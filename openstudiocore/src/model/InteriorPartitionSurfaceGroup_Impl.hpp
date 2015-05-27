@@ -70,47 +70,47 @@ namespace detail {
     //@}
 
     // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const;
+    virtual boost::optional<ParentObject> parent() const override;
 
     // set the parent, child may have to call methods on the parent
-    virtual bool setParent(ParentObject& newParent);
+    virtual bool setParent(ParentObject& newParent) override;
 
     // return any children objects in the hierarchy
-    virtual std::vector<ModelObject> children() const;
+    virtual std::vector<ModelObject> children() const override;
 
     /// get a vector of allowable children types
-    virtual std::vector<IddObjectType> allowableChildTypes() const;
+    virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual openstudio::Transformation buildingTransformation() const;
+    virtual openstudio::Transformation buildingTransformation() const override;
 
-    virtual bool changeTransformation(const openstudio::Transformation& transformation);
+    virtual bool changeTransformation(const openstudio::Transformation& transformation) override;
 
-    virtual openstudio::BoundingBox boundingBox() const;
+    virtual openstudio::BoundingBox boundingBox() const override;
 
     /** @name Getters */
     //@{
 
     // TODO: Handle Non-Extensible IddField Space Name.
 
-    virtual double directionofRelativeNorth() const;
+    virtual double directionofRelativeNorth() const override;
 
-    virtual bool isDirectionofRelativeNorthDefaulted() const;
+    virtual bool isDirectionofRelativeNorthDefaulted() const override;
 
-    virtual double xOrigin() const;
+    virtual double xOrigin() const override;
 
-    virtual bool isXOriginDefaulted() const;
+    virtual bool isXOriginDefaulted() const override;
 
-    virtual double yOrigin() const;
+    virtual double yOrigin() const override;
 
-    virtual bool isYOriginDefaulted() const;
+    virtual bool isYOriginDefaulted() const override;
 
-    virtual double zOrigin() const;
+    virtual double zOrigin() const override;
 
-    virtual bool isZOriginDefaulted() const;
+    virtual bool isZOriginDefaulted() const override;
 
     int multiplier() const;
 
@@ -120,21 +120,21 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    virtual void setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod = true);
+    virtual void setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod = true) override;
 
-    virtual void resetDirectionofRelativeNorth();
+    virtual void resetDirectionofRelativeNorth() override;
 
-    virtual void setXOrigin(double xOrigin, bool driverMethod = true);
+    virtual void setXOrigin(double xOrigin, bool driverMethod = true) override;
 
-    virtual void resetXOrigin();
+    virtual void resetXOrigin() override;
 
-    virtual void setYOrigin(double yOrigin, bool driverMethod = true);
+    virtual void setYOrigin(double yOrigin, bool driverMethod = true) override;
 
-    virtual void resetYOrigin();
+    virtual void resetYOrigin() override;
 
-    virtual void setZOrigin(double zOrigin, bool driverMethod = true);
+    virtual void setZOrigin(double zOrigin, bool driverMethod = true) override;
 
-    virtual void resetZOrigin();
+    virtual void resetZOrigin() override;
 
     bool setMultiplier(int multiplier);
 

@@ -42,7 +42,7 @@ class SpaceTypesGridView : public QWidget
 
 public:
 
-  SpaceTypesGridView(bool isIP, const model::Model & model, QWidget * parent = 0);
+  SpaceTypesGridView(bool isIP, const model::Model & model, QWidget * parent = nullptr);
 
   virtual ~SpaceTypesGridView() {}
 
@@ -97,25 +97,25 @@ public:
 
   virtual ~SpaceTypesGridController() {}
 
-  virtual void refreshModelObjects();
+  virtual void refreshModelObjects() override;
 
-  virtual void categorySelected(int index);
+  virtual void categorySelected(int index) override;
 
 protected:
 
-  virtual void setCategoriesAndFields();
+  virtual void setCategoriesAndFields() override;
 
-  virtual void addColumns(const QString &category, std::vector<QString> & fields);
+  virtual void addColumns(const QString &category, std::vector<QString> & fields) override;
 
-  virtual void checkSelectedFields();
+  virtual void checkSelectedFields() override;
 
-  virtual QString getColor(const model::ModelObject & modelObject);
+  virtual QString getColor(const model::ModelObject & modelObject) override;
 
 public slots:
 
-  virtual void onItemDropped(const OSItemId& itemId);
+  virtual void onItemDropped(const OSItemId& itemId) override;
 
-  virtual void onComboBoxIndexChanged(int index);
+  virtual void onComboBoxIndexChanged(int index) override;
 
   void filterChanged(const QString & text);
 

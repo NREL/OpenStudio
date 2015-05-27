@@ -104,7 +104,7 @@ class RunStatusView : public QWidget
 
    CloudLostConnectionButton * cloudLostConnectionButton;
 
-   void paintEvent(QPaintEvent * e);
+   void paintEvent(QPaintEvent * e) override;
 
  signals:
 
@@ -316,7 +316,7 @@ public:
 
 protected:
 
-  void paintEvent(QPaintEvent * e);
+  void paintEvent(QPaintEvent * e) override;
 
 public slots:
 

@@ -49,7 +49,7 @@ class SyncMeasuresDialogCentralWidget : public QWidget
 public:
   SyncMeasuresDialogCentralWidget(analysisdriver::SimpleProject * project,
     MeasureManager * measureManager,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
   virtual ~SyncMeasuresDialogCentralWidget() {}
 
   Component * checkedComponent() const;

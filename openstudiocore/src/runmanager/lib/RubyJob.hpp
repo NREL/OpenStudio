@@ -67,21 +67,21 @@ namespace detail {
       const JobState &t_restoreData);
 
 
-      virtual std::string descriptionImpl() const;
-      virtual std::string detailedDescriptionImpl() const
+      virtual std::string descriptionImpl() const override;
+      virtual std::string detailedDescriptionImpl() const override
       {
         return "";
       }
 
-      virtual ToolVersion getToolVersionImpl(const std::string &t_toolName) const;
-      virtual void startHandlerImpl();
+      virtual ToolVersion getToolVersionImpl(const std::string &t_toolName) const override;
+      virtual void startHandlerImpl() override;
 
-      virtual void basePathChanged();
+      virtual void basePathChanged() override;
 
-      virtual void mergeJobImpl(const std::shared_ptr<Job_Impl> &t_parent, const std::shared_ptr<Job_Impl> &t_job);
+      virtual void mergeJobImpl(const std::shared_ptr<Job_Impl> &t_parent, const std::shared_ptr<Job_Impl> &t_job) override;
 
-      virtual bool hasMergedJobsImpl() const;
-      virtual std::vector<MergedJobResults> mergedJobResultsImpl() const;
+      virtual bool hasMergedJobsImpl() const override;
+      virtual std::vector<MergedJobResults> mergedJobResultsImpl() const override;
 
     private:
       REGISTER_LOGGER("openstudio.runmanager.RubyJob");

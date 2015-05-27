@@ -29,7 +29,7 @@ class SpaceTypesTabView : public MainTabView
   Q_OBJECT
 
 public:
-  SpaceTypesTabView(QWidget * parent = 0);
+  SpaceTypesTabView(QWidget * parent = nullptr);
   virtual ~SpaceTypesTabView() {}
 
 };

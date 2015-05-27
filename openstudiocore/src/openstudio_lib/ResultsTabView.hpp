@@ -46,7 +46,7 @@ namespace openstudio {
     Q_OBJECT;
 
     public:
-      ResultsView(QWidget *t_parent = 0);
+      ResultsView(QWidget *t_parent = nullptr);
       virtual ~ResultsView();
       void searchForExistingResults(const openstudio::path &t_runDir);
 
@@ -89,7 +89,7 @@ namespace openstudio {
 
       ResultsTabView(const QString & tabLabel,
           bool hasSubTabs,
-          QWidget * parent = 0);
+          QWidget * parent = nullptr);
       virtual ~ResultsTabView() {}
       void searchForExistingResults(const openstudio::path &t_runDir);
 

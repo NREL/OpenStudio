@@ -105,7 +105,7 @@ namespace detail {
     /** @name Protected in or Absent from Public Class */
     //@{
 
-    virtual void reset();
+    virtual void reset() override;
 
     /** Called after Dakota job is constructed. As a side effect, sets iter to 0. */
     void setRestartFileReference(const FileReference& file);
@@ -116,7 +116,7 @@ namespace detail {
     /** Sets the RunManager job. */
     void setJob(const runmanager::Job& job);
 
-    virtual QVariant toVariant() const;
+    virtual QVariant toVariant() const override;
 
     //@}
    private:

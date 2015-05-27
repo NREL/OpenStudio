@@ -39,7 +39,7 @@ class OSCollapsibleItemList : public OSItemSelector
 
 public:
 
-  OSCollapsibleItemList(bool addScrollArea, QWidget * parent = 0);
+  OSCollapsibleItemList(bool addScrollArea, QWidget * parent = nullptr);
 
   virtual ~OSCollapsibleItemList() {}
 
@@ -47,7 +47,7 @@ public:
 
   OSCollapsibleItem* selectedCollapsibleItem() const;
 
-  OSItem* selectedItem() const;
+  OSItem* selectedItem() const override;
 
   bool itemsDraggable() const;
   void setItemsDraggable(bool itemsDraggable);
@@ -73,7 +73,7 @@ private slots:
 
 protected:
 
-  void paintEvent( QPaintEvent * event );
+  void paintEvent( QPaintEvent * event ) override;
 
 private:
 

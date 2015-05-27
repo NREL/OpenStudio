@@ -66,7 +66,7 @@ TEST_F(ModelFixture, RefrigerationCompressor_CloneOneModelWithDefaultData)
   RefrigerationCompressor testObjectClone = testObject.clone(model).cast<RefrigerationCompressor>();
 
   std::vector<CurveBicubic> refrigerationCompressorCurves = model.getModelObjects<CurveBicubic>();
-  for(std::vector<CurveBicubic>::iterator it = refrigerationCompressorCurves.begin(); it != refrigerationCompressorCurves.end(); ++it) {
+  for(auto it = refrigerationCompressorCurves.begin(); it != refrigerationCompressorCurves.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
 
@@ -205,11 +205,11 @@ TEST_F(ModelFixture, RefrigerationCompressor_CloneTwoModelsWithDefaultData)
   refrigerationCompressorCurves2 = model2.getModelObjects<CurveBicubic>();
   EXPECT_EQ(2, refrigerationCompressorCurves2.size());
 
-  for(std::vector<CurveBicubic>::iterator it = refrigerationCompressorCurves.begin(); it != refrigerationCompressorCurves.end(); ++it) {
+  for(auto it = refrigerationCompressorCurves.begin(); it != refrigerationCompressorCurves.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
 
-  for(std::vector<CurveBicubic>::iterator it = refrigerationCompressorCurves2.begin(); it != refrigerationCompressorCurves2.end(); ++it) {
+  for(auto it = refrigerationCompressorCurves2.begin(); it != refrigerationCompressorCurves2.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
 

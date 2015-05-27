@@ -83,10 +83,10 @@ TEST(Compare, IstringCompare)
   SetType words;
   words.insert("lorem ipsum");
 
-  SetType::const_iterator it = words.find("lorem ipsum");
+  auto it = words.find("lorem ipsum");
   ASSERT_TRUE(words.end() != it);
 
-  SetType::const_iterator it2 = words.find("LOREM IPSUM");
+  auto it2 = words.find("LOREM IPSUM");
   EXPECT_TRUE(it == it2);
 
   it2 = words.find("lOrEm IpsUm");
@@ -111,10 +111,10 @@ TEST(Compare, IstringPairCompare)
   SetType words;
   words.insert(PairType("lorem", "ipsum"));
 
-  SetType::const_iterator it = words.find(PairType("lorem", "ipsum"));
+  auto it = words.find(PairType("lorem", "ipsum"));
   ASSERT_TRUE(words.end() != it);
 
-  SetType::const_iterator it2 = words.find(PairType("lorem", "IPSUM"));
+  auto it2 = words.find(PairType("lorem", "IPSUM"));
   EXPECT_TRUE(it == it2);
 
   it2 = words.find(PairType("LOREM", "ipsum"));

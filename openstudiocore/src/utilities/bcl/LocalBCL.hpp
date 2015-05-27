@@ -72,10 +72,10 @@ namespace openstudio{
     //@{
 
     /// Get the component by uid
-    virtual boost::optional<BCLComponent> getComponent(const std::string& uid, const std::string& versionId = "") const;
+    virtual boost::optional<BCLComponent> getComponent(const std::string& uid, const std::string& versionId = "") const override;
 
     /// Get the measure by uid
-    virtual boost::optional<BCLMeasure> getMeasure(const std::string& uid, const std::string& versionId = "") const;
+    virtual boost::optional<BCLMeasure> getMeasure(const std::string& uid, const std::string& versionId = "") const override;
 
     /// Get all components
     std::vector<BCLComponent> components() const;

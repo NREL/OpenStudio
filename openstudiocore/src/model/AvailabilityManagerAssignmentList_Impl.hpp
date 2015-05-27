@@ -49,17 +49,17 @@ namespace detail {
 
     virtual ~AvailabilityManagerAssignmentList_Impl() {}
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     AvailabilityManagerScheduled availabilityManagerScheduled() const;
 
     AvailabilityManagerNightCycle availabilityManagerNightCycle() const;
 
-    std::vector<openstudio::IdfObject> remove();
+    std::vector<openstudio::IdfObject> remove() override;
 
-    ModelObject clone(Model model) const;
+    ModelObject clone(Model model) const override;
 
    protected:
 

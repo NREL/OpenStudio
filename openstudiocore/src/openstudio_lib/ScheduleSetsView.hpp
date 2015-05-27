@@ -36,7 +36,7 @@ class ScheduleSetsView : public ModelSubTabView
   public:
 
     ScheduleSetsView(const openstudio::model::Model& model,
-                      QWidget * parent = 0);
+                      QWidget * parent = nullptr);
 
     virtual ~ScheduleSetsView() {}
 
@@ -53,17 +53,17 @@ class ScheduleSetsInspectorView : public ModelObjectInspectorView
   public:
 
     ScheduleSetsInspectorView(const model::Model& model,
-                               QWidget * parent = 0);
+                               QWidget * parent = nullptr);
 
     virtual ~ScheduleSetsInspectorView() {}
 
   protected:
 
-    virtual void onClearSelection();
+    virtual void onClearSelection() override;
 
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
 
-    virtual void onUpdate();
+    virtual void onUpdate() override;
 
   private:
     

@@ -41,7 +41,7 @@ const int VRFSystemView::terminalViewHeight = 100;
 VRFView::VRFView()
   : QWidget()
 {
-  QVBoxLayout * mainVLayout = new QVBoxLayout();
+  auto mainVLayout = new QVBoxLayout();
   mainVLayout->setSpacing(0);
   mainVLayout->setContentsMargins(0,0,0,0);
   mainVLayout->setAlignment(Qt::AlignTop);
@@ -53,7 +53,7 @@ VRFView::VRFView()
   header->setFixedHeight(35);
   mainVLayout->addWidget(header);
 
-  QHBoxLayout * headerLayout = new QHBoxLayout();
+  auto headerLayout = new QHBoxLayout();
   headerLayout->setContentsMargins(5,5,5,5);
   headerLayout->setSpacing(0);
   header->setLayout(headerLayout);
@@ -112,7 +112,7 @@ void VRFSystemView::adjustLayout()
   x = x + zoneDropZone->boundingRect().width() + margin;
   y = y + zoneDropZone->boundingRect().height() + margin;
 
-  for(std::vector<QGraphicsObject *>::iterator it = m_terminalViews.begin();
+  for(auto it = m_terminalViews.begin();
       it != m_terminalViews.end();
       ++it)
   {
@@ -191,7 +191,7 @@ void VRFSystemView::paint( QPainter *painter,
     painter->drawLine(line1X,line1Y1,
                       line1X,line1Y2);
 
-    for(std::vector<QGraphicsObject *>::iterator it = m_terminalViews.begin();
+    for(auto it = m_terminalViews.begin();
         it != m_terminalViews.end();
         ++it)
     {
@@ -214,7 +214,7 @@ void VRFSystemView::removeAllVRFTerminalViews()
 {
   prepareGeometryChange();
 
-  for( std::vector<QGraphicsObject *>::iterator it = m_terminalViews.begin();
+  for( auto it = m_terminalViews.begin();
        it != m_terminalViews.end(); )
   {
     delete * it;

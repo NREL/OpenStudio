@@ -47,7 +47,7 @@ namespace openstudio {
 class AlwaysEmptyDropZoneVectorController : public OSVectorController
 {
 protected:
-  virtual std::vector<OSItemId> makeVector() { return std::vector<OSItemId>(); }
+  virtual std::vector<OSItemId> makeVector() override { return std::vector<OSItemId>(); }
 };
 
 OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
@@ -74,12 +74,12 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
   connect(m_dropZone, &OSDropZone::itemDropped, this, &OSItemSelectorButtons::itemDropped);
     
   // buttons
-  QWidget * buttonBox = new QWidget();
+  auto buttonBox = new QWidget();
   buttonBox->setObjectName("ButtonBox");
   buttonBox->setStyleSheet("QWidget#ButtonBox { background: #808080; border-top: 1px solid black; }");
   m_vLayout->addWidget(buttonBox);
 
-  QHBoxLayout * buttonLayout = new QHBoxLayout();
+  auto buttonLayout = new QHBoxLayout();
   buttonLayout->setContentsMargins(10,10,10,10);
   buttonLayout->setSpacing(5);
   buttonBox->setLayout(buttonLayout);

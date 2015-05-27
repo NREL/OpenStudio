@@ -63,7 +63,7 @@ void ServiceWaterScene::layout()
     delete *it;
   }
 
-  ServiceWaterItem * backgroundItem = new ServiceWaterItem(this);
+  auto backgroundItem = new ServiceWaterItem(this);
 
   Q_UNUSED(backgroundItem);
 }
@@ -131,7 +131,7 @@ void WaterUseConnectionsDetailScene::layout()
     delete *it;
   }
 
-  WaterUseConnectionsDetailItem * backgroundItem = new WaterUseConnectionsDetailItem(this);
+  auto backgroundItem = new WaterUseConnectionsDetailItem(this);
 
   Q_UNUSED(backgroundItem);
 }

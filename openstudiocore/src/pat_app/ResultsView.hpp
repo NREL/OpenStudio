@@ -149,7 +149,7 @@ public slots:
 
 protected:
 
-  void paintEvent(QPaintEvent * e);
+  void paintEvent(QPaintEvent * e) override;
 
 private:
 
@@ -245,7 +245,7 @@ public slots:
 
 protected:
 
-  void paintEvent(QPaintEvent * e);
+  void paintEvent(QPaintEvent * e) override;
 
 private:
 

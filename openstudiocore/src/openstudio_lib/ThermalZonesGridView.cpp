@@ -109,7 +109,7 @@ ThermalZonesGridView::ThermalZonesGridView(bool isIP, const model::Model & model
   : QWidget(parent),
   m_isIP(isIP)
 {
-  QVBoxLayout * layout = 0;
+  QVBoxLayout * layout = nullptr;
 
   layout = new QVBoxLayout();
   layout->setSpacing(0);

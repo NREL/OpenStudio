@@ -47,11 +47,11 @@ class TargetTemperatureScheduleVC : public ModelObjectVectorController
 
   protected:
 
-  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle);
-  virtual std::vector<OSItemId> makeVector();
-  virtual void onRemoveItem(OSItem* item);
-  virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId);
-  virtual void onDrop(const OSItemId& itemId);
+  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle) override;
+  virtual std::vector<OSItemId> makeVector() override;
+  virtual void onRemoveItem(OSItem* item) override;
+  virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId) override;
+  virtual void onDrop(const OSItemId& itemId) override;
 
   boost::optional<model::WaterUseEquipmentDefinition> waterUseEquipmentDefinition() const;
 };
@@ -66,11 +66,11 @@ class SensibleFractionScheduleVC : public ModelObjectVectorController
 
   protected:
 
-  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle);
-  virtual std::vector<OSItemId> makeVector();
-  virtual void onRemoveItem(OSItem* item);
-  virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId);
-  virtual void onDrop(const OSItemId& itemId);
+  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle) override;
+  virtual std::vector<OSItemId> makeVector() override;
+  virtual void onRemoveItem(OSItem* item) override;
+  virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId) override;
+  virtual void onDrop(const OSItemId& itemId) override;
 
   boost::optional<model::WaterUseEquipmentDefinition> waterUseEquipmentDefinition() const;
 };
@@ -85,11 +85,11 @@ class LatentFractionScheduleVC : public ModelObjectVectorController
 
   protected:
 
-  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle);
-  virtual std::vector<OSItemId> makeVector();
-  virtual void onRemoveItem(OSItem* item);
-  virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId);
-  virtual void onDrop(const OSItemId& itemId);
+  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle) override;
+  virtual std::vector<OSItemId> makeVector() override;
+  virtual void onRemoveItem(OSItem* item) override;
+  virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId) override;
+  virtual void onDrop(const OSItemId& itemId) override;
 
   boost::optional<model::WaterUseEquipmentDefinition> waterUseEquipmentDefinition() const;
 };
@@ -100,17 +100,17 @@ class WaterUseEquipmentDefinitionInspectorView : public ModelObjectInspectorView
 
   public:
 
-    WaterUseEquipmentDefinitionInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = 0 );
+    WaterUseEquipmentDefinitionInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = nullptr );
 
     virtual ~WaterUseEquipmentDefinitionInspectorView() {}
 
   protected:
 
-    virtual void onClearSelection();
+    virtual void onClearSelection() override;
 
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
 
-    virtual void onUpdate();
+    virtual void onUpdate() override;
 
   private:
 
@@ -138,7 +138,7 @@ class WaterUseEquipmentDefinitionInspectorView : public ModelObjectInspectorView
 
   public slots:
 
-    void toggleUnits(bool displayIP);
+    void toggleUnits(bool displayIP) override;
 };
 
 } // openstudio

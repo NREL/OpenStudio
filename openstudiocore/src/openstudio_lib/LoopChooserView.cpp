@@ -39,13 +39,13 @@ namespace openstudio {
 LoopChooserView::LoopChooserView(QWidget* parent)
   : QWidget(parent)
 {
-  QVBoxLayout * mainLayout = new QVBoxLayout();
+  auto mainLayout = new QVBoxLayout();
 
   mainLayout->setContentsMargins(0,0,0,0);
 
   this->setLayout(mainLayout);
 
-  QScrollArea * scrollArea = new QScrollArea();
+  auto scrollArea = new QScrollArea();
   
   scrollArea->setWidgetResizable(true);
 
@@ -53,7 +53,7 @@ LoopChooserView::LoopChooserView(QWidget* parent)
 
   mainLayout->addWidget(scrollArea);
 
-  QWidget * scrollWidget = new QWidget();
+  auto scrollWidget = new QWidget();
 
   scrollArea->setWidget(scrollWidget);
 
@@ -84,7 +84,7 @@ void LoopChooserView::layoutView()
   this->setUpdatesEnabled(false);
 
   QLayoutItem * child;
-  while((child = m_vLayout->takeAt(0)) != 0) 
+  while((child = m_vLayout->takeAt(0)) != nullptr) 
   {
       delete child->widget();
       delete child;
@@ -93,7 +93,7 @@ void LoopChooserView::layoutView()
 
   if( m_component )
   {
-    QLabel * label = new QLabel();
+    auto label = new QLabel();
     label->setObjectName("IGHeader");
     label->setText(toQString(m_component->iddObject().name()));
     m_vLayout->addWidget(label);
@@ -101,11 +101,11 @@ void LoopChooserView::layoutView()
     std::vector<model::PlantLoop> loops;
     loops = m_component->model().getConcreteModelObjects<model::PlantLoop>();
 
-    for( std::vector<model::PlantLoop>::iterator it = loops.begin();
+    for( auto it = loops.begin();
           it < loops.end();
           ++it )
     {
-      LoopChooserItem * loopChooserItem = new LoopChooserItem(*it,this);
+      auto loopChooserItem = new LoopChooserItem(*it,this);
       m_loopChooserItems.push_back(loopChooserItem);
       m_vLayout->addWidget(loopChooserItem);
       loopChooserItem->setChecked(false);
@@ -143,7 +143,7 @@ void LoopChooserView::paintEvent ( QPaintEvent * event )
 
 LoopChooserItem * LoopChooserView::loopChooserItemForLoop(std::string loopName)
 {
-  for( std::vector<LoopChooserItem *>::iterator it = m_loopChooserItems.begin();
+  for( auto it = m_loopChooserItems.begin();
        it < m_loopChooserItems.end();
        ++it )
   {
@@ -170,7 +170,7 @@ LoopChooserItem::LoopChooserItem(model::Loop & loop, LoopChooserView * parent)
     m_loopChooserView(parent),
     m_loop(loop)
 {
-  QHBoxLayout * hLayout = new QHBoxLayout();
+  auto hLayout = new QHBoxLayout();
 
   m_checkBox = new QCheckBox();
   

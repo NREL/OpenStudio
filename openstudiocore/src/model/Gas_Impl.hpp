@@ -111,9 +111,9 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
@@ -123,7 +123,7 @@ namespace detail {
     std::string gasType() const;
 
     /** Get the thickness of the material. Will throw if value is not available. */
-    virtual double thickness() const;
+    virtual double thickness() const override;
 
     /** The conductivity (W/m*K) at temperature (K). Will throw if necessary values are not 
      *  available. */
@@ -215,7 +215,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    virtual bool setThickness(double value);
+    virtual bool setThickness(double value) override;
 
     bool setCustomConductivity(double A, double B, double C);
 
@@ -311,7 +311,7 @@ namespace detail {
     //@}
    protected:
 
-    virtual void populateValidityReport(ValidityReport& report,bool checkNames) const;
+    virtual void populateValidityReport(ValidityReport& report,bool checkNames) const override;
 
    private:
     REGISTER_LOGGER("openstudio.model.Gas");

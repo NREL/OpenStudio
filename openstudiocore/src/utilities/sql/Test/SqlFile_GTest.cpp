@@ -307,3 +307,57 @@ TEST_F(SqlFileFixture, AnnualTotalCosts) {
   EXPECT_NEAR(0.18, *(sqlFile2.annualTotalCostPerNetConditionedBldgArea(FuelType::Gas)), 0.1);
 
 }
+
+void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double firstVal, double lastVal)
+{
+  openstudio::path fromPath = resourcesPath() / toPath("utilities/SqlFile") / toPath(name);
+  openstudio::path path = toPath(name);
+
+  if (boost::filesystem::exists(path)){
+    boost::filesystem::remove(path);
+  }
+  ASSERT_FALSE(boost::filesystem::exists(path));
+  ASSERT_TRUE(boost::filesystem::exists(fromPath)) << toString(fromPath);
+  boost::filesystem::copy(fromPath, path);
+  ASSERT_TRUE(boost::filesystem::exists(path));
+
+  boost::optional<SqlFile> sqlFile;
+  EXPECT_NO_THROW(sqlFile = SqlFile(path));
+  ASSERT_TRUE(sqlFile);
+
+  ASSERT_TRUE(sqlFile->hoursSimulated());
+  EXPECT_EQ(8760.0, sqlFile->hoursSimulated().get()) << name;
+  ASSERT_TRUE(sqlFile->netSiteEnergy());
+  EXPECT_NEAR(netSiteEnergy, sqlFile->netSiteEnergy().get(), 0.1) << name;
+
+  std::vector<std::string> availableEnvPeriods = sqlFile->availableEnvPeriods();
+  ASSERT_FALSE(availableEnvPeriods.empty());
+  EXPECT_EQ(static_cast<unsigned>(3), availableEnvPeriods.size());
+
+  openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Hourly", "Zone Mean Air Temperature", "Main Zone");
+  EXPECT_TRUE(ts);
+  ts = sqlFile->timeSeries(availableEnvPeriods[0], "Hourly", "Zone Mean Air Temperature", "MAIN ZONE");
+  ASSERT_TRUE(ts);
+
+  ASSERT_EQ(static_cast<unsigned>(8760), ts->daysFromFirstReport().size());
+  ASSERT_EQ(static_cast<unsigned>(8760), ts->values().size());
+  EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(0, 1, 0, 0)), ts->firstReportDateTime());
+  EXPECT_DOUBLE_EQ(firstVal, ts->values()[0]) << name;
+  EXPECT_DOUBLE_EQ(lastVal, ts->values()[8759]) << name;
+
+  ts = sqlFile->timeSeries(availableEnvPeriods[0], "Hourly", "Zone Mean Air Temperature", "Zone that does not exist");
+  EXPECT_FALSE(ts);
+}
+
+TEST_F(SqlFileFixture, Regressions) {
+  // these files were created by running the 1ZoneEvapCooler.idf example file 
+  // adding the Output:SQLite,SimpleAndTabular; object
+  // and using the USA_CO_Golden-NREL.724666_TMY3.epw weather file
+  regressionTestSqlFile("1ZoneEvapCooler-V7-0-0.sql", 42.25, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V7-1-0.sql", 42.05, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V7-2-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V8-0-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V8-1-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V8-2-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V8-3-0.sql", 43.28, 20, 20);
+}

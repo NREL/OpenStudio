@@ -52,9 +52,9 @@ namespace openstudio {
 
       RunListModel( RunView * runView );
 
-      int rowCount( const QModelIndex & parent = QModelIndex() ) const;
+      int rowCount( const QModelIndex & parent = QModelIndex() ) const override;
 
-      QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
+      QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const override;
 
       bool removeRows(int row, int count);
 
@@ -166,7 +166,7 @@ namespace openstudio {
     public:
 
       RunTabView(const model::Model & model,
-                  QWidget * parent = 0);
+                  QWidget * parent = nullptr);
 
       virtual ~RunTabView() {}
 

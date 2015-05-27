@@ -130,8 +130,19 @@ namespace detail {
   bool LayeredConstruction_Impl::insertLayer(unsigned layerIndex, 
                                              const Material& material) 
   {
-    OS_ASSERT(material.model() == model());
+    if (material.model() != model()){
+      return false;
+    }
     layerIndex = mf_clearNullLayers(layerIndex);
+
+    // DLM: duplicates check in layersAreValid which is not called if strictness < Final
+    if (isFenestration()){
+      if (layerIndex >= 8){
+        return false;
+      }
+    }else if (layerIndex >= 10){
+      return false;
+    }
 
     unsigned n = numLayers();
     MaterialVector layers = this->layers();
@@ -160,7 +171,9 @@ namespace detail {
   bool LayeredConstruction_Impl::setLayer(unsigned layerIndex, 
                                           const Material& material)
   {
-    OS_ASSERT(material.model() == model());
+    if (material.model() != model()){
+      return false;
+    }
     layerIndex = mf_clearNullLayers(layerIndex);
     if (layerIndex >= numLayers()) {
       LOG(Info,"Asked to change the Material at layer " << layerIndex << " in "
@@ -184,6 +197,22 @@ namespace detail {
 
   bool LayeredConstruction_Impl::setLayers(const std::vector<Material>& materials) {
     
+    // DLM: duplicates check in layersAreValid which is not called if strictness < Final
+    if (materials.empty()){
+      // ok
+    }else if (materials[0].optionalCast<FenestrationMaterial>()){
+      if (materials.size() > 8){
+        return false;
+      }
+    } else if (materials.size() > 10){
+      return false;
+    }
+    for (const Material& material : materials) {
+      if (material.model() != model()){
+        return false;
+      }
+    }
+
     if ((model().strictnessLevel() < StrictnessLevel::Final) || 
         LayeredConstruction::layersAreValid(materials)) 
     {
@@ -203,7 +232,9 @@ namespace detail {
 
   bool LayeredConstruction_Impl::setLayer(const ModelPartitionMaterial& modelPartitionMaterial) {
 
-    OS_ASSERT(modelPartitionMaterial.model() == model());
+    if (modelPartitionMaterial.model() != model()){
+      return false;
+    }
     clearExtensibleGroups();
     ModelExtensibleGroup group = pushExtensibleGroup(StringVector(), false).cast<ModelExtensibleGroup>();
     OS_ASSERT(!group.empty());
@@ -815,6 +846,12 @@ bool LayeredConstruction::layersAreValid(const std::vector<OpaqueMaterial>& opaq
 {
   // Rule 1: AirGap must have non-AirGap on either side.
   // Rule 2: RoofVegetation must be on exterior layer.
+  // Rule 3: Up to 10 layers are allowed, IDD limit
+
+  // Rule 3
+  if (opaqueMaterials.size() > 10){
+    return false;
+  }
 
   bool previousWasNonAirGap = false;
   for (unsigned i = 0, n = opaqueMaterials.size(); i < n; ++i) {
@@ -851,6 +888,13 @@ bool LayeredConstruction::layersAreValid(const std::vector<FenestrationMaterial>
   // Rule 1 -- SimpleGlazing cannot be combined with other Glazings or any GasLayers.
   // Rule 2 -- GasLayers must have non-GasLayer on either side.
   // Rule 3 -- Ultimately, GasLayers must have Glazing on either side.
+  // Rule 4 -- Up to 8 layers are allowed, IDD limit
+
+  // Rule 4
+  if (fenestrationMaterials.size() > 8){
+    return false;
+  }
+
   bool hasSimpleGlazing = false;
   bool hasGlazing = false;
   bool hasGasLayer = false;

@@ -226,8 +226,8 @@ TEST_F(UnitsFixture,OSQuantityVector_Profiling_Addition_QuantityVectorBaseCase) 
   for (unsigned i = 0, n = 10; i < n; ++i) {
     QuantityVector result(testQuantityVector);
     Quantity other(10.0,createSIPower());
-    for (unsigned j = 0, n = result.size(); j < n; ++j) {
-      result[j] += other;
+    for (auto & elem : result) {
+      elem += other;
     }
   }
 }
@@ -243,8 +243,8 @@ TEST_F(UnitsFixture,OSQuantityVector_Profiling_Multiplication_QuantityVectorBase
   for (unsigned i = 0, n = 10; i < n; ++i) {
     QuantityVector result(testQuantityVector);
     Quantity other(8.0,createWhTime());
-    for (unsigned j = 0, n = result.size(); j < n; ++j) {
-      result[j] *= other;
+    for (auto & elem : result) {
+      elem *= other;
     }
   }
 }

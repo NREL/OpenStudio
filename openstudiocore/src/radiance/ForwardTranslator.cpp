@@ -806,7 +806,7 @@ namespace radiance {
 
     result.setName(name);
 
-    std::vector<WindowGroup>::iterator it = std::find(m_windowGroups.begin(), m_windowGroups.end(), result);
+    auto it = std::find(m_windowGroups.begin(), m_windowGroups.end(), result);
     if (it != m_windowGroups.end()){
       it->addWindowPolygon(polygon);
       return *it;

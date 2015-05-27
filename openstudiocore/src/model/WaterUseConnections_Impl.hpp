@@ -57,11 +57,11 @@ class MODEL_API WaterUseConnections_Impl : public StraightComponent_Impl {
 
   virtual ~WaterUseConnections_Impl() {}
 
-  virtual const std::vector<std::string>& outputVariableNames() const;
+  virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual IddObjectType iddObjectType() const;
+  virtual IddObjectType iddObjectType() const override;
 
-  std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+  std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
   boost::optional<Schedule> hotWaterSupplyTemperatureSchedule() const;
 
@@ -75,9 +75,9 @@ class MODEL_API WaterUseConnections_Impl : public StraightComponent_Impl {
 
   void resetColdWaterSupplyTemperatureSchedule();
 
-  unsigned inletPort();
+  unsigned inletPort() override;
 
-  unsigned outletPort();
+  unsigned outletPort() override;
 
   std::vector<WaterUseEquipment> waterUseEquipment() const;
 
@@ -85,7 +85,7 @@ class MODEL_API WaterUseConnections_Impl : public StraightComponent_Impl {
 
   bool removeWaterUseEquipment(WaterUseEquipment & waterUseEquipment);
 
-  bool addToNode(Node & node);
+  bool addToNode(Node & node) override;
 
   protected:
 

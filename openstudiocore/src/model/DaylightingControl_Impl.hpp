@@ -79,9 +79,9 @@ namespace detail {
 
     //@}
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     /** @name Getters */
     //@{
@@ -208,7 +208,7 @@ namespace detail {
    protected: 
 
     // index of the space name
-    virtual int spaceIndex() const;
+    virtual int spaceIndex() const override;
 
    private:
     REGISTER_LOGGER("openstudio.model.DaylightingControl");

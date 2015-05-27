@@ -38,8 +38,8 @@ public:
 
 
 private:
-  void dropEvent(QDropEvent *evt);
-  void dragEnterEvent(QDragEnterEvent *e);
+  void dropEvent(QDropEvent *evt) override;
+  void dragEnterEvent(QDragEnterEvent *e) override;
 
 protected:
   // drag event

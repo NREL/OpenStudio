@@ -222,7 +222,7 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
   for(unsigned i = 0; i != t_numberofIndependentVariables; ++i)
   {
     std::vector<double> xValues = modelObject.getImpl<model::detail::TableMultiVariableLookup_Impl>()->xValues(i);
-    for(std::vector<double>::iterator it = xValues.begin();
+    for(auto it = xValues.begin();
         it != xValues.end();
         ++it)
     {
@@ -237,7 +237,7 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
     // If there is just one variable then we just make a list of the y values.
     std::vector<double> xValues = modelObject.getImpl<model::detail::TableMultiVariableLookup_Impl>()->xValues(0);
 
-    for(std::vector<double>::iterator it = xValues.begin();
+    for(auto it = xValues.begin();
         it != xValues.end();
         ++it)
     {
@@ -263,11 +263,11 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
     std::vector<double> x1Values = modelObject.getImpl<model::detail::TableMultiVariableLookup_Impl>()->xValues(0);
     std::vector<double> x2Values = modelObject.getImpl<model::detail::TableMultiVariableLookup_Impl>()->xValues(1);
 
-    for(std::vector<double>::iterator it2 = x2Values.begin();
+    for(auto it2 = x2Values.begin();
         it2 != x2Values.end();
         ++it2)
     {
-      for(std::vector<double>::iterator it1 = x1Values.begin();
+      for(auto it1 = x1Values.begin();
           it1 != x1Values.end();
           ++it1)
       {
@@ -312,7 +312,7 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
         it != slices.end();
         ++it)
     {
-      for(std::vector<double>::const_iterator it2 = it->begin();
+      for(auto it2 = it->begin();
           it2 != it->end();
           ++it2)
       {
@@ -323,11 +323,11 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
       std::vector<double> x1Values = modelObject.getImpl<model::detail::TableMultiVariableLookup_Impl>()->xValues(0);
       std::vector<double> x2Values = modelObject.getImpl<model::detail::TableMultiVariableLookup_Impl>()->xValues(1);
 
-      for(std::vector<double>::iterator x2It = x2Values.begin();
+      for(auto x2It = x2Values.begin();
           x2It != x2Values.end();
           ++x2It)
       {
-        for(std::vector<double>::iterator x1It = x1Values.begin();
+        for(auto x1It = x1Values.begin();
             x1It != x1Values.end();
             ++x1It)
         {

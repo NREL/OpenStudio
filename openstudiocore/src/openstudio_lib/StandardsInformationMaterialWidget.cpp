@@ -272,7 +272,7 @@ void StandardsInformationMaterialWidget::detach()
 
   if (m_standardsInformation){ 
     // DLM: this was never attached to anything
-    disconnect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), 0, this, 0);
+    disconnect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), nullptr, this, nullptr);
     m_standardsInformation.reset();
   }
 
@@ -337,8 +337,6 @@ void StandardsInformationMaterialWidget::disableComposite()
 
 void StandardsInformationMaterialWidget::requestPopulateFields()
 {
-  this;
-
   if (!m_populateFieldsRequested){
     m_populateFieldsRequested = true;
 
@@ -350,8 +348,6 @@ void StandardsInformationMaterialWidget::requestPopulateFields()
 
 void StandardsInformationMaterialWidget::populateFields()
 {
-  this;
-
   m_populateFieldsRequested = false;
 
   populateStandards();

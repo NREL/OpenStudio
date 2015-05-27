@@ -40,24 +40,24 @@ public:
   TreeViewWidget(openstudio::model::Model& model, QWidget *parent = nullptr);
   TreeViewWidget(QWidget *parent = nullptr);
   virtual ~TreeViewWidget();
-  virtual void addObjects(openstudio::IddObjectType type = openstudio::IddObjectType("UserCustom"));
-  virtual void loadModel();
-  virtual void removeObjects();
-  virtual void copyObjects();
-  virtual void pasteObjects();
-  virtual bool hasSelectedRows();
-  virtual bool hasRowsToPaste();
+  virtual void addObjects(openstudio::IddObjectType type = openstudio::IddObjectType("UserCustom")) override;
+  virtual void loadModel() override;
+  virtual void removeObjects() override;
+  virtual void copyObjects() override;
+  virtual void pasteObjects() override;
+  virtual bool hasSelectedRows() override;
+  virtual bool hasRowsToPaste() override;
   std::vector<openstudio::IddObjectType> getAllowableChildTypes();
   void expandAllNodes();
   void collapseAllNodes();
   TreeView* getTreeView();
   TreeModel* getTreeModel();
-  virtual void toggleGUIDs();
+  virtual void toggleGUIDs() override;
 
 public slots:
   virtual void viewSelection();
-  virtual void viewSelection(const QModelIndex& modelIndex);
-  virtual void on_nameChanged(QString);
+  virtual void viewSelection(const QModelIndex& modelIndex) override;
+  virtual void on_nameChanged(QString) override;
 
 signals:
   void expandAll();
@@ -68,11 +68,11 @@ protected:
   TreeModel * mTreeModel;
 
 private:
-  virtual void connectSignalsAndSlots();
-  virtual void createLayout();
-  virtual void createWidgets();
-  virtual void loadData();
-  virtual void loadModel(openstudio::model::Model& model);
+  virtual void connectSignalsAndSlots() override;
+  virtual void createLayout() override;
+  virtual void createWidgets() override;
+  virtual void loadData() override;
+  virtual void loadModel(openstudio::model::Model& model) override;
   void expandAppropriateTreeNodes();
   void setExpandedIndexHandles();
 
