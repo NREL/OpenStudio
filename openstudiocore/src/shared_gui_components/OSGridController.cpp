@@ -1150,7 +1150,7 @@ namespace openstudio {
     std::vector<Holder *> holders;
     // addWidget lambda adds to holders (by first creating a new holder).
     // Also adds to layout, which is the layout of the main cell (wrapper).
-    // holders and layout are accessible in the lamda through capture.
+    // holders and layout are accessible in the lambda through capture.
     // t_widget will be provided by ::makeWidget, it is the bindable control
     auto addWidget = [&](QWidget *t_widget, const boost::optional<model::ModelObject> &t_obj, const bool t_selector)
     {
@@ -1430,8 +1430,6 @@ namespace openstudio {
 
   void OSGridController::onComboBoxIndexChanged(int index)
   {
-    // Pure virtual in base class
-    OS_ASSERT(false);
   }
 
   void OSGridController::onItemSelected(OSItem * item)
