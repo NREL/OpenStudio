@@ -671,7 +671,7 @@ void PatApp::on_closeMonitorUseDlg()
 
 void PatApp::showHelp()
 {
-  QDesktopServices::openUrl(QUrl("http://nrel.github.io/OpenStudio-user-documentation/comparative_analysis/parametric_studies/"));
+  QDesktopServices::openUrl(QUrl("http://nrel.github.io/OpenStudio-user-documentation/reference/parametric_studies/"));
 }
 
 void PatApp::showAbout()
