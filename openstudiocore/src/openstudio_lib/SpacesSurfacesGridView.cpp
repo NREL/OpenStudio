@@ -151,17 +151,6 @@ namespace openstudio {
         }
         );
 
-        std::function<std::vector<std::string>(const model::Space &)> allSurfaceTypes(
-          [allSurfaces](const model::Space &t_space) {
-          std::vector<std::string> allTypes;
-          auto surfaces = allSurfaces(t_space);
-          for (auto surface : surfaces) {
-            allTypes.push_back(surface.cast<model::Surface>().surfaceType());
-          }
-          return allTypes;
-        }
-        );
-
         std::function<std::vector<boost::optional<model::ModelObject> >(const model::Space &)> allConstructions(
           [allSurfaces](const model::Space &t_space) {
           std::vector<boost::optional<model::ModelObject> > allModelObjects;
@@ -181,17 +170,6 @@ namespace openstudio {
         }
         );
 
-        std::function<std::vector<std::string>(const model::Space &)> allOutsideBoundaryConditions(
-          [allSurfaces](const model::Space &t_space) {
-          std::vector<std::string> allOutsideBoundaryCondition;
-          auto surfaces = allSurfaces(t_space);
-          for (auto surface : surfaces) {
-            allOutsideBoundaryCondition.push_back(surface.cast<model::Surface>().outsideBoundaryCondition());
-          }
-          return allOutsideBoundaryCondition;
-        }
-        );
-
         std::function<std::vector<boost::optional<model::ModelObject> >(const model::Space &)> allOutsideBoundaryConditionObjects(
           [allSurfaces](const model::Space &t_space) {
           std::vector<boost::optional<model::ModelObject> > allModelObjects;
@@ -208,28 +186,6 @@ namespace openstudio {
           allModelObjects.insert(allModelObjects.end(), allAdjacentSurfaces.begin(), allAdjacentSurfaces.end());
 
           return allModelObjects;
-        }
-        );
-
-        std::function<std::vector<std::string>(const model::Space &)> allSunExposures(
-          [allSurfaces](const model::Space &t_space) {
-          std::vector<std::string> allSunExposures;
-          auto surfaces = allSurfaces(t_space);
-          for (auto surface : surfaces) {
-            allSunExposures.push_back(surface.cast<model::Surface>().sunExposure());
-          }
-          return allSunExposures;
-        }
-        );
-
-        std::function<std::vector<std::string>(const model::Space &)> allWindExposure(
-          [allSurfaces](const model::Space &t_space) {
-          std::vector<std::string> allWindExposure;
-          auto surfaces = allSurfaces(t_space);
-          for (auto surface : surfaces) {
-            allWindExposure.push_back(surface.cast<model::Surface>().windExposure());
-          }
-          return allWindExposure;
         }
         );
 
@@ -274,7 +230,7 @@ namespace openstudio {
             boost::optional<std::function<void(model::Surface*)>>(),
             boost::optional<std::function<bool(model::Surface*)>>(),
             DataSource(
-            allSurfaceTypes,
+            allSurfaces,
             true
             )
             );
@@ -299,7 +255,7 @@ namespace openstudio {
             boost::optional<std::function<void(model::Surface*)>>(),
             boost::optional<std::function<bool(model::Surface*)>>(),
             DataSource(
-            allOutsideBoundaryConditions,
+            allSurfaces,
             true
             )
             );
@@ -332,7 +288,7 @@ namespace openstudio {
             boost::optional<std::function<void(model::Surface*)> >(NullAdapter(&model::Surface::resetSunExposure)),
             boost::optional<std::function<bool(model::Surface*)>>(),
             DataSource(
-            allSunExposures,
+            allSurfaces,
             true
             )
             );
@@ -346,7 +302,7 @@ namespace openstudio {
             boost::optional<std::function<void(model::Surface*)> >(NullAdapter(&model::Surface::resetWindExposure)),
             boost::optional<std::function<bool(model::Surface*)>>(),
             DataSource(
-            allWindExposure,
+            allSurfaces,
             true
             )
             );
