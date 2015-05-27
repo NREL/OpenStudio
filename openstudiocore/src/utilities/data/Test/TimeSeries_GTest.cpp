@@ -1125,10 +1125,13 @@ TEST_F(DataFixture, TimeSeries_Multiply8760)
   // Test out mulitplication on a detailed series and an iterval series
   std::string units = "C";
 
-  // interval
+  // Interval
   Time interval = Time(0, 1);
+
+  // Values
   Vector values = linspace(1, 8760, 8760);
 
+  // Date/times for detailed series
   Date startDate(Date(MonthOfYear(MonthOfYear::Jan), 1));
   DateTime firstReportDateTime(startDate, Time(0, 1, 0, 0));
   Date endDate(Date(MonthOfYear(MonthOfYear::Dec), 31));
@@ -1139,10 +1142,14 @@ TEST_F(DataFixture, TimeSeries_Multiply8760)
     dateTimes.push_back(current);
   }
 
+  // Time series objects
   TimeSeries intervalTimeSeries(firstReportDateTime, interval, values, units);
   TimeSeries detailedTimeSeries(dateTimes, values, units);
 
+  // Multiply interval series
   TimeSeries mult = 3 * intervalTimeSeries;
+
+  // Run tests
   Vector mvals = mult.values();
   for (unsigned i = 0; i < 8760; i++) {
     EXPECT_EQ(3 * values[i], mvals[i]);
@@ -1152,7 +1159,10 @@ TEST_F(DataFixture, TimeSeries_Multiply8760)
   EXPECT_EQ(interval, minter.get());
   EXPECT_EQ(firstReportDateTime, mult.firstReportDateTime());
 
+  // Multiply detailed series
   mult = 3 * detailedTimeSeries;
+
+  // Run tests
   mvals = mult.values();
   for (unsigned i = 0; i < 8760; i++) {
     EXPECT_EQ(3 * values[i], mvals[i]);

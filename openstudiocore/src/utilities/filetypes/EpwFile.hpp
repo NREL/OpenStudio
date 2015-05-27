@@ -43,6 +43,7 @@ class TimeSeries;
 class UTILITIES_API AirState
 {
 public:
+  /** Create a air state object at 25C, 101325 Pa, 50% RH */
   AirState();
 
   // Statics
