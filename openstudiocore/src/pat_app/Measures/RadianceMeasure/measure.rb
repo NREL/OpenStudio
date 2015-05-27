@@ -66,37 +66,38 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     write_sql = runner.getStringArgumentValue('write_sql', user_arguments)
     write_sql = (write_sql == 'Yes')
 
-		# Radiance model goes here
-    out_dir = "./radiance"
-    if !File.exists?(out_dir)
-      FileUtils.mkdir_p(out_dir)
+		# Radiance model output dir
+    rad_dir = "./radiance"
+    if !File.exists?(rad_dir)
+      FileUtils.mkdir_p(rad_dir)
     end
 
-    # Energyplus "pre-run" model goes here
+    # Energyplus "pre-run" model dir
     epout_dir = "./energyplus"
     if !File.exists?(epout_dir)
       FileUtils.mkdir_p(epout_dir)
     end
 
-   	# save osm to prerun dir   	
+   	# save osm 	
     eplusin_file_path = OpenStudio::Path.new("eplusin.osm")
     model.save(eplusin_file_path,true)
-
-		# queue the job to run the prerun model 
 
 		# find EnergyPlus
 		co = OpenStudio::Runmanager::ConfigOptions.new 
 		co.fastFindEnergyPlus
  
-		# make a workflow
+		# make a workflow (EnergyPlus "pre-run" to get constructions and weather)
 		workflow = OpenStudio::Runmanager::Workflow.new("ModelToRadPreprocess->ModelToIdf->ExpandObjects->EnergyPlus")
 		workflow.add(co.getTools)
 
-		# try to minimize file path lengths
+		# add model-to-rad workflow
+		modelToRad = OpenStudio::Runmanager::Workflow.new("ModelToRad")
+		workflow.addWorkflow(modelToRad)
+
+		# minimize file path lengths
 		workflow.addParam(OpenStudio::Runmanager::JobParam.new("flatoutdir"))
 
-		# make a run manager
-
+		# make the run manager
 		runDir = OpenStudio::Path.new(epout_dir)
 		runmanager_path = OpenStudio::Path.new("runmanager.db")
 		runmanager = OpenStudio::Runmanager::RunManager.new(runmanager_path, true, true, false, false)
@@ -126,8 +127,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     runner.registerFinalCondition("The building finished with #{model.getSpaces.size} spaces.")
     
     return true
-
-		# get the sql file
 
   end #run
 
