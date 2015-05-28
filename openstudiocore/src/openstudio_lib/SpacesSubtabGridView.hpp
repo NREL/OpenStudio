@@ -83,8 +83,6 @@ namespace openstudio{
 
     void showSpaceNameFilter();
 
-    void showThermalZoneNameFilter();
-
     void showWindExposureFilter();
 
     void showSunExposureFilter();
@@ -125,8 +123,6 @@ namespace openstudio{
 
     std::set<openstudio::model::ModelObject> m_objectsFilteredBySpaceName;
 
-    std::set<openstudio::model::ModelObject> m_objectsFilteredByThermalZoneName;
-
     std::set<openstudio::model::ModelObject> m_objectsFilteredByWindExposure;
 
     std::set<openstudio::model::ModelObject> m_objectsFilteredBySunExposure;
@@ -145,27 +141,25 @@ namespace openstudio{
 
     void onDropZoneItemClicked(OSItem* item);
 
-    void spaceNameFilterChanged();
+    virtual void spaceNameFilterChanged();
 
-    void thermalZoneNameFilterChanged();
+    virtual void storyFilterChanged(const QString & text);
 
-    void storyFilterChanged(const QString & text);
+    virtual void thermalZoneFilterChanged(const QString & text);
 
-    void thermalZoneFilterChanged(const QString & text);
+    virtual void spaceTypeFilterChanged(const QString & text);
 
-    void spaceTypeFilterChanged(const QString & text);
+    virtual void loadTypeFilterChanged(const QString & text);
 
-    void loadTypeFilterChanged(const QString & text);
+    virtual void windExposureFilterChanged(const QString & text);
 
-    void windExposureFilterChanged(const QString & text);
+    virtual void sunExposureFilterChanged(const QString & text);
 
-    void sunExposureFilterChanged(const QString & text);
+    virtual void outsideBoundaryConditionFilterChanged(const QString & text);
 
-    void outsideBoundaryConditionFilterChanged(const QString & text);
+    virtual void surfaceTypeFilterChanged(const QString & text);
 
-    void surfaceTypeFilterChanged(const QString & text);
-
-    void interiorPartitionGroupFilterChanged(const QString & text);
+    virtual void interiorPartitionGroupFilterChanged(const QString & text);
 
   };
 

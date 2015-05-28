@@ -102,7 +102,6 @@ namespace openstudio {
     showThermalZoneFilter();
     showSpaceTypeFilter();
     showSpaceNameFilter();
-    showThermalZoneNameFilter();
 
     m_filterGridLayout->setRowStretch(m_filterGridLayout->rowCount(), 100);
     m_filterGridLayout->setColumnStretch(m_filterGridLayout->columnCount(), 100);
