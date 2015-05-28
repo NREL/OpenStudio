@@ -11906,6 +11906,7 @@ OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode,
         \memo reheat). Optional inputs for moisture evaporation from wet coil when compressor
         \memo cycles off with continuous fan operation. Requires two to four sets of performance
         \memo data, see CoilPerformance:DX:Cooling. Stages are modeled as a face-split coil.
+       \min-fields 18
   A1, \field Handle
        \type handle
        \required-field
@@ -11996,6 +11997,7 @@ OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode,
        \note throughout the entire simulation.
 
 OS:CoilPerformance:DX:Cooling,
+       \min-fields 23
        \memo Used to specify DX cooling coil performance for one mode of operation for a
        \memo Coil:Cooling:DX:TwoStageWithHumidityControlMode object which may reference one to four
        \memo CoilPerformance:DX:Cooling objects depending on the specified number of stages and

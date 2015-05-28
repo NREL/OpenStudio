@@ -429,6 +429,14 @@
     <rule IddField="Zone" Access="HIDDEN"/>
     <rule IddField="Skin Loss Radiative Fraction" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_HeaderedPumps_VariableSpeed">
+    <rule IddField="Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_HeaderedPumps_ConstantSpeed">
+    <rule IddField="Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_Boiler_HotWater">
     <rule IddField="Boiler Water Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Boiler Water Outlet Node Name" Access="HIDDEN"/>
@@ -801,13 +809,13 @@
     <rule IddField="Condensate Collection Water Storage Tank" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_CoilPerformance_DX_Cooling">
-    <rule IddField="Total Cooling Capacity Function of Temperature Curve Name" Access="HIDDEN"/>
-    <rule IddField="Total Cooling Capacity Function of Flow Fraction Curve Name" Access="HIDDEN"/>
-    <rule IddField="Energy Input Ratio Function of Temperature Curve Name" Access="HIDDEN"/>
-    <rule IddField="Energy Input Ratio Function of Flow Fraction Curve Name" Access="HIDDEN"/>
-    <rule IddField="Part Load Fraction Correlation Curve Name" Access="HIDDEN"/>
-    <rule IddField="Sensible Heat Ratio Function of Temperature Curve Name" Access="HIDDEN"/>
-    <rule IddField="Sensible Heat Ratio Function of Flow Fraction Curve Name" Access="HIDDEN"/>
-    <rule IddField="Condenser Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Total Cooling Capacity Function of Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Total Cooling Capacity Function of Flow Fraction Curve" Access="LOCKED"/>
+    <rule IddField="Energy Input Ratio Function of Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Energy Input Ratio Function of Flow Fraction Curve" Access="LOCKED"/>
+    <rule IddField="Part Load Fraction Correlation Curve" Access="LOCKED"/>
+    <rule IddField="Sensible Heat Ratio Function of Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Sensible Heat Ratio Function of Flow Fraction Curve" Access="LOCKED"/>
+    <rule IddField="Condenser Air Inlet Node" Access="HIDDEN"/>
   </POLICY>
 </ROOT>

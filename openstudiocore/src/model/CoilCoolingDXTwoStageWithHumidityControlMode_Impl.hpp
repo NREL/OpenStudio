@@ -140,6 +140,7 @@ namespace detail {
     ModelObject clone(Model model) const;
     std::vector<ModelObject> children() const;
     boost::optional<HVACComponent> containingHVACComponent() const;
+    bool addToNode(Node & node);
 
     //@}
    protected:

@@ -21,6 +21,8 @@
 #include <model/CoilCoolingDXTwoStageWithHumidityControlMode_Impl.hpp>
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <model/CurveQuadratic.hpp>
@@ -383,6 +385,17 @@ namespace detail {
     }
 
     return result;
+  }
+
+  bool CoilCoolingDXTwoStageWithHumidityControlMode_Impl::addToNode(Node & node)
+  {
+    if( auto airLoop = node.airLoopHVAC() ) {
+      if( ! airLoop->demandComponent(node.handle()) ) {
+        return StraightComponent_Impl::addToNode( node );
+      }
+    }
+
+    return false;
   }
 
 } // detail
