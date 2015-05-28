@@ -642,9 +642,9 @@ namespace openstudio {
     m_objectsFilteredByWindExposure.clear();
 
     for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
-      auto surfaces = obj.cast<model::Space>().surfaces();
-      for (auto surface : surfaces) {
-        QString  windExposure = surface.windExposure().c_str();
+      auto surface = obj.optionalCast<model::Surface>();
+      if (surface) {
+        QString  windExposure = surface->windExposure().c_str();
         if (windExposure.isEmpty() || windExposure != text) {
           m_objectsFilteredByWindExposure.insert(obj).second;
         }
@@ -659,9 +659,9 @@ namespace openstudio {
     m_objectsFilteredBySunExposure.clear();
 
     for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
-      auto surfaces = obj.cast<model::Space>().surfaces();
-      for (auto surface : surfaces) {
-        QString sunExposure = surface.sunExposure().c_str();
+      auto surface = obj.optionalCast<model::Surface>();
+      if (surface) {
+        QString sunExposure = surface->sunExposure().c_str();
         if (sunExposure.isEmpty() || sunExposure != text) {
           m_objectsFilteredBySunExposure.insert(obj).second;
         }
@@ -676,9 +676,9 @@ namespace openstudio {
     m_objectsFilteredByOutsideBoundaryCondition.clear();
 
     for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
-      auto surfaces = obj.cast<model::Space>().surfaces();
-      for (auto surface : surfaces) {
-        QString outsideBoundaryCondition = surface.outsideBoundaryCondition().c_str();
+      auto surface = obj.optionalCast<model::Surface>();
+      if (surface) {
+        QString outsideBoundaryCondition = surface->outsideBoundaryCondition().c_str();
         if (outsideBoundaryCondition.isEmpty() || outsideBoundaryCondition != text) {
           m_objectsFilteredByOutsideBoundaryCondition.insert(obj).second;
         }
@@ -693,9 +693,9 @@ namespace openstudio {
     m_objectsFilteredBySurfaceType.clear();
 
     for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
-      auto surfaces = obj.cast<model::Space>().surfaces();
-      for (auto surface : surfaces) {
-        if (!surface.name() || (surface.name() && surface.name().get().c_str() != text)) {
+      auto surface = obj.optionalCast<model::Surface>();
+      if (surface) {
+        if (!surface->name() || (surface->name() && surface->name().get().c_str() != text)) {
           m_objectsFilteredBySurfaceType.insert(obj).second;
         }
       }
@@ -713,9 +713,9 @@ namespace openstudio {
     }
     else {
       for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
-        auto interiorPartitionSurfaceGroups = obj.cast<model::Space>().interiorPartitionSurfaceGroups();
-        for (auto interiorPartitionSurfaceGroup : interiorPartitionSurfaceGroups) {
-          if (!interiorPartitionSurfaceGroup.name() || (interiorPartitionSurfaceGroup.name() && interiorPartitionSurfaceGroup.name().get().c_str() != text)) {
+        auto interiorPartitionSurfaceGroup = obj.optionalCast<model::InteriorPartitionSurfaceGroup>();
+        if (interiorPartitionSurfaceGroup) {
+          if (!interiorPartitionSurfaceGroup->name() || (interiorPartitionSurfaceGroup->name() && interiorPartitionSurfaceGroup->name().get().c_str() != text)) {
             m_objectsFilteredByInteriorPartitionGroup.insert(obj).second;
           }
         }
