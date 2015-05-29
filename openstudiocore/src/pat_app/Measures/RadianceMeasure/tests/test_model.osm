@@ -1,7 +1,7 @@
 
 OS:Version,
-  {0f09523f-8794-4645-a27b-f5ae93f2cd88}, !- Handle
-  1.7.3;                                  !- Version Identifier
+  {6b4ea84d-4495-4abc-ac8d-7d8903fbcfa9}, !- Handle
+  1.7.5;                                  !- Version Identifier
 
 OS:SpaceType,
   {d83c9d8c-b4ea-4352-92bc-43a5e8551039}, !- Handle
@@ -8289,4 +8289,65 @@ OS:Rendering:Color,
   105,                                    !- Rendering Red Value
   105,                                    !- Rendering Green Value
   105;                                    !- Rendering Blue Value
+
+OS:ShadingSurfaceGroup,
+  {72d3a53a-9c96-4468-86ef-1704c5874e97}, !- Handle
+  Shading Surface Group 1,                !- Name
+  Building,                               !- Shading Surface Type
+  ,                                       !- Space Name
+  -0,                                     !- Direction of Relative North {deg}
+  0,                                      !- X Origin {m}
+  2.8199664825479e-18,                    !- Y Origin {m}
+  1.99986440677966,                       !- Z Origin {m}
+  ;                                       !- Shaded Object Name
+
+OS:ShadingSurface,
+  {3a5fb507-48b3-4472-816b-b7320aa1fb62}, !- Handle
+  Shading Surface 1,                      !- Name
+  {3fa915cd-afbf-4bd7-844f-e30452e84c61}, !- Construction Name
+  {72d3a53a-9c96-4468-86ef-1704c5874e97}, !- Shading Surface Group Name
+  ,                                       !- Transmittance Schedule Name
+  ,                                       !- Number of Vertices
+  6.924675, -1.0080625, 0,                !- X,Y,Z Vertex 1 {m}
+  6.924675, -2.8199664825479e-18, 0,      !- X,Y,Z Vertex 2 {m}
+  -0.777875, -2.8199664825479e-18, 0,     !- X,Y,Z Vertex 3 {m}
+  -0.777875, -1.0080625, 0;               !- X,Y,Z Vertex 4 {m}
+
+OS:Construction,
+  {3fa915cd-afbf-4bd7-844f-e30452e84c61}, !- Handle
+  TestOverhang,                           !- Name
+  {93772d9d-f27f-4cc9-aa93-ee3dc0d1e613}, !- Surface Rendering Name
+  {86a89011-0155-4206-b446-662c98e502e7}, !- Layer 1
+  {71cfacf2-0456-431c-bc9d-fe0d80ee09e1}; !- Layer 2
+
+OS:Rendering:Color,
+  {93772d9d-f27f-4cc9-aa93-ee3dc0d1e613}, !- Handle
+  Rendering Color 63,                     !- Name
+  0,                                      !- Rendering Red Value
+  0,                                      !- Rendering Green Value
+  139;                                    !- Rendering Blue Value
+
+OS:Material,
+  {71cfacf2-0456-431c-bc9d-fe0d80ee09e1}, !- Handle
+  TestOverhangTop,                        !- Name
+  Smooth,                                 !- Roughness
+  0.0008,                                 !- Thickness {m}
+  45.2800000000001,                       !- Conductivity {W/m-K}
+  7823.99999999999,                       !- Density {kg/m3}
+  500,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.2;                                    !- Visible Absorptance
+
+OS:Material,
+  {86a89011-0155-4206-b446-662c98e502e7}, !- Handle
+  TestOverhangBottom,                     !- Name
+  Smooth,                                 !- Roughness
+  0.0008,                                 !- Thickness {m}
+  45.2800000000001,                       !- Conductivity {W/m-K}
+  7823.99999999999,                       !- Density {kg/m3}
+  500,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.9;                                    !- Visible Absorptance
 
