@@ -88,7 +88,7 @@
 #define UNASSIGNED "Unassigned"
 
 // LOAD TYPES
-#define SHOWALLLOADS "Show all loads"
+//#define SHOWALLLOADS "Show all loads"
 #define INTERNALMASS "Internal Mass"
 #define PEOPLE "People"
 #define LIGHTS "Lights"
@@ -371,7 +371,7 @@ namespace openstudio {
   {
 
     {
-      m_loadTypeFilter->addItem(SHOWALLLOADS);
+      m_loadTypeFilter->addItem(ALL);
     }
 
     {
@@ -432,6 +432,8 @@ namespace openstudio {
 
   void SpacesSubtabGridView::initializeWindExposureFilter()
   {
+    m_windExposureFilter->addItem(ALL);
+
     for (auto str : model::Surface::validWindExposureValues()) {
       m_windExposureFilter->addItem(str.c_str());
     }
@@ -439,6 +441,8 @@ namespace openstudio {
 
   void SpacesSubtabGridView::initializeSunExposureFilter()
   {
+    m_sunExposureFilter->addItem(ALL);
+
     for (auto str : model::Surface::validSunExposureValues()) {
       m_sunExposureFilter->addItem(str.c_str());
     }
@@ -446,6 +450,8 @@ namespace openstudio {
 
   void SpacesSubtabGridView::initializeOutsideBoundaryConditionFilter()
   {
+    m_outsideBoundaryConditionFilter->addItem(ALL);
+
     for (auto str : model::Surface::validOutsideBoundaryConditionValues()) {
       m_outsideBoundaryConditionFilter->addItem(str.c_str());
     }
@@ -453,6 +459,8 @@ namespace openstudio {
 
   void SpacesSubtabGridView::initializeSurfaceTypeFilter()
   {
+    m_surfaceTypeFilter->addItem(ALL);
+
     for (auto str : model::Surface::validSurfaceTypeValues()) {
       m_surfaceTypeFilter->addItem(str.c_str());
     }
@@ -477,10 +485,10 @@ namespace openstudio {
   {
     m_objectsFilteredByStory.clear();
 
-    if (m_storyFilter->currentText() == ALL) {
+    if (text == ALL) {
       // nothing to filter
     }
-    else if (m_storyFilter->currentText() == UNASSIGNED) {
+    else if (text == UNASSIGNED) {
       for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
         if (obj.cast<model::Space>().buildingStory()) {
           m_objectsFilteredByStory.insert(obj).second;
@@ -503,10 +511,10 @@ namespace openstudio {
   {
     m_objectsFilteredByThermalZone.clear();
 
-    if (m_thermalZoneFilter->currentText() == ALL) {
+    if (text == ALL) {
       // nothing to filter
     }
-    else if (m_thermalZoneFilter->currentText() == UNASSIGNED) {
+    else if (text == UNASSIGNED) {
       for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
         if (obj.cast<model::Space>().thermalZone()) {
           m_objectsFilteredByThermalZone.insert(obj).second;
@@ -529,10 +537,10 @@ namespace openstudio {
   {
     m_objectsFilterdBySpaceType.clear();
 
-    if (m_spaceTypeFilter->currentText() == ALL) {
+    if (text == ALL) {
       // nothing to filter
     }
-    else if (m_spaceTypeFilter->currentText() == UNASSIGNED) {
+    else if (text == UNASSIGNED) {
       for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
         if (obj.cast<model::Space>().spaceType()) {
           m_objectsFilterdBySpaceType.insert(obj).second;
@@ -575,7 +583,7 @@ namespace openstudio {
     LOG(Debug, "Load filter changed: " << text);
 
     auto objectSelector = this->m_gridController->getObjectSelector();
-    if (text == SHOWALLLOADS)
+    if (text == ALL)
     {
       objectSelector->resetObjectFilter();
     }
@@ -641,12 +649,17 @@ namespace openstudio {
   {
     m_objectsFilteredByWindExposure.clear();
 
-    for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
-      auto surface = obj.optionalCast<model::Surface>();
-      if (surface) {
-        QString  windExposure = surface->windExposure().c_str();
-        if (windExposure.isEmpty() || windExposure != text) {
-          m_objectsFilteredByWindExposure.insert(obj).second;
+    if (text == ALL) {
+      // nothing to filter
+    }
+    else {
+      for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
+        auto surface = obj.optionalCast<model::Surface>();
+        if (surface) {
+          QString  windExposure = surface->windExposure().c_str();
+          if (windExposure.isEmpty() || windExposure != text) {
+            m_objectsFilteredByWindExposure.insert(obj).second;
+          }
         }
       }
     }
@@ -658,12 +671,17 @@ namespace openstudio {
   {
     m_objectsFilteredBySunExposure.clear();
 
-    for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
-      auto surface = obj.optionalCast<model::Surface>();
-      if (surface) {
-        QString sunExposure = surface->sunExposure().c_str();
-        if (sunExposure.isEmpty() || sunExposure != text) {
-          m_objectsFilteredBySunExposure.insert(obj).second;
+    if (text == ALL) {
+      // nothing to filter
+    }
+    else {
+      for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
+        auto surface = obj.optionalCast<model::Surface>();
+        if (surface) {
+          QString sunExposure = surface->sunExposure().c_str();
+          if (sunExposure.isEmpty() || sunExposure != text) {
+            m_objectsFilteredBySunExposure.insert(obj).second;
+          }
         }
       }
     }
@@ -675,12 +693,17 @@ namespace openstudio {
   {
     m_objectsFilteredByOutsideBoundaryCondition.clear();
 
-    for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
-      auto surface = obj.optionalCast<model::Surface>();
-      if (surface) {
-        QString outsideBoundaryCondition = surface->outsideBoundaryCondition().c_str();
-        if (outsideBoundaryCondition.isEmpty() || outsideBoundaryCondition != text) {
-          m_objectsFilteredByOutsideBoundaryCondition.insert(obj).second;
+    if (text == ALL) {
+      // nothing to filter
+    }
+    else {
+      for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
+        auto surface = obj.optionalCast<model::Surface>();
+        if (surface) {
+          QString outsideBoundaryCondition = surface->outsideBoundaryCondition().c_str();
+          if (outsideBoundaryCondition.isEmpty() || outsideBoundaryCondition != text) {
+            m_objectsFilteredByOutsideBoundaryCondition.insert(obj).second;
+          }
         }
       }
     }
@@ -692,11 +715,16 @@ namespace openstudio {
   {
     m_objectsFilteredBySurfaceType.clear();
 
-    for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
-      auto surface = obj.optionalCast<model::Surface>();
-      if (surface) {
-        if (!surface->name() || (surface->name() && surface->name().get().c_str() != text)) {
-          m_objectsFilteredBySurfaceType.insert(obj).second;
+    if (text == ALL) {
+      // nothing to filter
+    }
+    else {
+      for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
+        auto surface = obj.optionalCast<model::Surface>();
+        if (surface) {
+          if (!surface->name() || (surface->name() && surface->name().get().c_str() != text)) {
+            m_objectsFilteredBySurfaceType.insert(obj).second;
+          }
         }
       }
     }
