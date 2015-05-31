@@ -49,7 +49,13 @@ namespace openstudio{
 
     virtual void purgeObjects(const openstudio::IddObjectType& iddObjectType);
 
-  private slots:
+  protected slots :
+
+    virtual void onSelectItem(OSItem* item = nullptr);
+
+    virtual void onClearSelection();
+
+  private slots :
 
     void onDropZoneItemClicked(OSItem* item);
 

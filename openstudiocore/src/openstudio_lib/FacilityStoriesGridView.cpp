@@ -148,6 +148,9 @@ namespace openstudio {
     m_gridView->m_contentLayout->addLayout(filterGridLayout);
 
     m_gridView->m_contentLayout->addSpacing(7);
+
+    onClearSelection();
+
   }
 
   void FacilityStoriesGridView::onDropZoneItemClicked(OSItem* item)
@@ -203,6 +206,22 @@ namespace openstudio {
     }
 
     this->m_gridView->requestRefreshAll();
+  }
+
+  void FacilityStoriesGridView::onSelectItem(OSItem* item)
+  {
+    //m_itemSelectorButtons->enableAddButton();
+    //m_itemSelectorButtons->enableCopyButton();
+    m_itemSelectorButtons->enableRemoveButton();
+    m_itemSelectorButtons->enablePurgeButton();
+  }
+
+  void FacilityStoriesGridView::onClearSelection()
+  {
+    //m_itemSelectorButtons->disableAddButton();
+    //m_itemSelectorButtons->disableCopyButton();
+    m_itemSelectorButtons->disableRemoveButton();
+    m_itemSelectorButtons->disablePurgeButton();
   }
 
   FacilityStoriesGridController::FacilityStoriesGridController(bool isIP,

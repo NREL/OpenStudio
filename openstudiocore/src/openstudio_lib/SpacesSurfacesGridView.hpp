@@ -45,6 +45,12 @@ namespace openstudio{
 
     REGISTER_LOGGER("openstudio.SpacesSurfacesGridView");
 
+  protected slots:
+
+    virtual void onSelectItem(OSItem* item = nullptr);
+
+    virtual void onClearSelection();
+
   };
 
   class SpacesSurfacesGridController : public OSGridController

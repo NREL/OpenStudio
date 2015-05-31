@@ -294,6 +294,9 @@ namespace openstudio {
     this->m_gridController->getObjectSelector()->m_filteredObjects = allFilteredObjects;
 
     this->m_gridView->requestRefreshAll();
+
+    onClearSelection();
+
   }
 
   void FacilityShadingGridView::onDropZoneItemClicked(OSItem* item)
@@ -312,6 +315,22 @@ namespace openstudio {
     for (auto mo : this->m_model.getConcreteModelObjects<model::ShadingSurface>()){
       mo.remove();
     }
+  }
+
+  void FacilityShadingGridView::onSelectItem(OSItem* item)
+  {
+    //m_itemSelectorButtons->enableAddButton();
+    //m_itemSelectorButtons->enableCopyButton();
+    //m_itemSelectorButtons->enableRemoveButton();
+    //m_itemSelectorButtons->enablePurgeButton();
+  }
+
+  void FacilityShadingGridView::onClearSelection()
+  {
+    m_itemSelectorButtons->disableAddButton();
+    //m_itemSelectorButtons->disableCopyButton();
+    //m_itemSelectorButtons->disableRemoveButton();
+    m_itemSelectorButtons->disablePurgeButton();
   }
 
   FacilityShadingGridController::FacilityShadingGridController(bool isIP,

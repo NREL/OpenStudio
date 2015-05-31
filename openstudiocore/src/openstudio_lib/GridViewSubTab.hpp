@@ -83,8 +83,6 @@ class GridViewSubTab : public QWidget
 
     OSItemSelectorButtons * m_itemSelectorButtons = nullptr;
 
-  private:
-
   signals :
 
     void toggleUnitsClicked(bool displayIP);
@@ -109,9 +107,9 @@ class GridViewSubTab : public QWidget
 
     void toggleUnits(bool isIP);
 
-    void onSelectItem(OSItem* item);
+    virtual void onSelectItem(OSItem* item = nullptr) = 0;
 
-    void onClearSelection();
+    virtual void onClearSelection() = 0;
 
 };
 

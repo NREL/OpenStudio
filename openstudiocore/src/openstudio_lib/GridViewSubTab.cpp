@@ -169,21 +169,23 @@ namespace openstudio {
     return m_gridController->selectedObjects();
   }
 
-  void GridViewSubTab::onSelectItem(OSItem* item)
-  {
-    //selectItem(item);
-    m_itemSelectorButtons->enableCopyButton();
-    m_itemSelectorButtons->enableRemoveButton();
-    m_itemSelectorButtons->enablePurgeButton();
-  }
+  //void GridViewSubTab::onSelectItem(OSItem* item)
+  //{
+  //  //selectItem(item);
+  //  //m_itemSelectorButtons->enableAddButton();
+  //  m_itemSelectorButtons->enableCopyButton();
+  //  m_itemSelectorButtons->enableRemoveButton();
+  //  m_itemSelectorButtons->enablePurgeButton();
+  //}
 
-  void GridViewSubTab::onClearSelection()
-  {
-    //clearSelection();
-    m_itemSelectorButtons->disableCopyButton();
-    m_itemSelectorButtons->disableRemoveButton();
-    m_itemSelectorButtons->disablePurgeButton();
-  }
+  //void GridViewSubTab::onClearSelection()
+  //{
+  //  //clearSelection()  
+  //  //m_itemSelectorButtons->disableAddButton();
+  //  m_itemSelectorButtons->disableCopyButton();
+  //  m_itemSelectorButtons->disableRemoveButton();
+  //  m_itemSelectorButtons->disablePurgeButton();
+  //}
 
   void GridViewSubTab::toggleUnits(bool isIP)
   {

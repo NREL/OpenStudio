@@ -72,7 +72,13 @@ namespace openstudio{
 
     std::set<openstudio::model::ModelObject> m_objectsFilteredByOrientation;
 
-  private slots:
+  protected slots :
+
+    virtual void onSelectItem(OSItem* item = nullptr);
+
+    virtual void onClearSelection();
+    
+  private slots :
 
     void onDropZoneItemClicked(OSItem* item);
 

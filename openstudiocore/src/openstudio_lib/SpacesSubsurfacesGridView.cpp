@@ -20,6 +20,7 @@
 #include "SpacesSubsurfacesGridView.hpp"
 
 #include "OSDropZone.hpp"
+#include "OSItemSelectorButtons.hpp"
 
 #include "../shared_gui_components/OSGridView.hpp"
 
@@ -149,6 +150,22 @@ namespace openstudio {
     OSGridController(isIP, headerText, iddObjectType, model, modelObjects)
   {
     setCategoriesAndFields();
+  }
+
+  void SpacesSubsurfacesGridView::onSelectItem(OSItem* item)
+  {
+    //m_itemSelectorButtons->enableAddButton();
+    //m_itemSelectorButtons->enableCopyButton();
+    m_itemSelectorButtons->enableRemoveButton();
+    m_itemSelectorButtons->enablePurgeButton();
+  }
+
+  void SpacesSubsurfacesGridView::onClearSelection()
+  {
+    //m_itemSelectorButtons->disableAddButton();
+    //m_itemSelectorButtons->disableCopyButton();
+    m_itemSelectorButtons->disableRemoveButton();
+    m_itemSelectorButtons->disablePurgeButton();
   }
 
   void SpacesSubsurfacesGridController::setCategoriesAndFields()

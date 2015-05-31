@@ -45,6 +45,12 @@ namespace openstudio{
 
     REGISTER_LOGGER("openstudio.SpacesShadingGridView");
 
+  protected slots:
+
+    virtual void onSelectItem(OSItem* item = nullptr);
+
+    virtual void onClearSelection();
+
   };
 
   class SpacesShadingGridController : public OSGridController

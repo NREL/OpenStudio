@@ -97,6 +97,22 @@ namespace openstudio {
     }
   }
 
+  void FacilityExteriorEquipmentGridView::onSelectItem(OSItem* item)
+  {
+    //m_itemSelectorButtons->enableAddButton();
+    m_itemSelectorButtons->enableCopyButton();
+    m_itemSelectorButtons->enableRemoveButton();
+    m_itemSelectorButtons->enablePurgeButton();
+  }
+
+  void FacilityExteriorEquipmentGridView::onClearSelection()
+  {
+    //m_itemSelectorButtons->disableAddButton();
+    m_itemSelectorButtons->disableCopyButton();
+    m_itemSelectorButtons->disableRemoveButton();
+    m_itemSelectorButtons->disablePurgeButton();
+  }
+  
   FacilityExteriorEquipmentGridController::FacilityExteriorEquipmentGridController(bool isIP,
     const QString & headerText,
     IddObjectType iddObjectType,

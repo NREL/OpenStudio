@@ -45,6 +45,12 @@ namespace openstudio{
 
     REGISTER_LOGGER("openstudio.SpacesInteriorPartitionsGridView");
 
+  protected slots:
+
+    virtual void onSelectItem(OSItem* item = nullptr);
+
+    virtual void onClearSelection();
+
   };
 
   class SpacesInteriorPartitionsGridController : public OSGridController

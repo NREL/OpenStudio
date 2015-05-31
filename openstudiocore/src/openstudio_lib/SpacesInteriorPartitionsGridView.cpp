@@ -20,6 +20,7 @@
 #include "SpacesInteriorPartitionsGridView.hpp"
 
 #include "OSDropZone.hpp"
+#include "OSItemSelectorButtons.hpp"
 
 #include "../shared_gui_components/OSGridController.hpp"
 #include "../shared_gui_components/OSGridView.hpp"
@@ -84,6 +85,24 @@ namespace openstudio {
     m_gridView->m_contentLayout->addLayout(m_filterGridLayout);
     m_gridView->m_contentLayout->addSpacing(7);
     m_gridView->m_dropZone->hide();
+
+    onClearSelection();
+  }
+
+  void SpacesInteriorPartitionsGridView::onSelectItem(OSItem* item)
+  {
+    //m_itemSelectorButtons->enableAddButton();
+    //m_itemSelectorButtons->enableCopyButton();
+    //m_itemSelectorButtons->enableRemoveButton();
+    //m_itemSelectorButtons->enablePurgeButton();
+  }
+
+  void SpacesInteriorPartitionsGridView::onClearSelection()
+  {
+    m_itemSelectorButtons->disableAddButton();
+    //m_itemSelectorButtons->disableCopyButton();
+    //m_itemSelectorButtons->disableRemoveButton();
+    m_itemSelectorButtons->disablePurgeButton();
   }
 
   SpacesInteriorPartitionsGridController::SpacesInteriorPartitionsGridController(bool isIP,
