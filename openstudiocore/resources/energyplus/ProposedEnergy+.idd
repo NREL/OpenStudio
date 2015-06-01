@@ -29888,7 +29888,7 @@ CoilSystem:Cooling:DX:HeatExchangerAssisted,
   A5 ; \field Cooling Coil Name
        \required-field
        \type object-list
-       \object-list CoolingCoilsDXBypassFactorEmpirical
+       \object-list CoolingCoilsDXSingleSpeed
 
 Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \memo Direct expansion (DX) cooling coil and condensing unit (includes electric compressor

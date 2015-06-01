@@ -80,9 +80,15 @@ namespace detail {
     /** @name Setters */
     //@{
 
+
+    //@}
+    /** @name Other */
+    //@{
     virtual bool addToNode(Node & node) override;
 
     virtual std::vector<openstudio::IdfObject> remove() override;
+
+    bool removeFromLoop();
 
     void disconnect() override;
 

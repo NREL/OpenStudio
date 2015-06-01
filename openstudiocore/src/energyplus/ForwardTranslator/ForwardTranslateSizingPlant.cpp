@@ -75,6 +75,24 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingPlant( SizingPlant 
     idfObject.setDouble(Sizing_PlantFields::LoopDesignTemperatureDifference,value.get());
   }
 
+  // SizingOption
+  s = modelObject.sizingOption();
+  if( s ) {
+    idfObject.setString(Sizing_PlantFields::SizingOption,s.get());
+  }
+
+  // ZoneTimestepsinAveragingWindow
+  value = modelObject.zoneTimestepsinAveragingWindow();
+  if( value ) {
+    idfObject.setDouble(Sizing_PlantFields::ZoneTimestepsinAveragingWindow,value.get());
+  }
+
+  // CoincidentSizingFactorMode
+  s = modelObject.coincidentSizingFactorMode();
+  if( s ) {
+    idfObject.setString(Sizing_PlantFields::CoincidentSizingFactorMode,s.get());
+  }
+
   m_idfObjects.push_back(idfObject);
 
   return idfObject;
