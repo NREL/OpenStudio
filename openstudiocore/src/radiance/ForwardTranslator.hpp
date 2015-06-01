@@ -117,6 +117,7 @@ namespace radiance {
 
       // create materials library for model, shared for all Spaces
       std::set<std::string> m_radMaterials;
+      std::set<std::string> m_radMixMaterials;
       std::set<std::string> m_radMaterialsDC;
       std::set<std::string> m_radMaterialsWG0;
 

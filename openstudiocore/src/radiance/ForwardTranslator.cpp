@@ -772,6 +772,7 @@ namespace radiance {
   void ForwardTranslator::clear()
   {
     m_radMaterials.clear();
+    m_radMixMaterials.clear();
     m_radMaterialsDC.clear();
     m_radMaterialsWG0.clear();
 
@@ -931,24 +932,24 @@ namespace radiance {
 
           // write (two-sided) material         
           // exterior reflectance for front side
-          m_radMaterials.insert("void plastic bld_shd_refl_" + formatString(exteriorVisibleReflectance, 3) + "\n0\n0\n5\n"
+          m_radMaterials.insert("void plastic refl_" + formatString(exteriorVisibleReflectance, 3) + "\n0\n0\n5\n"
               + formatString(exteriorVisibleReflectance, 3) + " " + formatString(exteriorVisibleReflectance, 3) + " "
               + formatString(exteriorVisibleReflectance, 3) + " 0 0\n\n");
 
           // interior reflectance for back side
-          m_radMaterials.insert("void plastic bld_shd_refl_" + formatString(interiorVisibleReflectance, 3) + "\n0\n0\n5\n"
+          m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3) + "\n0\n0\n5\n"
               + formatString(interiorVisibleReflectance, 3) + " " + formatString(interiorVisibleReflectance, 3) + " "
               + formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
                     
-          // roll into a mixfunc...
+          // roll up into a mixfunc...
           // void mixfunc overhang
 					// 4 front back if(Rdot,1,0) .
 					// 0
 					// 0  
-          m_radMaterials.insert("void mixfunc reflBACK_" + formatString(interiorVisibleReflectance, 3) + \
+          m_radMixMaterials.insert("void mixfunc reflBACK_" + formatString(interiorVisibleReflectance, 3) + \
           		"_reflFRONT_" + formatString(exteriorVisibleReflectance, 3) + "\n4 " + \
-          		"bld_shd_refl_" + formatString(exteriorVisibleReflectance, 3) + \
-          		" bld_shd_refl_" + formatString(interiorVisibleReflectance, 3) + " if(Rdot,1,0) .\n0\n0\n");        		
+          		"refl_" + formatString(exteriorVisibleReflectance, 3) + " " + \
+          		"refl_" + formatString(interiorVisibleReflectance, 3) + " if(Rdot,1,0) .\n0\n0\n");        		
           		
           // polygon header
           openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(shadingSurface);
@@ -1825,9 +1826,14 @@ namespace radiance {
         {
           materialsfile << line;
         };
+        for (const auto & line : m_radMixMaterials)
+        {
+          materialsfile << line;
+        };        
       } else{
         LOG(Error, "Cannot open file '" << toString(materialsfilename) << "' for writing");
       }
+
 
       // write radiance DC vmx materials (lights) file
       m_radMaterialsDC.insert("# OpenStudio \"vmx\" Materials File\n# controlled windows: material=\"light\", black out all others.\n\nvoid plastic WG0\n0\n0\n5\n0 0 0 0 0\n\n");
