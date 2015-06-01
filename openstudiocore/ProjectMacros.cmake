@@ -293,7 +293,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   if(MAXIMIZE_CPU_USAGE)
     add_custom_target(${swig_target}_swig
       SOURCES "${SWIG_WRAPPER}"
-      )
+    )
     add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
   endif()
 
@@ -342,6 +342,11 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     else()
       set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
     endif()
+  endif()
+
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    # Prevent excessive warnings from generated swig files
+    set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess")
   endif()
 
   if(CMAKE_COMPILER_IS_GNUCXX)

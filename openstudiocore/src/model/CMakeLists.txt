@@ -1081,8 +1081,6 @@ set(${target_name}_moc
   DesignDay_Impl.hpp
   DesignSpecificationOutdoorAir_Impl.hpp
   DesignSpecificationZoneAirDistribution_Impl.hpp
-  DistrictCooling_Impl.hpp
-  DistrictHeating_Impl.hpp
   ElectricEquipment_Impl.hpp
   ElectricEquipmentDefinition_Impl.hpp
   EvaporativeCoolerDirectResearchSpecial_Impl.hpp
