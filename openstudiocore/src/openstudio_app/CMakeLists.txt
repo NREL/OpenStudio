@@ -279,7 +279,8 @@ if(APPLE)
       \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiesplot.bundle\"
       \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiessql.bundle\"
       \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiestime.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiesunits.bundle\")
+      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilitiesunits.bundle\"
+    )
 
 
     file(COPY \${PLUGINS} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}\")
