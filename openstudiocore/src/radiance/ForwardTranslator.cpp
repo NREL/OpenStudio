@@ -879,7 +879,8 @@ namespace radiance {
           // polygon header
           openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(shadingSurface);
 
-          std::string shadingsurface = "refl_" + formatString(interiorVisibleReflectance, 3) + " polygon " + shadingSurface_name + "\n";
+          std::string shadingsurface = "reflBACK_" + formatString(interiorVisibleReflectance, 3) + \
+          		"_reflFRONT_" + formatString(exteriorVisibleReflectance, 3) + " polygon " + shadingSurface_name + "\n";
           shadingsurface += "0\n0\n" + formatString(polygon.size()*3) + "\n";
 
           for (Point3dVector::const_iterator vertex = polygon.begin();
@@ -1037,7 +1038,7 @@ namespace radiance {
         std::string constructionName = surface.getString(2).get();
         m_radSpaces[space_name] += "#--constructionName = " + constructionName + "\n";
 
-        // get reflectance
+        // get reflectances
         double interiorVisibleReflectance = 0.5; // default for space surfaces
         if (surface.interiorVisibleAbsorptance()){
           double interiorVisibleAbsorptance = surface.interiorVisibleAbsorptance().get();
@@ -1049,28 +1050,69 @@ namespace radiance {
           exteriorVisibleReflectance = 1.0 - exteriorVisibleAbsorptance;
         }
 
-        m_radSpaces[space_name] += "#--reflectance (int) = " + formatString(interiorVisibleReflectance, 3) + \
-        "\n#--reflectance (ext) = " + formatString(exteriorVisibleReflectance, 3) + "\n";
+        // create polygon object
+        openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(surface);
 
-        // write material to library array
-        //
-        m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3)
+
+				if (!surface.adjacentSurface()){
+					// 2-sided material
+
+        	// header
+        	m_radSpaces[space_name] += "#--reflectance (int) = " + formatString(interiorVisibleReflectance, 3) + \
+        	"\n#--reflectance (ext) = " + formatString(exteriorVisibleReflectance, 3) + "\n";
+        	
+        	// material definition
+        	
+        	//interior
+        	m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3)
             + "\n0\n0\n5\n" + formatString(interiorVisibleReflectance, 3)
             + " " + formatString(interiorVisibleReflectance, 3)
             + " " + formatString(interiorVisibleReflectance, 3) + " 0 0\n");
+        	//exterior
+        	m_radMaterials.insert("void plastic refl_" + formatString(exteriorVisibleReflectance, 3)
+            + "\n0\n0\n5\n" + formatString(exteriorVisibleReflectance, 3)
+            + " " + formatString(exteriorVisibleReflectance, 3)
+            + " " + formatString(exteriorVisibleReflectance, 3) + " 0 0\n");
+          // mixfunc
+          m_radMixMaterials.insert("void mixfunc reflBACK_" + formatString(interiorVisibleReflectance, 3) + \
+          		"_reflFRONT_" + formatString(exteriorVisibleReflectance, 3) + "\n4 " + \
+          		"refl_" + formatString(exteriorVisibleReflectance, 3) + " " + \
+          		"refl_" + formatString(interiorVisibleReflectance, 3) + " if(Rdot,1,0) .\n0\n0\n");
+          
+          // polygon reference		
+          m_radSpaces[space_name] += "reflBACK_" + formatString(interiorVisibleReflectance, 3) + \
+          		"_reflFRONT_" + formatString(exteriorVisibleReflectance, 3) + " polygon " + \
+          		surface_name + "\n0\n0\n" + formatString(polygon.size() * 3) + "\n";
+       				 	
+				}else{  
+					// interior-only material
 
-        // write surface polygon
-        openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(surface);
-
-        m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3)
+        	// header
+        	m_radSpaces[space_name] += "#--reflectance = " + formatString(interiorVisibleReflectance, 3) + "\n\n";
+        	
+        	// material definition
+        	m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3)
+            + "\n0\n0\n5\n" + formatString(interiorVisibleReflectance, 3)
+            + " " + formatString(interiorVisibleReflectance, 3)
+            + " " + formatString(interiorVisibleReflectance, 3) + " 0 0\n");
+          
+          // polygon reference  
+          m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3)
           + " polygon " + surface_name + "\n0\n0\n" + formatString(polygon.size() * 3) + "\n";
 
+				 };
+
+
+				// add polygon vertices
         for (const auto & vertex : polygon)
         {
           m_radSpaces[space_name] += formatString(vertex.x()) + " "
             + formatString(vertex.y()) + " "
             + formatString(vertex.z()) + "\n";
         }
+
+				// end(surface)
+
 
         // get sub surfaces
         std::vector<openstudio::model::SubSurface> subSurfaces = surface.subSurfaces();
@@ -1608,7 +1650,7 @@ namespace radiance {
           m_radMixMaterials.insert("void mixfunc reflBACK_" + formatString(interiorVisibleReflectance, 3) + \
           		"_reflFRONT_" + formatString(exteriorVisibleReflectance, 3) + "\n4 " + \
           		"refl_" + formatString(exteriorVisibleReflectance, 3) + " " + \
-          		"refl_" + formatString(interiorVisibleReflectance, 3) + " if(Rdot,1,0) .\n0\n0\n");        		
+          		"refl_" + formatString(interiorVisibleReflectance, 3) + " if(Rdot,1,0) .\n0\n0\n\n");        		
 
           // polygon header
           m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance, 3) + "\n";

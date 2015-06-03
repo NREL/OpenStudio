@@ -7803,7 +7803,7 @@ OS:Surface,
 
 OS:Surface,
   {2380e7e5-5843-486a-880b-888b9dee3a31}, !- Handle
-  Surface 21,                             !- Name
+  interior surface,                       !- Name
   Wall,                                   !- Surface Type
   ,                                       !- Construction Name
   {3810e56a-95f5-4687-b896-06caf8120348}, !- Space Name
