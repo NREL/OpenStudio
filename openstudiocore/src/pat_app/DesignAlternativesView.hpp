@@ -155,7 +155,7 @@ class DesignAltItemView : public OSCollapsibleView
 
 public:
 
-  DesignAltItemView(bool t_isBaseline);
+  DesignAltItemView(bool t_isBaseline, bool t_isAlternativeModel);
 
   virtual ~DesignAltItemView() {}
 
@@ -174,10 +174,12 @@ class DesignAltHeaderView : public OSHeader
 
   public:
 
-  DesignAltHeaderView(bool isBaseline);
+  DesignAltHeaderView(bool isBaseline, bool t_isAlternativeModel);
+
   virtual ~DesignAltHeaderView() {}
 
   QLineEdit * designAltNameEdit;
+
   QPushButton * removeButton;
 };
 
@@ -187,7 +189,8 @@ class DesignAltContentView : public QWidget
 
   public:
 
-  DesignAltContentView(bool isBaseline);
+  DesignAltContentView(bool isBaseline, bool t_isAlternativeModel);
+
   virtual ~DesignAltContentView() {}
 
   OSListView * perturbationListView;

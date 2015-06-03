@@ -166,7 +166,7 @@ class DesignAltItem : public OSListItem
 
   public:
 
-  DesignAltItem(const analysis::DataPoint & dataPoint, bool isBaseline);
+  DesignAltItem(const analysis::DataPoint & dataPoint, bool isBaseline, bool isAlternativeModel);
 
   virtual ~DesignAltItem() {}
 
@@ -177,6 +177,8 @@ class DesignAltItem : public OSListItem
   analysis::DataPoint dataPoint() const;
 
   bool isBaseline() const;
+
+  bool isAlternativeModel() const;
 
   QSharedPointer<PerturbationListController> perturbationListController() const;
 
@@ -195,6 +197,8 @@ class DesignAltItem : public OSListItem
   analysis::DataPoint m_dataPoint;
 
   bool m_isBaseline;
+
+  bool m_isAlternativeModel;
 };
 
 // DesignAltItemDelegate views a DesignAltItem and returns an DesignAltItemView

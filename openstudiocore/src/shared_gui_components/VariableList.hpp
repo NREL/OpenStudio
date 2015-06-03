@@ -277,7 +277,7 @@ class MeasureItem : public OSListItem
 
   OptionalBCLMeasure bclMeasure() const;
 
-  bool isFixedMeasure() const;
+  bool isAlternativeModelMeasure() const;
 
   public slots:
 

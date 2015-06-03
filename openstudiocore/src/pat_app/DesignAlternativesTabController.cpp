@@ -34,6 +34,8 @@
 #include "../analysis/NullMeasure_Impl.hpp"
 #include "../analysis/MeasureGroup.hpp"
 #include "../analysis/MeasureGroup_Impl.hpp"
+#include "../analysis/RubyMeasure.hpp"
+#include "../analysis/RubyMeasure_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Containers.hpp"
@@ -277,12 +279,30 @@ DesignAltListController::DesignAltListController(QSharedPointer<OSItemSelectionC
 
 QSharedPointer<OSListItem> DesignAltListController::itemAt(int i)
 {
+
+
   if( i >= 0 && i < count() )
   {
+    analysis::DataPoint datapoint = dataPoints()[i];
+
     boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
 
-    analysis::DataPoint datapoint = dataPoints()[i];
-    QSharedPointer<DesignAltItem> item = QSharedPointer<DesignAltItem>(new DesignAltItem(datapoint, project && datapoint == project->baselineDataPoint()));
+    bool isBaseline = false;
+    if (project){
+      isBaseline = (datapoint == project->baselineDataPoint());
+    }
+
+    bool isAlternativeModel = false;
+    if (project){
+      analysis::OptionalMeasureGroup modelSwapVariable = project->getAlternativeModelVariable();
+      if (modelSwapVariable){
+        analysis::Measure swapMeasure = modelSwapVariable->getMeasure(datapoint);
+        // check if we are using the ruby measure for this variable rather than the null one
+        isAlternativeModel = swapMeasure.optionalCast<analysis::RubyMeasure>();
+      }
+    }
+
+    QSharedPointer<DesignAltItem> item = QSharedPointer<DesignAltItem>(new DesignAltItem(datapoint, isBaseline, isAlternativeModel));
 
     item->setController(this);
 
@@ -571,10 +591,11 @@ void DesignAltListController::addOneItemWithAllSelectedMeasures()
   }
 }
 
-DesignAltItem::DesignAltItem(const analysis::DataPoint & dataPoint, bool isBaseline)
+DesignAltItem::DesignAltItem(const analysis::DataPoint & dataPoint, bool isBaseline, bool isAlternativeModel)
   : OSListItem(),
     m_dataPoint(dataPoint),
-    m_isBaseline(isBaseline)
+    m_isBaseline(isBaseline),
+    m_isAlternativeModel(isAlternativeModel)
 {
   m_perturbationListController = QSharedPointer<PerturbationListController>(new PerturbationListController(this));
 }
@@ -604,6 +625,11 @@ bool DesignAltItem::isBaseline() const
   return m_isBaseline;
 }
 
+bool DesignAltItem::isAlternativeModel() const
+{
+  return m_isAlternativeModel;
+}
+
 analysis::DataPoint DesignAltItem::dataPoint() const
 {
   return m_dataPoint;
@@ -623,7 +649,7 @@ QWidget * DesignAltItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
   if(QSharedPointer<DesignAltItem> designAltItem = dataSource.objectCast<DesignAltItem>())
   {
-    auto designAltItemView = new DesignAltItemView(designAltItem->isBaseline());
+    auto designAltItemView = new DesignAltItemView(designAltItem->isBaseline(), designAltItem->isAlternativeModel());
 
     // Name
 

@@ -866,6 +866,25 @@ OptionalBCLMeasure MeasureItem::bclMeasure() const
   return m_measure.bclMeasure();
 }
 
+bool MeasureItem::isAlternativeModelMeasure() const
+{
+  if (boost::optional<analysisdriver::SimpleProject> project = m_app->project()){
+
+    analysis::OptionalMeasureGroup modelSwapVariable = project->getAlternativeModelVariable();
+
+    if (modelSwapVariable) {
+      std::vector<analysis::Measure> measures = modelSwapVariable->measures(false);
+      for (const auto measure : measures){
+        if (measure == m_measure){
+          return true;
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
 QString MeasureItem::name() const
 {
   return QString::fromStdString(m_measure.name());

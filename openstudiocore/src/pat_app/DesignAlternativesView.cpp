@@ -212,7 +212,7 @@ void AltsTabMeasureItemView::paintEvent(QPaintEvent * e)
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-DesignAltHeaderView::DesignAltHeaderView(bool t_isBaseline)
+DesignAltHeaderView::DesignAltHeaderView(bool t_isBaseline, bool t_isAlternativeModel)
   : OSHeader(new HeaderToggleButton())
 {
   setFixedHeight(40);
@@ -246,9 +246,11 @@ DesignAltHeaderView::DesignAltHeaderView(bool t_isBaseline)
     mainHLayout->addWidget(lbl);
   }
 
+
+
  }
 
-DesignAltContentView::DesignAltContentView(bool t_isBaseline)
+DesignAltContentView::DesignAltContentView(bool t_isBaseline, bool t_isAlternativeModel)
   : QWidget()
 {
   auto mainVLayout = new QVBoxLayout();
@@ -288,18 +290,20 @@ void DesignAltContentView::onDescriptionTextChanged()
   emit descriptionChanged(descriptionTextEdit->toPlainText());
 }
 
-DesignAltItemView::DesignAltItemView(bool t_isBaseline)
+DesignAltItemView::DesignAltItemView(bool t_isBaseline, bool t_isAlternativeModel)
   : OSCollapsibleView()
 {
-  designAltHeaderView = new DesignAltHeaderView(t_isBaseline);
+  designAltHeaderView = new DesignAltHeaderView(t_isBaseline, t_isAlternativeModel);
   setHeader(designAltHeaderView);
 
-  designAltContentView = new DesignAltContentView(t_isBaseline);
+  designAltContentView = new DesignAltContentView(t_isBaseline, t_isAlternativeModel);
   setContent(designAltContentView);
   
   if (t_isBaseline)
   {
     setStyleSheet("openstudio--pat--altstab--DesignAltItemView { background: #5B5B5B; } ");
+  } else if (t_isAlternativeModel) {
+      setStyleSheet("openstudio--pat--altstab--DesignAltItemView { background: #FFFF00; } ");
   } else {
     setStyleSheet("openstudio--pat--altstab--DesignAltItemView { background: #D5D5D5; }");
   }
