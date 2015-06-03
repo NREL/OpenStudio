@@ -1617,11 +1617,11 @@ namespace radiance {
           std::string shadingSurface_name = cleanName(shadingSurface.name().get());
 
           // add surface to zone geometry
-          m_radSpaces[space_name] += "#-Surface = " + shadingSurface_name + "\n";
+          m_radSpaces[space_name] += "# surface: " + shadingSurface_name + "\n";
 
           // set construction of space shadingSurface
-          std::string constructionName = shadingSurface.getString(1).get();
-          m_radSpaces[space_name] += "#--constructionName = " + constructionName + "\n";
+          std::string constructionName = shadingSurface.getString(2).get();
+          m_radSpaces[space_name] += "# construction: " + constructionName + "\n";
 
           // get reflectance
           double interiorVisibleReflectance = 0.25; // default for space shading surfaces
@@ -1653,8 +1653,8 @@ namespace radiance {
           		"refl_" + formatString(interiorVisibleReflectance, 3) + " if(Rdot,1,0) .\n0\n0\n\n");        		
 
           // polygon header
-          m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance, 3) + "\n";
-          m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance, 3) + "\n";
+          m_radSpaces[space_name] += "# exterior visible reflectance: " + formatString(exteriorVisibleReflectance, 3) + "\n";
+          m_radSpaces[space_name] += "# interior visible reflectance: " + formatString(interiorVisibleReflectance, 3) + "\n";
 
           // get / write surface polygon
 
@@ -1694,11 +1694,11 @@ namespace radiance {
 
           // add surface to zone geometry
           
-          m_radSpaces[space_name] += "#-Surface = " + interiorPartitionSurface_name + "\n";
+          m_radSpaces[space_name] += "# surface: " + interiorPartitionSurface_name + "\n";
 
           // set construction of interiorPartitionSurface
           std::string constructionName = interiorPartitionSurface.getString(1).get();
-          m_radSpaces[space_name] += "#--constructionName = " + constructionName + "\n";
+          m_radSpaces[space_name] += "# construction: " + constructionName + "\n";
 
          // get reflectance
           double interiorVisibleReflectance = 0.5; // set some default
