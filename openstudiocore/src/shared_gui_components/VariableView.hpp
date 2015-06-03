@@ -110,6 +110,7 @@ class NewGroupDropZone : public RectangularDropZone
 };
 
 // VariableGroupItemView displays a VariableGroupItem, e.g. all the Model or EnergyPlus MeasureGroups/Fixed Measures
+// It is configured by the VariableGroupItemDelegate
 class VariableGroupItemView : public OSCollapsibleView
 {
   Q_OBJECT

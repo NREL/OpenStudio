@@ -32,6 +32,7 @@ namespace openstudio{
 namespace measuretab {
 
 class VariableGroupListController;
+class VariableGroupItemDelegate;
 
 } // measuretab
   
@@ -42,7 +43,7 @@ class DesignAlternativesTabView;
 
 namespace altstab {
 
-class VariableGroupItemDelegate;
+class AltsTabVariableGroupItemDelegate;
 class DesignAltListController;
 class DesignAltItemDelegate;
 class PerturbationListController;
@@ -74,7 +75,7 @@ class DesignAlternativesTabController : public QObject
   private:
 
   QSharedPointer<measuretab::VariableGroupListController> m_variableGroupListController;
-  QSharedPointer<altstab::VariableGroupItemDelegate> m_variableGroupItemDelegate;
+  QSharedPointer<altstab::AltsTabVariableGroupItemDelegate> m_altsTabVariableGroupItemDelegate;
   QSharedPointer<altstab::DesignAltListController> m_designAltListController;
   QSharedPointer<altstab::DesignAltItemDelegate> m_designAltItemDelegate;
 
@@ -83,36 +84,48 @@ class DesignAlternativesTabController : public QObject
 
 namespace altstab {
 
-class VariableGroupItemDelegate : public OSItemDelegate
+// Many of these classes are alternatives to the classes in \openstudiocore\src\shared_gui_components\VariableList.hpp
+// If possible, we should share the classes in shared_gui_components to these
+// These classes are only used on the design alternatives tab
+
+// AltsTabVariableGroupItemDelegate views a VariableGroupItem and returns an AltsTabVariableGroupItemView
+class AltsTabVariableGroupItemDelegate : public OSItemDelegate
 {
   Q_OBJECT
 
   public:
-  virtual ~VariableGroupItemDelegate() {}
+    
+  virtual ~AltsTabVariableGroupItemDelegate() {}
 
   QWidget * view(QSharedPointer<OSListItem> dataSource);
 };
 
-class VariableItemDelegate : public OSItemDelegate
+// AltsTabVariableItemDelegate views a VariableItem and returns an AltsTabVariableItemView
+class AltsTabVariableItemDelegate : public OSItemDelegate
 {
   Q_OBJECT
 
   public:
-  virtual ~VariableItemDelegate() {}
+
+  virtual ~AltsTabVariableItemDelegate() {}
 
   QWidget * view(QSharedPointer<OSListItem> dataSource);
 };
 
-class MeasureItemDelegate : public OSItemDelegate
+// AltsTabMeasureItemDelegate views a MeasureItem and returns an AltsTabMeasureItemView
+class AltsTabMeasureItemDelegate : public OSItemDelegate
 {
   Q_OBJECT
 
   public:
-  virtual ~MeasureItemDelegate() {}
+
+  virtual ~AltsTabMeasureItemDelegate() {}
 
   QWidget * view(QSharedPointer<OSListItem> dataSource);
 };
 
+// DesignAltListController controls a list of DesignAltItems
+// It can add or remove analysis::Datapoints
 class DesignAltListController : public OSListController
 {
   Q_OBJECT
@@ -120,6 +133,7 @@ class DesignAltListController : public OSListController
   public:
 
   DesignAltListController(QSharedPointer<OSItemSelectionController> measureSelectionController);
+
   virtual ~DesignAltListController() {}
 
   QSharedPointer<OSListItem> itemAt(int i);
@@ -145,6 +159,7 @@ class DesignAltListController : public OSListController
   QSharedPointer<OSItemSelectionController> m_measureSelectionController;
 };
 
+// DesignAltItem corresponds to an analysis::DataPoint
 class DesignAltItem : public OSListItem
 {
   Q_OBJECT
@@ -152,6 +167,7 @@ class DesignAltItem : public OSListItem
   public:
 
   DesignAltItem(const analysis::DataPoint & dataPoint, bool isBaseline);
+
   virtual ~DesignAltItem() {}
 
   QString name() const;
@@ -181,6 +197,7 @@ class DesignAltItem : public OSListItem
   bool m_isBaseline;
 };
 
+// DesignAltItemDelegate views a DesignAltItem and returns an DesignAltItemView
 class DesignAltItemDelegate : public OSItemDelegate
 {
   Q_OBJECT
@@ -188,10 +205,13 @@ class DesignAltItemDelegate : public OSItemDelegate
   QWidget * view(QSharedPointer<OSListItem> dataSource);
 
   public:
+
   virtual ~DesignAltItemDelegate() {}
 };
 
 // These classes are the list controller and related classes for the perturbations associated with a design point.
+
+// PerturbationListController gets the perturbations (e.g. Measures) for a DesignAltItem
 class PerturbationListController : public OSListController
 {
   Q_OBJECT
@@ -199,6 +219,7 @@ class PerturbationListController : public OSListController
   public:
 
   PerturbationListController(DesignAltItem * designAltItem);
+  
   virtual ~PerturbationListController() {}
 
   QSharedPointer<OSListItem> itemAt(int i);
@@ -212,6 +233,7 @@ class PerturbationListController : public OSListController
   QPointer<DesignAltItem> m_designAltItem;
 };
 
+// DesignAltItem corresponds to an analysis::Measure
 class PerturbationItem : public OSListItem
 {
   Q_OBJECT
@@ -219,6 +241,7 @@ class PerturbationItem : public OSListItem
   public:
 
   PerturbationItem(const analysis::Measure & measure);
+  
   virtual ~PerturbationItem() {}
 
   QString name() const;
@@ -230,6 +253,7 @@ class PerturbationItem : public OSListItem
   analysis::Measure m_measure;
 };
 
+// PerturbationItemDelegate views a PerturbationItem and returns an PerturbationItemView
 class PerturbationItemDelegate : public OSItemDelegate
 {
   Q_OBJECT

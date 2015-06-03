@@ -38,10 +38,12 @@ namespace pat {
 namespace altstab {
 
   class DesignAltsView;
+  class DesignAltHeaderView;
+  class DesignAltContentView;
 
 }
 
-
+// DesignAlternativesTabView is the main tab for viewing design alternatives in PAT
 class DesignAlternativesTabView : public PatMainTabView
 {
   Q_OBJECT
@@ -49,6 +51,7 @@ class DesignAlternativesTabView : public PatMainTabView
   public:
 
   DesignAlternativesTabView();
+
   virtual ~DesignAlternativesTabView() {}
 
   QPushButton * selectAllButton;
@@ -62,7 +65,12 @@ class DesignAlternativesTabView : public PatMainTabView
 
 namespace altstab {
 
-// The thing on the right side of the main splitter
+// Many of these classes are alternatives to the classes in \openstudiocore\src\shared_gui_components\VariableList.hpp
+// If possible, we should share the classes in shared_gui_components to these
+// These classes are only used on the design alternatives tab
+
+// The widget on the right side of the main splitter
+// Shows all the design alternatives
 class DesignAltsView : public QWidget
 {
   Q_OBJECT
@@ -70,6 +78,7 @@ class DesignAltsView : public QWidget
   public:
 
   DesignAltsView();
+
   virtual ~DesignAltsView() {}
 
   OSListView * designAltsListView;
@@ -81,42 +90,51 @@ class DesignAltsView : public QWidget
   QPushButton * createFromFileButton;
 };
 
-class VariableGroupItemView : public OSCollapsibleView
+// AltsTabVariableGroupItemView displays a VariableGroupItem, e.g. all the Model or EnergyPlus MeasureGroups/Fixed Measures, the view is configured by a AltsTabVariableGroupItemDelegate
+class AltsTabVariableGroupItemView : public OSCollapsibleView
 {
   Q_OBJECT
 
   public:
 
-  VariableGroupItemView();
-  virtual ~VariableGroupItemView() {}
+  AltsTabVariableGroupItemView();
+
+  virtual ~AltsTabVariableGroupItemView() {}
 
   DarkGradientHeader * variableGroupHeaderView;
 
   OSListView * variableGroupContentView;
 };
 
-class VariableItemView : public OSCollapsibleView
+// AltsTabVariableItemView displays a VariableItem (either a MeasureGroup or a fixed Measure)
+// It is configured by the AltsTabVariableItemDelegate
+class AltsTabVariableItemView : public OSCollapsibleView
 {
   Q_OBJECT
 
   public:
 
-  VariableItemView();
-  virtual ~VariableItemView() {}
+  AltsTabVariableItemView();
+
+  virtual ~AltsTabVariableItemView() {}
 
   QLabel * variableHeaderView;
 
   OSListView * variableContentView;
 };
 
-class MeasureItemView : public QAbstractButton
+
+// AltsTabMeasureItemView displays a MeasureItem (individual measure)
+// It is configured by AltsTabMeasureItemDelegate
+class AltsTabMeasureItemView : public QAbstractButton
 {
   Q_OBJECT
 
   public:
 
-  MeasureItemView();
-  virtual ~MeasureItemView() {}
+  AltsTabMeasureItemView();
+
+  virtual ~AltsTabMeasureItemView() {}
 
   QLabel * label;
 
@@ -125,6 +143,27 @@ class MeasureItemView : public QAbstractButton
   void setHasEmphasis(bool hasEmphasis);
 
   protected:
+
+  void paintEvent(QPaintEvent * e);
+};
+
+// DesignAltItemView views a DesignAltItem (particular combination of measures)
+// It is configured by DesignAltItemDelegate
+class DesignAltItemView : public OSCollapsibleView
+{
+  Q_OBJECT
+
+public:
+
+  DesignAltItemView(bool t_isBaseline);
+
+  virtual ~DesignAltItemView() {}
+
+  DesignAltHeaderView * designAltHeaderView;
+
+  DesignAltContentView * designAltContentView;
+
+protected:
 
   void paintEvent(QPaintEvent * e);
 };
@@ -164,23 +203,7 @@ class DesignAltContentView : public QWidget
   void onDescriptionTextChanged();
 };
 
-class DesignAltItemView : public OSCollapsibleView
-{
-  Q_OBJECT
-  
-  public:
 
-  DesignAltItemView(bool t_isBaseline);
-  virtual ~DesignAltItemView() {}
-
-  DesignAltHeaderView * designAltHeaderView;
-
-  DesignAltContentView * designAltContentView;
-
-  protected:
-
-  void paintEvent(QPaintEvent * e);
-};
 
 } // altstab
 

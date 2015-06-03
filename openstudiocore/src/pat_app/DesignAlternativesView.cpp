@@ -152,7 +152,7 @@ DesignAltsView::DesignAltsView()
   mainVLayout->addWidget(designAltsListView);
 }
 
-VariableGroupItemView::VariableGroupItemView()
+AltsTabVariableGroupItemView::AltsTabVariableGroupItemView()
   : OSCollapsibleView()
 {
   variableGroupHeaderView = new DarkGradientHeader();
@@ -165,7 +165,7 @@ VariableGroupItemView::VariableGroupItemView()
   setExpanded(true);
 }
 
-VariableItemView::VariableItemView()
+AltsTabVariableItemView::AltsTabVariableItemView()
   : OSCollapsibleView()
 {
   variableHeaderView = new QLabel();
@@ -180,7 +180,7 @@ VariableItemView::VariableItemView()
   setExpanded(true);
 }
 
-MeasureItemView::MeasureItemView()
+AltsTabMeasureItemView::AltsTabMeasureItemView()
   : QAbstractButton()
 {
   auto mainHLayout = new QHBoxLayout();
@@ -192,7 +192,7 @@ MeasureItemView::MeasureItemView()
   mainHLayout->addWidget(label);
 }
 
-void MeasureItemView::setHasEmphasis(bool hasEmphasis)
+void AltsTabMeasureItemView::setHasEmphasis(bool hasEmphasis)
 {
   if( hasEmphasis )
   {
@@ -204,7 +204,7 @@ void MeasureItemView::setHasEmphasis(bool hasEmphasis)
   }
 }
 
-void MeasureItemView::paintEvent(QPaintEvent * e)
+void AltsTabMeasureItemView::paintEvent(QPaintEvent * e)
 {
   QStyleOption opt;
   opt.init(this);

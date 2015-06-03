@@ -83,7 +83,7 @@ class VariableGroupListController : public OSListController
   std::vector<QSharedPointer<VariableGroupItem> > m_variableGroupItems;
 };
 
-// Each VariableGroupItem represents a list of measures grouped by type
+// Each VariableGroupItem represents a list of measures grouped by type, e.g. all the Model Measures
 class VariableGroupItem : public OSListItem
 {
   Q_OBJECT
