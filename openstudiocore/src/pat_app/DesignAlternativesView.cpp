@@ -196,11 +196,11 @@ void AltsTabMeasureItemView::setHasEmphasis(bool hasEmphasis)
 {
   if( hasEmphasis )
   {
-    setStyleSheet("openstudio--pat--altstab--MeasureItemView { background: #FECD60; border: 2px solid #EE641A; }");
+    setStyleSheet("openstudio--pat--altstab--AltsTabMeasureItemView { background: #FECD60; border: 2px solid #EE641A; }");
   }
   else
   {
-    setStyleSheet("openstudio--pat--altstab--MeasureItemView {background: transparent;}");
+    setStyleSheet("openstudio--pat--altstab--AltsTabMeasureItemView {background: transparent;}");
   }
 }
 

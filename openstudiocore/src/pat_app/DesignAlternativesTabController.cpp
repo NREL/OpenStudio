@@ -205,20 +205,20 @@ QWidget* AltsTabVariableGroupItemDelegate::view(QSharedPointer<OSListItem> dataS
   if( QSharedPointer<measuretab::VariableGroupItem> variableGroupItem = dataSource.objectCast<measuretab::VariableGroupItem>() )
   {
     QSharedPointer<measuretab::VariableListController> variableListController = variableGroupItem->variableListController();
-    QSharedPointer<altstab::AltsTabVariableItemDelegate> variableItemDelegate = QSharedPointer<altstab::AltsTabVariableItemDelegate>(new altstab::AltsTabVariableItemDelegate());
+    QSharedPointer<altstab::AltsTabVariableItemDelegate> altsTabVariableItemDelegate = QSharedPointer<altstab::AltsTabVariableItemDelegate>(new altstab::AltsTabVariableItemDelegate());
 
-    auto variableGroupItemView = new altstab::AltsTabVariableGroupItemView(); 
+    auto altsTabVariableGroupItemView = new altstab::AltsTabVariableGroupItemView(); 
 
-    variableGroupItemView->variableGroupHeaderView->label->setText(variableGroupItem->label());
-    variableGroupItemView->variableGroupContentView->setListController(variableListController);
-    variableGroupItemView->variableGroupContentView->setDelegate(variableItemDelegate);
+    altsTabVariableGroupItemView->variableGroupHeaderView->label->setText(variableGroupItem->label());
+    altsTabVariableGroupItemView->variableGroupContentView->setListController(variableListController);
+    altsTabVariableGroupItemView->variableGroupContentView->setDelegate(altsTabVariableItemDelegate);
 
     if( variableListController->count() == 0 )
     {
-      variableGroupItemView->variableGroupHeaderView->hide();
+      altsTabVariableGroupItemView->variableGroupHeaderView->hide();
     }
 
-    return variableGroupItemView;
+    return altsTabVariableGroupItemView;
   }
 
   return new QWidget();
@@ -229,15 +229,15 @@ QWidget* AltsTabVariableItemDelegate::view(QSharedPointer<OSListItem> dataSource
   if( QSharedPointer<measuretab::VariableItem> variableItem = dataSource.objectCast<measuretab::VariableItem>() )
   {
     QSharedPointer<measuretab::MeasureListController> measureListController = variableItem->measureListController();
-    QSharedPointer<altstab::AltsTabMeasureItemDelegate> measureItemDelegate = QSharedPointer<altstab::AltsTabMeasureItemDelegate>(new altstab::AltsTabMeasureItemDelegate());
+    QSharedPointer<altstab::AltsTabMeasureItemDelegate> altsTabMeasureItemDelegate = QSharedPointer<altstab::AltsTabMeasureItemDelegate>(new altstab::AltsTabMeasureItemDelegate());
 
-    auto variableItemView = new altstab::AltsTabVariableItemView();
+    auto altsTabVariableItemView = new altstab::AltsTabVariableItemView();
 
-    variableItemView->variableHeaderView->setText(variableItem->displayName());
-    variableItemView->variableContentView->setListController(measureListController);
-    variableItemView->variableContentView->setDelegate(measureItemDelegate);
+    altsTabVariableItemView->variableHeaderView->setText(variableItem->displayName());
+    altsTabVariableItemView->variableContentView->setListController(measureListController);
+    altsTabVariableItemView->variableContentView->setDelegate(altsTabMeasureItemDelegate);
 
-    return variableItemView;
+    return altsTabVariableItemView;
   }
 
   return new QWidget();
@@ -247,23 +247,23 @@ QWidget* AltsTabMeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
   if(QSharedPointer<measuretab::MeasureItem> measureItem = dataSource.objectCast<measuretab::MeasureItem>())
   {
-    auto measureItemView = new altstab::AltsTabMeasureItemView();
+    auto altsTabMeasureItemView = new altstab::AltsTabMeasureItemView();
 
     // Name
 
-    measureItemView->label->setText(measureItem->displayName());
+    altsTabMeasureItemView->label->setText(measureItem->displayName());
 
-    connect(measureItem.data(), &measuretab::MeasureItem::displayNameChanged, measureItemView->label, &QLabel::setText);
+    connect(measureItem.data(), &measuretab::MeasureItem::displayNameChanged, altsTabMeasureItemView->label, &QLabel::setText);
 
     // Selection
 
-    measureItemView->setHasEmphasis(measureItem->isSelected());
+    altsTabMeasureItemView->setHasEmphasis(measureItem->isSelected());
 
-    connect(measureItemView, &altstab::AltsTabMeasureItemView::clicked, measureItem.data(), &measuretab::MeasureItem::toggleSelected);
+    connect(altsTabMeasureItemView, &altstab::AltsTabMeasureItemView::clicked, measureItem.data(), &measuretab::MeasureItem::toggleSelected);
 
-    connect(measureItem.data(), &measuretab::MeasureItem::selectedChanged, measureItemView, &altstab::AltsTabMeasureItemView::setHasEmphasis);
+    connect(measureItem.data(), &measuretab::MeasureItem::selectedChanged, altsTabMeasureItemView, &altstab::AltsTabMeasureItemView::setHasEmphasis);
 
-    return measureItemView;
+    return altsTabMeasureItemView;
   }
 
   return new QWidget();
