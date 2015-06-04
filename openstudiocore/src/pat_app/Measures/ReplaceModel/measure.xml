@@ -2,7 +2,7 @@
   <schema_version>3.0</schema_version>
   <name>replace_model</name>
   <uid>d234ecee-c118-44e7-a381-db0a8917d751</uid>
-  <version_id>358e5246-dd7a-403a-8824-5567bc0ecc9b</version_id>
+  <version_id>dae7dcb1-c597-4153-86c3-cc2486c45416</version_id>
   <xml_checksum>057E8D9D</xml_checksum>
   <class_name>ReplaceModel</class_name>
   <display_name>Replace OpenStudio Model</display_name>
@@ -15,6 +15,14 @@
       <type>Path</type>
       <required>true</required>
       <model_dependent>false</model_dependent>
+    </argument>
+    <argument>
+      <name>measures_json</name>
+      <display_name>measures_json</display_name>
+      <type>String</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>[]</default_value>
     </argument>
   </arguments>
   <provenances/>
@@ -41,6 +49,12 @@
       <checksum>6616E1BE</checksum>
     </file>
     <file>
+      <filename>ReplaceModel_Test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>588891E8</checksum>
+    </file>
+    <file>
       <version>
         <software_program>OpenStudio</software_program>
         <identifier>0.10.2</identifier>
@@ -49,13 +63,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>4410816F</checksum>
-    </file>
-    <file>
-      <filename>ReplaceModel_Test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>588891E8</checksum>
+      <checksum>C51CF0C4</checksum>
     </file>
   </files>
 </measure>

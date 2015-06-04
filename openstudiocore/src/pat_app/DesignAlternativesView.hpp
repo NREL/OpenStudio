@@ -156,7 +156,7 @@ class DesignAltItemView : public OSCollapsibleView
 
 public:
 
-  DesignAltItemView(bool t_isBaseline, bool t_isAlternativeModel);
+  DesignAltItemView(bool t_isBaseline, bool t_isAlternativeModel, bool t_alternateModelMeasureNeedsUpdate);
 
   virtual ~DesignAltItemView() {}
 
@@ -175,7 +175,7 @@ class DesignAltHeaderView : public OSHeader
 
   public:
 
-  DesignAltHeaderView(bool isBaseline, bool t_isAlternativeModel);
+  DesignAltHeaderView(bool isBaseline, bool t_isAlternativeModel, bool t_alternateModelMeasureNeedsUpdate);
 
   virtual ~DesignAltHeaderView() {}
 
@@ -190,7 +190,7 @@ class DesignAltContentView : public QWidget
 
   public:
 
-  DesignAltContentView(bool isBaseline, bool t_isAlternativeModel);
+  DesignAltContentView(bool isBaseline, bool t_isAlternativeModel, bool t_alternateModelMeasureNeedsUpdate);
 
   virtual ~DesignAltContentView() {}
 
@@ -219,7 +219,7 @@ class AlternativeModelMeasureItemView : public QWidget
 
   public:
    
-  AlternativeModelMeasureItemView();
+  AlternativeModelMeasureItemView(const QString& uuid);
  
   QLineEdit* displayNameTextEdit;
   QTextEdit* descriptionTextEdit;
@@ -227,7 +227,16 @@ class AlternativeModelMeasureItemView : public QWidget
   QComboBox* taxonomySecondLevelComboBox;
   QLineEdit* capitalCostTextEdit;
 
+  QString uuid() const;
+  QString displayName() const;
+  QString description() const;
+  QString taxonomyTag() const;
+  double capitalCost() const;
+
+  void setDisplayName(const QString& displayName);
+  void setDescription(const QString& description);
   void setTaxonomyTag(const QString& taxonomyTag);
+  void setCapitalCost(double capitalCost);
 
   signals :
 
@@ -236,6 +245,10 @@ class AlternativeModelMeasureItemView : public QWidget
   private slots:
 
   void onFirstLevelTaxonomyTagChanged();
+
+  private:
+
+  QString m_uuid;
 
 };
 

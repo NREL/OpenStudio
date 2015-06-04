@@ -169,7 +169,7 @@ class DesignAltItem : public OSListItem
 
   public:
 
-  DesignAltItem(const analysis::DataPoint & dataPoint, bool isBaseline, bool isAlternativeModel);
+  DesignAltItem(const analysis::DataPoint & dataPoint, bool isBaseline, bool isAlternativeModel, bool alternateModelMeasureNeedsUpdate);
 
   virtual ~DesignAltItem() {}
 
@@ -182,6 +182,8 @@ class DesignAltItem : public OSListItem
   bool isBaseline() const;
 
   bool isAlternativeModel() const;
+
+  bool alternateModelMeasureNeedsUpdate() const;
 
   QSharedPointer<PerturbationListController> perturbationListController() const;
 
@@ -206,6 +208,8 @@ class DesignAltItem : public OSListItem
   bool m_isBaseline;
 
   bool m_isAlternativeModel;
+
+  bool m_alternateModelMeasureNeedsUpdate;
 };
 
 // DesignAltItemDelegate views a DesignAltItem and returns an DesignAltItemView
@@ -304,6 +308,11 @@ private:
 
   boost::optional<analysis::RubyMeasure> rubySwapMeasure() const;
 
+  // the current swap measure arguments that represent user defined model measures
+  QJsonArray modelMeasures() const;
+
+  void setModelMeasures(const QJsonArray& modelMeasures);
+
   std::vector<QSharedPointer<AlternativeModelMeasureItem> > alternativeModelMeasureItems() const;
 
   QPointer<DesignAltItem> m_designAltItem;
@@ -335,9 +344,6 @@ signals:
   void changed();
 
 private:
-
-  //analysis::Measure m_measure;
-  //unsigned m_index;
 
   QString m_uuid;
   QString m_displayName;

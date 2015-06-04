@@ -297,16 +297,28 @@ QSharedPointer<OSListItem> DesignAltListController::itemAt(int i)
     }
 
     bool isAlternativeModel = false;
+    bool alternateModelMeasureNeedsUpdate = false;
     if (project){
       analysis::OptionalMeasureGroup modelSwapVariable = project->getAlternativeModelVariable();
       if (modelSwapVariable){
         analysis::Measure swapMeasure = modelSwapVariable->getMeasure(datapoint);
         // check if we are using the ruby measure for this variable rather than the null one
-        isAlternativeModel = swapMeasure.optionalCast<analysis::RubyMeasure>();
+        analysis::OptionalRubyMeasure rubySwapMeasure = swapMeasure.optionalCast<analysis::RubyMeasure>();
+        if (rubySwapMeasure){
+          isAlternativeModel = true;
+          alternateModelMeasureNeedsUpdate = true;
+
+          // look for the new argument
+          for (const ruleset::OSArgument& argument : rubySwapMeasure->arguments()){
+            if (argument.name() == "measures_json"){
+              alternateModelMeasureNeedsUpdate = false;
+            }
+          }
+        }
       }
     }
 
-    QSharedPointer<DesignAltItem> item = QSharedPointer<DesignAltItem>(new DesignAltItem(datapoint, isBaseline, isAlternativeModel));
+    QSharedPointer<DesignAltItem> item = QSharedPointer<DesignAltItem>(new DesignAltItem(datapoint, isBaseline, isAlternativeModel, alternateModelMeasureNeedsUpdate));
 
     item->setController(this);
 
@@ -595,11 +607,12 @@ void DesignAltListController::addOneItemWithAllSelectedMeasures()
   }
 }
 
-DesignAltItem::DesignAltItem(const analysis::DataPoint & dataPoint, bool isBaseline, bool isAlternativeModel)
+DesignAltItem::DesignAltItem(const analysis::DataPoint & dataPoint, bool isBaseline, bool isAlternativeModel, bool alternateModelMeasureNeedsUpdate)
   : OSListItem(),
     m_dataPoint(dataPoint),
     m_isBaseline(isBaseline),
-    m_isAlternativeModel(isAlternativeModel)
+    m_isAlternativeModel(isAlternativeModel), 
+    m_alternateModelMeasureNeedsUpdate(alternateModelMeasureNeedsUpdate)
 {
   m_perturbationListController = QSharedPointer<PerturbationListController>(new PerturbationListController(this));
   m_alternativeModelMeasureListController = QSharedPointer<AlternativeModelMeasureListController>(new AlternativeModelMeasureListController(this));
@@ -635,6 +648,11 @@ bool DesignAltItem::isAlternativeModel() const
   return m_isAlternativeModel;
 }
 
+bool DesignAltItem::alternateModelMeasureNeedsUpdate() const
+{
+  return m_alternateModelMeasureNeedsUpdate;
+}
+
 analysis::DataPoint DesignAltItem::dataPoint() const
 {
   return m_dataPoint;
@@ -659,7 +677,7 @@ QWidget * DesignAltItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
   if(QSharedPointer<DesignAltItem> designAltItem = dataSource.objectCast<DesignAltItem>())
   {
-    auto designAltItemView = new DesignAltItemView(designAltItem->isBaseline(), designAltItem->isAlternativeModel());
+    auto designAltItemView = new DesignAltItemView(designAltItem->isBaseline(), designAltItem->isAlternativeModel(), designAltItem->alternateModelMeasureNeedsUpdate());
 
     // Name
 
@@ -836,18 +854,42 @@ int AlternativeModelMeasureListController::count()
 
 void AlternativeModelMeasureListController::addAlternativeModelMeasure()
 {
-  if (analysis::OptionalRubyMeasure rubySwapMeasure = this->rubySwapMeasure()){
-    bool test = false;
+  QJsonArray modelMeasures = this->modelMeasures();
 
-    modelReset();
-  }
+  QJsonObject newMeasure;
+  newMeasure.insert("uuid", UUID::createUuid().toString());
+  newMeasure.insert("displayName", "New Measure");
+  newMeasure.insert("description", "New Measure Description");
+  newMeasure.insert("taxonomyTag", "Tax1.Tax2");
+  newMeasure.insert("capitalCost", 0.0);
+
+  modelMeasures << newMeasure;
+
+  setModelMeasures(modelMeasures);
+
+  // redraw all the views
+  modelReset();
 }
 
 void AlternativeModelMeasureListController::alternativeModelMeasureItemViewChanged()
 {
-  if (analysis::OptionalRubyMeasure rubySwapMeasure = this->rubySwapMeasure()){
-    bool test = false;
+  QObject* sender = this->sender();
+
+  AlternativeModelMeasureItemView* alternativeModelMeasureItemView = qobject_cast<AlternativeModelMeasureItemView*>(sender);
+
+  QJsonArray modelMeasures = this->modelMeasures();
+  for (QJsonValue jsonValue : modelMeasures) {
+    QJsonObject jsonObject = jsonValue.toObject();
+    if (jsonObject["uuid"].toString() == alternativeModelMeasureItemView->uuid()){
+
+      jsonObject.insert("displayName", alternativeModelMeasureItemView->displayName());
+      jsonObject.insert("description", alternativeModelMeasureItemView->description());
+      jsonObject.insert("taxonomyTag", alternativeModelMeasureItemView->taxonomyTag());
+      jsonObject.insert("capitalCost", alternativeModelMeasureItemView->capitalCost());
+    }
   }
+
+  setModelMeasures(modelMeasures);
 }
 
 analysis::OptionalRubyMeasure AlternativeModelMeasureListController::rubySwapMeasure() const
@@ -866,36 +908,80 @@ analysis::OptionalRubyMeasure AlternativeModelMeasureListController::rubySwapMea
   return boost::none;
 }
 
-std::vector<QSharedPointer<AlternativeModelMeasureItem> > AlternativeModelMeasureListController::alternativeModelMeasureItems() const
+QJsonArray AlternativeModelMeasureListController::modelMeasures() const
 {
-  std::vector<QSharedPointer<AlternativeModelMeasureItem> > result;
+  QJsonArray result;
 
   if (analysis::OptionalRubyMeasure rubySwapMeasure = this->rubySwapMeasure()){
     for (const ruleset::OSArgument& argument : rubySwapMeasure->arguments()){
       if (argument.name() == "measures_json"){
-        QString value = toQString(argument.valueAsString());
+        if (argument.hasValue()){
+          QString value = toQString(argument.valueAsString());
 
-        QJsonParseError parseError;
-        QJsonDocument jsonDoc = QJsonDocument::fromJson(value.toUtf8(), &parseError);
-        if (QJsonParseError::NoError == parseError.error) {
-          QJsonArray jsonArray = jsonDoc.array();
-          foreach(const QJsonValue & jsonValue, jsonArray) {
-            QJsonObject jsonObject = jsonValue.toObject();
-            QString uuid = jsonObject["uuid"].toString();
-            QString displayName = jsonObject["displayName"].toString();
-            QString description = jsonObject["description"].toString();
-            QString taxonomyTag = jsonObject["taxonomyTag"].toString();
-            double capitalCost = jsonObject["capitalCost"].toDouble();
-
-            QSharedPointer<AlternativeModelMeasureItem> alternativeModelMeasureItem(new AlternativeModelMeasureItem(uuid, displayName, description, taxonomyTag, capitalCost));
-
-            connect(alternativeModelMeasureItem.data(), &AlternativeModelMeasureItem::changed, this, &AlternativeModelMeasureListController::alternativeModelMeasureItemViewChanged);
-
-            result.push_back(alternativeModelMeasureItem);
+          QJsonParseError parseError;
+          QJsonDocument jsonDoc = QJsonDocument::fromJson(value.toUtf8(), &parseError);
+          if (QJsonParseError::NoError == parseError.error) {
+            result = jsonDoc.array();
           }
         }
       }
     }
+  }
+
+  return result;
+}
+
+void AlternativeModelMeasureListController::setModelMeasures(const QJsonArray& modelMeasures)
+{
+  bool test = false;
+
+  if (analysis::OptionalRubyMeasure rubySwapMeasure = this->rubySwapMeasure()){
+    std::vector<ruleset::OSArgument> arguments = rubySwapMeasure->arguments();
+    for (ruleset::OSArgument& argument : arguments){
+      if (argument.name() == "measures_json"){
+
+        QJsonDocument jsonDoc;
+        jsonDoc.setArray(modelMeasures);
+        QString qValue(jsonDoc.toJson(QJsonDocument::Compact));
+        std::string value = toString(qValue);
+        test = argument.setValue(value);
+
+        break;
+      }
+    }
+
+    if (test){
+      // set the modified arguments
+      rubySwapMeasure->setArguments(arguments);
+
+      // redraw all the views
+      modelReset();
+    } else{
+      // what happened?
+      test = false;
+    }
+  }
+}
+
+std::vector<QSharedPointer<AlternativeModelMeasureItem> > AlternativeModelMeasureListController::alternativeModelMeasureItems() const
+{
+  std::vector<QSharedPointer<AlternativeModelMeasureItem> > result;
+
+  QJsonArray modelMeasures = this->modelMeasures();
+
+  for (const QJsonValue & jsonValue : modelMeasures) {
+    QJsonObject jsonObject = jsonValue.toObject();
+    QString uuid = jsonObject["uuid"].toString();
+    QString displayName = jsonObject["displayName"].toString();
+    QString description = jsonObject["description"].toString();
+    QString taxonomyTag = jsonObject["taxonomyTag"].toString();
+    double capitalCost = jsonObject["capitalCost"].toDouble();
+
+    QSharedPointer<AlternativeModelMeasureItem> alternativeModelMeasureItem(new AlternativeModelMeasureItem(uuid, displayName, description, taxonomyTag, capitalCost));
+
+    connect(alternativeModelMeasureItem.data(), &AlternativeModelMeasureItem::changed, this, &AlternativeModelMeasureListController::alternativeModelMeasureItemViewChanged);
+
+    result.push_back(alternativeModelMeasureItem);
   }
 
   return result;
@@ -913,6 +999,11 @@ AlternativeModelMeasureItem::AlternativeModelMeasureItem(const QString& uuid,
   m_taxonomyTag(taxonomyTag),
   m_capitalCost(capitalCost)
 {
+}
+
+QString AlternativeModelMeasureItem::uuid() const
+{
+  return m_uuid;
 }
 
 QString AlternativeModelMeasureItem::displayName() const
@@ -935,21 +1026,16 @@ double AlternativeModelMeasureItem::capitalCost() const
   return m_capitalCost;
 }
 
-//void AlternativeModelMeasureItem::onAlternativeModelMeasureItemViewChanged()
-//{
-//
-//}
-
 QWidget * AlternativeModelMeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
   if (QSharedPointer<AlternativeModelMeasureItem> alternativeModelMeasureItem = dataSource.objectCast<AlternativeModelMeasureItem>())
   {
-    auto alternativeModelMeasureItemView = new AlternativeModelMeasureItemView();
+    auto alternativeModelMeasureItemView = new AlternativeModelMeasureItemView(alternativeModelMeasureItem->uuid());
 
-    alternativeModelMeasureItemView->displayNameTextEdit->setText(alternativeModelMeasureItem->displayName());
-    alternativeModelMeasureItemView->descriptionTextEdit->setText(alternativeModelMeasureItem->description());
+    alternativeModelMeasureItemView->setDisplayName(alternativeModelMeasureItem->displayName());
+    alternativeModelMeasureItemView->setDescription(alternativeModelMeasureItem->description());
     alternativeModelMeasureItemView->setTaxonomyTag(alternativeModelMeasureItem->taxonomyTag());
-    alternativeModelMeasureItemView->capitalCostTextEdit->setText(QString::number(alternativeModelMeasureItem->capitalCost()));
+    alternativeModelMeasureItemView->setCapitalCost(alternativeModelMeasureItem->capitalCost());
 
     connect(alternativeModelMeasureItemView, &AlternativeModelMeasureItemView::changed, alternativeModelMeasureItem.data(), &AlternativeModelMeasureItem::changed);
 

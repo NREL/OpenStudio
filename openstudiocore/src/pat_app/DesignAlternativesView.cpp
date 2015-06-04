@@ -213,7 +213,7 @@ void AltsTabMeasureItemView::paintEvent(QPaintEvent * e)
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-DesignAltHeaderView::DesignAltHeaderView(bool t_isBaseline, bool t_isAlternativeModel)
+DesignAltHeaderView::DesignAltHeaderView(bool t_isBaseline, bool t_isAlternativeModel, bool t_alternateModelMeasureNeedsUpdate)
   : OSHeader(new HeaderToggleButton())
 {
   setFixedHeight(40);
@@ -249,7 +249,7 @@ DesignAltHeaderView::DesignAltHeaderView(bool t_isBaseline, bool t_isAlternative
 
  }
 
-DesignAltContentView::DesignAltContentView(bool t_isBaseline, bool t_isAlternativeModel)
+DesignAltContentView::DesignAltContentView(bool t_isBaseline, bool t_isAlternativeModel, bool t_alternateModelMeasureNeedsUpdate)
   : QWidget()
 {
   auto mainVLayout = new QVBoxLayout();
@@ -288,10 +288,20 @@ DesignAltContentView::DesignAltContentView(bool t_isBaseline, bool t_isAlternati
   mainVLayout->addWidget(alternativeModelMeasureListView);
   
   if (t_isAlternativeModel){
-    addAlternativeModelMeasure = new SofterDuplicateButton();
-    mainVLayout->addWidget(addAlternativeModelMeasure);
+    QLabel * modelMeasuresTitleLabel = new QLabel("User Defined Measures");
+    modelMeasuresTitleLabel->setObjectName("H2");
+    mainVLayout->addWidget(modelMeasuresTitleLabel);
 
-    connect(addAlternativeModelMeasure, &QPushButton::clicked, this, &DesignAltContentView::addAlternativeModelMeasureClicked);
+    if (t_alternateModelMeasureNeedsUpdate){
+      QLabel * needsUpdateLabel = new QLabel("Update Required, Sync Project Measures With Library");
+      needsUpdateLabel->setStyleSheet("font:italic");
+      mainVLayout->addWidget(needsUpdateLabel);
+    }else{
+      addAlternativeModelMeasure = new SofterDuplicateButton();
+      mainVLayout->addWidget(addAlternativeModelMeasure);
+
+      connect(addAlternativeModelMeasure, &QPushButton::clicked, this, &DesignAltContentView::addAlternativeModelMeasureClicked);
+    }
   }
 }
 
@@ -300,13 +310,13 @@ void DesignAltContentView::onDescriptionTextChanged()
   emit descriptionChanged(descriptionTextEdit->toPlainText());
 }
 
-DesignAltItemView::DesignAltItemView(bool t_isBaseline, bool t_isAlternativeModel)
+DesignAltItemView::DesignAltItemView(bool t_isBaseline, bool t_isAlternativeModel, bool t_alternateModelMeasureNeedsUpdate)
   : OSCollapsibleView()
 {
-  designAltHeaderView = new DesignAltHeaderView(t_isBaseline, t_isAlternativeModel);
+  designAltHeaderView = new DesignAltHeaderView(t_isBaseline, t_isAlternativeModel, t_alternateModelMeasureNeedsUpdate);
   setHeader(designAltHeaderView);
 
-  designAltContentView = new DesignAltContentView(t_isBaseline, t_isAlternativeModel);
+  designAltContentView = new DesignAltContentView(t_isBaseline, t_isAlternativeModel, t_alternateModelMeasureNeedsUpdate);
   setContent(designAltContentView);
   
   if (t_isBaseline)
@@ -330,7 +340,8 @@ void DesignAltItemView::paintEvent(QPaintEvent * e)
 }
 
 
-AlternativeModelMeasureItemView::AlternativeModelMeasureItemView()
+AlternativeModelMeasureItemView::AlternativeModelMeasureItemView(const QString& uuid)
+  : m_uuid(uuid)
 {
   auto mainVLayout = new QVBoxLayout();
   mainVLayout->setContentsMargins(25, 0, 5, 5);
@@ -362,7 +373,6 @@ AlternativeModelMeasureItemView::AlternativeModelMeasureItemView()
 
   auto hLayout = new QHBoxLayout();
 
-
   taxonomyFirstLevelComboBox = new QComboBox();
   hLayout->addWidget(taxonomyFirstLevelComboBox);
 
@@ -379,9 +389,54 @@ AlternativeModelMeasureItemView::AlternativeModelMeasureItemView()
   mainVLayout->addLayout(hLayout);
 }
 
+QString AlternativeModelMeasureItemView::uuid() const
+{
+  return m_uuid;
+}
+
+QString AlternativeModelMeasureItemView::displayName() const
+{
+  return displayNameTextEdit->text();
+}
+
+QString AlternativeModelMeasureItemView::description() const
+{
+  return descriptionTextEdit->toPlainText();
+}
+
+QString AlternativeModelMeasureItemView::taxonomyTag() const
+{
+  return taxonomyFirstLevelComboBox->currentText() + QString(".") + taxonomySecondLevelComboBox->currentText();
+}
+
+double AlternativeModelMeasureItemView::capitalCost() const
+{
+  return capitalCostTextEdit->text().toDouble();
+}
+
+void AlternativeModelMeasureItemView::setDisplayName(const QString& displayName)
+{
+  displayNameTextEdit->setText(displayName);
+}
+
+void AlternativeModelMeasureItemView::setDescription(const QString& description)
+{
+  descriptionTextEdit->setPlainText(description);
+}
+
 void AlternativeModelMeasureItemView::setTaxonomyTag(const QString& taxonomyTag)
 {
+  QRegularExpression re("(.*)\\.(.*)");
+  QRegularExpressionMatch match = re.match(taxonomyTag);
+  if (match.hasMatch()) {
+    QString first = match.captured(1); 
+    QString second = match.captured(2); 
+  }
+}
 
+void AlternativeModelMeasureItemView::setCapitalCost(double capitalCost)
+{
+  capitalCostTextEdit->setText(QString::number(capitalCost));
 }
 
 void AlternativeModelMeasureItemView::onFirstLevelTaxonomyTagChanged()
