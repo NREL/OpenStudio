@@ -1849,7 +1849,7 @@ namespace radiance {
       }
 
       // write geometry
-      openstudio::path filename = t_radDir / openstudio::toPath("scene") / openstudio::toPath(space_name + "_geom.rad");
+      openstudio::path filename = t_radDir / openstudio::toPath("scene") / openstudio::toPath(space_name + ".rad");
       OFSTREAM file(filename);
       if (file.is_open()){
         t_outfiles.push_back(filename);

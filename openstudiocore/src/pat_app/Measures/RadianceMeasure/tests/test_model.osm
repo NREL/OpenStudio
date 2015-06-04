@@ -8353,8 +8353,8 @@ OS:Material,
 
 OS:ShadingSurfaceGroup,
   {729a1585-5d08-4eb4-bc0a-bd6e13f58dab}, !- Handle
-  Site Obstructions,                      !- Name
-  Building,                               !- Shading Surface Type
+  Building west,                          !- Name
+  Site,                               !- Shading Surface Type
   ,                                       !- Space Name
   0,                                      !- Direction of Relative North {deg}
   -2.02809419338191,                      !- X Origin {m}
@@ -8400,7 +8400,7 @@ OS:ShadingSurface,
 OS:ShadingSurface,
   {0592d80b-4c4f-46ae-81af-558894c902e0}, !- Handle
   Shading Surface 3,                      !- Name
-  ,                                       !- Construction Name
+  {728b353c-b211-4224-aa6b-ae190c75eeee}, !- Construction Name
   {729a1585-5d08-4eb4-bc0a-bd6e13f58dab}, !- Shading Surface Group Name
   ,                                       !- Transmittance Schedule Name
   ,                                       !- Number of Vertices
@@ -8459,8 +8459,8 @@ OS:ShadingSurface,
 
 OS:ShadingSurfaceGroup,
   {e59609a3-5c61-49fd-836f-b7ad648f6841}, !- Handle
-  Shading Surface Group 2,                !- Name
-  Building,                               !- Shading Surface Type
+  Building North,                         !- Name
+  Site,                               !- Shading Surface Type
   ,                                       !- Space Name
   -0,                                     !- Direction of Relative North {deg}
   -6.12531110359299,                      !- X Origin {m}
@@ -8542,8 +8542,8 @@ OS:ShadingSurface,
 
 OS:ShadingSurfaceGroup,
   {98a6dd8e-43d1-46f0-b17c-8881168cf12d}, !- Handle
-  Shading Surface Group 4,                !- Name
-  Building,                               !- Shading Surface Type
+  Ground,                                 !- Name
+  Site,                               !- Shading Surface Type
   ,                                       !- Space Name
   -0,                                     !- Direction of Relative North {deg}
   19.3463784696646,                       !- X Origin {m}
