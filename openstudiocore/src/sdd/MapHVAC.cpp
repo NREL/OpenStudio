@@ -5864,7 +5864,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     htgDsgnSupAirTemp = unitToUnit(value,"F","C").get();
   }
 
-  if( istringEqual(type,"PTAC") )
+  if( istringEqual(type,"PTAC") || istringEqual(type,"SZAC") )
   {
     // Fan
     boost::optional<model::HVACComponent> fan;
@@ -6056,7 +6056,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
       }
     }
   }
-  else if( istringEqual(type,"PTHP") )
+  else if( istringEqual(type,"PTHP") || istringEqual(type,"SZHP") )
   {
     QDomElement htPumpSuppTempElement;
     QDomElement htPumpCprsrLockoutTempElement;
