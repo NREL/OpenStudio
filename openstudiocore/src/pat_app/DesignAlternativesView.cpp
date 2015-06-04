@@ -32,6 +32,7 @@
 #include <QStyleOption>
 #include <QLineEdit>
 #include <QTextEdit>
+#include <QComboBox>
 
 namespace openstudio {
 
@@ -246,8 +247,6 @@ DesignAltHeaderView::DesignAltHeaderView(bool t_isBaseline, bool t_isAlternative
     mainHLayout->addWidget(lbl);
   }
 
-
-
  }
 
 DesignAltContentView::DesignAltContentView(bool t_isBaseline, bool t_isAlternativeModel)
@@ -281,8 +280,19 @@ DesignAltContentView::DesignAltContentView(bool t_isBaseline, bool t_isAlternati
     descriptionTextEdit->setVisible(false);
   }
 
-
   connect(descriptionTextEdit, &QTextEdit::textChanged, this, &DesignAltContentView::onDescriptionTextChanged);
+
+  alternativeModelMeasureListView = new OSListView();
+  alternativeModelMeasureListView->setContentsMargins(0, 0, 0, 0);
+
+  mainVLayout->addWidget(alternativeModelMeasureListView);
+
+  addAlternativeModelMeasure = new SofterDuplicateButton();
+  mainVLayout->addWidget(addAlternativeModelMeasure);
+
+  connect(addAlternativeModelMeasure, &QPushButton::clicked, this, &DesignAltContentView::addAlternativeModelMeasureClicked);
+
+  
 }
 
 void DesignAltContentView::onDescriptionTextChanged()
@@ -302,8 +312,6 @@ DesignAltItemView::DesignAltItemView(bool t_isBaseline, bool t_isAlternativeMode
   if (t_isBaseline)
   {
     setStyleSheet("openstudio--pat--altstab--DesignAltItemView { background: #5B5B5B; } ");
-  } else if (t_isAlternativeModel) {
-      setStyleSheet("openstudio--pat--altstab--DesignAltItemView { background: #FFFF00; } ");
   } else {
     setStyleSheet("openstudio--pat--altstab--DesignAltItemView { background: #D5D5D5; }");
   }
@@ -320,6 +328,68 @@ void DesignAltItemView::paintEvent(QPaintEvent * e)
   QPainter p(this);
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
+
+
+AlternativeModelMeasureItemView::AlternativeModelMeasureItemView()
+{
+  auto mainVLayout = new QVBoxLayout();
+  mainVLayout->setContentsMargins(25, 0, 5, 5);
+  mainVLayout->setSpacing(5);
+  setLayout(mainVLayout);
+
+  QLabel * displayNameTitleLabel = new QLabel("Name");
+  displayNameTitleLabel->setObjectName("H2");
+  mainVLayout->addWidget(displayNameTitleLabel);
+
+  QRegExp nameRegex("^\\S.*");
+  auto validator = new QRegExpValidator(nameRegex, this);
+
+  displayNameTextEdit = new QLineEdit();
+  displayNameTextEdit->setAcceptDrops(false);
+  displayNameTextEdit->setValidator(validator);
+  mainVLayout->addWidget(displayNameTextEdit);
+
+  QLabel * descriptionTitleLabel = new QLabel("Description");
+  descriptionTitleLabel->setObjectName("H2");
+  mainVLayout->addWidget(descriptionTitleLabel);
+
+  descriptionTextEdit = new QTextEdit();
+  descriptionTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  descriptionTextEdit->setMaximumWidth(600);
+  descriptionTextEdit->setFixedHeight(60);
+  descriptionTextEdit->setStyleSheet("QTextEdit { background: #E0E0E0; }");
+  mainVLayout->addWidget(descriptionTextEdit);
+
+  auto hLayout = new QHBoxLayout();
+
+
+  taxonomyFirstLevelComboBox = new QComboBox();
+  hLayout->addWidget(taxonomyFirstLevelComboBox);
+
+  taxonomySecondLevelComboBox = new QComboBox();
+  hLayout->addWidget(taxonomySecondLevelComboBox);
+
+  QRegExp numberRegex("^\\S.*");
+  validator = new QRegExpValidator(numberRegex, this);
+
+  capitalCostTextEdit = new QLineEdit();
+  capitalCostTextEdit->setAcceptDrops(false);
+  capitalCostTextEdit->setValidator(validator);
+  hLayout->addWidget(capitalCostTextEdit);
+  mainVLayout->addLayout(hLayout);
+}
+
+void AlternativeModelMeasureItemView::setTaxonomyTag(const QString& taxonomyTag)
+{
+
+}
+
+void AlternativeModelMeasureItemView::onFirstLevelTaxonomyTagChanged()
+{
+
+}
+
+
 
 } // altstab
 

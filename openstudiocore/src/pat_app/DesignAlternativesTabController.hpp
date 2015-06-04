@@ -23,6 +23,7 @@
 #include "../shared_gui_components/OSListView.hpp"
 #include "../analysis/DataPoint.hpp"
 #include "../analysis/Measure.hpp"
+#include "../analysis/RubyMeasure.hpp"
 #include <QObject>
 #include <QPointer>
 #include <QSharedPointer>
@@ -47,6 +48,8 @@ class AltsTabVariableGroupItemDelegate;
 class DesignAltListController;
 class DesignAltItemDelegate;
 class PerturbationListController;
+class AlternativeModelMeasureListController;
+class AlternativeModelMeasureItem;
 
 } // altstab
 
@@ -182,6 +185,8 @@ class DesignAltItem : public OSListItem
 
   QSharedPointer<PerturbationListController> perturbationListController() const;
 
+  QSharedPointer<AlternativeModelMeasureListController> alternativeModelMeasureListController() const;
+
   public slots:
 
   void setName(const QString & name);
@@ -193,6 +198,8 @@ class DesignAltItem : public OSListItem
   private:
 
   QSharedPointer<PerturbationListController> m_perturbationListController;
+
+  QSharedPointer<AlternativeModelMeasureListController> m_alternativeModelMeasureListController;
 
   analysis::DataPoint m_dataPoint;
 
@@ -237,7 +244,7 @@ class PerturbationListController : public OSListController
   QPointer<DesignAltItem> m_designAltItem;
 };
 
-// DesignAltItem corresponds to an analysis::Measure
+// PerturbationItem corresponds to an analysis::Measure
 class PerturbationItem : public OSListItem
 {
   Q_OBJECT
@@ -257,7 +264,7 @@ class PerturbationItem : public OSListItem
   analysis::Measure m_measure;
 };
 
-// PerturbationItemDelegate views a PerturbationItem and returns an PerturbationItemView
+// PerturbationItemDelegate views a PerturbationItem and returns a QLabel
 class PerturbationItemDelegate : public OSItemDelegate
 {
   Q_OBJECT
@@ -268,6 +275,77 @@ class PerturbationItemDelegate : public OSItemDelegate
 
   virtual ~PerturbationItemDelegate() {}
 };
+
+// These classes are the list controller and related classes for the user defined measures associated with an alternative model,
+// i.e. a model swapped into the workflow using the alternativeModelVariable.
+
+// AlternativeModelMeasureListController gets the user defined measures for an AlternativeModel DesignAltItem
+class AlternativeModelMeasureListController : public OSListController
+{
+  Q_OBJECT
+
+public:
+
+  AlternativeModelMeasureListController(DesignAltItem * designAltItem);
+
+  virtual ~AlternativeModelMeasureListController() {}
+
+  QSharedPointer<OSListItem> itemAt(int i);
+
+  int count();
+
+public slots:
+
+  void addAlternativeModelMeasure();
+
+private:
+
+  boost::optional<analysis::RubyMeasure> rubySwapMeasure() const;
+
+  std::vector<QSharedPointer<AlternativeModelMeasureItem> > alternativeModelMeasureItems() const;
+
+  QPointer<DesignAltItem> m_designAltItem;
+};
+
+// AlternativeModelMeasureItem corresponds to a user defined measure on an alternative model
+class AlternativeModelMeasureItem : public OSListItem
+{
+  Q_OBJECT
+
+public:
+
+  AlternativeModelMeasureItem(const analysis::Measure & measure, unsigned index);
+
+  virtual ~AlternativeModelMeasureItem() {}
+
+  QString displayName() const;
+  QString description() const;
+  QString taxonomyTag() const;
+  double capitalCost() const;
+
+public slots:
+
+  void onAlternativeModelMeasureItemViewChanged();
+
+private:
+
+  analysis::Measure m_measure;
+  unsigned m_index;
+};
+
+// AlternativeModelMeasureItemDelegate views an AlternativeModelMeasureItem and returns an AlternativeModelMeasureItemView
+class AlternativeModelMeasureItemDelegate : public OSItemDelegate
+{
+  Q_OBJECT
+
+    QWidget * view(QSharedPointer<OSListItem> dataSource);
+
+public:
+
+  virtual ~AlternativeModelMeasureItemDelegate() {}
+};
+
+
 
 } // altstab
 

@@ -279,8 +279,6 @@ DesignAltListController::DesignAltListController(QSharedPointer<OSItemSelectionC
 
 QSharedPointer<OSListItem> DesignAltListController::itemAt(int i)
 {
-
-
   if( i >= 0 && i < count() )
   {
     analysis::DataPoint datapoint = dataPoints()[i];
@@ -598,6 +596,7 @@ DesignAltItem::DesignAltItem(const analysis::DataPoint & dataPoint, bool isBasel
     m_isAlternativeModel(isAlternativeModel)
 {
   m_perturbationListController = QSharedPointer<PerturbationListController>(new PerturbationListController(this));
+  m_alternativeModelMeasureListController = QSharedPointer<AlternativeModelMeasureListController>(new AlternativeModelMeasureListController(this));
 }
 
 QString DesignAltItem::name() const
@@ -645,6 +644,11 @@ QSharedPointer<PerturbationListController> DesignAltItem::perturbationListContro
   return m_perturbationListController;
 }
 
+QSharedPointer<AlternativeModelMeasureListController> DesignAltItem::alternativeModelMeasureListController() const
+{
+  return m_alternativeModelMeasureListController;
+}
+
 QWidget * DesignAltItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
   if(QSharedPointer<DesignAltItem> designAltItem = dataSource.objectCast<DesignAltItem>())
@@ -674,6 +678,20 @@ QWidget * DesignAltItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     designAltItemView->designAltContentView->perturbationListView->setListController(perturbationListController);
     designAltItemView->designAltContentView->perturbationListView->setDelegate(perturbationItemDelegate);
+
+    // Alternative Model Measures
+    if (designAltItem->isAlternativeModel())
+    {
+      QSharedPointer<AlternativeModelMeasureListController> alternativeModelMeasureListController = designAltItem->alternativeModelMeasureListController();
+      QSharedPointer<AlternativeModelMeasureItemDelegate> alternativeModelMeasureItemDelegate = QSharedPointer<AlternativeModelMeasureItemDelegate>(new AlternativeModelMeasureItemDelegate());
+
+      designAltItemView->designAltContentView->alternativeModelMeasureListView->setListController(alternativeModelMeasureListController);
+      designAltItemView->designAltContentView->alternativeModelMeasureListView->setDelegate(alternativeModelMeasureItemDelegate);
+    
+      connect(designAltItemView->designAltContentView, &DesignAltContentView::addAlternativeModelMeasureClicked, alternativeModelMeasureListController.data(), &AlternativeModelMeasureListController::addAlternativeModelMeasure);
+     
+      connect(designAltItemView->designAltContentView, &DesignAltContentView::descriptionChanged, designAltItem.data(), &DesignAltItem::setDescription);
+    }
 
     return designAltItemView;
   }
@@ -783,6 +801,117 @@ QWidget * PerturbationItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     }
 
     return perturbationItemView;
+  }
+
+  return new QWidget();
+}
+
+
+AlternativeModelMeasureListController::AlternativeModelMeasureListController(DesignAltItem * designAltItem)
+  : OSListController(),
+    m_designAltItem(designAltItem)
+{
+}
+
+QSharedPointer<OSListItem> AlternativeModelMeasureListController::itemAt(int i)
+{
+  if (i >= 0 && i < count())
+  {
+    return alternativeModelMeasureItems()[i];
+  }
+
+  return QSharedPointer<OSListItem>();
+}
+
+int AlternativeModelMeasureListController::count()
+{
+  return (int)alternativeModelMeasureItems().size();
+}
+
+void AlternativeModelMeasureListController::addAlternativeModelMeasure()
+{
+  if (analysis::OptionalRubyMeasure rubySwapMeasure = this->rubySwapMeasure()){
+    bool test = false;
+  }
+}
+
+analysis::OptionalRubyMeasure AlternativeModelMeasureListController::rubySwapMeasure() const
+{
+  if (boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project()){
+
+    analysis::OptionalMeasureGroup modelSwapVariable = project->getAlternativeModelVariable();
+
+    if (modelSwapVariable){
+      analysis::Measure swapMeasure = modelSwapVariable->getMeasure(m_designAltItem->dataPoint());
+
+      return swapMeasure.optionalCast<analysis::RubyMeasure>();
+    }
+  }
+
+  return boost::none;
+}
+
+std::vector<QSharedPointer<AlternativeModelMeasureItem> > AlternativeModelMeasureListController::alternativeModelMeasureItems() const
+{
+  std::vector<QSharedPointer<AlternativeModelMeasureItem> > result;
+
+  if (analysis::OptionalRubyMeasure rubySwapMeasure = this->rubySwapMeasure()){
+    for (const ruleset::OSArgument& argument : rubySwapMeasure->arguments()){
+      if (argument.name() == "measures_json"){
+        std::string value = argument.valueAsString();
+      }
+    }
+  }
+
+  return result;
+}
+
+AlternativeModelMeasureItem::AlternativeModelMeasureItem(const analysis::Measure & measure, unsigned index)
+  : OSListItem(),
+   m_measure(measure),
+   m_index(index)
+{
+}
+
+QString AlternativeModelMeasureItem::displayName() const
+{
+  return openstudio::toQString(m_measure.displayName());
+}
+
+QString AlternativeModelMeasureItem::description() const
+{
+  return openstudio::toQString(m_measure.description());
+}
+
+QString AlternativeModelMeasureItem::taxonomyTag() const
+{
+  return QString();
+}
+
+double AlternativeModelMeasureItem::capitalCost() const
+{
+  return 0;
+}
+
+void AlternativeModelMeasureItem::onAlternativeModelMeasureItemViewChanged()
+{
+
+}
+
+QWidget * AlternativeModelMeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
+{
+  if (QSharedPointer<AlternativeModelMeasureItem> alternativeModelMeasureItem = dataSource.objectCast<AlternativeModelMeasureItem>())
+  {
+    auto alternativeModelMeasureItemView = new AlternativeModelMeasureItemView();
+
+    alternativeModelMeasureItemView->displayNameTextEdit->setText(alternativeModelMeasureItem->displayName());
+    alternativeModelMeasureItemView->descriptionTextEdit->setText(alternativeModelMeasureItem->description());
+    alternativeModelMeasureItemView->setTaxonomyTag(alternativeModelMeasureItem->taxonomyTag());
+    alternativeModelMeasureItemView->capitalCostTextEdit->setText(QString::number(alternativeModelMeasureItem->capitalCost()));
+
+    connect(alternativeModelMeasureItemView, &AlternativeModelMeasureItemView::changed, alternativeModelMeasureItem.data(), &AlternativeModelMeasureItem::onAlternativeModelMeasureItemViewChanged);
+
+    return alternativeModelMeasureItemView;
   }
 
   return new QWidget();

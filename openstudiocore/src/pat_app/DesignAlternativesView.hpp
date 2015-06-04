@@ -27,6 +27,7 @@
 class QPushButton;
 class QLineEdit;
 class QTextEdit;
+class QComboBox;
 
 namespace openstudio {
 
@@ -197,16 +198,46 @@ class DesignAltContentView : public QWidget
 
   QTextEdit * descriptionTextEdit;
 
+  OSListView * alternativeModelMeasureListView;
+
+  QPushButton * addAlternativeModelMeasure;
+
   signals:
 
   void descriptionChanged(const QString & description);
+
+  void addAlternativeModelMeasureClicked();
 
   private slots:
 
   void onDescriptionTextChanged();
 };
 
+class AlternativeModelMeasureItemView : public QWidget
+{
+  Q_OBJECT
 
+  public:
+   
+  AlternativeModelMeasureItemView();
+ 
+  QLineEdit* displayNameTextEdit;
+  QTextEdit* descriptionTextEdit;
+  QComboBox* taxonomyFirstLevelComboBox;
+  QComboBox* taxonomySecondLevelComboBox;
+  QLineEdit* capitalCostTextEdit;
+
+  void setTaxonomyTag(const QString& taxonomyTag);
+
+  signals :
+
+  void changed();
+
+  private slots:
+
+  void onFirstLevelTaxonomyTagChanged();
+
+};
 
 } // altstab
 
