@@ -7688,7 +7688,7 @@ OS:Surface,
   {35cbb3e8-0b70-4fd5-9713-bb391d09a5fc}, !- Handle
   Surface 15,                             !- Name
   Wall,                                   !- Surface Type
-  ,                                       !- Construction Name
+  {7a29ba3c-05e0-4ba6-a7bf-72746f63eedc}, !- Construction Name
   {b5a1aae9-e0e9-4254-bf19-cebfb520aed5}, !- Space Name
   Surface,                                !- Outside Boundary Condition
   {2380e7e5-5843-486a-880b-888b9dee3a31}, !- Outside Boundary Condition Object
@@ -7805,7 +7805,7 @@ OS:Surface,
   {2380e7e5-5843-486a-880b-888b9dee3a31}, !- Handle
   interior surface,                       !- Name
   Wall,                                   !- Surface Type
-  ,                                       !- Construction Name
+  {7a29ba3c-05e0-4ba6-a7bf-72746f63eedc}, !- Construction Name
   {3810e56a-95f5-4687-b896-06caf8120348}, !- Space Name
   Surface,                                !- Outside Boundary Condition
   {35cbb3e8-0b70-4fd5-9713-bb391d09a5fc}, !- Outside Boundary Condition Object
@@ -8353,98 +8353,14 @@ OS:Material,
 
 OS:ShadingSurfaceGroup,
   {729a1585-5d08-4eb4-bc0a-bd6e13f58dab}, !- Handle
-  Shading Surface Group 2,                !- Name
+  Site Obstructions,                      !- Name
   Building,                               !- Shading Surface Type
   ,                                       !- Space Name
-  -0,                                     !- Direction of Relative North {deg}
+  0,                                      !- Direction of Relative North {deg}
   -2.02809419338191,                      !- X Origin {m}
   -3.17056806550582,                      !- Y Origin {m}
   0,                                      !- Z Origin {m}
   ;                                       !- Shaded Object Name
-
-OS:ShadingSurface,
-  {52d3a4c0-ed10-4622-bcaa-5804bea36e45}, !- Handle
-  Shading Surface 2,                      !- Name
-  ,                                       !- Construction Name
-  {729a1585-5d08-4eb4-bc0a-bd6e13f58dab}, !- Shading Surface Group Name
-  ,                                       !- Transmittance Schedule Name
-  ,                                       !- Number of Vertices
-  0, 0, 0,                                !- X,Y,Z Vertex 1 {m}
-  0, -1.3589, 0,                          !- X,Y,Z Vertex 2 {m}
-  -8.5359875, -1.3589, 0,                 !- X,Y,Z Vertex 3 {m}
-  -8.5359875, 0, 0;                       !- X,Y,Z Vertex 4 {m}
-
-OS:ShadingSurface,
-  {554fcb2f-c42e-4e20-a97a-de5ed0665260}, !- Handle
-  Shading Surface 3,                      !- Name
-  ,                                       !- Construction Name
-  {729a1585-5d08-4eb4-bc0a-bd6e13f58dab}, !- Shading Surface Group Name
-  ,                                       !- Transmittance Schedule Name
-  ,                                       !- Number of Vertices
-  0, -1.3589, 5.4737,                     !- X,Y,Z Vertex 1 {m}
-  0, 0, 5.4737,                           !- X,Y,Z Vertex 2 {m}
-  -8.5359875, 0, 5.4737,                  !- X,Y,Z Vertex 3 {m}
-  -8.5359875, -1.3589, 5.4737;            !- X,Y,Z Vertex 4 {m}
-
-OS:ShadingSurface,
-  {9b313fdd-2bf0-4bb9-9764-231e612e158f}, !- Handle
-  Shading Surface 4,                      !- Name
-  ,                                       !- Construction Name
-  {729a1585-5d08-4eb4-bc0a-bd6e13f58dab}, !- Shading Surface Group Name
-  ,                                       !- Transmittance Schedule Name
-  ,                                       !- Number of Vertices
-  0, -1.3589, 5.4737,                     !- X,Y,Z Vertex 1 {m}
-  0, -1.3589, 0,                          !- X,Y,Z Vertex 2 {m}
-  0, 0, 0,                                !- X,Y,Z Vertex 3 {m}
-  0, 0, 5.4737;                           !- X,Y,Z Vertex 4 {m}
-
-OS:ShadingSurface,
-  {05ca4758-85cd-4354-805c-ddedbe847524}, !- Handle
-  Shading Surface 5,                      !- Name
-  {3fa915cd-afbf-4bd7-844f-e30452e84c61}, !- Construction Name
-  {729a1585-5d08-4eb4-bc0a-bd6e13f58dab}, !- Shading Surface Group Name
-  ,                                       !- Transmittance Schedule Name
-  ,                                       !- Number of Vertices
-  -8.5359875, -1.3589, 5.4737,            !- X,Y,Z Vertex 1 {m}
-  -8.5359875, -1.3589, 0,                 !- X,Y,Z Vertex 2 {m}
-  0, -1.3589, 0,                          !- X,Y,Z Vertex 3 {m}
-  0, -1.3589, 5.4737;                     !- X,Y,Z Vertex 4 {m}
-
-OS:ShadingSurface,
-  {73a4d6fa-3bac-4c7d-965e-5f677d20d1a1}, !- Handle
-  Shading Surface 6,                      !- Name
-  ,                                       !- Construction Name
-  {729a1585-5d08-4eb4-bc0a-bd6e13f58dab}, !- Shading Surface Group Name
-  ,                                       !- Transmittance Schedule Name
-  ,                                       !- Number of Vertices
-  0, 0, 5.4737,                           !- X,Y,Z Vertex 1 {m}
-  0, 0, 0,                                !- X,Y,Z Vertex 2 {m}
-  -8.5359875, 0, 0,                       !- X,Y,Z Vertex 3 {m}
-  -8.5359875, 0, 5.4737;                  !- X,Y,Z Vertex 4 {m}
-
-OS:ShadingSurface,
-  {173bf463-2423-4ffa-9d65-c22d9837f956}, !- Handle
-  Shading Surface 7,                      !- Name
-  ,                                       !- Construction Name
-  {729a1585-5d08-4eb4-bc0a-bd6e13f58dab}, !- Shading Surface Group Name
-  ,                                       !- Transmittance Schedule Name
-  ,                                       !- Number of Vertices
-  -8.5359875, 0, 5.4737,                  !- X,Y,Z Vertex 1 {m}
-  -8.5359875, 0, 0,                       !- X,Y,Z Vertex 2 {m}
-  -8.5359875, -1.3589, 0,                 !- X,Y,Z Vertex 3 {m}
-  -8.5359875, -1.3589, 5.4737;            !- X,Y,Z Vertex 4 {m}
-
-OS:ShadingSurface,
-  {083cedcd-864d-4afa-a4de-35ef5cb2fb38}, !- Handle
-  Shading Surface 9,                      !- Name
-  {3fa915cd-afbf-4bd7-844f-e30452e84c61}, !- Construction Name
-  {729a1585-5d08-4eb4-bc0a-bd6e13f58dab}, !- Shading Surface Group Name
-  ,                                       !- Transmittance Schedule Name
-  ,                                       !- Number of Vertices
-  12.3726787657683, 11.1272160898361, 6.365875, !- X,Y,Z Vertex 1 {m}
-  12.3726787657683, 11.1272160898361, 1.44382283906452e-15, !- X,Y,Z Vertex 2 {m}
-  9.17227876576832, 11.1272160898361, 1.44382283906452e-15, !- X,Y,Z Vertex 3 {m}
-  9.17227876576832, 11.1272160898361, 6.365875; !- X,Y,Z Vertex 4 {m}
 
 OS:ShadingSurfaceGroup,
   {f414e213-ccd7-49ae-b5c6-56a09768aca9}, !- Handle
@@ -8453,7 +8369,7 @@ OS:ShadingSurfaceGroup,
   {3810e56a-95f5-4687-b896-06caf8120348}, !- Space Name
   -0,                                     !- Direction of Relative North {deg}
   0,                                      !- X Origin {m}
-  0.523934360872219,                      !- Y Origin {m}
+  0.260409360872219,                      !- Y Origin {m}
   1.99986440677966,                       !- Z Origin {m}
   ;                                       !- Shaded Object Name
 
@@ -8464,8 +8380,204 @@ OS:ShadingSurface,
   {f414e213-ccd7-49ae-b5c6-56a09768aca9}, !- Shading Surface Group Name
   ,                                       !- Transmittance Schedule Name
   ,                                       !- Number of Vertices
-  1.6716375, 0, 0,                        !- X,Y,Z Vertex 1 {m}
-  1.6716375, 2.7047662918689, 0,          !- X,Y,Z Vertex 2 {m}
+  0.83581875, 0, 0,                       !- X,Y,Z Vertex 1 {m}
+  0.83581875, 2.7047662918689, 0,         !- X,Y,Z Vertex 2 {m}
   0, 2.7047662918689, 0,                  !- X,Y,Z Vertex 3 {m}
   0, 0, 0;                                !- X,Y,Z Vertex 4 {m}
+
+OS:ShadingSurface,
+  {8e3286d4-5605-4c68-bc44-5dd661231a5d}, !- Handle
+  Shading Surface 2,                      !- Name
+  ,                                       !- Construction Name
+  {729a1585-5d08-4eb4-bc0a-bd6e13f58dab}, !- Shading Surface Group Name
+  ,                                       !- Transmittance Schedule Name
+  ,                                       !- Number of Vertices
+  -3.70623665702989, 9.02875462387322, 0, !- X,Y,Z Vertex 1 {m}
+  -3.70623665702989, 3.12801712387322, 0, !- X,Y,Z Vertex 2 {m}
+  -9.03229915702989, 3.12801712387322, 0, !- X,Y,Z Vertex 3 {m}
+  -9.03229915702989, 9.02875462387322, 0; !- X,Y,Z Vertex 4 {m}
+
+OS:ShadingSurface,
+  {0592d80b-4c4f-46ae-81af-558894c902e0}, !- Handle
+  Shading Surface 3,                      !- Name
+  ,                                       !- Construction Name
+  {729a1585-5d08-4eb4-bc0a-bd6e13f58dab}, !- Shading Surface Group Name
+  ,                                       !- Transmittance Schedule Name
+  ,                                       !- Number of Vertices
+  -3.70623665702989, 3.12801712387322, 4.2719625, !- X,Y,Z Vertex 1 {m}
+  -3.70623665702989, 9.02875462387322, 4.2719625, !- X,Y,Z Vertex 2 {m}
+  -9.03229915702989, 9.02875462387322, 4.2719625, !- X,Y,Z Vertex 3 {m}
+  -9.03229915702989, 3.12801712387322, 4.2719625; !- X,Y,Z Vertex 4 {m}
+
+OS:ShadingSurface,
+  {9b3efefe-518a-446d-a826-9a5a4d794ea8}, !- Handle
+  Shading Surface 4,                      !- Name
+  ,                                       !- Construction Name
+  {729a1585-5d08-4eb4-bc0a-bd6e13f58dab}, !- Shading Surface Group Name
+  ,                                       !- Transmittance Schedule Name
+  ,                                       !- Number of Vertices
+  -3.70623665702989, 3.12801712387322, 4.2719625, !- X,Y,Z Vertex 1 {m}
+  -3.70623665702989, 3.12801712387322, 0, !- X,Y,Z Vertex 2 {m}
+  -3.70623665702989, 9.02875462387322, 0, !- X,Y,Z Vertex 3 {m}
+  -3.70623665702989, 9.02875462387322, 4.2719625; !- X,Y,Z Vertex 4 {m}
+
+OS:ShadingSurface,
+  {ee447518-20c5-4063-8fb9-9e34e96e1e92}, !- Handle
+  Shading Surface 5,                      !- Name
+  ,                                       !- Construction Name
+  {729a1585-5d08-4eb4-bc0a-bd6e13f58dab}, !- Shading Surface Group Name
+  ,                                       !- Transmittance Schedule Name
+  ,                                       !- Number of Vertices
+  -9.03229915702989, 3.12801712387322, 4.2719625, !- X,Y,Z Vertex 1 {m}
+  -9.03229915702989, 3.12801712387322, 0, !- X,Y,Z Vertex 2 {m}
+  -3.70623665702989, 3.12801712387322, 0, !- X,Y,Z Vertex 3 {m}
+  -3.70623665702989, 3.12801712387322, 4.2719625; !- X,Y,Z Vertex 4 {m}
+
+OS:ShadingSurface,
+  {d9771525-c163-4c41-b095-5e18136df707}, !- Handle
+  Shading Surface 6,                      !- Name
+  ,                                       !- Construction Name
+  {729a1585-5d08-4eb4-bc0a-bd6e13f58dab}, !- Shading Surface Group Name
+  ,                                       !- Transmittance Schedule Name
+  ,                                       !- Number of Vertices
+  -9.03229915702989, 9.02875462387322, 4.2719625, !- X,Y,Z Vertex 1 {m}
+  -9.03229915702989, 9.02875462387322, 0, !- X,Y,Z Vertex 2 {m}
+  -9.03229915702989, 3.12801712387322, 0, !- X,Y,Z Vertex 3 {m}
+  -9.03229915702989, 3.12801712387322, 4.2719625; !- X,Y,Z Vertex 4 {m}
+
+OS:ShadingSurface,
+  {4d535e16-baef-427f-b479-fbe818a40663}, !- Handle
+  Shading Surface 7,                      !- Name
+  ,                                       !- Construction Name
+  {729a1585-5d08-4eb4-bc0a-bd6e13f58dab}, !- Shading Surface Group Name
+  ,                                       !- Transmittance Schedule Name
+  ,                                       !- Number of Vertices
+  -3.70623665702989, 9.02875462387322, 4.2719625, !- X,Y,Z Vertex 1 {m}
+  -3.70623665702989, 9.02875462387322, 0, !- X,Y,Z Vertex 2 {m}
+  -9.03229915702989, 9.02875462387322, 0, !- X,Y,Z Vertex 3 {m}
+  -9.03229915702989, 9.02875462387322, 4.2719625; !- X,Y,Z Vertex 4 {m}
+
+OS:ShadingSurfaceGroup,
+  {e59609a3-5c61-49fd-836f-b7ad648f6841}, !- Handle
+  Shading Surface Group 2,                !- Name
+  Building,                               !- Shading Surface Type
+  ,                                       !- Space Name
+  -0,                                     !- Direction of Relative North {deg}
+  -6.12531110359299,                      !- X Origin {m}
+  13.9893724734174,                       !- Y Origin {m}
+  0,                                      !- Z Origin {m}
+  ;                                       !- Shaded Object Name
+
+OS:ShadingSurface,
+  {6302e00f-cde2-4428-a304-a8b3b7b53b3f}, !- Handle
+  Shading Surface 9,                      !- Name
+  ,                                       !- Construction Name
+  {e59609a3-5c61-49fd-836f-b7ad648f6841}, !- Shading Surface Group Name
+  ,                                       !- Transmittance Schedule Name
+  ,                                       !- Number of Vertices
+  22.52345, 2.663825, 0,                  !- X,Y,Z Vertex 1 {m}
+  22.52345, 0, 0,                         !- X,Y,Z Vertex 2 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 3 {m}
+  0, 2.663825, 0;                         !- X,Y,Z Vertex 4 {m}
+
+OS:ShadingSurface,
+  {84c614f7-b2af-4bcf-a40f-3b26722659c1}, !- Handle
+  Shading Surface 10,                     !- Name
+  ,                                       !- Construction Name
+  {e59609a3-5c61-49fd-836f-b7ad648f6841}, !- Shading Surface Group Name
+  ,                                       !- Transmittance Schedule Name
+  ,                                       !- Number of Vertices
+  22.52345, 2.663825, 1.6637,             !- X,Y,Z Vertex 1 {m}
+  22.52345, 2.663825, 0,                  !- X,Y,Z Vertex 2 {m}
+  0, 2.663825, 0,                         !- X,Y,Z Vertex 3 {m}
+  0, 2.663825, 1.6637;                    !- X,Y,Z Vertex 4 {m}
+
+OS:ShadingSurface,
+  {9ab11189-a6b6-4e5a-abe8-d94ca1b66cf7}, !- Handle
+  Shading Surface 11,                     !- Name
+  ,                                       !- Construction Name
+  {e59609a3-5c61-49fd-836f-b7ad648f6841}, !- Shading Surface Group Name
+  ,                                       !- Transmittance Schedule Name
+  ,                                       !- Number of Vertices
+  0, 2.663825, 1.6637,                    !- X,Y,Z Vertex 1 {m}
+  0, 2.663825, 0,                         !- X,Y,Z Vertex 2 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 3 {m}
+  0, 0, 1.6637;                           !- X,Y,Z Vertex 4 {m}
+
+OS:ShadingSurface,
+  {e2286ba6-db69-457e-bd17-aa34fa8b5603}, !- Handle
+  Shading Surface 12,                     !- Name
+  ,                                       !- Construction Name
+  {e59609a3-5c61-49fd-836f-b7ad648f6841}, !- Shading Surface Group Name
+  ,                                       !- Transmittance Schedule Name
+  ,                                       !- Number of Vertices
+  0, 0, 1.6637,                           !- X,Y,Z Vertex 1 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 2 {m}
+  22.52345, 0, 0,                         !- X,Y,Z Vertex 3 {m}
+  22.52345, 0, 1.6637;                    !- X,Y,Z Vertex 4 {m}
+
+OS:ShadingSurface,
+  {d466c877-2773-4bc4-808e-4939dae89b85}, !- Handle
+  Shading Surface 13,                     !- Name
+  ,                                       !- Construction Name
+  {e59609a3-5c61-49fd-836f-b7ad648f6841}, !- Shading Surface Group Name
+  ,                                       !- Transmittance Schedule Name
+  ,                                       !- Number of Vertices
+  22.52345, 0, 1.6637,                    !- X,Y,Z Vertex 1 {m}
+  22.52345, 2.663825, 1.6637,             !- X,Y,Z Vertex 2 {m}
+  0, 2.663825, 1.6637,                    !- X,Y,Z Vertex 3 {m}
+  0, 0, 1.6637;                           !- X,Y,Z Vertex 4 {m}
+
+OS:ShadingSurface,
+  {97ba99b0-70c0-4b37-994a-0a4098d720d4}, !- Handle
+  Shading Surface 14,                     !- Name
+  ,                                       !- Construction Name
+  {e59609a3-5c61-49fd-836f-b7ad648f6841}, !- Shading Surface Group Name
+  ,                                       !- Transmittance Schedule Name
+  ,                                       !- Number of Vertices
+  22.52345, 0, 1.6637,                    !- X,Y,Z Vertex 1 {m}
+  22.52345, 0, 0,                         !- X,Y,Z Vertex 2 {m}
+  22.52345, 2.663825, 0,                  !- X,Y,Z Vertex 3 {m}
+  22.52345, 2.663825, 1.6637;             !- X,Y,Z Vertex 4 {m}
+
+OS:ShadingSurfaceGroup,
+  {98a6dd8e-43d1-46f0-b17c-8881168cf12d}, !- Handle
+  Shading Surface Group 4,                !- Name
+  Building,                               !- Shading Surface Type
+  ,                                       !- Space Name
+  -0,                                     !- Direction of Relative North {deg}
+  19.3463784696646,                       !- X Origin {m}
+  -11.2178748825604,                      !- Y Origin {m}
+  0,                                      !- Z Origin {m}
+  ;                                       !- Shaded Object Name
+
+OS:ShadingSurface,
+  {9a566200-e218-44ad-b16e-c01680193d12}, !- Handle
+  Ground plane,                           !- Name
+  {728b353c-b211-4224-aa6b-ae190c75eeee}, !- Construction Name
+  {98a6dd8e-43d1-46f0-b17c-8881168cf12d}, !- Shading Surface Group Name
+  ,                                       !- Transmittance Schedule Name
+  ,                                       !- Number of Vertices
+  -0.430212500000003, 30.6085875, -0.1778, !- X,Y,Z Vertex 1 {m}
+  -0.430212500000003, 0, -0.1778,         !- X,Y,Z Vertex 2 {m}
+  -31.7960375, 0, -0.1778,                !- X,Y,Z Vertex 3 {m}
+  -31.7960375, 30.6085875, -0.1778;       !- X,Y,Z Vertex 4 {m}
+
+OS:Construction,
+  {728b353c-b211-4224-aa6b-ae190c75eeee}, !- Handle
+  Ground,                                 !- Name
+  {a76d196b-e761-4493-8631-b48b5e34c13c}, !- Surface Rendering Name
+  {6f8814bd-3ed7-480f-9df6-b73fbc105d72}; !- Layer 1
+
+OS:Material,
+  {6f8814bd-3ed7-480f-9df6-b73fbc105d72}, !- Handle
+  Ground,                                 !- Name
+  Smooth,                                 !- Roughness
+  0.0008,                                 !- Thickness {m}
+  45.2799999999995,                       !- Conductivity {W/m-K}
+  7823.99999999999,                       !- Density {kg/m3}
+  500,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.3,                                    !- Solar Absorptance
+  0.9;                                    !- Visible Absorptance
 
