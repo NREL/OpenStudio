@@ -281,18 +281,18 @@ DesignAltContentView::DesignAltContentView(bool t_isBaseline, bool t_isAlternati
   }
 
   connect(descriptionTextEdit, &QTextEdit::textChanged, this, &DesignAltContentView::onDescriptionTextChanged);
-
+  
   alternativeModelMeasureListView = new OSListView();
   alternativeModelMeasureListView->setContentsMargins(0, 0, 0, 0);
 
   mainVLayout->addWidget(alternativeModelMeasureListView);
-
-  addAlternativeModelMeasure = new SofterDuplicateButton();
-  mainVLayout->addWidget(addAlternativeModelMeasure);
-
-  connect(addAlternativeModelMeasure, &QPushButton::clicked, this, &DesignAltContentView::addAlternativeModelMeasureClicked);
-
   
+  if (t_isAlternativeModel){
+    addAlternativeModelMeasure = new SofterDuplicateButton();
+    mainVLayout->addWidget(addAlternativeModelMeasure);
+
+    connect(addAlternativeModelMeasure, &QPushButton::clicked, this, &DesignAltContentView::addAlternativeModelMeasureClicked);
+  }
 }
 
 void DesignAltContentView::onDescriptionTextChanged()

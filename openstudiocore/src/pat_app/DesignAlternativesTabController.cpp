@@ -45,6 +45,12 @@
 #include <QMessageBox>
 #include <QTimer>
 #include <QFileDialog>
+
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonParseError>
+#include <QJsonArray>
+
 #include <algorithm>
 
 #include "../shared_gui_components/VariableList.hpp"
@@ -832,6 +838,15 @@ void AlternativeModelMeasureListController::addAlternativeModelMeasure()
 {
   if (analysis::OptionalRubyMeasure rubySwapMeasure = this->rubySwapMeasure()){
     bool test = false;
+
+    modelReset();
+  }
+}
+
+void AlternativeModelMeasureListController::alternativeModelMeasureItemViewChanged()
+{
+  if (analysis::OptionalRubyMeasure rubySwapMeasure = this->rubySwapMeasure()){
+    bool test = false;
   }
 }
 
@@ -858,7 +873,27 @@ std::vector<QSharedPointer<AlternativeModelMeasureItem> > AlternativeModelMeasur
   if (analysis::OptionalRubyMeasure rubySwapMeasure = this->rubySwapMeasure()){
     for (const ruleset::OSArgument& argument : rubySwapMeasure->arguments()){
       if (argument.name() == "measures_json"){
-        std::string value = argument.valueAsString();
+        QString value = toQString(argument.valueAsString());
+
+        QJsonParseError parseError;
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(value.toUtf8(), &parseError);
+        if (QJsonParseError::NoError == parseError.error) {
+          QJsonArray jsonArray = jsonDoc.array();
+          foreach(const QJsonValue & jsonValue, jsonArray) {
+            QJsonObject jsonObject = jsonValue.toObject();
+            QString uuid = jsonObject["uuid"].toString();
+            QString displayName = jsonObject["displayName"].toString();
+            QString description = jsonObject["description"].toString();
+            QString taxonomyTag = jsonObject["taxonomyTag"].toString();
+            double capitalCost = jsonObject["capitalCost"].toDouble();
+
+            QSharedPointer<AlternativeModelMeasureItem> alternativeModelMeasureItem(new AlternativeModelMeasureItem(uuid, displayName, description, taxonomyTag, capitalCost));
+
+            connect(alternativeModelMeasureItem.data(), &AlternativeModelMeasureItem::changed, this, &AlternativeModelMeasureListController::alternativeModelMeasureItemViewChanged);
+
+            result.push_back(alternativeModelMeasureItem);
+          }
+        }
       }
     }
   }
@@ -866,37 +901,44 @@ std::vector<QSharedPointer<AlternativeModelMeasureItem> > AlternativeModelMeasur
   return result;
 }
 
-AlternativeModelMeasureItem::AlternativeModelMeasureItem(const analysis::Measure & measure, unsigned index)
+AlternativeModelMeasureItem::AlternativeModelMeasureItem(const QString& uuid,
+                                                         const QString& displayName,
+                                                         const QString& description,
+                                                         const QString& taxonomyTag,
+                                                         double capitalCost)
   : OSListItem(),
-   m_measure(measure),
-   m_index(index)
+  m_uuid(uuid),
+  m_displayName(displayName),
+  m_description(description),
+  m_taxonomyTag(taxonomyTag),
+  m_capitalCost(capitalCost)
 {
 }
 
 QString AlternativeModelMeasureItem::displayName() const
 {
-  return openstudio::toQString(m_measure.displayName());
+  return m_displayName;
 }
 
 QString AlternativeModelMeasureItem::description() const
 {
-  return openstudio::toQString(m_measure.description());
+  return m_description;
 }
 
 QString AlternativeModelMeasureItem::taxonomyTag() const
 {
-  return QString();
+  return m_taxonomyTag;
 }
 
 double AlternativeModelMeasureItem::capitalCost() const
 {
-  return 0;
+  return m_capitalCost;
 }
 
-void AlternativeModelMeasureItem::onAlternativeModelMeasureItemViewChanged()
-{
-
-}
+//void AlternativeModelMeasureItem::onAlternativeModelMeasureItemViewChanged()
+//{
+//
+//}
 
 QWidget * AlternativeModelMeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
@@ -909,7 +951,7 @@ QWidget * AlternativeModelMeasureItemDelegate::view(QSharedPointer<OSListItem> d
     alternativeModelMeasureItemView->setTaxonomyTag(alternativeModelMeasureItem->taxonomyTag());
     alternativeModelMeasureItemView->capitalCostTextEdit->setText(QString::number(alternativeModelMeasureItem->capitalCost()));
 
-    connect(alternativeModelMeasureItemView, &AlternativeModelMeasureItemView::changed, alternativeModelMeasureItem.data(), &AlternativeModelMeasureItem::onAlternativeModelMeasureItemViewChanged);
+    connect(alternativeModelMeasureItemView, &AlternativeModelMeasureItemView::changed, alternativeModelMeasureItem.data(), &AlternativeModelMeasureItem::changed);
 
     return alternativeModelMeasureItemView;
   }

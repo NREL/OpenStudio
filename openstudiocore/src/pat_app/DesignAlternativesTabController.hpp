@@ -298,6 +298,8 @@ public slots:
 
   void addAlternativeModelMeasure();
 
+  void alternativeModelMeasureItemViewChanged();
+
 private:
 
   boost::optional<analysis::RubyMeasure> rubySwapMeasure() const;
@@ -314,23 +316,34 @@ class AlternativeModelMeasureItem : public OSListItem
 
 public:
 
-  AlternativeModelMeasureItem(const analysis::Measure & measure, unsigned index);
+  AlternativeModelMeasureItem(const QString& uuid,
+                              const QString& displayName,
+                              const QString& description,
+                              const QString& taxonomyTag,
+                              double capitalCost);
 
   virtual ~AlternativeModelMeasureItem() {}
 
+  QString uuid() const;
   QString displayName() const;
   QString description() const;
   QString taxonomyTag() const;
   double capitalCost() const;
 
-public slots:
+signals:
 
-  void onAlternativeModelMeasureItemViewChanged();
+  void changed();
 
 private:
 
-  analysis::Measure m_measure;
-  unsigned m_index;
+  //analysis::Measure m_measure;
+  //unsigned m_index;
+
+  QString m_uuid;
+  QString m_displayName;
+  QString m_description;
+  QString m_taxonomyTag;
+  double m_capitalCost;
 };
 
 // AlternativeModelMeasureItemDelegate views an AlternativeModelMeasureItem and returns an AlternativeModelMeasureItemView
