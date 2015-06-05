@@ -229,19 +229,25 @@ namespace sdd {
 
       // do runperiod
       boost::optional<model::ModelObject> runPeriod = translateRunPeriod(projectElement, doc, *result);
-      //OS_ASSERT(!runPeriod.empty()); // what type of error handling do we want?
+      //if (!runPeriod){
+      //  LOG(Error, "Could not translate RunPeriod");
+      //}
 
       // do design days
       std::vector<WorkspaceObject> designDays = translateDesignDays(projectElement, doc, *result);
-      //OS_ASSERT(!designDays.empty()); // what type of error handling do we want?
+      //if (designDays.empty()){
+      //  LOG(Error, "Empty DesignDays");
+      //}
 
       // do weather file
       boost::optional<model::ModelObject> weatherFile = translateWeatherFile(projectElement, doc, *result);
-      //OS_ASSERT(weatherFile); // what type of error handling do we want?
+      //if (!weatherFile){
+      //  LOG(Error, "Could not translate WeatherFile");
+      //}
+
 
       // do site after design days and weather file
       boost::optional<model::ModelObject> site = translateSite(projectElement, doc, *result);
-      //OS_ASSERT(site); // what type of error handling do we want?
       if (!site){
         LOG(Error, "Could not find site information in SDD");
       }
@@ -282,7 +288,9 @@ namespace sdd {
       for (int i = 0; i < materialElements.count(); i++){
         QDomElement materialElement = materialElements.at(i).toElement();
         boost::optional<model::ModelObject> material = translateMaterial(materialElement, doc, *result);
-        OS_ASSERT(material); // what type of error handling do we want?
+        if (!material){
+          LOG(Error, "Failed to translate 'Mat' element " << i);
+        }
 
         if (m_progressBar){
           m_progressBar->setValue(m_progressBar->value() + 1);
@@ -303,7 +311,9 @@ namespace sdd {
       for (int i = 0; i < constructionElements.count(); i++){
         QDomElement constructionElement = constructionElements.at(i).toElement();
         boost::optional<model::ModelObject> construction = translateConstructAssembly(constructionElement, doc, *result);
-        OS_ASSERT(construction); // what type of error handling do we want?
+        if (!construction){
+          LOG(Error, "Failed to translate 'ConsAssm' element " << i);
+        }
                 
         if (m_progressBar){
           m_progressBar->setValue(m_progressBar->value() + 1);
@@ -322,7 +332,9 @@ namespace sdd {
       for (int i = 0; i < doorConstructionElements.count(); i++){
         QDomElement doorConstructionElement = doorConstructionElements.at(i).toElement();
         boost::optional<model::ModelObject> doorConstruction = translateDoorConstruction(doorConstructionElement, doc, *result);
-        OS_ASSERT(doorConstruction); // what type of error handling do we want?
+        if (!doorConstruction){
+          LOG(Error, "Failed to translate 'DrCons' element " << i);
+        }
 
         if (m_progressBar){
           m_progressBar->setValue(m_progressBar->value() + 1);
@@ -341,7 +353,9 @@ namespace sdd {
       for (int i = 0; i < fenestrationConstructionElements.count(); i++){
         QDomElement fenestrationConstructionElement = fenestrationConstructionElements.at(i).toElement();
         boost::optional<model::ModelObject> fenestrationConstruction = translateFenestrationConstruction(fenestrationConstructionElement, doc, *result);
-        OS_ASSERT(fenestrationConstruction); // what type of error handling do we want?
+        if (!fenestrationConstruction){
+          LOG(Error, "Failed to translate 'FenCons' element " << i);
+        }
 
         if (m_progressBar){
           m_progressBar->setValue(m_progressBar->value() + 1);
@@ -352,21 +366,27 @@ namespace sdd {
       for (int i = 0; i < crvDblQuadElements.count(); i++){
         QDomElement crvDblQuadElement = crvDblQuadElements.at(i).toElement();
         boost::optional<model::ModelObject> curve = translateCrvDblQuad(crvDblQuadElement, doc, *result);
-        OS_ASSERT(curve);
+        if (!curve){
+          LOG(Error, "Failed to translate 'CrvDblQuad' element " << i);
+        }
       }
 
       QDomNodeList crvCubicElements = projectElement.elementsByTagName("CrvCubic");
       for (int i = 0; i < crvCubicElements.count(); i++){
         QDomElement crvCubicElement = crvCubicElements.at(i).toElement();
         boost::optional<model::ModelObject> curve = translateCrvCubic(crvCubicElement, doc, *result);
-        OS_ASSERT(curve);
+        if (!curve){
+          LOG(Error, "Failed to translate 'CrvCubic' element " << i);
+        }
       }
 
       QDomNodeList crvQuadElements = projectElement.elementsByTagName("CrvQuad");
       for (int i = 0; i < crvQuadElements.count(); i++){
         QDomElement crvQuadElement = crvQuadElements.at(i).toElement();
         boost::optional<model::ModelObject> curve = translateCrvQuad(crvQuadElement, doc, *result);
-        OS_ASSERT(curve);
+        if (!curve){
+          LOG(Error, "Failed to translate 'CrvQuad' element " << i);
+        }
       }
 
       // do schedules before loads
@@ -381,7 +401,9 @@ namespace sdd {
       for (int i = 0; i < scheduleDayElements.count(); i++){
         QDomElement scheduleDayElement = scheduleDayElements.at(i).toElement();
         boost::optional<model::ModelObject> scheduleDay = translateScheduleDay(scheduleDayElement, doc, *result);
-        OS_ASSERT(scheduleDay); // what type of error handling do we want?
+        if (!scheduleDay){
+          LOG(Error, "Failed to translate 'SchDay' element " << i);
+        }
 
         if (m_progressBar){
           m_progressBar->setValue(m_progressBar->value() + 1);
@@ -399,7 +421,9 @@ namespace sdd {
       for (int i = 0; i < scheduleWeekElements.count(); i++){
         QDomElement scheduleWeekElement = scheduleWeekElements.at(i).toElement();
         boost::optional<model::ModelObject> scheduleWeek = translateScheduleWeek(scheduleWeekElement, doc, *result);
-        OS_ASSERT(scheduleWeek); // what type of error handling do we want?
+        if (!scheduleWeek){
+          LOG(Error, "Failed to translate 'SchWeek' element " << i);
+        }
 
         if (m_progressBar){
           m_progressBar->setValue(m_progressBar->value() + 1);
@@ -417,7 +441,9 @@ namespace sdd {
       for (int i = 0; i < scheduleElements.count(); i++){
         QDomElement scheduleElement = scheduleElements.at(i).toElement();
         boost::optional<model::ModelObject> schedule = translateSchedule(scheduleElement, doc, *result);
-        OS_ASSERT(schedule); // what type of error handling do we want?
+        if (!schedule){
+          LOG(Error, "Failed to translate 'Sch' element " << i);
+        }
 
         if (m_progressBar){
           m_progressBar->setValue(m_progressBar->value() + 1);
@@ -435,7 +461,9 @@ namespace sdd {
       for (int i = 0; i < holidayElements.count(); i++){
         QDomElement holidayElement = holidayElements.at(i).toElement();
         boost::optional<model::ModelObject> holiday = translateHoliday(holidayElement, doc, *result);
-        OS_ASSERT(holiday); // what type of error handling do we want?
+        if (!holiday){
+          LOG(Error, "Failed to translate 'Hol' element " << i);
+        }
 
         if (m_progressBar){
           m_progressBar->setValue(m_progressBar->value() + 1);
@@ -444,7 +472,9 @@ namespace sdd {
 
       // do water mains temperatures, do after schedules
       boost::optional<model::ModelObject> waterMainsTemperature = translateWaterMainsTemperature(projectElement, doc, *result);
-      //OS_ASSERT(waterMainsTemperature); // what type of error handling do we want?
+      //if (!waterMainsTemperature){
+      //  LOG(Error, "Could not translate WaterMainsTemperature");
+      //}
 
       // FluidSys
       QDomNodeList fluidSysElements = projectElement.elementsByTagName("FluidSys");
@@ -502,18 +532,24 @@ namespace sdd {
       for (int i = 0; i < exteriorShadingElements.count(); ++i){
         if (exteriorShadingElements.at(i).parentNode() == projectElement){
           boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements.at(i).toElement(), doc, shadingSurfaceGroup);
-          OS_ASSERT(exteriorShading);
+          if (!exteriorShading){
+            LOG(Error, "Failed to translate 'ExtShdgObj' element " << i);
+          }
         }
       }
 
-      // translate the building
-      QDomElement buildingElement = projectElement.firstChildElement("Bldg");
-      OS_ASSERT(!buildingElement.isNull()); // what type of error handling do we want?
-
       openstudio::model::Facility facility = result->getUniqueModelObject<openstudio::model::Facility>();
 
-      boost::optional<model::ModelObject> building = translateBuilding(buildingElement, doc, *result);
-      OS_ASSERT(building); // what type of error handling do we want?
+      // translate the building
+      QDomElement buildingElement = projectElement.firstChildElement("Bldg");
+      if (buildingElement.isNull()){
+        LOG(Error, "Required 'Bldg' element is Null");
+      } else{
+        boost::optional<model::ModelObject> building = translateBuilding(buildingElement, doc, *result);
+        if (!building){
+          LOG(Error, "Failed to translate 'Bldg'");
+        }
+      }
 
       result->setFastNaming(false);
 
@@ -555,7 +591,9 @@ namespace sdd {
 
         QDomElement thermalZoneElement = thermalZoneElements.at(i).toElement();
         boost::optional<model::ModelObject> thermalZone = translateThermalZone(thermalZoneElement,doc,*result);
-        OS_ASSERT(thermalZone);
+        if (!thermalZone){
+          LOG(Error, "Failed to translate 'ThrmlZn' element " << i);
+        }
 
         if (m_progressBar){
           m_progressBar->setValue(m_progressBar->value() + 1);
@@ -1449,7 +1487,6 @@ namespace sdd {
     boost::optional<EpwFile> epwFile;
     try{
       epwFile = EpwFile(epwFilePath);
-      OS_ASSERT(epwFile);
     }catch(std::exception&){
       LOG(Error, "Could not open epw file '" << toString(epwFilePath) << "'");
     }
