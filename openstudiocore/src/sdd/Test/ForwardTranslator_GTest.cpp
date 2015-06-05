@@ -79,14 +79,17 @@ TEST_F(SDDFixture, ForwardTranslator_exampleModel)
 
   EXPECT_TRUE(test);
 
-  ReverseTranslator reverseTranslator;
-  boost::optional<Model> model2 = reverseTranslator.loadModel(p);
+  // DLM: the forward translator writes out an input SDD, the reverse translator reads a sim SDD
+  // these two are not compatible and round trip is not supported
 
-  ASSERT_TRUE(model2);
+  //ReverseTranslator reverseTranslator;
+  //boost::optional<Model> model2 = reverseTranslator.loadModel(p);
 
-  path p1 = resourcesPath() / openstudio::toPath("sdd/exampleModel.osm");
-  model.save(p1, true);
+  //ASSERT_TRUE(model2);
 
-  path p2 = resourcesPath() / openstudio::toPath("sdd/exampleModel2.osm");
-  model2->save(p2, true);
+  //path p1 = resourcesPath() / openstudio::toPath("sdd/exampleModel.osm");
+  //model.save(p1, true);
+
+  //path p2 = resourcesPath() / openstudio::toPath("sdd/exampleModel2.osm");
+  //model2->save(p2, true);
 }
