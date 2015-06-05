@@ -130,6 +130,7 @@ namespace radiance {
       // create space geometry, hashes of space name to file contents
       std::map<std::string, std::string> m_radSpaces;
       std::map<std::string, std::string> m_radSensors;
+      std::map<std::string, std::string> m_radSensorViews;
       std::map<std::string, std::string> m_radGlareSensors;
       std::map<std::string, std::string> m_radMaps;
       std::map<std::string, openstudio::Handle> m_radMapHandles;

@@ -8122,7 +8122,7 @@ OS:ThermalZone,
   ,                                       !- Zone Return Air Node Name
   {70e9709f-2d5d-47a2-bf17-22abd0b55deb}, !- Primary Daylighting Control Name
   ,                                       !- Fraction of Zone Controlled by Primary Daylighting Control
-  ,                                       !- Secondary Daylighting Control Name
+  {6ac05ea8-5377-4344-bc33-2a86f8c0675f}, !- Secondary Daylighting Control Name
   ,                                       !- Fraction of Zone Controlled by Secondary Daylighting Control
   {de23406e-c3f2-40a2-9728-24b8bab99d59}, !- Illuminance Map Name
   {dcb3ba3a-c077-4665-b611-bd78f4d44647}, !- Group Rendering Name
@@ -8202,11 +8202,11 @@ OS:ThermalZone,
   {d6c88152-55e1-4cee-aa3d-8c0a10c91ed8}, !- Zone Air Exhaust Port List
   {5fc733a5-ca0b-4cdf-a9ce-c2500bde02af}, !- Zone Air Node Name
   ,                                       !- Zone Return Air Node Name
-  ,                                       !- Primary Daylighting Control Name
+  {6ac05ea8-5377-4344-bc33-2a86f8c0675f}, !- Primary Daylighting Control Name
   ,                                       !- Fraction of Zone Controlled by Primary Daylighting Control
-  {15610535-2b4e-44bf-b037-ffe65134ddf6}, !- Secondary Daylighting Control Name
+  {a8c69e3a-78d6-4c55-874e-93c27c37d527}, !- Secondary Daylighting Control Name
   ,                                       !- Fraction of Zone Controlled by Secondary Daylighting Control
-  {462c4de2-5519-4950-ae3c-0a2f7f463fe4}, !- Illuminance Map Name
+  {b3d56c31-f57c-420a-8f73-b0f6f2ea7135}, !- Illuminance Map Name
   {e372aac7-9c8d-428c-87a9-022b8feb96a1}, !- Group Rendering Name
   ,                                       !- Thermostat Name
   No,                                     !- Use Ideal Air Loads
@@ -8354,7 +8354,7 @@ OS:Material,
 OS:ShadingSurfaceGroup,
   {729a1585-5d08-4eb4-bc0a-bd6e13f58dab}, !- Handle
   Building west,                          !- Name
-  Site,                               !- Shading Surface Type
+  Site,                                   !- Shading Surface Type
   ,                                       !- Space Name
   0,                                      !- Direction of Relative North {deg}
   -2.02809419338191,                      !- X Origin {m}
@@ -8460,7 +8460,7 @@ OS:ShadingSurface,
 OS:ShadingSurfaceGroup,
   {e59609a3-5c61-49fd-836f-b7ad648f6841}, !- Handle
   Building North,                         !- Name
-  Site,                               !- Shading Surface Type
+  Site,                                   !- Shading Surface Type
   ,                                       !- Space Name
   -0,                                     !- Direction of Relative North {deg}
   -6.12531110359299,                      !- X Origin {m}
@@ -8543,7 +8543,7 @@ OS:ShadingSurface,
 OS:ShadingSurfaceGroup,
   {98a6dd8e-43d1-46f0-b17c-8881168cf12d}, !- Handle
   Ground,                                 !- Name
-  Site,                               !- Shading Surface Type
+  Site,                                   !- Shading Surface Type
   ,                                       !- Space Name
   -0,                                     !- Direction of Relative North {deg}
   19.3463784696646,                       !- X Origin {m}
@@ -8580,4 +8580,57 @@ OS:Material,
   0.9,                                    !- Thermal Absorptance
   0.3,                                    !- Solar Absorptance
   0.9;                                    !- Visible Absorptance
+
+OS:Daylighting:Control,
+  {6ac05ea8-5377-4344-bc33-2a86f8c0675f}, !- Handle
+  Daylighting Control 3,                  !- Name
+  {3810e56a-95f5-4687-b896-06caf8120348}, !- Space Name
+  -2.00207665099148,                      !- Position X-Coordinate {m}
+  1.76140975683147,                       !- Position Y-Coordinate {m}
+  0.762,                                  !- Position Z-Coordinate {m}
+  0,                                      !- Psi Rotation Around X-Axis {deg}
+  -0,                                     !- Theta Rotation Around Y-Axis {deg}
+  0,                                      !- Phi Rotation Around Z-Axis {deg}
+  ,                                       !- Illuminance Setpoint {lux}
+  ,                                       !- Lighting Control Type
+  ,                                       !- Minimum Input Power Fraction for Continuous Dimming Control
+  ,                                       !- Minimum Light Output Fraction for Continuous Dimming Control
+  ,                                       !- Number of Stepped Control Steps
+  ,                                       !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+  ,                                       !- Number of Daylighting Views
+  ;                                       !- Maximum Allowable Discomfort Glare Index
+
+OS:Daylighting:Control,
+  {a8c69e3a-78d6-4c55-874e-93c27c37d527}, !- Handle
+  Daylighting Control 4,                  !- Name
+  {3810e56a-95f5-4687-b896-06caf8120348}, !- Space Name
+  -1.92943725999088,                      !- Position X-Coordinate {m}
+  0.644579120197119,                      !- Position Y-Coordinate {m}
+  0.762,                                  !- Position Z-Coordinate {m}
+  0,                                      !- Psi Rotation Around X-Axis {deg}
+  -0,                                     !- Theta Rotation Around Y-Axis {deg}
+  0,                                      !- Phi Rotation Around Z-Axis {deg}
+  ,                                       !- Illuminance Setpoint {lux}
+  ,                                       !- Lighting Control Type
+  ,                                       !- Minimum Input Power Fraction for Continuous Dimming Control
+  ,                                       !- Minimum Light Output Fraction for Continuous Dimming Control
+  ,                                       !- Number of Stepped Control Steps
+  ,                                       !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+  ,                                       !- Number of Daylighting Views
+  ;                                       !- Maximum Allowable Discomfort Glare Index
+
+OS:IlluminanceMap,
+  {b3d56c31-f57c-420a-8f73-b0f6f2ea7135}, !- Handle
+  Illuminance Map North,                  !- Name
+  {3810e56a-95f5-4687-b896-06caf8120348}, !- Space Name
+  -5.8610442978988,                       !- Origin X-Coordinate {m}
+  0.317701860694381,                      !- Origin Y-Coordinate {m}
+  0.762,                                  !- Origin Z-Coordinate {m}
+  0,                                      !- Psi Rotation Around X-Axis {deg}
+  -0,                                     !- Theta Rotation Around Y-Axis {deg}
+  0,                                      !- Phi Rotation Around Z-Axis {deg}
+  5.593,                                  !- X Length {m}
+  ,                                       !- Number of X Grid Points
+  2.35,                                   !- Y Length {m}
+  ;                                       !- Number of Y Grid Points
 
