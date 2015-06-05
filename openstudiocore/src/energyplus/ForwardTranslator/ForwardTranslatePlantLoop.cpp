@@ -43,6 +43,8 @@
 #include "../../model/ChillerAbsorptionIndirect_Impl.hpp"
 #include "../../model/WaterHeaterMixed.hpp"
 #include "../../model/WaterHeaterMixed_Impl.hpp"
+#include "../../model/WaterHeaterHeatPump.hpp"
+#include "../../model/WaterHeaterHeatPump_Impl.hpp"
 #include "../../model/CoolingTowerVariableSpeed.hpp"
 #include "../../model/CoolingTowerVariableSpeed_Impl.hpp"
 #include "../../model/CoolingTowerSingleSpeed.hpp"
@@ -283,6 +285,21 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
           inletNode = waterToWaterComponent->demandInletModelObject()->optionalCast<Node>();
           outletNode = waterToWaterComponent->demandOutletModelObject()->optionalCast<Node>();
         }
+        //special case for WaterHeater:HeatPump. In E+, this object appears on both the 
+        //zonehvac:equipmentlist and the branch.  In OpenStudio the tank (WaterHeater:Mixed)
+        //is attached to the plant and the WaterHeaterHeatPump is connected to the zone and zonehvac equipment list.
+        //Here we resolve all of that since it is the WaterHeaterHeatPump that must show up on both
+        if( auto tank = modelObject.optionalCast<WaterHeaterMixed>() ) {
+          // containingZoneHVACComponent can be WaterHeaterHeatPump
+          if( auto hpwh = tank->containingZoneHVACComponent() ) {
+            //translate and map containingZoneHVAC
+            if ( auto hpwhIDF = translateAndMapModelObject(hpwh.get()) ) {
+              //Get the name and the idd object from the idf object version of this
+              objectName = hpwhIDF->name().get();
+              iddType = hpwhIDF->iddObject().name();
+            }
+          }
+        }
       }
 
       IdfExtensibleGroup eg = branchIdfObject.pushExtensibleGroup();
@@ -466,11 +483,19 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
           {
             flowRate = optionalFlowRate.get();
           }
-          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,HEATING));
+          if( auto hpwh = supplyComponent.cast<model::HVACComponent>().containingZoneHVACComponent() ) {
+            setpointComponents.push_back(SetpointComponentInfo(hpwh.get(),*outletNode,flowRate,autosize,HEATING));
+          } else {
+            setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,HEATING));
+          }
         }
         else
         {
-          heatingComponents.push_back(supplyComponent);
+          if( auto hpwh = supplyComponent.cast<model::HVACComponent>().containingZoneHVACComponent() ) {
+            heatingComponents.push_back(hpwh.get());
+          } else {
+            heatingComponents.push_back(supplyComponent);
+          }
         }
         break;
       }

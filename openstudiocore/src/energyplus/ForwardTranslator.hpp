@@ -87,6 +87,7 @@ class CoilPerformanceDXCooling;
 class CoilSystemCoolingDXHeatExchangerAssisted;
 class CoilSystemCoolingWaterHeatExchangerAssisted;
 class CoilWaterHeatingDesuperheater;
+class CoilWaterHeatingAirToWaterHeatPump;
 class Construction;
 class ConstructionWithInternalSource;
 class ControllerOutdoorAir;
@@ -242,6 +243,7 @@ class ThermostatSetpointDualSetpoint;
 class Timestep;
 class Version;
 class WaterHeaterMixed;
+class WaterHeaterHeatPump;
 class WaterUseConnections;
 class WaterUseEquipment;
 class WindowPropertyFrameAndDivider;
@@ -442,6 +444,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateCoilSystemCoolingWaterHeatExchangerAssisted( model::CoilSystemCoolingWaterHeatExchangerAssisted & modelObject );
 
   boost::optional<IdfObject> translateCoilWaterHeatingDesuperheater( model::CoilWaterHeatingDesuperheater & modelObject );
+
+  boost::optional<IdfObject> translateCoilWaterHeatingAirToWaterHeatPump( model::CoilWaterHeatingAirToWaterHeatPump & modelObject );
 
   boost::optional<IdfObject> translateConstruction( model::Construction & modelObject );
   
@@ -750,6 +754,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateVersion( model::Version & modelObject );
 
   boost::optional<IdfObject> translateWaterHeaterMixed( model::WaterHeaterMixed & modelObject );
+
+  boost::optional<IdfObject> translateWaterHeaterHeatPump( model::WaterHeaterHeatPump & modelObject );
 
   boost::optional<IdfObject> translateWaterUseConnections( model::WaterUseConnections & modelObject );
 

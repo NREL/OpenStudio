@@ -802,6 +802,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateCoilWaterHeatingDesuperheater(coil);
       break;
     }
+  case openstudio::IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump :
+    {
+      auto mo = modelObject.cast<CoilWaterHeatingAirToWaterHeatPump>();
+      retVal = translateCoilWaterHeatingAirToWaterHeatPump(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_ComponentData :
     {
       // no-op
@@ -1231,6 +1237,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::WaterHeaterMixed waterHeaterMixed = modelObject.cast<WaterHeaterMixed>();
       retVal = translateWaterHeaterMixed(waterHeaterMixed);
+      break;
+    }
+  case openstudio::IddObjectType::OS_WaterHeater_HeatPump :
+    {
+      auto mo = modelObject.cast<WaterHeaterHeatPump>();
+      retVal = translateWaterHeaterHeatPump(mo);
       break;
     }
   case openstudio::IddObjectType::OS_WaterUse_Connections :
