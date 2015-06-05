@@ -31,6 +31,8 @@
 #include <model/Schedule_Impl.hpp>
 #include <model/ScheduleDay.hpp>
 #include <model/ScheduleDay_Impl.hpp>
+#include <model/ThermalZone.hpp>
+#include <model/ThermalZone_Impl.hpp>
 #include <model/HVACComponent.hpp>
 #include <model/HVACComponent_Impl.hpp>
 #include <model/ScheduleRuleset.hpp>
@@ -483,7 +485,51 @@ namespace detail {
     return result;
   }
 
+  bool WaterHeaterHeatPump_Impl::addToThermalZone(ThermalZone & thermalZone)
+  {
+    bool result = false;
+    auto thisObject = getObject<WaterHeaterHeatPump>();
+
+    if( (result = ZoneHVACComponent_Impl::addToThermalZone(thermalZone)) ) {
+      thermalZone.setHeatingPriority(thisObject,1);
+      thermalZone.setCoolingPriority(thisObject,1);
+      setCompressorLocation("Zone");
+      setInletAirConfiguration("ZoneAirOnly");
+    }
+
+    return result;
+  }
+
 } // detail
+
+WaterHeaterHeatPump::WaterHeaterHeatPump(const Model& model,
+  const ModelObject & dxCoil,
+  const HVACComponent & tank,
+  const HVACComponent & fan,
+  Schedule & compressorSetpointTemperatureSchedule,
+  Schedule & inletAirMixerSchedule)
+  : ZoneHVACComponent(WaterHeaterHeatPump::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::WaterHeaterHeatPump_Impl>());
+
+  setDXCoil(dxCoil);
+  setTank(tank);
+  setFan(fan);
+  setCompressorSetpointTemperatureSchedule(compressorSetpointTemperatureSchedule);
+  setInletAirMixerSchedule(inletAirMixerSchedule);
+
+  setDeadBandTemperatureDifference(5.0);
+  autosizeCondenserWaterFlowRate();
+  autosizeEvaporatorAirFlowRate();
+  setInletAirConfiguration("Schedule");
+  setMinimumInletAirTemperatureforCompressorOperation(10.0);
+  setCompressorLocation("Schedule");
+  setFanPlacement("DrawThrough");
+  setOnCycleParasiticElectricLoad(0.0);
+  setOffCycleParasiticElectricLoad(0.0);
+  setParasiticHeatRejectionLocation("Outdoors");
+  setControlSensorLocationInStratifiedTank("Heater1");
+}
 
 WaterHeaterHeatPump::WaterHeaterHeatPump(const Model& model)
   : ZoneHVACComponent(WaterHeaterHeatPump::iddObjectType(),model)
@@ -511,12 +557,30 @@ WaterHeaterHeatPump::WaterHeaterHeatPump(const Model& model)
     setInletAirMixerSchedule(schedule);
   }
 
+  {
+    ScheduleRuleset schedule(model);
+    schedule.defaultDaySchedule().addValue(Time(0,24,0,0),19.7);
+    setInletAirTemperatureSchedule(schedule);
+  }
+
+  {
+    ScheduleRuleset schedule(model);
+    schedule.defaultDaySchedule().addValue(Time(0,24,0,0),0.5);
+    setInletAirHumiditySchedule(schedule);
+  }
+
+  {
+    ScheduleRuleset schedule(model);
+    schedule.defaultDaySchedule().addValue(Time(0,24,0,0),21.0);
+    setCompressorAmbientTemperatureSchedule(schedule);
+  }
+
   setDeadBandTemperatureDifference(5.0);
   autosizeCondenserWaterFlowRate();
   autosizeEvaporatorAirFlowRate();
-  setInletAirConfiguration("ZoneAirOnly");
+  setInletAirConfiguration("Schedule");
   setMinimumInletAirTemperatureforCompressorOperation(10.0);
-  setCompressorLocation("Zone");
+  setCompressorLocation("Schedule");
   setFanPlacement("DrawThrough");
   setOnCycleParasiticElectricLoad(0.0);
   setOffCycleParasiticElectricLoad(0.0);

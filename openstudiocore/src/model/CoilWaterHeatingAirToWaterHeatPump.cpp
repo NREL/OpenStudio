@@ -562,6 +562,44 @@ CoilWaterHeatingAirToWaterHeatPump::CoilWaterHeatingAirToWaterHeatPump(const Mod
 
 }
 
+CoilWaterHeatingAirToWaterHeatPump::CoilWaterHeatingAirToWaterHeatPump(const Model& model,
+  Curve & heatingCapacityFunctionofTemperatureCurve,
+  Curve & heatingCapacityFunctionofAirFlowFractionCurve,
+  Curve & heatingCapacityFunctionofWaterFlowFractionCurve,
+  Curve & heatingCOPFunctionofTemperatureCurve,
+  Curve & heatingCOPFunctionofAirFlowFractionCurve,
+  Curve & heatingCOPFunctionofWaterFlowFractionCurve,
+  Curve & partLoadFractionCorrelationCurve)
+  : ParentObject(CoilWaterHeatingAirToWaterHeatPump::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::CoilWaterHeatingAirToWaterHeatPump_Impl>());
+
+  setRatedHeatingCapacity(4000.0);
+  setRatedCOP(3.2);
+  setRatedSensibleHeatRatio(0.6956);
+  setRatedEvaporatorInletAirDryBulbTemperature(29.44);
+  setRatedEvaporatorInletAirWetBulbTemperature(22.22);
+  setRatedCondenserInletWaterTemperature(55.72);
+  autosizeRatedEvaporatorAirFlowRate();
+  autosizeRatedCondenserWaterFlowRate();
+  setEvaporatorFanPowerIncludedinRatedCOP(false);
+  setCondenserPumpPowerIncludedinRatedCOP(false);
+  setCondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP(false);
+  setCondenserWaterPumpPower(150.0);
+  setFractionofCondenserPumpHeattoWater(0.1);
+  setCrankcaseHeaterCapacity(100.0);
+  setMaximumAmbientTemperatureforCrankcaseHeaterOperation(5.0);
+  setEvaporatorAirTemperatureTypeforCurveObjects("WetBulbTemperature");
+
+  setHeatingCapacityFunctionofTemperatureCurve(heatingCapacityFunctionofTemperatureCurve);
+  setHeatingCapacityFunctionofAirFlowFractionCurve(heatingCapacityFunctionofAirFlowFractionCurve);
+  setHeatingCapacityFunctionofWaterFlowFractionCurve(heatingCapacityFunctionofWaterFlowFractionCurve);
+  setHeatingCOPFunctionofTemperatureCurve(heatingCOPFunctionofTemperatureCurve);
+  setHeatingCOPFunctionofAirFlowFractionCurve(heatingCOPFunctionofAirFlowFractionCurve);
+  setHeatingCOPFunctionofWaterFlowFractionCurve(heatingCOPFunctionofWaterFlowFractionCurve);
+  setPartLoadFractionCorrelationCurve(partLoadFractionCorrelationCurve);
+}
+
 IddObjectType CoilWaterHeatingAirToWaterHeatPump::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump);
 }

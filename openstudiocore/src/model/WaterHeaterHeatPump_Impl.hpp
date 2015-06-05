@@ -177,6 +177,7 @@ namespace detail {
     unsigned outletPort() const;
     std::vector<ModelObject> children() const;
     ModelObject clone(Model model) const;
+    bool addToThermalZone(ThermalZone & thermalZone);
 
     //@}
    protected:

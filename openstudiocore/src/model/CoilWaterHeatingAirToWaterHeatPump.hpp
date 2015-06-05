@@ -43,6 +43,15 @@ class MODEL_API CoilWaterHeatingAirToWaterHeatPump : public ParentObject {
 
   explicit CoilWaterHeatingAirToWaterHeatPump(const Model& model);
 
+  explicit CoilWaterHeatingAirToWaterHeatPump(const Model& model,
+    Curve & heatingCapacityFunctionofTemperatureCurve,
+    Curve & heatingCapacityFunctionofAirFlowFractionCurve,
+    Curve & heatingCapacityFunctionofWaterFlowFractionCurve,
+    Curve & heatingCOPFunctionofTemperatureCurve,
+    Curve & heatingCOPFunctionofAirFlowFractionCurve,
+    Curve & heatingCOPFunctionofWaterFlowFractionCurve,
+    Curve & partLoadFractionCorrelationCurve);
+
   virtual ~CoilWaterHeatingAirToWaterHeatPump() {}
 
   //@}
