@@ -24,6 +24,7 @@
 #include "../shared_gui_components/OSListView.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/bcl/BCLMeasure.hpp"
 
 #include <QSplitter>
 #include <QVBoxLayout>
@@ -273,24 +274,23 @@ DesignAltContentView::DesignAltContentView(bool t_isBaseline, bool t_isAlternati
   descriptionTextEdit->setStyleSheet("QTextEdit { background: #E0E0E0; }");
   mainVLayout->addWidget(descriptionTextEdit);
 
+  connect(descriptionTextEdit, &QTextEdit::textChanged, this, &DesignAltContentView::onDescriptionTextChanged);
+
   if (t_isBaseline)
   {
     perturbationListView->setStyleSheet("color:#D5D5D5");
     descriptionTitleLabel->setVisible(false);
     descriptionTextEdit->setVisible(false);
   }
-
-  connect(descriptionTextEdit, &QTextEdit::textChanged, this, &DesignAltContentView::onDescriptionTextChanged);
-  
-  alternativeModelMeasureListView = new OSListView();
-  alternativeModelMeasureListView->setContentsMargins(0, 0, 0, 0);
-
-  mainVLayout->addWidget(alternativeModelMeasureListView);
   
   if (t_isAlternativeModel){
     QLabel * modelMeasuresTitleLabel = new QLabel("User Defined Measures");
     modelMeasuresTitleLabel->setObjectName("H2");
     mainVLayout->addWidget(modelMeasuresTitleLabel);
+
+    alternativeModelMeasureListView = new OSListView();
+    alternativeModelMeasureListView->setContentsMargins(0, 0, 0, 0);
+    mainVLayout->addWidget(alternativeModelMeasureListView);
 
     if (t_alternateModelMeasureNeedsUpdate){
       QLabel * needsUpdateLabel = new QLabel("Update Required, Sync Project Measures With Library");
@@ -355,6 +355,9 @@ AlternativeModelMeasureItemView::AlternativeModelMeasureItemView(const QString& 
   QRegExp nameRegex("^\\S.*");
   auto validator = new QRegExpValidator(nameRegex, this);
 
+  removeAlternativeModelMeasure = new SofterDuplicateButton();
+  mainVLayout->addWidget(removeAlternativeModelMeasure);
+
   displayNameTextEdit = new QLineEdit();
   displayNameTextEdit->setAcceptDrops(false);
   displayNameTextEdit->setValidator(validator);
@@ -376,16 +379,26 @@ AlternativeModelMeasureItemView::AlternativeModelMeasureItemView(const QString& 
   taxonomyFirstLevelComboBox = new QComboBox();
   hLayout->addWidget(taxonomyFirstLevelComboBox);
 
+  std::vector<std::string> firstLevelTerms = BCLMeasure::suggestedFirstLevelTaxonomyTerms();
+  for (const std::string& firstLevelTerm : firstLevelTerms){
+    taxonomyFirstLevelComboBox->addItem(toQString(firstLevelTerm));
+  }
+
+  connect(taxonomyFirstLevelComboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &AlternativeModelMeasureItemView::onFirstLevelTaxonomyTagChanged);
+
   taxonomySecondLevelComboBox = new QComboBox();
   hLayout->addWidget(taxonomySecondLevelComboBox);
 
-  QRegExp numberRegex("^\\S.*");
+  QRegExp numberRegex("^[+-]?([0-9]*\\.?[0-9]+|[0-9]+\\.?[0-9]*)([eE][+-]?[0-9]+)?$");
   validator = new QRegExpValidator(numberRegex, this);
 
   capitalCostTextEdit = new QLineEdit();
   capitalCostTextEdit->setAcceptDrops(false);
   capitalCostTextEdit->setValidator(validator);
   hLayout->addWidget(capitalCostTextEdit);
+
+  hLayout->addStretch();
+
   mainVLayout->addLayout(hLayout);
 }
 
@@ -426,11 +439,15 @@ void AlternativeModelMeasureItemView::setDescription(const QString& description)
 
 void AlternativeModelMeasureItemView::setTaxonomyTag(const QString& taxonomyTag)
 {
-  QRegularExpression re("(.*)\\.(.*)");
-  QRegularExpressionMatch match = re.match(taxonomyTag);
-  if (match.hasMatch()) {
-    QString first = match.captured(1); 
-    QString second = match.captured(2); 
+  QStringList taxonomyParts = taxonomyTag.split('.');
+  if (taxonomyParts.size() > 0){
+    unsigned index = taxonomyFirstLevelComboBox->findText(taxonomyParts[0]);
+    taxonomyFirstLevelComboBox->setCurrentIndex(index);
+    onFirstLevelTaxonomyTagChanged();
+  }
+  if (taxonomyParts.size() > 1){
+    unsigned index = taxonomySecondLevelComboBox->findText(taxonomyParts[1]);
+    taxonomySecondLevelComboBox->setCurrentIndex(index);
   }
 }
 
@@ -441,7 +458,20 @@ void AlternativeModelMeasureItemView::setCapitalCost(double capitalCost)
 
 void AlternativeModelMeasureItemView::onFirstLevelTaxonomyTagChanged()
 {
+  std::string firstLevelTerm = toString(taxonomyFirstLevelComboBox->currentText());
 
+  taxonomySecondLevelComboBox->clear();
+  taxonomySecondLevelComboBox->setEnabled(false);
+
+  std::vector<std::string> secondLevelTerms = BCLMeasure::suggestedSecondLevelTaxonomyTerms(toString(firstLevelTerm));
+
+  if (!secondLevelTerms.empty()){
+    for (const std::string& secondLevelTerm : secondLevelTerms){
+      taxonomySecondLevelComboBox->addItem(toQString(secondLevelTerm));
+    }
+    taxonomySecondLevelComboBox->setCurrentIndex(0);
+    taxonomySecondLevelComboBox->setEnabled(true);
+  }
 }
 
 

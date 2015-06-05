@@ -304,6 +304,8 @@ public slots:
 
   void alternativeModelMeasureItemViewChanged();
 
+  void alternativeModelMeasureItemViewRemoved();
+
 private:
 
   boost::optional<analysis::RubyMeasure> rubySwapMeasure() const;
@@ -342,6 +344,8 @@ public:
 signals:
 
   void changed();
+
+  void removed();
 
 private:
 

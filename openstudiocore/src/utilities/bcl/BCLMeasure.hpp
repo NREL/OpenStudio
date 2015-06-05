@@ -126,6 +126,13 @@ namespace openstudio{
     /// Suggested values for "Intended Use Case" attribute
     static std::vector<std::string> suggestedIntendedUseCases();
 
+    /// Suggested values for the first level taxonomy tag
+    // DLM: we should move the TID code out of BuildingComponentDialog into BCLComponent
+    static std::vector<std::string> suggestedFirstLevelTaxonomyTerms();
+
+    /// Suggested values for the second level taxonomy tag
+    static std::vector<std::string> suggestedSecondLevelTaxonomyTerms(const std::string& firstLevelTaxonomyTerm);
+
     //@}
     /** @name Destructor */
     //@{

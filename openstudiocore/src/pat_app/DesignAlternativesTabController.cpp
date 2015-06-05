@@ -860,7 +860,7 @@ void AlternativeModelMeasureListController::addAlternativeModelMeasure()
   newMeasure.insert("uuid", UUID::createUuid().toString());
   newMeasure.insert("displayName", "New Measure");
   newMeasure.insert("description", "New Measure Description");
-  newMeasure.insert("taxonomyTag", "Tax1.Tax2");
+  newMeasure.insert("taxonomyTag", "Envelope.Form");
   newMeasure.insert("capitalCost", 0.0);
 
   modelMeasures << newMeasure;
@@ -890,6 +890,24 @@ void AlternativeModelMeasureListController::alternativeModelMeasureItemViewChang
   }
 
   setModelMeasures(modelMeasures);
+}
+
+void AlternativeModelMeasureListController::alternativeModelMeasureItemViewRemoved()
+{
+  QObject* sender = this->sender();
+
+  AlternativeModelMeasureItemView* alternativeModelMeasureItemView = qobject_cast<AlternativeModelMeasureItemView*>(sender);
+
+  QJsonArray modelMeasures = this->modelMeasures();
+  QJsonArray newModelMeasures;
+  for (QJsonValue jsonValue : modelMeasures) {
+    QJsonObject jsonObject = jsonValue.toObject();
+    if (jsonObject["uuid"].toString() != alternativeModelMeasureItemView->uuid()){
+      newModelMeasures << jsonObject;
+    }
+  }
+
+  setModelMeasures(newModelMeasures);
 }
 
 analysis::OptionalRubyMeasure AlternativeModelMeasureListController::rubySwapMeasure() const
@@ -980,6 +998,8 @@ std::vector<QSharedPointer<AlternativeModelMeasureItem> > AlternativeModelMeasur
     QSharedPointer<AlternativeModelMeasureItem> alternativeModelMeasureItem(new AlternativeModelMeasureItem(uuid, displayName, description, taxonomyTag, capitalCost));
 
     connect(alternativeModelMeasureItem.data(), &AlternativeModelMeasureItem::changed, this, &AlternativeModelMeasureListController::alternativeModelMeasureItemViewChanged);
+    
+    connect(alternativeModelMeasureItem.data(), &AlternativeModelMeasureItem::removed, this, &AlternativeModelMeasureListController::alternativeModelMeasureItemViewRemoved);
 
     result.push_back(alternativeModelMeasureItem);
   }
@@ -1038,6 +1058,9 @@ QWidget * AlternativeModelMeasureItemDelegate::view(QSharedPointer<OSListItem> d
     alternativeModelMeasureItemView->setCapitalCost(alternativeModelMeasureItem->capitalCost());
 
     connect(alternativeModelMeasureItemView, &AlternativeModelMeasureItemView::changed, alternativeModelMeasureItem.data(), &AlternativeModelMeasureItem::changed);
+
+    connect(alternativeModelMeasureItemView->removeAlternativeModelMeasure, &QPushButton::clicked, alternativeModelMeasureItem.data(), &AlternativeModelMeasureItem::removed);
+
 
     return alternativeModelMeasureItemView;
   }

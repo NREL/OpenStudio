@@ -227,6 +227,8 @@ class AlternativeModelMeasureItemView : public QWidget
   QComboBox* taxonomySecondLevelComboBox;
   QLineEdit* capitalCostTextEdit;
 
+  QPushButton * removeAlternativeModelMeasure;
+
   QString uuid() const;
   QString displayName() const;
   QString description() const;
@@ -241,6 +243,8 @@ class AlternativeModelMeasureItemView : public QWidget
   signals :
 
   void changed();
+
+  void removed();
 
   private slots:
 
