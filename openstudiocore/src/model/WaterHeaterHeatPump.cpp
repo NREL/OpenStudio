@@ -495,6 +495,11 @@ namespace detail {
       thermalZone.setCoolingPriority(thisObject,1);
       setCompressorLocation("Zone");
       setInletAirConfiguration("ZoneAirOnly");
+      auto t_tank = tank();
+      if( auto waterHeaterMixed = t_tank.optionalCast<WaterHeaterMixed>() ) {
+        waterHeaterMixed->setAmbientTemperatureIndicator("ThermalZone");
+        waterHeaterMixed->setAmbientTemperatureThermalZone(thermalZone);
+      }
     }
 
     return result;

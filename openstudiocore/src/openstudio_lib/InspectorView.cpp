@@ -84,6 +84,10 @@
 #include "../model/StraightComponent_Impl.hpp"
 #include "../model/WaterToAirComponent.hpp"
 #include "../model/WaterToAirComponent_Impl.hpp"
+#include "../model/WaterToWaterComponent.hpp"
+#include "../model/WaterToWaterComponent_Impl.hpp"
+#include "../model/WaterHeaterHeatPump.hpp"
+#include "../model/WaterHeaterHeatPump_Impl.hpp"
 #include "../model/ZoneHVACBaseboardConvectiveWater.hpp"
 #include "../model/ZoneHVACBaseboardConvectiveWater_Impl.hpp"
 #include "../model/ZoneHVACFourPipeFanCoil.hpp"
@@ -492,6 +496,28 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
               this, &InspectorView::addToLoopClicked);
 
       connect(static_cast<ZoneHVACPackagedTerminalAirConditionerInspectorView *>(m_currentView), &ZoneHVACPackagedTerminalAirConditionerInspectorView::removeFromLoopClicked,
+              this, &InspectorView::removeFromLoopClicked);
+    }
+    else if( boost::optional<model::WaterHeaterHeatPump> component = 
+             modelObject->optionalCast<model::WaterHeaterHeatPump>()  )
+
+    {
+      if( m_currentView )
+      {
+        delete m_currentView;
+      }
+
+      m_currentView = new WaterHeaterHeatPumpInspectorView();
+      connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
+
+      m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
+
+      m_vLayout->addWidget(m_currentView);
+
+      connect(static_cast<WaterHeaterHeatPumpInspectorView *>(m_currentView), &WaterHeaterHeatPumpInspectorView::addToLoopClicked,
+              this, &InspectorView::addToLoopClicked);
+
+      connect(static_cast<WaterHeaterHeatPumpInspectorView *>(m_currentView), &WaterHeaterHeatPumpInspectorView::removeFromLoopClicked,
               this, &InspectorView::removeFromLoopClicked);
     }
     else if( boost::optional<model::ZoneHVACUnitHeater> component = 
@@ -1973,6 +1999,71 @@ void ZoneHVACPackagedTerminalAirConditionerInspectorView::layoutModelObject( mod
 
         waterCoil = true;
       }
+    }
+  }
+
+  if( ! waterCoil )
+  {
+    boost::optional<model::ModelObject> mo;
+
+    m_loopChooserView->layoutModelObject(mo);
+  }
+}
+
+WaterHeaterHeatPumpInspectorView::WaterHeaterHeatPumpInspectorView( QWidget * parent )
+  : BaseInspectorView(parent)
+{
+  m_inspectorGadget = new InspectorGadget();
+  connect(this, &WaterHeaterHeatPumpInspectorView::toggleUnitsClicked, m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(m_inspectorGadget, &InspectorGadget::workspaceObjectRemoved, this, &BaseInspectorView::workspaceObjectRemoved);
+
+  m_loopChooserView = new LoopChooserView();
+
+  m_libraryTabWidget->addTab( m_inspectorGadget,
+                              ":images/properties_icon_on.png",
+                              ":images/properties_icon_off.png" );
+
+  m_libraryTabWidget->addTab( m_loopChooserView,
+                              ":images/link_icon_on.png",
+                              ":images/link_icon_off.png" );
+
+  m_libraryTabWidget->setCurrentIndex(0);
+
+  connect(m_loopChooserView, &LoopChooserView::addToLoopClicked,
+          this, &WaterHeaterHeatPumpInspectorView::addToLoopClicked);
+  
+  connect(m_loopChooserView, &LoopChooserView::removeFromLoopClicked,
+          this, &WaterHeaterHeatPumpInspectorView::removeFromLoopClicked);
+}
+
+void WaterHeaterHeatPumpInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP)
+{
+  m_modelObject = modelObject;
+
+  bool force=false;
+  bool recursive=true;
+  bool locked=readOnly;
+  bool hideChildren=false;
+  if( displayIP )
+  {
+    m_inspectorGadget->setUnitSystem(InspectorGadget::IP);
+  }
+  else
+  {
+    m_inspectorGadget->setUnitSystem(InspectorGadget::SI);
+  }
+  m_inspectorGadget->layoutModelObj(modelObject, force, recursive, locked, hideChildren);
+
+  bool waterCoil = false;
+
+  if( auto hpwh = modelObject.optionalCast<model::WaterHeaterHeatPump>() )
+  {
+    if( auto waterToWaterTank = hpwh->tank().optionalCast<model::WaterToWaterComponent>() )
+    {
+      auto tankMO = waterToWaterTank->optionalCast<model::ModelObject>();
+      m_loopChooserView->layoutModelObject(tankMO);
+
+      waterCoil = true;
     }
   }
 

@@ -40,7 +40,7 @@ namespace detail {
   CoilWaterHeatingAirToWaterHeatPump_Impl::CoilWaterHeatingAirToWaterHeatPump_Impl(const IdfObject& idfObject,
                                                                                    Model_Impl* model,
                                                                                    bool keepHandle)
-    : ParentObject_Impl(idfObject,model,keepHandle)
+    : HVACComponent_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == CoilWaterHeatingAirToWaterHeatPump::iddObjectType());
   }
@@ -48,7 +48,7 @@ namespace detail {
   CoilWaterHeatingAirToWaterHeatPump_Impl::CoilWaterHeatingAirToWaterHeatPump_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                                    Model_Impl* model,
                                                                                    bool keepHandle)
-    : ParentObject_Impl(other,model,keepHandle)
+    : HVACComponent_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == CoilWaterHeatingAirToWaterHeatPump::iddObjectType());
   }
@@ -56,7 +56,7 @@ namespace detail {
   CoilWaterHeatingAirToWaterHeatPump_Impl::CoilWaterHeatingAirToWaterHeatPump_Impl(const CoilWaterHeatingAirToWaterHeatPump_Impl& other,
                                                                                    Model_Impl* model,
                                                                                    bool keepHandle)
-    : ParentObject_Impl(other,model,keepHandle)
+    : HVACComponent_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& CoilWaterHeatingAirToWaterHeatPump_Impl::outputVariableNames() const
@@ -453,7 +453,7 @@ namespace detail {
 } // detail
 
 CoilWaterHeatingAirToWaterHeatPump::CoilWaterHeatingAirToWaterHeatPump(const Model& model)
-  : ParentObject(CoilWaterHeatingAirToWaterHeatPump::iddObjectType(),model)
+  : HVACComponent(CoilWaterHeatingAirToWaterHeatPump::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::CoilWaterHeatingAirToWaterHeatPump_Impl>());
 
@@ -570,7 +570,7 @@ CoilWaterHeatingAirToWaterHeatPump::CoilWaterHeatingAirToWaterHeatPump(const Mod
   Curve & heatingCOPFunctionofAirFlowFractionCurve,
   Curve & heatingCOPFunctionofWaterFlowFractionCurve,
   Curve & partLoadFractionCorrelationCurve)
-  : ParentObject(CoilWaterHeatingAirToWaterHeatPump::iddObjectType(),model)
+  : HVACComponent(CoilWaterHeatingAirToWaterHeatPump::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::CoilWaterHeatingAirToWaterHeatPump_Impl>());
 
@@ -811,7 +811,7 @@ bool CoilWaterHeatingAirToWaterHeatPump::setPartLoadFractionCorrelationCurve(con
 
 /// @cond
 CoilWaterHeatingAirToWaterHeatPump::CoilWaterHeatingAirToWaterHeatPump(std::shared_ptr<detail::CoilWaterHeatingAirToWaterHeatPump_Impl> impl)
-  : ParentObject(impl)
+  : HVACComponent(impl)
 {}
 /// @endcond
 

@@ -19,6 +19,8 @@
 
 #include "FanOnOff.hpp"
 #include "FanOnOff_Impl.hpp"
+#include "WaterHeaterHeatPump.hpp"
+#include "WaterHeaterHeatPump_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 #include "Schedule.hpp"
@@ -393,6 +395,8 @@ namespace detail {
   {
     // Process all types that might contain a FanOnOff object.
 
+    auto t_handle = handle();
+
     // AirLoopHVACUnitarySystem
     std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
 
@@ -403,6 +407,16 @@ namespace detail {
         if( fan->handle() == this->handle() )
         {
           return airLoopHVACUnitarySystem;
+        }
+      }
+    }
+
+    // WaterHeaterHeatPump
+    {
+      auto hpwhs = model().getConcreteModelObjects<WaterHeaterHeatPump>();
+      for( const auto & hpwh : hpwhs ) {
+        if( hpwh.fan().handle() == t_handle ) {
+          return hpwh;
         }
       }
     }

@@ -36,6 +36,8 @@ TEST_F(ModelFixture,WaterHeaterHeatPump)
      Model m; 
      WaterHeaterHeatPump hpwh(m); 
 
+     //hpwh.remove();
+
      exit(0); 
   } ,
     ::testing::ExitedWithCode(0), "" );

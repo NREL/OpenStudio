@@ -432,6 +432,33 @@ class ZoneHVACPackagedTerminalAirConditionerInspectorView : public BaseInspector
   LoopChooserView * m_loopChooserView;
 };
 
+class WaterHeaterHeatPumpInspectorView : public BaseInspectorView
+{
+  Q_OBJECT;
+
+  public:
+
+  WaterHeaterHeatPumpInspectorView(QWidget * parent = nullptr);
+
+  virtual ~WaterHeaterHeatPumpInspectorView() {}
+
+  void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP) override;
+
+  signals:
+
+  void addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
+
+  void removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
+
+  private:
+
+  boost::optional<model::ModelObject> m_modelObject;
+
+  InspectorGadget * m_inspectorGadget;
+
+  LoopChooserView * m_loopChooserView;
+};
+
 class ZoneHVACFourPipeFanCoilInspectorView : public BaseInspectorView
 {
   Q_OBJECT;

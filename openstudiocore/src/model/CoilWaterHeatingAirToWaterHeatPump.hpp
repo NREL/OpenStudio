@@ -21,7 +21,7 @@
 #define MODEL_COILWATERHEATINGAIRTOWATERHEATPUMP_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
+#include <model/HVACComponent.hpp>
 
 namespace openstudio {
 
@@ -36,7 +36,7 @@ namespace detail {
 } // detail
 
 /** CoilWaterHeatingAirToWaterHeatPump is a ModelObject that wraps the OpenStudio IDD object 'OS:Coil:WaterHeating:AirToWaterHeatPump'. */
-class MODEL_API CoilWaterHeatingAirToWaterHeatPump : public ParentObject {
+class MODEL_API CoilWaterHeatingAirToWaterHeatPump : public HVACComponent {
  public:
   /** @name Constructors and Destructors */
   //@{

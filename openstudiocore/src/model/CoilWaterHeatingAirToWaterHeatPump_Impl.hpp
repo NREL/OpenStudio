@@ -21,7 +21,7 @@
 #define MODEL_COILWATERHEATINGAIRTOWATERHEATPUMP_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/ParentObject_Impl.hpp>
+#include <model/HVACComponent_Impl.hpp>
 
 namespace openstudio {
 namespace model {
@@ -31,7 +31,7 @@ class Curve;
 namespace detail {
 
   /** CoilWaterHeatingAirToWaterHeatPump_Impl is a ModelObject_Impl that is the implementation class for CoilWaterHeatingAirToWaterHeatPump.*/
-  class MODEL_API CoilWaterHeatingAirToWaterHeatPump_Impl : public ParentObject_Impl {
+  class MODEL_API CoilWaterHeatingAirToWaterHeatPump_Impl : public HVACComponent_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{
