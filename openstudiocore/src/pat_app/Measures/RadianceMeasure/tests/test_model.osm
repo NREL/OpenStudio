@@ -7412,7 +7412,7 @@ OS:Space,
   3.048,                                  !- Y Origin {m}
   0,                                      !- Z Origin {m}
   {50868583-cd6e-4b33-9980-93aced1f0725}, !- Building Story Name
-  {7a4bb380-e226-474c-8b67-b74d155e47b8}, !- Thermal Zone Name
+  {7489cee5-eb99-4cec-8737-65904793c1f9}, !- Thermal Zone Name
   ,                                       !- Part of Total Floor Area
   ;                                       !- Design Specification Outdoor Air Object Name
 
@@ -8029,7 +8029,7 @@ OS:IlluminanceMap,
 
 OS:Daylighting:Control,
   {70e9709f-2d5d-47a2-bf17-22abd0b55deb}, !- Handle
-  Daylighting Control 1,                  !- Name
+  Daylighting Control SW,                 !- Name
   {5d7c8dbb-9c19-4b55-8b12-ebb5162e3678}, !- Space Name
   0.9144,                                 !- Position X-Coordinate {m}
   -2.1336,                                !- Position Y-Coordinate {m}
@@ -8076,7 +8076,7 @@ OS:IlluminanceMap,
 
 OS:Daylighting:Control,
   {15610535-2b4e-44bf-b037-ffe65134ddf6}, !- Handle
-  Daylighting Control 2,                  !- Name
+  Daylighting Control SE,                 !- Name
   {8e444b86-da4a-4808-a97b-44d486743eb3}, !- Space Name
   -1.8288,                                !- Position X-Coordinate {m}
   0.9144,                                 !- Position Y-Coordinate {m}
@@ -8108,7 +8108,7 @@ OS:Glare:Sensor,
 
 OS:ThermalZone,
   {7a4bb380-e226-474c-8b67-b74d155e47b8}, !- Handle
-  Thermal Zone 1,                         !- Name
+  Thermal Zone North,                     !- Name
   ,                                       !- Multiplier
   ,                                       !- Ceiling Height {m}
   ,                                       !- Volume {m3}
@@ -8120,11 +8120,11 @@ OS:ThermalZone,
   {8f5a1a42-a92c-4d5f-b016-ea4dc93ac353}, !- Zone Air Exhaust Port List
   {1e92a354-2fcc-420b-a751-bddf3fa7af87}, !- Zone Air Node Name
   ,                                       !- Zone Return Air Node Name
-  {70e9709f-2d5d-47a2-bf17-22abd0b55deb}, !- Primary Daylighting Control Name
+  {a8c69e3a-78d6-4c55-874e-93c27c37d527}, !- Primary Daylighting Control Name
   ,                                       !- Fraction of Zone Controlled by Primary Daylighting Control
-  {6ac05ea8-5377-4344-bc33-2a86f8c0675f}, !- Secondary Daylighting Control Name
+  {1bf50888-d467-4763-b447-4526e0d5222c}, !- Secondary Daylighting Control Name
   ,                                       !- Fraction of Zone Controlled by Secondary Daylighting Control
-  {de23406e-c3f2-40a2-9728-24b8bab99d59}, !- Illuminance Map Name
+  {b3d56c31-f57c-420a-8f73-b0f6f2ea7135}, !- Illuminance Map Name
   {dcb3ba3a-c077-4665-b611-bd78f4d44647}, !- Group Rendering Name
   ,                                       !- Thermostat Name
   No,                                     !- Use Ideal Air Loads
@@ -8190,8 +8190,8 @@ OS:ZoneHVAC:EquipmentList,
 
 OS:ThermalZone,
   {7489cee5-eb99-4cec-8737-65904793c1f9}, !- Handle
-  Thermal Zone 2,                         !- Name
-  ,                                       !- Multiplier
+  Thermal Zone South,                     !- Name
+  1,                                      !- Multiplier
   ,                                       !- Ceiling Height {m}
   ,                                       !- Volume {m3}
   ,                                       !- Floor Area {m2}
@@ -8202,11 +8202,11 @@ OS:ThermalZone,
   {d6c88152-55e1-4cee-aa3d-8c0a10c91ed8}, !- Zone Air Exhaust Port List
   {5fc733a5-ca0b-4cdf-a9ce-c2500bde02af}, !- Zone Air Node Name
   ,                                       !- Zone Return Air Node Name
-  {6ac05ea8-5377-4344-bc33-2a86f8c0675f}, !- Primary Daylighting Control Name
+  {15610535-2b4e-44bf-b037-ffe65134ddf6}, !- Primary Daylighting Control Name
   ,                                       !- Fraction of Zone Controlled by Primary Daylighting Control
-  {a8c69e3a-78d6-4c55-874e-93c27c37d527}, !- Secondary Daylighting Control Name
+  ,                                       !- Secondary Daylighting Control Name
   ,                                       !- Fraction of Zone Controlled by Secondary Daylighting Control
-  {b3d56c31-f57c-420a-8f73-b0f6f2ea7135}, !- Illuminance Map Name
+  {462c4de2-5519-4950-ae3c-0a2f7f463fe4}, !- Illuminance Map Name
   {e372aac7-9c8d-428c-87a9-022b8feb96a1}, !- Group Rendering Name
   ,                                       !- Thermostat Name
   No,                                     !- Use Ideal Air Loads
@@ -8582,27 +8582,8 @@ OS:Material,
   0.9;                                    !- Visible Absorptance
 
 OS:Daylighting:Control,
-  {6ac05ea8-5377-4344-bc33-2a86f8c0675f}, !- Handle
-  Daylighting Control 3,                  !- Name
-  {3810e56a-95f5-4687-b896-06caf8120348}, !- Space Name
-  -2.00207665099148,                      !- Position X-Coordinate {m}
-  1.76140975683147,                       !- Position Y-Coordinate {m}
-  0.762,                                  !- Position Z-Coordinate {m}
-  0,                                      !- Psi Rotation Around X-Axis {deg}
-  -0,                                     !- Theta Rotation Around Y-Axis {deg}
-  0,                                      !- Phi Rotation Around Z-Axis {deg}
-  ,                                       !- Illuminance Setpoint {lux}
-  ,                                       !- Lighting Control Type
-  ,                                       !- Minimum Input Power Fraction for Continuous Dimming Control
-  ,                                       !- Minimum Light Output Fraction for Continuous Dimming Control
-  ,                                       !- Number of Stepped Control Steps
-  ,                                       !- Probability Lighting will be Reset When Needed in Manual Stepped Control
-  ,                                       !- Number of Daylighting Views
-  ;                                       !- Maximum Allowable Discomfort Glare Index
-
-OS:Daylighting:Control,
   {a8c69e3a-78d6-4c55-874e-93c27c37d527}, !- Handle
-  Daylighting Control 4,                  !- Name
+  Daylighting Control North,              !- Name
   {3810e56a-95f5-4687-b896-06caf8120348}, !- Space Name
   -1.92943725999088,                      !- Position X-Coordinate {m}
   0.644579120197119,                      !- Position Y-Coordinate {m}
@@ -8633,4 +8614,23 @@ OS:IlluminanceMap,
   ,                                       !- Number of X Grid Points
   2.35,                                   !- Y Length {m}
   ;                                       !- Number of Y Grid Points
+
+OS:Daylighting:Control,
+  {1bf50888-d467-4763-b447-4526e0d5222c}, !- Handle
+  Daylighting Control North2,             !- Name
+  {3810e56a-95f5-4687-b896-06caf8120348}, !- Space Name
+  -4.23042332346242,                      !- Position X-Coordinate {m}
+  1.15131623916823,                       !- Position Y-Coordinate {m}
+  0,                                      !- Position Z-Coordinate {m}
+  0,                                      !- Psi Rotation Around X-Axis {deg}
+  -0,                                     !- Theta Rotation Around Y-Axis {deg}
+  0,                                      !- Phi Rotation Around Z-Axis {deg}
+  ,                                       !- Illuminance Setpoint {lux}
+  ,                                       !- Lighting Control Type
+  ,                                       !- Minimum Input Power Fraction for Continuous Dimming Control
+  ,                                       !- Minimum Light Output Fraction for Continuous Dimming Control
+  ,                                       !- Number of Stepped Control Steps
+  ,                                       !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+  ,                                       !- Number of Daylighting Views
+  ;                                       !- Maximum Allowable Discomfort Glare Index
 

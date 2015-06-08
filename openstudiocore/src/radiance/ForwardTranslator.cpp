@@ -169,12 +169,12 @@ namespace radiance {
         continue;
       }
 
-      // only allow primary and secondary daylighting control points (as defined in thermal zone) through
+      // only allow primary daylighting control points (as defined in thermal zone) through
       for (openstudio::model::DaylightingControl daylightingControl : space.daylightingControls()){
         if (daylightingControl.isPrimaryDaylightingControl()){
           // ok
         }else if (daylightingControl.isSecondaryDaylightingControl()){
-          // is this ok? DaylightSim only seems to write out values for one DaylightingControl
+          // ok
         }else{
           LOG(Warn, "DaylightingControl " << daylightingControl.name().get() << \
             " is not associated with this Space's ThermalZone, it will not be translated.");
@@ -183,16 +183,16 @@ namespace radiance {
       }
 
       // only allow illuminance maps referenced by thermal zone through
-      for (openstudio::model::IlluminanceMap illuminanceMap : space.illuminanceMaps()){
-        boost::optional<openstudio::model::IlluminanceMap> thermalZoneIlluminanceMap = thermalZone->illuminanceMap();
-        if (thermalZoneIlluminanceMap && (thermalZoneIlluminanceMap->handle() == illuminanceMap.handle())){
-          // ok
-        }else{
-          LOG(Warn, "IlluminanceMap " << illuminanceMap.name().get() << \
-            " is not associated with this Space's ThermalZone, it will not be translated.");
-          illuminanceMap.remove();
-        }
-      }
+//       for (openstudio::model::IlluminanceMap illuminanceMap : space.illuminanceMaps()){
+//         boost::optional<openstudio::model::IlluminanceMap> thermalZoneIlluminanceMap = thermalZone->illuminanceMap();
+//         if (thermalZoneIlluminanceMap && (thermalZoneIlluminanceMap->handle() == illuminanceMap.handle())){
+//           // ok
+//         }else{
+//           LOG(Warn, "IlluminanceMap " << illuminanceMap.name().get() << \
+//             " is not associated with this Space's ThermalZone, it will not be translated.");
+//           illuminanceMap.remove();
+//         }
+//       }
 
       std::vector<openstudio::model::DaylightingControl> daylightingControls = space.daylightingControls();
       std::vector<openstudio::model::IlluminanceMap> illuminanceMaps = space.illuminanceMaps();
@@ -294,8 +294,6 @@ namespace radiance {
           daylightsimopt << "--z";
         }
 
-        // moved bsdf stuff to window processing block - RPG
-
       }else{
         LOG(Error, "Cannot open file '" << toString(daylightsimoptpath) << "' for writing");
       }
@@ -317,7 +315,9 @@ namespace radiance {
                   << "-dc " << radianceParameters.directCertainty() << " "
                   << "-lw " << radianceParameters.limitWeightVMX() << " ";
       }else{
+      
         LOG(Error, "Cannot open file '" << toString(vmxoptpath) << "' for writing");
+      
       }
 
 
@@ -337,7 +337,9 @@ namespace radiance {
                   << "-dc " << radianceParameters.directCertainty() << " "
                   << "-lw " << radianceParameters.limitWeightDMX() << " ";
       }else{
+      
         LOG(Error, "Cannot open file '" << toString(dmxoptpath) << "' for writing");
+      
       }
 
       // Tregenza/Klems resolution options
@@ -384,7 +386,7 @@ namespace radiance {
       OFSTREAM mapsopt(mapsoptpath);
       if (mapsopt.is_open()){
         outfiles.push_back(mapsoptpath);
-        mapsopt << "-ab 10 -ad 8000 -as 50 -dt 0 -dc 1 -ds 0.05 -lw 0.00001";
+        mapsopt << "-ab 10 -ad 10000 -as 50 -dt 0 -dc 1 -ds 0.05 -lw 0.00001";
       }else{
         LOG(Error, "Cannot open file '" << toString(mapsoptpath) << "' for writing");
       }
@@ -979,7 +981,7 @@ namespace radiance {
 
           for (const auto & vertex : polygon)
           {
-            shadingsurface += formatString(vertex.x()) + " " + formatString(vertex.y()) + " " + formatString(vertex.z()) +"\n";
+            shadingsurface += formatString(vertex.x()) + " " + formatString(vertex.y()) + " " + formatString(vertex.z()) +"\n\n";
           }
 
           buildingShadingSurfaces.insert(shadingsurface);
@@ -1168,9 +1170,8 @@ namespace radiance {
             WindowGroupControl control = windowGroup.windowGroupControl();
             if (control.outwardNormal){
 
-              std::cout << "outward normal:" + formatString(control.outwardNormal->x()) + " " + formatString(control.outwardNormal->y()) + " " + \
-                formatString(control.outwardNormal->z()) + "\n";
-
+            LOG(Info, windowGroup.name() + " outward normal:" + formatString(control.outwardNormal->x()) + " " + formatString(control.outwardNormal->y()) + " " + \
+                formatString(control.outwardNormal->z()) + "\n");
             }
 
             std::string winUpVector = "Z";
@@ -1748,47 +1749,47 @@ namespace radiance {
       std::vector<openstudio::model::DaylightingControl> daylightingControls = space.daylightingControls();
       for (const auto & control : daylightingControls)
       {
-        if (control.isPrimaryDaylightingControl()){
-					m_radSensors[space_name] = "";
 
-					openstudio::Point3d sensor_point = openstudio::radiance::ForwardTranslator::getReferencePoint(control);
-					openstudio::Vector3d sensor_aimVector = openstudio::radiance::ForwardTranslator::getSensorVector(control);
-					m_radSensors[space_name] += \
-					formatString(sensor_point.x()) + " " + \
-					formatString(sensor_point.y()) + " " + \
-					formatString(sensor_point.z()) + " " + \
-					formatString(sensor_aimVector.x()) + " " + \
-					formatString(sensor_aimVector.y()) + " " + \
-					formatString(sensor_aimVector.z()) + "\n";
+				m_radSensors[space_name] = "";
 
-					// write daylighting controls
-					openstudio::path filename = t_radDir / openstudio::toPath("numeric") / openstudio::toPath(space_name + ".sns");
-					OFSTREAM file(filename);
-					if (file.is_open()){
-						t_outfiles.push_back(filename);
-						file << m_radSensors[space_name];
-					} else{
-						LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
-					}
+				openstudio::Point3d sensor_point = openstudio::radiance::ForwardTranslator::getReferencePoint(control);
+				openstudio::Vector3d sensor_aimVector = openstudio::radiance::ForwardTranslator::getSensorVector(control);
+				m_radSensors[space_name] += \
+				formatString(sensor_point.x(), 3) + " " + \
+				formatString(sensor_point.y(), 3) + " " + \
+				formatString(sensor_point.z(), 3) + " " + \
+				formatString(sensor_aimVector.x(), 3) + " " + \
+				formatString(sensor_aimVector.y(), 3) + " " + \
+				formatString(sensor_aimVector.z(), 3) + "\n";
 
-					// write daylighting control view file
-					m_radSensorViews[space_name] = "";
-					m_radSensorViews[space_name] += \
-					"rvu -vth -vp " + formatString(sensor_point.x()) + " " + formatString(sensor_point.y()) + " " + \
-					formatString(sensor_point.z()) + " -vd " + formatString(sensor_aimVector.x()) + " " + formatString(sensor_aimVector.y()) + " " + \
-					formatString(sensor_aimVector.z()) + " -vu 0 1 0 -vh 180 -vv 180 -vo 0 -vs 0 -vl 0\n";
-
-					filename = t_radDir / openstudio::toPath("views") / openstudio::toPath(space_name + ".cvf");
-					OFSTREAM file2(filename);
-					if (file2.is_open()){
-						t_outfiles.push_back(filename);
-						file2 << m_radSensorViews[space_name];
-					} else{
-						LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
-					}
-
-					LOG(Debug, "Wrote " << space_name << ".cvf");
+				// write daylighting controls
+				openstudio::path filename = t_radDir / openstudio::toPath("numeric") / openstudio::toPath(space_name + ".sns");
+				OFSTREAM file(filename);
+				if (file.is_open()){
+					t_outfiles.push_back(filename);
+					file << m_radSensors[space_name];
+				} else{
+					LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
 				}
+
+				// write daylighting control view file
+				m_radSensorViews[space_name] = "";
+				m_radSensorViews[space_name] += \
+				"rvu -vth -vp " + formatString(sensor_point.x(), 3) + " " + formatString(sensor_point.y(), 3) + " " + \
+				formatString(sensor_point.z(), 3) + " -vd " + formatString(sensor_aimVector.x(), 3) + " " + formatString(sensor_aimVector.y(), 3) + " " + \
+				formatString(sensor_aimVector.z(), 3) + " -vu 0 1 0 -vh 180 -vv 180 -vo 0 -vs 0 -vl 0\n";
+
+				filename = t_radDir / openstudio::toPath("views") / openstudio::toPath(space_name + ".cvf");
+				OFSTREAM file2(filename);
+				if (file2.is_open()){
+					t_outfiles.push_back(filename);
+					file2 << m_radSensorViews[space_name];
+				} else{
+					LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
+				}
+
+				LOG(Debug, "Wrote " << space_name << ".cvf");
+				
       } // daylighting controls
 
 
