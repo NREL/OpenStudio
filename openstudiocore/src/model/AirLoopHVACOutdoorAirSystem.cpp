@@ -344,7 +344,6 @@ namespace detail {
       }
       else if( boost::optional<AirToAirComponent> comp = modelObject->optionalCast<AirToAirComponent>() )
       {
-        modelObjects.push_back(*comp);
         modelObject = comp->secondaryAirOutletModelObject();
       }
       else if( boost::optional<WaterToAirComponent> comp = modelObject->optionalCast<WaterToAirComponent>() )
