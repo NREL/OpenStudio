@@ -555,9 +555,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
   }
   sizingSystem.setCentralHeatingDesignSupplyAirTemperature(htgDsgnSupAirTemp);
 
-  // DsgnAirFlowMin
-  QDomElement dsgnAirFlowMinElement = airSystemElement.firstChildElement("DsgnAirFlowMin");
-  value = dsgnAirFlowMinElement.text().toDouble(&ok);
+  // DsgnAirFlowMinRat
+  QDomElement dsgnAirFlowMinRatElement = airSystemElement.firstChildElement("DsgnAirFlowMinRat");
+  value = dsgnAirFlowMinRatElement.text().toDouble(&ok);
   if( ok )
   {
     sizingSystem.setMinimumSystemAirFlowRatio(value);
