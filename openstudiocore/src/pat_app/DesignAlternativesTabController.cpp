@@ -865,49 +865,51 @@ void AlternativeModelMeasureListController::addAlternativeModelMeasure()
 
   modelMeasures << newMeasure;
 
-  setModelMeasures(modelMeasures);
-
-  // redraw all the views
-  modelReset();
+  setModelMeasures(modelMeasures, true);
 }
 
-void AlternativeModelMeasureListController::alternativeModelMeasureItemViewChanged()
+void AlternativeModelMeasureListController::alternativeModelMeasureItemChanged()
 {
   QObject* sender = this->sender();
 
-  AlternativeModelMeasureItemView* alternativeModelMeasureItemView = qobject_cast<AlternativeModelMeasureItemView*>(sender);
+  AlternativeModelMeasureItem* alternativeModelMeasureItem = qobject_cast<AlternativeModelMeasureItem*>(sender);
+  OS_ASSERT(alternativeModelMeasureItem);
 
   QJsonArray modelMeasures = this->modelMeasures();
+  QJsonArray updatedModelMeasures;
   for (QJsonValue jsonValue : modelMeasures) {
     QJsonObject jsonObject = jsonValue.toObject();
-    if (jsonObject["uuid"].toString() == alternativeModelMeasureItemView->uuid()){
+    if (jsonObject["uuid"].toString() == alternativeModelMeasureItem->uuid()){
 
-      jsonObject.insert("displayName", alternativeModelMeasureItemView->displayName());
-      jsonObject.insert("description", alternativeModelMeasureItemView->description());
-      jsonObject.insert("taxonomyTag", alternativeModelMeasureItemView->taxonomyTag());
-      jsonObject.insert("capitalCost", alternativeModelMeasureItemView->capitalCost());
+      jsonObject.insert("displayName", alternativeModelMeasureItem->displayName());
+      jsonObject.insert("description", alternativeModelMeasureItem->description());
+      jsonObject.insert("taxonomyTag", alternativeModelMeasureItem->taxonomyTag());
+      jsonObject.insert("capitalCost", alternativeModelMeasureItem->capitalCost());
+
+      updatedModelMeasures << jsonObject;
     }
   }
 
-  setModelMeasures(modelMeasures);
+  setModelMeasures(updatedModelMeasures, false);
 }
 
-void AlternativeModelMeasureListController::alternativeModelMeasureItemViewRemoved()
+void AlternativeModelMeasureListController::alternativeModelMeasureItemRemoved()
 {
   QObject* sender = this->sender();
 
-  AlternativeModelMeasureItemView* alternativeModelMeasureItemView = qobject_cast<AlternativeModelMeasureItemView*>(sender);
+  AlternativeModelMeasureItem* alternativeModelMeasureItem = qobject_cast<AlternativeModelMeasureItem*>(sender);
+  OS_ASSERT(alternativeModelMeasureItem);
 
   QJsonArray modelMeasures = this->modelMeasures();
   QJsonArray newModelMeasures;
   for (QJsonValue jsonValue : modelMeasures) {
     QJsonObject jsonObject = jsonValue.toObject();
-    if (jsonObject["uuid"].toString() != alternativeModelMeasureItemView->uuid()){
+    if (jsonObject["uuid"].toString() != alternativeModelMeasureItem->uuid()){
       newModelMeasures << jsonObject;
     }
   }
 
-  setModelMeasures(newModelMeasures);
+  setModelMeasures(newModelMeasures, true);
 }
 
 analysis::OptionalRubyMeasure AlternativeModelMeasureListController::rubySwapMeasure() const
@@ -949,7 +951,7 @@ QJsonArray AlternativeModelMeasureListController::modelMeasures() const
   return result;
 }
 
-void AlternativeModelMeasureListController::setModelMeasures(const QJsonArray& modelMeasures)
+void AlternativeModelMeasureListController::setModelMeasures(const QJsonArray& modelMeasures, bool forceRefresh)
 {
   bool test = false;
 
@@ -962,6 +964,7 @@ void AlternativeModelMeasureListController::setModelMeasures(const QJsonArray& m
         jsonDoc.setArray(modelMeasures);
         QString qValue(jsonDoc.toJson(QJsonDocument::Compact));
         std::string value = toString(qValue);
+
         test = argument.setValue(value);
 
         break;
@@ -972,8 +975,10 @@ void AlternativeModelMeasureListController::setModelMeasures(const QJsonArray& m
       // set the modified arguments
       rubySwapMeasure->setArguments(arguments);
 
-      // redraw all the views
-      modelReset();
+      if (forceRefresh){
+        // redraw all the views
+        modelReset();
+      }
     } else{
       // what happened?
       test = false;
@@ -997,9 +1002,9 @@ std::vector<QSharedPointer<AlternativeModelMeasureItem> > AlternativeModelMeasur
 
     QSharedPointer<AlternativeModelMeasureItem> alternativeModelMeasureItem(new AlternativeModelMeasureItem(uuid, displayName, description, taxonomyTag, capitalCost));
 
-    connect(alternativeModelMeasureItem.data(), &AlternativeModelMeasureItem::changed, this, &AlternativeModelMeasureListController::alternativeModelMeasureItemViewChanged);
+    connect(alternativeModelMeasureItem.data(), &AlternativeModelMeasureItem::changed, this, &AlternativeModelMeasureListController::alternativeModelMeasureItemChanged);
     
-    connect(alternativeModelMeasureItem.data(), &AlternativeModelMeasureItem::removed, this, &AlternativeModelMeasureListController::alternativeModelMeasureItemViewRemoved);
+    connect(alternativeModelMeasureItem.data(), &AlternativeModelMeasureItem::removed, this, &AlternativeModelMeasureListController::alternativeModelMeasureItemRemoved);
 
     result.push_back(alternativeModelMeasureItem);
   }
@@ -1046,6 +1051,21 @@ double AlternativeModelMeasureItem::capitalCost() const
   return m_capitalCost;
 }
 
+void AlternativeModelMeasureItem::viewChanged() 
+{
+  QObject* sender = this->sender();
+
+  AlternativeModelMeasureItemView* alternativeModelMeasureItemView = qobject_cast<AlternativeModelMeasureItemView*>(sender);
+  OS_ASSERT(alternativeModelMeasureItemView);
+
+  m_displayName = alternativeModelMeasureItemView->displayName();
+  m_description = alternativeModelMeasureItemView->description();
+  m_taxonomyTag = alternativeModelMeasureItemView->taxonomyTag();
+  m_capitalCost = alternativeModelMeasureItemView->capitalCost();
+
+  emit changed();
+}
+
 QWidget * AlternativeModelMeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
   if (QSharedPointer<AlternativeModelMeasureItem> alternativeModelMeasureItem = dataSource.objectCast<AlternativeModelMeasureItem>())
@@ -1057,7 +1077,7 @@ QWidget * AlternativeModelMeasureItemDelegate::view(QSharedPointer<OSListItem> d
     alternativeModelMeasureItemView->setTaxonomyTag(alternativeModelMeasureItem->taxonomyTag());
     alternativeModelMeasureItemView->setCapitalCost(alternativeModelMeasureItem->capitalCost());
 
-    connect(alternativeModelMeasureItemView, &AlternativeModelMeasureItemView::changed, alternativeModelMeasureItem.data(), &AlternativeModelMeasureItem::changed);
+    connect(alternativeModelMeasureItemView, &AlternativeModelMeasureItemView::changed, alternativeModelMeasureItem.data(), &AlternativeModelMeasureItem::viewChanged);
 
     connect(alternativeModelMeasureItemView->removeAlternativeModelMeasure, &QPushButton::clicked, alternativeModelMeasureItem.data(), &AlternativeModelMeasureItem::removed);
 

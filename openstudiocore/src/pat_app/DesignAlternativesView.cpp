@@ -363,6 +363,8 @@ AlternativeModelMeasureItemView::AlternativeModelMeasureItemView(const QString& 
   displayNameTextEdit->setValidator(validator);
   mainVLayout->addWidget(displayNameTextEdit);
 
+  connect(displayNameTextEdit, &QLineEdit::textChanged, this, &AlternativeModelMeasureItemView::changed);
+
   QLabel * descriptionTitleLabel = new QLabel("Description");
   descriptionTitleLabel->setObjectName("H2");
   mainVLayout->addWidget(descriptionTitleLabel);
@@ -373,6 +375,8 @@ AlternativeModelMeasureItemView::AlternativeModelMeasureItemView(const QString& 
   descriptionTextEdit->setFixedHeight(60);
   descriptionTextEdit->setStyleSheet("QTextEdit { background: #E0E0E0; }");
   mainVLayout->addWidget(descriptionTextEdit);
+
+  connect(descriptionTextEdit, &QTextEdit::textChanged, this, &AlternativeModelMeasureItemView::changed);
 
   auto hLayout = new QHBoxLayout();
 
@@ -386,8 +390,12 @@ AlternativeModelMeasureItemView::AlternativeModelMeasureItemView(const QString& 
 
   connect(taxonomyFirstLevelComboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &AlternativeModelMeasureItemView::onFirstLevelTaxonomyTagChanged);
 
+  connect(taxonomyFirstLevelComboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &AlternativeModelMeasureItemView::changed);
+
   taxonomySecondLevelComboBox = new QComboBox();
   hLayout->addWidget(taxonomySecondLevelComboBox);
+
+  connect(taxonomySecondLevelComboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &AlternativeModelMeasureItemView::changed);
 
   QRegExp numberRegex("^[+-]?([0-9]*\\.?[0-9]+|[0-9]+\\.?[0-9]*)([eE][+-]?[0-9]+)?$");
   validator = new QRegExpValidator(numberRegex, this);
@@ -397,7 +405,9 @@ AlternativeModelMeasureItemView::AlternativeModelMeasureItemView(const QString& 
   capitalCostTextEdit->setValidator(validator);
   hLayout->addWidget(capitalCostTextEdit);
 
-  hLayout->addStretch();
+  connect(capitalCostTextEdit, &QLineEdit::textChanged, this, &AlternativeModelMeasureItemView::changed);
+
+  hLayout->addStretch(100);
 
   mainVLayout->addLayout(hLayout);
 }

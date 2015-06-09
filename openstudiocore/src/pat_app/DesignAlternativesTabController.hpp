@@ -302,9 +302,9 @@ public slots:
 
   void addAlternativeModelMeasure();
 
-  void alternativeModelMeasureItemViewChanged();
+  void alternativeModelMeasureItemChanged();
 
-  void alternativeModelMeasureItemViewRemoved();
+  void alternativeModelMeasureItemRemoved();
 
 private:
 
@@ -313,7 +313,7 @@ private:
   // the current swap measure arguments that represent user defined model measures
   QJsonArray modelMeasures() const;
 
-  void setModelMeasures(const QJsonArray& modelMeasures);
+  void setModelMeasures(const QJsonArray& modelMeasures, bool forceRefresh);
 
   std::vector<QSharedPointer<AlternativeModelMeasureItem> > alternativeModelMeasureItems() const;
 
@@ -340,6 +340,10 @@ public:
   QString description() const;
   QString taxonomyTag() const;
   double capitalCost() const;
+
+public slots:
+
+  void viewChanged();
 
 signals:
 
