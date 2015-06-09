@@ -19174,8 +19174,8 @@ OS:ZoneHVAC:UnitHeater,
   A6 , \field Supply Air Fan Name
        \required-field
        \type object-list
-       \object-list FansCVandVAV
-       \note Allowable fan types are Fan:ConstantVolume and
+       \object-list FansCVandOnOffandVAV
+       \note Allowable fan types are Fan:ConstantVolume, Fan:OnOff and
        \note Fan:VariableVolume
   N1 , \field Maximum Supply Air Flow Rate
        \note Must be less than or equal to fan size.
