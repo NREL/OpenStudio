@@ -7977,7 +7977,11 @@ OS:AirLoopHVAC,
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A10; \field Supply Side Outlet Node Names
+  A10, \field Supply Side Outlet Node A
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A11; \field Supply Side Outlet Node B
        \type object-list
        \required-field
        \object-list ConnectionNames

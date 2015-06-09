@@ -51,6 +51,8 @@
 #include "../HVACComponent_Impl.hpp"
 #include "../HVACTemplates.hpp"
 #include "../LifeCycleCost.hpp"
+#include "../ConnectorSplitter.hpp"
+#include "../ConnectorSplitter_Impl.hpp"
 
 using namespace openstudio::model;
 
@@ -710,3 +712,16 @@ TEST_F(ModelFixture,AirLoopHVAC_fans)
   }
    
 }
+
+TEST_F(ModelFixture,AirLoopHVAC_dualDuct)
+{
+  Model m;
+  AirLoopHVAC airLoopHVAC(m);
+
+  EXPECT_EQ(1u,airLoopHVAC.supplyOutletNodes().size()); 
+
+  ConnectorSplitter splitter(m);
+  auto supplyOutletNode = airLoopHVAC.supplyOutletNode();
+  EXPECT_TRUE(splitter.addToNode(supplyOutletNode));
+}
+

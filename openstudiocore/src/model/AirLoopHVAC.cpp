@@ -146,7 +146,7 @@ namespace detail {
     std::vector<Node> nodeVector;
     OptionalModelObject optionalModelObject;
     OptionalNode optionalNode;
-    optionalModelObject = this->connectedObject(openstudio::OS_AirLoopHVACFields::SupplySideOutletNodeNames);
+    optionalModelObject = this->connectedObject(openstudio::OS_AirLoopHVACFields::SupplySideOutletNodeA);
     if(optionalModelObject)
     {
       optionalNode = optionalModelObject->optionalCast<Node>();
@@ -972,6 +972,18 @@ namespace detail {
     return result;
   }
 
+  unsigned AirLoopHVAC_Impl::supplyOutletPortA() const {
+    return OS_AirLoopHVACFields::SupplySideOutletNodeA;
+  }
+
+  unsigned AirLoopHVAC_Impl::supplyOutletPortB() const {
+    return OS_AirLoopHVACFields::SupplySideOutletNodeB;
+  }
+
+  unsigned AirLoopHVAC_Impl::supplyInletPort() const {
+    return OS_AirLoopHVACFields::SupplySideInletNodeName;
+  }
+
 } // detail
 
 AirLoopHVAC::AirLoopHVAC(Model& model)
@@ -995,7 +1007,7 @@ AirLoopHVAC::AirLoopHVAC(Model& model)
   model.connect( supplyInletNode,openstudio::OS_NodeFields::OutletPort,
                  supplyOutletNode,openstudio::OS_NodeFields::InletPort );
   model.connect( supplyOutletNode,openstudio::OS_NodeFields::OutletPort,*this,
-                 openstudio::OS_AirLoopHVACFields::SupplySideOutletNodeNames );
+                 openstudio::OS_AirLoopHVACFields::SupplySideOutletNodeA );
 
   // demand side
 
