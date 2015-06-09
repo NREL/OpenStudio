@@ -143,7 +143,7 @@ namespace detail{
     auto thisObject = getObject<model::HVACComponent>();
     auto portB = nextOutletPort();
     t_model.connect(thisObject,portB,supplyOutletNodeB,supplyOutletNodeB.inletPort());
-    t_model.connect(supplyOutletNodeB,supplyOutletNodeB.outletPort(),t_nodeAirLoop,t_nodeAirLoop->getImpl<detail::AirLoopHVAC_Impl>()->supplyOutletPortB());
+    t_model.connect(supplyOutletNodeB,supplyOutletNodeB.outletPort(),t_nodeAirLoop.get(),t_nodeAirLoop->getImpl<detail::AirLoopHVAC_Impl>()->supplyOutletPortB());
 
     return true;
   }
