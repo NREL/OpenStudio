@@ -61,15 +61,15 @@ namespace detail {
     virtual ~AirLoopHVACOutdoorAirSystem_Impl();
 
     // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const;
+    virtual boost::optional<ParentObject> parent() const override;
 
     // return any children objects in the hierarchy
-    virtual std::vector<ModelObject> children() const;
+    virtual std::vector<ModelObject> children() const override;
 
     // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     unsigned returnAirPort() const;
     unsigned outdoorAirPort() const;
@@ -85,17 +85,17 @@ namespace detail {
 
     void setControllerOutdoorAir(const ControllerOutdoorAir& controllerOutdoorAir );
 
-    virtual ModelObject clone(Model model) const;
+    virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<openstudio::IdfObject> remove();
+    virtual std::vector<openstudio::IdfObject> remove() override;
 
-    virtual bool addToNode(Node & node);
+    virtual bool addToNode(Node & node) override;
 
     /** This function returns a vector of HVACComponent that are directly downstream
      *  from this object on an AirLoopHVAC or PlantLoop. 
      *  @param[in]  isDemandComponent  Boolean passed in whether object is a demand or supply component
     **/
-    virtual std::vector<HVACComponent> edges(bool isDemandComponent);
+    virtual std::vector<HVACComponent> edges(bool isDemandComponent) override;
 
     std::vector<ModelObject> oaComponents() const;
 

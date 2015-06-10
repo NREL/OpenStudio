@@ -219,8 +219,8 @@ namespace openstudio{
 
   /// from impl
   Date::Date(const Date::ImplType& impl)
-    : m_assumedBaseYear(impl.year()),
-      m_impl(ImplPtr(new ImplType(impl)))
+    : m_impl(ImplPtr(new ImplType(impl))),
+      m_assumedBaseYear(impl.year())
   {}
 
   /// Date from month, day of month

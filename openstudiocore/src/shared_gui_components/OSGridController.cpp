@@ -802,7 +802,7 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
     widget = unsignedEdit;
 
   } else if(QSharedPointer<DropZoneConcept> dropZoneConcept = t_baseConcept.dynamicCast<DropZoneConcept>()) {
-    OSDropZone2 * dropZone = new OSDropZone2();
+    auto dropZone = new OSDropZone2();
     if (dropZoneConcept->hasClickFocus()) {
       dropZone->enableClickFocus();
     }
@@ -824,7 +824,7 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
     widget = dropZone;
 
   } else if (QSharedPointer<RenderingColorConcept> renderingColorConcept = t_baseConcept.dynamicCast<RenderingColorConcept>()) {
-    auto * renderingColorWidget = new RenderingColorWidget2(this->gridView());
+    auto renderingColorWidget = new RenderingColorWidget2(this->gridView());
 
     renderingColorWidget->bind(t_mo,
       OptionalModelObjectGetter(std::bind(&RenderingColorConcept::get, renderingColorConcept.data(), t_mo)),
@@ -1110,7 +1110,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
     holder->widget = t_widget;
     holder->setLayout(l);
     // layout is defined outside the lambda and brought in through capture!
-    layout->addWidget(holder, numWidgets, 0, 0);
+    layout->addWidget(holder, numWidgets, 0, nullptr);
 
     //if (hasSubRows) {
     //  holder->setObjectName("InnerCell");

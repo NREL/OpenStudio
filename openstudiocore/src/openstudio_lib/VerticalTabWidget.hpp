@@ -38,7 +38,7 @@ class VerticalTabWidget : public QWidget
 
   public:
 
-  VerticalTabWidget(QWidget * parent = 0);
+  VerticalTabWidget(QWidget * parent = nullptr);
 
   virtual ~VerticalTabWidget() {}
 

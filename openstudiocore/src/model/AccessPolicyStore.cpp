@@ -46,11 +46,11 @@ namespace openstudio
       bool startElement(const QString& namespaceURI,
                         const QString& localName,
                         const QString& qName,
-                        const QXmlAttributes& atts  );
+                        const QXmlAttributes& atts  ) override;
 
       bool endElement  ( const QString& namespaceURI,
                          const QString& localName,
-                         const QString& qName );
+                         const QString& qName ) override;
 
       bool error(QXmlParseException&);
       bool fatalError(QXmlParseException&);

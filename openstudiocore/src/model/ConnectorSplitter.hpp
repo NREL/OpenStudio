@@ -48,16 +48,16 @@ class MODEL_API ConnectorSplitter : public Splitter
   virtual ~ConnectorSplitter() {}
 
   /** Returns the inlet port to the splitter. */
-  unsigned inletPort();
+  unsigned inletPort() override;
 
   /** Returns the outlet port for branchIndex.  Branches consequtively
    *  indexed starting from 0.
    */
-  unsigned outletPort(unsigned branchIndex);
+  unsigned outletPort(unsigned branchIndex) override;
 
   /** Returns the next available outlet port.  This will be the first port
    *  with no connected objects */
-  unsigned nextOutletPort();
+  unsigned nextOutletPort() override;
 
   virtual bool addToNode(Node & node);
 

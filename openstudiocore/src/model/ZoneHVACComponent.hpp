@@ -100,7 +100,7 @@ class MODEL_API ZoneHVACComponent : public HVACComponent
 
   explicit ZoneHVACComponent(std::shared_ptr<ImplType> impl);
 
-  virtual std::vector<ModelObject> children() const;
+  virtual std::vector<ModelObject> children() const override;
 
   private:
 

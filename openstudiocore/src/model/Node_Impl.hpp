@@ -55,19 +55,19 @@ namespace detail {
     virtual ~Node_Impl();
 
     // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     /** This function returns a vector of HVACComponent that are directly downstream
      *  from this object on an AirLoopHVAC or PlantLoop. 
      *  @param[in]  isDemandComponent  Boolean passed in whether object is a demand or supply component
     **/
-    virtual std::vector<HVACComponent> edges(bool isDemandComponent);
+    virtual std::vector<HVACComponent> edges(bool isDemandComponent) override;
 
-    unsigned inletPort();
+    unsigned inletPort() override;
 
-    unsigned outletPort();
+    unsigned outletPort() override;
 
     std::vector<SetpointManager> setpointManagers() const;
 
@@ -109,15 +109,17 @@ namespace detail {
 
     boost::optional<SetpointManagerWarmest> setpointManagerWarmest() const;
 
-    std::vector<ModelObject> children() const;
+    std::vector<ModelObject> children() const override;
 
-    bool isRemovable() const;
+    bool isRemovable() const override;
 
-    std::vector<IdfObject> remove();
+    std::vector<IdfObject> remove() override;
 
-    bool addToNode(Node & node);
+    bool addToNode(Node & node) override;
 
-    ModelObject clone(Model model) const;
+    ModelObject clone(Model model) const override;
+
+    bool isConnected(const ModelObject & modelObject);
 
    private:
 

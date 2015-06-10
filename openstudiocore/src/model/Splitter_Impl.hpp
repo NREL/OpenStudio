@@ -59,7 +59,7 @@ class MODEL_API Splitter_Impl : public HVACComponent_Impl
    *  from this object on an AirLoopHVAC or PlantLoop. 
    *  @param[in]  isDemandComponent  Boolean passed in whether object is a demand or supply component
   **/
-  virtual std::vector<HVACComponent> edges(bool isDemandComponent);
+  virtual std::vector<HVACComponent> edges(bool isDemandComponent) override;
 
   /** Returns the optional ModelObject connected to the inlet port.  
    *  If there is no connected object then the optional will be false. 
@@ -100,7 +100,7 @@ class MODEL_API Splitter_Impl : public HVACComponent_Impl
    */
   void removePortForBranch(unsigned branchIndex);
 
-  bool isRemovable() const;
+  bool isRemovable() const override;
 
   private:
 

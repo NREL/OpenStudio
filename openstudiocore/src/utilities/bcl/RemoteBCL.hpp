@@ -70,10 +70,10 @@ namespace openstudio{
     //@{
 
     /// Get the component by uid
-    virtual boost::optional<BCLComponent> getComponent(const std::string& uid, const std::string& versionId = "") const;
+    virtual boost::optional<BCLComponent> getComponent(const std::string& uid, const std::string& versionId = "") const override;
 
     /// Get the measure by uid
-    virtual boost::optional<BCLMeasure> getMeasure(const std::string& uid, const std::string& versionId = "") const;
+    virtual boost::optional<BCLMeasure> getMeasure(const std::string& uid, const std::string& versionId = "") const override;
     
     /// Perform a meta search on the library to identify number and types of results available.
     /// The total number of search results available can be used in the search method which requires a page number.

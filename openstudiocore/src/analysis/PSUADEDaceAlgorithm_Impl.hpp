@@ -55,7 +55,7 @@ namespace detail {
 
     virtual ~PSUADEDaceAlgorithm_Impl() {}
 
-    virtual AnalysisObject clone() const;
+    virtual AnalysisObject clone() const override;
 
     //@}
 
@@ -65,16 +65,16 @@ namespace detail {
     /** Returns true if Algorithm can operate on problem. For example, DesignOfExperiments can work
      *  on all \link Problem Problems \endlink, but SequentialSearch requires an OptimizationProblem
      *  with two objective functions and \link DiscreteVariable DiscreteVariables\endlink. */
-    virtual bool isCompatibleProblemType(const Problem& problem) const;
+    virtual bool isCompatibleProblemType(const Problem& problem) const override;
 
     /** Returns true if the algorithm requires continuous variables. The Problem class uses this
      *  method to determine whether to represent OpenStudio DiscreteVariables as continuous
      *  variables when communicating with DAKOTA. If the desired behavior is to fail, rather than
      *  to fake continuity, then isCompatibleProblemType should return false if Problem contains
      *  non-trivial (> 1 perturbation) discrete variables. */
-    virtual bool requiresContinuousVariables() const;
+    virtual bool requiresContinuousVariables() const override;
 
-    virtual std::string dakotaInFileDescription() const;
+    virtual std::string dakotaInFileDescription() const override;
 
     //@}
     /** @name Getters and Setters */
@@ -86,7 +86,7 @@ namespace detail {
     /** @name Absent or Protected in Public Class */
     //@{
 
-    virtual QVariant toVariant() const;
+    virtual QVariant toVariant() const override;
 
     static PSUADEDaceAlgorithm fromVariant(const QVariant& variant, const VersionString& version);
 

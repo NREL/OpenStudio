@@ -102,6 +102,12 @@ LocationView::LocationView(bool isIP,
 {
   loadQSettings();
 
+  QLabel * label = nullptr;
+  QPushButton * btn = nullptr;
+  QHBoxLayout * hLayout = nullptr;
+  QVBoxLayout * vLayout = nullptr;
+  QFont boldFont;
+
   model::ClimateZones climateZones = m_model.getUniqueModelObject<model::ClimateZones>();
 
   // ***** Main Layout *****
@@ -238,12 +244,18 @@ LocationView::LocationView(bool isIP,
   label = new QLabel("Download weather files at <a href=\"http://www.energyplus.gov\">www.energyplus.gov</a>");
   label->setOpenExternalLinks(true);
   weatherFileGridLayout->addWidget(label, i++, 0);
+  auto mainVLayout = new QVBoxLayout();
+  mainVLayout->setContentsMargins(10,10,10,10);
+  mainVLayout->setSpacing(10);
+  setLayout(mainVLayout);
 
-  // ***** Add Weather File GridLayout *****
-  weatherFileGridLayout->setColumnStretch(i, 10);
-  leftVLayout->addLayout(weatherFileGridLayout);
-  
   // ***** Climate Zones *****
+  QFrame * line;
+  line = new QFrame();
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  mainVLayout->addWidget(line);
+
   label = new QLabel("Measure Tags (Optional):");
   label->setObjectName("H2");
   leftVLayout->addWidget(label);

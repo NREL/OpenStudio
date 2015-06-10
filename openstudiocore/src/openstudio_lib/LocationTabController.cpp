@@ -43,10 +43,10 @@ LocationTabController::LocationTabController(const model::Model & model,
   : MainTabController(new LocationTabView(model,modelTempDir)),
   m_model(model)
 {
-  LocationView * locationView = new LocationView(false, model, modelTempDir);
-  mainContentWidget()->addSubTab("Overview",locationView,WEATHER_FILE);
+  auto locationView = new LocationView(model, modelTempDir);
+  mainContentWidget()->addSubTab("Weather File && Design Days",locationView,WEATHER_FILE);
 
-  LifeCycleCostsView * lifeCycleCostsView = new LifeCycleCostsView(model);
+  auto lifeCycleCostsView = new LifeCycleCostsView(model);
   mainContentWidget()->addSubTab("Life Cycle Costs",lifeCycleCostsView,LIFE_CYCLE_COSTS);
 
   QLabel * label;

@@ -67,9 +67,9 @@ class VariableGroupListController : public OSListController
 
   void addItem(QSharedPointer<OSListItem> item);
 
-  QSharedPointer<OSListItem> itemAt(int i);
+  QSharedPointer<OSListItem> itemAt(int i) override;
 
-  int count();
+  int count() override;
 
   private:
 
@@ -102,7 +102,7 @@ class VariableGroupItemDelegate : public OSItemDelegate
   public:
 
   VariableGroupItemDelegate(bool t_fixedMeasuresOnly);
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
+  QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 
   private:
 
@@ -117,9 +117,9 @@ class VariableListController : public OSListController
 
   VariableListController(MeasureType measureType, bool designAlternatives, BaseApp *t_baseApp);
 
-  QSharedPointer<OSListItem> itemAt(int i);
+  QSharedPointer<OSListItem> itemAt(int i) override;
 
-  int count();
+  int count() override;
 
   void removeItemForVariable(analysis::MeasureGroup variable);
 
@@ -197,7 +197,7 @@ class VariableItemDelegate : public OSItemDelegate
 
   public:
 
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
+  QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 };
 
 class MeasureListController : public OSListController
@@ -208,9 +208,9 @@ class MeasureListController : public OSListController
 
   MeasureListController(VariableItem * variableItem, BaseApp *t_app);
 
-  QSharedPointer<OSListItem> itemAt(int i);
+  QSharedPointer<OSListItem> itemAt(int i) override;
 
-  int count();
+  int count() override;
 
   void addItemForDuplicateMeasure(const analysis::Measure& measure);
 
@@ -270,7 +270,7 @@ class MeasureItem : public OSListItem
 
   void remove();
 
-  void setSelected(bool isSelected);
+  void setSelected(bool isSelected) override;
 
   signals:
 
@@ -297,7 +297,7 @@ class MeasureItemDelegate : public OSItemDelegate
 
   MeasureItemDelegate(bool t_fixed) : m_fixed(t_fixed) {}
 
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
+  QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 
   private:
 

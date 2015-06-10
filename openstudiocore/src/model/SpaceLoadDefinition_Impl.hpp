@@ -52,7 +52,7 @@ namespace detail {
     virtual ~SpaceLoadDefinition_Impl() {}
 
     /// Removes the definition and all instances.
-    virtual std::vector<openstudio::IdfObject> remove();
+    virtual std::vector<openstudio::IdfObject> remove() override;
 
     /// Returns all instances of this definition.
     std::vector<SpaceLoadInstance> instances() const;

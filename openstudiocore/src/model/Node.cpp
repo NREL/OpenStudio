@@ -318,7 +318,7 @@ namespace detail{
   {
     std::vector<SetpointManager> _setpointManagers;
     std::vector<SetpointManager> _modelObjects = getObject<Node>().getModelObjectSources<SetpointManager>();
-    for(std::vector<SetpointManager>::iterator it = _modelObjects.begin();
+    for(auto it = _modelObjects.begin();
         it != _modelObjects.end();
         ++it)
     {
@@ -336,12 +336,28 @@ namespace detail{
   void Node_Impl::removeSetpointManagers()
   {
     std::vector<SetpointManager> _setpointManagers = this->setpointManagers();
-    for(std::vector<SetpointManager>::iterator it = _setpointManagers.begin();
+    for(auto it = _setpointManagers.begin();
         it != _setpointManagers.end();
         ++it)
     {
       it->remove();
     }
+  }
+
+  bool Node_Impl::isConnected(const ModelObject & modelObject)
+  {
+    if( auto mo = outletModelObject() ) {
+      if( modelObject.handle() == mo->handle() ) {
+        return true;
+      }
+    }
+    if( auto mo = inletModelObject() ) {
+      if( modelObject.handle() == mo->handle() ) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
 } // detail

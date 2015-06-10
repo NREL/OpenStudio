@@ -1,3 +1,18 @@
+## OpenStudio v1.7.5
+###### 2015-05 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.4...v1.7.5 )
+
+- ![Changed:][changed] [#1662]( https://github.com/NREL/OpenStudio/issues/1662 ), WaterHeaterMixed will now be more fully initialized 
+- ![Improved:][improved] [#1637]( https://github.com/NREL/OpenStudio/issues/1637 ), DistrictHeating / DistrictCooling ::nominalCapacity is now autosizable
+- ![Improved:][improved] [#1638]( https://github.com/NREL/OpenStudio/issues/1638 ), HumidifierSteamElectric::ratedCapacity is now autosizable
+- ![Changed:][changed] [#1658]( https://github.com/NREL/OpenStudio/issues/1658 ), StraightComponent::addToNode will now remove from existing loop first
+- ![Removed:][removed] [#1648]( https://github.com/NREL/OpenStudio/issues/1648 ), Removed AirLoopHVAC::addAirLoopComp, please use HVACComponent::addToNode instead
+
+## OpenStudio v1.7.4
+###### 2015-05 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.3...v1.7.4 )
+
+## OpenStudio v1.7.3
+###### 2015-04 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.2...v1.7.3 )
+
 ## OpenStudio v1.7.2
 ###### 2015-04 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.1...v1.7.2 )
 

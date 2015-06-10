@@ -91,7 +91,7 @@ TEST(Time, StringConstructor)
 
 TEST(Time, TMConstructor)
 {
-  time_t t = time(0);
+  time_t t = time(nullptr);
   tm* lt = localtime(&t);
   Time zt(*lt);
 

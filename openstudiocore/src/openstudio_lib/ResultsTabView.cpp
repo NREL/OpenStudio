@@ -89,12 +89,12 @@ ResultsView::ResultsView(QWidget *t_parent)
     m_openResultsViewerBtn(new QPushButton("Open ResultsViewer\nfor Detailed Reports"))
 {
 
-  QVBoxLayout * mainLayout = new QVBoxLayout;
+  auto mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
 
   connect(m_openResultsViewerBtn, &QPushButton::clicked, this, &ResultsView::openResultsViewerClicked);
   
-  QHBoxLayout * hLayout = new QHBoxLayout(this);
+  auto hLayout = new QHBoxLayout(this);
   mainLayout->addLayout(hLayout);
 
   m_reportLabel = new QLabel("Reports: ",this);

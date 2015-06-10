@@ -49,23 +49,23 @@ class MODEL_API AirLoopHVACZoneSplitter_Impl : public Splitter_Impl {
   virtual ~AirLoopHVACZoneSplitter_Impl();
 
   // Get all output variable names that could be associated with this object.
-  virtual const std::vector<std::string>& outputVariableNames() const;
+  virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual IddObjectType iddObjectType() const;
+  virtual IddObjectType iddObjectType() const override;
 
-  std::vector<openstudio::IdfObject> remove();
+  std::vector<openstudio::IdfObject> remove() override;
 
-  unsigned inletPort();
+  unsigned inletPort() override;
 
-  unsigned outletPort(unsigned branchIndex);
+  unsigned outletPort(unsigned branchIndex) override;
 
-  unsigned nextOutletPort();
+  unsigned nextOutletPort() override;
 
   std::vector<ThermalZone> thermalZones();
 
   boost::optional<ModelObject> zoneEquipmentForBranch(int branchIndex);
 
-  void disconnect();
+  void disconnect() override;
 
   private:
 

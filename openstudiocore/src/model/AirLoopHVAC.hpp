@@ -79,7 +79,7 @@ class MODEL_API AirLoopHVAC : public Loop
 
 
   /** Returns the supply inlet node. */
-  Node supplyInletNode() const;
+  Node supplyInletNode() const override;
 
   /** Returns the supply outlet nodes.
    * Currently only one supply outlet node is supported, but EnergyPlus allows
@@ -88,7 +88,7 @@ class MODEL_API AirLoopHVAC : public Loop
   std::vector<Node> supplyOutletNodes() const;
 
   /** Returns the first supply outlet Node. */
-  Node supplyOutletNode() const;
+  Node supplyOutletNode() const override;
 
   /** Returns the demand inlet nodes.
    * Currently only one demand inlet node is supported, but EnergyPlus allows
@@ -97,10 +97,10 @@ class MODEL_API AirLoopHVAC : public Loop
   std::vector<Node> demandInletNodes() const;
 
   /** Returns the first demand inlet Node. */
-  Node demandInletNode() const;
+  Node demandInletNode() const override;
 
   /** Returns the demand outlet node */
-  Node demandOutletNode() const;
+  Node demandOutletNode() const override;
 
   /** Returns the outdoor air node.  This is the outermost node from which
    * outdoor air is introduced into the air loop.  This node only exists if there
@@ -183,12 +183,6 @@ class MODEL_API AirLoopHVAC : public Loop
    */
   std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
-  /** Adds a new component to the air loop.  In most cases the newObj will be added immediately after the
-   * targetObj.  The notable exceptions are when the targetObj is either a supply outlet node or a
-   * demand outlet node.  This interface is deprecated in favor of HVACComponent::addToNode.
-   */
-  void addAirLoopComp(openstudio::model::ModelObject targetObj, openstudio::model::ModelObject newObj);
-
   /** Returns the AirLoopHVACOutdoorAirSystem object associated with the air loop.
    * A freshly constructed AirLoopHVAC object will not have an outdoor air system
    * and this method will return a false optional.
@@ -253,9 +247,9 @@ class MODEL_API AirLoopHVAC : public Loop
   /** Returns a string indicating if the system is configured to night cycle **/
   std::string nightCycleControlType() const;
 
-  std::vector<openstudio::IdfObject> remove();
+  std::vector<openstudio::IdfObject> remove() override;
 
-  ModelObject clone(Model model) const;
+  ModelObject clone(Model model) const override;
 
   static IddObjectType iddObjectType();
 

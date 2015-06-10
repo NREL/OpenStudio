@@ -53,12 +53,12 @@ namespace detail {
 
     /// remove the object from the model's workspace
     /// return a new workspace containing any removed object(s)
-    virtual std::vector<openstudio::IdfObject> remove();
+    virtual std::vector<openstudio::IdfObject> remove() override;
 
     /// get a vector of allowable children types
     virtual std::vector<IddObjectType> allowableChildTypes() const;
 
-    virtual ModelObject clone(Model model) const;
+    virtual ModelObject clone(Model model) const override;
 
    private:
 

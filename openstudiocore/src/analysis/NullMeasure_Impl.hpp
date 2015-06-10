@@ -50,23 +50,23 @@ namespace detail {
 
     virtual ~NullMeasure_Impl() {}
 
-    virtual AnalysisObject clone() const;
+    virtual AnalysisObject clone() const override;
 
     //@}
     /** @name Virtual Methods */
     //@{
 
-    virtual boost::optional<FileReferenceType> inputFileType() const;
+    virtual boost::optional<FileReferenceType> inputFileType() const override;
 
-    virtual boost::optional<FileReferenceType> outputFileType() const;
+    virtual boost::optional<FileReferenceType> outputFileType() const override;
 
-    virtual runmanager::WorkItem createWorkItem(const openstudio::path& rubyIncludeDirectory) const;
+    virtual runmanager::WorkItem createWorkItem(const openstudio::path& rubyIncludeDirectory) const override;
 
     //@}
     /** @name Protected in Public Class */
     //@{
 
-    virtual QVariant toVariant() const;
+    virtual QVariant toVariant() const override;
 
     static NullMeasure fromVariant(const QVariant& variant, const VersionString& version);
 

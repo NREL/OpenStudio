@@ -246,7 +246,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
         ss << std::endl << "Ensure that all measures are correctly located in the scripts directory.";
         LOG(Warn,ss.str());
         // DLM: which dialog should be parent?
-        QMessageBox::warning(0, 
+        QMessageBox::warning(nullptr, 
                              QString("Error opening measure and run data."),
                              toQString(ss.str()),
                              QMessageBox::Ok);
@@ -275,7 +275,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
       ss << "you, and sorry for the inconvenience.";
       LOG(Warn,ss.str());
       // DLM: which dialog should be parent?
-      QMessageBox::warning(0, 
+      QMessageBox::warning(nullptr, 
                            QString("Error opening measure and run data."),
                            toQString(ss.str()),
                            QMessageBox::Ok);
@@ -1194,7 +1194,7 @@ void OSDocument::exportFile(fileType type)
 
     bool errorsOrWarnings = false;
     QString log;
-    for( std::vector<LogMessage>::iterator it = translatorErrors.begin();
+    for( auto it = translatorErrors.begin();
           it < translatorErrors.end();
           ++it )
     {
@@ -1205,7 +1205,7 @@ void OSDocument::exportFile(fileType type)
       log.append("\n");
     }  
 
-    for( std::vector<LogMessage>::iterator it = translatorWarnings.begin();
+    for( auto it = translatorWarnings.begin();
           it < translatorWarnings.end();
           ++it )
     {
@@ -1495,7 +1495,7 @@ void OSDocument::openMeasuresDlg()
   // save model if dirty
   if(this->modified()){
 
-    QMessageBox * messageBox = new QMessageBox(this->mainWindow());
+    auto messageBox = new QMessageBox(this->mainWindow());
     messageBox->setText("You must save your model before applying a measure.");
     messageBox->setInformativeText("Do you want to save your model now?");
     messageBox->setStandardButtons(QMessageBox::Save | QMessageBox::Cancel);

@@ -50,17 +50,17 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual ModelObject clone(Model model) const;
+    virtual ModelObject clone(Model model) const override;
 
-    virtual boost::optional<ParentObject> parent() const;
+    virtual boost::optional<ParentObject> parent() const override;
 
-    virtual std::vector<ModelObject> children() const;
+    virtual std::vector<ModelObject> children() const override;
 
     /** This function returns a vector of HVACComponent that are directly downstream
      *  from this object on an AirLoopHVAC or PlantLoop. 
      *  @param[in]  isDemandComponent  Boolean passed in whether object is a demand or supply component
     **/
-    virtual std::vector<HVACComponent> edges(bool isDemandComponent);
+    virtual std::vector<HVACComponent> edges(bool isDemandComponent) override;
 
     //@}
     /** @name Getters */
@@ -74,17 +74,23 @@ namespace detail {
 
     virtual boost::optional<ModelObject> outletModelObject();
 
-    virtual boost::optional<AirLoopHVAC> airLoopHVAC() const;
+    virtual boost::optional<AirLoopHVAC> airLoopHVAC() const override;
 
     //@}
     /** @name Setters */
     //@{
 
-    virtual bool addToNode(Node & node);
 
-    virtual std::vector<openstudio::IdfObject> remove();
+    //@}
+    /** @name Other */
+    //@{
+    virtual bool addToNode(Node & node) override;
 
-    void disconnect();
+    virtual std::vector<openstudio::IdfObject> remove() override;
+
+    bool removeFromLoop();
+
+    void disconnect() override;
 
     //@}
    private:

@@ -42,17 +42,17 @@ class MaterialAirWallInspectorView : public ModelObjectInspectorView
 
   public:
 
-    MaterialAirWallInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = 0);
+    MaterialAirWallInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = nullptr);
 
     virtual ~MaterialAirWallInspectorView() {}
 
   protected:
 
-    virtual void onClearSelection();
+    virtual void onClearSelection() override;
 
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
 
-    virtual void onUpdate();
+    virtual void onUpdate() override;
 
   private:
 

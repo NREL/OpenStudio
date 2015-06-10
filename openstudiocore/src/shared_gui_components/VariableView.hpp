@@ -79,11 +79,11 @@ class RectangularDropZone : public QWidget
 
   protected:
 
-  void paintEvent(QPaintEvent *);
+  void paintEvent(QPaintEvent *) override;
 
-  void dropEvent(QDropEvent * event);
+  void dropEvent(QDropEvent * event) override;
 
-  void dragEnterEvent(QDragEnterEvent * event);
+  void dragEnterEvent(QDragEnterEvent * event) override;
 
   private:
 
@@ -173,7 +173,7 @@ class VariableContentView : public QWidget
 
   protected:
 
-  void paintEvent(QPaintEvent *);
+  void paintEvent(QPaintEvent *) override;
 };
 
 class VariableItemView : public OSCollapsibleView
@@ -191,7 +191,7 @@ class VariableItemView : public OSCollapsibleView
   VariableContentView * variableContentView;
 
   protected:
-  void paintEvent(QPaintEvent *);
+  void paintEvent(QPaintEvent *) override;
 };
 
 class MeasureDropZone : public RectangularDropZone
@@ -225,7 +225,7 @@ class MeasureItemButton : public QAbstractButton
 
   protected:
 
-  void paintEvent(QPaintEvent * e);
+  void paintEvent(QPaintEvent * e) override;
 };
 
 class MeasureItemView : public QWidget
@@ -246,7 +246,7 @@ class MeasureItemView : public QWidget
 
  protected:
 
-  void paintEvent(QPaintEvent *);
+  void paintEvent(QPaintEvent *) override;
 };
 
 } // measuretab

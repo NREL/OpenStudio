@@ -65,9 +65,9 @@ namespace detail {
 
     virtual ~SizingPlant_Impl() {}
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     PlantLoop plantLoop() const;
 
@@ -81,6 +81,12 @@ namespace detail {
 
     Quantity getLoopDesignTemperatureDifference(bool returnIP=false) const;
 
+    std::string sizingOption() const;
+
+    int zoneTimestepsinAveragingWindow() const;
+
+    std::string coincidentSizingFactorMode() const;
+
     bool setPlantLoop(const PlantLoop& plantLoop);
 
     bool setLoopType(std::string loopType);
@@ -92,6 +98,12 @@ namespace detail {
     bool setLoopDesignTemperatureDifference(double loopDesignTemperatureDifference);
 
     bool setLoopDesignTemperatureDifference(const Quantity& loopDesignTemperatureDifference);
+
+    bool setSizingOption(std::string sizingOption);
+
+    bool setZoneTimestepsinAveragingWindow(int zoneTimestepsinAveragingWindow);
+
+    bool setCoincidentSizingFactorMode(std::string coincidentSizingFactorMode);
 
     protected:
 

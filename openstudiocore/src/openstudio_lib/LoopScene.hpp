@@ -61,7 +61,7 @@ class LoopScene : public GridScene
   public:
   
   LoopScene( model::Loop loop,
-             QObject *parent = 0 );
+             QObject *parent = nullptr );
 
   virtual ~LoopScene() {}
 

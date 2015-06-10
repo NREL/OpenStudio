@@ -90,7 +90,7 @@ OSCollapsibleItem::OSCollapsibleItem(OSCollapsibleItemHeader * collapsibleItemHe
   m_filterBtnGroup->addButton(m_filtersOnBtn);
   m_filterBtnGroup->addButton(m_filtersOffBtn);
 
-  QVBoxLayout * radioBtnVLayout = new QVBoxLayout();
+  auto radioBtnVLayout = new QVBoxLayout();
   radioBtnVLayout->addWidget(m_filtersOnBtn);
   radioBtnVLayout->addWidget(m_filtersOffBtn);
 
@@ -102,7 +102,7 @@ OSCollapsibleItem::OSCollapsibleItem(OSCollapsibleItemHeader * collapsibleItemHe
   m_openLibDlgButton->setText("Edit");
   connect(m_openLibDlgButton, &QPushButton::clicked, this, &OSCollapsibleItem::openLibDlgClicked);
 
-  QHBoxLayout * btnHLayout = new QHBoxLayout();
+  auto btnHLayout = new QHBoxLayout();
   btnHLayout->addLayout(radioBtnVLayout);
   btnHLayout->addWidget(m_openLibDlgButton);
 
@@ -117,7 +117,7 @@ OSCollapsibleItem::OSCollapsibleItem(OSCollapsibleItemHeader * collapsibleItemHe
   m_sortComboBox->addItem("BCL Components");
   connect(m_sortComboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &OSCollapsibleItem::comboBoxClicked);
 
-  QVBoxLayout * vLayout = new QVBoxLayout();
+  auto vLayout = new QVBoxLayout();
   vLayout->addLayout(btnHLayout);
   vLayout->addWidget(m_sortLabel);
   vLayout->addWidget(m_sortComboBox);

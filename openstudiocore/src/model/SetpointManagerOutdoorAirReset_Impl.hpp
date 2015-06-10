@@ -97,19 +97,19 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual bool addToNode(Node & node);
+    virtual bool addToNode(Node & node) override;
 
     //@}
     /** @name Getters */
     //@{
 
-    virtual std::string controlVariable() const;
+    virtual std::string controlVariable() const override;
 
     bool isControlVariableDefaulted() const;
 
@@ -129,7 +129,7 @@ namespace detail {
 
     Quantity getOutdoorHighTemperature(bool returnIP=false) const;
 
-    virtual boost::optional<Node> setpointNode() const;
+    virtual boost::optional<Node> setpointNode() const override;
 
     boost::optional<Schedule> schedule() const;
 
@@ -153,7 +153,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    virtual bool setControlVariable(const std::string& controlVariable);
+    virtual bool setControlVariable(const std::string& controlVariable) override;
 
     void resetControlVariable();
 
@@ -210,9 +210,9 @@ namespace detail {
     //@}
    protected:
    private:
-    virtual bool setSetpointNode(const Node& node);
+    virtual bool setSetpointNode(const Node& node) override;
 
-    virtual void resetSetpointNode();
+    virtual void resetSetpointNode() override;
 
     REGISTER_LOGGER("openstudio.model.SetpointManagerOutdoorAirReset");
 

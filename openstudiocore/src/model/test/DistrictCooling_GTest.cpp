@@ -98,17 +98,9 @@ TEST_F(ModelFixture,DistrictCooling_NominalCapacity_Quantity) {
   //test setting and getting the field with a double
   double testValue(1);
   testObject.setNominalCapacity(testValue);
-  ASSERT_EQ(1,testObject.nominalCapacity());
-
-  //test setting and getting the field with a quantity
-  Unit testUnits = testObject.getNominalCapacity(true).units(); // Get IP units.
-
-  Quantity testQuantity(testValue,testUnits);
-  EXPECT_TRUE(testObject.setNominalCapacity(testQuantity));
-
-  Quantity testOutQuantity = testObject.getNominalCapacity(true);
-  EXPECT_NEAR(testValue,testOutQuantity.value(),1.0E-8);
-  EXPECT_EQ(testUnits.standardString(),testOutQuantity.units().standardString());
+  auto capacity = testObject.nominalCapacity();
+  ASSERT_TRUE(capacity);
+  ASSERT_EQ(1,capacity.get());
 }
 
 //test cloning the object
@@ -121,13 +113,17 @@ TEST_F(ModelFixture,DistrictCooling_Clone){
 
   //clone into the same model
   DistrictCooling testObjectClone = testObject.clone(m).cast<DistrictCooling>();
-  ASSERT_EQ(1234,testObjectClone.nominalCapacity());
+  auto capacity = testObjectClone.nominalCapacity();
+  ASSERT_TRUE(capacity);
+  ASSERT_EQ(1234,capacity.get());
 
   //clone into another model
   Model m2;
   DistrictCooling testObjectClone2 = testObject.clone(m2).cast<DistrictCooling>();
 
-  ASSERT_EQ(1234,testObjectClone2.nominalCapacity());
+  capacity = testObjectClone2.nominalCapacity();
+  ASSERT_TRUE(capacity);
+  ASSERT_EQ(1234,capacity.get());
 }
 
 TEST_F(ModelFixture,DistrictCooling_addToNode) {

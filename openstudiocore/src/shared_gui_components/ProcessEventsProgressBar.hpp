@@ -31,7 +31,7 @@ class ProcessEventsProgressBar : public openstudio::ProgressBar
 {
 public:
   ProcessEventsProgressBar();
-  virtual void onPercentageUpdated(double percentage);
+  virtual void onPercentageUpdated(double percentage) override;
 };
 
 }

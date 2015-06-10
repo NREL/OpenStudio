@@ -126,7 +126,7 @@ class MeasureItemView : public QAbstractButton
 
   protected:
 
-  void paintEvent(QPaintEvent * e);
+  void paintEvent(QPaintEvent * e) override;
 };
 
 class DesignAltHeaderView : public OSHeader
@@ -179,7 +179,7 @@ class DesignAltItemView : public OSCollapsibleView
 
   protected:
 
-  void paintEvent(QPaintEvent * e);
+  void paintEvent(QPaintEvent * e) override;
 };
 
 } // altstab

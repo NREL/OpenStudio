@@ -296,6 +296,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnitSimple(const std::string& 
       callbackMap = m_callbackMaps.find(UnitSystem(UnitSystem::Mixed));
       OS_ASSERT(callbackMap != m_callbackMaps.end());
       callbackPair = callbackMap->second.find(standardString);
+      // clang-modernize note: This line must not compare against nullptr
       if ((callbackPair != callbackMap->second.end()) && (callbackPair->second != NULL)) {
         temp = callbackPair->second();
       }
@@ -304,6 +305,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnitSimple(const std::string& 
         callbackMap = m_callbackMaps.find(system);
         if (callbackMap != m_callbackMaps.end()) {
           callbackPair = callbackMap->second.find(standardString);
+          // clang-modernize note: This line must not compare against nullptr
           if ((callbackPair != callbackMap->second.end()) && (callbackPair->second != NULL)) {
             temp = callbackPair->second();
           }
@@ -319,6 +321,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnitSimple(const std::string& 
             callbackMap = m_callbackMaps.find(tempSystem);
             if (callbackMap != m_callbackMaps.end()) {
               callbackPair = callbackMap->second.find(standardString);
+              // clang-modernize note: This line must not compare against nullptr
               if ((callbackPair != callbackMap->second.end()) && (callbackPair->second != NULL)) {
                 temp = callbackPair->second();
                 break;

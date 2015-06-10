@@ -141,23 +141,23 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
   : QWidget(parent),
   m_isIP(isIP)
 {
-  QVBoxLayout * layout = 0;
+  QVBoxLayout * layout = nullptr;
 
   layout = new QVBoxLayout();
   layout->setSpacing(0);
   layout->setContentsMargins(0,0,0,0);
   setLayout(layout);
 
-  QVBoxLayout * scrollLayout = new QVBoxLayout();
+  auto scrollLayout = new QVBoxLayout();
   scrollLayout->setSpacing(0);
   scrollLayout->setContentsMargins(0,0,0,0);
 
-  QWidget * scrollWidget = new QWidget();
+  auto scrollWidget = new QWidget();
   scrollWidget->setObjectName("ScrollWidget");
   scrollWidget->setStyleSheet("QWidget#ScrollWidget { background: transparent; }");
   scrollWidget->setLayout(scrollLayout);
 
-  QScrollArea * scrollArea = new QScrollArea();
+  auto scrollArea = new QScrollArea();
   scrollArea->setContentsMargins(0,0,0,0);
   scrollArea->setFrameStyle(QFrame::NoFrame);
   scrollArea->setWidget(scrollWidget);

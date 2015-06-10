@@ -238,7 +238,7 @@ namespace openstudio {
   openstudio::path createModelTempDir()
   {
     openstudio::path result;
-    QTemporaryFile * tempFile = new QTemporaryFile();
+    auto tempFile = new QTemporaryFile();
 
     if( tempFile->open() )
     {
@@ -506,21 +506,21 @@ namespace openstudio {
 
     std::vector<openstudio::runmanager::Job> jobs = rm.getJobs();
 
-    for (std::vector<openstudio::runmanager::Job>::iterator itr = jobs.begin();
+    for (auto itr = jobs.begin();
          itr != jobs.end();
          ++itr)
     {
       itr->setCanceled(true);
     }
 
-    for (std::vector<openstudio::runmanager::Job>::iterator itr = jobs.begin();
+    for (auto itr = jobs.begin();
          itr != jobs.end();
          ++itr)
     { 
       itr->requestStop();
     }
 
-    for (std::vector<openstudio::runmanager::Job>::iterator itr = jobs.begin();
+    for (auto itr = jobs.begin();
          itr != jobs.end();
          ++itr)
     {
@@ -539,7 +539,7 @@ namespace openstudio {
       // disconnect signals from current jobs before clearing jobs
       std::vector<openstudio::runmanager::Job> jobs = rm.getJobs();
 
-      for (std::vector<openstudio::runmanager::Job>::iterator itr = jobs.begin();
+      for (auto itr = jobs.begin();
            itr != jobs.end();
            ++itr)
       {
@@ -593,7 +593,7 @@ namespace openstudio {
             openstudio::path radiancePath = rad.back().localBinPath.parent_path();
 
             bool modeltoidffound(false);
-            for (std::vector<runmanager::WorkItem>::iterator itr = workitems.begin();
+            for (auto itr = workitems.begin();
                 itr != workitems.end();
                 ++itr)
             {
@@ -631,7 +631,7 @@ namespace openstudio {
       // connect signals to new jobs
       jobs = rm.getJobs();
 
-      for (std::vector<openstudio::runmanager::Job>::iterator itr = jobs.begin();
+      for (auto itr = jobs.begin();
           itr != jobs.end();
           ++itr)
       {
@@ -698,7 +698,7 @@ namespace openstudio {
 
   bool findBCLMeasureWorkItem(const std::vector<runmanager::WorkItem>& workItems, const openstudio::UUID& uuid)
   {
-    for (std::vector<runmanager::WorkItem>::const_iterator itr = workItems.begin();
+    for (auto itr = workItems.begin();
          itr != workItems.end();
          ++itr)
     {
@@ -754,7 +754,7 @@ namespace openstudio {
 
     runmanager::WorkItem workItem = rubyJobBuilder.toWorkItem();
 
-    for (std::vector<runmanager::WorkItem>::iterator itr = workItems.begin();
+    for (auto itr = workItems.begin();
          itr != workItems.end();
          ++itr)
     {
@@ -787,7 +787,7 @@ namespace openstudio {
 
     runmanager::WorkItem workItem = rubyJobBuilder.toWorkItem();
 
-    for (std::vector<runmanager::WorkItem>::iterator itr = workItems.begin();
+    for (auto itr = workItems.begin();
          itr != workItems.end();
          ++itr)
     {

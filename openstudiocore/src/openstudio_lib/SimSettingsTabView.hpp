@@ -44,7 +44,7 @@ public:
                      const model::Model & model,
                      const QString & tabLabel,
                      bool hasSubTabs,
-                     QWidget * parent = 0);
+                     QWidget * parent = nullptr);
 
   virtual ~SimSettingsTabView() {}
 

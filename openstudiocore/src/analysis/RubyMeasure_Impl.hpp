@@ -76,17 +76,17 @@ namespace detail {
 
     virtual ~RubyMeasure_Impl() {}
 
-    virtual AnalysisObject clone() const;
+    virtual AnalysisObject clone() const override;
 
     //@}
     /** @name Virtual Methods */
     //@{
 
-    virtual boost::optional<FileReferenceType> inputFileType() const;
+    virtual boost::optional<FileReferenceType> inputFileType() const override;
 
-    virtual boost::optional<FileReferenceType> outputFileType() const;
+    virtual boost::optional<FileReferenceType> outputFileType() const override;
 
-    virtual runmanager::WorkItem createWorkItem(const openstudio::path& rubyIncludeDirectory) const;
+    virtual runmanager::WorkItem createWorkItem(const openstudio::path& rubyIncludeDirectory) const override;
 
     //@}
     /** @name Getters and Queries */
@@ -176,13 +176,13 @@ namespace detail {
     /** @name Protected in or Absent from Public Class */
     //@{
 
-    virtual QVariant toVariant() const;
+    virtual QVariant toVariant() const override;
 
     static RubyMeasure fromVariant(const QVariant& variant, const VersionString& version);
 
     /// Relocate path data from originalBase to newBase.
     virtual void updateInputPathData(const openstudio::path& originalBase,
-                                     const openstudio::path& newBase);
+                                     const openstudio::path& newBase) override;
 
     //@}
    protected:

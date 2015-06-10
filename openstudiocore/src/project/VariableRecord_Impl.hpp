@@ -57,13 +57,13 @@ namespace detail{
     //@{
 
     /// get name of the database table
-    virtual std::string databaseTableName() const;
+    virtual std::string databaseTableName() const override;
 
     /// get parent object
-    virtual boost::optional<ObjectRecord> parent() const;
+    virtual boost::optional<ObjectRecord> parent() const override;
 
     /// get join record objects
-    virtual std::vector<JoinRecord> joinRecords() const;
+    virtual std::vector<JoinRecord> joinRecords() const override;
 
     //@}
     /** @name Getters */
@@ -85,19 +85,19 @@ namespace detail{
     //@}
    protected:
     /** Bind data member values to a query for saving. */
-    virtual void bindValues(QSqlQuery& query) const;
+    virtual void bindValues(QSqlQuery& query) const override;
 
     /** Set the last state of this object from the query (including id). */
-    virtual void setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase);
+    virtual void setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) override;
 
     /** Check that values (except id) are same as query. */
-    virtual bool compareValues(const QSqlQuery& query) const;
+    virtual bool compareValues(const QSqlQuery& query) const override;
 
     /** Save values to last state. */
-    virtual void saveLastValues();
+    virtual void saveLastValues() override;
 
     /** Revert values back to last state. */
-    virtual void revertToLastValues();
+    virtual void revertToLastValues() override;
 
    private:
     REGISTER_LOGGER("openstudio.project.VariableRecord");

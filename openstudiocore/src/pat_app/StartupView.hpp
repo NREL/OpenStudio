@@ -38,7 +38,7 @@ class StartupView : public QWidget
 
   protected:
 
-  void paintEvent(QPaintEvent *);
+  void paintEvent(QPaintEvent *) override;
 };
 
 class LoadingProjectView : public QWidget
@@ -53,7 +53,7 @@ class LoadingProjectView : public QWidget
 
   protected:
 
-  void paintEvent(QPaintEvent *);
+  void paintEvent(QPaintEvent *) override;
 };
 
 } // pat

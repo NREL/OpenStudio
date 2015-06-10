@@ -144,9 +144,8 @@ class LocationTabView : public MainTabView
 public:
 
   LocationTabView(const model::Model & model,
-    const QString& modelTempDir,
-    QWidget * parent = 0);
-
+                  const QString& modelTempDir,
+                  QWidget * parent = nullptr);
   virtual ~LocationTabView() {}
 
 private:

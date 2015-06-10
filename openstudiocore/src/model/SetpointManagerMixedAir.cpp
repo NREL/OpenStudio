@@ -87,7 +87,7 @@ bool SetpointManagerMixedAir_Impl::addToNode(Node & node)
       std::vector<StraightComponent> fans;
       std::vector<ModelObject> supplyComponents = _airLoop->supplyComponents();
 
-      for( std::vector<ModelObject>::iterator it = supplyComponents.begin();
+      for( auto it = supplyComponents.begin();
            it != supplyComponents.end();
            ++it )
       {

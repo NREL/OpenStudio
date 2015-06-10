@@ -238,7 +238,7 @@ class CloudStartingButton : public QPushButton
 
   protected:
 
-  void paintEvent ( QPaintEvent * event );
+  void paintEvent ( QPaintEvent * event ) override;
 
   private:
 
@@ -266,7 +266,7 @@ class CloudStoppingButton : public QPushButton
 
   protected:
 
-  void paintEvent ( QPaintEvent * event );
+  void paintEvent ( QPaintEvent * event ) override;
 
   private:
 
