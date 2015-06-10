@@ -82,7 +82,7 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   Node supplyOutletNode() const override;
 
-  std::vector<Node> supplyOutletNodes() const;
+  std::vector<Node> supplyOutletNodes() const override;
 
   Node demandInletNode() const override;
 
@@ -99,6 +99,12 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
   std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) override;
 
   boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
+
+  boost::optional<Splitter> supplySplitter() const;
+
+  boost::optional<Node> supplySplitterInletNode() const;
+
+  std::vector<Node> supplySplitterOutletNodes() const;
 
   AirLoopHVACZoneMixer zoneMixer();
 

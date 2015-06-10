@@ -132,19 +132,20 @@ class MODEL_API AirLoopHVAC : public Loop
    */
   boost::optional<Node> returnAirNode();
 
+  /** Returns the supply side splitter.  If the system is a dual duct
+   * or has a return air bypass then it will have a supply side splitter.
+   */
+  boost::optional<Splitter> supplySplitter() const;
+
   /** Returns the supply side splitter inlet node.  If the system is a dual duct
    * or has a return air bypass then it will have a supply side splitter.
-   * Currently these air loop topologies are not supported so this method
-   * will always return a false optional.
    */
-  boost::optional<Node> supplySplitterInletNode();
+  boost::optional<Node> supplySplitterInletNode() const;
 
   /** Returns the supply side splitter outlet nodes.  If the system is a dual duct
    * or has a return air bypass then it will have a supply side splitter.
-   * Currently these air loop topologies are not supported so this method
-   * will always return a false optional.
    */
-  std::vector<Node> supplySplitterOutletNodes();
+  std::vector<Node> supplySplitterOutletNodes() const;
 
   /** Returns the supply side mixer inlet nodes.  If the system has a return
    * air bypass then it will have a mixer on the supply side.  Currently,

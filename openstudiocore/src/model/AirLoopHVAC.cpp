@@ -144,20 +144,18 @@ namespace detail {
   std::vector<Node> AirLoopHVAC_Impl::supplyOutletNodes() const
   {
     std::vector<Node> nodeVector;
-    OptionalModelObject optionalModelObject;
-    OptionalNode optionalNode;
-    optionalModelObject = this->connectedObject(openstudio::OS_AirLoopHVACFields::SupplySideOutletNodeA);
-    if(optionalModelObject)
-    {
-      optionalNode = optionalModelObject->optionalCast<Node>();
-      if(optionalNode)
-      {
-        nodeVector.push_back(*optionalNode);
-      }
+    if( auto mo = this->connectedObject(openstudio::OS_AirLoopHVACFields::SupplySideOutletNodeA) ) {
+      auto node = mo->optionalCast<Node>();
+      OS_ASSERT(node);
+      nodeVector.push_back(node.get());
+    }
+    if( auto mo = this->connectedObject(openstudio::OS_AirLoopHVACFields::SupplySideOutletNodeB) ) {
+      auto node = mo->optionalCast<Node>();
+      OS_ASSERT(node);
+      nodeVector.push_back(node.get());
     }
     return nodeVector;
   }
-
 
   std::vector<Node> AirLoopHVAC_Impl::demandInletNodes() const
   {
@@ -984,6 +982,33 @@ namespace detail {
     return OS_AirLoopHVACFields::SupplySideInletNodeName;
   }
 
+  boost::optional<Splitter> AirLoopHVAC_Impl::supplySplitter() const {
+    auto splitters = subsetCastVector<Splitter>(supplyComponents());
+    if( ! splitters.empty() ) {
+      return splitters.front();
+    } else {
+      return boost::none;
+    }
+  }
+
+  boost::optional<Node> AirLoopHVAC_Impl::supplySplitterInletNode() const {
+    if( auto splitter = supplySplitter() ) {
+      if( auto mo = splitter->inletModelObject() ) {
+        return mo->optionalCast<Node>();
+      }
+    }
+
+    return boost::none;
+  }
+  
+  std::vector<Node> AirLoopHVAC_Impl::supplySplitterOutletNodes() const {
+    if( auto splitter = supplySplitter() ) {
+      return subsetCastVector<Node>(splitter->outletModelObjects());
+    }
+
+    return std::vector<Node>();
+  }
+
 } // detail
 
 AirLoopHVAC::AirLoopHVAC(Model& model)
@@ -1147,14 +1172,16 @@ boost::optional<Node> AirLoopHVAC::returnAirNode()
   LOG_AND_THROW("Not implemented.");
 }
 
-boost::optional<Node> AirLoopHVAC::supplySplitterInletNode() {
-  // ETH@20111101 Adding to get Ruby bindings building.
-  LOG_AND_THROW("Not implemented.");
+boost::optional<Splitter> AirLoopHVAC::supplySplitter() const {
+  return getImpl<detail::AirLoopHVAC_Impl>()->supplySplitter();
 }
 
-std::vector<Node> AirLoopHVAC::supplySplitterOutletNodes() {
-  // ETH@20111101 Adding to get Ruby bindings building.
-  LOG_AND_THROW("Not implemented.");
+boost::optional<Node> AirLoopHVAC::supplySplitterInletNode() const {
+  return getImpl<detail::AirLoopHVAC_Impl>()->supplySplitterInletNode();
+}
+
+std::vector<Node> AirLoopHVAC::supplySplitterOutletNodes() const {
+  return getImpl<detail::AirLoopHVAC_Impl>()->supplySplitterOutletNodes();
 }
 
 std::vector<Node> AirLoopHVAC::supplyMixerInletNodes() {

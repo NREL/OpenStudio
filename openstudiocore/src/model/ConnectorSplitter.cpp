@@ -130,6 +130,11 @@ namespace detail{
       return false;
     }
 
+    if( ! t_nodeAirLoop->supplyComponents(iddObjectType()).empty() ) {
+      LOG(Warn, briefDescription() << " already has a splitter.");
+      return false;
+    }
+
     auto supplyInletNode = t_nodeAirLoop->supplyInletNode();
     auto supplyOutletNode = t_nodeAirLoop->supplyOutletNode();
 

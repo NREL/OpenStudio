@@ -201,6 +201,11 @@ Node PlantLoop_Impl::supplyOutletNode() const
   return connectedObject(supplyOutletPort())->optionalCast<Node>().get();
 }
 
+std::vector<Node> PlantLoop_Impl::supplyOutletNodes() const
+{
+  return std::vector<Node> { supplyOutletNode() };
+}
+
 Node PlantLoop_Impl::demandInletNode() const
 {
   return connectedObject(demandInletPort())->optionalCast<Node>().get();

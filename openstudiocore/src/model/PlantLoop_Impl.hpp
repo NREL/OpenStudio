@@ -137,6 +137,8 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   virtual Node supplyOutletNode() const override;
 
+  virtual std::vector<Node> supplyOutletNodes() const override;
+
   virtual Node demandInletNode() const override;
 
   virtual Node demandOutletNode() const override;

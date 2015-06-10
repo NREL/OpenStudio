@@ -155,13 +155,20 @@ namespace detail {
 
   boost::optional<ModelObject> Loop_Impl::supplyComponent(openstudio::Handle handle) const
   {
-    Node inletComp = this->supplyInletNode();
-    Node outletComp = this->supplyOutletNode();
+    auto inletComp = supplyInletNode();
+    auto outletComps = supplyOutletNodes();
+
     if( handle == inletComp.handle() ) { return inletComp; }
-    if( handle == outletComp.handle() ) { return outletComp; }
-    std::vector<HVACComponent> visited;
-    visited.push_back(inletComp);
-    return findModelObject(handle, outletComp, visited, false);
+
+    for( auto const & outletComp : outletComps ) {
+      if( handle == outletComp.handle() ) { return outletComp; }
+      std::vector<HVACComponent> visited { inletComp };
+      if( auto mo = findModelObject(handle, outletComp, visited, false) ) {
+        return mo;
+      }
+    }
+
+    return boost::none;
   }
 
   ModelObject Loop_Impl::clone(Model model) const
@@ -179,6 +186,7 @@ namespace detail {
       openstudio::IddObjectType type
     ) const
   {
+    LOG(Warn,"supplyComponents method for " << briefDescription() << " is not implemented to take multiple inlet and outlet components");
     return std::vector<ModelObject>();
   }
 
@@ -188,26 +196,6 @@ namespace detail {
     ) const
   {
     return std::vector<ModelObject>();
-  }
-
-  Node Loop_Impl::supplyInletNode() const
-  {
-    return Node(model());
-  }
-
-  Node Loop_Impl::supplyOutletNode() const
-  {
-    return Node(model());
-  }
-
-  Node Loop_Impl::demandInletNode() const
-  {
-    return Node(model());
-  }
-
-  Node Loop_Impl::demandOutletNode() const
-  {
-    return Node(model());
   }
 
   boost::optional<ModelObject> Loop_Impl::supplyInletNodeAsModelObject() {
@@ -315,9 +303,27 @@ namespace detail {
 
   std::vector<ModelObject> Loop_Impl::supplyComponents(openstudio::IddObjectType type) const
   {
-    return supplyComponents( supplyInletNode(),
-                             supplyOutletNode(),
-                             type );
+    auto t_supplyInletNode = supplyInletNode();
+    auto t_supplyOutletNodes = supplyOutletNodes();
+
+    OS_ASSERT(! t_supplyOutletNodes.empty());
+
+    auto supplyComponentsA = supplyComponents( t_supplyInletNode, t_supplyOutletNodes[0], type );
+
+    // If there are two supply outlet nodes we expect exactly one splitter
+    if( t_supplyOutletNodes.size() == 2u ) {
+      auto splitters = subsetCastVector<Splitter>(supplyComponentsA);
+      OS_ASSERT(splitters.size() == 1u);
+
+      // Grab the path to the other supply outlet node
+      auto supplyComponentsB = supplyComponents( splitters.front(), t_supplyOutletNodes[1], type ); 
+      // We should at least have the splitter and the outlet node
+      OS_ASSERT(supplyComponentsB.size() >= 2u);
+      // Add everything but the splitter, which is already in supplyComponentsA
+      supplyComponentsA.insert(supplyComponentsA.end(),supplyComponentsB.begin() + 1, supplyComponentsB.end());
+    }
+
+    return supplyComponentsA;
   }
 
   std::vector<ModelObject> Loop_Impl::demandComponents(openstudio::IddObjectType type) const
@@ -490,6 +496,11 @@ Node Loop::supplyInletNode() const
 Node Loop::supplyOutletNode() const
 {
   return getImpl<detail::Loop_Impl>()->supplyOutletNode();
+}
+
+std::vector<Node> Loop::supplyOutletNodes() const
+{
+  return getImpl<detail::Loop_Impl>()->supplyOutletNodes();
 }
 
 Node Loop::demandInletNode() const

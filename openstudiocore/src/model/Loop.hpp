@@ -111,6 +111,8 @@ class MODEL_API Loop : public ParentObject {
 
   virtual Node supplyOutletNode() const;
 
+  virtual std::vector<Node> supplyOutletNodes() const;
+
   virtual Node demandInletNode() const;
 
   virtual Node demandOutletNode() const;
