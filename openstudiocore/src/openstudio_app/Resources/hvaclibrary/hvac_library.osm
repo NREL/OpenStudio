@@ -5707,7 +5707,7 @@ OS:AirLoopHVAC:UnitarySystem,
   ,                                       !- Air Outlet Node Name
   {057b7168-bdc2-418a-9961-3bfe683a200e}, !- Supply Fan Name
   BlowThrough,                            !- Fan Placement
-  ,                                       !- Supply Air Fan Operating Mode Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Supply Air Fan Operating Mode Schedule Name
   {c2a61eb2-233b-451f-a63d-a7a583a9ac1d}, !- Heating Coil Name
   1,                                      !- DX Heating Coil Sizing Ratio
   {0c02083a-d668-4ba4-a8d2-8b99f73f4760}, !- Cooling Coil Name
@@ -5833,7 +5833,7 @@ OS:AirLoopHVAC:UnitarySystem,
   ,                                       !- Air Outlet Node Name
   {0c016d27-85cb-4254-8b85-9a16c4586de5}, !- Supply Fan Name
   BlowThrough,                            !- Fan Placement
-  ,                                       !- Supply Air Fan Operating Mode Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Supply Air Fan Operating Mode Schedule Name
   {45e57ffa-e9d4-43c4-ad4e-085192e249e1}, !- Heating Coil Name
   1,                                      !- DX Heating Coil Sizing Ratio
   {806192a5-97de-4a2e-bd59-9ce40853770a}, !- Cooling Coil Name
