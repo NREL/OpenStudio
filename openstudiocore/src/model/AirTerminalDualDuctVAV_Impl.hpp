@@ -98,15 +98,15 @@ namespace detail {
     /** @name Other */
     //@{
 
-    virtual unsigned outletPort() const;
+    virtual unsigned outletPort() const override;
 
-    virtual unsigned inletPort(unsigned branchIndex) const;
+    virtual unsigned inletPort(unsigned branchIndex) const override;
 
-    virtual unsigned nextInletPort() const;
+    virtual unsigned nextInletPort() const override;
 
-    unsigned newInletPortAfterBranch(unsigned branchIndex);
+    unsigned newInletPortAfterBranch(unsigned branchIndex) override;
 
-    void removePortForBranch(unsigned branchIndex);
+    void removePortForBranch(unsigned branchIndex) override;
 
     boost::optional<Node> hotAirInletNode() const;
 
