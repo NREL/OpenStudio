@@ -913,6 +913,9 @@ set(${target_name}_src
   WaterHeaterMixed.hpp
   WaterHeaterMixed_Impl.hpp
   WaterHeaterMixed.cpp
+  WaterHeaterStratified.hpp
+  WaterHeaterStratified_Impl.hpp
+  WaterHeaterStratified.cpp
   WaterToAirComponent.hpp
   WaterToAirComponent_Impl.hpp
   WaterToAirComponent.cpp
@@ -1425,6 +1428,7 @@ set(${target_name}_test_src
   test/TemperingValve_GTest.cpp
   test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp
+  test/WaterHeaterStratified_GTest.cpp
   test/WaterUseConnections_GTest.cpp
   test/WaterUseEquipment_GTest.cpp
   test/WeatherFile_GTest.cpp

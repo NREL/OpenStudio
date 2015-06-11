@@ -450,6 +450,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(UtilityCost_Variable);
     REGISTER_CONSTRUCTOR(Version);
     REGISTER_CONSTRUCTOR(WaterHeaterMixed);
+    REGISTER_CONSTRUCTOR(WaterHeaterStratified);
     REGISTER_CONSTRUCTOR(WaterUseConnections);
     REGISTER_CONSTRUCTOR(WaterUseEquipment);
     REGISTER_CONSTRUCTOR(WaterUseEquipmentDefinition);
@@ -775,6 +776,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(UtilityCost_Variable);
     REGISTER_COPYCONSTRUCTORS(Version);
     REGISTER_COPYCONSTRUCTORS(WaterHeaterMixed);
+    REGISTER_COPYCONSTRUCTORS(WaterHeaterStratified);
     REGISTER_COPYCONSTRUCTORS(WaterUseConnections);
     REGISTER_COPYCONSTRUCTORS(WaterUseEquipment);
     REGISTER_COPYCONSTRUCTORS(WaterUseEquipmentDefinition);
