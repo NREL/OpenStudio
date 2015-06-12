@@ -102,12 +102,6 @@ LocationView::LocationView(bool isIP,
 {
   loadQSettings();
 
-  QLabel * label = nullptr;
-  QPushButton * btn = nullptr;
-  QHBoxLayout * hLayout = nullptr;
-  QVBoxLayout * vLayout = nullptr;
-  QFont boldFont;
-
   model::ClimateZones climateZones = m_model.getUniqueModelObject<model::ClimateZones>();
 
   // ***** Main Layout *****
@@ -199,31 +193,32 @@ LocationView::LocationView(bool isIP,
   label = new QLabel(NAME);
 
   m_siteName = new OSLineEdit2();
-  m_siteName->bind(
-    *m_site,
-    OptionalStringGetter(std::bind(&model::Site::name, m_site.get_ptr(), true)),
-    boost::optional<StringSetter>(std::bind(&model::Site::setName, m_site.get_ptr(), std::placeholders::_1))
-    );
+  //m_siteName->bind(
+  //  *m_site,
+  //  OptionalStringGetter(std::bind(&model::Site::name, m_site.get_ptr(), true)),
+  //  boost::optional<StringSetter>(std::bind(&model::Site::setName, m_site.get_ptr(), std::placeholders::_1))
+  //  );
   
   int i = 0;
 
-    btn = new QPushButton("Import From DDY", this);
-  btn->setFlat(true);
-  btn->setObjectName("StandardGrayButton");
-  connect(btn, &QPushButton::clicked, this, &LocationView::onDesignDayBtnClicked);
+  //btn = new QPushButton("Import From DDY", this);
+  //btn->setFlat(true);
+  //btn->setObjectName("StandardGrayButton");
+  //connect(btn, &QPushButton::clicked, this, &LocationView::onDesignDayBtnClicked);
 
-  hLayout = new QHBoxLayout();
-  hLayout->setContentsMargins(0, 7, 0, 0);
-  hLayout->setSpacing(7);
+  //hLayout = new QHBoxLayout();
+  //hLayout->setContentsMargins(0, 7, 0, 0);
+  //hLayout->setSpacing(7);
 
-  hLayout->addWidget(label, 0, Qt::AlignLeft);
-  hLayout->addWidget(btn, 0, Qt::AlignLeft);
-  hLayout->addStretch();
+  //hLayout->addWidget(label, 0, Qt::AlignLeft);
+  ////hLayout->addWidget(btn, 0, Qt::AlignLeft);
+  //hLayout->addStretch();
 
-  auto widget = new QWidget();
-  widget->setLayout(hLayout);
+  //auto widget = new QWidget();
+  //widget->setLayout(hLayout);
 
-  weatherFileGridLayout->addWidget(widget, i++, 0);
+  //weatherFileGridLayout->addWidget(widget, i++, 0);
+  weatherFileGridLayout->addWidget(label, i++, 0);
 
   m_latitudeLbl = new QLabel(LATITUDE);
   weatherFileGridLayout->addWidget(m_latitudeLbl, i++, 0);
@@ -244,18 +239,12 @@ LocationView::LocationView(bool isIP,
   label = new QLabel("Download weather files at <a href=\"http://www.energyplus.gov\">www.energyplus.gov</a>");
   label->setOpenExternalLinks(true);
   weatherFileGridLayout->addWidget(label, i++, 0);
-  auto mainVLayout = new QVBoxLayout();
-  mainVLayout->setContentsMargins(10,10,10,10);
-  mainVLayout->setSpacing(10);
-  setLayout(mainVLayout);
+
+  // ***** Add Weather File GridLayout *****
+  weatherFileGridLayout->setColumnStretch(i, 10);
+  leftVLayout->addLayout(weatherFileGridLayout);
 
   // ***** Climate Zones *****
-  QFrame * line;
-  line = new QFrame();
-  line->setFrameShape(QFrame::HLine);
-  line->setFrameShadow(QFrame::Sunken);
-  mainVLayout->addWidget(line);
-
   label = new QLabel("Measure Tags (Optional):");
   label->setObjectName("H2");
   leftVLayout->addWidget(label);

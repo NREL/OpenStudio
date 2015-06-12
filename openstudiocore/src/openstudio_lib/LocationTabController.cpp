@@ -43,7 +43,7 @@ LocationTabController::LocationTabController(const model::Model & model,
   : MainTabController(new LocationTabView(model,modelTempDir)),
   m_model(model)
 {
-  auto locationView = new LocationView(model, modelTempDir);
+  auto locationView = new LocationView(false, model, modelTempDir); // TODO need isIP
   mainContentWidget()->addSubTab("Weather File && Design Days",locationView,WEATHER_FILE);
 
   auto lifeCycleCostsView = new LifeCycleCostsView(model);
