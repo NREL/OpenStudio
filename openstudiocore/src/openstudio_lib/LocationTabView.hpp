@@ -78,6 +78,8 @@ private slots:
 
   void onSiteNameChanged(const QString & text);
 
+  void checkNumDesignDays();
+
 private:
 
   void update();

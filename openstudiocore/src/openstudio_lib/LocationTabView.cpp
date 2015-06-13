@@ -708,6 +708,22 @@ void LocationView::onDesignDayBtnClicked()
         update();
       }
     }
+
+    QTimer::singleShot(0, this, SLOT(checkNumDesignDays()));
+
+  }
+}
+
+void LocationView::checkNumDesignDays()
+{
+  unsigned empty = m_model.getModelObjects<model::SizingPeriod>().empty();
+
+  if (empty) {
+    QMessageBox box(QMessageBox::Warning,
+      "No Design Days in DDY File", 
+      "This DDY file does not contain any valid design days.  Check the DDY file itself for errors or omissions.",
+      QMessageBox::Ok);
+    box.exec();  
   }
 }
 
