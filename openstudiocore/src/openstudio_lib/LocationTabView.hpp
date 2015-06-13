@@ -28,15 +28,15 @@
 
 #include <QWidget>
 
-class QDir;
 class QComboBox;
+class QDir;
+class QLineEdit;
 
 namespace openstudio {
 
 class EpwFile;
 class DesignDayGridView;
 class OSItemSelectorButtons;
-class OSLineEdit2;
 class YearSettingsWidget;
 
 namespace model {
@@ -76,6 +76,8 @@ private slots:
 
   void toggleUnits(bool);
 
+  void onSiteNameChanged(const QString & text);
+
 private:
 
   void update();
@@ -95,7 +97,7 @@ private:
   QString m_lastDdyPathOpened;
   QComboBox * m_ashraeClimateZone = nullptr;
   QComboBox * m_cecClimateZone = nullptr;
-  OSLineEdit2 * m_siteName = nullptr;
+  QLineEdit * m_siteName = nullptr;
   QLabel * m_latitudeLbl = nullptr;
   QLabel * m_longitudeLbl = nullptr;
   QLabel * m_elevationLbl = nullptr;

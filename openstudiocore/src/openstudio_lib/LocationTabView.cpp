@@ -28,7 +28,6 @@
 #include "YearSettingsWidget.hpp"
 
 #include "../shared_gui_components/OSGridView.hpp"
-#include "../shared_gui_components/OSLineEdit.hpp"
 
 #include "../openstudio_app/OpenStudioApp.hpp"
 
@@ -68,6 +67,7 @@
 #include <QDir>
 #include <QFileDialog>
 #include <QLabel>
+#include <QLineEdit>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QScrollArea>
@@ -100,6 +100,8 @@ LocationView::LocationView(bool isIP,
   m_yearDescription(m_model.getUniqueModelObject<model::YearDescription>()),
   m_modelTempDir(modelTempDir)
 {
+  OS_ASSERT(m_site);
+
   loadQSettings();
 
   model::ClimateZones climateZones = m_model.getUniqueModelObject<model::ClimateZones>();
@@ -190,35 +192,22 @@ LocationView::LocationView(bool isIP,
   leftVLayout->addLayout(hLayout);
 
   // ***** Site Info *****
-  label = new QLabel(NAME);
-
-  m_siteName = new OSLineEdit2();
-  //m_siteName->bind(
-  //  *m_site,
-  //  OptionalStringGetter(std::bind(&model::Site::name, m_site.get_ptr(), true)),
-  //  boost::optional<StringSetter>(std::bind(&model::Site::setName, m_site.get_ptr(), std::placeholders::_1))
-  //  );
-  
   int i = 0;
 
-  //btn = new QPushButton("Import From DDY", this);
-  //btn->setFlat(true);
-  //btn->setObjectName("StandardGrayButton");
-  //connect(btn, &QPushButton::clicked, this, &LocationView::onDesignDayBtnClicked);
+  label = new QLabel(NAME);
 
-  //hLayout = new QHBoxLayout();
-  //hLayout->setContentsMargins(0, 7, 0, 0);
-  //hLayout->setSpacing(7);
+  m_siteName = new QLineEdit();
+  connect(m_siteName, &QLineEdit::textEdited, this, &LocationView::onSiteNameChanged);
 
-  //hLayout->addWidget(label, 0, Qt::AlignLeft);
-  ////hLayout->addWidget(btn, 0, Qt::AlignLeft);
-  //hLayout->addStretch();
+  hLayout = new QHBoxLayout();
+  hLayout->setContentsMargins(0, 0, 0, 0);
+  hLayout->setSpacing(7);
 
-  //auto widget = new QWidget();
-  //widget->setLayout(hLayout);
+  hLayout->addWidget(label, 0, Qt::AlignLeft);
+  hLayout->addWidget(m_siteName, 0, Qt::AlignLeft);
+  hLayout->addStretch();
 
-  //weatherFileGridLayout->addWidget(widget, i++, 0);
-  weatherFileGridLayout->addWidget(label, i++, 0);
+  weatherFileGridLayout->addLayout(hLayout, i++, 0);
 
   m_latitudeLbl = new QLabel(LATITUDE);
   weatherFileGridLayout->addWidget(m_latitudeLbl, i++, 0);
@@ -406,6 +395,17 @@ void LocationView::toggleUnits(bool isIP)
   m_isIP = isIP;
 }
 
+void LocationView::onSiteNameChanged(const QString & text)
+{
+  auto temp = m_site->setName(text.toStdString());
+  if (!temp) {
+    m_siteName->setText("");
+  }
+  else if (QString(temp.get().c_str()) != text) {
+    m_siteName->setText(temp.get().c_str());
+  }
+}
+
 void LocationView::loadQSettings()
 {
   QString organizationName = QCoreApplication::organizationName();
@@ -434,10 +434,10 @@ void LocationView::update()
 
     boost::optional<openstudio::path> epwPath = weatherFile->path();
     if (epwPath){
-      // Do great things
+      // Do great things TODO
     }
 
-    if (weatherFile->name()) {
+    if (weatherFile->name() && !weatherFile->name()->empty()) {
       m_site->setName(weatherFile->name().get());
     }
     m_site->setLatitude(weatherFile->latitude());
@@ -446,7 +446,7 @@ void LocationView::update()
     m_site->setTimeZone(weatherFile->timeZone());
   }
 
-  if (m_site->name()) {
+  if (m_site->name() && !m_site->name()->empty()) {
     m_siteName->setText(m_site->name().get().c_str());
   }
 
