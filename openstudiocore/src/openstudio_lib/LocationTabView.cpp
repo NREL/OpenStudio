@@ -697,9 +697,10 @@ void LocationView::onDesignDayBtnClicked()
           }
         }
 
-        for (model::SizingPeriod sizingPeriod : m_model.getModelObjects<model::SizingPeriod>()){
-          sizingPeriod.remove();
-        }
+        // Evan note: do not remove existing design days
+        //for (model::SizingPeriod sizingPeriod : m_model.getModelObjects<model::SizingPeriod>()){
+        //  sizingPeriod.remove();
+        //}
 
         m_model.insertObjects(ddyModel.objects());
 
