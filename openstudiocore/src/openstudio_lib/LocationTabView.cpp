@@ -353,6 +353,8 @@ LocationView::LocationView(bool isIP,
   scrollLayout->addLayout(hLayout);
 
   m_designDaysGridView = new DesignDayGridView(m_isIP, model, this->parentWidget());
+  connect(this, &LocationView::toggleUnitsClicked, this, &LocationView::toggleUnits);
+  connect(this, &LocationView::toggleUnitsClicked, m_designDaysGridView, &DesignDayGridView::toggleUnitsClicked);
 
   scrollLayout->addWidget(m_designDaysGridView, 1, Qt::AlignTop);
 

@@ -42,8 +42,9 @@ class LocationTabController : public MainTabController
   Q_OBJECT
 
 public:
-  LocationTabController(const model::Model& model,
-                        const QString& modelTempDir);
+  LocationTabController(bool isIP,
+    const model::Model& model,
+    const QString& modelTempDir);
 
   virtual ~LocationTabController() {}
 

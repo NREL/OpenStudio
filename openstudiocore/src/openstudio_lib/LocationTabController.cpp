@@ -38,13 +38,15 @@
 
 namespace openstudio {
 
-LocationTabController::LocationTabController(const model::Model & model,
+LocationTabController::LocationTabController(bool isIP,
+  const model::Model & model,
   const QString& modelTempDir)
   : MainTabController(new LocationTabView(model,modelTempDir)),
   m_model(model)
 {
-  auto locationView = new LocationView(false, model, modelTempDir); // TODO need isIP
+  auto locationView = new LocationView(isIP, model, modelTempDir);
   mainContentWidget()->addSubTab("Weather File && Design Days",locationView,WEATHER_FILE);
+  connect(this, &LocationTabController::toggleUnitsClicked, locationView, &LocationView::toggleUnitsClicked);
 
   auto lifeCycleCostsView = new LifeCycleCostsView(model);
   mainContentWidget()->addSubTab("Life Cycle Costs",lifeCycleCostsView,LIFE_CYCLE_COSTS);

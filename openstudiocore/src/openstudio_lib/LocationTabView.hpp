@@ -68,6 +68,10 @@ protected:
 
   void onUpdate();
 
+signals:
+
+  void toggleUnitsClicked(bool displayIP);
+
 private slots:
 
   void onSelectItem();
