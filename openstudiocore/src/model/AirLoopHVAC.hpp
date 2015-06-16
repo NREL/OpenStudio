@@ -85,7 +85,7 @@ class MODEL_API AirLoopHVAC : public Loop
    * Currently only one supply outlet node is supported, but EnergyPlus allows
    * up to two for dual duct systems.
    */
-  std::vector<Node> supplyOutletNodes() const;
+  std::vector<Node> supplyOutletNodes() const override;
 
   /** Returns the first supply outlet Node. */
   Node supplyOutletNode() const override;
@@ -94,7 +94,7 @@ class MODEL_API AirLoopHVAC : public Loop
    * Currently only one demand inlet node is supported, but EnergyPlus allows
    * up to two for dual duct systems.
    */
-  std::vector<Node> demandInletNodes() const;
+  std::vector<Node> demandInletNodes() const override;
 
   /** Returns the first demand inlet Node. */
   Node demandInletNode() const override;

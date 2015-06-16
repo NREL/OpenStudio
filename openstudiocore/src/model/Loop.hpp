@@ -117,6 +117,8 @@ class MODEL_API Loop : public ParentObject {
 
   virtual Node demandOutletNode() const;
 
+  virtual std::vector<Node> demandInletNodes() const;
+
   /** Returns all of the supply side hvac equipment between
    * inletComps and outletComps.  If type is given then the results will
    * be limited to the given IddObjectType.  Multiple inlet and outlet nodes

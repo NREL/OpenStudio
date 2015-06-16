@@ -7973,7 +7973,7 @@ OS:AirLoopHVAC,
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A9, \field Demand Side Inlet Node Names
+  A9, \field Demand Side Inlet Node A
        \type object-list
        \required-field
        \object-list ConnectionNames
@@ -7981,7 +7981,11 @@ OS:AirLoopHVAC,
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A11; \field Supply Side Outlet Node B
+  A11, \field Demand Side Inlet Node B
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A12; \field Supply Side Outlet Node B
        \type object-list
        \required-field
        \object-list ConnectionNames

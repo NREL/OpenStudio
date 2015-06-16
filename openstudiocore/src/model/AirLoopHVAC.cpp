@@ -160,16 +160,15 @@ namespace detail {
   std::vector<Node> AirLoopHVAC_Impl::demandInletNodes() const
   {
     std::vector<Node> nodeVector;
-    OptionalModelObject optionalModelObject;
-    OptionalNode optionalNode;
-    optionalModelObject = this->connectedObject(openstudio::OS_AirLoopHVACFields::DemandSideInletNodeNames);
-    if(optionalModelObject)
-    {
-      optionalNode = optionalModelObject->optionalCast<Node>();
-      if(optionalNode)
-      {
-        nodeVector.push_back(*optionalNode);
-      }
+    if( auto mo = this->connectedObject(openstudio::OS_AirLoopHVACFields::DemandSideInletNodeA) ) {
+      auto node = mo->optionalCast<Node>();
+      OS_ASSERT(node);
+      nodeVector.push_back(node.get());
+    }
+    if( auto mo = this->connectedObject(openstudio::OS_AirLoopHVACFields::DemandSideInletNodeB) ) {
+      auto node = mo->optionalCast<Node>();
+      OS_ASSERT(node);
+      nodeVector.push_back(node.get());
     }
     return nodeVector;
   }
@@ -982,6 +981,18 @@ namespace detail {
     return OS_AirLoopHVACFields::SupplySideInletNodeName;
   }
 
+  unsigned AirLoopHVAC_Impl::demandInletPortA() const {
+    return OS_AirLoopHVACFields::DemandSideInletNodeA;
+  }
+
+  unsigned AirLoopHVAC_Impl::demandInletPortB() const {
+    return OS_AirLoopHVACFields::DemandSideInletNodeB;
+  }
+
+  unsigned AirLoopHVAC_Impl::demandOutletPort() const {
+    return OS_AirLoopHVACFields::DemandSideOutletNodeName;
+  }
+
   boost::optional<Splitter> AirLoopHVAC_Impl::supplySplitter() const {
     auto splitters = subsetCastVector<Splitter>(supplyComponents());
     if( ! splitters.empty() ) {
@@ -1040,7 +1051,7 @@ AirLoopHVAC::AirLoopHVAC(Model& model)
   Node demandOutletNode(model);
   Node branchNode(model);
 
-  model.connect( *this,openstudio::OS_AirLoopHVACFields::DemandSideInletNodeNames,
+  model.connect( *this,openstudio::OS_AirLoopHVACFields::DemandSideInletNodeA,
                  demandInletNode,demandInletNode.inletPort() );
   model.connect( demandOutletNode,demandOutletNode.outletPort(),
                  *this,openstudio::OS_AirLoopHVACFields::DemandSideOutletNodeName );

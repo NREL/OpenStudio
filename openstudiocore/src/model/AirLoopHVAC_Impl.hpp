@@ -86,7 +86,7 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   Node demandInletNode() const override;
 
-  std::vector<Node> demandInletNodes() const;
+  std::vector<Node> demandInletNodes() const override;
 
   Node demandOutletNode() const override;
 
@@ -187,6 +187,12 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
   unsigned supplyOutletPortB() const;
 
   unsigned supplyInletPort() const;
+
+  unsigned demandInletPortA() const;
+
+  unsigned demandInletPortB() const;
+
+  unsigned demandOutletPort() const;
 
   private:
 

@@ -97,30 +97,6 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   void resetCommonPipeSimulation();
 
-  //std::vector<ModelObject> supplyComponents(HVACComponent inletComp,
-  //                                          HVACComponent outletComp,
-  //                                          openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
-
-  std::vector<ModelObject> demandComponents(HVACComponent inletComp,
-                                            HVACComponent outletComp,
-                                            openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const override;
-
-  //std::vector<ModelObject> supplyComponents(openstudio::IddObjectType type=openstudio::IddObjectType("Catchall"));
-
-  std::vector<ModelObject> demandComponents(openstudio::IddObjectType type=openstudio::IddObjectType("Catchall")) const override;
-
-  //std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
-
-  boost::optional<ModelObject> component(openstudio::Handle handle) override;
-
-  //std::vector<ModelObject> supplyComponents(std::vector<HVACComponent> inletComps,
-  //                                          std::vector<HVACComponent> outletComps,
-  //                                          openstudio::IddObjectType type );
-
-  std::vector<ModelObject> demandComponents(std::vector<HVACComponent> inletComps,
-                                            std::vector<HVACComponent> outletComps,
-                                            openstudio::IddObjectType type ) const override;
-
   virtual std::vector<openstudio::IdfObject> remove() override;
 
   virtual ModelObject clone(Model model) const override;
@@ -140,6 +116,8 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
   virtual std::vector<Node> supplyOutletNodes() const override;
 
   virtual Node demandInletNode() const override;
+
+  virtual std::vector<Node> demandInletNodes() const override;
 
   virtual Node demandOutletNode() const override;
 

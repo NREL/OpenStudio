@@ -730,5 +730,11 @@ TEST_F(ModelFixture,AirLoopHVAC_dualDuct)
   EXPECT_EQ(2u,airLoopHVAC.supplySplitterOutletNodes().size());
   ASSERT_TRUE(airLoopHVAC.supplySplitterInletNode());
   EXPECT_EQ(airLoopHVAC.supplySplitterInletNode().get(),airLoopHVAC.supplyInletNode());
+
+  EXPECT_TRUE(airLoopHVAC.supplyComponent(splitter.handle()));
+  EXPECT_TRUE(airLoopHVAC.supplyComponent(airLoopHVAC.supplyOutletNodes().front().handle()));
+  EXPECT_TRUE(airLoopHVAC.supplyComponent(airLoopHVAC.supplyOutletNodes().back().handle()));
+
+  EXPECT_EQ(5u,airLoopHVAC.demandComponents().size());
 }
 

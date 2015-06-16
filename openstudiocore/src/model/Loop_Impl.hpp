@@ -65,6 +65,8 @@ namespace detail {
 
     virtual Node demandInletNode() const = 0;
 
+    virtual std::vector<Node> demandInletNodes() const = 0;
+
     virtual Node demandOutletNode() const = 0;
 
     virtual std::vector<ModelObject> children() const override;
