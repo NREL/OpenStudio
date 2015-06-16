@@ -98,7 +98,7 @@ namespace openstudio {
 
   void GridViewSubTab::setGridController(OSGridController * gridController)
   {
-    connect(this, &GridViewSubTab::toggleUnitsClicked, gridController, &OSGridController::toggleUnitsClicked);
+    connect(this, &GridViewSubTab::toggleUnitsClicked, gridController, &OSGridController::toggleUnits);
   }
 
   void GridViewSubTab::onAddClicked()

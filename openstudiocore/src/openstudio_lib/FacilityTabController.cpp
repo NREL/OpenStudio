@@ -35,9 +35,18 @@ FacilityTabController::FacilityTabController(bool isIP, const model::Model& mode
   connect(this, &FacilityTabController::toggleUnitsClicked, buildingInspectorView, &BuildingInspectorView::toggleUnitsClicked);
   connect(buildingInspectorView, &BuildingInspectorView::dropZoneItemClicked, this, &FacilityTabController::dropZoneItemClicked);
 
-  this->mainContentWidget()->addSubTab("Stories", new FacilityStoriesGridView(isIP, model), STORIES);
-  this->mainContentWidget()->addSubTab("Shading", new FacilityShadingGridView(isIP, model), SHADING);
-  this->mainContentWidget()->addSubTab("Exterior Equipment", new FacilityExteriorEquipmentGridView(isIP, model), EXTERIOR_EQUIPMENT);
+  auto facilityStoriesGridView = new FacilityStoriesGridView(isIP, model);
+  this->mainContentWidget()->addSubTab("Stories", facilityStoriesGridView, STORIES);
+  connect(this, &FacilityTabController::toggleUnitsClicked, facilityStoriesGridView, &FacilityStoriesGridView::toggleUnitsClicked);
+
+  auto facilityShadingGridView = new FacilityShadingGridView(isIP, model);
+  this->mainContentWidget()->addSubTab("Shading", facilityShadingGridView, SHADING);
+  connect(this, &FacilityTabController::toggleUnitsClicked, facilityShadingGridView, &FacilityShadingGridView::toggleUnitsClicked);
+
+  auto facilityExteriorEquipmentGridView = new FacilityExteriorEquipmentGridView(isIP, model);
+  this->mainContentWidget()->addSubTab("Exterior Equipment", facilityExteriorEquipmentGridView, EXTERIOR_EQUIPMENT);
+  connect(this, &FacilityTabController::toggleUnitsClicked, facilityExteriorEquipmentGridView, &FacilityExteriorEquipmentGridView::toggleUnitsClicked);
+
 }
 
 void FacilityTabController::toggleUnits(bool displayIP)
