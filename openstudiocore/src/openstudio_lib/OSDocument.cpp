@@ -279,36 +279,8 @@ namespace openstudio {
                              toQString(ss.str()),
                              QMessageBox::Ok);
       }
-    
     }
-    else {
-      // save copy of databases about to be overwritten
-      openstudio::path projectDir = openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources");
-      boost::filesystem::copy_file(projectDir / toPath("run.db"),
-                                   projectDir / toPath("bad-run.db"),
-                                   boost::filesystem::copy_option::overwrite_if_exists);
-      boost::filesystem::copy_file(projectDir / toPath("project.osp"),
-                                   projectDir / toPath("bad-project.osp"),
-                                   boost::filesystem::copy_option::overwrite_if_exists);
-      // throw up warning message
-      std::stringstream ss;
-      ss << "The project.osp and run.db associated with this model could not be opened. ";
-      ss << "Copies have been saved as bad-run.db and bad-project.osp. New, blank databases ";
-      ss << "will be created. Compared to the original, the model will no longer contain any ";
-      ss << "measures or run data. If that data was present and is critical, it can be mined ";
-      ss << "from the 'bad-' database copies, which are in SQLite format. If you would like ";
-      ss << "to help us diagnose and fix the underlying cause of this problem, please save ";
-      ss << "your model and send a zipped-up copy of the .osm file and its companion folder ";
-      ss << "to OpenStudio@NREL.gov, along with a description of this model's history. Thank ";
-      ss << "you, and sorry for the inconvenience.";
-      LOG(Warn,ss.str());
-      // DLM: which dialog should be parent?
-      QMessageBox::warning(nullptr, 
-                           QString("Error opening measure and run data."),
-                           toQString(ss.str()),
-                           QMessageBox::Ok);
-    }
-    }
+
     if (!m_simpleProject) {
       LOG(Debug, "Creating new project");
       m_simpleProject = openstudio::analysisdriver::SimpleProject::create(

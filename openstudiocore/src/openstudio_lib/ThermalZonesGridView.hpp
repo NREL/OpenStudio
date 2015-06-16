@@ -78,31 +78,27 @@ namespace openstudio{
 
     virtual ~ThermalZonesGridController() {}
 
-    virtual void refreshModelObjects();
+    virtual void refreshModelObjects() override;
 
-  virtual void refreshModelObjects() override;
+  protected:
 
-protected:
+    virtual void setCategoriesAndFields() override;
 
-    virtual void setCategoriesAndFields();
+    virtual void addColumns(const QString &t_category, std::vector<QString> & fields) override;
 
-  virtual void setCategoriesAndFields() override;
+    virtual void checkSelectedFields() override;
 
-  virtual void addColumns(const QString &t_category, std::vector<QString> & fields) override;
+    virtual QString getColor(const model::ModelObject & modelObject) override;
 
-  virtual void checkSelectedFields() override;
-
-  virtual QString getColor(const model::ModelObject & modelObject) override;
-
-public slots:
+  private:
 
     REGISTER_LOGGER("openstudio.ThermalZonesGridController");
 
-    virtual void onItemDropped(const OSItemId& itemId);
+  public slots:
 
-  virtual void onItemDropped(const OSItemId& itemId) override;
+    virtual void onItemDropped(const OSItemId& itemId) override;
 
-  virtual void onComboBoxIndexChanged(int index) override;
+    virtual void onComboBoxIndexChanged(int index) override;
 
 };
 
