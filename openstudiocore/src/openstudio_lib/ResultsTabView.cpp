@@ -22,6 +22,7 @@
 #include "ResultsWebEngineView.hpp"
 #else
 #include "ResultsWebView.hpp"
+#include <QWebInspector>
 #endif
 
 #include "OSDocument.hpp"
@@ -89,12 +90,12 @@ ResultsView::ResultsView(QWidget *t_parent)
     m_openResultsViewerBtn(new QPushButton("Open ResultsViewer\nfor Detailed Reports"))
 {
 
-  QVBoxLayout * mainLayout = new QVBoxLayout;
+  auto mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
 
   connect(m_openResultsViewerBtn, &QPushButton::clicked, this, &ResultsView::openResultsViewerClicked);
   
-  QHBoxLayout * hLayout = new QHBoxLayout(this);
+  auto hLayout = new QHBoxLayout(this);
   mainLayout->addLayout(hLayout);
 
   m_reportLabel = new QLabel("Reports: ",this);
@@ -111,9 +112,18 @@ ResultsView::ResultsView(QWidget *t_parent)
   hLayout->addWidget(m_openResultsViewerBtn, 0, Qt::AlignVCenter);
 
   m_view = new ResultsWebView(this);
-  m_view->setContextMenuPolicy(Qt::NoContextMenu);
   m_view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   mainLayout->addWidget(m_view, 0, Qt::AlignTop);
+
+  #if _DEBUG || (__GNUC__ && !NDEBUG)
+    #if QT_VERSION >= 0x050400
+      // QWebEngine debug stuff
+    #else
+      m_view->page()->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+    #endif
+  #else
+    m_view->setContextMenuPolicy(Qt::NoContextMenu);
+  #endif
 }
 
 ResultsView::~ResultsView()
@@ -358,17 +368,6 @@ ResultsWebView::ResultsWebView(QWidget * parent) :
   QWebView(parent)
 #endif
 {
-  #if _DEBUG || (__GNUC__ && !NDEBUG)
-    #if QT_VERSION >= 0x050400
-      // QWebEngine debug stuff
-    #else
-      this->page()->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
-      QWebInspector *inspector = new QWebInspector;
-      inspector->setPage(this->page());
-      inspector->setVisible(true);
-    #endif
-  #endif
-
   #if QT_VERSION >= 0x050400
       // QWebEngine local storage
   #else

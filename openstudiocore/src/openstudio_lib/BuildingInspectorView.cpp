@@ -227,16 +227,16 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   : ModelObjectInspectorView(model, true, parent),
   m_isIP(isIP)
 {
-  QWidget* hiddenWidget = new QWidget();
+  auto hiddenWidget = new QWidget();
   this->stackedWidget()->insertWidget(0, hiddenWidget);
 
-  QWidget* visibleWidget = new QWidget();
+  auto visibleWidget = new QWidget();
   this->stackedWidget()->insertWidget(1, visibleWidget);
 
   //this->stackedWidget()->setCurrentIndex(0);
   this->stackedWidget()->setCurrentIndex(1);
 
-  QGridLayout* mainGridLayout = new QGridLayout();
+  auto mainGridLayout = new QGridLayout();
   mainGridLayout->setContentsMargins(7,7,7,7);
   mainGridLayout->setSpacing(14);
   visibleWidget->setLayout(mainGridLayout);
@@ -244,9 +244,9 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   int row = 0;
 
   // name
-  QVBoxLayout* vLayout = new QVBoxLayout();
+  auto vLayout = new QVBoxLayout();
 
-  QLabel* label = new QLabel();
+  auto label = new QLabel();
   label->setText("Name: ");
   label->setStyleSheet("QLabel { font: bold; }");
   vLayout->addWidget(label);
@@ -633,7 +633,7 @@ void BuildingInspectorView::detach()
 
   m_nameEdit->unbind();
 
-  disconnect(m_standardsBuildingTypeComboBox, 0, this, 0);
+  disconnect(m_standardsBuildingTypeComboBox, nullptr, this, nullptr);
   m_standardsBuildingTypeComboBox->clear();
 
   m_spaceTypeVectorController->detach();
@@ -651,7 +651,7 @@ void BuildingInspectorView::detach()
 
 void BuildingInspectorView::populateStandardsBuildingTypes()
 {
-  disconnect(m_standardsBuildingTypeComboBox, 0, this, 0);
+  disconnect(m_standardsBuildingTypeComboBox, nullptr, this, nullptr);
 
   m_standardsBuildingTypeComboBox->clear();
   if (m_building){

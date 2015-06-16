@@ -108,7 +108,7 @@ void ConstructionsInspectorView::onSelectModelObject(const openstudio::model::Mo
 
 void ConstructionsInspectorView::showConstructionInspector(const openstudio::model::ModelObject & modelObject)
 {
-  ConstructionInspectorView * constructionInspectorView = new ConstructionInspectorView(m_isIP, m_model);
+  auto constructionInspectorView = new ConstructionInspectorView(m_isIP, m_model);
   connect(this, &ConstructionsInspectorView::toggleUnitsClicked, constructionInspectorView, &ConstructionInspectorView::toggleUnitsClicked);
 
   constructionInspectorView->selectModelObject(modelObject);
@@ -118,7 +118,7 @@ void ConstructionsInspectorView::showConstructionInspector(const openstudio::mod
 
 void ConstructionsInspectorView::showCfactorUndergroundWallInspector(const openstudio::model::ModelObject & modelObject)
 {
-  ConstructionCfactorUndergroundWallInspectorView * constructionCfactorUndergroundWallInspectorView = new ConstructionCfactorUndergroundWallInspectorView(m_isIP, m_model);
+  auto constructionCfactorUndergroundWallInspectorView = new ConstructionCfactorUndergroundWallInspectorView(m_isIP, m_model);
   connect(this, &ConstructionsInspectorView::toggleUnitsClicked, constructionCfactorUndergroundWallInspectorView, &ConstructionCfactorUndergroundWallInspectorView::toggleUnitsClicked);
 
   constructionCfactorUndergroundWallInspectorView->selectModelObject(modelObject);
@@ -128,7 +128,7 @@ void ConstructionsInspectorView::showCfactorUndergroundWallInspector(const opens
 
 void ConstructionsInspectorView::showFfactorGroundFloorInspector(const openstudio::model::ModelObject & modelObject)
 {
-  ConstructionFfactorGroundFloorInspectorView * constructionFfactorGroundFloorInspectorView = new ConstructionFfactorGroundFloorInspectorView(m_isIP, m_model);
+  auto constructionFfactorGroundFloorInspectorView = new ConstructionFfactorGroundFloorInspectorView(m_isIP, m_model);
   connect(this, &ConstructionsInspectorView::toggleUnitsClicked, constructionFfactorGroundFloorInspectorView, &ConstructionFfactorGroundFloorInspectorView::toggleUnitsClicked);
 
   constructionFfactorGroundFloorInspectorView->selectModelObject(modelObject);
@@ -138,7 +138,7 @@ void ConstructionsInspectorView::showFfactorGroundFloorInspector(const openstudi
 
 void ConstructionsInspectorView::showInternalSourceInspector(const openstudio::model::ModelObject & modelObject)
 {
-  ConstructionInternalSourceInspectorView * constructionInternalSourceInspectorView = new ConstructionInternalSourceInspectorView(m_isIP, m_model);
+  auto constructionInternalSourceInspectorView = new ConstructionInternalSourceInspectorView(m_isIP, m_model);
   connect(this, &ConstructionsInspectorView::toggleUnitsClicked, constructionInternalSourceInspectorView, &ConstructionInternalSourceInspectorView::toggleUnitsClicked);
 
   constructionInternalSourceInspectorView->selectModelObject(modelObject);
@@ -148,7 +148,7 @@ void ConstructionsInspectorView::showInternalSourceInspector(const openstudio::m
 
 void ConstructionsInspectorView::showWindowDataFileInspector(const openstudio::model::ModelObject & modelObject)
 {
-  ConstructionWindowDataFileInspectorView * constructionWindowDataFileInspectorView = new ConstructionWindowDataFileInspectorView(m_isIP, m_model);
+  auto constructionWindowDataFileInspectorView = new ConstructionWindowDataFileInspectorView(m_isIP, m_model);
   connect(this, &ConstructionsInspectorView::toggleUnitsClicked, constructionWindowDataFileInspectorView, &ConstructionWindowDataFileInspectorView::toggleUnitsClicked);
 
   constructionWindowDataFileInspectorView->selectModelObject(modelObject);

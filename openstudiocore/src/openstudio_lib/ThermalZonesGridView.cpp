@@ -98,12 +98,12 @@
 
 namespace openstudio {
 
-  struct ModelObjectNameSorter{
-    // sort by name
-    bool operator()(const model::ModelObject & lhs, const model::ModelObject & rhs){
-      return (lhs.name() < rhs.name());
-    }
-  };
+struct ModelObjectNameSorter{
+  // sort by name
+  bool operator()(const model::ModelObject & lhs, const model::ModelObject & rhs){
+    return (lhs.name() < rhs.name());
+  }
+};
 
   ThermalZonesGridView::ThermalZonesGridView(bool isIP, const model::Model & model, QWidget * parent)
     : QWidget(parent),

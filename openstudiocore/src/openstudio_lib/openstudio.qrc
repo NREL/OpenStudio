@@ -19,6 +19,8 @@
     <file>images/cav_reheat.png</file>
     <file>images/chilled_beam.png</file>
     <file>images/chiller_air.png</file>
+    <file>images/chiller_absorption_direct.png</file>
+    <file>images/chiller_absorption_indirect.png</file>
     <file>images/coilcoolingchilledbeam.png</file>
     <file>images/coilcoolinglowtemprad_constflow.png</file>
     <file>images/coilcoolinglowtemprad_varflow.png</file>
@@ -26,6 +28,8 @@
     <file>images/coilheatinglowtemprad_varflow.png</file>
     <file>images/coilheatingwater_baseboard.png</file>
     <file>images/coil_ht_dx_singlespeed.png</file>
+    <file>images/coil_system_coolingwater_heat_exchanger.png</file>
+    <file>images/coilsystem_cooling_dx.png</file>
     <file>images/combo_box_arrows.png</file>
     <file>images/combo_box_arrows_gray.png</file>
     <file>images/coming_soon_building_summary.png</file>
@@ -79,6 +83,7 @@
     <file>images/dxcoolingcoil_2speed.png</file>
     <file>images/dxcoolingcoil_singlespeed.png</file>
     <file>images/dx_cooling_multispeed.png</file>
+    <file>images/dxcoolingcoil_2stage_humidity.png</file>
     <file>images/electric_furnace.png</file>
     <file>images/electric_humidifier.png</file>
     <file>images/evap_cooled.png</file>
@@ -95,8 +100,11 @@
     <file>images/four_pipe_fan_coil.png</file>
     <file>images/furnace.png</file>
     <file>images/furnace_multi_stage.png</file>
+    <file>images/ground_heat_exchanger_horizontal.png</file>
     <file>images/ground_heat_exchanger_vertical.png</file>
     <file>images/header-backgnd-1px-wide.png</file>
+    <file>images/headered_pumps_constant.png</file>
+    <file>images/headered_pumps_variable.png</file>
     <file>images/heat_coil-uht.png</file>
     <file>images/heat_coil.png</file>
     <file>images/heat_pump3.png</file>
@@ -221,6 +229,8 @@
     <file>images/system_type_8.png</file>
     <file>images/system_type_9.png</file>
     <file>images/system_type_10.png</file>
+    <file>images/tempering_valve.png</file>
+    <file>images/thermal_storage_ice.png</file>
     <file>images/thermostat.png</file>
     <file>images/toggle_arrow.png</file>
     <file>images/toggle_arrow_closed.png</file>
@@ -269,11 +279,21 @@
 
     <file>openstudiolib.qss</file>
 
+    <file>images/mini_icons/mini_chiller_absorption_direct.png</file>
+    <file>images/mini_icons/mini_chiller_absorption_indirect.png</file>
+    <file>images/mini_icons/mini_coilsystem_cooling_DX.png</file>
+    <file>images/mini_icons/mini_coil_system_water.png</file>
     <file>images/mini_icons/mini_compressor.png</file>
     <file>images/mini_icons/mini_condensor.png</file>
     <file>images/mini_icons/mini_display_case.png</file>
+    <file>images/mini_icons/mini_dxcoolingcoil_2stage_humidity.png</file>
+    <file>images/mini_icons/mini_ground_heat_exchanger_horizontal.png</file>
+    <file>images/mini_icons/mini_headered_pumps_constant.png</file>
+    <file>images/mini_icons/mini_headered_pumps_variable.png</file>
     <file>images/mini_icons/mini_mechanical-sub-cooler.png</file>
     <file>images/mini_icons/mini_slhx.png</file>
+    <file>images/mini_icons/mini_tempering_valve.png</file>
+    <file>images/mini_icons/mini_thermal_storage_ice.png</file>
     <file>images/mini_icons/mini_walkin_case.png</file>
     <file>images/mini_icons/baseboard_electric.png</file>
     <file>images/mini_icons/baseboard_water.png</file>

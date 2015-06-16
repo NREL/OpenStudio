@@ -42,7 +42,7 @@ namespace openstudio{
 
   public:
 
-    SpaceTypesGridView(bool isIP, const model::Model & model, QWidget * parent = 0);
+  SpaceTypesGridView(bool isIP, const model::Model & model, QWidget * parent = nullptr);
 
     virtual ~SpaceTypesGridView() {}
 
@@ -97,25 +97,31 @@ namespace openstudio{
 
     virtual void refreshModelObjects();
 
-    virtual void categorySelected(int index);
+  virtual void refreshModelObjects() override;
 
-  protected:
+  virtual void categorySelected(int index) override;
+
+protected:
 
     virtual void setCategoriesAndFields();
 
-    virtual void addColumns(const QString &category, std::vector<QString> & fields);
+  virtual void setCategoriesAndFields() override;
 
-    virtual void checkSelectedFields();
+  virtual void addColumns(const QString &category, std::vector<QString> & fields) override;
 
-    virtual QString getColor(const model::ModelObject & modelObject);
+  virtual void checkSelectedFields() override;
 
-    public slots:
+  virtual QString getColor(const model::ModelObject & modelObject) override;
+
+public slots:
 
     virtual void onItemDropped(const OSItemId& itemId);
 
-    virtual void onComboBoxIndexChanged(int index);
+  virtual void onItemDropped(const OSItemId& itemId) override;
 
-    void filterChanged(const QString & text);
+  virtual void onComboBoxIndexChanged(int index) override;
+
+  void filterChanged(const QString & text);
 
   private:
 

@@ -94,11 +94,11 @@ namespace detail {
     /** Set the u-factor of this surface in W/m^2*K, if possible. value should already include 
      *  appropriate film coefficients. By default, assumes still air indoors and 15 mph outdoor air 
      *  speed. */
-    virtual bool setUFactor(double value);
+    virtual bool setUFactor(double value) override;
 
     /** Set the u-factor of this surface in W/m^2*K, if possible. filmResistance (m^2*K/W) may be 
      *  used to convert value to a conductance. */
-    virtual bool setUFactor(double value,double filmResistance);
+    virtual bool setUFactor(double value,double filmResistance) override;
 
     /** Set the conductance of this surface in W/m^2*K, if possible. value should not include any film 
      *  coefficients. */
@@ -110,26 +110,26 @@ namespace detail {
 
     /** Same as setThermalConductance. Just adding to support current interface of ConstructionBase.
      *  One of these sets of methods should be deprecated. */
-    virtual bool setConductance(double value);
+    virtual bool setConductance(double value) override;
 
     /** Same as setThermalConductance. Just adding to support current interface of ConstructionBase.
      *  One of these sets of methods should be deprecated. */
-    virtual bool setConductance(double value,double filmResistance);
+    virtual bool setConductance(double value,double filmResistance) override;
 
     //@}
     /** @name Queries */
     //@{
 
-    bool isOpaque() const;
+    bool isOpaque() const override;
 
-    bool isFenestration() const;
+    bool isFenestration() const override;
 
-    bool isSolarDiffusing() const;
+    bool isSolarDiffusing() const override;
 
-    bool isModelPartition() const;
+    bool isModelPartition() const override;
 
     /** Returns true if the construction has RoofVegetation as the outer layer. */
-    virtual bool isGreenRoof() const;
+    virtual bool isGreenRoof() const override;
 
     /** Returns true if this is a symmetric layered construction. */
     bool isSymmetric() const;
@@ -150,31 +150,31 @@ namespace detail {
     std::vector<unsigned> getLayerIndices(const Material& material) const;
 
     /** Get the u-factor of this construction. Includes film coefficients. */
-    virtual boost::optional<double> uFactor() const;
+    virtual boost::optional<double> uFactor() const override;
 
     /** Get the u-factor of this construction. Includes filmResistance. */
-    virtual boost::optional<double> uFactor(double filmResistance) const;
+    virtual boost::optional<double> uFactor(double filmResistance) const override;
 
     /** Get the thermal conductance of this construction. Does not include film coefficients. */
-    virtual boost::optional<double> thermalConductance() const;
+    virtual boost::optional<double> thermalConductance() const override;
 
     /** Get the thermal conductance of this construction. filmResistance is subtracted out of the
      *  thermalResistance if necessary. */
-    virtual boost::optional<double> thermalConductance(double filmResistance) const;
+    virtual boost::optional<double> thermalConductance(double filmResistance) const override;
 
     /** Get the heat capacity of this construction (J/m^2*K). Only works for 
      *  \link LayeredConstruction LayeredConstructions \endlink of \link StandardOpaqueMaterial
      *  StandardOpaqueMaterials \endlink. */
-    virtual boost::optional<double> heatCapacity() const;
+    virtual boost::optional<double> heatCapacity() const override;
 
     /// get interior visible absorptance (unitless)
-    virtual boost::optional<double> interiorVisibleAbsorptance() const;
+    virtual boost::optional<double> interiorVisibleAbsorptance() const override;
 
     /// get exterior visible absorptance (unitless)
-    virtual boost::optional<double> exteriorVisibleAbsorptance() const;
+    virtual boost::optional<double> exteriorVisibleAbsorptance() const override;
 
     /// get visible transmittance (unitless)
-    virtual boost::optional<double> visibleTransmittance() const;
+    virtual boost::optional<double> visibleTransmittance() const override;
 
     /** Returns a ValidityReport for this Gas object containing all errors at or below level. 
      *  Adds on to the WorkspaceObject requirements by ensuring that the layers in the construction
@@ -205,7 +205,7 @@ namespace detail {
 
     friend class LayeredConstruction;
 
-    virtual void populateValidityReport(ValidityReport& report,bool checkNames) const;
+    virtual void populateValidityReport(ValidityReport& report,bool checkNames) const override;
 
     // Erase all nullLayers, and return the new value for layerIndex, if it is affected by erasures.
     // If layerIndex was originally pointing to a nullLayer, upon return it will point to the first 

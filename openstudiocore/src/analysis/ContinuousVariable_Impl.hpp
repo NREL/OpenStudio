@@ -110,9 +110,9 @@ namespace detail {
     /** @name Protected in Public Class */
     //@{
 
-    virtual QVariant toVariant() const;
+    virtual QVariant toVariant() const override;
 
-    virtual QVariant toServerFormulationVariant() const;
+    virtual QVariant toServerFormulationVariant() const override;
 
     //@}
    protected:

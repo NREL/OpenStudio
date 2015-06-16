@@ -83,7 +83,7 @@ class InspectorController : public QObject
 
   private slots:
 
-  void onViewDestroyed(QObject * object = 0);
+  void onViewDestroyed(QObject * object = nullptr);
 
   private:
 

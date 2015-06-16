@@ -797,7 +797,7 @@ namespace resultsviewer{
     }
     bufferIlluminanceMapGridPoints(x1, y1);
     bufferIlluminanceMapGridPoints(x2, y2);
-    openstudio::MatrixFloodPlotData* data = new openstudio::MatrixFloodPlotData(x1,y1,illuminanceDiff,openstudio::LinearInterp);
+    auto data = new openstudio::MatrixFloodPlotData(x1,y1,illuminanceDiff,openstudio::LinearInterp);
 
     m_illuminanceMapData[0] = data->copy();
 
@@ -902,7 +902,7 @@ namespace resultsviewer{
     std::vector<double> illuminance;
     sqlFile.illuminanceMap(m_illuminanceMapReportIndicesDates[0].first,x,y,illuminance);
     bufferIlluminanceMapGridPoints(x, y);
-    openstudio::MatrixFloodPlotData* data = new openstudio::MatrixFloodPlotData(x,y,illuminance,openstudio::LinearInterp);
+    auto data = new openstudio::MatrixFloodPlotData(x,y,illuminance,openstudio::LinearInterp);
 
     m_illuminanceMapData[0] = data->copy();
 
@@ -1045,7 +1045,7 @@ namespace resultsviewer{
       m_floodPlotData->colorMapRange(colorMapRange); // color range applied to plot data
     }
 
-    openstudio::FloodPlotColorMap* colorMap = new openstudio::FloodPlotColorMap(m_colorLevels, m_colorMapType);
+    auto colorMap = new openstudio::FloodPlotColorMap(m_colorLevels, m_colorMapType);
     m_spectrogram->setColorMap(colorMap);
     
     colorMap = new openstudio::FloodPlotColorMap(m_colorLevels, m_colorMapType);
@@ -1105,7 +1105,7 @@ namespace resultsviewer{
 
   void PlotView::initColorMap()
   {
-    openstudio::FloodPlotColorMap* colorMap = new openstudio::FloodPlotColorMap(m_colorLevels, m_colorMapType);
+    auto colorMap = new openstudio::FloodPlotColorMap(m_colorLevels, m_colorMapType);
     m_spectrogram->setColorMap(colorMap);
     //m_spectrogram->setData(m_floodPlotData); // DLM: why is this here?
   }
@@ -1144,7 +1144,7 @@ namespace resultsviewer{
 
   void PlotView::initColorBar()
   {
-    openstudio::FloodPlotColorMap* colorMap = new openstudio::FloodPlotColorMap(m_colorLevels, m_colorMapType);
+    auto colorMap = new openstudio::FloodPlotColorMap(m_colorLevels, m_colorMapType);
 
     QwtScaleWidget *rightAxis = m_plot->axisWidget(QwtPlot::yRight);
     rightAxis->setColorBarEnabled(true);
@@ -2003,7 +2003,7 @@ namespace resultsviewer{
         }
         bufferIlluminanceMapGridPoints(x1, y1);
         bufferIlluminanceMapGridPoints(x2, y2);
-        openstudio::MatrixFloodPlotData* data = new openstudio::MatrixFloodPlotData(x1,y1,illuminanceDiff,openstudio::LinearInterp);
+        auto data = new openstudio::MatrixFloodPlotData(x1,y1,illuminanceDiff,openstudio::LinearInterp);
 
 
         m_floodPlotData = data;
@@ -2017,7 +2017,7 @@ namespace resultsviewer{
         std::vector<double> illuminance;
         sqlFile.illuminanceMap(m_illuminanceMapReportIndicesDates[reportIndex].first,x,y,illuminance);
         bufferIlluminanceMapGridPoints(x, y);
-        openstudio::MatrixFloodPlotData* data = new openstudio::MatrixFloodPlotData(x,y,illuminance,openstudio::LinearInterp);
+        auto data = new openstudio::MatrixFloodPlotData(x,y,illuminance,openstudio::LinearInterp);
 
         m_floodPlotData = data;
         m_illuminanceMapData[reportIndex] = data->copy();

@@ -72,9 +72,9 @@ public:
 
 protected:
 
-  virtual void hideEvent(QHideEvent * event);
+  virtual void hideEvent(QHideEvent * event) override;
 
-  virtual void showEvent(QShowEvent * event);
+  virtual void showEvent(QShowEvent * event) override;
 
 signals:
 

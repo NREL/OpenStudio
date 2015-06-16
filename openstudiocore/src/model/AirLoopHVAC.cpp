@@ -189,35 +189,6 @@ namespace detail {
     return optionalNode.get();
   }
 
-  void AirLoopHVAC_Impl::addAirLoopComp(ModelObject targetObj, ModelObject newComp)
-  {
-    if( OptionalNode node = targetObj.optionalCast<Node>() )
-    {
-      if( OptionalHVACComponent comp = newComp.optionalCast<HVACComponent>() )
-      {
-        comp->addToNode( node.get() );
-      }
-    }
-  }
-
-  void AirLoopHVAC_Impl::removeAirLoopComp(ModelObject targetObj)
-  {
-    Model model = targetObj.model();
-
-    OptionalStraightComponent straightComponent = targetObj.optionalCast<StraightComponent>();
-    // if we are deleting a straight component that is not a node
-    if( straightComponent && ! targetObj.optionalCast<Node>() )
-    {
-      straightComponent->remove();
-    }
-    // if we are deleting an AirLoopHVACOutdoorAirSystem
-    OptionalAirLoopHVACOutdoorAirSystem mixer = targetObj.optionalCast<AirLoopHVACOutdoorAirSystem>();
-    if(mixer)
-    {
-      mixer->remove();
-    }
-  }
-
   std::vector<openstudio::IdfObject> AirLoopHVAC_Impl::remove()
   {
     ModelObjectVector modelObjects;
@@ -1080,11 +1051,6 @@ std::vector<Node> AirLoopHVAC::demandInletNodes() const
 Node AirLoopHVAC::demandOutletNode() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->demandOutletNode();
-}
-
-void AirLoopHVAC::addAirLoopComp(openstudio::model::ModelObject targetObj, openstudio::model::ModelObject newObj)
-{
-  getImpl<detail::AirLoopHVAC_Impl>()->addAirLoopComp(targetObj, newObj);
 }
 
 std::vector<IdfObject> AirLoopHVAC::remove()

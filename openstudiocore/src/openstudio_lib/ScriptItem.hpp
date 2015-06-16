@@ -46,7 +46,7 @@ class ScriptItem : public OSItem {
 
   ScriptItem(const openstudio::path &t_path,
              OSItemType type,
-             QWidget * parent = 0);
+             QWidget * parent = nullptr);
 
   virtual ~ScriptItem() {}
 
@@ -76,7 +76,7 @@ class ScriptItem : public OSItem {
 
   bool removed() const;
 
-  virtual bool equal(const openstudio::OSItem *) const;
+  virtual bool equal(const openstudio::OSItem *) const override;
 
  signals:
 

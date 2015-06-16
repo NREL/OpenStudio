@@ -98,7 +98,7 @@ std::vector<OSItemId> ModelObjectListController::makeVector()
     // sort by name
     std::sort(bclresults.begin(), bclresults.end(), BCLComponentNameGreater());
 
-    for( std::vector<BCLComponent>::iterator it = bclresults.begin(); 
+    for( auto it = bclresults.begin(); 
          it != bclresults.end();
          ++it )
     {

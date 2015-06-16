@@ -99,7 +99,7 @@ namespace openstudio {
 
     public:
 
-      VariablesTabView(openstudio::model::Model t_model, QWidget * parent = 0);
+      VariablesTabView(openstudio::model::Model t_model, QWidget * parent = nullptr);
 
       virtual ~VariablesTabView() {}
 

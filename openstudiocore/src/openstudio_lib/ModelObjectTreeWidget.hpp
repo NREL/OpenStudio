@@ -36,11 +36,11 @@ class ModelObjectTreeWidget : public OSItemSelector
 
   public:
 
-    ModelObjectTreeWidget(const model::Model& model, QWidget * parent = 0);
+    ModelObjectTreeWidget(const model::Model& model, QWidget * parent = nullptr);
 
     virtual ~ModelObjectTreeWidget() {}
 
-    virtual OSItem* selectedItem() const;
+    virtual OSItem* selectedItem() const override;
 
     QTreeWidget* treeWidget() const;
 

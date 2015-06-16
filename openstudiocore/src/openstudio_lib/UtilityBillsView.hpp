@@ -67,7 +67,7 @@ class UtilityBillsView : public ModelSubTabView
 public:
 
   UtilityBillsView(const model::Model & model,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
   
   virtual ~UtilityBillsView() {}
 
@@ -91,7 +91,7 @@ public:
 
   UtilityBillsInspectorView(const openstudio::model::Model& model,
     bool addScrollArea,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
 
   virtual ~UtilityBillsInspectorView() {}
 
@@ -99,10 +99,10 @@ public:
 
 protected:
 
-  virtual void onSelectItem(OSItem *item);
-  virtual void onClearSelection();
-  virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
-  virtual void onUpdate();
+  virtual void onSelectItem(OSItem *item) override;
+  virtual void onClearSelection() override;
+  virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
+  virtual void onUpdate() override;
 
 protected slots:
 
@@ -196,7 +196,7 @@ public:
   BillingPeriodWidget(model::BillingPeriod billingPeriod,
     FuelType fuelType,
     BillFormat billFormat,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
 
   virtual ~BillingPeriodWidget() {}
 

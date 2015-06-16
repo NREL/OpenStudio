@@ -76,11 +76,11 @@ namespace detail {
 
     //@}
 
-    virtual boost::optional<ParentObject> parent() const;
+    virtual boost::optional<ParentObject> parent() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     /** @name Getters */
     //@{

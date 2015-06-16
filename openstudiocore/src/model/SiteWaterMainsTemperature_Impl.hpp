@@ -68,13 +68,13 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual boost::optional<ParentObject> parent() const;
+    virtual boost::optional<ParentObject> parent() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
     //@}
     /** @name Getters */
@@ -116,7 +116,7 @@ namespace detail {
 
     //@}
    protected:
-    virtual void populateValidityReport(ValidityReport& report,bool checkNames) const;
+    virtual void populateValidityReport(ValidityReport& report,bool checkNames) const override;
    private:
     REGISTER_LOGGER("openstudio.model.SiteWaterMainsTemperature");
 

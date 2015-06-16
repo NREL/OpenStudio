@@ -46,7 +46,7 @@ namespace detail {
 
     virtual ~PSUADEDaceAlgorithmOptions_Impl() {}
 
-    virtual AlgorithmOptions clone() const;
+    virtual AlgorithmOptions clone() const override;
 
     //@}
 

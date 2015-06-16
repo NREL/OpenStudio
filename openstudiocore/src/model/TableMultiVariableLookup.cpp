@@ -49,7 +49,7 @@ namespace detail {
     }
     else
     {
-      for(std::vector<double>::const_iterator it1 = a.begin(),it2 = b.begin();
+      for(auto it1 = a.begin(),it2 = b.begin();
           it1 != a.end() && it2 != b.end();
           ++it1,++it2)
       {
@@ -665,7 +665,7 @@ namespace detail {
     }
     else
     {
-      for(std::vector<double>::const_iterator it = t_xValues.begin();
+      for(auto it = t_xValues.begin();
           it != t_xValues.end();
           ++it)
       {

@@ -112,17 +112,13 @@ ScheduleDayView::ScheduleDayView(bool isIP,
 
   // Layout
 
-  QVBoxLayout * mainVLayout = new QVBoxLayout();
+  auto mainVLayout = new QVBoxLayout();
 
   mainVLayout->setContentsMargins(0, 0, 0, 0);
 
   mainVLayout->setSpacing(10);
 
   setLayout(mainVLayout);
-
-  QHBoxLayout * hLayout = nullptr;
-
-  QLabel * label = nullptr;
 
   // Name
 
@@ -155,13 +151,13 @@ ScheduleDayView::ScheduleDayView(bool isIP,
 
   // Zoom button group
 
-  QHBoxLayout * zoomButtonLayout = new QHBoxLayout();
+  auto zoomButtonLayout = new QHBoxLayout();
 
-  QButtonGroup * zoomButtonGroup = new QButtonGroup(this);
+  auto zoomButtonGroup = new QButtonGroup(this);
 
   zoomButtonLayout->addStretch();
 
-  QPushButton * hourlyZoomButton = new QPushButton();
+  auto hourlyZoomButton = new QPushButton();
   hourlyZoomButton->setObjectName("StandardGrayButton");
 
   hourlyZoomButton->setCheckable(true);
@@ -176,7 +172,7 @@ ScheduleDayView::ScheduleDayView(bool isIP,
   zoomButtonLayout->addWidget(hourlyZoomButton);
   zoomButtonLayout->addSpacing(10);
 
-  QPushButton * quarterHourlyZoomButton = new QPushButton();
+  auto quarterHourlyZoomButton = new QPushButton();
   quarterHourlyZoomButton->setObjectName("StandardGrayButton");
 
   quarterHourlyZoomButton->setCheckable(true);
@@ -189,7 +185,7 @@ ScheduleDayView::ScheduleDayView(bool isIP,
   zoomButtonLayout->addWidget(quarterHourlyZoomButton);
   zoomButtonLayout->addSpacing(10);
 
-  QPushButton * oneMinuteZommButton = new QPushButton();
+  auto oneMinuteZommButton = new QPushButton();
   oneMinuteZommButton->setObjectName("StandardGrayButton");
 
   oneMinuteZommButton->setCheckable(true);
@@ -207,7 +203,7 @@ ScheduleDayView::ScheduleDayView(bool isIP,
 
   // Day Overview
 
-  QHBoxLayout * overviewLayout = new QHBoxLayout();
+  auto overviewLayout = new QHBoxLayout();
 
   m_scheduleOverview = new DayScheduleOverview( this );
 
@@ -446,7 +442,7 @@ ScheduleLimitsView::ScheduleLimitsView(bool isIP,
     m_upperViewLimitSpinBox(nullptr),
     m_lowerViewLimitSpinBox(nullptr)
 {
-  QHBoxLayout * mainHLayout = new QHBoxLayout();
+  auto mainHLayout = new QHBoxLayout();
 
   mainHLayout->setContentsMargins(MARGINLEFT, 0, 0, 0);
 
@@ -668,8 +664,6 @@ void ScheduleDayEditor::resizeEvent ( QResizeEvent * event )
 {
   m_graphicsView->resize(event->size().width() - MARGINLEFT - MARGINRIGHT, event->size().height() - MARGINTOP - MARGINBOTTOM);
 
-  int buttonHeight = 140; // Can't ask for button height until it is first rendered
-
   fitInView();
 
   QWidget::resizeEvent( event );
@@ -810,9 +804,7 @@ void ScheduleDayEditor::updateKeyboardPrompt(const QString& keyboardPrompt)
     m_keyboardPrompt->setText(keyboardPrompt);
 
     // Draw keyboard text
-    QRectF r1 = m_keyboardPrompt->rect();
     m_keyboardPrompt->adjustSize();
-    QRectF r2 = m_keyboardPrompt->rect();
     m_keyboardPrompt->move(width() - MARGINRIGHT - m_keyboardPrompt->width() - 5, 0);
     m_keyboardPrompt->update();
 
@@ -948,11 +940,11 @@ void CalendarSegmentItem::splitSegment(double splitTime)
 
   oldNextVCalendarItem = this->nextVCalendarItem();
 
-  CalendarSegmentItem * item = new CalendarSegmentItem;
+  auto item = new CalendarSegmentItem;
 
   scene()->addItem(item);
 
-  VCalendarSegmentItem * vitem = new VCalendarSegmentItem;
+  auto vitem = new VCalendarSegmentItem;
 
   scene()->addItem(vitem);
 
@@ -1564,7 +1556,7 @@ void DaySchedulePlotArea::updateKeyboardPrompt()
       //}
 
     } 
-    else if (VCalendarSegmentItem * vCalendarItem = dynamic_cast<VCalendarSegmentItem *>(m_currentHoverItem))
+    else if (dynamic_cast<VCalendarSegmentItem *>(m_currentHoverItem))
     {
       result = "Drag vertical line to adjust";
     }
@@ -2043,7 +2035,7 @@ void DayScheduleScene::refresh()
     double lastTime = 0.0;
     CalendarSegmentItem * previousSegment = nullptr;
 
-    for( std::vector<openstudio::Time>::iterator it = times.begin();
+    for( auto it = times.begin();
          it < times.end();
          ++it )
     {
@@ -2056,7 +2048,7 @@ void DayScheduleScene::refresh()
 
       double scaledValue = (realvalues[i] - lowerViewLimit) / (upperViewLimit - lowerViewLimit);
 
-      CalendarSegmentItem * segment = new CalendarSegmentItem();
+      auto segment = new CalendarSegmentItem();
       addItem(segment);
       segment->setValue(scaledValue);
       segment->setIsOutOfTypeLimits(isOutOfTypeLimits);
@@ -2066,7 +2058,7 @@ void DayScheduleScene::refresh()
 
       if( previousSegment )
       {
-        VCalendarSegmentItem * vSegment = new VCalendarSegmentItem();
+        auto vSegment = new VCalendarSegmentItem();
         addItem(vSegment);
 
         segment->setPreviousVCalendarItem(vSegment);
@@ -2145,11 +2137,11 @@ CalendarSegmentItem * DayScheduleScene::addSegment(double untilTime)
 
   VCalendarSegmentItem * prevVCalendarItem = segment->previousVCalendarItem();
 
-  CalendarSegmentItem * item = new CalendarSegmentItem;
+  auto item = new CalendarSegmentItem;
 
   addItem(item);
 
-  VCalendarSegmentItem * vitem = new VCalendarSegmentItem;
+  auto vitem = new VCalendarSegmentItem;
 
   addItem(vitem);
 
@@ -2192,7 +2184,7 @@ void DayScheduleScene::clearSegments()
 {
   std::vector<CalendarSegmentItem *> _segments = segments();
 
-  for( std::vector<CalendarSegmentItem *>::iterator it = _segments.begin();
+  for( auto it = _segments.begin();
        it < _segments.end();
        ++it )
   {

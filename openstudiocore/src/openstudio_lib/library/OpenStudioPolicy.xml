@@ -51,6 +51,10 @@
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_GroundHeatExchanger_HorizontalTrench">
+    <rule IddField="Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_Coil_Cooling_Water">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
@@ -379,6 +383,29 @@
     <rule IddField="Basin Heater Setpoint Temperature" Access="HIDDEN"/>
     <rule IddField="Basin Heater Operating Schedule Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_Chiller_Absorption_Indirect">
+    <rule IddField="Chilled Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Chilled Water Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Condenser Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Condenser Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Generator Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Generator Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Generator Heat Input Function of Part Load Ratio Curve" Access="LOCKED"/>
+    <rule IddField="Pump Electric Input Function of Part Load Ratio Curve" Access="LOCKED"/>
+    <rule IddField="Capacity Correction Function of Condenser Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Capacity Correction Function of Chilled Water Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Capacity Correction Function of Generator Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Generator Heat Input Correction Function of Condenser Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Generator Heat Input Correction Function of Chilled Water Temperature Curve" Access="LOCKED"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Chiller_Absorption">
+    <rule IddField="Chilled Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Chilled Water Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Condenser Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Condenser Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Generator Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Generator Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_Pump_VariableSpeed">
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Outlet Node Name" Access="HIDDEN"/>
@@ -401,6 +428,14 @@
     <rule IddField="Rotational Speed" Access="HIDDEN"/>
     <rule IddField="Zone" Access="HIDDEN"/>
     <rule IddField="Skin Loss Radiative Fraction" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_HeaderedPumps_VariableSpeed">
+    <rule IddField="Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_HeaderedPumps_ConstantSpeed">
+    <rule IddField="Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_Boiler_HotWater">
     <rule IddField="Boiler Water Inlet Node Name" Access="HIDDEN"/>
@@ -751,5 +786,36 @@
     <rule IddField="Name" Access="HIDDEN"/>
     <rule IddField="Schedule Type Limits Name" Access="HIDDEN"/>
     <rule IddField="Interpolate to Timestep" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_TemperingValve">
+    <rule IddField="Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_ThermalStorage_Ice_Detailed">
+    <rule IddField="Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Discharging Curve" Access="LOCKED"/>
+    <rule IddField="Charging Curve" Access="LOCKED"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Coil_Cooling_DX_TwoStageWithHumidityControlMode">
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Number of Capacity Stages" Access="Hidden"/>
+    <rule IddField="Normal Mode Stage 1 Coil Performance" Access="HIDDEN"/>
+    <rule IddField="Normal Mode Stage 1 Plus 2 Coil Performance" Access="HIDDEN"/>
+    <rule IddField="Dehumidification Mode 1 Stage 1 Coil Performance" Access="HIDDEN"/>
+    <rule IddField="Dehumidification Mode 1 Stage 1 Plus 2 Coil Performance" Access="HIDDEN"/>
+    <rule IddField="Supply Water Storage Tank" Access="HIDDEN"/>
+    <rule IddField="Condensate Collection Water Storage Tank" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_CoilPerformance_DX_Cooling">
+    <rule IddField="Total Cooling Capacity Function of Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Total Cooling Capacity Function of Flow Fraction Curve" Access="LOCKED"/>
+    <rule IddField="Energy Input Ratio Function of Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Energy Input Ratio Function of Flow Fraction Curve" Access="LOCKED"/>
+    <rule IddField="Part Load Fraction Correlation Curve" Access="LOCKED"/>
+    <rule IddField="Sensible Heat Ratio Function of Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Sensible Heat Ratio Function of Flow Fraction Curve" Access="LOCKED"/>
+    <rule IddField="Condenser Air Inlet Node" Access="HIDDEN"/>
   </POLICY>
 </ROOT>

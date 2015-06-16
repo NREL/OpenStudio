@@ -109,7 +109,7 @@ namespace detail {
 
     virtual ~DataPoint_Impl() {}
 
-    virtual AnalysisObject clone() const;
+    virtual AnalysisObject clone() const override;
 
     //@}
     /** @name Getters and Queries */
@@ -276,7 +276,7 @@ namespace detail {
 
     void setProblem(const Problem& problem);
 
-    virtual QVariant toVariant() const;
+    virtual QVariant toVariant() const override;
 
     /** Contents of toVariant finalized for direct serialization (adds jsonMetadata and
      *  data_point moniker. */

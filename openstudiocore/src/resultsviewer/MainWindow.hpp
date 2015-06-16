@@ -178,7 +178,7 @@ signals:
 private slots:
   void fileOpen();
   bool openRecentFile();
-  void closeEvent(QCloseEvent *evt);
+  void closeEvent(QCloseEvent *evt) override;
   void showTreeViewContextMenu(const QPoint &pos);
   void showTableViewContextMenu(const QPoint &pos);
   void loadFile(const QString& alias, const QString& filename);

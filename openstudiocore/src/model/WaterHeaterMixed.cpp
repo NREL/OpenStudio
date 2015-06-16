@@ -21,6 +21,10 @@
 #include "WaterHeaterMixed_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
+#include "ScheduleDay.hpp"
+#include "ScheduleDay_Impl.hpp"
+#include "ScheduleRuleset.hpp"
+#include "ScheduleRuleset_Impl.hpp"
 #include "CurveCubic.hpp"
 #include "CurveCubic_Impl.hpp"
 #include "ThermalZone.hpp"
@@ -1577,6 +1581,15 @@ WaterHeaterMixed::WaterHeaterMixed(const Model& model)
   autosizeUseSideDesignFlowRate();
   autosizeSourceSideDesignFlowRate();
   setIndirectWaterHeatingRecoveryTime(1.5);
+
+  setAmbientTemperatureIndicator("Schedule");
+  ScheduleRuleset amb_schedule(model);
+  amb_schedule.defaultDaySchedule().addValue(Time(0,24,0,0),22.0);
+  setAmbientTemperatureSchedule(amb_schedule);
+
+  ScheduleRuleset setpoint_schedule(model);
+  setpoint_schedule.defaultDaySchedule().addValue(Time(0,24,0,0),60.0);
+  setSetpointTemperatureSchedule(setpoint_schedule);
 }
 
 IddObjectType WaterHeaterMixed::iddObjectType() {

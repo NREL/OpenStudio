@@ -127,7 +127,7 @@ class ANALYSIS_API WorkflowStep : public AnalysisObject {
 
   /** Specialization of public method onChange so WorkflowStep can make the call on InputVariable
    *  (its child) if appropriate. */
-  virtual void onChange();
+  virtual void onChange() override;
  private:
   REGISTER_LOGGER("openstudio.analysis.WorkflowStep");
 };

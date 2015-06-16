@@ -47,11 +47,11 @@ class SyncMeasuresDialog : public QDialog
 public:
   SyncMeasuresDialog(analysisdriver::SimpleProject * project,
     MeasureManager * measureManager,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
   virtual ~SyncMeasuresDialog() {}
 
 protected:
-  void paintEvent(QPaintEvent * event);
+  void paintEvent(QPaintEvent * event) override;
 
 private:
   void createLayout();

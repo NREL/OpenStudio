@@ -71,19 +71,19 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
 
   virtual bool addToSplitter(Splitter & splitter);
 
-  virtual boost::optional<ParentObject> parent() const;
+  virtual boost::optional<ParentObject> parent() const override;
 
-  virtual std::vector<ModelObject> children() const;
+  virtual std::vector<ModelObject> children() const override;
 
-  virtual const std::vector<std::string>& outputVariableNames() const;
+  virtual const std::vector<std::string>& outputVariableNames() const override;
 
   virtual void disconnect();
 
-  virtual std::vector<IdfObject> remove();
+  virtual std::vector<IdfObject> remove() override;
 
   virtual bool isRemovable() const;
 
-  virtual ModelObject clone(Model model) const;
+  virtual ModelObject clone(Model model) const override;
 
   /** This function returns a vector of HVACComponent that are directly downstream
    *  from this object on an AirLoopHVAC or PlantLoop. 
@@ -96,6 +96,17 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
   virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const;
   
   virtual boost::optional<StraightComponent> containingStraightComponent() const;
+
+  bool addToNode(Node & node, 
+    const HVACComponent & systemStartComponent, 
+    const HVACComponent & systemEndComponent,
+    unsigned componentInletPort,
+    unsigned componentOutletPort);
+
+  bool removeFromLoop( const HVACComponent & systemStartComponent, 
+    const HVACComponent & systemEndComponent,
+    unsigned componentInletPort,
+    unsigned componentOutletPort );
 
  protected:
 

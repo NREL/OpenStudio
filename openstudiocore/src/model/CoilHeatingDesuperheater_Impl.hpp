@@ -55,19 +55,19 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual unsigned inletPort();
+    virtual unsigned inletPort() override;
 
-    virtual unsigned outletPort();
+    virtual unsigned outletPort() override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual ModelObject clone(Model model) const;
+    virtual ModelObject clone(Model model) const override;
 
-    virtual bool addToNode(Node & node);
+    virtual bool addToNode(Node & node) override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
     //@}
     /** @name Getters */
@@ -114,7 +114,7 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.CoilHeatingDesuperheater");
 
-    virtual boost::optional<HVACComponent> containingHVACComponent() const;
+    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
   };
 
 } // detail

@@ -65,22 +65,22 @@ TEST_F(ModelFixture,PipeAdiabatic_addToNode) {
   EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
 
   Node demandOutletNode = plantLoop.demandOutletNode();
-  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+  EXPECT_TRUE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)7, plantLoop.demandComponents().size() );
 
   PipeAdiabatic testObject2(m);
 
   EXPECT_TRUE(testObject2.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)7, plantLoop.demandComponents().size() );
+  EXPECT_EQ( (unsigned)9, plantLoop.demandComponents().size() );
 
   PlantLoop plantLoop2(m);
   demandOutletNode = plantLoop2.demandOutletNode();
-  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop2.demandComponents().size() );
+  EXPECT_TRUE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)7, plantLoop2.demandComponents().size() );
 
   PipeAdiabatic testObjectClone = testObject.clone(m).cast<PipeAdiabatic>();
   supplyOutletNode = plantLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)9, plantLoop.supplyComponents().size() );
+  EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
 }

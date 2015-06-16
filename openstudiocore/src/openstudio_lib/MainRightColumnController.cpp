@@ -115,7 +115,7 @@ void MainRightColumnController::registerSystemItem(const Handle & systemHandle, 
 
 void MainRightColumnController::unregisterSystemItem(const Handle & systemHandle)
 {
-  std::map<Handle,SystemItem *>::iterator it = m_systemItemMap.find(systemHandle);
+  auto it = m_systemItemMap.find(systemHandle);
   if( it != m_systemItemMap.end() )
   {
     m_systemItemMap.erase(it);
@@ -124,7 +124,7 @@ void MainRightColumnController::unregisterSystemItem(const Handle & systemHandle
 
 SystemItem * MainRightColumnController::systemItem(const Handle & systemHandle) const
 {
-  std::map<Handle,SystemItem *>::const_iterator it = m_systemItemMap.find(systemHandle);
+  auto it = m_systemItemMap.find(systemHandle);
   if( it != m_systemItemMap.end() )
   {
     return it->second;
@@ -310,7 +310,7 @@ void MainRightColumnController::configureForSchedulesSubTab(int subTabID)
 
 
       // my model
-      ModelObjectTypeListView* myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
+      auto myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
       myModelList->setItemsType(OSItemType::LibraryItem);
       myModelList->setItemsDraggable(true);
       myModelList->setItemsRemoveable(false);
@@ -325,7 +325,7 @@ void MainRightColumnController::configureForSchedulesSubTab(int subTabID)
       setMyModelView(myModelList);
 
       // my library
-      ModelObjectTypeListView* myLibraryList = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader);
+      auto myLibraryList = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader);
       myLibraryList->setItemsDraggable(true);
       myLibraryList->setItemsRemoveable(false);
       myLibraryList->setItemsType(OSItemType::LibraryItem);
@@ -347,7 +347,7 @@ void MainRightColumnController::configureForSchedulesSubTab(int subTabID)
       model::Model lib = doc->componentLibrary();
 
       // my library
-      ModelObjectTypeListView* myLibraryList = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader);
+      auto myLibraryList = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader);
       myLibraryList->setItemsDraggable(true);
       myLibraryList->setItemsRemoveable(false);
       myLibraryList->setItemsType(OSItemType::LibraryItem);
@@ -381,7 +381,7 @@ void MainRightColumnController::configureForConstructionsSubTab(int subTabID)
       model::Model lib = doc->componentLibrary();
 
       // my model
-      ModelObjectTypeListView* myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
+      auto myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
       myModelList->setItemsDraggable(true);
       myModelList->setItemsRemoveable(false);
       myModelList->setItemsType(OSItemType::LibraryItem);
@@ -396,7 +396,7 @@ void MainRightColumnController::configureForConstructionsSubTab(int subTabID)
       setMyModelView(myModelList);
 
       // my library
-      ModelObjectTypeListView* myLibraryList = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader,true);
+      auto myLibraryList = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader,true);
       myLibraryList->setItemsDraggable(true);
       myLibraryList->setItemsRemoveable(false);
       myLibraryList->setItemsType(OSItemType::LibraryItem);
@@ -419,7 +419,7 @@ void MainRightColumnController::configureForConstructionsSubTab(int subTabID)
       model::Model lib = doc->componentLibrary();
 
       // my model
-      ModelObjectTypeListView* myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
+      auto myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
       myModelList->setItemsDraggable(true);
       myModelList->setItemsRemoveable(false);
       myModelList->setItemsType(OSItemType::LibraryItem);
@@ -445,7 +445,7 @@ void MainRightColumnController::configureForConstructionsSubTab(int subTabID)
       setMyModelView(myModelList);
 
       // my library
-      ModelObjectTypeListView* myLibraryList = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader, true);
+      auto myLibraryList = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader, true);
       myLibraryList->setItemsDraggable(true);
       myLibraryList->setItemsRemoveable(false);
       myLibraryList->setItemsType(OSItemType::LibraryItem);
@@ -484,7 +484,7 @@ void MainRightColumnController::configureForConstructionsSubTab(int subTabID)
       model::Model lib = doc->componentLibrary();
 
       // my model
-      ModelObjectTypeListView* myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
+      auto myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
       myModelList->setItemsDraggable(true);
       myModelList->setItemsRemoveable(false);
       myModelList->setItemsType(OSItemType::LibraryItem);
@@ -493,7 +493,7 @@ void MainRightColumnController::configureForConstructionsSubTab(int subTabID)
       setMyModelView(myModelList);
 
       // my library
-      ModelObjectTypeListView* myLibraryList = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader,true);
+      auto myLibraryList = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader,true);
       myLibraryList->setItemsDraggable(true);
       myLibraryList->setItemsRemoveable(false);
       myLibraryList->setItemsType(OSItemType::LibraryItem);
@@ -537,7 +537,7 @@ void MainRightColumnController::configureForLoadsSubTab(int subTabID)
 
   // my model
 
-  ModelObjectTypeListView* myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
+  auto myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
   myModelList->setItemsDraggable(true);
   myModelList->setItemsRemoveable(false);
   myModelList->setItemsType(OSItemType::LibraryItem);
@@ -558,7 +558,7 @@ void MainRightColumnController::configureForLoadsSubTab(int subTabID)
 
   // my library
 
-  ModelObjectTypeListView* myLibraryList = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader, true);
+  auto myLibraryList = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader, true);
   myLibraryList->setItemsDraggable(true);
   myLibraryList->setItemsRemoveable(false);
   myLibraryList->setItemsType(OSItemType::LibraryItem);
@@ -600,7 +600,7 @@ void MainRightColumnController::configureForSpaceTypesSubTab(int subTabID)
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   // my model
-  ModelObjectTypeListView* myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
+  auto myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
   myModelList->setItemsDraggable(true);
   myModelList->setItemsRemoveable(false);
   myModelList->setItemsType(OSItemType::LibraryItem);
@@ -641,7 +641,7 @@ void MainRightColumnController::configureForSpaceTypesSubTab(int subTabID)
   // my library
   model::Model lib = doc->componentLibrary();
 
-  ModelObjectTypeListView* myLibraryList = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader,true);
+  auto myLibraryList = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader,true);
   myLibraryList->setItemsDraggable(true);
   myLibraryList->setItemsRemoveable(false);
   myLibraryList->setItemsType(OSItemType::LibraryItem);
@@ -681,7 +681,7 @@ void MainRightColumnController::configureForFacilitySubTab(int subTabID)
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   // my model
-  ModelObjectTypeListView* myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
+  auto myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
   myModelList->setItemsDraggable(true);
   myModelList->setItemsRemoveable(false);
   myModelList->setItemsType(OSItemType::LibraryItem);
@@ -722,7 +722,7 @@ void MainRightColumnController::configureForFacilitySubTab(int subTabID)
   // Library
   model::Model lib = doc->combinedComponentLibrary();
 
-  ModelObjectTypeListView* myLibraryList = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader,true);
+  auto myLibraryList = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader);
   myLibraryList->setItemsDraggable(true);
   myLibraryList->setItemsRemoveable(false);
   myLibraryList->setItemsType(OSItemType::LibraryItem);
@@ -777,7 +777,7 @@ void MainRightColumnController::configureForSpacesSubTab(int subTabID)
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   // my model
-  ModelObjectTypeListView* myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
+  auto myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
   myModelList->setItemsDraggable(true);
   myModelList->setItemsRemoveable(false);
   myModelList->setItemsType(OSItemType::LibraryItem);
@@ -817,7 +817,7 @@ void MainRightColumnController::configureForSpacesSubTab(int subTabID)
   // Library
   model::Model lib = doc->combinedComponentLibrary();
 
-  ModelObjectTypeListView* myLibraryList = new ModelObjectTypeListView(lib, true, OSItemType::CollapsibleListHeader, true);
+  auto myLibraryList = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader,true);
   myLibraryList->setItemsDraggable(true);
   myLibraryList->setItemsRemoveable(false);
   myLibraryList->setItemsType(OSItemType::LibraryItem);
@@ -876,7 +876,7 @@ void MainRightColumnController::configureForThermalZonesSubTab(int subTabID)
 
   // My Model
 
-  ModelObjectTypeListView * myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
+  auto myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
   myModelList->setItemsDraggable(true);
   myModelList->setItemsRemoveable(false);
   myModelList->setItemsType(OSItemType::LibraryItem);
@@ -890,7 +890,7 @@ void MainRightColumnController::configureForThermalZonesSubTab(int subTabID)
   // Library
   model::Model lib = doc->combinedComponentLibrary();
 
-  ModelObjectTypeListView * libraryWidget = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader);
+  auto libraryWidget = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader);
   libraryWidget->setItemsDraggable(true);
   libraryWidget->setItemsRemoveable(false);
   libraryWidget->setItemsType(OSItemType::LibraryItem);
@@ -928,7 +928,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   setEditView(nullptr);
 
   // my model
-  ModelObjectTypeListView* myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
+  auto myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
   myModelList->setItemsDraggable(true);
   myModelList->setItemsRemoveable(false);
   myModelList->setItemsType(OSItemType::LibraryItem);
@@ -943,7 +943,9 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   myModelList->addModelObjectType(IddObjectType::OS_HeatExchanger_FluidToFluid,"Heat Exchanger Fluid To Fluid");
   myModelList->addModelObjectType(IddObjectType::OS_Coil_Heating_Water,"Coil Heating Water");
   myModelList->addModelObjectType(IddObjectType::OS_Coil_Cooling_Water,"Coil Cooling Water");
-  myModelList->addModelObjectType(IddObjectType::OS_Chiller_Electric_EIR,"Chiller Electric EIR");
+  myModelList->addModelObjectType(IddObjectType::OS_Chiller_Electric_EIR,"Chiller - Electric EIR");
+  myModelList->addModelObjectType(IddObjectType::OS_Chiller_Absorption,"Chiller - Absorption");
+  myModelList->addModelObjectType(IddObjectType::OS_Chiller_Absorption_Indirect,"Chiller - Indirect Absorption");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset,"Schedules");
 
 
@@ -953,7 +955,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
 
   model::Model lib = doc->hvacComponentLibrary();
 
-  ModelObjectTypeListView * libraryWidget = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader,true);
+  auto libraryWidget = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader,true);
   libraryWidget->setItemsDraggable(true);
   libraryWidget->setItemsRemoveable(false);
   libraryWidget->setItemsType(OSItemType::LibraryItem);
@@ -962,6 +964,9 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_WaterUse_Equipment,"Water Use Equipment");
   libraryWidget->addModelObjectType(IddObjectType::OS_WaterUse_Connections,"Water Use Connections");
   libraryWidget->addModelObjectType(IddObjectType::OS_WaterHeater_Mixed,"Water Heater Mixed");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AirConditioner_VariableRefrigerantFlow,"VRF System");
+  libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow,"VRF Terminal");
+  libraryWidget->addModelObjectType(IddObjectType::OS_TemperingValve,"Tempering Valve");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_SingleZone_Reheat,"Setpoint Manager Single Zone Reheat");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_Scheduled,"Setpoint Manager Scheduled");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_Scheduled_DualSetpoint,"Setpoint Manager Scheduled Dual Setpoint");
@@ -984,11 +989,17 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Condenser_AirCooled,"Refrigeration Condenser Air Cooled");
   libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Case,"Refrigeration Case");
   libraryWidget->addModelObjectType(IddObjectType::OS_Pump_ConstantSpeed,"Pump Constant Speed");
+  libraryWidget->addModelObjectType(IddObjectType::OS_HeaderedPumps_ConstantSpeed,"Pump Constant Speed Headered");
   libraryWidget->addModelObjectType(IddObjectType::OS_Pump_VariableSpeed,"Pump Variable Speed");
+  libraryWidget->addModelObjectType(IddObjectType::OS_HeaderedPumps_VariableSpeed,"Pump Variable Speed Headered");
   libraryWidget->addModelObjectType(IddObjectType::OS_Pipe_Adiabatic, "Pipes");
+  libraryWidget->addModelObjectType(IddObjectType::OS_ThermalStorage_Ice_Detailed,"Ice Storage");
   libraryWidget->addModelObjectType(IddObjectType::OS_Humidifier_Steam_Electric,"Humidifier Steam Electric");
   libraryWidget->addModelObjectType(IddObjectType::OS_HeatExchanger_FluidToFluid,"Heat Exchanger Fluid To Fluid");
   libraryWidget->addModelObjectType(IddObjectType::OS_HeatExchanger_AirToAir_SensibleAndLatent,"Heat Exchanger Air To Air Sensible and Latent");
+  libraryWidget->addModelObjectType(IddObjectType::OS_GroundHeatExchanger_Vertical, "Ground Heat Exchanger - Vertical ");
+  libraryWidget->addModelObjectType(IddObjectType::OS_GroundHeatExchanger_HorizontalTrench,"Ground Heat Exchanger - Horizontal");
+  libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_FourPipeFanCoil,"Four Pipe Fan Coil");
   libraryWidget->addModelObjectType(IddObjectType::OS_Fan_VariableVolume,"Fan Variable Volume");
   libraryWidget->addModelObjectType(IddObjectType::OS_Fan_ConstantVolume,"Fan Constant Volume");
   libraryWidget->addModelObjectType(IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial,"Evaporative Cooler Direct Research Special");
@@ -996,17 +1007,19 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_EvaporativeFluidCooler_SingleSpeed,"Evaporative Fluid Cooler SingleSpeed");
   libraryWidget->addModelObjectType(IddObjectType::OS_DistrictCooling,"District Cooling");
   libraryWidget->addModelObjectType(IddObjectType::OS_DistrictHeating,"District Heating");
-  libraryWidget->addModelObjectType(IddObjectType::OS_GroundHeatExchanger_Vertical, "Vertical Ground Heat Exchanger");
   libraryWidget->addModelObjectType(IddObjectType::OS_CoolingTower_TwoSpeed, "Cooling Tower Two Speed");
   libraryWidget->addModelObjectType(IddObjectType::OS_CoolingTower_SingleSpeed, "Cooling Tower Single Speed");
   libraryWidget->addModelObjectType(IddObjectType::OS_CoolingTower_VariableSpeed, "Cooling Tower Variable Speed");
-  libraryWidget->addModelObjectType(IddObjectType::OS_Chiller_Electric_EIR,"Chiller Electric EIR");
+  libraryWidget->addModelObjectType(IddObjectType::OS_Chiller_Electric_EIR,"Chiller - Electric EIR");
+  libraryWidget->addModelObjectType(IddObjectType::OS_Chiller_Absorption_Indirect,"Chiller - Indirect Absorption");
+  libraryWidget->addModelObjectType(IddObjectType::OS_Chiller_Absorption,"Chiller - Absorption");
   libraryWidget->addModelObjectType(IddObjectType::OS_Coil_Heating_Gas,"Coil Heating Gas");
   libraryWidget->addModelObjectType(IddObjectType::OS_Coil_Heating_DX_SingleSpeed,"Coil Heating DX SingleSpeed");
   libraryWidget->addModelObjectType(IddObjectType::OS_Coil_Heating_Electric,"Coil Heating Electric");
   libraryWidget->addModelObjectType(IddObjectType::OS_Coil_Heating_Water,"Coil Heating Water");
   libraryWidget->addModelObjectType(IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit,"Coil Heating Water To Air HP");
   libraryWidget->addModelObjectType(IddObjectType::OS_Coil_Cooling_Water,"Coil Cooling Water");
+  libraryWidget->addModelObjectType(IddObjectType::OS_Coil_Cooling_DX_TwoStageWithHumidityControlMode,"Coil Cooling DX TwoStage - Humidity Control");
   libraryWidget->addModelObjectType(IddObjectType::OS_Coil_Cooling_DX_TwoSpeed,"Coil Cooling DX TwoSpeed");
   libraryWidget->addModelObjectType(IddObjectType::OS_Coil_Cooling_DX_SingleSpeed,"Coil Cooling DX SingleSpeed");
   libraryWidget->addModelObjectType(IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit,"Coil Cooling Water To Air HP");
@@ -1017,7 +1030,6 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_VAV_Reheat,"AirTerminal Single Duct VAV Reheat");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_ParallelPIU_Reheat,"AirTerminal Single Duct Parallel PIU Reheat");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_SeriesPIU_Reheat,"AirTerminal Single Duct Series PIU Reheat");
-  libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_FourPipeFanCoil,"Four Pipe Fan Coil");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_InletSideMixer,"AirTerminal Inlet Side Mixer");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_VAV_HeatAndCool_Reheat,"AirTerminal Heat and Cool Reheat");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheat,"AirTerminal Heat and Cool No Reheat");
@@ -1026,8 +1038,6 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_VAV_NoReheat,"AirTerminal Single Duct VAV NoReheat");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirLoopHVAC_UnitarySystem, "AirLoopHVAC Unitary System");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass, "AirLoopHVAC Unitary VAV Changeover Bypass");
-  libraryWidget->addModelObjectType(IddObjectType::OS_AirConditioner_VariableRefrigerantFlow,"VRF System");
-  libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow,"VRF Terminal");
 
   setLibraryView(libraryWidget);
 

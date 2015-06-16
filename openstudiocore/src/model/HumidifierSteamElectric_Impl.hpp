@@ -54,15 +54,15 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned inletPort();
+    virtual unsigned inletPort() override;
 
-    virtual unsigned outletPort();
+    virtual unsigned outletPort() override;
 
     //@}
     /** @name Getters */
@@ -71,6 +71,8 @@ namespace detail {
     boost::optional<Schedule> availabilitySchedule() const;
 
     boost::optional<double> ratedCapacity() const;
+
+    bool isRatedCapacityAutosized() const;
 
     boost::optional<double> ratedPower() const;
 
@@ -92,7 +94,7 @@ namespace detail {
 
     bool setRatedCapacity(boost::optional<double> ratedCapacity);
 
-    void resetRatedCapacity();
+    void autosizeRatedCapacity();
 
     bool setRatedPower(boost::optional<double> ratedPower);
 

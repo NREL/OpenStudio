@@ -53,7 +53,7 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   virtual ~PlantLoop_Impl() {}
 
-  virtual IddObjectType iddObjectType() const;
+  virtual IddObjectType iddObjectType() const override;
 
   std::string fluidType();
 
@@ -103,15 +103,15 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   std::vector<ModelObject> demandComponents(HVACComponent inletComp,
                                             HVACComponent outletComp,
-                                            openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+                                            openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const override;
 
   //std::vector<ModelObject> supplyComponents(openstudio::IddObjectType type=openstudio::IddObjectType("Catchall"));
 
-  std::vector<ModelObject> demandComponents(openstudio::IddObjectType type=openstudio::IddObjectType("Catchall"));
+  std::vector<ModelObject> demandComponents(openstudio::IddObjectType type=openstudio::IddObjectType("Catchall")) const override;
 
   //std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
-  boost::optional<ModelObject> component(openstudio::Handle handle);
+  boost::optional<ModelObject> component(openstudio::Handle handle) override;
 
   //std::vector<ModelObject> supplyComponents(std::vector<HVACComponent> inletComps,
   //                                          std::vector<HVACComponent> outletComps,
@@ -119,11 +119,11 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   std::vector<ModelObject> demandComponents(std::vector<HVACComponent> inletComps,
                                             std::vector<HVACComponent> outletComps,
-                                            openstudio::IddObjectType type );
+                                            openstudio::IddObjectType type ) const override;
 
-  virtual std::vector<openstudio::IdfObject> remove();
+  virtual std::vector<openstudio::IdfObject> remove() override;
 
-  virtual ModelObject clone(Model model) const;
+  virtual ModelObject clone(Model model) const override;
 
   unsigned supplyInletPort() const;
 
@@ -133,21 +133,21 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   unsigned demandOutletPort() const;
 
-  virtual Node supplyInletNode() const;
+  virtual Node supplyInletNode() const override;
 
-  virtual Node supplyOutletNode() const;
+  virtual Node supplyOutletNode() const override;
 
-  virtual Node demandInletNode() const;
+  virtual Node demandInletNode() const override;
 
-  virtual Node demandOutletNode() const;
+  virtual Node demandOutletNode() const override;
 
   Mixer supplyMixer();
 
   Splitter supplySplitter();
 
-  Mixer demandMixer();
+  Mixer demandMixer() override;
 
-  Splitter demandSplitter();
+  Splitter demandSplitter() override;
 
   bool addSupplyBranchForComponent( HVACComponent component );
 
@@ -161,7 +161,7 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   void setLoopTemperatureSetpointNode( Node & node );
 
-  std::vector<ModelObject> children() const;
+  std::vector<ModelObject> children() const override;
 
   SizingPlant sizingPlant() const;
 

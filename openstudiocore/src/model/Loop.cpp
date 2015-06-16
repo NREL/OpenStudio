@@ -117,7 +117,7 @@ namespace detail {
     }
     std::vector<HVACComponent> nodes = hvacComponent.getImpl<HVACComponent_Impl>()->edges(isDemandComponents);
 
-    for(std::vector<HVACComponent>::iterator it = nodes.begin();
+    for(auto it = nodes.begin();
         it != nodes.end();
         it++)
     {

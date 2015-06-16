@@ -41,7 +41,7 @@ public:
     : m_called(false)
   {}
 
-  virtual void onPercentageUpdated(double percentage)
+  virtual void onPercentageUpdated(double percentage) override
   {
     m_called = true;
   }

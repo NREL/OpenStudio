@@ -53,32 +53,32 @@ namespace detail {
     //@{
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(const std::shared_ptr<QSqlDatabase>& database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase>& database) override;
 
     //@}
     /** @name Getters */
     //@{
 
-    virtual CloudSession cloudSession() const;
+    virtual CloudSession cloudSession() const override;
 
     AWSSession awsSession() const;
 
     //@}
    protected:
     /** Bind data member values to a query for saving. */
-    virtual void bindValues(QSqlQuery& query) const;
+    virtual void bindValues(QSqlQuery& query) const override;
 
     /** Set the last state of this object from the query (including id). */
-    virtual void setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase);
+    virtual void setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) override;
 
     /** Check that values (except id) are same as query. */
-    virtual bool compareValues(const QSqlQuery& query) const;
+    virtual bool compareValues(const QSqlQuery& query) const override;
 
     /** Save values to last state. */
-    virtual void saveLastValues();
+    virtual void saveLastValues() override;
 
     /** Revert values back to last state. */
-    virtual void revertToLastValues();
+    virtual void revertToLastValues() override;
 
    private:
     REGISTER_LOGGER("openstudio.project.AWSSessionRecord");

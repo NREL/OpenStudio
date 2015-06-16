@@ -183,7 +183,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
 
   unsigned i = 3;
   ModelObjectVector oaModelObjects = modelObject.oaComponents();
-  for( ModelObjectVector::iterator oaIt = oaModelObjects.begin();
+  for( auto oaIt = oaModelObjects.begin();
        oaIt != oaModelObjects.end();
        ++oaIt )
   {
@@ -197,16 +197,21 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
   }
 
   ModelObjectVector reliefModelObjects = modelObject.reliefComponents();
-  for( ModelObjectVector::iterator reliefIt = reliefModelObjects.begin();
+  for( auto reliefIt = reliefModelObjects.begin();
        reliefIt != reliefModelObjects.end();
        ++reliefIt )
   {
-    if( boost::optional<IdfObject> idfObject = translateAndMapModelObject(*reliefIt) )
-    {
-      equipmentListIdf.setString(i,idfObject->iddObject().name());
-      i++;
-      equipmentListIdf.setString(i,idfObject->name().get());
-      i++;
+    // Make sure this is not an AirToAirComponent, 
+    // because those will be added to the equipment list
+    // from the oaComponents() side.
+    if( ! reliefIt->optionalCast<AirToAirComponent>() ) {
+      if( boost::optional<IdfObject> idfObject = translateAndMapModelObject(*reliefIt) )
+      {
+        equipmentListIdf.setString(i,idfObject->iddObject().name());
+        i++;
+        equipmentListIdf.setString(i,idfObject->name().get());
+        i++;
+      }
     }
   }
 

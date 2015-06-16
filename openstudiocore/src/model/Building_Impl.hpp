@@ -96,19 +96,19 @@ namespace detail {
 
     //@}
 
-    virtual boost::optional<ParentObject> parent() const;
+    virtual boost::optional<ParentObject> parent() const override;
 
-    virtual std::vector<ModelObject> children() const;
+    virtual std::vector<ModelObject> children() const override;
 
-    virtual ModelObject clone(Model model) const;
+    virtual ModelObject clone(Model model) const override;
 
-    virtual bool setParent(ParentObject& newParent);
+    virtual bool setParent(ParentObject& newParent) override;
 
-    virtual std::vector<IddObjectType> allowableChildTypes() const;
+    virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     /** @name Getters */
     //@{

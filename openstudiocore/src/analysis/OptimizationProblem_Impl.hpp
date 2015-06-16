@@ -76,22 +76,22 @@ namespace detail {
 
     virtual ~OptimizationProblem_Impl() {}
 
-    virtual AnalysisObject clone() const;
+    virtual AnalysisObject clone() const override;
 
     //@}
     /** Virtual Methods */
     //@{
 
-    virtual bool isValid(const DataPoint& dataPoint) const;
+    virtual bool isValid(const DataPoint& dataPoint) const override;
 
     /** Returns a description of this problem for using in dakota.in files. */
     virtual std::string dakotaInFileDescription() const;
 
     virtual boost::optional<DataPoint> createDataPoint(
-        const std::vector<QVariant>& variableValues) const;
+        const std::vector<QVariant>& variableValues) const override;
 
     virtual boost::optional<DataPoint> createDataPoint(
-        const std::vector<DiscretePerturbation>& perturbations) const;
+        const std::vector<DiscretePerturbation>& perturbations) const override;
 
     /** Attemps to open and parse dakotaParametersFile, extract variable values and other relevant
      *  information, and create a new DataPoint. Returns that DataPoint if possible; returns
@@ -100,11 +100,11 @@ namespace detail {
         const openstudio::path& dakotaParametersFile) const;
 
     virtual void updateDataPoint(DataPoint& dataPoint,
-                                 const runmanager::Job& completedJob) const;
+                                 const runmanager::Job& completedJob) const override;
 
     /** Returns the DAKOTA results file string corresponding to dataPoint, if dataPoint completed
      *  successfully. Returns boost::none otherwise. */
-    virtual boost::optional<std::string> getDakotaResultsFile(const DataPoint& dataPoint) const;
+    virtual boost::optional<std::string> getDakotaResultsFile(const DataPoint& dataPoint) const override;
 
     //@}
     /** @name Getters and Queries */
@@ -136,13 +136,13 @@ namespace detail {
     /** @name Protected in or Absent from Public Class */
     //@{
 
-    virtual QVariant toVariant() const;
+    virtual QVariant toVariant() const override;
 
     static OptimizationProblem fromVariant(const QVariant& variant, const VersionString& version);
 
     /// Relocate path data from originalBase to newBase.
     virtual void updateInputPathData(const openstudio::path& originalBase,
-                                     const openstudio::path& newBase);
+                                     const openstudio::path& newBase) override;
 
     //@}
    protected:

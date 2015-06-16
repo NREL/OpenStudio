@@ -7,8 +7,10 @@ require "#{File.dirname(__FILE__)}/../measure.rb"
 require 'fileutils'
 
 require 'test/unit'
+#require 'minitest/unit'
 
 class CalibrationReports_Test < MiniTest::Unit::TestCase
+#class CalibrationReports_Test < MiniTest::Test
 
   # paths to expected test files, includes osm and eplusout.sql
   def modelPath

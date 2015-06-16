@@ -43,17 +43,17 @@ namespace detail {
 
     virtual ~SetpointManager_Impl();
 
-    virtual bool addToNode(Node & node);
+    virtual bool addToNode(Node & node) override;
 
-    virtual std::vector<openstudio::IdfObject> remove();
+    virtual std::vector<openstudio::IdfObject> remove() override;
 
-    virtual ModelObject clone(Model model) const;
+    virtual ModelObject clone(Model model) const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual boost::optional<ParentObject> parent() const;
+    virtual boost::optional<ParentObject> parent() const override;
 
-    virtual std::vector<ModelObject> children() const;
+    virtual std::vector<ModelObject> children() const override;
 
     virtual std::string controlVariable() const = 0;
 
@@ -61,13 +61,13 @@ namespace detail {
 
     virtual boost::optional<Node> setpointNode() const = 0;
 
-    virtual boost::optional<AirLoopHVAC> airLoopHVAC() const;
+    virtual boost::optional<AirLoopHVAC> airLoopHVAC() const override;
 
-    virtual boost::optional<PlantLoop> plantLoop() const;
+    virtual boost::optional<PlantLoop> plantLoop() const override;
 
-    virtual boost::optional<Loop> loop() const;
+    virtual boost::optional<Loop> loop() const override;
 
-    virtual boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
+    virtual boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const override;
 
    private:
 

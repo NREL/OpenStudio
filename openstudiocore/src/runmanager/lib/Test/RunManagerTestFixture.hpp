@@ -28,10 +28,10 @@ class RunManagerTestFixture : public ::testing::Test {
   protected:
 
     // initialize for each test
-    virtual void SetUp() {}
+    virtual void SetUp() override {}
 
     // tear down after for each test
-    virtual void TearDown() {}
+    virtual void TearDown() override {}
 
     // initialize before all tests
     static void SetUpTestCase();

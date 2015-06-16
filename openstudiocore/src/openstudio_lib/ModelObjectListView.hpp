@@ -47,7 +47,7 @@ private slots:
   void objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&);
 
 protected:
-  virtual std::vector<OSItemId> makeVector();
+  virtual std::vector<OSItemId> makeVector() override;
 
 private:
   openstudio::IddObjectType m_iddObjectType;
@@ -65,7 +65,7 @@ public:
                       const model::Model& model,
                       bool addScrollArea,
                       bool showLocalBCL = false,
-                      QWidget * parent = 0);
+                      QWidget * parent = nullptr);
 
   virtual ~ModelObjectListView() {}
 

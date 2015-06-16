@@ -50,8 +50,8 @@ public:
   void firstPage();
 
 protected:
-  void paintEvent(QPaintEvent * event);
-  QSize sizeHint() const;
+  void paintEvent(QPaintEvent * event) override;
+  QSize sizeHint() const override;
 
 private:
   void createLayout(const std::string& text, int numResults, int numPages);

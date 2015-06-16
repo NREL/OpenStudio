@@ -263,11 +263,11 @@ class ScheduleDayEditor : public QWidget
 
   protected:
 
-  void mouseDoubleClickEvent(QMouseEvent * event);
+  void mouseDoubleClickEvent(QMouseEvent * event) override;
 
-  void paintEvent(QPaintEvent * event);
+  void paintEvent(QPaintEvent * event) override;
 
-  void resizeEvent(QResizeEvent * event);
+  void resizeEvent(QResizeEvent * event) override;
 
   //void refresh();
 
@@ -374,15 +374,15 @@ class DaySchedulePlotArea : public QGraphicsView
 
   protected:
 
-  void mouseDoubleClickEvent(QMouseEvent * event);
+  void mouseDoubleClickEvent(QMouseEvent * event) override;
 
-  void mouseMoveEvent(QMouseEvent * event);
+  void mouseMoveEvent(QMouseEvent * event) override;
 
-  void mousePressEvent(QMouseEvent * event);
+  void mousePressEvent(QMouseEvent * event) override;
 
-  void mouseReleaseEvent(QMouseEvent * event);
+  void mouseReleaseEvent(QMouseEvent * event) override;
 
-  void keyPressEvent (QKeyEvent * event);
+  void keyPressEvent (QKeyEvent * event) override;
 
   private:
 
@@ -413,13 +413,13 @@ class DayScheduleOverview : public QWidget
 
   protected:
 
-  void resizeEvent (QResizeEvent * event);
+  void resizeEvent (QResizeEvent * event) override;
 
-  void mouseMoveEvent(QMouseEvent * event);
+  void mouseMoveEvent(QMouseEvent * event) override;
 
-  void mousePressEvent(QMouseEvent * event);
+  void mousePressEvent(QMouseEvent * event) override;
 
-  void mouseReleaseEvent(QMouseEvent * event);
+  void mouseReleaseEvent(QMouseEvent * event) override;
 
   private slots:
 
@@ -448,7 +448,7 @@ class VCalendarSegmentItem : public QGraphicsItem
 {
   public:
 
-  VCalendarSegmentItem( QGraphicsItem * parent = 0 );
+  VCalendarSegmentItem( QGraphicsItem * parent = nullptr );
 
   virtual ~VCalendarSegmentItem() {}
 
@@ -460,7 +460,7 @@ class VCalendarSegmentItem : public QGraphicsItem
 
   bool isMouseDown() const;
 
-  QRectF boundingRect() const;
+  QRectF boundingRect() const override;
 
   void setLength(double length);
 
@@ -488,7 +488,7 @@ class VCalendarSegmentItem : public QGraphicsItem
 
   void paint( QPainter *painter,
               const QStyleOptionGraphicsItem *option,
-              QWidget *widget );
+              QWidget *widget ) override;
 
   private:
 
@@ -511,7 +511,7 @@ class CalendarSegmentItem : public QGraphicsItem
 {
   public:
 
-  CalendarSegmentItem( QGraphicsItem * parent = 0 );
+  CalendarSegmentItem( QGraphicsItem * parent = nullptr );
 
   virtual ~CalendarSegmentItem() {}
 
@@ -539,7 +539,7 @@ class CalendarSegmentItem : public QGraphicsItem
 
   bool isMouseDown() const;
 
-  QRectF boundingRect() const;
+  QRectF boundingRect() const override;
 
   VCalendarSegmentItem * nextVCalendarItem() const;
 
@@ -563,7 +563,7 @@ class CalendarSegmentItem : public QGraphicsItem
 
   void paint( QPainter *painter,
               const QStyleOptionGraphicsItem *option,
-              QWidget *widget );
+              QWidget *widget ) override;
 
   private:
 
@@ -586,7 +586,7 @@ class ScheduleTypeLimitItem : public QGraphicsItem
 {
 public:
 
-  ScheduleTypeLimitItem(bool isUpperLimit, QGraphicsItem * parent = 0);
+  ScheduleTypeLimitItem(bool isUpperLimit, QGraphicsItem * parent = nullptr);
 
   virtual ~ScheduleTypeLimitItem() {}
 
@@ -606,13 +606,13 @@ public:
 
   double vCenterPos() const;
 
-  QRectF boundingRect() const;
+  QRectF boundingRect() const override;
 
 protected:
 
   void paint(QPainter *painter,
              const QStyleOptionGraphicsItem *option,
-             QWidget *widget);
+             QWidget *widget) override;
 
 private:
 

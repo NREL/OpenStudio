@@ -35,10 +35,10 @@ public:
 
   BCLComponentItem( const BCLComponent & component,
                     OSItemType type,
-                    QWidget * parent = 0 );
+                    QWidget * parent = nullptr );
   virtual ~BCLComponentItem() {}
 
-  virtual bool equal(const openstudio::OSItem *) const;
+  virtual bool equal(const openstudio::OSItem *) const override;
 
 private:
 
