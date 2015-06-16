@@ -65,8 +65,6 @@ class ModelObjectInspectorView : public OSInspectorView
 
     void itemsRequested();
 
-    void gridRowSelected(OSItem * item);
-
     void dropZoneItemClicked(OSItem* item);
 
 

@@ -61,8 +61,6 @@ namespace openstudio{
 
     void selectionCleared();
 
-    void gridRowSelected(OSItem*);
-
   };
 
   class ThermalZonesGridController : public OSGridController

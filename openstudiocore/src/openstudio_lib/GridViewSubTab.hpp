@@ -93,8 +93,6 @@ class GridViewSubTab : public QWidget
 
     void selectionCleared();
 
-    void gridRowSelected(OSItem*);
-
   protected slots :
 
     void onAddClicked();

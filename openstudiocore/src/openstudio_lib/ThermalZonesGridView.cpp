@@ -133,9 +133,6 @@ namespace openstudio {
     isConnected = connect(this, SIGNAL(selectionCleared()), gridView, SLOT(onSelectionCleared()));
     OS_ASSERT(isConnected);
 
-    isConnected = connect(gridView, SIGNAL(gridRowSelected(OSItem*)), this, SIGNAL(gridRowSelected(OSItem*)));
-    OS_ASSERT(isConnected);
-
     gridView->m_dropZone->hide();
 
     layout->addWidget(gridView, 0, Qt::AlignTop);

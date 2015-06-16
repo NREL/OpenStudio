@@ -670,8 +670,6 @@ signals:
 
   void toggleUnitsClicked(bool displayIP);
 
-  void gridRowSelected(OSItem*);
-
 public slots:
 
   virtual void onItemDropped(const OSItemId& itemId) = 0;

@@ -52,9 +52,6 @@ namespace openstudio {
     isConnected = connect(this, SIGNAL(selectionCleared()), m_gridView, SIGNAL(selectionCleared()));
     OS_ASSERT(isConnected);
 
-    isConnected = connect(m_gridView, SIGNAL(gridRowSelected(OSItem*)), this, SIGNAL(gridRowSelected(OSItem*)));
-    OS_ASSERT(isConnected);
-
     isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), this, SLOT(toggleUnits(bool)));
     OS_ASSERT(isConnected);
 

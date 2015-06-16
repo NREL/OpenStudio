@@ -74,9 +74,7 @@ namespace openstudio{
 
     void selectionCleared();
 
-    void gridRowSelected(OSItem*);
-
-    private slots:
+  private slots:
 
     void onDropZoneItemClicked(OSItem* item);
 
