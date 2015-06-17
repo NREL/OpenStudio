@@ -75,8 +75,6 @@ namespace detail {
 
     std::string endUseSubcategory() const;
 
-    bool isEndUseSubcategoryDefaulted() const;
-
     boost::optional<double> tankVolume() const;
 
     bool isTankVolumeAutosized() const;
@@ -87,37 +85,29 @@ namespace detail {
 
     std::string tankShape() const;
 
-    bool isTankShapeDefaulted() const;
-
     boost::optional<double> tankPerimeter() const;
 
-    boost::optional<double> maximumTemperatureLimit() const;
+    double maximumTemperatureLimit() const;
 
     std::string heaterPriorityControl() const;
-
-    bool isHeaterPriorityControlDefaulted() const;
 
     Schedule heater1SetpointTemperatureSchedule() const;
 
     double heater1DeadbandTemperatureDifference() const;
 
-    bool isHeater1DeadbandTemperatureDifferenceDefaulted() const;
-
     boost::optional<double> heater1Capacity() const;
 
     bool isHeater1CapacityAutosized() const;
 
-    boost::optional<double> heater1Height() const;
+    double heater1Height() const;
 
     Schedule heater2SetpointTemperatureSchedule() const;
 
     double heater2DeadbandTemperatureDifference() const;
 
-    bool isHeater2DeadbandTemperatureDifferenceDefaulted() const;
+    double heater2Capacity() const;
 
-    boost::optional<double> heater2Capacity() const;
-
-    boost::optional<double> heater2Height() const;
+    double heater2Height() const;
 
     std::string heaterFuelType() const;
 
@@ -125,31 +115,19 @@ namespace detail {
 
     double offCycleParasiticFuelConsumptionRate() const;
 
-    bool isOffCycleParasiticFuelConsumptionRateDefaulted() const;
-
-    boost::optional<std::string> offCycleParasiticFuelType() const;
+    std::string offCycleParasiticFuelType() const;
 
     double offCycleParasiticHeatFractiontoTank() const;
 
-    bool isOffCycleParasiticHeatFractiontoTankDefaulted() const;
-
     double offCycleParasiticHeight() const;
-
-    bool isOffCycleParasiticHeightDefaulted() const;
 
     double onCycleParasiticFuelConsumptionRate() const;
 
-    bool isOnCycleParasiticFuelConsumptionRateDefaulted() const;
-
-    boost::optional<std::string> onCycleParasiticFuelType() const;
+    std::string onCycleParasiticFuelType() const;
 
     double onCycleParasiticHeatFractiontoTank() const;
 
-    bool isOnCycleParasiticHeatFractiontoTankDefaulted() const;
-
     double onCycleParasiticHeight() const;
-
-    bool isOnCycleParasiticHeightDefaulted() const;
 
     std::string ambientTemperatureIndicator() const;
 
@@ -163,13 +141,9 @@ namespace detail {
 
     double skinLossFractiontoZone() const;
 
-    bool isSkinLossFractiontoZoneDefaulted() const;
-
     boost::optional<double> offCycleFlueLossCoefficienttoAmbientTemperature() const;
 
     double offCycleFlueLossFractiontoZone() const;
-
-    bool isOffCycleFlueLossFractiontoZoneDefaulted() const;
 
     boost::optional<double> peakUseFlowRate() const;
 
@@ -179,103 +153,57 @@ namespace detail {
 
     double useSideEffectiveness() const;
 
-    bool isUseSideEffectivenessDefaulted() const;
-
     double useSideInletHeight() const;
 
-    bool isUseSideInletHeightDefaulted() const;
-
     boost::optional<double> useSideOutletHeight() const;
-
-    bool isUseSideOutletHeightDefaulted() const;
 
     bool isUseSideOutletHeightAutocalculated() const;
 
     double sourceSideEffectiveness() const;
 
-    bool isSourceSideEffectivenessDefaulted() const;
-
     boost::optional<double> sourceSideInletHeight() const;
-
-    bool isSourceSideInletHeightDefaulted() const;
 
     bool isSourceSideInletHeightAutocalculated() const;
 
     double sourceSideOutletHeight() const;
 
-    bool isSourceSideOutletHeightDefaulted() const;
-
     std::string inletMode() const;
 
-    bool isInletModeDefaulted() const;
-
     boost::optional<double> useSideDesignFlowRate() const;
-
-    bool isUseSideDesignFlowRateDefaulted() const;
 
     bool isUseSideDesignFlowRateAutosized() const;
 
     boost::optional<double> sourceSideDesignFlowRate() const;
 
-    bool isSourceSideDesignFlowRateDefaulted() const;
-
     bool isSourceSideDesignFlowRateAutosized() const;
 
     double indirectWaterHeatingRecoveryTime() const;
 
-    bool isIndirectWaterHeatingRecoveryTimeDefaulted() const;
-
     int numberofNodes() const;
-
-    bool isNumberofNodesDefaulted() const;
 
     double additionalDestratificationConductivity() const;
 
-    bool isAdditionalDestratificationConductivityDefaulted() const;
-
     double node1AdditionalLossCoefficient() const;
-
-    bool isNode1AdditionalLossCoefficientDefaulted() const;
 
     double node2AdditionalLossCoefficient() const;
 
-    bool isNode2AdditionalLossCoefficientDefaulted() const;
-
     double node3AdditionalLossCoefficient() const;
-
-    bool isNode3AdditionalLossCoefficientDefaulted() const;
 
     double node4AdditionalLossCoefficient() const;
 
-    bool isNode4AdditionalLossCoefficientDefaulted() const;
-
     double node5AdditionalLossCoefficient() const;
-
-    bool isNode5AdditionalLossCoefficientDefaulted() const;
 
     double node6AdditionalLossCoefficient() const;
 
-    bool isNode6AdditionalLossCoefficientDefaulted() const;
-
     double node7AdditionalLossCoefficient() const;
-
-    bool isNode7AdditionalLossCoefficientDefaulted() const;
 
     double node8AdditionalLossCoefficient() const;
 
-    bool isNode8AdditionalLossCoefficientDefaulted() const;
-
     double node9AdditionalLossCoefficient() const;
-
-    bool isNode9AdditionalLossCoefficientDefaulted() const;
 
     double node10AdditionalLossCoefficient() const;
 
-    bool isNode10AdditionalLossCoefficientDefaulted() const;
-
     std::string sourceSideFlowControlMode() const;
-
-    bool isSourceSideFlowControlModeDefaulted() const;
 
     boost::optional<Schedule> indirectAlternateSetpointTemperatureSchedule() const;
 
@@ -284,8 +212,6 @@ namespace detail {
     //@{
 
     void setEndUseSubcategory(std::string endUseSubcategory);
-
-    void resetEndUseSubcategory();
 
     bool setTankVolume(boost::optional<double> tankVolume);
 
@@ -297,49 +223,31 @@ namespace detail {
 
     bool setTankShape(std::string tankShape);
 
-    void resetTankShape();
-
     bool setTankPerimeter(boost::optional<double> tankPerimeter);
 
     void resetTankPerimeter();
 
-    void setMaximumTemperatureLimit(boost::optional<double> maximumTemperatureLimit);
-
-    void resetMaximumTemperatureLimit();
+    void setMaximumTemperatureLimit(double maximumTemperatureLimit);
 
     bool setHeaterPriorityControl(std::string heaterPriorityControl);
-
-    void resetHeaterPriorityControl();
 
     bool setHeater1SetpointTemperatureSchedule(Schedule& schedule);
 
     bool setHeater1DeadbandTemperatureDifference(double heater1DeadbandTemperatureDifference);
 
-    void resetHeater1DeadbandTemperatureDifference();
-
     bool setHeater1Capacity(boost::optional<double> heater1Capacity);
-
-    void resetHeater1Capacity();
 
     void autosizeHeater1Capacity();
 
-    bool setHeater1Height(boost::optional<double> heater1Height);
-
-    void resetHeater1Height();
+    bool setHeater1Height(double heater1Height);
 
     bool setHeater2SetpointTemperatureSchedule(Schedule& schedule);
 
     bool setHeater2DeadbandTemperatureDifference(double heater2DeadbandTemperatureDifference);
 
-    void resetHeater2DeadbandTemperatureDifference();
+    bool setHeater2Capacity(double heater2Capacity);
 
-    bool setHeater2Capacity(boost::optional<double> heater2Capacity);
-
-    void resetHeater2Capacity();
-
-    bool setHeater2Height(boost::optional<double> heater2Height);
-
-    void resetHeater2Height();
+    bool setHeater2Height(double heater2Height);
 
     bool setHeaterFuelType(std::string heaterFuelType);
 
@@ -347,35 +255,19 @@ namespace detail {
 
     bool setOffCycleParasiticFuelConsumptionRate(double offCycleParasiticFuelConsumptionRate);
 
-    void resetOffCycleParasiticFuelConsumptionRate();
-
-    bool setOffCycleParasiticFuelType(boost::optional<std::string> offCycleParasiticFuelType);
-
-    void resetOffCycleParasiticFuelType();
+    bool setOffCycleParasiticFuelType(std::string offCycleParasiticFuelType);
 
     bool setOffCycleParasiticHeatFractiontoTank(double offCycleParasiticHeatFractiontoTank);
 
-    void resetOffCycleParasiticHeatFractiontoTank();
-
     bool setOffCycleParasiticHeight(double offCycleParasiticHeight);
-
-    void resetOffCycleParasiticHeight();
 
     bool setOnCycleParasiticFuelConsumptionRate(double onCycleParasiticFuelConsumptionRate);
 
-    void resetOnCycleParasiticFuelConsumptionRate();
-
-    bool setOnCycleParasiticFuelType(boost::optional<std::string> onCycleParasiticFuelType);
-
-    void resetOnCycleParasiticFuelType();
+    bool setOnCycleParasiticFuelType(std::string onCycleParasiticFuelType);
 
     bool setOnCycleParasiticHeatFractiontoTank(double onCycleParasiticHeatFractiontoTank);
 
-    void resetOnCycleParasiticHeatFractiontoTank();
-
     bool setOnCycleParasiticHeight(double onCycleParasiticHeight);
-
-    void resetOnCycleParasiticHeight();
 
     bool setAmbientTemperatureIndicator(std::string ambientTemperatureIndicator);
 
@@ -397,15 +289,11 @@ namespace detail {
 
     bool setSkinLossFractiontoZone(double skinLossFractiontoZone);
 
-    void resetSkinLossFractiontoZone();
-
     bool setOffCycleFlueLossCoefficienttoAmbientTemperature(boost::optional<double> offCycleFlueLossCoefficienttoAmbientTemperature);
 
     void resetOffCycleFlueLossCoefficienttoAmbientTemperature();
 
     bool setOffCycleFlueLossFractiontoZone(double offCycleFlueLossFractiontoZone);
-
-    void resetOffCycleFlueLossFractiontoZone();
 
     bool setPeakUseFlowRate(boost::optional<double> peakUseFlowRate);
 
@@ -421,103 +309,57 @@ namespace detail {
 
     bool setUseSideEffectiveness(double useSideEffectiveness);
 
-    void resetUseSideEffectiveness();
-
     bool setUseSideInletHeight(double useSideInletHeight);
 
-    void resetUseSideInletHeight();
-
     bool setUseSideOutletHeight(boost::optional<double> useSideOutletHeight);
-
-    void resetUseSideOutletHeight();
 
     void autocalculateUseSideOutletHeight();
 
     bool setSourceSideEffectiveness(double sourceSideEffectiveness);
 
-    void resetSourceSideEffectiveness();
-
     bool setSourceSideInletHeight(boost::optional<double> sourceSideInletHeight);
-
-    void resetSourceSideInletHeight();
 
     void autocalculateSourceSideInletHeight();
 
     bool setSourceSideOutletHeight(double sourceSideOutletHeight);
 
-    void resetSourceSideOutletHeight();
-
     bool setInletMode(std::string inletMode);
 
-    void resetInletMode();
-
     bool setUseSideDesignFlowRate(boost::optional<double> useSideDesignFlowRate);
-
-    void resetUseSideDesignFlowRate();
 
     void autosizeUseSideDesignFlowRate();
 
     bool setSourceSideDesignFlowRate(boost::optional<double> sourceSideDesignFlowRate);
 
-    void resetSourceSideDesignFlowRate();
-
     void autosizeSourceSideDesignFlowRate();
 
     bool setIndirectWaterHeatingRecoveryTime(double indirectWaterHeatingRecoveryTime);
 
-    void resetIndirectWaterHeatingRecoveryTime();
-
     bool setNumberofNodes(int numberofNodes);
-
-    void resetNumberofNodes();
 
     bool setAdditionalDestratificationConductivity(double additionalDestratificationConductivity);
 
-    void resetAdditionalDestratificationConductivity();
-
     void setNode1AdditionalLossCoefficient(double node1AdditionalLossCoefficient);
-
-    void resetNode1AdditionalLossCoefficient();
 
     void setNode2AdditionalLossCoefficient(double node2AdditionalLossCoefficient);
 
-    void resetNode2AdditionalLossCoefficient();
-
     void setNode3AdditionalLossCoefficient(double node3AdditionalLossCoefficient);
-
-    void resetNode3AdditionalLossCoefficient();
 
     void setNode4AdditionalLossCoefficient(double node4AdditionalLossCoefficient);
 
-    void resetNode4AdditionalLossCoefficient();
-
     void setNode5AdditionalLossCoefficient(double node5AdditionalLossCoefficient);
-
-    void resetNode5AdditionalLossCoefficient();
 
     void setNode6AdditionalLossCoefficient(double node6AdditionalLossCoefficient);
 
-    void resetNode6AdditionalLossCoefficient();
-
     void setNode7AdditionalLossCoefficient(double node7AdditionalLossCoefficient);
-
-    void resetNode7AdditionalLossCoefficient();
 
     void setNode8AdditionalLossCoefficient(double node8AdditionalLossCoefficient);
 
-    void resetNode8AdditionalLossCoefficient();
-
     void setNode9AdditionalLossCoefficient(double node9AdditionalLossCoefficient);
-
-    void resetNode9AdditionalLossCoefficient();
 
     void setNode10AdditionalLossCoefficient(double node10AdditionalLossCoefficient);
 
-    void resetNode10AdditionalLossCoefficient();
-
     bool setSourceSideFlowControlMode(std::string sourceSideFlowControlMode);
-
-    void resetSourceSideFlowControlMode();
 
     bool setIndirectAlternateSetpointTemperatureSchedule(Schedule& schedule);
 
@@ -538,10 +380,6 @@ namespace detail {
     // objects should be returned as boost::optionals
     boost::optional<Schedule> optionalHeater1SetpointTemperatureSchedule() const;
     boost::optional<Schedule> optionalHeater2SetpointTemperatureSchedule() const;
-    boost::optional<Connection> optionalUseSideInletNode() const;
-    boost::optional<Connection> optionalUseSideOutletNode() const;
-    boost::optional<Connection> optionalSourceSideInletNode() const;
-    boost::optional<Connection> optionalSourceSideOutletNode() const;
   };
 
 } // detail
