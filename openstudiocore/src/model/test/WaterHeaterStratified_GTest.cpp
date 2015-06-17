@@ -21,6 +21,10 @@
 #include "ModelFixture.hpp"
 #include "../WaterHeaterStratified.hpp"
 #include "../WaterHeaterStratified_Impl.hpp"
+#include "../WaterUseConnections.hpp"
+#include "../WaterUseEquipment.hpp"
+#include "../WaterUseEquipmentDefinition.hpp"
+#include "../PlantLoop.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -36,4 +40,32 @@ TEST_F(ModelFixture, WaterHeaterStratified_WaterHeaterStratified)
      exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
+}
+
+TEST_F(ModelFixture, WaterHeaterStratified_addToPlantLoop)
+{
+    Model m;
+    WaterHeaterStratified waterHeaterStratified(m);
+
+    PlantLoop plantLoop(m);
+    ASSERT_EQ( 5u, plantLoop.supplyComponents().size() );
+    ASSERT_EQ( 5u, plantLoop.demandComponents().size() );
+
+    WaterUseConnections waterUseConnections(m);
+
+    WaterUseEquipmentDefinition definition(m);
+
+    WaterUseEquipment e1(definition);
+    WaterUseEquipment e2(definition);
+    WaterUseEquipment e3(definition);
+
+    waterUseConnections.addWaterUseEquipment(e1);
+    waterUseConnections.addWaterUseEquipment(e2);
+    waterUseConnections.addWaterUseEquipment(e3);
+
+    EXPECT_EQ(3u, waterUseConnections.waterUseEquipment().size());
+
+    plantLoop.addDemandBranchForComponent(waterUseConnections);
+    ASSERT_EQ( 5u, plantLoop.supplyComponents().size() );
+    ASSERT_EQ( 7u, plantLoop.demandComponents().size() );
 }
