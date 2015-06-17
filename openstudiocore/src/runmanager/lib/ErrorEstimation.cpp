@@ -460,17 +460,9 @@ namespace openstudio {
       return itr->second;
     }
 
-    FuelUses ErrorEstimation::getUses(const std::string &t_sourceName, const isomodel::UserModel &t_userModel, const isomodel::ISOResults &t_results) const
+    FuelUses ErrorEstimation::getUses(const double t_confidence, const isomodel::UserModel &t_userModel, const isomodel::ISOResults &t_results)
     {
-      auto itr = m_confidences.find(t_sourceName);
-
-      if (itr == m_confidences.end())
-      {
-        throw std::runtime_error("Unknown source name, no registered confidence level");
-      }
-
-      FuelUses retval(itr->second);
-
+      FuelUses retval(t_confidence);
 
       std::vector<EndUseFuelType> fuelTypes = EndUses::fuelTypes();
 
@@ -486,10 +478,44 @@ namespace openstudio {
 
         try {
           // the fuel uses in this case seem to be stored in kWh/m2
+          // convert from kWh to KJ
           FuelUse fuse(openstudio::FuelType(fuelType.valueName()), value * 3600000 * t_userModel.floorArea(), *openstudio::createUnit("J"));
           retval += fuse;
         } catch (const std::exception &e) {
           LOG(Error, "Unmatched fuel type " << e.what());
+        }
+      }
+
+      return retval;
+    }
+
+    FuelUses ErrorEstimation::getUses(const std::string &t_sourceName, const isomodel::UserModel &t_userModel, const isomodel::ISOResults &t_results) const
+    {
+      auto itr = m_confidences.find(t_sourceName);
+
+      if (itr == m_confidences.end())
+      {
+        throw std::runtime_error("Unknown source name, no registered confidence level");
+      }
+
+      return getUses(itr->second, t_userModel, t_results);
+
+    }
+
+    FuelUses ErrorEstimation::getUses(const double t_confidence, const SqlFile &t_sql)
+    {
+      FuelUses retval(t_confidence);
+
+      std::vector<SummaryData> sd = t_sql.getSummaryData();
+
+      for (std::vector<SummaryData>::const_iterator itr = sd.begin();
+          itr != sd.end();
+          ++itr)
+      {
+        if (itr->reportingFrequency == openstudio::ReportingFrequency::Hourly)
+        {
+          FuelUse fuse(itr->fuelType, itr->value, itr->units);
+          retval += fuse;
         }
       }
 
@@ -505,22 +531,7 @@ namespace openstudio {
         throw std::runtime_error("Unknown source name, no registered confidence level");
       }
 
-      std::vector<SummaryData> sd = t_sql.getSummaryData();
-
-      FuelUses retval(itr->second);
-
-      for (std::vector<SummaryData>::const_iterator itr = sd.begin();
-          itr != sd.end();
-          ++itr)
-      {
-        if (itr->reportingFrequency == openstudio::ReportingFrequency::Hourly)
-        {
-          FuelUse fuse(itr->fuelType, itr->value, itr->units);
-          retval += fuse;
-        }
-      }
-
-      return retval;
+      return getUses(itr->second, t_sql);
     }
   }
 }

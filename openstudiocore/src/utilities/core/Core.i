@@ -13,6 +13,7 @@
   #include <utilities/core/Compare.hpp>
   #include <utilities/core/Optional.hpp>
   #include <utilities/core/ApplicationPathHelpers.hpp>  
+  #include <utilities/core/Encoding.hpp>  
   
   #include <utilities/math/FloatCompare.hpp>
   
@@ -37,6 +38,7 @@
 %include <utilities/core/ApplicationPathHelpers.hpp>
 %include <utilities/core/PathWatcher.i>
 %include <utilities/core/String.hpp>
+%include <utilities/core/Encoding.hpp>
 %include <utilities/core/StringHelpers.hpp>
 %include <utilities/core/Singleton.i>
 %include <utilities/core/Application.i>
@@ -88,5 +90,7 @@
 %template(DoublesLessThanOrEqual) openstudio::lessThanOrEqual<double>;
 %template(DoublesGreaterThanOrEqual) openstudio::greaterThanOrEqual<double>;
 %template(DoublesRelativeError) openstudio::relativeError<double>;
+
+
 
 #endif // UTILITIES_CORE_CORE_I

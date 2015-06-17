@@ -66,7 +66,7 @@ namespace boost {
         return boost::any_cast<double>(*self);
       }
       
-      std::string __str__() const{
+      std::string SWIG_TO_STRING_NAME() const{
         return boost::any_cast<std::string>(*self);
       }
       
@@ -156,7 +156,7 @@ namespace boost {
 %template(OptionalIntVector) boost::optional<std::vector<int> >;
 
 %extend boost::optional<int>{
-  std::string __str__() const{
+  std::string SWIG_TO_STRING_NAME() const{
     std::ostringstream os;
     if (self->is_initialized()){
       os << self->get();
@@ -180,7 +180,7 @@ namespace boost {
 };
 
 %extend boost::optional<unsigned>{
-  std::string __str__() const{
+  std::string SWIG_TO_STRING_NAME() const{
     std::ostringstream os;
     if (self->is_initialized()){
       os << self->get();
@@ -204,7 +204,7 @@ namespace boost {
 };
 
 %extend boost::optional<double>{
-  std::string __str__() const{
+  std::string SWIG_TO_STRING_NAME() const{
     std::ostringstream os;
     if (self->is_initialized()){
       os << self->get();
@@ -228,7 +228,7 @@ namespace boost {
 };
 
 %extend boost::optional<std::string>{
-  std::string __str__() const{
+  std::string SWIG_TO_STRING_NAME() const{
     if (self->is_initialized()){
       return self->get();
     }
@@ -237,7 +237,7 @@ namespace boost {
 };
 
 %extend boost::optional<std::wstring>{
-  std::wstring __str__() const{
+  std::wstring SWIG_TO_STRING_NAME() const{
     if (self->is_initialized()){
       return self->get();
     }

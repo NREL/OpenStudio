@@ -93,6 +93,18 @@ option(BUILD_REGRESSIONS "Build regressions" OFF)
 # This is a convenience for Visual Studio users
 option(ENABLE_TEST_RUNNER_TARGETS "Create test runner targets" OFF)
 
+option(PACKAGE_RADIANCE "Package Radiance" OFF)
+mark_as_advanced(PACKAGE_RADIANCE)
+
+if (PACKAGE_RADIANCE)
+  set(RADIANCE_DIR "" CACHE PATH "Location of Radiance to Package")
+  mark_as_advanced(CLEAR RADIANCE_DIR)
+else()
+  set(RADIANCE_DIR "" CACHE PATH "Location of Radiance to Package")
+  mark_as_advanced(RADIANCE_DIR)
+endif()
+
+
 set(MAXIMIZE_CPU_USAGE OFF CACHE BOOL "Attempt to fully load the CPU during builds")
 mark_as_advanced(MAXIMIZE_CPU_USAGE)
 
@@ -822,6 +834,8 @@ ExternalProject_Add(OSCore
     -DOPENSSL_ROOT_DIR:PATH=${OPENSSL_ROOT_DIR}
     -DPATCH_EXE:PATH=${PATCH_EXE}
     -DMAXIMIZE_CPU_USAGE:BOOL=${MAXIMIZE_CPU_USAGE}
+    -DPACKAGE_RADIANCE:BOOL=${PACKAGE_RADIANCE}
+    -DRADIANCE_DIR:PATH=${RADIANCE_DIR}
     INSTALL_COMMAND ""
 )
 

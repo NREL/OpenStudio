@@ -20,6 +20,8 @@
 #include "RunManager.hpp"
 #include "RunManagerStatus.hpp"
 #include "JSON.hpp"
+#include "WeatherFileFinder.hpp"
+#include "ErrorEstimation.hpp"
 
 #include "Workflow.hpp"
 #include "RunManager_Impl.hpp"
@@ -27,7 +29,10 @@
 
 #include "../../utilities/core/Path.hpp"
 #include "../../utilities/core/PathHelpers.hpp"
+#include "../../utilities/core/ApplicationPathHelpers.hpp"
 #include "../../utilities/core/Application.hpp"
+
+#include "../../utilities/sql/SqlFile.hpp"
 
 #include "../../model/Model.hpp"
 #include "../../model/ShadowCalculation.hpp"
@@ -43,11 +48,13 @@
 #include "../../model/DesignDay.hpp"
 #include "../../model/DesignDay_Impl.hpp"
 
+#include "../../isomodel/ForwardTranslator.hpp"
 
 #include <QThread>
 #include <QDir>
 #include <QMutex>
 #include <QMutexLocker>
+#include <QTemporaryDir>
 
 #include <boost/filesystem.hpp>
 
@@ -602,5 +609,131 @@ namespace runmanager {
     }
   }
 
+
+  SimulationResults RunManager::runSimulation(const openstudio::model::Model &t_model, const SimulationOptions &t_options) 
+  {
+
+    openstudio::runmanager::RunManager runmanager;
+    openstudio::runmanager::ConfigOptions configOptions;
+    configOptions.findTools(false, true, false, false);
+    runmanager.setConfigOptions(configOptions);
+
+
+    const openstudio::path epwDir = [&]()->openstudio::path{
+      if (!t_options.epwDir().empty()) { 
+        return t_options.epwDir(); 
+      } else { 
+        return configOptions.getDefaultEPWLocation(); 
+      }
+    }();
+
+    const openstudio::path epwPath =
+        WeatherFileFinder::find(t_model.toIdfFile(), epwDir, t_options.epwFile(), t_options.locationName());
+
+    SimulationResults results;
+
+    results.setEpwUsed(epwPath);
+
+    if (epwPath.empty()) {
+      results.setErrors(
+          JobErrors(openstudio::ruleset::OSResultValue::Fail, { {ErrorType::Error, "Unable to determine EPW"} }));
+      return results;
+    }
+
+    auto newM = openstudio::model::Model(t_model.clone());
+
+    if (t_options.simplifyModelForPerformance()) {
+      openstudio::runmanager::RunManager::simplifyModelForPerformance(newM);
+    }
+
+    if (t_options.runISOModel())
+    {
+      try {
+        openstudio::isomodel::ForwardTranslator translator;
+        auto userModel = translator.translateModel(newM);
+        userModel.setWeatherFilePath(epwPath);
+        const auto simModel = userModel.toSimModel();
+        const auto isoResults = simModel.simulate();
+
+        results.setISOFuelUses(ErrorEstimation::getUses(userModel, isoResults).data());
+        //results.setISOResults(isoResults);
+      } catch (const std::exception &e) {
+        results.setErrors(
+            JobErrors(openstudio::ruleset::OSResultValue::Fail, { {ErrorType::Error, std::string("Error executing ISO Model: ") + e.what()} }));
+        return results;
+      }
+    }
+
+    QTemporaryDir tempdir;
+
+    if (t_options.runEnergyPlus())
+    {
+      // Run the EnergyPlus Simulation
+      openstudio::runmanager::Workflow workflow;
+
+      const openstudio::path radiancePath = [&]()->openstudio::path {
+        std::vector<openstudio::runmanager::ToolInfo> rad = runmanager.getConfigOptions().getTools().getAllByName("rad").tools();
+
+        if (!rad.empty())
+        {
+          return rad.back().localBinPath.parent_path();
+        } else {
+          return openstudio::path();
+        }
+      }();
+
+      workflow.addStandardWorkflow(
+          openstudio::path(), // Path to scripts directory; note, we aren't using scripts.
+          configOptions.getTools().getAllByName("ruby").tools().size() > 0, // Whether ruby is installed.
+          openstudio::getOpenStudioRubyIncludePath(), // Ruby include path.
+          t_options.useRadiance(),
+          radiancePath);
+
+      workflow.add(configOptions.getTools());
+      workflow.parallelizeEnergyPlus(t_options.parallelSplits(), t_options.parallelOffset());
+      workflow.addParam(openstudio::runmanager::JobParam("flatoutdir"));
+
+      const auto outdir = openstudio::toPath(tempdir.path()) / openstudio::toPath("run");
+      LOG(Debug, "Running simulation in " << openstudio::toString(outdir));
+      const auto osmPath = openstudio::toPath(tempdir.path()) / openstudio::toPath("in.osm");
+      boost::filesystem::create_directory(outdir);
+
+      // Tell the workflow where to search for weather files.
+      const std::vector<openstudio::URLSearchPath> urlSearchVec{outdir};
+      // urlSearchVec.add(new openstudio.URLSearchPath(new openstudio.path(fs.realpathSync('.'))));
+
+
+      newM.save(osmPath);
+
+      const auto job = workflow.create(outdir, osmPath, epwPath, urlSearchVec);
+
+      // Run the job and wait for completion.
+      runmanager.enqueue(job, true);
+      runmanager.waitForFinished();
+      LOG(Debug, "Simulation Complete");
+
+      results.setErrors(job.treeErrors());
+
+      // Step: Do something with the results;
+      const auto outfiles = job.treeOutputFiles();
+      const auto sqlfiles = outfiles.getAllByExtension("sql").files();
+
+      LOG(Debug, "SQLFiles Found: " << sqlfiles.size());
+
+      try {
+        const auto sqlpath = outfiles.getLastByExtension("sql").fullPath;
+        LOG(Debug, "Using SQL File: " << openstudio::toString(sqlpath));
+        const openstudio::SqlFile sqlfile(sqlpath);
+        results.setEnergyPlusFuelUses(ErrorEstimation::getUses(sqlfile).data());
+        //results.setSqlFile(sqlfile);
+      } catch (const std::exception &) {
+      }
+
+
+    }
+
+    return results;
+  }
 }
 }
+

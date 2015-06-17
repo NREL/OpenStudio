@@ -265,6 +265,7 @@ set(runmanager_test_src
   Test/ExternallyManagedJobs_GTest.cpp
   Test/RunJSONWorkflow_GTest.cpp
   Test/JobErrors_GTest.cpp
+  Test/RunManagerSimpleInterface_GTest.cpp
   "${CMAKE_BINARY_DIR}/src/runmanager/Test/ToolBin.hxx"
 )
 

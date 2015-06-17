@@ -58,7 +58,7 @@
 %include <utilities/geometry/Intersection.hpp>
 
 %extend openstudio::Vector3d{
-  std::string __str__() const {
+  std::string SWIG_TO_STRING_NAME() const {
     std::ostringstream os;
     os << *self;
     return os.str();
@@ -66,7 +66,7 @@
 }
 
 %extend openstudio::Point3d{
-  std::string __str__() const {
+  std::string SWIG_TO_STRING_NAME() const {
     std::ostringstream os;
     os << *self;
     return os.str();

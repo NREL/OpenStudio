@@ -18,7 +18,7 @@
 %include <utilities/units/OSQuantityVector.hpp>
 
 %extend openstudio::Quantity {
-  std::string __str__() const{
+  std::string SWIG_TO_STRING_NAME() const{
     std::stringstream ss;
     ss << *self;
     return ss.str();

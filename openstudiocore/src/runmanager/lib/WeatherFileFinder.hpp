@@ -42,6 +42,17 @@ namespace runmanager {
           const boost::optional<std::string> &t_filelocationname,
           const boost::optional<std::string> &t_weatherfilename);
 
+      /// Returns the path to the weather file that should be used for the EnergyPlus simulation
+      ///
+      /// \param[in] t_epwdir Directory to scan for weather files
+      /// \param[in] t_epwfile Specific file location to check
+      /// \param[in] t_filelocationname Location name returned from extractDetails
+      /// \param[in] t_weatherfilename Weather file name returned from extractDetails
+      static openstudio::path find(const openstudio::path &t_epwdir,
+          const openstudio::path &t_epwfile,
+          const boost::optional<std::string> &t_filelocationname,
+          const boost::optional<std::string> &t_weatherfilename);
+
       /// Extracts the details of the IDF needed for simulation and weather file finding
       ///
       /// \param[in] t_idffile IDF to extract details form
@@ -53,6 +64,18 @@ namespace runmanager {
           ToolVersion &t_version,
           boost::optional<std::string> &t_filelocationname,
           boost::optional<std::string> &t_weatherfilename);
+
+      static openstudio::path find(const IdfFile &t_idffile,
+          const openstudio::path &t_epwdir,
+          const openstudio::path &t_epwfile,
+          const std::string &t_locationName = "")
+      {
+        ToolVersion tv;
+        boost::optional<std::string> filelocation;
+        boost::optional<std::string> weatherfilename;
+        extractDetails(t_idffile, tv, filelocation, weatherfilename);
+        return find(t_epwdir, t_epwfile, t_locationName.empty()?filelocation:t_locationName, weatherfilename);
+      }
 
     private:
           /// Return an ordered set of name parts for a weather name
