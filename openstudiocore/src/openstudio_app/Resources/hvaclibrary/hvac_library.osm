@@ -3238,12 +3238,26 @@ OS:Refrigeration:Case,
   {57b587d9-11b3-4700-a362-25f9ac3035d5}, !- Case Defrost Schedule Name
   {57b587d9-11b3-4700-a362-25f9ac3035d5}, !- Case Defrost Drip-Down Schedule Name
   None,                                   !- Defrost Energy Correction Curve Type
-  ,                                       !- Defrost Energy Correction Curve Name
+  {dde2f531-75bc-4d59-94cd-01bf3bf4bcc7}, !- Defrost Energy Correction Curve Name
   0,                                      !- Under Case HVAC Return Air Fraction
   ,                                       !- Refrigerated Case Restocking Schedule Name
   ,                                       !- Case Credit Fraction Schedule Name
   -5.56,                                  !- Design Evaporator Temperature or Brine Inlet Temperature {C}
   ;                                       !- Average Refrigerant Charge Inventory {kg/m}
+
+OS:Curve:Cubic,
+  {dde2f531-75bc-4d59-94cd-01bf3bf4bcc7},   !- Handle
+  Refrigerated Case Defrost Modifier Curve, !- Name
+  1,                                        !- Coefficient1 Constant
+  0,                                        !- Coefficient2 x
+  0,                                        !- Coefficient3 x**2
+  0,                                        !- Coefficient4 x**3
+  0,                                        !- Minimum Value of x {BasedOnField A2}
+  1,                                        !- Maximum Value of x {BasedOnField A2}
+  ,                                         !- Minimum Curve Output {BasedOnField A3}
+  ,                                         !- Maximum Curve Output {BasedOnField A3}
+  ,                                         !- Input Unit Type for X
+  ;                                         !- Output Unit Type
 
 OS:Curve:Cubic,
   {012a63c6-2590-4f3d-a487-c600bf72ad75}, !- Handle
