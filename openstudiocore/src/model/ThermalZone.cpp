@@ -1416,6 +1416,7 @@ namespace detail {
 
     //detach it from the zone air node
     Node airNode = this->zoneAirNode();
+    airNode.disconnect();
 
     airNode.remove();
 
