@@ -72,8 +72,6 @@ class VariableGroupListController : public OSListController
 
   VariableGroupListController(bool filterFixed, BaseApp *t_baseApp);
 
-  void addItem(QSharedPointer<OSListItem> item);
-
   QSharedPointer<OSListItem> itemAt(int i) override;
 
   int count() override;
