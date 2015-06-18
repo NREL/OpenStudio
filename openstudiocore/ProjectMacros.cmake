@@ -817,10 +817,6 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
     if(BUILD_NODE_MODULES)
       include_directories("${NODE_INCLUDE_DIR}" "${NODE_INCLUDE_DIR}/deps/v8/include" "${NODE_INCLUDE_DIR}/deps/uv/include" "${NODE_INCLUDE_DIR}/src")
-      #include_directories("/Users/kbenne/Development/electron/vendor/node" 
-      #  "/Users/kbenne/Development/electron/vendor/node/deps/v8/include" 
-      #  "/Users/kbenne/Development/electron/vendor/node/deps/uv/include" 
-      #  "/Users/kbenne/Development/electron/vendor/node/src")
     else()
       include_directories(${V8_INCLUDE_DIR})
     endif()

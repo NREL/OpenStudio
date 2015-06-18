@@ -205,7 +205,8 @@ if(BUILD_V8_BINDINGS)
 
   if(BUILD_NODE_MODULES)
     # Build Node for linking to Node modules
-    option(BUILD_NODE "Build Node" ON)
+    #option(BUILD_NODE "Build Node" ON)
+    set(NODE_INCLUDE_DIR "" CACHE PATH "Path to node" )
   else()
     option(BUILD_V8 "Build V8" ON)
   endif()
@@ -431,21 +432,12 @@ else()
 endif()
 
 
-find_package(SWIG 3.0.0)
+find_package(SWIG 3.0.5)
 mark_as_advanced(
   SWIG_DIR
   SWIG_EXECUTABLE
   SWIG_VERSION
 )
-
-# Currently MacOS (with swig < 3.0.3) and V8 require special builds
-# as of 2015-02-05. This should be re-checked after swig > 3.0.5 is released.
-# 64-bit MSVC also requires BUILD_SWIG
-if(SWIG_FOUND AND NOT BUILD_V8_BINDINGS AND NOT (APPLE AND ${SWIG_VERSION} VERSION_LESS "3.0.3") AND NOT (WIN32 AND MSVC AND CMAKE_CL_64))
-  option(BUILD_SWIG "Build SWIG" OFF)
-else()
-  option(BUILD_SWIG "Build SWIG" ON)
-endif()
 
 if(NOT WIN32)
   find_program(RUBY_EXECUTABLE NAMES ruby2.0 ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH)
@@ -472,7 +464,7 @@ elseif(UNIX)
 endif()
 
 if(NOT BUILD_SWIG)
-  if(${SWIG_VERSION} VERSION_LESS "2.0.10")
+  if(${SWIG_VERSION} VERSION_LESS "3.0.5")
     set(BUILD_SWIG ON)
   endif()
 endif()
@@ -788,6 +780,7 @@ ExternalProject_Add(OSCore
     -DBUILD_JAVA_BINDINGS:BOOL=${BUILD_JAVA_BINDINGS}
     -DBUILD_V8_BINDINGS:BOOL=${BUILD_V8_BINDINGS}
     -DBUILD_NODE_MODULES:BOOL=${BUILD_NODE_MODULES}
+    -DNODE_INCLUDE_DIR:BOOL=${NODE_INCLUDE_DIR}
     -DBUILD_PYTHON_BINDINGS:BOOL=${BUILD_PYTHON_BINDINGS}
     -DBUILD_TESTING:BOOL=${BUILD_TESTING}
     -DBUILD_PACKAGE:BOOL=${BUILD_PACKAGE}
@@ -826,7 +819,7 @@ ExternalProject_Add(OSCore
     -DSWIG_EXECUTABLE:STRING=${SWIG_EXECUTABLE}
     -DRUBY_EXECUTABLE:STRING=${RUBY_EXECUTABLE}
     -DNODE_BIN_DIR:STRING=${NODE_BIN_DIR}
-    -DNODE_INCLUDE_DIR:STRING=${NODE_INCLUDE_DIR}
+    -DNODE_INCLUDE_DIR:PATH=${NODE_INCLUDE_DIR}
     -DV8_INCLUDE_DIR:STRING=${V8_INCLUDE_DIR}
     -DRUBY_LIBRARY:STRING=${RUBY_LIBRARY}
     -DDOXYGEN_EXECUTABLE:STRING=${DOXYGEN_EXECUTABLE}
