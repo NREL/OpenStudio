@@ -527,6 +527,15 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
   ,                                       !- Effectiveness Flow Ratio Modifier Curve Name
   0.1;                                    !- Water Pump Power Sizing Factor {W/(m3/s)}
 
+OS:AirTerminal:SingleDuct:VAV:HeatAndCool:NoReheat,
+  {bf4b3859-f66c-48ce-b600-88c7d76d5d5e}, !- Handle
+  VAV Heat And Cool No Reheat, !- Name
+  ,                                       !- Availability Schedule
+  ,                                       !- Air Outlet
+  ,                                       !- Air Inlet
+  autosize,                               !- Maximum Air Flow Rate {m3/s}
+  0;                                      !- Zone Minimum Air Flow Fraction
+
 OS:AirTerminal:SingleDuct:InletSideMixer,
   {2894623e-fbd9-4162-bf36-c674ee542793}, !- Handle
   Inlet Side Mixer,                       !- Name
