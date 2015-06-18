@@ -793,7 +793,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     #file(MAKE_DIRECTORY ${CSHARP_GENERATED_SRC_DIR})
 
     if(BUILD_NODE_MODULES)
-      set(V8_DEFINES "-DBUILD_NODE_MODULE")
+      set(V8_DEFINES "-DBUILD_NODE_MODULE" "-DV8_VERSION=0x040277"  )
       set(SWIG_ENGINE "-node")
     else()
       set(V8_DEFINES "")
@@ -810,13 +810,17 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
               "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src"
               -module "${MODULE}"
               -o "${SWIG_WRAPPER_FULL_PATH}"
-              "${SWIG_DEFINES}" ${V8_DEFINES} ${SWIG_COMMON} ${KEY_I_FILE}
+              "${SWIG_DEFINES}" ${V8_DEFINES} ${SWIG_COMMON} ${KEY_I_FILE} 
               DEPENDS ${this_depends}
 
     )
 
     if(BUILD_NODE_MODULES)
       include_directories("${NODE_INCLUDE_DIR}" "${NODE_INCLUDE_DIR}/deps/v8/include" "${NODE_INCLUDE_DIR}/deps/uv/include" "${NODE_INCLUDE_DIR}/src")
+      #include_directories("/Users/kbenne/Development/electron/vendor/node" 
+      #  "/Users/kbenne/Development/electron/vendor/node/deps/v8/include" 
+      #  "/Users/kbenne/Development/electron/vendor/node/deps/uv/include" 
+      #  "/Users/kbenne/Development/electron/vendor/node/src")
     else()
       include_directories(${V8_INCLUDE_DIR})
     endif()

@@ -57,7 +57,7 @@
     try {
       $action
     } catch (const std::exception &e) {
-      return v8::ThrowException(v8::String::New(e.what()));
+      SWIGV8_THROW_EXCEPTION(SWIGV8_STRING_NEW(e.what()));
     }
   }
 
