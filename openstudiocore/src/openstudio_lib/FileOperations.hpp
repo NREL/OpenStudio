@@ -92,18 +92,18 @@ namespace openstudio {
   // Creates and saves the run manager database, overwriting previous database.
   OPENSTUDIO_API bool saveRunManagerDatabase(const openstudio::path& osmPath, const openstudio::path& modelTempDir, 
                                              bool useRadianceForDaylightingCalculations,
-                                             QWidget* parent = NULL);
+                                             QWidget* parent = nullptr);
   OPENSTUDIO_API bool saveRunManagerDatabase(const openstudio::path& osmPath, const openstudio::path& modelTempDir, 
                                              const std::map<openstudio::path,std::vector<ruleset::UserScriptInfo> >& userScriptsByFolder,
                                              bool useRadianceForDaylightingCalculations,
-                                             QWidget* parent = NULL);
+                                             QWidget* parent = nullptr);
 
   // Pause the run manager
   OPENSTUDIO_API void pauseRunManager(openstudio::runmanager::RunManager& rm);
 
   // Start the run manager
   OPENSTUDIO_API void startRunManager(openstudio::runmanager::RunManager& rm, const openstudio::path& osmPath, const openstudio::path& modelTempDir,
-      bool useRadianceForDaylightingCalculations, bool requireCalibrationReports, QWidget* parent = NULL);
+      bool useRadianceForDaylightingCalculations, bool requireCalibrationReports, QWidget* parent = nullptr);
 
   OPENSTUDIO_API bool findBCLMeasureWorkItem(const std::vector<runmanager::WorkItem>& workItems, const openstudio::UUID& uuid);
   
@@ -111,9 +111,9 @@ namespace openstudio {
 
   OPENSTUDIO_API bool addReportingMeasureWorkItem(std::vector<runmanager::WorkItem>& workItems, const openstudio::BCLMeasure& bclMeasure);
 
-  OPENSTUDIO_API boost::optional<openstudio::model::Model> modelFromOSM(const openstudio::path& path, openstudio::osversion::VersionTranslator& versionTranslator, openstudio::ProgressBar* progressBar = NULL);
+  OPENSTUDIO_API boost::optional<openstudio::model::Model> modelFromOSM(const openstudio::path& path, openstudio::osversion::VersionTranslator& versionTranslator, openstudio::ProgressBar* progressBar = nullptr);
 
-  OPENSTUDIO_API boost::optional<openstudio::model::Model> modelFromIDF(const openstudio::path& path, openstudio::energyplus::ReverseTranslator& reverseTranslator, openstudio::ProgressBar* progressBar = NULL);
+  OPENSTUDIO_API boost::optional<openstudio::model::Model> modelFromIDF(const openstudio::path& path, openstudio::energyplus::ReverseTranslator& reverseTranslator, openstudio::ProgressBar* progressBar = nullptr);
 
 
 } // openstudio

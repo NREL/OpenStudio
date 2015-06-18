@@ -100,7 +100,7 @@ class AltsTabVariableGroupItemDelegate : public OSItemDelegate
     
   virtual ~AltsTabVariableGroupItemDelegate() {}
 
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
+  QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 };
 
 // AltsTabVariableItemDelegate views a VariableItem and returns an AltsTabVariableItemView
@@ -112,7 +112,7 @@ class AltsTabVariableItemDelegate : public OSItemDelegate
 
   virtual ~AltsTabVariableItemDelegate() {}
 
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
+  QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 };
 
 // AltsTabMeasureItemDelegate views a MeasureItem and returns an AltsTabMeasureItemView
@@ -124,7 +124,7 @@ class AltsTabMeasureItemDelegate : public OSItemDelegate
 
   virtual ~AltsTabMeasureItemDelegate() {}
 
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
+  QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 };
 
 // DesignAltListController controls a list of DesignAltItems
@@ -139,9 +139,9 @@ class DesignAltListController : public OSListController
 
   virtual ~DesignAltListController() {}
 
-  QSharedPointer<OSListItem> itemAt(int i);
+  QSharedPointer<OSListItem> itemAt(int i) override;
 
-  int count();
+  int count() override;
 
   void removeItemForDataPoint(analysis::DataPoint datapoint);
 
@@ -217,7 +217,7 @@ class DesignAltItemDelegate : public OSItemDelegate
 {
   Q_OBJECT
 
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
+  QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 
   public:
 
@@ -237,9 +237,9 @@ class PerturbationListController : public OSListController
   
   virtual ~PerturbationListController() {}
 
-  QSharedPointer<OSListItem> itemAt(int i);
+  QSharedPointer<OSListItem> itemAt(int i) override;
 
-  int count();
+  int count() override;
 
   private:
 
@@ -273,7 +273,7 @@ class PerturbationItemDelegate : public OSItemDelegate
 {
   Q_OBJECT
 
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
+  QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 
   public:
 

@@ -216,6 +216,113 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingSystem( SizingSyste
     idfObject.setString(Sizing_SystemFields::SystemOutdoorAirMethod,s.get());
   }
 
+  // ZoneMaximumOutdoorAirFraction
+  value = modelObject.zoneMaximumOutdoorAirFraction();
+  if( value ) {
+    idfObject.setDouble(Sizing_SystemFields::ZoneMaximumOutdoorAirFraction,value.get());
+  }
+
+  // CoolingSupplyAirFlowRatePerFloorArea
+  value = modelObject.coolingSupplyAirFlowRatePerFloorArea();
+  if( value ) {
+    idfObject.setDouble(Sizing_SystemFields::CoolingSupplyAirFlowRatePerFloorArea,value.get());
+  }
+  
+  // CoolingFractionofAutosizedCoolingSupplyAirFlowRate
+  value = modelObject.coolingFractionofAutosizedCoolingSupplyAirFlowRate();
+  if( value ) {
+    idfObject.setDouble(Sizing_SystemFields::CoolingFractionofAutosizedCoolingSupplyAirFlowRate,value.get());
+  }
+
+  // CoolingSupplyAirFlowRatePerUnitCoolingCapacity
+  value = modelObject.coolingSupplyAirFlowRatePerUnitCoolingCapacity();
+  if( value ) {
+    idfObject.setDouble(Sizing_SystemFields::CoolingSupplyAirFlowRatePerUnitCoolingCapacity,value.get());
+  }
+
+  // HeatingSupplyAirFlowRatePerFloorArea
+  value = modelObject.heatingSupplyAirFlowRatePerFloorArea();
+  if( value ) {
+    idfObject.setDouble(Sizing_SystemFields::HeatingSupplyAirFlowRatePerFloorArea,value.get());
+  }
+  
+  // HeatingFractionofAutosizedHeatingSupplyAirFlowRate
+  value = modelObject.heatingFractionofAutosizedHeatingSupplyAirFlowRate();
+  if( value ) {
+    idfObject.setDouble(Sizing_SystemFields::HeatingFractionofAutosizedHeatingSupplyAirFlowRate,value.get());
+  }
+  
+  // HeatingFractionofAutosizedCoolingSupplyAirFlowRate
+  value = modelObject.heatingFractionofAutosizedCoolingSupplyAirFlowRate();
+  if( value ) {
+    idfObject.setDouble(Sizing_SystemFields::HeatingFractionofAutosizedCoolingSupplyAirFlowRate,value.get());
+  }
+
+  // HeatingSupplyAirFlowRatePerUnitHeatingCapacity
+  value = modelObject.heatingSupplyAirFlowRatePerUnitHeatingCapacity();
+  if( value ) {
+    idfObject.setDouble(Sizing_SystemFields::HeatingSupplyAirFlowRatePerUnitHeatingCapacity,value.get());
+  }
+
+  // CoolingDesignCapacityMethod
+  s = modelObject.coolingDesignCapacityMethod();
+  if( s ) {
+    idfObject.setString(Sizing_SystemFields::CoolingDesignCapacityMethod,s.get());
+  }
+
+  // CoolingDesignCapacity
+  value = modelObject.coolingDesignCapacity();
+  if( modelObject.isCoolingDesignCapacityAutosized() ) {
+    idfObject.setString(Sizing_SystemFields::CoolingDesignCapacity,"Autosize");
+  } else if( value ) {
+    idfObject.setDouble(Sizing_SystemFields::CoolingDesignCapacity,value.get());
+  }
+  
+  
+  // CoolingDesignCapacityPerFloorArea
+  value = modelObject.coolingDesignCapacityPerFloorArea();
+  if( value ) {
+    idfObject.setDouble(Sizing_SystemFields::CoolingDesignCapacityPerFloorArea,value.get());
+  }
+
+  // FractionofAutosizedCoolingDesignCapacity
+  value = modelObject.fractionofAutosizedCoolingDesignCapacity(); 
+  if( value ) {
+    idfObject.setDouble(Sizing_SystemFields::FractionofAutosizedCoolingDesignCapacity,value.get());
+  }
+
+  // HeatingDesignCapacityMethod
+  s = modelObject.heatingDesignCapacityMethod();
+  if( s ) {
+    idfObject.setString(Sizing_SystemFields::HeatingDesignCapacityMethod,s.get());
+  }
+
+  // HeatingDesignCapacity
+  value = modelObject.heatingDesignCapacity();
+  if( modelObject.isHeatingDesignCapacityAutosized() ) {
+    idfObject.setString(Sizing_SystemFields::HeatingDesignCapacity,"Autosize");
+  } else if( value ) {
+    idfObject.setDouble(Sizing_SystemFields::HeatingDesignCapacity,value.get());
+  }
+  
+  // HeatingDesignCapacityPerFloorArea
+  value = modelObject.heatingDesignCapacityPerFloorArea();
+  if( value ) {
+    idfObject.setDouble(Sizing_SystemFields::HeatingDesignCapacityPerFloorArea,value.get());
+  }
+
+  // FractionofAutosizedHeatingDesignCapacity
+  value = modelObject.fractionofAutosizedHeatingDesignCapacity(); 
+  if( value ) {
+    idfObject.setDouble(Sizing_SystemFields::FractionofAutosizedHeatingDesignCapacity,value.get());
+  }
+
+  // CentralCoolingCapacityControlMethod
+  s = modelObject.centralCoolingCapacityControlMethod();
+  if( s ) {
+    idfObject.setString(Sizing_SystemFields::CentralCoolingCapacityControlMethod,s.get());
+  }
+
   return idfObject;
 }
 

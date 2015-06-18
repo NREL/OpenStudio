@@ -82,17 +82,17 @@ class ModelSubTabController : public SubTabController
 
     virtual void onPurgeObjects(const openstudio::IddObjectType& iddObjectType) = 0;
 
-    virtual void onDrop(const OSItemId& itemId) = 0;
+    virtual void onDrop(const OSItemId& itemId) override = 0;
 
-    virtual void onAddItem();
+    virtual void onAddItem() override;
 
-    virtual void onCopyItem();
+    virtual void onCopyItem() override;
 
-    virtual void onRemoveItem(OSItem *item);
+    virtual void onRemoveItem(OSItem *item) override;
 
-    virtual void onReplaceItem(OSItem *item, const OSItemId& replacementItemId);
+    virtual void onReplaceItem(OSItem *item, const OSItemId& replacementItemId) override;
 
-    virtual void onPurgeItems();
+    virtual void onPurgeItems() override;
 
   private slots:
 

@@ -78,17 +78,17 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   void autosizeDesignSupplyAirFlowRate();
 
-  Node supplyInletNode() const;
+  Node supplyInletNode() const override;
 
-  Node supplyOutletNode() const;
+  Node supplyOutletNode() const override;
 
   std::vector<Node> supplyOutletNodes() const;
 
-  Node demandInletNode() const;
+  Node demandInletNode() const override;
 
   std::vector<Node> demandInletNodes() const;
 
-  Node demandOutletNode() const;
+  Node demandOutletNode() const override;
 
   boost::optional<Node> reliefAirNode() const;
 
@@ -96,13 +96,7 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
-  std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
-
-  void addAirLoopComp(ModelObject targetObj, ModelObject newComp);
-
-  void removeAirLoopComp(ModelObject targetObj);
-
-  void replaceAirLoopSupplyComp(ModelObject targetObj, ModelObject newObj);
+  std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) override;
 
   boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
 
@@ -112,17 +106,17 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   bool removeBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
-  virtual std::vector<openstudio::IdfObject> remove();
+  virtual std::vector<openstudio::IdfObject> remove() override;
 
-  virtual ModelObject clone(Model model) const;
+  virtual ModelObject clone(Model model) const override;
 
-  virtual const std::vector<std::string>& outputVariableNames() const;
+  virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual IddObjectType iddObjectType() const;
+  virtual IddObjectType iddObjectType() const override;
 
-  Splitter demandSplitter();
+  Splitter demandSplitter() override;
 
-  Mixer demandMixer();
+  Mixer demandMixer() override;
 
   boost::optional<HVACComponent> supplyFan() const;
 
@@ -158,7 +152,7 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   std::vector<ThermalZone> thermalZones() const;
 
-  std::vector<ModelObject> children() const;
+  std::vector<ModelObject> children() const override;
 
   Schedule availabilitySchedule() const;
 

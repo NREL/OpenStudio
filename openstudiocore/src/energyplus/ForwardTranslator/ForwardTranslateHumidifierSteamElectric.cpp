@@ -48,8 +48,9 @@ boost::optional<IdfObject> ForwardTranslator::translateHumidifierSteamElectric( 
   }
 
   // Rated Capacity
-  if( (d = modelObject.ratedCapacity()) )
-  {
+  if( modelObject.isRatedCapacityAutosized() ) {
+    idfObject.setString(Humidifier_Steam_ElectricFields::RatedCapacity,"Autosize");
+  } if( (d = modelObject.ratedCapacity()) ) {
     idfObject.setDouble(Humidifier_Steam_ElectricFields::RatedCapacity,d.get());
   }
 

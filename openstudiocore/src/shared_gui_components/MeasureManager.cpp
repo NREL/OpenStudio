@@ -351,7 +351,7 @@ void MeasureManager::updatePatApplicationMeasures(analysisdriver::SimpleProject 
 
   std::vector<BCLMeasure> measures = patApplicationMeasures();
 
-  for (std::vector<BCLMeasure>::iterator itr = measures.begin();
+  for (auto itr = measures.begin();
       itr != measures.end();
       ++itr)
   {
@@ -550,7 +550,7 @@ void MeasureManager::updateMeasuresLists(bool updateUserMeasures)
     // DLM: TODO!
     //OS_ASSERT(!checkForUpdates(measure));
 
-    std::map<UUID,BCLMeasure>::iterator it = m_patApplicationMeasures.find(measure.uuid());
+    auto it = m_patApplicationMeasures.find(measure.uuid());
     if (it != m_patApplicationMeasures.end()){
       // duplicate measure detected, user copy and paste
       LOG(Error, "UUID of built in measure at '" << measure.directory() << "' conflicts with other built in measure, measure at '" << it->second.directory() << "' will be used instead");
@@ -598,7 +598,7 @@ void MeasureManager::updateMeasuresLists(bool updateUserMeasures)
       measure.save();
     }
 
-    std::map<UUID,BCLMeasure>::iterator it = m_bclMeasures.find(measure.uuid());
+    auto it = m_bclMeasures.find(measure.uuid());
     if (it != m_bclMeasures.end()){
       // duplicate measure detected
       LOG(Error, "UUID of bcl measure at '" << measure.directory() << "' conflicts with other bcl measure, measure at '" << it->second.directory() << "' will be used instead");
@@ -706,7 +706,7 @@ std::vector<BCLMeasure> MeasureManager::combinedMeasures(bool includePatApplicat
   
   if (includePatApplicationMeasures){
     // insert pat application measures
-    for (std::map<UUID,BCLMeasure>::const_iterator it = m_patApplicationMeasures.begin(), itend = m_patApplicationMeasures.end(); it != itend; ++it){
+    for (auto it = m_patApplicationMeasures.begin(), itend = m_patApplicationMeasures.end(); it != itend; ++it){
       if (resultUUIDs.find(it->first) == resultUUIDs.end()){
         resultUUIDs.insert(it->first);
         result.push_back(it->second);
@@ -717,7 +717,7 @@ std::vector<BCLMeasure> MeasureManager::combinedMeasures(bool includePatApplicat
   }
 
   // insert my measures
-  for (std::map<UUID,BCLMeasure>::const_iterator it = m_myMeasures.begin(), itend = m_myMeasures.end(); it != itend; ++it){
+  for (auto it = m_myMeasures.begin(), itend = m_myMeasures.end(); it != itend; ++it){
     if (resultUUIDs.find(it->first) == resultUUIDs.end()){
       resultUUIDs.insert(it->first);
       result.push_back(it->second);
@@ -727,7 +727,7 @@ std::vector<BCLMeasure> MeasureManager::combinedMeasures(bool includePatApplicat
   }
 
    // insert bcl measures
-  for (std::map<UUID,BCLMeasure>::const_iterator it = m_bclMeasures.begin(), itend = m_bclMeasures.end(); it != itend; ++it){
+  for (auto it = m_bclMeasures.begin(), itend = m_bclMeasures.end(); it != itend; ++it){
     if (resultUUIDs.find(it->first) == resultUUIDs.end()){
       resultUUIDs.insert(it->first);
       result.push_back(it->second);

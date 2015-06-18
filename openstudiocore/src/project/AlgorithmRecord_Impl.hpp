@@ -58,14 +58,14 @@ namespace detail {
 
     /** Get the name of the database table for this record. Should be implemented by the base
      *  class for the table. */
-    virtual std::string databaseTableName() const;
+    virtual std::string databaseTableName() const override;
 
     /** Returns the direct parent of this object, if it exists. */
-    virtual boost::optional<ObjectRecord> parent() const;
+    virtual boost::optional<ObjectRecord> parent() const override;
 
     /** Returns objects directly owned by this Record. Children are removed when this Record
      *  is removed. */
-    virtual std::vector<ObjectRecord> children() const;
+    virtual std::vector<ObjectRecord> children() const override;
 
     //@}
     /** @name Getters */
@@ -96,19 +96,19 @@ namespace detail {
     //@}
    protected:
     /** Bind data member values to a query for saving. */
-    virtual void bindValues(QSqlQuery& query) const;
+    virtual void bindValues(QSqlQuery& query) const override;
 
     /** Set the last state of this object from the query (including id). */
-    virtual void setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase);
+    virtual void setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) override;
 
     /** Check that values (except id) are same as query. */
-    virtual bool compareValues(const QSqlQuery& query) const;
+    virtual bool compareValues(const QSqlQuery& query) const override;
 
     /** Save values to last state. */
-    virtual void saveLastValues();
+    virtual void saveLastValues() override;
 
     /** Revert values back to last state. */
-    virtual void revertToLastValues();
+    virtual void revertToLastValues() override;
 
    private:
     REGISTER_LOGGER("openstudio.project.AlgorithmRecord");

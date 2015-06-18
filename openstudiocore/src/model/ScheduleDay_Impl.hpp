@@ -58,21 +58,21 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual std::vector<IdfObject> remove();
+    virtual std::vector<IdfObject> remove() override;
 
-    virtual boost::optional<ParentObject> parent() const;
+    virtual boost::optional<ParentObject> parent() const override;
 
-    virtual bool setParent(ParentObject& newParent);
+    virtual bool setParent(ParentObject& newParent) override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
     //@{
 
-    virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const;
+    virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const override;
 
     bool isScheduleTypeLimitsDefaulted() const;
 
@@ -86,7 +86,7 @@ namespace detail {
     std::vector<openstudio::Time> times() const;
 
     /// Returns a vector of values in the same order and with the same number of elements as times.
-    virtual std::vector<double> values() const;
+    virtual std::vector<double> values() const override;
 
     /// Returns the value in effect at the given time.  If time is less than 0 days or greater than 1 day, 0 is returned.
     double getValue(const openstudio::Time& time) const;
@@ -97,9 +97,9 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    virtual bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits);
+    virtual bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) override;
 
-    virtual bool resetScheduleTypeLimits();
+    virtual bool resetScheduleTypeLimits() override;
 
     void setInterpolatetoTimestep(bool interpolatetoTimestep);
 
@@ -119,13 +119,13 @@ namespace detail {
     void clearValues();
 
     // ensure that this object does not contain the date 2/29
-    virtual void ensureNoLeapDays();
+    virtual void ensureNoLeapDays() override;
 
     //@}
    protected:
-    virtual bool candidateIsCompatibleWithCurrentUse(const ScheduleTypeLimits& candidate) const;
+    virtual bool candidateIsCompatibleWithCurrentUse(const ScheduleTypeLimits& candidate) const override;
 
-    virtual bool okToResetScheduleTypeLimits() const;
+    virtual bool okToResetScheduleTypeLimits() const override;
 
    private slots:
 

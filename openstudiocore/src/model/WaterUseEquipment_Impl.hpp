@@ -54,23 +54,23 @@ class MODEL_API WaterUseEquipment_Impl : public SpaceLoadInstance_Impl {
 
   virtual ~WaterUseEquipment_Impl() {}
 
-  virtual const std::vector<std::string>& outputVariableNames() const;
+  virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual IddObjectType iddObjectType() const;
+  virtual IddObjectType iddObjectType() const override;
 
-  virtual bool hardSize();
+  virtual bool hardSize() override;
 
-  virtual bool hardApplySchedules();
+  virtual bool hardApplySchedules() override;
 
-  virtual double multiplier() const;
+  virtual double multiplier() const override;
 
-  virtual bool isMultiplierDefaulted() const;
+  virtual bool isMultiplierDefaulted() const override;
 
-  virtual bool setDefinition(const SpaceLoadDefinition& definition);
+  virtual bool setDefinition(const SpaceLoadDefinition& definition) override;
 
-  virtual std::vector<IdfObject> remove();
+  virtual std::vector<IdfObject> remove() override;
 
-  std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+  std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
   boost::optional<Schedule> flowRateFractionSchedule() const;
   bool setFlowRateFractionSchedule(Schedule & flowRateFractionSchedule);
@@ -84,10 +84,10 @@ class MODEL_API WaterUseEquipment_Impl : public SpaceLoadInstance_Impl {
   protected:
 
   // index of the space name
-  virtual int spaceIndex() const;
+  virtual int spaceIndex() const override;
 
   // index of the definition name
-  virtual int definitionIndex() const;
+  virtual int definitionIndex() const override;
 
   private:
 

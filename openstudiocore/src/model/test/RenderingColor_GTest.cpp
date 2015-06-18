@@ -123,7 +123,7 @@ class RenderingColorWorkspaceWatcher : public openstudio::WorkspaceWatcher {
     : WorkspaceWatcher(workspace)
   {}
 
-  virtual void onObjectAdd(const WorkspaceObject& addedObject)
+  virtual void onObjectAdd(const WorkspaceObject& addedObject) override
   {
     WorkspaceWatcher::onObjectAdd(addedObject);
 

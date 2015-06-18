@@ -264,12 +264,21 @@ ConstructionWithInternalSource::ConstructionWithInternalSource(const Model& mode
 }
 
 ConstructionWithInternalSource::ConstructionWithInternalSource(const std::vector<OpaqueMaterial>& opaqueMaterials)
-  : LayeredConstruction(ConstructionWithInternalSource::iddObjectType(),opaqueMaterials.at(0).model())
+  : LayeredConstruction(ConstructionWithInternalSource::iddObjectType(),
+  (opaqueMaterials.empty() ? openstudio::model::Model() : opaqueMaterials.at(0).model()))
 {
-  if(opaqueMaterials.size() < 2){
+  if (opaqueMaterials.empty()){
+    // DLM: do not remove, this was only added to a temporary model
+    //this->remove();
+    LOG_AND_THROW("Cannot create an internal source construction with empty layers");
+  }else if (opaqueMaterials.size() < 2){
     this->remove();
-    LOG_AND_THROW("Cannot create a internal source construction with fewer than 2 layers");
+    LOG_AND_THROW("Cannot create an internal source construction with fewer than 2 layers");
+  } else if (opaqueMaterials.size() > 10){
+    this->remove();
+    LOG_AND_THROW("Cannot create an internal source construction with more than 10 layers");
   }
+
   std::vector<Material> materials = castVector<Material>(opaqueMaterials);
   bool ok = setLayers(materials);
   OS_ASSERT(ok);

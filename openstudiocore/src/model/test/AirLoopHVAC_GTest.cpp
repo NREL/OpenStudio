@@ -585,7 +585,7 @@ TEST_F(ModelFixture, AirLoopHVAC_edges)
   bool found_terminal_2 = false;
   bool found_terminal_3 = false;
   bool found_terminal_4 = false;
-  for( std::vector<HVACComponent>::iterator it = edges.begin(); it != edges.end(); ++it )
+  for( auto it = edges.begin(); it != edges.end(); ++it )
   {
     if( singleDuctTerminal == *it ) {
       found_terminal_1 = true;

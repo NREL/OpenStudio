@@ -32,20 +32,20 @@ class SpaceTypeInspectorView : public ModelObjectInspectorView
 
   public:
 
-    SpaceTypeInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = 0 );
+    SpaceTypeInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = nullptr );
 
     virtual ~SpaceTypeInspectorView() {}
 
-    virtual bool supportsMultipleObjectSelection() const { return true; }
-    virtual std::vector<model::ModelObject> selectedObjects() const;
+    virtual bool supportsMultipleObjectSelection() const override { return true; }
+    virtual std::vector<model::ModelObject> selectedObjects() const override;
 
   protected:
 
-    virtual void onClearSelection();
+    virtual void onClearSelection() override;
 
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
 
-    virtual void onUpdate();
+    virtual void onUpdate() override;
 
   private:
 
@@ -56,7 +56,7 @@ class SpaceTypeInspectorView : public ModelObjectInspectorView
 
   public slots:
 
-    void toggleUnits(bool displayIP);
+    void toggleUnits(bool displayIP) override;
 };
 
 } // openstudio

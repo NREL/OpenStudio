@@ -39,6 +39,8 @@
 #include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
+#include "CoilSystemCoolingDXHeatExchangerAssisted.hpp"
+#include "CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
@@ -557,6 +559,17 @@ namespace detail{
         if( coil->handle() == this->handle() )
         {
           return airLoopHVACUnitaryHeatPumpAirToAir;
+        }
+      }
+    }
+
+
+    // CoilSystemCoolingDXHeatExchangerAssisted
+    {
+      auto coilSystems = this->model().getConcreteModelObjects<CoilSystemCoolingDXHeatExchangerAssisted>();
+      for( const auto & coilSystem : coilSystems ) {
+        if( coilSystem.coolingCoil().handle() == this->handle() ) {
+          return coilSystem;
         }
       }
     }

@@ -728,7 +728,7 @@ public:
 
 protected:
 
-  void paintEvent(QPaintEvent * event);
+  void paintEvent(QPaintEvent * event) override;
 
 signals:
 
@@ -749,9 +749,9 @@ public:
 
 protected:
 
-  virtual void focusInEvent(QFocusEvent * e);
+  virtual void focusInEvent(QFocusEvent * e) override;
 
-  virtual void focusOutEvent(QFocusEvent * e);
+  virtual void focusOutEvent(QFocusEvent * e) override;
 
 signals:
 
@@ -791,7 +791,7 @@ class GridViewDropZoneVectorController : public OSVectorController
 {
   protected:
 
-  virtual std::vector<OSItemId> makeVector() { return std::vector<OSItemId>(); }
+  virtual std::vector<OSItemId> makeVector() override { return std::vector<OSItemId>(); }
 };
 
 } // openstudio

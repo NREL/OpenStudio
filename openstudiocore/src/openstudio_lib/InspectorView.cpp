@@ -45,6 +45,10 @@
 #include "../model/AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp"
 #include "../model/AirTerminalSingleDuctVAVReheat.hpp"
 #include "../model/AirTerminalSingleDuctVAVReheat_Impl.hpp"
+#include "../model/AirTerminalSingleDuctParallelPIUReheat.hpp"
+#include "../model/AirTerminalSingleDuctParallelPIUReheat_Impl.hpp"
+#include "../model/AirTerminalSingleDuctSeriesPIUReheat.hpp"
+#include "../model/AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp"
 #include "../model/CoilCoolingCooledBeam.hpp"
 #include "../model/CoilCoolingCooledBeam_Impl.hpp"
 #include "../model/CoilCoolingLowTempRadiantConstFlow.hpp"
@@ -344,6 +348,46 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
               this, &InspectorView::addToLoopClicked);
 
       connect(static_cast<AirTerminalSingleDuctVAVReheatInspectorView *>(m_currentView), &AirTerminalSingleDuctVAVReheatInspectorView::removeFromLoopClicked,
+              this, &InspectorView::removeFromLoopClicked);
+    }
+    else if( auto component = modelObject->optionalCast<model::AirTerminalSingleDuctParallelPIUReheat>()  )
+    {
+      if( m_currentView )
+      {
+        delete m_currentView;
+      }
+
+      m_currentView = new AirTerminalSingleDuctParallelPIUReheatInspectorView();
+      connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
+
+      m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
+
+      m_vLayout->addWidget(m_currentView);
+
+      connect(static_cast<AirTerminalSingleDuctParallelPIUReheatInspectorView *>(m_currentView), &AirTerminalSingleDuctParallelPIUReheatInspectorView::addToLoopClicked,
+              this, &InspectorView::addToLoopClicked);
+
+      connect(static_cast<AirTerminalSingleDuctParallelPIUReheatInspectorView *>(m_currentView), &AirTerminalSingleDuctParallelPIUReheatInspectorView::removeFromLoopClicked,
+              this, &InspectorView::removeFromLoopClicked);
+    }
+    else if( auto component = modelObject->optionalCast<model::AirTerminalSingleDuctSeriesPIUReheat>()  )
+    {
+      if( m_currentView )
+      {
+        delete m_currentView;
+      }
+
+      m_currentView = new AirTerminalSingleDuctSeriesPIUReheatInspectorView();
+      connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
+
+      m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
+
+      m_vLayout->addWidget(m_currentView);
+
+      connect(static_cast<AirTerminalSingleDuctSeriesPIUReheatInspectorView *>(m_currentView), &AirTerminalSingleDuctSeriesPIUReheatInspectorView::addToLoopClicked,
+              this, &InspectorView::addToLoopClicked);
+
+      connect(static_cast<AirTerminalSingleDuctSeriesPIUReheatInspectorView *>(m_currentView), &AirTerminalSingleDuctSeriesPIUReheatInspectorView::removeFromLoopClicked,
               this, &InspectorView::removeFromLoopClicked);
     }
     else if( boost::optional<model::AirTerminalSingleDuctVAVHeatAndCoolReheat> component = modelObject->optionalCast<model::AirTerminalSingleDuctVAVHeatAndCoolReheat>()  )
@@ -697,7 +741,7 @@ void GenericInspectorView::layoutModelObject( model::ModelObject & modelObject, 
 NewPlenumDialog::NewPlenumDialog(QWidget * parent)
   : QDialog(parent)
 {
-  QVBoxLayout * mainVLayout = new QVBoxLayout();
+  auto mainVLayout = new QVBoxLayout();
   mainVLayout->setAlignment(Qt::AlignTop);
   mainVLayout->setContentsMargins(10,10,10,10);
   mainVLayout->setSpacing(10);
@@ -706,7 +750,7 @@ NewPlenumDialog::NewPlenumDialog(QWidget * parent)
   setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
   setFixedWidth(400);
 
-  QLabel * message = new QLabel();
+  auto message = new QLabel();
   message->setWordWrap(true);
   message->setText("Choose an available zone to use as a plenum.  Only zones that are not conditioned by an air system or zone equipment are displayed."); 
   mainVLayout->addWidget(message);
@@ -722,7 +766,7 @@ NewPlenumDialog::NewPlenumDialog(QWidget * parent)
   std::vector<model::ThermalZone> allZones = model.getModelObjects<model::ThermalZone>();
   std::sort(allZones.begin(),allZones.end(),WorkspaceObjectNameLess()); 
 
-  for(std::vector<model::ThermalZone>::iterator it = allZones.begin();
+  for(auto it = allZones.begin();
       it != allZones.end();
       ++it)
   {
@@ -734,7 +778,7 @@ NewPlenumDialog::NewPlenumDialog(QWidget * parent)
 
   mainVLayout->addSpacing(10);
 
-  QDialogButtonBox * buttonBox = new QDialogButtonBox();
+  auto buttonBox = new QDialogButtonBox();
   QPushButton * cancelButton = buttonBox->addButton(QDialogButtonBox::Cancel);
   connect(cancelButton, &QPushButton::clicked, this, &NewPlenumDialog::onCancelClicked);
   QPushButton * applyButton = buttonBox->addButton(QDialogButtonBox::Apply);
@@ -754,15 +798,15 @@ void NewPlenumDialog::onApplyClicked()
 
 PlenumChooserView::PlenumChooserView(QWidget * parent)
 {
-  QVBoxLayout * mainVLayout = new QVBoxLayout();
+  auto mainVLayout = new QVBoxLayout();
   mainVLayout->setAlignment(Qt::AlignTop);
   setLayout(mainVLayout);
   mainVLayout->setContentsMargins(0,0,0,0);
   mainVLayout->setSpacing(0);
 
-  QFrame * supplyFrame = new QFrame();
+  auto supplyFrame = new QFrame();
   supplyFrame->setObjectName("IGRow");
-  QVBoxLayout * supplyVLayout = new QVBoxLayout();
+  auto supplyVLayout = new QVBoxLayout();
   supplyFrame->setLayout(supplyVLayout);
   mainVLayout->addWidget(supplyFrame);
 
@@ -780,9 +824,9 @@ PlenumChooserView::PlenumChooserView(QWidget * parent)
   newSupplyPlenumButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
   supplyVLayout->addWidget(newSupplyPlenumButton);
 
-  QFrame * returnFrame = new QFrame();
+  auto returnFrame = new QFrame();
   returnFrame->setObjectName("IGRow");
-  QVBoxLayout * returnVLayout = new QVBoxLayout();
+  auto returnVLayout = new QVBoxLayout();
   returnFrame->setLayout(returnVLayout);
   mainVLayout->addWidget(returnFrame);
 
@@ -844,18 +888,18 @@ void RefrigerationWalkinInspectorView::layoutModelObject( model::ModelObject & m
   {
     delete t_layout;
   }
-  QVBoxLayout * zoneBoundaryLayout = new QVBoxLayout();
+  auto zoneBoundaryLayout = new QVBoxLayout();
   zoneBoundaryLayout->setContentsMargins(0,0,0,0);
   zoneBoundaryLayout->setSpacing(0);
   m_zoneBoundaryWidget->setLayout(zoneBoundaryLayout);
   boost::optional<model::RefrigerationWalkIn> walkin = modelObject.optionalCast<model::RefrigerationWalkIn>();
   OS_ASSERT(walkin);
   std::vector<model::RefrigerationWalkInZoneBoundary> zoneBoundaries = walkin->zoneBoundaries();
-  for( std::vector<model::RefrigerationWalkInZoneBoundary>::iterator it = zoneBoundaries.begin();
+  for( auto it = zoneBoundaries.begin();
        it != zoneBoundaries.end();
        ++it )
   {
-    InspectorGadget * inspector = new InspectorGadget();
+    auto inspector = new InspectorGadget();
     connect(this, &RefrigerationWalkinInspectorView::toggleUnitsClicked, inspector, &InspectorGadget::toggleUnitsClicked);
     connect(inspector, &InspectorGadget::workspaceObjectRemoved, this, &BaseInspectorView::workspaceObjectRemoved);
     if( displayIP )
@@ -1023,7 +1067,7 @@ void ThermalZoneInspectorView::update()
   
   std::vector<model::AirLoopHVACSupplyPlenum> supplyPlenums = subsetCastVector<model::AirLoopHVACSupplyPlenum>(t_airLoopHVAC->demandComponents());
   std::sort(supplyPlenums.begin(),supplyPlenums.end(),supplyPlenumSort);
-  for( std::vector<model::AirLoopHVACSupplyPlenum>::iterator it = supplyPlenums.begin();
+  for( auto it = supplyPlenums.begin();
        it != supplyPlenums.end();
        ++it )
   {
@@ -1077,7 +1121,7 @@ void ThermalZoneInspectorView::update()
 
   std::vector<model::AirLoopHVACReturnPlenum> returnPlenums = subsetCastVector<model::AirLoopHVACReturnPlenum>(t_airLoopHVAC->demandComponents());
   std::sort(returnPlenums.begin(),returnPlenums.end(),returnPlenumSort);
-  for( std::vector<model::AirLoopHVACReturnPlenum>::iterator it = returnPlenums.begin();
+  for( auto it = returnPlenums.begin();
        it != returnPlenums.end();
        ++it )
   {
@@ -1266,7 +1310,7 @@ AirTerminalInspectorView::AirTerminalInspectorView( QWidget * parent )
                               ":images/link_icon_on.png",
                               ":images/link_icon_off.png" );
 
-  m_libraryTabWidget->setCurrentIndex(1);
+  m_libraryTabWidget->setCurrentIndex(0);
 
   connect(m_loopChooserView, &LoopChooserView::addToLoopClicked, this, &AirTerminalInspectorView::addToLoopClicked);
   
@@ -1337,6 +1381,28 @@ AirTerminalSingleDuctVAVReheatInspectorView::AirTerminalSingleDuctVAVReheatInspe
 void AirTerminalSingleDuctVAVReheatInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP)
 {
   AirTerminalInspectorView::layoutModelObject<model::AirTerminalSingleDuctVAVReheat>(modelObject, readOnly, displayIP);
+}
+
+AirTerminalSingleDuctParallelPIUReheatInspectorView::AirTerminalSingleDuctParallelPIUReheatInspectorView( QWidget * parent )
+  : AirTerminalInspectorView(parent)
+{
+
+}
+
+void AirTerminalSingleDuctParallelPIUReheatInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP)
+{
+  AirTerminalInspectorView::layoutModelObject<model::AirTerminalSingleDuctParallelPIUReheat>(modelObject, readOnly, displayIP);
+}
+
+AirTerminalSingleDuctSeriesPIUReheatInspectorView::AirTerminalSingleDuctSeriesPIUReheatInspectorView( QWidget * parent )
+  : AirTerminalInspectorView(parent)
+{
+
+}
+
+void AirTerminalSingleDuctSeriesPIUReheatInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP)
+{
+  AirTerminalInspectorView::layoutModelObject<model::AirTerminalSingleDuctSeriesPIUReheat>(modelObject, readOnly, displayIP);
 }
 
 AirTerminalSingleDuctVAVHeatAndCoolReheatInspectorView::AirTerminalSingleDuctVAVHeatAndCoolReheatInspectorView( QWidget * parent )

@@ -669,7 +669,7 @@ namespace openstudio
           ruby_options(m_argc, m_argv);
 
           // load the modules. If an error occurs, an exception will be thrown explaining the problem
-          for (std::vector<std::string>::const_iterator itr = t_moduleNames.begin();
+          for (auto itr = t_moduleNames.begin();
               itr != t_moduleNames.end();
               ++itr)
           {
@@ -874,7 +874,7 @@ namespace openstudio
         template<typename Type>
         swig_type_info *getTypeInfo() const
         {
-          std::map<std::string, std::string>::const_iterator itr = m_types.find(typeid(Type).name());
+          auto itr = m_types.find(typeid(Type).name());
 
           if (itr == m_types.end())
           {
@@ -885,7 +885,7 @@ namespace openstudio
 
           swig_type_info *sti = SWIG_TypeQuery(t_typeName.c_str());
 
-          if (sti == 0) {
+          if (sti == nullptr) {
             throw std::runtime_error("Unable to lookup type info for type: " + t_typeName);
           }
 
@@ -955,7 +955,7 @@ namespace openstudio
         template<typename Type>
           Type asType(VALUE v)
           {
-            Type *ptr = 0;
+            Type *ptr = nullptr;
 
             int res = SWIG_ConvertPtr(v, reinterpret_cast<void **>(&ptr), getTypeInfo<Type *>(), 0);
             if (SWIG_IsOK(res))

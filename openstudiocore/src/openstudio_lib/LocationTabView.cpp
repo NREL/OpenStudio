@@ -84,16 +84,16 @@ LocationView::LocationView(const model::Model & model,
     m_model(model),
     m_modelTempDir(modelTempDir)
 {
-  QLabel * label = 0;
-  QPushButton * btn = 0;
-  QHBoxLayout * hLayout = 0;
-  QVBoxLayout * vLayout = 0;
+  QLabel * label = nullptr;
+  QPushButton * btn = nullptr;
+  QHBoxLayout * hLayout = nullptr;
+  QVBoxLayout * vLayout = nullptr;
   QFont boldFont;
 
   model::ClimateZones climateZones = m_model.getUniqueModelObject<model::ClimateZones>();
 
   // ***** Main Layout *****
-  QVBoxLayout * mainVLayout = new QVBoxLayout();
+  auto mainVLayout = new QVBoxLayout();
   mainVLayout->setContentsMargins(10,10,10,10);
   mainVLayout->setSpacing(10);
   setLayout(mainVLayout);

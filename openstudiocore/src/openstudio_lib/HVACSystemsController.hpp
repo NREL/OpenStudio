@@ -280,7 +280,7 @@ class SystemAvailabilityVectorController : public ModelObjectVectorController
 
   boost::optional<model::AirLoopHVAC> airLoopHVAC();
 
-  void attach(const model::ModelObject& modelObject);
+  void attach(const model::ModelObject& modelObject) override;
 
   void detach();
 
@@ -292,11 +292,11 @@ class SystemAvailabilityVectorController : public ModelObjectVectorController
 
   protected:
 
-  std::vector<OSItemId> makeVector();
+  std::vector<OSItemId> makeVector() override;
 
-  void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId);
+  void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId) override;
 
-  void onDrop(const OSItemId& itemId);
+  void onDrop(const OSItemId& itemId) override;
 
   private:
 
@@ -313,7 +313,7 @@ class SupplyAirTempScheduleVectorController : public ModelObjectVectorController
 
   boost::optional<model::SetpointManagerScheduled> setpointManagerScheduled();
 
-  void attach(const model::ModelObject& modelObject);
+  void attach(const model::ModelObject& modelObject) override;
 
   void detach();
 
@@ -325,11 +325,11 @@ class SupplyAirTempScheduleVectorController : public ModelObjectVectorController
 
   protected:
 
-  std::vector<OSItemId> makeVector();
+  std::vector<OSItemId> makeVector() override;
 
-  void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId);
+  void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId) override;
 
-  void onDrop(const OSItemId& itemId);
+  void onDrop(const OSItemId& itemId) override;
 
   private:
 

@@ -53,9 +53,9 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
@@ -253,7 +253,7 @@ namespace detail {
     /** @name Other */
     //@{
 
-    int numVariables() const;
+    int numVariables() const override;
 
     /** Return all of the x values for independent variable i
       * in ascending order.
@@ -267,7 +267,7 @@ namespace detail {
       */
     boost::optional<double> yValue(const std::vector<double> & xValues) const;
 
-    double evaluate(const std::vector<double>& x) const;
+    double evaluate(const std::vector<double>& x) const override;
 
     bool addPoint(const std::vector<double> & xValues, double yValue);
 

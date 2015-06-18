@@ -122,46 +122,46 @@ public:
   virtual ~TimeSeriesLinePlotData();
 
   /// must provide copy
-  virtual TimeSeriesLinePlotData* copy() const;
+  virtual TimeSeriesLinePlotData* copy() const override;
 
   /// value at fractional day - used by qwtPlot engine
 //  double value(double fractionalDay) const;
 
   /// minX
-  double minX() const;
+  double minX() const override;
 
   /// maxX
-  double maxX() const;
+  double maxX() const override;
 
   /// minY
-  double minY() const;
+  double minY() const override;
 
   /// maxY
-  double maxY() const;
+  double maxY() const override;
 
   /// minValue
-  double minValue() const;
+  double minValue() const override;
 
   /// maxValue
-  double maxValue() const;
+  double maxValue() const override;
 
   /// sumValue
-  double sumValue() const;
+  double sumValue() const override;
 
   /// meanValue
-  double meanValue() const;
+  double meanValue() const override;
 
   /// stdDevValue
-  double stdDevValue() const;
+  double stdDevValue() const override;
 
   /// reimplement bounding rect for speed
-  QRectF boundingRect() const;
+  QRectF boundingRect() const override;
 
   /// reimplement sample
-  QPointF sample(size_t i) const;
+  QPointF sample(size_t i) const override;
 
   /// reimplement abstract function size
-  size_t size(void) const;
+  size_t size(void) const override;
 
   /// reimplement abstract function x
   double x(size_t pos) const;
@@ -170,10 +170,10 @@ public:
   double y(size_t pos) const;
 
   /// units for plotting on axes or scaling
-  void units(const std::string &unit);
+  void units(const std::string &unit) override;
 
   /// units for plotting on axes or scaling
-  std::string units() const;
+  std::string units() const override;
 
 private:
   TimeSeries m_timeSeries;
@@ -206,7 +206,7 @@ public:
   virtual ~VectorLinePlotData() {}
 
   /// must provide copy
-  virtual VectorLinePlotData* copy() const;
+  virtual VectorLinePlotData* copy() const override;
 
   /// get the value at point x
 //  double value(double x) const;
@@ -215,40 +215,40 @@ public:
   void interpMethod(InterpMethod interpMethod);
 
   /// minX
-  double minX() const;
+  double minX() const override;
 
   /// maxX
-  double maxX() const;
+  double maxX() const override;
 
   /// minY
-  double minY() const;
+  double minY() const override;
 
   /// maxY
-  double maxY() const;
+  double maxY() const override;
 
   /// minValue
-  double minValue() const;
+  double minValue() const override;
 
   /// maxValue
-  double maxValue() const;
+  double maxValue() const override;
 
   /// sumValue
-  double sumValue() const;
+  double sumValue() const override;
 
   /// meanValue
-  double meanValue() const;
+  double meanValue() const override;
 
   /// stdDevValue
-  double stdDevValue() const;
+  double stdDevValue() const override;
 
   /// reimplement bounding rect for speed
-  QRectF boundingRect() const;
+  QRectF boundingRect() const override;
 
   /// reimplement sample
-  QPointF sample(size_t i) const;
+  QPointF sample(size_t i) const override;
 
   /// reimplement abstract function size
-  size_t size(void) const;
+  size_t size(void) const override;
 
   /// reimplement abstract function x
   double x(size_t pos) const;
@@ -257,10 +257,10 @@ public:
   double y(size_t pos) const;
 
   /// units for plotting on axes or scaling
-  void units(const std::string &unit);
+  void units(const std::string &unit) override;
 
   /// units for plotting on axes or scaling
-  std::string units() const;
+  std::string units() const override;
 
 private:
 

@@ -145,7 +145,7 @@ class AltsTabMeasureItemView : public QAbstractButton
 
   protected:
 
-  void paintEvent(QPaintEvent * e);
+  void paintEvent(QPaintEvent * e) override;
 };
 
 // DesignAltItemView views a DesignAltItem (particular combination of measures)
@@ -254,6 +254,7 @@ class AlternativeModelMeasureItemView : public QWidget
 
   QString m_uuid;
 
+  void paintEvent(QPaintEvent * e) override;
 };
 
 } // altstab

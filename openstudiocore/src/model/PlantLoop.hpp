@@ -104,13 +104,13 @@ class MODEL_API PlantLoop : public Loop {
 
   void resetCommonPipeSimulation();
 
-  Node supplyInletNode() const;
+  Node supplyInletNode() const override;
 
-  Node supplyOutletNode() const;
+  Node supplyOutletNode() const override;
 
-  Node demandInletNode() const;
+  Node demandInletNode() const override;
 
-  Node demandOutletNode() const;
+  Node demandOutletNode() const override;
 
   /** Returns all of the demand side hvac equipment between
    * inletComps and outletComps.  If type is given then the results will
@@ -119,7 +119,7 @@ class MODEL_API PlantLoop : public Loop {
    */
   std::vector<ModelObject> demandComponents(std::vector<HVACComponent> inletComps,
                                             std::vector<HVACComponent> outletComps,
-                                            openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+                                            openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const override;
 
   /** Returns all of the demand side hvac equipment between
    * inletComp and outletComp.  If type is given then the results will
@@ -128,12 +128,12 @@ class MODEL_API PlantLoop : public Loop {
    */
   std::vector<ModelObject> demandComponents(HVACComponent inletComp,
                                             HVACComponent outletComp,
-                                            openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+                                            openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const override;
 
   /** Returns all of the demand side HVAC equipment within the air loop.
    * If type is given then the results will be limited to the given IddObjectType.
    */
-  std::vector<ModelObject> demandComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+  std::vector<ModelObject> demandComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const override;
 
   /** Returns all of the HVAC equipment within the air loop including both
    * the supply and demand sides of the loop.
@@ -144,7 +144,7 @@ class MODEL_API PlantLoop : public Loop {
   /** Returns an optional ModelObject with the given handle.
    * If the handle is not within the PlantLoop then the optional will be false
    */
-  boost::optional<ModelObject> component(openstudio::Handle handle);
+  boost::optional<ModelObject> component(openstudio::Handle handle) override;
 
   /** Returns the supply side Mixer. **/
   Mixer supplyMixer();
@@ -180,9 +180,9 @@ class MODEL_API PlantLoop : public Loop {
    */
   bool removeDemandBranchWithComponent( HVACComponent hvacComponent );
 
-  virtual std::vector<openstudio::IdfObject> remove();
+  virtual std::vector<openstudio::IdfObject> remove() override;
 
-  virtual ModelObject clone(Model model) const;
+  virtual ModelObject clone(Model model) const override;
 
   static IddObjectType iddObjectType();
 

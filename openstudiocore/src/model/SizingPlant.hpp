@@ -50,6 +50,10 @@ class MODEL_API SizingPlant : public ModelObject {
 
   static std::vector<std::string> loopTypeValues();
 
+  static std::vector<std::string> sizingOptionValues();
+
+  static std::vector<std::string> coincidentSizingFactorModeValues();
+
 
   PlantLoop plantLoop() const;
 
@@ -77,6 +81,21 @@ class MODEL_API SizingPlant : public ModelObject {
   bool setLoopDesignTemperatureDifference(double loopDesignTemperatureDifference);
 
   bool setLoopDesignTemperatureDifference(const Quantity& loopDesignTemperatureDifference);
+
+
+  std::string sizingOption() const;
+
+  bool setSizingOption(std::string sizingOption);
+
+
+  int zoneTimestepsinAveragingWindow() const;
+
+  bool setZoneTimestepsinAveragingWindow(int zoneTimestepsinAveragingWindow);
+
+
+  std::string coincidentSizingFactorMode() const;
+
+  bool setCoincidentSizingFactorMode(std::string coincidentSizingFactorMode);
 
   protected:
 

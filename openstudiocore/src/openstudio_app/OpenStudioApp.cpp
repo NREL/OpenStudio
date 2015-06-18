@@ -490,7 +490,7 @@ void OpenStudioApp::importIFC()
     parent = this->currentDocument()->mainWindow();
   }
   
-  bimserver::ProjectImporter *projectImportation = new bimserver::ProjectImporter(parent);
+  auto projectImportation = new bimserver::ProjectImporter(parent);
   boost::optional<model::Model> model = projectImportation->run();
   projectImportation->close();
 
@@ -801,7 +801,7 @@ void OpenStudioApp::newModel()
 
 void  OpenStudioApp::showHelp()
 {
-  QDesktopServices::openUrl(QUrl("http://nrel.github.io/OpenStudio-user-documentation/next_steps/openstudio_application_interface/"));
+  QDesktopServices::openUrl(QUrl("http://nrel.github.io/OpenStudio-user-documentation/reference/openstudio_application_interface/"));
 }
 
 void  OpenStudioApp::showAbout()

@@ -49,7 +49,7 @@ using namespace openstudio::ruleset;
 class TestOSRunner : public OSRunner {
  public:
 
-  virtual bool inSelection(const openstudio::model::ModelObject& modelObject) const {
+  virtual bool inSelection(const openstudio::model::ModelObject& modelObject) const override {
     return false;
   }
 
@@ -59,14 +59,14 @@ class TestOSRunner : public OSRunner {
 class TestModelUserScript1 : public ModelUserScript {
  public:
 
-  virtual std::string name() const {
+  virtual std::string name() const override {
     return "TestModelUserScript1";
   }
 
   // remove all spaces and add a new one
   virtual bool run(Model& model,
                    OSRunner& runner,
-                   const std::map<std::string, OSArgument>& user_arguments) const
+                   const std::map<std::string, OSArgument>& user_arguments) const override
   {
     ModelUserScript::run(model,runner,user_arguments);
 
@@ -147,11 +147,11 @@ TEST_F(RulesetFixture, UserScript_TestModelUserScript1) {
 
 class TestModelUserScript2 : public ModelUserScript {
  public:
-  virtual std::string name() const {
+  virtual std::string name() const override {
     return "TestModelUserScript2";
   }
 
-  virtual std::vector<OSArgument> arguments(const Model& model) const
+  virtual std::vector<OSArgument> arguments(const Model& model) const override
   {
     std::vector<OSArgument> result;
 
@@ -171,7 +171,7 @@ class TestModelUserScript2 : public ModelUserScript {
   // remove all spaces and add a new one
   virtual bool run(Model& model,
                    OSRunner& runner,
-                   const std::map<std::string, OSArgument>& user_arguments) const
+                   const std::map<std::string, OSArgument>& user_arguments) const override
   {
     ModelUserScript::run(model,runner,user_arguments); // initializes runner
 

@@ -40,7 +40,7 @@ class MainWindow : public QMainWindow
 
   public:
 
-  MainWindow(bool isPlugin, QWidget *parent = 0);
+  MainWindow(bool isPlugin, QWidget *parent = nullptr);
   virtual ~MainWindow() {}
 
   void addVerticalTabButton(int id,
@@ -137,13 +137,13 @@ class MainWindow : public QMainWindow
 
   protected:
 
-  void closeEvent(QCloseEvent * event);
+  void closeEvent(QCloseEvent * event) override;
 
-  void dragEnterEvent(QDragEnterEvent * event);
+  void dragEnterEvent(QDragEnterEvent * event) override;
 
-  void dropEvent(QDropEvent * event);
+  void dropEvent(QDropEvent * event) override;
 
-  QSize sizeHint() const;
+  QSize sizeHint() const override;
 
   private:
 

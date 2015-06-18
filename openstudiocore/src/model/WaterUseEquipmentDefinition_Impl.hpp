@@ -63,9 +63,9 @@ class MODEL_API WaterUseEquipmentDefinition_Impl : public SpaceLoadDefinition_Im
 
   virtual ~WaterUseEquipmentDefinition_Impl() {}
 
-  virtual const std::vector<std::string>& outputVariableNames() const;
+  virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual IddObjectType iddObjectType() const;
+  virtual IddObjectType iddObjectType() const override;
 
   std::string endUseSubcategory() const;
   bool isEndUseSubcategoryDefaulted() const;

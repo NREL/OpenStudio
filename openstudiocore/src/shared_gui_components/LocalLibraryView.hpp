@@ -115,7 +115,7 @@ class LibraryItemView : public OSDragableView
 
   protected:
 
-  void paintEvent(QPaintEvent *);
+  void paintEvent(QPaintEvent *) override;
 };
 
 } // openstudio

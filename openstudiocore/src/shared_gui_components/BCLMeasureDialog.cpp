@@ -408,7 +408,7 @@ void BCLMeasureDialog::init()
   QStringListIterator it(intendedSoftwareTools);
   while (it.hasNext()){
     QString intendedSoftwareTool = it.next();
-    QListWidgetItem *listItem = new QListWidgetItem(intendedSoftwareTool, m_intendedSoftwareToolListWidget);
+    auto listItem = new QListWidgetItem(intendedSoftwareTool, m_intendedSoftwareToolListWidget);
     // DLM: defaults per David
     if (intendedSoftwareTool == "Analysis Spreadsheet"){
       listItem->setCheckState(Qt::Unchecked);
@@ -435,7 +435,7 @@ void BCLMeasureDialog::init()
   it = QStringListIterator(intendedUseCases);
   while (it.hasNext()){
     QString intendedUseCase = it.next();
-    QListWidgetItem *listItem = new QListWidgetItem(intendedUseCase, m_intendedUseCaseListWidget);
+    auto listItem = new QListWidgetItem(intendedUseCase, m_intendedUseCaseListWidget);
     // DLM: default to unchecked per David
     listItem->setCheckState(Qt::Unchecked);
     listItem->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);

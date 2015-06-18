@@ -65,9 +65,9 @@ namespace detail {
 
     virtual Node demandOutletNode() const;
 
-    virtual std::vector<ModelObject> children() const;
+    virtual std::vector<ModelObject> children() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual std::vector<ModelObject> supplyComponents( HVACComponent inletComp,
                                                        HVACComponent outletComp,
@@ -103,9 +103,9 @@ namespace detail {
                                                       openstudio::IddObjectType type
                                                       ) const;
 
-    virtual std::vector<openstudio::IdfObject> remove();
+    virtual std::vector<openstudio::IdfObject> remove() override;
 
-    virtual ModelObject clone(Model model) const;
+    virtual ModelObject clone(Model model) const override;
 
     virtual Splitter demandSplitter() = 0;
 

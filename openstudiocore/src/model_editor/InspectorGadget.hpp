@@ -51,7 +51,7 @@ class MODELEDITOR_API IGWidget : public QWidget
   
   IGWidget(QWidget * parent = nullptr);
 
-  QSize sizeHint() const;
+  QSize sizeHint() const override;
 };
 
 class IGComboBox : public QComboBox
@@ -65,7 +65,7 @@ class IGComboBox : public QComboBox
 
   protected:
 
-  bool event ( QEvent * e )
+  bool event ( QEvent * e ) override
   {
     if( e->type() == QEvent::Wheel )
     {

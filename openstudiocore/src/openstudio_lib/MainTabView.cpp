@@ -53,7 +53,7 @@ MainTabView::MainTabView(const QString & tabLabel, bool hasSubTab, QWidget * par
   m_mainWidget->setObjectName("MainTabView");
   m_mainWidget->move(7,25);
 
-  QVBoxLayout * innerLayout = new QVBoxLayout();
+  auto innerLayout = new QVBoxLayout();
   innerLayout->setSpacing(0);
   m_mainWidget->setLayout(innerLayout);
 
@@ -106,7 +106,7 @@ bool MainTabView::addSubTab(const QString & subTablabel, QWidget * widget, int i
   OS_ASSERT(m_hasSubTab);
   if(!m_hasSubTab) return false;
 
-  QPushButton * button = new QPushButton(this);
+  auto button = new QPushButton(this);
   button->setText(subTablabel);
   button->setFixedHeight(21);
   m_tabButtons.push_back(button);
@@ -126,7 +126,7 @@ void MainTabView::select()
 
   int index = 0;
 
-  for( std::vector<QPushButton*>::iterator  it = m_tabButtons.begin();
+  for( auto it = m_tabButtons.begin();
        it < m_tabButtons.end();
        ++it ){
     if( *it == button ){

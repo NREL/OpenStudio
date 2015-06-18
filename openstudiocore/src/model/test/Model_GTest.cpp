@@ -230,7 +230,7 @@ TEST_F(ModelFixture, UniqueModelObjects)
 
   // DLM: have to sort before calling unique, unique only works on consecutive elements
   std::sort(modelObjectHandles.begin(),modelObjectHandles.end());
-  std::vector<std::string>::iterator end = std::unique(modelObjectHandles.begin(),modelObjectHandles.end());
+  auto end = std::unique(modelObjectHandles.begin(),modelObjectHandles.end());
   std::vector<std::string> uniqueModelObjectHandles(modelObjectHandles.begin(),end);
 
   EXPECT_EQ(modelObjectHandles.size(),uniqueModelObjectHandles.size());

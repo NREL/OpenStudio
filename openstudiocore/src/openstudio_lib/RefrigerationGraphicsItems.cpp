@@ -38,7 +38,7 @@ const double RefrigerationSystemView::componentHeight = 75;
 RefrigerationView::RefrigerationView()
   : QWidget()
 {
-  QVBoxLayout * mainVLayout = new QVBoxLayout();
+  auto mainVLayout = new QVBoxLayout();
   mainVLayout->setSpacing(0);
   mainVLayout->setContentsMargins(0,0,0,0);
   mainVLayout->setAlignment(Qt::AlignTop);
@@ -50,7 +50,7 @@ RefrigerationView::RefrigerationView()
   header->setFixedHeight(35);
   mainVLayout->addWidget(header);
 
-  QHBoxLayout * headerLayout = new QHBoxLayout();
+  auto headerLayout = new QHBoxLayout();
   headerLayout->setContentsMargins(5,5,5,5);
   headerLayout->setSpacing(0);
   header->setLayout(headerLayout);
@@ -455,7 +455,7 @@ void RefrigerationCasesView::setExpanded(bool exapanded)
 
   m_expanded = exapanded;
 
-  for( std::vector<QGraphicsObject *>::iterator it = m_caseDetailViews.begin();
+  for( auto it = m_caseDetailViews.begin();
        it != m_caseDetailViews.end();
        ++it )
   {
@@ -604,7 +604,7 @@ void RefrigerationCasesView::removeAllCaseDetailViews()
 {
   prepareGeometryChange();
 
-  for( std::vector<QGraphicsObject *>::iterator it = m_caseDetailViews.begin();
+  for( auto it = m_caseDetailViews.begin();
        it != m_caseDetailViews.end(); )
   {
     delete * it;
@@ -619,7 +619,7 @@ void RefrigerationCasesView::adjustLayout()
 {
   int i = 0;
 
-  for( std::vector<QGraphicsObject *>::iterator it = m_caseDetailViews.begin();
+  for( auto it = m_caseDetailViews.begin();
        it != m_caseDetailViews.end();
        ++it )
   {
@@ -986,7 +986,7 @@ void RefrigerationCompressorView::removeAllCompressorDetailViews()
 {
   prepareGeometryChange();
 
-  for( std::vector<QGraphicsObject *>::iterator it = m_compressorDetailViews.begin();
+  for( auto it = m_compressorDetailViews.begin();
        it != m_compressorDetailViews.end(); )
   {
     delete * it;
@@ -1004,7 +1004,7 @@ void RefrigerationCompressorView::adjustLayout()
   int x = refrigerationCompressorDropZoneView->pos().x() + refrigerationCompressorDropZoneView->boundingRect().width() + RefrigerationSystemView::margin / 2.0;
   int y = RefrigerationSystemView::margin / 2.0;
 
-  for( std::vector<QGraphicsObject *>::iterator it = m_compressorDetailViews.begin();
+  for( auto it = m_compressorDetailViews.begin();
        it != m_compressorDetailViews.end();
        ++it )
   {
@@ -1401,7 +1401,7 @@ void RefrigerationSecondaryView::insertSecondaryDetailView(int index, QGraphicsO
 
 void RefrigerationSecondaryView::removeAllSecondaryDetailViews()
 {
-  for( std::vector<QGraphicsObject *>::iterator it = m_secondaryDetailViews.begin();
+  for( auto it = m_secondaryDetailViews.begin();
        it != m_secondaryDetailViews.end(); )
   {
     delete * it;
@@ -1421,7 +1421,7 @@ void RefrigerationSecondaryView::adjustLayout()
   secondaryDropZoneView->setPos(0,0);
   y = y + secondaryDropZoneView->boundingRect().height() + RefrigerationSystemView::margin / 2.0;
 
-  for( std::vector<QGraphicsObject *>::iterator it = m_secondaryDetailViews.begin();
+  for( auto it = m_secondaryDetailViews.begin();
        it != m_secondaryDetailViews.end();
        ++it )
   {

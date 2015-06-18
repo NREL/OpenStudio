@@ -47,7 +47,7 @@ class SubTabView : public QSplitter
     SubTabView(OSItemSelector* itemSelector,
       OSInspectorView* inspectorView,
       bool showGridViewLayout = false,
-      QWidget * parent = 0);
+      QWidget * parent = nullptr);
 
     virtual ~SubTabView() {}
 
@@ -95,7 +95,7 @@ class SubTabView : public QSplitter
 
   protected:
 
-    void paintEvent ( QPaintEvent * event );
+    void paintEvent ( QPaintEvent * event ) override;
 
   private:
 

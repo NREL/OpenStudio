@@ -58,11 +58,11 @@ class ApplyMeasureNowDialog : public OSDialog
 
 public:
 
-  ApplyMeasureNowDialog(QWidget * parent = 0);
+  ApplyMeasureNowDialog(QWidget * parent = nullptr);
 
   virtual ~ApplyMeasureNowDialog();
 
-  QSize sizeHint() const;
+  QSize sizeHint() const override;
 
   void displayMeasure();
 
@@ -72,15 +72,15 @@ public:
 
 protected slots:
 
-  virtual void on_cancelButton(bool checked);
+  virtual void on_cancelButton(bool checked) override;
 
-  virtual void on_backButton(bool checked);
+  virtual void on_backButton(bool checked) override;
 
-  virtual void on_okButton(bool checked);
+  virtual void on_okButton(bool checked) override;
 
 protected:
 
-  void closeEvent(QCloseEvent * event);
+  void closeEvent(QCloseEvent * event) override;
 
 private slots:
 
@@ -228,7 +228,7 @@ public:
 
 protected:
 
-  void paintEvent(QPaintEvent * e);
+  void paintEvent(QPaintEvent * e) override;
 
 public slots:
 

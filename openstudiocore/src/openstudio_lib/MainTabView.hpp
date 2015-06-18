@@ -34,7 +34,7 @@ class MainTabView : public QWidget
   Q_OBJECT
 
 public:
-  MainTabView(const QString & tabLabel, bool hasSubTabs, QWidget * parent = 0);
+  MainTabView(const QString & tabLabel, bool hasSubTabs, QWidget * parent = nullptr);
 
   virtual ~MainTabView() {}
 
@@ -67,8 +67,8 @@ protected:
 
   void setCurrentIndex(int index);
   void setCurrentWidget(QWidget * widget);
-  void paintEvent( QPaintEvent * event );
-  void resizeEvent( QResizeEvent * event );
+  void paintEvent( QPaintEvent * event ) override;
+  void resizeEvent( QResizeEvent * event ) override;
 
 private slots:
   void select();

@@ -52,19 +52,19 @@ namespace detail {
 
     virtual ~ZoneHVACLowTemperatureRadiantElectric_Impl() {}
     
-    virtual unsigned inletPort() const;
+    virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const;
+    virtual unsigned outletPort() const override;
 
     /** @name Virtual Methods */
 
-    virtual ModelObject clone(Model model) const;
+    virtual ModelObject clone(Model model) const override;
     
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
     /** @name Getters */
 
@@ -116,9 +116,9 @@ namespace detail {
     
     boost::optional<ThermalZone> thermalZone() const;
 
-    bool addToThermalZone(ThermalZone & thermalZone);
+    bool addToThermalZone(ThermalZone & thermalZone) override;
 
-    void removeFromThermalZone();
+    void removeFromThermalZone() override;
 
     //@}
     /** @name Other */

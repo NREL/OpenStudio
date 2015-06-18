@@ -105,7 +105,7 @@ namespace detail {
 
     virtual ~Analysis_Impl() {}
 
-    virtual AnalysisObject clone() const;
+    virtual AnalysisObject clone() const override;
 
     //@}
     /** @name Getters and Queries */
@@ -221,7 +221,7 @@ namespace detail {
      *  this method should be called after this object has been saved to the ProjectDatabase
      *  (record constructed, database saved, and transaction committed). Returns false if the flag
      *  cannot be cleared for some reason. */
-    virtual bool clearDirtyFlag();
+    virtual bool clearDirtyFlag() override;
 
     /** Updates an existing DataPoint in this analysis. Throws an openstudio::Exception if DataPoint
      *  is not in this analysis, or if completedJob is not complete, or was not spawned by algorithm()
@@ -242,7 +242,7 @@ namespace detail {
 
     /// Relocate path data from originalBase to newBase.
     virtual void updateInputPathData(const openstudio::path& originalBase,
-                                     const openstudio::path& newBase);
+                                     const openstudio::path& newBase) override;
 
     //@}
     /** @name Serialization
@@ -262,7 +262,7 @@ namespace detail {
     /** @name Protected in or Absent from Public Class */
     //@{
 
-    virtual QVariant toVariant() const;
+    virtual QVariant toVariant() const override;
 
     /** Finalizes Analysis JSON based on options. */
     QVariant toVariant(const AnalysisSerializationOptions& options) const;
@@ -290,7 +290,7 @@ namespace detail {
     bool m_dataPointsAreInvalid;
 
     /** Calls AnalysisObject_Impl version and invalidates data points if appropriate. */
-    virtual void onChange(ChangeType changeType);
+    virtual void onChange(ChangeType changeType) override;
 
    private:
     REGISTER_LOGGER("openstudio.analysis.Analysis");

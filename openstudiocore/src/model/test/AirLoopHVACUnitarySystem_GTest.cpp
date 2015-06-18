@@ -320,7 +320,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodeTwoSameObjects)
   Node supplyOutletNode = airLoop.supplyOutletNode();
   testObject.addToNode(supplyOutletNode);
   supplyOutletNode = airLoop.supplyOutletNode();
-  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
   
   EXPECT_TRUE(testObject.airInletPort());
   EXPECT_TRUE(testObject.airOutletPort());   

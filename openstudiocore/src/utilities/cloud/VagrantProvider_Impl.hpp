@@ -74,17 +74,17 @@ namespace detail{
     /** @name Inherited members */
     //@{
 
-    virtual std::string cloudProviderType() const;
+    virtual std::string cloudProviderType() const override;
 
-    virtual std::string userAgreementText() const;
+    virtual std::string userAgreementText() const override;
 
-    virtual bool userAgreementSigned() const;
+    virtual bool userAgreementSigned() const override;
 
-    virtual void signUserAgreement(bool agree);
+    virtual void signUserAgreement(bool agree) override;
 
-    virtual bool loadSettings(bool overwriteExisting = false);
+    virtual bool loadSettings(bool overwriteExisting = false) override;
 
-    virtual bool saveToSettings(bool overwriteExisting = false) const;
+    virtual bool saveToSettings(bool overwriteExisting = false) const override;
 
     //@}
     /** @name Class members */
@@ -171,7 +171,7 @@ namespace detail{
     /** @name Inherited members */
     //@{
 
-    virtual std::string cloudProviderType() const;
+    virtual std::string cloudProviderType() const override;
 
     //@}
     /** @name Class members */
@@ -208,89 +208,89 @@ namespace detail{
     /** @name Inherited accessor class members */
     //@{
 
-    virtual std::string type() const;
+    virtual std::string type() const override;
 
-    virtual unsigned numWorkers() const;
+    virtual unsigned numWorkers() const override;
 
-    virtual CloudSettings settings() const;
+    virtual CloudSettings settings() const override;
 
-    virtual bool setSettings(const CloudSettings& settings);
+    virtual bool setSettings(const CloudSettings& settings) override;
 
-    virtual CloudSession session() const;
+    virtual CloudSession session() const override;
 
-    virtual bool setSession(const CloudSession& session);
+    virtual bool setSession(const CloudSession& session) override;
 
-    virtual bool lastInternetAvailable() const;
+    virtual bool lastInternetAvailable() const override;
 
-    virtual bool lastServiceAvailable() const;
+    virtual bool lastServiceAvailable() const override;
 
-    virtual bool lastValidateCredentials() const;
+    virtual bool lastValidateCredentials() const override;
 
-    virtual bool lastResourcesAvailableToStart() const;
+    virtual bool lastResourcesAvailableToStart() const override;
 
-    virtual bool serverStarted() const;
+    virtual bool serverStarted() const override;
 
-    virtual bool workersStarted() const;
+    virtual bool workersStarted() const override;
 
-    virtual bool lastServerRunning() const;
+    virtual bool lastServerRunning() const override;
 
-    virtual bool lastWorkersRunning() const;
+    virtual bool lastWorkersRunning() const override;
 
-    virtual bool terminateStarted() const;
+    virtual bool terminateStarted() const override;
 
-    virtual bool lastTerminateCompleted() const;
+    virtual bool lastTerminateCompleted() const override;
 
-    virtual std::vector<std::string> errors() const;
+    virtual std::vector<std::string> errors() const override;
     
-    virtual std::vector<std::string> warnings() const;
+    virtual std::vector<std::string> warnings() const override;
 
     //@}
     /** @name Inherited blocking class members */
     //@{
 
-    virtual bool internetAvailable(int msec);
+    virtual bool internetAvailable(int msec) override;
 
-    virtual bool serviceAvailable(int msec);
+    virtual bool serviceAvailable(int msec) override;
 
-    virtual bool validateCredentials(int msec);
+    virtual bool validateCredentials(int msec) override;
 
-    virtual bool resourcesAvailableToStart(int msec);
+    virtual bool resourcesAvailableToStart(int msec) override;
 
-    virtual bool waitForServer(int msec);
+    virtual bool waitForServer(int msec) override;
 
-    virtual bool waitForWorkers(int msec);
+    virtual bool waitForWorkers(int msec) override;
 
-    virtual bool serverRunning(int msec);
+    virtual bool serverRunning(int msec) override;
 
-    virtual bool workersRunning(int msec);
+    virtual bool workersRunning(int msec) override;
 
-    virtual bool waitForTerminated(int msec);
+    virtual bool waitForTerminated(int msec) override;
 
-    virtual bool terminateCompleted(int msec);
+    virtual bool terminateCompleted(int msec) override;
 
     //@}
     /** @name Inherited non-blocking class members */
     //@{
 
-    virtual bool requestInternetAvailable();
+    virtual bool requestInternetAvailable() override;
 
-    virtual bool requestServiceAvailable();
+    virtual bool requestServiceAvailable() override;
 
-    virtual bool requestValidateCredentials();
+    virtual bool requestValidateCredentials() override;
 
-    virtual bool requestResourcesAvailableToStart();
+    virtual bool requestResourcesAvailableToStart() override;
 
-    virtual bool requestStartServer();
+    virtual bool requestStartServer() override;
 
-    virtual bool requestStartWorkers();
+    virtual bool requestStartWorkers() override;
 
-    virtual bool requestServerRunning();
+    virtual bool requestServerRunning() override;
 
-    virtual bool requestWorkersRunning();
+    virtual bool requestWorkersRunning() override;
 
-    virtual bool requestTerminate();
+    virtual bool requestTerminate() override;
 
-    virtual bool requestTerminateCompleted();
+    virtual bool requestTerminateCompleted() override;
 
     //@}
     /** @name Class members */
