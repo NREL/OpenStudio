@@ -159,10 +159,6 @@ void OSGridView::setGridController(OSGridController * gridController)
   m_gridController = gridController;
 
   m_gridController->setParent(this);
-
-  // Evan NOTE: empty slot
-  //isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), m_gridController, SLOT(onItemSelected(OSItem *)));
-  //OS_ASSERT(isConnected);
 }
 
 void OSGridView::requestAddRow(int row)

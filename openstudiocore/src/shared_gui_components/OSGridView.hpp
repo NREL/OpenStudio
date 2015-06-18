@@ -78,8 +78,6 @@ protected:
 
 signals:
 
-  void itemSelected(OSItem *);
-
   void dropZoneItemClicked(OSItem* item);
 
 public slots:

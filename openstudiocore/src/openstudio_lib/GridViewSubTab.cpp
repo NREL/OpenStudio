@@ -76,13 +76,7 @@ namespace openstudio {
     connect(m_itemSelectorButtons, &OSItemSelectorButtons::removeClicked, this, &GridViewSubTab::onRemoveClicked);
     connect(m_itemSelectorButtons, &OSItemSelectorButtons::purgeClicked, this, &GridViewSubTab::onPurgeClicked);
 
-    // Toggle Units
     connect(this, &GridViewSubTab::toggleUnitsClicked, this, &GridViewSubTab::toggleUnits);
-
-    //connect(thermalZoneView, &ThermalZoneView::modelObjectSelected, this, &ThermalZonesController::modelObjectSelected);
-
-    //connect(thermalZoneView, &ThermalZoneView::dropZoneItemSelected, this, &ThermalZonesController::dropZoneItemSelected);
-
   }
 
   void GridViewSubTab::setGridView(OSGridView * gridView)
@@ -90,8 +84,6 @@ namespace openstudio {
     m_scrollLayout->addWidget(gridView, 0, Qt::AlignTop);
 
     connect(gridView, &OSGridView::dropZoneItemClicked, this, &GridViewSubTab::dropZoneItemClicked);
-
-    connect(this, &GridViewSubTab::itemSelected, gridView, &OSGridView::itemSelected);
 
     connect(this, &GridViewSubTab::selectionCleared, gridView, &OSGridView::onSelectionCleared);
   }

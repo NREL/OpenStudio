@@ -57,8 +57,6 @@ namespace openstudio{
 
     void dropZoneItemClicked(OSItem* item);
 
-    void itemSelected(OSItem * item);
-
     void selectionCleared();
 
   };

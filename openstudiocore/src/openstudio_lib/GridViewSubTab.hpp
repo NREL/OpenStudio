@@ -89,8 +89,6 @@ class GridViewSubTab : public QWidget
 
     void dropZoneItemClicked(OSItem* item);
 
-    void itemSelected(OSItem * item);
-
     void selectionCleared();
 
   protected slots :

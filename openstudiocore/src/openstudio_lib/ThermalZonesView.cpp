@@ -42,12 +42,6 @@ ThermalZonesView::ThermalZonesView(bool isIP,
 {
   bool isConnected = false;
 
-  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), inspectorView(), SIGNAL(itemSelected(OSItem *)));
-  OS_ASSERT(isConnected); 
-
-  isConnected = connect(itemSelector(), SIGNAL(itemSelected(OSItem *)), inspectorView(), SIGNAL(itemSelected(OSItem *)));
-  OS_ASSERT(isConnected);
-
   isConnected = connect(itemSelector(), SIGNAL(selectionCleared()), inspectorView(), SIGNAL(selectionCleared()));
   OS_ASSERT(isConnected);
 
@@ -67,9 +61,6 @@ ThermalZoneView::ThermalZoneView(bool isIP,
   this->stackedWidget()->addWidget(m_thermalZonesGridView);
 
   isConnected = connect(m_thermalZonesGridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), m_thermalZonesGridView, SIGNAL(itemSelected(OSItem *)));
   OS_ASSERT(isConnected);
 
   isConnected = connect(this, SIGNAL(selectionCleared()), m_thermalZonesGridView, SIGNAL(selectionCleared()));
