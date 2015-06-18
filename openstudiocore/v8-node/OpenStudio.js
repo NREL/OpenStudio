@@ -120,7 +120,7 @@ openstudio.runmanager = OpenStudioRunManager;
 
 openstudio.project = OpenStudioProject;
 
-openstudio.analsysdriver = OpenStudioAnalysisDriver;
+openstudio.analysisdriver = OpenStudioAnalysisDriver;
 
 //openstudio.modeleditor = OpenStudioModelEditor;
 
