@@ -65,6 +65,7 @@
 #include <QComboBox>
 #include <QDateTime>
 #include <QDir>
+#include <QFile>
 #include <QFileDialog>
 #include <QLabel>
 #include <QLineEdit>
@@ -80,6 +81,8 @@
 #define ELEVATION "Elevation: "
 #define TIME_ZONE "Time Zone: "
 #define NUM_DESIGN_DAYS "Number of Design Days: "
+#define SETWEATHERFILE "Set Weather File"
+#define CHANGEWEATHERFILE "Change Weather File"
 
 namespace openstudio {
 
@@ -176,17 +179,17 @@ LocationView::LocationView(bool isIP,
   auto label = new QLabel("Weather File");
   label->setObjectName("H2");
 
-  auto btn = new QPushButton("Set Weather File", this);
-  btn->setFlat(true);
-  btn->setObjectName("StandardGrayButton");
-  connect(btn, &QPushButton::clicked, this, &LocationView::onWeatherFileBtnClicked);
+  m_weatherFileBtn = new QPushButton(this);
+  m_weatherFileBtn->setFlat(true);
+  m_weatherFileBtn->setObjectName("StandardGrayButton");
+  connect(m_weatherFileBtn, &QPushButton::clicked, this, &LocationView::onWeatherFileBtnClicked);
 
   auto hLayout = new QHBoxLayout();
   hLayout->setContentsMargins(0, 0, 0, 0);
   hLayout->setSpacing(7);
 
   hLayout->addWidget(label, 0, Qt::AlignLeft);
-  hLayout->addWidget(btn, 0, Qt::AlignLeft);
+  hLayout->addWidget(m_weatherFileBtn, 0, Qt::AlignLeft);
   hLayout->addStretch();
 
   leftVLayout->addLayout(hLayout);
@@ -334,7 +337,7 @@ LocationView::LocationView(bool isIP,
   label = new QLabel("Design Days");
   label->setObjectName("H2");
 
-  btn = new QPushButton("Import From DDY", this);
+  auto btn = new QPushButton("Import From DDY", this);
   btn->setFlat(true);
   btn->setObjectName("StandardGrayButton");
   connect(btn, &QPushButton::clicked, this, &LocationView::onDesignDayBtnClicked);
@@ -425,28 +428,46 @@ void LocationView::saveQSettings() const
 
 void LocationView::update()
 {
-  QString info;
-  QString temp;
-
   boost::optional<model::WeatherFile> weatherFile = m_model.getOptionalUniqueModelObject<model::WeatherFile>();
   if (weatherFile){
 
     boost::optional<openstudio::path> epwPath = weatherFile->path();
-    if (epwPath){
-      // Do great things TODO
+
+    if ( !epwPath || ( epwPath && ( epwPath.get().empty() || !QFile(epwPath.get().string().c_str()).exists() ) && !QFile(m_lastEpwPathOpened).exists() ) ) {
+      m_weatherFileBtn->setText(SETWEATHERFILE);
+      clearSiteInfo();
+    }
+    else {
+      if (weatherFile->name() && !weatherFile->name()->empty()) {
+        m_site->setName(weatherFile->name().get());
+      }
+      m_site->setLatitude(weatherFile->latitude());
+      m_site->setLongitude(weatherFile->longitude());
+      m_site->setElevation(weatherFile->elevation());
+      m_site->setTimeZone(weatherFile->timeZone());
+
+      m_weatherFileBtn->setText(CHANGEWEATHERFILE);
+      setSiteInfo();
     }
 
-    if (weatherFile->name() && !weatherFile->name()->empty()) {
-      m_site->setName(weatherFile->name().get());
-    }
-    m_site->setLatitude(weatherFile->latitude());
-    m_site->setLongitude(weatherFile->longitude());
-    m_site->setElevation(weatherFile->elevation());
-    m_site->setTimeZone(weatherFile->timeZone());
   }
+  else {
+    m_weatherFileBtn->setText(SETWEATHERFILE);
+    clearSiteInfo();
+  }
+
+}
+
+void LocationView::setSiteInfo()
+{
+  QString info;
+  QString temp;
 
   if (m_site->name() && !m_site->name()->empty()) {
     m_siteName->setText(m_site->name().get().c_str());
+  }
+  else {
+    m_siteName->setText("");
   }
 
   info = LATITUDE;
@@ -468,6 +489,19 @@ void LocationView::update()
   temp.setNum(m_site->timeZone());
   info += temp;
   m_timeZoneLbl->setText(info);
+}
+
+void LocationView::clearSiteInfo()
+{
+  m_siteName->setText("");
+
+  m_latitudeLbl->setText(LATITUDE);
+
+  m_longitudeLbl->setText(LONGITUDE);
+
+  m_elevationLbl->setText(ELEVATION);
+
+  m_timeZoneLbl->setText(TIME_ZONE);
 }
 
 // ***** SLOTS *****
@@ -699,7 +733,6 @@ void LocationView::onDesignDayBtnClicked()
 
         m_lastDdyPathOpened = QFileInfo(fileName).absoluteFilePath();
 
-        update();
       }
     }
 

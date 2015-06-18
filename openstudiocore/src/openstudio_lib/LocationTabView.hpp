@@ -68,22 +68,6 @@ protected:
 
   void onUpdate();
 
-signals:
-
-  void toggleUnitsClicked(bool displayIP);
-
-private slots:
-
-  void onSelectItem();
-
-  void onClearSelection();
-
-  void toggleUnits(bool);
-
-  void onSiteNameChanged(const QString & text);
-
-  void checkNumDesignDays();
-
 private:
 
   void update();
@@ -91,6 +75,10 @@ private:
   void loadQSettings();
 
   void saveQSettings() const;
+
+  void setSiteInfo();
+
+  void clearSiteInfo();
 
   model::Model m_model;
   boost::optional<model::Site> m_site;
@@ -108,17 +96,30 @@ private:
   QLabel * m_longitudeLbl = nullptr;
   QLabel * m_elevationLbl = nullptr;
   QLabel * m_timeZoneLbl = nullptr;
+  QPushButton * m_weatherFileBtn = nullptr;
   bool m_isIP;
 
 signals:
 
   void modelObjectSelected(model::OptionalModelObject & modelObject, bool readOnly);
 
+  void toggleUnitsClicked(bool displayIP);
+
 public slots:
 
   void refresh();
 
 private slots:
+
+  void onSelectItem();
+
+  void onClearSelection();
+
+  void toggleUnits(bool);
+
+  void onSiteNameChanged(const QString & text);
+
+  void checkNumDesignDays();
 
   void setCalendarYear(int year);
 
