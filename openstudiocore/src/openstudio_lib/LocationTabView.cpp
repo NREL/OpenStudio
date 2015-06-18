@@ -221,9 +221,6 @@ LocationView::LocationView(bool isIP,
   m_timeZoneLbl = new QLabel(TIME_ZONE);
   weatherFileGridLayout->addWidget(m_timeZoneLbl, i++, 0);
 
-  m_numDesignDaysLbl = new QLabel(NUM_DESIGN_DAYS);
-  weatherFileGridLayout->addWidget(m_numDesignDaysLbl, i++, 0);
-
   // ***** Weather File Download Location *****
   label = new QLabel("Download weather files at <a href=\"http://www.energyplus.gov\">www.energyplus.gov</a>");
   label->setOpenExternalLinks(true);
@@ -471,12 +468,6 @@ void LocationView::update()
   temp.setNum(m_site->timeZone());
   info += temp;
   m_timeZoneLbl->setText(info);
-
-  unsigned numDesignDays = m_model.getModelObjects<model::SizingPeriod>().size();
-  info = NUM_DESIGN_DAYS;
-  temp.setNum(numDesignDays);
-  info += temp;
-  m_numDesignDaysLbl->setText(info);
 }
 
 // ***** SLOTS *****

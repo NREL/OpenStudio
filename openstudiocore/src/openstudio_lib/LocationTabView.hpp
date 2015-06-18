@@ -108,7 +108,6 @@ private:
   QLabel * m_longitudeLbl = nullptr;
   QLabel * m_elevationLbl = nullptr;
   QLabel * m_timeZoneLbl = nullptr;
-  QLabel * m_numDesignDaysLbl = nullptr;
   bool m_isIP;
 
 signals:
