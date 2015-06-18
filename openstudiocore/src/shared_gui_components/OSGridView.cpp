@@ -92,9 +92,6 @@ OSGridView::OSGridView(OSGridController * gridController,
 
   connect(m_dropZone, &OSDropZone::itemDropped, m_gridController, &OSGridController::onItemDropped);
 
-  auto isConnected = connect(this, SIGNAL(dropZoneItemClicked(OSItem*)), this, SLOT(onDropZoneItemClicked(OSItem*)));
-  OS_ASSERT(isConnected);
-
   buttonLayout->addWidget(m_dropZone);
 
   std::vector<QString> categories = m_gridController->categories();
@@ -468,10 +465,6 @@ ModelSubTabView * OSGridView::modelSubTabView()
 void OSGridView::onSelectionCleared()
 {
   m_gridController->onSelectionCleared();
-}
-
-void OSGridView::onDropZoneItemClicked(OSItem* item)
-{
 }
 
 void OSGridView::hideEvent(QHideEvent * event)

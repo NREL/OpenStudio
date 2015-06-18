@@ -304,10 +304,6 @@ namespace openstudio {
     m_filters->setEnabled(false);
   }
 
-  void SpaceTypesGridView::onDropZoneItemClicked(OSItem* item)
-  {
-  }
-
   SpaceTypesGridController::SpaceTypesGridController(bool isIP,
     const QString & headerText,
     IddObjectType iddObjectType,

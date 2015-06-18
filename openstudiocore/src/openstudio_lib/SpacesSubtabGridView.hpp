@@ -139,8 +139,6 @@ namespace openstudio{
 
   protected slots:
 
-    void onDropZoneItemClicked(OSItem* item);
-
     virtual void spaceNameFilterChanged();
 
     virtual void storyFilterChanged(const QString & text);

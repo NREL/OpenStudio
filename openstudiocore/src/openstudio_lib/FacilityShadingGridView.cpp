@@ -299,10 +299,6 @@ namespace openstudio {
 
   }
 
-  void FacilityShadingGridView::onDropZoneItemClicked(OSItem* item)
-  {
-  }
-
   void FacilityShadingGridView::addObject(const IddObjectType& iddObjectType)
   {
     if (IddObjectType::OS_ShadingSurfaceGroup == iddObjectType.value()) {

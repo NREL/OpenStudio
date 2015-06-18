@@ -696,8 +696,6 @@ private slots:
 
   void horizontalHeaderChecked(int index);
 
-  void onDropZoneItemClicked(OSItem* item);
-
   void onRemoveWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
 
   void onAddWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);

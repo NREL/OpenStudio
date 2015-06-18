@@ -153,10 +153,6 @@ namespace openstudio {
 
   }
 
-  void FacilityStoriesGridView::onDropZoneItemClicked(OSItem* item)
-  {
-  }
-
   void FacilityStoriesGridView::addObject(const IddObjectType& iddObjectType)
   {
     if (IddObjectType::OS_BuildingStory == iddObjectType.value()) {

@@ -55,10 +55,6 @@ namespace openstudio{
 
     virtual void onClearSelection();
 
-  private slots :
-
-    void onDropZoneItemClicked(OSItem* item);
-
   };
 
   class FacilityExteriorEquipmentGridController : public OSGridController

@@ -65,8 +65,6 @@ namespace openstudio{
 
   private slots :
 
-    void onDropZoneItemClicked(OSItem* item);
-
     void greaterThanFilterChanged();
 
     void lessThanFilterChanged();

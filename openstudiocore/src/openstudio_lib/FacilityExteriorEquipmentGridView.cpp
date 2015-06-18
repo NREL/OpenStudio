@@ -79,10 +79,6 @@ namespace openstudio {
     setGridView(gridView);
   }
 
-  void FacilityExteriorEquipmentGridView::onDropZoneItemClicked(OSItem* item)
-  {
-  }
-
   void FacilityExteriorEquipmentGridView::addObject(const IddObjectType& iddObjectType)
   {
     if (IddObjectType::OS_Exterior_Lights == iddObjectType.value()) {

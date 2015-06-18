@@ -810,10 +810,6 @@ namespace openstudio {
     this->m_gridView->requestRefreshAll();
   }
 
-  void SpacesSubtabGridView::onDropZoneItemClicked(OSItem* item)
-  {
-  }
-
   void SpacesSubtabGridView::addObject(const IddObjectType& iddObjectType)
   {
     if (IddObjectType::OS_Space == iddObjectType.value()) {

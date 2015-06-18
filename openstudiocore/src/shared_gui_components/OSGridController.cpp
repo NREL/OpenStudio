@@ -697,9 +697,6 @@ namespace openstudio {
       isConnected = connect(loadName, SIGNAL(itemClicked(OSItem*)), gridView(), SIGNAL(dropZoneItemClicked(OSItem*)));
       OS_ASSERT(isConnected);
 
-      isConnected = connect(loadName, SIGNAL(itemClicked(OSItem*)), this, SLOT(onDropZoneItemClicked(OSItem*)));
-      OS_ASSERT(isConnected);
-
       isConnected = connect(loadName, SIGNAL(objectRemoved(boost::optional<model::ParentObject>)), this, SLOT(onObjectRemoved(boost::optional<model::ParentObject>)));
       OS_ASSERT(isConnected);
 
@@ -723,9 +720,6 @@ namespace openstudio {
 
       if (nameLineEditConcept->isInspectable()) {
         isConnected = connect(nameLineEdit, SIGNAL(itemClicked(OSItem*)), gridView(), SIGNAL(dropZoneItemClicked(OSItem*)));
-        OS_ASSERT(isConnected);
-
-        isConnected = connect(nameLineEdit, SIGNAL(itemClicked(OSItem*)), this, SLOT(onDropZoneItemClicked(OSItem*)));
         OS_ASSERT(isConnected);
 
         isConnected = connect(nameLineEdit, SIGNAL(objectRemoved(boost::optional<model::ParentObject>)), this, SLOT(onObjectRemoved(boost::optional<model::ParentObject>)));
@@ -864,9 +858,6 @@ namespace openstudio {
         NoFailAction(std::bind(&DropZoneConcept::reset, dropZoneConcept.data(), t_mo)));
 
       isConnected = connect(dropZone, SIGNAL(itemClicked(OSItem*)), gridView(), SIGNAL(dropZoneItemClicked(OSItem*)));
-      OS_ASSERT(isConnected);
-
-      isConnected = connect(dropZone, SIGNAL(itemClicked(OSItem*)), this, SLOT(onDropZoneItemClicked(OSItem*)));
       OS_ASSERT(isConnected);
 
       isConnected = connect(dropZone, SIGNAL(objectRemoved(boost::optional<model::ParentObject>)), this, SLOT(onObjectRemoved(boost::optional<model::ParentObject>)));
@@ -1542,10 +1533,6 @@ namespace openstudio {
   }
 
   void OSGridController::onSelectionCleared()
-  {
-  }
-
-  void OSGridController::onDropZoneItemClicked(OSItem* item)
   {
   }
 

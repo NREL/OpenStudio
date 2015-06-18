@@ -74,10 +74,6 @@ namespace openstudio{
 
     void selectionCleared();
 
-  private slots:
-
-    void onDropZoneItemClicked(OSItem* item);
-
   };
 
   class SpaceTypesGridController : public OSGridController

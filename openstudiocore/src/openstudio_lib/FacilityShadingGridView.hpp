@@ -80,8 +80,6 @@ namespace openstudio{
     
   private slots :
 
-    void onDropZoneItemClicked(OSItem* item);
-
     void tiltFilterChanged();
 
     void orientationFilterChanged(const QString & text);
