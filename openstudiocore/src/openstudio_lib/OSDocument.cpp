@@ -717,6 +717,8 @@ namespace openstudio {
 
       connect(m_mainTabController.get(), &FacilityTabController::openLibDlgClicked, this, &OSDocument::openLibDlgClicked);
 
+      connect(m_mainRightColumnController.get(), &MainRightColumnController::itemRemoveClicked, m_mainTabController.get(), &FacilityTabController::itemRemoveClicked);
+
       connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForFacilitySubTab);
 
       connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
@@ -738,6 +740,8 @@ namespace openstudio {
       connect(m_mainTabController.get(), &SpacesTabController::downloadComponentsClicked, this, &OSDocument::downloadComponentsClicked);
 
       connect(m_mainTabController.get(), &SpacesTabController::openLibDlgClicked, this, &OSDocument::openLibDlgClicked);
+
+      connect(m_mainRightColumnController.get(), &MainRightColumnController::itemRemoveClicked, m_mainTabController.get(), &SpacesTabController::itemRemoveClicked);
 
       connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForFacilitySubTab);
 
