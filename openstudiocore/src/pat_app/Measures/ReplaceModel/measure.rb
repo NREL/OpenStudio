@@ -72,7 +72,7 @@ class ReplaceModel < OpenStudio::Ruleset::ModelUserScript
       capitalCost = measure[:capitalCost]
       description = measure[:description]
       runner.registerInfo("Adding LifeCycleCost for alternative measure '#{displayName}'.")
-      OpenStudio::Model::LifeCycleCost.createLifeCycleCost(displayName, building, capitalCost, 'CostPerEach', taxonomyTag, 0, 0)
+      cost = OpenStudio::Model::LifeCycleCost.createLifeCycleCost(displayName, building, capitalCost, 'CostPerEach', 'Construction', 0, 0)
     end
     
     # pull original weather file object over
