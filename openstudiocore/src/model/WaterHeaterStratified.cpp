@@ -17,22 +17,25 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/WaterHeaterStratified.hpp>
-#include <model/WaterHeaterStratified_Impl.hpp>
+#include "WaterHeaterStratified.hpp"
+#include "WaterHeaterStratified_Impl.hpp"
 
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
+#include "ScheduleDay.hpp"
+#include "ScheduleDay_Impl.hpp"
+#include "ScheduleRuleset.hpp"
+#include "ScheduleRuleset_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_WaterHeater_Stratified_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
-
-#include <utilities/core/Assert.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -999,108 +1002,80 @@ WaterHeaterStratified::WaterHeaterStratified(const Model& model)
 {
   OS_ASSERT(getImpl<detail::WaterHeaterStratified_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_WaterHeater_StratifiedFields::Heater1SetpointTemperatureScheduleName
-  //     OS_WaterHeater_StratifiedFields::Heater2SetpointTemperatureScheduleName
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
-  // setEndUseSubcategory();
-  // ok = setTankVolume();
-  OS_ASSERT(ok);
-  // ok = setTankHeight();
-  OS_ASSERT(ok);
-  // ok = setTankShape();
-  OS_ASSERT(ok);
-  // setMaximumTemperatureLimit();
-  // ok = setHeaterPriorityControl();
-  OS_ASSERT(ok);
-  // ok = setHeater1SetpointTemperatureSchedule();
-  OS_ASSERT(ok);
-  // ok = setHeater1DeadbandTemperatureDifference();
-  OS_ASSERT(ok);
-  // ok = setHeater1Capacity();
-  OS_ASSERT(ok);
-  // ok = setHeater1Height();
-  OS_ASSERT(ok);
-  // ok = setHeater2SetpointTemperatureSchedule();
-  OS_ASSERT(ok);
-  // ok = setHeater2DeadbandTemperatureDifference();
-  OS_ASSERT(ok);
-  // ok = setHeater2Capacity();
-  OS_ASSERT(ok);
-  // ok = setHeater2Height();
-  OS_ASSERT(ok);
-  // ok = setHeaterFuelType();
-  OS_ASSERT(ok);
-  // ok = setHeaterThermalEfficiency();
-  OS_ASSERT(ok);
-  // ok = setOffCycleParasiticFuelConsumptionRate();
-  OS_ASSERT(ok);
-  // ok = setOffCycleParasiticFuelType();
-  OS_ASSERT(ok);
-  // ok = setOffCycleParasiticHeatFractiontoTank();
-  OS_ASSERT(ok);
-  // ok = setOffCycleParasiticHeight();
-  OS_ASSERT(ok);
-  // ok = setOnCycleParasiticFuelConsumptionRate();
-  OS_ASSERT(ok);
-  // ok = setOnCycleParasiticFuelType();
-  OS_ASSERT(ok);
-  // ok = setOnCycleParasiticHeatFractiontoTank();
-  OS_ASSERT(ok);
-  // ok = setOnCycleParasiticHeight();
-  OS_ASSERT(ok);
-  // ok = setAmbientTemperatureIndicator();
-  OS_ASSERT(ok);
-  // ok = setSkinLossFractiontoZone();
-  OS_ASSERT(ok);
-  // ok = setOffCycleFlueLossFractiontoZone();
-  OS_ASSERT(ok);
-  // ok = setUseSideInletNode();
-  OS_ASSERT(ok);
-  // ok = setUseSideOutletNode();
-  OS_ASSERT(ok);
-  // ok = setUseSideEffectiveness();
-  OS_ASSERT(ok);
-  // ok = setUseSideInletHeight();
-  OS_ASSERT(ok);
-  // ok = setUseSideOutletHeight();
-  OS_ASSERT(ok);
-  // ok = setSourceSideInletNode();
-  OS_ASSERT(ok);
-  // ok = setSourceSideOutletNode();
-  OS_ASSERT(ok);
-  // ok = setSourceSideEffectiveness();
-  OS_ASSERT(ok);
-  // ok = setSourceSideInletHeight();
-  OS_ASSERT(ok);
-  // ok = setSourceSideOutletHeight();
-  OS_ASSERT(ok);
-  // ok = setInletMode();
-  OS_ASSERT(ok);
-  // ok = setUseSideDesignFlowRate();
-  OS_ASSERT(ok);
-  // ok = setSourceSideDesignFlowRate();
-  OS_ASSERT(ok);
-  // ok = setIndirectWaterHeatingRecoveryTime();
-  OS_ASSERT(ok);
-  // ok = setNumberofNodes();
-  OS_ASSERT(ok);
-  // ok = setAdditionalDestratificationConductivity();
-  OS_ASSERT(ok);
-  // setNode1AdditionalLossCoefficient();
-  // setNode2AdditionalLossCoefficient();
-  // setNode3AdditionalLossCoefficient();
-  // setNode4AdditionalLossCoefficient();
-  // setNode5AdditionalLossCoefficient();
-  // setNode6AdditionalLossCoefficient();
-  // setNode7AdditionalLossCoefficient();
-  // setNode8AdditionalLossCoefficient();
-  // setNode9AdditionalLossCoefficient();
-  // setNode10AdditionalLossCoefficient();
-  // ok = setSourceSideFlowControlMode();
-  OS_ASSERT(ok);
+  setTankVolume(0.1893); // autosizable
+  setTankHeight(1.4); // autosizable
+
+  setTankShape("VerticalCylinder");
+  setMaximumTemperatureLimit(82.22);
+  setHeaterPriorityControl("MasterSlave");
+
+  ScheduleRuleset setpoint_schedule_1(model);
+  setpoint_schedule_1.defaultDaySchedule().addValue(Time(0,24,0,0),48.89);
+
+  ScheduleRuleset setpoint_schedule_2(model);
+  setpoint_schedule_2.defaultDaySchedule().addValue(Time(0,24,0,0),48.89);
+
+  setHeater1SetpointTemperatureSchedule(setpoint_schedule_1);
+  setHeater1DeadbandTemperatureDifference(2);
+  setHeater1Capacity(4500);
+  setHeater1Height(1);
+
+  setHeater2SetpointTemperatureSchedule(setpoint_schedule_2);
+  setHeater2DeadbandTemperatureDifference(5);
+  setHeater2Capacity(4500);
+  setHeater2Height(0);
+
+  setHeaterFuelType("Electricity");
+  setHeaterThermalEfficiency(0.98);
+  
+  setOffCycleParasiticFuelConsumptionRate(10.0);
+  setOffCycleParasiticFuelType("Electricity");
+  setOffCycleParasiticHeatFractiontoTank(0);
+  setOffCycleParasiticHeight(0);
+
+  setOnCycleParasiticFuelConsumptionRate(10.0);
+  setOnCycleParasiticFuelType("Electricity");
+  setOnCycleParasiticHeatFractiontoTank(0);
+  setOnCycleParasiticHeight(0);
+
+  setAmbientTemperatureIndicator("Schedule");
+  ScheduleRuleset amb_schedule(model);
+  amb_schedule.defaultDaySchedule().addValue(Time(0,24,0,0),22.0);
+  setAmbientTemperatureSchedule(amb_schedule);
+
+  setSkinLossFractiontoZone(1);
+
+  setUniformSkinLossCoefficientperUnitAreatoAmbientTemperature(0.846);
+
+  setOffCycleFlueLossCoefficienttoAmbientTemperature(0);
+  setOffCycleFlueLossFractiontoZone(1);
+
+  setUseSideEffectiveness(1.0);
+  setUseSideInletHeight(0);
+  autocalculateUseSideOutletHeight();
+  setSourceSideEffectiveness(1.0);
+  autocalculateSourceSideInletHeight();
+  setSourceSideOutletHeight(0);
+  setInletMode("Fixed");
+  autosizeUseSideDesignFlowRate();
+  autosizeSourceSideDesignFlowRate();
+  setIndirectWaterHeatingRecoveryTime(1.5);
+  setEndUseSubcategory("General");
+
+  setNumberofNodes(6);
+  setAdditionalDestratificationConductivity(0.1);
+  setNode1AdditionalLossCoefficient(0.15);
+  setNode2AdditionalLossCoefficient(0);
+  setNode3AdditionalLossCoefficient(0);
+  setNode4AdditionalLossCoefficient(0);
+  setNode5AdditionalLossCoefficient(0);
+  setNode6AdditionalLossCoefficient(0.1);
+  setNode7AdditionalLossCoefficient(0);
+  setNode8AdditionalLossCoefficient(0);
+  setNode9AdditionalLossCoefficient(0);
+  setNode10AdditionalLossCoefficient(0);
+
+  setSourceSideFlowControlMode("IndirectHeatPrimarySetpoint");
 }
 
 IddObjectType WaterHeaterStratified::iddObjectType() {

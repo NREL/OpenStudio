@@ -20,8 +20,8 @@
 #ifndef MODEL_WATERHEATERSTRATIFIED_HPP
 #define MODEL_WATERHEATERSTRATIFIED_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/WaterToWaterComponent.hpp>
+#include "ModelAPI.hpp"
+#include "WaterToWaterComponent.hpp"
 
 namespace openstudio {
 

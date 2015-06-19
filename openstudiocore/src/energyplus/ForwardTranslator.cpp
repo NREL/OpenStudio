@@ -1233,6 +1233,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateWaterHeaterMixed(waterHeaterMixed);
       break;
     }
+  case openstudio::IddObjectType::OS_WaterHeater_Stratified :
+    {
+      model::WaterHeaterStratified waterHeaterStratified = modelObject.cast<WaterHeaterStratified>();
+      retVal = translateWaterHeaterStratified(waterHeaterStratified);
+      break;
+    }
   case openstudio::IddObjectType::OS_WaterUse_Connections :
     {
       model::WaterUseConnections waterUseConnections = modelObject.cast<WaterUseConnections>();

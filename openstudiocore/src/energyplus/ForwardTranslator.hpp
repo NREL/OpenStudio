@@ -242,6 +242,7 @@ class ThermostatSetpointDualSetpoint;
 class Timestep;
 class Version;
 class WaterHeaterMixed;
+class WaterHeaterStratified;
 class WaterUseConnections;
 class WaterUseEquipment;
 class WindowPropertyFrameAndDivider;
