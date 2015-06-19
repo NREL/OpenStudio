@@ -438,9 +438,7 @@ void LocationView::update()
       clearSiteInfo();
     }
     else {
-      if (weatherFile->name() && !weatherFile->name()->empty()) {
-        m_site->setName(weatherFile->name().get());
-      }
+      m_site->setName(weatherFile->city().c_str());
       m_site->setLatitude(weatherFile->latitude());
       m_site->setLongitude(weatherFile->longitude());
       m_site->setElevation(weatherFile->elevation());
