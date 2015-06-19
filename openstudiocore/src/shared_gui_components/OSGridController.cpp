@@ -694,6 +694,7 @@ namespace openstudio {
         loadNameConcept->readOnly() ? boost::none : boost::optional<StringSetter>(std::bind(&LoadNameConcept::set, loadNameConcept.data(), t_mo, std::placeholders::_1)),
         boost::optional<NoFailAction>(std::bind(&LoadNameConcept::reset, loadNameConcept.data(), t_mo)));
 
+      //connect(loadName, OSLoadNamePixmapLineEdit::itemClicked, gridView(), OSGridView::dropZoneItemClicked);
       isConnected = connect(loadName, SIGNAL(itemClicked(OSItem*)), gridView(), SIGNAL(dropZoneItemClicked(OSItem*)));
       OS_ASSERT(isConnected);
 
@@ -719,6 +720,7 @@ namespace openstudio {
         boost::optional<NoFailAction>(std::bind(&NameLineEditConcept::reset, nameLineEditConcept.data(), t_mo)));
 
       if (nameLineEditConcept->isInspectable()) {
+        //connect(nameLineEdit, OSLineEdit2::itemClicked, gridView(), OSGridView::dropZoneItemClicked);
         isConnected = connect(nameLineEdit, SIGNAL(itemClicked(OSItem*)), gridView(), SIGNAL(dropZoneItemClicked(OSItem*)));
         OS_ASSERT(isConnected);
 
@@ -857,6 +859,7 @@ namespace openstudio {
         ModelObjectSetter(std::bind(&DropZoneConcept::set, dropZoneConcept.data(), t_mo, std::placeholders::_1)),
         NoFailAction(std::bind(&DropZoneConcept::reset, dropZoneConcept.data(), t_mo)));
 
+      //connect(dropZone, OSDropZone2::itemClicked, gridView(), OSGridView::dropZoneItemClicked);
       isConnected = connect(dropZone, SIGNAL(itemClicked(OSItem*)), gridView(), SIGNAL(dropZoneItemClicked(OSItem*)));
       OS_ASSERT(isConnected);
 
@@ -1073,7 +1076,7 @@ namespace openstudio {
   }
 
   // Evan: Required for Qt to respect style sheet commands
-  QString OSGridController::cellStyle(int rowIndex, int columnIndex, bool isSelected, bool isSubRow)
+  QString OSGridController::cellStyle(int rowIndex, int columnIndex, bool isSelected, bool isSubRow) // Evan note: check here for sub row color
   {
     /// \todo this is a lot of string concatenation to do for each cell update
     QString cellColor;

@@ -38,14 +38,17 @@ FacilityTabController::FacilityTabController(bool isIP, const model::Model& mode
   auto facilityStoriesGridView = new FacilityStoriesGridView(isIP, model);
   this->mainContentWidget()->addSubTab("Stories", facilityStoriesGridView, STORIES);
   connect(this, &FacilityTabController::toggleUnitsClicked, facilityStoriesGridView, &FacilityStoriesGridView::toggleUnitsClicked);
+  connect(facilityStoriesGridView, &FacilityStoriesGridView::dropZoneItemSelected, this, &FacilityTabController::dropZoneItemSelected);
 
   auto facilityShadingGridView = new FacilityShadingGridView(isIP, model);
   this->mainContentWidget()->addSubTab("Shading", facilityShadingGridView, SHADING);
   connect(this, &FacilityTabController::toggleUnitsClicked, facilityShadingGridView, &FacilityShadingGridView::toggleUnitsClicked);
+  connect(facilityShadingGridView, &FacilityShadingGridView::dropZoneItemSelected, this, &FacilityTabController::dropZoneItemSelected);
 
   auto facilityExteriorEquipmentGridView = new FacilityExteriorEquipmentGridView(isIP, model);
   this->mainContentWidget()->addSubTab("Exterior Equipment", facilityExteriorEquipmentGridView, EXTERIOR_EQUIPMENT);
   connect(this, &FacilityTabController::toggleUnitsClicked, facilityExteriorEquipmentGridView, &FacilityExteriorEquipmentGridView::toggleUnitsClicked);
+  connect(facilityExteriorEquipmentGridView, &FacilityExteriorEquipmentGridView::dropZoneItemSelected, this, &FacilityTabController::dropZoneItemSelected);
 
 }
 

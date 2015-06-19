@@ -19,6 +19,8 @@
 
 #include "GridViewSubTab.hpp"
 
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
 #include "OSItemSelectorButtons.hpp"
 
 #include "../model/Model.hpp"
@@ -83,7 +85,7 @@ namespace openstudio {
   {
     m_scrollLayout->addWidget(gridView, 0, Qt::AlignTop);
 
-    connect(gridView, &OSGridView::dropZoneItemClicked, this, &GridViewSubTab::dropZoneItemClicked);
+    connect(gridView, &OSGridView::dropZoneItemClicked, this, &GridViewSubTab::onDropZoneItemClicked);
 
     connect(this, &GridViewSubTab::selectionCleared, gridView, &OSGridView::onSelectionCleared);
   }
@@ -157,6 +159,20 @@ namespace openstudio {
   std::vector<model::ModelObject> GridViewSubTab::selectedObjects() const
   {
     return m_gridController->selectedObjects();
+  }
+
+  void GridViewSubTab::onDropZoneItemClicked(OSItem* item)
+  {
+    std::shared_ptr<OSDocument> currentDocument = OSAppBase::instance()->currentDocument();
+    if (currentDocument){
+      if (!item) {
+        emit dropZoneItemSelected(item, false);
+      }
+      else {
+        // Note: perhaps passing this here offers more flexibility in the future when determining readOnly
+        emit dropZoneItemSelected(item, item->itemId().isDefaulted());
+      }
+    }
   }
 
   //void GridViewSubTab::onSelectItem(OSItem* item)

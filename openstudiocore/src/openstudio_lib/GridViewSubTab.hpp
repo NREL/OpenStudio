@@ -87,9 +87,13 @@ class GridViewSubTab : public QWidget
 
     void toggleUnitsClicked(bool displayIP);
 
-    void dropZoneItemClicked(OSItem* item);
+    void dropZoneItemSelected(OSItem* item, bool readOnly);
 
     void selectionCleared();
+
+  public slots:
+
+    void onDropZoneItemClicked(OSItem* item);
 
   protected slots :
 

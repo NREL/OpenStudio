@@ -36,26 +36,32 @@ namespace openstudio {
   auto spacesSpacesGridView = new SpacesSpacesGridView(isIP, model);
   this->mainContentWidget()->addSubTab("Properties", spacesSpacesGridView, SPACES);
   connect(this, &SpacesTabController::toggleUnitsClicked, spacesSpacesGridView, &SpacesSpacesGridView::toggleUnitsClicked);
+  connect(spacesSpacesGridView, &SpacesSpacesGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
 
   auto spacesLoadsGridView = new SpacesLoadsGridView(isIP, model);
   this->mainContentWidget()->addSubTab("Loads", new SpacesLoadsGridView(isIP, model), LOADS);
   connect(this, &SpacesTabController::toggleUnitsClicked, spacesLoadsGridView, &SpacesLoadsGridView::toggleUnitsClicked);
-  
+  connect(spacesLoadsGridView, &SpacesLoadsGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+
   auto spacesSurfacesGridView = new SpacesSurfacesGridView(isIP, model);
   this->mainContentWidget()->addSubTab("Surfaces", new SpacesSurfacesGridView(isIP, model), SURFACES);
   connect(this, &SpacesTabController::toggleUnitsClicked, spacesSurfacesGridView, &SpacesSurfacesGridView::toggleUnitsClicked);
-  
+  connect(spacesSurfacesGridView, &SpacesSurfacesGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+
   auto spacesSubsurfacesGridView = new SpacesSubsurfacesGridView(isIP, model);
   this->mainContentWidget()->addSubTab("Subsurfaces", new SpacesSubsurfacesGridView(isIP, model), SUBSURFACES);
   connect(this, &SpacesTabController::toggleUnitsClicked, spacesSubsurfacesGridView, &SpacesSubsurfacesGridView::toggleUnitsClicked);
-  
+  connect(spacesSubsurfacesGridView, &SpacesSubsurfacesGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+
   auto spacesInteriorPartitionsGridView = new SpacesInteriorPartitionsGridView(isIP, model);
   this->mainContentWidget()->addSubTab("Interior Partitions", new SpacesInteriorPartitionsGridView(isIP, model), INTERIOR_PARTITIONS);
   connect(this, &SpacesTabController::toggleUnitsClicked, spacesInteriorPartitionsGridView, &SpacesInteriorPartitionsGridView::toggleUnitsClicked);
-  
+  connect(spacesInteriorPartitionsGridView, &SpacesInteriorPartitionsGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+
   auto spacesShadingGridView = new SpacesShadingGridView(isIP, model);
   this->mainContentWidget()->addSubTab("Shading", new SpacesShadingGridView(isIP, model), SHADING);
   connect(this, &SpacesTabController::toggleUnitsClicked, spacesShadingGridView, &SpacesShadingGridView::toggleUnitsClicked);
+  connect(spacesShadingGridView, &SpacesShadingGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
 
   // Evan note: TODO SpacesDaylightingGridView may be a dead class, given the latest Radiance plans
   //this->mainContentWidget()->addSubTab("Daylighting", new SpacesDaylightingGridView(isIP, model), DAYLIGHTING);
