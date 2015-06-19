@@ -752,6 +752,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateWaterHeaterMixed( model::WaterHeaterMixed & modelObject );
 
+  boost::optional<IdfObject> translateWaterHeaterStratified( model::WaterHeaterStratified & modelObject );
+
   boost::optional<IdfObject> translateWaterUseConnections( model::WaterUseConnections & modelObject );
 
   boost::optional<IdfObject> translateWaterUseEquipment( model::WaterUseEquipment & modelObject );
