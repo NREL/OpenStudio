@@ -17,6 +17,8 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ######################################################################
 
+require 'json'
+
 class ReplaceModel < OpenStudio::Ruleset::ModelUserScript
 
   # override name to return the name of your script
@@ -49,6 +51,7 @@ class ReplaceModel < OpenStudio::Ruleset::ModelUserScript
     runner.registerInitialCondition("Initial model.")
 
     alternativeModelPath = runner.getPathArgumentValue("alternativeModelPath",user_arguments)
+    measures_json = runner.getStringArgumentValue("measures_json",user_arguments)
 
     translator = OpenStudio::OSVersion::VersionTranslator.new
     oModel = translator.loadModel(alternativeModelPath)
@@ -58,7 +61,20 @@ class ReplaceModel < OpenStudio::Ruleset::ModelUserScript
     end
 
     newModel = oModel.get
+    
+    # parse measures_json and add capital costs to new model
+    measures = JSON.parse(measures_json, symbolize_names: true)
 
+    building = newModel.getBuilding
+    measures.each do |measure|
+      displayName = measure[:displayName]
+      taxonomyTag = measure[:taxonomyTag]
+      capitalCost = measure[:capitalCost]
+      description = measure[:description]
+      runner.registerInfo("Adding LifeCycleCost for alternative measure '#{displayName}'.")
+      OpenStudio::Model::LifeCycleCost.createLifeCycleCost(displayName, building, capitalCost, 'CostPerEach', taxonomyTag, 0, 0)
+    end
+    
     # pull original weather file object over
     weatherFile = newModel.getOptionalWeatherFile
     if not weatherFile.empty?
@@ -81,7 +97,7 @@ class ReplaceModel < OpenStudio::Ruleset::ModelUserScript
     # swap underlying data in model with underlying data in newModel
     # model = newModel DOES NOT work
     model.swap(newModel)
-
+    
     runner.registerFinalCondition("Model replaced with alternative #{alternativeModelPath}. Weather file and design days retained from original.")
 
     return true
