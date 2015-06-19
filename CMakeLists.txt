@@ -197,9 +197,9 @@ find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
 option(BUILD_RUBY_GEM "Build Ruby Gem" OFF)
 
 if(BUILD_V8_BINDINGS)
-  if(WIN32)
-    message(SEND_ERROR "V8 is only tested and supported on Unix like systems")
-  endif()
+	#if(WIN32)
+  	#  message(SEND_ERROR "V8 is only tested and supported on Unix like systems")
+  	#endif()
 
   option(BUILD_NODE_MODULES "Build V8 Bindings as Node Modules" ON)
 

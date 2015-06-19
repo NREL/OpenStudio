@@ -846,7 +846,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/v8/")
 
     if(MSVC)
-      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /DBUILDING_NODE_EXTENSION /wd4996")  ## /wd4996 suppresses deprecated warnings
+      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/w /bigobj /DBUILDING_NODE_EXTENSION /wd4996")  ## /wd4996 suppresses deprecated warnings
     elseif(UNIX)
       set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-DBUILDING_NODE_EXTENSION -Wno-deprecated-declarations")
     endif()
@@ -855,6 +855,9 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-undefined suppress -flat_namespace")
     endif()
     target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS})
+    if(WIN32 AND BUILD_NODE_MODULES)
+    	target_link_libraries(${swig_target} "C:/Users/Kyle Benne/.electron-gyp/.node-gyp/0.28.0/x64/node.lib")
+    endif()
 
     #add_dependencies("${swig_target}" "${PARENT_TARGET}_resources")
 
