@@ -30,6 +30,8 @@
 #include "../../units/UnitFactory.hpp"
 #include "../../core/Application.hpp"
 
+#include <QRegularExpression>
+
 #include <resources.hxx>
 
 #include <iostream>
@@ -325,6 +327,15 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   EXPECT_NO_THROW(sqlFile = SqlFile(path));
   ASSERT_TRUE(sqlFile);
 
+  QRegularExpression re("1ZoneEvapCooler-V(.*)\\.sql");
+  QRegularExpressionMatch match = re.match(toQString(name));
+  ASSERT_TRUE(match.hasMatch());
+  VersionString expected(toString(match.captured(1)));
+  VersionString actual(sqlFile->energyPlusVersion());
+  EXPECT_EQ(expected.major(), actual.major());
+  EXPECT_EQ(expected.minor(), actual.minor());
+  EXPECT_EQ(expected.patch(), actual.patch());
+ 
   ASSERT_TRUE(sqlFile->hoursSimulated());
   EXPECT_EQ(8760.0, sqlFile->hoursSimulated().get()) << name;
   ASSERT_TRUE(sqlFile->netSiteEnergy());
@@ -334,19 +345,128 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   ASSERT_FALSE(availableEnvPeriods.empty());
   EXPECT_EQ(static_cast<unsigned>(3), availableEnvPeriods.size());
 
-  openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Hourly", "Zone Mean Air Temperature", "Main Zone");
-  EXPECT_TRUE(ts);
-  ts = sqlFile->timeSeries(availableEnvPeriods[0], "Hourly", "Zone Mean Air Temperature", "MAIN ZONE");
-  ASSERT_TRUE(ts);
+  { // Detailed
+    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Detailed", "Zone Mean Air Temperature", "Main Zone");
+    EXPECT_TRUE(ts);
+    ts = sqlFile->timeSeries(availableEnvPeriods[0], "HVAC System Timestep", "Zone Mean Air Temperature", "Main Zone");
+    EXPECT_TRUE(ts);
+    ts = sqlFile->timeSeries(availableEnvPeriods[0], "HVAC System Timestep", "Zone Mean Air Temperature", "MAIN ZONE");
+    EXPECT_TRUE(ts);
+    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Detailed", "Zone Mean Air Temperature", "MAIN ZONE");
+    ASSERT_TRUE(ts);
 
-  ASSERT_EQ(static_cast<unsigned>(8760), ts->daysFromFirstReport().size());
-  ASSERT_EQ(static_cast<unsigned>(8760), ts->values().size());
-  EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(0, 1, 0, 0)), ts->firstReportDateTime());
-  EXPECT_DOUBLE_EQ(firstVal, ts->values()[0]) << name;
-  EXPECT_DOUBLE_EQ(lastVal, ts->values()[8759]) << name;
+    unsigned N = ts->daysFromFirstReport().size();
 
-  ts = sqlFile->timeSeries(availableEnvPeriods[0], "Hourly", "Zone Mean Air Temperature", "Zone that does not exist");
-  EXPECT_FALSE(ts);
+    ASSERT_GT(N, 0u);
+    ASSERT_EQ(N, ts->values().size());
+    EXPECT_GE(N, 8760u*6u);
+    //EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(0, 1, 0, 0)), ts->firstReportDateTime());
+    //EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(0, 1, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[0]);
+    EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N-1]);
+  }
+
+  { // Timestep
+    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Timestep", "Zone Mean Air Temperature", "Main Zone");
+    EXPECT_TRUE(ts);
+    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Zone Timestep", "Zone Mean Air Temperature", "Main Zone");
+    EXPECT_TRUE(ts);
+    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Zone Timestep", "Zone Mean Air Temperature", "MAIN ZONE");
+    EXPECT_TRUE(ts);
+    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Timestep", "Zone Mean Air Temperature", "MAIN ZONE");
+    ASSERT_TRUE(ts);
+
+    unsigned N = ts->daysFromFirstReport().size();
+
+    ASSERT_GT(N, 0u);
+    ASSERT_EQ(N, ts->values().size());
+    EXPECT_EQ(N, 8760u * 6u);
+    EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(0, 0, 10, 0)), ts->firstReportDateTime());
+    EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(0, 0, 10, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[0]);
+    EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
+  }
+
+  { // Hourly
+    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Hourly", "Zone Mean Air Temperature", "Main Zone");
+    EXPECT_TRUE(ts);
+    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Hourly", "Zone Mean Air Temperature", "MAIN ZONE");
+    ASSERT_TRUE(ts);
+
+    unsigned N = ts->daysFromFirstReport().size();
+
+    ASSERT_GT(N, 0u);
+    ASSERT_EQ(N, ts->values().size());
+    EXPECT_EQ(N, 8760u);
+    EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(0, 1, 0, 0)), ts->firstReportDateTime());
+    EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(0, 1, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[0]);
+    EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
+    EXPECT_DOUBLE_EQ(firstVal, ts->values()[0]) << name;
+    EXPECT_DOUBLE_EQ(lastVal, ts->values()[N-1]) << name;
+  }
+
+  { // Daily
+    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Daily", "Zone Mean Air Temperature", "Main Zone");
+    EXPECT_TRUE(ts);
+    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Daily", "Zone Mean Air Temperature", "MAIN ZONE");
+    ASSERT_TRUE(ts);
+
+    unsigned N = ts->daysFromFirstReport().size();
+
+    ASSERT_GT(N, 0u);
+    ASSERT_EQ(N, ts->values().size());
+    EXPECT_EQ(N, 365u);
+    EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(1, 0, 0, 0)), ts->firstReportDateTime());
+    EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[0]);
+    EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
+  }
+
+  { // Monthly
+    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Monthly", "Zone Mean Air Temperature", "Main Zone");
+    EXPECT_TRUE(ts);
+    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Monthly", "Zone Mean Air Temperature", "MAIN ZONE");
+    ASSERT_TRUE(ts);
+
+    unsigned N = ts->daysFromFirstReport().size();
+
+    ASSERT_GT(N, 0u);
+    ASSERT_EQ(N, ts->values().size());
+    EXPECT_EQ(N, 12u);
+    EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime());
+    EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[0]);
+    EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
+  }
+
+  { // RunPeriod - synonymous with Environment and Annual 
+    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "RunPeriod", "Zone Mean Air Temperature", "Main Zone");
+    EXPECT_TRUE(ts);
+    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Run Period", "Zone Mean Air Temperature", "Main Zone");
+    EXPECT_TRUE(ts);
+    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Run Period", "Zone Mean Air Temperature", "MAIN ZONE");
+    EXPECT_TRUE(ts);
+    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Environment", "Zone Mean Air Temperature", "Main Zone");
+    EXPECT_TRUE(ts);
+    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Environment", "Zone Mean Air Temperature", "MAIN ZONE");
+    EXPECT_TRUE(ts);
+    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Annual", "Zone Mean Air Temperature", "Main Zone");
+    EXPECT_TRUE(ts);
+    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Annual", "Zone Mean Air Temperature", "MAIN ZONE");
+    EXPECT_TRUE(ts);
+    ts = sqlFile->timeSeries(availableEnvPeriods[0], "RunPeriod", "Zone Mean Air Temperature", "MAIN ZONE");
+    ASSERT_TRUE(ts);
+
+    unsigned N = ts->daysFromFirstReport().size();
+
+    ASSERT_GT(N, 0u);
+    ASSERT_EQ(N, ts->values().size());
+    EXPECT_EQ(N, 1u);
+    EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime());
+    EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[0]);
+    EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
+  }
+
+  { // Bad key name
+    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Hourly", "Zone Mean Air Temperature", "Zone that does not exist");
+    EXPECT_FALSE(ts);
+  }
 }
 
 TEST_F(SqlFileFixture, Regressions) {

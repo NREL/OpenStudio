@@ -458,34 +458,20 @@ namespace openstudio{
 
     bool SqlFile_Impl::isValidConnection()
     {
-      int code = -1;
-      if (m_db) {
-        sqlite3_stmt* sqlStmtPtr;
-        sqlite3_prepare_v2(m_db,"SELECT EnergyPlusVersion FROM Simulations",-1,&sqlStmtPtr,nullptr);
-        code = sqlite3_step(sqlStmtPtr);
-        if(code == SQLITE_ROW) {
-          // in 8.1 this is 'EnergyPlus-Windows-32 8.1.0.008, YMD=2014.11.08 22:49'
-          // in 8.2 this is 'EnergyPlus, Version 8.2.0-8397c2e30b, YMD=2015.01.09 08:37'
-          // radiance script is writing 'EnergyPlus, VERSION 8.2, (OpenStudio) YMD=2015.1.9 08:35:36'
-          boost::regex version_regex("\\d\\.\\d[\\.\\d]*");
-          std::string version_line = columnText(sqlite3_column_text(sqlStmtPtr,0));
-          boost::smatch version_match;
-          
-          if (boost::regex_search(version_line, version_match, version_regex)){
-            VersionString version(version_match[0].str());
-            if (version >= VersionString(7, 0) && version <= VersionString(energyPlusVersionMajor(), energyPlusVersionMinor())) {
-              m_supportedVersion = true;
-            } else {
-              m_supportedVersion = false;
-              LOG(Warn, "Using unsupported EnergyPlus version " << version.str());
-            }
-          } else{
-            LOG(Warn, "Using unknown EnergyPlus version");
-          }
-        }
-        sqlite3_finalize(sqlStmtPtr);
+      std::string energyPlusVersion = this->energyPlusVersion();
+      if (energyPlusVersion.empty()){
+        return false;
       }
-      return (code == SQLITE_ROW);
+
+      VersionString version(energyPlusVersion);
+      if (version >= VersionString(7, 0) && version <= VersionString(energyPlusVersionMajor(), energyPlusVersionMinor())) {
+        m_supportedVersion = true;
+      } else {
+        m_supportedVersion = false;
+        LOG(Warn, "Using unsupported EnergyPlus version " << version.str());
+      }
+
+      return true;
     }
 
 
@@ -1200,7 +1186,7 @@ namespace openstudio{
       return vec;
     };
 
-    ReportingFrequency SqlFile_Impl::reportingFrequencyFromDB(const std::string &dbReportingFrequency)
+    OptionalReportingFrequency SqlFile_Impl::reportingFrequencyFromDB(const std::string &dbReportingFrequency)
     {
       // EP+ version specific translation
       // use OPENSTUDIO_ENUM string handling
@@ -1209,8 +1195,7 @@ namespace openstudio{
         return result;
       }
       catch (...) {
-        // default value -- may want to return optional
-        return openstudio::ReportingFrequency::RunPeriod;
+        return boost::none;
       }
     };
 
@@ -2184,20 +2169,25 @@ namespace openstudio{
 
     openstudio::OptionalTime SqlFile_Impl::timeSeriesInterval(const DataDictionaryItem& dataDictionary)
     {
+      OptionalReportingFrequency freq = reportingFrequencyFromDB(dataDictionary.reportingFrequency);
+      if (!freq){
+        return boost::none;
+      }
+
       double minutes=0;
-      switch (reportingFrequencyFromDB(dataDictionary.reportingFrequency).value())
+      switch (freq->value())
       {
         case ReportingFrequency::Detailed:
           // unsupported
-          return boost::optional<openstudio::Time>();
+          return boost::none;
           break;
         case ReportingFrequency::Timestep:
           // unsupported
-          return boost::optional<openstudio::Time>();
+          return boost::none;
           break;
         case ReportingFrequency::Hourly:
           // unsupported - warmup days - see trac #236
-          return boost::optional<openstudio::Time>();
+          return boost::none;
           //        return boost::optional<openstudio::Time>(openstudio::Time(0,1,0,0));
           break;
         case ReportingFrequency::Daily:
@@ -2205,7 +2195,7 @@ namespace openstudio{
           break;
         case ReportingFrequency::Monthly:
           // unsupported
-          return boost::optional<openstudio::Time>();
+          return boost::none;
           break;
         case ReportingFrequency::RunPeriod:
           //          return boost::optional<openstudio::Time>();
@@ -2244,7 +2234,7 @@ namespace openstudio{
           break;
         default:
           // unsupported
-          return boost::optional<openstudio::Time>();
+          return boost::none;
           break;
       }
     }
@@ -2472,6 +2462,24 @@ namespace openstudio{
           LOG(Debug, "Trying query: " << queryEnvPeriod << ", " << reportingFrequency << ", " << timeSeriesName << ", " << upperKeyValue );
           ts = timeSeries(queryEnvPeriod, reportingFrequency, timeSeriesName, upperKeyValue);
         }
+
+        if (!ts){
+          if (istringEqual("Annual", reportingFrequency) || istringEqual("Environment", reportingFrequency)){
+            LOG(Debug, "Trying query: " << queryEnvPeriod << ", " << "Run Period" << ", " << timeSeriesName << ", " << upperKeyValue);
+            ts = timeSeries(queryEnvPeriod, "Run Period", timeSeriesName, keyValue);
+          }
+        }
+
+        if (!ts){
+          openstudio::OptionalReportingFrequency freq = reportingFrequencyFromDB(reportingFrequency);
+          if (freq){
+            if (reportingFrequency != freq->valueDescription()){
+              LOG(Debug, "Trying query: " << queryEnvPeriod << ", " << freq->valueDescription() << ", " << timeSeriesName << ", " << upperKeyValue);
+              ts = timeSeries(queryEnvPeriod, freq->valueDescription(), timeSeriesName, keyValue);
+            }
+          }
+        }
+        
 
       } else if (!iEpRfNKv->timeSeries.values().empty()) {
         ts = iEpRfNKv->timeSeries;
@@ -2832,7 +2840,26 @@ namespace openstudio{
     // DLM@20100511: can we query this?
     std::string SqlFile_Impl::energyPlusVersion() const
     {
-      return "5-0-0";
+      std::string result;
+      if (m_db) {
+        sqlite3_stmt* sqlStmtPtr;
+        sqlite3_prepare_v2(m_db, "SELECT EnergyPlusVersion FROM Simulations", -1, &sqlStmtPtr, nullptr);
+        int code = sqlite3_step(sqlStmtPtr);
+        if (code == SQLITE_ROW) {
+          // in 8.1 this is 'EnergyPlus-Windows-32 8.1.0.008, YMD=2014.11.08 22:49'
+          // in 8.2 this is 'EnergyPlus, Version 8.2.0-8397c2e30b, YMD=2015.01.09 08:37'
+          // radiance script is writing 'EnergyPlus, VERSION 8.2, (OpenStudio) YMD=2015.1.9 08:35:36'
+          boost::regex version_regex("\\d\\.\\d[\\.\\d]*");
+          std::string version_line = columnText(sqlite3_column_text(sqlStmtPtr, 0));
+          boost::smatch version_match;
+
+          if (boost::regex_search(version_line, version_match, version_regex)){
+            result = version_match[0].str();
+          }
+        }
+        sqlite3_finalize(sqlStmtPtr);
+      }
+      return result;
     }
 
     /// Energy Plus eplusout.sql file name

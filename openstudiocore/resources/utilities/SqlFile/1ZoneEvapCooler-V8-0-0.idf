@@ -577,7 +577,21 @@
 
   Output:Variable,*,Site Outdoor Air Relative Humidity,hourly;
 
-  Output:Variable,*,Zone Mean Air Temperature,hourly;
+  Output:Variable,*,Zone Mean Air Temperature,Annual;
+  
+  Output:Variable,*,Zone Mean Air Temperature,RunPeriod;
+  
+  Output:Variable,*,Zone Mean Air Temperature,Environment;
+  
+  Output:Variable,*,Zone Mean Air Temperature,Monthly;
+  
+  Output:Variable,*,Zone Mean Air Temperature,Daily;
+
+  Output:Variable,*,Zone Mean Air Temperature,Hourly;
+  
+  Output:Variable,*,Zone Mean Air Temperature,Timestep;
+  
+  Output:Variable,*,Zone Mean Air Temperature,Detailed;
 
   Output:Variable,Supply Outlet Node,System Node Mass Flow Rate,hourly;
 

@@ -615,7 +615,7 @@ namespace openstudio{
       std::vector<std::string> availableReportingFrequencies(const std::string& envPeriod);
 
       // version specific translation for reporting frequencies used in database to reporting frequency enum values
-      openstudio::ReportingFrequency reportingFrequencyFromDB(const std::string& dbReportingFrequency);
+      openstudio::OptionalReportingFrequency reportingFrequencyFromDB(const std::string& dbReportingFrequency);
 
       // return a vector of all the available variableName for environment period and reporting frequency
       std::vector<std::string> availableVariableNames(const std::string& envPeriod, const std::string&  reportingFrequency) const;
@@ -809,7 +809,9 @@ namespace openstudio{
       // return first date in time table used for start date of run period variables
       openstudio::DateTime firstDateTime(bool includeHourAndMinute);
 
+      // DLM: timeSeriesInterval seems pretty useless, can we remove it?
       boost::optional<Time> timeSeriesInterval(const DataDictionaryItem& dataDictionary);
+
       std::vector<DateTime> dateTimeVec(const DataDictionaryItem& dataDictionary);
 
       bool isValidConnection();
