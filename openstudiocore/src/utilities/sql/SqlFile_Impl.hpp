@@ -807,7 +807,10 @@ namespace openstudio{
       boost::optional<Date> timeSeriesStartDate(const DataDictionaryItem& dataDictionary);
 
       // return first date in time table used for start date of run period variables
-      openstudio::DateTime firstDateTime(bool includeHourAndMinute);
+      openstudio::DateTime firstDateTime(bool includeHourAndMinute, int envPeriodIndex);
+
+      // return last date in time table used for end date of run period variables
+      openstudio::DateTime lastDateTime(bool includeHourAndMinute, int envPeriodIndex);
 
       // DLM: timeSeriesInterval seems pretty useless, can we remove it?
       boost::optional<Time> timeSeriesInterval(const DataDictionaryItem& dataDictionary);
