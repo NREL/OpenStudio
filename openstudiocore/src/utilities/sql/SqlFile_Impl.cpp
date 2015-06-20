@@ -2378,8 +2378,6 @@ namespace openstudio{
         s2 << code;
         LOG(Debug, s2.str());
 
-        std::string test = s2.str();
-
         long cumulativeSeconds = 0;
 
         while (code == SQLITE_ROW) 

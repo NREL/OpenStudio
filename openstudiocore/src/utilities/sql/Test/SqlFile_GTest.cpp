@@ -344,7 +344,7 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   std::vector<std::string> availableEnvPeriods = sqlFile->availableEnvPeriods();
   ASSERT_FALSE(availableEnvPeriods.empty());
   EXPECT_EQ(static_cast<unsigned>(3), availableEnvPeriods.size());
-  /*
+
   { // Detailed
     openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Detailed", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
@@ -407,7 +407,7 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
     EXPECT_DOUBLE_EQ(firstVal, ts->values()[0]) << name;
     EXPECT_DOUBLE_EQ(lastVal, ts->values()[N-1]) << name;
   }
-  */
+
   { // Daily
     openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Daily", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
@@ -423,7 +423,7 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
     EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[0]);
     EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
   }
-  /*
+ 
   { // Monthly
     openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Monthly", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
@@ -467,7 +467,7 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
     EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[0]);
     EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
   }
-  */
+
   { // Bad key name
     openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Hourly", "Zone Mean Air Temperature", "Zone that does not exist");
     EXPECT_FALSE(ts);
@@ -479,11 +479,11 @@ TEST_F(SqlFileFixture, Regressions) {
   // adding the Output:SQLite,SimpleAndTabular; object
   // and using the USA_CO_Golden-NREL.724666_TMY3.epw weather file
   
-  //regressionTestSqlFile("1ZoneEvapCooler-V7-0-0.sql", 42.25, 20, 20);
-  //regressionTestSqlFile("1ZoneEvapCooler-V7-1-0.sql", 42.05, 20, 20);
-  //regressionTestSqlFile("1ZoneEvapCooler-V7-2-0.sql", 43.28, 20, 20);
-  //regressionTestSqlFile("1ZoneEvapCooler-V8-0-0.sql", 43.28, 20, 20);
-  //regressionTestSqlFile("1ZoneEvapCooler-V8-1-0.sql", 43.28, 20, 20);
-  //regressionTestSqlFile("1ZoneEvapCooler-V8-2-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V7-0-0.sql", 42.25, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V7-1-0.sql", 42.05, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V7-2-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V8-0-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V8-1-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V8-2-0.sql", 43.28, 20, 20);
   regressionTestSqlFile("1ZoneEvapCooler-V8-3-0.sql", 43.28, 20, 20);
 }
