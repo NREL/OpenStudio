@@ -2337,9 +2337,10 @@ namespace openstudio{
       stdValues.reserve(8760);
       boost::optional<unsigned> reportingIntervalMinutes;
 
+      ReportingFrequency reportingFrequency(ReportingFrequency::RunPeriod);
       bool isIntervalTimeSeries = false;
       try {
-        ReportingFrequency reportingFrequency(dataDictionary.reportingFrequency);
+        reportingFrequency = ReportingFrequency(dataDictionary.reportingFrequency);
         isIntervalTimeSeries = (reportingFrequency == ReportingFrequency::Timestep) ||
                                (reportingFrequency == ReportingFrequency::Hourly) ||
                                (reportingFrequency == ReportingFrequency::Daily);
@@ -2349,6 +2350,9 @@ namespace openstudio{
 
       if (m_db) 
       {
+        std::string energyPlusVersion = this->energyPlusVersion();
+        VersionString version(energyPlusVersion);
+
         std::stringstream s;
         s << "SELECT dt.VariableValue, Time.Month, Time.Day, Time.Hour, Time.Minute, Time.Interval FROM ";
         s << dataDictionary.table;
@@ -2388,6 +2392,20 @@ namespace openstudio{
           unsigned month = sqlite3_column_int(sqlStmtPtr, 1);
           unsigned day = sqlite3_column_int(sqlStmtPtr, 2);
           unsigned intervalMinutes = sqlite3_column_int(sqlStmtPtr, 5); // used for run periods
+
+          if ((version.major() == 8) && (version.minor() == 3)){
+            // workaround for bug in E+ 8.3, issue #1692
+            if (reportingFrequency == ReportingFrequency::Daily){
+              intervalMinutes = 24 * 60;
+            } else if (reportingFrequency == ReportingFrequency::Monthly){
+              intervalMinutes = day * 24 * 60;
+            } else if (reportingFrequency == ReportingFrequency::RunPeriod){
+              DateTime firstDateTime = this->firstDateTime(false, dataDictionary.envPeriodIndex);
+              DateTime lastDateTime = this->lastDateTime(false, dataDictionary.envPeriodIndex);
+              Time deltaT = lastDateTime - firstDateTime;
+              intervalMinutes = deltaT.totalMinutes() + 60;
+            }
+          }
 
           if (!firstReportDateTime){
             if ((month==0) || (day==0)){
