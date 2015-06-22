@@ -152,12 +152,13 @@ namespace detail {
     for( auto const & inletComp : inletComps ) {
       if( handle == inletComp.handle() ) { return inletComp; }
       std::vector<HVACComponent> visited { inletComp };
-      if( auto mo = findModelObject(handle, outletComp, visited, false) ) {
+      if( auto mo = findModelObject(handle, outletComp, visited, true) ) {
         return mo;
       }
     }
 
     return boost::none;
+
   }
 
   boost::optional<ModelObject> Loop_Impl::supplyComponent(openstudio::Handle handle) const
