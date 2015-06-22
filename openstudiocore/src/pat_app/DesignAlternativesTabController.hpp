@@ -318,6 +318,8 @@ private:
   std::vector<QSharedPointer<AlternativeModelMeasureItem> > alternativeModelMeasureItems() const;
 
   QPointer<DesignAltItem> m_designAltItem;
+
+  int m_count;
 };
 
 // AlternativeModelMeasureItem corresponds to a user defined measure on an alternative model

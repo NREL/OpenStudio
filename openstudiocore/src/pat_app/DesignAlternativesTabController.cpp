@@ -833,13 +833,14 @@ QWidget * PerturbationItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
 AlternativeModelMeasureListController::AlternativeModelMeasureListController(DesignAltItem * designAltItem)
   : OSListController(),
-    m_designAltItem(designAltItem)
+    m_designAltItem(designAltItem),
+    m_count((int)this->modelMeasures().size())
 {
 }
 
 QSharedPointer<OSListItem> AlternativeModelMeasureListController::itemAt(int i)
 {
-  if (i >= 0 && i < count())
+  if (i >= 0 && i < m_count)
   {
     return alternativeModelMeasureItems()[i];
   }
@@ -849,7 +850,7 @@ QSharedPointer<OSListItem> AlternativeModelMeasureListController::itemAt(int i)
 
 int AlternativeModelMeasureListController::count()
 {
-  return (int)alternativeModelMeasureItems().size();
+  return m_count;
 }
 
 void AlternativeModelMeasureListController::addAlternativeModelMeasure()
@@ -886,8 +887,9 @@ void AlternativeModelMeasureListController::alternativeModelMeasureItemChanged()
       jsonObject.insert("taxonomyTag", alternativeModelMeasureItem->taxonomyTag());
       jsonObject.insert("capitalCost", alternativeModelMeasureItem->capitalCost());
 
-      updatedModelMeasures << jsonObject;
-    }
+    } 
+
+    updatedModelMeasures << jsonObject;
   }
 
   setModelMeasures(updatedModelMeasures, false);
@@ -948,7 +950,6 @@ QJsonArray AlternativeModelMeasureListController::modelMeasures() const
     }
   }
 
-  int s = result.size();
 
   return result;
 }
@@ -976,6 +977,9 @@ void AlternativeModelMeasureListController::setModelMeasures(const QJsonArray& m
     if (test){
       // set the modified arguments
       rubySwapMeasure->setArguments(arguments);
+
+      // update the count
+      m_count = modelMeasures.size();
 
       if (forceRefresh){
         // redraw all the views
