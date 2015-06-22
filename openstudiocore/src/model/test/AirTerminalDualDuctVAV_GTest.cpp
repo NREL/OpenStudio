@@ -18,12 +18,34 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-
 #include <model/test/ModelFixture.hpp>
-
 #include <model/AirTerminalDualDuctVAV.hpp>
 #include <model/AirTerminalDualDuctVAV_Impl.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/AirLoopHVAC_Impl.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
 
+TEST_F(ModelFixture,AirTerminalDualDuctVAV) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+
+  ASSERT_EXIT ( 
+  {  
+     Model m; 
+     AirTerminalDualDuctVAV terminal(m); 
+
+     exit(0); 
+  } ,
+    ::testing::ExitedWithCode(0), "" );
+
+  {
+    Model m; 
+    AirTerminalDualDuctVAV terminal(m); 
+    
+    AirLoopHVAC airLoopHVAC(m);
+    EXPECT_TRUE(airLoopHVAC.addBranchForHVACComponent(terminal));
+
+    EXPECT_EQ(7u,airLoopHVAC.demandComponents().size());
+  }
+}

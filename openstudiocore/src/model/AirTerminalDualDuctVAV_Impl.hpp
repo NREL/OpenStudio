@@ -112,6 +112,8 @@ namespace detail {
 
     boost::optional<Node> coldAirInletNode() const;
 
+    bool addToNode(Node & node);
+
     //@}
    protected:
    private:

@@ -19,6 +19,8 @@
 
 #include <model/AirTerminalDualDuctVAV.hpp>
 #include <model/AirTerminalDualDuctVAV_Impl.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/AirLoopHVAC_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <model/Node.hpp>
@@ -207,6 +209,12 @@ namespace detail {
       OS_ASSERT(node);
     }
     return node;
+  }
+
+  bool AirTerminalDualDuctVAV_Impl::addToNode(Node & node)
+  {
+    auto mo = getObject<AirTerminalDualDuctVAV>();
+    return AirLoopHVAC_Impl::addDualDuctTerminalToNode(mo,inletPort(0),inletPort(1),outletPort(),node);
   }
 
 } // detail

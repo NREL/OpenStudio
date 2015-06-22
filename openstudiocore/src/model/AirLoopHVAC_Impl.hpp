@@ -194,6 +194,8 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   unsigned demandOutletPort() const;
 
+  static bool addDualDuctTerminalToNode(HVACComponent & terminal, const unsigned inletPortA, const unsigned inletPortB, const unsigned outletPort, Node & node);
+
   private:
 
   AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const;

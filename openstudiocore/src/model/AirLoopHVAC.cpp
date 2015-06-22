@@ -1020,6 +1020,79 @@ namespace detail {
     return std::vector<Node>();
   }
 
+  bool AirLoopHVAC_Impl::addDualDuctTerminalToNode(HVACComponent & terminal, const unsigned inletPortA, const unsigned inletPortB, const unsigned outletPort, Node & node) {
+    // Initialize result to true,
+    // then do a series of checks to make sure we can proceed.
+    // If any check does not pass, set result = false, and use that to halt progress.
+    bool result = true;
+
+    Model _model = node.model();
+    if( _model != terminal.model() ) { result = false; }
+
+    auto t_airLoopHVAC = node.airLoopHVAC();
+    if( result && ! t_airLoopHVAC ) { result = false; }
+
+    auto outlet = node.outletModelObject();
+    if( result && ! outlet ) { 
+      OS_ASSERT(outlet);
+      result = false;
+    }
+
+    auto inlet = node.inletModelObject();
+    if( result && ! inlet ) {
+      OS_ASSERT(inlet);
+      result = false;
+    }
+
+    auto sourcePort = node.connectedObjectPort(node.inletPort());
+    if( result && ! sourcePort ) { 
+      OS_ASSERT(sourcePort);
+      result = false; 
+    }
+
+    if( result && ! inlet->optionalCast<Splitter>() ) { result = false; }
+
+    boost::optional<ThermalZone> thermalZone;
+    if( result ) {
+      if( auto portList = outlet->optionalCast<PortList>()  ) {
+        thermalZone = portList->thermalZone();
+      }
+    }
+
+    if( result && ! (thermalZone || outlet->optionalCast<Mixer>()) ) { result = false; }
+
+    if( result ) {
+      Node inletNode(_model);
+
+      _model.connect( inlet.get(),
+                      sourcePort.get(),
+                      inletNode,
+                      inletNode.inletPort() );
+
+      _model.connect( inletNode,
+                      inletNode.outletPort(),
+                      terminal,
+                      inletPortA );
+
+      _model.connect( terminal,
+                      outletPort,
+                      node,
+                      node.inletPort() );
+
+      auto inletNodes = t_airLoopHVAC->demandInletNodes();
+      if( inletNodes.size() == 2 ) {
+        // Hook up other side of terminal
+      }
+
+      if( thermalZone ) {
+        thermalZone->addEquipment(terminal);
+      }
+    }
+
+    return result;
+  }
+  
+
 } // detail
 
 AirLoopHVAC::AirLoopHVAC(Model& model)
