@@ -72,6 +72,16 @@ class BlueButton : public QPushButton
   virtual ~BlueButton() {}
 };
 
+class AddButton : public QPushButton
+{
+  Q_OBJECT
+
+public:
+
+  AddButton(QWidget * parent = nullptr);
+  virtual ~AddButton() {}
+};
+
 class RemoveButton : public QPushButton
 {
   Q_OBJECT

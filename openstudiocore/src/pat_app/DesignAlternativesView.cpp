@@ -34,6 +34,7 @@
 #include <QLineEdit>
 #include <QTextEdit>
 #include <QComboBox>
+#include <QPushButton>
 
 namespace openstudio {
 
@@ -284,9 +285,23 @@ DesignAltContentView::DesignAltContentView(bool t_isBaseline, bool t_isAlternati
   }
   
   if (t_isAlternativeModel){
+    auto hLayout = new QHBoxLayout();
+
     QLabel * modelMeasuresTitleLabel = new QLabel("User Defined Measures");
     modelMeasuresTitleLabel->setObjectName("H2");
-    mainVLayout->addWidget(modelMeasuresTitleLabel);
+    hLayout->addWidget(modelMeasuresTitleLabel);
+
+    if (!t_alternateModelMeasureNeedsUpdate){
+      addAlternativeModelMeasure = new AddButton();
+      // todo: tooltip "New Alternative Model Measure");
+      hLayout->addWidget(addAlternativeModelMeasure);
+
+      connect(addAlternativeModelMeasure, &QPushButton::clicked, this, &DesignAltContentView::addAlternativeModelMeasureClicked);
+    
+      hLayout->addStretch();
+    }
+
+    mainVLayout->addLayout(hLayout);
 
     alternativeModelMeasureListView = new OSListView();
     alternativeModelMeasureListView->setContentsMargins(0, 0, 0, 0);
@@ -296,11 +311,6 @@ DesignAltContentView::DesignAltContentView(bool t_isBaseline, bool t_isAlternati
       QLabel * needsUpdateLabel = new QLabel("Update Required, Sync Project Measures With Library");
       needsUpdateLabel->setStyleSheet("font:italic");
       mainVLayout->addWidget(needsUpdateLabel);
-    }else{
-      addAlternativeModelMeasure = new SofterDuplicateButton();
-      mainVLayout->addWidget(addAlternativeModelMeasure);
-
-      connect(addAlternativeModelMeasure, &QPushButton::clicked, this, &DesignAltContentView::addAlternativeModelMeasureClicked);
     }
   }
 }
@@ -348,15 +358,21 @@ AlternativeModelMeasureItemView::AlternativeModelMeasureItemView(const QString& 
   mainVLayout->setSpacing(5);
   setLayout(mainVLayout);
 
+  auto hLayout = new QHBoxLayout();
+
   QLabel * displayNameTitleLabel = new QLabel("Name");
   displayNameTitleLabel->setObjectName("H2");
-  mainVLayout->addWidget(displayNameTitleLabel);
+  hLayout->addWidget(displayNameTitleLabel);
+
+  hLayout->addStretch();
+
+  removeAlternativeModelMeasure = new SofterRemoveButton();
+  hLayout->addWidget(removeAlternativeModelMeasure);
+
+  mainVLayout->addLayout(hLayout);
 
   QRegExp nameRegex("^\\S.*");
   auto validator = new QRegExpValidator(nameRegex, this);
-
-  removeAlternativeModelMeasure = new SofterDuplicateButton();
-  mainVLayout->addWidget(removeAlternativeModelMeasure);
 
   displayNameTextEdit = new QLineEdit();
   displayNameTextEdit->setAcceptDrops(false);
@@ -378,7 +394,7 @@ AlternativeModelMeasureItemView::AlternativeModelMeasureItemView(const QString& 
 
   connect(descriptionTextEdit, &QTextEdit::textChanged, this, &AlternativeModelMeasureItemView::changed);
 
-  auto hLayout = new QHBoxLayout();
+  hLayout = new QHBoxLayout();
 
   taxonomyFirstLevelComboBox = new QComboBox();
   hLayout->addWidget(taxonomyFirstLevelComboBox);
@@ -399,6 +415,10 @@ AlternativeModelMeasureItemView::AlternativeModelMeasureItemView(const QString& 
 
   QRegExp numberRegex("^[+-]?([0-9]*\\.?[0-9]+|[0-9]+\\.?[0-9]*)([eE][+-]?[0-9]+)?$");
   validator = new QRegExpValidator(numberRegex, this);
+
+  QLabel* dollarSign = new QLabel("$");
+  dollarSign->setObjectName("H2");
+  hLayout->addWidget(dollarSign);
 
   capitalCostTextEdit = new QLineEdit();
   capitalCostTextEdit->setAcceptDrops(false);
