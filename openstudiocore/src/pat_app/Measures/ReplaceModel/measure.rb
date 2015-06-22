@@ -35,6 +35,7 @@ class ReplaceModel < OpenStudio::Ruleset::ModelUserScript
     result << alternativeModelPath
     
     measures_json = OpenStudio::Ruleset::OSArgument::makeStringArgument("measures_json", true)
+    measures_json.setDisplayName("Alternative Measures")
     measures_json.setDefaultValue("[]")
     result << measures_json
     

@@ -948,6 +948,8 @@ QJsonArray AlternativeModelMeasureListController::modelMeasures() const
     }
   }
 
+  int s = result.size();
+
   return result;
 }
 
