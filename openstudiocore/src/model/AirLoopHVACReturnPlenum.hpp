@@ -66,7 +66,7 @@ class MODEL_API AirLoopHVACReturnPlenum : public Mixer {
 
   bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
-  bool addBranchForZone(openstudio::model::ThermalZone & thermalZone, StraightComponent & terminal);
+  bool addBranchForZone(openstudio::model::ThermalZone & thermalZone, HVACComponent & terminal);
 
  protected:
   /// @cond

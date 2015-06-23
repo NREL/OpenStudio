@@ -82,8 +82,8 @@ class MODEL_API AirLoopHVAC : public Loop
   Node supplyInletNode() const override;
 
   /** Returns the supply outlet nodes.
-   * Currently only one supply outlet node is supported, but EnergyPlus allows
-   * up to two for dual duct systems.
+   * Single duct systems have one supply outlet node.
+   * Dual duct systems have two supply outlet nodes.
    */
   std::vector<Node> supplyOutletNodes() const override;
 
@@ -91,8 +91,8 @@ class MODEL_API AirLoopHVAC : public Loop
   Node supplyOutletNode() const override;
 
   /** Returns the demand inlet nodes.
-   * Currently only one demand inlet node is supported, but EnergyPlus allows
-   * up to two for dual duct systems.
+   * Single duct systems have one demand inlet node.
+   * Dual duct systems have two demand inlet nodes.
    */
   std::vector<Node> demandInletNodes() const override;
 
@@ -161,23 +161,17 @@ class MODEL_API AirLoopHVAC : public Loop
    */
   boost::optional<Node> supplyMixerOutletNode();
 
-  /** Returns the zone splitter, if it doesn't exist then it makes one. */
-  AirLoopHVACZoneSplitter zoneSplitter();
+  /** Returns the first zone splitter.
+   */
+  AirLoopHVACZoneSplitter zoneSplitter() const;
 
-  /** Returns the zone splitter inlet node. */
-  boost::optional<Node> zoneSplitterInletNode(int zoneSplitterIndex);
-
-  /** Returns the zone splitter outlet nodes. */
-  std::vector<Node> zoneSplitterOutletNodes(int zoneSplitterIndex);
+  /** Returns the zone splitters.
+   * Single duct systems have one zone splitter, dual duct systems have two.
+   */
+  std::vector<AirLoopHVACZoneSplitter> zoneSplitters() const;
 
   /** Returns the zone mixer, if it doesn't exist then it makes one. */
   AirLoopHVACZoneMixer zoneMixer();
-
-  /** Returns the zone mixer inlet nodes. */
-  std::vector<Node> zoneMixerInletNodes();
-
-  /** Returns the zone mixer outlet nodes. */
-  boost::optional<Node> zoneMixerOutletNode();
 
   /** Returns all of the components on the outdoor air system including the mixer itself.
    *  If type is given then the results will be limited to the given IddObjectType.
@@ -210,13 +204,13 @@ class MODEL_API AirLoopHVAC : public Loop
    * is already connected to an air loop.
    */
   bool addBranchForZone(openstudio::model::ThermalZone & thermalZone,
-                        boost::optional<StraightComponent> optAirTerminal);
+                        boost::optional<HVACComponent> optAirTerminal);
 
   /** Overloaded version of addBranchForZone() **/
   bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
   /** Overloaded version of addBranchForZone() **/
-  bool addBranchForZone(ThermalZone & thermalZone, StraightComponent & airTerminal);
+  bool addBranchForZone(ThermalZone & thermalZone, HVACComponent & airTerminal);
 
   /** Adds a new branch on the demand side of the air loop with the specified airTerminal.
    *  Returns true if the airTerminal was accepted, otherwise false.  The argument, hvacComponent,

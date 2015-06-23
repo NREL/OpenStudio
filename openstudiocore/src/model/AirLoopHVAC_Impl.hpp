@@ -108,7 +108,9 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   AirLoopHVACZoneMixer zoneMixer();
 
-  AirLoopHVACZoneSplitter zoneSplitter();
+  AirLoopHVACZoneSplitter zoneSplitter() const;
+
+  std::vector<AirLoopHVACZoneSplitter> zoneSplitters() const;
 
   bool removeBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
@@ -132,19 +134,19 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
-  bool addBranchForZone(ThermalZone & thermalZone, StraightComponent & airTerminal);
+  bool addBranchForZone(ThermalZone & thermalZone, HVACComponent & airTerminal);
 
   bool addBranchForZone(ThermalZone & thermalZone, 
                         Splitter & splitter,
                         Mixer & mixer,
-                        StraightComponent & airTerminal);
+                        HVACComponent & airTerminal);
 
   bool addBranchForZone(ThermalZone & thermalZone, 
                         Splitter & splitter,
                         Mixer & mixer);
 
   bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone, 
-                            boost::optional<StraightComponent> optAirTerminal);
+                            boost::optional<HVACComponent> optAirTerminal);
 
   bool moveBranchForZone(ThermalZone & thermalZone,
                          Splitter & newSplitter);
@@ -172,11 +174,11 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
                                    AirLoopHVAC & airLoopHVAC,
                                    Splitter & splitter,
                                    Mixer & mixer,
-                                   boost::optional<StraightComponent> & optAirTerminal);
+                                   boost::optional<HVACComponent> & optAirTerminal);
 
   static boost::optional<ThermalZone> zoneForLastBranch(Mixer & mixer);
 
-  static boost::optional<StraightComponent> terminalForLastBranch(Mixer & mixer);
+  static boost::optional<HVACComponent> terminalForLastBranch(Mixer & mixer);
 
   static boost::optional<PlantLoop> plantForAirTerminal( HVACComponent & airTerminal );
 

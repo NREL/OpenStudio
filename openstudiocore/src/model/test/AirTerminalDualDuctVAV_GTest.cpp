@@ -23,6 +23,12 @@
 #include <model/AirTerminalDualDuctVAV_Impl.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
+#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/ThermalZone.hpp>
+#include <model/ThermalZone_Impl.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -39,13 +45,44 @@ TEST_F(ModelFixture,AirTerminalDualDuctVAV) {
   } ,
     ::testing::ExitedWithCode(0), "" );
 
+  // Add terminal
   {
     Model m; 
     AirTerminalDualDuctVAV terminal(m); 
     
     AirLoopHVAC airLoopHVAC(m);
-    EXPECT_TRUE(airLoopHVAC.addBranchForHVACComponent(terminal));
+    {
+      auto t_zoneSplitters = airLoopHVAC.zoneSplitters();
+      EXPECT_EQ(1u,t_zoneSplitters.size());
+      EXPECT_EQ(airLoopHVAC.zoneSplitter(),t_zoneSplitters.front());
+      EXPECT_EQ(1u,airLoopHVAC.demandInletNodes().size());
+    }
 
-    EXPECT_EQ(7u,airLoopHVAC.demandComponents().size());
+    EXPECT_TRUE(airLoopHVAC.addBranchForHVACComponent(terminal));
+    EXPECT_EQ(2u,airLoopHVAC.demandInletNodes().size());
+    EXPECT_EQ(2u,airLoopHVAC.zoneSplitters().size());
+
+    EXPECT_EQ(10u,airLoopHVAC.demandComponents().size());
+  }
+
+  // Add terminal with zone
+  {
+    Model m; 
+    AirTerminalDualDuctVAV terminal(m); 
+    
+    AirLoopHVAC airLoopHVAC(m);
+    {
+      auto t_zoneSplitters = airLoopHVAC.zoneSplitters();
+      EXPECT_EQ(1u,t_zoneSplitters.size());
+      EXPECT_EQ(airLoopHVAC.zoneSplitter(),t_zoneSplitters.front());
+      EXPECT_EQ(1u,airLoopHVAC.demandInletNodes().size());
+    }
+
+    ThermalZone zone(m);
+    EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone,terminal));
+    EXPECT_EQ(2u,airLoopHVAC.demandInletNodes().size());
+    EXPECT_EQ(2u,airLoopHVAC.zoneSplitters().size());
+
+    EXPECT_EQ(12u,airLoopHVAC.demandComponents().size());
   }
 }
