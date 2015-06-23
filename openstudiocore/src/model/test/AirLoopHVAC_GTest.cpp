@@ -147,7 +147,7 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone)
 
   ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal));
 
-  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::optional<HVACComponent>()));
+  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::optional<StraightComponent>()));
 
 }
 
@@ -169,7 +169,7 @@ TEST_F(ModelFixture,AirLoopHVAC_demandComponents)
 
   ASSERT_EQ( unsigned(8),airLoopHVAC.demandComponents().size() );
 
-  airLoopHVAC.addBranchForZone(thermalZone2, boost::optional<HVACComponent>());
+  airLoopHVAC.addBranchForZone(thermalZone2, boost::optional<StraightComponent>());
 
   ASSERT_EQ( unsigned(12),airLoopHVAC.demandComponents().size() );
 
@@ -188,7 +188,7 @@ TEST_F(ModelFixture,AirLoopHVAC_demandComponents2)
 
   EXPECT_EQ( unsigned(5),airLoopHVAC.demandComponents().size() );
 
-  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,boost::optional<HVACComponent>()));
+  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,boost::optional<StraightComponent>()));
 
   EXPECT_EQ( unsigned(7),airLoopHVAC.demandComponents().size() );
 
@@ -220,7 +220,7 @@ TEST_F(ModelFixture,AirLoopHVAC_removeBranchForZone)
 
   EXPECT_EQ( unsigned(8),airLoopHVAC.demandComponents().size() );
 
-  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::optional<HVACComponent>()));
+  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::optional<StraightComponent>()));
 
   EXPECT_EQ( unsigned(12),airLoopHVAC.demandComponents().size() );
 
@@ -250,7 +250,7 @@ TEST_F(ModelFixture,ThermalZone_remove)
 
   ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal));
 
-  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::optional<HVACComponent>()));
+  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::optional<StraightComponent>()));
 
   airLoopHVAC.removeBranchForZone(thermalZone2);
 
@@ -271,7 +271,7 @@ TEST_F(ModelFixture,AirLoopHVAC_remove)
 
   ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal));
 
-  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::optional<HVACComponent>()));
+  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::optional<StraightComponent>()));
 
   ASSERT_NO_THROW(airLoopHVAC.remove());
 }

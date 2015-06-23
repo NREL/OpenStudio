@@ -188,9 +188,10 @@ class MODEL_API AirLoopHVAC : public Loop
   /** Adds a new branch on the demand side of the air loop for a zone labeled zoneLabel
    * and returns true if the operation was successful. The method will return false if the Zone
    * is already connected to an air loop.
+   * New code should favor addBranchForZone(ThermalZone &) or addBranchForZone(ThermalZone &, HVACComponent&).
    */
   bool addBranchForZone(openstudio::model::ThermalZone & thermalZone,
-                        boost::optional<HVACComponent> optAirTerminal);
+                        boost::optional<StraightComponent> optAirTerminal);
 
   /** Overloaded version of addBranchForZone() **/
   bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);

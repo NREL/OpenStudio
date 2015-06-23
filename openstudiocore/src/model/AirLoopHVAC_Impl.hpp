@@ -146,7 +146,10 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
                         Mixer & mixer);
 
   bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone, 
-                            boost::optional<HVACComponent> optAirTerminal);
+                            boost::optional<StraightComponent> & optAirTerminal);
+
+  bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone, 
+                            boost::optional<HVACComponent> & optAirTerminal);
 
   bool moveBranchForZone(ThermalZone & thermalZone,
                          Splitter & newSplitter);

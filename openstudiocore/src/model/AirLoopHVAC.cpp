@@ -651,7 +651,18 @@ namespace detail {
     return addBranchForZoneImpl(thermalZone, comp);
   }
 
-  bool AirLoopHVAC_Impl::addBranchForZoneImpl(ThermalZone & thermalZone, OptionalHVACComponent airTerminal)
+  bool AirLoopHVAC_Impl::addBranchForZoneImpl(ThermalZone & thermalZone, OptionalStraightComponent & airTerminal)
+  {
+    boost::optional<HVACComponent> comp;
+
+    if( airTerminal ) {
+      comp = airTerminal->cast<HVACComponent>();
+    }
+
+    return addBranchForZoneImpl(thermalZone, comp);
+  }
+
+  bool AirLoopHVAC_Impl::addBranchForZoneImpl(ThermalZone & thermalZone, OptionalHVACComponent & airTerminal)
   {
     bool result = true;
     bool complete = false;
@@ -1248,7 +1259,7 @@ std::vector<AirLoopHVACZoneSplitter> AirLoopHVAC::zoneSplitters() const
 }
 
 bool AirLoopHVAC::addBranchForZone(openstudio::model::ThermalZone & thermalZone,
-                                   boost::optional<HVACComponent> optAirTerminal)
+                                   boost::optional<StraightComponent> optAirTerminal)
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->addBranchForZoneImpl( thermalZone, optAirTerminal );
 }
