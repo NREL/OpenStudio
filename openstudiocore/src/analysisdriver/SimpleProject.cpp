@@ -1289,6 +1289,7 @@ namespace detail {
     BCLMeasure replaceModelMeasure = insertMeasure(*it);
     RubyMeasure swapModel(replaceModelMeasure,false); // false so not used in algorithms
     swapModel.setName("Alternate Model: " + toString(newPath.filename()));
+    swapModel.setDisplayName("Alternate Model: " + toString(newPath.filename()));
     // hard-code argument since can't get arguments from library
     OSArgument arg = OSArgument::makePathArgument("alternativeModelPath",true,"osm");
     arg.setDisplayName("Alternative Model Path");
