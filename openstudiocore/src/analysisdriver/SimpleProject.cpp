@@ -1349,6 +1349,7 @@ namespace detail {
     bool ok = analysis.addDataPoint(dataPoint.get());
     OS_ASSERT(ok);
     dataPoint->setName(swapModel.name());
+    dataPoint->setDisplayName(swapModel.displayName());
     dataPoint->setDescription("Replace baseline model with '" + toString(newPath) + "'.");
 
     return true;
