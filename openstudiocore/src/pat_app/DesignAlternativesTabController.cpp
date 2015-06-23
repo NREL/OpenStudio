@@ -550,6 +550,7 @@ void DesignAltListController::addOneItemWithAllSelectedMeasures()
     {
       std::string name = suggestDesignAltName(boost::none);
       dataPoint->setName(name);
+      dataPoint->setDisplayName(name);
 
       bool bingo = project->analysis().addDataPoint(*dataPoint);
 
@@ -592,6 +593,7 @@ QString DesignAltItem::description() const
 void DesignAltItem::setName(const QString & name)
 {
   m_dataPoint.setName(name.toStdString());
+  m_dataPoint.setDisplayName(name.toStdString());
 }
 
 void DesignAltItem::setDescription(const QString & description)
