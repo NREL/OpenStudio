@@ -164,6 +164,28 @@ AddButton::AddButton(QWidget * parent)
   setStyleSheet(style);
 }
 
+SofterAddButton::SofterAddButton(QWidget * parent)
+  : QPushButton()
+{
+  setFlat(true);
+
+  setFixedSize(16, 16);
+
+  QString style;
+  style.append("QPushButton {"
+               "  background-image:url(':/shared_gui_components/images/add_softer_off.png');"
+               "  border:none;"
+               "}");
+  style.append("QPushButton:hover {"
+               "  background-image:url(':/shared_gui_components/images/add_softer_on.png');"
+               "}");
+  style.append("QPushButton:pressed {"
+               "  background-image:url(':/shared_gui_components/images/add_softer_on.png');"
+               "}");
+
+  setStyleSheet(style);
+}
+
 RemoveButton::RemoveButton(QWidget * parent)
   : QPushButton()
 {

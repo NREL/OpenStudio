@@ -82,6 +82,16 @@ public:
   virtual ~AddButton() {}
 };
 
+class SofterAddButton : public QPushButton
+{
+  Q_OBJECT
+
+public:
+
+  SofterAddButton(QWidget * parent = nullptr);
+  virtual ~SofterAddButton() {}
+};
+
 class RemoveButton : public QPushButton
 {
   Q_OBJECT

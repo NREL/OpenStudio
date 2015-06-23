@@ -292,8 +292,8 @@ DesignAltContentView::DesignAltContentView(bool t_isBaseline, bool t_isAlternati
     hLayout->addWidget(modelMeasuresTitleLabel);
 
     if (!t_alternateModelMeasureNeedsUpdate){
-      addAlternativeModelMeasure = new AddButton();
-      // todo: tooltip "New Alternative Model Measure");
+      addAlternativeModelMeasure = new SofterAddButton();
+      addAlternativeModelMeasure->setToolTip("New User Defined Measure");
       hLayout->addWidget(addAlternativeModelMeasure);
 
       connect(addAlternativeModelMeasure, &QPushButton::clicked, this, &DesignAltContentView::addAlternativeModelMeasureClicked);

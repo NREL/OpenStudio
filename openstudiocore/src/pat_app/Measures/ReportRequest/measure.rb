@@ -3,7 +3,7 @@
 
 require 'openstudio'
 require 'json'
-
+#
 # start the measure
 class ReportRequest < OpenStudio::Ruleset::WorkspaceUserScript
 
