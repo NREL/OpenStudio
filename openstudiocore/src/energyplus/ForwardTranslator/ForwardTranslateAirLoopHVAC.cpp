@@ -76,6 +76,7 @@
 #include <utilities/idd/AvailabilityManager_Scheduled_FieldEnums.hxx>
 #include <utilities/idd/AvailabilityManager_NightCycle_FieldEnums.hxx>
 #include <utilities/idd/BranchList_FieldEnums.hxx>
+#include <utilities/idd/NodeList_FieldEnums.hxx>
 #include <utilities/idd/Branch_FieldEnums.hxx>
 #include <utilities/idd/Schedule_Compact_FieldEnums.hxx>
 #include <utilities/idd/Sizing_System_FieldEnums.hxx>
@@ -543,12 +544,26 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
                       airLoopHVAC.supplyInletNode().name().get());
 
   // Supply Side Outlet Node Names
-  idfObject.setString(openstudio::AirLoopHVACFields::SupplySideOutletNodeNames,
-                      airLoopHVAC.supplyOutletNodes().begin()->name().get());
+  IdfObject supplyOutletNodeList(IddObjectType::NodeList);
+  supplyOutletNodeList.setName(airLoopHVACName + " Supply Outlet Nodes");
+  m_idfObjects.push_back(supplyOutletNodeList);
+  idfObject.setString(openstudio::AirLoopHVACFields::SupplySideOutletNodeNames,supplyOutletNodeList.name().get());
+
+  for( const auto & node : airLoopHVAC.supplyOutletNodes() ) {
+    auto eg = supplyOutletNodeList.pushExtensibleGroup();
+    eg.setString(NodeListExtensibleFields::NodeName,node.name().get());
+  }
 
   // Demand Side Inlet Node Names
-  idfObject.setString(openstudio::AirLoopHVACFields::DemandSideInletNodeNames,
-                      airLoopHVAC.demandInletNodes().begin()->name().get());
+  IdfObject demandInletNodeList(IddObjectType::NodeList);
+  demandInletNodeList.setName(airLoopHVACName + " Demand Inlet Nodes");
+  m_idfObjects.push_back(demandInletNodeList);
+  idfObject.setString(openstudio::AirLoopHVACFields::DemandSideInletNodeNames,demandInletNodeList.name().get());
+
+  for( const auto & node : airLoopHVAC.demandInletNodes() ) {
+    auto eg = demandInletNodeList.pushExtensibleGroup();
+    eg.setString(NodeListExtensibleFields::NodeName,node.name().get());
+  }
 
   // Demand Side Outlet Node Name
   idfObject.setString(openstudio::AirLoopHVACFields::DemandSideOutletNodeName,
