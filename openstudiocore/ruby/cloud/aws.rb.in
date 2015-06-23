@@ -20,28 +20,25 @@
 ######################################################################
 # == Synopsis
 #
-#   Uses the aws-sdk gem to communicate with AWS
+#   Uses the aws-sdk and openstudio-aws gems to communicate with AWS
 #
 # == Usage
 #
-#  ruby aws.rb access_key secret_key us-east-1 EC2 launch_server "{\"instance_type\":\"t1.micro\"}"
-#  ruby aws.rb access_key secret_key us-east-1 EC2 launch_server "{\"openstudio_version\":\"1.7.1\"}"
+#  ruby aws.rb access_key secret_key us-east-1 total_instances
+#  ruby aws.rb access_key secret_key us-east-1 launch_server "{\"instance_type\":\"m3.xlarge\"}"
+#  ruby aws.rb access_key secret_key us-east-1 launch_server "{\"instance_type\":\"m3.xlarge\", \"openstudio_version\":\"1.7.1\"}"
 #
 #  ARGV[0] - Access Key
 #  ARGV[1] - Secret Key
-#  ARGV[2] - Region
-#  ARGV[3] - Service (e.g. "EC2" or "CloudWatch")
-#  ARGV[4] - Command (e.g. "launch_server")
-#  ARGV[5] - Optional json with parameters associated with command
+#  ARGV[2] - Region (e.g. us-east-1)
+#  ARGV[3] - Command (e.g. describe_availability_zones, total_instances, instance_status, launch_server, launch_workers, terminate_session, termination_status, session_uptime, estimated_charges)
+#  ARGV[4] - Json with parameters associated with certain commands
 #
 ######################################################################
 
-# TODO: cull down this include list
-# TODO: we can remove the EC2/CloudWatch parameter. The Gem takes care of this
 require 'openstudio-aws'
 require 'json'
 require 'logger'
-require 'time'
 require 'cgi'
 require 'net/ssh/proxy/http'
 
@@ -56,7 +53,7 @@ def error(code, msg)
   exit 1
 end
 
-error(-1, 'Invalid number of args') if ARGV.length < 5
+error(-1, 'Invalid number of args') if ARGV.length < 4
 
 if ARGV[0].empty? || ARGV[1].empty?
   error(401, 'Missing authentication arguments')
@@ -64,9 +61,7 @@ end
 
 error(-1, 'Missing region argument') if ARGV[2].empty?
 
-error(-1, 'Missing service argument') if ARGV[3].empty?
-
-error(-1, 'Missing command argument') if ARGV[4].empty?
+error(-1, 'Missing command argument') if ARGV[3].empty?
 
 def get_proxy_user
   ENV['HTTP_PROXY_USER']
@@ -105,9 +100,9 @@ def get_proxy_port
   proxy_uri = ENV['HTTP_PROXY']
   if proxy_uri
     uri = URI.parse(proxy_uri)
-    return uri.port
+    uri.port
   else
-    return nil
+    nil
   end
 end
 
@@ -115,31 +110,30 @@ def get_proxy_host
   proxy_uri = ENV['HTTP_PROXY']
   if proxy_uri
     uri = URI.parse(proxy_uri)
-    return uri.host
+    uri.host
   else
-    return nil
+    nil
   end
 end
 
 def get_proxy_uri
   if get_proxy_host
-    return URI::Generic.new('http', get_proxy_user_info_escaped, get_proxy_host, get_proxy_port, nil, nil, nil, nil, nil).to_s
+    URI::Generic.new('http', get_proxy_user_info_escaped, get_proxy_host, get_proxy_port, nil, nil, nil, nil, nil).to_s
   else
-    return nil
+    nil
   end
 end
 
 def get_proxy
   if get_proxy_host
-    proxy = Net::SSH::Proxy::HTTP.new(get_proxy_host, get_proxy_port, user: get_proxy_user, password: get_proxy_pass)
-    return proxy
+    Net::SSH::Proxy::HTTP.new(get_proxy_host, get_proxy_port, user: get_proxy_user, password: get_proxy_pass)
   else
-    return nil
+    nil
   end
 end
 
-if ARGV.length == 6
-  @params = JSON.parse(ARGV[5])
+if ARGV.length == 5
+  @params = JSON.parse(ARGV[4])
   OPENSTUDIO_VERSION = @params['openstudio_version'] if @params.include?('openstudio_version')
   @server_image_id = @params['server_ami'] if @params.include?('server_ami')
   @worker_image_id = @params['worker_ami'] if @params.include?('worker_ami')
@@ -178,31 +172,29 @@ error(1, 'Could not find stable AMIs') unless @server_image_id && @worker_image_
 begin
   # This will create a logger in addition to the AWS logger which is the same file
   @logger = Logger.new(File.expand_path('~/.aws.log'))
-  case ARGV[4]
+  case ARGV[3]
     when 'describe_availability_zones'
       resp = @aws.describe_availability_zones
       puts resp.to_json
-      @logger.info("availability_zones #{resp}")
+      @logger.info("availability_zones: #{resp}")
     when 'total_instances'
-      resp = @aws.total_instances_count
-      puts resp
-      @logger.info("total_instances #{resp}")
+      resp = @aws.describe_all_instances
+      puts ({total_instances: resp[:instance_statuses].length, region: ARGV[2]}.to_json)
+      @logger.info("total_instances: #{resp[:instance_statuses].length}")
     when 'instance_status'
       resp = nil
-      if ARGV.length < 6
-        resp = @aws.client.describe_instance_status
+      if ARGV.length < 5
+        resp = @aws.describe_all_instances[:instance_statuses]
       else
-        resp = @aws.client.describe_instance_status(instance_ids: [@params['instance_id']])
+        resp = @aws.describe_all_instances[:instance_statuses].select{|instance| instance[:instance_id] == @params['instance_id']}
       end
       output = {}
-      resp.data[:instance_status_set].each do |instance|
+      resp.each do |instance|
         output[instance[:instance_id]] = instance[:instance_state][:name]
       end
       puts output.to_json
     when 'launch_server'
-      error(-1, 'Invalid number of args') if ARGV.length < 6
-
-      @timestamp = Time.now.to_i
+      error(-1, 'Invalid number of args') if ARGV.length < 5
 
       server_options = {
           instance_type: @params['instance_type'],
@@ -211,23 +203,11 @@ begin
 
       # Create the server & worker
       @aws.create_server server_options
-      @aws.save_cluster_info 'replace_me_somewhere.json'
+      @aws.save_cluster_info 'state.json'
 
-      puts @aws.cluster_info
-
-    # TODO: OpenStudio needs the private key (the file or the key????) as well in the JSON
-    # puts ({timestamp: @timestamp,
-    #        private_key: @private_key,
-    #        server: {
-    #            id: @server.id,
-    #            ip: 'http://' + @server.ip,
-    #            dns: @server.dns,
-    #            procs: @server.procs,
-    #            availability_zone: @server.availability_zone
-    #        }}.to_json)
-
+      puts @aws.cluster_info.to_json
     when 'launch_workers'
-      error(-1, 'Invalid number of args') if ARGV.length < 6
+      error(-1, 'Invalid number of args') if ARGV.length < 5
       unless @params.key? 'num'
         error(-1, 'Number of worker nodes not specified. Must be greater than or equal to 0')
       end
@@ -238,24 +218,21 @@ begin
       }
 
       # Load in the Server information from disk
-      @aws.load_instance_info_from_file 'replace_me_somewhere.json'
+      @aws.load_instance_info_from_file 'state.json'
 
-      # Create the worker node
+      # Create the worker nodes
       @aws.create_workers @params['num'], worker_options
-    when 'terminate_session'
-      error(-1, 'Invalid number of args') if ARGV.length < 6
 
-      @aws.load_instance_info_from_file 'replace_me_somewhere.json'
+      @aws.save_cluster_info 'state.json'
+
+      puts @aws.cluster_info.to_json
+    when 'terminate_session'
+      @aws.load_instance_info_from_file 'state.json'
       @aws.terminate
 
-      # When session is fully terminated, then delete the key pair
-
       puts ({terminate_session: true}.to_json)
-
     when 'termination_status'
-      error(-1, 'Invalid number of args') if ARGV.length < 6
-
-      @aws.load_instance_info_from_file 'replace_me_somewhere.json'
+      @aws.load_instance_info_from_file 'state.json'
 
       instances = @aws.describe_instances
 
@@ -269,41 +246,27 @@ begin
         @aws.delete_key_pair
 
         # remove all the files
-        File.delete 'replace_me_somewhere.json' if File.exist? 'replace_me_somewhere.json'
+        File.delete 'state.json' if File.exist? 'state.json'
         File.delete 'ec2_server_key.pem' if File.exist? 'ec2_server_key.pem'
         File.delete 'ec2_worker_key.pub' if File.exist? 'ec2_worker_key.pub'
         File.delete 'ec2_worker_key.pem' if File.exist? 'ec2_worker_key.pem'
       end
 
       puts ({all_instances_terminated: (not_terminated == 0)}.to_json)
-
-    when 'session_uptime'
-      error(-1, 'Invalid number of args') if ARGV.length < 6
-
-      @aws.load_instance_info_from_file 'replace_me_somewhere.json'
-
-      require 'pp'
-      pp @aws
-
-      minutes = 0
-      if @aws.server
-        minutes = (Time.now.to_i - @aws.server.data['launch_time'].to_i) / 60
-      end
-
-      puts ({session_uptime: minutes}.to_json)
-
     when 'estimated_charges'
-      require 'pp'
-      datapoints = @aws.estimated_charges
-      error(-1, 'No Billing Data') if datapoints.length == 0
+      charges = @aws.estimated_charges
+      error(-1, 'No Billing Data') if charges[:datapoints].length == 0
+      datapoints = charges[:datapoints]
       datapoints.sort! { |a, b| a[:timestamp] <=> b[:timestamp] }
       puts ({estimated_charges: datapoints[-1][:maximum],
              timestamp: datapoints[-1][:timestamp].to_i}.to_json)
+      @logger.info("estimated_charges: #{datapoints[-1][:maximum]}")
     else
-      error(-1, "Unknown command: #{ARGV[4]} (#{ARGV[3]})")
+      error(-1, "Unknown command: #{ARGV[3]}")
   end
 # puts \"Status: #{resp.http_response.status}\"
 rescue SystemExit => e
+# ignored
 rescue Exception => e
   if e.message == 'getaddrinfo: No such host is known. '
     error(503, 'Offline')

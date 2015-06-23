@@ -6,4 +6,4 @@ gem 'rdoc', '= 4.0.0'
 gem 'test-unit', '= 2.0.0.0'
 
 # OpenStudio
-gem 'openstudio-aws', '~> 0.3.2', :git => 'https://github.com/NREL/OpenStudio-aws-gem.git', :branch => 'openstudio-pat'
+gem 'openstudio-aws', '~> 0.4.0.alpha2'
