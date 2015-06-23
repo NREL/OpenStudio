@@ -147,20 +147,6 @@ class MODEL_API AirLoopHVAC : public Loop
    */
   std::vector<Node> supplySplitterOutletNodes() const;
 
-  /** Returns the supply side mixer inlet nodes.  If the system has a return
-   * air bypass then it will have a mixer on the supply side.  Currently,
-   * return air bypass topology is not supported so this method will
-   * always return a false optional.
-   */
-  std::vector<Node> supplyMixerInletNodes();
-
-  /** Returns the supply side mixer outlet node.  If the system has a return
-   * air bypass then it will have a mixer on the supply side.  Currently,
-   * return air bypass topology is not supported so this method will
-   * always return a false optional.
-   */
-  boost::optional<Node> supplyMixerOutletNode();
-
   /** Returns the first zone splitter.
    */
   AirLoopHVACZoneSplitter zoneSplitter() const;
