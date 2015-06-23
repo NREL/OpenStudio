@@ -22,7 +22,7 @@
 namespace openstudio {
 
 SpacesTabView::SpacesTabView(QWidget * parent)
-  : MainTabView("Site", true, parent)
+  : MainTabView("Site", MainTabView::GRIDVIEW_SUB_TAB, parent)
 {
 }
 

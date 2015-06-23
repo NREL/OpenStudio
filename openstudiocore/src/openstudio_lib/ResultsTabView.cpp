@@ -52,10 +52,10 @@
 namespace openstudio {
 
 ResultsTabView::ResultsTabView(const QString & tabLabel,
-                               bool hasSubTab,
-                               QWidget * parent)
-                               : MainTabView(tabLabel,hasSubTab,parent),
-                                 m_resultsView(new ResultsView())
+  TabType tabType,
+  QWidget * parent)
+  : MainTabView(tabLabel, tabType, parent),
+  m_resultsView(new ResultsView())
 {
   addTabWidget(m_resultsView);
   m_resultsView->setAutoFillBackground(false);
