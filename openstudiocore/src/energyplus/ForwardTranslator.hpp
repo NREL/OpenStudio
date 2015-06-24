@@ -794,7 +794,7 @@ class ENERGYPLUS_API ForwardTranslator {
   
   boost::optional<IdfObject> translateZoneHVACUnitHeater( model::ZoneHVACUnitHeater & modelObject );
 
-  boost::optional<IdfObject> createAirLoopHVACSupplyPath( model::AirLoopHVAC & airLoopHVAC );
+  boost::optional<IdfObject> createAirLoopHVACSupplyPath( const model::Node & demandInletNode );
 
   boost::optional<IdfObject> createAirLoopHVACReturnPath( model::AirLoopHVAC & airLoopHVAC );
 

@@ -570,7 +570,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
                       airLoopHVAC.demandOutletNode().name().get());
 
   // Convert demand side components
-  createAirLoopHVACSupplyPath(airLoopHVAC);
+  for( const auto & demandInletNode : airLoopHVAC.demandInletNodes() ) {
+    createAirLoopHVACSupplyPath(demandInletNode);
+  }
   createAirLoopHVACReturnPath(airLoopHVAC);
 
   std::vector<ModelObject> demandComponents = airLoopHVAC.demandComponents();
