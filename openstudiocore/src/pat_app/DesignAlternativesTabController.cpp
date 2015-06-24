@@ -861,8 +861,8 @@ void AlternativeModelMeasureListController::addAlternativeModelMeasure()
 
   QJsonObject newMeasure;
   newMeasure.insert("uuid", UUID::createUuid().toString());
-  newMeasure.insert("displayName", "New Measure");
-  newMeasure.insert("description", "New Measure Description");
+  newMeasure.insert("displayName", "New User Defined Measure");
+  newMeasure.insert("description", "New User Defined Measure Description");
   newMeasure.insert("taxonomyTag", "Envelope.Form");
   newMeasure.insert("capitalCost", 0.0);
 

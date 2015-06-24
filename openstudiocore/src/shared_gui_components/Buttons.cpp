@@ -180,7 +180,7 @@ SofterAddButton::SofterAddButton(QWidget * parent)
                "  background-image:url(':/shared_gui_components/images/add_softer_on.png');"
                "}");
   style.append("QPushButton:pressed {"
-               "  background-image:url(':/shared_gui_components/images/add_softer_on.png');"
+               "  background-image:url(':/shared_gui_components/images/add_softer_press.png');"
                "}");
 
   setStyleSheet(style);
