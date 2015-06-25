@@ -735,6 +735,32 @@ TEST_F(ModelFixture,AirLoopHVAC_dualDuct)
   EXPECT_TRUE(airLoopHVAC.supplyComponent(airLoopHVAC.supplyOutletNodes().front().handle()));
   EXPECT_TRUE(airLoopHVAC.supplyComponent(airLoopHVAC.supplyOutletNodes().back().handle()));
 
+  EXPECT_EQ(4u,airLoopHVAC.supplyComponents().size());
+
+  auto supplyOutletNodes = airLoopHVAC.supplyOutletNodes();
+
+  CoilCoolingWater coolingCoil(m);
+  EXPECT_TRUE(coolingCoil.addToNode(supplyOutletNodes[0]));
+  {
+    auto mo = coolingCoil.airOutletModelObject();
+    ASSERT_TRUE(mo);
+    auto node = mo->optionalCast<Node>();
+    ASSERT_TRUE(node);
+    ASSERT_EQ(supplyOutletNodes[0],node.get());
+  }
+
+  CoilHeatingWater heatingCoil(m);
+  EXPECT_TRUE(heatingCoil.addToNode(supplyOutletNodes[1]));
+  {
+    auto mo = heatingCoil.airOutletModelObject();
+    ASSERT_TRUE(mo);
+    auto node = mo->optionalCast<Node>();
+    ASSERT_TRUE(node);
+    ASSERT_EQ(supplyOutletNodes[1],node.get());
+  }
+
+  EXPECT_EQ(8u,airLoopHVAC.supplyComponents().size());
+
   EXPECT_EQ(5u,airLoopHVAC.demandComponents().size());
 }
 

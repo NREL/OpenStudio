@@ -51,11 +51,11 @@ boost::optional<IdfObject> ForwardTranslator::createAirLoopHVACSupplyPath( const
     IdfObject supplyPathIdf(openstudio::IddObjectType::AirLoopHVAC_SupplyPath);
     m_idfObjects.push_back(supplyPathIdf);
 
-    supplyPathIdf.setName(airLoopHVAC.name().get() + " " + demandInletNode.name().get() + " Supply Path");
+    supplyPathIdf.setName(t_airLoopHVAC->name().get() + " " + demandInletNode.name().get() + " Supply Path");
 
     supplyPathIdf.setString(openstudio::AirLoopHVAC_SupplyPathFields::SupplyAirPathInletNodeName,demandInletNode.name().get());
 
-    auto t_comps = t_airLoopHVAC.demandComponents(demandInletNode,t_airLoopHVAC->demandOutletNode());
+    auto t_comps = t_airLoopHVAC->demandComponents(demandInletNode,t_airLoopHVAC->demandOutletNode());
     auto splitters = subsetCastVector<model::AirLoopHVACZoneSplitter>(t_comps);
     OS_ASSERT(splitters.size() == 1u);
 
@@ -65,7 +65,7 @@ boost::optional<IdfObject> ForwardTranslator::createAirLoopHVACSupplyPath( const
     eg.setString(AirLoopHVAC_SupplyPathExtensibleFields::ComponentObjectType,_zoneSplitter->iddObject().name());
     eg.setString(AirLoopHVAC_SupplyPathExtensibleFields::ComponentName,_zoneSplitter->name().get());
 
-    std::vector<ModelObject> supplyPlenums = airLoopHVAC.demandComponents(demandInletNode,t_airLoopHVAC->demandOutletNode(),AirLoopHVACSupplyPlenum::iddObjectType());
+    std::vector<ModelObject> supplyPlenums = t_airLoopHVAC->demandComponents(demandInletNode,t_airLoopHVAC->demandOutletNode(),AirLoopHVACSupplyPlenum::iddObjectType());
     for( auto & supplyPlenum : supplyPlenums )
     {
       eg = supplyPathIdf.pushExtensibleGroup();

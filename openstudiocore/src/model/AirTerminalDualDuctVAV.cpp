@@ -224,6 +224,8 @@ AirTerminalDualDuctVAV::AirTerminalDualDuctVAV(const Model& model)
 {
   OS_ASSERT(getImpl<detail::AirTerminalDualDuctVAV_Impl>());
 
+  autosizeMaximumDamperAirFlowRate();
+  setZoneMinimumAirFlowFraction(0.3);
 }
 
 IddObjectType AirTerminalDualDuctVAV::iddObjectType() {
