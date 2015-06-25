@@ -456,7 +456,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
       }
 
       auto eg = branchList.pushExtensibleGroup();
-      eg.setString(BranchListExtensibleFields::BranchListExtensibleFields::BranchName,branch.name().get());
+      eg.setString(BranchListExtensibleFields::BranchName,branch.name().get());
 
       _supplySplitter.setString(Connector_SplitterFields::InletBranchName,branch.name().get());
 
@@ -476,7 +476,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
       }
 
       auto eg = branchList.pushExtensibleGroup();
-      eg.setString(BranchListExtensibleFields::BranchListExtensibleFields::BranchName,branch.name().get());
+      eg.setString(BranchListExtensibleFields::BranchName,branch.name().get());
 
       auto splitterEg = _supplySplitter.pushExtensibleGroup();
       splitterEg.setString(Connector_SplitterExtensibleFields::OutletBranchName,branch.name().get());
@@ -496,7 +496,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
       }
 
       auto branchListEg = branchList.pushExtensibleGroup();
-      branchListEg.setString(BranchListExtensibleFields::BranchListExtensibleFields::BranchName,branch.name().get());
+      branchListEg.setString(BranchListExtensibleFields::BranchName,branch.name().get());
 
       auto splitterEg = _supplySplitter.pushExtensibleGroup();
       splitterEg.setString(Connector_SplitterExtensibleFields::OutletBranchName,branch.name().get());
@@ -517,7 +517,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
     }
 
     auto eg = branchList.pushExtensibleGroup();
-    eg.setString(BranchListExtensibleFields::BranchListExtensibleFields::BranchName,branch.name().get());
+    eg.setString(BranchListExtensibleFields::BranchName,branch.name().get());
   }
 
   idfObject.setString(openstudio::AirLoopHVACFields::BranchListName,branchList.name().get());
