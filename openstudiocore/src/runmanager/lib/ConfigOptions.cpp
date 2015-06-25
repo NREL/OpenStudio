@@ -337,6 +337,14 @@ namespace runmanager {
     {
       exename = "energyplus";
     }
+    else if (eplus.first.getMajor() && eplus.first.getMajor() == 8 && eplus.first.getMinor() && eplus.first.getMinor() >= 3)
+    {
+      exename = "energyplus";
+    }
+    else if (eplus.first.getMajor() && eplus.first.getMajor() > 8)
+    {
+      exename = "energyplus";
+    }
 
 
     return openstudio::runmanager::ToolInfo(
