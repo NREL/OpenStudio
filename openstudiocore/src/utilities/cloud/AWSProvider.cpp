@@ -2081,10 +2081,10 @@ namespace openstudio{
       serverObject["private_key_file_name"] = m_workingDir.path() + "/ec2_server_key.pem";
       jsonObject["server"] = serverObject;
       auto workers = jsonObject["workers"].toArray();
-      for (auto &worker : workers) {
-        auto workerObject = worker.toObject();
+      for (auto i = 0; i < workers.size(); ++i) {
+        auto workerObject = workers[i].toObject();
         workerObject["private_key_file_name"] = m_workingDir.path() + "/ec2_server_key.pem";
-        worker = workerObject;
+        workers[i] = workerObject;
       }
       jsonObject["workers"] = workers;
       json = QJsonDocument(jsonObject);
