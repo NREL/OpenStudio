@@ -1523,6 +1523,8 @@ namespace openstudio{
 
       QJsonObject options;
       options["instance_type"] = QJsonValue(toQString(m_awsSettings.serverInstanceType()));
+      options["worker_instance_type"] = QJsonValue(toQString(m_awsSettings.workerInstanceType()));
+      options["num"] = QJsonValue(static_cast<int>(m_awsSettings.numWorkers()));
       options["openstudio_version"] = QJsonValue(toQString(openStudioVersion()));
       args << QString(QJsonDocument(options).toJson(QJsonDocument::Compact));
 
@@ -1735,14 +1737,16 @@ namespace openstudio{
           m_awsSession.setNumServerProcessors(json.object()["server"].toObject()["procs"].toInt());
 
           // Read keys and add to json
+          auto jsonObject = json.object();
           for (const auto &filename : QStringList{"ec2_server_key.pem", "ec2_worker_key.pem", "ec2_worker_key.pub"}) {
             QFile file(m_workingDir.path() + "/" + filename);
             if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
               logError("Unable to open " + file.fileName().toStdString());
               return false;
             }
-            json.object()[filename] = QJsonValue(QString(file.readAll()));
+            jsonObject[filename] = QJsonValue(QString(file.readAll()));
           }
+          json = QJsonDocument(jsonObject);
           m_awsSession.setPrivateKey(QString(json.toJson(QJsonDocument::Compact)).toStdString());
 
           emit CloudProvider_Impl::serverStarted(Url(json.object()["server"].toObject()["ip"].toString()));
@@ -1780,14 +1784,16 @@ namespace openstudio{
           m_awsSession.setNumWorkerProcessors(numWorkerProcessors);
 
           // Read keys and add to json
+          auto jsonObject = json.object();
           for (const auto &filename : QStringList{"ec2_server_key.pem", "ec2_worker_key.pem", "ec2_worker_key.pub"}) {
             QFile file(m_workingDir.path() + "/" + filename);
             if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
               logError("Unable to open " + file.fileName().toStdString());
               return false;
             }
-            json.object()[filename] = QJsonValue(QString(file.readAll()));
+            jsonObject[filename] = QJsonValue(QString(file.readAll()));
           }
+          json = QJsonDocument(jsonObject);
           m_awsSession.setPrivateKey(QString(json.toJson(QJsonDocument::Compact)).toStdString());
 
           emit CloudProvider_Impl::allWorkersStarted();
@@ -2070,19 +2076,27 @@ namespace openstudio{
       // Write instance info file and keys
       auto json = QJsonDocument::fromJson(toQString(m_awsSession.privateKey()).toUtf8());
 
-      json.object()["server"].toObject()["private_key_file_name"] = m_workingDir.path() + "/ec2_server_key.pem";
-      for (const QJsonValue& worker : json.object()["workers"].toArray()) {
-        worker.toObject()["private_key_file_name"] = m_workingDir.path() + "/ec2_server_key.pem";
+      auto jsonObject = json.object(); 
+      auto serverObject = jsonObject["server"].toObject();
+      serverObject["private_key_file_name"] = m_workingDir.path() + "/ec2_server_key.pem";
+      jsonObject["server"] = serverObject;
+      auto workers = jsonObject["workers"].toArray();
+      for (auto &worker : workers) {
+        auto workerObject = worker.toObject();
+        workerObject["private_key_file_name"] = m_workingDir.path() + "/ec2_server_key.pem";
+        worker = workerObject;
       }
+      jsonObject["workers"] = workers;
+      json = QJsonDocument(jsonObject);
 
       for (const auto &filename : QStringList{"state.json", "ec2_server_key.pem", "ec2_worker_key.pem", "ec2_worker_key.pub"}) {
         QFile file(m_workingDir.path() + "/" + filename);
         if (filename == "state.json") {
-          if (file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
+          if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
             file.write(json.toJson(QJsonDocument::Compact));
           }
         } else {
-          if (file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
+          if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
             file.write(json.object()[filename].toString().toStdString().c_str());
           }
         }

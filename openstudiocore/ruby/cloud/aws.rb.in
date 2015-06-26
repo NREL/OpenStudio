@@ -203,15 +203,22 @@ begin
 
       # Create the server & worker
       @aws.create_server server_options
+      worker_options = {
+          instance_type: @params['worker_instance_type'],
+          image_id: @worker_image_id
+      }
+      @aws.create_workers @params['num'], worker_options
+
       @aws.save_cluster_info 'state.json'
 
       puts @aws.cluster_info.to_json
+      @logger.info("launch_server: #{@aws.cluster_info}")
     when 'launch_workers'
       error(-1, 'Invalid number of args') if ARGV.length < 5
       unless @params.key? 'num'
         error(-1, 'Number of worker nodes not specified. Must be greater than or equal to 0')
       end
-
+=begin
       worker_options = {
           instance_type: @params['instance_type'],
           image_id: @worker_image_id
@@ -226,6 +233,9 @@ begin
       @aws.save_cluster_info 'state.json'
 
       puts @aws.cluster_info.to_json
+=end
+      puts JSON.parse(File.read('state.json')).to_json
+      #@logger.info("launch_workers: #{@aws.cluster_info}")
     when 'terminate_session'
       @aws.load_instance_info_from_file 'state.json'
       @aws.terminate
