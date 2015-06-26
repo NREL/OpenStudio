@@ -2,17 +2,36 @@
   <schema_version>3.0</schema_version>
   <name>radiance_measure</name>
   <uid>1e3cfef8-b051-4e60-8bb0-ed2d29d4f45d</uid>
-  <version_id>34a11ea2-c710-4256-85a1-b942699dba58</version_id>
+  <version_id>a4afe6dc-0dfc-423e-8c0e-358b0fb4639d</version_id>
   <xml_checksum>381B7733</xml_checksum>
   <class_name>RadianceMeasure</class_name>
-  <display_name>Radiance Measure</display_name>
+  <display_name>Radiance Daylighting Measure</display_name>
   <description>Does stuff</description>
   <modeler_description>Things</modeler_description>
   <arguments>
     <argument>
-      <name>space_name</name>
-      <display_name>New space name</display_name>
-      <description>This name will be used as the name of the new space.</description>
+      <name>apply_schedules</name>
+      <display_name>Apply schedule</display_name>
+      <description>Replace lighting and shading control schedules with schedules computed by radiance</description>
+      <type>Choice</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>Yes</default_value>
+      <choices>
+        <choice>
+          <value>Yes</value>
+          <display_name>Yes</display_name>
+        </choice>
+        <choice>
+          <value>No</value>
+          <display_name>No</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>write_sql</name>
+      <display_name>Write Radiance SqlFile</display_name>
+      <description>Write Radiance results to a SqlFile format.</description>
       <type>String</type>
       <required>true</required>
       <model_dependent>false</model_dependent>
@@ -54,13 +73,7 @@
       <filename>radiance_measure_test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
-      <checksum>D9A80277</checksum>
-    </file>
-    <file>
-      <filename>example_model.osm</filename>
-      <filetype>osm</filetype>
-      <usage_type>test</usage_type>
-      <checksum>C4F35230</checksum>
+      <checksum>8D8574EF</checksum>
     </file>
     <file>
       <version>
@@ -71,13 +84,25 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>5811C475</checksum>
+      <checksum>BC200B76</checksum>
     </file>
     <file>
       <filename>RadiancePreprocess.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
-      <checksum>738226E4</checksum>
+      <checksum>7ADD358C</checksum>
+    </file>
+    <file>
+      <filename>test_model.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>DA65EDCD</checksum>
+    </file>
+    <file>
+      <filename>USA_CO_Golden-NREL.724666_TMY3.epw</filename>
+      <filetype>epw</filetype>
+      <usage_type>test</usage_type>
+      <checksum>BDF687C1</checksum>
     </file>
   </files>
 </measure>
