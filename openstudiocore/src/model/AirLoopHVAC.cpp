@@ -1046,6 +1046,123 @@ namespace detail {
     return std::vector<Node>();
   }
 
+  bool AirLoopHVAC_Impl::removeDualDuctTerminalFromAirLoopHVAC(HVACComponent & terminal, const unsigned inletPortA, const unsigned inletPortB, const unsigned outletPort) {
+    bool result = true; 
+
+    auto _model = terminal.model();
+
+    auto t_airLoopHVAC = terminal.airLoopHVAC();
+    if( ! t_airLoopHVAC ) result = false;
+
+    if( result ) {
+      auto demandInletNodes = t_airLoopHVAC->demandInletNodes();
+      OS_ASSERT(demandInletNodes.size() == 2u);
+
+      auto zoneSplitters = t_airLoopHVAC->zoneSplitters();
+      OS_ASSERT(zoneSplitters.size() == 2u);
+
+      // Assuming two paths, demandInletNodes[0] (path 0) and demandInletNodes[1] (path 1)
+      // Disconnect from path 1 first.
+      // If there are no other terminals / zones on the path 1, then remove the entire path
+      // including any plenum and the path 1 zone splitter.
+      // This effectively turns it back into a single duct system on the demand side.
+      {
+        auto zoneSplitter = zoneSplitters[1];
+        auto demandInletNode = demandInletNodes[1];
+
+        auto terminalInletModelObject = terminal.connectedObject(inletPortB);
+        OS_ASSERT(terminalInletModelObject);
+        auto terminalInletNode = terminalInletModelObject->optionalCast<Node>();
+        OS_ASSERT(terminalInletNode);
+
+        // Get comps upstream and downstream of zone splitter for this leg
+        // Exclude the zone splitter itself
+        auto upstreamComps = t_airLoopHVAC->demandComponents(demandInletNode,zoneSplitter);
+        upstreamComps.erase(upstreamComps.end() - 1);
+        auto downstreamComps = t_airLoopHVAC->demandComponents(zoneSplitter,terminalInletNode.get());
+        downstreamComps.erase(downstreamComps.begin());
+
+        boost::optional<AirLoopHVACSupplyPlenum> supplyPlenum;
+        auto supplyPlenums = subsetCastVector<AirLoopHVACSupplyPlenum>(downstreamComps);
+        if( ! supplyPlenums.empty() ) {
+          supplyPlenum = supplyPlenums.front();
+        }
+
+        bool removePlenum = false;
+        if( supplyPlenum ) {
+          if( supplyPlenum->outletModelObjects().size() == 1u ) {
+            removePlenum = true;
+          }
+        }
+        bool removeSplitter = false;
+        if( (! supplyPlenum) || removePlenum ) {
+          if( zoneSplitter.outletModelObjects().size() == 1u ) {
+            removeSplitter = true;
+          }
+        }
+
+        if( supplyPlenum ) {
+          auto branchIndex = supplyPlenum->branchIndexForOutletModelObject(terminalInletNode.get());
+          supplyPlenum->removePortForBranch(branchIndex);
+          if( removePlenum ) {
+            supplyPlenum->getImpl<detail::AirLoopHVACSupplyPlenum_Impl>()->disconnect();
+            supplyPlenum->remove();
+          }
+        }
+
+        terminalInletNode->getImpl<detail::Node_Impl>()->disconnect();
+        terminalInletNode->remove();
+
+        if( removeSplitter ) {
+          for( auto & comp : upstreamComps ) {
+            comp.getImpl<detail::Node_Impl>()->disconnect();
+            comp.remove();
+          }  
+          zoneSplitter.remove(); 
+        }
+      }
+
+      // Now disconnect path 0
+      {
+        auto terminalInletModelObject = terminal.connectedObject(inletPortA);
+        OS_ASSERT(terminalInletModelObject);
+        auto terminalInletNode = terminalInletModelObject->optionalCast<Node>();
+        OS_ASSERT(terminalInletNode);
+
+        auto targetModelObject = terminal.connectedObject(outletPort);
+        OS_ASSERT(targetModelObject);
+        auto targetPort = terminal.connectedObjectPort(outletPort);
+        OS_ASSERT(targetPort);
+
+
+        auto sourceModelObject = terminalInletNode->inletModelObject();
+        OS_ASSERT(sourceModelObject);
+        auto sourcePort = terminalInletNode->connectedObjectPort(terminalInletNode->getImpl<detail::Node_Impl>()->inletPort());
+        OS_ASSERT(sourcePort);
+
+        _model.connect( sourceModelObject.get(),
+                        sourcePort.get(),
+                        targetModelObject.get(),
+                        targetPort.get() );
+
+        terminalInletNode->getImpl<detail::Node_Impl>()->disconnect();
+        terminalInletNode->remove();
+      }
+    }
+
+    for( auto & thermalZone : _model.getConcreteModelObjects<ThermalZone>() )
+    {
+      auto equipment = thermalZone.equipment();
+
+      if( std::find(equipment.begin(),equipment.end(),terminal) != equipment.end() ) {
+        thermalZone.removeEquipment(terminal);
+        break;
+      }
+    }
+    
+    return result;
+  }
+
   bool AirLoopHVAC_Impl::addDualDuctTerminalToNode(HVACComponent & terminal, const unsigned inletPortA, const unsigned inletPortB, const unsigned outletPort, Node & node) {
     // Initialize result to true,
     // then do a series of checks to make sure we can proceed.

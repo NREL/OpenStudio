@@ -65,8 +65,8 @@ TEST_F(ModelFixture,AirTerminalDualDuctVAV) {
     EXPECT_EQ(10u,airLoopHVAC.demandComponents().size());
   }
 
-  // Add terminal with zone
   {
+    // Add terminal with zone
     Model m; 
     AirTerminalDualDuctVAV terminal(m); 
     
@@ -84,5 +84,10 @@ TEST_F(ModelFixture,AirTerminalDualDuctVAV) {
     EXPECT_EQ(2u,airLoopHVAC.zoneSplitters().size());
 
     EXPECT_EQ(12u,airLoopHVAC.demandComponents().size());
+
+    // Remove the terminal
+    terminal.remove();
+    EXPECT_EQ(7u,airLoopHVAC.demandComponents().size());
   }
+
 }

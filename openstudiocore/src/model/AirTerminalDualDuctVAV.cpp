@@ -211,6 +211,12 @@ namespace detail {
     return node;
   }
 
+  std::vector<IdfObject> AirTerminalDualDuctVAV_Impl::remove() {
+    auto modelObject = getObject<AirTerminalDualDuctVAV>();
+    AirLoopHVAC_Impl::removeDualDuctTerminalFromAirLoopHVAC(modelObject,inletPort(0),inletPort(1),outletPort());
+    return Mixer_Impl::remove();
+  }
+
   bool AirTerminalDualDuctVAV_Impl::addToNode(Node & node)
   {
     auto mo = getObject<AirTerminalDualDuctVAV>();

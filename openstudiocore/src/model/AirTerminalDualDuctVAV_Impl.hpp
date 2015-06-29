@@ -114,6 +114,8 @@ namespace detail {
 
     bool addToNode(Node & node);
 
+    std::vector<IdfObject> remove();
+
     //@}
    protected:
    private:
