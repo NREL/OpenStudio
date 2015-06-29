@@ -7969,7 +7969,7 @@ OS:SubSurface,
   {80879f81-820f-4603-b611-b68e1595cb6e}, !- Surface Name
   ,                                       !- Outside Boundary Condition Object
   ,                                       !- View Factor to Ground
-  ,                                       !- Shading Control Name
+  {4cf76f1b-fec9-4226-97fc-2721fbb91cdb}, !- Shading Control Name
   ,                                       !- Frame and Divider Name
   ,                                       !- Multiplier
   ,                                       !- Number of Vertices
@@ -8633,4 +8633,10 @@ OS:Daylighting:Control,
   ,                                       !- Probability Lighting will be Reset When Needed in Manual Stepped Control
   ,                                       !- Number of Daylighting Views
   ;                                       !- Maximum Allowable Discomfort Glare Index
+
+OS:ShadingControl,
+  {4cf76f1b-fec9-4226-97fc-2721fbb91cdb}, !- Handle
+  Shading Control 1,                      !- Name
+  SwitchableGlazing,                      !- Shading Type
+  {11ef4fe8-c17f-416b-81fa-37abe5add41f}; !- Construction with Shading Name
 

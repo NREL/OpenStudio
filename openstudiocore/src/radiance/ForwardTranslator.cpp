@@ -1142,10 +1142,13 @@ namespace radiance {
 
             boost::optional<model::ShadingControl> shadingControl = subSurface.shadingControl();
             
+            // future support for mullion factor
             double visibleTransmittanceMultiplier = 1.0;
             if (frameAndDivider){
               // DLM: Rob what should we do here?
+              // <punt>
               visibleTransmittanceMultiplier = 1.0;
+              // </punt>
             }
 
             // find window group
@@ -1249,16 +1252,19 @@ namespace radiance {
 
             }
 
-            // write material
+            // write the window
 
-            if (windowGroup_name == "WG0"){
-          
+            if (windowGroup_name == "WG0"){ 
+            //no shades
+            
+            	// add material
               m_radMaterials.insert("void " + rMaterial + " glaz_" + rMaterial + "_tn-" + formatString(tn, 3) + "\n" + matString + "\n");
               m_radMaterialsDC.insert("void alias glaz_" + rMaterial + "_tn-" + formatString(tn, 3) + " WG0\n\n");
 
               // polygon header
               m_radWindowGroups[windowGroup_name] += "#--SubSurface = " + subSurface_name + "\n";
               m_radWindowGroups[windowGroup_name] += "#---Tvis = " + formatString(tVis, 4) + " (tn = " + formatString(tn, 4) + ")\n";
+              
               // write the polygon
               m_radWindowGroups[windowGroup_name] += "glaz_"+rMaterial+"_tn-"+formatString(tn, 3) + " polygon " + subSurface_name + "\n";
               m_radWindowGroups[windowGroup_name] += "0\n0\n" + formatString(polygon.size()*3) + "\n\n";
@@ -1268,9 +1274,11 @@ namespace radiance {
               {
                 m_radWindowGroups[windowGroup_name] += "" + formatString(vertex->x()) + " " + formatString(vertex->y()) + " " + formatString(vertex->z()) + "\n";
               }
-            }
-            else
-            {
+              
+            }else{ 
+            //has shades
+            
+            	//add material
               m_radMaterials.insert("void " + rMaterial + " " + windowGroup_name + "\n" + matString + "\n");
               m_radMaterialsDC.insert("void light " + windowGroup_name + "\n0\n0\n3\n1 1 1\n");
               m_radMaterialsWG0.insert("void plastic " + windowGroup_name + "\n0\n0\n5\n0 0 0 0 0\n");
@@ -1291,7 +1299,34 @@ namespace radiance {
                 formatString(vertex->x()) + " " + \
                 formatString(vertex->y()) + " " + \
                 formatString(vertex->z()) + "\n";
-              }
+              }					
+
+							// add the shade
+							
+							//add material
+							
+							rMaterial = "trans";
+              matString = "0\n0\n7\n0.5 0.5 0.5 0.0 0.0 0.3 0.01\n";
+							
+              m_radMaterials.insert("void " + rMaterial + " " + windowGroup_name + "_SHADE\n" + matString + "\n\n");
+              
+              // polygon header
+              m_radWindowGroups[windowGroup_name] += "\n# SHADE for SubSurface: " + subSurface_name + "\n";
+              
+              // write the polygon
+              m_radWindowGroups[windowGroup_name] += windowGroup_name + "_SHADE" + " polygon " + subSurface_name + "_SHADE\n";
+              m_radWindowGroups[windowGroup_name] += "0\n0\n" + formatString(polygon.size() * 3) + "\n\n";
+              for (Point3dVector::const_reverse_iterator vertex = polygon.rbegin();
+                vertex != polygon.rend();
+                ++vertex)
+              
+              {
+                m_radWindowGroups[windowGroup_name] += "" + \
+                formatString(vertex->x()) + " " + \
+                formatString(vertex->y()) + " " + \
+                formatString(vertex->z()) + "\n";
+              }					
+							           
             }
 
             // copy required bsdf files into place
@@ -1499,10 +1534,10 @@ namespace radiance {
             
        	  }else{
        	  
-       	  	LOG(Info, "adding framediv.");
             outsideRevealDepth = 0.0;
           	insideRevealDepth = 0.05;
           	insideSillDepth = 0.05;
+          	
           }
           
 					// subSurface.outwardNormal not in global coordinate system
@@ -1554,6 +1589,8 @@ namespace radiance {
 								Point3d vertex2 = polygon[index1] + offset;
 								Point3d vertex3 = polygon[index2] + offset;
 								Point3d vertex4 = polygon[index2];
+
+
 
 								// TODO: get exterior reflectance of surface
 								double interiorVisibleReflectance = 0.5;
