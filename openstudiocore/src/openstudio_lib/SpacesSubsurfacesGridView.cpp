@@ -51,10 +51,11 @@
 #define NAME "Space Name"
 #define SELECTED "All"
 
-// GENERAL "General"
-#define SPACENAME "Space Name" // read only
+// ALL GRID BUTTONS
 #define SURFACENAME "Surface Name" // read only
 #define SUBSURFACENAME "Subsurface Name"
+
+// GENERAL "General"
 #define SUBSURFACETYPE "Subsurface Type"
 #define MULTIPLIER "Multiplier"
 #define CONSTRUCTION "Construction"
@@ -62,10 +63,6 @@
 #define SHADINGSURFACENAME "Shading Surface Name" // read only
 
 // SHADINGCONTROLS "Shading Controls"
-#define SPACENAME "Space Name" // read only
-#define SURFACENAME "Surface Name" // read only
-#define SUBSURFACENAME "Subsurface Name"
-//#define NAME "Name"
 #define SHADINGTYPE "Shading Type"
 #define CONSTRUCTIONWITHSHADINGNAME "Construction with Shading Name"
 #define SHADINGDEVICEMATERIALNAME "Shading Device Material Name"
@@ -79,10 +76,6 @@
 #define SETPOINT2 "Setpoint 2"
 
 // FRAMEANDDIVIDER "Frame and Divider" 
-#define SPACENAME "Space Name" // read only
-#define SURFACENAME "Surface Name" // read only
-#define SUBSURFACENAME "Subsurface Name"
-//#define NAME "Name"
 #define FRAMEWIDTH "Frame Width"
 #define FRAMEOUTSIDEPROJECTION "Frame Outside Projection"
 #define FRAMEINSIDEPROJECTION "Frame Inside Projection"
@@ -113,7 +106,6 @@
 #define SPACENAME "Space Name" // read only
 #define SURFACENAME "Surface Name" // read only
 #define WINDOWNAME "Window Name"
-//#define NAME "Name"
 #define INSIDESHELFNAME "Inside Shelf Name" // Dan note: drop down need a model method for suggestions
 #define OUTSIDESHELFNAME "Outside Shelf Name" // Dan note: drop down need a model method for suggestions
 #define VIEWFACTORTOOUTSIDESHELF "View Factor to Outside Shelf"
@@ -180,13 +172,12 @@ namespace openstudio {
   {
     {
       std::vector<QString> fields;
-      //fields.push_back(SPACENAME);
-      //fields.push_back(SURFACENAME);
-      //fields.push_back(SUBSURFACENAME);
-      //fields.push_back(SUBSURFACETYPE);
+      fields.push_back(SURFACENAME);
+      fields.push_back(SUBSURFACENAME);
+      fields.push_back(SUBSURFACETYPE);
       //fields.push_back(MULTIPLIER);
       //fields.push_back(CONSTRUCTION);
-      //fields.push_back(OUTSIDEBOUNDARYCONDITIONOBJECT);
+      fields.push_back(OUTSIDEBOUNDARYCONDITIONOBJECT);
       //fields.push_back(SHADINGSURFACENAME);
       std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("General"), fields);
       m_categoriesAndFields.push_back(categoryAndFields);
@@ -194,30 +185,28 @@ namespace openstudio {
 
     {
       std::vector<QString> fields;
-      //fields.push_back(SPACENAME);
-      //fields.push_back(SURFACENAME);
-      //fields.push_back(SUBSURFACENAME);
+      fields.push_back(SURFACENAME);
+      fields.push_back(SUBSURFACENAME);
       //fields.push_back(NAME);
       //fields.push_back(SHADINGTYPE);
       //fields.push_back(CONSTRUCTIONWITHSHADINGNAME);
       //fields.push_back(SHADINGDEVICEMATERIALNAME);
       //fields.push_back(SHADINGCONTROLTYPE);
       //fields.push_back(SCHEDULENAME);
-      //fields.push_back(SETPOINT);
-      //fields.push_back(SHADINGCONTROLISSCHEDULED);
-      //fields.push_back(GLARECONTROLISACTIVE);
-      //fields.push_back(TYPEOFSLATANGLECONTROLFORBLINDS);
-      //fields.push_back(SLATANGLESCHEDULENAME);
-      //fields.push_back(SETPOINT2);
+      //fields.push_back(SETPOINT);                        IN IDD, BUT NOT EXPOSED IN MODEL OBJECT
+      //fields.push_back(SHADINGCONTROLISSCHEDULED);       IN IDD, BUT NOT EXPOSED IN MODEL OBJECT
+      //fields.push_back(GLARECONTROLISACTIVE);            IN IDD, BUT NOT EXPOSED IN MODEL OBJECT
+      //fields.push_back(TYPEOFSLATANGLECONTROLFORBLINDS); IN IDD, BUT NOT EXPOSED IN MODEL OBJECT
+      //fields.push_back(SLATANGLESCHEDULENAME);           IN IDD, BUT NOT EXPOSED IN MODEL OBJECT
+      //fields.push_back(SETPOINT2);                       IN IDD, BUT NOT EXPOSED IN MODEL OBJECT
       std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Shading Controls"), fields);
       m_categoriesAndFields.push_back(categoryAndFields);
     }
 
     {
       std::vector<QString> fields;
-      //fields.push_back(SPACENAME);
-      //fields.push_back(SURFACENAME);  
-      //fields.push_back(SUBSURFACENAME);
+      fields.push_back(SURFACENAME);  
+      fields.push_back(SUBSURFACENAME);
       //fields.push_back(NAME);
       fields.push_back(FRAMEWIDTH);
       fields.push_back(FRAMEOUTSIDEPROJECTION);
@@ -226,7 +215,7 @@ namespace openstudio {
       fields.push_back(FRAMEEDGEGLASSCONDUCTANCETOCENTEROFGLASSCONDUCTANCE);
       fields.push_back(FRAMESOLARABSORPTANCE);
       fields.push_back(FRAMEVISIBLEABSORPTANCE);
-      //fields.push_back(FRAMETHERMALHEMISPHERICALEMISSIVITY);
+      fields.push_back(FRAMETHERMALHEMISPHERICALEMISSIVITY);
       //fields.push_back(DIVIDERTYPE);
       fields.push_back(DIVIDERWIDTH);
       fields.push_back(NUMBEROFHORIZONTALDIVIDERS);
@@ -250,13 +239,12 @@ namespace openstudio {
 
     {
       std::vector<QString> fields;
-      //fields.push_back(SPACENAME);
-      //fields.push_back(SURFACENAME);
+      fields.push_back(SURFACENAME);
       //fields.push_back(WINDOWNAME);
-      //fields.push_back(NAME);
+      //fields.push_back( DaylightingDeviceShelfNAME);
       //fields.push_back(INSIDESHELFNAME);
       //fields.push_back(OUTSIDESHELFNAME);
-      //fields.push_back(VIEWFACTORTOOUTSIDESHELF);
+      fields.push_back(VIEWFACTORTOOUTSIDESHELF);
       std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Daylighting Shelves"), fields);
       m_categoriesAndFields.push_back(categoryAndFields);
     }
@@ -416,12 +404,29 @@ namespace openstudio {
             );
         }
 
-        else if (field == SPACENAME) {
+        //else if (field == SPACENAME) {
 
-        }
+        //}
 
         else if (field == SURFACENAME) {
-
+          addNameLineEditColumn(Heading(QString(NAME), false, false),
+            false,
+            false,
+            CastNullAdapter<model::Surface>(&model::Surface::name),
+            CastNullAdapter<model::Surface>(&model::Surface::setName),
+            boost::optional<std::function<void(model::Surface *)>>(
+            std::function<void(model::Surface *)>(
+            [](model::Surface *t_s)
+          {
+            t_s->remove();
+          }
+            )
+            ),
+            DataSource(
+            allSurfaces,
+            true
+            )
+            );
         }
 
         else if (field == SUBSURFACENAME) {
@@ -455,7 +460,7 @@ namespace openstudio {
             boost::optional<std::function<void(model::SubSurface*)>>(),
             boost::optional<std::function<bool(model::SubSurface*)>>(),
             DataSource(
-            allSurfaces,
+            allSubSurfaces,
             true
             )
             );
@@ -476,15 +481,15 @@ namespace openstudio {
         }
 
         else if (field == CONSTRUCTION) {
-          addDropZoneColumn(Heading(QString(CONSTRUCTION)),
-            CastNullAdapter<model::SubSurface>(&model::SubSurface::construction),
-            CastNullAdapter<model::SubSurface>(&model::SubSurface::setConstruction),
-            boost::optional<std::function<void(model::SubSurface*)> >(NullAdapter(&model::SubSurface::resetConstruction)),
-            DataSource(
-            allConstructions, 
-            true
-            )
-            );
+          //addDropZoneColumn(Heading(QString(CONSTRUCTION)),
+          //  CastNullAdapter<model::SubSurface>(&model::SubSurface::construction),
+          //  CastNullAdapter<model::SubSurface>(&model::SubSurface::setConstruction),
+          //  boost::optional<std::function<void(model::SubSurface*)> >(NullAdapter(&model::SubSurface::resetConstruction)),
+          //  DataSource(
+          //  allConstructions, 
+          //  true
+          //  )
+          //  );
         }
 
         else if (field == OUTSIDEBOUNDARYCONDITIONOBJECT) {
@@ -727,6 +732,19 @@ namespace openstudio {
           // WindowPropertyFrameAndDivider
           //double frameThermalHemisphericalEmissivity() const;
           //bool isFrameThermalHemisphericalEmissivityDefaulted() const;
+          //bool setFrameThermalHemisphericalEmissivity(double frameThermalHemisphericalEmissivity);
+          //void resetFrameThermalHemisphericalEmissivity();
+
+          addValueEditColumn(Heading(QString(FRAMETHERMALHEMISPHERICALEMISSIVITY)),
+            NullAdapter(&model::WindowPropertyFrameAndDivider::frameThermalHemisphericalEmissivity),
+            NullAdapter(&model::WindowPropertyFrameAndDivider::setFrameThermalHemisphericalEmissivity),
+            boost::optional<std::function<void(model::WindowPropertyFrameAndDivider*)>>(CastNullAdapter<model::WindowPropertyFrameAndDivider>(&model::WindowPropertyFrameAndDivider::resetFrameThermalHemisphericalEmissivity)),
+            boost::optional<std::function<bool(model::WindowPropertyFrameAndDivider*)>>(CastNullAdapter<model::WindowPropertyFrameAndDivider>(&model::WindowPropertyFrameAndDivider::isFrameThermalHemisphericalEmissivityDefaulted)),
+            DataSource(
+            allWindowPropertyFrameAndDividers,
+            true
+            )
+            );
         }
 
         else if (field == DIVIDERTYPE) {
@@ -1077,6 +1095,17 @@ namespace openstudio {
           //boost::optional<double> viewFactortoOutsideShelf() const;
           //bool setViewFactortoOutsideShelf(double viewFactortoOutsideShelf);
           //void resetViewFactortoOutsideShelf();
+
+          addValueEditColumn(Heading(QString(VIEWFACTORTOOUTSIDESHELF)),
+            NullAdapter(&model::DaylightingDeviceShelf::viewFactortoOutsideShelf),
+            NullAdapter(&model::DaylightingDeviceShelf::setViewFactortoOutsideShelf),
+            //boost::optional<std::function<void(model::DaylightingDeviceShelf*)>>(CastNullAdapter<model::DaylightingDeviceShelf>(&model::DaylightingDeviceShelf::resetViewFactortoOutsideShelf)),
+            //boost::optional<std::function<bool(model::DaylightingDeviceShelf *)>>(),
+            DataSource(
+            allDaylightingDeviceShelfs,
+            true
+            )
+            );
 
         }
         else {
