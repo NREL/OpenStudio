@@ -27,6 +27,8 @@
 #include "AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp"
 #include "AirTerminalSingleDuctParallelPIUReheat.hpp"
 #include "AirTerminalSingleDuctParallelPIUReheat_Impl.hpp"
+#include "ConnectorSplitter.hpp"
+#include "ConnectorSplitter_Impl.hpp"
 #include "FanConstantVolume.hpp"
 #include "FanConstantVolume_Impl.hpp"
 #include "FanVariableVolume.hpp"
@@ -1449,6 +1451,11 @@ AirLoopHVAC::AirLoopHVAC(Model& model, bool dualDuct)
   // Sizing:System
 
   SizingSystem sizingSystem(model,*this);
+
+  if( dualDuct ) {
+    ConnectorSplitter splitter(model);
+    splitter.addToNode(supplyOutletNode);
+  }
 }
 
 AirLoopHVAC::AirLoopHVAC(std::shared_ptr<detail::AirLoopHVAC_Impl> impl)
