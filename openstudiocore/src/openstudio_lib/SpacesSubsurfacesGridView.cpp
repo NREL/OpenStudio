@@ -222,7 +222,7 @@ namespace openstudio {
       fields.push_back(FRAMESOLARABSORPTANCE);
       fields.push_back(FRAMEVISIBLEABSORPTANCE);
       fields.push_back(FRAMETHERMALHEMISPHERICALEMISSIVITY);
-      //fields.push_back(DIVIDERTYPE);
+      fields.push_back(DIVIDERTYPE);
       fields.push_back(DIVIDERWIDTH);
       fields.push_back(NUMBEROFHORIZONTALDIVIDERS);
       fields.push_back(NUMBEROFVERTICALDIVIDERS);
@@ -736,11 +736,16 @@ namespace openstudio {
         }
 
         else if (field == DIVIDERTYPE) {
-          // WindowPropertyFrameAndDivider
-          //std::string dividerType() const;
-          //bool isDividerTypeDefaulted() const;
-          //bool setDividerType(std::string dividerType);
-          //void resetDividerType();
+          addValueEditColumn(Heading(QString(DIVIDERTYPE)),
+            NullAdapter(&model::WindowPropertyFrameAndDivider::dividerType),
+            NullAdapter(&model::WindowPropertyFrameAndDivider::setDividerType),
+            boost::optional<std::function<void(model::WindowPropertyFrameAndDivider*)>>(CastNullAdapter<model::WindowPropertyFrameAndDivider>(&model::WindowPropertyFrameAndDivider::resetDividerType)),
+            boost::optional<std::function<bool(model::WindowPropertyFrameAndDivider*)>>(CastNullAdapter<model::WindowPropertyFrameAndDivider>(&model::WindowPropertyFrameAndDivider::isDividerTypeDefaulted)),
+            DataSource(
+            allWindowPropertyFrameAndDividers,
+            true
+            )
+            );
         }
 
         else if (field == DIVIDERWIDTH) {
