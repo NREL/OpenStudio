@@ -60,6 +60,15 @@ class MODEL_API AirLoopHVAC : public Loop
    *
    * If dualDuct is true, then there will be a supply spiltter and two supply outlet nodes
    * connected into the system topology.
+   *
+   * The two paths / ducts / decks of a dual duct style system are identified by indexes
+   * 0 and 1.  If dual duct, key methods including supplyOutletNodes(), demandInletNodes(), and zoneSplitters(),
+   * will return a vector with exactly two items.  Item 0 in the supplyOutletNodes vector matches to item
+   * 0 in the demandInletNodes vector, and the zoneSplitters vector.  In this way the interface avoids
+   * declaring the paths as heating, cooling, ventilation, etc.  It is the client's responsibilty to choose
+   * what types of equipment to apply to the two branches.  Note that these indexes carry through to the terminals.
+   * Dual duct terminals are Mixer objects which have the method inletModelObjects(branchIndex).  The branchIndex 0
+   * will be connected to demandInletNodes()[0] path.
    */
   explicit AirLoopHVAC(Model& model, bool dualDuct = false);
 

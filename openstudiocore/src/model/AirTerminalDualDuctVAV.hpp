@@ -86,8 +86,16 @@ class MODEL_API AirTerminalDualDuctVAV : public Mixer {
   /** @name Other */
   //@{
 
+  /** This corresponds to Mixer::inletModelObject(0), as well as the system's branch 0
+    * (ie. AirLoopHVAC::demandInletNodes()[0] and AirLoopHVAC::supplyOutletNodes()[0])
+    * In OpenStudio we avoid using hot / cold nomenclature in the dual duct system api,
+    * but here in the terminal interface we use the language for transparency with the idf.
+    */
   boost::optional<Node> hotAirInletNode() const;
 
+  /** This corresponds to Mixer::inletModelObject(1), as well as the system's branch 1
+    * (ie. AirLoopHVAC::demandInletNodes()[1] and AirLoopHVAC::supplyOutletNodes()[1])
+    */
   boost::optional<Node> coldAirInletNode() const;
 
   //@}
