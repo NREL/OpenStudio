@@ -109,8 +109,11 @@ namespace pat {
 
 PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUserScriptInfoGetter> &t_infoGetter )
   : QApplication(argc, argv),
+    m_startupView(nullptr),
+    m_loadingProjectView(nullptr),
     m_onlineBclDialog(nullptr),
     m_cloudDialog(nullptr),
+    m_monitorUseDialog(nullptr),
     m_measureManager(t_infoGetter, this)
 {
   connect(this, &PatApp::userMeasuresDirChanged, &m_measureManager, static_cast<void (MeasureManager::*)(void)>(&MeasureManager::updateMeasuresLists));
@@ -267,6 +270,12 @@ PatApp::~PatApp()
   delete m_startupView;
 
   delete m_loadingProjectView;
+
+  delete m_onlineBclDialog;
+
+  delete m_cloudDialog;
+
+  delete m_monitorUseDialog;
 }
 
 PatApp * PatApp::instance()
