@@ -175,8 +175,8 @@ namespace openstudio {
       fields.push_back(SURFACENAME);
       fields.push_back(SUBSURFACENAME);
       fields.push_back(SUBSURFACETYPE);
-      //fields.push_back(MULTIPLIER);
-      //fields.push_back(CONSTRUCTION);
+      fields.push_back(MULTIPLIER);
+      //fields.push_back(CONSTRUCTION); Crashes in OSConcepts ln 292
       fields.push_back(OUTSIDEBOUNDARYCONDITIONOBJECT);
       //fields.push_back(SHADINGSURFACENAME);
       std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("General"), fields);
@@ -467,29 +467,28 @@ namespace openstudio {
         }
 
         else if (field == MULTIPLIER) {
-
-          //addValueEditColumn(Heading(QString(MULTIPLIER)),
-          //  NullAdapter(&model::SubSurface::multiplier),
-          //  NullAdapter(&model::SubSurface::setMultiplier),
-          //  boost::optional<std::function<void(model::ModelObject *)>>(),
-          //  boost::optional<std::function<bool(model::ModelObject *)>>(),
-          //  DataSource(
-          //  allSubSurfaces,
-          //  true
-          //  )
-          //  );
+          addValueEditColumn(Heading(QString(MULTIPLIER)),
+            NullAdapter(&model::SubSurface::multiplier),
+            NullAdapter(&model::SubSurface::setMultiplier),
+            boost::optional<std::function<void(model::SubSurface *)>>(),
+            boost::optional<std::function<bool(model::SubSurface *)>>(),
+            DataSource(
+            allSubSurfaces,
+            true
+            )
+            );
         }
 
         else if (field == CONSTRUCTION) {
-          //addDropZoneColumn(Heading(QString(CONSTRUCTION)),
-          //  CastNullAdapter<model::SubSurface>(&model::SubSurface::construction),
-          //  CastNullAdapter<model::SubSurface>(&model::SubSurface::setConstruction),
-          //  boost::optional<std::function<void(model::SubSurface*)> >(NullAdapter(&model::SubSurface::resetConstruction)),
-          //  DataSource(
-          //  allConstructions, 
-          //  true
-          //  )
-          //  );
+          addDropZoneColumn(Heading(QString(CONSTRUCTION)),
+            CastNullAdapter<model::SubSurface>(&model::SubSurface::construction),
+            CastNullAdapter<model::SubSurface>(&model::SubSurface::setConstruction),
+            boost::optional<std::function<void(model::SubSurface*)> >(NullAdapter(&model::SubSurface::resetConstruction)),
+            DataSource(
+            allConstructions, 
+            true
+            )
+            );
         }
 
         else if (field == OUTSIDEBOUNDARYCONDITIONOBJECT) {
@@ -566,29 +565,30 @@ namespace openstudio {
 
         }
 
-        else if (field == SETPOINT) {
+        // COLUMNS BELOW WHICH ARE COMMENTED OUT ARE IN THE IDD, BUT NOT EXPOSED IN THE MODEL OBJECT
+        //else if (field == SETPOINT) {
 
-        }
+        //}
 
-        else if (field == SHADINGCONTROLISSCHEDULED) {
+        //else if (field == SHADINGCONTROLISSCHEDULED) {
 
-        }
+        //}
 
-        else if (field == GLARECONTROLISACTIVE) {
+        //else if (field == GLARECONTROLISACTIVE) {
 
-        }
+        //}
 
-        else if (field == TYPEOFSLATANGLECONTROLFORBLINDS) {
+        //else if (field == TYPEOFSLATANGLECONTROLFORBLINDS) {
 
-        }
+        //}
 
-        else if (field == SLATANGLESCHEDULENAME) {
+        //else if (field == SLATANGLESCHEDULENAME) {
 
-        }
+        //}
 
-        else if (field == SETPOINT2) {
+        //else if (field == SETPOINT2) {
 
-        }
+        //}
 
         else if (field == SPACENAME) {
 
