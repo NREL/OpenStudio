@@ -28,6 +28,8 @@
 #include "../model/ConstructionBase_Impl.hpp"
 #include "../model/DaylightingDeviceShelf.hpp"
 #include "../model/DaylightingDeviceShelf_Impl.hpp"
+#include "../model/Schedule.hpp"
+#include "../model/Schedule_Impl.hpp"
 #include "../model/ShadingControl.hpp"
 #include "../model/ShadingControl_Impl.hpp"
 #include "../model/Space.hpp"
@@ -176,7 +178,7 @@ namespace openstudio {
       fields.push_back(SUBSURFACENAME);
       fields.push_back(SUBSURFACETYPE);
       fields.push_back(MULTIPLIER);
-      //fields.push_back(CONSTRUCTION); Crashes in OSConcepts ln 292
+      //fields.push_back(CONSTRUCTION); Crashes in OSConcepts,  line 292
       fields.push_back(OUTSIDEBOUNDARYCONDITIONOBJECT);
       //fields.push_back(SHADINGSURFACENAME);
       std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("General"), fields);
@@ -192,7 +194,7 @@ namespace openstudio {
       //fields.push_back(CONSTRUCTIONWITHSHADINGNAME);
       //fields.push_back(SHADINGDEVICEMATERIALNAME);
       //fields.push_back(SHADINGCONTROLTYPE);
-      //fields.push_back(SCHEDULENAME);
+      fields.push_back(SCHEDULENAME);
       //fields.push_back(SETPOINT);                        IN IDD, BUT NOT EXPOSED IN MODEL OBJECT
       //fields.push_back(SHADINGCONTROLISSCHEDULED);       IN IDD, BUT NOT EXPOSED IN MODEL OBJECT
       //fields.push_back(GLARECONTROLISACTIVE);            IN IDD, BUT NOT EXPOSED IN MODEL OBJECT
@@ -211,7 +213,7 @@ namespace openstudio {
       fields.push_back(FRAMEWIDTH);
       fields.push_back(FRAMEOUTSIDEPROJECTION);
       fields.push_back(FRAMEINSIDEPROJECTION);
-      //fields.push_back(FRAMECONDUCTANCE);
+      fields.push_back(FRAMECONDUCTANCE);
       fields.push_back(FRAMEEDGEGLASSCONDUCTANCETOCENTEROFGLASSCONDUCTANCE);
       fields.push_back(FRAMESOLARABSORPTANCE);
       fields.push_back(FRAMEVISIBLEABSORPTANCE);
@@ -558,11 +560,22 @@ namespace openstudio {
         }
 
         else if (field == SCHEDULENAME) {
-          // ShadingControl
-          //boost::optional<Schedule> schedule() const;
-          //bool setSchedule(const Schedule& schedule);
-          //void resetSchedule();
+          std::function<bool(model::ShadingControl *, const model::Schedule &)> setter(
+            [](model::ShadingControl *t_shadingControl, const model::Schedule &t_arg) {
+            auto copy = t_arg;
+            return t_shadingControl->setSchedule(copy);
+          }
+          );
 
+          addDropZoneColumn(Heading(QString(SCHEDULENAME)),
+            NullAdapter(&model::ShadingControl::schedule),
+            setter,
+            boost::optional<std::function<void(model::ShadingControl*)>>(CastNullAdapter<model::ShadingControl>(&model::ShadingControl::resetSchedule)),
+            DataSource(
+            allShadingControls,
+            true
+            )
+            );
         }
 
         // COLUMNS BELOW WHICH ARE COMMENTED OUT ARE IN THE IDD, BUT NOT EXPOSED IN THE MODEL OBJECT
@@ -607,12 +620,6 @@ namespace openstudio {
         }
 
         else if (field == FRAMEWIDTH) {
-          // WindowPropertyFrameAndDivider
-          //double frameWidth() const;
-          //bool isFrameWidthDefaulted() const;
-          //bool setFrameWidth(double frameWidth);
-          //void resetFrameWidth();
-
           addValueEditColumn(Heading(QString(INSIDEREVEALSOLARABSORPTANCE)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::insideRevealSolarAbsorptance),
             NullAdapter(&model::WindowPropertyFrameAndDivider::setInsideRevealSolarAbsorptance),
@@ -626,12 +633,6 @@ namespace openstudio {
         }
 
         else if (field == FRAMEOUTSIDEPROJECTION) {
-          // WindowPropertyFrameAndDivider
-          //double frameOutsideProjection() const;
-          //bool isFrameOutsideProjectionDefaulted() const;
-          //bool setFrameOutsideProjection(double frameOutsideProjection);
-          //void resetFrameOutsideProjection();
-
           addValueEditColumn(Heading(QString(FRAMEOUTSIDEPROJECTION)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::frameOutsideProjection),
             NullAdapter(&model::WindowPropertyFrameAndDivider::setFrameOutsideProjection),
@@ -645,12 +646,6 @@ namespace openstudio {
         }
 
         else if (field == FRAMEINSIDEPROJECTION) {
-          // WindowPropertyFrameAndDivider
-          //double frameInsideProjection() const;
-          //bool isFrameInsideProjectionDefaulted() const;
-          //bool setFrameInsideProjection(double frameInsideProjection);
-          //void resetFrameInsideProjection();
-          
           addValueEditColumn(Heading(QString(FRAMEINSIDEPROJECTION)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::frameInsideProjection),
             NullAdapter(&model::WindowPropertyFrameAndDivider::setFrameInsideProjection),
@@ -664,20 +659,18 @@ namespace openstudio {
         }
 
         else if (field == FRAMECONDUCTANCE) {
-          // WindowPropertyFrameAndDivider
-          //boost::optional<double> frameConductance() const;
-          //bool setFrameConductance(double frameConductance);
-          //void resetFrameConductance();
-
+          addValueEditColumn(Heading(QString(FRAMECONDUCTANCE)),
+            NullAdapter(&model::WindowPropertyFrameAndDivider::frameConductance),
+            NullAdapter(&model::WindowPropertyFrameAndDivider::setFrameConductance),
+            //boost::optional<std::function<void(model::WindowPropertyFrameAndDivider*)>>(CastNullAdapter<model::WindowPropertyFrameAndDivider>(&model::WindowPropertyFrameAndDivider::resetFrameConductance)),
+            DataSource(
+            allWindowPropertyFrameAndDividers,
+            true
+            )
+            );
         }
 
         else if (field == FRAMEEDGEGLASSCONDUCTANCETOCENTEROFGLASSCONDUCTANCE) {
-          // WindowPropertyFrameAndDivider
-          //double ratioOfFrameEdgeGlassConductanceToCenterOfGlassConductance() const;
-          //bool isRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductanceDefaulted() const;
-          //bool setRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductance(double ratioOfFrameEdgeGlassConductanceToCenterOfGlassConductance);
-          //void resetRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductance();
-
           addValueEditColumn(Heading(QString(FRAMEEDGEGLASSCONDUCTANCETOCENTEROFGLASSCONDUCTANCE)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::ratioOfFrameEdgeGlassConductanceToCenterOfGlassConductance),
             NullAdapter(&model::WindowPropertyFrameAndDivider::setRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductance),
@@ -691,12 +684,6 @@ namespace openstudio {
         }
 
         else if (field == FRAMESOLARABSORPTANCE) {
-          // WindowPropertyFrameAndDivider
-          //double frameSolarAbsorptance() const;
-          //bool isFrameSolarAbsorptanceDefaulted() const;
-          //bool setFrameSolarAbsorptance(double frameSolarAbsorptance);
-          //void resetFrameSolarAbsorptance();
-
           addValueEditColumn(Heading(QString(FRAMESOLARABSORPTANCE)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::insideRevealSolarAbsorptance),
             NullAdapter(&model::WindowPropertyFrameAndDivider::setInsideRevealSolarAbsorptance),
@@ -710,12 +697,6 @@ namespace openstudio {
         }
 
         else if (field == FRAMEVISIBLEABSORPTANCE) {
-          // WindowPropertyFrameAndDivider
-          //double frameVisibleAbsorptance() const;
-          //bool isFrameVisibleAbsorptanceDefaulted() const;
-          //bool setFrameVisibleAbsorptance(double frameVisibleAbsorptance);
-          //void resetFrameVisibleAbsorptance();
-
           addValueEditColumn(Heading(QString(FRAMEVISIBLEABSORPTANCE)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::frameVisibleAbsorptance),
             NullAdapter(&model::WindowPropertyFrameAndDivider::setFrameVisibleAbsorptance),
@@ -729,12 +710,6 @@ namespace openstudio {
         }
 
         else if (field == FRAMETHERMALHEMISPHERICALEMISSIVITY) {
-          // WindowPropertyFrameAndDivider
-          //double frameThermalHemisphericalEmissivity() const;
-          //bool isFrameThermalHemisphericalEmissivityDefaulted() const;
-          //bool setFrameThermalHemisphericalEmissivity(double frameThermalHemisphericalEmissivity);
-          //void resetFrameThermalHemisphericalEmissivity();
-
           addValueEditColumn(Heading(QString(FRAMETHERMALHEMISPHERICALEMISSIVITY)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::frameThermalHemisphericalEmissivity),
             NullAdapter(&model::WindowPropertyFrameAndDivider::setFrameThermalHemisphericalEmissivity),
@@ -756,12 +731,6 @@ namespace openstudio {
         }
 
         else if (field == DIVIDERWIDTH) {
-          // WindowPropertyFrameAndDivider
-          //double dividerWidth() const;
-          //bool isDividerWidthDefaulted() const;
-          //bool setDividerWidth(double dividerWidth);
-          //void resetDividerWidth();
-
           addValueEditColumn(Heading(QString(DIVIDERWIDTH)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::dividerWidth),
             NullAdapter(&model::WindowPropertyFrameAndDivider::setDividerWidth),
@@ -775,12 +744,6 @@ namespace openstudio {
         }
 
         else if (field == NUMBEROFHORIZONTALDIVIDERS) {
-          // WindowPropertyFrameAndDivider
-          //bool setNumberOfHorizontalDividers(double numberOfHorizontalDividers);
-          //void resetNumberOfHorizontalDividers();
-          //double numberOfHorizontalDividers() const;
-          //bool isNumberOfHorizontalDividersDefaulted() const;
-
           addValueEditColumn(Heading(QString(NUMBEROFHORIZONTALDIVIDERS)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::numberOfHorizontalDividers),
             NullAdapter(&model::WindowPropertyFrameAndDivider::setNumberOfHorizontalDividers),
@@ -794,12 +757,6 @@ namespace openstudio {
         }
 
         else if (field == NUMBEROFVERTICALDIVIDERS) {
-          //// WindowPropertyFrameAndDivider
-          //bool setNumberOfVerticalDividers(double numberOfVerticalDividers);
-          //void resetNumberOfVerticalDividers();
-          //double numberOfVerticalDividers() const;
-          //bool isNumberOfVerticalDividersDefaulted() const;
-
           addValueEditColumn(Heading(QString(NUMBEROFVERTICALDIVIDERS)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::numberOfVerticalDividers),
             NullAdapter(&model::WindowPropertyFrameAndDivider::setNumberOfVerticalDividers),
@@ -813,12 +770,6 @@ namespace openstudio {
         }
 
         else if (field == DIVIDEROUTSIDEPROJECTION) {
-          // WindowPropertyFrameAndDivider
-          //double dividerOutsideProjection() const;
-          //bool isDividerOutsideProjectionDefaulted() const;
-          //bool setDividerOutsideProjection(double dividerOutsideProjection);
-          //void resetDividerOutsideProjection();
-
           addValueEditColumn(Heading(QString(DIVIDEROUTSIDEPROJECTION)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::dividerOutsideProjection),
             NullAdapter(&model::WindowPropertyFrameAndDivider::setDividerOutsideProjection),
@@ -832,12 +783,6 @@ namespace openstudio {
         }
 
         else if (field == DIVIDERINSIDEPROJECTION) {
-          // WindowPropertyFrameAndDivider
-          //double dividerInsideProjection() const;
-          //bool isDividerInsideProjectionDefaulted() const;
-          //bool setDividerInsideProjection(double dividerInsideProjection);
-          //void resetDividerInsideProjection();
-
           addValueEditColumn(Heading(QString(DIVIDERINSIDEPROJECTION)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::dividerInsideProjection),
             NullAdapter(&model::WindowPropertyFrameAndDivider::setDividerInsideProjection),
@@ -851,12 +796,6 @@ namespace openstudio {
         }
 
         else if (field == DIVIDERCONDUCTANCE) {
-          // WindowPropertyFrameAndDivider
-          //double dividerConductance() const;
-          //bool isDividerConductanceDefaulted() const;
-          //bool setDividerConductance(double dividerConductance);
-          //void resetDividerConductance();
-
           addValueEditColumn(Heading(QString(DIVIDERCONDUCTANCE)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::dividerConductance),
             NullAdapter(&model::WindowPropertyFrameAndDivider::setDividerConductance),
@@ -870,12 +809,6 @@ namespace openstudio {
         }
 
         else if (field == RATIOOFDIVIDEREDGEGLASSCONDUCTANCETOCENTEROFGLASSCONDUCTANCE) {
-          // WindowPropertyFrameAndDivider
-          //double ratioOfDividerEdgeGlassConductanceToCenterOfGlassConductance() const;
-          //bool isRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductanceDefaulted() const;
-          //bool setRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductance(double ratioOfDividerEdgeGlassConductanceToCenterOfGlassConductance);
-          //void resetRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductance();
-
           addValueEditColumn(Heading(QString(RATIOOFDIVIDEREDGEGLASSCONDUCTANCETOCENTEROFGLASSCONDUCTANCE)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::ratioOfDividerEdgeGlassConductanceToCenterOfGlassConductance),
             NullAdapter(&model::WindowPropertyFrameAndDivider::setRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductance),
@@ -889,12 +822,6 @@ namespace openstudio {
         }
 
         else if (field == DIVIDERSOLARABSORPTANCE) {
-          // WindowPropertyFrameAndDivider
-          //double dividerSolarAbsorptance() const;
-          //bool isDividerSolarAbsorptanceDefaulted() const;
-          //bool setDividerSolarAbsorptance(double dividerSolarAbsorptance);
-          //void resetDividerSolarAbsorptance();
-
           addValueEditColumn(Heading(QString(DIVIDERSOLARABSORPTANCE)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::dividerSolarAbsorptance),
             NullAdapter(&model::WindowPropertyFrameAndDivider::setDividerSolarAbsorptance),
@@ -908,12 +835,6 @@ namespace openstudio {
         }
 
         else if (field == DIVIDERVISIBLEABSORPTANCE) {
-          // WindowPropertyFrameAndDivider
-          //double dividerVisibleAbsorptance() const;
-          //bool isDividerVisibleAbsorptanceDefaulted() const;
-          //bool setDividerVisibleAbsorptance(double dividerVisibleAbsorptance);
-          //void resetDividerVisibleAbsorptance();
-
           addValueEditColumn(Heading(QString(DIVIDERVISIBLEABSORPTANCE)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::dividerVisibleAbsorptance),
             NullAdapter(&model::WindowPropertyFrameAndDivider::setDividerVisibleAbsorptance),
@@ -927,12 +848,6 @@ namespace openstudio {
         }
 
         else if (field == DIVIDERTHERMALHEMISPHERICALEMISSIVITY) {
-          // WindowPropertyFrameAndDivider
-          //double dividerThermalHemisphericalEmissivity() const;
-          //bool isDividerThermalHemisphericalEmissivityDefaulted() const;
-          //bool setDividerThermalHemisphericalEmissivity(double dividerThermalHemisphericalEmissivity);
-          //void resetDividerThermalHemisphericalEmissivity();
-
           addValueEditColumn(Heading(QString(DIVIDERTHERMALHEMISPHERICALEMISSIVITY)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::dividerThermalHemisphericalEmissivity),
             NullAdapter(&model::WindowPropertyFrameAndDivider::setDividerThermalHemisphericalEmissivity),
@@ -946,12 +861,6 @@ namespace openstudio {
         }
 
         else if (field == OUTSIDEREVEALDEPTH) {
-          // WindowPropertyFrameAndDivider
-          //double outsideRevealDepth() const;
-          //bool isOutsideRevealDepthDefaulted() const;
-          //bool setOutsideRevealDepth(double outsideRevealDepth);
-          //void resetOutsideRevealDepth();
-
           addValueEditColumn(Heading(QString(OUTSIDEREVEALDEPTH)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::outsideRevealDepth),
             NullAdapter(&model::WindowPropertyFrameAndDivider::setOutsideRevealDepth),
@@ -965,12 +874,6 @@ namespace openstudio {
         }
 
         else if (field == OUTSIDEREVEALSOLARABSORPTANCE) {
-          // WindowPropertyFrameAndDivider
-          //double outsideRevealSolarAbsorptance() const;
-          //bool isOutsideRevealSolarAbsorptanceDefaulted() const;
-          //bool setOutsideRevealSolarAbsorptance(double outsideRevealSolarAbsorptance);
-          //void resetOutsideRevealSolarAbsorptance();
-
           addValueEditColumn(Heading(QString(OUTSIDEREVEALSOLARABSORPTANCE)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::outsideRevealSolarAbsorptance),
             NullAdapter(&model::WindowPropertyFrameAndDivider::setOutsideRevealSolarAbsorptance),
@@ -984,12 +887,6 @@ namespace openstudio {
         }
 
         else if (field == INSIDESILLDEPTH) {
-          // WindowPropertyFrameAndDivider
-          //double insideSillDepth() const;
-          //bool isInsideSillDepthDefaulted() const;
-          //bool setInsideSillDepth(double insideSillDepth);
-          //void resetInsideSillDepth();
-
           addValueEditColumn(Heading(QString(INSIDESILLDEPTH)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::insideSillDepth),
             NullAdapter(&model::WindowPropertyFrameAndDivider::setInsideSillDepth),
@@ -1003,12 +900,6 @@ namespace openstudio {
         }
 
         else if (field == INSIDESILLSOLARABSORPTANCE) {
-          // WindowPropertyFrameAndDivider
-          //double insideSillSolarAbsorptance() const;
-          //bool isInsideSillSolarAbsorptanceDefaulted() const;
-          //bool setInsideSillSolarAbsorptance(double insideSillSolarAbsorptance);
-          //void resetInsideSillSolarAbsorptance();
-
           addValueEditColumn(Heading(QString(INSIDESILLSOLARABSORPTANCE)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::insideSillSolarAbsorptance),
             NullAdapter(&model::WindowPropertyFrameAndDivider::setInsideSillSolarAbsorptance),
@@ -1022,12 +913,6 @@ namespace openstudio {
         }
 
         else if (field == INSIDEREVEALDEPTH) {
-          // WindowPropertyFrameAndDivider
-          //double insideRevealDepth() const;
-          //bool isInsideRevealDepthDefaulted() const;
-          //bool setInsideRevealDepth(double insideRevealDepth);
-          //void resetInsideRevealDepth();
-
           addValueEditColumn(Heading(QString(INSIDEREVEALDEPTH)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::insideRevealDepth),
             NullAdapter(&model::WindowPropertyFrameAndDivider::setInsideRevealDepth),
@@ -1041,12 +926,6 @@ namespace openstudio {
         }
 
         else if (field == INSIDEREVEALSOLARABSORPTANCE) {
-          // WindowPropertyFrameAndDivider
-          //double insideRevealSolarAbsorptance() const;
-          //bool isInsideRevealSolarAbsorptanceDefaulted() const;
-          //bool setInsideRevealSolarAbsorptance(double insideRevealSolarAbsorptance);
-          //void resetInsideRevealSolarAbsorptance();
-
           addValueEditColumn(Heading(QString(INSIDEREVEALSOLARABSORPTANCE)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::insideRevealSolarAbsorptance),
             NullAdapter(&model::WindowPropertyFrameAndDivider::setInsideRevealSolarAbsorptance),
@@ -1091,11 +970,6 @@ namespace openstudio {
         }
 
         else if (field == VIEWFACTORTOOUTSIDESHELF) {
-          // DaylightingDeviceShelf
-          //boost::optional<double> viewFactortoOutsideShelf() const;
-          //bool setViewFactortoOutsideShelf(double viewFactortoOutsideShelf);
-          //void resetViewFactortoOutsideShelf();
-
           addValueEditColumn(Heading(QString(VIEWFACTORTOOUTSIDESHELF)),
             NullAdapter(&model::DaylightingDeviceShelf::viewFactortoOutsideShelf),
             NullAdapter(&model::DaylightingDeviceShelf::setViewFactortoOutsideShelf),
@@ -1106,8 +980,8 @@ namespace openstudio {
             true
             )
             );
-
         }
+
         else {
           // unhandled
           OS_ASSERT(false);
