@@ -57,8 +57,11 @@ class MODEL_API AirLoopHVAC : public Loop
    * that are needed for a basic air loop in EnergyPlus.  These objects include:
    * supply inlet node, supply outlet node, demand inlet node, demand outlet node,
    * zone splitter, zone mixer, and zone hvac equipment connections.
+   *
+   * If dualDuct is true, then there will be a supply spiltter and two supply outlet nodes
+   * connected into the system topology.
    */
-  explicit AirLoopHVAC(Model& model);
+  explicit AirLoopHVAC(Model& model, bool dualDuct = false);
 
   virtual ~AirLoopHVAC() {}
 
@@ -132,10 +135,34 @@ class MODEL_API AirLoopHVAC : public Loop
    */
   boost::optional<Node> returnAirNode();
 
-  /** Returns the supply side splitter.  If the system is a dual duct
-   * or has a return air bypass then it will have a supply side splitter.
-   */
+  /** Returns the supply side splitter.  
+    * If the system is a dual duct then it will have a supply side splitter.
+    */
   boost::optional<Splitter> supplySplitter() const;
+
+  /** If this is a dual duct system, remove the supply side splitter.
+    * If this is not a dual duct system, there is no supply side splitter and the method will return false.
+    *
+    * The system will become a single duct. Dual duct terminals may remain on the demand side, and those must be 
+    * resolved separately by removing the zones served by dual ducts or changing to single duct terminals.
+    *
+    * The components downstream of the splitter will also be removed.
+    */
+  bool removeSupplySplitter();
+
+  /** If this is a dual duct system, remove the supply side splitter.
+    * If this is not a dual duct system, there is no supply side splitter and the method will return false.
+    *
+    * The system will become a single duct. Dual duct terminals may remain on the demand side, and those must be 
+    * resolved separately by removing the zones served by dual ducts or changing to single duct terminals.
+    *
+    * The dual duct branch containing hvacComponent will be removed.
+    * The remaining branch will be integrated into the loop. 
+    * If hvacComponent is not found on either dual duct branch
+    * the method will return false. This will be the case if hvacComponent is not found on the system's supplyComponents(),
+    * or upstream of the splitter.
+    */
+  bool removeSupplySplitter(HVACComponent & hvacComponent);
 
   /** Returns the supply side splitter inlet node.  If the system is a dual duct
    * or has a return air bypass then it will have a supply side splitter.

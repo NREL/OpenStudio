@@ -1028,6 +1028,131 @@ namespace detail {
     }
   }
 
+  bool AirLoopHVAC_Impl::removeSupplySplitter()
+  {
+    auto t_supplySplitter = supplySplitter();
+
+    if( ! t_supplySplitter ) return false;
+
+    auto _model = model();
+
+    auto inletModelObject = t_supplySplitter->inletModelObject();
+    OS_ASSERT(inletModelObject);
+
+    auto inletNode = inletModelObject->optionalCast<Node>();
+    OS_ASSERT(inletNode);
+
+    auto t_supplyOutletNodes = supplyOutletNodes();
+    OS_ASSERT(t_supplyOutletNodes.size() == 2u);
+
+    auto splitterOutletModelObjects = t_supplySplitter->outletModelObjects();
+    OS_ASSERT(splitterOutletModelObjects.size() == 2u);
+
+    auto splitterOutletNodes = subsetCastVector<Node>(splitterOutletModelObjects);
+    OS_ASSERT(splitterOutletNodes.size() == 2u);
+
+    auto comps0 = supplyComponents(splitterOutletNodes[0],t_supplyOutletNodes[0]);
+    OS_ASSERT(comps0.size() >= 1u);
+    auto comps1 = supplyComponents(splitterOutletNodes[1],t_supplyOutletNodes[1]);
+    OS_ASSERT(comps1.size() >= 1u);
+
+    for( auto it = comps0.begin(); it != comps0.end(); ++it ) {
+      it->getImpl<detail::HVACComponent_Impl>()->disconnect();
+    }
+
+    for( auto it = comps1.begin(); it != comps1.end(); ++it ) {
+      it->getImpl<detail::HVACComponent_Impl>()->disconnect();
+    }
+
+    t_supplySplitter->disconnect();
+
+    auto airLoopHVAC = getObject<AirLoopHVAC>();
+    if( inletNode.get() == supplyInletNode() ) {
+      Node supplyOutletNode(_model);
+      _model.connect(inletNode.get(),inletNode->outletPort(),supplyOutletNode,supplyOutletNode.inletPort());
+      _model.connect(supplyOutletNode,supplyOutletNode.outletPort(),airLoopHVAC,supplyOutletPortA());
+    } else {
+      _model.connect(inletNode.get(),inletNode->outletPort(),airLoopHVAC,supplyOutletPortA());
+    }
+
+    for( auto it = comps0.begin(); it != comps0.end(); ++it ) {
+      if( ! it->handle().isNull() ) {
+        it->remove();
+      }
+    }
+
+    for( auto it = comps1.begin(); it != comps1.end(); ++it ) {
+      if( ! it->handle().isNull() ) {
+        it->remove();
+      }
+    }
+
+    t_supplySplitter->remove();
+
+    return true;
+  }
+  
+  bool AirLoopHVAC_Impl::removeSupplySplitter(HVACComponent & hvacComponent)
+  {
+    auto t_supplySplitter = supplySplitter();
+
+    if( ! t_supplySplitter ) return false;
+
+    auto t_supplyOutletNodes = supplyOutletNodes();
+    OS_ASSERT(t_supplyOutletNodes.size() == 2u);
+
+    auto splitterOutletModelObjects = t_supplySplitter->outletModelObjects();
+    OS_ASSERT(splitterOutletModelObjects.size() == 2u);
+
+    auto splitterOutletNodes = subsetCastVector<Node>(splitterOutletModelObjects);
+    OS_ASSERT(splitterOutletNodes.size() == 2u);
+
+    auto systemStartComponent = supplyInletNode();
+    boost::optional<HVACComponent> systemEndComponent;
+    auto componentInletPort = t_supplySplitter->getImpl<detail::Splitter_Impl>()->inletPort();
+    boost::optional<unsigned> componentOutletPort;
+
+    std::vector<ModelObject> removeComps;
+
+    // Remove branch "0" if it contains hvacComponent
+    {
+      auto comps = supplyComponents(splitterOutletNodes[0],t_supplyOutletNodes[0]);
+      OS_ASSERT(! comps.empty());
+      if( std::find(comps.begin(),comps.end(),hvacComponent) != comps.end() ) {
+        removeComps = comps;
+        for( auto it = comps.begin(); it != comps.end(); ++it ) {
+          it->getImpl<detail::HVACComponent_Impl>()->disconnect();
+        }
+        systemEndComponent = t_supplyOutletNodes[1];
+        componentOutletPort = t_supplySplitter->getImpl<detail::Splitter_Impl>()->outletPort(1);
+      }
+    }
+
+    // Remove branch "1" if it contains hvacComponent
+    if( (! systemEndComponent) || (! componentOutletPort) ) {
+      auto comps = supplyComponents(splitterOutletNodes[1],t_supplyOutletNodes[1]);
+      OS_ASSERT(! comps.empty());
+      if( std::find(comps.begin(),comps.end(),hvacComponent) != comps.end() ) {
+        removeComps = comps;
+        for( auto it = comps.begin() + 1; it != comps.end(); ++it ) {
+          it->getImpl<detail::HVACComponent_Impl>()->disconnect();
+        }
+        systemEndComponent = t_supplyOutletNodes[0];
+        componentOutletPort = t_supplySplitter->getImpl<detail::Splitter_Impl>()->outletPort(0);
+      }
+    }
+
+    if( (! systemEndComponent) || (! componentOutletPort) ) return false;
+
+    auto result = t_supplySplitter->getImpl<detail::Splitter_Impl>()->removeFromLoop(systemStartComponent,systemEndComponent.get(),componentInletPort,componentOutletPort.get());
+
+    for( auto & comp : removeComps ) {
+      comp.remove();
+    }
+
+    return result;
+  }
+
   boost::optional<Node> AirLoopHVAC_Impl::supplySplitterInletNode() const {
     if( auto splitter = supplySplitter() ) {
       if( auto mo = splitter->inletModelObject() ) {
@@ -1271,7 +1396,7 @@ namespace detail {
 
 } // detail
 
-AirLoopHVAC::AirLoopHVAC(Model& model)
+AirLoopHVAC::AirLoopHVAC(Model& model, bool dualDuct)
   : Loop(iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirLoopHVAC_Impl>());
@@ -1531,6 +1656,16 @@ boost::optional<HVACComponent> AirLoopHVAC::returnFan() const
 boost::optional<HVACComponent> AirLoopHVAC::reliefFan() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->reliefFan();
+}
+
+bool AirLoopHVAC::removeSupplySplitter()
+{
+  return getImpl<detail::AirLoopHVAC_Impl>()->removeSupplySplitter();
+}
+
+bool AirLoopHVAC::removeSupplySplitter(HVACComponent & hvacComponent)
+{
+  return getImpl<detail::AirLoopHVAC_Impl>()->removeSupplySplitter(hvacComponent);
 }
 
 } // model

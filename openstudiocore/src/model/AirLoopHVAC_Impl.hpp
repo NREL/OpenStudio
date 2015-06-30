@@ -102,6 +102,10 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   boost::optional<Splitter> supplySplitter() const;
 
+  bool removeSupplySplitter();
+
+  bool removeSupplySplitter(HVACComponent & hvacComponent);
+
   boost::optional<Node> supplySplitterInletNode() const;
 
   std::vector<Node> supplySplitterOutletNodes() const;
