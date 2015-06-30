@@ -389,9 +389,23 @@ class MODEL_API ThermalZone : public HVACComponent {
   */
   bool setSupplyPlenum(const ThermalZone & plenumZone);
 
+  /** Overload of setSupplyPlenum()
+    * This variation can account for dual duct systems, branchIndex can be 0 or 1
+    * indicating which branch of a dual duct system to attach to.
+    * branchIndex 0 corresponds to the branch of demandInletNode(0).
+    */
+  bool setSupplyPlenum(const ThermalZone & plenumZone, unsigned branchIndex);
+
   /** Remove any supply plenum serving this zone
   */
   void removeSupplyPlenum();
+
+  /** Overload of removeSupplyPlenum()
+    * This variation can account for dual duct systems, branchIndex can be 0 or 1
+    * indicating which branch of a dual duct system to attach to.
+    * branchIndex 0 corresponds to the branch of demandInletNode(0).
+  */
+  void removeSupplyPlenum(unsigned branchIndex);
 
   /** Establish plenumZone as the return plenum for this ThermalZone.
   *   This ThermalZone must already be attached to AirLoopHVAC.

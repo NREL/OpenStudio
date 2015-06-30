@@ -80,8 +80,12 @@ TEST_F(ModelFixture,AirTerminalDualDuctVAV) {
 
     ThermalZone zone(m);
     EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone,terminal));
-    EXPECT_EQ(2u,airLoopHVAC.demandInletNodes().size());
-    EXPECT_EQ(2u,airLoopHVAC.zoneSplitters().size());
+    {
+      auto t_zoneSplitters = airLoopHVAC.zoneSplitters();
+      EXPECT_EQ(2u,t_zoneSplitters.size());
+      EXPECT_EQ(airLoopHVAC.zoneSplitter(),t_zoneSplitters.front());
+      EXPECT_EQ(2u,airLoopHVAC.demandInletNodes().size());
+    }
 
     EXPECT_EQ(12u,airLoopHVAC.demandComponents().size());
 

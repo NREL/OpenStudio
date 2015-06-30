@@ -672,6 +672,10 @@ namespace detail {
     Splitter splitter = zoneSplitter();
     Mixer mixer = zoneMixer();
 
+    if( auto currentSystem = thermalZone.airLoopHVAC() ) {
+      if( currentSystem->handle() == handle() ) return false;
+    }
+
     if( ! airTerminal )
     {
       std::vector<ModelObject> modelObjects = demandComponents(splitter,mixer);
