@@ -207,6 +207,8 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   static bool removeDualDuctTerminalFromAirLoopHVAC(HVACComponent & terminal, const unsigned inletPortA, const unsigned inletPortB, const unsigned outletPort);
 
+  bool isDualDuct() const;
+
   private:
 
   AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const;

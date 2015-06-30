@@ -1410,6 +1410,10 @@ namespace detail {
     return result;
   }
 
+  bool AirLoopHVAC_Impl::isDualDuct() const {
+    return supplySplitter() ? true : false;
+  }
+
 } // detail
 
 AirLoopHVAC::AirLoopHVAC(Model& model, bool dualDuct)
@@ -1687,6 +1691,10 @@ bool AirLoopHVAC::removeSupplySplitter()
 bool AirLoopHVAC::removeSupplySplitter(HVACComponent & hvacComponent)
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->removeSupplySplitter(hvacComponent);
+}
+
+bool AirLoopHVAC::isDualDuct() const {
+  return getImpl<detail::AirLoopHVAC_Impl>()->isDualDuct();
 }
 
 } // model

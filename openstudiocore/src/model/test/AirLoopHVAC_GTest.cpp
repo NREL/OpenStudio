@@ -726,6 +726,8 @@ TEST_F(ModelFixture,AirLoopHVAC_dualDuct)
     auto supplyOutletNode = airLoopHVAC.supplyOutletNode();
     EXPECT_TRUE(splitter.addToNode(supplyOutletNode));
 
+    EXPECT_TRUE(airLoopHVAC.isDualDuct());
+
     EXPECT_EQ(2u,airLoopHVAC.supplyOutletNodes().size()); 
     EXPECT_EQ(4u,airLoopHVAC.supplyComponents().size());
     EXPECT_TRUE(airLoopHVAC.supplySplitter());

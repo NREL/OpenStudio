@@ -144,6 +144,11 @@ class MODEL_API AirLoopHVAC : public Loop
    */
   boost::optional<Node> returnAirNode();
 
+  /** Returns true if the system is "dual duct"
+    * ie. there is a supply splitter
+    */
+  bool isDualDuct() const;
+
   /** Returns the supply side splitter.  
     * If the system is a dual duct then it will have a supply side splitter.
     */
