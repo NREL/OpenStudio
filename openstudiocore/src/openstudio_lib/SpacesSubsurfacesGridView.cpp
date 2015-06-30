@@ -28,10 +28,14 @@
 #include "../model/ConstructionBase_Impl.hpp"
 #include "../model/DaylightingDeviceShelf.hpp"
 #include "../model/DaylightingDeviceShelf_Impl.hpp"
+#include "../model/InteriorPartitionSurface.hpp"
+#include "../model/InteriorPartitionSurface_Impl.hpp"
 #include "../model/Schedule.hpp"
 #include "../model/Schedule_Impl.hpp"
 #include "../model/ShadingControl.hpp"
 #include "../model/ShadingControl_Impl.hpp"
+#include "../model/ShadingSurface.hpp"
+#include "../model/ShadingSurface_Impl.hpp"
 #include "../model/Space.hpp"
 #include "../model/Space_Impl.hpp"
 #include "../model/Surface.hpp"
@@ -190,10 +194,10 @@ namespace openstudio {
       fields.push_back(SURFACENAME);
       fields.push_back(SUBSURFACENAME);
       //fields.push_back(NAME);
-      //fields.push_back(SHADINGTYPE);
+      fields.push_back(SHADINGTYPE);
       //fields.push_back(CONSTRUCTIONWITHSHADINGNAME);
       //fields.push_back(SHADINGDEVICEMATERIALNAME);
-      //fields.push_back(SHADINGCONTROLTYPE);
+      fields.push_back(SHADINGCONTROLTYPE);
       fields.push_back(SCHEDULENAME);
       //fields.push_back(SETPOINT);                        IN IDD, BUT NOT EXPOSED IN MODEL OBJECT
       //fields.push_back(SHADINGCONTROLISSCHEDULED);       IN IDD, BUT NOT EXPOSED IN MODEL OBJECT
@@ -244,8 +248,8 @@ namespace openstudio {
       fields.push_back(SURFACENAME);
       //fields.push_back(WINDOWNAME);
       //fields.push_back( DaylightingDeviceShelfNAME);
-      //fields.push_back(INSIDESHELFNAME);
-      //fields.push_back(OUTSIDESHELFNAME);
+      fields.push_back(INSIDESHELFNAME);
+      fields.push_back(OUTSIDESHELFNAME);
       fields.push_back(VIEWFACTORTOOUTSIDESHELF);
       std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Daylighting Shelves"), fields);
       m_categoriesAndFields.push_back(categoryAndFields);
@@ -411,7 +415,7 @@ namespace openstudio {
         //}
 
         else if (field == SURFACENAME) {
-          addNameLineEditColumn(Heading(QString(NAME), false, false),
+          addNameLineEditColumn(Heading(QString(SURFACENAME), false, false),
             false,
             false,
             CastNullAdapter<model::Surface>(&model::Surface::name),
@@ -535,11 +539,15 @@ namespace openstudio {
         }
 
         else if (field == SHADINGTYPE) {
-          // ShadingControl
-          //std::string shadingType() const;
-          //bool setShadingType(const std::string& shadingType);
-          //static std::vector<std::string> shadingTypeValues();
-
+          addComboBoxColumn<std::string, model::ShadingControl>(
+            Heading(QString(SHADINGTYPE)),
+            static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+            std::function<std::vector<std::string>()>(&model::ShadingControl::shadingTypeValues),
+            CastNullAdapter<model::ShadingControl>(&model::ShadingControl::shadingType),
+            CastNullAdapter<model::ShadingControl>(&model::ShadingControl::setShadingType),
+            boost::optional<std::function<void(model::ShadingControl *)> >(),
+            boost::optional<DataSource>()
+            );
         }
 
         else if (field == CONSTRUCTIONWITHSHADINGNAME) {
@@ -553,10 +561,15 @@ namespace openstudio {
         }
 
         else if (field == SHADINGCONTROLTYPE) {
-          // ShadingControl
-          //std::string shadingControlType() const;
-          //bool setShadingControlType(const std::string& shadingControlType);
-          //static std::vector<std::string> shadingControlTypeValues();
+          addComboBoxColumn<std::string, model::ShadingControl>(
+            Heading(QString(SHADINGCONTROLTYPE)),
+            static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
+            std::function<std::vector<std::string>()>(&model::ShadingControl::shadingControlTypeValues),
+            CastNullAdapter<model::ShadingControl>(&model::ShadingControl::shadingControlType),
+            CastNullAdapter<model::ShadingControl>(&model::ShadingControl::setShadingControlType),
+            boost::optional<std::function<void(model::ShadingControl *)> >(),
+            boost::optional<DataSource>()
+            );
         }
 
         else if (field == SCHEDULENAME) {
@@ -620,11 +633,11 @@ namespace openstudio {
         }
 
         else if (field == FRAMEWIDTH) {
-          addValueEditColumn(Heading(QString(INSIDEREVEALSOLARABSORPTANCE)),
-            NullAdapter(&model::WindowPropertyFrameAndDivider::insideRevealSolarAbsorptance),
-            NullAdapter(&model::WindowPropertyFrameAndDivider::setInsideRevealSolarAbsorptance),
-            boost::optional<std::function<void(model::WindowPropertyFrameAndDivider*)>>(CastNullAdapter<model::WindowPropertyFrameAndDivider>(&model::WindowPropertyFrameAndDivider::resetInsideRevealSolarAbsorptance)),
-            boost::optional<std::function<bool(model::WindowPropertyFrameAndDivider*)>>(CastNullAdapter<model::WindowPropertyFrameAndDivider>(&model::WindowPropertyFrameAndDivider::isInsideRevealSolarAbsorptanceDefaulted)),
+          addValueEditColumn(Heading(QString(FRAMEWIDTH)),
+            NullAdapter(&model::WindowPropertyFrameAndDivider::frameWidth),
+            NullAdapter(&model::WindowPropertyFrameAndDivider::setFrameWidth),
+            boost::optional<std::function<void(model::WindowPropertyFrameAndDivider*)>>(CastNullAdapter<model::WindowPropertyFrameAndDivider>(&model::WindowPropertyFrameAndDivider::resetFrameWidth)),
+            boost::optional<std::function<bool(model::WindowPropertyFrameAndDivider*)>>(CastNullAdapter<model::WindowPropertyFrameAndDivider>(&model::WindowPropertyFrameAndDivider::isFrameWidthDefaulted)),
             DataSource(
             allWindowPropertyFrameAndDividers,
             true
@@ -956,17 +969,27 @@ namespace openstudio {
         //}
 
         else if (field == INSIDESHELFNAME) {
-          // DaylightingDeviceShelf
-          //boost::optional<InteriorPartitionSurface> insideShelf() const;
-          //bool setInsideShelf(const InteriorPartitionSurface& insideShelf);
-
+          addDropZoneColumn(Heading(QString(INSIDESHELFNAME)),
+            CastNullAdapter<model::DaylightingDeviceShelf>(&model::DaylightingDeviceShelf::insideShelf),
+            CastNullAdapter<model::DaylightingDeviceShelf>(&model::DaylightingDeviceShelf::setInsideShelf),
+            boost::optional<std::function<void(model::DaylightingDeviceShelf *)>>(),
+            DataSource(
+            allDaylightingDeviceShelfs,
+            true
+            )
+            );
         }
 
         else if (field == OUTSIDESHELFNAME) {
-          // DaylightingDeviceShelf
-          //boost::optional<ShadingSurface> outsideShelf() const;
-          //bool setOutsideShelf(const ShadingSurface& outsideShelf);
-
+          addDropZoneColumn(Heading(QString(OUTSIDESHELFNAME)),
+            CastNullAdapter<model::DaylightingDeviceShelf>(&model::DaylightingDeviceShelf::outsideShelf),
+            CastNullAdapter<model::DaylightingDeviceShelf>(&model::DaylightingDeviceShelf::setOutsideShelf),
+            boost::optional<std::function<void(model::DaylightingDeviceShelf *)>>(),
+            DataSource(
+            allDaylightingDeviceShelfs,
+            true
+            )
+            );
         }
 
         else if (field == VIEWFACTORTOOUTSIDESHELF) {
