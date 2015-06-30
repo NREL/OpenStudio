@@ -23,6 +23,8 @@
 #include <model/AirLoopHVAC_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/DesignSpecificationOutdoorAir.hpp>
@@ -221,6 +223,17 @@ namespace detail {
   {
     auto mo = getObject<AirTerminalDualDuctVAV>();
     return AirLoopHVAC_Impl::addDualDuctTerminalToNode(mo,inletPort(0),inletPort(1),outletPort(),node);
+  }
+
+  ModelObject AirTerminalDualDuctVAV_Impl::clone(Model model) const
+  {
+    auto t_clone = Mixer_Impl::clone(model).cast<AirTerminalDualDuctVAV>();
+
+    t_clone.setString(OS_AirTerminal_DualDuct_VAVFields::HotAirInletNode,"");
+    t_clone.setString(OS_AirTerminal_DualDuct_VAVFields::ColdAirInletNode,"");
+    t_clone.setString(OS_AirTerminal_DualDuct_VAVFields::AirOutletNode,"");
+
+    return t_clone;
   }
 
 } // detail

@@ -116,6 +116,8 @@ namespace detail {
 
     std::vector<IdfObject> remove();
 
+    virtual ModelObject clone(Model model) const override;
+
     //@}
    protected:
    private:

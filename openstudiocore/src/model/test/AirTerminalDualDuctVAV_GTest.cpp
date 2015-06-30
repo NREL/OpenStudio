@@ -100,13 +100,27 @@ TEST_F(ModelFixture,AirTerminalDualDuctVAV) {
     EXPECT_TRUE(airLoopHVAC.removeBranchForZone(zone));
     EXPECT_EQ(5u,airLoopHVAC.demandComponents().size());
 
-    AirTerminalDualDuctVAV newTerminal(m);
-    EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone,newTerminal));
+    AirTerminalDualDuctVAV terminal2(m);
+    EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone,terminal2));
     EXPECT_EQ(12u,airLoopHVAC.demandComponents().size());
 
     // Remove the whole branch again, this time there is a terminal to worry about
     EXPECT_TRUE(airLoopHVAC.removeBranchForZone(zone));
     EXPECT_EQ(5u,airLoopHVAC.demandComponents().size());
+
+    // Do it again and then see that the terminal duplication is happening when we add additional branches
+    AirTerminalDualDuctVAV terminal3(m);
+
+    EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone,terminal3));
+    EXPECT_EQ(12u,airLoopHVAC.demandComponents().size());
+
+    ThermalZone zone2(m);
+    EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone2));
+
+    {
+      auto terminals = subsetCastVector<AirTerminalDualDuctVAV>(airLoopHVAC.demandComponents());
+      EXPECT_EQ(2u,terminals.size());
+    }
   }
 
 }

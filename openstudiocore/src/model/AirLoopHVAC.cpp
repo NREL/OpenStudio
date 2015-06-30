@@ -700,7 +700,7 @@ namespace detail {
         {
           boost::optional<PlantLoop> plantLoop = plantForAirTerminal(lastAirTerminal.get());
           Model t_model = model();
-          airTerminal = lastAirTerminal->clone(t_model).cast<StraightComponent>();
+          airTerminal = lastAirTerminal->clone(t_model).cast<HVACComponent>();
           if( plantLoop )
           {
             setPlantForAirTerminal(airTerminal.get(),plantLoop.get());
