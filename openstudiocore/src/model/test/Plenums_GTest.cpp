@@ -184,12 +184,6 @@ TEST_F(ModelFixture,Plenums)
       auto plenums = subsetCastVector<AirLoopHVACSupplyPlenum>(demandComps);
       EXPECT_EQ(0u,plenums.size());
     }
-
-    EXPECT_FALSE(airLoop.addBranchForZone(conditionedZone1));
-    EXPECT_EQ(12u,airLoop.demandComponents().size());
-
-    //airLoop.removeBranchForZone(conditionedZone1);
-    //EXPECT_EQ(5u,airLoop.demandComponents().size());
     
   }
 }

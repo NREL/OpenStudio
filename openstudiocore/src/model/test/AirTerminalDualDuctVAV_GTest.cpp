@@ -92,6 +92,21 @@ TEST_F(ModelFixture,AirTerminalDualDuctVAV) {
     // Remove the terminal
     terminal.remove();
     EXPECT_EQ(7u,airLoopHVAC.demandComponents().size());
+
+    // Make sure we cant add the same zone again
+    EXPECT_FALSE(airLoopHVAC.addBranchForZone(zone));
+
+    // Remove the whole branch 
+    EXPECT_TRUE(airLoopHVAC.removeBranchForZone(zone));
+    EXPECT_EQ(5u,airLoopHVAC.demandComponents().size());
+
+    AirTerminalDualDuctVAV newTerminal(m);
+    EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone,newTerminal));
+    EXPECT_EQ(12u,airLoopHVAC.demandComponents().size());
+
+    // Remove the whole branch again, this time there is a terminal to worry about
+    EXPECT_TRUE(airLoopHVAC.removeBranchForZone(zone));
+    EXPECT_EQ(5u,airLoopHVAC.demandComponents().size());
   }
 
 }

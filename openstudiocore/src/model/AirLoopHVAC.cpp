@@ -462,7 +462,10 @@ namespace detail {
       return false;
     }
 
-    thermalZone.removeSupplyPlenum();
+    auto demandInletNodes = t_airLoopHVAC->demandInletNodes();
+    for( auto i = 0; i < demandInletNodes.size(); ++i ) {
+      thermalZone.removeSupplyPlenum(i);
+    }
     thermalZone.removeReturnPlenum();
 
     std::vector<ModelObject> modelObjects;
@@ -471,6 +474,16 @@ namespace detail {
     boost::optional<ModelObject> splitterOutletObject;
     boost::optional<ModelObject> mixerInletObject;
     std::vector<ModelObject>::iterator findit;
+
+    // Before we go wrecking the loop, cleanly remove anything that is not a node or zone
+    // (ie terminals).  This is important because dual duct terminals especially have to worry about 
+    // the second duct on their removal.
+    modelObjects = t_airLoopHVAC->demandComponents(zoneSplitter,thermalZone);
+    for( auto & modelObject : modelObjects ) {
+      if( (! modelObject.optionalCast<Node>()) && (! modelObject.optionalCast<ThermalZone>()) ) {
+        modelObject.remove();
+      }
+    }
 
     modelObjects = t_airLoopHVAC->demandComponents(thermalZone,zoneMixer);
     findit = std::find(modelObjects.begin(),modelObjects.end(),zoneMixer);
@@ -488,15 +501,12 @@ namespace detail {
     zoneSplitter.removePortForBranch(zoneSplitter.branchIndexForOutletModelObject(splitterOutletObject.get()));
     zoneMixer.removePortForBranch(zoneMixer.branchIndexForInletModelObject(mixerInletObject.get()));
 
-    for( const auto & modelObject : modelObjects )
-    {
+    for( const auto & modelObject : modelObjects ) {
       modelObject.cast<HVACComponent>().disconnect();
     }
 
-    for( auto & modelObject : modelObjects )
-    {
-      if( ! modelObject.optionalCast<ThermalZone>() )
-      {
+    for( auto & modelObject : modelObjects ) {
+      if( ! modelObject.optionalCast<ThermalZone>() ) {
         modelObject.remove();
       }
     }
