@@ -124,7 +124,7 @@ namespace openstudio {
       std::vector<QString> fields;
       fields.push_back(SURFACENAME);
       fields.push_back(SURFACETYPE); 
-      //fields.push_back(CONSTRUCTION); Crashes in OSConcepts,  line 292
+      fields.push_back(CONSTRUCTION);
       fields.push_back(OUTSIDEBOUNDARYCONDITION);
       fields.push_back(OUTSIDEBOUNDARYCONDITIONOBJECT); 
       fields.push_back(SUNEXPOSURE);
@@ -166,25 +166,6 @@ namespace openstudio {
           std::vector<model::ModelObject> allModelObjects;
           auto surfaces = t_space.surfaces();
           allModelObjects.insert(allModelObjects.end(), surfaces.begin(), surfaces.end());
-          return allModelObjects;
-        }
-        );
-
-        std::function<std::vector<boost::optional<model::ModelObject> >(const model::Space &)> allConstructions(
-          [allSurfaces](const model::Space &t_space) {
-          std::vector<boost::optional<model::ModelObject> > allModelObjects;
-          std::vector<boost::optional<model::ConstructionBase> > allConstructions;
-          for (auto surface : allSurfaces(t_space)) {
-            auto construction = surface.cast<model::Surface>().construction();
-            if (construction) {
-              allConstructions.push_back(construction);
-            }
-            else {
-              allConstructions.push_back(boost::optional<model::ConstructionBase>());
-            }
-          }
-          allModelObjects.insert(allModelObjects.end(), allConstructions.begin(), allConstructions.end());
-
           return allModelObjects;
         }
         );
@@ -260,7 +241,7 @@ namespace openstudio {
             CastNullAdapter<model::Surface>(&model::Surface::setConstruction),
             boost::optional<std::function<void(model::Surface*)> >(NullAdapter(&model::Surface::resetConstruction)),
             DataSource(
-            allConstructions, 
+            allSurfaces,
             true
             )
             );

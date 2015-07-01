@@ -182,7 +182,7 @@ namespace openstudio {
       fields.push_back(SUBSURFACENAME);
       fields.push_back(SUBSURFACETYPE);
       fields.push_back(MULTIPLIER);
-      //fields.push_back(CONSTRUCTION); Crashes in OSConcepts,  line 292
+      fields.push_back(CONSTRUCTION);
       fields.push_back(OUTSIDEBOUNDARYCONDITIONOBJECT);
       //fields.push_back(SHADINGSURFACENAME);
       std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("General"), fields);
@@ -359,25 +359,6 @@ namespace openstudio {
         }
         );
 
-        std::function<std::vector<boost::optional<model::ModelObject> >(const model::Space &)> allConstructions(
-          [allSubSurfaces](const model::Space &t_space) {
-          std::vector<boost::optional<model::ModelObject> > allModelObjects;
-          std::vector<boost::optional<model::ConstructionBase> > allConstructions;
-          for (auto subSurface : allSubSurfaces(t_space)) {
-            auto construction = subSurface.cast<model::SubSurface>().construction();
-            if (construction) {
-              allConstructions.push_back(construction);
-            }
-            else {
-              allConstructions.push_back(boost::optional<model::ConstructionBase>());
-            }
-          }
-          allModelObjects.insert(allModelObjects.end(), allConstructions.begin(), allConstructions.end());
-
-          return allModelObjects;
-        }
-        );
-
         std::function<std::vector<boost::optional<model::ModelObject> >(const model::Space &)> allOutsideBoundaryConditionObjects(
           [allSubSurfaces](const model::Space &t_space) {
           std::vector<boost::optional<model::ModelObject> > allModelObjects;
@@ -491,7 +472,7 @@ namespace openstudio {
             CastNullAdapter<model::SubSurface>(&model::SubSurface::setConstruction),
             boost::optional<std::function<void(model::SubSurface*)> >(NullAdapter(&model::SubSurface::resetConstruction)),
             DataSource(
-            allConstructions, 
+            allSubSurfaces,
             true
             )
             );
