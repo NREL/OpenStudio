@@ -247,7 +247,7 @@ namespace openstudio {
       std::vector<QString> fields;
       fields.push_back(SURFACENAME);
       //fields.push_back(WINDOWNAME);
-      //fields.push_back( DaylightingDeviceShelfNAME);
+      //fields.push_back( NAME);
       fields.push_back(INSIDESHELFNAME);
       fields.push_back(OUTSIDESHELFNAME);
       fields.push_back(VIEWFACTORTOOUTSIDESHELF);
@@ -546,7 +546,10 @@ namespace openstudio {
             CastNullAdapter<model::ShadingControl>(&model::ShadingControl::shadingType),
             CastNullAdapter<model::ShadingControl>(&model::ShadingControl::setShadingType),
             boost::optional<std::function<void(model::ShadingControl *)> >(),
-            boost::optional<DataSource>()
+            DataSource(
+            allShadingControls,
+            true
+            )
             );
         }
 
@@ -568,7 +571,10 @@ namespace openstudio {
             CastNullAdapter<model::ShadingControl>(&model::ShadingControl::shadingControlType),
             CastNullAdapter<model::ShadingControl>(&model::ShadingControl::setShadingControlType),
             boost::optional<std::function<void(model::ShadingControl *)> >(),
-            boost::optional<DataSource>()
+            DataSource(
+            allShadingControls,
+            true
+            )
             );
         }
 

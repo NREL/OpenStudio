@@ -124,7 +124,7 @@ namespace openstudio {
       std::vector<QString> fields;
       fields.push_back(SURFACENAME);
       fields.push_back(SURFACETYPE); 
-      fields.push_back(CONSTRUCTION);
+      //fields.push_back(CONSTRUCTION); Crashes in OSConcepts,  line 292
       fields.push_back(OUTSIDEBOUNDARYCONDITION);
       fields.push_back(OUTSIDEBOUNDARYCONDITIONOBJECT); 
       fields.push_back(SUNEXPOSURE);
