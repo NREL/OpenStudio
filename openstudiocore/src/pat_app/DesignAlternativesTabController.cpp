@@ -899,7 +899,7 @@ void AlternativeModelMeasureListController::alternativeModelMeasureItemChanged()
 
         // DLM: no change was made, need to reset view to stored arguments
         // redraw all the views
-        modelReset();
+        QTimer::singleShot(0, this, SLOT(emitModelReset()));
 
         return;
       }
@@ -961,6 +961,11 @@ void AlternativeModelMeasureListController::alternativeModelMeasureItemRemoved()
   }
 
   setModelMeasures(newModelMeasures, true);
+}
+
+void AlternativeModelMeasureListController::emitModelReset()
+{
+  modelReset();
 }
 
 analysis::OptionalRubyMeasure AlternativeModelMeasureListController::rubySwapMeasure() const

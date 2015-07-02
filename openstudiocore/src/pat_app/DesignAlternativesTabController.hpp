@@ -306,6 +306,10 @@ public slots:
 
   void alternativeModelMeasureItemRemoved();
 
+private slots:
+
+  void emitModelReset();
+
 private:
 
   boost::optional<analysis::RubyMeasure> rubySwapMeasure() const;
