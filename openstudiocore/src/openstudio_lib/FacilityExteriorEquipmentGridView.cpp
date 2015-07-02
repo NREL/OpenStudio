@@ -165,9 +165,18 @@ namespace openstudio {
         addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row");
       }
       else if (field == EXTERIORLIGHTSDEFINITION) {
-      //EXTERIORLIGHTSDEFINITION
-      //ExteriorLightsDefinition exteriorLightsDefinition() const;
-      //bool setExteriorLightsDefinition(const ExteriorLightsDefinition& exteriorLightsDefinition);
+        std::function<boost::optional<model::ExteriorLightsDefinition>(model::ExteriorLights*)> get(
+          [](model::ExteriorLights* el) {
+          boost::optional<model::ExteriorLightsDefinition> optional = el->exteriorLightsDefinition();
+          return optional;
+        }
+        );
+
+        addDropZoneColumn(Heading(QString(EXTERIORLIGHTSDEFINITION)),
+          get,
+          CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::setExteriorLightsDefinition),
+          boost::optional<std::function<void(model::ExteriorLights *)>>()
+          );
       }
       else if (field == SCHEDULE) {
 
