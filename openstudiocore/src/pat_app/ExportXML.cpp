@@ -274,7 +274,13 @@ boost::optional<QDomElement> ExportXML::exportAlternative(QDomDocument& doc,
         numMeasures += 1;
       }
 
+      // DLM: only check for this on alternative model measures
+      if (numMeasures == 0){
+        return boost::none;
+      }
+
     } else {
+
       // regular datapoint
       for (const analysis::WorkflowStepJob& job : jobs) {
         //record the details of the measure in the xml.
@@ -283,20 +289,20 @@ boost::optional<QDomElement> ExportXML::exportAlternative(QDomDocument& doc,
           numMeasures += 1;
         }
       }
+
+      // DLM: this seems to get hit for the baseline
+      if (numMeasures == 0){
+        bool isBaseline = true;
+      }
     }
 
-    if (numMeasures == 0){
-      return boost::none;
-    }
-    
     //alternative_type
     QDomElement altTypeElem = doc.createElement("alternative_type");
     alternative.appendChild(altTypeElem);
     if ( numMeasures > 1 ) {
       QString altType = "design_alternative";
       altTypeElem.appendChild(doc.createTextNode(altType));
-    }
-    else {
+    } else {
       QString altType = "single_measure";
       altTypeElem.appendChild(doc.createTextNode(altType));
     }
