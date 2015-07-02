@@ -1348,6 +1348,11 @@ bool PatApp::openFile(const QString& fileName)
       }
 
       attachProject(project);
+
+      if (project->analysis().resultsAreInvalid()) {
+        project->clearAllResults();
+      }
+
       mainWindow->setWindowTitle("");
       mainWindow->setWindowFilePath(dir.absolutePath());
       if (m_project->analysis().isDirty())

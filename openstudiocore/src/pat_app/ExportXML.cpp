@@ -127,8 +127,7 @@ bool ExportXML::exportXML(const analysisdriver::SimpleProject project, QString x
   //std::vector<InputVariable> variables = problem.variables();
 
   //alternatives
-  int numErrors = 0;
-  QString errors;
+  QStringList errors;
   QDomElement alternativesElem = doc.createElement("alternatives");
   analysisElem.appendChild(alternativesElem);
   for (const analysis::DataPoint& datapoint : dataPoints) {
@@ -137,18 +136,19 @@ bool ExportXML::exportXML(const analysisdriver::SimpleProject project, QString x
       std::vector<analysis::WorkflowStepJob> jobs = problem.getJobsByWorkflowStep(datapoint, true);
       if ( boost::optional<QDomElement> alternativeElem = exportAlternative(doc, *reportAttr, datapoint, jobs, edaBaselineName, proposedBaselineName, certificationBaselineName) ) {
         alternativesElem.appendChild(*alternativeElem);
+      } else{
+        errors << toQString(datapoint.name());
       }
     }else{
-      numErrors += 1;
-      errors += toQString(datapoint.name());
+      errors << toQString(datapoint.name());
     }
     // drop this DataPoint's Model and SqlFile from memory
     datapoint.clearFileDataFromCache();
   }    
 
   //warn the user if summary results were missing
-  if ( numErrors > 0 ) {
-    QMessageBox::warning(pat::PatApp::instance()->mainWindow, "Export XML Report - Warnings", errors + QString(" will be skipped; summary results not available.  Make sure you've run the reporting measure 'Xcel EDA Reporting and QAQC'"));
+  if ( errors.size() > 0 ) {
+    QMessageBox::warning(pat::PatApp::instance()->mainWindow, "Export XML Report - Warnings", errors.join(", ") + QString(" will be skipped; summary results not available.  Make sure you've run the reporting measure 'Xcel EDA Reporting and QAQC' and that all external file models have at least one user defined measure."));
   }
 
   QFile file(xmlFilePath);
@@ -283,6 +283,10 @@ boost::optional<QDomElement> ExportXML::exportAlternative(QDomDocument& doc,
           numMeasures += 1;
         }
       }
+    }
+
+    if (numMeasures == 0){
+      return boost::none;
     }
     
     //alternative_type
