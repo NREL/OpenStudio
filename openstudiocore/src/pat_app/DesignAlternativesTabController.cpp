@@ -857,6 +857,20 @@ int AlternativeModelMeasureListController::count()
 
 void AlternativeModelMeasureListController::addAlternativeModelMeasure()
 {
+  if (boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project()){
+    if (project->analysis().completeDataPoints().size() > 0u){
+      QMessageBox::StandardButton test = QMessageBox::question(
+        PatApp::instance()->mainWidget(),
+        "Clear results?",
+        "Adding user defined measure will remove all results, do you want to proceed?",
+        QMessageBox::Yes | QMessageBox::No,
+        QMessageBox::No);
+      if (test == QMessageBox::No){
+        return;
+      }
+    }
+  }
+
   QJsonArray modelMeasures = this->modelMeasures();
 
   QJsonObject newMeasure;
