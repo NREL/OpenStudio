@@ -887,6 +887,25 @@ void AlternativeModelMeasureListController::addAlternativeModelMeasure()
 
 void AlternativeModelMeasureListController::alternativeModelMeasureItemChanged()
 {
+  if (boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project()){
+    if (project->analysis().completeDataPoints().size() > 0u){
+      QMessageBox::StandardButton test = QMessageBox::question(
+        PatApp::instance()->mainWidget(),
+        "Clear results?",
+        "Changing user defined measure will remove all results, do you want to proceed?",
+        QMessageBox::Yes | QMessageBox::No,
+        QMessageBox::No);
+      if (test == QMessageBox::No){
+
+        // DLM: no change was made, need to reset view to stored arguments
+        // redraw all the views
+        modelReset();
+
+        return;
+      }
+    }
+  }
+
   QObject* sender = this->sender();
 
   AlternativeModelMeasureItem* alternativeModelMeasureItem = qobject_cast<AlternativeModelMeasureItem*>(sender);
@@ -913,6 +932,20 @@ void AlternativeModelMeasureListController::alternativeModelMeasureItemChanged()
 
 void AlternativeModelMeasureListController::alternativeModelMeasureItemRemoved()
 {
+  if (boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project()){
+    if (project->analysis().completeDataPoints().size() > 0u){
+      QMessageBox::StandardButton test = QMessageBox::question(
+        PatApp::instance()->mainWidget(),
+        "Clear results?",
+        "Removing user defined measure will remove all results, do you want to proceed?",
+        QMessageBox::Yes | QMessageBox::No,
+        QMessageBox::No);
+      if (test == QMessageBox::No){
+        return;
+      }
+    }
+  }
+
   QObject* sender = this->sender();
 
   AlternativeModelMeasureItem* alternativeModelMeasureItem = qobject_cast<AlternativeModelMeasureItem*>(sender);
