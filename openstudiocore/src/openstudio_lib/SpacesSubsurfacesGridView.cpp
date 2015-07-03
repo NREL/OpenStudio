@@ -69,6 +69,7 @@
 #define SHADINGSURFACENAME "Shading Surface Name" // read only
 
 // SHADINGCONTROLS "Shading Controls"
+#define SHADINGCONTROLNAME "Shading Control Name"
 #define SHADINGTYPE "Shading Type"
 #define CONSTRUCTIONWITHSHADINGNAME "Construction with Shading Name"
 #define SHADINGDEVICEMATERIALNAME "Shading Device Material Name"
@@ -82,6 +83,7 @@
 #define SETPOINT2 "Setpoint 2"
 
 // FRAMEANDDIVIDER "Frame and Divider" 
+#define FRAMEANDDIVIDERNAME "Frame and Divider Name"
 #define FRAMEWIDTH "Frame Width"
 #define FRAMEOUTSIDEPROJECTION "Frame Outside Projection"
 #define FRAMEINSIDEPROJECTION "Frame Inside Projection"
@@ -109,8 +111,7 @@
 #define INSIDEREVEALSOLARABSORPTANCE "Inside Reveal Solar Absorptance"
 
 // DAYLIGHTINGSHELVES "Daylighting Shelves"
-#define SPACENAME "Space Name" // read only
-#define SURFACENAME "Surface Name" // read only
+#define DAYLIGHTINGSHELFNAME "Daylighting Shelves Name"
 #define WINDOWNAME "Window Name"
 #define INSIDESHELFNAME "Inside Shelf Name" // Dan note: drop down need a model method for suggestions
 #define OUTSIDESHELFNAME "Outside Shelf Name" // Dan note: drop down need a model method for suggestions
@@ -178,8 +179,8 @@ namespace openstudio {
   {
     {
       std::vector<QString> fields;
-      fields.push_back(SURFACENAME);
       fields.push_back(SUBSURFACENAME);
+      fields.push_back(SURFACENAME);
       fields.push_back(SUBSURFACETYPE);
       fields.push_back(MULTIPLIER);
       fields.push_back(CONSTRUCTION);
@@ -191,9 +192,9 @@ namespace openstudio {
 
     {
       std::vector<QString> fields;
-      fields.push_back(SURFACENAME);
       fields.push_back(SUBSURFACENAME);
-      //fields.push_back(NAME);
+      fields.push_back(SURFACENAME);
+      fields.push_back(SHADINGCONTROLNAME);
       fields.push_back(SHADINGTYPE);
       //fields.push_back(CONSTRUCTIONWITHSHADINGNAME);
       //fields.push_back(SHADINGDEVICEMATERIALNAME);
@@ -211,9 +212,9 @@ namespace openstudio {
 
     {
       std::vector<QString> fields;
-      fields.push_back(SURFACENAME);  
       fields.push_back(SUBSURFACENAME);
-      //fields.push_back(NAME);
+      fields.push_back(SURFACENAME);  
+      fields.push_back(FRAMEANDDIVIDERNAME);
       fields.push_back(FRAMEWIDTH);
       fields.push_back(FRAMEOUTSIDEPROJECTION);
       fields.push_back(FRAMEINSIDEPROJECTION);
@@ -245,9 +246,10 @@ namespace openstudio {
 
     {
       std::vector<QString> fields;
+      fields.push_back(SUBSURFACENAME);
       fields.push_back(SURFACENAME);
+      fields.push_back(DAYLIGHTINGSHELFNAME);
       //fields.push_back(WINDOWNAME);
-      //fields.push_back( NAME);
       fields.push_back(INSIDESHELFNAME);
       fields.push_back(OUTSIDESHELFNAME);
       fields.push_back(VIEWFACTORTOOUTSIDESHELF);
@@ -391,10 +393,6 @@ namespace openstudio {
             );
         }
 
-        //else if (field == SPACENAME) {
-
-        //}
-
         else if (field == SURFACENAME) {
           addNameLineEditColumn(Heading(QString(SURFACENAME), false, false),
             false,
@@ -503,20 +501,17 @@ namespace openstudio {
 
         }
 
-        else if (field == SPACENAME) {
-
-        }
-
-        else if (field == SURFACENAME) {
-
-        }
-
-        else if (field == SUBSURFACENAME) {
-
-        }
-
-        else if (field == NAME) {
-
+        else if (field == SHADINGCONTROLNAME) {
+          addNameLineEditColumn(Heading(QString(SHADINGCONTROLNAME), true, false),
+            false,
+            false,
+            CastNullAdapter<model::ShadingControl>(&model::ShadingControl::name),
+            CastNullAdapter<model::ShadingControl>(&model::ShadingControl::setName),
+            boost::optional<std::function<void(model::ShadingControl *)>>(),
+            DataSource(
+            allShadingControls,
+            true)
+            );
         }
 
         else if (field == SHADINGTYPE) {
@@ -578,47 +573,19 @@ namespace openstudio {
             );
         }
 
-        // COLUMNS BELOW WHICH ARE COMMENTED OUT ARE IN THE IDD, BUT NOT EXPOSED IN THE MODEL OBJECT
-        //else if (field == SETPOINT) {
-
-        //}
-
-        //else if (field == SHADINGCONTROLISSCHEDULED) {
-
-        //}
-
-        //else if (field == GLARECONTROLISACTIVE) {
-
-        //}
-
-        //else if (field == TYPEOFSLATANGLECONTROLFORBLINDS) {
-
-        //}
-
-        //else if (field == SLATANGLESCHEDULENAME) {
-
-        //}
-
-        //else if (field == SETPOINT2) {
-
-        //}
-
-        else if (field == SPACENAME) {
-
+        else if (field == FRAMEANDDIVIDERNAME) {
+          addNameLineEditColumn(Heading(QString(FRAMEANDDIVIDERNAME), true, false),
+            false,
+            false,
+            CastNullAdapter<model::WindowPropertyFrameAndDivider>(&model::WindowPropertyFrameAndDivider::name),
+            CastNullAdapter<model::WindowPropertyFrameAndDivider>(&model::WindowPropertyFrameAndDivider::setName),
+            boost::optional<std::function<void(model::WindowPropertyFrameAndDivider *)>>(),
+            DataSource(
+            allWindowPropertyFrameAndDividers,
+            true)
+            );
         }
-
-        else if (field == SURFACENAME) {
-
-        }
-
-        else if (field == SUBSURFACENAME) {
-
-        }
-
-        else if (field == NAME) {
-
-        }
-
+        
         else if (field == FRAMEWIDTH) {
           addValueEditColumn(Heading(QString(FRAMEWIDTH)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::frameWidth),
@@ -943,23 +910,22 @@ namespace openstudio {
             );
         }
 
-        else if (field == SPACENAME) {
-
-        }
-
-        else if (field == SURFACENAME) {
-
-        }
-
         else if (field == WINDOWNAME) {
-          // WindowPropertyFrameAndDivider
-          // name
         }
 
-        //else if (field == NAME) {
-
-        //}
-
+        else if (field == DAYLIGHTINGSHELFNAME) {
+          addNameLineEditColumn(Heading(QString(DAYLIGHTINGSHELFNAME), true, false),
+            false,
+            false,
+            CastNullAdapter<model::DaylightingDeviceShelf>(&model::DaylightingDeviceShelf::name),
+            CastNullAdapter<model::DaylightingDeviceShelf>(&model::DaylightingDeviceShelf::setName),
+            boost::optional<std::function<void(model::DaylightingDeviceShelf *)>>(),
+            DataSource(
+            allDaylightingDeviceShelfs,
+            true)
+            );
+        }
+        
         else if (field == INSIDESHELFNAME) {
           addDropZoneColumn(Heading(QString(INSIDESHELFNAME)),
             CastNullAdapter<model::DaylightingDeviceShelf>(&model::DaylightingDeviceShelf::insideShelf),
