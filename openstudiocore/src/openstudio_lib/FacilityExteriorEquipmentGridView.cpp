@@ -123,7 +123,7 @@ namespace openstudio {
   {
     {
       std::vector<QString> fields;
-      //fields.push_back(EXTERIORLIGHTSDEFINITION);
+      fields.push_back(EXTERIORLIGHTSDEFINITION);
       fields.push_back(SCHEDULE);
       fields.push_back(CONTROLOPTION);
       fields.push_back(MULTIPLIER);
