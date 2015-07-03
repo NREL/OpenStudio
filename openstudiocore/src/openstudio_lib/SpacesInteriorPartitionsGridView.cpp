@@ -177,7 +177,26 @@ namespace openstudio {
             return allModelObjects;
           }
           );
-          
+
+          std::function<std::vector<boost::optional<model::ModelObject> >(const model::Space &)> allInteriorPartitionSurfaceInteriorPartitionSurfaceGroups(
+            [allInteriorPartitionSurfaceGroups](const model::Space &t_space) {
+            std::vector<boost::optional<model::ModelObject> > allModelObjects;
+            for (auto interiorPartitionSurfaceGroup : allInteriorPartitionSurfaceGroups(t_space)) {
+              auto interiorPartitionSurfaces = interiorPartitionSurfaceGroup.cast<model::InteriorPartitionSurfaceGroup>().interiorPartitionSurfaces();
+              for (auto interiorPartitionSurface : interiorPartitionSurfaces) {
+                auto group = interiorPartitionSurface.interiorPartitionSurfaceGroup();
+                if (group) {
+                  allModelObjects.push_back(*group);
+                }
+                else {
+                  allModelObjects.emplace_back();
+                }
+              }
+            }
+            return allModelObjects;
+          }
+          );
+
           std::function<std::vector<boost::optional<model::ModelObject> >(const model::Space &)> allConstructions(
             [allInteriorPartitionSurfaces](const model::Space &t_space) {
             std::vector<boost::optional<model::ModelObject> > allModelObjects;
@@ -228,7 +247,7 @@ namespace openstudio {
             CastNullAdapter<model::InteriorPartitionSurfaceGroup>(&model::InteriorPartitionSurfaceGroup::setName),
             boost::optional<std::function<void(model::InteriorPartitionSurfaceGroup *)>>(),
             DataSource(
-            allInteriorPartitionSurfaceGroups,
+            allInteriorPartitionSurfaceInteriorPartitionSurfaceGroups,
             true)
             );
         }
