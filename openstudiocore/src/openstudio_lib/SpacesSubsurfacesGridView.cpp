@@ -292,7 +292,7 @@ namespace openstudio {
           return allModelObjects;
         }
         );
-        
+
         std::function<std::vector<model::ModelObject>(const model::Space &)> allSubSurfaces(
           [allSurfaces](const model::Space &t_space) {
           std::vector<model::ModelObject> allModelObjects;
@@ -303,7 +303,26 @@ namespace openstudio {
           return allModelObjects;
         }
         );
-        
+
+        std::function<std::vector<boost::optional<model::ModelObject> >(const model::Space &)> allSubsurfaceSurfaces(
+          [allSurfaces](const model::Space &t_space) {
+          std::vector<boost::optional<model::ModelObject> > allModelObjects;
+          for (auto surface : allSurfaces(t_space)) {
+            auto subSurfaces = surface.cast<model::Surface>().subSurfaces();
+            for (auto subSurface : subSurfaces) {
+              auto surface = subSurface.surface();
+              if (surface) {
+                allModelObjects.push_back(*surface);
+              }
+              else {
+                allModelObjects.emplace_back();
+              }
+            }
+          }
+          return allModelObjects;
+        }
+        );
+
         std::function<std::vector<boost::optional<model::ModelObject> >(const model::Space &)> allDaylightingDeviceShelfs(
           [allSubSurfaces](const model::Space &t_space) {
           std::vector<boost::optional<model::ModelObject> > allModelObjects;
@@ -408,7 +427,7 @@ namespace openstudio {
             )
             ),
             DataSource(
-            allSurfaces,
+            allSubsurfaceSurfaces,
             true
             )
             );
