@@ -120,10 +120,10 @@ namespace openstudio {
   {
     {
       std::vector<QString> fields;
+      //fields.push_back(SHADEDSURFACENAME);
       fields.push_back(SHADINGSURFACEGROUP);
       fields.push_back(CONSTRUCTION);  
       fields.push_back(TRANSMITTANCESCHEDULE);
-      //fields.push_back(SHADEDSURFACENAME);
       //fields.push_back(DAYLIGHTINGSHELFNAME);
       std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("General"), fields);
       m_categoriesAndFields.push_back(categoryAndFields);

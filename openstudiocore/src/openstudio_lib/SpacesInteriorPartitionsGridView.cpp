@@ -119,8 +119,8 @@ namespace openstudio {
   {
     {
       std::vector<QString> fields;
-      fields.push_back(INTERIORPARTITIONGROUPNAME);
       fields.push_back(INTERIORPARTITIONNAME);
+      fields.push_back(INTERIORPARTITIONGROUPNAME);
       fields.push_back(CONSTRUCTIONNAME); 
       fields.push_back(CONVERTTOINTERNALMASS);
       //fields.push_back(SURFACEAREA);
