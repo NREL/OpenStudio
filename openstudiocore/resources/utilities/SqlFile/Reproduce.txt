@@ -1,0 +1,1 @@
+Run files with corresponding version of EnergyPlus and copy of USA_CO_Golden-NREL.724666_TMY3.epw for that version (note the weather file does change across versions of EnergyPlus).

@@ -705,8 +705,7 @@
   </POLICY>
   <POLICY IddObjectType="OS_Refrigeration_Case">
     <rule IddField="Latent Case Credit Curve Name" Access="LOCKED"/>
-    <rule IddField="Defrost Energy Correction Curve Name" Access="HIDDEN"/>
-    <rule IddField="Defrost Energy Correction Curve Type" Access="LOCKED"/>
+    <rule IddField="Defrost Energy Correction Curve Name" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Refrigeration_WalkIn">
     <rule IddField="Walkin Zone Boundary" Access="HIDDEN"/>
