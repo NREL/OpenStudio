@@ -765,7 +765,6 @@ namespace openstudio {
             );
         }
         else if (field == MULTIPLIER) {
-
           addValueEditColumn(Heading(QString(MULTIPLIER)),
             multiplier,
             setMultiplier,
@@ -864,10 +863,8 @@ namespace openstudio {
             getter, setter))
             )
             );
-
         }
         else if (field == SCHEDULE) {
-
           addDropZoneColumn(Heading(QString(SCHEDULE)),
             schedule,
             setSchedule,
@@ -877,10 +874,8 @@ namespace openstudio {
             true
             )
             );
-
         }
         else if (field == ACTIVITYSCHEDULE) {
-
           addDropZoneColumn(Heading(QString(SCHEDULE)),
             activityLevelSchedule,
             setActivityLevelSchedule,
@@ -890,7 +885,6 @@ namespace openstudio {
             true
             )
             );
-
         }
         else {
           // unhandled

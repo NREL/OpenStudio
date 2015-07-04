@@ -202,7 +202,7 @@ namespace openstudio {
           );
         }
         else if (field == SURFACENAME) {
-          addNameLineEditColumn(Heading(QString(NAME), false, false),
+          addNameLineEditColumn(Heading(QString(NAME), true, false),
             false,
             false,
             CastNullAdapter<model::Surface>(&model::Surface::name),
@@ -261,7 +261,6 @@ namespace openstudio {
             );
         }
         else if (field == OUTSIDEBOUNDARYCONDITIONOBJECT) {
-
           std::function<bool(model::Surface *, const model::Surface &)> setter(
             [](model::Surface *t_surface, const model::Surface &t_arg) {
             auto copy = t_arg;
@@ -306,9 +305,6 @@ namespace openstudio {
             true
             )
             );
-        }
-        else if (field == SHADINGSURFACENAME) {
-          //std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
         }
         else {
           // unhandled

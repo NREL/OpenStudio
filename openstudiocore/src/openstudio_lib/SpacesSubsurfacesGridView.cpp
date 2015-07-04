@@ -413,7 +413,7 @@ namespace openstudio {
         }
 
         else if (field == SURFACENAME) {
-          addNameLineEditColumn(Heading(QString(SURFACENAME), false, false),
+          addNameLineEditColumn(Heading(QString(SURFACENAME), true, false),
             false,
             false,
             CastNullAdapter<model::Surface>(&model::Surface::name),
@@ -432,10 +432,8 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == SUBSURFACENAME) {
-
-          addNameLineEditColumn(Heading(QString(SUBSURFACENAME), false, false),
+          addNameLineEditColumn(Heading(QString(SUBSURFACENAME), true, false),
             false,
             false,
             CastNullAdapter<model::SubSurface>(&model::SubSurface::name),
@@ -454,7 +452,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == SUBSURFACETYPE) {
           addComboBoxColumn(Heading(QString(SUBSURFACETYPE)),
             std::function<std::string(const std::string &)>(static_cast<std::string(*)(const std::string&)>(&openstudio::toString)),
@@ -469,7 +466,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == MULTIPLIER) {
           addValueEditColumn(Heading(QString(MULTIPLIER)),
             NullAdapter(&model::SubSurface::multiplier),
@@ -482,7 +478,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == CONSTRUCTION) {
           addDropZoneColumn(Heading(QString(CONSTRUCTION)),
             CastNullAdapter<model::SubSurface>(&model::SubSurface::construction),
@@ -494,9 +489,7 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == OUTSIDEBOUNDARYCONDITIONOBJECT) {
-
           std::function<bool(model::SubSurface *, const model::SubSurface &)> setter(
             [](model::SubSurface *t_subSurface, const model::SubSurface &t_arg) {
             auto copy = t_arg;
@@ -513,13 +506,10 @@ namespace openstudio {
             true
             )
             );
-
         }
-
         else if (field == SHADINGSURFACENAME) {
 
         }
-
         else if (field == SHADINGCONTROLNAME) {
           addNameLineEditColumn(Heading(QString(SHADINGCONTROLNAME), true, false),
             false,
@@ -532,7 +522,6 @@ namespace openstudio {
             true)
             );
         }
-
         else if (field == SHADINGTYPE) {
           addComboBoxColumn<std::string, model::ShadingControl>(
             Heading(QString(SHADINGTYPE)),
@@ -547,17 +536,14 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == CONSTRUCTIONWITHSHADINGNAME) {
           // ShadingControl
           //boost::optional<Construction> construction() const;
         }
-
         else if (field == SHADINGDEVICEMATERIALNAME) {
           // ShadingControl
           //boost::optional<ShadingMaterial> shadingMaterial() const;
         }
-
         else if (field == SHADINGCONTROLTYPE) {
           addComboBoxColumn<std::string, model::ShadingControl>(
             Heading(QString(SHADINGCONTROLTYPE)),
@@ -572,7 +558,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == SCHEDULENAME) {
           std::function<bool(model::ShadingControl *, const model::Schedule &)> setter(
             [](model::ShadingControl *t_shadingControl, const model::Schedule &t_arg) {
@@ -591,7 +576,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == FRAMEANDDIVIDERNAME) {
           addNameLineEditColumn(Heading(QString(FRAMEANDDIVIDERNAME), true, false),
             false,
@@ -604,7 +588,6 @@ namespace openstudio {
             true)
             );
         }
-        
         else if (field == FRAMEWIDTH) {
           addValueEditColumn(Heading(QString(FRAMEWIDTH)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::frameWidth),
@@ -617,7 +600,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == FRAMEOUTSIDEPROJECTION) {
           addValueEditColumn(Heading(QString(FRAMEOUTSIDEPROJECTION)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::frameOutsideProjection),
@@ -630,7 +612,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == FRAMEINSIDEPROJECTION) {
           addValueEditColumn(Heading(QString(FRAMEINSIDEPROJECTION)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::frameInsideProjection),
@@ -643,7 +624,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == FRAMECONDUCTANCE) {
           addValueEditColumn(Heading(QString(FRAMECONDUCTANCE)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::frameConductance),
@@ -655,7 +635,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == FRAMEEDGEGLASSCONDUCTANCETOCENTEROFGLASSCONDUCTANCE) {
           addValueEditColumn(Heading(QString(FRAMEEDGEGLASSCONDUCTANCETOCENTEROFGLASSCONDUCTANCE)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::ratioOfFrameEdgeGlassConductanceToCenterOfGlassConductance),
@@ -668,7 +647,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == FRAMESOLARABSORPTANCE) {
           addValueEditColumn(Heading(QString(FRAMESOLARABSORPTANCE)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::insideRevealSolarAbsorptance),
@@ -681,7 +659,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == FRAMEVISIBLEABSORPTANCE) {
           addValueEditColumn(Heading(QString(FRAMEVISIBLEABSORPTANCE)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::frameVisibleAbsorptance),
@@ -694,7 +671,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == FRAMETHERMALHEMISPHERICALEMISSIVITY) {
           addValueEditColumn(Heading(QString(FRAMETHERMALHEMISPHERICALEMISSIVITY)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::frameThermalHemisphericalEmissivity),
@@ -707,7 +683,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == DIVIDERTYPE) {
           addValueEditColumn(Heading(QString(DIVIDERTYPE)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::dividerType),
@@ -720,7 +695,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == DIVIDERWIDTH) {
           addValueEditColumn(Heading(QString(DIVIDERWIDTH)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::dividerWidth),
@@ -733,7 +707,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == NUMBEROFHORIZONTALDIVIDERS) {
           addValueEditColumn(Heading(QString(NUMBEROFHORIZONTALDIVIDERS)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::numberOfHorizontalDividers),
@@ -746,7 +719,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == NUMBEROFVERTICALDIVIDERS) {
           addValueEditColumn(Heading(QString(NUMBEROFVERTICALDIVIDERS)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::numberOfVerticalDividers),
@@ -759,7 +731,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == DIVIDEROUTSIDEPROJECTION) {
           addValueEditColumn(Heading(QString(DIVIDEROUTSIDEPROJECTION)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::dividerOutsideProjection),
@@ -772,7 +743,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == DIVIDERINSIDEPROJECTION) {
           addValueEditColumn(Heading(QString(DIVIDERINSIDEPROJECTION)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::dividerInsideProjection),
@@ -785,7 +755,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == DIVIDERCONDUCTANCE) {
           addValueEditColumn(Heading(QString(DIVIDERCONDUCTANCE)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::dividerConductance),
@@ -798,7 +767,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == RATIOOFDIVIDEREDGEGLASSCONDUCTANCETOCENTEROFGLASSCONDUCTANCE) {
           addValueEditColumn(Heading(QString(RATIOOFDIVIDEREDGEGLASSCONDUCTANCETOCENTEROFGLASSCONDUCTANCE)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::ratioOfDividerEdgeGlassConductanceToCenterOfGlassConductance),
@@ -811,7 +779,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == DIVIDERSOLARABSORPTANCE) {
           addValueEditColumn(Heading(QString(DIVIDERSOLARABSORPTANCE)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::dividerSolarAbsorptance),
@@ -824,7 +791,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == DIVIDERVISIBLEABSORPTANCE) {
           addValueEditColumn(Heading(QString(DIVIDERVISIBLEABSORPTANCE)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::dividerVisibleAbsorptance),
@@ -837,7 +803,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == DIVIDERTHERMALHEMISPHERICALEMISSIVITY) {
           addValueEditColumn(Heading(QString(DIVIDERTHERMALHEMISPHERICALEMISSIVITY)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::dividerThermalHemisphericalEmissivity),
@@ -850,7 +815,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == OUTSIDEREVEALDEPTH) {
           addValueEditColumn(Heading(QString(OUTSIDEREVEALDEPTH)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::outsideRevealDepth),
@@ -863,7 +827,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == OUTSIDEREVEALSOLARABSORPTANCE) {
           addValueEditColumn(Heading(QString(OUTSIDEREVEALSOLARABSORPTANCE)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::outsideRevealSolarAbsorptance),
@@ -876,7 +839,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == INSIDESILLDEPTH) {
           addValueEditColumn(Heading(QString(INSIDESILLDEPTH)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::insideSillDepth),
@@ -889,7 +851,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == INSIDESILLSOLARABSORPTANCE) {
           addValueEditColumn(Heading(QString(INSIDESILLSOLARABSORPTANCE)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::insideSillSolarAbsorptance),
@@ -902,7 +863,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == INSIDEREVEALDEPTH) {
           addValueEditColumn(Heading(QString(INSIDEREVEALDEPTH)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::insideRevealDepth),
@@ -915,7 +875,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == INSIDEREVEALSOLARABSORPTANCE) {
           addValueEditColumn(Heading(QString(INSIDEREVEALSOLARABSORPTANCE)),
             NullAdapter(&model::WindowPropertyFrameAndDivider::insideRevealSolarAbsorptance),
@@ -928,10 +887,8 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == WINDOWNAME) {
         }
-
         else if (field == DAYLIGHTINGSHELFNAME) {
           addNameLineEditColumn(Heading(QString(DAYLIGHTINGSHELFNAME), true, false),
             false,
@@ -944,7 +901,6 @@ namespace openstudio {
             true)
             );
         }
-        
         else if (field == INSIDESHELFNAME) {
           addDropZoneColumn(Heading(QString(INSIDESHELFNAME)),
             CastNullAdapter<model::DaylightingDeviceShelf>(&model::DaylightingDeviceShelf::insideShelf),
@@ -956,7 +912,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == OUTSIDESHELFNAME) {
           addDropZoneColumn(Heading(QString(OUTSIDESHELFNAME)),
             CastNullAdapter<model::DaylightingDeviceShelf>(&model::DaylightingDeviceShelf::outsideShelf),
@@ -968,7 +923,6 @@ namespace openstudio {
             )
             );
         }
-
         else if (field == VIEWFACTORTOOUTSIDESHELF) {
           addValueEditColumn(Heading(QString(VIEWFACTORTOOUTSIDESHELF)),
             NullAdapter(&model::DaylightingDeviceShelf::viewFactortoOutsideShelf),
@@ -981,7 +935,6 @@ namespace openstudio {
             )
             );
         }
-
         else {
           // unhandled
           OS_ASSERT(false);

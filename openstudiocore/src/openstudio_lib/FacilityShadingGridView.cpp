@@ -449,7 +449,6 @@ namespace openstudio {
             );
         }
         else if (field == TYPE) {
-
           std::function<std::vector<std::string>()> choices(
             []() {
             std::vector<std::string> choices{"Building","Site"};
@@ -500,7 +499,6 @@ namespace openstudio {
             );
         }
         else if (field == TRANSMITTANCESCHEDULENAME) {
-
           std::function<bool(model::ShadingSurface *, const model::Schedule &)> setter(
             [](model::ShadingSurface *t_shadingSurface, const model::Schedule &t_schedule) {
             auto copy = t_schedule;

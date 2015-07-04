@@ -236,7 +236,6 @@ namespace openstudio {
           );
 
         if (field == SELECTED) {
-
           auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
           checkbox->setToolTip("Check to select all rows");
           connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpacesShadingGridController::selectAllStateChanged);
@@ -272,7 +271,6 @@ namespace openstudio {
             );
         }
         else if (field == TRANSMITTANCESCHEDULE) {
-
           std::function<bool(model::ShadingSurface *, const model::Schedule &)> setter(
             [](model::ShadingSurface *t_shadingSurface, const model::Schedule &t_arg) {
             auto copy = t_arg;

@@ -227,7 +227,6 @@ namespace openstudio {
           );
 
         if (field == SELECTED) {
-
           auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
           checkbox->setToolTip("Check to select all rows");
           connect(checkbox.data(), &QCheckBox::stateChanged, this, &SpacesInteriorPartitionsGridController::selectAllStateChanged);
@@ -286,7 +285,6 @@ namespace openstudio {
             );
         }
         else if (field == SURFACEAREA) {
-
           std::function<bool(model::InteriorPartitionSurface *, double)> setter(
             [](model::InteriorPartitionSurface *t_interiorPartitionSurface, double t_arg) {
             return t_interiorPartitionSurface->setSurfaceArea(t_arg);

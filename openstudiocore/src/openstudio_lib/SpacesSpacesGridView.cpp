@@ -189,7 +189,6 @@ namespace openstudio {
           );
       }
       else if (field == THERMALZONE) {
-
         std::function<bool(model::Space*, const model::ThermalZone&)> set(
           [](model::Space* s, const model::ThermalZone& tz) {
           model::ThermalZone copy = tz;
@@ -278,7 +277,6 @@ namespace openstudio {
           getter, setter))
           )
           );
-
       }
       else if (field == SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS) {
         std::function<boost::optional<model::SpaceInfiltrationEffectiveLeakageArea>(model::Space *)>  getter;
@@ -327,7 +325,6 @@ namespace openstudio {
           getter, setter))
           )
           );
-
       }
       else if (field == DESIGNSPECIFICATIONOUTDOORAIROBJECTNAME) {
         addDropZoneColumn(Heading(QString(DESIGNSPECIFICATIONOUTDOORAIROBJECTNAME)),
