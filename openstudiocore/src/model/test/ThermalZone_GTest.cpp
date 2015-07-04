@@ -538,6 +538,8 @@ TEST_F(ModelFixture, ThermalZone_Clone)
   Model m;
   ThermalZone thermalZone(m);
   
+  auto zoneAirNode = thermalZone.zoneAirNode();
+  
   ZoneControlHumidistat humidistat(m);
   thermalZone.setZoneControlHumidistat(humidistat);
   ScheduleRuleset humidSchedule(m);
@@ -573,6 +575,10 @@ TEST_F(ModelFixture, ThermalZone_Clone)
   auto heatingSchedule2 = thermostatClone->cast<ThermostatSetpointDualSetpoint>().heatingSetpointTemperatureSchedule();
   ASSERT_TRUE(heatingSchedule2);
   ASSERT_EQ(heatingSchedule,heatingSchedule2.get());
+
+  EXPECT_FALSE(thermalZoneClone.zoneAirNode().handle().isNull());
+  EXPECT_EQ(zoneAirNode,thermalZone.zoneAirNode());
+  EXPECT_FALSE(thermalZone.zoneAirNode().handle().isNull());
 }
 
 TEST_F(ModelFixture, ThermalZone_SonOfClone)

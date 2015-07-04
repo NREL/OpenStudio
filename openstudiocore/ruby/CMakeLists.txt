@@ -74,9 +74,6 @@ else() #Linux
   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/cloud/aws.rb" DESTINATION "${RUBY_MODULE_DIR}/cloud")
   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/cloud/aws.rb" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}/Ruby/cloud")
 endif()
-file(COPY "${CMAKE_SOURCE_DIR}/ruby/cloud/mongoid.yml.template" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/cloud")
-file(COPY "${CMAKE_SOURCE_DIR}/ruby/cloud/server_script.sh" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/cloud")
-file(COPY "${CMAKE_SOURCE_DIR}/ruby/cloud/worker_script.sh.template" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/cloud")
 
 # install qt plugins and fixup for apple
 
@@ -96,7 +93,7 @@ if(WIN32 OR APPLE)
   endif()
 
   install(PROGRAMS "${QPA_PLUGIN}"
-          DESTINATION "Ruby/openstudio/platforms/" 
+          DESTINATION "Ruby/openstudio/platforms/"
   )
 
   get_filename_component(QPA_PLUGIN_NAME "${QPA_PLUGIN}" NAME)
@@ -193,7 +190,7 @@ foreach(POSSIBLE_CONFIGURATION ${POSSIBLE_CONFIGURATIONS})
 
   configure_file("${CMAKE_SOURCE_DIR}/ruby/openstudio/sketchup_plugin/Startup_dev.in" "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}/SketchUp/Plugins/OpenStudio/Startup.rb")
   file(COPY "${CMAKE_SOURCE_DIR}/ruby/openstudio/sketchup_plugin/OpenStudio.rb" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}/SketchUp/Plugins")
-  
+
   if(WIN32 AND ${BUILD_WITH_OPENSSL} AND ${OPENSSL_FOUND})
     file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Products/ruby/${POSSIBLE_CONFIGURATION}")
     file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/ruby/${POSSIBLE_CONFIGURATION}")
@@ -224,12 +221,12 @@ if(ENABLE_TEST_RUNNER_TARGETS)
     add_custom_target(ruby_run_tests
       ${CMAKE_COMMAND} -E chdir "${RUBY_RUN_DIR}" "${RUBY_EXECUTABLE}" -I "${RUBY_RUBY_LIB_DIR}" -I "${RUBY_RUBY_LIB_DIR}/i386-mingw32" -I. "openstudio_test.rb"
       DEPENDS ${ALL_RUBY_BINDING_TARGETS} ResultsViewer_resources openstudio_energyplus_resources
-    )  
+    )
   else()
     add_custom_target(ruby_run_tests
       ${CMAKE_COMMAND} -E chdir "${RUBY_RUN_DIR}" "${RUBY_EXECUTABLE}" -I "${RUBY_RUBY_LIB_DIR}" -I. "openstudio_test.rb"
       DEPENDS ${ALL_RUBY_BINDING_TARGETS} ResultsViewer_resources openstudio_energyplus_resources
-    )  
+    )
   endif()
 endif()
 
