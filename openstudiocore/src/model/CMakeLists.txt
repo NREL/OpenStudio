@@ -113,6 +113,9 @@ set(${target_name}_src
   AvailabilityManagerAssignmentList.hpp
   AvailabilityManagerAssignmentList_Impl.hpp
   AvailabilityManagerAssignmentList.cpp
+  AvailabilityManagerHybridVentilation.hpp
+  AvailabilityManagerHybridVentilation_Impl.hpp
+  AvailabilityManagerHybridVentilation.cpp
   AvailabilityManagerNightCycle.hpp
   AvailabilityManagerNightCycle_Impl.hpp
   AvailabilityManagerNightCycle.cpp
@@ -1250,6 +1253,7 @@ set(${target_name}_test_src
   test/Alpha1_GTest.cpp
   test/AvailabilityManagerAssignmentList_GTest.cpp
   test/AvailabilityManagerNightCycle_GTest.cpp
+  test/AvailabilityManagerHybridVentilation_GTest.cpp
   test/Blind_GTest.cpp
   test/BoilerHotWater_GTest.cpp
   test/BoilerSteam_GTest.cpp

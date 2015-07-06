@@ -9858,7 +9858,7 @@ OS:AvailabilityManager:NightVentilation,
        \note zone component is.
 
 OS:AvailabilityManager:HybridVentilation,
-       \min-fields 17
+       \min-fields 12
        \memo Depending on zone and outdoor conditions overrides window/door opening controls
        \memo to maximize natural ventilation and turn off an HVAC system when ventilation control
        \memo conditions are met.

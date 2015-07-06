@@ -216,6 +216,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(AvailabilityManagerAssignmentList);
     REGISTER_CONSTRUCTOR(AvailabilityManagerNightCycle);
     REGISTER_CONSTRUCTOR(AvailabilityManagerScheduled);
+    REGISTER_CONSTRUCTOR(AvailabilityManagerHybridVentilation);
     REGISTER_CONSTRUCTOR(Blind);
     REGISTER_CONSTRUCTOR(BoilerHotWater);
     REGISTER_CONSTRUCTOR(BoilerSteam);
