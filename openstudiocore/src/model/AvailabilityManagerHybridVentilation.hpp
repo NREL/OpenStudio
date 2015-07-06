@@ -21,7 +21,7 @@
 #define MODEL_AVAILABILITYMANAGERHYBRIDVENTILATION_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include <model/AvailabilityManager.hpp>
 
 namespace openstudio {
 
@@ -38,7 +38,7 @@ namespace detail {
 } // detail
 
 /** AvailabilityManagerHybridVentilation is a ModelObject that wraps the OpenStudio IDD object 'OS:AvailabilityManager:HybridVentilation'. */
-class MODEL_API AvailabilityManagerHybridVentilation : public ModelObject {
+class MODEL_API AvailabilityManagerHybridVentilation : public AvailabilityManager {
  public:
   /** @name Constructors and Destructors */
   //@{

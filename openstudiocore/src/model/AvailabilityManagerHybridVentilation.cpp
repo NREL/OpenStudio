@@ -44,7 +44,7 @@ namespace detail {
   AvailabilityManagerHybridVentilation_Impl::AvailabilityManagerHybridVentilation_Impl(const IdfObject& idfObject,
                                                                                        Model_Impl* model,
                                                                                        bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : AvailabilityManager_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == AvailabilityManagerHybridVentilation::iddObjectType());
   }
@@ -52,7 +52,7 @@ namespace detail {
   AvailabilityManagerHybridVentilation_Impl::AvailabilityManagerHybridVentilation_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                                        Model_Impl* model,
                                                                                        bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AvailabilityManager_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == AvailabilityManagerHybridVentilation::iddObjectType());
   }
@@ -60,7 +60,7 @@ namespace detail {
   AvailabilityManagerHybridVentilation_Impl::AvailabilityManagerHybridVentilation_Impl(const AvailabilityManagerHybridVentilation_Impl& other,
                                                                                        Model_Impl* model,
                                                                                        bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AvailabilityManager_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& AvailabilityManagerHybridVentilation_Impl::outputVariableNames() const
@@ -268,7 +268,7 @@ namespace detail {
 } // detail
 
 AvailabilityManagerHybridVentilation::AvailabilityManagerHybridVentilation(const Model& model)
-  : ModelObject(AvailabilityManagerHybridVentilation::iddObjectType(),model)
+  : AvailabilityManager(AvailabilityManagerHybridVentilation::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AvailabilityManagerHybridVentilation_Impl>());
 
@@ -289,7 +289,7 @@ AvailabilityManagerHybridVentilation::AvailabilityManagerHybridVentilation(const
 }
 
 AvailabilityManagerHybridVentilation::AvailabilityManagerHybridVentilation(const Model& model, Schedule& ventilationControlModeSchedule)
-  : ModelObject(AvailabilityManagerHybridVentilation::iddObjectType(),model)
+  : AvailabilityManager(AvailabilityManagerHybridVentilation::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AvailabilityManagerHybridVentilation_Impl>());
 
@@ -419,7 +419,7 @@ void AvailabilityManagerHybridVentilation::resetOpeningFactorFunctionofWindSpeed
 
 /// @cond
 AvailabilityManagerHybridVentilation::AvailabilityManagerHybridVentilation(std::shared_ptr<detail::AvailabilityManagerHybridVentilation_Impl> impl)
-  : ModelObject(impl)
+  : AvailabilityManager(impl)
 {}
 /// @endcond
 

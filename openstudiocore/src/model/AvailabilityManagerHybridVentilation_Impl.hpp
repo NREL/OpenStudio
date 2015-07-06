@@ -21,7 +21,7 @@
 #define MODEL_AVAILABILITYMANAGERHYBRIDVENTILATION_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include <model/AvailabilityManager_Impl.hpp>
 
 namespace openstudio {
 namespace model {
@@ -33,7 +33,7 @@ class Curve;
 namespace detail {
 
   /** AvailabilityManagerHybridVentilation_Impl is a ModelObject_Impl that is the implementation class for AvailabilityManagerHybridVentilation.*/
-  class MODEL_API AvailabilityManagerHybridVentilation_Impl : public ModelObject_Impl {
+  class MODEL_API AvailabilityManagerHybridVentilation_Impl : public AvailabilityManager_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{

@@ -110,6 +110,9 @@ set(${target_name}_src
   AirWallMaterial.hpp
   AirWallMaterial_Impl.hpp
   AirWallMaterial.cpp
+  AvailabilityManager.hpp
+  AvailabilityManager_Impl.hpp
+  AvailabilityManager.cpp
   AvailabilityManagerAssignmentList.hpp
   AvailabilityManagerAssignmentList_Impl.hpp
   AvailabilityManagerAssignmentList.cpp
