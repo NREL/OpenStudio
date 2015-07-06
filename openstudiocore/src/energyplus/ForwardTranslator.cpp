@@ -579,6 +579,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirWallMaterial(airWallMaterial);
       break;
     }
+  case openstudio::IddObjectType::OS_AvailabilityManager_HybridVentilation :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerHybridVentilation>();
+      retVal = translateAvailabilityManagerHybridVentilation(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_WindowMaterial_Blind :
     {
       model::Blind blind = modelObject.cast<Blind>();

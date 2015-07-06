@@ -60,6 +60,7 @@ class AirTerminalSingleDuctVAVHeatAndCoolReheat;
 class AirLoopHVACZoneMixer;
 class AirLoopHVACOutdoorAirSystem;
 class AirWallMaterial;
+class AvailabilityManagerHybridVentilation;
 class Blind;
 class Building;
 class BoilerHotWater;
@@ -380,6 +381,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateAirTerminalSingleDuctVAVHeatAndCoolReheat( model::AirTerminalSingleDuctVAVHeatAndCoolReheat & modelObject );
 
   boost::optional<IdfObject> translateAirWallMaterial( model::AirWallMaterial & modelObject );
+
+  boost::optional<IdfObject> translateAvailabilityManagerHybridVentilation( model::AvailabilityManagerHybridVentilation & modelObject );
 
   boost::optional<IdfObject> translateBlind( model::Blind & modelObject );
 
