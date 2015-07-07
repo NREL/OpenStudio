@@ -70,7 +70,7 @@ protected:
 
 private:
 
-  void update();
+  void update(bool weatherFileBtnClicked = false);
 
   void loadQSettings();
 

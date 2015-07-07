@@ -21,6 +21,7 @@
 
 #include "DesignDayGridView.hpp"
 #include "ModelObjectListView.hpp"
+#include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 #include "OSDropZone.hpp"
 #include "OSItemSelectorButtons.hpp"
@@ -426,18 +427,52 @@ void LocationView::saveQSettings() const
   settings.setValue("m_lastDdyPathOpened", m_lastDdyPathOpened);  
 }
 
-void LocationView::update()
+void LocationView::update(bool weatherFileBtnClicked)
 {
   boost::optional<model::WeatherFile> weatherFile = m_model.getOptionalUniqueModelObject<model::WeatherFile>();
-  if (weatherFile){
+  if (weatherFile) {
 
-    boost::optional<openstudio::path> epwPath = weatherFile->path();
+    auto fileExists = false;
 
-    if ( !epwPath || ( epwPath && ( epwPath.get().empty() || !QFile(epwPath.get().string().c_str()).exists() ) && !QFile(m_lastEpwPathOpened).exists() ) ) {
-      m_weatherFileBtn->setText(SETWEATHERFILE);
-      clearSiteInfo();
+    if (weatherFileBtnClicked) {
+      // An epw file was loaded into the model by the user clicking m_weatherFileBtn
+      // It's not yet saved in the model, so it's path will be different
+
+      // Check that the epw file newly loaded into the unsaved model exists
+      fileExists = QFile(m_lastEpwPathOpened).exists();
     }
     else {
+
+      boost::optional<openstudio::path> epwPath = weatherFile->path();
+
+      if (epwPath) {
+        // If there is a path, and a file at that path, our job is done
+        fileExists = QFile(epwPath->string().c_str()).exists();
+
+        if (!fileExists) {
+          // Construct the absolute path as dictated by the osm location, and check for the file
+          QString savePath, filePath;
+
+          openstudio::OSAppBase * app = OSAppBase::instance();
+          if (app) {
+
+            savePath = app->currentDocument()->savePath();
+
+            if (savePath.contains(".osm")) {
+              savePath.chop(4);
+              if (epwPath) {
+                filePath = savePath + "/files/";
+                filePath += (epwPath.get().filename()).string().c_str();
+              }
+            }
+
+            fileExists = QFile(filePath).exists();
+          }
+        }
+      }
+    }
+
+    if (fileExists) {
       m_site->setName(weatherFile->city().c_str());
       m_site->setLatitude(weatherFile->latitude());
       m_site->setLongitude(weatherFile->longitude());
@@ -447,7 +482,10 @@ void LocationView::update()
       m_weatherFileBtn->setText(CHANGEWEATHERFILE);
       setSiteInfo();
     }
-
+    else {
+      m_weatherFileBtn->setText(SETWEATHERFILE);
+      clearSiteInfo();
+    }
   }
   else {
     m_weatherFileBtn->setText(SETWEATHERFILE);
@@ -585,7 +623,7 @@ void LocationView::onWeatherFileBtnClicked()
 
       m_lastEpwPathOpened = QFileInfo(fileName).absoluteFilePath();
 
-      update();
+      update(true);
 
     }catch(...){
 
@@ -609,7 +647,7 @@ void LocationView::onWeatherFileBtnClicked()
         }
       }
 
-      update();
+      update(true);
     }
   }
 }
