@@ -26,6 +26,8 @@
 namespace openstudio {
 namespace model {
 
+class Loop;
+
 namespace detail{
   class AvailabilityManager_Impl;
 }
@@ -39,6 +41,8 @@ class MODEL_API AvailabilityManager : public ModelObject {
   virtual ~AvailabilityManager() {}
 
   friend class openstudio::IdfObject;
+
+  boost::optional<Loop> loop() const;
 
   /// @cond 
 

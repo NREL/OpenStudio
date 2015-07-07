@@ -19,6 +19,8 @@
 
 #include "AvailabilityManager.hpp"
 #include "AvailabilityManager_Impl.hpp"
+#include "Loop.hpp"
+#include "Loop_Impl.hpp"
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
@@ -52,6 +54,11 @@ AvailabilityManager_Impl::AvailabilityManager_Impl(const AvailabilityManager_Imp
 {
 }
 
+boost::optional<Loop> AvailabilityManager_Impl::loop() const {
+  // TODO Make this do stuff
+  return boost::none;
+}
+
 } // detail
 
 AvailabilityManager::AvailabilityManager(IddObjectType type,const Model& model)
@@ -63,6 +70,10 @@ AvailabilityManager::AvailabilityManager(IddObjectType type,const Model& model)
 AvailabilityManager::AvailabilityManager(std::shared_ptr<detail::AvailabilityManager_Impl> p)
   : ModelObject(p)
 {}
+
+boost::optional<Loop> AvailabilityManager::loop() const {
+  return getImpl<detail::AvailabilityManager_Impl>()->loop();
+}
 
 
 } // model

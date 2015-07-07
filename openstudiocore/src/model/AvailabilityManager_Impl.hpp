@@ -25,6 +25,8 @@
 namespace openstudio {
 namespace model {
 
+class Loop;
+
 namespace detail {
 
   class MODEL_API AvailabilityManager_Impl : public ModelObject_Impl {
@@ -44,21 +46,8 @@ namespace detail {
 
     virtual ~AvailabilityManager_Impl() {}
 
-    //@}
-    /** @name Getters */
-    //@{
+    boost::optional<Loop> loop() const;
 
-
-    //@}
-    /** @name Setters */
-    //@{
-
-
-    //@}
-    /** @name Other */
-    //@{
-
-    //@}
    private:
 
     REGISTER_LOGGER("openstudio.model.AvailabilityManager");

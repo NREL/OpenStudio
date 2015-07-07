@@ -49,10 +49,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerHybrid
     idfObject.setName(*s);
   }
 
-  //// HVACAirLoopName
-  //if( auto loop = modelObject.loop() ) {
-  //  idfObject.setString(AvailabilityManager_HybridVentilationFields::HVACAirLoopName,loop->name().get());
-  //}
+  // HVACAirLoopName
+  if( auto loop = modelObject.loop() ) {
+    idfObject.setString(AvailabilityManager_HybridVentilationFields::HVACAirLoopName,loop->name().get());
+  }
 
   // ControlledZoneName
   if( auto zone = modelObject.controlledZone() ) {
