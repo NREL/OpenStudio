@@ -215,6 +215,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(AirWallMaterial);
     REGISTER_CONSTRUCTOR(AvailabilityManagerAssignmentList);
     REGISTER_CONSTRUCTOR(AvailabilityManagerNightCycle);
+    REGISTER_CONSTRUCTOR(AvailabilityManagerOptimumStart);
     REGISTER_CONSTRUCTOR(AvailabilityManagerScheduled);
     REGISTER_CONSTRUCTOR(AvailabilityManagerHybridVentilation);
     REGISTER_CONSTRUCTOR(Blind);
@@ -542,6 +543,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerAssignmentList);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerNightCycle);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerScheduled);
+    REGISTER_COPYCONSTRUCTORS(AvailabilityManagerOptimumStart);
+    REGISTER_COPYCONSTRUCTORS(AvailabilityManagerHybridVentilation);
     REGISTER_COPYCONSTRUCTORS(Blind);
     REGISTER_COPYCONSTRUCTORS(BoilerHotWater);
     REGISTER_COPYCONSTRUCTORS(BoilerSteam);

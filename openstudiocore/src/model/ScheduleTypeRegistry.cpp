@@ -164,6 +164,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"AvailabilityManagerHybridVentilation","Minimum Outdoor Ventilation Air Schedule","minimumOutdoorVentilationAirSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"AvailabilityManagerHybridVentilation","AirflowNetwork Control Type Schedule","airflowNetworkControlTypeSchedule",false,"ControlMode",0.0,1.0},
     {"AvailabilityManagerHybridVentilation","Simple Airflow Control Type Schedule","simpleAirflowControlTypeSchedule",false,"ControlMode",0.0,1.0},
+    {"AvailabilityManagerOptimumStart","Applicability Schedule","applicabilitySchedule",false,"Availability",0.0,1.0},
     {"ChillerElectricEIR","Basin Heater","basinHeaterSchedule",false,"Availability",0.0,1.0},
     {"CoilCoolingCooledBeam","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilCoolingDXSingleSpeed","Availability","availabilitySchedule",false,"Availability",0.0,1.0},

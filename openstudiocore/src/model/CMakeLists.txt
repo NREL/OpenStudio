@@ -113,6 +113,9 @@ set(${target_name}_src
   AvailabilityManager.hpp
   AvailabilityManager_Impl.hpp
   AvailabilityManager.cpp
+  AvailabilityManagerOptimumStart.hpp
+  AvailabilityManagerOptimumStart_Impl.hpp
+  AvailabilityManagerOptimumStart.cpp
   AvailabilityManagerAssignmentList.hpp
   AvailabilityManagerAssignmentList_Impl.hpp
   AvailabilityManagerAssignmentList.cpp
@@ -1257,6 +1260,7 @@ set(${target_name}_test_src
   test/AvailabilityManagerAssignmentList_GTest.cpp
   test/AvailabilityManagerNightCycle_GTest.cpp
   test/AvailabilityManagerHybridVentilation_GTest.cpp
+  test/AvailabilityManagerOptimumStart_GTest.cpp
   test/Blind_GTest.cpp
   test/BoilerHotWater_GTest.cpp
   test/BoilerSteam_GTest.cpp
