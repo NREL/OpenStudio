@@ -38,6 +38,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateAirWallMaterial.cpp
   ForwardTranslator/ForwardTranslateAvailabilityManagerHybridVentilation.cpp
   ForwardTranslator/ForwardTranslateAvailabilityManagerOptimumStart.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerDifferentialThermostat.cpp
   ForwardTranslator/ForwardTranslateBlind.cpp
   ForwardTranslator/ForwardTranslateBoilerHotWater.cpp
   ForwardTranslator/ForwardTranslateBoilerSteam.cpp

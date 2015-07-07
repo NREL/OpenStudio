@@ -62,6 +62,7 @@ class AirLoopHVACOutdoorAirSystem;
 class AirWallMaterial;
 class AvailabilityManagerHybridVentilation;
 class AvailabilityManagerOptimumStart;
+class AvailabilityManagerDifferentialThermostat;
 class Blind;
 class Building;
 class BoilerHotWater;
@@ -386,6 +387,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateAvailabilityManagerHybridVentilation( model::AvailabilityManagerHybridVentilation & modelObject );
 
   boost::optional<IdfObject> translateAvailabilityManagerOptimumStart( model::AvailabilityManagerOptimumStart & modelObject );
+
+  boost::optional<IdfObject> translateAvailabilityManagerDifferentialThermostat( model::AvailabilityManagerDifferentialThermostat & modelObject );
 
   boost::optional<IdfObject> translateBlind( model::Blind & modelObject );
 
