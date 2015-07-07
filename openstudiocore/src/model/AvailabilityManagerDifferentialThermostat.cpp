@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/AvailabilityManagerDifferentialThermostat.hpp>
-#include <model/AvailabilityManagerDifferentialThermostat_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include "AvailabilityManagerDifferentialThermostat.hpp"
+#include "AvailabilityManagerDifferentialThermostat_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_AvailabilityManager_DifferentialThermostat_FieldEnums.hxx>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

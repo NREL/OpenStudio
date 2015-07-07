@@ -20,8 +20,8 @@
 #ifndef MODEL_AVAILABILITYMANAGERHYBRIDVENTILATION_IMPL_HPP
 #define MODEL_AVAILABILITYMANAGERHYBRIDVENTILATION_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/AvailabilityManager_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "AvailabilityManager_Impl.hpp"
 
 namespace openstudio {
 namespace model {

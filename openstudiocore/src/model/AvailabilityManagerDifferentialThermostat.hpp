@@ -20,8 +20,8 @@
 #ifndef MODEL_AVAILABILITYMANAGERDIFFERENTIALTHERMOSTAT_HPP
 #define MODEL_AVAILABILITYMANAGERDIFFERENTIALTHERMOSTAT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/AvailabilityManager.hpp>
+#include "ModelAPI.hpp"
+#include "AvailabilityManager.hpp"
 
 namespace openstudio {
 
