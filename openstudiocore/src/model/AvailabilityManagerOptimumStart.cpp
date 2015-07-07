@@ -19,6 +19,8 @@
 
 #include <model/AvailabilityManagerOptimumStart.hpp>
 #include <model/AvailabilityManagerOptimumStart_Impl.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <model/ThermalZone.hpp>
@@ -231,6 +233,21 @@ AvailabilityManagerOptimumStart::AvailabilityManagerOptimumStart(const Model& mo
   : AvailabilityManager(AvailabilityManagerOptimumStart::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AvailabilityManagerOptimumStart_Impl>());
+
+  {
+    auto schedule = model.alwaysOnDiscreteSchedule();
+    setApplicabilitySchedule(schedule);
+  }
+
+  setControlType("MaximumofZoneList");
+  setMaximumValueforOptimumStartTime(6.0);
+  setControlAlgorithm("AdaptiveTemperatureGradient");
+  setConstantTemperatureGradientduringCooling(3.0);
+  setConstantTemperatureGradientduringHeating(3.0);
+  setInitialTemperatureGradientduringCooling(2.0);
+  setInitialTemperatureGradientduringHeating(2.0);
+  setConstantStartTime(2.0);
+  setNumberofPreviousDays(3);
 }
 
 IddObjectType AvailabilityManagerOptimumStart::iddObjectType() {
