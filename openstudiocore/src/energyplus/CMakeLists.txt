@@ -37,6 +37,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVHeatAndCoolReheat.cpp
   ForwardTranslator/ForwardTranslateAirWallMaterial.cpp
   ForwardTranslator/ForwardTranslateAvailabilityManagerHybridVentilation.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerOptimumStart.cpp
   ForwardTranslator/ForwardTranslateBlind.cpp
   ForwardTranslator/ForwardTranslateBoilerHotWater.cpp
   ForwardTranslator/ForwardTranslateBoilerSteam.cpp

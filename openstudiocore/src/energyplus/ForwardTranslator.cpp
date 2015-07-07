@@ -585,6 +585,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAvailabilityManagerHybridVentilation(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_AvailabilityManager_OptimumStart :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerOptimumStart>();
+      retVal = translateAvailabilityManagerOptimumStart(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_WindowMaterial_Blind :
     {
       model::Blind blind = modelObject.cast<Blind>();
