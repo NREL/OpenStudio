@@ -597,6 +597,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAvailabilityManagerDifferentialThermostat(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_AvailabilityManager_NightVentilation :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerNightVentilation>();
+      retVal = translateAvailabilityManagerNightVentilation(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_WindowMaterial_Blind :
     {
       model::Blind blind = modelObject.cast<Blind>();
