@@ -119,6 +119,9 @@ set(${target_name}_src
   AvailabilityManagerDifferentialThermostat.hpp
   AvailabilityManagerDifferentialThermostat_Impl.hpp
   AvailabilityManagerDifferentialThermostat.cpp
+  AvailabilityManagerNightVentilation.hpp
+  AvailabilityManagerNightVentilation_Impl.hpp
+  AvailabilityManagerNightVentilation.cpp
   AvailabilityManagerAssignmentList.hpp
   AvailabilityManagerAssignmentList_Impl.hpp
   AvailabilityManagerAssignmentList.cpp
@@ -1265,6 +1268,7 @@ set(${target_name}_test_src
   test/AvailabilityManagerHybridVentilation_GTest.cpp
   test/AvailabilityManagerOptimumStart_GTest.cpp
   test/AvailabilityManagerDifferentialThermostat_GTest.cpp
+  test/AvailabilityManagerNightVentilation_GTest.cpp
   test/Blind_GTest.cpp
   test/BoilerHotWater_GTest.cpp
   test/BoilerSteam_GTest.cpp

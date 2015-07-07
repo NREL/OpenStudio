@@ -9816,6 +9816,7 @@ OS:AvailabilityManager:DifferentialThermostat,
 OS:AvailabilityManager:NightVentilation,
        \memo depending on zone and outdoor conditions overrides fan schedule to do
        \memo precooling with outdoor air
+       \min-fields 9
   A1, \field Handle
        \type handle
        \required-field
