@@ -58,7 +58,7 @@
 #define SELECTED "All"
 
 // ALL GRID BUTTONS
-#define SURFACENAME "Surface Name" // read only
+#define SURFACENAME "Parent Surface Name" // read only
 #define SUBSURFACENAME "Subsurface Name"
 
 // GENERAL "General"
