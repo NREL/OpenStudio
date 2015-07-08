@@ -582,6 +582,7 @@ void InspectorDialog::init(InspectorDialogClient client)
       m_typesToDisplay.insert(IddObjectType::OS_Material_NoMass);
       m_typesToDisplay.insert(IddObjectType::OS_Material_RoofVegetation);
       m_typesToDisplay.insert(IddObjectType::OS_WindowMaterial_Blind);
+      m_typesToDisplay.insert(IddObjectType::OS_WindowMaterial_DaylightRedirectionDevice);
       m_typesToDisplay.insert(IddObjectType::OS_WindowMaterial_Gas);
       m_typesToDisplay.insert(IddObjectType::OS_WindowMaterial_GasMixture);
       m_typesToDisplay.insert(IddObjectType::OS_WindowMaterial_Glazing);

@@ -20,7 +20,6 @@
 	  <rule IddField="Shading Type" Access="LOCKED"/>
 		<rule IddField="Construction with Shading Name" Access="LOCKED"/>
 		<rule IddField="Shading Device Material Name" Access="LOCKED"/>
-		<rule IddField="Setpoint" Access="HIDDEN"/>
 		<rule IddField="Shading Control Is Scheduled" Access="HIDDEN"/>
 		<rule IddField="Glare Control Is Active" Access="HIDDEN"/>
 		<rule IddField="Type of Slat Angle Control for Blinds" Access="HIDDEN"/>
