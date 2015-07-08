@@ -2462,7 +2462,24 @@ OS:WindowMaterial:Blind,
        \minimum 0
        \maximum 180
        \default 180
-
+       
+OS:WindowMaterial:DaylightRedirectionDevice,
+       \memo This object is not in EnergyPlus, this represents a film or louver which redirects daylighting.
+       \min-fields 2
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \type alpha
+       \required-field
+       \reference MaterialNames
+       \reference WindowShadesScreensAndBlinds
+  A3; \field Daylight Redirection Device Type
+       \type choice 
+       \default Louver
+       \key Louver
+       \key Film
+       
 OS:WindowMaterial:Gas,
        \memo Gas material properties that are used in Windows or Glass Doors
        \min-fields 4

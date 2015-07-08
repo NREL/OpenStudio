@@ -221,6 +221,7 @@ IconLibrary::IconLibrary()
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_WaterUse_Equipment).value()] = new QPixmap(":images/mini_icons/sinkmini_icon_definition.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_WaterUse_Equipment_Definition).value()] = new QPixmap(":images/mini_icons/sink.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_WindowMaterial_Blind).value()] = new QPixmap(":images/mini_icons/mini_window_blinds.png"); 
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_WindowMaterial_DaylightRedirectionDevice).value()] = new QPixmap(":images/mini_icons/mini_window_daylightredirectiondevice.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_WindowMaterial_Gas).value()] = new QPixmap(":images/mini_icons/window_material_glazing.png"); //new QPixmap(":images/mini_icons/window_material_gas.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_WindowMaterial_GasMixture).value()] = new QPixmap(":images/mini_icons/window_material_glazing.png"); //new QPixmap(":images/mini_icons/window_material_gasmixture.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_WindowMaterial_Glazing).value()] = new QPixmap(":images/mini_icons/window_material_glazing.png");

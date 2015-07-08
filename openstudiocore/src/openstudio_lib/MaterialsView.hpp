@@ -78,6 +78,7 @@ class MaterialsInspectorView : public ModelObjectInspectorView
     void showMaterialNoMassInspectorView(const openstudio::model::ModelObject & modelObject);
     void showMaterialRoofVegetationInspectorView(const openstudio::model::ModelObject & modelObject);
     void showWindowMaterialBlindInspectorView(const openstudio::model::ModelObject & modelObject);
+    void showWindowMaterialDaylightRedirectionDeviceInspectorView(const openstudio::model::ModelObject & modelObject);
     void showWindowMaterialGasInspectorView(const openstudio::model::ModelObject & modelObject);
     void showWindowMaterialGasMixtureInspectorView(const openstudio::model::ModelObject & modelObject);
     void showWindowMaterialGlazingGroupThermochromicInspectorView(const openstudio::model::ModelObject & modelObject);
