@@ -1259,7 +1259,7 @@ namespace radiance {
 						boost::optional<double> outsideRevealDepth;
 						boost::optional<double> insideRevealDepth;
 						boost::optional<double> insideSillDepth;
-
+						
 						if (frameAndDivider){
 					
 							if (frameAndDivider->isOutsideRevealDepthDefaulted()){
@@ -1267,27 +1267,41 @@ namespace radiance {
 							}else{
 								outsideRevealDepth = frameAndDivider->outsideRevealDepth();
 							}
-							outsideRevealDepth = frameAndDivider->outsideRevealDepth();
-
+							
 							if (frameAndDivider->isInsideRevealDepthDefaulted()){
-								insideRevealDepth = 0.0762;
+								insideRevealDepth = 0.05;
 							}else{
+							
+								// ensure there's a reasonable minimum to contain the shade/blind
+								if (insideRevealDepth < 0.05){
+									insideRevealDepth = 0.05;
+									LOG(Warn, "inside reveal depth increased to 0.05 m");
+								}else{
 								insideRevealDepth = frameAndDivider->insideRevealDepth();
+								}
 							}
 					
 							if (frameAndDivider->isInsideSillDepthDefaulted()){
-								insideSillDepth = 0.0762;
+								insideSillDepth = 0.05;
 							}else{
+								// ensure there's a reasonable minimum to contain the shade/blind
+								if (insideSillDepth < 0.05){
+									insideSillDepth = 0.05;
+									LOG(Warn, "inside sill depth increased to 0.05 m");
+								}else{
 								insideSillDepth = frameAndDivider->insideSillDepth();
+								}
 							}
 					
 						}else{
 				
 							outsideRevealDepth = 0.0;
-							insideRevealDepth = 0.0762;
-							insideSillDepth = 0.0762;
+							insideRevealDepth = 0.05;
+							insideSillDepth = 0.05;
 					
 						}
+
+						openstudio::Vector3d offset; 
 
 						// subSurface.outwardNormal not in global coordinate system
 						outwardNormal = subSurface.outwardNormal();
@@ -1303,7 +1317,7 @@ namespace radiance {
 
 								if (outsideRevealDepth && (*outsideRevealDepth > 0.0)){
 									// window polygon is already offset from the wall
-									openstudio::Vector3d offset = outsideRevealDepth.get() * outwardNormal;
+									offset = outsideRevealDepth.get() * outwardNormal;
 									Point3d vertex1 = polygon[index1];
 									Point3d vertex2 = polygon[index1] + offset;
 									Point3d vertex3 = polygon[index2] + offset;
@@ -1333,7 +1347,7 @@ namespace radiance {
 								if (insideRevealDepth && (*insideRevealDepth > 0.0)){
 	
 									// window polygon is already offset from the wall
-									openstudio::Vector3d offset = -insideRevealDepth.get() * outwardNormal;
+									offset = -insideRevealDepth.get() * outwardNormal;
 									Point3d vertex1 = polygon[index1];
 									Point3d vertex2 = polygon[index1] + offset;
 									Point3d vertex3 = polygon[index2] + offset;
@@ -1362,7 +1376,7 @@ namespace radiance {
 								if (insideSillDepth && (*insideSillDepth > 0.0)){
 
 									// window polygon is already offset from the wall
-									openstudio::Vector3d offset = -insideSillDepth.get() * outwardNormal;
+									offset = -insideSillDepth.get() * outwardNormal;
 									Point3d vertex1 = polygon[index1];
 									Point3d vertex2 = polygon[index1] + offset;
 									Point3d vertex3 = polygon[index2] + offset;
@@ -1390,8 +1404,8 @@ namespace radiance {
 							}
 						}
 		
-
-						// polygon header (same for all)
+						// finally, write the actual window
+						// add polygon header (same for all)
 						m_radWindowGroups[windowGroup_name] += "\n# SubSurface = " + subSurface_name + "\n";
 						m_radWindowGroups[windowGroup_name] += "# Tvis = " + formatString(tVis, 3) + " (tn = " + formatString(tn, 3) + ")\n";
 
@@ -1399,11 +1413,11 @@ namespace radiance {
 
             //no shades
             
-            	// add material
+            	// add materials
               m_radMaterials.insert("void " + rMaterial + " glaz_" + rMaterial + "_tn-" + formatString(tn, 3) + "\n" + matString + "\n");
               m_radMaterialsDC.insert("void alias glaz_" + rMaterial + "_tn-" + formatString(tn, 3) + " WG0\n\n");
         
-              // write the polygon
+              // write the window polygon
               m_radWindowGroups[windowGroup_name] += "glaz_"+rMaterial+"_tn-"+formatString(tn, 3) + " polygon " + subSurface_name + "\n";
               m_radWindowGroups[windowGroup_name] += "0\n0\n" + formatString(polygon.size()*3) + "\n\n";
               for (Point3dVector::const_reverse_iterator vertex = polygon.rbegin();
@@ -1417,7 +1431,7 @@ namespace radiance {
             
             //has shades
             
-            	//add material
+            	//add materials
               m_radMaterials.insert("void " + rMaterial + " " + windowGroup_name + "\n" + matString + "\n");
               m_radMaterialsDC.insert("void light " + windowGroup_name + "\n0\n0\n3\n1 1 1\n");
               m_radMaterialsWG0.insert("void plastic " + windowGroup_name + "\n0\n0\n5\n0 0 0 0 0\n");
@@ -1442,7 +1456,7 @@ namespace radiance {
 							// TODO: get mat from object
 								
 							rMaterial = "trans";
-              matString = "0\n0\n7\n0.9 0.9 0.9 0.0 0.05 0.333 0.833\n";
+              matString = "0\n0\n7\n0.1 0.1 0.9 0.0 0.05 0.333 0.833\n";
 							
               m_radMaterials.insert("void " + rMaterial + " " + windowGroup_name + "_SHADE\n" + matString + "\n\n");
               
@@ -1457,10 +1471,12 @@ namespace radiance {
                 ++vertex)
               
               {
+              	Point3d offsetVertex = *vertex + (-0.01*outwardNormal);
+              
                 m_radWindowGroups[windowGroup_name] += "" + \
-                formatString(vertex->x()) + " " + \
-                formatString(vertex->y()) + " " + \
-                formatString(vertex->z()) + "\n";
+                formatString(offsetVertex.x()) + " " + \
+                formatString(offsetVertex.y()) + " " + \
+                formatString(offsetVertex.z()) + "\n";
               }					
 							           
             }
@@ -1640,148 +1656,7 @@ namespace radiance {
 
           }
 
-
-					// write reveal surfaces from window frame and divider, add small reveals if no framediv object
-
-// 					boost::optional<double> outsideRevealDepth;
-// 					boost::optional<double> insideRevealDepth;
-// 					boost::optional<double> insideSillDepth;
-// 			 
-// 					if (frameAndDivider){
-// 					
-// 						if (frameAndDivider->isOutsideRevealDepthDefaulted()){
-// 							outsideRevealDepth = 0.0;
-// 						}else{
-// 							outsideRevealDepth = frameAndDivider->outsideRevealDepth();
-// 						}
-// 						outsideRevealDepth = frameAndDivider->outsideRevealDepth();
-// 
-// 						if (frameAndDivider->isInsideRevealDepthDefaulted()){
-// 							insideRevealDepth = 0.05;
-// 						}else{
-// 							insideRevealDepth = frameAndDivider->insideRevealDepth();
-// 						}
-// 					
-// 						if (frameAndDivider->isInsideSillDepthDefaulted()){
-// 							insideSillDepth = 0.05;
-// 						}else{
-// 							insideSillDepth = frameAndDivider->insideSillDepth();
-// 						}
-// 					
-// 					}else{
-// 				
-// 						outsideRevealDepth = 0.0;
-// 						insideRevealDepth = 0.05;
-// 						insideSillDepth = 0.05;
-// 					
-// 					}
-// 		
-
-		
-					// subSurface.outwardNormal not in global coordinate system
-					//Vector3d outwardNormal = subSurface.outwardNormal();
-// 					boost::optional<Vector3d> optionalOutwardNormal = openstudio::getOutwardNormal(polygon);
-// 					if (optionalOutwardNormal){
-// 						Vector3d outwardNormal = *optionalOutwardNormal;
-// 
-// 						size_t N = polygon.size();
-// 						for (size_t i = 0; i < N; ++i)
-// 						{
-// 							size_t index1 = i;
-// 							size_t index2 = (i + 1) % N;
-// 
-// 							if (outsideRevealDepth && (*outsideRevealDepth > 0.0)){
-// 								// window polygon is already offset from the wall
-// 								openstudio::Vector3d offset = outsideRevealDepth.get() * outwardNormal;
-// 								Point3d vertex1 = polygon[index1];
-// 								Point3d vertex2 = polygon[index1] + offset;
-// 								Point3d vertex3 = polygon[index2] + offset;
-// 								Point3d vertex4 = polygon[index2];
-// 
-// 								// TODO: get exterior reflectance of surface
-// 								double interiorVisibleReflectance = 0.5;
-// 								double exteriorVisibleReflectance = 0.2;
-// 								//polygon header
-// 								m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance, 3) + "\n";
-// 								m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance, 3) + "\n";
-// 								// write material
-// 								m_radMaterials.insert("void plastic refl_" + formatString(exteriorVisibleReflectance, 3) + "\n0\n0\n5\n" + \
-// 																			formatString(exteriorVisibleReflectance, 3) + " " + \
-// 																			formatString(exteriorVisibleReflectance, 3) + " " + \
-// 																			formatString(exteriorVisibleReflectance, 3) + " 0 0\n\n");
-// 								// write polygon
-// 								m_radSpaces[space_name] += "refl_" + formatString(exteriorVisibleReflectance, 3) + " polygon outside_reveal_" + subSurface_name + formatString(i, 0) + "\n";
-// 								m_radSpaces[space_name] += "0\n0\n" + formatString(4 * 3) + "\n";
-// 								m_radSpaces[space_name] += formatString(vertex1.x()) + " " + formatString(vertex1.y()) + " " + formatString(vertex1.z()) + "\n\n";
-// 								m_radSpaces[space_name] += formatString(vertex2.x()) + " " + formatString(vertex2.y()) + " " + formatString(vertex2.z()) + "\n\n";
-// 								m_radSpaces[space_name] += formatString(vertex3.x()) + " " + formatString(vertex3.y()) + " " + formatString(vertex3.z()) + "\n\n";
-// 								m_radSpaces[space_name] += formatString(vertex4.x()) + " " + formatString(vertex4.y()) + " " + formatString(vertex4.z()) + "\n\n";
-// 							}
-// 
-// 							// make interior sill/reveal surfaces
-// 							if (insideRevealDepth && (*insideRevealDepth > 0.0)){
-// 	
-// 								// window polygon is already offset from the wall
-// 								openstudio::Vector3d offset = -insideRevealDepth.get() * outwardNormal;
-// 								Point3d vertex1 = polygon[index1];
-// 								Point3d vertex2 = polygon[index1] + offset;
-// 								Point3d vertex3 = polygon[index2] + offset;
-// 								Point3d vertex4 = polygon[index2];
-// 
-// 								// TODO: get exterior reflectance of surface
-// 								double interiorVisibleReflectance = 0.5;
-// 								double exteriorVisibleReflectance = 0.2;
-// 								//polygon header
-// 								m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance, 3) + "\n";
-// 								m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance, 3) + "\n";
-// 								// write material
-// 								m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3) + "\n0\n0\n5\n" + \
-// 																			formatString(interiorVisibleReflectance, 3) + " " + \
-// 																			formatString(interiorVisibleReflectance, 3) + " " + \
-// 																			formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
-// 								// write polygon
-// 								m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3) + " polygon inside_reveal_" + subSurface_name + formatString(i, 0) + "\n";
-// 								m_radSpaces[space_name] += "0\n0\n" + formatString(4 * 3) + "\n";
-// 								m_radSpaces[space_name] += formatString(vertex1.x()) + " " + formatString(vertex1.y()) + " " + formatString(vertex1.z()) + "\n\n";
-// 								m_radSpaces[space_name] += formatString(vertex2.x()) + " " + formatString(vertex2.y()) + " " + formatString(vertex2.z()) + "\n\n";
-// 								m_radSpaces[space_name] += formatString(vertex3.x()) + " " + formatString(vertex3.y()) + " " + formatString(vertex3.z()) + "\n\n";
-// 								m_radSpaces[space_name] += formatString(vertex4.x()) + " " + formatString(vertex4.y()) + " " + formatString(vertex4.z()) + "\n\n";
-// 							}
-// 
-// 							if (insideSillDepth && (*insideSillDepth > 0.0)){
-// 
-// 								// window polygon is already offset from the wall
-// 								openstudio::Vector3d offset = -insideSillDepth.get() * outwardNormal;
-// 								Point3d vertex1 = polygon[index1];
-// 								Point3d vertex2 = polygon[index1] + offset;
-// 								Point3d vertex3 = polygon[index2] + offset;
-// 								Point3d vertex4 = polygon[index2];
-// 
-// 								// TODO: get exterior reflectance of surface
-// 								double interiorVisibleReflectance = 0.5;
-// 								double exteriorVisibleReflectance = 0.2;
-// 								//polygon header
-// 								m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance, 3) + "\n";
-// 								m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance, 3) + "\n";
-// 								// write material
-// 								m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3) + "\n0\n0\n5\n" + \
-// 																			formatString(interiorVisibleReflectance, 3) + " " + \
-// 																			formatString(interiorVisibleReflectance, 3) + " " + \
-// 																			formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
-// 								// write polygon
-// 								m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3) + " polygon inside_sill_" + subSurface_name + formatString(i, 0) + "\n";
-// 								m_radSpaces[space_name] += "0\n0\n" + formatString(4 * 3) + "\n";
-// 								m_radSpaces[space_name] += formatString(vertex1.x()) + " " + formatString(vertex1.y()) + " " + formatString(vertex1.z()) + "\n\n";
-// 								m_radSpaces[space_name] += formatString(vertex2.x()) + " " + formatString(vertex2.y()) + " " + formatString(vertex2.z()) + "\n\n";
-// 								m_radSpaces[space_name] += formatString(vertex3.x()) + " " + formatString(vertex3.y()) + " " + formatString(vertex3.z()) + "\n\n";
-// 								m_radSpaces[space_name] += formatString(vertex4.x()) + " " + formatString(vertex4.y()) + " " + formatString(vertex4.z()) + "\n\n";
-// 							}
-// 						
-// 							//add shade polygon here?
-// 						
-// 						}
-//					 }
- 					} //end reveals
+ 				} //end reveals
 
       } // end surfaces
 
