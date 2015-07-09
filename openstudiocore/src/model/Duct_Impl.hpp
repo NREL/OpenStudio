@@ -70,6 +70,10 @@ namespace detail {
     // TODO: Check return type. From object lists, some candidates are: Connection.
     boost::optional<Connection> outletNode() const;
 
+    virtual unsigned inletPort() override;
+
+    virtual unsigned outletPort() override;
+
     //@}
     /** @name Setters */
     //@{

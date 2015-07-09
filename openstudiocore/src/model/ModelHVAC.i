@@ -160,6 +160,7 @@ MODELOBJECT_TEMPLATES(GroundHeatExchangerHorizontalTrench);
 MODELOBJECT_TEMPLATES(ThermalStorageIceDetailed);
 MODELOBJECT_TEMPLATES(ChillerAbsorptionIndirect);
 MODELOBJECT_TEMPLATES(ChillerAbsorption);
+MODELOBJECT_TEMPLATES(Duct);
 
 SWIG_MODELOBJECT(PortList, 1);
 SWIG_MODELOBJECT(Loop, 0);
@@ -298,6 +299,7 @@ SWIG_MODELOBJECT(GroundHeatExchangerHorizontalTrench, 1);
 SWIG_MODELOBJECT(ThermalStorageIceDetailed, 1);
 SWIG_MODELOBJECT(ChillerAbsorptionIndirect, 1);
 SWIG_MODELOBJECT(ChillerAbsorption, 1);
+SWIG_MODELOBJECT(Duct, 1);
 
 #if defined(SWIGCSHARP) || defined(SWIGJAVA)
   %inline {

@@ -298,6 +298,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(DesignSpecificationZoneAirDistribution);
     REGISTER_CONSTRUCTOR(DistrictCooling);
     REGISTER_CONSTRUCTOR(DistrictHeating);
+    REGISTER_CONSTRUCTOR(Duct);
     REGISTER_CONSTRUCTOR(ElectricEquipment);
     REGISTER_CONSTRUCTOR(ElectricEquipmentDefinition);
     REGISTER_CONSTRUCTOR(EvaporativeCoolerDirectResearchSpecial);
@@ -623,6 +624,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(DesignSpecificationZoneAirDistribution);
     REGISTER_COPYCONSTRUCTORS(DistrictCooling);
     REGISTER_COPYCONSTRUCTORS(DistrictHeating);
+    REGISTER_COPYCONSTRUCTORS(Duct);
     REGISTER_COPYCONSTRUCTORS(ElectricEquipment);
     REGISTER_COPYCONSTRUCTORS(ElectricEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(EvaporativeCoolerDirectResearchSpecial);

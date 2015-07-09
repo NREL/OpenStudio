@@ -368,6 +368,9 @@ set(${target_name}_src
   DistrictHeating.hpp
   DistrictHeating_Impl.hpp
   DistrictHeating.cpp
+  Duct.hpp
+  Duct_Impl.hpp
+  Duct.cpp
   ElectricEquipment.hpp
   ElectricEquipment_Impl.hpp
   ElectricEquipment.cpp

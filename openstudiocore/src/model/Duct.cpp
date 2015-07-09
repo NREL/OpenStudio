@@ -26,6 +26,7 @@
 #include <model/Connection.hpp>
 #include <model/Connection_Impl.hpp>
 
+#include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Duct_FieldEnums.hxx>
 
 #include <utilities/core/Assert.hpp>
@@ -75,6 +76,16 @@ namespace detail {
 
   boost::optional<Connection> Duct_Impl::outletNode() const {
     return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_DuctFields::OutletNode);
+  }
+
+  unsigned Duct_Impl::inletPort()
+  {
+    return 0;
+  }
+
+  unsigned Duct_Impl::outletPort()
+  {
+    return 0;
   }
 
   bool Duct_Impl::setInletNode(const boost::optional<Connection>& connection) {
