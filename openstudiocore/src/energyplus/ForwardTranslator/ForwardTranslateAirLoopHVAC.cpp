@@ -21,6 +21,8 @@
 #include "../../model/Model.hpp"
 #include "../../model/AirLoopHVAC.hpp"
 #include "../../model/AirLoopHVAC_Impl.hpp"
+#include "../../model/AvailabilityManager.hpp"
+#include "../../model/AvailabilityManager_Impl.hpp"
 #include "../../model/SizingSystem.hpp"
 #include "../../model/SizingSystem_Impl.hpp"
 #include "../../model/CoilCoolingWater.hpp"
@@ -314,49 +316,24 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   idfObject.setString(openstudio::AirLoopHVACFields::AvailabilityManagerListName,
                       availabilityManagerAssignmentListIdf.name().get());
 
-  Schedule availabilitySchedule = airLoopHVAC.availabilitySchedule();
-  boost::optional<IdfObject> availabilityScheduleIdf = translateAndMapModelObject(availabilitySchedule);
+  if( auto availabilityManager = airLoopHVAC.availabilityManager() ) {
+    auto idf = translateAndMapModelObject(availabilityManager.get());
+    OS_ASSERT(idf);
+    auto eg = availabilityManagerAssignmentListIdf.pushExtensibleGroup();
+    eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerObjectType,idf->iddObject().name());
+    eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName,idf->name().get());
+  } else {
+    IdfObject idf(IddObjectType::AvailabilityManager_Scheduled);
+    idf.setName(airLoopHVACName + " Availability Manager");
+    m_idfObjects.push_back(idf);
 
-  if( ! istringEqual(airLoopHVAC.nightCycleControlType(),"StayOff") )
-  {
-    nightCycleIdf = IdfObject(openstudio::IddObjectType::AvailabilityManager_NightCycle);
-    nightCycleIdf->setName(airLoopHVACName + " NightCycle Manager");
-    m_idfObjects.push_back(nightCycleIdf.get());
+    idf.setString(openstudio::AvailabilityManager_ScheduledFields::ScheduleName,
+      airLoopHVAC.availabilitySchedule().name().get());
 
-    nightCycleIdf->setString(openstudio::AvailabilityManager_NightCycleFields::ControlType,airLoopHVAC.nightCycleControlType());
-    nightCycleIdf->setString(openstudio::AvailabilityManager_NightCycleFields::ApplicabilityScheduleName,alwaysOnIdf.name().get());
-
-    nightCycleIdf->setDouble(openstudio::AvailabilityManager_NightCycleFields::ThermostatTolerance,1.0);
-    nightCycleIdf->setUnsigned(openstudio::AvailabilityManager_NightCycleFields::CyclingRunTime,3600);
-
-    // ForwardTranslateFanX will write set the Fan's availability schedule to AirLoopHVAC::availabilitySchedule() if the fan is connected to an AirLoopHVAC object.
-    if( availabilityScheduleIdf )
-    {
-      nightCycleIdf->setString(openstudio::AvailabilityManager_NightCycleFields::FanScheduleName,availabilityScheduleIdf->name().get());
-    }
-
-    availabilityManagerAssignmentListIdf.setString(1 + openstudio::AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerObjectType,
-                                                nightCycleIdf->iddObject().name());
-    availabilityManagerAssignmentListIdf.setString(1 + openstudio::AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName,
-                                                nightCycleIdf->name().get());
-  }
-  else
-  {
-    IdfObject availabilityManagerScheduledIdf = IdfObject(openstudio::IddObjectType::AvailabilityManager_Scheduled);
-    availabilityManagerScheduledIdf.setName(airLoopHVACName + " Availability Manager");
-    m_idfObjects.push_back(availabilityManagerScheduledIdf);
-
-    if( availabilityScheduleIdf )
-    {
-      availabilityManagerScheduledIdf.setString(openstudio::AvailabilityManager_ScheduledFields::ScheduleName,
-                                                availabilityScheduleIdf->name().get());
-    }
-
-    availabilityManagerAssignmentListIdf.setString(1 + openstudio::AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerObjectType,
-                                                availabilityManagerScheduledIdf.iddObject().name());
-    availabilityManagerAssignmentListIdf.setString(1 + openstudio::AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName,
-                                                availabilityManagerScheduledIdf.name().get());
-  }
+    auto eg = availabilityManagerAssignmentListIdf.pushExtensibleGroup();
+    eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerObjectType,idf.iddObject().name());
+    eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName,idf.name().get());
+  } 
 
   // Design Supply Air Flow Rate
   if( airLoopHVAC.isDesignSupplyAirFlowRateAutosized() )
