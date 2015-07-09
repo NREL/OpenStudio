@@ -38,7 +38,7 @@ class RemoveLoadsDirectlyAssignedToSpaces < OpenStudio::Ruleset::ModelUserScript
     super(model, runner, user_arguments)
 
     # this was added to give the user a chance to cancel the operation if they inadvertently hit it
-    continue_operation = runner.registerWarning("This will remove all loads directly assigned to a space, click No to cancel.")
+    continue_operation = runner.yesNoPrompt("This will remove all loads directly assigned to a space, click No to cancel.")
     if not continue_operation
       puts "Operation canceled, your model was not altered."
       runner.registerAsNotApplicable("Operation canceled, your model was not altered.")

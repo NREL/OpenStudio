@@ -119,6 +119,8 @@ namespace detail {
 
     ModelObject clone(Model model) const override;
 
+    bool isConnected(const ModelObject & modelObject);
+
    private:
 
     REGISTER_LOGGER("openstudio.model.Node");

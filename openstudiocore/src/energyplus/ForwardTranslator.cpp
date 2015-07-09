@@ -602,6 +602,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // no-op
       return retVal;
     }
+  case openstudio::IddObjectType::OS_Chiller_Absorption :
+    {
+      auto mo = modelObject.cast<ChillerAbsorption>();
+      retVal = translateChillerAbsorption(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Chiller_Absorption_Indirect :
+    {
+      auto mo = modelObject.cast<ChillerAbsorptionIndirect>();
+      retVal = translateChillerAbsorptionIndirect(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_Chiller_Electric_EIR :
     {
       model::ChillerElectricEIR chiller = modelObject.cast<ChillerElectricEIR>();
@@ -652,6 +664,16 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
         retVal = translateCoilCoolingDXTwoSpeedWithoutUnitary(coil);
       } else {
         retVal = translateCoilCoolingDXTwoSpeed(coil);
+      }
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Cooling_DX_TwoStageWithHumidityControlMode :
+    {
+      auto coil = modelObject.cast<CoilCoolingDXTwoStageWithHumidityControlMode>();
+      if( this->isHVACComponentWithinUnitary(coil) ) {
+        retVal = translateCoilCoolingDXTwoStageWithHumidityControlModeWithoutUnitary(coil);
+      } else {
+        retVal = translateCoilCoolingDXTwoStageWithHumidityControlMode(coil);
       }
       break;
     }
@@ -748,6 +770,24 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::CoilHeatingWaterToAirHeatPumpEquationFit coil = modelObject.cast<CoilHeatingWaterToAirHeatPumpEquationFit>();
       retVal = translateCoilHeatingWaterToAirHeatPumpEquationFit(coil);
+      break;
+    }
+  case openstudio::IddObjectType::OS_CoilPerformance_DX_Cooling :
+    {
+      auto mo = modelObject.cast<CoilPerformanceDXCooling>();
+      retVal = translateCoilPerformanceDXCooling(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_CoilSystem_Cooling_Water_HeatExchangerAssisted :
+    {
+      auto mo = modelObject.cast<CoilSystemCoolingWaterHeatExchangerAssisted>();
+      retVal = translateCoilSystemCoolingWaterHeatExchangerAssisted(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_CoilSystem_Cooling_DX_HeatExchangerAssisted :
+    {
+      auto mo = modelObject.cast<CoilSystemCoolingDXHeatExchangerAssisted>();
+      retVal = translateCoilSystemCoolingDXHeatExchangerAssisted(mo);
       break;
     }
   case openstudio::IddObjectType::OS_Coil_WaterHeating_Desuperheater :
@@ -1091,10 +1131,28 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       break;
     }
     
+  case openstudio::IddObjectType::OS_GroundHeatExchanger_HorizontalTrench :
+    {
+      auto mo = modelObject.cast<GroundHeatExchangerHorizontalTrench>();
+      retVal = translateGroundHeatExchangerHorizontalTrench(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_GroundHeatExchanger_Vertical :
     {
       model::GroundHeatExchangerVertical groundHeatExchangerVertical = modelObject.cast<GroundHeatExchangerVertical>();
       retVal = translateGroundHeatExchangerVertical(groundHeatExchangerVertical);
+      break;
+    }
+  case openstudio::IddObjectType::OS_HeaderedPumps_ConstantSpeed :
+    {
+      auto mo = modelObject.cast<HeaderedPumpsConstantSpeed>();
+      retVal = translateHeaderedPumpsConstantSpeed(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_HeaderedPumps_VariableSpeed :
+    {
+      auto mo = modelObject.cast<HeaderedPumpsVariableSpeed>();
+      retVal = translateHeaderedPumpsVariableSpeed(mo);
       break;
     }
   case openstudio::IddObjectType::OS_HeatBalanceAlgorithm :
@@ -1676,10 +1734,22 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateTableMultiVariableLookup(table);
       break;
     }
+  case openstudio::IddObjectType::OS_TemperingValve :
+    {
+      auto mo = modelObject.cast<TemperingValve>();
+      retVal = translateTemperingValve(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_ThermalZone :
     {
       model::ThermalZone zone = modelObject.cast<ThermalZone>();
       retVal = translateThermalZone(zone);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ThermalStorage_Ice_Detailed :
+    {
+      auto mo = modelObject.cast<ThermalStorageIceDetailed>();
+      retVal = translateThermalStorageIceDetailed(mo);
       break;
     }
   case openstudio::IddObjectType::OS_ThermostatSetpoint_DualSetpoint :

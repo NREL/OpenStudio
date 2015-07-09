@@ -65,10 +65,13 @@ class Building;
 class BoilerHotWater;
 class BoilerSteam;
 class CFactorUndergroundWallConstruction;
+class ChillerAbsorption;
+class ChillerAbsorptionIndirect;
 class ChillerElectricEIR;
 class CoilCoolingDXMultiSpeed;
 class CoilCoolingDXSingleSpeed;
 class CoilCoolingDXTwoSpeed;
+class CoilCoolingDXTwoStageWithHumidityControlMode;
 class CoilCoolingDXVariableRefrigerantFlow;
 class CoilCoolingWater;
 class CoilCoolingWaterToAirHeatPumpEquationFit;
@@ -80,6 +83,9 @@ class CoilHeatingGas;
 class CoilHeatingGasMultiStage;
 class CoilHeatingWater;
 class CoilHeatingWaterToAirHeatPumpEquationFit;
+class CoilPerformanceDXCooling;
+class CoilSystemCoolingDXHeatExchangerAssisted;
+class CoilSystemCoolingWaterHeatExchangerAssisted;
 class CoilWaterHeatingDesuperheater;
 class Construction;
 class ConstructionWithInternalSource;
@@ -130,7 +136,10 @@ class FFactorGroundFloorConstruction;
 class Gas;
 class GasEquipment;
 class GasMixture;
+class GroundHeatExchangerHorizontalTrench;
 class GroundHeatExchangerVertical;
+class HeaderedPumpsConstantSpeed;
+class HeaderedPumpsVariableSpeed;
 class HeatBalanceAlgorithm;
 class HeatExchangerAirToAirSensibleAndLatent;
 class HeatExchangerFluidToFluid;
@@ -227,7 +236,9 @@ class SteamEquipment;
 class SubSurface;
 class Surface;
 class TableMultiVariableLookup;
+class TemperingValve;
 class ThermalZone;
+class ThermalStorageIceDetailed;
 class ThermostatSetpointDualSetpoint;
 class Timestep;
 class Version;
@@ -381,6 +392,10 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateCFactorUndergroundWallConstruction( model::CFactorUndergroundWallConstruction & modelObject );
 
+  boost::optional<IdfObject> translateChillerAbsorption( model::ChillerAbsorption & modelObject );
+
+  boost::optional<IdfObject> translateChillerAbsorptionIndirect( model::ChillerAbsorptionIndirect & modelObject );
+
   boost::optional<IdfObject> translateChillerElectricEIR( model::ChillerElectricEIR & modelObject );
 
   boost::optional<IdfObject> translateCoilCoolingDXSingleSpeed( model::CoilCoolingDXSingleSpeed & modelObject );
@@ -392,6 +407,10 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateCoilCoolingDXTwoSpeed( model::CoilCoolingDXTwoSpeed & modelObject );
 
   boost::optional<IdfObject> translateCoilCoolingDXTwoSpeedWithoutUnitary( model::CoilCoolingDXTwoSpeed & modelObject );
+
+  boost::optional<IdfObject> translateCoilCoolingDXTwoStageWithHumidityControlMode( model::CoilCoolingDXTwoStageWithHumidityControlMode & modelObject );
+
+  boost::optional<IdfObject> translateCoilCoolingDXTwoStageWithHumidityControlModeWithoutUnitary( model::CoilCoolingDXTwoStageWithHumidityControlMode & modelObject );
 
   boost::optional<IdfObject> translateCoilCoolingDXVariableRefrigerantFlow( model::CoilCoolingDXVariableRefrigerantFlow & modelObject );
 
@@ -416,6 +435,12 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateCoilHeatingWater( model::CoilHeatingWater & modelObject );
 
   boost::optional<IdfObject> translateCoilHeatingWaterToAirHeatPumpEquationFit( model::CoilHeatingWaterToAirHeatPumpEquationFit & modelObject );
+
+  boost::optional<IdfObject> translateCoilPerformanceDXCooling( model::CoilPerformanceDXCooling & modelObject );
+
+  boost::optional<IdfObject> translateCoilSystemCoolingDXHeatExchangerAssisted( model::CoilSystemCoolingDXHeatExchangerAssisted & modelObject );
+
+  boost::optional<IdfObject> translateCoilSystemCoolingWaterHeatExchangerAssisted( model::CoilSystemCoolingWaterHeatExchangerAssisted & modelObject );
 
   boost::optional<IdfObject> translateCoilWaterHeatingDesuperheater( model::CoilWaterHeatingDesuperheater & modelObject );
 
@@ -517,7 +542,13 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateGasMixture( model::GasMixture & modelObject );
 
+  boost::optional<IdfObject> translateGroundHeatExchangerHorizontalTrench( model::GroundHeatExchangerHorizontalTrench & modelObject );
+
   boost::optional<IdfObject> translateGroundHeatExchangerVertical( model::GroundHeatExchangerVertical & modelObject );
+
+  boost::optional<IdfObject> translateHeaderedPumpsConstantSpeed( model::HeaderedPumpsConstantSpeed & modelObject );
+
+  boost::optional<IdfObject> translateHeaderedPumpsVariableSpeed( model::HeaderedPumpsVariableSpeed & modelObject );
 
   boost::optional<IdfObject> translateHeatBalanceAlgorithm( model::HeatBalanceAlgorithm & modelObject );
 
@@ -708,6 +739,10 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateSurface( model::Surface & modelObject );
 
   boost::optional<IdfObject> translateTableMultiVariableLookup( model::TableMultiVariableLookup & modelObject );
+
+  boost::optional<IdfObject> translateTemperingValve( model::TemperingValve & modelObject );
+
+  boost::optional<IdfObject> translateThermalStorageIceDetailed( model::ThermalStorageIceDetailed & modelObject );
 
   boost::optional<IdfObject> translateThermalZone( model::ThermalZone & modelObject );
 

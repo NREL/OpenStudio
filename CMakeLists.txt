@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 2.8.11)
 project(OpenStudio)
 
 set(CMAKE_VERSION_MAJOR 1)
-set(CMAKE_VERSION_MINOR 7)
-set(CMAKE_VERSION_PATCH 5)
+set(CMAKE_VERSION_MINOR 8)
+set(CMAKE_VERSION_PATCH 1)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
@@ -114,19 +114,19 @@ if(UNIX)
 elseif(WIN32)
   if(CMAKE_CL_64)
     set(OPENSSL_ARCH 64)
-    set(OPENSSL_EXPECTED_HASH 33b9a5f93e4a50594bff8e30801c827c)
+    set(OPENSSL_EXPECTED_HASH 3f9c88523634c7b1e27f4026e7c3f3ee)
   else()
     set(OPENSSL_ARCH 32)
-    set(OPENSSL_EXPECTED_HASH a1c92599c51897dce7128edb3cc5c888)
+    set(OPENSSL_EXPECTED_HASH fb2aa1a8ceb85f68055044a85f1dbc94)
   endif()
-  set(OPENSSL_VERSION "1.0.1h")
+  set(OPENSSL_VERSION "1.0.2a")
   set(OPENSSL_PATH "OpenSSL-Win${OPENSSL_ARCH}")
   if(EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip")
     file(MD5 "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" OPENSSL_HASH)
   endif()
   if(NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" OR NOT "${OPENSSL_HASH}" MATCHES "${OPENSSL_EXPECTED_HASH}")
     message(STATUS "Downloading OpenSSL ${OPENSSL_VERSION} (${OPENSSL_ARCH}-bit)")
-    file(DOWNLOAD "http://developer.nrel.gov/downloads/buildings/openstudio/src/OpenSSL-Win${OPENSSL_ARCH}-${OPENSSL_VERSION}.zip" "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${OPENSSL_EXPECTED_HASH})
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/OpenSSL-Win${OPENSSL_ARCH}-${OPENSSL_VERSION}.zip" "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${OPENSSL_EXPECTED_HASH})
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
@@ -148,6 +148,8 @@ if(MSVC)
     message(WARNING "Update 4 for Visual Studio 2013 is strongly recommended")
   elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.31101")
     # VS2013 Update 4: no-op
+  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.40418")
+    # VS2013 Update 5: no-op
   endif()
 
   # Build with Multiple Processes
@@ -161,7 +163,7 @@ if(APPLE)
   if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
     message(FATAL_ERROR "OSX Deployment Target Must Be Set")
   endif()
-  
+
   set(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "Arch" FORCE)
 
   if(NOT CMAKE_OSX_SYSROOT)
@@ -263,15 +265,15 @@ if(MSVC)
       get_filename_component(GPDIR "${PDIR}" DIRECTORY)
       if(HAS_OPENGL_INSTALL)
         if(GPDIR MATCHES ".*opengl.*")
-	  list(APPEND QT_HINT_DIR "${GPDIR}")
-	endif()
+          list(APPEND QT_HINT_DIR "${GPDIR}")
+        endif()
       else()
-	list(APPEND QT_HINT_DIR "${GPDIR}")
+        list(APPEND QT_HINT_DIR "${GPDIR}")
       endif()
     endif()
   endforeach()
 
-  # we want sort, this will do both a lexicographical sort of the version numbers, putting the newest last and picking the 
+  # we want sort, this will do both a lexicographical sort of the version numbers, putting the newest last and picking the
   # longest (aka opengl) last. Then we sort it in reverse to prefer the highest version numbers with opengl
   list(SORT QT_HINT_DIR)
   list(REVERSE QT_HINT_DIR)
@@ -336,7 +338,7 @@ ProcessorCount(CPUCOUNT)
 if(CPUCOUNT EQUAL 0)
   set(CPUCOUNT 1)
 endif()
-  
+
 if(UNIX)
   if(CPUCOUNT EQUAL 1)
     set(BOOST_CPUCOUNT "1")
@@ -399,7 +401,7 @@ if(MSVC AND NOT Boost_FOUND AND EXISTS "C:/local/boost_1_55_0/")
   if(MSVC12)
     set(BOOST_MSVC 12.0)
   endif()
-  
+
   if(EXISTS "C:/local/boost_1_55_0/lib${BOOST_ARCH}-msvc-${BOOST_MSVC}")
     set(BOOST_ROOT "C:/local/boost_1_55_0")
     set(BOOST_LIBRARYDIR "C:/local/boost_1_55_0/lib${BOOST_ARCH}-msvc-${BOOST_MSVC}")
@@ -493,14 +495,14 @@ endif()
 
 if(BUILD_RUBY AND UNIX)
   ExternalProject_Add(Ruby
-    URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p594.tar.gz
-    URL_MD5 a9caa406da5d72f190e28344e747ee74
+    URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0-p645.tar.gz
+    URL_MD5 49919bba0c855eaf8e247108c7933a62
     CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && sh -c "./configure --enable-shared --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install CFLAGS=\"-fPIC\""
     BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE)
     INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE) install
   )
   set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
-  
+
   if(APPLE)
     set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby.2.0.0.dylib)
   else()
@@ -512,8 +514,8 @@ endif()
 if(WIN32)
   if(CMAKE_CL_64)
     ExternalProject_Add(Ruby
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p594-aws-win64.zip
-      URL_MD5 18b4ea46e7dec09de006ab9cb75ef9de
+      URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0-p645-aws-win64.zip
+      URL_MD5 4ad4ddc213a623b74f18f4c486651bc3
       PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/x64-mingw32.patch
       CONFIGURE_COMMAND ""
       BUILD_COMMAND ""
@@ -525,8 +527,8 @@ if(WIN32)
     set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/libx64-msvcrt-ruby200.dll.a")
   else()
     ExternalProject_Add(Ruby
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p594-aws-win32.zip
-      URL_MD5 f5dc50a99ddd5f0f93c47546bd21c396
+      URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0-p645-aws-win32.zip
+      URL_MD5 712839ed5e7c21043026420ddd82b88c
       PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/i386-mingw32.patch
       CONFIGURE_COMMAND ""
       BUILD_COMMAND ""
@@ -537,6 +539,17 @@ if(WIN32)
     set(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
     set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/libmsvcrt-ruby200.dll.a")
   endif()
+
+  # Install required gems
+  set(ENV{BUNDLE_PATH} "${CMAKE_BUILD_DIR}/Ruby-prefix/src/Ruby/lib/ruby/gems/2.0.0")
+  add_custom_command(TARGET Ruby
+                     POST_BUILD
+                     COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/bundle" "install" "--no-cache"
+                     COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/bundle" "clean" "--force"
+                     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/dependencies/ruby"
+                     COMMENT "Installing gems..."
+  )
+
 endif()
 
 
@@ -568,10 +581,10 @@ if(BUILD_SWIG)
     else()
       # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
       ExternalProject_Add(SWIG
-        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/swig-3.0.0.tar.gz
-        URL_MD5 9c8278fad527dda4bf38edffe5acc394
+        URL http://openstudio-resources.s3.amazonaws.com/dependencies/swig-3.0.5.tar.gz
+        URL_MD5 dcb9638324461b9baba8e044fe59031d
 
-        PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/swig_ruby_patch.patch && cp ${CMAKE_SOURCE_DIR}/dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && ../SWIG/Tools/pcre-build.sh
+        PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && ../SWIG/Tools/pcre-build.sh
         CONFIGURE_COMMAND ../SWIG/configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install
         BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && $(MAKE)
         INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && $(MAKE) install
@@ -581,8 +594,8 @@ if(BUILD_SWIG)
   else()
     # SWIG requires MinGW to compile on windows, so we just copy in the prebuilt binary
     ExternalProject_Add(SWIG
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/swigwin-3.0.0.zip
-      URL_MD5 c1d85fee2421d4edac552923fc4e5bde
+      URL http://openstudio-resources.s3.amazonaws.com/dependencies/swigwin-3.0.5.zip
+      URL_MD5 fd2e050f29e2a00b2348f5f7d3476490
       CONFIGURE_COMMAND ""
       BUILD_COMMAND ""
       INSTALL_COMMAND ""
@@ -595,10 +608,10 @@ if(BUILD_BOOST)
   if(APPLE)
     set(apple-flags "-std=c11 -std=c++11 -stdlib=libc++")
     ExternalProject_Add(Boost
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
+      URL http://openstudio-resources.s3.amazonaws.com/dependencies/boost_1_55_0.tar.gz
       URL_MD5 93780777cfbf999a600f62883bd54b17
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./bootstrap.sh
-      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51.patch && ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/fchmodat.patch 
+      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51.patch && ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/fchmodat.patch
       BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 toolset=clang cxxflags=${apple-flags} linkflags=${apple-flags} variant=debug,release define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${BOOST_CPUCOUNT} install
       INSTALL_COMMAND ""
     )
@@ -606,7 +619,7 @@ if(BUILD_BOOST)
     set(BOOST_LIBRARYDIR ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install/lib)
   elseif(UNIX)
     ExternalProject_Add(Boost
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
+      URL http://openstudio-resources.s3.amazonaws.com/dependencies/boost_1_55_0.tar.gz
       URL_MD5 93780777cfbf999a600f62883bd54b17
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./bootstrap.sh
       BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 cxxflags=-fPIC link=static variant=debug,release define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${BOOST_CPUCOUNT} install
@@ -625,7 +638,7 @@ if(BUILD_BOOST)
 
     if(CMAKE_CL_64)
       ExternalProject_Add(Boost
-        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
+        URL http://openstudio-resources.s3.amazonaws.com/dependencies/boost_1_55_0.tar.gz
         URL_MD5 93780777cfbf999a600f62883bd54b17
         CONFIGURE_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && bootstrap.bat"
         PATCH_COMMAND "${PATCH_EXE}" "${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost/boost/archive/iterators/transform_width.hpp" "${CMAKE_SOURCE_DIR}/dependencies/Boost/transform_width.diff"
@@ -634,7 +647,7 @@ if(BUILD_BOOST)
       )
     else()
       ExternalProject_Add(Boost
-        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
+        URL http://openstudio-resources.s3.amazonaws.com/dependencies/boost_1_55_0.tar.gz
         URL_MD5 93780777cfbf999a600f62883bd54b17
         CONFIGURE_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && bootstrap.bat"
         PATCH_COMMAND "${PATCH_EXE}" "${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost/boost/archive/iterators/transform_width.hpp" "${CMAKE_SOURCE_DIR}/dependencies/Boost/transform_width.diff"
@@ -649,7 +662,7 @@ if(BUILD_BOOST)
 endif()
 
 ExternalProject_Add(GoogleTest
-  URL http://developer.nrel.gov/downloads/buildings/openstudio/src/gtest-1.7.0.tar.gz
+  URL http://openstudio-resources.s3.amazonaws.com/dependencies/gtest-1.7.0.tar.gz
   URL_MD5 bad74f626d18f724cad4c9fe2e6ef27d
   PATCH_COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_SOURCE_DIR}/dependencies/GoogleTest ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest
   INSTALL_COMMAND ""
@@ -694,7 +707,7 @@ if(BUILD_QT)
     # make (and attempt to pass parameters to the child make jobs) is breaking our ability to install
     # the below code circumvents that by calling make through a call to "sh"
     ExternalProject_Add(Qt
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-5.3.2.tar.gz
+      URL http://openstudio-resources.s3.amazonaws.com/dependencies/qt-everywhere-opensource-src-5.3.2.tar.gz
       URL_MD5 febb001129927a70174467ecb508a682
       CONFIGURE_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && ./configure -v ${APPLE_SDK_COMMAND} -platform macx-clang-64 -release -opensource -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install"
       PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/qt/qmacstyle_mac.patch
@@ -704,7 +717,7 @@ if(BUILD_QT)
   elseif(UNIX)
     message(WARNING "Qt5 super build is currently untested")
     ExternalProject_Add(Qt
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-5.3.2.tar.gz
+      URL http://openstudio-resources.s3.amazonaws.com/dependencies/qt-everywhere-opensource-src-5.3.2.tar.gz
       URL_MD5 febb001129927a70174467ecb508a682
       CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/configure -debug-and-release -opensource -confirm-license -shared -qt-sql-sqlite -qt-xcb -openssl -nomake examples -nomake tests -plugindir ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/share/openstudio/qtplugins -qtlibinfix OpenStudio -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install
       BUILD_COMMAND $(MAKE) -f ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build/Makefile

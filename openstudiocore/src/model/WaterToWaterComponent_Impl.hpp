@@ -90,11 +90,26 @@ class MODEL_API WaterToWaterComponent_Impl : public HVACComponent_Impl
 
   bool removeFromSecondaryPlantLoop();
 
+  virtual unsigned tertiaryInletPort() const;
+
+  virtual unsigned tertiaryOutletPort() const;
+
+  boost::optional<PlantLoop> tertiaryPlantLoop() const;
+
+  bool removeFromTertiaryPlantLoop();
+
+  virtual bool addToTertiaryNode(Node & node);
+
+  boost::optional<ModelObject> tertiaryInletModelObject() const;
+
+  boost::optional<ModelObject> tertiaryOutletModelObject() const;
+
   protected:
 
   friend class Model_Impl;
 
   mutable boost::optional<PlantLoop> m_secondaryPlantLoop;
+  mutable boost::optional<PlantLoop> m_tertiaryPlantLoop;
 
   private:
 

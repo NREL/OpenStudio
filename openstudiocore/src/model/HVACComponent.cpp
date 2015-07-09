@@ -27,6 +27,12 @@
 #include "AirLoopHVAC_Impl.hpp"
 #include "PlantLoop.hpp"
 #include "PlantLoop_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "Splitter.hpp"
+#include "Splitter_Impl.hpp"
+#include "Mixer.hpp"
+#include "Mixer_Impl.hpp"
 #include "AirLoopHVACOutdoorAirSystem.hpp"
 #include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "Model.hpp"
@@ -157,6 +163,222 @@ namespace detail {
     }
 
     return boost::none;
+  }
+
+  bool HVACComponent_Impl::removeFromLoop( const HVACComponent & systemStartComponent, 
+    const HVACComponent & systemEndComponent,
+    unsigned componentInletPort,
+    unsigned componentOutletPort )
+  {
+    auto _model = model();
+    auto thisObject = getObject<HVACComponent>();
+    
+    if( systemStartComponent.model() != _model ) return false;
+    if( systemEndComponent.model() != _model ) return false;
+
+    auto inletComponent = connectedObject( componentInletPort );
+    auto outletComponent = connectedObject( componentOutletPort );
+    auto inletComponentOutletPort = connectedObjectPort( componentInletPort );
+    auto outletComponentInletPort = connectedObjectPort( componentOutletPort );
+
+    if( ! inletComponent ) return false;
+    if( ! outletComponent ) return false;
+    if( ! inletComponentOutletPort ) return false;
+    if( ! outletComponentInletPort ) return false;
+
+    auto inletNode = inletComponent->optionalCast<Node>();
+    auto outletNode = outletComponent->optionalCast<Node>();
+    boost::optional<Splitter> splitter;
+    boost::optional<Mixer> mixer;
+
+    if( inletNode ) {
+      if( auto mo = inletNode->inletModelObject() ) {
+        splitter = mo->optionalCast<Splitter>();
+      }
+    }
+    if( outletNode ) {
+      if( auto mo = outletNode->outletModelObject() ) {
+        mixer = mo->optionalCast<Mixer>();
+      }
+    }
+
+    if( systemStartComponent.handle() == inletComponent->handle() 
+        && systemEndComponent.handle() == outletComponent->handle() ) {
+      // This component is between the systemStartComponent and the systemEndComponent
+      // ie. the supply or demand inlet or outlet Nodes,
+      // or the oa system end points on either the relief or inlet air streams.
+      _model.disconnect(thisObject,componentInletPort); 
+      _model.disconnect(thisObject,componentOutletPort); 
+
+      _model.connect( inletComponent.get(), inletComponentOutletPort.get(), 
+                       outletComponent.get(), outletComponentInletPort.get() );
+      
+      return true;
+    } else if( systemEndComponent.handle() == outletComponent->handle() ) {
+      // Here the systemEndComponent is immediately downstream of this component,
+      // but there are other components (besides systemStartComponent) upstream.
+      boost::optional<ModelObject> newInletComponent;
+      boost::optional<unsigned> newInletComponentOutletPort;
+
+      // Make sure we don't end up with two nodes next to each other after this component is removed
+      if( inletNode && outletNode ) {
+        newInletComponent = inletNode->inletModelObject();
+        newInletComponentOutletPort = inletNode->connectedObjectPort(inletNode->inletPort());
+        OS_ASSERT(newInletComponent);
+        OS_ASSERT(newInletComponentOutletPort);
+        inletNode->remove();
+      } else {
+        newInletComponent = inletComponent;
+        newInletComponentOutletPort = inletComponentOutletPort;
+      }
+
+      _model.disconnect(thisObject,componentInletPort); 
+      _model.disconnect(thisObject,componentOutletPort); 
+
+      _model.connect( newInletComponent.get(), newInletComponentOutletPort.get(), 
+                       outletComponent.get(), outletComponentInletPort.get() );
+      return true;
+    } else if( splitter && mixer ) {
+      // If the component is the only component (except nodes) between a splitter mixer pair
+      OS_ASSERT(inletNode);
+      OS_ASSERT(outletNode);
+
+      int i = splitter->branchIndexForOutletModelObject(inletNode.get());
+      int j = mixer->branchIndexForInletModelObject(outletNode.get());
+
+      OS_ASSERT(i == j);
+
+      splitter->removePortForBranch(i);
+      mixer->removePortForBranch(i);
+
+      _model.disconnect(thisObject,componentInletPort); 
+      _model.disconnect(thisObject,componentOutletPort); 
+
+      inletNode->remove();
+      outletNode->remove();
+
+      if( ! splitter->lastOutletModelObject() )
+      {
+        Node newNode(_model);
+        _model.connect(splitter.get(),splitter->nextOutletPort(),newNode,newNode.inletPort());
+        _model.connect(newNode,newNode.outletPort(),mixer.get(),mixer->nextInletPort());
+      }
+
+      return true;
+    } else {
+      boost::optional<ModelObject> newOutletComponent; 
+      boost::optional<unsigned> newOutletComponentInletPort;
+
+      if( inletNode && outletNode ) {
+        newOutletComponent = outletNode->outletModelObject();
+        newOutletComponentInletPort = outletNode->connectedObjectPort(outletNode->outletPort());
+
+        outletNode->remove();
+      }
+
+      if( ! newOutletComponent ) newOutletComponent = outletComponent;
+      if( ! newOutletComponentInletPort ) newOutletComponentInletPort = outletComponentInletPort;
+
+      _model.disconnect(thisObject,componentInletPort); 
+      _model.disconnect(thisObject,componentOutletPort); 
+
+      model().connect( inletComponent.get(), inletComponentOutletPort.get(), 
+                       newOutletComponent.get(), newOutletComponentInletPort.get() );
+
+      return true;
+    }
+
+    return false;
+  }
+
+  bool HVACComponent_Impl::addToNode(Node & node, 
+    const HVACComponent & systemStartComponent, 
+    const HVACComponent & systemEndComponent,
+    unsigned componentInletPort,
+    unsigned componentOutletPort)
+  {
+    Model _model = model();
+    ModelObject thisModelObject = getObject<ModelObject>();
+
+    if( node.model() != _model ) return false;
+    if( systemStartComponent.model() != _model ) return false;
+    if( systemEndComponent.model() != _model ) return false;
+
+    if( (node == systemEndComponent) && (node.inletModelObject().get() == systemStartComponent) ) {
+      unsigned oldOutletPort = node.connectedObjectPort( node.inletPort() ).get();
+      unsigned oldInletPort = node.inletPort();
+      ModelObject oldSourceModelObject = node.connectedObject( node.inletPort() ).get();
+      ModelObject oldTargetModelObject = node;
+
+      // If systemStartComponent is not a node we need to insert one so that there
+      // is a node between systemStartComponent and this component we are adding
+      // This situation occurs in the oa system relief stream.
+      if( ! systemStartComponent.optionalCast<Node>() ) {
+        Node newNode(_model);
+        _model.connect(oldSourceModelObject,oldOutletPort,
+                       newNode,newNode.inletPort());
+        oldOutletPort = newNode.outletPort();
+        oldSourceModelObject = newNode;
+      }
+
+      _model.connect( oldSourceModelObject, oldOutletPort,
+                      thisModelObject, componentInletPort );
+      _model.connect( thisModelObject, componentOutletPort,
+                      oldTargetModelObject, oldInletPort );
+      return true;
+    } else if( (node == systemStartComponent) && (node.outletModelObject().get() == systemEndComponent) ) {
+      unsigned oldInletPort = node.connectedObjectPort( node.outletPort() ).get();
+      unsigned oldOutletPort = node.outletPort();
+      ModelObject oldTargetModelObject = node.connectedObject( node.outletPort() ).get();
+      ModelObject oldSourceModelObject = node;
+
+      // If systemEndComponent is not a node we need to insert one so that there
+      // is a node between systemEndComponent and this component we are adding
+      // This situation occurs in the oa system outdoor air stream.
+      if( ! systemEndComponent.optionalCast<Node>() ) {
+        Node newNode(_model);
+        _model.connect(newNode,newNode.outletPort(),
+                       oldTargetModelObject,oldInletPort);
+        oldInletPort = newNode.inletPort();
+        oldTargetModelObject = newNode;
+      }
+
+      _model.connect( oldSourceModelObject, oldOutletPort,
+                      thisModelObject, componentInletPort );
+      _model.connect( thisModelObject, componentOutletPort,
+                      oldTargetModelObject, oldInletPort );
+      return true;
+    } else if( node == systemEndComponent ) {
+      unsigned oldOutletPort = node.connectedObjectPort( node.inletPort() ).get();
+      unsigned oldInletPort = node.inletPort();
+      ModelObject oldSourceModelObject = node.connectedObject( node.inletPort() ).get();
+      ModelObject oldTargetModelObject = node;
+
+      Node newNode( _model );
+      _model.connect( oldSourceModelObject, oldOutletPort,
+                      newNode, newNode.inletPort() );
+      _model.connect( newNode, newNode.outletPort(),
+                      thisModelObject, componentInletPort );                        
+      _model.connect( thisModelObject, componentOutletPort,
+                      oldTargetModelObject, oldInletPort );
+      return true;
+    } else {
+      unsigned oldOutletPort = node.outletPort();
+      unsigned oldInletPort = node.connectedObjectPort( node.outletPort() ).get();
+      ModelObject oldSourceModelObject = node;
+      ModelObject oldTargetModelObject = node.connectedObject( node.outletPort() ).get();
+    
+      Node newNode( _model );
+      _model.connect( oldSourceModelObject, oldOutletPort,
+                      thisModelObject, componentInletPort );
+      _model.connect( thisModelObject, componentOutletPort,
+                      newNode, newNode.inletPort() );
+      _model.connect( newNode, newNode.outletPort(),
+                      oldTargetModelObject, oldInletPort );
+      return true;
+    }
+
+    return false;
   }
 
   bool HVACComponent_Impl::addToNode(Node & node)

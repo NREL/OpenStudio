@@ -69,17 +69,30 @@ namespace detail {
     return DistrictCooling::iddObjectType();
   }
 
-  double DistrictCooling_Impl::nominalCapacity() const {
-    boost::optional<double> value = getDouble(OS_DistrictCoolingFields::NominalCapacity,true);
-    OS_ASSERT(value);
-    return value.get();
+  boost::optional<double> DistrictCooling_Impl::nominalCapacity() const {
+    return getDouble(OS_DistrictCoolingFields::NominalCapacity,true);
   }
 
-  Quantity DistrictCooling_Impl::getNominalCapacity(bool returnIP) const {
-    OptionalDouble value = nominalCapacity();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_DistrictCoolingFields::NominalCapacity, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
+  bool DistrictCooling_Impl::isNominalCapacityAutosized() const {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_DistrictCoolingFields::NominalCapacity, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "autosize");
+    }
+    return result;
+  }
+
+  bool DistrictCooling_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
+    bool result(false);
+    if (nominalCapacity) {
+      result = setDouble(OS_DistrictCoolingFields::NominalCapacity, nominalCapacity.get());
+    }
+    return result;
+  }
+
+  void DistrictCooling_Impl::autosizeNominalCapacity() {
+    bool result = setString(OS_DistrictCoolingFields::NominalCapacity, "autosize");
+    OS_ASSERT(result);
   }
 
   unsigned DistrictCooling_Impl::inletPort()
@@ -92,27 +105,6 @@ namespace detail {
     return OS_DistrictCoolingFields::ChilledWaterOutletNodeName;
   }
   
-  bool DistrictCooling_Impl::setNominalCapacity(double nominalCapacity) {
-    bool result = setDouble(OS_DistrictCoolingFields::NominalCapacity, nominalCapacity);
-    return result;
-  }
-
-  bool DistrictCooling_Impl::setNominalCapacity(const Quantity& nominalCapacity) {
-    OptionalDouble value = getDoubleFromQuantity(OS_DistrictCoolingFields::NominalCapacity,nominalCapacity);
-    if (!value) {
-      return false;
-    }
-    return setNominalCapacity(value.get());
-  }
-
-  openstudio::Quantity DistrictCooling_Impl::nominalCapacity_SI() const {
-    return getNominalCapacity(false);
-  }
-
-  openstudio::Quantity DistrictCooling_Impl::nominalCapacity_IP() const {
-    return getNominalCapacity(true);
-  }
-
   bool DistrictCooling_Impl::addToNode(Node & node)
   {
     if( boost::optional<PlantLoop> plant = node.plantLoop() )
@@ -132,6 +124,7 @@ DistrictCooling::DistrictCooling(const Model& model)
   : StraightComponent(DistrictCooling::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::DistrictCooling_Impl>());
+  autosizeNominalCapacity();
 }
 
 IddObjectType DistrictCooling::iddObjectType() {
@@ -139,21 +132,22 @@ IddObjectType DistrictCooling::iddObjectType() {
   return result;
 }
 
-double DistrictCooling::nominalCapacity() const {
+boost::optional<double> DistrictCooling::nominalCapacity() const {
   return getImpl<detail::DistrictCooling_Impl>()->nominalCapacity();
 }
 
-Quantity DistrictCooling::getNominalCapacity(bool returnIP) const {
-  return getImpl<detail::DistrictCooling_Impl>()->getNominalCapacity(returnIP);
+bool DistrictCooling::isNominalCapacityAutosized() const {
+  return getImpl<detail::DistrictCooling_Impl>()->isNominalCapacityAutosized();
 }
 
 bool DistrictCooling::setNominalCapacity(double nominalCapacity) {
   return getImpl<detail::DistrictCooling_Impl>()->setNominalCapacity(nominalCapacity);
 }
 
-bool DistrictCooling::setNominalCapacity(const Quantity& nominalCapacity) {
-  return getImpl<detail::DistrictCooling_Impl>()->setNominalCapacity(nominalCapacity);
+void DistrictCooling::autosizeNominalCapacity() {
+  getImpl<detail::DistrictCooling_Impl>()->autosizeNominalCapacity();
 }
+
 
 
 /// @cond

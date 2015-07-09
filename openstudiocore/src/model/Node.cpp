@@ -344,6 +344,22 @@ namespace detail{
     }
   }
 
+  bool Node_Impl::isConnected(const ModelObject & modelObject)
+  {
+    if( auto mo = outletModelObject() ) {
+      if( modelObject.handle() == mo->handle() ) {
+        return true;
+      }
+    }
+    if( auto mo = inletModelObject() ) {
+      if( modelObject.handle() == mo->handle() ) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
 } // detail
 
 // create a new Node object in the model's workspace

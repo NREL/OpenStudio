@@ -70,12 +70,13 @@ class MODEL_API HVACComponent : public ParentObject
   virtual ~HVACComponent() {}
 
   /** Returns the optional Loop object that the HVAC component is attached to.
+   *  If the component is part of an outdoor air system, the containing AirLoopHVAC will be returned.
    *  If the component is attached to multiple loops, the optional will be false.
    */
   boost::optional<Loop> loop() const;
 
   /** Returns the optional AirLoopHVAC object that the HVAC component is attached to.
-   *
+   *  If the component is part of an outdoor air system, the containing AirLoopHVAC will be returned.
    *  If the HVAC component is not associated with an air loop then the optional will be false.
    */
   boost::optional<AirLoopHVAC> airLoopHVAC() const;
