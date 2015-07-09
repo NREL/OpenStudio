@@ -88,6 +88,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCurveTriquadratic.cpp
   ForwardTranslator/ForwardTranslateDaylightingControl.cpp
   ForwardTranslator/ForwardTranslateDaylightingDeviceShelf.cpp
+  ForwardTranslator/ForwardTranslateDaylightRedirectionDevice.cpp
   ForwardTranslator/ForwardTranslateDesignDay.cpp
   ForwardTranslator/ForwardTranslateDesignSpecificationOutdoorAir.cpp
   ForwardTranslator/ForwardTranslateDistrictCooling.cpp

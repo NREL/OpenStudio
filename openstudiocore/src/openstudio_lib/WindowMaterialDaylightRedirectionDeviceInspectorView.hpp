@@ -22,17 +22,13 @@
 
 #include "ModelObjectInspectorView.hpp"
 
+#include "../model/DaylightRedirectionDevice.hpp"
+
 namespace openstudio {
 
-namespace model {
+class OSComboBox2;
 
-  class DaylightRedirectionDevice;
-
-}
-
-class OSComboBox;
-
-class OSLineEdit;
+class OSLineEdit2;
 
 class StandardsInformationMaterialWidget;
 
@@ -66,11 +62,13 @@ class WindowMaterialDaylightRedirectionDeviceInspectorView : public ModelObjectI
 
     bool m_isIP;
 
-    OSLineEdit * m_nameEdit = nullptr;
+    OSLineEdit2 * m_nameEdit = nullptr;
 
-    OSComboBox * m_daylightRedirectionDeviceType = nullptr;
+    OSComboBox2 * m_daylightRedirectionDeviceType = nullptr;
 
     StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
+
+    boost::optional<model::DaylightRedirectionDevice> m_material;
 
 };
 

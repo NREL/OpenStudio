@@ -579,12 +579,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirWallMaterial(airWallMaterial);
       break;
     }
-  case openstudio::IddObjectType::OS_WindowMaterial_Blind :
-    {
-      model::Blind blind = modelObject.cast<Blind>();
-      retVal = translateBlind(blind);
-      break;
-    }
   case openstudio::IddObjectType::OS_Boiler_HotWater :
     {
       model::BoilerHotWater boiler = modelObject.cast<BoilerHotWater>();
@@ -1717,6 +1711,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateSkyTemperature(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_WindowMaterial_Blind:
+  {
+    model::Blind blind = modelObject.cast<Blind>();
+    retVal = translateBlind(blind);
+    break;
+  }
+  case openstudio::IddObjectType::OS_WindowMaterial_DaylightRedirectionDevice:
+  {
+    model::DaylightRedirectionDevice drd = modelObject.cast<DaylightRedirectionDevice>();
+    retVal = translateDaylightRedirectionDevice(drd);
+    break;
+  }
   case openstudio::IddObjectType::OS_WindowMaterial_Glazing_RefractionExtinctionMethod :
     {
       model::RefractionExtinctionGlazing mo = modelObject.cast<RefractionExtinctionGlazing>();

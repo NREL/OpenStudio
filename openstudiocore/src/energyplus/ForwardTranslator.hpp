@@ -112,6 +112,7 @@ class CurveSigmoid;
 class CurveTriquadratic;
 class DaylightingControl;
 class DaylightingDeviceShelf;
+class DaylightRedirectionDevice;
 class DesignDay;
 class DesignSpecificationOutdoorAir;
 class DistrictCooling;
@@ -479,6 +480,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateDaylightingControl( model::DaylightingControl & modelObject );
 
   boost::optional<IdfObject> translateDaylightingDeviceShelf( model::DaylightingDeviceShelf & modelObject );
+
+  boost::optional<IdfObject> translateDaylightRedirectionDevice(model::DaylightRedirectionDevice & modelObject);
 
   boost::optional<IdfObject> translateDesignDay( model::DesignDay & modelObject );
 

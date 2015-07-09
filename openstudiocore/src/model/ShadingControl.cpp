@@ -25,6 +25,8 @@
 #include "ShadingMaterial_Impl.hpp"
 #include "Blind.hpp"
 #include "Blind_Impl.hpp"
+#include "DaylightRedirectionDevice.hpp"
+#include "DaylightRedirectionDevice_Impl.hpp"
 #include "Screen.hpp"
 #include "Screen_Impl.hpp"
 #include "Shade.hpp"
@@ -156,6 +158,10 @@ ShadingControl::ShadingControl(const Construction& construction)
     }else if( layers[i].optionalCast<Screen>()){
       type = "Screen";
       break;
+    } else if (layers[i].optionalCast<DaylightRedirectionDevice>()){
+      type = "DaylightRedirectionDevice";
+      setShadingControlType("AlwaysOn");
+      break;
     }
   }
 
@@ -174,6 +180,11 @@ ShadingControl::ShadingControl(const Construction& construction)
   }
 
   if (type == "Screen" && position != "Exterior"){
+    this->remove();
+    LOG_AND_THROW(position << type << " is not an allowable configuration for ShadingControl");
+  }
+
+  if (type == "DaylightRedirectionDevice" && position != "Interior"){
     this->remove();
     LOG_AND_THROW(position << type << " is not an allowable configuration for ShadingControl");
   }
@@ -197,6 +208,9 @@ ShadingControl::ShadingControl(const ShadingMaterial& shadingMaterial)
     type = "InteriorBlind";
   }else if(shadingMaterial.optionalCast<Screen>()){
     type = "ExteriorScreen";
+  } else if (shadingMaterial.optionalCast<DaylightRedirectionDevice>()){
+    type = "InteriorDaylightRedirectionDevice";
+    setShadingControlType("AlwaysOn");
   }
 
   bool test = this->setShadingType(type);
