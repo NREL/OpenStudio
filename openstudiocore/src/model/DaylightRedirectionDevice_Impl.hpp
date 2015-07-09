@@ -29,8 +29,6 @@ namespace model {
 namespace detail {
 
   class MODEL_API DaylightRedirectionDevice_Impl : public ShadingMaterial_Impl {
-    Q_OBJECT;
-
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -43,7 +41,7 @@ namespace detail {
                Model_Impl* model,
                bool keepHandle);
 
-    DaylightRedirectionDevice_Impl(const Blind_Impl& other,
+    DaylightRedirectionDevice_Impl(const DaylightRedirectionDevice_Impl& other,
                Model_Impl* model,
                bool keepHandle);
 
@@ -57,6 +55,9 @@ namespace detail {
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;
+
+    /** Throws because blind has beam and diffuse visible transmittance. */
+    virtual boost::optional<double> getVisibleTransmittance() const override;
 
     //@}
     /** @name Getters */

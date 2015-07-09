@@ -23,13 +23,31 @@
 
 #include "../DaylightRedirectionDevice.hpp"
 #include "../DaylightRedirectionDevice_Impl.hpp"
-
+#include "../ShadingControl.hpp"
+#include "../Construction.hpp"
+#include "../Schedule.hpp"
+#include "../Blind.hpp"
+#include "../SimpleGlazing.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture, DaylightRedirectionDevice) {
   Model model;
+
+  Construction construction(model);
+
+  SimpleGlazing glazing(model);
+  EXPECT_TRUE(construction.insertLayer(0, glazing));
+
   DaylightRedirectionDevice drd(model);
+
+  ShadingControl shadingControl(drd);
+  EXPECT_FALSE(shadingControl.construction());
+  ASSERT_TRUE(shadingControl.shadingMaterial());
+  EXPECT_EQ(drd.handle(), shadingControl.shadingMaterial()->handle());
+  EXPECT_EQ("InteriorBlind", shadingControl.shadingType());
+  EXPECT_EQ("AlwaysOn", shadingControl.shadingControlType());
+  EXPECT_FALSE(shadingControl.schedule());
 
 }

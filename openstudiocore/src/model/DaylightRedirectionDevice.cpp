@@ -37,7 +37,7 @@ namespace detail {
   DaylightRedirectionDevice_Impl::DaylightRedirectionDevice_Impl(const IdfObject& idfObject,
                                                                  Model_Impl* model,
                                                                  bool keepHandle)
-    : DaylightRedirectionDevice_Impl(idfObject,model,keepHandle)
+    : ShadingMaterial_Impl(idfObject, model, keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == DaylightRedirectionDevice::iddObjectType());
   }
@@ -56,12 +56,8 @@ namespace detail {
     : ShadingMaterial_Impl(other,model,keepHandle)
   {}
 
-  double DaylightRedirectionDevice_Impl::thickness() const {
-    LOG_AND_THROW("Thickness not supported for daylight redirection devices.");
-    return 0.0;
-  }
-
   OptionalDouble DaylightRedirectionDevice_Impl::getVisibleTransmittance() const {
+    // DLM: should this really throw?
     LOG_AND_THROW("Visible transmittance not supported for blinds.");
     return boost::none;
   }
@@ -75,13 +71,9 @@ namespace detail {
   }
 
   IddObjectType DaylightRedirectionDevice_Impl::iddObjectType() const {
-    return Blind::iddObjectType();
+    return DaylightRedirectionDevice::iddObjectType();
   }
-
-  bool DaylightRedirectionDevice_Impl::setThickness(double value) {
-    return setDouble(OS_WindowMaterial_DaylightRedirectionDeviceFields::SlatThickness,value);
-  }
-
+  
   std::string DaylightRedirectionDevice_Impl::daylightRedirectionDeviceType() const {
     OptionalString os = getString(OS_WindowMaterial_DaylightRedirectionDeviceFields::DaylightRedirectionDeviceType,true);
     OS_ASSERT(os);
