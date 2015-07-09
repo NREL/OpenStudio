@@ -492,6 +492,7 @@ module OsLib_Reporting
       # get end uses
       end_use = OpenStudio::EndUseCategoryType.new(end_use).valueDescription
       query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='AnnualBuildingUtilityPerformanceSummary' and TableName='End Uses' and RowName= '#{end_use}' and ColumnName= 'Natural Gas'"
+      puts query
       results = sqlFile.execAndReturnFirstDouble(query)
       value = results.get * 9.48 # manual conversion from GJ to therms
       value_neat = OpenStudio::toNeatString(value,0,true)
@@ -3688,11 +3689,11 @@ module OsLib_Reporting
       if ann_additional_cash > 0
         cost_summary_table[:chart] << JSON.generate({:label => 'Additional', :label_x => yr, :value => ann_additional_cash, :color => color[2]})
       end
-      if ann_additional_cash > 0
-        cost_summary_table[:chart] << JSON.generate({:label => 'District Cooling', :label_x => yr, :value => ann_additional_cash, :color => color[3]})
+      if ann_dist_clg_cash > 0
+        cost_summary_table[:chart] << JSON.generate({:label => 'District Cooling', :label_x => yr, :value => ann_dist_clg_cash, :color => color[3]})
       end
-      if ann_additional_cash > 0
-        cost_summary_table[:chart] << JSON.generate({:label => 'District Heating', :label_x => yr, :value => ann_additional_cash, :color => color[4]})
+      if ann_dist_htg_cash > 0
+        cost_summary_table[:chart] << JSON.generate({:label => 'District Heating', :label_x => yr, :value => ann_dist_htg_cash, :color => color[4]})
       end
       if ann_water_cash > 0
         cost_summary_table[:chart] << JSON.generate({:label => 'Water', :label_x => yr, :value => ann_water_cash, :color => color[5]})

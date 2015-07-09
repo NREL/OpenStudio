@@ -1,12 +1,12 @@
 <measure>
   <schema_version>3.0</schema_version>
   <name>open_studio_results</name>
-  <uid>65c290d4-de21-4101-b6f5-46544af3c1da</uid>
-  <version_id>cdd49633-efdb-4b5f-a250-2dfb1a6c549b</version_id>
+  <uid>a68794ff-03f7-4ccb-a981-101c51b3d11e</uid>
+  <version_id>eca51221-011a-49b5-ad4a-74e850a89a7b</version_id>
   <xml_checksum>557BF06F</xml_checksum>
   <class_name>OpenStudioResults</class_name>
   <display_name>OpenStudio Results</display_name>
-  <description>This measure creates high level tables and charts pulling both from model inputs and EnergyPlus results. It has building level information as well as detail on space types, thermal zones, HVAC systems, envelope characteristics, and economics. Click the heading above a chart to view a table of the chart data.</description>
+  <description>This measure creates high level tables and charts pulling both from model inputs and EnergyPlus results. It has building level information as well as detail on space types, thermal zones, HVAC systems, envelope characteristics, and economics.</description>
   <modeler_description>For the most part consumption data comes from the tabular EnergyPlus results, however there are a few requests added for time series results. Space type and loop details come from the OpenStudio model. The code for this is modular, making it easy to use as a template for your own custom reports. The structure of the report uses bootstrap, and the graphs use dimple js.</modeler_description>
   <arguments>
     <argument>
@@ -450,18 +450,6 @@
       <checksum>C9208A2F</checksum>
     </file>
     <file>
-      <filename>os_lib_reporting.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>A9C810A6</checksum>
-    </file>
-    <file>
-      <filename>report.html.erb</filename>
-      <filetype>erb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>EA4F9557</checksum>
-    </file>
-    <file>
       <version>
         <software_program>OpenStudio</software_program>
         <identifier>1.7.5</identifier>
@@ -470,7 +458,19 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>10937FD5</checksum>
+      <checksum>74D6BDB8</checksum>
+    </file>
+    <file>
+      <filename>report.html.erb</filename>
+      <filetype>erb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>CF4E4F9C</checksum>
+    </file>
+    <file>
+      <filename>os_lib_reporting.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>B90BB768</checksum>
     </file>
   </files>
 </measure>
