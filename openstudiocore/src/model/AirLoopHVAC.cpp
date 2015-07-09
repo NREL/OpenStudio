@@ -61,8 +61,6 @@
 #include "AirTerminalSingleDuctVAVReheat_Impl.hpp"
 #include "AvailabilityManager.hpp"
 #include "AvailabilityManager_Impl.hpp"
-#include "AvailabilityManagerScheduled.hpp"
-#include "AvailabilityManagerScheduled_Impl.hpp"
 #include "AvailabilityManagerNightCycle.hpp"
 #include "AvailabilityManagerNightCycle_Impl.hpp"
 #include "CoilHeatingWater.hpp"
@@ -199,7 +197,6 @@ namespace detail {
     if( auto t_availabilityManager = availabilityManager() ) {
       t_availabilityManager->remove();
     }
-    availabilityManagerScheduled().remove();
 
     modelObjects = supplyComponents();
     for(it = modelObjects.begin();
@@ -545,9 +542,8 @@ namespace detail {
     AirLoopHVAC airLoopClone = Loop_Impl::clone(model).cast<AirLoopHVAC>();
 
     {
-      auto mo = availabilityManagerScheduled();
-      auto clone = mo.clone(model).cast<AvailabilityManagerScheduled>();
-      airLoopClone.setPointer(OS_AirLoopHVACFields::AvailabilityManagerScheduled,clone.handle());
+      auto clone = availabilitySchedule().clone(model).cast<Schedule>();
+      airLoopClone.setPointer(OS_AirLoopHVACFields::AvailabilitySchedule,clone.handle());
     }
 
     if( auto mo = availabilityManager() ) {
@@ -870,12 +866,15 @@ namespace detail {
 
   Schedule AirLoopHVAC_Impl::availabilitySchedule() const
   {
-    return availabilityManagerScheduled().schedule();
+    auto result = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirLoopHVACFields::AvailabilitySchedule);
+    OS_ASSERT(result);
+    return result.get();
   }
   
   void AirLoopHVAC_Impl::setAvailabilitySchedule(Schedule & schedule)
   {
-    availabilityManagerScheduled().setSchedule(schedule);
+    auto result = setPointer(OS_AirLoopHVACFields::AvailabilitySchedule,schedule.handle());
+    OS_ASSERT(result);
 
     auto seriesPIUs = subsetCastVector<AirTerminalSingleDuctSeriesPIUReheat>(demandComponents(AirTerminalSingleDuctSeriesPIUReheat::iddObjectType()));
     for( auto & piu : seriesPIUs ) {
@@ -995,18 +994,6 @@ namespace detail {
     return result;
   }
 
-  AvailabilityManagerScheduled AirLoopHVAC_Impl::availabilityManagerScheduled() const {
-    auto result = getObject<ModelObject>().getModelObjectTarget<AvailabilityManagerScheduled>(OS_AirLoopHVACFields::AvailabilityManagerScheduled);
-    if( ! result ) {
-      LOG_AND_THROW(briefDescription() << " does not have an AvailabilityManagerScheduled attached.");
-    }
-    return result.get();
-  }
-
-  bool AirLoopHVAC_Impl::setAvailabilityManagerScheduled(AvailabilityManagerScheduled & availabilityManager) {
-    return setPointer(OS_AirLoopHVACFields::AvailabilityManagerScheduled,availabilityManager.handle());
-  }
-
   boost::optional<AvailabilityManager> AirLoopHVAC_Impl::availabilityManager() const {
     return getObject<ModelObject>().getModelObjectTarget<AvailabilityManager>(OS_AirLoopHVACFields::AvailabilityManager);
   }
@@ -1080,10 +1067,8 @@ AirLoopHVAC::AirLoopHVAC(Model& model)
 
   // AvailabilityManagerScheduled
   {
-    AvailabilityManagerScheduled availabilityManager(model);
     auto schedule = model.alwaysOnDiscreteSchedule();
-    availabilityManager.setSchedule(schedule);
-    getImpl<detail::AirLoopHVAC_Impl>()->setAvailabilityManagerScheduled(availabilityManager);
+    setAvailabilitySchedule(schedule);
   }
 }
 

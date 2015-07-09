@@ -177,10 +177,6 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   static void setPlantForAirTerminal( HVACComponent & airTerminal, PlantLoop & plantLoop );
 
-  AvailabilityManagerScheduled availabilityManagerScheduled() const;
-
-  bool setAvailabilityManagerScheduled(AvailabilityManagerScheduled & availabilityManager);
-
   boost::optional<AvailabilityManager> availabilityManager() const;
 
   bool setAvailabilityManager(const AvailabilityManager & availabilityManager);

@@ -7947,9 +7947,9 @@ OS:AirLoopHVAC,
        \note Enter the name of an AirLoopHVAC:ControllerList object.
        \type object-list
        \object-list ControllerLists
-  A4, \field Availability Manager Scheduled
+  A4, \field Availability Schedule
        \type object-list
-       \object-list SystemAvailabilityManagers
+        \object-list ScheduleNames
   A5, \field Availability Manager
        \type object-list
        \object-list SystemAvailabilityManagers

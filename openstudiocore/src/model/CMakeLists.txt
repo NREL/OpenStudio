@@ -122,18 +122,12 @@ set(${target_name}_src
   AvailabilityManagerNightVentilation.hpp
   AvailabilityManagerNightVentilation_Impl.hpp
   AvailabilityManagerNightVentilation.cpp
-  AvailabilityManagerAssignmentList.hpp
-  AvailabilityManagerAssignmentList_Impl.hpp
-  AvailabilityManagerAssignmentList.cpp
   AvailabilityManagerHybridVentilation.hpp
   AvailabilityManagerHybridVentilation_Impl.hpp
   AvailabilityManagerHybridVentilation.cpp
   AvailabilityManagerNightCycle.hpp
   AvailabilityManagerNightCycle_Impl.hpp
   AvailabilityManagerNightCycle.cpp
-  AvailabilityManagerScheduled.hpp
-  AvailabilityManagerScheduled_Impl.hpp
-  AvailabilityManagerScheduled.cpp
   Blind.hpp
   Blind_Impl.hpp
   Blind.cpp
@@ -1049,7 +1043,6 @@ set(${target_name}_moc
   AirTerminalSingleDuctVAVNoReheat_Impl.hpp
   AirTerminalSingleDuctVAVReheat_Impl.hpp
   AvailabilityManagerNightCycle_Impl.hpp
-  AvailabilityManagerScheduled_Impl.hpp
   Blind_Impl.hpp
   BoilerHotWater_Impl.hpp
   BoilerSteam_Impl.hpp
@@ -1263,7 +1256,6 @@ set(${target_name}_test_src
   test/AirTerminalSingleDuctVAVHeatAndCoolReheat_GTest.cpp
   test/AirTerminalSingleDuctVAVHeatAndCoolNoReheat_GTest.cpp
   test/Alpha1_GTest.cpp
-  test/AvailabilityManagerAssignmentList_GTest.cpp
   test/AvailabilityManagerNightCycle_GTest.cpp
   test/AvailabilityManagerHybridVentilation_GTest.cpp
   test/AvailabilityManagerOptimumStart_GTest.cpp
