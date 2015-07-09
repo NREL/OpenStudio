@@ -42,8 +42,13 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl( model::Sh
 
   idfObject.setString(WindowProperty_ShadingControlFields::Name, modelObject.name().get());
   
-  idfObject.setString(WindowProperty_ShadingControlFields::ShadingType, modelObject.shadingType());
-  
+  std::string shadingType = modelObject.shadingType();
+  if (istringEqual("InteriorDaylightRedirectionDevice", shadingType)){
+    idfObject.setString(WindowProperty_ShadingControlFields::ShadingType, "InteriorBlind");
+  } else{
+    idfObject.setString(WindowProperty_ShadingControlFields::ShadingType, shadingType);
+  }
+
   boost::optional<Construction> construction = modelObject.construction();
   if (construction){
     idfObject.setString(WindowProperty_ShadingControlFields::ConstructionwithShadingName, construction->name().get());

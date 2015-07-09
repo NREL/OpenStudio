@@ -60,7 +60,7 @@ boost::optional<IdfObject> ForwardTranslator::translateDaylightRedirectionDevice
   idfObject.setDouble(WindowMaterial_BlindFields::SlatInfraredHemisphericalTransmittance, 0.0);
   idfObject.setDouble(WindowMaterial_BlindFields::FrontSideSlatInfraredHemisphericalEmissivity, 0.9);
   idfObject.setDouble(WindowMaterial_BlindFields::BackSideSlatInfraredHemisphericalEmissivity, 0.9);
-  idfObject.setDouble(WindowMaterial_BlindFields::BlindtoGlassDistance, 0.01);
+  idfObject.setDouble(WindowMaterial_BlindFields::BlindtoGlassDistance, 0.0254);
   idfObject.setDouble(WindowMaterial_BlindFields::BlindTopOpeningMultiplier, 0.5);
   idfObject.setDouble(WindowMaterial_BlindFields::BlindBottomOpeningMultiplier, 0.0);
   idfObject.setDouble(WindowMaterial_BlindFields::BlindLeftSideOpeningMultiplier, 0.5);

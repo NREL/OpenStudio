@@ -2097,6 +2097,7 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
   iddObjectTypes.push_back(IddObjectType::OS_Material_RoofVegetation);
 
   iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_Blind);
+  iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_DaylightRedirectionDevice);
   iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_Gas);
   iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_GasMixture);
   iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_Glazing);
