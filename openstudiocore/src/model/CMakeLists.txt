@@ -413,6 +413,12 @@ set(${target_name}_src
   FFactorGroundFloorConstruction.hpp
   FFactorGroundFloorConstruction_Impl.hpp
   FFactorGroundFloorConstruction.cpp
+  FluidCoolerSingleSpeed.hpp
+  FluidCoolerSingleSpeed_Impl.hpp
+  FluidCoolerSingleSpeed.cpp
+  FluidCoolerTwoSpeed.hpp
+  FluidCoolerTwoSpeed_Impl.hpp
+  FluidCoolerTwoSpeed.cpp 
   Gas.hpp
   Gas_Impl.hpp
   Gas.cpp
@@ -547,9 +553,6 @@ set(${target_name}_src
   Node.hpp
   Node_Impl.hpp
   Node.cpp
-  PortList.hpp
-  PortList_Impl.hpp
-  PortList.cpp
   OtherEquipment.hpp
   OtherEquipment_Impl.hpp
   OtherEquipment.cpp
@@ -580,6 +583,12 @@ set(${target_name}_src
   PipeAdiabatic.hpp
   PipeAdiabatic_Impl.hpp
   PipeAdiabatic.cpp
+  PipeIndoor.hpp
+  PipeIndoor_Impl.hpp
+  PipeIndoor.cpp
+  PipeOutdoor.hpp
+  PipeOutdoor_Impl.hpp
+  PipeOutdoor.cpp
   PlanarSurface.hpp
   PlanarSurface_Impl.hpp
   PlanarSurface.cpp
@@ -589,6 +598,9 @@ set(${target_name}_src
   PlantLoop.hpp
   PlantLoop_Impl.hpp
   PlantLoop.cpp
+  PortList.hpp
+  PortList_Impl.hpp
+  PortList.cpp
   ProgramControl.hpp
   ProgramControl_Impl.hpp
   ProgramControl.cpp
