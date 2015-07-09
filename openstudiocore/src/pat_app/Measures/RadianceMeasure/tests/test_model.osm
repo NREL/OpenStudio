@@ -7936,7 +7936,7 @@ OS:SubSurface,
   ,                                       !- Outside Boundary Condition Object
   ,                                       !- View Factor to Ground
   ,                                       !- Shading Control Name
-  ,                                       !- Frame and Divider Name
+  {03b3b456-1bd8-4328-86d7-2f256a4e1e3c}, !- Frame and Divider Name
   ,                                       !- Multiplier
   ,                                       !- Number of Vertices
   0, 0.0254, 1.99986440677966,            !- X,Y,Z Vertex 1 {m}
@@ -8639,4 +8639,33 @@ OS:ShadingControl,
   Shading Control 1,                      !- Name
   SwitchableGlazing,                      !- Shading Type
   {11ef4fe8-c17f-416b-81fa-37abe5add41f}; !- Construction with Shading Name
+
+OS:WindowProperty:FrameAndDivider,
+  {03b3b456-1bd8-4328-86d7-2f256a4e1e3c}, !- Handle
+  SampleFrameDiv,                         !- Name
+  ,                                       !- Frame Width {m}
+  0,                                      !- Frame Outside Projection {m}
+  0,                                      !- Frame Inside Projection {m}
+  0,                                      !- Frame Conductance {W/m2-K}
+  ,                                       !- Ratio of Frame-Edge Glass Conductance to Center-Of-Glass Conductance
+  ,                                       !- Frame Solar Absorptance
+  ,                                       !- Frame Visible Absorptance
+  ,                                       !- Frame Thermal Hemispherical Emissivity
+  ,                                       !- Divider Type
+  ,                                       !- Divider Width {m}
+  ,                                       !- Number of Horizontal Dividers
+  ,                                       !- Number of Vertical Dividers
+  ,                                       !- Divider Outside Projection {m}
+  ,                                       !- Divider Inside Projection {m}
+  ,                                       !- Divider Conductance {W/m2-K}
+  ,                                       !- Ratio of Divider-Edge Glass Conductance to Center-Of-Glass Conductance
+  ,                                       !- Divider Solar Absorptance
+  ,                                       !- Divider Visible Absorptance
+  ,                                       !- Divider Thermal Hemispherical Emissivity
+  0.12192,                                !- Outside Reveal Depth {m}
+  0,                                      !- Outside Reveal Solar Absorptance
+  0.003048,                               !- Inside Sill Depth {m}
+  0,                                      !- Inside Sill Solar Absorptance
+  0.12192,                                !- Inside Reveal Depth {m}
+  0;                                      !- Inside Reveal Solar Absorptance
 
