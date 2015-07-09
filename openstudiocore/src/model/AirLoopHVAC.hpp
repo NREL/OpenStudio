@@ -27,6 +27,8 @@ namespace openstudio {
 
 namespace model {
 
+class AvailabilityManager;
+
 namespace detail {
   class AirLoopHVAC_Impl;
 };
@@ -241,11 +243,24 @@ class MODEL_API AirLoopHVAC : public Loop
   void setAvailabilitySchedule(Schedule & schedule);
 
   /** Configure the system to night cycle
-   *  Valid options are StayOff, CycleOnAny, and CycleOnAnyZoneFansOnly **/
+    * This is a convenience for creating and attaching a new AvailabilityManagerNightCycle.
+    * Valid options are StayOff, CycleOnAny, and CycleOnAnyZoneFansOnly **/
   bool setNightCycleControlType(std::string controlType);
 
-  /** Returns a string indicating if the system is configured to night cycle **/
+  /** Returns a string indicating if the system is configured to night cycle 
+    * If there is no AvailabilityManagerNightCycle this method will return StayOff **/
   std::string nightCycleControlType() const;
+
+  /** AvailabilityManager is used to override the system availabilitySchedule() with one of OpenStudio's
+    * supported AvailabilityManager types.
+    * Unlike EnergyPlus which supports layering multiple availability managers on an AvailabilityManagerAssignmentList,
+    * OpenStudio allows only one AvailabilityManager at a time.
+    **/
+  boost::optional<AvailabilityManager> availabilityManager() const;
+
+  bool setAvailabilityManager(const AvailabilityManager& availabilityManager);
+
+  void resetAvailabilityManager();
 
   std::vector<openstudio::IdfObject> remove() override;
 
