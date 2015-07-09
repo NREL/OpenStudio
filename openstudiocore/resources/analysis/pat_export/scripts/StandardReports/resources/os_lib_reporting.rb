@@ -2722,7 +2722,7 @@ module OsLib_Reporting
     # add table to array of tables
     zone_condition_tables << temperature_table
 
-    humidity_bins_temps_ip = [30,35,40,45,50,55,60,65,60,75,80]
+    humidity_bins_temps_ip = [30,35,40,45,50,55,60,65,70,75,80]
     humidity_bins_temps_si = humidity_bins_temps_ip
 
     # hash to store hours
@@ -3414,7 +3414,8 @@ module OsLib_Reporting
     # data for query
     report_name = 'OutdoorAirSummary'
     table_name = 'Average Outdoor Air During Occupied Hours'
-    columns = ['','Average Number of Occupants','Nominal Number of Occupants','Zone Volume','Mechanical Ventilation','Infiltration']
+    min_table_name = 'Minimum Outdoor Air During Occupied Hours'
+    columns = ['','Average Number of Occupants','Nominal Number of Occupants','Zone Volume','Avg. Mechanical Ventilation','Avg. Infiltration','Min. Mechanical Ventilation','Min. Infiltration']
 
     # populate dynamic rows
     rows_name_query = "SELECT DISTINCT  RowName FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_name}'"
@@ -3426,12 +3427,12 @@ module OsLib_Reporting
 
     # create table
     table = {}
-    table[:title] = table_name
+    table[:title] = 'Average and Minimum Outdoor Air During Occupied Hours'
     table[:header] = columns
     source_units_volume = 'm^3'
     target_units_volume = 'ft^3'
-    table[:units] = ['','','',target_units_volume,"ach","ach"]
-    table[:source_units] = ['','','',source_units_volume,"ach","ach"] # used for conversation, not needed for rendering.
+    table[:units] = ['','','',target_units_volume,"ach","ach","ach","ach"]
+    table[:source_units] = ['','','',source_units_volume,"ach","ach","ach","ach"] # used for conversation, not needed for rendering.
     table[:data] = []
 
     # run query and populate table
@@ -3441,42 +3442,28 @@ module OsLib_Reporting
       table[:header].each do |header|
         column_counter += 1
         next if header == ''
-        query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_name}' and RowName= '#{row}' and ColumnName= '#{header}'"
-        results = sqlFile.execAndReturnFirstDouble(query)
-        row_data_ip = OpenStudio::convert(results.to_f,table[:source_units][column_counter],table[:units][column_counter]).get
-        row_data << row_data_ip.round(4)
-      end
+        if header == "Avg. Mechanical Ventilation"
+          query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_name}' and RowName= '#{row}' and ColumnName= '#{header.gsub("Avg. ","")}'"
+          results = sqlFile.execAndReturnFirstDouble(query)
+          row_data_ip = OpenStudio::convert(results.to_f,table[:source_units][column_counter],table[:units][column_counter]).get
+          row_data << row_data_ip.round(4)
+        elsif header == "Min. Mechanical Ventilation"
+          query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{min_table_name}' and RowName= '#{row}' and ColumnName= '#{header.gsub("Min. ","")}'"
+          results = sqlFile.execAndReturnFirstDouble(query)
+          row_data_ip = OpenStudio::convert(results.to_f,table[:source_units][column_counter],table[:units][column_counter]).get
+          row_data << row_data_ip.round(4)
+        elsif header == "Zone Volume"
+          query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_name}' and RowName= '#{row}' and ColumnName= '#{header}'"
+          results = sqlFile.execAndReturnFirstDouble(query)
+          row_data_ip = OpenStudio::convert(results.to_f,table[:source_units][column_counter],table[:units][column_counter]).get
+          row_data << row_data_ip.round(0)
+        else
+          query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_name}' and RowName= '#{row}' and ColumnName= '#{header}'"
+          results = sqlFile.execAndReturnFirstDouble(query)
+          row_data_ip = OpenStudio::convert(results.to_f,table[:source_units][column_counter],table[:units][column_counter]).get
+          row_data << row_data_ip.round(4)
+        end
 
-      table[:data] << row_data
-    end
-
-    # add table to array of tables
-    outdoor_air_section_tables << table
-
-    # data for query (all same as previous except for table name)
-    table_name = 'Minimum Outdoor Air During Occupied Hours'
-
-    # create table
-    table = {}
-    table[:title] = table_name
-    table[:header] = columns
-    source_units_volume = 'm^3'
-    target_units_volume = 'ft^3'
-    table[:units] = ['','','',target_units_volume,"ach","ach"]
-    table[:source_units] = ['','','',source_units_volume,"ach","ach"] # used for conversation, not needed for rendering.
-    table[:data] = []
-
-    # run query and populate table
-    rows.each do |row|
-      row_data = [row]
-      column_counter = -1
-      table[:header].each do |header|
-        column_counter += 1
-        next if header == ''
-        query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_name}' and RowName= '#{row}' and ColumnName= '#{header}'"
-        results = sqlFile.execAndReturnFirstDouble(query)
-        row_data_ip = OpenStudio::convert(results.to_f,table[:source_units][column_counter],table[:units][column_counter]).get
-        row_data << row_data_ip.round(4)
       end
 
       table[:data] << row_data

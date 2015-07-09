@@ -7,7 +7,7 @@ require "#{File.dirname(__FILE__)}/resources/os_lib_helper_methods"
 
 #start the measure
 class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
-  
+
   #define the name that a user will see, this method may be deprecated as
   #the display name in PAT comes from the name field in measure.xml
   def name
@@ -83,7 +83,7 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
 
     return result
   end
-  
+
   #define the arguments that the user will input
   def arguments()
     args = OpenStudio::Ruleset::OSArgumentVector.new
@@ -189,7 +189,7 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
     runner.registerFinalCondition("Generated report with #{sections_made} sections to  #{html_out_path}.")
 
     return true
- 
+
   end #end the run method
 
 end #end the measure
