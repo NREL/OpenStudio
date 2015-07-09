@@ -4897,7 +4897,8 @@ OS:ShadingControl,
        \key ExteriorBlind
        \key BetweenGlassShade
        \key BetweenGlassBlind
-       \key SwitchableGlazing       
+       \key SwitchableGlazing
+       \key InteriorDaylightRedirectionDevice
   A4 , \field Construction with Shading Name
        \type object-list
        \object-list ConstructionNames
