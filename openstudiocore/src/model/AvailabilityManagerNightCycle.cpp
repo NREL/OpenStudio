@@ -242,6 +242,8 @@ AvailabilityManagerNightCycle::AvailabilityManagerNightCycle(const Model& model)
   : AvailabilityManager(AvailabilityManagerNightCycle::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AvailabilityManagerNightCycle_Impl>());
+  setThermostatTolerance(1.0);
+  setCyclingRunTime(3600);
 }
 
 IddObjectType AvailabilityManagerNightCycle::iddObjectType() {
