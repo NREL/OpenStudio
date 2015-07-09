@@ -16,7 +16,7 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
 
   # human readable description
   def description
-    return "This measure creates high level tables and charts pulling both from model inputs and EnergyPlus results. It has building level information as well as detail on space types, thermal zones, HVAC systems, envelope characteristics, and economics."
+    return "This measure creates high level tables and charts pulling both from model inputs and EnergyPlus results. It has building level information as well as detail on space types, thermal zones, HVAC systems, envelope characteristics, and economics. Click the heading above a chart to view a table of the chart data."
   end
 
   # human readable description of modeling approach

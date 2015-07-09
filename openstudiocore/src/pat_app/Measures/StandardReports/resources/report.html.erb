@@ -3,11 +3,16 @@
 <head>
   <meta charset="utf-8">
   <title>OpenStudio Results</title>
+
   <link href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
-  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+  <link href="file:///<%= web_asset_path %>/bootstrap.min.css" rel="stylesheet">
+
   <script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="file:///<%= web_asset_path %>/bootstrap.min.js"></script>
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.3.9/d3.min.js"></script>
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/dygraph/1.0.1/dygraph-combined.js"></script>
+
   <style>
       body {
           position: relative;
@@ -143,6 +148,7 @@
                   <div id="chartContainer_<%= chart_counter %>">
                     <script src="/lib/d3.v3.4.8.js"></script>
                     <script src="http://dimplejs.org/dist/dimple.v2.1.2.min.js"></script>
+                    <script src="file:///<%= web_asset_path %>/dimple.v2.1.2.min.js"></script>
                     <script type="text/javascript">
                         var svg = dimple.newSvg("#chartContainer_<%= chart_counter %>", 500, 240);
                             var data = [<%= table[:chart].join(",") %>];
@@ -164,6 +170,7 @@
                   <div id="chartContainer_<%= chart_counter %>">
                     <script src="/lib/d3.v3.4.8.js"></script>
                     <script src="http://dimplejs.org/dist/dimple.v2.1.2.min.js"></script>
+                    <script src="file:///<%= web_asset_path %>/dimple.v2.1.2.min.js"></script>
                     <script type="text/javascript">
                         var svg = dimple.newSvg("#chartContainer_<%= chart_counter %>", 1100, 450);
                             var data = [<%= table[:chart].join(",") %>];
@@ -207,6 +214,7 @@
                   <div id="chartContainer_<%= chart_counter %>">
                     <script src="/lib/d3.v3.4.8.js"></script>
                     <script src="http://dimplejs.org/dist/dimple.v2.1.2.min.js"></script>
+                    <script src="file:///<%= web_asset_path %>/dimple.v2.1.2.min.js"></script>
                     <script type="text/javascript">
                         var svg = dimple.newSvg("#chartContainer_<%= chart_counter %>", 1000, 400);
                         var data = [<%= table[:chart].join(",") %>];
@@ -232,6 +240,7 @@
                   <div id="chartContainer_<%= chart_counter %>">
                     <script src="/lib/d3.v3.4.8.js"></script>
                     <script src="http://dimplejs.org/dist/dimple.v2.1.2.min.js"></script>
+                    <script src="file:///<%= web_asset_path %>/dimple.v2.1.2.min.js"></script>
                     <script type="text/javascript">
                         var svg = dimple.newSvg("#chartContainer_<%= chart_counter %>", 1150, 400);
                         var data = [<%= table[:chart].join(",") %>];
@@ -274,6 +283,7 @@
                       <div id="chartContainer_<%= chart_counter %>">
                         <script src="/lib/d3.v3.4.8.js"></script>
                         <script src="http://dimplejs.org/dist/dimple.v2.1.2.min.js"></script>
+                        <script src="file:///<%= web_asset_path %>/dimple.v2.1.2.min.js"></script>
                         <script type="text/javascript">
                             var svg = dimple.newSvg("#chartContainer_<%= chart_counter %>", 400,400);
                             var data = [<%= chart[:chart_data].join(",") %>];
