@@ -17,19 +17,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Duct.hpp>
-#include <model/Duct_Impl.hpp>
+#include "Duct.hpp"
+#include "Duct_Impl.hpp"
 
 // TODO: Check the following class names against object getters and setters.
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
+#include "Connection.hpp"
+#include "Connection_Impl.hpp"
+#include "Connection.hpp"
+#include "Connection_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Duct_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

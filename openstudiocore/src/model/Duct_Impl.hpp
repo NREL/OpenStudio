@@ -21,7 +21,7 @@
 #define MODEL_DUCT_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/StraightComponent_Impl.hpp>
+#include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {
