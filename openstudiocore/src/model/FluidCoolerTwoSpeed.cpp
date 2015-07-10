@@ -77,12 +77,12 @@ namespace detail {
 
   unsigned FluidCoolerTwoSpeed_Impl::inletPort()
   {
-    return 0;
+    return  OS_FluidCooler_TwoSpeedFields::WaterInletNode;
   }
 
   unsigned FluidCoolerTwoSpeed_Impl::outletPort()
   {
-    return 0;
+    return  OS_FluidCooler_TwoSpeedFields::WaterOutletNode;
   }
 
   boost::optional<Connection> FluidCoolerTwoSpeed_Impl::waterInletNode() const {
@@ -466,36 +466,38 @@ FluidCoolerTwoSpeed::FluidCoolerTwoSpeed(const Model& model)
   bool ok = true;
   // ok = setHandle();
   OS_ASSERT(ok);
-  // ok = setPerformanceInputMethod();
+   ok = setPerformanceInputMethod("NominalCapacity"); // UFactorTimesAreaAndDesignWaterFlowRate, NominalCapacity
   OS_ASSERT(ok);
-  // ok = setHighFanSpeedUfactorTimesAreaValue();
+  ok = setHighFanSpeedUfactorTimesAreaValue(0.1);
   OS_ASSERT(ok);
-  // ok = setLowFanSpeedUfactorTimesAreaValue();
+  ok = setLowFanSpeedUfactorTimesAreaValue(0.1);
   OS_ASSERT(ok);
-  // setLowFanSpeedUFactorTimesAreaSizingFactor();
-  // ok = setHighSpeedNominalCapacity();
+  setLowFanSpeedUFactorTimesAreaSizingFactor(1.0);
+  OS_ASSERT(lowFanSpeedUFactorTimesAreaSizingFactor() == 1.0);
+  ok = setHighSpeedNominalCapacity(0.1);
   OS_ASSERT(ok);
-  // ok = setLowSpeedNominalCapacity();
+  ok = setLowSpeedNominalCapacity(0.1);
   OS_ASSERT(ok);
-  // setLowSpeedNominalCapacitySizingFactor();
-  // ok = setDesignEnteringWaterTemperature();
+  setLowSpeedNominalCapacitySizingFactor(1.0);
+  OS_ASSERT(lowSpeedNominalCapacitySizingFactor() == 1.0);
+  ok = setDesignEnteringWaterTemperature(0.1);
   OS_ASSERT(ok);
-  // ok = setDesignEnteringAirTemperature();
+  ok = setDesignEnteringAirTemperature(0.1);
   OS_ASSERT(ok);
-  // ok = setDesignEnteringAirWetbulbTemperature();
+  ok = setDesignEnteringAirWetbulbTemperature(0.1);
   OS_ASSERT(ok);
-  // ok = setDesignWaterFlowRate();
+  ok = setDesignWaterFlowRate(0.1);
   OS_ASSERT(ok);
-  // ok = setHighFanSpeedAirFlowRate();
+  ok = setHighFanSpeedAirFlowRate(0.1);
   OS_ASSERT(ok);
-  // ok = setHighFanSpeedFanPower();
+  ok = setHighFanSpeedFanPower(0.1);
   OS_ASSERT(ok);
-  // ok = setLowFanSpeedAirFlowRate();
+  ok = setLowFanSpeedAirFlowRate(0.1);
   OS_ASSERT(ok);
-  // setLowFanSpeedAirFlowRateSizingFactor();
-  // ok = setLowFanSpeedFanPower();
+  setLowFanSpeedAirFlowRateSizingFactor(0.1);
+  ok = setLowFanSpeedFanPower(0.1);
   OS_ASSERT(ok);
-  // setLowFanSpeedFanPowerSizingFactor();
+  setLowFanSpeedFanPowerSizingFactor(0.1);
 }
 
 IddObjectType FluidCoolerTwoSpeed::iddObjectType() {

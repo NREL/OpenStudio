@@ -85,12 +85,12 @@ namespace detail {
 
   unsigned PipeIndoor_Impl::inletPort()
   {
-    return 0;
+    return OS_Pipe_IndoorFields::FluidInletNode;
   }
 
   unsigned PipeIndoor_Impl::outletPort()
   {
-    return 0;
+    return OS_Pipe_IndoorFields::FluidInletNode;
   }
 
   std::vector<ScheduleTypeKey> PipeIndoor_Impl::getScheduleTypeKeys(const Schedule& schedule) const
@@ -272,11 +272,11 @@ PipeIndoor::PipeIndoor(const Model& model)
   bool ok = true;
   // ok = setHandle();
   OS_ASSERT(ok);
-  // ok = setEnvironmentType();
+   ok = setEnvironmentType("Zone"); // Zone, Schedule
   OS_ASSERT(ok);
-  // ok = setPipeInsideDiameter();
+   ok = setPipeInsideDiameter(0.1);
   OS_ASSERT(ok);
-  // ok = setPipeLength();
+   ok = setPipeLength(0.1);
   OS_ASSERT(ok);
 }
 

@@ -77,12 +77,12 @@ namespace detail {
 
   unsigned FluidCoolerSingleSpeed_Impl::inletPort()
   {
-    return 0;
+    return  OS_FluidCooler_SingleSpeedFields::WaterInletNode;
   }
 
   unsigned FluidCoolerSingleSpeed_Impl::outletPort()
   {
-    return 0;
+    return  OS_FluidCooler_SingleSpeedFields::WaterOutletNode;
   }
 
   boost::optional<Connection> FluidCoolerSingleSpeed_Impl::waterInletNode() const {
@@ -316,25 +316,25 @@ FluidCoolerSingleSpeed::FluidCoolerSingleSpeed(const Model& model)
 
   // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
-  // ok = setHandle();
+   //ok = setHandle();
   OS_ASSERT(ok);
-  // ok = setPerformanceInputMethod();
+   ok = setPerformanceInputMethod("NominalCapacity"); // UFactorTimesAreaAndDesignWaterFlowRate, NominalCapacity
   OS_ASSERT(ok);
-  // ok = setDesignAirFlowRateUfactorTimesAreaValue();
+  ok = setDesignAirFlowRateUfactorTimesAreaValue(0.1);
   OS_ASSERT(ok);
-  // ok = setNominalCapacity();
+   ok = setNominalCapacity(0.1);
   OS_ASSERT(ok);
-  // ok = setDesignEnteringWaterTemperature();
+   ok = setDesignEnteringWaterTemperature(0.1);
   OS_ASSERT(ok);
-  // ok = setDesignEnteringAirTemperature();
+   ok = setDesignEnteringAirTemperature(0.1);
   OS_ASSERT(ok);
-  // ok = setDesignEnteringAirWetbulbTemperature();
+   ok = setDesignEnteringAirWetbulbTemperature(0.1);
   OS_ASSERT(ok);
-  // ok = setDesignWaterFlowRate();
+   ok = setDesignWaterFlowRate(0.1);
   OS_ASSERT(ok);
-  // ok = setDesignAirFlowRate();
+   ok = setDesignAirFlowRate(0.1);
   OS_ASSERT(ok);
-  // ok = setDesignAirFlowRateFanPower();
+   ok = setDesignAirFlowRateFanPower(0.1);
   OS_ASSERT(ok);
 }
 

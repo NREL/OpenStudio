@@ -78,12 +78,12 @@ namespace detail {
 
   unsigned PipeOutdoor_Impl::inletPort()
   {
-    return 0;
+    return OS_Pipe_OutdoorFields::FluidInletNode;
   }
 
   unsigned PipeOutdoor_Impl::outletPort()
   {
-    return 0;
+    return OS_Pipe_OutdoorFields::FluidOutletNode;
   }
 
   boost::optional<Construction> PipeOutdoor_Impl::construction() const {
@@ -203,9 +203,9 @@ PipeOutdoor::PipeOutdoor(const Model& model)
   bool ok = true;
   // ok = setHandle();
   OS_ASSERT(ok);
-  // ok = setPipeInsideDiameter();
+   ok = setPipeInsideDiameter(0.1);
   OS_ASSERT(ok);
-  // ok = setPipeLength();
+   ok = setPipeLength(0.1);
   OS_ASSERT(ok);
 }
 

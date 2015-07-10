@@ -80,12 +80,12 @@ namespace detail {
 
   unsigned Duct_Impl::inletPort()
   {
-    return 0;
+    return OS_DuctFields::InletNode;
   }
 
   unsigned Duct_Impl::outletPort()
   {
-    return 0;
+    return OS_DuctFields::OutletNode;
   }
 
   bool Duct_Impl::setInletNode(const boost::optional<Connection>& connection) {
