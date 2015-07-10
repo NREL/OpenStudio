@@ -3415,7 +3415,7 @@ module OsLib_Reporting
     report_name = 'OutdoorAirSummary'
     table_name = 'Average Outdoor Air During Occupied Hours'
     min_table_name = 'Minimum Outdoor Air During Occupied Hours'
-    columns = ['','Average Number of Occupants','Nominal Number of Occupants','Zone Volume','Avg. Mechanical Ventilation','Avg. Infiltration','Min. Mechanical Ventilation','Min. Infiltration']
+    columns = ['','Average Number of Occupants','Nominal Number of Occupants','Zone Volume','Avg. Mechanical Ventilation','Min. Mechanical Ventilation','Avg. Infiltration','Min. Infiltration']
 
     # populate dynamic rows
     rows_name_query = "SELECT DISTINCT  RowName FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_name}'"
@@ -3442,12 +3442,12 @@ module OsLib_Reporting
       table[:header].each do |header|
         column_counter += 1
         next if header == ''
-        if header == "Avg. Mechanical Ventilation"
+        if header.include? "Avg. "
           query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_name}' and RowName= '#{row}' and ColumnName= '#{header.gsub("Avg. ","")}'"
           results = sqlFile.execAndReturnFirstDouble(query)
           row_data_ip = OpenStudio::convert(results.to_f,table[:source_units][column_counter],table[:units][column_counter]).get
           row_data << row_data_ip.round(4)
-        elsif header == "Min. Mechanical Ventilation"
+        elsif header.include? "Min. "
           query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{min_table_name}' and RowName= '#{row}' and ColumnName= '#{header.gsub("Min. ","")}'"
           results = sqlFile.execAndReturnFirstDouble(query)
           row_data_ip = OpenStudio::convert(results.to_f,table[:source_units][column_counter],table[:units][column_counter]).get
