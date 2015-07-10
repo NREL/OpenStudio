@@ -27,8 +27,6 @@ namespace openstudio {
 
 namespace model {
 
-class AvailabilityManager;
-
 namespace detail {
   class AirLoopHVAC_Impl;
 };
@@ -42,6 +40,7 @@ class AirLoopHVACReturnPlenum;
 class StraightComponent;
 class ThermalZone;
 class SizingSystem;
+class AvailabilityManager;
 
 /** AirLoopHVAC is an interface to the EnergyPlus IDD object named "AirLoopHVAC"
  *
