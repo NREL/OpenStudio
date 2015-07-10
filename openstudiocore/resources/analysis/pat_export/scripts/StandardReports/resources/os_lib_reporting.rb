@@ -3914,13 +3914,13 @@ module OsLib_Reporting
 
     model.getSchedules.sort.each do |schedule|
       next if !schedule.to_ScheduleRuleset.is_initialized
-      next if !schedule.nonResourceObjectUseCount(true) == 0 # true excludes children
+      schedule = schedule.to_ScheduleRuleset.get
+      next if schedule.nonResourceObjectUseCount(true) == 0 # true excludes children
 
       # hash to hold chart
       chart = {:chart_data => [],:chart_attributes => {}}
 
       # get schedule and type limits
-      schedule = schedule.to_ScheduleRuleset.get
       type_limits = nil
       if schedule.scheduleTypeLimits.is_initialized
         type_limits = schedule.scheduleTypeLimits.get.unitType
