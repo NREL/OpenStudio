@@ -1316,6 +1316,7 @@ set(${target_name}_test_src
   test/DesignSpecificationZoneAirDistribution_GTest.cpp
   test/DistrictCooling_GTest.cpp
   test/DistrictHeating_GTest.cpp
+  test/Duct_GTest.cpp
   test/ElectricEquipment_GTest.cpp
   test/EvaporativeCoolerDirectResearchSpecial_GTest.cpp
   test/EvaporativeCoolerIndirectResearchSpecial_GTest.cpp
@@ -1326,6 +1327,8 @@ set(${target_name}_test_src
   test/FanZoneExhaust_GTest.cpp
   test/FanOnOff_GTest.cpp
   test/FenestrationMaterial_GTest.cpp
+  test/FluidCoolerSingleSpeed_GTest.cpp
+  test/FluidCoolerTwoSpeed_GTest.cpp
   test/GasEquipment_GTest.cpp
   test/GasMixture_GTest.cpp
   test/Gas_GTest.cpp
@@ -1366,6 +1369,8 @@ set(${target_name}_test_src
   test/People_GTest.cpp
   test/PeopleDefinition_GTest.cpp
   test/PipeAdiabatic_GTest.cpp
+  test/PipeIndoor_GTest.cpp
+  test/PipeOutdoor_GTest.cpp
   test/PlanarSurface_GTest.cpp
   test/PlantLoop_GTest.cpp
   test/Plenums_GTest.cpp

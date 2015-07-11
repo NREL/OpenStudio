@@ -21,7 +21,7 @@
 
 #include <model/test/ModelFixture.hpp>
 
-#include "../FluidCoolerTwoSpeed.hpp">
+#include "../FluidCoolerTwoSpeed.hpp"
 #include "../FluidCoolerTwoSpeed_Impl.hpp"
 
 using namespace openstudio;

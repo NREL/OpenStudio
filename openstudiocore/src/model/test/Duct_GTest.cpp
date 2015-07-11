@@ -21,9 +21,72 @@
 
 #include <model/test/ModelFixture.hpp>
 
-#include "../Duct.hpp">
+#include "../Duct.hpp"
 #include "../Duct_Impl.hpp"
+
+#include "../AirLoopHVAC.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../PlantLoop.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
+
+TEST_F(ModelFixture, Duct_Duct)
+{
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+
+  ASSERT_EXIT(
+  {
+    Model m;
+    Duct testObject(m);
+
+    exit(0);
+  },
+    ::testing::ExitedWithCode(0), "");
+}
+
+TEST_F(ModelFixture, Duct_addToNode) {
+  Model m;
+  Duct testObject(m);
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_TRUE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
+
+  Duct testObject2(m);
+
+  EXPECT_TRUE(testObject2.addToNode(demandOutletNode));
+  EXPECT_EQ((unsigned)9, plantLoop.demandComponents().size());
+
+  PlantLoop plantLoop2(m);
+  demandOutletNode = plantLoop2.demandOutletNode();
+  EXPECT_TRUE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ((unsigned)7, plantLoop2.demandComponents().size());
+
+  Duct testObjectClone = testObject.clone(m).cast<Duct>();
+  supplyOutletNode = plantLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
+}
+
 

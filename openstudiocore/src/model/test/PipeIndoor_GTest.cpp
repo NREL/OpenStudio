@@ -21,7 +21,7 @@
 
 #include <model/test/ModelFixture.hpp>
 
-#include "../PipeIndoor.hpp">
+#include "../PipeIndoor.hpp"
 #include "../PipeIndoor_Impl.hpp"
 
 using namespace openstudio;

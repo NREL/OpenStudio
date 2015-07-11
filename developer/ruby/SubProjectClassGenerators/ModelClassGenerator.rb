@@ -1312,7 +1312,7 @@ class ModelClassGenerator < SubProjectClassGenerator
     result = String.new
     if @hasRealFields
       result << "#include <model/test/ModelFixture.hpp>\n\n"
-      result << "#include \"../" << @className << ".hpp\">\n"
+      result << "#include \"../" << @className << ".hpp\"\n"
       result << "#include \"../" << @className << "_Impl.hpp\"\n\n"
       result << "using namespace openstudio;\n"
       result << "using namespace openstudio::model;\n\n"
