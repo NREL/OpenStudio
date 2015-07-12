@@ -54,7 +54,7 @@ private:
 
   void removeObject(openstudio::model::ModelObject modelObject);
 
-  void DesignDayGridView::purgeObjects(const IddObjectType& iddObjectType);
+  void purgeObjects(const IddObjectType& iddObjectType);
 
   bool m_isIP;
 
