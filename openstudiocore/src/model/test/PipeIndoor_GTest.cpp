@@ -27,3 +27,17 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
+
+TEST_F(ModelFixture, PipeIndoor_PipeIndoor)
+{
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+
+  ASSERT_EXIT(
+  {
+    Model m;
+    PipeIndoor testObject(m);
+
+    exit(0);
+  },
+    ::testing::ExitedWithCode(0), "");
+}
