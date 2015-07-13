@@ -717,6 +717,12 @@
     <rule IddField="Source Side Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Source Side Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_WaterHeater_Stratified">
+    <rule IddField="Use Side Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Use Side Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Source Side Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Source Side Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow">
     <rule IddField="Terminal Unit Air Inlet Node" Access="HIDDEN"/>
     <rule IddField="Terminal Unit Air Outlet Node" Access="HIDDEN"/>
