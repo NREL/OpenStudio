@@ -135,7 +135,8 @@ namespace radiance {
       std::map<std::string, std::string> m_radMaps;
       std::map<std::string, openstudio::Handle> m_radMapHandles;
       std::map<std::string, std::string> m_radViewPoints;
-      std::map<std::string, std::string> m_radWindowGroups; 
+      std::map<std::string, std::string> m_radWindowGroups;
+      std::map<std::string, std::string> m_radWindowGroupShades;
       int m_windowGroupId;
 
       // get window group
