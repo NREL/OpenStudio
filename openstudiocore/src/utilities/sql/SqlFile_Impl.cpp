@@ -458,34 +458,20 @@ namespace openstudio{
 
     bool SqlFile_Impl::isValidConnection()
     {
-      int code = -1;
-      if (m_db) {
-        sqlite3_stmt* sqlStmtPtr;
-        sqlite3_prepare_v2(m_db,"SELECT EnergyPlusVersion FROM Simulations",-1,&sqlStmtPtr,nullptr);
-        code = sqlite3_step(sqlStmtPtr);
-        if(code == SQLITE_ROW) {
-          // in 8.1 this is 'EnergyPlus-Windows-32 8.1.0.008, YMD=2014.11.08 22:49'
-          // in 8.2 this is 'EnergyPlus, Version 8.2.0-8397c2e30b, YMD=2015.01.09 08:37'
-          // radiance script is writing 'EnergyPlus, VERSION 8.2, (OpenStudio) YMD=2015.1.9 08:35:36'
-          boost::regex version_regex("\\d\\.\\d[\\.\\d]*");
-          std::string version_line = columnText(sqlite3_column_text(sqlStmtPtr,0));
-          boost::smatch version_match;
-          
-          if (boost::regex_search(version_line, version_match, version_regex)){
-            VersionString version(version_match[0].str());
-            if (version >= VersionString(7, 0) && version <= VersionString(energyPlusVersionMajor(), energyPlusVersionMinor())) {
-              m_supportedVersion = true;
-            } else {
-              m_supportedVersion = false;
-              LOG(Warn, "Using unsupported EnergyPlus version " << version.str());
-            }
-          } else{
-            LOG(Warn, "Using unknown EnergyPlus version");
-          }
-        }
-        sqlite3_finalize(sqlStmtPtr);
+      std::string energyPlusVersion = this->energyPlusVersion();
+      if (energyPlusVersion.empty()){
+        return false;
       }
-      return (code == SQLITE_ROW);
+
+      VersionString version(energyPlusVersion);
+      if (version >= VersionString(7, 0) && version <= VersionString(energyPlusVersionMajor(), energyPlusVersionMinor())) {
+        m_supportedVersion = true;
+      } else {
+        m_supportedVersion = false;
+        LOG(Warn, "Using unsupported EnergyPlus version " << version.str());
+      }
+
+      return true;
     }
 
 
@@ -1200,7 +1186,7 @@ namespace openstudio{
       return vec;
     };
 
-    ReportingFrequency SqlFile_Impl::reportingFrequencyFromDB(const std::string &dbReportingFrequency)
+    OptionalReportingFrequency SqlFile_Impl::reportingFrequencyFromDB(const std::string &dbReportingFrequency)
     {
       // EP+ version specific translation
       // use OPENSTUDIO_ENUM string handling
@@ -1209,8 +1195,7 @@ namespace openstudio{
         return result;
       }
       catch (...) {
-        // default value -- may want to return optional
-        return openstudio::ReportingFrequency::RunPeriod;
+        return boost::none;
       }
     };
 
@@ -2184,20 +2169,25 @@ namespace openstudio{
 
     openstudio::OptionalTime SqlFile_Impl::timeSeriesInterval(const DataDictionaryItem& dataDictionary)
     {
+      OptionalReportingFrequency freq = reportingFrequencyFromDB(dataDictionary.reportingFrequency);
+      if (!freq){
+        return boost::none;
+      }
+
       double minutes=0;
-      switch (reportingFrequencyFromDB(dataDictionary.reportingFrequency).value())
+      switch (freq->value())
       {
         case ReportingFrequency::Detailed:
           // unsupported
-          return boost::optional<openstudio::Time>();
+          return boost::none;
           break;
         case ReportingFrequency::Timestep:
           // unsupported
-          return boost::optional<openstudio::Time>();
+          return boost::none;
           break;
         case ReportingFrequency::Hourly:
           // unsupported - warmup days - see trac #236
-          return boost::optional<openstudio::Time>();
+          return boost::none;
           //        return boost::optional<openstudio::Time>(openstudio::Time(0,1,0,0));
           break;
         case ReportingFrequency::Daily:
@@ -2205,7 +2195,7 @@ namespace openstudio{
           break;
         case ReportingFrequency::Monthly:
           // unsupported
-          return boost::optional<openstudio::Time>();
+          return boost::none;
           break;
         case ReportingFrequency::RunPeriod:
           //          return boost::optional<openstudio::Time>();
@@ -2244,12 +2234,12 @@ namespace openstudio{
           break;
         default:
           // unsupported
-          return boost::optional<openstudio::Time>();
+          return boost::none;
           break;
       }
     }
 
-    openstudio::DateTime SqlFile_Impl::firstDateTime(bool includeHourAndMinute)
+    openstudio::DateTime SqlFile_Impl::firstDateTime(bool includeHourAndMinute, int envPeriodIndex)
     {
       // default until added to eplusout.sql from energy plus
       unsigned month=1, day=1, hour=1, minute=0;
@@ -2260,7 +2250,7 @@ namespace openstudio{
       if (m_db)
       {
         std::stringstream s;
-        s << "SELECT Month, Day, Hour, Minute from Time where Month is not NULL and Day is not null LIMIT 1";
+        s << "SELECT Month, Day, Hour, Minute from Time where Month is not NULL and Day is not null and EnvironmentPeriodIndex = " << envPeriodIndex << " LIMIT 1";
 
         sqlite3_stmt* sqlStmtPtr;
         int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, nullptr);
@@ -2273,6 +2263,9 @@ namespace openstudio{
           if (includeHourAndMinute){
             hour = sqlite3_column_int(sqlStmtPtr, 2);
             minute = sqlite3_column_int(sqlStmtPtr, 3);
+          } else{
+            hour = 1;
+            minute = 0;
           }
         }
         sqlite3_finalize(sqlStmtPtr);
@@ -2288,28 +2281,78 @@ namespace openstudio{
       return openstudio::DateTime(date, time);
     }
 
+    openstudio::DateTime SqlFile_Impl::lastDateTime(bool includeHourAndMinute, int envPeriodIndex)
+    {
+      // default until added to eplusout.sql from energy plus
+      unsigned month = 1, day = 1, hour = 1, minute = 0;
+
+      openstudio::YearDescription yd;
+      yd.isLeapYear = false;
+
+      if (m_db)
+      {
+        std::stringstream s;
+        s << "SELECT Month, Day, Hour, Minute from Time where Month is not NULL and Day is not null and EnvironmentPeriodIndex = " << envPeriodIndex << " order by TimeIndex DESC LIMIT 1";
+
+        sqlite3_stmt* sqlStmtPtr;
+        int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, nullptr);
+
+        code = sqlite3_step(sqlStmtPtr);
+        if (code == SQLITE_ROW)
+        {
+          month = sqlite3_column_int(sqlStmtPtr, 0);
+          day = sqlite3_column_int(sqlStmtPtr, 1);
+          if (includeHourAndMinute){
+            hour = sqlite3_column_int(sqlStmtPtr, 2);
+            minute = sqlite3_column_int(sqlStmtPtr, 3);
+          }else{
+            hour = 24;
+            minute = 0;
+          }
+        }
+        sqlite3_finalize(sqlStmtPtr);
+
+        // DLM: could also try to check DayType to find yearStartsOnDayOfWeek
+        if ((month == 2) && (day == 29)){
+          yd.isLeapYear = true;
+        }
+      }
+      // DLM: potential leap year problem
+      openstudio::Date date(monthOfYear(month), day, yd);
+      openstudio::Time time(0, hour, minute, 0);
+      return openstudio::DateTime(date, time);
+    }
+
+
     openstudio::OptionalTimeSeries SqlFile_Impl::timeSeries(const DataDictionaryItem& dataDictionary)
     {
       openstudio::OptionalTimeSeries ts;
       std::string units = dataDictionary.units;
 
-      boost::optional<openstudio::DateTime> startDateTime; 
-      std::vector<long> stdSecondsFromStart;
-      stdSecondsFromStart.reserve(8760);
+      boost::optional<openstudio::DateTime> firstReportDateTime;
+      std::vector<long> stdSecondsFromFirstReport;
+      stdSecondsFromFirstReport.reserve(8760);
 
       std::vector<double> stdValues;
       stdValues.reserve(8760);
       boost::optional<unsigned> reportingIntervalMinutes;
 
+      ReportingFrequency reportingFrequency(ReportingFrequency::RunPeriod);
       bool isIntervalTimeSeries = false;
       try {
-        ReportingFrequency reportingFrequency(dataDictionary.reportingFrequency);
-        isIntervalTimeSeries = (reportingFrequency != ReportingFrequency::Detailed);
+        reportingFrequency = ReportingFrequency(dataDictionary.reportingFrequency);
+        isIntervalTimeSeries = (reportingFrequency == ReportingFrequency::Timestep) ||
+                               (reportingFrequency == ReportingFrequency::Hourly) ||
+                               (reportingFrequency == ReportingFrequency::Daily);
+
       }catch(const std::exception&){
       }
 
       if (m_db) 
       {
+        std::string energyPlusVersion = this->energyPlusVersion();
+        VersionString version(energyPlusVersion);
+
         std::stringstream s;
         s << "SELECT dt.VariableValue, Time.Month, Time.Day, Time.Hour, Time.Minute, Time.Interval FROM ";
         s << dataDictionary.table;
@@ -2350,19 +2393,40 @@ namespace openstudio{
           unsigned day = sqlite3_column_int(sqlStmtPtr, 2);
           unsigned intervalMinutes = sqlite3_column_int(sqlStmtPtr, 5); // used for run periods
 
-          if (!startDateTime){
-            if ((month==0) || (day==0)){
-              // gets called for RunPeriod reports, just returns the first date in the time table, not sure if this is right
-              startDateTime = firstDateTime(false);
-            }else{
-              // DLM: potential leap year problem
-              startDateTime = openstudio::DateTime(openstudio::Date(month, day), openstudio::Time(0, 0, intervalMinutes, 0));
+          if ((version.major() == 8) && (version.minor() == 3)){
+            // workaround for bug in E+ 8.3, issue #1692
+            if (reportingFrequency == ReportingFrequency::Daily){
+              intervalMinutes = 24 * 60;
+            } else if (reportingFrequency == ReportingFrequency::Monthly){
+              intervalMinutes = day * 24 * 60;
+            } else if (reportingFrequency == ReportingFrequency::RunPeriod){
+              DateTime firstDateTime = this->firstDateTime(false, dataDictionary.envPeriodIndex);
+              DateTime lastDateTime = this->lastDateTime(false, dataDictionary.envPeriodIndex);
+              Time deltaT = lastDateTime - firstDateTime;
+              intervalMinutes = deltaT.totalMinutes() + 60;
             }
           }
 
-          cumulativeSeconds += 60 * intervalMinutes;
+          if (!firstReportDateTime){
+            if ((month==0) || (day==0)){
+              // gets called for RunPeriod reports
+              firstReportDateTime = lastDateTime(false, dataDictionary.envPeriodIndex);
+            } else{
+              // DLM: potential leap year problem
+              if (intervalMinutes >= 24 * 60){
+                // Daily or Monthly
+                OS_ASSERT(intervalMinutes % (24 * 60) == 0);
+                firstReportDateTime = openstudio::DateTime(openstudio::Date(month, day), openstudio::Time(1, 0, 0, 0));
+              } else {
+                firstReportDateTime = openstudio::DateTime(openstudio::Date(month, day), openstudio::Time(0, 0, intervalMinutes, 0));
+              }
 
-          stdSecondsFromStart.push_back(cumulativeSeconds);
+            }
+          }
+
+          stdSecondsFromFirstReport.push_back(cumulativeSeconds);
+           
+          cumulativeSeconds += 60*intervalMinutes;
 
           // check if this interval is same as the others
           if (isIntervalTimeSeries && !reportingIntervalMinutes){
@@ -2379,14 +2443,14 @@ namespace openstudio{
         // must finalize to prevent memory leaks
         sqlite3_finalize(sqlStmtPtr);
 
-        if (startDateTime && !stdSecondsFromStart.empty()){
+        if (firstReportDateTime && !stdSecondsFromFirstReport.empty()){
           if (isIntervalTimeSeries){
             openstudio::Time intervalTime(0,0,*reportingIntervalMinutes,0);
             openstudio::Vector values = createVector(stdValues);
-            ts = openstudio::TimeSeries(*startDateTime, intervalTime, values, units);
+            ts = openstudio::TimeSeries(*firstReportDateTime, intervalTime, values, units);
           }else{
             openstudio::Vector values = createVector(stdValues);
-            ts = openstudio::TimeSeries(*startDateTime, stdSecondsFromStart, values, units);
+            ts = openstudio::TimeSeries(*firstReportDateTime, stdSecondsFromFirstReport, values, units);
           }
         }
       }
@@ -2472,6 +2536,24 @@ namespace openstudio{
           LOG(Debug, "Trying query: " << queryEnvPeriod << ", " << reportingFrequency << ", " << timeSeriesName << ", " << upperKeyValue );
           ts = timeSeries(queryEnvPeriod, reportingFrequency, timeSeriesName, upperKeyValue);
         }
+
+        if (!ts){
+          if (istringEqual("Annual", reportingFrequency) || istringEqual("Environment", reportingFrequency)){
+            LOG(Debug, "Trying query: " << queryEnvPeriod << ", " << "Run Period" << ", " << timeSeriesName << ", " << upperKeyValue);
+            ts = timeSeries(queryEnvPeriod, "Run Period", timeSeriesName, keyValue);
+          }
+        }
+
+        if (!ts){
+          openstudio::OptionalReportingFrequency freq = reportingFrequencyFromDB(reportingFrequency);
+          if (freq){
+            if (reportingFrequency != freq->valueDescription()){
+              LOG(Debug, "Trying query: " << queryEnvPeriod << ", " << freq->valueDescription() << ", " << timeSeriesName << ", " << upperKeyValue);
+              ts = timeSeries(queryEnvPeriod, freq->valueDescription(), timeSeriesName, keyValue);
+            }
+          }
+        }
+        
 
       } else if (!iEpRfNKv->timeSeries.values().empty()) {
         ts = iEpRfNKv->timeSeries;
@@ -2832,7 +2914,26 @@ namespace openstudio{
     // DLM@20100511: can we query this?
     std::string SqlFile_Impl::energyPlusVersion() const
     {
-      return "5-0-0";
+      std::string result;
+      if (m_db) {
+        sqlite3_stmt* sqlStmtPtr;
+        sqlite3_prepare_v2(m_db, "SELECT EnergyPlusVersion FROM Simulations", -1, &sqlStmtPtr, nullptr);
+        int code = sqlite3_step(sqlStmtPtr);
+        if (code == SQLITE_ROW) {
+          // in 8.1 this is 'EnergyPlus-Windows-32 8.1.0.008, YMD=2014.11.08 22:49'
+          // in 8.2 this is 'EnergyPlus, Version 8.2.0-8397c2e30b, YMD=2015.01.09 08:37'
+          // radiance script is writing 'EnergyPlus, VERSION 8.2, (OpenStudio) YMD=2015.1.9 08:35:36'
+          boost::regex version_regex("\\d\\.\\d[\\.\\d]*");
+          std::string version_line = columnText(sqlite3_column_text(sqlStmtPtr, 0));
+          boost::smatch version_match;
+
+          if (boost::regex_search(version_line, version_match, version_regex)){
+            result = version_match[0].str();
+          }
+        }
+        sqlite3_finalize(sqlStmtPtr);
+      }
+      return result;
     }
 
     /// Energy Plus eplusout.sql file name

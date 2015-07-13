@@ -95,10 +95,6 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Humidifier_Steam_ElectricFields::AvailabilityScheduleName);
   }
 
-  boost::optional<double> HumidifierSteamElectric_Impl::ratedCapacity() const {
-    return getDouble(OS_Humidifier_Steam_ElectricFields::RatedCapacity,true);
-  }
-
   boost::optional<double> HumidifierSteamElectric_Impl::ratedPower() const {
     return getDouble(OS_Humidifier_Steam_ElectricFields::RatedPower,true);
   }
@@ -134,23 +130,6 @@ namespace detail {
 
   void HumidifierSteamElectric_Impl::resetAvailabilitySchedule() {
     bool result = setString(OS_Humidifier_Steam_ElectricFields::AvailabilityScheduleName, "");
-    OS_ASSERT(result);
-  }
-
-  bool HumidifierSteamElectric_Impl::setRatedCapacity(boost::optional<double> ratedCapacity) {
-    bool result(false);
-    if (ratedCapacity) {
-      result = setDouble(OS_Humidifier_Steam_ElectricFields::RatedCapacity, ratedCapacity.get());
-    }
-    else {
-      resetRatedCapacity();
-      result = true;
-    }
-    return result;
-  }
-
-  void HumidifierSteamElectric_Impl::resetRatedCapacity() {
-    bool result = setString(OS_Humidifier_Steam_ElectricFields::RatedCapacity, "");
     OS_ASSERT(result);
   }
 
@@ -227,13 +206,39 @@ namespace detail {
   //   OS_ASSERT(result);
   // }
 
+  boost::optional<double> HumidifierSteamElectric_Impl::ratedCapacity() const {
+    return getDouble(OS_Humidifier_Steam_ElectricFields::RatedCapacity,true);
+  }
+
+  bool HumidifierSteamElectric_Impl::isRatedCapacityAutosized() const {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_Humidifier_Steam_ElectricFields::RatedCapacity, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "autosize");
+    }
+    return result;
+  }
+
+  bool HumidifierSteamElectric_Impl::setRatedCapacity(boost::optional<double> ratedCapacity) {
+    bool result(false);
+    if (ratedCapacity) {
+      result = setDouble(OS_Humidifier_Steam_ElectricFields::RatedCapacity, ratedCapacity.get());
+    }
+    return result;
+  }
+
+  void HumidifierSteamElectric_Impl::autosizeRatedCapacity() {
+    bool result = setString(OS_Humidifier_Steam_ElectricFields::RatedCapacity, "autosize");
+    OS_ASSERT(result);
+  }
+
 } // detail
 
 HumidifierSteamElectric::HumidifierSteamElectric(const Model& model)
   : StraightComponent(HumidifierSteamElectric::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::HumidifierSteamElectric_Impl>());
-  setRatedCapacity(.00004);
+  autosizeRatedCapacity();
   setRatedPower(104000);
   setString(OS_Humidifier_Steam_ElectricFields::WaterStorageTankName,"");
 }
@@ -244,10 +249,6 @@ IddObjectType HumidifierSteamElectric::iddObjectType() {
 
 boost::optional<Schedule> HumidifierSteamElectric::availabilitySchedule() const {
   return getImpl<detail::HumidifierSteamElectric_Impl>()->availabilitySchedule();
-}
-
-boost::optional<double> HumidifierSteamElectric::ratedCapacity() const {
-  return getImpl<detail::HumidifierSteamElectric_Impl>()->ratedCapacity();
 }
 
 boost::optional<double> HumidifierSteamElectric::ratedPower() const {
@@ -278,14 +279,6 @@ void HumidifierSteamElectric::resetAvailabilitySchedule() {
   getImpl<detail::HumidifierSteamElectric_Impl>()->resetAvailabilitySchedule();
 }
 
-bool HumidifierSteamElectric::setRatedCapacity(double ratedCapacity) {
-  return getImpl<detail::HumidifierSteamElectric_Impl>()->setRatedCapacity(ratedCapacity);
-}
-
-void HumidifierSteamElectric::resetRatedCapacity() {
-  getImpl<detail::HumidifierSteamElectric_Impl>()->resetRatedCapacity();
-}
-
 bool HumidifierSteamElectric::setRatedPower(double ratedPower) {
   return getImpl<detail::HumidifierSteamElectric_Impl>()->setRatedPower(ratedPower);
 }
@@ -312,6 +305,22 @@ bool HumidifierSteamElectric::setStandbyPower(double standbyPower) {
 
 void HumidifierSteamElectric::resetStandbyPower() {
   getImpl<detail::HumidifierSteamElectric_Impl>()->resetStandbyPower();
+}
+
+boost::optional<double> HumidifierSteamElectric::ratedCapacity() const {
+  return getImpl<detail::HumidifierSteamElectric_Impl>()->ratedCapacity();
+}
+
+bool HumidifierSteamElectric::isRatedCapacityAutosized() const {
+  return getImpl<detail::HumidifierSteamElectric_Impl>()->isRatedCapacityAutosized();
+}
+
+bool HumidifierSteamElectric::setRatedCapacity(double ratedCapacity) {
+  return getImpl<detail::HumidifierSteamElectric_Impl>()->setRatedCapacity(ratedCapacity);
+}
+
+void HumidifierSteamElectric::autosizeRatedCapacity() {
+  getImpl<detail::HumidifierSteamElectric_Impl>()->autosizeRatedCapacity();
 }
 
 // bool HumidifierSteamElectric::setWaterStorageTank(const WaterStorageTank& waterStorageTank) {

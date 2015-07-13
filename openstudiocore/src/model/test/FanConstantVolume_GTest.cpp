@@ -77,20 +77,20 @@ TEST_F(ModelFixture,FanConstantVolume_addToNode) {
   EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
 
   if( boost::optional<Node> OANode = outdoorAirSystem.outboardOANode() ) {
-    EXPECT_FALSE(testObject.addToNode(*OANode));
-    EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
-    EXPECT_EQ( (unsigned)1, outdoorAirSystem.oaComponents().size() );
+    EXPECT_TRUE(testObject.addToNode(*OANode));
+    EXPECT_EQ( (unsigned)3, airLoop.supplyComponents().size() );
+    EXPECT_EQ( (unsigned)3, outdoorAirSystem.oaComponents().size() );
   }
 
   if( boost::optional<Node> reliefNode = outdoorAirSystem.outboardReliefNode() ) {
-    EXPECT_FALSE(testObject.addToNode(*reliefNode));
-    EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
-    EXPECT_EQ( (unsigned)1, outdoorAirSystem.reliefComponents().size() );
+    EXPECT_TRUE(testObject.addToNode(*reliefNode));
+    EXPECT_EQ( (unsigned)3, airLoop.supplyComponents().size() );
+    EXPECT_EQ( (unsigned)3, outdoorAirSystem.reliefComponents().size() );
   }
 
   FanConstantVolume testObjectClone = testObject.clone(m).cast<FanConstantVolume>();
   supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)7, airLoop.supplyComponents().size() );
+  EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
 }

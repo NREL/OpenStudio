@@ -72,6 +72,8 @@ namespace detail {
 
     boost::optional<double> ratedCapacity() const;
 
+    bool isRatedCapacityAutosized() const;
+
     boost::optional<double> ratedPower() const;
 
     bool isRatedPowerAutosized() const;
@@ -92,7 +94,7 @@ namespace detail {
 
     bool setRatedCapacity(boost::optional<double> ratedCapacity);
 
-    void resetRatedCapacity();
+    void autosizeRatedCapacity();
 
     bool setRatedPower(boost::optional<double> ratedPower);
 

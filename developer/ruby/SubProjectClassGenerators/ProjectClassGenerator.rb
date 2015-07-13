@@ -367,7 +367,7 @@ class ProjectClassGenerator < SubProjectClassGenerator
           result << ",\n"
       result << " " * constructorPreamble.size << "const " << @rightJoinClass << "Record& " 
           result << @rightArgument << ")\n"
-      result << "  : JoinRecord(boost::shared_ptr<detail::" << @className << "_Impl(\n"
+      result << "  : JoinRecord(std::shared_ptr<detail::" << @className << "_Impl(\n"
       result << "        new detail::" << @className << "_Impl(" << @leftArgument << ", " 
           result << @rightArgument << ")), " << @leftArgument << ".projectDatabase())\n"
       result << "{\n"
@@ -379,7 +379,7 @@ class ProjectClassGenerator < SubProjectClassGenerator
       # construct from serializedClass
       result << constructorPreamble << "const NAMESPACE::" << @serializedClass << "& " << @serializedClassArgument
       result << ", ProjectDatabase& database)\n"
-      result << "  : " << @baseClassName << "(boost::shared_ptr<detail::" << @className << "_Impl>(\n"
+      result << "  : " << @baseClassName << "(std::shared_ptr<detail::" << @className << "_Impl>(\n"
       result << "        new detail::" << @className << "_Impl(" << @serializedClassArgument << ", database)),\n"
       result << "        database)\n"
       result << "{\n"
@@ -391,7 +391,7 @@ class ProjectClassGenerator < SubProjectClassGenerator
       
       # construct from query
       result << constructorPreamble << "const QSqlQuery& query, ProjectDatabase& database)\n"    
-      result << "  : " << @baseClassName << "(boost::shared_ptr<detail::" << @className << "_Impl>(\n"
+      result << "  : " << @baseClassName << "(std::shared_ptr<detail::" << @className << "_Impl>(\n"
       result << "        new detail::" << @className << "_Impl(query, database)),\n"
       result << "        database)\n"
       result << "{\n"
@@ -510,7 +510,7 @@ class ProjectClassGenerator < SubProjectClassGenerator
     end
     
     result << "    /** Save the row that corresponds to this record in projectDatabase. */\n"
-    result << "    virtual void saveRow(const boost::shared_ptr<QSqlDatabase>& database);\n\n"
+    result << "    virtual void saveRow(const std::shared_ptr<QSqlDatabase>& database);\n\n"
     
     result << "    //@}\n"
     result << "    /** @name Getters */\n"
@@ -584,7 +584,7 @@ class ProjectClassGenerator < SubProjectClassGenerator
       
     end
     
-    result << "  void " << @className << "_Impl::saveRow(const boost::shared_ptr<QSqlDatabase>& database) {\n"
+    result << "  void " << @className << "_Impl::saveRow(const std::shared_ptr<QSqlDatabase>& database) {\n"
     result << "    QSqlQuery query(*database);\n"
     result << "    this->makeUpdateByIdQuery<" << @className << ">(query);\n"
     result << "    this->bindValues(query);\n"
@@ -743,7 +743,7 @@ class ProjectClassGenerator < SubProjectClassGenerator
       result << "  //   ...\n"
       result << "  // }\n\n"
       result << "  OS_ASSERT(false);\n"
-      result << "  return " << @className << "(boost::shared_ptr<detail::" << @className << "_Impl>());\n"
+      result << "  return " << @className << "(std::shared_ptr<detail::" << @className << "_Impl>());\n"
       result << "}\n\n"
       
     end
@@ -910,7 +910,7 @@ class ProjectClassGenerator < SubProjectClassGenerator
     if pImpl
       result << "\n"
       result << "  /** Construct from impl. */\n"
-      result << "  " << @className << "(boost::shared_ptr<detail::" << @className << "_Impl> impl,\n"
+      result << "  " << @className << "(std::shared_ptr<detail::" << @className << "_Impl> impl,\n"
       result << "  " << " " * @className.size << " ProjectDatabase database);\n\n"
     end
 
@@ -1046,7 +1046,7 @@ class ProjectClassGenerator < SubProjectClassGenerator
     
       # construct from impl and database
       result << "\n"
-      result << constructorPreamble << "boost::shared_ptr<detail::" << @className << "_Impl> impl,\n"
+      result << constructorPreamble << "std::shared_ptr<detail::" << @className << "_Impl> impl,\n"
       result << " " * constructorPreamble.size << "ProjectDatabase database)\n"
       result << "  : " << @baseClassName << "(impl, database)\n"
       result << "{\n"

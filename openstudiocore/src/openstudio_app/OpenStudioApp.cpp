@@ -801,7 +801,7 @@ void OpenStudioApp::newModel()
 
 void  OpenStudioApp::showHelp()
 {
-  QDesktopServices::openUrl(QUrl("http://nrel.github.io/OpenStudio-user-documentation/next_steps/openstudio_application_interface/"));
+  QDesktopServices::openUrl(QUrl("http://nrel.github.io/OpenStudio-user-documentation/reference/openstudio_application_interface/"));
 }
 
 void  OpenStudioApp::showAbout()
