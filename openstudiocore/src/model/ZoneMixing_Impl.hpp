@@ -26,16 +26,7 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Zone;
-class Schedule;
-class Zone;
-class Schedule;
-class Schedule;
-class Schedule;
-class Schedule;
-class Schedule;
-class Schedule;
+class ThermalZone;
 class Schedule;
 
 namespace detail {
@@ -75,15 +66,11 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Zone.
-    Zone zone() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
+    ThermalZone zone() const;
+    
     Schedule schedule() const;
 
     std::string designFlowRateCalculationMethod() const;
-
-    bool isDesignFlowRateCalculationMethodDefaulted() const;
 
     boost::optional<double> designFlowRate() const;
 
@@ -93,66 +80,41 @@ namespace detail {
 
     boost::optional<double> airChangesperHour() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Zone.
-    boost::optional<Zone> sourceZone() const;
+    boost::optional<ThermalZone> sourceZone() const;
 
     double deltaTemperature() const;
 
     bool isDeltaTemperatureDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> deltaTemperatureSchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> minimumZoneTemperatureSchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> maximumZoneTemperatureSchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> minimumSourceZoneTemperatureSchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> maximumSourceZoneTemperatureSchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> minimumOutdoorTemperatureSchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> maximumOutdoorTemperatureSchedule() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Zone.
-    bool setZone(const Zone& zone);
-
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setSchedule(Schedule& schedule);
 
-    bool setDesignFlowRateCalculationMethod(std::string designFlowRateCalculationMethod);
+    bool setDesignFlowRate(double designFlowRate);
 
-    void resetDesignFlowRateCalculationMethod();
+    bool setFlowRateperZoneFloorArea(double flowRateperZoneFloorArea);
 
-    bool setDesignFlowRate(boost::optional<double> designFlowRate);
+    bool setFlowRateperPerson(double flowRateperPerson);
 
-    void resetDesignFlowRate();
+    bool setAirChangesperHour(double airChangesperHour);
 
-    bool setFlowRateperZoneFloorArea(boost::optional<double> flowRateperZoneFloorArea);
-
-    void resetFlowRateperZoneFloorArea();
-
-    bool setFlowRateperPerson(boost::optional<double> flowRateperPerson);
-
-    void resetFlowRateperPerson();
-
-    bool setAirChangesperHour(boost::optional<double> airChangesperHour);
-
-    void resetAirChangesperHour();
-
-    // TODO: Check argument type. From object lists, some candidates are: Zone.
-    bool setSourceZone(const boost::optional<Zone>& zone);
+    bool setSourceZone(const ThermalZone& zone);
 
     void resetSourceZone();
 
@@ -160,37 +122,30 @@ namespace detail {
 
     void resetDeltaTemperature();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setDeltaTemperatureSchedule(Schedule& schedule);
 
     void resetDeltaTemperatureSchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setMinimumZoneTemperatureSchedule(Schedule& schedule);
 
     void resetMinimumZoneTemperatureSchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setMaximumZoneTemperatureSchedule(Schedule& schedule);
 
     void resetMaximumZoneTemperatureSchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setMinimumSourceZoneTemperatureSchedule(Schedule& schedule);
 
     void resetMinimumSourceZoneTemperatureSchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setMaximumSourceZoneTemperatureSchedule(Schedule& schedule);
 
     void resetMaximumSourceZoneTemperatureSchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setMinimumOutdoorTemperatureSchedule(Schedule& schedule);
 
     void resetMinimumOutdoorTemperatureSchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setMaximumOutdoorTemperatureSchedule(Schedule& schedule);
 
     void resetMaximumOutdoorTemperatureSchedule();
@@ -201,15 +156,11 @@ namespace detail {
 
     //@}
    protected:
+
    private:
+
     REGISTER_LOGGER("openstudio.model.ZoneMixing");
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Zone> optionalZone() const;
-    boost::optional<Schedule> optionalSchedule() const;
   };
 
 } // detail

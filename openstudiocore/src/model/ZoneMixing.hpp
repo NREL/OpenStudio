@@ -27,16 +27,7 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Zone;
-class Schedule;
-class Zone;
-class Schedule;
-class Schedule;
-class Schedule;
-class Schedule;
-class Schedule;
-class Schedule;
+class ThermalZone;
 class Schedule;
 
 namespace detail {
@@ -51,7 +42,7 @@ class MODEL_API ZoneMixing : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit ZoneMixing(const Model& model);
+  explicit ZoneMixing(const ThermalZone& thermalZone);
 
   virtual ~ZoneMixing() {}
 
@@ -59,20 +50,16 @@ class MODEL_API ZoneMixing : public ModelObject {
 
   static IddObjectType iddObjectType();
 
-  static std::vector<std::string> designFlowRateCalculationMethodValues();
-
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Zone.
-  Zone zone() const;
+  /// Returns the ThermalZone which receives air from this mixing object.
+  ThermalZone zone() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
+  /// Returns fractional schedule which moderates amount of air flow from the design level.
   Schedule schedule() const;
 
   std::string designFlowRateCalculationMethod() const;
-
-  bool isDesignFlowRateCalculationMethodDefaulted() const;
 
   boost::optional<double> designFlowRate() const;
 
@@ -81,105 +68,93 @@ class MODEL_API ZoneMixing : public ModelObject {
   boost::optional<double> flowRateperPerson() const;
 
   boost::optional<double> airChangesperHour() const;
+  
+  /// Returns the ThermalZone which supplies air to this mixing object.
+  boost::optional<ThermalZone> sourceZone() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Zone.
-  boost::optional<Zone> sourceZone() const;
-
+  /// Returns the constant temperature differential between source and receiving zones below which mixing is shutoff.
+  // DLM: is this a signed difference or absolute?
   double deltaTemperature() const;
 
   bool isDeltaTemperatureDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
+  /// Returns the temperature schedule containing the differential between source and receiving zones versus time below which mixing is shutoff.
   boost::optional<Schedule> deltaTemperatureSchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
+  /// Returns the temperature schedule containing the receiving zone dry-bulb temperature below which mixing is shutoff.
   boost::optional<Schedule> minimumZoneTemperatureSchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
+  /// Returns the temperature schedule containing the receiving zone dry-bulb temperature above which mixing is shutoff.
   boost::optional<Schedule> maximumZoneTemperatureSchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
+  /// Returns the temperature schedule containing the source zone dry-bulb temperature below which mixing is shutoff.
   boost::optional<Schedule> minimumSourceZoneTemperatureSchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
+  /// Returns the temperature schedule containing the source zone dry-bulb temperature above which mixing is shutoff.
   boost::optional<Schedule> maximumSourceZoneTemperatureSchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
+  /// Returns the temperature schedule containing the outdoor temperature below which mixing is shutoff.
   boost::optional<Schedule> minimumOutdoorTemperatureSchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
+  /// Returns the temperature schedule containing the outdoor temperature above which mixing is shutoff.
   boost::optional<Schedule> maximumOutdoorTemperatureSchedule() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Zone.
-  bool setZone(const Zone& zone);
-
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
+  /// Sets the fractional schedule which moderates amount of air flow from the design level.
   bool setSchedule(Schedule& schedule);
-
-  bool setDesignFlowRateCalculationMethod(std::string designFlowRateCalculationMethod);
-
-  void resetDesignFlowRateCalculationMethod();
 
   bool setDesignFlowRate(double designFlowRate);
 
-  void resetDesignFlowRate();
-
   bool setFlowRateperZoneFloorArea(double flowRateperZoneFloorArea);
-
-  void resetFlowRateperZoneFloorArea();
 
   bool setFlowRateperPerson(double flowRateperPerson);
 
-  void resetFlowRateperPerson();
-
   bool setAirChangesperHour(double airChangesperHour);
 
-  void resetAirChangesperHour();
-
-  // TODO: Check argument type. From object lists, some candidates are: Zone.
-  bool setSourceZone(const Zone& zone);
+  /// Sets the ThermalZone which supplies air to this mixing object.
+  bool setSourceZone(const ThermalZone& zone);
 
   void resetSourceZone();
 
+  /// Sets the constant temperature differential between source and receiving zones below which mixing is shutoff.
   void setDeltaTemperature(double deltaTemperature);
 
   void resetDeltaTemperature();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
+  /// Sets the temperature schedule containing the differential between source and receiving zones versus time below which mixing is shutoff.
   bool setDeltaTemperatureSchedule(Schedule& schedule);
 
   void resetDeltaTemperatureSchedule();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
+  /// Sets the temperature schedule containing the receiving zone dry-bulb temperature below which mixing is shutoff.
   bool setMinimumZoneTemperatureSchedule(Schedule& schedule);
 
   void resetMinimumZoneTemperatureSchedule();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
+  /// Sets the temperature schedule containing the receiving zone dry-bulb temperature above which mixing is shutoff.
   bool setMaximumZoneTemperatureSchedule(Schedule& schedule);
 
   void resetMaximumZoneTemperatureSchedule();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
+  /// Sets the temperature schedule containing the source zone dry-bulb temperature below which mixing is shutoff.
   bool setMinimumSourceZoneTemperatureSchedule(Schedule& schedule);
 
   void resetMinimumSourceZoneTemperatureSchedule();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
+  /// Sets the temperature schedule containing the source zone dry-bulb temperature above which mixing is shutoff.
   bool setMaximumSourceZoneTemperatureSchedule(Schedule& schedule);
 
   void resetMaximumSourceZoneTemperatureSchedule();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
+  /// Returns the temperature schedule containing the outdoor temperature below which mixing is shutoff.
   bool setMinimumOutdoorTemperatureSchedule(Schedule& schedule);
 
   void resetMinimumOutdoorTemperatureSchedule();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
+  /// Returns the temperature schedule containing the outdoor temperature above which mixing is shutoff.
   bool setMaximumOutdoorTemperatureSchedule(Schedule& schedule);
 
   void resetMaximumOutdoorTemperatureSchedule();
@@ -189,6 +164,7 @@ class MODEL_API ZoneMixing : public ModelObject {
   //@{
 
   //@}
+
  protected:
   /// @cond
   typedef detail::ZoneMixing_Impl ImplType;

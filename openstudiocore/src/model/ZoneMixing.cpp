@@ -20,13 +20,13 @@
 #include <model/ZoneMixing.hpp>
 #include <model/ZoneMixing_Impl.hpp>
 
-// TODO: Check the following class names against object getters and setters.
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeRegistry.hpp>
+#include <model/Model.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_ZoneMixing_FieldEnums.hxx>
@@ -115,16 +115,16 @@ namespace detail {
     return result;
   }
 
-  Zone ZoneMixing_Impl::zone() const {
-    boost::optional<Zone> value = optionalZone();
+  ThermalZone ZoneMixing_Impl::zone() const {
+    boost::optional<ThermalZone> value = getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_ZoneMixingFields::ZoneName);
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Zone attached.");
+      LOG_AND_THROW(briefDescription() << " does not have a receiving ThermalZone.");
     }
     return value.get();
   }
 
   Schedule ZoneMixing_Impl::schedule() const {
-    boost::optional<Schedule> value = optionalSchedule();
+    boost::optional<Schedule> value = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneMixingFields::ScheduleName);
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Schedule attached.");
     }
@@ -135,10 +135,6 @@ namespace detail {
     boost::optional<std::string> value = getString(OS_ZoneMixingFields::DesignFlowRateCalculationMethod,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  bool ZoneMixing_Impl::isDesignFlowRateCalculationMethodDefaulted() const {
-    return isEmpty(OS_ZoneMixingFields::DesignFlowRateCalculationMethod);
   }
 
   boost::optional<double> ZoneMixing_Impl::designFlowRate() const {
@@ -157,8 +153,8 @@ namespace detail {
     return getDouble(OS_ZoneMixingFields::AirChangesperHour,true);
   }
 
-  boost::optional<Zone> ZoneMixing_Impl::sourceZone() const {
-    return getObject<ModelObject>().getModelObjectTarget<Zone>(OS_ZoneMixingFields::SourceZoneName);
+  boost::optional<ThermalZone> ZoneMixing_Impl::sourceZone() const {
+    return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_ZoneMixingFields::SourceZoneName);
   }
 
   double ZoneMixing_Impl::deltaTemperature() const {
@@ -199,11 +195,6 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneMixingFields::MaximumOutdoorTemperatureScheduleName);
   }
 
-  bool ZoneMixing_Impl::setZone(const Zone& zone) {
-    bool result = setPointer(OS_ZoneMixingFields::ZoneName, zone.handle());
-    return result;
-  }
-
   bool ZoneMixing_Impl::setSchedule(Schedule& schedule) {
     bool result = ModelObject_Impl::setSchedule(OS_ZoneMixingFields::ScheduleName,
                                                 "ZoneMixing",
@@ -212,93 +203,33 @@ namespace detail {
     return result;
   }
 
-  bool ZoneMixing_Impl::setDesignFlowRateCalculationMethod(std::string designFlowRateCalculationMethod) {
-    bool result = setString(OS_ZoneMixingFields::DesignFlowRateCalculationMethod, designFlowRateCalculationMethod);
+  bool ZoneMixing_Impl::setDesignFlowRate(double designFlowRate) {
+    bool result(false);
+    result = setDouble(OS_ZoneMixingFields::DesignFlowRate, designFlowRate);
     return result;
   }
 
-  void ZoneMixing_Impl::resetDesignFlowRateCalculationMethod() {
-    bool result = setString(OS_ZoneMixingFields::DesignFlowRateCalculationMethod, "");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneMixing_Impl::setDesignFlowRate(boost::optional<double> designFlowRate) {
+  bool ZoneMixing_Impl::setFlowRateperZoneFloorArea(double flowRateperZoneFloorArea) {
     bool result(false);
-    if (designFlowRate) {
-      result = setDouble(OS_ZoneMixingFields::DesignFlowRate, designFlowRate.get());
-    }
-    else {
-      resetDesignFlowRate();
-      result = true;
-    }
+    result = setDouble(OS_ZoneMixingFields::FlowRateperZoneFloorArea, flowRateperZoneFloorArea);
     return result;
   }
 
-  void ZoneMixing_Impl::resetDesignFlowRate() {
-    bool result = setString(OS_ZoneMixingFields::DesignFlowRate, "");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneMixing_Impl::setFlowRateperZoneFloorArea(boost::optional<double> flowRateperZoneFloorArea) {
+  bool ZoneMixing_Impl::setFlowRateperPerson(double flowRateperPerson) {
     bool result(false);
-    if (flowRateperZoneFloorArea) {
-      result = setDouble(OS_ZoneMixingFields::FlowRateperZoneFloorArea, flowRateperZoneFloorArea.get());
-    }
-    else {
-      resetFlowRateperZoneFloorArea();
-      result = true;
-    }
+    result = setDouble(OS_ZoneMixingFields::FlowRateperPerson, flowRateperPerson);
     return result;
   }
 
-  void ZoneMixing_Impl::resetFlowRateperZoneFloorArea() {
-    bool result = setString(OS_ZoneMixingFields::FlowRateperZoneFloorArea, "");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneMixing_Impl::setFlowRateperPerson(boost::optional<double> flowRateperPerson) {
+  bool ZoneMixing_Impl::setAirChangesperHour(double airChangesperHour) {
     bool result(false);
-    if (flowRateperPerson) {
-      result = setDouble(OS_ZoneMixingFields::FlowRateperPerson, flowRateperPerson.get());
-    }
-    else {
-      resetFlowRateperPerson();
-      result = true;
-    }
+    result = setDouble(OS_ZoneMixingFields::AirChangesperHour, airChangesperHour);
     return result;
   }
 
-  void ZoneMixing_Impl::resetFlowRateperPerson() {
-    bool result = setString(OS_ZoneMixingFields::FlowRateperPerson, "");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneMixing_Impl::setAirChangesperHour(boost::optional<double> airChangesperHour) {
+  bool ZoneMixing_Impl::setSourceZone(const ThermalZone& zone) {
     bool result(false);
-    if (airChangesperHour) {
-      result = setDouble(OS_ZoneMixingFields::AirChangesperHour, airChangesperHour.get());
-    }
-    else {
-      resetAirChangesperHour();
-      result = true;
-    }
-    return result;
-  }
-
-  void ZoneMixing_Impl::resetAirChangesperHour() {
-    bool result = setString(OS_ZoneMixingFields::AirChangesperHour, "");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneMixing_Impl::setSourceZone(const boost::optional<Zone>& zone) {
-    bool result(false);
-    if (zone) {
-      result = setPointer(OS_ZoneMixingFields::SourceZoneName, zone.get().handle());
-    }
-    else {
-      resetSourceZone();
-      result = true;
-    }
+    result = setPointer(OS_ZoneMixingFields::SourceZoneName, zone.handle());
     return result;
   }
 
@@ -318,10 +249,10 @@ namespace detail {
   }
 
   bool ZoneMixing_Impl::setDeltaTemperatureSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_ZoneMixingFields::DeltaTemperatureScheduleName,
-                              "ZoneMixing",
-                              "Delta Temperature",
-                              schedule);
+    bool result = ModelObject_Impl::setSchedule(OS_ZoneMixingFields::DeltaTemperatureScheduleName,
+                                                "ZoneMixing",
+                                                "Delta Temperature",
+                                                schedule);
     return result;
   }
 
@@ -331,10 +262,10 @@ namespace detail {
   }
 
   bool ZoneMixing_Impl::setMinimumZoneTemperatureSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_ZoneMixingFields::MinimumZoneTemperatureScheduleName,
-                              "ZoneMixing",
-                              "Minimum Zone Temperature",
-                              schedule);
+    bool result = ModelObject_Impl::setSchedule(OS_ZoneMixingFields::MinimumZoneTemperatureScheduleName,
+                                                "ZoneMixing",
+                                                "Minimum Zone Temperature",
+                                                schedule);
     return result;
   }
 
@@ -344,10 +275,10 @@ namespace detail {
   }
 
   bool ZoneMixing_Impl::setMaximumZoneTemperatureSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_ZoneMixingFields::MaximumZoneTemperatureScheduleName,
-                              "ZoneMixing",
-                              "Maximum Zone Temperature",
-                              schedule);
+    bool result = ModelObject_Impl::setSchedule(OS_ZoneMixingFields::MaximumZoneTemperatureScheduleName,
+                                                "ZoneMixing",
+                                                "Maximum Zone Temperature",
+                                                schedule);
     return result;
   }
 
@@ -357,10 +288,10 @@ namespace detail {
   }
 
   bool ZoneMixing_Impl::setMinimumSourceZoneTemperatureSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_ZoneMixingFields::MinimumSourceZoneTemperatureScheduleName,
-                              "ZoneMixing",
-                              "Minimum Source Zone Temperature",
-                              schedule);
+    bool result = ModelObject_Impl::setSchedule(OS_ZoneMixingFields::MinimumSourceZoneTemperatureScheduleName,
+                                                "ZoneMixing",
+                                                "Minimum Source Zone Temperature",
+                                                schedule);
     return result;
   }
 
@@ -370,10 +301,10 @@ namespace detail {
   }
 
   bool ZoneMixing_Impl::setMaximumSourceZoneTemperatureSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_ZoneMixingFields::MaximumSourceZoneTemperatureScheduleName,
-                              "ZoneMixing",
-                              "Maximum Source Zone Temperature",
-                              schedule);
+    bool result = ModelObject_Impl::setSchedule(OS_ZoneMixingFields::MaximumSourceZoneTemperatureScheduleName,
+                                                "ZoneMixing",
+                                                "Maximum Source Zone Temperature",
+                                                schedule);
     return result;
   }
 
@@ -383,10 +314,10 @@ namespace detail {
   }
 
   bool ZoneMixing_Impl::setMinimumOutdoorTemperatureSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_ZoneMixingFields::MinimumOutdoorTemperatureScheduleName,
-                              "ZoneMixing",
-                              "Minimum Outdoor Temperature",
-                              schedule);
+    bool result = ModelObject_Impl::setSchedule(OS_ZoneMixingFields::MinimumOutdoorTemperatureScheduleName,
+                                                "ZoneMixing",
+                                                "Minimum Outdoor Temperature",
+                                                schedule);
     return result;
   }
 
@@ -396,10 +327,10 @@ namespace detail {
   }
 
   bool ZoneMixing_Impl::setMaximumOutdoorTemperatureSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_ZoneMixingFields::MaximumOutdoorTemperatureScheduleName,
-                              "ZoneMixing",
-                              "Maximum Outdoor Temperature",
-                              schedule);
+    bool result = ModelObject_Impl::setSchedule(OS_ZoneMixingFields::MaximumOutdoorTemperatureScheduleName,
+                                                "ZoneMixing",
+                                                "Maximum Outdoor Temperature",
+                                                schedule);
     return result;
   }
 
@@ -408,30 +339,17 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  boost::optional<Zone> ZoneMixing_Impl::optionalZone() const {
-    return getObject<ModelObject>().getModelObjectTarget<Zone>(OS_ZoneMixingFields::ZoneName);
-  }
-
-  boost::optional<Schedule> ZoneMixing_Impl::optionalSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneMixingFields::ScheduleName);
-  }
-
 } // detail
 
-ZoneMixing::ZoneMixing(const Model& model)
-  : ModelObject(ZoneMixing::iddObjectType(),model)
+ZoneMixing::ZoneMixing(const ThermalZone& zone)
+  : ModelObject(ZoneMixing::iddObjectType(), zone.model())
 {
   OS_ASSERT(getImpl<detail::ZoneMixing_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_ZoneMixingFields::ZoneName
-  //     OS_ZoneMixingFields::ScheduleName
-  bool ok = true;
-  // ok = setHandle();
+  bool ok = setPointer(OS_ZoneMixingFields::ZoneName, zone.handle());
   OS_ASSERT(ok);
-  // ok = setZone();
-  OS_ASSERT(ok);
-  // ok = setSchedule();
+
+  ok = setPointer(OS_ZoneMixingFields::ZoneName, zone.model().alwaysOnContinuousSchedule().handle());
   OS_ASSERT(ok);
 }
 
@@ -439,12 +357,7 @@ IddObjectType ZoneMixing::iddObjectType() {
   return IddObjectType(IddObjectType::OS_ZoneMixing);
 }
 
-std::vector<std::string> ZoneMixing::designFlowRateCalculationMethodValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_ZoneMixingFields::DesignFlowRateCalculationMethod);
-}
-
-Zone ZoneMixing::zone() const {
+ThermalZone ZoneMixing::zone() const {
   return getImpl<detail::ZoneMixing_Impl>()->zone();
 }
 
@@ -454,10 +367,6 @@ Schedule ZoneMixing::schedule() const {
 
 std::string ZoneMixing::designFlowRateCalculationMethod() const {
   return getImpl<detail::ZoneMixing_Impl>()->designFlowRateCalculationMethod();
-}
-
-bool ZoneMixing::isDesignFlowRateCalculationMethodDefaulted() const {
-  return getImpl<detail::ZoneMixing_Impl>()->isDesignFlowRateCalculationMethodDefaulted();
 }
 
 boost::optional<double> ZoneMixing::designFlowRate() const {
@@ -476,7 +385,7 @@ boost::optional<double> ZoneMixing::airChangesperHour() const {
   return getImpl<detail::ZoneMixing_Impl>()->airChangesperHour();
 }
 
-boost::optional<Zone> ZoneMixing::sourceZone() const {
+boost::optional<ThermalZone> ZoneMixing::sourceZone() const {
   return getImpl<detail::ZoneMixing_Impl>()->sourceZone();
 }
 
@@ -516,55 +425,27 @@ boost::optional<Schedule> ZoneMixing::maximumOutdoorTemperatureSchedule() const 
   return getImpl<detail::ZoneMixing_Impl>()->maximumOutdoorTemperatureSchedule();
 }
 
-bool ZoneMixing::setZone(const Zone& zone) {
-  return getImpl<detail::ZoneMixing_Impl>()->setZone(zone);
-}
-
 bool ZoneMixing::setSchedule(Schedule& schedule) {
   return getImpl<detail::ZoneMixing_Impl>()->setSchedule(schedule);
-}
-
-bool ZoneMixing::setDesignFlowRateCalculationMethod(std::string designFlowRateCalculationMethod) {
-  return getImpl<detail::ZoneMixing_Impl>()->setDesignFlowRateCalculationMethod(designFlowRateCalculationMethod);
-}
-
-void ZoneMixing::resetDesignFlowRateCalculationMethod() {
-  getImpl<detail::ZoneMixing_Impl>()->resetDesignFlowRateCalculationMethod();
 }
 
 bool ZoneMixing::setDesignFlowRate(double designFlowRate) {
   return getImpl<detail::ZoneMixing_Impl>()->setDesignFlowRate(designFlowRate);
 }
 
-void ZoneMixing::resetDesignFlowRate() {
-  getImpl<detail::ZoneMixing_Impl>()->resetDesignFlowRate();
-}
-
 bool ZoneMixing::setFlowRateperZoneFloorArea(double flowRateperZoneFloorArea) {
   return getImpl<detail::ZoneMixing_Impl>()->setFlowRateperZoneFloorArea(flowRateperZoneFloorArea);
-}
-
-void ZoneMixing::resetFlowRateperZoneFloorArea() {
-  getImpl<detail::ZoneMixing_Impl>()->resetFlowRateperZoneFloorArea();
 }
 
 bool ZoneMixing::setFlowRateperPerson(double flowRateperPerson) {
   return getImpl<detail::ZoneMixing_Impl>()->setFlowRateperPerson(flowRateperPerson);
 }
 
-void ZoneMixing::resetFlowRateperPerson() {
-  getImpl<detail::ZoneMixing_Impl>()->resetFlowRateperPerson();
-}
-
 bool ZoneMixing::setAirChangesperHour(double airChangesperHour) {
   return getImpl<detail::ZoneMixing_Impl>()->setAirChangesperHour(airChangesperHour);
 }
 
-void ZoneMixing::resetAirChangesperHour() {
-  getImpl<detail::ZoneMixing_Impl>()->resetAirChangesperHour();
-}
-
-bool ZoneMixing::setSourceZone(const Zone& zone) {
+bool ZoneMixing::setSourceZone(const ThermalZone& zone) {
   return getImpl<detail::ZoneMixing_Impl>()->setSourceZone(zone);
 }
 
