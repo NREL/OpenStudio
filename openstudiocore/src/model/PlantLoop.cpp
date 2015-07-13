@@ -75,7 +75,7 @@ PlantLoop_Impl::PlantLoop_Impl(const PlantLoop_Impl& other,
 
 std::vector<ModelObject> PlantLoop_Impl::demandComponents( HVACComponent inletComp,
                                                            HVACComponent outletComp,
-                                                           openstudio::IddObjectType type )
+                                                           openstudio::IddObjectType type ) const
 {
   return Loop_Impl::demandComponents(inletComp,outletComp,type);
 }
@@ -147,7 +147,7 @@ IddObjectType PlantLoop_Impl::iddObjectType() const {
   return PlantLoop::iddObjectType();
 }
 
-std::vector<ModelObject> PlantLoop_Impl::demandComponents(openstudio::IddObjectType type)
+std::vector<ModelObject> PlantLoop_Impl::demandComponents(openstudio::IddObjectType type) const
 {
   return demandComponents( demandInletNode(), demandOutletNode(), type );
 }
@@ -166,7 +166,7 @@ std::vector<ModelObject> PlantLoop_Impl::demandComponents(
     std::vector<HVACComponent> inletComps,
     std::vector<HVACComponent> outletComps,
     openstudio::IddObjectType type
-  )
+  ) const
 {
   return Loop_Impl::demandComponents(inletComps, outletComps, type);
 }
@@ -713,7 +713,7 @@ PlantLoop::PlantLoop(std::shared_ptr<detail::PlantLoop_Impl> impl)
 
 std::vector<ModelObject> PlantLoop::demandComponents(HVACComponent inletComp,
                                                      HVACComponent outletComp,
-                                                     openstudio::IddObjectType type)
+                                                     openstudio::IddObjectType type) const
 {
   return getImpl<detail::PlantLoop_Impl>()->demandComponents(inletComp, outletComp, type);
 }
@@ -733,7 +733,7 @@ std::vector<IdfObject> PlantLoop::remove()
 //  return getImpl<detail::PlantLoop_Impl>()->supplyComponents( type );
 //}
 
-std::vector<ModelObject> PlantLoop::demandComponents(openstudio::IddObjectType type)
+std::vector<ModelObject> PlantLoop::demandComponents(openstudio::IddObjectType type) const
 {
   return getImpl<detail::PlantLoop_Impl>()->demandComponents( type );
 }
@@ -759,7 +759,7 @@ ModelObject PlantLoop::clone(Model model) const
 std::vector<ModelObject> PlantLoop::demandComponents(std::vector<HVACComponent> inletComps,
     std::vector<HVACComponent> outletComps,
     openstudio::IddObjectType type
-  )
+  ) const
 {
   return getImpl<detail::PlantLoop_Impl>()->demandComponents( inletComps, outletComps, type);
 }

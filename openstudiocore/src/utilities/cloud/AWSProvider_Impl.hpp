@@ -25,7 +25,7 @@
 #include "../core/Path.hpp"
 
 #include <QProcess>
-#include <QTemporaryFile>
+#include <QTemporaryDir>
 
 namespace openstudio{
 
@@ -229,10 +229,10 @@ namespace detail{
     // sets the number of processor cores per worker
     void setNumWorkerProcessors(const unsigned numWorkerProcessors);
 
-    // returns the key pair's private key
+    // returns the cloud state in json format
     std::string privateKey() const;
 
-    // sets the key pair's private key
+    // sets the cloud state in json format
     void setPrivateKey(const std::string& privateKey);
 
     // returns the timestamp associated with the security group and key pair
@@ -308,7 +308,7 @@ namespace detail{
     //@{
 
     /// virtual destructor
-    virtual ~AWSProvider_Impl() {};
+    virtual ~AWSProvider_Impl();
 
     //@}
     /** @name Inherited accessor class members */
@@ -538,6 +538,8 @@ namespace detail{
     double parseCheckEstimatedChargesResults(const ProcessResults &);
     unsigned parseCheckTotalInstancesResults(const ProcessResults &);
 
+    void writeState() const;
+
     bool userAgreementSigned() const;
     bool authenticated() const;
 
@@ -546,7 +548,7 @@ namespace detail{
 
     path m_ruby;
     path m_script;
-    mutable QTemporaryFile m_privateKey;
+    mutable QTemporaryDir m_workingDir;
 
     QProcess* m_checkInternetProcess;
     QProcess* m_checkServiceProcess;

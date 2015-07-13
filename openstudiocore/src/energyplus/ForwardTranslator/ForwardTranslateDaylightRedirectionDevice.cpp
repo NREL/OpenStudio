@@ -34,41 +34,80 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateDaylightRedirectionDevice(model::DaylightRedirectionDevice & modelObject)
 {
-  IdfObject idfObject(openstudio::IddObjectType::WindowMaterial_Blind);
+  boost::optional<IdfObject> result;
 
-  m_idfObjects.push_back(idfObject);
+  if (modelObject.daylightRedirectionDeviceType() == "Film"){
+    result = IdfObject(openstudio::IddObjectType::WindowMaterial_Blind);
 
-  idfObject.setString(WindowMaterial_BlindFields::Name, modelObject.name().get());
-  idfObject.setString(WindowMaterial_BlindFields::SlatOrientation, "Horizontal");
-  idfObject.setDouble(WindowMaterial_BlindFields::SlatWidth, 0.0508); // 2 in
-  idfObject.setDouble(WindowMaterial_BlindFields::SlatSeparation, 0.0254); // 1 in
-  idfObject.setDouble(WindowMaterial_BlindFields::SlatThickness, 0.005);
-  idfObject.setDouble(WindowMaterial_BlindFields::SlatAngle, 60.0);
-  idfObject.setDouble(WindowMaterial_BlindFields::SlatConductivity, 221.0);
-  idfObject.setDouble(WindowMaterial_BlindFields::SlatBeamSolarTransmittance, 0.0);
-  idfObject.setDouble(WindowMaterial_BlindFields::FrontSideSlatBeamSolarReflectance, 0.9);
-  idfObject.setDouble(WindowMaterial_BlindFields::BackSideSlatBeamSolarReflectance, 0.9);
-  idfObject.setDouble(WindowMaterial_BlindFields::SlatDiffuseSolarTransmittance, 0.0);
-  idfObject.setDouble(WindowMaterial_BlindFields::FrontSideSlatDiffuseSolarReflectance, 0.9);
-  idfObject.setDouble(WindowMaterial_BlindFields::BackSideSlatDiffuseSolarReflectance, 0.9);
-  idfObject.setDouble(WindowMaterial_BlindFields::SlatBeamVisibleTransmittance, 0.0);
-  idfObject.setDouble(WindowMaterial_BlindFields::FrontSideSlatBeamVisibleReflectance, 0.9);
-  idfObject.setDouble(WindowMaterial_BlindFields::BackSideSlatBeamVisibleReflectance, 0.9);
-  idfObject.setDouble(WindowMaterial_BlindFields::SlatDiffuseVisibleTransmittance, 0.0);
-  idfObject.setDouble(WindowMaterial_BlindFields::FrontSideSlatDiffuseVisibleReflectance, 0.9);
-  idfObject.setDouble(WindowMaterial_BlindFields::BackSideSlatDiffuseVisibleReflectance, 0.9);
-  idfObject.setDouble(WindowMaterial_BlindFields::SlatInfraredHemisphericalTransmittance, 0.0);
-  idfObject.setDouble(WindowMaterial_BlindFields::FrontSideSlatInfraredHemisphericalEmissivity, 0.9);
-  idfObject.setDouble(WindowMaterial_BlindFields::BackSideSlatInfraredHemisphericalEmissivity, 0.9);
-  idfObject.setDouble(WindowMaterial_BlindFields::BlindtoGlassDistance, 0.0254);
-  idfObject.setDouble(WindowMaterial_BlindFields::BlindTopOpeningMultiplier, 0.5);
-  idfObject.setDouble(WindowMaterial_BlindFields::BlindBottomOpeningMultiplier, 0.0);
-  idfObject.setDouble(WindowMaterial_BlindFields::BlindLeftSideOpeningMultiplier, 0.5);
-  idfObject.setDouble(WindowMaterial_BlindFields::BlindRightSideOpeningMultiplier, 0.5);
-  idfObject.setDouble(WindowMaterial_BlindFields::MinimumSlatAngle, 60);
-  idfObject.setDouble(WindowMaterial_BlindFields::MaximumSlatAngle, 60);
+    m_idfObjects.push_back(*result);
 
-  return boost::optional<IdfObject>(idfObject);
+    result->setString(WindowMaterial_BlindFields::Name, modelObject.name().get());
+    result->setString(WindowMaterial_BlindFields::SlatOrientation, "Horizontal");
+    result->setDouble(WindowMaterial_BlindFields::SlatWidth, 0.0508); // 2 in
+    result->setDouble(WindowMaterial_BlindFields::SlatSeparation, 0.0254); // 1 in
+    result->setDouble(WindowMaterial_BlindFields::SlatThickness, 0.005);
+    result->setDouble(WindowMaterial_BlindFields::SlatAngle, 60.0);
+    result->setDouble(WindowMaterial_BlindFields::SlatConductivity, 221.0);
+    result->setDouble(WindowMaterial_BlindFields::SlatBeamSolarTransmittance, 0.0);
+    result->setDouble(WindowMaterial_BlindFields::FrontSideSlatBeamSolarReflectance, 0.9);
+    result->setDouble(WindowMaterial_BlindFields::BackSideSlatBeamSolarReflectance, 0.9);
+    result->setDouble(WindowMaterial_BlindFields::SlatDiffuseSolarTransmittance, 0.0);
+    result->setDouble(WindowMaterial_BlindFields::FrontSideSlatDiffuseSolarReflectance, 0.9);
+    result->setDouble(WindowMaterial_BlindFields::BackSideSlatDiffuseSolarReflectance, 0.9);
+    result->setDouble(WindowMaterial_BlindFields::SlatBeamVisibleTransmittance, 0.0);
+    result->setDouble(WindowMaterial_BlindFields::FrontSideSlatBeamVisibleReflectance, 0.9);
+    result->setDouble(WindowMaterial_BlindFields::BackSideSlatBeamVisibleReflectance, 0.9);
+    result->setDouble(WindowMaterial_BlindFields::SlatDiffuseVisibleTransmittance, 0.0);
+    result->setDouble(WindowMaterial_BlindFields::FrontSideSlatDiffuseVisibleReflectance, 0.9);
+    result->setDouble(WindowMaterial_BlindFields::BackSideSlatDiffuseVisibleReflectance, 0.9);
+    result->setDouble(WindowMaterial_BlindFields::SlatInfraredHemisphericalTransmittance, 0.0);
+    result->setDouble(WindowMaterial_BlindFields::FrontSideSlatInfraredHemisphericalEmissivity, 0.9);
+    result->setDouble(WindowMaterial_BlindFields::BackSideSlatInfraredHemisphericalEmissivity, 0.9);
+    result->setDouble(WindowMaterial_BlindFields::BlindtoGlassDistance, 0.0254);
+    result->setDouble(WindowMaterial_BlindFields::BlindTopOpeningMultiplier, 0.5);
+    result->setDouble(WindowMaterial_BlindFields::BlindBottomOpeningMultiplier, 0.0);
+    result->setDouble(WindowMaterial_BlindFields::BlindLeftSideOpeningMultiplier, 0.5);
+    result->setDouble(WindowMaterial_BlindFields::BlindRightSideOpeningMultiplier, 0.5);
+    result->setDouble(WindowMaterial_BlindFields::MinimumSlatAngle, 60);
+    result->setDouble(WindowMaterial_BlindFields::MaximumSlatAngle, 60);
+
+  } else if (modelObject.daylightRedirectionDeviceType() == "Louver"){
+    result = IdfObject(openstudio::IddObjectType::WindowMaterial_Blind);
+
+    m_idfObjects.push_back(*result);
+
+    result->setString(WindowMaterial_BlindFields::Name, modelObject.name().get());
+    result->setString(WindowMaterial_BlindFields::SlatOrientation, "Horizontal");
+    result->setDouble(WindowMaterial_BlindFields::SlatWidth, 0.0508); // 2 in
+    result->setDouble(WindowMaterial_BlindFields::SlatSeparation, 0.0254); // 1 in
+    result->setDouble(WindowMaterial_BlindFields::SlatThickness, 0.005);
+    result->setDouble(WindowMaterial_BlindFields::SlatAngle, 60.0);
+    result->setDouble(WindowMaterial_BlindFields::SlatConductivity, 221.0);
+    result->setDouble(WindowMaterial_BlindFields::SlatBeamSolarTransmittance, 0.0);
+    result->setDouble(WindowMaterial_BlindFields::FrontSideSlatBeamSolarReflectance, 0.9);
+    result->setDouble(WindowMaterial_BlindFields::BackSideSlatBeamSolarReflectance, 0.9);
+    result->setDouble(WindowMaterial_BlindFields::SlatDiffuseSolarTransmittance, 0.0);
+    result->setDouble(WindowMaterial_BlindFields::FrontSideSlatDiffuseSolarReflectance, 0.9);
+    result->setDouble(WindowMaterial_BlindFields::BackSideSlatDiffuseSolarReflectance, 0.9);
+    result->setDouble(WindowMaterial_BlindFields::SlatBeamVisibleTransmittance, 0.0);
+    result->setDouble(WindowMaterial_BlindFields::FrontSideSlatBeamVisibleReflectance, 0.9);
+    result->setDouble(WindowMaterial_BlindFields::BackSideSlatBeamVisibleReflectance, 0.9);
+    result->setDouble(WindowMaterial_BlindFields::SlatDiffuseVisibleTransmittance, 0.0);
+    result->setDouble(WindowMaterial_BlindFields::FrontSideSlatDiffuseVisibleReflectance, 0.9);
+    result->setDouble(WindowMaterial_BlindFields::BackSideSlatDiffuseVisibleReflectance, 0.9);
+    result->setDouble(WindowMaterial_BlindFields::SlatInfraredHemisphericalTransmittance, 0.0);
+    result->setDouble(WindowMaterial_BlindFields::FrontSideSlatInfraredHemisphericalEmissivity, 0.9);
+    result->setDouble(WindowMaterial_BlindFields::BackSideSlatInfraredHemisphericalEmissivity, 0.9);
+    result->setDouble(WindowMaterial_BlindFields::BlindtoGlassDistance, 0.0254);
+    result->setDouble(WindowMaterial_BlindFields::BlindTopOpeningMultiplier, 0.5);
+    result->setDouble(WindowMaterial_BlindFields::BlindBottomOpeningMultiplier, 0.0);
+    result->setDouble(WindowMaterial_BlindFields::BlindLeftSideOpeningMultiplier, 0.5);
+    result->setDouble(WindowMaterial_BlindFields::BlindRightSideOpeningMultiplier, 0.5);
+    result->setDouble(WindowMaterial_BlindFields::MinimumSlatAngle, 60);
+    result->setDouble(WindowMaterial_BlindFields::MaximumSlatAngle, 60);
+  }
+
+  return result;
 }
 
 } // energyplus

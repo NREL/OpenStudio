@@ -45,6 +45,10 @@
 #include "../model/AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp"
 #include "../model/AirTerminalSingleDuctVAVReheat.hpp"
 #include "../model/AirTerminalSingleDuctVAVReheat_Impl.hpp"
+#include "../model/AirTerminalSingleDuctParallelPIUReheat.hpp"
+#include "../model/AirTerminalSingleDuctParallelPIUReheat_Impl.hpp"
+#include "../model/AirTerminalSingleDuctSeriesPIUReheat.hpp"
+#include "../model/AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp"
 #include "../model/CoilCoolingCooledBeam.hpp"
 #include "../model/CoilCoolingCooledBeam_Impl.hpp"
 #include "../model/CoilCoolingLowTempRadiantConstFlow.hpp"
@@ -344,6 +348,46 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
               this, &InspectorView::addToLoopClicked);
 
       connect(static_cast<AirTerminalSingleDuctVAVReheatInspectorView *>(m_currentView), &AirTerminalSingleDuctVAVReheatInspectorView::removeFromLoopClicked,
+              this, &InspectorView::removeFromLoopClicked);
+    }
+    else if( auto component = modelObject->optionalCast<model::AirTerminalSingleDuctParallelPIUReheat>()  )
+    {
+      if( m_currentView )
+      {
+        delete m_currentView;
+      }
+
+      m_currentView = new AirTerminalSingleDuctParallelPIUReheatInspectorView();
+      connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
+
+      m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
+
+      m_vLayout->addWidget(m_currentView);
+
+      connect(static_cast<AirTerminalSingleDuctParallelPIUReheatInspectorView *>(m_currentView), &AirTerminalSingleDuctParallelPIUReheatInspectorView::addToLoopClicked,
+              this, &InspectorView::addToLoopClicked);
+
+      connect(static_cast<AirTerminalSingleDuctParallelPIUReheatInspectorView *>(m_currentView), &AirTerminalSingleDuctParallelPIUReheatInspectorView::removeFromLoopClicked,
+              this, &InspectorView::removeFromLoopClicked);
+    }
+    else if( auto component = modelObject->optionalCast<model::AirTerminalSingleDuctSeriesPIUReheat>()  )
+    {
+      if( m_currentView )
+      {
+        delete m_currentView;
+      }
+
+      m_currentView = new AirTerminalSingleDuctSeriesPIUReheatInspectorView();
+      connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
+
+      m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
+
+      m_vLayout->addWidget(m_currentView);
+
+      connect(static_cast<AirTerminalSingleDuctSeriesPIUReheatInspectorView *>(m_currentView), &AirTerminalSingleDuctSeriesPIUReheatInspectorView::addToLoopClicked,
+              this, &InspectorView::addToLoopClicked);
+
+      connect(static_cast<AirTerminalSingleDuctSeriesPIUReheatInspectorView *>(m_currentView), &AirTerminalSingleDuctSeriesPIUReheatInspectorView::removeFromLoopClicked,
               this, &InspectorView::removeFromLoopClicked);
     }
     else if( boost::optional<model::AirTerminalSingleDuctVAVHeatAndCoolReheat> component = modelObject->optionalCast<model::AirTerminalSingleDuctVAVHeatAndCoolReheat>()  )
@@ -1266,7 +1310,7 @@ AirTerminalInspectorView::AirTerminalInspectorView( QWidget * parent )
                               ":images/link_icon_on.png",
                               ":images/link_icon_off.png" );
 
-  m_libraryTabWidget->setCurrentIndex(1);
+  m_libraryTabWidget->setCurrentIndex(0);
 
   connect(m_loopChooserView, &LoopChooserView::addToLoopClicked, this, &AirTerminalInspectorView::addToLoopClicked);
   
@@ -1337,6 +1381,28 @@ AirTerminalSingleDuctVAVReheatInspectorView::AirTerminalSingleDuctVAVReheatInspe
 void AirTerminalSingleDuctVAVReheatInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP)
 {
   AirTerminalInspectorView::layoutModelObject<model::AirTerminalSingleDuctVAVReheat>(modelObject, readOnly, displayIP);
+}
+
+AirTerminalSingleDuctParallelPIUReheatInspectorView::AirTerminalSingleDuctParallelPIUReheatInspectorView( QWidget * parent )
+  : AirTerminalInspectorView(parent)
+{
+
+}
+
+void AirTerminalSingleDuctParallelPIUReheatInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP)
+{
+  AirTerminalInspectorView::layoutModelObject<model::AirTerminalSingleDuctParallelPIUReheat>(modelObject, readOnly, displayIP);
+}
+
+AirTerminalSingleDuctSeriesPIUReheatInspectorView::AirTerminalSingleDuctSeriesPIUReheatInspectorView( QWidget * parent )
+  : AirTerminalInspectorView(parent)
+{
+
+}
+
+void AirTerminalSingleDuctSeriesPIUReheatInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP)
+{
+  AirTerminalInspectorView::layoutModelObject<model::AirTerminalSingleDuctSeriesPIUReheat>(modelObject, readOnly, displayIP);
 }
 
 AirTerminalSingleDuctVAVHeatAndCoolReheatInspectorView::AirTerminalSingleDuctVAVHeatAndCoolReheatInspectorView( QWidget * parent )

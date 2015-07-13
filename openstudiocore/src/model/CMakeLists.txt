@@ -7,6 +7,9 @@ set(${target_name}_src
   Model.hpp
   Model_Impl.hpp
   Model.cpp
+  CoilPerformanceDXCooling.hpp
+  CoilPerformanceDXCooling_Impl.hpp
+  CoilPerformanceDXCooling.cpp
   Component.hpp
   Component_Impl.hpp
   Component.cpp
@@ -134,6 +137,12 @@ set(${target_name}_src
   CFactorUndergroundWallConstruction.hpp
   CFactorUndergroundWallConstruction_Impl.hpp
   CFactorUndergroundWallConstruction.cpp
+  ChillerAbsorption.hpp
+  ChillerAbsorption_Impl.hpp
+  ChillerAbsorption.cpp
+  ChillerAbsorptionIndirect.hpp
+  ChillerAbsorptionIndirect_Impl.hpp
+  ChillerAbsorptionIndirect.cpp
   ChillerElectricEIR.hpp
   ChillerElectricEIR_Impl.hpp
   ChillerElectricEIR.cpp
@@ -155,6 +164,9 @@ set(${target_name}_src
   CoilCoolingDXTwoSpeed.hpp
   CoilCoolingDXTwoSpeed_Impl.hpp
   CoilCoolingDXTwoSpeed.cpp
+  CoilCoolingDXTwoStageWithHumidityControlMode.hpp
+  CoilCoolingDXTwoStageWithHumidityControlMode_Impl.hpp
+  CoilCoolingDXTwoStageWithHumidityControlMode.cpp
   CoilCoolingDXVariableRefrigerantFlow.hpp
   CoilCoolingDXVariableRefrigerantFlow_Impl.hpp
   CoilCoolingDXVariableRefrigerantFlow.cpp
@@ -206,6 +218,12 @@ set(${target_name}_src
   CoilHeatingWaterBaseboard.hpp
   CoilHeatingWaterBaseboard_Impl.hpp
   CoilHeatingWaterBaseboard.cpp
+  CoilSystemCoolingWaterHeatExchangerAssisted.hpp
+  CoilSystemCoolingWaterHeatExchangerAssisted_Impl.hpp
+  CoilSystemCoolingWaterHeatExchangerAssisted.cpp
+  CoilSystemCoolingDXHeatExchangerAssisted.hpp
+  CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp
+  CoilSystemCoolingDXHeatExchangerAssisted.cpp
   CoilWaterHeatingDesuperheater.hpp
   CoilWaterHeatingDesuperheater_Impl.hpp
   CoilWaterHeatingDesuperheater.cpp
@@ -416,9 +434,18 @@ set(${target_name}_src
   Glazing.hpp
   Glazing_Impl.hpp
   Glazing.cpp
+  GroundHeatExchangerHorizontalTrench.hpp
+  GroundHeatExchangerHorizontalTrench_Impl.hpp
+  GroundHeatExchangerHorizontalTrench.cpp
   GroundHeatExchangerVertical.hpp
   GroundHeatExchangerVertical_Impl.hpp
   GroundHeatExchangerVertical.cpp
+  HeaderedPumpsConstantSpeed.hpp
+  HeaderedPumpsConstantSpeed_Impl.hpp
+  HeaderedPumpsConstantSpeed.cpp
+  HeaderedPumpsVariableSpeed.hpp
+  HeaderedPumpsVariableSpeed_Impl.hpp
+  HeaderedPumpsVariableSpeed.cpp
   HeatBalanceAlgorithm.hpp
   HeatBalanceAlgorithm_Impl.hpp
   HeatBalanceAlgorithm.cpp
@@ -835,6 +862,9 @@ set(${target_name}_src
   TableMultiVariableLookup.hpp
   TableMultiVariableLookup_Impl.hpp
   TableMultiVariableLookup.cpp
+  ThermalStorageIceDetailed.hpp
+  ThermalStorageIceDetailed_Impl.hpp
+  ThermalStorageIceDetailed.cpp
   ThermalZone.hpp
   ThermalZone_Impl.hpp
   ThermalZone.cpp
@@ -853,6 +883,9 @@ set(${target_name}_src
   Timestep.hpp
   Timestep_Impl.hpp
   Timestep.cpp
+  TemperingValve.hpp
+  TemperingValve_Impl.hpp
+  TemperingValve.cpp
   Version.hpp
   Version_Impl.hpp
   Version.cpp
@@ -1051,8 +1084,6 @@ set(${target_name}_moc
   DesignDay_Impl.hpp
   DesignSpecificationOutdoorAir_Impl.hpp
   DesignSpecificationZoneAirDistribution_Impl.hpp
-  DistrictCooling_Impl.hpp
-  DistrictHeating_Impl.hpp
   ElectricEquipment_Impl.hpp
   ElectricEquipmentDefinition_Impl.hpp
   EvaporativeCoolerDirectResearchSpecial_Impl.hpp
@@ -1227,12 +1258,15 @@ set(${target_name}_test_src
   test/BoilerSteam_GTest.cpp
   test/BuildingStory_GTest.cpp
   test/Building_GTest.cpp
+  test/ChillerAbsorption_GTest.cpp
+  test/ChillerAbsorptionIndirect_GTest.cpp
   test/ChillerElectricEIR_GTest.cpp
   test/ClimateZones_GTest.cpp
   test/CoilCoolingCooledBeam_GTest.cpp
   test/CoilCoolingDXSingleSpeed_GTest.cpp
   test/CoilCoolingDXMultiSpeed_GTest.cpp
   test/CoilCoolingDXTwoSpeed_GTest.cpp
+  test/CoilCoolingDXTwoStageWithHumidityControlMode_GTest.cpp
   test/CoilCoolingLowTempRadiantConstFlow_GTest.cpp
   test/CoilCoolingLowTempRadiantVarFlow_GTest.cpp
   test/CoilCoolingWater_GTest.cpp
@@ -1247,6 +1281,9 @@ set(${target_name}_test_src
   test/CoilHeatingWater_GTest.cpp
   test/CoilHeatingWaterToAirHeatPumpEquationFit_GTest.cpp
   test/CoilHeatingWaterBaseboard_GTest.cpp
+  test/CoilSystemCoolingDXHeatExchangerAssisted_GTest.cpp
+  test/CoilSystemCoolingWaterHeatExchangerAssisted_GTest.cpp
+  test/CoilPerformanceDXCooling_GTest.cpp
   test/CoilWaterHeatingDesuperheater_GTest.cpp
   test/Component_GTest.cpp
   test/Connection_GTest.cpp
@@ -1282,8 +1319,11 @@ set(${target_name}_test_src
   test/GasMixture_GTest.cpp
   test/Gas_GTest.cpp
   test/GlareSensor_GTest.cpp
+  test/GroundHeatExchangerHorizontalTrench_GTest.cpp
   test/GroundHeatExchangerVertical_GTest.cpp
   test/HotWaterEquipment_GTest.cpp
+  test/HeaderedPumpsConstantSpeed_GTest.cpp
+  test/HeaderedPumpsVariableSpeed_GTest.cpp
   test/HeatExchangerAirToAirSensibleAndLatent_GTest.cpp
   test/HeatExchangerFluidToFluid_GTest.cpp
   test/HumidifierSteamElectric_GTest.cpp
@@ -1385,6 +1425,8 @@ set(${target_name}_test_src
   test/Surface_GTest.cpp
   test/TableMultiVariableLookup_GTest.cpp
   test/ThermalZone_GTest.cpp
+  test/ThermalStorageIceDetailed_GTest.cpp
+  test/TemperingValve_GTest.cpp
   test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp
   test/WaterUseConnections_GTest.cpp

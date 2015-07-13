@@ -56,6 +56,8 @@ class MODEL_API HumidifierSteamElectric : public StraightComponent {
 
   boost::optional<double> ratedCapacity() const;
 
+  bool isRatedCapacityAutosized() const;
+
   boost::optional<double> ratedPower() const;
 
   bool isRatedPowerAutosized() const;
@@ -76,7 +78,7 @@ class MODEL_API HumidifierSteamElectric : public StraightComponent {
 
   bool setRatedCapacity(double ratedCapacity);
 
-  void resetRatedCapacity();
+  void autosizeRatedCapacity();
 
   bool setRatedPower(double ratedPower);
 

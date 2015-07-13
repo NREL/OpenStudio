@@ -46,7 +46,7 @@ OPENSTUDIO_ENUM(ReportingFrequency,
           ((Hourly))
           ((Daily))
           ((Monthly))
-          ((RunPeriod)) );
+          ((RunPeriod)(Run Period)));
 
 typedef boost::optional<ReportingFrequency> OptionalReportingFrequency;
 typedef std::vector<ReportingFrequency> ReportingFrequencyVector;

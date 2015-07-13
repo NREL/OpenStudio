@@ -50,12 +50,10 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl( model::Sh
   }
 
   boost::optional<Construction> construction = modelObject.construction();
+  boost::optional<ShadingMaterial> shadingMaterial = modelObject.shadingMaterial();
   if (construction){
     idfObject.setString(WindowProperty_ShadingControlFields::ConstructionwithShadingName, construction->name().get());
-  }
-
-  boost::optional<ShadingMaterial> shadingMaterial = modelObject.shadingMaterial();
-  if (shadingMaterial){
+  }else if (shadingMaterial){
     idfObject.setString(WindowProperty_ShadingControlFields::ShadingDeviceMaterialName, shadingMaterial->name().get());
   }
   
@@ -70,8 +68,13 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl( model::Sh
     idfObject.setString(WindowProperty_ShadingControlFields::ShadingControlIsScheduled, "No");
   }
 
+  boost::optional<double> setpoint = modelObject.setpoint();
   if (istringEqual("OnIfHighSolarOnWindow", shadingControlType)){
-    idfObject.setDouble(WindowProperty_ShadingControlFields::Setpoint, 100.0);
+    if (!setpoint){
+      setpoint = 100; // W/m2
+    }
+    OS_ASSERT(setpoint);
+    idfObject.setDouble(WindowProperty_ShadingControlFields::Setpoint, *setpoint);
   }
 
   idfObject.setString(WindowProperty_ShadingControlFields::GlareControlIsActive, "No");
@@ -82,7 +85,7 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl( model::Sh
 
   //idfObject.setDouble(WindowProperty_ShadingControlFields::Setpoint2, 0.0);
 
-  return boost::optional<IdfObject>(idfObject);
+  return idfObject;
 }
 
 } // energyplus

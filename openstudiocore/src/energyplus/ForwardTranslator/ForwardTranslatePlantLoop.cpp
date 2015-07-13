@@ -37,6 +37,10 @@
 #include "../../model/BoilerHotWater_Impl.hpp"
 #include "../../model/ChillerElectricEIR.hpp"
 #include "../../model/ChillerElectricEIR_Impl.hpp"
+#include "../../model/ChillerAbsorption.hpp"
+#include "../../model/ChillerAbsorption_Impl.hpp"
+#include "../../model/ChillerAbsorptionIndirect.hpp"
+#include "../../model/ChillerAbsorptionIndirect_Impl.hpp"
 #include "../../model/WaterHeaterMixed.hpp"
 #include "../../model/WaterHeaterMixed_Impl.hpp"
 #include "../../model/CoolingTowerVariableSpeed.hpp"
@@ -47,6 +51,8 @@
 #include "../../model/CoolingTowerTwoSpeed_Impl.hpp"
 #include "../../model/GroundHeatExchangerVertical.hpp"
 #include "../../model/GroundHeatExchangerVertical_Impl.hpp"
+#include "../../model/GroundHeatExchangerHorizontalTrench.hpp"
+#include "../../model/GroundHeatExchangerHorizontalTrench_Impl.hpp"
 #include "../../model/HeatExchangerFluidToFluid.hpp"
 #include "../../model/HeatExchangerFluidToFluid_Impl.hpp"
 #include "../../model/WaterToAirComponent.hpp"
@@ -503,6 +509,50 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
         }
         break;
       }
+      case openstudio::IddObjectType::OS_Chiller_Absorption_Indirect :
+      {
+        sizeAsChilledWaterSystem = true;
+        if( auto outletNode = isSetpointComponent(plantLoop,supplyComponent) ) {
+          auto chiller = supplyComponent.cast<ChillerAbsorptionIndirect>();
+          if( chiller.isDesignChilledWaterFlowRateAutosized() ) {
+            autosize = true;
+          } else if(auto optionalFlowRate = chiller.designChilledWaterFlowRate()) {
+            flowRate = optionalFlowRate.get();
+          }
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,COOLING));
+        } else {
+          coolingComponents.push_back(supplyComponent);
+        }
+        break;
+      }
+      case openstudio::IddObjectType::OS_Chiller_Absorption :
+      {
+        sizeAsChilledWaterSystem = true;
+        if( auto outletNode = isSetpointComponent(plantLoop,supplyComponent) ) {
+          auto chiller = supplyComponent.cast<ChillerAbsorption>();
+          if( chiller.isDesignChilledWaterFlowRateAutosized() ) {
+            autosize = true;
+          } else if(auto optionalFlowRate = chiller.designChilledWaterFlowRate()) {
+            flowRate = optionalFlowRate.get();
+          }
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,COOLING));
+        } else {
+          coolingComponents.push_back(supplyComponent);
+        }
+        break;
+      }
+      case openstudio::IddObjectType::OS_ThermalStorage_Ice_Detailed :
+      {
+        sizeAsChilledWaterSystem = true;
+        if( auto outletNode = isSetpointComponent(plantLoop,supplyComponent) ) {
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,0.0,true,BOTH));
+        }
+        else
+        {
+          coolingComponents.push_back(supplyComponent);
+        }
+        break;
+      }
       case openstudio::IddObjectType::OS_DistrictCooling :
       {
         sizeAsChilledWaterSystem = true;
@@ -589,6 +639,24 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
         {
           GroundHeatExchangerVertical hx = supplyComponent.cast<GroundHeatExchangerVertical>();
           if (boost::optional<double> optionalFlowRate = hx.maximumFlowRate())
+          {
+            flowRate = optionalFlowRate.get();
+          }
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,BOTH));
+        }
+        else
+        {
+          uncontrolledComponents.push_back(supplyComponent);
+        }
+        break;
+      }
+      case openstudio::IddObjectType::OS_GroundHeatExchanger_HorizontalTrench :
+      {
+        sizeAsCondenserSystem = true;
+        if (boost::optional<Node> outletNode = isSetpointComponent(plantLoop, supplyComponent))
+        {
+          auto hx = supplyComponent.cast<GroundHeatExchangerHorizontalTrench>();
+          if (boost::optional<double> optionalFlowRate = hx.designFlowRate())
           {
             flowRate = optionalFlowRate.get();
           }

@@ -103,11 +103,11 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   std::vector<ModelObject> demandComponents(HVACComponent inletComp,
                                             HVACComponent outletComp,
-                                            openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+                                            openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const override;
 
   //std::vector<ModelObject> supplyComponents(openstudio::IddObjectType type=openstudio::IddObjectType("Catchall"));
 
-  std::vector<ModelObject> demandComponents(openstudio::IddObjectType type=openstudio::IddObjectType("Catchall"));
+  std::vector<ModelObject> demandComponents(openstudio::IddObjectType type=openstudio::IddObjectType("Catchall")) const override;
 
   //std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
@@ -119,7 +119,7 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   std::vector<ModelObject> demandComponents(std::vector<HVACComponent> inletComps,
                                             std::vector<HVACComponent> outletComps,
-                                            openstudio::IddObjectType type );
+                                            openstudio::IddObjectType type ) const override;
 
   virtual std::vector<openstudio::IdfObject> remove() override;
 

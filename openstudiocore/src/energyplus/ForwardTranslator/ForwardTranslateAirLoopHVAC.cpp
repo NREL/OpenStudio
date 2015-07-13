@@ -25,6 +25,8 @@
 #include "../../model/SizingSystem_Impl.hpp"
 #include "../../model/CoilCoolingWater.hpp"
 #include "../../model/CoilCoolingWater_Impl.hpp"
+#include "../../model/CoilSystemCoolingWaterHeatExchangerAssisted.hpp"
+#include "../../model/CoilSystemCoolingWaterHeatExchangerAssisted_Impl.hpp"
 #include "../../model/CoilHeatingWater.hpp"
 #include "../../model/CoilHeatingWater_Impl.hpp"
 #include "../../model/ControllerWaterCoil.hpp"
@@ -256,6 +258,14 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
       case openstudio::IddObjectType::OS_Coil_Heating_Water :
       {
         controller = supplyComponent.cast<CoilHeatingWater>().controllerWaterCoil();
+        break;
+      }
+      case openstudio::IddObjectType::OS_CoilSystem_Cooling_Water_HeatExchangerAssisted :
+      {
+        auto coolingCoil = supplyComponent.cast<CoilSystemCoolingWaterHeatExchangerAssisted>().coolingCoil();
+        if( auto coilCoolingWater = coolingCoil.optionalCast<CoilCoolingWater>() ) {
+          controller = coilCoolingWater->controllerWaterCoil();
+        }
         break;
       }
       default:

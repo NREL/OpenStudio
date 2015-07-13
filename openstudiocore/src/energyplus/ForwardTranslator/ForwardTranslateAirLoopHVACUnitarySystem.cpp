@@ -33,6 +33,10 @@
 #include "../../model/SetpointManagerMixedAir_Impl.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "../../model/CoilSystemCoolingDXHeatExchangerAssisted.hpp"
+#include "../../model/CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
+#include "../../model/AirToAirComponent.hpp"
+#include "../../model/AirToAirComponent_Impl.hpp"
 #include <utilities/idd/AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_TwoSpeed_FieldEnums.hxx>
@@ -40,6 +44,7 @@
 #include <utilities/idd/Coil_Cooling_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Desuperheater_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_DX_SingleSpeed_FieldEnums.hxx>
+#include <utilities/idd/HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Gas_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
@@ -184,8 +189,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   // Cooling Coil Object Type
   // Cooling Coil Name
   boost::optional<IdfObject> _coolingCoil;
+  boost::optional<HVACComponent> coolingCoil = modelObject.coolingCoil();
 
-  if( boost::optional<HVACComponent> coolingCoil = modelObject.coolingCoil() )
+  if( coolingCoil )
   {
     _coolingCoil = translateAndMapModelObject(coolingCoil.get());
 
@@ -537,6 +543,23 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
     {
       _coolingCoil->setString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::AirInletNodeName,inletNodeName);
       _coolingCoil->setString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::AirOutletNodeName,outletNodeName);
+    }
+    else if( _coolingCoil->iddObject().type() == IddObjectType::CoilSystem_Cooling_DX_HeatExchangerAssisted )
+    {
+      OS_ASSERT(coolingCoil);
+      auto coilSystem = coolingCoil->optionalCast<model::CoilSystemCoolingDXHeatExchangerAssisted>();
+      OS_ASSERT(coilSystem);
+      auto hx = coilSystem->heatExchanger();
+      auto _hx = translateAndMapModelObject(hx);
+      OS_ASSERT(_hx);
+      if( _hx->iddObject().type() == IddObjectType::HeatExchanger_AirToAir_SensibleAndLatent ) {
+        _hx->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirInletNodeName,inletNodeName);
+        _hx->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirOutletNodeName,outletNodeName);
+      } else {
+        LOG(Warn,modelObject.briefDescription() << ": Contains an unsuported type " << _hx->iddObject().type() << ".");
+      }
+    } else {
+      LOG(Warn,modelObject.briefDescription() << ": Contains an unsuported type " << _coolingCoil->iddObject().type() << ".");
     }
   }
 

@@ -97,6 +97,17 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
   
   virtual boost::optional<StraightComponent> containingStraightComponent() const;
 
+  bool addToNode(Node & node, 
+    const HVACComponent & systemStartComponent, 
+    const HVACComponent & systemEndComponent,
+    unsigned componentInletPort,
+    unsigned componentOutletPort);
+
+  bool removeFromLoop( const HVACComponent & systemStartComponent, 
+    const HVACComponent & systemEndComponent,
+    unsigned componentInletPort,
+    unsigned componentOutletPort );
+
  protected:
 
   friend class Model_Impl;
