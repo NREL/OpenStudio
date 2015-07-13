@@ -34,6 +34,8 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, ZoneMixing)
 {
   Model model;
+  EXPECT_NE(model.alwaysOnContinuousSchedule().handle(), model.alwaysOnDiscreteSchedule().handle());
+
   ThermalZone zone1(model);
   ThermalZone zone2(model);
   ZoneMixing mixing(zone1);

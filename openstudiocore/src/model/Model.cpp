@@ -1408,7 +1408,7 @@ Schedule Model::alwaysOnDiscreteSchedule() const
 
 Schedule Model::alwaysOnContinuousSchedule() const
 {
-  return getImpl<detail::Model_Impl>()->alwaysOnDiscreteSchedule();
+  return getImpl<detail::Model_Impl>()->alwaysOnContinuousSchedule();
 }
 
 SpaceType Model::plenumSpaceType() const
