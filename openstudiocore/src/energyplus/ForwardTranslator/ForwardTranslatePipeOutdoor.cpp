@@ -18,9 +18,15 @@
  **********************************************************************/
 
 #include "../ForwardTranslator.hpp"
+#include "../../model/Construction.hpp"
+#include "../../model/Construction_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 #include "../../model/PipeOutdoor.hpp"
+#include "../../model/PipeOutdoor_Impl.hpp"
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/Pipe_Outdoor_FieldEnums.hxx>
 
 using namespace openstudio::model;
 
@@ -33,6 +39,75 @@ namespace energyplus {
   IdfObject idfObject(openstudio::IddObjectType::Pipe_Outdoor);
 
   m_idfObjects.push_back(idfObject);
+
+  OptionalString s;
+  OptionalDouble d;
+  OptionalModelObject mo;
+
+  ///////////////////////////////////////////////////////////////////////////
+  s = modelObject.name();
+  if (s)
+  {
+    idfObject.setName(*s);
+  }
+  ///////////////////////////////////////////////////////////////////////////
+
+  ///////////////////////////////////////////////////////////////////////////
+  mo = modelObject.construction();
+  if (mo)
+  {
+    s = mo->name();
+    if (s)
+    {
+      idfObject.setString(openstudio::Pipe_OutdoorFields::ConstructionName, *s);
+    }
+  }
+  ///////////////////////////////////////////////////////////////////////////
+
+  ///////////////////////////////////////////////////////////////////////////
+  mo = modelObject.fluidInletNode();
+  if (mo)
+  {
+    s = mo->name();
+    if (s)
+    {
+      idfObject.setString(openstudio::Pipe_OutdoorFields::FluidInletNodeName, *s);
+    }
+  }
+  ///////////////////////////////////////////////////////////////////////////
+
+  ///////////////////////////////////////////////////////////////////////////
+  mo = modelObject.fluidOutletNode();
+  if (mo)
+  {
+    s = mo->name();
+    if (s)
+    {
+      idfObject.setString(openstudio::Pipe_OutdoorFields::FluidOutletNodeName, *s);
+    }
+  }
+  ///////////////////////////////////////////////////////////////////////////
+
+  ///////////////////////////////////////////////////////////////////////////
+  mo = modelObject.ambientTemperatureOutdoorAirNode();
+  if (mo)
+  {
+    s = mo->name();
+    if (s)
+    {
+      idfObject.setString(openstudio::Pipe_OutdoorFields::AmbientTemperatureOutdoorAirNodeName, *s);
+    }
+  }
+  ///////////////////////////////////////////////////////////////////////////
+
+  ///////////////////////////////////////////////////////////////////////////
+  idfObject.setString(openstudio::Pipe_OutdoorFields::PipeInsideDiameter, toString(modelObject.pipeInsideDiameter()));
+  ///////////////////////////////////////////////////////////////////////////
+
+
+  ///////////////////////////////////////////////////////////////////////////
+  idfObject.setString(openstudio::Pipe_OutdoorFields::PipeLength, toString(modelObject.pipeLength()));
+  ///////////////////////////////////////////////////////////////////////////
 
   return boost::optional<IdfObject>(idfObject);
 }
