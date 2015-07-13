@@ -30,7 +30,6 @@ namespace detail {
 
   /** ZoneAirMassFlowConservation_Impl is a ModelObject_Impl that is the implementation class for ZoneAirMassFlowConservation.*/
   class MODEL_API ZoneAirMassFlowConservation_Impl : public ModelObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -77,7 +76,7 @@ namespace detail {
 
     void resetAdjustZoneMixingForZoneAirMassFlowBalance();
 
-    bool setSourceZoneInfiltrationTreatment(std::string sourceZoneInfiltrationTreatment);
+    bool setSourceZoneInfiltrationTreatment(const std::string& sourceZoneInfiltrationTreatment);
 
     void resetSourceZoneInfiltrationTreatment();
 

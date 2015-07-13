@@ -87,9 +87,9 @@ namespace detail {
   void ZoneAirMassFlowConservation_Impl::setAdjustZoneMixingForZoneAirMassFlowBalance(bool adjustZoneMixingForZoneAirMassFlowBalance) {
     bool result = false;
     if (adjustZoneMixingForZoneAirMassFlowBalance) {
-      setBooleanFieldValue(OS_ZoneAirMassFlowConservationFields::AdjustZoneMixingForZoneAirMassFlowBalance, "Yes");
+      result = setString(OS_ZoneAirMassFlowConservationFields::AdjustZoneMixingForZoneAirMassFlowBalance, "Yes");
     } else {
-      setBooleanFieldValue(OS_ZoneAirMassFlowConservationFields::AdjustZoneMixingForZoneAirMassFlowBalance, "No");
+      result = setString(OS_ZoneAirMassFlowConservationFields::AdjustZoneMixingForZoneAirMassFlowBalance, "No");
     }
     OS_ASSERT(result);
   }
@@ -99,7 +99,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool ZoneAirMassFlowConservation_Impl::setSourceZoneInfiltrationTreatment(std::string sourceZoneInfiltrationTreatment) {
+  bool ZoneAirMassFlowConservation_Impl::setSourceZoneInfiltrationTreatment(const std::string& sourceZoneInfiltrationTreatment) {
     bool result = setString(OS_ZoneAirMassFlowConservationFields::SourceZoneInfiltrationTreatment, sourceZoneInfiltrationTreatment);
     return result;
   }
@@ -144,7 +144,7 @@ void ZoneAirMassFlowConservation::resetAdjustZoneMixingForZoneAirMassFlowBalance
   getImpl<detail::ZoneAirMassFlowConservation_Impl>()->resetAdjustZoneMixingForZoneAirMassFlowBalance();
 }
 
-bool ZoneAirMassFlowConservation::setSourceZoneInfiltrationTreatment(std::string sourceZoneInfiltrationTreatment) {
+bool ZoneAirMassFlowConservation::setSourceZoneInfiltrationTreatment(const std::string& sourceZoneInfiltrationTreatment) {
   return getImpl<detail::ZoneAirMassFlowConservation_Impl>()->setSourceZoneInfiltrationTreatment(sourceZoneInfiltrationTreatment);
 }
 

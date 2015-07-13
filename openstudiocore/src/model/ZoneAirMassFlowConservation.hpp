@@ -61,11 +61,30 @@ class MODEL_API ZoneAirMassFlowConservation : public ModelObject {
   /** @name Setters */
   //@{
 
+   /// If this input field is true, then EnergyPlus attempts to enforce the zone air mass flow conservation.
+   /// If it is specified as false, then EnergyPlus calculation defaults to zone air mass flow balance that 
+   /// does not include zone mixing objects and that assumes self - balanced simple flow objects per the 
+   /// default procedure, which may not necessarily enforce zone mass conservation unless the user specified
+   /// a balanced flow to begin with. Mass conservation is enforced both for the receiving
+   /// and source zones if there is at least one mixing object defined. 
+   /// The default value is false. 
+   /// (Note that false input may also results in balanced flow depending on the system specified).
   void setAdjustZoneMixingForZoneAirMassFlowBalance(bool adjustZoneMixingForZoneAirMassFlowBalance);
 
   void resetAdjustZoneMixingForZoneAirMassFlowBalance();
 
-  bool setSourceZoneInfiltrationTreatment(std::string sourceZoneInfiltrationTreatment);
+  /// If this input is "AddInfiltrationFlow", then energy plus adds infiltration air
+  /// mass flow on top of the base flow, which is calculated using the infiltration object
+  /// user inputs, in order to balance the zone air mass flow. The additional infiltration
+  /// air mass flow is not self - balanced. If this input is specified as
+  /// "AdjustInfiltrationFlow", then energy plus may adjust the base flow calculated using
+  /// the infiltration object user inputs in order to balance the zone air mass flow. If it
+  /// is not required to adjust the base infiltration air flow calculated from the user
+  /// specified infiltration object inputs, then the base infiltration air mass flow
+  /// is assumed self - balanced. If adjustZoneMixingForZoneAirMassFlowBalance is false then this input
+  /// field has no impact on the simulation.
+  /// The default value is "AddInfiltrationFlow".
+  bool setSourceZoneInfiltrationTreatment(const std::string& sourceZoneInfiltrationTreatment);
 
   void resetSourceZoneInfiltrationTreatment();
 

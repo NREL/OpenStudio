@@ -45,6 +45,8 @@
 #include "ZoneAirContaminantBalance_Impl.hpp"
 #include "ZoneAirHeatBalanceAlgorithm.hpp"
 #include "ZoneAirHeatBalanceAlgorithm_Impl.hpp"
+#include "ZoneAirMassFlowConservation.hpp"
+#include "ZoneAirMassFlowConservation_Impl.hpp"
 #include "ZoneCapacitanceMultiplierResearchSpecial.hpp"
 #include "ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp"
 
@@ -134,6 +136,9 @@ namespace detail{
     OptionalZoneAirHeatBalanceAlgorithm ozahba = zoneAirHeatBalanceAlgorithm();
     if (ozahba) { result.push_back(*ozahba); }
 
+    OptionalZoneAirMassFlowConservation ozamfc = zoneAirMassFlowConservation();
+    if (ozamfc) { result.push_back(*ozamfc); }
+
     OptionalZoneCapacitanceMultiplierResearchSpecial ozcmrs;
     ozcmrs = zoneCapacitanceMultiplierResearchSpecial();
     if (ozcmrs) { result.push_back(*ozcmrs); }
@@ -153,6 +158,7 @@ namespace detail{
     result.push_back(Timestep::iddObjectType());
     result.push_back(ZoneAirContaminantBalance::iddObjectType());
     result.push_back(ZoneAirHeatBalanceAlgorithm::iddObjectType());
+    result.push_back(ZoneAirMassFlowConservation::iddObjectType());
     result.push_back(ZoneCapacitanceMultiplierResearchSpecial::iddObjectType());
     return result;
   }
@@ -492,6 +498,12 @@ namespace detail{
     return model().getOptionalUniqueModelObject<ZoneAirHeatBalanceAlgorithm>();
   }
 
+  boost::optional<ZoneAirMassFlowConservation>
+    SimulationControl_Impl::zoneAirMassFlowConservation() const
+  {
+    return model().getOptionalUniqueModelObject<ZoneAirMassFlowConservation>();
+  }
+
   boost::optional<ZoneCapacitanceMultiplierResearchSpecial>
   SimulationControl_Impl::zoneCapacitanceMultiplierResearchSpecial() const
   {
@@ -825,6 +837,10 @@ boost::optional<ZoneAirContaminantBalance> SimulationControl::zoneAirContaminant
 
 boost::optional<ZoneAirHeatBalanceAlgorithm> SimulationControl::zoneAirHeatBalanceAlgorithm() const {
   return getImpl<detail::SimulationControl_Impl>()->zoneAirHeatBalanceAlgorithm();
+}
+
+boost::optional<ZoneAirMassFlowConservation> SimulationControl::zoneAirMassFlowConservation() const {
+  return getImpl<detail::SimulationControl_Impl>()->zoneAirMassFlowConservation();
 }
 
 boost::optional<ZoneCapacitanceMultiplierResearchSpecial> SimulationControl::zoneCapacitanceMultiplierResearchSpecial() const {

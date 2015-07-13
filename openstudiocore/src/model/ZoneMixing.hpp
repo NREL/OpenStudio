@@ -74,9 +74,7 @@ class MODEL_API ZoneMixing : public ModelObject {
 
   /// Returns the constant temperature differential between source and receiving zones below which mixing is shutoff.
   // DLM: is this a signed difference or absolute?
-  double deltaTemperature() const;
-
-  bool isDeltaTemperatureDefaulted() const;
+  boost::optional<double> deltaTemperature() const;
 
   /// Returns the temperature schedule containing the differential between source and receiving zones versus time below which mixing is shutoff.
   boost::optional<Schedule> deltaTemperatureSchedule() const;

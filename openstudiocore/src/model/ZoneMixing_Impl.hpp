@@ -33,7 +33,7 @@ namespace detail {
 
   /** ZoneMixing_Impl is a ModelObject_Impl that is the implementation class for ZoneMixing.*/
   class MODEL_API ZoneMixing_Impl : public ModelObject_Impl {
-    Q_OBJECT;
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -82,9 +82,7 @@ namespace detail {
 
     boost::optional<ThermalZone> sourceZone() const;
 
-    double deltaTemperature() const;
-
-    bool isDeltaTemperatureDefaulted() const;
+    boost::optional<double> deltaTemperature() const;
 
     boost::optional<Schedule> deltaTemperatureSchedule() const;
 

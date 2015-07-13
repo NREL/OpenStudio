@@ -19540,7 +19540,7 @@ OS:ZoneMixing,
        \note This is the receiving zone
        \required-field
        \type object-list
-       \object-list ZoneNames
+       \object-list ThermalZoneNames
   A4 , \field Schedule Name
        \required-field
        \type object-list
@@ -19577,11 +19577,10 @@ OS:ZoneMixing,
        \minimum 0
   A6 , \field Source Zone Name
        \type object-list
-       \object-list ZoneNames
+       \object-list ThermalZoneNames
   N5 , \field Delta Temperature
        \units deltaC
        \type real
-       \default 0
        \note This field contains the constant temperature differential between source and
        \note receiving zones below which mixing is shutoff.
   A7 , \field Delta Temperature Schedule Name

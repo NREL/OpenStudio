@@ -157,14 +157,8 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_ZoneMixingFields::SourceZoneName);
   }
 
-  double ZoneMixing_Impl::deltaTemperature() const {
-    boost::optional<double> value = getDouble(OS_ZoneMixingFields::DeltaTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool ZoneMixing_Impl::isDeltaTemperatureDefaulted() const {
-    return isEmpty(OS_ZoneMixingFields::DeltaTemperature);
+  boost::optional<double> ZoneMixing_Impl::deltaTemperature() const {
+    return getDouble(OS_ZoneMixingFields::DeltaTemperature);
   }
 
   boost::optional<Schedule> ZoneMixing_Impl::deltaTemperatureSchedule() const {
@@ -206,24 +200,72 @@ namespace detail {
   bool ZoneMixing_Impl::setDesignFlowRate(double designFlowRate) {
     bool result(false);
     result = setDouble(OS_ZoneMixingFields::DesignFlowRate, designFlowRate);
+    if (result){
+      result = setString(OS_ZoneMixingFields::DesignFlowRateCalculationMethod, "Flow/Zone");
+      OS_ASSERT(result);
+      //result = setString(OS_ZoneMixingFields::DesignFlowRate, "");
+      //OS_ASSERT(result);
+      result = setString(OS_ZoneMixingFields::FlowRateperZoneFloorArea, "");
+      OS_ASSERT(result);
+      result = setString(OS_ZoneMixingFields::FlowRateperPerson, "");
+      OS_ASSERT(result);
+      result = setString(OS_ZoneMixingFields::AirChangesperHour, "");
+      OS_ASSERT(result);
+    }
     return result;
   }
 
   bool ZoneMixing_Impl::setFlowRateperZoneFloorArea(double flowRateperZoneFloorArea) {
     bool result(false);
     result = setDouble(OS_ZoneMixingFields::FlowRateperZoneFloorArea, flowRateperZoneFloorArea);
+    if (result){
+      result = setString(OS_ZoneMixingFields::DesignFlowRateCalculationMethod, "Flow/Area");
+      OS_ASSERT(result);
+      result = setString(OS_ZoneMixingFields::DesignFlowRate, "");
+      OS_ASSERT(result);
+      //result = setString(OS_ZoneMixingFields::FlowRateperZoneFloorArea, "");
+      //OS_ASSERT(result);
+      result = setString(OS_ZoneMixingFields::FlowRateperPerson, "");
+      OS_ASSERT(result);
+      result = setString(OS_ZoneMixingFields::AirChangesperHour, "");
+      OS_ASSERT(result);
+    }
     return result;
   }
 
   bool ZoneMixing_Impl::setFlowRateperPerson(double flowRateperPerson) {
     bool result(false);
     result = setDouble(OS_ZoneMixingFields::FlowRateperPerson, flowRateperPerson);
+    if (result){
+      result = setString(OS_ZoneMixingFields::DesignFlowRateCalculationMethod, "Flow/Person");
+      OS_ASSERT(result);
+      result = setString(OS_ZoneMixingFields::DesignFlowRate, "");
+      OS_ASSERT(result);
+      result = setString(OS_ZoneMixingFields::FlowRateperZoneFloorArea, "");
+      OS_ASSERT(result);
+      //result = setString(OS_ZoneMixingFields::FlowRateperPerson, "");
+      //OS_ASSERT(result);
+      result = setString(OS_ZoneMixingFields::AirChangesperHour, "");
+      OS_ASSERT(result);
+    }
     return result;
   }
 
   bool ZoneMixing_Impl::setAirChangesperHour(double airChangesperHour) {
     bool result(false);
     result = setDouble(OS_ZoneMixingFields::AirChangesperHour, airChangesperHour);
+    if (result){
+      result = setString(OS_ZoneMixingFields::DesignFlowRateCalculationMethod, "AirChanges/Hour");
+      OS_ASSERT(result);
+      result = setString(OS_ZoneMixingFields::DesignFlowRate, "");
+      OS_ASSERT(result);
+      result = setString(OS_ZoneMixingFields::FlowRateperZoneFloorArea, "");
+      OS_ASSERT(result);
+      result = setString(OS_ZoneMixingFields::FlowRateperPerson, "");
+      OS_ASSERT(result);
+      //result = setString(OS_ZoneMixingFields::AirChangesperHour, "");
+      //OS_ASSERT(result);
+    }
     return result;
   }
 
@@ -241,6 +283,7 @@ namespace detail {
   void ZoneMixing_Impl::setDeltaTemperature(double deltaTemperature) {
     bool result = setDouble(OS_ZoneMixingFields::DeltaTemperature, deltaTemperature);
     OS_ASSERT(result);
+    resetDeltaTemperatureSchedule();
   }
 
   void ZoneMixing_Impl::resetDeltaTemperature() {
@@ -253,6 +296,9 @@ namespace detail {
                                                 "ZoneMixing",
                                                 "Delta Temperature",
                                                 schedule);
+    if (result){
+      resetDeltaTemperature();
+    }
     return result;
   }
 
@@ -349,7 +395,10 @@ ZoneMixing::ZoneMixing(const ThermalZone& zone)
   bool ok = setPointer(OS_ZoneMixingFields::ZoneName, zone.handle());
   OS_ASSERT(ok);
 
-  ok = setPointer(OS_ZoneMixingFields::ZoneName, zone.model().alwaysOnContinuousSchedule().handle());
+  ok = setPointer(OS_ZoneMixingFields::ScheduleName, zone.model().alwaysOnContinuousSchedule().handle());
+  OS_ASSERT(ok);
+
+  ok = setDesignFlowRate(0.0);
   OS_ASSERT(ok);
 }
 
@@ -389,12 +438,8 @@ boost::optional<ThermalZone> ZoneMixing::sourceZone() const {
   return getImpl<detail::ZoneMixing_Impl>()->sourceZone();
 }
 
-double ZoneMixing::deltaTemperature() const {
+boost::optional<double> ZoneMixing::deltaTemperature() const {
   return getImpl<detail::ZoneMixing_Impl>()->deltaTemperature();
-}
-
-bool ZoneMixing::isDeltaTemperatureDefaulted() const {
-  return getImpl<detail::ZoneMixing_Impl>()->isDeltaTemperatureDefaulted();
 }
 
 boost::optional<Schedule> ZoneMixing::deltaTemperatureSchedule() const {

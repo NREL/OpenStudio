@@ -22,11 +22,22 @@
 
 #include "../ZoneAirMassFlowConservation.hpp"
 #include "../ZoneAirMassFlowConservation_Impl.hpp"
+#include "../Model.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture, ZoneAirMassFlowConservation)
-{
-  
+{ 
+  Model model;
+
+  EXPECT_FALSE(model.getOptionalUniqueModelObject<ZoneAirMassFlowConservation>());
+
+  ZoneAirMassFlowConservation zamfc = model.getUniqueModelObject<ZoneAirMassFlowConservation>();
+  EXPECT_FALSE(zamfc.adjustZoneMixingForZoneAirMassFlowBalance());
+  EXPECT_TRUE(zamfc.isAdjustZoneMixingForZoneAirMassFlowBalanceDefaulted());
+  EXPECT_EQ("AddInfiltrationFlow", zamfc.sourceZoneInfiltrationTreatment());
+  EXPECT_TRUE(zamfc.isSourceZoneInfiltrationTreatmentDefaulted());
+
+  EXPECT_TRUE(model.getOptionalUniqueModelObject<ZoneAirMassFlowConservation>());
 }
