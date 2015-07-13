@@ -24,10 +24,8 @@ require "pathname"
 
 if RUBY_PLATFORM =~ /darwin/
   mac_version = `/usr/bin/sw_vers -productVersion | tr -d "\n"`.split('.')
-  if mac_version[0].to_i <= 10
-    if mac_version[1].to_i < 8
-      raise LoadError, "OpenStudio is only compatible with OS 10.8 and later"
-    end
+  if mac_version[0].to_i < 10 || (mac_version[0].to_i == 10 && mac_version[1].to_i < 8)
+    raise LoadError, "OpenStudio is only compatible with OS 10.8 and later"
   end
 end
 
