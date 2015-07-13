@@ -18,9 +18,17 @@
  **********************************************************************/
 
 #include "../ForwardTranslator.hpp"
+#include "../../model/Construction.hpp"
+#include "../../model/Construction_Impl.hpp"
 #include "../../model/PipeIndoor.hpp"
+#include "../../model/PipeIndoor_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/Pipe_Indoor_FieldEnums.hxx>
 
 using namespace openstudio::model;
 
@@ -33,6 +41,103 @@ namespace energyplus {
   IdfObject idfObject(openstudio::IddObjectType::Pipe_Indoor);
 
   m_idfObjects.push_back(idfObject);
+
+  OptionalString s;
+  OptionalDouble d;
+  OptionalModelObject mo;
+
+  ///////////////////////////////////////////////////////////////////////////
+  s = modelObject.name();
+  if (s)
+  {
+    idfObject.setName(*s);
+  }
+  ///////////////////////////////////////////////////////////////////////////
+
+  ///////////////////////////////////////////////////////////////////////////
+  mo = modelObject.construction();
+  if (mo)
+  {
+    s = mo->name();
+    if (s)
+    {
+      idfObject.setString(openstudio::Pipe_IndoorFields::ConstructionName, *s);
+    }
+  }
+  ///////////////////////////////////////////////////////////////////////////
+
+  ///////////////////////////////////////////////////////////////////////////
+  mo = modelObject.fluidInletNode();
+  if (mo)
+  {
+    s = mo->name();
+    if (s)
+    {
+      idfObject.setString(openstudio::Pipe_IndoorFields::FluidInletNodeName, *s);
+    }
+  }
+  ///////////////////////////////////////////////////////////////////////////
+
+  ///////////////////////////////////////////////////////////////////////////
+  mo = modelObject.fluidOutletNode();
+  if (mo)
+  {
+    s = mo->name();
+    if (s)
+    {
+      idfObject.setString(openstudio::Pipe_IndoorFields::FluidOutletNodeName, *s);
+    }
+  }
+  ///////////////////////////////////////////////////////////////////////////
+
+  ///////////////////////////////////////////////////////////////////////////
+  idfObject.setString(openstudio::Pipe_IndoorFields::EnvironmentType, modelObject.environmentType());
+  ///////////////////////////////////////////////////////////////////////////
+
+  ///////////////////////////////////////////////////////////////////////////
+  mo = modelObject.ambientTemperatureZone();
+  if (mo)
+  {
+    s = mo->name();
+    if (s)
+    {
+      idfObject.setString(openstudio::Pipe_IndoorFields::AmbientTemperatureZoneName, *s);
+    }
+  }
+  ///////////////////////////////////////////////////////////////////////////
+
+  ///////////////////////////////////////////////////////////////////////////
+  mo = modelObject.ambientTemperatureSchedule();
+  if (mo)
+  {
+    s = mo->name();
+    if (s)
+    {
+      idfObject.setString(openstudio::Pipe_IndoorFields::AmbientTemperatureScheduleName, *s);
+    }
+  }
+  ///////////////////////////////////////////////////////////////////////////
+
+  ///////////////////////////////////////////////////////////////////////////
+  mo = modelObject.ambientAirVelocitySchedule();
+  if (mo)
+  {
+    s = mo->name();
+    if (s)
+    {
+      idfObject.setString(openstudio::Pipe_IndoorFields::AmbientAirVelocityScheduleName, *s);
+    }
+  }
+  ///////////////////////////////////////////////////////////////////////////
+
+  ///////////////////////////////////////////////////////////////////////////
+  idfObject.setString(openstudio::Pipe_IndoorFields::PipeInsideDiameter, toString(modelObject.pipeInsideDiameter()));
+  ///////////////////////////////////////////////////////////////////////////
+
+
+  ///////////////////////////////////////////////////////////////////////////
+  idfObject.setString(openstudio::Pipe_IndoorFields::PipeLength, toString(modelObject.pipeLength()));
+  ///////////////////////////////////////////////////////////////////////////
 
   return boost::optional<IdfObject>(idfObject);
 }
