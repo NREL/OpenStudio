@@ -407,6 +407,72 @@ class CheckBoxConceptImpl : public CheckBoxConcept
 
 ///////////////////////////////////////////////////////////////////////////////////
 
+
+class CheckBoxConceptBoolReturn : public BaseConcept
+{
+public:
+
+  CheckBoxConceptBoolReturn(const Heading &t_heading,
+    const std::string & t_tooltip)
+    : BaseConcept(t_heading),
+    m_tooltip(t_tooltip)
+  {
+  }
+
+  virtual ~CheckBoxConceptBoolReturn() {}
+
+
+  virtual bool get(const ConceptProxy & obj) = 0;
+  virtual bool set(const ConceptProxy & obj, bool) = 0;
+
+  const std::string & tooltip() { return m_tooltip; }
+
+private:
+
+  std::string m_tooltip;
+
+};
+
+template<typename DataSourceType>
+class CheckBoxConceptBoolReturnImpl : public CheckBoxConceptBoolReturn
+{
+public:
+
+  CheckBoxConceptBoolReturnImpl(const Heading &t_heading,
+    const std::string & t_tooltip,
+    std::function<bool(DataSourceType *)> t_getter,
+    std::function<bool(DataSourceType *, bool)> t_setter)
+    : CheckBoxConceptBoolReturn(t_heading, t_tooltip),
+    m_getter(t_getter),
+    m_setter(t_setter)
+  {
+  }
+
+  virtual ~CheckBoxConceptBoolReturnImpl() {}
+
+
+  virtual bool get(const ConceptProxy & t_obj)
+  {
+    DataSourceType obj = t_obj.cast<DataSourceType>();
+    return m_getter(&obj);
+  }
+
+  virtual bool set(const ConceptProxy & t_obj, bool value)
+  {
+    DataSourceType obj = t_obj.cast<DataSourceType>();
+    return m_setter(&obj, value);
+  }
+
+private:
+
+  std::function<bool(DataSourceType *)>  m_getter;
+  std::function<bool(DataSourceType *, bool)> m_setter;
+};
+
+
+///////////////////////////////////////////////////////////////////////////////////
+
+
 /** Concept of being able to get and set std::string choices. */
 class ChoiceConcept {
  public:

@@ -384,6 +384,7 @@ OSDocument::~OSDocument()
 
 void OSDocument::showStartTabAndStartSubTab()
 {
+  onVerticalTabSelected(m_verticalId);
   m_mainWindow->show();
 }
 
@@ -479,7 +480,6 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
     m_tabButtonsCreated = true;
     createTabButtons();
   }
-  createTab(m_verticalId);
 
   QTimer::singleShot(0, this, SLOT(initializeModel()));
 
@@ -616,12 +616,14 @@ void OSDocument::createTab(int verticalId)
     case SITE:
       // Location
 
-      m_mainTabController = std::shared_ptr<MainTabController>(new LocationTabController(m_model, m_modelTempDir));
+      m_mainTabController = std::shared_ptr<MainTabController>(new LocationTabController(isIP, m_model, m_modelTempDir));
       m_mainWindow->setView(m_mainTabController->mainContentWidget(), SITE);
 
       connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForSiteSubTab);
 
       connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
+
+      connect(this, &OSDocument::toggleUnitsClicked, m_mainTabController.get(), &LocationTabController::toggleUnitsClicked);
 
       break;
 
@@ -1106,7 +1108,7 @@ void OSDocument::onVerticalTabSelected(int verticalId)
 
   //m_mainWindow->selectHorizontalTab(LIBRARY);
 
-  boost::optional<model::ModelObject> mo;
+  //boost::optional<model::ModelObject> mo;
 
   //m_inspectorController->layoutModelObject(mo);
 }
