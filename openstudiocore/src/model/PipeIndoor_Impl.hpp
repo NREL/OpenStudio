@@ -26,7 +26,6 @@
 namespace openstudio {
 namespace model {
 
-class Connection;
 class Construction;
 class Schedule;
 class ThermalZone;
@@ -73,10 +72,6 @@ namespace detail {
 
     boost::optional<Construction> construction() const;
 
-    boost::optional<Connection> fluidInletNode() const;
-
-    boost::optional<Connection> fluidOutletNode() const;
-
     std::string environmentType() const;
 
     boost::optional<ThermalZone> ambientTemperatureZone() const;
@@ -96,14 +91,6 @@ namespace detail {
     bool setConstruction(const boost::optional<Construction>& construction);
 
     void resetConstruction();
-
-    bool setFluidInletNode(const boost::optional<Connection>& connection);
-
-    void resetFluidInletNode();
-
-    bool setFluidOutletNode(const boost::optional<Connection>& connection);
-
-    void resetFluidOutletNode();
 
     bool setEnvironmentType(std::string environmentType);
 

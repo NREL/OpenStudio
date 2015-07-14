@@ -20,8 +20,6 @@
 #include "PipeOutdoor.hpp"
 #include "PipeOutdoor_Impl.hpp"
 
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
 #include "Construction.hpp"
 #include "Construction_Impl.hpp"
 #include "Node.hpp"
@@ -86,14 +84,6 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Construction>(OS_Pipe_OutdoorFields::Construction);
   }
 
-  boost::optional<Connection> PipeOutdoor_Impl::fluidInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Pipe_OutdoorFields::FluidInletNode);
-  }
-
-  boost::optional<Connection> PipeOutdoor_Impl::fluidOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Pipe_OutdoorFields::FluidOutletNode);
-  }
-
   boost::optional<Node> PipeOutdoor_Impl::ambientTemperatureOutdoorAirNode() const {
     return getObject<ModelObject>().getModelObjectTarget<Node>(OS_Pipe_OutdoorFields::AmbientTemperatureOutdoorAirNode);
   }
@@ -124,40 +114,6 @@ namespace detail {
 
   void PipeOutdoor_Impl::resetConstruction() {
     bool result = setString(OS_Pipe_OutdoorFields::Construction, "");
-    OS_ASSERT(result);
-  }
-
-  bool PipeOutdoor_Impl::setFluidInletNode(const boost::optional<Connection>& connection) {
-    bool result(false);
-    if (connection) {
-      result = setPointer(OS_Pipe_OutdoorFields::FluidInletNode, connection.get().handle());
-    }
-    else {
-      resetFluidInletNode();
-      result = true;
-    }
-    return result;
-  }
-
-  void PipeOutdoor_Impl::resetFluidInletNode() {
-    bool result = setString(OS_Pipe_OutdoorFields::FluidInletNode, "");
-    OS_ASSERT(result);
-  }
-
-  bool PipeOutdoor_Impl::setFluidOutletNode(const boost::optional<Connection>& connection) {
-    bool result(false);
-    if (connection) {
-      result = setPointer(OS_Pipe_OutdoorFields::FluidOutletNode, connection.get().handle());
-    }
-    else {
-      resetFluidOutletNode();
-      result = true;
-    }
-    return result;
-  }
-
-  void PipeOutdoor_Impl::resetFluidOutletNode() {
-    bool result = setString(OS_Pipe_OutdoorFields::FluidOutletNode, "");
     OS_ASSERT(result);
   }
 
@@ -212,14 +168,6 @@ boost::optional<Construction> PipeOutdoor::construction() const {
   return getImpl<detail::PipeOutdoor_Impl>()->construction();
 }
 
-boost::optional<Connection> PipeOutdoor::fluidInletNode() const {
-  return getImpl<detail::PipeOutdoor_Impl>()->fluidInletNode();
-}
-
-boost::optional<Connection> PipeOutdoor::fluidOutletNode() const {
-  return getImpl<detail::PipeOutdoor_Impl>()->fluidOutletNode();
-}
-
 boost::optional<Node> PipeOutdoor::ambientTemperatureOutdoorAirNode() const {
   return getImpl<detail::PipeOutdoor_Impl>()->ambientTemperatureOutdoorAirNode();
 }
@@ -238,22 +186,6 @@ bool PipeOutdoor::setConstruction(const Construction& construction) {
 
 void PipeOutdoor::resetConstruction() {
   getImpl<detail::PipeOutdoor_Impl>()->resetConstruction();
-}
-
-bool PipeOutdoor::setFluidInletNode(const Connection& connection) {
-  return getImpl<detail::PipeOutdoor_Impl>()->setFluidInletNode(connection);
-}
-
-void PipeOutdoor::resetFluidInletNode() {
-  getImpl<detail::PipeOutdoor_Impl>()->resetFluidInletNode();
-}
-
-bool PipeOutdoor::setFluidOutletNode(const Connection& connection) {
-  return getImpl<detail::PipeOutdoor_Impl>()->setFluidOutletNode(connection);
-}
-
-void PipeOutdoor::resetFluidOutletNode() {
-  getImpl<detail::PipeOutdoor_Impl>()->resetFluidOutletNode();
 }
 
 bool PipeOutdoor::setAmbientTemperatureOutdoorAirNode(const Node& node) {

@@ -20,8 +20,6 @@
 #include "PipeIndoor.hpp"
 #include "PipeIndoor_Impl.hpp"
 
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
 #include "Construction.hpp"
 #include "Construction_Impl.hpp"
 #include "Schedule.hpp"
@@ -107,14 +105,6 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Construction>(OS_Pipe_IndoorFields::Construction);
   }
 
-  boost::optional<Connection> PipeIndoor_Impl::fluidInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Pipe_IndoorFields::FluidInletNode);
-  }
-
-  boost::optional<Connection> PipeIndoor_Impl::fluidOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Pipe_IndoorFields::FluidOutletNode);
-  }
-
   std::string PipeIndoor_Impl::environmentType() const {
     boost::optional<std::string> value = getString(OS_Pipe_IndoorFields::EnvironmentType,true);
     OS_ASSERT(value);
@@ -159,40 +149,6 @@ namespace detail {
 
   void PipeIndoor_Impl::resetConstruction() {
     bool result = setString(OS_Pipe_IndoorFields::Construction, "");
-    OS_ASSERT(result);
-  }
-
-  bool PipeIndoor_Impl::setFluidInletNode(const boost::optional<Connection>& connection) {
-    bool result(false);
-    if (connection) {
-      result = setPointer(OS_Pipe_IndoorFields::FluidInletNode, connection.get().handle());
-    }
-    else {
-      resetFluidInletNode();
-      result = true;
-    }
-    return result;
-  }
-
-  void PipeIndoor_Impl::resetFluidInletNode() {
-    bool result = setString(OS_Pipe_IndoorFields::FluidInletNode, "");
-    OS_ASSERT(result);
-  }
-
-  bool PipeIndoor_Impl::setFluidOutletNode(const boost::optional<Connection>& connection) {
-    bool result(false);
-    if (connection) {
-      result = setPointer(OS_Pipe_IndoorFields::FluidOutletNode, connection.get().handle());
-    }
-    else {
-      resetFluidOutletNode();
-      result = true;
-    }
-    return result;
-  }
-
-  void PipeIndoor_Impl::resetFluidOutletNode() {
-    bool result = setString(OS_Pipe_IndoorFields::FluidOutletNode, "");
     OS_ASSERT(result);
   }
 
@@ -285,14 +241,6 @@ boost::optional<Construction> PipeIndoor::construction() const {
   return getImpl<detail::PipeIndoor_Impl>()->construction();
 }
 
-boost::optional<Connection> PipeIndoor::fluidInletNode() const {
-  return getImpl<detail::PipeIndoor_Impl>()->fluidInletNode();
-}
-
-boost::optional<Connection> PipeIndoor::fluidOutletNode() const {
-  return getImpl<detail::PipeIndoor_Impl>()->fluidOutletNode();
-}
-
 std::string PipeIndoor::environmentType() const {
   return getImpl<detail::PipeIndoor_Impl>()->environmentType();
 }
@@ -323,22 +271,6 @@ bool PipeIndoor::setConstruction(const Construction& construction) {
 
 void PipeIndoor::resetConstruction() {
   getImpl<detail::PipeIndoor_Impl>()->resetConstruction();
-}
-
-bool PipeIndoor::setFluidInletNode(const Connection& connection) {
-  return getImpl<detail::PipeIndoor_Impl>()->setFluidInletNode(connection);
-}
-
-void PipeIndoor::resetFluidInletNode() {
-  getImpl<detail::PipeIndoor_Impl>()->resetFluidInletNode();
-}
-
-bool PipeIndoor::setFluidOutletNode(const Connection& connection) {
-  return getImpl<detail::PipeIndoor_Impl>()->setFluidOutletNode(connection);
-}
-
-void PipeIndoor::resetFluidOutletNode() {
-  getImpl<detail::PipeIndoor_Impl>()->resetFluidOutletNode();
 }
 
 bool PipeIndoor::setEnvironmentType(std::string environmentType) {

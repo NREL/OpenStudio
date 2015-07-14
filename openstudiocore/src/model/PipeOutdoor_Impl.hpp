@@ -26,7 +26,6 @@
 namespace openstudio {
 namespace model {
 
-class Connection;
 class Construction;
 class Node;
 
@@ -70,10 +69,6 @@ namespace detail {
 
     boost::optional<Construction> construction() const;
 
-    boost::optional<Connection> fluidInletNode() const;
-
-    boost::optional<Connection> fluidOutletNode() const;
-
     boost::optional<Node> ambientTemperatureOutdoorAirNode() const;
 
     double pipeInsideDiameter() const;
@@ -87,14 +82,6 @@ namespace detail {
     bool setConstruction(const boost::optional<Construction>& construction);
 
     void resetConstruction();
-
-    bool setFluidInletNode(const boost::optional<Connection>& connection);
-
-    void resetFluidInletNode();
-
-    bool setFluidOutletNode(const boost::optional<Connection>& connection);
-
-    void resetFluidOutletNode();
 
     bool setAmbientTemperatureOutdoorAirNode(const boost::optional<Node>& node);
 

@@ -27,7 +27,6 @@ namespace openstudio {
 
 namespace model {
 
-class Connection;
 class Construction;
 class Node;
 
@@ -56,10 +55,6 @@ class MODEL_API PipeOutdoor : public StraightComponent {
 
   boost::optional<Construction> construction() const;
 
-  boost::optional<Connection> fluidInletNode() const;
-
-  boost::optional<Connection> fluidOutletNode() const;
-
   boost::optional<Node> ambientTemperatureOutdoorAirNode() const;
 
   double pipeInsideDiameter() const;
@@ -73,14 +68,6 @@ class MODEL_API PipeOutdoor : public StraightComponent {
   bool setConstruction(const Construction& construction);
 
   void resetConstruction();
-
-  bool setFluidInletNode(const Connection& connection);
-
-  void resetFluidInletNode();
-
-  bool setFluidOutletNode(const Connection& connection);
-
-  void resetFluidOutletNode();
 
   bool setAmbientTemperatureOutdoorAirNode(const Node& node);
 
