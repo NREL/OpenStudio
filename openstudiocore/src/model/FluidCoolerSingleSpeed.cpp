@@ -81,14 +81,6 @@ namespace detail {
     return  OS_FluidCooler_SingleSpeedFields::WaterOutletNode;
   }
 
-  boost::optional<Connection> FluidCoolerSingleSpeed_Impl::waterInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_FluidCooler_SingleSpeedFields::WaterInletNode);
-  }
-
-  boost::optional<Connection> FluidCoolerSingleSpeed_Impl::waterOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_FluidCooler_SingleSpeedFields::WaterOutletNode);
-  }
-
   std::string FluidCoolerSingleSpeed_Impl::performanceInputMethod() const {
     boost::optional<std::string> value = getString(OS_FluidCooler_SingleSpeedFields::PerformanceInputMethod,true);
     OS_ASSERT(value);
@@ -173,40 +165,6 @@ namespace detail {
 
   boost::optional<Node> FluidCoolerSingleSpeed_Impl::outdoorAirInletNode() const {
     return getObject<ModelObject>().getModelObjectTarget<Node>(OS_FluidCooler_SingleSpeedFields::OutdoorAirInletNode);
-  }
-
-  bool FluidCoolerSingleSpeed_Impl::setWaterInletNode(const boost::optional<Connection>& connection) {
-    bool result(false);
-    if (connection) {
-      result = setPointer(OS_FluidCooler_SingleSpeedFields::WaterInletNode, connection.get().handle());
-    }
-    else {
-      resetWaterInletNode();
-      result = true;
-    }
-    return result;
-  }
-
-  void FluidCoolerSingleSpeed_Impl::resetWaterInletNode() {
-    bool result = setString(OS_FluidCooler_SingleSpeedFields::WaterInletNode, "");
-    OS_ASSERT(result);
-  }
-
-  bool FluidCoolerSingleSpeed_Impl::setWaterOutletNode(const boost::optional<Connection>& connection) {
-    bool result(false);
-    if (connection) {
-      result = setPointer(OS_FluidCooler_SingleSpeedFields::WaterOutletNode, connection.get().handle());
-    }
-    else {
-      resetWaterOutletNode();
-      result = true;
-    }
-    return result;
-  }
-
-  void FluidCoolerSingleSpeed_Impl::resetWaterOutletNode() {
-    bool result = setString(OS_FluidCooler_SingleSpeedFields::WaterOutletNode, "");
-    OS_ASSERT(result);
   }
 
   bool FluidCoolerSingleSpeed_Impl::setPerformanceInputMethod(std::string performanceInputMethod) {
@@ -342,14 +300,6 @@ std::vector<std::string> FluidCoolerSingleSpeed::performanceInputMethodValues() 
                         OS_FluidCooler_SingleSpeedFields::PerformanceInputMethod);
 }
 
-boost::optional<Connection> FluidCoolerSingleSpeed::waterInletNode() const {
-  return getImpl<detail::FluidCoolerSingleSpeed_Impl>()->waterInletNode();
-}
-
-boost::optional<Connection> FluidCoolerSingleSpeed::waterOutletNode() const {
-  return getImpl<detail::FluidCoolerSingleSpeed_Impl>()->waterOutletNode();
-}
-
 std::string FluidCoolerSingleSpeed::performanceInputMethod() const {
   return getImpl<detail::FluidCoolerSingleSpeed_Impl>()->performanceInputMethod();
 }
@@ -404,22 +354,6 @@ bool FluidCoolerSingleSpeed::isDesignAirFlowRateFanPowerAutosized() const {
 
 boost::optional<Node> FluidCoolerSingleSpeed::outdoorAirInletNode() const {
   return getImpl<detail::FluidCoolerSingleSpeed_Impl>()->outdoorAirInletNode();
-}
-
-bool FluidCoolerSingleSpeed::setWaterInletNode(const Connection& connection) {
-  return getImpl<detail::FluidCoolerSingleSpeed_Impl>()->setWaterInletNode(connection);
-}
-
-void FluidCoolerSingleSpeed::resetWaterInletNode() {
-  getImpl<detail::FluidCoolerSingleSpeed_Impl>()->resetWaterInletNode();
-}
-
-bool FluidCoolerSingleSpeed::setWaterOutletNode(const Connection& connection) {
-  return getImpl<detail::FluidCoolerSingleSpeed_Impl>()->setWaterOutletNode(connection);
-}
-
-void FluidCoolerSingleSpeed::resetWaterOutletNode() {
-  getImpl<detail::FluidCoolerSingleSpeed_Impl>()->resetWaterOutletNode();
 }
 
 bool FluidCoolerSingleSpeed::setPerformanceInputMethod(std::string performanceInputMethod) {

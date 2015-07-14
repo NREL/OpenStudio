@@ -55,10 +55,6 @@ class MODEL_API FluidCoolerSingleSpeed : public StraightComponent {
   /** @name Getters */
   //@{
 
-  boost::optional<Connection> waterInletNode() const;
-
-  boost::optional<Connection> waterOutletNode() const;
-
   std::string performanceInputMethod() const;
 
   boost::optional<double> designAirFlowRateUfactorTimesAreaValue() const;
@@ -90,14 +86,6 @@ class MODEL_API FluidCoolerSingleSpeed : public StraightComponent {
   //@}
   /** @name Setters */
   //@{
-
-  bool setWaterInletNode(const Connection& connection);
-
-  void resetWaterInletNode();
-
-  bool setWaterOutletNode(const Connection& connection);
-
-  void resetWaterOutletNode();
 
   bool setPerformanceInputMethod(std::string performanceInputMethod);
 

@@ -67,10 +67,6 @@ namespace detail {
 
     virtual unsigned outletPort() override;
 
-    boost::optional<Connection> waterInletNode() const;
-
-    boost::optional<Connection> waterOutletNode() const;
-
     std::string performanceInputMethod() const;
 
     boost::optional<double> designAirFlowRateUfactorTimesAreaValue() const;
@@ -102,14 +98,6 @@ namespace detail {
     //@}
     /** @name Setters */
     //@{
-
-    bool setWaterInletNode(const boost::optional<Connection>& connection);
-
-    void resetWaterInletNode();
-
-    bool setWaterOutletNode(const boost::optional<Connection>& connection);
-
-    void resetWaterOutletNode();
 
     bool setPerformanceInputMethod(std::string performanceInputMethod);
 
