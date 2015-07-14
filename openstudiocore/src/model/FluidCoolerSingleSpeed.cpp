@@ -20,8 +20,6 @@
 #include "FluidCoolerSingleSpeed.hpp"
 #include "FluidCoolerSingleSpeed_Impl.hpp"
 
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 

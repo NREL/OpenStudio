@@ -26,7 +26,6 @@
 namespace openstudio {
 namespace model {
 
-class Connection;
 class Node;
 
 namespace detail {
@@ -66,10 +65,6 @@ namespace detail {
     virtual unsigned inletPort() override;
 
     virtual unsigned outletPort() override;
-
-    boost::optional<Connection> waterInletNode() const;
-
-    boost::optional<Connection> waterOutletNode() const;
 
     std::string performanceInputMethod() const;
 
@@ -126,14 +121,6 @@ namespace detail {
     //@}
     /** @name Setters */
     //@{
-
-    bool setWaterInletNode(const boost::optional<Connection>& connection);
-
-    void resetWaterInletNode();
-
-    bool setWaterOutletNode(const boost::optional<Connection>& connection);
-
-    void resetWaterOutletNode();
 
     bool setPerformanceInputMethod(std::string performanceInputMethod);
 

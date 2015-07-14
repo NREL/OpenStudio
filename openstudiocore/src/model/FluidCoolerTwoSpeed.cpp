@@ -20,8 +20,6 @@
 #include "FluidCoolerTwoSpeed.hpp"
 #include "FluidCoolerTwoSpeed_Impl.hpp"
 
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 
@@ -79,14 +77,6 @@ namespace detail {
   unsigned FluidCoolerTwoSpeed_Impl::outletPort()
   {
     return  OS_FluidCooler_TwoSpeedFields::WaterOutletNode;
-  }
-
-  boost::optional<Connection> FluidCoolerTwoSpeed_Impl::waterInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_FluidCooler_TwoSpeedFields::WaterInletNode);
-  }
-
-  boost::optional<Connection> FluidCoolerTwoSpeed_Impl::waterOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_FluidCooler_TwoSpeedFields::WaterOutletNode);
   }
 
   std::string FluidCoolerTwoSpeed_Impl::performanceInputMethod() const {
@@ -249,40 +239,6 @@ namespace detail {
 
   boost::optional<Node> FluidCoolerTwoSpeed_Impl::outdoorAirInletNode() const {
     return getObject<ModelObject>().getModelObjectTarget<Node>(OS_FluidCooler_TwoSpeedFields::OutdoorAirInletNode);
-  }
-
-  bool FluidCoolerTwoSpeed_Impl::setWaterInletNode(const boost::optional<Connection>& connection) {
-    bool result(false);
-    if (connection) {
-      result = setPointer(OS_FluidCooler_TwoSpeedFields::WaterInletNode, connection.get().handle());
-    }
-    else {
-      resetWaterInletNode();
-      result = true;
-    }
-    return result;
-  }
-
-  void FluidCoolerTwoSpeed_Impl::resetWaterInletNode() {
-    bool result = setString(OS_FluidCooler_TwoSpeedFields::WaterInletNode, "");
-    OS_ASSERT(result);
-  }
-
-  bool FluidCoolerTwoSpeed_Impl::setWaterOutletNode(const boost::optional<Connection>& connection) {
-    bool result(false);
-    if (connection) {
-      result = setPointer(OS_FluidCooler_TwoSpeedFields::WaterOutletNode, connection.get().handle());
-    }
-    else {
-      resetWaterOutletNode();
-      result = true;
-    }
-    return result;
-  }
-
-  void FluidCoolerTwoSpeed_Impl::resetWaterOutletNode() {
-    bool result = setString(OS_FluidCooler_TwoSpeedFields::WaterOutletNode, "");
-    OS_ASSERT(result);
   }
 
   bool FluidCoolerTwoSpeed_Impl::setPerformanceInputMethod(std::string performanceInputMethod) {
@@ -504,14 +460,6 @@ std::vector<std::string> FluidCoolerTwoSpeed::performanceInputMethodValues() {
                         OS_FluidCooler_TwoSpeedFields::PerformanceInputMethod);
 }
 
-boost::optional<Connection> FluidCoolerTwoSpeed::waterInletNode() const {
-  return getImpl<detail::FluidCoolerTwoSpeed_Impl>()->waterInletNode();
-}
-
-boost::optional<Connection> FluidCoolerTwoSpeed::waterOutletNode() const {
-  return getImpl<detail::FluidCoolerTwoSpeed_Impl>()->waterOutletNode();
-}
-
 std::string FluidCoolerTwoSpeed::performanceInputMethod() const {
   return getImpl<detail::FluidCoolerTwoSpeed_Impl>()->performanceInputMethod();
 }
@@ -614,22 +562,6 @@ double FluidCoolerTwoSpeed::lowFanSpeedFanPowerSizingFactor() const {
 
 boost::optional<Node> FluidCoolerTwoSpeed::outdoorAirInletNode() const {
   return getImpl<detail::FluidCoolerTwoSpeed_Impl>()->outdoorAirInletNode();
-}
-
-bool FluidCoolerTwoSpeed::setWaterInletNode(const Connection& connection) {
-  return getImpl<detail::FluidCoolerTwoSpeed_Impl>()->setWaterInletNode(connection);
-}
-
-void FluidCoolerTwoSpeed::resetWaterInletNode() {
-  getImpl<detail::FluidCoolerTwoSpeed_Impl>()->resetWaterInletNode();
-}
-
-bool FluidCoolerTwoSpeed::setWaterOutletNode(const Connection& connection) {
-  return getImpl<detail::FluidCoolerTwoSpeed_Impl>()->setWaterOutletNode(connection);
-}
-
-void FluidCoolerTwoSpeed::resetWaterOutletNode() {
-  getImpl<detail::FluidCoolerTwoSpeed_Impl>()->resetWaterOutletNode();
 }
 
 bool FluidCoolerTwoSpeed::setPerformanceInputMethod(std::string performanceInputMethod) {
