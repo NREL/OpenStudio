@@ -370,10 +370,10 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_Hourly)
   Vector values = linspace(1, 8760, 8760);
   std::vector<long> seconds(8760);
   for(unsigned i=0;i<seconds.size();i++) {
-    seconds[i]=i*3600;
+    seconds[i]=(i+1)*3600;
   }
 
-  TimeSeries timeseries(DateTime(Date(MonthOfYear::Jan, 1),Time(0,1)), seconds, values, "");
+  TimeSeries timeseries(DateTime(Date(MonthOfYear::Jan, 1)), seconds, values, "");
 
   Model model;
 
@@ -506,13 +506,12 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_500)
 
   Vector values = linspace(1, 500, 500);
   std::vector<long> seconds(500);
-  seconds[0] = 0;
-  seconds[1] = numbers[1];
-  for(unsigned i=2;i<500;i++) {
+  seconds[0] = numbers[0];
+  for(unsigned i=1;i<500;i++) {
     seconds[i]=numbers[i]+seconds[i-1];
   }
 
-  TimeSeries timeseries(DateTime(Date(MonthOfYear::Jan, 1),Time(0,0,0,numbers[0])), seconds, values, "");
+  TimeSeries timeseries(DateTime(Date(MonthOfYear::Jan, 1)), seconds, values, "");
 
   Model model;
 

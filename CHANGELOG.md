@@ -1,3 +1,10 @@
+## OpenStudio v1.8.1
+###### 2015-07 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.8.0...v1.8.1 )
+
+- ![Improved:][improved] [#1458]( https://github.com/NREL/OpenStudio/issues/1458 ), 
+EPWFile includes new methods to get TimeSeries data from weather files, SWIG bindings to the EPWFile class have been improved
+
+
 ## OpenStudio v1.8.0
 ###### 2015-06 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.5...v1.8.0 )
 
