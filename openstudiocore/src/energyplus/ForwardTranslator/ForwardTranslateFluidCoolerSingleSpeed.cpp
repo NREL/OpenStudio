@@ -82,31 +82,31 @@ boost::optional<IdfObject> ForwardTranslator::translateFluidCoolerSingleSpeed(Fl
   d = modelObject.designAirFlowRateUfactorTimesAreaValue();
   if (d)
   {
-    idfObject.setString(openstudio::FluidCooler_SingleSpeedFields::DesignAirFlowRateUfactorTimesAreaValue, toString(*d));
+    idfObject.setDouble(openstudio::FluidCooler_SingleSpeedFields::DesignAirFlowRateUfactorTimesAreaValue, *d);
   }
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
-  idfObject.setString(openstudio::FluidCooler_SingleSpeedFields::NominalCapacity, toString(modelObject.nominalCapacity()));
+  idfObject.setDouble(openstudio::FluidCooler_SingleSpeedFields::NominalCapacity, modelObject.nominalCapacity());
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
-  idfObject.setString(openstudio::FluidCooler_SingleSpeedFields::DesignEnteringWaterTemperature, toString(modelObject.designEnteringWaterTemperature()));
+  idfObject.setDouble(openstudio::FluidCooler_SingleSpeedFields::DesignEnteringWaterTemperature, modelObject.designEnteringWaterTemperature());
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
-  idfObject.setString(openstudio::FluidCooler_SingleSpeedFields::DesignEnteringAirTemperature, toString(modelObject.designEnteringAirTemperature()));
+  idfObject.setDouble(openstudio::FluidCooler_SingleSpeedFields::DesignEnteringAirTemperature, modelObject.designEnteringAirTemperature());
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
-  idfObject.setString(openstudio::FluidCooler_SingleSpeedFields::DesignEnteringAirWetbulbTemperature, toString(modelObject.designEnteringAirWetbulbTemperature()));
+  idfObject.setDouble(openstudio::FluidCooler_SingleSpeedFields::DesignEnteringAirWetbulbTemperature, modelObject.designEnteringAirWetbulbTemperature());
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
   d = modelObject.designWaterFlowRate();
   if (d)
   {
-    idfObject.setString(openstudio::FluidCooler_SingleSpeedFields::DesignWaterFlowRate, toString(*d));
+    idfObject.setDouble(openstudio::FluidCooler_SingleSpeedFields::DesignWaterFlowRate, *d);
   }
   ///////////////////////////////////////////////////////////////////////////
 
@@ -114,7 +114,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFluidCoolerSingleSpeed(Fl
   d = modelObject.designAirFlowRate();
   if (d)
   {
-    idfObject.setString(openstudio::FluidCooler_SingleSpeedFields::DesignAirFlowRate, toString(*d));
+    idfObject.setDouble(openstudio::FluidCooler_SingleSpeedFields::DesignAirFlowRate, *d);
   }
   ///////////////////////////////////////////////////////////////////////////
 
@@ -122,7 +122,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFluidCoolerSingleSpeed(Fl
   d = modelObject.designAirFlowRateFanPower();
   if (d)
   {
-    idfObject.setString(openstudio::FluidCooler_SingleSpeedFields::DesignAirFlowRateFanPower, toString(*d));
+    idfObject.setDouble(openstudio::FluidCooler_SingleSpeedFields::DesignAirFlowRateFanPower, *d);
   }
   ///////////////////////////////////////////////////////////////////////////
 

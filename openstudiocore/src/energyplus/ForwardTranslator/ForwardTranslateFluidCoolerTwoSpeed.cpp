@@ -78,7 +78,7 @@ namespace energyplus {
   d = modelObject.highFanSpeedUfactorTimesAreaValue();
   if (d)
   {
-    idfObject.setString(openstudio::FluidCooler_TwoSpeedFields::HighFanSpeedUfactorTimesAreaValue, toString(*d));
+    idfObject.setDouble(openstudio::FluidCooler_TwoSpeedFields::HighFanSpeedUfactorTimesAreaValue, *d);
   }
   ///////////////////////////////////////////////////////////////////////////
 
@@ -86,47 +86,47 @@ namespace energyplus {
   d = modelObject.lowFanSpeedUfactorTimesAreaValue();
   if (d)
   {
-    idfObject.setString(openstudio::FluidCooler_TwoSpeedFields::LowFanSpeedUfactorTimesAreaValue, toString(*d));
+    idfObject.setDouble(openstudio::FluidCooler_TwoSpeedFields::LowFanSpeedUfactorTimesAreaValue, *d);
   }
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
-  idfObject.setString(openstudio::FluidCooler_TwoSpeedFields::LowFanSpeedUFactorTimesAreaSizingFactor, toString(modelObject.lowFanSpeedUFactorTimesAreaSizingFactor()));
+  idfObject.setDouble(openstudio::FluidCooler_TwoSpeedFields::LowFanSpeedUFactorTimesAreaSizingFactor, modelObject.lowFanSpeedUFactorTimesAreaSizingFactor());
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
-  idfObject.setString(openstudio::FluidCooler_TwoSpeedFields::HighSpeedNominalCapacity, toString(modelObject.highSpeedNominalCapacity()));
+  idfObject.setDouble(openstudio::FluidCooler_TwoSpeedFields::HighSpeedNominalCapacity, modelObject.highSpeedNominalCapacity());
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
   d = modelObject.lowSpeedNominalCapacity();
   if (d)
   {
-    idfObject.setString(openstudio::FluidCooler_TwoSpeedFields::LowSpeedNominalCapacity, toString(*d));
+    idfObject.setDouble(openstudio::FluidCooler_TwoSpeedFields::LowSpeedNominalCapacity, *d);
   }
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
-  idfObject.setString(openstudio::FluidCooler_TwoSpeedFields::LowSpeedNominalCapacitySizingFactor, toString(modelObject.lowSpeedNominalCapacitySizingFactor()));
+  idfObject.setDouble(openstudio::FluidCooler_TwoSpeedFields::LowSpeedNominalCapacitySizingFactor, modelObject.lowSpeedNominalCapacitySizingFactor());
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
-  idfObject.setString(openstudio::FluidCooler_TwoSpeedFields::DesignEnteringWaterTemperature, toString(modelObject.designEnteringWaterTemperature()));
+  idfObject.setDouble(openstudio::FluidCooler_TwoSpeedFields::DesignEnteringWaterTemperature, modelObject.designEnteringWaterTemperature());
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
-  idfObject.setString(openstudio::FluidCooler_TwoSpeedFields::DesignEnteringAirTemperature, toString(modelObject.designEnteringAirTemperature()));
+  idfObject.setDouble(openstudio::FluidCooler_TwoSpeedFields::DesignEnteringAirTemperature, modelObject.designEnteringAirTemperature());
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
-  idfObject.setString(openstudio::FluidCooler_TwoSpeedFields::DesignEnteringAirWetbulbTemperature, toString(modelObject.designEnteringAirWetbulbTemperature()));
+  idfObject.setDouble(openstudio::FluidCooler_TwoSpeedFields::DesignEnteringAirWetbulbTemperature, modelObject.designEnteringAirWetbulbTemperature());
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
   d = modelObject.designWaterFlowRate();
   if (d)
   {
-    idfObject.setString(openstudio::FluidCooler_TwoSpeedFields::DesignWaterFlowRate, toString(*d));
+    idfObject.setDouble(openstudio::FluidCooler_TwoSpeedFields::DesignWaterFlowRate, *d);
   }
   ///////////////////////////////////////////////////////////////////////////
 
@@ -134,7 +134,7 @@ namespace energyplus {
   d = modelObject.highFanSpeedAirFlowRate();
   if (d)
   {
-    idfObject.setString(openstudio::FluidCooler_TwoSpeedFields::HighFanSpeedAirFlowRate, toString(*d));
+    idfObject.setDouble(openstudio::FluidCooler_TwoSpeedFields::HighFanSpeedAirFlowRate, *d);
   }
   ///////////////////////////////////////////////////////////////////////////
 
@@ -142,7 +142,7 @@ namespace energyplus {
   d = modelObject.highFanSpeedFanPower();
   if (d)
   {
-    idfObject.setString(openstudio::FluidCooler_TwoSpeedFields::HighFanSpeedFanPower, toString(*d));
+    idfObject.setDouble(openstudio::FluidCooler_TwoSpeedFields::HighFanSpeedFanPower, *d);
   }
   ///////////////////////////////////////////////////////////////////////////
 
@@ -150,24 +150,24 @@ namespace energyplus {
   d = modelObject.lowFanSpeedAirFlowRate();
   if (d)
   {
-    idfObject.setString(openstudio::FluidCooler_TwoSpeedFields::LowFanSpeedAirFlowRate, toString(*d));
+    idfObject.setDouble(openstudio::FluidCooler_TwoSpeedFields::LowFanSpeedAirFlowRate, *d);
   }
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
-  idfObject.setString(openstudio::FluidCooler_TwoSpeedFields::LowFanSpeedAirFlowRateSizingFactor, toString(modelObject.lowFanSpeedAirFlowRateSizingFactor()));
+  idfObject.setDouble(openstudio::FluidCooler_TwoSpeedFields::LowFanSpeedAirFlowRateSizingFactor, modelObject.lowFanSpeedAirFlowRateSizingFactor());
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
   d = modelObject.lowFanSpeedFanPower();
   if (d)
   {
-    idfObject.setString(openstudio::FluidCooler_TwoSpeedFields::LowFanSpeedFanPower, toString(*d));
+    idfObject.setDouble(openstudio::FluidCooler_TwoSpeedFields::LowFanSpeedFanPower, *d);
   }
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
-  idfObject.setString(openstudio::FluidCooler_TwoSpeedFields::LowFanSpeedFanPowerSizingFactor, toString(modelObject.lowFanSpeedFanPowerSizingFactor()));
+  idfObject.setDouble(openstudio::FluidCooler_TwoSpeedFields::LowFanSpeedFanPowerSizingFactor, modelObject.lowFanSpeedFanPowerSizingFactor());
   ///////////////////////////////////////////////////////////////////////////
 
   return boost::optional<IdfObject>(idfObject);

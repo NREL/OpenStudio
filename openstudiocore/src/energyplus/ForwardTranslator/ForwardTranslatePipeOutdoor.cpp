@@ -101,12 +101,12 @@ namespace energyplus {
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
-  idfObject.setString(openstudio::Pipe_OutdoorFields::PipeInsideDiameter, toString(modelObject.pipeInsideDiameter()));
+  idfObject.setDouble(openstudio::Pipe_OutdoorFields::PipeInsideDiameter, modelObject.pipeInsideDiameter());
   ///////////////////////////////////////////////////////////////////////////
 
 
   ///////////////////////////////////////////////////////////////////////////
-  idfObject.setString(openstudio::Pipe_OutdoorFields::PipeLength, toString(modelObject.pipeLength()));
+  idfObject.setDouble(openstudio::Pipe_OutdoorFields::PipeLength, modelObject.pipeLength());
   ///////////////////////////////////////////////////////////////////////////
 
   return boost::optional<IdfObject>(idfObject);
