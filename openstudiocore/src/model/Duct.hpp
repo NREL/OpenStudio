@@ -26,8 +26,6 @@
 namespace openstudio {
 namespace model {
 
-class Connection;
-
 namespace detail {
 
   class Duct_Impl;

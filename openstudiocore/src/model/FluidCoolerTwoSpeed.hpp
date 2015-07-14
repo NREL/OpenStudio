@@ -62,7 +62,7 @@ class MODEL_API FluidCoolerTwoSpeed : public StraightComponent {
 
   boost::optional<double> lowFanSpeedUfactorTimesAreaValue() const;
 
-  bool isLowFanSpeedUfactorTimesAreaValueAutocalculated() const;
+  bool isLowFanSpeedUfactorTimesAreaValueAutosized() const;
 
   double lowFanSpeedUFactorTimesAreaSizingFactor() const;
 
@@ -70,7 +70,7 @@ class MODEL_API FluidCoolerTwoSpeed : public StraightComponent {
 
   boost::optional<double> lowSpeedNominalCapacity() const;
 
-  bool isLowSpeedNominalCapacityAutocalculated() const;
+  bool isLowSpeedNominalCapacityAutosized() const;
 
   double lowSpeedNominalCapacitySizingFactor() const;
 
@@ -94,13 +94,13 @@ class MODEL_API FluidCoolerTwoSpeed : public StraightComponent {
 
   boost::optional<double> lowFanSpeedAirFlowRate() const;
 
-  bool isLowFanSpeedAirFlowRateAutocalculated() const;
+  bool isLowFanSpeedAirFlowRateAutosized() const;
 
   double lowFanSpeedAirFlowRateSizingFactor() const;
 
   boost::optional<double> lowFanSpeedFanPower() const;
 
-  bool isLowFanSpeedFanPowerAutocalculated() const;
+  bool isLowFanSpeedFanPowerAutosized() const;
 
   double lowFanSpeedFanPowerSizingFactor() const;
 
@@ -118,7 +118,7 @@ class MODEL_API FluidCoolerTwoSpeed : public StraightComponent {
 
   bool setLowFanSpeedUfactorTimesAreaValue(double lowFanSpeedUfactorTimesAreaValue);
 
-  void autocalculateLowFanSpeedUfactorTimesAreaValue();
+  void autosizeLowFanSpeedUfactorTimesAreaValue();
 
   void setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor);
 
@@ -126,7 +126,7 @@ class MODEL_API FluidCoolerTwoSpeed : public StraightComponent {
 
   bool setLowSpeedNominalCapacity(double lowSpeedNominalCapacity);
 
-  void autocalculateLowSpeedNominalCapacity();
+  void autosizeLowSpeedNominalCapacity();
 
   void setLowSpeedNominalCapacitySizingFactor(double lowSpeedNominalCapacitySizingFactor);
 
@@ -150,13 +150,13 @@ class MODEL_API FluidCoolerTwoSpeed : public StraightComponent {
 
   bool setLowFanSpeedAirFlowRate(double lowFanSpeedAirFlowRate);
 
-  void autocalculateLowFanSpeedAirFlowRate();
+  void autosizeLowFanSpeedAirFlowRate();
 
   void setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor);
 
   bool setLowFanSpeedFanPower(double lowFanSpeedFanPower);
 
-  void autocalculateLowFanSpeedFanPower();
+  void autosizeLowFanSpeedFanPower();
 
   void setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor);
 
@@ -194,4 +194,3 @@ typedef std::vector<FluidCoolerTwoSpeed> FluidCoolerTwoSpeedVector;
 } // openstudio
 
 #endif // MODEL_FLUIDCOOLERTWOSPEED_HPP
-

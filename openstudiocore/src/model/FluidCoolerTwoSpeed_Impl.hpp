@@ -74,7 +74,7 @@ namespace detail {
 
     boost::optional<double> lowFanSpeedUfactorTimesAreaValue() const;
 
-    bool isLowFanSpeedUfactorTimesAreaValueAutocalculated() const;
+    bool isLowFanSpeedUfactorTimesAreaValueAutosized() const;
 
     double lowFanSpeedUFactorTimesAreaSizingFactor() const;
 
@@ -82,7 +82,7 @@ namespace detail {
 
     boost::optional<double> lowSpeedNominalCapacity() const;
 
-    bool isLowSpeedNominalCapacityAutocalculated() const;
+    bool isLowSpeedNominalCapacityAutosized() const;
 
     double lowSpeedNominalCapacitySizingFactor() const;
 
@@ -106,13 +106,13 @@ namespace detail {
 
     boost::optional<double> lowFanSpeedAirFlowRate() const;
 
-    bool isLowFanSpeedAirFlowRateAutocalculated() const;
+    bool isLowFanSpeedAirFlowRateAutosized() const;
 
     double lowFanSpeedAirFlowRateSizingFactor() const;
 
     boost::optional<double> lowFanSpeedFanPower() const;
 
-    bool isLowFanSpeedFanPowerAutocalculated() const;
+    bool isLowFanSpeedFanPowerAutosized() const;
 
     double lowFanSpeedFanPowerSizingFactor() const;
 
@@ -130,7 +130,7 @@ namespace detail {
 
     bool setLowFanSpeedUfactorTimesAreaValue(boost::optional<double> lowFanSpeedUfactorTimesAreaValue);
 
-    void autocalculateLowFanSpeedUfactorTimesAreaValue();
+    void autosizeLowFanSpeedUfactorTimesAreaValue();
 
     void setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor);
 
@@ -138,7 +138,7 @@ namespace detail {
 
     bool setLowSpeedNominalCapacity(boost::optional<double> lowSpeedNominalCapacity);
 
-    void autocalculateLowSpeedNominalCapacity();
+    void autosizeLowSpeedNominalCapacity();
 
     void setLowSpeedNominalCapacitySizingFactor(double lowSpeedNominalCapacitySizingFactor);
 
@@ -162,13 +162,13 @@ namespace detail {
 
     bool setLowFanSpeedAirFlowRate(boost::optional<double> lowFanSpeedAirFlowRate);
 
-    void autocalculateLowFanSpeedAirFlowRate();
+    void autosizeLowFanSpeedAirFlowRate();
 
     void setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor);
 
     bool setLowFanSpeedFanPower(boost::optional<double> lowFanSpeedFanPower);
 
-    void autocalculateLowFanSpeedFanPower();
+    void autosizeLowFanSpeedFanPower();
 
     void setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor);
 

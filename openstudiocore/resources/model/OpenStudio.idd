@@ -20015,7 +20015,7 @@ OS:FluidCooler:TwoSpeed,
        \units W/K
        \minimum> 0.0
        \maximum 300000.0
-       \autocalculatable
+       \autosizable
        \required-field
        \note Leave field blank if fluid cooler Performance Input Method is NominalCapacity
        \note Low speed fluid cooler UA must be less than high speed fluid cooler UA
@@ -20024,7 +20024,7 @@ OS:FluidCooler:TwoSpeed,
        \required-field
        \type real
        \required-field
-       \note This field is only used if the previous field is set to autocalculate and
+       \note This field is only used if the previous field is set to autosize and
        \note the Performance Input Method is UFactorTimesAreaAndDesignWaterFlowRate
   N4,  \field High Speed Nominal Capacity
        \type real
@@ -20036,14 +20036,14 @@ OS:FluidCooler:TwoSpeed,
        \type real
        \units W
        \minimum> 0.0
-       \autocalculatable
+       \autosizable
        \required-field
        \note Nominal fluid cooler capacity at low fan speed
   N6,  \field Low Speed Nominal Capacity Sizing Factor
        \required-field
        \type real
        \required-field
-       \note This field is only used if the previous field is set to autocalculate and
+       \note This field is only used if the previous field is set to autosize and
        \note the Performance Input Method is NominalCapacity
   N7,  \field Design Entering Water Temperature
        \required-field
@@ -20096,24 +20096,24 @@ OS:FluidCooler:TwoSpeed,
        \type real
        \units m3/s
        \minimum> 0.0
-       \autocalculatable
+       \autosizable
        \note Air Flow Rate at Low Fan Speed must be less than Air Flow Rate at High Fan Speed
   N14, \field Low Fan Speed Air Flow Rate Sizing Factor
        \required-field
        \type real
-       \note This field is only used if the previous field is set to autocalculate.
+       \note This field is only used if the previous field is set to autosize.
   N15, \field Low Fan Speed Fan Power
        \required-field
        \type real
        \units W
        \minimum> 0.0
-       \autocalculatable
+       \autosizable
        \ip-units W
        \note This is the fan motor electric input power at low speed
   N16, \field Low Fan Speed Fan Power Sizing Factor
        \required-field
        \type real
-       \note This field is only used if the previous field is set to autocalculate.
+       \note This field is only used if the previous field is set to autosize.
   A6;  \field Outdoor Air Inlet Node
        \type object-list
        \object-list Node

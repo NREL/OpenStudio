@@ -26,8 +26,6 @@
 namespace openstudio {
 namespace model {
 
-class Connection;
-
 namespace detail {
 
   /** Duct_Impl is a StraightComponent_Impl that is the implementation class for Duct.*/
