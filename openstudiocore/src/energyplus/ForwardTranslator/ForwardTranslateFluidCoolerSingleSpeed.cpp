@@ -55,10 +55,17 @@ boost::optional<IdfObject> ForwardTranslator::translateFluidCoolerSingleSpeed(Fl
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
-  d = modelObject.designAirFlowRateUfactorTimesAreaValue();
-  if (d)
+  if (modelObject.isDesignAirFlowRateUfactorTimesAreaValueAutosized())
   {
-    idfObject.setDouble(openstudio::FluidCooler_SingleSpeedFields::DesignAirFlowRateUfactorTimesAreaValue, *d);
+    idfObject.setString(openstudio::FluidCooler_SingleSpeedFields::DesignAirFlowRateUfactorTimesAreaValue, "Autosize");
+  }
+  else
+  {
+    d = modelObject.designAirFlowRateUfactorTimesAreaValue();
+    if (d)
+    {
+      idfObject.setDouble(FluidCooler_SingleSpeedFields::DesignAirFlowRateUfactorTimesAreaValue, *d);
+    }
   }
   ///////////////////////////////////////////////////////////////////////////
 
@@ -79,26 +86,47 @@ boost::optional<IdfObject> ForwardTranslator::translateFluidCoolerSingleSpeed(Fl
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
-  d = modelObject.designWaterFlowRate();
-  if (d)
+  if (modelObject.isDesignWaterFlowRateAutosized())
   {
-    idfObject.setDouble(openstudio::FluidCooler_SingleSpeedFields::DesignWaterFlowRate, *d);
+    idfObject.setString(openstudio::FluidCooler_SingleSpeedFields::DesignWaterFlowRate, "Autosize");
+  }
+  else
+  {
+    d = modelObject.designWaterFlowRate();
+    if (d)
+    {
+      idfObject.setDouble(openstudio::FluidCooler_SingleSpeedFields::DesignWaterFlowRate, *d);
+    }
   }
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
-  d = modelObject.designAirFlowRate();
-  if (d)
+  if (modelObject.isDesignAirFlowRateAutosized())
   {
-    idfObject.setDouble(openstudio::FluidCooler_SingleSpeedFields::DesignAirFlowRate, *d);
+    idfObject.setString(openstudio::FluidCooler_SingleSpeedFields::DesignAirFlowRate, "Autosize");
+  }
+  else
+  {
+    d = modelObject.designAirFlowRate();
+    if (d)
+    {
+      idfObject.setDouble(openstudio::FluidCooler_SingleSpeedFields::DesignAirFlowRate, *d);
+    }
   }
   ///////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////
-  d = modelObject.designAirFlowRateFanPower();
-  if (d)
+  if (modelObject.isDesignAirFlowRateFanPowerAutosized())
   {
-    idfObject.setDouble(openstudio::FluidCooler_SingleSpeedFields::DesignAirFlowRateFanPower, *d);
+    idfObject.setString(openstudio::FluidCooler_SingleSpeedFields::DesignAirFlowRateFanPower, "Autosize");
+  }
+  else
+  {
+    d = modelObject.designAirFlowRateFanPower();
+    if (d)
+    {
+      idfObject.setDouble(openstudio::FluidCooler_SingleSpeedFields::DesignAirFlowRateFanPower, *d);
+    }
   }
   ///////////////////////////////////////////////////////////////////////////
 
