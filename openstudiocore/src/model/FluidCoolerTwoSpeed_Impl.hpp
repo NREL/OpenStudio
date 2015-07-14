@@ -26,7 +26,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Connection;
 class Connection;
 class Node;
@@ -69,10 +68,8 @@ namespace detail {
 
     virtual unsigned outletPort() override;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
     boost::optional<Connection> waterInletNode() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
     boost::optional<Connection> waterOutletNode() const;
 
     std::string performanceInputMethod() const;
@@ -125,19 +122,16 @@ namespace detail {
 
     double lowFanSpeedFanPowerSizingFactor() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Node.
     boost::optional<Node> outdoorAirInletNode() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
     bool setWaterInletNode(const boost::optional<Connection>& connection);
 
     void resetWaterInletNode();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
     bool setWaterOutletNode(const boost::optional<Connection>& connection);
 
     void resetWaterOutletNode();
@@ -192,7 +186,6 @@ namespace detail {
 
     void setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor);
 
-    // TODO: Check argument type. From object lists, some candidates are: Node.
     bool setOutdoorAirInletNode(const boost::optional<Node>& node);
 
     void resetOutdoorAirInletNode();

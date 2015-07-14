@@ -20,7 +20,6 @@
 #include "PipeIndoor.hpp"
 #include "PipeIndoor_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "Construction.hpp"
 #include "Construction_Impl.hpp"
 #include "Connection.hpp"
@@ -95,7 +94,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> PipeIndoor_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -268,7 +266,6 @@ PipeIndoor::PipeIndoor(const Model& model)
 {
   OS_ASSERT(getImpl<detail::PipeIndoor_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
   // ok = setHandle();
   OS_ASSERT(ok);

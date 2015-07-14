@@ -20,7 +20,6 @@
 #include "Duct.hpp"
 #include "Duct_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "Connection.hpp"
 #include "Connection_Impl.hpp"
 #include "Connection.hpp"
@@ -129,7 +128,6 @@ Duct::Duct(const Model& model)
 {
   OS_ASSERT(getImpl<detail::Duct_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
   // ok = setHandle();
   OS_ASSERT(ok);

@@ -26,7 +26,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Connection;
 class Connection;
 
@@ -36,7 +35,6 @@ namespace detail {
 
 } // detail
 
-/** Duct is a StraightComponent that wraps the OpenStudio IDD object 'OS:Duct'. */
 class MODEL_API Duct : public StraightComponent {
  public:
   /** @name Constructors and Destructors */
@@ -53,22 +51,18 @@ class MODEL_API Duct : public StraightComponent {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
   boost::optional<Connection> inletNode() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
   boost::optional<Connection> outletNode() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
   bool setInletNode(const Connection& connection);
 
   void resetInletNode();
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
   bool setOutletNode(const Connection& connection);
 
   void resetOutletNode();

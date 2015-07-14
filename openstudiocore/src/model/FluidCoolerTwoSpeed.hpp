@@ -27,7 +27,6 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Connection;
 class Connection;
 class Node;
@@ -57,10 +56,8 @@ class MODEL_API FluidCoolerTwoSpeed : public StraightComponent {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
   boost::optional<Connection> waterInletNode() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
   boost::optional<Connection> waterOutletNode() const;
 
   std::string performanceInputMethod() const;
@@ -113,19 +110,16 @@ class MODEL_API FluidCoolerTwoSpeed : public StraightComponent {
 
   double lowFanSpeedFanPowerSizingFactor() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Node.
   boost::optional<Node> outdoorAirInletNode() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
   bool setWaterInletNode(const Connection& connection);
 
   void resetWaterInletNode();
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
   bool setWaterOutletNode(const Connection& connection);
 
   void resetWaterOutletNode();
@@ -180,7 +174,6 @@ class MODEL_API FluidCoolerTwoSpeed : public StraightComponent {
 
   void setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor);
 
-  // TODO: Check argument type. From object lists, some candidates are: Node.
   bool setOutdoorAirInletNode(const Node& node);
 
   void resetOutdoorAirInletNode();

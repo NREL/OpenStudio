@@ -27,7 +27,6 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Construction;
 class Connection;
 class Connection;
@@ -60,24 +59,18 @@ class MODEL_API PipeIndoor : public  StraightComponent {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Construction.
   boost::optional<Construction> construction() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
   boost::optional<Connection> fluidInletNode() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
   boost::optional<Connection> fluidOutletNode() const;
 
   std::string environmentType() const;
 
-  // TODO: Check return type. From object lists, some candidates are: ThermalZone.
   boost::optional<ThermalZone> ambientTemperatureZone() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> ambientTemperatureSchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> ambientAirVelocitySchedule() const;
 
   double pipeInsideDiameter() const;
@@ -88,34 +81,28 @@ class MODEL_API PipeIndoor : public  StraightComponent {
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Construction.
   bool setConstruction(const Construction& construction);
 
   void resetConstruction();
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
   bool setFluidInletNode(const Connection& connection);
 
   void resetFluidInletNode();
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
   bool setFluidOutletNode(const Connection& connection);
 
   void resetFluidOutletNode();
 
   bool setEnvironmentType(std::string environmentType);
 
-  // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
   bool setAmbientTemperatureZone(const ThermalZone& thermalZone);
 
   void resetAmbientTemperatureZone();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setAmbientTemperatureSchedule(Schedule& schedule);
 
   void resetAmbientTemperatureSchedule();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setAmbientAirVelocitySchedule(Schedule& schedule);
 
   void resetAmbientAirVelocitySchedule();

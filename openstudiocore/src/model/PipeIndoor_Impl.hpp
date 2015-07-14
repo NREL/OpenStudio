@@ -26,7 +26,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Construction;
 class Connection;
 class Connection;
@@ -74,24 +73,18 @@ namespace detail {
 
     virtual unsigned outletPort() override;
 
-    // TODO: Check return type. From object lists, some candidates are: Construction.
     boost::optional<Construction> construction() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
     boost::optional<Connection> fluidInletNode() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
     boost::optional<Connection> fluidOutletNode() const;
 
     std::string environmentType() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ThermalZone.
     boost::optional<ThermalZone> ambientTemperatureZone() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> ambientTemperatureSchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> ambientAirVelocitySchedule() const;
 
     double pipeInsideDiameter() const;
@@ -102,34 +95,28 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Construction.
     bool setConstruction(const boost::optional<Construction>& construction);
 
     void resetConstruction();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
     bool setFluidInletNode(const boost::optional<Connection>& connection);
 
     void resetFluidInletNode();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
     bool setFluidOutletNode(const boost::optional<Connection>& connection);
 
     void resetFluidOutletNode();
 
     bool setEnvironmentType(std::string environmentType);
 
-    // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
     bool setAmbientTemperatureZone(const boost::optional<ThermalZone>& thermalZone);
 
     void resetAmbientTemperatureZone();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setAmbientTemperatureSchedule(Schedule& schedule);
 
     void resetAmbientTemperatureSchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setAmbientAirVelocitySchedule(Schedule& schedule);
 
     void resetAmbientAirVelocitySchedule();

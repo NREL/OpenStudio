@@ -20,7 +20,6 @@
 #include "FluidCoolerTwoSpeed.hpp"
 #include "FluidCoolerTwoSpeed_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "Connection.hpp"
 #include "Connection_Impl.hpp"
 #include "Connection.hpp"
@@ -462,7 +461,6 @@ FluidCoolerTwoSpeed::FluidCoolerTwoSpeed(const Model& model)
 {
   OS_ASSERT(getImpl<detail::FluidCoolerTwoSpeed_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
   // ok = setHandle();
   OS_ASSERT(ok);

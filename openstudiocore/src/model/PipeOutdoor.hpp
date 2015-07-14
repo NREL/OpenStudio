@@ -27,7 +27,6 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Construction;
 class Connection;
 class Connection;
@@ -56,16 +55,12 @@ class MODEL_API PipeOutdoor : public StraightComponent {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Construction.
   boost::optional<Construction> construction() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
   boost::optional<Connection> fluidInletNode() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
   boost::optional<Connection> fluidOutletNode() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Node.
   boost::optional<Node> ambientTemperatureOutdoorAirNode() const;
 
   double pipeInsideDiameter() const;
@@ -76,22 +71,18 @@ class MODEL_API PipeOutdoor : public StraightComponent {
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Construction.
   bool setConstruction(const Construction& construction);
 
   void resetConstruction();
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
   bool setFluidInletNode(const Connection& connection);
 
   void resetFluidInletNode();
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
   bool setFluidOutletNode(const Connection& connection);
 
   void resetFluidOutletNode();
 
-  // TODO: Check argument type. From object lists, some candidates are: Node.
   bool setAmbientTemperatureOutdoorAirNode(const Node& node);
 
   void resetAmbientTemperatureOutdoorAirNode();

@@ -26,7 +26,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Connection;
 class Connection;
 
@@ -64,10 +63,8 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
     boost::optional<Connection> inletNode() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
     boost::optional<Connection> outletNode() const;
 
     virtual unsigned inletPort() override;
@@ -78,12 +75,10 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
     bool setInletNode(const boost::optional<Connection>& connection);
 
     void resetInletNode();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
     bool setOutletNode(const boost::optional<Connection>& connection);
 
     void resetOutletNode();

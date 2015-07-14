@@ -20,7 +20,6 @@
 #include "PipeOutdoor.hpp"
 #include "PipeOutdoor_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "Construction.hpp"
 #include "Construction_Impl.hpp"
 #include "Connection.hpp"
@@ -199,7 +198,6 @@ PipeOutdoor::PipeOutdoor(const Model& model)
 {
   OS_ASSERT(getImpl<detail::PipeOutdoor_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
   // ok = setHandle();
   OS_ASSERT(ok);
