@@ -20,28 +20,23 @@
 #include "PipeIndoor.hpp"
 #include "PipeIndoor_Impl.hpp"
 
+#include "Connection.hpp"
+#include "Connection_Impl.hpp"
 #include "Construction.hpp"
 #include "Construction_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "../../model/ScheduleTypeLimits.hpp"
-#include "../../model/ScheduleTypeRegistry.hpp"
 
-#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Pipe_Indoor_FieldEnums.hxx>
 
-#include "../utilities/units/Unit.hpp"
-
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/units/Unit.hpp"
 
 namespace openstudio {
 namespace model {

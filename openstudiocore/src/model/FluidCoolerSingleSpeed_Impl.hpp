@@ -27,7 +27,6 @@ namespace openstudio {
 namespace model {
 
 class Connection;
-class Connection;
 class Node;
 
 namespace detail {

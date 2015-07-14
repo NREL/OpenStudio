@@ -26,12 +26,10 @@
 namespace openstudio {
 namespace model {
 
+class Connection;
 class Construction;
-class Connection;
-class Connection;
+class Schedule;
 class ThermalZone;
-class Schedule;
-class Schedule;
 
 namespace detail {
 

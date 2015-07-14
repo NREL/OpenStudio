@@ -22,8 +22,6 @@
 
 #include "Connection.hpp"
 #include "Connection_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Duct_FieldEnums.hxx>
