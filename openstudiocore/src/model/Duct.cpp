@@ -69,14 +69,6 @@ namespace detail {
     return Duct::iddObjectType();
   }
 
-  boost::optional<Connection> Duct_Impl::inletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_DuctFields::InletNode);
-  }
-
-  boost::optional<Connection> Duct_Impl::outletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_DuctFields::OutletNode);
-  }
-
   unsigned Duct_Impl::inletPort()
   {
     return OS_DuctFields::InletNode;
@@ -85,40 +77,6 @@ namespace detail {
   unsigned Duct_Impl::outletPort()
   {
     return OS_DuctFields::OutletNode;
-  }
-
-  bool Duct_Impl::setInletNode(const boost::optional<Connection>& connection) {
-    bool result(false);
-    if (connection) {
-      result = setPointer(OS_DuctFields::InletNode, connection.get().handle());
-    }
-    else {
-      resetInletNode();
-      result = true;
-    }
-    return result;
-  }
-
-  void Duct_Impl::resetInletNode() {
-    bool result = setString(OS_DuctFields::InletNode, "");
-    OS_ASSERT(result);
-  }
-
-  bool Duct_Impl::setOutletNode(const boost::optional<Connection>& connection) {
-    bool result(false);
-    if (connection) {
-      result = setPointer(OS_DuctFields::OutletNode, connection.get().handle());
-    }
-    else {
-      resetOutletNode();
-      result = true;
-    }
-    return result;
-  }
-
-  void Duct_Impl::resetOutletNode() {
-    bool result = setString(OS_DuctFields::OutletNode, "");
-    OS_ASSERT(result);
   }
 
 } // detail
@@ -135,30 +93,6 @@ Duct::Duct(const Model& model)
 
 IddObjectType Duct::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Duct);
-}
-
-boost::optional<Connection> Duct::inletNode() const {
-  return getImpl<detail::Duct_Impl>()->inletNode();
-}
-
-boost::optional<Connection> Duct::outletNode() const {
-  return getImpl<detail::Duct_Impl>()->outletNode();
-}
-
-bool Duct::setInletNode(const Connection& connection) {
-  return getImpl<detail::Duct_Impl>()->setInletNode(connection);
-}
-
-void Duct::resetInletNode() {
-  getImpl<detail::Duct_Impl>()->resetInletNode();
-}
-
-bool Duct::setOutletNode(const Connection& connection) {
-  return getImpl<detail::Duct_Impl>()->setOutletNode(connection);
-}
-
-void Duct::resetOutletNode() {
-  getImpl<detail::Duct_Impl>()->resetOutletNode();
 }
 
 /// @cond

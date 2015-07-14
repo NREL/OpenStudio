@@ -51,21 +51,9 @@ class MODEL_API Duct : public StraightComponent {
   /** @name Getters */
   //@{
 
-  boost::optional<Connection> inletNode() const;
-
-  boost::optional<Connection> outletNode() const;
-
   //@}
   /** @name Setters */
   //@{
-
-  bool setInletNode(const Connection& connection);
-
-  void resetInletNode();
-
-  bool setOutletNode(const Connection& connection);
-
-  void resetOutletNode();
 
   //@}
   /** @name Other */

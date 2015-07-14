@@ -63,10 +63,6 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    boost::optional<Connection> inletNode() const;
-
-    boost::optional<Connection> outletNode() const;
-
     virtual unsigned inletPort() override;
 
     virtual unsigned outletPort() override;
@@ -74,14 +70,6 @@ namespace detail {
     //@}
     /** @name Setters */
     //@{
-
-    bool setInletNode(const boost::optional<Connection>& connection);
-
-    void resetInletNode();
-
-    bool setOutletNode(const boost::optional<Connection>& connection);
-
-    void resetOutletNode();
 
     //@}
     /** @name Other */
