@@ -417,16 +417,16 @@ FluidCoolerTwoSpeed::FluidCoolerTwoSpeed(const Model& model)
   bool ok = true;
   // ok = setHandle();
   OS_ASSERT(ok);
-   ok = setPerformanceInputMethod("NominalCapacity"); // UFactorTimesAreaAndDesignWaterFlowRate, NominalCapacity
+  ok = setPerformanceInputMethod("NominalCapacity"); // e+ default NominalCapacity
   OS_ASSERT(ok);
   autosizeHighFanSpeedUfactorTimesAreaValue();
   autosizeLowFanSpeedUfactorTimesAreaValue();
-  setLowFanSpeedUFactorTimesAreaSizingFactor(1.0);
+  setLowFanSpeedUFactorTimesAreaSizingFactor(0.6); // e+ default 0.6
   OS_ASSERT(lowFanSpeedUFactorTimesAreaSizingFactor() == 1.0);
   ok = setHighSpeedNominalCapacity(0.1);
   OS_ASSERT(ok);
   autosizeLowSpeedNominalCapacity();
-  setLowSpeedNominalCapacitySizingFactor(1.0);
+  setLowSpeedNominalCapacitySizingFactor(0.5); // e+ default 0.5
   OS_ASSERT(lowSpeedNominalCapacitySizingFactor() == 1.0);
   ok = setDesignEnteringWaterTemperature(0.1);
   OS_ASSERT(ok);
@@ -438,9 +438,9 @@ FluidCoolerTwoSpeed::FluidCoolerTwoSpeed(const Model& model)
   autosizeHighFanSpeedAirFlowRate();
   autosizeHighFanSpeedFanPower();
   autosizeLowFanSpeedAirFlowRate();
-  setLowFanSpeedAirFlowRateSizingFactor(0.1);
+  setLowFanSpeedAirFlowRateSizingFactor(0.5); // e+ default 0.5
   autosizeLowFanSpeedFanPower();
-  setLowFanSpeedFanPowerSizingFactor(0.1);
+  setLowFanSpeedFanPowerSizingFactor(0.16); // e+ default 0.16
 }
 
 IddObjectType FluidCoolerTwoSpeed::iddObjectType() {

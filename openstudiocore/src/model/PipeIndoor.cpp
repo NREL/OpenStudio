@@ -220,11 +220,11 @@ PipeIndoor::PipeIndoor(const Model& model)
   bool ok = true;
   // ok = setHandle();
   OS_ASSERT(ok);
-   ok = setEnvironmentType("Zone"); // Zone, Schedule
+  ok = setEnvironmentType("Zone"); // e+ default Zone
   OS_ASSERT(ok);
-   ok = setPipeInsideDiameter(0.1);
+  ok = setPipeInsideDiameter(0.1);
   OS_ASSERT(ok);
-   ok = setPipeLength(0.1);
+  ok = setPipeLength(0.1);
   OS_ASSERT(ok);
 }
 

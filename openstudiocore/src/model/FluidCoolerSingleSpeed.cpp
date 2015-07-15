@@ -269,7 +269,7 @@ FluidCoolerSingleSpeed::FluidCoolerSingleSpeed(const Model& model)
   bool ok = true;
   //ok = setHandle();
   OS_ASSERT(ok);
-  ok = setPerformanceInputMethod("NominalCapacity"); // UFactorTimesAreaAndDesignWaterFlowRate, NominalCapacity
+  ok = setPerformanceInputMethod("NominalCapacity"); // e+ default NominalCapacity
   OS_ASSERT(ok);
   autosizeDesignAirFlowRateUfactorTimesAreaValue();
   ok = setNominalCapacity(0.1);
