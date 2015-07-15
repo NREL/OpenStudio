@@ -7934,7 +7934,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
 
 OS:AirLoopHVAC,
        \memo Defines a central forced air system
-       \min-fields 11
+       \min-fields 12
   A1, \field Handle
        \type handle
        \required-field
@@ -7977,10 +7977,13 @@ OS:AirLoopHVAC,
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A10; \field Supply Side Outlet Node Names
+  A10, \field Supply Side Outlet Node Names
        \type object-list
        \required-field
        \object-list ConnectionNames
+  A11; \field Return Air Bypass Flow Temperature Setpoint Schedule Name
+       \type object-list
+       \object-list ScheduleNames
 
 OS:AirLoopHVAC:ControllerList,
        \memo List controllers in order of control sequence
@@ -17633,6 +17636,318 @@ OS:SetpointManager:WarmestTemperatureFlow,
        \units dimensionless
        \type real
        \minimum> 0.0
+
+OS:SetpointManager:Coldest,
+       \memo This SetpointManager is used in dual duct systems to reset
+       \memo the setpoint temperature of the air in the heating supply duct.
+       \memo Usually it is used in conjunction with a SetpointManager:Warmest
+       \memo resetting the temperature of the air in the cooling supply duct.
+       \min-fields 7
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference SetpointManagers
+  A3 , \field Control Variable
+       \required-field
+       \type choice
+       \key Temperature
+  N1 , \field Minimum Setpoint Temperature
+       \required-field
+       \units C
+       \type real
+       \minimum> 0.0
+  N2 , \field Maximum Setpoint Temperature
+       \required-field
+       \units C
+       \type real
+       \minimum> 0.0
+  A4 , \field Strategy
+       \required-field
+       \type choice
+       \key MinimumTemperature
+  A5 ; \field Setpoint Node or NodeList Name
+       \type object-list
+       \object-list Node
+
+OS:SetpointManager:FollowGroundTemperature,
+       \memo This setpoint manager is used to place a temperature setpoint on a
+       \memo system node that is derived from a current ground temperature.
+       \memo The ground temperatures are specified in different
+       \memo Site:GroundTemperature:* objects and used during the simulation.
+       \memo This setpoint manager is primarily intended for condenser or plant loops
+       \memo using some type of ground heat exchanger.
+       \min-fields 7
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference SetpointManagers
+  A3 , \field Control Variable
+       \required-field
+       \type choice
+       \key Temperature
+       \key MinimumTemperature
+       \key MaximumTemperature
+  N1 , \field Offset Temperature Difference
+       \required-field
+       \units deltaC
+       \type real
+  N2 , \field Maximum Setpoint Temperature
+       \required-field
+       \units C
+       \type real
+  N3 , \field Minimum Setpoint Temperature
+       \required-field
+       \units C
+       \type real
+  A4 ; \field Setpoint Node or NodeList Name
+       \type object-list
+       \object-list Node
+
+OS:SetpointManager:FollowSystemNodeTemperature,
+       \memo This setpoint manager is used to place a temperature setpoint on a
+       \memo system node that is derived from the current temperatures at a separate
+       \memo system node.  The current value of the temperature at a reference node
+       \memo is obtained and used to generate setpoint on a second system node.
+       \memo If the reference node is also designated to be an outdoor air (intake) node,
+       \memo then this setpoint manager can be used to follow outdoor air conditions
+       \memo that are adjusted for altitude.
+       \min-fields 9
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference SetpointManagers
+  A3 , \field Control Variable
+       \required-field
+       \type choice
+       \key Temperature
+       \key MinimumTemperature
+       \key MaximumTemperature
+  A4,  \field Reference Node Name
+       \type object-list
+       \object-list Node
+  A5 , \field Reference Temperature Type
+       \required-field
+       \type choice
+       \key NodeWetBulb
+       \key NodeDryBulb
+  N1 , \field Offset Temperature Difference
+       \required-field
+       \units deltaC
+       \type real
+  N2 , \field Maximum Limit Setpoint Temperature
+       \required-field
+       \units C
+       \type real
+  N3 , \field Minimum Limit Setpoint Temperature
+       \required-field
+       \units C
+       \type real
+  A6 ; \field Setpoint Node or NodeList Name
+       \type object-list
+       \object-list Node
+
+OS:SetpointManager:MultiZone:Cooling:Average,
+       \min-fields 6
+       \memo This setpoint manager sets the average supply air temperature based on the cooling load
+       \memo requirements of all controlled zones in an air loop served by a central air-conditioner.
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference SetpointManagers
+  A3 , \field Control Variable
+       \required-field
+       \type choice
+       \key Temperature
+  N1 , \field Minimum Setpoint Temperature
+       \required-field
+       \units C
+       \type real
+       \minimum> 0.0
+  N2 , \field Maximum Setpoint Temperature
+       \required-field
+       \units C
+       \type real
+       \minimum> 0.0
+  A4 ; \field Setpoint Node or NodeList Name
+       \type object-list
+       \object-list Node
+
+OS:SetpointManager:MultiZone:Heating:Average,
+       \min-fields 6
+       \memo This setpoint manager sets the average supply air temperature based on the heating load
+       \memo requirements of all controlled zones in an air loop served by a central air-conditioner.
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference SetpointManagers
+  A3 , \field Control Variable
+       \required-field
+       \type choice
+       \key Temperature
+  N1 , \field Minimum Setpoint Temperature
+       \required-field
+       \units C
+       \type real
+       \minimum> 0.0
+  N2 , \field Maximum Setpoint Temperature
+       \required-field
+       \units C
+       \type real
+       \minimum> 0.0
+  A4 ; \field Setpoint Node or NodeList Name
+       \type object-list
+       \object-list Node
+
+OS:SetpointManager:MultiZone:Humidity:Maximum,
+       \min-fields 6
+       \memo This setpoint manager sets the maximum supply air humidity ratio based on dehumidification
+       \memo requirements of a controlled zone with critical humidity ratio setpoint (i.e., a zone with
+       \memo the lowest humidity ratio setpoint) in an air loop served by a central air-conditioner.
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference SetpointManagers
+  A3 , \field Control Variable
+       \required-field
+       \type choice
+       \key MaximumHumidityRatio
+  N1 , \field Minimum Setpoint Humidity Ratio
+       \required-field
+       \units kgWater/kgDryAir
+       \type real
+       \minimum> 0.0
+  N2 , \field Maximum Setpoint Humidity Ratio
+       \required-field
+       \units kgWater/kgDryAir
+       \type real
+       \minimum> 0.0
+  A4 ; \field Setpoint Node or NodeList Name
+       \type object-list
+       \object-list Node
+
+OS:SetpointManager:MultiZone:MaximumHumidity:Average,
+       \min-fields 6
+       \memo This setpoint manager sets the average supply air maximum humidity ratio based on moisture
+       \memo load requirements of all controlled zones in an air loop served by a central air-conditioner.
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference SetpointManagers
+  A3 , \field Control Variable
+       \required-field
+       \type choice
+       \key MaximumHumidityRatio
+  N1 , \field Minimum Setpoint Humidity Ratio
+       \required-field
+       \units kgWater/kgDryAir
+       \type real
+       \minimum> 0.0
+  N2 , \field Maximum Setpoint Humidity Ratio
+       \required-field
+       \units kgWater/kgDryAir
+       \type real
+       \minimum> 0.0
+  A4 ; \field Setpoint Node or NodeList Name
+       \type object-list
+       \object-list Node
+
+OS:SetpointManager:SingleZone:OneStageCooling,
+       \memo This object can be used with CoilSystem:Cooling:DX to model on/off cycling control
+       \memo of single stage air systems. Setpoints are modulated to run coil full on or full off
+       \memo depending on zone conditions. Intended for use with ZoneControl:Thermostat:StagedDualSetpoint
+       \min-fields 7
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference SetpointManagers
+  A3 , \field Control Variable
+       \required-field
+       \type choice
+       \key Temperature
+  N1 , \field Cooling Stage On Supply Air Setpoint Temperature
+       \note This is the setpoint value applied when cooling device is to cycle ON
+       \required-field
+       \units C
+  N2 , \field Cooling Stage Off Supply Air Setpoint Temperature
+       \note This is the setpoint value applied when cooling device is to cycle OFF
+       \required-field
+       \units C
+  A4 , \field Control Zone Name
+       \type object-list
+       \object-list ThermalZoneNames
+  A5 ; \field Setpoint Node or NodeList Name
+       \type object-list
+       \object-list Node
+
+OS:SetpointManager:SingleZone:OneStageHeating,
+       \memo This object can be used with CoilSystem:Heating:DX, Coil:Heating:Gas,
+       \memo Coil:Heating:Electric to model on/off cycling control of single stage air systems.
+       \memo Setpoints are modulated to run coil full on or full off depending on zone conditions.
+       \memo Intended for use with ZoneControl:Thermostat:StagedDualSetpoint.
+       \min-fields 7
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference SetpointManagers
+  A3 , \field Control Variable
+       \required-field
+       \type choice
+       \key Temperature
+  N1 , \field Heating Stage On Supply Air Setpoint Temperature
+       \note This is the setpoint value applied when heating device is to cycle ON
+       \required-field
+       \units C
+  N2 , \field Heating Stage Off Supply Air Setpoint Temperature
+       \note This is the setpoint value applied when heating device is to cycle OFF
+       \required-field
+       \units C
+  A4 , \field Control Zone Name
+       \type object-list
+       \object-list ThermalZoneNames
+  A5 ; \field Setpoint Node or NodeList Name
+       \type object-list
+       \object-list Node
+
+OS:SetpointManager:SingleZone:Humidity:Maximum,
+       \memo The Single Zone Maximum Humidity Setpoint Manager allows the
+       \memo control of a single zone maximum humidity level.
+       \memo This setpoint manager can be used in conjunction with
+       \memo object ZoneControl:Humidistat to detect humidity levels.
+       \min-fields 5
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference SetpointManagers
+  A3 , \field Control Variable
+       \required-field
+       \type choice
+       \key MaximumHumidityRatio
+  A4 , \field Control Zone Name
+       \type object-list
+       \object-list ThermalZoneNames
+  A5 ; \field Setpoint Node or NodeList Name
+       \type object-list
+       \object-list Node
 
 OS:Sizing:Plant,
   A1, \field Handle
