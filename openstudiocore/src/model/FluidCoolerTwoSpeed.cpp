@@ -422,17 +422,17 @@ FluidCoolerTwoSpeed::FluidCoolerTwoSpeed(const Model& model)
   autosizeHighFanSpeedUfactorTimesAreaValue();
   autosizeLowFanSpeedUfactorTimesAreaValue();
   setLowFanSpeedUFactorTimesAreaSizingFactor(0.6); // e+ default 0.6
-  OS_ASSERT(lowFanSpeedUFactorTimesAreaSizingFactor() == 1.0);
-  ok = setHighSpeedNominalCapacity(0.1);
+  OS_ASSERT(lowFanSpeedUFactorTimesAreaSizingFactor() == 0.6);
+  ok = setHighSpeedNominalCapacity(20000.0);
   OS_ASSERT(ok);
   autosizeLowSpeedNominalCapacity();
   setLowSpeedNominalCapacitySizingFactor(0.5); // e+ default 0.5
-  OS_ASSERT(lowSpeedNominalCapacitySizingFactor() == 1.0);
-  ok = setDesignEnteringWaterTemperature(0.1);
+  OS_ASSERT(lowSpeedNominalCapacitySizingFactor() == 0.5);
+  ok = setDesignEnteringWaterTemperature(51.67);
   OS_ASSERT(ok);
-  ok = setDesignEnteringAirTemperature(0.1);
+  ok = setDesignEnteringAirTemperature(35);
   OS_ASSERT(ok);
-  ok = setDesignEnteringAirWetbulbTemperature(0.1);
+  ok = setDesignEnteringAirWetbulbTemperature(25.6);
   OS_ASSERT(ok);
   autosizeDesignWaterFlowRate();
   autosizeHighFanSpeedAirFlowRate();
