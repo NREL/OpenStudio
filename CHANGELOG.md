@@ -1,12 +1,13 @@
 ## OpenStudio v1.8.1
-###### 2015-07 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.8.0...v1.8.1 )
+###### 2015-07-14 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.8.0...v1.8.1 )
 
+- ![Added:][added] Design days grid view
+- ![Added:][added] Added new default standard reporting measure
 - ![Improved:][improved] [#1458]( https://github.com/NREL/OpenStudio/issues/1458 ), 
 EPWFile includes new methods to get TimeSeries data from weather files, SWIG bindings to the EPWFile class have been improved
 
-
 ## OpenStudio v1.8.0
-###### 2015-06 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.5...v1.8.0 )
+###### 2015-06-26 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.5...v1.8.0 )
 
 - ![Added:][added] Allow Gem installation at build time
 - ![Fixed:][fixed] [#599]( https://github.com/NREL/OpenStudio/issues/599 ), Some HVAC components that exist in OpenStudio are missing from the HVAC library
@@ -26,7 +27,7 @@ EPWFile includes new methods to get TimeSeries data from weather files, SWIG bin
 - ![Fixed:][fixed] [#1699]( https://github.com/NREL/OpenStudio/issues/1699 ), Meters are missing time indices in sql file
 
 ## OpenStudio v1.7.5
-###### 2015-05 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.4...v1.7.5 )
+###### 2015-06-01 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.4...v1.7.5 )
 
 - ![Added:][added] [#1666]( https://github.com/NREL/OpenStudio/pull/1666 ), Added HeaderedPumpsConstantSpeed to model
 - ![Added:][added] [#1666]( https://github.com/NREL/OpenStudio/pull/1666 ), Added HeaderedPumpsVariableSpeed to model
@@ -50,19 +51,19 @@ EPWFile includes new methods to get TimeSeries data from weather files, SWIG bin
 - ![Removed:][removed] [#1648]( https://github.com/NREL/OpenStudio/issues/1648 ), Removed AirLoopHVAC::addAirLoopComp, please use HVACComponent::addToNode instead
 
 ## OpenStudio v1.7.4
-###### 2015-05 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.3...v1.7.4 )
+###### 2015-05-18 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.3...v1.7.4 )
 
 - ![Fixed:][fixed] [#1411]( https://github.com/NREL/OpenStudio/issues/1411 ), IG should not add a NULL choice to the lights definition combo box.
 
 ## OpenStudio v1.7.3
-###### 2015-04 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.2...v1.7.3 )
+###### 2015-04-29 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.2...v1.7.3 )
 
 - ![Added:][added] [#1631] ( https://github.com/NREL/OpenStudio/pull/1631 ) Added new method OpenStudio::getEnergyPlusExecutable which can be used to determine the location of the EnergyPlus installation included in OpenStudio.
 - ![Fixed:][fixed] [#1580]( https://github.com/NREL/OpenStudio/issues/1580 ), Fixed errors in which OpenStudio could not be used on a system without a graphics adapter.
 - ![Fixed:][fixed] [#1580]( https://github.com/NREL/OpenStudio/issues/1629 ), Evap cooler 1.7.1 -> 1.7.2 version translation error 
 
 ## OpenStudio v1.7.2
-###### 2015-04 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.1...v1.7.2 )
+###### 2015-04-21 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.7.1...v1.7.2 )
 
 - ![Added:][added] [#1624]( https://github.com/NREL/OpenStudio/pull/1624 ), Support for EnergyPlus 8.3
 - ![Improved:][improved] [#1621]( https://github.com/NREL/OpenStudio/issues/1621 ), EvaporativeCoolerDirectResearchSpecial::RecirculatingWaterPumpPowerConsumption is now autosizable
