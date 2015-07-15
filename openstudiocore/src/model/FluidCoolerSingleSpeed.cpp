@@ -267,26 +267,22 @@ FluidCoolerSingleSpeed::FluidCoolerSingleSpeed(const Model& model)
   OS_ASSERT(getImpl<detail::FluidCoolerSingleSpeed_Impl>());
 
   bool ok = true;
-   //ok = setHandle();
+  //ok = setHandle();
   OS_ASSERT(ok);
-   ok = setPerformanceInputMethod("NominalCapacity"); // UFactorTimesAreaAndDesignWaterFlowRate, NominalCapacity
+  ok = setPerformanceInputMethod("NominalCapacity"); // UFactorTimesAreaAndDesignWaterFlowRate, NominalCapacity
   OS_ASSERT(ok);
-  ok = setDesignAirFlowRateUfactorTimesAreaValue(0.1);
+  autosizeDesignAirFlowRateUfactorTimesAreaValue();
+  ok = setNominalCapacity(0.1);
   OS_ASSERT(ok);
-   ok = setNominalCapacity(0.1);
+  ok = setDesignEnteringWaterTemperature(0.1);
   OS_ASSERT(ok);
-   ok = setDesignEnteringWaterTemperature(0.1);
+  ok = setDesignEnteringAirTemperature(0.1);
   OS_ASSERT(ok);
-   ok = setDesignEnteringAirTemperature(0.1);
+  ok = setDesignEnteringAirWetbulbTemperature(0.1);
   OS_ASSERT(ok);
-   ok = setDesignEnteringAirWetbulbTemperature(0.1);
-  OS_ASSERT(ok);
-   ok = setDesignWaterFlowRate(0.1);
-  OS_ASSERT(ok);
-   ok = setDesignAirFlowRate(0.1);
-  OS_ASSERT(ok);
-   ok = setDesignAirFlowRateFanPower(0.1);
-  OS_ASSERT(ok);
+  autosizeDesignWaterFlowRate();
+  autosizeDesignAirFlowRate();
+  autosizeDesignAirFlowRateFanPower();
 }
 
 IddObjectType FluidCoolerSingleSpeed::iddObjectType() {

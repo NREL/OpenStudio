@@ -419,16 +419,13 @@ FluidCoolerTwoSpeed::FluidCoolerTwoSpeed(const Model& model)
   OS_ASSERT(ok);
    ok = setPerformanceInputMethod("NominalCapacity"); // UFactorTimesAreaAndDesignWaterFlowRate, NominalCapacity
   OS_ASSERT(ok);
-  ok = setHighFanSpeedUfactorTimesAreaValue(0.1);
-  OS_ASSERT(ok);
-  ok = setLowFanSpeedUfactorTimesAreaValue(0.1);
-  OS_ASSERT(ok);
+  autosizeHighFanSpeedUfactorTimesAreaValue();
+  autosizeLowFanSpeedUfactorTimesAreaValue();
   setLowFanSpeedUFactorTimesAreaSizingFactor(1.0);
   OS_ASSERT(lowFanSpeedUFactorTimesAreaSizingFactor() == 1.0);
   ok = setHighSpeedNominalCapacity(0.1);
   OS_ASSERT(ok);
-  ok = setLowSpeedNominalCapacity(0.1);
-  OS_ASSERT(ok);
+  autosizeLowSpeedNominalCapacity();
   setLowSpeedNominalCapacitySizingFactor(1.0);
   OS_ASSERT(lowSpeedNominalCapacitySizingFactor() == 1.0);
   ok = setDesignEnteringWaterTemperature(0.1);
@@ -437,17 +434,12 @@ FluidCoolerTwoSpeed::FluidCoolerTwoSpeed(const Model& model)
   OS_ASSERT(ok);
   ok = setDesignEnteringAirWetbulbTemperature(0.1);
   OS_ASSERT(ok);
-  ok = setDesignWaterFlowRate(0.1);
-  OS_ASSERT(ok);
-  ok = setHighFanSpeedAirFlowRate(0.1);
-  OS_ASSERT(ok);
-  ok = setHighFanSpeedFanPower(0.1);
-  OS_ASSERT(ok);
-  ok = setLowFanSpeedAirFlowRate(0.1);
-  OS_ASSERT(ok);
+  autosizeDesignWaterFlowRate();
+  autosizeHighFanSpeedAirFlowRate();
+  autosizeHighFanSpeedFanPower();
+  autosizeLowFanSpeedAirFlowRate();
   setLowFanSpeedAirFlowRateSizingFactor(0.1);
-  ok = setLowFanSpeedFanPower(0.1);
-  OS_ASSERT(ok);
+  autosizeLowFanSpeedFanPower();
   setLowFanSpeedFanPowerSizingFactor(0.1);
 }
 
