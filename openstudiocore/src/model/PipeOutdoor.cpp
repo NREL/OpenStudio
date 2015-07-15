@@ -154,9 +154,9 @@ PipeOutdoor::PipeOutdoor(const Model& model)
   bool ok = true;
   // ok = setHandle();
   OS_ASSERT(ok);
-   ok = setPipeInsideDiameter(0.1);
+  ok = setPipeInsideDiameter(0.05);
   OS_ASSERT(ok);
-   ok = setPipeLength(0.1);
+   ok = setPipeLength(100.0);
   OS_ASSERT(ok);
 }
 
