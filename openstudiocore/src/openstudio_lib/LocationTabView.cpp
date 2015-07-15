@@ -98,11 +98,11 @@ LocationView::LocationView(bool isIP,
   const model::Model & model,
   const QString& modelTempDir)
   : QWidget(),
-  m_isIP(isIP),
   m_model(model),
   m_site(m_model.getUniqueModelObject<model::Site>()),
   m_yearDescription(m_model.getUniqueModelObject<model::YearDescription>()),
-  m_modelTempDir(modelTempDir)
+  m_modelTempDir(modelTempDir),
+  m_isIP(isIP)
 {
   OS_ASSERT(m_site);
 
