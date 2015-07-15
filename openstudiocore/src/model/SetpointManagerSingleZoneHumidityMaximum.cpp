@@ -17,19 +17,18 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SetpointManagerSingleZoneHumidityMaximum.hpp>
-#include <model/SetpointManagerSingleZoneHumidityMaximum_Impl.hpp>
+#include "SetpointManagerSingleZoneHumidityMaximum.hpp"
+#include "SetpointManagerSingleZoneHumidityMaximum_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SetpointManager_SingleZone_Humidity_Maximum_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -80,24 +79,17 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_SetpointManager_SingleZone_Humidity_MaximumFields::ControlZoneName);
   }
 
-  boost::optional<Node> SetpointManagerSingleZoneHumidityMaximum_Impl::setpointNodeorNodeList() const {
+  boost::optional<Node> SetpointManagerSingleZoneHumidityMaximum_Impl::setpointNode() const {
     return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_SingleZone_Humidity_MaximumFields::SetpointNodeorNodeListName);
   }
 
-  bool SetpointManagerSingleZoneHumidityMaximum_Impl::setControlVariable(std::string controlVariable) {
+  bool SetpointManagerSingleZoneHumidityMaximum_Impl::setControlVariable(const std::string& controlVariable) {
     bool result = setString(OS_SetpointManager_SingleZone_Humidity_MaximumFields::ControlVariable, controlVariable);
     return result;
   }
 
-  bool SetpointManagerSingleZoneHumidityMaximum_Impl::setControlZone(const boost::optional<ThermalZone>& thermalZone) {
-    bool result(false);
-    if (thermalZone) {
-      result = setPointer(OS_SetpointManager_SingleZone_Humidity_MaximumFields::ControlZoneName, thermalZone.get().handle());
-    }
-    else {
-      resetControlZone();
-      result = true;
-    }
+  bool SetpointManagerSingleZoneHumidityMaximum_Impl::setControlZone(const ThermalZone& thermalZone) {
+    bool result = setPointer(OS_SetpointManager_SingleZone_Humidity_MaximumFields::ControlZoneName, thermalZone.handle());
     return result;
   }
 
@@ -106,19 +98,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool SetpointManagerSingleZoneHumidityMaximum_Impl::setSetpointNodeorNodeList(const boost::optional<Node>& node) {
-    bool result(false);
-    if (node) {
-      result = setPointer(OS_SetpointManager_SingleZone_Humidity_MaximumFields::SetpointNodeorNodeListName, node.get().handle());
-    }
-    else {
-      resetSetpointNodeorNodeList();
-      result = true;
-    }
+  bool SetpointManagerSingleZoneHumidityMaximum_Impl::setSetpointNode(const Node& node) {
+    bool result = setPointer(OS_SetpointManager_SingleZone_Humidity_MaximumFields::SetpointNodeorNodeListName, node.handle());
     return result;
   }
 
-  void SetpointManagerSingleZoneHumidityMaximum_Impl::resetSetpointNodeorNodeList() {
+  void SetpointManagerSingleZoneHumidityMaximum_Impl::resetSetpointNode() {
     bool result = setString(OS_SetpointManager_SingleZone_Humidity_MaximumFields::SetpointNodeorNodeListName, "");
     OS_ASSERT(result);
   }
@@ -155,11 +140,11 @@ boost::optional<ThermalZone> SetpointManagerSingleZoneHumidityMaximum::controlZo
   return getImpl<detail::SetpointManagerSingleZoneHumidityMaximum_Impl>()->controlZone();
 }
 
-boost::optional<Node> SetpointManagerSingleZoneHumidityMaximum::setpointNodeorNodeList() const {
-  return getImpl<detail::SetpointManagerSingleZoneHumidityMaximum_Impl>()->setpointNodeorNodeList();
+boost::optional<Node> SetpointManagerSingleZoneHumidityMaximum::setpointNode() const {
+  return getImpl<detail::SetpointManagerSingleZoneHumidityMaximum_Impl>()->setpointNode();
 }
 
-bool SetpointManagerSingleZoneHumidityMaximum::setControlVariable(std::string controlVariable) {
+bool SetpointManagerSingleZoneHumidityMaximum::setControlVariable(const std::string& controlVariable) {
   return getImpl<detail::SetpointManagerSingleZoneHumidityMaximum_Impl>()->setControlVariable(controlVariable);
 }
 
@@ -169,14 +154,6 @@ bool SetpointManagerSingleZoneHumidityMaximum::setControlZone(const ThermalZone&
 
 void SetpointManagerSingleZoneHumidityMaximum::resetControlZone() {
   getImpl<detail::SetpointManagerSingleZoneHumidityMaximum_Impl>()->resetControlZone();
-}
-
-bool SetpointManagerSingleZoneHumidityMaximum::setSetpointNodeorNodeList(const Node& node) {
-  return getImpl<detail::SetpointManagerSingleZoneHumidityMaximum_Impl>()->setSetpointNodeorNodeList(node);
-}
-
-void SetpointManagerSingleZoneHumidityMaximum::resetSetpointNodeorNodeList() {
-  getImpl<detail::SetpointManagerSingleZoneHumidityMaximum_Impl>()->resetSetpointNodeorNodeList();
 }
 
 /// @cond

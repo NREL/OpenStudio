@@ -17,19 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SetpointManagerMultiZoneHeatingAverage.hpp>
-#include <model/SetpointManagerMultiZoneHeatingAverage_Impl.hpp>
-
-// TODO: Check the following class names against object getters and setters.
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include "SetpointManagerMultiZoneHeatingAverage.hpp"
+#include "SetpointManagerMultiZoneHeatingAverage_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "Model.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SetpointManager_MultiZone_Heating_Average_FieldEnums.hxx>
-
-#include <utilities/units/Unit.hpp>
-
-#include <utilities/core/Assert.hpp>
+#include <utilities/idd/IddEnums.hxx>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -88,11 +85,11 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<Node> SetpointManagerMultiZoneHeatingAverage_Impl::setpointNodeorNodeList() const {
+  boost::optional<Node> SetpointManagerMultiZoneHeatingAverage_Impl::setpointNode() const {
     return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_MultiZone_Heating_AverageFields::SetpointNodeorNodeListName);
   }
 
-  bool SetpointManagerMultiZoneHeatingAverage_Impl::setControlVariable(std::string controlVariable) {
+  bool SetpointManagerMultiZoneHeatingAverage_Impl::setControlVariable(const std::string& controlVariable) {
     bool result = setString(OS_SetpointManager_MultiZone_Heating_AverageFields::ControlVariable, controlVariable);
     return result;
   }
@@ -107,19 +104,12 @@ namespace detail {
     return result;
   }
 
-  bool SetpointManagerMultiZoneHeatingAverage_Impl::setSetpointNodeorNodeList(const boost::optional<Node>& node) {
-    bool result(false);
-    if (node) {
-      result = setPointer(OS_SetpointManager_MultiZone_Heating_AverageFields::SetpointNodeorNodeListName, node.get().handle());
-    }
-    else {
-      resetSetpointNodeorNodeList();
-      result = true;
-    }
+  bool SetpointManagerMultiZoneHeatingAverage_Impl::setSetpointNode(const Node& node) {
+    bool result = setPointer(OS_SetpointManager_MultiZone_Heating_AverageFields::SetpointNodeorNodeListName, node.handle());
     return result;
   }
 
-  void SetpointManagerMultiZoneHeatingAverage_Impl::resetSetpointNodeorNodeList() {
+  void SetpointManagerMultiZoneHeatingAverage_Impl::resetSetpointNode() {
     bool result = setString(OS_SetpointManager_MultiZone_Heating_AverageFields::SetpointNodeorNodeListName, "");
     OS_ASSERT(result);
   }
@@ -131,16 +121,9 @@ SetpointManagerMultiZoneHeatingAverage::SetpointManagerMultiZoneHeatingAverage(c
 {
   OS_ASSERT(getImpl<detail::SetpointManagerMultiZoneHeatingAverage_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
-  // ok = setControlVariable();
-  OS_ASSERT(ok);
-  // ok = setMinimumSetpointTemperature();
-  OS_ASSERT(ok);
-  // ok = setMaximumSetpointTemperature();
-  OS_ASSERT(ok);
+  setControlVariable("Temperature");
+  setMinimumSetpointTemperature(20.);
+  setMaximumSetpointTemperature(50.);
 }
 
 IddObjectType SetpointManagerMultiZoneHeatingAverage::iddObjectType() {
@@ -164,11 +147,11 @@ double SetpointManagerMultiZoneHeatingAverage::maximumSetpointTemperature() cons
   return getImpl<detail::SetpointManagerMultiZoneHeatingAverage_Impl>()->maximumSetpointTemperature();
 }
 
-boost::optional<Node> SetpointManagerMultiZoneHeatingAverage::setpointNodeorNodeList() const {
-  return getImpl<detail::SetpointManagerMultiZoneHeatingAverage_Impl>()->setpointNodeorNodeList();
+boost::optional<Node> SetpointManagerMultiZoneHeatingAverage::setpointNode() const {
+  return getImpl<detail::SetpointManagerMultiZoneHeatingAverage_Impl>()->setpointNode();
 }
 
-bool SetpointManagerMultiZoneHeatingAverage::setControlVariable(std::string controlVariable) {
+bool SetpointManagerMultiZoneHeatingAverage::setControlVariable(const std::string& controlVariable) {
   return getImpl<detail::SetpointManagerMultiZoneHeatingAverage_Impl>()->setControlVariable(controlVariable);
 }
 
@@ -178,14 +161,6 @@ bool SetpointManagerMultiZoneHeatingAverage::setMinimumSetpointTemperature(doubl
 
 bool SetpointManagerMultiZoneHeatingAverage::setMaximumSetpointTemperature(double maximumSetpointTemperature) {
   return getImpl<detail::SetpointManagerMultiZoneHeatingAverage_Impl>()->setMaximumSetpointTemperature(maximumSetpointTemperature);
-}
-
-bool SetpointManagerMultiZoneHeatingAverage::setSetpointNodeorNodeList(const Node& node) {
-  return getImpl<detail::SetpointManagerMultiZoneHeatingAverage_Impl>()->setSetpointNodeorNodeList(node);
-}
-
-void SetpointManagerMultiZoneHeatingAverage::resetSetpointNodeorNodeList() {
-  getImpl<detail::SetpointManagerMultiZoneHeatingAverage_Impl>()->resetSetpointNodeorNodeList();
 }
 
 /// @cond

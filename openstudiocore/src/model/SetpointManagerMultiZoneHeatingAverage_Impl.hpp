@@ -20,13 +20,12 @@
 #ifndef MODEL_SETPOINTMANAGERMULTIZONEHEATINGAVERAGE_IMPL_HPP
 #define MODEL_SETPOINTMANAGERMULTIZONEHEATINGAVERAGE_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SetpointManager_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "SetpointManager_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Node;
 
 namespace detail {
@@ -55,37 +54,31 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
     //@{
 
-    std::string controlVariable() const;
+    virtual std::string controlVariable() const override;
 
     double minimumSetpointTemperature() const;
 
     double maximumSetpointTemperature() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Node.
-    boost::optional<Node> setpointNodeorNodeList() const;
+    virtual boost::optional<Node> setpointNode() const override;
 
     //@}
     /** @name Setters */
     //@{
 
-    bool setControlVariable(std::string controlVariable);
+    virtual bool setControlVariable(const std::string& controlVariable) override;
 
     bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
 
     bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
-
-    // TODO: Check argument type. From object lists, some candidates are: Node.
-    bool setSetpointNodeorNodeList(const boost::optional<Node>& node);
-
-    void resetSetpointNodeorNodeList();
 
     //@}
     /** @name Other */
@@ -94,6 +87,10 @@ namespace detail {
     //@}
    protected:
    private:
+    virtual bool setSetpointNode(const Node& node) override;
+
+    virtual void resetSetpointNode() override;
+
     REGISTER_LOGGER("openstudio.model.SetpointManagerMultiZoneHeatingAverage");
   };
 

@@ -17,21 +17,18 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SetpointManagerSingleZoneOneStageCooling.hpp>
-#include <model/SetpointManagerSingleZoneOneStageCooling_Impl.hpp>
+#include "SetpointManagerSingleZoneOneStageCooling.hpp"
+#include "SetpointManagerSingleZoneOneStageCooling_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SetpointManager_SingleZone_OneStageCooling_FieldEnums.hxx>
-
-#include <utilities/units/Unit.hpp>
-
-#include <utilities/core/Assert.hpp>
+#include <utilities/idd/IddEnums.hxx>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -94,11 +91,11 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_SetpointManager_SingleZone_OneStageCoolingFields::ControlZoneName);
   }
 
-  boost::optional<Node> SetpointManagerSingleZoneOneStageCooling_Impl::setpointNodeorNodeList() const {
+  boost::optional<Node> SetpointManagerSingleZoneOneStageCooling_Impl::setpointNode() const {
     return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_SingleZone_OneStageCoolingFields::SetpointNodeorNodeListName);
   }
 
-  bool SetpointManagerSingleZoneOneStageCooling_Impl::setControlVariable(std::string controlVariable) {
+  bool SetpointManagerSingleZoneOneStageCooling_Impl::setControlVariable(const std::string& controlVariable) {
     bool result = setString(OS_SetpointManager_SingleZone_OneStageCoolingFields::ControlVariable, controlVariable);
     return result;
   }
@@ -113,15 +110,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool SetpointManagerSingleZoneOneStageCooling_Impl::setControlZone(const boost::optional<ThermalZone>& thermalZone) {
-    bool result(false);
-    if (thermalZone) {
-      result = setPointer(OS_SetpointManager_SingleZone_OneStageCoolingFields::ControlZoneName, thermalZone.get().handle());
-    }
-    else {
-      resetControlZone();
-      result = true;
-    }
+  bool SetpointManagerSingleZoneOneStageCooling_Impl::setControlZone(const ThermalZone& thermalZone) {
+    bool result = setPointer(OS_SetpointManager_SingleZone_OneStageCoolingFields::ControlZoneName, thermalZone.handle());
     return result;
   }
 
@@ -130,19 +120,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool SetpointManagerSingleZoneOneStageCooling_Impl::setSetpointNodeorNodeList(const boost::optional<Node>& node) {
-    bool result(false);
-    if (node) {
-      result = setPointer(OS_SetpointManager_SingleZone_OneStageCoolingFields::SetpointNodeorNodeListName, node.get().handle());
-    }
-    else {
-      resetSetpointNodeorNodeList();
-      result = true;
-    }
+  bool SetpointManagerSingleZoneOneStageCooling_Impl::setSetpointNode(const Node& node) {
+    bool result  = setPointer(OS_SetpointManager_SingleZone_OneStageCoolingFields::SetpointNodeorNodeListName, node.handle());
     return result;
   }
 
-  void SetpointManagerSingleZoneOneStageCooling_Impl::resetSetpointNodeorNodeList() {
+  void SetpointManagerSingleZoneOneStageCooling_Impl::resetSetpointNode() {
     bool result = setString(OS_SetpointManager_SingleZone_OneStageCoolingFields::SetpointNodeorNodeListName, "");
     OS_ASSERT(result);
   }
@@ -189,11 +172,11 @@ boost::optional<ThermalZone> SetpointManagerSingleZoneOneStageCooling::controlZo
   return getImpl<detail::SetpointManagerSingleZoneOneStageCooling_Impl>()->controlZone();
 }
 
-boost::optional<Node> SetpointManagerSingleZoneOneStageCooling::setpointNodeorNodeList() const {
-  return getImpl<detail::SetpointManagerSingleZoneOneStageCooling_Impl>()->setpointNodeorNodeList();
+boost::optional<Node> SetpointManagerSingleZoneOneStageCooling::setpointNode() const {
+  return getImpl<detail::SetpointManagerSingleZoneOneStageCooling_Impl>()->setpointNode();
 }
 
-bool SetpointManagerSingleZoneOneStageCooling::setControlVariable(std::string controlVariable) {
+bool SetpointManagerSingleZoneOneStageCooling::setControlVariable(const std::string& controlVariable) {
   return getImpl<detail::SetpointManagerSingleZoneOneStageCooling_Impl>()->setControlVariable(controlVariable);
 }
 
@@ -211,14 +194,6 @@ bool SetpointManagerSingleZoneOneStageCooling::setControlZone(const ThermalZone&
 
 void SetpointManagerSingleZoneOneStageCooling::resetControlZone() {
   getImpl<detail::SetpointManagerSingleZoneOneStageCooling_Impl>()->resetControlZone();
-}
-
-bool SetpointManagerSingleZoneOneStageCooling::setSetpointNodeorNodeList(const Node& node) {
-  return getImpl<detail::SetpointManagerSingleZoneOneStageCooling_Impl>()->setSetpointNodeorNodeList(node);
-}
-
-void SetpointManagerSingleZoneOneStageCooling::resetSetpointNodeorNodeList() {
-  getImpl<detail::SetpointManagerSingleZoneOneStageCooling_Impl>()->resetSetpointNodeorNodeList();
 }
 
 /// @cond

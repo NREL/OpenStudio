@@ -17,19 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SetpointManagerMultiZoneHumidityMaximum.hpp>
-#include <model/SetpointManagerMultiZoneHumidityMaximum_Impl.hpp>
+#include "SetpointManagerMultiZoneHumidityMaximum.hpp"
+#include "SetpointManagerMultiZoneHumidityMaximum_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SetpointManager_MultiZone_Humidity_Maximum_FieldEnums.hxx>
-
-#include <utilities/units/Unit.hpp>
-
-#include <utilities/core/Assert.hpp>
+#include <utilities/idd/IddEnums.hxx>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -88,11 +85,11 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<Node> SetpointManagerMultiZoneHumidityMaximum_Impl::setpointNodeorNodeList() const {
+  boost::optional<Node> SetpointManagerMultiZoneHumidityMaximum_Impl::setpointNode() const {
     return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_MultiZone_Humidity_MaximumFields::SetpointNodeorNodeListName);
   }
 
-  bool SetpointManagerMultiZoneHumidityMaximum_Impl::setControlVariable(std::string controlVariable) {
+  bool SetpointManagerMultiZoneHumidityMaximum_Impl::setControlVariable(const std::string& controlVariable) {
     bool result = setString(OS_SetpointManager_MultiZone_Humidity_MaximumFields::ControlVariable, controlVariable);
     return result;
   }
@@ -107,19 +104,12 @@ namespace detail {
     return result;
   }
 
-  bool SetpointManagerMultiZoneHumidityMaximum_Impl::setSetpointNodeorNodeList(const boost::optional<Node>& node) {
-    bool result(false);
-    if (node) {
-      result = setPointer(OS_SetpointManager_MultiZone_Humidity_MaximumFields::SetpointNodeorNodeListName, node.get().handle());
-    }
-    else {
-      resetSetpointNodeorNodeList();
-      result = true;
-    }
+  bool SetpointManagerMultiZoneHumidityMaximum_Impl::setSetpointNode(const Node& node) {
+    bool result = setPointer(OS_SetpointManager_MultiZone_Humidity_MaximumFields::SetpointNodeorNodeListName, node.handle());
     return result;
   }
 
-  void SetpointManagerMultiZoneHumidityMaximum_Impl::resetSetpointNodeorNodeList() {
+  void SetpointManagerMultiZoneHumidityMaximum_Impl::resetSetpointNode() {
     bool result = setString(OS_SetpointManager_MultiZone_Humidity_MaximumFields::SetpointNodeorNodeListName, "");
     OS_ASSERT(result);
   }
@@ -164,11 +154,11 @@ double SetpointManagerMultiZoneHumidityMaximum::maximumSetpointHumidityRatio() c
   return getImpl<detail::SetpointManagerMultiZoneHumidityMaximum_Impl>()->maximumSetpointHumidityRatio();
 }
 
-boost::optional<Node> SetpointManagerMultiZoneHumidityMaximum::setpointNodeorNodeList() const {
-  return getImpl<detail::SetpointManagerMultiZoneHumidityMaximum_Impl>()->setpointNodeorNodeList();
+boost::optional<Node> SetpointManagerMultiZoneHumidityMaximum::setpointNode() const {
+  return getImpl<detail::SetpointManagerMultiZoneHumidityMaximum_Impl>()->setpointNode();
 }
 
-bool SetpointManagerMultiZoneHumidityMaximum::setControlVariable(std::string controlVariable) {
+bool SetpointManagerMultiZoneHumidityMaximum::setControlVariable(const std::string& controlVariable) {
   return getImpl<detail::SetpointManagerMultiZoneHumidityMaximum_Impl>()->setControlVariable(controlVariable);
 }
 
@@ -178,14 +168,6 @@ bool SetpointManagerMultiZoneHumidityMaximum::setMinimumSetpointHumidityRatio(do
 
 bool SetpointManagerMultiZoneHumidityMaximum::setMaximumSetpointHumidityRatio(double maximumSetpointHumidityRatio) {
   return getImpl<detail::SetpointManagerMultiZoneHumidityMaximum_Impl>()->setMaximumSetpointHumidityRatio(maximumSetpointHumidityRatio);
-}
-
-bool SetpointManagerMultiZoneHumidityMaximum::setSetpointNodeorNodeList(const Node& node) {
-  return getImpl<detail::SetpointManagerMultiZoneHumidityMaximum_Impl>()->setSetpointNodeorNodeList(node);
-}
-
-void SetpointManagerMultiZoneHumidityMaximum::resetSetpointNodeorNodeList() {
-  getImpl<detail::SetpointManagerMultiZoneHumidityMaximum_Impl>()->resetSetpointNodeorNodeList();
 }
 
 /// @cond
