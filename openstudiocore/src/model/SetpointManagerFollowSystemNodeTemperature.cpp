@@ -22,6 +22,7 @@
 
 #include "Node.hpp"
 #include "Node_Impl.hpp"
+#include "PlantLoop.hpp"
 #include "Model.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
@@ -66,6 +67,25 @@ namespace detail {
 
   IddObjectType SetpointManagerFollowSystemNodeTemperature_Impl::iddObjectType() const {
     return SetpointManagerFollowSystemNodeTemperature::iddObjectType();
+  }
+
+  bool SetpointManagerFollowSystemNodeTemperature_Impl::addToNode(Node & node) {
+    bool added = SetpointManager_Impl::addToNode( node );
+    if( added ) {
+      return added;
+    } else if( boost::optional<PlantLoop> plantLoop = node.plantLoop() ) {
+      if( plantLoop->supplyComponent(node.handle()) ) {
+        return this->setSetpointNode(node);
+      }
+    }
+    return added;
+  }
+
+  ModelObject SetpointManagerFollowSystemNodeTemperature_Impl::clone(Model model) const
+  {
+    SetpointManagerFollowSystemNodeTemperature clonedObject = SetpointManager_Impl::clone( model ).cast<SetpointManagerFollowSystemNodeTemperature>();
+    clonedObject.resetReferenceNode();
+    return clonedObject;
   }
 
   std::string SetpointManagerFollowSystemNodeTemperature_Impl::controlVariable() const {

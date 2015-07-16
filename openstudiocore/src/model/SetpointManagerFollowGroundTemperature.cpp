@@ -21,7 +21,7 @@
 #include "SetpointManagerFollowGroundTemperature_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
-#include "Model.hpp"
+#include "PlantLoop.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SetpointManager_FollowGroundTemperature_FieldEnums.hxx>
@@ -65,6 +65,18 @@ namespace detail {
 
   IddObjectType SetpointManagerFollowGroundTemperature_Impl::iddObjectType() const {
     return SetpointManagerFollowGroundTemperature::iddObjectType();
+  }
+
+  bool SetpointManagerFollowGroundTemperature_Impl::addToNode(Node & node) {
+    bool added = SetpointManager_Impl::addToNode( node );
+    if( added ) {
+      return added;
+    } else if( boost::optional<PlantLoop> plantLoop = node.plantLoop() ) {
+      if( plantLoop->supplyComponent(node.handle()) ) {
+        return this->setSetpointNode(node);
+      }
+    }
+    return added;
   }
 
   std::string SetpointManagerFollowGroundTemperature_Impl::controlVariable() const {

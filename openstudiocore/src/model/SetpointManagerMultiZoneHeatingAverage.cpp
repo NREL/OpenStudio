@@ -21,7 +21,6 @@
 #include "SetpointManagerMultiZoneHeatingAverage_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
-#include "Model.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SetpointManager_MultiZone_Heating_Average_FieldEnums.hxx>

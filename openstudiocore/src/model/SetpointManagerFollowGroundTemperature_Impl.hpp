@@ -58,6 +58,8 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual bool addToNode(Node & node) override;
+
     //@}
     /** @name Getters */
     //@{

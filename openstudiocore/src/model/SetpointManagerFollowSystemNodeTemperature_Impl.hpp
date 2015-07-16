@@ -58,6 +58,10 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual ModelObject clone(Model model) const override;
+
+    virtual bool addToNode(Node & node) override;
+
     //@}
     /** @name Getters */
     //@{

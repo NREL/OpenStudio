@@ -22,7 +22,6 @@
 
 #include "Node.hpp"
 #include "Node_Impl.hpp"
-#include "Model.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SetpointManager_MultiZone_Cooling_Average_FieldEnums.hxx>

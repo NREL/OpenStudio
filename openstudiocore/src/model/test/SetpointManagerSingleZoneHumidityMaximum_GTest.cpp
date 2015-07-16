@@ -21,9 +21,6 @@
 
 #include "ModelFixture.hpp"
 
-using namespace openstudio;
-using namespace openstudio::model;
-
 #include "../SetpointManagerSingleZoneHumidityMaximum.hpp"
 #include "../SetpointManagerSingleZoneHumidityMaximum_Impl.hpp"
 #include "../Node.hpp"
