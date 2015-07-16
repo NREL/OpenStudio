@@ -337,16 +337,12 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996") ## /wd4996 suppresses deprecated warning
     endif()
   elseif(UNIX)
-    if(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
+    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+      # Prevent excessive warnings from generated swig files, suppress deprecated declarations
       set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations")
     else()
       set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
     endif()
-  endif()
-
-  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    # Prevent excessive warnings from generated swig files
-    set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess")
   endif()
 
   if(CMAKE_COMPILER_IS_GNUCXX)
