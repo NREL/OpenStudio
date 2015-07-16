@@ -180,6 +180,8 @@ namespace detail {
     /** @name Other */
     //@{
 
+    bool addToNode(Node & node) override;
+
     //@}
    protected:
    private:

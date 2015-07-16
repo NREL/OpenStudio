@@ -144,6 +144,16 @@ namespace detail {
     return result;
   }
 
+  bool PipeOutdoor_Impl::addToNode(Node & node)
+  {
+    if (node.plantLoop() || node.airLoopHVAC())
+    {
+      return StraightComponent_Impl::addToNode(node);
+    }
+
+    return false;
+  }
+
 } // detail
 
 PipeOutdoor::PipeOutdoor(const Model& model)

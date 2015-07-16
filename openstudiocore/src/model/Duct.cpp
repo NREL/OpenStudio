@@ -20,6 +20,9 @@
 #include "Duct.hpp"
 #include "Duct_Impl.hpp"
 
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Duct_FieldEnums.hxx>
 
@@ -72,6 +75,16 @@ namespace detail {
   unsigned Duct_Impl::outletPort()
   {
     return OS_DuctFields::OutletNode;
+  }
+
+  bool Duct_Impl::addToNode(Node & node)
+  {
+    if (node.plantLoop() || node.airLoopHVAC())
+    {
+      return StraightComponent_Impl::addToNode(node);
+    }
+
+    return false;
   }
 
 } // detail

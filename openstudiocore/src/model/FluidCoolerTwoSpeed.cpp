@@ -407,6 +407,16 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  bool FluidCoolerTwoSpeed_Impl::addToNode(Node & node)
+  {
+    if (node.plantLoop() || node.airLoopHVAC())
+    {
+      return StraightComponent_Impl::addToNode(node);
+    }
+
+    return false;
+  }
+
 } // detail
 
 FluidCoolerTwoSpeed::FluidCoolerTwoSpeed(const Model& model)

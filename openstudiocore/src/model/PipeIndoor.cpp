@@ -22,6 +22,8 @@
 
 #include "Construction.hpp"
 #include "Construction_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
@@ -208,6 +210,16 @@ namespace detail {
   bool PipeIndoor_Impl::setPipeLength(double pipeLength) {
     bool result = setDouble(OS_Pipe_IndoorFields::PipeLength, pipeLength);
     return result;
+  }
+
+  bool PipeIndoor_Impl::addToNode(Node & node)
+  {
+    if (node.plantLoop() || node.airLoopHVAC())
+    {
+      return StraightComponent_Impl::addToNode(node);
+    }
+
+    return false;
   }
 
 } // detail
