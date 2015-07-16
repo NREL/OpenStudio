@@ -34,6 +34,7 @@ set(utilities_resources_src
   utilities/Filetypes/USA_CO_Golden-NREL.amy
   utilities/Filetypes/USA_CO_Golden-NREL.wrap.amy
   utilities/Filetypes/TDV_2008_kBtu_CZ13.csv
+  utilities/Filetypes/TUN_Tunis.607150_IWEC.epw
   utilities/Idf/CommentTest.idf
   utilities/Idf/DosLineEndingTest.idf
   utilities/Idf/UnixLineEndingTest.idf
@@ -372,6 +373,9 @@ set(osversion_resources_src
   osversion/1_8_0/OpenStudio.idd
   osversion/1_8_0/example.osm
   osversion/1_8_0/example.osc
+  osversion/1_8_1/OpenStudio.idd
+  osversion/1_8_1/example.osm
+  osversion/1_8_1/example.osc
   osversion/unknown.osc
 )
 

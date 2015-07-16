@@ -94,7 +94,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.5.4")] = &VersionTranslator::update_1_5_3_to_1_5_4;
   m_updateMethods[VersionString("1.7.2")] = &VersionTranslator::update_1_7_1_to_1_7_2;
   m_updateMethods[VersionString("1.7.5")] = &VersionTranslator::update_1_7_4_to_1_7_5;
-  m_updateMethods[VersionString("1.8.1")] = &VersionTranslator::update_1_8_0_to_1_8_1;
+  m_updateMethods[VersionString("1.8.2")] = &VersionTranslator::update_1_8_1_to_1_8_2;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -177,6 +177,7 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.7.4"));
   m_startVersions.push_back(VersionString("1.7.5"));
   m_startVersions.push_back(VersionString("1.8.0"));
+  m_startVersions.push_back(VersionString("1.8.1"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -2544,19 +2545,19 @@ std::string VersionTranslator::update_1_7_4_to_1_7_5(const IdfFile& idf_1_7_4, c
   return ss.str();
 }
 
-std::string VersionTranslator::update_1_8_0_to_1_8_1(const IdfFile& idf_1_8_0, const IddFileAndFactoryWrapper& idd_1_8_1) {
+std::string VersionTranslator::update_1_8_1_to_1_8_2(const IdfFile& idf_1_8_1, const IddFileAndFactoryWrapper& idd_1_8_2) {
   std::stringstream ss;
 
-  ss << idf_1_8_0.header() << std::endl << std::endl;
+  ss << idf_1_8_1.header() << std::endl << std::endl;
 
   // new version object
-  IdfFile targetIdf(idd_1_8_1.iddFile());
+  IdfFile targetIdf(idd_1_8_2.iddFile());
   ss << targetIdf.versionObject().get();
 
-  for (const IdfObject& object : idf_1_8_0.objects()) {
+  for (const IdfObject& object : idf_1_8_1.objects()) {
     auto iddname = object.iddObject().name();
     if (iddname == "OS:AirLoopHVAC") {
-      auto iddObject = idd_1_8_1.getObject("OS:AirLoopHVAC");
+      auto iddObject = idd_1_8_2.getObject("OS:AirLoopHVAC");
       OS_ASSERT(iddObject);
       IdfObject newObject(iddObject.get());
 
@@ -2576,22 +2577,22 @@ std::string VersionTranslator::update_1_8_0_to_1_8_1(const IdfFile& idf_1_8_0, c
       // AvailabilityManagerAssignmentList
       auto availabilityManagerListHandle = object.getString(3);
       OS_ASSERT(availabilityManagerListHandle);
-      auto availabilityManagerList = idf_1_8_0.getObject(toUUID(availabilityManagerListHandle.get()));
+      auto availabilityManagerList = idf_1_8_1.getObject(toUUID(availabilityManagerListHandle.get()));
       OS_ASSERT(availabilityManagerList);
 
       auto availabilityManagerScheduledHandle = availabilityManagerList->getString(2);
       OS_ASSERT(availabilityManagerScheduledHandle);
-      auto availabilityManagerScheduled = idf_1_8_0.getObject(toUUID(availabilityManagerScheduledHandle.get()));
+      auto availabilityManagerScheduled = idf_1_8_1.getObject(toUUID(availabilityManagerScheduledHandle.get()));
       OS_ASSERT(availabilityManagerScheduled);
 
       auto availabilityScheduleHandle = availabilityManagerScheduled->getString(2);
       OS_ASSERT(availabilityScheduleHandle);
-      auto availabilitySchedule = idf_1_8_0.getObject(toUUID(availabilityScheduleHandle.get()));
+      auto availabilitySchedule = idf_1_8_1.getObject(toUUID(availabilityScheduleHandle.get()));
       OS_ASSERT(availabilitySchedule);
 
       auto availabilityManagerNightCycleHandle = availabilityManagerList->getString(3);
       OS_ASSERT(availabilityManagerNightCycleHandle);
-      auto availabilityManagerNightCycle = idf_1_8_0.getObject(toUUID(availabilityManagerNightCycleHandle.get()));
+      auto availabilityManagerNightCycle = idf_1_8_1.getObject(toUUID(availabilityManagerNightCycleHandle.get()));
       OS_ASSERT(availabilityManagerNightCycle);
 
       auto controlType = availabilityManagerNightCycle->getString(4);

@@ -4,7 +4,7 @@ project(OpenStudio)
 
 set(CMAKE_VERSION_MAJOR 1)
 set(CMAKE_VERSION_MINOR 8)
-set(CMAKE_VERSION_PATCH 1)
+set(CMAKE_VERSION_PATCH 2)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
@@ -581,8 +581,8 @@ if(BUILD_SWIG)
     else()
       # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
       ExternalProject_Add(SWIG
-        URL http://openstudio-resources.s3.amazonaws.com/dependencies/swig-3.0.5.tar.gz
-        URL_MD5 dcb9638324461b9baba8e044fe59031d
+        URL http://openstudio-resources.s3.amazonaws.com/dependencies/swig-3.0.6.tar.gz
+        URL_MD5 df43ae271642bcfa61c1e59f970f9963
 
         PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && ../SWIG/Tools/pcre-build.sh
         CONFIGURE_COMMAND ../SWIG/configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install
@@ -594,8 +594,8 @@ if(BUILD_SWIG)
   else()
     # SWIG requires MinGW to compile on windows, so we just copy in the prebuilt binary
     ExternalProject_Add(SWIG
-      URL http://openstudio-resources.s3.amazonaws.com/dependencies/swigwin-3.0.5.zip
-      URL_MD5 fd2e050f29e2a00b2348f5f7d3476490
+      URL http://openstudio-resources.s3.amazonaws.com/dependencies/swigwin-3.0.6.zip
+      URL_MD5 aacecb356084ca18cf5d952621e2e1dd
       CONFIGURE_COMMAND ""
       BUILD_COMMAND ""
       INSTALL_COMMAND ""
