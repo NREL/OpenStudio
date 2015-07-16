@@ -86,7 +86,7 @@ namespace detail {
 
     double maximumOutdoorDewpoint() const;
 
-    boost::optional<Schedule> minimumOutdoorVentilationAirSchedule() const;
+    Schedule minimumOutdoorVentilationAirSchedule() const;
 
     boost::optional<Curve> openingFactorFunctionofWindSpeedCurve() const;
 
@@ -117,8 +117,6 @@ namespace detail {
     bool setMaximumOutdoorDewpoint(double maximumOutdoorDewpoint);
 
     bool setMinimumOutdoorVentilationAirSchedule(Schedule& schedule);
-
-    void resetMinimumOutdoorVentilationAirSchedule();
 
     bool setOpeningFactorFunctionofWindSpeedCurve(const boost::optional<Curve>& curve);
 

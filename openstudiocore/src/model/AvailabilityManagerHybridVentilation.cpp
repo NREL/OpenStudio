@@ -159,8 +159,10 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<Schedule> AvailabilityManagerHybridVentilation_Impl::minimumOutdoorVentilationAirSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AvailabilityManager_HybridVentilationFields::MinimumOutdoorVentilationAirSchedule);
+  Schedule AvailabilityManagerHybridVentilation_Impl::minimumOutdoorVentilationAirSchedule() const {
+    auto result = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AvailabilityManager_HybridVentilationFields::MinimumOutdoorVentilationAirSchedule);
+    OS_ASSERT(result);
+    return result.get();
   }
 
   boost::optional<Curve> AvailabilityManagerHybridVentilation_Impl::openingFactorFunctionofWindSpeedCurve() const {
@@ -239,11 +241,6 @@ namespace detail {
     return result;
   }
 
-  void AvailabilityManagerHybridVentilation_Impl::resetMinimumOutdoorVentilationAirSchedule() {
-    bool result = setString(OS_AvailabilityManager_HybridVentilationFields::MinimumOutdoorVentilationAirSchedule, "");
-    OS_ASSERT(result);
-  }
-
   bool AvailabilityManagerHybridVentilation_Impl::setOpeningFactorFunctionofWindSpeedCurve(const boost::optional<Curve>& curve) {
     bool result(false);
     if (curve) {
@@ -278,22 +275,29 @@ AvailabilityManagerHybridVentilation::AvailabilityManagerHybridVentilation(const
     setVentilationControlModeSchedule(schedule);
   }
 
+  {
+    ScheduleRuleset schedule(model);
+    schedule.defaultDaySchedule().addValue(Time(0,24,0,0),0.0);
+    setMinimumOutdoorVentilationAirSchedule(schedule);
+  }
+
   setUseWeatherFileRainIndicators(true);
   setMaximumWindSpeed(40.0);
-  setMinimumOutdoorTemperature(-100.0);
-  setMaximumOutdoorTemperature(100.0);
-  setMinimumOutdoorEnthalpy(0.0);
-  setMaximumOutdoorEnthalpy(300000.0);
-  setMinimumOutdoorDewpoint(-100.0);
-  setMaximumOutdoorDewpoint(100.0);
+  setMinimumOutdoorTemperature(20.0);
+  setMaximumOutdoorTemperature(30.0);
+  setMinimumOutdoorEnthalpy(20000.0);
+  setMaximumOutdoorEnthalpy(30000.0);
+  setMinimumOutdoorDewpoint(15.0);
+  setMaximumOutdoorDewpoint(30.0);
 }
 
-AvailabilityManagerHybridVentilation::AvailabilityManagerHybridVentilation(const Model& model, Schedule& ventilationControlModeSchedule)
+AvailabilityManagerHybridVentilation::AvailabilityManagerHybridVentilation(const Model& model, Schedule& ventilationControlModeSchedule, Schedule& minimumOutdoorVentilationAirSchedule)
   : AvailabilityManager(AvailabilityManagerHybridVentilation::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AvailabilityManagerHybridVentilation_Impl>());
 
   setVentilationControlModeSchedule(ventilationControlModeSchedule);
+  setMinimumOutdoorVentilationAirSchedule(minimumOutdoorVentilationAirSchedule);
 
   setUseWeatherFileRainIndicators(true);
   setMaximumWindSpeed(40.0);
@@ -349,7 +353,7 @@ double AvailabilityManagerHybridVentilation::maximumOutdoorDewpoint() const {
   return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->maximumOutdoorDewpoint();
 }
 
-boost::optional<Schedule> AvailabilityManagerHybridVentilation::minimumOutdoorVentilationAirSchedule() const {
+Schedule AvailabilityManagerHybridVentilation::minimumOutdoorVentilationAirSchedule() const {
   return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->minimumOutdoorVentilationAirSchedule();
 }
 
@@ -403,10 +407,6 @@ bool AvailabilityManagerHybridVentilation::setMaximumOutdoorDewpoint(double maxi
 
 bool AvailabilityManagerHybridVentilation::setMinimumOutdoorVentilationAirSchedule(Schedule& schedule) {
   return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setMinimumOutdoorVentilationAirSchedule(schedule);
-}
-
-void AvailabilityManagerHybridVentilation::resetMinimumOutdoorVentilationAirSchedule() {
-  getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->resetMinimumOutdoorVentilationAirSchedule();
 }
 
 bool AvailabilityManagerHybridVentilation::setOpeningFactorFunctionofWindSpeedCurve(const Curve& curve) {

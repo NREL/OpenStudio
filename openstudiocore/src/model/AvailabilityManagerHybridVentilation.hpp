@@ -47,11 +47,15 @@ class MODEL_API AvailabilityManagerHybridVentilation : public AvailabilityManage
   // The required "ventilationControlModeSchedule" will be initialized with 
   // a new schedule having a constant value of one, meaning the availability manager
   // will operate with temperature control.
+  // The required "minimumOutdoorVentilationAirSchedule" will be initialized with a 
+  // schedule of constant value 0. This schedule is only applicable if control mode is 0,
+  // but EnergyPlus requires it to operate.
   explicit AvailabilityManagerHybridVentilation(const Model& model);
 
   // Constructor for AvailabilityManagerHybridVentilation.
   // The required "ventilationControlModeSchedule" must be provided.
-  explicit AvailabilityManagerHybridVentilation(const Model& model, Schedule& ventilationControlModeSchedule);
+  // The required "minimumOutdoorVentilationAirSchedule" must be provided.
+  explicit AvailabilityManagerHybridVentilation(const Model& model, Schedule& ventilationControlModeSchedule, Schedule& minimumOutdoorVentilationAirSchedule);
 
   virtual ~AvailabilityManagerHybridVentilation() {}
 
@@ -82,7 +86,7 @@ class MODEL_API AvailabilityManagerHybridVentilation : public AvailabilityManage
 
   double maximumOutdoorDewpoint() const;
 
-  boost::optional<Schedule> minimumOutdoorVentilationAirSchedule() const;
+  Schedule minimumOutdoorVentilationAirSchedule() const;
 
   boost::optional<Curve> openingFactorFunctionofWindSpeedCurve() const;
 
@@ -113,8 +117,6 @@ class MODEL_API AvailabilityManagerHybridVentilation : public AvailabilityManage
   bool setMaximumOutdoorDewpoint(double maximumOutdoorDewpoint);
 
   bool setMinimumOutdoorVentilationAirSchedule(Schedule& schedule);
-
-  void resetMinimumOutdoorVentilationAirSchedule();
 
   bool setOpeningFactorFunctionofWindSpeedCurve(const Curve& curve);
 

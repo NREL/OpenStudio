@@ -27,6 +27,8 @@
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/AirLoopHVAC_Impl.hpp"
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/AvailabilityManager_HybridVentilation_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -44,6 +46,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerHybrid
   IdfObject idfObject(IddObjectType::AvailabilityManager_HybridVentilation);
   m_idfObjects.push_back(idfObject);
 
+  boost::optional<AirLoopHVAC> airLoopHVAC;
+  if( auto loop = modelObject.loop() ) {
+    airLoopHVAC = loop->optionalCast<model::AirLoopHVAC>();
+  }
+
   // Name
   if( auto s = modelObject.name() ) {
     idfObject.setName(*s);
@@ -57,6 +64,15 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerHybrid
   // ControlledZoneName
   if( auto zone = modelObject.controlledZone() ) {
     idfObject.setString(AvailabilityManager_HybridVentilationFields::ControlledZoneName,zone->name().get());
+  } else {
+    if( airLoopHVAC ) {
+      auto zones = airLoopHVAC->thermalZones(); 
+      if( ! zones.empty() ) {
+        auto default_zone = zones.front();
+        LOG(Info,modelObject.briefDescription() << " is missing Control Zone Name, defaulting to " << default_zone.briefDescription() << ".");
+        idfObject.setString(AvailabilityManager_HybridVentilationFields::ControlledZoneName,default_zone.name().get());
+      }
+    }
   }
 
   // VentilationControlModeScheduleName
@@ -117,8 +133,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerHybrid
   }
 
   // MinimumOutdoorVentilationAirScheduleName
-  if( auto schedule = modelObject.minimumOutdoorVentilationAirSchedule() ) {
-    idfObject.setString(AvailabilityManager_HybridVentilationFields::MinimumOutdoorVentilationAirScheduleName,schedule->name().get());
+  { 
+    auto schedule = modelObject.minimumOutdoorVentilationAirSchedule();
+    idfObject.setString(AvailabilityManager_HybridVentilationFields::MinimumOutdoorVentilationAirScheduleName,schedule.name().get());
   }
 
   // OpeningFactorFunctionofWindSpeedCurveName

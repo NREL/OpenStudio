@@ -23,6 +23,8 @@
 #include "../../model/AirLoopHVAC_Impl.hpp"
 #include "../../model/AvailabilityManager.hpp"
 #include "../../model/AvailabilityManager_Impl.hpp"
+#include "../../model/AvailabilityManagerHybridVentilation.hpp"
+#include "../../model/AvailabilityManagerHybridVentilation_Impl.hpp"
 #include "../../model/SizingSystem.hpp"
 #include "../../model/SizingSystem_Impl.hpp"
 #include "../../model/CoilCoolingWater.hpp"
@@ -316,13 +318,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   idfObject.setString(openstudio::AirLoopHVACFields::AvailabilityManagerListName,
                       availabilityManagerAssignmentListIdf.name().get());
 
-  if( auto availabilityManager = airLoopHVAC.availabilityManager() ) {
-    auto idf = translateAndMapModelObject(availabilityManager.get());
-    OS_ASSERT(idf);
-    auto eg = availabilityManagerAssignmentListIdf.pushExtensibleGroup();
-    eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerObjectType,idf->iddObject().name());
-    eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName,idf->name().get());
-  } else {
+  auto createdAvailabilityManagerScheduled = [&]() {
     IdfObject idf(IddObjectType::AvailabilityManager_Scheduled);
     idf.setName(airLoopHVACName + " Availability Manager");
     m_idfObjects.push_back(idf);
@@ -333,6 +329,22 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
     auto eg = availabilityManagerAssignmentListIdf.pushExtensibleGroup();
     eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerObjectType,idf.iddObject().name());
     eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName,idf.name().get());
+  };
+
+  if( auto availabilityManager = airLoopHVAC.availabilityManager() ) {
+    auto idf = translateAndMapModelObject(availabilityManager.get());
+    OS_ASSERT(idf);
+    if( availabilityManager->optionalCast<model::AvailabilityManagerHybridVentilation>() ) {
+      // AvailabilityManagerHybridVentilation is an odd duck, it is not allowed on availabilityManagerAssignmentList.
+      // Poor thing :(
+      createdAvailabilityManagerScheduled();
+    } else {
+      auto eg = availabilityManagerAssignmentListIdf.pushExtensibleGroup();
+      eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerObjectType,idf->iddObject().name());
+      eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName,idf->name().get());
+    }
+  } else {
+    createdAvailabilityManagerScheduled();
   } 
 
   // Design Supply Air Flow Rate
