@@ -800,9 +800,6 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
   }
   commentText->setObjectName("IDFcomment");
 
-  label->setFocusPolicy(Qt::ClickFocus);
-  label->setFocusProxy( text );
-
   vbox->addWidget(commentText);
 
   if(exists)

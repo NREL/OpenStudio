@@ -1,4 +1,4 @@
-!IDD_Version 1.7.5
+!IDD_Version 1.8.2
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -9721,6 +9721,269 @@ OS:AvailabilityManager:NightCycle,
        \note manager assignment list, the Control Zone Name should be the name of the zone in which the
        \note zone component is.
 
+OS:AvailabilityManager:OptimumStart,
+       \memo Determines the optimal start of HVAC systems before occupancy.
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference SystemAvailabilityManagers
+  A3 , \field Applicability Schedule
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+  A4 , \field Fan Schedule
+       \type object-list
+       \object-list ScheduleNames
+  A5 , \field Control Type
+       \type choice
+       \key StayOff
+      \key ControlZone
+       \key MaximumofZoneList
+       \required-field
+  A6 , \field Control Zone
+       \type object-list
+       \object-list ThermalZoneNames
+  A7 , \field Zone List
+       \type object-list
+       \object-list ZoneListNames
+  N1 , \field Maximum Value for Optimum Start Time
+       \required-field
+       \units hr
+       \note this is the maximum number of hours that a system can start before occupancy
+  A8 , \field Control Algorithm
+       \type choice
+       \key ConstantTemperatureGradient
+       \key AdaptiveTemperatureGradient
+       \key AdaptiveASHRAE
+       \key ConstantStartTime
+       \required-field
+  N2,  \field Constant Temperature Gradient during Cooling
+       \units deltaC/hr
+       \type real
+       \required-field
+  N3,  \field Constant Temperature Gradient during Heating
+       \units deltaC/hr
+       \type real
+       \required-field
+  N4,  \field Initial Temperature Gradient during Cooling
+       \units deltaC/hr
+       \type real
+       \required-field
+  N5,  \field Initial Temperature Gradient during Heating
+       \units deltaC/hr
+       \type real
+       \required-field
+  N6,  \field Constant Start Time
+       \units hr
+       \type real
+       \note this is the number of hours before occupancy for a system
+       \required-field
+  N7;  \field Number of Previous Days
+       \type integer
+       \units days
+       \minimum 2
+       \maximum 5
+       \required-field
+       \note this is the number of days that their actual temperature
+       \note gradients will be used in the AdaptiveTemperatureGradient method
+
+OS:AvailabilityManager:DifferentialThermostat,
+       \memo Overrides fan/pump schedules depending on temperature difference between two nodes.
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference SystemAvailabilityManagers
+  A3 , \field Hot Node
+       \type object-list
+       \object-list Node
+  A4 , \field Cold Node
+       \type object-list
+       \object-list Node
+  N1 , \field Temperature Difference On Limit
+       \required-field
+       \type real
+       \units deltaC
+  N2 ; \field Temperature Difference Off Limit
+       \type real
+       \units deltaC
+       \required-field
+
+OS:AvailabilityManager:NightVentilation,
+       \memo depending on zone and outdoor conditions overrides fan schedule to do
+       \memo precooling with outdoor air
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference SystemAvailabilityManagers
+  A3 , \field Applicability Schedule
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+  A4 , \field Fan Schedule
+       \type object-list
+       \object-list ScheduleNames
+  A5 , \field Ventilation Temperature Schedule
+       \type object-list
+       \object-list ScheduleNames
+       \note One zone temperature must be above this scheduled temperature
+       \note for night ventilation to be enabled
+  N1 , \field Ventilation Temperature Difference
+       \units deltaC
+       \required-field
+       \note The outdoor air temperature minus the control zone temperature
+       \note must be greater than the ventilation delta T
+  N2 , \field Ventilation Temperature Low Limit
+       \units C
+       \required-field
+       \note Night ventilation is disabled if any conditioned zone served by
+       \note the system falls below this temperature
+  N3 , \field Night Venting Flow Fraction
+       \minimum 0.0
+       \required-field
+       \note the fraction (could be > 1) of the design system Flow Rate at which
+       \note night ventilation will be done
+  A6 ; \field Control Zone
+       \type object-list
+       \object-list ThermalZoneNames
+       \note When AvailabilityManager:NightVentilation is used in the zone component availability
+       \note manager assignment list, the Control Zone Name should be the name of the zone in which the
+       \note zone component is.
+
+OS:AvailabilityManager:HybridVentilation,
+       \min-fields 17
+       \memo Depending on zone and outdoor conditions overrides window/door opening controls
+       \memo to maximize natural ventilation and turn off an HVAC system when ventilation control
+       \memo conditions are met.
+       \memo This object (zone ventilation object name) has not been instrumented to work with
+       \memo global Zone or Zone List names option for Ventilation:DesignFlowRate.  In order to
+       \memo use, you must enter the single <Ventilation:DesignFlowRate> name in that
+       \memo field. If it is a part of a global ventilation assignment the name will be
+       \memo <Zone Name> <global Ventilation:DesignFlowRate> name.
+       \memo Currently, hybrid ventilation manager is restricted to one per zone. It can either be applied
+       \memo through the air loop or directly to the zone. If hybrid ventilation manager is applied to an
+       \memo air loop and one of the zones served by that air loop also has hybrid ventilation manager,
+       \memo then zone hybrid ventilation manager is disabled.
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference SystemAvailabilityManagers
+  A3 , \field Controlled Zone
+       \type object-list
+       \object-list ThermalZoneNames
+       \note the controlled zone name should be a zone where a thermostat or humidistat is located
+       \note served by an air primary loop.
+  A4 , \field Ventilation Control Mode Schedule
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+       \note The Ventilation control mode contains appropriate integer control types.
+       \note 0 - uncontrolled (Natural ventilation and HVAC system are controlled by themselves)
+       \note 1 = Temperature control
+       \note 2 = Enthalpy control
+       \note 3 = Dewpoint control
+       \note 4 = Outdoor ventilation air control
+  A5 , \field Use Weather File Rain Indicators
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+       \note If Yes, ventilation is shutoff when there is rain
+       \note If No, there is no rain control
+  N1 , \field Maximum Wind Speed
+       \type real
+       \units m/s
+       \minimum 0.0
+       \maximum 40.0
+       \required-field
+       \note this is the wind speed above which ventilation is shutoff
+  N2 , \field Minimum Outdoor Temperature
+       \note this is the outdoor temperature below which ventilation is shutoff
+       \units C
+       \type real
+       \minimum -100
+       \maximum 100
+       \required-field
+  N3 , \field Maximum Outdoor Temperature
+       \note this is the outdoor temperature above which ventilation is shutoff
+       \units C
+       \type real
+       \minimum -100
+       \maximum 100
+       \required-field
+  N4 , \field Minimum Outdoor Enthalpy
+       \note this is the outdoor Enthalpy below which ventilation is shutoff
+       \units J/kg
+       \type real
+       \minimum> 0.0
+       \maximum< 300000.0
+       \required-field
+  N5 , \field Maximum Outdoor Enthalpy
+       \note this is the outdoor Enthalpy above which ventilation is shutoff
+       \units J/kg
+       \type real
+       \minimum> 0
+       \maximum< 300000.0
+       \required-field
+  N6 , \field Minimum Outdoor Dewpoint
+       \note this is the outdoor temperature below which ventilation is shutoff
+       \units C
+       \type real
+       \minimum -100
+       \maximum 100
+       \required-field
+       \note Applicable only if Ventilation Control Mode = 3
+  N7 , \field Maximum Outdoor Dewpoint
+       \note this is the outdoor dewpoint above which ventilation is shutoff
+       \units C
+       \type real
+       \minimum -100
+       \maximum 100
+       \required-field
+       \note Applicable only if Ventilation Control Mode = 3
+  A6 , \field Minimum Outdoor Ventilation Air Schedule
+       \type object-list
+       \object-list ScheduleNames
+       \note Used only if Ventilation Control Mode = 4
+  A7 , \field Opening Factor Function of Wind Speed Curve
+       \type object-list
+       \object-list LinearOrQuadraticCurves
+       \object-list UniVariateTables
+       \note linear curve = a + b*WS
+       \note quadratic curve = a + b*WS + c*WS**2
+       \note WS = wind speed (m/s)
+  A8 , \field AirflowNetwork Control Type Schedule
+       \type object-list
+       \object-list ScheduleNames
+       \note The schedule is used to incorporate operation of AirflowNetwork large opening
+       \note objects and HVAC system operation.
+  A9 , \field Simple Airflow Control Type Schedule
+       \type object-list
+       \object-list ScheduleNames
+       \note The schedule is used to incorporate operation of simple airflow objects and HVAC
+       \note system operation.
+       \note The simple airflow objects are Ventilation and Mixing only
+  A10; \field ZoneVentilation Object
+       \note This field has not been instrumented to work with
+       \note global Zone or Zone List names option for Ventilation:DesignFlowRate.  In order to
+       \note use, you must enter the single <Ventilation:DesignFlowRate> name in this field.
+       \note If it is a part of a global ventilation assignment the name will be
+       \note <Zone Name> <global Ventilation:DesignFlowRate> name.
+       \type object-list
+       \object-list VentilationNames
+       \note The other ZoneVentilation:* and ZoneMixing objects controlled in the same AirLoopHVAC
+       \note will work in the same way as this ventilation object.
+
 OS:Boiler:HotWater,
        \memo This boiler model is an adaptation of the empirical model from the Building
        \memo Loads and System Thermodynamics (BLAST) program.  Boiler performance
@@ -16297,7 +16560,7 @@ OS:HeatExchanger:FluidToFluid,
         \required-field
    N3 , \field Heat Exchanger U-Factor Times Area Value
         \type real
-        \units W/k
+        \units W/K
         \minimum> 0.0
         \autosizable
         \required-field
@@ -19174,8 +19437,8 @@ OS:ZoneHVAC:UnitHeater,
   A6 , \field Supply Air Fan Name
        \required-field
        \type object-list
-       \object-list FansCVandVAV
-       \note Allowable fan types are Fan:ConstantVolume and
+       \object-list FansCVandOnOffandVAV
+       \note Allowable fan types are Fan:ConstantVolume, Fan:OnOff and
        \note Fan:VariableVolume
   N1 , \field Maximum Supply Air Flow Rate
        \note Must be less than or equal to fan size.

@@ -392,6 +392,32 @@ class AirTerminalSingleDuctVAVReheatInspectorView : public AirTerminalInspectorV
   void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP) override;
 };
 
+class AirTerminalSingleDuctParallelPIUReheatInspectorView : public AirTerminalInspectorView
+{
+  Q_OBJECT;
+
+  public:
+
+  AirTerminalSingleDuctParallelPIUReheatInspectorView(QWidget * parent = nullptr);
+
+  virtual ~AirTerminalSingleDuctParallelPIUReheatInspectorView() {}
+
+  void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP) override;
+};
+
+class AirTerminalSingleDuctSeriesPIUReheatInspectorView : public AirTerminalInspectorView
+{
+  Q_OBJECT;
+
+  public:
+
+  AirTerminalSingleDuctSeriesPIUReheatInspectorView(QWidget * parent = nullptr);
+
+  virtual ~AirTerminalSingleDuctSeriesPIUReheatInspectorView() {}
+
+  void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP) override;
+};
+
 class AirTerminalSingleDuctVAVHeatAndCoolReheatInspectorView : public AirTerminalInspectorView
 {
   Q_OBJECT;

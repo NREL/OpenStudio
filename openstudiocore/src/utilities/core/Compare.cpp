@@ -69,7 +69,7 @@ bool IstringPairCompare::operator()(const std::pair<std::string, std::string>& x
 VersionString::VersionString(const std::string& version)
   : m_str(version)
 {
-  boost::regex versionRegex("(\\d+)\\.(\\d+)(?:\\.(\\d+))?(?:\\.(\\d+))?");
+  boost::regex versionRegex("(\\d+)[\\.-](\\d+)(?:[\\.-](\\d+))?(?:[\\.-](\\d+))?");
   boost::smatch m;
   if (boost::regex_match(version,m,versionRegex)) {
     m_major = boost::lexical_cast<int>(std::string(m[1].first,m[1].second));

@@ -94,6 +94,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.5.4")] = &VersionTranslator::update_1_5_3_to_1_5_4;
   m_updateMethods[VersionString("1.7.2")] = &VersionTranslator::update_1_7_1_to_1_7_2;
   m_updateMethods[VersionString("1.7.5")] = &VersionTranslator::update_1_7_4_to_1_7_5;
+  m_updateMethods[VersionString("1.8.2")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -174,6 +175,9 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.7.2"));
   m_startVersions.push_back(VersionString("1.7.3"));
   m_startVersions.push_back(VersionString("1.7.4"));
+  m_startVersions.push_back(VersionString("1.7.5"));
+  m_startVersions.push_back(VersionString("1.8.0"));
+  m_startVersions.push_back(VersionString("1.8.1"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 

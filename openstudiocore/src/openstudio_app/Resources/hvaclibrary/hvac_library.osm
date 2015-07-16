@@ -1,7 +1,7 @@
 
 OS:Version,
-  {910f29a7-a0d6-49ba-adfd-413913c73fc0}, !- Handle
-  1.7.5;                                  !- Version Identifier
+  {48b53559-667b-4351-a0af-8dceb808653b}, !- Handle
+  1.8.0;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -527,6 +527,15 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
   ,                                       !- Effectiveness Flow Ratio Modifier Curve Name
   0.1;                                    !- Water Pump Power Sizing Factor {W/(m3/s)}
 
+OS:AirTerminal:SingleDuct:VAV:HeatAndCool:NoReheat,
+  {bf4b3859-f66c-48ce-b600-88c7d76d5d5e}, !- Handle
+  VAV Heat And Cool No Reheat, !- Name
+  ,                                       !- Availability Schedule
+  ,                                       !- Air Outlet
+  ,                                       !- Air Inlet
+  autosize,                               !- Maximum Air Flow Rate {m3/s}
+  0;                                      !- Zone Minimum Air Flow Fraction
+
 OS:AirTerminal:SingleDuct:InletSideMixer,
   {2894623e-fbd9-4162-bf36-c674ee542793}, !- Handle
   Inlet Side Mixer,                       !- Name
@@ -1016,7 +1025,7 @@ OS:Connection,
 
 OS:Chiller:Absorption,
   {0a8258c1-6a93-4f16-bc87-c16aedbb5ca5}, !- Handle
-  Absorption Chiller,                   !- Name
+  Absorption Chiller,                     !- Name
   autosize,                               !- Nominal Capacity {W}
   autosize,                               !- Nominal Pumping Power {W}
   ,                                       !- Chilled Water Inlet Node Name
@@ -1046,7 +1055,7 @@ OS:Chiller:Absorption,
 
 OS:Chiller:Absorption:Indirect,
   {6d250ddd-9660-437a-906e-9356d8369b69}, !- Handle
-  Indirect Absorption Chiller,          !- Name
+  Indirect Absorption Chiller,            !- Name
   autosize,                               !- Nominal Capacity {W}
   autosize,                               !- Nominal Pumping Power {W}
   ,                                       !- Chilled Water Inlet Node Name
@@ -1080,7 +1089,7 @@ OS:Chiller:Absorption:Indirect,
 
 OS:Curve:Cubic,
   {850a5971-0a93-4efa-8174-0bc98698bce5}, !- Handle
-  Ind Abs Chiller Generator Heat Input Func of PLR,                          !- Name
+  Ind Abs Chiller Generator Heat Input Func of PLR, !- Name
   0.18892,                                !- Coefficient1 Constant
   0.968044,                               !- Coefficient2 x
   1.119202,                               !- Coefficient3 x**2
@@ -1090,7 +1099,7 @@ OS:Curve:Cubic,
 
 OS:Curve:Quadratic,
   {786ab5c0-a447-4696-8189-72f9ebaddc60}, !- Handle
-  Ind Abs Chiller Pump Elec Input Func of PLR,                      !- Name
+  Ind Abs Chiller Pump Elec Input Func of PLR, !- Name
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -1099,7 +1108,7 @@ OS:Curve:Quadratic,
 
 OS:Curve:Cubic,
   {dce1b9c5-f1af-44cd-abbc-b6b14482d5f4}, !- Handle
-  Ind Abs Chiller Cap Func of Cond Temp,                          !- Name
+  Ind Abs Chiller Cap Func of Cond Temp,  !- Name
   0.245507,                               !- Coefficient1 Constant
   0.023614,                               !- Coefficient2 x
   2.78e-05,                               !- Coefficient3 x**2
@@ -1109,7 +1118,7 @@ OS:Curve:Cubic,
 
 OS:Curve:Cubic,
   {5ddeaf9a-9a50-45f0-aa8a-5c176220373a}, !- Handle
-  Ind Abs Chiller Cap Func of Gen Temp,                          !- Name
+  Ind Abs Chiller Cap Func of Gen Temp,   !- Name
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -1119,7 +1128,7 @@ OS:Curve:Cubic,
 
 OS:Curve:Cubic,
   {185b6b07-fd12-4ea0-a3e1-fd43ab28223f}, !- Handle
-  Ind Abs Chiller Cap Func Chilled Water Temp,                          !- Name
+  Ind Abs Chiller Cap Func Chilled Water Temp, !- Name
   0.690571,                               !- Coefficient1 Constant
   0.065571,                               !- Coefficient2 x
   -0.00289,                               !- Coefficient3 x**2
@@ -1129,7 +1138,7 @@ OS:Curve:Cubic,
 
 OS:Curve:Cubic,
   {bd3e525e-e818-4526-b38e-07834a84abda}, !- Handle
-  Ind Abs Chiller Gen Heat Input Func of Cond Temp,                          !- Name
+  Ind Abs Chiller Gen Heat Input Func of Cond Temp, !- Name
   0.712019,                               !- Coefficient1 Constant
   -0.00478,                               !- Coefficient2 x
   0.000864,                               !- Coefficient3 x**2
@@ -1139,7 +1148,7 @@ OS:Curve:Cubic,
 
 OS:Curve:Cubic,
   {5332ab8e-39d3-48c9-985c-37e3c3773ac5}, !- Handle
-  Ind Abs Chiller Gen Heat Input Func of Chilled Water Temp,                          !- Name
+  Ind Abs Chiller Gen Heat Input Func of Chilled Water Temp, !- Name
   0.995571,                               !- Coefficient1 Constant
   0.046821,                               !- Coefficient2 x
   -0.01099,                               !- Coefficient3 x**2
@@ -3317,7 +3326,7 @@ OS:GroundHeatExchanger:Vertical,
 
 OS:GroundHeatExchanger:HorizontalTrench,
   {a169f9ac-6a1c-47cd-bd5d-b3736e7279b3}, !- Handle
-  Horizontal Ground HX, !- Name
+  Horizontal Ground HX,                   !- Name
   ,                                       !- Inlet Node Name
   ,                                       !- Outlet Node Name
   0.004,                                  !- Design Flow Rate {m3/s}
@@ -3600,12 +3609,26 @@ OS:Refrigeration:Case,
   {57b587d9-11b3-4700-a362-25f9ac3035d5}, !- Case Defrost Schedule Name
   {57b587d9-11b3-4700-a362-25f9ac3035d5}, !- Case Defrost Drip-Down Schedule Name
   None,                                   !- Defrost Energy Correction Curve Type
-  ,                                       !- Defrost Energy Correction Curve Name
+  {dde2f531-75bc-4d59-94cd-01bf3bf4bcc7}, !- Defrost Energy Correction Curve Name
   0,                                      !- Under Case HVAC Return Air Fraction
   ,                                       !- Refrigerated Case Restocking Schedule Name
   ,                                       !- Case Credit Fraction Schedule Name
   -5.56,                                  !- Design Evaporator Temperature or Brine Inlet Temperature {C}
   ;                                       !- Average Refrigerant Charge Inventory {kg/m}
+
+OS:Curve:Cubic,
+  {dde2f531-75bc-4d59-94cd-01bf3bf4bcc7}, !- Handle
+  Refrigerated Case Defrost Modifier Curve, !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1,                                      !- Maximum Value of x {BasedOnField A2}
+  ,                                       !- Minimum Curve Output {BasedOnField A3}
+  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  ,                                       !- Input Unit Type for X
+  ;                                       !- Output Unit Type
 
 OS:Curve:Cubic,
   {012a63c6-2590-4f3d-a487-c600bf72ad75}, !- Handle
@@ -5371,7 +5394,7 @@ OS:Curve:Quadratic,
 
 OS:Curve:Biquadratic,
   {3c27b659-f47b-4b69-ae7c-63e879a6d465}, !- Handle
-  Curve Biquadratic 7,                    !- Name
+  Curve Biquadratic 36,                   !- Name
   0.297145,                               !- Coefficient1 Constant
   0.0430933,                              !- Coefficient2 x
   -0.000748766,                           !- Coefficient3 x**2
@@ -5997,7 +6020,7 @@ OS:Curve:Biquadratic,
 
 OS:Curve:Quadratic,
   {6b131ebb-bb01-4447-93a8-295d49a0210e}, !- Handle
-  Curve Quadratic 10,                     !- Name
+  Curve Quadratic 46,                     !- Name
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -6069,7 +6092,7 @@ OS:AirLoopHVAC:UnitarySystem,
   ,                                       !- Air Outlet Node Name
   {057b7168-bdc2-418a-9961-3bfe683a200e}, !- Supply Fan Name
   BlowThrough,                            !- Fan Placement
-  ,                                       !- Supply Air Fan Operating Mode Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Supply Air Fan Operating Mode Schedule Name
   {c2a61eb2-233b-451f-a63d-a7a583a9ac1d}, !- Heating Coil Name
   1,                                      !- DX Heating Coil Sizing Ratio
   {0c02083a-d668-4ba4-a8d2-8b99f73f4760}, !- Cooling Coil Name
@@ -6195,7 +6218,7 @@ OS:AirLoopHVAC:UnitarySystem,
   ,                                       !- Air Outlet Node Name
   {0c016d27-85cb-4254-8b85-9a16c4586de5}, !- Supply Fan Name
   BlowThrough,                            !- Fan Placement
-  ,                                       !- Supply Air Fan Operating Mode Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Supply Air Fan Operating Mode Schedule Name
   {45e57ffa-e9d4-43c4-ad4e-085192e249e1}, !- Heating Coil Name
   1,                                      !- DX Heating Coil Sizing Ratio
   {806192a5-97de-4a2e-bd59-9ce40853770a}, !- Cooling Coil Name
@@ -7046,7 +7069,7 @@ OS:HeatExchanger:FluidToFluid,
   ,                                       !- Loop Supply Side Outlet Node
   autosize,                               !- Loop Supply Side Design Flow Rate {m3/s}
   Ideal,                                  !- Heat Exchange Model Type
-  autosize,                               !- Heat Exchanger U-Factor Times Area Value {W/k}
+  autosize,                               !- Heat Exchanger U-Factor Times Area Value {W/K}
   UncontrolledOn,                         !- Control Type
   ,                                       !- Heat Exchanger Setpoint Node Name
   0.01,                                   !- Minimum Temperature Difference to Activate Heat Exchanger {deltaC}
@@ -8546,7 +8569,7 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
 
 OS:TemperingValve,
   {4985fb51-95da-475b-89c4-ffaa863320b9}, !- Handle
-  Tempering Valve,                      !- Name
+  Tempering Valve,                        !- Name
   ,                                       !- Inlet Node Name
   ,                                       !- Outlet Node Name
   ,                                       !- Stream 2 Source Node
@@ -8570,11 +8593,12 @@ OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode,
   ,                                       !- Supply Water Storage Tank
   ,                                       !- Condensate Collection Water Storage Tank
   0,                                      !- Basin Heater Capacity {W/K}
-  2;                                      !- Basin Heater Setpoint Temperature {C}
+  2,                                      !- Basin Heater Setpoint Temperature {C}
+  ;                                       !- Basin Heater Operating Schedule
 
 OS:Curve:Biquadratic,
   {c6ad1cd4-5f48-4e3d-85cf-ee56e48fcae0}, !- Handle
-  Curve Biquadratic 1,                    !- Name
+  Curve Biquadratic 38,                   !- Name
   1.067939449,                            !- Coefficient1 Constant
   -0.031261829,                           !- Coefficient2 x
   0.001974308,                            !- Coefficient3 x**2
@@ -8588,7 +8612,7 @@ OS:Curve:Biquadratic,
 
 OS:Curve:Quadratic,
   {dcc0bff7-3579-49b1-86c0-afe368574723}, !- Handle
-  Curve Quadratic 1,                      !- Name
+  Curve Quadratic 53,                     !- Name
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -8597,7 +8621,7 @@ OS:Curve:Quadratic,
 
 OS:Curve:Biquadratic,
   {e8476be3-171c-4cd2-baac-e9c1f4bbdd89}, !- Handle
-  Curve Biquadratic 2,                    !- Name
+  Curve Biquadratic 41,                   !- Name
   0.174059889,                            !- Coefficient1 Constant
   0.022281508,                            !- Coefficient2 x
   -0.000134077,                           !- Coefficient3 x**2
@@ -8611,7 +8635,7 @@ OS:Curve:Biquadratic,
 
 OS:Curve:Quadratic,
   {1fd1641b-70c2-43a5-8fe5-4bb2d64133e0}, !- Handle
-  Curve Quadratic 2,                      !- Name
+  Curve Quadratic 44,                     !- Name
   1.1552,                                 !- Coefficient1 Constant
   -0.1808,                                !- Coefficient2 x
   0.0256,                                 !- Coefficient3 x**2
@@ -8620,7 +8644,7 @@ OS:Curve:Quadratic,
 
 OS:Curve:Quadratic,
   {c5ac203b-4e0a-4a99-b4e4-87c06dafb41a}, !- Handle
-  Curve Quadratic 3,                      !- Name
+  Curve Quadratic 52,                     !- Name
   0.85,                                   !- Coefficient1 Constant
   0.15,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -8648,11 +8672,13 @@ OS:CoilPerformance:DX:Cooling,
   AirCooled,                              !- Condenser Type
   0.9,                                    !- Evaporative Condenser Effectiveness {dimensionless}
   autosize,                               !- Evaporative Condenser Air Flow Rate {m3/s}
-  autosize;                               !- Evaporative Condenser Pump Rated Power Consumption {W}
+  autosize,                               !- Evaporative Condenser Pump Rated Power Consumption {W}
+  ,                                       !- Sensible Heat Ratio Function of Temperature Curve
+  ;                                       !- Sensible Heat Ratio Function of Flow Fraction Curve
 
 OS:Curve:Biquadratic,
   {ffd0f189-e645-4ab1-87dd-820fb9915e2d}, !- Handle
-  Curve Biquadratic 3,                    !- Name
+  Curve Biquadratic 42,                   !- Name
   1.067939449,                            !- Coefficient1 Constant
   -0.031261829,                           !- Coefficient2 x
   0.001974308,                            !- Coefficient3 x**2
@@ -8666,7 +8692,7 @@ OS:Curve:Biquadratic,
 
 OS:Curve:Quadratic,
   {a3bc1afd-70d1-49fb-a89e-811a28ee58ce}, !- Handle
-  Curve Quadratic 4,                      !- Name
+  Curve Quadratic 51,                     !- Name
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -8675,7 +8701,7 @@ OS:Curve:Quadratic,
 
 OS:Curve:Biquadratic,
   {dcfaf23f-7d1c-4023-a03f-7173ac071bc5}, !- Handle
-  Curve Biquadratic 4,                    !- Name
+  Curve Biquadratic 40,                   !- Name
   0.174059889,                            !- Coefficient1 Constant
   0.022281508,                            !- Coefficient2 x
   -0.000134077,                           !- Coefficient3 x**2
@@ -8689,7 +8715,7 @@ OS:Curve:Biquadratic,
 
 OS:Curve:Quadratic,
   {53e51181-cf5f-44e6-b6e9-ee73f7f2579c}, !- Handle
-  Curve Quadratic 5,                      !- Name
+  Curve Quadratic 45,                     !- Name
   1.1552,                                 !- Coefficient1 Constant
   -0.1808,                                !- Coefficient2 x
   0.0256,                                 !- Coefficient3 x**2
@@ -8698,7 +8724,7 @@ OS:Curve:Quadratic,
 
 OS:Curve:Quadratic,
   {787502f4-370f-4750-b69e-027561f4294a}, !- Handle
-  Curve Quadratic 6,                      !- Name
+  Curve Quadratic 49,                     !- Name
   0.85,                                   !- Coefficient1 Constant
   0.15,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -8726,11 +8752,13 @@ OS:CoilPerformance:DX:Cooling,
   AirCooled,                              !- Condenser Type
   0.9,                                    !- Evaporative Condenser Effectiveness {dimensionless}
   autosize,                               !- Evaporative Condenser Air Flow Rate {m3/s}
-  autosize;                               !- Evaporative Condenser Pump Rated Power Consumption {W}
+  autosize,                               !- Evaporative Condenser Pump Rated Power Consumption {W}
+  ,                                       !- Sensible Heat Ratio Function of Temperature Curve
+  ;                                       !- Sensible Heat Ratio Function of Flow Fraction Curve
 
 OS:Curve:Biquadratic,
   {378f4664-cfe7-49b5-8741-16146c92756d}, !- Handle
-  Curve Biquadratic 5,                    !- Name
+  Curve Biquadratic 35,                   !- Name
   0.596779741,                            !- Coefficient1 Constant
   0.034216637,                            !- Coefficient2 x
   0.000113924,                            !- Coefficient3 x**2
@@ -8744,7 +8772,7 @@ OS:Curve:Biquadratic,
 
 OS:Curve:Quadratic,
   {75dc57c4-f87a-4fff-8e2b-58bfbcf3c2d4}, !- Handle
-  Curve Quadratic 7,                      !- Name
+  Curve Quadratic 48,                     !- Name
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -8753,7 +8781,7 @@ OS:Curve:Quadratic,
 
 OS:Curve:Biquadratic,
   {45338277-1f02-4238-b60b-0a09378e37cf}, !- Handle
-  Curve Biquadratic 6,                    !- Name
+  Curve Biquadratic 37,                   !- Name
   0.435347586,                            !- Coefficient1 Constant
   0.004015641,                            !- Coefficient2 x
   0.000604235,                            !- Coefficient3 x**2
@@ -8767,7 +8795,7 @@ OS:Curve:Biquadratic,
 
 OS:Curve:Quadratic,
   {a114056d-9e83-40a9-9ea0-34e3b51f50a0}, !- Handle
-  Curve Quadratic 8,                      !- Name
+  Curve Quadratic 50,                     !- Name
   1.1552,                                 !- Coefficient1 Constant
   -0.1808,                                !- Coefficient2 x
   0.0256,                                 !- Coefficient3 x**2
@@ -8776,7 +8804,7 @@ OS:Curve:Quadratic,
 
 OS:Curve:Quadratic,
   {6f52d588-f4ac-4af7-9a25-e06658a4a535}, !- Handle
-  Curve Quadratic 9,                      !- Name
+  Curve Quadratic 47,                     !- Name
   0.85,                                   !- Coefficient1 Constant
   0.15,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -8804,7 +8832,9 @@ OS:CoilPerformance:DX:Cooling,
   AirCooled,                              !- Condenser Type
   0.9,                                    !- Evaporative Condenser Effectiveness {dimensionless}
   autosize,                               !- Evaporative Condenser Air Flow Rate {m3/s}
-  autosize;                               !- Evaporative Condenser Pump Rated Power Consumption {W}
+  autosize,                               !- Evaporative Condenser Pump Rated Power Consumption {W}
+  ,                                       !- Sensible Heat Ratio Function of Temperature Curve
+  ;                                       !- Sensible Heat Ratio Function of Flow Fraction Curve
 
 OS:Curve:Biquadratic,
   {107665fd-578f-474d-8841-cbe3ce856cf7}, !- Handle
@@ -8831,7 +8861,7 @@ OS:Curve:Quadratic,
 
 OS:Curve:Biquadratic,
   {ceeb5418-1f11-4489-b549-a321e748eb8c}, !- Handle
-  Curve Biquadratic 8,                    !- Name
+  Curve Biquadratic 39,                   !- Name
   0.435347586,                            !- Coefficient1 Constant
   0.004015641,                            !- Coefficient2 x
   0.000604235,                            !- Coefficient3 x**2
@@ -8845,7 +8875,7 @@ OS:Curve:Biquadratic,
 
 OS:Curve:Quadratic,
   {e3511949-611a-4041-b42c-abd4e2e8c9c4}, !- Handle
-  Curve Quadratic 11,                     !- Name
+  Curve Quadratic 55,                     !- Name
   1.1552,                                 !- Coefficient1 Constant
   -0.1808,                                !- Coefficient2 x
   0.0256,                                 !- Coefficient3 x**2
@@ -8854,7 +8884,7 @@ OS:Curve:Quadratic,
 
 OS:Curve:Quadratic,
   {e30298f7-b1b3-4db1-a07f-00beeef9a253}, !- Handle
-  Curve Quadratic 12,                     !- Name
+  Curve Quadratic 54,                     !- Name
   0.85,                                   !- Coefficient1 Constant
   0.15,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -8882,11 +8912,13 @@ OS:CoilPerformance:DX:Cooling,
   AirCooled,                              !- Condenser Type
   0.9,                                    !- Evaporative Condenser Effectiveness {dimensionless}
   autosize,                               !- Evaporative Condenser Air Flow Rate {m3/s}
-  autosize;                               !- Evaporative Condenser Pump Rated Power Consumption {W}
+  autosize,                               !- Evaporative Condenser Pump Rated Power Consumption {W}
+  ,                                       !- Sensible Heat Ratio Function of Temperature Curve
+  ;                                       !- Sensible Heat Ratio Function of Flow Fraction Curve
 
 OS:ThermalStorage:Ice:Detailed,
   {834d71fc-cc98-4f8d-acc7-774664f85bb1}, !- Handle
-  Ice Storage,         !- Name
+  Ice Storage,                            !- Name
   ,                                       !- Availability Schedule
   0.5,                                    !- Capacity {GJ}
   ,                                       !- Inlet Node Name
@@ -8902,7 +8934,7 @@ OS:ThermalStorage:Ice:Detailed,
 
 OS:Curve:QuadraticLinear,
   {9395922f-513b-43a9-8024-dcba3ca72a7d}, !- Handle
-  Ice Storage Discharge Curve,               !- Name
+  Ice Storage Discharge Curve,            !- Name
   0,                                      !- Coefficient1 Constant
   0.09,                                   !- Coefficient2 x
   -0.15,                                  !- Coefficient3 x**2
@@ -8927,3 +8959,4 @@ OS:Curve:QuadraticLinear,
   1,                                      !- Maximum Value of x {BasedOnField A2}
   0,                                      !- Minimum Value of y {BasedOnField A3}
   9.9;                                    !- Maximum Value of y {BasedOnField A3}
+
