@@ -12,21 +12,6 @@
     <rule IddField="Outlet Node" Access="HIDDEN"/>
     <rule IddField="Induced Air Outlet Node" Access="HIDDEN"/>
   </POLICY>
-  <POLICY IddObjectType="OS_SetpointManager_SingleZone_Humidity_Minimum">
-    <rule IddField="Control Variable" Access="HIDDEN"/>
-    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
-  </POLICY>
-  <POLICY IddObjectType="OS_SetpointManager_MultiZone_Humidity_Minimum">
-    <rule IddField="Control Variable" Access="HIDDEN"/>
-    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
-  </POLICY>
-  <POLICY IddObjectType="OS_SetpointManager_MultiZone_MinimumHumidity_Average">
-    <rule IddField="Control Variable" Access="HIDDEN"/>
-    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
-  </POLICY>
-  <POLICY IddObjectType="OS_SetpointManager_FollowOutdoorAirTemperature">
-    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
-  </POLICY>
   <POLICY IddObjectType="OS_CoolingTower_SingleSpeed">
     <rule IddField="Water Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Water Outlet Node Name" Access="HIDDEN"/>
@@ -194,16 +179,74 @@
     <rule IddField="Outdoor Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Supply Water Storage Tank Name" Access="HIDDEN"/>
   </POLICY>
-  <POLICY IddObjectType="OS_SetpointManager_SingleZone_Reheat">
+  <POLICY IddObjectType="OS_SetpointManager_Coldest">
     <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
   </POLICY>
-  <POLICY IddObjectType="OS_SetpointManager_Scheduled">
+  <POLICY IddObjectType="OS_SetpointManager_FollowGroundTemperature">
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_FollowOutdoorAirTemperature">
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_FollowSystemNodeTemperature">
     <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_SetpointManager_MixedAir">
     <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_MultiZone_Cooling_Average">
+    <rule IddField="Control Variable" Access="HIDDEN"/>
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_MultiZone_Heating_Average">
+    <rule IddField="Control Variable" Access="HIDDEN"/>
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_MultiZone_Humidity_Maximum">
+    <rule IddField="Control Variable" Access="HIDDEN"/>
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_MultiZone_Humidity_Minimum">
+    <rule IddField="Control Variable" Access="HIDDEN"/>
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_MultiZone_MaximumHumidity_Average">
+    <rule IddField="Control Variable" Access="HIDDEN"/>
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_MultiZone_MinimumHumidity_Average">
+    <rule IddField="Control Variable" Access="HIDDEN"/>
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_OutdoorAirPretreat">
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_SetpointManager_OutdoorAirReset">
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_Scheduled">
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_Scheduled_DualSetpoint">
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_SingleZone_Humidity_Maximum">
+    <rule IddField="Control Variable" Access="HIDDEN"/>
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_SingleZone_Humidity_Minimum">
+    <rule IddField="Control Variable" Access="HIDDEN"/>
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_SingleZone_OneStageCooling">
+    <rule IddField="Control Variable" Access="HIDDEN"/>
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_SingleZone_OneStageHeating">
+    <rule IddField="Control Variable" Access="HIDDEN"/>
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_SingleZone_Reheat">
     <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_SetpointManager_Warmest">

@@ -1543,22 +1543,82 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateScheduleVariableInterval(schedule);
       break;
     }
+  case  openstudio::IddObjectType::OS_SetpointManager_Coldest :
+    {
+      model::SetpointManagerColdest spm = modelObject.cast<SetpointManagerColdest>();
+      retVal = translateSetpointManagerColdest(spm);
+      break;
+    }
+  case  openstudio::IddObjectType::OS_SetpointManager_FollowGroundTemperature :
+    {
+      model::SetpointManagerFollowGroundTemperature spm = modelObject.cast<SetpointManagerFollowGroundTemperature>();
+      retVal = translateSetpointManagerFollowGroundTemperature(spm);
+      break;
+    }
   case  openstudio::IddObjectType::OS_SetpointManager_FollowOutdoorAirTemperature :
     {
       model::SetpointManagerFollowOutdoorAirTemperature spm = modelObject.cast<SetpointManagerFollowOutdoorAirTemperature>();
       retVal = translateSetpointManagerFollowOutdoorAirTemperature(spm);
       break;
     }
-  case  openstudio::IddObjectType::OS_SetpointManager_SingleZone_Humidity_Minimum :
+  case  openstudio::IddObjectType::OS_SetpointManager_FollowSystemNodeTemperature :
     {
-      model::SetpointManagerSingleZoneHumidityMinimum spm = modelObject.cast<SetpointManagerSingleZoneHumidityMinimum>();
-      retVal = translateSetpointManagerSingleZoneHumidityMinimum(spm);
+      model::SetpointManagerFollowSystemNodeTemperature spm = modelObject.cast<SetpointManagerFollowSystemNodeTemperature>();
+      retVal = translateSetpointManagerFollowSystemNodeTemperature(spm);
       break;
     }
-  case  openstudio::IddObjectType::OS_SetpointManager_SingleZone_Reheat :
+  case  openstudio::IddObjectType::OS_SetpointManager_MixedAir :
     {
-      model::SetpointManagerSingleZoneReheat spm = modelObject.cast<SetpointManagerSingleZoneReheat>();
-      retVal = translateSetpointManagerSingleZoneReheat(spm);
+      model::SetpointManagerMixedAir spm = modelObject.cast<SetpointManagerMixedAir>();
+      retVal = translateSetpointManagerMixedAir(spm);
+      break;
+    }
+  case  openstudio::IddObjectType::OS_SetpointManager_MultiZone_Cooling_Average :
+    {
+      model::SetpointManagerMultiZoneCoolingAverage spm = modelObject.cast<SetpointManagerMultiZoneCoolingAverage>();
+      retVal = translateSetpointManagerMultiZoneCoolingAverage(spm);
+      break;
+    }
+  case  openstudio::IddObjectType::OS_SetpointManager_MultiZone_Heating_Average :
+    {
+      model::SetpointManagerMultiZoneHeatingAverage spm = modelObject.cast<SetpointManagerMultiZoneHeatingAverage>();
+      retVal = translateSetpointManagerMultiZoneHeatingAverage(spm);
+      break;
+    }
+  case  openstudio::IddObjectType::OS_SetpointManager_MultiZone_Humidity_Maximum :
+    {
+      model::SetpointManagerMultiZoneHumidityMaximum spm = modelObject.cast<SetpointManagerMultiZoneHumidityMaximum>();
+      retVal = translateSetpointManagerMultiZoneHumidityMaximum(spm);
+      break;
+    }
+  case  openstudio::IddObjectType::OS_SetpointManager_MultiZone_Humidity_Minimum :
+    {
+      model::SetpointManagerMultiZoneHumidityMinimum spm = modelObject.cast<SetpointManagerMultiZoneHumidityMinimum>();
+      retVal = translateSetpointManagerMultiZoneHumidityMinimum(spm);
+      break;
+    }
+  case  openstudio::IddObjectType::OS_SetpointManager_MultiZone_MaximumHumidity_Average :
+    {
+      model::SetpointManagerMultiZoneMaximumHumidityAverage spm = modelObject.cast<SetpointManagerMultiZoneMaximumHumidityAverage>();
+      retVal = translateSetpointManagerMultiZoneMaximumHumidityAverage(spm);
+      break;
+    }
+  case  openstudio::IddObjectType::OS_SetpointManager_MultiZone_MinimumHumidity_Average :
+    {
+      model::SetpointManagerMultiZoneMinimumHumidityAverage spm = modelObject.cast<SetpointManagerMultiZoneMinimumHumidityAverage>();
+      retVal = translateSetpointManagerMultiZoneMinimumHumidityAverage(spm);
+      break;
+    }
+  case  openstudio::IddObjectType::OS_SetpointManager_OutdoorAirPretreat :
+    {
+      model::SetpointManagerOutdoorAirPretreat spm = modelObject.cast<SetpointManagerOutdoorAirPretreat>();
+      retVal = translateSetpointManagerOutdoorAirPretreat(spm);
+      break;
+    }
+  case  openstudio::IddObjectType::OS_SetpointManager_OutdoorAirReset :
+    {
+      model::SetpointManagerOutdoorAirReset spm = modelObject.cast<SetpointManagerOutdoorAirReset>();
+      retVal = translateSetpointManagerOutdoorAirReset(spm);
       break;
     }
   case  openstudio::IddObjectType::OS_SetpointManager_Scheduled :
@@ -1573,34 +1633,34 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateSetpointManagerScheduledDualSetpoint(spm);
       break;
     }
-  case  openstudio::IddObjectType::OS_SetpointManager_MixedAir :
+  case  openstudio::IddObjectType::OS_SetpointManager_SingleZone_Humidity_Maximum :
     {
-      model::SetpointManagerMixedAir spm = modelObject.cast<SetpointManagerMixedAir>();
-      retVal = translateSetpointManagerMixedAir(spm);
+      model::SetpointManagerSingleZoneHumidityMaximum spm = modelObject.cast<SetpointManagerSingleZoneHumidityMaximum>();
+      retVal = translateSetpointManagerSingleZoneHumidityMaximum(spm);
       break;
     }
-  case  openstudio::IddObjectType::OS_SetpointManager_MultiZone_Humidity_Minimum :
+  case  openstudio::IddObjectType::OS_SetpointManager_SingleZone_Humidity_Minimum :
     {
-      model::SetpointManagerMultiZoneHumidityMinimum spm = modelObject.cast<SetpointManagerMultiZoneHumidityMinimum>();
-      retVal = translateSetpointManagerMultiZoneHumidityMinimum(spm);
+      model::SetpointManagerSingleZoneHumidityMinimum spm = modelObject.cast<SetpointManagerSingleZoneHumidityMinimum>();
+      retVal = translateSetpointManagerSingleZoneHumidityMinimum(spm);
       break;
     }
-  case  openstudio::IddObjectType::OS_SetpointManager_MultiZone_MinimumHumidity_Average :
+  case  openstudio::IddObjectType::OS_SetpointManager_SingleZone_OneStageCooling :
     {
-      model::SetpointManagerMultiZoneMinimumHumidityAverage spm = modelObject.cast<SetpointManagerMultiZoneMinimumHumidityAverage>();
-      retVal = translateSetpointManagerMultiZoneMinimumHumidityAverage(spm);
+      model::SetpointManagerSingleZoneOneStageCooling spm = modelObject.cast<SetpointManagerSingleZoneOneStageCooling>();
+      retVal = translateSetpointManagerSingleZoneOneStageCooling(spm);
       break;
     }
-  case  openstudio::IddObjectType::OS_SetpointManager_OutdoorAirReset :
+  case  openstudio::IddObjectType::OS_SetpointManager_SingleZone_OneStageHeating :
     {
-      model::SetpointManagerOutdoorAirReset spm = modelObject.cast<SetpointManagerOutdoorAirReset>();
-      retVal = translateSetpointManagerOutdoorAirReset(spm);
+      model::SetpointManagerSingleZoneOneStageHeating spm = modelObject.cast<SetpointManagerSingleZoneOneStageHeating>();
+      retVal = translateSetpointManagerSingleZoneOneStageHeating(spm);
       break;
     }
-  case  openstudio::IddObjectType::OS_SetpointManager_OutdoorAirPretreat :
+  case  openstudio::IddObjectType::OS_SetpointManager_SingleZone_Reheat :
     {
-      model::SetpointManagerOutdoorAirPretreat spm = modelObject.cast<SetpointManagerOutdoorAirPretreat>();
-      retVal = translateSetpointManagerOutdoorAirPretreat(spm);
+      model::SetpointManagerSingleZoneReheat spm = modelObject.cast<SetpointManagerSingleZoneReheat>();
+      retVal = translateSetpointManagerSingleZoneReheat(spm);
       break;
     }
   case  openstudio::IddObjectType::OS_SetpointManager_Warmest :
