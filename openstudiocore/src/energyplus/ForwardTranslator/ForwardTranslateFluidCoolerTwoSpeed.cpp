@@ -42,6 +42,14 @@ namespace energyplus {
   OptionalDouble d;
   OptionalModelObject mo;
 
+  if (modelObject.inletModelObject()) {
+    translateModelObject(modelObject.inletModelObject().get());
+  }
+
+  if (modelObject.outletModelObject()) {
+    translateModelObject(modelObject.outletModelObject().get());
+  }
+
   ///////////////////////////////////////////////////////////////////////////
   s = modelObject.name();
   if (s)
