@@ -7934,7 +7934,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
 
 OS:AirLoopHVAC,
        \memo Defines a central forced air system
-       \min-fields 11
+       \min-fields 12
   A1, \field Handle
        \type handle
        \required-field
