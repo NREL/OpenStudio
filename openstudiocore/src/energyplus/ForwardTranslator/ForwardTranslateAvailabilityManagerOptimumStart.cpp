@@ -68,17 +68,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerOptimu
 
   // FanScheduleName
   if( airLoopHVAC ) {
-    if( auto supplyFan = airLoopHVAC->supplyFan() ) {
-      boost::optional<model::Schedule> schedule;
-      if( auto fanConstantVolume = supplyFan->optionalCast<model::FanConstantVolume>() ) {
-        schedule = fanConstantVolume->availabilitySchedule();
-      } else if( auto fanVariableVolume = supplyFan->optionalCast<model::FanVariableVolume>() ) {
-        schedule = fanVariableVolume->availabilitySchedule();
-      }
-      if( schedule ) {
-        idfObject.setString(AvailabilityManager_OptimumStartFields::FanScheduleName,schedule->name().get());
-      }
-    }
+    // Fan schedules are set to match the availabilitySchedule in the translator
+    idfObject.setString(AvailabilityManager_OptimumStartFields::FanScheduleName,airLoopHVAC->availabilitySchedule().name().get());
   }
 
   // ControlType
@@ -92,12 +83,14 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerOptimu
   } else if( istringEqual(controlType,"MaximumofZoneList") ) {
     if( airLoopHVAC ) {
       IdfObject zoneList(IddObjectType::ZoneList);
-      zoneList.setName(modelObject.name().get() + " Control Zones List");
+      auto zoneListName = modelObject.name().get() + " Control Zones List";
+      zoneList.setName(zoneListName);
       m_idfObjects.push_back(zoneList);
       for( const auto & zone : airLoopHVAC->thermalZones() ) {
         auto eg = zoneList.pushExtensibleGroup();
         eg.setString(ZoneListExtensibleFields::ZoneName,zone.name().get());
       }
+      idfObject.setString(AvailabilityManager_OptimumStartFields::ZoneListName,zoneListName);
     }
   }
 

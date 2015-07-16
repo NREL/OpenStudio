@@ -19,8 +19,12 @@
 
 #include "AvailabilityManager.hpp"
 #include "AvailabilityManager_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
 #include "Loop.hpp"
 #include "Loop_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
@@ -55,7 +59,15 @@ AvailabilityManager_Impl::AvailabilityManager_Impl(const AvailabilityManager_Imp
 }
 
 boost::optional<Loop> AvailabilityManager_Impl::loop() const {
-  // TODO Make this do stuff
+  auto t_handle = handle();
+  for( const auto & loop : model().getModelObjects<AirLoopHVAC>() ) {
+    if( auto availabilityManager = loop.availabilityManager() ) {
+      if( availabilityManager->handle() == t_handle ) {
+        return loop;
+      }
+    }
+  }
+
   return boost::none;
 }
 

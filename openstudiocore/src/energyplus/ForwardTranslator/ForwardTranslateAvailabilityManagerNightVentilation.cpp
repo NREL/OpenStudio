@@ -67,19 +67,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightV
     idfObject.setString(AvailabilityManager_NightVentilationFields::ApplicabilityScheduleName,schedule.name().get());
   }
 
-  // FanScheduleName
   if( airLoopHVAC ) {
-    if( auto supplyFan = airLoopHVAC->supplyFan() ) {
-      boost::optional<model::Schedule> schedule;
-      if( auto fanConstantVolume = supplyFan->optionalCast<model::FanConstantVolume>() ) {
-        schedule = fanConstantVolume->availabilitySchedule();
-      } else if( auto fanVariableVolume = supplyFan->optionalCast<model::FanVariableVolume>() ) {
-        schedule = fanVariableVolume->availabilitySchedule();
-      }
-      if( schedule ) {
-        idfObject.setString(AvailabilityManager_NightVentilationFields::FanScheduleName,schedule->name().get());
-      }
-    }
+    // Fan schedules are set to match the availabilitySchedule in the translator
+    idfObject.setString(AvailabilityManager_NightVentilationFields::FanScheduleName,airLoopHVAC->availabilitySchedule().name().get());
   }
 
   // VentilationTemperatureScheduleName
@@ -108,6 +98,15 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightV
   // ControlZoneName
   if( auto zone = modelObject.controlZone() ) {
     idfObject.setString(AvailabilityManager_NightVentilationFields::ControlZoneName,zone->name().get());
+  } else {
+    if( airLoopHVAC ) {
+      auto zones = airLoopHVAC->thermalZones(); 
+      if( ! zones.empty() ) {
+        auto default_zone = zones.front();
+        LOG(Info,modelObject.briefDescription() << " is missing Control Zone Name, defaulting to " << default_zone.briefDescription() << ".");
+        idfObject.setString(AvailabilityManager_NightVentilationFields::ControlZoneName,default_zone.name().get());
+      }
+    }
   }
 
   return idfObject;
