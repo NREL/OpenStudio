@@ -70,13 +70,13 @@ class MODEL_API SetpointManagerColdest : public SetpointManager {
   /** @name Setters */
   //@{
 
-  bool setControlVariable(std::string controlVariable);
+  bool setControlVariable(const std::string& controlVariable);
 
   bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
 
   bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
 
-  bool setStrategy(std::string strategy);
+  bool setStrategy(const std::string& strategy);
 
   //@}
   /** @name Other */

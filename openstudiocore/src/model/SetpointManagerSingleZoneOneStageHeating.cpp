@@ -24,6 +24,8 @@
 #include "ThermalZone_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
+#include "Model.hpp"
+#include "AirLoopHVAC.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SetpointManager_SingleZone_OneStageHeating_FieldEnums.hxx>
@@ -67,6 +69,30 @@ namespace detail {
 
   IddObjectType SetpointManagerSingleZoneOneStageHeating_Impl::iddObjectType() const {
     return SetpointManagerSingleZoneOneStageHeating::iddObjectType();
+  }
+
+  bool SetpointManagerSingleZoneOneStageHeating_Impl::addToNode(Node & node)
+  {
+    bool added = SetpointManager_Impl::addToNode( node );
+    if( added ) {
+      if( boost::optional<AirLoopHVAC> _airLoop = node.airLoopHVAC() ) {
+        ModelObjectVector modelObjectVector = _airLoop->demandComponents(openstudio::IddObjectType::OS_ThermalZone);
+        if( !modelObjectVector.empty() ) {
+          ModelObject mo = modelObjectVector.front();
+          ThermalZone thermalZone = mo.cast<ThermalZone>();
+          this->setControlZone(thermalZone);
+        }
+        return true;
+      }
+    }
+    return false;
+  }
+
+  ModelObject SetpointManagerSingleZoneOneStageHeating_Impl::clone(Model model) const
+  {
+    SetpointManagerSingleZoneOneStageHeating clonedObject = SetpointManager_Impl::clone( model ).cast<SetpointManagerSingleZoneOneStageHeating>();
+    clonedObject.resetControlZone();
+    return clonedObject;
   }
 
   std::string SetpointManagerSingleZoneOneStageHeating_Impl::controlVariable() const {
@@ -121,7 +147,7 @@ namespace detail {
   }
 
   bool SetpointManagerSingleZoneOneStageHeating_Impl::setSetpointNode(const Node& node) {
-    bool result = setPointer(OS_SetpointManager_SingleZone_OneStageHeatingFields::SetpointNodeorNodeListName, node.get().handle());
+    bool result = setPointer(OS_SetpointManager_SingleZone_OneStageHeatingFields::SetpointNodeorNodeListName, node.handle());
     return result;
   }
 
@@ -137,14 +163,9 @@ SetpointManagerSingleZoneOneStageHeating::SetpointManagerSingleZoneOneStageHeati
 {
   OS_ASSERT(getImpl<detail::SetpointManagerSingleZoneOneStageHeating_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
-  // ok = setControlVariable();
-  OS_ASSERT(ok);
-  // setHeatingStageOnSupplyAirSetpointTemperature();
-  // setHeatingStageOffSupplyAirSetpointTemperature();
+  setControlVariable("Temperature");
+  setHeatingStageOnSupplyAirSetpointTemperature(99);
+  setHeatingStageOffSupplyAirSetpointTemperature(-99);
 }
 
 IddObjectType SetpointManagerSingleZoneOneStageHeating::iddObjectType() {

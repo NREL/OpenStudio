@@ -24,6 +24,8 @@
 #include "ThermalZone_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
+#include "Model.hpp"
+#include "AirLoopHVAC.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SetpointManager_SingleZone_OneStageCooling_FieldEnums.hxx>
@@ -67,6 +69,30 @@ namespace detail {
 
   IddObjectType SetpointManagerSingleZoneOneStageCooling_Impl::iddObjectType() const {
     return SetpointManagerSingleZoneOneStageCooling::iddObjectType();
+  }
+
+  bool SetpointManagerSingleZoneOneStageCooling_Impl::addToNode(Node & node)
+  {
+    bool added = SetpointManager_Impl::addToNode( node );
+    if( added ) {
+      if( boost::optional<AirLoopHVAC> _airLoop = node.airLoopHVAC() ) {
+        ModelObjectVector modelObjectVector = _airLoop->demandComponents(openstudio::IddObjectType::OS_ThermalZone);
+        if( !modelObjectVector.empty() ) {
+          ModelObject mo = modelObjectVector.front();
+          ThermalZone thermalZone = mo.cast<ThermalZone>();
+          this->setControlZone(thermalZone);
+        }
+        return true;
+      }
+    }
+    return false;
+  }
+
+  ModelObject SetpointManagerSingleZoneOneStageCooling_Impl::clone(Model model) const
+  {
+    SetpointManagerSingleZoneOneStageCooling clonedObject = SetpointManager_Impl::clone( model ).cast<SetpointManagerSingleZoneOneStageCooling>();
+    clonedObject.resetControlZone();
+    return clonedObject;
   }
 
   std::string SetpointManagerSingleZoneOneStageCooling_Impl::controlVariable() const {
@@ -137,14 +163,9 @@ SetpointManagerSingleZoneOneStageCooling::SetpointManagerSingleZoneOneStageCooli
 {
   OS_ASSERT(getImpl<detail::SetpointManagerSingleZoneOneStageCooling_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
-  // ok = setControlVariable();
-  OS_ASSERT(ok);
-  // setCoolingStageOnSupplyAirSetpointTemperature();
-  // setCoolingStageOffSupplyAirSetpointTemperature();
+  setControlVariable("Temperature");
+  setCoolingStageOnSupplyAirSetpointTemperature(-99);
+  setCoolingStageOffSupplyAirSetpointTemperature(99);
 }
 
 IddObjectType SetpointManagerSingleZoneOneStageCooling::iddObjectType() {

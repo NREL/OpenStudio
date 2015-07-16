@@ -712,15 +712,36 @@ set(${target_name}_src
   SetpointManager.hpp
   SetpointManager_Impl.hpp
   SetpointManager.cpp
+  SetpointManagerColdest.hpp
+  SetpointManagerColdest_Impl.hpp
+  SetpointManagerColdest.cpp
+  SetpointManagerFollowGroundTemperature.hpp
+  SetpointManagerFollowGroundTemperature_Impl.hpp
+  SetpointManagerFollowGroundTemperature.cpp
   SetpointManagerFollowOutdoorAirTemperature.hpp
   SetpointManagerFollowOutdoorAirTemperature_Impl.hpp
   SetpointManagerFollowOutdoorAirTemperature.cpp
+  SetpointManagerFollowSystemNodeTemperature.hpp
+  SetpointManagerFollowSystemNodeTemperature_Impl.hpp
+  SetpointManagerFollowSystemNodeTemperature.cpp
   SetpointManagerMixedAir.hpp
   SetpointManagerMixedAir_Impl.hpp
   SetpointManagerMixedAir.cpp
+  SetpointManagerMultiZoneCoolingAverage.hpp
+  SetpointManagerMultiZoneCoolingAverage_Impl.hpp
+  SetpointManagerMultiZoneCoolingAverage.cpp
+  SetpointManagerMultiZoneHeatingAverage.hpp
+  SetpointManagerMultiZoneHeatingAverage_Impl.hpp
+  SetpointManagerMultiZoneHeatingAverage.cpp
+  SetpointManagerMultiZoneHumidityMaximum.hpp
+  SetpointManagerMultiZoneHumidityMaximum_Impl.hpp
+  SetpointManagerMultiZoneHumidityMaximum.cpp
   SetpointManagerMultiZoneHumidityMinimum.hpp
   SetpointManagerMultiZoneHumidityMinimum_Impl.hpp
   SetpointManagerMultiZoneHumidityMinimum.cpp
+  SetpointManagerMultiZoneMaximumHumidityAverage.hpp
+  SetpointManagerMultiZoneMaximumHumidityAverage_Impl.hpp
+  SetpointManagerMultiZoneMaximumHumidityAverage.cpp
   SetpointManagerMultiZoneMinimumHumidityAverage.hpp
   SetpointManagerMultiZoneMinimumHumidityAverage_Impl.hpp
   SetpointManagerMultiZoneMinimumHumidityAverage.cpp
@@ -736,9 +757,18 @@ set(${target_name}_src
   SetpointManagerScheduledDualSetpoint.hpp
   SetpointManagerScheduledDualSetpoint_Impl.hpp
   SetpointManagerScheduledDualSetpoint.cpp
+  SetpointManagerSingleZoneHumidityMaximum.hpp
+  SetpointManagerSingleZoneHumidityMaximum_Impl.hpp
+  SetpointManagerSingleZoneHumidityMaximum.cpp
   SetpointManagerSingleZoneHumidityMinimum.hpp
   SetpointManagerSingleZoneHumidityMinimum_Impl.hpp
   SetpointManagerSingleZoneHumidityMinimum.cpp
+  SetpointManagerSingleZoneOneStageCooling.hpp
+  SetpointManagerSingleZoneOneStageCooling_Impl.hpp
+  SetpointManagerSingleZoneOneStageCooling.cpp
+  SetpointManagerSingleZoneOneStageHeating.hpp
+  SetpointManagerSingleZoneOneStageHeating_Impl.hpp
+  SetpointManagerSingleZoneOneStageHeating.cpp
   SetpointManagerSingleZoneReheat.hpp
   SetpointManagerSingleZoneReheat_Impl.hpp
   SetpointManagerSingleZoneReheat.cpp
@@ -1379,17 +1409,28 @@ set(${target_name}_test_src
   test/RoofVegetation_GTest.cpp
   test/RunPeriodControlDaylightSavingTime_GTest.cpp
   test/RunPeriodControlSpecialDays_GTest.cpp
+  test/SetpointManagerColdest_GTest.cpp
+  test/SetpointManagerFollowGroundTemperature_GTest.cpp
   test/SetpointManagerFollowOutdoorAirTemperature_GTest.cpp
+  test/SetpointManagerFollowSystemNodeTemperature_GTest.cpp
   test/SetpointManagerMixedAir_GTest.cpp
+  test/SetpointManagerMultiZoneCoolingAverage_GTest.cpp
+  test/SetpointManagerMultiZoneHeatingAverage_GTest.cpp
+  test/SetpointManagerMultiZoneHumidityMaximum_GTest.cpp
   test/SetpointManagerMultiZoneHumidityMinimum_GTest.cpp
+  test/SetpointManagerMultiZoneMaximumHumidityAverage_GTest.cpp
   test/SetpointManagerMultiZoneMinimumHumidityAverage_GTest.cpp
   test/SetpointManagerOutdoorAirPretreat_GTest.cpp
   test/SetpointManagerOutdoorAirReset_GTest.cpp
   test/SetpointManagerScheduled_GTest.cpp
   test/SetpointManagerScheduledDualSetpoint_GTest.cpp
+  test/SetpointManagerSingleZoneHumidityMaximum_GTest.cpp
   test/SetpointManagerSingleZoneHumidityMinimum_GTest.cpp
+  test/SetpointManagerSingleZoneOneStageCooling_GTest.cpp
+  test/SetpointManagerSingleZoneOneStageHeating_GTest.cpp
   test/SetpointManagerSingleZoneReheat_GTest.cpp
   test/SetpointManagerWarmest_GTest.cpp
+  test/SetpointManagerWarmestTemperatureFlow_GTest.cpp
   test/ScheduleDay_GTest.cpp
   test/ScheduleInterval_GTest.cpp
   test/ScheduleRuleset_GTest.cpp

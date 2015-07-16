@@ -82,7 +82,7 @@ namespace detail {
 
     bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
 
-    bool setStrategy(std::string strategy);
+    bool setStrategy(const std::string& strategy);
 
     //@}
     /** @name Other */

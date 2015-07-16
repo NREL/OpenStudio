@@ -121,16 +121,9 @@ SetpointManagerMultiZoneMaximumHumidityAverage::SetpointManagerMultiZoneMaximumH
 {
   OS_ASSERT(getImpl<detail::SetpointManagerMultiZoneMaximumHumidityAverage_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
-  // ok = setControlVariable();
-  OS_ASSERT(ok);
-  // ok = setMinimumSetpointHumidityRatio();
-  OS_ASSERT(ok);
-  // ok = setMaximumSetpointHumidityRatio();
-  OS_ASSERT(ok);
+  setControlVariable("MaximumHumidityRatio");
+  setMinimumSetpointHumidityRatio(0.008);
+  setMaximumSetpointHumidityRatio(0.015);
 }
 
 IddObjectType SetpointManagerMultiZoneMaximumHumidityAverage::iddObjectType() {

@@ -59,6 +59,10 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual ModelObject clone(Model model) const override;
+
+    virtual bool addToNode(Node & node) override;
+
     //@}
     /** @name Getters */
     //@{
@@ -73,7 +77,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    bool setControlVariable(const std::string& controlVariable);
+    virtual bool setControlVariable(const std::string& controlVariable) override;
 
     bool setControlZone(const ThermalZone& thermalZone);
 

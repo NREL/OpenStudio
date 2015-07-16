@@ -24,6 +24,8 @@
 #include "ThermalZone_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
+#include "Model.hpp"
+#include "AirLoopHVAC.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SetpointManager_SingleZone_Humidity_Maximum_FieldEnums.hxx>
@@ -67,6 +69,30 @@ namespace detail {
 
   IddObjectType SetpointManagerSingleZoneHumidityMaximum_Impl::iddObjectType() const {
     return SetpointManagerSingleZoneHumidityMaximum::iddObjectType();
+  }
+
+  bool SetpointManagerSingleZoneHumidityMaximum_Impl::addToNode(Node & node)
+  {
+    bool added = SetpointManager_Impl::addToNode( node );
+    if( added ) {
+      if( boost::optional<AirLoopHVAC> _airLoop = node.airLoopHVAC() ) {
+        ModelObjectVector modelObjectVector = _airLoop->demandComponents(openstudio::IddObjectType::OS_ThermalZone);
+        if( !modelObjectVector.empty() ) {
+          ModelObject mo = modelObjectVector.front();
+          ThermalZone thermalZone = mo.cast<ThermalZone>();
+          this->setControlZone(thermalZone);
+        }
+        return true;
+      }
+    }
+    return false;
+  }
+
+  ModelObject SetpointManagerSingleZoneHumidityMaximum_Impl::clone(Model model) const
+  {
+    SetpointManagerSingleZoneHumidityMaximum clonedObject = SetpointManager_Impl::clone( model ).cast<SetpointManagerSingleZoneHumidityMaximum>();
+    clonedObject.resetControlZone();
+    return clonedObject;
   }
 
   std::string SetpointManagerSingleZoneHumidityMaximum_Impl::controlVariable() const {
@@ -115,12 +141,7 @@ SetpointManagerSingleZoneHumidityMaximum::SetpointManagerSingleZoneHumidityMaxim
 {
   OS_ASSERT(getImpl<detail::SetpointManagerSingleZoneHumidityMaximum_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
-  // ok = setControlVariable();
-  OS_ASSERT(ok);
+  setControlVariable("MaximumHumidityRatio");
 }
 
 IddObjectType SetpointManagerSingleZoneHumidityMaximum::iddObjectType() {

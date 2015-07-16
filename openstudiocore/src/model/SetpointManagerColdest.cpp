@@ -93,7 +93,7 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<Node> SetpointManagerWarmest_Impl::setpointNode() const {
+  boost::optional<Node> SetpointManagerColdest_Impl::setpointNode() const {
     return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_ColdestFields::SetpointNodeorNodeListName);
   }
 
@@ -171,7 +171,7 @@ std::string SetpointManagerColdest::strategy() const {
   return getImpl<detail::SetpointManagerColdest_Impl>()->strategy();
 }
 
-boost::optional<Node> SetpointManagerWarmest::setpointNode() const {
+boost::optional<Node> SetpointManagerColdest::setpointNode() const {
   return getImpl<detail::SetpointManagerColdest_Impl>()->setpointNode();
 }
 

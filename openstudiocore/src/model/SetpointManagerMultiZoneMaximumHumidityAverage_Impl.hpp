@@ -74,7 +74,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    bool setControlVariable(const std::string& controlVariable);
+    virtual bool setControlVariable(const std::string& controlVariable) override;
 
     bool setMinimumSetpointHumidityRatio(double minimumSetpointHumidityRatio);
 

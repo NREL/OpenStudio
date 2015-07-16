@@ -162,8 +162,8 @@ SetpointManagerFollowSystemNodeTemperature::SetpointManagerFollowSystemNodeTempe
   setReferenceTemperatureType("NodeDryBulb");
   setControlVariable("Temperature");
   setOffsetTemperatureDifference(0);
-  setMaximumSetpointTemperature(100);
-  setMinimumSetpointTemperature(0);
+  setMaximumLimitSetpointTemperature(100);
+  setMinimumLimitSetpointTemperature(0);
 }
 
 IddObjectType SetpointManagerFollowSystemNodeTemperature::iddObjectType() {
