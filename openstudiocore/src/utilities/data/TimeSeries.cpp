@@ -34,7 +34,7 @@ TimeSeries_Impl::TimeSeries_Impl() :m_outOfRangeValue(0.0)
 {}
 
 TimeSeries_Impl::TimeSeries_Impl(const Date& startDate, const Time& intervalLength, const Vector& values, const std::string& units)
-  : m_secondsFromStart(values.size()), m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0), m_wrapAround(false)
+  : m_secondsFromFirstReport(values.size()), m_secondsFromStart(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0), m_wrapAround(false)
 {
   if (values.empty()) {
     LOG(Warn, "Creating empty timeseries");
@@ -72,7 +72,7 @@ TimeSeries_Impl::TimeSeries_Impl(const Date& startDate, const Time& intervalLeng
 }
 
 TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const Time& intervalLength, const Vector& values, const std::string& units)
-  : m_secondsFromStart(values.size()), m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0), m_wrapAround(false)
+  : m_secondsFromFirstReport(values.size()), m_secondsFromStart(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0), m_wrapAround(false)
 {
   if (values.empty()) {
     LOG(Warn, "Creating empty timeseries");
@@ -109,7 +109,7 @@ TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const Time
 }
 
 TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const Vector& timeInDays, const Vector& values, const std::string& units)
-  : m_secondsFromStart(values.size()), m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
+  : m_secondsFromFirstReport(values.size()), m_secondsFromStart(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
 {
   if (timeInDays.size() != values.size()) {
     LOG_AND_THROW("Length of values (" << values.size() << ") must match length of times (" << timeInDays.size() << ")");
@@ -176,7 +176,7 @@ TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const Vect
 }
 
 TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<double>& timeInDays, const std::vector<double>& values, const std::string& units)
-  : m_secondsFromStart(values.size()), m_secondsFromFirstReport(timeInDays.size()), m_values(values.size()), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
+  : m_secondsFromFirstReport(timeInDays.size()), m_secondsFromStart(values.size()), m_values(values.size()), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
 {
 
   if (timeInDays.size() != values.size()) {
@@ -244,7 +244,7 @@ TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std:
 }
 
 TimeSeries_Impl::TimeSeries_Impl(const DateTimeVector& inDateTimes, const Vector& values, const std::string& units)
-  : m_secondsFromStart(values.size()), m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
+  : m_secondsFromFirstReport(values.size()), m_secondsFromStart(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
 {
   // DLM: this seems to be a pretty fragile constructor with a lot going on
 
@@ -266,7 +266,7 @@ TimeSeries_Impl::TimeSeries_Impl(const DateTimeVector& inDateTimes, const Vector
 
     // DLM: startDate may or may not have baseYear defined
     m_firstReportDateTime = dateTimes.front();
-    unsigned numDateTimes = dateTimes.size();
+    // unsigned numDateTimes = dateTimes.size();
     boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
 
     // Check for wrap around
@@ -354,7 +354,7 @@ TimeSeries_Impl::TimeSeries_Impl(const DateTimeVector& inDateTimes, const Vector
 }
 
 TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<long>& timeInSeconds, const Vector& values, const std::string& units)
-  : m_secondsFromStart(values.size()), m_secondsFromFirstReport(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
+  : m_secondsFromFirstReport(values.size()), m_secondsFromStart(values.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
 {
   if (timeInSeconds.size() != values.size()) {
     LOG_AND_THROW("Length of values (" << values.size() << ") must match length of times (" << timeInSeconds.size() << ")");
