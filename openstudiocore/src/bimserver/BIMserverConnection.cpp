@@ -19,6 +19,8 @@
 
 #include "BIMserverConnection.hpp"
 
+#include "../utilities/core/System.hpp"
+
 #include <QString>
 #include <QUrl>
 #include <QtNetwork/QNetworkAccessManager>
@@ -31,6 +33,7 @@
 #include <QByteArray>
 #include <QFileInfo>
 #include <iostream>
+#include <boost/none.hpp>
 
 
 namespace openstudio {
@@ -42,6 +45,7 @@ namespace bimserver {
   {
     QString bimserver = "http://" + bimserverAddr + ":" + bimserverPort + "/json";
     m_bimserverURL = QUrl(bimserver);
+    m_operationDone = true;
   }
 
   BIMserverConnection::~BIMserverConnection() {
@@ -49,6 +53,12 @@ namespace bimserver {
   }
 
   void BIMserverConnection::login(QString username, QString password) {
+    
+    if (!m_operationDone) {
+      emit errorOccured(QString("The last process has not end yet. Please wait and try again."));
+      return;
+    }
+    m_operationDone = false;
     if (!username.isEmpty() && !password.isEmpty()) {
       m_username = username;
       m_password = password;
@@ -98,7 +108,8 @@ namespace bimserver {
       if (!containsError(response)) {
 
         m_token = response["result"].toString();
-
+        m_loginSuccess = true;
+        m_operationDone = true;
         emit operationSucceeded(QString("login"));
 
       } else {
@@ -112,6 +123,11 @@ namespace bimserver {
   }
 
   void BIMserverConnection::getAllProjects() { 
+    if (!m_operationDone) {
+      emit errorOccured(QString("The last process has not end yet. Please wait and try again."));
+      return;
+    }
+    m_operationDone = false;
     sendGetAllProjectsRequest();
   }
 
@@ -163,6 +179,8 @@ namespace bimserver {
           QString project = projectID.append(":").append(projectName);
           projectList.append(project);
         }
+        m_projectList = projectList;
+        m_operationDone = true;
         emit listAllProjects(projectList);
       } else {
         emitErrorMessage(response);
@@ -171,9 +189,16 @@ namespace bimserver {
     } else {
       emit bimserverError();
     }
+    
   }
 
   void BIMserverConnection::download(QString revisionID) {
+
+    if (!m_operationDone) {
+      emit errorOccured(QString("The last process has not end yet. Please wait and try again."));
+      return;
+    }
+    m_operationDone = false;
     if (!revisionID.isEmpty()) {
       m_roid = revisionID;
       sendGetSerializerRequest();
@@ -322,6 +347,9 @@ namespace bimserver {
         QByteArray byteArray;
         byteArray.append(file);
         QString OSMFile = QByteArray::fromBase64(byteArray);
+
+        m_osmModel = OSMFile;
+        m_operationDone = true;
         emit osmStringRetrieved(OSMFile);
       } else {
         emitErrorMessage(response);
@@ -334,6 +362,13 @@ namespace bimserver {
 
   //
   void BIMserverConnection::createProject(QString projectName) {
+
+    if (!m_operationDone) {
+      emit errorOccured(QString("The last process has not end yet. Please wait and try again."));
+      return;
+    }
+    m_operationDone = false;
+
     if (!projectName.isEmpty()) {
       sendCreateProjectRequest(projectName);
     } else {
@@ -378,6 +413,8 @@ namespace bimserver {
       QJsonObject response = createProjectResponse["response"].toObject();
 
       if (!containsError(response)) {
+        m_createProjectSuccess = true;
+        m_operationDone = true;
         emit operationSucceeded(QString("createProject"));
       } else {
         emitErrorMessage(response);
@@ -386,9 +423,83 @@ namespace bimserver {
     } else {
       emit bimserverError();
     }
+    
   }
 
+    void BIMserverConnection::deleteProject(QString projectID) {
+
+    if (!m_operationDone) {
+      emit errorOccured(QString("The last process has not end yet. Please wait and try again."));
+      return;
+    }
+    m_operationDone = false;
+
+    if (!projectID.isEmpty()) {
+      sendDeleteProjectRequest(projectID);
+    } else {
+      emit errorOccured(QString("Project ID is empty!"));
+    }
+  }
+
+  void BIMserverConnection::sendDeleteProjectRequest(QString projectID) {
+    
+    QJsonObject parameters;
+    parameters["poid"] = projectID;
+    QJsonObject request;
+    request["interface"] = QJsonValue(QString("Bimsie1ServiceInterface"));
+    request["method"] = QJsonValue(QString("deleteProject"));
+    request["parameters"] = parameters;
+    QJsonObject deleteProjectRequest;
+    deleteProjectRequest["token"] = QJsonValue(m_token);
+    deleteProjectRequest["request"] = request;
+
+    QJsonDocument doc;
+    doc.setObject(deleteProjectRequest);
+
+    QByteArray deleteProjectRequestJson = doc.toJson();
+
+    //setup network connection
+    QNetworkRequest qNetworkRequest(m_bimserverURL);
+    qNetworkRequest.setRawHeader("Content-Type", "application/json");
+
+    // disconnect all signals from m_networkManager to this
+    disconnect(m_networkManager, nullptr, this, nullptr);
+    connect(m_networkManager, &QNetworkAccessManager::finished, this, &BIMserverConnection::processDeleteProjectRequest);
+    m_networkManager->post(qNetworkRequest, deleteProjectRequestJson);
+    
+  }
+
+
+  void BIMserverConnection::processDeleteProjectRequest(QNetworkReply *rep) {
+    if (rep) {
+      QByteArray responseArray = rep->readAll();
+
+      QJsonDocument responseDoc = QJsonDocument::fromJson(responseArray);
+      QJsonObject deleteProjectResponse = responseDoc.object();
+      QJsonObject response = deleteProjectResponse["response"].toObject();
+
+      if (!containsError(response)) {
+        m_deleteProjectSuccess = true;
+        m_operationDone = true;
+        emit operationSucceeded(QString("deleteProject"));
+      } else {
+        emitErrorMessage(response);
+      }
+
+    } else {
+      emit bimserverError();
+    }
+    
+  }
+  
   void BIMserverConnection::checkInIFCFile(QString projectID, QString IFCFilePath) {
+
+    if (!m_operationDone) {
+      emit errorOccured(QString("The last process has not end yet. Please wait and try again."));
+      return;
+    }
+    m_operationDone = false;
+
     if (!projectID.isEmpty() && !IFCFilePath.isEmpty()) {
       m_poid = projectID;
       m_filePath = IFCFilePath;
@@ -570,6 +681,8 @@ namespace bimserver {
 
           revisionList.append(revision);
         }
+        m_ifcList = revisionList;
+        m_operationDone = true;
         emit listAllIFCRevisions(revisionList);
       } else {
         emitErrorMessage(response);
@@ -578,6 +691,7 @@ namespace bimserver {
     } else {
       emit bimserverError();
     }
+    
   }
 
   void BIMserverConnection::sendGetProgressRequest(QString topicId, QString action) {
@@ -626,6 +740,8 @@ namespace bimserver {
         if (sender == "download") {
           sendGetDownloadDataRequest();
         } else if (sender == "checkInIFC") {
+          m_checkInIFCSuccess = true;
+          m_operationDone = true;
           emit operationSucceeded(QString("checkInIFC"));
         }
       } else {
@@ -668,6 +784,81 @@ namespace bimserver {
       QString errorMessage = exception["message"].toString();
       emit errorOccured(errorMessage);
     }
+  }
+
+
+  bool BIMserverConnection::loginBlocked(QString username, QString password, int timeout) {
+    m_loginSuccess = false;
+    login(username, password);
+    waitForLock(timeout);
+    return m_loginSuccess;
+  }
+
+  boost::optional<QString> BIMserverConnection::downloadBlocked(QString projectID, int timeout) {
+    m_osmModel=boost::none;
+    download(projectID);
+    waitForLock(timeout);
+    return m_osmModel;
+  }
+
+  boost::optional<QStringList> BIMserverConnection::getAllProjectsBlocked(int timeout) {
+    m_projectList = boost::none;
+    getAllProjects();
+    waitForLock(timeout);
+    return m_projectList;
+  }
+
+  bool BIMserverConnection::createProjectBlocked(QString projectName, int timeout) {
+    m_createProjectSuccess = false;
+    createProject(projectName);
+    waitForLock(timeout);
+    return m_createProjectSuccess;
+  }
+
+  bool BIMserverConnection::deleteProjectBlocked(QString projectID, int timeout) {
+    m_deleteProjectSuccess = false;
+    deleteProject(projectID);
+    waitForLock(timeout);
+    return m_deleteProjectSuccess;
+  }
+
+  bool BIMserverConnection::checkInIFCFileBlocked(QString projectID, QString IFCFilePath, int timeout) {
+    m_checkInIFCSuccess = false;
+    checkInIFCFile(projectID, IFCFilePath);
+    waitForLock(timeout);
+    return m_checkInIFCSuccess;
+  }
+
+  boost::optional<QStringList> BIMserverConnection::getIFCRevisionListBlocked(QString projectID, int timeout) {
+    m_ifcList = boost::none;
+    getIFCRevisionList(projectID);
+    waitForLock(timeout);
+    return m_ifcList;
+  }
+  
+  bool BIMserverConnection::waitForLock(int msec) const {
+    int msecPerLoop = 20;
+    int numTries = msec / msecPerLoop;
+    int current = 0;
+    while (true) {
+
+      // if we can get the lock then the download is complete
+      if (m_operationDone) {
+        return true;
+      }
+
+      // this calls process events
+      System::msleep(msecPerLoop);
+
+      if (current > numTries) {
+        LOG(Error, "waitForLock timeout");
+        break;
+      }
+
+      ++current;
+    }
+
+    return false;
   }
 
 } // bimserver
