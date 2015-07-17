@@ -138,6 +138,7 @@ namespace radiance {
       std::map<std::string, std::string> m_radWindowGroups;
       std::map<std::string, std::string> m_radWindowGroupShades;
       int m_windowGroupId;
+      std::string shadeBSDF;
 
       // get window group
       WindowGroup getWindowGroup(const openstudio::Vector3d& outwardNormal, const model::Space& space, 

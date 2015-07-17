@@ -1114,6 +1114,7 @@ namespace radiance {
 
           std::string rMaterial = "glass";
           std::string matString = "";
+          std::string shadeBSDF = "";
 
           boost::optional<model::ConstructionBase> construction = subSurface.construction();
           if (!construction){
@@ -1450,21 +1451,18 @@ namespace radiance {
               }					
 
 							// add the shade
-							
-							// add shade material (prototyping shadecloth BSDF) 
-							// TODO: get mat from object
-								
+															
 							rMaterial = "BSDF";
               matString = "0\n0\n6\n0 2011-SA2.xml 0 0 1 .\n0\n0\n";
 							
               m_radMaterials.insert("void " + rMaterial + " " + windowGroup_name + "_SHADE\n" + matString + "\n\n");
               
               // polygon header
-              m_radWindowGroupShades[windowGroup_name] += "\n# SHADE for SubSurface: " + subSurface_name + "\n";
+              m_radWindowGroupShades[windowGroup_name] += "\n# shade for SubSurface: " + subSurface_name + "\n";
               
               // write the polygon TODO: offset inside of framediv objects
-              m_radWindowGroupShades[windowGroup_name] += windowGroup_name + "_SHADE" + " polygon " + subSurface_name + "_SHADE\n";
-              m_radWindowGroupShades[windowGroup_name] += "0\n0\n" + formatString(polygon.size() * 3) + "\n\n";
+              m_radWindowGroupShades[windowGroup_name] += windowGroup_name + "_SHADE" + " polygon " + windowGroup_name + "_SHADE_" + subSurface_name + "\n";
+              m_radWindowGroupShades[windowGroup_name] += "0\n0\n" + formatString(polygon.size() * 3) + "\n";
               for (Point3dVector::const_reverse_iterator vertex = polygon.rbegin();
                 vertex != polygon.rend();
                 ++vertex)
@@ -1480,21 +1478,34 @@ namespace radiance {
 							           
             }
 
-            // copy shade bsdf files into place
+
+						// shade BSDF stuff
+
+            // make dir for BSDF files
+
             openstudio::path bsdfoutpath = t_radDir / openstudio::toPath("bsdf");
 
-						// shadecloth prototype
+						// Set shade BSDF
+		
+						shadeBSDF = "blinds.xml";
+						// TODO get shade type from object
+								// if shade type = blind, shadeBSDF = blind.xml
+								// if shade type = louver, shadeBSDF = 1xliloX.xml
+								// if shade type = shadecloth, shadeBSDF = 05_shade_light.xml			
+								// etc...
 
 						// path to write bsdf
-						openstudio::path shadeBSDFOut = t_radDir / openstudio::toPath("bsdf") / openstudio::toPath("/2011-SA2.xml");
+
+						openstudio::path shadeBSDFPath = t_radDir / openstudio::toPath("bsdf") / shadeBSDF;
 						
-						// add xml file to the collection of crap to copy up
-						t_outfiles.push_back(shadeBSDFOut);
+						// add BSDF file to the collection of crap to copy up
+						t_outfiles.push_back(shadeBSDFPath);
 						
 						// read BSDF from resource dll
 						// must be in openstudiocore/src/radiance/radiance.qrc
 						QString defaultFile;
-						QFile inFile(":/resources/2011-SA2.xml");
+						//QFile inFile(":/resources/blinds.xml");
+						QFile inFile(toQString(":/resources/" + shadeBSDF));
 						if (inFile.open(QFile::ReadOnly)){
 							QTextStream docIn(&inFile);
 							defaultFile = docIn.readAll();
@@ -1502,14 +1513,42 @@ namespace radiance {
 						}
 
 						// write shade BSDF
-						QFile outFile(toQString(shadeBSDFOut));
+						QFile outFile(toQString(shadeBSDFPath));
 						bool opened = outFile.open(QIODevice::WriteOnly);
 						if (!opened){
-							LOG_AND_THROW("Cannot write file to '" << toString(shadeBSDFOut) << "'");
+							LOG_AND_THROW("Cannot write file to '" << toString(shadeBSDFPath) << "'");
 						}
 						QTextStream textStream(&outFile);
 						textStream << defaultFile;
 						outFile.close();
+
+						// add an airBSDF
+		
+						shadeBSDFPath = t_radDir / openstudio::toPath("bsdf") / openstudio::toPath("air.xml");
+						
+						// add BSDF file to the collection of crap to copy up
+						t_outfiles.push_back(shadeBSDFPath);
+						
+						// read BSDF from resource dll
+						// must be in openstudiocore/src/radiance/radiance.qrc
+						QFile inFileAir(":/resources/air.xml");
+						if (inFileAir.open(QFile::ReadOnly)){
+							QTextStream docIn(&inFileAir);
+							defaultFile = docIn.readAll();
+							inFileAir.close();
+						}
+
+						// write shade BSDF
+						QFile outFileAir(toQString(shadeBSDFPath));
+						opened = outFileAir.open(QIODevice::WriteOnly);
+						if (!opened){
+							LOG_AND_THROW("Cannot write file to '" << toString(shadeBSDFPath) << "'");
+						}
+						QTextStream textStream2(&outFileAir);
+						textStream2 << defaultFile;
+						outFileAir.close();
+				
+
 
 						//store window group entry for mapping.rad
 						if (windowGroup_name == "WG0"){
@@ -1522,7 +1561,7 @@ namespace radiance {
 							m_radDCmats.insert(windowGroup_name + "," + \
 								formatString((control.outwardNormal->x() * -1), 2) + " " + \
 								formatString((control.outwardNormal->y() * -1), 2) + " " + \
-								formatString((control.outwardNormal->z() * -1), 2) + ",2,2000");
+								formatString((control.outwardNormal->z() * -1), 2) + ",2,2000,air.xml," + shadeBSDF + "\n");
 						}
 
 //					  if (rMaterial == "glass"){

@@ -1,7 +1,7 @@
 
 OS:Version,
-  {6b4ea84d-4495-4abc-ac8d-7d8903fbcfa9}, !- Handle
-  1.7.5;                                  !- Version Identifier
+  {cf34f414-5cd3-4eb2-b8e0-ef80cdff4a67}, !- Handle
+  1.8.1;                                  !- Version Identifier
 
 OS:SpaceType,
   {d83c9d8c-b4ea-4352-92bc-43a5e8551039}, !- Handle
@@ -7952,7 +7952,7 @@ OS:SubSurface,
   {5cfd7343-beef-4dd8-96ff-05ad91c84aad}, !- Surface Name
   ,                                       !- Outside Boundary Condition Object
   ,                                       !- View Factor to Ground
-  ,                                       !- Shading Control Name
+  {e92bbf46-fa74-4c6f-b420-14859826812a}, !- Shading Control Name
   ,                                       !- Frame and Divider Name
   ,                                       !- Multiplier
   ,                                       !- Number of Vertices
@@ -8636,9 +8636,18 @@ OS:Daylighting:Control,
 
 OS:ShadingControl,
   {4cf76f1b-fec9-4226-97fc-2721fbb91cdb}, !- Handle
-  Shading Control 1,                      !- Name
+  mechoshade,                             !- Name
   SwitchableGlazing,                      !- Shading Type
-  {11ef4fe8-c17f-416b-81fa-37abe5add41f}; !- Construction with Shading Name
+  {11ef4fe8-c17f-416b-81fa-37abe5add41f}, !- Construction with Shading Name
+  ,                                       !- Shading Device Material Name
+  ,                                       !- Shading Control Type
+  ,                                       !- Schedule Name
+  ,                                       !- Setpoint {BasedOnField A4}
+  ,                                       !- Shading Control Is Scheduled
+  ,                                       !- Glare Control Is Active
+  ,                                       !- Type of Slat Angle Control for Blinds
+  ,                                       !- Slat Angle Schedule Name
+  ;                                       !- Setpoint 2 {BasedOnField A4}
 
 OS:WindowProperty:FrameAndDivider,
   {03b3b456-1bd8-4328-86d7-2f256a4e1e3c}, !- Handle
@@ -8668,4 +8677,19 @@ OS:WindowProperty:FrameAndDivider,
   0,                                      !- Inside Sill Solar Absorptance
   0.12192,                                !- Inside Reveal Depth {m}
   0;                                      !- Inside Reveal Solar Absorptance
+
+OS:ShadingControl,
+  {e92bbf46-fa74-4c6f-b420-14859826812a}, !- Handle
+  blind,                                  !- Name
+  SwitchableGlazing,                      !- Shading Type
+  {11ef4fe8-c17f-416b-81fa-37abe5add41f}, !- Construction with Shading Name
+  ,                                       !- Shading Device Material Name
+  AlwaysOn,                               !- Shading Control Type
+  ,                                       !- Schedule Name
+  ,                                       !- Setpoint {BasedOnField A4}
+  ,                                       !- Shading Control Is Scheduled
+  ,                                       !- Glare Control Is Active
+  ,                                       !- Type of Slat Angle Control for Blinds
+  ,                                       !- Slat Angle Schedule Name
+  ;                                       !- Setpoint 2 {BasedOnField A4}
 

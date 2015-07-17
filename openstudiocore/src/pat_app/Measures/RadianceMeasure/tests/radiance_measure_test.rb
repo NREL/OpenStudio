@@ -79,7 +79,7 @@ class RadianceMeasureTest < MiniTest::Unit::TestCase
     result = runner.result
 
     # show the output
-    puts "Yo:"
+
     show_output(result)
 
     # assert that it ran correctly
