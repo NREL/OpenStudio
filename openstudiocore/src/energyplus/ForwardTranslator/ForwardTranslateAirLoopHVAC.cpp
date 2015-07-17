@@ -78,6 +78,7 @@
 #include <utilities/idd/BranchList_FieldEnums.hxx>
 #include <utilities/idd/Branch_FieldEnums.hxx>
 #include <utilities/idd/Schedule_Compact_FieldEnums.hxx>
+#include <utilities/idd/SetpointManager_ReturnAirBypassFlow_FieldEnums.hxx>
 #include <utilities/idd/Sizing_System_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -553,6 +554,29 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   // Demand Side Outlet Node Name
   idfObject.setString(openstudio::AirLoopHVACFields::DemandSideOutletNodeName,
                       airLoopHVAC.demandOutletNode().name().get());
+
+  // Return Air Bypass Flow Temperature Setpoint Schedule Name
+  if( boost::optional<Schedule> returnAirBypassFlowTemperatureSetpointSchedule = airLoopHVAC.returnAirBypassFlowTemperatureSetpointSchedule() )
+  {
+    boost::optional<IdfObject> _returnAirBypassFlowTemperatureSetpointSchedule = translateAndMapModelObject(returnAirBypassFlowTemperatureSetpointSchedule.get());
+    if( _returnAirBypassFlowTemperatureSetpointSchedule && _returnAirBypassFlowTemperatureSetpointSchedule->name() )
+    {
+      IdfObject _returnAirBypassFlowSPM(IddObjectType::SetpointManager_ReturnAirBypassFlow);
+      m_idfObjects.push_back(_returnAirBypassFlowSPM);
+
+      // Name
+      _returnAirBypassFlowSPM.setName(airLoopHVACName + " Return Air Bypass Flow");
+
+      // Control Variable
+      _returnAirBypassFlowSPM.setString(SetpointManager_ReturnAirBypassFlowFields::ControlVariable,"Flow");
+
+      // HVAC Air Loop Name
+      _returnAirBypassFlowSPM.setString(SetpointManager_ReturnAirBypassFlowFields::HVACAirLoopName,airLoopHVACName);
+
+      // Temperature Setpoint Schedule Name
+      _returnAirBypassFlowSPM.setString(SetpointManager_ReturnAirBypassFlowFields::TemperatureSetpointScheduleName,_returnAirBypassFlowTemperatureSetpointSchedule->name().get());
+    }
+  }
 
   // Convert demand side components
   createAirLoopHVACSupplyPath(airLoopHVAC);

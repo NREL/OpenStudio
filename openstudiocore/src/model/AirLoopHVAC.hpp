@@ -247,6 +247,19 @@ class MODEL_API AirLoopHVAC : public Loop
   /** Returns a string indicating if the system is configured to night cycle **/
   std::string nightCycleControlType() const;
 
+  /** Returns the temperature setpoint schedule when this system tries to determine the required mass
+   *  flow rate through a return air bypass duct. If there is a temperature setpoint schedule,
+   *  the forward translator will create a SetpointManager:ReturnAirBypassFlow object. **/
+  boost::optional<Schedule> returnAirBypassFlowTemperatureSetpointSchedule() const;
+
+  /** Set the temperature setpoint schedule for when this system tries to determine the required mass
+   *  flow rate through a return air bypass duct. **/
+  bool setReturnAirBypassFlowTemperatureSetpointSchedule(Schedule & temperatureSetpointSchedule);
+
+  /** Reset the temperature setpoint schedule for when this system tries to determine the required mass
+   *  flow rate through a return air bypass duct. **/
+  void resetReturnAirBypassFlowTemperatureSetpointSchedule();
+
   std::vector<openstudio::IdfObject> remove() override;
 
   ModelObject clone(Model model) const override;

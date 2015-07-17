@@ -73,6 +73,8 @@
 #include "PortList_Impl.hpp"
 #include "ScheduleYear.hpp"
 #include "ScheduleYear_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 #include "SetpointManagerSingleZoneReheat.hpp"
 #include "SetpointManagerSingleZoneReheat_Impl.hpp"
 #include "../utilities/idd/IddEnums.hpp"
@@ -127,6 +129,18 @@ namespace detail {
 
   IddObjectType AirLoopHVAC_Impl::iddObjectType() const {
     return AirLoopHVAC::iddObjectType();
+  }
+
+  std::vector<ScheduleTypeKey> AirLoopHVAC_Impl::getScheduleTypeKeys(const Schedule& schedule) const
+  {
+    std::vector<ScheduleTypeKey> result;
+    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+    if (std::find(b,e,OS_AirLoopHVACFields::ReturnAirBypassFlowTemperatureSetpointScheduleName) != e)
+    {
+      result.push_back(ScheduleTypeKey("AirLoopHVAC","Return Air Bypass Flow Temperature Setpoint"));
+    }
+    return result;
   }
 
   Node AirLoopHVAC_Impl::supplyInletNode() const
@@ -886,6 +900,26 @@ namespace detail {
     return availabilityManagerAssignmentList().availabilityManagerNightCycle().controlType();
   }
 
+  boost::optional<Schedule>  AirLoopHVAC_Impl::returnAirBypassFlowTemperatureSetpointSchedule() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirLoopHVACFields::ReturnAirBypassFlowTemperatureSetpointScheduleName);
+  }
+
+  bool  AirLoopHVAC_Impl::setReturnAirBypassFlowTemperatureSetpointSchedule(Schedule & temperatureSetpointSchedule)
+  {
+    bool result = setSchedule(OS_AirLoopHVACFields::ReturnAirBypassFlowTemperatureSetpointScheduleName,
+                              "AirLoopHVAC",
+                              "Return Air Bypass Flow Temperature Setpoint",
+                              temperatureSetpointSchedule);
+    return result;
+  }
+
+  void  AirLoopHVAC_Impl::resetReturnAirBypassFlowTemperatureSetpointSchedule()
+  {
+    bool result = setString(OS_AirLoopHVACFields::ReturnAirBypassFlowTemperatureSetpointScheduleName,"");
+    OS_ASSERT(result);
+  }
+
   AvailabilityManagerAssignmentList AirLoopHVAC_Impl::availabilityManagerAssignmentList() const
   {
     boost::optional<WorkspaceObject> wo = getTarget(OS_AirLoopHVACFields::AvailabilityManagerListName);
@@ -1241,6 +1275,21 @@ void AirLoopHVAC::setAvailabilitySchedule(Schedule & schedule)
 bool AirLoopHVAC::setNightCycleControlType(std::string controlType)
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->setNightCycleControlType(controlType);
+}
+
+boost::optional<Schedule> AirLoopHVAC::returnAirBypassFlowTemperatureSetpointSchedule() const
+{
+  return getImpl<detail::AirLoopHVAC_Impl>()->returnAirBypassFlowTemperatureSetpointSchedule();
+}
+
+bool AirLoopHVAC::setReturnAirBypassFlowTemperatureSetpointSchedule(Schedule & temperatureSetpointSchedule)
+{
+  return getImpl<detail::AirLoopHVAC_Impl>()->setReturnAirBypassFlowTemperatureSetpointSchedule(temperatureSetpointSchedule);
+}
+
+void AirLoopHVAC::resetReturnAirBypassFlowTemperatureSetpointSchedule()
+{
+  getImpl<detail::AirLoopHVAC_Impl>()->resetReturnAirBypassFlowTemperatureSetpointSchedule();
 }
 
 std::string AirLoopHVAC::nightCycleControlType() const
