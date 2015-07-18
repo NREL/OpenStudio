@@ -1,7 +1,7 @@
 
 OS:Version,
-  {48b53559-667b-4351-a0af-8dceb808653b}, !- Handle
-  1.8.0;                                  !- Version Identifier
+  {8314af35-504d-45b2-900b-103a3991e248}, !- Handle
+  1.8.1;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -248,6 +248,92 @@ OS:SetpointManager:Scheduled:DualSetpoint,
   Temperature,                            !- Control Variable
   {7aec1e64-640d-4bb1-ba20-f89f7e911d11}, !- High Setpoint Schedule Name
   {3515ff9e-912f-4d2e-bf1f-163a63d2662b}, !- Low Setpoint Schedule Name
+  ;                                       !- Setpoint Node or NodeList Name
+
+OS:SetpointManager:Coldest,
+  {7c253b1f-3985-4eda-b181-401bd72749ce}, !- Handle
+  Setpoint Manager Coldest,               !- Name
+  Temperature,                            !- Control Variable
+  20,                                     !- Minimum Setpoint Temperature {C}
+  50,                                     !- Maximum Setpoint Temperature {C}
+  MinimumTemperature,                     !- Strategy
+  ;                                       !- Setpoint Node or NodeList Name
+
+OS:SetpointManager:FollowGroundTemperature,
+  {bffba0e9-d335-4800-9082-8a20bba507a3}, !- Handle
+  Setpoint Manager Follow Ground Temperature, !- Name
+  Temperature,                            !- Control Variable
+  0,                                      !- Offset Temperature Difference {deltaC}
+  80,                                     !- Maximum Setpoint Temperature {C}
+  10,                                     !- Minimum Setpoint Temperature {C}
+  ;                                       !- Setpoint Node or NodeList Name
+
+OS:SetpointManager:FollowSystemNodeTemperature,
+  {e8244f46-033d-4bf5-8571-36abd31f3527}, !- Handle
+  Setpoint Manager Follow System Node Temperature, !- Name
+  Temperature,                            !- Control Variable
+  ,                                       !- Reference Node Name
+  NodeDryBulb,                            !- Reference Temperature Type
+  0,                                      !- Offset Temperature Difference {deltaC}
+  100,                                    !- Maximum Limit Setpoint Temperature {C}
+  0,                                      !- Minimum Limit Setpoint Temperature {C}
+  ;                                       !- Setpoint Node or NodeList Name
+
+OS:SetpointManager:MultiZone:Cooling:Average,
+  {caf83914-0b9e-4da4-9bae-1a698c25b893}, !- Handle
+  Setpoint Manager Multi Zone Cooling Average, !- Name
+  Temperature,                            !- Control Variable
+  12,                                     !- Minimum Setpoint Temperature {C}
+  18,                                     !- Maximum Setpoint Temperature {C}
+  ;                                       !- Setpoint Node or NodeList Name
+
+OS:SetpointManager:MultiZone:Heating:Average,
+  {0a71f5aa-a09a-4295-b793-ae7afacf1880}, !- Handle
+  Setpoint Manager Multi Zone Heating Average, !- Name
+  Temperature,                            !- Control Variable
+  20,                                     !- Minimum Setpoint Temperature {C}
+  50,                                     !- Maximum Setpoint Temperature {C}
+  ;                                       !- Setpoint Node or NodeList Name
+
+OS:SetpointManager:MultiZone:Humidity:Maximum,
+  {f83b7f0e-7825-4404-8457-ceca1af0e739}, !- Handle
+  Setpoint Manager Multi Zone Humidity Maximum, !- Name
+  MaximumHumidityRatio,                   !- Control Variable
+  0.008,                                  !- Minimum Setpoint Humidity Ratio {kgWater/kgDryAir}
+  0.015,                                  !- Maximum Setpoint Humidity Ratio {kgWater/kgDryAir}
+  ;                                       !- Setpoint Node or NodeList Name
+
+OS:SetpointManager:MultiZone:MaximumHumidity:Average,
+  {009553a2-3dd7-43dc-bab1-ee5d2e9abc35}, !- Handle
+  Setpoint Manager Multi Zone Maximum Humidity Average, !- Name
+  MaximumHumidityRatio,                   !- Control Variable
+  0.008,                                  !- Minimum Setpoint Humidity Ratio {kgWater/kgDryAir}
+  0.015,                                  !- Maximum Setpoint Humidity Ratio {kgWater/kgDryAir}
+  ;                                       !- Setpoint Node or NodeList Name
+
+OS:SetpointManager:SingleZone:Humidity:Maximum,
+  {34e80a9c-7b5f-4161-8965-4e058bd78fba}, !- Handle
+  Setpoint Manager Single Zone Humidity Maximum, !- Name
+  MaximumHumidityRatio,                   !- Control Variable
+  ,                                       !- Control Zone Name
+  ;                                       !- Setpoint Node or NodeList Name
+
+OS:SetpointManager:SingleZone:OneStageCooling,
+  {698b3c0c-62eb-431c-a93b-571f5614da9a}, !- Handle
+  Setpoint Manager Single Zone One Stage Cooling, !- Name
+  Temperature,                            !- Control Variable
+  -99,                                    !- Cooling Stage On Supply Air Setpoint Temperature {C}
+  99,                                     !- Cooling Stage Off Supply Air Setpoint Temperature {C}
+  ,                                       !- Control Zone Name
+  ;                                       !- Setpoint Node or NodeList Name
+
+OS:SetpointManager:SingleZone:OneStageHeating,
+  {b6b9b2a2-3b14-4f97-8a48-aaeefd196c0e}, !- Handle
+  Setpoint Manager Single Zone One Stage Heating, !- Name
+  Temperature,                            !- Control Variable
+  99,                                     !- Heating Stage On Supply Air Setpoint Temperature {C}
+  -99,                                    !- Heating Stage Off Supply Air Setpoint Temperature {C}
+  ,                                       !- Control Zone Name
   ;                                       !- Setpoint Node or NodeList Name
 
 OS:Schedule:Ruleset,
