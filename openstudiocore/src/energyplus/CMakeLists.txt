@@ -341,6 +341,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateZoneAirHeatBalanceAlgorithm.cpp
   ReverseTranslator/ReverseTranslateZoneAirMassFlowConservation.cpp
   ReverseTranslator/ReverseTranslateZone.cpp
+  ReverseTranslator/ReverseTranslateZoneCrossMixing.cpp
   ReverseTranslator/ReverseTranslateZoneHVACEquipmentList.cpp
   ReverseTranslator/ReverseTranslateZoneHVACIdealLoadsAirSystem.cpp
   ReverseTranslator/ReverseTranslateZoneInfiltrationDesignFlowRate.cpp
