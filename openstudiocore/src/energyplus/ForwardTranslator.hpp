@@ -246,6 +246,7 @@ class WaterUseConnections;
 class WaterUseEquipment;
 class WindowPropertyFrameAndDivider;
 class ZoneAirHeatBalanceAlgorithm;
+class ZoneAirMassFlowConservation;
 class ZoneControlHumidistat;
 class ZoneControlThermostatStagedDualSetpoint;
 class ZoneHVACBaseboardConvectiveElectric;
@@ -759,6 +760,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateWindowPropertyFrameAndDivider(model::WindowPropertyFrameAndDivider & modelObject);
 
   boost::optional<IdfObject> translateZoneAirHeatBalanceAlgorithm( model::ZoneAirHeatBalanceAlgorithm & modelObject );
+
+  boost::optional<IdfObject> translateZoneAirMassFlowConservation(model::ZoneAirMassFlowConservation & modelObject);
 
   boost::optional<IdfObject> translateZoneControlHumidistat( model::ZoneControlHumidistat& modelObject );
 

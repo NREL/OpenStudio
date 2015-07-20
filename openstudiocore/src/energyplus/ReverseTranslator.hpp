@@ -261,6 +261,8 @@ class ENERGYPLUS_API ReverseTranslator {
 
   boost::optional<model::ModelObject> translateZoneAirHeatBalanceAlgorithm(const WorkspaceObject & workspaceObject);
 
+  boost::optional<model::ModelObject> translateZoneAirMassFlowConservation(const WorkspaceObject & workspaceObject);
+  
   boost::optional<model::ModelObject> translateZoneCrossMixing(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateZoneHVACEquipmentList(const WorkspaceObject & workspaceObject);

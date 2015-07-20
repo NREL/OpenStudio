@@ -19,19 +19,10 @@
 
 #include "../ForwardTranslator.hpp"
 #include "../../model/Model.hpp"
-#include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
-#include "../../model/ModelObject.hpp"
-#include "../../model/ModelObject_Impl.hpp"
-#include "../../model/Node.hpp"
-#include "../../model/Node_Impl.hpp"
-#include "../../model/ZoneHVACBaseboardConvectiveElectric.hpp"
-#include "../../model/ZoneHVACBaseboardConvectiveElectric_Impl.hpp"
-#include "../../model/ThermalZone.hpp"
-#include "../../model/ThermalZone_Impl.hpp"
-#include "../../model/StraightComponent.hpp"
-#include "../../model/StraightComponent_Impl.hpp"
-#include <utilities/idd/ZoneHVAC_Baseboard_Convective_Electric_FieldEnums.hxx>
+#include "../../model/ZoneAirMassFlowConservation.hpp"
+#include "../../model/ZoneAirMassFlowConservation_Impl.hpp"
+
+#include <utilities/idd/ZoneAirMassFlowConservation_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -42,41 +33,21 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateZoneHVACBaseboardConvectiveElectric(
-    ZoneHVACBaseboardConvectiveElectric & modelObject )
+boost::optional<IdfObject> ForwardTranslator::translateZoneAirMassFlowConservation(
+    ZoneAirMassFlowConservation & modelObject)
 {
   // Makes sure the modelObject gets put in the map, and that the new idfObject gets put in 
   // the final file. Also set's the idfObject's name.
-  IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::ZoneHVAC_Baseboard_Convective_Electric,modelObject);
+  IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::ZoneAirMassFlowConservation, modelObject);
 
-  boost::optional<std::string> s;
-  boost::optional<double> value;
-  boost::optional<ModelObject> temp;
+  if (modelObject.adjustZoneMixingForZoneAirMassFlowBalance()){
+    idfObject.setString(ZoneAirMassFlowConservationFields::AdjustZoneMixingForZoneAirMassFlowBalance, "Yes");
+  }else{
+    idfObject.setString(ZoneAirMassFlowConservationFields::AdjustZoneMixingForZoneAirMassFlowBalance, "No");
+  }
+
+  idfObject.setString(ZoneAirMassFlowConservationFields::SourceZoneInfiltrationTreatment, modelObject.sourceZoneInfiltrationTreatment());
   
-  // AvailabilityScheduleName
-  Schedule availabilitySchedule = modelObject.availabilitySchedule();
-  translateAndMapModelObject(availabilitySchedule);
-  idfObject.setString(ZoneHVAC_Baseboard_Convective_ElectricFields::AvailabilityScheduleName,
-                      availabilitySchedule.name().get() );
-
-  // NominalCapacity
-
-  if( modelObject.isNominalCapacityAutosized() )
-  {
-    idfObject.setString(ZoneHVAC_Baseboard_Convective_ElectricFields::HeatingDesignCapacity,"Autosize");
-  }
-  else if( (value = modelObject.nominalCapacity()) )
-  {
-    idfObject.setDouble(ZoneHVAC_Baseboard_Convective_ElectricFields::HeatingDesignCapacity,value.get());
-  }
-
-  // Efficiency
-
-  if( (value = modelObject.efficiency()) )
-  {
-    idfObject.setDouble(ZoneHVAC_Baseboard_Convective_ElectricFields::Efficiency,value.get());
-  }
-
   return idfObject;
 }
 
