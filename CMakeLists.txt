@@ -148,7 +148,7 @@ if(MSVC)
     message(WARNING "Update 4 for Visual Studio 2013 is strongly recommended")
   elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.31101")
     # VS2013 Update 4: no-op
-  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.40418")
+  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.40629")
     # VS2013 Update 5: no-op
   endif()
 
