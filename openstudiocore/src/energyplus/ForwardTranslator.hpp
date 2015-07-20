@@ -244,6 +244,7 @@ class Timestep;
 class Version;
 class WaterHeaterMixed;
 class WaterHeaterHeatPump;
+class WaterHeaterStratified;
 class WaterUseConnections;
 class WaterUseEquipment;
 class WindowPropertyFrameAndDivider;
@@ -756,6 +757,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateWaterHeaterMixed( model::WaterHeaterMixed & modelObject );
 
   boost::optional<IdfObject> translateWaterHeaterHeatPump( model::WaterHeaterHeatPump & modelObject );
+
+  boost::optional<IdfObject> translateWaterHeaterStratified( model::WaterHeaterStratified & modelObject );
 
   boost::optional<IdfObject> translateWaterUseConnections( model::WaterUseConnections & modelObject );
 

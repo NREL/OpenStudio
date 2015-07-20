@@ -20118,6 +20118,373 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
        \note Use curve coefficients of 1,0,0 or leave this field blank when neglecting performance impacts
        \note due to variations in part load ratio.
 
+OS:WaterHeater:Stratified,
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference WaterHeaterNames
+       \reference ConnectionObject
+  A3,  \field End-Use Subcategory
+       \required-field
+       \type alpha
+       \retaincase
+  N1,  \field Tank Volume
+       \autosizable
+       \required-field
+       \type real
+       \units m3
+       \minimum> 0.0
+       \ip-units gal
+  N2,  \field Tank Height
+       \autosizable
+       \required-field
+       \type real
+       \units m
+       \minimum> 0.0
+       \note Height is measured in the axial direction for horizontal cylinders
+  A4,  \field Tank Shape
+       \required-field
+       \type choice
+       \key VerticalCylinder
+       \key HorizontalCylinder
+       \key Other
+  N3,  \field Tank Perimeter
+       \type real
+       \units m
+       \minimum 0.0
+       \note Only used if Tank Shape is Other
+  N4,  \field Maximum Temperature Limit
+       \required-field
+       \type real
+       \units C
+  A5,  \field Heater Priority Control
+       \required-field
+       \type choice
+       \key MasterSlave
+       \key Simultaneous
+  A6,  \field Heater 1 Setpoint Temperature Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+  N5,  \field Heater 1 Deadband Temperature Difference
+       \required-field
+       \type real
+       \units deltaC
+       \minimum 0.0
+  N6,  \field Heater 1 Capacity
+       \required-field
+       \type real
+       \units W
+       \minimum 0.0
+       \autosizable
+  N7,  \field Heater 1 Height
+       \required-field
+       \type real
+       \units m
+       \minimum 0.0
+  A7,  \field Heater 2 Setpoint Temperature Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+  N8,  \field Heater 2 Deadband Temperature Difference
+       \required-field
+       \type real
+       \units deltaC
+       \minimum 0.0
+  N9,  \field Heater 2 Capacity
+       \required-field
+       \type real
+       \units W
+       \minimum 0.0
+  N10, \field Heater 2 Height
+       \required-field
+       \type real
+       \units m
+       \minimum 0.0
+  A8,  \field Heater Fuel Type
+       \required-field
+       \type choice
+       \key Electricity
+       \key NaturalGas
+       \key PropaneGas
+       \key FuelOil#1
+       \key FuelOil#2
+       \key Coal
+       \key Diesel
+       \key Gasoline
+       \key OtherFuel1
+       \key OtherFuel2
+       \key Steam
+       \key DistrictHeating
+  N11, \field Heater Thermal Efficiency
+       \required-field
+       \type real
+       \minimum> 0.0
+       \maximum 1.0
+  N12, \field Off Cycle Parasitic Fuel Consumption Rate
+       \required-field
+       \type real
+       \units W
+       \minimum 0.0
+  A9,  \field Off Cycle Parasitic Fuel Type
+       \required-field
+       \type choice
+       \key Electricity
+       \key NaturalGas
+       \key PropaneGas
+       \key FuelOil#1
+       \key FuelOil#2
+       \key Coal
+       \key Diesel
+       \key Gasoline
+       \key OtherFuel1
+       \key OtherFuel2
+       \key Steam
+       \key DistrictHeating
+  N13, \field Off Cycle Parasitic Heat Fraction to Tank
+       \required-field
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+  N14, \field Off Cycle Parasitic Height
+       \required-field
+       \type real
+       \units m
+       \minimum 0.0
+  N15, \field On Cycle Parasitic Fuel Consumption Rate
+       \required-field
+       \type real
+       \units W
+       \minimum 0.0
+  A10, \field On Cycle Parasitic Fuel Type
+       \required-field
+       \type choice
+       \key Electricity
+       \key NaturalGas
+       \key PropaneGas
+       \key FuelOil#1
+       \key FuelOil#2
+       \key Coal
+       \key Diesel
+       \key Gasoline
+       \key OtherFuel1
+       \key OtherFuel2
+       \key Steam
+       \key DistrictHeating
+  N16, \field On Cycle Parasitic Heat Fraction to Tank
+       \required-field
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+  N17, \field On Cycle Parasitic Height
+       \required-field
+       \type real
+       \units m
+       \minimum 0.0
+  A11, \field Ambient Temperature Indicator
+       \required-field
+       \type choice
+       \key Schedule
+       \key ThermalZone
+       \key Outdoors
+  A12, \field Ambient Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  A13, \field Ambient Temperature Thermal Zone Name
+       \type object-list
+       \object-list ThermalZoneNames
+  A14, \field Ambient Temperature Outdoor Air Node Name
+       \type alpha
+       \note required for Ambient Temperature Indicator=Outdoors
+  N18, \field Uniform Skin Loss Coefficient per Unit Area to Ambient Temperature
+       \type real
+       \units W/m2-K
+       \minimum 0.0
+  N19, \field Skin Loss Fraction to Zone
+       \required-field
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+  N20, \field Off Cycle Flue Loss Coefficient to Ambient Temperature
+       \type real
+       \units W/K
+       \minimum 0.0
+  N21, \field Off Cycle Flue Loss Fraction to Zone
+       \required-field
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+  N22, \field Peak Use Flow Rate
+       \type real
+       \units m3/s
+       \ip-units gal/min
+       \minimum 0.0
+       \note Only used if Use Side Node connections are blank
+  A15, \field Use Flow Rate Fraction Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note If blank, defaults to 1.0 at all times
+       \note Only used if use side node connections are blank
+  A16, \field Cold Water Supply Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Only used if use side node connections are blank
+       \note Defaults to water temperatures calculated by Site:WaterMainsTemperature object
+  A17, \field Use Side Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A18, \field Use Side Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  N23, \field Use Side Effectiveness
+       \required-field
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+       \note The use side effectiveness in the stratified tank model is a simplified analogy of
+       \note a heat exchanger's effectiveness. This effectiveness is equal to the fraction of
+       \note use mass flow rate that directly mixes with the tank fluid. And one minus the
+       \note effectiveness is the fraction that bypasses the tank. The use side mass flow rate
+       \note that bypasses the tank is mixed with the fluid or water leaving the stratified tank.
+  N24, \field Use Side Inlet Height
+       \required-field
+       \type real
+       \units m
+       \minimum 0.0
+       \note Defaults to bottom of tank
+  N25, \field Use Side Outlet Height
+       \required-field
+       \type real
+       \units m
+       \minimum 0.0
+       \autocalculatable
+       \note Defaults to top of tank
+  A19, \field Source Side Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A20, \field Source Side Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  N26, \field Source Side Effectiveness
+       \required-field
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+       \note The source side effectiveness in the stratified tank model is a simplified analogy of
+       \note a heat exchanger's effectiveness. This effectiveness is equal to the fraction of
+       \note source mass flow rate that directly mixes with the tank fluid. And one minus the
+       \note effectiveness is the fraction that bypasses the tank. The source side mass flow rate
+       \note that bypasses the tank is mixed with the fluid or water leaving the stratified tank.
+  N27, \field Source Side Inlet Height
+       \required-field
+       \type real
+       \units m
+       \minimum 0.0
+       \autocalculatable
+       \note Defaults to top of tank
+  N28, \field Source Side Outlet Height
+       \required-field
+       \type real
+       \units m
+       \minimum 0.0
+       \note Defaults to bottom of tank
+  A21, \field Inlet Mode
+       \required-field
+       \type choice
+       \key Fixed
+       \key Seeking
+  N29, \field Use Side Design Flow Rate
+       \required-field
+       \type real
+       \autosizable
+       \units m3/s
+       \ip-units gal/min
+       \minimum 0.0
+  N30, \field Source Side Design Flow Rate
+       \required-field
+       \type real
+       \autosizable
+       \units m3/s
+       \ip-units gal/min
+       \minimum 0.0
+  N31, \field Indirect Water Heating Recovery Time
+       \required-field
+       \type real
+       \note Parameter for autosizing design flow rates for indirectly heated water tanks
+       \note time required to raise temperature of entire tank from 14.4C to 57.2C
+       \units hr
+       \minimum> 0.0
+  N32, \field Number of Nodes
+       \required-field
+       \type integer
+       \minimum 1
+       \maximum 10
+  N33, \field Additional Destratification Conductivity
+       \required-field
+       \type real
+       \units W/m-K
+       \minimum 0.0
+  N34, \field Node 1 Additional Loss Coefficient
+       \required-field
+       \type real
+       \units W/m2-K
+  N35, \field Node 2 Additional Loss Coefficient
+       \required-field
+       \type real
+       \units W/m2-K
+  N36, \field Node 3 Additional Loss Coefficient
+       \required-field
+       \type real
+       \units W/m2-K
+  N37, \field Node 4 Additional Loss Coefficient
+       \required-field
+       \type real
+       \units W/m2-K
+  N38, \field Node 5 Additional Loss Coefficient
+       \required-field
+       \type real
+       \units W/m2-K
+  N39, \field Node 6 Additional Loss Coefficient
+       \required-field
+       \type real
+       \units W/m2-K
+  N40, \field Node 7 Additional Loss Coefficient
+       \required-field
+       \type real
+       \units W/m2-K
+  N41, \field Node 8 Additional Loss Coefficient
+       \required-field
+       \type real
+       \units W/m2-K
+  N42, \field Node 9 Additional Loss Coefficient
+       \required-field
+       \type real
+       \units W/m2-K
+  N43, \field Node 10 Additional Loss Coefficient
+       \required-field
+       \type real
+       \units W/m2-K
+  A22, \field Source Side Flow Control Mode
+       \required-field
+       \type choice
+       \key StorageTank
+       \key IndirectHeatPrimarySetpoint
+       \key IndirectHeatAlternateSetpoint
+       \note StorageTank mode always requests flow unless tank is at its Maximum Temperature Limit
+       \note IndirectHeatPrimarySetpoint mode requests flow whenever primary setpoint for heater 1 calls for heat
+       \note IndirectHeatAlternateSetpoint mode requests flow whenever alternate indirect setpoint calls for heat
+  A23; \field Indirect Alternate Setpoint Temperature Schedule Name
+       \note This field is only used if the previous is set to IndirectHeatAlternateSetpoint
+       \type object-list
+       \object-list ScheduleNames
+
 OS:WaterUse:Equipment,
   A1, \field Handle
        \type handle

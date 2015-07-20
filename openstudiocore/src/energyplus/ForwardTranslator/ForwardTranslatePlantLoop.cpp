@@ -45,6 +45,8 @@
 #include "../../model/WaterHeaterMixed_Impl.hpp"
 #include "../../model/WaterHeaterHeatPump.hpp"
 #include "../../model/WaterHeaterHeatPump_Impl.hpp"
+#include "../../model/WaterHeaterStratified.hpp"
+#include "../../model/WaterHeaterStratified_Impl.hpp"
 #include "../../model/CoolingTowerVariableSpeed.hpp"
 #include "../../model/CoolingTowerVariableSpeed_Impl.hpp"
 #include "../../model/CoolingTowerSingleSpeed.hpp"
@@ -496,6 +498,28 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
           } else {
             heatingComponents.push_back(supplyComponent);
           }
+        }
+        break;
+      }
+      case openstudio::IddObjectType::OS_WaterHeater_Stratified :
+      {
+        sizeAsHotWaterSystem = true;
+        if( boost::optional<Node> outletNode = isSetpointComponent(plantLoop,supplyComponent) ) 
+        {
+          WaterHeaterStratified waterHeater = supplyComponent.cast<WaterHeaterStratified>();
+          if( waterHeater.isUseSideDesignFlowRateAutosized() )
+          {
+            autosize = true;
+          }
+          else if(boost::optional<double> optionalFlowRate = waterHeater.useSideDesignFlowRate())
+          {
+            flowRate = optionalFlowRate.get();
+          }
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,HEATING));
+        }
+        else
+        {
+          heatingComponents.push_back(supplyComponent);
         }
         break;
       }

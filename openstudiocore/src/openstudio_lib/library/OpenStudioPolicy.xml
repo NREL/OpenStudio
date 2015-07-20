@@ -736,6 +736,11 @@
     <rule IddField="Heating COP Function of Air Flow Fraction Curve" Access="LOCKED"/>
     <rule IddField="Heating COP Function of Water Flow Fraction Curve" Access="LOCKED"/>
     <rule IddField="Part Load Fraction Correlation Curve" Access="LOCKED"/>
+  <POLICY IddObjectType="OS_WaterHeater_Stratified">
+    <rule IddField="Use Side Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Use Side Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Source Side Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Source Side Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow">
     <rule IddField="Terminal Unit Air Inlet Node" Access="HIDDEN"/>
