@@ -1186,16 +1186,21 @@ TEST_F(DataFixture, TimeSeries_Yearly)
   Vector idioticVector(1);
   idioticVector[0] = 1.0;
 
-  std::vector<double> daysFromFirstReport = { 0.0 };
+  std::vector<double> daysFromFirstReport0 = { 0.0 };
+  std::vector<double> daysFromFirstReport8760 = { 8760.0 };
 
   TimeSeries intervalTimeSeries(firstReportDateTime, interval, idioticVector, units);
-  TimeSeries firstAndDaysTimeSeries(firstReportDateTime, daysFromFirstReport, values, units);
+  TimeSeries firstAndDaysTimeSeries0(firstReportDateTime, daysFromFirstReport0, values, units);
+  TimeSeries firstAndDaysTimeSeries8760(firstReportDateTime, daysFromFirstReport8760, values, units);
 
   // Check computations
   EXPECT_EQ(31536000, intervalTimeSeries.integrate());
   EXPECT_EQ(1, intervalTimeSeries.averageValue());
-  EXPECT_EQ(31536000, firstAndDaysTimeSeries.integrate());
-  EXPECT_EQ(1, firstAndDaysTimeSeries.averageValue());
+  EXPECT_EQ(31536000, firstAndDaysTimeSeries0.integrate());
+  EXPECT_EQ(1, firstAndDaysTimeSeries0.averageValue());
+  EXPECT_EQ(31536000, firstAndDaysTimeSeries8760.integrate());
+  EXPECT_EQ(1, firstAndDaysTimeSeries8760.averageValue());
+
 }
 
 TEST_F(DataFixture, TimeSeries_Monthly)
