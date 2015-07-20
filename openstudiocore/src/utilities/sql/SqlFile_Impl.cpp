@@ -2424,9 +2424,9 @@ namespace openstudio{
             }
           }
 
-          stdSecondsFromFirstReport.push_back(cumulativeSeconds);
-           
+          // Use the new way to create the time series with nonzero first entry
           cumulativeSeconds += 60*intervalMinutes;
+          stdSecondsFromFirstReport.push_back(cumulativeSeconds);
 
           // check if this interval is same as the others
           if (isIntervalTimeSeries && !reportingIntervalMinutes){

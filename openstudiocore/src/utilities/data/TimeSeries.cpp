@@ -359,7 +359,6 @@ TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std:
   if (timeInSeconds.size() != values.size()) {
     LOG_AND_THROW("Length of values (" << values.size() << ") must match length of times (" << timeInSeconds.size() << ")");
   }
-
   if (values.empty() || timeInSeconds.empty()) {
     LOG(Warn, "Creating empty timeseries");
     m_startDateTime = firstReportDateTime;
