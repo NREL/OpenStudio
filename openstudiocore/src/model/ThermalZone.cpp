@@ -83,6 +83,8 @@
 #include "LifeCycleCost_Impl.hpp"
 #include "SetpointManagerSingleZoneReheat.hpp"
 #include "SetpointManagerSingleZoneReheat_Impl.hpp"
+#include "ZoneMixing.hpp"
+#include "ZoneMixing_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -157,6 +159,7 @@ namespace detail {
   std::vector<IddObjectType> ThermalZone_Impl::allowableChildTypes() const
   {
     std::vector<IddObjectType> result;
+    // DLM: this does not seem to agree with implementation of children()
     result.push_back(IddObjectType::OS_ThermostatSetpoint_DualSetpoint);
     result.push_back(IddObjectType::OS_ZoneControl_Thermostat_StagedDualSetpoint);
     return result;
@@ -1430,6 +1433,15 @@ namespace detail {
       
     zoneHVACEquipmentList().remove();
 
+    // remove ZoneMixing objects
+
+    // DLM: these removed objects are not being returned in the result
+    for (auto mixing : this->zoneMixing()){
+      mixing.remove();
+      //std::vector<IdfObject> temp = mixing.remove();
+      //result.insert(result.end(), temp.begin(), temp.end());
+    }
+
     //turn the object back on and proceed  
     this->blockSignals(false);
 
@@ -1911,6 +1923,8 @@ namespace detail {
       tz.setZoneControlHumidistat(humidistatClone);
     }
 
+    // DLM: do not clone zone mixing objects
+
     return tz;
   }
 
@@ -2169,6 +2183,36 @@ namespace detail {
       }
     }
   }
+
+  std::vector<ZoneMixing> ThermalZone_Impl::zoneMixing()
+  {
+    return getObject<ModelObject>().getModelObjectSources<ZoneMixing>();
+  }
+
+  std::vector<ZoneMixing> ThermalZone_Impl::supplyZoneMixing()
+  {
+    std::vector<ZoneMixing> result = this->zoneMixing();
+
+    Handle handle = this->handle();
+    auto new_end = std::remove_if(result.begin(), result.end(),
+                                  [&](const ZoneMixing& mixing){ return (mixing.zone().handle() != handle); });
+
+    result.erase(new_end, result.end());
+    return result;
+  }
+
+  std::vector<ZoneMixing> ThermalZone_Impl::exhaustZoneMixing()
+  {
+    std::vector<ZoneMixing> result = this->zoneMixing();
+
+    Handle handle = this->handle();
+    auto new_end = std::remove_if(result.begin(), result.end(),
+                                  [&](const ZoneMixing& mixing){ return (!mixing.sourceZone() || (mixing.sourceZone()->handle() != handle)); });
+
+    result.erase(new_end, result.end());
+    return result;
+  }
+
 
 } // detail
 
@@ -2714,6 +2758,21 @@ bool ThermalZone::setReturnPlenum(const ThermalZone & plenumZone)
 void ThermalZone::removeReturnPlenum()
 {
   getImpl<detail::ThermalZone_Impl>()->removeReturnPlenum();
+}
+
+std::vector<ZoneMixing> ThermalZone::zoneMixing()
+{
+  return getImpl<detail::ThermalZone_Impl>()->zoneMixing();
+}
+
+std::vector<ZoneMixing> ThermalZone::supplyZoneMixing()
+{
+  return getImpl<detail::ThermalZone_Impl>()->supplyZoneMixing();
+}
+
+std::vector<ZoneMixing> ThermalZone::exhaustZoneMixing()
+{
+  return getImpl<detail::ThermalZone_Impl>()->exhaustZoneMixing();
 }
 
 /// @cond

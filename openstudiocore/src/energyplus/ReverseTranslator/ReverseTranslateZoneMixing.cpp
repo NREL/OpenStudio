@@ -19,16 +19,14 @@
 
 #include "../ReverseTranslator.hpp"
 
-#include "../../model/SpaceInfiltrationDesignFlowRate.hpp"
-#include "../../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
-#include "../../model/Space.hpp"
-#include "../../model/Space_Impl.hpp"
-#include "../../model/SpaceType.hpp"
-#include "../../model/SpaceType_Impl.hpp"
+#include "../../model/ZoneMixing.hpp"
+#include "../../model/ZoneMixing_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
 
-#include <utilities/idd/ZoneInfiltration_DesignFlowRate_FieldEnums.hxx>
+#include <utilities/idd/ZoneMixing_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
@@ -40,107 +38,165 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateZoneInfiltrationDesignFlowRate( const WorkspaceObject & workspaceObject )
+OptionalModelObject ReverseTranslator::translateZoneMixing( const WorkspaceObject & workspaceObject )
 {
-  if( workspaceObject.iddObject().type() != IddObjectType::ZoneInfiltration_DesignFlowRate ){
-    LOG(Error, "WorkspaceObject is not IddObjectType: ZoneInfiltration:DesignFlowRate");
+  if( workspaceObject.iddObject().type() != IddObjectType::ZoneMixing ){
+    LOG(Error, "WorkspaceObject is not IddObjectType: ZoneMixing");
     return boost::none;
   }
 
-  openstudio::model::SpaceInfiltrationDesignFlowRate infiltration(m_model);
+  OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::ZoneMixingFields::ZoneName);
+  OptionalThermalZone zone;
+  if (target){
+    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+    if (modelObject){
+      zone = modelObject->optionalCast<ThermalZone>();
+    }
+  }
+  
+  if (!zone){
+    return boost::none;
+  }
+
+  openstudio::model::ZoneMixing mixing(*zone);
   
   OptionalString s = workspaceObject.name();
   if(s){
-    infiltration.setName(*s);
+    mixing.setName(*s);
   }
 
-  OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::ZoneInfiltration_DesignFlowRateFields::ZoneorZoneListName);
+  target = workspaceObject.getTarget(openstudio::ZoneMixingFields::ScheduleName);
   if (target){
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){
-      if (modelObject->optionalCast<Space>()){
-        infiltration.setSpace(modelObject->cast<Space>());
-      }else if (modelObject->optionalCast<SpaceType>()){
-        infiltration.setSpaceType(modelObject->cast<SpaceType>());
+      if (modelObject->optionalCast<Schedule>()){
+        mixing.setSchedule(modelObject->cast<Schedule>());
       }
     }
   }
 
-  target = workspaceObject.getTarget(openstudio::ZoneInfiltration_DesignFlowRateFields::ScheduleName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (OptionalSchedule intermediate = modelObject->optionalCast<Schedule>()){
-        Schedule schedule(*intermediate);
-        infiltration.setSchedule(schedule);
-      }
-    }
-  }
-
-  s = workspaceObject.getString(openstudio::ZoneInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod, true);
+  s = workspaceObject.getString(openstudio::ZoneMixingFields::DesignFlowRateCalculationMethod, true);
   OS_ASSERT(s);
 
   OptionalDouble d;
   if (istringEqual("Flow/Zone", *s)){
-    d = workspaceObject.getDouble(openstudio::ZoneInfiltration_DesignFlowRateFields::DesignFlowRate);
+    d = workspaceObject.getDouble(openstudio::ZoneMixingFields::DesignFlowRate);
     if (d){
-      infiltration.setDesignFlowRate(*d);
-    }else{
+      mixing.setDesignFlowRate(*d);
+    } else{
       LOG(Error, "Flow/Zone value not found for workspace object " << workspaceObject);
     }
-  }else if(istringEqual("Flow/Area", *s)){
-    d = workspaceObject.getDouble(openstudio::ZoneInfiltration_DesignFlowRateFields::FlowperZoneFloorArea);
+  } else if (istringEqual("Flow/Area", *s)){
+    d = workspaceObject.getDouble(openstudio::ZoneMixingFields::FlowRateperZoneFloorArea);
     if (d){
-      infiltration.setFlowperSpaceFloorArea(*d);
-    }else{
+      mixing.setFlowRateperZoneFloorArea(*d);
+    } else{
       LOG(Error, "Flow/Area value not found for workspace object " << workspaceObject);
     }
-  }else if(istringEqual("Flow/ExteriorArea", *s)){
-    d = workspaceObject.getDouble(openstudio::ZoneInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea);
+  } else if (istringEqual("Flow/Person", *s)){
+    d = workspaceObject.getDouble(openstudio::ZoneMixingFields::FlowRateperPerson);
     if (d){
-      infiltration.setFlowperExteriorSurfaceArea(*d);
-    }else{
-      LOG(Error, "Flow/ExteriorArea value not found for workspace object " << workspaceObject);
+      mixing.setFlowRateperPerson(*d);
+    } else{
+      LOG(Error, "Flow/Person value not found for workspace object " << workspaceObject);
     }
-  }else if(istringEqual("Flow/ExteriorWallArea", *s)){
-    d = workspaceObject.getDouble(openstudio::ZoneInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea);
+  } else if (istringEqual("AirChanges/Hour", *s)){
+    d = workspaceObject.getDouble(openstudio::ZoneMixingFields::AirChangesperHour);
     if (d){
-      infiltration.setFlowperExteriorWallArea(*d);
-    }else{
-      LOG(Error, "Flow/ExteriorWallArea value not found for workspace object " << workspaceObject);
-    }
-  }else if(istringEqual("AirChanges/Hour", *s)){
-    d = workspaceObject.getDouble(openstudio::ZoneInfiltration_DesignFlowRateFields::AirChangesperHour);
-    if (d){
-      infiltration.setAirChangesperHour(*d);
-    }else{
+      mixing.setAirChangesperHour(*d);
+    } else{
       LOG(Error, "AirChanges/Hour value not found for workspace object " << workspaceObject);
     }
-  }else{
-    LOG(Error, "Unknown DesignLevelCalculationMethod value for workspace object" << workspaceObject);
+  } else{
+    LOG(Error, "Unknown DesignFlowRateCalculationMethod value for workspace object" << workspaceObject);
   }
 
-  d = workspaceObject.getDouble(openstudio::ZoneInfiltration_DesignFlowRateFields::ConstantTermCoefficient);
+  target = workspaceObject.getTarget(openstudio::ZoneMixingFields::SourceZoneName);
+  if (target){
+    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+    if (modelObject){
+      if (modelObject->optionalCast<ThermalZone>()){
+        mixing.setSourceZone(modelObject->cast<ThermalZone>());
+      }
+    }
+  }
+
+  d = workspaceObject.getDouble(openstudio::ZoneMixingFields::DeltaTemperature);
   if (d){
-    infiltration.setConstantTermCoefficient(*d);
+    mixing.setDeltaTemperature(*d);
   }
 
-  d = workspaceObject.getDouble(openstudio::ZoneInfiltration_DesignFlowRateFields::TemperatureTermCoefficient);
-  if (d){
-    infiltration.setTemperatureTermCoefficient(*d);
+  target = workspaceObject.getTarget(openstudio::ZoneMixingFields::DeltaTemperatureScheduleName);
+  if (target){
+    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+    if (modelObject){
+      if (modelObject->optionalCast<Schedule>()){
+        mixing.setDeltaTemperatureSchedule(modelObject->cast<Schedule>());
+      }
+    }
   }
 
-  d = workspaceObject.getDouble(openstudio::ZoneInfiltration_DesignFlowRateFields::VelocityTermCoefficient);
-  if (d){
-    infiltration.setVelocityTermCoefficient(*d);
+  target = workspaceObject.getTarget(openstudio::ZoneMixingFields::MinimumZoneTemperatureScheduleName);
+  if (target){
+    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+    if (modelObject){
+      if (modelObject->optionalCast<Schedule>()){
+        mixing.setMinimumZoneTemperatureSchedule(modelObject->cast<Schedule>());
+      }
+    }
   }
 
-  d = workspaceObject.getDouble(openstudio::ZoneInfiltration_DesignFlowRateFields::VelocitySquaredTermCoefficient);
-  if (d){
-    infiltration.setVelocitySquaredTermCoefficient(*d);
+  target = workspaceObject.getTarget(openstudio::ZoneMixingFields::MaximumZoneTemperatureScheduleName);
+  if (target){
+    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+    if (modelObject){
+      if (modelObject->optionalCast<Schedule>()){
+        mixing.setMaximumZoneTemperatureSchedule(modelObject->cast<Schedule>());
+      }
+    }
   }
 
-  return infiltration;
+  target = workspaceObject.getTarget(openstudio::ZoneMixingFields::MinimumSourceZoneTemperatureScheduleName);
+  if (target){
+    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+    if (modelObject){
+      if (modelObject->optionalCast<Schedule>()){
+        mixing.setMinimumSourceZoneTemperatureSchedule(modelObject->cast<Schedule>());
+      }
+    }
+  }
+
+  target = workspaceObject.getTarget(openstudio::ZoneMixingFields::MaximumSourceZoneTemperatureScheduleName);
+  if (target){
+    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+    if (modelObject){
+      if (modelObject->optionalCast<Schedule>()){
+        mixing.setMaximumSourceZoneTemperatureSchedule(modelObject->cast<Schedule>());
+      }
+    }
+  }
+
+  target = workspaceObject.getTarget(openstudio::ZoneMixingFields::MinimumOutdoorTemperatureScheduleName);
+  if (target){
+    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+    if (modelObject){
+      if (modelObject->optionalCast<Schedule>()){
+        mixing.setMinimumOutdoorTemperatureSchedule(modelObject->cast<Schedule>());
+      }
+    }
+  }
+
+  target = workspaceObject.getTarget(openstudio::ZoneMixingFields::MaximumOutdoorTemperatureScheduleName);
+  if (target){
+    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+    if (modelObject){
+      if (modelObject->optionalCast<Schedule>()){
+        mixing.setMaximumOutdoorTemperatureSchedule(modelObject->cast<Schedule>());
+      }
+    }
+  }
+
+  return mixing;
 }
 
 } // energyplus

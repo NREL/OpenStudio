@@ -262,6 +262,7 @@ class ZoneHVACTerminalUnitVariableRefrigerantFlow;
 class ZoneHVACWaterToAirHeatPump;
 class ZoneHVACEquipmentList;
 class ZoneHVACUnitHeater;
+class ZoneMixing;
 }
 
 namespace energyplus {
@@ -790,6 +791,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateZoneHVACWaterToAirHeatPump( model::ZoneHVACWaterToAirHeatPump & modelObject );
   
   boost::optional<IdfObject> translateZoneHVACUnitHeater( model::ZoneHVACUnitHeater & modelObject );
+
+  boost::optional<IdfObject> translateZoneMixing( model::ZoneMixing & modelObject);
 
   boost::optional<IdfObject> createAirLoopHVACSupplyPath( model::AirLoopHVAC & airLoopHVAC );
 

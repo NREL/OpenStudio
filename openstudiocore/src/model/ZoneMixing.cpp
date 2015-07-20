@@ -271,7 +271,11 @@ namespace detail {
 
   bool ZoneMixing_Impl::setSourceZone(const ThermalZone& zone) {
     bool result(false);
-    result = setPointer(OS_ZoneMixingFields::SourceZoneName, zone.handle());
+    
+    // source zone cannot be the same as this zone
+    if (zone.handle() != this->zone().handle()){
+      result = setPointer(OS_ZoneMixingFields::SourceZoneName, zone.handle());
+    }
     return result;
   }
 
