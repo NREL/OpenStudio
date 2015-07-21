@@ -1173,3 +1173,52 @@ TEST_F(DataFixture, TimeSeries_Multiply8760)
 
 }
 
+TEST_F(DataFixture, TimeSeries_Yearly)
+{
+  std::string units = "W";
+
+  Date startDate(MonthOfYear(MonthOfYear::Jan), 1);
+  DateTime startDateTime(startDate);
+  Time interval(0, 8760, 0, 0);
+  DateTime firstReportDateTime(startDate, interval);
+
+  std::vector<double> values = { 1.0 };
+  Vector idioticVector(1);
+  idioticVector[0] = 1.0;
+
+  std::vector<double> daysFromFirstReport0 = { 0.0 };
+  std::vector<double> daysFromFirstReport8760 = { 365.0 };
+
+  TimeSeries intervalTimeSeries(firstReportDateTime, interval, idioticVector, units);
+  ASSERT_THROW(TimeSeries firstAndDaysTimeSeries0(firstReportDateTime, daysFromFirstReport0, values, units), openstudio::Exception);
+  TimeSeries firstAndDaysTimeSeries8760(firstReportDateTime, daysFromFirstReport8760, values, units);
+
+  // Check computations
+  EXPECT_EQ(31536000, intervalTimeSeries.integrate());
+  EXPECT_EQ(1, intervalTimeSeries.averageValue());
+  EXPECT_EQ(31536000, firstAndDaysTimeSeries8760.integrate());
+  EXPECT_EQ(1, firstAndDaysTimeSeries8760.averageValue());
+
+}
+
+TEST_F(DataFixture, TimeSeries_Monthly)
+{
+  std::string units = "W";
+
+  Date startDate(MonthOfYear(MonthOfYear::Jan), 1);
+  DateTime startDateTime(startDate);
+  Time interval = Date(MonthOfYear(MonthOfYear::Feb), 1) - startDate;
+  DateTime firstReportDateTime(startDate, interval);
+
+  std::vector<double> values = { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0 };
+
+  std::vector<double> daysFromFirstReport = { 0.0, 28.0, 59.0, 89.0, 120.0, 150.0, 181.0, 212.0, 242.0, 273.0, 303.0, 334.0 };
+  std::vector<double> daysFromStart = { 31.0, 59.0, 90.0, 120.0, 151.0, 181.0, 212.0, 243.0, 273.0, 304.0, 334.0, 365.0 };
+  // 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 
+
+  ASSERT_THROW(TimeSeries firstTimeSeries(firstReportDateTime, daysFromFirstReport, values, units), openstudio::Exception);
+  TimeSeries startTimeSeries(firstReportDateTime, daysFromStart, values, units);
+
+  // Check computations
+  EXPECT_EQ(205804800, startTimeSeries.integrate());
+}
