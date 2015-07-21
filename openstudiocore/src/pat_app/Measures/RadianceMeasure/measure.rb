@@ -64,6 +64,55 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     return args
   end
 
+	## Radiance Utilities 
+
+	# print statement and execute as system call
+	def exec_statement(s)
+		if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
+			s = s.gsub("/", "\\")
+		end
+		#puts "start '#{s}'"
+		result = system(s)
+		#puts "end '#{s}'"
+		return result
+	end
+
+	# help those poor Windows users out
+	perlExtension = ""
+	catCommand = "cat"
+	osQuote = "\'"
+	if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
+		catCommand = "type"
+		osQuote = "\""
+	end
+
+	# UNIX-style which 
+	def which(cmd) 
+		exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : [''] 
+		ENV['PATH'].split(File::PATH_SEPARATOR).each do |path| 
+			exts.each do |ext| 
+				exe = "#{path}/#{cmd}#{ext}" 
+				return exe if File.executable? exe 
+			end
+		end 
+		return nil 
+	end 
+		
+	# make float.round() sorta work in ruby v1.8 like it does in v1.9, enough for our purposes
+	# TODO deprecate since we are on R2.0
+	class Numeric
+		def round_to_str( decimals=0 )
+			if decimals >= 0
+				"%.#{decimals}f" % self
+			else
+				factor = 10**-decimals
+				((self/factor).round * factor).to_s
+			end
+		end
+	end
+
+	## END Radiance Utilities
+
   def run(model, runner, user_arguments)
     super(model, runner, user_arguments)
 
@@ -98,31 +147,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       FileUtils.mkdir_p(rad_dir)
     end
 
-		
-		# Radiance utility stuff 
-		
-		# print statement and execute as system call
-		def exec_statement(s)
-			if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
-				s = s.gsub("/", "\\")
-			end
-			#puts "start '#{s}'"
-			result = system(s)
-			#puts "end '#{s}'"
-			return result
-		end
-
-		# UNIX-style which 
-		def which(cmd) 
-			exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : [''] 
-			ENV['PATH'].split(File::PATH_SEPARATOR).each do |path| 
-				exts.each do |ext| 
-					exe = "#{path}/#{cmd}#{ext}" 
-					return exe if File.executable? exe 
-				end
-			end 
-			return nil 
-		end 
 
 		# setup path to Radiance binaries
 		co = OpenStudio::Runmanager::ConfigOptions.new(true);
@@ -192,8 +216,10 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 		# END (Radiance utility stuff)
 		
+		
+		## ModelToRad Workflow
 
-   	# save osm 	
+   	# save osm for input to eplus pre-process
     eplusin_file_path = OpenStudio::Path.new("eplusin.osm")
     model.save(eplusin_file_path,true)
 
@@ -211,9 +237,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 		# minimize file path lengths
 		workflow.addParam(OpenStudio::Runmanager::JobParam.new("flatoutdir"))
-
-
-		# make the Radiance model
 		
 		# make the run manager
 		runDir = OpenStudio::Path.new(epout_dir)
@@ -231,17 +254,80 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 		runmanager.waitForFinished()
 
 
-		# copy Radiance model up
-		# TODO be smarter about this. Is Mo
-		FileUtils.copy_entry("#{epout_dir}/4-ModelToRad-0", rad_dir)
-
-	
+		##  Radiance crap
+		
 		# set up output dirs
-		Dir.chdir("#{rad_dir}")
-		FileUtils.mkdir_p("output/dc") unless File.exists?("output/dc")
-		FileUtils.mkdir_p("output/ts") unless File.exists?("output/ts")
-		FileUtils.mkdir_p("output/dc/merged_space/maps") unless File.exists?("output/dc/merged_space/maps")
+		FileUtils.mkdir_p("#{rad_dir}/output/dc") unless File.exists?("#{rad_dir}/output/dc")
+		FileUtils.mkdir_p("#{rad_dir}/output/ts") unless File.exists?("#{rad_dir}/output/ts")
+		FileUtils.mkdir_p("#{rad_dir}/output/dc/merged_space/maps") unless File.exists?("#{rad_dir}/output/dc/merged_space/maps")
+ 		FileUtils.mkdir_p("#{rad_dir}/sql") unless File.exists?("#{rad_dir}/sql")
  
+		# copy Radiance model up
+		# TODO be smarter about this.
+		FileUtils.copy_entry("#{epout_dir}/4-ModelToRad-0", rad_dir)
+		FileUtils.cp("#{epout_dir}/3-EnergyPlus-0/eplusout.sql", "#{rad_dir}/sql")
+
+
+		# settle in, it's gonna be a bumpy ride...
+		Dir.chdir("#{rad_dir}")
+
+		sqlPath = OpenStudio::Path.new("sql/eplusout.sql")
+		sqlPath = OpenStudio::system_complete(sqlPath)
+		
+		# load the sql file
+		sqlFile = OpenStudio::SqlFile.new(sqlPath)
+		if not sqlFile.connectionOpen
+			puts "SqlFile #{sqlPath} connection is not open"
+			return false
+		end	
+
+		# set the sql file
+		model.setSqlFile(sqlFile)
+		if model.sqlFile.empty?
+			puts "Model's SqlFile is not initialized"
+			return false
+		end
+
+		# get the top level simulation object
+		simulation = model.getSimulationControl
+
+		# get site information
+		site = model.getSite()
+		weatherFile = site.weatherFile();
+
+		puts "Getting weather file"
+		epwFile = nil
+		if (!weatherFile.empty?)
+			puts "Weather file is not empty"
+
+			p = weatherFile.get().path()
+			if (!p.empty?)
+				puts "Path to weather file is: " + p.get().to_s + " using osmpath: " + osmPath.to_s
+			end
+
+			epwFile = weatherFile.get().file(osmPath)
+
+			if (!epwFile.empty?)
+				puts "epwFile is not empty"
+			end
+		else
+			puts "weather file object is empty"
+		end
+
+		if (weatherFile.empty? || epwFile.empty? || !File.exists?(epwFile.get.to_s))
+			puts "EPW From model not found"
+			possibleEpw = modelPath.parent_path() / OpenStudio::Path.new("in.epw");
+
+			if (File.exists?(possibleEpw.to_s))
+				puts "EPW not found, but found one here: " + possibleEpw.to_s
+				epwFile = OpenStudio::OptionalEpwFile.new(OpenStudio::EpwFile.new(possibleEpw))
+			end
+		end
+
+		weaPath = nil
+		smxPath = nil
+
+		
 # 		def calculateDaylightCoeffecients(rad_dir, t_options, t_space_names_to_calculate, t_radMaps, t_opts_map, t_simCores, t_catCommand)
 # 
 # 			haveWG0 = ""
