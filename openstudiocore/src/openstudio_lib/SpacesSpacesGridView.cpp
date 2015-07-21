@@ -359,8 +359,8 @@ namespace openstudio {
 
   void SpacesSpacesGridController::refreshModelObjects()
   {
-    auto exteriorLights = m_model.getModelObjects<model::Space>();
-    m_modelObjects = subsetCastVector<model::ModelObject>(exteriorLights);
+    auto spaces = m_model.getModelObjects<model::Space>();
+    m_modelObjects = subsetCastVector<model::ModelObject>(spaces);
     std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
   }
 
