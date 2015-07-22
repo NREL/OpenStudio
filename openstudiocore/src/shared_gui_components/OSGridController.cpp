@@ -125,7 +125,7 @@ namespace openstudio {
         && widget.second->row == row
         && (!widget.second->subrow || (widget.second->subrow == t_subrow)))
       {
-        if (!m_objectFilter(*widget.first) || m_filteredObjects.count(*widget.first) != 0) {
+        if (!m_objectFilter(*widget.first) || m_filteredObjects.count(*widget.first) != 0 || (widget.first->parent().is_initialized() && m_filteredObjects.count(*widget.first->parent()) != 0)) {
           // an object in this (sub)row is not visible, therefore I am not visible
           visible = false;
           break;

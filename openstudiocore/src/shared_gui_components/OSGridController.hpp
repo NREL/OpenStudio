@@ -568,6 +568,8 @@ public:
 
   IddObjectType m_iddObjectType;
 
+  std::vector<model::ModelObject> m_modelObjects;
+
 protected:
 
   // This function determines the category for
@@ -617,8 +619,6 @@ protected:
   model::Model m_model;
 
   bool m_isIP;
-
-  std::vector<model::ModelObject> m_modelObjects;
 
   REGISTER_LOGGER("openstudio.OSGridController");
 
