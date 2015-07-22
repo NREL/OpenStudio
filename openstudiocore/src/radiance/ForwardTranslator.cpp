@@ -212,6 +212,7 @@ namespace radiance {
       openstudio::path radDir = outPath;
       boost::filesystem::create_directory(radDir / openstudio::toPath("scene"));
       boost::filesystem::create_directory(radDir / openstudio::toPath("scene/glazing"));
+      boost::filesystem::create_directory(radDir / openstudio::toPath("scene/shades"));
       boost::filesystem::create_directory(radDir / openstudio::toPath("materials"));
       boost::filesystem::create_directory(radDir / openstudio::toPath("numeric"));
       boost::filesystem::create_directory(radDir / openstudio::toPath("views"));
@@ -1433,8 +1434,6 @@ namespace radiance {
             
             	//add materials
               m_radMaterials.insert("void " + rMaterial + " " + windowGroup_name + "\n" + matString + "\n");
-              m_radMaterialsDC.insert("void light " + windowGroup_name + "\n0\n0\n3\n1 1 1\n");
-              m_radMaterialsWG0.insert("void plastic " + windowGroup_name + "\n0\n0\n5\n0 0 0 0 0\n");
 
               // write the polygon
               m_radWindowGroups[windowGroup_name] += windowGroup_name + " polygon " + subSurface_name + "\n";
@@ -1453,14 +1452,18 @@ namespace radiance {
 							// add the shade
 															
 							rMaterial = "BSDF";
-              matString = "0\n0\n6\n0 2011-SA2.xml 0 0 1 .\n0\n0\n";
+              matString = "6\n0 bsdf/blinds.xml 0 0 1 .\n0\n0\n";
 							
               m_radMaterials.insert("void " + rMaterial + " " + windowGroup_name + "_SHADE\n" + matString + "\n\n");
+
+              m_radMaterialsDC.insert("void light " + windowGroup_name + "_SHADE\n0\n0\n3\n1 1 1\n");
+              m_radMaterialsWG0.insert("void plastic " + windowGroup_name + "_SHADE\n0\n0\n5\n0 0 0 0 0\n");
+
               
               // polygon header
               m_radWindowGroupShades[windowGroup_name] += "\n# shade for SubSurface: " + subSurface_name + "\n";
               
-              // write the polygon TODO: offset inside of framediv objects
+              // write the polygon 
               m_radWindowGroupShades[windowGroup_name] += windowGroup_name + "_SHADE" + " polygon " + windowGroup_name + "_SHADE_" + subSurface_name + "\n";
               m_radWindowGroupShades[windowGroup_name] += "0\n0\n" + formatString(polygon.size() * 3) + "\n";
               for (Point3dVector::const_reverse_iterator vertex = polygon.rbegin();
@@ -1468,6 +1471,8 @@ namespace radiance {
                 ++vertex)
               
               {
+              
+              	// offset the shade to the interior side of the window
               	Point3d offsetVertex = *vertex + (-0.01*outwardNormal);
               
                 m_radWindowGroupShades[windowGroup_name] += "" + \
@@ -1502,9 +1507,8 @@ namespace radiance {
 						t_outfiles.push_back(shadeBSDFPath);
 						
 						// read BSDF from resource dll
-						// must be in openstudiocore/src/radiance/radiance.qrc
+						// must be referenced in openstudiocore/src/radiance/radiance.qrc
 						QString defaultFile;
-						//QFile inFile(":/resources/blinds.xml");
 						QFile inFile(toQString(":/resources/" + shadeBSDF));
 						if (inFile.open(QFile::ReadOnly)){
 							QTextStream docIn(&inFile);
@@ -1938,12 +1942,12 @@ namespace radiance {
         openstudio::Vector3dVector viewVectors = openstudio::radiance::ForwardTranslator::getViewVectors(sensor);
         for (const Vector3d& viewVector : viewVectors){
           m_radGlareSensors[space_name] += \
-          formatString(sensor_point.x()) + " " + \
-          formatString(sensor_point.y()) + " " + \
-          formatString(sensor_point.z()) + " " + \
-          formatString(viewVector.x()) + " " + \
-          formatString(viewVector.y()) + " " + \
-          formatString(viewVector.z()) + "\n";
+          formatString(sensor_point.x(), 3) + " " + \
+          formatString(sensor_point.y(), 3) + " " + \
+          formatString(sensor_point.z(), 3) + " " + \
+          formatString(viewVector.x(), 3) + " " + \
+          formatString(viewVector.y(), 3) + " " + \
+          formatString(viewVector.z(), 3) + "\n";
         }
 
         // write glare sensor
@@ -1976,7 +1980,7 @@ namespace radiance {
           std::vector<Point3d> referencePoints = openstudio::radiance::ForwardTranslator::getReferencePoints(map);
           for (const auto & point : referencePoints)
           {
-            m_radMaps[space_name] += "" + formatString(point.x()) + " " + formatString(point.y()) + " " + formatString(point.z()) + " 0 0 1\n";
+            m_radMaps[space_name] += "" + formatString(point.x(), 3) + " " + formatString(point.y(), 3) + " " + formatString(point.z(), 3) + " 0.000 0.000 1.000\n";
           }
           file << m_radMaps[space_name];
         } else{
@@ -2016,7 +2020,7 @@ namespace radiance {
           }
 
 					if(windowGroup_name != "WG0"){
-						openstudio::path shadefilename = t_radDir / openstudio::toPath("scene/glazing") / openstudio::toPath(windowGroup_name + "_SHADE.rad");
+						openstudio::path shadefilename = t_radDir / openstudio::toPath("scene/shades") / openstudio::toPath(windowGroup_name + "_SHADE.rad");
 						OFSTREAM shadefile(shadefilename);
 						if (shadefile.is_open()){
 							t_outfiles.push_back(shadefilename);

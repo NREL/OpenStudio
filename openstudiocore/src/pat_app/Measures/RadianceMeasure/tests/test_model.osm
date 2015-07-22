@@ -8023,9 +8023,9 @@ OS:IlluminanceMap,
   -0,                                     !- Theta Rotation Around Y-Axis {deg}
   0,                                      !- Phi Rotation Around Z-Axis {deg}
   2.4384,                                 !- X Length {m}
-  5,                                      !- Number of X Grid Points
+  3,                                      !- Number of X Grid Points
   2.4384,                                 !- Y Length {m}
-  5;                                      !- Number of Y Grid Points
+  3;                                      !- Number of Y Grid Points
 
 OS:Daylighting:Control,
   {70e9709f-2d5d-47a2-bf17-22abd0b55deb}, !- Handle
@@ -8070,9 +8070,9 @@ OS:IlluminanceMap,
   -0,                                     !- Theta Rotation Around Y-Axis {deg}
   0,                                      !- Phi Rotation Around Z-Axis {deg}
   2.4384,                                 !- X Length {m}
-  5,                                      !- Number of X Grid Points
+  3,                                      !- Number of X Grid Points
   2.4384,                                 !- Y Length {m}
-  5;                                      !- Number of Y Grid Points
+  3;                                      !- Number of Y Grid Points
 
 OS:Daylighting:Control,
   {15610535-2b4e-44bf-b037-ffe65134ddf6}, !- Handle
@@ -8611,9 +8611,9 @@ OS:IlluminanceMap,
   -0,                                     !- Theta Rotation Around Y-Axis {deg}
   0,                                      !- Phi Rotation Around Z-Axis {deg}
   5.593,                                  !- X Length {m}
-  ,                                       !- Number of X Grid Points
+  3,                                      !- Number of X Grid Points
   2.35,                                   !- Y Length {m}
-  ;                                       !- Number of Y Grid Points
+  3;                                      !- Number of Y Grid Points
 
 OS:Daylighting:Control,
   {1bf50888-d467-4763-b447-4526e0d5222c}, !- Handle
