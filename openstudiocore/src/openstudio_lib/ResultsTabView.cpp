@@ -345,7 +345,7 @@ void ResultsView::populateComboBox(std::vector<openstudio::path> reports)
   if(m_comboBox->count()){
     m_comboBox->setCurrentIndex(0);
     for (int i = 0; i < m_comboBox->count(); ++i){
-      if (m_comboBox->itemText(i) == QString("Results | OpenStudio")){
+      if (m_comboBox->itemText(i) == QString("OpenStudio Results")){
         m_comboBox->setCurrentIndex(i);
         break;
       }

@@ -302,63 +302,64 @@ namespace openstudio {
       problem.push(runmanager::WorkItem(runmanager::JobType::OpenStudioPostProcess));
     }
 
-    OS_ASSERT(m_simpleProject);
+  OS_ASSERT(m_simpleProject);
+  
+  // make sure project has baseline stuff setup
+  analysis::DataPoint baselineDataPoint = m_simpleProject->baselineDataPoint();
+  openstudio::analysis::Analysis analysis = m_simpleProject->analysis();
 
-    // make sure project has baseline stuff setup
-    analysis::DataPoint baselineDataPoint = m_simpleProject->baselineDataPoint();
-    openstudio::analysis::Analysis analysis = m_simpleProject->analysis();
+  // DLM: do we need to set seed model
 
-    // DLM: do we need to set seed model
+  openstudio::runmanager::ConfigOptions co(true);
+  m_simpleProject->runManager().setConfigOptions(co);
 
-    openstudio::runmanager::ConfigOptions co(true);
-    m_simpleProject->runManager().setConfigOptions(co);
+  bool isConnected = analysis.connect(SIGNAL(changed(ChangeType)), this, SLOT(markAsModified()));
+  OS_ASSERT(isConnected);
 
-    bool isConnected = analysis.connect(SIGNAL(changed(ChangeType)), this, SLOT(markAsModified()));
-    OS_ASSERT(isConnected);
+  m_verticalId = 0;
+  m_subTabIds = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+  // Make sure that the vector is the same size as the number of tabs
+  OS_ASSERT(m_subTabIds.size() == static_cast<unsigned>(RESULTS_SUMMARY + 1));
 
-    m_verticalId = 0;
-    m_subTabIds = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    // Make sure that the vector is the same size as the number of tabs
-    OS_ASSERT(m_subTabIds.size() == static_cast<unsigned>(RESULTS_SUMMARY + 1));
+  // set the model, this will create widgets
+  setModel(*model, modifiedOnLoad, false);
 
-    // set the model, this will create widgets
-    setModel(*model, modifiedOnLoad, false);
+  // connect signals to main window
+  connect(m_mainWindow, &MainWindow::downloadComponentsClicked, this, &OSDocument::openBclDlg);
+  connect(m_mainWindow, &MainWindow::openLibDlgClicked, this, &OSDocument::openLibDlg);
+  connect(m_mainWindow, &MainWindow::closeClicked, this, &OSDocument::closeClicked);
+  connect(m_mainWindow, &MainWindow::verticalTabSelected, this, &OSDocument::onVerticalTabSelected);
+  connect(m_mainWindow, &MainWindow::importClicked, this, &OSDocument::importClicked);
+  connect(m_mainWindow, &MainWindow::importgbXMLClicked, this, &OSDocument::importgbXMLClicked);
+  connect(m_mainWindow, &MainWindow::importSDDClicked, this, &OSDocument::importSDDClicked);
+  connect(m_mainWindow, &MainWindow::importIFCClicked, this, &OSDocument::importIFCClicked);
+  connect(m_mainWindow, &MainWindow::loadFileClicked, this, &OSDocument::loadFileClicked);
+  connect(m_mainWindow, &MainWindow::loadLibraryClicked, this, &OSDocument::loadLibraryClicked);
+  connect(m_mainWindow, &MainWindow::newClicked, this, &OSDocument::newClicked);
+  connect(m_mainWindow, &MainWindow::exitClicked, this, &OSDocument::exitClicked);
+  connect(m_mainWindow, &MainWindow::helpClicked, this, &OSDocument::helpClicked);
+  connect(m_mainWindow, &MainWindow::aboutClicked, this, &OSDocument::aboutClicked);
+  connect(m_mainWindow, &MainWindow::osmDropped, this, &OSDocument::osmDropped);
+  connect(m_mainWindow, &MainWindow::exportClicked, this, &OSDocument::exportIdf);
+  connect(m_mainWindow, &MainWindow::exportgbXMLClicked, this, &OSDocument::exportgbXML);
+  connect(m_mainWindow, &MainWindow::exportSDDClicked, this, &OSDocument::exportSDD);
+  connect(m_mainWindow, &MainWindow::saveAsFileClicked, this, &OSDocument::saveAs);
+  connect(m_mainWindow, &MainWindow::saveFileClicked, this, &OSDocument::save);
+  // Using old-style connect here to avoid including OpenStudioApp files
+  isConnected = connect(m_mainWindow, SIGNAL(revertFileClicked()), OSAppBase::instance(), SLOT(revertToSaved()));
+  OS_ASSERT(isConnected);
+  connect(m_mainWindow, &MainWindow::scanForToolsClicked, this, &OSDocument::scanForTools);
+  connect(m_mainWindow, &MainWindow::showRunManagerPreferencesClicked, this, &OSDocument::showRunManagerPreferences);
+  connect(m_mainWindow, &MainWindow::toggleUnitsClicked, this, &OSDocument::toggleUnitsClicked);
+  connect(m_mainWindow, &MainWindow::applyMeasureClicked, this, &OSDocument::openMeasuresDlg);
+  connect(m_mainWindow, &MainWindow::downloadMeasuresClicked, this, &OSDocument::openMeasuresBclDlg);
+  connect(m_mainWindow, &MainWindow::changeMyMeasuresDir, this, &OSDocument::openChangeMeasuresDirDlg);
+  connect(m_mainWindow, &MainWindow::changeBclLogin, this, &OSDocument::changeBclLogin);
+  connect(this, &OSDocument::downloadComponentsClicked, this, &OSDocument::openBclDlg);
+  connect(this, &OSDocument::openLibDlgClicked, this, &OSDocument::openLibDlg);
 
-    // connect signals to main window
-    connect(m_mainWindow, &MainWindow::downloadComponentsClicked, this, &OSDocument::openBclDlg);
-    connect(m_mainWindow, &MainWindow::openLibDlgClicked, this, &OSDocument::openLibDlg);
-    connect(m_mainWindow, &MainWindow::closeClicked, this, &OSDocument::closeClicked);
-    connect(m_mainWindow, &MainWindow::verticalTabSelected, this, &OSDocument::onVerticalTabSelected);
-    connect(m_mainWindow, &MainWindow::importClicked, this, &OSDocument::importClicked);
-    connect(m_mainWindow, &MainWindow::importgbXMLClicked, this, &OSDocument::importgbXMLClicked);
-    connect(m_mainWindow, &MainWindow::importSDDClicked, this, &OSDocument::importSDDClicked);
-    connect(m_mainWindow, &MainWindow::loadFileClicked, this, &OSDocument::loadFileClicked);
-    connect(m_mainWindow, &MainWindow::loadLibraryClicked, this, &OSDocument::loadLibraryClicked);
-    connect(m_mainWindow, &MainWindow::newClicked, this, &OSDocument::newClicked);
-    connect(m_mainWindow, &MainWindow::exitClicked, this, &OSDocument::exitClicked);
-    connect(m_mainWindow, &MainWindow::helpClicked, this, &OSDocument::helpClicked);
-    connect(m_mainWindow, &MainWindow::aboutClicked, this, &OSDocument::aboutClicked);
-    connect(m_mainWindow, &MainWindow::osmDropped, this, &OSDocument::osmDropped);
-    connect(m_mainWindow, &MainWindow::exportClicked, this, &OSDocument::exportIdf);
-    connect(m_mainWindow, &MainWindow::exportgbXMLClicked, this, &OSDocument::exportgbXML);
-    connect(m_mainWindow, &MainWindow::exportSDDClicked, this, &OSDocument::exportSDD);
-    connect(m_mainWindow, &MainWindow::saveAsFileClicked, this, &OSDocument::saveAs);
-    connect(m_mainWindow, &MainWindow::saveFileClicked, this, &OSDocument::save);
-    // Using old-style connect here to avoid including OpenStudioApp files
-    isConnected = connect(m_mainWindow, SIGNAL(revertFileClicked()), OSAppBase::instance(), SLOT(revertToSaved()));
-    OS_ASSERT(isConnected);
-    connect(m_mainWindow, &MainWindow::scanForToolsClicked, this, &OSDocument::scanForTools);
-    connect(m_mainWindow, &MainWindow::showRunManagerPreferencesClicked, this, &OSDocument::showRunManagerPreferences);
-    connect(m_mainWindow, &MainWindow::toggleUnitsClicked, this, &OSDocument::toggleUnitsClicked);
-    connect(m_mainWindow, &MainWindow::applyMeasureClicked, this, &OSDocument::openMeasuresDlg);
-    connect(m_mainWindow, &MainWindow::downloadMeasuresClicked, this, &OSDocument::openMeasuresBclDlg);
-    connect(m_mainWindow, &MainWindow::changeMyMeasuresDir, this, &OSDocument::openChangeMeasuresDirDlg);
-    connect(m_mainWindow, &MainWindow::changeBclLogin, this, &OSDocument::changeBclLogin);
-    connect(this, &OSDocument::downloadComponentsClicked, this, &OSDocument::openBclDlg);
-    connect(this, &OSDocument::openLibDlgClicked, this, &OSDocument::openLibDlg);
-
-    // update window path after the dialog is shown
-    QTimer::singleShot(0, this, SLOT(updateWindowFilePath()));
+  // update window path after the dialog is shown
+  QTimer::singleShot(0, this, SLOT(updateWindowFilePath())); 
   }
 
   //void OSDocument::showRubyConsole()
@@ -614,12 +615,14 @@ namespace openstudio {
     case SITE:
       // Location
 
-      m_mainTabController = std::shared_ptr<MainTabController>(new LocationTabController(m_model, m_modelTempDir));
+      m_mainTabController = std::shared_ptr<MainTabController>(new LocationTabController(isIP, m_model, m_modelTempDir));
       m_mainWindow->setView(m_mainTabController->mainContentWidget(), SITE);
 
       connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForSiteSubTab);
 
       connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
+
+      connect(this, &OSDocument::toggleUnitsClicked, m_mainTabController.get(), &LocationTabController::toggleUnitsClicked);
 
       break;
 
@@ -1114,7 +1117,7 @@ namespace openstudio {
 
     //m_mainWindow->selectHorizontalTab(LIBRARY);
 
-    boost::optional<model::ModelObject> mo;
+  //boost::optional<model::ModelObject> mo;
 
     //m_inspectorController->layoutModelObject(mo);
   }

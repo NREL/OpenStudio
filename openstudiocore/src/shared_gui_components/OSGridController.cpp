@@ -561,6 +561,38 @@ namespace openstudio {
       isConnected = connect(comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxIndexChanged(int)));
       OS_ASSERT(isConnected);
 
+  } else if (auto checkBoxConceptBoolReturn = t_baseConcept.dynamicCast<CheckBoxConceptBoolReturn>()){
+
+      auto checkBoxBoolReturn = new OSCheckBox3(this->gridView());
+      if (checkBoxConceptBoolReturn->tooltip().size()) {
+        checkBoxBoolReturn->setToolTip(checkBoxConceptBoolReturn->tooltip().c_str());
+      }
+
+      checkBoxBoolReturn->bind(t_mo,
+        BoolGetter(std::bind(&CheckBoxConceptBoolReturn::get, checkBoxConceptBoolReturn.data(), t_mo)),
+        boost::optional<BoolSetterBoolReturn>(std::bind(&CheckBoxConceptBoolReturn::set, checkBoxConceptBoolReturn.data(), t_mo, std::placeholders::_1)));
+
+      isConnected = connect(checkBoxBoolReturn, SIGNAL(stateChanged(int)), gridView(), SLOT(requestRefreshGrid()));
+      OS_ASSERT(isConnected);
+
+      widget = checkBoxBoolReturn;
+
+  } else if(QSharedPointer<ComboBoxConcept> comboBoxConcept = t_baseConcept.dynamicCast<ComboBoxConcept>()) {
+
+    auto choiceConcept = comboBoxConcept->choiceConcept(t_mo);
+
+    auto comboBox = new OSComboBox2(this->gridView(), choiceConcept->editable());
+    if (comboBoxConcept->hasClickFocus()) {
+      comboBox->enableClickFocus();
+    }
+
+    comboBox->bind(t_mo, choiceConcept);
+
+    widget = comboBox;
+
+    isConnected = connect(comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxIndexChanged(int)));
+    OS_ASSERT(isConnected);
+
     }
     else if (QSharedPointer<ValueEditConcept<double> > doubleEditConcept = t_baseConcept.dynamicCast<ValueEditConcept<double> >()) {
 
@@ -883,7 +915,7 @@ namespace openstudio {
       OS_ASSERT(false);
     }
 
-    return widget;
+  return widget;
   }
 
   void OSGridController::setConceptValue(model::ModelObject t_setterMO, model::ModelObject t_getterMO, const QSharedPointer<BaseConcept> &t_baseConcept)
@@ -1693,149 +1725,149 @@ namespace openstudio {
 
       QTimer::singleShot(0, this, SLOT(setApplyButtonState()));
     }
+}
+
+void OSGridController::setApplyButtonState()
+{
+  for (auto pair : m_applyToButtonStates) {
+    HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(pair.first));
+    OS_ASSERT(horizontalHeaderWidget);
+    auto button = horizontalHeaderWidget->m_pushButton;
+    OS_ASSERT(button);
+    button->setEnabled(pair.second);
   }
 
-  void OSGridController::setApplyButtonState()
+  m_applyToButtonStates.clear();
+}
+
+std::vector<model::ModelObject> OSGridController::selectedObjects() const
+{
+  const auto objs = this->getObjectSelector()->getSelectedObjects();
+
+  return std::vector<model::ModelObject>(objs.cbegin(), objs.cend());
+}
+
+HorizontalHeaderPushButton::HorizontalHeaderPushButton(QWidget * parent)
+  : QPushButton()
+{
+  QString style =
+    "QPushButton {"
+    "    font-size: 8pt;"
+    "}";
+  setStyleSheet(style);
+  setFocusPolicy(Qt::StrongFocus);
+}
+
+HorizontalHeaderPushButton::~HorizontalHeaderPushButton()
+{
+}
+
+void HorizontalHeaderPushButton::focusInEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason)
   {
-    for (auto pair : m_applyToButtonStates) {
-      HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(pair.first));
-      OS_ASSERT(horizontalHeaderWidget);
-      auto button = horizontalHeaderWidget->m_pushButton;
-      OS_ASSERT(button);
-      button->setEnabled(pair.second);
-    }
-
-    m_applyToButtonStates.clear();
+    emit inFocus(true, true); // TODO should hasData = true???
   }
+  
+  QPushButton::focusInEvent(e);
+}
 
-  std::vector<model::ModelObject> OSGridController::selectedObjects() const
+void HorizontalHeaderPushButton::focusOutEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason)
   {
-    const auto objs = this->getObjectSelector()->getSelectedObjects();
-
-    return std::vector<model::ModelObject>(objs.cbegin(), objs.cend());
+    emit inFocus(false, false);
   }
+  
+  QPushButton::focusOutEvent(e);
+}
 
-  HorizontalHeaderPushButton::HorizontalHeaderPushButton(QWidget * parent)
-    : QPushButton()
+//ColumnSizer::mouseMoveEvent ( QMouseEvent * event )
+//{
+//  if( event->buttons == Qt::LeftButton ) {
+//    
+//  }
+//}
+
+Holder::Holder(QWidget * parent)
+  : QWidget(parent)
+{
+}
+
+Holder::~Holder()
+{
+}
+
+void Holder::paintEvent(QPaintEvent *)
+{
+  QStyleOption opt;
+  opt.init(this);
+  QPainter p(this);
+  style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
+
+HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)
+  : QWidget(parent),
+  m_label(new QLabel(fieldName, this)),
+  m_checkBox(new QPushButton(this)),
+  m_pushButton(new HorizontalHeaderPushButton(this))
+{
+  auto mainLayout = new QVBoxLayout(this);
+  mainLayout->setContentsMargins(0,0,0,5);
+  mainLayout->setAlignment(Qt::AlignCenter);
+  setLayout(mainLayout);
+
+  mainLayout->addWidget(m_checkBox);
+  m_checkBox->setToolTip("Check to add this column to \"Custom\"");
+  m_checkBox->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
+  QString style = "\
+    QPushButton {\
+      border: none;\
+      background: #808080;\
+      padding: 0px;\
+    }\
+    QPushButton:checked {\
+      background: #94b3de;\
+    }\
+  ";
+
+  m_checkBox->setStyleSheet(style);
+  m_checkBox->setCheckable(true);
+
+  m_label->setWordWrap(true);
+  m_label->setStyleSheet("QLabel { padding: 5px; }");
+  m_label->setAlignment(Qt::AlignHCenter);
+  mainLayout->addWidget(m_label);
+
+  mainLayout->addStretch();
+
+  m_pushButton->setText("Apply to Selected");
+  m_pushButton->setMaximumWidth(150);
+  m_pushButton->setEnabled(false);
+  connect(m_pushButton, &HorizontalHeaderPushButton::inFocus, this, &HorizontalHeaderWidget::inFocus);
+  mainLayout->addWidget(m_pushButton,0,Qt::AlignCenter);
+}
+
+HorizontalHeaderWidget::~HorizontalHeaderWidget()
+{
+  for (auto &widget : m_addedWidgets)
   {
-    QString style =
-      "QPushButton {"
-      "    font-size: 8pt;"
-      "}";
-    setStyleSheet(style);
-    setFocusPolicy(Qt::StrongFocus);
+    layout()->removeWidget(widget.data());
+    widget->setVisible(false);
+    widget->setParent(nullptr);
   }
+}
 
-  HorizontalHeaderPushButton::~HorizontalHeaderPushButton()
-  {
+void HorizontalHeaderWidget::addWidget(const QSharedPointer<QWidget> &t_widget)
+{
+  if (!t_widget.isNull()) {
+    m_addedWidgets.push_back(t_widget);
+    auto hLayout = new QHBoxLayout();
+    hLayout->setContentsMargins(5,0,5,0);
+    qobject_cast<QVBoxLayout *>(layout())->addLayout(hLayout);
+    hLayout->addWidget(t_widget.data());
+    t_widget->setVisible(true);
   }
-
-  void HorizontalHeaderPushButton::focusInEvent(QFocusEvent * e)
-  {
-    if (e->reason() == Qt::MouseFocusReason)
-    {
-      emit inFocus(true, true); // TODO should hasData = true???
-    }
-
-    QPushButton::focusInEvent(e);
-  }
-
-  void HorizontalHeaderPushButton::focusOutEvent(QFocusEvent * e)
-  {
-    if (e->reason() == Qt::MouseFocusReason)
-    {
-      emit inFocus(false, false);
-    }
-
-    QPushButton::focusOutEvent(e);
-  }
-
-  //ColumnSizer::mouseMoveEvent ( QMouseEvent * event )
-  //{
-  //  if( event->buttons == Qt::LeftButton ) {
-  //    
-  //  }
-  //}
-
-  Holder::Holder(QWidget * parent)
-    : QWidget(parent)
-  {
-  }
-
-  Holder::~Holder()
-  {
-  }
-
-  void Holder::paintEvent(QPaintEvent *)
-  {
-    QStyleOption opt;
-    opt.init(this);
-    QPainter p(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-  }
-
-  HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidget * parent)
-    : QWidget(parent),
-    m_label(new QLabel(fieldName, this)),
-    m_checkBox(new QPushButton(this)),
-    m_pushButton(new HorizontalHeaderPushButton(this))
-  {
-    auto mainLayout = new QVBoxLayout(this);
-    mainLayout->setContentsMargins(0, 0, 0, 5);
-    mainLayout->setAlignment(Qt::AlignCenter);
-    setLayout(mainLayout);
-
-    mainLayout->addWidget(m_checkBox);
-    m_checkBox->setToolTip("Check to add this column to \"Custom\"");
-    m_checkBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    QString style = "\
-                        QPushButton {\
-                              border: none;\
-                                    background: #808080;\
-                                          padding: 0px;\
-                                              }\
-                                                  QPushButton:checked {\
-                                                        background: #94b3de;\
-                                                            }\
-                                                              ";
-
-    m_checkBox->setStyleSheet(style);
-    m_checkBox->setCheckable(true);
-
-    m_label->setWordWrap(true);
-    m_label->setStyleSheet("QLabel { padding: 5px; }");
-    m_label->setAlignment(Qt::AlignHCenter);
-    mainLayout->addWidget(m_label);
-
-    mainLayout->addStretch();
-
-    m_pushButton->setText("Apply to Selected");
-    m_pushButton->setMaximumWidth(150);
-    m_pushButton->setEnabled(false);
-    connect(m_pushButton, &HorizontalHeaderPushButton::inFocus, this, &HorizontalHeaderWidget::inFocus);
-    mainLayout->addWidget(m_pushButton, 0, Qt::AlignCenter);
-  }
-
-  HorizontalHeaderWidget::~HorizontalHeaderWidget()
-  {
-    for (auto &widget : m_addedWidgets)
-    {
-      layout()->removeWidget(widget.data());
-      widget->setVisible(false);
-      widget->setParent(nullptr);
-    }
-  }
-
-  void HorizontalHeaderWidget::addWidget(const QSharedPointer<QWidget> &t_widget)
-  {
-    if (!t_widget.isNull()) {
-      m_addedWidgets.push_back(t_widget);
-      auto hLayout = new QHBoxLayout();
-      hLayout->setContentsMargins(5, 0, 5, 0);
-      qobject_cast<QVBoxLayout *>(layout())->addLayout(hLayout);
-      hLayout->addWidget(t_widget.data());
-      t_widget->setVisible(true);
-    }
-  }
+}
 
 } // openstudio

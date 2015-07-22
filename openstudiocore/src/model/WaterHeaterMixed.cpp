@@ -19,6 +19,10 @@
 
 #include "WaterHeaterMixed.hpp"
 #include "WaterHeaterMixed_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "WaterHeaterHeatPump.hpp"
+#include "WaterHeaterHeatPump_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "ScheduleDay.hpp"
@@ -1554,6 +1558,20 @@ namespace detail {
   unsigned WaterHeaterMixed_Impl::demandOutletPort()
   {
     return OS_WaterHeater_MixedFields::SourceSideOutletNodeName;
+  }
+
+  boost::optional<ZoneHVACComponent> WaterHeaterMixed_Impl::containingZoneHVACComponent() const
+  {
+    auto hpwhs = model().getModelObjects<model::WaterHeaterHeatPump>();
+    auto t_Handle = handle();
+    
+    for( const auto & hpwh : hpwhs ) {
+      if( hpwh.tank().handle() == t_Handle ) {
+        return hpwh;
+      }
+    }
+
+    return boost::none;
   }
 
 } // detail

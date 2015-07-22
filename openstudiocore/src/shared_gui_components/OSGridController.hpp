@@ -295,6 +295,16 @@ public:
     m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<CheckBoxConcept>(new CheckBoxConceptImpl<DataSourceType>(heading,tooltip,t_getter,t_setter)), t_source));
   }
 
+  template<typename DataSourceType>
+  void addCheckBoxColumn(const Heading &heading,
+    const std::string & tooltip,
+    std::function<bool(DataSourceType *)>  t_getter,
+    std::function<bool(DataSourceType *, bool)> t_setter,
+    const boost::optional<DataSource> &t_source = boost::none)
+  {
+    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<CheckBoxConceptBoolReturn>(new CheckBoxConceptBoolReturnImpl<DataSourceType>(heading, tooltip, t_getter, t_setter)), t_source));
+  }
+
   template<typename ChoiceType, typename DataSourceType>
   void addComboBoxColumn(const Heading &heading,
                          std::function<std::string (const ChoiceType &)> toString,
@@ -569,6 +579,8 @@ public:
   IddObjectType m_iddObjectType;
 
   std::vector<model::ModelObject> m_modelObjects;
+
+  model::Model & model() { return m_model; }
 
 protected:
 

@@ -63,6 +63,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCoilSystemCoolingDXHeatExchangerAssisted.cpp
   ForwardTranslator/ForwardTranslateCoilSystemCoolingWaterHeatExchangerAssisted.cpp
   ForwardTranslator/ForwardTranslateCoilWaterHeatingDesuperheater.cpp
+  ForwardTranslator/ForwardTranslateCoilWaterHeatingAirToWaterHeatPump.cpp
   ForwardTranslator/ForwardTranslateConstruction.cpp
   ForwardTranslator/ForwardTranslateConstructionWithInternalSource.cpp
   ForwardTranslator/ForwardTranslateConvergenceLimits.cpp
@@ -217,6 +218,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateTimestep.cpp
   ForwardTranslator/ForwardTranslateVersion.cpp
   ForwardTranslator/ForwardTranslateWaterHeaterMixed.cpp
+  ForwardTranslator/ForwardTranslateWaterHeaterHeatPump.cpp
+  ForwardTranslator/ForwardTranslateWaterHeaterStratified.cpp
   ForwardTranslator/ForwardTranslateWaterUseConnections.cpp
   ForwardTranslator/ForwardTranslateWaterUseEquipment.cpp
   ForwardTranslator/ForwardTranslateWindowPropertyFrameAndDivider.cpp  

@@ -338,3 +338,43 @@ TEST(String,NumFractionalDigits) {
   EXPECT_EQ(4u,result.first); EXPECT_EQ(4u,result.second);
 }
 
+TEST(String, StringSplit)
+{
+  std::vector<std::string> results = splitString("This,is,the,unambiguous,case",',');
+  ASSERT_EQ(5, results.size());
+  EXPECT_EQ("This", results[0]);
+  EXPECT_EQ("is", results[1]);
+  EXPECT_EQ("the", results[2]);
+  EXPECT_EQ("unambiguous", results[3]);
+  EXPECT_EQ("case", results[4]);
+
+  results = splitString(",This,is,more,ambiguous", ',');
+  ASSERT_EQ(5, results.size());
+  EXPECT_TRUE(results[0].empty());
+  EXPECT_EQ("This", results[1]);
+  EXPECT_EQ("is", results[2]);
+  EXPECT_EQ("more", results[3]);
+  EXPECT_EQ("ambiguous", results[4]);
+
+  results = splitString(",Even,more,ambiguous,", ',');
+  ASSERT_EQ(5, results.size());
+  EXPECT_TRUE(results[0].empty());
+  EXPECT_EQ("Even", results[1]);
+  EXPECT_EQ("more", results[2]);
+  EXPECT_EQ("ambiguous", results[3]);
+  EXPECT_TRUE(results[4].empty());
+
+  //Empty string case
+  results = splitString("", ',');
+  ASSERT_EQ(0, results.size());
+
+  //Very little to do test
+  results = splitString(",", ',');
+  ASSERT_EQ(2, results.size());
+
+  results = splitString("This is not the string you are looking for", ',');
+  ASSERT_EQ(1, results.size());
+  EXPECT_EQ("This is not the string you are looking for", results[0]);
+
+}
+

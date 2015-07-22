@@ -42,10 +42,13 @@ class LocationTabController : public MainTabController
   Q_OBJECT
 
 public:
-  LocationTabController(const model::Model& model,
-                        const QString& modelTempDir);
+  LocationTabController(bool isIP,
+    const model::Model& model,
+    const QString& modelTempDir);
 
   virtual ~LocationTabController() {}
+
+  void showUtilityBillSubTab();
 
   enum TabID
   {
@@ -62,6 +65,7 @@ private:
   QStackedWidget * m_utilityBillsStackedWidget;
   int m_warningWidgetIndex;
   int m_visibleWidgetIndex;
+  model::Model m_model;
 
 private slots:
   void showSubTabView(bool showSubTabView);
