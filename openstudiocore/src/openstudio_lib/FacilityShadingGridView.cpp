@@ -313,7 +313,7 @@ namespace openstudio {
     }
   }
 
-  void FacilityShadingGridView::onSelectItem(OSItem* item)
+  void FacilityShadingGridView::onSelectItem()
   {
     //m_itemSelectorButtons->enableAddButton();
     //m_itemSelectorButtons->enableCopyButton();

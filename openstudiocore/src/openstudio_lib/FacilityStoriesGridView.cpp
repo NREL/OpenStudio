@@ -204,7 +204,7 @@ namespace openstudio {
     this->m_gridView->requestRefreshAll();
   }
 
-  void FacilityStoriesGridView::onSelectItem(OSItem* item)
+  void FacilityStoriesGridView::onSelectItem()
   {
     //m_itemSelectorButtons->enableAddButton();
     //m_itemSelectorButtons->enableCopyButton();

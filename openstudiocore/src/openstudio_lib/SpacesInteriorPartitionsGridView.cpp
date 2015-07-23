@@ -89,7 +89,7 @@ namespace openstudio {
     onClearSelection();
   }
 
-  void SpacesInteriorPartitionsGridView::onSelectItem(OSItem* item)
+  void SpacesInteriorPartitionsGridView::onSelectItem()
   {
     //m_itemSelectorButtons->enableAddButton();
     //m_itemSelectorButtons->enableCopyButton();

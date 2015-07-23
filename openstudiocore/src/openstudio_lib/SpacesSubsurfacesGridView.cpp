@@ -159,7 +159,7 @@ namespace openstudio {
     setCategoriesAndFields();
   }
 
-  void SpacesSubsurfacesGridView::onSelectItem(OSItem* item)
+  void SpacesSubsurfacesGridView::onSelectItem()
   {
     //m_itemSelectorButtons->enableAddButton();
     //m_itemSelectorButtons->enableCopyButton();

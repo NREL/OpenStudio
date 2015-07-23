@@ -542,24 +542,10 @@ namespace openstudio {
       isConnected = connect(checkBox, SIGNAL(stateChanged(int)), gridView(), SLOT(requestRefreshGrid())); // TODO this is not the most efficient, by single row would be better
       OS_ASSERT(isConnected);
 
-      widget = checkBox;
-
-    }
-    else if (QSharedPointer<ComboBoxConcept> comboBoxConcept = t_baseConcept.dynamicCast<ComboBoxConcept>()) {
-
-      auto choiceConcept = comboBoxConcept->choiceConcept(t_mo);
-
-      auto comboBox = new OSComboBox2(this->gridView(), choiceConcept->editable());
-      if (comboBoxConcept->hasClickFocus()) {
-        comboBox->enableClickFocus();
-      }
-
-      comboBox->bind(t_mo, choiceConcept);
-
-      widget = comboBox;
-
-      isConnected = connect(comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxIndexChanged(int)));
+      isConnected = connect(checkBox, SIGNAL(stateChanged(int)), gridView(), SIGNAL(gridRowSelectionChanged(int)));
       OS_ASSERT(isConnected);
+
+      widget = checkBox;
 
   } else if (auto checkBoxConceptBoolReturn = t_baseConcept.dynamicCast<CheckBoxConceptBoolReturn>()){
 
@@ -575,9 +561,13 @@ namespace openstudio {
       isConnected = connect(checkBoxBoolReturn, SIGNAL(stateChanged(int)), gridView(), SLOT(requestRefreshGrid()));
       OS_ASSERT(isConnected);
 
+      isConnected = connect(checkBoxBoolReturn, SIGNAL(stateChanged(int)), gridView(), SIGNAL(gridRowSelectionChanged(int)));
+      OS_ASSERT(isConnected);
+
       widget = checkBoxBoolReturn;
 
-  } else if(QSharedPointer<ComboBoxConcept> comboBoxConcept = t_baseConcept.dynamicCast<ComboBoxConcept>()) {
+  }
+  else if(QSharedPointer<ComboBoxConcept> comboBoxConcept = t_baseConcept.dynamicCast<ComboBoxConcept>()) {
 
     auto choiceConcept = comboBoxConcept->choiceConcept(t_mo);
 

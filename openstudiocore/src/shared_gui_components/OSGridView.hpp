@@ -80,6 +80,8 @@ signals:
 
   void dropZoneItemClicked(OSItem* item);
 
+  void gridRowSelectionChanged(int checkState);
+
 public slots:
 
   void onSelectionCleared();

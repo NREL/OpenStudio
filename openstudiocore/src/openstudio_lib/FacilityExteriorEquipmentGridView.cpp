@@ -93,7 +93,7 @@ namespace openstudio {
     }
   }
 
-  void FacilityExteriorEquipmentGridView::onSelectItem(OSItem* item)
+  void FacilityExteriorEquipmentGridView::onSelectItem()
   {
     //m_itemSelectorButtons->enableAddButton();
     m_itemSelectorButtons->enableCopyButton();

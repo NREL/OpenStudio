@@ -131,7 +131,7 @@ namespace openstudio {
     onClearSelection();
   }
 
-  void SpacesLoadsGridView::onSelectItem(OSItem* item)
+  void SpacesLoadsGridView::onSelectItem()
   {
     //m_itemSelectorButtons->enableAddButton();
     m_itemSelectorButtons->enableCopyButton();

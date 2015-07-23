@@ -47,9 +47,9 @@ namespace openstudio{
 
   protected slots:
 
-    virtual void onSelectItem(OSItem* item = nullptr);
+    virtual void onSelectItem() override;
 
-    virtual void onClearSelection();
+    virtual void onClearSelection() override;
 
   };
 
