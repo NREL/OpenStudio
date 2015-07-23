@@ -136,11 +136,16 @@ namespace openstudio {
         removeObject(obj);
       }
     }
+    // No selected rows will remain after a delete, so clear selection
+    onClearSelection();
   }
-  
+
   void GridViewSubTab::onPurgeClicked()
   {
     purgeObjects(m_iddObjectType);
+
+    // No selected rows will remain after a delete, so clear selection
+    onClearSelection();
   }
 
   void GridViewSubTab::addObject(const model::ModelObject& modelObject)
@@ -184,13 +189,12 @@ namespace openstudio {
 
   void GridViewSubTab::gridRowSelectionChanged(int checkState)
   {
-    if (checkState == 0) {
+    if (this->m_gridController->getObjectSelector()->m_selectedObjects.size() == 0) {
       onClearSelection();
     }
     else {
       onSelectItem();
     }
-
   }
 
 } // openstudio
