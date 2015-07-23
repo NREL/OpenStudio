@@ -19945,7 +19945,6 @@ OS:SolarCollector:FlatPlate:Water,
        \type object-list
        \object-list FlatPlateSolarCollectorParameters
   A4 , \field Surface Name
-       \required-field
        \type object-list
        \object-list AllShadingAndHTSurfNames
   A5 , \field Inlet Node Name

@@ -421,6 +421,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(SizingSystem);
     REGISTER_CONSTRUCTOR(SizingZone);
     REGISTER_CONSTRUCTOR(SkyTemperature);
+    REGISTER_CONSTRUCTOR(SolarCollectorFlatPlateWater);
+    REGISTER_CONSTRUCTOR(SolarCollectorPerformanceFlatPlate);
     REGISTER_CONSTRUCTOR(Space);
     REGISTER_CONSTRUCTOR(SpaceInfiltrationDesignFlowRate);
     REGISTER_CONSTRUCTOR(SpaceInfiltrationEffectiveLeakageArea);
@@ -746,6 +748,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(SizingSystem);
     REGISTER_COPYCONSTRUCTORS(SizingZone);
     REGISTER_COPYCONSTRUCTORS(SkyTemperature);
+    REGISTER_COPYCONSTRUCTORS(SolarCollectorFlatPlateWater);
+    REGISTER_COPYCONSTRUCTORS(SolarCollectorPerformanceFlatPlate);
     REGISTER_COPYCONSTRUCTORS(Space);
     REGISTER_COPYCONSTRUCTORS(SpaceInfiltrationDesignFlowRate);
     REGISTER_COPYCONSTRUCTORS(SpaceInfiltrationEffectiveLeakageArea);

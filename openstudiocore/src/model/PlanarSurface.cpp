@@ -542,6 +542,12 @@ namespace model {
       return *result;
     }
 
+    std::vector<ModelObject> PlanarSurface_Impl::solarCollectors() const
+    {
+      // DLM: todo
+      return std::vector<ModelObject>(); // getImpl<detail::PlanarSurface_Impl>()->solarCollector();
+    }
+
     boost::optional<ModelObject> PlanarSurface_Impl::constructionAsModelObject() const
     {
       return static_cast<boost::optional<ModelObject> >(this->construction());
@@ -766,6 +772,11 @@ std::vector<std::vector<Point3d> > PlanarSurface::triangulation() const
 Point3d PlanarSurface::centroid() const
 {
   return getImpl<detail::PlanarSurface_Impl>()->centroid();
+}
+
+std::vector<ModelObject> PlanarSurface::solarCollectors() const
+{
+  return getImpl<detail::PlanarSurface_Impl>()->solarCollectors();
 }
 
 std::vector<PlanarSurface> PlanarSurface::findPlanarSurfaces(const std::vector<PlanarSurface>& planarSurfaces,

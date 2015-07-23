@@ -802,6 +802,12 @@ set(${target_name}_src
   SkyTemperature.hpp
   SkyTemperature_Impl.hpp
   SkyTemperature.cpp
+  SolarCollectorFlatPlateWater.hpp
+  SolarCollectorFlatPlateWater_Impl.hpp
+  SolarCollectorFlatPlateWater.cpp
+  SolarCollectorPerformanceFlatPlate.hpp
+  SolarCollectorPerformanceFlatPlate_Impl.hpp
+  SolarCollectorPerformanceFlatPlate.cpp
   Space.hpp
   Space_Impl.hpp
   Space.cpp
@@ -1411,6 +1417,7 @@ set(${target_name}_test_src
   test/SizingSystem_GTest.cpp
   test/SizingZone_GTest.cpp
   test/SkyTemperature_GTest.cpp
+  test/SolarCollectorFlatPlateWater_GTest.cpp
   test/SpaceInfiltrationDesignFlowRate_GTest.cpp
   test/SpaceInfiltrationEffectiveLeakageArea_GTest.cpp
   test/SpaceType_GTest.cpp
