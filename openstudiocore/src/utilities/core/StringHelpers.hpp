@@ -107,6 +107,12 @@ namespace openstudio {
   * DocumentFormat::COUT. */
   UTILITIES_API std::string formatUnitString(const std::string& str, DocumentFormat fmt);
 
+  /** Split a string into a vector of strings given a delimiter character. An empty string results
+   *  in an empty vector, strings that begin or end with the delimiter will result in a vector
+   *  beginning or ending with an empty string, and non-empty strings with no delimiters returns
+   *  a vector with the input string as the only element. */
+  UTILITIES_API std::vector <std::string> splitString(const std::string & string, char delimiter);
+
 }
 
 #endif // UTILITIES_CORE_STRINGHELPERS_HPP

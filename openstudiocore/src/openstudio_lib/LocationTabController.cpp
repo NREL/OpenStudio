@@ -38,12 +38,15 @@
 
 namespace openstudio {
 
-LocationTabController::LocationTabController(const model::Model & model,
-                                             const QString& modelTempDir)
-  : MainTabController(new LocationTabView(model,modelTempDir))
+LocationTabController::LocationTabController(bool isIP,
+  const model::Model & model,
+  const QString& modelTempDir)
+  : MainTabController(new LocationTabView(model,modelTempDir)),
+  m_model(model)
 {
-  auto locationView = new LocationView(model, modelTempDir);
+  auto locationView = new LocationView(isIP, model, modelTempDir);
   mainContentWidget()->addSubTab("Weather File && Design Days",locationView,WEATHER_FILE);
+  connect(this, &LocationTabController::toggleUnitsClicked, locationView, &LocationView::toggleUnitsClicked);
 
   auto lifeCycleCostsView = new LifeCycleCostsView(model);
   mainContentWidget()->addSubTab("Life Cycle Costs",lifeCycleCostsView,LIFE_CYCLE_COSTS);
@@ -62,29 +65,13 @@ LocationTabController::LocationTabController(const model::Model & model,
 
   mainContentWidget()->addSubTab("Utility Bills",m_utilityBillsStackedWidget,UTILITY_BILLS);
 
-  // Determine if the utility bill sub-tab is shown
-  boost::optional<model::YearDescription> yearDescription = model.yearDescription();
-  if (yearDescription){
-    boost::optional<int> calendarYear = yearDescription.get().calendarYear();
-    if (calendarYear){
-      boost::optional<model::WeatherFile> weatherFile = model.weatherFile();
-      if (weatherFile){
-        boost::optional<model::RunPeriod> runPeriod = model.getOptionalUniqueModelObject<model::RunPeriod>();
-        if (runPeriod.is_initialized()){
-          m_utilityBillsStackedWidget->setCurrentIndex(m_visibleWidgetIndex);
-        }
-        else {
-          m_utilityBillsStackedWidget->setCurrentIndex(m_warningWidgetIndex);
-        }
-      }
-    }
-  }
+  showUtilityBillSubTab();
 
   // Hack code to remove when tab active
   label = new QLabel();
   label->setPixmap(QPixmap(":/images/coming_soon_utility_rates.png"));
   label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-  mainContentWidget()->addSubTab("Utility Rates",label,UTILITY_RATES);
+  //mainContentWidget()->addSubTab("Utility Rates",label,UTILITY_RATES); This is too slow in coming, so hide until ready
 
   // Hack code to remove when tab active
   //label = new QLabel();
@@ -97,6 +84,27 @@ LocationTabController::LocationTabController(const model::Model & model,
   //label->setPixmap(QPixmap(":/images/coming_soon_water_mains_temperature.png"));
   //label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   //mainContentWidget()->addSubTab("Water Mains Temperature",label,WATER_MAINS_TEMPERATURE);
+}
+
+void LocationTabController::showUtilityBillSubTab()
+{
+  // Determine if the utility bill sub-tab is shown
+  boost::optional<model::YearDescription> yearDescription = m_model.yearDescription();
+  if (yearDescription){
+    boost::optional<int> calendarYear = yearDescription.get().calendarYear();
+    if (calendarYear){
+      boost::optional<model::WeatherFile> weatherFile = m_model.weatherFile();
+      if (weatherFile){
+        boost::optional<model::RunPeriod> runPeriod = m_model.getOptionalUniqueModelObject<model::RunPeriod>();
+        if (runPeriod.is_initialized()){
+          m_utilityBillsStackedWidget->setCurrentIndex(m_visibleWidgetIndex);
+        }
+        else {
+          m_utilityBillsStackedWidget->setCurrentIndex(m_warningWidgetIndex);
+        }
+      }
+    }
+  }
 }
 
 void LocationTabController::showSubTabView(bool showSubTabView)

@@ -56,12 +56,37 @@ namespace openstudio {
     this->setChecked(checked);
   }
 
+  void OSCheckBox3::bind(model::ModelObject & modelObject,
+    BoolGetter get,
+    boost::optional<BoolSetterBoolReturn> set,
+    boost::optional<NoFailAction> reset,
+    boost::optional<BasicQuery> isDefaulted)
+  {
+    m_modelObject = modelObject;
+    m_get = get;
+    m_setBoolReturn = set;
+    m_reset = reset;
+    m_isDefaulted = isDefaulted;
+
+    setEnabled(true);
+
+    connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSCheckBox3::onModelObjectChange);
+
+    connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSCheckBox3::onModelObjectRemove);
+
+    connect(this, &OSCheckBox3::toggled, this, &OSCheckBox3::onToggled);
+    bool checked = (*m_get)();
+
+    this->setChecked(checked);
+  }
+
   void OSCheckBox3::unbind()
   {
     if (m_modelObject){
       this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
       m_get.reset();
       m_set.reset();
+      m_setBoolReturn.reset();
       m_reset.reset();
       m_isDefaulted.reset();
       setEnabled(false);
@@ -73,6 +98,11 @@ namespace openstudio {
     if (m_modelObject && m_set) {
       if ((*m_get)() != checked) {
         (*m_set)(checked);
+      }
+    }
+    else if (m_modelObject && m_setBoolReturn) {
+      if ((*m_get)() != checked) {
+        (*m_setBoolReturn)(checked);
       }
     }
   }
