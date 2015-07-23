@@ -817,4 +817,7 @@
     <rule IddField="Sensible Heat Ratio Function of Flow Fraction Curve" Access="LOCKED"/>
     <rule IddField="Condenser Air Inlet Node" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_ZoneMixing">
+    <rule IddField="Zone Name" Access="HIDDEN"/>
+  </POLICY>
 </ROOT>

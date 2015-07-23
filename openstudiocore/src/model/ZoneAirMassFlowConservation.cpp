@@ -56,6 +56,8 @@ namespace detail {
   {
     static std::vector<std::string> result;
     if (result.empty()){
+      result.push_back("Zone Infiltration Air Mass Flow Balance Status");
+      result.push_back("Zone Mass Balance Infiltration Air Mass Flow Rate");
     }
     return result;
   }

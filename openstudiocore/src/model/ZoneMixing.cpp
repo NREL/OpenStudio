@@ -66,6 +66,21 @@ namespace detail {
   {
     static std::vector<std::string> result;
     if (result.empty()){
+      result.push_back("Zone Mixing Volume");
+      result.push_back("Zone Mixing Current Density Air Volume Flow Rate");
+      result.push_back("Zone Mixing Standard Density Air Volume Flow Rate");
+      result.push_back("Zone Mixing Mass");
+      result.push_back("Zone Mixing Mass Flow Rate");
+      result.push_back("Zone Mixing Sensible Heat Loss Energy");
+      result.push_back("Zone Mixing Sensible Heat Gain Energy");
+      result.push_back("Zone Mixing Latent Heat Loss Energy");
+      result.push_back("Zone Mixing Latent Heat Gain Energy");
+      result.push_back("Zone Mixing Total Heat Loss Energy");
+      result.push_back("Zone Mixing Total Heat Gain Energy");
+      // DLM: these are not working yet
+      // https://github.com/NREL/EnergyPlus/issues/5042
+      //result.push_back("Zone Mixing Receiving Air Mass Flow Rate");
+      //result.push_back("Zone Mixing Source Air Mass Flow Rate");
     }
     return result;
   }

@@ -406,13 +406,13 @@ class MODEL_API ThermalZone : public HVACComponent {
   void removeReturnPlenum();
 
   /** Returns all ZoneMixing objects associated with this zone, includes supply and exhaust mixing objects */
-  std::vector<ZoneMixing> zoneMixing();
+  std::vector<ZoneMixing> zoneMixing() const;
 
   /** Returns all ZoneMixing objects which supply air to this zone */
-  std::vector<ZoneMixing> supplyZoneMixing();
+  std::vector<ZoneMixing> supplyZoneMixing() const;
 
   /** Returns all ZoneMixing objects which exhaust air from this zone */
-  std::vector<ZoneMixing> exhaustZoneMixing();
+  std::vector<ZoneMixing> exhaustZoneMixing() const;
 
   //@}
  protected:

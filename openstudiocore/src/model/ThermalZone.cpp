@@ -143,7 +143,13 @@ namespace detail {
     // Sizing Zone object
     SizingZone sizingZone = this->sizingZone();
     result.push_back(sizingZone);
-    
+
+    // DLM: temporarily add supplyZoneMixing as children so we can see them in IG
+    // remove once we have gridview for these
+    for (const auto& mixing : supplyZoneMixing()){
+      result.push_back(mixing);
+    }
+
     return result;
   }
 
@@ -2184,12 +2190,12 @@ namespace detail {
     }
   }
 
-  std::vector<ZoneMixing> ThermalZone_Impl::zoneMixing()
+  std::vector<ZoneMixing> ThermalZone_Impl::zoneMixing() const
   {
     return getObject<ModelObject>().getModelObjectSources<ZoneMixing>();
   }
 
-  std::vector<ZoneMixing> ThermalZone_Impl::supplyZoneMixing()
+  std::vector<ZoneMixing> ThermalZone_Impl::supplyZoneMixing() const
   {
     std::vector<ZoneMixing> result = this->zoneMixing();
 
@@ -2201,7 +2207,7 @@ namespace detail {
     return result;
   }
 
-  std::vector<ZoneMixing> ThermalZone_Impl::exhaustZoneMixing()
+  std::vector<ZoneMixing> ThermalZone_Impl::exhaustZoneMixing() const
   {
     std::vector<ZoneMixing> result = this->zoneMixing();
 
@@ -2760,17 +2766,17 @@ void ThermalZone::removeReturnPlenum()
   getImpl<detail::ThermalZone_Impl>()->removeReturnPlenum();
 }
 
-std::vector<ZoneMixing> ThermalZone::zoneMixing()
+std::vector<ZoneMixing> ThermalZone::zoneMixing() const
 {
   return getImpl<detail::ThermalZone_Impl>()->zoneMixing();
 }
 
-std::vector<ZoneMixing> ThermalZone::supplyZoneMixing()
+std::vector<ZoneMixing> ThermalZone::supplyZoneMixing() const
 {
   return getImpl<detail::ThermalZone_Impl>()->supplyZoneMixing();
 }
 
-std::vector<ZoneMixing> ThermalZone::exhaustZoneMixing()
+std::vector<ZoneMixing> ThermalZone::exhaustZoneMixing() const
 {
   return getImpl<detail::ThermalZone_Impl>()->exhaustZoneMixing();
 }

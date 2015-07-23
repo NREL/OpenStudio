@@ -441,9 +441,9 @@ namespace detail {
     bool setReturnPlenum(const ThermalZone & plenumZone);
     void removeReturnPlenum();
 
-    std::vector<ZoneMixing> zoneMixing();
-    std::vector<ZoneMixing> supplyZoneMixing();
-    std::vector<ZoneMixing> exhaustZoneMixing();
+    std::vector<ZoneMixing> zoneMixing() const;
+    std::vector<ZoneMixing> supplyZoneMixing() const;
+    std::vector<ZoneMixing> exhaustZoneMixing() const;
 
    protected:
 
