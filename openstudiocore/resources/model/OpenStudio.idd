@@ -19871,6 +19871,95 @@ OS:ThermalStorage:Ice:Detailed,
        \key InsideMelt
        \key OutsideMelt
        \required-field
+       
+\group Solar Collectors
+
+OS:SolarCollectorPerformance:FlatPlate,
+       \memo Thermal and optical performance parameters for a single flat plate solar collector
+       \memo module. These parameters are based on the testing methodologies described in ASHRAE
+       \memo Standards 93 and 96 which are used Solar Rating and Certification Corporation (SRCC)
+       \memo Directory of SRCC Certified Solar Collector Ratings. See EnergyPlus DataSets file
+       \memo SolarCollectors.idf.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference FlatPlateSolarCollectorParameters
+  N1 , \field Gross Area
+       \required-field
+       \type real
+       \minimum> 0
+       \units m2
+  A3,  \field Test Fluid
+       \type choice
+       \key Water
+       \default Water
+  N2,  \field Test Flow Rate
+       \required-field
+       \type real
+       \minimum> 0
+       \units m3/s
+  A4 , \field Test Correlation Type
+       \required-field
+       \type choice
+       \key Inlet
+       \key Average
+       \key Outlet
+  N3 , \field Coefficient 1 of Efficiency Equation
+       \required-field
+       \type real
+       \units dimensionless
+       \note Y-intercept term
+  N4 , \field Coefficient 2 of Efficiency Equation
+       \required-field
+       \type real
+       \units W/m2-K
+       \note 1st Order term
+  N5 , \field Coefficient 3 of Efficiency Equation
+       \type real
+       \units W/m2-K2
+       \note 2nd order term
+  N6 , \field Coefficient 2 of Incident Angle Modifier
+       \type real
+       \note 1st order term
+  N7 ; \field Coefficient 3 of Incident Angle Modifier
+       \type real
+       \note 2nd order term
+
+OS:SolarCollector:FlatPlate:Water,
+       \memo Flat plate water solar collector (single glazed, unglazed, or evacuated tube).
+       \memo Thermal and optical properties are taken from the referenced
+       \memo SolarCollectorPerformance:FlatPlate object. Collector tilt, azimuth, and gross area
+       \memo are taken from the referenced building surface or shading surface. The collector
+       \memo surface participates normally in all shading calculations.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+  A3 , \field SolarCollectorPerformance Name
+       \required-field
+       \type object-list
+       \object-list FlatPlateSolarCollectorParameters
+  A4 , \field Surface Name
+       \required-field
+       \type object-list
+       \object-list AllShadingAndHTSurfNames
+  A5 , \field Inlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  A6 , \field Outlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  N1 ; \field Maximum Flow Rate
+       \type real
+       \minimum> 0
+       \units m3/s
 
 \group OpenStudio Economics
 
