@@ -142,9 +142,9 @@ namespace openstudio {
 
     {
       std::vector<QString> fields;
+      fields.push_back(DESIGNSPECIFICATIONOUTDOORAIROBJECTNAME);
       fields.push_back(SPACEINFILTRATIONDESIGNFLOWRATES);
       fields.push_back(SPACEINFILTRATIONEFFECTIVELEAKAGEAREAS);
-      fields.push_back(DESIGNSPECIFICATIONOUTDOORAIROBJECTNAME);
       std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Airflow"), fields);
       m_categoriesAndFields.push_back(categoryAndFields);
     }
