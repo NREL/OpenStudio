@@ -582,6 +582,8 @@ public:
 
   model::Model & model() { return m_model; }
 
+  OSGridView * gridView();
+
 protected:
 
   // This function determines the category for
@@ -650,8 +652,6 @@ private:
   void setCustomCategoryAndFields();
 
   QString cellStyle(int rowIndex, int columnIndex, bool isSelected, bool isSubRow);
-
-  OSGridView * gridView();
 
   OSItem * getSelectedItemFromModelSubTabView();
 
