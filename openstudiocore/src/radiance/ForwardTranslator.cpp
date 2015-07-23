@@ -1181,7 +1181,7 @@ namespace radiance {
               }
               else{
                 // 3-phase/rfluxmtx support
-                m_radWindowGroups[windowGroup_name] += "#@rfluxmtx h=kf u=" + winUpVector + " o=output/dc/" + windowGroup_name + ".vmx\n";
+								// moved to "shade" polygon now 2015.07.23 RPG
               }
 
             }
@@ -1437,7 +1437,7 @@ namespace radiance {
 
               // write the polygon
               m_radWindowGroups[windowGroup_name] += windowGroup_name + " polygon " + subSurface_name + "\n";
-              m_radWindowGroups[windowGroup_name] += "0\n0\n" + formatString(polygon.size() * 3) + "\n\n";
+              m_radWindowGroups[windowGroup_name] += "0\n0\n" + formatString(polygon.size() * 3) + "\n";
               for (Point3dVector::const_reverse_iterator vertex = polygon.rbegin();
                 vertex != polygon.rend();
                 ++vertex)
@@ -1461,6 +1461,7 @@ namespace radiance {
 
               
               // polygon header
+              m_radWindowGroupShades[windowGroup_name] += "#@rfluxmtx h=kf u=" + winUpVector + " o=output/dc/" + windowGroup_name + ".vmx\n";
               m_radWindowGroupShades[windowGroup_name] += "\n# shade for SubSurface: " + subSurface_name + "\n";
               
               // write the polygon 
@@ -1552,7 +1553,6 @@ namespace radiance {
 						textStream2 << defaultFile;
 						outFileAir.close();
 				
-
 
 						//store window group entry for mapping.rad
 						if (windowGroup_name == "WG0"){

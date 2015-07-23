@@ -276,29 +276,31 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 			# Read simulation settings from model export 
 			# TODO: read settings directly from model
-			options_tregVars = ""
+			options_tregVars = "-c 100 -e MF:1 -f tregenza.cal -b tbin -bn Ntbins" 			## TESTING (reset to empty)
 			options_klemsDensity = ""
 			options_skyvecDensity = ""
-			options_dmx = ""
-			options_vmx = ""
+			options_dmx = "-ab 1 -ad 128 -as 56 -dj 1 -dp 1 -dt 0.1 -dc 0.1 -lw 0.1 " 	## TESTING (reset to empty)
+			options_vmx = "-ab 1 -ad 128 -as 56 -dj 1 -dp 1 -dt 0.1 -dc 0.1 -lw 0.1"		## TESTING (reset to empty)
 
-			File.open("#{radPath}/options/treg.opt", "r") do |file|
-				tempIO = file.read
-				tempSettings = tempIO.split(" ")
-				options_klemsDensity = "#{tempSettings[0]} #{tempSettings[1]}"
-				options_skyvecDensity = tempSettings[3].split(":")[1]
-				options_tregVars = tempSettings[2..-1].join(" ")
-			end
-
-			File.open("#{radPath}/options/dmx.opt", "r") do |file|
-				tempIO = file.read
-				options_dmx = tempIO
-			end
-
-			File.open("#{radPath}/options/vmx.opt", "r") do |file|
-				tempIO = file.read
-				options_vmx = tempIO
-			end
+# UNCOMMENT WHEN DONE TESTING
+# 			File.open("#{radPath}/options/treg.opt", "r") do |file|
+# 				tempIO = file.read
+# 				tempSettings = tempIO.split(" ")
+# 				options_klemsDensity = "#{tempSettings[0]} #{tempSettings[1]}"
+# 				options_skyvecDensity = tempSettings[3].split(":")[1]
+# 				options_tregVars = tempSettings[2..-1].join(" ")
+# 			end
+# 
+# 			File.open("#{radPath}/options/dmx.opt", "r") do |file|
+# 				tempIO = file.read
+# 				options_dmx = tempIO
+# 			end
+# 
+# 			File.open("#{radPath}/options/vmx.opt", "r") do |file|
+# 				tempIO = file.read
+# 				options_vmx = tempIO
+# 			end
+# UNCOMMENT WHEN DONE TESTING
 
 			## END read simulation settings
 
@@ -315,7 +317,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			haveWG0 = ""
 
 			# get calculation points array size (needed for rmtxop later)
-			mapFile=File.open("#{radPath}/numeric/merged_space.map","r")
+			mapFile=File.open("numeric/merged_space.map","r")
 			rfluxmtxDim = mapFile.readlines.size.to_s
 
 			puts "#{Time.now.getutc}: passing #{rfluxmtxDim} calculation points to Radiance"
@@ -325,7 +327,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			puts "#{Time.now.getutc}: computing daylight coefficient matrices"
 
 			system("oconv materials/materials.rad model.rad > model_dc.oct")
-			windowMaps = File::open("#{radPath}/bsdf/mapping.rad")
+			windowMaps = File::open("bsdf/mapping.rad")
 			windowMaps.each do |row|
 				next if row[0] == "#"
 				wg=row.split(",")[0]
@@ -335,14 +337,24 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 					# use more aggro simulation parameters because this is basically a view matrix
 					rtrace_args = "#{options_vmx}"
 			
-					# make special WG0 octree (all shade control window groups blacked out)
-					exec_statement("oconv \"#{radPath}/materials/materials.rad\" \"#{radPath}/materials/materials_WG0.rad\" model.rad \
-						\"#{radPath}/skies/dc_sky.rad\" > model_WG0.oct")
+					# make special WG0 octree (all shade controlled window groups blacked out)
+					temp_command = "oconv \"materials/materials.rad\" \"materials/materials_WG0.rad\" model.rad \
+						\"skies/dc_sky.rad\" > model_WG0.oct"
+					puts "SYSTEM: #{temp_command}"
+					system(temp_command)
 
 					# do daylight coefficients for uncontrolled windows
+					
 					puts "#{Time.now.getutc}: computing daylight/view matrix for window group #{wg}"
-					exec_statement("#{t_catCommand} \"#{radPath}/numeric/merged_space.map\" \
-						| rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} -o \"#{radPath}/output/dc/WG0.vmx\" -m skyglow model_WG0.oct")
+					
+					puts "procsUsed = #{procsUsed}"
+					puts "rtrace_args = #{rtrace_args}"
+					puts "options_tregVars = #{options_tregVars}"
+					
+					temp_command = "#{t_catCommand} numeric/merged_space.map \
+						| rcontrib #{rtrace_args} -I+ -fo #{options_tregVars} -o output/dc/WG0.vmx -m skyglow model_WG0.oct"
+					puts "SYSTEM: #{temp_command}"
+					system(temp_command)
 
 				else 	# window group has shade control 
 			
@@ -352,46 +364,55 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 					# do daylight matrices for controlled windows
 					puts "#{Time.now.getutc}: computing daylight matrix for window group #{wg}"
 
-					exec_statement("rfluxmtx #{rtrace_args} #{procsUsed} -fa -v #{radPath}/scene/glazing/#{wg}.rad #{radPath}/skies/dc_sky.rad -i model_dc.oct > \
-					#{radPath}/output/dc/#{wg}.dmx")
+					temp_command = ""
+					temp_command = "rfluxmtx #{rtrace_args} -fa -v scene/glazing/#{wg}.rad skies/dc_sky.rad -i model_dc.oct > \
+					output/dc/#{wg}.dmx"
+					puts "SYSTEM: #{temp_command}"
+					system("rfluxmtx #{rtrace_args} -fa -v scene/glazing/#{wg}.rad skies/dc_sky.rad -i model_dc.oct > \
+					output/dc/#{wg}.dmx")
 		
 				end
 				
  			end  # calculate DMX
-# 
-# 
-# 			# compute view matrices for all controlled window groups
-# 
-# 			# use fine params
-# 			
-# 			rtrace_args = "#{t_options.vmx}" 
-# 
-# 			# get the window groups, skipping WG0 if present
-# 			
-# 			wgInput = []
-# 			Dir.glob("#{rad_dir}/scene/glazing/WG*.rad") {|file|
-# 				next if file == "#{rad_dir}/scene/glazing/WG0.rad"
-# 				wgInput << file
-# 			}
-# 	
-# 			puts "#{Time.now.getutc}: computing view matri(ces) for controlled windows"
-# 			exec_statement("#{t_catCommand} #{rad_dir}/materials/materials_vmx.rad #{wgInput.join(" ")} > receivers_vmx.rad")
-# 			exec_statement("oconv #{rad_dir}/materials/materials.rad #{rad_dir}/scene/*.rad > model_vmx.oct")
-# 			exec_statement("rfluxmtx #{rtrace_args} -ds .15 #{procsUsed} -faa -n #{t_simCores} -y #{rfluxmtxDim} -I -v - receivers_vmx.rad -i model_vmx.oct < \
-# 				#{rad_dir}/numeric/merged_space.map")
-# 	
-# 			# compute daylight coefficient matrices for window group control points
-# 			
-# 			rtrace_args = "#{t_options.dmx}"
-# 			system("oconv \"#{rad_dir}/materials/materials.rad\" model.rad \
-# 				\"#{rad_dir}/skies/dc_sky.rad\" > model_wc.oct")
-# 			puts "#{Time.now.getutc}: computing DCs for window control points"
-# 			exec_statement("#{t_catCommand} \"#{rad_dir}/numeric/window_controls.map\" \
-# 				| rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{t_options.tregVars} \
-# 				-o \"#{rad_dir}/output/dc/window_controls.vmx\" \
-# 				-m skyglow model_wc.oct")
-# 			
-# 			# end VMX
+
+
+			# compute view matrices for all controlled window groups
+
+			# use fine params		
+			rtrace_args = "#{options_vmx}" 
+
+			puts "#{Time.now.getutc}: computing view matri(ces) for controlled windows"
+			
+			# get the shaded window groups' shade polygons
+			
+			wgInput = []
+			# get the SHADE polygons for sampling (NOT the GLAZING ones!)
+			Dir.glob("scene/shades/WG*.rad") {|file|
+				wgInput << file
+			}
+	
+			# make the receiver file
+			exec_statement("#{t_catCommand} materials/materials_vmx.rad #{wgInput.join(" ")} > receivers_vmx.rad")
+			
+			# make the octree
+			exec_statement("oconv materials/materials.rad scene/*.rad > model_vmx.oct")
+			
+			# make rfluxmtx do all the work
+			exec_statement("rfluxmtx #{rtrace_args} -ds .15 -faa -y #{rfluxmtxDim} -I -v - receivers_vmx.rad -i model_vmx.oct < \
+				numeric/merged_space.map")
+	
+			# compute daylight coefficient matrices for window group control points
+			
+			rtrace_args = "#{options_dmx}"
+			system("oconv \"materials/materials.rad\" model.rad \
+				\"skies/dc_sky.rad\" > model_wc.oct")
+			puts "#{Time.now.getutc}: computing DCs for window control points"
+			exec_statement("#{t_catCommand} \"numeric/window_controls.map\" \
+				| rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} \
+				-o \"output/dc/window_controls.vmx\" \
+				-m skyglow model_wc.oct")
+			
+			# end VMX
 
 		puts "#{Time.now.getutc}: done (daylight coefficients)."
 
@@ -404,7 +425,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 		Dir.chdir("#{radPath}")
 		puts "\nRunning radiance in directory: '#{Dir.pwd}'"
 
-		sqlPath = OpenStudio::Path.new("#{radPath}/sql/eplusout.sql")
+		sqlPath = OpenStudio::Path.new("sql/eplusout.sql")
 		sqlPath = OpenStudio::system_complete(sqlPath)
 		
 		# load the sql file
@@ -431,7 +452,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 		# settle in, it's gonna be a bumpy ride...
 		Dir.chdir("#{radPath}")
 
-		sqlPath = OpenStudio::Path.new("#{radPath}/sql/eplusout.sql")
+		sqlPath = OpenStudio::Path.new("sql/eplusout.sql")
 		sqlPath = OpenStudio::system_complete(sqlPath)
 		
 		# load the sql file
@@ -582,26 +603,26 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 		end
 
 		# merge window group control points
-		File.open("#{radPath}/numeric/window_controls.map", "w") do |f|
+		File.open("numeric/window_controls.map", "w") do |f|
 
-			windows = Dir.glob("#{radPath}/numeric/WG*.pts")
+			windows = Dir.glob("numeric/WG*.pts")
 			windows.each do |wg|
 				f.write IO.read(wg)
 			end
 		end
 
 		# merge calculation points
-		File.open("#{radPath}/numeric/merged_space.map", "w") do |f|
+		File.open("numeric/merged_space.map", "w") do |f|
 			space_names_to_calculate.each do |space_name|
 
-				f.write IO.read("#{radPath}/numeric/#{space_name}.map")
+				f.write IO.read("numeric/#{space_name}.map")
 
-				if File.exists?("#{radPath}/numeric/#{space_name}.sns")        
-					f.write IO.read("#{radPath}/numeric/#{space_name}.sns")
+				if File.exists?("numeric/#{space_name}.sns")        
+					f.write IO.read("numeric/#{space_name}.sns")
 				end
 
-				if File.exists?("#{radPath}/numeric/#{space_name}.glr")
-					f.write IO.read("#{radPath}/numeric/#{space_name}.glr")
+				if File.exists?("numeric/#{space_name}.glr")
+					f.write IO.read("numeric/#{space_name}.glr")
 
 				end
 			end
