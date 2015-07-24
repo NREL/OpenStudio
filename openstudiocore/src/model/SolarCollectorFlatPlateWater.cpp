@@ -28,6 +28,8 @@
 #include <model/ShadingSurface_Impl.hpp>
 #include <model/Connection.hpp>
 #include <model/Connection_Impl.hpp>
+#include <model/ModelObject.hpp>
+#include <model/ModelObject_Impl.hpp>
 
 #include <utilities/idd/OS_SolarCollector_FlatPlate_Water_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -62,6 +64,21 @@ namespace detail {
                                                                        bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {}
+
+  ModelObject SolarCollectorFlatPlateWater_Impl::clone(Model model) const 
+  {
+    ModelObject foo =  StraightComponent_Impl::clone(model);
+    return foo;
+    // do not want to point to any surface after cloning
+    //result.cast<SolarCollectorFlatPlateWater>().resetSurface();
+
+    //return result;
+  }
+
+  std::vector<IdfObject> SolarCollectorFlatPlateWater_Impl::remove()
+  {
+    return ParentObject_Impl::remove();
+  }
 
   const std::vector<std::string>& SolarCollectorFlatPlateWater_Impl::outputVariableNames() const
   {
@@ -199,6 +216,10 @@ bool SolarCollectorFlatPlateWater::setSolarCollectorPerformance(const SolarColle
 
 bool SolarCollectorFlatPlateWater::setSurface(const PlanarSurface& surface) {
   return getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->setSurface(surface);
+}
+
+void SolarCollectorFlatPlateWater::resetSurface() {
+  return getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->resetSurface();
 }
 
 bool SolarCollectorFlatPlateWater::setMaximumFlowRate(double maximumFlowRate) {

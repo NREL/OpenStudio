@@ -72,7 +72,7 @@ class MODEL_API SolarCollectorFlatPlateWater : public StraightComponent {
 
   bool setSurface(const PlanarSurface& surface);
 
-  void reserSurface();
+  void resetSurface();
 
   //bool setInletNode(const Connection& connection);
 
