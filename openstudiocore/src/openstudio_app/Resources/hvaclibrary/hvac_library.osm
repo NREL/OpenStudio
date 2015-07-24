@@ -1,7 +1,7 @@
 
 OS:Version,
-  {48b53559-667b-4351-a0af-8dceb808653b}, !- Handle
-  1.8.0;                                  !- Version Identifier
+  {41c7abfd-91d3-4643-b84c-bb2f7d724527}, !- Handle
+  1.8.2;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -529,7 +529,7 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
 
 OS:AirTerminal:SingleDuct:VAV:HeatAndCool:NoReheat,
   {bf4b3859-f66c-48ce-b600-88c7d76d5d5e}, !- Handle
-  VAV Heat And Cool No Reheat, !- Name
+  VAV Heat And Cool No Reheat,            !- Name
   ,                                       !- Availability Schedule
   ,                                       !- Air Outlet
   ,                                       !- Air Inlet
@@ -8597,4 +8597,25 @@ OS:Curve:QuadraticLinear,
   1,                                      !- Maximum Value of x {BasedOnField A2}
   0,                                      !- Minimum Value of y {BasedOnField A3}
   9.9;                                    !- Maximum Value of y {BasedOnField A3}
+  
+OS:SolarCollector:FlatPlate:Water,
+  {49f50946-e58b-424d-8de0-7c40725d7df6}, !- Handle
+  Solar Collector Flat Plate Water 1,     !- Name
+  {7a28412e-316b-4ed4-af83-aec518479b28}, !- SolarCollectorPerformance Name
+  ,                                       !- Surface Name
+  ,                                       !- Inlet Node Name
+  ;                                       !- Outlet Node Name
+  
+OS:SolarCollectorPerformance:FlatPlate,
+  {7a28412e-316b-4ed4-af83-aec518479b28}, !- Handle
+  Alternate Energy Technologies AE-32,    !- Name
+  2.9646,                                 !- Gross Area {m2}
+  Water,                                  !- Test Fluid
+  3.88e-005,                              !- Test Flow Rate {m3/s}
+  Inlet,                                  !- Test Correlation Type
+  0.691,                                  !- Coefficient 1 of Efficiency Equation {dimensionless}
+  -0.00193,                               !- Coefficient 2 of Efficiency Equation {W/m2-K}
+  ,                                       !- Coefficient 3 of Efficiency Equation {W/m2-K2}
+  -0.1939,                                !- Coefficient 2 of Incident Angle Modifier
+  -0.0055;                                !- Coefficient 3 of Incident Angle Modifier
 

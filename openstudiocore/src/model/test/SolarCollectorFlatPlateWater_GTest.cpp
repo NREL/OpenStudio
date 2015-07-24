@@ -78,10 +78,21 @@ TEST_F(ModelFixture, SolarCollectorFlatPlateWater_addToNode) {
   EXPECT_EQ(0u, model.getObjectsByType(SolarCollectorPerformanceFlatPlate::iddObjectType()).size());
 
   SolarCollectorFlatPlateWater collector(model);
-  EXPECT_TRUE(collector.addToNode(node));
-
   EXPECT_EQ(1u, model.getObjectsByType(SolarCollectorFlatPlateWater::iddObjectType()).size());
   EXPECT_EQ(1u, model.getObjectsByType(SolarCollectorPerformanceFlatPlate::iddObjectType()).size());
+
+  SolarCollectorPerformanceFlatPlate performance = collector.solarCollectorPerformance();
+  EXPECT_NE(0.0, performance.grossArea());
+  EXPECT_EQ("Water", performance.testFluid());
+  EXPECT_NE(0.0, performance.testFlowRate());
+  EXPECT_EQ("Inlet", performance.testCorrelationType());
+  EXPECT_NE(0.0, performance.coefficient1ofEfficiencyEquation());
+  EXPECT_NE(0.0, performance.coefficient2ofEfficiencyEquation());
+  //EXPECT_FALSE(performance.coefficient3ofEfficiencyEquation());
+  //EXPECT_TRUE(performance.coefficient2ofIncidentAngleModifier());
+  //EXPECT_TRUE(performance.coefficient3ofIncidentAngleModifier());
+
+  EXPECT_TRUE(collector.addToNode(node));
 
   EXPECT_EQ(1u, plant.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
   EXPECT_EQ(1u, plant.supplyComponents(TemperingValve::iddObjectType()).size());

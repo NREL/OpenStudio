@@ -690,6 +690,27 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
         }
         break;
       }
+      case openstudio::IddObjectType::OS_SolarCollector_FlatPlate_Water :
+      {
+        // DLM: ?????
+        sizeAsCondenserSystem = true;
+        if (boost::optional<Node> outletNode = isSetpointComponent(plantLoop, supplyComponent))
+        {
+          auto hx = supplyComponent.cast<HeatExchangerFluidToFluid>();
+          if (hx.isLoopSupplySideDesignFlowRateAutosized())
+          {
+            autosize = true;
+          } else if (boost::optional<double> optionalFlowRate = hx.loopSupplySideDesignFlowRate())
+          {
+            flowRate = optionalFlowRate.get();
+          }
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent, *outletNode, flowRate, autosize, BOTH));
+        } else
+        {
+          uncontrolledComponents.push_back(supplyComponent);
+        }
+        break;
+      }
       default:
       {
         break;

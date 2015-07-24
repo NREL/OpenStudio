@@ -128,6 +128,7 @@ IconLibrary::IconLibrary()
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Refrigeration_Condenser_Cascade).value()] = new QPixmap(":images/condenser_cascade.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Refrigeration_Condenser_EvaporativeCooled).value()] = new QPixmap(":images/evap_cooled.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Refrigeration_Condenser_WaterCooled).value()] = new QPixmap(":images/water_cooled.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SolarCollector_FlatPlate_Water).value()] = new QPixmap(":images/bug.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_TemperingValve).value()] = new QPixmap(":images/tempering_valve.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ThermalZone).value()] = new QPixmap(":images/zone.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ThermalStorage_Ice_Detailed).value()] = new QPixmap(":images/thermal_storage_ice.png");
@@ -223,6 +224,7 @@ IconLibrary::IconLibrary()
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ShadingSurface).value()] = new QPixmap(":images/mini_icons/shading_surface.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ShadingSurfaceGroup).value()] = new QPixmap(":images/mini_icons/shading_surface_group.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Site).value()] = new QPixmap(":images/mini_icons/site.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SolarCollector_FlatPlate_Water).value()] = new QPixmap(":images/bug.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Space).value()] = new QPixmap(":images/mini_icons/space.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SpaceType).value()] = new QPixmap(":images/mini_icons/space_type.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SteamEquipment).value()] = new QPixmap(":images/mini_icons/steam_equipment.png");

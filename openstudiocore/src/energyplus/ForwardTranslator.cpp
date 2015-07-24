@@ -1699,6 +1699,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateSizingParameters(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_SolarCollectorPerformance_FlatPlate :
+  {
+    model::SolarCollectorPerformanceFlatPlate mo = modelObject.cast<SolarCollectorPerformanceFlatPlate>();
+    retVal = translateSolarCollectorPerformanceFlatPlate(mo);
+    break;
+  }
+  case openstudio::IddObjectType::OS_SolarCollector_FlatPlate_Water :
+  {
+    model::SolarCollectorFlatPlateWater mo = modelObject.cast<SolarCollectorFlatPlateWater>();
+    retVal = translateSolarCollectorFlatPlateWater(mo);
+    break;
+  }
   case openstudio::IddObjectType::OS_StandardsInformation_Construction :
     {
       // no-op

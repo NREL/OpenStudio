@@ -201,6 +201,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSizingSystem.cpp
   ForwardTranslator/ForwardTranslateSizingZone.cpp
   ForwardTranslator/ForwardTranslateSpace.cpp
+  ForwardTranslator/ForwardTranslateSolarCollectorFlatPlateWater.cpp
+  ForwardTranslator/ForwardTranslateSolarCollectorPerformanceFlatPlate.cpp
   ForwardTranslator/ForwardTranslateSpaceType.cpp
   ForwardTranslator/ForwardTranslateSpaceInfiltrationDesignFlowRate.cpp
   ForwardTranslator/ForwardTranslateSpaceInfiltrationEffectiveLeakageArea.cpp
