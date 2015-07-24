@@ -90,6 +90,10 @@ namespace openstudio {
     connect(this, &GridViewSubTab::selectionCleared, gridView, &OSGridView::onSelectionCleared);
 
     connect(gridView, &OSGridView::gridRowSelectionChanged, this, &GridViewSubTab::gridRowSelectionChanged);
+
+    connect(this, &GridViewSubTab::toggleUnitsClicked, m_gridController, &OSGridController::toggleUnitsClicked);
+
+    connect(this, &GridViewSubTab::toggleUnitsClicked, m_gridController, &OSGridController::toggleUnits);
   }
 
   void GridViewSubTab::setGridController(OSGridController * gridController)
