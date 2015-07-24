@@ -197,7 +197,7 @@ namespace openstudio {
 
     m_spaceNameFilter = new QLineEdit();
     m_spaceNameFilter->setFixedWidth(OSItem::ITEM_WIDTH);
-    connect(m_spaceNameFilter, &QLineEdit::editingFinished, this, &openstudio::SpacesSubtabGridView::spaceNameFilterChanged);
+    connect(m_spaceNameFilter, &QLineEdit::textChanged, this, &openstudio::SpacesSubtabGridView::spaceNameFilterChanged);
     // Evan note: there are issues with using the signal below, related to the design and updating of the gridview (loss of focus, and updates per key stroke)
     //connect(m_spaceNameFilter, &QLineEdit::textEdited, this, &openstudio::SpacesSubtabGridView::spaceNameFilterChanged);
 

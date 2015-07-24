@@ -117,7 +117,7 @@ namespace openstudio {
 
     m_nameFilter = new QLineEdit();
     m_nameFilter->setFixedWidth(OSItem::ITEM_WIDTH);
-    connect(m_nameFilter, &QLineEdit::editingFinished, this, &openstudio::FacilityShadingGridView::nameFilterChanged);
+    connect(m_nameFilter, &QLineEdit::textChanged, this, &openstudio::FacilityShadingGridView::nameFilterChanged);
 
     QRegExp nameRegex("^\\S.*");
     auto nameValidator = new QRegExpValidator(nameRegex, this);
@@ -176,7 +176,7 @@ namespace openstudio {
 
     m_tiltFilter = new QLineEdit();
     m_tiltFilter->setFixedWidth(0.7 * OSItem::ITEM_WIDTH);
-    connect(m_tiltFilter, &QLineEdit::editingFinished, this, &openstudio::FacilityShadingGridView::tiltFilterChanged);
+    connect(m_tiltFilter, &QLineEdit::textChanged, this, &openstudio::FacilityShadingGridView::tiltFilterChanged);
 
     auto tiltValidator = new QDoubleValidator(this);
     m_tiltFilter->setValidator(tiltValidator);
