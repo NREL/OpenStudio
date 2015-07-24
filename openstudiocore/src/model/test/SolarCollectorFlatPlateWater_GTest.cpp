@@ -31,7 +31,9 @@
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
 
+#include "../../utilities/geometry/Point3d.hpp"
 
+using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture, SolarCollectorFlatPlateWater_SolarCollectorFlatPlateWater)
@@ -68,12 +70,22 @@ TEST_F(ModelFixture, SolarCollectorFlatPlateWater_addToNode) {
   ASSERT_TRUE(waterHeater.supplyOutletModelObject()->optionalCast<Node>());
   Node node = waterHeater.supplyOutletModelObject()->cast<Node>();
 
-  EXPECT_EQ(2u, plant.supplyComponents().size());
+  EXPECT_EQ(1u, plant.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
+  EXPECT_EQ(1u, plant.supplyComponents(TemperingValve::iddObjectType()).size());
+  EXPECT_EQ(0u, plant.supplyComponents(SolarCollectorFlatPlateWater::iddObjectType()).size());
+
+  EXPECT_EQ(0u, model.getObjectsByType(SolarCollectorFlatPlateWater::iddObjectType()).size());
+  EXPECT_EQ(0u, model.getObjectsByType(SolarCollectorPerformanceFlatPlate::iddObjectType()).size());
 
   SolarCollectorFlatPlateWater collector(model);
   EXPECT_TRUE(collector.addToNode(node));
 
-  EXPECT_EQ(3u, plant.supplyComponents().size());
+  EXPECT_EQ(1u, model.getObjectsByType(SolarCollectorFlatPlateWater::iddObjectType()).size());
+  EXPECT_EQ(1u, model.getObjectsByType(SolarCollectorPerformanceFlatPlate::iddObjectType()).size());
+
+  EXPECT_EQ(1u, plant.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
+  EXPECT_EQ(1u, plant.supplyComponents(TemperingValve::iddObjectType()).size());
+  EXPECT_EQ(1u, plant.supplyComponents(SolarCollectorFlatPlateWater::iddObjectType()).size());
 
   EXPECT_FALSE(collector.surface());
 
@@ -88,6 +100,13 @@ TEST_F(ModelFixture, SolarCollectorFlatPlateWater_addToNode) {
   EXPECT_TRUE(collector.setSurface(shadingSurface));
   EXPECT_TRUE(collector.surface());
 
+  collector.remove();
 
+  EXPECT_EQ(0u, model.getObjectsByType(SolarCollectorFlatPlateWater::iddObjectType()).size());
+  EXPECT_EQ(0u, model.getObjectsByType(SolarCollectorPerformanceFlatPlate::iddObjectType()).size());
+
+  EXPECT_EQ(1u, plant.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
+  EXPECT_EQ(1u, plant.supplyComponents(TemperingValve::iddObjectType()).size());
+  EXPECT_EQ(0u, plant.supplyComponents(SolarCollectorFlatPlateWater::iddObjectType()).size());
 
 }

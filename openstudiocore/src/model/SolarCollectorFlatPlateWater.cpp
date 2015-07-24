@@ -30,6 +30,10 @@
 #include <model/Connection_Impl.hpp>
 #include <model/ModelObject.hpp>
 #include <model/ModelObject_Impl.hpp>
+#include <model/PlantLoop.hpp>
+#include <model/PlantLoop_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Model.hpp>
 
 #include <utilities/idd/OS_SolarCollector_FlatPlate_Water_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -67,17 +71,19 @@ namespace detail {
 
   ModelObject SolarCollectorFlatPlateWater_Impl::clone(Model model) const 
   {
-    ModelObject foo =  StraightComponent_Impl::clone(model);
-    return foo;
-    // do not want to point to any surface after cloning
-    //result.cast<SolarCollectorFlatPlateWater>().resetSurface();
 
-    //return result;
+    SolarCollectorFlatPlateWater result = StraightComponent_Impl::clone(model).cast<SolarCollectorFlatPlateWater>();
+
+    // do not want to point to any surface after cloning
+    result.resetSurface();
+
+    return result;
   }
 
   std::vector<IdfObject> SolarCollectorFlatPlateWater_Impl::remove()
   {
-    return ParentObject_Impl::remove();
+    // DLM: will remove performance object due to parent/child relationship
+    return StraightComponent_Impl::remove();
   }
 
   const std::vector<std::string>& SolarCollectorFlatPlateWater_Impl::outputVariableNames() const
@@ -120,6 +126,17 @@ namespace detail {
 
   bool SolarCollectorFlatPlateWater_Impl::addToNode(Node & node)
   {
+    if (boost::optional<PlantLoop> plantLoop = node.plantLoop())
+    {
+      if (plantLoop->supplyComponent(node.handle()))
+      {
+        if (StraightComponent_Impl::addToNode(node))
+        {
+          return true;
+        }
+      }
+    }
+
     return false;
   }
 
