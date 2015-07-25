@@ -19880,6 +19880,7 @@ OS:SolarCollectorPerformance:FlatPlate,
        \memo Standards 93 and 96 which are used Solar Rating and Certification Corporation (SRCC)
        \memo Directory of SRCC Certified Solar Collector Ratings. See EnergyPlus DataSets file
        \memo SolarCollectors.idf.
+       \min-fields 11
   A1,  \field Handle
        \type handle
        \required-field
@@ -19935,6 +19936,7 @@ OS:SolarCollector:FlatPlate:Water,
        \memo SolarCollectorPerformance:FlatPlate object. Collector tilt, azimuth, and gross area
        \memo are taken from the referenced building surface or shading surface. The collector
        \memo surface participates normally in all shading calculations.
+       \min-fields 7
   A1,  \field Handle
        \type handle
        \required-field

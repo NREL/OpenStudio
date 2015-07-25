@@ -817,4 +817,9 @@
     <rule IddField="Sensible Heat Ratio Function of Flow Fraction Curve" Access="LOCKED"/>
     <rule IddField="Condenser Air Inlet Node" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_SolarCollector_FlatPlate_Water">
+    <rule IddField="SolarCollectorPerformance Name" Access="HIDDEN"/>
+    <rule IddField="Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>  
 </ROOT>
