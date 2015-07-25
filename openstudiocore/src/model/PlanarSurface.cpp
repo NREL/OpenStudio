@@ -41,6 +41,8 @@
 
 #include "../utilities/core/Assert.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 #include <boost/math/constants/constants.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -544,8 +546,18 @@ namespace model {
 
     std::vector<ModelObject> PlanarSurface_Impl::solarCollectors() const
     {
-      // DLM: todo
-      return std::vector<ModelObject>(); // getImpl<detail::PlanarSurface_Impl>()->solarCollector();
+      std::vector<ModelObject> result;
+      for (const ModelObject& modelObject : getObject<ModelObject>().getModelObjectSources<ModelObject>()){
+        switch (modelObject.iddObject().type().value()){
+        case IddObjectType::OS_SolarCollector_FlatPlate_Water:
+          result.push_back(modelObject);
+          break;
+        default:
+          break;
+        }
+        
+      }
+      return result;
     }
 
     boost::optional<ModelObject> PlanarSurface_Impl::constructionAsModelObject() const

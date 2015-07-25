@@ -152,6 +152,10 @@ module OpenStudio
         @entity.material = @model_interface.materials_interface.space_shading
         @entity.back_material = @model_interface.materials_interface.space_shading_back          
       end
+      
+      if @model_object.solarCollectors.size > 0 
+        @entity.material = @model_interface.materials_interface.solar_collector
+      end      
     end
 
 

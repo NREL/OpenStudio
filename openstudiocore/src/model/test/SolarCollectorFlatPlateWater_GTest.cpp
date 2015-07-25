@@ -111,9 +111,14 @@ TEST_F(ModelFixture, SolarCollectorFlatPlateWater_addToNode) {
   ShadingSurface shadingSurface(points, model);
 
   EXPECT_TRUE(collector.setSurface(shadingSurface));
-  EXPECT_TRUE(collector.surface());
+  ASSERT_TRUE(collector.surface());
+  EXPECT_EQ(shadingSurface.handle(), collector.surface()->handle());
+  ASSERT_EQ(1u, shadingSurface.solarCollectors().size());
+  EXPECT_EQ(collector.handle(), shadingSurface.solarCollectors()[0].handle());
 
   collector.remove();
+
+  EXPECT_EQ(0, shadingSurface.solarCollectors().size());
 
   EXPECT_EQ(0u, model.getObjectsByType(SolarCollectorFlatPlateWater::iddObjectType()).size());
   EXPECT_EQ(0u, model.getObjectsByType(SolarCollectorPerformanceFlatPlate::iddObjectType()).size());
