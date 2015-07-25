@@ -20,7 +20,9 @@
 #include <gtest/gtest.h>
 #include "ModelFixture.hpp"
 #include "../SolarCollectorPerformanceFlatPlate.hpp"
+#include "../SolarCollectorPerformanceFlatPlate_Impl.hpp"
 #include "../SolarCollectorFlatPlateWater.hpp"
+#include "../SolarCollectorFlatPlateWater_Impl.hpp"
 #include "../Surface.hpp"
 #include "../ShadingSurface.hpp"
 #include "../Schedule.hpp"
@@ -120,4 +122,35 @@ TEST_F(ModelFixture, SolarCollectorFlatPlateWater_addToNode) {
   EXPECT_EQ(1u, plant.supplyComponents(TemperingValve::iddObjectType()).size());
   EXPECT_EQ(0u, plant.supplyComponents(SolarCollectorFlatPlateWater::iddObjectType()).size());
 
+}
+
+
+TEST_F(ModelFixture, SolarCollectorFlatPlateWater_Clone) {
+  {
+    Model model;
+    SolarCollectorFlatPlateWater collector(model);
+    SolarCollectorPerformanceFlatPlate performance = collector.solarCollectorPerformance();
+
+    ModelObject clone = collector.clone(model);
+    ASSERT_TRUE(clone.optionalCast<SolarCollectorFlatPlateWater>());
+    SolarCollectorFlatPlateWater collector2 = clone.cast<SolarCollectorFlatPlateWater>();
+    SolarCollectorPerformanceFlatPlate performance2 = collector2.solarCollectorPerformance();
+
+    EXPECT_NE(collector.handle(), collector2.handle());
+    EXPECT_NE(performance.handle(), performance2.handle());
+  }
+  {
+    Model model;
+    SolarCollectorFlatPlateWater collector(model);
+    SolarCollectorPerformanceFlatPlate performance = collector.solarCollectorPerformance();
+
+    Model model2;
+    ModelObject clone = collector.clone(model2);
+    ASSERT_TRUE(clone.optionalCast<SolarCollectorFlatPlateWater>());
+    SolarCollectorFlatPlateWater collector2 = clone.cast<SolarCollectorFlatPlateWater>();
+    SolarCollectorPerformanceFlatPlate performance2 = collector2.solarCollectorPerformance();
+
+    EXPECT_NE(collector.handle(), collector2.handle());
+    EXPECT_NE(performance.handle(), performance2.handle());
+  }
 }

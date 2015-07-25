@@ -19883,6 +19883,7 @@ OS:SolarCollectorPerformance:FlatPlate,
   A1,  \field Handle
        \type handle
        \required-field
+       \reference ConnectionObject
   A2 , \field Name
        \required-field
        \type alpha
@@ -19940,6 +19941,7 @@ OS:SolarCollector:FlatPlate:Water,
   A2 , \field Name
        \required-field
        \type alpha
+       \reference ConnectionObject
   A3 , \field SolarCollectorPerformance Name
        \required-field
        \type object-list

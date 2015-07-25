@@ -73,6 +73,8 @@ namespace detail {
   {
 
     SolarCollectorFlatPlateWater result = StraightComponent_Impl::clone(model).cast<SolarCollectorFlatPlateWater>();
+    SolarCollectorPerformanceFlatPlate performance = this->solarCollectorPerformance().clone(model).cast<SolarCollectorPerformanceFlatPlate>();
+    result.setPointer(OS_SolarCollector_FlatPlate_WaterFields::SolarCollectorPerformanceName, performance.handle());
 
     // do not want to point to any surface after cloning
     result.resetSurface();
