@@ -555,42 +555,17 @@ endif()
 
 if(BUILD_SWIG)
   if(UNIX)
-    if(BUILD_V8_BINDINGS)
-      message("Building SWIG for V8, the latest source will be cloned from git://github.com/lefticus/swig-v8.git. Autoconf tools are required")
+    # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
+    ExternalProject_Add(SWIG
+      URL http://openstudio-resources.s3.amazonaws.com/dependencies/swig-3.0.6.tar.gz
+      URL_MD5 df43ae271642bcfa61c1e59f970f9963
 
-      find_program(autoconf "autoconf")
-
-      if(autoconf STREQUAL "autoconf_NOTFOUND")
-        message(FATAL_ERROR "autoconf is required to compile SWIG with V8 support")
-      else()
-        get_filename_component(autoconf_path "${autoconf}" PATH)
-        message("autoconf directory: ${autoconf_path}")
-      endif()
-
-      # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
-      ExternalProject_Add(SWIG
-        GIT_REPOSITORY git://github.com/lefticus/swig.git
-        GIT_TAG merged_fixes
-        # URL http://github.com/lefticus/swig-v8/archive/devel.zip
-        PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && ../SWIG/Tools/pcre-build.sh
-        CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG && /bin/sh -c "PATH=\$PATH:${autoconf_path} ./autogen.sh" && cd - && ../SWIG/configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install --disable-ccache
-        BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && $(MAKE)
-        INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && $(MAKE) install
+      PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && ../SWIG/Tools/pcre-build.sh
+      CONFIGURE_COMMAND ../SWIG/configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install
+      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && $(MAKE)
+      INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && $(MAKE) install
       )
-      set(SWIG_EXECUTABLE ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install/bin/swig)
-    else()
-      # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
-      ExternalProject_Add(SWIG
-        URL http://openstudio-resources.s3.amazonaws.com/dependencies/swig-3.0.6.tar.gz
-        URL_MD5 df43ae271642bcfa61c1e59f970f9963
-
-        PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && ../SWIG/Tools/pcre-build.sh
-        CONFIGURE_COMMAND ../SWIG/configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install
-        BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && $(MAKE)
-        INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && $(MAKE) install
-      )
-      set(SWIG_EXECUTABLE ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install/bin/swig)
-    endif()
+    set(SWIG_EXECUTABLE ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install/bin/swig)
   else()
     # SWIG requires MinGW to compile on windows, so we just copy in the prebuilt binary
     ExternalProject_Add(SWIG
