@@ -74,6 +74,9 @@
     <file alias="shared_gui_components/images/add_script_icon.png">../shared_gui_components/images/add_script_icon.png</file>
     <file alias="shared_gui_components/images/add_script_icon_over.png">../shared_gui_components/images/add_script_icon_over.png</file>
     <file alias="shared_gui_components/images/add_script_icon_press.png">../shared_gui_components/images/add_script_icon_press.png</file>
+    <file alias="shared_gui_components/images/add_softer_off.png">../shared_gui_components/images/add_softer_off.png</file>
+    <file alias="shared_gui_components/images/add_softer_on.png">../shared_gui_components/images/add_softer_on.png</file>
+    <file alias="shared_gui_components/images/add_softer_press.png">../shared_gui_components/images/add_softer_press.png</file>
     <file alias="shared_gui_components/images/arrow_down.png">../shared_gui_components/images/arrow_down.png</file>
     <file alias="shared_gui_components/images/arrow_down_over.png">../shared_gui_components/images/arrow_down_over.png</file>
     <file alias="shared_gui_components/images/arrow_down_press.png">../shared_gui_components/images/arrow_down_press.png</file>

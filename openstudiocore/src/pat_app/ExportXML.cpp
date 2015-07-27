@@ -58,10 +58,14 @@
 #include <boost/lexical_cast.hpp>
 
 #include <QMessageBox>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonParseError>
+#include <QJsonArray>
 
 namespace openstudio {
-namespace analysis {
-namespace exportxml {
+
+namespace pat {
 
 ExportXML::ExportXML()
 {
@@ -74,12 +78,12 @@ ExportXML::~ExportXML()
 bool ExportXML::exportXML(const analysisdriver::SimpleProject project, QString xmlFilePath)
 {
   //get the analysis from the project
-  Analysis analysis = project.analysis();
+  analysis::Analysis analysis = project.analysis();
 
   //get all the alternatives
-  DataPointVector dataPoints = analysis.dataPoints();
+  analysis::DataPointVector dataPoints = analysis.dataPoints();
   std::vector<std::string> alternativeNames;
-  for (const DataPoint& datapoint : dataPoints) {
+  for (const analysis::DataPoint& datapoint : dataPoints) {
     alternativeNames.push_back(datapoint.name());
   } 
 
@@ -117,34 +121,34 @@ bool ExportXML::exportXML(const analysisdriver::SimpleProject project, QString x
   softwareElem.appendChild(doc.createTextNode(softwareName));
 
   //get the problem from the project
-  Problem problem = analysis.problem();
+  analysis::Problem problem = analysis.problem();
 
   //get the input variables from the problem
   //std::vector<InputVariable> variables = problem.variables();
 
   //alternatives
-  int numErrors = 0;
-  QString errors;
+  QStringList errors;
   QDomElement alternativesElem = doc.createElement("alternatives");
   analysisElem.appendChild(alternativesElem);
-  for (const DataPoint& datapoint : dataPoints) {
+  for (const analysis::DataPoint& datapoint : dataPoints) {
     //export the alternative if it has the necessary results
     if ( boost::optional<Attribute> reportAttr = datapoint.getOutputAttribute("report")) {
-      std::vector<WorkflowStepJob> jobs = problem.getJobsByWorkflowStep(datapoint, true);
+      std::vector<analysis::WorkflowStepJob> jobs = problem.getJobsByWorkflowStep(datapoint, true);
       if ( boost::optional<QDomElement> alternativeElem = exportAlternative(doc, *reportAttr, datapoint, jobs, edaBaselineName, proposedBaselineName, certificationBaselineName) ) {
         alternativesElem.appendChild(*alternativeElem);
+      } else{
+        errors << toQString(datapoint.name());
       }
     }else{
-      numErrors += 1;
-      errors += toQString(datapoint.name());
+      errors << toQString(datapoint.name());
     }
     // drop this DataPoint's Model and SqlFile from memory
     datapoint.clearFileDataFromCache();
   }    
 
   //warn the user if summary results were missing
-  if ( numErrors > 0 ) {
-    QMessageBox::warning(pat::PatApp::instance()->mainWindow, "Export XML Report - Warnings", errors + QString(" will be skipped; summary results not available.  Make sure you've run the reporting measure 'Xcel EDA Reporting and QAQC'"));
+  if ( errors.size() > 0 ) {
+    QMessageBox::warning(pat::PatApp::instance()->mainWindow, "Export XML Report - Warnings", errors.join(", ") + QString(" will be skipped; summary results not available.  Make sure you've run the reporting measure 'Xcel EDA Reporting and QAQC' and that all external file models have at least one user defined measure."));
   }
 
   QFile file(xmlFilePath);
@@ -162,7 +166,7 @@ bool ExportXML::exportXML(const analysisdriver::SimpleProject project, QString x
 boost::optional<QDomElement> ExportXML::exportAlternative(QDomDocument& doc, 
                                                           Attribute& alternativeAttr,
                                                           analysis::DataPoint dataPt,
-                                                          std::vector<WorkflowStepJob>& jobs,
+                                                          std::vector<analysis::WorkflowStepJob>& jobs,
                                                           std::string edaBaselineName,
                                                           std::string proposedBaselineName,
                                                           std::string certificationBaselineName)
@@ -225,29 +229,80 @@ boost::optional<QDomElement> ExportXML::exportAlternative(QDomDocument& doc,
       floorAreaElem.appendChild(doc.createTextNode(floorArea));
     }  
 
+    // check if this is an alternative model datapoint
+    bool isAlternativeModel = false;
+    std::string measures_json;
+    boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+    analysis::OptionalMeasureGroup modelSwapVariable = project->getAlternativeModelVariable();
+    if (modelSwapVariable){
+      analysis::Measure swapMeasure = modelSwapVariable->getMeasure(dataPt);
+      // check if we are using the ruby measure for this variable rather than the null one
+      analysis::OptionalRubyMeasure rubySwapMeasure = swapMeasure.optionalCast<analysis::RubyMeasure>();
+      if (rubySwapMeasure){
+        isAlternativeModel = true;
+        measures_json = "[]"; // empty
+        for (const ruleset::OSArgument& argument : rubySwapMeasure->arguments()){
+          if (argument.name() == "measures_json"){
+            if (argument.hasValue()){
+              measures_json = argument.valueAsString();
+              break;
+            }
+          }
+        }
+      }
+    }
+
     //number of measures in a design alt. differentiates whether it is called a measure
     //or a design alternative in Xcel EDA
-    double numMeasures = 0.0;
+    unsigned numMeasures = 0.0;
 
     //measures
     QDomElement measuresElem = doc.createElement("measures");
     alternative.appendChild(measuresElem);
-    for (const WorkflowStepJob& job : jobs) {
-      //record the details of the measure in the xml.
-      if (boost::optional<QDomElement> measureElem = exportMeasure(doc, job)){
-        measuresElem.appendChild(*measureElem);
+    if (isAlternativeModel){
+
+      // this is a swap model datapoint, get the alternative measures applied
+      QJsonArray measures;
+      QJsonParseError parseError;
+      QJsonDocument jsonDoc = QJsonDocument::fromJson(toQString(measures_json).toUtf8(), &parseError);
+      if (QJsonParseError::NoError == parseError.error) {
+        measures = jsonDoc.array();
+      }
+
+      for (const QDomElement& measureElem : exportSwapModelAlternatives(doc, measures)){
+        measuresElem.appendChild(measureElem);
         numMeasures += 1;
       }
+
+      // DLM: only check for this on alternative model measures
+      if (numMeasures == 0){
+        return boost::none;
+      }
+
+    } else {
+
+      // regular datapoint
+      for (const analysis::WorkflowStepJob& job : jobs) {
+        //record the details of the measure in the xml.
+        if (boost::optional<QDomElement> measureElem = exportMeasure(doc, job)){
+          measuresElem.appendChild(*measureElem);
+          numMeasures += 1;
+        }
+      }
+
+      // DLM: this seems to get hit for the baseline
+      if (numMeasures == 0){
+        bool isBaseline = true;
+      }
     }
-    
+
     //alternative_type
     QDomElement altTypeElem = doc.createElement("alternative_type");
     alternative.appendChild(altTypeElem);
     if ( numMeasures > 1 ) {
       QString altType = "design_alternative";
       altTypeElem.appendChild(doc.createTextNode(altType));
-    }
-    else {
+    } else {
       QString altType = "single_measure";
       altTypeElem.appendChild(doc.createTextNode(altType));
     }
@@ -293,11 +348,62 @@ boost::optional<QDomElement> ExportXML::exportAlternative(QDomDocument& doc,
   return alternative;
 }
 
+std::vector<QDomElement> ExportXML::exportSwapModelAlternatives(QDomDocument& doc, const QJsonArray& measures)
+{
+  std::vector<QDomElement> result;
+
+  for (const QJsonValue & jsonValue : measures) {
+    QJsonObject jsonObject = jsonValue.toObject();
+    QString uuid = jsonObject["uuid"].toString();
+    QString displayName = jsonObject["displayName"].toString();
+    QString description = jsonObject["description"].toString();
+    QString taxonomyTag = jsonObject["taxonomyTag"].toString();
+    double capitalCost = jsonObject["capitalCost"].toDouble();
+
+    //start the measure
+    QDomElement measureElem = doc.createElement("measure");
+
+    //name
+    QDomElement instanceNameElem = doc.createElement("name");
+    measureElem.appendChild(instanceNameElem);
+    instanceNameElem.appendChild(doc.createTextNode(displayName));
+
+    //id
+    QDomElement measureIdElem = doc.createElement("id");
+    measureElem.appendChild(measureIdElem);
+    measureIdElem.appendChild(doc.createTextNode(uuid));
+
+    //category
+    QDomElement categoryElem = doc.createElement("category");
+    measureElem.appendChild(categoryElem);
+    categoryElem.appendChild(doc.createTextNode(taxonomyTag));
+
+    //description
+    QDomElement descElem = doc.createElement("description");
+    measureElem.appendChild(descElem);
+    descElem.appendChild(doc.createTextNode(description));
+
+    //initial_condition
+    QDomElement initCondElem = doc.createElement("initial_condition");
+    measureElem.appendChild(initCondElem);
+    initCondElem.appendChild(doc.createTextNode(""));
+
+    //final_condition
+    QDomElement finCondElem = doc.createElement("final_condition");
+    measureElem.appendChild(finCondElem);
+    finCondElem.appendChild(doc.createTextNode(""));
+
+    result.push_back(measureElem);
+  }
+
+  return result;
+}
+
 boost::optional<QDomElement> ExportXML::exportMeasure(QDomDocument& doc,
-                                                      const WorkflowStepJob& wfJob)
+                                                      const analysis::WorkflowStepJob& wfJob)
 {
       
-    WorkflowStep step = wfJob.step;
+    analysis::WorkflowStep step = wfJob.step;
 
     //skip 
     if ( step.isInputVariable() == false ){
@@ -307,7 +413,7 @@ boost::optional<QDomElement> ExportXML::exportMeasure(QDomDocument& doc,
     //skip fixed measures (present in all design alternatives)
     if (boost::optional<analysis::Measure> measure = wfJob.measure) {
       if (boost::optional<analysis::AnalysisObject> parObj = measure->parent()) {
-        if (boost::optional<MeasureGroup> discVar = parObj->optionalCast<MeasureGroup>()) {
+        if (boost::optional<analysis::MeasureGroup> discVar = parObj->optionalCast<analysis::MeasureGroup>()) {
           if (discVar->measures(false).size() == 1) {
             return boost::none;
           }
@@ -317,7 +423,7 @@ boost::optional<QDomElement> ExportXML::exportMeasure(QDomDocument& doc,
 
     //skip reporting measures
     if (boost::optional<analysis::Measure> measure = wfJob.measure) {
-      if ( boost::optional<RubyMeasure> rubyMeasure = measure->optionalCast<RubyMeasure>() ) {
+      if (boost::optional<analysis::RubyMeasure> rubyMeasure = measure->optionalCast<analysis::RubyMeasure>()) {
         if ( boost::optional<BCLMeasure> bclMeasure = rubyMeasure->measure() ) {
           if (bclMeasure->measureType() == MeasureType::ReportingMeasure ) {
             return boost::none;
@@ -340,11 +446,11 @@ boost::optional<QDomElement> ExportXML::exportMeasure(QDomDocument& doc,
       //start the measure
       QDomElement measureElem = doc.createElement("measure");   
            
-      if ( boost::optional<Measure> measure = wfJob.measure ) {
+      if (boost::optional<analysis::Measure> measure = wfJob.measure) {
           
         //name
         QString measureName = "unknown";
-        if ( boost::optional<RubyMeasure> rubyMeasure = measure->optionalCast<RubyMeasure>() ) {
+        if (boost::optional<analysis::RubyMeasure> rubyMeasure = measure->optionalCast<analysis::RubyMeasure>()) {
           measureName = toQString(rubyMeasure->name());
         }
         QDomElement instanceNameElem = doc.createElement("name");
@@ -354,12 +460,14 @@ boost::optional<QDomElement> ExportXML::exportMeasure(QDomDocument& doc,
         //get information out of the measure
         QString measureId = "uuid unknown";
         QString category = "category unknown";
-        if ( boost::optional<RubyMeasure> rubyMeasure = measure->optionalCast<RubyMeasure>() ) {
+        if (boost::optional<analysis::RubyMeasure> rubyMeasure = measure->optionalCast<analysis::RubyMeasure>()) {
           if ( boost::optional<BCLMeasure> bclMeasure = rubyMeasure->measure() ) {
             measureId = toQString(bclMeasure->uid());
             category = toQString(bclMeasure->taxonomyTag());
           }
         }
+
+
         //id
         QDomElement measureIdElem = doc.createElement("id");
         measureElem.appendChild(measureIdElem);
@@ -715,6 +823,5 @@ boost::optional<QDomElement> ExportXML::exportChecks(QDomDocument& doc,
 } 
 
 
-} // exportxml
-} // analysis
+} // pat
 } // openstudio
