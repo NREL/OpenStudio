@@ -58,18 +58,18 @@ class MODEL_API SolarCollectorFlatPlateWater : public StraightComponent {
 
   boost::optional<PlanarSurface> surface() const;
 
-  //Connection inletNode() const;
-
-  //Connection outletNode() const;
-
   boost::optional<double> maximumFlowRate() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  bool setSolarCollectorPerformance(const SolarCollectorPerformanceFlatPlate& solarCollectorPerformanceFlatPlate);
-
+  /// Deletes the current parameters and clones the parameters passed in
+  bool setSolarCollectorPerformance(const SolarCollectorPerformanceFlatPlate& parameters);
+  
+  /// Deletes the current parameters and constructs a new default set of parameters
+  void resetSolarCollectorPerformance();
+  
   bool setSurface(const PlanarSurface& surface);
 
   void resetSurface();

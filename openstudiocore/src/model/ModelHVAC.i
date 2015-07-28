@@ -163,8 +163,12 @@ MODELOBJECT_TEMPLATES(GroundHeatExchangerHorizontalTrench);
 MODELOBJECT_TEMPLATES(ThermalStorageIceDetailed);
 MODELOBJECT_TEMPLATES(ChillerAbsorptionIndirect);
 MODELOBJECT_TEMPLATES(ChillerAbsorption);
+MODELOBJECT_TEMPLATES(SolarCollectorFlatPlatePhotovoltaicThermal);
 MODELOBJECT_TEMPLATES(SolarCollectorFlatPlateWater);
+MODELOBJECT_TEMPLATES(SolarCollectorIntegralCollectorStorage);
 MODELOBJECT_TEMPLATES(SolarCollectorPerformanceFlatPlate);
+MODELOBJECT_TEMPLATES(SolarCollectorPerformanceIntegralCollectorStorage);
+MODELOBJECT_TEMPLATES(SolarCollectorPerformancePhotovoltaicThermalSimple);
 
 SWIG_MODELOBJECT(PortList, 1);
 SWIG_MODELOBJECT(Loop, 0);
@@ -306,8 +310,12 @@ SWIG_MODELOBJECT(GroundHeatExchangerHorizontalTrench, 1);
 SWIG_MODELOBJECT(ThermalStorageIceDetailed, 1);
 SWIG_MODELOBJECT(ChillerAbsorptionIndirect, 1);
 SWIG_MODELOBJECT(ChillerAbsorption, 1);
+SWIG_MODELOBJECT(SolarCollectorFlatPlatePhotovoltaicThermal, 1);
 SWIG_MODELOBJECT(SolarCollectorFlatPlateWater, 1);
+SWIG_MODELOBJECT(SolarCollectorIntegralCollectorStorage, 1);
 SWIG_MODELOBJECT(SolarCollectorPerformanceFlatPlate, 1);
+SWIG_MODELOBJECT(SolarCollectorPerformanceIntegralCollectorStorage, 1);
+SWIG_MODELOBJECT(SolarCollectorPerformancePhotovoltaicThermalSimple, 1);
 
 #if defined(SWIGCSHARP) || defined(SWIGJAVA)
   %inline {

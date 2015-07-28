@@ -39,8 +39,6 @@ class MODEL_API SolarCollectorPerformanceFlatPlate : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit SolarCollectorPerformanceFlatPlate(const Model& model);
-
   virtual ~SolarCollectorPerformanceFlatPlate() {}
 
   //@}
@@ -110,12 +108,16 @@ class MODEL_API SolarCollectorPerformanceFlatPlate : public ModelObject {
 
   //@}
  protected:
+ 
+  explicit SolarCollectorPerformanceFlatPlate(const Model& model);
+  
   /// @cond
   typedef detail::SolarCollectorPerformanceFlatPlate_Impl ImplType;
 
   explicit SolarCollectorPerformanceFlatPlate(std::shared_ptr<detail::SolarCollectorPerformanceFlatPlate_Impl> impl);
 
   friend class detail::SolarCollectorPerformanceFlatPlate_Impl;
+  friend class detail::SolarCollectorFlatPlateWater_Impl;
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
