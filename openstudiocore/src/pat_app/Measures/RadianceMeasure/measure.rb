@@ -345,8 +345,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 					# use more aggro simulation parameters because this is basically a view matrix
 					rtrace_args = "#{options_vmx}"
 			
-					# make special WG0 octree (all shade controlled window groups blacked out)
-					rad_command = "oconv materials/materials.rad materials/materials_WG0.rad model.rad skies/dc_sky.rad > model_WG0.oct"
+					# make special WG0 octree (all shade controlled window groups blacked out)	
+					rad_command = "oconv \"materials/materials.rad\" \"materials/materials_WG0.rad\" model.rad \"skies/dc_sky.rad\" > model_WG0.oct"
 					puts "#{Time.now.getutc}: #{rad_command}"
 					system(rad_command)
 
@@ -358,8 +358,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 					#puts "rtrace_args = #{rtrace_args}"
 					#puts "options_tregVars = #{options_tregVars}"
 					
-					rad_command = "#{t_catCommand} numeric/merged_space.map | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
-					"-o output/dc/WG0.vmx -m skyglow model_WG0.oct"
+					rad_command = "#{t_catCommand} \"numeric/merged_space.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
+					"-o \"output/dc/WG0.vmx\" -m skyglow model_WG0.oct"
 					puts "#{Time.now.getutc}: #{rad_command}"
 					system(rad_command)
 
@@ -371,9 +371,9 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 					# do daylight matrices for controlled windows
 					puts "#{Time.now.getutc}: computing daylight matrix for window group #{wg}..."
 
-					rad_command = "rfluxmtx #{rtrace_args} -fa -v scene/glazing/#{wg}.rad skies/dc_sky.rad -i model_dc.oct > output/dc/#{wg}.dmx"
+					rad_command = "rfluxmtx #{rtrace_args} -fa -v \"scene/shades/#{wg}_SHADE.rad\" \"skies/dc_sky.rad\" -i model_dc.oct > \"output/dc/#{wg}.dmx\""
 					puts "#{Time.now.getutc}: #{rad_command}"
-					system("rfluxmtx #{rtrace_args} -fa -v scene/shades/#{wg}_SHADE.rad skies/dc_sky.rad -i model_dc.oct > output/dc/#{wg}.dmx")
+					system(rad_command)
 		
 				end
 				
@@ -396,7 +396,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			}
 	
 			# make the receiver file
-			exec_statement("#{t_catCommand} materials/materials_vmx.rad #{wgInput.join(" ")} > receivers_vmx.rad")
+			exec_statement("#{t_catCommand} \"materials/materials_vmx.rad\" #{wgInput.join(" ")} > receivers_vmx.rad")
 			
 			# make the octree
 			exec_statement("oconv materials/materials.rad scene/*.rad > model_vmx.oct")
@@ -412,8 +412,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 				\"skies/dc_sky.rad\" > model_wc.oct")
 			puts "#{Time.now.getutc}: computing DCs for window control points"
 			
-			rad_command = "#{t_catCommand} numeric/window_controls.map | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
-			"-o output/dc/window_controls.vmx -m skyglow model_wc.oct"
+			rad_command = "#{t_catCommand} \"numeric/window_controls.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
+			"-o \"output/dc/window_controls.vmx\" -m skyglow model_wc.oct"
 			system(rad_command)
 			
 			# end VMX
@@ -453,7 +453,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			simulations = []
 
 #			exec_statement("gendaymtx #{genDaymtxHdr} -m #{t_options_skyvecDensity} in.wea > annual-sky.mtx")
-			exec_statement("gendaymtx -m #{t_options_skyvecDensity} wx/in.wea > annual-sky.mtx")
+			exec_statement("gendaymtx -m #{t_options_skyvecDensity} \"wx/in.wea\" > annual-sky.mtx")
 
 
 			windowMaps = File::open("bsdf/mapping.rad")
@@ -468,7 +468,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 				# do uncontrolled windows (WG0)
 				if wg[2].to_i == 0
 					# keep header, convert to illuminance, but no transpose
-					exec_statement("dctimestep output/dc/#{wg}.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}.ill") 
+					exec_statement("dctimestep \"#{t_radPath}/output/dc/#{wg}.vmx\" annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > \"#{t_radPath}/output/ts/#{wg}.ill\"") 
 		
 				else
 		
@@ -480,9 +480,12 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 					end
 		
 					wgXMLs.each_index do |i|
-						exec_statement("dctimestep output/dc/#{wg}.vmx bsdf/#{wgXMLs[i].strip} output/dc/#{wg}.dmx \
-						annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}_#{wgXMLs[i].split[0]}.ill")
-
+						rad_command = "dctimestep output/dc/#{wg}.vmx bsdf/#{wgXMLs[i].strip} output/dc/#{wg}.dmx \
+					annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}_#{wgXMLs[i].split[0]}.ill"
+						#exec_statement("dctimestep #{t_radPath}/output/dc/#{wg}.vmx | #{t_radPath}/bsdf/#{wgXMLs[i].strip} #{t_radPath}/output/dc/#{wg}.dmx \
+						# annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}_#{wgXMLs[i].split[0]}.ill")
+						puts "#{Time.now.getutc}: #{rad_command}"
+						system(rad_command)
 					end
 			
 				end
@@ -490,7 +493,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			end
 	
 			# get annual values for window control sensors (note: convert to illuminance, no transpose, strip header)
-			exec_statement("dctimestep #{t_radPath}/output/dc/window_controls.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - | getinfo - > #{t_radPath}/output/ts/window_controls.ill")
+			exec_statement("dctimestep output/dc/window_controls.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - | getinfo - > output/ts/window_controls.ill")
 
 			# return the bsdf index for window group given by index at this hour
 			# this is deprecated
@@ -504,14 +507,14 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 	
 			# do that window group/state merge thing
 	
-			windowGroups = File.open("#{t_radPath}/bsdf/mapping.rad")
+			windowGroups = File.open("bsdf/mapping.rad")
 			windowGroups.each do |wg|
 
 				next if wg[0] == "#"
 				windowGroup = wg.split(",")[0]
 				next if windowGroup == "WG0"
 
-				wgIllumFiles = Dir.glob("#{t_radPath}/output/ts/#{windowGroup}_*.ill")
+				wgIllumFiles = Dir.glob("output/ts/#{windowGroup}_*.ill")
 
 				shadeControlSetpoint = wg.split(",")[3].to_f
 
@@ -542,7 +545,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 				# get the window control point illuminances (should be headerless file)
 		
-				windowControls = File.open("#{t_radPath}/output/ts/window_controls.ill", "r")
+				windowControls = File.open("output/ts/window_controls.ill", "r")
 
 				windowControls.each do |row|
 	
@@ -598,7 +601,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			mergedWindows.each do |file|
 				addFiles << "+ #{file} "
 			end
-			system("rmtxop -fa #{addFiles} -t | getinfo - > output/ts/merged_space.ill")
+			system("rmtxop -fa #{addFiles} -t | getinfo - > \"output/ts/merged_space.ill\"")
 
 			## window merge end
 
@@ -888,7 +891,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 		epw2weapath = OpenStudio::Path.new(ENV['EPW2WEAPATH'])
 
 		puts "Executing epw2wea: #{epw2weapath}"
-		exec_statement("\"#{epw2weapath.to_s}\" \"#{epw_path.to_s}\" \"wx/in.wea\"")
+		exec_statement("#{epw2weapath.to_s} #{epw_path.to_s} wx/in.wea")
 		
 
 		# get site info from .wea file
