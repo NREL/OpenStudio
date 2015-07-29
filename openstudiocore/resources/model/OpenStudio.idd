@@ -570,24 +570,15 @@ OS:ZoneAirMassFlowConservation,
        \type handle
        \required-field       
   A2,  \field Adjust Zone Mixing For Zone Air Mass Flow Balance
-       \note If Yes, Zone mixing object flow rates are adjusted to balance the zone air mass flow
+       \note If 'Yes', Zone mixing object flow rates are adjusted to balance the zone air mass flow
        \note and additional infiltration air flow may be added if required in order to balance the
        \note zone air mass flow.
        \type choice
        \key Yes
-       \key No
-       \default No
-       \note This optional choice input field allows users triggering the zone air mass flow
-       \note balance calculation when desired. This global object has two choice KEYs: ?Yes? and
-       \note ?No?. If this input field is specified as ?Yes?, then EnergyPlus attempts to enforce
-       \note the zone air mass flow conservation, or else if it is specified as ?No?, then EnergyPlus
-       \note calculation defaults to zone air mass flow balance that does not include zone mixing
-       \note objects and that assumes self-balanced simple flow objects per the default procedure,
-       \note which may not necessarily enforce zone mass conservation unless the user specified
-       \note a balanced flow to begin with. Mass conservation is enforced both for the receiving
-       \note and source zones if there is at least one mixing object defined. The default input
-       \note is ?No?. (Note that ?No? input may also results in balanced flow depending on the
-       \note system specified).
+       \default Yes
+       \note If this input field is specified as 'Yes', then EnergyPlus attempts to enforce
+       \note the zone air mass flow conservation. Mass conservation is enforced both for the receiving
+       \note and source zones if there is at least one mixing object defined. 
   A3;  \field Source Zone Infiltration Treatment
        \note This input field allows user to choose how zone infiltration flow is treated during
        \note the zone air mass flow balance calculation.
@@ -595,17 +586,16 @@ OS:ZoneAirMassFlowConservation,
        \key AddInfiltrationFlow
        \key AdjustInfiltrationFlow
        \default AddInfiltrationFlow
-       \note It has two choice KEYs: ?AddInfiltrationFlow? and ?AdjustInfiltrationFlow?.  If this
-       \note input is specified as ?AddInfiltrationFlow?, then energy plus adds infiltration air
+       \note It has two choice KEYs: 'AddInfiltrationFlow' and 'AdjustInfiltrationFlow'.  If this
+       \note input is specified as 'AddInfiltrationFlow', then energy plus adds infiltration air
        \note mass flow on top of the base flow, which is calculated using the infiltration object
        \note user inputs, in order to balance the zone air mass flow.  The additional infiltration
        \note air mass flow is not self-balanced.  If this input is specified as
-       \note ?AdjustInfiltrationFlow?, then energy plus may adjust the base flow calculated using
+       \note 'AdjustInfiltrationFlow', then energy plus may adjust the base flow calculated using
        \note the infiltration object user inputs in order to balance the zone air mass flow. If it
        \note is not required to adjust the base infiltration air flow calculated from the user
        \note specified infiltration object inputs, then the base infiltration air mass flow
-       \note is assumed self-balanced. If the above input field specified as "No", then this input
-       \note field has no impact on the simulation.
+       \note is assumed self-balanced. 
        
 OS:ZoneCapacitanceMultiplier:ResearchSpecial,
        \memo Multiplier altering the relative capacitance of the air compared to an empty zone
