@@ -36,6 +36,7 @@ class RadianceMeasureTest < MiniTest::Unit::TestCase
     runner = OpenStudio::Ruleset::OSRunner.new
     
     # set up runner, this will happen automatically when measure is run in PAT
+    
     runner.setLastEpwFilePath(File.dirname(__FILE__) + "/USA_CO_Golden-NREL.724666_TMY3.epw")  
     
     # load the test model
@@ -43,8 +44,19 @@ class RadianceMeasureTest < MiniTest::Unit::TestCase
     path = OpenStudio::Path.new(File.dirname(__FILE__) + "/test_model.osm")
     model = translator.loadModel(path)
     assert((not model.empty?))
+
     model = model.get
 
+		weather_file = runner.lastEpwFilePath.get
+    epw_file = OpenStudio::EpwFile.new(weather_file)
+    OpenStudio::Model::WeatherFile.setWeatherFile(model, epw_file).get
+    
+    site = model.getSite
+    site.setName("Test Site")
+    site.setLatitude(epw_file.latitude)
+    site.setLongitude(epw_file.longitude)
+    site.setTimeZone(epw_file.timeZone)
+    
     # store the number of spaces in the seed model
     num_spaces_seed = model.getSpaces.size
 
