@@ -332,7 +332,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 			puts "#{Time.now.getutc}: computing daylight coefficient matrices"
 
-			system("oconv materials/materials.rad model.rad > model_dc.oct")
+			exec_statement("oconv materials/materials.rad model.rad > model_dc.oct")
 			windowMaps = File::open("bsdf/mapping.rad")
 			windowMaps.each do |row|
 				next if row[0] == "#"
@@ -348,7 +348,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 					# make special WG0 octree (all shade controlled window groups blacked out)	
 					rad_command = "oconv \"materials/materials.rad\" \"materials/materials_WG0.rad\" model.rad \"skies/dc_sky.rad\" > model_WG0.oct"
 					puts "#{Time.now.getutc}: #{rad_command}"
-					system(rad_command)
+					exec_statement(rad_command)
 
 					# do daylight coefficients for uncontrolled windows
 					
@@ -361,7 +361,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 					rad_command = "#{t_catCommand} \"numeric/merged_space.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
 					"-o \"output/dc/WG0.vmx\" -m skyglow model_WG0.oct"
 					puts "#{Time.now.getutc}: #{rad_command}"
-					system(rad_command)
+					exec_statement(rad_command)
 
 				else 	# window group has shade control 
 			
@@ -373,7 +373,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 					rad_command = "rfluxmtx #{rtrace_args} -fa -v \"scene/shades/#{wg}_SHADE.rad\" \"skies/dc_sky.rad\" -i model_dc.oct > \"output/dc/#{wg}.dmx\""
 					puts "#{Time.now.getutc}: #{rad_command}"
-					system(rad_command)
+					exec_statement(rad_command)
 		
 				end
 				
@@ -399,7 +399,9 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			exec_statement("#{t_catCommand} \"materials/materials_vmx.rad\" #{wgInput.join(" ")} > receivers_vmx.rad")
 			
 			# make the octree
-			exec_statement("oconv materials/materials.rad scene/*.rad > model_vmx.oct")
+      scene_files = []
+      Dir.glob("scene/*.rad").each {|f| scene_files << f}
+			exec_statement("oconv materials/materials.rad #{scene_files.join(' ')} > model_vmx.oct")
 			
 			# make rfluxmtx do all the work
 			rad_command = "rfluxmtx #{rtrace_args} -ds .15 -faa -y #{rfluxmtxDim} -I -v - receivers_vmx.rad -i model_vmx.oct < numeric/merged_space.map"
@@ -408,13 +410,13 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			# compute daylight coefficient matrices for window group control points
 			
 			rtrace_args = "#{options_dmx}"
-			system("oconv \"materials/materials.rad\" model.rad \
+			exec_statement("oconv \"materials/materials.rad\" model.rad \
 				\"skies/dc_sky.rad\" > model_wc.oct")
 			puts "#{Time.now.getutc}: computing DCs for window control points"
 			
 			rad_command = "#{t_catCommand} \"numeric/window_controls.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
 			"-o \"output/dc/window_controls.vmx\" -m skyglow model_wc.oct"
-			system(rad_command)
+			exec_statement(rad_command)
 			
 			# end VMX
 
@@ -485,7 +487,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 						#exec_statement("dctimestep #{t_radPath}/output/dc/#{wg}.vmx | #{t_radPath}/bsdf/#{wgXMLs[i].strip} #{t_radPath}/output/dc/#{wg}.dmx \
 						# annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}_#{wgXMLs[i].split[0]}.ill")
 						puts "#{Time.now.getutc}: #{rad_command}"
-						system(rad_command)
+						exec_statement(rad_command)
 					end
 			
 				end
@@ -601,7 +603,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			mergedWindows.each do |file|
 				addFiles << "+ #{file} "
 			end
-			system("rmtxop -fa #{addFiles} -t | getinfo - > \"output/ts/merged_space.ill\"")
+			exec_statement("rmtxop -fa #{addFiles} -t | getinfo - > \"output/ts/merged_space.ill\"")
 
 			## window merge end
 
