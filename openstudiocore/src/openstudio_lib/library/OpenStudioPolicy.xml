@@ -759,6 +759,33 @@
     <rule IddField="Source Side Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Source Side Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_WaterHeater_HeatPump">
+    <rule IddField="Air Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Outdoor Air Node" Access="HIDDEN"/>
+    <rule IddField="Tank" Access="LOCKED"/>
+    <rule IddField="DX Coil" Access="LOCKED"/>
+    <rule IddField="Fan" Access="LOCKED"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Coil_WaterHeating_AirToWaterHeatPump">
+    <rule IddField="Evaporator Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Evaporator Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Condenser Water Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Condenser Water Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Heating Capacity Function of Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Heating Capacity Function of Air Flow Fraction Curve" Access="LOCKED"/>
+    <rule IddField="Heating Capacity Function of Water Flow Fraction Curve" Access="LOCKED"/>
+    <rule IddField="Heating COP Function of Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Heating COP Function of Air Flow Fraction Curve" Access="LOCKED"/>
+    <rule IddField="Heating COP Function of Water Flow Fraction Curve" Access="LOCKED"/>
+    <rule IddField="Part Load Fraction Correlation Curve" Access="LOCKED"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_WaterHeater_Stratified">
+    <rule IddField="Use Side Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Use Side Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Source Side Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Source Side Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow">
     <rule IddField="Terminal Unit Air Inlet Node" Access="HIDDEN"/>
     <rule IddField="Terminal Unit Air Outlet Node" Access="HIDDEN"/>

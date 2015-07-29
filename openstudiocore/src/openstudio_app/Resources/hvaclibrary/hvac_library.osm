@@ -1,7 +1,12 @@
 
 OS:Version,
+<<<<<<< HEAD
   {8314af35-504d-45b2-900b-103a3991e248}, !- Handle
   1.8.1;                                  !- Version Identifier
+=======
+  {12be9444-5ce3-4598-870b-511a2a6905c1}, !- Handle
+  1.8.2;                                  !- Version Identifier
+>>>>>>> develop
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -615,7 +620,7 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
 
 OS:AirTerminal:SingleDuct:VAV:HeatAndCool:NoReheat,
   {bf4b3859-f66c-48ce-b600-88c7d76d5d5e}, !- Handle
-  VAV Heat And Cool No Reheat, !- Name
+  VAV Heat And Cool No Reheat,            !- Name
   ,                                       !- Availability Schedule
   ,                                       !- Air Outlet
   ,                                       !- Air Inlet
@@ -1494,7 +1499,7 @@ OS:Schedule:Ruleset,
 
 OS:Schedule:Day,
   {9b35d3ba-4ce5-49f8-91ac-bdb91509399c}, !- Handle
-  Schedule Day 1,                         !- Name
+  Schedule Day 8,                         !- Name
   {a97fb7de-95e1-4e93-8e86-6fae9baf0f7e}, !- Schedule Type Limits Name
   ,                                       !- Interpolate to Timestep
   24,                                     !- Hour 1
@@ -2034,6 +2039,451 @@ OS:WaterHeater:Mixed,
   autosize,                               ! Use Side Design Flow Rate {m3/s}
   autosize,                               ! Source Side Design Flow Rate {m3/s}
   1.5;                                    ! Indirect Water Heating Recovery Time {hr}
+
+OS:WaterHeater:HeatPump,
+  {8227efbf-0cf6-443c-bdd2-3f8217c5f85e}, !- Handle
+  Heat Pump Water Heater,               !- Name
+  ,                                       !- Availability Schedule
+  {8ec3f91c-d0c8-40e3-ad58-b93ce96ba5ed}, !- Compressor Setpoint Temperature Schedule
+  5,                                      !- Dead Band Temperature Difference {deltaC}
+  autosize,                               !- Condenser Water Flow Rate {m3/s}
+  autosize,                               !- Evaporator Air Flow Rate {m3/s}
+  Schedule,                               !- Inlet Air Configuration
+  ,                                       !- Air Inlet Node
+  ,                                       !- Air Outlet Node
+  ,                                       !- Outdoor Air Node
+  {fec1f40a-140f-4541-b3e7-8018896e49ac}, !- Inlet Air Temperature Schedule
+  {50d31668-dbf4-4e07-8175-ff052904be2b}, !- Inlet Air Humidity Schedule
+  {5a6a31ef-f662-4452-925d-855d251337c0}, !- Tank
+  {8812d392-ab70-47ea-a32d-1e6030e7cd7e}, !- DX Coil
+  10,                                     !- Minimum Inlet Air Temperature for Compressor Operation {C}
+  Schedule,                               !- Compressor Location
+  {01003409-972f-4d53-854b-b899d3a53373}, !- Compressor Ambient Temperature Schedule
+  {d609f359-7cae-452b-ad72-7a7d35e5408c}, !- Fan
+  DrawThrough,                            !- Fan Placement
+  0,                                      !- On Cycle Parasitic Electric Load {W}
+  0,                                      !- Off Cycle Parasitic Electric Load {W}
+  Outdoors,                               !- Parasitic Heat Rejection Location
+  {93c85db1-4601-45e9-aa96-1fa65ef11b9b}, !- Inlet Air Mixer Schedule
+  Heater1;                                !- Control Sensor Location In Stratified Tank
+
+OS:Coil:WaterHeating:AirToWaterHeatPump,
+  {8812d392-ab70-47ea-a32d-1e6030e7cd7e}, !- Handle
+  HPWH DX Coil, !- Name
+  4000,                                   !- Rated Heating Capacity {W}
+  3.2,                                    !- Rated COP {W/W}
+  0.6956,                                 !- Rated Sensible Heat Ratio
+  29.44,                                  !- Rated Evaporator Inlet Air Dry-Bulb Temperature {C}
+  22.22,                                  !- Rated Evaporator Inlet Air Wet-Bulb Temperature {C}
+  55.72,                                  !- Rated Condenser Inlet Water Temperature {C}
+  autosize,                               !- Rated Evaporator Air Flow Rate {m3/s}
+  autosize,                               !- Rated Condenser Water Flow Rate {m3/s}
+  No,                                     !- Evaporator Fan Power Included in Rated COP
+  No,                                     !- Condenser Pump Power Included in Rated COP
+  No,                                     !- Condenser Pump Heat Included in Rated Heating Capacity and Rated COP
+  150,                                    !- Condenser Water Pump Power {W}
+  0.1,                                    !- Fraction of Condenser Pump Heat to Water
+  ,                                       !- Evaporator Air Inlet Node Name
+  ,                                       !- Evaporator Air Outlet Node Name
+  ,                                       !- Condenser Water Inlet Node
+  ,                                       !- Condenser Water Outlet Node
+  100,                                    !- Crankcase Heater Capacity {W}
+  5,                                      !- Maximum Ambient Temperature for Crankcase Heater Operation {C}
+  WetBulbTemperature,                     !- Evaporator Air Temperature Type for Curve Objects
+  {e2045130-ce9e-4dec-8e63-f266dd5f148d}, !- Heating Capacity Function of Temperature Curve
+  {22c0207a-5d34-4e2a-90b2-5f349666c0a0}, !- Heating Capacity Function of Air Flow Fraction Curve
+  {a3bf6669-033c-4ec8-bb5c-71fe226cc3f3}, !- Heating Capacity Function of Water Flow Fraction Curve
+  {15fdb8d0-1cdf-48b5-a6be-cf1cdf5f7cb4}, !- Heating COP Function of Temperature Curve
+  {9c1f4673-151b-464a-ab8b-1dbd2614b97e}, !- Heating COP Function of Air Flow Fraction Curve
+  {489134e3-6c2a-4475-8f8b-a19ad0b8c965}, !- Heating COP Function of Water Flow Fraction Curve
+  {248ab195-cfb7-4c64-89bb-2018882ad681}; !- Part Load Fraction Correlation Curve
+
+OS:Curve:Biquadratic,
+  {e2045130-ce9e-4dec-8e63-f266dd5f148d}, !- Handle
+  HPWH Heating Cap Func Temp,             !- Name
+  0.369827,                               !- Coefficient1 Constant
+  0.043341,                               !- Coefficient2 x
+  -0.00023,                               !- Coefficient3 x**2
+  0.000466,                               !- Coefficient4 y
+  2.6e-05,                                !- Coefficient5 y**2
+  -0.00027,                               !- Coefficient6 x*y
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  40,                                     !- Maximum Value of x {BasedOnField A2}
+  20,                                     !- Minimum Value of y {BasedOnField A3}
+  90,                                     !- Maximum Value of y {BasedOnField A3}
+  ,                                       !- Minimum Curve Output {BasedOnField A4}
+  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  Temperature,                            !- Input Unit Type for X
+  Temperature,                            !- Input Unit Type for Y
+  Dimensionless;                          !- Output Unit Type
+
+OS:Curve:Quadratic,
+  {22c0207a-5d34-4e2a-90b2-5f349666c0a0}, !- Handle
+  HPWH Heating Cap Func Air Flow Frac,    !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Quadratic,
+  {a3bf6669-033c-4ec8-bb5c-71fe226cc3f3}, !- Handle
+  HPWH Heating Cap Func Water Flow Frac,  !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Biquadratic,
+  {15fdb8d0-1cdf-48b5-a6be-cf1cdf5f7cb4}, !- Handle
+  HPWH COP Func of Temp,                  !- Name
+  1.19713,                                !- Coefficient1 Constant
+  0.077849,                               !- Coefficient2 x
+  -1.6e-06,                               !- Coefficient3 x**2
+  -0.02675,                               !- Coefficient4 y
+  0.000296,                               !- Coefficient5 y**2
+  -0.00112,                               !- Coefficient6 x*y
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  40,                                     !- Maximum Value of x {BasedOnField A2}
+  20,                                     !- Minimum Value of y {BasedOnField A3}
+  90,                                     !- Maximum Value of y {BasedOnField A3}
+  ,                                       !- Minimum Curve Output {BasedOnField A4}
+  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  Temperature,                            !- Input Unit Type for X
+  Temperature,                            !- Input Unit Type for Y
+  Dimensionless;                          !- Output Unit Type
+
+OS:Curve:Quadratic,
+  {9c1f4673-151b-464a-ab8b-1dbd2614b97e}, !- Handle
+  HPWH COP Func of Air Flow Frac,         !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Quadratic,
+  {489134e3-6c2a-4475-8f8b-a19ad0b8c965}, !- Handle
+  HPWH COP Func of Water Flow Frac,       !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Quadratic,
+  {248ab195-cfb7-4c64-89bb-2018882ad681}, !- Handle
+  Part Load Frac Correlation,             !- Name
+  0.75,                                   !- Coefficient1 Constant
+  0.25,                                   !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
+
+OS:Schedule:Ruleset,
+  {9616370d-4aaf-4f17-8eca-210f8024f2a0}, ! Handle
+  Water Heater Stratified Setpoint Temperature, ! Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, ! Schedule Type Limits Name
+  {8c74544a-4d75-4e86-a169-3abf44d0edcc}; ! Default Day Schedule Name
+
+OS:Schedule:Day,
+  {8c74544a-4d75-4e86-a169-3abf44d0edcc}, ! Handle
+  Water Heater Stratified Setpoint Temperature Default, ! Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, ! Schedule Type Limits Name
+  ,                                       ! Interpolate to Timestep
+  24,                                     ! Hour 1
+  0,                                      ! Minute 1
+  48.89;                                  ! Value Until Time 1
+
+OS:WaterHeater:Stratified,
+  {db2fa640-2a72-4846-9027-769207ea3ebf}, !- Handle
+  Water Heater Stratified,                !- Name
+  General,                                !- End-Use Subcategory
+  0.1893,                                 !- Tank Volume {m3}
+  1.4,                                    !- Tank Height {m}
+  VerticalCylinder,                       !- Tank Shape
+  ,                                       !- Tank Perimeter {m}
+  82.22,                                  !- Maximum Temperature Limit {C}
+  MasterSlave,                            !- Heater Priority Control
+  {9616370d-4aaf-4f17-8eca-210f8024f2a0}, !- Heater 1 Setpoint Temperature Schedule Name
+  2,                                      !- Heater 1 Deadband Temperature Difference {deltaC}
+  4500,                                   !- Heater 1 Capacity {W}
+  1,                                      !- Heater 1 Height {m}
+  {9616370d-4aaf-4f17-8eca-210f8024f2a0}, !- Heater 2 Setpoint Temperature Schedule Name
+  5,                                      !- Heater 2 Deadband Temperature Difference {deltaC}
+  4500,                                   !- Heater 2 Capacity {W}
+  0,                                      !- Heater 2 Height {m}
+  Electricity,                            !- Heater Fuel Type
+  0.98,                                   !- Heater Thermal Efficiency
+  10,                                     !- Off Cycle Parasitic Fuel Consumption Rate {W}
+  Electricity,                            !- Off Cycle Parasitic Fuel Type
+  0,                                      !- Off Cycle Parasitic Heat Fraction to Tank
+  0,                                      !- Off Cycle Parasitic Height {m}
+  10,                                     !- On Cycle Parasitic Fuel Consumption Rate {W}
+  Electricity,                            !- On Cycle Parasitic Fuel Type
+  0,                                      !- On Cycle Parasitic Heat Fraction to Tank
+  0,                                      !- On Cycle Parasitic Height {m}
+  Schedule,                               !- Ambient Temperature Indicator
+  {cc53a423-3dc6-47ad-90d5-0154db8eccc8}, !- Ambient Temperature Schedule Name
+  ,                                       !- Ambient Temperature Thermal Zone Name
+  ,                                       !- Ambient Temperature Outdoor Air Node Name
+  0.846,                                  !- Uniform Skin Loss Coefficient per Unit Area to Ambient Temperature {W/m2-K}
+  1,                                      !- Skin Loss Fraction to Zone
+  0,                                      !- Off Cycle Flue Loss Coefficient to Ambient Temperature {W/K}
+  1,                                      !- Off Cycle Flue Loss Fraction to Zone
+  ,                                       !- Peak Use Flow Rate {m3/s}
+  ,                                       !- Use Flow Rate Fraction Schedule Name
+  ,                                       !- Cold Water Supply Temperature Schedule Name
+  ,                                       !- Use Side Inlet Node Name
+  ,                                       !- Use Side Outlet Node Name
+  1,                                      !- Use Side Effectiveness
+  0,                                      !- Use Side Inlet Height {m}
+  autocalculate,                          !- Use Side Outlet Height {m}
+  ,                                       !- Source Side Inlet Node Name
+  ,                                       !- Source Side Outlet Node Name
+  1,                                      !- Source Side Effectiveness
+  autocalculate,                          !- Source Side Inlet Height {m}
+  0,                                      !- Source Side Outlet Height {m}
+  Fixed,                                  !- Inlet Mode
+  autosize,                               !- Use Side Design Flow Rate {m3/s}
+  autosize,                               !- Source Side Design Flow Rate {m3/s}
+  1.5,                                    !- Indirect Water Heating Recovery Time {hr}
+  6,                                      !- Number of Nodes
+  0.1,                                    !- Additional Destratification Conductivity {W/m-K}
+  0.15,                                   !- Node 1 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 2 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 3 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 4 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 5 Additional Loss Coefficient {W/m2-K}
+  0.1,                                    !- Node 6 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 7 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 8 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 9 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 10 Additional Loss Coefficient {W/m2-K}
+  IndirectHeatPrimarySetpoint,            !- Source Side Flow Control Mode
+  ;                                       !- Indirect Alternate Setpoint Temperature Schedule Name
+
+OS:WaterHeater:Mixed,
+  {5a6a31ef-f662-4452-925d-855d251337c0}, !- Handle
+  HPWH Tank,                              !- Name
+  0.3785,                                 !- Tank Volume {m3}
+  {82f28594-c0f3-4288-ac71-545c739367a8}, !- Setpoint Temperature Schedule Name
+  2,                                      !- Deadband Temperature Difference {deltaC}
+  82.22,                                  !- Maximum Temperature Limit {C}
+  Cycle,                                  !- Heater Control Type
+  845000,                                 !- Heater Maximum Capacity {W}
+  ,                                       !- Heater Minimum Capacity {W}
+  ,                                       !- Heater Ignition Minimum Flow Rate {m3/s}
+  ,                                       !- Heater Ignition Delay {s}
+  NaturalGas,                             !- Heater Fuel Type
+  0.8,                                    !- Heater Thermal Efficiency
+  ,                                       !- Part Load Factor Curve Name
+  20,                                     !- Off Cycle Parasitic Fuel Consumption Rate {W}
+  NaturalGas,                             !- Off Cycle Parasitic Fuel Type
+  0.8,                                    !- Off Cycle Parasitic Heat Fraction to Tank
+  ,                                       !- On Cycle Parasitic Fuel Consumption Rate {W}
+  NaturalGas,                             !- On Cycle Parasitic Fuel Type
+  ,                                       !- On Cycle Parasitic Heat Fraction to Tank
+  Schedule,                               !- Ambient Temperature Indicator
+  {fec1f40a-140f-4541-b3e7-8018896e49ac}, !- Ambient Temperature Schedule Name
+  ,                                       !- Ambient Temperature Thermal Zone Name
+  ,                                       !- Ambient Temperature Outdoor Air Node Name
+  6,                                      !- Off Cycle Loss Coefficient to Ambient Temperature {W/K}
+  ,                                       !- Off Cycle Loss Fraction to Thermal Zone
+  6,                                      !- On Cycle Loss Coefficient to Ambient Temperature {W/K}
+  ,                                       !- On Cycle Loss Fraction to Thermal Zone
+  ,                                       !- Peak Use Flow Rate {m3/s}
+  ,                                       !- Use Flow Rate Fraction Schedule Name
+  ,                                       !- Cold Water Supply Temperature Schedule Name
+  ,                                       !- Use Side Inlet Node Name
+  ,                                       !- Use Side Outlet Node Name
+  1,                                      !- Use Side Effectiveness
+  ,                                       !- Source Side Inlet Node Name
+  ,                                       !- Source Side Outlet Node Name
+  1,                                      !- Source Side Effectiveness
+  autosize,                               !- Use Side Design Flow Rate {m3/s}
+  autosize,                               !- Source Side Design Flow Rate {m3/s}
+  1.5;                                    !- Indirect Water Heating Recovery Time {hr}
+
+OS:Schedule:Ruleset,
+  {4aae3977-6a06-4af9-9943-119bc42601a8}, !- Handle
+  Schedule Ruleset 1,                     !- Name
+  {81cbda09-5e78-433c-aa14-d07601131750}, !- Schedule Type Limits Name
+  {2e133a0a-b7e9-47ba-8515-efaf35ce3011}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {2e133a0a-b7e9-47ba-8515-efaf35ce3011}, !- Handle
+  Schedule Day 1,                         !- Name
+  {81cbda09-5e78-433c-aa14-d07601131750}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  22;                                     !- Value Until Time 1
+
+OS:ScheduleTypeLimits,
+  {81cbda09-5e78-433c-aa14-d07601131750}, !- Handle
+  Temperature 2,                          !- Name
+  ,                                       !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
+  Continuous,                             !- Numeric Type
+  Temperature;                            !- Unit Type
+
+OS:Schedule:Ruleset,
+  {82f28594-c0f3-4288-ac71-545c739367a8}, !- Handle
+  HPWH Setpoint,                          !- Name
+  {81cbda09-5e78-433c-aa14-d07601131750}, !- Schedule Type Limits Name
+  {b1ebec0b-6d61-4fe7-b099-81418aff1c0a}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {b1ebec0b-6d61-4fe7-b099-81418aff1c0a}, !- Handle
+  Schedule Day 2,                         !- Name
+  {81cbda09-5e78-433c-aa14-d07601131750}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  60;                                     !- Value Until Time 1
+
+OS:Fan:OnOff,
+  {d609f359-7cae-452b-ad72-7a7d35e5408c}, !- Handle
+  HPWH Fan,                               !- Name
+  {9875a6ce-9141-4182-9ef8-92f66eff28cf}, !- Availability Schedule Name
+  0.6,                                    !- Fan Efficiency
+  300,                                    !- Pressure Rise {Pa}
+  autosize,                               !- Maximum Flow Rate {m3/s}
+  0.8,                                    !- Motor Efficiency
+  1,                                      !- Motor In Airstream Fraction
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {b5ed7293-6ce3-478f-baa7-81cb26574a12}, !- Fan Power Ratio Function of Speed Ratio Curve Name
+  {8e01faf1-eca6-4876-9cf0-2baaf52a0798}, !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
+  ;                                       !- End-Use Subcategory
+
+OS:Schedule:Constant,
+  {9875a6ce-9141-4182-9ef8-92f66eff28cf}, !- Handle
+  Always On Discrete 2,                   !- Name
+  {689e8ec5-f8df-4594-944d-3a478e57ebde}, !- Schedule Type Limits Name
+  1;                                      !- Value
+
+OS:ScheduleTypeLimits,
+  {689e8ec5-f8df-4594-944d-3a478e57ebde}, !- Handle
+  OnOff 1,                                !- Name
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  1,                                      !- Upper Limit Value {BasedOnField A4}
+  Discrete,                               !- Numeric Type
+  Availability;                           !- Unit Type
+
+OS:Curve:Exponent,
+  {b5ed7293-6ce3-478f-baa7-81cb26574a12}, !- Handle
+  Fan On Off Power Curve 16,              !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 Constant
+  0,                                      !- Coefficient3 Constant
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1,                                      !- Maximum Value of x {BasedOnField A2}
+  ,                                       !- Minimum Curve Output {BasedOnField A3}
+  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  ,                                       !- Input Unit Type for X
+  ;                                       !- Output Unit Type
+
+OS:Curve:Cubic,
+  {8e01faf1-eca6-4876-9cf0-2baaf52a0798}, !- Handle
+  Fan On Off Efficiency Curve 16,         !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
+
+OS:Schedule:Ruleset,
+  {8ec3f91c-d0c8-40e3-ad58-b93ce96ba5ed}, !- Handle
+  Compressor Setpoint Temp,               !- Name
+  {81cbda09-5e78-433c-aa14-d07601131750}, !- Schedule Type Limits Name
+  {c77280c9-a1a3-4877-9bbf-d1cc0d16fe60}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {c77280c9-a1a3-4877-9bbf-d1cc0d16fe60}, !- Handle
+  Schedule Day 3,                         !- Name
+  {81cbda09-5e78-433c-aa14-d07601131750}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  60;                                     !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {93c85db1-4601-45e9-aa96-1fa65ef11b9b}, !- Handle
+  Inlet Air Mixer Fraction,               !- Name
+  {e626ef76-63d7-4555-ace7-c0e9ffba76e6}, !- Schedule Type Limits Name
+  {5bfbd450-8c1d-4c1d-95ef-9dd0671a6683}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {5bfbd450-8c1d-4c1d-95ef-9dd0671a6683}, !- Handle
+  Schedule Day 4,                         !- Name
+  {e626ef76-63d7-4555-ace7-c0e9ffba76e6}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0.2;                                    !- Value Until Time 1
+
+OS:ScheduleTypeLimits,
+  {e626ef76-63d7-4555-ace7-c0e9ffba76e6}, !- Handle
+  Fractional 2,                           !- Name
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  1,                                      !- Upper Limit Value {BasedOnField A4}
+  Continuous;                             !- Numeric Type
+
+OS:Schedule:Ruleset,
+  {fec1f40a-140f-4541-b3e7-8018896e49ac}, !- Handle
+  Inlet Air Temp,                         !- Name
+  {81cbda09-5e78-433c-aa14-d07601131750}, !- Schedule Type Limits Name
+  {81a7b613-3016-4312-ba3c-0885344e023a}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {81a7b613-3016-4312-ba3c-0885344e023a}, !- Handle
+  Schedule Day 5,                         !- Name
+  {81cbda09-5e78-433c-aa14-d07601131750}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  19.7;                                   !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {50d31668-dbf4-4e07-8175-ff052904be2b}, !- Handle
+  Inlet Air Humidity,                     !- Name
+  {09791629-0b05-4935-8060-d1ca19e6d0a3}, !- Schedule Type Limits Name
+  {38b4b584-88e0-4d37-bc17-2bf3ff742a62}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {38b4b584-88e0-4d37-bc17-2bf3ff742a62}, !- Handle
+  Schedule Day 6,                         !- Name
+  {09791629-0b05-4935-8060-d1ca19e6d0a3}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0.5;                                    !- Value Until Time 1
+
+OS:ScheduleTypeLimits,
+  {09791629-0b05-4935-8060-d1ca19e6d0a3}, !- Handle
+  Dimensionless,                          !- Name
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
+  Continuous;                             !- Numeric Type
+
+OS:Schedule:Ruleset,
+  {01003409-972f-4d53-854b-b899d3a53373}, !- Handle
+  Compressor Ambient Temp,                !- Name
+  {81cbda09-5e78-433c-aa14-d07601131750}, !- Schedule Type Limits Name
+  {5d2f4cc2-c6f8-4de1-a3fc-62389d3fd6d1}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {5d2f4cc2-c6f8-4de1-a3fc-62389d3fd6d1}, !- Handle
+  Schedule Day 7,                         !- Name
+  {81cbda09-5e78-433c-aa14-d07601131750}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  21;                                     !- Value Until Time 1
 
 OS:WaterUse:Connections,
   {dd7dec71-07dd-4fc1-80a8-3794cd5a8083}, ! Handle

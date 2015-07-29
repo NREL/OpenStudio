@@ -281,7 +281,8 @@
     <file>images/watertoairHP.png</file>
     <file>images/water_connection.png</file>
     <file>images/water_cooled.png</file>
-    <file>images/water_heater.png</file>
+    <file>images/water_heater_mixed.png</file>
+    <file>images/water_heater_stratified.png</file>
     <file>images/water_main_alone.png</file>
     <file>images/water_main_alone_over.png</file>
     <file>images/water_main_alone_press.png</file>
@@ -458,7 +459,8 @@
     <file>images/mini_icons/wahpDXCC_mini.png</file>        
     <file>images/mini_icons/wahpDXHC_mini.png</file>    
     <file>images/mini_icons/water_connection.png</file>
-    <file>images/mini_icons/water_heater.png</file>
+    <file>images/mini_icons/water_heater_mixed.png</file>
+    <file>images/mini_icons/water_heater_stratified.png</file>
     <file>images/mini_icons/watertoairHP.png</file>
     <file>images/mini_icons/window_material_gas.png</file>
     <file>images/mini_icons/window_material_gasmixture.png</file>
@@ -483,6 +485,9 @@
     <file alias="shared_gui_components/images/add_script_icon.png">../shared_gui_components/images/add_script_icon.png</file>
     <file alias="shared_gui_components/images/add_script_icon_over.png">../shared_gui_components/images/add_script_icon_over.png</file>
     <file alias="shared_gui_components/images/add_script_icon_press.png">../shared_gui_components/images/add_script_icon_press.png</file>
+    <file alias="shared_gui_components/images/add_softer_off.png">../shared_gui_components/images/add_softer_off.png</file>
+    <file alias="shared_gui_components/images/add_softer_on.png">../shared_gui_components/images/add_softer_on.png</file>
+    <file alias="shared_gui_components/images/add_softer_press.png">../shared_gui_components/images/add_softer_press.png</file>
     <file alias="shared_gui_components/images/arrow_down.png">../shared_gui_components/images/arrow_down.png</file>
     <file alias="shared_gui_components/images/arrow_down_over.png">../shared_gui_components/images/arrow_down_over.png</file>
     <file alias="shared_gui_components/images/arrow_down_press.png">../shared_gui_components/images/arrow_down_press.png</file>
