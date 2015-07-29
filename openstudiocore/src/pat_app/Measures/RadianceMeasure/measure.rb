@@ -453,7 +453,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			simulations = []
 
 #			exec_statement("gendaymtx #{genDaymtxHdr} -m #{t_options_skyvecDensity} in.wea > annual-sky.mtx")
-			exec_statement("gendaymtx -m #{t_options_skyvecDensity} in.wea > annual-sky.mtx")
+			exec_statement("gendaymtx -m #{t_options_skyvecDensity} wx/in.wea > annual-sky.mtx")
 
 
 			windowMaps = File::open("bsdf/mapping.rad")
