@@ -1,12 +1,7 @@
 
 OS:Version,
-<<<<<<< HEAD
-  {8314af35-504d-45b2-900b-103a3991e248}, !- Handle
-  1.8.1;                                  !- Version Identifier
-=======
   {12be9444-5ce3-4598-870b-511a2a6905c1}, !- Handle
   1.8.2;                                  !- Version Identifier
->>>>>>> develop
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
