@@ -15428,6 +15428,9 @@ OS:Table:MultiVariableLookup,
        \reference BiquadraticCurves
        \reference QuadraticLinearCurves
        \reference TriQuadraticCurves
+       \reference BiquadraticCubicCurves
+       \reference BiVariateTables
+       \reference UniVariateTables
   A3 , \field Interpolation Method
        \type choice
        \key LinearInterpolationOfTable
