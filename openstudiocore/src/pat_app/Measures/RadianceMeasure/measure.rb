@@ -84,8 +84,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     write_sql = (write_sql == 'Yes')
 
     use_cores = runner.getStringArgumentValue('use_cores', user_arguments)
-    use_cores = (use_cores == 'Default')
-
 
     # Energyplus "pre-run" model dir
     epout_dir = "eplus_preprocess"
@@ -429,7 +427,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 		# annual simulation dealio
 		def runSimulation(t_space_names_to_calculate, t_sqlFile, t_simCores, t_options_skyvecDensity, t_site_latitude, t_site_longitude, t_site_stdmeridian, t_radPath, \
-		t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
+		t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, runner)
 
 			puts "#{Time.now.getutc}: Calculating annual daylight values for all window groups and shade states"
 
@@ -482,11 +480,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 					end
 		
 					wgXMLs.each_index do |i|
-						rad_command = "dctimestep output/dc/#{wg}.vmx bsdf/#{wgXMLs[i].strip} output/dc/#{wg}.dmx \
-					annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}_#{wgXMLs[i].split[0]}.ill"
-						#exec_statement("dctimestep #{t_radPath}/output/dc/#{wg}.vmx | #{t_radPath}/bsdf/#{wgXMLs[i].strip} #{t_radPath}/output/dc/#{wg}.dmx \
-						# annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}_#{wgXMLs[i].split[0]}.ill")
-						puts "#{Time.now.getutc}: #{rad_command}"
+						rad_command = "dctimestep output/dc/#{wg}.vmx bsdf/#{wgXMLs[i].strip} output/dc/#{wg}.dmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}_#{wgXMLs[i].split[0]}.ill"
+						runner.registerInfo("radiance\#: #{rad_command}")
 						exec_statement(rad_command)
 					end
 			
@@ -1008,11 +1003,12 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 		options_skyvecDensity = "1"
 		puts "last call: #{options_skyvecDensity}"
 
-		# calculate input for annualSimulation()
-		values, dcVectors = runSimulation(space_names_to_calculate, sqlFile, sim_cores, options_skyvecDensity, site_latitude, site_longitude, site_meridian, radPath, spaceWidths, spaceHeights, radGlareSensorViews)
+		# make merged building-wide illuminance schedule(s)
+		values, dcVectors = runSimulation(space_names_to_calculate, sqlFile, sim_cores, options_skyvecDensity, site_latitude, site_longitude, site_meridian, radPath, spaceWidths, spaceHeights, radGlareSensorViews, runner)
 		
-		# make merged building-wide illuminance schedule
-  	#annualSimulation(sqlFile, options, epw_path, space_names_to_calculate, radMaps, spaceWidths, spaceHeights, radMapPoints, radGlareSensorViews, sim_cores, site_latitude, site_longitude, site_meridian, radPath, building, values, dcVectors)
+		# make space-level illuminance schedules and radout.sql results database
+		# hoping this is no longer necessary...
+  	# annualSimulation(sqlFile, epwFile, space_names_to_calculate, radMaps, spaceWidths, spaceHeights, radMapPoints, radGlareSensorViews, sim_cores, site_latitude, site_longitude, site_meridian, radPath, building, values, dcVectors)
 
 		# execute MakeSchedules
 		# result = exec_statement("ruby #{load_paths} '#{dirname}/MakeSchedules.rb' '#{modelPath}' '#{sqlPath}' --keep")
