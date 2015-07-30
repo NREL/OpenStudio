@@ -555,28 +555,29 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   idfObject.setString(openstudio::AirLoopHVACFields::DemandSideOutletNodeName,
                       airLoopHVAC.demandOutletNode().name().get());
 
+  // Not possible currently in OS, uncomment later
   // Return Air Bypass Flow Temperature Setpoint Schedule Name
-  if( boost::optional<Schedule> returnAirBypassFlowTemperatureSetpointSchedule = airLoopHVAC.returnAirBypassFlowTemperatureSetpointSchedule() )
-  {
-    boost::optional<IdfObject> _returnAirBypassFlowTemperatureSetpointSchedule = translateAndMapModelObject(returnAirBypassFlowTemperatureSetpointSchedule.get());
-    if( _returnAirBypassFlowTemperatureSetpointSchedule && _returnAirBypassFlowTemperatureSetpointSchedule->name() )
-    {
-      IdfObject _returnAirBypassFlowSPM(IddObjectType::SetpointManager_ReturnAirBypassFlow);
-      m_idfObjects.push_back(_returnAirBypassFlowSPM);
+  // if( boost::optional<Schedule> returnAirBypassFlowTemperatureSetpointSchedule = airLoopHVAC.returnAirBypassFlowTemperatureSetpointSchedule() )
+  // {
+  //   boost::optional<IdfObject> _returnAirBypassFlowTemperatureSetpointSchedule = translateAndMapModelObject(returnAirBypassFlowTemperatureSetpointSchedule.get());
+  //   if( _returnAirBypassFlowTemperatureSetpointSchedule && _returnAirBypassFlowTemperatureSetpointSchedule->name() )
+  //   {
+  //     IdfObject _returnAirBypassFlowSPM(IddObjectType::SetpointManager_ReturnAirBypassFlow);
+  //     m_idfObjects.push_back(_returnAirBypassFlowSPM);
 
-      // Name
-      _returnAirBypassFlowSPM.setName(airLoopHVACName + " Return Air Bypass Flow");
+  //     // Name
+  //     _returnAirBypassFlowSPM.setName(airLoopHVACName + " Return Air Bypass Flow");
 
-      // Control Variable
-      _returnAirBypassFlowSPM.setString(SetpointManager_ReturnAirBypassFlowFields::ControlVariable,"Flow");
+  //     // Control Variable
+  //     _returnAirBypassFlowSPM.setString(SetpointManager_ReturnAirBypassFlowFields::ControlVariable,"Flow");
 
-      // HVAC Air Loop Name
-      _returnAirBypassFlowSPM.setString(SetpointManager_ReturnAirBypassFlowFields::HVACAirLoopName,airLoopHVACName);
+  //     // HVAC Air Loop Name
+  //     _returnAirBypassFlowSPM.setString(SetpointManager_ReturnAirBypassFlowFields::HVACAirLoopName,airLoopHVACName);
 
-      // Temperature Setpoint Schedule Name
-      _returnAirBypassFlowSPM.setString(SetpointManager_ReturnAirBypassFlowFields::TemperatureSetpointScheduleName,_returnAirBypassFlowTemperatureSetpointSchedule->name().get());
-    }
-  }
+  //     // Temperature Setpoint Schedule Name
+  //     _returnAirBypassFlowSPM.setString(SetpointManager_ReturnAirBypassFlowFields::TemperatureSetpointScheduleName,_returnAirBypassFlowTemperatureSetpointSchedule->name().get());
+  //   }
+  // }
 
   // Convert demand side components
   createAirLoopHVACSupplyPath(airLoopHVAC);

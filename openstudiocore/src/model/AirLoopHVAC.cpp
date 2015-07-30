@@ -134,12 +134,12 @@ namespace detail {
   std::vector<ScheduleTypeKey> AirLoopHVAC_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
     std::vector<ScheduleTypeKey> result;
-    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_AirLoopHVACFields::ReturnAirBypassFlowTemperatureSetpointScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("AirLoopHVAC","Return Air Bypass Flow Temperature Setpoint"));
-    }
+    // UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+    // UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+    // if (std::find(b,e,OS_AirLoopHVACFields::ReturnAirBypassFlowTemperatureSetpointScheduleName) != e)
+    // {
+    //   result.push_back(ScheduleTypeKey("AirLoopHVAC","Return Air Bypass Flow Temperature Setpoint"));
+    // }
     return result;
   }
 
@@ -900,25 +900,25 @@ namespace detail {
     return availabilityManagerAssignmentList().availabilityManagerNightCycle().controlType();
   }
 
-  boost::optional<Schedule>  AirLoopHVAC_Impl::returnAirBypassFlowTemperatureSetpointSchedule() const
-  {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirLoopHVACFields::ReturnAirBypassFlowTemperatureSetpointScheduleName);
-  }
+  // boost::optional<Schedule>  AirLoopHVAC_Impl::returnAirBypassFlowTemperatureSetpointSchedule() const
+  // {
+  //   return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirLoopHVACFields::ReturnAirBypassFlowTemperatureSetpointScheduleName);
+  // }
 
-  bool  AirLoopHVAC_Impl::setReturnAirBypassFlowTemperatureSetpointSchedule(Schedule & temperatureSetpointSchedule)
-  {
-    bool result = setSchedule(OS_AirLoopHVACFields::ReturnAirBypassFlowTemperatureSetpointScheduleName,
-                              "AirLoopHVAC",
-                              "Return Air Bypass Flow Temperature Setpoint",
-                              temperatureSetpointSchedule);
-    return result;
-  }
+  // bool  AirLoopHVAC_Impl::setReturnAirBypassFlowTemperatureSetpointSchedule(Schedule & temperatureSetpointSchedule)
+  // {
+  //   bool result = setSchedule(OS_AirLoopHVACFields::ReturnAirBypassFlowTemperatureSetpointScheduleName,
+  //                             "AirLoopHVAC",
+  //                             "Return Air Bypass Flow Temperature Setpoint",
+  //                             temperatureSetpointSchedule);
+  //   return result;
+  // }
 
-  void  AirLoopHVAC_Impl::resetReturnAirBypassFlowTemperatureSetpointSchedule()
-  {
-    bool result = setString(OS_AirLoopHVACFields::ReturnAirBypassFlowTemperatureSetpointScheduleName,"");
-    OS_ASSERT(result);
-  }
+  // void  AirLoopHVAC_Impl::resetReturnAirBypassFlowTemperatureSetpointSchedule()
+  // {
+  //   bool result = setString(OS_AirLoopHVACFields::ReturnAirBypassFlowTemperatureSetpointScheduleName,"");
+  //   OS_ASSERT(result);
+  // }
 
   AvailabilityManagerAssignmentList AirLoopHVAC_Impl::availabilityManagerAssignmentList() const
   {
@@ -1277,20 +1277,20 @@ bool AirLoopHVAC::setNightCycleControlType(std::string controlType)
   return getImpl<detail::AirLoopHVAC_Impl>()->setNightCycleControlType(controlType);
 }
 
-boost::optional<Schedule> AirLoopHVAC::returnAirBypassFlowTemperatureSetpointSchedule() const
-{
-  return getImpl<detail::AirLoopHVAC_Impl>()->returnAirBypassFlowTemperatureSetpointSchedule();
-}
+// boost::optional<Schedule> AirLoopHVAC::returnAirBypassFlowTemperatureSetpointSchedule() const
+// {
+//   return getImpl<detail::AirLoopHVAC_Impl>()->returnAirBypassFlowTemperatureSetpointSchedule();
+// }
 
-bool AirLoopHVAC::setReturnAirBypassFlowTemperatureSetpointSchedule(Schedule & temperatureSetpointSchedule)
-{
-  return getImpl<detail::AirLoopHVAC_Impl>()->setReturnAirBypassFlowTemperatureSetpointSchedule(temperatureSetpointSchedule);
-}
+// bool AirLoopHVAC::setReturnAirBypassFlowTemperatureSetpointSchedule(Schedule & temperatureSetpointSchedule)
+// {
+//   return getImpl<detail::AirLoopHVAC_Impl>()->setReturnAirBypassFlowTemperatureSetpointSchedule(temperatureSetpointSchedule);
+// }
 
-void AirLoopHVAC::resetReturnAirBypassFlowTemperatureSetpointSchedule()
-{
-  getImpl<detail::AirLoopHVAC_Impl>()->resetReturnAirBypassFlowTemperatureSetpointSchedule();
-}
+// void AirLoopHVAC::resetReturnAirBypassFlowTemperatureSetpointSchedule()
+// {
+//   getImpl<detail::AirLoopHVAC_Impl>()->resetReturnAirBypassFlowTemperatureSetpointSchedule();
+// }
 
 std::string AirLoopHVAC::nightCycleControlType() const
 {

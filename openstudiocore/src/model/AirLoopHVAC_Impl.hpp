@@ -164,11 +164,11 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   std::string nightCycleControlType() const;
 
-  boost::optional<Schedule> returnAirBypassFlowTemperatureSetpointSchedule() const;
+  // boost::optional<Schedule> returnAirBypassFlowTemperatureSetpointSchedule() const;
 
-  bool setReturnAirBypassFlowTemperatureSetpointSchedule(Schedule & temperatureSetpointSchedule);
+  // bool setReturnAirBypassFlowTemperatureSetpointSchedule(Schedule & temperatureSetpointSchedule);
 
-  void resetReturnAirBypassFlowTemperatureSetpointSchedule();
+  // void resetReturnAirBypassFlowTemperatureSetpointSchedule();
 
   static bool addBranchForZoneImpl(ThermalZone & thermalZone, 
                                    AirLoopHVAC & airLoopHVAC,

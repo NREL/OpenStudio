@@ -39,6 +39,9 @@
 #include "../ThermalZone.hpp"
 #include "../ScheduleCompact.hpp"
 #include "../ScheduleTypeLimits.hpp"
+#include "../ScheduleRuleset.hpp"
+#include "../ScheduleDay.hpp"
+#include "../../utilities/time/Time.hpp"
 #include "../FanConstantVolume.hpp"
 #include "../FanConstantVolume_Impl.hpp"
 #include "../FanVariableVolume.hpp"
@@ -710,3 +713,25 @@ TEST_F(ModelFixture,AirLoopHVAC_fans)
   }
    
 }
+
+// Not possible in OS currently, uncomment in future
+// TEST_F(ModelFixture,AirLoopHVAC_returnAirBypassFlow)
+// {
+//   Model m;
+//   AirLoopHVAC airSystem(m);
+
+//   auto schedule = ScheduleRuleset(m);
+//   schedule.defaultDaySchedule().addValue( openstudio::Time(0, 24, 0), 50 );
+
+//   EXPECT_TRUE( airSystem.setReturnAirBypassFlowTemperatureSetpointSchedule( schedule ) );
+
+//   auto airSystem_schedule = airSystem.returnAirBypassFlowTemperatureSetpointSchedule();
+
+//   ASSERT_TRUE( airSystem_schedule );
+//   EXPECT_EQ( schedule, airSystem_schedule.get() );
+
+//   airSystem.resetReturnAirBypassFlowTemperatureSetpointSchedule();
+
+//   EXPECT_FALSE( airSystem.returnAirBypassFlowTemperatureSetpointSchedule() );
+   
+// }
