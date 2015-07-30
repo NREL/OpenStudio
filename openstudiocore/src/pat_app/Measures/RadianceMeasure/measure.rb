@@ -824,6 +824,271 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 		end
 
 
+
+		def writeTimeSeriesToSql(sqlfile, simDateTimes, illum, space_name, ts_name, ts_units)
+			#puts "writing Radiance glare results database..."
+			#puts DateTime.now.to_s + " Beginning timeseries write to sql"
+			#puts DateTime.now.to_s + " Creating data vector"
+			data = OpenStudio::Vector.new(illum.length)
+			illum.length.times do |n|
+				begin
+					data[n] = illum[n].to_f;
+				rescue Exception => e
+					puts "Error inserting data: " + illum[n] + " inserting 0 instead";
+					data[n] = 0;
+				end
+			end
+			#puts DateTime.now.to_s + " Creating TimeSeries Object"
+			illumTS = OpenStudio::TimeSeries.new(simDateTimes, data, ts_units);
+			#puts DateTime.now.to_s + " Inserting into SQLFile"
+			sqlfile.insertTimeSeriesData(
+				"Average", "Zone", "Zone", space_name, ts_name, OpenStudio::ReportingFrequency.new("Hourly"),
+				OpenStudio::OptionalString.new(),
+				ts_units, illumTS);
+			#puts DateTime.now.to_s + " Ending timeseries write to sql"
+
+		end # writeTimeSeriesToSql()
+
+
+
+		def annualSimulation(t_sqlFile, t_epwFile, t_space_names_to_calculate, t_radMaps, t_spaceWidths, t_spaceHeights, t_radMapPoints, \
+			t_radGlareSensorViews, t_simCores, t_site_latitude, t_site_longitude, t_site_stdmeridian, t_outPath, t_building, t_values, t_dcVectors)
+			sqlOutPath = OpenStudio::Path.new("#{Dir.pwd}/output/radout.sql")
+			if OpenStudio::exists(sqlOutPath)
+				OpenStudio::remove(sqlOutPath)
+			end
+
+			# for each environment period (design days, annual, or arbitrary) you will create a directory for results
+			t_sqlFile.availableEnvPeriods.each do |envPeriod|
+
+				puts "envPeriod = '" + envPeriod.to_s + "'"
+
+				diffHorizIllumAll, dirNormIllumAll, diffEfficacyAll, dirNormEfficacyAll, solarAltitudeAll, solarAzimuthAll, diffHorizUnits, dirNormUnits = getTimeSeries(t_sqlFile, envPeriod)
+
+				# check that we have all timeseries
+				if (not diffHorizIllumAll) or (not dirNormIllumAll) or (not diffEfficacyAll) or (not dirNormEfficacyAll) or (not solarAltitudeAll) or (not solarAzimuthAll)
+					puts "Missing required timeseries"
+					exit false
+				end
+
+				# make timeseries
+				simDateTimes, simTimes, diffHorizIllum, dirNormIllum, diffEfficacy, dirNormEfficacy, solarAltitude, solarAzimuth, firstReportDateTime = \
+				buildSimulationTimes(t_sqlFile, envPeriod, diffHorizIllumAll, dirNormIllumAll, diffEfficacyAll, dirNormEfficacyAll, solarAltitudeAll, solarAzimuthAll)
+
+
+				sqlOutFile = OpenStudio::SqlFile.new(sqlOutPath,
+																						 t_epwFile.get(),
+																						 OpenStudio::DateTime::now(),
+																						 OpenStudio::Calendar.new(firstReportDateTime.date().year()));
+
+				puts "#{Time.now.getutc}: removing indexes"
+				sqlOutFile.removeIndexes
+
+				t_space_names_to_calculate.each do |space_name|
+					illuminanceMatrixMaps = OpenStudio::MatrixVector.new();
+					daylightSensorIlluminance = []
+					meanIlluminanceMap = []
+					minDGP = []
+					meanDGP = []
+					maxDGP = []
+
+					puts "#{Time.now.getutc}: Processing Space: #{space_name}"
+
+					timeSeriesIllum =[]
+					timeSeriesGlare =[]
+
+					simTimes.each_index do |i|
+						spaceWidth = t_spaceWidths[space_name]
+						spaceHeight = t_spaceHeights[space_name]
+
+						illuminanceMatrixMaps << OpenStudio::Matrix.new(spaceWidth, spaceHeight, 0)
+						daylightSensorIlluminance << 0
+						meanIlluminanceMap << 0
+						minDGP << 0
+						meanDGP << 0
+						maxDGP << 0
+
+				
+						# these must be declared in the thread otherwise will get overwritten on each loop
+						tsDateTime = simTimes[i]
+
+						#if t_options.glare == true
+						#	puts "image based glare analysis temporarily disabled, sorry."
+							#  system("gendaylit -ang #{tsSolarAlt} #{tsSolarAzi} -L #{tsDirectNormIllum} #{tsDiffuseHorIllum} \
+							#  | #{perlPrefix}genskyvec#{perlExtension} -m 1 | dctimestep \"#{outPath}/output/dc/#{space_name}/views/#{space_name}treg%03d.hdr\" | pfilt -1 -x /2 -y /2 > \
+							#  \"#{outPath}/output/dc/#{space_name}/views/#{tsDateTime.gsub(/[: ]/,'_')}.hdr\"")
+						#end
+
+
+						# Split up values by space
+
+						illumValues, illumSensorValues, glareSensorValues = t_values[i][space_name]
+
+						timeSeriesIllum[i] = tsDateTime.to_s.gsub(" ",",") + "," + "#{dirNormIllum[i]},#{diffHorizIllum[i]}," + illumSensorValues.join(',') + "," + illumValues.join(',')
+
+						# add glare sensor values
+						if t_radGlareSensorViews[space_name]
+							if not glareSensorValues.nil?
+								timeSeriesGlare[i] = tsDateTime.to_s.gsub(" ",",") + "," + glareSensorValues.join(',')
+
+								if not glareSensorValues.empty?
+									sumDGP = 0
+									glareSensorValues.each do |val| 
+										sumDGP += val
+									end
+									minDGP[i] = glareSensorValues.min
+									meanDGP[i] = sumDGP / glareSensorValues.size.to_f
+									maxDGP[i] = glareSensorValues.max
+								end
+							end
+						end
+
+						m = OpenStudio::Matrix.new(spaceWidth, spaceHeight, 0)
+
+						if not illumSensorValues.empty?
+							daylightSensorIlluminance[i] = illumSensorValues[0]
+						end
+
+						#puts "Daylight sensor: #{daylightSensorIlluminance[i]} lux"
+						n = 0
+						sumIllumMap = 0
+						illumValues.each do |val|
+							x = (n%spaceWidth).to_i;
+							y = (n/spaceWidth).to_i;
+							#puts "Setting value (" + x.to_s + ", " + y.to_s + ") to " + val.to_f.to_s
+							sumIllumMap += val.to_f
+							m[x, y] = val.to_f
+							n = n + 1
+						end
+
+						illuminanceMatrixMaps[i] = m
+
+						if n != 0
+							meanIlluminanceMap[i] = sumIllumMap / n.to_f
+						end
+
+					end
+
+					#Print illuminance results to dat file
+					FileUtils.mkdir_p("#{Dir.pwd}/output/ts/#{space_name}/maps") unless File.exists?("#{Dir.pwd}/output/ts/#{space_name}/maps")
+					f = File.open("#{Dir.pwd}/output/ts/#{space_name}/maps/#{space_name}_map.ill", "w")
+					space = nil
+					t_building.spaces.each do |s|
+						this_name = s.name.get.gsub(' ', '_').gsub(':', '_')
+						if this_name == space_name
+							space = s
+							break
+						end
+					end
+
+					illuminanceMaps = space.illuminanceMaps
+
+					# todo: use all if not empty
+					if not illuminanceMaps.empty?
+
+						map = illuminanceMaps[0]
+
+						xmin = map.originXCoordinate
+						xmax = xmin + map.xLength
+						nx = map.numberofXGridPoints
+						ymin = map.originYCoordinate
+						ymax = ymin + map.yLength
+						ny = map.numberofYGridPoints
+						z = map.originZCoordinate
+
+						xSpacing = (xmax-xmin)/nx
+						ySpacing = (ymax-ymin)/ny
+
+						puts "#{Time.now.getutc}: writing Radiance results file..."
+
+						f.print "## OpenStudio Daylight Simulation Results file\n"
+						f.print "## Header: xmin ymin z xmax ymin z xmax ymax z xspacing yspacing\n"
+						f.print "## Data: month,day,time,directNormalIllumimance(external),diffuseHorizontalIlluminance(external),daylightSensorIlluminance,pointIlluminance [lux]\n"
+						f.print "#{xmin} #{ymin} #{z} #{xmax} #{ymin} #{z} #{xmax} #{ymax} #{z} #{xSpacing} #{ySpacing}\n"
+						timeSeriesIllum.each {|ts| f.print "#{ts}\n"}
+						f.close
+
+						#Print glare results to dat file
+						FileUtils.mkdir_p("#{Dir.pwd}/output/ts/#{space_name}/maps") unless File.exists?("#{Dir.pwd}/output/ts/#{space_name}/maps")
+						f = File.open("#{Dir.pwd}/output/ts/#{space_name}/maps/#{space_name}_map.glr", "w")
+						space = nil
+						t_building.spaces.each do |s|
+							this_name = s.name.get.gsub(' ', '_').gsub(':', '_')
+							if this_name == space_name
+								space = s
+								break
+							end
+						end
+
+						if t_radGlareSensorViews[space_name]
+							f.print "## OpenStudio Daylight Simulation (glare) Results file\n"
+							f.print "## Data: month,day,time,DGPSimplified values\n"
+							timeSeriesGlare.each {|ts| f.print "#{ts}\n"}
+							f.close
+						end
+
+						puts "#{Time.now.getutc}: writing Radiance results database..."
+						writeTimeSeriesToSql(sqlOutFile, simDateTimes, dirNormIllum, space_name, "Direct Normal Illuminance", "lux")
+						writeTimeSeriesToSql(sqlOutFile, simDateTimes, diffHorizIllum, space_name, "Global Horizontal Illuminance", "lux")
+						writeTimeSeriesToSql(sqlOutFile, simDateTimes, daylightSensorIlluminance, space_name, "Daylight Sensor Illuminance", "lux")
+						writeTimeSeriesToSql(sqlOutFile, simDateTimes, meanIlluminanceMap, space_name, "Mean Illuminance Map", "lux")
+
+						if t_radGlareSensorViews[space_name]
+							writeTimeSeriesToSql(sqlOutFile, simDateTimes, minDGP, space_name, "Minimum Simplified Daylight Glare Probability", "")
+							writeTimeSeriesToSql(sqlOutFile, simDateTimes, meanDGP, space_name, "Mean Simplified Daylight Glare Probability", "")
+							writeTimeSeriesToSql(sqlOutFile, simDateTimes, maxDGP, space_name, "Maximum Simplified Daylight Glare Probability", "")
+						end
+
+						# I really have no idea how to populate these fields
+						sqlOutFile.insertZone(space_name,
+																	0,
+																	0,0,0,
+																	0,0,0,
+																	0,
+																	0,
+																	0,
+																	0, 0,
+																	0, 0,
+																	0, 0,
+																	0,
+																	0,
+																	0,
+																	0,
+																	0,
+																	0,
+																	0,
+																	0,
+																	true)
+
+						xs = OpenStudio::DoubleVector.new()
+
+						nx.times do |n|
+							xs << xmin + (n * xSpacing)
+						end
+
+						ys = OpenStudio::DoubleVector.new()
+
+						ny.times do |n|
+							ys << ymin + (n * ySpacing)
+						end
+
+						sqlOutFile.insertIlluminanceMap(space_name, space_name + " DAYLIGHT MAP", t_epwFile.get().wmoNumber(),
+																						simDateTimes, xs, ys, map.originZCoordinate, 
+																						illuminanceMatrixMaps)
+
+					end
+				end
+
+				puts "#{Time.now.getutc}: creating indexes..."
+				sqlOutFile.createIndexes
+				puts "#{Time.now.getutc}: done writing Radiance results database."
+
+			end
+		end # annualSimulation()
+
+
+
+
 		# actually do the thing
 		
 		# settle in, it's gonna be a bumpy ride...
@@ -859,7 +1124,9 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			return false
 
 	  end
-
+	  
+	  epwFile = OpenStudio::OptionalEpwFile.new(OpenStudio::EpwFile.new(epw_path))
+	  	  
 		sqlPath = OpenStudio::Path.new("sql/eplusout.sql")
 		sqlPath = OpenStudio::system_complete(sqlPath)
 		
@@ -1008,7 +1275,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 		
 		# make space-level illuminance schedules and radout.sql results database
 		# hoping this is no longer necessary...
-  	# annualSimulation(sqlFile, epwFile, space_names_to_calculate, radMaps, spaceWidths, spaceHeights, radMapPoints, radGlareSensorViews, sim_cores, site_latitude, site_longitude, site_meridian, radPath, building, values, dcVectors)
+  	annualSimulation(sqlFile, epwFile, space_names_to_calculate, radMaps, spaceWidths, spaceHeights, radMapPoints, radGlareSensorViews, sim_cores, site_latitude, site_longitude, site_meridian, radPath, building, values, dcVectors)
 
 		# execute MakeSchedules
 		# result = exec_statement("ruby #{load_paths} '#{dirname}/MakeSchedules.rb' '#{modelPath}' '#{sqlPath}' --keep")
