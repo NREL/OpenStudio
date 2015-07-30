@@ -48,6 +48,7 @@
 #include <QCheckBox>
 #include <QComboBox>
 #include <QLabel>
+#include <QRegExp>
 
 // These defines provide a common area for field display names
 // used on column headers, and other grid widgets
@@ -116,8 +117,9 @@ namespace openstudio {
     m_greaterThanFilter->setFixedWidth(OSItem::ITEM_WIDTH);
     connect(m_greaterThanFilter, &QLineEdit::editingFinished, this, &openstudio::FacilityStoriesGridView::greaterThanFilterChanged);
 
-    auto greaterThanValidator = new QDoubleValidator();
-    m_greaterThanFilter->setValidator(greaterThanValidator);
+    QRegExp regex("^(-?\\d*\\.?\\d+)?$");
+    auto validator = new QRegExpValidator(regex, this);
+    m_greaterThanFilter->setValidator(validator);
 
     layout->addWidget(m_greaterThanFilter, Qt::AlignTop | Qt::AlignLeft);
     layout->addStretch();
@@ -137,8 +139,8 @@ namespace openstudio {
     // Evan note: there are issues with using the signal textChanged or textEdited, related to the design and updating of the gridview (loss of focus, and updates per key stroke)
     connect(m_lessThanFilter, &QLineEdit::editingFinished, this, &openstudio::FacilityStoriesGridView::lessThanFilterChanged);
 
-    auto lessThanValidator = new QDoubleValidator();
-    m_lessThanFilter->setValidator(lessThanValidator);
+    validator = new QRegExpValidator(regex, this);
+    m_greaterThanFilter->setValidator(validator);
 
     layout->addWidget(m_lessThanFilter, Qt::AlignTop | Qt::AlignLeft);
     layout->addStretch();
