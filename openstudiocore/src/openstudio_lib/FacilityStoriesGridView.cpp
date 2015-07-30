@@ -42,6 +42,7 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/idd/IddEnums.hxx"
 #include "../utilities/idd/OS_BuildingStory_FieldEnums.hxx"
+#include "../utilities/units/QuantityConverter.hpp"
 
 #include <QBoxLayout>
 #include <QCheckBox>
@@ -133,6 +134,7 @@ namespace openstudio {
 
     m_lessThanFilter = new QLineEdit();
     m_lessThanFilter->setFixedWidth(OSItem::ITEM_WIDTH);
+    // Evan note: there are issues with using the signal textChanged or textEdited, related to the design and updating of the gridview (loss of focus, and updates per key stroke)
     connect(m_lessThanFilter, &QLineEdit::editingFinished, this, &openstudio::FacilityStoriesGridView::lessThanFilterChanged);
 
     auto lessThanValidator = new QDoubleValidator();
@@ -181,9 +183,9 @@ namespace openstudio {
   {
     auto objectSelector = this->m_gridController->getObjectSelector();
 
-    auto upperLimit = std::numeric_limits<int>::max();
-    auto lowerLimit = std::numeric_limits<int>::min();
-      
+    auto upperLimit = std::numeric_limits<double>::max();
+    auto lowerLimit = std::numeric_limits<double>::min();
+
     if (!this->m_lessThanFilter->text().isEmpty()) {
       upperLimit = this->m_lessThanFilter->text().toDouble();
     }
@@ -192,12 +194,24 @@ namespace openstudio {
       lowerLimit = this->m_greaterThanFilter->text().toDouble();
     }
 
+    if (m_isIP == true) {
+      auto convertedValue = convert(upperLimit, "ft", "m");
+      OS_ASSERT(convertedValue);
+      upperLimit = *convertedValue;
+
+      convertedValue = convert(lowerLimit, "ft", "m");
+      OS_ASSERT(convertedValue);
+      lowerLimit = *convertedValue;
+    } 
+
     objectSelector->m_filteredObjects.clear();
 
     for (auto obj : objectSelector->m_selectorObjects) {
       auto nominalZCoordinate = obj.cast<model::BuildingStory>().nominalZCoordinate();
-      if (nominalZCoordinate && (*nominalZCoordinate > upperLimit || *nominalZCoordinate < lowerLimit)) {
-        objectSelector->m_filteredObjects.insert(obj).second;
+      if (nominalZCoordinate) {
+        if (*nominalZCoordinate >= upperLimit || *nominalZCoordinate <= lowerLimit) {
+          objectSelector->m_filteredObjects.insert(obj).second;
+        }
       }
     }
 
