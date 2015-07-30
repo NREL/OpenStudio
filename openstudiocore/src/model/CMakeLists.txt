@@ -589,6 +589,9 @@ set(${target_name}_src
   PlantLoop.hpp
   PlantLoop_Impl.hpp
   PlantLoop.cpp
+  PlantEquipmentOperationScheme.hpp
+  PlantEquipmentOperationScheme_Impl.hpp
+  PlantEquipmentOperationScheme.cpp
   ProgramControl.hpp
   ProgramControl_Impl.hpp
   ProgramControl.cpp
