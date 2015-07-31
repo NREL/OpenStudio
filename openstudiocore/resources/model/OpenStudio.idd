@@ -1,4 +1,4 @@
-!IDD_Version 1.8.2
+!IDD_Version 1.8.3
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -15428,6 +15428,9 @@ OS:Table:MultiVariableLookup,
        \reference BiquadraticCurves
        \reference QuadraticLinearCurves
        \reference TriQuadraticCurves
+       \reference BiquadraticCubicCurves
+       \reference BiVariateTables
+       \reference UniVariateTables
   A3 , \field Interpolation Method
        \type choice
        \key LinearInterpolationOfTable
@@ -19888,7 +19891,6 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
        \reference HeatPumpWaterHeaterDXCoils
        \reference ConnectionObject
        \note Unique name for this instance of a heat pump water heater DX coil.
-       \reference ConnectionObject
   N1 , \field Rated Heating Capacity
        \required-field
        \type real
@@ -20095,7 +20097,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
        \note ff = fraction of the rated evaporator air flow rate.
        \note Use curve coefficients of 1,0,0 or leave this field blank when neglecting performance impacts
        \note due to variations in air flow rate fraction.
-  A15, \field Heating COP Function of Water Flow Fraction Curve
+  A16, \field Heating COP Function of Water Flow Fraction Curve
        \type object-list
        \required-field
        \object-list QuadraticCubicCurves
@@ -20106,7 +20108,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
        \note ff = fraction of the rated condenser water flow rate.
        \note Use curve coefficients of 1,0,0 or leave this field blank when neglecting performance impacts
        \note due to variations in water flow rate fraction.
-  A16; \field Part Load Fraction Correlation Curve
+  A17; \field Part Load Fraction Correlation Curve
        \type object-list
        \required-field
        \object-list QuadraticCubicCurves

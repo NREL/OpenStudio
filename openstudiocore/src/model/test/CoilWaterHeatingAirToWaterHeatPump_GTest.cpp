@@ -18,12 +18,127 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-
 #include <model/test/ModelFixture.hpp>
-
 #include <model/CoilWaterHeatingAirToWaterHeatPump.hpp>
 #include <model/CoilWaterHeatingAirToWaterHeatPump_Impl.hpp>
+#include <model/Curve.hpp>
+#include <model/Curve_Impl.hpp>
+#include <model/TableMultiVariableLookup.hpp>
+#include <model/TableMultiVariableLookup_Impl.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
+
+TEST_F(ModelFixture,CoilWaterHeatingAirToWaterHeatPump)
+{
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+
+  EXPECT_EXIT ( 
+  {  
+    Model m; 
+    CoilWaterHeatingAirToWaterHeatPump coil(m); 
+    coil.remove();
+
+    exit(0); 
+  } ,
+    ::testing::ExitedWithCode(0), "" );
+
+  {
+    Model m; 
+    CoilWaterHeatingAirToWaterHeatPump coil(m); 
+    {
+      auto curve = coil.heatingCapacityFunctionofTemperatureCurve();
+      EXPECT_FALSE(curve.handle().isNull());
+    }
+
+    {
+      auto curve = coil.heatingCapacityFunctionofAirFlowFractionCurve();
+      EXPECT_FALSE(curve.handle().isNull());
+    }
+
+    { 
+      auto curve = coil.heatingCapacityFunctionofWaterFlowFractionCurve();
+      EXPECT_FALSE(curve.handle().isNull());
+    }
+
+    {
+      auto curve = coil.heatingCOPFunctionofTemperatureCurve();
+      EXPECT_FALSE(curve.handle().isNull());
+    }
+
+    {
+      auto curve = coil.heatingCOPFunctionofAirFlowFractionCurve();
+      EXPECT_FALSE(curve.handle().isNull());
+    }
+
+    {
+      auto curve = coil.heatingCOPFunctionofWaterFlowFractionCurve();
+      EXPECT_FALSE(curve.handle().isNull());
+    }
+
+    {
+      auto curve = coil.partLoadFractionCorrelationCurve();
+      EXPECT_FALSE(curve.handle().isNull());
+    }
+  }
+
+  {
+    Model m; 
+
+    TableMultiVariableLookup heatingCapacityFunctionofTemperatureCurve(m,1);
+    TableMultiVariableLookup heatingCapacityFunctionofAirFlowFractionCurve(m,1);
+    TableMultiVariableLookup heatingCapacityFunctionofWaterFlowFractionCurve(m,1);
+    TableMultiVariableLookup heatingCOPFunctionofTemperatureCurve(m,1);
+    TableMultiVariableLookup heatingCOPFunctionofAirFlowFractionCurve(m,1);
+    TableMultiVariableLookup heatingCOPFunctionofWaterFlowFractionCurve(m,1);
+    TableMultiVariableLookup partLoadFractionCorrelationCurve(m,1);
+
+    CoilWaterHeatingAirToWaterHeatPump coil(m,
+      heatingCapacityFunctionofTemperatureCurve,
+      heatingCapacityFunctionofAirFlowFractionCurve,
+      heatingCapacityFunctionofWaterFlowFractionCurve,
+      heatingCOPFunctionofTemperatureCurve,
+      heatingCOPFunctionofAirFlowFractionCurve,
+      heatingCOPFunctionofWaterFlowFractionCurve,
+      partLoadFractionCorrelationCurve);
+
+    {
+      auto curve = coil.heatingCapacityFunctionofTemperatureCurve();
+      EXPECT_FALSE(curve.handle().isNull());
+    }
+
+    {
+      auto curve = coil.heatingCapacityFunctionofAirFlowFractionCurve();
+      EXPECT_FALSE(curve.handle().isNull());
+    }
+
+    { 
+      auto curve = coil.heatingCapacityFunctionofWaterFlowFractionCurve();
+      EXPECT_FALSE(curve.handle().isNull());
+    }
+
+    {
+      auto curve = coil.heatingCOPFunctionofTemperatureCurve();
+      EXPECT_FALSE(curve.handle().isNull());
+    }
+
+    {
+      auto curve = coil.heatingCOPFunctionofAirFlowFractionCurve();
+      EXPECT_FALSE(curve.handle().isNull());
+    }
+
+    {
+      auto curve = coil.heatingCOPFunctionofWaterFlowFractionCurve();
+      EXPECT_FALSE(curve.handle().isNull());
+    }
+
+    {
+      auto curve = coil.partLoadFractionCorrelationCurve();
+      EXPECT_FALSE(curve.handle().isNull());
+    }
+
+    m.save("/Users/kbenne/tabletest.idf",true);
+  }
+}
+
 

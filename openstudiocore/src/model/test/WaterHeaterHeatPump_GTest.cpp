@@ -18,11 +18,15 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-
 #include <model/test/ModelFixture.hpp>
-
 #include <model/WaterHeaterHeatPump.hpp>
 #include <model/WaterHeaterHeatPump_Impl.hpp>
+#include <model/FanOnOff.hpp>
+#include <model/FanOnOff_Impl.hpp>
+#include <model/CoilWaterHeatingAirToWaterHeatPump.hpp>
+#include <model/CoilWaterHeatingAirToWaterHeatPump_Impl.hpp>
+#include <model/HVACComponent.hpp>
+#include <model/HVACComponent_Impl.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -35,8 +39,7 @@ TEST_F(ModelFixture,WaterHeaterHeatPump)
   {  
      Model m; 
      WaterHeaterHeatPump hpwh(m); 
-
-     //hpwh.remove();
+     hpwh.remove();
 
      exit(0); 
   } ,
@@ -50,7 +53,14 @@ TEST_F(ModelFixture,WaterHeaterHeatPump)
     ASSERT_FALSE(tank.handle().isNull());
     auto zoneHVAC = tank.containingZoneHVACComponent();
 
+     auto dxCoil = hpwh.dXCoil();
+     EXPECT_FALSE(dxCoil.handle().isNull());
+     auto fan = hpwh.fan();
+     EXPECT_FALSE(fan.handle().isNull());
+
     ASSERT_TRUE(zoneHVAC);
     ASSERT_EQ(hpwh,zoneHVAC.get());
+
+    PlantLoop plantLoop(m);
   }
 }
