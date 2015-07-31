@@ -209,6 +209,7 @@ class ObjectSelector : public QObject
     bool containsObject(const openstudio::model::ModelObject &t_obj) const;
     void selectAll();
     void clearSelection();
+    void updateWidgets();
 
     std::set<model::ModelObject> m_selectedObjects;
     std::set<model::ModelObject> m_selectorObjects;
@@ -221,7 +222,6 @@ class ObjectSelector : public QObject
     void widgetDestroyed(QObject *t_obj);
 
   private:
-    void updateWidgets();
     void updateWidgets(const model::ModelObject &t_obj);
     void ObjectSelector::updateWidgets(const model::ModelObject &t_obj, const bool t_objectVisible);
     void updateWidgets(const int t_row, const boost::optional<int> &t_subrow, bool t_selected, bool t_visible);

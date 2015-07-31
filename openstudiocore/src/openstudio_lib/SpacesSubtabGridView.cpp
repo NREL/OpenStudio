@@ -807,7 +807,7 @@ namespace openstudio {
 
     this->m_gridController->getObjectSelector()->m_filteredObjects = allFilteredObjects;
 
-    this->m_gridView->requestRefreshAll();
+    this->m_gridController->getObjectSelector()->updateWidgets();
   }
 
   void SpacesSubtabGridView::addObject(const IddObjectType& iddObjectType)

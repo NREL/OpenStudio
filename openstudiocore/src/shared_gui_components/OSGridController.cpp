@@ -379,7 +379,26 @@ namespace openstudio {
 #endif
 
     const auto objectSelected = m_selectedObjects.count(t_obj) != 0;
-    const auto objectVisible = m_objectFilter(t_obj);
+    auto objectVisible = m_objectFilter(t_obj);
+
+    if (objectVisible) {
+      if (std::get<1>(row)) {
+        // We have a matched sub row
+        auto parent = t_obj.parent();
+        if (parent) {
+          if (m_filteredObjects.count(*parent) != 0) {
+            objectVisible = false;
+          }
+        }
+      }
+      else{
+        // We only matched the row
+        if (m_filteredObjects.count(t_obj) != 0) {
+          objectVisible = false;
+        }
+      }
+
+    }
 
     updateWidgets(std::get<0>(row), std::get<1>(row), objectSelected, objectVisible);
   }
