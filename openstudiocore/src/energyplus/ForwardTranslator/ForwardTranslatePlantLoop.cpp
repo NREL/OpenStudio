@@ -115,13 +115,15 @@ enum SetpointComponentType {HEATING, COOLING, BOTH};
 struct SetpointComponentInfo
 {
   ModelObject modelObject;
+  Node inletNode;
   Node outletNode;
   double flowRate;
   bool isFlowRateAutosized;
   SetpointComponentType type;
 
-  SetpointComponentInfo(const ModelObject & t_mo, const Node & t_outletNode, double t_flowRate, bool t_isFlowRateAutosized, SetpointComponentType t_type )
+  SetpointComponentInfo(const ModelObject & t_mo, const Node & t_inletNode, const Node & t_outletNode, double t_flowRate, bool t_isFlowRateAutosized, SetpointComponentType t_type )
     : modelObject(t_mo),
+      inletNode(t_inletNode),
       outletNode(t_outletNode),
       flowRate(t_flowRate),
       isFlowRateAutosized(t_isFlowRateAutosized),
@@ -431,7 +433,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   
   idfObject.setString(PlantLoopFields::PlantEquipmentOperationSchemeName,_operationScheme.name().get());
 
-  std::vector<ModelObject> supplyComponents = plantLoop.supplyComponents();
+  auto supplyComponents = plantLoop.supplyComponents();
   std::vector<ModelObject> heatingComponents;
   std::vector<ModelObject> coolingComponents;
   std::vector<ModelObject> uncontrolledComponents;
@@ -447,12 +449,24 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     bool autosize = false;
     double flowRate = 0.0;
 
+    boost::optional<Node> inletNode;
+    boost::optional<Node> outletNode;
+    if( ! supplyComponent.optionalCast<Node>() ) {
+      outletNode = isSetpointComponent(plantLoop,supplyComponent);
+      if( outletNode ) {
+        auto upstreamComps = plantLoop.supplyComponents(plantLoop.supplyInletNode(),supplyComponent.cast<HVACComponent>());
+        OS_ASSERT(upstreamComps.size() >= 2u);
+        auto upstreamIt = upstreamComps.end() - 2u;
+        inletNode = upstreamIt->optionalCast<Node>();
+      }
+    }
+
     switch(supplyComponent.iddObject().type().value())
     {
       case openstudio::IddObjectType::OS_Boiler_HotWater :
       {
         sizeAsHotWaterSystem = true;
-        if( boost::optional<Node> outletNode = isSetpointComponent(plantLoop,supplyComponent) ) 
+        if( outletNode && inletNode ) 
         {
           BoilerHotWater boiler = supplyComponent.cast<BoilerHotWater>();
           if( boiler.isDesignWaterFlowRateAutosized() )
@@ -463,7 +477,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
           {
             flowRate = optionalFlowRate.get();
           }
-          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,HEATING));
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*inletNode,*outletNode,flowRate,autosize,HEATING));
         }
         else
         {
@@ -474,7 +488,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       case openstudio::IddObjectType::OS_WaterHeater_Mixed :
       {
         sizeAsHotWaterSystem = true;
-        if( boost::optional<Node> outletNode = isSetpointComponent(plantLoop,supplyComponent) ) 
+        if( outletNode && inletNode ) 
         {
           WaterHeaterMixed waterHeater = supplyComponent.cast<WaterHeaterMixed>();
           if( waterHeater.isUseSideDesignFlowRateAutosized() )
@@ -486,9 +500,9 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
             flowRate = optionalFlowRate.get();
           }
           if( auto hpwh = supplyComponent.cast<model::HVACComponent>().containingZoneHVACComponent() ) {
-            setpointComponents.push_back(SetpointComponentInfo(hpwh.get(),*outletNode,flowRate,autosize,HEATING));
+            setpointComponents.push_back(SetpointComponentInfo(hpwh.get(),*inletNode,*outletNode,flowRate,autosize,HEATING));
           } else {
-            setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,HEATING));
+            setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*inletNode,*outletNode,flowRate,autosize,HEATING));
           }
         }
         else
@@ -504,7 +518,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       case openstudio::IddObjectType::OS_WaterHeater_Stratified :
       {
         sizeAsHotWaterSystem = true;
-        if( boost::optional<Node> outletNode = isSetpointComponent(plantLoop,supplyComponent) ) 
+        if( outletNode && inletNode ) 
         {
           WaterHeaterStratified waterHeater = supplyComponent.cast<WaterHeaterStratified>();
           if( waterHeater.isUseSideDesignFlowRateAutosized() )
@@ -515,7 +529,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
           {
             flowRate = optionalFlowRate.get();
           }
-          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,HEATING));
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*inletNode,*outletNode,flowRate,autosize,HEATING));
         }
         else
         {
@@ -526,9 +540,9 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       case openstudio::IddObjectType::OS_DistrictHeating :
       {
         sizeAsHotWaterSystem = true;
-        if( boost::optional<Node> outletNode = isSetpointComponent(plantLoop,supplyComponent) ) 
+        if( outletNode && inletNode ) 
         {
-          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,0.0,true,HEATING));
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*inletNode,*outletNode,0.0,true,HEATING));
         }
         else
         {
@@ -539,7 +553,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       case openstudio::IddObjectType::OS_Chiller_Electric_EIR :
       {
         sizeAsChilledWaterSystem = true;
-        if( boost::optional<Node> outletNode = isSetpointComponent(plantLoop,supplyComponent) ) 
+        if( outletNode && inletNode ) 
         {
           ChillerElectricEIR chiller = supplyComponent.cast<ChillerElectricEIR>();
           if( chiller.isReferenceChilledWaterFlowRateAutosized() )
@@ -550,7 +564,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
           {
             flowRate = optionalFlowRate.get();
           }
-          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,COOLING));
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*inletNode,*outletNode,flowRate,autosize,COOLING));
         }
         else
         {
@@ -561,14 +575,14 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       case openstudio::IddObjectType::OS_Chiller_Absorption_Indirect :
       {
         sizeAsChilledWaterSystem = true;
-        if( auto outletNode = isSetpointComponent(plantLoop,supplyComponent) ) {
+        if( outletNode && inletNode ) {
           auto chiller = supplyComponent.cast<ChillerAbsorptionIndirect>();
           if( chiller.isDesignChilledWaterFlowRateAutosized() ) {
             autosize = true;
           } else if(auto optionalFlowRate = chiller.designChilledWaterFlowRate()) {
             flowRate = optionalFlowRate.get();
           }
-          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,COOLING));
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*inletNode,*outletNode,flowRate,autosize,COOLING));
         } else {
           coolingComponents.push_back(supplyComponent);
         }
@@ -577,14 +591,14 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       case openstudio::IddObjectType::OS_Chiller_Absorption :
       {
         sizeAsChilledWaterSystem = true;
-        if( auto outletNode = isSetpointComponent(plantLoop,supplyComponent) ) {
+        if( outletNode && inletNode ) {
           auto chiller = supplyComponent.cast<ChillerAbsorption>();
           if( chiller.isDesignChilledWaterFlowRateAutosized() ) {
             autosize = true;
           } else if(auto optionalFlowRate = chiller.designChilledWaterFlowRate()) {
             flowRate = optionalFlowRate.get();
           }
-          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,COOLING));
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*inletNode,*outletNode,flowRate,autosize,COOLING));
         } else {
           coolingComponents.push_back(supplyComponent);
         }
@@ -593,8 +607,8 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       case openstudio::IddObjectType::OS_ThermalStorage_Ice_Detailed :
       {
         sizeAsChilledWaterSystem = true;
-        if( auto outletNode = isSetpointComponent(plantLoop,supplyComponent) ) {
-          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,0.0,true,BOTH));
+        if( outletNode && inletNode ) {
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*inletNode,*outletNode,0.0,true,BOTH));
         }
         else
         {
@@ -605,9 +619,9 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       case openstudio::IddObjectType::OS_DistrictCooling :
       {
         sizeAsChilledWaterSystem = true;
-        if( boost::optional<Node> outletNode = isSetpointComponent(plantLoop,supplyComponent) ) 
+        if( outletNode && inletNode ) 
         {
-          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,0.0,true,COOLING));
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*inletNode,*outletNode,0.0,true,COOLING));
         }
         else
         {
@@ -618,7 +632,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       case openstudio::IddObjectType::OS_CoolingTower_SingleSpeed :
       {
         sizeAsCondenserSystem = true;
-        if( boost::optional<Node> outletNode = isSetpointComponent(plantLoop,supplyComponent) ) 
+        if( outletNode && inletNode ) 
         {
           CoolingTowerSingleSpeed tower = supplyComponent.cast<CoolingTowerSingleSpeed>();
           if( tower.isDesignWaterFlowRateAutosized() )
@@ -629,7 +643,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
           {
             flowRate = optionalFlowRate.get();
           }
-          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,COOLING));
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*inletNode,*outletNode,flowRate,autosize,COOLING));
         }
         else
         {
@@ -640,7 +654,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       case openstudio::IddObjectType::OS_CoolingTower_VariableSpeed :
       {
         sizeAsCondenserSystem = true;
-        if( boost::optional<Node> outletNode = isSetpointComponent(plantLoop,supplyComponent) ) 
+        if( outletNode && inletNode ) 
         {
           CoolingTowerVariableSpeed tower = supplyComponent.cast<CoolingTowerVariableSpeed>();
           if( tower.isDesignWaterFlowRateAutosized() )
@@ -651,7 +665,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
           {
             flowRate = optionalFlowRate.get();
           }
-          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,COOLING));
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*inletNode,*outletNode,flowRate,autosize,COOLING));
         }
         else
         {
@@ -662,7 +676,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       case openstudio::IddObjectType::OS_CoolingTower_TwoSpeed:
       {
         sizeAsCondenserSystem = true;
-        if (boost::optional<Node> outletNode = isSetpointComponent(plantLoop, supplyComponent))
+        if( outletNode && inletNode )
         {
           CoolingTowerTwoSpeed tower = supplyComponent.cast<CoolingTowerTwoSpeed>();
           if (tower.isDesignWaterFlowRateAutosized())
@@ -673,7 +687,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
           {
             flowRate = optionalFlowRate.get();
           }
-          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,COOLING));
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*inletNode,*outletNode,flowRate,autosize,COOLING));
         }
         else
         {
@@ -684,14 +698,14 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       case openstudio::IddObjectType::OS_GroundHeatExchanger_Vertical :
       {
         sizeAsCondenserSystem = true;
-        if (boost::optional<Node> outletNode = isSetpointComponent(plantLoop, supplyComponent))
+        if( outletNode && inletNode )
         {
           GroundHeatExchangerVertical hx = supplyComponent.cast<GroundHeatExchangerVertical>();
           if (boost::optional<double> optionalFlowRate = hx.maximumFlowRate())
           {
             flowRate = optionalFlowRate.get();
           }
-          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,BOTH));
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*inletNode,*outletNode,flowRate,autosize,BOTH));
         }
         else
         {
@@ -702,14 +716,14 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       case openstudio::IddObjectType::OS_GroundHeatExchanger_HorizontalTrench :
       {
         sizeAsCondenserSystem = true;
-        if (boost::optional<Node> outletNode = isSetpointComponent(plantLoop, supplyComponent))
+        if( outletNode && inletNode )
         {
           auto hx = supplyComponent.cast<GroundHeatExchangerHorizontalTrench>();
           if (boost::optional<double> optionalFlowRate = hx.designFlowRate())
           {
             flowRate = optionalFlowRate.get();
           }
-          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,BOTH));
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*inletNode,*outletNode,flowRate,autosize,BOTH));
         }
         else
         {
@@ -720,7 +734,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       case openstudio::IddObjectType::OS_HeatExchanger_FluidToFluid :
       {
         sizeAsCondenserSystem = true;
-        if (boost::optional<Node> outletNode = isSetpointComponent(plantLoop, supplyComponent))
+        if(outletNode && inletNode)
         {
           auto hx = supplyComponent.cast<HeatExchangerFluidToFluid>();
           if (hx.isLoopSupplySideDesignFlowRateAutosized())
@@ -731,7 +745,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
           {
             flowRate = optionalFlowRate.get();
           }
-          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*outletNode,flowRate,autosize,BOTH));
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent,*inletNode,*outletNode,flowRate,autosize,BOTH));
         }
         else
         {
@@ -1460,7 +1474,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       IdfExtensibleGroup eg = _optionalSetpointOperation->pushExtensibleGroup();
       eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::EquipmentObjectType,_idfObject->iddObject().name());
       eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::EquipmentName,_idfObject->name().get());
-      eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::DemandCalculationNodeName,setpointComponent.outletNode.name().get());
+      eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::DemandCalculationNodeName,setpointComponent.inletNode.name().get());
       eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::SetpointNodeName,setpointComponent.outletNode.name().get());
       if( setpointComponent.isFlowRateAutosized )
       {
