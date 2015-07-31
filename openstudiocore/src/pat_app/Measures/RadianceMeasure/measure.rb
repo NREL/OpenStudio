@@ -104,9 +104,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
 				s = s.gsub("/", "\\")
 			end
-			#puts "start '#{s}'"
 			result = system(s)
-			#puts "end '#{s}'"
 			return result
 		end
 
@@ -351,11 +349,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 					# do daylight coefficients for uncontrolled windows
 					
 					puts "#{Time.now.getutc}: computing daylight/view matrix for static window group (#{wg})..."
-					
-					#puts "procsUsed = #{procsUsed}"
-					#puts "rtrace_args = #{rtrace_args}"
-					#puts "options_tregVars = #{options_tregVars}"
-					
+										
 					rad_command = "#{t_catCommand} \"numeric/merged_space.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
 					"-o \"output/dc/WG0.vmx\" -m skyglow model_WG0.oct"
 					puts "#{Time.now.getutc}: #{rad_command}"
@@ -427,7 +421,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 		# annual simulation dealio
 		def runSimulation(t_space_names_to_calculate, t_sqlFile, t_simCores, t_options_skyvecDensity, t_site_latitude, t_site_longitude, t_site_stdmeridian, t_radPath, \
-		t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, runner)
+		t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, runner, write_sql)
 
 			puts "#{Time.now.getutc}: Calculating annual daylight values for all window groups and shade states"
 
@@ -603,7 +597,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			## window merge end
 
 
-			rawValues = parseResults(simulations, windowMapping, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_radPath)
+			rawValues = parseResults(simulations, windowMapping, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_radPath, write_sql)
 
 			dcVectors = nil
 
@@ -635,7 +629,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 
 		# function renamed from execSimulation() to parseResults()
-		def parseResults(t_cmds, t_mapping, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_radPath)
+		def parseResults(t_cmds, t_mapping, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_radPath, write_sql)
 
 			puts "#{Time.now.getutc}: Executing simulation"
 	
@@ -760,6 +754,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 		end # getTimeSeries()
 
+
+
 		def buildSimulationTimes(t_sqlFile, t_envPeriod, t_diffHorizIllumAll, t_dirNormIllumAll, t_diffEfficacyAll, t_dirNormEfficacyAll, t_solarAltitudeAll, t_solarAzimuthAll)
 
 			# we want simulation at these indices only
@@ -788,25 +784,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 						dateTime = dateTime - OpenStudio::Time.new(0,0,0,1);
 					end
 
-# removing month/day select 
-# 					simulate_this_time = true
-# 					curMonth = "#{dateTime.date.monthOfYear.value}"
-# 					if t_options.simMonth.nil?
-# 						#puts "INFO: no months specified, simulating all months"
-# 					else
-# 						if not t_options.simMonth.include?(curMonth)
-# 							simulate_this_time = false
-# 						end
-# 					end
-# 					curDay = "#{dateTime.date.dayOfMonth}"
-# 					if t_options.simDay.nil?
-# 						#puts "INFO: no days specified, simulating all days"
-# 					else
-# 						if not t_options.simDay.include?(curDay)
-# 							simulate_this_time = false
-# 						end
-# 					end
-# 					if simulate_this_time
 					simTimes << "#{dateTime.date.monthOfYear.value} #{dateTime.date.dayOfMonth} #{dateTime.time}"
 					simDateTimes << dateTime
 					diffHorizIllum << t_diffHorizIllumAll[i]
@@ -815,20 +792,16 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 					dirNormEfficacy << t_dirNormEfficacyAll[i]
 					solarAltitude << t_solarAltitudeAll[i]
 					solarAzimuth << t_solarAzimuthAll[i]
-#					end
 				end
 			end
 
 			return simDateTimes, simTimes, diffHorizIllum, dirNormIllum, diffEfficacy, dirNormEfficacy, solarAltitude, solarAzimuth, firstReportDateTime
 
-		end
+		end # buildSimulationTimes()
 
 
 
 		def writeTimeSeriesToSql(sqlfile, simDateTimes, illum, space_name, ts_name, ts_units)
-			#puts "writing Radiance glare results database..."
-			#puts DateTime.now.to_s + " Beginning timeseries write to sql"
-			#puts DateTime.now.to_s + " Creating data vector"
 			data = OpenStudio::Vector.new(illum.length)
 			illum.length.times do |n|
 				begin
@@ -838,21 +811,19 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 					data[n] = 0;
 				end
 			end
-			#puts DateTime.now.to_s + " Creating TimeSeries Object"
+
 			illumTS = OpenStudio::TimeSeries.new(simDateTimes, data, ts_units);
-			#puts DateTime.now.to_s + " Inserting into SQLFile"
 			sqlfile.insertTimeSeriesData(
 				"Average", "Zone", "Zone", space_name, ts_name, OpenStudio::ReportingFrequency.new("Hourly"),
 				OpenStudio::OptionalString.new(),
 				ts_units, illumTS);
-			#puts DateTime.now.to_s + " Ending timeseries write to sql"
 
 		end # writeTimeSeriesToSql()
 
 
 
 		def annualSimulation(t_sqlFile, t_epwFile, t_space_names_to_calculate, t_radMaps, t_spaceWidths, t_spaceHeights, t_radMapPoints, \
-			t_radGlareSensorViews, t_simCores, t_site_latitude, t_site_longitude, t_site_stdmeridian, t_outPath, t_building, t_values, t_dcVectors)
+			t_radGlareSensorViews, t_simCores, t_site_latitude, t_site_longitude, t_site_stdmeridian, t_outPath, t_building, t_values, t_dcVectors, write_sql)
 			sqlOutPath = OpenStudio::Path.new("#{Dir.pwd}/output/radout.sql")
 			if OpenStudio::exists(sqlOutPath)
 				OpenStudio::remove(sqlOutPath)
@@ -912,13 +883,10 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 						# these must be declared in the thread otherwise will get overwritten on each loop
 						tsDateTime = simTimes[i]
 
-						#if t_options.glare == true
 						#	puts "image based glare analysis temporarily disabled, sorry."
 							#  system("gendaylit -ang #{tsSolarAlt} #{tsSolarAzi} -L #{tsDirectNormIllum} #{tsDiffuseHorIllum} \
 							#  | #{perlPrefix}genskyvec#{perlExtension} -m 1 | dctimestep \"#{outPath}/output/dc/#{space_name}/views/#{space_name}treg%03d.hdr\" | pfilt -1 -x /2 -y /2 > \
 							#  \"#{outPath}/output/dc/#{space_name}/views/#{tsDateTime.gsub(/[: ]/,'_')}.hdr\"")
-						#end
-
 
 						# Split up values by space
 
@@ -949,13 +917,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 							daylightSensorIlluminance[i] = illumSensorValues[0]
 						end
 
-						#puts "Daylight sensor: #{daylightSensorIlluminance[i]} lux"
 						n = 0
 						sumIllumMap = 0
 						illumValues.each do |val|
 							x = (n%spaceWidth).to_i;
 							y = (n/spaceWidth).to_i;
-							#puts "Setting value (" + x.to_s + ", " + y.to_s + ") to " + val.to_f.to_s
 							sumIllumMap += val.to_f
 							m[x, y] = val.to_f
 							n = n + 1
@@ -1027,55 +993,58 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 							f.close
 						end
 
-						puts "#{Time.now.getutc}: writing Radiance results database..."
-						writeTimeSeriesToSql(sqlOutFile, simDateTimes, dirNormIllum, space_name, "Direct Normal Illuminance", "lux")
-						writeTimeSeriesToSql(sqlOutFile, simDateTimes, diffHorizIllum, space_name, "Global Horizontal Illuminance", "lux")
-						writeTimeSeriesToSql(sqlOutFile, simDateTimes, daylightSensorIlluminance, space_name, "Daylight Sensor Illuminance", "lux")
-						writeTimeSeriesToSql(sqlOutFile, simDateTimes, meanIlluminanceMap, space_name, "Mean Illuminance Map", "lux")
 
-						if t_radGlareSensorViews[space_name]
-							writeTimeSeriesToSql(sqlOutFile, simDateTimes, minDGP, space_name, "Minimum Simplified Daylight Glare Probability", "")
-							writeTimeSeriesToSql(sqlOutFile, simDateTimes, meanDGP, space_name, "Mean Simplified Daylight Glare Probability", "")
-							writeTimeSeriesToSql(sqlOutFile, simDateTimes, maxDGP, space_name, "Maximum Simplified Daylight Glare Probability", "")
+						if write_sql == "Yes"
+							puts "#{Time.now.getutc}: writing Radiance results database..."
+							writeTimeSeriesToSql(sqlOutFile, simDateTimes, dirNormIllum, space_name, "Direct Normal Illuminance", "lux")
+							writeTimeSeriesToSql(sqlOutFile, simDateTimes, diffHorizIllum, space_name, "Global Horizontal Illuminance", "lux")
+							writeTimeSeriesToSql(sqlOutFile, simDateTimes, daylightSensorIlluminance, space_name, "Daylight Sensor Illuminance", "lux")
+							writeTimeSeriesToSql(sqlOutFile, simDateTimes, meanIlluminanceMap, space_name, "Mean Illuminance Map", "lux")
+
+							if t_radGlareSensorViews[space_name]
+								writeTimeSeriesToSql(sqlOutFile, simDateTimes, minDGP, space_name, "Minimum Simplified Daylight Glare Probability", "")
+								writeTimeSeriesToSql(sqlOutFile, simDateTimes, meanDGP, space_name, "Mean Simplified Daylight Glare Probability", "")
+								writeTimeSeriesToSql(sqlOutFile, simDateTimes, maxDGP, space_name, "Maximum Simplified Daylight Glare Probability", "")
+							end
+
+							# I really have no idea how to populate these fields
+							sqlOutFile.insertZone(space_name,
+																		0,
+																		0,0,0,
+																		0,0,0,
+																		0,
+																		0,
+																		0,
+																		0, 0,
+																		0, 0,
+																		0, 0,
+																		0,
+																		0,
+																		0,
+																		0,
+																		0,
+																		0,
+																		0,
+																		0,
+																		true)
+
+							xs = OpenStudio::DoubleVector.new()
+
+							nx.times do |n|
+								xs << xmin + (n * xSpacing)
+							end
+
+							ys = OpenStudio::DoubleVector.new()
+
+							ny.times do |n|
+								ys << ymin + (n * ySpacing)
+							end
+
+							sqlOutFile.insertIlluminanceMap(space_name, space_name + " DAYLIGHT MAP", t_epwFile.get().wmoNumber(),
+																							simDateTimes, xs, ys, map.originZCoordinate, 
+																							illuminanceMatrixMaps)
+					
 						end
-
-						# I really have no idea how to populate these fields
-						sqlOutFile.insertZone(space_name,
-																	0,
-																	0,0,0,
-																	0,0,0,
-																	0,
-																	0,
-																	0,
-																	0, 0,
-																	0, 0,
-																	0, 0,
-																	0,
-																	0,
-																	0,
-																	0,
-																	0,
-																	0,
-																	0,
-																	0,
-																	true)
-
-						xs = OpenStudio::DoubleVector.new()
-
-						nx.times do |n|
-							xs << xmin + (n * xSpacing)
-						end
-
-						ys = OpenStudio::DoubleVector.new()
-
-						ny.times do |n|
-							ys << ymin + (n * ySpacing)
-						end
-
-						sqlOutFile.insertIlluminanceMap(space_name, space_name + " DAYLIGHT MAP", t_epwFile.get().wmoNumber(),
-																						simDateTimes, xs, ys, map.originZCoordinate, 
-																						illuminanceMatrixMaps)
-
 					end
 				end
 
@@ -1271,11 +1240,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 		puts "last call: #{options_skyvecDensity}"
 
 		# make merged building-wide illuminance schedule(s)
-		values, dcVectors = runSimulation(space_names_to_calculate, sqlFile, sim_cores, options_skyvecDensity, site_latitude, site_longitude, site_meridian, radPath, spaceWidths, spaceHeights, radGlareSensorViews, runner)
+		values, dcVectors = runSimulation(space_names_to_calculate, sqlFile, sim_cores, options_skyvecDensity, site_latitude, site_longitude, site_meridian, radPath, spaceWidths, spaceHeights, radGlareSensorViews, runner, write_sql)
 		
 		# make space-level illuminance schedules and radout.sql results database
 		# hoping this is no longer necessary...
-  	annualSimulation(sqlFile, epwFile, space_names_to_calculate, radMaps, spaceWidths, spaceHeights, radMapPoints, radGlareSensorViews, sim_cores, site_latitude, site_longitude, site_meridian, radPath, building, values, dcVectors)
+  	annualSimulation(sqlFile, epwFile, space_names_to_calculate, radMaps, spaceWidths, spaceHeights, radMapPoints, radGlareSensorViews, sim_cores, site_latitude, site_longitude, site_meridian, radPath, building, values, dcVectors, write_sql)
 
 		# execute MakeSchedules
 		# result = exec_statement("ruby #{load_paths} '#{dirname}/MakeSchedules.rb' '#{modelPath}' '#{sqlPath}' --keep")
@@ -1283,9 +1252,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 		#   puts "failed to run MakeSchedules"
 		#   exit false
 		# end
-		# 
-		# FileUtils.copy("in/model/radiance/out.osm", "out.osm");
-		# FileUtils.copy("in/model/radiance/output/radout.sql", "radout.sql");
 		# 
 		# # execute DaylightMetrics
 		# result = exec_statement("ruby #{load_paths} '#{dirname}/DaylightMetrics.rb' '#{modelPath}' '#{sqlPath}' radout.sql")
@@ -1295,7 +1261,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 		# end
 		
 		
-
     # report initial condition of model
     daylightAnalysisSpaces = []
     spaces = model.getSpaces

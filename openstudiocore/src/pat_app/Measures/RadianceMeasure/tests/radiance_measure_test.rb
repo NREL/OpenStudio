@@ -69,7 +69,7 @@ class RadianceMeasureTest < MiniTest::Unit::TestCase
     args_hash = {}
     args_hash["apply_schedules"] = "Yes"
     args_hash["write_sql"] = "Yes"
-    args_hash["use_cores"] = "Min"
+    args_hash["use_cores"] = "Max"
 
     # using defaults values from measure.rb for other arguments
 
@@ -82,9 +82,7 @@ class RadianceMeasureTest < MiniTest::Unit::TestCase
       end
       argument_map[arg.name] = temp_arg_var
     end
-    
-    puts "argument_map = #{argument_map}"
-    
+        
     # move to output dir
     current_dir = Dir.pwd 
     out_dir = File.dirname(__FILE__) + "/output"
