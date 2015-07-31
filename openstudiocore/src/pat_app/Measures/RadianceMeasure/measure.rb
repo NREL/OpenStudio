@@ -44,7 +44,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     chs = OpenStudio::StringVector.new
     chs << 'Yes'
     chs << 'No'
-    write_sql = OpenStudio::Ruleset::OSArgument.makeStringArgument('write_sql', true)
+    write_sql = OpenStudio::Ruleset::OSArgument.makeChoiceArgument('write_sql', chs, true)
     write_sql.setDisplayName('Write Radiance SqlFile')
     write_sql.setDefaultValue('Yes')
     write_sql.setDescription('Write Radiance results to a SqlFile format.')
@@ -54,10 +54,10 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     chs << 'Min'
     chs << 'Max'
     chs << 'Default'
-    use_cores = OpenStudio::Ruleset::OSArgument.makeStringArgument('use_cores', true)
+    use_cores = OpenStudio::Ruleset::OSArgument.makeChoiceArgument('use_cores', chs, true)
     use_cores.setDisplayName('Cores')
     use_cores.setDefaultValue('Default')
-    use_cores.setDescription('Number of CPU cores to use for Radiance jobs. Default is to use all but one core for Radiance')
+    use_cores.setDescription('Number of CPU cores to use for Radiance jobs. Default is to use all but one core')
     args << use_cores
 
 
@@ -78,10 +78,10 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
     # assign the user inputs to variables
     apply_schedules = runner.getStringArgumentValue('apply_schedules', user_arguments)
-    apply_schedules = (apply_schedules == 'Yes')
+    #apply_schedules = (apply_schedules == 'Yes')
     
     write_sql = runner.getStringArgumentValue('write_sql', user_arguments)
-    write_sql = (write_sql == 'Yes')
+    #write_sql = (write_sql == 'Yes')
 
     use_cores = runner.getStringArgumentValue('use_cores', user_arguments)
 
