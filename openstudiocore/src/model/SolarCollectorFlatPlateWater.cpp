@@ -73,8 +73,7 @@ namespace detail {
   {
 
     SolarCollectorFlatPlateWater result = StraightComponent_Impl::clone(model).cast<SolarCollectorFlatPlateWater>();
-    SolarCollectorPerformanceFlatPlate performance = this->solarCollectorPerformance().clone(model).cast<SolarCollectorPerformanceFlatPlate>();
-    result.setPointer(OS_SolarCollector_FlatPlate_WaterFields::SolarCollectorPerformanceName, performance.handle());
+    result.setSolarCollectorPerformance(this->solarCollectorPerformance());
 
     // do not want to point to any surface after cloning
     result.resetSurface();
@@ -145,6 +144,7 @@ namespace detail {
   SolarCollectorPerformanceFlatPlate SolarCollectorFlatPlateWater_Impl::solarCollectorPerformance() const {
     boost::optional<SolarCollectorPerformanceFlatPlate> value = getObject<ModelObject>().getModelObjectTarget<SolarCollectorPerformanceFlatPlate>(OS_SolarCollector_FlatPlate_WaterFields::SolarCollectorPerformanceName);
     if (!value) {
+      // DLM: could default construct one here?
       LOG_AND_THROW(briefDescription() << " does not have an Solar Collector Performance attached.");
     }
     return value.get();
@@ -159,8 +159,20 @@ namespace detail {
   }
 
   bool SolarCollectorFlatPlateWater_Impl::setSolarCollectorPerformance(const SolarCollectorPerformanceFlatPlate& solarCollectorPerformanceFlatPlate) {
-    bool result = setPointer(OS_SolarCollector_FlatPlate_WaterFields::SolarCollectorPerformanceName, solarCollectorPerformanceFlatPlate.handle());
-    return result;
+    ModelObject clone = solarCollectorPerformanceFlatPlate.clone(this->model());
+    return setSolarCollectorPerformanceNoClone(clone.cast<SolarCollectorPerformanceFlatPlate>());
+  }
+  
+  void SolarCollectorFlatPlateWater_Impl::resetSolarCollectorPerformance()
+  {
+    boost::optional<SolarCollectorPerformanceFlatPlate> oldPerformance = getObject<ModelObject>().getModelObjectTarget<SolarCollectorPerformanceFlatPlate>(OS_SolarCollector_FlatPlate_WaterFields::SolarCollectorPerformanceName);
+    if (oldPerformance){
+      oldPerformance->remove();
+    }
+    
+    SolarCollectorPerformanceFlatPlate performance(this->model());
+    bool ok = setSolarCollectorPerformanceNoClone(performance);
+    OS_ASSERT(ok);
   }
 
   bool SolarCollectorFlatPlateWater_Impl::setSurface(const PlanarSurface& surface) {
@@ -197,6 +209,10 @@ namespace detail {
     bool result = setString(OS_SolarCollector_FlatPlate_WaterFields::MaximumFlowRate, "");
     OS_ASSERT(result);
   }
+  
+  bool SolarCollectorFlatPlateWater_Impl::setSolarCollectorPerformanceNoClone(const SolarCollectorPerformanceFlatPlate& solarCollectorPerformanceFlatPlate) {
+    return setPointer(OS_SolarCollector_FlatPlate_WaterFields::SolarCollectorPerformanceName, solarCollectorPerformanceFlatPlate.handle());
+  }
 
 } // detail
 
@@ -208,7 +224,7 @@ SolarCollectorFlatPlateWater::SolarCollectorFlatPlateWater(const Model& model)
   SolarCollectorPerformanceFlatPlate performance(model);
 
   bool ok = true;
-  ok = setSolarCollectorPerformance(performance);
+  ok = getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->setSolarCollectorPerformanceNoClone(performance);
   OS_ASSERT(ok);
 
 }
@@ -231,6 +247,10 @@ boost::optional<double> SolarCollectorFlatPlateWater::maximumFlowRate() const {
 
 bool SolarCollectorFlatPlateWater::setSolarCollectorPerformance(const SolarCollectorPerformanceFlatPlate& solarCollectorPerformanceFlatPlate) {
   return getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->setSolarCollectorPerformance(solarCollectorPerformanceFlatPlate);
+}
+
+void SolarCollectorFlatPlateWater::resetSolarCollectorPerformance() {
+  getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->resetSolarCollectorPerformance();
 }
 
 bool SolarCollectorFlatPlateWater::setSurface(const PlanarSurface& surface) {

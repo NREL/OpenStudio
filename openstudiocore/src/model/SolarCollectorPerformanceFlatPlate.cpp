@@ -20,6 +20,10 @@
 #include <model/SolarCollectorPerformanceFlatPlate.hpp>
 #include <model/SolarCollectorPerformanceFlatPlate_Impl.hpp>
 
+
+#include <model/SolarCollectorFlatPlateWater.hpp>
+#include <model/SolarCollectorFlatPlateWater_Impl.hpp>
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SolarCollectorPerformance_FlatPlate_FieldEnums.hxx>
 

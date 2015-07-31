@@ -82,7 +82,7 @@ class MODEL_API SolarCollectorFlatPlatePhotovoltaicThermal : public StraightComp
   //bool setPhotovoltaic(const PVGenerator& pVGenerator);
   //void resetPhotovoltaic();
 
-  void setDesignFlowRate(double designFlowRate);
+  bool setDesignFlowRate(double designFlowRate);
 
   void resetDesignFlowRate();
 

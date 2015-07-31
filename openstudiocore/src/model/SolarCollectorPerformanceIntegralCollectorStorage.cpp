@@ -21,6 +21,7 @@
 #include <model/SolarCollectorPerformanceIntegralCollectorStorage_Impl.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
+#include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_SolarCollectorPerformance_IntegralCollectorStorage_FieldEnums.hxx>
 
 #include <utilities/units/Unit.hpp>
@@ -124,23 +125,23 @@ namespace detail {
     return isEmpty(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::CollectorSideHeight);
   }
 
-  double SolarCollectorPerformanceIntegralCollectorStorage_Impl::thermalMassofAbsorberPlate() const {
+  double SolarCollectorPerformanceIntegralCollectorStorage_Impl::thermalMassOfAbsorberPlate() const {
     boost::optional<double> value = getDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::ThermalMassofAbsorberPlate,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::isThermalMassofAbsorberPlateDefaulted() const {
+  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::isThermalMassOfAbsorberPlateDefaulted() const {
     return isEmpty(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::ThermalMassofAbsorberPlate);
   }
 
-  int SolarCollectorPerformanceIntegralCollectorStorage_Impl::numberofCovers() const {
+  int SolarCollectorPerformanceIntegralCollectorStorage_Impl::numberOfCovers() const {
     boost::optional<int> value = getInt(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::NumberofCovers,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::isNumberofCoversDefaulted() const {
+  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::isNumberOfCoversDefaulted() const {
     return isEmpty(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::NumberofCovers);
   }
 
@@ -154,83 +155,83 @@ namespace detail {
     return isEmpty(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::CoverSpacing);
   }
 
-  double SolarCollectorPerformanceIntegralCollectorStorage_Impl::refractiveIndexofOuterCover() const {
+  double SolarCollectorPerformanceIntegralCollectorStorage_Impl::refractiveIndexOfOuterCover() const {
     boost::optional<double> value = getDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::RefractiveIndexofOuterCover,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::isRefractiveIndexofOuterCoverDefaulted() const {
+  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::isRefractiveIndexOfOuterCoverDefaulted() const {
     return isEmpty(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::RefractiveIndexofOuterCover);
   }
 
-  double SolarCollectorPerformanceIntegralCollectorStorage_Impl::extinctionCoefficientTimesThicknessofOuterCover() const {
+  double SolarCollectorPerformanceIntegralCollectorStorage_Impl::extinctionCoefficientTimesThicknessOfOuterCover() const {
     boost::optional<double> value = getDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::ExtinctionCoefficientTimesThicknessofOuterCover,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::isExtinctionCoefficientTimesThicknessofOuterCoverDefaulted() const {
+  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::isExtinctionCoefficientTimesThicknessOfOuterCoverDefaulted() const {
     return isEmpty(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::ExtinctionCoefficientTimesThicknessofOuterCover);
   }
 
-  double SolarCollectorPerformanceIntegralCollectorStorage_Impl::emissivityofOuterCover() const {
+  double SolarCollectorPerformanceIntegralCollectorStorage_Impl::emissivityOfOuterCover() const {
     boost::optional<double> value = getDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::EmissivityofOuterCover,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::isEmissivityofOuterCoverDefaulted() const {
+  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::isEmissivityOfOuterCoverDefaulted() const {
     return isEmpty(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::EmissivityofOuterCover);
   }
 
-  double SolarCollectorPerformanceIntegralCollectorStorage_Impl::refractiveIndexofInnerCover() const {
+  double SolarCollectorPerformanceIntegralCollectorStorage_Impl::refractiveIndexOfInnerCover() const {
     boost::optional<double> value = getDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::RefractiveIndexofInnerCover,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::isRefractiveIndexofInnerCoverDefaulted() const {
+  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::isRefractiveIndexOfInnerCoverDefaulted() const {
     return isEmpty(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::RefractiveIndexofInnerCover);
   }
 
-  double SolarCollectorPerformanceIntegralCollectorStorage_Impl::extinctionCoefficientTimesThicknessoftheinnerCover() const {
+  double SolarCollectorPerformanceIntegralCollectorStorage_Impl::extinctionCoefficientTimesThicknessOfTheInnerCover() const {
     boost::optional<double> value = getDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::ExtinctionCoefficientTimesThicknessoftheinnerCover,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::isExtinctionCoefficientTimesThicknessoftheinnerCoverDefaulted() const {
+  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::isExtinctionCoefficientTimesThicknessOfTheInnerCoverDefaulted() const {
     return isEmpty(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::ExtinctionCoefficientTimesThicknessoftheinnerCover);
   }
 
-  double SolarCollectorPerformanceIntegralCollectorStorage_Impl::emissivityofInnerCover() const {
+  double SolarCollectorPerformanceIntegralCollectorStorage_Impl::emissivityOfInnerCover() const {
     boost::optional<double> value = getDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::EmissivityofInnerCover,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::isEmissivityofInnerCoverDefaulted() const {
+  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::isEmissivityOfInnerCoverDefaulted() const {
     return isEmpty(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::EmissivityofInnerCover);
   }
 
-  double SolarCollectorPerformanceIntegralCollectorStorage_Impl::absorptanceofAbsorberPlate() const {
+  double SolarCollectorPerformanceIntegralCollectorStorage_Impl::absorptanceOfAbsorberPlate() const {
     boost::optional<double> value = getDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::AbsorptanceofAbsorberPlate,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::isAbsorptanceofAbsorberPlateDefaulted() const {
+  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::isAbsorptanceOfAbsorberPlateDefaulted() const {
     return isEmpty(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::AbsorptanceofAbsorberPlate);
   }
 
-  double SolarCollectorPerformanceIntegralCollectorStorage_Impl::emissivityofAbsorberPlate() const {
+  double SolarCollectorPerformanceIntegralCollectorStorage_Impl::emissivityOfAbsorberPlate() const {
     boost::optional<double> value = getDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::EmissivityofAbsorberPlate,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::isEmissivityofAbsorberPlateDefaulted() const {
+  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::isEmissivityOfAbsorberPlateDefaulted() const {
     return isEmpty(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::EmissivityofAbsorberPlate);
   }
 
@@ -318,22 +319,22 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setThermalMassofAbsorberPlate(double thermalMassofAbsorberPlate) {
-    bool result = setDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::ThermalMassofAbsorberPlate, thermalMassofAbsorberPlate);
+  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setThermalMassOfAbsorberPlate(double thermalMassOfAbsorberPlate) {
+    bool result = setDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::ThermalMassofAbsorberPlate, thermalMassOfAbsorberPlate);
     return result;
   }
 
-  void SolarCollectorPerformanceIntegralCollectorStorage_Impl::resetThermalMassofAbsorberPlate() {
+  void SolarCollectorPerformanceIntegralCollectorStorage_Impl::resetThermalMassOfAbsorberPlate() {
     bool result = setString(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::ThermalMassofAbsorberPlate, "");
     OS_ASSERT(result);
   }
 
-  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setNumberofCovers(int numberofCovers) {
-    bool result = setInt(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::NumberofCovers, numberofCovers);
+  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setNumberOfCovers(int numberOfCovers) {
+    bool result = setInt(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::NumberofCovers, numberOfCovers);
     return result;
   }
 
-  void SolarCollectorPerformanceIntegralCollectorStorage_Impl::resetNumberofCovers() {
+  void SolarCollectorPerformanceIntegralCollectorStorage_Impl::resetNumberOfCovers() {
     bool result = setString(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::NumberofCovers, "");
     OS_ASSERT(result);
   }
@@ -348,82 +349,82 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setRefractiveIndexofOuterCover(double refractiveIndexofOuterCover) {
-    bool result = setDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::RefractiveIndexofOuterCover, refractiveIndexofOuterCover);
+  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setRefractiveIndexOfOuterCover(double refractiveIndexOfOuterCover) {
+    bool result = setDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::RefractiveIndexofOuterCover, refractiveIndexOfOuterCover);
     return result;
   }
 
-  void SolarCollectorPerformanceIntegralCollectorStorage_Impl::resetRefractiveIndexofOuterCover() {
+  void SolarCollectorPerformanceIntegralCollectorStorage_Impl::resetRefractiveIndexOfOuterCover() {
     bool result = setString(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::RefractiveIndexofOuterCover, "");
     OS_ASSERT(result);
   }
 
-  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setExtinctionCoefficientTimesThicknessofOuterCover(double extinctionCoefficientTimesThicknessofOuterCover) {
-    bool result = setDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::ExtinctionCoefficientTimesThicknessofOuterCover, extinctionCoefficientTimesThicknessofOuterCover);
+  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setExtinctionCoefficientTimesThicknessOfOuterCover(double extinctionCoefficientTimesThicknessOfOuterCover) {
+    bool result = setDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::ExtinctionCoefficientTimesThicknessofOuterCover, extinctionCoefficientTimesThicknessOfOuterCover);
     return result;
   }
 
-  void SolarCollectorPerformanceIntegralCollectorStorage_Impl::resetExtinctionCoefficientTimesThicknessofOuterCover() {
+  void SolarCollectorPerformanceIntegralCollectorStorage_Impl::resetExtinctionCoefficientTimesThicknessOfOuterCover() {
     bool result = setString(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::ExtinctionCoefficientTimesThicknessofOuterCover, "");
     OS_ASSERT(result);
   }
 
-  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setEmissivityofOuterCover(double emissivityofOuterCover) {
-    bool result = setDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::EmissivityofOuterCover, emissivityofOuterCover);
+  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setEmissivityOfOuterCover(double emissivityOfOuterCover) {
+    bool result = setDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::EmissivityofOuterCover, emissivityOfOuterCover);
     return result;
   }
 
-  void SolarCollectorPerformanceIntegralCollectorStorage_Impl::resetEmissivityofOuterCover() {
+  void SolarCollectorPerformanceIntegralCollectorStorage_Impl::resetEmissivityOfOuterCover() {
     bool result = setString(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::EmissivityofOuterCover, "");
     OS_ASSERT(result);
   }
 
-  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setRefractiveIndexofInnerCover(double refractiveIndexofInnerCover) {
-    bool result = setDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::RefractiveIndexofInnerCover, refractiveIndexofInnerCover);
+  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setRefractiveIndexOfInnerCover(double refractiveIndexOfInnerCover) {
+    bool result = setDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::RefractiveIndexofInnerCover, refractiveIndexOfInnerCover);
     return result;
   }
 
-  void SolarCollectorPerformanceIntegralCollectorStorage_Impl::resetRefractiveIndexofInnerCover() {
+  void SolarCollectorPerformanceIntegralCollectorStorage_Impl::resetRefractiveIndexOfInnerCover() {
     bool result = setString(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::RefractiveIndexofInnerCover, "");
     OS_ASSERT(result);
   }
 
-  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setExtinctionCoefficientTimesThicknessoftheinnerCover(double extinctionCoefficientTimesThicknessoftheinnerCover) {
-    bool result = setDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::ExtinctionCoefficientTimesThicknessoftheinnerCover, extinctionCoefficientTimesThicknessoftheinnerCover);
+  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setExtinctionCoefficientTimesThicknessOfTheInnerCover(double extinctionCoefficientTimesThicknessOfTheInnerCover) {
+    bool result = setDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::ExtinctionCoefficientTimesThicknessoftheinnerCover, extinctionCoefficientTimesThicknessOfTheInnerCover);
     return result;
   }
 
-  void SolarCollectorPerformanceIntegralCollectorStorage_Impl::resetExtinctionCoefficientTimesThicknessoftheinnerCover() {
+  void SolarCollectorPerformanceIntegralCollectorStorage_Impl::resetExtinctionCoefficientTimesThicknessOfTheInnerCover() {
     bool result = setString(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::ExtinctionCoefficientTimesThicknessoftheinnerCover, "");
     OS_ASSERT(result);
   }
 
-  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setEmissivityofInnerCover(double emissivityofInnerCover) {
-    bool result = setDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::EmissivityofInnerCover, emissivityofInnerCover);
+  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setEmissivityOfInnerCover(double emissivityOfInnerCover) {
+    bool result = setDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::EmissivityofInnerCover, emissivityOfInnerCover);
     return result;
   }
 
-  void SolarCollectorPerformanceIntegralCollectorStorage_Impl::resetEmissivityofInnerCover() {
+  void SolarCollectorPerformanceIntegralCollectorStorage_Impl::resetEmissivityOfInnerCover() {
     bool result = setString(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::EmissivityofInnerCover, "");
     OS_ASSERT(result);
   }
 
-  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setAbsorptanceofAbsorberPlate(double absorptanceofAbsorberPlate) {
-    bool result = setDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::AbsorptanceofAbsorberPlate, absorptanceofAbsorberPlate);
+  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setAbsorptanceOfAbsorberPlate(double absorptanceOfAbsorberPlate) {
+    bool result = setDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::AbsorptanceofAbsorberPlate, absorptanceOfAbsorberPlate);
     return result;
   }
 
-  void SolarCollectorPerformanceIntegralCollectorStorage_Impl::resetAbsorptanceofAbsorberPlate() {
+  void SolarCollectorPerformanceIntegralCollectorStorage_Impl::resetAbsorptanceOfAbsorberPlate() {
     bool result = setString(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::AbsorptanceofAbsorberPlate, "");
     OS_ASSERT(result);
   }
 
-  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setEmissivityofAbsorberPlate(double emissivityofAbsorberPlate) {
-    bool result = setDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::EmissivityofAbsorberPlate, emissivityofAbsorberPlate);
+  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setEmissivityOfAbsorberPlate(double emissivityOfAbsorberPlate) {
+    bool result = setDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::EmissivityofAbsorberPlate, emissivityOfAbsorberPlate);
     return result;
   }
 
-  void SolarCollectorPerformanceIntegralCollectorStorage_Impl::resetEmissivityofAbsorberPlate() {
+  void SolarCollectorPerformanceIntegralCollectorStorage_Impl::resetEmissivityOfAbsorberPlate() {
     bool result = setString(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::EmissivityofAbsorberPlate, "");
     OS_ASSERT(result);
   }
@@ -498,20 +499,20 @@ bool SolarCollectorPerformanceIntegralCollectorStorage::isCollectorSideHeightDef
   return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->isCollectorSideHeightDefaulted();
 }
 
-double SolarCollectorPerformanceIntegralCollectorStorage::thermalMassofAbsorberPlate() const {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->thermalMassofAbsorberPlate();
+double SolarCollectorPerformanceIntegralCollectorStorage::thermalMassOfAbsorberPlate() const {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->thermalMassOfAbsorberPlate();
 }
 
-bool SolarCollectorPerformanceIntegralCollectorStorage::isThermalMassofAbsorberPlateDefaulted() const {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->isThermalMassofAbsorberPlateDefaulted();
+bool SolarCollectorPerformanceIntegralCollectorStorage::isThermalMassOfAbsorberPlateDefaulted() const {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->isThermalMassOfAbsorberPlateDefaulted();
 }
 
-int SolarCollectorPerformanceIntegralCollectorStorage::numberofCovers() const {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->numberofCovers();
+int SolarCollectorPerformanceIntegralCollectorStorage::numberOfCovers() const {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->numberOfCovers();
 }
 
-bool SolarCollectorPerformanceIntegralCollectorStorage::isNumberofCoversDefaulted() const {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->isNumberofCoversDefaulted();
+bool SolarCollectorPerformanceIntegralCollectorStorage::isNumberOfCoversDefaulted() const {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->isNumberOfCoversDefaulted();
 }
 
 double SolarCollectorPerformanceIntegralCollectorStorage::coverSpacing() const {
@@ -522,68 +523,68 @@ bool SolarCollectorPerformanceIntegralCollectorStorage::isCoverSpacingDefaulted(
   return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->isCoverSpacingDefaulted();
 }
 
-double SolarCollectorPerformanceIntegralCollectorStorage::refractiveIndexofOuterCover() const {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->refractiveIndexofOuterCover();
+double SolarCollectorPerformanceIntegralCollectorStorage::refractiveIndexOfOuterCover() const {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->refractiveIndexOfOuterCover();
 }
 
-bool SolarCollectorPerformanceIntegralCollectorStorage::isRefractiveIndexofOuterCoverDefaulted() const {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->isRefractiveIndexofOuterCoverDefaulted();
+bool SolarCollectorPerformanceIntegralCollectorStorage::isRefractiveIndexOfOuterCoverDefaulted() const {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->isRefractiveIndexOfOuterCoverDefaulted();
 }
 
-double SolarCollectorPerformanceIntegralCollectorStorage::extinctionCoefficientTimesThicknessofOuterCover() const {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->extinctionCoefficientTimesThicknessofOuterCover();
+double SolarCollectorPerformanceIntegralCollectorStorage::extinctionCoefficientTimesThicknessOfOuterCover() const {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->extinctionCoefficientTimesThicknessOfOuterCover();
 }
 
-bool SolarCollectorPerformanceIntegralCollectorStorage::isExtinctionCoefficientTimesThicknessofOuterCoverDefaulted() const {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->isExtinctionCoefficientTimesThicknessofOuterCoverDefaulted();
+bool SolarCollectorPerformanceIntegralCollectorStorage::isExtinctionCoefficientTimesThicknessOfOuterCoverDefaulted() const {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->isExtinctionCoefficientTimesThicknessOfOuterCoverDefaulted();
 }
 
-double SolarCollectorPerformanceIntegralCollectorStorage::emissivityofOuterCover() const {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->emissivityofOuterCover();
+double SolarCollectorPerformanceIntegralCollectorStorage::emissivityOfOuterCover() const {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->emissivityOfOuterCover();
 }
 
-bool SolarCollectorPerformanceIntegralCollectorStorage::isEmissivityofOuterCoverDefaulted() const {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->isEmissivityofOuterCoverDefaulted();
+bool SolarCollectorPerformanceIntegralCollectorStorage::isEmissivityOfOuterCoverDefaulted() const {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->isEmissivityOfOuterCoverDefaulted();
 }
 
-double SolarCollectorPerformanceIntegralCollectorStorage::refractiveIndexofInnerCover() const {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->refractiveIndexofInnerCover();
+double SolarCollectorPerformanceIntegralCollectorStorage::refractiveIndexOfInnerCover() const {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->refractiveIndexOfInnerCover();
 }
 
-bool SolarCollectorPerformanceIntegralCollectorStorage::isRefractiveIndexofInnerCoverDefaulted() const {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->isRefractiveIndexofInnerCoverDefaulted();
+bool SolarCollectorPerformanceIntegralCollectorStorage::isRefractiveIndexOfInnerCoverDefaulted() const {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->isRefractiveIndexOfInnerCoverDefaulted();
 }
 
-double SolarCollectorPerformanceIntegralCollectorStorage::extinctionCoefficientTimesThicknessoftheinnerCover() const {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->extinctionCoefficientTimesThicknessoftheinnerCover();
+double SolarCollectorPerformanceIntegralCollectorStorage::extinctionCoefficientTimesThicknessOfTheInnerCover() const {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->extinctionCoefficientTimesThicknessOfTheInnerCover();
 }
 
-bool SolarCollectorPerformanceIntegralCollectorStorage::isExtinctionCoefficientTimesThicknessoftheinnerCoverDefaulted() const {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->isExtinctionCoefficientTimesThicknessoftheinnerCoverDefaulted();
+bool SolarCollectorPerformanceIntegralCollectorStorage::isExtinctionCoefficientTimesThicknessOfTheInnerCoverDefaulted() const {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->isExtinctionCoefficientTimesThicknessOfTheInnerCoverDefaulted();
 }
 
-double SolarCollectorPerformanceIntegralCollectorStorage::emissivityofInnerCover() const {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->emissivityofInnerCover();
+double SolarCollectorPerformanceIntegralCollectorStorage::emissivityOfInnerCover() const {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->emissivityOfInnerCover();
 }
 
-bool SolarCollectorPerformanceIntegralCollectorStorage::isEmissivityofInnerCoverDefaulted() const {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->isEmissivityofInnerCoverDefaulted();
+bool SolarCollectorPerformanceIntegralCollectorStorage::isEmissivityOfInnerCoverDefaulted() const {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->isEmissivityOfInnerCoverDefaulted();
 }
 
-double SolarCollectorPerformanceIntegralCollectorStorage::absorptanceofAbsorberPlate() const {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->absorptanceofAbsorberPlate();
+double SolarCollectorPerformanceIntegralCollectorStorage::absorptanceOfAbsorberPlate() const {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->absorptanceOfAbsorberPlate();
 }
 
-bool SolarCollectorPerformanceIntegralCollectorStorage::isAbsorptanceofAbsorberPlateDefaulted() const {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->isAbsorptanceofAbsorberPlateDefaulted();
+bool SolarCollectorPerformanceIntegralCollectorStorage::isAbsorptanceOfAbsorberPlateDefaulted() const {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->isAbsorptanceOfAbsorberPlateDefaulted();
 }
 
-double SolarCollectorPerformanceIntegralCollectorStorage::emissivityofAbsorberPlate() const {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->emissivityofAbsorberPlate();
+double SolarCollectorPerformanceIntegralCollectorStorage::emissivityOfAbsorberPlate() const {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->emissivityOfAbsorberPlate();
 }
 
-bool SolarCollectorPerformanceIntegralCollectorStorage::isEmissivityofAbsorberPlateDefaulted() const {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->isEmissivityofAbsorberPlateDefaulted();
+bool SolarCollectorPerformanceIntegralCollectorStorage::isEmissivityOfAbsorberPlateDefaulted() const {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->isEmissivityOfAbsorberPlateDefaulted();
 }
 
 bool SolarCollectorPerformanceIntegralCollectorStorage::setICSCollectorType(std::string iCSCollectorType) {
@@ -642,20 +643,20 @@ void SolarCollectorPerformanceIntegralCollectorStorage::resetCollectorSideHeight
   getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetCollectorSideHeight();
 }
 
-bool SolarCollectorPerformanceIntegralCollectorStorage::setThermalMassofAbsorberPlate(double thermalMassofAbsorberPlate) {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->setThermalMassofAbsorberPlate(thermalMassofAbsorberPlate);
+bool SolarCollectorPerformanceIntegralCollectorStorage::setThermalMassOfAbsorberPlate(double thermalMassOfAbsorberPlate) {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->setThermalMassOfAbsorberPlate(thermalMassOfAbsorberPlate);
 }
 
-void SolarCollectorPerformanceIntegralCollectorStorage::resetThermalMassofAbsorberPlate() {
-  getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetThermalMassofAbsorberPlate();
+void SolarCollectorPerformanceIntegralCollectorStorage::resetThermalMassOfAbsorberPlate() {
+  getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetThermalMassOfAbsorberPlate();
 }
 
-bool SolarCollectorPerformanceIntegralCollectorStorage::setNumberofCovers(int numberofCovers) {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->setNumberofCovers(numberofCovers);
+bool SolarCollectorPerformanceIntegralCollectorStorage::setNumberOfCovers(int numberOfCovers) {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->setNumberOfCovers(numberOfCovers);
 }
 
-void SolarCollectorPerformanceIntegralCollectorStorage::resetNumberofCovers() {
-  getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetNumberofCovers();
+void SolarCollectorPerformanceIntegralCollectorStorage::resetNumberOfCovers() {
+  getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetNumberOfCovers();
 }
 
 bool SolarCollectorPerformanceIntegralCollectorStorage::setCoverSpacing(double coverSpacing) {
@@ -666,68 +667,68 @@ void SolarCollectorPerformanceIntegralCollectorStorage::resetCoverSpacing() {
   getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetCoverSpacing();
 }
 
-bool SolarCollectorPerformanceIntegralCollectorStorage::setRefractiveIndexofOuterCover(double refractiveIndexofOuterCover) {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->setRefractiveIndexofOuterCover(refractiveIndexofOuterCover);
+bool SolarCollectorPerformanceIntegralCollectorStorage::setRefractiveIndexOfOuterCover(double refractiveIndexOfOuterCover) {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->setRefractiveIndexOfOuterCover(refractiveIndexOfOuterCover);
 }
 
-void SolarCollectorPerformanceIntegralCollectorStorage::resetRefractiveIndexofOuterCover() {
-  getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetRefractiveIndexofOuterCover();
+void SolarCollectorPerformanceIntegralCollectorStorage::resetRefractiveIndexOfOuterCover() {
+  getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetRefractiveIndexOfOuterCover();
 }
 
-bool SolarCollectorPerformanceIntegralCollectorStorage::setExtinctionCoefficientTimesThicknessofOuterCover(double extinctionCoefficientTimesThicknessofOuterCover) {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->setExtinctionCoefficientTimesThicknessofOuterCover(extinctionCoefficientTimesThicknessofOuterCover);
+bool SolarCollectorPerformanceIntegralCollectorStorage::setExtinctionCoefficientTimesThicknessOfOuterCover(double extinctionCoefficientTimesThicknessOfOuterCover) {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->setExtinctionCoefficientTimesThicknessOfOuterCover(extinctionCoefficientTimesThicknessOfOuterCover);
 }
 
-void SolarCollectorPerformanceIntegralCollectorStorage::resetExtinctionCoefficientTimesThicknessofOuterCover() {
-  getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetExtinctionCoefficientTimesThicknessofOuterCover();
+void SolarCollectorPerformanceIntegralCollectorStorage::resetExtinctionCoefficientTimesThicknessOfOuterCover() {
+  getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetExtinctionCoefficientTimesThicknessOfOuterCover();
 }
 
-bool SolarCollectorPerformanceIntegralCollectorStorage::setEmissivityofOuterCover(double emissivityofOuterCover) {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->setEmissivityofOuterCover(emissivityofOuterCover);
+bool SolarCollectorPerformanceIntegralCollectorStorage::setEmissivityOfOuterCover(double emissivityOfOuterCover) {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->setEmissivityOfOuterCover(emissivityOfOuterCover);
 }
 
-void SolarCollectorPerformanceIntegralCollectorStorage::resetEmissivityofOuterCover() {
-  getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetEmissivityofOuterCover();
+void SolarCollectorPerformanceIntegralCollectorStorage::resetEmissivityOfOuterCover() {
+  getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetEmissivityOfOuterCover();
 }
 
-bool SolarCollectorPerformanceIntegralCollectorStorage::setRefractiveIndexofInnerCover(double refractiveIndexofInnerCover) {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->setRefractiveIndexofInnerCover(refractiveIndexofInnerCover);
+bool SolarCollectorPerformanceIntegralCollectorStorage::setRefractiveIndexOfInnerCover(double refractiveIndexOfInnerCover) {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->setRefractiveIndexOfInnerCover(refractiveIndexOfInnerCover);
 }
 
-void SolarCollectorPerformanceIntegralCollectorStorage::resetRefractiveIndexofInnerCover() {
-  getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetRefractiveIndexofInnerCover();
+void SolarCollectorPerformanceIntegralCollectorStorage::resetRefractiveIndexOfInnerCover() {
+  getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetRefractiveIndexOfInnerCover();
 }
 
-bool SolarCollectorPerformanceIntegralCollectorStorage::setExtinctionCoefficientTimesThicknessoftheinnerCover(double extinctionCoefficientTimesThicknessoftheinnerCover) {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->setExtinctionCoefficientTimesThicknessoftheinnerCover(extinctionCoefficientTimesThicknessoftheinnerCover);
+bool SolarCollectorPerformanceIntegralCollectorStorage::setExtinctionCoefficientTimesThicknessOfTheInnerCover(double extinctionCoefficientTimesThicknessOfTheInnerCover) {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->setExtinctionCoefficientTimesThicknessOfTheInnerCover(extinctionCoefficientTimesThicknessOfTheInnerCover);
 }
 
-void SolarCollectorPerformanceIntegralCollectorStorage::resetExtinctionCoefficientTimesThicknessoftheinnerCover() {
-  getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetExtinctionCoefficientTimesThicknessoftheinnerCover();
+void SolarCollectorPerformanceIntegralCollectorStorage::resetExtinctionCoefficientTimesThicknessOfTheInnerCover() {
+  getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetExtinctionCoefficientTimesThicknessOfTheInnerCover();
 }
 
-bool SolarCollectorPerformanceIntegralCollectorStorage::setEmissivityofInnerCover(double emissivityofInnerCover) {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->setEmissivityofInnerCover(emissivityofInnerCover);
+bool SolarCollectorPerformanceIntegralCollectorStorage::setEmissivityOfInnerCover(double emissivityOfInnerCover) {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->setEmissivityOfInnerCover(emissivityOfInnerCover);
 }
 
-void SolarCollectorPerformanceIntegralCollectorStorage::resetEmissivityofInnerCover() {
-  getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetEmissivityofInnerCover();
+void SolarCollectorPerformanceIntegralCollectorStorage::resetEmissivityOfInnerCover() {
+  getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetEmissivityOfInnerCover();
 }
 
-bool SolarCollectorPerformanceIntegralCollectorStorage::setAbsorptanceofAbsorberPlate(double absorptanceofAbsorberPlate) {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->setAbsorptanceofAbsorberPlate(absorptanceofAbsorberPlate);
+bool SolarCollectorPerformanceIntegralCollectorStorage::setAbsorptanceOfAbsorberPlate(double absorptanceOfAbsorberPlate) {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->setAbsorptanceOfAbsorberPlate(absorptanceOfAbsorberPlate);
 }
 
-void SolarCollectorPerformanceIntegralCollectorStorage::resetAbsorptanceofAbsorberPlate() {
-  getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetAbsorptanceofAbsorberPlate();
+void SolarCollectorPerformanceIntegralCollectorStorage::resetAbsorptanceOfAbsorberPlate() {
+  getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetAbsorptanceOfAbsorberPlate();
 }
 
-bool SolarCollectorPerformanceIntegralCollectorStorage::setEmissivityofAbsorberPlate(double emissivityofAbsorberPlate) {
-  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->setEmissivityofAbsorberPlate(emissivityofAbsorberPlate);
+bool SolarCollectorPerformanceIntegralCollectorStorage::setEmissivityOfAbsorberPlate(double emissivityOfAbsorberPlate) {
+  return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->setEmissivityOfAbsorberPlate(emissivityOfAbsorberPlate);
 }
 
-void SolarCollectorPerformanceIntegralCollectorStorage::resetEmissivityofAbsorberPlate() {
-  getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetEmissivityofAbsorberPlate();
+void SolarCollectorPerformanceIntegralCollectorStorage::resetEmissivityOfAbsorberPlate() {
+  getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetEmissivityOfAbsorberPlate();
 }
 
 /// @cond

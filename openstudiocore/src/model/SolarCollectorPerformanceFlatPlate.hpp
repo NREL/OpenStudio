@@ -27,8 +27,11 @@ namespace openstudio {
 
 namespace model {
 
+  class SolarCollectorPerformanceFlatPlate;
+
 namespace detail {
 
+  class SolarCollectorFlatPlateWater_Impl;
   class SolarCollectorPerformanceFlatPlate_Impl;
 
 } // detail
@@ -118,6 +121,7 @@ class MODEL_API SolarCollectorPerformanceFlatPlate : public ModelObject {
 
   friend class detail::SolarCollectorPerformanceFlatPlate_Impl;
   friend class detail::SolarCollectorFlatPlateWater_Impl;
+  friend class SolarCollectorFlatPlateWater;
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;

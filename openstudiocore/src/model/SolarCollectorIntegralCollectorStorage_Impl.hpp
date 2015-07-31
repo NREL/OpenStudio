@@ -26,11 +26,8 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class CollectorStoragePerformance;
-class AllShadingAndHTSurf;
-class Connection;
-class Connection;
+class PlanarSurface;
+class SolarCollectorPerformanceIntegralCollectorStorage;
 
 namespace detail {
 
@@ -59,31 +56,33 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual ModelObject clone(Model model) const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual std::vector<IdfObject> remove() override;
+
+    virtual const std::vector<std::string>& outputVariableNames() const override;
+
+    virtual IddObjectType iddObjectType() const override;
+
+    virtual std::vector<ModelObject> children() const override;
+
+    virtual unsigned inletPort() override;
+
+    virtual unsigned outletPort() override;
+
+    virtual bool addToNode(Node & node) override;
 
     //@}
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: CollectorStoragePerformance.
-    CollectorStoragePerformance integralCollectorStorageParameters() const;
+    SolarCollectorPerformanceIntegralCollectorStorage solarCollectorPerformance() const;
 
-    // TODO: Check return type. From object lists, some candidates are: AllShadingAndHTSurf.
-    AllShadingAndHTSurf surface() const;
+    boost::optional<PlanarSurface> surface() const;
 
     std::string bottomSurfaceBoundaryConditionsType() const;
 
     bool isBottomSurfaceBoundaryConditionsTypeDefaulted() const;
-
-    boost::optional<std::string> boundaryConditionModelName() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> inletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> outletNode() const;
 
     boost::optional<double> maximumFlowRate() const;
 
@@ -91,31 +90,13 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: CollectorStoragePerformance.
-    bool setIntegralCollectorStorageParameters(const CollectorStoragePerformance& collectorStoragePerformance);
+    bool setSolarCollectorPerformance(const SolarCollectorPerformanceIntegralCollectorStorage& solarCollectorPerformance);
 
-    // TODO: Check argument type. From object lists, some candidates are: AllShadingAndHTSurf.
-    bool setSurface(const AllShadingAndHTSurf& allShadingAndHTSurf);
+    void resetSolarCollectorPerformance();
 
-    bool setBottomSurfaceBoundaryConditionsType(std::string bottomSurfaceBoundaryConditionsType);
+    bool setSurface(const PlanarSurface& surface);
 
-    void resetBottomSurfaceBoundaryConditionsType();
-
-    void setBoundaryConditionModelName(boost::optional<std::string> boundaryConditionModelName);
-
-    void resetBoundaryConditionModelName();
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setInletNode(const boost::optional<Connection>& connection);
-
-    void resetInletNode();
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setOutletNode(const boost::optional<Connection>& connection);
-
-    void resetOutletNode();
-
-    bool setMaximumFlowRate(boost::optional<double> maximumFlowRate);
+    bool setMaximumFlowRate(double maximumFlowRate);
 
     void resetMaximumFlowRate();
 
@@ -128,12 +109,9 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.SolarCollectorIntegralCollectorStorage");
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<CollectorStoragePerformance> optionalIntegralCollectorStorageParameters() const;
-    boost::optional<AllShadingAndHTSurf> optionalSurface() const;
+    bool setSolarCollectorPerformanceNoClone(const SolarCollectorPerformanceIntegralCollectorStorage& solarCollectorPerformance);
+
+    friend class openstudio::model::SolarCollectorIntegralCollectorStorage;
   };
 
 } // detail

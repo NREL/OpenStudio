@@ -20924,7 +20924,6 @@ OS:SolarCollector:IntegralCollectorStorage,
        \type object-list
        \object-list CollectorStoragePerformance
   A4 , \field Surface Name
-       \required-field
        \type object-list
        \object-list AllShadingAndHTSurfNames
   A5 , \field Bottom Surface Boundary Conditions Type
@@ -20960,15 +20959,16 @@ OS:SolarCollectorPerformance:PhotovoltaicThermal:Simple,
        \required-field 
        \reference FlatPlatePVTParameters
   N1 , \field Fraction of Surface Area with Active Thermal Collector
-       \required-field
        \type real
        \units dimensionless
        \minimum> 0.0
        \maximum 1.0
+       \default 1.0
   A3 , \field Thermal Conversion Efficiency Input Mode Type
        \type choice
        \key Fixed
        \key Scheduled
+       \default Fixed
   N2 , \field Value for Thermal Conversion Efficiency if Fixed
        \note Efficiency = (thermal power generated [W])/(incident solar[W])
        \type real
@@ -20995,7 +20995,6 @@ OS:SolarCollector:FlatPlate:PhotovoltaicThermal,
        \type alpha
        \reference ConnectionObject
   A3 , \field Surface Name
-       \required-field
        \type object-list
        \object-list AllShadingAndHTSurfNames
   A4 , \field Photovoltaic-Thermal Model Performance Name

@@ -27,8 +27,11 @@ namespace openstudio {
 
 namespace model {
 
+  class SolarCollectorIntegralCollectorStorage;
+
 namespace detail {
 
+  class SolarCollectorIntegralCollectorStorage_Impl;
   class SolarCollectorPerformanceIntegralCollectorStorage_Impl;
 
 } // detail
@@ -38,8 +41,6 @@ class MODEL_API SolarCollectorPerformanceIntegralCollectorStorage : public Model
  public:
   /** @name Constructors and Destructors */
   //@{
-
-  explicit SolarCollectorPerformanceIntegralCollectorStorage(const Model& model);
 
   virtual ~SolarCollectorPerformanceIntegralCollectorStorage() {}
 
@@ -76,49 +77,49 @@ class MODEL_API SolarCollectorPerformanceIntegralCollectorStorage : public Model
 
   bool isCollectorSideHeightDefaulted() const;
 
-  double thermalMassofAbsorberPlate() const;
+  double thermalMassOfAbsorberPlate() const;
 
-  bool isThermalMassofAbsorberPlateDefaulted() const;
+  bool isThermalMassOfAbsorberPlateDefaulted() const;
 
-  int numberofCovers() const;
+  int numberOfCovers() const;
 
-  bool isNumberofCoversDefaulted() const;
+  bool isNumberOfCoversDefaulted() const;
 
   double coverSpacing() const;
 
   bool isCoverSpacingDefaulted() const;
 
-  double refractiveIndexofOuterCover() const;
+  double refractiveIndexOfOuterCover() const;
 
-  bool isRefractiveIndexofOuterCoverDefaulted() const;
+  bool isRefractiveIndexOfOuterCoverDefaulted() const;
 
-  double extinctionCoefficientTimesThicknessofOuterCover() const;
+  double extinctionCoefficientTimesThicknessOfOuterCover() const;
 
-  bool isExtinctionCoefficientTimesThicknessofOuterCoverDefaulted() const;
+  bool isExtinctionCoefficientTimesThicknessOfOuterCoverDefaulted() const;
 
-  double emissivityofOuterCover() const;
+  double emissivityOfOuterCover() const;
 
-  bool isEmissivityofOuterCoverDefaulted() const;
+  bool isEmissivityOfOuterCoverDefaulted() const;
 
-  double refractiveIndexofInnerCover() const;
+  double refractiveIndexOfInnerCover() const;
 
-  bool isRefractiveIndexofInnerCoverDefaulted() const;
+  bool isRefractiveIndexOfInnerCoverDefaulted() const;
 
-  double extinctionCoefficientTimesThicknessoftheinnerCover() const;
+  double extinctionCoefficientTimesThicknessOfTheInnerCover() const;
 
-  bool isExtinctionCoefficientTimesThicknessoftheinnerCoverDefaulted() const;
+  bool isExtinctionCoefficientTimesThicknessOfTheInnerCoverDefaulted() const;
 
-  double emissivityofInnerCover() const;
+  double emissivityOfInnerCover() const;
 
-  bool isEmissivityofInnerCoverDefaulted() const;
+  bool isEmissivityOfInnerCoverDefaulted() const;
 
-  double absorptanceofAbsorberPlate() const;
+  double absorptanceOfAbsorberPlate() const;
 
-  bool isAbsorptanceofAbsorberPlateDefaulted() const;
+  bool isAbsorptanceOfAbsorberPlateDefaulted() const;
 
-  double emissivityofAbsorberPlate() const;
+  double emissivityOfAbsorberPlate() const;
 
-  bool isEmissivityofAbsorberPlateDefaulted() const;
+  bool isEmissivityOfAbsorberPlateDefaulted() const;
 
   //@}
   /** @name Setters */
@@ -152,49 +153,49 @@ class MODEL_API SolarCollectorPerformanceIntegralCollectorStorage : public Model
 
   void resetCollectorSideHeight();
 
-  bool setThermalMassofAbsorberPlate(double thermalMassofAbsorberPlate);
+  bool setThermalMassOfAbsorberPlate(double thermalMassOfAbsorberPlate);
 
-  void resetThermalMassofAbsorberPlate();
+  void resetThermalMassOfAbsorberPlate();
 
-  bool setNumberofCovers(int numberofCovers);
+  bool setNumberOfCovers(int numberOfCovers);
 
-  void resetNumberofCovers();
+  void resetNumberOfCovers();
 
   bool setCoverSpacing(double coverSpacing);
 
   void resetCoverSpacing();
 
-  bool setRefractiveIndexofOuterCover(double refractiveIndexofOuterCover);
+  bool setRefractiveIndexOfOuterCover(double refractiveIndexOfOuterCover);
 
-  void resetRefractiveIndexofOuterCover();
+  void resetRefractiveIndexOfOuterCover();
 
-  bool setExtinctionCoefficientTimesThicknessofOuterCover(double extinctionCoefficientTimesThicknessofOuterCover);
+  bool setExtinctionCoefficientTimesThicknessOfOuterCover(double extinctionCoefficientTimesThicknessOfOuterCover);
 
-  void resetExtinctionCoefficientTimesThicknessofOuterCover();
+  void resetExtinctionCoefficientTimesThicknessOfOuterCover();
 
-  bool setEmissivityofOuterCover(double emissivityofOuterCover);
+  bool setEmissivityOfOuterCover(double emissivityOfOuterCover);
 
-  void resetEmissivityofOuterCover();
+  void resetEmissivityOfOuterCover();
 
-  bool setRefractiveIndexofInnerCover(double refractiveIndexofInnerCover);
+  bool setRefractiveIndexOfInnerCover(double refractiveIndexOfInnerCover);
 
-  void resetRefractiveIndexofInnerCover();
+  void resetRefractiveIndexOfInnerCover();
 
-  bool setExtinctionCoefficientTimesThicknessoftheinnerCover(double extinctionCoefficientTimesThicknessoftheinnerCover);
+  bool setExtinctionCoefficientTimesThicknessOfTheInnerCover(double extinctionCoefficientTimesThicknessOfTheInnerCover);
 
-  void resetExtinctionCoefficientTimesThicknessoftheinnerCover();
+  void resetExtinctionCoefficientTimesThicknessOfTheInnerCover();
 
-  bool setEmissivityofInnerCover(double emissivityofInnerCover);
+  bool setEmissivityOfInnerCover(double emissivityOfInnerCover);
 
-  void resetEmissivityofInnerCover();
+  void resetEmissivityOfInnerCover();
 
-  bool setAbsorptanceofAbsorberPlate(double absorptanceofAbsorberPlate);
+  bool setAbsorptanceOfAbsorberPlate(double absorptanceOfAbsorberPlate);
 
-  void resetAbsorptanceofAbsorberPlate();
+  void resetAbsorptanceOfAbsorberPlate();
 
-  bool setEmissivityofAbsorberPlate(double emissivityofAbsorberPlate);
+  bool setEmissivityOfAbsorberPlate(double emissivityOfAbsorberPlate);
 
-  void resetEmissivityofAbsorberPlate();
+  void resetEmissivityOfAbsorberPlate();
 
   //@}
   /** @name Other */
@@ -205,9 +206,13 @@ class MODEL_API SolarCollectorPerformanceIntegralCollectorStorage : public Model
   /// @cond
   typedef detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl ImplType;
 
+  explicit SolarCollectorPerformanceIntegralCollectorStorage(const Model& model);
+
   explicit SolarCollectorPerformanceIntegralCollectorStorage(std::shared_ptr<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl> impl);
 
+  friend class detail::SolarCollectorIntegralCollectorStorage_Impl;
   friend class detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl;
+  friend class SolarCollectorIntegralCollectorStorage;
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;

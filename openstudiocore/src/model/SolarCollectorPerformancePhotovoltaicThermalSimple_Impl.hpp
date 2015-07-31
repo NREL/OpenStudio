@@ -66,13 +66,12 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    double fractionofSurfaceAreawithActiveThermalCollector() const;
+    double fractionOfSurfaceAreaWithActiveThermalCollector() const;
 
-    boost::optional<std::string> thermalConversionEfficiencyInputModeType() const;
+    std::string thermalConversionEfficiencyInputModeType() const;
 
-    boost::optional<double> valueforThermalConversionEfficiencyifFixed() const;
+    boost::optional<double> thermalConversionEfficiency() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> thermalConversionEfficiencySchedule() const;
 
     double frontSurfaceEmittance() const;
@@ -83,17 +82,12 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    bool setFractionofSurfaceAreawithActiveThermalCollector(double fractionofSurfaceAreawithActiveThermalCollector);
+    bool setFractionOfSurfaceAreaWithActiveThermalCollector(double fractionofSurfaceAreawithActiveThermalCollector);
 
-    bool setThermalConversionEfficiencyInputModeType(boost::optional<std::string> thermalConversionEfficiencyInputModeType);
+    bool setThermalConversionEfficiency(double fixedThermalConversionEfficiency);
 
-    void resetThermalConversionEfficiencyInputModeType();
+    void resetThermalConversionEfficiency();
 
-    bool setValueforThermalConversionEfficiencyifFixed(boost::optional<double> valueforThermalConversionEfficiencyifFixed);
-
-    void resetValueforThermalConversionEfficiencyifFixed();
-
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setThermalConversionEfficiencySchedule(Schedule& schedule);
 
     void resetThermalConversionEfficiencySchedule();

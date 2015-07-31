@@ -77,7 +77,7 @@ namespace detail {
 
     boost::optional<PlanarSurface> surface() const;
 
-    boost::optional<SolarCollectorPerformancePhotovoltaicThermalSimple> solarCollectorPerformance() const;
+    SolarCollectorPerformancePhotovoltaicThermalSimple solarCollectorPerformance() const;
 
     boost::optional<double> designFlowRate() const;
 
@@ -95,7 +95,7 @@ namespace detail {
 
     void resetSurface();
 
-    void setDesignFlowRate(boost::optional<double> designFlowRate);
+    bool setDesignFlowRate(double designFlowRate);
 
     void resetDesignFlowRate();
 
@@ -108,7 +108,12 @@ namespace detail {
     //@}
    protected:
    private:
+
     REGISTER_LOGGER("openstudio.model.SolarCollectorFlatPlatePhotovoltaicThermal");
+    
+    bool setSolarCollectorPerformanceNoClone(const SolarCollectorPerformancePhotovoltaicThermalSimple& parameters);
+
+    friend class openstudio::model::SolarCollectorFlatPlatePhotovoltaicThermal;
 
   };
 

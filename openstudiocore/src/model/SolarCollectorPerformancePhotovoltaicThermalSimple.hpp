@@ -26,12 +26,13 @@
 namespace openstudio {
 
 namespace model {
-
-// TODO: Check the following class names against object getters and setters.
+  
+class SolarCollectorFlatPlatePhotovoltaicThermal;
 class Schedule;
 
 namespace detail {
 
+  class SolarCollectorFlatPlatePhotovoltaicThermal_Impl;
   class SolarCollectorPerformancePhotovoltaicThermalSimple_Impl;
 
 } // detail
@@ -41,8 +42,6 @@ class MODEL_API SolarCollectorPerformancePhotovoltaicThermalSimple : public Mode
  public:
   /** @name Constructors and Destructors */
   //@{
-
-  explicit SolarCollectorPerformancePhotovoltaicThermalSimple(const Model& model);
 
   virtual ~SolarCollectorPerformancePhotovoltaicThermalSimple() {}
 
@@ -55,13 +54,12 @@ class MODEL_API SolarCollectorPerformancePhotovoltaicThermalSimple : public Mode
   /** @name Getters */
   //@{
 
-  double fractionofSurfaceAreawithActiveThermalCollector() const;
+  double fractionOfSurfaceAreaWithActiveThermalCollector() const;
 
-  boost::optional<std::string> thermalConversionEfficiencyInputModeType() const;
+  std::string thermalConversionEfficiencyInputModeType() const;
 
-  boost::optional<double> valueforThermalConversionEfficiencyifFixed() const;
+  boost::optional<double> thermalConversionEfficiency() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> thermalConversionEfficiencySchedule() const;
 
   double frontSurfaceEmittance() const;
@@ -72,17 +70,12 @@ class MODEL_API SolarCollectorPerformancePhotovoltaicThermalSimple : public Mode
   /** @name Setters */
   //@{
 
-  bool setFractionofSurfaceAreawithActiveThermalCollector(double fractionofSurfaceAreawithActiveThermalCollector);
+  bool setFractionOfSurfaceAreaWithActiveThermalCollector(double fractionofSurfaceAreawithActiveThermalCollector);
 
-  bool setThermalConversionEfficiencyInputModeType(std::string thermalConversionEfficiencyInputModeType);
+  bool setThermalConversionEfficiency(double fixedThermalConversionEfficiency);
 
-  void resetThermalConversionEfficiencyInputModeType();
+  void resetThermalConversionEfficiency();
 
-  bool setValueforThermalConversionEfficiencyifFixed(double valueforThermalConversionEfficiencyifFixed);
-
-  void resetValueforThermalConversionEfficiencyifFixed();
-
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setThermalConversionEfficiencySchedule(Schedule& schedule);
 
   void resetThermalConversionEfficiencySchedule();
@@ -100,9 +93,13 @@ class MODEL_API SolarCollectorPerformancePhotovoltaicThermalSimple : public Mode
   /// @cond
   typedef detail::SolarCollectorPerformancePhotovoltaicThermalSimple_Impl ImplType;
 
+  explicit SolarCollectorPerformancePhotovoltaicThermalSimple(const Model& model);
+
   explicit SolarCollectorPerformancePhotovoltaicThermalSimple(std::shared_ptr<detail::SolarCollectorPerformancePhotovoltaicThermalSimple_Impl> impl);
 
   friend class detail::SolarCollectorPerformancePhotovoltaicThermalSimple_Impl;
+  friend class detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl;
+  friend class SolarCollectorFlatPlatePhotovoltaicThermal;
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;

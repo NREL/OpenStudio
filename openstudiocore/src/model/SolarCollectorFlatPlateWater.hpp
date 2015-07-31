@@ -29,7 +29,6 @@ namespace model {
 
 class SolarCollectorPerformanceFlatPlate;
 class PlanarSurface;
-//class Connection;
 
 namespace detail {
 
@@ -92,7 +91,7 @@ class MODEL_API SolarCollectorFlatPlateWater : public StraightComponent {
   typedef detail::SolarCollectorFlatPlateWater_Impl ImplType;
 
   explicit SolarCollectorFlatPlateWater(std::shared_ptr<detail::SolarCollectorFlatPlateWater_Impl> impl);
-
+  
   friend class detail::SolarCollectorFlatPlateWater_Impl;
   friend class Model;
   friend class IdfObject;

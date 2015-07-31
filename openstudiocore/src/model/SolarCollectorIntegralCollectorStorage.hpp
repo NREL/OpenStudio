@@ -27,11 +27,8 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class CollectorStoragePerformance;
-class AllShadingAndHTSurf;
-class Connection;
-class Connection;
+class PlanarSurface;
+class SolarCollectorPerformanceIntegralCollectorStorage;
 
 namespace detail {
 
@@ -58,23 +55,13 @@ class MODEL_API SolarCollectorIntegralCollectorStorage : public StraightComponen
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: CollectorStoragePerformance.
-  CollectorStoragePerformance integralCollectorStorageParameters() const;
+  SolarCollectorPerformanceIntegralCollectorStorage solarCollectorPerformance() const;
 
-  // TODO: Check return type. From object lists, some candidates are: AllShadingAndHTSurf.
-  AllShadingAndHTSurf surface() const;
+  boost::optional<PlanarSurface> surface() const;
 
   std::string bottomSurfaceBoundaryConditionsType() const;
 
   bool isBottomSurfaceBoundaryConditionsTypeDefaulted() const;
-
-  boost::optional<std::string> boundaryConditionModelName() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  boost::optional<Connection> inletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  boost::optional<Connection> outletNode() const;
 
   boost::optional<double> maximumFlowRate() const;
 
@@ -82,29 +69,15 @@ class MODEL_API SolarCollectorIntegralCollectorStorage : public StraightComponen
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: CollectorStoragePerformance.
-  bool setIntegralCollectorStorageParameters(const CollectorStoragePerformance& collectorStoragePerformance);
+  /// Deletes the current parameters and clones the parameters passed in
+  bool setSolarCollectorPerformance(const SolarCollectorPerformanceIntegralCollectorStorage& solarCollectorPerformance);
 
-  // TODO: Check argument type. From object lists, some candidates are: AllShadingAndHTSurf.
-  bool setSurface(const AllShadingAndHTSurf& allShadingAndHTSurf);
+  /// Deletes the current parameters and constructs a new default set of parameters
+  void resetSolarCollectorPerformance();
 
-  bool setBottomSurfaceBoundaryConditionsType(std::string bottomSurfaceBoundaryConditionsType);
+  bool setSurface(const PlanarSurface& surface);
 
-  void resetBottomSurfaceBoundaryConditionsType();
-
-  void setBoundaryConditionModelName(std::string boundaryConditionModelName);
-
-  void resetBoundaryConditionModelName();
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setInletNode(const Connection& connection);
-
-  void resetInletNode();
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setOutletNode(const Connection& connection);
-
-  void resetOutletNode();
+  void resetSurface();
 
   bool setMaximumFlowRate(double maximumFlowRate);
 

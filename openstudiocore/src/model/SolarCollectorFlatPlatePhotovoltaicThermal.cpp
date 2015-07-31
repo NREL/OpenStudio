@@ -22,10 +22,18 @@
 
 #include <model/PlanarSurface.hpp>
 #include <model/PlanarSurface_Impl.hpp>
+#include <model/Surface.hpp>
+#include <model/Surface_Impl.hpp>
+#include <model/ShadingSurface.hpp>
+#include <model/ShadingSurface_Impl.hpp>
 #include <model/SolarCollectorPerformancePhotovoltaicThermalSimple.hpp>
 #include <model/SolarCollectorPerformancePhotovoltaicThermalSimple_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/Model.hpp>
 
 #include <utilities/idd/OS_SolarCollector_FlatPlate_PhotovoltaicThermal_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include <utilities/units/Unit.hpp>
 
@@ -80,6 +88,12 @@ namespace detail {
   {
     static std::vector<std::string> result;
     if (result.empty()){
+      result.push_back("Generator Produced Thermal Rate");
+      result.push_back("Generator Produced Thermal Energy");
+      result.push_back("Generator PVT Fluid Bypass Status");
+      result.push_back("Generator PVT Fluid Inlet Temperature");
+      result.push_back("Generator PVT Fluid Outlet Temperature");
+      result.push_back("Generator PVT Fluid Mass Flow Rate");
     }
     return result;
   }
@@ -88,7 +102,7 @@ namespace detail {
     return SolarCollectorFlatPlatePhotovoltaicThermal::iddObjectType();
   }
 
-  std::vector<ModelObject> SolarCollectorFlatPlateWater_Impl::children() const
+  std::vector<ModelObject> SolarCollectorFlatPlatePhotovoltaicThermal_Impl::children() const
   {
     std::vector<ModelObject> result;
 
@@ -98,17 +112,17 @@ namespace detail {
     return result;
   }
 
-  unsigned SolarCollectorFlatPlateWater_Impl::inletPort()
+  unsigned SolarCollectorFlatPlatePhotovoltaicThermal_Impl::inletPort()
   {
-    return OS_SolarCollector_FlatPlate_WaterFields::InletNodeName;
+    return OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::InletNodeName;
   }
 
-  unsigned SolarCollectorFlatPlateWater_Impl::outletPort()
+  unsigned SolarCollectorFlatPlatePhotovoltaicThermal_Impl::outletPort()
   {
-    return OS_SolarCollector_FlatPlate_WaterFields::OutletNodeName;
+    return OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::OutletNodeName;
   }
 
-  bool SolarCollectorFlatPlateWater_Impl::addToNode(Node & node)
+  bool SolarCollectorFlatPlatePhotovoltaicThermal_Impl::addToNode(Node & node)
   {
     if (boost::optional<PlantLoop> plantLoop = node.plantLoop())
     {
@@ -121,27 +135,23 @@ namespace detail {
       }
     }
 
+    // TODO: handle air loop case
+
     return false;
+  }
+
+  SolarCollectorPerformancePhotovoltaicThermalSimple SolarCollectorFlatPlatePhotovoltaicThermal_Impl::solarCollectorPerformance() const {
+    boost::optional<SolarCollectorPerformancePhotovoltaicThermalSimple> value = getObject<ModelObject>().getModelObjectTarget<SolarCollectorPerformancePhotovoltaicThermalSimple>(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicThermalModelPerformanceName);
+    if (!value) {
+      // DLM: could default construct one here?
+      LOG_AND_THROW(briefDescription() << " does not have an Solar Collector Performance attached.");
+    }
+    return value.get();
+  
   }
 
   boost::optional<PlanarSurface> SolarCollectorFlatPlatePhotovoltaicThermal_Impl::surface() const {
     return getObject<ModelObject>().getModelObjectTarget<PlanarSurface>(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::SurfaceName);
-  }
-
-  boost::optional<FlatPlatePVTParameters> SolarCollectorFlatPlatePhotovoltaicThermal_Impl::photovoltaicThermalModelPerformance() const {
-    return getObject<ModelObject>().getModelObjectTarget<FlatPlatePVTParameters>(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicThermalModelPerformanceName);
-  }
-
-  boost::optional<PVGenerator> SolarCollectorFlatPlatePhotovoltaicThermal_Impl::photovoltaic() const {
-    return getObject<ModelObject>().getModelObjectTarget<PVGenerator>(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicName);
-  }
-
-  boost::optional<Connection> SolarCollectorFlatPlatePhotovoltaicThermal_Impl::inletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::InletNodeName);
-  }
-
-  boost::optional<Connection> SolarCollectorFlatPlatePhotovoltaicThermal_Impl::outletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::OutletNodeName);
   }
 
   boost::optional<double> SolarCollectorFlatPlatePhotovoltaicThermal_Impl::designFlowRate() const {
@@ -157,67 +167,46 @@ namespace detail {
     return result;
   }
 
-  bool SolarCollectorFlatPlatePhotovoltaicThermal_Impl::setSurface(const AllShadingAndHTSurf& allShadingAndHTSurf) {
-    bool result = setPointer(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::SurfaceName, allShadingAndHTSurf.handle());
+  bool SolarCollectorFlatPlatePhotovoltaicThermal_Impl::setSolarCollectorPerformance(const SolarCollectorPerformancePhotovoltaicThermalSimple& performance) {
+    bool result(false);
+    ModelObject clone = performance.clone(this->model());
+    return setSolarCollectorPerformanceNoClone(clone.cast<SolarCollectorPerformancePhotovoltaicThermalSimple>());
+  }
+
+  void SolarCollectorFlatPlatePhotovoltaicThermal_Impl::resetSolarCollectorPerformance() {
+    boost::optional<SolarCollectorPerformancePhotovoltaicThermalSimple> oldPerformance = getObject<ModelObject>().getModelObjectTarget<SolarCollectorPerformancePhotovoltaicThermalSimple>(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicThermalModelPerformanceName);
+    if (oldPerformance){
+      oldPerformance->remove();
+    }
+
+    SolarCollectorPerformancePhotovoltaicThermalSimple performance(this->model());
+    bool ok = setSolarCollectorPerformanceNoClone(performance);
+    OS_ASSERT(ok);
+  }
+
+  bool SolarCollectorFlatPlatePhotovoltaicThermal_Impl::setSurface(const PlanarSurface& surface) {
+    bool result(false);
+
+    if (surface.isAirWall()){
+      return false;
+    }
+
+    // DLM: check for existing solar collectors or photovoltaic generators?
+
+    if (surface.optionalCast<Surface>()){
+      Surface s = surface.cast<Surface>();
+      if (istringEqual("SunExposed", s.sunExposure())){
+        result = setPointer(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::SurfaceName, surface.handle());
+      }
+    } else if (surface.optionalCast<ShadingSurface>()){
+      result = setPointer(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::SurfaceName, surface.handle());
+    }
+
     return result;
   }
 
-  bool SolarCollectorFlatPlatePhotovoltaicThermal_Impl::setPhotovoltaicThermalModelPerformance(const boost::optional<FlatPlatePVTParameters>& flatPlatePVTParameters) {
-    bool result(false);
-    if (flatPlatePVTParameters) {
-      result = setPointer(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicThermalModelPerformanceName, flatPlatePVTParameters.get().handle());
-    }
-    else {
-      resetPhotovoltaicThermalModelPerformance();
-      result = true;
-    }
-    return result;
-  }
-
-  void SolarCollectorFlatPlatePhotovoltaicThermal_Impl::resetPhotovoltaicThermalModelPerformance() {
-    bool result = setString(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicThermalModelPerformanceName, "");
-    OS_ASSERT(result);
-  }
-
-  bool SolarCollectorFlatPlatePhotovoltaicThermal_Impl::setPhotovoltaic(const boost::optional<PVGenerator>& pVGenerator) {
-    bool result(false);
-    if (pVGenerator) {
-      result = setPointer(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicName, pVGenerator.get().handle());
-    }
-    else {
-      resetPhotovoltaic();
-      result = true;
-    }
-    return result;
-  }
-
-  void SolarCollectorFlatPlatePhotovoltaicThermal_Impl::resetPhotovoltaic() {
-    bool result = setString(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicName, "");
-    OS_ASSERT(result);
-  }
-
-  bool SolarCollectorFlatPlatePhotovoltaicThermal_Impl::setInletNode(const boost::optional<Connection>& connection) {
-    bool result(false);
-    if (connection) {
-      result = setPointer(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::InletNodeName, connection.get().handle());
-    }
-    else {
-      resetInletNode();
-      result = true;
-    }
-    return result;
-  }
-
-  void SolarCollectorFlatPlatePhotovoltaicThermal_Impl::setDesignFlowRate(boost::optional<double> designFlowRate) {
-    bool result(false);
-    if (designFlowRate) {
-      result = setDouble(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::DesignFlowRate, designFlowRate.get());
-    }
-    else {
-      resetDesignFlowRate();
-      result = true;
-    }
-    OS_ASSERT(result);
+  bool SolarCollectorFlatPlatePhotovoltaicThermal_Impl::setDesignFlowRate(double designFlowRate) {
+    return setDouble(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::DesignFlowRate, designFlowRate);
   }
 
   void SolarCollectorFlatPlatePhotovoltaicThermal_Impl::resetDesignFlowRate() {
@@ -250,24 +239,12 @@ IddObjectType SolarCollectorFlatPlatePhotovoltaicThermal::iddObjectType() {
   return IddObjectType(IddObjectType::OS_SolarCollector_FlatPlate_PhotovoltaicThermal);
 }
 
-AllShadingAndHTSurf SolarCollectorFlatPlatePhotovoltaicThermal::surface() const {
+SolarCollectorPerformancePhotovoltaicThermalSimple SolarCollectorFlatPlatePhotovoltaicThermal::solarCollectorPerformance() const {
+  return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->solarCollectorPerformance();
+}
+
+boost::optional<PlanarSurface> SolarCollectorFlatPlatePhotovoltaicThermal::surface() const {
   return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->surface();
-}
-
-boost::optional<FlatPlatePVTParameters> SolarCollectorFlatPlatePhotovoltaicThermal::photovoltaicThermalModelPerformance() const {
-  return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->photovoltaicThermalModelPerformance();
-}
-
-boost::optional<PVGenerator> SolarCollectorFlatPlatePhotovoltaicThermal::photovoltaic() const {
-  return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->photovoltaic();
-}
-
-boost::optional<Connection> SolarCollectorFlatPlatePhotovoltaicThermal::inletNode() const {
-  return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->inletNode();
-}
-
-boost::optional<Connection> SolarCollectorFlatPlatePhotovoltaicThermal::outletNode() const {
-  return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->outletNode();
 }
 
 boost::optional<double> SolarCollectorFlatPlatePhotovoltaicThermal::designFlowRate() const {
@@ -278,44 +255,20 @@ bool SolarCollectorFlatPlatePhotovoltaicThermal::isDesignFlowRateAutosized() con
   return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->isDesignFlowRateAutosized();
 }
 
-bool SolarCollectorFlatPlatePhotovoltaicThermal::setSurface(const AllShadingAndHTSurf& allShadingAndHTSurf) {
-  return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->setSurface(allShadingAndHTSurf);
+bool SolarCollectorFlatPlatePhotovoltaicThermal::setSurface(const PlanarSurface& surface) {
+  return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->setSurface(surface);
 }
 
-bool SolarCollectorFlatPlatePhotovoltaicThermal::setPhotovoltaicThermalModelPerformance(const FlatPlatePVTParameters& flatPlatePVTParameters) {
-  return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->setPhotovoltaicThermalModelPerformance(flatPlatePVTParameters);
+bool SolarCollectorFlatPlatePhotovoltaicThermal::setSolarCollectorPerformance(const SolarCollectorPerformancePhotovoltaicThermalSimple& performance) {
+  return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->setSolarCollectorPerformance(performance);
 }
 
-void SolarCollectorFlatPlatePhotovoltaicThermal::resetPhotovoltaicThermalModelPerformance() {
-  getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->resetPhotovoltaicThermalModelPerformance();
+void SolarCollectorFlatPlatePhotovoltaicThermal::resetSolarCollectorPerformance() {
+  getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->resetSolarCollectorPerformance();
 }
 
-bool SolarCollectorFlatPlatePhotovoltaicThermal::setPhotovoltaic(const PVGenerator& pVGenerator) {
-  return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->setPhotovoltaic(pVGenerator);
-}
-
-void SolarCollectorFlatPlatePhotovoltaicThermal::resetPhotovoltaic() {
-  getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->resetPhotovoltaic();
-}
-
-bool SolarCollectorFlatPlatePhotovoltaicThermal::setInletNode(const Connection& connection) {
-  return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->setInletNode(connection);
-}
-
-void SolarCollectorFlatPlatePhotovoltaicThermal::resetInletNode() {
-  getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->resetInletNode();
-}
-
-bool SolarCollectorFlatPlatePhotovoltaicThermal::setOutletNode(const Connection& connection) {
-  return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->setOutletNode(connection);
-}
-
-void SolarCollectorFlatPlatePhotovoltaicThermal::resetOutletNode() {
-  getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->resetOutletNode();
-}
-
-void SolarCollectorFlatPlatePhotovoltaicThermal::setDesignFlowRate(double designFlowRate) {
-  getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->setDesignFlowRate(designFlowRate);
+bool SolarCollectorFlatPlatePhotovoltaicThermal::setDesignFlowRate(double designFlowRate) {
+  return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->setDesignFlowRate(designFlowRate);
 }
 
 void SolarCollectorFlatPlatePhotovoltaicThermal::resetDesignFlowRate() {
