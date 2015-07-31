@@ -16818,6 +16818,54 @@ OS:PlantLoop,
        \key LoopFlowCorrection
        \key None
 
+OS:PlantEquipmentOperation:CoolingLoad,
+    \extensible:3
+   A1, \field Handle
+        \type handle
+        \required-field
+   A2 ,\field Name
+        \required-field
+        \reference ControlSchemeList
+   N1 ,\field Load Range 1 Lower Limit
+        \required-field
+       \type real
+       \units W
+       \minimum 0.0
+       \begin-extensible
+   N2 ,\field Load Range 1 Upper Limit
+        \required-field
+       \type real
+       \units W
+       \minimum 0.0
+   A3 ;\field Range 1 Equipment List Name
+        \required-field
+        \type object-list
+        \object-list ModelObjectLists
+
+OS:PlantEquipmentOperation:HeatingLoad,
+    \extensible:3
+   A1, \field Handle
+        \type handle
+        \required-field
+   A2 ,\field Name
+        \required-field
+        \reference ControlSchemeList
+   N1 ,\field Load Range 1 Lower Limit
+        \required-field
+       \type real
+       \units W
+       \minimum 0.0
+       \begin-extensible
+   N2 ,\field Load Range 1 Upper Limit
+        \required-field
+       \type real
+       \units W
+       \minimum 0.0
+   A3 ;\field Range 1 Equipment List Name
+        \required-field
+        \type object-list
+        \object-list ModelObjectLists
+
 OS:Pump:ConstantSpeed,
        \memo This pump model is described in the ASHRAE secondary HVAC toolkit.
        \min-fields 10 
