@@ -207,6 +207,11 @@ namespace detail {
     return result;
   }
 
+  void SolarCollectorIntegralCollectorStorage_Impl::resetSurface() {
+    bool result = setString(OS_SolarCollector_IntegralCollectorStorageFields::SurfaceName, "");
+    OS_ASSERT(result);
+  }
+
   bool SolarCollectorIntegralCollectorStorage_Impl::setMaximumFlowRate(double maximumFlowRate) {
     return setDouble(OS_SolarCollector_IntegralCollectorStorageFields::MaximumFlowRate, maximumFlowRate);
   }
@@ -274,6 +279,10 @@ void SolarCollectorIntegralCollectorStorage::resetSolarCollectorPerformance() {
 
 bool SolarCollectorIntegralCollectorStorage::setSurface(const PlanarSurface& surface) {
   return getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->setSurface(surface);
+}
+
+void SolarCollectorIntegralCollectorStorage::resetSurface() {
+  getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->resetSurface();
 }
 
 bool SolarCollectorIntegralCollectorStorage::setMaximumFlowRate(double maximumFlowRate) {

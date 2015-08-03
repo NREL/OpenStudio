@@ -33,7 +33,7 @@ namespace detail {
 
   /** SolarCollectorPerformancePhotovoltaicThermalSimple_Impl is a ModelObject_Impl that is the implementation class for SolarCollectorPerformancePhotovoltaicThermalSimple.*/
   class MODEL_API SolarCollectorPerformancePhotovoltaicThermalSimple_Impl : public ModelObject_Impl {
-    Q_OBJECT;
+ 
    public:
     /** @name Constructors and Destructors */
     //@{

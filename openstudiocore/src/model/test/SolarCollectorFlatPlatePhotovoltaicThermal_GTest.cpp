@@ -19,10 +19,10 @@
 
 #include <gtest/gtest.h>
 #include "ModelFixture.hpp"
-#include "../SolarCollectorPerformanceFlatPlate.hpp"
-#include "../SolarCollectorPerformanceFlatPlate_Impl.hpp"
-#include "../SolarCollectorFlatPlateWater.hpp"
-#include "../SolarCollectorFlatPlateWater_Impl.hpp"
+#include "../SolarCollectorFlatPlatePhotovoltaicThermal.hpp"
+#include "../SolarCollectorFlatPlatePhotovoltaicThermal_Impl.hpp"
+#include "../SolarCollectorPerformancePhotovoltaicThermalSimple.hpp"
+#include "../SolarCollectorPerformancePhotovoltaicThermalSimple_Impl.hpp"
 #include "../Surface.hpp"
 #include "../ShadingSurface.hpp"
 #include "../Schedule.hpp"
@@ -38,15 +38,15 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SolarCollectorFlatPlateWater_SolarCollectorFlatPlateWater)
+TEST_F(ModelFixture, SolarCollectorFlatPlatePhotovoltaicThermal_SolarCollectorFlatPlatePhotovoltaicThermal)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT ( 
   {  
     Model m;
-    SolarCollectorFlatPlateWater testObject(m);
-    SolarCollectorPerformanceFlatPlate performance = testObject.solarCollectorPerformance();
+    SolarCollectorFlatPlatePhotovoltaicThermal testObject(m);
+    SolarCollectorPerformancePhotovoltaicThermalSimple performance = testObject.solarCollectorPerformance();
 
     exit(0); 
   } ,
@@ -54,7 +54,7 @@ TEST_F(ModelFixture, SolarCollectorFlatPlateWater_SolarCollectorFlatPlateWater)
 }
 
 
-TEST_F(ModelFixture, SolarCollectorFlatPlateWater_addToNode) {
+TEST_F(ModelFixture, SolarCollectorFlatPlatePhotovoltaicThermal_addToNode) {
   Model model;
 
   PlantLoop plant(model);
@@ -74,31 +74,22 @@ TEST_F(ModelFixture, SolarCollectorFlatPlateWater_addToNode) {
 
   EXPECT_EQ(1u, plant.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
   EXPECT_EQ(1u, plant.supplyComponents(TemperingValve::iddObjectType()).size());
-  EXPECT_EQ(0u, plant.supplyComponents(SolarCollectorFlatPlateWater::iddObjectType()).size());
+  EXPECT_EQ(0u, plant.supplyComponents(SolarCollectorFlatPlatePhotovoltaicThermal::iddObjectType()).size());
 
-  EXPECT_EQ(0u, model.getObjectsByType(SolarCollectorFlatPlateWater::iddObjectType()).size());
-  EXPECT_EQ(0u, model.getObjectsByType(SolarCollectorPerformanceFlatPlate::iddObjectType()).size());
+  EXPECT_EQ(0u, model.getObjectsByType(SolarCollectorFlatPlatePhotovoltaicThermal::iddObjectType()).size());
+  EXPECT_EQ(0u, model.getObjectsByType(SolarCollectorPerformancePhotovoltaicThermalSimple::iddObjectType()).size());
 
-  SolarCollectorFlatPlateWater collector(model);
-  EXPECT_EQ(1u, model.getObjectsByType(SolarCollectorFlatPlateWater::iddObjectType()).size());
-  EXPECT_EQ(1u, model.getObjectsByType(SolarCollectorPerformanceFlatPlate::iddObjectType()).size());
+  SolarCollectorFlatPlatePhotovoltaicThermal collector(model);
+  EXPECT_EQ(1u, model.getObjectsByType(SolarCollectorFlatPlatePhotovoltaicThermal::iddObjectType()).size());
+  EXPECT_EQ(1u, model.getObjectsByType(SolarCollectorPerformancePhotovoltaicThermalSimple::iddObjectType()).size());
 
-  SolarCollectorPerformanceFlatPlate performance = collector.solarCollectorPerformance();
-  EXPECT_NE(0.0, performance.grossArea());
-  EXPECT_EQ("Water", performance.testFluid());
-  EXPECT_NE(0.0, performance.testFlowRate());
-  EXPECT_EQ("Inlet", performance.testCorrelationType());
-  EXPECT_NE(0.0, performance.coefficient1ofEfficiencyEquation());
-  EXPECT_NE(0.0, performance.coefficient2ofEfficiencyEquation());
-  //EXPECT_FALSE(performance.coefficient3ofEfficiencyEquation());
-  //EXPECT_TRUE(performance.coefficient2ofIncidentAngleModifier());
-  //EXPECT_TRUE(performance.coefficient3ofIncidentAngleModifier());
+  SolarCollectorPerformancePhotovoltaicThermalSimple performance = collector.solarCollectorPerformance();
 
   EXPECT_TRUE(collector.addToNode(node));
 
   EXPECT_EQ(1u, plant.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
   EXPECT_EQ(1u, plant.supplyComponents(TemperingValve::iddObjectType()).size());
-  EXPECT_EQ(1u, plant.supplyComponents(SolarCollectorFlatPlateWater::iddObjectType()).size());
+  EXPECT_EQ(1u, plant.supplyComponents(SolarCollectorFlatPlatePhotovoltaicThermal::iddObjectType()).size());
 
   EXPECT_FALSE(collector.surface());
 
@@ -120,40 +111,40 @@ TEST_F(ModelFixture, SolarCollectorFlatPlateWater_addToNode) {
 
   EXPECT_EQ(0, shadingSurface.solarCollectors().size());
 
-  EXPECT_EQ(0u, model.getObjectsByType(SolarCollectorFlatPlateWater::iddObjectType()).size());
-  EXPECT_EQ(0u, model.getObjectsByType(SolarCollectorPerformanceFlatPlate::iddObjectType()).size());
+  EXPECT_EQ(0u, model.getObjectsByType(SolarCollectorFlatPlatePhotovoltaicThermal::iddObjectType()).size());
+  EXPECT_EQ(0u, model.getObjectsByType(SolarCollectorPerformancePhotovoltaicThermalSimple::iddObjectType()).size());
 
   EXPECT_EQ(1u, plant.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
   EXPECT_EQ(1u, plant.supplyComponents(TemperingValve::iddObjectType()).size());
-  EXPECT_EQ(0u, plant.supplyComponents(SolarCollectorFlatPlateWater::iddObjectType()).size());
+  EXPECT_EQ(0u, plant.supplyComponents(SolarCollectorFlatPlatePhotovoltaicThermal::iddObjectType()).size());
 
 }
 
 
-TEST_F(ModelFixture, SolarCollectorFlatPlateWater_Clone) {
+TEST_F(ModelFixture, SolarCollectorFlatPlatePhotovoltaicThermal_Clone) {
   {
     Model model;
-    SolarCollectorFlatPlateWater collector(model);
-    SolarCollectorPerformanceFlatPlate performance = collector.solarCollectorPerformance();
+    SolarCollectorFlatPlatePhotovoltaicThermal collector(model);
+    SolarCollectorPerformancePhotovoltaicThermalSimple performance = collector.solarCollectorPerformance();
 
     ModelObject clone = collector.clone(model);
-    ASSERT_TRUE(clone.optionalCast<SolarCollectorFlatPlateWater>());
-    SolarCollectorFlatPlateWater collector2 = clone.cast<SolarCollectorFlatPlateWater>();
-    SolarCollectorPerformanceFlatPlate performance2 = collector2.solarCollectorPerformance();
+    ASSERT_TRUE(clone.optionalCast<SolarCollectorFlatPlatePhotovoltaicThermal>());
+    SolarCollectorFlatPlatePhotovoltaicThermal collector2 = clone.cast<SolarCollectorFlatPlatePhotovoltaicThermal>();
+    SolarCollectorPerformancePhotovoltaicThermalSimple performance2 = collector2.solarCollectorPerformance();
 
     EXPECT_NE(collector.handle(), collector2.handle());
     EXPECT_NE(performance.handle(), performance2.handle());
   }
   {
     Model model;
-    SolarCollectorFlatPlateWater collector(model);
-    SolarCollectorPerformanceFlatPlate performance = collector.solarCollectorPerformance();
+    SolarCollectorFlatPlatePhotovoltaicThermal collector(model);
+    SolarCollectorPerformancePhotovoltaicThermalSimple performance = collector.solarCollectorPerformance();
 
     Model model2;
     ModelObject clone = collector.clone(model2);
-    ASSERT_TRUE(clone.optionalCast<SolarCollectorFlatPlateWater>());
-    SolarCollectorFlatPlateWater collector2 = clone.cast<SolarCollectorFlatPlateWater>();
-    SolarCollectorPerformanceFlatPlate performance2 = collector2.solarCollectorPerformance();
+    ASSERT_TRUE(clone.optionalCast<SolarCollectorFlatPlatePhotovoltaicThermal>());
+    SolarCollectorFlatPlatePhotovoltaicThermal collector2 = clone.cast<SolarCollectorFlatPlatePhotovoltaicThermal>();
+    SolarCollectorPerformancePhotovoltaicThermalSimple performance2 = collector2.solarCollectorPerformance();
 
     EXPECT_NE(collector.handle(), collector2.handle());
     EXPECT_NE(performance.handle(), performance2.handle());

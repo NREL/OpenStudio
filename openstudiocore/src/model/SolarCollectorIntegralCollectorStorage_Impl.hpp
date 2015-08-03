@@ -33,7 +33,7 @@ namespace detail {
 
   /** SolarCollectorIntegralCollectorStorage_Impl is a StraightComponent_Impl that is the implementation class for SolarCollectorIntegralCollectorStorage.*/
   class MODEL_API SolarCollectorIntegralCollectorStorage_Impl : public StraightComponent_Impl {
-    Q_OBJECT;
+  
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -95,6 +95,8 @@ namespace detail {
     void resetSolarCollectorPerformance();
 
     bool setSurface(const PlanarSurface& surface);
+
+    void resetSurface();
 
     bool setMaximumFlowRate(double maximumFlowRate);
 

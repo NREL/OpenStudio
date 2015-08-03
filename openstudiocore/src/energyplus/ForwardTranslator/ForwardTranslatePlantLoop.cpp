@@ -753,11 +753,13 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
         }
         break;
       }
-      case openstudio::IddObjectType::OS_SolarCollector_FlatPlate_Water :
+      case openstudio::IddObjectType::OS_SolarCollector_FlatPlate_Water: // fall through
+      case openstudio::IddObjectType::OS_SolarCollector_IntegralCollectorStorage: // fall through
+      case openstudio::IddObjectType::OS_SolarCollector_FlatPlate_PhotovoltaicThermal: // fall through
       {
-        // DLM: ?????
-        sizeAsCondenserSystem = true;
-        if (boost::optional<Node> outletNode = isSetpointComponent(plantLoop, supplyComponent))
+        // DLM: what does sizeAsCondenserSystem mean?  solar collectors are not condensors so probably should be false?
+        sizeAsCondenserSystem = false;
+        if (outletNode && inletNode) {
         {
           auto hx = supplyComponent.cast<HeatExchangerFluidToFluid>();
           if (hx.isLoopSupplySideDesignFlowRateAutosized())
@@ -767,7 +769,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
           {
             flowRate = optionalFlowRate.get();
           }
-          setpointComponents.push_back(SetpointComponentInfo(supplyComponent, *outletNode, flowRate, autosize, BOTH));
+          setpointComponents.push_back(SetpointComponentInfo(supplyComponent, *inletNode, *outletNode, flowRate, autosize, HEATING));
         } else
         {
           uncontrolledComponents.push_back(supplyComponent);

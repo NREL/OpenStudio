@@ -38,6 +38,7 @@ namespace detail {
 
 /** SolarCollectorFlatPlateWater is a StraightComponent that wraps the OpenStudio IDD object 'OS:SolarCollector:FlatPlate:Water'. */
 class MODEL_API SolarCollectorFlatPlateWater : public StraightComponent {
+  
  public:
   /** @name Constructors and Destructors */
   //@{

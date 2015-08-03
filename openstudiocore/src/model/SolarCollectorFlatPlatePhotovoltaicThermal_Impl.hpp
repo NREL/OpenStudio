@@ -33,6 +33,7 @@ namespace detail {
 
   /** SolarCollectorFlatPlatePhotovoltaicThermal_Impl is a StraightComponent_Impl that is the implementation class for SolarCollectorFlatPlatePhotovoltaicThermal.*/
   class MODEL_API SolarCollectorFlatPlatePhotovoltaicThermal_Impl : public StraightComponent_Impl {
+    
    public:
     /** @name Constructors and Destructors */
     //@{

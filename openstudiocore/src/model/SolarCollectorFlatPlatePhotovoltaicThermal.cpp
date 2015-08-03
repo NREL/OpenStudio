@@ -205,6 +205,11 @@ namespace detail {
     return result;
   }
 
+  void SolarCollectorFlatPlatePhotovoltaicThermal_Impl::resetSurface() {
+    bool result = setString(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::SurfaceName, "");
+    OS_ASSERT(result);
+  }
+
   bool SolarCollectorFlatPlatePhotovoltaicThermal_Impl::setDesignFlowRate(double designFlowRate) {
     return setDouble(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::DesignFlowRate, designFlowRate);
   }
@@ -219,6 +224,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  bool SolarCollectorFlatPlatePhotovoltaicThermal_Impl::setSolarCollectorPerformanceNoClone(const SolarCollectorPerformancePhotovoltaicThermalSimple& performance) {
+    return setPointer(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicThermalModelPerformanceName, performance.handle());
+  }
+
 } // detail
 
 SolarCollectorFlatPlatePhotovoltaicThermal::SolarCollectorFlatPlatePhotovoltaicThermal(const Model& model)
@@ -226,12 +235,10 @@ SolarCollectorFlatPlatePhotovoltaicThermal::SolarCollectorFlatPlatePhotovoltaicT
 {
   OS_ASSERT(getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::SurfaceName
+  SolarCollectorPerformancePhotovoltaicThermalSimple performance(model);
+
   bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
-  // ok = setSurface();
+  ok = getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->setSolarCollectorPerformanceNoClone(performance);
   OS_ASSERT(ok);
 }
 
@@ -257,6 +264,10 @@ bool SolarCollectorFlatPlatePhotovoltaicThermal::isDesignFlowRateAutosized() con
 
 bool SolarCollectorFlatPlatePhotovoltaicThermal::setSurface(const PlanarSurface& surface) {
   return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->setSurface(surface);
+}
+
+void SolarCollectorFlatPlatePhotovoltaicThermal::resetSurface() {
+  return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->resetSurface();
 }
 
 bool SolarCollectorFlatPlatePhotovoltaicThermal::setSolarCollectorPerformance(const SolarCollectorPerformancePhotovoltaicThermalSimple& performance) {

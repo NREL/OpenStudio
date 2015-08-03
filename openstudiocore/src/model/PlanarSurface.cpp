@@ -549,7 +549,9 @@ namespace model {
       std::vector<ModelObject> result;
       for (const ModelObject& modelObject : getObject<ModelObject>().getModelObjectSources<ModelObject>()){
         switch (modelObject.iddObject().type().value()){
-        case IddObjectType::OS_SolarCollector_FlatPlate_Water:
+        case IddObjectType::OS_SolarCollector_FlatPlate_PhotovoltaicThermal: // fall through
+        case IddObjectType::OS_SolarCollector_FlatPlate_Water: // fall through
+        case IddObjectType::OS_SolarCollector_IntegralCollectorStorage: // fall through
           result.push_back(modelObject);
           break;
         default:
