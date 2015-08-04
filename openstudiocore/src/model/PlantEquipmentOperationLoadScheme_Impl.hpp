@@ -20,7 +20,7 @@
 #ifndef MODEL_PlantEquipmentOperationLoadScheme_IMPL_HPP
 #define MODEL_PlantEquipmentOperationLoadScheme_IMPL_HPP
 
-#include "ModelObject_Impl.hpp"
+#include "PlantEquipmentOperationScheme_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -29,10 +29,8 @@ class PlantLoop;
 
 namespace detail {
 
-  class MODEL_API PlantEquipmentOperationLoadScheme_Impl : public ModelObject_Impl {
+  class MODEL_API PlantEquipmentOperationLoadScheme_Impl : public PlantEquipmentOperationScheme_Impl {
    public:
-    /** @name Constructors and Destructors */
-    //@{
 
     PlantEquipmentOperationLoadScheme_Impl(IddObjectType type, Model_Impl* model);
 
@@ -45,6 +43,24 @@ namespace detail {
     PlantEquipmentOperationLoadScheme_Impl(const PlantEquipmentOperationLoadScheme_Impl& other, Model_Impl* model, bool keepHandles);
 
     virtual ~PlantEquipmentOperationLoadScheme_Impl() {}
+
+    bool addLoadRange(double upperLimit, const std::vector<HVACComponent> & equipment);
+
+    std::vector<HVACComponent> removeLoadRange(double upperLimit);
+
+    std::vector<double> loadRangeUpperLimits() const;
+
+    std::vector<HVACComponent> equipment(double upperLimit) const;
+
+    bool addEquipment(double upperLimit, const HVACComponent & equipment);
+
+    bool addEquipment(const HVACComponent & equipment);
+
+    bool removeEquipment(double upperLimit, const HVACComponent & equipment);
+
+    void clearLoadRanges();
+
+    static double maximumUpperLimit();
 
    private:
 
