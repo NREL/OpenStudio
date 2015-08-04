@@ -7,50 +7,48 @@ require_relative '../measure.rb'
 require 'fileutils'
 
 class OpenStudioResults_Test < MiniTest::Unit::TestCase
-
   # class level variable
   @@co = OpenStudio::Runmanager::ConfigOptions.new(true)
 
   def model_in_path
-    return "#{File.dirname(__FILE__)}/ExampleModel.osm"
+    "#{File.dirname(__FILE__)}/ExampleModel.osm"
   end
 
   def epw_path
     # make sure we have a weather data location
     assert(!@@co.getDefaultEPWLocation.to_s.empty?)
-    epw = @@co.getDefaultEPWLocation / OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.epw")
+    epw = @@co.getDefaultEPWLocation / OpenStudio::Path.new('USA_CO_Golden-NREL.724666_TMY3.epw')
     assert(File.exist?(epw.to_s))
 
-    return epw.to_s
+    epw.to_s
   end
 
   def run_dir(test_name)
     # always generate test output in specially named 'output' directory so result files are not made part of the measure
-    return "#{File.dirname(__FILE__)}/output/#{test_name}"
+    "#{File.dirname(__FILE__)}/output/#{test_name}"
   end
 
   def model_out_path(test_name)
-    return "#{run_dir(test_name)}/ExampleModel.osm"
+    "#{run_dir(test_name)}/ExampleModel.osm"
   end
 
   def workspace_path(test_name)
-    return "#{run_dir(test_name)}/ModelToIdf/in.idf"
+    "#{run_dir(test_name)}/ModelToIdf/in.idf"
   end
 
   def sql_path(test_name)
-    return "#{run_dir(test_name)}/ModelToIdf/EnergyPlusPreProcess-0/EnergyPlus-0/eplusout.sql"
+    "#{run_dir(test_name)}/ModelToIdf/EnergyPlusPreProcess-0/EnergyPlus-0/eplusout.sql"
   end
 
   def report_path(test_name)
-    return "#{run_dir(test_name)}/report.html"
+    "#{run_dir(test_name)}/report.html"
   end
 
-  # create test files if they do not exist when the test first runs 
+  # create test files if they do not exist when the test first runs
   def setup_test(test_name, idf_output_requests)
-
     @@co.findTools(false, true, false, true)
 
-    if !File.exist?(run_dir(test_name))
+    unless File.exist?(run_dir(test_name))
       FileUtils.mkdir_p(run_dir(test_name))
     end
     assert(File.exist?(run_dir(test_name)))
@@ -66,7 +64,7 @@ class OpenStudioResults_Test < MiniTest::Unit::TestCase
     end
 
     # convert output requests to OSM for testing, OS App and PAT will add these to the E+ Idf
-    workspace = OpenStudio::Workspace.new("Draft".to_StrictnessLevel, "EnergyPlus".to_IddFileType)
+    workspace = OpenStudio::Workspace.new('Draft'.to_StrictnessLevel, 'EnergyPlus'.to_IddFileType)
     workspace.addObjects(idf_output_requests)
     rt = OpenStudio::EnergyPlus::ReverseTranslator.new
     request_model = rt.translateWorkspace(workspace)
@@ -75,11 +73,11 @@ class OpenStudioResults_Test < MiniTest::Unit::TestCase
     model.addObjects(request_model.objects)
     model.save(model_out_path(test_name), true)
 
-    if !File.exist?(sql_path(test_name))
-      puts "Running EnergyPlus"
+    unless File.exist?(sql_path(test_name))
+      puts 'Running EnergyPlus'
 
-      wf = OpenStudio::Runmanager::Workflow.new("modeltoidf->energypluspreprocess->energyplus")
-      wf.add(@@co.getTools())
+      wf = OpenStudio::Runmanager::Workflow.new('modeltoidf->energypluspreprocess->energyplus')
+      wf.add(@@co.getTools)
       job = wf.create(OpenStudio::Path.new(run_dir(test_name)), OpenStudio::Path.new(model_out_path(test_name)), OpenStudio::Path.new(epw_path))
 
       rm = OpenStudio::Runmanager::RunManager.new
@@ -89,8 +87,7 @@ class OpenStudioResults_Test < MiniTest::Unit::TestCase
   end
 
   def test_good_argument_values
-
-    test_name = "test_good_argument_values"
+    test_name = 'test_good_argument_values'
 
     # create an instance of the measure
     measure = OpenStudioResults.new
@@ -99,7 +96,7 @@ class OpenStudioResults_Test < MiniTest::Unit::TestCase
     runner = OpenStudio::Ruleset::OSRunner.new
 
     # get arguments
-    arguments = measure.arguments()
+    arguments = measure.arguments
     argument_map = OpenStudio::Ruleset.convertOSArgumentVectorToMap(arguments)
 
     # create hash of argument values
@@ -146,7 +143,7 @@ class OpenStudioResults_Test < MiniTest::Unit::TestCase
       measure.run(runner, argument_map)
       result = runner.result
       show_output(result)
-      assert_equal("Success", result.value.valueName)
+      assert_equal('Success', result.value.valueName)
     ensure
       Dir.chdir(start_dir)
     end
@@ -154,5 +151,4 @@ class OpenStudioResults_Test < MiniTest::Unit::TestCase
     # make sure the report file exists
     assert(File.exist?(report_path(test_name)))
   end
-
 end
