@@ -180,8 +180,9 @@ namespace openstudio {
         // Evan note: there are issues with using the signal textChanged or textEdited, related to the design and updating of the gridview (loss of focus, and updates per key stroke)
     connect(m_tiltFilter, &QLineEdit::editingFinished, this, &openstudio::FacilityShadingGridView::tiltFilterChanged);
 
-    auto tiltValidator = new QDoubleValidator(this);
-    m_tiltFilter->setValidator(tiltValidator);
+    QRegExp regex("^(-?\\d*\\.?\\d+)?$");
+    auto validator = new QRegExpValidator(regex, this);
+    m_tiltFilter->setValidator(validator);
 
     label = new QLabel();
     label->setText("rad");
