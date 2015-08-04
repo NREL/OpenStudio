@@ -81,63 +81,18 @@ namespace openstudio {
 
   void ObjectSelector::addWidget(const boost::optional<model::ModelObject> &t_obj,
     Holder *t_holder,
-    int row,
-    int column,
+    int t_row,
+    int t_column,
     const boost::optional<int> &t_subrow,
     const bool t_selector)
   {
-    WidgetLocation * widgetLoc = new WidgetLocation(t_holder, row, column, t_subrow);
+    WidgetLocation * widgetLoc = new WidgetLocation(t_holder, t_row, t_column, t_subrow);
 
     connect(t_holder, &QObject::destroyed, this, &ObjectSelector::widgetDestroyed);
     connect(t_holder, &Holder::inFocus, widgetLoc, &WidgetLocation::onInFocus);
     connect(widgetLoc, &WidgetLocation::inFocus, this, &ObjectSelector::inFocus);
 
     m_widgetMap.insert(std::make_pair(t_obj, widgetLoc));
-
-    boost::optional<int> subRowToUpdate = t_subrow;
-
-    // A subrow may have been added, but maybe this gridview is driven by rows instead of subrows
-    bool rowSelected = false;
-    for (auto &widget : m_widgetMap)
-    {
-      if (widget.first
-        && widget.second->row == row
-        && (!widget.second->subrow || (widget.second->subrow == t_subrow)))
-      {
-        if (m_selectedObjects.count(*widget.first) != 0)
-        {
-          // we found a selected row, not subrow
-          if (!widget.second->subrow) {
-            subRowToUpdate.reset();
-          }
-          rowSelected = true;
-          break;
-        }
-      }
-    }
-
-    auto visible = true;
-
-    // is this (sub)row visible?
-    for (auto &widget : m_widgetMap)
-    {
-      if (widget.first
-        && widget.second->row == row
-        && (!widget.second->subrow || (widget.second->subrow == t_subrow)))
-      {
-        if (!m_objectFilter(*widget.first)) {
-          // an object in this (sub)row is not visible, therefore I am not visible
-          visible = false;
-          break;
-        }
-      }
-    }
-
-    // we found something selected that overlaps (row or subrow) with the added widget
-    // so let's go ahead and perform an update
-    if (rowSelected || !visible) {
-      updateWidgets(row, subRowToUpdate, rowSelected, visible);
-    }
 
     if (t_selector && t_obj)
     {

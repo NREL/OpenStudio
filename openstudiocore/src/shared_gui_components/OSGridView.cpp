@@ -366,7 +366,7 @@ void OSGridView::refreshAll()
       }
     }
 
-    this->m_gridController->getObjectSelector()->m_filteredObjects.clear();
+    this->m_gridController->getObjectSelector()->updateWidgets();
 
     QTimer::singleShot(0, this, SLOT(selectRowDeterminedByModelSubTabView()));
   }
