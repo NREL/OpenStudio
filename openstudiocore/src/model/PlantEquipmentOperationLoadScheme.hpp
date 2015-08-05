@@ -48,7 +48,7 @@ class MODEL_API PlantEquipmentOperationLoadScheme : public PlantEquipmentOperati
   friend class openstudio::IdfObject;
 
   /** Add a new load range, using the adjacent range as the lower limit, and "upperLimit" as the upper limit of the new range. 
-    * Returns true if the load range was succesfully added. **/
+    * Returns true if the load range was succesfully added. Duplicates wil be removed from the equipment vector **/
   bool addLoadRange(double upperLimit, const std::vector<HVACComponent> & equipment);
 
   /** Remove an existing load range identified by its upper limit. 

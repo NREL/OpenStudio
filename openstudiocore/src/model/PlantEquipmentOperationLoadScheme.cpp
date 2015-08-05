@@ -36,10 +36,10 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
-
 // These are the same for heating and cooling load range schemes
 enum LoadExtensibleFields { LOADRANGEFIELDS_LOWERLIMIT, LOADRANGEFIELDS_UPPERLIMIT, LOADRANGEFIELDS_RANGEEQUIPMENTLISTNAME };
+
+namespace detail {
 
 double PlantEquipmentOperationLoadScheme_Impl::maximumUpperLimit()
 {
@@ -78,9 +78,15 @@ bool PlantEquipmentOperationLoadScheme_Impl::addLoadRange(double upperLimit, con
       auto newEg = getObject<IdfObject>().insertExtensibleGroup(i).cast<WorkspaceExtensibleGroup>();
       auto m = model();
       ModelObjectList modelObjectList(m);
-      for( const auto & mo : equipment ) {
+
+      // Remove duplicates
+      auto equipmentCopy = equipment;
+      std::sort( equipmentCopy.begin(), equipmentCopy.end() );
+      equipmentCopy.erase( unique( equipmentCopy.begin(), equipmentCopy.end() ), equipmentCopy.end() );
+      for( const auto & mo : equipmentCopy ) {
         modelObjectList.addModelObject(mo);
       }
+
       newEg.setPointer(LOADRANGEFIELDS_RANGEEQUIPMENTLISTNAME,modelObjectList.handle());
       newEg.setDouble(LOADRANGEFIELDS_LOWERLIMIT,t_lowerLimit.get());
       newEg.setDouble(LOADRANGEFIELDS_UPPERLIMIT,upperLimit);
@@ -155,10 +161,6 @@ std::vector<HVACComponent> PlantEquipmentOperationLoadScheme_Impl::equipment(dou
 
 bool PlantEquipmentOperationLoadScheme_Impl::addEquipment(double upperLimit, const HVACComponent & equipment)
 {
-  auto plant = plantLoop();
-  if( ! plant ) return false;
-  if( ! plant->supplyComponent(equipment.handle()) ) return false;
-
   for( const auto & eg : extensibleGroups() ) {
     const auto & value = eg.getDouble(LOADRANGEFIELDS_UPPERLIMIT);
     OS_ASSERT(value);
@@ -167,7 +169,10 @@ bool PlantEquipmentOperationLoadScheme_Impl::addEquipment(double upperLimit, con
       OS_ASSERT(wo);
       auto modelObjectList = wo->optionalCast<ModelObjectList>();
       OS_ASSERT(modelObjectList);
-      return modelObjectList->addModelObject(equipment);
+      auto currentEquipment = modelObjectList->modelObjects();
+      if( std::find(currentEquipment.begin(),currentEquipment.end(),equipment) == currentEquipment.end() ) {
+        return modelObjectList->addModelObject(equipment);
+      }
     }
   }
 
@@ -176,10 +181,6 @@ bool PlantEquipmentOperationLoadScheme_Impl::addEquipment(double upperLimit, con
 
 bool PlantEquipmentOperationLoadScheme_Impl::addEquipment(const HVACComponent & equipment)
 {
-  auto plant = plantLoop();
-  if( ! plant ) return false;
-  if( ! plant->supplyComponent(equipment.handle()) ) return false;
-
   const auto & egs = extensibleGroups();
 
   OS_ASSERT(! egs.empty());
@@ -189,7 +190,12 @@ bool PlantEquipmentOperationLoadScheme_Impl::addEquipment(const HVACComponent & 
   OS_ASSERT(wo);
   auto modelObjectList = wo->optionalCast<ModelObjectList>();
   OS_ASSERT(modelObjectList);
-  return modelObjectList->addModelObject(equipment);
+  auto currentEquipment = modelObjectList->modelObjects();
+  if( std::find(currentEquipment.begin(),currentEquipment.end(),equipment) == currentEquipment.end() ) {
+    return modelObjectList->addModelObject(equipment);
+  }
+
+  return false;
 }
 
 bool PlantEquipmentOperationLoadScheme_Impl::removeEquipment(double upperLimit, const HVACComponent & equipment)
@@ -232,6 +238,12 @@ PlantEquipmentOperationLoadScheme::PlantEquipmentOperationLoadScheme(IddObjectTy
   : PlantEquipmentOperationScheme(type,model)
 {
   OS_ASSERT(getImpl<detail::PlantEquipmentOperationLoadScheme_Impl>());
+
+  auto eg = pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+  ModelObjectList modelObjectList(model);
+  eg.setPointer(LOADRANGEFIELDS_RANGEEQUIPMENTLISTNAME,modelObjectList.handle());
+  eg.setDouble(LOADRANGEFIELDS_LOWERLIMIT,0.0);
+  eg.setDouble(LOADRANGEFIELDS_UPPERLIMIT,getImpl<detail::PlantEquipmentOperationLoadScheme_Impl>()->maximumUpperLimit());
 }     
 
 PlantEquipmentOperationLoadScheme::PlantEquipmentOperationLoadScheme(std::shared_ptr<detail::PlantEquipmentOperationLoadScheme_Impl> p)

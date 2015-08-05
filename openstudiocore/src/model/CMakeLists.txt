@@ -598,6 +598,9 @@ set(${target_name}_src
   PlantEquipmentOperationCoolingLoad.hpp
   PlantEquipmentOperationCoolingLoad_Impl.hpp
   PlantEquipmentOperationCoolingLoad.cpp
+  PlantEquipmentOperationHeatingLoad.hpp
+  PlantEquipmentOperationHeatingLoad_Impl.hpp
+  PlantEquipmentOperationHeatingLoad.cpp
   ProgramControl.hpp
   ProgramControl_Impl.hpp
   ProgramControl.cpp
@@ -1372,6 +1375,8 @@ set(${target_name}_test_src
   test/PipeAdiabatic_GTest.cpp
   test/PlanarSurface_GTest.cpp
   test/PlantLoop_GTest.cpp
+  test/PlantEquipmentOperationCoolingLoad_GTest.cpp
+  test/PlantEquipmentOperationHeatingLoad_GTest.cpp
   test/Plenums_GTest.cpp
   test/PumpConstantSpeed_GTest.cpp
   test/PumpVariableSpeed_GTest.cpp
