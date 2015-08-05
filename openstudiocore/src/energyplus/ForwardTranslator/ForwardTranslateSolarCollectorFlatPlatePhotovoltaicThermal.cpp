@@ -70,13 +70,14 @@ namespace energyplus {
   // PhotovoltaicName
   // DLM: not implemented
 
-  // DLM: todo, figure out if this is on an air loop or plant loop
-  bool onAirLoop = false;
+  // figure out if this is on an air loop or plant loop
+  boost::optional<AirLoopHVAC> airLoopHVAC = modelObject.airLoopHVAC();
+  boost::optional<PlantLoop> plantLoop = modelObject.plantLoop();
 
   // ThermalWorkingFluidType
-  if (onAirLoop){
+  if (airLoopHVAC){
     idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::ThermalWorkingFluidType, "Air");
-  } else{
+  } else if (plantLoop){
     idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::ThermalWorkingFluidType, "Water");
   }
 
@@ -85,9 +86,9 @@ namespace energyplus {
   {
     if (boost::optional<Node> node = mo->optionalCast<Node>())
     {
-      if (onAirLoop){
+      if (airLoopHVAC){
         idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::AirInletNodeName, node->name().get());
-      } else{
+      } else if (plantLoop){
         idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::WaterInletNodeName, node->name().get());
       }
     }
@@ -98,9 +99,9 @@ namespace energyplus {
   {
     if (boost::optional<Node> node = mo->optionalCast<Node>())
     {
-      if (onAirLoop){
+      if (airLoopHVAC){
         idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::AirOutletNodeName, node->name().get());
-      } else{
+      } else if (plantLoop){
         idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::WaterOutletNodeName, node->name().get());
       }
     }

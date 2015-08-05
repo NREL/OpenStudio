@@ -133,9 +133,17 @@ namespace detail {
           return true;
         }
       }
+    } else if (boost::optional<AirLoopHVAC> airLoopHVAC = node.airLoopHVAC())
+    {
+      if (airLoopHVAC->supplyComponent(node.handle()))
+      {
+        if (StraightComponent_Impl::addToNode(node))
+        {
+          return true;
+        }
+      }
     }
 
-    // TODO: handle air loop case
 
     return false;
   }

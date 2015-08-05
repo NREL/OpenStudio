@@ -216,6 +216,9 @@
     <file>images/sizing.png</file>
     <file>images/slhx.png</file>
     <file>images/snowflake.png</file>
+    <file>images/solarcollector_flatplate_photovoltaicthermal.png</file>
+    <file>images/solarcollector_flatplate_water.png</file>
+    <file>images/solarcollector_integralstorage.png</file>
     <file>images/splitter.png</file>
     <file>images/supply_mixer.png</file>
     <file>images/supply_splitter.png</file>
@@ -406,6 +409,9 @@
     <file>images/mini_icons/shading_surface_group.png</file>
     <file>images/mini_icons/sinkmini_icon_definition.png</file>
     <file>images/mini_icons/site.png</file>
+    <file>images/mini_icons/solarcollector_flatplate_photovoltaicthermal.png</file>
+    <file>images/mini_icons/solarcollector_flatplate_water.png</file>
+    <file>images/mini_icons/solarcollector_integralstorage.png</file>
     <file>images/mini_icons/space.png</file>
     <file>images/mini_icons/space_type.png</file>
     <file>images/mini_icons/steam_equipment.png</file>
