@@ -760,7 +760,6 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
         // DLM: what does sizeAsCondenserSystem mean?  solar collectors are not condensors so probably should be false?
         sizeAsCondenserSystem = false;
         if (outletNode && inletNode) {
-        {
           auto hx = supplyComponent.cast<HeatExchangerFluidToFluid>();
           if (hx.isLoopSupplySideDesignFlowRateAutosized())
           {

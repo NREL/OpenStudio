@@ -844,9 +844,29 @@
     <rule IddField="Sensible Heat Ratio Function of Flow Fraction Curve" Access="LOCKED"/>
     <rule IddField="Condenser Air Inlet Node" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_SolarCollector_FlatPlate_PhotovoltaicThermal">
+    <rule IddField="Photovoltaic-Thermal Model Performance Name" Access="HIDDEN"/>
+    <rule IddField="Photovoltaic Name" Access="LOCKED"/>
+    <rule IddField="Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>  
   <POLICY IddObjectType="OS_SolarCollector_FlatPlate_Water">
     <rule IddField="SolarCollectorPerformance Name" Access="HIDDEN"/>
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>  
+  <POLICY IddObjectType="OS_SolarCollector_IntegralCollectorStorage">
+    <rule IddField="IntegralCollectorStorageParameters Name" Access="HIDDEN"/>
+    <rule IddField="Bottom Surface Boundary Conditions Type" Access="LOCKED"/>
+    <rule IddField="Boundary Condition Model Name" Access="HIDDEN"/>
+    <rule IddField="Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>  
+  <POLICY IddObjectType="OS_SolarCollector_FlatPlate_Water">
+  </POLICY>  
+    <POLICY IddObjectType="OS_SolarCollector_IntegralCollectorStorage">
+    <rule IddField="ICS Collector Type" Access="LOCKED"/>
+  </POLICY>  
+  <POLICY IddObjectType="OS_SolarCollector_PhotovoltaicThermal_Simple">
   </POLICY>  
 </ROOT>

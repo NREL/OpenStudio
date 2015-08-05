@@ -1716,16 +1716,41 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateSizingParameters(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_SolarCollector_FlatPlate_PhotovoltaicThermal:
+  {
+    model::SolarCollectorFlatPlatePhotovoltaicThermal mo = modelObject.cast<SolarCollectorFlatPlatePhotovoltaicThermal>();
+    retVal = translateSolarCollectorFlatPlatePhotovoltaicThermal(mo);
+    break;
+  }
+  case openstudio::IddObjectType::OS_SolarCollector_FlatPlate_Water:
+  {
+    model::SolarCollectorFlatPlateWater mo = modelObject.cast<SolarCollectorFlatPlateWater>();
+    retVal = translateSolarCollectorFlatPlateWater(mo);
+    break;
+  }
+
+  case openstudio::IddObjectType::OS_SolarCollector_IntegralCollectorStorage:
+  {
+    model::SolarCollectorIntegralCollectorStorage mo = modelObject.cast<SolarCollectorIntegralCollectorStorage>();
+    retVal = translateSolarCollectorIntegralCollectorStorage(mo);
+    break;
+  }
   case openstudio::IddObjectType::OS_SolarCollectorPerformance_FlatPlate :
   {
     model::SolarCollectorPerformanceFlatPlate mo = modelObject.cast<SolarCollectorPerformanceFlatPlate>();
     retVal = translateSolarCollectorPerformanceFlatPlate(mo);
     break;
   }
-  case openstudio::IddObjectType::OS_SolarCollector_FlatPlate_Water :
+  case openstudio::IddObjectType::OS_SolarCollectorPerformance_IntegralCollectorStorage:
   {
-    model::SolarCollectorFlatPlateWater mo = modelObject.cast<SolarCollectorFlatPlateWater>();
-    retVal = translateSolarCollectorFlatPlateWater(mo);
+    model::SolarCollectorPerformanceIntegralCollectorStorage mo = modelObject.cast<SolarCollectorPerformanceIntegralCollectorStorage>();
+    retVal = translateSolarCollectorPerformanceIntegralCollectorStorage(mo);
+    break;
+  }
+  case openstudio::IddObjectType::OS_SolarCollectorPerformance_PhotovoltaicThermal_Simple:
+  {
+    model::SolarCollectorPerformancePhotovoltaicThermalSimple mo = modelObject.cast<SolarCollectorPerformancePhotovoltaicThermalSimple>();
+    retVal = translateSolarCollectorPerformancePhotovoltaicThermalSimple(mo);
     break;
   }
   case openstudio::IddObjectType::OS_StandardsInformation_Construction :

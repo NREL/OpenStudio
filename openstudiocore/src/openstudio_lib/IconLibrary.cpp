@@ -128,7 +128,9 @@ IconLibrary::IconLibrary()
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Refrigeration_Condenser_Cascade).value()] = new QPixmap(":images/condenser_cascade.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Refrigeration_Condenser_EvaporativeCooled).value()] = new QPixmap(":images/evap_cooled.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Refrigeration_Condenser_WaterCooled).value()] = new QPixmap(":images/water_cooled.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SolarCollector_FlatPlate_PhotovoltaicThermal).value()] = new QPixmap(":images/bug.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SolarCollector_FlatPlate_Water).value()] = new QPixmap(":images/bug.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SolarCollector_IntegralCollectorStorage).value()] = new QPixmap(":images/bug.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_TemperingValve).value()] = new QPixmap(":images/tempering_valve.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ThermalZone).value()] = new QPixmap(":images/zone.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ThermalStorage_Ice_Detailed).value()] = new QPixmap(":images/thermal_storage_ice.png");
