@@ -351,7 +351,7 @@ void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bo
     event->accept();
 
     // don't allow user to drag standard reports or other built in measures 
-    if (m_app->measureManager().isPatApplicationMeasure(id)){
+    if (m_app->measureManager().isManagedMeasure(id)){
       QMessageBox::warning( m_app->mainWidget(), 
           "Cannot add measure", 
           "This measure conflicts with a built in measure and cannot be added. Create a duplicate of this measure to add to this project.");

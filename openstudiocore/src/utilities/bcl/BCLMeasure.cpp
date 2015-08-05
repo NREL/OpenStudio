@@ -413,6 +413,10 @@ namespace openstudio{
     return BCLMeasure(patApplicationMeasuresDir() / toPath("CalibrationReports"));
   }
 
+  BCLMeasure BCLMeasure::radianceMeasure() {
+    return BCLMeasure(patApplicationMeasuresDir() / toPath("RadianceMeasure"));
+  }
+
   std::vector<BCLMeasure> BCLMeasure::localBCLMeasures()
   {
     return LocalBCL::instance().measures();

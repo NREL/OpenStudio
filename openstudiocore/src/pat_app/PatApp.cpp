@@ -1439,7 +1439,7 @@ void PatApp::attachProject(boost::optional<analysisdriver::SimpleProject> projec
     // and use that. Call this original version when the run button is hit.
 
     // update built in measures that may have changed if we upgraded versions
-    m_measureManager.updatePatApplicationMeasures(*m_project);
+    m_measureManager.updateOpenStudioMeasures(*m_project);
 
     // cache the seed models here
     m_project->seedModel();

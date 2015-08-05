@@ -577,6 +577,7 @@ QWidget * LibraryItemDelegate::view(QSharedPointer<OSListItem> dataSource)
       widget->m_measureTypeBadge->setVisible(true);
     }
 
+    // DLM: look here
     if(libraryItem->m_source == LocalLibrary::BCL){
       widget->m_measureBadge->setMeasureBadgeType(MeasureBadgeType::BCLMeasure);
     }
