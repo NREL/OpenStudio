@@ -60,7 +60,7 @@ class RunTabController : public MainTabController
  signals:
     void resultsGenerated(const openstudio::path &t_sqlFile, const openstudio::path &t_radianceOutputFile);
     void toolsUpdated();
-    void useRadianceStateChanged(bool);
+    //void useRadianceStateChanged(bool);
 
 
  public slots:

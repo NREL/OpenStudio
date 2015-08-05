@@ -133,7 +133,7 @@ RunView::RunView(const model::Model & model,
   m_statusLabel = new QLabel("Ready");
   progressbarlayout->addWidget(m_statusLabel);
   mainLayout->addLayout(progressbarlayout, 0, 1);
-
+  /*
   m_radianceGroup = new QButtonGroup(this);
 
   connect(m_radianceGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &RunView::on_radianceGroupClicked);
@@ -161,13 +161,13 @@ RunView::RunView(const model::Model & model,
   radianceInteriorLayout->addWidget(m_energyPlusButton);
   radianceInteriorLayout->addStretch();
   radianceInteriorLayout->addWidget(m_radianceButton);
-
+  */
 /*
   radianceHLayout->addSpacing(100);
   radianceHLayout->addWidget(radianceWidget, 3);
   radianceHLayout->addStretch(2);
   */
-  radianceWidget->setStyleSheet("QWidget#RunStatusViewRadiance {background: #DADADA; border: 1px solid #A5A5A5;}");
+  //radianceWidget->setStyleSheet("QWidget#RunStatusViewRadiance {background: #DADADA; border: 1px solid #A5A5A5;}");
 
 
 
@@ -192,14 +192,14 @@ RunView::RunView(const model::Model & model,
   groupBox->setLayout(radianceVLayout);
 */
 
-  mainLayout->addWidget(radianceWidget, 1, 1);
+  //mainLayout->addWidget(radianceWidget, 1, 1);
 
-  if (usesRadianceForDaylightCalculations(t_runManager))
-  {
-    m_radianceButton->setChecked(true);
-  } else {
-    m_energyPlusButton->setChecked(true);
-  }
+  //if (usesRadianceForDaylightCalculations(t_runManager))
+  //{
+  //  m_radianceButton->setChecked(true);
+  //} else {
+  //  m_energyPlusButton->setChecked(true);
+  //}
 
   openstudio::runmanager::ToolVersion epversion = getRequiredEnergyPlusVersion();
   if( auto tag = epversion.getTag() ) {
@@ -236,7 +236,7 @@ RunView::RunView(const model::Model & model,
   updateRunManagerStats(t_runManager);
 }
 
-
+/*
 void RunView::getRadiancePreRunWarningsAndErrors(std::vector<std::string> & warnings,
                                                  std::vector<std::string> & errors)
 {
@@ -244,7 +244,7 @@ void RunView::getRadiancePreRunWarningsAndErrors(std::vector<std::string> & warn
   boost::optional<model::Model> model(m_model);
   openstudio::getRadiancePreRunWarningsAndErrors(warnings, errors, rm, model);
 }
-
+*/
 void RunView::locateEnergyPlus()
 {
   openstudio::runmanager::ConfigOptions co(true);
@@ -262,14 +262,14 @@ void RunView::updateToolsWarnings()
 {
   LOG(Debug, "updateToolsWarnings called");
   
-  getRadiancePreRunWarningsAndErrors(m_radianceWarnings,m_radianceErrors);
+  //getRadiancePreRunWarningsAndErrors(m_radianceWarnings,m_radianceErrors);
 
-  QString checkBoxText;
-  QString buttonText;
+  //QString checkBoxText;
+  //QString buttonText;
 
-  if(m_radianceErrors.size() > 0){
-    m_energyPlusButton->setChecked(true);
-  }
+  //if(m_radianceErrors.size() > 0){
+  //  m_energyPlusButton->setChecked(true);
+  //}
 
   locateEnergyPlus();
 }
@@ -488,15 +488,15 @@ void RunView::playButtonClicked(bool t_checked)
     }
 
     // TODO call Dan's ModelToRad translator to determine if there are problems
-    if(m_radianceButton->isChecked() && (!m_radianceWarnings.empty() || !m_radianceErrors.empty())) {
-      showRadianceWarningsAndErrors(m_radianceWarnings, m_radianceErrors);
-      if(m_radianceErrors.size()){
-        return;
-      }
-      else{
-        // check messageBox return value to run with warnings
-      }
-    }
+    //if(m_radianceButton->isChecked() && (!m_radianceWarnings.empty() || !m_radianceErrors.empty())) {
+    //  showRadianceWarningsAndErrors(m_radianceWarnings, m_radianceErrors);
+    // if(m_radianceErrors.size()){
+    //    return;
+    //  }
+    //  else{
+    //    // check messageBox return value to run with warnings
+    //  }
+    //}
 
     m_canceling = false;
     m_outputWindow->clear();
@@ -518,14 +518,14 @@ void RunView::requestStartRunManager()
   std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
   bool requireCalibrationReports = (osdocument->model().getConcreteModelObjects<model::UtilityBill>().size() > 0);
   openstudio::runmanager::RunManager rm = runManager();
-  startRunManager(rm, m_modelPath, m_tempFolder, m_radianceButton->isChecked(), requireCalibrationReports, this);
+  startRunManager(rm, m_modelPath, m_tempFolder, std::vector<double>(), requireCalibrationReports, this);
 }
 
 openstudio::runmanager::RunManager RunView::runManager()
 {
   return OSAppBase::instance()->project()->runManager();
 }
-
+/*
 void RunView::showRadianceWarningsAndErrors(const std::vector<std::string> & warnings,
                                             const std::vector<std::string> & errors)
 {
@@ -554,7 +554,7 @@ void RunView::showRadianceWarningsAndErrors(const std::vector<std::string> & war
   QMessageBox::critical(this, "Radiance Warnings and Errors", errorsAndWarnings);
 }
 
-void RunView::on_radianceWarningsAndErrorsClicked(bool /*checked*/)
+void RunView::on_radianceWarningsAndErrorsClicked(bool checked)
 {
   showRadianceWarningsAndErrors(m_radianceWarnings,m_radianceErrors);
 }
@@ -574,5 +574,5 @@ void RunView::on_radianceGroupClicked(int idx)
     emit useRadianceStateChanged(false);
   }
 }
-
+*/
 } // openstudio

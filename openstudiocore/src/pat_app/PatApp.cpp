@@ -774,9 +774,9 @@ bool PatApp::setSeed(const FileReference& currentSeedLocation) {
       }
 
       // DLM: TODO check imported model to see what this should do
-      if (projectHasRadiance(*m_project)){
-        removeRadianceFromProject(*m_project);
-      }
+      //if (projectHasRadiance(*m_project)){
+      //  removeRadianceFromProject(*m_project);
+      //}
       
       // get new number of variables and report out how many fixed measures were added
       int nvarsAdded = m_project->analysis().problem().numVariables() - nvars;

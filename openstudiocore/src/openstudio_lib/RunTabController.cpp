@@ -40,7 +40,7 @@ RunTabController::RunTabController(const model::Model & model, const openstudio:
 
   connect(m_runView, &RunView::toolsUpdated, this, &RunTabController::toolsUpdated);
 
-  connect(m_runView, &RunView::useRadianceStateChanged, this, &RunTabController::useRadianceStateChanged);
+  //connect(m_runView, &RunView::useRadianceStateChanged, this, &RunTabController::useRadianceStateChanged);
 }
 
 openstudio::RunView * RunTabController::runView(){
