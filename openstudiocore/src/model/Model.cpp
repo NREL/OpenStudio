@@ -264,6 +264,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(CoilSystemCoolingDXHeatExchangerAssisted);
     REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPump);
     REGISTER_CONSTRUCTOR(CoilWaterHeatingDesuperheater);
+    REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPump);
     REGISTER_CONSTRUCTOR(ComponentCostAdjustments);
     REGISTER_CONSTRUCTOR(ComponentData);
     REGISTER_CONSTRUCTOR(Connection);
@@ -461,6 +462,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(UtilityCost_Variable);
     REGISTER_CONSTRUCTOR(Version);
     REGISTER_CONSTRUCTOR(WaterHeaterMixed);
+    REGISTER_CONSTRUCTOR(WaterHeaterHeatPump);
+    REGISTER_CONSTRUCTOR(WaterHeaterStratified);
     REGISTER_CONSTRUCTOR(WaterUseConnections);
     REGISTER_CONSTRUCTOR(WaterUseEquipment);
     REGISTER_CONSTRUCTOR(WaterUseEquipmentDefinition);
@@ -600,6 +603,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(CoilSystemCoolingDXHeatExchangerAssisted);
     REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPump);
     REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingDesuperheater);
+    REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPump);
     REGISTER_COPYCONSTRUCTORS(ComponentCostAdjustments);
     REGISTER_COPYCONSTRUCTORS(ComponentData);
     REGISTER_COPYCONSTRUCTORS(Connection);
@@ -797,6 +801,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(UtilityCost_Variable);
     REGISTER_COPYCONSTRUCTORS(Version);
     REGISTER_COPYCONSTRUCTORS(WaterHeaterMixed);
+    REGISTER_COPYCONSTRUCTORS(WaterHeaterHeatPump);
+    REGISTER_COPYCONSTRUCTORS(WaterHeaterStratified);
     REGISTER_COPYCONSTRUCTORS(WaterUseConnections);
     REGISTER_COPYCONSTRUCTORS(WaterUseEquipment);
     REGISTER_COPYCONSTRUCTORS(WaterUseEquipmentDefinition);

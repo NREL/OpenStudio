@@ -22,8 +22,8 @@
 namespace openstudio {
 
 SchedulesTabView::SchedulesTabView(const model::Model & model,
-                                   QWidget * parent)
-  : MainTabView("Schedules",true,parent)
+  QWidget * parent)
+  : MainTabView("Schedules", MainTabView::SUB_TAB, parent)
 {
 }
 

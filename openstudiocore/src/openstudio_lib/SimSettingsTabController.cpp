@@ -29,7 +29,7 @@
 namespace openstudio {
 
 SimSettingsTabController::SimSettingsTabController(bool isIP, const model::Model & model)
-  : MainTabController(new SimSettingsTabView(isIP,model,"Simulation Settings",false))
+  : MainTabController(new SimSettingsTabView(isIP, model, "Simulation Settings", MainTabView::MAIN_TAB))
 {
   connect(this, &SimSettingsTabController::toggleUnitsClicked, mainContentWidget(), &MainTabView::toggleUnitsClicked);
 }

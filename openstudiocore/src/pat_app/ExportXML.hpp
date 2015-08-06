@@ -42,10 +42,7 @@ namespace openstudio {
   class SqlFile;
   class Transformation;
 
-namespace analysis {
-
-
-namespace exportxml {
+namespace pat {
 
   class ExportXML {
   public:
@@ -59,13 +56,15 @@ namespace exportxml {
   private:
 
     boost::optional<QDomElement> exportMeasure(QDomDocument& doc,
-                                               const WorkflowStepJob& wfJob);
+                                               const analysis::WorkflowStepJob& wfJob);
 
+    std::vector<QDomElement> exportSwapModelAlternatives(QDomDocument& doc,
+                                                         const QJsonArray& measures);
 
-    boost::optional<QDomElement> exportAlternative(QDomDocument& doc, 
+    boost::optional<QDomElement> exportAlternative(QDomDocument& doc,
                                                    Attribute& alternativeAttr,
                                                    analysis::DataPoint dataPt,
-                                                   std::vector<WorkflowStepJob>& jobs,
+                                                   std::vector<analysis::WorkflowStepJob>& jobs,
                                                    std::string edaBaselineName,
                                                    std::string proposedBaselineName,
                                                    std::string certificationBaselineName);
@@ -84,8 +83,7 @@ namespace exportxml {
 
   };
 
-} // exportxml
-} // analysis
+} // pat
 } // openstudio
 
 #endif // PATAPP_EXPORTXML_HPP

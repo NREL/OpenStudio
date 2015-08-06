@@ -129,9 +129,9 @@ TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const Vect
     if (timeInDays[0] == 0) { // This is the old, BROKEN way
       int firstIntervalSeconds = firstReportDateTime.time().totalSeconds();
       if (firstIntervalSeconds == 0) {
-        LOG_AND_THROW("Cannot calculate or assume the series start date for first report at the beginning of a day");
+        LOG_AND_THROW("Cannot calculate the series start date for first report at the beginning of a day");
       }
-      LOG(Warn, "Assuming that time series begins at the start of the day of first report");
+      LOG(Warn, "Assuming time series begins at the start of the day of first report. This behavior is deprecated and will instead be an error in the future.");
       m_startDateTime = DateTime(m_firstReportDateTime.date());
 
       for (unsigned i = 0; i < values.size(); ++i) {
@@ -197,9 +197,9 @@ TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std:
     if (timeInDays[0] == 0) { // This is the old, BROKEN way
       int firstIntervalSeconds = firstReportDateTime.time().totalSeconds();
       if (firstIntervalSeconds == 0) {
-        LOG_AND_THROW("Cannot calculate or assume the series start date for first report at the beginning of a day");
+        LOG_AND_THROW("Cannot calculate the series start date for first report at the beginning of a day");
       }
-      LOG(Warn, "Assuming that time series begins at the start of the day of first report");
+      LOG(Warn, "Assuming time series begins at the start of the day of first report. This behavior is deprecated and will instead be an error in the future.");
       m_startDateTime = DateTime(m_firstReportDateTime.date());
 
       for (unsigned i = 0; i < values.size(); ++i) {
@@ -334,9 +334,9 @@ TimeSeries_Impl::TimeSeries_Impl(const DateTimeVector& inDateTimes, const Vector
         m_startDateTime = m_firstReportDateTime - Time(0, 0, 0, delta);
       } else {
         if (m_firstReportDateTime.time().totalSeconds() == 0) {
-          LOG_AND_THROW("Cannot calculate or assume the series start date for first report at the beginning of a day");
+          LOG_AND_THROW("Cannot calculate the series start date for first report at the beginning of a day");
         }
-        LOG(Warn, "Assuming that time series begins at the start of the day of first report");
+        LOG(Warn, "Assuming time series begins at the start of the day of first report. This behavior is deprecated and will instead be an error in the future.");
         m_startDateTime = DateTime(m_firstReportDateTime.date());
       }
     }
@@ -359,7 +359,6 @@ TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std:
   if (timeInSeconds.size() != values.size()) {
     LOG_AND_THROW("Length of values (" << values.size() << ") must match length of times (" << timeInSeconds.size() << ")");
   }
-
   if (values.empty() || timeInSeconds.empty()) {
     LOG(Warn, "Creating empty timeseries");
     m_startDateTime = firstReportDateTime;
@@ -374,9 +373,9 @@ TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std:
 
     if (timeInSeconds[0] == 0) { // This is the old, BROKEN way
       if (firstReportDateTime.time().totalSeconds() == 0) {
-        LOG_AND_THROW("Cannot calculate or assume the series start date for first report at the beginning of a day");
+        LOG_AND_THROW("Cannot calculate the series start date for first report at the beginning of a day");
       }
-      LOG(Warn, "Assuming that time series begins at the start of the day of first report");
+      LOG(Warn, "Assuming time series begins at the start of the day of first report. This behavior is deprecated and will instead be an error in the future.");
       m_startDateTime = DateTime(firstReportDateTime.date());
       m_firstReportDateTime = firstReportDateTime;
       int firstIntervalSeconds = m_firstReportDateTime.time().totalSeconds();

@@ -20,9 +20,17 @@
 #ifndef OPENSTUDIO_FACILITYTABVIEW_HPP
 #define OPENSTUDIO_FACILITYTABVIEW_HPP
 
-#include "SubTabView.hpp"
+#include "../model/Model.hpp"
+
+#include "MainTabView.hpp"
+
+class QWidget;
 
 namespace openstudio {
+
+  namespace model {
+    class Model;
+  }
 
 class FacilityTabView : public MainTabView
 {
@@ -37,6 +45,7 @@ public:
 public slots:
 
   void toggleUnits(bool displayIP);
+
 };
 
 } // openstudio

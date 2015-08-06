@@ -22,7 +22,7 @@
 namespace openstudio {
 
 ThermalZonesTabView::ThermalZonesTabView(QWidget * parent)
-  : MainTabView("Thermal Zones",false,parent)
+  : MainTabView("Thermal Zones", MainTabView::MAIN_TAB, parent)
 {
 }
 
