@@ -357,6 +357,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(PipeAdiabatic);
     REGISTER_CONSTRUCTOR(PlantLoop);
     REGISTER_CONSTRUCTOR(PlantEquipmentOperationCoolingLoad);
+    REGISTER_CONSTRUCTOR(PlantEquipmentOperationHeatingLoad);
     REGISTER_CONSTRUCTOR(PortList);
     REGISTER_CONSTRUCTOR(ProgramControl);
     REGISTER_CONSTRUCTOR(PumpConstantSpeed);
@@ -686,6 +687,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(PipeAdiabatic);
     REGISTER_COPYCONSTRUCTORS(PlantLoop);
     REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationCoolingLoad);
+    REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationHeatingLoad);
     REGISTER_COPYCONSTRUCTORS(PortList);
     REGISTER_COPYCONSTRUCTORS(ProgramControl);
     REGISTER_COPYCONSTRUCTORS(PumpConstantSpeed);

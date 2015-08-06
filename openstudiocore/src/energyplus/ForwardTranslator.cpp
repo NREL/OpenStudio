@@ -1352,6 +1352,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translatePlantLoop(plantLoop);
       break;
     }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_CoolingLoad :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationCoolingLoad>();
+      retVal = translatePlantEquipmentOperationCoolingLoad(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_HeatingLoad :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationHeatingLoad>();
+      retVal = translatePlantEquipmentOperationHeatingLoad(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_Pump_ConstantSpeed :
     {
       PumpConstantSpeed pump = modelObject.cast<PumpConstantSpeed>();

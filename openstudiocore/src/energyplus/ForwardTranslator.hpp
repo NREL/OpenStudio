@@ -165,6 +165,8 @@ class OutputVariable;
 class People;
 class PipeAdiabatic;
 class PlantLoop;
+class PlantEquipmentOperationCoolingLoad;
+class PlantEquipmentOperationHeatingLoad;
 class PortList;
 class PumpConstantSpeed;
 class PumpVariableSpeed;
@@ -601,6 +603,10 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translatePipeAdiabatic( model::PipeAdiabatic & modelObject );
 
   boost::optional<IdfObject> translatePlantLoop( model::PlantLoop & modelObject );
+
+  boost::optional<IdfObject> translatePlantEquipmentOperationCoolingLoad( model::PlantEquipmentOperationCoolingLoad & modelObject );
+
+  boost::optional<IdfObject> translatePlantEquipmentOperationHeatingLoad( model::PlantEquipmentOperationHeatingLoad & modelObject );
 
   boost::optional<IdfObject> translatePortList( model::PortList & modelObject );
 
