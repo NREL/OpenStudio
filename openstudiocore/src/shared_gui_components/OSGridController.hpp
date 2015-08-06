@@ -223,7 +223,7 @@ class ObjectSelector : public QObject
 
   private:
     void updateWidgets(const model::ModelObject &t_obj);
-    void ObjectSelector::updateWidgets(const model::ModelObject &t_obj, const bool t_objectVisible);
+    void updateWidgets(const model::ModelObject &t_obj, const bool t_objectVisible);
     void updateWidgets(const int t_row, const boost::optional<int> &t_subrow, bool t_selected, bool t_visible);
     static std::function<bool (const model::ModelObject &)> getDefaultFilter();
 
