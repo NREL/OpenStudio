@@ -2,7 +2,7 @@
   <schema_version>3.0</schema_version>
   <name>radiance_measure</name>
   <uid>1e3cfef8-b051-4e60-8bb0-ed2d29d4f45d</uid>
-  <version_id>a4afe6dc-0dfc-423e-8c0e-358b0fb4639d</version_id>
+  <version_id>3c6d007a-d512-4de6-8788-384d91accea8</version_id>
   <xml_checksum>381B7733</xml_checksum>
   <class_name>RadianceMeasure</class_name>
   <display_name>Radiance Daylighting Measure</display_name>
@@ -19,11 +19,11 @@
       <default_value>Yes</default_value>
       <choices>
         <choice>
-          <value>Yes</value>
+          <value></value>
           <display_name>Yes</display_name>
         </choice>
         <choice>
-          <value>No</value>
+          <value></value>
           <display_name>No</display_name>
         </choice>
       </choices>
@@ -70,10 +70,22 @@
   </attributes>
   <files>
     <file>
+      <filename>RadiancePreprocess.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>7ADD358C</checksum>
+    </file>
+    <file>
+      <filename>USA_CO_Golden-NREL.724666_TMY3.epw</filename>
+      <filetype>epw</filetype>
+      <usage_type>test</usage_type>
+      <checksum>BDF687C1</checksum>
+    </file>
+    <file>
       <filename>radiance_measure_test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
-      <checksum>8D8574EF</checksum>
+      <checksum>2253BD73</checksum>
     </file>
     <file>
       <version>
@@ -84,25 +96,13 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>BC200B76</checksum>
-    </file>
-    <file>
-      <filename>RadiancePreprocess.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>7ADD358C</checksum>
+      <checksum>1EE26E34</checksum>
     </file>
     <file>
       <filename>test_model.osm</filename>
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
-      <checksum>DA65EDCD</checksum>
-    </file>
-    <file>
-      <filename>USA_CO_Golden-NREL.724666_TMY3.epw</filename>
-      <filetype>epw</filetype>
-      <usage_type>test</usage_type>
-      <checksum>BDF687C1</checksum>
+      <checksum>99A1B770</checksum>
     </file>
   </files>
 </measure>
