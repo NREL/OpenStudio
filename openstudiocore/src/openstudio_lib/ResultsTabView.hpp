@@ -88,8 +88,8 @@ namespace openstudio {
     public:
 
       ResultsTabView(const QString & tabLabel,
-          bool hasSubTabs,
-          QWidget * parent = nullptr);
+        TabType tabType,
+        QWidget * parent = nullptr);
       virtual ~ResultsTabView() {}
       void searchForExistingResults(const openstudio::path &t_runDir);
 
