@@ -14403,7 +14403,6 @@ OS:Coil:Cooling:DX:VariableSpeed,
    N1,  \field Nominal Speed Level
         \units dimensionless
         \type integer
-        \default 2
         \required-field
         \note must be lower than or equal to the highest speed number
    N2,  \field Gross Rated Total Cooling Capacity At Selected Nominal Speed Level

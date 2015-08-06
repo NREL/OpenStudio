@@ -26,9 +26,10 @@
 namespace openstudio {
 namespace model {
 
-class CurveQuadratic;
+class Curve;
 // class WaterStorageTank;
 class Schedule;
+class CoilCoolingDXVariableSpeedSpeedData;
 
 namespace detail {
 
@@ -66,13 +67,19 @@ namespace detail {
 
     virtual unsigned outletPort() override;
 
+    virtual ModelObject clone(Model model) const override;
+
+    virtual std::vector<ModelObject> children() const override;
+
+    // virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+
+    // virtual bool addToNode(Node & node) override;
+
     //@}
     /** @name Getters */
     //@{
 
     int nominalSpeedLevel() const;
-
-    bool isNominalSpeedLevelDefaulted() const;
 
     boost::optional<double> grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const;
 
@@ -86,9 +93,9 @@ namespace detail {
 
     double initialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity() const;
 
-    CurveQuadratic energyPartLoadFractionCurve() const;
+    Curve energyPartLoadFractionCurve() const;
 
-    boost::optional<std::string> condenserAirInletNodeName() const;
+    // boost::optional<std::string> condenserAirInletNodeName() const;
 
     std::string condenserType() const;
 
@@ -110,15 +117,11 @@ namespace detail {
 
     boost::optional<Schedule> basinHeaterOperatingSchedule() const;
 
-    // TODO: Handle this object's extensible fields.
-
     //@}
     /** @name Setters */
     //@{
 
     void setNominalSpeedLevel(int nominalSpeedLevel);
-
-    void resetNominalSpeedLevel();
 
     void setGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel(boost::optional<double> grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel);
 
@@ -132,11 +135,11 @@ namespace detail {
 
     bool setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity(double initialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity);
 
-    bool setEnergyPartLoadFractionCurve(const CurveQuadratic& curveQuadratic);
+    bool setEnergyPartLoadFractionCurve(const Curve& curve);
 
-    void setCondenserAirInletNodeName(boost::optional<std::string> condenserAirInletNodeName);
+    // void setCondenserAirInletNodeName(boost::optional<std::string> condenserAirInletNodeName);
 
-    void resetCondenserAirInletNodeName();
+    // void resetCondenserAirInletNodeName();
 
     bool setCondenserType(std::string condenserType);
 
@@ -164,22 +167,23 @@ namespace detail {
 
     void resetBasinHeaterOperatingSchedule();
 
-    // TODO: Handle this object's extensible fields.
-
     //@}
     /** @name Other */
     //@{
+
+    std::vector<CoilCoolingDXVariableSpeedSpeedData> speeds() const;
+
+    void addSpeed(CoilCoolingDXVariableSpeedSpeedData& speed);
 
     //@}
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.CoilCoolingDXVariableSpeed");
 
-    // TODO: Check the return types of these methods.
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
-    boost::optional<CurveQuadratic> optionalEnergyPartLoadFractionCurve() const;
+    boost::optional<Curve> optionalEnergyPartLoadFractionCurve() const;
   };
 
 } // detail

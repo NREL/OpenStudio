@@ -20,10 +20,15 @@
 #include "CoilCoolingDXVariableSpeed.hpp"
 #include "CoilCoolingDXVariableSpeed_Impl.hpp"
 
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
 #include "CurveQuadratic.hpp"
-#include "CurveQuadratic_Impl.hpp"
+#include "CoilCoolingDXVariableSpeedSpeedData.hpp"
+#include "CoilCoolingDXVariableSpeedSpeedData_Impl.hpp"
 // #include "WaterStorageTank.hpp"
 // #include "WaterStorageTank_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
@@ -78,7 +83,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> CoilCoolingDXVariableSpeed_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -101,10 +105,6 @@ namespace detail {
     boost::optional<int> value = getInt(OS_Coil_Cooling_DX_VariableSpeedFields::NominalSpeedLevel,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  bool CoilCoolingDXVariableSpeed_Impl::isNominalSpeedLevelDefaulted() const {
-    return isEmpty(OS_Coil_Cooling_DX_VariableSpeedFields::NominalSpeedLevel);
   }
 
   boost::optional<double> CoilCoolingDXVariableSpeed_Impl::grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const {
@@ -145,17 +145,17 @@ namespace detail {
     return value.get();
   }
 
-  CurveQuadratic CoilCoolingDXVariableSpeed_Impl::energyPartLoadFractionCurve() const {
-    boost::optional<CurveQuadratic> value = optionalEnergyPartLoadFractionCurve();
+  Curve CoilCoolingDXVariableSpeed_Impl::energyPartLoadFractionCurve() const {
+    boost::optional<Curve> value = optionalEnergyPartLoadFractionCurve();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Energy Part Load Fraction Curve attached.");
     }
     return value.get();
   }
 
-  boost::optional<std::string> CoilCoolingDXVariableSpeed_Impl::condenserAirInletNodeName() const {
-    return getString(OS_Coil_Cooling_DX_VariableSpeedFields::CondenserAirInletNodeName,true);
-  }
+  // boost::optional<std::string> CoilCoolingDXVariableSpeed_Impl::condenserAirInletNodeName() const {
+  //   return getString(OS_Coil_Cooling_DX_VariableSpeedFields::CondenserAirInletNodeName,true);
+  // }
 
   std::string CoilCoolingDXVariableSpeed_Impl::condenserType() const {
     boost::optional<std::string> value = getString(OS_Coil_Cooling_DX_VariableSpeedFields::CondenserType,true);
@@ -217,11 +217,6 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoilCoolingDXVariableSpeed_Impl::resetNominalSpeedLevel() {
-    bool result = setString(OS_Coil_Cooling_DX_VariableSpeedFields::NominalSpeedLevel, "");
-    OS_ASSERT(result);
-  }
-
   void CoilCoolingDXVariableSpeed_Impl::setGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel(boost::optional<double> grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel) {
     bool result(false);
     if (grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel) {
@@ -258,27 +253,27 @@ namespace detail {
     return result;
   }
 
-  bool CoilCoolingDXVariableSpeed_Impl::setEnergyPartLoadFractionCurve(const CurveQuadratic& curveQuadratic) {
-    bool result = setPointer(OS_Coil_Cooling_DX_VariableSpeedFields::EnergyPartLoadFractionCurveName, curveQuadratic.handle());
+  bool CoilCoolingDXVariableSpeed_Impl::setEnergyPartLoadFractionCurve(const Curve& curve) {
+    bool result = setPointer(OS_Coil_Cooling_DX_VariableSpeedFields::EnergyPartLoadFractionCurveName, curve.handle());
     return result;
   }
 
-  void CoilCoolingDXVariableSpeed_Impl::setCondenserAirInletNodeName(boost::optional<std::string> condenserAirInletNodeName) {
-    bool result(false);
-    if (condenserAirInletNodeName) {
-      result = setString(OS_Coil_Cooling_DX_VariableSpeedFields::CondenserAirInletNodeName, condenserAirInletNodeName.get());
-    }
-    else {
-      resetCondenserAirInletNodeName();
-      result = true;
-    }
-    OS_ASSERT(result);
-  }
+  // void CoilCoolingDXVariableSpeed_Impl::setCondenserAirInletNodeName(boost::optional<std::string> condenserAirInletNodeName) {
+  //   bool result(false);
+  //   if (condenserAirInletNodeName) {
+  //     result = setString(OS_Coil_Cooling_DX_VariableSpeedFields::CondenserAirInletNodeName, condenserAirInletNodeName.get());
+  //   }
+  //   else {
+  //     resetCondenserAirInletNodeName();
+  //     result = true;
+  //   }
+  //   OS_ASSERT(result);
+  // }
 
-  void CoilCoolingDXVariableSpeed_Impl::resetCondenserAirInletNodeName() {
-    bool result = setString(OS_Coil_Cooling_DX_VariableSpeedFields::CondenserAirInletNodeName, "");
-    OS_ASSERT(result);
-  }
+  // void CoilCoolingDXVariableSpeed_Impl::resetCondenserAirInletNodeName() {
+  //   bool result = setString(OS_Coil_Cooling_DX_VariableSpeedFields::CondenserAirInletNodeName, "");
+  //   OS_ASSERT(result);
+  // }
 
   bool CoilCoolingDXVariableSpeed_Impl::setCondenserType(std::string condenserType) {
     bool result = setString(OS_Coil_Cooling_DX_VariableSpeedFields::CondenserType, condenserType);
@@ -365,9 +360,68 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  boost::optional<CurveQuadratic> CoilCoolingDXVariableSpeed_Impl::optionalEnergyPartLoadFractionCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CurveQuadratic>(OS_Coil_Cooling_DX_VariableSpeedFields::EnergyPartLoadFractionCurveName);
+  boost::optional<Curve> CoilCoolingDXVariableSpeed_Impl::optionalEnergyPartLoadFractionCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_VariableSpeedFields::EnergyPartLoadFractionCurveName);
   }
+
+  ModelObject CoilCoolingDXVariableSpeed_Impl::clone(Model model) const {
+    auto t_clone = StraightComponent_Impl::clone(model).cast<CoilCoolingDXVariableSpeed>();
+
+    auto t_speeds = speeds();
+    for( auto speed : t_speeds ) {
+      auto speedClone = speed.clone(model).cast<CoilCoolingDXVariableSpeedSpeedData>();
+      t_clone.addSpeed(speedClone);
+    }
+    return t_clone;
+  }
+
+  std::vector<ModelObject> CoilCoolingDXVariableSpeed_Impl::children() const {
+    auto children = subsetCastVector<ModelObject>( speeds() );
+    children.push_back( energyPartLoadFractionCurve() );
+    return subsetCastVector<ModelObject>(speeds());
+  }
+
+  std::vector<CoilCoolingDXVariableSpeedSpeedData> CoilCoolingDXVariableSpeed_Impl::speeds() const {
+    std::vector<CoilCoolingDXVariableSpeedSpeedData> result;
+    auto groups = extensibleGroups();
+    for( auto group : groups ) {
+      auto target = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_Coil_Cooling_DX_VariableSpeedExtensibleFields::SpeedData);
+      if( target ) {
+        if( auto speed = target->optionalCast<CoilCoolingDXVariableSpeedSpeedData>() ) {
+          result.push_back(speed.get());
+        }
+      }
+    }
+    return result;
+  }
+
+  void CoilCoolingDXVariableSpeed_Impl::addSpeed(CoilCoolingDXVariableSpeedSpeedData& speed) {
+    auto group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+    OS_ASSERT(! group.empty());
+    group.setPointer(OS_Coil_Cooling_DX_VariableSpeedExtensibleFields::SpeedData,speed.handle());
+  }
+
+  // boost::optional<HVACComponent> CoilCoolingDXVariableSpeed_Impl::containingHVACComponent() const
+  // {
+  //   // AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed
+  //   {
+  //     auto systems = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
+
+  //     for( const auto & system : systems ) {
+  //       auto coolingCoil = system.coolingCoil();
+  //       if( coolingCoil.handle() == this->handle() ) {
+  //         return system;
+  //       }
+  //     }
+  //   }
+
+  //   return boost::none;
+  // }
+
+  // bool CoilCoolingDXVariableSpeed_Impl::addToNode(Node & node)
+  // {
+  //   return false;
+  // }
 
 } // detail
 
@@ -376,37 +430,76 @@ CoilCoolingDXVariableSpeed::CoilCoolingDXVariableSpeed(const Model& model)
 {
   OS_ASSERT(getImpl<detail::CoilCoolingDXVariableSpeed_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName
-  //     OS_Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName
-  //     OS_Coil_Cooling_DX_VariableSpeedFields::EnergyPartLoadFractionCurveName
   bool ok = true;
-  // ok = setHandle();
+  setNominalSpeedLevel(2);
+  autosizeGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
+  autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
+  ok = setNominalTimeforCondensatetoBeginLeavingtheCoil(0);
   OS_ASSERT(ok);
-  // ok = setIndoorAirInletNode();
+  ok = setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity(0);
   OS_ASSERT(ok);
-  // ok = setIndoorAirOutletNode();
+
+  auto partLoadFraction = CurveQuadratic(model);
+  partLoadFraction.setCoefficient1Constant(0.85);
+  partLoadFraction.setCoefficient2x(0.15);
+  partLoadFraction.setCoefficient3xPOW2(0.0);
+  partLoadFraction.setMinimumValueofx(0.0);
+  partLoadFraction.setMaximumValueofx(1.0);
+
+  ok = setEnergyPartLoadFractionCurve(partLoadFraction);
   OS_ASSERT(ok);
-  // setGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
-  // setRatedAirFlowRateAtSelectedNominalSpeedLevel();
-  // ok = setNominalTimeforCondensatetoBeginLeavingtheCoil();
+  ok = setCondenserType("AirCooled");
   OS_ASSERT(ok);
-  // ok = setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity();
+  ok = setEvaporativeCondenserPumpRatedPowerConsumption(0.0);
   OS_ASSERT(ok);
-  // ok = setEnergyPartLoadFractionCurve();
+  ok = setCrankcaseHeaterCapacity(0.0);
   OS_ASSERT(ok);
-  // ok = setCondenserType();
+  ok = setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
   OS_ASSERT(ok);
-  // ok = setEvaporativeCondenserPumpRatedPowerConsumption();
+  // ok = setSupplyWaterStorageTank(WaterStorageTank);
+  // OS_ASSERT(ok);
+  // ok = setCondensateCollectionWaterStorageTank(WaterStorageTank);
+  // OS_ASSERT(ok);
+  ok = setBasinHeaterCapacity(0.0);
   OS_ASSERT(ok);
-  // ok = setCrankcaseHeaterCapacity();
+  ok = setBasinHeaterSetpointTemperature(2.0);
   OS_ASSERT(ok);
-  // ok = setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation();
+
+}
+
+CoilCoolingDXVariableSpeed::CoilCoolingDXVariableSpeed(const Model& model,
+                                                       const Curve& partLoadFraction)
+  : StraightComponent(CoilCoolingDXVariableSpeed::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::CoilCoolingDXVariableSpeed_Impl>());
+
+  bool ok = true;
+  setNominalSpeedLevel(2);
+  autosizeGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
+  autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
+  ok = setNominalTimeforCondensatetoBeginLeavingtheCoil(0);
   OS_ASSERT(ok);
-  // ok = setBasinHeaterCapacity();
+  ok = setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity(0);
   OS_ASSERT(ok);
-  // ok = setBasinHeaterSetpointTemperature();
+  ok = setEnergyPartLoadFractionCurve(partLoadFraction);
   OS_ASSERT(ok);
+  ok = setCondenserType("AirCooled");
+  OS_ASSERT(ok);
+  ok = setEvaporativeCondenserPumpRatedPowerConsumption(0.0);
+  OS_ASSERT(ok);
+  ok = setCrankcaseHeaterCapacity(0.0);
+  OS_ASSERT(ok);
+  ok = setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
+  OS_ASSERT(ok);
+  // ok = setSupplyWaterStorageTank(WaterStorageTank);
+  // OS_ASSERT(ok);
+  // ok = setCondensateCollectionWaterStorageTank(WaterStorageTank);
+  // OS_ASSERT(ok);
+  ok = setBasinHeaterCapacity(0.0);
+  OS_ASSERT(ok);
+  ok = setBasinHeaterSetpointTemperature(2.0);
+  OS_ASSERT(ok);
+
 }
 
 IddObjectType CoilCoolingDXVariableSpeed::iddObjectType() {
@@ -420,10 +513,6 @@ std::vector<std::string> CoilCoolingDXVariableSpeed::condenserTypeValues() {
 
 int CoilCoolingDXVariableSpeed::nominalSpeedLevel() const {
   return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->nominalSpeedLevel();
-}
-
-bool CoilCoolingDXVariableSpeed::isNominalSpeedLevelDefaulted() const {
-  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->isNominalSpeedLevelDefaulted();
 }
 
 boost::optional<double> CoilCoolingDXVariableSpeed::grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const {
@@ -450,13 +539,13 @@ double CoilCoolingDXVariableSpeed::initialMoistureEvaporationRateDividedbySteady
   return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->initialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity();
 }
 
-CurveQuadratic CoilCoolingDXVariableSpeed::energyPartLoadFractionCurve() const {
+Curve CoilCoolingDXVariableSpeed::energyPartLoadFractionCurve() const {
   return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->energyPartLoadFractionCurve();
 }
 
-boost::optional<std::string> CoilCoolingDXVariableSpeed::condenserAirInletNodeName() const {
-  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->condenserAirInletNodeName();
-}
+// boost::optional<std::string> CoilCoolingDXVariableSpeed::condenserAirInletNodeName() const {
+//   return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->condenserAirInletNodeName();
+// }
 
 std::string CoilCoolingDXVariableSpeed::condenserType() const {
   return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->condenserType();
@@ -502,10 +591,6 @@ void CoilCoolingDXVariableSpeed::setNominalSpeedLevel(int nominalSpeedLevel) {
   getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setNominalSpeedLevel(nominalSpeedLevel);
 }
 
-void CoilCoolingDXVariableSpeed::resetNominalSpeedLevel() {
-  getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->resetNominalSpeedLevel();
-}
-
 void CoilCoolingDXVariableSpeed::setGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel(double grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel) {
   getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel(grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel);
 }
@@ -530,17 +615,17 @@ bool CoilCoolingDXVariableSpeed::setInitialMoistureEvaporationRateDividedbyStead
   return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity(initialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity);
 }
 
-bool CoilCoolingDXVariableSpeed::setEnergyPartLoadFractionCurve(const CurveQuadratic& curveQuadratic) {
-  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setEnergyPartLoadFractionCurve(curveQuadratic);
+bool CoilCoolingDXVariableSpeed::setEnergyPartLoadFractionCurve(const Curve& curve) {
+  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setEnergyPartLoadFractionCurve(curve);
 }
 
-void CoilCoolingDXVariableSpeed::setCondenserAirInletNodeName(std::string condenserAirInletNodeName) {
-  getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setCondenserAirInletNodeName(condenserAirInletNodeName);
-}
+// void CoilCoolingDXVariableSpeed::setCondenserAirInletNodeName(std::string condenserAirInletNodeName) {
+//   getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setCondenserAirInletNodeName(condenserAirInletNodeName);
+// }
 
-void CoilCoolingDXVariableSpeed::resetCondenserAirInletNodeName() {
-  getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->resetCondenserAirInletNodeName();
-}
+// void CoilCoolingDXVariableSpeed::resetCondenserAirInletNodeName() {
+//   getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->resetCondenserAirInletNodeName();
+// }
 
 bool CoilCoolingDXVariableSpeed::setCondenserType(std::string condenserType) {
   return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setCondenserType(condenserType);
@@ -592,6 +677,14 @@ bool CoilCoolingDXVariableSpeed::setBasinHeaterOperatingSchedule(Schedule& sched
 
 void CoilCoolingDXVariableSpeed::resetBasinHeaterOperatingSchedule() {
   getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->resetBasinHeaterOperatingSchedule();
+}
+
+std::vector<CoilCoolingDXVariableSpeedSpeedData> CoilCoolingDXVariableSpeed::speeds() const {
+  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->speeds();
+}
+
+void CoilCoolingDXVariableSpeed::addSpeed(CoilCoolingDXVariableSpeedSpeedData& speed) {
+  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->addSpeed(speed);
 }
 
 /// @cond

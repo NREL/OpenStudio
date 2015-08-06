@@ -27,9 +27,10 @@ namespace openstudio {
 
 namespace model {
 
-class CurveQuadratic;
+class Curve;
 // class WaterStorageTank;
 class Schedule;
+class CoilCoolingDXVariableSpeedSpeedData;
 
 namespace detail {
 
@@ -45,6 +46,8 @@ class MODEL_API CoilCoolingDXVariableSpeed : public StraightComponent {
 
   explicit CoilCoolingDXVariableSpeed(const Model& model);
 
+  explicit CoilCoolingDXVariableSpeed(const Model& model, const Curve& partLoadFraction);
+
   virtual ~CoilCoolingDXVariableSpeed() {}
 
   //@}
@@ -58,8 +61,6 @@ class MODEL_API CoilCoolingDXVariableSpeed : public StraightComponent {
 
   int nominalSpeedLevel() const;
 
-  bool isNominalSpeedLevelDefaulted() const;
-
   boost::optional<double> grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const;
 
   bool isGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevelAutosized() const;
@@ -72,9 +73,9 @@ class MODEL_API CoilCoolingDXVariableSpeed : public StraightComponent {
 
   double initialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity() const;
 
-  CurveQuadratic energyPartLoadFractionCurve() const;
+  Curve energyPartLoadFractionCurve() const;
 
-  boost::optional<std::string> condenserAirInletNodeName() const;
+  // boost::optional<std::string> condenserAirInletNodeName() const;
 
   std::string condenserType() const;
 
@@ -96,15 +97,13 @@ class MODEL_API CoilCoolingDXVariableSpeed : public StraightComponent {
 
   boost::optional<Schedule> basinHeaterOperatingSchedule() const;
 
-  // TODO: Handle this object's extensible fields.
+  std::vector<CoilCoolingDXVariableSpeedSpeedData> speeds() const;
 
   //@}
   /** @name Setters */
   //@{
 
   void setNominalSpeedLevel(int nominalSpeedLevel);
-
-  void resetNominalSpeedLevel();
 
   void setGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel(double grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel);
 
@@ -118,11 +117,11 @@ class MODEL_API CoilCoolingDXVariableSpeed : public StraightComponent {
 
   bool setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity(double initialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity);
 
-  bool setEnergyPartLoadFractionCurve(const CurveQuadratic& curveQuadratic);
+  bool setEnergyPartLoadFractionCurve(const Curve& curve);
 
-  void setCondenserAirInletNodeName(std::string condenserAirInletNodeName);
+  // void setCondenserAirInletNodeName(std::string condenserAirInletNodeName);
 
-  void resetCondenserAirInletNodeName();
+  // void resetCondenserAirInletNodeName();
 
   bool setCondenserType(std::string condenserType);
 
@@ -150,7 +149,7 @@ class MODEL_API CoilCoolingDXVariableSpeed : public StraightComponent {
 
   void resetBasinHeaterOperatingSchedule();
 
-  // TODO: Handle this object's extensible fields.
+  void addSpeed(CoilCoolingDXVariableSpeedSpeedData& speed);
 
   //@}
   /** @name Other */

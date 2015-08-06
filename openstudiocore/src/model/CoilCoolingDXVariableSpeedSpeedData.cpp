@@ -20,10 +20,10 @@
 #include "CoilCoolingDXVariableSpeedSpeedData.hpp"
 #include "CoilCoolingDXVariableSpeedSpeedData_Impl.hpp"
 
-#include "CurveBiquadratic.hpp"
-#include "CurveBiquadratic_Impl.hpp"
-#include "CurveQuadratic.hpp"
-#include "CurveQuadratic_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_Coil_Cooling_DX_VariableSpeed_SpeedData_FieldEnums.hxx>
 
@@ -102,32 +102,32 @@ namespace detail {
     return getDouble(OS_Coil_Cooling_DX_VariableSpeed_SpeedDataFields::ReferenceUnitRatedPadEffectivenessofEvapPrecooling,true);
   }
 
-  CurveBiquadratic CoilCoolingDXVariableSpeedSpeedData_Impl::totalCoolingCapacityFunctionofTemperatureCurve() const {
-    boost::optional<CurveBiquadratic> value = optionalTotalCoolingCapacityFunctionofTemperatureCurve();
+  Curve CoilCoolingDXVariableSpeedSpeedData_Impl::totalCoolingCapacityFunctionofTemperatureCurve() const {
+    boost::optional<Curve> value = optionalTotalCoolingCapacityFunctionofTemperatureCurve();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Total Cooling Capacity Functionof Temperature Curve attached.");
     }
     return value.get();
   }
 
-  CurveQuadratic CoilCoolingDXVariableSpeedSpeedData_Impl::totalCoolingCapacityFunctionofAirFlowFractionCurve() const {
-    boost::optional<CurveQuadratic> value = optionalTotalCoolingCapacityFunctionofAirFlowFractionCurve();
+  Curve CoilCoolingDXVariableSpeedSpeedData_Impl::totalCoolingCapacityFunctionofAirFlowFractionCurve() const {
+    boost::optional<Curve> value = optionalTotalCoolingCapacityFunctionofAirFlowFractionCurve();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Total Cooling Capacity Functionof Air Flow Fraction Curve attached.");
     }
     return value.get();
   }
 
-  CurveBiquadratic CoilCoolingDXVariableSpeedSpeedData_Impl::energyInputRatioFunctionofTemperatureCurve() const {
-    boost::optional<CurveBiquadratic> value = optionalEnergyInputRatioFunctionofTemperatureCurve();
+  Curve CoilCoolingDXVariableSpeedSpeedData_Impl::energyInputRatioFunctionofTemperatureCurve() const {
+    boost::optional<Curve> value = optionalEnergyInputRatioFunctionofTemperatureCurve();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Energy Input Ratio Functionof Temperature Curve attached.");
     }
     return value.get();
   }
 
-  CurveQuadratic CoilCoolingDXVariableSpeedSpeedData_Impl::energyInputRatioFunctionofAirFlowFractionCurve() const {
-    boost::optional<CurveQuadratic> value = optionalEnergyInputRatioFunctionofAirFlowFractionCurve();
+  Curve CoilCoolingDXVariableSpeedSpeedData_Impl::energyInputRatioFunctionofAirFlowFractionCurve() const {
+    boost::optional<Curve> value = optionalEnergyInputRatioFunctionofAirFlowFractionCurve();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Energy Input Ratio Functionof Air Flow Fraction Curve attached.");
     }
@@ -188,40 +188,40 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool CoilCoolingDXVariableSpeedSpeedData_Impl::setTotalCoolingCapacityFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic) {
-    bool result = setPointer(OS_Coil_Cooling_DX_VariableSpeed_SpeedDataFields::TotalCoolingCapacityFunctionofTemperatureCurveName, curveBiquadratic.handle());
+  bool CoilCoolingDXVariableSpeedSpeedData_Impl::setTotalCoolingCapacityFunctionofTemperatureCurve(const Curve& curve) {
+    bool result = setPointer(OS_Coil_Cooling_DX_VariableSpeed_SpeedDataFields::TotalCoolingCapacityFunctionofTemperatureCurveName, curve.handle());
     return result;
   }
 
-  bool CoilCoolingDXVariableSpeedSpeedData_Impl::setTotalCoolingCapacityFunctionofAirFlowFractionCurve(const CurveQuadratic& curveQuadratic) {
-    bool result = setPointer(OS_Coil_Cooling_DX_VariableSpeed_SpeedDataFields::TotalCoolingCapacityFunctionofAirFlowFractionCurveName, curveQuadratic.handle());
+  bool CoilCoolingDXVariableSpeedSpeedData_Impl::setTotalCoolingCapacityFunctionofAirFlowFractionCurve(const Curve& curve) {
+    bool result = setPointer(OS_Coil_Cooling_DX_VariableSpeed_SpeedDataFields::TotalCoolingCapacityFunctionofAirFlowFractionCurveName, curve.handle());
     return result;
   }
 
-  bool CoilCoolingDXVariableSpeedSpeedData_Impl::setEnergyInputRatioFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic) {
-    bool result = setPointer(OS_Coil_Cooling_DX_VariableSpeed_SpeedDataFields::EnergyInputRatioFunctionofTemperatureCurveName, curveBiquadratic.handle());
+  bool CoilCoolingDXVariableSpeedSpeedData_Impl::setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve) {
+    bool result = setPointer(OS_Coil_Cooling_DX_VariableSpeed_SpeedDataFields::EnergyInputRatioFunctionofTemperatureCurveName, curve.handle());
     return result;
   }
 
-  bool CoilCoolingDXVariableSpeedSpeedData_Impl::setEnergyInputRatioFunctionofAirFlowFractionCurve(const CurveQuadratic& curveQuadratic) {
-    bool result = setPointer(OS_Coil_Cooling_DX_VariableSpeed_SpeedDataFields::EnergyInputRatioFunctionofAirFlowFractionCurveName, curveQuadratic.handle());
+  bool CoilCoolingDXVariableSpeedSpeedData_Impl::setEnergyInputRatioFunctionofAirFlowFractionCurve(const Curve& curve) {
+    bool result = setPointer(OS_Coil_Cooling_DX_VariableSpeed_SpeedDataFields::EnergyInputRatioFunctionofAirFlowFractionCurveName, curve.handle());
     return result;
   }
 
-  boost::optional<CurveBiquadratic> CoilCoolingDXVariableSpeedSpeedData_Impl::optionalTotalCoolingCapacityFunctionofTemperatureCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CurveBiquadratic>(OS_Coil_Cooling_DX_VariableSpeed_SpeedDataFields::TotalCoolingCapacityFunctionofTemperatureCurveName);
+  boost::optional<Curve> CoilCoolingDXVariableSpeedSpeedData_Impl::optionalTotalCoolingCapacityFunctionofTemperatureCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_VariableSpeed_SpeedDataFields::TotalCoolingCapacityFunctionofTemperatureCurveName);
   }
 
-  boost::optional<CurveQuadratic> CoilCoolingDXVariableSpeedSpeedData_Impl::optionalTotalCoolingCapacityFunctionofAirFlowFractionCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CurveQuadratic>(OS_Coil_Cooling_DX_VariableSpeed_SpeedDataFields::TotalCoolingCapacityFunctionofAirFlowFractionCurveName);
+  boost::optional<Curve> CoilCoolingDXVariableSpeedSpeedData_Impl::optionalTotalCoolingCapacityFunctionofAirFlowFractionCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_VariableSpeed_SpeedDataFields::TotalCoolingCapacityFunctionofAirFlowFractionCurveName);
   }
 
-  boost::optional<CurveBiquadratic> CoilCoolingDXVariableSpeedSpeedData_Impl::optionalEnergyInputRatioFunctionofTemperatureCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CurveBiquadratic>(OS_Coil_Cooling_DX_VariableSpeed_SpeedDataFields::EnergyInputRatioFunctionofTemperatureCurveName);
+  boost::optional<Curve> CoilCoolingDXVariableSpeedSpeedData_Impl::optionalEnergyInputRatioFunctionofTemperatureCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_VariableSpeed_SpeedDataFields::EnergyInputRatioFunctionofTemperatureCurveName);
   }
 
-  boost::optional<CurveQuadratic> CoilCoolingDXVariableSpeedSpeedData_Impl::optionalEnergyInputRatioFunctionofAirFlowFractionCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CurveQuadratic>(OS_Coil_Cooling_DX_VariableSpeed_SpeedDataFields::EnergyInputRatioFunctionofAirFlowFractionCurveName);
+  boost::optional<Curve> CoilCoolingDXVariableSpeedSpeedData_Impl::optionalEnergyInputRatioFunctionofAirFlowFractionCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_VariableSpeed_SpeedDataFields::EnergyInputRatioFunctionofAirFlowFractionCurveName);
   }
 
 } // detail
@@ -285,19 +285,19 @@ boost::optional<double> CoilCoolingDXVariableSpeedSpeedData::referenceUnitRatedP
   return getImpl<detail::CoilCoolingDXVariableSpeedSpeedData_Impl>()->referenceUnitRatedPadEffectivenessofEvapPrecooling();
 }
 
-CurveBiquadratic CoilCoolingDXVariableSpeedSpeedData::totalCoolingCapacityFunctionofTemperatureCurve() const {
+Curve CoilCoolingDXVariableSpeedSpeedData::totalCoolingCapacityFunctionofTemperatureCurve() const {
   return getImpl<detail::CoilCoolingDXVariableSpeedSpeedData_Impl>()->totalCoolingCapacityFunctionofTemperatureCurve();
 }
 
-CurveQuadratic CoilCoolingDXVariableSpeedSpeedData::totalCoolingCapacityFunctionofAirFlowFractionCurve() const {
+Curve CoilCoolingDXVariableSpeedSpeedData::totalCoolingCapacityFunctionofAirFlowFractionCurve() const {
   return getImpl<detail::CoilCoolingDXVariableSpeedSpeedData_Impl>()->totalCoolingCapacityFunctionofAirFlowFractionCurve();
 }
 
-CurveBiquadratic CoilCoolingDXVariableSpeedSpeedData::energyInputRatioFunctionofTemperatureCurve() const {
+Curve CoilCoolingDXVariableSpeedSpeedData::energyInputRatioFunctionofTemperatureCurve() const {
   return getImpl<detail::CoilCoolingDXVariableSpeedSpeedData_Impl>()->energyInputRatioFunctionofTemperatureCurve();
 }
 
-CurveQuadratic CoilCoolingDXVariableSpeedSpeedData::energyInputRatioFunctionofAirFlowFractionCurve() const {
+Curve CoilCoolingDXVariableSpeedSpeedData::energyInputRatioFunctionofAirFlowFractionCurve() const {
   return getImpl<detail::CoilCoolingDXVariableSpeedSpeedData_Impl>()->energyInputRatioFunctionofAirFlowFractionCurve();
 }
 
@@ -333,20 +333,20 @@ void CoilCoolingDXVariableSpeedSpeedData::resetReferenceUnitRatedPadEffectivenes
   getImpl<detail::CoilCoolingDXVariableSpeedSpeedData_Impl>()->resetReferenceUnitRatedPadEffectivenessofEvapPrecooling();
 }
 
-bool CoilCoolingDXVariableSpeedSpeedData::setTotalCoolingCapacityFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic) {
-  return getImpl<detail::CoilCoolingDXVariableSpeedSpeedData_Impl>()->setTotalCoolingCapacityFunctionofTemperatureCurve(curveBiquadratic);
+bool CoilCoolingDXVariableSpeedSpeedData::setTotalCoolingCapacityFunctionofTemperatureCurve(const Curve& curve) {
+  return getImpl<detail::CoilCoolingDXVariableSpeedSpeedData_Impl>()->setTotalCoolingCapacityFunctionofTemperatureCurve(curve);
 }
 
-bool CoilCoolingDXVariableSpeedSpeedData::setTotalCoolingCapacityFunctionofAirFlowFractionCurve(const CurveQuadratic& curveQuadratic) {
-  return getImpl<detail::CoilCoolingDXVariableSpeedSpeedData_Impl>()->setTotalCoolingCapacityFunctionofAirFlowFractionCurve(curveQuadratic);
+bool CoilCoolingDXVariableSpeedSpeedData::setTotalCoolingCapacityFunctionofAirFlowFractionCurve(const Curve& curve) {
+  return getImpl<detail::CoilCoolingDXVariableSpeedSpeedData_Impl>()->setTotalCoolingCapacityFunctionofAirFlowFractionCurve(curve);
 }
 
-bool CoilCoolingDXVariableSpeedSpeedData::setEnergyInputRatioFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic) {
-  return getImpl<detail::CoilCoolingDXVariableSpeedSpeedData_Impl>()->setEnergyInputRatioFunctionofTemperatureCurve(curveBiquadratic);
+bool CoilCoolingDXVariableSpeedSpeedData::setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve) {
+  return getImpl<detail::CoilCoolingDXVariableSpeedSpeedData_Impl>()->setEnergyInputRatioFunctionofTemperatureCurve(curve);
 }
 
-bool CoilCoolingDXVariableSpeedSpeedData::setEnergyInputRatioFunctionofAirFlowFractionCurve(const CurveQuadratic& curveQuadratic) {
-  return getImpl<detail::CoilCoolingDXVariableSpeedSpeedData_Impl>()->setEnergyInputRatioFunctionofAirFlowFractionCurve(curveQuadratic);
+bool CoilCoolingDXVariableSpeedSpeedData::setEnergyInputRatioFunctionofAirFlowFractionCurve(const Curve& curve) {
+  return getImpl<detail::CoilCoolingDXVariableSpeedSpeedData_Impl>()->setEnergyInputRatioFunctionofAirFlowFractionCurve(curve);
 }
 
 /// @cond
