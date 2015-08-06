@@ -319,7 +319,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(FanConstantVolume);
     REGISTER_CONSTRUCTOR(FanOnOff);
     REGISTER_CONSTRUCTOR(FanVariableVolume);
-    REGISTER_CONSTRUCTOR(FanZoneExhaust);    
+    REGISTER_CONSTRUCTOR(FanZoneExhaust);
     REGISTER_CONSTRUCTOR(FFactorGroundFloorConstruction);
     REGISTER_CONSTRUCTOR(Gas);
     REGISTER_CONSTRUCTOR(GasEquipment);
@@ -476,8 +476,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ZoneControlHumidistat);
     REGISTER_CONSTRUCTOR(ZoneControlThermostatStagedDualSetpoint);
     REGISTER_CONSTRUCTOR(ZoneHVACEquipmentList);
-    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveElectric);  
-    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveWater);  
+    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveElectric);
+    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveWater);
     REGISTER_CONSTRUCTOR(ZoneHVACIdealLoadsAirSystem);
     REGISTER_CONSTRUCTOR(ZoneHVACFourPipeFanCoil);
     REGISTER_CONSTRUCTOR(ZoneHVACHighTemperatureRadiant);
@@ -655,7 +655,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(FanConstantVolume);
     REGISTER_COPYCONSTRUCTORS(FanOnOff);
     REGISTER_COPYCONSTRUCTORS(FanVariableVolume);
-    REGISTER_COPYCONSTRUCTORS(FanZoneExhaust);    
+    REGISTER_COPYCONSTRUCTORS(FanZoneExhaust);
     REGISTER_COPYCONSTRUCTORS(FFactorGroundFloorConstruction);
     REGISTER_COPYCONSTRUCTORS(Gas);
     REGISTER_COPYCONSTRUCTORS(GasEquipment);
