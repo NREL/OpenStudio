@@ -14030,7 +14030,937 @@ OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
   N14; \field Heating Power Consumption Coefficient 5
        \type real
        \required-field
-      
+
+OS:Coil:Heating:DX:MultiSpeed,
+       \min-fields 19
+       \extensible:1
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference HeatingCoilsDXMultiSpeed
+       \reference AFNCoilNames
+       \reference ConnectionObject
+  A3 , \field Availability Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  A4 , \field Air Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A5 , \field Air Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  N1 , \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
+       \required-field
+       \type real
+       \units C
+  N2 , \field Outdoor Dry-Bulb Temperature to Turn On Compressor
+       \type real
+       \units C
+  N3 , \field Crankcase Heater Capacity
+       \required-field
+       \type real
+       \minimum 0.0
+       \units W
+       \ip-units W
+  N4 , \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
+       \required-field
+       \type real
+       \minimum 0.0
+       \units C
+  A6 , \field Defrost Energy Input Ratio Function of Temperature Curve Name
+       \type object-list
+       \object-list BiquadraticCurves
+       \object-list BiVariateTables
+  N5 , \field Maximum Outdoor Dry-Bulb Temperature for Defrost Operation
+       \required-field
+       \type real
+       \minimum 0.0
+       \maximum 7.22
+       \units C
+  A7 , \field Defrost Strategy
+       \required-field
+       \type choice
+       \key ReverseCycle
+       \key Resistive
+  A8 , \field Defrost Control
+       \required-field
+       \type choice
+       \key Timed
+       \key OnDemand
+  N6 , \field Defrost Time Period Fraction
+       \required-field
+       \type real
+       \minimum 0.0
+  N7 , \field Resistive Defrost Heater Capacity
+       \required-field
+       \type real
+       \minimum 0.0
+       \autosizable
+       \units W
+       \ip-units W
+  A9 , \field Apply Part Load Fraction to Speeds Greater than 1
+       \required-field
+       \type choice
+       \key Yes
+       \key No
+  A10, \field Fuel Type
+       \required-field
+       \type choice
+       \key Electricity
+       \key NaturalGas
+       \key PropaneGas
+       \key Diesel
+       \key Gasoline
+       \key FuelOil#1
+       \key FuelOil#2
+       \key OtherFuel1
+       \key OtherFuel2
+  N8,  \field Region number for Calculating HSPF
+       \required-field
+       \type integer
+       \minimum 1
+       \maximum 6
+  A11; \field Stage Data
+       \begin-extensible
+       \type object-list
+       \object-list CoilHeatingDXMultiSpeedStageData
+
+OS:Coil:Heating:DX:MultiSpeed:StageData,
+       \min-fields 21
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference CoilHeatingDXMultiSpeedStageData
+  N1 , \field Gross Rated Total Heating Capacity
+       \required-field
+       \type real
+       \units W
+       \minimum> 0.0
+       \autosizable
+  N2 , \field Gross Rated Sensible Heat Ratio
+       \required-field
+       \type real
+       \minimum 0.5
+       \maximum 1.0
+       \autosizable
+  N3 , \field Gross Rated Heating COP
+       \type real
+       \units W/W
+       \minimum> 0.0
+       \required-field
+  N4 , \field Rated Air Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+  N5, \field Rated Evaporator Fan Power Per Volume Flow Rate
+       \type real
+       \units W/(m3/s)
+       \minimum 0.0
+       \maximum 1250.0
+       \required-field
+  A3, \field Total Heating Capacity Function of Temperature Curve
+       \required-field
+       \type object-list
+       \object-list BiquadraticCurves
+  A4, \field Total Heating Capacity Function of Flow Fraction Curve
+       \required-field
+       \type object-list
+       \object-list QuadraticCubicCurves
+  A5, \field Energy Input Ratio Function of Temperature Curve
+       \required-field
+       \type object-list
+       \object-list BiquadraticCurves
+  A6, \field Energy Input Ratio Function of Flow Fraction Curve
+       \required-field
+       \type object-list
+       \object-list QuadraticCubicCurves
+  A7, \field Part Load Fraction Correlation Curve
+       \required-field
+       \type object-list
+       \object-list QuadraticCubicCurves
+  N6, \field Nominal Time for Condensate Removal to Begin
+       \type real
+       \units s
+       \minimum 0.0
+       \maximum 3000.0
+       \required-field
+  N7, \field Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
+       \type real
+       \units dimensionless
+       \minimum 0.0
+       \maximum 5.0
+       \required-field
+  N8, \field Maximum Cycling Rate
+       \type real
+       \units cycles/hr
+       \minimum 0.0
+       \maximum 5.0
+       \required-field
+  N9, \field Latent Capacity Time Constant
+       \type real
+       \units s
+       \minimum 0.0
+       \maximum 500.0
+       \required-field
+  N10, \field Rated Waste Heat Fraction of Power Input
+       \required-field
+       \type real
+       \units dimensionless
+       \minimum> 0.0
+       \maximum 1.0
+  A8, \field Waste Heat Function of Temperature Curve
+       \required-field
+       \type object-list
+       \object-list BiquadraticCurves
+  N11, \field Evaporative Condenser Effectiveness
+       \type real
+       \units dimensionless
+       \minimum 0.0
+       \maximum 1.0
+       \required-field
+  N12, \field Evaporative Condenser Air Flow Rate
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+       \required-field
+  N13; \field Rated Evaporative Condenser Pump Power Consumption
+       \type real
+       \units W
+       \minimum 0.0
+       \autosizable
+       \required-field
+
+OS:Coil:Heating:DX:VariableSpeed,
+        \min-fields 19
+        \extensible:1
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+        \type alpha
+        \reference HeatingCoilsDXVariableSpeed
+        \reference ConnectionObject
+   A3,  \field Indoor Air Inlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   A4,  \field Indoor Air Outlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   N1,  \field Nominal Speed Level
+        \units dimensionless
+        \type integer
+        \required-field
+        \note must be lower than or equal to the highest speed number
+   N2,  \field Rated Heating Capacity At Selected Nominal Speed Level
+        \units w
+        \type real
+        \autosizable
+        \required-field
+   N3,  \field Rated Air Flow Rate At Selected Nominal Speed Level
+        \units m3/s
+        \type real
+        \autosizable
+        \required-field
+   A5,  \field Energy Part Load Fraction Curve Name
+        \required-field
+        \type object-list
+        \object-list QuadraticCubicCurves
+        \object-list UniVariateTables
+   A6,  \field Defrost Energy Input Ratio Function of Temperature Curve Name
+        \type object-list
+        \object-list BiquadraticCurves
+        \object-list BiVariateTables
+   N4,  \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
+        \required-field
+        \type real
+        \minimum -50.0
+        \units C
+   N5,  \field Outdoor Dry-Bulb Temperature to Turn On Compressor
+        \type real
+        \units C
+   N6,  \field Maximum Outdoor Dry-Bulb Temperature for Defrost Operation
+        \required-field
+        \type real
+        \minimum 0.0
+        \maximum 7.22
+        \units C
+   N7,  \field Crankcase Heater Capacity
+        \required-field
+        \type real
+        \minimum 0.0
+        \units W
+        \ip-units W
+   N8,  \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
+        \required-field
+        \type real
+        \minimum 0.0
+        \units C
+   A7,  \field Defrost Strategy
+        \required-field
+        \type choice
+        \key ReverseCycle
+        \key Resistive
+   A8,  \field Defrost Control
+        \required-field
+        \type choice
+        \key Timed
+        \key OnDemand
+   N9,  \field Defrost Time Period Fraction
+        \required-field
+        \type real
+        \minimum 0.0
+   N10, \field Resistive Defrost Heater Capacity
+        \required-field
+        \type real
+        \minimum 0.0
+        \autosizable
+        \units W
+        \ip-units W
+   A9;  \field Speed Data
+        \begin-extensible
+        \type object-list
+        \object-list CoilHeatingDXVariableSpeedSpeedData
+
+OS:Coil:Heating:DX:VariableSpeed:SpeedData,
+        \min-fields 9
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+        \type alpha
+        \reference CoilHeatingDXVariableSpeedSpeedData
+   N1,  \field Reference Unit Gross Rated Heating Capacity
+        \note Heating capacity not accounting for the effect of supply air fan heat
+        \units w
+        \type real
+        \minimum 0
+        \required-field
+   N2,  \field Reference Unit Gross Rated Heating COP
+        \units dimensionless
+        \type real
+        \minimum 0
+        \required-field
+   N3,  \field Reference Unit Rated Air Flow Rate
+        \units m3/s
+        \type real
+        \minimum 0
+        \required-field
+   A3,  \field Heating Capacity Function of Temperature Curve Name
+        \required-field
+        \type object-list
+        \object-list BiquadraticCurves
+        \object-list BiVariateTables
+   A4,  \field Total  Heating Capacity Function of Air Flow Fraction Curve Name
+        \required-field
+        \type object-list
+        \object-list QuadraticCubicCurves
+        \object-list UniVariateTables
+   A5,  \field Energy Input Ratio Function of Temperature Curve Name
+        \required-field
+        \type object-list
+        \object-list BiquadraticCurves
+        \object-list BiVariateTables
+   A6;  \field Energy Input Ratio Function of Air Flow Fraction Curve Name
+        \required-field
+        \type object-list
+        \object-list QuadraticCubicCurves
+        \object-list UniVariateTables
+
+OS:Coil:Cooling:DX:VariableSpeed,
+        \min-fields 21
+        \extensible:1
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+        \type alpha
+        \reference CoolingCoilsDXVariableSpeed
+        \reference ConnectionObject
+   A3,  \field Indoor Air Inlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   A4,  \field Indoor Air Outlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   N1,  \field Nominal Speed Level
+        \units dimensionless
+        \type integer
+        \default 2
+        \required-field
+        \note must be lower than or equal to the highest speed number
+   N2,  \field Gross Rated Total Cooling Capacity At Selected Nominal Speed Level
+        \units w
+        \type real
+        \autosizable
+        \required-field
+   N3,  \field Rated Air Flow Rate At Selected Nominal Speed Level
+        \units m3/s
+        \type real
+        \autosizable
+        \required-field
+   N4,  \field Nominal Time for Condensate to Begin Leaving the Coil
+        \units s
+        \type real
+        \minimum 0
+        \required-field
+   N5,  \field Initial Moisture Evaporation Rate Divided by Steady-State AC Latent Capacity
+        \units dimensionless
+        \type real
+        \minimum 0
+        \required-field
+   A5,  \field Energy Part Load Fraction Curve Name
+        \required-field
+        \type object-list
+        \object-list QuadraticCubicCurves
+        \object-list UniVariateTables
+   A6,  \field Condenser Air Inlet Node Name
+        \type alpha
+   A7,  \field Condenser Type
+        \required-field
+        \type choice
+        \key AirCooled
+        \key EvaporativelyCooled
+   N6,  \field Evaporative Condenser Pump Rated Power Consumption
+        \required-field
+        \type real
+        \units W
+        \minimum 0.0
+        \autosizable
+   N7,  \field Crankcase Heater Capacity
+        \required-field
+        \type real
+        \minimum 0.0
+        \units W
+        \ip-units W
+   N8,  \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
+        \required-field
+        \type real
+        \minimum 0.0
+        \units C
+   A8,  \field Supply Water Storage Tank Name
+        \type object-list
+        \object-list WaterStorageTankNames
+   A9,  \field Condensate Collection Water Storage Tank Name
+        \type object-list
+        \object-list WaterStorageTankNames
+   N9,  \field Basin Heater Capacity
+        \required-field
+        \type real
+        \units W/K
+        \minimum 0.0
+   N10, \field Basin Heater Setpoint Temperature
+        \required-field
+        \type real
+        \units C
+        \minimum 2.0
+   A10, \field Basin Heater Operating Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+   A11; \field Speed Data
+        \begin-extensible
+        \type object-list
+        \object-list CoilCoolingDXVariableSpeedSpeedData
+
+OS:Coil:Cooling:DX:VariableSpeed:SpeedData,
+        \min-fields 12
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+        \type alpha
+        \reference CoilCoolingDXVariableSpeedSpeedData
+   N1,  \field Reference Unit Gross Rated Total Cooling Capacity
+        \units w
+        \type real
+        \minimum 0
+        \required-field
+   N2,  \field Reference Unit Gross Rated Sensible Heat Ratio
+        \units dimensionless
+        \type real
+        \minimum 0
+        \maximum 1.0
+        \required-field
+   N3,  \field Reference Unit Gross Rated Cooling COP
+        \units dimensionless
+        \type real
+        \minimum 0
+        \required-field
+   N4,  \field Reference Unit Rated Air Flow Rate
+        \units m3/s
+        \type real
+        \minimum 0
+        \required-field
+   N5,  \field Reference Unit Rated Condenser Air Flow Rate
+        \units m3/s
+        \type real
+        \minimum 0
+        \note This field is only used for Condenser Type = EvaporativelyCooled
+   N6,  \field Reference Unit Rated Pad Effectiveness of Evap Precooling
+        \units dimensionless
+        \type real
+        \minimum 0
+        \maximum 1.0
+        \note This field is only used for Condenser Type = EvaporativelyCooled
+   A3,  \field Total Cooling Capacity Function of Temperature Curve Name
+        \required-field
+        \type object-list
+        \object-list BiquadraticCurves
+        \object-list BiVariateTables
+   A4,  \field Total Cooling Capacity Function of Air Flow Fraction Curve Name
+        \required-field
+        \type object-list
+        \object-list QuadraticCubicCurves
+        \object-list UniVariateTables
+   A5,  \field Energy Input Ratio Function of Temperature Curve Name
+        \required-field
+        \type object-list
+        \object-list BiquadraticCurves
+        \object-list BiVariateTables
+   A6;  \field Energy Input Ratio Function of Air Flow Fraction Curve Name
+        \required-field
+        \type object-list
+        \object-list QuadraticCubicCurves
+        \object-list UniVariateTables
+
+OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit,
+        \min-fields 12
+        \extensible:1
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+        \type alpha
+        \reference HeatingCoilsWaterToAirVSHP
+        \reference ConnectionObject
+   A3,  \field Water-to-Refrigerant HX Water Inlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   A4,  \field Water-to-Refrigerant HX Water Outlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   A5,  \field Indoor Air Inlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   A6,  \field Indoor Air Outlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   N1,  \field Nominal Speed Level
+        \units dimensionless
+        \type integer
+        \required-field
+        \note must be lower than or equal to the highest speed number
+   N2,  \field Rated Heating Capacity At Selected Nominal Speed Level
+        \units w
+        \type real
+        \autosizable
+        \required-field
+   N3,  \field Rated Air Flow Rate At Selected Nominal Speed Level
+        \units m3/s
+        \type real
+        \autosizable
+        \required-field
+   N4,  \field Rated Water Flow Rate At Selected Nominal Speed Level
+        \units m3/s
+        \type real
+        \autosizable
+        \required-field
+   A7,  \field Energy Part Load Fraction Curve Name
+        \required-field
+        \type object-list
+        \object-list QuadraticCubicCurves
+        \object-list UniVariateTables
+   A8;  \field Speed Data
+        \begin-extensible
+        \type object-list
+        \object-list CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData
+
+OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
+        \min-fields 14
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+        \type alpha
+        \reference CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData
+   N1,  \field Reference Unit Gross Rated Heating Capacity
+        \note Heating capacity not accounting for the effect of supply air fan heat
+        \units w
+        \type real
+        \minimum 0
+        \required-field
+   N2,  \field Reference Unit Gross Rated Heating COP
+        \units dimensionless
+        \type real
+        \minimum 0
+        \required-field
+   N3,  \field Reference Unit Rated Air Flow
+        \units m3/s
+        \type real
+        \minimum 0
+        \required-field
+   N4,  \field Reference Unit Rated Water Flow Rate
+        \units m3/s
+        \type real
+        \minimum 0
+        \required-field
+   A3,  \field Heating Capacity Function of Temperature Curve Name
+        \required-field
+        \type object-list
+        \object-list BiquadraticCurves
+        \object-list BiVariateTables
+   A4,  \field Total Heating Capacity Function of Air Flow Fraction Curve Name
+        \required-field
+        \type object-list
+        \object-list QuadraticCubicCurves
+        \object-list UniVariateTables
+   A5,  \field Heating Capacity Function of Water Flow Fraction Curve Name
+        \required-field
+        \type object-list
+        \object-list QuadraticCubicCurves
+        \object-list UniVariateTables
+   A6,  \field Energy Input Ratio Function of Temperature Curve Name
+        \required-field
+        \type object-list
+        \object-list BiquadraticCurves
+        \object-list BiVariateTables
+   A7,  \field Energy Input Ratio Function of Air Flow Fraction Curve Name
+        \required-field
+        \type object-list
+        \object-list QuadraticCubicCurves
+        \object-list UniVariateTables
+   A8,  \field Energy Input Ratio Function of Water Flow Fraction Curve Name
+        \required-field
+        \type object-list
+        \object-list QuadraticCubicCurves
+        \object-list UniVariateTables
+   N5,  \field Reference Unit Waste Heat Fraction of Input Power At Rated Conditions
+        \units dimensionless
+        \type real
+        \minimum 0
+        \required-field
+   A9;  \field Waste Heat Function of Temperature Curve Name
+        \required-field
+        \type object-list
+        \object-list BiquadraticCurves
+        \object-list BiVariateTables
+
+OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit,
+        \min-fields 15
+        \extensible:1
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+        \type alpha
+        \reference CoolingCoilsWaterToAirVSHP
+        \reference ConnectionObject
+   A3,  \field Water-to-Refrigerant HX Water Inlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   A4,  \field Water-to-Refrigerant HX Water Outlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   A5,  \field Indoor Air Inlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   A6,  \field Indoor Air Outlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   N1,  \field Nominal Speed Level
+        \units dimensionless
+        \type integer
+        \required-field
+        \note must be lower than or equal to the highest speed number
+   N2,  \field Gross Rated Total Cooling Capacity At Selected Nominal Speed Level
+        \units w
+        \type real
+        \autosizable
+        \required-field
+   N3,  \field Rated Air Flow Rate At Selected Nominal Speed Level
+        \units m3/s
+        \type real
+        \autosizable
+        \required-field
+   N4,  \field Rated Water Flow Rate At Selected Nominal Speed Level
+        \units m3/s
+        \type real
+        \autosizable
+        \required-field
+   N5,  \field Nominal Time for Condensate to Begin Leaving the Coil
+        \units s
+        \type real
+        \minimum 0
+        \required-field
+   N6,  \field Initial Moisture Evaporation Rate Divided by Steady-State AC Latent Capacity
+        \units dimensionless
+        \type real
+        \minimum 0
+        \required-field
+   N7,  \field Use Hot Gas Reheat
+        \type choice
+        \key Yes
+        \key No
+        \required-field
+   A7,  \field Energy Part Load Fraction Curve Name
+        \required-field
+        \type object-list
+        \object-list QuadraticCubicCurves
+        \object-list UniVariateTables
+   A8;  \field Speed Data
+        \begin-extensible
+        \type object-list
+        \object-list CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData
+
+OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
+        \min-fields 15
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+        \type alpha
+        \reference CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData
+   N1,  \field Reference Unit Gross Rated Total Cooling Capacity
+        \units w
+        \type real
+        \minimum 0
+        \required-field
+   N2,  \field Reference Unit Gross Rated Sensible Heat Ratio
+        \units dimensionless
+        \type real
+        \minimum 0
+        \Maximum 1.0
+        \required-field
+   N3,  \field Reference Unit Gross Rated Cooling COP
+        \units dimensionless
+        \type real
+        \minimum 0
+        \required-field
+   N4,  \field Reference Unit Rated Air Flow Rate
+        \units m3/s
+        \type real
+        \minimum 0
+        \required-field
+   N5,  \field Reference Unit Rated Water Flow Rate
+        \units m3/s
+        \type real
+        \minimum 0
+        \required-field
+   A3,  \field Total Cooling Capacity Function of Temperature Curve Name
+        \required-field
+        \type object-list
+        \object-list BiquadraticCurves
+        \object-list BiVariateTables
+   A4,  \field Total Cooling Capacity Function of Air Flow Fraction Curve Name
+        \required-field
+        \type object-list
+        \object-list QuadraticCubicCurves
+        \object-list UniVariateTables
+   A5,  \field Total Cooling Capacity Function of Water Flow Fraction Curve Name
+        \required-field
+        \type object-list
+        \object-list QuadraticCubicCurves
+        \object-list UniVariateTables
+   A6,  \field Energy Input Ratio Function of Temperature Curve Name
+        \required-field
+        \type object-list
+        \object-list BiquadraticCurves
+        \object-list BiVariateTables
+   A7,  \field Energy Input Ratio Function of Air Flow Fraction Curve Name
+        \required-field
+        \type object-list
+        \object-list QuadraticCubicCurves
+        \object-list UniVariateTables
+   A8,  \field Energy Input Ratio Function of Water Flow Fraction Curve Name
+        \required-field
+        \type object-list
+        \object-list QuadraticCubicCurves
+        \object-list UniVariateTables
+   N6,  \field Reference Unit Waste Heat Fraction of Input Power At Rated Conditions
+        \units dimensionless
+        \type real
+        \minimum 0
+        \required-field
+   A9;  \field Waste Heat Function of Temperature Curve Name
+        \required-field
+        \type object-list
+        \object-list BiquadraticCurves
+        \object-list BiVariateTables
+
+OS:Coil:WaterHeating:AirToWaterHeatPump,
+       \min-fields 21
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A1 , \field Name
+       \required-field
+       \type alpha
+       \reference HeatPumpWaterHeaterDXCoils
+       \reference ConnectionObject
+  N1 , \field Rated Heating Capacity
+       \required-field
+       \type real
+       \units W
+       \minimum> 0
+  N2 , \field Rated COP
+       \required-field
+       \type real
+       \units W/W
+       \minimum> 0
+  N3 , \field Rated Sensible Heat Ratio
+       \required-field
+       \type real
+       \minimum 0.5
+       \maximum 1
+  N4 , \field Rated Evaporator Inlet Air Dry-Bulb Temperature
+       \required-field
+       \type real
+       \units C
+       \minimum> 5
+  N5 , \field Rated Evaporator Inlet Air Wet-Bulb Temperature
+       \required-field
+       \type real
+       \units C
+       \minimum> 5
+  N6 , \field Rated Condenser Inlet Water Temperature
+       \required-field
+       \type real
+       \units C
+       \minimum> 25
+  N7 , \field Rated Evaporator Air Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0
+       \autocalculatable
+  N8 , \field Rated Condenser Water Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0
+       \autocalculatable
+  A2 , \field Evaporator Fan Power Included in Rated COP
+       \required-field
+       \type choice
+       \key Yes
+       \key No
+  A3 , \field Condenser Pump Power Included in Rated COP
+       \required-field
+       \type choice
+       \key Yes
+       \key No
+  A4 , \field Condenser Pump Heat Included in Rated Heating Capacity and Rated COP
+       \required-field
+       \type choice
+       \key Yes
+       \key No
+  N9 , \field Condenser Water Pump Power
+       \required-field
+       \type real
+       \units W
+       \minimum 0
+  N10, \field Fraction of Condenser Pump Heat to Water
+       \required-field
+       \type real
+       \minimum 0
+       \maximum 1
+  A5 , \field Evaporator Air Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A6 , \field Evaporator Air Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A7 , \field Condenser Water Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A8 , \field Condenser Water Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  N11, \field Crankcase Heater Capacity
+       \required-field
+       \type real
+       \minimum 0
+       \units W
+  N12, \field Maximum Ambient Temperature for Crankcase Heater Operation
+       \required-field
+       \type real
+       \minimum 0
+       \units C
+  A9 , \field Evaporator Air Temperature Type for Curve Objects
+       \required-field
+       \type choice
+       \key DryBulbTemperature
+       \key WetBulbTemperature
+  A10, \field Heating Capacity Function of Temperature Curve Name
+       \required-field
+       \type object-list
+       \object-list BiquadraticCubicCurves
+       \object-list BiVariateTables
+  A11, \field Heating Capacity Function of Air Flow Fraction Curve Name
+       \required-field
+       \type object-list
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
+  A12, \field Heating Capacity Function of Water Flow Fraction Curve Name
+       \required-field
+       \type object-list
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
+  A13, \field Heating COP Function of Temperature Curve Name
+       \required-field
+       \type object-list
+       \object-list BiquadraticCubicCurves
+       \object-list BiVariateTables
+  A14, \field Heating COP Function of Air Flow Fraction Curve Name
+       \required-field
+       \type object-list
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
+  A15, \field Heating COP Function of Water Flow Fraction Curve Name
+       \required-field
+       \type object-list
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
+  A16; \field Part Load Fraction Correlation Curve Name
+       \required-field
+       \type object-list
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
+
 OS:Connection,
        \min-fields 1
   A1, \field Handle
