@@ -604,6 +604,9 @@ set(${target_name}_src
   PlantEquipmentOperationOutdoorDryBulb.hpp
   PlantEquipmentOperationOutdoorDryBulb_Impl.hpp
   PlantEquipmentOperationOutdoorDryBulb.cpp
+  PlantEquipmentOperationOutdoorWetBulb.hpp
+  PlantEquipmentOperationOutdoorWetBulb_Impl.hpp
+  PlantEquipmentOperationOutdoorWetBulb.cpp
   ProgramControl.hpp
   ProgramControl_Impl.hpp
   ProgramControl.cpp
