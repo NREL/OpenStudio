@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODEL_PLANTEQUIPMENTOPERATIONLOADSCHEME_HPP
-#define MODEL_PLANTEQUIPMENTOPERATIONLOADSCHEME_HPP
+#ifndef MODEL_PLANTEQUIPMENTOPERATIONRANGEBASEDSCHEME_HPP
+#define MODEL_PLANTEQUIPMENTOPERATIONRANGEBASEDSCHEME_HPP
 
 #include "ModelAPI.hpp"
 #include "PlantEquipmentOperationScheme.hpp"
@@ -29,23 +29,34 @@ namespace model {
 class HVACComponent;
 
 namespace detail{
-  class PlantEquipmentOperationLoadScheme_Impl;
+  class PlantEquipmentOperationRangeBasedScheme_Impl;
 }
 
-/** PlantEquipmentOperationLoadScheme instances 
- * will be created with a single continuous load range between zero and a very large upper bound. 
- * This continuum can be subdivided to create multiple discrete load ranges with different equipment assignments. 
- * Load ranges are identified by the value of their upper limit. A load range is allowed to be empty.
+/** PlantEquipmentOperationRangeBasedScheme instances 
+ * will be created with a single continuous load range between a minimum and maximum bound. 
+ * This continuum can be subdivided to create multiple discrete ranges with different equipment assignments. 
+ * Ranges are identified by the value of their upper limit. A load range is allowed to be empty.
+ * This interface is similar to ScheduleDay in OpenStudio, where an entire continuum must be filled in.
+ * Here some ranges in the continuum maybe be empty (no equipment), signaling that the no equipment operates during
+ * the specified range. Subclasses will determine appropriate minimum and maximum bounds of the operation scheme.
  */
-class MODEL_API PlantEquipmentOperationLoadScheme : public PlantEquipmentOperationScheme {
+class MODEL_API PlantEquipmentOperationRangeBasedScheme : public PlantEquipmentOperationScheme {
 
   public:
 
-  PlantEquipmentOperationLoadScheme(IddObjectType type,const Model& model);
+  PlantEquipmentOperationRangeBasedScheme(IddObjectType type,const Model& model);
 
-  virtual ~PlantEquipmentOperationLoadScheme() {}
+  virtual ~PlantEquipmentOperationRangeBasedScheme() {}
 
   friend class openstudio::IdfObject;
+
+  /** The maximum limit of the range based operation scheme. No load range can operate above this value. */
+  double maximumUpperLimit() const;
+
+  /** The minimum limit of the range based operation scheme. No load range can operate below this value. 
+    * This is where the first load range will begin from. A default constructed PlantEquipmentOperationRangeBasedScheme will
+    * have a single range defined between the minimumLowerLimit and the maximumUpperLimit. */
+  double minimumLowerLimit() const;
 
   /** Add a new load range, using the adjacent range as the lower limit, and "upperLimit" as the upper limit of the new range. 
     * Returns true if the load range was succesfully added. Duplicates wil be removed from the equipment vector **/
@@ -80,24 +91,24 @@ class MODEL_API PlantEquipmentOperationLoadScheme : public PlantEquipmentOperati
 
   /// @cond 
 
-  typedef detail::PlantEquipmentOperationLoadScheme_Impl ImplType;
+  typedef detail::PlantEquipmentOperationRangeBasedScheme_Impl ImplType;
 
-  explicit PlantEquipmentOperationLoadScheme(std::shared_ptr<detail::PlantEquipmentOperationLoadScheme_Impl> impl);
+  explicit PlantEquipmentOperationRangeBasedScheme(std::shared_ptr<detail::PlantEquipmentOperationRangeBasedScheme_Impl> impl);
 
   private:
 
-  REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationLoadScheme");
+  REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationRangeBasedScheme");
 
   /// @endcond 
 
 };
 
-typedef boost::optional<PlantEquipmentOperationLoadScheme> OptionalPlantEquipmentOperationLoadScheme;
+typedef boost::optional<PlantEquipmentOperationRangeBasedScheme> OptionalPlantEquipmentOperationRangeBasedScheme;
 
-typedef std::vector<PlantEquipmentOperationLoadScheme> PlantEquipmentOperationLoadSchemeVector;
+typedef std::vector<PlantEquipmentOperationRangeBasedScheme> PlantEquipmentOperationRangeBasedSchemeVector;
 
 } // model
 } // openstudio
 
-#endif // MODEL_PLANTEQUIPMENTOPERATIONLOADSCHEME_HPP
+#endif // MODEL_PLANTEQUIPMENTOPERATIONRANGEBASEDSCHEME_HPP
 

@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include "PlantEquipmentOperationLoadScheme.hpp"
-#include "PlantEquipmentOperationLoadScheme_Impl.hpp"
+#include "PlantEquipmentOperationRangeBasedScheme.hpp"
+#include "PlantEquipmentOperationRangeBasedScheme_Impl.hpp"
 #include "PlantEquipmentOperationScheme.hpp"
 #include "PlantEquipmentOperationScheme_Impl.hpp"
 #include "Model.hpp"
@@ -41,22 +41,17 @@ enum LoadExtensibleFields { LOADRANGEFIELDS_LOWERLIMIT, LOADRANGEFIELDS_UPPERLIM
 
 namespace detail {
 
-double PlantEquipmentOperationLoadScheme_Impl::maximumUpperLimit()
-{
-  return 1E9;
-}
-
-PlantEquipmentOperationLoadScheme_Impl::PlantEquipmentOperationLoadScheme_Impl(IddObjectType type, Model_Impl* model)
+PlantEquipmentOperationRangeBasedScheme_Impl::PlantEquipmentOperationRangeBasedScheme_Impl(IddObjectType type, Model_Impl* model)
   : PlantEquipmentOperationScheme_Impl(type,model)
 {
 }
 
-PlantEquipmentOperationLoadScheme_Impl::PlantEquipmentOperationLoadScheme_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+PlantEquipmentOperationRangeBasedScheme_Impl::PlantEquipmentOperationRangeBasedScheme_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
   : PlantEquipmentOperationScheme_Impl(idfObject, model, keepHandle)
 { 
 }
 
-PlantEquipmentOperationLoadScheme_Impl::PlantEquipmentOperationLoadScheme_Impl(
+PlantEquipmentOperationRangeBasedScheme_Impl::PlantEquipmentOperationRangeBasedScheme_Impl(
     const openstudio::detail::WorkspaceObject_Impl& other, 
     Model_Impl* model, 
     bool keepHandle)
@@ -64,8 +59,12 @@ PlantEquipmentOperationLoadScheme_Impl::PlantEquipmentOperationLoadScheme_Impl(
 {
 }
 
-bool PlantEquipmentOperationLoadScheme_Impl::addLoadRange(double upperLimit, const std::vector<HVACComponent> & equipment)
+bool PlantEquipmentOperationRangeBasedScheme_Impl::addLoadRange(double upperLimit, const std::vector<HVACComponent> & equipment)
 {
+  if( upperLimit < minimumLowerLimit() ) {
+    return false;
+  }
+
   unsigned i = 0;
   for( auto & eg : extensibleGroups() ) {
     const auto & t_upperLimit = eg.getDouble(LOADRANGEFIELDS_UPPERLIMIT);
@@ -98,7 +97,7 @@ bool PlantEquipmentOperationLoadScheme_Impl::addLoadRange(double upperLimit, con
   return false;
 }
 
-std::vector<HVACComponent> PlantEquipmentOperationLoadScheme_Impl::removeLoadRange(double upperLimit)
+std::vector<HVACComponent> PlantEquipmentOperationRangeBasedScheme_Impl::removeLoadRange(double upperLimit)
 {
   auto t_extensibleGroups = extensibleGroups();
   if( t_extensibleGroups.size() == 1u ) { return std::vector<HVACComponent>(); }
@@ -129,7 +128,7 @@ std::vector<HVACComponent> PlantEquipmentOperationLoadScheme_Impl::removeLoadRan
   return std::vector<HVACComponent>();
 }
 
-std::vector<double> PlantEquipmentOperationLoadScheme_Impl::loadRangeUpperLimits() const
+std::vector<double> PlantEquipmentOperationRangeBasedScheme_Impl::loadRangeUpperLimits() const
 {
   std::vector<double> result;
   
@@ -142,7 +141,7 @@ std::vector<double> PlantEquipmentOperationLoadScheme_Impl::loadRangeUpperLimits
   return result;
 }
 
-std::vector<HVACComponent> PlantEquipmentOperationLoadScheme_Impl::equipment(double upperLimit) const
+std::vector<HVACComponent> PlantEquipmentOperationRangeBasedScheme_Impl::equipment(double upperLimit) const
 {
   for( const auto & eg : extensibleGroups() ) {
     const auto & value = eg.getDouble(LOADRANGEFIELDS_UPPERLIMIT);
@@ -159,7 +158,7 @@ std::vector<HVACComponent> PlantEquipmentOperationLoadScheme_Impl::equipment(dou
   return std::vector<HVACComponent>();
 }
 
-bool PlantEquipmentOperationLoadScheme_Impl::addEquipment(double upperLimit, const HVACComponent & equipment)
+bool PlantEquipmentOperationRangeBasedScheme_Impl::addEquipment(double upperLimit, const HVACComponent & equipment)
 {
   for( const auto & eg : extensibleGroups() ) {
     const auto & value = eg.getDouble(LOADRANGEFIELDS_UPPERLIMIT);
@@ -179,7 +178,7 @@ bool PlantEquipmentOperationLoadScheme_Impl::addEquipment(double upperLimit, con
   return false;
 }
 
-bool PlantEquipmentOperationLoadScheme_Impl::addEquipment(const HVACComponent & equipment)
+bool PlantEquipmentOperationRangeBasedScheme_Impl::addEquipment(const HVACComponent & equipment)
 {
   const auto & egs = extensibleGroups();
 
@@ -198,7 +197,7 @@ bool PlantEquipmentOperationLoadScheme_Impl::addEquipment(const HVACComponent & 
   return false;
 }
 
-bool PlantEquipmentOperationLoadScheme_Impl::removeEquipment(double upperLimit, const HVACComponent & equipment)
+bool PlantEquipmentOperationRangeBasedScheme_Impl::removeEquipment(double upperLimit, const HVACComponent & equipment)
 {
   for( const auto & eg : extensibleGroups() ) {
     const auto & value = eg.getDouble(LOADRANGEFIELDS_UPPERLIMIT);
@@ -221,11 +220,11 @@ bool PlantEquipmentOperationLoadScheme_Impl::removeEquipment(double upperLimit, 
   return false;
 }
 
-void PlantEquipmentOperationLoadScheme_Impl::clearLoadRanges()
+void PlantEquipmentOperationRangeBasedScheme_Impl::clearLoadRanges()
 {
 }
 
-PlantEquipmentOperationLoadScheme_Impl::PlantEquipmentOperationLoadScheme_Impl(const PlantEquipmentOperationLoadScheme_Impl& other, 
+PlantEquipmentOperationRangeBasedScheme_Impl::PlantEquipmentOperationRangeBasedScheme_Impl(const PlantEquipmentOperationRangeBasedScheme_Impl& other, 
                                                Model_Impl* model, 
                                                bool keepHandles)
   : PlantEquipmentOperationScheme_Impl(other,model,keepHandles)
@@ -234,60 +233,60 @@ PlantEquipmentOperationLoadScheme_Impl::PlantEquipmentOperationLoadScheme_Impl(c
 
 } // detail
 
-PlantEquipmentOperationLoadScheme::PlantEquipmentOperationLoadScheme(IddObjectType type,const Model& model)
+PlantEquipmentOperationRangeBasedScheme::PlantEquipmentOperationRangeBasedScheme(IddObjectType type,const Model& model)
   : PlantEquipmentOperationScheme(type,model)
 {
-  OS_ASSERT(getImpl<detail::PlantEquipmentOperationLoadScheme_Impl>());
+  OS_ASSERT(getImpl<detail::PlantEquipmentOperationRangeBasedScheme_Impl>());
 
   auto eg = pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
   ModelObjectList modelObjectList(model);
   eg.setPointer(LOADRANGEFIELDS_RANGEEQUIPMENTLISTNAME,modelObjectList.handle());
-  eg.setDouble(LOADRANGEFIELDS_LOWERLIMIT,0.0);
-  eg.setDouble(LOADRANGEFIELDS_UPPERLIMIT,getImpl<detail::PlantEquipmentOperationLoadScheme_Impl>()->maximumUpperLimit());
+  eg.setDouble(LOADRANGEFIELDS_LOWERLIMIT,getImpl<detail::PlantEquipmentOperationRangeBasedScheme_Impl>()->minimumLowerLimit());
+  eg.setDouble(LOADRANGEFIELDS_UPPERLIMIT,getImpl<detail::PlantEquipmentOperationRangeBasedScheme_Impl>()->maximumUpperLimit());
 }     
 
-PlantEquipmentOperationLoadScheme::PlantEquipmentOperationLoadScheme(std::shared_ptr<detail::PlantEquipmentOperationLoadScheme_Impl> p)
+PlantEquipmentOperationRangeBasedScheme::PlantEquipmentOperationRangeBasedScheme(std::shared_ptr<detail::PlantEquipmentOperationRangeBasedScheme_Impl> p)
   : PlantEquipmentOperationScheme(p)
 {}
 
-bool PlantEquipmentOperationLoadScheme::addLoadRange(double upperLimit, const std::vector<HVACComponent> & equipment)
+bool PlantEquipmentOperationRangeBasedScheme::addLoadRange(double upperLimit, const std::vector<HVACComponent> & equipment)
 {
-  return getImpl<detail::PlantEquipmentOperationLoadScheme_Impl>()->addLoadRange(upperLimit,equipment);
+  return getImpl<detail::PlantEquipmentOperationRangeBasedScheme_Impl>()->addLoadRange(upperLimit,equipment);
 }
 
-std::vector<HVACComponent> PlantEquipmentOperationLoadScheme::removeLoadRange(double upperLimit)
+std::vector<HVACComponent> PlantEquipmentOperationRangeBasedScheme::removeLoadRange(double upperLimit)
 {
-  return getImpl<detail::PlantEquipmentOperationLoadScheme_Impl>()->removeLoadRange(upperLimit);
+  return getImpl<detail::PlantEquipmentOperationRangeBasedScheme_Impl>()->removeLoadRange(upperLimit);
 }
 
-std::vector<double> PlantEquipmentOperationLoadScheme::loadRangeUpperLimits() const
+std::vector<double> PlantEquipmentOperationRangeBasedScheme::loadRangeUpperLimits() const
 {
-  return getImpl<detail::PlantEquipmentOperationLoadScheme_Impl>()->loadRangeUpperLimits();
+  return getImpl<detail::PlantEquipmentOperationRangeBasedScheme_Impl>()->loadRangeUpperLimits();
 }
 
-std::vector<HVACComponent> PlantEquipmentOperationLoadScheme::equipment(double upperLimit) const
+std::vector<HVACComponent> PlantEquipmentOperationRangeBasedScheme::equipment(double upperLimit) const
 {
-  return getImpl<detail::PlantEquipmentOperationLoadScheme_Impl>()->equipment(upperLimit);
+  return getImpl<detail::PlantEquipmentOperationRangeBasedScheme_Impl>()->equipment(upperLimit);
 }
 
-bool PlantEquipmentOperationLoadScheme::addEquipment(double upperLimit, const HVACComponent & equipment)
+bool PlantEquipmentOperationRangeBasedScheme::addEquipment(double upperLimit, const HVACComponent & equipment)
 {
-  return getImpl<detail::PlantEquipmentOperationLoadScheme_Impl>()->addEquipment(upperLimit,equipment);
+  return getImpl<detail::PlantEquipmentOperationRangeBasedScheme_Impl>()->addEquipment(upperLimit,equipment);
 }
 
-bool PlantEquipmentOperationLoadScheme::addEquipment(const HVACComponent & equipment)
+bool PlantEquipmentOperationRangeBasedScheme::addEquipment(const HVACComponent & equipment)
 {
-  return getImpl<detail::PlantEquipmentOperationLoadScheme_Impl>()->addEquipment(equipment);
+  return getImpl<detail::PlantEquipmentOperationRangeBasedScheme_Impl>()->addEquipment(equipment);
 }
 
-bool PlantEquipmentOperationLoadScheme::removeEquipment(double upperLimit, const HVACComponent & equipment)
+bool PlantEquipmentOperationRangeBasedScheme::removeEquipment(double upperLimit, const HVACComponent & equipment)
 {
-  return getImpl<detail::PlantEquipmentOperationLoadScheme_Impl>()->removeEquipment(upperLimit,equipment);
+  return getImpl<detail::PlantEquipmentOperationRangeBasedScheme_Impl>()->removeEquipment(upperLimit,equipment);
 }
 
-void PlantEquipmentOperationLoadScheme::clearLoadRanges()
+void PlantEquipmentOperationRangeBasedScheme::clearLoadRanges()
 {
-  return getImpl<detail::PlantEquipmentOperationLoadScheme_Impl>()->clearLoadRanges();
+  return getImpl<detail::PlantEquipmentOperationRangeBasedScheme_Impl>()->clearLoadRanges();
 }
 
 } // model

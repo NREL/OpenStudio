@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODEL_PlantEquipmentOperationLoadScheme_IMPL_HPP
-#define MODEL_PlantEquipmentOperationLoadScheme_IMPL_HPP
+#ifndef MODEL_PLANTEQUIPMENTOPERATIONRANGEBASEDSCHEME_IMPL_HPP
+#define MODEL_PLANTEQUIPMENTOPERATIONRANGEBASEDSCHEME_IMPL_HPP
 
 #include "PlantEquipmentOperationScheme_Impl.hpp"
 
@@ -29,20 +29,20 @@ class PlantLoop;
 
 namespace detail {
 
-  class MODEL_API PlantEquipmentOperationLoadScheme_Impl : public PlantEquipmentOperationScheme_Impl {
+  class MODEL_API PlantEquipmentOperationRangeBasedScheme_Impl : public PlantEquipmentOperationScheme_Impl {
    public:
 
-    PlantEquipmentOperationLoadScheme_Impl(IddObjectType type, Model_Impl* model);
+    PlantEquipmentOperationRangeBasedScheme_Impl(IddObjectType type, Model_Impl* model);
 
-    PlantEquipmentOperationLoadScheme_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+    PlantEquipmentOperationRangeBasedScheme_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    PlantEquipmentOperationLoadScheme_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+    PlantEquipmentOperationRangeBasedScheme_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                            Model_Impl* model,
                            bool keepHandle);
 
-    PlantEquipmentOperationLoadScheme_Impl(const PlantEquipmentOperationLoadScheme_Impl& other, Model_Impl* model, bool keepHandles);
+    PlantEquipmentOperationRangeBasedScheme_Impl(const PlantEquipmentOperationRangeBasedScheme_Impl& other, Model_Impl* model, bool keepHandles);
 
-    virtual ~PlantEquipmentOperationLoadScheme_Impl() {}
+    virtual ~PlantEquipmentOperationRangeBasedScheme_Impl() {}
 
     bool addLoadRange(double upperLimit, const std::vector<HVACComponent> & equipment);
 
@@ -60,11 +60,13 @@ namespace detail {
 
     void clearLoadRanges();
 
-    static double maximumUpperLimit();
+    virtual double maximumUpperLimit() const = 0;
+
+    virtual double minimumLowerLimit() const = 0;
 
    private:
 
-    REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationLoadScheme");
+    REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationRangeBasedScheme");
   };
 
 } // detail
@@ -72,4 +74,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_PlantEquipmentOperationLoadScheme_IMPL_HPP
+#endif // MODEL_PLANTEQUIPMENTOPERATIONRANGEBASEDSCHEME_IMPL_HPP

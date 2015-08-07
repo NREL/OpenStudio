@@ -21,7 +21,7 @@
 #define MODEL_PLANTEQUIPMENTOPERATIONCOOLINGLOAD_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/PlantEquipmentOperationLoadScheme.hpp>
+#include <model/PlantEquipmentOperationRangeBasedScheme.hpp>
 
 namespace openstudio {
 namespace model {
@@ -32,8 +32,8 @@ namespace detail {
 
 } // detail
 
-/** PlantEquipmentOperationCoolingLoad is a PlantEquipmentOperationLoadScheme that wraps the OpenStudio IDD object 'OS:PlantEquipmentOperation:CoolingLoad'. */
-class MODEL_API PlantEquipmentOperationCoolingLoad : public PlantEquipmentOperationLoadScheme {
+/** PlantEquipmentOperationCoolingLoad is a PlantEquipmentOperationRangeBasedScheme that wraps the OpenStudio IDD object 'OS:PlantEquipmentOperation:CoolingLoad'. */
+class MODEL_API PlantEquipmentOperationCoolingLoad : public PlantEquipmentOperationRangeBasedScheme {
  public:
   /** @name Constructors and Destructors */
   //@{

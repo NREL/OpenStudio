@@ -21,15 +21,15 @@
 #define MODEL_PLANTEQUIPMENTOPERATIONCOOLINGLOAD_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/PlantEquipmentOperationLoadScheme_Impl.hpp>
+#include <model/PlantEquipmentOperationRangeBasedScheme_Impl.hpp>
 
 namespace openstudio {
 namespace model {
 
 namespace detail {
 
-  /** PlantEquipmentOperationCoolingLoad_Impl is a PlantEquipmentOperationLoadScheme_Impl that is the implementation class for PlantEquipmentOperationCoolingLoad.*/
-  class MODEL_API PlantEquipmentOperationCoolingLoad_Impl : public PlantEquipmentOperationLoadScheme_Impl {
+  /** PlantEquipmentOperationCoolingLoad_Impl is a PlantEquipmentOperationRangeBasedScheme_Impl that is the implementation class for PlantEquipmentOperationCoolingLoad.*/
+  class MODEL_API PlantEquipmentOperationCoolingLoad_Impl : public PlantEquipmentOperationRangeBasedScheme_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -69,6 +69,10 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+
+    double maximumUpperLimit() const override;
+
+    double minimumLowerLimit() const override;
 
     //@}
    protected:

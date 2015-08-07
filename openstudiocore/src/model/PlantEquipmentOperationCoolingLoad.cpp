@@ -31,7 +31,7 @@ namespace detail {
   PlantEquipmentOperationCoolingLoad_Impl::PlantEquipmentOperationCoolingLoad_Impl(const IdfObject& idfObject,
                                                                                    Model_Impl* model,
                                                                                    bool keepHandle)
-    : PlantEquipmentOperationLoadScheme_Impl(idfObject,model,keepHandle)
+    : PlantEquipmentOperationRangeBasedScheme_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == PlantEquipmentOperationCoolingLoad::iddObjectType());
   }
@@ -39,7 +39,7 @@ namespace detail {
   PlantEquipmentOperationCoolingLoad_Impl::PlantEquipmentOperationCoolingLoad_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                                    Model_Impl* model,
                                                                                    bool keepHandle)
-    : PlantEquipmentOperationLoadScheme_Impl(other,model,keepHandle)
+    : PlantEquipmentOperationRangeBasedScheme_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == PlantEquipmentOperationCoolingLoad::iddObjectType());
   }
@@ -47,7 +47,7 @@ namespace detail {
   PlantEquipmentOperationCoolingLoad_Impl::PlantEquipmentOperationCoolingLoad_Impl(const PlantEquipmentOperationCoolingLoad_Impl& other,
                                                                                    Model_Impl* model,
                                                                                    bool keepHandle)
-    : PlantEquipmentOperationLoadScheme_Impl(other,model,keepHandle)
+    : PlantEquipmentOperationRangeBasedScheme_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& PlantEquipmentOperationCoolingLoad_Impl::outputVariableNames() const
@@ -62,10 +62,20 @@ namespace detail {
     return PlantEquipmentOperationCoolingLoad::iddObjectType();
   }
 
+  double PlantEquipmentOperationCoolingLoad_Impl::maximumUpperLimit() const
+  {
+    return 1E9;
+  }
+
+  double PlantEquipmentOperationCoolingLoad_Impl::minimumLowerLimit() const
+  {
+    return 0.0;
+  }
+
 } // detail
 
 PlantEquipmentOperationCoolingLoad::PlantEquipmentOperationCoolingLoad(const Model& model)
-  : PlantEquipmentOperationLoadScheme(PlantEquipmentOperationCoolingLoad::iddObjectType(),model)
+  : PlantEquipmentOperationRangeBasedScheme(PlantEquipmentOperationCoolingLoad::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::PlantEquipmentOperationCoolingLoad_Impl>());
 }
@@ -76,7 +86,7 @@ IddObjectType PlantEquipmentOperationCoolingLoad::iddObjectType() {
 
 /// @cond
 PlantEquipmentOperationCoolingLoad::PlantEquipmentOperationCoolingLoad(std::shared_ptr<detail::PlantEquipmentOperationCoolingLoad_Impl> impl)
-  : PlantEquipmentOperationLoadScheme(impl)
+  : PlantEquipmentOperationRangeBasedScheme(impl)
 {}
 /// @endcond
 
