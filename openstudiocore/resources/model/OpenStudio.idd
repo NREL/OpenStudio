@@ -16866,6 +16866,197 @@ OS:PlantEquipmentOperation:HeatingLoad,
         \type object-list
         \object-list ModelObjectLists
 
+OS:PlantEquipmentOperation:OutdoorDryBulb,
+    \extensible:3
+   A1, \field Handle
+        \type handle
+        \required-field
+   A2 ,\field Name
+        \required-field
+        \reference ControlSchemeList
+   N1 ,\field Dry-Bulb Temperature Range 1 Lower Limit
+        \required-field
+       \type real
+       \units C
+       \minimum -70
+       \maximum 70
+       \begin-extensible
+   N2 ,\field Dry-Bulb Temperature Range 1 Upper Limit
+        \required-field
+       \type real
+       \units C
+       \minimum -70
+       \maximum 70
+   A3 ;\field Range 1 Equipment List Name
+        \required-field
+        \type object-list
+        \object-list ModelObjectLists
+
+OS:PlantEquipmentOperation:OutdoorWetBulb,
+    \extensible:3
+   A1, \field Handle
+        \type handle
+        \required-field
+   A2 ,\field Name
+        \required-field
+        \reference ControlSchemeList
+   N1 ,\field Dry-Bulb Temperature Range 1 Lower Limit
+        \required-field
+       \type real
+       \units C
+       \minimum -70
+       \maximum 70
+       \begin-extensible
+   N2 ,\field Dry-Bulb Temperature Range 1 Upper Limit
+        \required-field
+       \type real
+       \units C
+       \minimum -70
+       \maximum 70
+   A3 ;\field Range 1 Equipment List Name
+        \required-field
+        \type object-list
+        \object-list ModelObjectLists
+
+OS:PlantEquipmentOperation:OutdoorRelativeHumidity,
+    \extensible:3
+   A1, \field Handle
+        \type handle
+        \required-field
+   A2 ,\field Name
+        \required-field
+        \reference ControlSchemeList
+   N1 ,\field Relative Humidity Range 1 Lower Limit
+        \required-field
+       \type real
+       \units percent
+       \minimum 0.0
+       \maximum 100.0
+       \begin-extensible
+   N2 ,\field Relative Humidity Range 1 Upper Limit
+        \required-field
+       \type real
+       \units percent
+       \minimum 0.0
+       \maximum 100.0
+   A3 ;\field Range 1 Equipment List Name
+        \required-field
+        \type object-list
+        \object-list ModelObjectLists
+
+OS:PlantEquipmentOperation:OutdoorDewpoint,
+    \extensible:3
+   A1, \field Handle
+        \type handle
+        \required-field
+   A2 ,\field Name
+        \required-field
+        \reference ControlSchemeList
+   N1 ,\field Dewpoint Temperature Range 1 Lower Limit
+        \required-field
+       \type real
+       \units C
+       \minimum -70
+       \maximum 70
+       \begin-extensible
+   N2 ,\field Dewpoint Temperature Range 1 Upper Limit
+        \required-field
+       \type real
+       \units C
+       \minimum -70
+       \maximum 70
+   A3 ;\field Range 1 Equipment List Name
+        \required-field
+        \type object-list
+        \object-list ModelObjectLists
+
+OS:PlantEquipmentOperation:OutdoorDryBulbDifference,
+    \extensible:3
+   A1, \field Handle
+        \type handle
+        \required-field
+   A2 ,\field Name
+        \required-field
+        \reference ControlSchemeList
+   A3 ,\field Reference Temperature Node Name
+       \type object-list
+       \object-list Node
+   N1,\field Dry-Bulb Temperature Difference Range 1 Lower Limit
+       \required-field
+       \type real
+       \units deltaC
+       \minimum -50.0
+       \maximum 100.0
+       \begin-extensible
+   N2,\field Dry-Bulb Temperature Difference Range 1 Upper Limit
+       \required-field
+       \type real
+       \units deltaC
+       \minimum -50.0
+       \maximum 100.0
+   A4; \field Range 1 Equipment List Name
+        \required-field
+        \type object-list
+        \object-list ModelObjectLists
+
+OS:PlantEquipmentOperation:OutdoorDewpointDifference,
+    \extensible:3
+   A1, \field Handle
+        \type handle
+        \required-field
+   A2 ,\field Name
+        \required-field
+        \reference ControlSchemeList
+   A3 ,\field Reference Temperature Node Name
+       \type object-list
+       \object-list Node
+   N1,\field Dry-Bulb Temperature Difference Range 1 Lower Limit
+       \required-field
+       \type real
+       \units deltaC
+       \minimum -50.0
+       \maximum 100.0
+       \begin-extensible
+   N2,\field Dry-Bulb Temperature Difference Range 1 Upper Limit
+       \required-field
+       \type real
+       \units deltaC
+       \minimum -50.0
+       \maximum 100.0
+   A4; \field Range 1 Equipment List Name
+        \required-field
+        \type object-list
+        \object-list ModelObjectLists
+
+OS:PlantEquipmentOperation:OutdoorWetBulbDifference,
+    \extensible:3
+   A1, \field Handle
+        \type handle
+        \required-field
+   A2 ,\field Name
+        \required-field
+        \reference ControlSchemeList
+   A3 ,\field Reference Temperature Node Name
+       \type object-list
+       \object-list Node
+   N1,\field Dry-Bulb Temperature Difference Range 1 Lower Limit
+       \required-field
+       \type real
+       \units deltaC
+       \minimum -50.0
+       \maximum 100.0
+       \begin-extensible
+   N2,\field Dry-Bulb Temperature Difference Range 1 Upper Limit
+       \required-field
+       \type real
+       \units deltaC
+       \minimum -50.0
+       \maximum 100.0
+   A4; \field Range 1 Equipment List Name
+        \required-field
+        \type object-list
+        \object-list ModelObjectLists
+
 OS:Pump:ConstantSpeed,
        \memo This pump model is described in the ASHRAE secondary HVAC toolkit.
        \min-fields 10 

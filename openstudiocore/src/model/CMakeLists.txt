@@ -601,6 +601,9 @@ set(${target_name}_src
   PlantEquipmentOperationHeatingLoad.hpp
   PlantEquipmentOperationHeatingLoad_Impl.hpp
   PlantEquipmentOperationHeatingLoad.cpp
+  PlantEquipmentOperationOutdoorDryBulb.hpp
+  PlantEquipmentOperationOutdoorDryBulb_Impl.hpp
+  PlantEquipmentOperationOutdoorDryBulb.cpp
   ProgramControl.hpp
   ProgramControl_Impl.hpp
   ProgramControl.cpp
