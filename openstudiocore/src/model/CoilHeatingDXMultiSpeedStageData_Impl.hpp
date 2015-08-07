@@ -26,8 +26,7 @@
 namespace openstudio {
 namespace model {
 
-class CurveBiquadratic;
-class CurveQuadratic;
+class Curve;
 
 namespace detail {
 
@@ -59,17 +58,17 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const;
 
+    virtual ModelObject clone(Model model) const override;
+
+    virtual std::vector<ModelObject> children() const override;
+
     //@}
     /** @name Getters */
     //@{
 
-    boost::optional<double> grossRatedTotalHeatingCapacity() const;
+    boost::optional<double> grossRatedHeatingCapacity() const;
 
-    bool isGrossRatedTotalHeatingCapacityAutosized() const;
-
-    boost::optional<double> grossRatedSensibleHeatRatio() const;
-
-    bool isGrossRatedSensibleHeatRatioAutosized() const;
+    bool isGrossRatedHeatingCapacityAutosized() const;
 
     double grossRatedHeatingCOP() const;
 
@@ -77,51 +76,29 @@ namespace detail {
 
     bool isRatedAirFlowRateAutosized() const;
 
-    double ratedEvaporatorFanPowerPerVolumeFlowRate() const;
+    double ratedSupplyAirFanPowerPerVolumeFlowRate() const;
 
-    CurveBiquadratic totalHeatingCapacityFunctionofTemperatureCurve() const;
+    Curve heatingCapacityFunctionofTemperatureCurve() const;
 
-    CurveQuadratic totalHeatingCapacityFunctionofFlowFractionCurve() const;
+    Curve heatingCapacityFunctionofFlowFractionCurve() const;
 
-    CurveBiquadratic energyInputRatioFunctionofTemperatureCurve() const;
+    Curve energyInputRatioFunctionofTemperatureCurve() const;
 
-    CurveQuadratic energyInputRatioFunctionofFlowFractionCurve() const;
+    Curve energyInputRatioFunctionofFlowFractionCurve() const;
 
-    CurveQuadratic partLoadFractionCorrelationCurve() const;
-
-    double nominalTimeforCondensateRemovaltoBegin() const;
-
-    double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity() const;
-
-    double maximumCyclingRate() const;
-
-    double latentCapacityTimeConstant() const;
+    Curve partLoadFractionCorrelationCurve() const;
 
     double ratedWasteHeatFractionofPowerInput() const;
 
-    CurveBiquadratic wasteHeatFunctionofTemperatureCurve() const;
-
-    double evaporativeCondenserEffectiveness() const;
-
-    boost::optional<double> evaporativeCondenserAirFlowRate() const;
-
-    bool isEvaporativeCondenserAirFlowRateAutosized() const;
-
-    boost::optional<double> ratedEvaporativeCondenserPumpPowerConsumption() const;
-
-    bool isRatedEvaporativeCondenserPumpPowerConsumptionAutosized() const;
+    Curve wasteHeatFunctionofTemperatureCurve() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    bool setGrossRatedTotalHeatingCapacity(boost::optional<double> grossRatedTotalHeatingCapacity);
+    bool setGrossRatedHeatingCapacity(boost::optional<double> grossRatedHeatingCapacity);
 
-    void autosizeGrossRatedTotalHeatingCapacity();
-
-    bool setGrossRatedSensibleHeatRatio(boost::optional<double> grossRatedSensibleHeatRatio);
-
-    void autosizeGrossRatedSensibleHeatRatio();
+    void autosizeGrossRatedHeatingCapacity();
 
     bool setGrossRatedHeatingCOP(double grossRatedHeatingCOP);
 
@@ -129,39 +106,21 @@ namespace detail {
 
     void autosizeRatedAirFlowRate();
 
-    bool setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate);
+    bool setRatedSupplyAirFanPowerPerVolumeFlowRate(double ratedSupplyAirFanPowerPerVolumeFlowRate);
 
-    bool setTotalHeatingCapacityFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic);
+    bool setHeatingCapacityFunctionofTemperatureCurve(const Curve& curve);
 
-    bool setTotalHeatingCapacityFunctionofFlowFractionCurve(const CurveQuadratic& curveQuadratic);
+    bool setHeatingCapacityFunctionofFlowFractionCurve(const Curve& curve);
 
-    bool setEnergyInputRatioFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic);
+    bool setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve);
 
-    bool setEnergyInputRatioFunctionofFlowFractionCurve(const CurveQuadratic& curveQuadratic);
+    bool setEnergyInputRatioFunctionofFlowFractionCurve(const Curve& curve);
 
-    bool setPartLoadFractionCorrelationCurve(const CurveQuadratic& curveQuadratic);
-
-    bool setNominalTimeforCondensateRemovaltoBegin(double nominalTimeforCondensateRemovaltoBegin);
-
-    bool setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity);
-
-    bool setMaximumCyclingRate(double maximumCyclingRate);
-
-    bool setLatentCapacityTimeConstant(double latentCapacityTimeConstant);
+    bool setPartLoadFractionCorrelationCurve(const Curve& curve);
 
     bool setRatedWasteHeatFractionofPowerInput(double ratedWasteHeatFractionofPowerInput);
 
-    bool setWasteHeatFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic);
-
-    bool setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness);
-
-    bool setEvaporativeCondenserAirFlowRate(boost::optional<double> evaporativeCondenserAirFlowRate);
-
-    void autosizeEvaporativeCondenserAirFlowRate();
-
-    bool setRatedEvaporativeCondenserPumpPowerConsumption(boost::optional<double> ratedEvaporativeCondenserPumpPowerConsumption);
-
-    void autosizeRatedEvaporativeCondenserPumpPowerConsumption();
+    bool setWasteHeatFunctionofTemperatureCurve(const Curve& curve);
 
     //@}
     /** @name Other */
@@ -175,12 +134,12 @@ namespace detail {
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
-    boost::optional<CurveBiquadratic> optionalTotalHeatingCapacityFunctionofTemperatureCurve() const;
-    boost::optional<CurveQuadratic> optionalTotalHeatingCapacityFunctionofFlowFractionCurve() const;
-    boost::optional<CurveBiquadratic> optionalEnergyInputRatioFunctionofTemperatureCurve() const;
-    boost::optional<CurveQuadratic> optionalEnergyInputRatioFunctionofFlowFractionCurve() const;
-    boost::optional<CurveQuadratic> optionalPartLoadFractionCorrelationCurve() const;
-    boost::optional<CurveBiquadratic> optionalWasteHeatFunctionofTemperatureCurve() const;
+    boost::optional<Curve> optionalHeatingCapacityFunctionofTemperatureCurve() const;
+    boost::optional<Curve> optionalHeatingCapacityFunctionofFlowFractionCurve() const;
+    boost::optional<Curve> optionalEnergyInputRatioFunctionofTemperatureCurve() const;
+    boost::optional<Curve> optionalEnergyInputRatioFunctionofFlowFractionCurve() const;
+    boost::optional<Curve> optionalPartLoadFractionCorrelationCurve() const;
+    boost::optional<Curve> optionalWasteHeatFunctionofTemperatureCurve() const;
   };
 
 } // detail

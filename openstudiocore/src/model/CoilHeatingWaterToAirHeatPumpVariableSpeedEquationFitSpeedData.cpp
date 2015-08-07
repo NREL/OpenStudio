@@ -20,10 +20,8 @@
 #include "CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.hpp"
 #include "CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl.hpp"
 
-#include "CurveBiquadratic.hpp"
-#include "CurveBiquadratic_Impl.hpp"
-#include "CurveQuadratic.hpp"
-#include "CurveQuadratic_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
 
 #include <utilities/idd/OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedData_FieldEnums.hxx>
 
@@ -94,48 +92,48 @@ namespace detail {
     return value.get();
   }
 
-  CurveBiquadratic CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::heatingCapacityFunctionofTemperatureCurve() const {
-    boost::optional<CurveBiquadratic> value = optionalHeatingCapacityFunctionofTemperatureCurve();
+  Curve CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::heatingCapacityFunctionofTemperatureCurve() const {
+    boost::optional<Curve> value = optionalHeatingCapacityFunctionofTemperatureCurve();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Heating Capacity Functionof Temperature Curve attached.");
     }
     return value.get();
   }
 
-  CurveQuadratic CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::totalHeatingCapacityFunctionofAirFlowFractionCurve() const {
-    boost::optional<CurveQuadratic> value = optionalTotalHeatingCapacityFunctionofAirFlowFractionCurve();
+  Curve CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::totalHeatingCapacityFunctionofAirFlowFractionCurve() const {
+    boost::optional<Curve> value = optionalTotalHeatingCapacityFunctionofAirFlowFractionCurve();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Total Heating Capacity Functionof Air Flow Fraction Curve attached.");
     }
     return value.get();
   }
 
-  CurveQuadratic CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::heatingCapacityFunctionofWaterFlowFractionCurve() const {
-    boost::optional<CurveQuadratic> value = optionalHeatingCapacityFunctionofWaterFlowFractionCurve();
+  Curve CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::heatingCapacityFunctionofWaterFlowFractionCurve() const {
+    boost::optional<Curve> value = optionalHeatingCapacityFunctionofWaterFlowFractionCurve();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Heating Capacity Functionof Water Flow Fraction Curve attached.");
     }
     return value.get();
   }
 
-  CurveBiquadratic CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::energyInputRatioFunctionofTemperatureCurve() const {
-    boost::optional<CurveBiquadratic> value = optionalEnergyInputRatioFunctionofTemperatureCurve();
+  Curve CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::energyInputRatioFunctionofTemperatureCurve() const {
+    boost::optional<Curve> value = optionalEnergyInputRatioFunctionofTemperatureCurve();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Energy Input Ratio Functionof Temperature Curve attached.");
     }
     return value.get();
   }
 
-  CurveQuadratic CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::energyInputRatioFunctionofAirFlowFractionCurve() const {
-    boost::optional<CurveQuadratic> value = optionalEnergyInputRatioFunctionofAirFlowFractionCurve();
+  Curve CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::energyInputRatioFunctionofAirFlowFractionCurve() const {
+    boost::optional<Curve> value = optionalEnergyInputRatioFunctionofAirFlowFractionCurve();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Energy Input Ratio Functionof Air Flow Fraction Curve attached.");
     }
     return value.get();
   }
 
-  CurveQuadratic CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::energyInputRatioFunctionofWaterFlowFractionCurve() const {
-    boost::optional<CurveQuadratic> value = optionalEnergyInputRatioFunctionofWaterFlowFractionCurve();
+  Curve CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::energyInputRatioFunctionofWaterFlowFractionCurve() const {
+    boost::optional<Curve> value = optionalEnergyInputRatioFunctionofWaterFlowFractionCurve();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Energy Input Ratio Functionof Water Flow Fraction Curve attached.");
     }
@@ -148,8 +146,8 @@ namespace detail {
     return value.get();
   }
 
-  CurveBiquadratic CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::wasteHeatFunctionofTemperatureCurve() const {
-    boost::optional<CurveBiquadratic> value = optionalWasteHeatFunctionofTemperatureCurve();
+  Curve CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::wasteHeatFunctionofTemperatureCurve() const {
+    boost::optional<Curve> value = optionalWasteHeatFunctionofTemperatureCurve();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Waste Heat Functionof Temperature Curve attached.");
     }
@@ -176,33 +174,33 @@ namespace detail {
     return result;
   }
 
-  bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::setHeatingCapacityFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic) {
-    bool result = setPointer(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::HeatingCapacityFunctionofTemperatureCurveName, curveBiquadratic.handle());
+  bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::setHeatingCapacityFunctionofTemperatureCurve(const Curve& curve) {
+    bool result = setPointer(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::HeatingCapacityFunctionofTemperatureCurveName, curve.handle());
     return result;
   }
 
-  bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::setTotalHeatingCapacityFunctionofAirFlowFractionCurve(const CurveQuadratic& curveQuadratic) {
-    bool result = setPointer(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::TotalHeatingCapacityFunctionofAirFlowFractionCurveName, curveQuadratic.handle());
+  bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::setTotalHeatingCapacityFunctionofAirFlowFractionCurve(const Curve& curve) {
+    bool result = setPointer(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::TotalHeatingCapacityFunctionofAirFlowFractionCurveName, curve.handle());
     return result;
   }
 
-  bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::setHeatingCapacityFunctionofWaterFlowFractionCurve(const CurveQuadratic& curveQuadratic) {
-    bool result = setPointer(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::HeatingCapacityFunctionofWaterFlowFractionCurveName, curveQuadratic.handle());
+  bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::setHeatingCapacityFunctionofWaterFlowFractionCurve(const Curve& curve) {
+    bool result = setPointer(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::HeatingCapacityFunctionofWaterFlowFractionCurveName, curve.handle());
     return result;
   }
 
-  bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::setEnergyInputRatioFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic) {
-    bool result = setPointer(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::EnergyInputRatioFunctionofTemperatureCurveName, curveBiquadratic.handle());
+  bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve) {
+    bool result = setPointer(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::EnergyInputRatioFunctionofTemperatureCurveName, curve.handle());
     return result;
   }
 
-  bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::setEnergyInputRatioFunctionofAirFlowFractionCurve(const CurveQuadratic& curveQuadratic) {
-    bool result = setPointer(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::EnergyInputRatioFunctionofAirFlowFractionCurveName, curveQuadratic.handle());
+  bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::setEnergyInputRatioFunctionofAirFlowFractionCurve(const Curve& curve) {
+    bool result = setPointer(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::EnergyInputRatioFunctionofAirFlowFractionCurveName, curve.handle());
     return result;
   }
 
-  bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::setEnergyInputRatioFunctionofWaterFlowFractionCurve(const CurveQuadratic& curveQuadratic) {
-    bool result = setPointer(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::EnergyInputRatioFunctionofWaterFlowFractionCurveName, curveQuadratic.handle());
+  bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::setEnergyInputRatioFunctionofWaterFlowFractionCurve(const Curve& curve) {
+    bool result = setPointer(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::EnergyInputRatioFunctionofWaterFlowFractionCurveName, curve.handle());
     return result;
   }
 
@@ -211,37 +209,37 @@ namespace detail {
     return result;
   }
 
-  bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::setWasteHeatFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic) {
-    bool result = setPointer(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::WasteHeatFunctionofTemperatureCurveName, curveBiquadratic.handle());
+  bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::setWasteHeatFunctionofTemperatureCurve(const Curve& curve) {
+    bool result = setPointer(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::WasteHeatFunctionofTemperatureCurveName, curve.handle());
     return result;
   }
 
-  boost::optional<CurveBiquadratic> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::optionalHeatingCapacityFunctionofTemperatureCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CurveBiquadratic>(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::HeatingCapacityFunctionofTemperatureCurveName);
+  boost::optional<Curve> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::optionalHeatingCapacityFunctionofTemperatureCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::HeatingCapacityFunctionofTemperatureCurveName);
   }
 
-  boost::optional<CurveQuadratic> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::optionalTotalHeatingCapacityFunctionofAirFlowFractionCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CurveQuadratic>(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::TotalHeatingCapacityFunctionofAirFlowFractionCurveName);
+  boost::optional<Curve> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::optionalTotalHeatingCapacityFunctionofAirFlowFractionCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::TotalHeatingCapacityFunctionofAirFlowFractionCurveName);
   }
 
-  boost::optional<CurveQuadratic> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::optionalHeatingCapacityFunctionofWaterFlowFractionCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CurveQuadratic>(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::HeatingCapacityFunctionofWaterFlowFractionCurveName);
+  boost::optional<Curve> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::optionalHeatingCapacityFunctionofWaterFlowFractionCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::HeatingCapacityFunctionofWaterFlowFractionCurveName);
   }
 
-  boost::optional<CurveBiquadratic> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::optionalEnergyInputRatioFunctionofTemperatureCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CurveBiquadratic>(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::EnergyInputRatioFunctionofTemperatureCurveName);
+  boost::optional<Curve> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::optionalEnergyInputRatioFunctionofTemperatureCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::EnergyInputRatioFunctionofTemperatureCurveName);
   }
 
-  boost::optional<CurveQuadratic> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::optionalEnergyInputRatioFunctionofAirFlowFractionCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CurveQuadratic>(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::EnergyInputRatioFunctionofAirFlowFractionCurveName);
+  boost::optional<Curve> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::optionalEnergyInputRatioFunctionofAirFlowFractionCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::EnergyInputRatioFunctionofAirFlowFractionCurveName);
   }
 
-  boost::optional<CurveQuadratic> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::optionalEnergyInputRatioFunctionofWaterFlowFractionCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CurveQuadratic>(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::EnergyInputRatioFunctionofWaterFlowFractionCurveName);
+  boost::optional<Curve> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::optionalEnergyInputRatioFunctionofWaterFlowFractionCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::EnergyInputRatioFunctionofWaterFlowFractionCurveName);
   }
 
-  boost::optional<CurveBiquadratic> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::optionalWasteHeatFunctionofTemperatureCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CurveBiquadratic>(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::WasteHeatFunctionofTemperatureCurveName);
+  boost::optional<Curve> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::optionalWasteHeatFunctionofTemperatureCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::WasteHeatFunctionofTemperatureCurveName);
   }
 
 } // detail
@@ -308,27 +306,27 @@ double CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::reference
   return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->referenceUnitRatedWaterFlowRate();
 }
 
-CurveBiquadratic CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::heatingCapacityFunctionofTemperatureCurve() const {
+Curve CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::heatingCapacityFunctionofTemperatureCurve() const {
   return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->heatingCapacityFunctionofTemperatureCurve();
 }
 
-CurveQuadratic CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::totalHeatingCapacityFunctionofAirFlowFractionCurve() const {
+Curve CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::totalHeatingCapacityFunctionofAirFlowFractionCurve() const {
   return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->totalHeatingCapacityFunctionofAirFlowFractionCurve();
 }
 
-CurveQuadratic CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::heatingCapacityFunctionofWaterFlowFractionCurve() const {
+Curve CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::heatingCapacityFunctionofWaterFlowFractionCurve() const {
   return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->heatingCapacityFunctionofWaterFlowFractionCurve();
 }
 
-CurveBiquadratic CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::energyInputRatioFunctionofTemperatureCurve() const {
+Curve CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::energyInputRatioFunctionofTemperatureCurve() const {
   return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->energyInputRatioFunctionofTemperatureCurve();
 }
 
-CurveQuadratic CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::energyInputRatioFunctionofAirFlowFractionCurve() const {
+Curve CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::energyInputRatioFunctionofAirFlowFractionCurve() const {
   return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->energyInputRatioFunctionofAirFlowFractionCurve();
 }
 
-CurveQuadratic CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::energyInputRatioFunctionofWaterFlowFractionCurve() const {
+Curve CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::energyInputRatioFunctionofWaterFlowFractionCurve() const {
   return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->energyInputRatioFunctionofWaterFlowFractionCurve();
 }
 
@@ -336,7 +334,7 @@ double CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::reference
   return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->referenceUnitWasteHeatFractionofInputPowerAtRatedConditions();
 }
 
-CurveBiquadratic CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::wasteHeatFunctionofTemperatureCurve() const {
+Curve CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::wasteHeatFunctionofTemperatureCurve() const {
   return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->wasteHeatFunctionofTemperatureCurve();
 }
 
@@ -356,36 +354,36 @@ bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::setReferenc
   return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->setReferenceUnitRatedWaterFlowRate(referenceUnitRatedWaterFlowRate);
 }
 
-bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::setHeatingCapacityFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic) {
-  return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->setHeatingCapacityFunctionofTemperatureCurve(curveBiquadratic);
+bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::setHeatingCapacityFunctionofTemperatureCurve(const Curve& curve) {
+  return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->setHeatingCapacityFunctionofTemperatureCurve(curve);
 }
 
-bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::setTotalHeatingCapacityFunctionofAirFlowFractionCurve(const CurveQuadratic& curveQuadratic) {
-  return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->setTotalHeatingCapacityFunctionofAirFlowFractionCurve(curveQuadratic);
+bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::setTotalHeatingCapacityFunctionofAirFlowFractionCurve(const Curve& curve) {
+  return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->setTotalHeatingCapacityFunctionofAirFlowFractionCurve(curve);
 }
 
-bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::setHeatingCapacityFunctionofWaterFlowFractionCurve(const CurveQuadratic& curveQuadratic) {
-  return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->setHeatingCapacityFunctionofWaterFlowFractionCurve(curveQuadratic);
+bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::setHeatingCapacityFunctionofWaterFlowFractionCurve(const Curve& curve) {
+  return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->setHeatingCapacityFunctionofWaterFlowFractionCurve(curve);
 }
 
-bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::setEnergyInputRatioFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic) {
-  return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->setEnergyInputRatioFunctionofTemperatureCurve(curveBiquadratic);
+bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve) {
+  return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->setEnergyInputRatioFunctionofTemperatureCurve(curve);
 }
 
-bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::setEnergyInputRatioFunctionofAirFlowFractionCurve(const CurveQuadratic& curveQuadratic) {
-  return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->setEnergyInputRatioFunctionofAirFlowFractionCurve(curveQuadratic);
+bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::setEnergyInputRatioFunctionofAirFlowFractionCurve(const Curve& curve) {
+  return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->setEnergyInputRatioFunctionofAirFlowFractionCurve(curve);
 }
 
-bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::setEnergyInputRatioFunctionofWaterFlowFractionCurve(const CurveQuadratic& curveQuadratic) {
-  return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->setEnergyInputRatioFunctionofWaterFlowFractionCurve(curveQuadratic);
+bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::setEnergyInputRatioFunctionofWaterFlowFractionCurve(const Curve& curve) {
+  return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->setEnergyInputRatioFunctionofWaterFlowFractionCurve(curve);
 }
 
 bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::setReferenceUnitWasteHeatFractionofInputPowerAtRatedConditions(double referenceUnitWasteHeatFractionofInputPowerAtRatedConditions) {
   return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->setReferenceUnitWasteHeatFractionofInputPowerAtRatedConditions(referenceUnitWasteHeatFractionofInputPowerAtRatedConditions);
 }
 
-bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::setWasteHeatFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic) {
-  return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->setWasteHeatFunctionofTemperatureCurve(curveBiquadratic);
+bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::setWasteHeatFunctionofTemperatureCurve(const Curve& curve) {
+  return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>()->setWasteHeatFunctionofTemperatureCurve(curve);
 }
 
 /// @cond

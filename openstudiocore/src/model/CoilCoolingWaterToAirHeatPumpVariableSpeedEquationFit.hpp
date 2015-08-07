@@ -27,7 +27,7 @@ namespace openstudio {
 
 namespace model {
 
-class CurveQuadratic;
+class Curve;
 
 namespace detail {
 
@@ -72,7 +72,7 @@ class MODEL_API CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit : public W
 
   bool useHotGasReheat() const;
 
-  CurveQuadratic energyPartLoadFractionCurve() const;
+  Curve energyPartLoadFractionCurve() const;
 
   // TODO: Handle this object's extensible fields.
 
@@ -100,7 +100,7 @@ class MODEL_API CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit : public W
 
   void setUseHotGasReheat(bool useHotGasReheat);
 
-  bool setEnergyPartLoadFractionCurve(const CurveQuadratic& curveQuadratic);
+  bool setEnergyPartLoadFractionCurve(const Curve& curve);
 
   // TODO: Handle this object's extensible fields.
 

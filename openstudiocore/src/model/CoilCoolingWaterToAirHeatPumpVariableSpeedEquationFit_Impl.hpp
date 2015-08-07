@@ -26,7 +26,7 @@
 namespace openstudio {
 namespace model {
 
-class CurveQuadratic;
+class Curve;
 
 namespace detail {
 
@@ -90,7 +90,7 @@ namespace detail {
 
     bool useHotGasReheat() const;
 
-    CurveQuadratic energyPartLoadFractionCurve() const;
+    Curve energyPartLoadFractionCurve() const;
 
     // TODO: Handle this object's extensible fields.
 
@@ -118,7 +118,7 @@ namespace detail {
 
     void setUseHotGasReheat(bool useHotGasReheat);
 
-    bool setEnergyPartLoadFractionCurve(const CurveQuadratic& curveQuadratic);
+    bool setEnergyPartLoadFractionCurve(const Curve& curve);
 
     // TODO: Handle this object's extensible fields.
 
@@ -134,7 +134,7 @@ namespace detail {
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
-    boost::optional<CurveQuadratic> optionalEnergyPartLoadFractionCurve() const;
+    boost::optional<Curve> optionalEnergyPartLoadFractionCurve() const;
   };
 
 } // detail

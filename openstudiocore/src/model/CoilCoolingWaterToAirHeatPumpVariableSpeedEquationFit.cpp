@@ -20,8 +20,8 @@
 #include "CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit.hpp"
 #include "CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl.hpp"
 
-#include "CurveQuadratic.hpp"
-#include "CurveQuadratic_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
 
 #include <utilities/idd/OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit_FieldEnums.hxx>
 
@@ -147,8 +147,8 @@ namespace detail {
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
-  CurveQuadratic CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::energyPartLoadFractionCurve() const {
-    boost::optional<CurveQuadratic> value = optionalEnergyPartLoadFractionCurve();
+  Curve CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::energyPartLoadFractionCurve() const {
+    boost::optional<Curve> value = optionalEnergyPartLoadFractionCurve();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Energy Part Load Fraction Curve attached.");
     }
@@ -213,13 +213,13 @@ namespace detail {
     setBooleanFieldValue(OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::UseHotGasReheat, useHotGasReheat);
   }
 
-  bool CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::setEnergyPartLoadFractionCurve(const CurveQuadratic& curveQuadratic) {
-    bool result = setPointer(OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::EnergyPartLoadFractionCurveName, curveQuadratic.handle());
+  bool CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::setEnergyPartLoadFractionCurve(const Curve& curve) {
+    bool result = setPointer(OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::EnergyPartLoadFractionCurveName, curve.handle());
     return result;
   }
 
-  boost::optional<CurveQuadratic> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::optionalEnergyPartLoadFractionCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CurveQuadratic>(OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::EnergyPartLoadFractionCurveName);
+  boost::optional<Curve> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::optionalEnergyPartLoadFractionCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::EnergyPartLoadFractionCurveName);
   }
 
 } // detail
@@ -303,7 +303,7 @@ bool CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::useHotGasReheat() co
   return getImpl<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->useHotGasReheat();
 }
 
-CurveQuadratic CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::energyPartLoadFractionCurve() const {
+Curve CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::energyPartLoadFractionCurve() const {
   return getImpl<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->energyPartLoadFractionCurve();
 }
 
@@ -347,8 +347,8 @@ void CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::setUseHotGasReheat(b
   getImpl<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->setUseHotGasReheat(useHotGasReheat);
 }
 
-bool CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::setEnergyPartLoadFractionCurve(const CurveQuadratic& curveQuadratic) {
-  return getImpl<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->setEnergyPartLoadFractionCurve(curveQuadratic);
+bool CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::setEnergyPartLoadFractionCurve(const Curve& curve) {
+  return getImpl<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->setEnergyPartLoadFractionCurve(curve);
 }
 
 /// @cond

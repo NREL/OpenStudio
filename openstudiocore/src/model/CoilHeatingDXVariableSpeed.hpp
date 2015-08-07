@@ -27,8 +27,8 @@ namespace openstudio {
 
 namespace model {
 
-class CurveQuadratic;
-class CurveBiquadratic;
+class Curve;
+class CoilHeatingDXVariableSpeedSpeedData;
 
 namespace detail {
 
@@ -43,6 +43,8 @@ class MODEL_API CoilHeatingDXVariableSpeed : public StraightComponent {
   //@{
 
   explicit CoilHeatingDXVariableSpeed(const Model& model);
+
+  explicit CoilHeatingDXVariableSpeed(const Model& model, const Curve& partLoadFraction);
 
   virtual ~CoilHeatingDXVariableSpeed() {}
 
@@ -67,9 +69,9 @@ class MODEL_API CoilHeatingDXVariableSpeed : public StraightComponent {
 
   bool isRatedAirFlowRateAtSelectedNominalSpeedLevelAutosized() const;
 
-  CurveQuadratic energyPartLoadFractionCurve() const;
+  Curve energyPartLoadFractionCurve() const;
 
-  boost::optional<CurveBiquadratic> defrostEnergyInputRatioFunctionofTemperatureCurve() const;
+  boost::optional<Curve> defrostEnergyInputRatioFunctionofTemperatureCurve() const;
 
   double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
@@ -91,7 +93,7 @@ class MODEL_API CoilHeatingDXVariableSpeed : public StraightComponent {
 
   bool isResistiveDefrostHeaterCapacityAutosized() const;
 
-  // TODO: Handle this object's extensible fields.
+  std::vector<CoilHeatingDXVariableSpeedSpeedData> speeds() const;
 
   //@}
   /** @name Setters */
@@ -107,9 +109,9 @@ class MODEL_API CoilHeatingDXVariableSpeed : public StraightComponent {
 
   void autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
 
-  bool setEnergyPartLoadFractionCurve(const CurveQuadratic& curveQuadratic);
+  bool setEnergyPartLoadFractionCurve(const Curve& curve);
 
-  bool setDefrostEnergyInputRatioFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic);
+  bool setDefrostEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve);
 
   void resetDefrostEnergyInputRatioFunctionofTemperatureCurve();
 
@@ -135,7 +137,7 @@ class MODEL_API CoilHeatingDXVariableSpeed : public StraightComponent {
 
   void autosizeResistiveDefrostHeaterCapacity();
 
-  // TODO: Handle this object's extensible fields.
+  void addSpeed(CoilHeatingDXVariableSpeedSpeedData& speed);
 
   //@}
   /** @name Other */

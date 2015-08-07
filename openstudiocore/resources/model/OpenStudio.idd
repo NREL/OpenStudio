@@ -14131,115 +14131,70 @@ OS:Coil:Heating:DX:MultiSpeed,
        \object-list CoilHeatingDXMultiSpeedStageData
 
 OS:Coil:Heating:DX:MultiSpeed:StageData,
-       \min-fields 21
+       \min-fields 12
   A1 , \field Handle
        \type handle
        \required-field
-  A2 , \field Name
-       \required-field
-       \type alpha
-       \reference CoilHeatingDXMultiSpeedStageData
-  N1 , \field Gross Rated Total Heating Capacity
+  N1 , \field Gross Rated Heating Capacity
+       \note Heating capacity not accounting for the effect of supply air fan heat
        \required-field
        \type real
        \units W
        \minimum> 0.0
        \autosizable
-  N2 , \field Gross Rated Sensible Heat Ratio
+  N2 , \field Gross Rated Heating COP
        \required-field
-       \type real
-       \minimum 0.5
-       \maximum 1.0
-       \autosizable
-  N3 , \field Gross Rated Heating COP
        \type real
        \units W/W
        \minimum> 0.0
-       \required-field
-  N4 , \field Rated Air Flow Rate
+  N3 , \field Rated Air Flow Rate
        \required-field
        \type real
        \units m3/s
        \minimum> 0.0
        \autosizable
-  N5, \field Rated Evaporator Fan Power Per Volume Flow Rate
+  N4 , \field Rated Supply Air Fan Power Per Volume Flow Rate
+       \required-field
        \type real
        \units W/(m3/s)
        \minimum 0.0
        \maximum 1250.0
-       \required-field
-  A3, \field Total Heating Capacity Function of Temperature Curve
-       \required-field
-       \type object-list
-       \object-list BiquadraticCurves
-  A4, \field Total Heating Capacity Function of Flow Fraction Curve
+  A2 , \field Heating Capacity Function of Temperature Curve Name
        \required-field
        \type object-list
-       \object-list QuadraticCubicCurves
-  A5, \field Energy Input Ratio Function of Temperature Curve
-       \required-field
-       \type object-list
-       \object-list BiquadraticCurves
-  A6, \field Energy Input Ratio Function of Flow Fraction Curve
+       \object-list BiquadraticQuadraticCubicCurves
+       \object-list BiVariateTables
+  A3 , \field Heating Capacity Function of Flow Fraction Curve Name
        \required-field
        \type object-list
        \object-list QuadraticCubicCurves
-  A7, \field Part Load Fraction Correlation Curve
+       \object-list UniVariateTables
+  A4 , \field Energy Input Ratio Function of Temperature Curve Name
+       \required-field
+       \type object-list
+       \object-list BiquadraticQuadraticCubicCurves
+       \object-list BiVariateTables
+  A5 , \field Energy Input Ratio Function of Flow Fraction Curve Name
        \required-field
        \type object-list
        \object-list QuadraticCubicCurves
-  N6, \field Nominal Time for Condensate Removal to Begin
-       \type real
-       \units s
-       \minimum 0.0
-       \maximum 3000.0
+       \object-list UniVariateTables
+  A6 , \field Part Load Fraction Correlation Curve Name
        \required-field
-  N7, \field Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
-       \type real
-       \units dimensionless
-       \minimum 0.0
-       \maximum 5.0
-       \required-field
-  N8, \field Maximum Cycling Rate
-       \type real
-       \units cycles/hr
-       \minimum 0.0
-       \maximum 5.0
-       \required-field
-  N9, \field Latent Capacity Time Constant
-       \type real
-       \units s
-       \minimum 0.0
-       \maximum 500.0
-       \required-field
-  N10, \field Rated Waste Heat Fraction of Power Input
+       \type object-list
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
+  N5 , \field Rated Waste Heat Fraction of Power Input
        \required-field
        \type real
        \units dimensionless
        \minimum> 0.0
        \maximum 1.0
-  A8, \field Waste Heat Function of Temperature Curve
+  A7 ; \field Waste Heat Function of Temperature Curve Name
        \required-field
        \type object-list
-       \object-list BiquadraticCurves
-  N11, \field Evaporative Condenser Effectiveness
-       \type real
-       \units dimensionless
-       \minimum 0.0
-       \maximum 1.0
-       \required-field
-  N12, \field Evaporative Condenser Air Flow Rate
-       \type real
-       \units m3/s
-       \minimum> 0.0
-       \autosizable
-       \required-field
-  N13; \field Rated Evaporative Condenser Pump Power Consumption
-       \type real
-       \units W
-       \minimum 0.0
-       \autosizable
-       \required-field
+       \object-list BiQuadraticCurves
+       \object-list BiVariateTables
 
 OS:Coil:Heating:DX:VariableSpeed,
         \min-fields 19

@@ -22,8 +22,8 @@
 
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-#include "CurveBiquadratic.hpp"
-#include "CurveBiquadratic_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 
@@ -120,8 +120,8 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<CurveBiquadratic> CoilHeatingDXMultiSpeed_Impl::defrostEnergyInputRatioFunctionofTemperatureCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CurveBiquadratic>(OS_Coil_Heating_DX_MultiSpeedFields::DefrostEnergyInputRatioFunctionofTemperatureCurveName);
+  boost::optional<Curve> CoilHeatingDXMultiSpeed_Impl::defrostEnergyInputRatioFunctionofTemperatureCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_DX_MultiSpeedFields::DefrostEnergyInputRatioFunctionofTemperatureCurveName);
   }
 
   double CoilHeatingDXMultiSpeed_Impl::maximumOutdoorDryBulbTemperatureforDefrostOperation() const {
@@ -224,10 +224,10 @@ namespace detail {
     return result;
   }
 
-  bool CoilHeatingDXMultiSpeed_Impl::setDefrostEnergyInputRatioFunctionofTemperatureCurve(const boost::optional<CurveBiquadratic>& curveBiquadratic) {
+  bool CoilHeatingDXMultiSpeed_Impl::setDefrostEnergyInputRatioFunctionofTemperatureCurve(const boost::optional<Curve>& curve) {
     bool result(false);
-    if (curveBiquadratic) {
-      result = setPointer(OS_Coil_Heating_DX_MultiSpeedFields::DefrostEnergyInputRatioFunctionofTemperatureCurveName, curveBiquadratic.get().handle());
+    if (curve) {
+      result = setPointer(OS_Coil_Heating_DX_MultiSpeedFields::DefrostEnergyInputRatioFunctionofTemperatureCurveName, curve.get().handle());
     }
     else {
       resetDefrostEnergyInputRatioFunctionofTemperatureCurve();
@@ -366,7 +366,7 @@ double CoilHeatingDXMultiSpeed::maximumOutdoorDryBulbTemperatureforCrankcaseHeat
   return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation();
 }
 
-boost::optional<CurveBiquadratic> CoilHeatingDXMultiSpeed::defrostEnergyInputRatioFunctionofTemperatureCurve() const {
+boost::optional<Curve> CoilHeatingDXMultiSpeed::defrostEnergyInputRatioFunctionofTemperatureCurve() const {
   return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->defrostEnergyInputRatioFunctionofTemperatureCurve();
 }
 
@@ -434,8 +434,8 @@ bool CoilHeatingDXMultiSpeed::setMaximumOutdoorDryBulbTemperatureforCrankcaseHea
   return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
 }
 
-bool CoilHeatingDXMultiSpeed::setDefrostEnergyInputRatioFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic) {
-  return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setDefrostEnergyInputRatioFunctionofTemperatureCurve(curveBiquadratic);
+bool CoilHeatingDXMultiSpeed::setDefrostEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve) {
+  return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setDefrostEnergyInputRatioFunctionofTemperatureCurve(curve);
 }
 
 void CoilHeatingDXMultiSpeed::resetDefrostEnergyInputRatioFunctionofTemperatureCurve() {

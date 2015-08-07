@@ -71,9 +71,11 @@ namespace detail {
 
     virtual std::vector<ModelObject> children() const override;
 
-    // virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
-    // virtual bool addToNode(Node & node) override;
+    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+
+    virtual bool addToNode(Node & node) override;
 
     //@}
     /** @name Getters */

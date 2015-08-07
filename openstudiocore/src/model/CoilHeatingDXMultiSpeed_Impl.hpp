@@ -27,7 +27,7 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
-class CurveBiquadratic;
+class Curve;
 
 namespace detail {
 
@@ -79,7 +79,7 @@ namespace detail {
 
     double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const;
 
-    boost::optional<CurveBiquadratic> defrostEnergyInputRatioFunctionofTemperatureCurve() const;
+    boost::optional<Curve> defrostEnergyInputRatioFunctionofTemperatureCurve() const;
 
     double maximumOutdoorDryBulbTemperatureforDefrostOperation() const;
 
@@ -119,7 +119,7 @@ namespace detail {
 
     bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
 
-    bool setDefrostEnergyInputRatioFunctionofTemperatureCurve(const boost::optional<CurveBiquadratic>& curveBiquadratic);
+    bool setDefrostEnergyInputRatioFunctionofTemperatureCurve(const boost::optional<Curve>& curve);
 
     void resetDefrostEnergyInputRatioFunctionofTemperatureCurve();
 

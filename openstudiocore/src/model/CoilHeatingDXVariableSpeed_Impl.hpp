@@ -26,8 +26,8 @@
 namespace openstudio {
 namespace model {
 
-class CurveQuadratic;
-class CurveBiquadratic;
+class Curve;
+class CoilHeatingDXVariableSpeedSpeedData;
 
 namespace detail {
 
@@ -63,6 +63,16 @@ namespace detail {
 
     virtual unsigned outletPort() override;
 
+    virtual ModelObject clone(Model model) const override;
+
+    virtual std::vector<ModelObject> children() const override;
+
+    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+
+    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+
+    virtual bool addToNode(Node & node) override;
+
     //@}
     /** @name Getters */
     //@{
@@ -77,9 +87,9 @@ namespace detail {
 
     bool isRatedAirFlowRateAtSelectedNominalSpeedLevelAutosized() const;
 
-    CurveQuadratic energyPartLoadFractionCurve() const;
+    Curve energyPartLoadFractionCurve() const;
 
-    boost::optional<CurveBiquadratic> defrostEnergyInputRatioFunctionofTemperatureCurve() const;
+    boost::optional<Curve> defrostEnergyInputRatioFunctionofTemperatureCurve() const;
 
     double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
@@ -101,8 +111,6 @@ namespace detail {
 
     bool isResistiveDefrostHeaterCapacityAutosized() const;
 
-    // TODO: Handle this object's extensible fields.
-
     //@}
     /** @name Setters */
     //@{
@@ -117,9 +125,9 @@ namespace detail {
 
     void autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
 
-    bool setEnergyPartLoadFractionCurve(const CurveQuadratic& curveQuadratic);
+    bool setEnergyPartLoadFractionCurve(const Curve& curve);
 
-    bool setDefrostEnergyInputRatioFunctionofTemperatureCurve(const boost::optional<CurveBiquadratic>& curveBiquadratic);
+    bool setDefrostEnergyInputRatioFunctionofTemperatureCurve(const boost::optional<Curve>& curve);
 
     void resetDefrostEnergyInputRatioFunctionofTemperatureCurve();
 
@@ -145,11 +153,13 @@ namespace detail {
 
     void autosizeResistiveDefrostHeaterCapacity();
 
-    // TODO: Handle this object's extensible fields.
-
     //@}
     /** @name Other */
     //@{
+
+    std::vector<CoilHeatingDXVariableSpeedSpeedData> speeds() const;
+
+    void addSpeed(CoilHeatingDXVariableSpeedSpeedData& speed);
 
     //@}
    protected:
@@ -159,7 +169,7 @@ namespace detail {
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
-    boost::optional<CurveQuadratic> optionalEnergyPartLoadFractionCurve() const;
+    boost::optional<Curve> optionalEnergyPartLoadFractionCurve() const;
   };
 
 } // detail

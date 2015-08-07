@@ -20,10 +20,12 @@
 #include "CoilHeatingDXMultiSpeedStageData.hpp"
 #include "CoilHeatingDXMultiSpeedStageData_Impl.hpp"
 
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include "CurveBiquadratic.hpp"
-#include "CurveBiquadratic_Impl.hpp"
 #include "CurveQuadratic.hpp"
-#include "CurveQuadratic_Impl.hpp"
 
 #include <utilities/idd/OS_Coil_Heating_DX_MultiSpeed_StageData_FieldEnums.hxx>
 
@@ -70,26 +72,13 @@ namespace detail {
     return CoilHeatingDXMultiSpeedStageData::iddObjectType();
   }
 
-  boost::optional<double> CoilHeatingDXMultiSpeedStageData_Impl::grossRatedTotalHeatingCapacity() const {
-    return getDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::GrossRatedTotalHeatingCapacity,true);
+  boost::optional<double> CoilHeatingDXMultiSpeedStageData_Impl::grossRatedHeatingCapacity() const {
+    return getDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::GrossRatedHeatingCapacity,true);
   }
 
-  bool CoilHeatingDXMultiSpeedStageData_Impl::isGrossRatedTotalHeatingCapacityAutosized() const {
+  bool CoilHeatingDXMultiSpeedStageData_Impl::isGrossRatedHeatingCapacityAutosized() const {
     bool result = false;
-    boost::optional<std::string> value = getString(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::GrossRatedTotalHeatingCapacity, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
-    }
-    return result;
-  }
-
-  boost::optional<double> CoilHeatingDXMultiSpeedStageData_Impl::grossRatedSensibleHeatRatio() const {
-    return getDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::GrossRatedSensibleHeatRatio,true);
-  }
-
-  bool CoilHeatingDXMultiSpeedStageData_Impl::isGrossRatedSensibleHeatRatioAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::GrossRatedSensibleHeatRatio, true);
+    boost::optional<std::string> value = getString(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::GrossRatedHeatingCapacity, true);
     if (value) {
       result = openstudio::istringEqual(value.get(), "autosize");
     }
@@ -115,73 +104,49 @@ namespace detail {
     return result;
   }
 
-  double CoilHeatingDXMultiSpeedStageData_Impl::ratedEvaporatorFanPowerPerVolumeFlowRate() const {
-    boost::optional<double> value = getDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::RatedEvaporatorFanPowerPerVolumeFlowRate,true);
+  double CoilHeatingDXMultiSpeedStageData_Impl::ratedSupplyAirFanPowerPerVolumeFlowRate() const {
+    boost::optional<double> value = getDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::RatedSupplyAirFanPowerPerVolumeFlowRate,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  CurveBiquadratic CoilHeatingDXMultiSpeedStageData_Impl::totalHeatingCapacityFunctionofTemperatureCurve() const {
-    boost::optional<CurveBiquadratic> value = optionalTotalHeatingCapacityFunctionofTemperatureCurve();
+  Curve CoilHeatingDXMultiSpeedStageData_Impl::heatingCapacityFunctionofTemperatureCurve() const {
+    boost::optional<Curve> value = optionalHeatingCapacityFunctionofTemperatureCurve();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Total Heating Capacity Functionof Temperature Curve attached.");
+      LOG_AND_THROW(briefDescription() << " does not have an Heating Capacity Functionof Temperature Curve attached.");
     }
     return value.get();
   }
 
-  CurveQuadratic CoilHeatingDXMultiSpeedStageData_Impl::totalHeatingCapacityFunctionofFlowFractionCurve() const {
-    boost::optional<CurveQuadratic> value = optionalTotalHeatingCapacityFunctionofFlowFractionCurve();
+  Curve CoilHeatingDXMultiSpeedStageData_Impl::heatingCapacityFunctionofFlowFractionCurve() const {
+    boost::optional<Curve> value = optionalHeatingCapacityFunctionofFlowFractionCurve();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Total Heating Capacity Functionof Flow Fraction Curve attached.");
+      LOG_AND_THROW(briefDescription() << " does not have an Heating Capacity Functionof Flow Fraction Curve attached.");
     }
     return value.get();
   }
 
-  CurveBiquadratic CoilHeatingDXMultiSpeedStageData_Impl::energyInputRatioFunctionofTemperatureCurve() const {
-    boost::optional<CurveBiquadratic> value = optionalEnergyInputRatioFunctionofTemperatureCurve();
+  Curve CoilHeatingDXMultiSpeedStageData_Impl::energyInputRatioFunctionofTemperatureCurve() const {
+    boost::optional<Curve> value = optionalEnergyInputRatioFunctionofTemperatureCurve();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Energy Input Ratio Functionof Temperature Curve attached.");
     }
     return value.get();
   }
 
-  CurveQuadratic CoilHeatingDXMultiSpeedStageData_Impl::energyInputRatioFunctionofFlowFractionCurve() const {
-    boost::optional<CurveQuadratic> value = optionalEnergyInputRatioFunctionofFlowFractionCurve();
+  Curve CoilHeatingDXMultiSpeedStageData_Impl::energyInputRatioFunctionofFlowFractionCurve() const {
+    boost::optional<Curve> value = optionalEnergyInputRatioFunctionofFlowFractionCurve();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Energy Input Ratio Functionof Flow Fraction Curve attached.");
     }
     return value.get();
   }
 
-  CurveQuadratic CoilHeatingDXMultiSpeedStageData_Impl::partLoadFractionCorrelationCurve() const {
-    boost::optional<CurveQuadratic> value = optionalPartLoadFractionCorrelationCurve();
+  Curve CoilHeatingDXMultiSpeedStageData_Impl::partLoadFractionCorrelationCurve() const {
+    boost::optional<Curve> value = optionalPartLoadFractionCorrelationCurve();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Part Load Fraction Correlation Curve attached.");
     }
-    return value.get();
-  }
-
-  double CoilHeatingDXMultiSpeedStageData_Impl::nominalTimeforCondensateRemovaltoBegin() const {
-    boost::optional<double> value = getDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::NominalTimeforCondensateRemovaltoBegin,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  double CoilHeatingDXMultiSpeedStageData_Impl::ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity() const {
-    boost::optional<double> value = getDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::RatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  double CoilHeatingDXMultiSpeedStageData_Impl::maximumCyclingRate() const {
-    boost::optional<double> value = getDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::MaximumCyclingRate,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  double CoilHeatingDXMultiSpeedStageData_Impl::latentCapacityTimeConstant() const {
-    boost::optional<double> value = getDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::LatentCapacityTimeConstant,true);
-    OS_ASSERT(value);
     return value.get();
   }
 
@@ -191,69 +156,24 @@ namespace detail {
     return value.get();
   }
 
-  CurveBiquadratic CoilHeatingDXMultiSpeedStageData_Impl::wasteHeatFunctionofTemperatureCurve() const {
-    boost::optional<CurveBiquadratic> value = optionalWasteHeatFunctionofTemperatureCurve();
+  Curve CoilHeatingDXMultiSpeedStageData_Impl::wasteHeatFunctionofTemperatureCurve() const {
+    boost::optional<Curve> value = optionalWasteHeatFunctionofTemperatureCurve();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Waste Heat Functionof Temperature Curve attached.");
     }
     return value.get();
   }
 
-  double CoilHeatingDXMultiSpeedStageData_Impl::evaporativeCondenserEffectiveness() const {
-    boost::optional<double> value = getDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::EvaporativeCondenserEffectiveness,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<double> CoilHeatingDXMultiSpeedStageData_Impl::evaporativeCondenserAirFlowRate() const {
-    return getDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::EvaporativeCondenserAirFlowRate,true);
-  }
-
-  bool CoilHeatingDXMultiSpeedStageData_Impl::isEvaporativeCondenserAirFlowRateAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::EvaporativeCondenserAirFlowRate, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
-    }
-    return result;
-  }
-
-  boost::optional<double> CoilHeatingDXMultiSpeedStageData_Impl::ratedEvaporativeCondenserPumpPowerConsumption() const {
-    return getDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::RatedEvaporativeCondenserPumpPowerConsumption,true);
-  }
-
-  bool CoilHeatingDXMultiSpeedStageData_Impl::isRatedEvaporativeCondenserPumpPowerConsumptionAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::RatedEvaporativeCondenserPumpPowerConsumption, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
-    }
-    return result;
-  }
-
-  bool CoilHeatingDXMultiSpeedStageData_Impl::setGrossRatedTotalHeatingCapacity(boost::optional<double> grossRatedTotalHeatingCapacity) {
+  bool CoilHeatingDXMultiSpeedStageData_Impl::setGrossRatedHeatingCapacity(boost::optional<double> grossRatedHeatingCapacity) {
     bool result(false);
-    if (grossRatedTotalHeatingCapacity) {
-      result = setDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::GrossRatedTotalHeatingCapacity, grossRatedTotalHeatingCapacity.get());
+    if (grossRatedHeatingCapacity) {
+      result = setDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::GrossRatedHeatingCapacity, grossRatedHeatingCapacity.get());
     }
     return result;
   }
 
-  void CoilHeatingDXMultiSpeedStageData_Impl::autosizeGrossRatedTotalHeatingCapacity() {
-    bool result = setString(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::GrossRatedTotalHeatingCapacity, "autosize");
-    OS_ASSERT(result);
-  }
-
-  bool CoilHeatingDXMultiSpeedStageData_Impl::setGrossRatedSensibleHeatRatio(boost::optional<double> grossRatedSensibleHeatRatio) {
-    bool result(false);
-    if (grossRatedSensibleHeatRatio) {
-      result = setDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::GrossRatedSensibleHeatRatio, grossRatedSensibleHeatRatio.get());
-    }
-    return result;
-  }
-
-  void CoilHeatingDXMultiSpeedStageData_Impl::autosizeGrossRatedSensibleHeatRatio() {
-    bool result = setString(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::GrossRatedSensibleHeatRatio, "autosize");
+  void CoilHeatingDXMultiSpeedStageData_Impl::autosizeGrossRatedHeatingCapacity() {
+    bool result = setString(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::GrossRatedHeatingCapacity, "autosize");
     OS_ASSERT(result);
   }
 
@@ -275,53 +195,33 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool CoilHeatingDXMultiSpeedStageData_Impl::setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate) {
-    bool result = setDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::RatedEvaporatorFanPowerPerVolumeFlowRate, ratedEvaporatorFanPowerPerVolumeFlowRate);
+  bool CoilHeatingDXMultiSpeedStageData_Impl::setRatedSupplyAirFanPowerPerVolumeFlowRate(double ratedSupplyAirFanPowerPerVolumeFlowRate) {
+    bool result = setDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::RatedSupplyAirFanPowerPerVolumeFlowRate, ratedSupplyAirFanPowerPerVolumeFlowRate);
     return result;
   }
 
-  bool CoilHeatingDXMultiSpeedStageData_Impl::setTotalHeatingCapacityFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic) {
-    bool result = setPointer(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::TotalHeatingCapacityFunctionofTemperatureCurve, curveBiquadratic.handle());
+  bool CoilHeatingDXMultiSpeedStageData_Impl::setHeatingCapacityFunctionofTemperatureCurve(const Curve& curve) {
+    bool result = setPointer(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::HeatingCapacityFunctionofTemperatureCurveName, curve.handle());
     return result;
   }
 
-  bool CoilHeatingDXMultiSpeedStageData_Impl::setTotalHeatingCapacityFunctionofFlowFractionCurve(const CurveQuadratic& curveQuadratic) {
-    bool result = setPointer(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::TotalHeatingCapacityFunctionofFlowFractionCurve, curveQuadratic.handle());
+  bool CoilHeatingDXMultiSpeedStageData_Impl::setHeatingCapacityFunctionofFlowFractionCurve(const Curve& curve) {
+    bool result = setPointer(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::HeatingCapacityFunctionofFlowFractionCurveName, curve.handle());
     return result;
   }
 
-  bool CoilHeatingDXMultiSpeedStageData_Impl::setEnergyInputRatioFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic) {
-    bool result = setPointer(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::EnergyInputRatioFunctionofTemperatureCurve, curveBiquadratic.handle());
+  bool CoilHeatingDXMultiSpeedStageData_Impl::setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve) {
+    bool result = setPointer(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::EnergyInputRatioFunctionofTemperatureCurveName, curve.handle());
     return result;
   }
 
-  bool CoilHeatingDXMultiSpeedStageData_Impl::setEnergyInputRatioFunctionofFlowFractionCurve(const CurveQuadratic& curveQuadratic) {
-    bool result = setPointer(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::EnergyInputRatioFunctionofFlowFractionCurve, curveQuadratic.handle());
+  bool CoilHeatingDXMultiSpeedStageData_Impl::setEnergyInputRatioFunctionofFlowFractionCurve(const Curve& curve) {
+    bool result = setPointer(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::EnergyInputRatioFunctionofFlowFractionCurveName, curve.handle());
     return result;
   }
 
-  bool CoilHeatingDXMultiSpeedStageData_Impl::setPartLoadFractionCorrelationCurve(const CurveQuadratic& curveQuadratic) {
-    bool result = setPointer(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::PartLoadFractionCorrelationCurve, curveQuadratic.handle());
-    return result;
-  }
-
-  bool CoilHeatingDXMultiSpeedStageData_Impl::setNominalTimeforCondensateRemovaltoBegin(double nominalTimeforCondensateRemovaltoBegin) {
-    bool result = setDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::NominalTimeforCondensateRemovaltoBegin, nominalTimeforCondensateRemovaltoBegin);
-    return result;
-  }
-
-  bool CoilHeatingDXMultiSpeedStageData_Impl::setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity) {
-    bool result = setDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::RatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity, ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity);
-    return result;
-  }
-
-  bool CoilHeatingDXMultiSpeedStageData_Impl::setMaximumCyclingRate(double maximumCyclingRate) {
-    bool result = setDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::MaximumCyclingRate, maximumCyclingRate);
-    return result;
-  }
-
-  bool CoilHeatingDXMultiSpeedStageData_Impl::setLatentCapacityTimeConstant(double latentCapacityTimeConstant) {
-    bool result = setDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::LatentCapacityTimeConstant, latentCapacityTimeConstant);
+  bool CoilHeatingDXMultiSpeedStageData_Impl::setPartLoadFractionCorrelationCurve(const Curve& curve) {
+    bool result = setPointer(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::PartLoadFractionCorrelationCurveName, curve.handle());
     return result;
   }
 
@@ -330,64 +230,70 @@ namespace detail {
     return result;
   }
 
-  bool CoilHeatingDXMultiSpeedStageData_Impl::setWasteHeatFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic) {
-    bool result = setPointer(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::WasteHeatFunctionofTemperatureCurve, curveBiquadratic.handle());
+  bool CoilHeatingDXMultiSpeedStageData_Impl::setWasteHeatFunctionofTemperatureCurve(const Curve& curve) {
+    bool result = setPointer(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::WasteHeatFunctionofTemperatureCurveName, curve.handle());
     return result;
   }
 
-  bool CoilHeatingDXMultiSpeedStageData_Impl::setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness) {
-    bool result = setDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::EvaporativeCondenserEffectiveness, evaporativeCondenserEffectiveness);
+  boost::optional<Curve> CoilHeatingDXMultiSpeedStageData_Impl::optionalHeatingCapacityFunctionofTemperatureCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::HeatingCapacityFunctionofTemperatureCurveName);
+  }
+
+  boost::optional<Curve> CoilHeatingDXMultiSpeedStageData_Impl::optionalHeatingCapacityFunctionofFlowFractionCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::HeatingCapacityFunctionofFlowFractionCurveName);
+  }
+
+  boost::optional<Curve> CoilHeatingDXMultiSpeedStageData_Impl::optionalEnergyInputRatioFunctionofTemperatureCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::EnergyInputRatioFunctionofTemperatureCurveName);
+  }
+
+  boost::optional<Curve> CoilHeatingDXMultiSpeedStageData_Impl::optionalEnergyInputRatioFunctionofFlowFractionCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::EnergyInputRatioFunctionofFlowFractionCurveName);
+  }
+
+  boost::optional<Curve> CoilHeatingDXMultiSpeedStageData_Impl::optionalPartLoadFractionCorrelationCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::PartLoadFractionCorrelationCurveName);
+  }
+
+  boost::optional<Curve> CoilHeatingDXMultiSpeedStageData_Impl::optionalWasteHeatFunctionofTemperatureCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::WasteHeatFunctionofTemperatureCurveName);
+  }
+
+  std::vector<ModelObject> CoilHeatingDXMultiSpeedStageData_Impl::children() const {
+    std::vector<ModelObject> result;
+
+    result.push_back(heatingCapacityFunctionofTemperatureCurve());
+    result.push_back(heatingCapacityFunctionofFlowFractionCurve());
+    result.push_back(energyInputRatioFunctionofTemperatureCurve());
+    result.push_back(energyInputRatioFunctionofFlowFractionCurve());
+    result.push_back(partLoadFractionCorrelationCurve());
+    result.push_back(wasteHeatFunctionofTemperatureCurve());
+
     return result;
   }
 
-  bool CoilHeatingDXMultiSpeedStageData_Impl::setEvaporativeCondenserAirFlowRate(boost::optional<double> evaporativeCondenserAirFlowRate) {
-    bool result(false);
-    if (evaporativeCondenserAirFlowRate) {
-      result = setDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::EvaporativeCondenserAirFlowRate, evaporativeCondenserAirFlowRate.get());
-    }
-    return result;
-  }
+  ModelObject CoilHeatingDXMultiSpeedStageData_Impl::clone(Model model) const {
+    auto t_clone = ModelObject_Impl::clone(model).cast<CoilHeatingDXMultiSpeedStageData>();
 
-  void CoilHeatingDXMultiSpeedStageData_Impl::autosizeEvaporativeCondenserAirFlowRate() {
-    bool result = setString(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::EvaporativeCondenserAirFlowRate, "autosize");
-    OS_ASSERT(result);
-  }
+    auto curve = heatingCapacityFunctionofTemperatureCurve().clone(model).cast<Curve>();
+    t_clone.setHeatingCapacityFunctionofTemperatureCurve(curve);
 
-  bool CoilHeatingDXMultiSpeedStageData_Impl::setRatedEvaporativeCondenserPumpPowerConsumption(boost::optional<double> ratedEvaporativeCondenserPumpPowerConsumption) {
-    bool result(false);
-    if (ratedEvaporativeCondenserPumpPowerConsumption) {
-      result = setDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::RatedEvaporativeCondenserPumpPowerConsumption, ratedEvaporativeCondenserPumpPowerConsumption.get());
-    }
-    return result;
-  }
+    curve = heatingCapacityFunctionofFlowFractionCurve().clone(model).cast<Curve>();
+    t_clone.setHeatingCapacityFunctionofFlowFractionCurve(curve);
 
-  void CoilHeatingDXMultiSpeedStageData_Impl::autosizeRatedEvaporativeCondenserPumpPowerConsumption() {
-    bool result = setString(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::RatedEvaporativeCondenserPumpPowerConsumption, "autosize");
-    OS_ASSERT(result);
-  }
+    curve = energyInputRatioFunctionofTemperatureCurve().clone(model).cast<Curve>();
+    t_clone.setEnergyInputRatioFunctionofTemperatureCurve(curve);
 
-  boost::optional<CurveBiquadratic> CoilHeatingDXMultiSpeedStageData_Impl::optionalTotalHeatingCapacityFunctionofTemperatureCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CurveBiquadratic>(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::TotalHeatingCapacityFunctionofTemperatureCurve);
-  }
+    curve = energyInputRatioFunctionofFlowFractionCurve().clone(model).cast<Curve>();
+    t_clone.setEnergyInputRatioFunctionofFlowFractionCurve(curve);
 
-  boost::optional<CurveQuadratic> CoilHeatingDXMultiSpeedStageData_Impl::optionalTotalHeatingCapacityFunctionofFlowFractionCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CurveQuadratic>(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::TotalHeatingCapacityFunctionofFlowFractionCurve);
-  }
+    curve = partLoadFractionCorrelationCurve().clone(model).cast<Curve>();
+    t_clone.setPartLoadFractionCorrelationCurve(curve);
 
-  boost::optional<CurveBiquadratic> CoilHeatingDXMultiSpeedStageData_Impl::optionalEnergyInputRatioFunctionofTemperatureCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CurveBiquadratic>(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::EnergyInputRatioFunctionofTemperatureCurve);
-  }
+    curve = wasteHeatFunctionofTemperatureCurve().clone(model).cast<Curve>();
+    t_clone.setWasteHeatFunctionofTemperatureCurve(curve);
 
-  boost::optional<CurveQuadratic> CoilHeatingDXMultiSpeedStageData_Impl::optionalEnergyInputRatioFunctionofFlowFractionCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CurveQuadratic>(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::EnergyInputRatioFunctionofFlowFractionCurve);
-  }
-
-  boost::optional<CurveQuadratic> CoilHeatingDXMultiSpeedStageData_Impl::optionalPartLoadFractionCorrelationCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CurveQuadratic>(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::PartLoadFractionCorrelationCurve);
-  }
-
-  boost::optional<CurveBiquadratic> CoilHeatingDXMultiSpeedStageData_Impl::optionalWasteHeatFunctionofTemperatureCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CurveBiquadratic>(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::WasteHeatFunctionofTemperatureCurve);
+    return t_clone;
   }
 
 } // detail
@@ -397,53 +303,117 @@ CoilHeatingDXMultiSpeedStageData::CoilHeatingDXMultiSpeedStageData(const Model& 
 {
   OS_ASSERT(getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_Coil_Heating_DX_MultiSpeed_StageDataFields::TotalHeatingCapacityFunctionofTemperatureCurve
-  //     OS_Coil_Heating_DX_MultiSpeed_StageDataFields::TotalHeatingCapacityFunctionofFlowFractionCurve
-  //     OS_Coil_Heating_DX_MultiSpeed_StageDataFields::EnergyInputRatioFunctionofTemperatureCurve
-  //     OS_Coil_Heating_DX_MultiSpeed_StageDataFields::EnergyInputRatioFunctionofFlowFractionCurve
-  //     OS_Coil_Heating_DX_MultiSpeed_StageDataFields::PartLoadFractionCorrelationCurve
-  //     OS_Coil_Heating_DX_MultiSpeed_StageDataFields::WasteHeatFunctionofTemperatureCurve
+  CurveBiquadratic heating_curve_1(model);
+  heating_curve_1.setCoefficient1Constant(0.760523473);
+  heating_curve_1.setCoefficient2x(0.007531702);
+  heating_curve_1.setCoefficient3xPOW2(-0.000288398);
+  heating_curve_1.setCoefficient4y(0.021653033);
+  heating_curve_1.setCoefficient5yPOW2(3.29133E-05);
+  heating_curve_1.setCoefficient6xTIMESY(0.00014862);
+  heating_curve_1.setMinimumValueofx(18.33333);
+  heating_curve_1.setMaximumValueofx(23.88889);
+  heating_curve_1.setMinimumValueofy(-13.88889);
+  heating_curve_1.setMaximumValueofy(19.44444);
+
+  CurveQuadratic heating_curve_2(model);
+  heating_curve_2.setCoefficient1Constant(0.752130847);
+  heating_curve_2.setCoefficient2x(0.437552514);
+  heating_curve_2.setCoefficient3xPOW2(-0.189683361);
+  heating_curve_2.setMinimumValueofx(0.7);
+  heating_curve_2.setMaximumValueofx(1.1);
+
+  CurveBiquadratic heating_curve_3(model);
+  heating_curve_3.setCoefficient1Constant(0.750128109);
+  heating_curve_3.setCoefficient2x(0.002298944);
+  heating_curve_3.setCoefficient3xPOW2(0.000953927);
+  heating_curve_3.setCoefficient4y(-0.008327043);
+  heating_curve_3.setCoefficient5yPOW2(0.001016058);
+  heating_curve_3.setCoefficient6xTIMESY(-0.001433855);
+  heating_curve_3.setMinimumValueofx(18.33333);
+  heating_curve_3.setMaximumValueofx(23.88889);
+  heating_curve_3.setMinimumValueofy(-13.88889);
+  heating_curve_3.setMaximumValueofy(19.44444);
+
+  CurveQuadratic heating_curve_4(model);
+  heating_curve_4.setCoefficient1Constant(1.853909301);
+  heating_curve_4.setCoefficient2x(-1.411203778);
+  heating_curve_4.setCoefficient3xPOW2(0.557294478);
+  heating_curve_4.setMinimumValueofx(0.7);
+  heating_curve_4.setMaximumValueofx(1.1);
+
+  CurveQuadratic heating_curve_5(model);
+  heating_curve_5.setCoefficient1Constant(0.85);
+  heating_curve_5.setCoefficient2x(0.15);
+  heating_curve_5.setCoefficient3xPOW2(0.0);
+  heating_curve_5.setMinimumValueofx(0.0);
+  heating_curve_5.setMaximumValueofx(1.0);
+
+  CurveBiquadratic heating_curve_6(model);
+  heating_curve_6.setCoefficient1Constant(1.0);
+  heating_curve_6.setCoefficient2x(0.0);
+  heating_curve_6.setCoefficient3xPOW2(0.0);
+  heating_curve_6.setCoefficient4y(0.0);
+  heating_curve_6.setCoefficient5yPOW2(0.0);
+  heating_curve_6.setCoefficient6xTIMESY(0.0);
+  heating_curve_6.setMinimumValueofx(0);
+  heating_curve_6.setMaximumValueofx(50);
+  heating_curve_6.setMinimumValueofy(0);
+  heating_curve_6.setMaximumValueofy(50);
+
   bool ok = true;
-  // ok = setHandle();
+  autosizeGrossRatedHeatingCapacity();
+  ok = setGrossRatedHeatingCOP(2.75);
   OS_ASSERT(ok);
-  // ok = setGrossRatedTotalHeatingCapacity();
+  autosizeRatedAirFlowRate();
+  ok = setRatedSupplyAirFanPowerPerVolumeFlowRate(773.3);
   OS_ASSERT(ok);
-  // ok = setGrossRatedSensibleHeatRatio();
+  ok = setHeatingCapacityFunctionofTemperatureCurve(heating_curve_1);
   OS_ASSERT(ok);
-  // ok = setGrossRatedHeatingCOP();
+  ok = setHeatingCapacityFunctionofFlowFractionCurve(heating_curve_2);
   OS_ASSERT(ok);
-  // ok = setRatedAirFlowRate();
+  ok = setEnergyInputRatioFunctionofTemperatureCurve(heating_curve_3);
   OS_ASSERT(ok);
-  // ok = setRatedEvaporatorFanPowerPerVolumeFlowRate();
+  ok = setEnergyInputRatioFunctionofFlowFractionCurve(heating_curve_4);
   OS_ASSERT(ok);
-  // ok = setTotalHeatingCapacityFunctionofTemperatureCurve();
+  ok = setPartLoadFractionCorrelationCurve(heating_curve_5);
   OS_ASSERT(ok);
-  // ok = setTotalHeatingCapacityFunctionofFlowFractionCurve();
+  ok = setRatedWasteHeatFractionofPowerInput(0.2);
   OS_ASSERT(ok);
-  // ok = setEnergyInputRatioFunctionofTemperatureCurve();
+  ok = setWasteHeatFunctionofTemperatureCurve(heating_curve_6);
   OS_ASSERT(ok);
-  // ok = setEnergyInputRatioFunctionofFlowFractionCurve();
+}
+
+CoilHeatingDXMultiSpeedStageData::CoilHeatingDXMultiSpeedStageData(const Model& model,
+  const Curve& heatingCapacityFunctionofTemperature,
+  const Curve& heatingCapacityFuncionofFlowFraction,
+  const Curve& energyInputRatioFunctionofTemperature,
+  const Curve& energyInputRatioFunctionofFlowFraction,
+  const Curve& partLoadFractionCorrelation,
+  const Curve& wasteHeatFunctionofTemperature)
+  : ParentObject(CoilHeatingDXMultiSpeedStageData::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>());
+
+  bool ok = true;
+  autosizeGrossRatedHeatingCapacity();
+  ok = setGrossRatedHeatingCOP(2.75);
   OS_ASSERT(ok);
-  // ok = setPartLoadFractionCorrelationCurve();
+  autosizeRatedAirFlowRate();
+  ok = setRatedSupplyAirFanPowerPerVolumeFlowRate(773.3);
   OS_ASSERT(ok);
-  // ok = setNominalTimeforCondensateRemovaltoBegin();
+  ok = setHeatingCapacityFunctionofTemperatureCurve(heatingCapacityFunctionofTemperature);
   OS_ASSERT(ok);
-  // ok = setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity();
+  ok = setHeatingCapacityFunctionofFlowFractionCurve(heatingCapacityFuncionofFlowFraction);
   OS_ASSERT(ok);
-  // ok = setMaximumCyclingRate();
+  ok = setEnergyInputRatioFunctionofTemperatureCurve(energyInputRatioFunctionofTemperature);
   OS_ASSERT(ok);
-  // ok = setLatentCapacityTimeConstant();
+  ok = setEnergyInputRatioFunctionofFlowFractionCurve(energyInputRatioFunctionofFlowFraction);
   OS_ASSERT(ok);
-  // ok = setRatedWasteHeatFractionofPowerInput();
+  ok = setPartLoadFractionCorrelationCurve(partLoadFractionCorrelation);
   OS_ASSERT(ok);
-  // ok = setWasteHeatFunctionofTemperatureCurve();
+  ok = setRatedWasteHeatFractionofPowerInput(0.2);
   OS_ASSERT(ok);
-  // ok = setEvaporativeCondenserEffectiveness();
-  OS_ASSERT(ok);
-  // ok = setEvaporativeCondenserAirFlowRate();
-  OS_ASSERT(ok);
-  // ok = setRatedEvaporativeCondenserPumpPowerConsumption();
+  ok = setWasteHeatFunctionofTemperatureCurve(wasteHeatFunctionofTemperature);
   OS_ASSERT(ok);
 }
 
@@ -451,20 +421,12 @@ IddObjectType CoilHeatingDXMultiSpeedStageData::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Coil_Heating_DX_MultiSpeed_StageData);
 }
 
-boost::optional<double> CoilHeatingDXMultiSpeedStageData::grossRatedTotalHeatingCapacity() const {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->grossRatedTotalHeatingCapacity();
+boost::optional<double> CoilHeatingDXMultiSpeedStageData::grossRatedHeatingCapacity() const {
+  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->grossRatedHeatingCapacity();
 }
 
-bool CoilHeatingDXMultiSpeedStageData::isGrossRatedTotalHeatingCapacityAutosized() const {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->isGrossRatedTotalHeatingCapacityAutosized();
-}
-
-boost::optional<double> CoilHeatingDXMultiSpeedStageData::grossRatedSensibleHeatRatio() const {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->grossRatedSensibleHeatRatio();
-}
-
-bool CoilHeatingDXMultiSpeedStageData::isGrossRatedSensibleHeatRatioAutosized() const {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->isGrossRatedSensibleHeatRatioAutosized();
+bool CoilHeatingDXMultiSpeedStageData::isGrossRatedHeatingCapacityAutosized() const {
+  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->isGrossRatedHeatingCapacityAutosized();
 }
 
 double CoilHeatingDXMultiSpeedStageData::grossRatedHeatingCOP() const {
@@ -479,88 +441,44 @@ bool CoilHeatingDXMultiSpeedStageData::isRatedAirFlowRateAutosized() const {
   return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->isRatedAirFlowRateAutosized();
 }
 
-double CoilHeatingDXMultiSpeedStageData::ratedEvaporatorFanPowerPerVolumeFlowRate() const {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->ratedEvaporatorFanPowerPerVolumeFlowRate();
+double CoilHeatingDXMultiSpeedStageData::ratedSupplyAirFanPowerPerVolumeFlowRate() const {
+  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->ratedSupplyAirFanPowerPerVolumeFlowRate();
 }
 
-CurveBiquadratic CoilHeatingDXMultiSpeedStageData::totalHeatingCapacityFunctionofTemperatureCurve() const {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->totalHeatingCapacityFunctionofTemperatureCurve();
+Curve CoilHeatingDXMultiSpeedStageData::heatingCapacityFunctionofTemperatureCurve() const {
+  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->heatingCapacityFunctionofTemperatureCurve();
 }
 
-CurveQuadratic CoilHeatingDXMultiSpeedStageData::totalHeatingCapacityFunctionofFlowFractionCurve() const {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->totalHeatingCapacityFunctionofFlowFractionCurve();
+Curve CoilHeatingDXMultiSpeedStageData::heatingCapacityFunctionofFlowFractionCurve() const {
+  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->heatingCapacityFunctionofFlowFractionCurve();
 }
 
-CurveBiquadratic CoilHeatingDXMultiSpeedStageData::energyInputRatioFunctionofTemperatureCurve() const {
+Curve CoilHeatingDXMultiSpeedStageData::energyInputRatioFunctionofTemperatureCurve() const {
   return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->energyInputRatioFunctionofTemperatureCurve();
 }
 
-CurveQuadratic CoilHeatingDXMultiSpeedStageData::energyInputRatioFunctionofFlowFractionCurve() const {
+Curve CoilHeatingDXMultiSpeedStageData::energyInputRatioFunctionofFlowFractionCurve() const {
   return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->energyInputRatioFunctionofFlowFractionCurve();
 }
 
-CurveQuadratic CoilHeatingDXMultiSpeedStageData::partLoadFractionCorrelationCurve() const {
+Curve CoilHeatingDXMultiSpeedStageData::partLoadFractionCorrelationCurve() const {
   return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->partLoadFractionCorrelationCurve();
-}
-
-double CoilHeatingDXMultiSpeedStageData::nominalTimeforCondensateRemovaltoBegin() const {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->nominalTimeforCondensateRemovaltoBegin();
-}
-
-double CoilHeatingDXMultiSpeedStageData::ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity() const {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity();
-}
-
-double CoilHeatingDXMultiSpeedStageData::maximumCyclingRate() const {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->maximumCyclingRate();
-}
-
-double CoilHeatingDXMultiSpeedStageData::latentCapacityTimeConstant() const {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->latentCapacityTimeConstant();
 }
 
 double CoilHeatingDXMultiSpeedStageData::ratedWasteHeatFractionofPowerInput() const {
   return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->ratedWasteHeatFractionofPowerInput();
 }
 
-CurveBiquadratic CoilHeatingDXMultiSpeedStageData::wasteHeatFunctionofTemperatureCurve() const {
+Curve CoilHeatingDXMultiSpeedStageData::wasteHeatFunctionofTemperatureCurve() const {
   return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->wasteHeatFunctionofTemperatureCurve();
 }
 
-double CoilHeatingDXMultiSpeedStageData::evaporativeCondenserEffectiveness() const {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->evaporativeCondenserEffectiveness();
+bool CoilHeatingDXMultiSpeedStageData::setGrossRatedHeatingCapacity(double grossRatedHeatingCapacity) {
+  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setGrossRatedHeatingCapacity(grossRatedHeatingCapacity);
 }
 
-boost::optional<double> CoilHeatingDXMultiSpeedStageData::evaporativeCondenserAirFlowRate() const {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->evaporativeCondenserAirFlowRate();
-}
-
-bool CoilHeatingDXMultiSpeedStageData::isEvaporativeCondenserAirFlowRateAutosized() const {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->isEvaporativeCondenserAirFlowRateAutosized();
-}
-
-boost::optional<double> CoilHeatingDXMultiSpeedStageData::ratedEvaporativeCondenserPumpPowerConsumption() const {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->ratedEvaporativeCondenserPumpPowerConsumption();
-}
-
-bool CoilHeatingDXMultiSpeedStageData::isRatedEvaporativeCondenserPumpPowerConsumptionAutosized() const {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->isRatedEvaporativeCondenserPumpPowerConsumptionAutosized();
-}
-
-bool CoilHeatingDXMultiSpeedStageData::setGrossRatedTotalHeatingCapacity(double grossRatedTotalHeatingCapacity) {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setGrossRatedTotalHeatingCapacity(grossRatedTotalHeatingCapacity);
-}
-
-void CoilHeatingDXMultiSpeedStageData::autosizeGrossRatedTotalHeatingCapacity() {
-  getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->autosizeGrossRatedTotalHeatingCapacity();
-}
-
-bool CoilHeatingDXMultiSpeedStageData::setGrossRatedSensibleHeatRatio(double grossRatedSensibleHeatRatio) {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setGrossRatedSensibleHeatRatio(grossRatedSensibleHeatRatio);
-}
-
-void CoilHeatingDXMultiSpeedStageData::autosizeGrossRatedSensibleHeatRatio() {
-  getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->autosizeGrossRatedSensibleHeatRatio();
+void CoilHeatingDXMultiSpeedStageData::autosizeGrossRatedHeatingCapacity() {
+  getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->autosizeGrossRatedHeatingCapacity();
 }
 
 bool CoilHeatingDXMultiSpeedStageData::setGrossRatedHeatingCOP(double grossRatedHeatingCOP) {
@@ -575,72 +493,36 @@ void CoilHeatingDXMultiSpeedStageData::autosizeRatedAirFlowRate() {
   getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->autosizeRatedAirFlowRate();
 }
 
-bool CoilHeatingDXMultiSpeedStageData::setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate) {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate(ratedEvaporatorFanPowerPerVolumeFlowRate);
+bool CoilHeatingDXMultiSpeedStageData::setRatedSupplyAirFanPowerPerVolumeFlowRate(double ratedSupplyAirFanPowerPerVolumeFlowRate) {
+  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setRatedSupplyAirFanPowerPerVolumeFlowRate(ratedSupplyAirFanPowerPerVolumeFlowRate);
 }
 
-bool CoilHeatingDXMultiSpeedStageData::setTotalHeatingCapacityFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic) {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setTotalHeatingCapacityFunctionofTemperatureCurve(curveBiquadratic);
+bool CoilHeatingDXMultiSpeedStageData::setHeatingCapacityFunctionofTemperatureCurve(const Curve& curve) {
+  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setHeatingCapacityFunctionofTemperatureCurve(curve);
 }
 
-bool CoilHeatingDXMultiSpeedStageData::setTotalHeatingCapacityFunctionofFlowFractionCurve(const CurveQuadratic& curveQuadratic) {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setTotalHeatingCapacityFunctionofFlowFractionCurve(curveQuadratic);
+bool CoilHeatingDXMultiSpeedStageData::setHeatingCapacityFunctionofFlowFractionCurve(const Curve& curve) {
+  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setHeatingCapacityFunctionofFlowFractionCurve(curve);
 }
 
-bool CoilHeatingDXMultiSpeedStageData::setEnergyInputRatioFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic) {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setEnergyInputRatioFunctionofTemperatureCurve(curveBiquadratic);
+bool CoilHeatingDXMultiSpeedStageData::setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve) {
+  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setEnergyInputRatioFunctionofTemperatureCurve(curve);
 }
 
-bool CoilHeatingDXMultiSpeedStageData::setEnergyInputRatioFunctionofFlowFractionCurve(const CurveQuadratic& curveQuadratic) {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setEnergyInputRatioFunctionofFlowFractionCurve(curveQuadratic);
+bool CoilHeatingDXMultiSpeedStageData::setEnergyInputRatioFunctionofFlowFractionCurve(const Curve& curve) {
+  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setEnergyInputRatioFunctionofFlowFractionCurve(curve);
 }
 
-bool CoilHeatingDXMultiSpeedStageData::setPartLoadFractionCorrelationCurve(const CurveQuadratic& curveQuadratic) {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setPartLoadFractionCorrelationCurve(curveQuadratic);
-}
-
-bool CoilHeatingDXMultiSpeedStageData::setNominalTimeforCondensateRemovaltoBegin(double nominalTimeforCondensateRemovaltoBegin) {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setNominalTimeforCondensateRemovaltoBegin(nominalTimeforCondensateRemovaltoBegin);
-}
-
-bool CoilHeatingDXMultiSpeedStageData::setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity) {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity);
-}
-
-bool CoilHeatingDXMultiSpeedStageData::setMaximumCyclingRate(double maximumCyclingRate) {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setMaximumCyclingRate(maximumCyclingRate);
-}
-
-bool CoilHeatingDXMultiSpeedStageData::setLatentCapacityTimeConstant(double latentCapacityTimeConstant) {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setLatentCapacityTimeConstant(latentCapacityTimeConstant);
+bool CoilHeatingDXMultiSpeedStageData::setPartLoadFractionCorrelationCurve(const Curve& curve) {
+  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setPartLoadFractionCorrelationCurve(curve);
 }
 
 bool CoilHeatingDXMultiSpeedStageData::setRatedWasteHeatFractionofPowerInput(double ratedWasteHeatFractionofPowerInput) {
   return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setRatedWasteHeatFractionofPowerInput(ratedWasteHeatFractionofPowerInput);
 }
 
-bool CoilHeatingDXMultiSpeedStageData::setWasteHeatFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic) {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setWasteHeatFunctionofTemperatureCurve(curveBiquadratic);
-}
-
-bool CoilHeatingDXMultiSpeedStageData::setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness) {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setEvaporativeCondenserEffectiveness(evaporativeCondenserEffectiveness);
-}
-
-bool CoilHeatingDXMultiSpeedStageData::setEvaporativeCondenserAirFlowRate(double evaporativeCondenserAirFlowRate) {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setEvaporativeCondenserAirFlowRate(evaporativeCondenserAirFlowRate);
-}
-
-void CoilHeatingDXMultiSpeedStageData::autosizeEvaporativeCondenserAirFlowRate() {
-  getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->autosizeEvaporativeCondenserAirFlowRate();
-}
-
-bool CoilHeatingDXMultiSpeedStageData::setRatedEvaporativeCondenserPumpPowerConsumption(double ratedEvaporativeCondenserPumpPowerConsumption) {
-  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setRatedEvaporativeCondenserPumpPowerConsumption(ratedEvaporativeCondenserPumpPowerConsumption);
-}
-
-void CoilHeatingDXMultiSpeedStageData::autosizeRatedEvaporativeCondenserPumpPowerConsumption() {
-  getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->autosizeRatedEvaporativeCondenserPumpPowerConsumption();
+bool CoilHeatingDXMultiSpeedStageData::setWasteHeatFunctionofTemperatureCurve(const Curve& curve) {
+  return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setWasteHeatFunctionofTemperatureCurve(curve);
 }
 
 /// @cond

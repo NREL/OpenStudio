@@ -26,8 +26,7 @@
 namespace openstudio {
 namespace model {
 
-class CurveBiquadratic;
-class CurveQuadratic;
+class Curve;
 
 namespace detail {
 
@@ -71,21 +70,21 @@ namespace detail {
 
     double referenceUnitRatedWaterFlowRate() const;
 
-    CurveBiquadratic heatingCapacityFunctionofTemperatureCurve() const;
+    Curve heatingCapacityFunctionofTemperatureCurve() const;
 
-    CurveQuadratic totalHeatingCapacityFunctionofAirFlowFractionCurve() const;
+    Curve totalHeatingCapacityFunctionofAirFlowFractionCurve() const;
 
-    CurveQuadratic heatingCapacityFunctionofWaterFlowFractionCurve() const;
+    Curve heatingCapacityFunctionofWaterFlowFractionCurve() const;
 
-    CurveBiquadratic energyInputRatioFunctionofTemperatureCurve() const;
+    Curve energyInputRatioFunctionofTemperatureCurve() const;
 
-    CurveQuadratic energyInputRatioFunctionofAirFlowFractionCurve() const;
+    Curve energyInputRatioFunctionofAirFlowFractionCurve() const;
 
-    CurveQuadratic energyInputRatioFunctionofWaterFlowFractionCurve() const;
+    Curve energyInputRatioFunctionofWaterFlowFractionCurve() const;
 
     double referenceUnitWasteHeatFractionofInputPowerAtRatedConditions() const;
 
-    CurveBiquadratic wasteHeatFunctionofTemperatureCurve() const;
+    Curve wasteHeatFunctionofTemperatureCurve() const;
 
     //@}
     /** @name Setters */
@@ -99,21 +98,21 @@ namespace detail {
 
     bool setReferenceUnitRatedWaterFlowRate(double referenceUnitRatedWaterFlowRate);
 
-    bool setHeatingCapacityFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic);
+    bool setHeatingCapacityFunctionofTemperatureCurve(const Curve& curve);
 
-    bool setTotalHeatingCapacityFunctionofAirFlowFractionCurve(const CurveQuadratic& curveQuadratic);
+    bool setTotalHeatingCapacityFunctionofAirFlowFractionCurve(const Curve& curve);
 
-    bool setHeatingCapacityFunctionofWaterFlowFractionCurve(const CurveQuadratic& curveQuadratic);
+    bool setHeatingCapacityFunctionofWaterFlowFractionCurve(const Curve& curve);
 
-    bool setEnergyInputRatioFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic);
+    bool setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve);
 
-    bool setEnergyInputRatioFunctionofAirFlowFractionCurve(const CurveQuadratic& curveQuadratic);
+    bool setEnergyInputRatioFunctionofAirFlowFractionCurve(const Curve& curve);
 
-    bool setEnergyInputRatioFunctionofWaterFlowFractionCurve(const CurveQuadratic& curveQuadratic);
+    bool setEnergyInputRatioFunctionofWaterFlowFractionCurve(const Curve& curve);
 
     bool setReferenceUnitWasteHeatFractionofInputPowerAtRatedConditions(double referenceUnitWasteHeatFractionofInputPowerAtRatedConditions);
 
-    bool setWasteHeatFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic);
+    bool setWasteHeatFunctionofTemperatureCurve(const Curve& curve);
 
     //@}
     /** @name Other */
@@ -127,13 +126,13 @@ namespace detail {
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
-    boost::optional<CurveBiquadratic> optionalHeatingCapacityFunctionofTemperatureCurve() const;
-    boost::optional<CurveQuadratic> optionalTotalHeatingCapacityFunctionofAirFlowFractionCurve() const;
-    boost::optional<CurveQuadratic> optionalHeatingCapacityFunctionofWaterFlowFractionCurve() const;
-    boost::optional<CurveBiquadratic> optionalEnergyInputRatioFunctionofTemperatureCurve() const;
-    boost::optional<CurveQuadratic> optionalEnergyInputRatioFunctionofAirFlowFractionCurve() const;
-    boost::optional<CurveQuadratic> optionalEnergyInputRatioFunctionofWaterFlowFractionCurve() const;
-    boost::optional<CurveBiquadratic> optionalWasteHeatFunctionofTemperatureCurve() const;
+    boost::optional<Curve> optionalHeatingCapacityFunctionofTemperatureCurve() const;
+    boost::optional<Curve> optionalTotalHeatingCapacityFunctionofAirFlowFractionCurve() const;
+    boost::optional<Curve> optionalHeatingCapacityFunctionofWaterFlowFractionCurve() const;
+    boost::optional<Curve> optionalEnergyInputRatioFunctionofTemperatureCurve() const;
+    boost::optional<Curve> optionalEnergyInputRatioFunctionofAirFlowFractionCurve() const;
+    boost::optional<Curve> optionalEnergyInputRatioFunctionofWaterFlowFractionCurve() const;
+    boost::optional<Curve> optionalWasteHeatFunctionofTemperatureCurve() const;
   };
 
 } // detail

@@ -27,8 +27,7 @@ namespace openstudio {
 
 namespace model {
 
-class CurveBiquadratic;
-class CurveQuadratic;
+class Curve;
 
 namespace detail {
 
@@ -63,21 +62,21 @@ class MODEL_API CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData :
 
   double referenceUnitRatedWaterFlowRate() const;
 
-  CurveBiquadratic totalCoolingCapacityFunctionofTemperatureCurve() const;
+  Curve totalCoolingCapacityFunctionofTemperatureCurve() const;
 
-  CurveQuadratic totalCoolingCapacityFunctionofAirFlowFractionCurve() const;
+  Curve totalCoolingCapacityFunctionofAirFlowFractionCurve() const;
 
-  CurveQuadratic totalCoolingCapacityFunctionofWaterFlowFractionCurve() const;
+  Curve totalCoolingCapacityFunctionofWaterFlowFractionCurve() const;
 
-  CurveBiquadratic energyInputRatioFunctionofTemperatureCurve() const;
+  Curve energyInputRatioFunctionofTemperatureCurve() const;
 
-  CurveQuadratic energyInputRatioFunctionofAirFlowFractionCurve() const;
+  Curve energyInputRatioFunctionofAirFlowFractionCurve() const;
 
-  CurveQuadratic energyInputRatioFunctionofWaterFlowFractionCurve() const;
+  Curve energyInputRatioFunctionofWaterFlowFractionCurve() const;
 
   double referenceUnitWasteHeatFractionofInputPowerAtRatedConditions() const;
 
-  CurveBiquadratic wasteHeatFunctionofTemperatureCurve() const;
+  Curve wasteHeatFunctionofTemperatureCurve() const;
 
   //@}
   /** @name Setters */
@@ -93,21 +92,21 @@ class MODEL_API CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData :
 
   bool setReferenceUnitRatedWaterFlowRate(double referenceUnitRatedWaterFlowRate);
 
-  bool setTotalCoolingCapacityFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic);
+  bool setTotalCoolingCapacityFunctionofTemperatureCurve(const Curve& curve);
 
-  bool setTotalCoolingCapacityFunctionofAirFlowFractionCurve(const CurveQuadratic& curveQuadratic);
+  bool setTotalCoolingCapacityFunctionofAirFlowFractionCurve(const Curve& curve);
 
-  bool setTotalCoolingCapacityFunctionofWaterFlowFractionCurve(const CurveQuadratic& curveQuadratic);
+  bool setTotalCoolingCapacityFunctionofWaterFlowFractionCurve(const Curve& curve);
 
-  bool setEnergyInputRatioFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic);
+  bool setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve);
 
-  bool setEnergyInputRatioFunctionofAirFlowFractionCurve(const CurveQuadratic& curveQuadratic);
+  bool setEnergyInputRatioFunctionofAirFlowFractionCurve(const Curve& curve);
 
-  bool setEnergyInputRatioFunctionofWaterFlowFractionCurve(const CurveQuadratic& curveQuadratic);
+  bool setEnergyInputRatioFunctionofWaterFlowFractionCurve(const Curve& curve);
 
   bool setReferenceUnitWasteHeatFractionofInputPowerAtRatedConditions(double referenceUnitWasteHeatFractionofInputPowerAtRatedConditions);
 
-  bool setWasteHeatFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic);
+  bool setWasteHeatFunctionofTemperatureCurve(const Curve& curve);
 
   //@}
   /** @name Other */

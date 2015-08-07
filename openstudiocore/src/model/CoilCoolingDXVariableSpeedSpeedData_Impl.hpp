@@ -26,8 +26,7 @@
 namespace openstudio {
 namespace model {
 
-class CurveBiquadratic;
-class CurveQuadratic;
+class Curve;
 
 namespace detail {
 
@@ -59,6 +58,10 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const;
 
+    virtual ModelObject clone(Model model) const override;
+
+    virtual std::vector<ModelObject> children() const override;
+
     //@}
     /** @name Getters */
     //@{
@@ -75,13 +78,13 @@ namespace detail {
 
     boost::optional<double> referenceUnitRatedPadEffectivenessofEvapPrecooling() const;
 
-    CurveBiquadratic totalCoolingCapacityFunctionofTemperatureCurve() const;
+    Curve totalCoolingCapacityFunctionofTemperatureCurve() const;
 
-    CurveQuadratic totalCoolingCapacityFunctionofAirFlowFractionCurve() const;
+    Curve totalCoolingCapacityFunctionofAirFlowFractionCurve() const;
 
-    CurveBiquadratic energyInputRatioFunctionofTemperatureCurve() const;
+    Curve energyInputRatioFunctionofTemperatureCurve() const;
 
-    CurveQuadratic energyInputRatioFunctionofAirFlowFractionCurve() const;
+    Curve energyInputRatioFunctionofAirFlowFractionCurve() const;
 
     //@}
     /** @name Setters */
@@ -103,13 +106,13 @@ namespace detail {
 
     void resetReferenceUnitRatedPadEffectivenessofEvapPrecooling();
 
-    bool setTotalCoolingCapacityFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic);
+    bool setTotalCoolingCapacityFunctionofTemperatureCurve(const Curve& curve);
 
-    bool setTotalCoolingCapacityFunctionofAirFlowFractionCurve(const CurveQuadratic& curveQuadratic);
+    bool setTotalCoolingCapacityFunctionofAirFlowFractionCurve(const Curve& curve);
 
-    bool setEnergyInputRatioFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic);
+    bool setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve);
 
-    bool setEnergyInputRatioFunctionofAirFlowFractionCurve(const CurveQuadratic& curveQuadratic);
+    bool setEnergyInputRatioFunctionofAirFlowFractionCurve(const Curve& curve);
 
     //@}
     /** @name Other */
@@ -123,10 +126,10 @@ namespace detail {
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
-    boost::optional<CurveBiquadratic> optionalTotalCoolingCapacityFunctionofTemperatureCurve() const;
-    boost::optional<CurveQuadratic> optionalTotalCoolingCapacityFunctionofAirFlowFractionCurve() const;
-    boost::optional<CurveBiquadratic> optionalEnergyInputRatioFunctionofTemperatureCurve() const;
-    boost::optional<CurveQuadratic> optionalEnergyInputRatioFunctionofAirFlowFractionCurve() const;
+    boost::optional<Curve> optionalTotalCoolingCapacityFunctionofTemperatureCurve() const;
+    boost::optional<Curve> optionalTotalCoolingCapacityFunctionofAirFlowFractionCurve() const;
+    boost::optional<Curve> optionalEnergyInputRatioFunctionofTemperatureCurve() const;
+    boost::optional<Curve> optionalEnergyInputRatioFunctionofAirFlowFractionCurve() const;
   };
 
 } // detail

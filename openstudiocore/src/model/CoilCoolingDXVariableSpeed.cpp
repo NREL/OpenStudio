@@ -27,8 +27,20 @@
 #include "CoilCoolingDXVariableSpeedSpeedData_Impl.hpp"
 // #include "WaterStorageTank.hpp"
 // #include "WaterStorageTank_Impl.hpp"
+
+#include "AirLoopHVACUnitarySystem.hpp"
+#include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
+#include "ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
+#include "ZoneHVACPackagedTerminalHeatPump.hpp"
+#include "ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
+
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+#include "Node.hpp"
+#include "AirLoopHVAC.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
@@ -372,13 +384,16 @@ namespace detail {
       auto speedClone = speed.clone(model).cast<CoilCoolingDXVariableSpeedSpeedData>();
       t_clone.addSpeed(speedClone);
     }
+
+    t_clone.setEnergyPartLoadFractionCurve( energyPartLoadFractionCurve().clone(model).cast<Curve>() );
+
     return t_clone;
   }
 
   std::vector<ModelObject> CoilCoolingDXVariableSpeed_Impl::children() const {
     auto children = subsetCastVector<ModelObject>( speeds() );
     children.push_back( energyPartLoadFractionCurve() );
-    return subsetCastVector<ModelObject>(speeds());
+    return children;
   }
 
   std::vector<CoilCoolingDXVariableSpeedSpeedData> CoilCoolingDXVariableSpeed_Impl::speeds() const {
@@ -401,27 +416,77 @@ namespace detail {
     group.setPointer(OS_Coil_Cooling_DX_VariableSpeedExtensibleFields::SpeedData,speed.handle());
   }
 
-  // boost::optional<HVACComponent> CoilCoolingDXVariableSpeed_Impl::containingHVACComponent() const
-  // {
-  //   // AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed
-  //   {
-  //     auto systems = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
+  boost::optional<HVACComponent> CoilCoolingDXVariableSpeed_Impl::containingHVACComponent() const
+  {
+    // AirLoopHVACUnitarySystem
+    {
+      auto systems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
 
-  //     for( const auto & system : systems ) {
-  //       auto coolingCoil = system.coolingCoil();
-  //       if( coolingCoil.handle() == this->handle() ) {
-  //         return system;
-  //       }
-  //     }
-  //   }
+      for( auto const & system : systems ) {
+        if( auto coolingCoil = system.coolingCoil() ) {
+          if( coolingCoil->handle() == this->handle() ) {
+            return system;
+          }
+        }
+      }
+    }
 
-  //   return boost::none;
-  // }
+    // AirLoopHVACUnitaryHeatPumpAirToAir
+    {
+      auto systems = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
 
-  // bool CoilCoolingDXVariableSpeed_Impl::addToNode(Node & node)
-  // {
-  //   return false;
-  // }
+      for( auto const & system : systems ) {
+        auto coolingCoil = system.coolingCoil();
+        if( coolingCoil.handle() == this->handle() ) {
+          return system;
+        }
+      }
+    }
+
+    return boost::none;
+  }
+
+  boost::optional<ZoneHVACComponent> CoilCoolingDXVariableSpeed_Impl::containingZoneHVACComponent() const
+  {
+    // ZoneHVACPackagedTerminalAirConditioner
+    {
+      auto systems = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalAirConditioner>();
+
+      for( auto const & system : systems ) {
+        auto coolingCoil = system.coolingCoil();
+        if( coolingCoil.handle() == this->handle() ) {
+          return system;
+        }
+      }
+    }
+
+    // ZoneHVACPackagedTerminalHeatPump
+    {
+      auto systems = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalHeatPump>();
+
+      for( auto const & system : systems ) {
+        auto coolingCoil = system.coolingCoil();
+        if( coolingCoil.handle() == this->handle() ) {
+          return system;
+        }
+      }
+    }
+
+    return boost::none;
+  }
+
+  bool CoilCoolingDXVariableSpeed_Impl::addToNode(Node & node)
+  {
+    if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
+    {
+      if( ! airLoop->demandComponent(node.handle()) )
+      {
+        return StraightComponent_Impl::addToNode( node );
+      }
+    }
+
+    return false;
+  }
 
 } // detail
 
@@ -431,7 +496,7 @@ CoilCoolingDXVariableSpeed::CoilCoolingDXVariableSpeed(const Model& model)
   OS_ASSERT(getImpl<detail::CoilCoolingDXVariableSpeed_Impl>());
 
   bool ok = true;
-  setNominalSpeedLevel(2);
+  setNominalSpeedLevel(1);
   autosizeGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
   autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
   ok = setNominalTimeforCondensatetoBeginLeavingtheCoil(0);
@@ -474,7 +539,7 @@ CoilCoolingDXVariableSpeed::CoilCoolingDXVariableSpeed(const Model& model,
   OS_ASSERT(getImpl<detail::CoilCoolingDXVariableSpeed_Impl>());
 
   bool ok = true;
-  setNominalSpeedLevel(2);
+  setNominalSpeedLevel(1);
   autosizeGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
   autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
   ok = setNominalTimeforCondensatetoBeginLeavingtheCoil(0);

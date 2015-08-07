@@ -26,75 +26,6 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-CoilCoolingDXVariableSpeedSpeedData makeSpeed(Model & model) {
-  CurveBiquadratic cooling_curve_1(model);
-  cooling_curve_1.setCoefficient1Constant(0.766956);
-  cooling_curve_1.setCoefficient2x(0.0107756);
-  cooling_curve_1.setCoefficient3xPOW2(-0.0000414703);
-  cooling_curve_1.setCoefficient4y(0.00134961);
-  cooling_curve_1.setCoefficient5yPOW2(-0.000261144);
-  cooling_curve_1.setCoefficient6xTIMESY(0.000457488);
-  cooling_curve_1.setMinimumValueofx(17.0);
-  cooling_curve_1.setMaximumValueofx(22.0);
-  cooling_curve_1.setMinimumValueofy(13.0);
-  cooling_curve_1.setMaximumValueofy(46.0);
-  
-  CurveQuadratic cooling_curve_2(model);
-  cooling_curve_2.setCoefficient1Constant(0.8);
-  cooling_curve_2.setCoefficient2x(0.2);
-  cooling_curve_2.setCoefficient3xPOW2(0.0);
-  cooling_curve_2.setMinimumValueofx(0.5);
-  cooling_curve_2.setMaximumValueofx(1.5);
-  
-  CurveBiquadratic cooling_curve_3(model);
-  cooling_curve_3.setCoefficient1Constant(0.297145);
-  cooling_curve_3.setCoefficient2x(0.0430933);
-  cooling_curve_3.setCoefficient3xPOW2(-0.000748766);
-  cooling_curve_3.setCoefficient4y(0.00597727);
-  cooling_curve_3.setCoefficient5yPOW2(0.000482112);
-  cooling_curve_3.setCoefficient6xTIMESY(-0.000956448);
-  cooling_curve_3.setMinimumValueofx(17.0);
-  cooling_curve_3.setMaximumValueofx(22.0);
-  cooling_curve_3.setMinimumValueofy(13.0);
-  cooling_curve_3.setMaximumValueofy(46.0);
-  
-  CurveQuadratic cooling_curve_4(model);
-  cooling_curve_4.setCoefficient1Constant(1.156);
-  cooling_curve_4.setCoefficient2x(-0.1816);
-  cooling_curve_4.setCoefficient3xPOW2(0.0256);
-  cooling_curve_4.setMinimumValueofx(0.5);
-  cooling_curve_4.setMaximumValueofx(1.5);
-  
-  CurveQuadratic cooling_curve_5(model);
-  cooling_curve_5.setCoefficient1Constant(0.75);
-  cooling_curve_5.setCoefficient2x(0.25);
-  cooling_curve_5.setCoefficient3xPOW2(0.0);
-  cooling_curve_5.setMinimumValueofx(0.0);
-  cooling_curve_5.setMaximumValueofx(1.0);
-  
-  CurveBiquadratic cooling_curve_6(model);
-  cooling_curve_6.setCoefficient1Constant(1.0);
-  cooling_curve_6.setCoefficient2x(0.0);
-  cooling_curve_6.setCoefficient3xPOW2(0.0);
-  cooling_curve_6.setCoefficient4y(0.0);
-  cooling_curve_6.setCoefficient5yPOW2(0.0);
-  cooling_curve_6.setCoefficient6xTIMESY(0.0);
-  cooling_curve_6.setMinimumValueofx(0.0);
-  cooling_curve_6.setMaximumValueofx(0.0);
-  cooling_curve_6.setMinimumValueofy(0.0);
-  cooling_curve_6.setMaximumValueofy(0.0);
-
-  CoilCoolingDXVariableSpeedSpeedData stage(model,
-    cooling_curve_1,
-    cooling_curve_2,
-    cooling_curve_3,
-    cooling_curve_4,
-    cooling_curve_5,
-    cooling_curve_6);
-
-  return stage;
-}
-
 TEST_F(ModelFixture,CoilCoolingDXVariableSpeed)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
@@ -114,11 +45,11 @@ TEST_F(ModelFixture, CoilCoolingDXVariableSpeed_Speeds)
   Model m;
   CoilCoolingDXVariableSpeed coil(m);
 
-  auto stage1 = makeSpeed(m);
-  coil.addSpeed(stage1);
+  CoilCoolingDXVariableSpeedSpeedData speed1( m );
+  coil.addSpeed(speed1);
 
-  auto stage2 = makeSpeed(m);
-  coil.addSpeed(stage2);
+  CoilCoolingDXVariableSpeedSpeedData speed2( m );
+  coil.addSpeed(speed2);
 
   ASSERT_EQ(2u,coil.speeds().size());
   

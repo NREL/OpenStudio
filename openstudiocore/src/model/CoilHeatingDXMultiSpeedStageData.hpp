@@ -27,8 +27,7 @@ namespace openstudio {
 
 namespace model {
 
-class CurveBiquadratic;
-class CurveQuadratic;
+class Curve;
 
 namespace detail {
 
@@ -44,6 +43,14 @@ class MODEL_API CoilHeatingDXMultiSpeedStageData : public ParentObject {
 
   explicit CoilHeatingDXMultiSpeedStageData(const Model& model);
 
+  explicit CoilHeatingDXMultiSpeedStageData(const Model& model,
+    const Curve& heatingCapacityFunctionofTemperature,
+    const Curve& heatingCapacityFunctionofFlowFraction,
+    const Curve& energyInputRatioFunctionofTemperature,
+    const Curve& energyInputRatioFunctionofFlowFraction,
+    const Curve& partLoadFractionCorrelation,
+    const Curve& wasteHeatFunctionofTemperature);
+
   virtual ~CoilHeatingDXMultiSpeedStageData() {}
 
   //@}
@@ -53,13 +60,9 @@ class MODEL_API CoilHeatingDXMultiSpeedStageData : public ParentObject {
   /** @name Getters */
   //@{
 
-  boost::optional<double> grossRatedTotalHeatingCapacity() const;
+  boost::optional<double> grossRatedHeatingCapacity() const;
 
-  bool isGrossRatedTotalHeatingCapacityAutosized() const;
-
-  boost::optional<double> grossRatedSensibleHeatRatio() const;
-
-  bool isGrossRatedSensibleHeatRatioAutosized() const;
+  bool isGrossRatedHeatingCapacityAutosized() const;
 
   double grossRatedHeatingCOP() const;
 
@@ -67,51 +70,29 @@ class MODEL_API CoilHeatingDXMultiSpeedStageData : public ParentObject {
 
   bool isRatedAirFlowRateAutosized() const;
 
-  double ratedEvaporatorFanPowerPerVolumeFlowRate() const;
+  double ratedSupplyAirFanPowerPerVolumeFlowRate() const;
 
-  CurveBiquadratic totalHeatingCapacityFunctionofTemperatureCurve() const;
+  Curve heatingCapacityFunctionofTemperatureCurve() const;
 
-  CurveQuadratic totalHeatingCapacityFunctionofFlowFractionCurve() const;
+  Curve heatingCapacityFunctionofFlowFractionCurve() const;
 
-  CurveBiquadratic energyInputRatioFunctionofTemperatureCurve() const;
+  Curve energyInputRatioFunctionofTemperatureCurve() const;
 
-  CurveQuadratic energyInputRatioFunctionofFlowFractionCurve() const;
+  Curve energyInputRatioFunctionofFlowFractionCurve() const;
 
-  CurveQuadratic partLoadFractionCorrelationCurve() const;
-
-  double nominalTimeforCondensateRemovaltoBegin() const;
-
-  double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity() const;
-
-  double maximumCyclingRate() const;
-
-  double latentCapacityTimeConstant() const;
+  Curve partLoadFractionCorrelationCurve() const;
 
   double ratedWasteHeatFractionofPowerInput() const;
 
-  CurveBiquadratic wasteHeatFunctionofTemperatureCurve() const;
-
-  double evaporativeCondenserEffectiveness() const;
-
-  boost::optional<double> evaporativeCondenserAirFlowRate() const;
-
-  bool isEvaporativeCondenserAirFlowRateAutosized() const;
-
-  boost::optional<double> ratedEvaporativeCondenserPumpPowerConsumption() const;
-
-  bool isRatedEvaporativeCondenserPumpPowerConsumptionAutosized() const;
+  Curve wasteHeatFunctionofTemperatureCurve() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  bool setGrossRatedTotalHeatingCapacity(double grossRatedTotalHeatingCapacity);
+  bool setGrossRatedHeatingCapacity(double grossRatedHeatingCapacity);
 
-  void autosizeGrossRatedTotalHeatingCapacity();
-
-  bool setGrossRatedSensibleHeatRatio(double grossRatedSensibleHeatRatio);
-
-  void autosizeGrossRatedSensibleHeatRatio();
+  void autosizeGrossRatedHeatingCapacity();
 
   bool setGrossRatedHeatingCOP(double grossRatedHeatingCOP);
 
@@ -119,39 +100,21 @@ class MODEL_API CoilHeatingDXMultiSpeedStageData : public ParentObject {
 
   void autosizeRatedAirFlowRate();
 
-  bool setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate);
+  bool setRatedSupplyAirFanPowerPerVolumeFlowRate(double ratedSupplyAirFanPowerPerVolumeFlowRate);
 
-  bool setTotalHeatingCapacityFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic);
+  bool setHeatingCapacityFunctionofTemperatureCurve(const Curve& curve);
 
-  bool setTotalHeatingCapacityFunctionofFlowFractionCurve(const CurveQuadratic& curveQuadratic);
+  bool setHeatingCapacityFunctionofFlowFractionCurve(const Curve& curve);
 
-  bool setEnergyInputRatioFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic);
+  bool setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve);
 
-  bool setEnergyInputRatioFunctionofFlowFractionCurve(const CurveQuadratic& curveQuadratic);
+  bool setEnergyInputRatioFunctionofFlowFractionCurve(const Curve& curve);
 
-  bool setPartLoadFractionCorrelationCurve(const CurveQuadratic& curveQuadratic);
-
-  bool setNominalTimeforCondensateRemovaltoBegin(double nominalTimeforCondensateRemovaltoBegin);
-
-  bool setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity);
-
-  bool setMaximumCyclingRate(double maximumCyclingRate);
-
-  bool setLatentCapacityTimeConstant(double latentCapacityTimeConstant);
+  bool setPartLoadFractionCorrelationCurve(const Curve& curve);
 
   bool setRatedWasteHeatFractionofPowerInput(double ratedWasteHeatFractionofPowerInput);
 
-  bool setWasteHeatFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic);
-
-  bool setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness);
-
-  bool setEvaporativeCondenserAirFlowRate(double evaporativeCondenserAirFlowRate);
-
-  void autosizeEvaporativeCondenserAirFlowRate();
-
-  bool setRatedEvaporativeCondenserPumpPowerConsumption(double ratedEvaporativeCondenserPumpPowerConsumption);
-
-  void autosizeRatedEvaporativeCondenserPumpPowerConsumption();
+  bool setWasteHeatFunctionofTemperatureCurve(const Curve& curve);
 
   //@}
   /** @name Other */

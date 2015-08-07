@@ -27,8 +27,7 @@ namespace openstudio {
 
 namespace model {
 
-class CurveBiquadratic;
-class CurveQuadratic;
+class Curve;
 
 namespace detail {
 
@@ -43,6 +42,12 @@ class MODEL_API CoilCoolingDXVariableSpeedSpeedData : public ParentObject {
   //@{
 
   explicit CoilCoolingDXVariableSpeedSpeedData(const Model& model);
+
+  explicit CoilCoolingDXVariableSpeedSpeedData(const Model& model,
+                                               const Curve& totalCoolingCapacityFunctionofTemperatureCurve,
+                                               const Curve& totalCoolingCapacityFunctionofAirFlowFractionCurve,
+                                               const Curve& energyInputRatioFunctionofTemperatureCurve,
+                                               const Curve& energyInputRatioFunctionofAirFlowFractionCurve);
 
   virtual ~CoilCoolingDXVariableSpeedSpeedData() {}
 
@@ -65,13 +70,13 @@ class MODEL_API CoilCoolingDXVariableSpeedSpeedData : public ParentObject {
 
   boost::optional<double> referenceUnitRatedPadEffectivenessofEvapPrecooling() const;
 
-  CurveBiquadratic totalCoolingCapacityFunctionofTemperatureCurve() const;
+  Curve totalCoolingCapacityFunctionofTemperatureCurve() const;
 
-  CurveQuadratic totalCoolingCapacityFunctionofAirFlowFractionCurve() const;
+  Curve totalCoolingCapacityFunctionofAirFlowFractionCurve() const;
 
-  CurveBiquadratic energyInputRatioFunctionofTemperatureCurve() const;
+  Curve energyInputRatioFunctionofTemperatureCurve() const;
 
-  CurveQuadratic energyInputRatioFunctionofAirFlowFractionCurve() const;
+  Curve energyInputRatioFunctionofAirFlowFractionCurve() const;
 
   //@}
   /** @name Setters */
@@ -93,13 +98,13 @@ class MODEL_API CoilCoolingDXVariableSpeedSpeedData : public ParentObject {
 
   void resetReferenceUnitRatedPadEffectivenessofEvapPrecooling();
 
-  bool setTotalCoolingCapacityFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic);
+  bool setTotalCoolingCapacityFunctionofTemperatureCurve(const Curve& curve);
 
-  bool setTotalCoolingCapacityFunctionofAirFlowFractionCurve(const CurveQuadratic& curveQuadratic);
+  bool setTotalCoolingCapacityFunctionofAirFlowFractionCurve(const Curve& curve);
 
-  bool setEnergyInputRatioFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic);
+  bool setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve);
 
-  bool setEnergyInputRatioFunctionofAirFlowFractionCurve(const CurveQuadratic& curveQuadratic);
+  bool setEnergyInputRatioFunctionofAirFlowFractionCurve(const Curve& curve);
 
   //@}
   /** @name Other */
