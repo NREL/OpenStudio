@@ -78,11 +78,6 @@ PlantEquipmentOperationOutdoorDryBulb::PlantEquipmentOperationOutdoorDryBulb(con
   : PlantEquipmentOperationRangeBasedScheme(PlantEquipmentOperationOutdoorDryBulb::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::PlantEquipmentOperationOutdoorDryBulb_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
 }
 
 IddObjectType PlantEquipmentOperationOutdoorDryBulb::iddObjectType() {
