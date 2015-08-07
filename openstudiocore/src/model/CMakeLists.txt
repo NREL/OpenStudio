@@ -610,6 +610,9 @@ set(${target_name}_src
   PlantEquipmentOperationOutdoorDewpoint.hpp
   PlantEquipmentOperationOutdoorDewpoint_Impl.hpp
   PlantEquipmentOperationOutdoorDewpoint.cpp
+  PlantEquipmentOperationOutdoorRelativeHumidity.hpp
+  PlantEquipmentOperationOutdoorRelativeHumidity_Impl.hpp
+  PlantEquipmentOperationOutdoorRelativeHumidity.cpp
   ProgramControl.hpp
   ProgramControl_Impl.hpp
   ProgramControl.cpp

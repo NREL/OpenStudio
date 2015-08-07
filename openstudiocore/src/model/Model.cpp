@@ -361,6 +361,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(PlantEquipmentOperationOutdoorDryBulb);
     REGISTER_CONSTRUCTOR(PlantEquipmentOperationOutdoorWetBulb);
     REGISTER_CONSTRUCTOR(PlantEquipmentOperationOutdoorDewpoint);
+    REGISTER_CONSTRUCTOR(PlantEquipmentOperationOutdoorRelativeHumidity);
     REGISTER_CONSTRUCTOR(PortList);
     REGISTER_CONSTRUCTOR(ProgramControl);
     REGISTER_CONSTRUCTOR(PumpConstantSpeed);
@@ -694,6 +695,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationOutdoorDryBulb);
     REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationOutdoorWetBulb);
     REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationOutdoorDewpoint);
+    REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationOutdoorRelativeHumidity);
     REGISTER_COPYCONSTRUCTORS(PortList);
     REGISTER_COPYCONSTRUCTORS(ProgramControl);
     REGISTER_COPYCONSTRUCTORS(PumpConstantSpeed);
