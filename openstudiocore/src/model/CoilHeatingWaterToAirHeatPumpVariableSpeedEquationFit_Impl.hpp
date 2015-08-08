@@ -27,6 +27,7 @@ namespace openstudio {
 namespace model {
 
 class Curve;
+class CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData;
 
 namespace detail {
 
@@ -66,6 +67,16 @@ namespace detail {
 
     virtual unsigned waterOutletPort() override;
 
+    virtual ModelObject clone(Model model) const override;
+
+    virtual std::vector<ModelObject> children() const override;
+
+    virtual std::vector<IdfObject> remove() override;
+
+    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+
+    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+
     //@}
     /** @name Getters */
     //@{
@@ -85,8 +96,6 @@ namespace detail {
     bool isRatedWaterFlowRateAtSelectedNominalSpeedLevelAutosized() const;
 
     Curve energyPartLoadFractionCurve() const;
-
-    // TODO: Handle this object's extensible fields.
 
     //@}
     /** @name Setters */
@@ -108,11 +117,13 @@ namespace detail {
 
     bool setEnergyPartLoadFractionCurve(const Curve& curve);
 
-    // TODO: Handle this object's extensible fields.
-
     //@}
     /** @name Other */
     //@{
+
+    std::vector<CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData> speeds() const;
+
+    void addSpeed(const CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& speed);
 
     //@}
    protected:

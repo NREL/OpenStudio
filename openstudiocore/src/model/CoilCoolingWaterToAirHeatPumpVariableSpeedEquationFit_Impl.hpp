@@ -69,6 +69,8 @@ namespace detail {
 
     virtual ModelObject clone(Model model) const override;
 
+    virtual std::vector<ModelObject> children() const override;
+
     virtual std::vector<IdfObject> remove() override;
 
     virtual boost::optional<HVACComponent> containingHVACComponent() const override;

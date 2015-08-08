@@ -240,7 +240,15 @@ namespace detail {
   {
     auto newCoil = WaterToAirComponent_Impl::clone(model).cast<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit>();
 
+    newCoil.setEnergyPartLoadFractionCurve( energyPartLoadFractionCurve().clone(model).cast<Curve>() );
+
     return newCoil;
+  }
+
+  std::vector<ModelObject> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::children() const {
+    std::vector<ModelObject> children;
+    children.push_back( energyPartLoadFractionCurve() );
+    return children;
   }
 
   std::vector<openstudio::IdfObject> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::remove()

@@ -291,79 +291,81 @@ CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::CoilCoolingWater
   OS_ASSERT(getImpl<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>());
 
   CurveBiquadratic cooling_curve_1(model);
-  cooling_curve_1.setCoefficient1Constant(1.6253449506);
-  cooling_curve_1.setCoefficient2x(-0.0786550838);
-  cooling_curve_1.setCoefficient3xPOW2(0.0030679776);
-  cooling_curve_1.setCoefficient4y(0.0008002088);
-  cooling_curve_1.setCoefficient5yPOW2(-0.0000354060);
-  cooling_curve_1.setCoefficient6xTIMESY(-0.0003534409);
-  cooling_curve_1.setMinimumValueofx(13.89);
-  cooling_curve_1.setMaximumValueofx(22.22);
-  cooling_curve_1.setMinimumValueofy(12.78);
-  cooling_curve_1.setMaximumValueofy(51.67);
+  cooling_curve_1.setCoefficient1Constant(1.43085);
+  cooling_curve_1.setCoefficient2x(-0.0453653);
+  cooling_curve_1.setCoefficient3xPOW2(0.00199378);
+  cooling_curve_1.setCoefficient4y(-0.00805944);
+  cooling_curve_1.setCoefficient5yPOW2(3.93414E-05);
+  cooling_curve_1.setCoefficient6xTIMESY(-1.81187E-04);
+  cooling_curve_1.setMinimumValueofx(10.0);
+  cooling_curve_1.setMaximumValueofx(25.6);
+  cooling_curve_1.setMinimumValueofy(7.2);
+  cooling_curve_1.setMaximumValueofy(48.9);
   
   CurveQuadratic cooling_curve_2(model);
   cooling_curve_2.setCoefficient1Constant(1.0);
   cooling_curve_2.setCoefficient2x(0.0);
   cooling_curve_2.setCoefficient3xPOW2(0.0);
-  cooling_curve_2.setMinimumValueofx(0.5);
-  cooling_curve_2.setMaximumValueofx(1.5);
+  cooling_curve_2.setMinimumValueofx(0.0);
+  cooling_curve_2.setMaximumValueofx(1.0);
 
   CurveQuadratic cooling_curve_3(model);
   cooling_curve_3.setCoefficient1Constant(1.0);
   cooling_curve_3.setCoefficient2x(0.0);
   cooling_curve_3.setCoefficient3xPOW2(0.0);
-  cooling_curve_3.setMinimumValueofx(0.5);
-  cooling_curve_3.setMaximumValueofx(1.5);
+  cooling_curve_3.setMinimumValueofx(0.0);
+  cooling_curve_3.setMaximumValueofx(1.0);
   
   CurveBiquadratic cooling_curve_4(model);
-  cooling_curve_4.setCoefficient1Constant(1.4240389306);
-  cooling_curve_4.setCoefficient2x(-0.0593310687);
-  cooling_curve_4.setCoefficient3xPOW2(0.0026068070);
-  cooling_curve_4.setCoefficient4y(0.0008867551);
-  cooling_curve_4.setCoefficient5yPOW2(-0.0000369191);
-  cooling_curve_4.setCoefficient6xTIMESY(-0.0003552805);
-  cooling_curve_4.setMinimumValueofx(13.89);
-  cooling_curve_4.setMaximumValueofx(22.22);
-  cooling_curve_4.setMinimumValueofy(12.78);
-  cooling_curve_4.setMaximumValueofy(51.67);
+  cooling_curve_4.setCoefficient1Constant(0.138848);
+  cooling_curve_4.setCoefficient2x(0.0457985);
+  cooling_curve_4.setCoefficient3xPOW2(-0.00138661);
+  cooling_curve_4.setCoefficient4y(0.0141485);
+  cooling_curve_4.setCoefficient5yPOW2(0.000386055);
+  cooling_curve_4.setCoefficient6xTIMESY(-4.38194E-04);
+  cooling_curve_4.setMinimumValueofx(10.0);
+  cooling_curve_4.setMaximumValueofx(25.6);
+  cooling_curve_4.setMinimumValueofy(7.2);
+  cooling_curve_4.setMaximumValueofy(48.9);
   
   CurveQuadratic cooling_curve_5(model);
   cooling_curve_5.setCoefficient1Constant(1.0);
   cooling_curve_5.setCoefficient2x(0.0);
   cooling_curve_5.setCoefficient3xPOW2(0.0);
-  cooling_curve_5.setMinimumValueofx(0.5);
-  cooling_curve_5.setMaximumValueofx(1.5);
+  cooling_curve_5.setMinimumValueofx(0.0);
+  cooling_curve_5.setMaximumValueofx(1.0);
 
   CurveQuadratic cooling_curve_6(model);
   cooling_curve_6.setCoefficient1Constant(1.0);
   cooling_curve_6.setCoefficient2x(0.0);
   cooling_curve_6.setCoefficient3xPOW2(0.0);
-  cooling_curve_6.setMinimumValueofx(0.5);
-  cooling_curve_6.setMaximumValueofx(1.5);
+  cooling_curve_6.setMinimumValueofx(0.0);
+  cooling_curve_6.setMaximumValueofx(1.0);
 
   CurveBiquadratic cooling_curve_7(model);
-  cooling_curve_7.setCoefficient1Constant(1.4240389306);
-  cooling_curve_7.setCoefficient2x(-0.0593310687);
-  cooling_curve_7.setCoefficient3xPOW2(0.0026068070);
-  cooling_curve_7.setCoefficient4y(0.0008867551);
-  cooling_curve_7.setCoefficient5yPOW2(-0.0000369191);
-  cooling_curve_7.setCoefficient6xTIMESY(-0.0003552805);
-  cooling_curve_7.setMinimumValueofx(13.89);
-  cooling_curve_7.setMaximumValueofx(22.22);
-  cooling_curve_7.setMinimumValueofy(12.78);
-  cooling_curve_7.setMaximumValueofy(51.67);
+  cooling_curve_7.setCoefficient1Constant(1.0);
+  cooling_curve_7.setCoefficient2x(0.0);
+  cooling_curve_7.setCoefficient3xPOW2(0.0);
+  cooling_curve_7.setCoefficient4y(0.0);
+  cooling_curve_7.setCoefficient5yPOW2(0.0);
+  cooling_curve_7.setCoefficient6xTIMESY(0.0);
+  cooling_curve_7.setMinimumValueofx(10.0);
+  cooling_curve_7.setMaximumValueofx(25.6);
+  cooling_curve_7.setMinimumValueofy(7.2);
+  cooling_curve_7.setMaximumValueofy(48.9);
 
   bool ok = true;
-  ok = setReferenceUnitGrossRatedTotalCoolingCapacity(8914.185229);
+  ok = setReferenceUnitGrossRatedTotalCoolingCapacity(1524.1);
   OS_ASSERT(ok);
-  ok = setReferenceUnitGrossRatedSensibleHeatRatio(0.79);
+  ok = setReferenceUnitGrossRatedSensibleHeatRatio(0.75);
   OS_ASSERT(ok);
-  ok = setReferenceUnitGrossRatedCoolingCOP(3.980488789);
+  ok = setReferenceUnitGrossRatedCoolingCOP(4.0);
   OS_ASSERT(ok);
-  ok = setReferenceUnitRatedAirFlowRate(0.944);
+  ok = setReferenceUnitRatedAirFlowRate(0.1359072);
   OS_ASSERT(ok);
-  ok = setReferenceUnitRatedWaterFlowRate(0.944);
+  ok = setReferenceUnitRatedWaterFlowRate(0.000381695);
+  OS_ASSERT(ok);
+  ok = setReferenceUnitWasteHeatFractionofInputPowerAtRatedConditions(0.1);
   OS_ASSERT(ok);
   ok = setTotalCoolingCapacityFunctionofTemperatureCurve(cooling_curve_1);
   OS_ASSERT(ok);
@@ -378,6 +380,48 @@ CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::CoilCoolingWater
   ok = setEnergyInputRatioFunctionofWaterFlowFractionCurve(cooling_curve_6);
   OS_ASSERT(ok);
   ok = setWasteHeatFunctionofTemperatureCurve(cooling_curve_7);
+  OS_ASSERT(ok);
+}
+
+CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData(
+  const Model& model,
+  const Curve& totalCoolingCapacityFunctionofTemperature,
+  const Curve& totalCoolingCapacityFunctionofAirFlowFraction,
+  const Curve& totalCoolingCapacityFunctionofWaterFlowFraction,
+  const Curve& energyInputRatioFunctionofTemperature,
+  const Curve& energyInputRatioFunctionofAirFlowFraction,
+  const Curve& energyInputRatioFunctionofWaterFlowFraction,
+  const Curve& wasteHeatFunctionofTemperature)
+  : ParentObject(CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>());
+
+  bool ok = true;
+  ok = setReferenceUnitGrossRatedTotalCoolingCapacity(1524.1);
+  OS_ASSERT(ok);
+  ok = setReferenceUnitGrossRatedSensibleHeatRatio(0.75);
+  OS_ASSERT(ok);
+  ok = setReferenceUnitGrossRatedCoolingCOP(4.0);
+  OS_ASSERT(ok);
+  ok = setReferenceUnitRatedAirFlowRate(0.1359072);
+  OS_ASSERT(ok);
+  ok = setReferenceUnitRatedWaterFlowRate(0.000381695);
+  OS_ASSERT(ok);
+  ok = setReferenceUnitWasteHeatFractionofInputPowerAtRatedConditions(0.1);
+  OS_ASSERT(ok);
+  ok = setTotalCoolingCapacityFunctionofTemperatureCurve(totalCoolingCapacityFunctionofTemperature);
+  OS_ASSERT(ok);
+  ok = setTotalCoolingCapacityFunctionofAirFlowFractionCurve(totalCoolingCapacityFunctionofAirFlowFraction);
+  OS_ASSERT(ok);
+  ok = setTotalCoolingCapacityFunctionofWaterFlowFractionCurve(totalCoolingCapacityFunctionofWaterFlowFraction);
+  OS_ASSERT(ok);
+  ok = setEnergyInputRatioFunctionofTemperatureCurve(energyInputRatioFunctionofTemperature);
+  OS_ASSERT(ok);
+  ok = setEnergyInputRatioFunctionofAirFlowFractionCurve(energyInputRatioFunctionofAirFlowFraction);
+  OS_ASSERT(ok);
+  ok = setEnergyInputRatioFunctionofWaterFlowFractionCurve(energyInputRatioFunctionofWaterFlowFraction);
+  OS_ASSERT(ok);
+  ok = setWasteHeatFunctionofTemperatureCurve(wasteHeatFunctionofTemperature);
   OS_ASSERT(ok);
 }
 

@@ -22,6 +22,10 @@
 
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "CurveBiquadratic.hpp"
+#include "CurveQuadratic.hpp"
 
 #include <utilities/idd/OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedData_FieldEnums.hxx>
 
@@ -242,6 +246,32 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::WasteHeatFunctionofTemperatureCurveName);
   }
 
+  ModelObject CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::clone(Model model) const {
+    auto t_clone = ParentObject_Impl::clone(model).cast<CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData>();
+
+    t_clone.setHeatingCapacityFunctionofTemperatureCurve( heatingCapacityFunctionofTemperatureCurve().clone(model).cast<Curve>() );
+    t_clone.setTotalHeatingCapacityFunctionofAirFlowFractionCurve( totalHeatingCapacityFunctionofAirFlowFractionCurve().clone(model).cast<Curve>() );
+    t_clone.setHeatingCapacityFunctionofWaterFlowFractionCurve( heatingCapacityFunctionofWaterFlowFractionCurve().clone(model).cast<Curve>() );
+    t_clone.setEnergyInputRatioFunctionofTemperatureCurve( energyInputRatioFunctionofTemperatureCurve().clone(model).cast<Curve>() );
+    t_clone.setEnergyInputRatioFunctionofAirFlowFractionCurve( energyInputRatioFunctionofAirFlowFractionCurve().clone(model).cast<Curve>() );
+    t_clone.setEnergyInputRatioFunctionofWaterFlowFractionCurve( energyInputRatioFunctionofWaterFlowFractionCurve().clone(model).cast<Curve>() );
+    t_clone.setWasteHeatFunctionofTemperatureCurve( wasteHeatFunctionofTemperatureCurve().clone(model).cast<Curve>() );
+
+    return t_clone;
+  }
+
+  std::vector<ModelObject> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::children() const {
+    std::vector<ModelObject> children;
+    children.push_back( heatingCapacityFunctionofTemperatureCurve() );
+    children.push_back( totalHeatingCapacityFunctionofAirFlowFractionCurve() );
+    children.push_back( heatingCapacityFunctionofWaterFlowFractionCurve() );
+    children.push_back( energyInputRatioFunctionofTemperatureCurve() );
+    children.push_back( energyInputRatioFunctionofAirFlowFractionCurve() );
+    children.push_back( energyInputRatioFunctionofWaterFlowFractionCurve() );
+    children.push_back( wasteHeatFunctionofTemperatureCurve() );
+    return children;
+  }
+
 } // detail
 
 CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData(const Model& model)
@@ -249,40 +279,134 @@ CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::CoilHeatingWater
 {
   OS_ASSERT(getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::HeatingCapacityFunctionofTemperatureCurveName
-  //     OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::TotalHeatingCapacityFunctionofAirFlowFractionCurveName
-  //     OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::HeatingCapacityFunctionofWaterFlowFractionCurveName
-  //     OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::EnergyInputRatioFunctionofTemperatureCurveName
-  //     OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::EnergyInputRatioFunctionofAirFlowFractionCurveName
-  //     OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::EnergyInputRatioFunctionofWaterFlowFractionCurveName
-  //     OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedDataFields::WasteHeatFunctionofTemperatureCurveName
+  CurveBiquadratic heating_curve_1(model);
+  heating_curve_1.setCoefficient1Constant(0.617474);
+  heating_curve_1.setCoefficient2x(-0.00245669);
+  heating_curve_1.setCoefficient3xPOW2(-1.86550E-05);
+  heating_curve_1.setCoefficient4y(0.0254921);
+  heating_curve_1.setCoefficient5yPOW2(-1.00773E-04);
+  heating_curve_1.setCoefficient6xTIMESY(-1.09447E-04);
+  heating_curve_1.setMinimumValueofx(7.0);
+  heating_curve_1.setMaximumValueofx(27.0);
+  heating_curve_1.setMinimumValueofy(10.0);
+  heating_curve_1.setMaximumValueofy(30.0);
+  
+  CurveQuadratic heating_curve_2(model);
+  heating_curve_2.setCoefficient1Constant(1.0);
+  heating_curve_2.setCoefficient2x(0.0);
+  heating_curve_2.setCoefficient3xPOW2(0.0);
+  heating_curve_2.setMinimumValueofx(0.0);
+  heating_curve_2.setMaximumValueofx(1.0);
+
+  CurveQuadratic heating_curve_3(model);
+  heating_curve_3.setCoefficient1Constant(1.0);
+  heating_curve_3.setCoefficient2x(0.0);
+  heating_curve_3.setCoefficient3xPOW2(0.0);
+  heating_curve_3.setMinimumValueofx(0.0);
+  heating_curve_3.setMaximumValueofx(1.0);
+  
+  CurveBiquadratic heating_curve_4(model);
+  heating_curve_4.setCoefficient1Constant(0.993257);
+  heating_curve_4.setCoefficient2x(0.0201512);
+  heating_curve_4.setCoefficient3xPOW2(7.72375E-05);
+  heating_curve_4.setCoefficient4y(-0.0317207);
+  heating_curve_4.setCoefficient5yPOW2(0.000740649);
+  heating_curve_4.setCoefficient6xTIMESY(-3.03875E-04);
+  heating_curve_4.setMinimumValueofx(7.0);
+  heating_curve_4.setMaximumValueofx(27.0);
+  heating_curve_4.setMinimumValueofy(10.0);
+  heating_curve_4.setMaximumValueofy(30.0);
+  
+  CurveQuadratic heating_curve_5(model);
+  heating_curve_5.setCoefficient1Constant(1.0);
+  heating_curve_5.setCoefficient2x(0.0);
+  heating_curve_5.setCoefficient3xPOW2(0.0);
+  heating_curve_5.setMinimumValueofx(0.0);
+  heating_curve_5.setMaximumValueofx(1.0);
+
+  CurveQuadratic heating_curve_6(model);
+  heating_curve_6.setCoefficient1Constant(1.0);
+  heating_curve_6.setCoefficient2x(0.0);
+  heating_curve_6.setCoefficient3xPOW2(0.0);
+  heating_curve_6.setMinimumValueofx(0.0);
+  heating_curve_6.setMaximumValueofx(1.0);
+
+  CurveBiquadratic heating_curve_7(model);
+  heating_curve_7.setCoefficient1Constant(1.0);
+  heating_curve_7.setCoefficient2x(0.0);
+  heating_curve_7.setCoefficient3xPOW2(0.0);
+  heating_curve_7.setCoefficient4y(0.0);
+  heating_curve_7.setCoefficient5yPOW2(0.0);
+  heating_curve_7.setCoefficient6xTIMESY(0.0);
+  heating_curve_7.setMinimumValueofx(7.0);
+  heating_curve_7.setMaximumValueofx(27.0);
+  heating_curve_7.setMinimumValueofy(10.0);
+  heating_curve_7.setMaximumValueofy(30.0);
+
   bool ok = true;
-  // ok = setHandle();
+  ok = setReferenceUnitGrossRatedHeatingCapacity(1838.7);
   OS_ASSERT(ok);
-  // ok = setReferenceUnitGrossRatedHeatingCapacity();
+  ok = setReferenceUnitGrossRatedHeatingCOP(5.0);
   OS_ASSERT(ok);
-  // ok = setReferenceUnitGrossRatedHeatingCOP();
+  ok = setReferenceUnitRatedAirFlow(0.1661088);
   OS_ASSERT(ok);
-  // ok = setReferenceUnitRatedAirFlow();
+  ok = setReferenceUnitRatedWaterFlowRate(0.000381695);
   OS_ASSERT(ok);
-  // ok = setReferenceUnitRatedWaterFlowRate();
+  ok = setReferenceUnitWasteHeatFractionofInputPowerAtRatedConditions(0.1);
   OS_ASSERT(ok);
-  // ok = setHeatingCapacityFunctionofTemperatureCurve();
+  ok = setHeatingCapacityFunctionofTemperatureCurve(heating_curve_1);
   OS_ASSERT(ok);
-  // ok = setTotalHeatingCapacityFunctionofAirFlowFractionCurve();
+  ok = setTotalHeatingCapacityFunctionofAirFlowFractionCurve(heating_curve_2);
   OS_ASSERT(ok);
-  // ok = setHeatingCapacityFunctionofWaterFlowFractionCurve();
+  ok = setHeatingCapacityFunctionofWaterFlowFractionCurve(heating_curve_3);
   OS_ASSERT(ok);
-  // ok = setEnergyInputRatioFunctionofTemperatureCurve();
+  ok = setEnergyInputRatioFunctionofTemperatureCurve(heating_curve_4);
   OS_ASSERT(ok);
-  // ok = setEnergyInputRatioFunctionofAirFlowFractionCurve();
+  ok = setEnergyInputRatioFunctionofAirFlowFractionCurve(heating_curve_5);
   OS_ASSERT(ok);
-  // ok = setEnergyInputRatioFunctionofWaterFlowFractionCurve();
+  ok = setEnergyInputRatioFunctionofWaterFlowFractionCurve(heating_curve_6);
   OS_ASSERT(ok);
-  // ok = setReferenceUnitWasteHeatFractionofInputPowerAtRatedConditions();
+  ok = setWasteHeatFunctionofTemperatureCurve(heating_curve_7);
   OS_ASSERT(ok);
-  // ok = setWasteHeatFunctionofTemperatureCurve();
+}
+
+CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData(
+  const Model& model,
+  const Curve& heatingCapacityFunctionofTemperature,
+  const Curve& totalHeatingCapacityFunctionofAirFlowFraction,
+  const Curve& heatingCapacityFunctionofWaterFlowFraction,
+  const Curve& energyInputRatioFunctionofTemperature,
+  const Curve& energyInputRatioFunctionofAirFlowFraction,
+  const Curve& energyInputRatioFunctionofWaterFlowFraction,
+  const Curve& wasteHeatFunctionofTemperature)
+  : ParentObject(CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl>());
+
+  bool ok = true;
+  ok = setReferenceUnitGrossRatedHeatingCapacity(1838.7);
+  OS_ASSERT(ok);
+  ok = setReferenceUnitGrossRatedHeatingCOP(5.0);
+  OS_ASSERT(ok);
+  ok = setReferenceUnitRatedAirFlow(0.1661088);
+  OS_ASSERT(ok);
+  ok = setReferenceUnitRatedWaterFlowRate(0.000381695);
+  OS_ASSERT(ok);
+  ok = setReferenceUnitWasteHeatFractionofInputPowerAtRatedConditions(0.1);
+  OS_ASSERT(ok);
+  ok = setHeatingCapacityFunctionofTemperatureCurve(heatingCapacityFunctionofTemperature);
+  OS_ASSERT(ok);
+  ok = setTotalHeatingCapacityFunctionofAirFlowFractionCurve(totalHeatingCapacityFunctionofAirFlowFraction);
+  OS_ASSERT(ok);
+  ok = setHeatingCapacityFunctionofWaterFlowFractionCurve(heatingCapacityFunctionofWaterFlowFraction);
+  OS_ASSERT(ok);
+  ok = setEnergyInputRatioFunctionofTemperatureCurve(energyInputRatioFunctionofTemperature);
+  OS_ASSERT(ok);
+  ok = setEnergyInputRatioFunctionofAirFlowFractionCurve(energyInputRatioFunctionofAirFlowFraction);
+  OS_ASSERT(ok);
+  ok = setEnergyInputRatioFunctionofWaterFlowFractionCurve(energyInputRatioFunctionofWaterFlowFraction);
+  OS_ASSERT(ok);
+  ok = setWasteHeatFunctionofTemperatureCurve(wasteHeatFunctionofTemperature);
   OS_ASSERT(ok);
 }
 

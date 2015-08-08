@@ -43,6 +43,17 @@ class MODEL_API CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData :
 
   explicit CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData(const Model& model);
 
+  explicit CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData(
+    const Model& model,
+    const Curve& heatingCapacityFunctionofTemperature,
+    const Curve& totalHeatingCapacityFunctionofAirFlowFraction,
+    const Curve& heatingCapacityFunctionofWaterFlowFraction,
+    const Curve& energyInputRatioFunctionofTemperature,
+    const Curve& energyInputRatioFunctionofAirFlowFraction,
+    const Curve& energyInputRatioFunctionofWaterFlowFraction,
+    const Curve& wasteHeatFunctionofTemperature
+  );
+
   virtual ~CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData() {}
 
   //@}
