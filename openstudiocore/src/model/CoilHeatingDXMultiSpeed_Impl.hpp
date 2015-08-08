@@ -28,6 +28,7 @@ namespace model {
 
 class Schedule;
 class Curve;
+class CoilHeatingDXMultiSpeedStageData;
 
 namespace detail {
 
@@ -65,6 +66,14 @@ namespace detail {
 
     virtual unsigned outletPort() override;
 
+    virtual ModelObject clone(Model model) const override;
+
+    virtual std::vector<ModelObject> children() const override;
+
+    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+
+    virtual bool addToNode(Node & node) override;
+
     //@}
     /** @name Getters */
     //@{
@@ -98,8 +107,6 @@ namespace detail {
     std::string fuelType() const;
 
     int regionnumberforCalculatingHSPF() const;
-
-    // TODO: Handle this object's extensible fields.
 
     //@}
     /** @name Setters */
@@ -141,11 +148,13 @@ namespace detail {
 
     bool setRegionnumberforCalculatingHSPF(int regionnumberforCalculatingHSPF);
 
-    // TODO: Handle this object's extensible fields.
-
     //@}
     /** @name Other */
     //@{
+
+    std::vector<CoilHeatingDXMultiSpeedStageData> stages() const;
+
+    void addStage(const CoilHeatingDXMultiSpeedStageData& stage);
 
     //@}
    protected:

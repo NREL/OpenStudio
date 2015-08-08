@@ -29,6 +29,7 @@ namespace model {
 
 class Schedule;
 class Curve;
+class CoilHeatingDXMultiSpeedStageData;
 
 namespace detail {
 
@@ -89,8 +90,6 @@ class MODEL_API CoilHeatingDXMultiSpeed : public StraightComponent {
 
   int regionnumberforCalculatingHSPF() const;
 
-  // TODO: Handle this object's extensible fields.
-
   //@}
   /** @name Setters */
   //@{
@@ -131,11 +130,15 @@ class MODEL_API CoilHeatingDXMultiSpeed : public StraightComponent {
 
   bool setRegionnumberforCalculatingHSPF(int regionnumberforCalculatingHSPF);
 
-  // TODO: Handle this object's extensible fields.
-
   //@}
   /** @name Other */
   //@{
+
+  /** Return the performance data for each stage. **/
+  std::vector<CoilHeatingDXMultiSpeedStageData> stages() const;
+
+  /** Add a new stage after all of the existing stages **/
+  void addStage(const CoilHeatingDXMultiSpeedStageData& stage);
 
   //@}
  protected:

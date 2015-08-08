@@ -22,12 +22,26 @@
 
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
+#include "CurveQuadratic.hpp"
+#include "CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.hpp"
+#include "CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl.hpp"
+#include "ZoneHVACComponent.hpp"
+#include "HVACComponent.hpp"
+#include "ZoneHVACWaterToAirHeatPump.hpp"
+#include "ZoneHVACWaterToAirHeatPump_Impl.hpp"
+#include "AirLoopHVACUnitarySystem.hpp"
+#include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 
 #include <utilities/idd/OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit_FieldEnums.hxx>
 
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 namespace openstudio {
 namespace model {
@@ -222,6 +236,80 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::EnergyPartLoadFractionCurveName);
   }
 
+  ModelObject CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::clone(Model model) const
+  {
+    auto newCoil = WaterToAirComponent_Impl::clone(model).cast<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit>();
+
+    return newCoil;
+  }
+
+  std::vector<openstudio::IdfObject> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::remove()
+  {
+    if( isRemovable() )
+    {
+      return WaterToAirComponent_Impl::remove();
+    }
+
+    return std::vector<IdfObject>();
+  }
+
+  boost::optional<HVACComponent> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::containingHVACComponent() const
+  {
+    // AirLoopHVACUnitarySystem
+    auto const airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+    for( const auto & airLoopHVACUnitarySystem : airLoopHVACUnitarySystems )
+    {
+      if( boost::optional<HVACComponent> coolingCoil = airLoopHVACUnitarySystem.coolingCoil() )
+      {
+        if( coolingCoil->handle() == this->handle() )
+        {
+          return airLoopHVACUnitarySystem;
+        }
+      }
+    }
+    return boost::none;
+  }
+
+  boost::optional<ZoneHVACComponent> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::containingZoneHVACComponent() const
+  {
+    // ZoneHVACWaterToAirHeatPump
+    auto const zoneHVACWaterToAirHeatPumps = this->model().getConcreteModelObjects<ZoneHVACWaterToAirHeatPump>();
+
+    for( const auto & zoneHVACWaterToAirHeatPump : zoneHVACWaterToAirHeatPumps )
+    {
+      if( boost::optional<HVACComponent> coil = zoneHVACWaterToAirHeatPump.coolingCoil() )
+      {
+        if( coil->handle() == this->handle() )
+        {
+          return zoneHVACWaterToAirHeatPump;
+        }
+      }
+    }
+
+    return boost::none;
+  }
+
+  std::vector<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::speeds() const {
+    std::vector<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData> result;
+    auto groups = extensibleGroups();
+    for( auto group : groups ) {
+      auto target = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitExtensibleFields::SpeedData);
+      if( target ) {
+        if( auto speed = target->optionalCast<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData>() ) {
+          result.push_back(speed.get());
+        }
+      }
+    }
+    return result;
+  }
+
+  void CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::addSpeed(const CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& speed) {
+    auto group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+    OS_ASSERT(! group.empty());
+    group.setPointer(OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitExtensibleFields::SpeedData,speed.handle());
+  }
+
 } // detail
 
 CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit(const Model& model)
@@ -229,33 +317,45 @@ CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::CoilCoolingWaterToAirHeat
 {
   OS_ASSERT(getImpl<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::WatertoRefrigerantHXWaterInletNodeName
-  //     OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::WatertoRefrigerantHXWaterOutletNodeName
-  //     OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::IndoorAirInletNodeName
-  //     OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::IndoorAirOutletNodeName
-  //     OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::EnergyPartLoadFractionCurveName
   bool ok = true;
-  // ok = setHandle();
+  setNominalSpeedLevel(1);
+  autosizeGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
+  autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
+  autosizeRatedWaterFlowRateAtSelectedNominalSpeedLevel();
+  ok = setNominalTimeforCondensatetoBeginLeavingtheCoil(0);
   OS_ASSERT(ok);
-  // ok = setWatertoRefrigerantHXWaterInletNode();
+  ok = setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity(0);
   OS_ASSERT(ok);
-  // ok = setWatertoRefrigerantHXWaterOutletNode();
+  setUseHotGasReheat(false);
+
+  auto partLoadFraction = CurveQuadratic(model);
+  partLoadFraction.setCoefficient1Constant(0.85);
+  partLoadFraction.setCoefficient2x(0.15);
+  partLoadFraction.setCoefficient3xPOW2(0.0);
+  partLoadFraction.setMinimumValueofx(0.0);
+  partLoadFraction.setMaximumValueofx(1.0);
+
+  ok = setEnergyPartLoadFractionCurve(partLoadFraction);
   OS_ASSERT(ok);
-  // ok = setIndoorAirInletNode();
+}
+
+CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit(const Model& model,
+                                                                                                             const Curve& partLoadFraction)
+  : WaterToAirComponent(CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>());
+
+  bool ok = true;
+  setNominalSpeedLevel(1);
+  autosizeGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
+  autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
+  autosizeRatedWaterFlowRateAtSelectedNominalSpeedLevel();
+  ok = setNominalTimeforCondensatetoBeginLeavingtheCoil(0);
   OS_ASSERT(ok);
-  // ok = setIndoorAirOutletNode();
+  ok = setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity(0);
   OS_ASSERT(ok);
-  // setNominalSpeedLevel();
-  // setGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
-  // setRatedAirFlowRateAtSelectedNominalSpeedLevel();
-  // setRatedWaterFlowRateAtSelectedNominalSpeedLevel();
-  // ok = setNominalTimeforCondensatetoBeginLeavingtheCoil();
-  OS_ASSERT(ok);
-  // ok = setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity();
-  OS_ASSERT(ok);
-  // setUseHotGasReheat();
-  // ok = setEnergyPartLoadFractionCurve();
+  setUseHotGasReheat(false);
+  ok = setEnergyPartLoadFractionCurve(partLoadFraction);
   OS_ASSERT(ok);
 }
 
@@ -349,6 +449,14 @@ void CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::setUseHotGasReheat(b
 
 bool CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::setEnergyPartLoadFractionCurve(const Curve& curve) {
   return getImpl<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->setEnergyPartLoadFractionCurve(curve);
+}
+
+std::vector<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::speeds() const {
+  return getImpl<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->speeds();
+}
+
+void CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::addSpeed(const CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& speed) {
+  return getImpl<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->addSpeed(speed);
 }
 
 /// @cond

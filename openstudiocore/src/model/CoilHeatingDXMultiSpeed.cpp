@@ -24,6 +24,12 @@
 #include "Schedule_Impl.hpp"
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "CoilHeatingDXMultiSpeedStageData.hpp"
+#include "CoilHeatingDXMultiSpeedStageData_Impl.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 
@@ -33,6 +39,7 @@
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 namespace openstudio {
 namespace model {
@@ -288,6 +295,71 @@ namespace detail {
     return result;
   }
 
+  ModelObject CoilHeatingDXMultiSpeed_Impl::clone(Model model) const {
+    auto t_clone = StraightComponent_Impl::clone(model).cast<CoilHeatingDXMultiSpeed>();
+
+    auto t_stages = stages();
+    for( auto stage: t_stages ) {
+      auto stageClone = stage.clone(model).cast<CoilHeatingDXMultiSpeedStageData>();
+      t_clone.addStage(stageClone);
+    }
+
+    if ( auto const curve = defrostEnergyInputRatioFunctionofTemperatureCurve() ) {
+      t_clone.setDefrostEnergyInputRatioFunctionofTemperatureCurve( curve.get() );
+    }
+
+    return t_clone;
+  }
+
+  std::vector<ModelObject> CoilHeatingDXMultiSpeed_Impl::children() const {
+    auto children = subsetCastVector<ModelObject>( stages() );
+    if ( auto const curve = defrostEnergyInputRatioFunctionofTemperatureCurve() ) {
+      children.push_back( curve.get() );
+    }
+    return children;
+  }
+
+  std::vector<CoilHeatingDXMultiSpeedStageData> CoilHeatingDXMultiSpeed_Impl::stages() const {
+    std::vector<CoilHeatingDXMultiSpeedStageData> result;
+    auto groups = extensibleGroups();
+    for( auto group: groups ) {
+      auto target = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_Coil_Heating_DX_MultiSpeedExtensibleFields::StageData);
+      if( target ) {
+        if( auto stage = target->optionalCast<CoilHeatingDXMultiSpeedStageData>() ) {
+          result.push_back(stage.get());
+        }
+      }
+    }
+    return result;
+  }
+
+  void CoilHeatingDXMultiSpeed_Impl::addStage(const CoilHeatingDXMultiSpeedStageData& stage) {
+    auto group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+    OS_ASSERT(! group.empty());
+    group.setPointer(OS_Coil_Heating_DX_MultiSpeedExtensibleFields::StageData,stage.handle());
+  }
+
+  boost::optional<HVACComponent> CoilHeatingDXMultiSpeed_Impl::containingHVACComponent() const
+  {
+    // AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed
+    {
+      auto systems = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
+
+      for( const auto & system : systems ) {
+        auto heatingCoil = system.heatingCoil();
+        if( heatingCoil.handle() == this->handle() ) {
+          return system;
+        }
+      }
+    }
+    return boost::none;
+  }
+
+  bool CoilHeatingDXMultiSpeed_Impl::addToNode(Node & node)
+  {
+    return false;
+  }
+
 } // detail
 
 CoilHeatingDXMultiSpeed::CoilHeatingDXMultiSpeed(const Model& model)
@@ -295,36 +367,30 @@ CoilHeatingDXMultiSpeed::CoilHeatingDXMultiSpeed(const Model& model)
 {
   OS_ASSERT(getImpl<detail::CoilHeatingDXMultiSpeed_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_Coil_Heating_DX_MultiSpeedFields::AirInletNodeName
-  //     OS_Coil_Heating_DX_MultiSpeedFields::AirOutletNodeName
   bool ok = true;
-  // ok = setHandle();
+  auto always_on = model.alwaysOnDiscreteSchedule();
+  ok = setAvailabilitySchedule( always_on );
   OS_ASSERT(ok);
-  // ok = setAirInletNode();
+  setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-8.0);
+  ok = setCrankcaseHeaterCapacity(0.0);
   OS_ASSERT(ok);
-  // ok = setAirOutletNode();
+  ok = setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
   OS_ASSERT(ok);
-  // setMinimumOutdoorDryBulbTemperatureforCompressorOperation();
-  // ok = setCrankcaseHeaterCapacity();
+  ok = setMaximumOutdoorDryBulbTemperatureforDefrostOperation(5.0);
   OS_ASSERT(ok);
-  // ok = setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation();
+  ok = setDefrostStrategy("Resistive");
   OS_ASSERT(ok);
-  // ok = setMaximumOutdoorDryBulbTemperatureforDefrostOperation();
+  ok = setDefrostControl("OnDemand");
   OS_ASSERT(ok);
-  // ok = setDefrostStrategy();
+  ok = setDefrostTimePeriodFraction(0.058333);
   OS_ASSERT(ok);
-  // ok = setDefrostControl();
+  autosizeResistiveDefrostHeaterCapacity();
+  setApplyPartLoadFractiontoSpeedsGreaterthan1(false);
+  ok = setFuelType("NaturalGas");
   OS_ASSERT(ok);
-  // ok = setDefrostTimePeriodFraction();
+  ok = setRegionnumberforCalculatingHSPF(4);
   OS_ASSERT(ok);
-  // ok = setResistiveDefrostHeaterCapacity();
-  OS_ASSERT(ok);
-  // setApplyPartLoadFractiontoSpeedsGreaterthan1();
-  // ok = setFuelType();
-  OS_ASSERT(ok);
-  // ok = setRegionnumberforCalculatingHSPF();
-  OS_ASSERT(ok);
+
 }
 
 IddObjectType CoilHeatingDXMultiSpeed::iddObjectType() {
@@ -476,6 +542,14 @@ bool CoilHeatingDXMultiSpeed::setFuelType(std::string fuelType) {
 
 bool CoilHeatingDXMultiSpeed::setRegionnumberforCalculatingHSPF(int regionnumberforCalculatingHSPF) {
   return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setRegionnumberforCalculatingHSPF(regionnumberforCalculatingHSPF);
+}
+
+std::vector<CoilHeatingDXMultiSpeedStageData> CoilHeatingDXMultiSpeed::stages() const {
+  return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->stages();
+}
+
+void CoilHeatingDXMultiSpeed::addStage(const CoilHeatingDXMultiSpeedStageData& stage) {
+  return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->addStage(stage);
 }
 
 /// @cond

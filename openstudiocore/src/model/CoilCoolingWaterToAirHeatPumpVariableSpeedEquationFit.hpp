@@ -28,6 +28,7 @@ namespace openstudio {
 namespace model {
 
 class Curve;
+class CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData;
 
 namespace detail {
 
@@ -42,6 +43,8 @@ class MODEL_API CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit : public W
   //@{
 
   explicit CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit(const Model& model);
+
+  explicit CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit(const Model& model, const Curve& partLoadFraction);
 
   virtual ~CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit() {}
 
@@ -74,8 +77,6 @@ class MODEL_API CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit : public W
 
   Curve energyPartLoadFractionCurve() const;
 
-  // TODO: Handle this object's extensible fields.
-
   //@}
   /** @name Setters */
   //@{
@@ -102,11 +103,13 @@ class MODEL_API CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit : public W
 
   bool setEnergyPartLoadFractionCurve(const Curve& curve);
 
-  // TODO: Handle this object's extensible fields.
-
   //@}
   /** @name Other */
   //@{
+
+  std::vector<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData> speeds() const;
+
+  void addSpeed(const CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& speed);
 
   //@}
  protected:
