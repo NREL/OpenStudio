@@ -113,7 +113,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterStratified( Wa
   }
 
   // Heater 1 Setpoint Temperature Schedule Name
-  if( schedule = modelObject.heater1SetpointTemperatureSchedule() )
+  if( ( schedule = modelObject.heater1SetpointTemperatureSchedule() ) )
   {
     auto _schedule = translateAndMapModelObject(schedule.get());
 
@@ -153,7 +153,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterStratified( Wa
   }
 
   // Heater 2 Setpoint Temperature Schedule Name
-  if( schedule = modelObject.heater2SetpointTemperatureSchedule() )
+  if( ( schedule = modelObject.heater2SetpointTemperatureSchedule() ) )
   {
     auto _schedule = translateAndMapModelObject(schedule.get());
 
