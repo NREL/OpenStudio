@@ -2511,55 +2511,60 @@ bool EpwFile::parse(bool storeData)
 
 bool EpwFile::parseLocation(const std::string& line)
 {
-  bool result = true;
+  bool result = false;
 
   // LOCATION,Chicago Ohare Intl Ap,IL,USA,TMY3,725300,41.98,-87.92,-6.0,201.0
-  std::regex locationRegex("^LOCATION,(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),([^,]*).*?$");
-  std::smatch matches;
-  if (std::regex_search(line, matches, locationRegex)){
-    std::string city = std::string(matches[1].first, matches[1].second); boost::trim(city);
-    std::string stateProvinceRegion = std::string(matches[2].first, matches[2].second); boost::trim(stateProvinceRegion);
-    std::string country = std::string(matches[3].first, matches[3].second); boost::trim(country);
-    std::string dataSource = std::string(matches[4].first, matches[4].second); boost::trim(dataSource);
-    std::string wmoNumber = std::string(matches[5].first, matches[5].second); boost::trim(wmoNumber);
-    std::string latitude = std::string(matches[6].first, matches[6].second); boost::trim(latitude);
-    std::string longitude = std::string(matches[7].first, matches[7].second); boost::trim(longitude);
-    std::string timeZone = std::string(matches[8].first, matches[8].second); boost::trim(timeZone);
-    std::string elevation = std::string(matches[9].first, matches[9].second); boost::trim(elevation);
-
-    m_city = city;
-    m_stateProvinceRegion = stateProvinceRegion;
-    m_country = country;
-    m_dataSource = dataSource;
-    m_wmoNumber = wmoNumber;
-    try{
-      m_latitude = std::stod(latitude);
-    }catch(...){
-      result = false;
-    }
-    try{
-      m_longitude = std::stod(longitude);
-    }catch(...){
-      result = false;
-    }
-    try{
-      m_timeZone = std::stod(timeZone);
-    }catch(...){
-      result = false;
-    }
-    try{
-      m_elevation = std::stod(elevation);
-    }catch(...){
-      result = false;
-    }
-
-  }else{
-    // can't read line
-    LOG(Error, "Could not read location from EPW file '" << m_path << "'");
-    result = false;
+  // LOCATION, city, stateProvinceRegion, country, dataSource, wmoNumber, latitude, longitude, timeZone, elevation
+  std::vector<std::string> split = splitString(line, ',');
+  if(split.size() < 10) {
+    LOG(Error, "Expected 10 location fields rather than the " << split.size() << " fields in EPW file '" << m_path << "'");
+    return false;
+  } else if(split.size() > 10) {
+    LOG(Warn, "Expected 10 location fields rather than the " << split.size() << " fields in EPW file '" << m_path << "', additional fields will be ignored");
   }
 
-  return(result);
+  if(split[0] != "LOCATION") {
+    LOG(Error, "Missing LOCATION specifier in EPW file '" << m_path << "'");
+    return false;
+  }
+
+  m_city = split[1]; boost::trim(m_city);
+  m_stateProvinceRegion = split[2]; boost::trim(m_stateProvinceRegion);
+  m_country = split[3]; boost::trim(m_country);
+  m_dataSource = split[4]; boost::trim(m_dataSource);
+  m_wmoNumber = split[5]; boost::trim(m_wmoNumber);
+
+  std::string latitude = split[6]; boost::trim(latitude);
+  std::string longitude = split[7]; boost::trim(longitude);
+  std::string timeZone = split[8]; boost::trim(timeZone);
+  std::string elevation = split[9]; boost::trim(elevation);
+
+  try{
+    m_latitude = std::stod(latitude);
+  } catch(...) {
+    LOG(Error, "Non-numerical latitude in EPW file '" << m_path << "'");
+    return false;
+  }
+  try{
+    m_longitude = std::stod(longitude);
+  } catch(...) {
+    LOG(Error, "Non-numerical longitude in EPW file '" << m_path << "'");
+    return false;
+  }
+  try{
+    m_timeZone = std::stod(timeZone);
+  } catch(...) {
+    LOG(Error, "Non-numerical timezone in EPW file '" << m_path << "'");
+    return false;
+  }
+  try{
+    m_elevation = std::stod(elevation);
+  } catch(...) {
+    LOG(Error, "Non-numerical elevation in EPW file '" << m_path << "'");
+    return false;
+  }
+
+  return true;
 }
 
 bool EpwFile::parseDataPeriod(const std::string& line)
