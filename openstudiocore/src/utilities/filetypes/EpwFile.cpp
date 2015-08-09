@@ -2510,8 +2510,6 @@ bool EpwFile::parse(bool storeData)
 
 bool EpwFile::parseLocation(const std::string& line)
 {
-  bool result = false;
-
   // LOCATION,Chicago Ohare Intl Ap,IL,USA,TMY3,725300,41.98,-87.92,-6.0,201.0
   // LOCATION, city, stateProvinceRegion, country, dataSource, wmoNumber, latitude, longitude, timeZone, elevation
   std::vector<std::string> split = splitString(line, ',');
@@ -2568,8 +2566,6 @@ bool EpwFile::parseLocation(const std::string& line)
 
 bool EpwFile::parseDataPeriod(const std::string& line)
 {
-  bool result = true;
-
   // DATA PERIODS,1,1,Data,Sunday, 1/ 1,12/31
   // DATA PERIODS, nDataPeriods, timeStep, startDayOfWeek, startDate, endDate
   // NOTE THAT ONLY ONE DATA PERIOD IS SUPPORTED
@@ -2626,7 +2622,7 @@ bool EpwFile::parseDataPeriod(const std::string& line)
     split = splitString(startDate, '/');
     if(split.size() != 2 && split.size() != 3) {
       LOG(Error, "Bad data period start date format '" << startDate << "' in EPW file '" << m_path << "'");
-      result = false;
+      return false;
     }
     int month = std::stoi(split[0]);
     int day = std::stoi(split[1]);
@@ -2639,7 +2635,7 @@ bool EpwFile::parseDataPeriod(const std::string& line)
     }
   } catch(...) {
     LOG(Error, "Failed to parse data period start date from '" << startDate << "' in EPW file '" << m_path << "'");
-    result = false;
+    return false;
   }
 
   try{
@@ -2647,7 +2643,7 @@ bool EpwFile::parseDataPeriod(const std::string& line)
     split = splitString(endDate, '/');
     if(split.size() != 2 && split.size() != 3) {
       LOG(Error, "Bad data period end date format '" << startDate << "' in EPW file '" << m_path << "'");
-      result = false;
+      return false;
     }
     int month = std::stoi(split[0]);
     int day = std::stoi(split[1]);
@@ -2661,7 +2657,7 @@ bool EpwFile::parseDataPeriod(const std::string& line)
   }
   catch(...) {
     LOG(Error, "Failed to parse data period end date from '" << startDate << "' in EPW file '" << m_path << "'");
-    result = false;
+    return false;
   }
 
   return true;
