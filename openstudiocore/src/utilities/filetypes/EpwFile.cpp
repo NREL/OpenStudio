@@ -2572,88 +2572,100 @@ bool EpwFile::parseDataPeriod(const std::string& line)
   bool result = true;
 
   // DATA PERIODS,1,1,Data,Sunday, 1/ 1,12/31
-  std::regex dataPeriodRegex("^DATA PERIODS,(.*?),(.*?),(.*?),(.*?),(.*?),([^,]*).*?$");
-  std::smatch matches;
-  if (std::regex_search(line, matches, dataPeriodRegex)){
-    std::string nDataPeriods =  std::string(matches[1].first, matches[1].second); boost::trim(nDataPeriods);
-    std::string timeStep = std::string(matches[2].first, matches[2].second); boost::trim(timeStep);
-    std::string startDayOfWeek = std::string(matches[4].first, matches[4].second); boost::trim(startDayOfWeek);
-    std::string startDate = std::string(matches[5].first, matches[5].second); boost::trim(startDate);
-    std::string endDate = std::string(matches[6].first, matches[6].second); boost::trim(endDate);
+  // DATA PERIODS, nDataPeriods, timeStep, startDayOfWeek, startDate, endDate
+  // NOTE THAT ONLY ONE DATA PERIOD IS SUPPORTED
+  std::vector<std::string> split = splitString(line, ',');
+  if(split.size() < 7) {
+    LOG(Error, "Expected 7 data period fields rather than the " << split.size() << " fields in EPW file '" << m_path << "'");
+    return false;
+  } else if(split.size() > 7) {
+    LOG(Warn, "Expected 7 data period fields rather than the " << split.size() << " fields in EPW file '" << m_path << "', additional fields will be ignored");
+  }
 
-    try{
-      int N = std::stoi(nDataPeriods);
-      if(N>1)
-      {
-        LOG(Error, "More than one data period in EPW file '" << m_path << "', which is not supported");
-        result = false;
-      }
-    }catch(...){
-      result = false;
-    }
-    try{
-      m_recordsPerHour = std::stoi(timeStep);
-      if((60 % m_recordsPerHour) != 0) {
-        LOG(Error, "Number of records per hour of " << m_recordsPerHour << " does not result in integral number of minutes between records in EPW file '" << m_path<<"'");
-        result = false;
-      }
-    }catch(...){
-      result = false;
-    }
-    try{
-      m_startDayOfWeek = DayOfWeek(startDayOfWeek);
-    }catch(...){
-      result = false;
-    }
-    try{
-      // Regex: Capture month and day, optional capture of year
-      std::regex dateRegex("^(.*?)/(.*?)(?:/(.*?))?$");
-      if (std::regex_search(startDate, matches, dateRegex)){
-        int month = std::stoi(std::string(matches[1].first, matches[1].second));
-        int day = std::stoi(std::string(matches[2].first, matches[2].second));
-        if (matches[3].matched) {
-          int year = std::stoi(std::string(matches[3].first, matches[3].second));
-          m_startDate = Date(monthOfYear(month), day, year);
-          m_startDateActualYear = year;
-        } else {
-          m_startDate = Date(monthOfYear(month), day);
-        }
-      } else {
-        LOG(Error, "Failed to parse data period start date from \'" << startDate << "\'");
-        result = false;
-      }
-    }catch(...){
-      result = false;
-    }
-    try{
-      // Regex: Capture month and day, optional capture of year
-      std::regex dateRegex("^(.*?)/(.*?)(?:/(.*?))?$");
-      if (std::regex_search(endDate, matches, dateRegex)){
-        int month = std::stoi(std::string(matches[1].first, matches[1].second));
-        int day = std::stoi(std::string(matches[2].first, matches[2].second));
-        if (matches[3].matched) {
-          int year = std::stoi(std::string(matches[3].first, matches[3].second));
-          m_endDate = Date(monthOfYear(month), day, year);
-          m_endDateActualYear = year;
-        }
-        else {
-          m_endDate = Date(monthOfYear(month), day);
-        }
-      } else {
-        LOG(Error, "Failed to parse data period end date from \'" << endDate << "\'");
-        result = false;
-      }
-    }catch(...){
-      result = false;
-    }
+  if(split[0] != "DATA PERIODS") {
+    LOG(Error, "Missing DATA PERIODS specifier in EPW file '" << m_path << "'");
+    return false;
+  }
 
-  }else{
-    // can't read line
-    LOG(Error, "Could not read data period from EPW file '" << m_path << "'");
+  std::string nDataPeriods =  split[1]; boost::trim(nDataPeriods);
+  std::string timeStep = split[2]; boost::trim(timeStep);
+  std::string startDayOfWeek = split[4]; boost::trim(startDayOfWeek);
+  std::string startDate = split[5]; boost::trim(startDate);
+  std::string endDate = split[6]; boost::trim(endDate);
+
+  try{
+    int N = std::stoi(nDataPeriods);
+    if(N > 1) {
+      LOG(Error, "More than one data period in EPW file '" << m_path << "', which is not supported");
+      return false;
+    }
+  } catch(...) {
+    LOG(Error, "Non-integral number of data periods in EPW file '" << m_path << "'");
+    return false;
+  }
+
+  try{
+    m_recordsPerHour = std::stoi(timeStep);
+    if((60 % m_recordsPerHour) != 0) {
+      LOG(Error, "Number of records per hour of " << m_recordsPerHour << " does not result in integral number of minutes between records in EPW file '" << m_path << "'");
+      return false;
+    }
+  } catch(...) {
+    LOG(Error, "Non-integral timestep in EPW file '" << m_path << "'");
+    return false;
+  }
+
+  try{
+    m_startDayOfWeek = DayOfWeek(startDayOfWeek);
+  } catch(...) {
+    LOG(Error, "Bad start day of week in EPW file '" << m_path << "'");
+    return false;
+  }
+
+  try{
+    // Parse start month and day, optional year
+    split = splitString(startDate, '/');
+    if(split.size() != 2 && split.size() != 3) {
+      LOG(Error, "Bad data period start date format '" << startDate << "' in EPW file '" << m_path << "'");
+      result = false;
+    }
+    int month = std::stoi(split[0]);
+    int day = std::stoi(split[1]);
+    if(split.size() == 3) {
+      int year = std::stoi(split[1]);
+      m_startDate = Date(monthOfYear(month), day, year);
+      m_startDateActualYear = year;
+    } else {
+      m_startDate = Date(monthOfYear(month), day);
+    }
+  } catch(...) {
+    LOG(Error, "Failed to parse data period start date from '" << startDate << "' in EPW file '" << m_path << "'");
     result = false;
   }
 
-  return(result);
+  try{
+    // Parse end month and day, optional year
+    split = splitString(endDate, '/');
+    if(split.size() != 2 && split.size() != 3) {
+      LOG(Error, "Bad data period end date format '" << startDate << "' in EPW file '" << m_path << "'");
+      result = false;
+    }
+    int month = std::stoi(split[0]);
+    int day = std::stoi(split[1]);
+    if(split.size() == 3) {
+      int year = std::stoi(split[1]);
+      m_endDate = Date(monthOfYear(month), day, year);
+      m_endDateActualYear = year;
+    } else {
+      m_endDate = Date(monthOfYear(month), day);
+    }
+  }
+  catch(...) {
+    LOG(Error, "Failed to parse data period end date from '" << startDate << "' in EPW file '" << m_path << "'");
+    result = false;
+  }
+
+  return true;
 }
 
 bool EpwFile::isActual() const
