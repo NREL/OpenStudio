@@ -31,7 +31,6 @@
 #include <QTextStream>
 
 #include <cmath>
-#include <regex>
 #include <string>
 #include <fstream>
 
