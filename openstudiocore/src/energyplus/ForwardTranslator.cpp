@@ -1364,6 +1364,48 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translatePlantEquipmentOperationHeatingLoad(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_OutdoorDryBulb :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationOutdoorDryBulb>();
+      retVal = translatePlantEquipmentOperationOutdoorDryBulb(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_OutdoorWetBulb :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationOutdoorWetBulb>();
+      retVal = translatePlantEquipmentOperationOutdoorWetBulb(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_OutdoorDewpoint :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationOutdoorDewpoint>();
+      retVal = translatePlantEquipmentOperationOutdoorDewpoint(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_OutdoorDryBulbDifference :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationOutdoorDryBulbDifference>();
+      retVal = translatePlantEquipmentOperationOutdoorDryBulbDifference(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_OutdoorWetBulbDifference :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationOutdoorWetBulbDifference>();
+      retVal = translatePlantEquipmentOperationOutdoorWetBulbDifference(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_OutdoorDewpointDifference :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationOutdoorDewpointDifference>();
+      retVal = translatePlantEquipmentOperationOutdoorDewpointDifference(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_OutdoorRelativeHumidity :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationOutdoorRelativeHumidity>();
+      retVal = translatePlantEquipmentOperationOutdoorRelativeHumidity(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_Pump_ConstantSpeed :
     {
       PumpConstantSpeed pump = modelObject.cast<PumpConstantSpeed>();

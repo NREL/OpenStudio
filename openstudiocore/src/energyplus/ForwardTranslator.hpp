@@ -167,6 +167,13 @@ class PipeAdiabatic;
 class PlantLoop;
 class PlantEquipmentOperationCoolingLoad;
 class PlantEquipmentOperationHeatingLoad;
+class PlantEquipmentOperationOutdoorDryBulb;
+class PlantEquipmentOperationOutdoorWetBulb;
+class PlantEquipmentOperationOutdoorDewpoint;
+class PlantEquipmentOperationOutdoorRelativeHumidity;
+class PlantEquipmentOperationOutdoorDryBulbDifference;
+class PlantEquipmentOperationOutdoorWetBulbDifference;
+class PlantEquipmentOperationOutdoorDewpointDifference;
 class PortList;
 class PumpConstantSpeed;
 class PumpVariableSpeed;
@@ -607,6 +614,20 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translatePlantEquipmentOperationCoolingLoad( model::PlantEquipmentOperationCoolingLoad & modelObject );
 
   boost::optional<IdfObject> translatePlantEquipmentOperationHeatingLoad( model::PlantEquipmentOperationHeatingLoad & modelObject );
+
+  boost::optional<IdfObject> translatePlantEquipmentOperationOutdoorDryBulb( model::PlantEquipmentOperationOutdoorDryBulb & modelObject );
+
+  boost::optional<IdfObject> translatePlantEquipmentOperationOutdoorWetBulb( model::PlantEquipmentOperationOutdoorWetBulb & modelObject );
+
+  boost::optional<IdfObject> translatePlantEquipmentOperationOutdoorDewpoint( model::PlantEquipmentOperationOutdoorDewpoint & modelObject );
+
+  boost::optional<IdfObject> translatePlantEquipmentOperationOutdoorRelativeHumidity( model::PlantEquipmentOperationOutdoorRelativeHumidity & modelObject );
+
+  boost::optional<IdfObject> translatePlantEquipmentOperationOutdoorDryBulbDifference( model::PlantEquipmentOperationOutdoorDryBulbDifference & modelObject );
+
+  boost::optional<IdfObject> translatePlantEquipmentOperationOutdoorWetBulbDifference( model::PlantEquipmentOperationOutdoorWetBulbDifference & modelObject );
+
+  boost::optional<IdfObject> translatePlantEquipmentOperationOutdoorDewpointDifference( model::PlantEquipmentOperationOutdoorDewpointDifference & modelObject );
 
   boost::optional<IdfObject> translatePortList( model::PortList & modelObject );
 
