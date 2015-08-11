@@ -78,12 +78,16 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
     # assign the user inputs to variables
     apply_schedules = runner.getStringArgumentValue('apply_schedules', user_arguments)
-    #apply_schedules = (apply_schedules == 'Yes')
     
     write_sql = runner.getStringArgumentValue('write_sql', user_arguments)
-    #write_sql = (write_sql == 'Yes')
+
+		if apply_schedules == "Yes" && write_sql == "No"
+			puts "lighting power schedules requested, will write Radiance sql results file"
+			write_sql = "Yes"
+		end
 
     use_cores = runner.getStringArgumentValue('use_cores', user_arguments)
+
 
     # Energyplus "pre-run" model dir
     epout_dir = "eplus_preprocess"
@@ -256,11 +260,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 		FileUtils.copy_entry("#{epout_dir}/4-ModelToRad-0", rad_dir)
 		FileUtils.cp("#{epout_dir}/3-EnergyPlus-0/eplusout.sql", "#{rad_dir}/sql")
 
-		
-#		def calculateDaylightCoeffecients(rad_dir, t_options, t_space_names_to_calculate, t_radMaps, t_opts_map, t_simCores, t_catCommand)
-		def calculateDaylightCoeffecients(radPath, t_sim_cores, t_catCommand)
-
-
 		# Read simulation settings from model export 
 		# TODO: read settings directly from model
 		options_tregVars = "-e MF:1 -f tregenza.cal -b tbin -bn Ntbins" 			## TESTING (reset to empty)
@@ -268,8 +267,13 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 		options_skyvecDensity = "1"
 		options_dmx = "-ab 1 -ad 128 -as 56 -dj 1 -dp 1 -dt 0.1 -dc 0.1 -lw 0.1 " 	## TESTING (reset to empty)
 		options_vmx = "-ab 1 -ad 128 -as 56 -dj 1 -dp 1 -dt 0.1 -dc 0.1 -lw 0.1"		## TESTING (reset to empty)
-		
-		puts "first call: #{options_skyvecDensity}"
+
+
+#		def calculateDaylightCoeffecients(rad_dir, t_options, t_space_names_to_calculate, t_radMaps, t_opts_map, t_simCores, t_catCommand)
+		def calculateDaylightCoeffecients(radPath, t_sim_cores, t_catCommand, options_tregVars, options_klemsDensity, options_skyvecDensity, options_dmx, options_vmx)
+
+
+			puts "first call: #{options_skyvecDensity}"
 
 
 # UNCOMMENT WHEN DONE TESTING
@@ -1280,6 +1284,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 		end # makeSchedules()
 
 
+		## ## ## ## ## ##
+
 
 		# actually do the thing
 		
@@ -1458,12 +1464,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 		end
 
 		# get the daylight coefficient matrices
-		calculateDaylightCoeffecients(radPath, sim_cores, catCommand)
-
-		# TODO remove this breakpoint!
-		options_skyvecDensity = "1"
-		puts "still hard-coded options_skyvecDensity: #{options_skyvecDensity}"
-
+		calculateDaylightCoeffecients(radPath, sim_cores, catCommand, options_tregVars, options_klemsDensity, options_skyvecDensity, options_dmx, options_vmx)
 
 		# make merged building-wide illuminance schedule(s)
 		values, dcVectors = runSimulation(space_names_to_calculate, sqlFile, sim_cores, options_skyvecDensity, site_latitude, site_longitude, \
