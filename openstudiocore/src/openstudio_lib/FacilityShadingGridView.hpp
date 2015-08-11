@@ -58,9 +58,9 @@ namespace openstudio{
 
     REGISTER_LOGGER("openstudio.FacilityShadingGridView");
 
-    virtual void addObject(const openstudio::IddObjectType& iddObjectType);
+    virtual void addObject(const openstudio::IddObjectType& iddObjectType) override;
 
-    virtual void purgeObjects(const openstudio::IddObjectType& iddObjectType);
+    virtual void purgeObjects(const openstudio::IddObjectType& iddObjectType) override;
 
     void filterChanged();
 

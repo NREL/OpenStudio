@@ -47,9 +47,9 @@ namespace openstudio{
 
     REGISTER_LOGGER("openstudio.FacilityStoriesGridView");
 
-    virtual void addObject(const IddObjectType& iddObjectType);
+    virtual void addObject(const IddObjectType& iddObjectType) override;
 
-    virtual void purgeObjects(const IddObjectType& iddObjectType);
+    virtual void purgeObjects(const IddObjectType& iddObjectType) override;
 
     void filterChanged();
 

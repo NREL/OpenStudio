@@ -371,6 +371,8 @@ namespace openstudio {
     model::Model model,
     std::vector<model::ModelObject> modelObjects)
     : QObject(),
+    m_iddObjectType(iddObjectType),
+    m_modelObjects(modelObjects),
     m_categoriesAndFields(std::vector<std::pair<QString, std::vector<QString> > >()),
     m_baseConcepts(std::vector<QSharedPointer<BaseConcept> >()),
     m_horizontalHeader(std::vector<QWidget *>()),
@@ -381,8 +383,6 @@ namespace openstudio {
     m_customFields(std::vector<QString>()),
     m_model(model),
     m_isIP(isIP),
-    m_modelObjects(modelObjects),
-    m_iddObjectType(iddObjectType),
     m_horizontalHeaderBtnGrp(nullptr),
     m_headerText(headerText),
     m_objectSelector(std::make_shared<ObjectSelector>(this))
