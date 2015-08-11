@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_MODELSUBTABVIEW_HPP
-#define OPENSTUDIO_MODELSUBTABVIEW_HPP
+#ifndef OPENSTUDIO_GRIDVIEWSUBTAB_HPP
+#define OPENSTUDIO_GRIDVIEWSUBTAB_HPP
 
 #include "../shared_gui_components/OSGridController.hpp"
 #include "../shared_gui_components/OSGridView.hpp"
@@ -117,5 +117,5 @@ class GridViewSubTab : public QWidget
 
 } // openstudio
 
-#endif // OPENSTUDIO_MODELSUBTABVIEW_HPP
+#endif // OPENSTUDIO_GRIDVIEWSUBTAB_HPP
 

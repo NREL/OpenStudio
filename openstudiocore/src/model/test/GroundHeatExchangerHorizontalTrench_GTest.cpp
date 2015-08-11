@@ -18,9 +18,9 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/GroundHeatExchangerHorizontalTrench.hpp>
-#include <model/GroundHeatExchangerHorizontalTrench_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../GroundHeatExchangerHorizontalTrench.hpp"
+#include "../GroundHeatExchangerHorizontalTrench_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

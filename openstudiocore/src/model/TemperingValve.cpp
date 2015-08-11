@@ -17,23 +17,23 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/TemperingValve.hpp>
-#include <model/TemperingValve_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Mixer.hpp>
-#include <model/Mixer_Impl.hpp>
-#include <model/PumpConstantSpeed.hpp>
-#include <model/PumpConstantSpeed_Impl.hpp>
-#include <model/PumpVariableSpeed.hpp>
-#include <model/PumpVariableSpeed_Impl.hpp>
-#include <model/HeaderedPumpsConstantSpeed.hpp>
-#include <model/HeaderedPumpsConstantSpeed_Impl.hpp>
-#include <model/HeaderedPumpsVariableSpeed.hpp>
-#include <model/HeaderedPumpsVariableSpeed_Impl.hpp>
+#include "TemperingValve.hpp"
+#include "TemperingValve_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "Mixer.hpp"
+#include "Mixer_Impl.hpp"
+#include "PumpConstantSpeed.hpp"
+#include "PumpConstantSpeed_Impl.hpp"
+#include "PumpVariableSpeed.hpp"
+#include "PumpVariableSpeed_Impl.hpp"
+#include "HeaderedPumpsConstantSpeed.hpp"
+#include "HeaderedPumpsConstantSpeed_Impl.hpp"
+#include "HeaderedPumpsVariableSpeed.hpp"
+#include "HeaderedPumpsVariableSpeed_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_TemperingValve_FieldEnums.hxx>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

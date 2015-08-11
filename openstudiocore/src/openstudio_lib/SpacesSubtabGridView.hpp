@@ -18,8 +18,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_SpacesSubtabGridView_HPP
-#define OPENSTUDIO_SpacesSubtabGridView_HPP
+#ifndef OPENSTUDIO_SPACESSUBTABGRIDVIEW_HPP
+#define OPENSTUDIO_SPACESSUBTABGRIDVIEW_HPP
 
 #include "../shared_gui_components/OSGridController.hpp"
 
@@ -163,4 +163,4 @@ namespace openstudio{
 
 } // openstudio
 
-#endif // OPENSTUDIO_SpacesSubtabGridView_HPP
+#endif // OPENSTUDIO_SPACESSUBTABGRIDVIEW_HPP

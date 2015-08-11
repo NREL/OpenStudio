@@ -18,9 +18,9 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/CoilPerformanceDXCooling.hpp>
-#include <model/CoilPerformanceDXCooling_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../CoilPerformanceDXCooling.hpp"
+#include "../CoilPerformanceDXCooling_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
