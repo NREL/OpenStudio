@@ -18,15 +18,15 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/WaterHeaterHeatPump.hpp>
-#include <model/WaterHeaterHeatPump_Impl.hpp>
-#include <model/FanOnOff.hpp>
-#include <model/FanOnOff_Impl.hpp>
-#include <model/CoilWaterHeatingAirToWaterHeatPump.hpp>
-#include <model/CoilWaterHeatingAirToWaterHeatPump_Impl.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../WaterHeaterHeatPump.hpp"
+#include "../WaterHeaterHeatPump_Impl.hpp"
+#include "../FanOnOff.hpp"
+#include "../FanOnOff_Impl.hpp"
+#include "../CoilWaterHeatingAirToWaterHeatPump.hpp"
+#include "../CoilWaterHeatingAirToWaterHeatPump_Impl.hpp"
+#include "../HVACComponent.hpp"
+#include "../HVACComponent_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

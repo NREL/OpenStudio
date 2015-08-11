@@ -875,12 +875,12 @@ void AlternativeModelMeasureListController::addAlternativeModelMeasure()
 
   QJsonObject newMeasure;
   newMeasure.insert("uuid", UUID::createUuid().toString());
-  newMeasure.insert("displayName", "New User Defined Measure");
-  newMeasure.insert("description", "New User Defined Measure Description");
-  newMeasure.insert("taxonomyTag", "Envelope.Form");
+  newMeasure.insert("displayName", QString("New User Defined Measure"));
+  newMeasure.insert("description", QString("New User Defined Measure Description"));
+  newMeasure.insert("taxonomyTag", QString("Envelope.Form"));
   newMeasure.insert("capitalCost", 0.0);
 
-  modelMeasures << newMeasure;
+  modelMeasures.push_back(newMeasure);
 
   setModelMeasures(modelMeasures, true);
 }
@@ -924,7 +924,7 @@ void AlternativeModelMeasureListController::alternativeModelMeasureItemChanged()
 
     } 
 
-    updatedModelMeasures << jsonObject;
+    updatedModelMeasures.push_back(jsonObject);
   }
 
   setModelMeasures(updatedModelMeasures, false);
@@ -956,7 +956,7 @@ void AlternativeModelMeasureListController::alternativeModelMeasureItemRemoved()
   for (QJsonValue jsonValue : modelMeasures) {
     QJsonObject jsonObject = jsonValue.toObject();
     if (jsonObject["uuid"].toString() != alternativeModelMeasureItem->uuid()){
-      newModelMeasures << jsonObject;
+      newModelMeasures.push_back(jsonObject);
     }
   }
 

@@ -36,8 +36,8 @@ class OSComboBox;
 class OSDropZone;
 class OSIntegerEdit2;
 class OSLineEdit;
-class OSQuantityEdit2;
 class OSQuantityEdit;
+class OSQuantityEdit2;
 class OSSwitch2;
 
 class BuildingSpaceTypeVectorController : public ModelObjectVectorController
@@ -110,6 +110,7 @@ class BuildingInspectorView : public ModelObjectInspectorView
   public:
 
     BuildingInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = nullptr );
+
     virtual ~BuildingInspectorView() {}
 
   signals:
@@ -125,6 +126,7 @@ class BuildingInspectorView : public ModelObjectInspectorView
   protected slots:
 
     void editStandardsBuildingType(const QString & text);
+
     void standardsBuildingTypeChanged(const QString & text);
 
   private:
@@ -136,22 +138,21 @@ class BuildingInspectorView : public ModelObjectInspectorView
     void populateStandardsBuildingTypes();
 
     boost::optional<openstudio::model::Building> m_building;
-
-    OSLineEdit* m_nameEdit;
-    QComboBox* m_standardsBuildingTypeComboBox;
-    BuildingSpaceTypeVectorController* m_spaceTypeVectorController;
-    OSDropZone* m_spaceTypeDropZone;
-    BuildingDefaultConstructionSetVectorController* m_defaultConstructionSetVectorController;
-    OSDropZone* m_defaultConstructionSetDropZone;
-    BuildingDefaultScheduleSetVectorController* m_defaultScheduleSetVectorController;
-    OSDropZone* m_defaultScheduleSetDropZone;
-    OSQuantityEdit* m_northAxisEdit;
-    OSIntegerEdit2* m_numberLivingUnits;
-    OSIntegerEdit2* m_numberStories;
-    OSIntegerEdit2* m_numberAboveGroundStories;
-    OSSwitch2* m_relocatable;
+    BuildingDefaultConstructionSetVectorController* m_defaultConstructionSetVectorController = nullptr;
+    BuildingDefaultScheduleSetVectorController* m_defaultScheduleSetVectorController = nullptr;
+    BuildingSpaceTypeVectorController* m_spaceTypeVectorController = nullptr;
+    OSDropZone* m_defaultConstructionSetDropZone = nullptr;
+    OSDropZone* m_defaultScheduleSetDropZone = nullptr;
+    OSDropZone* m_spaceTypeDropZone = nullptr;
+    OSIntegerEdit2* m_numberAboveGroundStories = nullptr;
+    OSIntegerEdit2* m_numberLivingUnits = nullptr;
+    OSIntegerEdit2* m_numberStories = nullptr;
+    OSLineEdit* m_nameEdit = nullptr;
+    OSQuantityEdit* m_northAxisEdit = nullptr;
     OSQuantityEdit2 * m_floorToCeilingHeight = nullptr;
     OSQuantityEdit2 * m_floorToFloorHeight = nullptr;
+    OSSwitch2* m_relocatable = nullptr;
+    QComboBox* m_standardsBuildingTypeComboBox = nullptr;
     bool m_isIP;
 
   public slots:

@@ -18,13 +18,13 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/CoilWaterHeatingAirToWaterHeatPump.hpp>
-#include <model/CoilWaterHeatingAirToWaterHeatPump_Impl.hpp>
-#include <model/Curve.hpp>
-#include <model/Curve_Impl.hpp>
-#include <model/TableMultiVariableLookup.hpp>
-#include <model/TableMultiVariableLookup_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../CoilWaterHeatingAirToWaterHeatPump.hpp"
+#include "../CoilWaterHeatingAirToWaterHeatPump_Impl.hpp"
+#include "../Curve.hpp"
+#include "../Curve_Impl.hpp"
+#include "../TableMultiVariableLookup.hpp"
+#include "../TableMultiVariableLookup_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
