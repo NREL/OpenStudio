@@ -720,7 +720,7 @@ std::vector<BCLMeasure> MeasureManager::combinedMeasures(bool includeOpenStudioM
   std::set<UUID> resultUUIDs;
   
   if (includeOpenStudioMeasures){
-    // insert pat application measures
+    // insert openstudio measures
     for (auto it = m_openstudioMeasures.begin(), itend = m_openstudioMeasures.end(); it != itend; ++it){
       if (resultUUIDs.find(it->first) == resultUUIDs.end()){
         resultUUIDs.insert(it->first);
