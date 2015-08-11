@@ -262,18 +262,19 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 		# Read simulation settings from model export 
 		# TODO: read settings directly from model
+		#options_tregVars = ""
 		options_tregVars = "-e MF:1 -f tregenza.cal -b tbin -bn Ntbins" 			## TESTING (reset to empty)
 		options_klemsDensity = ""
 		options_skyvecDensity = "1"
+		#options_dmx = ""
+		#options_vmx = ""
 		options_dmx = "-ab 1 -ad 128 -as 56 -dj 1 -dp 1 -dt 0.1 -dc 0.1 -lw 0.1 " 	## TESTING (reset to empty)
 		options_vmx = "-ab 1 -ad 128 -as 56 -dj 1 -dp 1 -dt 0.1 -dc 0.1 -lw 0.1"		## TESTING (reset to empty)
 
 
-#		def calculateDaylightCoeffecients(rad_dir, t_options, t_space_names_to_calculate, t_radMaps, t_opts_map, t_simCores, t_catCommand)
-		def calculateDaylightCoeffecients(radPath, t_sim_cores, t_catCommand, options_tregVars, options_klemsDensity, options_skyvecDensity, options_dmx, options_vmx)
+		# core functions
 
-
-			puts "first call: #{options_skyvecDensity}"
+		def calculateDaylightCoeffecients(radPath, sim_cores, t_catCommand, options_tregVars, options_klemsDensity, options_skyvecDensity, options_dmx, options_vmx)
 
 
 # UNCOMMENT WHEN DONE TESTING
@@ -296,7 +297,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 # 			end
 # UNCOMMENT WHEN DONE TESTING
 
-			## END read simulation settings
 
 			# configure multiprocessing 
 			procsUsed = ""
@@ -304,8 +304,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 				puts "Radiance does not support multiple cores on Windows"
 				procsUsed = ""
 			else
-				puts "Radiance using #{t_sim_cores} core(s)"
-				procsUsed = "-n #{t_sim_cores}"
+				puts "Radiance using #{sim_cores} core(s)"
+				procsUsed = "-n #{sim_cores}"
 			end
 
 			haveWG0 = ""
@@ -355,7 +355,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 					# do daylight matrices for controlled windows
 					puts "#{Time.now.getutc}: computing daylight matrix for window group #{wg}..."
 
-					rad_command = "rfluxmtx #{rtrace_args} -fa -v \"scene/shades/#{wg}_SHADE.rad\" \"skies/dc_sky.rad\" -i model_dc.oct > \"output/dc/#{wg}.dmx\""
+					rad_command = "rfluxmtx #{rtrace_args} -n #{sim_cores} -fa -v \"scene/shades/#{wg}_SHADE.rad\" \"skies/dc_sky.rad\" -i model_dc.oct > \"output/dc/#{wg}.dmx\""
 					puts "#{Time.now.getutc}: #{rad_command}"
 					exec_statement(rad_command)
 		
