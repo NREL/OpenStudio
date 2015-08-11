@@ -862,11 +862,11 @@
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Outlet Node Name" Access="HIDDEN"/>
   </POLICY>  
-  <POLICY IddObjectType="OS_SolarCollector_FlatPlate_Water">
+  <POLICY IddObjectType="OS_SolarCollectorPerformance_FlatPlate">
   </POLICY>  
-    <POLICY IddObjectType="OS_SolarCollector_IntegralCollectorStorage">
+    <POLICY IddObjectType="OS_SolarCollectorPerformance_IntegralCollectorStorage">
     <rule IddField="ICS Collector Type" Access="LOCKED"/>
   </POLICY>  
-  <POLICY IddObjectType="OS_SolarCollector_PhotovoltaicThermal_Simple">
+  <POLICY IddObjectType="OS_SolarCollectorPerformance_PhotovoltaicThermal_Simple">
   </POLICY>  
 </ROOT>
