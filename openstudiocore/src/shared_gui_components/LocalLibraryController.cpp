@@ -581,10 +581,11 @@ QWidget * LibraryItemDelegate::view(QSharedPointer<OSListItem> dataSource)
       widget->m_measureBadge->setMeasureBadgeType(MeasureBadgeType::BCLMeasure);
     } else if (libraryItem->m_source == LocalLibrary::USER){
       widget->m_measureBadge->setMeasureBadgeType(MeasureBadgeType::MyMeasure);
-    } else if (libraryItem->m_source == LocalLibrary::COMBINED){
-      // DLM: this should not happen
     }else if(libraryItem->m_source == LocalLibrary::OS){
       widget->m_measureBadge->setMeasureBadgeType(MeasureBadgeType::OSMeasure);
+    } else{
+      //DLM: this should not happen, LocalLibrary::COMBINED
+      libraryItem->m_source;
     }
 
     // Name
