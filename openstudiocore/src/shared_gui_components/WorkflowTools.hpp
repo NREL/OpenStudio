@@ -26,24 +26,10 @@
 
 namespace openstudio
 {
-  namespace runmanager
-  {
-    class RunManager;
-  }
-
-  namespace model
-  {
-    class Model;
-  }
 
   namespace analysis
   {
     class Problem;
-  }
-
-  namespace analysisdriver
-  {
-    class SimpleProject;
   }
 
   //void getRadiancePreRunWarningsAndErrors(std::vector<std::string> &t_warnings, 
