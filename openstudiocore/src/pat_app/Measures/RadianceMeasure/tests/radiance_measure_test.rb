@@ -68,7 +68,7 @@ class RadianceMeasureTest < MiniTest::Unit::TestCase
     # If the argument has a default that you want to use, you don't need it in the hash
     args_hash = {}
     args_hash["apply_schedules"] = "Yes"
-    args_hash["write_sql"] = "No"
+    args_hash["write_sql"] = "Yes"
     args_hash["use_cores"] = "Max"
 
     # using defaults values from measure.rb for other arguments

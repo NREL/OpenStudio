@@ -20,12 +20,12 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
   # human readable description
   def description
-    return "Does stuff"
+    return "This measure uses Radiance instead of EnergyPlus for daylighting calculations with OpenStudio."
   end
 
   # human readable description of modeling approach
   def modeler_description
-    return "Things"
+    return "The OpenStudio model is converted to Radiance format. All spaces containing daylighting objects (illuminance map, daylighting control point, and optionally glare sensors) will have annual illuminance calculated using Radiance, and the OS mole's lighting schedules can be overwritten with those based on daylight responsive lighting controls."
   end
 
   # define the arguments that the user will input
@@ -36,9 +36,9 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     chs << 'Yes'
     chs << 'No'
     apply_schedules = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('apply_schedules', chs, true)
-    apply_schedules.setDisplayName('Apply schedule')
+    apply_schedules.setDisplayName('Apply schedules')
     apply_schedules.setDefaultValue('Yes')
-    apply_schedules.setDescription('Replace lighting and shading control schedules with schedules computed by radiance')
+    apply_schedules.setDescription('Replace lighting and shading control schedules with schedules computed by Radiance')
     args << apply_schedules
     
     chs = OpenStudio::StringVector.new
@@ -47,13 +47,13 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     write_sql = OpenStudio::Ruleset::OSArgument.makeChoiceArgument('write_sql', chs, true)
     write_sql.setDisplayName('Write Radiance SqlFile')
     write_sql.setDefaultValue('Yes')
-    write_sql.setDescription('Write Radiance results to a SqlFile format.')
+    write_sql.setDescription('Write Radiance results to a SqlFile format')
     args << write_sql
 
     chs = OpenStudio::StringVector.new
+    chs << 'Default'
     chs << 'Min'
     chs << 'Max'
-    chs << 'Default'
     use_cores = OpenStudio::Ruleset::OSArgument.makeChoiceArgument('use_cores', chs, true)
     use_cores.setDisplayName('Cores')
     use_cores.setDefaultValue('Default')
@@ -108,6 +108,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			return result
 		end
 
+
 		# UNIX-style which 
 		def which(cmd) 
 			exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : [''] 
@@ -119,19 +120,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			end 
 			return nil 
 		end 
-		
-		# make float.round() sorta work in ruby v1.8 like it does in v1.9, enough for our purposes
-		# TODO deprecate
-# 		class Numeric
-# 			def round_to_str( decimals=0 )
-# 				if decimals >= 0
-# 					"%.#{decimals}f" % self
-# 				else
-# 					factor = 10**-decimals
-# 					((self/factor).round * factor).to_s
-# 				end
-# 			end
-# 		end
+
 
 		# set up MP option
 		coreCount = OpenStudio::System::numberOfProcessors
@@ -179,7 +168,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 		OpenStudio::Path.new('lib')).to_s()
 
 		epw2weapath = (OpenStudio::Path.new(radiancePath) / OpenStudio::Path.new('epw2wea')).to_s
-
 
 		ENV["EPW2WEAPATH"] = epw2weapath
 		programExtension = ''
@@ -418,7 +406,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 
 
-
 		# annual simulation dealio
 		def runSimulation(t_space_names_to_calculate, t_sqlFile, t_simCores, t_options_skyvecDensity, t_site_latitude, t_site_longitude, t_site_stdmeridian, t_radPath, \
 		t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, runner, write_sql)
@@ -429,26 +416,27 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			values = Hash.new
 			dcVectors = Hash.new
 
-			# i can haz gendaymtx vintage? (gendaymtx >= v4.2.b adds header and -h option to suppress) - 2014.07.02 RPG 
-# 			genDaymtxHdr = ""
-# 			exec_statement("gendaymtx -h -m #{t_options.skyvecDensity} \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" > \"#{t_outPath / OpenStudio::Path.new("daymtx_out.tmp")}\" ")
-# 			if File.zero?("#{t_outPath / OpenStudio::Path.new("daymtx_out.tmp")}")
-# 				genDaymtxHdr = ""
-# 				if t_options.z == true
-# 					puts "Old Radiance version detected, will not work with 3-phase method, quitting."
-# 					exit false
-# 				end
-# 			end
-# 			File.delete("#{t_outPath / OpenStudio::Path.new("daymtx_out.tmp")}")
-# 			# we now haz =)
+
+			# deprecate and just require a recent (NREL) version of Radiance 2015.08.11 RPG
+			
+										# i can haz gendaymtx vintage? (gendaymtx >= v4.2.b adds header and -h option to suppress) - 2014.07.02 RPG 
+							# 			genDaymtxHdr = ""
+							# 			exec_statement("gendaymtx -h -m #{t_options.skyvecDensity} \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" > \"#{t_outPath / OpenStudio::Path.new("daymtx_out.tmp")}\" ")
+							# 			if File.zero?("#{t_outPath / OpenStudio::Path.new("daymtx_out.tmp")}")
+							# 				genDaymtxHdr = ""
+							# 				if t_options.z == true
+							# 					puts "Old Radiance version detected, will not work with 3-phase method, quitting."
+							# 					exit false
+							# 				end
+							# 			end
+							# 			File.delete("#{t_outPath / OpenStudio::Path.new("daymtx_out.tmp")}")
+							# 			# we now haz =)
 			
 			# Run the simulation 
 
 			simulations = []
 
-#			exec_statement("gendaymtx #{genDaymtxHdr} -m #{t_options_skyvecDensity} in.wea > annual-sky.mtx")
 			exec_statement("gendaymtx -m #{t_options_skyvecDensity} \"wx/in.wea\" > annual-sky.mtx")
-
 
 			windowMaps = File::open("bsdf/mapping.rad")
 	
@@ -475,7 +463,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 		
 					wgXMLs.each_index do |i|
 						rad_command = "dctimestep output/dc/#{wg}.vmx bsdf/#{wgXMLs[i].strip} output/dc/#{wg}.dmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}_#{wgXMLs[i].split[0]}.ill"
-						runner.registerInfo("radiance\#: #{rad_command}")
+						runner.registerInfo("#{Time.now.getutc}: #{rad_command}")
 						exec_statement(rad_command)
 					end
 			
@@ -852,7 +840,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 																						 OpenStudio::DateTime::now(),
 																						 OpenStudio::Calendar.new(firstReportDateTime.date().year()));
 
-				puts "#{Time.now.getutc}: removing indexes"
 				sqlOutFile.removeIndexes
 
 				t_space_names_to_calculate.each do |space_name|
@@ -883,10 +870,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 						# these must be declared in the thread otherwise will get overwritten on each loop
 						tsDateTime = simTimes[i]
 
-						#	puts "image based glare analysis temporarily disabled, sorry."
+						#	<someday> (image based glare analysis)
 							#  system("gendaylit -ang #{tsSolarAlt} #{tsSolarAzi} -L #{tsDirectNormIllum} #{tsDiffuseHorIllum} \
 							#  | #{perlPrefix}genskyvec#{perlExtension} -m 1 | dctimestep \"#{outPath}/output/dc/#{space_name}/views/#{space_name}treg%03d.hdr\" | pfilt -1 -x /2 -y /2 > \
 							#  \"#{outPath}/output/dc/#{space_name}/views/#{tsDateTime.gsub(/[: ]/,'_')}.hdr\"")
+						# </someday>
 
 						# Split up values by space
 
@@ -935,7 +923,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 					end
 
-					#Print illuminance results to dat file
+					# Write results
+					
 					FileUtils.mkdir_p("#{Dir.pwd}/output/ts/#{space_name}/maps") unless File.exists?("#{Dir.pwd}/output/ts/#{space_name}/maps")
 					f = File.open("#{Dir.pwd}/output/ts/#{space_name}/maps/#{space_name}_map.ill", "w")
 					space = nil
@@ -967,6 +956,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 						puts "#{Time.now.getutc}: writing Radiance results file..."
 
+						# illuminance to csv
+						
 						f.print "## OpenStudio Daylight Simulation Results file\n"
 						f.print "## Header: xmin ymin z xmax ymin z xmax ymax z xspacing yspacing\n"
 						f.print "## Data: month,day,time,directNormalIllumimance(external),diffuseHorizontalIlluminance(external),daylightSensorIlluminance,pointIlluminance [lux]\n"
@@ -974,7 +965,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 						timeSeriesIllum.each {|ts| f.print "#{ts}\n"}
 						f.close
 
-						#Print glare results to dat file
+						# glare to csv 
+						
 						FileUtils.mkdir_p("#{Dir.pwd}/output/ts/#{space_name}/maps") unless File.exists?("#{Dir.pwd}/output/ts/#{space_name}/maps")
 						f = File.open("#{Dir.pwd}/output/ts/#{space_name}/maps/#{space_name}_map.glr", "w")
 						space = nil
@@ -993,7 +985,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 							f.close
 						end
 
-
+						# all results to sql
+						
 						if write_sql == "Yes"
 							puts "#{Time.now.getutc}: writing Radiance results database..."
 							writeTimeSeriesToSql(sqlOutFile, simDateTimes, dirNormIllum, space_name, "Direct Normal Illuminance", "lux")
@@ -1048,17 +1041,249 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 					end
 				end
 
-				puts "#{Time.now.getutc}: creating indexes..."
 				sqlOutFile.createIndexes
-				puts "#{Time.now.getutc}: done writing Radiance results database."
 
 			end
 		end # annualSimulation()
 
 
+		# makeSchedules() 
+		# write new lighting power schedules for the model
+		
+		def makeSchedules(model, sqlFile)
+		
+			# only run period in pre process job
+			environmentName = "Run Period 1"
+
+			# loop through each thermal zone
+			model.getThermalZones.each do |thermalZone|
+
+				spaces = thermalZone.spaces
+
+				if spaces.empty?
+					puts "ThermalZone '#{thermalZone.name}' has no spaces, skipping."
+					next
+				end
+	
+				# get people schedule for zone
+				# TODO: require people for occupancy controls
+				peopleTimeseries = sqlFile.timeSeries("Run Period 1".upcase, "Hourly", "Zone People Occupant Count", thermalZone.name.get.upcase)
+	
+				if peopleTimeseries.empty?
+					puts "Cannot find timeseries 'Zone People Occupant Count' for ThermalZone '#{thermalZone.name}'."
+				end
+	
+				# get lights schedule for zone
+				lightsTimeseries = sqlFile.timeSeries("Run Period 1".upcase, "Hourly", "Zone Lights Electric Power", thermalZone.name.get.upcase)
+	
+				if lightsTimeseries.empty?
+					newname = thermalZone.name.get.sub(/^OS:/, '');
+					puts "Cannot find timeseries 'Zone Lights Electric Power' for ThermalZone '#{thermalZone.name}', skipping."
+					next
+				end
+	
+				lightsTimeseries = lightsTimeseries.get
+	 
+				# get illuminance map
+				illuminanceMap = thermalZone.illuminanceMap
+
+				if illuminanceMap.empty?
+					puts "Cannot find IlluminanceMap for ThermalZone '#{thermalZone.name}', skipping."
+					next
+				end
+
+				illuminanceMap = illuminanceMap.get
+
+				# get the space
+				space = illuminanceMap.space
+	
+				if space.empty?
+					puts "Cannot find Space for IlluminanceMap '#{illuminanceMap.name}' in ThermalZone '#{thermalZone.name}', skipping."
+					next
+				end
+	
+				space = space.get
+	
+				space_name = space.name.get.gsub(' ', '_').gsub(':', '_')
+
+				radSqlPath = OpenStudio::Path.new("output/radout.sql")
+
+				# load the illuminance map
+				# assume this will be reported in 1 hour timesteps starting on 1/1
+				averageIlluminances = []
+				radSqlFile = OpenStudio::SqlFile.new(radSqlPath)
+
+# 				if options.setpointInput == true
+# 					# we have to calculate the average ourselves
+# 					reportIndices = radSqlFile.illuminanceMapHourlyReportIndices(space_name)
+# 
+# 					reportIndices.each do |index|
+# 
+# 						map = radSqlFile.illuminanceMap(index)
+# 						#  averageIlluminances << OpenStudio::mean(map)
+# 						sum = 0
+# 						illuminances = Array.new
+# 
+# 						# we have to normalize the values to 0 if there's any that are less than 0
+# 						map.size1().times do |x|
+# 							map.size2().times do |y|
+# 
+# 								illuminance = map[x, y]
+# 
+# 								if illuminance < 0
+# 									if options.verbose == true
+# 										puts "Warning illuminance #{illuminance} less than zero, will be reset to 0"
+# 									end
+# 									illuminance = 0
+# 								end
+# 
+# 								illuminances << illuminance
+# 								sum += illuminance
+# 							end
+# 						end
+# 						if options.verbose == true
+# 							puts "Average illuminance " + (sum / illuminances.size.to_f).to_s
+# 						end
+# 						averageIlluminances << sum/illuminances.size.to_f
+# 					end
+# 				else 
+					# use the daylight sensor input
+					spacename = space.name.get.gsub(' ', '_').gsub(':', '_')
+					envPeriods = radSqlFile.availableEnvPeriods
+
+					if envPeriods.size == 0
+						puts "No available environment periods in radiance sql file, skipping"
+						next
+					end
+
+					daylightSensor = radSqlFile.timeSeries(envPeriods[0], "Hourly", "Daylight Sensor Illuminance", space_name)
+		
+					if daylightSensor.empty?
+						puts "Daylight sensor data could not be loaded, skipping"
+						next
+					end
+
+					values = daylightSensor.get.values
+
+					values.length.times do |i|
+						val = values[i];
+
+						if val < 0
+							val = 0
+						end
+						averageIlluminances << val
+					#end
+				 end
+
+				daylightSetpoint = 0.0
+
+				primaryDaylightingControl = thermalZone.primaryDaylightingControl
+				if not primaryDaylightingControl.empty?
+					daylightSetpoint = primaryDaylightingControl.get.illuminanceSetpoint
+				end
+
+					secondaryDaylightingControl = thermalZone.secondaryDaylightingControl
+					if not secondaryDaylightingControl.empty?
+						if daylightSetpoint == 0.0
+							daylightSetpoint = secondaryDaylightingControl.get.illuminanceSetpoint
+						else
+							"Ignoring secondary daylighting control in ThermalZone '#{thermalZone.name}'"
+					end
+				end
+	
+				if daylightSetpoint == 0.0
+					space.daylightingControls.each do |i|
+						daylightSetpoint = i.illuminanceSetpoint
+						if daylightSetpoint != 0.0
+							break
+						end
+					end
+				end
+	
+				if daylightSetpoint == 0.0
+					puts "Illuminance setpoint is not defined in Space '#{space.name}' or in ThermalZone '#{thermalZone.name}', skipping."
+					next
+				end
+	
+				puts "ThermalZone '#{thermalZone.name}' illuminance setpoint is: #{daylightSetpoint} lux"
+	
+				originalLightsValues = lightsTimeseries.values
+				lightsValues = OpenStudio::Vector.new(averageIlluminances.size)
+				averageIlluminances.each_index do |i|
+					dimmingResponse = [(daylightSetpoint-averageIlluminances[i])/daylightSetpoint, 0].max
+					#puts "#{daylightSetpoint}, #{averageIlluminances[i]}, #{dimmingResponse}"
+					lightsValues[i] = dimmingResponse*originalLightsValues[i]
+
+			#    is_occupied = false
+			#    if not peopleTimeseries.empty?
+			#      is_occupied = peopleTimeseries.get.values[i] > 0
+			#    end
+			#    
+			#    daValues[i] = is_occupied*(averageIlluminances[i] > daylightSetpoint)
+				end
+	
+				# get max lighting power
+				lightingLevel = OpenStudio::maximum(lightsValues)
+	
+				if lightingLevel <= 0.0
+					puts "ThermalZone '#{thermalZone.name}' lighting level is less than or equal to 0, skipping"
+					next
+				end
+	
+				puts "ThermalZone '#{thermalZone.name}' lighting level is: #{lightingLevel} W"
+	
+				# normalize lights values
+				averageIlluminances.each_index do |i|
+					lightsValues[i] = lightsValues[i]/lightingLevel
+				end
+	
+				startDate = OpenStudio::Date.new(OpenStudio::MonthOfYear.new(1), 1)
+				interval = OpenStudio::Time.new(0,1,0)
+				timeseries = OpenStudio::TimeSeries.new(startDate, interval, lightsValues, "W")
+
+				schedule = OpenStudio::Model::ScheduleInterval::fromTimeSeries(timeseries, model)
+	
+				if schedule.empty?
+					puts "Could not create modified lighting schedule for ThermalZone '#{thermalZone.name}', skipping"
+					next
+				end
+	
+				schedule = schedule.get
+	
+				schedule.setName(thermalZone.name.get + " Lights Schedule")
+	
+				# remove all lights in this zone
+				spaces.each do |space|
+					space.hardApplySpaceType(true)
+					space.lights.each do |light|
+						light.remove
+					end
+					space.luminaires.each do |luminaire|
+						luminaire.remove
+					end
+				end
+	
+				# add a new lights object to first space in this zone and set schedule
+				lightsDefinition = OpenStudio::Model::LightsDefinition.new(model)
+				lightsDefinition.setLightingLevel(lightingLevel)
+	
+				lights = OpenStudio::Model::Lights.new(lightsDefinition)
+				lights.setSchedule(schedule)
+				lights.setSpace(spaces[0])
+	
+				# remove illuminance map and daylighting controls from thermal zone to prevent double counting
+				thermalZone.resetPrimaryDaylightingControl
+				thermalZone.resetSecondaryDaylightingControl
+				thermalZone.resetIlluminanceMap
+			end
+	
+		end # makeSchedules()
+
 
 
 		# actually do the thing
+		
+		sqlOutFile = ""
 		
 		# settle in, it's gonna be a bumpy ride...
 		Dir.chdir("#{radPath}")
@@ -1237,14 +1462,19 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 		# TODO remove this breakpoint!
 		options_skyvecDensity = "1"
-		puts "last call: #{options_skyvecDensity}"
+		puts "still hard-coded options_skyvecDensity: #{options_skyvecDensity}"
+
 
 		# make merged building-wide illuminance schedule(s)
-		values, dcVectors = runSimulation(space_names_to_calculate, sqlFile, sim_cores, options_skyvecDensity, site_latitude, site_longitude, site_meridian, radPath, spaceWidths, spaceHeights, radGlareSensorViews, runner, write_sql)
+		values, dcVectors = runSimulation(space_names_to_calculate, sqlFile, sim_cores, options_skyvecDensity, site_latitude, site_longitude, \
+		site_meridian, radPath, spaceWidths, spaceHeights, radGlareSensorViews, runner, write_sql)
 		
+
 		# make space-level illuminance schedules and radout.sql results database
 		# hoping this is no longer necessary...
-  	annualSimulation(sqlFile, epwFile, space_names_to_calculate, radMaps, spaceWidths, spaceHeights, radMapPoints, radGlareSensorViews, sim_cores, site_latitude, site_longitude, site_meridian, radPath, building, values, dcVectors, write_sql)
+  	annualSimulation(sqlFile, epwFile, space_names_to_calculate, radMaps, spaceWidths, spaceHeights, radMapPoints, radGlareSensorViews, \
+  	sim_cores, site_latitude, site_longitude, site_meridian, radPath, building, values, dcVectors, write_sql)
+
 
 		# execute MakeSchedules
 		# result = exec_statement("ruby #{load_paths} '#{dirname}/MakeSchedules.rb' '#{modelPath}' '#{sqlPath}' --keep")
@@ -1252,7 +1482,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 		#   puts "failed to run MakeSchedules"
 		#   exit false
 		# end
-		# 
+
+		makeSchedules(model, sqlFile)
+
+
+
 		# # execute DaylightMetrics
 		# result = exec_statement("ruby #{load_paths} '#{dirname}/DaylightMetrics.rb' '#{modelPath}' '#{sqlPath}' radout.sql")
 		# if not result

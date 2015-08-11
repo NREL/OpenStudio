@@ -2,7 +2,7 @@
   <schema_version>3.0</schema_version>
   <name>radiance_measure</name>
   <uid>1e3cfef8-b051-4e60-8bb0-ed2d29d4f45d</uid>
-  <version_id>a4afe6dc-0dfc-423e-8c0e-358b0fb4639d</version_id>
+  <version_id>a538e098-fc5e-476e-bcfe-c69271e25878</version_id>
   <xml_checksum>381B7733</xml_checksum>
   <class_name>RadianceMeasure</class_name>
   <display_name>Radiance Daylighting Measure</display_name>
@@ -11,8 +11,8 @@
   <arguments>
     <argument>
       <name>apply_schedules</name>
-      <display_name>Apply schedule</display_name>
-      <description>Replace lighting and shading control schedules with schedules computed by radiance</description>
+      <display_name>Apply schedules</display_name>
+      <description>Replace lighting and shading control schedules with schedules computed by Radiance</description>
       <type>Choice</type>
       <required>true</required>
       <model_dependent>false</model_dependent>
@@ -32,9 +32,43 @@
       <name>write_sql</name>
       <display_name>Write Radiance SqlFile</display_name>
       <description>Write Radiance results to a SqlFile format.</description>
-      <type>String</type>
+      <type>Choice</type>
       <required>true</required>
       <model_dependent>false</model_dependent>
+      <default_value>Yes</default_value>
+      <choices>
+        <choice>
+          <value>Yes</value>
+          <display_name>Yes</display_name>
+        </choice>
+        <choice>
+          <value>No</value>
+          <display_name>No</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>use_cores</name>
+      <display_name>Cores</display_name>
+      <description>Number of CPU cores to use for Radiance jobs.\nDefault is to use all but one core</description>
+      <type>Choice</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>Default</default_value>
+      <choices>
+        <choice>
+          <value>Min</value>
+          <display_name>Min</display_name>
+        </choice>
+        <choice>
+          <value>Max</value>
+          <display_name>Max</display_name>
+        </choice>
+        <choice>
+          <value>Default</value>
+          <display_name>Default</display_name>
+        </choice>
+      </choices>
     </argument>
   </arguments>
   <provenances/>
@@ -70,10 +104,22 @@
   </attributes>
   <files>
     <file>
+      <filename>RadiancePreprocess.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>7ADD358C</checksum>
+    </file>
+    <file>
+      <filename>USA_CO_Golden-NREL.724666_TMY3.epw</filename>
+      <filetype>epw</filetype>
+      <usage_type>test</usage_type>
+      <checksum>BDF687C1</checksum>
+    </file>
+    <file>
       <filename>radiance_measure_test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
-      <checksum>8D8574EF</checksum>
+      <checksum>2253BD73</checksum>
     </file>
     <file>
       <version>
@@ -84,25 +130,19 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>BC200B76</checksum>
-    </file>
-    <file>
-      <filename>RadiancePreprocess.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>7ADD358C</checksum>
+      <checksum>F85675E1</checksum>
     </file>
     <file>
       <filename>test_model.osm</filename>
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
-      <checksum>DA65EDCD</checksum>
+      <checksum>99A1B770</checksum>
     </file>
     <file>
-      <filename>USA_CO_Golden-NREL.724666_TMY3.epw</filename>
-      <filetype>epw</filetype>
+      <filename>CMakeCache.txt</filename>
+      <filetype>txt</filetype>
       <usage_type>test</usage_type>
-      <checksum>BDF687C1</checksum>
+      <checksum>751BDF68</checksum>
     </file>
   </files>
 </measure>
