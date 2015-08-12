@@ -65,9 +65,9 @@ namespace detail {
 
     bool isICSCollectorTypeDefaulted() const;
 
-    boost::optional<double> grossArea() const;
+    double grossArea() const;
 
-    boost::optional<double> collectorWaterVolume() const;
+    double collectorWaterVolume() const;
 
     double bottomHeatLossConductance() const;
 
@@ -137,13 +137,13 @@ namespace detail {
 
     void resetICSCollectorType();
 
-    bool setGrossArea(boost::optional<double> grossArea);
+    bool setGrossArea(double grossArea);
 
-    void resetGrossArea();
+    //void resetGrossArea();
 
-    bool setCollectorWaterVolume(boost::optional<double> collectorWaterVolume);
+    bool setCollectorWaterVolume(double collectorWaterVolume);
 
-    void resetCollectorWaterVolume();
+    //void resetCollectorWaterVolume();
 
     bool setBottomHeatLossConductance(double bottomHeatLossConductance);
 

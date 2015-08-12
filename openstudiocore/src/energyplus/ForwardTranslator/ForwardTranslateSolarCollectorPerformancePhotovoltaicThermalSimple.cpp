@@ -45,7 +45,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSolarCollectorPerformance
   idfObject.setDouble(SolarCollectorPerformance_PhotovoltaicThermal_SimpleFields::FractionofSurfaceAreawithActiveThermalCollector, modelObject.fractionOfSurfaceAreaWithActiveThermalCollector());
 
   std::string thermalConversionEfficiencyInputModeType = modelObject.thermalConversionEfficiencyInputModeType();
-  idfObject.setString(SolarCollectorPerformance_PhotovoltaicThermal_SimpleFields::FractionofSurfaceAreawithActiveThermalCollector, thermalConversionEfficiencyInputModeType);
+  idfObject.setString(SolarCollectorPerformance_PhotovoltaicThermal_SimpleFields::ThermalConversionEfficiencyInputModeType, thermalConversionEfficiencyInputModeType);
 
   if (istringEqual("Scheduled", thermalConversionEfficiencyInputModeType)){
     boost::optional<Schedule> schedule = modelObject.thermalConversionEfficiencySchedule();

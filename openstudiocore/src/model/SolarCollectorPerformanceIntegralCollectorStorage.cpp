@@ -77,12 +77,16 @@ namespace detail {
     return isEmpty(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::ICSCollectorType);
   }
 
-  boost::optional<double> SolarCollectorPerformanceIntegralCollectorStorage_Impl::grossArea() const {
-    return getDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::GrossArea,true);
+  double SolarCollectorPerformanceIntegralCollectorStorage_Impl::grossArea() const {
+    OptionalDouble d = getDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::GrossArea, true);
+    OS_ASSERT(d);
+    return *d;
   }
 
-  boost::optional<double> SolarCollectorPerformanceIntegralCollectorStorage_Impl::collectorWaterVolume() const {
-    return getDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::CollectorWaterVolume,true);
+  double SolarCollectorPerformanceIntegralCollectorStorage_Impl::collectorWaterVolume() const {
+    OptionalDouble d = getDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::CollectorWaterVolume,true);
+    OS_ASSERT(d);
+    return *d;
   }
 
   double SolarCollectorPerformanceIntegralCollectorStorage_Impl::bottomHeatLossConductance() const {
@@ -245,39 +249,23 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setGrossArea(boost::optional<double> grossArea) {
-    bool result(false);
-    if (grossArea) {
-      result = setDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::GrossArea, grossArea.get());
-    }
-    else {
-      resetGrossArea();
-      result = true;
-    }
-    return result;
+  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setGrossArea(double grossArea) {
+    return setDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::GrossArea, grossArea);
   }
 
-  void SolarCollectorPerformanceIntegralCollectorStorage_Impl::resetGrossArea() {
-    bool result = setString(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::GrossArea, "");
-    OS_ASSERT(result);
+  //void SolarCollectorPerformanceIntegralCollectorStorage_Impl::resetGrossArea() {
+  //  bool result = setString(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::GrossArea, "");
+  //  OS_ASSERT(result);
+  //}
+
+  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setCollectorWaterVolume(double collectorWaterVolume) {
+    return setDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::CollectorWaterVolume, collectorWaterVolume);
   }
 
-  bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setCollectorWaterVolume(boost::optional<double> collectorWaterVolume) {
-    bool result(false);
-    if (collectorWaterVolume) {
-      result = setDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::CollectorWaterVolume, collectorWaterVolume.get());
-    }
-    else {
-      resetCollectorWaterVolume();
-      result = true;
-    }
-    return result;
-  }
-
-  void SolarCollectorPerformanceIntegralCollectorStorage_Impl::resetCollectorWaterVolume() {
-    bool result = setString(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::CollectorWaterVolume, "");
-    OS_ASSERT(result);
-  }
+  //void SolarCollectorPerformanceIntegralCollectorStorage_Impl::resetCollectorWaterVolume() {
+  //  bool result = setString(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::CollectorWaterVolume, "");
+  //  OS_ASSERT(result);
+  //}
 
   bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setBottomHeatLossConductance(double bottomHeatLossConductance) {
     bool result = setDouble(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::BottomHeatLossConductance, bottomHeatLossConductance);
@@ -436,10 +424,13 @@ SolarCollectorPerformanceIntegralCollectorStorage::SolarCollectorPerformanceInte
 {
   OS_ASSERT(getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
+  // non-idd defaults from HP_wICSSolarCollector.idf 
   bool ok = true;
-  // ok = setHandle();
+  ok = setGrossArea(2.9800);
   OS_ASSERT(ok);
+  ok = setCollectorWaterVolume(0.1862);
+  OS_ASSERT(ok);
+  
 }
 
 IddObjectType SolarCollectorPerformanceIntegralCollectorStorage::iddObjectType() {
@@ -459,11 +450,11 @@ bool SolarCollectorPerformanceIntegralCollectorStorage::isICSCollectorTypeDefaul
   return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->isICSCollectorTypeDefaulted();
 }
 
-boost::optional<double> SolarCollectorPerformanceIntegralCollectorStorage::grossArea() const {
+double SolarCollectorPerformanceIntegralCollectorStorage::grossArea() const {
   return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->grossArea();
 }
 
-boost::optional<double> SolarCollectorPerformanceIntegralCollectorStorage::collectorWaterVolume() const {
+double SolarCollectorPerformanceIntegralCollectorStorage::collectorWaterVolume() const {
   return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->collectorWaterVolume();
 }
 
@@ -599,17 +590,17 @@ bool SolarCollectorPerformanceIntegralCollectorStorage::setGrossArea(double gros
   return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->setGrossArea(grossArea);
 }
 
-void SolarCollectorPerformanceIntegralCollectorStorage::resetGrossArea() {
-  getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetGrossArea();
-}
+//void SolarCollectorPerformanceIntegralCollectorStorage::resetGrossArea() {
+//  getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetGrossArea();
+//}
 
 bool SolarCollectorPerformanceIntegralCollectorStorage::setCollectorWaterVolume(double collectorWaterVolume) {
   return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->setCollectorWaterVolume(collectorWaterVolume);
 }
 
-void SolarCollectorPerformanceIntegralCollectorStorage::resetCollectorWaterVolume() {
-  getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetCollectorWaterVolume();
-}
+//void SolarCollectorPerformanceIntegralCollectorStorage::resetCollectorWaterVolume() {
+//  getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->resetCollectorWaterVolume();
+//}
 
 bool SolarCollectorPerformanceIntegralCollectorStorage::setBottomHeatLossConductance(double bottomHeatLossConductance) {
   return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->setBottomHeatLossConductance(bottomHeatLossConductance);
