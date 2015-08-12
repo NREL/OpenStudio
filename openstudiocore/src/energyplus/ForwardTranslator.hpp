@@ -611,6 +611,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translatePlantLoop( model::PlantLoop & modelObject );
 
+  boost::optional<IdfObject> translatePlantEquipmentOperationSchemes( model::PlantLoop & plantLoop );
+
   boost::optional<IdfObject> translatePlantEquipmentOperationCoolingLoad( model::PlantEquipmentOperationCoolingLoad & modelObject );
 
   boost::optional<IdfObject> translatePlantEquipmentOperationHeatingLoad( model::PlantEquipmentOperationHeatingLoad & modelObject );

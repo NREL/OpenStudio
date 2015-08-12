@@ -141,6 +141,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslatePeople.cpp
   ForwardTranslator/ForwardTranslatePipeAdiabatic.cpp
   ForwardTranslator/ForwardTranslatePlantLoop.cpp
+  ForwardTranslator/ForwardTranslatePlantEquipmentOperationSchemes.cpp
   ForwardTranslator/ForwardTranslatePlantEquipmentOperationCoolingLoad.cpp
   ForwardTranslator/ForwardTranslatePlantEquipmentOperationHeatingLoad.cpp
   ForwardTranslator/ForwardTranslatePlantEquipmentOperationOutdoorDryBulb.cpp
