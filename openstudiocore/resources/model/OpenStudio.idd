@@ -16721,11 +16721,16 @@ OS:PlantLoop,
        \note This field is only required when Fluid Type is UserDefinedFluidType
        \type object-list
        \object-list FluidAndGlycolNames
-  A5, \field Plant Equipment Operation Scheme Name
+  A5, \field Plant Equipment Operation Heating Load
        \type object-list
-       \required-field
-       \object-list PlantOperationSchemes
-  A6, \field Loop Temperature Setpoint Node Name
+       \object-list ControlSchemeList
+  A6, \field Plant Equipment Operation Cooling Load
+       \type object-list
+       \object-list ControlSchemeList
+  A7, \field Primary Plant Equipment Operation Scheme
+       \type object-list
+       \object-list ControlSchemeList
+  A8, \field Loop Temperature Setpoint Node Name
        \type object-list
        \required-field
        \object-list Node
@@ -16756,15 +16761,15 @@ OS:PlantLoop,
        \ip-units gal
        \minimum 0
        \default autocalculate
-  A7, \field Plant Side Inlet Node Name
+  A8, \field Plant Side Inlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A8, \field Plant Side Outlet Node Name
+  A9, \field Plant Side Outlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A9, \field Plant Side Branch List Name
+  A10, \field Plant Side Branch List Name
        \type object-list
        \required-field
        \object-list BranchLists

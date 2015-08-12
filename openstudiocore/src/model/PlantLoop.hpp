@@ -32,14 +32,13 @@ namespace detail {
 };
 
 class Node;
-
 class Splitter;
-
 class Mixer;
-
 class HVACComponent;
-
 class SizingPlant;
+class PlantEquipmentOperationScheme;
+class PlantEquipmentOperationHeatingLoad;
+class PlantEquipmentOperationCoolingLoad;
 
 /** PlantLoop is an interface to the EnergyPlus IDD object
  *  named "PlantLoop"
@@ -111,6 +110,24 @@ class MODEL_API PlantLoop : public Loop {
   Node demandInletNode() const override;
 
   Node demandOutletNode() const override;
+
+  boost::optional<PlantEquipmentOperationHeatingLoad> plantEquipmentOperationHeatingLoad() const;
+
+  bool setPlantEquipmentOperationHeatingLoad(const PlantEquipmentOperationHeatingLoad& plantOperation);
+
+  void resetPlantEquipmentOperationHeatingLoad();
+
+  boost::optional<PlantEquipmentOperationCoolingLoad> plantEquipmentOperationCoolingLoad() const;
+
+  bool setPlantEquipmentOperationCoolingLoad(const PlantEquipmentOperationCoolingLoad& plantOperation);
+
+  void resetPlantEquipmentOperationCoolingLoad();
+
+  boost::optional<PlantEquipmentOperationScheme> primaryPlantEquipmentOperationScheme() const;
+
+  bool setPrimaryPlantEquipmentOperationScheme(const PlantEquipmentOperationScheme& plantOperation);
+
+  void resetPrimaryPlantEquipmentOperationScheme();
 
   /** Returns all of the demand side hvac equipment between
    * inletComps and outletComps.  If type is given then the results will
