@@ -49,12 +49,20 @@
 #include "../../model/HeatExchangerFluidToFluid_Impl.hpp"
 #include "../../model/SetpointManager.hpp"
 #include "../../model/SetpointManager_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/WorkspaceObjectOrder.hpp"
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/PlantEquipmentOperationSchemes_FieldEnums.hxx>
+#include <utilities/idd/PlantEquipmentOperation_HeatingLoad_FieldEnums.hxx>
+#include <utilities/idd/PlantEquipmentOperation_CoolingLoad_FieldEnums.hxx>
+#include <utilities/idd/PlantEquipmentOperation_ComponentSetpoint_FieldEnums.hxx>
+#include <utilities/idd/PlantEquipmentOperation_Uncontrolled_FieldEnums.hxx>
+#include <utilities/idd/PlantEquipmentList_FieldEnums.hxx>
 
 using namespace openstudio::model;
 
@@ -322,11 +330,182 @@ std::vector<HVACComponent> uncontrolledComponents(const PlantLoop & plantLoop)
 
 boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSchemes( PlantLoop & plantLoop )
 {
-  IdfObject _operationSchemes(IddObjectType::PlantEquipmentOperationSchemes);
-  m_idfObjects.push_back(_operationSchemes);
+  IdfObject operationSchemes(IddObjectType::PlantEquipmentOperationSchemes);
+  m_idfObjects.push_back(operationSchemes);
 
-  _operationSchemes.setName(plantLoop.name().get() + " Operation Schemes");
-  return _operationSchemes;
+  operationSchemes.setName(plantLoop.name().get() + " Operation Schemes");
+
+  auto createSetpointOperationScheme = [&](PlantLoop & plantLoop) {
+    const auto & t_setpointComponents = setpointComponents(plantLoop);
+    if( ! t_setpointComponents.empty() ) {
+      Schedule alwaysOn = plantLoop.model().alwaysOnDiscreteSchedule();
+
+      IdfObject setpointOperation(IddObjectType::PlantEquipmentOperation_ComponentSetpoint);
+      setpointOperation.setName(plantLoop.name().get() + " Setpoint Operation Scheme");
+      m_idfObjects.push_back(setpointOperation);
+      setpointOperation.clearExtensibleGroups();
+
+      IdfExtensibleGroup eg = operationSchemes.pushExtensibleGroup();
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,setpointOperation.iddObject().name());
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,setpointOperation.name().get());
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,alwaysOn.name().get());
+
+      for( auto setpointComponent : t_setpointComponents )
+      {
+        boost::optional<IdfObject> _idfObject = translateAndMapModelObject(setpointComponent);
+        OS_ASSERT(_idfObject);
+
+        IdfExtensibleGroup eg = setpointOperation.pushExtensibleGroup();
+        eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::EquipmentObjectType,_idfObject->iddObject().name());
+        eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::EquipmentName,_idfObject->name().get());
+        if( const auto & t_inletNode = inletNode(plantLoop,setpointComponent) ) {
+          eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::DemandCalculationNodeName,t_inletNode->name().get());
+        }
+        if( const auto & t_outletNode = outletNode(plantLoop,setpointComponent) ) {
+          eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::SetpointNodeName,t_outletNode->name().get());
+        }
+        if( auto value = flowrate(setpointComponent) ) {
+          eg.setDouble(PlantEquipmentOperation_ComponentSetpointExtensibleFields::ComponentFlowRate,value.get());
+        } else {
+          eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::ComponentFlowRate,"Autosize");
+        }
+        auto t_componentType = componentType(setpointComponent);
+        switch(t_componentType)
+        {
+          case ComponentType::HEATING :
+            eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::OperationType,"Heating");
+            break;
+          case ComponentType::COOLING :
+            eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::OperationType,"Cooling");
+            break;
+          default :
+            eg.setString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::OperationType,"Dual");
+            break;
+        }
+      }
+    }
+  };
+
+  bool applyDefault = true;
+  //if( auto coolingLoadScheme = plantLoop.plantEquipmentOperationCoolingLoad() ) {
+  //  applyDefault = false;
+  //} 
+
+  //if( auto heatingLoadScheme = plantLoop.plantEquipmentOperationHeatingLoad() ) {
+  //  applyDefault = false;
+  //}
+
+  //if( auto primaryScheme = plantLoop.primaryPlantEquipmentOperationScheme() ) {
+  //  createSetpointOperationScheme();
+  //  applyDefault = false;
+  //}
+
+  if( applyDefault ) {
+    Schedule alwaysOn = plantLoop.model().alwaysOnDiscreteSchedule();
+
+    const auto & t_heatingComponents = heatingComponents( plantLoop );
+    if( ! t_heatingComponents.empty() ) {
+
+      IdfObject heatingOperation(IddObjectType::PlantEquipmentOperation_HeatingLoad);
+      heatingOperation.setName(plantLoop.name().get() + " Heating Operation Scheme");
+      m_idfObjects.push_back(heatingOperation);
+      heatingOperation.clearExtensibleGroups();
+
+      IdfObject plantEquipmentList(IddObjectType::PlantEquipmentList);
+      plantEquipmentList.setName(plantLoop.name().get() + " Heating Equipment List");
+      plantEquipmentList.clearExtensibleGroups();
+      m_idfObjects.push_back(plantEquipmentList);
+
+      IdfExtensibleGroup eg = heatingOperation.pushExtensibleGroup();
+      eg.setDouble(PlantEquipmentOperation_HeatingLoadExtensibleFields::LoadRangeLowerLimit,0.0);
+      eg.setDouble(PlantEquipmentOperation_HeatingLoadExtensibleFields::LoadRangeUpperLimit,1E9);
+      eg.setString(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName,plantEquipmentList.name().get());
+
+      eg = operationSchemes.pushExtensibleGroup();
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,heatingOperation.iddObject().name());
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,heatingOperation.name().get());
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,alwaysOn.name().get());
+
+      for( auto heatingComponent : t_heatingComponents )
+      {
+        if( const auto & idfObject = translateAndMapModelObject(heatingComponent) ) {
+          IdfExtensibleGroup eg = plantEquipmentList.pushExtensibleGroup();
+          eg.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType,idfObject->iddObject().name());
+          eg.setString(PlantEquipmentListExtensibleFields::EquipmentName,idfObject->name().get());
+        }
+      }
+    }
+
+    const auto & t_coolingComponents = coolingComponents( plantLoop );
+    if( ! t_coolingComponents.empty() ) {
+
+      IdfObject coolingOperation(IddObjectType::PlantEquipmentOperation_HeatingLoad);
+      coolingOperation.setName(plantLoop.name().get() + " Cooling Operation Scheme");
+      m_idfObjects.push_back(coolingOperation);
+      coolingOperation.clearExtensibleGroups();
+
+      IdfObject plantEquipmentList(IddObjectType::PlantEquipmentList);
+      plantEquipmentList.setName(plantLoop.name().get() + " Cooling Equipment List");
+      plantEquipmentList.clearExtensibleGroups();
+      m_idfObjects.push_back(plantEquipmentList);
+
+      IdfExtensibleGroup eg = coolingOperation.pushExtensibleGroup();
+      eg.setDouble(PlantEquipmentOperation_HeatingLoadExtensibleFields::LoadRangeLowerLimit,0.0);
+      eg.setDouble(PlantEquipmentOperation_HeatingLoadExtensibleFields::LoadRangeUpperLimit,1E9);
+      eg.setString(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName,plantEquipmentList.name().get());
+
+      eg = operationSchemes.pushExtensibleGroup();
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,coolingOperation.iddObject().name());
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,coolingOperation.name().get());
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,alwaysOn.name().get());
+
+      for( auto coolingComponent : t_coolingComponents )
+      {
+        if( const auto & idfObject = translateAndMapModelObject(coolingComponent) ) {
+          IdfExtensibleGroup eg = plantEquipmentList.pushExtensibleGroup();
+          eg.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType,idfObject->iddObject().name());
+          eg.setString(PlantEquipmentListExtensibleFields::EquipmentName,idfObject->name().get());
+        }
+      }
+    }
+
+    const auto & t_uncontrolledComponents = uncontrolledComponents( plantLoop );
+    if( ! t_uncontrolledComponents.empty() ) {
+
+      IdfObject uncontrolledOperation(IddObjectType::PlantEquipmentOperation_Uncontrolled);
+      uncontrolledOperation.setName(plantLoop.name().get() + " Uncontrolled Operation Scheme");
+      m_idfObjects.push_back(uncontrolledOperation);
+      uncontrolledOperation.clearExtensibleGroups();
+
+      IdfObject plantEquipmentList(IddObjectType::PlantEquipmentList);
+      plantEquipmentList.setName(plantLoop.name().get() + " Uncontrolled Equipment List");
+      plantEquipmentList.clearExtensibleGroups();
+      m_idfObjects.push_back(plantEquipmentList);
+
+      IdfExtensibleGroup eg = uncontrolledOperation.pushExtensibleGroup();
+      eg.setDouble(PlantEquipmentOperation_HeatingLoadExtensibleFields::LoadRangeLowerLimit,0.0);
+      eg.setDouble(PlantEquipmentOperation_HeatingLoadExtensibleFields::LoadRangeUpperLimit,1E9);
+      eg.setString(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName,plantEquipmentList.name().get());
+
+      eg = operationSchemes.pushExtensibleGroup();
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,uncontrolledOperation.iddObject().name());
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,uncontrolledOperation.name().get());
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,alwaysOn.name().get());
+
+      for( auto uncontrolledComponent : t_uncontrolledComponents )
+      {
+        if( const auto & idfObject = translateAndMapModelObject(uncontrolledComponent) ) {
+          IdfExtensibleGroup eg = plantEquipmentList.pushExtensibleGroup();
+          eg.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType,idfObject->iddObject().name());
+          eg.setString(PlantEquipmentListExtensibleFields::EquipmentName,idfObject->name().get());
+        }
+      }
+    }
+
+    createSetpointOperationScheme(plantLoop);
+  }
+
+  return operationSchemes;
 }
 
 } // energyplus
