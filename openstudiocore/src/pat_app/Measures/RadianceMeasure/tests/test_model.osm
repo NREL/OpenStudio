@@ -8122,7 +8122,7 @@ OS:ThermalZone,
   ,                                       !- Zone Return Air Node Name
   {a8c69e3a-78d6-4c55-874e-93c27c37d527}, !- Primary Daylighting Control Name
   ,                                       !- Fraction of Zone Controlled by Primary Daylighting Control
-  {1bf50888-d467-4763-b447-4526e0d5222c}, !- Secondary Daylighting Control Name
+  ,                                       !- Secondary Daylighting Control Name
   ,                                       !- Fraction of Zone Controlled by Secondary Daylighting Control
   {b3d56c31-f57c-420a-8f73-b0f6f2ea7135}, !- Illuminance Map Name
   {dcb3ba3a-c077-4665-b611-bd78f4d44647}, !- Group Rendering Name
