@@ -3,12 +3,10 @@
 
 # design document for this measure is at https://docs.google.com/document/d/16_TLRuhc4VFs2o0gRAp81hRObet7-s6fUEWo3HO7LpE/edit#
 
-require_relative 'resources/RadiancePreprocess'
-
-# require 'fileutils'
-# require 'csv'
-# require 'tempfile'
-# require 'date'
+require 'fileutils'
+require 'csv'
+require 'tempfile'
+require 'date'
 
 # start the measure
 class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
@@ -259,6 +257,9 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 		# TODO be smarter about this.
 		FileUtils.copy_entry("#{epout_dir}/4-ModelToRad-0", rad_dir)
 		FileUtils.cp("#{epout_dir}/3-EnergyPlus-0/eplusout.sql", "#{rad_dir}/sql")
+    
+    # remove the E+ run dir so we don't confuse users 
+    FileUtils.rm_rf(epout_dir)
 
 		# Read simulation settings from model export 
 		# TODO: read settings directly from model
@@ -596,6 +597,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			# for each environment period (design days, annual, or arbitrary) you will create a directory for results
 			t_sqlFile.availableEnvPeriods.each do |envPeriod|
 
+        # DLM: all of these might be available directly from the EpwFile after Jason DeGraw's work
 				diffHorizIllumAll, dirNormIllumAll, diffEfficacyAll, dirNormEfficacyAll, solarAltitudeAll, solarAzimuthAll, diffHorizUnits, dirNormUnits = getTimeSeries(t_sqlFile, envPeriod)
 
 				# check that we have all timeseries

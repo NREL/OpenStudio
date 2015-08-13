@@ -2,7 +2,7 @@
   <schema_version>3.0</schema_version>
   <name>radiance_measure</name>
   <uid>1e3cfef8-b051-4e60-8bb0-ed2d29d4f45d</uid>
-  <version_id>13b6cd1d-9c02-44fd-be9e-865f9dcbf783</version_id>
+  <version_id>898e7ce6-3488-493c-b5b2-958d03b4c955</version_id>
   <xml_checksum>381B7733</xml_checksum>
   <class_name>RadianceMeasure</class_name>
   <display_name>Radiance Daylighting Measure</display_name>
@@ -104,12 +104,6 @@
   </attributes>
   <files>
     <file>
-      <filename>RadiancePreprocess.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>7ADD358C</checksum>
-    </file>
-    <file>
       <filename>USA_CO_Golden-NREL.724666_TMY3.epw</filename>
       <filetype>epw</filetype>
       <usage_type>test</usage_type>
@@ -125,7 +119,7 @@
       <filename>test_model.osm</filename>
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
-      <checksum>99A1B770</checksum>
+      <checksum>5250B8C3</checksum>
     </file>
     <file>
       <version>
@@ -136,7 +130,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>3645DBBF</checksum>
+      <checksum>1C69523F</checksum>
     </file>
   </files>
 </measure>
