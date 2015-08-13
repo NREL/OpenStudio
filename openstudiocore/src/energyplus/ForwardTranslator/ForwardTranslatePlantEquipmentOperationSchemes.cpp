@@ -386,23 +386,44 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
     }
   };
 
+  Schedule alwaysOn = plantLoop.model().alwaysOnDiscreteSchedule();
+
   bool applyDefault = true;
-  //if( auto coolingLoadScheme = plantLoop.plantEquipmentOperationCoolingLoad() ) {
-  //  applyDefault = false;
-  //} 
+  if( auto coolingLoadScheme = plantLoop.plantEquipmentOperationCoolingLoad() ) {
+    auto _scheme = translateAndMapModelObject(coolingLoadScheme.get());
+    OS_ASSERT(_scheme);
+    auto eg = operationSchemes.pushExtensibleGroup();
+    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,_scheme.iddObject().name());
+    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,_scheme.name().get());
+    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,alwaysOn.name().get());
 
-  //if( auto heatingLoadScheme = plantLoop.plantEquipmentOperationHeatingLoad() ) {
-  //  applyDefault = false;
-  //}
+    applyDefault = false;
+  } 
 
-  //if( auto primaryScheme = plantLoop.primaryPlantEquipmentOperationScheme() ) {
-  //  createSetpointOperationScheme();
-  //  applyDefault = false;
-  //}
+  if( auto heatingLoadScheme = plantLoop.plantEquipmentOperationHeatingLoad() ) {
+    auto _scheme = translateAndMapModelObject(heatingLoadScheme.get());
+    OS_ASSERT(_scheme);
+    auto eg = operationSchemes.pushExtensibleGroup();
+    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,_scheme.iddObject().name());
+    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,_scheme.name().get());
+    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,alwaysOn.name().get());
+
+    applyDefault = false;
+  }
+
+  if( auto primaryScheme = plantLoop.primaryPlantEquipmentOperationScheme() ) {
+    auto _scheme = translateAndMapModelObject(primaryScheme.get());
+    OS_ASSERT(_scheme);
+    auto eg = operationSchemes.pushExtensibleGroup();
+    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,_scheme.iddObject().name());
+    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,_scheme.name().get());
+    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,alwaysOn.name().get());
+
+    createSetpointOperationScheme();
+    applyDefault = false;
+  }
 
   if( applyDefault ) {
-    Schedule alwaysOn = plantLoop.model().alwaysOnDiscreteSchedule();
-
     const auto & t_heatingComponents = heatingComponents( plantLoop );
     if( ! t_heatingComponents.empty() ) {
 
