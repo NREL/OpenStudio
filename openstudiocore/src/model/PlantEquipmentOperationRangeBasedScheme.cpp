@@ -289,6 +289,16 @@ void PlantEquipmentOperationRangeBasedScheme::clearLoadRanges()
   return getImpl<detail::PlantEquipmentOperationRangeBasedScheme_Impl>()->clearLoadRanges();
 }
 
+double PlantEquipmentOperationRangeBasedScheme::maximumUpperLimit() const
+{
+  return getImpl<detail::PlantEquipmentOperationRangeBasedScheme_Impl>()->maximumUpperLimit();
+}
+
+double PlantEquipmentOperationRangeBasedScheme::minimumLowerLimit() const
+{
+  return getImpl<detail::PlantEquipmentOperationRangeBasedScheme_Impl>()->minimumLowerLimit();
+}
+
 } // model
 
 } // openstudio

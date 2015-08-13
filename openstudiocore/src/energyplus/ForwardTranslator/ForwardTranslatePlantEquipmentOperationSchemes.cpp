@@ -47,6 +47,12 @@
 #include "../../model/GroundHeatExchangerHorizontalTrench_Impl.hpp"
 #include "../../model/HeatExchangerFluidToFluid.hpp"
 #include "../../model/HeatExchangerFluidToFluid_Impl.hpp"
+#include "../../model/PlantEquipmentOperationCoolingLoad.hpp"
+#include "../../model/PlantEquipmentOperationCoolingLoad_Impl.hpp"
+#include "../../model/PlantEquipmentOperationHeatingLoad.hpp"
+#include "../../model/PlantEquipmentOperationHeatingLoad_Impl.hpp"
+#include "../../model/PlantEquipmentOperationScheme.hpp"
+#include "../../model/PlantEquipmentOperationScheme_Impl.hpp"
 #include "../../model/SetpointManager.hpp"
 #include "../../model/SetpointManager_Impl.hpp"
 #include "../../model/Schedule.hpp"
@@ -393,8 +399,8 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
     auto _scheme = translateAndMapModelObject(coolingLoadScheme.get());
     OS_ASSERT(_scheme);
     auto eg = operationSchemes.pushExtensibleGroup();
-    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,_scheme.iddObject().name());
-    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,_scheme.name().get());
+    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,_scheme->iddObject().name());
+    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,_scheme->name().get());
     eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,alwaysOn.name().get());
 
     applyDefault = false;
@@ -404,8 +410,8 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
     auto _scheme = translateAndMapModelObject(heatingLoadScheme.get());
     OS_ASSERT(_scheme);
     auto eg = operationSchemes.pushExtensibleGroup();
-    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,_scheme.iddObject().name());
-    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,_scheme.name().get());
+    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,_scheme->iddObject().name());
+    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,_scheme->name().get());
     eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,alwaysOn.name().get());
 
     applyDefault = false;
@@ -415,11 +421,11 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
     auto _scheme = translateAndMapModelObject(primaryScheme.get());
     OS_ASSERT(_scheme);
     auto eg = operationSchemes.pushExtensibleGroup();
-    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,_scheme.iddObject().name());
-    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,_scheme.name().get());
+    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,_scheme->iddObject().name());
+    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,_scheme->name().get());
     eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,alwaysOn.name().get());
 
-    createSetpointOperationScheme();
+    createSetpointOperationScheme(plantLoop);
     applyDefault = false;
   }
 
