@@ -209,7 +209,7 @@ boost::optional<double> flowrate(const HVACComponent & component)
   return result;
 }
 
-enum class ComponentType {HEATING, COOLING, BOTH};
+enum class ComponentType {HEATING, COOLING, BOTH, NONE};
 
 ComponentType componentType(const HVACComponent & component)
 {
@@ -277,7 +277,7 @@ ComponentType componentType(const HVACComponent & component)
     }
     default:
     {
-      return ComponentType::BOTH;
+      return ComponentType::NONE;
     }
   }
 }
@@ -466,7 +466,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
     const auto & t_coolingComponents = coolingComponents( plantLoop );
     if( ! t_coolingComponents.empty() ) {
 
-      IdfObject coolingOperation(IddObjectType::PlantEquipmentOperation_HeatingLoad);
+      IdfObject coolingOperation(IddObjectType::PlantEquipmentOperation_CoolingLoad);
       coolingOperation.setName(plantLoop.name().get() + " Cooling Operation Scheme");
       m_idfObjects.push_back(coolingOperation);
       coolingOperation.clearExtensibleGroups();
@@ -477,9 +477,9 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
       m_idfObjects.push_back(plantEquipmentList);
 
       IdfExtensibleGroup eg = coolingOperation.pushExtensibleGroup();
-      eg.setDouble(PlantEquipmentOperation_HeatingLoadExtensibleFields::LoadRangeLowerLimit,0.0);
-      eg.setDouble(PlantEquipmentOperation_HeatingLoadExtensibleFields::LoadRangeUpperLimit,1E9);
-      eg.setString(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName,plantEquipmentList.name().get());
+      eg.setDouble(PlantEquipmentOperation_CoolingLoadExtensibleFields::LoadRangeLowerLimit,0.0);
+      eg.setDouble(PlantEquipmentOperation_CoolingLoadExtensibleFields::LoadRangeUpperLimit,1E9);
+      eg.setString(PlantEquipmentOperation_CoolingLoadExtensibleFields::RangeEquipmentListName,plantEquipmentList.name().get());
 
       eg = operationSchemes.pushExtensibleGroup();
       eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,coolingOperation.iddObject().name());
@@ -509,12 +509,9 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
       plantEquipmentList.clearExtensibleGroups();
       m_idfObjects.push_back(plantEquipmentList);
 
-      IdfExtensibleGroup eg = uncontrolledOperation.pushExtensibleGroup();
-      eg.setDouble(PlantEquipmentOperation_HeatingLoadExtensibleFields::LoadRangeLowerLimit,0.0);
-      eg.setDouble(PlantEquipmentOperation_HeatingLoadExtensibleFields::LoadRangeUpperLimit,1E9);
-      eg.setString(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName,plantEquipmentList.name().get());
+      uncontrolledOperation.setString(PlantEquipmentOperation_UncontrolledFields::EquipmentListName,plantEquipmentList.name().get());
 
-      eg = operationSchemes.pushExtensibleGroup();
+      auto eg = operationSchemes.pushExtensibleGroup();
       eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,uncontrolledOperation.iddObject().name());
       eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,uncontrolledOperation.name().get());
       eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,alwaysOn.name().get());

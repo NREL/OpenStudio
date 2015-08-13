@@ -911,11 +911,6 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   }
 
   // Operation Scheme
-  IdfObject _operationScheme(IddObjectType::PlantEquipmentOperationSchemes);
-  m_idfObjects.push_back(_operationScheme);
-  _operationScheme.setName(plantLoop.name().get() + " Operation Scheme List");
-  _operationScheme.clearExtensibleGroups();
-  
   const auto & operationSchemes = translatePlantEquipmentOperationSchemes(plantLoop);
   OS_ASSERT(operationSchemes);
   idfObject.setString(PlantLoopFields::PlantEquipmentOperationSchemeName,operationSchemes->name().get());
