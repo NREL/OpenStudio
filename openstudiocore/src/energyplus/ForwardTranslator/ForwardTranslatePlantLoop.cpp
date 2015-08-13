@@ -925,9 +925,6 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   m_idfObjects.erase(opSchemeStart,opSchemeEnd);
   m_idfObjects.insert(operationSchemeLocation,opSchemeObjects.begin(),opSchemeObjects.end());
 
-  //std::move(opSchemeStart,opSchemeEnd,operationSchemeLocation);
-
-
   return boost::optional<IdfObject>(idfObject);
 }
 

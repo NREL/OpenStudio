@@ -36,7 +36,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-enum class PlantSizingType {HOTWATER, CHILLEDWATER, CONDENSER};
+enum class PlantSizingType {HOTWATER, CHILLEDWATER, CONDENSER, NONE};
 
 PlantSizingType plantSizingType(const ModelObject & component)
 {
@@ -104,7 +104,7 @@ PlantSizingType plantSizingType(const ModelObject & component)
     }
     default:
     {
-      return PlantSizingType::CONDENSER;
+      return PlantSizingType::NONE;
     }
   }
 }
