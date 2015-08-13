@@ -57,6 +57,12 @@
 #include "../../model/SetpointManager_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
+#include "../../model/WaterHeaterMixed.hpp"
+#include "../../model/WaterHeaterMixed_Impl.hpp"
+#include "../../model/WaterHeaterStratified.hpp"
+#include "../../model/WaterHeaterStratified_Impl.hpp"
+#include "../../model/ZoneHVACComponent.hpp"
+#include "../../model/ZoneHVACComponent_Impl.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/WorkspaceObjectOrder.hpp"
@@ -282,13 +288,50 @@ ComponentType componentType(const HVACComponent & component)
   }
 }
 
+// Some plant components air in a containingHVACComponent() and it is that
+// container which needs to go on the plant operation scheme. Here is a filter to 
+// figure that out. 
+HVACComponent operationSchemeComponent(const HVACComponent & component) {
+    boost::optional<HVACComponent> result;
+
+    switch(component.iddObject().type().value())
+    {
+      case openstudio::IddObjectType::OS_WaterHeater_Mixed :
+      {
+        auto waterHeater = component.cast<WaterHeaterMixed>();
+        if( auto hpwh = waterHeater.containingZoneHVACComponent() ) {
+          result = hpwh;
+        }
+        break;
+      }
+      case openstudio::IddObjectType::OS_WaterHeater_Stratified :
+      {
+        auto waterHeater = component.cast<WaterHeaterStratified>();
+        if( auto hpwh = waterHeater.containingZoneHVACComponent() ) {
+          result = hpwh;
+        }
+        break;
+      }
+      default:
+      {
+        break;
+      }
+    }
+
+  if( result ) {
+    return result.get();
+  }
+
+  return component;
+}
+
 std::vector<HVACComponent> setpointComponents(const PlantLoop & plantLoop)
 {
   std::vector<HVACComponent> result;
 
   for( const auto & comp : subsetCastVector<HVACComponent>(plantLoop.supplyComponents()) ) {
     if( _isSetpointComponent(plantLoop,comp) ) {
-      result.push_back(comp);
+      result.push_back(operationSchemeComponent(comp));
     }
   }
 
@@ -301,7 +344,7 @@ std::vector<HVACComponent> coolingComponents(const PlantLoop & plantLoop)
 
   for( const auto & comp : subsetCastVector<HVACComponent>(plantLoop.supplyComponents()) ) {
     if( componentType(comp) == ComponentType::COOLING ) {
-      result.push_back(comp);
+      result.push_back(operationSchemeComponent(comp));
     }
   }
 
@@ -314,7 +357,7 @@ std::vector<HVACComponent> heatingComponents(const PlantLoop & plantLoop)
 
   for( const auto & comp : subsetCastVector<HVACComponent>(plantLoop.supplyComponents()) ) {
     if( componentType(comp) == ComponentType::HEATING ) {
-      result.push_back(comp);
+      result.push_back(operationSchemeComponent(comp));
     }
   }
 
@@ -327,7 +370,7 @@ std::vector<HVACComponent> uncontrolledComponents(const PlantLoop & plantLoop)
 
   for( const auto & comp : subsetCastVector<HVACComponent>(plantLoop.supplyComponents()) ) {
     if( componentType(comp) == ComponentType::BOTH ) {
-      result.push_back(comp);
+      result.push_back(operationSchemeComponent(comp));
     }
   }
 
@@ -341,6 +384,8 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
 
   operationSchemes.setName(plantLoop.name().get() + " Operation Schemes");
 
+  // Lambda does what the name suggests, create setpoint operation schemes.
+  // This is for any component that has a setpoint manager on its outlet node
   auto createSetpointOperationScheme = [&](PlantLoop & plantLoop) {
     const auto & t_setpointComponents = setpointComponents(plantLoop);
     if( ! t_setpointComponents.empty() ) {
@@ -393,8 +438,10 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
   };
 
   Schedule alwaysOn = plantLoop.model().alwaysOnDiscreteSchedule();
-
   bool applyDefault = true;
+
+  // If any operation schemes are defined in the model then don't apply default operation schemes
+
   if( auto coolingLoadScheme = plantLoop.plantEquipmentOperationCoolingLoad() ) {
     auto _scheme = translateAndMapModelObject(coolingLoadScheme.get());
     OS_ASSERT(_scheme);
@@ -430,9 +477,10 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
   }
 
   if( applyDefault ) {
+    // If we get here then there must not be any operation schemes defined in the model 
+    // and we should go ahead and create default schemes.
     const auto & t_heatingComponents = heatingComponents( plantLoop );
     if( ! t_heatingComponents.empty() ) {
-
       IdfObject heatingOperation(IddObjectType::PlantEquipmentOperation_HeatingLoad);
       heatingOperation.setName(plantLoop.name().get() + " Heating Operation Scheme");
       m_idfObjects.push_back(heatingOperation);
@@ -453,8 +501,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
       eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,heatingOperation.name().get());
       eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,alwaysOn.name().get());
 
-      for( auto heatingComponent : t_heatingComponents )
-      {
+      for( auto heatingComponent : t_heatingComponents ) {
         if( const auto & idfObject = translateAndMapModelObject(heatingComponent) ) {
           IdfExtensibleGroup eg = plantEquipmentList.pushExtensibleGroup();
           eg.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType,idfObject->iddObject().name());
@@ -465,7 +512,6 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
 
     const auto & t_coolingComponents = coolingComponents( plantLoop );
     if( ! t_coolingComponents.empty() ) {
-
       IdfObject coolingOperation(IddObjectType::PlantEquipmentOperation_CoolingLoad);
       coolingOperation.setName(plantLoop.name().get() + " Cooling Operation Scheme");
       m_idfObjects.push_back(coolingOperation);
@@ -486,8 +532,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
       eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,coolingOperation.name().get());
       eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,alwaysOn.name().get());
 
-      for( auto coolingComponent : t_coolingComponents )
-      {
+      for( auto coolingComponent : t_coolingComponents ) {
         if( const auto & idfObject = translateAndMapModelObject(coolingComponent) ) {
           IdfExtensibleGroup eg = plantEquipmentList.pushExtensibleGroup();
           eg.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType,idfObject->iddObject().name());
@@ -516,8 +561,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
       eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,uncontrolledOperation.name().get());
       eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,alwaysOn.name().get());
 
-      for( auto uncontrolledComponent : t_uncontrolledComponents )
-      {
+      for( auto uncontrolledComponent : t_uncontrolledComponents ) {
         if( const auto & idfObject = translateAndMapModelObject(uncontrolledComponent) ) {
           IdfExtensibleGroup eg = plantEquipmentList.pushExtensibleGroup();
           eg.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType,idfObject->iddObject().name());
