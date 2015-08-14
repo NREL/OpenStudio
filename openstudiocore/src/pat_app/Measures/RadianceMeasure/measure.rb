@@ -202,8 +202,49 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			puts "Perl could not be found in path, exiting"
 			exit false
 		end
-
+    
+		# get the epw file
+		# TODO align with long-winded thread from 2015.07.28
 		
+		epw_path = nil
+    
+    # try runner first
+    if runner.lastEpwFilePath.is_initialized
+      test = runner.lastEpwFilePath.get.to_s
+      if File.exist?(test)
+        epw_path = test
+      end
+    end
+        
+    # try model second
+		if !epw_path
+      if model.weatherFile.is_initialized
+        test = model.weatherFile.get.path
+        if test.is_initialized
+          # have a file name from the model
+          if File.exist?(test.get.to_s)
+            epw_path = test.get
+          else
+            # If this is an always-run Measure, need to check for file in different path
+            alt_weath_path = File.expand_path(File.join(File.dirname(__FILE__), "../../../resources"))
+            alt_epw_path = File.expand_path(File.join(alt_weath_path, test.get.to_s))
+            if File.exist?(alt_epw_path)
+              epw_path = OpenStudio::Path.new(alt_epw_path)
+            else
+              runner.registerError("Model has been assigned a weather file, but the file is not in the specified location of '#{test.get}'.")
+              return false
+            end
+          end
+        else
+          runner.registerError("Model has a weather file assigned, but the weather file path has been deleted.")
+          return false
+        end
+      else
+        runner.registerError('Model has not been assigned a weather file.')
+        return false
+      end
+    end
+    
 		## ModelToRad Workflow
 
    	# save osm for input to eplus pre-process
@@ -1615,36 +1656,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 		# settle in, it's gonna be a bumpy ride...
 		Dir.chdir("#{radPath}")
 		puts "\nRunning radiance in directory: '#{Dir.pwd}'"
-
-		# get the epw file
-		# TODO align with long-winded thread from 2015.07.28
-		
-		epw_path = nil
-		if model.weatherFile.is_initialized
-			epw_path = model.weatherFile.get.path
-			if epw_path.is_initialized
-				if File.exist?(epw_path.get.to_s)
-					epw_path = epw_path.get
-				else
-					# If this is an always-run Measure, need to check a different path
-					alt_weath_path = File.expand_path(File.join(File.dirname(__FILE__), "../../../resources"))
-					alt_epw_path = File.expand_path(File.join(alt_weath_path, epw_path.get.to_s))
-					if File.exist?(alt_epw_path)
-						epw_path = OpenStudio::Path.new(alt_epw_path)
-					else
-						OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has been assigned a weather file, but the file is not in the specified location of '#{epw_path.get}'.")
-						return false
-					end
-				end
-			else
-				OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has a weather file assigned, but the weather file path has been deleted.")
-				return false
-			end
-		else
-			OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'Model has not been assigned a weather file.')
-			return false
-
-	  end
 	  
 	  epwFile = OpenStudio::OptionalEpwFile.new(OpenStudio::EpwFile.new(epw_path))
 	  	  
