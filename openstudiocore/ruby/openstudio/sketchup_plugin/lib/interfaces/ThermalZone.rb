@@ -178,9 +178,9 @@ module OpenStudio
         end      
         
         if error
-          msg  = "ThermalZone initialization resulted in the following error:\n\n"
-          msg += "'#{error}'"
-          msg += "It advised that you save a backup of your current OpenStudio model and restart SketchUp."
+          msg  = "ThermalZone initialization resulted in the following error:\n"
+          msg += "'#{error}'\n\n"
+          msg += "It is advised that you save a backup of your current OpenStudio model and restart SketchUp."
           UI.messagebox(msg)
         end
                

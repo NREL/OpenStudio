@@ -70,7 +70,7 @@ module OpenStudio
 
     def show_error
       msg  = "An error occurred in the OpenStudio SketchUp plug-in.\n\n"
-      msg += "It advised that you save a backup of your current OpenStudio model and restart SketchUp."
+      msg += "It is advised that you save a backup of your current OpenStudio model and restart SketchUp."
       UI.messagebox(msg)
     end
     
