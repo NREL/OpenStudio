@@ -49,15 +49,15 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationHe
   auto name = modelObject.name().get();
   idfObject.setName(name);
 
-  double lowerLimit = 0.0;
+  double lowerLimit = modelObject.minimumLowerLimit();
   int i = 1;
   for( auto upperLimit : modelObject.loadRangeUpperLimits() ) {
-    auto eg = idfObject.pushExtensibleGroup();
-    eg.setDouble(PlantEquipmentOperation_HeatingLoadExtensibleFields::LoadRangeLowerLimit,lowerLimit);
-    eg.setDouble(PlantEquipmentOperation_HeatingLoadExtensibleFields::LoadRangeUpperLimit,upperLimit);
-
     auto equipment = modelObject.equipment(upperLimit);
     if( ! equipment.empty() ) {
+      auto eg = idfObject.pushExtensibleGroup();
+      eg.setDouble(PlantEquipmentOperation_HeatingLoadExtensibleFields::LoadRangeLowerLimit,lowerLimit);
+      eg.setDouble(PlantEquipmentOperation_HeatingLoadExtensibleFields::LoadRangeUpperLimit,upperLimit);
+
       IdfObject equipmentList(IddObjectType::PlantEquipmentList);
       m_idfObjects.push_back(equipmentList);
       auto equipmentListName = name + " equipment list " + std::to_string(i);

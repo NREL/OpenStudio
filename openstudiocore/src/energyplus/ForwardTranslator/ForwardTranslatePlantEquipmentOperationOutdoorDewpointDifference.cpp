@@ -56,15 +56,15 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationOu
     idfObject.setString(PlantEquipmentOperation_OutdoorDewpointDifferenceFields::ReferenceTemperatureNodeName,node->name().get());
   }
 
-  double lowerLimit = 0.0;
+  double lowerLimit = modelObject.minimumLowerLimit();
   int i = 1;
   for( auto upperLimit : modelObject.loadRangeUpperLimits() ) {
-    auto eg = idfObject.pushExtensibleGroup();
-    eg.setDouble(PlantEquipmentOperation_OutdoorDewpointDifferenceExtensibleFields::DewpointTemperatureDifferenceRangeLowerLimit,lowerLimit);
-    eg.setDouble(PlantEquipmentOperation_OutdoorDewpointDifferenceExtensibleFields::DewpointTemperatureDifferenceRangeUpperLimit,upperLimit);
-
     auto equipment = modelObject.equipment(upperLimit);
     if( ! equipment.empty() ) {
+      auto eg = idfObject.pushExtensibleGroup();
+      eg.setDouble(PlantEquipmentOperation_OutdoorDewpointDifferenceExtensibleFields::DewpointTemperatureDifferenceRangeLowerLimit,lowerLimit);
+      eg.setDouble(PlantEquipmentOperation_OutdoorDewpointDifferenceExtensibleFields::DewpointTemperatureDifferenceRangeUpperLimit,upperLimit);
+
       IdfObject equipmentList(IddObjectType::PlantEquipmentList);
       m_idfObjects.push_back(equipmentList);
       auto equipmentListName = name + " equipment list " + std::to_string(i);

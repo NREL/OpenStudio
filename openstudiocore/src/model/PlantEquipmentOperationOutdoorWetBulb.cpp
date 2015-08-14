@@ -64,12 +64,12 @@ namespace detail {
 
   double PlantEquipmentOperationOutdoorWetBulb_Impl::maximumUpperLimit() const
   {
-    return -70.0;
+    return 70.0;
   }
 
   double PlantEquipmentOperationOutdoorWetBulb_Impl::minimumLowerLimit() const
   {
-    return 70.0;
+    return -70.0;
   }
 
 } // detail
