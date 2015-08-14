@@ -586,6 +586,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			end
 			exec_statement("rmtxop -fa #{addFiles} -t | getinfo - > \"output/ts/merged_space.ill\"")
 
+			
+
 			## window merge end
 
 
@@ -1602,6 +1604,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 		## ## ## ## ## ##
 
 
+
 		# actually do the thing
 		
 		sqlOutFile = ""
@@ -1683,12 +1686,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 		site_longitude = site.longitude
 		site_meridian = site.timeZone.to_f * 15
 
-		puts "city: #{site_name}"
-		puts "latitude: #{site_latitude}"
-		puts "longitude: #{site_longitude}"
-		puts "time zone: GMT #{site.timeZone}"
-		puts "std meridian: #{site_meridian}"
-
 		# get the facility and building
 		facility = model.getFacility
 		building = model.getBuilding
@@ -1742,6 +1739,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			end
 		end
 
+
 		space_names_to_calculate = Array.new
 
 
@@ -1794,7 +1792,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
   	sim_cores, site_latitude, site_longitude, site_meridian, radPath, building, values, dcVectors, write_sql)
 
 
-		# make new lighting power schedules based on Radiance daylight schedules
+		# make new lighting power schedules based on Radiance daylight data
 		makeSchedules(model, sqlFile)
 
 
@@ -1803,12 +1801,12 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 
 		# remove illuminance map and daylighting controls from model, so they are not re-simulated in E+
-
 		model.getThermalZones.each do |thermalZone|
 			thermalZone.resetPrimaryDaylightingControl
 			thermalZone.resetSecondaryDaylightingControl
 			thermalZone.resetIlluminanceMap
 		end
+		
 		
     # report initial condition of model
     daylightAnalysisSpaces = []
