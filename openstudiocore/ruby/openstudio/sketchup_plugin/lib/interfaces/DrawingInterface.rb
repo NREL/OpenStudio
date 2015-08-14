@@ -255,12 +255,20 @@ module OpenStudio
       if @model_object.nil?
         return(false)
       elsif @model_object.handle.isNull
+        # object may have been deleted or not fully initialized
         return(false)
       else
+        # check that this object is accessible in the workspace
+        object = @model_interface.openstudio_model.getObject(@model_object.handle)
+        if object.empty?
+          msg  = "A partially initialized object was detected in the plug-in.\n\n"
+          msg += "It advised that you save a backup of your current OpenStudio model and restart SketchUp."
+          UI.messagebox(msg)
+        end
+     
         return(true)
       end
     end
-
 
     # Updates the ModelObject with new information from the SketchUp entity.
     def update_model_object
