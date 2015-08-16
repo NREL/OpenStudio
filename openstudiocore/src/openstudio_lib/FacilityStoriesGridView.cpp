@@ -212,7 +212,7 @@ namespace openstudio {
       auto nominalZCoordinate = obj.cast<model::BuildingStory>().nominalZCoordinate();
       if (nominalZCoordinate) {
         if (*nominalZCoordinate >= upperLimit || *nominalZCoordinate <= lowerLimit) {
-          objectSelector->m_filteredObjects.insert(obj).second;
+          objectSelector->m_filteredObjects.insert(obj);
         }
       }
     }

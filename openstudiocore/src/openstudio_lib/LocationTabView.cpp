@@ -454,7 +454,7 @@ void LocationView::update(bool weatherFileBtnClicked)
           QString savePath, filePath;
 
           openstudio::OSAppBase * app = OSAppBase::instance();
-          if (app) {
+          if (app && app->currentDocument()) {
 
             savePath = app->currentDocument()->savePath();
 

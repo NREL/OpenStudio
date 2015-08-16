@@ -17,32 +17,32 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/WaterHeaterHeatPump.hpp>
-#include <model/WaterHeaterHeatPump_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/WaterHeaterMixed.hpp>
-#include <model/WaterHeaterMixed_Impl.hpp>
-#include <model/FanOnOff.hpp>
-#include <model/FanOnOff_Impl.hpp>
-#include <model/CoilWaterHeatingAirToWaterHeatPump.hpp>
-#include <model/CoilWaterHeatingAirToWaterHeatPump_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleDay.hpp>
-#include <model/ScheduleDay_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
-#include <model/ScheduleRuleset.hpp>
-#include <model/ScheduleRuleset_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
+#include "WaterHeaterHeatPump.hpp"
+#include "WaterHeaterHeatPump_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "WaterHeaterMixed.hpp"
+#include "WaterHeaterMixed_Impl.hpp"
+#include "FanOnOff.hpp"
+#include "FanOnOff_Impl.hpp"
+#include "CoilWaterHeatingAirToWaterHeatPump.hpp"
+#include "CoilWaterHeatingAirToWaterHeatPump_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ScheduleDay.hpp"
+#include "ScheduleDay_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "HVACComponent.hpp"
+#include "HVACComponent_Impl.hpp"
+#include "ScheduleRuleset.hpp"
+#include "ScheduleRuleset_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_WaterHeater_HeatPump_FieldEnums.hxx>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

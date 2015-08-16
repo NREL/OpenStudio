@@ -18,12 +18,12 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/ChillerAbsorptionIndirect.hpp>
-#include <model/PlantLoop_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Node.hpp>
+#include "ModelFixture.hpp"
+#include "../ChillerAbsorptionIndirect.hpp"
+#include "../PlantLoop_Impl.hpp"
+#include "../PlantLoop.hpp"
+#include "../Node_Impl.hpp"
+#include "../Node.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

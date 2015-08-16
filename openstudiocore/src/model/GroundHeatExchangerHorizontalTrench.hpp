@@ -20,8 +20,8 @@
 #ifndef MODEL_GROUNDHEATEXCHANGERHORIZONTALTRENCH_HPP
 #define MODEL_GROUNDHEATEXCHANGERHORIZONTALTRENCH_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 

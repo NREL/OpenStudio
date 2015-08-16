@@ -215,7 +215,7 @@ namespace openstudio {
       for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
         QString objName(obj.name().get().c_str());
         if (!objName.contains(m_nameFilter->text(), Qt::CaseInsensitive)) {
-          m_objectsFilteredByName.insert(obj).second;
+          m_objectsFilteredByName.insert(obj);
         }
       }
     }
@@ -230,7 +230,7 @@ namespace openstudio {
     for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
       if (obj.iddObjectType() == IddObjectType::OS_ShadingSurfaceGroup){
         if (m_typeFilter->currentText() == obj.cast<model::ShadingSurfaceGroup>().shadingSurfaceType().c_str()) {
-          m_objectsFilterdByType.insert(obj).second;
+          m_objectsFilterdByType.insert(obj);
         }
       }
     }
@@ -245,7 +245,7 @@ namespace openstudio {
     for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
       if (obj.iddObjectType() == IddObjectType::OS_WindowMaterial_Blind){
         if (m_orientationFilter->currentText() == obj.cast<model::Blind>().slatOrientation().c_str()) {
-          m_objectsFilteredByOrientation.insert(obj).second;
+          m_objectsFilteredByOrientation.insert(obj);
         }
       }
     }
@@ -264,7 +264,7 @@ namespace openstudio {
       for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
         QString objName(obj.name().get().c_str());
         if (!objName.contains(m_tiltFilter->text(), Qt::CaseInsensitive)) {
-          m_objectsFilteredByTilt.insert(obj).second;
+          m_objectsFilteredByTilt.insert(obj);
         }
       }
     }
@@ -278,19 +278,19 @@ namespace openstudio {
 
     for (auto obj : m_objectsFilteredByTilt) {
       if (allFilteredObjects.count(obj) == 0) {
-        allFilteredObjects.insert(obj).second;
+        allFilteredObjects.insert(obj);
       }
     }
 
     for (auto obj : m_objectsFilterdByType) {
       if (allFilteredObjects.count(obj) == 0) {
-        allFilteredObjects.insert(obj).second;
+        allFilteredObjects.insert(obj);
       }
     }
 
     for (auto obj : m_objectsFilteredByOrientation) {
       if (allFilteredObjects.count(obj) == 0) {
-        allFilteredObjects.insert(obj).second;
+        allFilteredObjects.insert(obj);
       }
     }
 

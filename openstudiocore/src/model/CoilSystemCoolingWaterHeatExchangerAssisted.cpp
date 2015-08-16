@@ -17,27 +17,27 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CoilSystemCoolingWaterHeatExchangerAssisted.hpp>
-#include <model/CoilSystemCoolingWaterHeatExchangerAssisted_Impl.hpp>
-#include <model/AirToAirComponent.hpp>
-#include <model/AirToAirComponent_Impl.hpp>
-#include <model/ControllerWaterCoil.hpp>
-#include <model/ControllerWaterCoil_Impl.hpp>
-#include <model/WaterToAirComponent.hpp>
-#include <model/WaterToAirComponent_Impl.hpp>
-#include <model/CoilCoolingWater.hpp>
-#include <model/CoilCoolingWater_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/HeatExchangerAirToAirSensibleAndLatent.hpp>
-#include <model/HeatExchangerAirToAirSensibleAndLatent_Impl.hpp>
+#include "CoilSystemCoolingWaterHeatExchangerAssisted.hpp"
+#include "CoilSystemCoolingWaterHeatExchangerAssisted_Impl.hpp"
+#include "AirToAirComponent.hpp"
+#include "AirToAirComponent_Impl.hpp"
+#include "ControllerWaterCoil.hpp"
+#include "ControllerWaterCoil_Impl.hpp"
+#include "WaterToAirComponent.hpp"
+#include "WaterToAirComponent_Impl.hpp"
+#include "CoilCoolingWater.hpp"
+#include "CoilCoolingWater_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "HeatExchangerAirToAirSensibleAndLatent.hpp"
+#include "HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
 #include <utilities/idd/OS_CoilSystem_Cooling_Water_HeatExchangerAssisted_FieldEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
