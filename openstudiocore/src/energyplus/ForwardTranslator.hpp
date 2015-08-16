@@ -249,6 +249,8 @@ class WaterUseConnections;
 class WaterUseEquipment;
 class WindowPropertyFrameAndDivider;
 class ZoneAirHeatBalanceAlgorithm;
+class ZoneControlHumidistat;
+class ZoneControlThermostatStagedDualSetpoint;
 class ZoneHVACBaseboardConvectiveElectric;
 class ZoneHVACBaseboardConvectiveWater;
 class ZoneHVACBaseboardRadiantConvectiveElectric;

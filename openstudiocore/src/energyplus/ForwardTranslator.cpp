@@ -1940,13 +1940,13 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateZoneHVACLowTemperatureRadiantElectric(mo);
       break;
     }
-  case openstudio::IddObjectType::OS_ZoneHVAC_LowTempRadiant_ConstFlow :
+  case openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow :
     {
       model::ZoneHVACLowTempRadiantConstFlow mo = modelObject.cast<ZoneHVACLowTempRadiantConstFlow>();
       retVal = translateZoneHVACLowTempRadiantConstFlow(mo);
       break;
     }
-  case openstudio::IddObjectType::OS_ZoneHVAC_LowTempRadiant_VarFlow :
+  case openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow :
     {
       model::ZoneHVACLowTempRadiantVarFlow mo = modelObject.cast<ZoneHVACLowTempRadiantVarFlow>();
       retVal = translateZoneHVACLowTempRadiantVarFlow(mo);

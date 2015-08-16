@@ -45,7 +45,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACDehumidifierDX( Z
   boost::optional<ModelObject> temp;
 
   // Name
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_Baseboard_RadiantConvective_Electric, modelObject);
+  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_Dehumidifier_DX, modelObject);
 
   // AvailabilityScheduleName
   {
@@ -56,12 +56,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACDehumidifierDX( Z
   }
 
   // AirInletNodeName
-  if( auto node = modelObject.inletModelObject() ) {
+  if( auto node = modelObject.inletNode() ) {
     idfObject.setString(ZoneHVAC_Dehumidifier_DXFields::AirInletNodeName,node->name().get());
   }
 
   // AirOutletNodeName
-  if( auto node = modelObject.outletModelObject() ) {
+  if( auto node = modelObject.outletNode() ) {
     idfObject.setString(ZoneHVAC_Dehumidifier_DXFields::AirOutletNodeName,node->name().get());
   }
 

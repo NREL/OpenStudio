@@ -23,18 +23,11 @@
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
-#include "../../model/ZoneHVACUnitHeater.hpp"
-#include "../../model/ZoneHVACUnitHeater_Impl.hpp"
+#include "../../model/ZoneHVACUnitVentilator.hpp"
+#include "../../model/ZoneHVACUnitVentilator_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
-#include "../../model/CoilHeatingWater.hpp"
-#include "../../model/CoilHeatingWater_Impl.hpp"
-#include <utilities/idd/ZoneHVAC_UnitHeater_FieldEnums.hxx>
-#include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
-#include <utilities/idd/Fan_VariableVolume_FieldEnums.hxx>
-#include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
-#include <utilities/idd/Coil_Heating_Gas_FieldEnums.hxx>
-#include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
+#include <utilities/idd/ZoneHVAC_UnitVentilator_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -45,200 +38,154 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitHeater(
-    ZoneHVACUnitHeater & modelObject )
+boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitVentilator( ZoneHVACUnitVentilator & modelObject )
 {
-  // Make sure the modelObject gets ut into the map, and the new idfObject gets put into the final file.
-  // Also sets the idfObjects name
-
-  IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::ZoneHVAC_UnitHeater,modelObject);
-  
-  
   boost::optional<std::string> s;
   boost::optional<double> value;
-  boost::optional<Node> node;
-  
-  // Get model object name and define node names for future use
-  
+  boost::optional<ModelObject> temp;
+
   // Model Name
-  std::string baseName = modelObject.name().get();
-  
+  std::string const baseName = modelObject.name().get();
   // Node Names
-  std::string fanOutletNodeName = baseName + " Fan Outlet Node";
-  
-  // Field: Availability Schedule Name
+  std::string const mixedAirNodeName = baseName + " Mixed Air Node";
+  std::string const fanOutletNodeName = baseName + " Fan Outlet Node";
+  std::string const coolingCoilOutletNodeName = baseName + " Cooling Coil Outlet Node";
+  std::string const reliefAirNodeName = baseName + " Relief Air Node";
+  std::string const exhaustAirNodeName = baseName + " Exhaust Air Node";
+  std::string const oaNodeName = baseName + " OA Node";
 
-  Schedule availabilitySchedule = modelObject.availabilitySchedule();
-  translateAndMapModelObject(availabilitySchedule);
-  
-  s = availabilitySchedule.name();
-  
-  if(s)
+  // Name
+  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_UnitVentilator, modelObject);
+
+  // AvailabilityScheduleName
   {
-    idfObject.setString(ZoneHVAC_UnitHeaterFields::AvailabilityScheduleName,*s);
-  }
-
-  // Field: Air Inlet Node Name
-  
-  node = modelObject.inletNode();
-  
-  if(node)
-  {
-    s = node->name();
-
-    if(s)
-    {
-      idfObject.setString(ZoneHVAC_UnitHeaterFields::AirInletNodeName,*s);
+    auto schedule = modelObject.availabilitySchedule();
+    if( auto _schedule = translateAndMapModelObject(schedule) ) {
+      idfObject.setString(ZoneHVAC_UnitVentilatorFields::AvailabilityScheduleName,_schedule->name().get());
     }
   }
 
-  // Field: Air Outlet Node Name
-  
-  node = modelObject.outletNode();
+  // MaximumSupplyAirFlowRate
+  if( modelObject.isMaximumSupplyAirFlowRateAutosized() ) {
+    idfObject.setString(ZoneHVAC_UnitVentilatorFields::MaximumSupplyAirFlowRate,"AutoSize");
+  } else if( (value = modelObject.maximumSupplyAirFlowRate()) ) {
+    idfObject.setDouble(ZoneHVAC_UnitVentilatorFields::MaximumSupplyAirFlowRate,value.get());
+  }
 
-  if(node)
+  // OutdoorAirControlType
+  if( (s = modelObject.outdoorAirControlType()) ) {
+    idfObject.setString(ZoneHVAC_UnitVentilatorFields::OutdoorAirControlType,s.get());
+  }
+
+  // MinimumOutdoorAirFlowRate
+  if( modelObject.isMinimumOutdoorAirFlowRateAutosized() ) {
+    idfObject.setString(ZoneHVAC_UnitVentilatorFields::MinimumOutdoorAirFlowRate,"AutoSize");
+  } else if( (value = modelObject.minimumOutdoorAirFlowRate()) ) {
+    idfObject.setDouble(ZoneHVAC_UnitVentilatorFields::MinimumOutdoorAirFlowRate,value.get());
+  }
+
+  // MinimumOutdoorAirScheduleName
   {
-    s = node->name();
-
-    if(s)
-    {
-      idfObject.setString(ZoneHVAC_UnitHeaterFields::AirOutletNodeName,*s);
+    auto schedule = modelObject.minimumOutdoorAirSchedule();
+    if( auto _schedule = translateAndMapModelObject(schedule) ) {
+      idfObject.setString(ZoneHVAC_UnitVentilatorFields::MinimumOutdoorAirScheduleName,_schedule->name().get());
     }
   }
 
-  //Field: Supply Air Fan Object Type
-
-  HVACComponent supplyAirFan = modelObject.supplyAirFan();
-
-  if(boost::optional<IdfObject> _supplyAirFan = translateAndMapModelObject(supplyAirFan)) 
-  {
-    idfObject.setString(ZoneHVAC_UnitHeaterFields::SupplyAirFanObjectType,_supplyAirFan->iddObject().name());
+  // MaximumOutdoorAirFlowRate
+  if( modelObject.isMaximumOutdoorAirFlowRateAutosized() ) {
+    idfObject.setString(ZoneHVAC_UnitVentilatorFields::MaximumOutdoorAirFlowRate,"AutoSize");
+  } else if( (value = modelObject.maximumOutdoorAirFlowRate()) ) {
+    idfObject.setDouble(ZoneHVAC_UnitVentilatorFields::MaximumOutdoorAirFlowRate,value.get());
   }
 
-  // Field: Supply Air Fan Name
-  
-  s = modelObject.supplyAirFan().name();
-   
-
-  if(s)
-
+  // MaximumOutdoorAirFractionorTemperatureScheduleName
   {
-    idfObject.setString(ZoneHVAC_UnitHeaterFields::SupplyAirFanName,*s);
-  }
-
-  // Supply Air Fan Inlet and Outlet Nodes
-  
-  node = modelObject.inletNode();
-  
-  if(boost::optional<IdfObject> _supplyAirFan = translateAndMapModelObject(supplyAirFan))
-  {
-  
-    if(node)
-    {
-      s = node->name();
-
-      if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_ConstantVolume)
-      {
-        _supplyAirFan->setString(Fan_ConstantVolumeFields::AirInletNodeName,*s);
-        _supplyAirFan->setString(Fan_ConstantVolumeFields::AirOutletNodeName,fanOutletNodeName);
-      }
-      else if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_VariableVolume )
-      {
-        _supplyAirFan->setString(Fan_VariableVolumeFields::AirInletNodeName,*s);
-        _supplyAirFan->setString(Fan_VariableVolumeFields::AirOutletNodeName,fanOutletNodeName);
-      }
+    auto schedule = modelObject.maximumOutdoorAirFractionorTemperatureSchedule();
+    if( auto _schedule = translateAndMapModelObject(schedule) ) {
+      idfObject.setString(ZoneHVAC_UnitVentilatorFields::MaximumOutdoorAirFractionorTemperatureScheduleName,_schedule->name().get());
     }
   }
 
-  // Field Maximum Supply Air Flow Rate
-
-  if( modelObject.isMaximumSupplyAirFlowRateAutosized())
-  {
-    idfObject.setString(ZoneHVAC_UnitHeaterFields::MaximumSupplyAirFlowRate,"Autosize");
+  // AirInletNodeName
+  if( auto node = modelObject.inletNode() ) {
+    idfObject.setString(ZoneHVAC_UnitVentilatorFields::AirInletNodeName,node->name().get());
   }
 
-  else if ( (value = modelObject.maximumSupplyAirFlowRate()) )
-  {
-    idfObject.setDouble(ZoneHVAC_UnitHeaterFields::MaximumSupplyAirFlowRate,*value);
+  // AirOutletNodeName
+  if( auto node = modelObject.inletNode() ) {
+    idfObject.setString(ZoneHVAC_UnitVentilatorFields::AirInletNodeName,node->name().get());
   }
 
-  // Field: Fan Control Type
-  // Maps to "Supply Air Fan Operation During No Heating" in 8.2.0 and above.
+  // OutdoorAirNodeName
+  // ExhaustAirNodeName
+  // MixedAirNodeName
+  idfObject.setString(ZoneHVAC_UnitVentilatorFields::MixedAirNodeName,mixedAirNodeName);
+  idfObject.setString(ZoneHVAC_UnitVentilatorFields::OutdoorAirNodeName,oaNodeName);
+  idfObject.setString(ZoneHVAC_UnitVentilatorFields::ExhaustAirNodeName,exhaustAirNodeName);
+  IdfObject _oaNodeList(openstudio::IddObjectType::OutdoorAir_NodeList);
+  _oaNodeList.setString(0,oaNodeName);
+  m_idfObjects.push_back(_oaNodeList);
 
-  if( istringEqual(modelObject.fanControlType(),"ONOFF") ) {
-    idfObject.setString(ZoneHVAC_UnitHeaterFields::SupplyAirFanOperationDuringNoHeating,"No");
+  // SupplyAirFanObjectType
+  // SupplyAirFanName
+  {
+    auto supplyAirFan = modelObject.supplyAirFan();
+    if( auto _supplyAirFan = translateAndMapModelObject(supplyAirFan) ) {
+      idfObject.setString(ZoneHVAC_UnitVentilatorFields::SupplyAirFanObjectType,_supplyAirFan->iddObject().name());
+      idfObject.setString(ZoneHVAC_UnitVentilatorFields::SupplyAirFanName,_supplyAirFan->name().get());
+    }
+  }
+  // CoilOption
+  auto heatingCoil = modelObject.heatingCoil();
+  auto coolingCoil = modelObject.coolingCoil();
+
+  if ( heatingCoil && coolingCoil ) {
+    idfObject.setString(ZoneHVAC_UnitVentilatorFields::CoilOption,"HeatingAndCooling");
+  } else if ( heatingCoil ) {
+    idfObject.setString(ZoneHVAC_UnitVentilatorFields::CoilOption,"Heating");
+  } else if ( coolingCoil ) {
+    idfObject.setString(ZoneHVAC_UnitVentilatorFields::CoilOption,"Cooling");
   } else {
-    idfObject.setString(ZoneHVAC_UnitHeaterFields::SupplyAirFanOperationDuringNoHeating,"Yes");
+    idfObject.setString(ZoneHVAC_UnitVentilatorFields::CoilOption,"None");
   }
 
-   // Field: Heating Coil Object Type
-
-  HVACComponent heatingCoil = modelObject.heatingCoil();
-
-  if( boost::optional<IdfObject> _heatingCoil = translateAndMapModelObject(heatingCoil))
-  {
-    idfObject.setString(ZoneHVAC_UnitHeaterFields::HeatingCoilObjectType,_heatingCoil->iddObject().name());
+  // SupplyAirFanOperatingModeScheduleName
+  if( (temp = modelObject.supplyAirFanOperatingModeSchedule()) ){
+    if( auto _schedule = translateAndMapModelObject(temp.get()) ) {
+      idfObject.setString(ZoneHVAC_UnitVentilatorFields::SupplyAirFanOperatingModeScheduleName,_schedule->name().get());
+    }
   }
-
-   // Field: Heating Coil Name
-
-  s = modelObject.heatingCoil().name();
-   
-  if(s)
-  {
-    idfObject.setString(ZoneHVAC_UnitHeaterFields::HeatingCoilName,*s);
-  }
-
-  // Heating coil inlet and outlet node names
-
-  node = modelObject.outletNode();
-  
-  if(boost::optional<IdfObject> _heatingCoil = translateAndMapModelObject(heatingCoil))
-  {
-    if(node)
-    {
-      s = node->name();
-
-      if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric)
-      {
-        _heatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName,fanOutletNodeName);
-        _heatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName,*s);
-      }
-      else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Gas )
-      {
-        _heatingCoil->setString(Coil_Heating_GasFields::AirInletNodeName,fanOutletNodeName);
-        _heatingCoil->setString(Coil_Heating_GasFields::AirOutletNodeName,*s);
-      }
-      else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water )
-      {
-        _heatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName,fanOutletNodeName);
-        _heatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName,*s);
-      }
+  // HeatingCoilObjectType
+  // HeatingCoilName
+  if( heatingCoil ) {
+    if( auto _heatingCoil = translateAndMapModelObject(heatingCoil.get()) ) {
+      idfObject.setString(ZoneHVAC_UnitVentilatorFields::HeatingCoilObjectType,_heatingCoil->iddObject().name());
+      idfObject.setString(ZoneHVAC_UnitVentilatorFields::HeatingCoilName,_heatingCoil->name().get());
     }
   }
 
-  // Field Maximum Hot Water [or Steam] Flow Rate
-
-  if( modelObject.isMaximumHotWaterFlowRateAutosized())
-  
-  {
-    idfObject.setString(ZoneHVAC_UnitHeaterFields::MaximumHotWaterorSteamFlowRate,"Autosize");
+  // HeatingConvergenceTolerance
+  if( (value = modelObject.heatingConvergenceTolerance()) ) {
+    idfObject.setDouble(ZoneHVAC_UnitVentilatorFields::HeatingConvergenceTolerance,value.get());
   }
 
-  else if ( (value = modelObject.maximumHotWaterFlowRate()) )
-  {
-     idfObject.setDouble(ZoneHVAC_UnitHeaterFields::MaximumHotWaterorSteamFlowRate,*value);
+  // CoolingCoilObjectType
+  // CoolingCoilName
+  if( coolingCoil ) {
+    if( auto _coolingCoil = translateAndMapModelObject(coolingCoil.get()) ) {
+      idfObject.setString(ZoneHVAC_UnitVentilatorFields::CoolingCoilObjectType,_coolingCoil->iddObject().name());
+      idfObject.setString(ZoneHVAC_UnitVentilatorFields::CoolingCoilName,_coolingCoil->name().get());
+    }
   }
 
-  // Field: Minimum Hot Water [or Steam] Flow Rate
+  // CoolingConvergenceTolerance
+  if( (value = modelObject.coolingConvergenceTolerance()) ) {
+    idfObject.setDouble(ZoneHVAC_UnitVentilatorFields::CoolingConvergenceTolerance,value.get());
+  }
 
-  idfObject.setDouble(ZoneHVAC_UnitHeaterFields::MinimumHotWaterorSteamFlowRate,modelObject.minimumHotWaterFlowRate());
-
- // Field: Heating Convergence Tolerance
-
-  idfObject.setDouble(ZoneHVAC_UnitHeaterFields::HeatingConvergenceTolerance,modelObject.heatingConvergenceTolerance());
-
-  // Field: Availability Manager List Name: Ignored?
+  // AvailabilityManagerListName
+  // DesignSpecificationZoneHVACSizingObjectName
 
   return idfObject;
 }
