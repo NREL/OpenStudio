@@ -249,22 +249,26 @@ class WaterUseConnections;
 class WaterUseEquipment;
 class WindowPropertyFrameAndDivider;
 class ZoneAirHeatBalanceAlgorithm;
-class ZoneControlHumidistat;
-class ZoneControlThermostatStagedDualSetpoint;
 class ZoneHVACBaseboardConvectiveElectric;
 class ZoneHVACBaseboardConvectiveWater;
+class ZoneHVACBaseboardRadiantConvectiveElectric;
+class ZoneHVACBaseboardRadiantConvectiveWater;
+class ZoneHVACDehumidifierDX;
+class ZoneHVACEnergyRecoveryVentilator;
+class ZoneHVACEnergyRecoveryVentilatorController;
+class ZoneHVACEquipmentList;
 class ZoneHVACFourPipeFanCoil;
-class ZoneHVACIdealLoadsAirSystem;
 class ZoneHVACHighTemperatureRadiant;
+class ZoneHVACIdealLoadsAirSystem;
+class ZoneHVACLowTemperatureRadiantElectric;
 class ZoneHVACLowTempRadiantConstFlow;
 class ZoneHVACLowTempRadiantVarFlow;
-class ZoneHVACLowTemperatureRadiantElectric;
 class ZoneHVACPackagedTerminalHeatPump;
 class ZoneHVACPackagedTerminalAirConditioner;
 class ZoneHVACTerminalUnitVariableRefrigerantFlow;
-class ZoneHVACWaterToAirHeatPump;
-class ZoneHVACEquipmentList;
 class ZoneHVACUnitHeater;
+class ZoneHVACUnitVentilator;
+class ZoneHVACWaterToAirHeatPump;
 }
 
 namespace energyplus {
@@ -775,30 +779,42 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateZoneHVACBaseboardConvectiveElectric( model::ZoneHVACBaseboardConvectiveElectric & modelObject );
 
   boost::optional<IdfObject> translateZoneHVACBaseboardConvectiveWater( model::ZoneHVACBaseboardConvectiveWater & modelObject );
-  
+
+  boost::optional<IdfObject> translateZoneHVACBaseboardRadiantConvectiveElectric( model::ZoneHVACBaseboardRadiantConvectiveElectric & modelObject );
+
+  boost::optional<IdfObject> translateZoneHVACBaseboardRadiantConvectiveWater( model::ZoneHVACBaseboardRadiantConvectiveWater & modelObject );
+
+  boost::optional<IdfObject> translateZoneHVACDehumidifierDX( model::ZoneHVACDehumidifierDX & modelObject );
+
+  boost::optional<IdfObject> translateZoneHVACEnergyRecoveryVentilator( model::ZoneHVACEnergyRecoveryVentilator & modelObject );
+
+  boost::optional<IdfObject> translateZoneHVACEnergyRecoveryVentilatorController( model::ZoneHVACEnergyRecoveryVentilatorController & modelObject );
+
   boost::optional<IdfObject> translateZoneHVACEquipmentList( model::ZoneHVACEquipmentList & modelObject );
 
   boost::optional<IdfObject> translateZoneHVACFourPipeFanCoil( model::ZoneHVACFourPipeFanCoil & modelObject );
 
+  boost::optional<IdfObject> translateZoneHVACHighTemperatureRadiant( model::ZoneHVACHighTemperatureRadiant & modelObject );
+
   boost::optional<IdfObject> translateZoneHVACIdealLoadsAirSystem( model::ZoneHVACIdealLoadsAirSystem & modelObject );
 
-  boost::optional<IdfObject> translateZoneHVACHighTemperatureRadiant(model::ZoneHVACHighTemperatureRadiant & modelObject );
-
-  boost::optional<IdfObject> translateZoneHVACLowTempRadiantConstFlow(model::ZoneHVACLowTempRadiantConstFlow & modelObject );
-
-  boost::optional<IdfObject> translateZoneHVACLowTempRadiantVarFlow(model::ZoneHVACLowTempRadiantVarFlow & modelObject );
-  
   boost::optional<IdfObject> translateZoneHVACLowTemperatureRadiantElectric( model::ZoneHVACLowTemperatureRadiantElectric & modelObject );
- 
+
+  boost::optional<IdfObject> translateZoneHVACLowTempRadiantConstFlow( model::ZoneHVACLowTempRadiantConstFlow & modelObject );
+
+  boost::optional<IdfObject> translateZoneHVACLowTempRadiantVarFlow( model::ZoneHVACLowTempRadiantVarFlow & modelObject );
+
   boost::optional<IdfObject> translateZoneHVACPackagedTerminalHeatPump( model::ZoneHVACPackagedTerminalHeatPump & modelObject );
- 
+
   boost::optional<IdfObject> translateZoneHVACPackagedTerminalAirConditioner( model::ZoneHVACPackagedTerminalAirConditioner & modelObject );
 
   boost::optional<IdfObject> translateZoneHVACTerminalUnitVariableRefrigerantFlow( model::ZoneHVACTerminalUnitVariableRefrigerantFlow & modelObject );
 
-  boost::optional<IdfObject> translateZoneHVACWaterToAirHeatPump( model::ZoneHVACWaterToAirHeatPump & modelObject );
-  
   boost::optional<IdfObject> translateZoneHVACUnitHeater( model::ZoneHVACUnitHeater & modelObject );
+
+  boost::optional<IdfObject> translateZoneHVACUnitVentilator( model::ZoneHVACUnitVentilator & modelObject );
+
+  boost::optional<IdfObject> translateZoneHVACWaterToAirHeatPump( model::ZoneHVACWaterToAirHeatPump & modelObject );
 
   boost::optional<IdfObject> createAirLoopHVACSupplyPath( model::AirLoopHVAC & airLoopHVAC );
 

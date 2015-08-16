@@ -1873,13 +1873,43 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       model::ZoneHVACBaseboardConvectiveElectric mo = modelObject.cast<ZoneHVACBaseboardConvectiveElectric>();
       retVal = translateZoneHVACBaseboardConvectiveElectric(mo);
       break;
-    }  
+    }
   case openstudio::IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Water :
     {
       model::ZoneHVACBaseboardConvectiveWater mo = modelObject.cast<ZoneHVACBaseboardConvectiveWater>();
       retVal = translateZoneHVACBaseboardConvectiveWater(mo);
       break;
-    }  
+    }
+  case openstudio::IddObjectType::OS_ZoneHVAC_Baseboard_RadiantConvective_Electric :
+    {
+      model::ZoneHVACBaseboardRadiantConvectiveElectric mo = modelObject.cast<ZoneHVACBaseboardRadiantConvectiveElectric>();
+      retVal = translateZoneHVACBaseboardRadiantConvectiveElectric(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ZoneHVAC_Baseboard_RadiantConvective_Water :
+    {
+      model::ZoneHVACBaseboardRadiantConvectiveWater mo = modelObject.cast<ZoneHVACBaseboardRadiantConvectiveWater>();
+      retVal = translateZoneHVACBaseboardRadiantConvectiveWater(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ZoneHVAC_Dehumidifier_DX :
+    {
+      model::ZoneHVACDehumidifierDX mo = modelObject.cast<ZoneHVACDehumidifierDX>();
+      retVal = translateZoneHVACDehumidifierDX(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ZoneHVAC_EnergyRecoveryVentilator :
+    {
+      model::ZoneHVACEnergyRecoveryVentilator mo = modelObject.cast<ZoneHVACEnergyRecoveryVentilator>();
+      retVal = translateZoneHVACEnergyRecoveryVentilator(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ZoneHVAC_EnergyRecoveryVentilator_Controller :
+    {
+      model::ZoneHVACEnergyRecoveryVentilatorController mo = modelObject.cast<ZoneHVACEnergyRecoveryVentilatorController>();
+      retVal = translateZoneHVACEnergyRecoveryVentilatorController(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_ZoneHVAC_EquipmentList :
     {
       model::ZoneHVACEquipmentList mo = modelObject.cast<ZoneHVACEquipmentList>();
@@ -1891,29 +1921,17 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       model::ZoneHVACFourPipeFanCoil mo = modelObject.cast<ZoneHVACFourPipeFanCoil>();
       retVal = translateZoneHVACFourPipeFanCoil(mo);
       break;
-    }  
-  case openstudio::IddObjectType::OS_ZoneHVAC_IdealLoadsAirSystem :
-    {
-      model::ZoneHVACIdealLoadsAirSystem mo = modelObject.cast<ZoneHVACIdealLoadsAirSystem>();
-      retVal = translateZoneHVACIdealLoadsAirSystem(mo);
-      break;
     }
   case openstudio::IddObjectType::OS_ZoneHVAC_HighTemperatureRadiant :
-    { 
+    {
       model::ZoneHVACHighTemperatureRadiant mo = modelObject.cast<ZoneHVACHighTemperatureRadiant>();
       retVal = translateZoneHVACHighTemperatureRadiant(mo);
       break;
     }
-  case openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow :
-    { 
-      model::ZoneHVACLowTempRadiantConstFlow mo = modelObject.cast<ZoneHVACLowTempRadiantConstFlow>();
-      retVal = translateZoneHVACLowTempRadiantConstFlow(mo);
-      break;
-    }
-  case openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow :
-    { 
-      model::ZoneHVACLowTempRadiantVarFlow mo = modelObject.cast<ZoneHVACLowTempRadiantVarFlow>();
-      retVal = translateZoneHVACLowTempRadiantVarFlow(mo);
+  case openstudio::IddObjectType::OS_ZoneHVAC_IdealLoadsAirSystem :
+    {
+      model::ZoneHVACIdealLoadsAirSystem mo = modelObject.cast<ZoneHVACIdealLoadsAirSystem>();
+      retVal = translateZoneHVACIdealLoadsAirSystem(mo);
       break;
     }
   case openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric :
@@ -1921,7 +1939,19 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       model::ZoneHVACLowTemperatureRadiantElectric mo = modelObject.cast<ZoneHVACLowTemperatureRadiantElectric>();
       retVal = translateZoneHVACLowTemperatureRadiantElectric(mo);
       break;
-    }  
+    }
+  case openstudio::IddObjectType::OS_ZoneHVAC_LowTempRadiant_ConstFlow :
+    {
+      model::ZoneHVACLowTempRadiantConstFlow mo = modelObject.cast<ZoneHVACLowTempRadiantConstFlow>();
+      retVal = translateZoneHVACLowTempRadiantConstFlow(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ZoneHVAC_LowTempRadiant_VarFlow :
+    {
+      model::ZoneHVACLowTempRadiantVarFlow mo = modelObject.cast<ZoneHVACLowTempRadiantVarFlow>();
+      retVal = translateZoneHVACLowTempRadiantVarFlow(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump :
     {
       model::ZoneHVACPackagedTerminalHeatPump mo = modelObject.cast<ZoneHVACPackagedTerminalHeatPump>();
@@ -1940,16 +1970,22 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateZoneHVACTerminalUnitVariableRefrigerantFlow(mo);
       break;
     }
-  case openstudio::IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump :
-    {
-      model::ZoneHVACWaterToAirHeatPump mo = modelObject.cast<ZoneHVACWaterToAirHeatPump>();
-      retVal = translateZoneHVACWaterToAirHeatPump(mo);
-      break;
-    }
   case openstudio::IddObjectType::OS_ZoneHVAC_UnitHeater :
     {
       model::ZoneHVACUnitHeater mo = modelObject.cast<ZoneHVACUnitHeater>();
       retVal = translateZoneHVACUnitHeater(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ZoneHVAC_UnitVentilator :
+    {
+      model::ZoneHVACUnitVentilator mo = modelObject.cast<ZoneHVACUnitVentilator>();
+      retVal = translateZoneHVACUnitVentilator(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump :
+    {
+      model::ZoneHVACWaterToAirHeatPump mo = modelObject.cast<ZoneHVACWaterToAirHeatPump>();
+      retVal = translateZoneHVACWaterToAirHeatPump(mo);
       break;
     }
   //If no case statement log a warning

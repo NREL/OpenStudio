@@ -327,6 +327,11 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"RefrigerationAirChiller","Heating Power","heatingPowerSchedule",true,"",0.0,1.0},
     {"RefrigerationAirChiller","Defrost","defrostSchedule",true,"",0.0,1.0},
     {"RefrigerationAirChiller","Defrost Drip-Down","defrostDripDownSchedule",true,"",0.0,1.0},
+    {"ZoneHVACBaseboardRadiantConvectiveElectric","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"ZoneHVACBaseboardRadiantConvectiveWater","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"ZoneHVACDehumidifierDX","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"ZoneHVACEnergyRecoveryVentilator","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"ZoneHVACEnergyRecoveryVentilatorController","Time of Day Economizer Flow Control","timeofDayEconomizerFlowControlSchedule",true,"",0.0,1.0},
     {"ZoneHVACTerminalUnitVariableRefrigerantFlow","Terminal Unit Availability schedule","terminalUnitAvailabilityschedule",false,"Availability",0.0,1.0},
     {"ZoneHVACTerminalUnitVariableRefrigerantFlow","Supply Air Fan Operating Mode Schedule","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
     {"ZoneHVACHighTemperatureRadiant","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
@@ -334,6 +339,13 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"ZoneHVACWaterToAirHeatPump","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACWaterToAirHeatPump","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
     {"ZoneHVACUnitHeater","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"ZoneHVACUnitVentilator","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"ZoneHVACUnitVentilator","Minimum Outdoor Air","minimumOutdoorAirSchedule",true,"",0.0,1.0},
+
+    {"ZoneHVACUnitVentilator","Maximum Outdoor Air Fraction or Temperature","maximumOutdoorAirFractionorTemperatureSchedule",true,"",OptionalDouble(),OptionalDouble()},
+    
+    {"ZoneHVACUnitVentilator","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
+
     {"","","",true,"",OptionalDouble(),OptionalDouble()}
   };
 

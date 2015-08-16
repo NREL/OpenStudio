@@ -467,20 +467,26 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ZoneCapacitanceMultiplierResearchSpecial);
     REGISTER_CONSTRUCTOR(ZoneControlHumidistat);
     REGISTER_CONSTRUCTOR(ZoneControlThermostatStagedDualSetpoint);
+    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveElectric);
+    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveWater);
+    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveElectric);
+    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveWater);
+    REGISTER_CONSTRUCTOR(ZoneHVACDehumidifierDX);
+    REGISTER_CONSTRUCTOR(ZoneHVACEnergyRecoveryVentilator);
+    REGISTER_CONSTRUCTOR(ZoneHVACEnergyRecoveryVentilatorController);
     REGISTER_CONSTRUCTOR(ZoneHVACEquipmentList);
-    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveElectric);  
-    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveWater);  
-    REGISTER_CONSTRUCTOR(ZoneHVACIdealLoadsAirSystem);
     REGISTER_CONSTRUCTOR(ZoneHVACFourPipeFanCoil);
     REGISTER_CONSTRUCTOR(ZoneHVACHighTemperatureRadiant);
+    REGISTER_CONSTRUCTOR(ZoneHVACIdealLoadsAirSystem);
     REGISTER_CONSTRUCTOR(ZoneHVACLowTemperatureRadiantElectric);
     REGISTER_CONSTRUCTOR(ZoneHVACLowTempRadiantConstFlow);
     REGISTER_CONSTRUCTOR(ZoneHVACLowTempRadiantVarFlow);
     REGISTER_CONSTRUCTOR(ZoneHVACPackagedTerminalHeatPump);
     REGISTER_CONSTRUCTOR(ZoneHVACPackagedTerminalAirConditioner);
     REGISTER_CONSTRUCTOR(ZoneHVACTerminalUnitVariableRefrigerantFlow);
-    REGISTER_CONSTRUCTOR(ZoneHVACWaterToAirHeatPump);
     REGISTER_CONSTRUCTOR(ZoneHVACUnitHeater);
+    REGISTER_CONSTRUCTOR(ZoneHVACUnitVentilator);
+    REGISTER_CONSTRUCTOR(ZoneHVACWaterToAirHeatPump);
 
     if (!result) {
       LOG(Warn,"Creating GenericModelObject for IddObjectType '"
@@ -795,20 +801,26 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ZoneCapacitanceMultiplierResearchSpecial);
     REGISTER_COPYCONSTRUCTORS(ZoneControlHumidistat);
     REGISTER_COPYCONSTRUCTORS(ZoneControlThermostatStagedDualSetpoint);
-    REGISTER_COPYCONSTRUCTORS(ZoneHVACEquipmentList);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardConvectiveElectric);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardConvectiveWater);
-    REGISTER_COPYCONSTRUCTORS(ZoneHVACIdealLoadsAirSystem);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveElectric);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveWater);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACDehumidifierDX);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACEnergyRecoveryVentilator);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACEnergyRecoveryVentilatorController);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACEquipmentList);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACFourPipeFanCoil);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACHighTemperatureRadiant);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACIdealLoadsAirSystem);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACLowTemperatureRadiantElectric);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACLowTempRadiantConstFlow);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACLowTempRadiantVarFlow);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACPackagedTerminalHeatPump);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACPackagedTerminalAirConditioner);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACTerminalUnitVariableRefrigerantFlow);
-    REGISTER_COPYCONSTRUCTORS(ZoneHVACWaterToAirHeatPump);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACUnitHeater);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACUnitVentilator);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACWaterToAirHeatPump);
 
     if (!result) {
       LOG(Warn,"Creating GenericModelObject for IddObjectType '"

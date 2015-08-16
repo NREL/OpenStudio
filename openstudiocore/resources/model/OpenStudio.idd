@@ -19416,7 +19416,7 @@ OS:ZoneHVAC:WaterToAirHeatPump,
         
 OS:ZoneHVAC:UnitHeater,
        \min-fields 10
-  A1,  \field Handle
+  A1 , \field Handle
        \type handle
        \required-field
   A2 , \field Name
@@ -19459,27 +19459,439 @@ OS:ZoneHVAC:UnitHeater,
        \required-field
        \type object-list
        \object-list HeatingCoilName
-   N2 ,\field Maximum Hot Water Flow Rate
+  N2 , \field Maximum Hot Water Flow Rate
        \note Not used when heating coil is gas or electric
        \units m3/s
        \minimum> 0
        \autosizable
        \ip-units gal/min
-   N3 ,\field Minimum Hot Water Flow Rate
+  N3 , \field Minimum Hot Water Flow Rate
        \note Not used when heating coil is gas or electric
        \units m3/s
        \minimum 0
        \default 0
        \ip-units gal/min
-   N4 ,\field Heating Convergence Tolerance
+  N4 , \field Heating Convergence Tolerance
        \type real
        \minimum> 0.0
        \default 0.001
-  A9; \field Availability Manager List Name
+  A9 ; \field Availability Manager List Name
        \note Enter the name of an AvailabilityManagerAssignmentList object.
        \type object-list
        \object-list SystemAvailabilityManagerLists
-       
+
+OS:ZoneHVAC:Dehumidifier:DX,
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+        \type alpha
+        \reference ConnectionObject
+   A3,  \field Availability Schedule Name
+        \required-field
+        \type object-list
+        \object-list ScheduleNames
+   A4,  \field Air Inlet Node Name
+        \required-field
+        \type object-list
+        \object-list ConnectionNames
+   A5,  \field Air Outlet Node Name
+        \required-field
+        \type object-list
+        \object-list ConnectionNames
+   N1,  \field Rated Water Removal
+        \required-field
+        \type real
+        \units L/day
+        \minimum> 0.0
+   N2,  \field Rated Energy Factor
+        \required-field
+        \type real
+        \units L/kWh
+        \minimum> 0.0
+   N3,  \field Rated Air Flow Rate
+        \required-field
+        \type real
+        \units m3/s
+        \minimum> 0.0
+   A6,  \field Water Removal Curve Name
+        \required-field
+        \type object-list
+        \object-list BiquadraticCurves
+        \object-list BiVariateTables
+   A7,  \field Energy Factor Curve Name
+        \required-field
+        \type object-list
+        \object-list BiquadraticCurves
+        \object-list BiVariateTables
+   A8,  \field Part Load Fraction Correlation Curve Name
+        \required-field
+        \type object-list
+        \object-list QuadraticCubicCurves
+        \object-list UniVariateTables
+   N4,  \field Minimum Dry-Bulb Temperature for Dehumidifier Operation
+        \required-field
+        \type real
+        \units C
+   N5,  \field Maximum Dry-Bulb Temperature for Dehumidifier Operation
+        \required-field
+        \type real
+        \units C
+   N6,  \field Off-Cycle Parasitic Electric Load
+        \required-field
+        \type real
+        \units W
+        \minimum 0.0
+   A9;  \field Condensate Collection Water Storage Tank Name
+        \type object-list
+        \object-list WaterStorageTankNames
+
+OS:ZoneHVAC:EnergyRecoveryVentilator,
+  A1 ,  \field Handle
+        \type handle
+        \required-field
+  A2 ,  \field Name
+        \required-field
+        \type alpha
+        \reference ConnectionObject
+  A3 ,  \field Availability Schedule Name
+        \required-field
+        \type object-list
+        \object-list ScheduleNames
+  A4 ,  \field Heat Exchanger Name
+        \required-field
+        \note Heat exchanger type must be HeatExchanger:AirToAir:SensibleAndLatent
+        \type object-list
+        \object-list HXAirToAirSensibleAndLatentNames
+  N1 ,  \field Supply Air Flow Rate
+        \required-field
+        \autosizable
+        \type real
+        \minimum> 0.0
+        \units m3/s
+        \note This flow rate must match the supply fan's air flow rate.
+  N2 ,  \field Exhaust Air Flow Rate
+        \required-field
+        \autosizable
+        \type real
+        \minimum> 0.0
+        \units m3/s
+        \note This flow rate must match the supply fan air flow rate.
+  A5 ,  \field Supply Air Fan Name
+        \required-field
+        \note Fan type must be Fan:OnOff
+        \type object-list
+        \object-list FansOnOff
+  A6 ,  \field Exhaust Air Fan Name
+        \required-field
+        \note Fan type must be Fan:OnOff
+        \type object-list
+        \object-list FansOnOff
+  A7 ,  \field Controller Name
+        \note Enter the name of a ZoneHVAC:EnergyRecoveryVentilator:Controller object.
+        \type object-list
+        \object-list ControllerStandAloneEnergyRecoveryVentilator
+  N3 ,  \field Ventilation Rate per Unit Floor Area
+        \required-field
+        \type real
+        \units m3/s-m2
+        \minimum 0.0
+        \note 0.000508 m3/s-m2 corresponds to 0.1 ft3/min-ft2
+        \note Used only when supply and exhaust air flow rates are autosized.
+  N4 ,  \field Ventilation Rate per Occupant
+        \required-field
+        \type real
+        \units m3/s-person
+        \minimum 0.0
+        \note 0.00236 m3/s-person corresponds to 5 ft3/min-person
+        \note Used only when supply and exhaust air flow rates are autosized.
+  A8 ;  \field Availability Manager List Name
+        \note Enter the name of an AvailabilityManagerAssignmentList object.
+        \type object-list
+        \object-list SystemAvailabilityManagerLists
+
+OS:ZoneHVAC:EnergyRecoveryVentilator:Controller,
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference ControllerStandAloneEnergyRecoveryVentilator
+  N1 , \field Temperature High Limit
+       \type real
+       \units C
+       \note Enter the maximum outdoor dry-bulb temperature limit for economizer operation.
+       \note No input or blank input means this limit is not operative
+  N2 , \field Temperature Low Limit
+       \type real
+       \units C
+       \note Enter the minimum outdoor dry-bulb temperature limit for economizer operation.
+       \note No input or blank input means this limit is not operative
+  N3 , \field Enthalpy High Limit
+       \type real
+       \units J/kg
+       \note Enter the maximum outdoor enthalpy limit for economizer operation.
+       \note No input or blank input means this limit is not operative
+  N4 , \field Dewpoint Temperature Limit
+       \type real
+       \units C
+       \note Enter the maximum outdoor dew point temperature limit for economizer operation.
+       \note No input or blank input means this limit is not operative
+  A3 , \field Electronic Enthalpy Limit Curve Name
+       \type object-list
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
+       \note Enter the name of a quadratic or cubic curve which defines the maximum outdoor
+       \note humidity ratio (function of outdoor dry-bulb temperature) for economizer operation.
+       \note No input or blank input means this limit is not operative
+  A4 , \field Exhaust Air Temperature Limit
+       \required-field
+       \type choice
+       \key ExhaustAirTemperatureLimit
+       \key NoExhaustAirTemperatureLimit
+  A5 , \field Exhaust Air Enthalpy Limit
+       \required-field
+       \type choice
+       \key ExhaustAirEnthalpyLimit
+       \key NoExhaustAirEnthalpyLimit
+  A6 , \field Time of Day Economizer Flow Control Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Schedule values greater than 0 indicate economizer operation is active. This
+       \note schedule may be used with or without the High Humidity Control option.
+       \note When used together, high humidity control has priority over economizer control.
+  A7 , \field High Humidity Control Flag
+       \required-field
+       \type choice
+       \key Yes
+       \key No
+       \note Select Yes to modify air flow rates based on a zone humidistat.
+       \note Select No to disable this feature.
+  N5 , \field High Humidity Outdoor Air Flow Ratio
+       \required-field
+       \type real
+       \minimum> 0.0
+       \note Enter the ratio of supply (outdoor) air to the maximum supply air flow rate when modified
+       \note air flow rates are active based on high indoor humidity.
+  A8 ; \field Control High Indoor Humidity Based on Outdoor Humidity Ratio
+       \required-field
+       \type choice
+       \key Yes
+       \key No
+       \note If NO is selected, the air flow rate is modified any time indoor relative
+       \note humidity is above humidistat setpoint. If YES is selected, outdoor air flow
+       \note rate is modified any time indoor relative humidity is above the humidistat
+       \note setpoint AND the outdoor humidity ratio is less than the indoor humidity ratio.
+
+OS:ZoneHVAC:UnitVentilator,
+   A1 , \field Handle
+        \type handle
+        \required-field
+   A2 , \field Name
+        \required-field
+        \type alpha
+        \reference ConnectionObject
+   A3 , \field Availability Schedule Name
+        \required-field
+        \type object-list
+        \object-list ScheduleNames
+   N1 , \field Maximum Supply Air Flow Rate
+        \required-field
+        \units m3/s
+        \minimum> 0
+        \autosizable
+   A4 , \field Outdoor Air Control Type
+        \required-field
+        \type choice
+        \key FixedAmount
+        \key VariablePercent
+        \key FixedTemperature
+   N2 , \field Minimum Outdoor Air Flow Rate
+        \required-field
+        \units m3/s
+        \autosizable
+        \minimum 0.0
+   A5 , \field Minimum Outdoor Air Schedule Name
+        \required-field
+        \type object-list
+        \object-list ScheduleNames
+   N3 , \field Maximum Outdoor Air Flow Rate
+        \required-field
+        \units m3/s
+        \minimum 0
+        \autosizable
+   A6 , \field Maximum Outdoor Air Fraction or Temperature Schedule Name
+        \required-field
+        \type object-list
+        \object-list ScheduleNames
+   A7 , \field Air Inlet Node Name
+        \required-field
+        \type object-list
+        \object-list ConnectionNames
+   A8 , \field Air Outlet Node Name
+        \required-field
+        \type object-list
+        \object-list ConnectionNames
+   A9,  \field Supply Air Fan Name
+        \required-field
+        \type object-list
+        \object-list FansCVandOnOffandVAV
+   A10, \field Supply Air Fan Operating Mode Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+        \note Enter the name of a schedule that controls fan operation. Schedule
+        \note name values of 0 denote cycling fan operation (fan cycles with
+        \note cooling/heating coil). Schedule values greater than 0 denote
+        \note constant fan operation (fan runs continually regardless of coil
+        \note operation). The fan operating mode defaults to cycling fan operation
+        \note if this input field is left blank.
+   A11, \field Heating Coil Name
+        \type object-list
+        \object-list HeatingCoilName
+   N4 , \field Heating Convergence Tolerance
+        \required-field
+        \type real
+        \minimum> 0.0
+   A12, \field Cooling Coil Name
+        \type object-list
+        \object-list CoolingCoilsWater
+   N5 , \field Cooling Convergence Tolerance
+        \required-field
+        \type real
+        \minimum> 0.0
+   A13, \field Availability Manager List Name
+        \note Enter the name of an AvailabilityManagerAssignmentList object.
+        \type object-list
+        \object-list SystemAvailabilityManagerLists
+   A14; \field Design Specification ZoneHVAC Sizing Object Name
+        \note Enter the name of a DesignSpecificationZoneHVACSizing object.
+        \type object-list
+        \object-list DesignSpecificationZoneHVACSizingName
+
+OS:ZoneHVAC:Baseboard:RadiantConvective:Water,
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference ConnectionObject
+  A3,  \field Availability Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+  A4,  \field Inlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  A5,  \field Outlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  N1,  \field Rated Average Water Temperature
+       \required-field
+       \type real
+       \maximum 150.0
+       \minimum 20.0
+       \units C
+  N2,  \field Rated Water Mass Flow Rate
+       \required-field
+       \type real
+       \maximum 10.0
+       \minimum> 0.0
+       \units kg/s
+  A6,  \field Heating Design Capacity Method
+       \required-field
+       \type choice
+       \key HeatingDesignCapacity
+       \key CapacityPerFloorArea
+       \key FractionOfAutosizedHeatingCapacity
+  N3 , \field Heating Design Capacity
+       \required-field
+       \type real
+       \units W
+       \minimum 0.0
+       \autosizable
+       \ip-units W
+  N4 , \field Heating Design Capacity Per Floor Area
+       \required-field
+       \type real
+       \units W/m2
+       \minimum 0.0
+  N5 , \field Fraction of Autosized Heating Design Capacity
+       \required-field
+       \type real
+       \minimum 0.0
+  N6,  \field Maximum Water Flow Rate
+       \required-field
+       \autosizable
+       \type real
+       \units m3/s
+  N7,  \field Convergence Tolerance
+       \required-field
+       \type real
+       \minimum> 0.0
+  N8,  \field Fraction Radiant
+       \required-field
+       \type real
+       \minimum 0
+       \maximum 1
+  N9;  \field Fraction of Radiant Energy Incident on People
+       \required-field
+       \type real
+       \minimum 0
+       \maximum 1
+
+OS:ZoneHVAC:Baseboard:RadiantConvective:Electric,
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+  A3 , \field Availability Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+  A4 , \field Heating Design Capacity Method
+       \required-field
+       \type choice
+       \key HeatingDesignCapacity
+       \key CapacityPerFloorArea
+       \key FractionOfAutosizedHeatingCapacity
+  N1 , \field Heating Design Capacity
+       \required-field
+       \type real
+       \units W
+       \minimum 0.0
+       \autosizable
+       \ip-units W
+  N2 , \field Heating Design Capacity Per Floor Area
+       \required-field
+       \type real
+       \units W/m2
+       \minimum 0.0
+  N3 , \field Fraction of Autosized Heating Design Capacity
+       \required-field
+       \type real
+       \minimum 0.0
+  N4 , \field Efficiency
+       \required-field
+       \maximum 1.0
+       \minimum> 0.0
+  N5,  \field Fraction Radiant
+       \required-field
+       \type real
+       \minimum 0
+       \maximum 1
+  N6;  \field Fraction of Radiant Energy Incident on People
+       \required-field
+       \type real
+       \minimum 0
+       \maximum 1
+
 OS:WaterHeater:Mixed,
   A1, \field Handle
        \type handle
