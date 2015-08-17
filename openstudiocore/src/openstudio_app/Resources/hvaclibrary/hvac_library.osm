@@ -1,7 +1,7 @@
 
 OS:Version,
-  {12be9444-5ce3-4598-870b-511a2a6905c1}, !- Handle
-  1.8.2;                                  !- Version Identifier
+  {885cfb79-12cd-4f39-a556-e753df9e45b3}, !- Handle
+  1.8.4;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -621,6 +621,22 @@ OS:Coil:Heating:Water,
   ,                                       !- Rated Outlet Water Temperature {C}
   ,                                       !- Rated Outlet Air Temperature {C}
   ;                                       !- Rated Ratio for Air and Water Convection
+
+OS:FluidCooler:SingleSpeed,
+  {2a57ade5-7f14-4501-a925-ae7b0677ecf9}, !- Handle
+  Single Speed Fluid Cooler,            !- Name
+  ,                                       !- Water Inlet Node
+  ,                                       !- Water Outlet Node
+  NominalCapacity,                        !- Performance Input Method
+  autosize,                               !- Design Air Flow Rate U-factor Times Area Value {W/K}
+  58601,                                  !- Nominal Capacity {W}
+  51.67,                                  !- Design Entering Water Temperature {C}
+  35,                                     !- Design Entering Air Temperature {C}
+  25.6,                                   !- Design Entering Air Wetbulb Temperature {C}
+  0.001388,                               !- Design Water Flow Rate {m3/s}
+  9.911,                                  !- Design Air Flow Rate {m3/s}
+  autosize,                               !- Design Air Flow Rate Fan Power {W}
+  ;                                       !- Outdoor Air Inlet Node
 
 OS:EvaporativeFluidCooler:SingleSpeed,
   {b04f495c-cbc1-4d89-acec-e5f7711f00de}, !- Handle
@@ -1951,7 +1967,7 @@ OS:WaterHeater:Mixed,
 
 OS:WaterHeater:HeatPump,
   {8227efbf-0cf6-443c-bdd2-3f8217c5f85e}, !- Handle
-  Heat Pump Water Heater,               !- Name
+  Heat Pump Water Heater,                 !- Name
   ,                                       !- Availability Schedule
   {8ec3f91c-d0c8-40e3-ad58-b93ce96ba5ed}, !- Compressor Setpoint Temperature Schedule
   5,                                      !- Dead Band Temperature Difference {deltaC}
@@ -1978,7 +1994,7 @@ OS:WaterHeater:HeatPump,
 
 OS:Coil:WaterHeating:AirToWaterHeatPump,
   {8812d392-ab70-47ea-a32d-1e6030e7cd7e}, !- Handle
-  HPWH DX Coil, !- Name
+  HPWH DX Coil,                           !- Name
   4000,                                   !- Rated Heating Capacity {W}
   3.2,                                    !- Rated COP {W/W}
   0.6956,                                 !- Rated Sensible Heat Ratio
