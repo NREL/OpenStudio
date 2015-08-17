@@ -199,6 +199,11 @@
     <rule IddField="Water Outlet Node" Access="HIDDEN"/>
     <rule IddField="Outdoor Air Inlet Node" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_FluidCooler_TwoSpeed">
+    <rule IddField="Water Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Water Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Outdoor Air Inlet Node" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_SetpointManager_SingleZone_Reheat">
     <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
   </POLICY>
