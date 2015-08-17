@@ -25,6 +25,7 @@
 #include "HVACComponent.hpp"
 #include "HVACComponent_Impl.hpp"
 #include "Model.hpp"
+#include "FanConstantVolume.hpp"
 #include "WaterToAirComponent.hpp"
 #include "WaterToAirComponent_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
@@ -475,38 +476,58 @@ ZoneHVACUnitVentilator::ZoneHVACUnitVentilator(const Model& model)
 {
   OS_ASSERT(getImpl<detail::ZoneHVACUnitVentilator_Impl>());
 
-  //     OS_ZoneHVAC_UnitVentilatorFields::AvailabilityScheduleName
-  //     OS_ZoneHVAC_UnitVentilatorFields::MinimumOutdoorAirScheduleName
-  //     OS_ZoneHVAC_UnitVentilatorFields::MaximumOutdoorAirFractionorTemperatureScheduleName
-  //     OS_ZoneHVAC_UnitVentilatorFields::AirInletNodeName
-  //     OS_ZoneHVAC_UnitVentilatorFields::AirOutletNodeName
-  //     OS_ZoneHVAC_UnitVentilatorFields::SupplyAirFanName
+  auto always_on = model.alwaysOnDiscreteSchedule();
+  auto always_off = model.alwaysOffDiscreteSchedule();
+  auto supplyAirFan = FanConstantVolume( model );
+
   bool ok = true;
-  // ok = setHandle();
+  ok = setAvailabilitySchedule( always_on );
   OS_ASSERT(ok);
-  // ok = setAvailabilitySchedule();
+  autosizeMaximumSupplyAirFlowRate();
+  ok = setOutdoorAirControlType( "VariablePercent" );
   OS_ASSERT(ok);
-  // ok = setMaximumSupplyAirFlowRate();
+  autosizeMinimumOutdoorAirFlowRate();
+  ok = setMinimumOutdoorAirSchedule( always_off );
   OS_ASSERT(ok);
-  // ok = setOutdoorAirControlType();
+  autosizeMaximumOutdoorAirFlowRate();
+  ok = setMaximumOutdoorAirFractionorTemperatureSchedule( always_on );
   OS_ASSERT(ok);
-  // ok = setMinimumOutdoorAirFlowRate();
+  ok = setSupplyAirFan( supplyAirFan );
   OS_ASSERT(ok);
-  // ok = setMinimumOutdoorAirSchedule();
+  ok = setHeatingConvergenceTolerance( 0.001 );
   OS_ASSERT(ok);
-  // ok = setMaximumOutdoorAirFlowRate();
+  ok = setCoolingConvergenceTolerance( 0.001 );
   OS_ASSERT(ok);
-  // ok = setMaximumOutdoorAirFractionorTemperatureSchedule();
+}
+
+ZoneHVACUnitVentilator::ZoneHVACUnitVentilator(
+  const Model& model,
+  const HVACComponent& supplyAirFan
+  )
+  : ZoneHVACComponent(ZoneHVACUnitVentilator::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::ZoneHVACUnitVentilator_Impl>());
+
+  auto always_on = model.alwaysOnDiscreteSchedule();
+  auto always_off = model.alwaysOffDiscreteSchedule();
+
+  bool ok = true;
+  ok = setAvailabilitySchedule( always_on );
   OS_ASSERT(ok);
-  // ok = setAirInletNode();
+  autosizeMaximumSupplyAirFlowRate();
+  ok = setOutdoorAirControlType( "VariablePercent" );
   OS_ASSERT(ok);
-  // ok = setAirOutletNode();
+  autosizeMinimumOutdoorAirFlowRate();
+  ok = setMinimumOutdoorAirSchedule( always_off );
   OS_ASSERT(ok);
-  // ok = setSupplyAirFan();
+  autosizeMaximumOutdoorAirFlowRate();
+  ok = setMaximumOutdoorAirFractionorTemperatureSchedule( always_on );
   OS_ASSERT(ok);
-  // ok = setHeatingConvergenceTolerance();
+  ok = setSupplyAirFan( supplyAirFan );
   OS_ASSERT(ok);
-  // ok = setCoolingConvergenceTolerance();
+  ok = setHeatingConvergenceTolerance( 0.001 );
+  OS_ASSERT(ok);
+  ok = setCoolingConvergenceTolerance( 0.001 );
   OS_ASSERT(ok);
 }
 

@@ -28,7 +28,6 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
-class Surface;
 class ThermalZone;
 
 namespace detail {

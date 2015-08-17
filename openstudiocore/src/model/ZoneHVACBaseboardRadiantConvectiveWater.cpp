@@ -336,36 +336,27 @@ ZoneHVACBaseboardRadiantConvectiveWater::ZoneHVACBaseboardRadiantConvectiveWater
 {
   OS_ASSERT(getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>());
 
-  //     OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::AvailabilityScheduleName
-  //     OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::InletNodeName
-  //     OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::OutletNodeName
   bool ok = true;
-  // ok = setHandle();
+  auto alwaysOn = model.alwaysOnDiscreteSchedule();
+  ok = setAvailabilitySchedule( alwaysOn );
   OS_ASSERT(ok);
-  // ok = setAvailabilitySchedule();
+  ok = setRatedAverageWaterTemperature( 87.78 );
   OS_ASSERT(ok);
-  // ok = setInletNode();
+  ok = setRatedWaterMassFlowRate( 0.063 );
   OS_ASSERT(ok);
-  // ok = setOutletNode();
+  ok = setHeatingDesignCapacityMethod( "HeatingDesignCapacity" );
   OS_ASSERT(ok);
-  // ok = setRatedAverageWaterTemperature();
+  autosizeHeatingDesignCapacity();
+  ok = setHeatingDesignCapacityPerFloorArea( 0 );
   OS_ASSERT(ok);
-  // ok = setRatedWaterMassFlowRate();
+  ok = setFractionofAutosizedHeatingDesignCapacity( 1.0 );
   OS_ASSERT(ok);
-  // ok = setHeatingDesignCapacityMethod();
+  autosizeMaximumWaterFlowRate();
+  ok = setConvergenceTolerance( 0.001 );
   OS_ASSERT(ok);
-  // ok = setHeatingDesignCapacity();
+  ok = setFractionRadiant( 0.3 );
   OS_ASSERT(ok);
-  // ok = setHeatingDesignCapacityPerFloorArea();
-  OS_ASSERT(ok);
-  // ok = setFractionofAutosizedHeatingDesignCapacity();
-  OS_ASSERT(ok);
-  // setMaximumWaterFlowRate();
-  // ok = setConvergenceTolerance();
-  OS_ASSERT(ok);
-  // ok = setFractionRadiant();
-  OS_ASSERT(ok);
-  // ok = setFractionofRadiantEnergyIncidentonPeople();
+  ok = setFractionofRadiantEnergyIncidentonPeople( 0.3 );
   OS_ASSERT(ok);
 }
 

@@ -25,6 +25,8 @@
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
 #include "Model.hpp"
+#include "CurveBiquadratic.hpp"
+#include "CurveQuadratic.hpp"
 // #include "WaterStorageTank.hpp"
 // #include "WaterStorageTank_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
@@ -276,36 +278,88 @@ ZoneHVACDehumidifierDX::ZoneHVACDehumidifierDX(const Model& model)
 {
   OS_ASSERT(getImpl<detail::ZoneHVACDehumidifierDX_Impl>());
 
-  //     OS_ZoneHVAC_Dehumidifier_DXFields::AvailabilityScheduleName
-  //     OS_ZoneHVAC_Dehumidifier_DXFields::AirInletNodeName
-  //     OS_ZoneHVAC_Dehumidifier_DXFields::AirOutletNodeName
-  //     OS_ZoneHVAC_Dehumidifier_DXFields::WaterRemovalCurveName
-  //     OS_ZoneHVAC_Dehumidifier_DXFields::EnergyFactorCurveName
-  //     OS_ZoneHVAC_Dehumidifier_DXFields::PartLoadFractionCorrelationCurveName
+  auto waterRemovalCurve = CurveBiquadratic(model);
+  waterRemovalCurve.setCoefficient1Constant(-2.724878664080);
+  waterRemovalCurve.setCoefficient2x(0.100711983591);
+  waterRemovalCurve.setCoefficient3xPOW2(-0.000990538285);
+  waterRemovalCurve.setCoefficient4y(0.050053043874);
+  waterRemovalCurve.setCoefficient5yPOW2(-0.000203629282);
+  waterRemovalCurve.setCoefficient6xTIMESY(-0.000341750531);
+  waterRemovalCurve.setMinimumValueofx(21.0);
+  waterRemovalCurve.setMaximumValueofx(32.22);
+  waterRemovalCurve.setMinimumValueofy(40.0);
+  waterRemovalCurve.setMaximumValueofy(80.0);
+
+  auto energyFactorCurve = CurveBiquadratic(model);
+  energyFactorCurve.setCoefficient1Constant(-2.388319068955);
+  energyFactorCurve.setCoefficient2x(0.093047739452);
+  energyFactorCurve.setCoefficient3xPOW2(-0.001369700327);
+  energyFactorCurve.setCoefficient4y(0.066533716758);
+  energyFactorCurve.setCoefficient5yPOW2(-0.000343198063);
+  energyFactorCurve.setCoefficient6xTIMESY(-0.000562490295);
+  energyFactorCurve.setMinimumValueofx(21.0);
+  energyFactorCurve.setMaximumValueofx(32.22);
+  energyFactorCurve.setMinimumValueofy(40.0);
+  energyFactorCurve.setMaximumValueofy(80.0);
+
+  auto partLoadFractionCurve = CurveQuadratic(model);
+  partLoadFractionCurve.setCoefficient1Constant(0.95);
+  partLoadFractionCurve.setCoefficient2x(0.05);
+  partLoadFractionCurve.setCoefficient3xPOW2(0.0);
+  partLoadFractionCurve.setMinimumValueofx(0.0);
+  partLoadFractionCurve.setMaximumValueofx(1.0);
+
   bool ok = true;
-  // ok = setHandle();
+  auto alwaysOn = model.alwaysOnDiscreteSchedule();
+  ok = setAvailabilitySchedule( alwaysOn );
   OS_ASSERT(ok);
-  // ok = setAvailabilitySchedule();
+  ok = setRatedWaterRemoval( 50.16 );
   OS_ASSERT(ok);
-  // ok = setAirInletNode();
+  ok = setRatedEnergyFactor( 3.412 );
   OS_ASSERT(ok);
-  // ok = setAirOutletNode();
+  ok = setRatedAirFlowRate( 0.12036 );
   OS_ASSERT(ok);
-  // ok = setRatedWaterRemoval();
+  ok = setWaterRemovalCurve( waterRemovalCurve );
   OS_ASSERT(ok);
-  // ok = setRatedEnergyFactor();
+  ok = setEnergyFactorCurve( energyFactorCurve );
   OS_ASSERT(ok);
-  // ok = setRatedAirFlowRate();
+  ok = setPartLoadFractionCorrelationCurve( partLoadFractionCurve );
   OS_ASSERT(ok);
-  // ok = setWaterRemovalCurve();
+  setMinimumDryBulbTemperatureforDehumidifierOperation( 10.0 );
+  setMaximumDryBulbTemperatureforDehumidifierOperation( 32.0 );
+  ok = setOffCycleParasiticElectricLoad( 0.0 );
   OS_ASSERT(ok);
-  // ok = setEnergyFactorCurve();
+}
+
+ZoneHVACDehumidifierDX::ZoneHVACDehumidifierDX(
+  const Model& model,
+  const Curve& waterRemovalCurve,
+  const Curve& energyFactorCurve,
+  const Curve& partLoadFractionCurve
+  )
+  : ZoneHVACComponent(ZoneHVACDehumidifierDX::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::ZoneHVACDehumidifierDX_Impl>());
+
+  bool ok = true;
+  auto alwaysOn = model.alwaysOnDiscreteSchedule();
+  ok = setAvailabilitySchedule( alwaysOn );
   OS_ASSERT(ok);
-  // ok = setPartLoadFractionCorrelationCurve();
+  ok = setRatedWaterRemoval( 50.16 );
   OS_ASSERT(ok);
-  // setMinimumDryBulbTemperatureforDehumidifierOperation();
-  // setMaximumDryBulbTemperatureforDehumidifierOperation();
-  // ok = setOffCycleParasiticElectricLoad();
+  ok = setRatedEnergyFactor( 3.412 );
+  OS_ASSERT(ok);
+  ok = setRatedAirFlowRate( 0.12036 );
+  OS_ASSERT(ok);
+  ok = setWaterRemovalCurve( waterRemovalCurve );
+  OS_ASSERT(ok);
+  ok = setEnergyFactorCurve( energyFactorCurve );
+  OS_ASSERT(ok);
+  ok = setPartLoadFractionCorrelationCurve( partLoadFractionCurve );
+  OS_ASSERT(ok);
+  setMinimumDryBulbTemperatureforDehumidifierOperation( 10.0 );
+  setMaximumDryBulbTemperatureforDehumidifierOperation( 32.0 );
+  ok = setOffCycleParasiticElectricLoad( 0.0 );
   OS_ASSERT(ok);
 }
 

@@ -45,6 +45,13 @@ class MODEL_API ZoneHVACDehumidifierDX : public ZoneHVACComponent {
 
   explicit ZoneHVACDehumidifierDX(const Model& model);
 
+  explicit ZoneHVACDehumidifierDX(
+    const Model& model,
+    const Curve& waterRemovalCurve,
+    const Curve& energyFactorCurve,
+    const Curve& partLoadFractionCurve
+  );
+
   virtual ~ZoneHVACDehumidifierDX() {}
 
   //@}

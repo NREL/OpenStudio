@@ -25,6 +25,8 @@
 #include "HVACComponent.hpp"
 #include "HVACComponent_Impl.hpp"
 #include "Model.hpp"
+#include "HeatExchangerAirToAirSensibleAndLatent.hpp"
+#include "FanOnOff.hpp"
 #include "ZoneHVACEnergyRecoveryVentilatorController.hpp"
 #include "ZoneHVACEnergyRecoveryVentilatorController_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
@@ -329,28 +331,53 @@ ZoneHVACEnergyRecoveryVentilator::ZoneHVACEnergyRecoveryVentilator(const Model& 
 {
   OS_ASSERT(getImpl<detail::ZoneHVACEnergyRecoveryVentilator_Impl>());
 
-  //     OS_ZoneHVAC_EnergyRecoveryVentilatorFields::AvailabilityScheduleName
-  //     OS_ZoneHVAC_EnergyRecoveryVentilatorFields::HeatExchangerName
-  //     OS_ZoneHVAC_EnergyRecoveryVentilatorFields::SupplyAirFanName
-  //     OS_ZoneHVAC_EnergyRecoveryVentilatorFields::ExhaustAirFanName
+  auto heatExchanger = HeatExchangerAirToAirSensibleAndLatent( model );
+  auto supplyAirFan = FanOnOff( model );
+  auto exhaustAirFan = FanOnOff( model );
+
   bool ok = true;
-  // ok = setHandle();
+  auto alwaysOn = model.alwaysOnDiscreteSchedule();
+  ok = setAvailabilitySchedule( alwaysOn );
   OS_ASSERT(ok);
-  // ok = setAvailabilitySchedule();
+  ok = setHeatExchanger( heatExchanger );
   OS_ASSERT(ok);
-  // ok = setHeatExchanger();
+  autosizeSupplyAirFlowRate();
+  autosizeExhaustAirFlowRate();
+  ok = setSupplyAirFan( supplyAirFan );
   OS_ASSERT(ok);
-  // ok = setSupplyAirFlowRate();
+  ok = setExhaustAirFan( exhaustAirFan );
   OS_ASSERT(ok);
-  // ok = setExhaustAirFlowRate();
+  ok = setVentilationRateperUnitFloorArea( 0.000508 );
   OS_ASSERT(ok);
-  // ok = setSupplyAirFan();
+  ok = setVentilationRateperOccupant( 0.00236 );
   OS_ASSERT(ok);
-  // ok = setExhaustAirFan();
+}
+
+ZoneHVACEnergyRecoveryVentilator::ZoneHVACEnergyRecoveryVentilator(
+  const Model& model,
+  const HVACComponent& heatExchanger,
+  const HVACComponent& supplyAirFan,
+  const HVACComponent& exhaustAirFan
+  )
+  : ZoneHVACComponent(ZoneHVACEnergyRecoveryVentilator::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::ZoneHVACEnergyRecoveryVentilator_Impl>());
+
+  bool ok = true;
+  auto alwaysOn = model.alwaysOnDiscreteSchedule();
+  ok = setAvailabilitySchedule( alwaysOn );
   OS_ASSERT(ok);
-  // ok = setVentilationRateperUnitFloorArea();
+  ok = setHeatExchanger( heatExchanger );
   OS_ASSERT(ok);
-  // ok = setVentilationRateperOccupant();
+  autosizeSupplyAirFlowRate();
+  autosizeExhaustAirFlowRate();
+  ok = setSupplyAirFan( supplyAirFan );
+  OS_ASSERT(ok);
+  ok = setExhaustAirFan( exhaustAirFan );
+  OS_ASSERT(ok);
+  ok = setVentilationRateperUnitFloorArea( 0.000508 );
+  OS_ASSERT(ok);
+  ok = setVentilationRateperOccupant( 0.00236 );
   OS_ASSERT(ok);
 }
 

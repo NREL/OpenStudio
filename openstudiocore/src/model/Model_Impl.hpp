@@ -141,6 +141,8 @@ namespace detail {
 
     Schedule alwaysOnDiscreteSchedule() const;
 
+    Schedule alwaysOffDiscreteSchedule() const;
+
     SpaceType plenumSpaceType() const;
 
     //@}

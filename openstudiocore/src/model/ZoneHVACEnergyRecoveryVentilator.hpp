@@ -45,6 +45,13 @@ class MODEL_API ZoneHVACEnergyRecoveryVentilator : public ZoneHVACComponent {
 
   explicit ZoneHVACEnergyRecoveryVentilator(const Model& model);
 
+  explicit ZoneHVACEnergyRecoveryVentilator(
+  const Model& model,
+  const HVACComponent& heatExchanger,
+  const HVACComponent& supplyAirFan,
+  const HVACComponent& exhaustAirFan
+  );
+
   virtual ~ZoneHVACEnergyRecoveryVentilator() {}
 
   //@}

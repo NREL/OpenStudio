@@ -44,6 +44,11 @@ class MODEL_API ZoneHVACUnitVentilator : public ZoneHVACComponent {
 
   explicit ZoneHVACUnitVentilator(const Model& model);
 
+  explicit ZoneHVACUnitVentilator(
+    const Model& model,
+    const HVACComponent& supplyAirFan
+  );
+
   virtual ~ZoneHVACUnitVentilator() {}
 
   //@}

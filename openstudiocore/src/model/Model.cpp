@@ -1004,6 +1004,58 @@ if (_className::iddObjectType() == typeToCreate) { \
     return schedule;
   }
 
+Schedule Model_Impl::alwaysOffDiscreteSchedule() const
+  {
+    std::string alwaysOffName("Always Off Discrete");
+
+    std::vector<ScheduleConstant> schedules = model().getConcreteModelObjects<ScheduleConstant>();
+
+    for( const auto & schedule : schedules )
+    {
+      if( boost::optional<std::string> name = schedule.name() )
+      {
+        if( istringEqual(name.get(),alwaysOffName) )
+        {
+          if( equal<double>(schedule.value(),1.0) )
+          {
+            if( boost::optional<ScheduleTypeLimits> limits = schedule.scheduleTypeLimits() )
+            {
+              if( boost::optional<std::string> type = limits->numericType() )
+              {
+                if( istringEqual(type.get(),"Discrete") )
+                {
+                  return schedule;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    ScheduleConstant schedule(model());
+
+    schedule.setName(alwaysOffName);
+
+    ScheduleTypeLimits limits(model());
+
+    limits.setName("OnOff");
+
+    limits.setNumericType("Discrete");
+
+    limits.setUnitType("Availability");
+
+    limits.setLowerLimitValue(0.0);
+
+    limits.setUpperLimitValue(1.0);
+
+    schedule.setScheduleTypeLimits(limits);
+
+    schedule.setValue(0.0);
+
+    return schedule;
+  }
+
   SpaceType Model_Impl::plenumSpaceType() const
   {
     std::string plenumSpaceTypeName("Plenum Space Type");
@@ -1384,6 +1436,11 @@ boost::optional<WeatherFile> Model::weatherFile() const
 Schedule Model::alwaysOnDiscreteSchedule() const
 {
   return getImpl<detail::Model_Impl>()->alwaysOnDiscreteSchedule();
+}
+
+Schedule Model::alwaysOffDiscreteSchedule() const
+{
+  return getImpl<detail::Model_Impl>()->alwaysOffDiscreteSchedule();
 }
 
 SpaceType Model::plenumSpaceType() const

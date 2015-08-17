@@ -278,25 +278,22 @@ ZoneHVACBaseboardRadiantConvectiveElectric::ZoneHVACBaseboardRadiantConvectiveEl
 {
   OS_ASSERT(getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>());
 
-  //     OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::AvailabilityScheduleName
   bool ok = true;
-  // ok = setHandle();
+  auto alwaysOn = model.alwaysOnDiscreteSchedule();
+  ok = setAvailabilitySchedule( alwaysOn );
   OS_ASSERT(ok);
-  // ok = setAvailabilitySchedule();
+  ok = setHeatingDesignCapacityMethod( "HeatingDesignCapacity" );
   OS_ASSERT(ok);
-  // ok = setHeatingDesignCapacityMethod();
+  autosizeHeatingDesignCapacity();
+  ok = setHeatingDesignCapacityPerFloorArea( 0 );
   OS_ASSERT(ok);
-  // ok = setHeatingDesignCapacity();
+  ok = setFractionofAutosizedHeatingDesignCapacity( 1.0 );
   OS_ASSERT(ok);
-  // ok = setHeatingDesignCapacityPerFloorArea();
+  ok = setEfficiency( 1.0 );
   OS_ASSERT(ok);
-  // ok = setFractionofAutosizedHeatingDesignCapacity();
+  ok = setFractionRadiant( 0.2 );
   OS_ASSERT(ok);
-  // ok = setEfficiency();
-  OS_ASSERT(ok);
-  // ok = setFractionRadiant();
-  OS_ASSERT(ok);
-  // ok = setFractionofRadiantEnergyIncidentonPeople();
+  ok = setFractionofRadiantEnergyIncidentonPeople( 0.3 );
   OS_ASSERT(ok);
 }
 

@@ -275,16 +275,14 @@ ZoneHVACEnergyRecoveryVentilatorController::ZoneHVACEnergyRecoveryVentilatorCont
   OS_ASSERT(getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>());
 
   bool ok = true;
-  // ok = setHandle();
+  ok = setExhaustAirTemperatureLimit( "NoExhaustAirTemperatureLimit" );
   OS_ASSERT(ok);
-  // ok = setExhaustAirTemperatureLimit();
+  ok = setExhaustAirEnthalpyLimit( "NoExhaustAirEnthalpyLimit" );
   OS_ASSERT(ok);
-  // ok = setExhaustAirEnthalpyLimit();
+  setHighHumidityControlFlag( false );
+  ok = setHighHumidityOutdoorAirFlowRatio( 1.0 );
   OS_ASSERT(ok);
-  // setHighHumidityControlFlag();
-  // ok = setHighHumidityOutdoorAirFlowRatio();
-  OS_ASSERT(ok);
-  // setControlHighIndoorHumidityBasedonOutdoorHumidityRatio();
+  setControlHighIndoorHumidityBasedonOutdoorHumidityRatio( true );
 }
 
 IddObjectType ZoneHVACEnergyRecoveryVentilatorController::iddObjectType() {
