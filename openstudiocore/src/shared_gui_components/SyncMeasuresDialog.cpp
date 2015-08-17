@@ -147,6 +147,10 @@ void SyncMeasuresDialog::findUpdates()
   // DLM: if m_measuresNeedingUpdates is empty should we do something else?  
   // just say "No updates available" and quit?
 
+  if (!m_measuresNeedingUpdates.empty()){
+    m_measureManager->updateMeasuresLists();
+  }
+
   m_centralWidget->setMeasures(m_measuresNeedingUpdates);
 
 }

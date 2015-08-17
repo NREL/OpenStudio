@@ -723,7 +723,7 @@ void StartCloudWorker::startWorking()
 
     if( provider->requestStartServer() )
     {
-      m_error = ! provider->waitForServer(900000);
+      m_error = ! provider->waitForServer();
     }
   }
 

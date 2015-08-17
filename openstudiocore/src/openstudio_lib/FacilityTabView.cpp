@@ -22,7 +22,7 @@
 namespace openstudio {
 
 FacilityTabView::FacilityTabView(QWidget * parent)
-  : MainTabView("Facility",false,parent)
+  : MainTabView("Facility", MainTabView::GRIDVIEW_SUB_TAB, parent)
 {
 }
 

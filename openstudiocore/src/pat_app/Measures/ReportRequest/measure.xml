@@ -1,9 +1,8 @@
 <measure>
   <schema_version>3.0</schema_version>
-  <error>cannot load such file -- pathname.so</error>
   <name>report_request</name>
   <uid>060ee477-b04c-4a1b-8788-312d796ad132</uid>
-  <version_id>f80c5af4-cde2-4cae-8722-de246ec57461</version_id>
+  <version_id>f94b5a86-30a0-44b7-bfae-0e420f74034a</version_id>
   <xml_checksum>2CF2EA46</xml_checksum>
   <class_name>ReportRequest</class_name>
   <display_name>Report Request</display_name>
@@ -52,6 +51,12 @@
       <checksum>D88DBC57</checksum>
     </file>
     <file>
+      <filename>report_request_test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>BEAA7A11</checksum>
+    </file>
+    <file>
       <version>
         <software_program>OpenStudio</software_program>
         <identifier>1.4.2</identifier>
@@ -61,12 +66,6 @@
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
       <checksum>86D45CBF</checksum>
-    </file>
-    <file>
-      <filename>report_request_test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>BEAA7A11</checksum>
     </file>
   </files>
 </measure>

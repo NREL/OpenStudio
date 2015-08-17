@@ -802,6 +802,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateCoilWaterHeatingDesuperheater(coil);
       break;
     }
+  case openstudio::IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump :
+    {
+      auto mo = modelObject.cast<CoilWaterHeatingAirToWaterHeatPump>();
+      retVal = translateCoilWaterHeatingAirToWaterHeatPump(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_ComponentData :
     {
       // no-op
@@ -1253,6 +1259,17 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateWaterHeaterMixed(waterHeaterMixed);
       break;
     }
+  case openstudio::IddObjectType::OS_WaterHeater_HeatPump :
+    {
+      auto mo = modelObject.cast<WaterHeaterHeatPump>();
+      retVal = translateWaterHeaterHeatPump(mo);
+    }
+  case openstudio::IddObjectType::OS_WaterHeater_Stratified :
+    {
+      model::WaterHeaterStratified waterHeaterStratified = modelObject.cast<WaterHeaterStratified>();
+      retVal = translateWaterHeaterStratified(waterHeaterStratified);
+      break;
+    }
   case openstudio::IddObjectType::OS_WaterUse_Connections :
     {
       model::WaterUseConnections waterUseConnections = modelObject.cast<WaterUseConnections>();
@@ -1353,6 +1370,60 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       PlantLoop plantLoop = modelObject.cast<PlantLoop>();
       retVal = translatePlantLoop(plantLoop);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_CoolingLoad :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationCoolingLoad>();
+      retVal = translatePlantEquipmentOperationCoolingLoad(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_HeatingLoad :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationHeatingLoad>();
+      retVal = translatePlantEquipmentOperationHeatingLoad(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_OutdoorDryBulb :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationOutdoorDryBulb>();
+      retVal = translatePlantEquipmentOperationOutdoorDryBulb(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_OutdoorWetBulb :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationOutdoorWetBulb>();
+      retVal = translatePlantEquipmentOperationOutdoorWetBulb(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_OutdoorDewpoint :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationOutdoorDewpoint>();
+      retVal = translatePlantEquipmentOperationOutdoorDewpoint(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_OutdoorDryBulbDifference :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationOutdoorDryBulbDifference>();
+      retVal = translatePlantEquipmentOperationOutdoorDryBulbDifference(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_OutdoorWetBulbDifference :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationOutdoorWetBulbDifference>();
+      retVal = translatePlantEquipmentOperationOutdoorWetBulbDifference(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_OutdoorDewpointDifference :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationOutdoorDewpointDifference>();
+      retVal = translatePlantEquipmentOperationOutdoorDewpointDifference(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_OutdoorRelativeHumidity :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationOutdoorRelativeHumidity>();
+      retVal = translatePlantEquipmentOperationOutdoorRelativeHumidity(mo);
       break;
     }
   case openstudio::IddObjectType::OS_Pump_ConstantSpeed :

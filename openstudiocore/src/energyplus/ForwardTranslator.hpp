@@ -87,6 +87,7 @@ class CoilPerformanceDXCooling;
 class CoilSystemCoolingDXHeatExchangerAssisted;
 class CoilSystemCoolingWaterHeatExchangerAssisted;
 class CoilWaterHeatingDesuperheater;
+class CoilWaterHeatingAirToWaterHeatPump;
 class Construction;
 class ConstructionWithInternalSource;
 class ControllerOutdoorAir;
@@ -169,6 +170,15 @@ class PipeAdiabatic;
 class PipeIndoor;
 class PipeOutdoor;
 class PlantLoop;
+class PlantEquipmentOperationCoolingLoad;
+class PlantEquipmentOperationHeatingLoad;
+class PlantEquipmentOperationOutdoorDryBulb;
+class PlantEquipmentOperationOutdoorWetBulb;
+class PlantEquipmentOperationOutdoorDewpoint;
+class PlantEquipmentOperationOutdoorRelativeHumidity;
+class PlantEquipmentOperationOutdoorDryBulbDifference;
+class PlantEquipmentOperationOutdoorWetBulbDifference;
+class PlantEquipmentOperationOutdoorDewpointDifference;
 class PortList;
 class PumpConstantSpeed;
 class PumpVariableSpeed;
@@ -247,6 +257,8 @@ class ThermostatSetpointDualSetpoint;
 class Timestep;
 class Version;
 class WaterHeaterMixed;
+class WaterHeaterHeatPump;
+class WaterHeaterStratified;
 class WaterUseConnections;
 class WaterUseEquipment;
 class WindowPropertyFrameAndDivider;
@@ -448,6 +460,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateCoilWaterHeatingDesuperheater( model::CoilWaterHeatingDesuperheater & modelObject );
 
+  boost::optional<IdfObject> translateCoilWaterHeatingAirToWaterHeatPump( model::CoilWaterHeatingAirToWaterHeatPump & modelObject );
+
   boost::optional<IdfObject> translateConstruction( model::Construction & modelObject );
   
   boost::optional<IdfObject> translateConstructionWithInternalSource( model::ConstructionWithInternalSource & modelObject );
@@ -612,6 +626,26 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translatePlantLoop( model::PlantLoop & modelObject );
 
+  boost::optional<IdfObject> translatePlantEquipmentOperationSchemes( model::PlantLoop & plantLoop );
+
+  boost::optional<IdfObject> translatePlantEquipmentOperationCoolingLoad( model::PlantEquipmentOperationCoolingLoad & modelObject );
+
+  boost::optional<IdfObject> translatePlantEquipmentOperationHeatingLoad( model::PlantEquipmentOperationHeatingLoad & modelObject );
+
+  boost::optional<IdfObject> translatePlantEquipmentOperationOutdoorDryBulb( model::PlantEquipmentOperationOutdoorDryBulb & modelObject );
+
+  boost::optional<IdfObject> translatePlantEquipmentOperationOutdoorWetBulb( model::PlantEquipmentOperationOutdoorWetBulb & modelObject );
+
+  boost::optional<IdfObject> translatePlantEquipmentOperationOutdoorDewpoint( model::PlantEquipmentOperationOutdoorDewpoint & modelObject );
+
+  boost::optional<IdfObject> translatePlantEquipmentOperationOutdoorRelativeHumidity( model::PlantEquipmentOperationOutdoorRelativeHumidity & modelObject );
+
+  boost::optional<IdfObject> translatePlantEquipmentOperationOutdoorDryBulbDifference( model::PlantEquipmentOperationOutdoorDryBulbDifference & modelObject );
+
+  boost::optional<IdfObject> translatePlantEquipmentOperationOutdoorWetBulbDifference( model::PlantEquipmentOperationOutdoorWetBulbDifference & modelObject );
+
+  boost::optional<IdfObject> translatePlantEquipmentOperationOutdoorDewpointDifference( model::PlantEquipmentOperationOutdoorDewpointDifference & modelObject );
+
   boost::optional<IdfObject> translatePortList( model::PortList & modelObject );
 
   boost::optional<IdfObject> translatePumpConstantSpeed( model::PumpConstantSpeed & modelObject );
@@ -765,6 +799,10 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateVersion( model::Version & modelObject );
 
   boost::optional<IdfObject> translateWaterHeaterMixed( model::WaterHeaterMixed & modelObject );
+
+  boost::optional<IdfObject> translateWaterHeaterHeatPump( model::WaterHeaterHeatPump & modelObject );
+
+  boost::optional<IdfObject> translateWaterHeaterStratified( model::WaterHeaterStratified & modelObject );
 
   boost::optional<IdfObject> translateWaterUseConnections( model::WaterUseConnections & modelObject );
 

@@ -1523,8 +1523,6 @@ namespace openstudio{
 
       QJsonObject options;
       options["instance_type"] = QJsonValue(toQString(m_awsSettings.serverInstanceType()));
-      options["worker_instance_type"] = QJsonValue(toQString(m_awsSettings.workerInstanceType()));
-      options["num"] = QJsonValue(static_cast<int>(m_awsSettings.numWorkers()));
       options["openstudio_version"] = QJsonValue(toQString(openStudioVersion()));
       args << QString(QJsonDocument(options).toJson(QJsonDocument::Compact));
 
@@ -2079,6 +2077,7 @@ namespace openstudio{
       auto jsonObject = json.object(); 
       auto serverObject = jsonObject["server"].toObject();
       serverObject["private_key_file_name"] = m_workingDir.path() + "/ec2_server_key.pem";
+      serverObject["worker_private_key_file_name"] = m_workingDir.path() + "/ec2_worker_key.pem";
       jsonObject["server"] = serverObject;
       auto workers = jsonObject["workers"].toArray();
       for (auto i = 0; i < workers.size(); ++i) {

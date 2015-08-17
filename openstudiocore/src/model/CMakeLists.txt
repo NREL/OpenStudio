@@ -227,6 +227,9 @@ set(${target_name}_src
   CoilWaterHeatingDesuperheater.hpp
   CoilWaterHeatingDesuperheater_Impl.hpp
   CoilWaterHeatingDesuperheater.cpp
+  CoilWaterHeatingAirToWaterHeatPump.hpp
+  CoilWaterHeatingAirToWaterHeatPump_Impl.hpp
+  CoilWaterHeatingAirToWaterHeatPump.cpp
   ComponentCostAdjustments.hpp
   ComponentCostAdjustments_Impl.hpp
   ComponentCostAdjustments.cpp
@@ -601,6 +604,39 @@ set(${target_name}_src
   PortList.hpp
   PortList_Impl.hpp
   PortList.cpp
+  PlantEquipmentOperationRangeBasedScheme.hpp
+  PlantEquipmentOperationRangeBasedScheme_Impl.hpp
+  PlantEquipmentOperationRangeBasedScheme.cpp
+  PlantEquipmentOperationScheme.hpp
+  PlantEquipmentOperationScheme_Impl.hpp
+  PlantEquipmentOperationScheme.cpp
+  PlantEquipmentOperationCoolingLoad.hpp
+  PlantEquipmentOperationCoolingLoad_Impl.hpp
+  PlantEquipmentOperationCoolingLoad.cpp
+  PlantEquipmentOperationHeatingLoad.hpp
+  PlantEquipmentOperationHeatingLoad_Impl.hpp
+  PlantEquipmentOperationHeatingLoad.cpp
+  PlantEquipmentOperationOutdoorDryBulb.hpp
+  PlantEquipmentOperationOutdoorDryBulb_Impl.hpp
+  PlantEquipmentOperationOutdoorDryBulb.cpp
+  PlantEquipmentOperationOutdoorWetBulb.hpp
+  PlantEquipmentOperationOutdoorWetBulb_Impl.hpp
+  PlantEquipmentOperationOutdoorWetBulb.cpp
+  PlantEquipmentOperationOutdoorDewpoint.hpp
+  PlantEquipmentOperationOutdoorDewpoint_Impl.hpp
+  PlantEquipmentOperationOutdoorDewpoint.cpp
+  PlantEquipmentOperationOutdoorRelativeHumidity.hpp
+  PlantEquipmentOperationOutdoorRelativeHumidity_Impl.hpp
+  PlantEquipmentOperationOutdoorRelativeHumidity.cpp
+  PlantEquipmentOperationOutdoorDryBulbDifference.hpp
+  PlantEquipmentOperationOutdoorDryBulbDifference_Impl.hpp
+  PlantEquipmentOperationOutdoorDryBulbDifference.cpp
+  PlantEquipmentOperationOutdoorWetBulbDifference.hpp
+  PlantEquipmentOperationOutdoorWetBulbDifference_Impl.hpp
+  PlantEquipmentOperationOutdoorWetBulbDifference.cpp
+  PlantEquipmentOperationOutdoorDewpointDifference.hpp
+  PlantEquipmentOperationOutdoorDewpointDifference_Impl.hpp
+  PlantEquipmentOperationOutdoorDewpointDifference.cpp
   ProgramControl.hpp
   ProgramControl_Impl.hpp
   ProgramControl.cpp
@@ -928,6 +964,12 @@ set(${target_name}_src
   WaterHeaterMixed.hpp
   WaterHeaterMixed_Impl.hpp
   WaterHeaterMixed.cpp
+  WaterHeaterHeatPump.hpp
+  WaterHeaterHeatPump_Impl.hpp
+  WaterHeaterHeatPump.cpp
+  WaterHeaterStratified.hpp
+  WaterHeaterStratified_Impl.hpp
+  WaterHeaterStratified.cpp
   WaterToAirComponent.hpp
   WaterToAirComponent_Impl.hpp
   WaterToAirComponent.cpp
@@ -1297,6 +1339,7 @@ set(${target_name}_test_src
   test/CoilSystemCoolingWaterHeatExchangerAssisted_GTest.cpp
   test/CoilPerformanceDXCooling_GTest.cpp
   test/CoilWaterHeatingDesuperheater_GTest.cpp
+  test/CoilWaterHeatingAirToWaterHeatPump_GTest.cpp
   test/Component_GTest.cpp
   test/Connection_GTest.cpp
   test/Construction_GTest.cpp
@@ -1373,6 +1416,8 @@ set(${target_name}_test_src
   test/PipeOutdoor_GTest.cpp
   test/PlanarSurface_GTest.cpp
   test/PlantLoop_GTest.cpp
+  test/PlantEquipmentOperationCoolingLoad_GTest.cpp
+  test/PlantEquipmentOperationHeatingLoad_GTest.cpp
   test/Plenums_GTest.cpp
   test/PumpConstantSpeed_GTest.cpp
   test/PumpVariableSpeed_GTest.cpp
@@ -1445,6 +1490,8 @@ set(${target_name}_test_src
   test/TemperingValve_GTest.cpp
   test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp
+  test/WaterHeaterHeatPump_GTest.cpp
+  test/WaterHeaterStratified_GTest.cpp
   test/WaterUseConnections_GTest.cpp
   test/WaterUseEquipment_GTest.cpp
   test/WeatherFile_GTest.cpp

@@ -68,7 +68,7 @@ HorizontalTabWidget::HorizontalTabWidget(QWidget * parent)
   m_tabBarLine->setStyleSheet("QWidget { border-top: 1px solid black; background-color: #95B3DE; }");
 
   // Page stack
-  
+
   m_pageStack = new QStackedWidget();
 
   m_pageStack->setObjectName("GrayWidget");

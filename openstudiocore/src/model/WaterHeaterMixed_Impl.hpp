@@ -550,6 +550,8 @@ namespace detail {
 
     void resetIndirectWaterHeatingRecoveryTime();
 
+    boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+
     //@}
    protected:
 

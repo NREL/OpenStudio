@@ -253,6 +253,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(CoilSystemCoolingWaterHeatExchangerAssisted);
     REGISTER_CONSTRUCTOR(CoilSystemCoolingDXHeatExchangerAssisted);
     REGISTER_CONSTRUCTOR(CoilWaterHeatingDesuperheater);
+    REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPump);
     REGISTER_CONSTRUCTOR(ComponentCostAdjustments);
     REGISTER_CONSTRUCTOR(ComponentData);
     REGISTER_CONSTRUCTOR(Connection);
@@ -360,6 +361,15 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(PipeIndoor);
     REGISTER_CONSTRUCTOR(PipeOutdoor);
     REGISTER_CONSTRUCTOR(PlantLoop);
+    REGISTER_CONSTRUCTOR(PlantEquipmentOperationCoolingLoad);
+    REGISTER_CONSTRUCTOR(PlantEquipmentOperationHeatingLoad);
+    REGISTER_CONSTRUCTOR(PlantEquipmentOperationOutdoorDryBulb);
+    REGISTER_CONSTRUCTOR(PlantEquipmentOperationOutdoorWetBulb);
+    REGISTER_CONSTRUCTOR(PlantEquipmentOperationOutdoorDewpoint);
+    REGISTER_CONSTRUCTOR(PlantEquipmentOperationOutdoorRelativeHumidity);
+    REGISTER_CONSTRUCTOR(PlantEquipmentOperationOutdoorDryBulbDifference);
+    REGISTER_CONSTRUCTOR(PlantEquipmentOperationOutdoorWetBulbDifference);
+    REGISTER_CONSTRUCTOR(PlantEquipmentOperationOutdoorDewpointDifference);
     REGISTER_CONSTRUCTOR(PortList);
     REGISTER_CONSTRUCTOR(ProgramControl);
     REGISTER_CONSTRUCTOR(PumpConstantSpeed);
@@ -455,6 +465,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(UtilityCost_Variable);
     REGISTER_CONSTRUCTOR(Version);
     REGISTER_CONSTRUCTOR(WaterHeaterMixed);
+    REGISTER_CONSTRUCTOR(WaterHeaterHeatPump);
+    REGISTER_CONSTRUCTOR(WaterHeaterStratified);
     REGISTER_CONSTRUCTOR(WaterUseConnections);
     REGISTER_CONSTRUCTOR(WaterUseEquipment);
     REGISTER_CONSTRUCTOR(WaterUseEquipmentDefinition);
@@ -583,6 +595,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(CoilSystemCoolingWaterHeatExchangerAssisted);
     REGISTER_COPYCONSTRUCTORS(CoilSystemCoolingDXHeatExchangerAssisted);
     REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingDesuperheater);
+    REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPump);
     REGISTER_COPYCONSTRUCTORS(ComponentCostAdjustments);
     REGISTER_COPYCONSTRUCTORS(ComponentData);
     REGISTER_COPYCONSTRUCTORS(Connection);
@@ -690,6 +703,15 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(PipeIndoor);
     REGISTER_COPYCONSTRUCTORS(PipeOutdoor);
     REGISTER_COPYCONSTRUCTORS(PlantLoop);
+    REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationCoolingLoad);
+    REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationHeatingLoad);
+    REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationOutdoorDryBulb);
+    REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationOutdoorWetBulb);
+    REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationOutdoorDewpoint);
+    REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationOutdoorRelativeHumidity);
+    REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationOutdoorDryBulbDifference);
+    REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationOutdoorWetBulbDifference);
+    REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationOutdoorDewpointDifference);
     REGISTER_COPYCONSTRUCTORS(PortList);
     REGISTER_COPYCONSTRUCTORS(ProgramControl);
     REGISTER_COPYCONSTRUCTORS(PumpConstantSpeed);
@@ -785,6 +807,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(UtilityCost_Variable);
     REGISTER_COPYCONSTRUCTORS(Version);
     REGISTER_COPYCONSTRUCTORS(WaterHeaterMixed);
+    REGISTER_COPYCONSTRUCTORS(WaterHeaterHeatPump);
+    REGISTER_COPYCONSTRUCTORS(WaterHeaterStratified);
     REGISTER_COPYCONSTRUCTORS(WaterUseConnections);
     REGISTER_COPYCONSTRUCTORS(WaterUseEquipment);
     REGISTER_COPYCONSTRUCTORS(WaterUseEquipmentDefinition);
