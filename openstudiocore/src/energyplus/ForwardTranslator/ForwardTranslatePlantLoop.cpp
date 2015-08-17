@@ -382,7 +382,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
   // Mark where we want the plant operation schemes to go
   // Don't actually translate yet because we don't want the components to show up yet
-  auto operationSchemeLocation = m_idfObjects.end();
+  auto operationSchemeLocation = std::distance(m_idfObjects.begin(),m_idfObjects.end());
 
   // Supply Side
 
@@ -923,7 +923,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
   std::vector<IdfObject> opSchemeObjects(opSchemeStart,opSchemeEnd);
   m_idfObjects.erase(opSchemeStart,opSchemeEnd);
-  m_idfObjects.insert(operationSchemeLocation,opSchemeObjects.begin(),opSchemeObjects.end());
+  m_idfObjects.insert(m_idfObjects.begin() + operationSchemeLocation,opSchemeObjects.begin(),opSchemeObjects.end());
 
   return boost::optional<IdfObject>(idfObject);
 }
