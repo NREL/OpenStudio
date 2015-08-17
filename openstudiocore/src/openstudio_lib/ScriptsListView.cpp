@@ -18,7 +18,6 @@
 **********************************************************************/
 
 #include "ScriptsListView.hpp"
-#include "BuildingStoryInspectorView.hpp"
 #include "ModelObjectListView.hpp"
 #include "ScriptItem.hpp"
 

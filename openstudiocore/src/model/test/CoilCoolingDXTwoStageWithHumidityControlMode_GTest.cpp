@@ -18,9 +18,9 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/CoilCoolingDXTwoStageWithHumidityControlMode.hpp>
-#include <model/CoilCoolingDXTwoStageWithHumidityControlMode_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../CoilCoolingDXTwoStageWithHumidityControlMode.hpp"
+#include "../CoilCoolingDXTwoStageWithHumidityControlMode_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

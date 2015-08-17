@@ -90,7 +90,7 @@ namespace openstudio {
 LocationTabView::LocationTabView(const model::Model & model,
   const QString& modelTempDir,
   QWidget * parent)
-  : MainTabView("Site",true,parent)
+  : MainTabView("Site", MainTabView::SUB_TAB, parent)
 {
 }
 
@@ -454,7 +454,7 @@ void LocationView::update(bool weatherFileBtnClicked)
           QString savePath, filePath;
 
           openstudio::OSAppBase * app = OSAppBase::instance();
-          if (app) {
+          if (app && app->currentDocument()) {
 
             savePath = app->currentDocument()->savePath();
 

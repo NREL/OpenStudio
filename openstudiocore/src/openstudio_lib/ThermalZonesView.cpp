@@ -42,16 +42,7 @@ ThermalZonesView::ThermalZonesView(bool isIP,
 {
   bool isConnected = false;
 
-  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), inspectorView(), SIGNAL(itemSelected(OSItem *)));
-  OS_ASSERT(isConnected); 
-
-  isConnected = connect(itemSelector(), SIGNAL(itemSelected(OSItem *)), inspectorView(), SIGNAL(itemSelected(OSItem *)));
-  OS_ASSERT(isConnected);
-
   isConnected = connect(itemSelector(), SIGNAL(selectionCleared()), inspectorView(), SIGNAL(selectionCleared()));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(inspectorView(), SIGNAL(gridRowSelected(OSItem*)), itemSelector(), SIGNAL(gridRowSelected(OSItem*)));
   OS_ASSERT(isConnected);
 
   isConnected = connect(inspectorView(), SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
@@ -72,13 +63,7 @@ ThermalZoneView::ThermalZoneView(bool isIP,
   isConnected = connect(m_thermalZonesGridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(itemSelected(OSItem *)), m_thermalZonesGridView, SIGNAL(itemSelected(OSItem *)));
-  OS_ASSERT(isConnected);
-
   isConnected = connect(this, SIGNAL(selectionCleared()), m_thermalZonesGridView, SIGNAL(selectionCleared()));
-  OS_ASSERT(isConnected);
-
-  isConnected = connect(m_thermalZonesGridView, SIGNAL(gridRowSelected(OSItem*)), this, SIGNAL(gridRowSelected(OSItem*)));
   OS_ASSERT(isConnected);
 
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), this, SLOT(toggleUnits(bool)));

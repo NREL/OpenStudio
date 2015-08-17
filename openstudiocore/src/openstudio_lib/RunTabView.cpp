@@ -76,8 +76,8 @@
 namespace openstudio {
 
 RunTabView::RunTabView(const model::Model & model,
-                       QWidget * parent)
-  : MainTabView("Run Simulation",true,parent)
+  QWidget * parent)
+  : MainTabView("Run Simulation", MainTabView::SUB_TAB, parent)
     //m_runView(new RunView(model)),
     //m_status(new openstudio::runmanager::JobStatusWidget(m_runView->runManager()))
 {

@@ -20,7 +20,6 @@
 #ifndef OPENSTUDIO_MODELSUBTABVIEW_HPP
 #define OPENSTUDIO_MODELSUBTABVIEW_HPP
 
-#include "MainTabView.hpp"
 #include "SubTabView.hpp"
 
 #include "../model/Model.hpp"

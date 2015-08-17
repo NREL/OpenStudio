@@ -209,6 +209,11 @@ class ObjectSelector : public QObject
     bool containsObject(const openstudio::model::ModelObject &t_obj) const;
     void selectAll();
     void clearSelection();
+    void updateWidgets();
+
+    std::set<model::ModelObject> m_selectedObjects;
+    std::set<model::ModelObject> m_selectorObjects;
+    std::set<model::ModelObject> m_filteredObjects;
 
   signals:
     void inFocus(bool inFocus, bool hasData, int row, int column, boost::optional<int> subrow);
@@ -217,15 +222,13 @@ class ObjectSelector : public QObject
     void widgetDestroyed(QObject *t_obj);
 
   private:
-    void updateWidgets();
     void updateWidgets(const model::ModelObject &t_obj);
+    void updateWidgets(const model::ModelObject &t_obj, const bool t_objectVisible);
     void updateWidgets(const int t_row, const boost::optional<int> &t_subrow, bool t_selected, bool t_visible);
     static std::function<bool (const model::ModelObject &)> getDefaultFilter();
 
     OSGridController *m_grid;
     std::multimap<boost::optional<model::ModelObject>, WidgetLocation *> m_widgetMap;
-    std::set<model::ModelObject> m_selectedObjects;
-    std::set<model::ModelObject> m_selectorObjects;
     std::function<bool (const model::ModelObject &)> m_objectFilter;
 };
 
@@ -561,7 +564,7 @@ public:
 
   // Return a new widget at a "top level" row and column specified by arguments.
   // There might be sub rows within the specified location.
-  // In that case a QWidget with sub rows (innner grid layout) will be returned.
+  // In that case a QWidget with sub rows (inner grid layout) will be returned.
   QWidget * widgetAt(int row, int column);
 
   // Call this function on a model update
@@ -573,7 +576,13 @@ public:
 
   std::shared_ptr<ObjectSelector> getObjectSelector() const { return m_objectSelector; }
 
+  IddObjectType m_iddObjectType;
+
+  std::vector<model::ModelObject> m_modelObjects;
+
   model::Model & model() { return m_model; }
+
+  OSGridView * gridView();
 
 protected:
 
@@ -625,10 +634,6 @@ protected:
 
   bool m_isIP;
 
-  std::vector<model::ModelObject> m_modelObjects;
-
-  IddObjectType m_iddObjectType;
-
   REGISTER_LOGGER("openstudio.OSGridController");
 
 private:
@@ -647,8 +652,6 @@ private:
   void setCustomCategoryAndFields();
 
   QString cellStyle(int rowIndex, int columnIndex, bool isSelected, bool isSubRow);
-
-  OSGridView * gridView();
 
   OSItem * getSelectedItemFromModelSubTabView();
 
@@ -679,8 +682,6 @@ signals:
 
   void toggleUnitsClicked(bool displayIP);
 
-  void gridRowSelected(OSItem*);
-
 public slots:
 
   virtual void onItemDropped(const OSItemId& itemId) = 0;
@@ -706,8 +707,6 @@ protected slots:
 private slots:
 
   void horizontalHeaderChecked(int index);
-
-  void onDropZoneItemClicked(OSItem* item);
 
   void onRemoveWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
 

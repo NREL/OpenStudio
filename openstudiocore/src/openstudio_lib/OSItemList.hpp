@@ -87,8 +87,6 @@ signals:
 
   void itemsRequested();
 
-  void gridRowSelected(OSItem*);
-
 protected:
 
   void paintEvent( QPaintEvent * event ) override;
