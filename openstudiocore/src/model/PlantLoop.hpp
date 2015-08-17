@@ -32,14 +32,13 @@ namespace detail {
 };
 
 class Node;
-
 class Splitter;
-
 class Mixer;
-
 class HVACComponent;
-
 class SizingPlant;
+class PlantEquipmentOperationScheme;
+class PlantEquipmentOperationHeatingLoad;
+class PlantEquipmentOperationCoolingLoad;
 
 /** PlantLoop is an interface to the EnergyPlus IDD object
  *  named "PlantLoop"
@@ -111,6 +110,42 @@ class MODEL_API PlantLoop : public Loop {
   Node demandInletNode() const override;
 
   Node demandOutletNode() const override;
+
+
+
+  /** In OpenStudio there are three levels of "priority" for PlantEquipmentOperationScheme instances.
+    * Priority here means that if there are multiple operation schemes that list the same equipment, 
+    * the one with the highest priority will define operation for that equipment.
+    * The operation scheme defined for primaryPlantEquipmentOperationScheme() is the highest priority,
+    * followed by any component setpoint operation. Heating and cooling load operation,
+    * defined by plantEquipmentOperationHeatingLoad() and plantEquipmentOperationCoolingLoad() has the lowest priority.
+    *
+    * No operation scheme is required for plant operation. OpenStudio will provide suitable defaults if none are provied.
+    * If any operation schemes, including primary, heating load, or cooling load, are defined then the default logic is 
+    * entirely disabled.
+    *
+    * OpenStudio does not define a PlantEquipmentOperationComponentSetpoint, which is defined in EnergyPlus, 
+    * but the funcitonality is supported. In OpenStudio placing a setpoint manager on a component outlet
+    * node will trigger OpenStudio to produce a component setpoint operation scheme on export to EnergyPlus.
+    * This component setpoint behavior is in place even if there are other primary, heating load, or cooling load schemes defined.
+    */
+  boost::optional<PlantEquipmentOperationHeatingLoad> plantEquipmentOperationHeatingLoad() const;
+
+  bool setPlantEquipmentOperationHeatingLoad(const PlantEquipmentOperationHeatingLoad& plantOperation);
+
+  void resetPlantEquipmentOperationHeatingLoad();
+
+  boost::optional<PlantEquipmentOperationCoolingLoad> plantEquipmentOperationCoolingLoad() const;
+
+  bool setPlantEquipmentOperationCoolingLoad(const PlantEquipmentOperationCoolingLoad& plantOperation);
+
+  void resetPlantEquipmentOperationCoolingLoad();
+
+  boost::optional<PlantEquipmentOperationScheme> primaryPlantEquipmentOperationScheme() const;
+
+  bool setPrimaryPlantEquipmentOperationScheme(const PlantEquipmentOperationScheme& plantOperation);
+
+  void resetPrimaryPlantEquipmentOperationScheme();
 
   /** Returns all of the demand side hvac equipment between
    * inletComps and outletComps.  If type is given then the results will

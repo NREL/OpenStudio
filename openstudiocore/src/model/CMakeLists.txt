@@ -589,6 +589,39 @@ set(${target_name}_src
   PlantLoop.hpp
   PlantLoop_Impl.hpp
   PlantLoop.cpp
+  PlantEquipmentOperationRangeBasedScheme.hpp
+  PlantEquipmentOperationRangeBasedScheme_Impl.hpp
+  PlantEquipmentOperationRangeBasedScheme.cpp
+  PlantEquipmentOperationScheme.hpp
+  PlantEquipmentOperationScheme_Impl.hpp
+  PlantEquipmentOperationScheme.cpp
+  PlantEquipmentOperationCoolingLoad.hpp
+  PlantEquipmentOperationCoolingLoad_Impl.hpp
+  PlantEquipmentOperationCoolingLoad.cpp
+  PlantEquipmentOperationHeatingLoad.hpp
+  PlantEquipmentOperationHeatingLoad_Impl.hpp
+  PlantEquipmentOperationHeatingLoad.cpp
+  PlantEquipmentOperationOutdoorDryBulb.hpp
+  PlantEquipmentOperationOutdoorDryBulb_Impl.hpp
+  PlantEquipmentOperationOutdoorDryBulb.cpp
+  PlantEquipmentOperationOutdoorWetBulb.hpp
+  PlantEquipmentOperationOutdoorWetBulb_Impl.hpp
+  PlantEquipmentOperationOutdoorWetBulb.cpp
+  PlantEquipmentOperationOutdoorDewpoint.hpp
+  PlantEquipmentOperationOutdoorDewpoint_Impl.hpp
+  PlantEquipmentOperationOutdoorDewpoint.cpp
+  PlantEquipmentOperationOutdoorRelativeHumidity.hpp
+  PlantEquipmentOperationOutdoorRelativeHumidity_Impl.hpp
+  PlantEquipmentOperationOutdoorRelativeHumidity.cpp
+  PlantEquipmentOperationOutdoorDryBulbDifference.hpp
+  PlantEquipmentOperationOutdoorDryBulbDifference_Impl.hpp
+  PlantEquipmentOperationOutdoorDryBulbDifference.cpp
+  PlantEquipmentOperationOutdoorWetBulbDifference.hpp
+  PlantEquipmentOperationOutdoorWetBulbDifference_Impl.hpp
+  PlantEquipmentOperationOutdoorWetBulbDifference.cpp
+  PlantEquipmentOperationOutdoorDewpointDifference.hpp
+  PlantEquipmentOperationOutdoorDewpointDifference_Impl.hpp
+  PlantEquipmentOperationOutdoorDewpointDifference.cpp
   ProgramControl.hpp
   ProgramControl_Impl.hpp
   ProgramControl.cpp
@@ -1378,6 +1411,8 @@ set(${target_name}_test_src
   test/PipeAdiabatic_GTest.cpp
   test/PlanarSurface_GTest.cpp
   test/PlantLoop_GTest.cpp
+  test/PlantEquipmentOperationCoolingLoad_GTest.cpp
+  test/PlantEquipmentOperationHeatingLoad_GTest.cpp
   test/Plenums_GTest.cpp
   test/PumpConstantSpeed_GTest.cpp
   test/PumpVariableSpeed_GTest.cpp
