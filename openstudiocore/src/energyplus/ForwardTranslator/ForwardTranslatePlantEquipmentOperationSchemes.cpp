@@ -53,6 +53,12 @@
 #include "../../model/PlantEquipmentOperationHeatingLoad_Impl.hpp"
 #include "../../model/PlantEquipmentOperationScheme.hpp"
 #include "../../model/PlantEquipmentOperationScheme_Impl.hpp"
+#include "../../model/EvaporativeFluidCoolerSingleSpeed.hpp"
+#include "../../model/EvaporativeFluidCoolerSingleSpeed_Impl.hpp"
+#include "../../model/FluidCoolerSingleSpeed.hpp"
+#include "../../model/FluidCoolerSingleSpeed_Impl.hpp"
+#include "../../model/FluidCoolerTwoSpeed.hpp"
+#include "../../model/FluidCoolerTwoSpeed_Impl.hpp"
 #include "../../model/SetpointManager.hpp"
 #include "../../model/SetpointManager_Impl.hpp"
 #include "../../model/Schedule.hpp"
@@ -188,6 +194,24 @@ boost::optional<double> flowrate(const HVACComponent & component)
       result = tower.designWaterFlowRate();
       break;
     }
+    case openstudio::IddObjectType::OS_EvaporativeFluidCooler_SingleSpeed:
+    {
+      auto mo = component.cast<EvaporativeFluidCoolerSingleSpeed>();
+      result = mo.designWaterFlowRate();
+      break;
+    }
+    case openstudio::IddObjectType::OS_FluidCooler_SingleSpeed:
+    {
+      auto mo = component.cast<FluidCoolerSingleSpeed>();
+      result = mo.designWaterFlowRate();
+      break;
+    }
+    case openstudio::IddObjectType::OS_FluidCooler_TwoSpeed:
+    {
+      auto mo = component.cast<FluidCoolerTwoSpeed>();
+      result = mo.designWaterFlowRate();
+      break;
+    }
     case openstudio::IddObjectType::OS_GroundHeatExchanger_Vertical :
     {
       auto hx = component.cast<GroundHeatExchangerVertical>();
@@ -266,6 +290,18 @@ ComponentType componentType(const HVACComponent & component)
       return ComponentType::COOLING;
     }
     case openstudio::IddObjectType::OS_CoolingTower_TwoSpeed:
+    {
+      return ComponentType::COOLING;
+    }
+    case openstudio::IddObjectType::OS_EvaporativeFluidCooler_SingleSpeed:
+    {
+      return ComponentType::COOLING;
+    }
+    case openstudio::IddObjectType::OS_FluidCooler_SingleSpeed:
+    {
+      return ComponentType::COOLING;
+    }
+    case openstudio::IddObjectType::OS_FluidCooler_TwoSpeed:
     {
       return ComponentType::COOLING;
     }

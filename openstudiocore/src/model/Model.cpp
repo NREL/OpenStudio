@@ -299,6 +299,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(DesignSpecificationZoneAirDistribution);
     REGISTER_CONSTRUCTOR(DistrictCooling);
     REGISTER_CONSTRUCTOR(DistrictHeating);
+    REGISTER_CONSTRUCTOR(Duct);
     REGISTER_CONSTRUCTOR(ElectricEquipment);
     REGISTER_CONSTRUCTOR(ElectricEquipmentDefinition);
     REGISTER_CONSTRUCTOR(EvaporativeCoolerDirectResearchSpecial);
@@ -311,6 +312,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(FanVariableVolume);
     REGISTER_CONSTRUCTOR(FanZoneExhaust);    
     REGISTER_CONSTRUCTOR(FFactorGroundFloorConstruction);
+    REGISTER_CONSTRUCTOR(FluidCoolerSingleSpeed);
+    REGISTER_CONSTRUCTOR(FluidCoolerTwoSpeed);
     REGISTER_CONSTRUCTOR(Gas);
     REGISTER_CONSTRUCTOR(GasEquipment);
     REGISTER_CONSTRUCTOR(GasEquipmentDefinition);
@@ -355,6 +358,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(People);
     REGISTER_CONSTRUCTOR(PeopleDefinition);
     REGISTER_CONSTRUCTOR(PipeAdiabatic);
+    REGISTER_CONSTRUCTOR(PipeIndoor);
+    REGISTER_CONSTRUCTOR(PipeOutdoor);
     REGISTER_CONSTRUCTOR(PlantLoop);
     REGISTER_CONSTRUCTOR(PlantEquipmentOperationCoolingLoad);
     REGISTER_CONSTRUCTOR(PlantEquipmentOperationHeatingLoad);
@@ -636,6 +641,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(DesignSpecificationZoneAirDistribution);
     REGISTER_COPYCONSTRUCTORS(DistrictCooling);
     REGISTER_COPYCONSTRUCTORS(DistrictHeating);
+    REGISTER_COPYCONSTRUCTORS(Duct);
     REGISTER_COPYCONSTRUCTORS(ElectricEquipment);
     REGISTER_COPYCONSTRUCTORS(ElectricEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(EvaporativeCoolerDirectResearchSpecial);
@@ -648,6 +654,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(FanVariableVolume);
     REGISTER_COPYCONSTRUCTORS(FanZoneExhaust);    
     REGISTER_COPYCONSTRUCTORS(FFactorGroundFloorConstruction);
+    REGISTER_COPYCONSTRUCTORS(FluidCoolerSingleSpeed);
+    REGISTER_COPYCONSTRUCTORS(FluidCoolerTwoSpeed);
     REGISTER_COPYCONSTRUCTORS(Gas);
     REGISTER_COPYCONSTRUCTORS(GasEquipment);
     REGISTER_COPYCONSTRUCTORS(GasEquipmentDefinition);
@@ -692,6 +700,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(People);
     REGISTER_COPYCONSTRUCTORS(PeopleDefinition);
     REGISTER_COPYCONSTRUCTORS(PipeAdiabatic);
+    REGISTER_COPYCONSTRUCTORS(PipeIndoor);
+    REGISTER_COPYCONSTRUCTORS(PipeOutdoor);
     REGISTER_COPYCONSTRUCTORS(PlantLoop);
     REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationCoolingLoad);
     REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationHeatingLoad);
