@@ -30,57 +30,25 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateDuct(Duct & modelObject)
+boost::optional<IdfObject> ForwardTranslator::translateDuct(Duct & modelObject)
 {
   IdfObject idfObject(openstudio::IddObjectType::Duct);
 
   m_idfObjects.push_back(idfObject);
 
-  OptionalString s;
-  OptionalDouble d;
-  OptionalModelObject mo;
-
-  if (modelObject.inletModelObject()) {
-    translateModelObject(modelObject.inletModelObject().get());
+  if(auto value = modelObject.name()){
+    idfObject.setName(value.get());
   }
 
-  if (modelObject.outletModelObject()) {
-    translateModelObject(modelObject.outletModelObject().get());
+  if(auto node = modelObject.inletModelObject()) {
+    idfObject.setString(openstudio::DuctFields::InletNodeName, node->name().get());
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  s = modelObject.name();
-  if (s)
-  {
-    idfObject.setName(*s);
+  if(auto node = modelObject.outletModelObject()) {
+    idfObject.setString(openstudio::DuctFields::OutletNodeName, node->name().get());
   }
-  ///////////////////////////////////////////////////////////////////////////
 
-  ///////////////////////////////////////////////////////////////////////////
-  mo = modelObject.inletModelObject();
-  if (mo)
-  {
-    s = mo->name();
-    if (s)
-    {
-      idfObject.setString(openstudio::DuctFields::InletNodeName, *s);
-    }
-  }
-  ///////////////////////////////////////////////////////////////////////////
-
-  ///////////////////////////////////////////////////////////////////////////
-  mo = modelObject.outletModelObject();
-  if (mo)
-  {
-    s = mo->name();
-    if (s)
-    {
-      idfObject.setString(openstudio::DuctFields::OutletNodeName, *s);
-    }
-  }
-  ///////////////////////////////////////////////////////////////////////////
-
-  return boost::optional<IdfObject>(idfObject);
+  return idfObject;
 }
 
 } // energyplus

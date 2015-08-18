@@ -827,6 +827,10 @@
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_Duct">
+    <rule IddField="Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Outlet Node" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_ThermalStorage_Ice_Detailed">
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Outlet Node Name" Access="HIDDEN"/>

@@ -9083,3 +9083,9 @@ OS:Curve:QuadraticLinear,
   0,                                      !- Minimum Value of y {BasedOnField A3}
   9.9;                                    !- Maximum Value of y {BasedOnField A3}
 
+OS:Duct,
+  {ea824d81-93c3-43af-a30b-ffadd19d6cc1}, !- Handle
+  Duct,                                   !- Name
+  ,                                       !- Inlet Node
+  ;                                       !- Outlet Node
+
