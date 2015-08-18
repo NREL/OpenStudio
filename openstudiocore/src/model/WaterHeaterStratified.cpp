@@ -19,7 +19,8 @@
 
 #include "WaterHeaterStratified.hpp"
 #include "WaterHeaterStratified_Impl.hpp"
-
+#include "WaterHeaterHeatPump.hpp"
+#include "WaterHeaterHeatPump_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "ThermalZone.hpp"
@@ -30,10 +31,9 @@
 #include "ScheduleDay_Impl.hpp"
 #include "ScheduleRuleset.hpp"
 #include "ScheduleRuleset_Impl.hpp"
-
+#include "Model.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_WaterHeater_Stratified_FieldEnums.hxx>
-
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
 
@@ -993,6 +993,20 @@ namespace detail {
 
   boost::optional<Schedule> WaterHeaterStratified_Impl::optionalHeater2SetpointTemperatureSchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterHeater_StratifiedFields::Heater2SetpointTemperatureScheduleName);
+  }
+
+  boost::optional<ZoneHVACComponent> WaterHeaterStratified_Impl::containingZoneHVACComponent() const
+  {
+    auto hpwhs = model().getModelObjects<model::WaterHeaterHeatPump>();
+    auto t_Handle = handle();
+    
+    for( const auto & hpwh : hpwhs ) {
+      if( hpwh.tank().handle() == t_Handle ) {
+        return hpwh;
+      }
+    }
+
+    return boost::none;
   }
 
 } // detail

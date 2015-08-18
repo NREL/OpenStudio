@@ -260,6 +260,17 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
             }
           }
         }
+        if( auto tank = modelObject.optionalCast<WaterHeaterStratified>() ) {
+          // containingZoneHVACComponent can be WaterHeaterHeatPump
+          if( auto hpwh = tank->containingZoneHVACComponent() ) {
+            //translate and map containingZoneHVAC
+            if ( auto hpwhIDF = translateAndMapModelObject(hpwh.get()) ) {
+              //Get the name and the idd object from the idf object version of this
+              objectName = hpwhIDF->name().get();
+              iddType = hpwhIDF->iddObject().name();
+            }
+          }
+        }
       }
 
       IdfExtensibleGroup eg = branchIdfObject.pushExtensibleGroup();
