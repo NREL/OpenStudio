@@ -123,6 +123,7 @@ class DesignDay;
 class DesignSpecificationOutdoorAir;
 class DistrictCooling;
 class DistrictHeating;
+class Duct;
 class ElectricEquipment;
 class EvaporativeCoolerDirectResearchSpecial;
 class EvaporativeCoolerIndirectResearchSpecial;
@@ -133,6 +134,8 @@ class FanOnOff;
 class FanVariableVolume;
 class FanZoneExhaust;
 class FFactorGroundFloorConstruction;
+class FluidCoolerSingleSpeed;
+class FluidCoolerTwoSpeed;
 class Gas;
 class GasEquipment;
 class GasMixture;
@@ -164,6 +167,8 @@ class OutputControlReportingTolerances;
 class OutputVariable;
 class People;
 class PipeAdiabatic;
+class PipeIndoor;
+class PipeOutdoor;
 class PlantLoop;
 class PlantEquipmentOperationCoolingLoad;
 class PlantEquipmentOperationHeatingLoad;
@@ -525,8 +530,10 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateDistrictCooling( model::DistrictCooling & modelObject );   
   
-  boost::optional<IdfObject> translateDistrictHeating( model::DistrictHeating & modelObject );  
-  
+  boost::optional<IdfObject> translateDistrictHeating(model::DistrictHeating & modelObject);
+
+  boost::optional<IdfObject> translateDuct(model::Duct & modelObject);
+
   boost::optional<IdfObject> translateElectricEquipment( model::ElectricEquipment & modelObject );
 
   boost::optional<IdfObject> translateEvaporativeFluidCoolerSingleSpeed( model::EvaporativeFluidCoolerSingleSpeed & modelObject );
@@ -545,7 +552,11 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateEvaporativeCoolerIndirectResearchSpecial( model::EvaporativeCoolerIndirectResearchSpecial & modelObject );
 
-  boost::optional<IdfObject> translateFFactorGroundFloorConstruction( model::FFactorGroundFloorConstruction & modelObject );
+  boost::optional<IdfObject> translateFFactorGroundFloorConstruction(model::FFactorGroundFloorConstruction & modelObject);
+
+  boost::optional<IdfObject> translateFluidCoolerSingleSpeed(model::FluidCoolerSingleSpeed & modelObject);
+
+  boost::optional<IdfObject> translateFluidCoolerTwoSpeed(model::FluidCoolerTwoSpeed & modelObject);
 
   boost::optional<IdfObject> translateGas( model::Gas & modelObject );
 
@@ -607,7 +618,11 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translatePeople( model::People & modelObject );
 
-  boost::optional<IdfObject> translatePipeAdiabatic( model::PipeAdiabatic & modelObject );
+  boost::optional<IdfObject> translatePipeAdiabatic(model::PipeAdiabatic & modelObject);
+
+  boost::optional<IdfObject> translatePipeIndoor(model::PipeIndoor & modelObject);
+
+  boost::optional<IdfObject> translatePipeOutdoor(model::PipeOutdoor & modelObject);
 
   boost::optional<IdfObject> translatePlantLoop( model::PlantLoop & modelObject );
 

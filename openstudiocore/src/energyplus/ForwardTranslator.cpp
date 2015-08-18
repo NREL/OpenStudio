@@ -1076,12 +1076,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateDistrictCooling(districtCooling);
       break;
     }
-  case openstudio::IddObjectType::OS_DistrictHeating :
-    {
-      model::DistrictHeating districtHeating = modelObject.cast<DistrictHeating>();
-      retVal = translateDistrictHeating(districtHeating);
-      break;
-    }
+  case openstudio::IddObjectType::OS_DistrictHeating:
+  {
+    model::DistrictHeating districtHeating = modelObject.cast<DistrictHeating>();
+    retVal = translateDistrictHeating(districtHeating);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Duct:
+  {
+    model::Duct duct = modelObject.cast<Duct>();
+    retVal = translateDuct(duct);
+    break;
+  }
   case openstudio::IddObjectType::OS_ElectricEquipment :
     {
       model::ElectricEquipment equipment = modelObject.cast<ElectricEquipment>();
@@ -1143,6 +1149,20 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       break;
     }
     
+  case openstudio::IddObjectType::OS_FluidCooler_SingleSpeed:
+  {
+    model::FluidCoolerSingleSpeed fluidCoolerSingleSpeed = modelObject.cast<FluidCoolerSingleSpeed>();
+    retVal = translateFluidCoolerSingleSpeed(fluidCoolerSingleSpeed);
+    break;
+  }
+
+  case openstudio::IddObjectType::OS_FluidCooler_TwoSpeed:
+  {
+    model::FluidCoolerTwoSpeed fluidCoolerTwoSpeed = modelObject.cast<FluidCoolerTwoSpeed>();
+    retVal = translateFluidCoolerTwoSpeed(fluidCoolerTwoSpeed);
+    break;
+  }
+
   case openstudio::IddObjectType::OS_GroundHeatExchanger_HorizontalTrench :
     {
       auto mo = modelObject.cast<GroundHeatExchangerHorizontalTrench>();
@@ -1436,12 +1456,24 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translatePeople(people);
       break;
     }
-  case openstudio::IddObjectType::OS_Pipe_Adiabatic :
-    {
-      model::PipeAdiabatic pipe = modelObject.cast<PipeAdiabatic>();
-      retVal = translatePipeAdiabatic(pipe);
-      break;
-    }
+  case openstudio::IddObjectType::OS_Pipe_Adiabatic:
+  {
+    model::PipeAdiabatic pipe = modelObject.cast<PipeAdiabatic>();
+    retVal = translatePipeAdiabatic(pipe);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Pipe_Indoor:
+  {
+    model::PipeIndoor pipe = modelObject.cast<PipeIndoor>();
+    retVal = translatePipeIndoor(pipe);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Pipe_Outdoor:
+  {
+    model::PipeOutdoor pipe = modelObject.cast<PipeOutdoor>();
+    retVal = translatePipeOutdoor(pipe);
+    break;
+  }
   case openstudio::IddObjectType::OS_PortList :
     {
       model::PortList portList = modelObject.cast<PortList>();
