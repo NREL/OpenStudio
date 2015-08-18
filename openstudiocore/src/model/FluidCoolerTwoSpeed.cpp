@@ -409,9 +409,10 @@ namespace detail {
 
   bool FluidCoolerTwoSpeed_Impl::addToNode(Node & node)
   {
-    if (node.plantLoop() || node.airLoopHVAC())
-    {
-      return StraightComponent_Impl::addToNode(node);
+    if(auto plant = node.plantLoop()) {
+      if( plant->supplyComponent(node.handle()) ) {
+        return StraightComponent_Impl::addToNode(node);
+      }
     }
 
     return false;

@@ -214,8 +214,7 @@ namespace detail {
 
   bool PipeIndoor_Impl::addToNode(Node & node)
   {
-    if (node.plantLoop() || node.airLoopHVAC())
-    {
+    if(node.plantLoop()) {
       return StraightComponent_Impl::addToNode(node);
     }
 

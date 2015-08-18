@@ -79,8 +79,7 @@ namespace detail {
 
   bool Duct_Impl::addToNode(Node & node)
   {
-    if (node.plantLoop() || node.airLoopHVAC())
-    {
+    if(node.airLoopHVAC()) {
       return StraightComponent_Impl::addToNode(node);
     }
 
