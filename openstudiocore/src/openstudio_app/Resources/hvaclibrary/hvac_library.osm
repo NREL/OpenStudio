@@ -9089,3 +9089,32 @@ OS:Duct,
   ,                                       !- Inlet Node
   ;                                       !- Outlet Node
 
+OS:Pipe:Outdoor,
+  {17bbdd3d-44a9-4878-92cb-8e42f9140b18}, !- Handle
+  Outdoor Pipe,                         !- Name
+  {de11bfc1-7dc3-4a5b-a98d-46d3a33c1b82}, !- Construction
+  ,                                       !- Fluid Inlet Node
+  ,                                       !- Fluid Outlet Node
+  ,                                       !- Ambient Temperature Outdoor Air Node
+  0.05,                                   !- Pipe Inside Diameter {m}
+  100;                                    !- Pipe Length {m}
+
+OS:Material,
+  {0e7d4a49-4eee-48f1-8cba-d3afc0f7239c}, !- Handle
+  Pipe Steel,                             !- Name
+  Smooth,                                 !- Roughness
+  0.003,                                  !- Thickness {m}
+  45.31,                                  !- Conductivity {W/m-K}
+  7833,                                   !- Density {kg/m3}
+  500,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.5,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+OS:Construction,
+  {de11bfc1-7dc3-4a5b-a98d-46d3a33c1b82}, !- Handle
+  Outdoor Pipe Construction,                         !- Name
+  ,                                       !- Surface Rendering Name
+  {0e7d4a49-4eee-48f1-8cba-d3afc0f7239c}; !- Layer 1
+
+

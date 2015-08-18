@@ -214,8 +214,8 @@ IconLibrary::IconLibrary()
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_DesignSpecification_OutdoorAir).value()] = new QPixmap(":images/mini_icons/outdoor_air.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_People).value()] = new QPixmap(":images/mini_icons/people.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_People_Definition).value()] = new QPixmap(":images/mini_icons/people_definition.png");
-  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Pipe_Indoor).value()] = new QPixmap(":images/mini_icons/pipe_indoor.png");
-  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Pipe_Outdoor).value()] = new QPixmap(":images/mini_icons/pipe_outdoor.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Pipe_Indoor).value()] = new QPixmap(":images/mini_icons/mini_pipe_indoor.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Pipe_Outdoor).value()] = new QPixmap(":images/mini_icons/mini_pipe_outdoor.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Refrigeration_Compressor).value()] = new QPixmap(":images/mini_icons/mini_compressor.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Refrigeration_Condenser_AirCooled).value()] = new QPixmap(":images/mini_icons/mini_condensor.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Refrigeration_Case).value()] = new QPixmap(":images/mini_icons/mini_display_case.png");
