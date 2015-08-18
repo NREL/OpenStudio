@@ -10340,6 +10340,224 @@ OS:Chiller:Electric:EIR,
        \type object-list
        \object-list ScheduleNames
 
+OS:CentralHeatPumpSystem,
+       \extensible:1
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \type alpha
+       \reference ConnectionObjecta
+       \required-field
+  A3,  \field Control Method
+       \required-field
+       \type choice
+       \key SmartMixing
+  A3,  \field Cooling Loop Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A4,  \field Cooling Loop Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A5,  \field Source Loop Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A6,  \field Source Loop Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A7,  \field Heating Loop Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A8,  \field Heating Loop Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  N1,  \field Ancillary Power
+       \required-field
+       \type real
+       \units W
+       \minimum 0.0
+  A9,  \field Ancillary Operation Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This value from this schedule is multiplied times the Ancillary Power
+  A10; \field Chiller Heater Module Name
+       \begin-extensible
+       \required-field
+       \type object-list
+       \object-list CentralHeatPumpSystemModule
+
+OS:CentralHeatPumpSystem:Module,
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \type alpha
+       \reference  CentralHeatPumpSystemModule
+       \required-field
+  A3 , \field Chiller Heater Modules Performance Component Name
+       \required-field
+       \type object-list
+       \object-list ChillerHeaterEIRNames
+  A4 , \field Chiller Heater Modules Control Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \required-field
+  N1 ; \field Number of Chiller Heater Modules
+       \type integer
+       \minimum 1
+       \required-field
+
+OS:ChillerHeaterPerformance:Electric:EIR,
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \type alpha
+       \required-field
+       \reference ChillerHeaterEIRNames
+  N1 , \field Reference Cooling Mode Evaporator Capacity
+       \type real
+       \units W
+       \required-field
+       \minimum> 0.0
+       \autosizable
+  N2 , \field Reference Cooling Mode COP
+       \note Efficiency of the chiller compressor (cooling output/compressor energy input).
+       \type real
+       \units W/W
+       \required-field
+       \minimum> 0.0
+  N3 , \field Reference Cooling Mode Leaving Chilled Water Temperature
+       \required-field
+       \type real
+       \units C
+  N4 , \field Reference Cooling Mode Entering Condenser Fluid Temperature
+       \required-field
+       \type real
+       \units C
+  N5 , \field Reference Cooling Mode Leaving Condenser Water Temperature
+       \required-field
+       \type real
+       \units C
+  N6 , \field Reference Heating Mode Cooling Capacity Ratio
+       \required-field
+       \type real
+  N7 , \field Reference Heating Mode Cooling Power Input Ratio
+       \required-field
+       \type real
+       \minimum> 0.0
+  N8 , \field Reference Heating Mode Leaving Chilled Water Temperature
+       \required-field
+       \type real
+       \units C
+  N9 , \field Reference Heating Mode Leaving Condenser Water Temperature
+       \required-field
+       \type real
+       \units C
+  N10, \field Reference Heating Mode Entering Condenser Fluid Temperature
+       \required-field
+       \type real
+       \units C
+  N11, \field Heating Mode Entering Chilled Water Temperature Low Limit
+       \required-field
+       \type real
+       \units C
+  A3 , \field Chilled Water Flow Mode Type
+       \required-field
+       \type choice
+       \key ConstantFlow
+       \key VariableFlow
+  N12, \field Design Chilled Water Flow Rate
+       \type real
+       \units m3/s
+       \minimum> 0
+       \autosizable
+       \ip-units gal/min
+  N13, \field Design Condenser Water Flow Rate
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+       \ip-units gal/min
+  N14, \field Design Hot Water Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum 0.0
+       \ip-units gal/min
+  N15, \field Compressor Motor Efficiency
+       \required-field
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+  A4 , \field Condenser Type
+       \required-field
+       \type choice
+       \key AirCooled
+       \key WaterCooled
+  A5 , \field Cooling Mode Temperature Curve Condenser Water Independent Variable
+       \required-field
+       \type choice
+       \key EnteringCondenser
+       \key LeavingCondenser
+  A6 , \field Cooling Mode Cooling Capacity Function of Temperature Curve Name
+       \required-field
+       \type object-list
+       \object-list BiquadraticCurves
+       \object-list BiVariateTables
+  A7 , \field Cooling Mode Electric Input to Cooling Output Ratio Function of Temperature Curve Name
+       \required-field
+       \type object-list
+       \object-list BiquadraticCurves
+       \object-list BiVariateTables
+  A8 , \field Cooling Mode Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve Name
+       \required-field
+       \type object-list
+       \object-list BicubicCurves
+       \object-list QuadraticCurves
+       \object-list UniVariateTables
+       \object-list BiVariateTables
+  N16, \field Cooling Mode Cooling Capacity Optimum Part Load Ratio
+       \required-field
+       \type real
+       \minimum> 0.0
+  A9 , \field Heating Mode Temperature Curve Condenser Water Independent Variable
+       \required-field
+       \type choice
+       \key EnteringCondenser
+       \key LeavingCondenser
+  A10, \field Heating Mode Cooling Capacity Function of Temperature Curve Name
+       \required-field
+       \type object-list
+       \object-list BiquadraticCurves
+       \object-list BiVariateTables
+  A11, \field Heating Mode Electric Input to Cooling Output Ratio Function of Temperature Curve Name
+       \required-field
+       \type object-list
+       \object-list BiquadraticCurves
+       \object-list BiVariateTables
+  A12, \field Heating Mode Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve Name
+       \required-field
+       \type object-list
+       \object-list BicubicCurves
+       \object-list QuadraticCurves
+       \object-list UniVariateTables
+       \object-list BiVariateTables
+  N17, \field Heating Mode Cooling Capacity Optimum Part Load Ratio
+       \required-field
+       \type real
+       \minimum> 0.0
+  N18; \field Sizing Factor
+       \required-field
+       \type real
+       \minimum> 0.0
+
 OS:Chiller:Absorption:Indirect,
        \memo This indirect absorption chiller model is an enhanced model from the
        \memo Building Loads and System Thermodynamics (BLAST) program.  Chiller
@@ -16113,6 +16331,188 @@ OS:EvaporativeFluidCooler:SingleSpeed,
        \type object-list
        \object-list WaterStorageTankNames
 
+OS:EvaporativeFluidCooler:TwoSpeed,
+       \min-fields 34
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference ConnectionObject
+  A3 , \field Water Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A4 , \field Water Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  N1 , \field High Fan Speed Air Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+  N2 , \field High Fan Speed Fan Power
+       \required-field
+       \type real
+       \units W
+       \minimum> 0.0
+       \autosizable
+       \ip-units W
+       \note This is the fan motor electric input power at high speed
+  N3 , \field Low Fan Speed Air Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autocalculatable
+       \note Low speed air flow rate must be less than high speed air flow rate
+  N4 , \field Low Fan Speed Air Flow Rate Sizing Factor
+       \required-field
+       \type real
+       \note This field is only used if the previous field is set to autocalculate
+  N5 , \field Low Fan Speed Fan Power
+       \required-field
+       \type real
+       \units W
+       \minimum> 0.0
+       \autocalculatable
+       \ip-units W
+       \note This is the fan motor electric input power at low speed
+  N6 , \field Low Fan Speed Fan Power Sizing Factor
+       \required-field
+       \type real
+       \note This field is only used if the previous field is set to autocalculate.
+  N7 , \field Design Spray Water Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \ip-units gal/min
+  A5 , \field Performance Input Method
+       \required-field
+       \type choice
+       \key UFactorTimesAreaAndDesignWaterFlowRate
+       \key StandardDesignCapacity
+       \key UserSpecifiedDesignCapacity
+       \note User can define fluid cooler thermal performance by specifying the fluid cooler UA
+       \note and the Design Water Flow Rate, or by specifying the fluid cooler Standard Design
+       \note Capacity or by specifying Design Capacity for Non standard conditions.
+  A6 , \field Outdoor Air Inlet Node Name
+       \type alpha
+       \note Enter the name of an outdoor air node
+  N8 , \field Heat Rejection Capacity and Nominal Capacity Sizing Ratio
+       \required-field
+       \type real
+  N9 , \field High Speed Standard Design Capacity
+       \type real
+       \units W
+       \minimum> 0.0
+  N10, \field Low Speed Standard Design Capacity
+       \type real
+       \units W
+       \minimum> 0.0
+       \autocalculatable
+  N11, \field Low Speed Standard Capacity Sizing Factor
+       \required-field
+       \type real
+       \note This field is only used if the previous field is set to autocalculate
+  N12, \field High Fan Speed U-factor Times Area Value
+       \type real
+       \units W/K
+       \minimum> 0.0
+       \maximum 2100000.0
+       \autosizable
+       \note Only used for Performance Input Method = UFactorTimesAreaAndDesignWaterFlowRate;
+       \note for other Performance Input Methods, this field is ignored.
+  N13, \field Low Fan Speed U-factor Times Area Value
+       \type real
+       \units W/K
+       \minimum> 0.0
+       \maximum 300000.0
+       \autocalculatable
+       \note Only used for Performance Input Method = UFactorTimesAreaAndDesignWaterFlowRate;
+       \note for other input methods, this field is ignored.
+       \note Low speed fluid cooler UA must be less than high speed fluid cooler UA
+  N14, \field Low Fan Speed U-Factor Times Area Sizing Factor
+       \required-field
+       \type real
+       \note This field is only used if the previous field is set to autocalculate and
+       \note the Performance Input Method is UFactorTimesAreaAndDesignWaterFlowRate
+  N15, \field Design Water Flow Rate
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+       \ip-units gal/min
+       \note Input value is ignored if fluid cooler Performance Input Method= StandardDesignCapacity
+  N16, \field High Speed User Specified Design Capacity
+       \type real
+       \units W
+       \minimum> 0.0
+       \note Only used for Performance Input Method = UserSpecifiedDesignCapacity;
+       \note for other Performance Input Methods, this field is ignored.
+  N17, \field Low Speed User Specified Design Capacity
+       \type real
+       \units W
+       \minimum> 0.0
+       \autocalculatable
+       \note Only used for Performance Input Method = UserSpecifiedDesignCapacity;
+       \note for other Performance Input Methods, this field is ignored.
+  N18, \field Low Speed User Specified Design Capacity Sizing Factor
+       \required-field
+       \type real
+       \note This field is only used if the previous field is set to autocalculate
+  N19, \field Design Entering Water Temperature
+       \type real
+       \units C
+       \minimum> 0.0
+       \ip-units F
+  N20, \field Design Entering Air Temperature
+       \type real
+       \units C
+       \minimum> 0.0
+       \ip-units F
+  N21, \field Design Entering Air Wet-bulb Temperature
+       \type real
+       \units C
+       \minimum> 0.0
+       \ip-units F
+       \note Temperature.
+  N22, \field High Speed Sizing Factor
+       \required-field
+       \type real
+       \minimum> 0.0
+  A7 , \field Evaporation Loss Mode
+       \required-field
+       \type choice
+       \key LossFactor
+       \key SaturatedExit
+  N23, \field Evaporation Loss Factor
+       \type real
+       \units percent/K
+  N24, \field Drift Loss Percent
+       \required-field
+       \type real
+       \units percent
+  A8 , \field Blowdown Calculation Mode
+       \required-field
+       \type choice
+       \key ConcentrationRatio
+       \key ScheduledRate
+  N25, \field Blowdown Concentration Ratio
+       \required-field
+       \type real
+       \minimum 2.0
+  A9 , \field Blowdown Makeup Water Usage Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  A10; \field Supply Water Storage Tank Name
+       \type object-list
+       \object-list WaterStorageTankNames
+
 OS:Fan:ConstantVolume,
        \min-fields 10
   A1, \field Handle
@@ -17061,6 +17461,75 @@ OS:PlantEquipmentOperation:OutdoorWetBulbDifference,
         \required-field
         \type object-list
         \object-list ModelObjectLists
+
+OS:PlantComponent:TemperatureSource,
+       \min-fields 8
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference ConnectionObject
+  A3 , \field Inlet Node
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  A4 , \field Outlet Node
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  N1 , \field Design Volume Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+       \ip-units gal/min
+  A5 , \field Temperature Specification Type
+       \required-field
+       \type choice
+       \key Constant
+       \key Scheduled
+  N2 , \field Source Temperature
+       \type real
+       \units C
+       \note Used if Temperature Specification Type = Constant
+  A6 ; \field Source Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \units C
+       \note Used if Temperature Specification Type = Scheduled
+
+OS:LoadProfile:Plant,
+       \min-fields 7
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference ConnectionObject
+  A3 , \field Inlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  A4 , \field Outlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  A5 , \field Load Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+  N1 , \field Peak Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+  A6 ; \field Flow Rate Fraction Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
 
 OS:Pump:ConstantSpeed,
        \memo This pump model is described in the ASHRAE secondary HVAC toolkit.
@@ -20905,6 +21374,212 @@ OS:ThermalStorage:Ice:Detailed,
        \key InsideMelt
        \key OutsideMelt
        \required-field
+
+OS:ThermalStorage:ChilledWater:Stratified,
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference ConnectionObject
+  N1 , \field Tank Volume
+       \required-field
+       \type real
+       \units m3
+       \minimum> 0.0
+       \ip-units gal
+  N2 , \field Tank Height
+       \required-field
+       \type real
+       \units m
+       \minimum> 0.0
+       \note Height is measured in the axial direction for horizontal cylinders
+  A3 , \field Tank Shape
+       \required-field
+       \type choice
+       \key VerticalCylinder
+       \key HorizontalCylinder
+       \key Other
+  N3 , \field Tank Perimeter
+       \type real
+       \units m
+       \minimum 0.0
+       \note Only used if Tank Shape is Other
+  A4 , \field Setpoint Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  N4 , \field Deadband Temperature Difference
+       \required-field
+       \type real
+       \units deltaC
+       \minimum 0.0
+  N5,  \field Temperature Sensor Height
+       \units m
+       \minimum 0.0
+  N6 , \field Minimum Temperature Limit
+       \type real
+       \units C
+  N7 , \field Nominal Cooling Capacity
+       \type real
+       \units W
+  A5 , \field Ambient Temperature Indicator
+       \required-field
+       \type choice
+       \key Schedule
+       \key Zone
+       \key Outdoors
+  A6 , \field Ambient Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  A7 , \field Ambient Temperature Thermal Zone Name
+       \type object-list
+       \object-list ThermalZoneNames
+  A8 , \field Ambient Temperature Outdoor Air Node Name
+       \type alpha
+       \note required for Ambient Temperature Indicator=Outdoors
+  N8, \field Uniform Skin Loss Coefficient per Unit Area to Ambient Temperature
+       \type real
+       \units W/m2-K
+       \minimum 0.0
+  A9 , \field Use Side Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A10, \field Use Side Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  N9 , \field Use Side Heat Transfer Effectiveness
+       \required-field
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+  A11, \field Use Side Availability Schedule Name
+       \note Availability schedule name for use side. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  N10, \field Use Side Inlet Height
+       \required-field
+       \type real
+       \units m
+       \minimum 0.0
+       \autocalculatable
+       \note Defaults to top of tank
+  N11, \field Use Side Outlet Height
+       \required-field
+       \type real
+       \units m
+       \minimum 0.0
+       \note Defaults to bottom of tank
+  N12, \field Use Side Design Flow Rate
+       \required-field
+       \type real
+       \autosizable
+       \units m3/s
+       \ip-units gal/min
+       \minimum 0.0
+  A12, \field Source Side Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A13, \field Source Side Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  N13, \field Source Side Heat Transfer Effectiveness
+       \required-field
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+  A14, \field Source Side Availability Schedule Name
+       \note Availability schedule name for use side. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  N14, \field Source Side Inlet Height
+       \required-field
+       \type real
+       \units m
+       \minimum 0.0
+       \note Defaults to bottom of tank
+  N15, \field Source Side Outlet Height
+       \required-field
+       \type real
+       \units m
+       \minimum 0.0
+       \autocalculatable
+       \note Defaults to top of tank
+  N16, \field Source Side Design Flow Rate
+       \required-field
+       \type real
+       \autosizable
+       \units m3/s
+       \ip-units gal/min
+       \minimum 0.0
+  N17, \field Tank Recovery Time
+       \required-field
+       \type real
+       \note Parameter for autosizing design flow rates for indirectly cooled water tanks
+       \note time required to lower temperature of entire tank from 14.4C to 9.0C
+       \units hr
+       \minimum> 0.0
+  A15, \field Inlet Mode
+       \required-field
+       \type choice
+       \key Fixed
+       \key Seeking
+  N18, \field Number of Nodes
+       \required-field
+       \type integer
+       \minimum 1
+       \maximum 10
+  N19, \field Additional Destratification Conductivity
+       \required-field
+       \type real
+       \units W/m-K
+       \minimum 0.0
+  N20, \field Node 1 Additional Loss Coefficient
+       \required-field
+       \type real
+       \units W/m2-K
+  N21, \field Node 2 Additional Loss Coefficient
+       \required-field
+       \type real
+       \units W/m2-K
+  N22, \field Node 3 Additional Loss Coefficient
+       \required-field
+       \type real
+       \units W/m2-K
+  N23, \field Node 4 Additional Loss Coefficient
+       \required-field
+       \type real
+       \units W/m2-K
+  N24, \field Node 5 Additional Loss Coefficient
+       \required-field
+       \type real
+       \units W/m2-K
+  N25, \field Node 6 Additional Loss Coefficient
+       \required-field
+       \type real
+       \units W/m2-K
+  N26, \field Node 7 Additional Loss Coefficient
+       \required-field
+       \type real
+       \units W/m2-K
+  N27, \field Node 8 Additional Loss Coefficient
+       \required-field
+       \type real
+       \units W/m2-K
+  N28, \field Node 9 Additional Loss Coefficient
+       \required-field
+       \type real
+       \units W/m2-K
+  N29; \field Node 10 Additional Loss Coefficient
+       \required-field
+       \type real
+       \units W/m2-K
 
 OS:Duct,
        \memo Passes inlet node state variables to outlet node state variables
