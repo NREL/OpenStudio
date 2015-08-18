@@ -9113,8 +9113,21 @@ OS:Material,
 
 OS:Construction,
   {de11bfc1-7dc3-4a5b-a98d-46d3a33c1b82}, !- Handle
-  Outdoor Pipe Construction,                         !- Name
+  Pipe Construction,                         !- Name
   ,                                       !- Surface Rendering Name
   {0e7d4a49-4eee-48f1-8cba-d3afc0f7239c}; !- Layer 1
+
+OS:Pipe:Indoor,
+  {c93356bb-763d-4272-9b35-3ee12862a86c}, !- Handle
+  Indoor Pipe,                            !- Name
+  {de11bfc1-7dc3-4a5b-a98d-46d3a33c1b82}, !- Construction
+  ,                                       !- Fluid Inlet Node
+  ,                                       !- Fluid Outlet Node
+  Zone,                                   !- Environment Type
+  ,                                       !- Ambient Temperature Zone
+  ,                                       !- Ambient Temperature Schedule
+  ,                                       !- Ambient Air Velocity Schedule
+  0.05,                                   !- Pipe Inside Diameter {m}
+  100;                                    !- Pipe Length {m}
 
 

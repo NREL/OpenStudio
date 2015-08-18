@@ -836,6 +836,10 @@
     <rule IddField="Fluid Outlet Node" Access="HIDDEN"/>
     <rule IddField="Ambient Temperature Outdoor Air Node" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_Pipe_Indoor">
+    <rule IddField="Fluid Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Fluid Outlet Node" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_ThermalStorage_Ice_Detailed">
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Outlet Node Name" Access="HIDDEN"/>

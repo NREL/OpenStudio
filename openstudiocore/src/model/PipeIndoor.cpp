@@ -84,7 +84,7 @@ namespace detail {
 
   unsigned PipeIndoor_Impl::outletPort()
   {
-    return OS_Pipe_IndoorFields::FluidInletNode;
+    return OS_Pipe_IndoorFields::FluidOutletNode;
   }
 
   std::vector<ScheduleTypeKey> PipeIndoor_Impl::getScheduleTypeKeys(const Schedule& schedule) const
