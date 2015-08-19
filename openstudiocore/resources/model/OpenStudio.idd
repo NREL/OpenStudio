@@ -21318,6 +21318,327 @@ OS:ThermalStorage:Ice:Detailed,
        \key OutsideMelt
        \required-field
 
+OS:Duct,
+       \memo Passes inlet node state variables to outlet node state variables
+       \min-fields 4
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \reference ConnectionObject
+  A3,  \field Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+  A4;  \field Outlet Node
+       \type object-list
+       \object-list ConnectionNames
+
+OS:FluidCooler:SingleSpeed,
+       \memo The fluid cooler is modeled as a cross flow heat exchanger (both streams unmixed) with
+       \memo single-speed fans (induced draft configuration).
+       \min-fields 14
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \reference ConnectionObject
+       \type alpha
+       \note fluid cooler name
+  A3,  \field Water Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+  A4,  \field Water Outlet Node
+       \type object-list
+       \object-list ConnectionNames
+  A5,  \field Performance Input Method
+       \type choice
+       \key UFactorTimesAreaAndDesignWaterFlowRate
+       \key NominalCapacity
+       \required-field
+       \note User can define fluid cooler thermal performance by specifying the fluid cooler UA
+       \note and the Design Water Flow Rate, or by specifying the fluid cooler nominal capacity
+  N1,  \field Design Air Flow Rate U-factor Times Area Value
+       \type real
+       \units W/K
+       \minimum> 0.0
+       \maximum 2100000.0
+       \autosizable
+       \required-field
+       \note Leave field blank if fluid cooler Performance Input Method is NominalCapacity
+  N2,  \field Nominal Capacity
+       \type real
+       \units W
+       \minimum> 0.0
+       \required-field
+       \note Nominal fluid cooler capacity
+  N3,  \field Design Entering Water Temperature
+       \required-field
+       \type real
+       \units C
+       \minimum> 0.0
+       \ip-units F
+       \note Design Entering Water Temperature must be specified for both the performance input methods and
+       \note its value must be greater than Design Entering Air Temperature.
+  N4,  \field Design Entering Air Temperature
+       \required-field
+       \type real
+       \units C
+       \minimum> 0.0
+       \ip-units F
+       \note Design Entering Air Temperature must be specified for both the performance input methods and
+       \note its value must be greater than Design Entering Air Wet-bulb Temperature.
+  N5,  \field Design Entering Air Wetbulb Temperature
+       \required-field
+       \type real
+       \units C
+       \minimum> 0.0
+       \ip-units F
+       \note Design Entering Air Wet-bulb Temperature must be specified for both the performance input methods and
+       \note its value must be less than Design Entering Air Temperature.
+  N6,  \field Design Water Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+       \ip-units gal/min
+  N7,  \field Design Air Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+  N8,  \field Design Air Flow Rate Fan Power
+       \required-field
+       \type real
+       \units W
+       \minimum> 0.0
+       \autosizable
+       \ip-units W
+       \note This is the fan motor electric input power
+  A6 ; \field Outdoor Air Inlet Node
+       \type object-list
+       \object-list Node
+       \note Enter the name of an outdoor air node
+
+OS:FluidCooler:TwoSpeed,
+       \min-fields 22
+       \memo The fluid cooler is modeled as a cross flow heat exchanger (both streams unmixed) with
+       \memo two-speed fans (induced draft configuration).
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \reference ConnectionObject
+       \type alpha
+       \note fluid cooler name
+  A3,  \field Water Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+  A4,  \field Water Outlet Node
+       \type object-list
+       \object-list ConnectionNames
+  A5,  \field Performance Input Method
+       \type choice
+       \key UFactorTimesAreaAndDesignWaterFlowRate
+       \key NominalCapacity
+       \required-field
+       \note User can define fluid cooler thermal performance by specifying the fluid cooler UA
+       \note and the Design Water Flow Rate, or by specifying the fluid cooler nominal capacity
+  N1,  \field High Fan Speed U-factor Times Area Value
+       \type real
+       \units W/K
+       \minimum> 0.0
+       \maximum 2100000.0
+       \autosizable
+       \required-field
+       \note Leave field blank if fluid cooler Performance Input Method is NominalCapacity
+  N2,  \field Low Fan Speed U-factor Times Area Value
+       \type real
+       \units W/K
+       \minimum> 0.0
+       \maximum 300000.0
+       \autosizable
+       \required-field
+       \note Leave field blank if fluid cooler Performance Input Method is NominalCapacity
+       \note Low speed fluid cooler UA must be less than high speed fluid cooler UA
+       \note Low speed fluid cooler UA must be greater than free convection fluid cooler UA
+  N3,  \field Low Fan Speed U-Factor Times Area Sizing Factor
+       \required-field
+       \type real
+       \required-field
+       \note This field is only used if the previous field is set to autosize and
+       \note the Performance Input Method is UFactorTimesAreaAndDesignWaterFlowRate
+  N4,  \field High Speed Nominal Capacity
+       \type real
+       \units W
+       \minimum> 0.0
+       \required-field
+       \note Nominal fluid cooler capacity at high fan speed
+  N5,  \field Low Speed Nominal Capacity
+       \type real
+       \units W
+       \minimum> 0.0
+       \autosizable
+       \required-field
+       \note Nominal fluid cooler capacity at low fan speed
+  N6,  \field Low Speed Nominal Capacity Sizing Factor
+       \required-field
+       \type real
+       \required-field
+       \note This field is only used if the previous field is set to autosize and
+       \note the Performance Input Method is NominalCapacity
+  N7,  \field Design Entering Water Temperature
+       \required-field
+       \type real
+       \units C
+       \minimum> 0.0
+       \ip-units F
+       \note Design Entering Water Temperature must be specified for both the performance input methods and
+       \note its value must be greater than Design Entering Air Temperature.
+  N8,  \field Design Entering Air Temperature
+       \required-field
+       \type real
+       \units C
+       \minimum> 0.0
+       \ip-units F
+       \note Design Entering Air Temperature must be specified for both the performance input methods and
+       \note its value must be greater than Design Entering Air Wet-bulb Temperature.
+  N9,  \field Design Entering Air Wet-bulb Temperature
+       \required-field
+       \type real
+       \units C
+       \minimum> 0.0
+       \ip-units F
+       \note Design Entering Air Wet-bulb Temperature must be specified for both the performance input methods and
+       \note its value must be less than Design Entering Air Temperature.
+  N10, \field Design Water Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+       \ip-units gal/min
+  N11, \field High Fan Speed Air Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+       \note Air Flow Rate at High Fan Speed must be greater than Air Flow Rate at Low Fan Speed
+  N12, \field High Fan Speed Fan Power
+       \required-field
+       \type real
+       \units W
+       \minimum> 0.0
+       \autosizable
+       \ip-units W
+       \note This is the fan motor electric input power at high speed
+  N13, \field Low Fan Speed Air Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+       \note Air Flow Rate at Low Fan Speed must be less than Air Flow Rate at High Fan Speed
+  N14, \field Low Fan Speed Air Flow Rate Sizing Factor
+       \required-field
+       \type real
+       \note This field is only used if the previous field is set to autosize.
+  N15, \field Low Fan Speed Fan Power
+       \required-field
+       \type real
+       \units W
+       \minimum> 0.0
+       \autosizable
+       \ip-units W
+       \note This is the fan motor electric input power at low speed
+  N16, \field Low Fan Speed Fan Power Sizing Factor
+       \required-field
+       \type real
+       \note This field is only used if the previous field is set to autosize.
+  A6;  \field Outdoor Air Inlet Node
+       \type object-list
+       \object-list Node
+
+OS:Pipe:Indoor,
+       \memo Pipe model with transport delay and heat transfer to the environment.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \reference ConnectionObject
+  A3,  \field Construction
+       \type object-list
+       \object-list ConstructionNames
+  A4,  \field Fluid Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+  A5,  \field Fluid Outlet Node
+       \type object-list
+       \object-list ConnectionNames
+  A6,  \field Environment Type
+       \required-field
+       \type choice
+       \key Zone
+       \key Schedule
+  A7,  \field Ambient Temperature Zone
+       \type object-list
+       \object-list ThermalZoneNames
+  A8,  \field Ambient Temperature Schedule
+       \type object-list
+       \object-list ScheduleNames
+  A9,  \field Ambient Air Velocity Schedule
+       \type object-list
+       \object-list ScheduleNames
+  N1,  \field Pipe Inside Diameter
+       \required-field
+       \type real
+       \units m
+       \minimum> 0
+       \ip-units in
+  N2;  \field Pipe Length
+       \required-field
+       \type real
+       \units m
+       \minimum> 0.0
+
+OS:Pipe:Outdoor,
+       \memo Pipe model with transport delay and heat transfer to the environment.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \reference ConnectionObject
+  A3,  \field Construction
+       \type object-list
+       \object-list ConstructionNames
+  A4,  \field Fluid Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+  A5,  \field Fluid Outlet Node
+       \type object-list
+       \object-list ConnectionNames
+  A6,  \field Ambient Temperature Outdoor Air Node
+       \type object-list
+       \object-list Node
+  N1,  \field Pipe Inside Diameter
+       \required-field
+       \type real
+       \units m
+       \minimum> 0
+       \ip-units in
+  N2;  \field Pipe Length
+       \required-field
+       \type real
+       \units m
+       \minimum> 0.0
+
 \group OpenStudio Economics
 
 OS:ComponentCost:Adjustments,

@@ -240,6 +240,8 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"People","Work Efficiency","workEfficiencySchedule",true,"",0.0,1.0},
     {"People","Clothing Insulation","clothingInsulationSchedule",true,"ClothingInsulation",0.0,OptionalDouble()},
     {"People","Air Velocity","airVelocitySchedule",true,"Velocity",0.0,OptionalDouble()},
+    { "PipeIndoor", "Ambient Temperature", "ambientTemperatureSchedule", true, "Temperature", 0.0, OptionalDouble() },
+    { "PipeIndoor", "Ambient Air Velocity", "ambientAirVelocitySchedule", true, "Velocity", 0.0, OptionalDouble() },
     {"PumpConstantSpeed","Pump Flow Rate","pumpFlowRateSchedule",true,"",0.0,1.0},
     {"PumpVariableSpeed","Pump Flow Rate","pumpFlowRateSchedule",true,"",0.0,1.0},
     {"PumpVariableSpeed","Pump RPM","pumpRPMSchedule",true,"RotationsPerMinute",OptionalDouble(),OptionalDouble()},

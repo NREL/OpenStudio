@@ -99,6 +99,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateDesignSpecificationOutdoorAir.cpp
   ForwardTranslator/ForwardTranslateDistrictCooling.cpp
   ForwardTranslator/ForwardTranslateDistrictHeating.cpp
+  ForwardTranslator/ForwardTranslateDuct.cpp
   ForwardTranslator/ForwardTranslateElectricEquipment.cpp
   ForwardTranslator/ForwardTranslateEvaporativeCoolerDirectResearchSpecial.cpp
   ForwardTranslator/ForwardTranslateEvaporativeCoolerIndirectResearchSpecial.cpp
@@ -109,6 +110,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateFanVariableVolume.cpp
   ForwardTranslator/ForwardTranslateFanZoneExhaust.cpp
   ForwardTranslator/ForwardTranslateFFactorGroundFloorConstruction.cpp
+  ForwardTranslator/ForwardTranslateFluidCoolerSingleSpeed.cpp
+  ForwardTranslator/ForwardTranslateFluidCoolerTwoSpeed.cpp
   ForwardTranslator/ForwardTranslateGas.cpp
   ForwardTranslator/ForwardTranslateGasEquipment.cpp
   ForwardTranslator/ForwardTranslateGasMixture.cpp
@@ -140,6 +143,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateOutputVariable.cpp
   ForwardTranslator/ForwardTranslatePeople.cpp
   ForwardTranslator/ForwardTranslatePipeAdiabatic.cpp
+  ForwardTranslator/ForwardTranslatePipeIndoor.cpp
+  ForwardTranslator/ForwardTranslatePipeOutdoor.cpp
   ForwardTranslator/ForwardTranslatePlantLoop.cpp
   ForwardTranslator/ForwardTranslatePlantEquipmentOperationSchemes.cpp
   ForwardTranslator/ForwardTranslatePlantEquipmentOperationCoolingLoad.cpp
