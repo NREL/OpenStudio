@@ -42,6 +42,12 @@
 #include "CoilHeatingWater_Impl.hpp"
 #include "ControllerWaterCoil.hpp"
 #include "ControllerWaterCoil_Impl.hpp"
+#include "PlantEquipmentOperationScheme.hpp"
+#include "PlantEquipmentOperationScheme_Impl.hpp"
+#include "PlantEquipmentOperationHeatingLoad.hpp"
+#include "PlantEquipmentOperationHeatingLoad_Impl.hpp"
+#include "PlantEquipmentOperationCoolingLoad.hpp"
+#include "PlantEquipmentOperationCoolingLoad_Impl.hpp"
 #include <utilities/idd/OS_PlantLoop_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Assert.hpp"
@@ -626,6 +632,69 @@ void PlantLoop_Impl::resetCommonPipeSimulation()
   setString(OS_PlantLoopFields::CommonPipeSimulation,"");
 }
 
+  boost::optional<PlantEquipmentOperationHeatingLoad> PlantLoop_Impl::plantEquipmentOperationHeatingLoad() const {
+    return getObject<ModelObject>().getModelObjectTarget<PlantEquipmentOperationHeatingLoad>(OS_PlantLoopFields::PlantEquipmentOperationHeatingLoad);
+  }
+
+  bool PlantLoop_Impl::setPlantEquipmentOperationHeatingLoad(const boost::optional<PlantEquipmentOperationHeatingLoad>& plantEquipmentOperationHeatingLoad) {
+    bool result(false);
+    if (plantEquipmentOperationHeatingLoad) {
+      result = setPointer(OS_PlantLoopFields::PlantEquipmentOperationHeatingLoad, plantEquipmentOperationHeatingLoad.get().handle());
+    }
+    else {
+      resetPlantEquipmentOperationHeatingLoad();
+      result = true;
+    }
+    return result;
+  }
+
+  void PlantLoop_Impl::resetPlantEquipmentOperationHeatingLoad() {
+    bool result = setString(OS_PlantLoopFields::PlantEquipmentOperationHeatingLoad, "");
+    OS_ASSERT(result);
+  }
+
+  boost::optional<PlantEquipmentOperationCoolingLoad> PlantLoop_Impl::plantEquipmentOperationCoolingLoad() const {
+    return getObject<ModelObject>().getModelObjectTarget<PlantEquipmentOperationCoolingLoad>(OS_PlantLoopFields::PlantEquipmentOperationCoolingLoad);
+  }
+
+  bool PlantLoop_Impl::setPlantEquipmentOperationCoolingLoad(const boost::optional<PlantEquipmentOperationCoolingLoad>& plantEquipmentOperationCoolingLoad) {
+    bool result(false);
+    if (plantEquipmentOperationCoolingLoad) {
+      result = setPointer(OS_PlantLoopFields::PlantEquipmentOperationCoolingLoad, plantEquipmentOperationCoolingLoad.get().handle());
+    }
+    else {
+      resetPlantEquipmentOperationCoolingLoad();
+      result = true;
+    }
+    return result;
+  }
+
+  void PlantLoop_Impl::resetPlantEquipmentOperationCoolingLoad() {
+    bool result = setString(OS_PlantLoopFields::PlantEquipmentOperationCoolingLoad, "");
+    OS_ASSERT(result);
+  }
+
+  boost::optional<PlantEquipmentOperationScheme> PlantLoop_Impl::primaryPlantEquipmentOperationScheme() const {
+    return getObject<ModelObject>().getModelObjectTarget<PlantEquipmentOperationScheme>(OS_PlantLoopFields::PrimaryPlantEquipmentOperationScheme);
+  }
+
+  bool PlantLoop_Impl::setPrimaryPlantEquipmentOperationScheme(const boost::optional<PlantEquipmentOperationScheme>& plantEquipmentOperationScheme) {
+    bool result(false);
+    if (plantEquipmentOperationScheme) {
+      result = setPointer(OS_PlantLoopFields::PrimaryPlantEquipmentOperationScheme, plantEquipmentOperationScheme.get().handle());
+    }
+    else {
+      resetPrimaryPlantEquipmentOperationScheme();
+      result = true;
+    }
+    return result;
+  }
+
+  void PlantLoop_Impl::resetPrimaryPlantEquipmentOperationScheme() {
+    bool result = setString(OS_PlantLoopFields::PrimaryPlantEquipmentOperationScheme, "");
+    OS_ASSERT(result);
+  }
+
 } // detail
 
 PlantLoop::PlantLoop(Model& model)
@@ -969,6 +1038,41 @@ void PlantLoop::resetCommonPipeSimulation()
   getImpl<detail::PlantLoop_Impl>()->resetCommonPipeSimulation();
 }
 
+boost::optional<PlantEquipmentOperationHeatingLoad> PlantLoop::plantEquipmentOperationHeatingLoad() const {
+  return getImpl<detail::PlantLoop_Impl>()->plantEquipmentOperationHeatingLoad();
+}
+
+bool PlantLoop::setPlantEquipmentOperationHeatingLoad(const PlantEquipmentOperationHeatingLoad& plantOperation) {
+  return getImpl<detail::PlantLoop_Impl>()->setPlantEquipmentOperationHeatingLoad(plantOperation);
+}
+
+void PlantLoop::resetPlantEquipmentOperationHeatingLoad() {
+  getImpl<detail::PlantLoop_Impl>()->resetPlantEquipmentOperationHeatingLoad();
+}
+
+boost::optional<PlantEquipmentOperationCoolingLoad> PlantLoop::plantEquipmentOperationCoolingLoad() const {
+  return getImpl<detail::PlantLoop_Impl>()->plantEquipmentOperationCoolingLoad();
+}
+
+bool PlantLoop::setPlantEquipmentOperationCoolingLoad(const PlantEquipmentOperationCoolingLoad& plantOperation) {
+  return getImpl<detail::PlantLoop_Impl>()->setPlantEquipmentOperationCoolingLoad(plantOperation);
+}
+
+void PlantLoop::resetPlantEquipmentOperationCoolingLoad() {
+  getImpl<detail::PlantLoop_Impl>()->resetPlantEquipmentOperationCoolingLoad();
+}
+
+boost::optional<PlantEquipmentOperationScheme> PlantLoop::primaryPlantEquipmentOperationScheme() const {
+  return getImpl<detail::PlantLoop_Impl>()->primaryPlantEquipmentOperationScheme();
+}
+
+bool PlantLoop::setPrimaryPlantEquipmentOperationScheme(const PlantEquipmentOperationScheme& plantOperation) {
+  return getImpl<detail::PlantLoop_Impl>()->setPrimaryPlantEquipmentOperationScheme(plantOperation);
+}
+
+void PlantLoop::resetPrimaryPlantEquipmentOperationScheme() {
+  getImpl<detail::PlantLoop_Impl>()->resetPrimaryPlantEquipmentOperationScheme();
+}
 
 } // model
 } // openstudio

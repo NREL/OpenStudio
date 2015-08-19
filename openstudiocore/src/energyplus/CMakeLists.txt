@@ -99,6 +99,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateDesignSpecificationOutdoorAir.cpp
   ForwardTranslator/ForwardTranslateDistrictCooling.cpp
   ForwardTranslator/ForwardTranslateDistrictHeating.cpp
+  ForwardTranslator/ForwardTranslateDuct.cpp
   ForwardTranslator/ForwardTranslateElectricEquipment.cpp
   ForwardTranslator/ForwardTranslateEvaporativeCoolerDirectResearchSpecial.cpp
   ForwardTranslator/ForwardTranslateEvaporativeCoolerIndirectResearchSpecial.cpp
@@ -109,6 +110,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateFanVariableVolume.cpp
   ForwardTranslator/ForwardTranslateFanZoneExhaust.cpp
   ForwardTranslator/ForwardTranslateFFactorGroundFloorConstruction.cpp
+  ForwardTranslator/ForwardTranslateFluidCoolerSingleSpeed.cpp
+  ForwardTranslator/ForwardTranslateFluidCoolerTwoSpeed.cpp
   ForwardTranslator/ForwardTranslateGas.cpp
   ForwardTranslator/ForwardTranslateGasEquipment.cpp
   ForwardTranslator/ForwardTranslateGasMixture.cpp
@@ -140,7 +143,19 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateOutputVariable.cpp
   ForwardTranslator/ForwardTranslatePeople.cpp
   ForwardTranslator/ForwardTranslatePipeAdiabatic.cpp
+  ForwardTranslator/ForwardTranslatePipeIndoor.cpp
+  ForwardTranslator/ForwardTranslatePipeOutdoor.cpp
   ForwardTranslator/ForwardTranslatePlantLoop.cpp
+  ForwardTranslator/ForwardTranslatePlantEquipmentOperationSchemes.cpp
+  ForwardTranslator/ForwardTranslatePlantEquipmentOperationCoolingLoad.cpp
+  ForwardTranslator/ForwardTranslatePlantEquipmentOperationHeatingLoad.cpp
+  ForwardTranslator/ForwardTranslatePlantEquipmentOperationOutdoorDryBulb.cpp
+  ForwardTranslator/ForwardTranslatePlantEquipmentOperationOutdoorWetBulb.cpp
+  ForwardTranslator/ForwardTranslatePlantEquipmentOperationOutdoorDewpoint.cpp
+  ForwardTranslator/ForwardTranslatePlantEquipmentOperationOutdoorRelativeHumidity.cpp
+  ForwardTranslator/ForwardTranslatePlantEquipmentOperationOutdoorDryBulbDifference.cpp
+  ForwardTranslator/ForwardTranslatePlantEquipmentOperationOutdoorWetBulbDifference.cpp
+  ForwardTranslator/ForwardTranslatePlantEquipmentOperationOutdoorDewpointDifference.cpp
   ForwardTranslator/ForwardTranslatePortList.cpp
   ForwardTranslator/ForwardTranslatePumpConstantSpeed.cpp
   ForwardTranslator/ForwardTranslatePumpVariableSpeed.cpp
