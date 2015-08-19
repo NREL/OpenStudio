@@ -7,9 +7,6 @@ set(${target_name}_src
   Model.hpp
   Model_Impl.hpp
   Model.cpp
-  CoilPerformanceDXCooling.hpp
-  CoilPerformanceDXCooling_Impl.hpp
-  CoilPerformanceDXCooling.cpp
   Component.hpp
   Component_Impl.hpp
   Component.cpp
@@ -176,15 +173,33 @@ set(${target_name}_src
   CoilCoolingLowTempRadiantVarFlow.hpp
   CoilCoolingLowTempRadiantVarFlow_Impl.hpp
   CoilCoolingLowTempRadiantVarFlow.cpp
+  CoilCoolingDXVariableSpeed.hpp
+  CoilCoolingDXVariableSpeed_Impl.hpp
+  CoilCoolingDXVariableSpeed.cpp
+  CoilCoolingDXVariableSpeedSpeedData.hpp
+  CoilCoolingDXVariableSpeedSpeedData_Impl.hpp
+  CoilCoolingDXVariableSpeedSpeedData.cpp
   CoilCoolingWater.hpp
   CoilCoolingWater_Impl.hpp
   CoilCoolingWater.cpp
   CoilCoolingWaterToAirHeatPumpEquationFit.hpp
   CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp
   CoilCoolingWaterToAirHeatPumpEquationFit.cpp
+  CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit.hpp
+  CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl.hpp
+  CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit.cpp
+  CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.hpp
+  CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl.hpp
+  CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.cpp
   CoilHeatingDesuperheater.hpp
   CoilHeatingDesuperheater_Impl.hpp
   CoilHeatingDesuperheater.cpp
+  CoilHeatingDXMultiSpeed.hpp
+  CoilHeatingDXMultiSpeed_Impl.hpp
+  CoilHeatingDXMultiSpeed.cpp
+  CoilHeatingDXMultiSpeedStageData.hpp
+  CoilHeatingDXMultiSpeedStageData_Impl.hpp
+  CoilHeatingDXMultiSpeedStageData.cpp
   CoilHeatingDXSingleSpeed.hpp
   CoilHeatingDXSingleSpeed_Impl.hpp
   CoilHeatingDXSingleSpeed.cpp
@@ -209,27 +224,42 @@ set(${target_name}_src
   CoilHeatingLowTempRadiantVarFlow.hpp
   CoilHeatingLowTempRadiantVarFlow_Impl.hpp
   CoilHeatingLowTempRadiantVarFlow.cpp
+  CoilHeatingDXVariableSpeed.hpp
+  CoilHeatingDXVariableSpeed_Impl.hpp
+  CoilHeatingDXVariableSpeed.cpp
+  CoilHeatingDXVariableSpeedSpeedData.hpp
+  CoilHeatingDXVariableSpeedSpeedData_Impl.hpp
+  CoilHeatingDXVariableSpeedSpeedData.cpp
   CoilHeatingWater.hpp
   CoilHeatingWater_Impl.hpp
   CoilHeatingWater.cpp
   CoilHeatingWaterToAirHeatPumpEquationFit.hpp
   CoilHeatingWaterToAirHeatPumpEquationFit_Impl.hpp
   CoilHeatingWaterToAirHeatPumpEquationFit.cpp
+  CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit.hpp
+  CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl.hpp
+  CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit.cpp
+  CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.hpp
+  CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl.hpp
+  CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.cpp
   CoilHeatingWaterBaseboard.hpp
   CoilHeatingWaterBaseboard_Impl.hpp
   CoilHeatingWaterBaseboard.cpp
+  CoilPerformanceDXCooling.hpp
+  CoilPerformanceDXCooling_Impl.hpp
+  CoilPerformanceDXCooling.cpp
   CoilSystemCoolingWaterHeatExchangerAssisted.hpp
   CoilSystemCoolingWaterHeatExchangerAssisted_Impl.hpp
   CoilSystemCoolingWaterHeatExchangerAssisted.cpp
   CoilSystemCoolingDXHeatExchangerAssisted.hpp
   CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp
   CoilSystemCoolingDXHeatExchangerAssisted.cpp
-  CoilWaterHeatingDesuperheater.hpp
-  CoilWaterHeatingDesuperheater_Impl.hpp
-  CoilWaterHeatingDesuperheater.cpp
   CoilWaterHeatingAirToWaterHeatPump.hpp
   CoilWaterHeatingAirToWaterHeatPump_Impl.hpp
   CoilWaterHeatingAirToWaterHeatPump.cpp
+  CoilWaterHeatingDesuperheater.hpp
+  CoilWaterHeatingDesuperheater_Impl.hpp
+  CoilWaterHeatingDesuperheater.cpp
   ComponentCostAdjustments.hpp
   ComponentCostAdjustments_Impl.hpp
   ComponentCostAdjustments.cpp
@@ -1342,12 +1372,20 @@ set(${target_name}_test_src
   test/CoilCoolingDXMultiSpeed_GTest.cpp
   test/CoilCoolingDXTwoSpeed_GTest.cpp
   test/CoilCoolingDXTwoStageWithHumidityControlMode_GTest.cpp
+  test/CoilCoolingDXVariableSpeed_GTest.cpp
+  test/CoilCoolingDXVariableSpeedSpeedData_GTest.cpp
   test/CoilCoolingLowTempRadiantConstFlow_GTest.cpp
   test/CoilCoolingLowTempRadiantVarFlow_GTest.cpp
   test/CoilCoolingWater_GTest.cpp
   test/CoilCoolingWaterToAirHeatPumpEquationFit_GTest.cpp
+  test/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_GTest.cpp
+  test/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_GTest.cpp
   test/CoilHeatingDesuperheater_GTest.cpp
+  test/CoilHeatingDXMultiSpeed_GTest.cpp
+  test/CoilHeatingDXMultiSpeedStageData_GTest.cpp
   test/CoilHeatingDXSingleSpeed_GTest.cpp
+  test/CoilHeatingDXVariableSpeed_GTest.cpp
+  test/CoilHeatingDXVariableSpeedSpeedData_GTest.cpp
   test/CoilHeatingElectric_GTest.cpp
   test/CoilHeatingGas_GTest.cpp
   test/CoilHeatingGasMultiStage_GTest.cpp
@@ -1355,12 +1393,14 @@ set(${target_name}_test_src
   test/CoilHeatingLowTempRadiantVarFlow_GTest.cpp
   test/CoilHeatingWater_GTest.cpp
   test/CoilHeatingWaterToAirHeatPumpEquationFit_GTest.cpp
+  test/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_GTest.cpp
+  test/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_GTest.cpp
   test/CoilHeatingWaterBaseboard_GTest.cpp
   test/CoilSystemCoolingDXHeatExchangerAssisted_GTest.cpp
   test/CoilSystemCoolingWaterHeatExchangerAssisted_GTest.cpp
   test/CoilPerformanceDXCooling_GTest.cpp
-  test/CoilWaterHeatingDesuperheater_GTest.cpp
   test/CoilWaterHeatingAirToWaterHeatPump_GTest.cpp
+  test/CoilWaterHeatingDesuperheater_GTest.cpp
   test/Component_GTest.cpp
   test/Connection_GTest.cpp
   test/Construction_GTest.cpp

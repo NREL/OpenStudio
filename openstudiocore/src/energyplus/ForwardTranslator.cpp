@@ -689,6 +689,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateCoilCoolingDXVariableRefrigerantFlow(coil);
       break;
     }
+  case openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableSpeed :
+    {
+      model::CoilCoolingDXVariableSpeed coil = modelObject.cast<CoilCoolingDXVariableSpeed>();
+      retVal = translateCoilCoolingDXVariableSpeed(coil);
+      break;
+    }
   case openstudio::IddObjectType::OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlow :
     {
       // no-op
@@ -711,6 +717,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateCoilCoolingWaterToAirHeatPumpEquationFit(coil);
       break;
     }
+  case openstudio::IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit :
+    {
+      model::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit coil = modelObject.cast<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit>();
+      retVal = translateCoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit(coil);
+      break;
+    }
   case openstudio::IddObjectType::OS_Coil_Heating_Desuperheater :
     {
       model::CoilHeatingDesuperheater coil = modelObject.cast<CoilHeatingDesuperheater>();
@@ -725,6 +737,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       } else {
         retVal = translateCoilHeatingDXSingleSpeed(coil);
       }
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Heating_DX_MultiSpeed :
+    {
+      model::CoilHeatingDXMultiSpeed coil = modelObject.cast<CoilHeatingDXMultiSpeed>();
+      retVal = translateCoilHeatingDXMultiSpeed(coil);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Heating_DX_VariableSpeed :
+    {
+      model::CoilHeatingDXVariableSpeed coil = modelObject.cast<CoilHeatingDXVariableSpeed>();
+      retVal = translateCoilHeatingDXVariableSpeed(coil);
       break;
     }
   case openstudio::IddObjectType::OS_Coil_Heating_Electric :
@@ -776,6 +800,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::CoilHeatingWaterToAirHeatPumpEquationFit coil = modelObject.cast<CoilHeatingWaterToAirHeatPumpEquationFit>();
       retVal = translateCoilHeatingWaterToAirHeatPumpEquationFit(coil);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit :
+    {
+      model::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit coil = modelObject.cast<CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit>();
+      retVal = translateCoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit(coil);
       break;
     }
   case openstudio::IddObjectType::OS_CoilPerformance_DX_Cooling :
