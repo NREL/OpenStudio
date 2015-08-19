@@ -90,8 +90,9 @@ OptionalModelObject ReverseTranslator::translateZoneCrossMixing( const Workspace
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){
       if (modelObject->optionalCast<Schedule>()){
-        mixing.setSchedule(modelObject->cast<Schedule>());
-        reverseMixing.setSchedule(modelObject->cast<Schedule>());
+        auto s = modelObject->cast<Schedule>();
+        mixing.setSchedule(s);
+        reverseMixing.setSchedule(s);
       }
     }
   }
@@ -147,9 +148,9 @@ OptionalModelObject ReverseTranslator::translateZoneCrossMixing( const Workspace
   if (target){
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){
-      if (modelObject->optionalCast<Schedule>()){
-        mixing.setDeltaTemperatureSchedule(modelObject->cast<Schedule>());
-        reverseMixing.setDeltaTemperatureSchedule(modelObject->cast<Schedule>());
+      if (auto s = modelObject->optionalCast<Schedule>()){
+        mixing.setDeltaTemperatureSchedule(s.get());
+        reverseMixing.setDeltaTemperatureSchedule(s.get());
       }
     }
   }
@@ -158,9 +159,9 @@ OptionalModelObject ReverseTranslator::translateZoneCrossMixing( const Workspace
   if (target){
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){
-      if (modelObject->optionalCast<Schedule>()){
-        mixing.setMinimumZoneTemperatureSchedule(modelObject->cast<Schedule>());
-        reverseMixing.setMinimumZoneTemperatureSchedule(modelObject->cast<Schedule>());
+      if (auto s = modelObject->optionalCast<Schedule>()){
+        mixing.setMinimumZoneTemperatureSchedule(s.get());
+        reverseMixing.setMinimumZoneTemperatureSchedule(s.get());
       }
     }
   }
@@ -169,9 +170,9 @@ OptionalModelObject ReverseTranslator::translateZoneCrossMixing( const Workspace
   if (target){
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){
-      if (modelObject->optionalCast<Schedule>()){
-        mixing.setMaximumZoneTemperatureSchedule(modelObject->cast<Schedule>());
-        reverseMixing.setMaximumZoneTemperatureSchedule(modelObject->cast<Schedule>());
+      if (auto s = modelObject->optionalCast<Schedule>()){
+        mixing.setMaximumZoneTemperatureSchedule(s.get());
+        reverseMixing.setMaximumZoneTemperatureSchedule(s.get());
       }
     }
   }
@@ -180,9 +181,9 @@ OptionalModelObject ReverseTranslator::translateZoneCrossMixing( const Workspace
   if (target){
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){
-      if (modelObject->optionalCast<Schedule>()){
-        mixing.setMinimumSourceZoneTemperatureSchedule(modelObject->cast<Schedule>());
-        reverseMixing.setMinimumSourceZoneTemperatureSchedule(modelObject->cast<Schedule>());
+      if (auto s = modelObject->optionalCast<Schedule>()){
+        mixing.setMinimumSourceZoneTemperatureSchedule(s.get());
+        reverseMixing.setMinimumSourceZoneTemperatureSchedule(s.get());
       }
     }
   }
@@ -191,9 +192,9 @@ OptionalModelObject ReverseTranslator::translateZoneCrossMixing( const Workspace
   if (target){
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){
-      if (modelObject->optionalCast<Schedule>()){
-        mixing.setMaximumSourceZoneTemperatureSchedule(modelObject->cast<Schedule>());
-        reverseMixing.setMaximumSourceZoneTemperatureSchedule(modelObject->cast<Schedule>());
+      if (auto s = modelObject->optionalCast<Schedule>()){
+        mixing.setMaximumSourceZoneTemperatureSchedule(s.get());
+        reverseMixing.setMaximumSourceZoneTemperatureSchedule(s.get());
       }
     }
   }
@@ -202,9 +203,9 @@ OptionalModelObject ReverseTranslator::translateZoneCrossMixing( const Workspace
   if (target){
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){
-      if (modelObject->optionalCast<Schedule>()){
-        mixing.setMinimumOutdoorTemperatureSchedule(modelObject->cast<Schedule>());
-        reverseMixing.setMinimumOutdoorTemperatureSchedule(modelObject->cast<Schedule>());
+      if (auto s = modelObject->optionalCast<Schedule>()){
+        mixing.setMinimumOutdoorTemperatureSchedule(s.get());
+        reverseMixing.setMinimumOutdoorTemperatureSchedule(s.get());
       }
     }
   }
@@ -213,9 +214,9 @@ OptionalModelObject ReverseTranslator::translateZoneCrossMixing( const Workspace
   if (target){
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){
-      if (modelObject->optionalCast<Schedule>()){
-        mixing.setMaximumOutdoorTemperatureSchedule(modelObject->cast<Schedule>());
-        reverseMixing.setMaximumOutdoorTemperatureSchedule(modelObject->cast<Schedule>());
+      if (auto s = modelObject->optionalCast<Schedule>()){
+        mixing.setMaximumOutdoorTemperatureSchedule(s.get());
+        reverseMixing.setMaximumOutdoorTemperatureSchedule(s.get());
       }
     }
   }
