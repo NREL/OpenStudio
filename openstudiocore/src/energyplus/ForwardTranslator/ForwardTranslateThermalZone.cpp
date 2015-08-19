@@ -107,6 +107,7 @@
 #include "../../model/GlareSensor.hpp"
 #include "../../model/GlareSensor_Impl.hpp"
 #include "../../model/LifeCycleCost.hpp"
+#include "../../model/ZoneMixing.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/Workspace.hpp"
@@ -495,6 +496,13 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     for (SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea : spaceInfiltrationEffectiveLeakageAreas){
       translateAndMapModelObject(spaceInfiltrationEffectiveLeakageArea);
     }
+  }
+
+  // translate zone mixing objects which supply air to this zone
+  ZoneMixingVector supplyZoneMixing = modelObject.supplyZoneMixing();
+  std::sort(supplyZoneMixing.begin(), supplyZoneMixing.end(), WorkspaceObjectNameLess());
+  for (ZoneMixing& mixing : supplyZoneMixing){
+    translateAndMapModelObject(mixing);
   }
 
   // translate thermostat and/or humidistat

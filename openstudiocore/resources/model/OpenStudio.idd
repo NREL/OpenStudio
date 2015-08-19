@@ -561,6 +561,42 @@ OS:ZoneAirHeatBalanceAlgorithm,
        \key AnalyticalSolution
        \key EulerMethod
 
+OS:ZoneAirMassFlowConservation,
+       \memo Enforces the zone air mass flow balance by adjusting zone mixing object flow rates.
+       \memo The infiltration object mass flow rate may also be adjusted or may add infiltration
+       \memo air flow to the base infiltration air flow for source zones only.
+       \unique-object
+  A1,  \field Handle
+       \type handle
+       \required-field       
+  A2,  \field Adjust Zone Mixing For Zone Air Mass Flow Balance
+       \note If 'Yes', Zone mixing object flow rates are adjusted to balance the zone air mass flow
+       \note and additional infiltration air flow may be added if required in order to balance the
+       \note zone air mass flow.
+       \type choice
+       \key Yes
+       \default Yes
+       \note If this input field is specified as 'Yes', then EnergyPlus attempts to enforce
+       \note the zone air mass flow conservation. Mass conservation is enforced both for the receiving
+       \note and source zones if there is at least one mixing object defined. 
+  A3;  \field Source Zone Infiltration Treatment
+       \note This input field allows user to choose how zone infiltration flow is treated during
+       \note the zone air mass flow balance calculation.
+       \type choice
+       \key AddInfiltrationFlow
+       \key AdjustInfiltrationFlow
+       \default AddInfiltrationFlow
+       \note It has two choice KEYs: 'AddInfiltrationFlow' and 'AdjustInfiltrationFlow'.  If this
+       \note input is specified as 'AddInfiltrationFlow', then energy plus adds infiltration air
+       \note mass flow on top of the base flow, which is calculated using the infiltration object
+       \note user inputs, in order to balance the zone air mass flow.  The additional infiltration
+       \note air mass flow is not self-balanced.  If this input is specified as
+       \note 'AdjustInfiltrationFlow', then energy plus may adjust the base flow calculated using
+       \note the infiltration object user inputs in order to balance the zone air mass flow. If it
+       \note is not required to adjust the base infiltration air flow calculated from the user
+       \note specified infiltration object inputs, then the base infiltration air mass flow
+       \note is assumed self-balanced. 
+       
 OS:ZoneCapacitanceMultiplier:ResearchSpecial,
        \memo Multiplier altering the relative capacitance of the air compared to an empty zone
        \unique-object
@@ -19723,6 +19759,102 @@ OS:ZoneHVAC:UnitHeater,
        \note Enter the name of an AvailabilityManagerAssignmentList object.
        \type object-list
        \object-list SystemAvailabilityManagerLists
+       
+OS:ZoneMixing,
+       \memo ZoneMixing is a simple air exchange from one zone to another. Note that this statement
+       \memo only affects the energy balance of the "receiving" zone and will not produce
+       \memo any effect on the "source" zone. Mixing statements can be complementary and include
+       \memo multiple zones, but the balancing of flows between zones is left to the user's
+       \memo discretion.
+ \min-fields 18
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+  A3 , \field Zone Name
+       \note This is the receiving zone
+       \required-field
+       \type object-list
+       \object-list ThermalZoneNames
+  A4 , \field Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+  A5 , \field Design Flow Rate Calculation Method
+       \note The entered calculation method is used to create the maximum amount of ventilation
+       \note for this set of attributes
+       \note Choices: Flow/Zone => Design Flow Rate -- simply enter Design Flow Rate
+       \note Flow/Area => Flow Rate per Zone Floor Area - Value * Floor Area (zone) = Design Flow Rate
+       \note Flow/Person => Flow Rate per Person - Value * #people = Design Flow Rate
+       \note AirChanges/Hour => Air Changes per Hour - Value * Floor Volume (zone) adjusted for m3/s = Design Volume Flow Rate
+       \note  "Vdesign" in Equation is the result.
+       \type choice
+       \key Flow/Zone
+       \key Flow/Area
+       \key Flow/Person
+       \key AirChanges/Hour
+       \default Flow/Zone
+  N1 , \field Design Flow Rate
+       \units m3/s
+       \type real
+       \minimum 0
+  N2 , \field Flow Rate per Zone Floor Area
+       \type real
+       \minimum 0
+       \units m3/s-m2
+  N3 , \field Flow Rate per Person
+       \type real
+       \minimum 0
+       \units m3/s-person
+  N4 , \field Air Changes per Hour
+       \units 1/hr
+       \type real
+       \minimum 0
+  A6 , \field Source Zone Name
+       \type object-list
+       \object-list ThermalZoneNames
+  N5 , \field Delta Temperature
+       \units deltaC
+       \type real
+       \note This field contains the constant temperature differential between source and
+       \note receiving zones below which mixing is shutoff.
+  A7 , \field Delta Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This schedule contains the temperature differential between source and receiving
+       \note zones versus time below which mixing is shutoff.
+  A8 , \field Minimum Zone Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This schedule contains the zone dry-bulb temperature versus time below which
+       \note mixing is shutoff.
+  A9 , \field Maximum Zone Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This schedule contains the zone dry-bulb temperature versus time above which
+       \note mixing is shutoff.
+  A10 , \field Minimum Source Zone Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This schedule contains the source zone dry-bulb temperature versus time below
+       \note which mixing is shutoff.
+  A11, \field Maximum Source Zone Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This schedule contains the source zone dry-bulb temperature versus time above
+       \note which mixing is shutoff.
+  A12, \field Minimum Outdoor Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This schedule contains the outdoor temperature versus time below which
+       \note mixing is shutoff.
+  A13; \field Maximum Outdoor Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This schedule contains the outdoor temperature versus time above which
+       \note mixing is shutoff.
        
 OS:WaterHeater:Mixed,
   A1, \field Handle

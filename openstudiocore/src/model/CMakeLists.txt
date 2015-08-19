@@ -1009,6 +1009,9 @@ set(${target_name}_src
   ZoneAirHeatBalanceAlgorithm.hpp
   ZoneAirHeatBalanceAlgorithm_Impl.hpp
   ZoneAirHeatBalanceAlgorithm.cpp
+  ZoneAirMassFlowConservation.hpp
+  ZoneAirMassFlowConservation_Impl.hpp
+  ZoneAirMassFlowConservation.cpp
   ZoneCapacitanceMultiplierResearchSpecial.hpp
   ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp
   ZoneCapacitanceMultiplierResearchSpecial.cpp
@@ -1060,6 +1063,9 @@ set(${target_name}_src
   ZoneHVACUnitHeater.hpp
   ZoneHVACUnitHeater_Impl.hpp
   ZoneHVACUnitHeater.cpp
+  ZoneMixing.hpp
+  ZoneMixing_Impl.hpp
+  ZoneMixing.cpp  
 )
 
 set(${target_name}_swig_src
@@ -1497,6 +1503,7 @@ set(${target_name}_test_src
   test/WeatherFile_GTest.cpp
   test/WindowPropertyFrameAndDivider_GTest.cpp
   test/YearDescription_GTest.cpp
+  test/ZoneAirMassFlowConservation_GTest.cpp
   test/ZoneCapacitanceMultiplierResearchSpecial_GTest.cpp
   test/ZoneHVACBaseboardConvectiveElectric_GTest.cpp
   test/ZoneHVACBaseboardConvectiveWater_GTest.cpp
@@ -1509,6 +1516,7 @@ set(${target_name}_test_src
   test/ZoneHVACPackagedTerminalHeatPump_GTest.cpp
   test/ZoneHVACWaterToAirHeatPump_GTest.cpp
   test/ZoneHVACUnitHeater_GTest.cpp
+  test/ZoneMixing_GTest.cpp
 )
 
 set(${target_name}_test_depends
