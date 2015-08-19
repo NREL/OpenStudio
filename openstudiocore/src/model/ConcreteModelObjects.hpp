@@ -328,6 +328,7 @@
 #include "ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
 #include "ZoneHVACWaterToAirHeatPump.hpp"
 #include "ZoneHVACUnitHeater.hpp"
+#include "ZoneVentilationDesignFlowRate.hpp"
 
 // include all concrete ModelObject Impls too
 #include "AirConditionerVariableRefrigerantFlow_Impl.hpp"
@@ -638,5 +639,6 @@
 #include "ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
 #include "ZoneHVACWaterToAirHeatPump_Impl.hpp"
 #include "ZoneHVACUnitHeater_Impl.hpp"
+#include "ZoneVentilationDesignFlowRate_Impl.hpp"
 
 #endif // MODEL_CONCRETEMODELOBJECTS_HPP

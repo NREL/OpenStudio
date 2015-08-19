@@ -89,8 +89,12 @@ namespace detail {
   ModelObject ZoneHVACComponent_Impl::clone(Model model) const
   {
     auto clone = ModelObject_Impl::clone(model).cast<ZoneHVACComponent>();
-    clone.setString(clone.inletPort(),"");
-    clone.setString(clone.outletPort(),"");
+    if( clone.inletPort() != 0u ) {
+      clone.setString(clone.inletPort(),"");
+    }
+    if( clone.outletPort() != 0u ) {
+      clone.setString(clone.outletPort(),"");
+    }
 
     return clone;
   }

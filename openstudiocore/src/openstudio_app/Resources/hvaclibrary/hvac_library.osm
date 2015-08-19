@@ -9130,4 +9130,32 @@ OS:Pipe:Indoor,
   0.05,                                   !- Pipe Inside Diameter {m}
   100;                                    !- Pipe Length {m}
 
+OS:ZoneVentilation:DesignFlowRate,
+  {53c98d09-d39f-466a-9e00-a479c7b0c564}, !- Handle
+  Natural Ventilation,                    !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Schedule Name
+  AirChanges/Hour,                        !- Design Flow Rate Calculation Method
+  0,                                      !- Design Flow Rate {m3/s}
+  0,                                      !- Flow Rate per Zone Floor Area {m3/s-m2}
+  0,                                      !- Flow Rate per Person {m3/s-person}
+  5,                                      !- Air Changes per Hour {1/hr}
+  Natural,                                !- Ventilation Type
+  0,                                      !- Fan Pressure Rise {Pa}
+  1,                                      !- Fan Total Efficiency
+  0.606,                                  !- Constant Term Coefficient
+  0.03636,                                !- Temperature Term Coefficient
+  0.1177,                                 !- Velocity Term Coefficient
+  0,                                      !- Velocity Squared Term Coefficient
+  18,                                     !- Minimum Indoor Temperature {C}
+  ,                                       !- Minimum Indoor Temperature Schedule Name
+  100,                                    !- Maximum Indoor Temperature {C}
+  ,                                       !- Maximum Indoor Temperature Schedule Name
+  1,                                      !- Delta Temperature {deltaC}
+  ,                                       !- Delta Temperature Schedule Name
+  -100,                                   !- Minimum Outdoor Temperature {C}
+  ,                                       !- Minimum Outdoor Temperature Schedule Name
+  100,                                    !- Maximum Outdoor Temperature {C}
+  ,                                       !- Maximum Outdoor Temperature Schedule Name
+  40;                                     !- Maximum Wind Speed {m/s}
+
 

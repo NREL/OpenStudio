@@ -1060,6 +1060,9 @@ set(${target_name}_src
   ZoneHVACUnitHeater.hpp
   ZoneHVACUnitHeater_Impl.hpp
   ZoneHVACUnitHeater.cpp
+  ZoneVentilationDesignFlowRate.hpp
+  ZoneVentilationDesignFlowRate_Impl.hpp
+  ZoneVentilationDesignFlowRate.cpp
 )
 
 set(${target_name}_swig_src
