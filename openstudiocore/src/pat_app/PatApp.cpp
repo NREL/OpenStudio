@@ -1110,7 +1110,7 @@ void PatApp::exportXml()
 
   //make results.xml inside the project directory
   openstudio::path resultsXmlPath = projectPath / toPath("results.xml");
-  openstudio::analysis::exportxml::ExportXML newXMLdoc;
+  openstudio::pat::ExportXML newXMLdoc;
   if (!newXMLdoc.exportXML(*m_project, toQString(resultsXmlPath))) {
     // user canceled, stop the export process
     mainWindow->setEnabled(true);
@@ -1348,6 +1348,11 @@ bool PatApp::openFile(const QString& fileName)
       }
 
       attachProject(project);
+
+      if (project->analysis().resultsAreInvalid()) {
+        project->clearAllResults();
+      }
+
       mainWindow->setWindowTitle("");
       mainWindow->setWindowFilePath(dir.absolutePath());
       if (m_project->analysis().isDirty())

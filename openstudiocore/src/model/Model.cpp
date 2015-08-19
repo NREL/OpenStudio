@@ -253,6 +253,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(CoilSystemCoolingWaterHeatExchangerAssisted);
     REGISTER_CONSTRUCTOR(CoilSystemCoolingDXHeatExchangerAssisted);
     REGISTER_CONSTRUCTOR(CoilWaterHeatingDesuperheater);
+    REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPump);
     REGISTER_CONSTRUCTOR(ComponentCostAdjustments);
     REGISTER_CONSTRUCTOR(ComponentData);
     REGISTER_CONSTRUCTOR(Connection);
@@ -299,6 +300,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(DesignSpecificationZoneAirDistribution);
     REGISTER_CONSTRUCTOR(DistrictCooling);
     REGISTER_CONSTRUCTOR(DistrictHeating);
+    REGISTER_CONSTRUCTOR(Duct);
     REGISTER_CONSTRUCTOR(ElectricEquipment);
     REGISTER_CONSTRUCTOR(ElectricEquipmentDefinition);
     REGISTER_CONSTRUCTOR(EvaporativeCoolerDirectResearchSpecial);
@@ -311,6 +313,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(FanVariableVolume);
     REGISTER_CONSTRUCTOR(FanZoneExhaust);    
     REGISTER_CONSTRUCTOR(FFactorGroundFloorConstruction);
+    REGISTER_CONSTRUCTOR(FluidCoolerSingleSpeed);
+    REGISTER_CONSTRUCTOR(FluidCoolerTwoSpeed);
     REGISTER_CONSTRUCTOR(Gas);
     REGISTER_CONSTRUCTOR(GasEquipment);
     REGISTER_CONSTRUCTOR(GasEquipmentDefinition);
@@ -355,7 +359,18 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(People);
     REGISTER_CONSTRUCTOR(PeopleDefinition);
     REGISTER_CONSTRUCTOR(PipeAdiabatic);
+    REGISTER_CONSTRUCTOR(PipeIndoor);
+    REGISTER_CONSTRUCTOR(PipeOutdoor);
     REGISTER_CONSTRUCTOR(PlantLoop);
+    REGISTER_CONSTRUCTOR(PlantEquipmentOperationCoolingLoad);
+    REGISTER_CONSTRUCTOR(PlantEquipmentOperationHeatingLoad);
+    REGISTER_CONSTRUCTOR(PlantEquipmentOperationOutdoorDryBulb);
+    REGISTER_CONSTRUCTOR(PlantEquipmentOperationOutdoorWetBulb);
+    REGISTER_CONSTRUCTOR(PlantEquipmentOperationOutdoorDewpoint);
+    REGISTER_CONSTRUCTOR(PlantEquipmentOperationOutdoorRelativeHumidity);
+    REGISTER_CONSTRUCTOR(PlantEquipmentOperationOutdoorDryBulbDifference);
+    REGISTER_CONSTRUCTOR(PlantEquipmentOperationOutdoorWetBulbDifference);
+    REGISTER_CONSTRUCTOR(PlantEquipmentOperationOutdoorDewpointDifference);
     REGISTER_CONSTRUCTOR(PortList);
     REGISTER_CONSTRUCTOR(ProgramControl);
     REGISTER_CONSTRUCTOR(PumpConstantSpeed);
@@ -451,6 +466,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(UtilityCost_Variable);
     REGISTER_CONSTRUCTOR(Version);
     REGISTER_CONSTRUCTOR(WaterHeaterMixed);
+    REGISTER_CONSTRUCTOR(WaterHeaterHeatPump);
+    REGISTER_CONSTRUCTOR(WaterHeaterStratified);
     REGISTER_CONSTRUCTOR(WaterUseConnections);
     REGISTER_CONSTRUCTOR(WaterUseEquipment);
     REGISTER_CONSTRUCTOR(WaterUseEquipmentDefinition);
@@ -462,6 +479,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(YearDescription);
     REGISTER_CONSTRUCTOR(ZoneAirContaminantBalance);
     REGISTER_CONSTRUCTOR(ZoneAirHeatBalanceAlgorithm);
+    REGISTER_CONSTRUCTOR(ZoneAirMassFlowConservation);
     REGISTER_CONSTRUCTOR(ZoneCapacitanceMultiplierResearchSpecial);
     REGISTER_CONSTRUCTOR(ZoneControlHumidistat);
     REGISTER_CONSTRUCTOR(ZoneControlThermostatStagedDualSetpoint);
@@ -479,6 +497,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ZoneHVACTerminalUnitVariableRefrigerantFlow);
     REGISTER_CONSTRUCTOR(ZoneHVACWaterToAirHeatPump);
     REGISTER_CONSTRUCTOR(ZoneHVACUnitHeater);
+    REGISTER_CONSTRUCTOR(ZoneMixing);
 
     if (!result) {
       LOG(Warn,"Creating GenericModelObject for IddObjectType '"
@@ -579,6 +598,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(CoilSystemCoolingWaterHeatExchangerAssisted);
     REGISTER_COPYCONSTRUCTORS(CoilSystemCoolingDXHeatExchangerAssisted);
     REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingDesuperheater);
+    REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPump);
     REGISTER_COPYCONSTRUCTORS(ComponentCostAdjustments);
     REGISTER_COPYCONSTRUCTORS(ComponentData);
     REGISTER_COPYCONSTRUCTORS(Connection);
@@ -625,6 +645,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(DesignSpecificationZoneAirDistribution);
     REGISTER_COPYCONSTRUCTORS(DistrictCooling);
     REGISTER_COPYCONSTRUCTORS(DistrictHeating);
+    REGISTER_COPYCONSTRUCTORS(Duct);
     REGISTER_COPYCONSTRUCTORS(ElectricEquipment);
     REGISTER_COPYCONSTRUCTORS(ElectricEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(EvaporativeCoolerDirectResearchSpecial);
@@ -637,6 +658,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(FanVariableVolume);
     REGISTER_COPYCONSTRUCTORS(FanZoneExhaust);    
     REGISTER_COPYCONSTRUCTORS(FFactorGroundFloorConstruction);
+    REGISTER_COPYCONSTRUCTORS(FluidCoolerSingleSpeed);
+    REGISTER_COPYCONSTRUCTORS(FluidCoolerTwoSpeed);
     REGISTER_COPYCONSTRUCTORS(Gas);
     REGISTER_COPYCONSTRUCTORS(GasEquipment);
     REGISTER_COPYCONSTRUCTORS(GasEquipmentDefinition);
@@ -681,7 +704,18 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(People);
     REGISTER_COPYCONSTRUCTORS(PeopleDefinition);
     REGISTER_COPYCONSTRUCTORS(PipeAdiabatic);
+    REGISTER_COPYCONSTRUCTORS(PipeIndoor);
+    REGISTER_COPYCONSTRUCTORS(PipeOutdoor);
     REGISTER_COPYCONSTRUCTORS(PlantLoop);
+    REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationCoolingLoad);
+    REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationHeatingLoad);
+    REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationOutdoorDryBulb);
+    REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationOutdoorWetBulb);
+    REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationOutdoorDewpoint);
+    REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationOutdoorRelativeHumidity);
+    REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationOutdoorDryBulbDifference);
+    REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationOutdoorWetBulbDifference);
+    REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationOutdoorDewpointDifference);
     REGISTER_COPYCONSTRUCTORS(PortList);
     REGISTER_COPYCONSTRUCTORS(ProgramControl);
     REGISTER_COPYCONSTRUCTORS(PumpConstantSpeed);
@@ -777,6 +811,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(UtilityCost_Variable);
     REGISTER_COPYCONSTRUCTORS(Version);
     REGISTER_COPYCONSTRUCTORS(WaterHeaterMixed);
+    REGISTER_COPYCONSTRUCTORS(WaterHeaterHeatPump);
+    REGISTER_COPYCONSTRUCTORS(WaterHeaterStratified);
     REGISTER_COPYCONSTRUCTORS(WaterUseConnections);
     REGISTER_COPYCONSTRUCTORS(WaterUseEquipment);
     REGISTER_COPYCONSTRUCTORS(WaterUseEquipmentDefinition);
@@ -788,6 +824,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(YearDescription);
     REGISTER_COPYCONSTRUCTORS(ZoneAirContaminantBalance);
     REGISTER_COPYCONSTRUCTORS(ZoneAirHeatBalanceAlgorithm);
+    REGISTER_COPYCONSTRUCTORS(ZoneAirMassFlowConservation);
     REGISTER_COPYCONSTRUCTORS(ZoneCapacitanceMultiplierResearchSpecial);
     REGISTER_COPYCONSTRUCTORS(ZoneControlHumidistat);
     REGISTER_COPYCONSTRUCTORS(ZoneControlThermostatStagedDualSetpoint);
@@ -805,6 +842,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ZoneHVACTerminalUnitVariableRefrigerantFlow);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACWaterToAirHeatPump);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACUnitHeater);
+    REGISTER_COPYCONSTRUCTORS(ZoneMixing);
 
     if (!result) {
       LOG(Warn,"Creating GenericModelObject for IddObjectType '"
@@ -958,6 +996,58 @@ if (_className::iddObjectType() == typeToCreate) { \
     limits.setNumericType("Discrete");
 
     limits.setUnitType("Availability");
+
+    limits.setLowerLimitValue(0.0);
+
+    limits.setUpperLimitValue(1.0);
+
+    schedule.setScheduleTypeLimits(limits);
+
+    schedule.setValue(1.0);
+
+    return schedule;
+  }
+
+  Schedule Model_Impl::alwaysOnContinuousSchedule() const
+  {
+    std::string alwaysOnName("Always On Continuous");
+
+    std::vector<ScheduleConstant> schedules = model().getConcreteModelObjects<ScheduleConstant>();
+
+    for (const auto & schedule : schedules)
+    {
+      if (boost::optional<std::string> name = schedule.name())
+      {
+        if (istringEqual(name.get(), alwaysOnName))
+        {
+          if (equal<double>(schedule.value(), 1.0))
+          {
+            if (boost::optional<ScheduleTypeLimits> limits = schedule.scheduleTypeLimits())
+            {
+              if (boost::optional<std::string> type = limits->numericType())
+              {
+                if (istringEqual(type.get(), "Continuous"))
+                {
+                  return schedule;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    ScheduleConstant schedule(model());
+
+    schedule.setName(alwaysOnName);
+
+    ScheduleTypeLimits limits(model());
+
+    limits.setName("Fractional");
+
+    limits.setNumericType("Continuous");
+
+    limits.setUnitType("");
 
     limits.setLowerLimitValue(0.0);
 
@@ -1350,6 +1440,11 @@ boost::optional<WeatherFile> Model::weatherFile() const
 Schedule Model::alwaysOnDiscreteSchedule() const
 {
   return getImpl<detail::Model_Impl>()->alwaysOnDiscreteSchedule();
+}
+
+Schedule Model::alwaysOnContinuousSchedule() const
+{
+  return getImpl<detail::Model_Impl>()->alwaysOnContinuousSchedule();
 }
 
 SpaceType Model::plenumSpaceType() const

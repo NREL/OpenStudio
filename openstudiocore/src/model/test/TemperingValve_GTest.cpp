@@ -19,10 +19,10 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/TemperingValve.hpp>
-#include <model/TemperingValve_Impl.hpp>
+#include "../TemperingValve.hpp"
+#include "../TemperingValve_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

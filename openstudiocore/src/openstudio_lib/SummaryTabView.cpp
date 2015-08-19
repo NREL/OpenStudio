@@ -27,7 +27,7 @@ namespace openstudio {
 
 SummaryTabView::SummaryTabView(const model::Model & model,
                                QWidget * parent)
-                               : MainTabView("Building Summary",false,parent)
+                               : MainTabView("Building Summary", MainTabView::MAIN_TAB, parent)
 {
   // Hack code to remove when tab active
   auto underConstructionLabel = new QLabel();

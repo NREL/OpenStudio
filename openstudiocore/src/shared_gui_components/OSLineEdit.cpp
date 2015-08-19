@@ -98,10 +98,25 @@ void OSLineEdit2::bind(model::ModelObject& modelObject,
   completeBind();
 }
 
+void OSLineEdit2::bind(model::ModelObject& modelObject,
+  StringGetter get,
+  boost::optional<StringSetterVoidReturn> set,
+  boost::optional<NoFailAction> reset,
+  boost::optional<BasicQuery> isDefaulted)
+{
+  m_modelObject = modelObject;
+  m_get = get;
+  m_setVoidReturn = set;
+  m_reset = reset;
+  m_isDefaulted = isDefaulted;
+
+  completeBind();
+}
+
 void OSLineEdit2::completeBind() {
   setEnabled(true);
 
-  if (!m_set && !m_setOptionalStringReturn)
+  if (!m_set && !m_setOptionalStringReturn && !m_setVoidReturn)
   {
     setReadOnly(true);
   }
@@ -129,6 +144,7 @@ void OSLineEdit2::unbind()
     m_getOptionalBoolArg.reset();
     m_set.reset();
     m_setOptionalStringReturn.reset();
+    m_setVoidReturn.reset();
     m_reset.reset();
     m_isDefaulted.reset();
     setEnabled(false);
@@ -136,10 +152,24 @@ void OSLineEdit2::unbind()
 }
 
 void OSLineEdit2::onEditingFinished() {
-  if(m_modelObject && m_set) {
+  if (m_modelObject && (m_set || m_setOptionalStringReturn || m_setVoidReturn)) {
     if (m_text != this->text().toStdString()) {
       m_text = this->text().toStdString();
-      bool result = (*m_set)(m_text);
+      auto result = false;
+      if (m_set) {
+        result = (*m_set)(m_text);
+      }
+      else if (m_setOptionalStringReturn) {
+        auto optionalStringReturn = (*m_setOptionalStringReturn)(m_text);
+        if (optionalStringReturn) {
+          result = true; // TODO
+        }
+        result = true;
+      }
+      else if (m_setVoidReturn) {
+        (*m_setVoidReturn)(m_text);
+        result = true;
+      }
       if (!result){
         //restore
         onModelObjectChange();

@@ -227,6 +227,9 @@ set(${target_name}_src
   CoilWaterHeatingDesuperheater.hpp
   CoilWaterHeatingDesuperheater_Impl.hpp
   CoilWaterHeatingDesuperheater.cpp
+  CoilWaterHeatingAirToWaterHeatPump.hpp
+  CoilWaterHeatingAirToWaterHeatPump_Impl.hpp
+  CoilWaterHeatingAirToWaterHeatPump.cpp
   ComponentCostAdjustments.hpp
   ComponentCostAdjustments_Impl.hpp
   ComponentCostAdjustments.cpp
@@ -371,6 +374,9 @@ set(${target_name}_src
   DistrictHeating.hpp
   DistrictHeating_Impl.hpp
   DistrictHeating.cpp
+  Duct.hpp
+  Duct_Impl.hpp
+  Duct.cpp
   ElectricEquipment.hpp
   ElectricEquipment_Impl.hpp
   ElectricEquipment.cpp
@@ -413,6 +419,12 @@ set(${target_name}_src
   FFactorGroundFloorConstruction.hpp
   FFactorGroundFloorConstruction_Impl.hpp
   FFactorGroundFloorConstruction.cpp
+  FluidCoolerSingleSpeed.hpp
+  FluidCoolerSingleSpeed_Impl.hpp
+  FluidCoolerSingleSpeed.cpp
+  FluidCoolerTwoSpeed.hpp
+  FluidCoolerTwoSpeed_Impl.hpp
+  FluidCoolerTwoSpeed.cpp 
   Gas.hpp
   Gas_Impl.hpp
   Gas.cpp
@@ -547,9 +559,6 @@ set(${target_name}_src
   Node.hpp
   Node_Impl.hpp
   Node.cpp
-  PortList.hpp
-  PortList_Impl.hpp
-  PortList.cpp
   OtherEquipment.hpp
   OtherEquipment_Impl.hpp
   OtherEquipment.cpp
@@ -580,6 +589,12 @@ set(${target_name}_src
   PipeAdiabatic.hpp
   PipeAdiabatic_Impl.hpp
   PipeAdiabatic.cpp
+  PipeIndoor.hpp
+  PipeIndoor_Impl.hpp
+  PipeIndoor.cpp
+  PipeOutdoor.hpp
+  PipeOutdoor_Impl.hpp
+  PipeOutdoor.cpp
   PlanarSurface.hpp
   PlanarSurface_Impl.hpp
   PlanarSurface.cpp
@@ -589,6 +604,42 @@ set(${target_name}_src
   PlantLoop.hpp
   PlantLoop_Impl.hpp
   PlantLoop.cpp
+  PortList.hpp
+  PortList_Impl.hpp
+  PortList.cpp
+  PlantEquipmentOperationRangeBasedScheme.hpp
+  PlantEquipmentOperationRangeBasedScheme_Impl.hpp
+  PlantEquipmentOperationRangeBasedScheme.cpp
+  PlantEquipmentOperationScheme.hpp
+  PlantEquipmentOperationScheme_Impl.hpp
+  PlantEquipmentOperationScheme.cpp
+  PlantEquipmentOperationCoolingLoad.hpp
+  PlantEquipmentOperationCoolingLoad_Impl.hpp
+  PlantEquipmentOperationCoolingLoad.cpp
+  PlantEquipmentOperationHeatingLoad.hpp
+  PlantEquipmentOperationHeatingLoad_Impl.hpp
+  PlantEquipmentOperationHeatingLoad.cpp
+  PlantEquipmentOperationOutdoorDryBulb.hpp
+  PlantEquipmentOperationOutdoorDryBulb_Impl.hpp
+  PlantEquipmentOperationOutdoorDryBulb.cpp
+  PlantEquipmentOperationOutdoorWetBulb.hpp
+  PlantEquipmentOperationOutdoorWetBulb_Impl.hpp
+  PlantEquipmentOperationOutdoorWetBulb.cpp
+  PlantEquipmentOperationOutdoorDewpoint.hpp
+  PlantEquipmentOperationOutdoorDewpoint_Impl.hpp
+  PlantEquipmentOperationOutdoorDewpoint.cpp
+  PlantEquipmentOperationOutdoorRelativeHumidity.hpp
+  PlantEquipmentOperationOutdoorRelativeHumidity_Impl.hpp
+  PlantEquipmentOperationOutdoorRelativeHumidity.cpp
+  PlantEquipmentOperationOutdoorDryBulbDifference.hpp
+  PlantEquipmentOperationOutdoorDryBulbDifference_Impl.hpp
+  PlantEquipmentOperationOutdoorDryBulbDifference.cpp
+  PlantEquipmentOperationOutdoorWetBulbDifference.hpp
+  PlantEquipmentOperationOutdoorWetBulbDifference_Impl.hpp
+  PlantEquipmentOperationOutdoorWetBulbDifference.cpp
+  PlantEquipmentOperationOutdoorDewpointDifference.hpp
+  PlantEquipmentOperationOutdoorDewpointDifference_Impl.hpp
+  PlantEquipmentOperationOutdoorDewpointDifference.cpp
   ProgramControl.hpp
   ProgramControl_Impl.hpp
   ProgramControl.cpp
@@ -916,6 +967,12 @@ set(${target_name}_src
   WaterHeaterMixed.hpp
   WaterHeaterMixed_Impl.hpp
   WaterHeaterMixed.cpp
+  WaterHeaterHeatPump.hpp
+  WaterHeaterHeatPump_Impl.hpp
+  WaterHeaterHeatPump.cpp
+  WaterHeaterStratified.hpp
+  WaterHeaterStratified_Impl.hpp
+  WaterHeaterStratified.cpp
   WaterToAirComponent.hpp
   WaterToAirComponent_Impl.hpp
   WaterToAirComponent.cpp
@@ -955,6 +1012,9 @@ set(${target_name}_src
   ZoneAirHeatBalanceAlgorithm.hpp
   ZoneAirHeatBalanceAlgorithm_Impl.hpp
   ZoneAirHeatBalanceAlgorithm.cpp
+  ZoneAirMassFlowConservation.hpp
+  ZoneAirMassFlowConservation_Impl.hpp
+  ZoneAirMassFlowConservation.cpp
   ZoneCapacitanceMultiplierResearchSpecial.hpp
   ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp
   ZoneCapacitanceMultiplierResearchSpecial.cpp
@@ -1006,6 +1066,9 @@ set(${target_name}_src
   ZoneHVACUnitHeater.hpp
   ZoneHVACUnitHeater_Impl.hpp
   ZoneHVACUnitHeater.cpp
+  ZoneMixing.hpp
+  ZoneMixing_Impl.hpp
+  ZoneMixing.cpp  
 )
 
 set(${target_name}_swig_src
@@ -1285,6 +1348,7 @@ set(${target_name}_test_src
   test/CoilSystemCoolingWaterHeatExchangerAssisted_GTest.cpp
   test/CoilPerformanceDXCooling_GTest.cpp
   test/CoilWaterHeatingDesuperheater_GTest.cpp
+  test/CoilWaterHeatingAirToWaterHeatPump_GTest.cpp
   test/Component_GTest.cpp
   test/Connection_GTest.cpp
   test/Construction_GTest.cpp
@@ -1305,6 +1369,7 @@ set(${target_name}_test_src
   test/DesignSpecificationZoneAirDistribution_GTest.cpp
   test/DistrictCooling_GTest.cpp
   test/DistrictHeating_GTest.cpp
+  test/Duct_GTest.cpp
   test/ElectricEquipment_GTest.cpp
   test/EvaporativeCoolerDirectResearchSpecial_GTest.cpp
   test/EvaporativeCoolerIndirectResearchSpecial_GTest.cpp
@@ -1315,6 +1380,8 @@ set(${target_name}_test_src
   test/FanZoneExhaust_GTest.cpp
   test/FanOnOff_GTest.cpp
   test/FenestrationMaterial_GTest.cpp
+  test/FluidCoolerSingleSpeed_GTest.cpp
+  test/FluidCoolerTwoSpeed_GTest.cpp
   test/GasEquipment_GTest.cpp
   test/GasMixture_GTest.cpp
   test/Gas_GTest.cpp
@@ -1355,8 +1422,12 @@ set(${target_name}_test_src
   test/People_GTest.cpp
   test/PeopleDefinition_GTest.cpp
   test/PipeAdiabatic_GTest.cpp
+  test/PipeIndoor_GTest.cpp
+  test/PipeOutdoor_GTest.cpp
   test/PlanarSurface_GTest.cpp
   test/PlantLoop_GTest.cpp
+  test/PlantEquipmentOperationCoolingLoad_GTest.cpp
+  test/PlantEquipmentOperationHeatingLoad_GTest.cpp
   test/Plenums_GTest.cpp
   test/PumpConstantSpeed_GTest.cpp
   test/PumpVariableSpeed_GTest.cpp
@@ -1429,11 +1500,14 @@ set(${target_name}_test_src
   test/TemperingValve_GTest.cpp
   test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp
+  test/WaterHeaterHeatPump_GTest.cpp
+  test/WaterHeaterStratified_GTest.cpp
   test/WaterUseConnections_GTest.cpp
   test/WaterUseEquipment_GTest.cpp
   test/WeatherFile_GTest.cpp
   test/WindowPropertyFrameAndDivider_GTest.cpp
   test/YearDescription_GTest.cpp
+  test/ZoneAirMassFlowConservation_GTest.cpp
   test/ZoneCapacitanceMultiplierResearchSpecial_GTest.cpp
   test/ZoneHVACBaseboardConvectiveElectric_GTest.cpp
   test/ZoneHVACBaseboardConvectiveWater_GTest.cpp
@@ -1446,6 +1520,7 @@ set(${target_name}_test_src
   test/ZoneHVACPackagedTerminalHeatPump_GTest.cpp
   test/ZoneHVACWaterToAirHeatPump_GTest.cpp
   test/ZoneHVACUnitHeater_GTest.cpp
+  test/ZoneMixing_GTest.cpp
 )
 
 set(${target_name}_test_depends

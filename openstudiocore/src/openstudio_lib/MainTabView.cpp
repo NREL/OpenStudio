@@ -36,9 +36,9 @@ static const int TAB_SEPARATION = 10;
 
 namespace openstudio {
 
-MainTabView::MainTabView(const QString & tabLabel, bool hasSubTab, QWidget * parent)
+MainTabView::MainTabView(const QString & tabLabel, TabType tabType, QWidget * parent)
   : QWidget(parent),
-  m_hasSubTab(hasSubTab)
+  m_tabType(tabType)
 {
   this->setObjectName("BlueGradientWidget");
 
@@ -61,40 +61,53 @@ MainTabView::MainTabView(const QString & tabLabel, bool hasSubTab, QWidget * par
   m_stackedWidget->setContentsMargins(0,0,0,0);
   innerLayout->addWidget(m_stackedWidget);
 
-  setHasSubTab(hasSubTab);
+  setTabType(tabType);
 }
 
-void MainTabView::setHasSubTab(bool hasSubTab)
+void MainTabView::setTabType(MainTabView::TabType tabType)
 {
-  m_hasSubTab = hasSubTab;
+  QString style;
 
-  if( hasSubTab ) {
-    QString style;
-    style.append("QWidget#MainTabView { " );
-    style.append("  background: #E6E6E6; " );
-    style.append("  border-left: 1px solid black; " );
-    style.append("  border-top: 1px solid black; " );
-    style.append("  border-top-left-radius: 5px; " );
-    style.append("}" );
-    m_mainWidget->setStyleSheet(style);
-    m_mainWidget->layout()->setContentsMargins(7,10,0,0);
-  } else {
-    QString style;
-    style.append("QWidget#MainTabView { " );
-    style.append("  background: #E6E6E6; " );
-    style.append("  border-left: 1px solid black; " );
-    style.append("  border-top: 1px solid black; " );
-    style.append("}" );
-    m_mainWidget->setStyleSheet(style);
-    m_mainWidget->layout()->setContentsMargins(0,0,0,0);
+  switch (tabType)
+  {
+  case MAIN_TAB:
+    style.append("QWidget#MainTabView { ");
+    style.append("  background: #E6E6E6; ");
+    style.append("  border-left: 1px solid black; ");
+    style.append("  border-top: 1px solid black; ");
+    style.append("}");
+    m_mainWidget->layout()->setContentsMargins(0, 0, 0, 0);
+    break;
+  case SUB_TAB:
+    style.append("QWidget#MainTabView { ");
+    style.append("  background: #E6E6E6; ");
+    style.append("  border-left: 1px solid black; ");
+    style.append("  border-top: 1px solid black; ");
+    style.append("  border-top-left-radius: 5px; ");
+    style.append("}");
+    m_mainWidget->layout()->setContentsMargins(7, 10, 0, 0);
+    break;
+  case GRIDVIEW_SUB_TAB:
+    style.append("QWidget#MainTabView { ");
+    style.append("  background: #E6E6E6; ");
+    style.append("  border-left: 1px solid black; ");
+    style.append("  border-top: 1px solid black; ");
+    style.append("  border-top-left-radius: 5px; ");
+    style.append("}");
+    m_mainWidget->layout()->setContentsMargins(1, 2, 0, 0);
+    break;
+  default:
+    OS_ASSERT(false);
   }
+
+  m_mainWidget->setStyleSheet(style);
 }
 
 bool MainTabView::addTabWidget(QWidget * widget)
 {
   // This method should only be called in cases where the tab will not have sub tabs
-  OS_ASSERT(!m_hasSubTab);
-  if(m_hasSubTab) return false;
+  OS_ASSERT(m_tabType == MAIN_TAB);
+  if (m_tabType != MAIN_TAB) return false;
 
   m_stackedWidget->addWidget(widget);
   return true;
@@ -103,8 +116,8 @@ bool MainTabView::addTabWidget(QWidget * widget)
 bool MainTabView::addSubTab(const QString & subTablabel, QWidget * widget, int id)
 {
   // This method should only be called in cases where the tab will have sub tabs
-  OS_ASSERT(m_hasSubTab);
-  if(!m_hasSubTab) return false;
+  OS_ASSERT(m_tabType != MAIN_TAB);
+  if (m_tabType == MAIN_TAB) return false;
 
   auto button = new QPushButton(this);
   button->setText(subTablabel);
@@ -219,7 +232,7 @@ void MainTabView::resizeEvent( QResizeEvent * event )
 
 int MainTabView::subTabId() const
 {
-  if( m_hasSubTab )
+  if (m_tabType != MAIN_TAB)
   {
     return m_ids[subTabIndex()];
   }
@@ -236,7 +249,7 @@ int MainTabView::subTabIndex() const
 
 bool MainTabView::selectSubTabByIndex(int index)
 {
-  if(m_hasSubTab){
+  if (m_tabType != MAIN_TAB){
     if(index < 0 || index >= m_stackedWidget->count()){
       return false;
     } else {

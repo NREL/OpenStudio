@@ -114,9 +114,9 @@ namespace openstudio {
 #else
     candidate = getApplicationRunDirectory().parent_path() / expectedPath;
 #endif
-    std::cout << "candidate: " << openstudio::toString(candidate) << std::endl;
-    std::cout << "expectedPath: " << openstudio::toString(expectedPath) << std::endl;
-    std::cout << "buildPath: " << openstudio::toString(buildPath) << std::endl;
+    //std::cout << "candidate: " << openstudio::toString(candidate) << std::endl;
+    //std::cout << "expectedPath: " << openstudio::toString(expectedPath) << std::endl;
+    //std::cout << "buildPath: " << openstudio::toString(buildPath) << std::endl;
     // revert to build directory location for regression tests and other external projects
     // that link to a developer build of OpenStudio
     if (!boost::filesystem::exists(candidate)) {

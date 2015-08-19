@@ -18,30 +18,38 @@
 **********************************************************************/
 
 #include "FacilityTabController.hpp"
-#include "FacilityTabView.hpp"
-#include "FacilityController.hpp"
-#include "OSItem.hpp"
 
-#include "../utilities/core/Assert.hpp"
+#include "BuildingInspectorView.hpp"
+#include "FacilityExteriorEquipmentGridView.hpp"
+#include "FacilityShadingGridView.hpp"
+#include "FacilityStoriesGridView.hpp"
+#include "FacilityTabView.hpp"
 
 namespace openstudio {
 
 FacilityTabController::FacilityTabController(bool isIP, const model::Model& model)
   : MainTabController(new FacilityTabView())
 {
-  m_facilityController = std::shared_ptr<FacilityController>(new FacilityController(isIP, model));
+  auto buildingInspectorView = new BuildingInspectorView(isIP, model);
+  this->mainContentWidget()->addSubTab("Building", buildingInspectorView, BUILDING);
+  connect(this, &FacilityTabController::toggleUnitsClicked, buildingInspectorView, &BuildingInspectorView::toggleUnitsClicked);
+  connect(buildingInspectorView, &BuildingInspectorView::dropZoneItemClicked, this, &FacilityTabController::dropZoneItemClicked);
 
-  connect(m_facilityController.get(), &FacilityController::modelObjectSelected, this, &FacilityTabController::modelObjectSelected);
+  auto facilityStoriesGridView = new FacilityStoriesGridView(isIP, model);
+  this->mainContentWidget()->addSubTab("Stories", facilityStoriesGridView, STORIES);
+  connect(this, &FacilityTabController::toggleUnitsClicked, facilityStoriesGridView, &FacilityStoriesGridView::toggleUnitsClicked);
+  connect(facilityStoriesGridView, &FacilityStoriesGridView::dropZoneItemSelected, this, &FacilityTabController::dropZoneItemSelected);
 
-  connect(m_facilityController.get(), &FacilityController::dropZoneItemSelected, this, &FacilityTabController::dropZoneItemSelected);
+  auto facilityShadingGridView = new FacilityShadingGridView(isIP, model);
+  this->mainContentWidget()->addSubTab("Shading", facilityShadingGridView, SHADING);
+  connect(this, &FacilityTabController::toggleUnitsClicked, facilityShadingGridView, &FacilityShadingGridView::toggleUnitsClicked);
+  connect(facilityShadingGridView, &FacilityShadingGridView::dropZoneItemSelected, this, &FacilityTabController::dropZoneItemSelected);
 
-  connect(this, &FacilityTabController::toggleUnitsClicked, m_facilityController.get(), &FacilityController::toggleUnitsClicked);
+  auto facilityExteriorEquipmentGridView = new FacilityExteriorEquipmentGridView(isIP, model);
+  this->mainContentWidget()->addSubTab("Exterior Equipment", facilityExteriorEquipmentGridView, EXTERIOR_EQUIPMENT);
+  connect(this, &FacilityTabController::toggleUnitsClicked, facilityExteriorEquipmentGridView, &FacilityExteriorEquipmentGridView::toggleUnitsClicked);
+  connect(facilityExteriorEquipmentGridView, &FacilityExteriorEquipmentGridView::dropZoneItemSelected, this, &FacilityTabController::dropZoneItemSelected);
 
-  connect(m_facilityController.get(), &FacilityController::downloadComponentsClicked, this, &FacilityTabController::downloadComponentsClicked);
-
-  connect(m_facilityController.get(), &FacilityController::openLibDlgClicked, this, &FacilityTabController::openLibDlgClicked);
-  
-  this->mainContentWidget()->addTabWidget(m_facilityController->subTabView());
 }
 
 void FacilityTabController::toggleUnits(bool displayIP)

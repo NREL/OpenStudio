@@ -27,14 +27,13 @@ namespace openstudio {
 namespace model {
 
 class Node;
-
 class HVACComponent;
-
 class Mixer;
-
 class Splitter;
-
 class SizingPlant;
+class PlantEquipmentOperationScheme;
+class PlantEquipmentOperationHeatingLoad;
+class PlantEquipmentOperationCoolingLoad;
 
 namespace detail {
 
@@ -96,6 +95,24 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
   bool setCommonPipeSimulation(const std::string & value);
 
   void resetCommonPipeSimulation();
+
+  boost::optional<PlantEquipmentOperationHeatingLoad> plantEquipmentOperationHeatingLoad() const;
+
+  bool setPlantEquipmentOperationHeatingLoad(const boost::optional<PlantEquipmentOperationHeatingLoad>& plantOperation);
+
+  void resetPlantEquipmentOperationHeatingLoad();
+
+  boost::optional<PlantEquipmentOperationCoolingLoad> plantEquipmentOperationCoolingLoad() const;
+
+  bool setPlantEquipmentOperationCoolingLoad(const boost::optional<PlantEquipmentOperationCoolingLoad>& plantOperation);
+
+  void resetPlantEquipmentOperationCoolingLoad();
+
+  boost::optional<PlantEquipmentOperationScheme> primaryPlantEquipmentOperationScheme() const;
+
+  bool setPrimaryPlantEquipmentOperationScheme(const boost::optional<PlantEquipmentOperationScheme>& plantOperation);
+
+  void resetPrimaryPlantEquipmentOperationScheme();
 
   //std::vector<ModelObject> supplyComponents(HVACComponent inletComp,
   //                                          HVACComponent outletComp,

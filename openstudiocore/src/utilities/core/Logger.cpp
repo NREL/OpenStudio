@@ -56,6 +56,11 @@ namespace openstudio{
       case QtDebugMsg:
         logFree(Debug, "Qt", msg);
         break;
+#if QT_VERSION >= 0x050500
+      case QtInfoMsg:
+        logFree(Info, "Qt", msg);
+        break;
+#endif
       case QtWarningMsg:
         logFree(Warn, "Qt", msg);
         break;

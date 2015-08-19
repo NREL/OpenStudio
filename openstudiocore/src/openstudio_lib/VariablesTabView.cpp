@@ -321,7 +321,7 @@ namespace openstudio {
   }
 
   VariablesTabView::VariablesTabView(openstudio::model::Model t_model, QWidget * parent)
-    : MainTabView("Output Variables",false,parent)
+    : MainTabView("Output Variables", MainTabView::MAIN_TAB, parent)
   {
     auto scrollarea = new QScrollArea();
     VariablesList *vl = new VariablesList(t_model);

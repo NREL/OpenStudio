@@ -19,10 +19,10 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/HeaderedPumpsConstantSpeed.hpp>
-#include <model/HeaderedPumpsConstantSpeed_Impl.hpp>
+#include "../HeaderedPumpsConstantSpeed.hpp"
+#include "../HeaderedPumpsConstantSpeed_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

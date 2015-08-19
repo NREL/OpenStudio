@@ -20,8 +20,8 @@
 #ifndef MODEL_TEMPERINGVALVE_HPP
 #define MODEL_TEMPERINGVALVE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 namespace model {
