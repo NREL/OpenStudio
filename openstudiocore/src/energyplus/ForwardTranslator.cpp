@@ -1076,12 +1076,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateDistrictCooling(districtCooling);
       break;
     }
-  case openstudio::IddObjectType::OS_DistrictHeating :
-    {
-      model::DistrictHeating districtHeating = modelObject.cast<DistrictHeating>();
-      retVal = translateDistrictHeating(districtHeating);
-      break;
-    }
+  case openstudio::IddObjectType::OS_DistrictHeating:
+  {
+    model::DistrictHeating districtHeating = modelObject.cast<DistrictHeating>();
+    retVal = translateDistrictHeating(districtHeating);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Duct:
+  {
+    model::Duct duct = modelObject.cast<Duct>();
+    retVal = translateDuct(duct);
+    break;
+  }
   case openstudio::IddObjectType::OS_ElectricEquipment :
     {
       model::ElectricEquipment equipment = modelObject.cast<ElectricEquipment>();
@@ -1143,6 +1149,20 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       break;
     }
     
+  case openstudio::IddObjectType::OS_FluidCooler_SingleSpeed:
+  {
+    model::FluidCoolerSingleSpeed fluidCoolerSingleSpeed = modelObject.cast<FluidCoolerSingleSpeed>();
+    retVal = translateFluidCoolerSingleSpeed(fluidCoolerSingleSpeed);
+    break;
+  }
+
+  case openstudio::IddObjectType::OS_FluidCooler_TwoSpeed:
+  {
+    model::FluidCoolerTwoSpeed fluidCoolerTwoSpeed = modelObject.cast<FluidCoolerTwoSpeed>();
+    retVal = translateFluidCoolerTwoSpeed(fluidCoolerTwoSpeed);
+    break;
+  }
+
   case openstudio::IddObjectType::OS_GroundHeatExchanger_HorizontalTrench :
     {
       auto mo = modelObject.cast<GroundHeatExchangerHorizontalTrench>();
@@ -1243,6 +1263,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       auto mo = modelObject.cast<WaterHeaterHeatPump>();
       retVal = translateWaterHeaterHeatPump(mo);
+      break;
     }
   case openstudio::IddObjectType::OS_WaterHeater_Stratified :
     {
@@ -1352,6 +1373,60 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translatePlantLoop(plantLoop);
       break;
     }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_CoolingLoad :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationCoolingLoad>();
+      retVal = translatePlantEquipmentOperationCoolingLoad(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_HeatingLoad :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationHeatingLoad>();
+      retVal = translatePlantEquipmentOperationHeatingLoad(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_OutdoorDryBulb :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationOutdoorDryBulb>();
+      retVal = translatePlantEquipmentOperationOutdoorDryBulb(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_OutdoorWetBulb :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationOutdoorWetBulb>();
+      retVal = translatePlantEquipmentOperationOutdoorWetBulb(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_OutdoorDewpoint :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationOutdoorDewpoint>();
+      retVal = translatePlantEquipmentOperationOutdoorDewpoint(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_OutdoorDryBulbDifference :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationOutdoorDryBulbDifference>();
+      retVal = translatePlantEquipmentOperationOutdoorDryBulbDifference(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_OutdoorWetBulbDifference :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationOutdoorWetBulbDifference>();
+      retVal = translatePlantEquipmentOperationOutdoorWetBulbDifference(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_OutdoorDewpointDifference :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationOutdoorDewpointDifference>();
+      retVal = translatePlantEquipmentOperationOutdoorDewpointDifference(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantEquipmentOperation_OutdoorRelativeHumidity :
+    {
+      auto mo = modelObject.cast<PlantEquipmentOperationOutdoorRelativeHumidity>();
+      retVal = translatePlantEquipmentOperationOutdoorRelativeHumidity(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_Pump_ConstantSpeed :
     {
       PumpConstantSpeed pump = modelObject.cast<PumpConstantSpeed>();
@@ -1382,12 +1457,24 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translatePeople(people);
       break;
     }
-  case openstudio::IddObjectType::OS_Pipe_Adiabatic :
-    {
-      model::PipeAdiabatic pipe = modelObject.cast<PipeAdiabatic>();
-      retVal = translatePipeAdiabatic(pipe);
-      break;
-    }
+  case openstudio::IddObjectType::OS_Pipe_Adiabatic:
+  {
+    model::PipeAdiabatic pipe = modelObject.cast<PipeAdiabatic>();
+    retVal = translatePipeAdiabatic(pipe);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Pipe_Indoor:
+  {
+    model::PipeIndoor pipe = modelObject.cast<PipeIndoor>();
+    retVal = translatePipeIndoor(pipe);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Pipe_Outdoor:
+  {
+    model::PipeOutdoor pipe = modelObject.cast<PipeOutdoor>();
+    retVal = translatePipeOutdoor(pipe);
+    break;
+  }
   case openstudio::IddObjectType::OS_PortList :
     {
       model::PortList portList = modelObject.cast<PortList>();
@@ -1851,6 +1938,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateZoneAirHeatBalanceAlgorithm(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_ZoneAirMassFlowConservation:
+    {
+      model::ZoneAirMassFlowConservation mo = modelObject.cast<ZoneAirMassFlowConservation>();
+      retVal = translateZoneAirMassFlowConservation(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_ZoneCapacitanceMultiplier_ResearchSpecial :
     {
       // no-op
@@ -1952,6 +2045,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateZoneHVACUnitHeater(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_ZoneMixing:
+  {
+    model::ZoneMixing mo = modelObject.cast<ZoneMixing>();
+    retVal = translateZoneMixing(mo);
+    break;
+  }
   //If no case statement log a warning
   default:
     {
@@ -2037,6 +2136,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Sizing_Parameters);
   result.push_back(IddObjectType::OS_ZoneAirContaminantBalance);
   result.push_back(IddObjectType::OS_ZoneAirHeatBalanceAlgorithm);
+  result.push_back(IddObjectType::OS_ZoneAirMassFlowConservation);
   result.push_back(IddObjectType::OS_ZoneCapacitanceMultiplier_ResearchSpecial);
   result.push_back(IddObjectType::OS_OutputControl_ReportingTolerances);
 
@@ -2154,6 +2254,8 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow);
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow);
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
+  result.push_back(IddObjectType::OS_ZoneMixing);
+
 
   result.push_back(IddObjectType::OS_Refrigeration_System);
   result.push_back(IddObjectType::OS_Refrigeration_TranscriticalSystem);

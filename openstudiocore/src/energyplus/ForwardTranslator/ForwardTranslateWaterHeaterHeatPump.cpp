@@ -22,6 +22,8 @@
 #include "../../model/WaterHeaterHeatPump_Impl.hpp"
 #include "../../model/WaterHeaterMixed.hpp"
 #include "../../model/WaterHeaterMixed_Impl.hpp"
+#include "../../model/WaterHeaterStratified.hpp"
+#include "../../model/WaterHeaterStratified_Impl.hpp"
 #include "../../model/CoilWaterHeatingAirToWaterHeatPump.hpp"
 #include "../../model/CoilWaterHeatingAirToWaterHeatPump_Impl.hpp"
 #include "../../model/Model.hpp"
@@ -39,6 +41,7 @@
 #include <utilities/idd/WaterHeater_HeatPump_FieldEnums.hxx>
 #include <utilities/idd/Coil_WaterHeating_AirToWaterHeatPump_FieldEnums.hxx>
 #include <utilities/idd/WaterHeater_Mixed_FieldEnums.hxx>
+#include <utilities/idd/WaterHeater_Stratified_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
@@ -288,6 +291,16 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPump(
           idfObject.setString(WaterHeater_HeatPumpFields::TankUseSideInletNodeName,node->name().get());
         }
         if( auto node = waterHeaterMixed.supplyOutletModelObject() ) {
+          idfObject.setString(WaterHeater_HeatPumpFields::TankUseSideOutletNodeName,node->name().get());
+        }
+      } else if( mo.iddObjectType() == model::WaterHeaterStratified::iddObjectType() ) {
+        idf->setString(WaterHeater_StratifiedFields::SourceSideOutletNodeName,tankOutletCondInletNodeName);
+        idf->setString(WaterHeater_StratifiedFields::SourceSideInletNodeName,condOutletTankInletNodeName);
+        auto waterHeaterStratified = mo.cast<model::WaterHeaterStratified>();
+        if( auto node = waterHeaterStratified.supplyInletModelObject() ) {
+          idfObject.setString(WaterHeater_HeatPumpFields::TankUseSideInletNodeName,node->name().get());
+        }
+        if( auto node = waterHeaterStratified.supplyOutletModelObject() ) {
           idfObject.setString(WaterHeater_HeatPumpFields::TankUseSideOutletNodeName,node->name().get());
         }
       } else {

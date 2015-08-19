@@ -36,6 +36,7 @@ namespace detail {
 } // detail
 
 /** ZoneAirContaminantBalance is a ModelObject that wraps the OpenStudio IDD object 'OS:ZoneAirContaminantBalance'. */
+// DLM: this class is not translated to E+
 class MODEL_API ZoneAirContaminantBalance : public ModelObject {
  public:
   /** @name Constructors and Destructors */

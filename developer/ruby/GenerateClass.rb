@@ -1,24 +1,24 @@
 ######################################################################
-#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 #  All rights reserved.
-#  
+#
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
 #  License as published by the Free Software Foundation; either
 #  version 2.1 of the License, or (at your option) any later version.
-#  
+#
 #  This library is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 #  Lesser General Public License for more details.
-#  
+#
 #  You should have received a copy of the GNU Lesser General Public
 #  License along with this library; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ######################################################################
 
 ######################################################################
-# == Synopsis 
+# == Synopsis
 #
 #   Generate starter files for an OpenStudio class.
 #
@@ -29,11 +29,11 @@
 ######################################################################
 
 require 'optparse'
-require File.dirname(__FILE__) + '/SubProjectClassGenerators/SubProjectClassGenerator.rb'
-require File.dirname(__FILE__) + '/SubProjectClassGenerators/ModelClassGenerator.rb'
-require File.dirname(__FILE__) + '/SubProjectClassGenerators/ProjectClassGenerator.rb'
-require File.dirname(__FILE__) + '/SubProjectClassGenerators/AnalysisClassGenerator.rb'
 
+require_relative 'SubProjectClassGenerators/SubProjectClassGenerator.rb'
+require_relative 'SubProjectClassGenerators/ModelClassGenerator.rb'
+require_relative 'SubProjectClassGenerators/ProjectClassGenerator.rb'
+require_relative 'SubProjectClassGenerators/AnalysisClassGenerator.rb'
 
 # HANDLE INPUT ARGUMENTS
 
@@ -48,27 +48,27 @@ optparse = OptionParser.new do |opts|
   opts.on( '-c', '--className CLASSNAME', String, "Name of the class to be generated" ) do |className|
     options[:className] = className
   end
-  
+
   opts.on( '-b', '--baseClassName BASECLASSNAME', String, "Name of the base class for the class to be generated" ) do |baseClassName|
     options[:baseClassName] = baseClassName
   end
-  
+
   opts.on( '-o', '--outputDirectory OUTPUTDIRECTORY', String, "Directory to which the generated files should be saved") do |outputDirectory|
     options[:outputDirectory] = outputDirectory
   end
-  
+
   opts.on( '-p', '--[no-]pImpl', "Use the pImpl idiom") do |pImpl|
     options[:pImpl] = pImpl
   end
-  
+
   opts.on( '-q', '--[no-]qobject', "Make the class a QOBJECT") do |qobject|
     options[:qobject] = qobject
   end
-  
+
   opts.on( '-i', '--iddObjectType IDDOBJECTTYPE', String, "IddObjectType to be wrapped by the ModelObject class being generated (ignored if not model sourceDirectory)") do |iddObjectType|
     options [:iddObjectType] = iddObjectType
   end
-  
+
 end
 
 # parse the input parameters
@@ -98,7 +98,7 @@ iddObjectType = options[:iddObjectType].to_s
 summary = "\nWriting files for class " + sourceDirectory + "/" + className
 if not baseClassName.empty?
   summary += ", which derives from " + baseClassName + ","
-end 
+end
 summary += " to " + outputDirectory + ".\n\n"
 puts summary
 if pImpl
@@ -159,7 +159,7 @@ m = sourceDirectory.match(re)
 sourceFolders = m[1,(m.size-1)]
 
 defineString = String.new
-sourceFolders.each { |folder| 
+sourceFolders.each { |folder|
   defineString += folder.upcase + "_" if folder != nil
 }
 defineString += className.upcase
@@ -189,16 +189,16 @@ end
 subprojectInTitleCase = sourceFolders[0].gsub(/\b\w/){$&.upcase}
 
 hpp << "#include <" << sourceFolders[0] << "/" << subprojectInTitleCase << "API.hpp>\n"
-cpp << "#include <" << sourceDirectory << "/" << className << ".hpp>\n"
+cpp << "#include \"" << className << ".hpp\"\n"
 if pImpl
   implHpp << "#include <" << sourceFolders[0] << "/" << subprojectInTitleCase << "API.hpp>\n"
-  cpp << "#include <" << sourceDirectory << "/" << className << "_Impl.hpp>\n\n"
+  cpp << "#include \"" << className << "_Impl.hpp\"\n\n"
 end
 
 if not baseClassName.empty?
-  hpp << "#include <" << sourceDirectory << "/" << baseClassName << ".hpp>\n\n"
+  hpp << "#include \"" << baseClassName << ".hpp\"\n\n"
   if pImpl
-    implHpp << "#include <" << sourceDirectory << "/" << baseClassName << "_Impl.hpp>\n\n"
+    implHpp << "#include \"" << baseClassName << "_Impl.hpp\"\n\n"
   end
 end
 
@@ -208,7 +208,7 @@ cpp << methodGenerator.cppIncludes
 
 if baseClassName.empty?
   hpp << "\n"
-  if qobject and not pImpl    
+  if qobject and not pImpl
     hpp << "#include <QObject>\n\n"
   end
   if pImpl
@@ -216,7 +216,7 @@ if baseClassName.empty?
   end
   hpp << "#include <boost/optional.hpp>\n\n"
   hpp << "#include <vector>\n\n"
-  
+
   if pImpl
     implHpp << "\n"
     if qobject
@@ -250,7 +250,7 @@ if pImpl
   implHpp << "namespace " << sourceFolders[0] << " {\n\n"
   implHpp << methodGenerator.implHppSubProjectForwardDeclarations
   implHpp << "namespace detail {\n\n"
-  
+
   cpp << "namespace detail {\n\n"
 end
 
@@ -271,7 +271,7 @@ if baseClassName.empty?
     hpp << " : public QObject"
   end
 else
-  hpp << " : public " << baseClassName 
+  hpp << " : public " << baseClassName
 end
 hpp << " {\n"
 if qobject and not pImpl
@@ -287,7 +287,7 @@ if pImpl
     end
     implHpp << "public std::enable_shared_from_this<" << className << "_Impl>"
   else
-    implHpp << " : public " << baseClassName << "_Impl" 
+    implHpp << " : public " << baseClassName << "_Impl"
   end
   implHpp << " {\n"
   implHpp << "    Q_OBJECT;\n" if qobject
@@ -335,7 +335,7 @@ hpp << "  //@}\n\n"
 
 if pImpl
   implHpp << "    virtual ~" << className << "_Impl() {}\n\n"
-  implHpp << "    //@}\n"  
+  implHpp << "    //@}\n"
 end
 
 
@@ -383,7 +383,7 @@ if pImpl and baseClassName.empty?
   hpp << "  }\n"
   hpp << "\n"
   hpp << "  //@}\n"
-  
+
   implHpp << "    /** @name Type Casting */\n"
   implHpp << "    //@{\n"
   implHpp << "\n"
@@ -411,7 +411,7 @@ hpp << methodGenerator.hppProtectedImpl
 hpp << methodGenerator.hppProtectedFriends
 cppPublicClass << methodGenerator.cppPublicClassProtectedImpl
 
-if pImpl  
+if pImpl
   implHpp << "   protected:\n"
 end
 
@@ -432,7 +432,7 @@ hpp << " private:" << "\n"
 
 if pImpl
   implHpp << "   private:" << "\n"
-  
+
   if baseClassName.empty?
     hpp << "  std::shared_ptr<detail::" << className << "_Impl> m_impl;\n\n"
   end
@@ -474,7 +474,7 @@ if pImpl
   implHpp << "} // detail\n\n"
   implHpp << "} // " << sourceFolders[0] << "\n"
   implHpp << "} // openstudio" << "\n" << "\n"
-  
+
   cpp << "} // detail" << "\n\n"
   cpp << cppPublicClass << "\n"
 end
