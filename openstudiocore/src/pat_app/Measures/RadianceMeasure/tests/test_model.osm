@@ -8693,3 +8693,75 @@ OS:ShadingControl,
   ,                                       !- Slat Angle Schedule Name
   ;                                       !- Setpoint 2 {BasedOnField A4}
 
+OS:ClimateZones,
+  {d47a85b1-4be4-4b97-bde1-6734660e654a}, !- Handle
+  ,                                       !- Active Institution
+  ,                                       !- Active Year
+  ASHRAE,                                 !- Climate Zone Institution Name 1
+  ANSI/ASHRAE Standard 169,               !- Climate Zone Document Name 1
+  2006,                                   !- Climate Zone Document Year 1
+  ,                                       !- Climate Zone Value 1
+  CEC,                                    !- Climate Zone Institution Name 2
+  California Climate Zone Descriptions,   !- Climate Zone Document Name 2
+  1995,                                   !- Climate Zone Document Year 2
+  ;                                       !- Climate Zone Value 2
+
+OS:LifeCycleCost:Parameters,
+  {e44402e9-a785-4b42-b238-90ebfdca0699}, !- Handle
+  FEMP,                                   !- Analysis Type
+  ,                                       !- Discounting Convention
+  ,                                       !- Inflation Approach
+  ,                                       !- Real Discount Rate
+  ,                                       !- Nominal Discount Rate
+  ,                                       !- Inflation
+  ,                                       !- Base Date Month
+  ,                                       !- Base Date Year
+  ,                                       !- Service Date Month
+  ,                                       !- Service Date Year
+  ,                                       !- Length of Study Period in Years
+  ,                                       !- Tax Rate
+  ,                                       !- Depreciation Method
+  Yes;                                    !- Use NIST Fuel Escalation Rates
+
+OS:YearDescription,
+  {5a55f507-6290-40ca-88fe-dd0599f76164}, !- Handle
+  ,                                       !- Calendar Year
+  Sunday;                                 !- Day of Week for Start Day
+
+OS:WeatherFile,
+  {49ed996c-79bd-4319-befd-6f4dc493248f}, !- Handle
+  Denver Centennial  Golden   Nr,         !- City
+  CO,                                     !- State Province Region
+  USA,                                    !- Country
+  TMY3,                                   !- Data Source
+  724666,                                 !- WMO Number
+  39.74,                                  !- Latitude {deg}
+  -105.18,                                !- Longitude {deg}
+  -7,                                     !- Time Zone {hr}
+  1829,                                   !- Elevation {m}
+  file:files/USA_CO_Golden-NREL.724666_TMY3.epw, !- Url
+  BDF687C1;                               !- Checksum
+
+OS:RunPeriod,
+  {8f80596d-7f7e-4560-997c-ad8bb8402909}, !- Handle
+  Run Period 1,                           !- Name
+  1,                                      !- Begin Month
+  1,                                      !- Begin Day of Month
+  12,                                     !- End Month
+  31,                                     !- End Day of Month
+  ,                                       !- Use Weather File Holidays and Special Days
+  ,                                       !- Use Weather File Daylight Saving Period
+  ,                                       !- Apply Weekend Holiday Rule
+  ,                                       !- Use Weather File Rain Indicators
+  ,                                       !- Use Weather File Snow Indicators
+  ;                                       !- Number of Times Runperiod to be Repeated
+
+OS:Site,
+  {24fff0c4-5c4f-458c-892c-69c7d3d13274}, !- Handle
+  Site 1,                                 !- Name
+  39.74,                                  !- Latitude {deg}
+  -105.18,                                !- Longitude {deg}
+  -7,                                     !- Time Zone {hr}
+  1829,                                   !- Elevation {m}
+  ;                                       !- Terrain
+

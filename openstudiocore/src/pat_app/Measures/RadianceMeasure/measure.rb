@@ -462,21 +462,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			values = Hash.new
 			dcVectors = Hash.new
 
-
-			# deprecate and just require a recent (NREL) version of Radiance 2015.08.11 RPG
-			
-										# i can haz gendaymtx vintage? (gendaymtx >= v4.2.b adds header and -h option to suppress) - 2014.07.02 RPG 
-							# 			genDaymtxHdr = ""
-							# 			exec_statement("gendaymtx -h -m #{t_options.skyvecDensity} \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" > \"#{t_outPath / OpenStudio::Path.new("daymtx_out.tmp")}\" ")
-							# 			if File.zero?("#{t_outPath / OpenStudio::Path.new("daymtx_out.tmp")}")
-							# 				genDaymtxHdr = ""
-							# 				if t_options.z == true
-							# 					puts "Old Radiance version detected, will not work with 3-phase method, quitting."
-							# 					exit false
-							# 				end
-							# 			end
-							# 			File.delete("#{t_outPath / OpenStudio::Path.new("daymtx_out.tmp")}")
-							# 			# we now haz =)
+							
 			
 			# Run the simulation 
 
