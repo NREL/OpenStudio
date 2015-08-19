@@ -1512,6 +1512,7 @@ set(${target_name}_test_src
   test/ZoneHVACPackagedTerminalHeatPump_GTest.cpp
   test/ZoneHVACWaterToAirHeatPump_GTest.cpp
   test/ZoneHVACUnitHeater_GTest.cpp
+  test/ZoneVentilationDesignFlowRate_GTest.cpp
 )
 
 set(${target_name}_test_depends
