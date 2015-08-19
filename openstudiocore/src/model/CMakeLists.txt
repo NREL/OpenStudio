@@ -1024,18 +1024,33 @@ set(${target_name}_src
   ZoneHVACBaseboardConvectiveWater.hpp
   ZoneHVACBaseboardConvectiveWater_Impl.hpp
   ZoneHVACBaseboardConvectiveWater.cpp
+  ZoneHVACBaseboardRadiantConvectiveElectric.hpp
+  ZoneHVACBaseboardRadiantConvectiveElectric_Impl.hpp
+  ZoneHVACBaseboardRadiantConvectiveElectric.cpp
+  ZoneHVACBaseboardRadiantConvectiveWater.hpp
+  ZoneHVACBaseboardRadiantConvectiveWater_Impl.hpp
+  ZoneHVACBaseboardRadiantConvectiveWater.cpp
+  ZoneHVACDehumidifierDX.hpp
+  ZoneHVACDehumidifierDX_Impl.hpp
+  ZoneHVACDehumidifierDX.cpp
+  ZoneHVACEnergyRecoveryVentilator.hpp
+  ZoneHVACEnergyRecoveryVentilator_Impl.hpp
+  ZoneHVACEnergyRecoveryVentilator.cpp
+  ZoneHVACEnergyRecoveryVentilatorController.hpp
+  ZoneHVACEnergyRecoveryVentilatorController_Impl.hpp
+  ZoneHVACEnergyRecoveryVentilatorController.cpp
   ZoneHVACEquipmentList.hpp
   ZoneHVACEquipmentList_Impl.hpp
   ZoneHVACEquipmentList.cpp
-  ZoneHVACIdealLoadsAirSystem.hpp
-  ZoneHVACIdealLoadsAirSystem_Impl.hpp
-  ZoneHVACIdealLoadsAirSystem.cpp
   ZoneHVACFourPipeFanCoil.hpp
   ZoneHVACFourPipeFanCoil_Impl.hpp
   ZoneHVACFourPipeFanCoil.cpp
   ZoneHVACHighTemperatureRadiant.hpp
   ZoneHVACHighTemperatureRadiant_Impl.hpp
   ZoneHVACHighTemperatureRadiant.cpp
+  ZoneHVACIdealLoadsAirSystem.hpp
+  ZoneHVACIdealLoadsAirSystem_Impl.hpp
+  ZoneHVACIdealLoadsAirSystem.cpp
   ZoneHVACLowTemperatureRadiantElectric.hpp
   ZoneHVACLowTemperatureRadiantElectric_Impl.hpp
   ZoneHVACLowTemperatureRadiantElectric.cpp
@@ -1051,18 +1066,18 @@ set(${target_name}_src
   ZoneHVACPackagedTerminalAirConditioner.hpp
   ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
   ZoneHVACPackagedTerminalAirConditioner.cpp
-  ZoneHVACPackagedTerminalAirConditioner.hpp
-  ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
-  ZoneHVACPackagedTerminalAirConditioner.cpp
   ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp
   ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp
   ZoneHVACTerminalUnitVariableRefrigerantFlow.cpp
-  ZoneHVACWaterToAirHeatPump.hpp
-  ZoneHVACWaterToAirHeatPump_Impl.hpp
-  ZoneHVACWaterToAirHeatPump.cpp
   ZoneHVACUnitHeater.hpp
   ZoneHVACUnitHeater_Impl.hpp
   ZoneHVACUnitHeater.cpp
+  ZoneHVACUnitVentilator.hpp
+  ZoneHVACUnitVentilator_Impl.hpp
+  ZoneHVACUnitVentilator.cpp
+  ZoneHVACWaterToAirHeatPump.hpp
+  ZoneHVACWaterToAirHeatPump_Impl.hpp
+  ZoneHVACWaterToAirHeatPump.cpp
   ZoneMixing.hpp
   ZoneMixing_Impl.hpp
   ZoneMixing.cpp  
@@ -1507,15 +1522,21 @@ set(${target_name}_test_src
   test/ZoneCapacitanceMultiplierResearchSpecial_GTest.cpp
   test/ZoneHVACBaseboardConvectiveElectric_GTest.cpp
   test/ZoneHVACBaseboardConvectiveWater_GTest.cpp
+  test/ZoneHVACBaseboardRadiantConvectiveElectric_GTest.cpp
+  test/ZoneHVACBaseboardRadiantConvectiveWater_GTest.cpp
+  test/ZoneHVACDehumidifierDX_GTest.cpp
+  test/ZoneHVACEnergyRecoveryVentilator_GTest.cpp
+  test/ZoneHVACEnergyRecoveryVentilatorController_GTest.cpp
   test/ZoneHVACFourPipeFanCoil_GTest.cpp
   test/ZoneHVACHighTemperatureRadiant_GTest.cpp
   test/ZoneHVACLowTemperatureRadiantElectric_GTest.cpp
   test/ZoneHVACLowTempRadiantConstFlow_GTest.cpp
   test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp
-  test/ZoneHVACPackagedTerminalAirConditioner_GTest.cpp
   test/ZoneHVACPackagedTerminalHeatPump_GTest.cpp
-  test/ZoneHVACWaterToAirHeatPump_GTest.cpp
+  test/ZoneHVACPackagedTerminalAirConditioner_GTest.cpp
   test/ZoneHVACUnitHeater_GTest.cpp
+  test/ZoneHVACUnitVentilator_GTest.cpp
+  test/ZoneHVACWaterToAirHeatPump_GTest.cpp
   test/ZoneMixing_GTest.cpp
 )
 

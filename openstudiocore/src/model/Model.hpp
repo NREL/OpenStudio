@@ -114,6 +114,10 @@ class MODEL_API Model : public openstudio::Workspace {
    *  create a new schedule if necessary and add it to the model */
   Schedule alwaysOnDiscreteSchedule() const;
 
+  /** Get an always off schedule with discrete type limits if there is one.
+   *  create a new schedule if necessary and add it to the model */
+  Schedule alwaysOffDiscreteSchedule() const;
+
   /** Get an always on schedule with continuous type limits if there is one.
   *  create a new schedule if necessary and add it to the model */
   Schedule alwaysOnContinuousSchedule() const;
