@@ -40,6 +40,7 @@ class ZoneControlHumidistat;
 class ThermalZone;
 class SizingZone;
 class PortList;
+class ZoneMixing;
 class ZoneHVACEquipmentList;
 
 namespace detail {
@@ -439,6 +440,10 @@ namespace detail {
     void removeSupplyPlenum();
     bool setReturnPlenum(const ThermalZone & plenumZone);
     void removeReturnPlenum();
+
+    std::vector<ZoneMixing> zoneMixing() const;
+    std::vector<ZoneMixing> supplyZoneMixing() const;
+    std::vector<ZoneMixing> exhaustZoneMixing() const;
 
    protected:
 

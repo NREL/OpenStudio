@@ -1937,6 +1937,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateZoneAirHeatBalanceAlgorithm(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_ZoneAirMassFlowConservation:
+    {
+      model::ZoneAirMassFlowConservation mo = modelObject.cast<ZoneAirMassFlowConservation>();
+      retVal = translateZoneAirMassFlowConservation(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_ZoneCapacitanceMultiplier_ResearchSpecial :
     {
       // no-op
@@ -2038,6 +2044,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateZoneHVACUnitHeater(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_ZoneMixing:
+  {
+    model::ZoneMixing mo = modelObject.cast<ZoneMixing>();
+    retVal = translateZoneMixing(mo);
+    break;
+  }
   //If no case statement log a warning
   default:
     {
@@ -2123,6 +2135,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Sizing_Parameters);
   result.push_back(IddObjectType::OS_ZoneAirContaminantBalance);
   result.push_back(IddObjectType::OS_ZoneAirHeatBalanceAlgorithm);
+  result.push_back(IddObjectType::OS_ZoneAirMassFlowConservation);
   result.push_back(IddObjectType::OS_ZoneCapacitanceMultiplier_ResearchSpecial);
   result.push_back(IddObjectType::OS_OutputControl_ReportingTolerances);
 
@@ -2240,6 +2253,8 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow);
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow);
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
+  result.push_back(IddObjectType::OS_ZoneMixing);
+
 
   result.push_back(IddObjectType::OS_Refrigeration_System);
   result.push_back(IddObjectType::OS_Refrigeration_TranscriticalSystem);

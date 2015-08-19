@@ -478,6 +478,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(YearDescription);
     REGISTER_CONSTRUCTOR(ZoneAirContaminantBalance);
     REGISTER_CONSTRUCTOR(ZoneAirHeatBalanceAlgorithm);
+    REGISTER_CONSTRUCTOR(ZoneAirMassFlowConservation);
     REGISTER_CONSTRUCTOR(ZoneCapacitanceMultiplierResearchSpecial);
     REGISTER_CONSTRUCTOR(ZoneControlHumidistat);
     REGISTER_CONSTRUCTOR(ZoneControlThermostatStagedDualSetpoint);
@@ -495,6 +496,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ZoneHVACTerminalUnitVariableRefrigerantFlow);
     REGISTER_CONSTRUCTOR(ZoneHVACWaterToAirHeatPump);
     REGISTER_CONSTRUCTOR(ZoneHVACUnitHeater);
+    REGISTER_CONSTRUCTOR(ZoneMixing);
 
     if (!result) {
       LOG(Warn,"Creating GenericModelObject for IddObjectType '"
@@ -820,6 +822,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(YearDescription);
     REGISTER_COPYCONSTRUCTORS(ZoneAirContaminantBalance);
     REGISTER_COPYCONSTRUCTORS(ZoneAirHeatBalanceAlgorithm);
+    REGISTER_COPYCONSTRUCTORS(ZoneAirMassFlowConservation);
     REGISTER_COPYCONSTRUCTORS(ZoneCapacitanceMultiplierResearchSpecial);
     REGISTER_COPYCONSTRUCTORS(ZoneControlHumidistat);
     REGISTER_COPYCONSTRUCTORS(ZoneControlThermostatStagedDualSetpoint);
@@ -837,6 +840,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ZoneHVACTerminalUnitVariableRefrigerantFlow);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACWaterToAirHeatPump);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACUnitHeater);
+    REGISTER_COPYCONSTRUCTORS(ZoneMixing);
 
     if (!result) {
       LOG(Warn,"Creating GenericModelObject for IddObjectType '"
@@ -990,6 +994,58 @@ if (_className::iddObjectType() == typeToCreate) { \
     limits.setNumericType("Discrete");
 
     limits.setUnitType("Availability");
+
+    limits.setLowerLimitValue(0.0);
+
+    limits.setUpperLimitValue(1.0);
+
+    schedule.setScheduleTypeLimits(limits);
+
+    schedule.setValue(1.0);
+
+    return schedule;
+  }
+
+  Schedule Model_Impl::alwaysOnContinuousSchedule() const
+  {
+    std::string alwaysOnName("Always On Continuous");
+
+    std::vector<ScheduleConstant> schedules = model().getConcreteModelObjects<ScheduleConstant>();
+
+    for (const auto & schedule : schedules)
+    {
+      if (boost::optional<std::string> name = schedule.name())
+      {
+        if (istringEqual(name.get(), alwaysOnName))
+        {
+          if (equal<double>(schedule.value(), 1.0))
+          {
+            if (boost::optional<ScheduleTypeLimits> limits = schedule.scheduleTypeLimits())
+            {
+              if (boost::optional<std::string> type = limits->numericType())
+              {
+                if (istringEqual(type.get(), "Continuous"))
+                {
+                  return schedule;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    ScheduleConstant schedule(model());
+
+    schedule.setName(alwaysOnName);
+
+    ScheduleTypeLimits limits(model());
+
+    limits.setName("Fractional");
+
+    limits.setNumericType("Continuous");
+
+    limits.setUnitType("");
 
     limits.setLowerLimitValue(0.0);
 
@@ -1382,6 +1438,11 @@ boost::optional<WeatherFile> Model::weatherFile() const
 Schedule Model::alwaysOnDiscreteSchedule() const
 {
   return getImpl<detail::Model_Impl>()->alwaysOnDiscreteSchedule();
+}
+
+Schedule Model::alwaysOnContinuousSchedule() const
+{
+  return getImpl<detail::Model_Impl>()->alwaysOnContinuousSchedule();
 }
 
 SpaceType Model::plenumSpaceType() const

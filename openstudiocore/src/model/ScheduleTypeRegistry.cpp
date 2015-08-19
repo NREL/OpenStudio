@@ -336,6 +336,15 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"ZoneHVACWaterToAirHeatPump","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACWaterToAirHeatPump","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
     {"ZoneHVACUnitHeater","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    // className, scheduleDisplayName, scheduleRelationshipName, isContinuous, unitType, lowerLimitValue, upperLimitValue;
+    { "ZoneMixing", "Zone Mixing", "schedule", true, "", 0.0, 1.0},
+    { "ZoneMixing", "Delta Temperature", "deltaTemperatureSchedule", true, "Temperature", OptionalDouble(), OptionalDouble() },
+    { "ZoneMixing", "Minimum Zone Temperature", "minimumZoneTemperatureSchedule", true, "Temperature", OptionalDouble(), OptionalDouble() },
+    { "ZoneMixing", "Maximum Zone Temperature", "maximumZoneTemperatureSchedule", true, "Temperature", OptionalDouble(), OptionalDouble() },
+    { "ZoneMixing", "Minimum Source Zone Temperature", "minimumSourceZoneTemperatureSchedule", true, "Temperature", OptionalDouble(), OptionalDouble() },
+    { "ZoneMixing", "Maximum Source Zone Temperature", "maximumSourceZoneTemperatureSchedule", true, "Temperature", OptionalDouble(), OptionalDouble() },
+    { "ZoneMixing", "Minimum Outdoor Temperature", "minimumOutdoorTemperatureSchedule", true, "Temperature", OptionalDouble(), OptionalDouble() },
+    { "ZoneMixing", "Maximum Outdoor Temperature", "maximumOutdoorTemperatureSchedule", true, "Temperature", OptionalDouble(), OptionalDouble() },
     {"","","",true,"",OptionalDouble(),OptionalDouble()}
   };
 
