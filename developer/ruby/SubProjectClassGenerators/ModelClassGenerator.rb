@@ -24,7 +24,6 @@
 #
 ######################################################################
 
-require 'C:/Git/OpenStudio_3/build/OSCore-prefix/src/OSCore-build/ruby/Debug/openstudio.rb'
 require File.dirname(__FILE__) + '/SubProjectClassGenerator.rb'
 
 class ModelObjectField

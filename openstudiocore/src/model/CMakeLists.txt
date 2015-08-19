@@ -134,6 +134,12 @@ set(${target_name}_src
   BuildingStory.hpp
   BuildingStory_Impl.hpp
   BuildingStory.cpp
+  CentralHeatPumpSystem.hpp
+  CentralHeatPumpSystem_Impl.hpp
+  CentralHeatPumpSystem.cpp
+  CentralHeatPumpSystemModule.hpp
+  CentralHeatPumpSystemModule_Impl.hpp
+  CentralHeatPumpSystemModule.cpp
   CFactorUndergroundWallConstruction.hpp
   CFactorUndergroundWallConstruction_Impl.hpp
   CFactorUndergroundWallConstruction.cpp
@@ -146,6 +152,9 @@ set(${target_name}_src
   ChillerElectricEIR.hpp
   ChillerElectricEIR_Impl.hpp
   ChillerElectricEIR.cpp
+  ChillerHeaterPerformanceElectricEIR.hpp
+  ChillerHeaterPerformanceElectricEIR_Impl.hpp
+  ChillerHeaterPerformanceElectricEIR.cpp
   ClimateZones.hpp
   ClimateZones_Impl.hpp
   ClimateZones.cpp
@@ -389,6 +398,9 @@ set(${target_name}_src
   EvaporativeFluidCoolerSingleSpeed.hpp
   EvaporativeFluidCoolerSingleSpeed_Impl.hpp
   EvaporativeFluidCoolerSingleSpeed.cpp
+  EvaporativeFluidCoolerTwoSpeed.hpp
+  EvaporativeFluidCoolerTwoSpeed_Impl.hpp
+  EvaporativeFluidCoolerTwoSpeed.cpp
   ExteriorLights.hpp
   ExteriorLights_Impl.hpp
   ExteriorLights.cpp
@@ -529,6 +541,9 @@ set(${target_name}_src
   LightsDefinition.hpp
   LightsDefinition_Impl.hpp
   LightsDefinition.cpp
+  LoadProfilePlant.hpp
+  LoadProfilePlant_Impl.hpp
+  LoadProfilePlant.cpp
   Loop.hpp
   Loop_Impl.hpp
   Loop.cpp
@@ -598,6 +613,9 @@ set(${target_name}_src
   PlanarSurfaceGroup.hpp
   PlanarSurfaceGroup_Impl.hpp
   PlanarSurfaceGroup.cpp
+  PlantComponentTemperatureSource.hpp
+  PlantComponentTemperatureSource_Impl.hpp
+  PlantComponentTemperatureSource.cpp
   PlantLoop.hpp
   PlantLoop_Impl.hpp
   PlantLoop.cpp
@@ -910,6 +928,9 @@ set(${target_name}_src
   TableMultiVariableLookup.hpp
   TableMultiVariableLookup_Impl.hpp
   TableMultiVariableLookup.cpp
+  ThermalStorageChilledWaterStratified.hpp
+  ThermalStorageChilledWaterStratified_Impl.hpp
+  ThermalStorageChilledWaterStratified.cpp
   ThermalStorageIceDetailed.hpp
   ThermalStorageIceDetailed_Impl.hpp
   ThermalStorageIceDetailed.cpp
