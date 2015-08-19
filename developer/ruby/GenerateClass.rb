@@ -29,11 +29,11 @@
 ######################################################################
 
 require 'optparse'
-require File.dirname(__FILE__) + '/SubProjectClassGenerators/SubProjectClassGenerator.rb'
-require File.dirname(__FILE__) + '/SubProjectClassGenerators/ModelClassGenerator.rb'
-require File.dirname(__FILE__) + '/SubProjectClassGenerators/ProjectClassGenerator.rb'
-require File.dirname(__FILE__) + '/SubProjectClassGenerators/AnalysisClassGenerator.rb'
 
+require_relative 'SubProjectClassGenerators/SubProjectClassGenerator.rb'
+require_relative 'SubProjectClassGenerators/ModelClassGenerator.rb'
+require_relative 'SubProjectClassGenerators/ProjectClassGenerator.rb'
+require_relative 'SubProjectClassGenerators/AnalysisClassGenerator.rb'
 
 # HANDLE INPUT ARGUMENTS
 

@@ -311,6 +311,7 @@
 #include "YearDescription.hpp"
 #include "ZoneAirContaminantBalance.hpp"
 #include "ZoneAirHeatBalanceAlgorithm.hpp"
+#include "ZoneAirMassFlowConservation.hpp"
 #include "ZoneCapacitanceMultiplierResearchSpecial.hpp"
 #include "ZoneControlHumidistat.hpp"
 #include "ZoneControlThermostatStagedDualSetpoint.hpp"
@@ -334,6 +335,7 @@
 #include "ZoneHVACUnitHeater.hpp"
 #include "ZoneHVACUnitVentilator.hpp"
 #include "ZoneHVACWaterToAirHeatPump.hpp"
+#include "ZoneMixing.hpp"
 
 // include all concrete ModelObject Impls too
 #include "AirConditionerVariableRefrigerantFlow_Impl.hpp"
@@ -627,6 +629,7 @@
 #include "YearDescription_Impl.hpp"
 #include "ZoneAirContaminantBalance_Impl.hpp"
 #include "ZoneAirHeatBalanceAlgorithm_Impl.hpp"
+#include "ZoneAirMassFlowConservation_Impl.hpp"
 #include "ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp"
 #include "ZoneControlHumidistat_Impl.hpp"
 #include "ZoneControlThermostatStagedDualSetpoint_Impl.hpp"
@@ -650,5 +653,6 @@
 #include "ZoneHVACUnitHeater_Impl.hpp"
 #include "ZoneHVACUnitVentilator_Impl.hpp"
 #include "ZoneHVACWaterToAirHeatPump_Impl.hpp"
+#include "ZoneMixing_Impl.hpp"
 
 #endif // MODEL_CONCRETEMODELOBJECTS_HPP

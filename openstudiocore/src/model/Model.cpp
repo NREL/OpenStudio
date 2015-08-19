@@ -478,29 +478,25 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(YearDescription);
     REGISTER_CONSTRUCTOR(ZoneAirContaminantBalance);
     REGISTER_CONSTRUCTOR(ZoneAirHeatBalanceAlgorithm);
+    REGISTER_CONSTRUCTOR(ZoneAirMassFlowConservation);
     REGISTER_CONSTRUCTOR(ZoneCapacitanceMultiplierResearchSpecial);
     REGISTER_CONSTRUCTOR(ZoneControlHumidistat);
     REGISTER_CONSTRUCTOR(ZoneControlThermostatStagedDualSetpoint);
-    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveElectric);
-    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveWater);
-    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveElectric);
-    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveWater);
-    REGISTER_CONSTRUCTOR(ZoneHVACDehumidifierDX);
-    REGISTER_CONSTRUCTOR(ZoneHVACEnergyRecoveryVentilator);
-    REGISTER_CONSTRUCTOR(ZoneHVACEnergyRecoveryVentilatorController);
     REGISTER_CONSTRUCTOR(ZoneHVACEquipmentList);
+    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveElectric);  
+    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveWater);  
+    REGISTER_CONSTRUCTOR(ZoneHVACIdealLoadsAirSystem);
     REGISTER_CONSTRUCTOR(ZoneHVACFourPipeFanCoil);
     REGISTER_CONSTRUCTOR(ZoneHVACHighTemperatureRadiant);
-    REGISTER_CONSTRUCTOR(ZoneHVACIdealLoadsAirSystem);
     REGISTER_CONSTRUCTOR(ZoneHVACLowTemperatureRadiantElectric);
     REGISTER_CONSTRUCTOR(ZoneHVACLowTempRadiantConstFlow);
     REGISTER_CONSTRUCTOR(ZoneHVACLowTempRadiantVarFlow);
     REGISTER_CONSTRUCTOR(ZoneHVACPackagedTerminalHeatPump);
     REGISTER_CONSTRUCTOR(ZoneHVACPackagedTerminalAirConditioner);
     REGISTER_CONSTRUCTOR(ZoneHVACTerminalUnitVariableRefrigerantFlow);
-    REGISTER_CONSTRUCTOR(ZoneHVACUnitHeater);
-    REGISTER_CONSTRUCTOR(ZoneHVACUnitVentilator);
     REGISTER_CONSTRUCTOR(ZoneHVACWaterToAirHeatPump);
+    REGISTER_CONSTRUCTOR(ZoneHVACUnitHeater);
+    REGISTER_CONSTRUCTOR(ZoneMixing);
 
     if (!result) {
       LOG(Warn,"Creating GenericModelObject for IddObjectType '"
@@ -826,29 +822,25 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(YearDescription);
     REGISTER_COPYCONSTRUCTORS(ZoneAirContaminantBalance);
     REGISTER_COPYCONSTRUCTORS(ZoneAirHeatBalanceAlgorithm);
+    REGISTER_COPYCONSTRUCTORS(ZoneAirMassFlowConservation);
     REGISTER_COPYCONSTRUCTORS(ZoneCapacitanceMultiplierResearchSpecial);
     REGISTER_COPYCONSTRUCTORS(ZoneControlHumidistat);
     REGISTER_COPYCONSTRUCTORS(ZoneControlThermostatStagedDualSetpoint);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACEquipmentList);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardConvectiveElectric);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardConvectiveWater);
-    REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveElectric);
-    REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveWater);
-    REGISTER_COPYCONSTRUCTORS(ZoneHVACDehumidifierDX);
-    REGISTER_COPYCONSTRUCTORS(ZoneHVACEnergyRecoveryVentilator);
-    REGISTER_COPYCONSTRUCTORS(ZoneHVACEnergyRecoveryVentilatorController);
-    REGISTER_COPYCONSTRUCTORS(ZoneHVACEquipmentList);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACIdealLoadsAirSystem);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACFourPipeFanCoil);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACHighTemperatureRadiant);
-    REGISTER_COPYCONSTRUCTORS(ZoneHVACIdealLoadsAirSystem);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACLowTemperatureRadiantElectric);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACLowTempRadiantConstFlow);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACLowTempRadiantVarFlow);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACPackagedTerminalHeatPump);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACPackagedTerminalAirConditioner);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACTerminalUnitVariableRefrigerantFlow);
-    REGISTER_COPYCONSTRUCTORS(ZoneHVACUnitHeater);
-    REGISTER_COPYCONSTRUCTORS(ZoneHVACUnitVentilator);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACWaterToAirHeatPump);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACUnitHeater);
+    REGISTER_COPYCONSTRUCTORS(ZoneMixing);
 
     if (!result) {
       LOG(Warn,"Creating GenericModelObject for IddObjectType '"
@@ -962,6 +954,58 @@ if (_className::iddObjectType() == typeToCreate) { \
     return m_cachedWeatherFile;
   }
 
+  Schedule Model_Impl::alwaysOffDiscreteSchedule() const
+  {
+    std::string alwaysOffName("Always Off Discrete");
+
+    std::vector<ScheduleConstant> schedules = model().getConcreteModelObjects<ScheduleConstant>();
+
+    for( const auto & schedule : schedules )
+    {
+      if( boost::optional<std::string> name = schedule.name() )
+      {
+        if( istringEqual(name.get(),alwaysOffName) )
+        {
+          if( equal<double>(schedule.value(),1.0) )
+          {
+            if( boost::optional<ScheduleTypeLimits> limits = schedule.scheduleTypeLimits() )
+            {
+              if( boost::optional<std::string> type = limits->numericType() )
+              {
+                if( istringEqual(type.get(),"Discrete") )
+                {
+                  return schedule;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    ScheduleConstant schedule(model());
+
+    schedule.setName(alwaysOffName);
+
+    ScheduleTypeLimits limits(model());
+
+    limits.setName("OnOff");
+
+    limits.setNumericType("Discrete");
+
+    limits.setUnitType("Availability");
+
+    limits.setLowerLimitValue(0.0);
+
+    limits.setUpperLimitValue(1.0);
+
+    schedule.setScheduleTypeLimits(limits);
+
+    schedule.setValue(0.0);
+
+    return schedule;
+  }
+
   Schedule Model_Impl::alwaysOnDiscreteSchedule() const
   {
     std::string alwaysOnName("Always On Discrete");
@@ -1014,25 +1058,25 @@ if (_className::iddObjectType() == typeToCreate) { \
     return schedule;
   }
 
-Schedule Model_Impl::alwaysOffDiscreteSchedule() const
+  Schedule Model_Impl::alwaysOnContinuousSchedule() const
   {
-    std::string alwaysOffName("Always Off Discrete");
+    std::string alwaysOnName("Always On Continuous");
 
     std::vector<ScheduleConstant> schedules = model().getConcreteModelObjects<ScheduleConstant>();
 
-    for( const auto & schedule : schedules )
+    for (const auto & schedule : schedules)
     {
-      if( boost::optional<std::string> name = schedule.name() )
+      if (boost::optional<std::string> name = schedule.name())
       {
-        if( istringEqual(name.get(),alwaysOffName) )
+        if (istringEqual(name.get(), alwaysOnName))
         {
-          if( equal<double>(schedule.value(),1.0) )
+          if (equal<double>(schedule.value(), 1.0))
           {
-            if( boost::optional<ScheduleTypeLimits> limits = schedule.scheduleTypeLimits() )
+            if (boost::optional<ScheduleTypeLimits> limits = schedule.scheduleTypeLimits())
             {
-              if( boost::optional<std::string> type = limits->numericType() )
+              if (boost::optional<std::string> type = limits->numericType())
               {
-                if( istringEqual(type.get(),"Discrete") )
+                if (istringEqual(type.get(), "Continuous"))
                 {
                   return schedule;
                 }
@@ -1045,15 +1089,15 @@ Schedule Model_Impl::alwaysOffDiscreteSchedule() const
 
     ScheduleConstant schedule(model());
 
-    schedule.setName(alwaysOffName);
+    schedule.setName(alwaysOnName);
 
     ScheduleTypeLimits limits(model());
 
-    limits.setName("OnOff");
+    limits.setName("Fractional");
 
-    limits.setNumericType("Discrete");
+    limits.setNumericType("Continuous");
 
-    limits.setUnitType("Availability");
+    limits.setUnitType("");
 
     limits.setLowerLimitValue(0.0);
 
@@ -1061,7 +1105,7 @@ Schedule Model_Impl::alwaysOffDiscreteSchedule() const
 
     schedule.setScheduleTypeLimits(limits);
 
-    schedule.setValue(0.0);
+    schedule.setValue(1.0);
 
     return schedule;
   }
@@ -1443,14 +1487,19 @@ boost::optional<WeatherFile> Model::weatherFile() const
   return getImpl<detail::Model_Impl>()->weatherFile();
 }
 
+Schedule Model::alwaysOffDiscreteSchedule() const
+{
+  return getImpl<detail::Model_Impl>()->alwaysOffDiscreteSchedule();
+}
+
 Schedule Model::alwaysOnDiscreteSchedule() const
 {
   return getImpl<detail::Model_Impl>()->alwaysOnDiscreteSchedule();
 }
 
-Schedule Model::alwaysOffDiscreteSchedule() const
+Schedule Model::alwaysOnContinuousSchedule() const
 {
-  return getImpl<detail::Model_Impl>()->alwaysOffDiscreteSchedule();
+  return getImpl<detail::Model_Impl>()->alwaysOnContinuousSchedule();
 }
 
 SpaceType Model::plenumSpaceType() const

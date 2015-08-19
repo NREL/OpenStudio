@@ -39,6 +39,7 @@ class SizingParameters;
 class Timestep;
 class ZoneAirContaminantBalance;
 class ZoneAirHeatBalanceAlgorithm;
+class ZoneAirMassFlowConservation;
 class ZoneCapacitanceMultiplierResearchSpecial;
 
 namespace detail {
@@ -194,6 +195,9 @@ class MODEL_API SimulationControl : public ParentObject {
 
   /// Returns child ZoneAirHeatBalanceAlgorithm if it exists.
   boost::optional<ZoneAirHeatBalanceAlgorithm> zoneAirHeatBalanceAlgorithm() const;
+
+  /// Returns child ZoneAirMassFlowConservation object if it exists.
+  boost::optional<ZoneAirMassFlowConservation> zoneAirMassFlowConservation() const;
 
   /// Returns child ZoneCapacitanceMultiplierResearchSpecial if it exists.
   boost::optional<ZoneCapacitanceMultiplierResearchSpecial> zoneCapacitanceMultiplierResearchSpecial() const;

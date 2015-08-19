@@ -369,6 +369,8 @@ namespace detail {
     /** @name Other */
     //@{
 
+    boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const;
+
     //@}
    protected:
    private:

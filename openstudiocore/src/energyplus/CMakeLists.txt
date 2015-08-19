@@ -239,6 +239,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateWaterUseEquipment.cpp
   ForwardTranslator/ForwardTranslateWindowPropertyFrameAndDivider.cpp  
   ForwardTranslator/ForwardTranslateZoneAirHeatBalanceAlgorithm.cpp
+  ForwardTranslator/ForwardTranslateZoneAirMassFlowConservation.cpp
   ForwardTranslator/ForwardTranslateZoneControlHumidistat.cpp
   ForwardTranslator/ForwardTranslateZoneControlThermostatStagedDualSetpoint.cpp
   ForwardTranslator/ForwardTranslateZoneHVACBaseboardConvectiveElectric.cpp
@@ -261,6 +262,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateZoneHVACUnitHeater.cpp
   ForwardTranslator/ForwardTranslateZoneHVACUnitVentilator.cpp
   ForwardTranslator/ForwardTranslateZoneHVACWaterToAirHeatPump.cpp
+  ForwardTranslator/ForwardTranslateZoneMixing.cpp
   ForwardTranslator/CreateAirLoopHVACSupplyPath.cpp
   ForwardTranslator/CreateAirLoopHVACReturnPath.cpp
 
@@ -361,12 +363,15 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateWindowMaterialSimpleGlazingSystem.cpp
   ReverseTranslator/ReverseTranslateWindowPropertyFrameAndDivider.cpp  
   ReverseTranslator/ReverseTranslateZoneAirHeatBalanceAlgorithm.cpp
+  ReverseTranslator/ReverseTranslateZoneAirMassFlowConservation.cpp
   ReverseTranslator/ReverseTranslateZone.cpp
+  ReverseTranslator/ReverseTranslateZoneCrossMixing.cpp
   ReverseTranslator/ReverseTranslateZoneHVACEquipmentList.cpp
   ReverseTranslator/ReverseTranslateZoneHVACIdealLoadsAirSystem.cpp
   ReverseTranslator/ReverseTranslateZoneInfiltrationDesignFlowRate.cpp
   ReverseTranslator/ReverseTranslateZoneInfiltrationEffectiveLeakageArea.cpp
   ReverseTranslator/ReverseTranslateZoneList.cpp
+  ReverseTranslator/ReverseTranslateZoneMixing.cpp
   ReverseTranslator/ReverseTranslateZoneVentilationDesignFlowRate.cpp
 )
 

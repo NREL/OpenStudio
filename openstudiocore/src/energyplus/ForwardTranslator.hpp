@@ -263,6 +263,7 @@ class WaterUseConnections;
 class WaterUseEquipment;
 class WindowPropertyFrameAndDivider;
 class ZoneAirHeatBalanceAlgorithm;
+class ZoneAirMassFlowConservation;
 class ZoneControlHumidistat;
 class ZoneControlThermostatStagedDualSetpoint;
 class ZoneHVACBaseboardConvectiveElectric;
@@ -285,6 +286,7 @@ class ZoneHVACTerminalUnitVariableRefrigerantFlow;
 class ZoneHVACUnitHeater;
 class ZoneHVACUnitVentilator;
 class ZoneHVACWaterToAirHeatPump;
+class ZoneMixing;
 }
 
 namespace energyplus {
@@ -818,6 +820,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateZoneAirHeatBalanceAlgorithm( model::ZoneAirHeatBalanceAlgorithm & modelObject );
 
+  boost::optional<IdfObject> translateZoneAirMassFlowConservation(model::ZoneAirMassFlowConservation & modelObject);
+
   boost::optional<IdfObject> translateZoneControlHumidistat( model::ZoneControlHumidistat& modelObject );
 
   boost::optional<IdfObject> translateZoneControlThermostatStagedDualSetpoint( model::ZoneControlThermostatStagedDualSetpoint& modelObject );
@@ -861,6 +865,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateZoneHVACUnitVentilator( model::ZoneHVACUnitVentilator & modelObject );
 
   boost::optional<IdfObject> translateZoneHVACWaterToAirHeatPump( model::ZoneHVACWaterToAirHeatPump & modelObject );
+
+  boost::optional<IdfObject> translateZoneMixing( model::ZoneMixing & modelObject);
 
   boost::optional<IdfObject> createAirLoopHVACSupplyPath( model::AirLoopHVAC & airLoopHVAC );
 
