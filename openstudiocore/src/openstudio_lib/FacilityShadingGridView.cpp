@@ -166,6 +166,10 @@ namespace openstudio {
     layout->addStretch();
     filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, filterGridLayout->columnCount());
 
+    // Evan note TODO make this work with min and max degrees
+    label->hide();
+    m_orientationFilter->hide();
+
     // TILT
 
     layout = new QVBoxLayout();
@@ -184,9 +188,16 @@ namespace openstudio {
     auto validator = new QRegExpValidator(regex, this);
     m_tiltFilter->setValidator(validator);
 
+    // Evan note TODO make this work with min and max degrees
+    label->hide();
+    m_tiltFilter->hide(); 
+
     label = new QLabel();
     label->setText("rad");
     label->setObjectName("H3");
+
+    // Evan note TODO hide this label too, for now
+    label->hide();
 
     auto hLayout = new QHBoxLayout();
     hLayout->addWidget(m_tiltFilter, Qt::AlignTop | Qt::AlignLeft);
@@ -347,7 +358,6 @@ namespace openstudio {
     {
       std::vector<QString> fields;
       fields.push_back(SHADINGSURFACENAME);
-      fields.push_back(TYPE);
       fields.push_back(TRANSMITTANCESCHEDULENAME);
       fields.push_back(CONSTRUCTIONNAME);
       std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("General"), fields);
@@ -365,7 +375,8 @@ namespace openstudio {
   void FacilityShadingGridController::addColumns(const QString &category, std::vector<QString> & fields)
   {
     // always show name and selected columns
-    fields.insert(fields.begin(), { NAME, SELECTED });
+    // show type next to name, since it comes from the groups
+    fields.insert(fields.begin(), { NAME, TYPE, SELECTED });
 
     m_baseConcepts.clear();
 
@@ -379,6 +390,25 @@ namespace openstudio {
           CastNullAdapter<model::ShadingSurfaceGroup>(&model::ShadingSurfaceGroup::setName)
           );
       }
+      // Evan note: TODO to correctly use this column we need a new control --
+      // a dropzone for spaces, and a combo box with site and building as choices
+      else if (field == TYPE) {
+        std::function<std::vector<std::string>()> choices(
+          []() {
+          std::vector<std::string> choices{  "Site", "Building", "Space" };
+          return choices;
+        }
+        );
+
+        addComboBoxColumn(Heading(QString(TYPE)),
+          std::function<std::string(const std::string &)>(static_cast<std::string(*)(const std::string&)>(&openstudio::toString)),
+          choices,
+          CastNullAdapter<model::ShadingSurfaceGroup>(&model::ShadingSurfaceGroup::shadingSurfaceType),
+          CastNullAdapter<model::ShadingSurfaceGroup>(&model::ShadingSurfaceGroup::setShadingSurfaceType),
+          boost::optional<std::function<void(model::ShadingSurfaceGroup*)>>(),
+          boost::optional<std::function<bool(model::ShadingSurfaceGroup*)>>()
+          );
+      }
       else {
 
         std::function<std::vector<model::ModelObject>(const model::ShadingSurfaceGroup &)> allShadingSurfaces(
@@ -386,55 +416,6 @@ namespace openstudio {
           std::vector<model::ModelObject> allModelObjects;
           auto shadingSurfaces = t_shadingSurfaceGroup.shadingSurfaces();
           allModelObjects.insert(allModelObjects.end(), shadingSurfaces.begin(), shadingSurfaces.end());
-          return allModelObjects;
-        }
-        );
-
-        std::function<std::vector<std::string>(const model::ShadingSurfaceGroup &)> allTypes(
-          [](const model::ShadingSurfaceGroup &t_shadingSurfaceGroup) {
-          std::vector<std::string> allTypes;
-          auto shadingSurfaceType = t_shadingSurfaceGroup.shadingSurfaceType();
-          auto shadingSurfaces = t_shadingSurfaceGroup.shadingSurfaces();
-          for (auto shadingSurface : shadingSurfaces) {
-            allTypes.push_back(shadingSurfaceType);
-          }
-          return allTypes;
-        }
-        );
-
-        std::function<std::vector<boost::optional<model::ModelObject>>(const model::ShadingSurfaceGroup &)> allTransmittanceSchedules(
-          [](const model::ShadingSurfaceGroup &t_shadingSurfaceGroup) {
-          std::vector<boost::optional<model::ModelObject>> allModelObjects;
-          auto shadingSurfaces = t_shadingSurfaceGroup.shadingSurfaces();
-          for (auto shadingSurface : shadingSurfaces) {
-            auto transmittanceSchedule = shadingSurface.transmittanceSchedule();
-            if (transmittanceSchedule)
-            {
-              allModelObjects.push_back(transmittanceSchedule.get());
-            }
-            else {
-              allModelObjects.push_back(boost::optional<model::ModelObject>());
-            }
-          }
-          return allModelObjects;
-        }
-        );
-
-        std::function<std::vector<boost::optional<model::ModelObject> >(const model::ShadingSurfaceGroup &)> allConstructions(
-          [allShadingSurfaces](const model::ShadingSurfaceGroup &t_shadingSurfaceGroup) {
-          std::vector<boost::optional<model::ModelObject> > allModelObjects;
-          std::vector<boost::optional<model::ConstructionBase> > allConstructions;
-          for (auto shadingSurface : allShadingSurfaces(t_shadingSurfaceGroup)) {
-            auto construction = shadingSurface.cast<model::ShadingSurface>().construction();
-            if (construction) {
-              allConstructions.push_back(construction);
-            }
-            else {
-              allConstructions.push_back(boost::optional<model::ConstructionBase>());
-            }
-          }
-          allModelObjects.insert(allModelObjects.end(), allConstructions.begin(), allConstructions.end());
-
           return allModelObjects;
         }
         );
@@ -448,27 +429,6 @@ namespace openstudio {
           addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row",
             DataSource(
             allShadingSurfaces,
-            true
-            )
-            );
-        }
-        else if (field == TYPE) {
-          std::function<std::vector<std::string>()> choices(
-            []() {
-            std::vector<std::string> choices{"Building","Site"};
-            return choices;
-          }
-          );
-
-          addComboBoxColumn(Heading(QString(TYPE)),
-            std::function<std::string(const std::string &)>(static_cast<std::string(*)(const std::string&)>(&openstudio::toString)),
-            choices,
-            CastNullAdapter<model::ShadingSurfaceGroup>(&model::ShadingSurfaceGroup::shadingSurfaceType),
-            CastNullAdapter<model::ShadingSurfaceGroup>(&model::ShadingSurfaceGroup::setShadingSurfaceType),
-            boost::optional<std::function<void(model::ShadingSurfaceGroup*)>>(),
-            boost::optional<std::function<bool(model::ShadingSurfaceGroup*)>>(),
-            DataSource(
-            allTypes,
             true
             )
             );
@@ -497,7 +457,7 @@ namespace openstudio {
             CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::setConstruction),
             boost::optional<std::function<void(model::ShadingSurface*)> >(NullAdapter(&model::ShadingSurface::resetConstruction)),
             DataSource(
-            allConstructions,
+            allShadingSurfaces,
             true
             )
             );
@@ -515,7 +475,7 @@ namespace openstudio {
             setter,
             boost::optional<std::function<void(model::ShadingSurface*)>>(CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::resetTransmittanceSchedule)),
             DataSource(
-            allTransmittanceSchedules,
+            allShadingSurfaces,
             true
             )
             );
