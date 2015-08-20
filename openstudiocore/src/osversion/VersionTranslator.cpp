@@ -2559,7 +2559,8 @@ std::string VersionTranslator::update_1_8_3_to_1_8_4(const IdfFile& idf_1_8_3, c
   ss << targetIdf.versionObject().get();
 
   for (const IdfObject& object : idf_1_8_3.objects()) {
-    if (object.iddObject().name() == "OS:PlantLoop") {
+    auto iddname = object.iddObject().name();
+    if (iddname == "OS:PlantLoop") {
       auto iddObject = idd_1_8_4.getObject("OS:PlantLoop");
       OS_ASSERT(iddObject);
       IdfObject newObject(iddObject.get());
@@ -2578,8 +2579,8 @@ std::string VersionTranslator::update_1_8_3_to_1_8_4(const IdfFile& idf_1_8_3, c
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
-    if (iddname == "OS:AirLoopHVAC") {
-      auto iddObject = idd_1_8_2.getObject("OS:AirLoopHVAC");
+    } else if (iddname == "OS:AirLoopHVAC") {
+      auto iddObject = idd_1_8_4.getObject("OS:AirLoopHVAC");
       OS_ASSERT(iddObject);
       IdfObject newObject(iddObject.get());
 
@@ -2599,22 +2600,22 @@ std::string VersionTranslator::update_1_8_3_to_1_8_4(const IdfFile& idf_1_8_3, c
       // AvailabilityManagerAssignmentList
       auto availabilityManagerListHandle = object.getString(3);
       OS_ASSERT(availabilityManagerListHandle);
-      auto availabilityManagerList = idf_1_8_1.getObject(toUUID(availabilityManagerListHandle.get()));
+      auto availabilityManagerList = idf_1_8_3.getObject(toUUID(availabilityManagerListHandle.get()));
       OS_ASSERT(availabilityManagerList);
 
       auto availabilityManagerScheduledHandle = availabilityManagerList->getString(2);
       OS_ASSERT(availabilityManagerScheduledHandle);
-      auto availabilityManagerScheduled = idf_1_8_1.getObject(toUUID(availabilityManagerScheduledHandle.get()));
+      auto availabilityManagerScheduled = idf_1_8_3.getObject(toUUID(availabilityManagerScheduledHandle.get()));
       OS_ASSERT(availabilityManagerScheduled);
 
       auto availabilityScheduleHandle = availabilityManagerScheduled->getString(2);
       OS_ASSERT(availabilityScheduleHandle);
-      auto availabilitySchedule = idf_1_8_1.getObject(toUUID(availabilityScheduleHandle.get()));
+      auto availabilitySchedule = idf_1_8_3.getObject(toUUID(availabilityScheduleHandle.get()));
       OS_ASSERT(availabilitySchedule);
 
       auto availabilityManagerNightCycleHandle = availabilityManagerList->getString(3);
       OS_ASSERT(availabilityManagerNightCycleHandle);
-      auto availabilityManagerNightCycle = idf_1_8_1.getObject(toUUID(availabilityManagerNightCycleHandle.get()));
+      auto availabilityManagerNightCycle = idf_1_8_3.getObject(toUUID(availabilityManagerNightCycleHandle.get()));
       OS_ASSERT(availabilityManagerNightCycle);
 
       auto controlType = availabilityManagerNightCycle->getString(4);
