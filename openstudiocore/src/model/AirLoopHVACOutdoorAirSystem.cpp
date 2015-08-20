@@ -19,8 +19,6 @@
 
 #include "AirLoopHVACOutdoorAirSystem.hpp"
 #include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
-#include "AvailabilityManagerScheduled.hpp"
-#include "AvailabilityManagerScheduled_Impl.hpp"
 #include "AirToAirComponent.hpp"
 #include "AirToAirComponent_Impl.hpp"
 #include "WaterToAirComponent.hpp"

@@ -21,6 +21,10 @@
 #include "../../model/Model.hpp"
 #include "../../model/AirLoopHVAC.hpp"
 #include "../../model/AirLoopHVAC_Impl.hpp"
+#include "../../model/AvailabilityManager.hpp"
+#include "../../model/AvailabilityManager_Impl.hpp"
+#include "../../model/AvailabilityManagerHybridVentilation.hpp"
+#include "../../model/AvailabilityManagerHybridVentilation_Impl.hpp"
 #include "../../model/SizingSystem.hpp"
 #include "../../model/SizingSystem_Impl.hpp"
 #include "../../model/CoilCoolingWater.hpp"
@@ -78,6 +82,7 @@
 #include <utilities/idd/BranchList_FieldEnums.hxx>
 #include <utilities/idd/Branch_FieldEnums.hxx>
 #include <utilities/idd/Schedule_Compact_FieldEnums.hxx>
+#include <utilities/idd/SetpointManager_ReturnAirBypassFlow_FieldEnums.hxx>
 #include <utilities/idd/Sizing_System_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -314,48 +319,33 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   idfObject.setString(openstudio::AirLoopHVACFields::AvailabilityManagerListName,
                       availabilityManagerAssignmentListIdf.name().get());
 
-  Schedule availabilitySchedule = airLoopHVAC.availabilitySchedule();
-  boost::optional<IdfObject> availabilityScheduleIdf = translateAndMapModelObject(availabilitySchedule);
+  auto createdAvailabilityManagerScheduled = [&]() {
+    IdfObject idf(IddObjectType::AvailabilityManager_Scheduled);
+    idf.setName(airLoopHVACName + " Availability Manager");
+    m_idfObjects.push_back(idf);
 
-  if( ! istringEqual(airLoopHVAC.nightCycleControlType(),"StayOff") )
-  {
-    nightCycleIdf = IdfObject(openstudio::IddObjectType::AvailabilityManager_NightCycle);
-    nightCycleIdf->setName(airLoopHVACName + " NightCycle Manager");
-    m_idfObjects.push_back(nightCycleIdf.get());
+    idf.setString(openstudio::AvailabilityManager_ScheduledFields::ScheduleName,
+      airLoopHVAC.availabilitySchedule().name().get());
 
-    nightCycleIdf->setString(openstudio::AvailabilityManager_NightCycleFields::ControlType,airLoopHVAC.nightCycleControlType());
-    nightCycleIdf->setString(openstudio::AvailabilityManager_NightCycleFields::ApplicabilityScheduleName,alwaysOnIdf.name().get());
+    auto eg = availabilityManagerAssignmentListIdf.pushExtensibleGroup();
+    eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerObjectType,idf.iddObject().name());
+    eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName,idf.name().get());
+  };
 
-    nightCycleIdf->setDouble(openstudio::AvailabilityManager_NightCycleFields::ThermostatTolerance,1.0);
-    nightCycleIdf->setUnsigned(openstudio::AvailabilityManager_NightCycleFields::CyclingRunTime,3600);
-
-    // ForwardTranslateFanX will write set the Fan's availability schedule to AirLoopHVAC::availabilitySchedule() if the fan is connected to an AirLoopHVAC object.
-    if( availabilityScheduleIdf )
-    {
-      nightCycleIdf->setString(openstudio::AvailabilityManager_NightCycleFields::FanScheduleName,availabilityScheduleIdf->name().get());
+  if( auto availabilityManager = airLoopHVAC.availabilityManager() ) {
+    auto idf = translateAndMapModelObject(availabilityManager.get());
+    OS_ASSERT(idf);
+    if( availabilityManager->optionalCast<model::AvailabilityManagerHybridVentilation>() ) {
+      // AvailabilityManagerHybridVentilation is an odd duck, it is not allowed on availabilityManagerAssignmentList.
+      // Poor thing :(
+      createdAvailabilityManagerScheduled();
+    } else {
+      auto eg = availabilityManagerAssignmentListIdf.pushExtensibleGroup();
+      eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerObjectType,idf->iddObject().name());
+      eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName,idf->name().get());
     }
-
-    availabilityManagerAssignmentListIdf.setString(1 + openstudio::AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerObjectType,
-                                                nightCycleIdf->iddObject().name());
-    availabilityManagerAssignmentListIdf.setString(1 + openstudio::AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName,
-                                                nightCycleIdf->name().get());
-  }
-  else
-  {
-    IdfObject availabilityManagerScheduledIdf = IdfObject(openstudio::IddObjectType::AvailabilityManager_Scheduled);
-    availabilityManagerScheduledIdf.setName(airLoopHVACName + " Availability Manager");
-    m_idfObjects.push_back(availabilityManagerScheduledIdf);
-
-    if( availabilityScheduleIdf )
-    {
-      availabilityManagerScheduledIdf.setString(openstudio::AvailabilityManager_ScheduledFields::ScheduleName,
-                                                availabilityScheduleIdf->name().get());
-    }
-
-    availabilityManagerAssignmentListIdf.setString(1 + openstudio::AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerObjectType,
-                                                availabilityManagerScheduledIdf.iddObject().name());
-    availabilityManagerAssignmentListIdf.setString(1 + openstudio::AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName,
-                                                availabilityManagerScheduledIdf.name().get());
+  } else {
+    createdAvailabilityManagerScheduled();
   }
 
   // Design Supply Air Flow Rate
@@ -553,6 +543,30 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   // Demand Side Outlet Node Name
   idfObject.setString(openstudio::AirLoopHVACFields::DemandSideOutletNodeName,
                       airLoopHVAC.demandOutletNode().name().get());
+
+  // Not possible currently in OS, uncomment later
+  // Return Air Bypass Flow Temperature Setpoint Schedule Name
+  // if( boost::optional<Schedule> returnAirBypassFlowTemperatureSetpointSchedule = airLoopHVAC.returnAirBypassFlowTemperatureSetpointSchedule() )
+  // {
+  //   boost::optional<IdfObject> _returnAirBypassFlowTemperatureSetpointSchedule = translateAndMapModelObject(returnAirBypassFlowTemperatureSetpointSchedule.get());
+  //   if( _returnAirBypassFlowTemperatureSetpointSchedule && _returnAirBypassFlowTemperatureSetpointSchedule->name() )
+  //   {
+  //     IdfObject _returnAirBypassFlowSPM(IddObjectType::SetpointManager_ReturnAirBypassFlow);
+  //     m_idfObjects.push_back(_returnAirBypassFlowSPM);
+
+  //     // Name
+  //     _returnAirBypassFlowSPM.setName(airLoopHVACName + " Return Air Bypass Flow");
+
+  //     // Control Variable
+  //     _returnAirBypassFlowSPM.setString(SetpointManager_ReturnAirBypassFlowFields::ControlVariable,"Flow");
+
+  //     // HVAC Air Loop Name
+  //     _returnAirBypassFlowSPM.setString(SetpointManager_ReturnAirBypassFlowFields::HVACAirLoopName,airLoopHVACName);
+
+  //     // Temperature Setpoint Schedule Name
+  //     _returnAirBypassFlowSPM.setString(SetpointManager_ReturnAirBypassFlowFields::TemperatureSetpointScheduleName,_returnAirBypassFlowTemperatureSetpointSchedule->name().get());
+  //   }
+  // }
 
   // Convert demand side components
   createAirLoopHVACSupplyPath(airLoopHVAC);

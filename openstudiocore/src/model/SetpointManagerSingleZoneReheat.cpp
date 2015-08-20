@@ -23,7 +23,6 @@
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 #include "AirLoopHVAC.hpp"
-#include "AirLoopHVACOutdoorAirSystem.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "../utilities/core/Assert.hpp"

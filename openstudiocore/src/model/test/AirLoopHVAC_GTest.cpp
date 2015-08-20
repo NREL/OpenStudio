@@ -21,6 +21,16 @@
 #include "ModelFixture.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../AirLoopHVAC_Impl.hpp"
+#include "../AvailabilityManager.hpp"
+#include "../AvailabilityManager_Impl.hpp"
+#include "../AvailabilityManagerNightCycle.hpp"
+#include "../AvailabilityManagerNightCycle_Impl.hpp"
+#include "../AvailabilityManagerHybridVentilation.hpp"
+#include "../AvailabilityManagerHybridVentilation_Impl.hpp"
+#include "../AvailabilityManagerNightVentilation.hpp"
+#include "../AvailabilityManagerNightVentilation_Impl.hpp"
+#include "../AvailabilityManagerOptimumStart.hpp"
+#include "../AvailabilityManagerOptimumStart_Impl.hpp"
 #include "../AirLoopHVACSupplyPlenum.hpp"
 #include "../AirLoopHVACReturnPlenum.hpp"
 #include "../CoilHeatingWater.hpp"
@@ -39,6 +49,9 @@
 #include "../ThermalZone.hpp"
 #include "../ScheduleCompact.hpp"
 #include "../ScheduleTypeLimits.hpp"
+#include "../ScheduleRuleset.hpp"
+#include "../ScheduleDay.hpp"
+#include "../../utilities/time/Time.hpp"
 #include "../FanConstantVolume.hpp"
 #include "../FanConstantVolume_Impl.hpp"
 #include "../FanVariableVolume.hpp"
@@ -710,3 +723,77 @@ TEST_F(ModelFixture,AirLoopHVAC_fans)
   }
    
 }
+
+// Not possible in OS currently, uncomment in future
+// TEST_F(ModelFixture,AirLoopHVAC_returnAirBypassFlow)
+// {
+//   Model m;
+//   AirLoopHVAC airSystem(m);
+
+//   auto schedule = ScheduleRuleset(m);
+//   schedule.defaultDaySchedule().addValue( openstudio::Time(0, 24, 0), 50 );
+
+//   EXPECT_TRUE( airSystem.setReturnAirBypassFlowTemperatureSetpointSchedule( schedule ) );
+
+//   auto airSystem_schedule = airSystem.returnAirBypassFlowTemperatureSetpointSchedule();
+
+//   ASSERT_TRUE( airSystem_schedule );
+//   EXPECT_EQ( schedule, airSystem_schedule.get() );
+
+//   airSystem.resetReturnAirBypassFlowTemperatureSetpointSchedule();
+
+//   EXPECT_FALSE( airSystem.returnAirBypassFlowTemperatureSetpointSchedule() );
+   
+// }
+
+TEST_F(ModelFixture,AirLoopHVAC_Availability)
+{
+  Model m;
+  AirLoopHVAC airLoopHVAC(m);
+
+  {
+    auto schedule = m.alwaysOnDiscreteSchedule();
+    EXPECT_EQ(schedule,airLoopHVAC.availabilitySchedule()); 
+  } 
+
+  EXPECT_FALSE(airLoopHVAC.availabilityManager());
+
+  {
+    airLoopHVAC.setNightCycleControlType("CycleOnAny");  
+    auto availabilityManager = airLoopHVAC.availabilityManager();
+    EXPECT_TRUE(availabilityManager);
+    auto nightCycle = availabilityManager->optionalCast<AvailabilityManagerNightCycle>();
+    EXPECT_TRUE(nightCycle);
+    EXPECT_EQ("CycleOnAny",nightCycle->controlType());
+
+    nightCycle->remove();
+    EXPECT_FALSE(airLoopHVAC.availabilityManager());
+    EXPECT_EQ("StayOff",airLoopHVAC.nightCycleControlType());
+  }
+
+  {
+    AvailabilityManagerHybridVentilation availabilityManager(m);
+    EXPECT_TRUE(airLoopHVAC.setAvailabilityManager(availabilityManager));
+    auto availabilityManager2 = airLoopHVAC.availabilityManager();
+    EXPECT_TRUE(availabilityManager2);
+    EXPECT_EQ(availabilityManager2.get(),availabilityManager);
+  }
+
+  {
+    AvailabilityManagerNightVentilation availabilityManager(m);
+    EXPECT_TRUE(airLoopHVAC.setAvailabilityManager(availabilityManager));
+    auto availabilityManager2 = airLoopHVAC.availabilityManager();
+    EXPECT_TRUE(availabilityManager2);
+    EXPECT_EQ(availabilityManager2.get(),availabilityManager);
+  }
+
+  {
+    AvailabilityManagerOptimumStart availabilityManager(m);
+    EXPECT_TRUE(airLoopHVAC.setAvailabilityManager(availabilityManager));
+    auto availabilityManager2 = airLoopHVAC.availabilityManager();
+    EXPECT_TRUE(availabilityManager2);
+    EXPECT_EQ(availabilityManager2.get(),availabilityManager);
+  }
+
+}
+

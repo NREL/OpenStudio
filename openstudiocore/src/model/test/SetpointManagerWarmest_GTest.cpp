@@ -154,7 +154,7 @@ TEST_F(ModelFixture, SetpointManagerWarmest_customDataClone)
   EXPECT_EQ(999.9, testObjectClone.minimumSetpointTemperature());
 }
 
-TEST_F(ModelFixture,SetpointManagerOutdoorAirReset) {
+TEST_F(ModelFixture, SetpointManagerWarmest_legacy) {
   Model model;
 
   SetpointManagerWarmest setpointManagerWarmest(model);
