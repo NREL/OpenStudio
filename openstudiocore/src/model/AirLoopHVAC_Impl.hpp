@@ -114,6 +114,8 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   virtual IddObjectType iddObjectType() const override;
 
+  virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+
   Splitter demandSplitter() override;
 
   Mixer demandMixer() override;
@@ -161,6 +163,12 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
   bool setNightCycleControlType(std::string nightCycle);
 
   std::string nightCycleControlType() const;
+
+  // boost::optional<Schedule> returnAirBypassFlowTemperatureSetpointSchedule() const;
+
+  // bool setReturnAirBypassFlowTemperatureSetpointSchedule(Schedule & temperatureSetpointSchedule);
+
+  // void resetReturnAirBypassFlowTemperatureSetpointSchedule();
 
   static bool addBranchForZoneImpl(ThermalZone & thermalZone, 
                                    AirLoopHVAC & airLoopHVAC,

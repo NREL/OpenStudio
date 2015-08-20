@@ -23,6 +23,7 @@
 
 #include "../SetpointManagerWarmestTemperatureFlow.hpp"
 #include "../SetpointManagerWarmestTemperatureFlow_Impl.hpp"
+#include "../Node.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

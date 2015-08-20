@@ -418,15 +418,25 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ScheduleWeek);
     REGISTER_CONSTRUCTOR(ScheduleYear);
     REGISTER_CONSTRUCTOR(Screen);
+    REGISTER_CONSTRUCTOR(SetpointManagerColdest);
+    REGISTER_CONSTRUCTOR(SetpointManagerFollowGroundTemperature);
     REGISTER_CONSTRUCTOR(SetpointManagerFollowOutdoorAirTemperature);
+    REGISTER_CONSTRUCTOR(SetpointManagerFollowSystemNodeTemperature);
     REGISTER_CONSTRUCTOR(SetpointManagerMixedAir);
+    REGISTER_CONSTRUCTOR(SetpointManagerMultiZoneCoolingAverage);
+    REGISTER_CONSTRUCTOR(SetpointManagerMultiZoneHeatingAverage);
+    REGISTER_CONSTRUCTOR(SetpointManagerMultiZoneHumidityMaximum);
     REGISTER_CONSTRUCTOR(SetpointManagerMultiZoneHumidityMinimum);
+    REGISTER_CONSTRUCTOR(SetpointManagerMultiZoneMaximumHumidityAverage);
     REGISTER_CONSTRUCTOR(SetpointManagerMultiZoneMinimumHumidityAverage);
     REGISTER_CONSTRUCTOR(SetpointManagerOutdoorAirPretreat);
     REGISTER_CONSTRUCTOR(SetpointManagerOutdoorAirReset);
     REGISTER_CONSTRUCTOR(SetpointManagerScheduled);
     REGISTER_CONSTRUCTOR(SetpointManagerScheduledDualSetpoint);
+    REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneHumidityMaximum);
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneHumidityMinimum);
+    REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneOneStageCooling);
+    REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneOneStageHeating);
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneReheat);
     REGISTER_CONSTRUCTOR(SetpointManagerWarmest);
     REGISTER_CONSTRUCTOR(SetpointManagerWarmestTemperatureFlow);
@@ -506,6 +516,12 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ZoneHVACTerminalUnitVariableRefrigerantFlow);
     REGISTER_CONSTRUCTOR(ZoneHVACWaterToAirHeatPump);
     REGISTER_CONSTRUCTOR(ZoneHVACUnitHeater);
+    REGISTER_CONSTRUCTOR(ZoneHVACDehumidifierDX);
+    REGISTER_CONSTRUCTOR(ZoneHVACEnergyRecoveryVentilatorController);
+    REGISTER_CONSTRUCTOR(ZoneHVACEnergyRecoveryVentilator);
+    REGISTER_CONSTRUCTOR(ZoneHVACUnitVentilator);
+    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveWater);
+    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveElectric);
     REGISTER_CONSTRUCTOR(ZoneMixing);
 
     if (!result) {
@@ -772,15 +788,25 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ScheduleWeek);
     REGISTER_COPYCONSTRUCTORS(ScheduleYear);
     REGISTER_COPYCONSTRUCTORS(Screen);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerColdest);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerFollowGroundTemperature);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerFollowOutdoorAirTemperature);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerFollowSystemNodeTemperature);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerMixedAir);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerMultiZoneCoolingAverage);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerMultiZoneHeatingAverage);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerMultiZoneHumidityMaximum);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerMultiZoneHumidityMinimum);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerMultiZoneMaximumHumidityAverage);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerMultiZoneMinimumHumidityAverage);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerOutdoorAirPretreat);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerOutdoorAirReset);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerScheduled);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerScheduledDualSetpoint);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneHumidityMaximum);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneHumidityMinimum);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneOneStageCooling);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneOneStageHeating);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneReheat);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerWarmest);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerWarmestTemperatureFlow);
@@ -860,6 +886,12 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ZoneHVACTerminalUnitVariableRefrigerantFlow);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACWaterToAirHeatPump);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACUnitHeater);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACDehumidifierDX);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACEnergyRecoveryVentilatorController);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACEnergyRecoveryVentilator);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACUnitVentilator);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveWater);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveElectric);
     REGISTER_COPYCONSTRUCTORS(ZoneMixing);
 
     if (!result) {

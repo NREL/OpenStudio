@@ -191,24 +191,46 @@
     <file>images/run_simulation_button.png</file>
     <file>images/searchbox_magnifyingglass.png</file>
     <file>images/series_fan_terminal.png</file>
-    <file>images/setpoint_dual.png</file>
+    <file>images/setpoint_coldest.png</file>
+    <file>images/setpoint_coldest_right.png</file>
+    <file>images/setpoint_follow_ground_temp.png</file>
+    <file>images/setpoint_follow_ground_temp_right.png</file>
     <file>images/setpoint_follow_outdoorair.png</file>
     <file>images/setpoint_follow_outdoorair_right.png</file>
+    <file>images/setpoint_follow_system_node.png</file>
+    <file>images/setpoint_follow_system_node_right.png</file>
     <file>images/setpoint_mixed.png</file>
     <file>images/setpoint_mixed_right.png</file>
-    <file>images/setpoint_multi_zone_humidity_ave.png</file>
-    <file>images/setpoint_multi_zone_humidity_ave_right.png</file>
-    <file>images/setpoint_multi_zone_humidity_min.png</file>
-    <file>images/setpoint_multi_zone_humidity_min_right.png</file>
+    <file>images/setpoint_multizone_cooling.png</file>
+    <file>images/setpoint_multizone_cooling_right.png</file>
+    <file>images/setpoint_multizone_heating.png</file>
+    <file>images/setpoint_multizone_heating_right.png</file>
+    <file>images/setpoint_multizone_humidity_max.png</file>
+    <file>images/setpoint_multizone_humidity_max_right.png</file>
+    <file>images/setpoint_multizone_humidity_min.png</file>
+    <file>images/setpoint_multizone_humidity_min_right.png</file>
+    <file>images/setpoint_multizone_maxhumidity_avg.png</file>
+    <file>images/setpoint_multizone_maxhumidity_avg_right.png</file>
+    <file>images/setpoint_multizone_minhumidity_avg.png</file>
+    <file>images/setpoint_multizone_minhumidity_avg_right.png</file>
+    <file>images/setpoint_pretreat.png</file>
+    <file>images/setpoint_pretreat_right.png</file>
     <file>images/setpoint_outdoorair.png</file>
     <file>images/setpoint_outdoorair_right.png</file>
-    <file>images/setpoint_pretreat.png</file>
     <file>images/setpoint_scheduled.png</file>
     <file>images/setpoint_scheduled_right.png</file>
+    <file>images/setpoint_dual.png</file>
+    <file>images/setpoint_dual_right.png</file>
+    <file>images/setpoint_singlezone_humidity_max.png</file>
+    <file>images/setpoint_singlezone_humidity_max_right.png</file>
+    <file>images/setpoint_singlezone_humidity_min.png</file>
+    <file>images/setpoint_singlezone_humidity_min_right.png</file>
+    <file>images/setpoint_onestage_cooling.png</file>
+    <file>images/setpoint_onestage_cooling_right.png</file>
+    <file>images/setpoint_onestage_heating.png</file>
+    <file>images/setpoint_onestage_heating_right.png</file>
     <file>images/setpoint_singlezone.png</file>
     <file>images/setpoint_singlezone_right.png</file>
-    <file>images/setpoint_single_zone_humidity_min.png</file>
-    <file>images/setpoint_single_zone_humidity_min_right.png</file>
     <file>images/setpoint_warmest.png</file>
     <file>images/setpoint_warmest_right.png</file>
     <file>images/setpoint_warmest_tempflow.png</file>
@@ -420,11 +442,26 @@
     <file>images/mini_icons/schedule.png</file>
     <file>images/mini_icons/series_fan_terminal.png</file>
     <file>images/mini_icons/setpoint_dual.png</file>
+    <file>images/mini_icons/setpoint_coldest.png</file>
+    <file>images/mini_icons/setpoint_follow_ground_temp.png</file>
     <file>images/mini_icons/setpoint_follow_outdoorair.png</file>
+    <file>images/mini_icons/setpoint_follow_system_node.png</file>
     <file>images/mini_icons/setpoint_mixed.png</file>
+    <file>images/mini_icons/setpoint_multizone_cooling.png</file>
+    <file>images/mini_icons/setpoint_multizone_heating.png</file>
+    <file>images/mini_icons/setpoint_multizone_humidity_max.png</file>
+    <file>images/mini_icons/setpoint_multizone_humidity_min.png</file>
+    <file>images/mini_icons/setpoint_multizone_maxhumidity_avg.png</file>
+    <file>images/mini_icons/setpoint_multizone_minhumidity_avg.png</file>
+    <file>images/mini_icons/setpoint_pretreat.png</file>
     <file>images/mini_icons/setpoint_outdoorair.png</file>
     <file>images/mini_icons/setpoint_pretreat.png</file>
     <file>images/mini_icons/setpoint_scheduled.png</file>
+    <file>images/mini_icons/setpoint_dual.png</file>
+    <file>images/mini_icons/setpoint_singlezone_humidity_max.png</file>
+    <file>images/mini_icons/setpoint_singlezone_humidity_min.png</file>
+    <file>images/mini_icons/setpoint_onestage_cooling.png</file>
+    <file>images/mini_icons/setpoint_onestage_heating.png</file>
     <file>images/mini_icons/setpoint_singlezone.png</file>
     <file>images/mini_icons/setpoint_warmest.png</file>
     <file>images/mini_icons/setpoint_warmest_tempflow.png</file>

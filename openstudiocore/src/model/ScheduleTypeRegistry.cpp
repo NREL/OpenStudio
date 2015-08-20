@@ -138,6 +138,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"AirConditionerVariableRefrigerantFlow","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirConditionerVariableRefrigerantFlow","Thermostat Priority Schedule","thermostatPrioritySchedule",false,"ControlMode",0.0,1.0},
     {"AirConditionerVariableRefrigerantFlow","Basin Heater Operating Schedule","basinHeaterOperatingSchedule",false,"Availability",0.0,1.0},
+    {"AirLoopHVAC","Return Air Bypass Flow Temperature Setpoint","returnAirBypassFlowTemperatureSetpointSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass","Outdoor Air Flow Rate Multiplier Schedule","outdoorAirFlowRateMultiplierSchedule",true,"",0.0,1.0},
     {"AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass","Supply Air Fan Operating Mode Schedule","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},

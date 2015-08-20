@@ -207,15 +207,25 @@ class RunPeriod;
 class RunPeriodControlDaylightSavingTime;
 class RunPeriodControlSpecialDays;
 class Screen;
+class SetpointManagerColdest;
+class SetpointManagerFollowGroundTemperature;
 class SetpointManagerFollowOutdoorAirTemperature;
+class SetpointManagerFollowSystemNodeTemperature;
 class SetpointManagerMixedAir;
+class SetpointManagerMultiZoneCoolingAverage;
+class SetpointManagerMultiZoneHeatingAverage;
+class SetpointManagerMultiZoneHumidityMaximum;
 class SetpointManagerMultiZoneHumidityMinimum;
+class SetpointManagerMultiZoneMaximumHumidityAverage;
 class SetpointManagerMultiZoneMinimumHumidityAverage;
 class SetpointManagerOutdoorAirPretreat;
 class SetpointManagerOutdoorAirReset;
 class SetpointManagerScheduled;
 class SetpointManagerScheduledDualSetpoint;
+class SetpointManagerSingleZoneHumidityMaximum;
 class SetpointManagerSingleZoneHumidityMinimum;
+class SetpointManagerSingleZoneOneStageCooling;
+class SetpointManagerSingleZoneOneStageHeating;
 class SetpointManagerSingleZoneReheat;
 class SetpointManagerWarmest;
 class SetpointManagerWarmestTemperatureFlow;
@@ -733,11 +743,25 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateScreen( model::Screen & modelObject );
 
+  boost::optional<IdfObject> translateSetpointManagerColdest( model::SetpointManagerColdest & modelObject );
+
+  boost::optional<IdfObject> translateSetpointManagerFollowGroundTemperature( model::SetpointManagerFollowGroundTemperature & modelObject );
+
   boost::optional<IdfObject> translateSetpointManagerFollowOutdoorAirTemperature( model::SetpointManagerFollowOutdoorAirTemperature & modelObject );
+
+  boost::optional<IdfObject> translateSetpointManagerFollowSystemNodeTemperature( model::SetpointManagerFollowSystemNodeTemperature & modelObject );
 
   boost::optional<IdfObject> translateSetpointManagerMixedAir( model::SetpointManagerMixedAir & modelObject );
 
+  boost::optional<IdfObject> translateSetpointManagerMultiZoneCoolingAverage( model::SetpointManagerMultiZoneCoolingAverage & modelObject );
+
+  boost::optional<IdfObject> translateSetpointManagerMultiZoneHeatingAverage( model::SetpointManagerMultiZoneHeatingAverage & modelObject );
+
+  boost::optional<IdfObject> translateSetpointManagerMultiZoneHumidityMaximum( model::SetpointManagerMultiZoneHumidityMaximum & modelObject );
+
   boost::optional<IdfObject> translateSetpointManagerMultiZoneHumidityMinimum( model::SetpointManagerMultiZoneHumidityMinimum & modelObject );
+
+  boost::optional<IdfObject> translateSetpointManagerMultiZoneMaximumHumidityAverage( model::SetpointManagerMultiZoneMaximumHumidityAverage & modelObject );
 
   boost::optional<IdfObject> translateSetpointManagerMultiZoneMinimumHumidityAverage( model::SetpointManagerMultiZoneMinimumHumidityAverage & modelObject );
 
@@ -749,13 +773,19 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateSetpointManagerScheduledDualSetpoint( model::SetpointManagerScheduledDualSetpoint & modelObject );
 
-  boost::optional<IdfObject> translateSetpointManagerSingleZoneHumidityMinimum( model::SetpointManagerSingleZoneHumidityMinimum & modelObject);
+  boost::optional<IdfObject> translateSetpointManagerSingleZoneHumidityMaximum( model::SetpointManagerSingleZoneHumidityMaximum & modelObject );
 
-  boost::optional<IdfObject> translateSetpointManagerSingleZoneReheat( model::SetpointManagerSingleZoneReheat & modelObject);
+  boost::optional<IdfObject> translateSetpointManagerSingleZoneHumidityMinimum( model::SetpointManagerSingleZoneHumidityMinimum & modelObject );
 
-  boost::optional<IdfObject> translateSetpointManagerWarmest( model::SetpointManagerWarmest & modelObject);
+  boost::optional<IdfObject> translateSetpointManagerSingleZoneOneStageCooling( model::SetpointManagerSingleZoneOneStageCooling & modelObject );
 
-  boost::optional<IdfObject> translateSetpointManagerWarmestTemperatureFlow( model::SetpointManagerWarmestTemperatureFlow & modelObject);
+  boost::optional<IdfObject> translateSetpointManagerSingleZoneOneStageHeating( model::SetpointManagerSingleZoneOneStageHeating & modelObject );
+
+  boost::optional<IdfObject> translateSetpointManagerSingleZoneReheat( model::SetpointManagerSingleZoneReheat & modelObject );
+
+  boost::optional<IdfObject> translateSetpointManagerWarmest( model::SetpointManagerWarmest & modelObject );
+
+  boost::optional<IdfObject> translateSetpointManagerWarmestTemperatureFlow( model::SetpointManagerWarmestTemperatureFlow & modelObject );
 
   boost::optional<IdfObject> translateShade( model::Shade & modelObject );
 
