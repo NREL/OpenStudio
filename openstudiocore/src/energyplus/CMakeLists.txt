@@ -40,6 +40,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateAvailabilityManagerOptimumStart.cpp
   ForwardTranslator/ForwardTranslateAvailabilityManagerDifferentialThermostat.cpp
   ForwardTranslator/ForwardTranslateAvailabilityManagerNightVentilation.cpp
+  ForwardTranslator/ForwardTranslateAvailabilityManagerNightCycle.cpp
   ForwardTranslator/ForwardTranslateBlind.cpp
   ForwardTranslator/ForwardTranslateBoilerHotWater.cpp
   ForwardTranslator/ForwardTranslateBoilerSteam.cpp
