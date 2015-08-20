@@ -8011,15 +8011,23 @@ OS:AirLoopHVAC,
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A10, \field Demand Side Inlet Node Names
+  A10, \field Demand Side Inlet Node A
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A11, \field Supply Side Outlet Node Names
+  A11, \field Supply Side Outlet Node A
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A11; \field Return Air Bypass Flow Temperature Setpoint Schedule Name
+  A12, \field Demand Side Inlet Node B
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A13, \field Supply Side Outlet Node B
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A14; \field Return Air Bypass Flow Temperature Setpoint Schedule Name
        \type object-list
        \object-list ScheduleNames
 
@@ -9688,6 +9696,133 @@ OS:AirTerminal:SingleDuct:VAV:Reheat,
        \note If this field is blank, then the terminal unit will not be controlled for outdoor air flow.
        \type object-list
        \object-list DesignSpecificationOutdoorAirNames
+
+OS:AirTerminal:DualDuct:VAV:OutdoorAir,
+       \memo Central air system terminal unit, dual duct, variable volume with special controls.
+       \memo One VAV duct is controlled to supply ventilation air and the other VAV duct is
+       \memo controlled to meet the zone cooling load.
+       \min-fields 9
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference ConnectionObject
+  A3 , \field Availability Schedule
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  A4 , \field Air Outlet Node
+       \type object-list
+       \object-list ConnectionNames
+       \note The outlet node of the terminal unit.
+       \note This is also the zone inlet node.
+  A5 , \field Outdoor Air Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+  A6 , \field Recirculated Air Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+  N1 , \field Maximum Terminal Air Flow Rate
+       \required-field
+       \units m3/s
+       \minimum 0.0
+       \autosizable
+       \required-field
+       \note If autosized this is the sum of flow needed for cooling and maximum required outdoor air
+  A7 , \field Design Specification Outdoor Air Object
+       \required-field
+       \type object-list
+       \object-list DesignSpecificationOutdoorAirNames
+       \note When the name of a DesignSpecification:OutdoorAir object is entered, the terminal
+       \note unit will increase flow as needed to meet this outdoor air requirement.
+       \note If Outdoor Air Flow per Person is non-zero, then the outdoor air requirement will
+       \note be computed based mode selected in the next field.
+       \note At no time will the supply air flow rate exceed the value for Maximum Air Flow Rate.
+  A8 ; \field Per Person Ventilation Rate Mode
+       \type choice
+       \required-field
+       \key CurrentOccupancy
+       \key DesignOccupancy
+       \note CurrentOccupancy models demand controlled ventilation using the current number of people
+       \note DesignOccupancy uses the total Number of People in the zone and is constant
+
+OS:AirTerminal:DualDuct:ConstantVolume,
+       \memo Central air system terminal unit, dual duct, constant volume.
+       \min-fields 7
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference ConnectionObject
+  A3 , \field Availability Schedule
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  A4 , \field Air Outlet Node
+       \type object-list
+       \object-list ConnectionNames
+       \note The outlet node of the terminal unit.
+       \note This is also the zone inlet node.
+  A5 , \field Hot Air Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+  A6 , \field Cold Air Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+  N1 ; \field Maximum Air Flow Rate
+       \required-field
+       \units m3/s
+       \minimum 0.0
+       \autosizable
+
+OS:AirTerminal:DualDuct:VAV,
+       \memo Central air system terminal unit, dual duct, variable volume.
+       \min-fields 9
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference ConnectionObject
+  A3 , \field Availability Schedule
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  A4 , \field Air Outlet Node
+       \type object-list
+       \object-list ConnectionNames
+       \note The outlet node of the terminal unit.
+       \note This is also the zone inlet node.
+  A5 , \field Hot Air Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+  A6 , \field Cold Air Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+  N1 , \field Maximum Damper Air Flow Rate
+       \required-field
+       \units m3/s
+       \minimum 0.0
+       \autosizable
+  N2 , \field Zone Minimum Air Flow Fraction
+       \note fraction of maximum air flow
+       \maximum 1.0
+       \minimum 0.0
+       \required-field
+  A7 ; \field Design Specification Outdoor Air Object
+       \type object-list
+       \object-list DesignSpecificationOutdoorAirNames
+       \note When the name of a DesignSpecification:OutdoorAir object is entered, the terminal
+       \note unit will increase flow as needed to meet this outdoor air requirement.
+       \note If Outdoor Air Flow per Person is non-zero, then the outdoor air requirement will
+       \note be computed based on the current number of occupants in the zone.
+       \note At no time will the supply air flow rate exceed the value for Maximum Air Flow Rate.
+       \note If this field is blank, then the terminal unit will not be controlled for outdoor air flow.
 
 OS:AvailabilityManagerAssignmentList,
        \extensible:1

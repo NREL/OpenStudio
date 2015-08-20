@@ -57,13 +57,17 @@ namespace detail {
 
     virtual ~Loop_Impl() {}
 
-    virtual Node supplyInletNode() const;
+    virtual Node supplyInletNode() const = 0;
 
-    virtual Node supplyOutletNode() const;
+    virtual Node supplyOutletNode() const = 0;
 
-    virtual Node demandInletNode() const;
+    virtual std::vector<Node> supplyOutletNodes() const = 0;
 
-    virtual Node demandOutletNode() const;
+    virtual Node demandInletNode() const = 0;
+
+    virtual std::vector<Node> demandInletNodes() const = 0;
+
+    virtual Node demandOutletNode() const = 0;
 
     virtual std::vector<ModelObject> children() const override;
 

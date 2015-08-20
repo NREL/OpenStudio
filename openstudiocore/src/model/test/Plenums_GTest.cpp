@@ -23,6 +23,8 @@
 #include "../AirLoopHVACReturnPlenum_Impl.hpp"
 #include "../AirLoopHVACSupplyPlenum.hpp"
 #include "../AirLoopHVACSupplyPlenum_Impl.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
+#include "../AirLoopHVACZoneSplitter_Impl.hpp"
 #include "../ThermalZone.hpp"
 #include "../ThermalZone_Impl.hpp"
 #include "../Node.hpp"
@@ -31,6 +33,8 @@
 #include "../AirLoopHVAC_Impl.hpp"
 #include "../AirTerminalSingleDuctVAVReheat.hpp"
 #include "../AirTerminalSingleDuctVAVReheat_Impl.hpp"
+#include "../AirTerminalDualDuctVAV.hpp"
+#include "../AirTerminalDualDuctVAV_Impl.hpp"
 #include "../HVACTemplates.hpp"
 
 using namespace openstudio;
@@ -124,6 +128,63 @@ TEST_F(ModelFixture,Plenums)
     ASSERT_TRUE(airLoop.demandComponents(AirLoopHVACSupplyPlenum::iddObjectType()).empty());
     ASSERT_TRUE(airLoop.demandComponents(AirLoopHVACReturnPlenum::iddObjectType()).empty());
     ASSERT_EQ(19u,airLoop.demandComponents().size());
+  }
+
+  // Plenum on dual duct
+  {
+    Model m;
+
+    AirLoopHVAC airLoop(m,true); // <-- true makes it a dual duct
+
+    ThermalZone supplyPlenumZone(m);
+    ThermalZone returnPlenumZone(m);
+
+    ThermalZone conditionedZone1(m);
+    ThermalZone conditionedZone2(m);
+    ThermalZone conditionedZone3(m);
+
+    AirTerminalDualDuctVAV terminal(m);
+    airLoop.addBranchForZone(conditionedZone1,terminal);
+    EXPECT_EQ(12u,airLoop.demandComponents().size());
+
+    
+    {
+      auto t_zoneSplitters = airLoop.zoneSplitters();
+      EXPECT_EQ(2u,t_zoneSplitters.size());
+      EXPECT_EQ(airLoop.zoneSplitter(),t_zoneSplitters.front());
+      EXPECT_EQ(2u,airLoop.demandInletNodes().size());
+    }
+
+    ASSERT_EXIT ( 
+    {  
+      conditionedZone1.removeSupplyPlenum();
+      conditionedZone1.removeSupplyPlenum(0);
+      conditionedZone1.removeSupplyPlenum(1);
+      exit(0); 
+    } ,
+      ::testing::ExitedWithCode(0), "" );
+
+    EXPECT_TRUE(conditionedZone1.setSupplyPlenum(supplyPlenumZone));
+    EXPECT_EQ(14u,airLoop.demandComponents().size());
+
+    auto zoneSplitters = airLoop.zoneSplitters(); 
+    EXPECT_EQ(2u,zoneSplitters.size());
+
+    {
+      auto demandComps = airLoop.demandComponents(zoneSplitters[0],conditionedZone1); 
+      auto plenums = subsetCastVector<AirLoopHVACSupplyPlenum>(demandComps);
+      EXPECT_EQ(1u,plenums.size());
+    }
+
+    conditionedZone1.removeSupplyPlenum();
+    EXPECT_EQ(12u,airLoop.demandComponents().size());
+
+    {
+      auto demandComps = airLoop.demandComponents(zoneSplitters[0],conditionedZone1); 
+      auto plenums = subsetCastVector<AirLoopHVACSupplyPlenum>(demandComps);
+      EXPECT_EQ(0u,plenums.size());
+    }
+    
   }
 }
 

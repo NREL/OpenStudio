@@ -84,12 +84,12 @@ namespace detail {
     }
   }
 
-  unsigned AirLoopHVACZoneMixer_Impl::outletPort()
+  unsigned AirLoopHVACZoneMixer_Impl::outletPort() const
   {
     return OS_AirLoopHVAC_ZoneMixerFields::OutletNodeName;
   }
 
-  unsigned AirLoopHVACZoneMixer_Impl::inletPort(unsigned branchIndex)
+  unsigned AirLoopHVACZoneMixer_Impl::inletPort(unsigned branchIndex) const
   {
     unsigned result;
     result = numNonextensibleFields();
@@ -97,7 +97,7 @@ namespace detail {
     return result;
   }
 
-  unsigned AirLoopHVACZoneMixer_Impl::nextInletPort()
+  unsigned AirLoopHVACZoneMixer_Impl::nextInletPort() const
   {
     return inletPort( this->nextBranchIndex() );
   }
@@ -141,17 +141,17 @@ std::vector<openstudio::IdfObject> AirLoopHVACZoneMixer::remove()
   return getImpl<detail::AirLoopHVACZoneMixer_Impl>()->remove();
 }
 
-unsigned AirLoopHVACZoneMixer::outletPort()
+unsigned AirLoopHVACZoneMixer::outletPort() const
 {
   return getImpl<detail::AirLoopHVACZoneMixer_Impl>()->outletPort();
 }
 
-unsigned AirLoopHVACZoneMixer::inletPort(unsigned branchIndex)
+unsigned AirLoopHVACZoneMixer::inletPort(unsigned branchIndex) const
 {
   return getImpl<detail::AirLoopHVACZoneMixer_Impl>()->inletPort(branchIndex);
 }
 
-unsigned AirLoopHVACZoneMixer::nextInletPort()
+unsigned AirLoopHVACZoneMixer::nextInletPort() const
 {
   return getImpl<detail::AirLoopHVACZoneMixer_Impl>()->nextInletPort();
 }

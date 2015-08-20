@@ -148,6 +148,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed","Supply Air Fan Operating Mode Schedule","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
     {"AirLoopHVACUnitarySystem","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirLoopHVACUnitarySystem","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
+    {"AirTerminalDualDuctVAV","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirTerminalSingleDuctConstantVolumeCooledBeam","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirTerminalSingleDuctConstantVolumeFourPipeInduction","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirTerminalSingleDuctConstantVolumeReheat","Availability","availabilitySchedule",false,"Availability",0.0,1.0},

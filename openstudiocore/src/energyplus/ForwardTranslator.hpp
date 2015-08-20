@@ -46,6 +46,7 @@ class AirLoopHVACUnitarySystem;
 class AirLoopHVACReturnPlenum;
 class AirLoopHVACSupplyPlenum;
 class AirLoopHVACZoneSplitter;
+class AirTerminalDualDuctVAV;
 class AirTerminalSingleDuctConstantVolumeCooledBeam;
 class AirTerminalSingleDuctConstantVolumeFourPipeInduction;
 class AirTerminalSingleDuctConstantVolumeReheat;
@@ -407,6 +408,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateAirLoopHVACZoneMixer( model::AirLoopHVACZoneMixer & modelObject  );
 
   boost::optional<IdfObject> translateAirLoopHVACZoneSplitter( model::AirLoopHVACZoneSplitter & airLoopHVACZoneSplitter );
+
+  boost::optional<IdfObject> translateAirTerminalDualDuctVAV ( model::AirTerminalDualDuctVAV & modelObject );
 
   boost::optional<IdfObject> translateAirTerminalSingleDuctConstantVolumeCooledBeam ( model::AirTerminalSingleDuctConstantVolumeCooledBeam & modelObject );
 
@@ -946,7 +949,7 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateZoneMixing( model::ZoneMixing & modelObject);
 
-  boost::optional<IdfObject> createAirLoopHVACSupplyPath( model::AirLoopHVAC & airLoopHVAC );
+  boost::optional<IdfObject> createAirLoopHVACSupplyPath( const model::Node & demandInletNode );
 
   boost::optional<IdfObject> createAirLoopHVACReturnPath( model::AirLoopHVAC & airLoopHVAC );
 
@@ -954,7 +957,7 @@ class ENERGYPLUS_API ForwardTranslator {
   void reset();
 
   // helper method used by ForwardTranslatePlantLoop
-  IdfObject populateBranch( IdfObject & branchIdfObject, std::vector<model::ModelObject> & modelObjects, model::PlantLoop & plantLoop);
+  IdfObject populateBranch( IdfObject & branchIdfObject, std::vector<model::ModelObject> & modelObjects, model::Loop & loop);
 
   // translate all constructions
   void translateConstructions(const model::Model & model);

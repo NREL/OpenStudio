@@ -2629,7 +2629,7 @@ std::string VersionTranslator::update_1_8_3_to_1_8_4(const IdfFile& idf_1_8_3, c
       }
 
       // All the remaining fields are unchanged but shifted down one to account for new field
-      for( size_t i = 4; i < 11; ++i ) {
+      for( size_t i = 4; i < 15; ++i ) {
         if( auto value = object.getString(i) ) {
           newObject.setString(i + 1,value.get());
         }

@@ -19,6 +19,8 @@
 
 #include "ConnectorSplitter.hpp"
 #include "ConnectorSplitter_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
 #include "Node.hpp"
 #include "AirTerminalSingleDuctUncontrolled.hpp"
 #include "Model.hpp"
@@ -101,7 +103,54 @@ namespace detail{
 
   bool ConnectorSplitter_Impl::addToNode(Node & node)
   {
-    return false;
+    auto t_model = model();
+
+    if( node.model() != t_model ) {
+      return false;
+    }
+
+    if( loop() ) {
+      return false;
+    }
+
+    if( ! outletModelObjects().empty() ) {
+      LOG(Warn, briefDescription() << " must not have existing outlet connections to use addToNode method.");
+      return false;
+    }
+
+    auto t_nodeAirLoop = node.airLoopHVAC();
+
+    if( ! t_nodeAirLoop ) {
+      LOG(Warn, briefDescription() << " must be added to an AirLoopHVAC supply node use addToNode method.");
+      return false;
+    }
+
+    if( ! t_nodeAirLoop->supplyComponent(node.handle()) ) {
+      LOG(Warn, briefDescription() << " must be added to an AirLoopHVAC supply node use addToNode method.");
+      return false;
+    }
+
+    if( ! t_nodeAirLoop->supplyComponents(iddObjectType()).empty() ) {
+      LOG(Warn, briefDescription() << " already has a splitter.");
+      return false;
+    }
+
+    auto supplyInletNode = t_nodeAirLoop->supplyInletNode();
+    auto supplyOutletNode = t_nodeAirLoop->supplyOutletNode();
+
+    // Hook Up Duct "A"
+    auto t_inletPort = inletPort();
+    auto portA = nextOutletPort();
+    HVACComponent_Impl::addToNode(node, supplyInletNode, supplyOutletNode, t_inletPort, portA);
+
+    // Hook Up Duct "B"
+    Node supplyOutletNodeB(t_model);
+    auto thisObject = getObject<model::HVACComponent>();
+    auto portB = nextOutletPort();
+    t_model.connect(thisObject,portB,supplyOutletNodeB,supplyOutletNodeB.inletPort());
+    t_model.connect(supplyOutletNodeB,supplyOutletNodeB.outletPort(),t_nodeAirLoop.get(),t_nodeAirLoop->getImpl<detail::AirLoopHVAC_Impl>()->supplyOutletPortB());
+
+    return true;
   }
 
   ModelObject ConnectorSplitter_Impl::clone(Model model) const
