@@ -123,7 +123,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
 
     boost::optional<IdfObject> _equipment = translateAndMapModelObject(elem);
 
-    if( _equipment && (! ele.optionalCast<ZoneVentilationDesignFlowRate>()) )
+    if( _equipment && (! elem.optionalCast<ZoneVentilationDesignFlowRate>()) )
     {
       IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
 
