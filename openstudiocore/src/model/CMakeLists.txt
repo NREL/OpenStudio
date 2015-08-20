@@ -7,9 +7,6 @@ set(${target_name}_src
   Model.hpp
   Model_Impl.hpp
   Model.cpp
-  CoilPerformanceDXCooling.hpp
-  CoilPerformanceDXCooling_Impl.hpp
-  CoilPerformanceDXCooling.cpp
   Component.hpp
   Component_Impl.hpp
   Component.cpp
@@ -110,15 +107,24 @@ set(${target_name}_src
   AirWallMaterial.hpp
   AirWallMaterial_Impl.hpp
   AirWallMaterial.cpp
-  AvailabilityManagerAssignmentList.hpp
-  AvailabilityManagerAssignmentList_Impl.hpp
-  AvailabilityManagerAssignmentList.cpp
+  AvailabilityManager.hpp
+  AvailabilityManager_Impl.hpp
+  AvailabilityManager.cpp
+  AvailabilityManagerOptimumStart.hpp
+  AvailabilityManagerOptimumStart_Impl.hpp
+  AvailabilityManagerOptimumStart.cpp
+  AvailabilityManagerDifferentialThermostat.hpp
+  AvailabilityManagerDifferentialThermostat_Impl.hpp
+  AvailabilityManagerDifferentialThermostat.cpp
+  AvailabilityManagerNightVentilation.hpp
+  AvailabilityManagerNightVentilation_Impl.hpp
+  AvailabilityManagerNightVentilation.cpp
+  AvailabilityManagerHybridVentilation.hpp
+  AvailabilityManagerHybridVentilation_Impl.hpp
+  AvailabilityManagerHybridVentilation.cpp
   AvailabilityManagerNightCycle.hpp
   AvailabilityManagerNightCycle_Impl.hpp
   AvailabilityManagerNightCycle.cpp
-  AvailabilityManagerScheduled.hpp
-  AvailabilityManagerScheduled_Impl.hpp
-  AvailabilityManagerScheduled.cpp
   Blind.hpp
   Blind_Impl.hpp
   Blind.cpp
@@ -185,15 +191,33 @@ set(${target_name}_src
   CoilCoolingLowTempRadiantVarFlow.hpp
   CoilCoolingLowTempRadiantVarFlow_Impl.hpp
   CoilCoolingLowTempRadiantVarFlow.cpp
+  CoilCoolingDXVariableSpeed.hpp
+  CoilCoolingDXVariableSpeed_Impl.hpp
+  CoilCoolingDXVariableSpeed.cpp
+  CoilCoolingDXVariableSpeedSpeedData.hpp
+  CoilCoolingDXVariableSpeedSpeedData_Impl.hpp
+  CoilCoolingDXVariableSpeedSpeedData.cpp
   CoilCoolingWater.hpp
   CoilCoolingWater_Impl.hpp
   CoilCoolingWater.cpp
   CoilCoolingWaterToAirHeatPumpEquationFit.hpp
   CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp
   CoilCoolingWaterToAirHeatPumpEquationFit.cpp
+  CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit.hpp
+  CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl.hpp
+  CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit.cpp
+  CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.hpp
+  CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl.hpp
+  CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.cpp
   CoilHeatingDesuperheater.hpp
   CoilHeatingDesuperheater_Impl.hpp
   CoilHeatingDesuperheater.cpp
+  CoilHeatingDXMultiSpeed.hpp
+  CoilHeatingDXMultiSpeed_Impl.hpp
+  CoilHeatingDXMultiSpeed.cpp
+  CoilHeatingDXMultiSpeedStageData.hpp
+  CoilHeatingDXMultiSpeedStageData_Impl.hpp
+  CoilHeatingDXMultiSpeedStageData.cpp
   CoilHeatingDXSingleSpeed.hpp
   CoilHeatingDXSingleSpeed_Impl.hpp
   CoilHeatingDXSingleSpeed.cpp
@@ -218,27 +242,42 @@ set(${target_name}_src
   CoilHeatingLowTempRadiantVarFlow.hpp
   CoilHeatingLowTempRadiantVarFlow_Impl.hpp
   CoilHeatingLowTempRadiantVarFlow.cpp
+  CoilHeatingDXVariableSpeed.hpp
+  CoilHeatingDXVariableSpeed_Impl.hpp
+  CoilHeatingDXVariableSpeed.cpp
+  CoilHeatingDXVariableSpeedSpeedData.hpp
+  CoilHeatingDXVariableSpeedSpeedData_Impl.hpp
+  CoilHeatingDXVariableSpeedSpeedData.cpp
   CoilHeatingWater.hpp
   CoilHeatingWater_Impl.hpp
   CoilHeatingWater.cpp
   CoilHeatingWaterToAirHeatPumpEquationFit.hpp
   CoilHeatingWaterToAirHeatPumpEquationFit_Impl.hpp
   CoilHeatingWaterToAirHeatPumpEquationFit.cpp
+  CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit.hpp
+  CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl.hpp
+  CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit.cpp
+  CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.hpp
+  CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl.hpp
+  CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.cpp
   CoilHeatingWaterBaseboard.hpp
   CoilHeatingWaterBaseboard_Impl.hpp
   CoilHeatingWaterBaseboard.cpp
+  CoilPerformanceDXCooling.hpp
+  CoilPerformanceDXCooling_Impl.hpp
+  CoilPerformanceDXCooling.cpp
   CoilSystemCoolingWaterHeatExchangerAssisted.hpp
   CoilSystemCoolingWaterHeatExchangerAssisted_Impl.hpp
   CoilSystemCoolingWaterHeatExchangerAssisted.cpp
   CoilSystemCoolingDXHeatExchangerAssisted.hpp
   CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp
   CoilSystemCoolingDXHeatExchangerAssisted.cpp
-  CoilWaterHeatingDesuperheater.hpp
-  CoilWaterHeatingDesuperheater_Impl.hpp
-  CoilWaterHeatingDesuperheater.cpp
   CoilWaterHeatingAirToWaterHeatPump.hpp
   CoilWaterHeatingAirToWaterHeatPump_Impl.hpp
   CoilWaterHeatingAirToWaterHeatPump.cpp
+  CoilWaterHeatingDesuperheater.hpp
+  CoilWaterHeatingDesuperheater_Impl.hpp
+  CoilWaterHeatingDesuperheater.cpp
   ComponentCostAdjustments.hpp
   ComponentCostAdjustments_Impl.hpp
   ComponentCostAdjustments.cpp
@@ -781,15 +820,36 @@ set(${target_name}_src
   SetpointManager.hpp
   SetpointManager_Impl.hpp
   SetpointManager.cpp
+  SetpointManagerColdest.hpp
+  SetpointManagerColdest_Impl.hpp
+  SetpointManagerColdest.cpp
+  SetpointManagerFollowGroundTemperature.hpp
+  SetpointManagerFollowGroundTemperature_Impl.hpp
+  SetpointManagerFollowGroundTemperature.cpp
   SetpointManagerFollowOutdoorAirTemperature.hpp
   SetpointManagerFollowOutdoorAirTemperature_Impl.hpp
   SetpointManagerFollowOutdoorAirTemperature.cpp
+  SetpointManagerFollowSystemNodeTemperature.hpp
+  SetpointManagerFollowSystemNodeTemperature_Impl.hpp
+  SetpointManagerFollowSystemNodeTemperature.cpp
   SetpointManagerMixedAir.hpp
   SetpointManagerMixedAir_Impl.hpp
   SetpointManagerMixedAir.cpp
+  SetpointManagerMultiZoneCoolingAverage.hpp
+  SetpointManagerMultiZoneCoolingAverage_Impl.hpp
+  SetpointManagerMultiZoneCoolingAverage.cpp
+  SetpointManagerMultiZoneHeatingAverage.hpp
+  SetpointManagerMultiZoneHeatingAverage_Impl.hpp
+  SetpointManagerMultiZoneHeatingAverage.cpp
+  SetpointManagerMultiZoneHumidityMaximum.hpp
+  SetpointManagerMultiZoneHumidityMaximum_Impl.hpp
+  SetpointManagerMultiZoneHumidityMaximum.cpp
   SetpointManagerMultiZoneHumidityMinimum.hpp
   SetpointManagerMultiZoneHumidityMinimum_Impl.hpp
   SetpointManagerMultiZoneHumidityMinimum.cpp
+  SetpointManagerMultiZoneMaximumHumidityAverage.hpp
+  SetpointManagerMultiZoneMaximumHumidityAverage_Impl.hpp
+  SetpointManagerMultiZoneMaximumHumidityAverage.cpp
   SetpointManagerMultiZoneMinimumHumidityAverage.hpp
   SetpointManagerMultiZoneMinimumHumidityAverage_Impl.hpp
   SetpointManagerMultiZoneMinimumHumidityAverage.cpp
@@ -805,9 +865,18 @@ set(${target_name}_src
   SetpointManagerScheduledDualSetpoint.hpp
   SetpointManagerScheduledDualSetpoint_Impl.hpp
   SetpointManagerScheduledDualSetpoint.cpp
+  SetpointManagerSingleZoneHumidityMaximum.hpp
+  SetpointManagerSingleZoneHumidityMaximum_Impl.hpp
+  SetpointManagerSingleZoneHumidityMaximum.cpp
   SetpointManagerSingleZoneHumidityMinimum.hpp
   SetpointManagerSingleZoneHumidityMinimum_Impl.hpp
   SetpointManagerSingleZoneHumidityMinimum.cpp
+  SetpointManagerSingleZoneOneStageCooling.hpp
+  SetpointManagerSingleZoneOneStageCooling_Impl.hpp
+  SetpointManagerSingleZoneOneStageCooling.cpp
+  SetpointManagerSingleZoneOneStageHeating.hpp
+  SetpointManagerSingleZoneOneStageHeating_Impl.hpp
+  SetpointManagerSingleZoneOneStageHeating.cpp
   SetpointManagerSingleZoneReheat.hpp
   SetpointManagerSingleZoneReheat_Impl.hpp
   SetpointManagerSingleZoneReheat.cpp
@@ -871,6 +940,24 @@ set(${target_name}_src
   SkyTemperature.hpp
   SkyTemperature_Impl.hpp
   SkyTemperature.cpp
+  SolarCollectorFlatPlatePhotovoltaicThermal.hpp
+  SolarCollectorFlatPlatePhotovoltaicThermal_Impl.hpp
+  SolarCollectorFlatPlatePhotovoltaicThermal.cpp  
+  SolarCollectorFlatPlateWater.hpp
+  SolarCollectorFlatPlateWater_Impl.hpp
+  SolarCollectorFlatPlateWater.cpp
+  SolarCollectorIntegralCollectorStorage.hpp
+  SolarCollectorIntegralCollectorStorage_Impl.hpp
+  SolarCollectorIntegralCollectorStorage.cpp
+  SolarCollectorPerformanceFlatPlate.hpp
+  SolarCollectorPerformanceFlatPlate_Impl.hpp
+  SolarCollectorPerformanceFlatPlate.cpp
+  SolarCollectorPerformanceIntegralCollectorStorage.hpp
+  SolarCollectorPerformanceIntegralCollectorStorage_Impl.hpp
+  SolarCollectorPerformanceIntegralCollectorStorage.cpp  
+  SolarCollectorPerformancePhotovoltaicThermalSimple.hpp
+  SolarCollectorPerformancePhotovoltaicThermalSimple_Impl.hpp
+  SolarCollectorPerformancePhotovoltaicThermalSimple.cpp  
   Space.hpp
   Space_Impl.hpp
   Space.cpp
@@ -1030,6 +1117,9 @@ set(${target_name}_src
   ZoneAirHeatBalanceAlgorithm.hpp
   ZoneAirHeatBalanceAlgorithm_Impl.hpp
   ZoneAirHeatBalanceAlgorithm.cpp
+  ZoneAirMassFlowConservation.hpp
+  ZoneAirMassFlowConservation_Impl.hpp
+  ZoneAirMassFlowConservation.cpp
   ZoneCapacitanceMultiplierResearchSpecial.hpp
   ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp
   ZoneCapacitanceMultiplierResearchSpecial.cpp
@@ -1042,18 +1132,33 @@ set(${target_name}_src
   ZoneHVACBaseboardConvectiveWater.hpp
   ZoneHVACBaseboardConvectiveWater_Impl.hpp
   ZoneHVACBaseboardConvectiveWater.cpp
+  ZoneHVACBaseboardRadiantConvectiveElectric.hpp
+  ZoneHVACBaseboardRadiantConvectiveElectric_Impl.hpp
+  ZoneHVACBaseboardRadiantConvectiveElectric.cpp
+  ZoneHVACBaseboardRadiantConvectiveWater.hpp
+  ZoneHVACBaseboardRadiantConvectiveWater_Impl.hpp
+  ZoneHVACBaseboardRadiantConvectiveWater.cpp
+  ZoneHVACDehumidifierDX.hpp
+  ZoneHVACDehumidifierDX_Impl.hpp
+  ZoneHVACDehumidifierDX.cpp
+  ZoneHVACEnergyRecoveryVentilator.hpp
+  ZoneHVACEnergyRecoveryVentilator_Impl.hpp
+  ZoneHVACEnergyRecoveryVentilator.cpp
+  ZoneHVACEnergyRecoveryVentilatorController.hpp
+  ZoneHVACEnergyRecoveryVentilatorController_Impl.hpp
+  ZoneHVACEnergyRecoveryVentilatorController.cpp
   ZoneHVACEquipmentList.hpp
   ZoneHVACEquipmentList_Impl.hpp
   ZoneHVACEquipmentList.cpp
-  ZoneHVACIdealLoadsAirSystem.hpp
-  ZoneHVACIdealLoadsAirSystem_Impl.hpp
-  ZoneHVACIdealLoadsAirSystem.cpp
   ZoneHVACFourPipeFanCoil.hpp
   ZoneHVACFourPipeFanCoil_Impl.hpp
   ZoneHVACFourPipeFanCoil.cpp
   ZoneHVACHighTemperatureRadiant.hpp
   ZoneHVACHighTemperatureRadiant_Impl.hpp
   ZoneHVACHighTemperatureRadiant.cpp
+  ZoneHVACIdealLoadsAirSystem.hpp
+  ZoneHVACIdealLoadsAirSystem_Impl.hpp
+  ZoneHVACIdealLoadsAirSystem.cpp
   ZoneHVACLowTemperatureRadiantElectric.hpp
   ZoneHVACLowTemperatureRadiantElectric_Impl.hpp
   ZoneHVACLowTemperatureRadiantElectric.cpp
@@ -1069,18 +1174,21 @@ set(${target_name}_src
   ZoneHVACPackagedTerminalAirConditioner.hpp
   ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
   ZoneHVACPackagedTerminalAirConditioner.cpp
-  ZoneHVACPackagedTerminalAirConditioner.hpp
-  ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
-  ZoneHVACPackagedTerminalAirConditioner.cpp
   ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp
   ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp
   ZoneHVACTerminalUnitVariableRefrigerantFlow.cpp
-  ZoneHVACWaterToAirHeatPump.hpp
-  ZoneHVACWaterToAirHeatPump_Impl.hpp
-  ZoneHVACWaterToAirHeatPump.cpp
   ZoneHVACUnitHeater.hpp
   ZoneHVACUnitHeater_Impl.hpp
   ZoneHVACUnitHeater.cpp
+  ZoneHVACUnitVentilator.hpp
+  ZoneHVACUnitVentilator_Impl.hpp
+  ZoneHVACUnitVentilator.cpp
+  ZoneHVACWaterToAirHeatPump.hpp
+  ZoneHVACWaterToAirHeatPump_Impl.hpp
+  ZoneHVACWaterToAirHeatPump.cpp
+  ZoneMixing.hpp
+  ZoneMixing_Impl.hpp
+  ZoneMixing.cpp  
 )
 
 set(${target_name}_swig_src
@@ -1112,7 +1220,6 @@ set(${target_name}_moc
   AirTerminalSingleDuctVAVNoReheat_Impl.hpp
   AirTerminalSingleDuctVAVReheat_Impl.hpp
   AvailabilityManagerNightCycle_Impl.hpp
-  AvailabilityManagerScheduled_Impl.hpp
   Blind_Impl.hpp
   BoilerHotWater_Impl.hpp
   BoilerSteam_Impl.hpp
@@ -1326,8 +1433,11 @@ set(${target_name}_test_src
   test/AirTerminalSingleDuctVAVHeatAndCoolReheat_GTest.cpp
   test/AirTerminalSingleDuctVAVHeatAndCoolNoReheat_GTest.cpp
   test/Alpha1_GTest.cpp
-  test/AvailabilityManagerAssignmentList_GTest.cpp
   test/AvailabilityManagerNightCycle_GTest.cpp
+  test/AvailabilityManagerHybridVentilation_GTest.cpp
+  test/AvailabilityManagerOptimumStart_GTest.cpp
+  test/AvailabilityManagerDifferentialThermostat_GTest.cpp
+  test/AvailabilityManagerNightVentilation_GTest.cpp
   test/Blind_GTest.cpp
   test/BoilerHotWater_GTest.cpp
   test/BoilerSteam_GTest.cpp
@@ -1342,12 +1452,20 @@ set(${target_name}_test_src
   test/CoilCoolingDXMultiSpeed_GTest.cpp
   test/CoilCoolingDXTwoSpeed_GTest.cpp
   test/CoilCoolingDXTwoStageWithHumidityControlMode_GTest.cpp
+  test/CoilCoolingDXVariableSpeed_GTest.cpp
+  test/CoilCoolingDXVariableSpeedSpeedData_GTest.cpp
   test/CoilCoolingLowTempRadiantConstFlow_GTest.cpp
   test/CoilCoolingLowTempRadiantVarFlow_GTest.cpp
   test/CoilCoolingWater_GTest.cpp
   test/CoilCoolingWaterToAirHeatPumpEquationFit_GTest.cpp
+  test/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_GTest.cpp
+  test/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_GTest.cpp
   test/CoilHeatingDesuperheater_GTest.cpp
+  test/CoilHeatingDXMultiSpeed_GTest.cpp
+  test/CoilHeatingDXMultiSpeedStageData_GTest.cpp
   test/CoilHeatingDXSingleSpeed_GTest.cpp
+  test/CoilHeatingDXVariableSpeed_GTest.cpp
+  test/CoilHeatingDXVariableSpeedSpeedData_GTest.cpp
   test/CoilHeatingElectric_GTest.cpp
   test/CoilHeatingGas_GTest.cpp
   test/CoilHeatingGasMultiStage_GTest.cpp
@@ -1355,12 +1473,14 @@ set(${target_name}_test_src
   test/CoilHeatingLowTempRadiantVarFlow_GTest.cpp
   test/CoilHeatingWater_GTest.cpp
   test/CoilHeatingWaterToAirHeatPumpEquationFit_GTest.cpp
+  test/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_GTest.cpp
+  test/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_GTest.cpp
   test/CoilHeatingWaterBaseboard_GTest.cpp
   test/CoilSystemCoolingDXHeatExchangerAssisted_GTest.cpp
   test/CoilSystemCoolingWaterHeatExchangerAssisted_GTest.cpp
   test/CoilPerformanceDXCooling_GTest.cpp
-  test/CoilWaterHeatingDesuperheater_GTest.cpp
   test/CoilWaterHeatingAirToWaterHeatPump_GTest.cpp
+  test/CoilWaterHeatingDesuperheater_GTest.cpp
   test/Component_GTest.cpp
   test/Connection_GTest.cpp
   test/Construction_GTest.cpp
@@ -1465,17 +1585,28 @@ set(${target_name}_test_src
   test/RoofVegetation_GTest.cpp
   test/RunPeriodControlDaylightSavingTime_GTest.cpp
   test/RunPeriodControlSpecialDays_GTest.cpp
+  test/SetpointManagerColdest_GTest.cpp
+  test/SetpointManagerFollowGroundTemperature_GTest.cpp
   test/SetpointManagerFollowOutdoorAirTemperature_GTest.cpp
+  test/SetpointManagerFollowSystemNodeTemperature_GTest.cpp
   test/SetpointManagerMixedAir_GTest.cpp
+  test/SetpointManagerMultiZoneCoolingAverage_GTest.cpp
+  test/SetpointManagerMultiZoneHeatingAverage_GTest.cpp
+  test/SetpointManagerMultiZoneHumidityMaximum_GTest.cpp
   test/SetpointManagerMultiZoneHumidityMinimum_GTest.cpp
+  test/SetpointManagerMultiZoneMaximumHumidityAverage_GTest.cpp
   test/SetpointManagerMultiZoneMinimumHumidityAverage_GTest.cpp
   test/SetpointManagerOutdoorAirPretreat_GTest.cpp
   test/SetpointManagerOutdoorAirReset_GTest.cpp
   test/SetpointManagerScheduled_GTest.cpp
   test/SetpointManagerScheduledDualSetpoint_GTest.cpp
+  test/SetpointManagerSingleZoneHumidityMaximum_GTest.cpp
   test/SetpointManagerSingleZoneHumidityMinimum_GTest.cpp
+  test/SetpointManagerSingleZoneOneStageCooling_GTest.cpp
+  test/SetpointManagerSingleZoneOneStageHeating_GTest.cpp
   test/SetpointManagerSingleZoneReheat_GTest.cpp
   test/SetpointManagerWarmest_GTest.cpp
+  test/SetpointManagerWarmestTemperatureFlow_GTest.cpp
   test/ScheduleDay_GTest.cpp
   test/ScheduleInterval_GTest.cpp
   test/ScheduleRuleset_GTest.cpp
@@ -1497,6 +1628,9 @@ set(${target_name}_test_src
   test/SizingSystem_GTest.cpp
   test/SizingZone_GTest.cpp
   test/SkyTemperature_GTest.cpp
+  test/SolarCollectorFlatPlatePhotovoltaicThermal_GTest.cpp
+  test/SolarCollectorFlatPlateWater_GTest.cpp
+  test/SolarCollectorIntegralCollectorStorage_GTest.cpp
   test/SpaceInfiltrationDesignFlowRate_GTest.cpp
   test/SpaceInfiltrationEffectiveLeakageArea_GTest.cpp
   test/SpaceType_GTest.cpp
@@ -1518,18 +1652,26 @@ set(${target_name}_test_src
   test/WeatherFile_GTest.cpp
   test/WindowPropertyFrameAndDivider_GTest.cpp
   test/YearDescription_GTest.cpp
+  test/ZoneAirMassFlowConservation_GTest.cpp
   test/ZoneCapacitanceMultiplierResearchSpecial_GTest.cpp
   test/ZoneHVACBaseboardConvectiveElectric_GTest.cpp
   test/ZoneHVACBaseboardConvectiveWater_GTest.cpp
+  test/ZoneHVACBaseboardRadiantConvectiveElectric_GTest.cpp
+  test/ZoneHVACBaseboardRadiantConvectiveWater_GTest.cpp
+  test/ZoneHVACDehumidifierDX_GTest.cpp
+  test/ZoneHVACEnergyRecoveryVentilator_GTest.cpp
+  test/ZoneHVACEnergyRecoveryVentilatorController_GTest.cpp
   test/ZoneHVACFourPipeFanCoil_GTest.cpp
   test/ZoneHVACHighTemperatureRadiant_GTest.cpp
   test/ZoneHVACLowTemperatureRadiantElectric_GTest.cpp
   test/ZoneHVACLowTempRadiantConstFlow_GTest.cpp
   test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp
-  test/ZoneHVACPackagedTerminalAirConditioner_GTest.cpp
   test/ZoneHVACPackagedTerminalHeatPump_GTest.cpp
-  test/ZoneHVACWaterToAirHeatPump_GTest.cpp
+  test/ZoneHVACPackagedTerminalAirConditioner_GTest.cpp
   test/ZoneHVACUnitHeater_GTest.cpp
+  test/ZoneHVACUnitVentilator_GTest.cpp
+  test/ZoneHVACWaterToAirHeatPump_GTest.cpp
+  test/ZoneMixing_GTest.cpp
 )
 
 set(${target_name}_test_depends

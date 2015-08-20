@@ -59,10 +59,8 @@
 #include "AirTerminalSingleDuctUncontrolled_Impl.hpp"
 #include "AirTerminalSingleDuctVAVReheat.hpp"
 #include "AirTerminalSingleDuctVAVReheat_Impl.hpp"
-#include "AvailabilityManagerAssignmentList.hpp"
-#include "AvailabilityManagerAssignmentList_Impl.hpp"
-#include "AvailabilityManagerScheduled.hpp"
-#include "AvailabilityManagerScheduled_Impl.hpp"
+#include "AvailabilityManager.hpp"
+#include "AvailabilityManager_Impl.hpp"
 #include "AvailabilityManagerNightCycle.hpp"
 #include "AvailabilityManagerNightCycle_Impl.hpp"
 #include "CoilHeatingWater.hpp"
@@ -73,6 +71,8 @@
 #include "PortList_Impl.hpp"
 #include "ScheduleYear.hpp"
 #include "ScheduleYear_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 #include "SetpointManagerSingleZoneReheat.hpp"
 #include "SetpointManagerSingleZoneReheat_Impl.hpp"
 #include "../utilities/idd/IddEnums.hpp"
@@ -127,6 +127,18 @@ namespace detail {
 
   IddObjectType AirLoopHVAC_Impl::iddObjectType() const {
     return AirLoopHVAC::iddObjectType();
+  }
+
+  std::vector<ScheduleTypeKey> AirLoopHVAC_Impl::getScheduleTypeKeys(const Schedule& schedule) const
+  {
+    std::vector<ScheduleTypeKey> result;
+    // UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+    // UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+    // if (std::find(b,e,OS_AirLoopHVACFields::ReturnAirBypassFlowTemperatureSetpointScheduleName) != e)
+    // {
+    //   result.push_back(ScheduleTypeKey("AirLoopHVAC","Return Air Bypass Flow Temperature Setpoint"));
+    // }
+    return result;
   }
 
   Node AirLoopHVAC_Impl::supplyInletNode() const
@@ -196,7 +208,9 @@ namespace detail {
 
     sizingSystem().remove();
 
-    availabilityManagerAssignmentList().remove();
+    if( auto t_availabilityManager = availabilityManager() ) {
+      t_availabilityManager->remove();
+    }
 
     modelObjects = supplyComponents();
     for(it = modelObjects.begin();
@@ -541,9 +555,17 @@ namespace detail {
   {
     AirLoopHVAC airLoopClone = Loop_Impl::clone(model).cast<AirLoopHVAC>();
 
-    AvailabilityManagerAssignmentList amalClone = availabilityManagerAssignmentList().clone(model).cast<AvailabilityManagerAssignmentList>();
+    {
+      auto clone = availabilitySchedule().clone(model).cast<Schedule>();
+      airLoopClone.setPointer(OS_AirLoopHVACFields::AvailabilitySchedule,clone.handle());
+    }
 
-    airLoopClone.setPointer(OS_AirLoopHVACFields::AvailabilityManagerListName,amalClone.handle());
+    if( auto mo = availabilityManager() ) {
+      auto clone = mo->clone(model).cast<AvailabilityManager>();
+      airLoopClone.setAvailabilityManager(clone);
+    } else {
+      airLoopClone.setString(OS_AirLoopHVACFields::AvailabilityManager,"");
+    }
 
     return airLoopClone;
   }
@@ -858,12 +880,15 @@ namespace detail {
 
   Schedule AirLoopHVAC_Impl::availabilitySchedule() const
   {
-    return availabilityManagerAssignmentList().availabilityManagerScheduled().schedule();
+    auto result = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirLoopHVACFields::AvailabilitySchedule);
+    OS_ASSERT(result);
+    return result.get();
   }
   
   void AirLoopHVAC_Impl::setAvailabilitySchedule(Schedule & schedule)
   {
-    availabilityManagerAssignmentList().availabilityManagerScheduled().setSchedule(schedule);
+    auto result = setPointer(OS_AirLoopHVACFields::AvailabilitySchedule,schedule.handle());
+    OS_ASSERT(result);
 
     auto seriesPIUs = subsetCastVector<AirTerminalSingleDuctSeriesPIUReheat>(demandComponents(AirTerminalSingleDuctSeriesPIUReheat::iddObjectType()));
     for( auto & piu : seriesPIUs ) {
@@ -878,21 +903,52 @@ namespace detail {
   
   bool AirLoopHVAC_Impl::setNightCycleControlType(std::string controlType)
   {
-    return availabilityManagerAssignmentList().availabilityManagerNightCycle().setControlType(controlType);
+    if( auto t_availabilityManager = availabilityManager() ) {
+      if( auto nightCycle = t_availabilityManager->optionalCast<AvailabilityManagerNightCycle>() ) {
+        return nightCycle->setControlType(controlType); 
+      } 
+    } else {
+      auto t_model = model();
+      AvailabilityManagerNightCycle nightCycle(t_model);
+      if( nightCycle.setControlType(controlType) ) {
+        auto result = setAvailabilityManager(nightCycle);
+        OS_ASSERT(result);
+        return true;
+      } else {
+        nightCycle.remove();
+      }
+    }
+    return false;
   }
   
+  // boost::optional<Schedule>  AirLoopHVAC_Impl::returnAirBypassFlowTemperatureSetpointSchedule() const
+  // {
+  //   return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirLoopHVACFields::ReturnAirBypassFlowTemperatureSetpointScheduleName);
+  // }
+
+  // bool  AirLoopHVAC_Impl::setReturnAirBypassFlowTemperatureSetpointSchedule(Schedule & temperatureSetpointSchedule)
+  // {
+  //   bool result = setSchedule(OS_AirLoopHVACFields::ReturnAirBypassFlowTemperatureSetpointScheduleName,
+  //                             "AirLoopHVAC",
+  //                             "Return Air Bypass Flow Temperature Setpoint",
+  //                             temperatureSetpointSchedule);
+  //   return result;
+  // }
+
+  // void  AirLoopHVAC_Impl::resetReturnAirBypassFlowTemperatureSetpointSchedule()
+  // {
+  //   bool result = setString(OS_AirLoopHVACFields::ReturnAirBypassFlowTemperatureSetpointScheduleName,"");
+  //   OS_ASSERT(result);
+  // }
+
   std::string AirLoopHVAC_Impl::nightCycleControlType() const
   {
-    return availabilityManagerAssignmentList().availabilityManagerNightCycle().controlType();
-  }
-
-  AvailabilityManagerAssignmentList AirLoopHVAC_Impl::availabilityManagerAssignmentList() const
-  {
-    boost::optional<WorkspaceObject> wo = getTarget(OS_AirLoopHVACFields::AvailabilityManagerListName);
-
-    OS_ASSERT(wo);
-
-    return wo->cast<AvailabilityManagerAssignmentList>();
+    if( auto t_availabilityManager = availabilityManager() ) {
+      if( auto nightCycle = t_availabilityManager->optionalCast<AvailabilityManagerNightCycle>() ) {
+        return nightCycle->controlType();
+      } 
+    }
+    return "StayOff";
   }
 
   boost::optional<Node> AirLoopHVAC_Impl::mixedAirNode() const
@@ -972,6 +1028,26 @@ namespace detail {
     return result;
   }
 
+  boost::optional<AvailabilityManager> AirLoopHVAC_Impl::availabilityManager() const {
+    return getObject<ModelObject>().getModelObjectTarget<AvailabilityManager>(OS_AirLoopHVACFields::AvailabilityManager);
+  }
+
+  bool AirLoopHVAC_Impl::setAvailabilityManager(const AvailabilityManager & availabilityManager) {
+    auto type = availabilityManager.iddObjectType();
+    if( type == IddObjectType::OS_AvailabilityManager_NightCycle ||
+        type == IddObjectType::OS_AvailabilityManager_HybridVentilation ||
+        type == IddObjectType::OS_AvailabilityManager_NightVentilation ||
+        type == IddObjectType::OS_AvailabilityManager_OptimumStart ) {
+      return setPointer(OS_AirLoopHVACFields::AvailabilityManager, availabilityManager.handle());
+    }
+    return false;
+  }
+
+  void AirLoopHVAC_Impl::resetAvailabilityManager() {
+    bool result = setString(OS_AirLoopHVACFields::AvailabilityManager, "");
+    OS_ASSERT(result);
+  }
+
 } // detail
 
 AirLoopHVAC::AirLoopHVAC(Model& model)
@@ -980,10 +1056,6 @@ AirLoopHVAC::AirLoopHVAC(Model& model)
   OS_ASSERT(getImpl<detail::AirLoopHVAC_Impl>());
 
   setString(openstudio::OS_AirLoopHVACFields::DesignSupplyAirFlowRate,"AutoSize");
-
-  AvailabilityManagerAssignmentList list(model);
-
-  setPointer(OS_AirLoopHVACFields::AvailabilityManagerListName,list.handle());
 
   // supply side
 
@@ -1025,8 +1097,13 @@ AirLoopHVAC::AirLoopHVAC(Model& model)
                  demandOutletNode,demandOutletNode.inletPort() );
 
   // Sizing:System
-
   SizingSystem sizingSystem(model,*this);
+
+  // AvailabilityManagerScheduled
+  {
+    auto schedule = model.alwaysOnDiscreteSchedule();
+    setAvailabilitySchedule(schedule);
+  }
 }
 
 AirLoopHVAC::AirLoopHVAC(std::shared_ptr<detail::AirLoopHVAC_Impl> impl)
@@ -1243,6 +1320,21 @@ bool AirLoopHVAC::setNightCycleControlType(std::string controlType)
   return getImpl<detail::AirLoopHVAC_Impl>()->setNightCycleControlType(controlType);
 }
 
+// boost::optional<Schedule> AirLoopHVAC::returnAirBypassFlowTemperatureSetpointSchedule() const
+// {
+//   return getImpl<detail::AirLoopHVAC_Impl>()->returnAirBypassFlowTemperatureSetpointSchedule();
+// }
+
+// bool AirLoopHVAC::setReturnAirBypassFlowTemperatureSetpointSchedule(Schedule & temperatureSetpointSchedule)
+// {
+//   return getImpl<detail::AirLoopHVAC_Impl>()->setReturnAirBypassFlowTemperatureSetpointSchedule(temperatureSetpointSchedule);
+// }
+
+// void AirLoopHVAC::resetReturnAirBypassFlowTemperatureSetpointSchedule()
+// {
+//   getImpl<detail::AirLoopHVAC_Impl>()->resetReturnAirBypassFlowTemperatureSetpointSchedule();
+// }
+
 std::string AirLoopHVAC::nightCycleControlType() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->nightCycleControlType();
@@ -1261,6 +1353,21 @@ boost::optional<HVACComponent> AirLoopHVAC::returnFan() const
 boost::optional<HVACComponent> AirLoopHVAC::reliefFan() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->reliefFan();
+}
+
+boost::optional<AvailabilityManager> AirLoopHVAC::availabilityManager() const
+{
+  return getImpl<detail::AirLoopHVAC_Impl>()->availabilityManager();
+}
+
+bool AirLoopHVAC::setAvailabilityManager(const AvailabilityManager& availabilityManager)
+{
+  return getImpl<detail::AirLoopHVAC_Impl>()->setAvailabilityManager(availabilityManager);
+}
+
+void AirLoopHVAC::resetAvailabilityManager()
+{
+  return getImpl<detail::AirLoopHVAC_Impl>()->resetAvailabilityManager();
 }
 
 } // model

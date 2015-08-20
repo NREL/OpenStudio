@@ -215,6 +215,10 @@ class MODEL_API PlanarSurface : public ParentObject {
   /// Return the centroid of this planar surface's vertices
   Point3d centroid() const;
 
+  /// Returns any solar hot water collectors associated with this surface.
+  std::vector<ModelObject> solarCollectors() const;
+
+
  protected:
 
   /** @name Constructors and Destructors */

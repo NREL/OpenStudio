@@ -21,7 +21,7 @@
 #define MODEL_AVAILABILITYMANAGERNIGHTCYCLE_HPP
 
 #include "ModelAPI.hpp"
-#include "ModelObject.hpp"
+#include "AvailabilityManager.hpp"
 
 namespace openstudio {
 
@@ -40,7 +40,7 @@ namespace detail {
 } // detail
 
 /** AvailabilityManagerNightCycle is a ModelObject that wraps the OpenStudio IDD object 'OS:AvailabilityManager:NightCycle'. */
-class MODEL_API AvailabilityManagerNightCycle : public ModelObject {
+class MODEL_API AvailabilityManagerNightCycle : public AvailabilityManager {
  public:
 
   explicit AvailabilityManagerNightCycle(const Model& model);

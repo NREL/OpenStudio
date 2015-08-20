@@ -579,6 +579,36 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirWallMaterial(airWallMaterial);
       break;
     }
+  case openstudio::IddObjectType::OS_AvailabilityManager_HybridVentilation :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerHybridVentilation>();
+      retVal = translateAvailabilityManagerHybridVentilation(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_OptimumStart :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerOptimumStart>();
+      retVal = translateAvailabilityManagerOptimumStart(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_DifferentialThermostat :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerDifferentialThermostat>();
+      retVal = translateAvailabilityManagerDifferentialThermostat(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_NightVentilation :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerNightVentilation>();
+      retVal = translateAvailabilityManagerNightVentilation(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_NightCycle :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerNightCycle>();
+      retVal = translateAvailabilityManagerNightCycle(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_WindowMaterial_Blind :
     {
       model::Blind blind = modelObject.cast<Blind>();
@@ -706,6 +736,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateCoilCoolingDXVariableRefrigerantFlow(coil);
       break;
     }
+  case openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableSpeed :
+    {
+      model::CoilCoolingDXVariableSpeed coil = modelObject.cast<CoilCoolingDXVariableSpeed>();
+      retVal = translateCoilCoolingDXVariableSpeed(coil);
+      break;
+    }
   case openstudio::IddObjectType::OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlow :
     {
       // no-op
@@ -728,6 +764,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateCoilCoolingWaterToAirHeatPumpEquationFit(coil);
       break;
     }
+  case openstudio::IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit :
+    {
+      model::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit coil = modelObject.cast<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit>();
+      retVal = translateCoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit(coil);
+      break;
+    }
   case openstudio::IddObjectType::OS_Coil_Heating_Desuperheater :
     {
       model::CoilHeatingDesuperheater coil = modelObject.cast<CoilHeatingDesuperheater>();
@@ -742,6 +784,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       } else {
         retVal = translateCoilHeatingDXSingleSpeed(coil);
       }
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Heating_DX_MultiSpeed :
+    {
+      model::CoilHeatingDXMultiSpeed coil = modelObject.cast<CoilHeatingDXMultiSpeed>();
+      retVal = translateCoilHeatingDXMultiSpeed(coil);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Heating_DX_VariableSpeed :
+    {
+      model::CoilHeatingDXVariableSpeed coil = modelObject.cast<CoilHeatingDXVariableSpeed>();
+      retVal = translateCoilHeatingDXVariableSpeed(coil);
       break;
     }
   case openstudio::IddObjectType::OS_Coil_Heating_Electric :
@@ -793,6 +847,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::CoilHeatingWaterToAirHeatPumpEquationFit coil = modelObject.cast<CoilHeatingWaterToAirHeatPumpEquationFit>();
       retVal = translateCoilHeatingWaterToAirHeatPumpEquationFit(coil);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit :
+    {
+      model::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit coil = modelObject.cast<CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit>();
+      retVal = translateCoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit(coil);
       break;
     }
   case openstudio::IddObjectType::OS_CoilPerformance_DX_Cooling :
@@ -1286,6 +1346,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       auto mo = modelObject.cast<WaterHeaterHeatPump>();
       retVal = translateWaterHeaterHeatPump(mo);
+      break;
     }
   case openstudio::IddObjectType::OS_WaterHeater_Stratified :
     {
@@ -1681,22 +1742,82 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateScheduleVariableInterval(schedule);
       break;
     }
+  case  openstudio::IddObjectType::OS_SetpointManager_Coldest :
+    {
+      model::SetpointManagerColdest spm = modelObject.cast<SetpointManagerColdest>();
+      retVal = translateSetpointManagerColdest(spm);
+      break;
+    }
+  case  openstudio::IddObjectType::OS_SetpointManager_FollowGroundTemperature :
+    {
+      model::SetpointManagerFollowGroundTemperature spm = modelObject.cast<SetpointManagerFollowGroundTemperature>();
+      retVal = translateSetpointManagerFollowGroundTemperature(spm);
+      break;
+    }
   case  openstudio::IddObjectType::OS_SetpointManager_FollowOutdoorAirTemperature :
     {
       model::SetpointManagerFollowOutdoorAirTemperature spm = modelObject.cast<SetpointManagerFollowOutdoorAirTemperature>();
       retVal = translateSetpointManagerFollowOutdoorAirTemperature(spm);
       break;
     }
-  case  openstudio::IddObjectType::OS_SetpointManager_SingleZone_Humidity_Minimum :
+  case  openstudio::IddObjectType::OS_SetpointManager_FollowSystemNodeTemperature :
     {
-      model::SetpointManagerSingleZoneHumidityMinimum spm = modelObject.cast<SetpointManagerSingleZoneHumidityMinimum>();
-      retVal = translateSetpointManagerSingleZoneHumidityMinimum(spm);
+      model::SetpointManagerFollowSystemNodeTemperature spm = modelObject.cast<SetpointManagerFollowSystemNodeTemperature>();
+      retVal = translateSetpointManagerFollowSystemNodeTemperature(spm);
       break;
     }
-  case  openstudio::IddObjectType::OS_SetpointManager_SingleZone_Reheat :
+  case  openstudio::IddObjectType::OS_SetpointManager_MixedAir :
     {
-      model::SetpointManagerSingleZoneReheat spm = modelObject.cast<SetpointManagerSingleZoneReheat>();
-      retVal = translateSetpointManagerSingleZoneReheat(spm);
+      model::SetpointManagerMixedAir spm = modelObject.cast<SetpointManagerMixedAir>();
+      retVal = translateSetpointManagerMixedAir(spm);
+      break;
+    }
+  case  openstudio::IddObjectType::OS_SetpointManager_MultiZone_Cooling_Average :
+    {
+      model::SetpointManagerMultiZoneCoolingAverage spm = modelObject.cast<SetpointManagerMultiZoneCoolingAverage>();
+      retVal = translateSetpointManagerMultiZoneCoolingAverage(spm);
+      break;
+    }
+  case  openstudio::IddObjectType::OS_SetpointManager_MultiZone_Heating_Average :
+    {
+      model::SetpointManagerMultiZoneHeatingAverage spm = modelObject.cast<SetpointManagerMultiZoneHeatingAverage>();
+      retVal = translateSetpointManagerMultiZoneHeatingAverage(spm);
+      break;
+    }
+  case  openstudio::IddObjectType::OS_SetpointManager_MultiZone_Humidity_Maximum :
+    {
+      model::SetpointManagerMultiZoneHumidityMaximum spm = modelObject.cast<SetpointManagerMultiZoneHumidityMaximum>();
+      retVal = translateSetpointManagerMultiZoneHumidityMaximum(spm);
+      break;
+    }
+  case  openstudio::IddObjectType::OS_SetpointManager_MultiZone_Humidity_Minimum :
+    {
+      model::SetpointManagerMultiZoneHumidityMinimum spm = modelObject.cast<SetpointManagerMultiZoneHumidityMinimum>();
+      retVal = translateSetpointManagerMultiZoneHumidityMinimum(spm);
+      break;
+    }
+  case  openstudio::IddObjectType::OS_SetpointManager_MultiZone_MaximumHumidity_Average :
+    {
+      model::SetpointManagerMultiZoneMaximumHumidityAverage spm = modelObject.cast<SetpointManagerMultiZoneMaximumHumidityAverage>();
+      retVal = translateSetpointManagerMultiZoneMaximumHumidityAverage(spm);
+      break;
+    }
+  case  openstudio::IddObjectType::OS_SetpointManager_MultiZone_MinimumHumidity_Average :
+    {
+      model::SetpointManagerMultiZoneMinimumHumidityAverage spm = modelObject.cast<SetpointManagerMultiZoneMinimumHumidityAverage>();
+      retVal = translateSetpointManagerMultiZoneMinimumHumidityAverage(spm);
+      break;
+    }
+  case  openstudio::IddObjectType::OS_SetpointManager_OutdoorAirPretreat :
+    {
+      model::SetpointManagerOutdoorAirPretreat spm = modelObject.cast<SetpointManagerOutdoorAirPretreat>();
+      retVal = translateSetpointManagerOutdoorAirPretreat(spm);
+      break;
+    }
+  case  openstudio::IddObjectType::OS_SetpointManager_OutdoorAirReset :
+    {
+      model::SetpointManagerOutdoorAirReset spm = modelObject.cast<SetpointManagerOutdoorAirReset>();
+      retVal = translateSetpointManagerOutdoorAirReset(spm);
       break;
     }
   case  openstudio::IddObjectType::OS_SetpointManager_Scheduled :
@@ -1711,34 +1832,34 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateSetpointManagerScheduledDualSetpoint(spm);
       break;
     }
-  case  openstudio::IddObjectType::OS_SetpointManager_MixedAir :
+  case  openstudio::IddObjectType::OS_SetpointManager_SingleZone_Humidity_Maximum :
     {
-      model::SetpointManagerMixedAir spm = modelObject.cast<SetpointManagerMixedAir>();
-      retVal = translateSetpointManagerMixedAir(spm);
+      model::SetpointManagerSingleZoneHumidityMaximum spm = modelObject.cast<SetpointManagerSingleZoneHumidityMaximum>();
+      retVal = translateSetpointManagerSingleZoneHumidityMaximum(spm);
       break;
     }
-  case  openstudio::IddObjectType::OS_SetpointManager_MultiZone_Humidity_Minimum :
+  case  openstudio::IddObjectType::OS_SetpointManager_SingleZone_Humidity_Minimum :
     {
-      model::SetpointManagerMultiZoneHumidityMinimum spm = modelObject.cast<SetpointManagerMultiZoneHumidityMinimum>();
-      retVal = translateSetpointManagerMultiZoneHumidityMinimum(spm);
+      model::SetpointManagerSingleZoneHumidityMinimum spm = modelObject.cast<SetpointManagerSingleZoneHumidityMinimum>();
+      retVal = translateSetpointManagerSingleZoneHumidityMinimum(spm);
       break;
     }
-  case  openstudio::IddObjectType::OS_SetpointManager_MultiZone_MinimumHumidity_Average :
+  case  openstudio::IddObjectType::OS_SetpointManager_SingleZone_OneStageCooling :
     {
-      model::SetpointManagerMultiZoneMinimumHumidityAverage spm = modelObject.cast<SetpointManagerMultiZoneMinimumHumidityAverage>();
-      retVal = translateSetpointManagerMultiZoneMinimumHumidityAverage(spm);
+      model::SetpointManagerSingleZoneOneStageCooling spm = modelObject.cast<SetpointManagerSingleZoneOneStageCooling>();
+      retVal = translateSetpointManagerSingleZoneOneStageCooling(spm);
       break;
     }
-  case  openstudio::IddObjectType::OS_SetpointManager_OutdoorAirReset :
+  case  openstudio::IddObjectType::OS_SetpointManager_SingleZone_OneStageHeating :
     {
-      model::SetpointManagerOutdoorAirReset spm = modelObject.cast<SetpointManagerOutdoorAirReset>();
-      retVal = translateSetpointManagerOutdoorAirReset(spm);
+      model::SetpointManagerSingleZoneOneStageHeating spm = modelObject.cast<SetpointManagerSingleZoneOneStageHeating>();
+      retVal = translateSetpointManagerSingleZoneOneStageHeating(spm);
       break;
     }
-  case  openstudio::IddObjectType::OS_SetpointManager_OutdoorAirPretreat :
+  case  openstudio::IddObjectType::OS_SetpointManager_SingleZone_Reheat :
     {
-      model::SetpointManagerOutdoorAirPretreat spm = modelObject.cast<SetpointManagerOutdoorAirPretreat>();
-      retVal = translateSetpointManagerOutdoorAirPretreat(spm);
+      model::SetpointManagerSingleZoneReheat spm = modelObject.cast<SetpointManagerSingleZoneReheat>();
+      retVal = translateSetpointManagerSingleZoneReheat(spm);
       break;
     }
   case  openstudio::IddObjectType::OS_SetpointManager_Warmest :
@@ -1837,6 +1958,43 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateSizingParameters(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_SolarCollector_FlatPlate_PhotovoltaicThermal:
+  {
+    model::SolarCollectorFlatPlatePhotovoltaicThermal mo = modelObject.cast<SolarCollectorFlatPlatePhotovoltaicThermal>();
+    retVal = translateSolarCollectorFlatPlatePhotovoltaicThermal(mo);
+    break;
+  }
+  case openstudio::IddObjectType::OS_SolarCollector_FlatPlate_Water:
+  {
+    model::SolarCollectorFlatPlateWater mo = modelObject.cast<SolarCollectorFlatPlateWater>();
+    retVal = translateSolarCollectorFlatPlateWater(mo);
+    break;
+  }
+
+  case openstudio::IddObjectType::OS_SolarCollector_IntegralCollectorStorage:
+  {
+    model::SolarCollectorIntegralCollectorStorage mo = modelObject.cast<SolarCollectorIntegralCollectorStorage>();
+    retVal = translateSolarCollectorIntegralCollectorStorage(mo);
+    break;
+  }
+  case openstudio::IddObjectType::OS_SolarCollectorPerformance_FlatPlate :
+  {
+    model::SolarCollectorPerformanceFlatPlate mo = modelObject.cast<SolarCollectorPerformanceFlatPlate>();
+    retVal = translateSolarCollectorPerformanceFlatPlate(mo);
+    break;
+  }
+  case openstudio::IddObjectType::OS_SolarCollectorPerformance_IntegralCollectorStorage:
+  {
+    model::SolarCollectorPerformanceIntegralCollectorStorage mo = modelObject.cast<SolarCollectorPerformanceIntegralCollectorStorage>();
+    retVal = translateSolarCollectorPerformanceIntegralCollectorStorage(mo);
+    break;
+  }
+  case openstudio::IddObjectType::OS_SolarCollectorPerformance_PhotovoltaicThermal_Simple:
+  {
+    model::SolarCollectorPerformancePhotovoltaicThermalSimple mo = modelObject.cast<SolarCollectorPerformancePhotovoltaicThermalSimple>();
+    retVal = translateSolarCollectorPerformancePhotovoltaicThermalSimple(mo);
+    break;
+  }
   case openstudio::IddObjectType::OS_StandardsInformation_Construction :
     {
       // no-op
@@ -1978,6 +2136,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateZoneAirHeatBalanceAlgorithm(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_ZoneAirMassFlowConservation:
+    {
+      model::ZoneAirMassFlowConservation mo = modelObject.cast<ZoneAirMassFlowConservation>();
+      retVal = translateZoneAirMassFlowConservation(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_ZoneCapacitanceMultiplier_ResearchSpecial :
     {
       // no-op
@@ -2007,6 +2171,36 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateZoneHVACBaseboardConvectiveWater(mo);
       break;
     }  
+  case openstudio::IddObjectType::OS_ZoneHVAC_Baseboard_RadiantConvective_Electric :
+    {
+      model::ZoneHVACBaseboardRadiantConvectiveElectric mo = modelObject.cast<ZoneHVACBaseboardRadiantConvectiveElectric>();
+      retVal = translateZoneHVACBaseboardRadiantConvectiveElectric(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ZoneHVAC_Baseboard_RadiantConvective_Water :
+    {
+      model::ZoneHVACBaseboardRadiantConvectiveWater mo = modelObject.cast<ZoneHVACBaseboardRadiantConvectiveWater>();
+      retVal = translateZoneHVACBaseboardRadiantConvectiveWater(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ZoneHVAC_Dehumidifier_DX :
+    {
+      model::ZoneHVACDehumidifierDX mo = modelObject.cast<ZoneHVACDehumidifierDX>();
+      retVal = translateZoneHVACDehumidifierDX(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ZoneHVAC_EnergyRecoveryVentilator :
+    {
+      model::ZoneHVACEnergyRecoveryVentilator mo = modelObject.cast<ZoneHVACEnergyRecoveryVentilator>();
+      retVal = translateZoneHVACEnergyRecoveryVentilator(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ZoneHVAC_EnergyRecoveryVentilator_Controller :
+    {
+      model::ZoneHVACEnergyRecoveryVentilatorController mo = modelObject.cast<ZoneHVACEnergyRecoveryVentilatorController>();
+      retVal = translateZoneHVACEnergyRecoveryVentilatorController(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_ZoneHVAC_EquipmentList :
     {
       model::ZoneHVACEquipmentList mo = modelObject.cast<ZoneHVACEquipmentList>();
@@ -2019,16 +2213,22 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateZoneHVACFourPipeFanCoil(mo);
       break;
     }  
+  case openstudio::IddObjectType::OS_ZoneHVAC_HighTemperatureRadiant :
+    {
+      model::ZoneHVACHighTemperatureRadiant mo = modelObject.cast<ZoneHVACHighTemperatureRadiant>();
+      retVal = translateZoneHVACHighTemperatureRadiant(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_ZoneHVAC_IdealLoadsAirSystem :
     {
       model::ZoneHVACIdealLoadsAirSystem mo = modelObject.cast<ZoneHVACIdealLoadsAirSystem>();
       retVal = translateZoneHVACIdealLoadsAirSystem(mo);
       break;
     }
-  case openstudio::IddObjectType::OS_ZoneHVAC_HighTemperatureRadiant :
+  case openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric :
     { 
-      model::ZoneHVACHighTemperatureRadiant mo = modelObject.cast<ZoneHVACHighTemperatureRadiant>();
-      retVal = translateZoneHVACHighTemperatureRadiant(mo);
+      model::ZoneHVACLowTemperatureRadiantElectric mo = modelObject.cast<ZoneHVACLowTemperatureRadiantElectric>();
+      retVal = translateZoneHVACLowTemperatureRadiantElectric(mo);
       break;
     }
   case openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow :
@@ -2043,12 +2243,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateZoneHVACLowTempRadiantVarFlow(mo);
       break;
     }
-  case openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric :
-    {
-      model::ZoneHVACLowTemperatureRadiantElectric mo = modelObject.cast<ZoneHVACLowTemperatureRadiantElectric>();
-      retVal = translateZoneHVACLowTemperatureRadiantElectric(mo);
-      break;
-    }  
   case openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump :
     {
       model::ZoneHVACPackagedTerminalHeatPump mo = modelObject.cast<ZoneHVACPackagedTerminalHeatPump>();
@@ -2067,18 +2261,30 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateZoneHVACTerminalUnitVariableRefrigerantFlow(mo);
       break;
     }
-  case openstudio::IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump :
-    {
-      model::ZoneHVACWaterToAirHeatPump mo = modelObject.cast<ZoneHVACWaterToAirHeatPump>();
-      retVal = translateZoneHVACWaterToAirHeatPump(mo);
-      break;
-    }
   case openstudio::IddObjectType::OS_ZoneHVAC_UnitHeater :
     {
       model::ZoneHVACUnitHeater mo = modelObject.cast<ZoneHVACUnitHeater>();
       retVal = translateZoneHVACUnitHeater(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_ZoneHVAC_UnitVentilator :
+    {
+      model::ZoneHVACUnitVentilator mo = modelObject.cast<ZoneHVACUnitVentilator>();
+      retVal = translateZoneHVACUnitVentilator(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump :
+    {
+      model::ZoneHVACWaterToAirHeatPump mo = modelObject.cast<ZoneHVACWaterToAirHeatPump>();
+      retVal = translateZoneHVACWaterToAirHeatPump(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ZoneMixing:
+  {
+    model::ZoneMixing mo = modelObject.cast<ZoneMixing>();
+    retVal = translateZoneMixing(mo);
+    break;
+  }
   //If no case statement log a warning
   default:
     {
@@ -2164,6 +2370,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Sizing_Parameters);
   result.push_back(IddObjectType::OS_ZoneAirContaminantBalance);
   result.push_back(IddObjectType::OS_ZoneAirHeatBalanceAlgorithm);
+  result.push_back(IddObjectType::OS_ZoneAirMassFlowConservation);
   result.push_back(IddObjectType::OS_ZoneCapacitanceMultiplier_ResearchSpecial);
   result.push_back(IddObjectType::OS_OutputControl_ReportingTolerances);
 
@@ -2281,6 +2488,8 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow);
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow);
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
+  result.push_back(IddObjectType::OS_ZoneMixing);
+
 
   result.push_back(IddObjectType::OS_Refrigeration_System);
   result.push_back(IddObjectType::OS_Refrigeration_TranscriticalSystem);

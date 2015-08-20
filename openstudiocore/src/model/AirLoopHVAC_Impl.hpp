@@ -36,7 +36,8 @@ class ThermalZone;
 class PlantLoop;
 class SizingSystem;
 class StraightComponent;
-class AvailabilityManagerAssignmentList;
+class AvailabilityManagerScheduled;
+class AvailabilityManager;
 
 namespace detail {
 
@@ -114,6 +115,8 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   virtual IddObjectType iddObjectType() const override;
 
+  virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+
   Splitter demandSplitter() override;
 
   Mixer demandMixer() override;
@@ -162,6 +165,12 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   std::string nightCycleControlType() const;
 
+  // boost::optional<Schedule> returnAirBypassFlowTemperatureSetpointSchedule() const;
+
+  // bool setReturnAirBypassFlowTemperatureSetpointSchedule(Schedule & temperatureSetpointSchedule);
+
+  // void resetReturnAirBypassFlowTemperatureSetpointSchedule();
+
   static bool addBranchForZoneImpl(ThermalZone & thermalZone, 
                                    AirLoopHVAC & airLoopHVAC,
                                    Splitter & splitter,
@@ -175,9 +184,15 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
   static boost::optional<PlantLoop> plantForAirTerminal( HVACComponent & airTerminal );
 
   static void setPlantForAirTerminal( HVACComponent & airTerminal, PlantLoop & plantLoop );
-  private:
 
-  AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const;
+  boost::optional<AvailabilityManager> availabilityManager() const;
+
+  bool setAvailabilityManager(const AvailabilityManager & availabilityManager);
+
+  void resetAvailabilityManager();
+
+
+  private:
 
   REGISTER_LOGGER("openstudio.model.AirLoopHVAC");
 

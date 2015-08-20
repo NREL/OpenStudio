@@ -250,6 +250,92 @@ OS:SetpointManager:Scheduled:DualSetpoint,
   {3515ff9e-912f-4d2e-bf1f-163a63d2662b}, !- Low Setpoint Schedule Name
   ;                                       !- Setpoint Node or NodeList Name
 
+OS:SetpointManager:Coldest,
+  {7c253b1f-3985-4eda-b181-401bd72749ce}, !- Handle
+  Setpoint Manager Coldest,               !- Name
+  Temperature,                            !- Control Variable
+  20,                                     !- Minimum Setpoint Temperature {C}
+  50,                                     !- Maximum Setpoint Temperature {C}
+  MinimumTemperature,                     !- Strategy
+  ;                                       !- Setpoint Node or NodeList Name
+
+OS:SetpointManager:FollowGroundTemperature,
+  {bffba0e9-d335-4800-9082-8a20bba507a3}, !- Handle
+  Setpoint Manager Follow Ground Temperature, !- Name
+  Temperature,                            !- Control Variable
+  0,                                      !- Offset Temperature Difference {deltaC}
+  80,                                     !- Maximum Setpoint Temperature {C}
+  10,                                     !- Minimum Setpoint Temperature {C}
+  ;                                       !- Setpoint Node or NodeList Name
+
+OS:SetpointManager:FollowSystemNodeTemperature,
+  {e8244f46-033d-4bf5-8571-36abd31f3527}, !- Handle
+  Setpoint Manager Follow System Node Temperature, !- Name
+  Temperature,                            !- Control Variable
+  ,                                       !- Reference Node Name
+  NodeDryBulb,                            !- Reference Temperature Type
+  0,                                      !- Offset Temperature Difference {deltaC}
+  100,                                    !- Maximum Limit Setpoint Temperature {C}
+  0,                                      !- Minimum Limit Setpoint Temperature {C}
+  ;                                       !- Setpoint Node or NodeList Name
+
+OS:SetpointManager:MultiZone:Cooling:Average,
+  {caf83914-0b9e-4da4-9bae-1a698c25b893}, !- Handle
+  Setpoint Manager Multi Zone Cooling Average, !- Name
+  Temperature,                            !- Control Variable
+  12,                                     !- Minimum Setpoint Temperature {C}
+  18,                                     !- Maximum Setpoint Temperature {C}
+  ;                                       !- Setpoint Node or NodeList Name
+
+OS:SetpointManager:MultiZone:Heating:Average,
+  {0a71f5aa-a09a-4295-b793-ae7afacf1880}, !- Handle
+  Setpoint Manager Multi Zone Heating Average, !- Name
+  Temperature,                            !- Control Variable
+  20,                                     !- Minimum Setpoint Temperature {C}
+  50,                                     !- Maximum Setpoint Temperature {C}
+  ;                                       !- Setpoint Node or NodeList Name
+
+OS:SetpointManager:MultiZone:Humidity:Maximum,
+  {f83b7f0e-7825-4404-8457-ceca1af0e739}, !- Handle
+  Setpoint Manager Multi Zone Humidity Maximum, !- Name
+  MaximumHumidityRatio,                   !- Control Variable
+  0.008,                                  !- Minimum Setpoint Humidity Ratio {kgWater/kgDryAir}
+  0.015,                                  !- Maximum Setpoint Humidity Ratio {kgWater/kgDryAir}
+  ;                                       !- Setpoint Node or NodeList Name
+
+OS:SetpointManager:MultiZone:MaximumHumidity:Average,
+  {009553a2-3dd7-43dc-bab1-ee5d2e9abc35}, !- Handle
+  Setpoint Manager Multi Zone Maximum Humidity Average, !- Name
+  MaximumHumidityRatio,                   !- Control Variable
+  0.008,                                  !- Minimum Setpoint Humidity Ratio {kgWater/kgDryAir}
+  0.015,                                  !- Maximum Setpoint Humidity Ratio {kgWater/kgDryAir}
+  ;                                       !- Setpoint Node or NodeList Name
+
+OS:SetpointManager:SingleZone:Humidity:Maximum,
+  {34e80a9c-7b5f-4161-8965-4e058bd78fba}, !- Handle
+  Setpoint Manager Single Zone Humidity Maximum, !- Name
+  MaximumHumidityRatio,                   !- Control Variable
+  ,                                       !- Control Zone Name
+  ;                                       !- Setpoint Node or NodeList Name
+
+OS:SetpointManager:SingleZone:OneStageCooling,
+  {698b3c0c-62eb-431c-a93b-571f5614da9a}, !- Handle
+  Setpoint Manager Single Zone One Stage Cooling, !- Name
+  Temperature,                            !- Control Variable
+  -99,                                    !- Cooling Stage On Supply Air Setpoint Temperature {C}
+  99,                                     !- Cooling Stage Off Supply Air Setpoint Temperature {C}
+  ,                                       !- Control Zone Name
+  ;                                       !- Setpoint Node or NodeList Name
+
+OS:SetpointManager:SingleZone:OneStageHeating,
+  {b6b9b2a2-3b14-4f97-8a48-aaeefd196c0e}, !- Handle
+  Setpoint Manager Single Zone One Stage Heating, !- Name
+  Temperature,                            !- Control Variable
+  99,                                     !- Heating Stage On Supply Air Setpoint Temperature {C}
+  -99,                                    !- Heating Stage Off Supply Air Setpoint Temperature {C}
+  ,                                       !- Control Zone Name
+  ;                                       !- Setpoint Node or NodeList Name
+
 OS:Schedule:Ruleset,
   {7aec1e64-640d-4bb1-ba20-f89f7e911d11}, !- Handle
   Min Max Temp w Deadband Max Temp Sch,   !- Name
@@ -9130,4 +9216,76 @@ OS:Pipe:Indoor,
   0.05,                                   !- Pipe Inside Diameter {m}
   100;                                    !- Pipe Length {m}
 
+OS:SolarCollector:FlatPlate:Water,
+  {49f50946-e58b-424d-8de0-7c40725d7df6}, !- Handle
+  Solar Collector Flat Plate Water 1,     !- Name
+  {7a28412e-316b-4ed4-af83-aec518479b28}, !- SolarCollectorPerformance Name
+  ,                                       !- Surface Name
+  ,                                       !- Inlet Node Name
+  ;                                       !- Outlet Node Name
+  
+OS:SolarCollectorPerformance:FlatPlate,
+  {7a28412e-316b-4ed4-af83-aec518479b28}, !- Handle
+  Alternate Energy Technologies AE-32,    !- Name
+  2.9646,                                 !- Gross Area {m2}
+  Water,                                  !- Test Fluid
+  3.88e-005,                              !- Test Flow Rate {m3/s}
+  Inlet,                                  !- Test Correlation Type
+  0.691,                                  !- Coefficient 1 of Efficiency Equation {dimensionless}
+  -0.00193,                               !- Coefficient 2 of Efficiency Equation {W/m2-K}
+  ,                                       !- Coefficient 3 of Efficiency Equation {W/m2-K2}
+  -0.1939,                                !- Coefficient 2 of Incident Angle Modifier
+  -0.0055;                                !- Coefficient 3 of Incident Angle Modifier
+
+OS:SolarCollector:IntegralCollectorStorage,
+  {64be4831-667a-48f5-9289-04a5d50b68dd}, !- Handle
+  Solar Collector Integral Collector Storage 1, !- Name
+  {0229cfb2-20b7-4721-b1c0-6990a0dbcfee}, !- IntegralCollectorStorageParameters Name
+  ,                                       !- Surface Name
+  ,                                       !- Bottom Surface Boundary Conditions Type
+  ,                                       !- Boundary Condition Model Name
+  ,                                       !- Inlet Node Name
+  ,                                       !- Outlet Node Name
+  ;                                       !- Maximum Flow Rate {m3/s}
+
+OS:SolarCollectorPerformance:IntegralCollectorStorage,
+  {0229cfb2-20b7-4721-b1c0-6990a0dbcfee}, !- Handle
+  Solar Collector Performance Integral Collector Storage 1, !- Name
+  ,                                       !- ICS Collector Type
+  ,                                       !- Gross Area {m2}
+  ,                                       !- Collector Water Volume {m3}
+  ,                                       !- Bottom Heat Loss Conductance {W/m2-K}
+  ,                                       !- Side Heat Loss Conductance {W/m2-K}
+  ,                                       !- Aspect Ratio {m}
+  ,                                       !- Collector Side Height {m}
+  ,                                       !- Thermal Mass of Absorber Plate {J/m2-K}
+  ,                                       !- Number of Covers
+  ,                                       !- Cover Spacing {m}
+  ,                                       !- Refractive Index of Outer Cover {dimensionless}
+  ,                                       !- Extinction Coefficient Times Thickness of Outer Cover {dimensionless}
+  ,                                       !- Emissivity of Outer Cover {dimensionless}
+  ,                                       !- Refractive Index of Inner Cover {dimensionless}
+  ,                                       !- Extinction Coefficient Times Thickness of the inner Cover {dimensionless}
+  ,                                       !- Emissivity of Inner Cover {dimensionless}
+  ,                                       !- Absorptance of Absorber Plate {dimensionless}
+  ;                                       !- Emissivity of Absorber Plate {dimensionless}
+
+OS:SolarCollector:FlatPlate:PhotovoltaicThermal,
+  {bac3df38-7db9-426d-a5fb-993a71a3b9e6}, !- Handle
+  Solar Collector Flat Plate Photovoltaic Thermal 1, !- Name
+  ,                                       !- Surface Name
+  {c0483617-4b80-40f5-a562-a21b3c3e6dce}, !- Photovoltaic-Thermal Model Performance Name
+  ,                                       !- Photovoltaic Name
+  ,                                       !- Inlet Node Name
+  ,                                       !- Outlet Node Name
+  ;                                       !- Design Flow Rate {m3/s}
+
+OS:SolarCollectorPerformance:PhotovoltaicThermal:Simple,
+  {c0483617-4b80-40f5-a562-a21b3c3e6dce}, !- Handle
+  Solar Collector Performance Photovoltaic Thermal Simple 1, !- Name
+  ,                                       !- Fraction of Surface Area with Active Thermal Collector {dimensionless}
+  Fixed,                                  !- Thermal Conversion Efficiency Input Mode Type
+  0.3,                                    !- Value for Thermal Conversion Efficiency if Fixed
+  ,                                       !- Thermal Conversion Efficiency Schedule Name
+  ;                                       !- Front Surface Emittance
 

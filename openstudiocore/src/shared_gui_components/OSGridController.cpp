@@ -328,7 +328,7 @@ namespace openstudio {
     ++range.first;
     while (range.first != range.second)
     {
-      assert(row == std::make_tuple(range.first->second->row, range.first->second->subrow));
+      //assert(row == std::make_tuple(range.first->second->row, range.first->second->subrow));
       ++range.first;
     }
 #endif

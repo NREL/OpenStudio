@@ -39,6 +39,7 @@ class Thermostat;
 class ZoneControlHumidistat;
 class SizingZone;
 class PortList;
+class ZoneMixing;
 
 namespace detail {
 
@@ -403,6 +404,15 @@ class MODEL_API ThermalZone : public HVACComponent {
   /** Remove any return plenum serving this zone
   */
   void removeReturnPlenum();
+
+  /** Returns all ZoneMixing objects associated with this zone, includes supply and exhaust mixing objects */
+  std::vector<ZoneMixing> zoneMixing() const;
+
+  /** Returns all ZoneMixing objects which supply air to this zone */
+  std::vector<ZoneMixing> supplyZoneMixing() const;
+
+  /** Returns all ZoneMixing objects which exhaust air from this zone */
+  std::vector<ZoneMixing> exhaustZoneMixing() const;
 
   //@}
  protected:
