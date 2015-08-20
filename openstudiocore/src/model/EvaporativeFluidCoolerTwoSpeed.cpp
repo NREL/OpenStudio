@@ -20,15 +20,11 @@
 #include "EvaporativeFluidCoolerTwoSpeed.hpp"
 #include "EvaporativeFluidCoolerTwoSpeed_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-#include "WaterStorageTank.hpp"
-#include "WaterStorageTank_Impl.hpp"
+// #include "WaterStorageTank.hpp"
+// #include "WaterStorageTank_Impl.hpp"
+#include "Node.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
 
@@ -92,20 +88,24 @@ namespace detail {
     return result;
   }
 
-  Connection EvaporativeFluidCoolerTwoSpeed_Impl::waterInletNode() const {
-    boost::optional<Connection> value = optionalWaterInletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Water Inlet Node attached.");
+  bool EvaporativeFluidCoolerTwoSpeed_Impl::addToNode(Node & node)
+  {
+    if(auto plant = node.plantLoop()) {
+      if( plant->supplyComponent(node.handle()) ) {
+        return StraightComponent_Impl::addToNode(node);
+      }
     }
-    return value.get();
+    return false;
   }
 
-  Connection EvaporativeFluidCoolerTwoSpeed_Impl::waterOutletNode() const {
-    boost::optional<Connection> value = optionalWaterOutletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Water Outlet Node attached.");
-    }
-    return value.get();
+  unsigned EvaporativeFluidCoolerTwoSpeed_Impl::inletPort()
+  {
+    return OS_EvaporativeFluidCooler_TwoSpeedFields::WaterInletNodeName;
+  }
+
+  unsigned EvaporativeFluidCoolerTwoSpeed_Impl::outletPort()
+  {
+    return OS_EvaporativeFluidCooler_TwoSpeedFields::WaterOutletNodeName;
   }
 
   boost::optional<double> EvaporativeFluidCoolerTwoSpeed_Impl::highFanSpeedAirFlowRate() const {
@@ -335,19 +335,9 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_EvaporativeFluidCooler_TwoSpeedFields::BlowdownMakeupWaterUsageScheduleName);
   }
 
-  boost::optional<WaterStorageTank> EvaporativeFluidCoolerTwoSpeed_Impl::supplyWaterStorageTank() const {
-    return getObject<ModelObject>().getModelObjectTarget<WaterStorageTank>(OS_EvaporativeFluidCooler_TwoSpeedFields::SupplyWaterStorageTankName);
-  }
-
-  bool EvaporativeFluidCoolerTwoSpeed_Impl::setWaterInletNode(const Connection& connection) {
-    bool result = setPointer(OS_EvaporativeFluidCooler_TwoSpeedFields::WaterInletNodeName, connection.handle());
-    return result;
-  }
-
-  bool EvaporativeFluidCoolerTwoSpeed_Impl::setWaterOutletNode(const Connection& connection) {
-    bool result = setPointer(OS_EvaporativeFluidCooler_TwoSpeedFields::WaterOutletNodeName, connection.handle());
-    return result;
-  }
+  // boost::optional<WaterStorageTank> EvaporativeFluidCoolerTwoSpeed_Impl::supplyWaterStorageTank() const {
+  //   return getObject<ModelObject>().getModelObjectTarget<WaterStorageTank>(OS_EvaporativeFluidCooler_TwoSpeedFields::SupplyWaterStorageTankName);
+  // }
 
   bool EvaporativeFluidCoolerTwoSpeed_Impl::setHighFanSpeedAirFlowRate(boost::optional<double> highFanSpeedAirFlowRate) {
     bool result(false);
@@ -708,30 +698,22 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool EvaporativeFluidCoolerTwoSpeed_Impl::setSupplyWaterStorageTank(const boost::optional<WaterStorageTank>& waterStorageTank) {
-    bool result(false);
-    if (waterStorageTank) {
-      result = setPointer(OS_EvaporativeFluidCooler_TwoSpeedFields::SupplyWaterStorageTankName, waterStorageTank.get().handle());
-    }
-    else {
-      resetSupplyWaterStorageTank();
-      result = true;
-    }
-    return result;
-  }
+  // bool EvaporativeFluidCoolerTwoSpeed_Impl::setSupplyWaterStorageTank(const boost::optional<WaterStorageTank>& waterStorageTank) {
+  //   bool result(false);
+  //   if (waterStorageTank) {
+  //     result = setPointer(OS_EvaporativeFluidCooler_TwoSpeedFields::SupplyWaterStorageTankName, waterStorageTank.get().handle());
+  //   }
+  //   else {
+  //     resetSupplyWaterStorageTank();
+  //     result = true;
+  //   }
+  //   return result;
+  // }
 
-  void EvaporativeFluidCoolerTwoSpeed_Impl::resetSupplyWaterStorageTank() {
-    bool result = setString(OS_EvaporativeFluidCooler_TwoSpeedFields::SupplyWaterStorageTankName, "");
-    OS_ASSERT(result);
-  }
-
-  boost::optional<Connection> EvaporativeFluidCoolerTwoSpeed_Impl::optionalWaterInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_EvaporativeFluidCooler_TwoSpeedFields::WaterInletNodeName);
-  }
-
-  boost::optional<Connection> EvaporativeFluidCoolerTwoSpeed_Impl::optionalWaterOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_EvaporativeFluidCooler_TwoSpeedFields::WaterOutletNodeName);
-  }
+  // void EvaporativeFluidCoolerTwoSpeed_Impl::resetSupplyWaterStorageTank() {
+  //   bool result = setString(OS_EvaporativeFluidCooler_TwoSpeedFields::SupplyWaterStorageTankName, "");
+  //   OS_ASSERT(result);
+  // }
 
 } // detail
 
@@ -796,14 +778,6 @@ std::vector<std::string> EvaporativeFluidCoolerTwoSpeed::evaporationLossModeValu
 std::vector<std::string> EvaporativeFluidCoolerTwoSpeed::blowdownCalculationModeValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_EvaporativeFluidCooler_TwoSpeedFields::BlowdownCalculationMode);
-}
-
-Connection EvaporativeFluidCoolerTwoSpeed::waterInletNode() const {
-  return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->waterInletNode();
-}
-
-Connection EvaporativeFluidCoolerTwoSpeed::waterOutletNode() const {
-  return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->waterOutletNode();
 }
 
 boost::optional<double> EvaporativeFluidCoolerTwoSpeed::highFanSpeedAirFlowRate() const {
@@ -962,17 +936,9 @@ boost::optional<Schedule> EvaporativeFluidCoolerTwoSpeed::blowdownMakeupWaterUsa
   return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->blowdownMakeupWaterUsageSchedule();
 }
 
-boost::optional<WaterStorageTank> EvaporativeFluidCoolerTwoSpeed::supplyWaterStorageTank() const {
-  return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->supplyWaterStorageTank();
-}
-
-bool EvaporativeFluidCoolerTwoSpeed::setWaterInletNode(const Connection& connection) {
-  return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setWaterInletNode(connection);
-}
-
-bool EvaporativeFluidCoolerTwoSpeed::setWaterOutletNode(const Connection& connection) {
-  return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setWaterOutletNode(connection);
-}
+// boost::optional<WaterStorageTank> EvaporativeFluidCoolerTwoSpeed::supplyWaterStorageTank() const {
+//   return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->supplyWaterStorageTank();
+// }
 
 bool EvaporativeFluidCoolerTwoSpeed::setHighFanSpeedAirFlowRate(double highFanSpeedAirFlowRate) {
   return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setHighFanSpeedAirFlowRate(highFanSpeedAirFlowRate);
@@ -1182,13 +1148,13 @@ void EvaporativeFluidCoolerTwoSpeed::resetBlowdownMakeupWaterUsageSchedule() {
   getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->resetBlowdownMakeupWaterUsageSchedule();
 }
 
-bool EvaporativeFluidCoolerTwoSpeed::setSupplyWaterStorageTank(const WaterStorageTank& waterStorageTank) {
-  return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setSupplyWaterStorageTank(waterStorageTank);
-}
+// bool EvaporativeFluidCoolerTwoSpeed::setSupplyWaterStorageTank(const WaterStorageTank& waterStorageTank) {
+//   return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setSupplyWaterStorageTank(waterStorageTank);
+// }
 
-void EvaporativeFluidCoolerTwoSpeed::resetSupplyWaterStorageTank() {
-  getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->resetSupplyWaterStorageTank();
-}
+// void EvaporativeFluidCoolerTwoSpeed::resetSupplyWaterStorageTank() {
+//   getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->resetSupplyWaterStorageTank();
+// }
 
 /// @cond
 EvaporativeFluidCoolerTwoSpeed::EvaporativeFluidCoolerTwoSpeed(std::shared_ptr<detail::EvaporativeFluidCoolerTwoSpeed_Impl> impl)

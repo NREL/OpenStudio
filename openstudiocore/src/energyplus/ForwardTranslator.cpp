@@ -608,6 +608,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // no-op
       return retVal;
     }
+  case openstudio::IddObjectType::OS_CentralHeatPumpSystem :
+    {
+      model::CentralHeatPumpSystem mo = modelObject.cast<CentralHeatPumpSystem>();
+      retVal = translateCentralHeatPumpSystem(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_CentralHeatPumpSystem_Module :
+    {
+      model::CentralHeatPumpSystemModule mo = modelObject.cast<CentralHeatPumpSystemModule>();
+      retVal = translateCentralHeatPumpSystemModule(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_Chiller_Absorption :
     {
       auto mo = modelObject.cast<ChillerAbsorption>();
@@ -624,6 +636,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::ChillerElectricEIR chiller = modelObject.cast<ChillerElectricEIR>();
       retVal = translateChillerElectricEIR(chiller);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ChillerHeaterPerformance_Electric_EIR :
+    {
+      model::ChillerHeaterPerformanceElectricEIR mo = modelObject.cast<ChillerHeaterPerformanceElectricEIR>();
+      retVal = translateChillerHeaterPerformanceElectricEIR(mo);
       break;
     }
   case openstudio::IddObjectType::OS_ClimateZones:
@@ -1112,6 +1130,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateEvaporativeFluidCoolerSingleSpeed(evap);
       break;
     }
+  case openstudio::IddObjectType::OS_EvaporativeFluidCooler_TwoSpeed :
+    {
+      model::EvaporativeFluidCoolerTwoSpeed mo = modelObject.cast<EvaporativeFluidCoolerTwoSpeed>();
+      retVal = translateEvaporativeFluidCoolerTwoSpeed(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_Exterior_Lights :
     {
       model::ExteriorLights lights = modelObject.cast<ExteriorLights>();
@@ -1288,6 +1312,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateGasMixture(gasMixture);
       break;
     }
+  case openstudio::IddObjectType::OS_LoadProfile_Plant :
+    {
+      model::LoadProfilePlant mo = modelObject.cast<LoadProfilePlant>();
+      retVal = translateLoadProfilePlant(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_LifeCycleCost :
     {
       model::LifeCycleCost lifeCycleCost = modelObject.cast<LifeCycleCost>();
@@ -1370,6 +1400,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       PlantLoop plantLoop = modelObject.cast<PlantLoop>();
       retVal = translatePlantLoop(plantLoop);
+      break;
+    }
+  case openstudio::IddObjectType::OS_PlantComponent_TemperatureSource :
+    {
+      model::PlantComponentTemperatureSource mo = modelObject.cast<PlantComponentTemperatureSource>();
+      retVal = translatePlantComponentTemperatureSource(mo);
       break;
     }
   case openstudio::IddObjectType::OS_PlantEquipmentOperation_CoolingLoad :
@@ -1859,6 +1895,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       auto mo = modelObject.cast<ThermalStorageIceDetailed>();
       retVal = translateThermalStorageIceDetailed(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ThermalStorage_ChilledWater_Stratified :
+    {
+      model::ThermalStorageChilledWaterStratified mo = modelObject.cast<ThermalStorageChilledWaterStratified>();
+      retVal = translateThermalStorageChilledWaterStratified(mo);
       break;
     }
   case openstudio::IddObjectType::OS_ThermostatSetpoint_DualSetpoint :

@@ -26,8 +26,7 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class ChillerHeaterEIR;
+class ChillerHeaterPerformanceElectricEIR;
 class Schedule;
 
 namespace detail {
@@ -66,10 +65,8 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: ChillerHeaterEIR.
-    ChillerHeaterEIR chillerHeaterModulesPerformanceComponent() const;
+    ChillerHeaterPerformanceElectricEIR chillerHeaterModulesPerformanceComponent() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     Schedule chillerHeaterModulesControlSchedule() const;
 
     int numberofChillerHeaterModules() const;
@@ -78,10 +75,8 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: ChillerHeaterEIR.
-    bool setChillerHeaterModulesPerformanceComponent(const ChillerHeaterEIR& chillerHeaterEIR);
+    bool setChillerHeaterModulesPerformanceComponent(const ChillerHeaterPerformanceElectricEIR& chillerHeaterPerformanceElectricEIR);
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setChillerHeaterModulesControlSchedule(Schedule& schedule);
 
     bool setNumberofChillerHeaterModules(int numberofChillerHeaterModules);
@@ -95,11 +90,10 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.CentralHeatPumpSystemModule");
 
-    // TODO: Check the return types of these methods.
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
-    boost::optional<ChillerHeaterEIR> optionalChillerHeaterModulesPerformanceComponent() const;
+    boost::optional<ChillerHeaterPerformanceElectricEIR> optionalChillerHeaterModulesPerformanceComponent() const;
     boost::optional<Schedule> optionalChillerHeaterModulesControlSchedule() const;
   };
 

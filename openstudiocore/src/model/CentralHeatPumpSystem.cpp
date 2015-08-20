@@ -20,19 +20,6 @@
 #include "CentralHeatPumpSystem.hpp"
 #include "CentralHeatPumpSystem_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
@@ -98,57 +85,36 @@ namespace detail {
     return result;
   }
 
+  unsigned CentralHeatPumpSystem_Impl::supplyInletPort()
+  {
+    return OS_CentralHeatPumpSystemFields::CoolingLoopInletNodeName;
+  }
+
+  unsigned CentralHeatPumpSystem_Impl::supplyOutletPort()
+  {
+    return OS_CentralHeatPumpSystemFields::CoolingLoopOutletNodeName;
+  }
+
+  unsigned CentralHeatPumpSystem_Impl::demandInletPort()
+  {
+    return OS_CentralHeatPumpSystemFields::SourceLoopInletNodeName;
+  }
+
+  unsigned CentralHeatPumpSystem_Impl::demandOutletPort()
+  {
+    return OS_CentralHeatPumpSystemFields::SourceLoopOutletNodeName;
+  }
+
+// OS_CentralHeatPumpSystemFields::CoolingLoopInletNodeName
+// OS_CentralHeatPumpSystemFields::CoolingLoopOutletNodeName
+// OS_CentralHeatPumpSystemFields::SourceLoopInletNodeName
+// OS_CentralHeatPumpSystemFields::SourceLoopOutletNodeName
+// OS_CentralHeatPumpSystemFields::HeatingLoopInletNodeName
+// OS_CentralHeatPumpSystemFields::HeatingLoopOutletNodeName
+
   std::string CentralHeatPumpSystem_Impl::controlMethod() const {
     boost::optional<std::string> value = getString(OS_CentralHeatPumpSystemFields::ControlMethod,true);
     OS_ASSERT(value);
-    return value.get();
-  }
-
-  Connection CentralHeatPumpSystem_Impl::coolingLoopInletNode() const {
-    boost::optional<Connection> value = optionalCoolingLoopInletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Cooling Loop Inlet Node attached.");
-    }
-    return value.get();
-  }
-
-  Connection CentralHeatPumpSystem_Impl::coolingLoopOutletNode() const {
-    boost::optional<Connection> value = optionalCoolingLoopOutletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Cooling Loop Outlet Node attached.");
-    }
-    return value.get();
-  }
-
-  Connection CentralHeatPumpSystem_Impl::sourceLoopInletNode() const {
-    boost::optional<Connection> value = optionalSourceLoopInletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Source Loop Inlet Node attached.");
-    }
-    return value.get();
-  }
-
-  Connection CentralHeatPumpSystem_Impl::sourceLoopOutletNode() const {
-    boost::optional<Connection> value = optionalSourceLoopOutletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Source Loop Outlet Node attached.");
-    }
-    return value.get();
-  }
-
-  Connection CentralHeatPumpSystem_Impl::heatingLoopInletNode() const {
-    boost::optional<Connection> value = optionalHeatingLoopInletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Heating Loop Inlet Node attached.");
-    }
-    return value.get();
-  }
-
-  Connection CentralHeatPumpSystem_Impl::heatingLoopOutletNode() const {
-    boost::optional<Connection> value = optionalHeatingLoopOutletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Heating Loop Outlet Node attached.");
-    }
     return value.get();
   }
 
@@ -164,36 +130,6 @@ namespace detail {
 
   bool CentralHeatPumpSystem_Impl::setControlMethod(std::string controlMethod) {
     bool result = setString(OS_CentralHeatPumpSystemFields::ControlMethod, controlMethod);
-    return result;
-  }
-
-  bool CentralHeatPumpSystem_Impl::setCoolingLoopInletNode(const Connection& connection) {
-    bool result = setPointer(OS_CentralHeatPumpSystemFields::CoolingLoopInletNodeName, connection.handle());
-    return result;
-  }
-
-  bool CentralHeatPumpSystem_Impl::setCoolingLoopOutletNode(const Connection& connection) {
-    bool result = setPointer(OS_CentralHeatPumpSystemFields::CoolingLoopOutletNodeName, connection.handle());
-    return result;
-  }
-
-  bool CentralHeatPumpSystem_Impl::setSourceLoopInletNode(const Connection& connection) {
-    bool result = setPointer(OS_CentralHeatPumpSystemFields::SourceLoopInletNodeName, connection.handle());
-    return result;
-  }
-
-  bool CentralHeatPumpSystem_Impl::setSourceLoopOutletNode(const Connection& connection) {
-    bool result = setPointer(OS_CentralHeatPumpSystemFields::SourceLoopOutletNodeName, connection.handle());
-    return result;
-  }
-
-  bool CentralHeatPumpSystem_Impl::setHeatingLoopInletNode(const Connection& connection) {
-    bool result = setPointer(OS_CentralHeatPumpSystemFields::HeatingLoopInletNodeName, connection.handle());
-    return result;
-  }
-
-  bool CentralHeatPumpSystem_Impl::setHeatingLoopOutletNode(const Connection& connection) {
-    bool result = setPointer(OS_CentralHeatPumpSystemFields::HeatingLoopOutletNodeName, connection.handle());
     return result;
   }
 
@@ -213,30 +149,6 @@ namespace detail {
   void CentralHeatPumpSystem_Impl::resetAncillaryOperationSchedule() {
     bool result = setString(OS_CentralHeatPumpSystemFields::AncillaryOperationScheduleName, "");
     OS_ASSERT(result);
-  }
-
-  boost::optional<Connection> CentralHeatPumpSystem_Impl::optionalCoolingLoopInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_CentralHeatPumpSystemFields::CoolingLoopInletNodeName);
-  }
-
-  boost::optional<Connection> CentralHeatPumpSystem_Impl::optionalCoolingLoopOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_CentralHeatPumpSystemFields::CoolingLoopOutletNodeName);
-  }
-
-  boost::optional<Connection> CentralHeatPumpSystem_Impl::optionalSourceLoopInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_CentralHeatPumpSystemFields::SourceLoopInletNodeName);
-  }
-
-  boost::optional<Connection> CentralHeatPumpSystem_Impl::optionalSourceLoopOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_CentralHeatPumpSystemFields::SourceLoopOutletNodeName);
-  }
-
-  boost::optional<Connection> CentralHeatPumpSystem_Impl::optionalHeatingLoopInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_CentralHeatPumpSystemFields::HeatingLoopInletNodeName);
-  }
-
-  boost::optional<Connection> CentralHeatPumpSystem_Impl::optionalHeatingLoopOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_CentralHeatPumpSystemFields::HeatingLoopOutletNodeName);
   }
 
 } // detail
@@ -287,30 +199,6 @@ std::string CentralHeatPumpSystem::controlMethod() const {
   return getImpl<detail::CentralHeatPumpSystem_Impl>()->controlMethod();
 }
 
-Connection CentralHeatPumpSystem::coolingLoopInletNode() const {
-  return getImpl<detail::CentralHeatPumpSystem_Impl>()->coolingLoopInletNode();
-}
-
-Connection CentralHeatPumpSystem::coolingLoopOutletNode() const {
-  return getImpl<detail::CentralHeatPumpSystem_Impl>()->coolingLoopOutletNode();
-}
-
-Connection CentralHeatPumpSystem::sourceLoopInletNode() const {
-  return getImpl<detail::CentralHeatPumpSystem_Impl>()->sourceLoopInletNode();
-}
-
-Connection CentralHeatPumpSystem::sourceLoopOutletNode() const {
-  return getImpl<detail::CentralHeatPumpSystem_Impl>()->sourceLoopOutletNode();
-}
-
-Connection CentralHeatPumpSystem::heatingLoopInletNode() const {
-  return getImpl<detail::CentralHeatPumpSystem_Impl>()->heatingLoopInletNode();
-}
-
-Connection CentralHeatPumpSystem::heatingLoopOutletNode() const {
-  return getImpl<detail::CentralHeatPumpSystem_Impl>()->heatingLoopOutletNode();
-}
-
 double CentralHeatPumpSystem::ancillaryPower() const {
   return getImpl<detail::CentralHeatPumpSystem_Impl>()->ancillaryPower();
 }
@@ -321,30 +209,6 @@ boost::optional<Schedule> CentralHeatPumpSystem::ancillaryOperationSchedule() co
 
 bool CentralHeatPumpSystem::setControlMethod(std::string controlMethod) {
   return getImpl<detail::CentralHeatPumpSystem_Impl>()->setControlMethod(controlMethod);
-}
-
-bool CentralHeatPumpSystem::setCoolingLoopInletNode(const Connection& connection) {
-  return getImpl<detail::CentralHeatPumpSystem_Impl>()->setCoolingLoopInletNode(connection);
-}
-
-bool CentralHeatPumpSystem::setCoolingLoopOutletNode(const Connection& connection) {
-  return getImpl<detail::CentralHeatPumpSystem_Impl>()->setCoolingLoopOutletNode(connection);
-}
-
-bool CentralHeatPumpSystem::setSourceLoopInletNode(const Connection& connection) {
-  return getImpl<detail::CentralHeatPumpSystem_Impl>()->setSourceLoopInletNode(connection);
-}
-
-bool CentralHeatPumpSystem::setSourceLoopOutletNode(const Connection& connection) {
-  return getImpl<detail::CentralHeatPumpSystem_Impl>()->setSourceLoopOutletNode(connection);
-}
-
-bool CentralHeatPumpSystem::setHeatingLoopInletNode(const Connection& connection) {
-  return getImpl<detail::CentralHeatPumpSystem_Impl>()->setHeatingLoopInletNode(connection);
-}
-
-bool CentralHeatPumpSystem::setHeatingLoopOutletNode(const Connection& connection) {
-  return getImpl<detail::CentralHeatPumpSystem_Impl>()->setHeatingLoopOutletNode(connection);
 }
 
 bool CentralHeatPumpSystem::setAncillaryPower(double ancillaryPower) {

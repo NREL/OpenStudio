@@ -26,9 +26,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Connection;
-class Connection;
 class Schedule;
 
 namespace detail {
@@ -63,15 +60,15 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
 
+    virtual unsigned inletPort() override;
+
+    virtual unsigned outletPort() override;
+
+    // virtual bool addToNode(Node & node) override;
+
     //@}
     /** @name Getters */
     //@{
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection inletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection outletNode() const;
 
     boost::optional<double> designVolumeFlowRate() const;
 
@@ -81,18 +78,11 @@ namespace detail {
 
     boost::optional<double> sourceTemperature() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> sourceTemperatureSchedule() const;
 
     //@}
     /** @name Setters */
     //@{
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setInletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setOutletNode(const Connection& connection);
 
     bool setDesignVolumeFlowRate(boost::optional<double> designVolumeFlowRate);
 
@@ -104,7 +94,6 @@ namespace detail {
 
     void resetSourceTemperature();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setSourceTemperatureSchedule(Schedule& schedule);
 
     void resetSourceTemperatureSchedule();
@@ -118,12 +107,9 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.PlantComponentTemperatureSource");
 
-    // TODO: Check the return types of these methods.
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
-    boost::optional<Connection> optionalInletNode() const;
-    boost::optional<Connection> optionalOutletNode() const;
   };
 
 } // detail

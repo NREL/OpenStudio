@@ -20,9 +20,8 @@
 #include "CentralHeatPumpSystemModule.hpp"
 #include "CentralHeatPumpSystemModule_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include "ChillerHeaterEIR.hpp"
-#include "ChillerHeaterEIR_Impl.hpp"
+#include "ChillerHeaterPerformanceElectricEIR.hpp"
+#include "ChillerHeaterPerformanceElectricEIR_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
@@ -85,8 +84,8 @@ namespace detail {
     return result;
   }
 
-  ChillerHeaterEIR CentralHeatPumpSystemModule_Impl::chillerHeaterModulesPerformanceComponent() const {
-    boost::optional<ChillerHeaterEIR> value = optionalChillerHeaterModulesPerformanceComponent();
+  ChillerHeaterPerformanceElectricEIR CentralHeatPumpSystemModule_Impl::chillerHeaterModulesPerformanceComponent() const {
+    boost::optional<ChillerHeaterPerformanceElectricEIR> value = optionalChillerHeaterModulesPerformanceComponent();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Chiller Heater Modules Performance Component attached.");
     }
@@ -107,8 +106,8 @@ namespace detail {
     return value.get();
   }
 
-  bool CentralHeatPumpSystemModule_Impl::setChillerHeaterModulesPerformanceComponent(const ChillerHeaterEIR& chillerHeaterEIR) {
-    bool result = setPointer(OS_CentralHeatPumpSystem_ModuleFields::ChillerHeaterModulesPerformanceComponentName, chillerHeaterEIR.handle());
+  bool CentralHeatPumpSystemModule_Impl::setChillerHeaterModulesPerformanceComponent(const ChillerHeaterPerformanceElectricEIR& chillerHeaterPerformanceElectricEIR) {
+    bool result = setPointer(OS_CentralHeatPumpSystem_ModuleFields::ChillerHeaterModulesPerformanceComponentName, chillerHeaterPerformanceElectricEIR.handle());
     return result;
   }
 
@@ -125,8 +124,8 @@ namespace detail {
     return result;
   }
 
-  boost::optional<ChillerHeaterEIR> CentralHeatPumpSystemModule_Impl::optionalChillerHeaterModulesPerformanceComponent() const {
-    return getObject<ModelObject>().getModelObjectTarget<ChillerHeaterEIR>(OS_CentralHeatPumpSystem_ModuleFields::ChillerHeaterModulesPerformanceComponentName);
+  boost::optional<ChillerHeaterPerformanceElectricEIR> CentralHeatPumpSystemModule_Impl::optionalChillerHeaterModulesPerformanceComponent() const {
+    return getObject<ModelObject>().getModelObjectTarget<ChillerHeaterPerformanceElectricEIR>(OS_CentralHeatPumpSystem_ModuleFields::ChillerHeaterModulesPerformanceComponentName);
   }
 
   boost::optional<Schedule> CentralHeatPumpSystemModule_Impl::optionalChillerHeaterModulesControlSchedule() const {
@@ -158,7 +157,7 @@ IddObjectType CentralHeatPumpSystemModule::iddObjectType() {
   return IddObjectType(IddObjectType::OS_CentralHeatPumpSystem_Module);
 }
 
-ChillerHeaterEIR CentralHeatPumpSystemModule::chillerHeaterModulesPerformanceComponent() const {
+ChillerHeaterPerformanceElectricEIR CentralHeatPumpSystemModule::chillerHeaterModulesPerformanceComponent() const {
   return getImpl<detail::CentralHeatPumpSystemModule_Impl>()->chillerHeaterModulesPerformanceComponent();
 }
 
@@ -170,8 +169,8 @@ int CentralHeatPumpSystemModule::numberofChillerHeaterModules() const {
   return getImpl<detail::CentralHeatPumpSystemModule_Impl>()->numberofChillerHeaterModules();
 }
 
-bool CentralHeatPumpSystemModule::setChillerHeaterModulesPerformanceComponent(const ChillerHeaterEIR& chillerHeaterEIR) {
-  return getImpl<detail::CentralHeatPumpSystemModule_Impl>()->setChillerHeaterModulesPerformanceComponent(chillerHeaterEIR);
+bool CentralHeatPumpSystemModule::setChillerHeaterModulesPerformanceComponent(const ChillerHeaterPerformanceElectricEIR& chillerHeaterPerformanceElectricEIR) {
+  return getImpl<detail::CentralHeatPumpSystemModule_Impl>()->setChillerHeaterModulesPerformanceComponent(chillerHeaterPerformanceElectricEIR);
 }
 
 bool CentralHeatPumpSystemModule::setChillerHeaterModulesControlSchedule(Schedule& schedule) {

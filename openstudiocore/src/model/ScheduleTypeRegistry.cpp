@@ -160,10 +160,8 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"AirTerminalSingleDuctVAVHeatAndCoolNoReheat","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirTerminalSingleDuctVAVHeatAndCoolReheat","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AvailabilityManagerScheduled","Availability","schedule",false,"Availability",0.0,1.0},
-
-    {"CentralHeatPumpSystem","Ancillary Operation","ancillaryOperationSchedule",,,,},
-    {"CentralHeatPumpSystemModule","Chiller Heater Modules Control","chillerHeaterModulesControlSchedule",,,,},
-
+    {"CentralHeatPumpSystem","Ancillary Operation","ancillaryOperationSchedule",false,"Availability",0.0,1.0},
+    {"CentralHeatPumpSystemModule","Chiller Heater Modules Control","chillerHeaterModulesControlSchedule",false,"Availability",0.0,1.0},
     {"ChillerElectricEIR","Basin Heater","basinHeaterSchedule",false,"Availability",0.0,1.0},
     {"CoilCoolingCooledBeam","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilCoolingDXSingleSpeed","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
@@ -236,10 +234,8 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"HeatExchangerFluidToFluid","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"HumidifierSteamElectric","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"HotWaterEquipment","Hot Water Equipment","schedule",true,"",0.0,1.0},
-
-    {"LoadProfilePlant","Load","loadSchedule",,,,},
+    {"LoadProfilePlant","Load","loadSchedule",true,"",OptionalDouble(),OptionalDouble()},
     {"LoadProfilePlant","Flow Rate Fraction","flowRateFractionSchedule",true,"",0.0,1.0},
-
     {"Lights","Lighting","schedule",true,"",0.0,1.0},
     {"Luminaire","Luminaire","schedule",true,"",0.0,1.0},
     {"OtherEquipment","Other Equipment","schedule",true,"",0.0,1.0},
@@ -249,9 +245,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"People","Work Efficiency","workEfficiencySchedule",true,"",0.0,1.0},
     {"People","Clothing Insulation","clothingInsulationSchedule",true,"ClothingInsulation",0.0,OptionalDouble()},
     {"People","Air Velocity","airVelocitySchedule",true,"Velocity",0.0,OptionalDouble()},
-
-    {"PlantComponentTemperatureSource","Source Temperature","sourceTemperatureSchedule",,,,},
-
+    {"PlantComponentTemperatureSource","Source Temperature","sourceTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     { "PipeIndoor", "Ambient Temperature", "ambientTemperatureSchedule", true, "Temperature", 0.0, OptionalDouble() },
     { "PipeIndoor", "Ambient Air Velocity", "ambientAirVelocitySchedule", true, "Velocity", 0.0, OptionalDouble() },
     {"PumpConstantSpeed","Pump Flow Rate","pumpFlowRateSchedule",true,"",0.0,1.0},
@@ -291,12 +285,10 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"SpaceInfiltrationEffectiveLeakageArea","Infiltration","schedule",true,"",0.0,1.0},
     {"SteamEquipment","Steam Equipment","schedule",true,"",0.0,1.0},
     {"ThermalStorageIceDetailed","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
-
-    {"ThermalStorageChilledWaterStratified","Setpoint Temperature","setpointTemperatureSchedule",,,,},
-    {"ThermalStorageChilledWaterStratified","Ambient Temperature","ambientTemperatureSchedule",,,,},
-    {"ThermalStorageChilledWaterStratified","Use Side Availability","useSideAvailabilitySchedule",,,,},
-    {"ThermalStorageChilledWaterStratified","Source Side Availability","sourceSideAvailabilitySchedule",,,,},
-
+    {"ThermalStorageChilledWaterStratified","Setpoint Temperature","setpointTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
+    {"ThermalStorageChilledWaterStratified","Ambient Temperature","ambientTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
+    {"ThermalStorageChilledWaterStratified","Use Side Availability","useSideAvailabilitySchedule",false,"Availability",0.0,1.0},
+    {"ThermalStorageChilledWaterStratified","Source Side Availability","sourceSideAvailabilitySchedule",false,"Availability",0.0,1.0},
     {"ThermostatSetpointDualSetpoint","Heating Setpoint Temperature","heatingSetpointTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"ThermostatSetpointDualSetpoint","Cooling Setpoint Temperature","coolingSetpointTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"ZoneControlThermostatStagedDualSetpoint","Heating Temperature Setpoint Schedule","heatingTemperatureSetpointSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},

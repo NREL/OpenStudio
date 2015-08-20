@@ -20,11 +20,6 @@
 #include "PlantComponentTemperatureSource.hpp"
 #include "PlantComponentTemperatureSource_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
@@ -90,20 +85,14 @@ namespace detail {
     return result;
   }
 
-  Connection PlantComponentTemperatureSource_Impl::inletNode() const {
-    boost::optional<Connection> value = optionalInletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Inlet Node attached.");
-    }
-    return value.get();
+  unsigned PlantComponentTemperatureSource_Impl::inletPort()
+  {
+    return OS_PlantComponent_TemperatureSourceFields::InletNode;
   }
 
-  Connection PlantComponentTemperatureSource_Impl::outletNode() const {
-    boost::optional<Connection> value = optionalOutletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Outlet Node attached.");
-    }
-    return value.get();
+  unsigned PlantComponentTemperatureSource_Impl::outletPort()
+  {
+    return OS_PlantComponent_TemperatureSourceFields::OutletNode;
   }
 
   boost::optional<double> PlantComponentTemperatureSource_Impl::designVolumeFlowRate() const {
@@ -131,16 +120,6 @@ namespace detail {
 
   boost::optional<Schedule> PlantComponentTemperatureSource_Impl::sourceTemperatureSchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PlantComponent_TemperatureSourceFields::SourceTemperatureScheduleName);
-  }
-
-  bool PlantComponentTemperatureSource_Impl::setInletNode(const Connection& connection) {
-    bool result = setPointer(OS_PlantComponent_TemperatureSourceFields::InletNode, connection.handle());
-    return result;
-  }
-
-  bool PlantComponentTemperatureSource_Impl::setOutletNode(const Connection& connection) {
-    bool result = setPointer(OS_PlantComponent_TemperatureSourceFields::OutletNode, connection.handle());
-    return result;
   }
 
   bool PlantComponentTemperatureSource_Impl::setDesignVolumeFlowRate(boost::optional<double> designVolumeFlowRate) {
@@ -191,14 +170,6 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  boost::optional<Connection> PlantComponentTemperatureSource_Impl::optionalInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_PlantComponent_TemperatureSourceFields::InletNode);
-  }
-
-  boost::optional<Connection> PlantComponentTemperatureSource_Impl::optionalOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_PlantComponent_TemperatureSourceFields::OutletNode);
-  }
-
 } // detail
 
 PlantComponentTemperatureSource::PlantComponentTemperatureSource(const Model& model)
@@ -231,14 +202,6 @@ std::vector<std::string> PlantComponentTemperatureSource::temperatureSpecificati
                         OS_PlantComponent_TemperatureSourceFields::TemperatureSpecificationType);
 }
 
-Connection PlantComponentTemperatureSource::inletNode() const {
-  return getImpl<detail::PlantComponentTemperatureSource_Impl>()->inletNode();
-}
-
-Connection PlantComponentTemperatureSource::outletNode() const {
-  return getImpl<detail::PlantComponentTemperatureSource_Impl>()->outletNode();
-}
-
 boost::optional<double> PlantComponentTemperatureSource::designVolumeFlowRate() const {
   return getImpl<detail::PlantComponentTemperatureSource_Impl>()->designVolumeFlowRate();
 }
@@ -257,14 +220,6 @@ boost::optional<double> PlantComponentTemperatureSource::sourceTemperature() con
 
 boost::optional<Schedule> PlantComponentTemperatureSource::sourceTemperatureSchedule() const {
   return getImpl<detail::PlantComponentTemperatureSource_Impl>()->sourceTemperatureSchedule();
-}
-
-bool PlantComponentTemperatureSource::setInletNode(const Connection& connection) {
-  return getImpl<detail::PlantComponentTemperatureSource_Impl>()->setInletNode(connection);
-}
-
-bool PlantComponentTemperatureSource::setOutletNode(const Connection& connection) {
-  return getImpl<detail::PlantComponentTemperatureSource_Impl>()->setOutletNode(connection);
 }
 
 bool PlantComponentTemperatureSource::setDesignVolumeFlowRate(double designVolumeFlowRate) {

@@ -27,11 +27,8 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Connection;
-class Connection;
 class Schedule;
-class WaterStorageTank;
+// class WaterStorageTank;
 
 namespace detail {
 
@@ -61,12 +58,6 @@ class MODEL_API EvaporativeFluidCoolerTwoSpeed : public StraightComponent {
 
   /** @name Getters */
   //@{
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection waterInletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection waterOutletNode() const;
 
   boost::optional<double> highFanSpeedAirFlowRate() const;
 
@@ -144,21 +135,13 @@ class MODEL_API EvaporativeFluidCoolerTwoSpeed : public StraightComponent {
 
   double blowdownConcentrationRatio() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> blowdownMakeupWaterUsageSchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: WaterStorageTank.
-  boost::optional<WaterStorageTank> supplyWaterStorageTank() const;
+  // boost::optional<WaterStorageTank> supplyWaterStorageTank() const;
 
   //@}
   /** @name Setters */
   //@{
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setWaterInletNode(const Connection& connection);
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setWaterOutletNode(const Connection& connection);
 
   bool setHighFanSpeedAirFlowRate(double highFanSpeedAirFlowRate);
 
@@ -260,15 +243,13 @@ class MODEL_API EvaporativeFluidCoolerTwoSpeed : public StraightComponent {
 
   bool setBlowdownConcentrationRatio(double blowdownConcentrationRatio);
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setBlowdownMakeupWaterUsageSchedule(Schedule& schedule);
 
   void resetBlowdownMakeupWaterUsageSchedule();
 
-  // TODO: Check argument type. From object lists, some candidates are: WaterStorageTank.
-  bool setSupplyWaterStorageTank(const WaterStorageTank& waterStorageTank);
+  // bool setSupplyWaterStorageTank(const WaterStorageTank& waterStorageTank);
 
-  void resetSupplyWaterStorageTank();
+  // void resetSupplyWaterStorageTank();
 
   //@}
   /** @name Other */

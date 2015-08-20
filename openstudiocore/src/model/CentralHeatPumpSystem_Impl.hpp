@@ -26,13 +26,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Connection;
-class Connection;
-class Connection;
-class Connection;
-class Connection;
-class Connection;
 class Schedule;
 
 namespace detail {
@@ -67,33 +60,22 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
 
+    virtual unsigned supplyInletPort() override;
+
+    virtual unsigned supplyOutletPort() override;
+
+    virtual unsigned demandInletPort() override;
+
+    virtual unsigned demandOutletPort() override;
+
     //@}
     /** @name Getters */
     //@{
 
     std::string controlMethod() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection coolingLoopInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection coolingLoopOutletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection sourceLoopInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection sourceLoopOutletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection heatingLoopInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection heatingLoopOutletNode() const;
-
     double ancillaryPower() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> ancillaryOperationSchedule() const;
 
     // TODO: Handle this object's extensible fields.
@@ -104,27 +86,8 @@ namespace detail {
 
     bool setControlMethod(std::string controlMethod);
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setCoolingLoopInletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setCoolingLoopOutletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setSourceLoopInletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setSourceLoopOutletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setHeatingLoopInletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setHeatingLoopOutletNode(const Connection& connection);
-
     bool setAncillaryPower(double ancillaryPower);
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setAncillaryOperationSchedule(Schedule& schedule);
 
     void resetAncillaryOperationSchedule();
@@ -140,16 +103,9 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.CentralHeatPumpSystem");
 
-    // TODO: Check the return types of these methods.
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
-    boost::optional<Connection> optionalCoolingLoopInletNode() const;
-    boost::optional<Connection> optionalCoolingLoopOutletNode() const;
-    boost::optional<Connection> optionalSourceLoopInletNode() const;
-    boost::optional<Connection> optionalSourceLoopOutletNode() const;
-    boost::optional<Connection> optionalHeatingLoopInletNode() const;
-    boost::optional<Connection> optionalHeatingLoopOutletNode() const;
   };
 
 } // detail

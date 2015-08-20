@@ -27,16 +27,8 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Schedule;
 class Schedule;
 class ThermalZone;
-class Connection;
-class Connection;
-class Schedule;
-class Connection;
-class Connection;
-class Schedule;
 
 namespace detail {
 
@@ -75,7 +67,6 @@ class MODEL_API ThermalStorageChilledWaterStratified : public WaterToWaterCompon
 
   boost::optional<double> tankPerimeter() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> setpointTemperatureSchedule() const;
 
   double deadbandTemperatureDifference() const;
@@ -88,25 +79,16 @@ class MODEL_API ThermalStorageChilledWaterStratified : public WaterToWaterCompon
 
   std::string ambientTemperatureIndicator() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> ambientTemperatureSchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: ThermalZone.
   boost::optional<ThermalZone> ambientTemperatureThermalZone() const;
 
   boost::optional<std::string> ambientTemperatureOutdoorAirNodeName() const;
 
   boost::optional<double> uniformSkinLossCoefficientperUnitAreatoAmbientTemperature() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection useSideInletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection useSideOutletNode() const;
-
   double useSideHeatTransferEffectiveness() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> useSideAvailabilitySchedule() const;
 
   boost::optional<double> useSideInletHeight() const;
@@ -119,15 +101,8 @@ class MODEL_API ThermalStorageChilledWaterStratified : public WaterToWaterCompon
 
   bool isUseSideDesignFlowRateAutosized() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection sourceSideInletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection sourceSideOutletNode() const;
-
   double sourceSideHeatTransferEffectiveness() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> sourceSideAvailabilitySchedule() const;
 
   double sourceSideInletHeight() const;
@@ -182,7 +157,6 @@ class MODEL_API ThermalStorageChilledWaterStratified : public WaterToWaterCompon
 
   void resetTankPerimeter();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setSetpointTemperatureSchedule(Schedule& schedule);
 
   void resetSetpointTemperatureSchedule();
@@ -203,12 +177,10 @@ class MODEL_API ThermalStorageChilledWaterStratified : public WaterToWaterCompon
 
   bool setAmbientTemperatureIndicator(std::string ambientTemperatureIndicator);
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setAmbientTemperatureSchedule(Schedule& schedule);
 
   void resetAmbientTemperatureSchedule();
 
-  // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
   bool setAmbientTemperatureThermalZone(const ThermalZone& thermalZone);
 
   void resetAmbientTemperatureThermalZone();
@@ -221,15 +193,8 @@ class MODEL_API ThermalStorageChilledWaterStratified : public WaterToWaterCompon
 
   void resetUniformSkinLossCoefficientperUnitAreatoAmbientTemperature();
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setUseSideInletNode(const Connection& connection);
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setUseSideOutletNode(const Connection& connection);
-
   bool setUseSideHeatTransferEffectiveness(double useSideHeatTransferEffectiveness);
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setUseSideAvailabilitySchedule(Schedule& schedule);
 
   void resetUseSideAvailabilitySchedule();
@@ -244,15 +209,8 @@ class MODEL_API ThermalStorageChilledWaterStratified : public WaterToWaterCompon
 
   void autosizeUseSideDesignFlowRate();
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setSourceSideInletNode(const Connection& connection);
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setSourceSideOutletNode(const Connection& connection);
-
   bool setSourceSideHeatTransferEffectiveness(double sourceSideHeatTransferEffectiveness);
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setSourceSideAvailabilitySchedule(Schedule& schedule);
 
   void resetSourceSideAvailabilitySchedule();

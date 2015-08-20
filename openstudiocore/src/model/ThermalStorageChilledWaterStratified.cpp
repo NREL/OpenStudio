@@ -20,25 +20,10 @@
 #include "ThermalStorageChilledWaterStratified.hpp"
 #include "ThermalStorageChilledWaterStratified_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
 
@@ -114,6 +99,26 @@ namespace detail {
     return result;
   }
 
+  unsigned ThermalStorageChilledWaterStratified_Impl::supplyInletPort()
+  {
+    return OS_ThermalStorage_ChilledWater_StratifiedFields::UseSideInletNodeName;
+  }
+
+  unsigned ThermalStorageChilledWaterStratified_Impl::supplyOutletPort()
+  {
+    return OS_ThermalStorage_ChilledWater_StratifiedFields::UseSideOutletNodeName;
+  }
+
+  unsigned ThermalStorageChilledWaterStratified_Impl::demandInletPort()
+  {
+    return OS_ThermalStorage_ChilledWater_StratifiedFields::SourceSideInletNodeName;
+  }
+
+  unsigned ThermalStorageChilledWaterStratified_Impl::demandOutletPort()
+  {
+    return OS_ThermalStorage_ChilledWater_StratifiedFields::SourceSideOutletNodeName;
+  }
+
   double ThermalStorageChilledWaterStratified_Impl::tankVolume() const {
     boost::optional<double> value = getDouble(OS_ThermalStorage_ChilledWater_StratifiedFields::TankVolume,true);
     OS_ASSERT(value);
@@ -180,22 +185,6 @@ namespace detail {
     return getDouble(OS_ThermalStorage_ChilledWater_StratifiedFields::UniformSkinLossCoefficientperUnitAreatoAmbientTemperature,true);
   }
 
-  Connection ThermalStorageChilledWaterStratified_Impl::useSideInletNode() const {
-    boost::optional<Connection> value = optionalUseSideInletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Use Side Inlet Node attached.");
-    }
-    return value.get();
-  }
-
-  Connection ThermalStorageChilledWaterStratified_Impl::useSideOutletNode() const {
-    boost::optional<Connection> value = optionalUseSideOutletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Use Side Outlet Node attached.");
-    }
-    return value.get();
-  }
-
   double ThermalStorageChilledWaterStratified_Impl::useSideHeatTransferEffectiveness() const {
     boost::optional<double> value = getDouble(OS_ThermalStorage_ChilledWater_StratifiedFields::UseSideHeatTransferEffectiveness,true);
     OS_ASSERT(value);
@@ -236,22 +225,6 @@ namespace detail {
       result = openstudio::istringEqual(value.get(), "autosize");
     }
     return result;
-  }
-
-  Connection ThermalStorageChilledWaterStratified_Impl::sourceSideInletNode() const {
-    boost::optional<Connection> value = optionalSourceSideInletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Source Side Inlet Node attached.");
-    }
-    return value.get();
-  }
-
-  Connection ThermalStorageChilledWaterStratified_Impl::sourceSideOutletNode() const {
-    boost::optional<Connection> value = optionalSourceSideOutletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Source Side Outlet Node attached.");
-    }
-    return value.get();
   }
 
   double ThermalStorageChilledWaterStratified_Impl::sourceSideHeatTransferEffectiveness() const {
@@ -550,16 +523,6 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool ThermalStorageChilledWaterStratified_Impl::setUseSideInletNode(const Connection& connection) {
-    bool result = setPointer(OS_ThermalStorage_ChilledWater_StratifiedFields::UseSideInletNodeName, connection.handle());
-    return result;
-  }
-
-  bool ThermalStorageChilledWaterStratified_Impl::setUseSideOutletNode(const Connection& connection) {
-    bool result = setPointer(OS_ThermalStorage_ChilledWater_StratifiedFields::UseSideOutletNodeName, connection.handle());
-    return result;
-  }
-
   bool ThermalStorageChilledWaterStratified_Impl::setUseSideHeatTransferEffectiveness(double useSideHeatTransferEffectiveness) {
     bool result = setDouble(OS_ThermalStorage_ChilledWater_StratifiedFields::UseSideHeatTransferEffectiveness, useSideHeatTransferEffectiveness);
     return result;
@@ -607,16 +570,6 @@ namespace detail {
   void ThermalStorageChilledWaterStratified_Impl::autosizeUseSideDesignFlowRate() {
     bool result = setString(OS_ThermalStorage_ChilledWater_StratifiedFields::UseSideDesignFlowRate, "autosize");
     OS_ASSERT(result);
-  }
-
-  bool ThermalStorageChilledWaterStratified_Impl::setSourceSideInletNode(const Connection& connection) {
-    bool result = setPointer(OS_ThermalStorage_ChilledWater_StratifiedFields::SourceSideInletNodeName, connection.handle());
-    return result;
-  }
-
-  bool ThermalStorageChilledWaterStratified_Impl::setSourceSideOutletNode(const Connection& connection) {
-    bool result = setPointer(OS_ThermalStorage_ChilledWater_StratifiedFields::SourceSideOutletNodeName, connection.handle());
-    return result;
   }
 
   bool ThermalStorageChilledWaterStratified_Impl::setSourceSideHeatTransferEffectiveness(double sourceSideHeatTransferEffectiveness) {
@@ -736,22 +689,6 @@ namespace detail {
   void ThermalStorageChilledWaterStratified_Impl::setNode10AdditionalLossCoefficient(double node10AdditionalLossCoefficient) {
     bool result = setDouble(OS_ThermalStorage_ChilledWater_StratifiedFields::Node10AdditionalLossCoefficient, node10AdditionalLossCoefficient);
     OS_ASSERT(result);
-  }
-
-  boost::optional<Connection> ThermalStorageChilledWaterStratified_Impl::optionalUseSideInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_ThermalStorage_ChilledWater_StratifiedFields::UseSideInletNodeName);
-  }
-
-  boost::optional<Connection> ThermalStorageChilledWaterStratified_Impl::optionalUseSideOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_ThermalStorage_ChilledWater_StratifiedFields::UseSideOutletNodeName);
-  }
-
-  boost::optional<Connection> ThermalStorageChilledWaterStratified_Impl::optionalSourceSideInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_ThermalStorage_ChilledWater_StratifiedFields::SourceSideInletNodeName);
-  }
-
-  boost::optional<Connection> ThermalStorageChilledWaterStratified_Impl::optionalSourceSideOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_ThermalStorage_ChilledWater_StratifiedFields::SourceSideOutletNodeName);
   }
 
 } // detail
@@ -898,14 +835,6 @@ boost::optional<double> ThermalStorageChilledWaterStratified::uniformSkinLossCoe
   return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->uniformSkinLossCoefficientperUnitAreatoAmbientTemperature();
 }
 
-Connection ThermalStorageChilledWaterStratified::useSideInletNode() const {
-  return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->useSideInletNode();
-}
-
-Connection ThermalStorageChilledWaterStratified::useSideOutletNode() const {
-  return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->useSideOutletNode();
-}
-
 double ThermalStorageChilledWaterStratified::useSideHeatTransferEffectiveness() const {
   return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->useSideHeatTransferEffectiveness();
 }
@@ -932,14 +861,6 @@ boost::optional<double> ThermalStorageChilledWaterStratified::useSideDesignFlowR
 
 bool ThermalStorageChilledWaterStratified::isUseSideDesignFlowRateAutosized() const {
   return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->isUseSideDesignFlowRateAutosized();
-}
-
-Connection ThermalStorageChilledWaterStratified::sourceSideInletNode() const {
-  return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->sourceSideInletNode();
-}
-
-Connection ThermalStorageChilledWaterStratified::sourceSideOutletNode() const {
-  return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->sourceSideOutletNode();
 }
 
 double ThermalStorageChilledWaterStratified::sourceSideHeatTransferEffectiveness() const {
@@ -1118,14 +1039,6 @@ void ThermalStorageChilledWaterStratified::resetUniformSkinLossCoefficientperUni
   getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->resetUniformSkinLossCoefficientperUnitAreatoAmbientTemperature();
 }
 
-bool ThermalStorageChilledWaterStratified::setUseSideInletNode(const Connection& connection) {
-  return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setUseSideInletNode(connection);
-}
-
-bool ThermalStorageChilledWaterStratified::setUseSideOutletNode(const Connection& connection) {
-  return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setUseSideOutletNode(connection);
-}
-
 bool ThermalStorageChilledWaterStratified::setUseSideHeatTransferEffectiveness(double useSideHeatTransferEffectiveness) {
   return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setUseSideHeatTransferEffectiveness(useSideHeatTransferEffectiveness);
 }
@@ -1156,14 +1069,6 @@ bool ThermalStorageChilledWaterStratified::setUseSideDesignFlowRate(double useSi
 
 void ThermalStorageChilledWaterStratified::autosizeUseSideDesignFlowRate() {
   getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->autosizeUseSideDesignFlowRate();
-}
-
-bool ThermalStorageChilledWaterStratified::setSourceSideInletNode(const Connection& connection) {
-  return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setSourceSideInletNode(connection);
-}
-
-bool ThermalStorageChilledWaterStratified::setSourceSideOutletNode(const Connection& connection) {
-  return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setSourceSideOutletNode(connection);
 }
 
 bool ThermalStorageChilledWaterStratified::setSourceSideHeatTransferEffectiveness(double sourceSideHeatTransferEffectiveness) {

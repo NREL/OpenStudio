@@ -27,13 +27,7 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class BiquadraticCurves;
-class BiquadraticCurves;
-class BicubicCurves;
-class BiquadraticCurves;
-class BiquadraticCurves;
-class BicubicCurves;
+class Curve;
 
 namespace detail {
 
@@ -108,27 +102,21 @@ class MODEL_API ChillerHeaterPerformanceElectricEIR : public ParentObject {
 
   std::string coolingModeTemperatureCurveCondenserWaterIndependentVariable() const;
 
-  // TODO: Check return type. From object lists, some candidates are: BiquadraticCurves, BiVariateTables.
-  BiquadraticCurves coolingModeCoolingCapacityFunctionofTemperatureCurve() const;
+  Curve coolingModeCoolingCapacityFunctionofTemperatureCurve() const;
 
-  // TODO: Check return type. From object lists, some candidates are: BiquadraticCurves, BiVariateTables.
-  BiquadraticCurves coolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve() const;
+  Curve coolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve() const;
 
-  // TODO: Check return type. From object lists, some candidates are: BicubicCurves, QuadraticCurves, UniVariateTables, BiVariateTables.
-  BicubicCurves coolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve() const;
+  Curve coolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve() const;
 
   double coolingModeCoolingCapacityOptimumPartLoadRatio() const;
 
   std::string heatingModeTemperatureCurveCondenserWaterIndependentVariable() const;
 
-  // TODO: Check return type. From object lists, some candidates are: BiquadraticCurves, BiVariateTables.
-  BiquadraticCurves heatingModeCoolingCapacityFunctionofTemperatureCurve() const;
+  Curve heatingModeCoolingCapacityFunctionofTemperatureCurve() const;
 
-  // TODO: Check return type. From object lists, some candidates are: BiquadraticCurves, BiVariateTables.
-  BiquadraticCurves heatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve() const;
+  Curve heatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve() const;
 
-  // TODO: Check return type. From object lists, some candidates are: BicubicCurves, QuadraticCurves, UniVariateTables, BiVariateTables.
-  BicubicCurves heatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve() const;
+  Curve heatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve() const;
 
   double heatingModeCoolingCapacityOptimumPartLoadRatio() const;
 
@@ -184,27 +172,21 @@ class MODEL_API ChillerHeaterPerformanceElectricEIR : public ParentObject {
 
   bool setCoolingModeTemperatureCurveCondenserWaterIndependentVariable(std::string coolingModeTemperatureCurveCondenserWaterIndependentVariable);
 
-  // TODO: Check argument type. From object lists, some candidates are: BiquadraticCurves, BiVariateTables.
-  bool setCoolingModeCoolingCapacityFunctionofTemperatureCurve(const BiquadraticCurves& biquadraticCurves);
+  bool setCoolingModeCoolingCapacityFunctionofTemperatureCurve(const Curve& curve);
 
-  // TODO: Check argument type. From object lists, some candidates are: BiquadraticCurves, BiVariateTables.
-  bool setCoolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve(const BiquadraticCurves& biquadraticCurves);
+  bool setCoolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve(const Curve& curve);
 
-  // TODO: Check argument type. From object lists, some candidates are: BicubicCurves, QuadraticCurves, UniVariateTables, BiVariateTables.
-  bool setCoolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve(const BicubicCurves& bicubicCurves);
+  bool setCoolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve(const Curve& curve);
 
   bool setCoolingModeCoolingCapacityOptimumPartLoadRatio(double coolingModeCoolingCapacityOptimumPartLoadRatio);
 
   bool setHeatingModeTemperatureCurveCondenserWaterIndependentVariable(std::string heatingModeTemperatureCurveCondenserWaterIndependentVariable);
 
-  // TODO: Check argument type. From object lists, some candidates are: BiquadraticCurves, BiVariateTables.
-  bool setHeatingModeCoolingCapacityFunctionofTemperatureCurve(const BiquadraticCurves& biquadraticCurves);
+  bool setHeatingModeCoolingCapacityFunctionofTemperatureCurve(const Curve& curve);
 
-  // TODO: Check argument type. From object lists, some candidates are: BiquadraticCurves, BiVariateTables.
-  bool setHeatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve(const BiquadraticCurves& biquadraticCurves);
+  bool setHeatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve(const Curve& curve);
 
-  // TODO: Check argument type. From object lists, some candidates are: BicubicCurves, QuadraticCurves, UniVariateTables, BiVariateTables.
-  bool setHeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve(const BicubicCurves& bicubicCurves);
+  bool setHeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve(const Curve& curve);
 
   bool setHeatingModeCoolingCapacityOptimumPartLoadRatio(double heatingModeCoolingCapacityOptimumPartLoadRatio);
 

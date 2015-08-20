@@ -26,10 +26,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Connection;
-class Connection;
-class Schedule;
 class Schedule;
 
 namespace detail {
@@ -64,40 +60,30 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
 
+    virtual unsigned inletPort() override;
+
+    virtual unsigned outletPort() override;
+
+    // virtual bool addToNode(Node & node) override;
+
     //@}
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection inletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection outletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     Schedule loadSchedule() const;
 
     double peakFlowRate() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     Schedule flowRateFractionSchedule() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setInletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setOutletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setLoadSchedule(Schedule& schedule);
 
     void setPeakFlowRate(double peakFlowRate);
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setFlowRateFractionSchedule(Schedule& schedule);
 
     //@}
@@ -109,12 +95,9 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.LoadProfilePlant");
 
-    // TODO: Check the return types of these methods.
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
-    boost::optional<Connection> optionalInletNode() const;
-    boost::optional<Connection> optionalOutletNode() const;
     boost::optional<Schedule> optionalLoadSchedule() const;
     boost::optional<Schedule> optionalFlowRateFractionSchedule() const;
   };

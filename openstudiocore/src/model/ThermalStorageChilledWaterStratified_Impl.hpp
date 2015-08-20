@@ -26,16 +26,8 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Schedule;
 class Schedule;
 class ThermalZone;
-class Connection;
-class Connection;
-class Schedule;
-class Connection;
-class Connection;
-class Schedule;
 
 namespace detail {
 
@@ -69,6 +61,14 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
 
+    virtual unsigned supplyInletPort() override;
+
+    virtual unsigned supplyOutletPort() override;
+
+    virtual unsigned demandInletPort() override;
+
+    virtual unsigned demandOutletPort() override;
+
     //@}
     /** @name Getters */
     //@{
@@ -81,7 +81,6 @@ namespace detail {
 
     boost::optional<double> tankPerimeter() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> setpointTemperatureSchedule() const;
 
     double deadbandTemperatureDifference() const;
@@ -94,25 +93,16 @@ namespace detail {
 
     std::string ambientTemperatureIndicator() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> ambientTemperatureSchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ThermalZone.
     boost::optional<ThermalZone> ambientTemperatureThermalZone() const;
 
     boost::optional<std::string> ambientTemperatureOutdoorAirNodeName() const;
 
     boost::optional<double> uniformSkinLossCoefficientperUnitAreatoAmbientTemperature() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection useSideInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection useSideOutletNode() const;
-
     double useSideHeatTransferEffectiveness() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> useSideAvailabilitySchedule() const;
 
     boost::optional<double> useSideInletHeight() const;
@@ -125,15 +115,8 @@ namespace detail {
 
     bool isUseSideDesignFlowRateAutosized() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection sourceSideInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection sourceSideOutletNode() const;
-
     double sourceSideHeatTransferEffectiveness() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> sourceSideAvailabilitySchedule() const;
 
     double sourceSideInletHeight() const;
@@ -188,7 +171,6 @@ namespace detail {
 
     void resetTankPerimeter();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setSetpointTemperatureSchedule(Schedule& schedule);
 
     void resetSetpointTemperatureSchedule();
@@ -209,12 +191,10 @@ namespace detail {
 
     bool setAmbientTemperatureIndicator(std::string ambientTemperatureIndicator);
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setAmbientTemperatureSchedule(Schedule& schedule);
 
     void resetAmbientTemperatureSchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
     bool setAmbientTemperatureThermalZone(const boost::optional<ThermalZone>& thermalZone);
 
     void resetAmbientTemperatureThermalZone();
@@ -227,15 +207,8 @@ namespace detail {
 
     void resetUniformSkinLossCoefficientperUnitAreatoAmbientTemperature();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setUseSideInletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setUseSideOutletNode(const Connection& connection);
-
     bool setUseSideHeatTransferEffectiveness(double useSideHeatTransferEffectiveness);
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setUseSideAvailabilitySchedule(Schedule& schedule);
 
     void resetUseSideAvailabilitySchedule();
@@ -250,15 +223,8 @@ namespace detail {
 
     void autosizeUseSideDesignFlowRate();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setSourceSideInletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setSourceSideOutletNode(const Connection& connection);
-
     bool setSourceSideHeatTransferEffectiveness(double sourceSideHeatTransferEffectiveness);
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setSourceSideAvailabilitySchedule(Schedule& schedule);
 
     void resetSourceSideAvailabilitySchedule();
@@ -310,14 +276,9 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.ThermalStorageChilledWaterStratified");
 
-    // TODO: Check the return types of these methods.
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
-    boost::optional<Connection> optionalUseSideInletNode() const;
-    boost::optional<Connection> optionalUseSideOutletNode() const;
-    boost::optional<Connection> optionalSourceSideInletNode() const;
-    boost::optional<Connection> optionalSourceSideOutletNode() const;
   };
 
 } // detail

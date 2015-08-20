@@ -27,13 +27,6 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Connection;
-class Connection;
-class Connection;
-class Connection;
-class Connection;
-class Connection;
 class Schedule;
 
 namespace detail {
@@ -63,27 +56,8 @@ class MODEL_API CentralHeatPumpSystem : public WaterToWaterComponent {
 
   std::string controlMethod() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection coolingLoopInletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection coolingLoopOutletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection sourceLoopInletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection sourceLoopOutletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection heatingLoopInletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection heatingLoopOutletNode() const;
-
   double ancillaryPower() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> ancillaryOperationSchedule() const;
 
   // TODO: Handle this object's extensible fields.
@@ -94,27 +68,8 @@ class MODEL_API CentralHeatPumpSystem : public WaterToWaterComponent {
 
   bool setControlMethod(std::string controlMethod);
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setCoolingLoopInletNode(const Connection& connection);
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setCoolingLoopOutletNode(const Connection& connection);
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setSourceLoopInletNode(const Connection& connection);
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setSourceLoopOutletNode(const Connection& connection);
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setHeatingLoopInletNode(const Connection& connection);
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setHeatingLoopOutletNode(const Connection& connection);
-
   bool setAncillaryPower(double ancillaryPower);
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setAncillaryOperationSchedule(Schedule& schedule);
 
   void resetAncillaryOperationSchedule();

@@ -20,13 +20,6 @@
 #include "LoadProfilePlant.hpp"
 #include "LoadProfilePlant_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
@@ -95,20 +88,14 @@ namespace detail {
     return result;
   }
 
-  Connection LoadProfilePlant_Impl::inletNode() const {
-    boost::optional<Connection> value = optionalInletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Inlet Node attached.");
-    }
-    return value.get();
+  unsigned LoadProfilePlant_Impl::inletPort()
+  {
+    return OS_LoadProfile_PlantFields::InletNodeName;
   }
 
-  Connection LoadProfilePlant_Impl::outletNode() const {
-    boost::optional<Connection> value = optionalOutletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Outlet Node attached.");
-    }
-    return value.get();
+  unsigned LoadProfilePlant_Impl::outletPort()
+  {
+    return OS_LoadProfile_PlantFields::OutletNodeName;
   }
 
   Schedule LoadProfilePlant_Impl::loadSchedule() const {
@@ -133,16 +120,6 @@ namespace detail {
     return value.get();
   }
 
-  bool LoadProfilePlant_Impl::setInletNode(const Connection& connection) {
-    bool result = setPointer(OS_LoadProfile_PlantFields::InletNodeName, connection.handle());
-    return result;
-  }
-
-  bool LoadProfilePlant_Impl::setOutletNode(const Connection& connection) {
-    bool result = setPointer(OS_LoadProfile_PlantFields::OutletNodeName, connection.handle());
-    return result;
-  }
-
   bool LoadProfilePlant_Impl::setLoadSchedule(Schedule& schedule) {
     bool result = setSchedule(OS_LoadProfile_PlantFields::LoadScheduleName,
                               "LoadProfilePlant",
@@ -162,14 +139,6 @@ namespace detail {
                               "Flow Rate Fraction",
                               schedule);
     return result;
-  }
-
-  boost::optional<Connection> LoadProfilePlant_Impl::optionalInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_LoadProfile_PlantFields::InletNodeName);
-  }
-
-  boost::optional<Connection> LoadProfilePlant_Impl::optionalOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_LoadProfile_PlantFields::OutletNodeName);
   }
 
   boost::optional<Schedule> LoadProfilePlant_Impl::optionalLoadSchedule() const {
@@ -210,14 +179,6 @@ IddObjectType LoadProfilePlant::iddObjectType() {
   return IddObjectType(IddObjectType::OS_LoadProfile_Plant);
 }
 
-Connection LoadProfilePlant::inletNode() const {
-  return getImpl<detail::LoadProfilePlant_Impl>()->inletNode();
-}
-
-Connection LoadProfilePlant::outletNode() const {
-  return getImpl<detail::LoadProfilePlant_Impl>()->outletNode();
-}
-
 Schedule LoadProfilePlant::loadSchedule() const {
   return getImpl<detail::LoadProfilePlant_Impl>()->loadSchedule();
 }
@@ -228,14 +189,6 @@ double LoadProfilePlant::peakFlowRate() const {
 
 Schedule LoadProfilePlant::flowRateFractionSchedule() const {
   return getImpl<detail::LoadProfilePlant_Impl>()->flowRateFractionSchedule();
-}
-
-bool LoadProfilePlant::setInletNode(const Connection& connection) {
-  return getImpl<detail::LoadProfilePlant_Impl>()->setInletNode(connection);
-}
-
-bool LoadProfilePlant::setOutletNode(const Connection& connection) {
-  return getImpl<detail::LoadProfilePlant_Impl>()->setOutletNode(connection);
 }
 
 bool LoadProfilePlant::setLoadSchedule(Schedule& schedule) {

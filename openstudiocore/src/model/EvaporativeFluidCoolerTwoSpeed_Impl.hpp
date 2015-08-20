@@ -26,11 +26,8 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Connection;
-class Connection;
 class Schedule;
-class WaterStorageTank;
+// class WaterStorageTank;
 
 namespace detail {
 
@@ -64,15 +61,15 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
 
+    virtual unsigned inletPort() override;
+
+    virtual unsigned outletPort() override;
+
+    virtual bool addToNode(Node & node) override;
+
     //@}
     /** @name Getters */
     //@{
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection waterInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection waterOutletNode() const;
 
     boost::optional<double> highFanSpeedAirFlowRate() const;
 
@@ -150,21 +147,13 @@ namespace detail {
 
     double blowdownConcentrationRatio() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> blowdownMakeupWaterUsageSchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: WaterStorageTank.
-    boost::optional<WaterStorageTank> supplyWaterStorageTank() const;
+    // boost::optional<WaterStorageTank> supplyWaterStorageTank() const;
 
     //@}
     /** @name Setters */
     //@{
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setWaterInletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setWaterOutletNode(const Connection& connection);
 
     bool setHighFanSpeedAirFlowRate(boost::optional<double> highFanSpeedAirFlowRate);
 
@@ -266,15 +255,13 @@ namespace detail {
 
     bool setBlowdownConcentrationRatio(double blowdownConcentrationRatio);
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setBlowdownMakeupWaterUsageSchedule(Schedule& schedule);
 
     void resetBlowdownMakeupWaterUsageSchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: WaterStorageTank.
-    bool setSupplyWaterStorageTank(const boost::optional<WaterStorageTank>& waterStorageTank);
+    // bool setSupplyWaterStorageTank(const boost::optional<WaterStorageTank>& waterStorageTank);
 
-    void resetSupplyWaterStorageTank();
+    // void resetSupplyWaterStorageTank();
 
     //@}
     /** @name Other */
@@ -285,12 +272,9 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.EvaporativeFluidCoolerTwoSpeed");
 
-    // TODO: Check the return types of these methods.
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
-    boost::optional<Connection> optionalWaterInletNode() const;
-    boost::optional<Connection> optionalWaterOutletNode() const;
   };
 
 } // detail

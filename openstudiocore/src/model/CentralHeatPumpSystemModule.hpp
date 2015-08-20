@@ -26,8 +26,7 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class ChillerHeaterEIR;
+class ChillerHeaterPerformanceElectricEIR;
 class Schedule;
 
 namespace detail {
@@ -53,10 +52,8 @@ class MODEL_API CentralHeatPumpSystemModule : public ParentObject {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: ChillerHeaterEIR.
-  ChillerHeaterEIR chillerHeaterModulesPerformanceComponent() const;
+  ChillerHeaterPerformanceElectricEIR chillerHeaterModulesPerformanceComponent() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   Schedule chillerHeaterModulesControlSchedule() const;
 
   int numberofChillerHeaterModules() const;
@@ -65,10 +62,8 @@ class MODEL_API CentralHeatPumpSystemModule : public ParentObject {
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: ChillerHeaterEIR.
-  bool setChillerHeaterModulesPerformanceComponent(const ChillerHeaterEIR& chillerHeaterEIR);
+  bool setChillerHeaterModulesPerformanceComponent(const ChillerHeaterPerformanceElectricEIR& chillerHeaterPerformanceElectricEIR);
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setChillerHeaterModulesControlSchedule(Schedule& schedule);
 
   bool setNumberofChillerHeaterModules(int numberofChillerHeaterModules);

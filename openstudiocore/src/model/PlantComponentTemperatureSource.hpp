@@ -27,9 +27,6 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Connection;
-class Connection;
 class Schedule;
 
 namespace detail {
@@ -57,12 +54,6 @@ class MODEL_API PlantComponentTemperatureSource : public StraightComponent {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection inletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection outletNode() const;
-
   boost::optional<double> designVolumeFlowRate() const;
 
   bool isDesignVolumeFlowRateAutosized() const;
@@ -71,18 +62,11 @@ class MODEL_API PlantComponentTemperatureSource : public StraightComponent {
 
   boost::optional<double> sourceTemperature() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> sourceTemperatureSchedule() const;
 
   //@}
   /** @name Setters */
   //@{
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setInletNode(const Connection& connection);
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setOutletNode(const Connection& connection);
 
   bool setDesignVolumeFlowRate(double designVolumeFlowRate);
 
@@ -94,7 +78,6 @@ class MODEL_API PlantComponentTemperatureSource : public StraightComponent {
 
   void resetSourceTemperature();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setSourceTemperatureSchedule(Schedule& schedule);
 
   void resetSourceTemperatureSchedule();

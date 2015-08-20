@@ -40,10 +40,13 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateBoilerHotWater.cpp
   ForwardTranslator/ForwardTranslateBoilerSteam.cpp
   ForwardTranslator/ForwardTranslateBuilding.cpp
+  ForwardTranslator/ForwardTranslateCentralHeatPumpSystem.cpp
+  ForwardTranslator/ForwardTranslateCentralHeatPumpSystemModule.cpp
   ForwardTranslator/ForwardTranslateCFactorUndergroundWallConstruction.cpp
   ForwardTranslator/ForwardTranslateChillerAbsorption.cpp
   ForwardTranslator/ForwardTranslateChillerAbsorptionIndirect.cpp
   ForwardTranslator/ForwardTranslateChillerElectricEIR.cpp
+  ForwardTranslator/ForwardTranslateChillerHeaterPerformanceElectricEIR.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXMultiSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXSingleSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXTwoSpeed.cpp
@@ -104,6 +107,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateEvaporativeCoolerDirectResearchSpecial.cpp
   ForwardTranslator/ForwardTranslateEvaporativeCoolerIndirectResearchSpecial.cpp
   ForwardTranslator/ForwardTranslateEvaporativeFluidCoolerSingleSpeed.cpp
+  ForwardTranslator/ForwardTranslateEvaporativeFluidCoolerTwoSpeed.cpp
   ForwardTranslator/ForwardTranslateExteriorLights.cpp
   ForwardTranslator/ForwardTranslateFanConstantVolume.cpp
   ForwardTranslator/ForwardTranslateFanOnOff.cpp
@@ -130,6 +134,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateInteriorPartitionSurface.cpp
   ForwardTranslator/ForwardTranslateInteriorPartitionSurfaceGroup.cpp
   ForwardTranslator/ForwardTranslateInternalMass.cpp
+  ForwardTranslator/ForwardTranslateLoadProfilePlant.cpp
   ForwardTranslator/ForwardTranslateLifeCycleCost.cpp
   ForwardTranslator/ForwardTranslateLifeCycleCostParameters.cpp
   ForwardTranslator/ForwardTranslateLights.cpp
@@ -146,6 +151,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslatePipeIndoor.cpp
   ForwardTranslator/ForwardTranslatePipeOutdoor.cpp
   ForwardTranslator/ForwardTranslatePlantLoop.cpp
+  ForwardTranslator/ForwardTranslatePlantComponentTemperatureSource.cpp
   ForwardTranslator/ForwardTranslatePlantEquipmentOperationSchemes.cpp
   ForwardTranslator/ForwardTranslatePlantEquipmentOperationCoolingLoad.cpp
   ForwardTranslator/ForwardTranslatePlantEquipmentOperationHeatingLoad.cpp
@@ -228,6 +234,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateTableMultiVariableLookup.cpp
   ForwardTranslator/ForwardTranslateTemperingValve.cpp
   ForwardTranslator/ForwardTranslateThermalStorageIceDetailed.cpp
+  ForwardTranslator/ForwardTranslateThermalStorageChilledWaterStratified.cpp
   ForwardTranslator/ForwardTranslateThermalZone.cpp
   ForwardTranslator/ForwardTranslateThermostatSetpointDualSetpoint.cpp
   ForwardTranslator/ForwardTranslateTimestep.cpp
