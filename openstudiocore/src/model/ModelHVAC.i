@@ -207,6 +207,12 @@ MODELOBJECT_TEMPLATES(FluidCoolerSingleSpeed);
 MODELOBJECT_TEMPLATES(FluidCoolerTwoSpeed);
 MODELOBJECT_TEMPLATES(PipeIndoor);
 MODELOBJECT_TEMPLATES(PipeOutdoor);
+MODELOBJECT_TEMPLATES(SolarCollectorFlatPlatePhotovoltaicThermal);
+MODELOBJECT_TEMPLATES(SolarCollectorFlatPlateWater);
+MODELOBJECT_TEMPLATES(SolarCollectorIntegralCollectorStorage);
+MODELOBJECT_TEMPLATES(SolarCollectorPerformanceFlatPlate);
+MODELOBJECT_TEMPLATES(SolarCollectorPerformanceIntegralCollectorStorage);
+MODELOBJECT_TEMPLATES(SolarCollectorPerformancePhotovoltaicThermalSimple);
 
 SWIG_MODELOBJECT(PortList, 1);
 SWIG_MODELOBJECT(Loop, 0);
@@ -392,6 +398,12 @@ SWIG_MODELOBJECT(FluidCoolerSingleSpeed, 1);
 SWIG_MODELOBJECT(FluidCoolerTwoSpeed, 1);
 SWIG_MODELOBJECT(PipeIndoor, 1);
 SWIG_MODELOBJECT(PipeOutdoor, 1);
+SWIG_MODELOBJECT(SolarCollectorFlatPlatePhotovoltaicThermal, 1);
+SWIG_MODELOBJECT(SolarCollectorFlatPlateWater, 1);
+SWIG_MODELOBJECT(SolarCollectorIntegralCollectorStorage, 1);
+SWIG_MODELOBJECT(SolarCollectorPerformanceFlatPlate, 1);
+SWIG_MODELOBJECT(SolarCollectorPerformanceIntegralCollectorStorage, 1);
+SWIG_MODELOBJECT(SolarCollectorPerformancePhotovoltaicThermalSimple, 1);
 
 #if defined(SWIGCSHARP) || defined(SWIGJAVA)
   %inline {

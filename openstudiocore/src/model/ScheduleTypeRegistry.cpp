@@ -278,6 +278,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"SetpointManagerOutdoorAirReset","Setpoint Manager Outdoor Air Reset","schedule",true,"",0.0,OptionalDouble()},
     {"ShadingSurface","Transmittance","transmittanceSchedule",true,"",0.0,1.0},
     {"SiteWaterMainsTemperature","Temperature","temperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
+    { "SolarCollectorPerformancePhotovoltaicThermalSimple", "Thermal Conversion Efficiency", "thermalConversionEfficiencySchedule", true, "", 0.0, 1.0 },
     {"SpaceInfiltrationDesignFlowRate","Infiltration","schedule",true,"",0.0,1.0},
     {"SpaceInfiltrationEffectiveLeakageArea","Infiltration","schedule",true,"",0.0,1.0},
     {"SteamEquipment","Steam Equipment","schedule",true,"",0.0,1.0},

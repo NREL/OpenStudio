@@ -22826,6 +22826,360 @@ OS:Pipe:Outdoor,
        \units m
        \minimum> 0.0
 
+\group Solar Collectors
+
+OS:SolarCollectorPerformance:FlatPlate,
+       \memo Thermal and optical performance parameters for a single flat plate solar collector
+       \memo module. These parameters are based on the testing methodologies described in ASHRAE
+       \memo Standards 93 and 96 which are used Solar Rating and Certification Corporation (SRCC)
+       \memo Directory of SRCC Certified Solar Collector Ratings. See EnergyPlus DataSets file
+       \memo SolarCollectors.idf.
+       \min-fields 11
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference FlatPlateSolarCollectorParameters
+  N1 , \field Gross Area
+       \required-field
+       \type real
+       \minimum> 0
+       \units m2
+  A3,  \field Test Fluid
+       \type choice
+       \key Water
+       \default Water
+  N2,  \field Test Flow Rate
+       \required-field
+       \type real
+       \minimum> 0
+       \units m3/s
+  A4 , \field Test Correlation Type
+       \required-field
+       \type choice
+       \key Inlet
+       \key Average
+       \key Outlet
+  N3 , \field Coefficient 1 of Efficiency Equation
+       \required-field
+       \type real
+       \units dimensionless
+       \note Y-intercept term
+  N4 , \field Coefficient 2 of Efficiency Equation
+       \required-field
+       \type real
+       \units W/m2-K
+       \note 1st Order term
+  N5 , \field Coefficient 3 of Efficiency Equation
+       \type real
+       \units W/m2-K2
+       \note 2nd order term
+  N6 , \field Coefficient 2 of Incident Angle Modifier
+       \type real
+       \note 1st order term
+  N7 ; \field Coefficient 3 of Incident Angle Modifier
+       \type real
+       \note 2nd order term
+
+OS:SolarCollector:FlatPlate:Water,
+       \memo Flat plate water solar collector (single glazed, unglazed, or evacuated tube).
+       \memo Thermal and optical properties are taken from the referenced
+       \memo SolarCollectorPerformance:FlatPlate object. Collector tilt, azimuth, and gross area
+       \memo are taken from the referenced building surface or shading surface. The collector
+       \memo surface participates normally in all shading calculations.
+       \min-fields 7
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference ConnectionObject
+  A3 , \field SolarCollectorPerformance Name
+       \required-field
+       \type object-list
+       \object-list FlatPlateSolarCollectorParameters
+  A4 , \field Surface Name
+       \type object-list
+       \object-list AllShadingAndHTSurfNames
+  A5 , \field Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+  A6 , \field Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+  N1 ; \field Maximum Flow Rate
+       \type real
+       \minimum> 0
+       \units m3/s
+
+OS:SolarCollectorPerformance:IntegralCollectorStorage,
+       \memo Thermal and optical performance parameters for a single glazed solar collector with
+       \memo integral storage unit.
+       \min-fields 20
+  A1,  \field Handle
+       \type handle
+       \required-field  
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference CollectorStoragePerformance
+  A3,  \field ICS Collector Type
+       \required-field
+       \type choice
+       \key RectangularTank
+       \default RectangularTank
+       \note Currently only RectangularTank ICS collector type is available.
+  N1,  \field Gross Area
+       \type real
+       \minimum> 0
+       \units m2
+  N2,  \field Collector Water Volume
+       \type real
+       \minimum> 0
+       \units m3
+  N3,  \field Bottom Heat Loss Conductance
+       \required-field
+       \type real
+       \minimum> 0
+       \default 0.40
+       \units W/m2-K
+       \note Heat loss conductance of the collector bottom insulation
+  N4,  \field Side Heat Loss Conductance
+       \required-field
+       \type real
+       \minimum> 0
+       \default 0.60
+       \units W/m2-K
+       \note heat loss conductance of the collector side insulation
+  N5,  \field Aspect Ratio
+       \required-field
+       \type real
+       \minimum> 0.5
+       \maximum< 1.0
+       \default 0.8
+       \units m
+       \note This value is ratio of the width (short side) to length
+       \note (long side of) of the collector.  Used to calculate the
+       \note perimeter of the collector
+  N6,  \field Collector Side Height
+       \required-field
+       \type real
+       \minimum> 0
+       \maximum< 0.30
+       \default 0.20
+       \units m
+       \note This value is used to estimate collector side area for the heat
+       \note loss calculation through the collector side
+  N7,  \field Thermal Mass of Absorber Plate
+       \required-field
+       \type real
+       \minimum 0
+       \default 0
+       \units J/m2-K
+       \note Calculated from the specific heat, density and thickness
+       \note of the absorber plate.
+  N8,  \field Number of Covers
+       \required-field
+       \type integer
+       \minimum 1
+       \maximum 2
+       \default 2
+       \note Number of transparent covers. Common practice is to use low-iron
+       \note glass as the outer cover and very thin transparent sheet such as
+       \note Teflon as the inner cover.
+  N9,  \field Cover Spacing
+       \required-field
+       \type real
+       \minimum> 0
+       \maximum 0.20
+       \default 0.05
+       \units m
+       \note The gap between the transparent covers and between the inner cover
+       \note and the absorber plate
+  N10, \field Refractive Index of Outer Cover
+       \required-field
+       \type real
+       \minimum 1.0
+       \maximum 2.0
+       \default 1.526
+       \units dimensionless
+       \note Refractive index of outer cover. Typically low-iron glass is used
+       \note as the outer cover material, and used as the default outer cover
+       \note with a value of 1.526.
+  N11, \field Extinction Coefficient Times Thickness of Outer Cover
+       \required-field
+       \type real
+       \minimum 0.
+       \default 0.045
+       \units dimensionless
+       \note Clear glass has extinction coefficient of about 15 [1/m]
+       \note and with thickness of 3.0mm, the product of the extinction
+       \note coefficient and thickness becomes 0.045 (=15 * 0.003)
+  N12, \field Emissivity of Outer Cover
+       \required-field
+       \type real
+       \minimum> 0.
+       \maximum< 1.0
+       \default 0.88
+       \units dimensionless
+       \note Thermal emissivity of the outer cover, commonly glass is used as
+       \note the out collector cover material.
+  N13, \field Refractive Index of Inner Cover
+       \required-field
+       \type real
+       \minimum 1.0
+       \maximum 2.0
+       \default 1.37
+       \units dimensionless
+       \note Typical material is very thin sheet of Teflon (PTFE). The default
+       \note value is refractive index of Teflon.
+  N14, \field Extinction Coefficient Times Thickness of the inner Cover
+       \required-field
+       \type real
+       \minimum 0.
+       \default 0.008
+       \units dimensionless
+       \note Default inner cover is very thin sheet of Teflon with
+       \note extinction coefficient of approximately 40.0 and a thickness
+       \note 0.2mm yields a default value of 0.008.
+  N15, \field Emissivity of Inner Cover
+       \required-field
+       \type real
+       \minimum> 0.
+       \maximum< 1.0
+       \default 0.88
+       \units dimensionless
+       \note Thermal emissivity of the inner cover material
+  N16, \field Absorptance of Absorber Plate
+       \required-field
+       \type real
+       \minimum> 0.
+       \maximum< 1.0
+       \default 0.96
+       \units dimensionless
+       \note The absorber plate solar absorptance.  Copper is assumed as
+       \note the default absorber plate.
+  N17; \field Emissivity of Absorber Plate
+       \required-field
+       \type real
+       \minimum> 0.
+       \maximum< 1.0
+       \default 0.30
+       \units dimensionless
+       \note Thermal emissivity of the absorber plate
+
+OS:SolarCollector:IntegralCollectorStorage,
+       \memo Glazed solar collector with integral storage unit. Thermal and optical properties are
+       \memo taken from the referenced SolarCollectorPerformance:IntegralCollectorStorage object.
+       \memo Collector tilt, azimuth, and gross area are taken from the referenced building surface
+       \memo or shading surface. The collector surface participates normally in all shading
+       \memo calculations.
+       \min-fields 9
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference ConnectionObject
+  A3 , \field IntegralCollectorStorageParameters Name
+       \required-field
+       \type object-list
+       \object-list CollectorStoragePerformance
+  A4 , \field Surface Name
+       \type object-list
+       \object-list AllShadingAndHTSurfNames
+  A5 , \field Bottom Surface Boundary Conditions Type
+       \required-field
+       \type choice
+       \key OtherSideConditionsModel
+       \key AmbientAir
+       \default AmbientAir
+  A6 , \field Boundary Condition Model Name
+       \type alpha
+       \note Enter the name of a SurfaceProperty:OtherSideConditionsModel
+       \note object. Specified only if the boundary condition type is
+       \note OtherSideConditionsModel, otherwise leave it blank
+  A7 , \field Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+  A8 , \field Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+  N1 ; \field Maximum Flow Rate
+       \type real
+       \minimum> 0
+       \units m3/s
+
+OS:SolarCollectorPerformance:PhotovoltaicThermal:Simple,
+       \memo Thermal performance parameters for a hybrid photovoltaic-thermal (PVT) solar collector.
+       \min-fields 7
+  A1,  \field Handle
+       \type handle
+       \required-field 
+  A2 , \field Name
+       \type alpha
+       \required-field 
+       \reference FlatPlatePVTParameters
+  N1 , \field Fraction of Surface Area with Active Thermal Collector
+       \type real
+       \units dimensionless
+       \minimum> 0.0
+       \maximum 1.0
+       \default 1.0
+  A3 , \field Thermal Conversion Efficiency Input Mode Type
+       \type choice
+       \key Fixed
+       \key Scheduled
+       \default Fixed
+  N2 , \field Value for Thermal Conversion Efficiency if Fixed
+       \note Efficiency = (thermal power generated [W])/(incident solar[W])
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+  A4 , \field Thermal Conversion Efficiency Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  N3 ; \field Front Surface Emittance
+       \type real
+       \default 0.84
+       \minimum> 0.00
+       \maximum< 1.00
+
+OS:SolarCollector:FlatPlate:PhotovoltaicThermal,
+       \memo Models hybrid photovoltaic-thermal (PVT) solar collectors that convert incident solar
+       \memo energy into both electricity and useful thermal energy by heating air or water.
+       \min-fields 8
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference ConnectionObject
+  A3 , \field Surface Name
+       \type object-list
+       \object-list AllShadingAndHTSurfNames
+  A4 , \field Photovoltaic-Thermal Model Performance Name
+       \type object-list
+       \object-list FlatPlatePVTParameters
+  A5 , \field Photovoltaic Name
+       \note Enter the name of a Generator:Photovoltaic object.
+       \type object-list
+       \object-list PVGeneratorNames
+  A6 , \field Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+  A7 , \field Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+  N1 ; \field Design Flow Rate
+       \units m3/s
+       \autosizable
+
 \group OpenStudio Economics
 
 OS:ComponentCost:Adjustments,

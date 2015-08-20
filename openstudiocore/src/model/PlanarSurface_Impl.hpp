@@ -90,46 +90,31 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    /// get the construction object
-    /// if the planar surface is paired with an adjacent planar surface, attempts to resolve any surface matching conflict
     virtual boost::optional<ConstructionBase> construction() const;
 
-    /// get the construction object and the search distance that was needed to find the construction
-    /// does not consider adjacent planar surfaces
     virtual boost::optional<std::pair<ConstructionBase, int> > constructionWithSearchDistance() const = 0;
 
-    /// Returns true if the construction is not directly referenced by this surface .
     virtual bool isConstructionDefaulted() const = 0;
 
-    /// Returns the containing PlanarSurfaceGroup if available.
     virtual boost::optional<PlanarSurfaceGroup> planarSurfaceGroup() const = 0;
 
-    /// Returns the containing Space if available.
     virtual boost::optional<Space> space() const = 0;
 
-    /// get the vertices
     std::vector<Point3d> vertices() const;
 
     //@}
     /** @name Setters */
 
-    /// set the vertices
     virtual bool setVertices(const std::vector<Point3d>& vertices);
 
-    /// set the construction object
     virtual bool setConstruction(const ConstructionBase& construction) = 0;
 
-    /// Resets the construction object.
     virtual void resetConstruction() = 0;
 
-    /** Set the u-factor of this surface in W/m^2*K, if possible. value should already include appropriate
-     *  film coefficients. By default, assumes still air indoors and 15 mph outdoor air speed. */
     virtual bool setUFactor(double value);
 
     bool setUFactor(boost::optional<double> value);
 
-    /** Set the conductance of this surface in W/m^2*K, if possible. value should not include any film
-     *  coefficients. */
     virtual bool setThermalConductance(double value);
 
     bool setThermalConductance(boost::optional<double> value);
@@ -138,63 +123,43 @@ namespace detail {
     /** @name Queries */
     //@{
 
-    /// is this surface an air wall
     bool isAirWall() const;
 
-    /// compute gross area (m^2)
     double grossArea() const;
 
-    /// should subtract this surface from parent's gross area for net area
     virtual bool subtractFromGrossArea() const = 0;
 
-    /// compute net area (m^2)
     double netArea() const;
 
-    /// get the outward normal in local coordinates
-    /// throws openstudio::Exception if cannot compute outward normal for this surface.
     Vector3d outwardNormal() const;
 
-    /// get tilt [from local up] (rad)
-    /// throws openstudio::Exception if cannot compute outward normal for this surface.
     double tilt() const;
 
-    /// get azimuth [clockwise from local North] (rad)
-    /// throws openstudio::Exception if cannot compute outward normal for this surface.
     double azimuth() const;
 
-    /** Get the u-factor of this surface. Includes film coefficients. */
     virtual boost::optional<double> uFactor() const;
 
-    /** Get the conductance of this surface. Does not include film coefficients. */
     virtual boost::optional<double> thermalConductance() const;
 
-    /** Get the heat capacity of this surface in J/m^2*K, if available. */
     boost::optional<double> heatCapacity() const;
 
-    /// get interior visible absorptance (unitless)
     boost::optional<double> interiorVisibleAbsorptance() const;
 
-    /// get exterior visible absorptance (unitless)
     boost::optional<double> exteriorVisibleAbsorptance() const;
 
-    /// get visible transmittance (unitless)
-    /// requires 'EnvelopeSummary' summary table
     boost::optional<double> visibleTransmittance() const;
 
-    /// Check if this planar surface's vertices are equal to the other's in the building coordinate system
     bool equalVertices(const PlanarSurface& other) const;
 
-    /// Check if this planar surface's vertices are reverse equal to the other's in the building coordinate system
     bool reverseEqualVertices(const PlanarSurface& other) const;
 
-    /// Get the plane, throws openstudio::Exception if cannot compute plane for this surface.
     Plane plane() const;
 
-    /// Get a triangulation of this surface, subsurfaces will be replaced by holes in the triangulation
     std::vector<std::vector<Point3d> > triangulation() const;
 
-    /// Return the centroid of this planar surface's vertices
     Point3d centroid() const;
+
+    std::vector<ModelObject> solarCollectors() const;
 
     //@}
    protected:

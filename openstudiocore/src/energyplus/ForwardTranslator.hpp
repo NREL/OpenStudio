@@ -256,6 +256,12 @@ class ShadingSurface;
 class ShadingSurfaceGroup;
 class Site;
 class SkyTemperature;
+class SolarCollectorFlatPlatePhotovoltaicThermal;
+class SolarCollectorFlatPlateWater;
+class SolarCollectorIntegralCollectorStorage;
+class SolarCollectorPerformanceFlatPlate;
+class SolarCollectorPerformanceIntegralCollectorStorage;
+class SolarCollectorPerformancePhotovoltaicThermalSimple;
 class Space;
 class SpaceInfiltrationDesignFlowRate;
 class SpaceInfiltrationEffectiveLeakageArea;
@@ -818,6 +824,18 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateSizingZone( model::SizingZone & modelObject );
 
   boost::optional<IdfObject> translateSkyTemperature( model::SkyTemperature & modelObject );
+
+  boost::optional<IdfObject> translateSolarCollectorFlatPlatePhotovoltaicThermal(model::SolarCollectorFlatPlatePhotovoltaicThermal & modelObject);
+  
+  boost::optional<IdfObject> translateSolarCollectorFlatPlateWater(model::SolarCollectorFlatPlateWater & modelObject);
+  
+  boost::optional<IdfObject> translateSolarCollectorIntegralCollectorStorage(model::SolarCollectorIntegralCollectorStorage & modelObject);
+
+  boost::optional<IdfObject> translateSolarCollectorPerformanceFlatPlate(model::SolarCollectorPerformanceFlatPlate & modelObject);
+  
+  boost::optional<IdfObject> translateSolarCollectorPerformanceIntegralCollectorStorage(model::SolarCollectorPerformanceIntegralCollectorStorage & modelObject);
+
+  boost::optional<IdfObject> translateSolarCollectorPerformancePhotovoltaicThermalSimple(model::SolarCollectorPerformancePhotovoltaicThermalSimple & modelObject);
 
   boost::optional<IdfObject> translateSpace( model::Space & modelObject );
 
