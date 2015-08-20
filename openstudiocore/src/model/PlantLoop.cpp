@@ -79,13 +79,6 @@ PlantLoop_Impl::PlantLoop_Impl(const PlantLoop_Impl& other,
 {
 }
 
-std::vector<ModelObject> PlantLoop_Impl::demandComponents( HVACComponent inletComp,
-                                                           HVACComponent outletComp,
-                                                           openstudio::IddObjectType type ) const
-{
-  return Loop_Impl::demandComponents(inletComp,outletComp,type);
-}
-
 std::vector<openstudio::IdfObject> PlantLoop_Impl::remove()
 {
   sizingPlant().remove();
@@ -153,28 +146,9 @@ IddObjectType PlantLoop_Impl::iddObjectType() const {
   return PlantLoop::iddObjectType();
 }
 
-std::vector<ModelObject> PlantLoop_Impl::demandComponents(openstudio::IddObjectType type) const
-{
-  return demandComponents( demandInletNode(), demandOutletNode(), type );
-}
-
-OptionalModelObject PlantLoop_Impl::component(openstudio::Handle handle)
-{
-  return Loop_Impl::component( handle );
-}
-
 ModelObject PlantLoop_Impl::clone(Model model) const
 {
   return Loop_Impl::clone(model);
-}
-
-std::vector<ModelObject> PlantLoop_Impl::demandComponents(
-    std::vector<HVACComponent> inletComps,
-    std::vector<HVACComponent> outletComps,
-    openstudio::IddObjectType type
-  ) const
-{
-  return Loop_Impl::demandComponents(inletComps, outletComps, type);
 }
 
 unsigned PlantLoop_Impl::supplyInletPort() const
@@ -207,9 +181,19 @@ Node PlantLoop_Impl::supplyOutletNode() const
   return connectedObject(supplyOutletPort())->optionalCast<Node>().get();
 }
 
+std::vector<Node> PlantLoop_Impl::supplyOutletNodes() const
+{
+  return std::vector<Node> { supplyOutletNode() };
+}
+
 Node PlantLoop_Impl::demandInletNode() const
 {
   return connectedObject(demandInletPort())->optionalCast<Node>().get();
+}
+
+std::vector<Node> PlantLoop_Impl::demandInletNodes() const
+{
+  return std::vector<Node> { demandInletNode() };
 }
 
 Node PlantLoop_Impl::demandOutletNode() const
@@ -773,64 +757,14 @@ PlantLoop::PlantLoop(std::shared_ptr<detail::PlantLoop_Impl> impl)
   : Loop(impl)
 {}
 
-//std::vector<ModelObject> PlantLoop::supplyComponents(HVACComponent inletComp,
-//                                                     HVACComponent outletComp,
-//                                                     openstudio::IddObjectType type)
-//{
-//  return getImpl<detail::PlantLoop_Impl>()->supplyComponents(inletComp, outletComp, type);
-//}
-
-std::vector<ModelObject> PlantLoop::demandComponents(HVACComponent inletComp,
-                                                     HVACComponent outletComp,
-                                                     openstudio::IddObjectType type) const
-{
-  return getImpl<detail::PlantLoop_Impl>()->demandComponents(inletComp, outletComp, type);
-}
-
 std::vector<IdfObject> PlantLoop::remove()
 {
   return getImpl<detail::PlantLoop_Impl>()->remove();
 }
 
-//std::vector<ModelObject> PlantLoop::components(openstudio::IddObjectType type)
-//{
-//  return getImpl<detail::PlantLoop_Impl>()->components( type );
-//}
-
-//std::vector<ModelObject> PlantLoop::supplyComponents(openstudio::IddObjectType type)
-//{
-//  return getImpl<detail::PlantLoop_Impl>()->supplyComponents( type );
-//}
-
-std::vector<ModelObject> PlantLoop::demandComponents(openstudio::IddObjectType type) const
-{
-  return getImpl<detail::PlantLoop_Impl>()->demandComponents( type );
-}
-
-boost::optional<ModelObject> PlantLoop::component(openstudio::Handle handle)
-{
-  return getImpl<detail::PlantLoop_Impl>()->component( handle );
-}
-
 ModelObject PlantLoop::clone(Model model) const
 {
   return getImpl<detail::PlantLoop_Impl>()->clone( model );
-}
-
-//std::vector<ModelObject> PlantLoop::supplyComponents(std::vector<HVACComponent> inletComps,
-//    std::vector<HVACComponent> outletComps,
-//    openstudio::IddObjectType type
-//  )
-//{
-//  return getImpl<detail::PlantLoop_Impl>()->supplyComponents( inletComps, outletComps, type);
-//}
-
-std::vector<ModelObject> PlantLoop::demandComponents(std::vector<HVACComponent> inletComps,
-    std::vector<HVACComponent> outletComps,
-    openstudio::IddObjectType type
-  ) const
-{
-  return getImpl<detail::PlantLoop_Impl>()->demandComponents( inletComps, outletComps, type);
 }
 
 unsigned PlantLoop::supplyInletPort() const
@@ -863,9 +797,19 @@ Node PlantLoop::supplyOutletNode() const
   return getImpl<detail::PlantLoop_Impl>()->supplyOutletNode();
 }
 
+std::vector<Node> PlantLoop::supplyOutletNodes() const
+{
+  return getImpl<detail::PlantLoop_Impl>()->supplyOutletNodes();
+}
+
 Node PlantLoop::demandInletNode() const
 {
   return getImpl<detail::PlantLoop_Impl>()->demandInletNode();
+}
+
+std::vector<Node> PlantLoop::demandInletNodes() const
+{
+  return getImpl<detail::PlantLoop_Impl>()->demandInletNodes();
 }
 
 Node PlantLoop::demandOutletNode() const

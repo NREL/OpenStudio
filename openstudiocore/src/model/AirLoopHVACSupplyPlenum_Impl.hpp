@@ -69,9 +69,9 @@ class MODEL_API AirLoopHVACSupplyPlenum_Impl : public Splitter_Impl {
 
   bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
-  bool addBranchForZone(openstudio::model::ThermalZone & thermalZone, StraightComponent & terminal);
+  bool addBranchForZone(openstudio::model::ThermalZone & thermalZone, HVACComponent & terminal);
 
-  bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone, boost::optional<StraightComponent> & terminal);
+  bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone, boost::optional<HVACComponent> & terminal);
 
   std::vector<IdfObject> remove() override;
 

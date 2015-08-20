@@ -170,9 +170,7 @@ namespace openstudio {
             std::vector<model::ModelObject> allModelObjects;
             for (auto shadingSurfaceGroup : allShadingSurfaceGroups(t_space)) {
               auto shadingSurfaces = shadingSurfaceGroup.cast<model::ShadingSurfaceGroup>().shadingSurfaces();
-              for (auto shadingSurface : shadingSurfaces) {
-                allModelObjects.push_back(shadingSurface);
-              }
+              allModelObjects.insert(allModelObjects.end(), shadingSurfaces.begin(), shadingSurfaces.end());
             }
             return allModelObjects;
           }
@@ -193,44 +191,6 @@ namespace openstudio {
                 }
               }
             }
-            return allModelObjects;
-          }
-          );
-
-          std::function<std::vector<boost::optional<model::ModelObject> >(const model::Space &)> allConstructions(
-            [allShadingSurfaces](const model::Space &t_space) {
-            std::vector<boost::optional<model::ModelObject> > allModelObjects;
-            std::vector<boost::optional<model::ConstructionBase> > allConstructions;
-            for (auto shadingSurface : allShadingSurfaces(t_space)) {
-              auto construction = shadingSurface.cast<model::ShadingSurface>().construction();
-              if (construction) {
-                allConstructions.push_back(construction);
-              }
-              else {
-                allConstructions.push_back(boost::optional<model::ConstructionBase>());
-              }
-            }
-            allModelObjects.insert(allModelObjects.end(), allConstructions.begin(), allConstructions.end());
-
-            return allModelObjects;
-          }
-          );
-
-          std::function<std::vector<boost::optional<model::ModelObject> >(const model::Space &)> allTransmittanceSchedules(
-            [allShadingSurfaces](const model::Space &t_space) {
-            std::vector<boost::optional<model::ModelObject> > allModelObjects;
-            std::vector<boost::optional<model::Schedule> > transmittanceSchedules;
-            for (auto shadingSurface : allShadingSurfaces(t_space)) {
-              auto transmittanceSchedule = shadingSurface.cast<model::ShadingSurface>().transmittanceSchedule();
-              if (transmittanceSchedule) {
-                transmittanceSchedules.push_back(transmittanceSchedule);
-              }
-              else {
-                transmittanceSchedules.push_back(boost::optional<model::Schedule>());
-              }
-            }
-            allModelObjects.insert(allModelObjects.end(), transmittanceSchedules.begin(), transmittanceSchedules.end());
-
             return allModelObjects;
           }
           );
@@ -266,7 +226,7 @@ namespace openstudio {
             CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::setConstruction),
             boost::optional<std::function<void(model::ShadingSurface*)> >(NullAdapter(&model::ShadingSurface::resetConstruction)),
             DataSource(
-            allConstructions, 
+            allShadingSurfaces,
             true
             )
             );
@@ -284,7 +244,7 @@ namespace openstudio {
             setter,
             boost::optional<std::function<void(model::ShadingSurface*)> >(NullAdapter(&model::ShadingSurface::resetTransmittanceSchedule)),
             DataSource(
-            allTransmittanceSchedules, 
+            allShadingSurfaces,
             true
             )
             );

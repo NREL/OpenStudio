@@ -60,21 +60,21 @@ namespace detail {
 
     void resetThermalZone();
 
-    unsigned outletPort() override;
+    unsigned outletPort() const override;
 
     PortList inducedAirOutletPortList();
 
-    unsigned inletPort(unsigned branchIndex) override;
+    unsigned inletPort(unsigned branchIndex) const override;
 
-    unsigned nextInletPort() override;
+    unsigned nextInletPort() const override;
 
     bool addToNode(Node & node) override;
 
     bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
-    bool addBranchForZone(openstudio::model::ThermalZone & thermalZone, StraightComponent & terminal);
+    bool addBranchForZone(openstudio::model::ThermalZone & thermalZone, HVACComponent & terminal);
 
-    bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone, boost::optional<StraightComponent> & terminal);
+    bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone, boost::optional<HVACComponent> & terminal);
 
     std::vector<IdfObject> remove() override;
 

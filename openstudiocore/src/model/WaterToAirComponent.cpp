@@ -139,7 +139,14 @@ bool WaterToAirComponent_Impl::addToNode(Node & node)
     if( t_airLoop->demandComponent( node.handle() ) ) return false;
 
     systemStartComponent = t_airLoop->supplyInletNode();
-    systemEndComponent = t_airLoop->supplyOutletNode();
+    auto nodes = t_airLoop->supplyOutletNodes();
+    OS_ASSERT( ! nodes.empty() );
+    if( (nodes.size() == 2u) && (! t_airLoop->supplyComponents(node,nodes[1]).empty()) ) {
+      systemEndComponent = nodes[1];
+    } else {
+      systemEndComponent = nodes[0];
+    }
+    OS_ASSERT(systemEndComponent);
     componentInletPort = airInletPort();
     componentOutletPort = airOutletPort();
 

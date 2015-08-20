@@ -60,18 +60,28 @@
 #include "../model/PlantLoop.hpp"
 #include "../model/PlantLoop_Impl.hpp"
 #include "../model/SetpointManager.hpp"
-#include "../model/SetpointManagerMixedAir.hpp"
-#include "../model/SetpointManagerOutdoorAirReset.hpp"
-#include "../model/SetpointManagerSingleZoneReheat.hpp"
-#include "../model/SetpointManagerScheduled.hpp"
+#include "../model/SetpointManagerColdest.hpp"
+#include "../model/SetpointManagerFollowGroundTemperature.hpp"
 #include "../model/SetpointManagerFollowOutdoorAirTemperature.hpp"
+#include "../model/SetpointManagerFollowSystemNodeTemperature.hpp"
+#include "../model/SetpointManagerMixedAir.hpp"
+#include "../model/SetpointManagerMultiZoneCoolingAverage.hpp"
+#include "../model/SetpointManagerMultiZoneHeatingAverage.hpp"
+#include "../model/SetpointManagerMultiZoneHumidityMaximum.hpp"
+#include "../model/SetpointManagerMultiZoneHumidityMinimum.hpp"
+#include "../model/SetpointManagerMultiZoneMaximumHumidityAverage.hpp"
+#include "../model/SetpointManagerMultiZoneMinimumHumidityAverage.hpp"
+#include "../model/SetpointManagerOutdoorAirPretreat.hpp"
+#include "../model/SetpointManagerOutdoorAirReset.hpp"
+#include "../model/SetpointManagerScheduled.hpp"
+#include "../model/SetpointManagerScheduledDualSetpoint.hpp"
+#include "../model/SetpointManagerSingleZoneHumidityMaximum.hpp"
+#include "../model/SetpointManagerSingleZoneHumidityMinimum.hpp"
+#include "../model/SetpointManagerSingleZoneOneStageCooling.hpp"
+#include "../model/SetpointManagerSingleZoneOneStageHeating.hpp"
+#include "../model/SetpointManagerSingleZoneReheat.hpp"
 #include "../model/SetpointManagerWarmest.hpp"
 #include "../model/SetpointManagerWarmestTemperatureFlow.hpp"
-#include "../model/SetpointManagerScheduledDualSetpoint.hpp"
-#include "../model/SetpointManagerOutdoorAirPretreat.hpp"
-#include "../model/SetpointManagerSingleZoneHumidityMinimum.hpp"
-#include "../model/SetpointManagerMultiZoneMinimumHumidityAverage.hpp"
-#include "../model/SetpointManagerMultiZoneHumidityMinimum.hpp"
 #include "../model/RenderingColor.hpp"
 #include "../model/RenderingColor_Impl.hpp"
 #include "../model/Node.hpp"
@@ -2118,54 +2128,94 @@ void OneThreeNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
         {
           if( it->iddObjectType() == SetpointManagerMixedAir::iddObjectType() )
           {
-            painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_mixed.png"));
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_mixed.png"));
           }
           else if( it->iddObjectType() == SetpointManagerSingleZoneReheat::iddObjectType() )
           {
-            painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_singlezone.png"));
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_singlezone.png"));
           }
           else if( it->iddObjectType() == SetpointManagerScheduled::iddObjectType() )
           {
-            painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_scheduled.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerFollowOutdoorAirTemperature::iddObjectType() )
-          {
-            painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_follow_outdoorair.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerOutdoorAirReset::iddObjectType() )
-          {
-            painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_outdoorair.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerWarmest::iddObjectType() )
-          {
-            painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_warmest.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerWarmestTemperatureFlow::iddObjectType() )
-          {
-            painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_warmest_tempflow.png"));
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_scheduled.png"));
           }
           else if( it->iddObjectType() == SetpointManagerScheduledDualSetpoint::iddObjectType() )
           {
-            painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_dual.png"));
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_dual.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerWarmest::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_warmest.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerColdest::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_coldest.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerOutdoorAirReset::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_outdoorair.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerFollowGroundTemperature::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_follow_ground_temp.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerFollowOutdoorAirTemperature::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_follow_outdoorair.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerFollowSystemNodeTemperature::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_follow_system_node.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerMultiZoneCoolingAverage::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_multizone_cooling.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerMultiZoneHeatingAverage::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_multizone_heating.png"));
           }
           else if( it->iddObjectType() == SetpointManagerOutdoorAirPretreat::iddObjectType() )
           {
-            painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_pretreat.png"));
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_pretreat.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerSingleZoneOneStageCooling::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_onestage_cooling.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerSingleZoneOneStageHeating::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_onestage_heating.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerWarmestTemperatureFlow::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_warmest_tempflow.png"));
           }
           break;
         } else {
-          //else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMinimum::iddObjectType() )
-          //{
-          //  painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_single_zone_humidity_min.png"));
-          //}
-          //else if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMinimum::iddObjectType() )
-          //{
-          //  painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_multi_zone_humidity_min.png"));
-          //}
-          //else if( it->iddObjectType() == SetpointManagerMultiZoneMinimumHumidityAverage::iddObjectType() )
-          //{
-          //  painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_multi_zone_humidity_ave.png"));
-          //}
+          // if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMaximum::iddObjectType() )
+          // {
+          //   painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_multizone_humidity_max.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMinimum::iddObjectType() )
+          // {
+          //   painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_multizone_humidity_min.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerMultiZoneMaximumHumidityAverage::iddObjectType() )
+          // {
+          //   painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_multizone_maxhumidity_avg.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerMultiZoneMinimumHumidityAverage::iddObjectType() )
+          // {
+          //   painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_multizone_minhumidity_avg.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMaximum::iddObjectType() )
+          // {
+          //   painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_singlezone_humidity_max.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMinimum::iddObjectType() )
+          // {
+          //   painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_singlezone_humidity_min.png"));
+          // }
           //break;
         }
       }
@@ -2291,54 +2341,94 @@ void TwoFourNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
         {
           if( it->iddObjectType() == SetpointManagerMixedAir::iddObjectType() )
           {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_mixed_right.png"));
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_mixed_right.png"));
           }
           else if( it->iddObjectType() == SetpointManagerSingleZoneReheat::iddObjectType() )
           {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_singlezone_right.png"));
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone_right.png"));
           }
           else if( it->iddObjectType() == SetpointManagerScheduled::iddObjectType() )
           {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_scheduled_right.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerFollowOutdoorAirTemperature::iddObjectType() )
-          {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_follow_outdoorair_right.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerOutdoorAirReset::iddObjectType() )
-          {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_outdoorair_right.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerWarmest::iddObjectType() )
-          {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_warmest_right.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerWarmestTemperatureFlow::iddObjectType() )
-          {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_warmest_tempflow_right.png"));
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_scheduled_right.png"));
           }
           else if( it->iddObjectType() == SetpointManagerScheduledDualSetpoint::iddObjectType() )
           {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_dual.png"));
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_dual_right.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerWarmest::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_warmest_right.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerColdest::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_coldest_right.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerOutdoorAirReset::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_outdoorair_right.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerFollowGroundTemperature::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_follow_ground_temp_right.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerFollowOutdoorAirTemperature::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_follow_outdoorair_right.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerFollowSystemNodeTemperature::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_follow_system_node_right.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerMultiZoneCoolingAverage::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_cooling_right.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerMultiZoneHeatingAverage::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_heating_right.png"));
           }
           else if( it->iddObjectType() == SetpointManagerOutdoorAirPretreat::iddObjectType() )
           {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_pretreat.png"));
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_pretreat_right.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerSingleZoneOneStageCooling::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_onestage_cooling_right.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerSingleZoneOneStageHeating::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_onestage_heating_right.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerWarmestTemperatureFlow::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_warmest_tempflow_right.png"));
           }
           break;
         } else {
-          //else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMinimum::iddObjectType() )
-          //{
-          //  painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_single_zone_humidity_min_right.png"));
-          //}
-          //else if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMinimum::iddObjectType() )
-          //{
-          //  painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_multi_zone_humidity_min_right.png"));
-          //}
-          //else if( it->iddObjectType() == SetpointManagerMultiZoneMinimumHumidityAverage::iddObjectType() )
-          //{
-          //  painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_multi_zone_humidity_ave_right.png"));
-          //}
+          // if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMaximum::iddObjectType() )
+          // {
+          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_humidity_max_right.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMinimum::iddObjectType() )
+          // {
+          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_humidity_min_right.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerMultiZoneMaximumHumidityAverage::iddObjectType() )
+          // {
+          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_maxhumidity_avg_right.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerMultiZoneMinimumHumidityAverage::iddObjectType() )
+          // {
+          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_minhumidity_avg_right.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMaximum::iddObjectType() )
+          // {
+          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone_humidity_max_right.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMinimum::iddObjectType() )
+          // {
+          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone_humidity_min_right.png"));
+          // }
           //break;
         }
       }
@@ -2409,58 +2499,98 @@ void OAStraightNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
           it != _setpointManagers.end();
           ++it)
       {
-        if( istringEqual("Temperature", it->controlVariable()) ) 
+        if( istringEqual("Temperature", it->controlVariable()) )
         {
           if( it->iddObjectType() == SetpointManagerMixedAir::iddObjectType() )
           {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_mixed.png"));
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_mixed.png"));
           }
           else if( it->iddObjectType() == SetpointManagerSingleZoneReheat::iddObjectType() )
           {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_singlezone.png"));
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone.png"));
           }
           else if( it->iddObjectType() == SetpointManagerScheduled::iddObjectType() )
           {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_scheduled.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerFollowOutdoorAirTemperature::iddObjectType() )
-          {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_follow_outdoorair.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerOutdoorAirReset::iddObjectType() )
-          {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_outdoorair.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerWarmest::iddObjectType() )
-          {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_warmest.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerWarmestTemperatureFlow::iddObjectType() )
-          {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_warmest_tempflow.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerOutdoorAirPretreat::iddObjectType() )
-          {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_pretreat.png"));
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_scheduled.png"));
           }
           else if( it->iddObjectType() == SetpointManagerScheduledDualSetpoint::iddObjectType() )
           {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_dual.png"));
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_dual.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerWarmest::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_warmest.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerColdest::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_coldest.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerOutdoorAirReset::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_outdoorair.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerFollowGroundTemperature::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_follow_ground_temp.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerFollowOutdoorAirTemperature::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_follow_outdoorair.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerFollowSystemNodeTemperature::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_follow_system_node.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerMultiZoneCoolingAverage::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_cooling.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerMultiZoneHeatingAverage::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_heating.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerOutdoorAirPretreat::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_pretreat.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerSingleZoneOneStageCooling::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_onestage_cooling.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerSingleZoneOneStageHeating::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_onestage_heating.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerWarmestTemperatureFlow::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_warmest_tempflow.png"));
           }
           break;
         } else {
-          //else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMinimum::iddObjectType() )
-          //{
-          //  painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_single_zone_humidity_min.png"));
-          //}
-          //else if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMinimum::iddObjectType() )
-          //{
-          //  painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_multi_zone_humidity_min.png"));
-          //}
-          //else if( it->iddObjectType() == SetpointManagerMultiZoneMinimumHumidityAverage::iddObjectType() )
-          //{
-          //  painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_multi_zone_humidity_ave.png"));
-          //}
+          // if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMaximum::iddObjectType() )
+          // {
+          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_humidity_max.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMinimum::iddObjectType() )
+          // {
+          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_humidity_min.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerMultiZoneMaximumHumidityAverage::iddObjectType() )
+          // {
+          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_maxhumidity_avg.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerMultiZoneMinimumHumidityAverage::iddObjectType() )
+          // {
+          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_minhumidity_avg.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMaximum::iddObjectType() )
+          // {
+          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone_humidity_max.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMinimum::iddObjectType() )
+          // {
+          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone_humidity_min.png"));
+          // }
           //break;
         }
       }
