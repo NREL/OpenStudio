@@ -135,12 +135,14 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXVariableSpee
     idfObject.setDouble(Coil_Heating_DX_VariableSpeedFields::ResistiveDefrostHeaterCapacity,value.get());
   }
   
+  auto const speeds = modelObject.speeds();
+  
   // NumberofSpeeds
-  if( auto num = modelObject.speeds().size() ) {
+  if( auto num = speeds.size() ) {
     idfObject.setInt(Coil_Heating_DX_VariableSpeedFields::NumberofSpeeds,num);
   }
 
-  for( auto speed: modelObject.speeds() ) {
+  for( auto const & speed : speeds ) {
     auto eg = idfObject.pushExtensibleGroup();
 
     // SpeedReferenceUnitGrossRatedHeatingCapacity

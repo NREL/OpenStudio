@@ -131,13 +131,15 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXMultiSpeed( 
   if( auto num = modelObject.regionnumberforCalculatingHSPF() ) {
     idfObject.setInt(Coil_Heating_DX_MultiSpeedFields::RegionnumberforCalculatingHSPF,num);
   }
+
+  auto const stages = modelObject.stages();
   
   // NumberofSpeeds
-  if( auto num = modelObject.stages().size() ) {
+  if( auto num = stages.size() ) {
     idfObject.setInt(Coil_Heating_DX_MultiSpeedFields::NumberofSpeeds,num);
   }
 
-  for( auto stage: modelObject.stages() ) {
+  for( auto const & stage : stages ) {
     auto eg = idfObject.pushExtensibleGroup();
   
     // GrossRatedHeatingCapacity

@@ -136,12 +136,14 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXVariableSpee
     }
   }
   
+  auto const speeds = modelObject.speeds();
+
   // NumberofSpeeds
-  if( auto num = modelObject.speeds().size() ) {
+  if( auto num = speeds.size() ) {
     idfObject.setInt(Coil_Cooling_DX_VariableSpeedFields::NumberofSpeeds,num);
   }
 
-  for( auto speed: modelObject.speeds() ) {
+  for( auto const & speed : speeds ) {
     auto eg = idfObject.pushExtensibleGroup();
 
     // SpeedReferenceUnitGrossRatedTotalCoolingCapacity
