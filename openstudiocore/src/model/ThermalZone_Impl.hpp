@@ -437,9 +437,11 @@ namespace detail {
     bool isPlenum() const;
     bool canBePlenum() const;
     bool setSupplyPlenum(const ThermalZone & plenumZone);
+    bool setSupplyPlenum(const ThermalZone & plenumZone, unsigned branchIndex);
     void removeSupplyPlenum();
     bool setReturnPlenum(const ThermalZone & plenumZone);
     void removeReturnPlenum();
+    void removeSupplyPlenum(unsigned branchIndex);
 
     std::vector<ZoneMixing> zoneMixing() const;
     std::vector<ZoneMixing> supplyZoneMixing() const;

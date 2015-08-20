@@ -22,6 +22,8 @@
 #include "../../model/Model.hpp"
 #include "../../model/PlantLoop.hpp"
 #include "../../model/PlantLoop_Impl.hpp"
+#include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
+#include "../../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "../../model/SizingPlant.hpp"
 #include "../../model/SizingPlant_Impl.hpp"
 #include "../../model/Node.hpp"
@@ -112,7 +114,7 @@ namespace energyplus {
 
 IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject, 
                           std::vector<ModelObject> & modelObjects,
-                          PlantLoop & plantLoop)
+                          Loop & loop)
 {
   if(modelObjects.size() > 0)
   {
@@ -127,13 +129,17 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
     
       //translate and map each model object
       //in most cases, the name and idd object type come directly from the resulting idfObject
-      if ( boost::optional<IdfObject> idfObject = this->translateAndMapModelObject(modelObject) )
-      {
+      if( boost::optional<IdfObject> idfObject = this->translateAndMapModelObject(modelObject) ) {
         objectName = idfObject->name().get();
         iddType = idfObject->iddObject().name();
       }
 
-      if( boost::optional<StraightComponent> straightComponent = modelObject.optionalCast<StraightComponent>() )
+      if( modelObject.optionalCast<Node>() ) {
+        // Skip nodes we don't want them showing up on branches
+        continue;
+      }
+
+      if( auto straightComponent = modelObject.optionalCast<StraightComponent>() )
       {
         inletNode = straightComponent->inletModelObject()->optionalCast<Node>();
         outletNode = straightComponent->outletModelObject()->optionalCast<Node>();
@@ -228,19 +234,19 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
           }
         }
       }
-      else if( boost::optional<WaterToAirComponent> waterToAirComponent = modelObject.optionalCast<WaterToAirComponent>() )
+      else if( auto waterToAirComponent = modelObject.optionalCast<WaterToAirComponent>() )
       {
         inletNode = waterToAirComponent->waterInletModelObject()->optionalCast<Node>();
         outletNode = waterToAirComponent->waterOutletModelObject()->optionalCast<Node>();
       }
-      else if( boost::optional<WaterToWaterComponent> waterToWaterComponent = modelObject.optionalCast<WaterToWaterComponent>() )
+      else if( auto waterToWaterComponent = modelObject.optionalCast<WaterToWaterComponent>() )
       {
-        if( plantLoop.supplyComponent(waterToWaterComponent->handle()) )
+        if( loop.supplyComponent(waterToWaterComponent->handle()) )
         {
           inletNode = waterToWaterComponent->supplyInletModelObject()->optionalCast<Node>();
           outletNode = waterToWaterComponent->supplyOutletModelObject()->optionalCast<Node>();
         }
-        else if( plantLoop.demandComponent(waterToWaterComponent->handle()) )
+        else if( loop.demandComponent(waterToWaterComponent->handle()) )
         {
           inletNode = waterToWaterComponent->demandInletModelObject()->optionalCast<Node>();
           outletNode = waterToWaterComponent->demandOutletModelObject()->optionalCast<Node>();
@@ -272,13 +278,20 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
           }
         }
       }
+      else if( auto oaSystem = modelObject.optionalCast<AirLoopHVACOutdoorAirSystem>() )
+      {
+        inletNode = oaSystem->returnAirModelObject()->optionalCast<Node>();
+        outletNode = oaSystem->mixedAirModelObject()->optionalCast<Node>();
+      }
 
-      IdfExtensibleGroup eg = branchIdfObject.pushExtensibleGroup();
-      eg.setString(BranchExtensibleFields::ComponentObjectType,iddType);
-      eg.setString(BranchExtensibleFields::ComponentName,objectName);
-      eg.setString(BranchExtensibleFields::ComponentInletNodeName,inletNode->name().get());
-      eg.setString(BranchExtensibleFields::ComponentOutletNodeName,outletNode->name().get());
-      eg.setString(BranchExtensibleFields::ComponentBranchControlType,"Passive");
+      if( inletNode && outletNode ) {
+        IdfExtensibleGroup eg = branchIdfObject.pushExtensibleGroup();
+        eg.setString(BranchExtensibleFields::ComponentObjectType,iddType);
+        eg.setString(BranchExtensibleFields::ComponentName,objectName);
+        eg.setString(BranchExtensibleFields::ComponentInletNodeName,inletNode->name().get());
+        eg.setString(BranchExtensibleFields::ComponentOutletNodeName,outletNode->name().get());
+        eg.setString(BranchExtensibleFields::ComponentBranchControlType,"Passive");
+      }
 
       i++;
     }
@@ -452,33 +465,14 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   m_idfObjects.push_back(_supplyInletBranch);
 
   std::vector<ModelObject> supplyInletModelObjects;
-  std::vector<ModelObject> supplyInletBranchModelObjects;
   supplyInletModelObjects = plantLoop.supplyComponents(supplyInletNode,supplySplitter);
 
   OS_ASSERT( supplyInletModelObjects.size() >= 2 );
 
-  supplyInletModelObjects.erase(supplyInletModelObjects.begin());
-  supplyInletModelObjects.erase(supplyInletModelObjects.end() - 1);
-
-  for( auto & supplyInletModelObject : supplyInletModelObjects )
-  {
-    //nodes don't go onto branches, but still need to be translated and mapped
-    //because doing so translates their setpoint managers
-    if( boost::optional<Node> node = supplyInletModelObject.optionalCast<Node>() )
-    {
-      boost::optional<IdfObject> idfObject = this->translateAndMapModelObject(supplyInletModelObject);
-    }
-    //all other types of objects go onto the branch
-    else
-    {
-      supplyInletBranchModelObjects.push_back(supplyInletModelObject);
-    }
-  }
-
-  if( supplyInletBranchModelObjects.size() > 0 )
+  if( supplyInletModelObjects.size() > 2u )
   {
     populateBranch( _supplyInletBranch,
-                    supplyInletBranchModelObjects,
+                    supplyInletModelObjects,
                     plantLoop );
   }
   else
@@ -520,7 +514,6 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     model::HVACComponent comp2 = it2->optionalCast<model::HVACComponent>().get();
 
     std::vector<model::ModelObject> allComponents = plantLoop.supplyComponents(comp1,comp2);
-    std::vector<model::ModelObject> branchComponents;
 
     IdfObject _equipmentBranch(IddObjectType::Branch); 
     _equipmentBranch.clearExtensibleGroups();
@@ -536,25 +529,10 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     eg = _supplyBranchList.pushExtensibleGroup();
     eg.setString(BranchListExtensibleFields::BranchName,_equipmentBranch.name().get());
 
-    for( auto & component : allComponents )
-    {
-      //nodes don't go onto branches, but still need to be translated and mapped
-      //because doing so translates their setpoint managers
-      if( boost::optional<Node> node = component.optionalCast<Node>() )
-      {
-        boost::optional<IdfObject> idfObject = this->translateAndMapModelObject(component);
-      }
-      //all other types of objects go onto the branch
-      else
-      {
-        branchComponents.push_back(component);
-      }
-    }
-
-    if( branchComponents.size() > 0 )
+    if( allComponents.size() > 2u )
     {
       populateBranch( _equipmentBranch,
-                      branchComponents,
+                      allComponents,
                       plantLoop );
     }
     else
@@ -593,33 +571,14 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   m_idfObjects.push_back(_supplyOutletBranch);
 
   std::vector<ModelObject> supplyOutletModelObjects;
-  std::vector<ModelObject> supplyOutletBranchModelObjects;
   supplyOutletModelObjects = plantLoop.supplyComponents(supplyMixer,supplyOutletNode);  
 
   OS_ASSERT( supplyOutletModelObjects.size() >= 2 );
 
-  supplyOutletModelObjects.erase(supplyOutletModelObjects.begin());
-  supplyOutletModelObjects.erase(supplyOutletModelObjects.end() - 1);
-
-  for( auto & supplyOutletModelObject : supplyOutletModelObjects )
-  {
-    //nodes don't go onto branches, but still need to be translated and mapped
-    //because doing so translates their setpoint managers
-    if( boost::optional<Node> node = supplyOutletModelObject.optionalCast<Node>() )
-    {
-      boost::optional<IdfObject> idfObject = this->translateAndMapModelObject(supplyOutletModelObject);
-    }
-    //all other types of objects go onto the branch
-    else
-    {
-      supplyOutletBranchModelObjects.push_back(supplyOutletModelObject);
-    }
-  }
-
-  if( supplyOutletBranchModelObjects.size() > 0 )
+  if( supplyOutletModelObjects.size() > 2u )
   {
     populateBranch( _supplyOutletBranch,
-                    supplyOutletBranchModelObjects,
+                    supplyOutletModelObjects,
                     plantLoop );
   }
   else
@@ -699,33 +658,14 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   m_idfObjects.push_back(_demandInletBranch);
 
   std::vector<ModelObject> demandInletModelObjects;
-  std::vector<ModelObject> demandInletBranchModelObjects;
   demandInletModelObjects = plantLoop.demandComponents(demandInletNode,demandSplitter);
 
-  OS_ASSERT( demandInletModelObjects.size() >= 2 );  
+  OS_ASSERT( demandInletModelObjects.size() >= 2u );  
 
-  demandInletModelObjects.erase(demandInletModelObjects.begin());
-  demandInletModelObjects.erase(demandInletModelObjects.end() - 1);
-
-  for( auto & demandInletModelObject : demandInletModelObjects )
-  {
-    //nodes don't go onto branches, but still need to be translated and mapped
-    //because doing so translates their setpoint managers
-    if( boost::optional<Node> node = demandInletModelObject.optionalCast<Node>() )
-    {
-      boost::optional<IdfObject> idfObject = this->translateAndMapModelObject(demandInletModelObject);
-    }
-    //all other types of objects go onto the branch
-    else
-    {
-      demandInletBranchModelObjects.push_back(demandInletModelObject);
-    }
-  }
-
-  if( demandInletBranchModelObjects.size() > 0 )
+  if( demandInletModelObjects.size() > 2u )
   {
     populateBranch( _demandInletBranch,
-                    demandInletBranchModelObjects,
+                    demandInletModelObjects,
                     plantLoop );
   }
   else
@@ -767,7 +707,6 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     model::HVACComponent comp2 = it2->optionalCast<model::HVACComponent>().get();
 
     std::vector<model::ModelObject> allComponents = plantLoop.demandComponents(comp1,comp2);
-    std::vector<model::ModelObject> branchComponents;
 
     IdfObject _equipmentBranch(IddObjectType::Branch); 
     _equipmentBranch.clearExtensibleGroups();
@@ -783,25 +722,10 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     eg = _demandBranchList.pushExtensibleGroup();
     eg.setString(BranchListExtensibleFields::BranchName,_equipmentBranch.name().get());
 
-    for( auto & component : allComponents )
-    {
-      //nodes don't go onto branches, but still need to be translated and mapped
-      //because doing so translates their setpoint managers
-      if( boost::optional<Node> node = component.optionalCast<Node>() )
-      {
-        boost::optional<IdfObject> idfObject = this->translateAndMapModelObject(component);
-      }
-      //all other types of objects go onto the branch
-      else
-      {
-        branchComponents.push_back(component);
-      }
-    }
-
-    if( branchComponents.size() > 0 )
+    if( allComponents.size() > 2u )
     {
       populateBranch( _equipmentBranch,
-                      branchComponents,
+                      allComponents,
                       plantLoop );
     }
     else
@@ -829,7 +753,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
   // Install a bypass branch with a pipe
 
-  if( splitterOutletObjects.size() > 0 )
+  if( splitterOutletObjects.size() > 0u )
   {
     IdfObject _equipmentBranch(IddObjectType::Branch); 
     _equipmentBranch.clearExtensibleGroups();
@@ -876,33 +800,14 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   m_idfObjects.push_back(_demandOutletBranch);
 
   std::vector<ModelObject> demandOutletModelObjects;
-  std::vector<ModelObject> demandOutletBranchModelObjects;
   demandOutletModelObjects = plantLoop.demandComponents(demandMixer,demandOutletNode);  
 
-  OS_ASSERT( demandOutletModelObjects.size() >= 2 );
+  OS_ASSERT( demandOutletModelObjects.size() >= 2u );
 
-  demandOutletModelObjects.erase(demandOutletModelObjects.begin());
-  demandOutletModelObjects.erase(demandOutletModelObjects.end() - 1);
-
-  for( auto & demandOutletModelObject : demandOutletModelObjects )
-  {
-    //nodes don't go onto branches, but still need to be translated and mapped
-    //because doing so translates their setpoint managers
-    if( boost::optional<Node> node = demandOutletModelObject.optionalCast<Node>() )
-    {
-      boost::optional<IdfObject> idfObject = this->translateAndMapModelObject(demandOutletModelObject);
-    }
-    //all other types of objects go onto the branch
-    else
-    {
-      demandOutletBranchModelObjects.push_back(demandOutletModelObject);
-    }
-  }
-
-  if( demandOutletBranchModelObjects.size() > 0 )
+  if( demandOutletModelObjects.size() > 2u )
   {
     populateBranch( _demandOutletBranch,
-                    demandOutletBranchModelObjects,
+                    demandOutletModelObjects,
                     plantLoop );
   }
   else

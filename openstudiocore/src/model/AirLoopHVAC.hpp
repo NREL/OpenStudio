@@ -40,6 +40,7 @@ class AirLoopHVACReturnPlenum;
 class StraightComponent;
 class ThermalZone;
 class SizingSystem;
+class AvailabilityManager;
 
 /** AirLoopHVAC is an interface to the EnergyPlus IDD object named "AirLoopHVAC"
  *
@@ -57,8 +58,20 @@ class MODEL_API AirLoopHVAC : public Loop
    * that are needed for a basic air loop in EnergyPlus.  These objects include:
    * supply inlet node, supply outlet node, demand inlet node, demand outlet node,
    * zone splitter, zone mixer, and zone hvac equipment connections.
+   *
+   * If dualDuct is true, then there will be a supply spiltter and two supply outlet nodes
+   * connected into the system topology.
+   *
+   * The two paths / ducts / decks of a dual duct style system are identified by indexes
+   * 0 and 1.  If dual duct, key methods including supplyOutletNodes(), demandInletNodes(), and zoneSplitters(),
+   * will return a vector with exactly two items.  Item 0 in the supplyOutletNodes vector matches to item
+   * 0 in the demandInletNodes vector, and the zoneSplitters vector.  In this way the interface avoids
+   * declaring the paths as heating, cooling, ventilation, etc.  It is the client's responsibilty to choose
+   * what types of equipment to apply to the two branches.  Note that these indexes carry through to the terminals.
+   * Dual duct terminals are Mixer objects which have the method inletModelObjects(branchIndex).  The branchIndex 0
+   * will be connected to demandInletNodes()[0] path.
    */
-  explicit AirLoopHVAC(Model& model);
+  explicit AirLoopHVAC(Model& model, bool dualDuct = false);
 
   virtual ~AirLoopHVAC() {}
 
@@ -82,19 +95,19 @@ class MODEL_API AirLoopHVAC : public Loop
   Node supplyInletNode() const override;
 
   /** Returns the supply outlet nodes.
-   * Currently only one supply outlet node is supported, but EnergyPlus allows
-   * up to two for dual duct systems.
+   * Single duct systems have one supply outlet node.
+   * Dual duct systems have two supply outlet nodes.
    */
-  std::vector<Node> supplyOutletNodes() const;
+  std::vector<Node> supplyOutletNodes() const override;
 
   /** Returns the first supply outlet Node. */
   Node supplyOutletNode() const override;
 
   /** Returns the demand inlet nodes.
-   * Currently only one demand inlet node is supported, but EnergyPlus allows
-   * up to two for dual duct systems.
+   * Single duct systems have one demand inlet node.
+   * Dual duct systems have two demand inlet nodes.
    */
-  std::vector<Node> demandInletNodes() const;
+  std::vector<Node> demandInletNodes() const override;
 
   /** Returns the first demand inlet Node. */
   Node demandInletNode() const override;
@@ -132,51 +145,61 @@ class MODEL_API AirLoopHVAC : public Loop
    */
   boost::optional<Node> returnAirNode();
 
+  /** Returns true if the system is "dual duct"
+    * ie. there is a supply splitter
+    */
+  bool isDualDuct() const;
+
+  /** Returns the supply side splitter.  
+    * If the system is a dual duct then it will have a supply side splitter.
+    */
+  boost::optional<Splitter> supplySplitter() const;
+
+  /** If this is a dual duct system, remove the supply side splitter.
+    * If this is not a dual duct system, there is no supply side splitter and the method will return false.
+    *
+    * The system will become a single duct. Dual duct terminals may remain on the demand side, and those must be 
+    * resolved separately by removing the zones served by dual ducts or changing to single duct terminals.
+    *
+    * The components downstream of the splitter will also be removed.
+    */
+  bool removeSupplySplitter();
+
+  /** If this is a dual duct system, remove the supply side splitter.
+    * If this is not a dual duct system, there is no supply side splitter and the method will return false.
+    *
+    * The system will become a single duct. Dual duct terminals may remain on the demand side, and those must be 
+    * resolved separately by removing the zones served by dual ducts or changing to single duct terminals.
+    *
+    * The dual duct branch containing hvacComponent will be removed.
+    * The remaining branch will be integrated into the loop. 
+    * If hvacComponent is not found on either dual duct branch
+    * the method will return false. This will be the case if hvacComponent is not found on the system's supplyComponents(),
+    * or upstream of the splitter.
+    */
+  bool removeSupplySplitter(HVACComponent & hvacComponent);
+
   /** Returns the supply side splitter inlet node.  If the system is a dual duct
    * or has a return air bypass then it will have a supply side splitter.
-   * Currently these air loop topologies are not supported so this method
-   * will always return a false optional.
    */
-  boost::optional<Node> supplySplitterInletNode();
+  boost::optional<Node> supplySplitterInletNode() const;
 
   /** Returns the supply side splitter outlet nodes.  If the system is a dual duct
    * or has a return air bypass then it will have a supply side splitter.
-   * Currently these air loop topologies are not supported so this method
-   * will always return a false optional.
    */
-  std::vector<Node> supplySplitterOutletNodes();
+  std::vector<Node> supplySplitterOutletNodes() const;
 
-  /** Returns the supply side mixer inlet nodes.  If the system has a return
-   * air bypass then it will have a mixer on the supply side.  Currently,
-   * return air bypass topology is not supported so this method will
-   * always return a false optional.
+  /** Returns the first zone splitter.
    */
-  std::vector<Node> supplyMixerInletNodes();
+  AirLoopHVACZoneSplitter zoneSplitter() const;
 
-  /** Returns the supply side mixer outlet node.  If the system has a return
-   * air bypass then it will have a mixer on the supply side.  Currently,
-   * return air bypass topology is not supported so this method will
-   * always return a false optional.
+  /** Returns the zone splitters.
+   * Single duct systems have one zone splitter, dual duct systems have two.
    */
-  boost::optional<Node> supplyMixerOutletNode();
-
-  /** Returns the zone splitter, if it doesn't exist then it makes one. */
-  AirLoopHVACZoneSplitter zoneSplitter();
-
-  /** Returns the zone splitter inlet node. */
-  boost::optional<Node> zoneSplitterInletNode(int zoneSplitterIndex);
-
-  /** Returns the zone splitter outlet nodes. */
-  std::vector<Node> zoneSplitterOutletNodes(int zoneSplitterIndex);
+  std::vector<AirLoopHVACZoneSplitter> zoneSplitters() const;
 
   /** Returns the zone mixer, if it doesn't exist then it makes one. */
   AirLoopHVACZoneMixer zoneMixer();
-
-  /** Returns the zone mixer inlet nodes. */
-  std::vector<Node> zoneMixerInletNodes();
-
-  /** Returns the zone mixer outlet nodes. */
-  boost::optional<Node> zoneMixerOutletNode();
 
   /** Returns all of the components on the outdoor air system including the mixer itself.
    *  If type is given then the results will be limited to the given IddObjectType.
@@ -207,6 +230,7 @@ class MODEL_API AirLoopHVAC : public Loop
   /** Adds a new branch on the demand side of the air loop for a zone labeled zoneLabel
    * and returns true if the operation was successful. The method will return false if the Zone
    * is already connected to an air loop.
+   * New code should favor addBranchForZone(ThermalZone &) or addBranchForZone(ThermalZone &, HVACComponent&).
    */
   bool addBranchForZone(openstudio::model::ThermalZone & thermalZone,
                         boost::optional<StraightComponent> optAirTerminal);
@@ -215,7 +239,7 @@ class MODEL_API AirLoopHVAC : public Loop
   bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
   /** Overloaded version of addBranchForZone() **/
-  bool addBranchForZone(ThermalZone & thermalZone, StraightComponent & airTerminal);
+  bool addBranchForZone(ThermalZone & thermalZone, HVACComponent & airTerminal);
 
   /** Adds a new branch on the demand side of the air loop with the specified airTerminal.
    *  Returns true if the airTerminal was accepted, otherwise false.  The argument, hvacComponent,
@@ -241,11 +265,39 @@ class MODEL_API AirLoopHVAC : public Loop
   void setAvailabilitySchedule(Schedule & schedule);
 
   /** Configure the system to night cycle
-   *  Valid options are StayOff, CycleOnAny, and CycleOnAnyZoneFansOnly **/
+    * This is a convenience for creating and attaching a new AvailabilityManagerNightCycle.
+    * Valid options are StayOff, CycleOnAny, and CycleOnAnyZoneFansOnly **/
   bool setNightCycleControlType(std::string controlType);
 
-  /** Returns a string indicating if the system is configured to night cycle **/
+  /** Returns a string indicating if the system is configured to night cycle 
+    * If there is no AvailabilityManagerNightCycle this method will return StayOff **/
   std::string nightCycleControlType() const;
+
+  // returnAirBypassFlowTemperatureSetpointSchedule is not possible currently in OS, uncomment in future
+
+  /** Returns the temperature setpoint schedule when this system tries to determine the required mass
+   *  flow rate through a return air bypass duct. If there is a temperature setpoint schedule,
+   *  the forward translator will create a SetpointManager:ReturnAirBypassFlow object. **/
+  // boost::optional<Schedule> returnAirBypassFlowTemperatureSetpointSchedule() const;
+
+  /** Set the temperature setpoint schedule for when this system tries to determine the required mass
+   *  flow rate through a return air bypass duct. **/
+  // bool setReturnAirBypassFlowTemperatureSetpointSchedule(Schedule & temperatureSetpointSchedule);
+
+  /** Reset the temperature setpoint schedule for when this system tries to determine the required mass
+   *  flow rate through a return air bypass duct. **/
+  // void resetReturnAirBypassFlowTemperatureSetpointSchedule();
+
+  /** AvailabilityManager is used to override the system availabilitySchedule() with one of OpenStudio's
+    * supported AvailabilityManager types.
+    * Unlike EnergyPlus which supports layering multiple availability managers on an AvailabilityManagerAssignmentList,
+    * OpenStudio allows only one AvailabilityManager at a time.
+    **/
+  boost::optional<AvailabilityManager> availabilityManager() const;
+
+  bool setAvailabilityManager(const AvailabilityManager& availabilityManager);
+
+  void resetAvailabilityManager();
 
   std::vector<openstudio::IdfObject> remove() override;
 

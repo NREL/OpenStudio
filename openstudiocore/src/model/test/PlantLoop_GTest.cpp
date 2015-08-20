@@ -124,6 +124,19 @@ TEST_F(ModelFixture,PlantLoop_supplyComponents)
   ASSERT_EQ( 7u,plantLoop.supplyComponents().size() );
 }
 
+TEST_F(ModelFixture,PlantLoop_demandComponent)
+{
+  Model m; 
+  PlantLoop plantLoop(m); 
+
+  ASSERT_EQ( 1u,plantLoop.demandInletNodes().size() );
+
+  auto demandInletNode = plantLoop.demandInletNode();
+  auto mo = plantLoop.demandComponent(demandInletNode.handle());
+  ASSERT_TRUE(mo);
+  EXPECT_EQ( demandInletNode,mo.get() );
+}
+
 TEST_F(ModelFixture,PlantLoop_demandComponents)
 {
   Model m; 

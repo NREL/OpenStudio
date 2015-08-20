@@ -41,6 +41,8 @@
 
 #include "../utilities/core/Assert.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 #include <boost/math/constants/constants.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -542,6 +544,24 @@ namespace model {
       return *result;
     }
 
+    std::vector<ModelObject> PlanarSurface_Impl::solarCollectors() const
+    {
+      std::vector<ModelObject> result;
+      for (const ModelObject& modelObject : getObject<ModelObject>().getModelObjectSources<ModelObject>()){
+        switch (modelObject.iddObject().type().value()){
+        case IddObjectType::OS_SolarCollector_FlatPlate_PhotovoltaicThermal: // fall through
+        case IddObjectType::OS_SolarCollector_FlatPlate_Water: // fall through
+        case IddObjectType::OS_SolarCollector_IntegralCollectorStorage: // fall through
+          result.push_back(modelObject);
+          break;
+        default:
+          break;
+        }
+        
+      }
+      return result;
+    }
+
     boost::optional<ModelObject> PlanarSurface_Impl::constructionAsModelObject() const
     {
       return static_cast<boost::optional<ModelObject> >(this->construction());
@@ -766,6 +786,11 @@ std::vector<std::vector<Point3d> > PlanarSurface::triangulation() const
 Point3d PlanarSurface::centroid() const
 {
   return getImpl<detail::PlanarSurface_Impl>()->centroid();
+}
+
+std::vector<ModelObject> PlanarSurface::solarCollectors() const
+{
+  return getImpl<detail::PlanarSurface_Impl>()->solarCollectors();
 }
 
 std::vector<PlanarSurface> PlanarSurface::findPlanarSurfaces(const std::vector<PlanarSurface>& planarSurfaces,

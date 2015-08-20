@@ -23,9 +23,7 @@
 #include "Model.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
-#include "AirLoopHVAC.hpp"
 #include "PlantLoop.hpp"
-#include "Schedule.hpp"
 
 #include <utilities/idd/OS_SetpointManager_FollowOutdoorAirTemperature_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>

@@ -89,47 +89,38 @@ namespace detail {
   ModelObject ZoneHVACComponent_Impl::clone(Model model) const
   {
     auto clone = ModelObject_Impl::clone(model).cast<ZoneHVACComponent>();
-    clone.setString(clone.inletPort(),"");
-    clone.setString(clone.outletPort(),"");
+    if( clone.inletPort() != 0u ) {
+      clone.setString(clone.inletPort(),"");
+    }
+    if( clone.outletPort() != 0u ) {
+      clone.setString(clone.outletPort(),"");
+    }
 
     return clone;
   }
 
   boost::optional<ThermalZone> ZoneHVACComponent_Impl::thermalZone()
   {
-    boost::optional<ThermalZone> result;
+    auto thisObject = this->getObject<ModelObject>();
+    for( const auto & thermalZone : model().getConcreteModelObjects<ThermalZone>() ) {
+      std::vector<ModelObject> equipment = thermalZone.equipment();
 
-    if( boost::optional<ModelObject> mo1 = connectedObject(outletPort()) )
-    {
-      if( boost::optional<Node> node = mo1->optionalCast<Node>() )
-      {
-        if( boost::optional<ModelObject> mo2 = node->outletModelObject() )
-        {
-          if( boost::optional<PortList> pl = mo2->optionalCast<PortList>() )
-          {
-            if( boost::optional<ThermalZone> tz = pl->thermalZone() )
-            {
-              result = tz;
-            }
-          }
-        }
+      if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() ) {
+        return thermalZone;
       }
     }
-
-    return result;
+    return boost::none;
   }
 
   bool ZoneHVACComponent_Impl::addToThermalZone(ThermalZone & thermalZone)
   {
     Model m = this->model();
 
-    if( thermalZone.model() != m )
-    {
+    if( thermalZone.model() != m ) {
       return false;
     }
 
-    if( thermalZone.isPlenum() )
-    {
+    if( thermalZone.isPlenum() ) {
       return false;
     }
 
@@ -137,31 +128,23 @@ namespace detail {
 
     thermalZone.setUseIdealAirLoads(false);
 
-    // Exhaust Node
+    // Connect nodes if this is an air based zone hvac component
+    if( inletPort() != 0u && outletPort() != 0u ) {
+      // Exhaust Node
+      Node exhaustNode(m);
+      PortList exhaustPortList = thermalZone.exhaustPortList();
+      unsigned nextPort = exhaustPortList.nextPort();
+      m.connect(exhaustPortList,nextPort,exhaustNode,exhaustNode.inletPort());
+      ModelObject mo = this->getObject<ModelObject>();
+      m.connect(exhaustNode,exhaustNode.outletPort(),mo,this->inletPort());
 
-    Node exhaustNode(m);
-
-    PortList exhaustPortList = thermalZone.exhaustPortList();
-
-    unsigned nextPort = exhaustPortList.nextPort();
-
-    m.connect(exhaustPortList,nextPort,exhaustNode,exhaustNode.inletPort());
-
-    ModelObject mo = this->getObject<ModelObject>();
-
-    m.connect(exhaustNode,exhaustNode.outletPort(),mo,this->inletPort());
-
-    // Air Inlet Node
-
-    Node airInletNode(m);
-
-    PortList inletPortList = thermalZone.inletPortList();
-
-    unsigned nextInletPort = inletPortList.nextPort();
-
-    m.connect(airInletNode,airInletNode.outletPort(),inletPortList,nextInletPort);
-
-    m.connect(mo,this->outletPort(),airInletNode,airInletNode.inletPort());
+      // Air Inlet Node
+      Node airInletNode(m);
+      PortList inletPortList = thermalZone.inletPortList();
+      unsigned nextInletPort = inletPortList.nextPort();
+      m.connect(airInletNode,airInletNode.outletPort(),inletPortList,nextInletPort);
+      m.connect(mo,this->outletPort(),airInletNode,airInletNode.inletPort());
+    }
 
     thermalZone.addEquipment(this->getObject<ZoneHVACComponent>());
 
@@ -179,35 +162,24 @@ namespace detail {
     } else if( thermalZone ) {
       ZoneHVACComponent mo = getObject<ZoneHVACComponent>();
 
-      boost::optional<Node> inletNode = this->inletNode();
-
-      if( inletNode )
-      {
-        inletNode->disconnect();
-
-        inletNode->remove();
+      if( auto t_inletNode = inletNode() ) {
+        t_inletNode->disconnect();
+        t_inletNode->remove();
       }
 
-      boost::optional<Node> outletNode = this->outletNode();
-
-      if( outletNode )
+      if( auto t_outletNode = outletNode() )
       {
-        outletNode->disconnect();
-
-        outletNode->remove();
+        t_outletNode->disconnect();
+        t_outletNode->remove();
       }
     }
 
-    ModelObject thisObject = this->getObject<ModelObject>();
-    std::vector<ThermalZone> thermalZones = m.getConcreteModelObjects<ThermalZone>();
-    for( auto & thermalZone : thermalZones )
-    {
+    auto thisObject = this->getObject<ModelObject>();
+    for( auto & thermalZone : m.getConcreteModelObjects<ThermalZone>() ) {
       std::vector<ModelObject> equipment = thermalZone.equipment();
 
-      if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
-      {
+      if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() ) {
         thermalZone.removeEquipment(thisObject);
-
         break;
       }
     }

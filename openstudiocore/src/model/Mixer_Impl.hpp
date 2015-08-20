@@ -43,25 +43,25 @@ class MODEL_API Mixer_Impl : public HVACComponent_Impl
 
   virtual ~Mixer_Impl() {}
 
-  virtual unsigned outletPort() = 0;
+  virtual unsigned outletPort() const = 0;
 
-  virtual unsigned inletPort(unsigned branchIndex) = 0;
+  virtual unsigned inletPort(unsigned branchIndex) const = 0;
 
-  virtual unsigned nextInletPort() = 0;
+  virtual unsigned nextInletPort() const = 0;
 
-  virtual boost::optional<ModelObject> outletModelObject();
+  virtual boost::optional<ModelObject> outletModelObject() const;
 
-  virtual boost::optional<ModelObject> inletModelObject(unsigned branchIndex);
+  virtual boost::optional<ModelObject> inletModelObject(unsigned branchIndex) const;
 
-  virtual boost::optional<ModelObject> lastInletModelObject();
+  virtual boost::optional<ModelObject> lastInletModelObject() const;
 
-  virtual std::vector<ModelObject> inletModelObjects();
+  virtual std::vector<ModelObject> inletModelObjects() const;
 
   virtual unsigned newInletPortAfterBranch(unsigned branchIndex);
 
-  virtual unsigned branchIndexForInletModelObject( ModelObject modelObject );
+  virtual unsigned branchIndexForInletModelObject( ModelObject modelObject ) const;
 
-  virtual unsigned nextBranchIndex();
+  virtual unsigned nextBranchIndex() const;
 
   virtual void removePortForBranch(unsigned branchIndex);
 

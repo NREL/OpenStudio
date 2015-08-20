@@ -69,6 +69,12 @@
 #include "../../model/WaterHeaterStratified_Impl.hpp"
 #include "../../model/ZoneHVACComponent.hpp"
 #include "../../model/ZoneHVACComponent_Impl.hpp"
+#include "../../model/SolarCollectorIntegralCollectorStorage.hpp"
+#include "../../model/SolarCollectorIntegralCollectorStorage_Impl.hpp"
+#include "../../model/SolarCollectorFlatPlateWater.hpp"
+#include "../../model/SolarCollectorFlatPlateWater_Impl.hpp"
+#include "../../model/SolarCollectorFlatPlatePhotovoltaicThermal.hpp"
+#include "../../model/SolarCollectorFlatPlatePhotovoltaicThermal_Impl.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/WorkspaceObjectOrder.hpp"
@@ -230,6 +236,24 @@ boost::optional<double> flowrate(const HVACComponent & component)
       result = hx.loopSupplySideDesignFlowRate();
       break;
     }
+    case openstudio::IddObjectType::OS_SolarCollector_FlatPlate_PhotovoltaicThermal :
+    {
+      auto mo = component.cast<SolarCollectorFlatPlatePhotovoltaicThermal>();
+      result = mo.designFlowRate();
+      break;
+    }
+    case openstudio::IddObjectType::OS_SolarCollector_FlatPlate_Water :
+    {
+      auto mo = component.cast<SolarCollectorFlatPlateWater>();
+      result = mo.maximumFlowRate();
+      break;
+    }
+    case openstudio::IddObjectType::OS_SolarCollector_IntegralCollectorStorage :
+    {
+      auto mo = component.cast<SolarCollectorIntegralCollectorStorage>();
+      result = mo.maximumFlowRate();
+      break;
+    }
     default:
     {
       break;
@@ -316,6 +340,18 @@ ComponentType componentType(const HVACComponent & component)
     case openstudio::IddObjectType::OS_HeatExchanger_FluidToFluid :
     {
       return ComponentType::BOTH;
+    }
+    case openstudio::IddObjectType::OS_SolarCollector_FlatPlate_PhotovoltaicThermal :
+    {
+      return ComponentType::HEATING;
+    }
+    case openstudio::IddObjectType::OS_SolarCollector_FlatPlate_Water :
+    {
+      return ComponentType::HEATING;
+    }
+    case openstudio::IddObjectType::OS_SolarCollector_IntegralCollectorStorage :
+    {
+      return ComponentType::HEATING;
     }
     default:
     {
