@@ -28,6 +28,8 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
+class ModelObjectList;
+class CentralHeatPumpSystemModule;
 
 namespace detail {
 
@@ -60,8 +62,6 @@ class MODEL_API CentralHeatPumpSystem : public WaterToWaterComponent {
 
   boost::optional<Schedule> ancillaryOperationSchedule() const;
 
-  // TODO: Handle this object's extensible fields.
-
   //@}
   /** @name Setters */
   //@{
@@ -74,11 +74,17 @@ class MODEL_API CentralHeatPumpSystem : public WaterToWaterComponent {
 
   void resetAncillaryOperationSchedule();
 
-  // TODO: Handle this object's extensible fields.
-
   //@}
   /** @name Other */
   //@{
+
+  bool addModule( const CentralHeatPumpSystemModule & centralHeatPumpSystemModule);
+
+  void removeModule( const CentralHeatPumpSystemModule & centralHeatPumpSystemModule);
+
+  void removeAllModules();
+
+  std::vector<CentralHeatPumpSystemModule> modules() const;
 
   //@}
  protected:

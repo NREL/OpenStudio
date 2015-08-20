@@ -81,13 +81,13 @@ namespace detail {
 
     boost::optional<double> lowFanSpeedAirFlowRate() const;
 
-    bool isLowFanSpeedAirFlowRateAutocalculated() const;
+    bool isLowFanSpeedAirFlowRateAutosized() const;
 
     double lowFanSpeedAirFlowRateSizingFactor() const;
 
     boost::optional<double> lowFanSpeedFanPower() const;
 
-    bool isLowFanSpeedFanPowerAutocalculated() const;
+    bool isLowFanSpeedFanPowerAutosized() const;
 
     double lowFanSpeedFanPowerSizingFactor() const;
 
@@ -103,7 +103,7 @@ namespace detail {
 
     boost::optional<double> lowSpeedStandardDesignCapacity() const;
 
-    bool isLowSpeedStandardDesignCapacityAutocalculated() const;
+    bool isLowSpeedStandardDesignCapacityAutosized() const;
 
     double lowSpeedStandardCapacitySizingFactor() const;
 
@@ -113,7 +113,7 @@ namespace detail {
 
     boost::optional<double> lowFanSpeedUfactorTimesAreaValue() const;
 
-    bool isLowFanSpeedUfactorTimesAreaValueAutocalculated() const;
+    bool isLowFanSpeedUfactorTimesAreaValueAutosized() const;
 
     double lowFanSpeedUFactorTimesAreaSizingFactor() const;
 
@@ -125,7 +125,7 @@ namespace detail {
 
     boost::optional<double> lowSpeedUserSpecifiedDesignCapacity() const;
 
-    bool isLowSpeedUserSpecifiedDesignCapacityAutocalculated() const;
+    bool isLowSpeedUserSpecifiedDesignCapacityAutosized() const;
 
     double lowSpeedUserSpecifiedDesignCapacitySizingFactor() const;
 
@@ -165,13 +165,13 @@ namespace detail {
 
     bool setLowFanSpeedAirFlowRate(boost::optional<double> lowFanSpeedAirFlowRate);
 
-    void autocalculateLowFanSpeedAirFlowRate();
+    void autosizeLowFanSpeedAirFlowRate();
 
     void setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor);
 
     bool setLowFanSpeedFanPower(boost::optional<double> lowFanSpeedFanPower);
 
-    void autocalculateLowFanSpeedFanPower();
+    void autosizeLowFanSpeedFanPower();
 
     void setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor);
 
@@ -193,7 +193,7 @@ namespace detail {
 
     void resetLowSpeedStandardDesignCapacity();
 
-    void autocalculateLowSpeedStandardDesignCapacity();
+    void autosizeLowSpeedStandardDesignCapacity();
 
     void setLowSpeedStandardCapacitySizingFactor(double lowSpeedStandardCapacitySizingFactor);
 
@@ -207,7 +207,7 @@ namespace detail {
 
     void resetLowFanSpeedUfactorTimesAreaValue();
 
-    void autocalculateLowFanSpeedUfactorTimesAreaValue();
+    void autosizeLowFanSpeedUfactorTimesAreaValue();
 
     void setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor);
 
@@ -225,7 +225,7 @@ namespace detail {
 
     void resetLowSpeedUserSpecifiedDesignCapacity();
 
-    void autocalculateLowSpeedUserSpecifiedDesignCapacity();
+    void autosizeLowSpeedUserSpecifiedDesignCapacity();
 
     void setLowSpeedUserSpecifiedDesignCapacitySizingFactor(double lowSpeedUserSpecifiedDesignCapacitySizingFactor);
 

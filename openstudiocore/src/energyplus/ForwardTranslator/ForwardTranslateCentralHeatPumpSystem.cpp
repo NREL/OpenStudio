@@ -19,11 +19,12 @@
 
 #include "../ForwardTranslator.hpp"
 #include "../../model/Model.hpp"
-#include "../../model/PipeAdiabatic.hpp"
-#include "../../model/PipeAdiabatic_Impl.hpp"
+#include "../../model/CentralHeatPumpSystem.hpp"
+#include "../../model/CentralHeatPumpSystem_Impl.hpp"
+#include "../../model/CentralHeatPumpSystemModule.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Node.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
-#include "../../utilities/idf/Workspace.hpp"
-#include "../../utilities/idf/WorkspaceObjectOrder.hpp"
 #include "../../utilities/core/Logger.hpp"
 #include <utilities/idd/Pipe_Adiabatic_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -34,53 +35,87 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translatePipeAdiabatic( PipeAdiabatic& modelObject )
+boost::optional<IdfObject> ForwardTranslator::translateCentralHeatPumpSystem( CentralHeatPumpSystem& modelObject )
 {
   OptionalString s;
   OptionalDouble d;
   OptionalModelObject temp;
 
-  IdfObject idfObject(IddObjectType::Pipe_Adiabatic);
+  // Name
+  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::CentralHeatPumpSystem, modelObject);
 
-  m_idfObjects.push_back(idfObject);
-
-  ///////////////////////////////////////////////////////////////////////////
-  // Field: Name ////////////////////////////////////////////////////////////
-  s = modelObject.name();
-  if(s)
-  {
-    idfObject.setName(*s);
+  // ControlMethod
+  if( (s = modelObject.controlMethod()) ) {
+    idfObject.setString(CentralHeatPumpSystemFields::ControlMethod,s.get());
   }
-  ///////////////////////////////////////////////////////////////////////////
 
-  ///////////////////////////////////////////////////////////////////////////
-  // Inlet Node Name ////////////////////////////////////////////////////
-  temp = modelObject.inletModelObject();
-  if(temp)
+  // AncillaryPower
+  if( (d = modelObject.ancillaryPower()) ) {
+    idfObject.setString(CentralHeatPumpSystemFields::AncillaryPower,d.get());
+  }
+
+  // AncillaryOperationScheduleName
   {
-    s = temp->name();
-    if(s)
-    {
-      idfObject.setString(openstudio::Pipe_AdiabaticFields::InletNodeName,*s);
+   if( auto schedule = modelObject.ancillaryOperationSchedule() ) {
+     if( auto _schedule = translateAndMapModelObject(schedule.get()) ) {
+       idfObject.setString(CentralHeatPumpSystemFields::AncillaryOperationScheduleName,_schedule->name().get());
+     }
+   }
+  }
+
+  // SourceLoopInletNodeName
+  if( auto mo = modelObject.supplyInletModelObject() ) {
+    if( auto node = mo->optionalCast<Node>() ) {
+      idfObject.setString(CentralHeatPumpSystemFields::SourceLoopInletNodeName,node->name().get());
     }
   }
-  ///////////////////////////////////////////////////////////////////////////
 
-  ///////////////////////////////////////////////////////////////////////////
-  // Outlet Node Name ///////////////////////////////////////////////////
-  temp = modelObject.outletModelObject();
-  if(temp)
-  {
-    s = temp->name();
-    if(s)
-    {
-      idfObject.setString(openstudio::Pipe_AdiabaticFields::OutletNodeName,*s);
+  // SourceLoopOutletNodeName
+  if( auto mo = modelObject.supplyOutletModelObject() ) {
+    if( auto node = mo->optionalCast<Node>() ) {
+      idfObject.setString(CentralHeatPumpSystemFields::SourceLoopOutletNodeName,node->name().get());
     }
   }
-  ///
-  ////////////////////////////////////////////////////////////////////////
 
-  return boost::optional<IdfObject>(idfObject);
+  // CoolingLoopInletNodeName
+  if( auto mo = modelObject.demandInletModelObject() ) {
+    if( auto node = mo->optionalCast<Node>() ) {
+      idfObject.setString(CentralHeatPumpSystemFields::CoolingLoopInletNodeName,node->name().get());
+    }
+  }
+
+  // CoolingLoopOutletNodeName
+  if( auto mo = modelObject.demandOutletModelObject() ) {
+    if( auto node = mo->optionalCast<Node>() ) {
+      idfObject.setString(CentralHeatPumpSystemFields::CoolingLoopOutletNodeName,node->name().get());
+    }
+  }
+
+  // HeatingLoopInletNodeName
+  // HeatingLoopOutletNodeName
+
+  // ChillerHeaterModulesPerformanceComponentObjectType1
+  // ChillerHeaterModulesPerformanceComponentName1
+  // ChillerHeaterModulesControlScheduleName1
+  // NumberofChillerHeaterModules1
+  auto const& modules = modelObject.getImpl<model::detail::CentralHeatPumpSystem_Impl>()->modules();
+  for ( auto const& module : modules ) {
+    IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
+
+    auto const & performanceComponent = module.chillerHeaterModulesPerformanceComponent();
+    if( auto _performanceComponent = translateAndMapModelObject(performanceComponent) ) {
+      group.setString(CentralHeatPumpSystemExtensibleFields::ChillerHeaterModulesPerformanceComponentObjectType1, _performanceComponent->iddObject().name());
+      group.setString(CentralHeatPumpSystemExtensibleFields::ChillerHeaterModulesPerformanceComponentName1, _performanceComponent->name().get());
+    }
+    if( auto schedule = module.chillerHeaterModulesControlSchedule() ) {
+      if( auto _schedule = translateAndMapModelObject(schedule.get()) ) {
+        idfObject.setString(CentralHeatPumpSystemExtensibleFields::ChillerHeaterModulesControlScheduleName1,_schedule->name().get());
+     }
+    }
+    group.setInt(CentralHeatPumpSystemExtensibleFields::NumberofChillerHeaterModules1, module.numberofChillerHeaterModules() );
+  }
+
+  return idfObject;
 }
 
 } // energyplus

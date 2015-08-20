@@ -65,7 +65,6 @@ class Building;
 class BoilerHotWater;
 class BoilerSteam;
 class CentralHeatPumpSystem;
-class CentralHeatPumpSystemModule;
 class CFactorUndergroundWallConstruction;
 class ChillerAbsorption;
 class ChillerAbsorptionIndirect;
@@ -414,8 +413,6 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateBuilding( model::Building & modelObject );
 
   boost::optional<IdfObject> translateCentralHeatPumpSystem( model::CentralHeatPumpSystem & modelObject  );
-
-  boost::optional<IdfObject> translateCentralHeatPumpSystemModule( model::CentralHeatPumpSystemModule & modelObject  );
 
   boost::optional<IdfObject> translateCFactorUndergroundWallConstruction( model::CFactorUndergroundWallConstruction & modelObject );
 

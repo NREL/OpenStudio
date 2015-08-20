@@ -19,13 +19,12 @@
 
 #include "../ForwardTranslator.hpp"
 #include "../../model/Model.hpp"
-#include "../../model/PipeAdiabatic.hpp"
-#include "../../model/PipeAdiabatic_Impl.hpp"
-#include "../../utilities/idf/IdfExtensibleGroup.hpp"
-#include "../../utilities/idf/Workspace.hpp"
-#include "../../utilities/idf/WorkspaceObjectOrder.hpp"
+#include "../../model/PlantComponentTemperatureSource.hpp"
+#include "../../model/PlantComponentTemperatureSource_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Node.hpp"
 #include "../../utilities/core/Logger.hpp"
-#include <utilities/idd/Pipe_Adiabatic_FieldEnums.hxx>
+#include <utilities/idd/PlantComponent_TemperatureSource_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -34,53 +33,49 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translatePipeAdiabatic( PipeAdiabatic& modelObject )
+boost::optional<IdfObject> ForwardTranslator::translatePlantComponentTemperatureSource( PlantComponentTemperatureSource& modelObject )
 {
   OptionalString s;
-  OptionalDouble d;
+  OptionalDouble value;
   OptionalModelObject temp;
 
-  IdfObject idfObject(IddObjectType::Pipe_Adiabatic);
+  //Name
+  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::PlantComponent_TemperatureSource, modelObject);
 
-  m_idfObjects.push_back(idfObject);
-
-  ///////////////////////////////////////////////////////////////////////////
-  // Field: Name ////////////////////////////////////////////////////////////
-  s = modelObject.name();
-  if(s)
-  {
-    idfObject.setName(*s);
+  // InletNode
+  if( auto node = modelObject.inletModelObject() ) {
+    idfObject.setString(PlantComponent_TemperatureSourceFields::InletNode,node->name().get());
   }
-  ///////////////////////////////////////////////////////////////////////////
 
-  ///////////////////////////////////////////////////////////////////////////
-  // Inlet Node Name ////////////////////////////////////////////////////
-  temp = modelObject.inletModelObject();
-  if(temp)
+  // OutletNode
+  if( auto node = modelObject.outletModelObject() ) {
+    idfObject.setString(PlantComponent_TemperatureSourceFields::OutletNode,node->name().get());
+  }
+
+  // DesignVolumeFlowRate
+  if( (value = modelObject.designVolumeFlowRate()) ) {
+    idfObject.setDouble(PlantComponent_TemperatureSourceFields::DesignVolumeFlowRate,value.get()); 
+  }
+
+  // TemperatureSpecificationType
+  if( (s = modelObject.temperatureSpecificationType()) ) {
+    idfObject.setDouble(PlantComponent_TemperatureSourceFields::TemperatureSpecificationType,s.get()); 
+  }
+
+  // SourceTemperature
+  if( (value = modelObject.sourceTemperature()) ) {
+    idfObject.setDouble(PlantComponent_TemperatureSourceFields::SourceTemperature,value.get()); 
+  }
+
+  // SourceTemperatureScheduleName
   {
-    s = temp->name();
-    if(s)
-    {
-      idfObject.setString(openstudio::Pipe_AdiabaticFields::InletNodeName,*s);
+    auto schedule = modelObject.sourceTemperatureSchedule();
+    if( auto _schedule = translateAndMapModelObject(schedule.get()) ) {
+      idfObject.setString(PlantComponent_TemperatureSourceFields::SourceTemperatureScheduleName,_schedule->name().get());
     }
   }
-  ///////////////////////////////////////////////////////////////////////////
 
-  ///////////////////////////////////////////////////////////////////////////
-  // Outlet Node Name ///////////////////////////////////////////////////
-  temp = modelObject.outletModelObject();
-  if(temp)
-  {
-    s = temp->name();
-    if(s)
-    {
-      idfObject.setString(openstudio::Pipe_AdiabaticFields::OutletNodeName,*s);
-    }
-  }
-  ///
-  ////////////////////////////////////////////////////////////////////////
-
-  return boost::optional<IdfObject>(idfObject);
+  return idfObject;
 }
 
 } // energyplus

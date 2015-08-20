@@ -616,9 +616,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     }
   case openstudio::IddObjectType::OS_CentralHeatPumpSystem_Module :
     {
-      model::CentralHeatPumpSystemModule mo = modelObject.cast<CentralHeatPumpSystemModule>();
-      retVal = translateCentralHeatPumpSystemModule(mo);
-      break;
+      // no-op
+      return retVal;
     }
   case openstudio::IddObjectType::OS_Chiller_Absorption :
     {

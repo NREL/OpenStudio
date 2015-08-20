@@ -22,6 +22,10 @@
 
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
+#include "ModelObjectList.hpp"
+#include "ModelObjectList_Impl.hpp"
+#include "CentralHeatPumpSystemModule.hpp"
+#include "CentralHeatPumpSystemModule_Impl.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
 
@@ -111,6 +115,56 @@ namespace detail {
 // OS_CentralHeatPumpSystemFields::SourceLoopOutletNodeName
 // OS_CentralHeatPumpSystemFields::HeatingLoopInletNodeName
 // OS_CentralHeatPumpSystemFields::HeatingLoopOutletNodeName
+
+  boost::optional<ModelObjectList> CentralHeatPumpSystem_Impl::chillerHeaterModuleList() const {
+    return getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(OS_CentralHeatPumpSystemFields::ChillerHeaterModuleListName);
+  }
+
+  bool CentralHeatPumpSystem_Impl::addModule( const CentralHeatPumpSystemModule & centralHeatPumpSystemModule) {
+    auto const modelObjectList = chillerHeaterModuleList();
+    if( modelObjectList ) {
+      modelObjectList->addModelObject(centralHeatPumpSystemModule);
+    }
+    return false;
+  }
+
+  void CentralHeatPumpSystem_Impl::removeModule( const CentralHeatPumpSystemModule & centralHeatPumpSystemModule) {
+    auto const modelObjectList = chillerHeaterModuleList();
+    if( modelObjectList ) {
+      modelObjectList->removeModelObject(centralHeatPumpSystemModule);
+    }
+  }
+
+  void CentralHeatPumpSystem_Impl::removeAllModules() {
+    auto const modelObjectList = chillerHeaterModuleList();
+    if( modelObjectList ) {
+      auto const modelObjects = modelObjectList->modelObjects();
+
+      for(const auto & elem : modelObjects) {
+          auto const modelObject = elem.optionalCast<CentralHeatPumpSystemModule>();
+          if (modelObject) {
+            modelObjectList->removeModelObject(elem);
+          }
+      }
+    }
+  }
+
+  std::vector<CentralHeatPumpSystemModule> CentralHeatPumpSystem_Impl::modules() const {
+    std::vector<CentralHeatPumpSystemModule> result;
+    auto const modelObjectList = chillerHeaterModuleList();
+    if( modelObjectList ) {
+      auto const modelObjects = modelObjectList->modelObjects();
+
+      for(const auto & elem : modelObjects) {
+          auto const modelObject = elem.optionalCast<CentralHeatPumpSystemModule>();
+          if (modelObject) {
+            result.push_back(modelObject.get());
+          }
+      }
+    }
+
+    return result;
+  }
 
   std::string CentralHeatPumpSystem_Impl::controlMethod() const {
     boost::optional<std::string> value = getString(OS_CentralHeatPumpSystemFields::ControlMethod,true);
@@ -221,6 +275,22 @@ bool CentralHeatPumpSystem::setAncillaryOperationSchedule(Schedule& schedule) {
 
 void CentralHeatPumpSystem::resetAncillaryOperationSchedule() {
   getImpl<detail::CentralHeatPumpSystem_Impl>()->resetAncillaryOperationSchedule();
+}
+
+bool CentralHeatPumpSystem_Impl::addModule( const CentralHeatPumpSystemModule & centralHeatPumpSystemModule) {
+  return getImpl<detail::CentralHeatPumpSystem_Impl>()->addModule( centralHeatPumpSystemModule );
+}
+
+void CentralHeatPumpSystem_Impl::removeModule( const CentralHeatPumpSystemModule & centralHeatPumpSystemModule) {
+  getImpl<detail::CentralHeatPumpSystem_Impl>()->removeModule( centralHeatPumpSystemModule );
+}
+
+void CentralHeatPumpSystem_Impl::removeAllModules() {
+  getImpl<detail::CentralHeatPumpSystem_Impl>()->removeAllModules();
+}
+
+std::vector<CentralHeatPumpSystemModule> CentralHeatPumpSystem_Impl::modules() const {
+  reutn getImpl<detail::CentralHeatPumpSystem_Impl>()->modules();
 }
 
 /// @cond

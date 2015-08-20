@@ -19,13 +19,12 @@
 
 #include "../ForwardTranslator.hpp"
 #include "../../model/Model.hpp"
-#include "../../model/PipeAdiabatic.hpp"
-#include "../../model/PipeAdiabatic_Impl.hpp"
-#include "../../utilities/idf/IdfExtensibleGroup.hpp"
-#include "../../utilities/idf/Workspace.hpp"
-#include "../../utilities/idf/WorkspaceObjectOrder.hpp"
+#include "../../model/LoadProfilePlant.hpp"
+#include "../../model/LoadProfilePlant_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Node.hpp"
 #include "../../utilities/core/Logger.hpp"
-#include <utilities/idd/Pipe_Adiabatic_FieldEnums.hxx>
+#include <utilities/idd/LoadProfile_Plant_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -34,53 +33,47 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translatePipeAdiabatic( PipeAdiabatic& modelObject )
+boost::optional<IdfObject> ForwardTranslator::translateLoadProfilePlant( LoadProfilePlant& modelObject )
 {
   OptionalString s;
-  OptionalDouble d;
+  OptionalDouble value;
   OptionalModelObject temp;
 
-  IdfObject idfObject(IddObjectType::Pipe_Adiabatic);
+  //Name
+  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::LoadProfile_Plant, modelObject);
 
-  m_idfObjects.push_back(idfObject);
-
-  ///////////////////////////////////////////////////////////////////////////
-  // Field: Name ////////////////////////////////////////////////////////////
-  s = modelObject.name();
-  if(s)
-  {
-    idfObject.setName(*s);
+  // InletNodeName
+  if( auto node = modelObject.inletModelObject() ) {
+    idfObject.setString(LoadProfile_PlantFields::InletNodeName,node->name().get());
   }
-  ///////////////////////////////////////////////////////////////////////////
 
-  ///////////////////////////////////////////////////////////////////////////
-  // Inlet Node Name ////////////////////////////////////////////////////
-  temp = modelObject.inletModelObject();
-  if(temp)
+  // OutletNodeName
+  if( auto node = modelObject.outletModelObject() ) {
+    idfObject.setString(LoadProfile_PlantFields::OutletNodeName,node->name().get());
+  }
+
+  // LoadScheduleName
   {
-    s = temp->name();
-    if(s)
-    {
-      idfObject.setString(openstudio::Pipe_AdiabaticFields::InletNodeName,*s);
+    auto schedule = modelObject.loadSchedule();
+    if( auto _schedule = translateAndMapModelObject(schedule.get()) ) {
+      idfObject.setString(LoadProfile_PlantFields::LoadScheduleName,_schedule->name().get());
     }
   }
-  ///////////////////////////////////////////////////////////////////////////
+  
+  // PeakFlowRate
+  if( (value = modelObject.peakFlowRate()) ) {
+    idfObject.setDouble(LoadProfile_PlantFields::PeakFlowRate,value.get()); 
+  }
 
-  ///////////////////////////////////////////////////////////////////////////
-  // Outlet Node Name ///////////////////////////////////////////////////
-  temp = modelObject.outletModelObject();
-  if(temp)
+  // FlowRateFractionScheduleName
   {
-    s = temp->name();
-    if(s)
-    {
-      idfObject.setString(openstudio::Pipe_AdiabaticFields::OutletNodeName,*s);
+    auto schedule = modelObject.flowRateFractionSchedule();
+    if( auto _schedule = translateAndMapModelObject(schedule.get()) ) {
+      idfObject.setString(LoadProfile_PlantFields::FlowRateFractionScheduleName,_schedule->name().get());
     }
   }
-  ///
-  ////////////////////////////////////////////////////////////////////////
 
-  return boost::optional<IdfObject>(idfObject);
+  return idfObject;
 }
 
 } // energyplus

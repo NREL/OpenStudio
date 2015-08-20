@@ -23,15 +23,13 @@
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
-#include "../../model/ChillerElectricEIR.hpp"
-#include "../../model/ChillerElectricEIR_Impl.hpp"
-#include "../../model/CurveBiquadratic.hpp"
-#include "../../model/CurveBiquadratic_Impl.hpp"
-#include "../../model/CurveQuadratic.hpp"
-#include "../../model/CurveQuadratic_Impl.hpp"
+#include "../../model/ChillerHeaterPerformanceElectricEIR.hpp"
+#include "../../model/ChillerHeaterPerformanceElectricEIR_Impl.hpp"
+#include "../../model/Curve.hpp"
+#include "../../model/Curve.hpp"
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"
-#include <utilities/idd/Chiller_Electric_EIR_FieldEnums.hxx>
+#include <utilities/idd/ChillerHeaterPerformance_Electric_EIR_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -44,240 +42,184 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( ChillerElectricEIR & modelObject )
+boost::optional<IdfObject> ForwardTranslator::translateChillerHeaterPerformanceElectricEIR( ChillerHeaterPerformanceElectricEIR & modelObject )
 {
-  boost::optional<std::string> s;
-  boost::optional<double> value;
-
-  IdfObject idfObject(IddObjectType::Chiller_Electric_EIR);
-
-  m_idfObjects.push_back(idfObject);
+  OptionalString s;
+  OptionalDouble value;
+  OptionalModelObject temp;
 
   // Name
+  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ChillerHeaterPerformance_Electric_EIR, modelObject);
 
-  s = modelObject.name();
-  if( s )
-  {
-    idfObject.setName(*s);
+  // ReferenceCoolingModeEvaporatorCapacity
+  if( modelObject.isReferenceCoolingModeEvaporatorCapacityAutosized() ) {
+    idfObject.setString(ChillerHeaterPerformance_Electric_EIRFields::ReferenceCoolingModeEvaporatorCapacity,"Autosize");
+  }
+  else if( (value = modelObject.referenceCoolingModeEvaporatorCapacity()) ) {
+    idfObject.setDouble(ChillerHeaterPerformance_Electric_EIRFields::ReferenceCoolingModeEvaporatorCapacity,value.get()); 
   }
 
-  // ReferenceCapacity
-
-  if( modelObject.isReferenceCapacityAutosized() )
-  {
-    idfObject.setString(Chiller_Electric_EIRFields::ReferenceCapacity,"Autosize");
-  }
-  else if( (value = modelObject.referenceCapacity()) )
-  {
-    idfObject.setDouble(Chiller_Electric_EIRFields::ReferenceCapacity,value.get()); 
+  // ReferenceCoolingModeCOP
+  if( (value = modelObject.referenceCoolingModeCOP()) ) {
+    idfObject.setDouble(ChillerHeaterPerformance_Electric_EIRFields::ReferenceCoolingModeCOP,value.get()); 
   }
 
-  // ReferenceCOP
-  
-  if( (value = modelObject.referenceCOP()) )
-  {
-    idfObject.setDouble(Chiller_Electric_EIRFields::ReferenceCOP,value.get());
+  // ReferenceCoolingModeLeavingChilledWaterTemperature
+  if( (value = modelObject.referenceCoolingModeLeavingChilledWaterTemperature()) ) {
+    idfObject.setDouble(ChillerHeaterPerformance_Electric_EIRFields::ReferenceCoolingModeLeavingChilledWaterTemperature,value.get()); 
   }
 
-  // ReferenceLeavingChilledWaterTemperature
-
-  if( (value = modelObject.referenceLeavingChilledWaterTemperature()) )
-  {
-    idfObject.setDouble(Chiller_Electric_EIRFields::ReferenceLeavingChilledWaterTemperature,value.get());
+  // ReferenceCoolingModeEnteringCondenserFluidTemperature
+  if( (value = modelObject.referenceCoolingModeEnteringCondenserFluidTemperature()) ) {
+    idfObject.setDouble(ChillerHeaterPerformance_Electric_EIRFields::ReferenceCoolingModeEnteringCondenserFluidTemperature,value.get()); 
   }
 
-  // ReferenceEnteringCondenserFluidTemperature
-
-  if( (value = modelObject.referenceEnteringCondenserFluidTemperature()) )
-  {
-    idfObject.setDouble(Chiller_Electric_EIRFields::ReferenceEnteringCondenserFluidTemperature,value.get());
+  // ReferenceCoolingModeLeavingCondenserWaterTemperature
+  if( (value = modelObject.referenceCoolingModeLeavingCondenserWaterTemperature()) ) {
+    idfObject.setDouble(ChillerHeaterPerformance_Electric_EIRFields::ReferenceCoolingModeLeavingCondenserWaterTemperature,value.get()); 
   }
 
-  // ReferenceChilledWaterFlowRate
-
-  if( modelObject.isReferenceChilledWaterFlowRateAutosized() )
-  {
-    idfObject.setString(Chiller_Electric_EIRFields::ReferenceChilledWaterFlowRate,"Autosize");
-  }
-  else if( (value = modelObject.referenceChilledWaterFlowRate()) )
-  {
-    idfObject.setDouble(Chiller_Electric_EIRFields::ReferenceChilledWaterFlowRate,value.get());
+  // ReferenceHeatingModeCoolingCapacityRatio
+  if( (value = modelObject.referenceHeatingModeCoolingCapacityRatio()) ) {
+    idfObject.setDouble(ChillerHeaterPerformance_Electric_EIRFields::ReferenceHeatingModeCoolingCapacityRatio,value.get()); 
   }
 
-  // ReferenceCondenserFluidFlowRate
-
-  if( modelObject.isReferenceCondenserFluidFlowRateAutosized() )
-  {
-    idfObject.setString(Chiller_Electric_EIRFields::ReferenceCondenserFluidFlowRate,"Autosize");
-  }
-  else if( (value = modelObject.referenceCondenserFluidFlowRate()) )
-  {
-    idfObject.setDouble(Chiller_Electric_EIRFields::ReferenceCondenserFluidFlowRate,value.get());
+  // ReferenceHeatingModeCoolingPowerInputRatio
+  if( (value = modelObject.referenceHeatingModeCoolingPowerInputRatio()) ) {
+    idfObject.setDouble(ChillerHeaterPerformance_Electric_EIRFields::ReferenceHeatingModeCoolingPowerInputRatio,value.get()); 
   }
 
-  // MinimumPartLoadRatio
-
-  if( (value = modelObject.minimumPartLoadRatio()) )
-  {
-    idfObject.setDouble(Chiller_Electric_EIRFields::MinimumPartLoadRatio,value.get());
+  // ReferenceHeatingModeLeavingChilledWaterTemperature
+  if( (value = modelObject.referenceHeatingModeLeavingChilledWaterTemperature()) ) {
+    idfObject.setDouble(ChillerHeaterPerformance_Electric_EIRFields::ReferenceHeatingModeLeavingChilledWaterTemperature,value.get()); 
   }
 
-  // MaximumPartLoadRatio
-
-  if( (value = modelObject.maximumPartLoadRatio()) )
-  {
-    idfObject.setDouble(Chiller_Electric_EIRFields::MaximumPartLoadRatio,value.get());
+  // ReferenceHeatingModeLeavingCondenserWaterTemperature
+  if( (value = modelObject.referenceHeatingModeLeavingCondenserWaterTemperature()) ) {
+    idfObject.setDouble(ChillerHeaterPerformance_Electric_EIRFields::ReferenceHeatingModeLeavingCondenserWaterTemperature,value.get()); 
   }
 
-  // OptimumPartLoadRatio
-
-  if( (value = modelObject.optimumPartLoadRatio()) )
-  {
-    idfObject.setDouble(Chiller_Electric_EIRFields::OptimumPartLoadRatio,value.get());
+  // ReferenceHeatingModeEnteringCondenserFluidTemperature
+  if( (value = modelObject.referenceHeatingModeEnteringCondenserFluidTemperature()) ) {
+    idfObject.setDouble(ChillerHeaterPerformance_Electric_EIRFields::ReferenceHeatingModeEnteringCondenserFluidTemperature,value.get()); 
   }
 
-  // MinimumUnloadingRatio
-  
-  if( (value = modelObject.minimumUnloadingRatio()) )
-  {
-    idfObject.setDouble(Chiller_Electric_EIRFields::MinimumUnloadingRatio,value.get());
+  // HeatingModeEnteringChilledWaterTemperatureLowLimit
+  if( (value = modelObject.heatingModeEnteringChilledWaterTemperatureLowLimit()) ) {
+    idfObject.setDouble(ChillerHeaterPerformance_Electric_EIRFields::HeatingModeEnteringChilledWaterTemperatureLowLimit,value.get()); 
   }
 
-  // ChilledWaterInletNodeName
-
-  if( boost::optional<ModelObject> mo = modelObject.supplyInletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      idfObject.setString(Chiller_Electric_EIRFields::ChilledWaterInletNodeName,node->name().get());
-    }
+  // ChilledWaterFlowModeType
+  if( (s = modelObject.chilledWaterFlowModeType()) ) {
+    idfObject.setString(ChillerHeaterPerformance_Electric_EIRFields::ChilledWaterFlowModeType,s.get()); 
   }
 
-  // ChilledWaterOutletNodeName
-
-  if( boost::optional<ModelObject> mo = modelObject.supplyOutletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      idfObject.setString(Chiller_Electric_EIRFields::ChilledWaterOutletNodeName,node->name().get());
-    }
+  // DesignChilledWaterFlowRate
+  if( modelObject.isDesignChilledWaterFlowRateAutosized() ) {
+    idfObject.setString(ChillerHeaterPerformance_Electric_EIRFields::DesignChilledWaterFlowRate,"Autosize");
+  }
+  else if( (value = modelObject.designChilledWaterFlowRate()) ) {
+    idfObject.setDouble(ChillerHeaterPerformance_Electric_EIRFields::DesignChilledWaterFlowRate,value.get()); 
   }
 
-  // CondenserInletNodeName
-
-  if( boost::optional<ModelObject> mo = modelObject.demandInletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      idfObject.setString(Chiller_Electric_EIRFields::CondenserInletNodeName,node->name().get());
-    }
+  // DesignCondenserWaterFlowRate
+  if( modelObject.isDesignCondenserWaterFlowRateAutosized() ) {
+    idfObject.setString(ChillerHeaterPerformance_Electric_EIRFields::DesignCondenserWaterFlowRate,"Autosize");
+  }
+  else if( (value = modelObject.designCondenserWaterFlowRate()) ) {
+    idfObject.setDouble(ChillerHeaterPerformance_Electric_EIRFields::DesignCondenserWaterFlowRate,value.get()); 
   }
 
-  // CondenserOutletNodeName
-
-  if( boost::optional<ModelObject> mo = modelObject.demandOutletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      idfObject.setString(Chiller_Electric_EIRFields::CondenserOutletNodeName,node->name().get());
-    }
-  }
-
-  // CondenserType
-
-  if( modelObject.demandInletModelObject() )
-  {
-    idfObject.setString(Chiller_Electric_EIRFields::CondenserType,"WaterCooled");
-  }
-  else
-  {
-    idfObject.setString(Chiller_Electric_EIRFields::CondenserType,"AirCooled");
-  }
-
-  // CondenserFanPowerRatio
-
-  if( (value = modelObject.condenserFanPowerRatio()) )
-  {
-    idfObject.setDouble(Chiller_Electric_EIRFields::CondenserFanPowerRatio,value.get());
+  // DesignHotWaterFlowRate
+  if( (value = modelObject.designHotWaterFlowRate()) ) {
+    idfObject.setDouble(ChillerHeaterPerformance_Electric_EIRFields::DesignHotWaterFlowRate,value.get()); 
   }
 
   // CompressorMotorEfficiency
-  // Changed to Fraction of Compressor Electric Consumption Rejected by Condenser in E+ version 8.0
-
-  if( (value = modelObject.compressorMotorEfficiency()) )
-  {
-    idfObject.setDouble(Chiller_Electric_EIRFields::FractionofCompressorElectricConsumptionRejectedbyCondenser,value.get());
+  if( (value = modelObject.compressorMotorEfficiency()) ) {
+    idfObject.setDouble(ChillerHeaterPerformance_Electric_EIRFields::CompressorMotorEfficiency,value.get()); 
   }
 
-  // LeavingChilledWaterLowerTemperatureLimit
-
-  if( (value = modelObject.leavingChilledWaterLowerTemperatureLimit()) )
-  {
-    idfObject.setDouble(Chiller_Electric_EIRFields::LeavingChilledWaterLowerTemperatureLimit,value.get());
+  // CondenserType
+  if( (s = modelObject.condenserType()) ) {
+    idfObject.setString(ChillerHeaterPerformance_Electric_EIRFields::CondenserType,s.get()); 
   }
 
-  // ChillerFlowMode
-
-  if( (s = modelObject.chillerFlowMode()) )
-  {
-    idfObject.setString(Chiller_Electric_EIRFields::ChillerFlowMode,s.get());
+  // CoolingModeTemperatureCurveCondenserWaterIndependentVariable
+  if( (s = modelObject.coolingModeTemperatureCurveCondenserWaterIndependentVariable()) ) {
+    idfObject.setString(ChillerHeaterPerformance_Electric_EIRFields::CoolingModeTemperatureCurveCondenserWaterIndependentVariable,s.get()); 
   }
 
-  // CoolingCapacityFunctionofTemperatureCurveName
-
-  CurveBiquadratic curve = modelObject.coolingCapacityFunctionOfTemperature();
-
-  boost::optional<IdfObject> _curve = translateAndMapModelObject(curve);
-
-  if( _curve )
-  {
-    idfObject.setString(Chiller_Electric_EIRFields::CoolingCapacityFunctionofTemperatureCurveName,_curve->name().get());
+  // CoolingModeCoolingCapacityFunctionofTemperatureCurveName
+  { 
+    auto curve = modelObject.coolingModeCoolingCapacityFunctionofTemperatureCurve();
+    if( auto _curve = translateAndMapModelObject(curve) ) {
+      idfObject.setString(ChillerHeaterPerformance_Electric_EIRFields::CoolingModeCoolingCapacityFunctionofTemperatureCurveName,_curve->name().get());
+    }
   }
 
-  // ElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName
-
-  curve = modelObject.electricInputToCoolingOutputRatioFunctionOfTemperature();
-
-  _curve = translateAndMapModelObject(curve);
-
-  if( _curve )
-  {
-    idfObject.setString(Chiller_Electric_EIRFields::ElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName,_curve->name().get());
+  // CoolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName
+  { 
+    auto curve = modelObject.coolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve();
+    if( auto _curve = translateAndMapModelObject(curve) ) {
+      idfObject.setString(ChillerHeaterPerformance_Electric_EIRFields::CoolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName,_curve->name().get());
+    }
   }
 
-  // ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName
-
-  CurveQuadratic quadcurve = modelObject.electricInputToCoolingOutputRatioFunctionOfPLR();
-
-  _curve = translateAndMapModelObject(quadcurve);
-
-  if( _curve )
-  {
-    idfObject.setString(Chiller_Electric_EIRFields::ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName,_curve->name().get());
+  // CoolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName
+  { 
+    auto curve = modelObject.coolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve();
+    if( auto _curve = translateAndMapModelObject(curve) ) {
+      idfObject.setString(ChillerHeaterPerformance_Electric_EIRFields::CoolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName,_curve->name().get());
+    }
   }
 
+  // CoolingModeCoolingCapacityOptimumPartLoadRatio
+  if( (value = modelObject.coolingModeCoolingCapacityOptimumPartLoadRatio()) ) {
+    idfObject.setDouble(ChillerHeaterPerformance_Electric_EIRFields::CoolingModeCoolingCapacityOptimumPartLoadRatio,value.get()); 
+  }
+
+  // HeatingModeTemperatureCurveCondenserWaterIndependentVariable
+  if( (s = modelObject.heatingModeTemperatureCurveCondenserWaterIndependentVariable()) ) {
+    idfObject.setString(ChillerHeaterPerformance_Electric_EIRFields::HeatingModeTemperatureCurveCondenserWaterIndependentVariable,s.get()); 
+  }
+
+  // HeatingModeCoolingCapacityFunctionofTemperatureCurveName
+  { 
+    auto curve = modelObject.heatingModeCoolingCapacityFunctionofTemperatureCurve();
+    if( auto _curve = translateAndMapModelObject(curve) ) {
+      idfObject.setString(ChillerHeaterPerformance_Electric_EIRFields::HeatingModeCoolingCapacityFunctionofTemperatureCurveName,_curve->name().get());
+    }
+  }
+
+  // HeatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName
+  { 
+    auto curve = modelObject.heatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve();
+    if( auto _curve = translateAndMapModelObject(curve) ) {
+      idfObject.setString(ChillerHeaterPerformance_Electric_EIRFields::HeatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName,_curve->name().get());
+    }
+  }
+
+  // HeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName
+  { 
+    auto curve = modelObject.heatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve();
+    if( auto _curve = translateAndMapModelObject(curve) ) {
+      idfObject.setString(ChillerHeaterPerformance_Electric_EIRFields::HeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName,_curve->name().get());
+    }
+  }
+
+  // HeatingModeCoolingCapacityOptimumPartLoadRatio
+  if( (value = modelObject.heatingModeCoolingCapacityOptimumPartLoadRatio()) ) {
+    idfObject.setDouble(ChillerHeaterPerformance_Electric_EIRFields::HeatingModeCoolingCapacityOptimumPartLoadRatio,value.get()); 
+  }
+
+  // SizingFactor
   if( (value = modelObject.sizingFactor()) ) {
-    idfObject.setDouble(Chiller_Electric_EIRFields::SizingFactor,value.get());
+    idfObject.setDouble(ChillerHeaterPerformance_Electric_EIRFields::SizingFactor,value.get()); 
   }
 
-  return boost::optional<IdfObject>(idfObject);
+  return idfObject;
 }
-
-//OPENSTUDIO_ENUM( Chiller_Electric_EIRFields,
-//  ((Name)(Name))
-//  ((CoolingCapacityFunctionofTemperatureCurveName)(Cooling Capacity Function of Temperature Curve Name))
-//  ((ElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName)(Electric Input to Cooling Output Ratio Function of Temperature Curve Name))
-//  ((ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName)(Electric Input to Cooling Output Ratio Function of Fan Coil Part Load Ratio Curve Name))
-//  ((CondenserInletNodeName)(Condenser Inlet Node Name))
-//  ((CondenserOutletNodeName)(Condenser Outlet Node Name))
-//  ((DesignHeatRecoveryWaterFlowRate)(Design Heat Recovery Water Flow Rate))
-//  ((HeatRecoveryInletNodeName)(Heat Recovery Inlet Node Name))
-//  ((HeatRecoveryOutletNodeName)(Heat Recovery Outlet Node Name))
-//  ((SizingFactor)(Sizing Factor))
-//  ((BasinHeaterCapacity)(Basin Heater Capacity))
-//  ((BasinHeaterSetpointTemperature)(Basin Heater Setpoint Temperature))
-//  ((BasinHeaterOperatingScheduleName)(Basin Heater Operating Schedule Name))
-//);
 
 } // energyplus
 

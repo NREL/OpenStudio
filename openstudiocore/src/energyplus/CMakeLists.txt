@@ -41,7 +41,6 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateBoilerSteam.cpp
   ForwardTranslator/ForwardTranslateBuilding.cpp
   ForwardTranslator/ForwardTranslateCentralHeatPumpSystem.cpp
-  ForwardTranslator/ForwardTranslateCentralHeatPumpSystemModule.cpp
   ForwardTranslator/ForwardTranslateCFactorUndergroundWallConstruction.cpp
   ForwardTranslator/ForwardTranslateChillerAbsorption.cpp
   ForwardTranslator/ForwardTranslateChillerAbsorptionIndirect.cpp
