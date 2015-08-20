@@ -106,6 +106,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
 				s = s.gsub("/", "\\")
 			end
+      puts "Executing: #{s}"
 			result = system(s)
 			return result
 		end
@@ -171,7 +172,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 		epw2weapath = (OpenStudio::Path.new(radiancePath) / OpenStudio::Path.new('epw2wea')).to_s
 
-		ENV["EPW2WEAPATH"] = epw2weapath
 		programExtension = ''
 		if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
 			programExtension = ".exe"
@@ -196,7 +196,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			You may need to install a newer version of Radiance."
 			exit false
 		end
-		ENV["EPW2WEAPATH"] = epw2weapath
+		#ENV["EPW2WEAPATH"] = epw2weapath + programExtension
 
 		if !which('perl')
 			puts "Perl could not be found in path, exiting"
@@ -1670,11 +1670,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 										
 		# reduce/convert epw data to Daysim-style ".wea" input format
 
-		epw2weapath = OpenStudio::Path.new(ENV['EPW2WEAPATH'])
+		#epw2weapath = OpenStudio::Path.new(ENV['EPW2WEAPATH'])
 
-		puts "Executing epw2wea: #{epw2weapath}"
-		exec_statement("#{epw2weapath.to_s} #{epw_path.to_s} wx/in.wea")
-		
+		#puts "Executing epw2wea: #{epw2weapath}"
+		#exec_statement("#{epw2weapath.to_s} #{epw_path.to_s} wx/in.wea")
+    exec_statement("epw2wea \"#{epw_path.to_s}\" wx/in.wea")
 
 		# get site info from .wea file
 		# TODO may want to get this from properly set OS.site object
