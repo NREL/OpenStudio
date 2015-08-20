@@ -140,6 +140,12 @@ class MODEL_API CoilHeatingDXMultiSpeed : public StraightComponent {
   /** Add a new stage after all of the existing stages **/
   void addStage(const CoilHeatingDXMultiSpeedStageData& stage);
 
+  /** Remove a stage **/
+  void removeStage(const CoilHeatingDXMultiSpeedStageData& stage);
+
+  /** Remove all stages **/
+  void removeAllStages();
+
   //@}
  protected:
   /// @cond

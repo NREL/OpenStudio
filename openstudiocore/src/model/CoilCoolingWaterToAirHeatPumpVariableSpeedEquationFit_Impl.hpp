@@ -28,6 +28,7 @@ namespace model {
 
 class Curve;
 class CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData;
+class ModelObjectList;
 
 namespace detail {
 
@@ -133,9 +134,19 @@ namespace detail {
     /** @name Other */
     //@{
 
+    bool setSpeedDataList(const boost::optional<ModelObjectList>& modelObjectList);
+
+    void resetSpeedDataList();
+
+    boost::optional<ModelObjectList> speedDataList() const;
+
     std::vector<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData> speeds() const;
 
     void addSpeed(const CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& speed);
+
+    void removeSpeed(const CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& speed);
+
+    void removeAllSpeeds();
 
     //@}
    protected:

@@ -99,6 +99,10 @@ class MODEL_API CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit : public W
 
   void addSpeed(const CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& speed);
 
+  void removeSpeed(const CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& speed);
+
+  void removeAllSpeeds();
+
   //@}
  protected:
   /// @cond

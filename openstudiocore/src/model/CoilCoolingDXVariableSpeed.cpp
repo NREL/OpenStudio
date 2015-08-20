@@ -27,7 +27,7 @@
 #include "CoilCoolingDXVariableSpeedSpeedData_Impl.hpp"
 // #include "WaterStorageTank.hpp"
 // #include "WaterStorageTank_Impl.hpp"
-
+#include "ModelObjectList.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
@@ -379,10 +379,9 @@ namespace detail {
   ModelObject CoilCoolingDXVariableSpeed_Impl::clone(Model model) const {
     auto t_clone = StraightComponent_Impl::clone(model).cast<CoilCoolingDXVariableSpeed>();
 
-    auto t_speeds = speeds();
-    for( auto speed : t_speeds ) {
-      auto speedClone = speed.clone(model).cast<CoilCoolingDXVariableSpeedSpeedData>();
-      t_clone.addSpeed(speedClone);
+    if (auto speedDataList = this->speedDataList()) {
+      auto speedDataListClone = speedDataList->clone(model).cast<ModelObjectList>();
+      t_clone.getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setSpeedDataList(speedDataListClone);
     }
 
     t_clone.setEnergyPartLoadFractionCurve( energyPartLoadFractionCurve().clone(model).cast<Curve>() );
@@ -391,29 +390,60 @@ namespace detail {
   }
 
   std::vector<ModelObject> CoilCoolingDXVariableSpeed_Impl::children() const {
-    auto children = subsetCastVector<ModelObject>( speeds() );
+    std::vector<ModelObject children;
     children.push_back( energyPartLoadFractionCurve() );
+    if( auto const speedDataList = speedDataList() ) {
+      children.push_back( speedDataList.get() );
+    }
     return children;
+  }
+
+  boost::optional<ModelObjectList> CoilCoolingDXVariableSpeed_Impl::speedDataList() const {
+    return getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(OS_Coil_Cooling_DX_VariableSpeedFields::SpeedDataList);
+  }
+
+  bool CoilCoolingDXVariableSpeed_Impl::addSpeed( const CoilCoolingDXVariableSpeedSpeedData & speed) {
+    auto modelObjectList = speedDataList();
+    if( modelObjectList ) {
+      modelObjectList->addModelObject(speed);
+    }
+    return false;
+  }
+
+  void CoilCoolingDXVariableSpeed_Impl::removeSpeed( const CoilCoolingDXVariableSpeedSpeedData & speed) {
+    auto modelObjectList = speedDataList();
+    if( modelObjectList ) {
+      modelObjectList->removeModelObject(speed);
+    }
+  }
+
+  void CoilCoolingDXVariableSpeed_Impl::removeAllSpeeds() {
+    auto modelObjectList = speedDataList();
+    if( modelObjectList ) {
+      auto const modelObjects = modelObjectList->modelObjects();
+
+      for(const auto & elem : modelObjects) {
+          auto const modelObject = elem.optionalCast<CoilCoolingDXVariableSpeedSpeedData>();
+          if (modelObject) {
+            modelObjectList->removeModelObject(elem);
+          }
+      }
+    }
   }
 
   std::vector<CoilCoolingDXVariableSpeedSpeedData> CoilCoolingDXVariableSpeed_Impl::speeds() const {
     std::vector<CoilCoolingDXVariableSpeedSpeedData> result;
-    auto groups = extensibleGroups();
-    for( auto group : groups ) {
-      auto target = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_Coil_Cooling_DX_VariableSpeedExtensibleFields::SpeedData);
-      if( target ) {
-        if( auto speed = target->optionalCast<CoilCoolingDXVariableSpeedSpeedData>() ) {
-          result.push_back(speed.get());
-        }
+    auto const modelObjectList = speedDataList();
+    if( modelObjectList ) {
+      auto const modelObjects = modelObjectList->modelObjects();
+
+      for(const auto & elem : modelObjects) {
+          auto const modelObject = elem.optionalCast<CoilCoolingDXVariableSpeedSpeedData>();
+          if (modelObject) {
+            result.push_back(modelObject.get());
+          }
       }
     }
-    return result;
-  }
-
-  void CoilCoolingDXVariableSpeed_Impl::addSpeed(CoilCoolingDXVariableSpeedSpeedData& speed) {
-    auto group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-    OS_ASSERT(! group.empty());
-    group.setPointer(OS_Coil_Cooling_DX_VariableSpeedExtensibleFields::SpeedData,speed.handle());
   }
 
   boost::optional<HVACComponent> CoilCoolingDXVariableSpeed_Impl::containingHVACComponent() const
@@ -488,6 +518,23 @@ namespace detail {
     return false;
   }
 
+  bool CoilCoolingDXVariableSpeed_Impl::setSpeedDataList(const boost::optional<ModelObjectList>& modelObjectList) {
+    bool result(false);
+    if (modelObjectList) {
+      result = setPointer(OS_Coil_Cooling_DX_VariableSpeedFields::SpeedDataList, modelObjectList.get().handle());
+    }
+    else {
+      resetSpeedDataList();
+      result = true;
+    }
+    return result;
+  }
+
+  void CoilCoolingDXVariableSpeed_Impl::resetSpeedDataList() {
+    bool result = setString(OS_Coil_Cooling_DX_VariableSpeedFields::SpeedDataList, "");
+    OS_ASSERT(result);
+  }
+
 } // detail
 
 CoilCoolingDXVariableSpeed::CoilCoolingDXVariableSpeed(const Model& model)
@@ -529,6 +576,10 @@ CoilCoolingDXVariableSpeed::CoilCoolingDXVariableSpeed(const Model& model)
   OS_ASSERT(ok);
   ok = setBasinHeaterSetpointTemperature(2.0);
   OS_ASSERT(ok);
+
+  auto speedDataList = ModelObjectList(model);
+  speedDataList.setName(this->name().get() + " Speed Data List");
+  bool ok = getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setSpeedDataList(speedDataList);
 
 }
 
@@ -748,8 +799,16 @@ std::vector<CoilCoolingDXVariableSpeedSpeedData> CoilCoolingDXVariableSpeed::spe
   return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->speeds();
 }
 
-void CoilCoolingDXVariableSpeed::addSpeed(CoilCoolingDXVariableSpeedSpeedData& speed) {
+void CoilCoolingDXVariableSpeed::addSpeed(const CoilCoolingDXVariableSpeedSpeedData& speed) {
   return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->addSpeed(speed);
+}
+
+void CoilCoolingDXVariableSpeed::removeSpeed(const CoilCoolingDXVariableSpeedSpeedData& speed) {
+  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->removeSpeed(speed);
+}
+
+void CoilCoolingDXVariableSpeed::removeAllSpeeds() {
+  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->removeAllSpeeds();
 }
 
 /// @cond
