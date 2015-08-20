@@ -64,6 +64,15 @@
   %ignore openstudio::model::Meter::setName;
 #endif
 
+// workaround for github issue #1786 -- starting sometime between v1.6.0 and v1.8.0
+// python bindings were no longer picking up the LogLevel::Debug enum constant
+// in this particular case. alternative would be to get SWIG to see the function 
+// signature as compareInputAndOutput(object, attributeName, inputResult, 
+// outputResult, tol, logLevel=openstudioutilitiescore.Debug)
+#if defined SWIGPYTHON
+  %ignore openstudio::model::compareInputAndOutput;
+#endif
+
 // templates for non-ModelObjects
 %template(ModelVector) std::vector<openstudio::model::Model>;
 %ignore std::vector<openstudio::model::Component>::vector(size_type);
