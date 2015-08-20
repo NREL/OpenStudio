@@ -1171,6 +1171,9 @@ set(${target_name}_src
   ZoneMixing.hpp
   ZoneMixing_Impl.hpp
   ZoneMixing.cpp  
+  ZoneVentilationDesignFlowRate.hpp
+  ZoneVentilationDesignFlowRate_Impl.hpp
+  ZoneVentilationDesignFlowRate.cpp
 )
 
 set(${target_name}_swig_src
@@ -1655,6 +1658,7 @@ set(${target_name}_test_src
   test/ZoneHVACUnitVentilator_GTest.cpp
   test/ZoneHVACWaterToAirHeatPump_GTest.cpp
   test/ZoneMixing_GTest.cpp
+  test/ZoneVentilationDesignFlowRate_GTest.cpp
 )
 
 set(${target_name}_test_depends

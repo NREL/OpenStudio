@@ -2250,6 +2250,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translateZoneMixing(mo);
     break;
   }
+  case openstudio::IddObjectType::OS_ZoneVentilation_DesignFlowRate :
+    {
+      auto mo = modelObject.cast<ZoneVentilationDesignFlowRate>();
+      retVal = translateZoneVentilationDesignFlowRate(mo);
+      break;
+    }
   //If no case statement log a warning
   default:
     {
