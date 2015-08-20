@@ -25,6 +25,7 @@
 #include "../ZoneMixing_Impl.hpp"
 #include "../ThermalZone.hpp"
 #include "../ScheduleRuleset.hpp"
+#include "../ScheduleTypeLimits.hpp"
 #include "../Model.hpp"
 #include "../Model_Impl.hpp"
 
@@ -110,8 +111,22 @@ TEST_F(ModelFixture, ZoneMixing)
   EXPECT_FALSE(mixing.maximumOutdoorTemperatureSchedule());
 
   ScheduleRuleset fractionalSchedule(model);
-  ScheduleRuleset temperatureSchedule(model);
+  ScheduleTypeLimits fractionalLimits(model);
+  EXPECT_TRUE(fractionalLimits.setUnitType("Dimensionless"));
+  fractionalSchedule.setScheduleTypeLimits(fractionalLimits);
 
+  ScheduleRuleset temperatureSchedule(model);
+  ScheduleTypeLimits temperatureLimits(model);
+  EXPECT_TRUE(temperatureLimits.setUnitType("Temperature"));
+  temperatureSchedule.setScheduleTypeLimits(temperatureLimits);
+
+  ScheduleRuleset deltaTemperatureSchedule(model);
+  ScheduleTypeLimits deltaTemperatureLimits(model);
+  EXPECT_TRUE(deltaTemperatureLimits.setUnitType("DeltaTemperature"));
+  temperatureSchedule.setScheduleTypeLimits(deltaTemperatureLimits);
+
+  EXPECT_FALSE(mixing.setSchedule(temperatureSchedule));
+  EXPECT_FALSE(mixing.setSchedule(deltaTemperatureSchedule));
   EXPECT_TRUE(mixing.setSchedule(fractionalSchedule));
   EXPECT_EQ(fractionalSchedule.handle(), mixing.schedule().handle());
 
@@ -120,15 +135,24 @@ TEST_F(ModelFixture, ZoneMixing)
   EXPECT_EQ(10.0, mixing.deltaTemperature().get());
   EXPECT_FALSE(mixing.deltaTemperatureSchedule());
 
-  EXPECT_TRUE(mixing.setDeltaTemperatureSchedule(temperatureSchedule));
+  EXPECT_FALSE(mixing.setSchedule(fractionalSchedule));
+  EXPECT_FALSE(mixing.setSchedule(temperatureSchedule));
+  EXPECT_TRUE(mixing.setDeltaTemperatureSchedule(deltaTemperatureSchedule));
   EXPECT_FALSE(mixing.deltaTemperature());
   ASSERT_TRUE(mixing.deltaTemperatureSchedule());
-  EXPECT_EQ(temperatureSchedule.handle(), mixing.deltaTemperatureSchedule().get().handle());
+  EXPECT_EQ(deltaTemperatureSchedule.handle(), mixing.deltaTemperatureSchedule().get().handle());
 
   mixing.setDeltaTemperature(-10.0);
   ASSERT_TRUE(mixing.deltaTemperature());
   EXPECT_EQ(-10.0, mixing.deltaTemperature().get());
   EXPECT_FALSE(mixing.deltaTemperatureSchedule());
+
+  EXPECT_FALSE(mixing.setSchedule(fractionalSchedule));
+  EXPECT_FALSE(mixing.setSchedule(deltaTemperatureSchedule));
+  EXPECT_TRUE(mixing.setMaximumZoneTemperatureSchedule(temperatureSchedule));
+  EXPECT_FALSE(mixing.maximumZoneTemperatureSchedule());
+  ASSERT_TRUE(mixing.maximumZoneTemperatureSchedule());
+  EXPECT_EQ(temperatureSchedule.handle(), mixing.maximumZoneTemperatureSchedule().get().handle());
 }
 
 TEST_F(ModelFixture, ZoneMixing_SameZone)
