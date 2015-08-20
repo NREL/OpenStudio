@@ -27,6 +27,7 @@
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include "ModelObjectList.hpp"
+#include "ModelObjectList_Impl.hpp"
 #include "CoilHeatingDXMultiSpeedStageData.hpp"
 #include "CoilHeatingDXMultiSpeedStageData_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.hpp"
@@ -312,9 +313,9 @@ namespace detail {
   }
 
   std::vector<ModelObject> CoilHeatingDXMultiSpeed_Impl::children() const {
-    std::vector<ModelObject children;
-    if( auto const stageDataList = stageDataList() ) {
-      children.push_back( stageDataList.get() );
+    std::vector<ModelObject> children;
+    if( auto const _stageDataList = stageDataList() ) {
+      children.push_back( _stageDataList.get() );
     }
     if ( auto const curve = defrostEnergyInputRatioFunctionofTemperatureCurve() ) {
       children.push_back( curve.get() );
@@ -329,7 +330,7 @@ namespace detail {
   bool CoilHeatingDXMultiSpeed_Impl::addStage( const CoilHeatingDXMultiSpeedStageData & stage) {
     auto modelObjectList = stageDataList();
     if( modelObjectList ) {
-      modelObjectList->addModelObject(speed);
+      modelObjectList->addModelObject(stage);
     }
     return false;
   }
@@ -337,7 +338,7 @@ namespace detail {
   void CoilHeatingDXMultiSpeed_Impl::removeStage( const CoilHeatingDXMultiSpeedStageData & stage) {
     auto modelObjectList = stageDataList();
     if( modelObjectList ) {
-      modelObjectList->removeModelObject(speed);
+      modelObjectList->removeModelObject(stage);
     }
   }
 
@@ -368,6 +369,7 @@ namespace detail {
           }
       }
     }
+    return result;
   }
 
   boost::optional<HVACComponent> CoilHeatingDXMultiSpeed_Impl::containingHVACComponent() const
@@ -441,7 +443,8 @@ CoilHeatingDXMultiSpeed::CoilHeatingDXMultiSpeed(const Model& model)
 
   auto stageDataList = ModelObjectList(model);
   stageDataList.setName(this->name().get() + " Stage Data List");
-  bool ok = getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setStageDataList(stageDataList);
+  ok = getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setStageDataList(stageDataList);
+  OS_ASSERT(ok);
 
 }
 
@@ -600,8 +603,16 @@ std::vector<CoilHeatingDXMultiSpeedStageData> CoilHeatingDXMultiSpeed::stages() 
   return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->stages();
 }
 
-void CoilHeatingDXMultiSpeed::addStage(const CoilHeatingDXMultiSpeedStageData& stage) {
+bool CoilHeatingDXMultiSpeed::addStage(const CoilHeatingDXMultiSpeedStageData& stage) {
   return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->addStage(stage);
+}
+
+void CoilHeatingDXMultiSpeed::removeStage(const CoilHeatingDXMultiSpeedStageData& stage) {
+  getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->removeStage(stage);
+}
+
+void CoilHeatingDXMultiSpeed::removeAllStages() {
+  getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->removeAllStages();
 }
 
 /// @cond

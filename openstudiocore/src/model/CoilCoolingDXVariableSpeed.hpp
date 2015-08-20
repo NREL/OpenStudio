@@ -153,7 +153,7 @@ class MODEL_API CoilCoolingDXVariableSpeed : public StraightComponent {
 
   std::vector<CoilCoolingDXVariableSpeedSpeedData> speeds() const;
 
-  void addSpeed(const CoilCoolingDXVariableSpeedSpeedData& speed);
+  bool addSpeed(const CoilCoolingDXVariableSpeedSpeedData& speed);
 
   void removeSpeed(const CoilCoolingDXVariableSpeedSpeedData& speed);
 

@@ -161,11 +161,11 @@ namespace detail {
 
     std::vector<CoilHeatingDXMultiSpeedStageData> stages() const;
 
-    void addStage(const CoilHeatingDXMultiSpeedStageData& stage);
+    bool addStage(const CoilHeatingDXMultiSpeedStageData& stage);
 
     void removeStage(const CoilHeatingDXMultiSpeedStageData& stage);
 
-    void removeAllStagess();
+    void removeAllStages();
 
     //@}
    protected:

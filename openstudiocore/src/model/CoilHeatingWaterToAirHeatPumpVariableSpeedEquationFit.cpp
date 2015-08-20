@@ -26,6 +26,7 @@
 #include "CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.hpp"
 #include "CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl.hpp"
 #include "ModelObjectList.hpp"
+#include "ModelObjectList_Impl.hpp"
 #include "ZoneHVACComponent.hpp"
 #include "HVACComponent.hpp"
 #include "ZoneHVACWaterToAirHeatPump.hpp"
@@ -221,8 +222,8 @@ namespace detail {
 
   std::vector<ModelObject> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::children() const {
     std::vector<ModelObject> children;
-    if( auto const speedDataList = speedDataList() ) {
-      children.push_back( speedDataList.get() );
+    if( auto const _stageDataList = speedDataList() ) {
+      children.push_back( _stageDataList.get() );
     }
     children.push_back( energyPartLoadFractionCurve() );
     return children;
@@ -321,6 +322,7 @@ namespace detail {
           }
       }
     }
+    return result;
   }
 
   bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::setSpeedDataList(const boost::optional<ModelObjectList>& modelObjectList) {
@@ -365,7 +367,8 @@ CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit::CoilHeatingWaterToAirHeat
 
   auto speedDataList = ModelObjectList(model);
   speedDataList.setName(this->name().get() + " Speed Data List");
-  bool ok = getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->setSpeedDataList(speedDataList);
+  ok = getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->setSpeedDataList(speedDataList);
+  OS_ASSERT(ok);
 }
 
 CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit(const Model& model,
@@ -380,6 +383,11 @@ CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit::CoilHeatingWaterToAirHeat
   autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
   autosizeRatedWaterFlowRateAtSelectedNominalSpeedLevel();
   ok = setEnergyPartLoadFractionCurve(partLoadFraction);
+  OS_ASSERT(ok);
+
+  auto speedDataList = ModelObjectList(model);
+  speedDataList.setName(this->name().get() + " Speed Data List");
+  ok = getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->setSpeedDataList(speedDataList);
   OS_ASSERT(ok);
 }
 
@@ -455,16 +463,16 @@ std::vector<CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData> Coil
   return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->speeds();
 }
 
-void CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit::addSpeed(const CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& speed) {
+bool CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit::addSpeed(const CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& speed) {
   return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->addSpeed(speed);
 }
 
 void CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit::removeSpeed(const CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& speed) {
-  return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->removeSpeed(speed);
+  getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->removeSpeed(speed);
 }
 
 void CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit::removeAllSpeeds() {
-  return getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->removeAllSpeeds();
+  getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->removeAllSpeeds();
 }
 
 /// @cond

@@ -138,7 +138,7 @@ class MODEL_API CoilHeatingDXMultiSpeed : public StraightComponent {
   std::vector<CoilHeatingDXMultiSpeedStageData> stages() const;
 
   /** Add a new stage after all of the existing stages **/
-  void addStage(const CoilHeatingDXMultiSpeedStageData& stage);
+  bool addStage(const CoilHeatingDXMultiSpeedStageData& stage);
 
   /** Remove a stage **/
   void removeStage(const CoilHeatingDXMultiSpeedStageData& stage);

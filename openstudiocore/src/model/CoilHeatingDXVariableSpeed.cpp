@@ -26,6 +26,7 @@
 #include "CoilHeatingDXVariableSpeedSpeedData.hpp"
 #include "CoilHeatingDXVariableSpeedSpeedData_Impl.hpp"
 #include "ModelObjectList.hpp"
+#include "ModelObjectList_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
@@ -337,9 +338,9 @@ namespace detail {
   }
 
   std::vector<ModelObject> CoilHeatingDXVariableSpeed_Impl::children() const {
-    std::vector<ModelObject children;
-    if( auto const speedDataList = speedDataList() ) {
-      children.push_back( speedDataList.get() );
+    std::vector<ModelObject> children;
+    if( auto const _stageDataList = speedDataList() ) {
+      children.push_back( _stageDataList.get() );
     }
     children.push_back( energyPartLoadFractionCurve() );
     if ( auto curve = defrostEnergyInputRatioFunctionofTemperatureCurve() ) {
@@ -394,6 +395,7 @@ namespace detail {
           }
       }
     }
+    return result;
   }
 
   boost::optional<HVACComponent> CoilHeatingDXVariableSpeed_Impl::containingHVACComponent() const
@@ -511,7 +513,8 @@ CoilHeatingDXVariableSpeed::CoilHeatingDXVariableSpeed(const Model& model)
 
   auto speedDataList = ModelObjectList(model);
   speedDataList.setName(this->name().get() + " Speed Data List");
-  bool ok = getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setSpeedDataList(speedDataList);
+  ok = getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setSpeedDataList(speedDataList);
+  OS_ASSERT(ok);
 
 }
 
@@ -542,6 +545,11 @@ CoilHeatingDXVariableSpeed::CoilHeatingDXVariableSpeed(const Model& model,
   ok = setDefrostTimePeriodFraction(0.166667);
   OS_ASSERT(ok);
   autosizeResistiveDefrostHeaterCapacity();
+
+  auto speedDataList = ModelObjectList(model);
+  speedDataList.setName(this->name().get() + " Speed Data List");
+  ok = getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setSpeedDataList(speedDataList);
+  OS_ASSERT(ok);
 
 }
 
@@ -707,16 +715,16 @@ std::vector<CoilHeatingDXVariableSpeedSpeedData> CoilHeatingDXVariableSpeed::spe
   return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->speeds();
 }
 
-void CoilHeatingDXVariableSpeed::addSpeed(const CoilHeatingDXVariableSpeedSpeedData& speed) {
+bool CoilHeatingDXVariableSpeed::addSpeed(const CoilHeatingDXVariableSpeedSpeedData& speed) {
   return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->addSpeed(speed);
 }
 
 void CoilHeatingDXVariableSpeed::removeSpeed(const CoilHeatingDXVariableSpeedSpeedData& speed) {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->removeSpeed(speed);
+  getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->removeSpeed(speed);
 }
 
 void CoilHeatingDXVariableSpeed::removeAllSpeeds() {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->removeAllSpeeds();
+  getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->removeAllSpeeds();
 }
 
 /// @cond
