@@ -32,6 +32,7 @@
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACZoneMixer.hpp"
 #include "AirLoopHVACZoneSplitter.hpp"
+#include "AirTerminalDualDuctVAV.hpp"
 #include "AirTerminalSingleDuctInletSideMixer.hpp"
 #include "AirTerminalSingleDuctConstantVolumeCooledBeam.hpp"
 #include "AirTerminalSingleDuctConstantVolumeFourPipeInduction.hpp"
@@ -371,6 +372,7 @@
 #include "ZoneHVACUnitVentilator.hpp"
 #include "ZoneHVACWaterToAirHeatPump.hpp"
 #include "ZoneMixing.hpp"
+#include "ZoneVentilationDesignFlowRate.hpp"
 
 // include all concrete ModelObject Impls too
 #include "AirConditionerVariableRefrigerantFlow_Impl.hpp"
@@ -385,6 +387,7 @@
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "AirLoopHVACZoneMixer_Impl.hpp"
 #include "AirLoopHVACZoneSplitter_Impl.hpp"
+#include "AirTerminalDualDuctVAV_Impl.hpp"
 #include "AirTerminalSingleDuctInletSideMixer_Impl.hpp"
 #include "AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp"
 #include "AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl.hpp"
@@ -724,5 +727,6 @@
 #include "ZoneHVACUnitVentilator_Impl.hpp"
 #include "ZoneHVACWaterToAirHeatPump_Impl.hpp"
 #include "ZoneMixing_Impl.hpp"
+#include "ZoneVentilationDesignFlowRate_Impl.hpp"
 
 #endif // MODEL_CONCRETEMODELOBJECTS_HPP

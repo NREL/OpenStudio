@@ -68,6 +68,9 @@ set(${target_name}_src
   AirLoopHVACZoneSplitter.hpp
   AirLoopHVACZoneSplitter_Impl.hpp
   AirLoopHVACZoneSplitter.cpp
+  AirTerminalDualDuctVAV.hpp
+  AirTerminalDualDuctVAV_Impl.hpp
+  AirTerminalDualDuctVAV.cpp
   AirTerminalSingleDuctInletSideMixer.hpp
   AirTerminalSingleDuctInletSideMixer_Impl.hpp
   AirTerminalSingleDuctInletSideMixer.cpp
@@ -1189,6 +1192,9 @@ set(${target_name}_src
   ZoneMixing.hpp
   ZoneMixing_Impl.hpp
   ZoneMixing.cpp  
+  ZoneVentilationDesignFlowRate.hpp
+  ZoneVentilationDesignFlowRate_Impl.hpp
+  ZoneVentilationDesignFlowRate.cpp
 )
 
 set(${target_name}_swig_src
@@ -1421,6 +1427,7 @@ set(${target_name}_test_src
   test/AirLoopHVACUnitarySystem_GTest.cpp
   test/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_GTest.cpp
   test/AirLoopHVAC_GTest.cpp
+  test/AirTerminalDualDuctVAV_GTest.cpp
   test/AirTerminalSingleDuctInletSideMixer_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeFourPipeInduction_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeCooledBeam_GTest.cpp
@@ -1679,6 +1686,7 @@ set(${target_name}_test_src
   test/ZoneHVACUnitVentilator_GTest.cpp
   test/ZoneHVACWaterToAirHeatPump_GTest.cpp
   test/ZoneMixing_GTest.cpp
+  test/ZoneVentilationDesignFlowRate_GTest.cpp
 )
 
 set(${target_name}_test_depends

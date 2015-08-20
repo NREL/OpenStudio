@@ -457,6 +457,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirLoopHVACSupplyPlenum(airLoopHVACSupplyPlenum);
       break;
     }
+  case openstudio::IddObjectType::OS_AirTerminal_DualDuct_VAV :
+    {
+      auto mo = modelObject.cast<AirTerminalDualDuctVAV>();
+      retVal = translateAirTerminalDualDuctVAV(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInduction :
     {
       model::AirTerminalSingleDuctConstantVolumeFourPipeInduction airTerminal = modelObject.cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
@@ -2285,6 +2291,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translateZoneMixing(mo);
     break;
   }
+  case openstudio::IddObjectType::OS_ZoneVentilation_DesignFlowRate :
+    {
+      auto mo = modelObject.cast<ZoneVentilationDesignFlowRate>();
+      retVal = translateZoneVentilationDesignFlowRate(mo);
+      break;
+    }
   //If no case statement log a warning
   default:
     {

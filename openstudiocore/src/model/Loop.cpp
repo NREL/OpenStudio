@@ -144,24 +144,39 @@ namespace detail {
 
   boost::optional<ModelObject> Loop_Impl::demandComponent(openstudio::Handle handle) const
   {
-    Node inletComp = this->demandInletNode();
-    Node outletComp = this->demandOutletNode();
-    if( handle == inletComp.handle() ) { return inletComp; }
+    auto inletComps = demandInletNodes();
+    auto outletComp = demandOutletNode();
+
     if( handle == outletComp.handle() ) { return outletComp; }
-    std::vector<HVACComponent> visited;
-    visited.push_back(inletComp);
-    return findModelObject(handle, outletComp, visited, true);
+
+    for( auto const & inletComp : inletComps ) {
+      if( handle == inletComp.handle() ) { return inletComp; }
+      std::vector<HVACComponent> visited { inletComp };
+      if( auto mo = findModelObject(handle, outletComp, visited, true) ) {
+        return mo;
+      }
+    }
+
+    return boost::none;
+
   }
 
   boost::optional<ModelObject> Loop_Impl::supplyComponent(openstudio::Handle handle) const
   {
-    Node inletComp = this->supplyInletNode();
-    Node outletComp = this->supplyOutletNode();
+    auto inletComp = supplyInletNode();
+    auto outletComps = supplyOutletNodes();
+
     if( handle == inletComp.handle() ) { return inletComp; }
-    if( handle == outletComp.handle() ) { return outletComp; }
-    std::vector<HVACComponent> visited;
-    visited.push_back(inletComp);
-    return findModelObject(handle, outletComp, visited, false);
+
+    for( auto const & outletComp : outletComps ) {
+      if( handle == outletComp.handle() ) { return outletComp; }
+      std::vector<HVACComponent> visited { inletComp };
+      if( auto mo = findModelObject(handle, outletComp, visited, false) ) {
+        return mo;
+      }
+    }
+
+    return boost::none;
   }
 
   ModelObject Loop_Impl::clone(Model model) const
@@ -179,6 +194,7 @@ namespace detail {
       openstudio::IddObjectType type
     ) const
   {
+    LOG(Warn,"supplyComponents method for " << briefDescription() << " is not implemented to take multiple inlet and outlet components");
     return std::vector<ModelObject>();
   }
 
@@ -188,26 +204,6 @@ namespace detail {
     ) const
   {
     return std::vector<ModelObject>();
-  }
-
-  Node Loop_Impl::supplyInletNode() const
-  {
-    return Node(model());
-  }
-
-  Node Loop_Impl::supplyOutletNode() const
-  {
-    return Node(model());
-  }
-
-  Node Loop_Impl::demandInletNode() const
-  {
-    return Node(model());
-  }
-
-  Node Loop_Impl::demandOutletNode() const
-  {
-    return Node(model());
   }
 
   boost::optional<ModelObject> Loop_Impl::supplyInletNodeAsModelObject() {
@@ -313,18 +309,61 @@ namespace detail {
     return reducedModelObjects;
   }
 
+  template <typename T>
+  struct Duplicate {
+    bool operator()(const T& element) {
+      return ! s_.insert(element).second; // true if element already in set
+    }
+   private:
+    std::set<T> s_;
+  };
+
   std::vector<ModelObject> Loop_Impl::supplyComponents(openstudio::IddObjectType type) const
   {
-    return supplyComponents( supplyInletNode(),
-                             supplyOutletNode(),
-                             type );
+    std::vector<ModelObject> result;
+
+    auto t_supplyInletNode = supplyInletNode();
+    auto t_supplyOutletNodes = supplyOutletNodes();
+
+    for( auto const & t_supplyOutletNode : t_supplyOutletNodes ) {
+      auto components = supplyComponents( t_supplyInletNode,
+                                          t_supplyOutletNode,
+                                          type );
+      result.insert(result.end(),components.begin(),components.end());
+    }
+
+    // If there is more than one outlet node (dual duct) we might have duplicates
+    if( t_supplyOutletNodes.size() > 1u ) {
+      Duplicate<ModelObject> pred;
+      auto it = std::remove_if(result.begin(), result.end(), std::ref(pred));
+      return std::vector<ModelObject>(result.begin(),it);
+    } else {
+      return result;
+    }
   }
 
   std::vector<ModelObject> Loop_Impl::demandComponents(openstudio::IddObjectType type) const
   {
-    return demandComponents( demandInletNode(),
-                             demandOutletNode(),
-                             type );
+    std::vector<ModelObject> result;
+
+    auto t_demandOutletNode = demandOutletNode();
+    auto t_demandInletNodes = demandInletNodes();
+
+    for( auto const & t_demandInletNode : t_demandInletNodes ) {
+      auto components = demandComponents( t_demandInletNode,
+                                          t_demandOutletNode,
+                                          type );
+      result.insert(result.end(),components.begin(),components.end());
+    }
+
+    // If there is more than one inlet node (dual duct) we might have duplicates
+    if( t_demandInletNodes.size() > 1u ) {
+      Duplicate<ModelObject> pred;
+      auto it = std::remove_if(result.begin(), result.end(), std::ref(pred));
+      return std::vector<ModelObject>(result.begin(),it);
+    } else {
+      return result;
+    }
   }
 
   std::vector<ModelObject> Loop_Impl::components(openstudio::IddObjectType type)
@@ -492,9 +531,19 @@ Node Loop::supplyOutletNode() const
   return getImpl<detail::Loop_Impl>()->supplyOutletNode();
 }
 
+std::vector<Node> Loop::supplyOutletNodes() const
+{
+  return getImpl<detail::Loop_Impl>()->supplyOutletNodes();
+}
+
 Node Loop::demandInletNode() const
 {
   return getImpl<detail::Loop_Impl>()->demandInletNode();
+}
+
+std::vector<Node> Loop::demandInletNodes() const
+{
+  return getImpl<detail::Loop_Impl>()->demandInletNodes();
 }
 
 Node Loop::demandOutletNode() const

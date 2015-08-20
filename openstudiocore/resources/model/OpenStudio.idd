@@ -8011,15 +8011,23 @@ OS:AirLoopHVAC,
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A10, \field Demand Side Inlet Node Names
+  A10, \field Demand Side Inlet Node A
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A11, \field Supply Side Outlet Node Names
+  A11, \field Supply Side Outlet Node A
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A11; \field Return Air Bypass Flow Temperature Setpoint Schedule Name
+  A12, \field Demand Side Inlet Node B
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A13, \field Supply Side Outlet Node B
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A14; \field Return Air Bypass Flow Temperature Setpoint Schedule Name
        \type object-list
        \object-list ScheduleNames
 
@@ -9688,6 +9696,133 @@ OS:AirTerminal:SingleDuct:VAV:Reheat,
        \note If this field is blank, then the terminal unit will not be controlled for outdoor air flow.
        \type object-list
        \object-list DesignSpecificationOutdoorAirNames
+
+OS:AirTerminal:DualDuct:VAV:OutdoorAir,
+       \memo Central air system terminal unit, dual duct, variable volume with special controls.
+       \memo One VAV duct is controlled to supply ventilation air and the other VAV duct is
+       \memo controlled to meet the zone cooling load.
+       \min-fields 9
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference ConnectionObject
+  A3 , \field Availability Schedule
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  A4 , \field Air Outlet Node
+       \type object-list
+       \object-list ConnectionNames
+       \note The outlet node of the terminal unit.
+       \note This is also the zone inlet node.
+  A5 , \field Outdoor Air Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+  A6 , \field Recirculated Air Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+  N1 , \field Maximum Terminal Air Flow Rate
+       \required-field
+       \units m3/s
+       \minimum 0.0
+       \autosizable
+       \required-field
+       \note If autosized this is the sum of flow needed for cooling and maximum required outdoor air
+  A7 , \field Design Specification Outdoor Air Object
+       \required-field
+       \type object-list
+       \object-list DesignSpecificationOutdoorAirNames
+       \note When the name of a DesignSpecification:OutdoorAir object is entered, the terminal
+       \note unit will increase flow as needed to meet this outdoor air requirement.
+       \note If Outdoor Air Flow per Person is non-zero, then the outdoor air requirement will
+       \note be computed based mode selected in the next field.
+       \note At no time will the supply air flow rate exceed the value for Maximum Air Flow Rate.
+  A8 ; \field Per Person Ventilation Rate Mode
+       \type choice
+       \required-field
+       \key CurrentOccupancy
+       \key DesignOccupancy
+       \note CurrentOccupancy models demand controlled ventilation using the current number of people
+       \note DesignOccupancy uses the total Number of People in the zone and is constant
+
+OS:AirTerminal:DualDuct:ConstantVolume,
+       \memo Central air system terminal unit, dual duct, constant volume.
+       \min-fields 7
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference ConnectionObject
+  A3 , \field Availability Schedule
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  A4 , \field Air Outlet Node
+       \type object-list
+       \object-list ConnectionNames
+       \note The outlet node of the terminal unit.
+       \note This is also the zone inlet node.
+  A5 , \field Hot Air Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+  A6 , \field Cold Air Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+  N1 ; \field Maximum Air Flow Rate
+       \required-field
+       \units m3/s
+       \minimum 0.0
+       \autosizable
+
+OS:AirTerminal:DualDuct:VAV,
+       \memo Central air system terminal unit, dual duct, variable volume.
+       \min-fields 9
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference ConnectionObject
+  A3 , \field Availability Schedule
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  A4 , \field Air Outlet Node
+       \type object-list
+       \object-list ConnectionNames
+       \note The outlet node of the terminal unit.
+       \note This is also the zone inlet node.
+  A5 , \field Hot Air Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+  A6 , \field Cold Air Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+  N1 , \field Maximum Damper Air Flow Rate
+       \required-field
+       \units m3/s
+       \minimum 0.0
+       \autosizable
+  N2 , \field Zone Minimum Air Flow Fraction
+       \note fraction of maximum air flow
+       \maximum 1.0
+       \minimum 0.0
+       \required-field
+  A7 ; \field Design Specification Outdoor Air Object
+       \type object-list
+       \object-list DesignSpecificationOutdoorAirNames
+       \note When the name of a DesignSpecification:OutdoorAir object is entered, the terminal
+       \note unit will increase flow as needed to meet this outdoor air requirement.
+       \note If Outdoor Air Flow per Person is non-zero, then the outdoor air requirement will
+       \note be computed based on the current number of occupants in the zone.
+       \note At no time will the supply air flow rate exceed the value for Maximum Air Flow Rate.
+       \note If this field is blank, then the terminal unit will not be controlled for outdoor air flow.
 
 OS:AvailabilityManagerAssignmentList,
        \extensible:1
@@ -20148,6 +20283,156 @@ OS:ZoneHVAC:EquipmentList,
        \minimum 1
        \note Specifies the zone equipment simulation order
        \note when the zone thermostat requests heating or no load
+
+OS:ZoneVentilation:DesignFlowRate,
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \type alpha
+       \required-field
+       \reference VentilationNames
+  A3 , \field Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+  A4 , \field Design Flow Rate Calculation Method
+       \note The entered calculation method is used to create the maximum amount of ventilation
+       \note for this set of attributes
+       \note Choices: Flow/Zone => Design Flow Rate -- simply enter Design Flow Rate
+       \note Flow/Area => Flow Rate per Zone Floor Area - Value * Floor Area (zone) = Design Flow Rate
+       \note Flow/Person => Flow Rate per Person - Value * #people = Design Flow Rate
+       \note AirChanges/Hour => Air Changes per Hour - Value * Floor Volume (zone) adjusted for m3/s = Design Volume Flow Rate
+       \note  "Vdesign" in Equation is the result.
+       \type choice
+       \key Flow/Zone
+       \key Flow/Area
+       \key Flow/Person
+       \key AirChanges/Hour
+       \required-field
+  N1 , \field Design Flow Rate
+       \units m3/s
+       \type real
+       \minimum 0
+       \required-field
+  N2 , \field Flow Rate per Zone Floor Area
+       \type real
+       \minimum 0
+       \units m3/s-m2
+       \required-field
+  N3 , \field Flow Rate per Person
+       \type real
+       \minimum 0
+       \units m3/s-person
+       \required-field
+  N4 , \field Air Changes per Hour
+       \units 1/hr
+       \type real
+       \minimum 0
+       \required-field
+  A5 , \field Ventilation Type
+       \type choice
+       \key Natural
+       \key Intake
+       \key Exhaust
+       \key Balanced
+       \required-field
+  N5 , \field Fan Pressure Rise
+       \note pressure rise across the fan
+       \type real
+       \units Pa
+       \minimum 0
+       \required-field
+  N6 , \field Fan Total Efficiency
+       \type real
+       \minimum> 0
+       \required-field
+  N7 , \field Constant Term Coefficient
+       \note  "A" in Equation
+       \type real
+       \required-field
+  N8 , \field Temperature Term Coefficient
+       \note  "B" in Equation
+       \type real
+       \required-field
+  N9 , \field Velocity Term Coefficient
+       \note  "C" in Equation
+       \type real
+       \required-field
+  N10, \field Velocity Squared Term Coefficient
+       \note  "D" in Equation
+       \type real
+       \required-field
+  N11, \field Minimum Indoor Temperature
+       \note this is the indoor temperature below which ventilation is shutoff
+       \units C
+       \type real
+       \minimum -100
+       \maximum 100
+       \required-field
+  A6 , \field Minimum Indoor Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This schedule contains the indoor temperature versus time below which
+       \note ventilation is shutoff.
+  N12, \field Maximum Indoor Temperature
+       \note this is the indoor temperature above which ventilation is shutoff
+       \units C
+       \type real
+       \minimum -100
+       \maximum 100
+       \required-field
+  A7 , \field Maximum Indoor Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This schedule contains the indoor temperature versus time above which
+       \note ventilation is shutoff.
+  N13, \field Delta Temperature
+       \note This is the temperature differential between indoor and outdoor below which ventilation is shutoff.
+       \note If ((IndoorTemp - OutdoorTemp) < DeltaTemperature) then ventilation is not allowed.
+       \note For example, if delta temperature is 2C, ventilation is assumed to be available if the outside air temperature
+       \note is at least 2C cooler than the zone air temperature. The values for this field can include negative numbers.
+       \note This allows ventilation to occur even if the outdoor temperature is above the indoor temperature.
+       \units deltaC
+       \type real
+       \minimum -100
+       \required-field
+  A8 , \field Delta Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This schedule contains the temperature differential between indoor and outdoor
+       \note versus time below which ventilation is shutoff.
+  N14, \field Minimum Outdoor Temperature
+       \note this is the outdoor temperature below which ventilation is shutoff
+       \units C
+       \type real
+       \minimum -100
+       \maximum 100
+       \required-field
+  A9 , \field Minimum Outdoor Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This schedule contains the outdoor temperature versus time below which
+       \note ventilation is shutoff.
+  N15, \field Maximum Outdoor Temperature
+       \note this is the outdoor temperature above which ventilation is shutoff
+       \units C
+       \type real
+       \minimum -100
+       \maximum 100
+       \required-field
+  A10, \field Maximum Outdoor Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This schedule contains the outdoor temperature versus time above which
+       \note ventilation is shutoff.
+  N16; \field Maximum Wind Speed
+       \note this is the outdoor wind speed above which ventilation is shutoff
+       \units m/s
+       \type real
+       \minimum 0
+       \maximum 40
+       \required-field
 
 OS:ZoneHVAC:Baseboard:Convective:Electric,
   A1 , \field Handle

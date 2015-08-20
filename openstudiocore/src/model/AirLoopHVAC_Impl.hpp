@@ -83,11 +83,11 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   Node supplyOutletNode() const override;
 
-  std::vector<Node> supplyOutletNodes() const;
+  std::vector<Node> supplyOutletNodes() const override;
 
   Node demandInletNode() const override;
 
-  std::vector<Node> demandInletNodes() const;
+  std::vector<Node> demandInletNodes() const override;
 
   Node demandOutletNode() const override;
 
@@ -101,9 +101,21 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
 
+  boost::optional<Splitter> supplySplitter() const;
+
+  bool removeSupplySplitter();
+
+  bool removeSupplySplitter(HVACComponent & hvacComponent);
+
+  boost::optional<Node> supplySplitterInletNode() const;
+
+  std::vector<Node> supplySplitterOutletNodes() const;
+
   AirLoopHVACZoneMixer zoneMixer();
 
-  AirLoopHVACZoneSplitter zoneSplitter();
+  AirLoopHVACZoneSplitter zoneSplitter() const;
+
+  std::vector<AirLoopHVACZoneSplitter> zoneSplitters() const;
 
   bool removeBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
@@ -129,19 +141,22 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
-  bool addBranchForZone(ThermalZone & thermalZone, StraightComponent & airTerminal);
+  bool addBranchForZone(ThermalZone & thermalZone, HVACComponent & airTerminal);
 
   bool addBranchForZone(ThermalZone & thermalZone, 
                         Splitter & splitter,
                         Mixer & mixer,
-                        StraightComponent & airTerminal);
+                        HVACComponent & airTerminal);
 
   bool addBranchForZone(ThermalZone & thermalZone, 
                         Splitter & splitter,
                         Mixer & mixer);
 
   bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone, 
-                            boost::optional<StraightComponent> optAirTerminal);
+                            boost::optional<StraightComponent> & optAirTerminal);
+
+  bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone, 
+                            boost::optional<HVACComponent> & optAirTerminal);
 
   bool moveBranchForZone(ThermalZone & thermalZone,
                          Splitter & newSplitter);
@@ -175,22 +190,39 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
                                    AirLoopHVAC & airLoopHVAC,
                                    Splitter & splitter,
                                    Mixer & mixer,
-                                   boost::optional<StraightComponent> & optAirTerminal);
+                                   boost::optional<HVACComponent> & optAirTerminal);
 
   static boost::optional<ThermalZone> zoneForLastBranch(Mixer & mixer);
 
-  static boost::optional<StraightComponent> terminalForLastBranch(Mixer & mixer);
+  static boost::optional<HVACComponent> terminalForLastBranch(Mixer & mixer);
 
   static boost::optional<PlantLoop> plantForAirTerminal( HVACComponent & airTerminal );
 
   static void setPlantForAirTerminal( HVACComponent & airTerminal, PlantLoop & plantLoop );
+
+  unsigned supplyOutletPortA() const;
+
+  unsigned supplyOutletPortB() const;
+
+  unsigned supplyInletPort() const;
+
+  unsigned demandInletPortA() const;
+
+  unsigned demandInletPortB() const;
+
+  unsigned demandOutletPort() const;
+
+  static bool addDualDuctTerminalToNode(HVACComponent & terminal, const unsigned inletPortA, const unsigned inletPortB, const unsigned outletPort, Node & node);
+
+  static bool removeDualDuctTerminalFromAirLoopHVAC(HVACComponent & terminal, const unsigned inletPortA, const unsigned inletPortB, const unsigned outletPort);
+
+  bool isDualDuct() const;
 
   boost::optional<AvailabilityManager> availabilityManager() const;
 
   bool setAvailabilityManager(const AvailabilityManager & availabilityManager);
 
   void resetAvailabilityManager();
-
 
   private:
 

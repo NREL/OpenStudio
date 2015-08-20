@@ -1997,7 +1997,7 @@ namespace detail {
     return result;
   }
 
-  bool ThermalZone_Impl::setSupplyPlenum(const ThermalZone & plenumZone)
+  bool ThermalZone_Impl::setSupplyPlenum(const ThermalZone & plenumZone, unsigned branchIndex)
   {
     bool result = true;
 
@@ -2044,11 +2044,22 @@ namespace detail {
       }
     }
 
+    boost::optional<AirLoopHVACZoneSplitter> zoneSplitter;
+
+    if( result ) {
+      auto zoneSplitters = t_airLoopHVAC->zoneSplitters();
+      if( branchIndex < zoneSplitters.size() ) {
+        zoneSplitter = zoneSplitters[branchIndex];
+      }
+    }
+
+    if( ! zoneSplitter ) result = false; 
+
     if( result )
     {
       removeSupplyPlenum();
 
-      model::ModelObject mo = t_airLoopHVAC->demandComponents(t_airLoopHVAC->zoneSplitter(),getObject<ThermalZone>(),Node::iddObjectType()).front();
+      model::ModelObject mo = t_airLoopHVAC->demandComponents(zoneSplitter.get(),getObject<ThermalZone>(),Node::iddObjectType()).front();
       Node node = mo.cast<Node>();
 
       OS_ASSERT(plenum);
@@ -2058,41 +2069,59 @@ namespace detail {
     return result;
   }
 
-  void ThermalZone_Impl::removeSupplyPlenum()
+  bool ThermalZone_Impl::setSupplyPlenum(const ThermalZone & plenumZone)
+  {
+    return setSupplyPlenum(plenumZone,0u);
+  }
+
+  void ThermalZone_Impl::removeSupplyPlenum(unsigned branchIndex)
   {
     Model t_model = model();
     boost::optional<AirLoopHVAC> t_airLoopHVAC = airLoopHVAC();
 
     if( t_airLoopHVAC )
     {
-      AirLoopHVACZoneSplitter zoneSplitter = t_airLoopHVAC->zoneSplitter();
-      std::vector<ModelObject> modelObjects = t_airLoopHVAC->demandComponents(zoneSplitter,getObject<ThermalZone>());
-      std::vector<AirLoopHVACSupplyPlenum> plenums = subsetCastVector<AirLoopHVACSupplyPlenum>(modelObjects);
-      boost::optional<AirLoopHVACSupplyPlenum> plenum;
-
-      if( ! plenums.empty() )
-      {
-        plenum = plenums.front();
+      boost::optional<AirLoopHVACZoneSplitter> zoneSplitter;
+      auto zoneSplitters = t_airLoopHVAC->zoneSplitters();
+      if( branchIndex < zoneSplitters.size() ) {
+        zoneSplitter = zoneSplitters[branchIndex];
       }
 
-      if( plenum )
-      {
-        if( plenum->outletModelObjects().size() == 1u )
+      if( zoneSplitter ) {
+        std::vector<ModelObject> modelObjects = t_airLoopHVAC->demandComponents(zoneSplitter.get(),getObject<ThermalZone>());
+        std::vector<AirLoopHVACSupplyPlenum> plenums = subsetCastVector<AirLoopHVACSupplyPlenum>(modelObjects);
+        boost::optional<AirLoopHVACSupplyPlenum> plenum;
+
+        if( ! plenums.empty() )
         {
-          plenum->remove();
+          plenum = plenums.front();
         }
-        else
+
+        if( plenum )
         {
-          auto it = std::find(modelObjects.begin(),modelObjects.end(),plenum.get());
-          ModelObject plenumOutletModelObject = *(it + 1);
-          unsigned branchIndex = plenum->branchIndexForOutletModelObject(plenumOutletModelObject);
-          unsigned port = plenum->connectedObjectPort(plenum->outletPort(branchIndex)).get();
-          plenum->removePortForBranch(branchIndex);
-          t_model.connect(zoneSplitter,zoneSplitter.nextOutletPort(),plenumOutletModelObject,port);
+          if( plenum->outletModelObjects().size() == 1u )
+          {
+            plenum->remove();
+          }
+          else
+          {
+            auto it = std::find(modelObjects.begin(),modelObjects.end(),plenum.get());
+            ModelObject plenumOutletModelObject = *(it + 1);
+            unsigned branchIndex = plenum->branchIndexForOutletModelObject(plenumOutletModelObject);
+            unsigned port = plenum->connectedObjectPort(plenum->outletPort(branchIndex)).get();
+            plenum->removePortForBranch(branchIndex);
+            t_model.connect(zoneSplitter.get(),zoneSplitter->nextOutletPort(),plenumOutletModelObject,port);
+          }
         }
       }
     }
   }
+
+  void ThermalZone_Impl::removeSupplyPlenum()
+  {
+    return removeSupplyPlenum(0u);
+  }
+
   bool ThermalZone_Impl::setReturnPlenum(const ThermalZone & plenumZone)
   {
     bool result = true;
@@ -2751,9 +2780,19 @@ bool ThermalZone::setSupplyPlenum(const ThermalZone & plenumZone)
   return getImpl<detail::ThermalZone_Impl>()->setSupplyPlenum(plenumZone);
 }
 
+bool ThermalZone::setSupplyPlenum(const ThermalZone & plenumZone, unsigned branchIndex)
+{
+  return getImpl<detail::ThermalZone_Impl>()->setSupplyPlenum(plenumZone,branchIndex);
+}
+
 void ThermalZone::removeSupplyPlenum()
 {
   getImpl<detail::ThermalZone_Impl>()->removeSupplyPlenum();
+}
+
+void ThermalZone::removeSupplyPlenum(unsigned branchIndex)
+{
+  getImpl<detail::ThermalZone_Impl>()->removeSupplyPlenum(branchIndex);
 }
 
 bool ThermalZone::setReturnPlenum(const ThermalZone & plenumZone)

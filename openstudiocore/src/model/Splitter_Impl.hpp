@@ -102,6 +102,8 @@ class MODEL_API Splitter_Impl : public HVACComponent_Impl
 
   bool isRemovable() const override;
 
+  void disconnect() override;
+
   private:
 
   REGISTER_LOGGER("openstudio.model.Splitter");

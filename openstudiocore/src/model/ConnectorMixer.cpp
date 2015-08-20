@@ -78,12 +78,12 @@ namespace detail{
     return ModelObject_Impl::remove();
   }
 
-  unsigned ConnectorMixer_Impl::outletPort()
+  unsigned ConnectorMixer_Impl::outletPort() const
   {
     return OS_Connector_MixerFields::OutletBranchName;
   }
 
-  unsigned ConnectorMixer_Impl::inletPort(unsigned branchIndex)
+  unsigned ConnectorMixer_Impl::inletPort(unsigned branchIndex) const
   {
     unsigned result;
     result = numNonextensibleFields();
@@ -91,7 +91,7 @@ namespace detail{
     return result;
   }
 
-  unsigned ConnectorMixer_Impl::nextInletPort()
+  unsigned ConnectorMixer_Impl::nextInletPort() const
   {
     return inletPort( this->nextBranchIndex() );
   }
@@ -125,17 +125,17 @@ std::vector<openstudio::IdfObject> ConnectorMixer::remove()
   return getImpl<detail::ConnectorMixer_Impl>()->remove();
 }
 
-unsigned ConnectorMixer::outletPort()
+unsigned ConnectorMixer::outletPort() const
 {
   return getImpl<detail::ConnectorMixer_Impl>()->outletPort();
 }
 
-unsigned ConnectorMixer::inletPort(unsigned branchIndex)
+unsigned ConnectorMixer::inletPort(unsigned branchIndex) const
 {
   return getImpl<detail::ConnectorMixer_Impl>()->inletPort(branchIndex);
 }
 
-unsigned ConnectorMixer::nextInletPort()
+unsigned ConnectorMixer::nextInletPort() const
 {
   return getImpl<detail::ConnectorMixer_Impl>()->nextInletPort();
 }

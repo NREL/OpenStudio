@@ -168,6 +168,17 @@ bool Splitter_Impl::isRemovable() const
   }
 }
 
+void Splitter_Impl::disconnect()
+{
+  ModelObject mo = this->getObject<ModelObject>();
+  auto _model = model();
+
+  _model.disconnect(mo, inletPort());
+  for( auto i = 0; i != nextBranchIndex(); ++i ) {
+    _model.disconnect(mo, outletPort(i));
+  }
+}
+
 //bool Splitter_Impl::addToNode(Node & node)
 //{
 //  return false;

@@ -165,7 +165,14 @@ bool StraightComponent_Impl::addToNode(Node & node)
   if( t_loop && ! t_oaSystem ) {
     if( t_loop->supplyComponent(node.handle()) ) {
       systemStartComponent = t_loop->supplyInletNode();
-      systemEndComponent = t_loop->supplyOutletNode();
+      auto nodes = t_loop->supplyOutletNodes();
+      OS_ASSERT( ! nodes.empty() );
+      if( (nodes.size() == 2u) && (! t_loop->supplyComponents(node,nodes[1]).empty()) ) {
+        systemEndComponent = nodes[1];
+      } else {
+        systemEndComponent = nodes[0];
+      }
+      OS_ASSERT(systemEndComponent);
     } else if( t_loop->demandComponent(node.handle()) ) {
       systemStartComponent = t_loop->demandInletNode();
       systemEndComponent = t_loop->demandOutletNode();

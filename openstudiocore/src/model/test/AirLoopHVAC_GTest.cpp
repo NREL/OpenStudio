@@ -64,6 +64,8 @@
 #include "../HVACComponent_Impl.hpp"
 #include "../HVACTemplates.hpp"
 #include "../LifeCycleCost.hpp"
+#include "../ConnectorSplitter.hpp"
+#include "../ConnectorSplitter_Impl.hpp"
 
 using namespace openstudio::model;
 
@@ -794,6 +796,154 @@ TEST_F(ModelFixture,AirLoopHVAC_Availability)
     EXPECT_TRUE(availabilityManager2);
     EXPECT_EQ(availabilityManager2.get(),availabilityManager);
   }
+}
 
+TEST_F(ModelFixture,AirLoopHVAC_dualDuct)
+{
+  // Make dual duct
+  {
+    Model m;
+    AirLoopHVAC airLoopHVAC(m);
+
+    EXPECT_EQ(1u,airLoopHVAC.supplyOutletNodes().size()); 
+
+    ConnectorSplitter splitter(m);
+    auto supplyOutletNode = airLoopHVAC.supplyOutletNode();
+    EXPECT_TRUE(splitter.addToNode(supplyOutletNode));
+
+    EXPECT_TRUE(airLoopHVAC.isDualDuct());
+
+    EXPECT_EQ(2u,airLoopHVAC.supplyOutletNodes().size()); 
+    EXPECT_EQ(4u,airLoopHVAC.supplyComponents().size());
+    EXPECT_TRUE(airLoopHVAC.supplySplitter());
+    EXPECT_EQ(2u,airLoopHVAC.supplySplitterOutletNodes().size());
+    ASSERT_TRUE(airLoopHVAC.supplySplitterInletNode());
+    EXPECT_EQ(airLoopHVAC.supplySplitterInletNode().get(),airLoopHVAC.supplyInletNode());
+
+    EXPECT_TRUE(airLoopHVAC.supplyComponent(splitter.handle()));
+    EXPECT_TRUE(airLoopHVAC.supplyComponent(airLoopHVAC.supplyOutletNodes().front().handle()));
+    EXPECT_TRUE(airLoopHVAC.supplyComponent(airLoopHVAC.supplyOutletNodes().back().handle()));
+
+    EXPECT_EQ(4u,airLoopHVAC.supplyComponents().size());
+
+    auto supplyOutletNodes = airLoopHVAC.supplyOutletNodes();
+
+    CoilCoolingWater coolingCoil(m);
+    EXPECT_TRUE(coolingCoil.addToNode(supplyOutletNodes[0]));
+    {
+      auto mo = coolingCoil.airOutletModelObject();
+      ASSERT_TRUE(mo);
+      auto node = mo->optionalCast<Node>();
+      ASSERT_TRUE(node);
+      ASSERT_EQ(supplyOutletNodes[0],node.get());
+    }
+
+    CoilHeatingWater heatingCoil(m);
+    EXPECT_TRUE(heatingCoil.addToNode(supplyOutletNodes[1]));
+    {
+      auto mo = heatingCoil.airOutletModelObject();
+      ASSERT_TRUE(mo);
+      auto node = mo->optionalCast<Node>();
+      ASSERT_TRUE(node);
+      ASSERT_EQ(supplyOutletNodes[1],node.get());
+    }
+
+    EXPECT_EQ(8u,airLoopHVAC.supplyComponents().size());
+
+    EXPECT_EQ(5u,airLoopHVAC.demandComponents().size());
+  }
+
+  // Unmake dual duct
+  auto createDualDuctSystem = [](Model & m) {
+    AirLoopHVAC airLoopHVAC(m);
+
+    ConnectorSplitter splitter(m);
+    auto supplyOutletNode = airLoopHVAC.supplyOutletNode();
+
+    splitter.addToNode(supplyOutletNode);
+
+    auto supplyOutletNodes = airLoopHVAC.supplyOutletNodes();
+
+    CoilCoolingWater coolingCoil(m);
+    coolingCoil.addToNode(supplyOutletNodes[0]);
+
+    CoilHeatingWater heatingCoil(m);
+    heatingCoil.addToNode(supplyOutletNodes[1]);
+
+    return airLoopHVAC;
+  };
+
+  {
+    Model m;
+    auto airLoop = createDualDuctSystem(m);
+    EXPECT_EQ(8u,airLoop.supplyComponents().size());
+    EXPECT_TRUE(airLoop.removeSupplySplitter());
+    EXPECT_EQ(2u,airLoop.supplyComponents().size());
+  }
+
+  {
+    Model m;
+    auto airLoop = createDualDuctSystem(m);
+    FanConstantVolume fan(m);
+    auto supplyInletNode = airLoop.supplyInletNode();
+    fan.addToNode(supplyInletNode);
+
+    EXPECT_EQ(10u,airLoop.supplyComponents().size());
+    EXPECT_TRUE(airLoop.removeSupplySplitter());
+    EXPECT_EQ(3u,airLoop.supplyComponents().size());
+  }
+
+  {
+    Model m;
+    AirLoopHVAC airLoop(m);
+    ConnectorSplitter splitter(m);
+    auto supplyOutletNode = airLoop.supplyOutletNode();
+    splitter.addToNode(supplyOutletNode);
+
+    EXPECT_EQ(4u,airLoop.supplyComponents().size());
+    EXPECT_TRUE(airLoop.removeSupplySplitter());
+    EXPECT_EQ(2u,airLoop.supplyComponents().size());
+  }
+
+  {
+    Model m;
+    auto airLoop = createDualDuctSystem(m);
+    FanConstantVolume fan(m);
+    auto supplyInletNode = airLoop.supplyInletNode();
+    fan.addToNode(supplyInletNode);
+    EXPECT_EQ(10u,airLoop.supplyComponents().size());
+
+    EXPECT_FALSE(airLoop.removeSupplySplitter(supplyInletNode));
+
+    auto supplyOutletNodes = airLoop.supplyOutletNodes();
+    EXPECT_TRUE(airLoop.removeSupplySplitter(supplyOutletNodes[0]));
+    EXPECT_EQ(5u,airLoop.supplyComponents().size());
+
+    EXPECT_EQ(supplyOutletNodes[1],airLoop.supplyOutletNode());
+    EXPECT_FALSE(airLoop.supplySplitter());
+  }
+
+  {
+    Model m;
+    auto airLoop = createDualDuctSystem(m);
+    FanConstantVolume fan(m);
+    auto supplyInletNode = airLoop.supplyInletNode();
+    fan.addToNode(supplyInletNode);
+    EXPECT_EQ(10u,airLoop.supplyComponents().size());
+
+    auto supplyOutletNodes = airLoop.supplyOutletNodes();
+    EXPECT_TRUE(airLoop.removeSupplySplitter(supplyOutletNodes[1]));
+    EXPECT_EQ(5u,airLoop.supplyComponents().size());
+
+    EXPECT_EQ(supplyOutletNodes[0],airLoop.supplyOutletNode());
+    EXPECT_FALSE(airLoop.supplySplitter());
+  }
+
+  {
+    Model m;
+    AirLoopHVAC airLoop(m,true);
+    EXPECT_EQ(4u,airLoop.supplyComponents().size());
+    EXPECT_TRUE(airLoop.supplySplitter());
+  }
 }
 

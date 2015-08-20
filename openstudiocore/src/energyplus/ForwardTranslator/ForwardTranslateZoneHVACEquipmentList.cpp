@@ -25,6 +25,8 @@
 #include "../../model/ThermalZone.hpp"
 #include "../../model/RefrigerationAirChiller.hpp"
 #include "../../model/RefrigerationAirChiller_Impl.hpp"
+#include "../../model/ZoneVentilationDesignFlowRate.hpp"
+#include "../../model/ZoneVentilationDesignFlowRate_Impl.hpp"
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/ZoneHVAC_EquipmentList_FieldEnums.hxx>
@@ -57,11 +59,9 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
 
   for( const auto & elem : objects )
   {
-    if (boost::optional<RefrigerationAirChiller> airChiller = elem.optionalCast<RefrigerationAirChiller>())
-    {
+    if (boost::optional<RefrigerationAirChiller> airChiller = elem.optionalCast<RefrigerationAirChiller>()) {
       airChillers.push_back(airChiller.get());
-    }
-    else {
+    } else {
       stdEquipment.push_back(elem);
     }
   }
@@ -123,7 +123,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
 
     boost::optional<IdfObject> _equipment = translateAndMapModelObject(elem);
 
-    if( _equipment )
+    if( _equipment && (! elem.optionalCast<ZoneVentilationDesignFlowRate>()) )
     {
       IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
 
