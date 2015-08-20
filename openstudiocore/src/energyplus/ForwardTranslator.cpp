@@ -579,6 +579,36 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirWallMaterial(airWallMaterial);
       break;
     }
+  case openstudio::IddObjectType::OS_AvailabilityManager_HybridVentilation :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerHybridVentilation>();
+      retVal = translateAvailabilityManagerHybridVentilation(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_OptimumStart :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerOptimumStart>();
+      retVal = translateAvailabilityManagerOptimumStart(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_DifferentialThermostat :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerDifferentialThermostat>();
+      retVal = translateAvailabilityManagerDifferentialThermostat(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_NightVentilation :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerNightVentilation>();
+      retVal = translateAvailabilityManagerNightVentilation(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_NightCycle :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerNightCycle>();
+      retVal = translateAvailabilityManagerNightCycle(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_WindowMaterial_Blind :
     {
       model::Blind blind = modelObject.cast<Blind>();

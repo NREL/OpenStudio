@@ -40,6 +40,7 @@ class AirLoopHVACReturnPlenum;
 class StraightComponent;
 class ThermalZone;
 class SizingSystem;
+class AvailabilityManager;
 
 /** AirLoopHVAC is an interface to the EnergyPlus IDD object named "AirLoopHVAC"
  *
@@ -241,10 +242,12 @@ class MODEL_API AirLoopHVAC : public Loop
   void setAvailabilitySchedule(Schedule & schedule);
 
   /** Configure the system to night cycle
-   *  Valid options are StayOff, CycleOnAny, and CycleOnAnyZoneFansOnly **/
+    * This is a convenience for creating and attaching a new AvailabilityManagerNightCycle.
+    * Valid options are StayOff, CycleOnAny, and CycleOnAnyZoneFansOnly **/
   bool setNightCycleControlType(std::string controlType);
 
-  /** Returns a string indicating if the system is configured to night cycle **/
+  /** Returns a string indicating if the system is configured to night cycle 
+    * If there is no AvailabilityManagerNightCycle this method will return StayOff **/
   std::string nightCycleControlType() const;
 
   // returnAirBypassFlowTemperatureSetpointSchedule is not possible currently in OS, uncomment in future
@@ -261,6 +264,17 @@ class MODEL_API AirLoopHVAC : public Loop
   /** Reset the temperature setpoint schedule for when this system tries to determine the required mass
    *  flow rate through a return air bypass duct. **/
   // void resetReturnAirBypassFlowTemperatureSetpointSchedule();
+
+  /** AvailabilityManager is used to override the system availabilitySchedule() with one of OpenStudio's
+    * supported AvailabilityManager types.
+    * Unlike EnergyPlus which supports layering multiple availability managers on an AvailabilityManagerAssignmentList,
+    * OpenStudio allows only one AvailabilityManager at a time.
+    **/
+  boost::optional<AvailabilityManager> availabilityManager() const;
+
+  bool setAvailabilityManager(const AvailabilityManager& availabilityManager);
+
+  void resetAvailabilityManager();
 
   std::vector<openstudio::IdfObject> remove() override;
 

@@ -7983,37 +7983,39 @@ OS:AirLoopHVAC,
        \note Enter the name of an AirLoopHVAC:ControllerList object.
        \type object-list
        \object-list ControllerLists
-  A4, \field Availability Manager List Name
-       \note Enter the name of an AvailabilityManagerAssignmentList object.
+  A4, \field Availability Schedule
        \type object-list
-       \object-list SystemAvailabilityManagerLists
+        \object-list ScheduleNames
+  A5, \field Availability Manager
+       \type object-list
+       \object-list SystemAvailabilityManagers
   N1, \field Design Supply Air Flow Rate
        \type real
        \autosizable
        \units m3/s
        \default 0
-  A5, \field Branch List Name
+  A6, \field Branch List Name
        \note Name of a BranchList containing all the branches in this air loop
        \type object-list
        \required-field
        \object-list BranchLists
-  A6, \field Connector List Name
+  A7, \field Connector List Name
        \note Name of a ConnectorList containing all the splitters and mixers in the loop
        \type object-list
        \object-list ConnectorLists
-  A7, \field Supply Side Inlet Node Name
+  A8, \field Supply Side Inlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A8, \field Demand Side Outlet Node Name
+  A9, \field Demand Side Outlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A9, \field Demand Side Inlet Node Names
+  A10, \field Demand Side Inlet Node Names
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A10, \field Supply Side Outlet Node Names
+  A11, \field Supply Side Outlet Node Names
        \type object-list
        \required-field
        \object-list ConnectionNames
@@ -9855,6 +9857,7 @@ OS:AvailabilityManager:DifferentialThermostat,
 OS:AvailabilityManager:NightVentilation,
        \memo depending on zone and outdoor conditions overrides fan schedule to do
        \memo precooling with outdoor air
+       \min-fields 9
   A1, \field Handle
        \type handle
        \required-field
@@ -9897,7 +9900,7 @@ OS:AvailabilityManager:NightVentilation,
        \note zone component is.
 
 OS:AvailabilityManager:HybridVentilation,
-       \min-fields 17
+       \min-fields 12
        \memo Depending on zone and outdoor conditions overrides window/door opening controls
        \memo to maximize natural ventilation and turn off an HVAC system when ventilation control
        \memo conditions are met.

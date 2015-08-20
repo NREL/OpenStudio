@@ -36,7 +36,8 @@ class ThermalZone;
 class PlantLoop;
 class SizingSystem;
 class StraightComponent;
-class AvailabilityManagerAssignmentList;
+class AvailabilityManagerScheduled;
+class AvailabilityManager;
 
 namespace detail {
 
@@ -183,9 +184,15 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
   static boost::optional<PlantLoop> plantForAirTerminal( HVACComponent & airTerminal );
 
   static void setPlantForAirTerminal( HVACComponent & airTerminal, PlantLoop & plantLoop );
-  private:
 
-  AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const;
+  boost::optional<AvailabilityManager> availabilityManager() const;
+
+  bool setAvailabilityManager(const AvailabilityManager & availabilityManager);
+
+  void resetAvailabilityManager();
+
+
+  private:
 
   REGISTER_LOGGER("openstudio.model.AirLoopHVAC");
 

@@ -30,7 +30,6 @@
 #include "../model/CurveQuadratic.hpp"
 #include "../model/CurveBiquadratic.hpp"
 #include "../model/AirLoopHVACOutdoorAirSystem.hpp"
-#include "../model/AvailabilityManagerScheduled.hpp"
 #include "../model/ControllerOutdoorAir.hpp"
 #include "../model/CoilHeatingGas.hpp"
 #include "../model/CoilCoolingDXSingleSpeed.hpp"
