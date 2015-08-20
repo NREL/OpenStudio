@@ -69,12 +69,12 @@ class Blind;
 class Building;
 class BoilerHotWater;
 class BoilerSteam;
-class CentralHeatPumpSystem;
+// class CentralHeatPumpSystem;
 class CFactorUndergroundWallConstruction;
 class ChillerAbsorption;
 class ChillerAbsorptionIndirect;
 class ChillerElectricEIR;
-class ChillerHeaterPerformanceElectricEIR;
+// class ChillerHeaterPerformanceElectricEIR;
 class CoilCoolingDXMultiSpeed;
 class CoilCoolingDXSingleSpeed;
 class CoilCoolingDXTwoSpeed;
@@ -456,7 +456,7 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateBuilding( model::Building & modelObject );
 
-  boost::optional<IdfObject> translateCentralHeatPumpSystem( model::CentralHeatPumpSystem & modelObject  );
+  // boost::optional<IdfObject> translateCentralHeatPumpSystem( model::CentralHeatPumpSystem & modelObject  );
 
   boost::optional<IdfObject> translateCFactorUndergroundWallConstruction( model::CFactorUndergroundWallConstruction & modelObject );
 
@@ -466,7 +466,7 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateChillerElectricEIR( model::ChillerElectricEIR & modelObject );
 
-  boost::optional<IdfObject> translateChillerHeaterPerformanceElectricEIR( model::ChillerHeaterPerformanceElectricEIR & modelObject  );
+  // boost::optional<IdfObject> translateChillerHeaterPerformanceElectricEIR( model::ChillerHeaterPerformanceElectricEIR & modelObject  );
 
   boost::optional<IdfObject> translateCoilCoolingDXSingleSpeed( model::CoilCoolingDXSingleSpeed & modelObject );
 
