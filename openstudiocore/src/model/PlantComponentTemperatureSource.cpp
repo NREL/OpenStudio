@@ -177,20 +177,11 @@ PlantComponentTemperatureSource::PlantComponentTemperatureSource(const Model& mo
 {
   OS_ASSERT(getImpl<detail::PlantComponentTemperatureSource_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_PlantComponent_TemperatureSourceFields::InletNode
-  //     OS_PlantComponent_TemperatureSourceFields::OutletNode
   bool ok = true;
-  // ok = setHandle();
+  autosizeDesignVolumeFlowRate();
+  ok = setTemperatureSpecificationType( "Constant" );
   OS_ASSERT(ok);
-  // ok = setInletNode();
-  OS_ASSERT(ok);
-  // ok = setOutletNode();
-  OS_ASSERT(ok);
-  // ok = setDesignVolumeFlowRate();
-  OS_ASSERT(ok);
-  // ok = setTemperatureSpecificationType();
-  OS_ASSERT(ok);
+  setSourceTemperature( 8 );
 }
 
 IddObjectType PlantComponentTemperatureSource::iddObjectType() {

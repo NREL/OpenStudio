@@ -22,6 +22,11 @@
 
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
+#include "ScheduleRuleset.hpp"
+#include "ScheduleDay.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "../utilities/Time/Time.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
 
@@ -156,22 +161,21 @@ LoadProfilePlant::LoadProfilePlant(const Model& model)
 {
   OS_ASSERT(getImpl<detail::LoadProfilePlant_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_LoadProfile_PlantFields::InletNodeName
-  //     OS_LoadProfile_PlantFields::OutletNodeName
-  //     OS_LoadProfile_PlantFields::LoadScheduleName
-  //     OS_LoadProfile_PlantFields::FlowRateFractionScheduleName
+  auto alwaysOn = model.alwaysOnDiscreteSchedule();
+
+  auto scheduleRuleset = ScheduleRuleset(model);
+  auto scheduleDay = scheduleRuleset.defaultDaySchedule();
+  scheduleDay.addValue(Time(4),8000);
+  scheduleDay.addValue(Time(8),6000);
+  scheduleDay.addValue(Time(9),0);
+  scheduleDay.addValue(Time(12),6000);
+  scheduleDay.addValue(Time(24),10000);
+
   bool ok = true;
-  // ok = setHandle();
+  ok = setLoadSchedule( scheduleRuleset );
   OS_ASSERT(ok);
-  // ok = setInletNode();
-  OS_ASSERT(ok);
-  // ok = setOutletNode();
-  OS_ASSERT(ok);
-  // ok = setLoadSchedule();
-  OS_ASSERT(ok);
-  // setPeakFlowRate();
-  // ok = setFlowRateFractionSchedule();
+  setPeakFlowRate( 0.002 );
+  ok = setFlowRateFractionSchedule( alwaysOn );
   OS_ASSERT(ok);
 }
 

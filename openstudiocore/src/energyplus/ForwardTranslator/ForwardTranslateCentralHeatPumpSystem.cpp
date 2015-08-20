@@ -22,11 +22,13 @@
 #include "../../model/CentralHeatPumpSystem.hpp"
 #include "../../model/CentralHeatPumpSystem_Impl.hpp"
 #include "../../model/CentralHeatPumpSystemModule.hpp"
+#include "../../model/ChillerHeaterPerformanceElectricEIR.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/core/Logger.hpp"
-#include <utilities/idd/Pipe_Adiabatic_FieldEnums.hxx>
+#include <utilities/idd/CentralHeatPumpSystem_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -51,7 +53,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCentralHeatPumpSystem( Ce
 
   // AncillaryPower
   if( (d = modelObject.ancillaryPower()) ) {
-    idfObject.setString(CentralHeatPumpSystemFields::AncillaryPower,d.get());
+    idfObject.setDouble(CentralHeatPumpSystemFields::AncillaryPower,d.get());
   }
 
   // AncillaryOperationScheduleName
@@ -102,17 +104,18 @@ boost::optional<IdfObject> ForwardTranslator::translateCentralHeatPumpSystem( Ce
   for ( auto const& module : modules ) {
     IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
 
-    auto const & performanceComponent = module.chillerHeaterModulesPerformanceComponent();
+    auto performanceComponent = module.chillerHeaterModulesPerformanceComponent();
     if( auto _performanceComponent = translateAndMapModelObject(performanceComponent) ) {
-      group.setString(CentralHeatPumpSystemExtensibleFields::ChillerHeaterModulesPerformanceComponentObjectType1, _performanceComponent->iddObject().name());
-      group.setString(CentralHeatPumpSystemExtensibleFields::ChillerHeaterModulesPerformanceComponentName1, _performanceComponent->name().get());
+      group.setString(CentralHeatPumpSystemExtensibleFields::ChillerHeaterModulesPerformanceComponentObjectType, _performanceComponent->iddObject().name());
+      group.setString(CentralHeatPumpSystemExtensibleFields::ChillerHeaterModulesPerformanceComponentName, _performanceComponent->name().get());
     }
-    if( auto schedule = module.chillerHeaterModulesControlSchedule() ) {
-      if( auto _schedule = translateAndMapModelObject(schedule.get()) ) {
-        idfObject.setString(CentralHeatPumpSystemExtensibleFields::ChillerHeaterModulesControlScheduleName1,_schedule->name().get());
+    {
+      auto schedule = module.chillerHeaterModulesControlSchedule();
+      if( auto _schedule = translateAndMapModelObject(schedule) ) {
+        idfObject.setString(CentralHeatPumpSystemExtensibleFields::ChillerHeaterModulesControlScheduleName,_schedule->name().get());
      }
     }
-    group.setInt(CentralHeatPumpSystemExtensibleFields::NumberofChillerHeaterModules1, module.numberofChillerHeaterModules() );
+    group.setInt(CentralHeatPumpSystemExtensibleFields::NumberofChillerHeaterModules, module.numberofChillerHeaterModules() );
   }
 
   return idfObject;

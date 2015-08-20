@@ -24,6 +24,7 @@
 #include "ChillerHeaterPerformanceElectricEIR_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
+#include "Model.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
 
@@ -139,17 +140,15 @@ CentralHeatPumpSystemModule::CentralHeatPumpSystemModule(const Model& model)
 {
   OS_ASSERT(getImpl<detail::CentralHeatPumpSystemModule_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_CentralHeatPumpSystem_ModuleFields::ChillerHeaterModulesPerformanceComponentName
-  //     OS_CentralHeatPumpSystem_ModuleFields::ChillerHeaterModulesControlScheduleName
+  auto alwaysOn = model.alwaysOnDiscreteSchedule();
+  auto const module = ChillerHeaterPerformanceElectricEIR(model);
+
   bool ok = true;
-  // ok = setHandle();
+  ok = setChillerHeaterModulesPerformanceComponent( module );
   OS_ASSERT(ok);
-  // ok = setChillerHeaterModulesPerformanceComponent();
+  ok = setChillerHeaterModulesControlSchedule( alwaysOn );
   OS_ASSERT(ok);
-  // ok = setChillerHeaterModulesControlSchedule();
-  OS_ASSERT(ok);
-  // ok = setNumberofChillerHeaterModules();
+  ok = setNumberofChillerHeaterModules( 1 );
   OS_ASSERT(ok);
 }
 

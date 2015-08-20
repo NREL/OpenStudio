@@ -48,33 +48,17 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalStorageChilledWate
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ThermalStorage_ChilledWater_Stratified, modelObject);
 
   // Tank Volume
-  if( modelObject.isTankVolumeAutosized() )
+  value = modelObject.tankVolume();
+  if( value )
   {
-      idfObject.setString(ThermalStorage_ChilledWater_StratifiedFields::TankVolume, "Autosize");
-  }
-  else
-  {
-    value = modelObject.tankVolume();
-
-    if( value )
-    {
-      idfObject.setDouble(ThermalStorage_ChilledWater_StratifiedFields::TankVolume, value.get());
-    }
+    idfObject.setDouble(ThermalStorage_ChilledWater_StratifiedFields::TankVolume, value.get());
   }
 
   // Tank Height
-  if( modelObject.isTankHeightAutosized() )
+  value = modelObject.tankHeight();
+  if( value )
   {
-      idfObject.setString(ThermalStorage_ChilledWater_StratifiedFields::TankHeight, "Autosize");
-  }
-  else
-  {
-    value = modelObject.tankHeight();
-
-    if( value )
-    {
-      idfObject.setDouble(ThermalStorage_ChilledWater_StratifiedFields::TankHeight, value.get());
-    }
+    idfObject.setDouble(ThermalStorage_ChilledWater_StratifiedFields::TankHeight, value.get());
   }
 
   // Tank Shape
@@ -223,10 +207,10 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalStorageChilledWate
   }
 
   // Use Side Outlet Height
-  value = modelObject.useSideInOutletHeight();
+  value = modelObject.useSideOutletHeight();
   if( value )
   {
-    idfObject.setDouble(ThermalStorage_ChilledWater_StratifiedFields::UseSideInOutletHeight,value.get());
+    idfObject.setDouble(ThermalStorage_ChilledWater_StratifiedFields::UseSideOutletHeight,value.get());
   }
 
   // Use Side Inlet Height

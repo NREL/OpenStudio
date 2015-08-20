@@ -59,7 +59,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantComponentTemperature
 
   // TemperatureSpecificationType
   if( (s = modelObject.temperatureSpecificationType()) ) {
-    idfObject.setDouble(PlantComponent_TemperatureSourceFields::TemperatureSpecificationType,s.get()); 
+    idfObject.setString(PlantComponent_TemperatureSourceFields::TemperatureSpecificationType,s.get()); 
   }
 
   // SourceTemperature

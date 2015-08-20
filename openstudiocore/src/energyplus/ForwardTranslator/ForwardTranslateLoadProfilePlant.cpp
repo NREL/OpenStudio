@@ -55,7 +55,7 @@ boost::optional<IdfObject> ForwardTranslator::translateLoadProfilePlant( LoadPro
   // LoadScheduleName
   {
     auto schedule = modelObject.loadSchedule();
-    if( auto _schedule = translateAndMapModelObject(schedule.get()) ) {
+    if( auto _schedule = translateAndMapModelObject(schedule) ) {
       idfObject.setString(LoadProfile_PlantFields::LoadScheduleName,_schedule->name().get());
     }
   }
@@ -68,7 +68,7 @@ boost::optional<IdfObject> ForwardTranslator::translateLoadProfilePlant( LoadPro
   // FlowRateFractionScheduleName
   {
     auto schedule = modelObject.flowRateFractionSchedule();
-    if( auto _schedule = translateAndMapModelObject(schedule.get()) ) {
+    if( auto _schedule = translateAndMapModelObject(schedule) ) {
       idfObject.setString(LoadProfile_PlantFields::FlowRateFractionScheduleName,_schedule->name().get());
     }
   }

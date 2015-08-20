@@ -43,6 +43,16 @@ class MODEL_API ChillerHeaterPerformanceElectricEIR : public ParentObject {
 
   explicit ChillerHeaterPerformanceElectricEIR(const Model& model);
 
+  explicit ChillerHeaterPerformanceElectricEIR(
+    const Model& model,
+    const Curve& chillerHeaterClgCapFT,
+    const Curve& chillerHeaterClgEIRFT,
+    const Curve& chillerHeaterClgEIRFPLR,
+    const Curve& chillerHeaterHtgCapFT,
+    const Curve& chillerHeaterHtgEIRFT,
+    const Curve& chillerHeaterHtgEIRFPLR
+  );
+
   virtual ~ChillerHeaterPerformanceElectricEIR() {}
 
   //@}

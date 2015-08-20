@@ -121,7 +121,7 @@ namespace detail {
   }
 
   bool CentralHeatPumpSystem_Impl::addModule( const CentralHeatPumpSystemModule & centralHeatPumpSystemModule) {
-    auto const modelObjectList = chillerHeaterModuleList();
+    auto modelObjectList = chillerHeaterModuleList();
     if( modelObjectList ) {
       modelObjectList->addModelObject(centralHeatPumpSystemModule);
     }
@@ -129,14 +129,14 @@ namespace detail {
   }
 
   void CentralHeatPumpSystem_Impl::removeModule( const CentralHeatPumpSystemModule & centralHeatPumpSystemModule) {
-    auto const modelObjectList = chillerHeaterModuleList();
+    auto modelObjectList = chillerHeaterModuleList();
     if( modelObjectList ) {
       modelObjectList->removeModelObject(centralHeatPumpSystemModule);
     }
   }
 
   void CentralHeatPumpSystem_Impl::removeAllModules() {
-    auto const modelObjectList = chillerHeaterModuleList();
+    auto modelObjectList = chillerHeaterModuleList();
     if( modelObjectList ) {
       auto const modelObjects = modelObjectList->modelObjects();
 
@@ -212,31 +212,10 @@ CentralHeatPumpSystem::CentralHeatPumpSystem(const Model& model)
 {
   OS_ASSERT(getImpl<detail::CentralHeatPumpSystem_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_CentralHeatPumpSystemFields::CoolingLoopInletNodeName
-  //     OS_CentralHeatPumpSystemFields::CoolingLoopOutletNodeName
-  //     OS_CentralHeatPumpSystemFields::SourceLoopInletNodeName
-  //     OS_CentralHeatPumpSystemFields::SourceLoopOutletNodeName
-  //     OS_CentralHeatPumpSystemFields::HeatingLoopInletNodeName
-  //     OS_CentralHeatPumpSystemFields::HeatingLoopOutletNodeName
   bool ok = true;
-  // ok = setHandle();
+  ok = setControlMethod( "SmartMixing" );
   OS_ASSERT(ok);
-  // ok = setControlMethod();
-  OS_ASSERT(ok);
-  // ok = setCoolingLoopInletNode();
-  OS_ASSERT(ok);
-  // ok = setCoolingLoopOutletNode();
-  OS_ASSERT(ok);
-  // ok = setSourceLoopInletNode();
-  OS_ASSERT(ok);
-  // ok = setSourceLoopOutletNode();
-  OS_ASSERT(ok);
-  // ok = setHeatingLoopInletNode();
-  OS_ASSERT(ok);
-  // ok = setHeatingLoopOutletNode();
-  OS_ASSERT(ok);
-  // ok = setAncillaryPower();
+  ok = setAncillaryPower( 0.0 );
   OS_ASSERT(ok);
 }
 
@@ -277,20 +256,20 @@ void CentralHeatPumpSystem::resetAncillaryOperationSchedule() {
   getImpl<detail::CentralHeatPumpSystem_Impl>()->resetAncillaryOperationSchedule();
 }
 
-bool CentralHeatPumpSystem_Impl::addModule( const CentralHeatPumpSystemModule & centralHeatPumpSystemModule) {
+bool CentralHeatPumpSystem::addModule( const CentralHeatPumpSystemModule & centralHeatPumpSystemModule) {
   return getImpl<detail::CentralHeatPumpSystem_Impl>()->addModule( centralHeatPumpSystemModule );
 }
 
-void CentralHeatPumpSystem_Impl::removeModule( const CentralHeatPumpSystemModule & centralHeatPumpSystemModule) {
+void CentralHeatPumpSystem::removeModule( const CentralHeatPumpSystemModule & centralHeatPumpSystemModule) {
   getImpl<detail::CentralHeatPumpSystem_Impl>()->removeModule( centralHeatPumpSystemModule );
 }
 
-void CentralHeatPumpSystem_Impl::removeAllModules() {
+void CentralHeatPumpSystem::removeAllModules() {
   getImpl<detail::CentralHeatPumpSystem_Impl>()->removeAllModules();
 }
 
-std::vector<CentralHeatPumpSystemModule> CentralHeatPumpSystem_Impl::modules() const {
-  reutn getImpl<detail::CentralHeatPumpSystem_Impl>()->modules();
+std::vector<CentralHeatPumpSystemModule> CentralHeatPumpSystem::modules() const {
+  return getImpl<detail::CentralHeatPumpSystem_Impl>()->modules();
 }
 
 /// @cond

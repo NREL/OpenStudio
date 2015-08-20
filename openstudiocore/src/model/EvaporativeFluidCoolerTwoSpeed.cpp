@@ -722,42 +722,33 @@ EvaporativeFluidCoolerTwoSpeed::EvaporativeFluidCoolerTwoSpeed(const Model& mode
 {
   OS_ASSERT(getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_EvaporativeFluidCooler_TwoSpeedFields::WaterInletNodeName
-  //     OS_EvaporativeFluidCooler_TwoSpeedFields::WaterOutletNodeName
   bool ok = true;
-  // ok = setHandle();
+  autosizeHighFanSpeedAirFlowRate();
+  autosizeHighFanSpeedFanPower();
+  autosizeLowFanSpeedAirFlowRate();
+  setLowFanSpeedAirFlowRateSizingFactor( 0.5 );
+  autosizeLowFanSpeedFanPower();
+  setLowFanSpeedFanPowerSizingFactor( 0.5 );
+  ok = setDesignSprayWaterFlowRate( 0.002208 );
   OS_ASSERT(ok);
-  // ok = setWaterInletNode();
+  ok = setPerformanceInputMethod( "UFactorTimesAreaAndDesignWaterFlowRate" );
   OS_ASSERT(ok);
-  // ok = setWaterOutletNode();
+  setHeatRejectionCapacityandNominalCapacitySizingRatio( 1.25 );
+  autosizeLowSpeedUserSpecifiedDesignCapacity();
+  autosizeLowSpeedStandardDesignCapacity();
+  setLowSpeedStandardCapacitySizingFactor( 0.5 );
+  autosizeHighFanSpeedUfactorTimesAreaValue();
+  autosizeLowFanSpeedUfactorTimesAreaValue();
+  setLowFanSpeedUFactorTimesAreaSizingFactor( 0.6 );
+  setLowSpeedUserSpecifiedDesignCapacitySizingFactor( 0.5 );
+  ok = setHighSpeedSizingFactor( 1.0 );
   OS_ASSERT(ok);
-  // ok = setHighFanSpeedAirFlowRate();
+  ok = setEvaporationLossMode( "SaturatedExit" );
   OS_ASSERT(ok);
-  // ok = setHighFanSpeedFanPower();
+  setDriftLossPercent( 0.008 );
+  ok = setBlowdownCalculationMode( "ConcentrationRatio" );
   OS_ASSERT(ok);
-  // ok = setLowFanSpeedAirFlowRate();
-  OS_ASSERT(ok);
-  // setLowFanSpeedAirFlowRateSizingFactor();
-  // ok = setLowFanSpeedFanPower();
-  OS_ASSERT(ok);
-  // setLowFanSpeedFanPowerSizingFactor();
-  // ok = setDesignSprayWaterFlowRate();
-  OS_ASSERT(ok);
-  // ok = setPerformanceInputMethod();
-  OS_ASSERT(ok);
-  // setHeatRejectionCapacityandNominalCapacitySizingRatio();
-  // setLowSpeedStandardCapacitySizingFactor();
-  // setLowFanSpeedUFactorTimesAreaSizingFactor();
-  // setLowSpeedUserSpecifiedDesignCapacitySizingFactor();
-  // ok = setHighSpeedSizingFactor();
-  OS_ASSERT(ok);
-  // ok = setEvaporationLossMode();
-  OS_ASSERT(ok);
-  // setDriftLossPercent();
-  // ok = setBlowdownCalculationMode();
-  OS_ASSERT(ok);
-  // ok = setBlowdownConcentrationRatio();
+  ok = setBlowdownConcentrationRatio( 3.0 );
   OS_ASSERT(ok);
 }
 

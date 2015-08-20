@@ -24,6 +24,8 @@
 #include "Schedule_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
+#include "ScheduleRuleset.hpp"
+#include "ScheduleDay.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
 
@@ -31,8 +33,8 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_ThermalStorage_ChilledWater_Stratified_FieldEnums.hxx>
 
+#include "../utilities/time/Time.hpp"
 #include "../utilities/units/Unit.hpp"
-
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
@@ -698,66 +700,52 @@ ThermalStorageChilledWaterStratified::ThermalStorageChilledWaterStratified(const
 {
   OS_ASSERT(getImpl<detail::ThermalStorageChilledWaterStratified_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_ThermalStorage_ChilledWater_StratifiedFields::UseSideInletNodeName
-  //     OS_ThermalStorage_ChilledWater_StratifiedFields::UseSideOutletNodeName
-  //     OS_ThermalStorage_ChilledWater_StratifiedFields::SourceSideInletNodeName
-  //     OS_ThermalStorage_ChilledWater_StratifiedFields::SourceSideOutletNodeName
   bool ok = true;
-  // ok = setHandle();
+  ok = setTankVolume( 50.0 );
   OS_ASSERT(ok);
-  // ok = setTankVolume();
+  ok = setTankHeight( 8.0 );
   OS_ASSERT(ok);
-  // ok = setTankHeight();
+  ok = setTankShape( "VerticalCylinder" );
   OS_ASSERT(ok);
-  // ok = setTankShape();
+  ok = setDeadbandTemperatureDifference( 2.5 );
   OS_ASSERT(ok);
-  // ok = setDeadbandTemperatureDifference();
+  ok = setAmbientTemperatureIndicator( "Schedule" );
   OS_ASSERT(ok);
-  // ok = setAmbientTemperatureIndicator();
+
+  ScheduleRuleset setpoint_schedule_1(model);
+  setpoint_schedule_1.defaultDaySchedule().addValue(Time(0,24,0,0),48.89);
+  setAmbientTemperatureSchedule(setpoint_schedule_1);
+
+  ok = setUseSideHeatTransferEffectiveness( 1.0 );
   OS_ASSERT(ok);
-  // ok = setUseSideInletNode();
+  autocalculateUseSideInletHeight();
+  ok = setUseSideOutletHeight( 0.0 );
   OS_ASSERT(ok);
-  // ok = setUseSideOutletNode();
+  autosizeUseSideDesignFlowRate();
+  ok = setSourceSideHeatTransferEffectiveness( 1.0 );
   OS_ASSERT(ok);
-  // ok = setUseSideHeatTransferEffectiveness();
+  ok = setSourceSideInletHeight( 0.0 );
   OS_ASSERT(ok);
-  // ok = setUseSideInletHeight();
+  autocalculateSourceSideOutletHeight();
+  autosizeSourceSideDesignFlowRate();
+  ok = setTankRecoveryTime( 4.0 );
   OS_ASSERT(ok);
-  // ok = setUseSideOutletHeight();
+  ok = setInletMode( "Fixed" );
   OS_ASSERT(ok);
-  // ok = setUseSideDesignFlowRate();
+  ok = setNumberofNodes( 6 );
   OS_ASSERT(ok);
-  // ok = setSourceSideInletNode();
+  ok = setAdditionalDestratificationConductivity( 0.0 );
   OS_ASSERT(ok);
-  // ok = setSourceSideOutletNode();
-  OS_ASSERT(ok);
-  // ok = setSourceSideHeatTransferEffectiveness();
-  OS_ASSERT(ok);
-  // ok = setSourceSideInletHeight();
-  OS_ASSERT(ok);
-  // ok = setSourceSideOutletHeight();
-  OS_ASSERT(ok);
-  // ok = setSourceSideDesignFlowRate();
-  OS_ASSERT(ok);
-  // ok = setTankRecoveryTime();
-  OS_ASSERT(ok);
-  // ok = setInletMode();
-  OS_ASSERT(ok);
-  // ok = setNumberofNodes();
-  OS_ASSERT(ok);
-  // ok = setAdditionalDestratificationConductivity();
-  OS_ASSERT(ok);
-  // setNode1AdditionalLossCoefficient();
-  // setNode2AdditionalLossCoefficient();
-  // setNode3AdditionalLossCoefficient();
-  // setNode4AdditionalLossCoefficient();
-  // setNode5AdditionalLossCoefficient();
-  // setNode6AdditionalLossCoefficient();
-  // setNode7AdditionalLossCoefficient();
-  // setNode8AdditionalLossCoefficient();
-  // setNode9AdditionalLossCoefficient();
-  // setNode10AdditionalLossCoefficient();
+  setNode1AdditionalLossCoefficient( 0.0 );
+  setNode2AdditionalLossCoefficient( 0.0 );
+  setNode3AdditionalLossCoefficient( 0.0 );
+  setNode4AdditionalLossCoefficient( 0.0 );
+  setNode5AdditionalLossCoefficient( 0.0 );
+  setNode6AdditionalLossCoefficient( 0.0 );
+  setNode7AdditionalLossCoefficient( 0.0 );
+  setNode8AdditionalLossCoefficient( 0.0 );
+  setNode9AdditionalLossCoefficient( 0.0 );
+  setNode10AdditionalLossCoefficient( 0.0 );
 }
 
 IddObjectType ThermalStorageChilledWaterStratified::iddObjectType() {

@@ -22,6 +22,8 @@
 
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
+#include "CurveBiquadratic.hpp"
+#include "CurveCubic.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -484,59 +486,188 @@ ChillerHeaterPerformanceElectricEIR::ChillerHeaterPerformanceElectricEIR(const M
 {
   OS_ASSERT(getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_ChillerHeaterPerformance_Electric_EIRFields::CoolingModeCoolingCapacityFunctionofTemperatureCurveName
-  //     OS_ChillerHeaterPerformance_Electric_EIRFields::CoolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName
-  //     OS_ChillerHeaterPerformance_Electric_EIRFields::CoolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName
-  //     OS_ChillerHeaterPerformance_Electric_EIRFields::HeatingModeCoolingCapacityFunctionofTemperatureCurveName
-  //     OS_ChillerHeaterPerformance_Electric_EIRFields::HeatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName
-  //     OS_ChillerHeaterPerformance_Electric_EIRFields::HeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName
+  CurveBiquadratic chillerHeaterClgCapFT(model);
+  chillerHeaterClgCapFT.setCoefficient1Constant(0.950829);
+  chillerHeaterClgCapFT.setCoefficient2x(3.419327E-02);
+  chillerHeaterClgCapFT.setCoefficient3xPOW2(2.66642E-04);
+  chillerHeaterClgCapFT.setCoefficient4y(-1.733397E-03);
+  chillerHeaterClgCapFT.setCoefficient5yPOW2(-1.762417E-04);
+  chillerHeaterClgCapFT.setCoefficient6xTIMESY(-3.69198E-05);
+  chillerHeaterClgCapFT.setMinimumValueofx(4.44);
+  chillerHeaterClgCapFT.setMaximumValueofx(12.78);
+  chillerHeaterClgCapFT.setMinimumValueofy(12.78);
+  chillerHeaterClgCapFT.setMaximumValueofy(29.44);
+  chillerHeaterClgCapFT.setInputUnitTypeforX("Temperature");
+  chillerHeaterClgCapFT.setInputUnitTypeforY("Temperature");
+  chillerHeaterClgCapFT.setOutputUnitType("Dimensionless");
+
+  CurveBiquadratic chillerHeaterClgEIRFT(model);
+  chillerHeaterClgEIRFT.setCoefficient1Constant(0.7362431);
+  chillerHeaterClgEIRFT.setCoefficient2x(2.136491E-02);
+  chillerHeaterClgEIRFT.setCoefficient3xPOW2(3.638909E-04);
+  chillerHeaterClgEIRFT.setCoefficient4y(-4.284947E-03);
+  chillerHeaterClgEIRFT.setCoefficient5yPOW2(3.389817E-04);
+  chillerHeaterClgEIRFT.setCoefficient6xTIMESY(-3.632396E-04);
+  chillerHeaterClgEIRFT.setMinimumValueofx(4.44);
+  chillerHeaterClgEIRFT.setMaximumValueofx(12.78);
+  chillerHeaterClgEIRFT.setMinimumValueofy(12.78);
+  chillerHeaterClgEIRFT.setMaximumValueofy(29.44);
+  chillerHeaterClgEIRFT.setInputUnitTypeforX("Temperature");
+  chillerHeaterClgEIRFT.setInputUnitTypeforY("Temperature");
+  chillerHeaterClgEIRFT.setOutputUnitType("Dimensionless");
+
+  CurveBiquadratic chillerHeaterHtgCapFT(model);
+  chillerHeaterHtgCapFT.setCoefficient1Constant(0.9415266);
+  chillerHeaterHtgCapFT.setCoefficient2x(5.527431E-02);
+  chillerHeaterHtgCapFT.setCoefficient3xPOW2(3.573558E-04);
+  chillerHeaterHtgCapFT.setCoefficient4y(1.258391E-03);
+  chillerHeaterHtgCapFT.setCoefficient5yPOW2(-6.420546E-05);
+  chillerHeaterHtgCapFT.setCoefficient6xTIMESY(-5.350989E-04);
+  chillerHeaterHtgCapFT.setMinimumValueofx(4.44);
+  chillerHeaterHtgCapFT.setMaximumValueofx(15.56);
+  chillerHeaterHtgCapFT.setMinimumValueofy(25);
+  chillerHeaterHtgCapFT.setMaximumValueofy(57.22);
+  chillerHeaterHtgCapFT.setInputUnitTypeforX("Temperature");
+  chillerHeaterHtgCapFT.setInputUnitTypeforY("Temperature");
+  chillerHeaterHtgCapFT.setOutputUnitType("Dimensionless");
+
+  CurveBiquadratic chillerHeaterHtgEIRFT(model);
+  chillerHeaterHtgEIRFT.setCoefficient1Constant(0.2286246);
+  chillerHeaterHtgEIRFT.setCoefficient2x(2.498714E-02);
+  chillerHeaterHtgEIRFT.setCoefficient3xPOW2(-1.267106E-05);
+  chillerHeaterHtgEIRFT.setCoefficient4y(9.327184E-03);
+  chillerHeaterHtgEIRFT.setCoefficient5yPOW2(5.892037E-05);
+  chillerHeaterHtgEIRFT.setCoefficient6xTIMESY(-3.268512E-04);
+  chillerHeaterHtgEIRFT.setMinimumValueofx(4.44);
+  chillerHeaterHtgEIRFT.setMaximumValueofx(15.56);
+  chillerHeaterHtgEIRFT.setMinimumValueofy(25);
+  chillerHeaterHtgEIRFT.setMaximumValueofy(57.22);
+  chillerHeaterHtgEIRFT.setInputUnitTypeforX("Temperature");
+  chillerHeaterHtgEIRFT.setInputUnitTypeforY("Temperature");
+  chillerHeaterHtgEIRFT.setOutputUnitType("Dimensionless");
+
+  CurveCubic chillerHeaterClgEIRFPLR(model);
+  chillerHeaterClgEIRFPLR.setCoefficient1Constant(0.0);
+  chillerHeaterClgEIRFPLR.setCoefficient2x(1.22895);
+  chillerHeaterClgEIRFPLR.setCoefficient3xPOW2(-0.751383);
+  chillerHeaterClgEIRFPLR.setCoefficient4xPOW3(0.517396);
+  chillerHeaterClgEIRFPLR.setMinimumValueofx(0.2);
+  chillerHeaterClgEIRFPLR.setMaximumValueofx(1);
+
+  CurveCubic chillerHeaterHtgEIRFPLR(model);
+  chillerHeaterHtgEIRFPLR.setCoefficient1Constant(0.0);
+  chillerHeaterHtgEIRFPLR.setCoefficient2x(1.12853);
+  chillerHeaterHtgEIRFPLR.setCoefficient3xPOW2(-0.0264962);
+  chillerHeaterHtgEIRFPLR.setCoefficient4xPOW3(-0.103811);
+  chillerHeaterHtgEIRFPLR.setMinimumValueofx(0.3);
+  chillerHeaterHtgEIRFPLR.setMaximumValueofx(1);
+
   bool ok = true;
-  // ok = setHandle();
+  autosizeReferenceCoolingModeEvaporatorCapacity();
+  autosizeDesignCondenserWaterFlowRate();
+  autosizeDesignChilledWaterFlowRate();
+  ok = setReferenceCoolingModeCOP( 1.5 );
   OS_ASSERT(ok);
-  // ok = setReferenceCoolingModeEvaporatorCapacity();
+  setReferenceCoolingModeLeavingChilledWaterTemperature( 6.67 );
+  setReferenceCoolingModeEnteringCondenserFluidTemperature( 29.4 );
+  setReferenceCoolingModeLeavingCondenserWaterTemperature( 35.0 );
+  setReferenceHeatingModeCoolingCapacityRatio( 0.74 );
+  ok = setReferenceHeatingModeCoolingPowerInputRatio( 1.38 );
   OS_ASSERT(ok);
-  // ok = setReferenceCoolingModeCOP();
+  setReferenceHeatingModeLeavingChilledWaterTemperature( 6.67 );
+  setReferenceHeatingModeLeavingCondenserWaterTemperature( 60 );
+  setReferenceHeatingModeEnteringCondenserFluidTemperature( 29.44 );
+  setHeatingModeEnteringChilledWaterTemperatureLowLimit( 5 );
+  ok = setChilledWaterFlowModeType( "VariableFlow" );
   OS_ASSERT(ok);
-  // setReferenceCoolingModeLeavingChilledWaterTemperature();
-  // setReferenceCoolingModeEnteringCondenserFluidTemperature();
-  // setReferenceCoolingModeLeavingCondenserWaterTemperature();
-  // setReferenceHeatingModeCoolingCapacityRatio();
-  // ok = setReferenceHeatingModeCoolingPowerInputRatio();
+  ok = setDesignHotWaterFlowRate( 0.0003525 );
   OS_ASSERT(ok);
-  // setReferenceHeatingModeLeavingChilledWaterTemperature();
-  // setReferenceHeatingModeLeavingCondenserWaterTemperature();
-  // setReferenceHeatingModeEnteringCondenserFluidTemperature();
-  // setHeatingModeEnteringChilledWaterTemperatureLowLimit();
-  // ok = setChilledWaterFlowModeType();
+  ok = setCompressorMotorEfficiency( 1 );
   OS_ASSERT(ok);
-  // ok = setDesignHotWaterFlowRate();
+  ok = setCondenserType( "WaterCooled" );
   OS_ASSERT(ok);
-  // ok = setCompressorMotorEfficiency();
+  ok = setCoolingModeTemperatureCurveCondenserWaterIndependentVariable( "EnteringCondenser" );
   OS_ASSERT(ok);
-  // ok = setCondenserType();
+  ok = setCoolingModeCoolingCapacityFunctionofTemperatureCurve( chillerHeaterClgCapFT );
   OS_ASSERT(ok);
-  // ok = setCoolingModeTemperatureCurveCondenserWaterIndependentVariable();
+  ok = setCoolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve( chillerHeaterClgEIRFT );
   OS_ASSERT(ok);
-  // ok = setCoolingModeCoolingCapacityFunctionofTemperatureCurve();
+  ok = setCoolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve( chillerHeaterClgEIRFPLR );
   OS_ASSERT(ok);
-  // ok = setCoolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve();
+  ok = setCoolingModeCoolingCapacityOptimumPartLoadRatio( 1 );
   OS_ASSERT(ok);
-  // ok = setCoolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve();
+  ok = setHeatingModeTemperatureCurveCondenserWaterIndependentVariable( "LeavingCondenser" );
   OS_ASSERT(ok);
-  // ok = setCoolingModeCoolingCapacityOptimumPartLoadRatio();
+  ok = setHeatingModeCoolingCapacityFunctionofTemperatureCurve( chillerHeaterHtgCapFT );
   OS_ASSERT(ok);
-  // ok = setHeatingModeTemperatureCurveCondenserWaterIndependentVariable();
+  ok = setHeatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve( chillerHeaterHtgEIRFT );
   OS_ASSERT(ok);
-  // ok = setHeatingModeCoolingCapacityFunctionofTemperatureCurve();
+  ok = setHeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve( chillerHeaterHtgEIRFPLR );
   OS_ASSERT(ok);
-  // ok = setHeatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve();
+  ok = setHeatingModeCoolingCapacityOptimumPartLoadRatio( 1 );
   OS_ASSERT(ok);
-  // ok = setHeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve();
+  ok = setSizingFactor( 1 );
   OS_ASSERT(ok);
-  // ok = setHeatingModeCoolingCapacityOptimumPartLoadRatio();
+}
+
+ChillerHeaterPerformanceElectricEIR::ChillerHeaterPerformanceElectricEIR(
+  const Model& model,
+  const Curve& chillerHeaterClgCapFT,
+  const Curve& chillerHeaterClgEIRFT,
+  const Curve& chillerHeaterClgEIRFPLR,
+  const Curve& chillerHeaterHtgCapFT,
+  const Curve& chillerHeaterHtgEIRFT,
+  const Curve& chillerHeaterHtgEIRFPLR
+  )
+  : ParentObject(ChillerHeaterPerformanceElectricEIR::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::ChillerHeaterPerformanceElectricEIR_Impl>());
+
+  bool ok = true;
+  autosizeReferenceCoolingModeEvaporatorCapacity();
+  autosizeDesignCondenserWaterFlowRate();
+  autosizeDesignChilledWaterFlowRate();
+  ok = setReferenceCoolingModeCOP( 1.5 );
   OS_ASSERT(ok);
-  // ok = setSizingFactor();
+  setReferenceCoolingModeLeavingChilledWaterTemperature( 6.67 );
+  setReferenceCoolingModeEnteringCondenserFluidTemperature( 29.4 );
+  setReferenceCoolingModeLeavingCondenserWaterTemperature( 35.0 );
+  setReferenceHeatingModeCoolingCapacityRatio( 0.74 );
+  ok = setReferenceHeatingModeCoolingPowerInputRatio( 1.38 );
+  OS_ASSERT(ok);
+  setReferenceHeatingModeLeavingChilledWaterTemperature( 6.67 );
+  setReferenceHeatingModeLeavingCondenserWaterTemperature( 60 );
+  setReferenceHeatingModeEnteringCondenserFluidTemperature( 29.44 );
+  setHeatingModeEnteringChilledWaterTemperatureLowLimit( 5 );
+  ok = setChilledWaterFlowModeType( "VariableFlow" );
+  OS_ASSERT(ok);
+  ok = setDesignHotWaterFlowRate( 0.0003525 );
+  OS_ASSERT(ok);
+  ok = setCompressorMotorEfficiency( 1 );
+  OS_ASSERT(ok);
+  ok = setCondenserType( "WaterCooled" );
+  OS_ASSERT(ok);
+  ok = setCoolingModeTemperatureCurveCondenserWaterIndependentVariable( "EnteringCondenser" );
+  OS_ASSERT(ok);
+  ok = setCoolingModeCoolingCapacityFunctionofTemperatureCurve( chillerHeaterClgCapFT );
+  OS_ASSERT(ok);
+  ok = setCoolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve( chillerHeaterClgEIRFT );
+  OS_ASSERT(ok);
+  ok = setCoolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve( chillerHeaterClgEIRFPLR );
+  OS_ASSERT(ok);
+  ok = setCoolingModeCoolingCapacityOptimumPartLoadRatio( 1 );
+  OS_ASSERT(ok);
+  ok = setHeatingModeTemperatureCurveCondenserWaterIndependentVariable( "LeavingCondenser" );
+  OS_ASSERT(ok);
+  ok = setHeatingModeCoolingCapacityFunctionofTemperatureCurve( chillerHeaterHtgCapFT );
+  OS_ASSERT(ok);
+  ok = setHeatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve( chillerHeaterHtgEIRFT );
+  OS_ASSERT(ok);
+  ok = setHeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve( chillerHeaterHtgEIRFPLR );
+  OS_ASSERT(ok);
+  ok = setHeatingModeCoolingCapacityOptimumPartLoadRatio( 1 );
+  OS_ASSERT(ok);
+  ok = setSizingFactor( 1 );
   OS_ASSERT(ok);
 }
 

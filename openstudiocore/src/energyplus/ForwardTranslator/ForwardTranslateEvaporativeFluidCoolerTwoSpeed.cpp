@@ -145,11 +145,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerTwo
   }
 
   // LowSpeedStandardCapacitySizingFactor
-  if( modelObject.isLowSpeedStandardCapacitySizingFactorAutosized() )
-  {
-    idfObject.setString(openstudio::EvaporativeFluidCooler_TwoSpeedFields::LowSpeedStandardCapacitySizingFactor,"Autocalculate");
-  } 
-  else if( (d = modelObject.lowSpeedStandardCapacitySizingFactor()) )
+  if( (d = modelObject.lowSpeedStandardCapacitySizingFactor()) )
   {
     idfObject.setDouble(openstudio::EvaporativeFluidCooler_TwoSpeedFields::LowSpeedStandardCapacitySizingFactor,d.get());
   }
