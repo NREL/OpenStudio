@@ -562,8 +562,11 @@ void MeasureManager::updateMeasuresLists(bool updateUserMeasures)
   for (auto & measure : openstudioMeasures)
   {
     // installed measures should not change
-    // DLM: TODO!
-    //OS_ASSERT(!checkForUpdates(measure));
+    // DLM: However, we have found that developers are not good about updating these
+    if (checkForUpdates(measure)){
+      // save may not be able to succeed if measure is in Program Files
+      measure.save();
+    }
 
     auto it = m_openstudioMeasures.find(measure.uuid());
     if (it != m_openstudioMeasures.end()){
