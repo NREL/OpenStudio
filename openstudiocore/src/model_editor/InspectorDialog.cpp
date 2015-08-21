@@ -670,7 +670,7 @@ void InspectorDialog::init(InspectorDialogClient client)
       m_disableAddTypes.insert(IddObjectType::OS_IlluminanceMap);
       m_disableAddTypes.insert(IddObjectType::OS_Luminaire);
       m_disableAddTypes.insert(IddObjectType::OS_Glare_Sensor);
-	    //m_disableAddTypes.insert(IddObjectType::OS_ThermalZone); // DLM: continue to allow this for now
+      m_disableAddTypes.insert(IddObjectType::OS_ThermalZone);
 
       // DISABLE COPY
 
@@ -688,7 +688,7 @@ void InspectorDialog::init(InspectorDialogClient client)
       m_disableCopyTypes.insert(IddObjectType::OS_IlluminanceMap);
       m_disableCopyTypes.insert(IddObjectType::OS_Luminaire);
       m_disableCopyTypes.insert(IddObjectType::OS_Glare_Sensor);
-	    //m_disableCopyTypes.insert(IddObjectType::OS_ThermalZone); // DLM: continue to allow this for now
+      m_disableCopyTypes.insert(IddObjectType::OS_ThermalZone);
 
       // DISABLE REMOVE
 
@@ -707,7 +707,7 @@ void InspectorDialog::init(InspectorDialogClient client)
       m_disableRemoveTypes.insert(IddObjectType::OS_IlluminanceMap);
       m_disableRemoveTypes.insert(IddObjectType::OS_Luminaire);
       m_disableRemoveTypes.insert(IddObjectType::OS_Glare_Sensor);
-	    //m_disableRemoveTypes.insert(IddObjectType::OS_ThermalZone); // DLM: continue to allow this for now
+      //m_disableRemoveTypes.insert(IddObjectType::OS_ThermalZone); // DLM: continue to allow this for now
 
       // DISABLE PURGE
 

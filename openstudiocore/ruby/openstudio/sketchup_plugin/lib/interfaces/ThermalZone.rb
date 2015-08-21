@@ -62,21 +62,8 @@ module OpenStudio
     def check_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       
+      # minimal additional initialization 
       if (super)
-        
-        # check zone air node
-        if @model_object.connectedObject(@model_object.zoneAirPort).empty?
-          watcher_enabled = disable_watcher
-          model_watcher_enabled = @model_interface.model_watcher.disable
-          
-          node = OpenStudio::Model::Node.new(@model_interface.openstudio_model)
-          @model_interface.openstudio_model.connect(@model_object, @model_object.zoneAirPort, node, node.inletPort)
-          
-          @model_interface.model_watcher.enable if model_watcher_enabled
-          enable_watcher if watcher_enabled
-        end 
-        
-        # check zone has a color
         if @model_object.renderingColor.empty?
           watcher_enabled = disable_watcher
           model_watcher_enabled = @model_interface.model_watcher.disable
@@ -84,50 +71,149 @@ module OpenStudio
           
           rendering_color = OpenStudio::Model::RenderingColor.new(@model_interface.openstudio_model)
           @model_object.setRenderingColor(rendering_color)
-          @model_interface.model_watcher.onObjectAdd(rendering_color)
+          if @model_object.renderingColor.empty? 
+            rendering_color.remove
+          else
+            @model_interface.model_watcher.onObjectAdd(rendering_color)
+          end
           
           @model_interface.materials_interface.add_observers if had_observers
           @model_interface.model_watcher.enable if model_watcher_enabled
           enable_watcher if watcher_enabled
-        end      
-        
-        # check ZoneAirInletPortList
-        if @model_object.isEmpty(9) # ZoneAirInletPortList
-          watcher_enabled = disable_watcher
-          portlist = OpenStudio::Model::PortList.new(@model_object)
-          @model_object.setPointer(9, portlist.handle)
-          enable_watcher if watcher_enabled
-        end
-        
-        # check ZoneAirExhaustPortList
-        if @model_object.isEmpty(10) # ZoneAirExhaustPortList
-          watcher_enabled = disable_watcher
-          portlist = OpenStudio::Model::PortList.new(@model_object)
-          @model_object.setPointer(10, portlist.handle)
-          enable_watcher if watcher_enabled
-        end
-        
-        # check for SizingZone object
-        if @model_object.getSources("OS_Sizing_Zone".to_IddObjectType).empty? 
-          OpenStudio::Model::SizingZone.new(@model_object.model, @model_object)
-        end
-        
-        # check that useIdealAirLoads is set
-        if @model_object.isEmpty(20) # useIdealAirLoads
-          watcher_enabled = disable_watcher
-          @model_object.setUseIdealAirLoads(false)
-          enable_watcher if watcher_enabled
-        end
-        
-        # check for ZoneHVACEquipmentList object
-        if @model_object.getSources("OS_ZoneHVAC_EquipmentList".to_IddObjectType).empty? 
-          OpenStudio::Model::ZoneHVACEquipmentList.new(@model_object)
-        end
-        
+        end   
+
         return(true)
-      else
-        return(false)
       end
+      
+      return(false)
+      
+      # # extended initialization
+      # if (super)
+        
+        # # DLM: below is ThermalZone initialization code that can be problematic as seen in issues #1667, #1763, #1755
+      
+        # error = nil
+        
+        # # check that this object is accessible in the workspace
+        # object = @model_interface.openstudio_model.getObject(@model_object.handle)
+        # if object.empty?
+          # error = 'Cannot retrieve ThermalZone from model by handle'
+        # end
+        
+        # # check for SizingZone object
+        # if error.nil? && @model_object.getSources("OS_Sizing_Zone".to_IddObjectType).empty? 
+          # model_watcher_enabled = @model_interface.model_watcher.disable
+          
+          # sizing_zone = OpenStudio::Model::SizingZone.new(@model_object.model, @model_object)
+          # if sizing_zone.isEmpty(1)
+            # error = 'Incomplete SizingZone object created'
+            # sizing_zone.remove
+          # end
+          
+          # @model_interface.model_watcher.enable if model_watcher_enabled
+        # end
+        
+        # # check for ZoneHVACEquipmentList object
+        # if error.nil? && @model_object.getSources("OS_ZoneHVAC_EquipmentList".to_IddObjectType).empty? 
+          # model_watcher_enabled = @model_interface.model_watcher.disable
+          
+          # zonehvac_equipmentlist = OpenStudio::Model::ZoneHVACEquipmentList.new(@model_object)
+          # if zonehvac_equipmentlist.isEmpty(2)
+            # error = 'Incomplete ZoneHVACEquipmentList object created'
+            # zonehvac_equipmentlist.remove
+          # end
+          
+          # @model_interface.model_watcher.enable if model_watcher_enabled
+        # end
+        
+        # # check ZoneAirInletPortList
+        # if error.nil? && @model_object.isEmpty(9) # ZoneAirInletPortList
+          # watcher_enabled = disable_watcher
+          # model_watcher_enabled = @model_interface.model_watcher.disable
+          
+          # portlist = OpenStudio::Model::PortList.new(@model_object)
+          # test = @model_object.setPointer(9, portlist.handle)
+          # if !test
+            # error = 'Could not set ZoneAirInletPortList'
+            # portlist.remove
+          # end
+          
+          # @model_interface.model_watcher.enable if model_watcher_enabled
+          # enable_watcher if watcher_enabled
+        # end
+        
+        # # check ZoneAirExhaustPortList
+        # if error.nil? && @model_object.isEmpty(10) # ZoneAirExhaustPortList
+          # watcher_enabled = disable_watcher
+          # model_watcher_enabled = @model_interface.model_watcher.disable
+          
+          # portlist = OpenStudio::Model::PortList.new(@model_object)
+          # test = @model_object.setPointer(10, portlist.handle)
+          # if !test
+            # error = 'Could not set ZoneAirExhaustPortList'
+            # portlist.remove
+          # end
+          
+          # @model_interface.model_watcher.enable if model_watcher_enabled
+          # enable_watcher if watcher_enabled
+        # end
+        
+        # # check that useIdealAirLoads is set
+        # if error.nil? && @model_object.isEmpty(20) # useIdealAirLoads
+          # watcher_enabled = disable_watcher
+          
+          # @model_object.setUseIdealAirLoads(false)
+          # if @model_object.isEmpty(20)
+            # error = 'Could not set useIdealAirLoads'
+          # end
+          
+          # enable_watcher if watcher_enabled
+        # end
+        
+        # # check zone air node
+        # if error.nil? && @model_object.connectedObject(@model_object.zoneAirPort).empty?
+          # watcher_enabled = disable_watcher
+          # model_watcher_enabled = @model_interface.model_watcher.disable
+          
+          # node = OpenStudio::Model::Node.new(@model_interface.openstudio_model)
+          # @model_interface.openstudio_model.connect(@model_object, @model_object.zoneAirPort, node, node.inletPort)
+          # # DLM: any way to test if this worked?
+          
+          # @model_interface.model_watcher.enable if model_watcher_enabled
+          # enable_watcher if watcher_enabled
+        # end 
+        
+        # # check zone has a color
+        # if error.nil? && @model_object.renderingColor.empty?
+          # watcher_enabled = disable_watcher
+          # model_watcher_enabled = @model_interface.model_watcher.disable
+          # had_observers = @model_interface.materials_interface.remove_observers
+          
+          # rendering_color = OpenStudio::Model::RenderingColor.new(@model_interface.openstudio_model)
+          # @model_object.setRenderingColor(rendering_color)
+          # if @model_object.renderingColor.empty? 
+            # error = 'Could not set RenderingColor'
+            # rendering_color.remove
+          # else
+            # @model_interface.model_watcher.onObjectAdd(rendering_color)
+          # end
+          
+          # @model_interface.materials_interface.add_observers if had_observers
+          # @model_interface.model_watcher.enable if model_watcher_enabled
+          # enable_watcher if watcher_enabled
+        # end      
+        
+        # if error
+          # msg  = "ThermalZone initialization resulted in the following error:\n"
+          # msg += "'#{error}'\n\n"
+          # msg += "It is advised that you save a backup of your current OpenStudio model and restart SketchUp."
+          # UI.messagebox(msg)
+        # end
+               
+        # return(true)
+      # else
+        # return(false)
+      # end
     end
     
     # Updates the ModelObject with new information from the SketchUp entity.

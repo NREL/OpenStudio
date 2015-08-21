@@ -143,6 +143,12 @@ set(${target_name}_src
   BuildingStory.hpp
   BuildingStory_Impl.hpp
   BuildingStory.cpp
+##  CentralHeatPumpSystem.hpp
+##  CentralHeatPumpSystem_Impl.hpp
+##  CentralHeatPumpSystem.cpp
+##  CentralHeatPumpSystemModule.hpp
+##  CentralHeatPumpSystemModule_Impl.hpp
+##  CentralHeatPumpSystemModule.cpp
   CFactorUndergroundWallConstruction.hpp
   CFactorUndergroundWallConstruction_Impl.hpp
   CFactorUndergroundWallConstruction.cpp
@@ -155,6 +161,9 @@ set(${target_name}_src
   ChillerElectricEIR.hpp
   ChillerElectricEIR_Impl.hpp
   ChillerElectricEIR.cpp
+##  ChillerHeaterPerformanceElectricEIR.hpp
+##  ChillerHeaterPerformanceElectricEIR_Impl.hpp
+##  ChillerHeaterPerformanceElectricEIR.cpp
   ClimateZones.hpp
   ClimateZones_Impl.hpp
   ClimateZones.cpp
@@ -434,6 +443,9 @@ set(${target_name}_src
   EvaporativeFluidCoolerSingleSpeed.hpp
   EvaporativeFluidCoolerSingleSpeed_Impl.hpp
   EvaporativeFluidCoolerSingleSpeed.cpp
+  EvaporativeFluidCoolerTwoSpeed.hpp
+  EvaporativeFluidCoolerTwoSpeed_Impl.hpp
+  EvaporativeFluidCoolerTwoSpeed.cpp
   ExteriorLights.hpp
   ExteriorLights_Impl.hpp
   ExteriorLights.cpp
@@ -574,6 +586,9 @@ set(${target_name}_src
   LightsDefinition.hpp
   LightsDefinition_Impl.hpp
   LightsDefinition.cpp
+  LoadProfilePlant.hpp
+  LoadProfilePlant_Impl.hpp
+  LoadProfilePlant.cpp
   Loop.hpp
   Loop_Impl.hpp
   Loop.cpp
@@ -643,6 +658,9 @@ set(${target_name}_src
   PlanarSurfaceGroup.hpp
   PlanarSurfaceGroup_Impl.hpp
   PlanarSurfaceGroup.cpp
+  PlantComponentTemperatureSource.hpp
+  PlantComponentTemperatureSource_Impl.hpp
+  PlantComponentTemperatureSource.cpp
   PlantLoop.hpp
   PlantLoop_Impl.hpp
   PlantLoop.cpp
@@ -1003,6 +1021,9 @@ set(${target_name}_src
   TableMultiVariableLookup.hpp
   TableMultiVariableLookup_Impl.hpp
   TableMultiVariableLookup.cpp
+  ThermalStorageChilledWaterStratified.hpp
+  ThermalStorageChilledWaterStratified_Impl.hpp
+  ThermalStorageChilledWaterStratified.cpp
   ThermalStorageIceDetailed.hpp
   ThermalStorageIceDetailed_Impl.hpp
   ThermalStorageIceDetailed.cpp
@@ -1432,9 +1453,12 @@ set(${target_name}_test_src
   test/BoilerSteam_GTest.cpp
   test/BuildingStory_GTest.cpp
   test/Building_GTest.cpp
+##  test/CentralHeatPumpSystem_GTest.cpp
+##  test/CentralHeatPumpSystemModule_GTest.cpp
   test/ChillerAbsorption_GTest.cpp
   test/ChillerAbsorptionIndirect_GTest.cpp
   test/ChillerElectricEIR_GTest.cpp
+##  test/ChillerHeaterPerformanceElectricEIR_GTest.cpp
   test/ClimateZones_GTest.cpp
   test/CoilCoolingCooledBeam_GTest.cpp
   test/CoilCoolingDXSingleSpeed_GTest.cpp
@@ -1495,6 +1519,7 @@ set(${target_name}_test_src
   test/EvaporativeCoolerDirectResearchSpecial_GTest.cpp
   test/EvaporativeCoolerIndirectResearchSpecial_GTest.cpp
   test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
+  test/EvaporativeFluidCoolerTwoSpeed_GTest.cpp
   test/Facility_GTest.cpp
   test/FanVariableVolume_GTest.cpp
   test/FanConstantVolume_GTest.cpp
@@ -1519,6 +1544,7 @@ set(${target_name}_test_src
   test/InteriorPartitionSurfaceGroup_GTest.cpp
   test/InteriorPartitionSurface_GTest.cpp
   test/InternalMass_GTest.cpp
+##  test/LoadProfilePlant_GTest.cpp
   test/LifeCycleCostParameters_GTest.cpp
   test/LightingDesignDay_GTest.cpp
   test/LightingSimulationControl_GTest.cpp
@@ -1547,6 +1573,7 @@ set(${target_name}_test_src
   test/PipeOutdoor_GTest.cpp
   test/PlanarSurface_GTest.cpp
   test/PlantLoop_GTest.cpp
+##  test/PlantComponentTemperatureSource_GTest.cpp
   test/PlantEquipmentOperationCoolingLoad_GTest.cpp
   test/PlantEquipmentOperationHeatingLoad_GTest.cpp
   test/Plenums_GTest.cpp
@@ -1632,6 +1659,7 @@ set(${target_name}_test_src
   test/TableMultiVariableLookup_GTest.cpp
   test/ThermalZone_GTest.cpp
   test/ThermalStorageIceDetailed_GTest.cpp
+  test/ThermalStorageChilledWaterStratified_GTest.cpp
   test/TemperingValve_GTest.cpp
   test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp

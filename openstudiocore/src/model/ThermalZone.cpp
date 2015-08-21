@@ -1700,7 +1700,9 @@ namespace detail {
 
     std::vector<SizingZone> sizingObjects;
     
-    sizingObjects = model().getConcreteModelObjects<SizingZone>();
+    //sizingObjects = model().getConcreteModelObjects<SizingZone>();
+
+    sizingObjects = getObject<ModelObject>().getModelObjectSources<SizingZone>(SizingZone::iddObjectType());
 
     for( const auto & sizingObject : sizingObjects )
     {
@@ -1846,7 +1848,9 @@ namespace detail {
   {
     boost::optional<ZoneHVACEquipmentList> result;
 
-    std::vector<ZoneHVACEquipmentList> list = model().getConcreteModelObjects<ZoneHVACEquipmentList>();
+    std::vector<ZoneHVACEquipmentList> list = getObject<ModelObject>().getModelObjectSources<ZoneHVACEquipmentList>(ZoneHVACEquipmentList::iddObjectType());
+
+    //std::vector<ZoneHVACEquipmentList> list = model().getConcreteModelObjects<ZoneHVACEquipmentList>();
 
     for( const auto & elem : list )
     {
@@ -1856,9 +1860,13 @@ namespace detail {
       }
     }
 
-    OS_ASSERT(result);
-
-    return result.get();
+    if (result)
+    {
+      return result.get();
+    } else
+    {
+      LOG_AND_THROW("ThermalZone missing ZoneHVAC:EquipmentList object");
+    }
   }
 
   void ThermalZone_Impl::addEquipment(const ModelObject & equipment)

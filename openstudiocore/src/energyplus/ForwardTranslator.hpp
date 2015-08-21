@@ -70,10 +70,12 @@ class Blind;
 class Building;
 class BoilerHotWater;
 class BoilerSteam;
+// class CentralHeatPumpSystem;
 class CFactorUndergroundWallConstruction;
 class ChillerAbsorption;
 class ChillerAbsorptionIndirect;
 class ChillerElectricEIR;
+// class ChillerHeaterPerformanceElectricEIR;
 class CoilCoolingDXMultiSpeed;
 class CoilCoolingDXSingleSpeed;
 class CoilCoolingDXTwoSpeed;
@@ -140,6 +142,7 @@ class ElectricEquipment;
 class EvaporativeCoolerDirectResearchSpecial;
 class EvaporativeCoolerIndirectResearchSpecial;
 class EvaporativeFluidCoolerSingleSpeed;
+class EvaporativeFluidCoolerTwoSpeed;
 class ExteriorLights;
 class FanConstantVolume;
 class FanOnOff;
@@ -166,6 +169,7 @@ class InfraredTransparentMaterial;
 class InteriorPartitionSurface;
 class InteriorPartitionSurfaceGroup;
 class InternalMass;
+class LoadProfilePlant;
 class LifeCycleCost;
 class LifeCycleCostParameters;
 class Lights;
@@ -182,6 +186,7 @@ class PipeAdiabatic;
 class PipeIndoor;
 class PipeOutdoor;
 class PlantLoop;
+class PlantComponentTemperatureSource;
 class PlantEquipmentOperationCoolingLoad;
 class PlantEquipmentOperationHeatingLoad;
 class PlantEquipmentOperationOutdoorDryBulb;
@@ -281,6 +286,7 @@ class TableMultiVariableLookup;
 class TemperingValve;
 class ThermalZone;
 class ThermalStorageIceDetailed;
+class ThermalStorageChilledWaterStratified;
 class ThermostatSetpointDualSetpoint;
 class Timestep;
 class Version;
@@ -455,6 +461,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateBuilding( model::Building & modelObject );
 
+  // boost::optional<IdfObject> translateCentralHeatPumpSystem( model::CentralHeatPumpSystem & modelObject  );
+
   boost::optional<IdfObject> translateCFactorUndergroundWallConstruction( model::CFactorUndergroundWallConstruction & modelObject );
 
   boost::optional<IdfObject> translateChillerAbsorption( model::ChillerAbsorption & modelObject );
@@ -462,6 +470,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateChillerAbsorptionIndirect( model::ChillerAbsorptionIndirect & modelObject );
 
   boost::optional<IdfObject> translateChillerElectricEIR( model::ChillerElectricEIR & modelObject );
+
+  // boost::optional<IdfObject> translateChillerHeaterPerformanceElectricEIR( model::ChillerHeaterPerformanceElectricEIR & modelObject  );
 
   boost::optional<IdfObject> translateCoilCoolingDXSingleSpeed( model::CoilCoolingDXSingleSpeed & modelObject );
 
@@ -599,6 +609,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateEvaporativeFluidCoolerSingleSpeed( model::EvaporativeFluidCoolerSingleSpeed & modelObject );
   
+  boost::optional<IdfObject> translateEvaporativeFluidCoolerTwoSpeed( model::EvaporativeFluidCoolerTwoSpeed & modelObject  );
+  
   boost::optional<IdfObject> translateExteriorLights(model::ExteriorLights& modelObject);
 
   boost::optional<IdfObject> translateFanConstantVolume( model::FanConstantVolume & modelObject );
@@ -655,6 +667,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateInternalMass( model::InternalMass & modelObject );
 
+  boost::optional<IdfObject> translateLoadProfilePlant( model::LoadProfilePlant & modelObject  );
+
   boost::optional<IdfObject> translateLifeCycleCost( model::LifeCycleCost & modelObject );
 
   boost::optional<IdfObject> translateLifeCycleCostParameters( model::LifeCycleCostParameters & modelObject );
@@ -686,6 +700,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translatePipeOutdoor(model::PipeOutdoor & modelObject);
 
   boost::optional<IdfObject> translatePlantLoop( model::PlantLoop & modelObject );
+
+  boost::optional<IdfObject> translatePlantComponentTemperatureSource( model::PlantComponentTemperatureSource & modelObject  );
 
   boost::optional<IdfObject> translatePlantEquipmentOperationSchemes( model::PlantLoop & plantLoop );
 
@@ -882,6 +898,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateTemperingValve( model::TemperingValve & modelObject );
 
   boost::optional<IdfObject> translateThermalStorageIceDetailed( model::ThermalStorageIceDetailed & modelObject );
+
+  boost::optional<IdfObject> translateThermalStorageChilledWaterStratified( model::ThermalStorageChilledWaterStratified & modelObject  );
 
   boost::optional<IdfObject> translateThermalZone( model::ThermalZone & modelObject );
 
