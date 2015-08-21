@@ -355,9 +355,9 @@ struct ModelObjectNameSorter{
       }
       else if (field == COOLINGMINIMUMAIRFLOWPERZONEFLOORAREA){
         addQuantityEditColumn(Heading(QString(COOLINGMINIMUMAIRFLOWPERZONEFLOORAREA)),
-          QString("m^3/min*m^2"),
-          QString("m^3/min*m^2"),
-          QString("ft^3/min*ft^2"),
+          QString("m^3/s*m^2"), 
+          QString("m^3/s*m^2"), 
+          QString("ft^3/min*ft^2"), 
           m_isIP,
           ProxyAdapter(&model::SizingZone::coolingMinimumAirFlowperZoneFloorArea, &model::ThermalZone::sizingZone),
           ProxyAdapter(static_cast<bool (model::SizingZone::*)(double)>(&model::SizingZone::setCoolingMinimumAirFlowperZoneFloorArea),
@@ -385,9 +385,9 @@ struct ModelObjectNameSorter{
       }
       else if (field == HEATINGMAXIMUMAIRFLOWPERZONEFLOORAREA){
         addQuantityEditColumn(Heading(QString(HEATINGMAXIMUMAIRFLOWPERZONEFLOORAREA)),
-          QString("m^3/min*m^2"),
-          QString("m^3/min*m^2"),
-          QString("ft^3/min*ft^2"),
+          QString("m^3/s*m^2"), 
+          QString("m^3/s*m^2"), 
+          QString("ft^3/min*ft^2"), 
           m_isIP,
           ProxyAdapter(&model::SizingZone::heatingMaximumAirFlowperZoneFloorArea, &model::ThermalZone::sizingZone),
           ProxyAdapter(static_cast<bool (model::SizingZone::*)(double)>(&model::SizingZone::setHeatingMaximumAirFlowperZoneFloorArea),
