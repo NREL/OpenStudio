@@ -615,12 +615,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAvailabilityManagerNightCycle(mo);
       break;
     }
-  case openstudio::IddObjectType::OS_WindowMaterial_Blind :
-    {
-      model::Blind blind = modelObject.cast<Blind>();
-      retVal = translateBlind(blind);
-      break;
-    }
   case openstudio::IddObjectType::OS_Boiler_HotWater :
     {
       model::BoilerHotWater boiler = modelObject.cast<BoilerHotWater>();
