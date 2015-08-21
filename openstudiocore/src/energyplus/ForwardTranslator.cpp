@@ -1312,7 +1312,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   }
   case openstudio::IddObjectType::OS_Glare_Sensor:
     {
-      LOG(Warn, "OS_GlareSensor not currently translated");
+      // no-op
       break;
     }
   case openstudio::IddObjectType::OS_GroundHeatExchanger_HorizontalTrench :
