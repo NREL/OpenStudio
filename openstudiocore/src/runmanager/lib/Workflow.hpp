@@ -377,8 +377,8 @@ namespace runmanager {
       ///            to the workflow
       /// \param[in] t_rubyIncludePath include path to pass to the ruby interpreter
       /// \param[in] t_userScriptsByFolder map containing paths to model, idf, and post EnergyPlus scripts
-      /// \param[in] t_useRadianceForDaylightCalculations If true, use radiance. Requires radiance and ruby installed
-      /// \param[in] t_radiancePath path to Radiance
+      /// \param[in] t_useRadianceForDaylightCalculations If true, use radiance. Requires radiance and ruby installed. This parameter is deprecated and will be unused in the future.
+      /// \param[in] t_radiancePath path to Radiance.  This parameter is deprecated and will be unused in the future.
       /// \param[in] t_relativeTo (unused)
       /// \param[in] t_copyFileTrue (unused)
       bool addStandardWorkflow(const openstudio::path &t_scriptsPath,
@@ -406,6 +406,7 @@ namespace runmanager {
       std::vector<WorkItem> toWorkItems() const;
 
       /// \returns a WorkItem that performs daylight calculations
+      /// This function is deprecated and will be removed in the future.
       static WorkItem radianceDaylightCalculations(const openstudio::path &t_rubyIncludePath,
           const openstudio::path &t_radiancePath);
 

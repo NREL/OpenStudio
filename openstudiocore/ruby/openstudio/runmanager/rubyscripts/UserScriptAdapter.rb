@@ -221,8 +221,15 @@ while (scriptindex == 0 || File.directory?(scriptfolder + "/mergedjob-" + script
     ObjectSpace.each_object(OpenStudio::Ruleset::UserScript) { |obj| currentObjects[obj] = true }
 
     ObjectSpace.garbage_collect
-    load user_script_path.to_s # need load in case have seen this script before    
-
+    
+    # executing user defined code
+    current_dir = Dir.pwd()
+    begin
+      load user_script_path.to_s # need load in case have seen this script before    
+    ensure
+      Dir.chdir(current_dir)
+    end
+    
     userScript = nil
     ObjectSpace.each_object(OpenStudio::Ruleset::UserScript) { |obj|
       if not currentObjects[obj]
@@ -263,7 +270,17 @@ while (scriptindex == 0 || File.directory?(scriptfolder + "/mergedjob-" + script
   arguments = OpenStudio::Ruleset::OSArgumentMap.new
 
   if (input_data)
-    userScript.arguments(input_data).each { |arg|
+  
+    # executing user defined code
+    current_dir = Dir.pwd()
+    args = nil
+    begin
+      args = userScript.arguments(input_data)
+    ensure
+      Dir.chdir(current_dir)
+    end
+    
+    args.each { |arg|
       # look for arg.name() in options
       userArg = nil
       userArguments.each { |candidate|
@@ -281,7 +298,17 @@ while (scriptindex == 0 || File.directory?(scriptfolder + "/mergedjob-" + script
       arguments[arg.name] = arg
     }
   else
-    userScript.arguments().each { |arg|
+  
+    # executing user defined code
+    current_dir = Dir.pwd()
+    args = nil
+    begin
+      args = userScript.arguments()
+    ensure
+      Dir.chdir(current_dir)
+    end
+    
+    args.each { |arg|
       # look for arg.name() in options
       userArg = nil
       userArguments.each { |candidate|
@@ -322,15 +349,45 @@ while (scriptindex == 0 || File.directory?(scriptfolder + "/mergedjob-" + script
   
   result = false
   if type == "model"
-    result = userScript.run(model,runner,arguments)
+    # executing user defined code
+    current_dir = Dir.pwd()
+    begin
+      result = userScript.run(model,runner,arguments)
+    ensure
+      Dir.chdir(current_dir)
+    end
   elsif type == "workspace"
-    result = userScript.run(workspace,runner,arguments)
+    # executing user defined code
+    current_dir = Dir.pwd()
+    begin
+      result = userScript.run(workspace,runner,arguments)
+    ensure
+      Dir.chdir(current_dir)
+    end
   elsif type == "translation"
-    result = userScript.run(workspace,model,runner,arguments)
+    # executing user defined code
+    current_dir = Dir.pwd()
+    begin
+      result = userScript.run(workspace,model,runner,arguments)
+    ensure
+      Dir.chdir(current_dir)
+    end
   elsif type == "utility"
-    result = userScript.run(runner,arguments)
+    # executing user defined code
+    current_dir = Dir.pwd()
+    begin
+      result = userScript.run(runner,arguments)
+    ensure
+      Dir.chdir(current_dir)
+    end
   elsif type == "report"
-    result = userScript.run(runner,arguments)  
+    # executing user defined code
+    current_dir = Dir.pwd()
+    begin
+      result = userScript.run(runner,arguments)  
+    ensure
+      Dir.chdir(current_dir)
+    end
   end
 
   scriptindex += 1
@@ -339,6 +396,7 @@ while (scriptindex == 0 || File.directory?(scriptfolder + "/mergedjob-" + script
   runner.result.save(OpenStudio::Path.new("result.ossr"),true)
   
   # stop executing scripts once an error is encountered
+  puts "result = #{result}"
   break if not result
 
 end

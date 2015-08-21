@@ -143,7 +143,7 @@ TEST_F(BCLFixture, BCLMeasure_CTor)
 TEST_F(BCLFixture, PatApplicationMeasures)
 {
   std::vector<BCLMeasure> patApplicationMeasures = BCLMeasure::patApplicationMeasures();
-  ASSERT_EQ(4u, patApplicationMeasures.size());
+  ASSERT_EQ(5u, patApplicationMeasures.size());
 
   bool filesUpdated;
   bool xmlUpdated;
@@ -182,6 +182,15 @@ TEST_F(BCLFixture, PatApplicationMeasures)
   ASSERT_FALSE(xmlUpdated); // DLM: comment out to update built in PAT measures
   if (filesUpdated || xmlUpdated){
     calibrationReportMeasure.save();
+  }
+
+  BCLMeasure radianceMeasure = BCLMeasure::radianceMeasure();
+  filesUpdated = radianceMeasure.checkForUpdatesFiles();
+  ASSERT_FALSE(filesUpdated); // DLM: comment out to update built in PAT measures
+  xmlUpdated = radianceMeasure.checkForUpdatesXML();
+  ASSERT_FALSE(xmlUpdated); // DLM: comment out to update built in PAT measures
+  if (filesUpdated || xmlUpdated){
+    radianceMeasure.save();
   }
 
 }

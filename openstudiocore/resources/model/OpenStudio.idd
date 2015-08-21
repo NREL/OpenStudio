@@ -2498,7 +2498,24 @@ OS:WindowMaterial:Blind,
        \minimum 0
        \maximum 180
        \default 180
-
+       
+OS:WindowMaterial:DaylightRedirectionDevice,
+       \memo This object is not in EnergyPlus, this represents a film or louver which redirects daylighting.
+       \min-fields 2
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \type alpha
+       \required-field
+       \reference MaterialNames
+       \reference WindowShadesScreensAndBlinds
+  A3; \field Daylight Redirection Device Type
+       \type choice 
+       \default Louver
+       \key Louver
+       \key Film
+       
 OS:WindowMaterial:Gas,
        \memo Gas material properties that are used in Windows or Glass Doors
        \min-fields 4
@@ -4917,6 +4934,7 @@ OS:ShadingControl,
        \key BetweenGlassShade
        \key BetweenGlassBlind
        \key SwitchableGlazing       
+       \key InteriorDaylightRedirectionDevice
   A4 , \field Construction with Shading Name
        \type object-list
        \object-list ConstructionNames
@@ -20746,7 +20764,7 @@ OS:ZoneHVAC:IdealLoadsAirSystem,
        \minimum 0.0
        \maximum 1.0
        \default 0.65
-
+       
 OS:ZoneHVAC:FourPipeFanCoil,
         \min-fields 24
    A1 , \field Handle
@@ -20884,11 +20902,11 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \default MeanAirTemperature
    A6 , \field Low Temp Radiant Constant Flow Heating Coil Name
         \type object-List
-        \required-field
+        \required-field 
         \object-list CoilHeatingLowTempRadiantConstantFlow
    A7 , \field Low Temp Radiant Constant Flow Cooling Coil Name
         \type object-List
-        \required-field
+        \required-field 
         \object-list CoilCoolingLowTempRadiantConstantFlow    
    N3 , \field Rated Flow Rate
         \units m3/s
@@ -20923,7 +20941,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
    N8 ; \field Circuit Length
         \units m
         \default 106.7
-
+        
 OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
         \min-fields 9
    A1 , \field Handle
@@ -20970,7 +20988,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
         \key OperativeTemperature
         \key OutdoorDryBulbTemperature
         \key OutdoorWetBulbTemperature
-        \default MeanAirTemperature
+        \default MeanAirTemperature       
    A8 , \field Number of Circuits
         \type choice
         \key OnePerSurface
@@ -20979,7 +20997,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
    N3 ; \field Circuit Length
         \units m
         \default 106.7
-
+        
 OS:ZoneHVAC:PackagedTerminalHeatPump,
        \min-fields 24
   A1, \field Handle
@@ -21234,7 +21252,7 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
        \note than 0 denote constant fan operation (fan runs continually regardless of coil operation).
        \type object-list
        \object-list ScheduleNames
-       
+
 OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
   A1, \field Handle
        \type handle
@@ -21338,7 +21356,7 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
        \type real
        \units W/W
        \minimum 1.0
-
+       
 OS:ZoneHVAC:WaterToAirHeatPump,
         \min-fields 25
    A1,  \field Handle
@@ -21368,14 +21386,14 @@ OS:ZoneHVAC:WaterToAirHeatPump,
    N1,  \field Supply Air Flow Rate During Cooling Operation
         \note Must be less than or equal to fan size.
         \type real
-        \required-field 
+        \required-field
         \units m3/s
         \minimum> 0.0
         \autosizable
    N2,  \field Supply Air Flow Rate During Heating Operation
         \note Must be less than or equal to fan size.
         \type real 
-        \required-field 
+        \required-field
         \autosizable
         \units m3/s
         \minimum> 0.0
@@ -21461,7 +21479,7 @@ OS:ZoneHVAC:WaterToAirHeatPump,
         \default 60
    A10, \field Supplemental Heating Coil Name
         \note  Needs to match in the supplemental heating coil object
-        \type object-list
+        \type object-list 
         \required-field
         \object-list HeatingCoilName
    N11, \field Maximum Supply Air Temperature from Supplemental Heater
@@ -21493,7 +21511,7 @@ OS:ZoneHVAC:WaterToAirHeatPump,
         \note Enter the name of an AvailabilityManagerAssignmentList object.
         \type object-list
         \object-list SystemAvailabilityManagerLists
-
+        
 OS:ZoneHVAC:UnitHeater,
        \min-fields 10
   A1 , \field Handle
@@ -21503,7 +21521,7 @@ OS:ZoneHVAC:UnitHeater,
        \note Unique name for this unit heater.
        \type alpha
        \required-field
-       \reference ConnectionObject
+       \reference ConnectionObject    
   A3 , \field Availability Schedule Name
        \note Schedule values of 0 denote the unit is off.
        \type object-list
@@ -21764,7 +21782,7 @@ OS:ZoneHVAC:EnergyRecoveryVentilator:Controller,
        \note humidity is above humidistat setpoint. If YES is selected, outdoor air flow
        \note rate is modified any time indoor relative humidity is above the humidistat
        \note setpoint AND the outdoor humidity ratio is less than the indoor humidity ratio.
-       
+
 OS:ZoneHVAC:UnitVentilator,
    A1 , \field Handle
         \type handle
@@ -21812,7 +21830,7 @@ OS:ZoneHVAC:UnitVentilator,
         \object-list ConnectionNames
    A8 , \field Air Outlet Node Name
         \required-field
-        \type object-list 
+        \type object-list
         \object-list ConnectionNames
    A9,  \field Supply Air Fan Name
         \required-field
@@ -21849,7 +21867,7 @@ OS:ZoneHVAC:UnitVentilator,
         \note Enter the name of a DesignSpecificationZoneHVACSizing object.
         \type object-list
         \object-list DesignSpecificationZoneHVACSizingName
-        
+
 OS:ZoneHVAC:Baseboard:RadiantConvective:Water,
   A1,  \field Handle
        \type handle
@@ -21857,7 +21875,7 @@ OS:ZoneHVAC:Baseboard:RadiantConvective:Water,
   A2,  \field Name
        \required-field
        \type alpha
-       \reference ConnectionObject    
+       \reference ConnectionObject
   A3,  \field Availability Schedule Name
        \required-field
        \type object-list
@@ -22067,7 +22085,7 @@ OS:ZoneMixing,
        \object-list ScheduleNames
        \note This schedule contains the outdoor temperature versus time above which
        \note mixing is shutoff.
-       
+
 OS:WaterHeater:Mixed,
   A1, \field Handle
        \type handle

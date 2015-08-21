@@ -852,7 +852,7 @@ namespace openstudio {
       m_mainTabController = std::shared_ptr<MainTabController>(new RunTabController(m_model, openstudio::toPath(m_savePath), openstudio::toPath(m_modelTempDir), m_simpleProject->runManager()));
       m_mainWindow->setView(m_mainTabController->mainContentWidget(), RUN_SIMULATION);
 
-      connect(qobject_cast<RunTabController *>(m_mainTabController.get()), &RunTabController::useRadianceStateChanged, this, &OSDocument::markAsModified);
+      //connect(qobject_cast<RunTabController *>(m_mainTabController.get()), &RunTabController::useRadianceStateChanged, this, &OSDocument::markAsModified);
 
       connect(qobject_cast<RunTabController *>(m_mainTabController.get()), &RunTabController::resultsGenerated, this, &OSDocument::runComplete);
 

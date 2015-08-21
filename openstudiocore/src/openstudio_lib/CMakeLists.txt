@@ -336,6 +336,8 @@ set(${target_name}_SRC
   WaterUseEquipmentInspectorView.hpp
   WindowMaterialBlindInspectorView.cpp
   WindowMaterialBlindInspectorView.hpp
+  WindowMaterialDaylightRedirectionDeviceInspectorView.cpp
+  WindowMaterialDaylightRedirectionDeviceInspectorView.hpp
   WindowMaterialGasInspectorView.cpp
   WindowMaterialGasInspectorView.hpp
   WindowMaterialGasMixtureInspectorView.cpp
@@ -623,6 +625,7 @@ set(${target_name}_moc
   VRFGraphicsItems.hpp
   WaterUseEquipmentInspectorView.hpp
   WindowMaterialBlindInspectorView.hpp
+  WindowMaterialDaylightRedirectionDeviceInspectorView.hpp
   WindowMaterialGasInspectorView.hpp
   WindowMaterialGasMixtureInspectorView.hpp
   WindowMaterialGlazingGroupThermochromicInspectorView.hpp

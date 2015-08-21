@@ -46,7 +46,7 @@
 #include "../utilities/core/ApplicationPathHelpers.hpp"
 
 namespace openstudio {
-
+  /*
 void getRadiancePreRunWarningsAndErrors(std::vector<std::string> &t_warnings, 
     std::vector<std::string> &t_errors,
     openstudio::runmanager::RunManager &t_runManager,
@@ -171,7 +171,7 @@ OptionalInt getProjectRadianceJobIndex(const openstudio::analysisdriver::SimpleP
   }
 }
 
-
+*/
 OptionalInt getModelMeasureInsertStep(const openstudio::analysis::Problem &t_problem)
 {
   OptionalInt stopIndex = t_problem.getWorkflowStepIndexByJobType(runmanager::JobType::ModelToIdf);
@@ -193,7 +193,7 @@ OptionalInt getModelMeasureInsertStep(const openstudio::analysis::Problem &t_pro
   return stopIndex;
 }
 
-
+/*
 bool projectHasRadiance(const openstudio::analysisdriver::SimpleProject &t_project)
 {
   return getProjectRadianceJobIndex(t_project);
@@ -234,6 +234,7 @@ void addRadianceToProject(openstudio::analysisdriver::SimpleProject &t_project)
       problem.insert(*index, wi);
     }
   }
+ 
 }
-
+*/
 }

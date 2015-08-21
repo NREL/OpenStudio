@@ -390,11 +390,11 @@ namespace openstudio{
   {
     openstudio::path result;
     if (applicationIsRunningFromBuildDirectory()){
-      result = getApplicationSourceDirectory() / toPath("src/pat_app/Measures/");
+      result = getApplicationSourceDirectory() / toPath("src/pat_app/Measures");
     }else{
-      result = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio-" + openStudioVersion() + "/pat/Measures/");
+      result = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio-" + openStudioVersion() + "/pat/Measures");
     }
-    return result;
+    return boost::filesystem::system_complete(result);
   }
 
   BCLMeasure BCLMeasure::alternativeModelMeasure() {
@@ -413,6 +413,10 @@ namespace openstudio{
     return BCLMeasure(patApplicationMeasuresDir() / toPath("CalibrationReports"));
   }
 
+  BCLMeasure BCLMeasure::radianceMeasure() {
+    return BCLMeasure(patApplicationMeasuresDir() / toPath("RadianceMeasure"));
+  }
+
   std::vector<BCLMeasure> BCLMeasure::localBCLMeasures()
   {
     return LocalBCL::instance().measures();
@@ -429,7 +433,7 @@ namespace openstudio{
     QSettings settings("OpenStudio", "BCLMeasure");
     QString value = settings.value("userMeasuresDir", QDir::homePath().append("/OpenStudio/Measures")).toString();
     openstudio::path result = toPath(value);
-    return result;
+    return boost::filesystem::system_complete(result);
   }
 
   bool BCLMeasure::setUserMeasuresDir(const openstudio::path& userMeasuresDir)

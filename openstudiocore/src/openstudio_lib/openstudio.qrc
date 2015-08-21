@@ -428,11 +428,13 @@
     <file>images/mini_icons/mini_walkin_case.png</file>
     <file>images/mini_icons/mini_water_cooled.png</file>
     <file>images/mini_icons/mini_window_blinds.png</file>
+    <file>images/mini_icons/mini_window_daylightredirectiondevice.png</file>
     <file>images/mini_icons/mini_window_refraction.png</file>
     <file>images/mini_icons/mini_window_screen.png</file>
     <file>images/mini_icons/mini_window_thermoc.png</file>
     <file>images/mini_icons/min_window_data.png</file>
     <file>images/mini_icons/min_window_simple_glazing.png</file>
+    <file>images/mini_icons/mini-window-shade.png</file>
     <file>images/mini_icons/OAMixer.png</file>
     <file>images/mini_icons/other_equipment.png</file>
     <file>images/mini_icons/other_equipment_definition.png</file>
@@ -568,5 +570,3 @@
 
   </qresource>
 </RCC>
-
-

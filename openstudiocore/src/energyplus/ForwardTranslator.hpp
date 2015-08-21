@@ -132,6 +132,7 @@ class CurveSigmoid;
 class CurveTriquadratic;
 class DaylightingControl;
 class DaylightingDeviceShelf;
+class DaylightRedirectionDevice;
 class DesignDay;
 class DesignSpecificationOutdoorAir;
 class DistrictCooling;
@@ -592,6 +593,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateDaylightingDeviceShelf( model::DaylightingDeviceShelf & modelObject );
 
+  boost::optional<IdfObject> translateDaylightRedirectionDevice(model::DaylightRedirectionDevice & modelObject);
+
   boost::optional<IdfObject> translateDesignDay( model::DesignDay & modelObject );
 
   boost::optional<IdfObject> translateDesignSpecificationOutdoorAir( model::DesignSpecificationOutdoorAir & modelObject );
@@ -601,11 +604,11 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateDistrictHeating(model::DistrictHeating & modelObject);
 
   boost::optional<IdfObject> translateDuct(model::Duct & modelObject);
-
+  
   boost::optional<IdfObject> translateElectricEquipment( model::ElectricEquipment & modelObject );
 
   boost::optional<IdfObject> translateEvaporativeFluidCoolerSingleSpeed( model::EvaporativeFluidCoolerSingleSpeed & modelObject );
-
+  
   boost::optional<IdfObject> translateEvaporativeFluidCoolerTwoSpeed( model::EvaporativeFluidCoolerTwoSpeed & modelObject  );
   
   boost::optional<IdfObject> translateExteriorLights(model::ExteriorLights& modelObject);
@@ -929,7 +932,7 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateZoneHVACBaseboardConvectiveElectric( model::ZoneHVACBaseboardConvectiveElectric & modelObject );
 
   boost::optional<IdfObject> translateZoneHVACBaseboardConvectiveWater( model::ZoneHVACBaseboardConvectiveWater & modelObject );
-  
+
   boost::optional<IdfObject> translateZoneHVACBaseboardRadiantConvectiveElectric( model::ZoneHVACBaseboardRadiantConvectiveElectric & modelObject );
 
   boost::optional<IdfObject> translateZoneHVACBaseboardRadiantConvectiveWater( model::ZoneHVACBaseboardRadiantConvectiveWater & modelObject );
@@ -951,11 +954,11 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateZoneHVACLowTemperatureRadiantElectric( model::ZoneHVACLowTemperatureRadiantElectric & modelObject );
 
   boost::optional<IdfObject> translateZoneHVACLowTempRadiantConstFlow( model::ZoneHVACLowTempRadiantConstFlow & modelObject );
-  
+
   boost::optional<IdfObject> translateZoneHVACLowTempRadiantVarFlow( model::ZoneHVACLowTempRadiantVarFlow & modelObject );
- 
+
   boost::optional<IdfObject> translateZoneHVACPackagedTerminalHeatPump( model::ZoneHVACPackagedTerminalHeatPump & modelObject );
- 
+
   boost::optional<IdfObject> translateZoneHVACPackagedTerminalAirConditioner( model::ZoneHVACPackagedTerminalAirConditioner & modelObject );
 
   boost::optional<IdfObject> translateZoneHVACTerminalUnitVariableRefrigerantFlow( model::ZoneHVACTerminalUnitVariableRefrigerantFlow & modelObject );
@@ -965,7 +968,7 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateZoneHVACUnitVentilator( model::ZoneHVACUnitVentilator & modelObject );
 
   boost::optional<IdfObject> translateZoneHVACWaterToAirHeatPump( model::ZoneHVACWaterToAirHeatPump & modelObject );
-  
+
   boost::optional<IdfObject> translateZoneMixing( model::ZoneMixing & modelObject);
 
   boost::optional<IdfObject> createAirLoopHVACSupplyPath( const model::Node & demandInletNode );

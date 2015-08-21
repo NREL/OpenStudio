@@ -615,12 +615,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAvailabilityManagerNightCycle(mo);
       break;
     }
-  case openstudio::IddObjectType::OS_WindowMaterial_Blind :
-    {
-      model::Blind blind = modelObject.cast<Blind>();
-      retVal = translateBlind(blind);
-      break;
-    }
   case openstudio::IddObjectType::OS_Boiler_HotWater :
     {
       model::BoilerHotWater boiler = modelObject.cast<BoilerHotWater>();
@@ -2095,6 +2089,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateSkyTemperature(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_WindowMaterial_Blind:
+  {
+    model::Blind blind = modelObject.cast<Blind>();
+    retVal = translateBlind(blind);
+    break;
+  }
+  case openstudio::IddObjectType::OS_WindowMaterial_DaylightRedirectionDevice:
+  {
+    model::DaylightRedirectionDevice drd = modelObject.cast<DaylightRedirectionDevice>();
+    retVal = translateDaylightRedirectionDevice(drd);
+    break;
+  }
   case openstudio::IddObjectType::OS_WindowMaterial_Glazing_RefractionExtinctionMethod :
     {
       model::RefractionExtinctionGlazing mo = modelObject.cast<RefractionExtinctionGlazing>();
@@ -2170,13 +2176,13 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       model::ZoneHVACBaseboardConvectiveElectric mo = modelObject.cast<ZoneHVACBaseboardConvectiveElectric>();
       retVal = translateZoneHVACBaseboardConvectiveElectric(mo);
       break;
-    }  
+    }
   case openstudio::IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Water :
     {
       model::ZoneHVACBaseboardConvectiveWater mo = modelObject.cast<ZoneHVACBaseboardConvectiveWater>();
       retVal = translateZoneHVACBaseboardConvectiveWater(mo);
       break;
-    }  
+    }
   case openstudio::IddObjectType::OS_ZoneHVAC_Baseboard_RadiantConvective_Electric :
     {
       model::ZoneHVACBaseboardRadiantConvectiveElectric mo = modelObject.cast<ZoneHVACBaseboardRadiantConvectiveElectric>();
@@ -2218,7 +2224,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       model::ZoneHVACFourPipeFanCoil mo = modelObject.cast<ZoneHVACFourPipeFanCoil>();
       retVal = translateZoneHVACFourPipeFanCoil(mo);
       break;
-    }  
+    }
   case openstudio::IddObjectType::OS_ZoneHVAC_HighTemperatureRadiant :
     {
       model::ZoneHVACHighTemperatureRadiant mo = modelObject.cast<ZoneHVACHighTemperatureRadiant>();
@@ -2232,19 +2238,19 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       break;
     }
   case openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric :
-    { 
+    {
       model::ZoneHVACLowTemperatureRadiantElectric mo = modelObject.cast<ZoneHVACLowTemperatureRadiantElectric>();
       retVal = translateZoneHVACLowTemperatureRadiantElectric(mo);
       break;
     }
   case openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow :
-    { 
+    {
       model::ZoneHVACLowTempRadiantConstFlow mo = modelObject.cast<ZoneHVACLowTempRadiantConstFlow>();
       retVal = translateZoneHVACLowTempRadiantConstFlow(mo);
       break;
     }
   case openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow :
-    { 
+    {
       model::ZoneHVACLowTempRadiantVarFlow mo = modelObject.cast<ZoneHVACLowTempRadiantVarFlow>();
       retVal = translateZoneHVACLowTempRadiantVarFlow(mo);
       break;
@@ -2526,6 +2532,7 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
   iddObjectTypes.push_back(IddObjectType::OS_Material_RoofVegetation);
 
   iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_Blind);
+  iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_DaylightRedirectionDevice);
   iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_Gas);
   iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_GasMixture);
   iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_Glazing);

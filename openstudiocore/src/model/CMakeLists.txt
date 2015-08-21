@@ -395,6 +395,9 @@ set(${target_name}_src
   DaylightingDeviceShelf.hpp
   DaylightingDeviceShelf_Impl.hpp
   DaylightingDeviceShelf.cpp
+  DaylightRedirectionDevice.hpp
+  DaylightRedirectionDevice_Impl.hpp
+  DaylightRedirectionDevice.cpp
   DefaultConstructionSet.hpp
   DefaultConstructionSet_Impl.hpp
   DefaultConstructionSet.cpp
@@ -1502,6 +1505,7 @@ set(${target_name}_test_src
   test/CoolingTowerTwoSpeed_GTest.cpp
   test/DaylightingControl_GTest.cpp
   test/DaylightingDeviceShelf_GTest.cpp
+  test/DaylightRedirectionDevice_GTest.cpp
   test/DefaultConstructionSet_GTest.cpp
   test/DefaultScheduleSet_GTest.cpp
   test/DefaultSubSurfaceConstructions_GTest.cpp

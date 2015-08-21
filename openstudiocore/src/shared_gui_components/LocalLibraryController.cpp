@@ -577,8 +577,15 @@ QWidget * LibraryItemDelegate::view(QSharedPointer<OSListItem> dataSource)
       widget->m_measureTypeBadge->setVisible(true);
     }
 
-    if(libraryItem->m_source == LocalLibrary::BCL){
+    if (libraryItem->m_source == LocalLibrary::BCL){
       widget->m_measureBadge->setMeasureBadgeType(MeasureBadgeType::BCLMeasure);
+    } else if (libraryItem->m_source == LocalLibrary::USER){
+      widget->m_measureBadge->setMeasureBadgeType(MeasureBadgeType::MyMeasure);
+    }else if(libraryItem->m_source == LocalLibrary::OS){
+      widget->m_measureBadge->setMeasureBadgeType(MeasureBadgeType::OSMeasure);
+    } else{
+      //DLM: this should not happen, LocalLibrary::COMBINED
+      libraryItem->m_source;
     }
 
     // Name
@@ -695,6 +702,7 @@ void LibraryListController::createItems()
 
   // create items
   openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
+  openstudio::path patApplicationMeasuresDir = BCLMeasure::patApplicationMeasuresDir();
 
   for( const auto & measure : measures )
   {
@@ -707,6 +715,8 @@ void LibraryListController::createItems()
         // check if this measure is in the my measures directory
         if (userMeasuresDir == measure.directory().parent_path()){
           source = LocalLibrary::USER;
+        } else if (patApplicationMeasuresDir == measure.directory().parent_path()){
+          source = LocalLibrary::OS;
         }else{
           source = LocalLibrary::BCL;
         }

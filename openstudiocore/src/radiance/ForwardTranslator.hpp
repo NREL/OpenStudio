@@ -117,6 +117,7 @@ namespace radiance {
 
       // create materials library for model, shared for all Spaces
       std::set<std::string> m_radMaterials;
+      std::set<std::string> m_radMixMaterials;
       std::set<std::string> m_radMaterialsDC;
       std::set<std::string> m_radMaterialsWG0;
 
@@ -129,12 +130,15 @@ namespace radiance {
       // create space geometry, hashes of space name to file contents
       std::map<std::string, std::string> m_radSpaces;
       std::map<std::string, std::string> m_radSensors;
+      std::map<std::string, std::string> m_radSensorViews;
       std::map<std::string, std::string> m_radGlareSensors;
       std::map<std::string, std::string> m_radMaps;
       std::map<std::string, openstudio::Handle> m_radMapHandles;
       std::map<std::string, std::string> m_radViewPoints;
-      std::map<std::string, std::string> m_radWindowGroups; 
+      std::map<std::string, std::string> m_radWindowGroups;
+      std::map<std::string, std::string> m_radWindowGroupShades;
       int m_windowGroupId;
+      std::string shadeBSDF;
 
       // get window group
       WindowGroup getWindowGroup(const openstudio::Vector3d& outwardNormal, const model::Space& space, 
