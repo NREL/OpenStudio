@@ -1199,7 +1199,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     }
   case openstudio::IddObjectType::OS_DesignSpecification_ZoneAirDistribution:
     {
-      LOG(Warn, "OS_DesignSpecification_ZoneAirDistribution not currently translated.");
+      // DLM: appears to be translated in SizingZone
       break;
     }
   case openstudio::IddObjectType::OS_DistrictCooling :
@@ -2233,7 +2233,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     }
   case openstudio::IddObjectType::OS_UtilityBill:
     {
-      LOG(Warn, "OS_UtilityBill is not currently translated");
+      // no-op
       break;
     }
   case openstudio::IddObjectType::OS_UtilityCost_Charge_Block:
@@ -2585,6 +2585,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_LifeCycleCost_UsePriceEscalation);
 
   result.push_back(IddObjectType::OS_SimulationControl);
+  result.push_back(IddObjectType::OS_ProgramControl);
   result.push_back(IddObjectType::OS_ConvergenceLimits);
   result.push_back(IddObjectType::OS_HeatBalanceAlgorithm);
   result.push_back(IddObjectType::OS_RunPeriod);
