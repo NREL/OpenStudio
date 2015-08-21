@@ -109,7 +109,11 @@ class MODEL_API CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit : public W
 
   std::vector<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData> speeds() const;
 
-  void addSpeed(const CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& speed);
+  bool addSpeed(const CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& speed);
+
+  void removeSpeed(const CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& speed);
+
+  void removeAllSpeeds();
 
   //@}
  protected:

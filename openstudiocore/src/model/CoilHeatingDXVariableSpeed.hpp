@@ -93,8 +93,6 @@ class MODEL_API CoilHeatingDXVariableSpeed : public StraightComponent {
 
   bool isResistiveDefrostHeaterCapacityAutosized() const;
 
-  std::vector<CoilHeatingDXVariableSpeedSpeedData> speeds() const;
-
   //@}
   /** @name Setters */
   //@{
@@ -137,11 +135,17 @@ class MODEL_API CoilHeatingDXVariableSpeed : public StraightComponent {
 
   void autosizeResistiveDefrostHeaterCapacity();
 
-  void addSpeed(CoilHeatingDXVariableSpeedSpeedData& speed);
-
   //@}
   /** @name Other */
   //@{
+
+  std::vector<CoilHeatingDXVariableSpeedSpeedData> speeds() const;
+
+  bool addSpeed(const CoilHeatingDXVariableSpeedSpeedData& speed);
+
+  void removeSpeed(const CoilHeatingDXVariableSpeedSpeedData& speed);
+
+  void removeAllSpeeds();
 
   //@}
  protected:

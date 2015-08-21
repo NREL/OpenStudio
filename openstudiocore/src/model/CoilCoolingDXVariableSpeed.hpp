@@ -97,8 +97,6 @@ class MODEL_API CoilCoolingDXVariableSpeed : public StraightComponent {
 
   boost::optional<Schedule> basinHeaterOperatingSchedule() const;
 
-  std::vector<CoilCoolingDXVariableSpeedSpeedData> speeds() const;
-
   //@}
   /** @name Setters */
   //@{
@@ -149,11 +147,17 @@ class MODEL_API CoilCoolingDXVariableSpeed : public StraightComponent {
 
   void resetBasinHeaterOperatingSchedule();
 
-  void addSpeed(CoilCoolingDXVariableSpeedSpeedData& speed);
-
   //@}
   /** @name Other */
   //@{
+
+  std::vector<CoilCoolingDXVariableSpeedSpeedData> speeds() const;
+
+  bool addSpeed(const CoilCoolingDXVariableSpeedSpeedData& speed);
+
+  void removeSpeed(const CoilCoolingDXVariableSpeedSpeedData& speed);
+
+  void removeAllSpeeds();
 
   //@}
  protected:

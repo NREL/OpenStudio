@@ -26,6 +26,8 @@
 #include "Curve_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+#include "ModelObjectList.hpp"
+#include "ModelObjectList_Impl.hpp"
 #include "CoilHeatingDXMultiSpeedStageData.hpp"
 #include "CoilHeatingDXMultiSpeedStageData_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.hpp"
@@ -298,10 +300,9 @@ namespace detail {
   ModelObject CoilHeatingDXMultiSpeed_Impl::clone(Model model) const {
     auto t_clone = StraightComponent_Impl::clone(model).cast<CoilHeatingDXMultiSpeed>();
 
-    auto t_stages = stages();
-    for( auto stage: t_stages ) {
-      auto stageClone = stage.clone(model).cast<CoilHeatingDXMultiSpeedStageData>();
-      t_clone.addStage(stageClone);
+    if (auto stageDataList = this->stageDataList()) {
+      auto stageDataListClone = stageDataList->clone(model).cast<ModelObjectList>();
+      t_clone.getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setStageDataList(stageDataListClone);
     }
 
     if ( auto const curve = defrostEnergyInputRatioFunctionofTemperatureCurve() ) {
@@ -312,31 +313,63 @@ namespace detail {
   }
 
   std::vector<ModelObject> CoilHeatingDXMultiSpeed_Impl::children() const {
-    auto children = subsetCastVector<ModelObject>( stages() );
+    std::vector<ModelObject> children;
+    if( auto const _stageDataList = stageDataList() ) {
+      children.push_back( _stageDataList.get() );
+    }
     if ( auto const curve = defrostEnergyInputRatioFunctionofTemperatureCurve() ) {
       children.push_back( curve.get() );
     }
     return children;
   }
 
+  boost::optional<ModelObjectList> CoilHeatingDXMultiSpeed_Impl::stageDataList() const {
+    return getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(OS_Coil_Heating_DX_MultiSpeedFields::StageDataList);
+  }
+
+  bool CoilHeatingDXMultiSpeed_Impl::addStage( const CoilHeatingDXMultiSpeedStageData & stage) {
+    auto modelObjectList = stageDataList();
+    if( modelObjectList ) {
+      modelObjectList->addModelObject(stage);
+    }
+    return false;
+  }
+
+  void CoilHeatingDXMultiSpeed_Impl::removeStage( const CoilHeatingDXMultiSpeedStageData & stage) {
+    auto modelObjectList = stageDataList();
+    if( modelObjectList ) {
+      modelObjectList->removeModelObject(stage);
+    }
+  }
+
+  void CoilHeatingDXMultiSpeed_Impl::removeAllStages() {
+    auto modelObjectList = stageDataList();
+    if( modelObjectList ) {
+      auto const modelObjects = modelObjectList->modelObjects();
+
+      for(const auto & elem : modelObjects) {
+          auto const modelObject = elem.optionalCast<CoilHeatingDXMultiSpeedStageData>();
+          if (modelObject) {
+            modelObjectList->removeModelObject(elem);
+          }
+      }
+    }
+  }
+
   std::vector<CoilHeatingDXMultiSpeedStageData> CoilHeatingDXMultiSpeed_Impl::stages() const {
     std::vector<CoilHeatingDXMultiSpeedStageData> result;
-    auto groups = extensibleGroups();
-    for( auto group: groups ) {
-      auto target = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_Coil_Heating_DX_MultiSpeedExtensibleFields::StageData);
-      if( target ) {
-        if( auto stage = target->optionalCast<CoilHeatingDXMultiSpeedStageData>() ) {
-          result.push_back(stage.get());
-        }
+    auto const modelObjectList = stageDataList();
+    if( modelObjectList ) {
+      auto const modelObjects = modelObjectList->modelObjects();
+
+      for(const auto & elem : modelObjects) {
+          auto const modelObject = elem.optionalCast<CoilHeatingDXMultiSpeedStageData>();
+          if (modelObject) {
+            result.push_back(modelObject.get());
+          }
       }
     }
     return result;
-  }
-
-  void CoilHeatingDXMultiSpeed_Impl::addStage(const CoilHeatingDXMultiSpeedStageData& stage) {
-    auto group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-    OS_ASSERT(! group.empty());
-    group.setPointer(OS_Coil_Heating_DX_MultiSpeedExtensibleFields::StageData,stage.handle());
   }
 
   boost::optional<HVACComponent> CoilHeatingDXMultiSpeed_Impl::containingHVACComponent() const
@@ -358,6 +391,23 @@ namespace detail {
   bool CoilHeatingDXMultiSpeed_Impl::addToNode(Node & node)
   {
     return false;
+  }
+
+  bool CoilHeatingDXMultiSpeed_Impl::setStageDataList(const boost::optional<ModelObjectList>& modelObjectList) {
+    bool result(false);
+    if (modelObjectList) {
+      result = setPointer(OS_Coil_Heating_DX_MultiSpeedFields::StageDataList, modelObjectList.get().handle());
+    }
+    else {
+      resetStageDataList();
+      result = true;
+    }
+    return result;
+  }
+
+  void CoilHeatingDXMultiSpeed_Impl::resetStageDataList() {
+    bool result = setString(OS_Coil_Heating_DX_MultiSpeedFields::StageDataList, "");
+    OS_ASSERT(result);
   }
 
 } // detail
@@ -389,6 +439,11 @@ CoilHeatingDXMultiSpeed::CoilHeatingDXMultiSpeed(const Model& model)
   ok = setFuelType("NaturalGas");
   OS_ASSERT(ok);
   ok = setRegionnumberforCalculatingHSPF(4);
+  OS_ASSERT(ok);
+
+  auto stageDataList = ModelObjectList(model);
+  stageDataList.setName(this->name().get() + " Stage Data List");
+  ok = getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setStageDataList(stageDataList);
   OS_ASSERT(ok);
 
 }
@@ -548,8 +603,16 @@ std::vector<CoilHeatingDXMultiSpeedStageData> CoilHeatingDXMultiSpeed::stages() 
   return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->stages();
 }
 
-void CoilHeatingDXMultiSpeed::addStage(const CoilHeatingDXMultiSpeedStageData& stage) {
+bool CoilHeatingDXMultiSpeed::addStage(const CoilHeatingDXMultiSpeedStageData& stage) {
   return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->addStage(stage);
+}
+
+void CoilHeatingDXMultiSpeed::removeStage(const CoilHeatingDXMultiSpeedStageData& stage) {
+  getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->removeStage(stage);
+}
+
+void CoilHeatingDXMultiSpeed::removeAllStages() {
+  getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->removeAllStages();
 }
 
 /// @cond

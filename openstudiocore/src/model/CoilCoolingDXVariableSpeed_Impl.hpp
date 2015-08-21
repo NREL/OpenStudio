@@ -30,6 +30,7 @@ class Curve;
 // class WaterStorageTank;
 class Schedule;
 class CoilCoolingDXVariableSpeedSpeedData;
+class ModelObjectList;
 
 namespace detail {
 
@@ -173,9 +174,19 @@ namespace detail {
     /** @name Other */
     //@{
 
+    bool setSpeedDataList(const boost::optional<ModelObjectList>& modelObjectList);
+
+    void resetSpeedDataList();
+
+    boost::optional<ModelObjectList> speedDataList() const;
+
     std::vector<CoilCoolingDXVariableSpeedSpeedData> speeds() const;
 
-    void addSpeed(CoilCoolingDXVariableSpeedSpeedData& speed);
+    bool addSpeed(const CoilCoolingDXVariableSpeedSpeedData& speed);
+
+    void removeSpeed(const CoilCoolingDXVariableSpeedSpeedData& speed);
+
+    void removeAllSpeeds();
 
     //@}
    protected:
