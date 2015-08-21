@@ -498,7 +498,7 @@ namespace openstudio {
           }
           );
 
-          addDropZoneColumn(Heading(QString(OUTSIDEBOUNDARYCONDITIONOBJECT)),
+          addDropZoneColumn(Heading(QString(OUTSIDEBOUNDARYCONDITIONOBJECT), true, false),
             CastNullAdapter<model::SubSurface>(&model::SubSurface::adjacentSubSurface),
             setter,
             boost::optional<std::function<void(model::SubSurface*)> >(NullAdapter(&model::SubSurface::resetAdjacentSubSurface)),
