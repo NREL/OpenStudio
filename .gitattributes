@@ -67,6 +67,7 @@
 *.sln     text
 *.stat    text
 *.sub     text
+*.svg     text
 *.tmp     text
 *.txt     text
 *.ui      text
@@ -98,7 +99,6 @@
 *.snk     binary
 *.sql     binary
 *.style   binary
-*.svg     binary
 *.tiff    binary
 *.ttf     binary
 *.woff    binary
