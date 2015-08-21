@@ -162,8 +162,24 @@ namespace detail {
           }
       }
     }
-
     return result;
+  }
+
+  bool CentralHeatPumpSystem_Impl::setChillerHeaterModuleList(const boost::optional<ModelObjectList>& modelObjectList) {
+    bool result(false);
+    if (modelObjectList) {
+      result = setPointer(OS_CentralHeatPumpSystemFields::ChillerHeaterModuleListName, modelObjectList.get().handle());
+    }
+    else {
+      resetChillerHeaterModuleList();
+      result = true;
+    }
+    return result;
+  }
+
+  void CentralHeatPumpSystem_Impl::resetChillerHeaterModuleList() {
+    bool result = setString(OS_CentralHeatPumpSystemFields::ChillerHeaterModuleListName, "");
+    OS_ASSERT(result);
   }
 
   std::string CentralHeatPumpSystem_Impl::controlMethod() const {
@@ -217,6 +233,12 @@ CentralHeatPumpSystem::CentralHeatPumpSystem(const Model& model)
   OS_ASSERT(ok);
   ok = setAncillaryPower( 0.0 );
   OS_ASSERT(ok);
+
+  auto chillerHeaterModuleList = ModelObjectList(model);
+  chillerHeaterModuleList.setName(this->name().get() + " Chiller Heater Module List");
+  ok = getImpl<detail::CentralHeatPumpSystem_Impl>()->setChillerHeaterModuleList(chillerHeaterModuleList);
+  OS_ASSERT(ok);
+
 }
 
 IddObjectType CentralHeatPumpSystem::iddObjectType() {

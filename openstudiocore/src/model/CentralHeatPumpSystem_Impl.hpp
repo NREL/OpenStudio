@@ -106,6 +106,10 @@ namespace detail {
 
     std::vector<CentralHeatPumpSystemModule> modules() const;
 
+    bool setChillerHeaterModuleList(const boost::optional<ModelObjectList>& modelObjectList);
+
+    void resetChillerHeaterModuleList();
+
     //@}
    protected:
    private:
