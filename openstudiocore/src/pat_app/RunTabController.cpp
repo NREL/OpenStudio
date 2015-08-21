@@ -285,6 +285,14 @@ void RunTabController::onPlayButtonClicked()
       return;
     }
 
+    // check for missing measure.rb file
+    for (const BCLMeasure measure : project->measures()){
+      if (!measure.primaryRubyScriptPath()){
+        QMessageBox::warning(runView, "Missing Ruby Script", toQString("Measure '" + measure.displayName() + "' is missing it's measure.rb file, update this measure and try again."));
+        return;
+      }
+    }
+
     // version translation and weather file
     if (project->modelsRequireUpdate()) {
       std::stringstream question;
