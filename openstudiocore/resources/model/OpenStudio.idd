@@ -14426,7 +14426,6 @@ OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
       
 OS:Coil:Heating:DX:MultiSpeed,
        \min-fields 19
-       \extensible:1
   A1 , \field Handle
        \type handle
        \required-field
@@ -14518,10 +14517,9 @@ OS:Coil:Heating:DX:MultiSpeed,
        \type integer
        \minimum 1
        \maximum 6
-  A11; \field Stage Data
-       \begin-extensible
+  A11; \field Stage Data List
        \type object-list
-       \object-list CoilHeatingDXMultiSpeedStageData
+       \object-list ModelObjectLists
 
 OS:Coil:Heating:DX:MultiSpeed:StageData,
        \min-fields 12
@@ -14591,7 +14589,6 @@ OS:Coil:Heating:DX:MultiSpeed:StageData,
 
 OS:Coil:Heating:DX:VariableSpeed,
         \min-fields 19
-        \extensible:1
    A1,  \field Handle
         \type handle
         \required-field
@@ -14678,10 +14675,9 @@ OS:Coil:Heating:DX:VariableSpeed,
         \autosizable
         \units W
         \ip-units W
-   A9;  \field Speed Data
-        \begin-extensible
+   A9;  \field Speed Data List
         \type object-list
-        \object-list CoilHeatingDXVariableSpeedSpeedData
+        \object-list ModelObjectLists
 
 OS:Coil:Heating:DX:VariableSpeed:SpeedData,
         \min-fields 9
@@ -14731,7 +14727,6 @@ OS:Coil:Heating:DX:VariableSpeed:SpeedData,
 
 OS:Coil:Cooling:DX:VariableSpeed,
         \min-fields 21
-        \extensible:1
    A1,  \field Handle
         \type handle
         \required-field
@@ -14821,10 +14816,9 @@ OS:Coil:Cooling:DX:VariableSpeed,
    A10, \field Basin Heater Operating Schedule Name
         \type object-list
         \object-list ScheduleNames
-   A11; \field Speed Data
-        \begin-extensible
+   A11; \field Speed Data List
         \type object-list
-        \object-list CoilCoolingDXVariableSpeedSpeedData
+        \object-list ModelObjectLists
 
 OS:Coil:Cooling:DX:VariableSpeed:SpeedData,
         \min-fields 12
@@ -14890,7 +14884,6 @@ OS:Coil:Cooling:DX:VariableSpeed:SpeedData,
 
 OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit,
         \min-fields 12
-        \extensible:1
    A1,  \field Handle
         \type handle
         \required-field
@@ -14940,10 +14933,9 @@ OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit,
         \type object-list
         \object-list QuadraticCubicCurves
         \object-list UniVariateTables
-   A8;  \field Speed Data
-        \begin-extensible
+   A8;  \field Speed Data List
         \type object-list
-        \object-list CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData
+        \object-list ModelObjectLists
 
 OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
         \min-fields 14
@@ -15018,7 +15010,6 @@ OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
 
 OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit,
         \min-fields 15
-        \extensible:1
    A1,  \field Handle
         \type handle
         \required-field
@@ -15083,10 +15074,9 @@ OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit,
         \type object-list
         \object-list QuadraticCubicCurves
         \object-list UniVariateTables
-   A8;  \field Speed Data
-        \begin-extensible
+   A8;  \field Speed Data List
         \type object-list
-        \object-list CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData
+        \object-list ModelObjectLists
 
 OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
         \min-fields 15

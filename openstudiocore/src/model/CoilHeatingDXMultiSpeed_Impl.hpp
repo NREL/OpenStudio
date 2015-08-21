@@ -29,6 +29,7 @@ namespace model {
 class Schedule;
 class Curve;
 class CoilHeatingDXMultiSpeedStageData;
+class ModelObjectList;
 
 namespace detail {
 
@@ -152,9 +153,19 @@ namespace detail {
     /** @name Other */
     //@{
 
+    bool setStageDataList(const boost::optional<ModelObjectList>& modelObjectList);
+
+    void resetStageDataList();
+
+    boost::optional<ModelObjectList> stageDataList() const;
+
     std::vector<CoilHeatingDXMultiSpeedStageData> stages() const;
 
-    void addStage(const CoilHeatingDXMultiSpeedStageData& stage);
+    bool addStage(const CoilHeatingDXMultiSpeedStageData& stage);
+
+    void removeStage(const CoilHeatingDXMultiSpeedStageData& stage);
+
+    void removeAllStages();
 
     //@}
    protected:

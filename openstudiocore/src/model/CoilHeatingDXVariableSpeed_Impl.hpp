@@ -28,6 +28,7 @@ namespace model {
 
 class Curve;
 class CoilHeatingDXVariableSpeedSpeedData;
+class ModelObjectList;
 
 namespace detail {
 
@@ -157,9 +158,19 @@ namespace detail {
     /** @name Other */
     //@{
 
+    bool setSpeedDataList(const boost::optional<ModelObjectList>& modelObjectList);
+
+    void resetSpeedDataList();
+
+    boost::optional<ModelObjectList> speedDataList() const;
+
     std::vector<CoilHeatingDXVariableSpeedSpeedData> speeds() const;
 
-    void addSpeed(CoilHeatingDXVariableSpeedSpeedData& speed);
+    bool addSpeed(const CoilHeatingDXVariableSpeedSpeedData& speed);
+
+    void removeSpeed(const CoilHeatingDXVariableSpeedSpeedData& speed);
+
+    void removeAllSpeeds();
 
     //@}
    protected:
