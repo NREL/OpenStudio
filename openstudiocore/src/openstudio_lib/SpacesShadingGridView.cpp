@@ -69,10 +69,10 @@ namespace openstudio {
   SpacesShadingGridView::SpacesShadingGridView(bool isIP, const model::Model & model, QWidget * parent)
     : SpacesSubtabGridView(isIP, model, parent)
   {
-    showStoryFilter();
-    showThermalZoneFilter();
-    showSpaceTypeFilter();
-    showSpaceNameFilter();
+    //showStoryFilter();
+    //showThermalZoneFilter();
+    //showSpaceTypeFilter();
+    //showSpaceNameFilter();
 
     m_filterGridLayout->setRowStretch(m_filterGridLayout->rowCount(), 100);
     m_filterGridLayout->setColumnStretch(m_filterGridLayout->columnCount(), 100);
