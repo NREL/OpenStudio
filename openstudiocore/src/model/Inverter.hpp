@@ -21,8 +21,7 @@
 #define MODEL_INVERTER_HPP
 
 #include "ModelAPI.hpp"
-#include "HVACComponent.hpp"
-#include "Connection.hpp"
+#include "ParentObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -33,7 +32,7 @@ namespace detail{
 
 /** Inverter is the base class for inverters.
  */
-class MODEL_API Inverter : public ModelObject {
+class MODEL_API Inverter : public ParentObject {
 
   public:
 

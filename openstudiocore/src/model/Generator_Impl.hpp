@@ -20,14 +20,14 @@
 #ifndef MODEL_GENERATOR_IMPL_HPP
 #define MODEL_GENERATOR_IMPL_HPP
 
-#include "ModelObject_Impl.hpp"
+#include "ParentObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
 namespace detail {
 
-  class MODEL_API Generator_Impl : public ModelObject_Impl {
+  class MODEL_API Generator_Impl : public ParentObject_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -40,19 +40,13 @@ namespace detail {
                    Model_Impl* model,
                    bool keepHandle);
 
-    Generator_Impl(const StraightComponent_Impl& other, Model_Impl* model, bool keepHandles);
+    Generator_Impl(const Generator_Impl& other, Model_Impl* model, bool keepHandles);
 
     virtual ~Generator_Impl() {}
 
     //@}
     /** @name Virtual Methods */
     //@{
-
-    virtual ModelObject clone(Model model) const override;
-
-    virtual boost::optional<ParentObject> parent() const override;
-
-    virtual std::vector<ModelObject> children() const override;
 
     //@}
     /** @name Getters */
@@ -63,6 +57,8 @@ namespace detail {
     // boost::optional<Schedule> availabilitySchedule() const;
 
     // boost::optional<double> ratedThermalToElectricalPowerRatio() const;
+
+    // boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 
     //@}
     /** @name Setters */

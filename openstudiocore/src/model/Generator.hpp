@@ -21,8 +21,7 @@
 #define MODEL_GENERATOR_HPP
 
 #include "ModelAPI.hpp"
-#include "HVACComponent.hpp"
-#include "Connection.hpp"
+#include "ParentObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -33,7 +32,7 @@ namespace detail{
 
 /** Generator is the base class for generators.
  */
-class MODEL_API Generator : public ModelObject {
+class MODEL_API Generator : public ParentObject {
 
   public:
 
@@ -49,7 +48,7 @@ class MODEL_API Generator : public ModelObject {
 
   /// @cond 
 
-  typedef detail::Inverter_Impl ImplType;
+  typedef detail::Generator_Impl ImplType;
 
   explicit Generator(std::shared_ptr<detail::Generator_Impl> impl);
 
