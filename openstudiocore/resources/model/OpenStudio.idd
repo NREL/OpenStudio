@@ -24149,6 +24149,362 @@ OS:SolarCollector:FlatPlate:PhotovoltaicThermal,
        \units m3/s
        \autosizable
 
+\group Electric Load Center-Generator Specifications
+
+OS:Generator:Photovoltaic,
+        \memo Describes an array of photovoltaic (PV) modules.  A series of different PV arrays
+        \memo can be connected to a single electric load center (and inverter) by listing them all
+        \memo in an ElectricLoadCenter:Generator object. PV performance is taken from the
+        \memo referenced PhotovoltaicPerformance:* object. Array tilt, azimuth, and gross area
+        \memo are taken from the referenced building surface or shading surface. The array
+        \memo surface participates normally in all shading calculations.
+   A1 , \field Handle
+        \type handle
+        \required-field        
+   A2 , \field Name
+        \required-field
+        \reference GeneratorNames
+        \reference PVGeneratorNames
+   A3 , \field Surface Name
+        \required-field
+        \type object-list
+        \object-list AllShadingAndHTSurfNames
+   A4 , \field Photovoltaic Performance Object Type
+        \type choice
+        \key PhotovoltaicPerformance:Simple
+        \key PhotovoltaicPerformance:EquivalentOne-Diode
+        \key PhotovoltaicPerformance:Sandia
+   A5 , \field Module Performance Name
+        \note PV array modeling details
+        \type object-list
+        \object-list PVModules
+   A6 , \field Heat Transfer Integration Mode
+        \type choice
+        \key Decoupled
+        \key DecoupledUllebergDynamic
+        \key IntegratedSurfaceOutsideFace
+        \key IntegratedTranspiredCollector
+        \key IntegratedExteriorVentedCavity
+        \key PhotovoltaicThermalSolarCollector
+        \default Decoupled
+   N1 , \field Number of Modules in Parallel
+        \default 1
+        \units dimensionless
+        \minimum 1
+   N2 ; \field Number of Modules in Series
+        \default 1
+        \units dimensionless
+        \minimum 1
+
+OS:PhotovoltaicPerformance:Simple,
+        \memo Describes a simple model of photovoltaics that may be useful for early phase
+        \memo design analysis. In this model the user has direct access to the efficiency with
+        \memo which surfaces convert incident solar radiation to electricity and need not specify
+        \memo arrays of specific modules.
+   A1 , \field Handle
+        \type handle
+        \required-field        
+   A2 , \field Name
+        \reference PVModules
+   N1 , \field Fraction of Surface Area with Active Solar Cells
+        \required-field
+        \type real
+        \units dimensionless
+        \minimum 0.0
+        \maximum 1.0
+   A3 , \field Conversion Efficiency Input Mode
+        \type choice
+        \key Fixed
+        \key Scheduled
+   N2 , \field Value for Cell Efficiency if Fixed
+        \note Efficiency = (power generated [W])/(incident solar[W])
+        \type real
+        \minimum 0.0
+        \maximum 1.0
+   A4 ; \field Efficiency Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+
+OS:PhotovoltaicPerformance:EquivalentOne-Diode,
+        \memo Describes the performance characteristics of Photovoltaic (PV) modules to be modeled
+        \memo using an equivalent one-diode circuit.  This model is also known as
+        \memo the 4- or 5-parameter TRNSYS model for photovoltaics.
+   A1 , \field Handle
+        \type handle
+        \required-field        
+   A2 , \field Name
+        \reference PVModules
+   A3 , \field Cell type
+        \type choice
+        \key CrystallineSilicon
+        \key AmorphousSilicon
+   N1 , \field Number of Cells in Series
+         \default 36
+         \type integer
+         \units dimensionless
+         \minimum 0
+   N2 , \field Active Area
+         \note The total power output of the array is determined by the
+         \note number of modules (see above).  The Active Area is only
+         \note used to calculate the PV Array Efficiency output variable.
+         \default 0.89
+         \type real
+         \units m2
+         \minimum 0.1
+   N3 , \field Transmittance Absorptance Product
+         \default 0.95
+         \type real
+         \units dimensionless
+         \minimum 0.0
+         \maximum 1.0
+   N4 , \field Semiconductor Bandgap
+         \default 1.12
+         \type real
+         \units eV
+         \minimum 0.0
+   N5 , \field Shunt Resistance
+         \default 1000000.0
+         \type real
+         \units ohms
+         \minimum 0.0
+   N6 , \field Short Circuit Current
+         \default 6.5
+         \type real
+         \units A
+         \minimum 0.0
+   N7, \field Open Circuit Voltage
+         \default 21.6
+         \type real
+         \units V
+         \minimum 0.0
+   N8, \field Reference Temperature
+         \default 25
+         \type real
+         \units C
+         \minimum 0.0
+   N9, \field Reference Insolation
+         \default 1000
+         \type real
+         \units W/m2
+         \minimum 0.0
+   N10, \field Module Current at Maximum Power
+         \note Single module current at the maximum power point
+         \note and reference conditions.  Module Current, Module Voltage,
+         \note Number of Modules in Parallel and Number of Modules in Series
+         \note determine the maximum power output of the array.
+         \default 5.9
+         \type real
+         \units A
+         \minimum 0.0
+   N11, \field Module Voltage at Maximum Power
+         \note Single module voltage at the maximum power point
+         \note and reference conditions.  Module Current, Module Voltage,
+         \note Number of Modules in Parallel and Number of Modules in Series
+         \note determine the maximum power output of the array.
+         \default 17
+         \type real
+         \units V
+         \minimum 0.0
+   N12, \field Temperature Coefficient of Short Circuit Current
+         \default 0.02
+         \type real
+         \units A/K
+   N13, \field Temperature Coefficient of Open Circuit Voltage
+         \default -0.079
+         \type real
+         \units V/K
+   N14, \field Nominal Operating Cell Temperature Test Ambient Temperature
+         \default 20
+         \type real
+         \units C
+         \minimum 0.0
+   N15, \field Nominal Operating Cell Temperature Test Cell Temperature
+         \default 40
+         \type real
+         \units C
+         \minimum 0.0
+   N16, \field Nominal Operating Cell Temperature Test Insolation
+         \default 800
+         \type real
+         \units W/m2
+         \minimum 0.0
+   N17, \field Module Heat Loss Coefficient
+         \default 30
+         \type real
+         \units W/m2-K
+         \minimum 0.0
+   N18; \field Total Heat Capacity
+         \default 50000
+         \type real
+         \units J/m2-K
+         \minimum 0.0
+
+OS:ElectricLoadCenter:Generators,
+       \memo List of electric power generators to include in the simulation including the name and
+       \memo type of each generators along with availability schedule, rated power output,
+       \memo and thermal-to-electrical power ratio.
+       \extensible:5 - repeat set of five fields, remembering to remove ; from "inner" fields.
+       \min-fields 6
+  A1 , \field Handle
+       \type handle
+       \required-field         
+  A2 , \field Name
+       \required-field
+       \reference GeneratorLists
+  A3 , \field Generator 1 Name
+       \begin-extensible
+       \required-field
+       \type object-list
+       \object-list GeneratorNames
+  A4 , \field Generator 1 Object Type
+       \required-field
+       \type choice
+       \key Generator:InternalCombustionEngine
+       \key Generator:CombustionTurbine
+       \key Generator:Photovoltaic
+       \key Generator:FuelCell
+       \key Generator:MicroCHP
+       \key Generator:MicroTurbine
+       \key Generator:WindTurbine
+  N1 , \field Generator 1 Rated Electric Power Output
+       \type real
+       \units W
+  A5 , \field Generator 1 Availability Schedule Name
+       \note Availability schedule name for this generator. Schedule value > 0 means the generator is available.
+       \note If this field is blank, the generator is always available.
+       \type object-list
+       \object-list ScheduleNames
+  N2 ; \field Generator 1 Rated Thermal to Electrical Power Ratio
+
+OS:ElectricLoadCenter:Inverter:Simple,
+        \memo Electric power inverter to convert from direct current (DC) to alternating current
+        \memo (AC) in an electric load center that contains photovoltaic modules. This input
+        \memo object is for the simplest inverter model and uses a fixed efficiency.
+   A1 , \field Handle
+        \type handle
+        \required-field          
+   A2 , \field Name
+        \reference InverterList
+   A3 , \field Availability Schedule Name
+        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+        \note If this field is blank, the system is always available.
+        \type object-list
+        \object-list ScheduleNames
+   A4 , \field Zone Name
+        \note enter name of zone to receive inverter losses as heat
+        \note if blank then inverter is assumed to be outdoors
+        \type object-list
+        \object-list ZoneNames
+   N1 , \field Radiative Fraction
+        \minimum 0
+        \maximum 1.0
+   N2 ; \field Inverter Efficiency
+        \minimum 0
+        \maximum 1.0
+
+OS:ElectricLoadCenter:Inverter:LookUpTable,
+        \memo   California Energy Commission tests and publishes data on inverters
+        \memo   This inverter model interpolates using CEC test data
+        \memo   Input data are at http://www.gosolarcalifornia.org/equipment/inverter_tests/summaries
+   A1 , \field Handle
+        \type handle
+        \required-field           
+   A2 , \field Name
+        \reference InverterList
+   A3 , \field Availability Schedule Name
+        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+        \note If this field is blank, the system is always available.
+        \type object-list
+        \object-list ScheduleNames
+   A4 , \field Zone Name
+        \note Enter name of zone to receive inverter losses as heat
+        \note if blank then inverter is assumed to be outdoors
+        \type object-list
+        \object-list ZoneNames
+   N1 , \field Radiative Fraction
+        \minimum 0
+        \maximum 1.0
+   N2 , \field Rated Maximum Continuous Output Power
+        \units W
+   N3 , \field Night Tare Loss Power
+        \units W
+   N4 , \field Nominal Voltage Input
+        \units V
+   N5 , \field Efficiency at 10% Power and Nominal Voltage
+        \minimum 0
+        \maximum 1.0
+   N6 , \field Efficiency at 20% Power and Nominal Voltage
+        \minimum 0
+        \maximum 1.0
+   N7 , \field Efficiency at 30% Power and Nominal Voltage
+        \minimum 0
+        \maximum 1.0
+   N8 , \field Efficiency at 50% Power and Nominal Voltage
+        \minimum 0
+        \maximum 1.0
+   N9 , \field Efficiency at 75% Power and Nominal Voltage
+        \minimum 0
+        \maximum 1.0
+   N10; \field Efficiency at 100% Power and Nominal Voltage
+        \minimum 0
+        \maximum 1.0
+
+OS:ElectricLoadCenter:Distribution,
+       \memo a list of meters that can be reported are available after a run on
+       \memo the meter dictionary file (.mdd) if the Output:VariableDictionary has been requested.
+  A1 , \field Handle
+       \type handle
+       \required-field      
+  A2 , \field Name
+       \required-field
+  A3 , \field Generator List Name
+       \type object-list
+       \required-field 
+       \object-list GeneratorLists
+  A4 , \field Generator Operation Scheme Type
+       \note required if Generator List is entered.
+       \type choice
+       \key Baseload
+!       \key DemandLimit
+!       \key TrackElectrical
+!       \key TrackSchedule
+!       \key TrackMeter
+!       \key FollowThermal
+!       \key FollowThermalLimitElectrical
+  N1 , \field Demand Limit Scheme Purchased Electric Demand Limit
+       \type real
+       \units W
+  A5 , \field Track Schedule Name Scheme Schedule Name
+       \note required when Generator Operation Scheme Type=TrackSchedule
+       \type object-list
+       \object-list ScheduleNames
+  A6 , \field Track Meter Scheme Meter Name
+       \note required when Generator Operation Scheme Type=TrackMeter
+       \type external-list
+       \external-list autoRDDmeter
+  A7 , \field Electrical Buss Type
+       \type choice
+!       \key AlternatingCurrent
+!       \key AlternatingCurrentWithStorage
+       \key DirectCurrentWithInverter
+!       \key DirectCurrentWithInverterDCStorage
+!       \key DirectCurrentWithInverterACStorage
+!       \default AlternatingCurrent
+  A8 , \field Inverter Object Name
+       \note required when Electrical Buss Type=DirectCurrentWithInverter, DirectCurrentWithInverterDCStorage,
+       \note or DirectCurrentWithInverterACStorage
+       \type object-list
+       \object-list InverterList
+  A9 , \field Electrical Storage Object Name
+       \note required when Electrical Buss Type=AlternatingCurrentWithStorage, DirectCurrentWithInverterDCStorage,
+       \note or DirectCurrentWithInverterACStorage
+       \type object-list
+       \object-list ElecStorageList
+  A10; \field Transformer Object Name
+       \note required when power needs to be output from on-site generation to the grid via transformer
+       \type object-list
+       \object-list TransformerNames       
+       
 \group OpenStudio Economics
 
 OS:ComponentCost:Adjustments,
