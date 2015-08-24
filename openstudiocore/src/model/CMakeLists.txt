@@ -494,6 +494,9 @@ set(${target_name}_src
   GasMixture.hpp
   GasMixture_Impl.hpp
   GasMixture.cpp
+  Generator.hpp
+  Generator_Impl.hpp
+  Generator.cpp  
   GlareSensor.hpp
   GlareSensor_Impl.hpp
   GlareSensor.cpp
@@ -559,6 +562,9 @@ set(${target_name}_src
   InteriorPartitionSurfaceGroup.hpp
   InteriorPartitionSurfaceGroup_Impl.hpp
   InteriorPartitionSurfaceGroup.cpp
+  Inverter.hpp
+  Inverter_Impl.hpp
+  Inverter.cpp  
   LayeredConstruction.hpp
   LayeredConstruction_Impl.hpp
   LayeredConstruction.cpp
