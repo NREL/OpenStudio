@@ -37,6 +37,7 @@
 #include <utilities/idd/Coil_Heating_Gas_MultiStage_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_DX_MultiSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_MultiSpeed_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -346,6 +347,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
     } else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water ) {
       _heatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName,heatingCoilInletNodeName);
       _heatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName,heatingCoilOutletNodeName);
+    } else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_DX_MultiSpeed ) {
+      _heatingCoil->setString(Coil_Heating_DX_MultiSpeedFields::AirInletNodeName,heatingCoilInletNodeName);
+      _heatingCoil->setString(Coil_Heating_DX_MultiSpeedFields::AirOutletNodeName,heatingCoilOutletNodeName);
     }
   }
 
