@@ -75,6 +75,8 @@
 #include "../../model/SolarCollectorFlatPlateWater_Impl.hpp"
 #include "../../model/SolarCollectorFlatPlatePhotovoltaicThermal.hpp"
 #include "../../model/SolarCollectorFlatPlatePhotovoltaicThermal_Impl.hpp"
+#include "../../model/PlantComponentTemperatureSource.hpp"
+#include "../../model/PlantComponentTemperatureSource_Impl.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/WorkspaceObjectOrder.hpp"
@@ -254,6 +256,12 @@ boost::optional<double> flowrate(const HVACComponent & component)
       result = mo.maximumFlowRate();
       break;
     }
+    case openstudio::IddObjectType::OS_PlantComponent_TemperatureSource :
+    {
+      auto mo = component.cast<PlantComponentTemperatureSource>();
+      result = mo.designVolumeFlowRate();
+      break;
+    }
     default:
     {
       break;
@@ -352,6 +360,10 @@ ComponentType componentType(const HVACComponent & component)
     case openstudio::IddObjectType::OS_SolarCollector_IntegralCollectorStorage :
     {
       return ComponentType::HEATING;
+    }
+    case openstudio::IddObjectType::OS_PlantComponent_TemperatureSource :
+    {
+      return ComponentType::BOTH;
     }
     default:
     {
