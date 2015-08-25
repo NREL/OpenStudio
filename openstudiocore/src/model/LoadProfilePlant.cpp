@@ -26,7 +26,7 @@
 #include "ScheduleDay.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
-#include "../utilities/Time/Time.hpp"
+#include "../utilities/time/Time.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
 
