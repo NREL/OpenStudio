@@ -107,7 +107,8 @@ class ReplaceModel < OpenStudio::Ruleset::ModelUserScript
     end
     model.removeObjects(handlesToRemove)
     
-    model.addObjects(newModel.objects)
+    # must do a full serialization so we are adding IdfObjects
+    model.addObjects(newModel.toIdfFile.objects)
     
     runner.registerFinalCondition("Model replaced with alternative #{alternativeModelPath}. Weather file and design days retained from original.")
 
