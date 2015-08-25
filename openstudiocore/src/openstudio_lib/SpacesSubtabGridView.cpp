@@ -324,6 +324,7 @@ namespace openstudio {
     m_storyFilter->addItem(ALL);
     m_storyFilter->addItem(UNASSIGNED);
     auto buildingStories = this->m_model.getModelObjects<model::BuildingStory>(true);
+    std::sort(buildingStories.begin(), buildingStories.end(), ModelObjectNameSorter());
     for (auto bd : buildingStories)
     {
       QString temp("unnamed");
@@ -340,6 +341,7 @@ namespace openstudio {
     m_thermalZoneFilter->addItem(ALL);
     m_thermalZoneFilter->addItem(UNASSIGNED);
     auto thermalZones = this->m_model.getModelObjects<model::ThermalZone>(true);
+    std::sort(thermalZones.begin(), thermalZones.end(), ModelObjectNameSorter());
     for (auto tz : thermalZones)
     {
       QString temp("unnamed");
@@ -355,6 +357,7 @@ namespace openstudio {
     m_spaceTypeFilter->clear();
     m_spaceTypeFilter->addItem(ALL);
     auto spacetypes = this->m_model.getModelObjects<model::SpaceType>(true);
+    std::sort(spacetypes.begin(), spacetypes.end(), ModelObjectNameSorter());
     for (auto st : spacetypes)
     {
       QString temp("unnamed");
@@ -469,6 +472,7 @@ namespace openstudio {
     m_interiorPartitionGroupFilter->clear();
     m_interiorPartitionGroupFilter->addItem(ALL);
     auto interiorPartitions = this->m_model.getModelObjects<model::InteriorPartitionSurface>(true);
+    std::sort(interiorPartitions.begin(), interiorPartitions.end(), ModelObjectNameSorter());
     for (auto ip : interiorPartitions)
     {
       QString temp("unnamed");

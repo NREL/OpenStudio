@@ -152,10 +152,6 @@ namespace openstudio {
     layout->addStretch();
     filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, filterGridLayout->columnCount());
 
-    // Evan note TODO hide for now
-    label->hide();
-    m_typeFilter->hide();
-
     // ORIENTATION
 
     layout = new QVBoxLayout();
@@ -175,10 +171,6 @@ namespace openstudio {
     layout->addStretch();
     filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, filterGridLayout->columnCount());
 
-    // Evan note TODO make this work with min and max degrees
-    label->hide();
-    m_orientationFilter->hide();
-
     // TILT
 
     layout = new QVBoxLayout();
@@ -197,16 +189,9 @@ namespace openstudio {
     auto validator = new QRegExpValidator(regex, this);
     m_tiltFilter->setValidator(validator);
 
-    // Evan note TODO make this work with min and max degrees
-    label->hide();
-    m_tiltFilter->hide(); 
-
     label = new QLabel();
     label->setText("rad");
     label->setObjectName("H3");
-
-    // Evan note TODO hide this label too, for now
-    label->hide();
 
     auto hLayout = new QHBoxLayout();
     hLayout->addWidget(m_tiltFilter, Qt::AlignTop | Qt::AlignLeft);
