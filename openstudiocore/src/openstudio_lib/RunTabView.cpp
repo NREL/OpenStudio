@@ -487,6 +487,19 @@ void RunView::playButtonClicked(bool t_checked)
       return;
     }
 
+    // check for missing measure.rb file
+    for (const BCLMeasure measure : OSAppBase::instance()->project()->measures()){
+      if (!measure.primaryRubyScriptPath()){
+        QMessageBox::information(this, 
+            "Missing Ruby Script", 
+            toQString("Measure '" + measure.displayName() + "' is missing it's measure.rb file, update this measure and try again."),
+            QMessageBox::Ok);
+        m_playButton->setChecked(false);
+        osdocument->enableTabsAfterRun();
+        return;
+      }
+    }
+
     // TODO call Dan's ModelToRad translator to determine if there are problems
     //if(m_radianceButton->isChecked() && (!m_radianceWarnings.empty() || !m_radianceErrors.empty())) {
     //  showRadianceWarningsAndErrors(m_radianceWarnings, m_radianceErrors);

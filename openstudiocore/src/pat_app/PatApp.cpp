@@ -1314,12 +1314,12 @@ bool PatApp::openFile(const QString& fileName)
 
     // check if opening the project requires an update
     if (analysisdriver::SimpleProject::requiresUpdate(projectDir)){
-      bool test = QMessageBox::question(mainWindow,
+      QMessageBox::StandardButton test = QMessageBox::question(mainWindow,
                             "Project Requires Update",
                             QString("Project at '") + dirAbsolutePath + QString("' requires update which may remove previous results."),
                             QMessageBox::Ok | QMessageBox::Cancel,
                             QMessageBox::Cancel);
-      if (!test){
+      if (test != QMessageBox::Ok){
         showStartupView();
         return false;
       }
