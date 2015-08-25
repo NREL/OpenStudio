@@ -477,7 +477,7 @@ namespace detail {
     }
 
     auto demandInletNodes = t_airLoopHVAC->demandInletNodes();
-    for( auto i = 0; i < demandInletNodes.size(); ++i ) {
+    for( unsigned i = 0; i < demandInletNodes.size(); ++i ) {
       thermalZone.removeSupplyPlenum(i);
     }
     thermalZone.removeReturnPlenum();
