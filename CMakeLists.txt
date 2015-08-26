@@ -1,4 +1,3 @@
-
 if (CMAKE_HOST_WIN32)
   # Necessary to do with FindOpenSSL on Windows
   cmake_minimum_required(VERSION 3.2.3)
@@ -189,6 +188,14 @@ endif()
 
 # EnergyPlus
 find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
+
+# Radiance
+if(BUILD_PACKAGE)
+  option(PACKAGE_RADIANCE "Package Radiance" OFF)
+  if(PACKAGE_RADIANCE OR PACKAGE_ENERGYPLUS)
+    set(RADIANCE_LOCATION "" CACHE PATH "Location of Radiance to Package")
+  endif()
+endif()
 
 # Build Ruby gem
 option(BUILD_RUBY_GEM "Build Ruby Gem" OFF)
@@ -814,6 +821,8 @@ ExternalProject_Add(OSCore
     -DRUBY_LIBRARY:STRING=${RUBY_LIBRARY}
     -DDOXYGEN_EXECUTABLE:STRING=${DOXYGEN_EXECUTABLE}
     -DDOXYGEN_DOT_EXECUTABLE:STRING=${DOXYGEN_DOT_EXECUTABLE}
+    -DPACKAGE_RADIANCE:BOOL=${PACKAGE_RADIANCE}
+    -DRADIANCE_LOCATION:PATH=${RADIANCE_LOCATION}
     -DOPENSSL_ROOT_DIR:PATH=${OPENSSL_ROOT_DIR}
     -DPATCH_EXE:PATH=${PATCH_EXE}
     -DMAXIMIZE_CPU_USAGE:BOOL=${MAXIMIZE_CPU_USAGE}
