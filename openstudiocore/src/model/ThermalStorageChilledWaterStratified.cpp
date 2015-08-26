@@ -709,7 +709,7 @@ ThermalStorageChilledWaterStratified::ThermalStorageChilledWaterStratified(const
   OS_ASSERT(ok);
   ok = setDeadbandTemperatureDifference( 2.5 );
   OS_ASSERT(ok);
-  ok = setAmbientTemperatureIndicator( "Schedule" );
+  ok = setAmbientTemperatureIndicator( "Outdoors" );
   OS_ASSERT(ok);
 
   ScheduleRuleset setpoint_schedule_1(model);
