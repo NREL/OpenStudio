@@ -44,6 +44,7 @@
 #include "../utilities/idd/OS_ShadingSurface_FieldEnums.hxx"
 #include "../utilities/idd/OS_ShadingSurfaceGroup_FieldEnums.hxx"
 #include "../utilities/idd/OS_WindowMaterial_Blind_FieldEnums.hxx"
+#include "../utilities/units/QuantityConverter.hpp"
 
 #include <QBoxLayout>
 #include <QCheckBox>
@@ -67,8 +68,10 @@
 // FILTERS
 #define SHADINGSURFACETYPE "Shading Surface Type"
 #define SHADINGSURFACEGROUPNAME "Shading Surface Group Name"
-#define ORIENTATION "Orientation"
-#define TILT "Tilt"
+#define ORIENTATIONGREATERTHAN "Degrees Orientation >"
+#define ORIENTATIONLESSTHAN "Degrees Orientation <"
+#define TILTGREATERTHAN "Degrees Tilt >"
+#define TILTLESSTHAN "Degrees Tilt <"
 
 namespace openstudio {
 
@@ -128,10 +131,6 @@ namespace openstudio {
     layout->addStretch();
     filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, filterGridLayout->columnCount());
 
-    // Evan note TODO hide for now
-    label->hide();
-    m_nameFilter->hide();
-
     // SHADINGSURFACETYPE
 
     layout = new QVBoxLayout();
@@ -152,53 +151,87 @@ namespace openstudio {
     layout->addStretch();
     filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, filterGridLayout->columnCount());
 
-    // ORIENTATION
+    // TILTGREATERTHAN
 
     layout = new QVBoxLayout();
 
     label = new QLabel();
-    label->setText(ORIENTATION);
+    label->setText(TILTGREATERTHAN);
     label->setObjectName("H3");
     layout->addWidget(label, Qt::AlignTop | Qt::AlignLeft);
 
-    m_orientationFilter = new QComboBox();
-    m_orientationFilter->addItem("Horizontal");
-    m_orientationFilter->addItem("Vertical");
-    m_orientationFilter->setFixedWidth(OSItem::ITEM_WIDTH);
-    connect(m_orientationFilter, &QComboBox::currentTextChanged, this, &openstudio::FacilityShadingGridView::orientationFilterChanged);
-
-    layout->addWidget(m_orientationFilter, Qt::AlignTop | Qt::AlignLeft);
-    layout->addStretch();
-    filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, filterGridLayout->columnCount());
-
-    // TILT
-
-    layout = new QVBoxLayout();
-
-    label = new QLabel();
-    label->setText(TILT);
-    label->setObjectName("H3");
-    layout->addWidget(label, Qt::AlignTop | Qt::AlignLeft);
-
-    m_tiltFilter = new QLineEdit();
-    m_tiltFilter->setFixedWidth(0.7 * OSItem::ITEM_WIDTH);
-        // Evan note: there are issues with using the signal textChanged or textEdited, related to the design and updating of the gridview (loss of focus, and updates per key stroke)
-    connect(m_tiltFilter, &QLineEdit::editingFinished, this, &openstudio::FacilityShadingGridView::tiltFilterChanged);
+    m_tiltGreaterThanFilter = new QLineEdit();
+    m_tiltGreaterThanFilter->setFixedWidth(OSItem::ITEM_WIDTH);
+    connect(m_tiltGreaterThanFilter, &QLineEdit::editingFinished, this, &openstudio::FacilityShadingGridView::tiltFilterChanged);
 
     QRegExp regex("^(-?\\d*\\.?\\d+)?$");
     auto validator = new QRegExpValidator(regex, this);
-    m_tiltFilter->setValidator(validator);
+    m_tiltGreaterThanFilter->setValidator(validator);
+
+    layout->addWidget(m_tiltGreaterThanFilter, Qt::AlignTop | Qt::AlignLeft);
+    layout->addStretch();
+    filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, filterGridLayout->columnCount());
+
+    //TILTLESSTHAN
+
+    layout = new QVBoxLayout();
 
     label = new QLabel();
-    label->setText("rad");
+    label->setText(TILTLESSTHAN);
     label->setObjectName("H3");
+    layout->addWidget(label, Qt::AlignTop | Qt::AlignLeft);
 
-    auto hLayout = new QHBoxLayout();
-    hLayout->addWidget(m_tiltFilter, Qt::AlignTop | Qt::AlignLeft);
-    hLayout->addWidget(label, Qt::AlignTop | Qt::AlignLeft);
-    hLayout->addStretch();
-    layout->addLayout(hLayout, Qt::AlignTop | Qt::AlignLeft);
+    m_tiltLessThanFilter = new QLineEdit();
+    m_tiltLessThanFilter->setFixedWidth(OSItem::ITEM_WIDTH);
+    // Evan note: there are issues with using the signal textChanged or textEdited, related to the design and updating of the gridview (loss of focus, and updates per key stroke)
+    connect(m_tiltLessThanFilter, &QLineEdit::editingFinished, this, &openstudio::FacilityShadingGridView::tiltFilterChanged);
 
+    validator = new QRegExpValidator(regex, this);
+    m_tiltLessThanFilter->setValidator(validator);
+
+    layout->addWidget(m_tiltLessThanFilter, Qt::AlignTop | Qt::AlignLeft);
+    layout->addStretch();
+    filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, filterGridLayout->columnCount());
+
+    // ORIENTATIONGREATERTHAN
+
+    layout = new QVBoxLayout();
+
+    label = new QLabel();
+    label->setText(ORIENTATIONGREATERTHAN);
+    label->setObjectName("H3");
+    layout->addWidget(label, Qt::AlignTop | Qt::AlignLeft);
+
+    m_orientationGreaterThanFilter = new QLineEdit();
+    m_orientationGreaterThanFilter->setFixedWidth(OSItem::ITEM_WIDTH);
+    connect(m_orientationGreaterThanFilter, &QLineEdit::editingFinished, this, &openstudio::FacilityShadingGridView::orientationFilterChanged);
+
+    validator = new QRegExpValidator(regex, this);
+    m_orientationGreaterThanFilter->setValidator(validator);
+
+    layout->addWidget(m_orientationGreaterThanFilter, Qt::AlignTop | Qt::AlignLeft);
+    layout->addStretch();
+    filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, filterGridLayout->columnCount());
+
+    // ORIENTATIONLESSTHAN
+
+    layout = new QVBoxLayout();
+
+    label = new QLabel();
+    label->setText(ORIENTATIONLESSTHAN);
+    label->setObjectName("H3");
+    layout->addWidget(label, Qt::AlignTop | Qt::AlignLeft);
+
+    m_orientationLessThanFilter = new QLineEdit();
+    m_orientationLessThanFilter->setFixedWidth(OSItem::ITEM_WIDTH);
+    // Evan note: there are issues with using the signal textChanged or textEdited, related to the design and updating of the gridview (loss of focus, and updates per key stroke)
+    connect(m_orientationLessThanFilter, &QLineEdit::editingFinished, this, &openstudio::FacilityShadingGridView::orientationFilterChanged);
+
+    validator = new QRegExpValidator(regex, this);
+    m_orientationLessThanFilter->setValidator(validator);
+
+    layout->addWidget(m_orientationLessThanFilter, Qt::AlignTop | Qt::AlignLeft);
+    layout->addStretch();
     filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, filterGridLayout->columnCount());
 
     filterGridLayout->setRowStretch(filterGridLayout->rowCount(), 100);
@@ -243,36 +276,89 @@ namespace openstudio {
     filterChanged();
   }
 
-  void FacilityShadingGridView::orientationFilterChanged(const QString& text)
+  void FacilityShadingGridView::orientationFilterChanged()
   {
     m_objectsFilteredByOrientation.clear();
 
+    auto objectSelector = this->m_gridController->getObjectSelector();
+
+    auto upperLimit = std::numeric_limits<double>::max();
+    auto lowerLimit = std::numeric_limits<double>::min();
+
+    if (!this->m_orientationLessThanFilter->text().isEmpty()) {
+      upperLimit = this->m_orientationLessThanFilter->text().toDouble();
+    }
+
+    if (!this->m_orientationGreaterThanFilter->text().isEmpty()) {
+      lowerLimit = this->m_orientationGreaterThanFilter->text().toDouble();
+    }
+
+    auto convertedValue = convert(upperLimit, "deg", "rad");
+    OS_ASSERT(convertedValue);
+    upperLimit = *convertedValue;
+
+    convertedValue = convert(lowerLimit, "deg", "rad");
+    OS_ASSERT(convertedValue);
+    lowerLimit = *convertedValue;
+
+    objectSelector->m_filteredObjects.clear();
+
+
     for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
-      if (obj.iddObjectType() == IddObjectType::OS_WindowMaterial_Blind){
-        if (m_orientationFilter->currentText() == obj.cast<model::Blind>().slatOrientation().c_str()) {
-          m_objectsFilteredByOrientation.insert(obj);
+      if (obj.iddObjectType() == IddObjectType::OS_ShadingSurfaceGroup){
+        for (auto shadingSurface : obj.cast<model::ShadingSurfaceGroup>().shadingSurfaces()) {
+          auto orientation = shadingSurface.azimuth();
+          if (orientation >= upperLimit || orientation <= lowerLimit) {
+            m_objectsFilteredByOrientation.insert(obj);
+          }
         }
       }
     }
 
+    this->m_gridView->requestRefreshAll();
+
     filterChanged();
   }
-
+  
   void FacilityShadingGridView::tiltFilterChanged()
   {
     m_objectsFilteredByTilt.clear();
 
-    if (m_tiltFilter->text().isEmpty()) {
-      // nothing to filter
+    auto objectSelector = this->m_gridController->getObjectSelector();
+
+    auto upperLimit = std::numeric_limits<double>::max();
+    auto lowerLimit = std::numeric_limits<double>::min();
+
+    if (!this->m_tiltLessThanFilter->text().isEmpty()) {
+      upperLimit = this->m_tiltLessThanFilter->text().toDouble();
     }
-    else {
-      for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
-        QString objName(obj.name().get().c_str());
-        if (!objName.contains(m_tiltFilter->text(), Qt::CaseInsensitive)) {
-          m_objectsFilteredByTilt.insert(obj);
+
+    if (!this->m_tiltGreaterThanFilter->text().isEmpty()) {
+      lowerLimit = this->m_tiltGreaterThanFilter->text().toDouble();
+    }
+
+    auto convertedValue = convert(upperLimit, "deg", "rad");
+    OS_ASSERT(convertedValue);
+    upperLimit = *convertedValue;
+
+    convertedValue = convert(lowerLimit, "deg", "rad");
+    OS_ASSERT(convertedValue);
+    lowerLimit = *convertedValue;
+
+    objectSelector->m_filteredObjects.clear();
+
+    for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
+      if (obj.iddObjectType() == IddObjectType::OS_ShadingSurfaceGroup){
+        for (auto shadingSurface : obj.cast<model::ShadingSurfaceGroup>().shadingSurfaces()) {
+          auto tilt = shadingSurface.tilt();
+          if (tilt >= upperLimit || tilt <= lowerLimit) {
+            m_objectsFilteredByOrientation.insert(obj);
+          }
         }
       }
     }
+
+    this->m_gridView->requestRefreshAll();
 
     filterChanged();
   }
@@ -304,7 +390,6 @@ namespace openstudio {
     this->m_gridView->requestRefreshAll();
 
     onClearSelection();
-
   }
 
   void FacilityShadingGridView::addObject(const IddObjectType& iddObjectType)
