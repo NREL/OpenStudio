@@ -266,9 +266,12 @@ namespace openstudio {
     m_objectsFilterdByType.clear();
 
     for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
-      if (obj.iddObjectType() == IddObjectType::OS_ShadingSurfaceGroup){
-        if (m_typeFilter->currentText() == obj.cast<model::ShadingSurfaceGroup>().shadingSurfaceType().c_str()) {
-          m_objectsFilterdByType.insert(obj);
+      auto parent = obj.parent();
+      if (parent && parent->iddObjectType() == IddObjectType::OS_ShadingSurfaceGroup){
+        if (m_typeFilter->currentText() == parent->cast<model::ShadingSurfaceGroup>().shadingSurfaceType().c_str()) {
+          if (m_objectsFilterdByType.count(obj) == 0) {
+            m_objectsFilterdByType.insert(obj);
+          }
         }
       }
     }
