@@ -40,6 +40,8 @@ class MODEL_API Inverter : public ParentObject {
 
   virtual ~Inverter() {}
 
+  //boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
+
   protected:
 
   friend class Model;

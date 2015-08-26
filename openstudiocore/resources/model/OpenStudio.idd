@@ -24431,6 +24431,7 @@ OS:ElectricLoadCenter:Distribution,
   A4 , \field Generator Operation Scheme Type
        \note required if Generator List is entered.
        \type choice
+       \default Baseload
        \key Baseload
 !       \key DemandLimit
 !       \key TrackElectrical

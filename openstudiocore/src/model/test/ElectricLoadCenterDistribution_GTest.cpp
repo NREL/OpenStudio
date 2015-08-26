@@ -17,57 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODEL_GENERATOR_HPP
-#define MODEL_GENERATOR_HPP
+#include <gtest/gtest.h>
+#include "ModelFixture.hpp"
+#include "../ElectricLoadCenterDistribution.hpp"
 
-#include "ModelAPI.hpp"
-#include "ParentObject.hpp"
+using namespace openstudio::model;
 
-namespace openstudio {
-namespace model {
-
-namespace detail{
-  class Generator_Impl;
+TEST_F(ModelFixture, ElectricLoadCenterDistribution) {
+  Model model;
+  
 }
-
-/** Generator is the base class for generators.
- */
-class MODEL_API Generator : public ParentObject {
-
-  public:
-
-  Generator(IddObjectType type,const Model& model);
-
-  virtual ~Generator() {}
-
-  //boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
-
-  protected:
-
-  friend class Model;
-
-  friend class openstudio::IdfObject;
-
-  /// @cond 
-
-  typedef detail::Generator_Impl ImplType;
-
-  explicit Generator(std::shared_ptr<detail::Generator_Impl> impl);
-
-  private:
-
-  REGISTER_LOGGER("openstudio.model.Generator");
-
-  /// @endcond 
-
-};
-
-typedef boost::optional<Generator> OptionalGenerator;
-
-typedef std::vector<Generator> GeneratorVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_GENERATOR_HPP
-

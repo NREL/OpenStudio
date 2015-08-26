@@ -17,30 +17,28 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODEL_GENERATOR_HPP
-#define MODEL_GENERATOR_HPP
+#ifndef MODEL_PHOTOVOLTAICPERFORMANCE_HPP
+#define MODEL_PHOTOVOLTAICPERFORMANCE_HPP
 
 #include "ModelAPI.hpp"
-#include "ParentObject.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
 
 namespace detail{
-  class Generator_Impl;
+  class PhotovoltaicPerformance_Impl;
 }
 
-/** Generator is the base class for generators.
+/** PhotovoltaicPerformance is the base class for photovoltaic performance objects.
  */
-class MODEL_API Generator : public ParentObject {
+class MODEL_API PhotovoltaicPerformance : public ModelObject {
 
   public:
 
-  Generator(IddObjectType type,const Model& model);
+  PhotovoltaicPerformance(IddObjectType type, const Model& model);
 
-  virtual ~Generator() {}
-
-  //boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
+  virtual ~PhotovoltaicPerformance() {}
 
   protected:
 
@@ -50,24 +48,24 @@ class MODEL_API Generator : public ParentObject {
 
   /// @cond 
 
-  typedef detail::Generator_Impl ImplType;
+  typedef detail::PhotovoltaicPerformance_Impl ImplType;
 
-  explicit Generator(std::shared_ptr<detail::Generator_Impl> impl);
+  explicit PhotovoltaicPerformance(std::shared_ptr<detail::PhotovoltaicPerformance_Impl> impl);
 
   private:
 
-  REGISTER_LOGGER("openstudio.model.Generator");
+  REGISTER_LOGGER("openstudio.model.PhotovoltaicPerformance");
 
   /// @endcond 
 
 };
 
-typedef boost::optional<Generator> OptionalGenerator;
+typedef boost::optional<PhotovoltaicPerformance> OptionalPhotovoltaicPerformance;
 
-typedef std::vector<Generator> GeneratorVector;
+typedef std::vector<PhotovoltaicPerformance> PhotovoltaicPerformanceVector;
 
 } // model
 } // openstudio
 
-#endif // MODEL_GENERATOR_HPP
+#endif // MODEL_PHOTOVOLTAICPERFORMANCE_HPP
 

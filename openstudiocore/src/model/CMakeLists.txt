@@ -434,6 +434,9 @@ set(${target_name}_src
   ElectricEquipmentDefinition.hpp
   ElectricEquipmentDefinition_Impl.hpp
   ElectricEquipmentDefinition.cpp
+  ElectricLoadCenterDistribution.hpp
+  ElectricLoadCenterDistribution_Impl.hpp
+  ElectricLoadCenterDistribution.cpp
   EvaporativeCoolerDirectResearchSpecial.hpp
   EvaporativeCoolerDirectResearchSpecial_Impl.hpp
   EvaporativeCoolerDirectResearchSpecial.cpp
@@ -496,7 +499,10 @@ set(${target_name}_src
   GasMixture.cpp
   Generator.hpp
   Generator_Impl.hpp
-  Generator.cpp  
+  Generator.cpp 
+  GeneratorPhotovoltaic.hpp
+  GeneratorPhotovoltaic_Impl.hpp
+  GeneratorPhotovoltaic.cpp  
   GlareSensor.hpp
   GlareSensor_Impl.hpp
   GlareSensor.cpp
@@ -649,6 +655,9 @@ set(${target_name}_src
   PeopleDefinition.hpp
   PeopleDefinition_Impl.hpp
   PeopleDefinition.cpp
+  PhotovoltaicPerformance.hpp
+  PhotovoltaicPerformance_Impl.hpp
+  PhotovoltaicPerformance.cpp
   PipeAdiabatic.hpp
   PipeAdiabatic_Impl.hpp
   PipeAdiabatic.cpp
@@ -1522,6 +1531,7 @@ set(${target_name}_test_src
   test/DistrictHeating_GTest.cpp
   test/Duct_GTest.cpp
   test/ElectricEquipment_GTest.cpp
+  test/ElectricLoadCenterDistribution_GTest.cpp
   test/EvaporativeCoolerDirectResearchSpecial_GTest.cpp
   test/EvaporativeCoolerIndirectResearchSpecial_GTest.cpp
   test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
@@ -1537,6 +1547,7 @@ set(${target_name}_test_src
   test/GasEquipment_GTest.cpp
   test/GasMixture_GTest.cpp
   test/Gas_GTest.cpp
+  test/GeneratorPhotovoltaic_GTest.cpp
   test/GlareSensor_GTest.cpp
   test/GroundHeatExchangerHorizontalTrench_GTest.cpp
   test/GroundHeatExchangerVertical_GTest.cpp

@@ -33,6 +33,8 @@
 #include "AirWallMaterial_Impl.hpp"
 #include "SubSurface.hpp"
 #include "SubSurface_Impl.hpp"
+#include "GeneratorPhotovoltaic.hpp"
+#include "GeneratorPhotovoltaic_Impl.hpp"
 
 #include "../utilities/sql/SqlFile.hpp"
 
@@ -562,6 +564,12 @@ namespace model {
       return result;
     }
 
+    std::vector<GeneratorPhotovoltaic> PlanarSurface_Impl::generatorPhotovoltaics() const
+    {
+      // DLM: TODO
+      return std::vector<GeneratorPhotovoltaic>();
+    }
+    
     boost::optional<ModelObject> PlanarSurface_Impl::constructionAsModelObject() const
     {
       return static_cast<boost::optional<ModelObject> >(this->construction());
@@ -791,6 +799,11 @@ Point3d PlanarSurface::centroid() const
 std::vector<ModelObject> PlanarSurface::solarCollectors() const
 {
   return getImpl<detail::PlanarSurface_Impl>()->solarCollectors();
+}
+
+std::vector<GeneratorPhotovoltaic> PlanarSurface::generatorPhotovoltaics() const
+{
+  return getImpl<detail::PlanarSurface_Impl>()->generatorPhotovoltaics();
 }
 
 std::vector<PlanarSurface> PlanarSurface::findPlanarSurfaces(const std::vector<PlanarSurface>& planarSurfaces,

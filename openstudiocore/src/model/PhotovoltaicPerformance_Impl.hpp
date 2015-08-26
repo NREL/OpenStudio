@@ -17,51 +17,40 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODEL_GENERATOR_IMPL_HPP
-#define MODEL_GENERATOR_IMPL_HPP
+#ifndef MODEL_PHOTOVOLTAICPERFORMANCE_IMPL_HPP
+#define MODEL_PHOTOVOLTAICPERFORMANCE_IMPL_HPP
 
-#include "ParentObject_Impl.hpp"
+#include "ModelObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
 namespace detail {
 
-  class MODEL_API Generator_Impl : public ParentObject_Impl {
+  class MODEL_API PhotovoltaicPerformance_Impl : public ModelObject_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{
 
-    Generator_Impl(IddObjectType type, Model_Impl* model);
+    PhotovoltaicPerformance_Impl(IddObjectType type, Model_Impl* model);
 
-    Generator_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+    PhotovoltaicPerformance_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    Generator_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                   Model_Impl* model,
-                   bool keepHandle);
+    PhotovoltaicPerformance_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                 Model_Impl* model,
+                                 bool keepHandle);
 
-    Generator_Impl(const Generator_Impl& other, Model_Impl* model, bool keepHandles);
+    PhotovoltaicPerformance_Impl(const PhotovoltaicPerformance_Impl& other, Model_Impl* model, bool keepHandles);
 
-    virtual ~Generator_Impl() {}
+    virtual ~PhotovoltaicPerformance_Impl() {}
 
     //@}
     /** @name Virtual Methods */
     //@{
 
-    /// remove this object from any ElectricLoadCenterDistribution objects then remove from file
-    //virtual std::vector<openstudio::IdfObject> remove() override;
-
     //@}
     /** @name Getters */
     //@{
-
-    // boost::optional<double> ratedElectricPowerOutput() const;
-    
-    // boost::optional<Schedule> availabilitySchedule() const;
-
-    // boost::optional<double> ratedThermalToElectricalPowerRatio() const;
-
-    // boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 
     //@}
     /** @name Setters */
@@ -75,7 +64,7 @@ namespace detail {
     //@}
    private:
 
-    REGISTER_LOGGER("openstudio.model.Generator");
+    REGISTER_LOGGER("openstudio.model.PhotovoltaicPerformance");
   };
 
 } // detail
@@ -83,4 +72,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_GENERATOR_IMPL_HPP
+#endif // MODEL_PHOTOVOLTAICPERFORMANCE_IMPL_HPP
