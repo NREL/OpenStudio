@@ -369,7 +369,7 @@ namespace detail {
     /** @name Other */
     //@{
 
-    boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const;
+    boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
     //@}
    protected:
