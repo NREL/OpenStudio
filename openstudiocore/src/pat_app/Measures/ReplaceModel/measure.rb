@@ -97,7 +97,18 @@ class ReplaceModel < OpenStudio::Ruleset::ModelUserScript
 
     # swap underlying data in model with underlying data in newModel
     # model = newModel DOES NOT work
-    model.swap(newModel)
+    
+    # DLM: there is something wrong with the implementation of swap
+    # model.swap(newModel)
+    
+    handlesToRemove = OpenStudio::UUIDVector.new
+    model.objects.each do |object|
+      handlesToRemove << object.handle
+    end
+    model.removeObjects(handlesToRemove)
+    
+    # must do a full serialization so we are adding IdfObjects
+    model.addObjects(newModel.toIdfFile.objects)
     
     runner.registerFinalCondition("Model replaced with alternative #{alternativeModelPath}. Weather file and design days retained from original.")
 
