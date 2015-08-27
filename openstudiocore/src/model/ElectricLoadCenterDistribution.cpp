@@ -300,6 +300,10 @@ std::vector<std::string> ElectricLoadCenterDistribution::electricalBussTypeValue
                         OS_ElectricLoadCenter_DistributionFields::ElectricalBussType);
 }
 
+std::vector<Generator> ElectricLoadCenterDistribution::generators() const {
+  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->generators();
+}
+
 std::string ElectricLoadCenterDistribution::generatorOperationSchemeType() const {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->generatorOperationSchemeType();
 }

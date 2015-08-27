@@ -1223,6 +1223,8 @@ set(${target_name}_swig_src
   ModelResources.i
   ModelGeometry.i
   ModelHVAC.i
+  ModelRefrigeration.i
+  ModelGenerators.i
 )
 
 # Only need to moc files that have Q_OBJECT macro

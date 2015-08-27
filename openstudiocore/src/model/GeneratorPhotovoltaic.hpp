@@ -119,6 +119,8 @@ class MODEL_API GeneratorPhotovoltaic : public Generator {
   /// @cond
   typedef detail::GeneratorPhotovoltaic_Impl ImplType;
 
+  GeneratorPhotovoltaic(const Model& model);
+
   //GeneratorPhotovoltaic(const Model& model, const PhotovoltaicPerformanceSimple& performance);
   
   //GeneratorPhotovoltaic(const Model& model, const PhotovoltaicPerformanceEquivalentOneDiode& performance);

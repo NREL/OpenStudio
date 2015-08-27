@@ -234,8 +234,17 @@ namespace detail {
 
 } // detail
 
-/*
-GeneratorPhotovoltaic::GeneratorPhotovoltaic(const Model& model, const PhotovoltaicPerformanceSimple& performance)
+GeneratorPhotovoltaic GeneratorPhotovoltaic::simple(const Model& model)
+{
+  return GeneratorPhotovoltaic(model);
+}
+
+GeneratorPhotovoltaic GeneratorPhotovoltaic::equivalentOneDiode(const Model& model)
+{
+  return GeneratorPhotovoltaic(model);
+}
+
+GeneratorPhotovoltaic::GeneratorPhotovoltaic(const Model& model)//, const PhotovoltaicPerformanceSimple& performance)
   : Generator(GeneratorPhotovoltaic::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::GeneratorPhotovoltaic_Impl>());
@@ -248,7 +257,6 @@ GeneratorPhotovoltaic::GeneratorPhotovoltaic(const Model& model, const Photovolt
   // ok = setModulePerformance();
   OS_ASSERT(ok);
 }
-*/
 
 IddObjectType GeneratorPhotovoltaic::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Generator_Photovoltaic);

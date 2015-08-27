@@ -1,8 +1,8 @@
-#ifndef MODEL_HVAC_I
-#define MODEL_HVAC_I
+#ifndef MODEL_GENERATORS_I
+#define MODEL_GENERATORS_I
 
 #ifdef SWIGPYTHON
-  %module openstudiomodelhvac
+  %module openstudiomodelgenerators
 #endif
 
 
@@ -13,6 +13,15 @@
 %import <model/ModelGeometry.i>
 %import <model/ModelHVAC.i>
 
+%{
+  #include <model/PhotovoltaicPerformance.hpp>
+  #include <model/PhotovoltaicPerformance_Impl.hpp>
+  #include <model/Generator.hpp>
+  #include <model/Generator_Impl.hpp>
+  #include <model/Inverter.hpp>
+  #include <model/Inverter_Impl.hpp>
+%}
+
 
 #if defined SWIGCSHARP
 
@@ -21,11 +30,21 @@
   
 #endif
 
+namespace openstudio {
+  namespace model {
+
+    // forward declarations
+    class Generator;
+  }
+}
+
+MODELOBJECT_TEMPLATES(PhotovoltaicPerformance);
 MODELOBJECT_TEMPLATES(Generator);
 MODELOBJECT_TEMPLATES(Inverter);
 MODELOBJECT_TEMPLATES(GeneratorPhotovoltaic);
 MODELOBJECT_TEMPLATES(ElectricLoadCenterDistribution);
 
+SWIG_MODELOBJECT(PhotovoltaicPerformance, 0);
 SWIG_MODELOBJECT(Generator, 0);
 SWIG_MODELOBJECT(Inverter, 0);
 SWIG_MODELOBJECT(GeneratorPhotovoltaic, 1);

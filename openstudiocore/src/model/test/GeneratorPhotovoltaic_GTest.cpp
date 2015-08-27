@@ -25,4 +25,6 @@ using namespace openstudio::model;
 
 TEST_F(ModelFixture, GeneratorPhotovoltaic) {
   Model model;
+
+  GeneratorPhotovoltaic panel = GeneratorPhotovoltaic::simple(model);
 }

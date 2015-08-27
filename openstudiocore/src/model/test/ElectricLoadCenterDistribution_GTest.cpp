@@ -25,5 +25,7 @@ using namespace openstudio::model;
 
 TEST_F(ModelFixture, ElectricLoadCenterDistribution) {
   Model model;
+
+  ElectricLoadCenterDistribution elcd(model);
   
 }
