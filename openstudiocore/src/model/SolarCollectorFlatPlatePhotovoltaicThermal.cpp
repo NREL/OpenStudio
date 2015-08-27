@@ -176,7 +176,7 @@ namespace detail {
   }
 
   bool SolarCollectorFlatPlatePhotovoltaicThermal_Impl::setSolarCollectorPerformance(const SolarCollectorPerformancePhotovoltaicThermalSimple& performance) {
-    bool result(false);
+    // bool result(false);
     ModelObject clone = performance.clone(this->model());
     return setSolarCollectorPerformanceNoClone(clone.cast<SolarCollectorPerformancePhotovoltaicThermalSimple>());
   }
