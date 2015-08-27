@@ -21,11 +21,11 @@ class RadianceMeasureTest < MiniTest::Unit::TestCase
 
     # get arguments and test that they are what we are expecting
     arguments = measure.arguments(model)
-    assert_equal(3, arguments.size)
+    assert_equal(4, arguments.size)
     assert_equal("apply_schedules", arguments[0].name)
     assert_equal("write_sql", arguments[1].name)
     assert_equal("use_cores", arguments[2].name)
-
+    assert_equal("rad_settings", arguments[3].name)
   end
 
   def test_measure
@@ -70,6 +70,7 @@ class RadianceMeasureTest < MiniTest::Unit::TestCase
     args_hash["apply_schedules"] = "Yes"
     args_hash["write_sql"] = "No"
     args_hash["use_cores"] = "Max"
+    args_hash["rad_settings"] = "Testing"
 
     # using defaults values from measure.rb for other arguments
 
