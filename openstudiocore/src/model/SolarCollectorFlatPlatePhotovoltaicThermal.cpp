@@ -31,6 +31,7 @@
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/Model.hpp>
+#include <model/AirLoopHVACOutdoorAirSystem.hpp>
 
 #include <utilities/idd/OS_SolarCollector_FlatPlate_PhotovoltaicThermal_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -135,11 +136,15 @@ namespace detail {
       }
     } else if (boost::optional<AirLoopHVAC> airLoopHVAC = node.airLoopHVAC())
     {
-      if (airLoopHVAC->supplyComponent(node.handle()))
+      boost::optional<AirLoopHVACOutdoorAirSystem> oa = airLoopHVAC->airLoopHVACOutdoorAirSystem();
+      if (oa)
       {
-        if (StraightComponent_Impl::addToNode(node))
+        if (oa->oaComponent(node.handle()))
         {
-          return true;
+          if (StraightComponent_Impl::addToNode(node))
+          {
+            return true;
+          }
         }
       }
     }
