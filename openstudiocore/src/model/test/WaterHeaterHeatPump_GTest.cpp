@@ -27,6 +27,8 @@
 #include "../CoilWaterHeatingAirToWaterHeatPump_Impl.hpp"
 #include "../HVACComponent.hpp"
 #include "../HVACComponent_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -35,32 +37,80 @@ TEST_F(ModelFixture,WaterHeaterHeatPump)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
+  // Create
   ASSERT_EXIT ( 
   {  
      Model m; 
      WaterHeaterHeatPump hpwh(m); 
-     hpwh.remove();
 
      exit(0); 
   } ,
     ::testing::ExitedWithCode(0), "" );
-
-  {
-    Model m;
-    WaterHeaterHeatPump hpwh(m);
-
-    auto tank = hpwh.tank();
-    ASSERT_FALSE(tank.handle().isNull());
-    auto zoneHVAC = tank.containingZoneHVACComponent();
-
-     auto dxCoil = hpwh.dXCoil();
-     EXPECT_FALSE(dxCoil.handle().isNull());
-     auto fan = hpwh.fan();
-     EXPECT_FALSE(fan.handle().isNull());
-
-    ASSERT_TRUE(zoneHVAC);
-    ASSERT_EQ(hpwh,zoneHVAC.get());
-
-    PlantLoop plantLoop(m);
-  }
 }
+
+TEST_F(ModelFixture,WaterHeaterHeatPump_Relationships)
+{
+  Model m;
+  WaterHeaterHeatPump hpwh(m);
+
+  auto dxCoil = hpwh.dXCoil();
+  ASSERT_FALSE(dxCoil.handle().isNull());
+  auto fan = hpwh.fan();
+  ASSERT_FALSE(fan.handle().isNull());
+  auto tank = hpwh.tank();
+  ASSERT_FALSE(tank.handle().isNull());
+
+  auto zoneHVAC = tank.containingZoneHVACComponent();
+  ASSERT_TRUE(zoneHVAC);
+  EXPECT_EQ(hpwh,zoneHVAC.get());
+}
+
+TEST_F(ModelFixture,WaterHeaterHeatPump_Remove)
+{
+  Model m;
+  WaterHeaterHeatPump hpwh(m);
+
+  auto dxCoil = hpwh.dXCoil();
+  auto fan = hpwh.fan();
+  auto tank = hpwh.tank();
+  
+  hpwh.remove();
+
+  EXPECT_TRUE(hpwh.handle().isNull());
+  EXPECT_TRUE(dxCoil.handle().isNull());
+  EXPECT_TRUE(fan.handle().isNull());
+  EXPECT_TRUE(tank.handle().isNull());
+}
+
+TEST_F(ModelFixture,WaterHeaterHeatPump_ThermalZone)
+{
+  Model m;
+  WaterHeaterHeatPump hpwh(m);
+
+  ThermalZone zone(m);
+  EXPECT_TRUE(hpwh.addToThermalZone(zone));
+  EXPECT_EQ(1u,zone.equipment().size());
+
+  hpwh.remove();
+  EXPECT_TRUE(hpwh.handle().isNull());
+  EXPECT_TRUE(zone.equipment().empty());
+}
+
+TEST_F(ModelFixture,WaterHeaterHeatPump_SystemConnections)
+{
+  Model m;
+  WaterHeaterHeatPump hpwh(m);
+
+  PlantLoop plant(m);
+  auto demandCount = plant.supplyComponents().size();
+  auto tank = hpwh.tank();
+  EXPECT_TRUE(plant.addSupplyBranchForComponent(tank));
+  EXPECT_TRUE(plant.supplyComponent(tank.handle()));
+
+  hpwh.remove();
+
+  EXPECT_EQ(demandCount,plant.supplyComponents().size());
+  EXPECT_TRUE(hpwh.handle().isNull());
+  EXPECT_TRUE(tank.handle().isNull());
+}
+
