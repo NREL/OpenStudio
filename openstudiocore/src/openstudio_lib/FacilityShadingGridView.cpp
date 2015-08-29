@@ -268,7 +268,7 @@ namespace openstudio {
     for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
       auto parent = obj.parent();
       if (parent && parent->iddObjectType() == IddObjectType::OS_ShadingSurfaceGroup){
-        if (m_typeFilter->currentText() == parent->cast<model::ShadingSurfaceGroup>().shadingSurfaceType().c_str()) {
+        if (m_typeFilter->currentText() != parent->cast<model::ShadingSurfaceGroup>().shadingSurfaceType().c_str()) {
           if (m_objectsFilterdByType.count(obj) == 0) {
             m_objectsFilterdByType.insert(obj);
           }
