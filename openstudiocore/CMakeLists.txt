@@ -88,7 +88,7 @@ option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
 option(BUILD_TESTING "Build testing targets" OFF)
 
 # Build package
-# Requires: EnergyPlus
+# Requires: EnergyPlus, Radiance
 option(BUILD_PACKAGE "Build package" OFF)
 
 # Build test runner targets.
@@ -103,11 +103,6 @@ option(BUILD_R "Build R package" OFF)
 
 # Build Ruby gem
 option(BUILD_RUBY_GEM "Build Ruby Gem" OFF)
-
-if(BUILD_PACKAGE)
-  option(PACKAGE_RADIANCE "Package Radiance" OFF)
-  option(PACKAGE_ENERGYPLUS "Package EnergyPlus" ON)
-endif()
 
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -339,6 +334,7 @@ endif()
 # Dependencies
 
 # EnergyPlus
+set(ENV{ENERGYPLUSDIR} ${ENERGYPLUS_LOCATION})
 find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
 
 # Ruby
@@ -1045,30 +1041,22 @@ if(NOT UNIX)
   endif()
 endif()
 
-if(PACKAGE_RADIANCE)
-  set(RADIANCE_LOCATION "" CACHE PATH "Location of Radiance to Package")
-
-  if(APPLE)
-    install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
-  elseif(MSVC)
-    install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
-  else()
-    install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
-  endif()
+# Package Radiance
+set(RADIANCE_LOCATION "" CACHE PATH "Location of Radiance to Package")
+if(APPLE)
+  install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+elseif(MSVC)
+  install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
+else()
+  install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
 endif()
 
-if(PACKAGE_ENERGYPLUS)
-  get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" PATH)
-
-  if(APPLE)
-    install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
-  elseif(MSVC)
-    install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
-  else()
-    install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
-  endif()
+# Package EnergyPlus
+get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" PATH)
+if(APPLE)
+  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+elseif(MSVC)
+  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
+else()
+  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
 endif()
-
-
-
-
