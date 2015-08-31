@@ -345,9 +345,27 @@ namespace openstudio {
           if (m_filteredObjects.count(*parent) != 0) {
             objectVisible = false;
           }
+
+          if (objectVisible) {
+            // We still haven't matched the sub row, let's look up 1 more level
+            auto parentsParent = parent->parent();
+            // Evan's note:
+            //   in the case of SpacesSubsurfacesGridView,
+            //   t_obj.parent() returns Surface,
+            //   but our common currency is Space.
+            //   t_obj.parent()->parent() returns Space
+
+            if (parentsParent) {
+              // Check if we are filtering on the sub row's parent's parent object
+              if (m_filteredObjects.count(*parentsParent) != 0) {
+                objectVisible = false;
+              }
+            }
+          }
         }
-        // Check if we are filtering on the sub row's object
-        if (m_filteredObjects.count(t_obj) != 0) {
+        // Hmmm, still no match, let's check if we
+        // are filtering on the sub row's object
+        if (objectVisible && m_filteredObjects.count(t_obj) != 0) {
           objectVisible = false;
         }
       }
