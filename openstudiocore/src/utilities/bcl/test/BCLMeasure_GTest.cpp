@@ -149,6 +149,7 @@ TEST_F(BCLFixture, PatApplicationMeasures)
   bool xmlUpdated;
 
   BCLMeasure alternativeModelMeasure = BCLMeasure::alternativeModelMeasure();
+  ASSERT_TRUE(alternativeModelMeasure.primaryRubyScriptPath());
   filesUpdated = alternativeModelMeasure.checkForUpdatesFiles();
   ASSERT_FALSE(filesUpdated); // DLM: comment out to update built in PAT measures
   xmlUpdated = alternativeModelMeasure.checkForUpdatesXML();
@@ -158,6 +159,7 @@ TEST_F(BCLFixture, PatApplicationMeasures)
   }
 
   BCLMeasure reportRequestMeasure = BCLMeasure::reportRequestMeasure();
+  ASSERT_TRUE(reportRequestMeasure.primaryRubyScriptPath());
   filesUpdated = reportRequestMeasure.checkForUpdatesFiles();
   ASSERT_FALSE(filesUpdated); // DLM: comment out to update built in PAT measures
   xmlUpdated = reportRequestMeasure.checkForUpdatesXML();
@@ -167,6 +169,7 @@ TEST_F(BCLFixture, PatApplicationMeasures)
   }
 
   BCLMeasure standardReportMeasure = BCLMeasure::standardReportMeasure();
+  ASSERT_TRUE(standardReportMeasure.primaryRubyScriptPath());
   filesUpdated = standardReportMeasure.checkForUpdatesFiles();
   ASSERT_FALSE(filesUpdated); // DLM: comment out to update built in PAT measures
   xmlUpdated = standardReportMeasure.checkForUpdatesXML();
@@ -176,6 +179,7 @@ TEST_F(BCLFixture, PatApplicationMeasures)
   }
 
   BCLMeasure calibrationReportMeasure = BCLMeasure::calibrationReportMeasure();
+  ASSERT_TRUE(calibrationReportMeasure.primaryRubyScriptPath());
   filesUpdated = calibrationReportMeasure.checkForUpdatesFiles();
   ASSERT_FALSE(filesUpdated); // DLM: comment out to update built in PAT measures
   xmlUpdated = calibrationReportMeasure.checkForUpdatesXML();
@@ -185,6 +189,7 @@ TEST_F(BCLFixture, PatApplicationMeasures)
   }
 
   BCLMeasure radianceMeasure = BCLMeasure::radianceMeasure();
+  ASSERT_TRUE(radianceMeasure.primaryRubyScriptPath());
   filesUpdated = radianceMeasure.checkForUpdatesFiles();
   ASSERT_FALSE(filesUpdated); // DLM: comment out to update built in PAT measures
   xmlUpdated = radianceMeasure.checkForUpdatesXML();

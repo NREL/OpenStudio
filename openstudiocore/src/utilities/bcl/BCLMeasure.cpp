@@ -962,6 +962,7 @@ namespace openstudio{
     for (BCLFileReference file : m_bclXML.files()) {
       if (!exists(file.path())){
         result = true;
+        // what if this is the measure.rb file?
         filesToRemove.push_back(file);
       }else if (file.checkForUpdate()){
         result = true;
@@ -1004,6 +1005,19 @@ namespace openstudio{
       if (!m_bclXML.hasFile(srcItemPath)){
         BCLFileReference file(srcItemPath, true);
         file.setUsageType("resource");
+        result = true;
+        filesToAdd.push_back(file);
+      }
+    }
+
+    // check for measure.rb
+    openstudio::path srcItemPath = m_directory / toPath("measure.rb");
+    if (!m_bclXML.hasFile(srcItemPath)){
+      if (exists(srcItemPath)){
+        BCLFileReference file(srcItemPath, true);
+        file.setUsageType("script");
+        // we don't know what the actual version this was created for, we also don't know minimum version
+        file.setSoftwareProgramVersion(openStudioVersion());
         result = true;
         filesToAdd.push_back(file);
       }

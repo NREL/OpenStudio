@@ -128,6 +128,10 @@ namespace openstudio {
     layout->addStretch();
     filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, filterGridLayout->columnCount());
 
+    // Evan note TODO hide for now
+    label->hide();
+    m_nameFilter->hide();
+
     // SHADINGSURFACETYPE
 
     layout = new QVBoxLayout();
@@ -138,14 +142,19 @@ namespace openstudio {
     layout->addWidget(label, Qt::AlignTop | Qt::AlignLeft);
 
     m_typeFilter = new QComboBox();
-    m_typeFilter->addItem("Building");
     m_typeFilter->addItem("Site");
+    m_typeFilter->addItem("Building");
+    m_typeFilter->addItem("Space");
     m_typeFilter->setFixedWidth(OSItem::ITEM_WIDTH);
     connect(m_typeFilter, &QComboBox::currentTextChanged, this, &openstudio::FacilityShadingGridView::typeFilterChanged);
 
     layout->addWidget(m_typeFilter, Qt::AlignTop | Qt::AlignLeft);
     layout->addStretch();
     filterGridLayout->addLayout(layout, filterGridLayout->rowCount() - 1, filterGridLayout->columnCount());
+
+    // Evan note TODO hide for now
+    label->hide();
+    m_typeFilter->hide();
 
     // ORIENTATION
 

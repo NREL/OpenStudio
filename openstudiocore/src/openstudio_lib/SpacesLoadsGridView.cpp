@@ -110,9 +110,9 @@ namespace openstudio {
   SpacesLoadsGridView::SpacesLoadsGridView(bool isIP, const model::Model & model, QWidget * parent)
     : SpacesSubtabGridView(isIP, model, parent)
   {
-    showStoryFilter();
-    showThermalZoneFilter();
-    showSpaceTypeFilter();
+    //showStoryFilter();
+    //showThermalZoneFilter();
+    //showSpaceTypeFilter();
     showLoadTypeFilter();
 
     m_filterGridLayout->setRowStretch(m_filterGridLayout->rowCount(), 100);

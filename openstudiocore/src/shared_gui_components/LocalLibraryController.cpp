@@ -585,7 +585,7 @@ QWidget * LibraryItemDelegate::view(QSharedPointer<OSListItem> dataSource)
       widget->m_measureBadge->setMeasureBadgeType(MeasureBadgeType::OSMeasure);
     } else{
       //DLM: this should not happen, LocalLibrary::COMBINED
-      libraryItem->m_source;
+      // libraryItem->m_source;
     }
 
     // Name
