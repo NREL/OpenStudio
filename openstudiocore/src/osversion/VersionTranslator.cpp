@@ -2550,7 +2550,6 @@ std::string VersionTranslator::update_1_7_4_to_1_7_5(const IdfFile& idf_1_7_4, c
 
 std::string VersionTranslator::update_1_8_3_to_1_8_4(const IdfFile& idf_1_8_3, const IddFileAndFactoryWrapper& idd_1_8_4)
 {
-  LOG(Error,"Here is the model" << idf_1_8_3);
   std::stringstream ss;
 
   ss << idf_1_8_3.header() << std::endl << std::endl;
