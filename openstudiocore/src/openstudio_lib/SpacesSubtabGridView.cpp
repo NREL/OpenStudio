@@ -55,6 +55,8 @@
 #include "../model/Space_Impl.hpp"
 #include "../model/SteamEquipment.hpp"
 #include "../model/SteamEquipment_Impl.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/SubSurface_Impl.hpp"
 #include "../model/Surface.hpp"
 #include "../model/Surface_Impl.hpp"
 #include "../model/ThermalZone.hpp"
@@ -324,6 +326,7 @@ namespace openstudio {
     m_storyFilter->addItem(ALL);
     m_storyFilter->addItem(UNASSIGNED);
     auto buildingStories = this->m_model.getModelObjects<model::BuildingStory>(true);
+    std::sort(buildingStories.begin(), buildingStories.end(), ModelObjectNameSorter());
     for (auto bd : buildingStories)
     {
       QString temp("unnamed");
@@ -340,6 +343,7 @@ namespace openstudio {
     m_thermalZoneFilter->addItem(ALL);
     m_thermalZoneFilter->addItem(UNASSIGNED);
     auto thermalZones = this->m_model.getModelObjects<model::ThermalZone>(true);
+    std::sort(thermalZones.begin(), thermalZones.end(), ModelObjectNameSorter());
     for (auto tz : thermalZones)
     {
       QString temp("unnamed");
@@ -355,6 +359,7 @@ namespace openstudio {
     m_spaceTypeFilter->clear();
     m_spaceTypeFilter->addItem(ALL);
     auto spacetypes = this->m_model.getModelObjects<model::SpaceType>(true);
+    std::sort(spacetypes.begin(), spacetypes.end(), ModelObjectNameSorter());
     for (auto st : spacetypes)
     {
       QString temp("unnamed");
@@ -469,6 +474,7 @@ namespace openstudio {
     m_interiorPartitionGroupFilter->clear();
     m_interiorPartitionGroupFilter->addItem(ALL);
     auto interiorPartitions = this->m_model.getModelObjects<model::InteriorPartitionSurface>(true);
+    std::sort(interiorPartitions.begin(), interiorPartitions.end(), ModelObjectNameSorter());
     for (auto ip : interiorPartitions)
     {
       QString temp("unnamed");
@@ -506,7 +512,7 @@ namespace openstudio {
   }
 
   void SpacesSubtabGridView::thermalZoneFilterChanged(const QString& text)
-  { 
+  {
     m_objectsFilteredByThermalZone.clear();
 
     if (text == ALL) {
@@ -651,7 +657,7 @@ namespace openstudio {
       // nothing to filter
     }
     else {
-      for (auto obj : this->m_gridController->m_modelObjects) {
+      for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
         auto surface = obj.optionalCast<model::Surface>();
         if (surface) {
           QString  windExposure = surface->windExposure().c_str();
@@ -673,7 +679,7 @@ namespace openstudio {
       // nothing to filter
     }
     else {
-      for (auto obj : this->m_gridController->m_modelObjects) {
+      for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
         auto surface = obj.optionalCast<model::Surface>();
         if (surface) {
           QString sunExposure = surface->sunExposure().c_str();
@@ -695,10 +701,17 @@ namespace openstudio {
       // nothing to filter
     }
     else {
-      for (auto obj : this->m_gridController->m_modelObjects) {
+      for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
         auto surface = obj.optionalCast<model::Surface>();
+        auto subSurface = obj.optionalCast<model::SubSurface>();
         if (surface) {
           QString outsideBoundaryCondition = surface->outsideBoundaryCondition().c_str();
+          if (outsideBoundaryCondition.isEmpty() || outsideBoundaryCondition != text) {
+            m_objectsFilteredByOutsideBoundaryCondition.insert(obj);
+          }
+        }
+        else if (subSurface) {
+          QString outsideBoundaryCondition = subSurface->outsideBoundaryCondition().c_str();
           if (outsideBoundaryCondition.isEmpty() || outsideBoundaryCondition != text) {
             m_objectsFilteredByOutsideBoundaryCondition.insert(obj);
           }
@@ -717,10 +730,11 @@ namespace openstudio {
       // nothing to filter
     }
     else {
-      for (auto obj : this->m_gridController->m_modelObjects) {
+      for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
         auto surface = obj.optionalCast<model::Surface>();
         if (surface) {
-          if (!surface->name() || (surface->name() && surface->name().get().c_str() != text)) {
+          QString surfaceType(surface->surfaceType().c_str());
+          if (surfaceType != text) {
             m_objectsFilteredBySurfaceType.insert(obj);
           }
         }
@@ -738,7 +752,7 @@ namespace openstudio {
       // nothing to filter
     }
     else {
-      for (auto obj : this->m_gridController->m_modelObjects) {
+      for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
         auto interiorPartitionSurfaceGroup = obj.optionalCast<model::InteriorPartitionSurfaceGroup>();
         if (interiorPartitionSurfaceGroup) {
           if (!interiorPartitionSurfaceGroup->name() || (interiorPartitionSurfaceGroup->name() && interiorPartitionSurfaceGroup->name().get().c_str() != text)) {

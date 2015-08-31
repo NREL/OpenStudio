@@ -48,11 +48,15 @@ namespace openstudio{
 
     QLineEdit *  m_nameFilter = nullptr;
 
-    QLineEdit *  m_tiltFilter = nullptr;
+    QLineEdit *  m_tiltGreaterThanFilter = nullptr;
+
+    QLineEdit *  m_tiltLessThanFilter = nullptr;
 
     QComboBox *  m_typeFilter = nullptr;
 
-    QComboBox *  m_orientationFilter = nullptr;
+    QLineEdit *  m_orientationGreaterThanFilter = nullptr;
+
+    QLineEdit *  m_orientationLessThanFilter = nullptr;
 
   private:
 
@@ -82,7 +86,7 @@ namespace openstudio{
 
     void tiltFilterChanged();
 
-    void orientationFilterChanged(const QString & text);
+    void orientationFilterChanged();
 
     void nameFilterChanged();
 
