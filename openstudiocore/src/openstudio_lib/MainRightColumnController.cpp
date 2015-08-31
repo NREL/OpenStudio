@@ -975,7 +975,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
 
   libraryWidget->addModelObjectType(IddObjectType::OS_SolarCollector_IntegralCollectorStorage, "Solar Collector Integral Collector Storage");
   libraryWidget->addModelObjectType(IddObjectType::OS_SolarCollector_FlatPlate_Water, "Solar Collector Flat Plate Water");
-  libraryWidget->addModelObjectType(IddObjectType::OS_SolarCollector_FlatPlate_PhotovoltaicThermal, "Solar Collector Flat Plate Photovoltaic Thermal");
+  //libraryWidget->addModelObjectType(IddObjectType::OS_SolarCollector_FlatPlate_PhotovoltaicThermal, "Solar Collector Flat Plate Photovoltaic Thermal");
   libraryWidget->addModelObjectType(IddObjectType::OS_WaterUse_Equipment,"Water Use Equipment");
   libraryWidget->addModelObjectType(IddObjectType::OS_WaterUse_Connections,"Water Use Connections");
   libraryWidget->addModelObjectType(IddObjectType::OS_WaterHeater_HeatPump,"Water Heater - Heat Pump");

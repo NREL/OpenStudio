@@ -54,9 +54,9 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
@@ -78,12 +78,12 @@ namespace detail {
     /** @name Other */
     //@{
 
-    unsigned inletPort();
-    unsigned outletPort();
+    unsigned inletPort() override;
+    unsigned outletPort() override;
 
-    bool addToNode(Node & node);
-    std::vector<ModelObject> children() const;
-    ModelObject clone(Model model) const;
+    bool addToNode(Node & node) override;
+    std::vector<ModelObject> children() const override;
+    ModelObject clone(Model model) const override;
 
     //@}
    protected:

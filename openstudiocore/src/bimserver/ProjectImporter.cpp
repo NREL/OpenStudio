@@ -217,7 +217,7 @@ namespace bimserver {
   void ProjectImporter::newButton_clicked() 
   {
     m_statusBar->showMessage(tr("Create a new project and upload it to the server."), 2000);
-    QDialog newDialog(this);	
+    QDialog newDialog(this);
     QGridLayout newLayout;
     newDialog.setWindowTitle(tr("New Project"));
     newDialog.setLayout(&newLayout);
@@ -347,7 +347,7 @@ namespace bimserver {
       { 
         //in debug mode, this pointer is 0xCDCDCDCD, and is not null, creates an error
         //if (m_bimserverConnection != nullptr) {
-        //	delete m_bimserverConnection;
+        //  delete m_bimserverConnection;
         //}
 
         m_settings->setValue("addr", address);

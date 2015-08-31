@@ -291,9 +291,9 @@ boost::optional<QDomElement> ExportXML::exportAlternative(QDomDocument& doc,
       }
 
       // DLM: this seems to get hit for the baseline
-      if (numMeasures == 0){
+      /*if (numMeasures == 0){
         bool isBaseline = true;
-      }
+      }*/
     }
 
     //alternative_type
@@ -358,7 +358,7 @@ std::vector<QDomElement> ExportXML::exportSwapModelAlternatives(QDomDocument& do
     QString displayName = jsonObject["displayName"].toString();
     QString description = jsonObject["description"].toString();
     QString taxonomyTag = jsonObject["taxonomyTag"].toString();
-    double capitalCost = jsonObject["capitalCost"].toDouble();
+    // double capitalCost = jsonObject["capitalCost"].toDouble();
 
     //start the measure
     QDomElement measureElem = doc.createElement("measure");

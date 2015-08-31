@@ -58,6 +58,15 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     use_cores.setDescription('Number of CPU cores to use for Radiance jobs. Default is to use all but one core')
     args << use_cores
 
+    chs = OpenStudio::StringVector.new
+    chs << 'Model'
+    chs << 'Testing'
+    rad_settings = OpenStudio::Ruleset::OSArgument.makeChoiceArgument('rad_settings', chs, true)
+    rad_settings.setDisplayName('Radiance Settings')
+    rad_settings.setDefaultValue('Model')
+    rad_settings.setDescription('Radiance simulation parameters. Default is to get these from the model; the Testing option is for testing the Radiance workflow only, as it uses very crude parameters for a fast simulation but very inaccurate results.')
+    args << rad_settings
+
 
     return args
   end
@@ -85,6 +94,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 		end
 
     use_cores = runner.getStringArgumentValue('use_cores', user_arguments)
+
+    rad_settings = runner.getStringArgumentValue('rad_settings', user_arguments)
 
 
     # Energyplus "pre-run" model dir
@@ -302,52 +313,53 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     # remove the E+ run dir so we don't confuse users 
     FileUtils.rm_rf(epout_dir)
 
-		# Read simulation settings from model export 
+		# Set Radiance simulation settings
 		# TODO: read settings directly from model
-		#options_tregVars = ""
-		options_tregVars = "-e MF:1 -f tregenza.cal -b tbin -bn Ntbins" 			## TESTING (reset to empty)
+		
+		options_tregVars = ""
+		options_dmx = ""
+		options_vmx = ""
+		if rad_settings == "Testing"
+			options_tregVars = "-e MF:1 -f tregenza.cal -b tbin -bn Ntbins"
+			options_dmx = "-ab 1 -ad 128 -as 56 -dj 1 -dp 1 -dt 0.1 -dc 0.1 -lw 0.1 " 
+			options_vmx = "-ab 1 -ad 128 -as 56 -dj 1 -dp 1 -dt 0.1 -dc 0.1 -lw 0.1"
+		end
 		options_klemsDensity = ""
 		options_skyvecDensity = "1"
-		#options_dmx = ""
-		#options_vmx = ""
-		options_dmx = "-ab 1 -ad 128 -as 56 -dj 1 -dp 1 -dt 0.1 -dc 0.1 -lw 0.1 " 	## TESTING (reset to empty)
-		options_vmx = "-ab 1 -ad 128 -as 56 -dj 1 -dp 1 -dt 0.1 -dc 0.1 -lw 0.1"		## TESTING (reset to empty)
-
 
 		# core functions
 
-		def calculateDaylightCoeffecients(radPath, sim_cores, t_catCommand, options_tregVars, options_klemsDensity, options_skyvecDensity, options_dmx, options_vmx)
+		def calculateDaylightCoeffecients(radPath, sim_cores, t_catCommand, options_tregVars, options_klemsDensity, options_skyvecDensity, options_dmx, options_vmx, rad_settings)
 
 
-# UNCOMMENT WHEN DONE TESTING
-# 			File.open("#{radPath}/options/treg.opt", "r") do |file|
-# 				tempIO = file.read
-# 				tempSettings = tempIO.split(" ")
-# 				options_klemsDensity = "#{tempSettings[0]} #{tempSettings[1]}"
-# 				options_skyvecDensity = tempSettings[3].split(":")[1]
-# 				options_tregVars = tempSettings[2..-1].join(" ")
-# 			end
-# 
-# 			File.open("#{radPath}/options/dmx.opt", "r") do |file|
-# 				tempIO = file.read
-# 				options_dmx = tempIO
-# 			end
-# 
-# 			File.open("#{radPath}/options/vmx.opt", "r") do |file|
-# 				tempIO = file.read
-# 				options_vmx = tempIO
-# 			end
-# UNCOMMENT WHEN DONE TESTING
+			if rad_settings == "Model"
+				File.open("#{radPath}/options/treg.opt", "r") do |file|
+					tempIO = file.read
+					tempSettings = tempIO.split(" ")
+					options_klemsDensity = "#{tempSettings[0]} #{tempSettings[1]}"
+					options_skyvecDensity = tempSettings[3].split(":")[1]
+					options_tregVars = tempSettings[2..-1].join(" ")
+				end
 
+				File.open("#{radPath}/options/dmx.opt", "r") do |file|
+					tempIO = file.read
+					options_dmx = tempIO
+				end
 
-			# configure multiprocessing 
-			procsUsed = ""
-			if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
-				puts "Radiance does not support multiple cores on Windows"
+				File.open("#{radPath}/options/vmx.opt", "r") do |file|
+					tempIO = file.read
+					options_vmx = tempIO
+				end
+
+				# configure multiprocessing 
 				procsUsed = ""
-			else
-				puts "Radiance using #{sim_cores} core(s)"
-				procsUsed = "-n #{sim_cores}"
+				if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
+					puts "Radiance does not support multiple cores on Windows"
+					procsUsed = ""
+				else
+					puts "Radiance using #{sim_cores} core(s)"
+					procsUsed = "-n #{sim_cores}"
+				end
 			end
 
 			haveWG0 = ""
@@ -1148,40 +1160,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 				averageIlluminances = []
 				radSqlFile = OpenStudio::SqlFile.new(radSqlPath)
 
-# 				if options.setpointInput == true
-# 					# we have to calculate the average ourselves
-# 					reportIndices = radSqlFile.illuminanceMapHourlyReportIndices(space_name)
-# 
-# 					reportIndices.each do |index|
-# 
-# 						map = radSqlFile.illuminanceMap(index)
-# 						#  averageIlluminances << OpenStudio::mean(map)
-# 						sum = 0
-# 						illuminances = Array.new
-# 
-# 						# we have to normalize the values to 0 if there's any that are less than 0
-# 						map.size1().times do |x|
-# 							map.size2().times do |y|
-# 
-# 								illuminance = map[x, y]
-# 
-# 								if illuminance < 0
-# 									if options.verbose == true
-# 										puts "Warning illuminance #{illuminance} less than zero, will be reset to 0"
-# 									end
-# 									illuminance = 0
-# 								end
-# 
-# 								illuminances << illuminance
-# 								sum += illuminance
-# 							end
-# 						end
-# 						if options.verbose == true
-# 							puts "Average illuminance " + (sum / illuminances.size.to_f).to_s
-# 						end
-# 						averageIlluminances << sum/illuminances.size.to_f
-# 					end
-# 				else 
 					# use the daylight sensor input
 					spacename = space.name.get.gsub(' ', '_').gsub(':', '_')
 					envPeriods = radSqlFile.availableEnvPeriods
@@ -1778,7 +1756,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 		# get the daylight coefficient matrices
 		calculateDaylightCoeffecients(radPath, sim_cores, catCommand, options_tregVars, options_klemsDensity, options_skyvecDensity, options_dmx, \
-		options_vmx)
+		options_vmx, rad_settings)
 
 		# make merged building-wide illuminance schedule(s)
 		values, dcVectors = runSimulation(space_names_to_calculate, sqlFile, sim_cores, options_skyvecDensity, site_latitude, site_longitude, \
