@@ -95,7 +95,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.7.2")] = &VersionTranslator::update_1_7_1_to_1_7_2;
   m_updateMethods[VersionString("1.7.5")] = &VersionTranslator::update_1_7_4_to_1_7_5;
   m_updateMethods[VersionString("1.8.4")] = &VersionTranslator::update_1_8_3_to_1_8_4;
-  m_updateMethods[VersionString("1.8.5")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.8.5")] = &VersionTranslator::update_1_8_4_to_1_8_5;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -2659,6 +2659,41 @@ std::string VersionTranslator::update_1_8_3_to_1_8_4(const IdfFile& idf_1_8_3, c
   }
 
   return ss.str();
+}
+
+std::string VersionTranslator::update_1_8_4_to_1_8_5(const IdfFile& idf_1_8_4, const IddFileAndFactoryWrapper& idd_1_8_5)
+{
+  std::stringstream ss;
+
+  ss << idf_1_8_4.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_8_5.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_1_8_4.objects()) {
+    auto iddname = object.iddObject().name();
+    if (iddname == "OS:SetpointManager:Scheduled") {
+      if( (! object.getString(2)) || object.getString(2).get().empty()  ) {
+        auto iddObject = idd_1_8_5.getObject("OS:SetpointManager::Scheduled");
+        OS_ASSERT(iddObject);
+        IdfObject newObject(iddObject.get());
+
+        for( size_t i = 0; i < 5; ++i ) {
+          if( i == 2 ) {
+            newObject.setString(i,"Temperature");
+          } else if( auto s = object.getString(i) ) {
+            newObject.setString(i,s.get());
+          }
+        }
+        ss << newObject;
+      } else {
+        ss << object;
+      }
+    } else {
+      ss << object;
+    }
+  }
 }
 
 } // osversion
