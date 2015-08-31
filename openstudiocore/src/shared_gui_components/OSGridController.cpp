@@ -341,9 +341,14 @@ namespace openstudio {
         // We have a matched sub row
         auto parent = t_obj.parent();
         if (parent) {
+          // Check if we are filtering on the sub row's parent object
           if (m_filteredObjects.count(*parent) != 0) {
             objectVisible = false;
           }
+        }
+        // Check if we are filtering on the sub row's object
+        if (m_filteredObjects.count(t_obj) != 0) {
+          objectVisible = false;
         }
       }
       else{
