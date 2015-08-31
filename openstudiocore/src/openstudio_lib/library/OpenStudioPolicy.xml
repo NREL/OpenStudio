@@ -852,6 +852,7 @@
     <rule IddField="Heat Recovery Cooling Energy Modifier Curve" Access="LOCKED"/>
     <rule IddField="Heat Recovery Heating Capacity Modifier Curve" Access="LOCKED"/>
     <rule IddField="Heat Recovery Heating Energy Modifier Curve" Access="LOCKED"/>
+    <rule IddField="Zone Terminal Unit List" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_Table_MultiVariableLookup">
     <rule IddField="External File Name" Access="HIDDEN"/>
