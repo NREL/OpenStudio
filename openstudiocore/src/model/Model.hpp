@@ -409,7 +409,7 @@ bool MODEL_API compareInputAndOutput(const ModelObject& object,
                                      double inputResult,
                                      double outputResult,
                                      double tol,
-                                     LogLevel logLevel=Debug);
+                                     LogLevel logLevel=LogLevel::Debug);
 
 /// Returns an example model useful for testing.
 MODEL_API Model exampleModel();
