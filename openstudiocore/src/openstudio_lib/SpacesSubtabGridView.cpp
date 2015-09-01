@@ -48,11 +48,15 @@
 #include "../model/People.hpp"
 #include "../model/People_Impl.hpp"
 #include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
 #include "../model/SpaceLoadInstance.hpp"
 #include "../model/SpaceLoadInstance_Impl.hpp"
 #include "../model/SpaceType.hpp"
 #include "../model/SpaceType_Impl.hpp"
-#include "../model/Space_Impl.hpp"
 #include "../model/SteamEquipment.hpp"
 #include "../model/SteamEquipment_Impl.hpp"
 #include "../model/SubSurface.hpp"
@@ -100,6 +104,8 @@
 #define HOTWATEREQUIPMENT "Hot Water Equipment"
 #define STEAMEQUIPMENT "Steam Equipment"
 #define OTHEREQUIPMENT "Other Equipment"
+#define SPACEINFILTRATIONDESIGNFLOWRATE "Space Infiltration Design Flow Rate"
+#define SPACEINFILTRATIONEFFECTIVELEAKAGEAREA "Space Infiltration Effective Leakage Area"
 
 namespace openstudio {
 
@@ -312,7 +318,7 @@ namespace openstudio {
 
     m_loadTypeFilter = new QComboBox();
     initializeLoadTypeFilter();
-    m_loadTypeFilter->setFixedWidth(OSItem::ITEM_WIDTH);
+    m_loadTypeFilter->setFixedWidth(1.5*OSItem::ITEM_WIDTH);
     connect(m_loadTypeFilter, &QComboBox::currentTextChanged, this, &openstudio::SpacesSubtabGridView::loadTypeFilterChanged);
 
     layout->addWidget(m_loadTypeFilter, Qt::AlignTop | Qt::AlignLeft);
@@ -429,6 +435,18 @@ namespace openstudio {
       auto pixMap = new QPixmap(":images/mini_icons/other_equipment.png");
       OS_ASSERT(pixMap);
       m_loadTypeFilter->addItem(*pixMap, OTHEREQUIPMENT);
+    }
+
+    {
+      auto pixMap = new QPixmap(":images/mini_icons/infiltration.png");
+      OS_ASSERT(pixMap);
+      m_loadTypeFilter->addItem(*pixMap, SPACEINFILTRATIONDESIGNFLOWRATE);
+    }
+
+    {
+      auto pixMap = new QPixmap(":images/mini_icons/mini_infiltration_leak.png");
+      OS_ASSERT(pixMap);
+      m_loadTypeFilter->addItem(*pixMap, SPACEINFILTRATIONEFFECTIVELEAKAGEAREA);
     }
 
   }
@@ -633,6 +651,14 @@ namespace openstudio {
           else if (text == OTHEREQUIPMENT)
           {
             return static_cast<bool>(obj.optionalCast<model::OtherEquipment>());
+          }
+          else if (text == SPACEINFILTRATIONDESIGNFLOWRATE)
+          {
+            return static_cast<bool>(obj.optionalCast<model::SpaceInfiltrationDesignFlowRate>());
+          }
+          else if (text == SPACEINFILTRATIONEFFECTIVELEAKAGEAREA)
+          {
+            return static_cast<bool>(obj.optionalCast<model::SpaceInfiltrationEffectiveLeakageArea>());
           }
           else
           {
