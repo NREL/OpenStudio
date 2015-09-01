@@ -2640,18 +2640,15 @@ std::string VersionTranslator::update_1_8_3_to_1_8_4(const IdfFile& idf_1_8_3, c
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
     } else if(iddname == "OS:AvailabilityManager:Scheduled") {
-      m_untranslated.push_back(object);
-      continue;
+      m_deprecated.push_back(object);
     } else if(iddname == "OS:AvailabilityManagerAssignmentList") {
-      m_untranslated.push_back(object);
-      continue;
+      m_deprecated.push_back(object);
     } else if(iddname == "OS:AvailabilityManager:NightCycle") {
       auto controlType = object.getString(4);
       if( controlType && (istringEqual("CycleOnAny",controlType.get()) || istringEqual("CycleOnControlZone",controlType.get()) || istringEqual("CycleOnAnyZoneFansOnly",controlType.get())) ) {
         ss << object;
       } else {
-        continue;
-        m_untranslated.push_back(object);
+        m_deprecated.push_back(object);
       } 
     } else {
       ss << object;
