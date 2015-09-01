@@ -47,6 +47,7 @@ LocationTabController::LocationTabController(bool isIP,
   auto locationView = new LocationView(isIP, model, modelTempDir);
   mainContentWidget()->addSubTab("Weather File && Design Days",locationView,WEATHER_FILE);
   connect(this, &LocationTabController::toggleUnitsClicked, locationView, &LocationView::toggleUnitsClicked);
+  connect(locationView, &LocationView::calendarYearSelected, this, &LocationTabController::showSubTabView);
 
   auto lifeCycleCostsView = new LifeCycleCostsView(model);
   mainContentWidget()->addSubTab("Life Cycle Costs",lifeCycleCostsView,LIFE_CYCLE_COSTS);

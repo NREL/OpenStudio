@@ -808,6 +808,8 @@ void LocationView::onCECClimateZoneChanged(const QString& climateZone)
 void LocationView::setCalendarYear(int year)
 {
   m_yearDescription->setCalendarYear(year);
+
+  emit calendarYearSelected(true);
 }
 
 void LocationView::setFirstDayofYear(const QString & firstDayofYear)
@@ -815,6 +817,8 @@ void LocationView::setFirstDayofYear(const QString & firstDayofYear)
   m_yearDescription->resetCalendarYear();
 
   m_yearDescription->setDayofWeekforStartDay(firstDayofYear.toStdString());
+
+  emit calendarYearSelected(false);
 }
 
 void LocationView::setDaylightSavingsTime(bool enabled)

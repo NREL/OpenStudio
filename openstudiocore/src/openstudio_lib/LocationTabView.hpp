@@ -101,6 +101,8 @@ private:
 
 signals:
 
+  void calendarYearSelected(bool selected);
+
   void modelObjectSelected(model::OptionalModelObject & modelObject, bool readOnly);
 
   void toggleUnitsClicked(bool displayIP);
