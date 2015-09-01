@@ -49,6 +49,9 @@ class MODEL_API CoilCoolingDXMultiSpeedStageData : public ParentObject {
     Curve& partLoadFractionCorrelation,
     Curve& wasteHeatFunctionofTemperature);
 
+  /** Create CoilCoolingDXMultiSpeedStageData with default curves **/
+  explicit CoilCoolingDXMultiSpeedStageData(const Model& model);
+
   virtual ~CoilCoolingDXMultiSpeedStageData() {}
 
   //@}
