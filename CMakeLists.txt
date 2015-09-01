@@ -34,7 +34,7 @@ if(GIT_FOUND)
     set(CMAKE_VERSION_BUILD ${GIT_VERSION} CACHE STRING "Build number" FORCE) # git sha
   endif()
 
-  get_filename_component(GIT_DIR "${GIT_EXECUTABLE}" PATH)
+  get_filename_component(GIT_DIR "${GIT_EXECUTABLE}" DIRECTORY)
 else()
   set(GIT_DIR "")
 endif()

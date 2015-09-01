@@ -416,7 +416,7 @@ set(ALL_RUBY_BINDING_TARGETS "") # global list
 # build rdoc
 if(BUILD_DOCUMENTATION)
   if(WIN32)
-    get_filename_component(RUBY_BIN_DIR "${RUBY_EXECUTABLE}" PATH)
+    get_filename_component(RUBY_BIN_DIR "${RUBY_EXECUTABLE}" DIRECTORY)
     find_file(RDOC NAMES rdoc.bat HINTS $ENV{PATH} "${RUBY_BIN_DIR}")
     find_file(RI NAMES ri.bat HINTS $ENV{PATH} "${RUBY_BIN_DIR}")
   else()
@@ -689,7 +689,7 @@ list(APPEND QT_LIBS ${Qt5PrintSupport_LIBRARIES})
 ### recreating QT_LIBRARY_DIR for qt5
 if(WIN32 AND TARGET Qt5::Core)
   get_property(_Qt5_Core_LOCATION TARGET Qt5::Core PROPERTY LOCATION)
-  get_filename_component(QT_LIBRARY_DIR "${_Qt5_Core_LOCATION}" PATH)
+  get_filename_component(QT_LIBRARY_DIR "${_Qt5_Core_LOCATION}" DIRECTORY)
 else()
   set(QT_LIBRARY_DIR "")
 endif()
@@ -1026,8 +1026,8 @@ if(NOT UNIX)
 
   install(DIRECTORY "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced" DESTINATION .)
 
-  get_filename_component(RubyEXEPath "${RUBY_EXECUTABLE}" PATH)
-  get_filename_component(RubyPath "${RubyEXEPath}" PATH)
+  get_filename_component(RubyEXEPath "${RUBY_EXECUTABLE}" DIRECTORY)
+  get_filename_component(RubyPath "${RubyEXEPath}" DIRECTORY)
   install(DIRECTORY "${RubyPath}/" DESTINATION "ruby-install/ruby")
 
   set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
@@ -1058,7 +1058,7 @@ if(PACKAGE_RADIANCE)
 endif()
 
 if(PACKAGE_ENERGYPLUS)
-  get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" PATH)
+  get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
 
   if(APPLE)
     install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
