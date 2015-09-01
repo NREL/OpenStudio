@@ -750,6 +750,7 @@ EvaporativeFluidCoolerTwoSpeed::EvaporativeFluidCoolerTwoSpeed(const Model& mode
   OS_ASSERT(ok);
   ok = setBlowdownConcentrationRatio( 3.0 );
   OS_ASSERT(ok);
+  autosizeDesignWaterFlowRate();
 }
 
 IddObjectType EvaporativeFluidCoolerTwoSpeed::iddObjectType() {
