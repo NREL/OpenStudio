@@ -9317,4 +9317,15 @@ OS:ZoneVentilation:DesignFlowRate,
   ,                                       !- Maximum Outdoor Temperature Schedule Name
   40;                                     !- Maximum Wind Speed {m/s}
 
+OS:ZoneHVAC:Baseboard:RadiantConvective:Electric,
+  {32fb7bcc-647c-4d15-af95-8bc628371416}, !- Handle
+  Zone HVAC Baseboard Radiant Convective Electric, !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  HeatingDesignCapacity,                  !- Heating Design Capacity Method
+  autosize,                               !- Heating Design Capacity {W}
+  0,                                      !- Heating Design Capacity Per Floor Area {W/m2}
+  1,                                      !- Fraction of Autosized Heating Design Capacity
+  1,                                      !- Efficiency
+  0.2,                                    !- Fraction Radiant
+  0.3;                                    !- Fraction of Radiant Energy Incident on People
 
