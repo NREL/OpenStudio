@@ -9329,3 +9329,56 @@ OS:ZoneHVAC:Baseboard:RadiantConvective:Electric,
   0.2,                                    !- Fraction Radiant
   0.3;                                    !- Fraction of Radiant Energy Incident on People
 
+OS:ZoneHVAC:Dehumidifier:DX,
+  {7cfae36c-6794-4c2b-a5ae-0c81d9fefd65}, !- Handle
+  Zone HVAC Dehumidifier,            !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  50.16,                                  !- Rated Water Removal {L/day}
+  3.412,                                  !- Rated Energy Factor {L/kWh}
+  0.12036,                                !- Rated Air Flow Rate {m3/s}
+  {76bf325d-47dc-4a51-99b8-003d845157bb}, !- Water Removal Curve Name
+  {4e677b6a-34c7-4cf4-a4d5-c704bea97e7f}, !- Energy Factor Curve Name
+  {3803b58a-8833-4a06-a04f-591fe46e3ac4}, !- Part Load Fraction Correlation Curve Name
+  10,                                     !- Minimum Dry-Bulb Temperature for Dehumidifier Operation {C}
+  32,                                     !- Maximum Dry-Bulb Temperature for Dehumidifier Operation {C}
+  0;                                      !- Off-Cycle Parasitic Electric Load {W}
+
+OS:Curve:Biquadratic,
+  {76bf325d-47dc-4a51-99b8-003d845157bb}, !- Handle
+  Dehumidifier Water Removal Curve,                    !- Name
+  -2.72487866408,                         !- Coefficient1 Constant
+  0.100711983591,                         !- Coefficient2 x
+  -0.000990538285,                        !- Coefficient3 x**2
+  0.050053043874,                         !- Coefficient4 y
+  -0.000203629282,                        !- Coefficient5 y**2
+  -0.000341750531,                        !- Coefficient6 x*y
+  21,                                     !- Minimum Value of x {BasedOnField A2}
+  32.22,                                  !- Maximum Value of x {BasedOnField A2}
+  40,                                     !- Minimum Value of y {BasedOnField A3}
+  80;                                     !- Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Biquadratic,
+  {4e677b6a-34c7-4cf4-a4d5-c704bea97e7f}, !- Handle
+  Dehumidifier Energy Factor Curve,                    !- Name
+  -2.388319068955,                        !- Coefficient1 Constant
+  0.093047739452,                         !- Coefficient2 x
+  -0.001369700327,                        !- Coefficient3 x**2
+  0.066533716758,                         !- Coefficient4 y
+  -0.000343198063,                        !- Coefficient5 y**2
+  -0.000562490295,                        !- Coefficient6 x*y
+  21,                                     !- Minimum Value of x {BasedOnField A2}
+  32.22,                                  !- Maximum Value of x {BasedOnField A2}
+  40,                                     !- Minimum Value of y {BasedOnField A3}
+  80;                                     !- Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Quadratic,
+  {3803b58a-8833-4a06-a04f-591fe46e3ac4}, !- Handle
+  Dehumidifier Part Load Curve,                      !- Name
+  0.95,                                   !- Coefficient1 Constant
+  0.05,                                   !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
+

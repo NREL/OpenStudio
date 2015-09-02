@@ -51,6 +51,7 @@
     <file>images/cooling_tower_variable.png</file>
     <file>images/dehumidify_schedule_icon.png</file>
     <file>images/baseboard_rad_convect_electric.png</file>
+    <file>images/dehumidifier_dx.png</file>
     <file>images/delete-icon.png</file>
     <file>images/delete.png</file>
     <file>images/delete_disabled.png</file>
@@ -401,6 +402,7 @@
     <file>images/mini_icons/mini_cooling_tower_2speed.png</file>
     <file>images/mini_icons/mini_cooling_tower_variable.png</file>
     <file>images/mini_icons/mini_baseboard_rad_convect_electric.png</file>
+    <file>images/mini_icons/mini_dehumidifier_dx.png</file>
     <file>images/mini_icons/mini_display_case.png</file>
     <file>images/mini_icons/mini_duct.png</file>
     <file>images/mini_icons/mini_dx_cooling_coil_multispeed.png</file>
