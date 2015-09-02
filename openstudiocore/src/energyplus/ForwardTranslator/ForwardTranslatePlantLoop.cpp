@@ -377,8 +377,10 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   }
 
   // LoadDistributionScheme
-
-  idfObject.setString(PlantLoopFields::LoadDistributionScheme,"Optimal");
+  {
+    auto scheme = plantLoop.loadDistributionScheme();
+    idfObject.setString(PlantLoopFields::LoadDistributionScheme,scheme);
+  }
 
   // Plant Loop Volume
 
