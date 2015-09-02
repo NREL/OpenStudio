@@ -92,6 +92,13 @@
     <rule IddField="Low Temp Radiant Variable Flow Heating Coil Name" Access="HIDDEN"/>
     <rule IddField="Low Temp Radiant Variable Flow Cooling Coil Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_ZoneHVAC_Dehumidifier_DX">
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Water Removal Curve Name" Access="LOCKED"/>
+    <rule IddField="Energy Factor Curve Name" Access="LOCKED"/>
+    <rule IddField="Part Load Fraction Correlation Curve Name" Access="LOCKED"/>
+  </POLICY>
   <POLICY IddObjectType="OS_Connector_Splitter">
     <rule IddField="Inlet Branch Name" Access="HIDDEN"/>
     <rule IddField="Outlet Branch Name" Access="HIDDEN"/>
