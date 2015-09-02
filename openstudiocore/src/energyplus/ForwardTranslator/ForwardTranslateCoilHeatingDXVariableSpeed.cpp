@@ -24,6 +24,7 @@
 #include "../../model/Node.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Curve.hpp"
+#include <utilities/idd/CoilSystem_Heating_DX_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_DX_VariableSpeed_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -36,7 +37,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXVariableSpeed( CoilHeatingDXVariableSpeed & modelObject )
+boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXVariableSpeedWithoutUnitary( CoilHeatingDXVariableSpeed & modelObject )
 {
   boost::optional<std::string> s;
   boost::optional<double> value;
@@ -195,6 +196,26 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXVariableSpee
   }
 
   return idfObject;
+}
+
+boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXVariableSpeed( CoilHeatingDXVariableSpeed& modelObject )
+{
+  IdfObject coilSystemHeatingDXIdf(IddObjectType::CoilSystem_Heating_DX);
+    
+  m_idfObjects.push_back(coilSystemHeatingDXIdf);
+
+  boost::optional<IdfObject> idfObject = translateCoilHeatingDXVariableSpeedWithoutUnitary(modelObject);
+
+  if( ! idfObject ) { return boost::none; }
+
+  if( auto s = modelObject.name() )
+  {
+    coilSystemHeatingDXIdf.setString(CoilSystem_Heating_DXFields::HeatingCoilObjectType,idfObject->iddObject().name());
+    coilSystemHeatingDXIdf.setString(CoilSystem_Heating_DXFields::HeatingCoilName,s.get());
+    coilSystemHeatingDXIdf.setName(s.get() + " CoilSystem");
+  }
+
+  return coilSystemHeatingDXIdf;
 }
 
 } // energyplus

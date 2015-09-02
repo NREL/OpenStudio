@@ -744,7 +744,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   case openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableSpeed :
     {
       model::CoilCoolingDXVariableSpeed coil = modelObject.cast<CoilCoolingDXVariableSpeed>();
-      retVal = translateCoilCoolingDXVariableSpeed(coil);
+      if( this->isHVACComponentWithinUnitary(coil) ) {
+        retVal = translateCoilCoolingDXVariableSpeedWithoutUnitary(coil);
+      } else {
+        retVal = translateCoilCoolingDXVariableSpeed(coil);
+      }
       break;
     }
   case openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableSpeed_SpeedData :
@@ -815,7 +819,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   case openstudio::IddObjectType::OS_Coil_Heating_DX_VariableSpeed :
     {
       model::CoilHeatingDXVariableSpeed coil = modelObject.cast<CoilHeatingDXVariableSpeed>();
-      retVal = translateCoilHeatingDXVariableSpeed(coil);
+      if( this->isHVACComponentWithinUnitary(coil) ) {
+        retVal = translateCoilHeatingDXVariableSpeedWithoutUnitary(coil);
+      } else {
+        retVal = translateCoilHeatingDXVariableSpeed(coil); 
+      }
       break;
     }
   case openstudio::IddObjectType::OS_Coil_Heating_DX_VariableSpeed_SpeedData:
