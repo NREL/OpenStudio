@@ -154,6 +154,7 @@ bool ExportXML::exportXML(const analysisdriver::SimpleProject project, QString x
   QFile file(xmlFilePath);
   if (file.open(QFile::WriteOnly)){
     QTextStream textStream(&file);
+    textStream.setCodec("UTF-8");
     textStream << doc.toString(2);
     file.close();
     return true;
