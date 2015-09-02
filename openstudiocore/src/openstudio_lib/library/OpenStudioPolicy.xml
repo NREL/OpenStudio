@@ -645,7 +645,6 @@
     <rule IddField="Demand Side Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Demand Side Branch List Name" Access="HIDDEN"/>
     <rule IddField="Demand Side Connector List Name" Access="HIDDEN"/>
-    <rule IddField="Load Distribution Scheme" Access="HIDDEN"/>
     <rule IddField="Availability Manager List Name" Access="HIDDEN"/>
     <rule IddField="Plant Loop Demand Calculation Scheme" Access="HIDDEN"/>
     <rule IddField="Common Pipe Simulation" Access="HIDDEN"/>

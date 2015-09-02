@@ -2687,10 +2687,29 @@ std::string VersionTranslator::update_1_8_4_to_1_8_5(const IdfFile& idf_1_8_4, c
       } else {
         ss << object;
       }
+    } else if (iddname == "OS:PlantLoop") {
+      if( (! object.getString(20)) || object.getString(20).get().empty()  ) {
+        auto iddObject = idd_1_8_5.getObject("OS:PlantLoop");
+        OS_ASSERT(iddObject);
+        IdfObject newObject(iddObject.get());
+
+        for( size_t i = 0; i < 25; ++i ) {
+          if( i == 20 ) {
+            newObject.setString(i,"Optimal");
+          } else if( auto s = object.getString(i) ) {
+            newObject.setString(i,s.get());
+          }
+        }
+        ss << newObject;
+      } else {
+        ss << object;
+      }
     } else {
       ss << object;
     }
   }
+
+  return ss.str();
 }
 
 } // osversion

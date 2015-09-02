@@ -18114,7 +18114,7 @@ OS:PlantLoop,
        \object-list ConnectorLists
   A15, \field Load Distribution Scheme
        \type choice
-       \default Sequential
+       \required-field
        \key Optimal
        \key Sequential
        \key Uniform
