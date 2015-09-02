@@ -231,8 +231,16 @@ namespace detail {
             needsrunperiodvariable = false;
           }
         }
-      }
 
+        // warn if using OutputControl:Table:Style to change reporting units
+        for (auto& outputControlStyle : ws->getObjectsByType(IddObjectType::OutputControl_Table_Style))
+        {
+          boost::optional<std::string> unitConversion = outputControlStyle.getString(1);
+          if (unitConversion && !istringEqual(unitConversion.get(), "None")){
+            errors.addError(ErrorType::Warning, "OutputControl:Table:Style object with unsupported value '" + unitConversion.get() + "'.  OpenStudio results processing may not work correctly.");
+          }
+        }
+      }
  
       openstudio::path outfile = outdir(true)/openstudio::toPath("out.idf");
 
