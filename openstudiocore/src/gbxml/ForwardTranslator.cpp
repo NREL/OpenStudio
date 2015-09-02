@@ -85,6 +85,7 @@ namespace gbxml {
     QFile file(toQString(path));
     if (file.open(QFile::WriteOnly)){
       QTextStream textStream(&file);
+      textStream.setCodec("UTF-8");
       textStream << doc->toString(2);
       file.close();
       return true;
