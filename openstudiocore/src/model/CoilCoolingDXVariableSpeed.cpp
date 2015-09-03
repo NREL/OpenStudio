@@ -394,7 +394,9 @@ namespace detail {
     std::vector<ModelObject> children;
     children.push_back( energyPartLoadFractionCurve() );
     if( auto const _stageDataList = speedDataList() ) {
-      children.push_back( _stageDataList.get() );
+      for( const auto & mo : _stageDataList->modelObjects() ) {
+        children.push_back( mo );
+      }
     }
     return children;
   }

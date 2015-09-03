@@ -30,6 +30,8 @@
     <file>images/coilheatinglowtemprad_varflow.png</file>
     <file>images/coilheatingwater_baseboard.png</file>
     <file>images/coilsystem_cooling_dx.png</file>
+    <file>images/cool_coil_dx_vari_speed.png</file>
+    <file>images/ht_coil_dx_vari.png</file>
     <file>images/combo_box_arrows.png</file>
     <file>images/combo_box_arrows_gray.png</file>
     <file>images/coming_soon_building_summary.png</file>
@@ -332,6 +334,7 @@
     <file>images/mini_icons/coilheatinglowtemprad_constflow.png</file>
     <file>images/mini_icons/coilheatinglowtemprad_varflow.png</file>
     <file>images/mini_icons/coilheatingwater_baseboard_mini.png</file>
+    <file>images/mini_icons/mini_ht_coil_dx_vari.png</file>
     <file>images/mini_icons/construct_inter_source.png</file>
     <file>images/mini_icons/construction.png</file>
     <file>images/mini_icons/construction_gnd.png</file>
@@ -400,6 +403,7 @@
     <file>images/mini_icons/mini_chiller_absorption_indirect.png</file>
     <file>images/mini_icons/mini_coil_system_water.png</file>
     <file>images/mini_icons/mini_coilsystem_cooling_DX.png</file>
+    <file>images/mini_icons/mini_cool_coil_dx_vari_speed.png</file>
     <file>images/mini_icons/mini_compressor.png</file>
     <file>images/mini_icons/mini_condenser_cascade.png</file>
     <file>images/mini_icons/mini_condensor.png</file>
