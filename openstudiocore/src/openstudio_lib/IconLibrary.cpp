@@ -124,6 +124,7 @@ IconLibrary::IconLibrary()
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_HeatExchanger_FluidToFluid).value()] = new QPixmap(":images/fluid_hx.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Humidifier_Steam_Electric).value()] = new QPixmap(":images/electric_humidifier.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_EvaporativeFluidCooler_SingleSpeed).value()] = new QPixmap(":images/evap_fluid_cooler.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_EvaporativeFluidCooler_TwoSpeed).value()] = new QPixmap(":images/evap_fluid_cooler_two_speed.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Pipe_Adiabatic).value()] = new QPixmap(":images/pipe.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Pipe_Indoor).value()] = new QPixmap(":images/pipe_indoor.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Pipe_Outdoor).value()] = new QPixmap(":images/pipe_outdoor.png");
@@ -317,6 +318,7 @@ IconLibrary::IconLibrary()
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Fan_VariableVolume).value()] = new QPixmap(":images/mini_icons/fan_variable.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Fan_ZoneExhaust).value()] = new QPixmap(":images/mini_icons/fan_zoneexhaust.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_EvaporativeFluidCooler_SingleSpeed).value()] = new QPixmap(":images/mini_icons/evap_fluid_cooler.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_EvaporativeFluidCooler_TwoSpeed).value()] = new QPixmap(":images/mini_icons/evap_fluid_cooler_two_speed.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Pipe_Adiabatic).value()] = new QPixmap(":images/mini_icons/pipe.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Pump_ConstantSpeed).value()] = new QPixmap(":images/mini_icons/pump_constant.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Pump_VariableSpeed).value()] = new QPixmap(":images/mini_icons/pump_variable.png");

@@ -775,6 +775,42 @@ OS:EvaporativeFluidCooler:SingleSpeed,
   ,                                       !- Blowdown Makeup Water Usage Schedule Name
   ;                                       !- Supply Water Storage Tank Name
 
+OS:EvaporativeFluidCooler:TwoSpeed,
+  {18aada6d-61ad-4dad-ad3b-8b72de1a97ac}, !- Handle
+  2 Spd Evap Fluid Cooler,   !- Name
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  autosize,                               !- High Fan Speed Air Flow Rate {m3/s}
+  autosize,                               !- High Fan Speed Fan Power {W}
+  autosize,                               !- Low Fan Speed Air Flow Rate {m3/s}
+  0.5,                                    !- Low Fan Speed Air Flow Rate Sizing Factor
+  autosize,                               !- Low Fan Speed Fan Power {W}
+  0.5,                                    !- Low Fan Speed Fan Power Sizing Factor
+  0.002208,                               !- Design Spray Water Flow Rate {m3/s}
+  UFactorTimesAreaAndDesignWaterFlowRate, !- Performance Input Method
+  ,                                       !- Outdoor Air Inlet Node Name
+  1.25,                                   !- Heat Rejection Capacity and Nominal Capacity Sizing Ratio
+  ,                                       !- High Speed Standard Design Capacity {W}
+  autosize,                               !- Low Speed Standard Design Capacity {W}
+  0.5,                                    !- Low Speed Standard Capacity Sizing Factor
+  autosize,                               !- High Fan Speed U-factor Times Area Value {W/K}
+  autosize,                               !- Low Fan Speed U-factor Times Area Value {W/K}
+  0.6,                                    !- Low Fan Speed U-Factor Times Area Sizing Factor
+  autosize,                               !- Design Water Flow Rate {m3/s}
+  ,                                       !- High Speed User Specified Design Capacity {W}
+  autosize,                               !- Low Speed User Specified Design Capacity {W}
+  0.5,                                    !- Low Speed User Specified Design Capacity Sizing Factor
+  ,                                       !- Design Entering Water Temperature {C}
+  ,                                       !- Design Entering Air Temperature {C}
+  ,                                       !- Design Entering Air Wet-bulb Temperature {C}
+  1,                                      !- High Speed Sizing Factor
+  SaturatedExit,                          !- Evaporation Loss Mode
+  ,                                       !- Evaporation Loss Factor {percent/K}
+  0.008,                                  !- Drift Loss Percent {percent}
+  ConcentrationRatio,                     !- Blowdown Calculation Mode
+  3,                                      !- Blowdown Concentration Ratio
+  ;                                       !- Blowdown Makeup Water Usage Schedule Name
+
 OS:AirTerminal:SingleDuct:Uncontrolled,
   {b883cca7-f436-48ce-ad23-7e8310c7a85d}, ! Handle
   Diffuser,                               ! Name

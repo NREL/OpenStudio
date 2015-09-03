@@ -186,6 +186,12 @@
     <rule IddField="Outdoor Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Supply Water Storage Tank Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_EvaporativeFluidCooler_TwoSpeed">
+    <rule IddField="Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Water Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Outdoor Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Supply Water Storage Tank Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_FluidCooler_SingleSpeed">
     <rule IddField="Water Inlet Node" Access="HIDDEN"/>
     <rule IddField="Water Outlet Node" Access="HIDDEN"/>
