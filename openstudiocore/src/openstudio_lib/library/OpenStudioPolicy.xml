@@ -913,6 +913,12 @@
     <rule IddField="Discharging Curve" Access="LOCKED"/>
     <rule IddField="Charging Curve" Access="LOCKED"/>
   </POLICY>
+  <POLICY IddObjectType="OS_ThermalStorage_ChilledWater_Stratified">
+    <rule IddField="Use Side Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Use Side Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Source Side Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Source Side Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_Coil_Cooling_DX_TwoStageWithHumidityControlMode">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>

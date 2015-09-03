@@ -266,6 +266,7 @@
     <file>images/system_type_10.png</file>
     <file>images/tempering_valve.png</file>
     <file>images/thermal_storage_ice.png</file>
+    <file>images/thermal_storage_strat.png</file>
     <file>images/thermostat.png</file>
     <file>images/toggle_arrow.png</file>
     <file>images/toggle_arrow_closed.png</file>
@@ -434,6 +435,7 @@
     <file>images/mini_icons/mini_slhx.png</file>
     <file>images/mini_icons/mini_tempering_valve.png</file>
     <file>images/mini_icons/mini_thermal_storage_ice.png</file>
+    <file>images/mini_icons/mini_thermal_storage_strat.png</file>
     <file>images/mini_icons/mini_unitary_system.png</file>
     <file>images/mini_icons/mini_vrf_outdoor.png</file>
     <file>images/mini_icons/mini_vrf_unit.png</file>

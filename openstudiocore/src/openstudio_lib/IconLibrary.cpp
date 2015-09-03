@@ -142,6 +142,7 @@ IconLibrary::IconLibrary()
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_TemperingValve).value()] = new QPixmap(":images/tempering_valve.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ThermalZone).value()] = new QPixmap(":images/zone.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ThermalStorage_Ice_Detailed).value()] = new QPixmap(":images/thermal_storage_ice.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ThermalStorage_ChilledWater_Stratified).value()] = new QPixmap(":images/thermal_storage_strat.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_WaterHeater_HeatPump).value()] = new QPixmap(":images/water_heater.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_WaterHeater_Mixed).value()] = new QPixmap(":images/water_heater_mixed.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_WaterHeater_Stratified).value()] = new QPixmap(":images/water_heater_stratified.png");
@@ -254,6 +255,7 @@ IconLibrary::IconLibrary()
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SubSurface).value()] = new QPixmap(":images/mini_icons/subsurface.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Surface).value()] = new QPixmap(":images/mini_icons/surface.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ThermalStorage_Ice_Detailed).value()] = new QPixmap(":images/mini_icons/mini_thermal_storage_ice.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ThermalStorage_ChilledWater_Stratified).value()] = new QPixmap(":images/mini_icons/mini_thermal_storage_strat.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ThermalZone).value()] = new QPixmap(":images/mini_icons/thermal_zone.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_WaterHeater_HeatPump).value()] = new QPixmap(":images/mini_icons/water_heater.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_WaterHeater_Mixed).value()] = new QPixmap(":images/mini_icons/water_heater_mixed.png");

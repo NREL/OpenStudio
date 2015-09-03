@@ -9459,3 +9459,72 @@ OS:ScheduleTypeLimits,
   ,                                       !- Upper Limit Value {BasedOnField A4}
   Continuous;                             !- Numeric Type
 
+OS:ThermalStorage:ChilledWater:Stratified,
+  {96287772-bccf-4162-a1d1-593d0c5d91c4}, !- Handle
+  Thermal Storage - Chilled Water Stratified, !- Name
+  50,                                     !- Tank Volume {m3}
+  8,                                      !- Tank Height {m}
+  VerticalCylinder,                       !- Tank Shape
+  ,                                       !- Tank Perimeter {m}
+  ,                                       !- Setpoint Temperature Schedule Name
+  2.5,                                    !- Deadband Temperature Difference {deltaC}
+  ,                                       !- Temperature Sensor Height {m}
+  ,                                       !- Minimum Temperature Limit {C}
+  ,                                       !- Nominal Cooling Capacity {W}
+  Outdoors,                               !- Ambient Temperature Indicator
+  {c3199601-9088-4db1-80a2-a72ce5be2376}, !- Ambient Temperature Schedule Name
+  ,                                       !- Ambient Temperature Thermal Zone Name
+  ,                                       !- Ambient Temperature Outdoor Air Node Name
+  ,                                       !- Uniform Skin Loss Coefficient per Unit Area to Ambient Temperature {W/m2-K}
+  ,                                       !- Use Side Inlet Node Name
+  ,                                       !- Use Side Outlet Node Name
+  1,                                      !- Use Side Heat Transfer Effectiveness
+  ,                                       !- Use Side Availability Schedule Name
+  autocalculate,                          !- Use Side Inlet Height {m}
+  0,                                      !- Use Side Outlet Height {m}
+  autosize,                               !- Use Side Design Flow Rate {m3/s}
+  ,                                       !- Source Side Inlet Node Name
+  ,                                       !- Source Side Outlet Node Name
+  1,                                      !- Source Side Heat Transfer Effectiveness
+  ,                                       !- Source Side Availability Schedule Name
+  0,                                      !- Source Side Inlet Height {m}
+  autocalculate,                          !- Source Side Outlet Height {m}
+  autosize,                               !- Source Side Design Flow Rate {m3/s}
+  4,                                      !- Tank Recovery Time {hr}
+  Fixed,                                  !- Inlet Mode
+  6,                                      !- Number of Nodes
+  0,                                      !- Additional Destratification Conductivity {W/m-K}
+  0,                                      !- Node 1 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 2 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 3 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 4 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 5 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 6 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 7 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 8 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 9 Additional Loss Coefficient {W/m2-K}
+  0;                                      !- Node 10 Additional Loss Coefficient {W/m2-K}
+
+OS:Schedule:Ruleset,
+  {c3199601-9088-4db1-80a2-a72ce5be2376}, !- Handle
+  Thermal Storage - Chilled Water Stratified Ambient Temp Schedule,                     !- Name
+  {92dfd9e8-d92e-43b9-841b-fc31bf02d5dd}, !- Schedule Type Limits Name
+  {09b28e72-3925-440b-bd8c-33cd5f82de4b}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {09b28e72-3925-440b-bd8c-33cd5f82de4b}, !- Handle
+  Schedule Day 1,                         !- Name
+  {92dfd9e8-d92e-43b9-841b-fc31bf02d5dd}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  48.89;                                  !- Value Until Time 1
+
+OS:ScheduleTypeLimits,
+  {92dfd9e8-d92e-43b9-841b-fc31bf02d5dd}, !- Handle
+  Temperature,                            !- Name
+  ,                                       !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
+  Continuous,                             !- Numeric Type
+  Temperature;                            !- Unit Type
+

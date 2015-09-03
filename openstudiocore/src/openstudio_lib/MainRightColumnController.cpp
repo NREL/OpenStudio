@@ -985,6 +985,8 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_WaterHeater_Stratified,"Water Heater Stratified");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirConditioner_VariableRefrigerantFlow,"VRF System");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow,"VRF Terminal");
+  libraryWidget->addModelObjectType(IddObjectType::OS_ThermalStorage_Ice_Detailed,"Thermal Storage - Ice Storage");
+  libraryWidget->addModelObjectType(IddObjectType::OS_ThermalStorage_ChilledWater_Stratified,"Thermal Storage - Chilled Water");
   libraryWidget->addModelObjectType(IddObjectType::OS_TemperingValve,"Tempering Valve");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_Coldest,"Setpoint Manager Coldest");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_FollowGroundTemperature,"Setpoint Manager Follow Ground Temperature");
@@ -1027,7 +1029,6 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_Pipe_Indoor, "Pipe - Indoor");
   libraryWidget->addModelObjectType(IddObjectType::OS_Pipe_Adiabatic, "Pipe - Adiabatic");
   libraryWidget->addModelObjectType(IddObjectType::OS_LoadProfile_Plant, "Load Profile - Plant");
-  libraryWidget->addModelObjectType(IddObjectType::OS_ThermalStorage_Ice_Detailed,"Ice Storage");
   libraryWidget->addModelObjectType(IddObjectType::OS_Humidifier_Steam_Electric,"Humidifier Steam Electric");
   libraryWidget->addModelObjectType(IddObjectType::OS_HeatExchanger_FluidToFluid,"Heat Exchanger Fluid To Fluid");
   libraryWidget->addModelObjectType(IddObjectType::OS_HeatExchanger_AirToAir_SensibleAndLatent,"Heat Exchanger Air To Air Sensible and Latent");
