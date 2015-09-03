@@ -196,6 +196,10 @@
     <rule IddField="Inlet Node" Access="HIDDEN"/>
     <rule IddField="Outlet Node" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_LoadProfile_Plant">
+    <rule IddField="Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_FluidCooler_SingleSpeed">
     <rule IddField="Water Inlet Node" Access="HIDDEN"/>
     <rule IddField="Water Outlet Node" Access="HIDDEN"/>

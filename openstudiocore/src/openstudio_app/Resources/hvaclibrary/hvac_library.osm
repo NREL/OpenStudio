@@ -9428,3 +9428,34 @@ OS:PlantComponent:TemperatureSource,
   8,                                      !- Source Temperature {C}
   ;                                       !- Source Temperature Schedule Name {C}
 
+OS:LoadProfile:Plant,
+  {e1563386-b77e-4a7c-b840-03bb3c6321a7}, !- Handle
+  Load Profile,                   !- Name
+  ,                                       !- Inlet Node Name
+  ,                                       !- Outlet Node Name
+  {b7e02bb7-c3e4-45a7-a348-5866b7092426}, !- Load Schedule Name
+  0.002,                                  !- Peak Flow Rate {m3/s}
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}; !- Flow Rate Fraction Schedule Name
+
+OS:Schedule:Ruleset,
+  {b7e02bb7-c3e4-45a7-a348-5866b7092426}, !- Handle
+  Load Profile Schedule,                     !- Name
+  {e7abde92-45b2-45e9-9de6-9794b4b6edb4}, !- Schedule Type Limits Name
+  {bd081929-36d7-41c4-96d2-95c9c5f588ca}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {bd081929-36d7-41c4-96d2-95c9c5f588ca}, !- Handle
+  Schedule Day 1,                         !- Name
+  {e7abde92-45b2-45e9-9de6-9794b4b6edb4}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:ScheduleTypeLimits,
+  {e7abde92-45b2-45e9-9de6-9794b4b6edb4}, !- Handle
+  Dimensionless,                          !- Name
+  ,                                       !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
+  Continuous;                             !- Numeric Type
+

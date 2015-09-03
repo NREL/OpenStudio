@@ -179,6 +179,7 @@
     <file>images/pipe_outdoor.png</file>
     <file>images/plant_loop_icon.png</file>
     <file>images/plant_temp_source.png</file>
+    <file>images/plant_profile.png</file>
     <file>images/plenum_off.png</file>
     <file>images/plenum_on.png</file>
     <file>images/properties_icon_off.png</file>
@@ -427,6 +428,7 @@
     <file>images/mini_icons/mini_pipe_indoor.png</file>
     <file>images/mini_icons/mini_pipe_outdoor.png</file>
     <file>images/mini_icons/mini_plant_temp_source.png</file>
+    <file>images/mini_icons/mini_plant_profile.png</file>
     <file>images/mini_icons/mini_refrigeration_system.png</file>
     <file>images/mini_icons/mini_single_ducts_constant_vol_4pipe.png</file>
     <file>images/mini_icons/mini_slhx.png</file>
