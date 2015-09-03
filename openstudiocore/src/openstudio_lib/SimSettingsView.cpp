@@ -109,7 +109,7 @@ SimSettingsView::SimSettingsView(bool isIP,
   m_runPeriodGroup(nullptr),
   m_radianceGroup(nullptr),
   m_runPeriodName(nullptr),
-  m_isIP(false),
+  m_isIP(isIP),
   // SimulationControl
   m_doZoneSizingCalculation(nullptr),
   m_doSystemSizingCalculation(nullptr),

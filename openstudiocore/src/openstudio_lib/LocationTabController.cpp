@@ -20,7 +20,6 @@
 #include "LocationTabController.hpp"
 
 #include "LifeCycleCostsTabView.hpp"
-#include "LocationTabView.hpp"
 #include "UtilityBillsView.hpp"
 #include "UtilityBillsController.hpp"
 
@@ -44,9 +43,10 @@ LocationTabController::LocationTabController(bool isIP,
   : MainTabController(new LocationTabView(model,modelTempDir)),
   m_model(model)
 {
-  auto locationView = new LocationView(isIP, model, modelTempDir);
-  mainContentWidget()->addSubTab("Weather File && Design Days",locationView,WEATHER_FILE);
-  connect(this, &LocationTabController::toggleUnitsClicked, locationView, &LocationView::toggleUnitsClicked);
+  m_locationView = new LocationView(isIP, model, modelTempDir);
+  mainContentWidget()->addSubTab("Weather File && Design Days", m_locationView, WEATHER_FILE);
+  connect(this, &LocationTabController::toggleUnitsClicked, m_locationView, &LocationView::toggleUnitsClicked);
+  connect(m_locationView, &LocationView::calendarYearSelectionChanged, this, &LocationTabController::showUtilityBillSubTab);
 
   auto lifeCycleCostsView = new LifeCycleCostsView(model);
   mainContentWidget()->addSubTab("Life Cycle Costs",lifeCycleCostsView,LIFE_CYCLE_COSTS);
@@ -92,18 +92,31 @@ void LocationTabController::showUtilityBillSubTab()
   boost::optional<model::YearDescription> yearDescription = m_model.yearDescription();
   if (yearDescription){
     boost::optional<int> calendarYear = yearDescription.get().calendarYear();
-    if (calendarYear){
+    if (calendarYearChecked() && calendarYear){
       boost::optional<model::WeatherFile> weatherFile = m_model.weatherFile();
       if (weatherFile){
         boost::optional<model::RunPeriod> runPeriod = m_model.getOptionalUniqueModelObject<model::RunPeriod>();
         if (runPeriod.is_initialized()){
           m_utilityBillsStackedWidget->setCurrentIndex(m_visibleWidgetIndex);
+          return;
         }
         else {
           m_utilityBillsStackedWidget->setCurrentIndex(m_warningWidgetIndex);
+          return;
         }
       }
     }
+  }
+  // Oops, missing some needed object above, so default to warning
+  m_utilityBillsStackedWidget->setCurrentIndex(m_warningWidgetIndex);
+}
+
+bool LocationTabController::calendarYearChecked() {
+  if (m_locationView) {
+    return m_locationView->calendarYearChecked();
+  }
+  else {
+    return false;
   }
 }
 

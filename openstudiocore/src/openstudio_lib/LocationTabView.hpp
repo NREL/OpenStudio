@@ -25,6 +25,7 @@
 #include "../model/YearDescription.hpp"
 
 #include "MainTabView.hpp"
+#include "YearSettingsWidget.hpp"
 
 #include <QWidget>
 
@@ -37,7 +38,6 @@ namespace openstudio {
 class EpwFile;
 class DesignDayGridView;
 class OSItemSelectorButtons;
-class YearSettingsWidget;
 
 namespace model {
   class Model;
@@ -61,6 +61,8 @@ public:
   virtual bool supportsMultipleObjectSelection() const { return true; }
 
   virtual std::vector<model::ModelObject> selectedObjects() const;
+
+  bool calendarYearChecked();
 
 protected:
 
@@ -86,9 +88,9 @@ private:
   YearSettingsWidget * m_yearSettingsWidget = nullptr;
   DesignDayGridView * m_designDaysGridView = nullptr;
   OSItemSelectorButtons * m_itemSelectorButtons = nullptr;
-  QString m_modelTempDir;
-  QString m_lastEpwPathOpened;
-  QString m_lastDdyPathOpened;
+  QString m_modelTempDir = QString();
+  QString m_lastEpwPathOpened = QString();
+  QString m_lastDdyPathOpened = QString();
   QComboBox * m_ashraeClimateZone = nullptr;
   QComboBox * m_cecClimateZone = nullptr;
   QLineEdit * m_siteName = nullptr;
@@ -100,6 +102,8 @@ private:
   bool m_isIP;
 
 signals:
+
+  void calendarYearSelectionChanged();
 
   void modelObjectSelected(model::OptionalModelObject & modelObject, bool readOnly);
 

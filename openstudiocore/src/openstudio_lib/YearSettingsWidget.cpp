@@ -18,29 +18,31 @@
 **********************************************************************/
 
 #include "YearSettingsWidget.hpp"
+
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
-#include "../shared_gui_components/OSSwitch.hpp"
+
 #include "../shared_gui_components/OSComboBox.hpp"
-#include "../model/WeatherFile.hpp"
-#include "../model/WeatherFile_Impl.hpp"
+#include "../shared_gui_components/OSSwitch.hpp"
+
 #include "../model/RunPeriodControlDaylightSavingTime.hpp"
 #include "../model/RunPeriodControlDaylightSavingTime_Impl.hpp"
-#include "../utilities/time/Date.hpp"
+#include "../model/WeatherFile.hpp"
+#include "../model/WeatherFile_Impl.hpp"
+
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/filetypes/EpwFile.hpp"
-#include <QVBoxLayout>
-#include <QHBoxLayout>
+#include "../utilities/idd/IddEnums.hxx"
+#include "../utilities/time/Date.hpp"
+
+#include <QBoxLayout>
+#include <QButtonGroup>
+#include <QDateEdit>
+#include <QFrame>
 #include <QGridLayout>
 #include <QLabel>
-#include <QFrame>
-#include <QRadioButton>
-#include <QButtonGroup>
 #include <QPushButton>
-#include <QDateEdit>
 #include <QTimer>
-
-#include <utilities/idd/IddEnums.hxx>
 
 namespace openstudio {
 
@@ -270,6 +272,15 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
   connect(m_endMonthBox, static_cast<void (OSComboBox::*)(const QString &)>(&OSComboBox::currentIndexChanged),
     this, &YearSettingsWidget::onDstEndDayWeekMonthChanged);
   connect(m_endDateEdit, &QDateEdit::dateChanged, this, &YearSettingsWidget::dstEndDateChanged);
+}
+
+bool YearSettingsWidget::calendarYearChecked() {
+  if (m_calendarYearButton) {
+    return m_calendarYearButton->isChecked();
+  }
+  else {
+    return false;
+  }
 }
 
 void YearSettingsWidget::onWorkspaceObjectAdd(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wo)

@@ -146,7 +146,7 @@ OS:HeatBalanceAlgorithm,
        \key CombinedHeatAndMoistureFiniteElement
   N1, \field Surface Temperature Upper Limit
        \type real
-       \units F
+       \units C
        \minimum 200
        \default 200.0
   N2, \field Minimum Surface Convection Heat Transfer Coefficient Value
