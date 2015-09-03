@@ -9418,3 +9418,13 @@ OS:Curve:Quadratic,
   0,                                      !- Minimum Value of x {BasedOnField A2}
   1;                                      !- Maximum Value of x {BasedOnField A2}
 
+OS:PlantComponent:TemperatureSource,
+  {796ae1cd-7682-46f0-8264-38474d73831e}, !- Handle
+  Plant Component Temperature Source,   !- Name
+  ,                                       !- Inlet Node
+  ,                                       !- Outlet Node
+  autosize,                               !- Design Volume Flow Rate {m3/s}
+  Constant,                               !- Temperature Specification Type
+  8,                                      !- Source Temperature {C}
+  ;                                       !- Source Temperature Schedule Name {C}
+
