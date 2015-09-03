@@ -21946,7 +21946,7 @@ OS:ZoneHVAC:Baseboard:RadiantConvective:Water,
        \required-field
        \type object-list
        \object-list ScheduleNames
-  A4;  \field Heating Coil Name
+  A4,  \field Heating Coil Name
        \type object-list
        \required-field
        \object-list RadiantBaseboardHeatingCoil
