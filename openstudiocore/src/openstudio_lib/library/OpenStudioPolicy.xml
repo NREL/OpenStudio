@@ -649,13 +649,15 @@
   </POLICY>
   <POLICY IddObjectType="OS_AirLoopHVAC">
     <rule IddField="Controller List Name" Access="HIDDEN"/>
-    <rule IddField="Availability Manager List Name" Access="HIDDEN"/>
+    <rule IddField="Availability Manager" Access="HIDDEN"/>
     <rule IddField="Branch List Name" Access="HIDDEN"/>
     <rule IddField="Connector List Name" Access="HIDDEN"/>
     <rule IddField="Supply Side Inlet Node Name" Access="HIDDEN"/>
-    <rule IddField="Supply Side Outlet Node Names" Access="HIDDEN"/>
+    <rule IddField="Supply Side Outlet Node A" Access="HIDDEN"/>
+    <rule IddField="Supply Side Outlet Node B" Access="HIDDEN"/>
     <rule IddField="Demand Side Outlet Node Name" Access="HIDDEN"/>
-    <rule IddField="Demand Side Inlet Node Names" Access="HIDDEN"/>
+    <rule IddField="Demand Side Inlet Node A" Access="HIDDEN"/>
+    <rule IddField="Demand Side Inlet Node B" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_PlantLoop">
     <rule IddField="Plant Equipment Operation Scheme Name" Access="HIDDEN"/>
