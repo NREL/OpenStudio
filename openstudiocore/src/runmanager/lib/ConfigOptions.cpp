@@ -550,6 +550,11 @@ namespace runmanager {
   {
     std::vector<openstudio::path> potentialpaths;
 
+    boost::optional<openstudio::path> radianceDirectory = getRadianceDirectory();
+    if (radianceDirectory){
+      potentialpaths.push_back(*radianceDirectory);
+    }
+
     QByteArray qba = qgetenv("RAYPATH");
     if (!qba.isEmpty())
     {
@@ -623,6 +628,9 @@ namespace runmanager {
   std::vector<openstudio::path> ConfigOptions::potentialEnergyPlusLocations() const
   {
     std::vector<openstudio::path> potentialpaths;
+
+    potentialpaths.push_back(getEnergyPlusDirectory());
+    potentialpaths.push_back(getEnergyPlusExecutable());
 
     QByteArray qba = qgetenv("ENERGYPLUSDIR");
     if (!qba.isEmpty())

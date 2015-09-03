@@ -80,6 +80,9 @@ namespace openstudio {
   /// \returns The path to the packaged EnergyPlus executable.
   UTILITIES_API openstudio::path getEnergyPlusExecutable();
 
+  /// \returns The packaged Radiance installation if it exists.
+  UTILITIES_API boost::optional<openstudio::path> getRadianceDirectory();
+
 } // openstudio
 
 #endif //UTILITIES_CORE_PATHHELPERS_HPP
