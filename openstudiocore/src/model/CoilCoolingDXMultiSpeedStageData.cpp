@@ -23,6 +23,10 @@
 #include "../model/Curve_Impl.hpp"
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
+#include "../model/CurveBiquadratic.hpp"
+#include "../model/CurveBiquadratic_Impl.hpp"
+#include "../model/CurveQuadratic.hpp"
+#include "../model/CurveQuadratic_Impl.hpp"
 #include <utilities/idd/OS_Coil_Cooling_DX_MultiSpeed_StageData_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
@@ -421,6 +425,91 @@ namespace detail {
   }
 
 } // detail
+
+CoilCoolingDXMultiSpeedStageData::CoilCoolingDXMultiSpeedStageData(const Model& model)
+  : ParentObject(CoilCoolingDXMultiSpeedStageData::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>());
+
+  autosizeGrossRatedTotalCoolingCapacity();
+  autosizeGrossRatedSensibleHeatRatio();
+  setGrossRatedCoolingCOP(3.0);
+  autosizeRatedAirFlowRate();
+  autosizeRatedEvaporativeCondenserPumpPowerConsumption();
+  setNominalTimeforCondensateRemovaltoBegin(0.0);
+  setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(0.0);
+  setMaximumCyclingRate(0.0);
+  setLatentCapacityTimeConstant(0.0);
+  setRatedWasteHeatFractionofPowerInput(0.0);
+  setEvaporativeCondenserEffectiveness(0.9);
+  autosizeEvaporativeCondenserAirFlowRate();
+  autosizeRatedEvaporativeCondenserPumpPowerConsumption();
+  setRatedEvaporatorFanPowerPerVolumeFlowRate(773.3);
+  setRatedWasteHeatFractionofPowerInput(0.5);
+
+  CurveBiquadratic coolingCapacityFunctionofTemperature(model);
+  coolingCapacityFunctionofTemperature.setCoefficient1Constant(0.766956);
+  coolingCapacityFunctionofTemperature.setCoefficient2x(0.0107756);
+  coolingCapacityFunctionofTemperature.setCoefficient3xPOW2(-0.0000414703);
+  coolingCapacityFunctionofTemperature.setCoefficient4y(0.00134961);
+  coolingCapacityFunctionofTemperature.setCoefficient5yPOW2(-0.000261144);
+  coolingCapacityFunctionofTemperature.setCoefficient6xTIMESY(0.000457488);
+  coolingCapacityFunctionofTemperature.setMinimumValueofx(17.0);
+  coolingCapacityFunctionofTemperature.setMaximumValueofx(22.0);
+  coolingCapacityFunctionofTemperature.setMinimumValueofy(13.0);
+  coolingCapacityFunctionofTemperature.setMaximumValueofy(46.0);
+  setTotalCoolingCapacityFunctionofTemperatureCurve(coolingCapacityFunctionofTemperature);
+
+  CurveQuadratic coolingCapacityFuncionofFlowFraction(model);
+  coolingCapacityFuncionofFlowFraction.setCoefficient1Constant(0.8);
+  coolingCapacityFuncionofFlowFraction.setCoefficient2x(0.2);
+  coolingCapacityFuncionofFlowFraction.setCoefficient3xPOW2(0.0);
+  coolingCapacityFuncionofFlowFraction.setMinimumValueofx(0.5);
+  coolingCapacityFuncionofFlowFraction.setMaximumValueofx(1.5);
+  setTotalCoolingCapacityFunctionofFlowFractionCurve(coolingCapacityFuncionofFlowFraction);
+
+  CurveBiquadratic energyInputRatioFunctionofTemperature(model);
+  energyInputRatioFunctionofTemperature.setCoefficient1Constant(0.297145);
+  energyInputRatioFunctionofTemperature.setCoefficient2x(0.0430933);
+  energyInputRatioFunctionofTemperature.setCoefficient3xPOW2(-0.000748766);
+  energyInputRatioFunctionofTemperature.setCoefficient4y(0.00597727);
+  energyInputRatioFunctionofTemperature.setCoefficient5yPOW2(0.000482112);
+  energyInputRatioFunctionofTemperature.setCoefficient6xTIMESY(-0.000956448);
+  energyInputRatioFunctionofTemperature.setMinimumValueofx(17.0);
+  energyInputRatioFunctionofTemperature.setMaximumValueofx(22.0);
+  energyInputRatioFunctionofTemperature.setMinimumValueofy(13.0);
+  energyInputRatioFunctionofTemperature.setMaximumValueofy(46.0);
+  setEnergyInputRatioFunctionofTemperatureCurve(energyInputRatioFunctionofTemperature);
+
+  CurveQuadratic energyInputRatioFunctionofFlowFraction(model);
+  energyInputRatioFunctionofFlowFraction.setCoefficient1Constant(1.156);
+  energyInputRatioFunctionofFlowFraction.setCoefficient2x(-0.1816);
+  energyInputRatioFunctionofFlowFraction.setCoefficient3xPOW2(0.0256);
+  energyInputRatioFunctionofFlowFraction.setMinimumValueofx(0.5);
+  energyInputRatioFunctionofFlowFraction.setMaximumValueofx(1.5);
+  setEnergyInputRatioFunctionofFlowFractionCurve(energyInputRatioFunctionofFlowFraction);
+
+  CurveQuadratic partLoadFractionCorrelation(model);
+  partLoadFractionCorrelation.setCoefficient1Constant(0.75);
+  partLoadFractionCorrelation.setCoefficient2x(0.25);
+  partLoadFractionCorrelation.setCoefficient3xPOW2(0.0);
+  partLoadFractionCorrelation.setMinimumValueofx(0.0);
+  partLoadFractionCorrelation.setMaximumValueofx(1.0);
+  setPartLoadFractionCorrelationCurve(partLoadFractionCorrelation);
+
+  CurveBiquadratic wasteHeatFunctionofTemperature(model);
+  wasteHeatFunctionofTemperature.setCoefficient1Constant(1);
+  wasteHeatFunctionofTemperature.setCoefficient2x(0.0);
+  wasteHeatFunctionofTemperature.setCoefficient3xPOW2(0.0);
+  wasteHeatFunctionofTemperature.setCoefficient4y(0.0);
+  wasteHeatFunctionofTemperature.setCoefficient5yPOW2(0.0);
+  wasteHeatFunctionofTemperature.setCoefficient6xTIMESY(0.0);
+  wasteHeatFunctionofTemperature.setMinimumValueofx(0.0);
+  wasteHeatFunctionofTemperature.setMaximumValueofx(0.0);
+  wasteHeatFunctionofTemperature.setMinimumValueofy(0.0);
+  wasteHeatFunctionofTemperature.setMaximumValueofy(0.0);
+  setWasteHeatFunctionofTemperatureCurve(wasteHeatFunctionofTemperature);
+}
 
 CoilCoolingDXMultiSpeedStageData::CoilCoolingDXMultiSpeedStageData(const Model& model,
   Curve& coolingCapacityFunctionofTemperature,

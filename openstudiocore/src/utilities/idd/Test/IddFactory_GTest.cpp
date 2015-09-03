@@ -246,11 +246,12 @@ TEST_F(IddFixture,IddFactory_Units) {
         siUnit = field.getUnits(false);
         EXPECT_TRUE(siUnit || field.unitsBasedOnOtherField()) << object.name() << " field: " << field.name();
         if (siUnit) {
-          // could just return junk unit. if not junk, quantity will be convertable
+          // could just return junk unit. if not junk, quantity will be convertible
           // to UnitSystem::SI.
           Quantity q(1.0,*siUnit);
           OptionalQuantity testQ = convert(q,UnitSystem(UnitSystem::SI));
-          EXPECT_TRUE(testQ);
+          EXPECT_TRUE(testQ) << "Unable to convert unit '" << *iddUnits << "' to SI for field '"
+            << field.name() << "' in IddObject '" << object.name() << "'.";
           if (testQ) {
             goodUnits.insert(*iddUnits);
             EXPECT_TRUE(testQ->system() == UnitSystem::SI);

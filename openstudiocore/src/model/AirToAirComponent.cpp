@@ -169,6 +169,7 @@ std::vector<openstudio::IdfObject> AirToAirComponent_Impl::remove()
   {
     _model.connect(reliefInletModelObject.get(),reliefInletModelObjectPort.get(),reliefOutletNode.get(),reliefOutletNode->inletPort());
 
+    reliefInletNode->disconnect();
     reliefInletNode->remove();
   }
 

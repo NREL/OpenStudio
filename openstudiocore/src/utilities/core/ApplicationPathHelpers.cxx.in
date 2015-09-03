@@ -440,4 +440,33 @@ openstudio::path getEnergyPlusExecutable() {
 #endif
 }
 
+boost::optional<openstudio::path> getRadianceDirectory() {
+  openstudio::path cmakeRadianceDirectory = openstudio::toPath("${RADIANCE_LOCATION}");
+  openstudio::path radianceDirectoryName;
+  if (!cmakeRadianceDirectory.empty()){
+    radianceDirectoryName = cmakeRadianceDirectory.filename();
+  }
+
+  openstudio::path result;
+
+  if (applicationIsRunningFromBuildDirectory())
+  {
+    result = cmakeRadianceDirectory;
+  } else {
+#ifdef Q_OS_LINUX
+    result = getApplicationInstallDirectory() / openstudio::toPath("share/openstudio-" + openStudioVersion()) / radianceDirectoryName;
+#elif defined(Q_OS_MAC)
+    result = getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("sharedresources") / radianceDirectoryName;
+#else
+    result = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio") / radianceDirectoryName;
+#endif
+  }
+
+  if (exists(result)){
+    return result;
+  }
+
+  return boost::none;
+}
+
 } // openstudio

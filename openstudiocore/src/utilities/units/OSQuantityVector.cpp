@@ -228,9 +228,18 @@ void OSQuantityVector::lbfToLbm() {
 }
 
 OSQuantityVector& OSQuantityVector::operator+=(OSQuantityVector rVector) {
+
   if (this == &rVector) {
     (*this) *= 2.0;
     return *this;
+  }
+
+  if (isTemperature() && rVector.isTemperature()) {
+    if (!isAbsolute() && rVector.isAbsolute()) {
+      setAsAbsolute();
+    }else if (isAbsolute() && !rVector.isAbsolute()) {
+      rVector.setAsAbsolute();
+    }
   }
 
   if (units() != rVector.units()) {
@@ -252,16 +261,19 @@ OSQuantityVector& OSQuantityVector::operator+=(OSQuantityVector rVector) {
     m_values[i] += rValues[i];
   }
 
-  if (isTemperature() && rVector.isTemperature()) {
-    if (!isAbsolute() && rVector.isAbsolute()) {
-      setAsAbsolute();
-    }
-  }
-
   return *this;
 }
 
 OSQuantityVector& OSQuantityVector::operator+=(Quantity rQuantity) {
+
+  if (isTemperature() && rQuantity.isTemperature()) {
+    if (!isAbsolute() && rQuantity.isAbsolute()) {
+      setAsAbsolute();
+    } else if (isAbsolute() && !rQuantity.isAbsolute()) {
+      rQuantity.setAsAbsolute();
+    }
+  }
+
   if (units() != rQuantity.units()) {
     LOG_AND_THROW("Cannot add OSQuantityVector and Quantity with different units (" << units()
                   << " and " << rQuantity.units() << ").");
@@ -276,21 +288,32 @@ OSQuantityVector& OSQuantityVector::operator+=(Quantity rQuantity) {
     m_values[i] += value;
   }
 
-  if (isTemperature() && rQuantity.isTemperature()) {
-    if (!isAbsolute() && rQuantity.isAbsolute()) {
-      setAsAbsolute();
-    }
-  }
-
   return *this;
 }
 
 OSQuantityVector& OSQuantityVector::operator-=(OSQuantityVector rVector) {
+
   unsigned n = size();
   if (this == &rVector) {
     clear();
     resize(n,0.0);
     return *this;
+  }
+
+  if (isTemperature() && rVector.isTemperature()) {
+    if (isAbsolute() && rVector.isAbsolute()) {
+      // units must be the same, check that exponent on this is 1
+      std::vector<std::string> bus = m_units.baseUnits();
+      assert(bus.size() == 1);
+      if (m_units.baseUnitExponent(bus[0]) == 1) {
+        setAsRelative();
+        rVector.setAsRelative();
+      }
+    } else if (!isAbsolute() && rVector.isAbsolute()) {
+      setAsAbsolute();
+    } else if (isAbsolute() && !rVector.isAbsolute()) {
+      rVector.setAsAbsolute();
+    }
   }
 
   if (units() != rVector.units()) {
@@ -311,24 +334,27 @@ OSQuantityVector& OSQuantityVector::operator-=(OSQuantityVector rVector) {
     m_values[i] -= rValues[i];
   }
 
-  if (isTemperature() && rVector.isTemperature()) {
-    if (isAbsolute() && rVector.isAbsolute()) {
+  return *this;
+}
+
+OSQuantityVector& OSQuantityVector::operator-=(Quantity rQuantity) {
+
+  if (isTemperature() && rQuantity.isTemperature()) {
+    if (isAbsolute() && rQuantity.isAbsolute()) {
       // units must be the same, check that exponent on this is 1
       std::vector<std::string> bus = m_units.baseUnits();
       assert(bus.size() == 1);
       if (m_units.baseUnitExponent(bus[0]) == 1) {
         setAsRelative();
+        rQuantity.setAsRelative();
       }
-    }
-    else if (!isAbsolute() && rVector.isAbsolute()) {
+    } else if (!isAbsolute() && rQuantity.isAbsolute()) {
       setAsAbsolute();
+    } else if (isAbsolute() && !rQuantity.isAbsolute()) {
+      rQuantity.setAsAbsolute();
     }
   }
 
-  return *this;
-}
-
-OSQuantityVector& OSQuantityVector::operator-=(Quantity rQuantity) {
   if (units() != rQuantity.units()) {
     LOG_AND_THROW("Cannot subtract OSQuantityVector and Quantity with different units (" << units()
                   << " and " << rQuantity.units() << ").");
@@ -341,20 +367,6 @@ OSQuantityVector& OSQuantityVector::operator-=(Quantity rQuantity) {
   double value = rQuantity.value();
   for (unsigned i = 0, n = size(); i < n; ++i) {
     m_values[i] -= value;
-  }
-
-  if (isTemperature() && rQuantity.isTemperature()) {
-    if (isAbsolute() && rQuantity.isAbsolute()) {
-      // units must be the same, check that exponent on this is 1
-      std::vector<std::string> bus = m_units.baseUnits();
-      assert(bus.size() == 1);
-      if (m_units.baseUnitExponent(bus[0]) == 1) {
-        setAsRelative();
-      }
-    }
-    else if (!isAbsolute() && rQuantity.isAbsolute()) {
-      setAsAbsolute();
-    }
   }
 
   return *this;

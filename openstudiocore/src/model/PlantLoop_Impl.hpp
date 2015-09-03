@@ -54,6 +54,10 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   virtual IddObjectType iddObjectType() const override;
 
+  std::string loadDistributionScheme();
+
+  bool setLoadDistributionScheme(std::string scheme);
+
   std::string fluidType();
 
   void setFluidType( const std::string & value );

@@ -95,6 +95,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.7.2")] = &VersionTranslator::update_1_7_1_to_1_7_2;
   m_updateMethods[VersionString("1.7.5")] = &VersionTranslator::update_1_7_4_to_1_7_5;
   m_updateMethods[VersionString("1.8.4")] = &VersionTranslator::update_1_8_3_to_1_8_4;
+  m_updateMethods[VersionString("1.8.5")] = &VersionTranslator::update_1_8_4_to_1_8_5;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -180,6 +181,7 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.8.1"));
   m_startVersions.push_back(VersionString("1.8.2"));
   m_startVersions.push_back(VersionString("1.8.3"));
+  m_startVersions.push_back(VersionString("1.8.4"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -2638,19 +2640,70 @@ std::string VersionTranslator::update_1_8_3_to_1_8_4(const IdfFile& idf_1_8_3, c
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
     } else if(iddname == "OS:AvailabilityManager:Scheduled") {
-      m_untranslated.push_back(object);
-      continue;
+      m_deprecated.push_back(object);
     } else if(iddname == "OS:AvailabilityManagerAssignmentList") {
-      m_untranslated.push_back(object);
-      continue;
+      m_deprecated.push_back(object);
     } else if(iddname == "OS:AvailabilityManager:NightCycle") {
       auto controlType = object.getString(4);
       if( controlType && (istringEqual("CycleOnAny",controlType.get()) || istringEqual("CycleOnControlZone",controlType.get()) || istringEqual("CycleOnAnyZoneFansOnly",controlType.get())) ) {
         ss << object;
       } else {
-        continue;
-        m_untranslated.push_back(object);
+        m_deprecated.push_back(object);
       } 
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_8_4_to_1_8_5(const IdfFile& idf_1_8_4, const IddFileAndFactoryWrapper& idd_1_8_5)
+{
+  std::stringstream ss;
+
+  ss << idf_1_8_4.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_8_5.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_1_8_4.objects()) {
+    auto iddname = object.iddObject().name();
+    if (iddname == "OS:SetpointManager:Scheduled") {
+      if( (! object.getString(2)) || object.getString(2).get().empty()  ) {
+        auto iddObject = idd_1_8_5.getObject("OS:SetpointManager::Scheduled");
+        OS_ASSERT(iddObject);
+        IdfObject newObject(iddObject.get());
+
+        for( size_t i = 0; i < 5; ++i ) {
+          if( i == 2 ) {
+            newObject.setString(i,"Temperature");
+          } else if( auto s = object.getString(i) ) {
+            newObject.setString(i,s.get());
+          }
+        }
+        ss << newObject;
+      } else {
+        ss << object;
+      }
+    } else if (iddname == "OS:PlantLoop") {
+      if( (! object.getString(20)) || object.getString(20).get().empty()  ) {
+        auto iddObject = idd_1_8_5.getObject("OS:PlantLoop");
+        OS_ASSERT(iddObject);
+        IdfObject newObject(iddObject.get());
+
+        for( size_t i = 0; i < 25; ++i ) {
+          if( i == 20 ) {
+            newObject.setString(i,"Optimal");
+          } else if( auto s = object.getString(i) ) {
+            newObject.setString(i,s.get());
+          }
+        }
+        ss << newObject;
+      } else {
+        ss << object;
+      }
     } else {
       ss << object;
     }

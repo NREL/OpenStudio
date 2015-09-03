@@ -135,6 +135,8 @@
 #define HOTWATEREQUIPMENT "Hot Water Equipment"
 #define STEAMEQUIPMENT "Steam Equipment"
 #define OTHEREQUIPMENT "Other Equipment"
+#define SPACEINFILTRATIONDESIGNFLOWRATE "Space Infiltration Design Flow Rate"
+#define SPACEINFILTRATIONEFFECTIVELEAKAGEAREA "Space Infiltration Effective Leakage Area"
 
 namespace openstudio {
 
@@ -185,7 +187,7 @@ namespace openstudio {
     layout->addWidget(m_filterLabel, Qt::AlignTop | Qt::AlignLeft);
 
     m_filters = new QComboBox();
-    m_filters->setFixedWidth(OSItem::ITEM_WIDTH);
+    m_filters->setFixedWidth(1.5*OSItem::ITEM_WIDTH);
 
     {
       m_filters->addItem(SHOWALLLOADS);
@@ -243,6 +245,18 @@ namespace openstudio {
       const QPixmap * pixMap = new QPixmap(":images/mini_icons/other_equipment.png");
       OS_ASSERT(pixMap);
       m_filters->addItem(*pixMap, OTHEREQUIPMENT);
+    }
+
+    {
+      auto pixMap = new QPixmap(":images/mini_icons/infiltration.png");
+      OS_ASSERT(pixMap);
+      m_filters->addItem(*pixMap, SPACEINFILTRATIONDESIGNFLOWRATE);
+    }
+
+    {
+      auto pixMap = new QPixmap(":images/mini_icons/mini_infiltration_leak.png");
+      OS_ASSERT(pixMap);
+      m_filters->addItem(*pixMap, SPACEINFILTRATIONEFFECTIVELEAKAGEAREA);
     }
 
     disableFilter();

@@ -48,13 +48,19 @@
 #include "../model/People.hpp"
 #include "../model/People_Impl.hpp"
 #include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
 #include "../model/SpaceLoadInstance.hpp"
 #include "../model/SpaceLoadInstance_Impl.hpp"
 #include "../model/SpaceType.hpp"
 #include "../model/SpaceType_Impl.hpp"
-#include "../model/Space_Impl.hpp"
 #include "../model/SteamEquipment.hpp"
 #include "../model/SteamEquipment_Impl.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/SubSurface_Impl.hpp"
 #include "../model/Surface.hpp"
 #include "../model/Surface_Impl.hpp"
 #include "../model/ThermalZone.hpp"
@@ -98,6 +104,8 @@
 #define HOTWATEREQUIPMENT "Hot Water Equipment"
 #define STEAMEQUIPMENT "Steam Equipment"
 #define OTHEREQUIPMENT "Other Equipment"
+#define SPACEINFILTRATIONDESIGNFLOWRATE "Space Infiltration Design Flow Rate"
+#define SPACEINFILTRATIONEFFECTIVELEAKAGEAREA "Space Infiltration Effective Leakage Area"
 
 namespace openstudio {
 
@@ -310,7 +318,7 @@ namespace openstudio {
 
     m_loadTypeFilter = new QComboBox();
     initializeLoadTypeFilter();
-    m_loadTypeFilter->setFixedWidth(OSItem::ITEM_WIDTH);
+    m_loadTypeFilter->setFixedWidth(1.5*OSItem::ITEM_WIDTH);
     connect(m_loadTypeFilter, &QComboBox::currentTextChanged, this, &openstudio::SpacesSubtabGridView::loadTypeFilterChanged);
 
     layout->addWidget(m_loadTypeFilter, Qt::AlignTop | Qt::AlignLeft);
@@ -324,6 +332,7 @@ namespace openstudio {
     m_storyFilter->addItem(ALL);
     m_storyFilter->addItem(UNASSIGNED);
     auto buildingStories = this->m_model.getModelObjects<model::BuildingStory>(true);
+    std::sort(buildingStories.begin(), buildingStories.end(), ModelObjectNameSorter());
     for (auto bd : buildingStories)
     {
       QString temp("unnamed");
@@ -340,6 +349,7 @@ namespace openstudio {
     m_thermalZoneFilter->addItem(ALL);
     m_thermalZoneFilter->addItem(UNASSIGNED);
     auto thermalZones = this->m_model.getModelObjects<model::ThermalZone>(true);
+    std::sort(thermalZones.begin(), thermalZones.end(), ModelObjectNameSorter());
     for (auto tz : thermalZones)
     {
       QString temp("unnamed");
@@ -355,6 +365,7 @@ namespace openstudio {
     m_spaceTypeFilter->clear();
     m_spaceTypeFilter->addItem(ALL);
     auto spacetypes = this->m_model.getModelObjects<model::SpaceType>(true);
+    std::sort(spacetypes.begin(), spacetypes.end(), ModelObjectNameSorter());
     for (auto st : spacetypes)
     {
       QString temp("unnamed");
@@ -426,6 +437,18 @@ namespace openstudio {
       m_loadTypeFilter->addItem(*pixMap, OTHEREQUIPMENT);
     }
 
+    {
+      auto pixMap = new QPixmap(":images/mini_icons/infiltration.png");
+      OS_ASSERT(pixMap);
+      m_loadTypeFilter->addItem(*pixMap, SPACEINFILTRATIONDESIGNFLOWRATE);
+    }
+
+    {
+      auto pixMap = new QPixmap(":images/mini_icons/mini_infiltration_leak.png");
+      OS_ASSERT(pixMap);
+      m_loadTypeFilter->addItem(*pixMap, SPACEINFILTRATIONEFFECTIVELEAKAGEAREA);
+    }
+
   }
 
   void SpacesSubtabGridView::initializeWindExposureFilter()
@@ -469,6 +492,7 @@ namespace openstudio {
     m_interiorPartitionGroupFilter->clear();
     m_interiorPartitionGroupFilter->addItem(ALL);
     auto interiorPartitions = this->m_model.getModelObjects<model::InteriorPartitionSurface>(true);
+    std::sort(interiorPartitions.begin(), interiorPartitions.end(), ModelObjectNameSorter());
     for (auto ip : interiorPartitions)
     {
       QString temp("unnamed");
@@ -506,7 +530,7 @@ namespace openstudio {
   }
 
   void SpacesSubtabGridView::thermalZoneFilterChanged(const QString& text)
-  { 
+  {
     m_objectsFilteredByThermalZone.clear();
 
     if (text == ALL) {
@@ -628,6 +652,14 @@ namespace openstudio {
           {
             return static_cast<bool>(obj.optionalCast<model::OtherEquipment>());
           }
+          else if (text == SPACEINFILTRATIONDESIGNFLOWRATE)
+          {
+            return static_cast<bool>(obj.optionalCast<model::SpaceInfiltrationDesignFlowRate>());
+          }
+          else if (text == SPACEINFILTRATIONEFFECTIVELEAKAGEAREA)
+          {
+            return static_cast<bool>(obj.optionalCast<model::SpaceInfiltrationEffectiveLeakageArea>());
+          }
           else
           {
             // Should never get here
@@ -651,7 +683,7 @@ namespace openstudio {
       // nothing to filter
     }
     else {
-      for (auto obj : this->m_gridController->m_modelObjects) {
+      for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
         auto surface = obj.optionalCast<model::Surface>();
         if (surface) {
           QString  windExposure = surface->windExposure().c_str();
@@ -673,7 +705,7 @@ namespace openstudio {
       // nothing to filter
     }
     else {
-      for (auto obj : this->m_gridController->m_modelObjects) {
+      for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
         auto surface = obj.optionalCast<model::Surface>();
         if (surface) {
           QString sunExposure = surface->sunExposure().c_str();
@@ -695,10 +727,17 @@ namespace openstudio {
       // nothing to filter
     }
     else {
-      for (auto obj : this->m_gridController->m_modelObjects) {
+      for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
         auto surface = obj.optionalCast<model::Surface>();
+        auto subSurface = obj.optionalCast<model::SubSurface>();
         if (surface) {
           QString outsideBoundaryCondition = surface->outsideBoundaryCondition().c_str();
+          if (outsideBoundaryCondition.isEmpty() || outsideBoundaryCondition != text) {
+            m_objectsFilteredByOutsideBoundaryCondition.insert(obj);
+          }
+        }
+        else if (subSurface) {
+          QString outsideBoundaryCondition = subSurface->outsideBoundaryCondition().c_str();
           if (outsideBoundaryCondition.isEmpty() || outsideBoundaryCondition != text) {
             m_objectsFilteredByOutsideBoundaryCondition.insert(obj);
           }
@@ -717,10 +756,11 @@ namespace openstudio {
       // nothing to filter
     }
     else {
-      for (auto obj : this->m_gridController->m_modelObjects) {
+      for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
         auto surface = obj.optionalCast<model::Surface>();
         if (surface) {
-          if (!surface->name() || (surface->name() && surface->name().get().c_str() != text)) {
+          QString surfaceType(surface->surfaceType().c_str());
+          if (surfaceType != text) {
             m_objectsFilteredBySurfaceType.insert(obj);
           }
         }
@@ -738,7 +778,7 @@ namespace openstudio {
       // nothing to filter
     }
     else {
-      for (auto obj : this->m_gridController->m_modelObjects) {
+      for (auto obj : this->m_gridController->getObjectSelector()->m_selectorObjects) {
         auto interiorPartitionSurfaceGroup = obj.optionalCast<model::InteriorPartitionSurfaceGroup>();
         if (interiorPartitionSurfaceGroup) {
           if (!interiorPartitionSurfaceGroup->name() || (interiorPartitionSurfaceGroup->name() && interiorPartitionSurfaceGroup->name().get().c_str() != text)) {

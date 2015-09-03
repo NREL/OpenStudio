@@ -57,6 +57,12 @@ class MODEL_API PlantLoop : public Loop {
 
   virtual ~PlantLoop() {}
 
+  static std::vector<std::string> loadDistributionSchemeValues();
+
+  std::string loadDistributionScheme();
+
+  bool setLoadDistributionScheme(std::string scheme);
+
   std::string fluidType();
 
   void setFluidType( const std::string & value );

@@ -9218,7 +9218,7 @@ OS:Pipe:Indoor,
 
 OS:SolarCollector:FlatPlate:Water,
   {49f50946-e58b-424d-8de0-7c40725d7df6}, !- Handle
-  Solar Collector Flat Plate Water 1,     !- Name
+  Solar Collector Flat Plate Water,       !- Name
   {7a28412e-316b-4ed4-af83-aec518479b28}, !- SolarCollectorPerformance Name
   ,                                       !- Surface Name
   ,                                       !- Inlet Node Name
@@ -9239,7 +9239,7 @@ OS:SolarCollectorPerformance:FlatPlate,
 
 OS:SolarCollector:IntegralCollectorStorage,
   {64be4831-667a-48f5-9289-04a5d50b68dd}, !- Handle
-  Solar Collector Integral Collector Storage 1, !- Name
+  Solar Collector Integral Collector Storage, !- Name
   {0229cfb2-20b7-4721-b1c0-6990a0dbcfee}, !- IntegralCollectorStorageParameters Name
   ,                                       !- Surface Name
   ,                                       !- Bottom Surface Boundary Conditions Type
@@ -9250,7 +9250,7 @@ OS:SolarCollector:IntegralCollectorStorage,
 
 OS:SolarCollectorPerformance:IntegralCollectorStorage,
   {0229cfb2-20b7-4721-b1c0-6990a0dbcfee}, !- Handle
-  Solar Collector Performance Integral Collector Storage 1, !- Name
+  Solar Collector Performance Integral Collector Storage, !- Name
   ,                                       !- ICS Collector Type
   ,                                       !- Gross Area {m2}
   ,                                       !- Collector Water Volume {m3}
@@ -9272,7 +9272,7 @@ OS:SolarCollectorPerformance:IntegralCollectorStorage,
 
 OS:SolarCollector:FlatPlate:PhotovoltaicThermal,
   {bac3df38-7db9-426d-a5fb-993a71a3b9e6}, !- Handle
-  Solar Collector Flat Plate Photovoltaic Thermal 1, !- Name
+  Solar Collector Flat Plate Photovoltaic Thermal, !- Name
   ,                                       !- Surface Name
   {c0483617-4b80-40f5-a562-a21b3c3e6dce}, !- Photovoltaic-Thermal Model Performance Name
   ,                                       !- Photovoltaic Name
@@ -9282,7 +9282,7 @@ OS:SolarCollector:FlatPlate:PhotovoltaicThermal,
 
 OS:SolarCollectorPerformance:PhotovoltaicThermal:Simple,
   {c0483617-4b80-40f5-a562-a21b3c3e6dce}, !- Handle
-  Solar Collector Performance Photovoltaic Thermal Simple 1, !- Name
+  Solar Collector Performance Photovoltaic Thermal Simple, !- Name
   ,                                       !- Fraction of Surface Area with Active Thermal Collector {dimensionless}
   Fixed,                                  !- Thermal Conversion Efficiency Input Mode Type
   0.3,                                    !- Value for Thermal Conversion Efficiency if Fixed

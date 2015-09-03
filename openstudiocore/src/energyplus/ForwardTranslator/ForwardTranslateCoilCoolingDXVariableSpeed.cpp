@@ -24,6 +24,7 @@
 #include "../../model/Node.hpp"
 #include "../../model/Curve.hpp"
 #include "../../model/Schedule.hpp"
+#include <utilities/idd/CoilSystem_Cooling_DX_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -36,7 +37,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXVariableSpeed( CoilCoolingDXVariableSpeed & modelObject )
+boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXVariableSpeedWithoutUnitary( CoilCoolingDXVariableSpeed & modelObject )
 {
   boost::optional<std::string> s;
   boost::optional<double> value;
@@ -211,6 +212,37 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXVariableSpee
   }
 
   return idfObject;
+}
+
+boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXVariableSpeed( CoilCoolingDXVariableSpeed& modelObject )
+{
+  IdfObject coilSystemCoolingDXIdf(IddObjectType::CoilSystem_Cooling_DX);
+    
+  m_idfObjects.push_back(coilSystemCoolingDXIdf);
+
+  boost::optional<IdfObject> idfObject = translateCoilCoolingDXVariableSpeedWithoutUnitary(modelObject);
+
+  if( ! idfObject ) { return boost::none; }
+
+  if( auto s = modelObject.name() )
+  {
+    coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::CoolingCoilObjectType,idfObject->iddObject().name());
+    coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::CoolingCoilName,s.get());
+    coilSystemCoolingDXIdf.setName(s.get() + " CoilSystem");
+  }
+
+  if( auto node = modelObject.inletModelObject() ) {
+    translateAndMapModelObject(node.get());
+    coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemInletNodeName,node->name().get());
+  }
+
+  if( auto node = modelObject.outletModelObject() ) {
+    translateAndMapModelObject(node.get());
+    coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemOutletNodeName,node->name().get());
+    coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemSensorNodeName,node->name().get());
+  }
+
+  return coilSystemCoolingDXIdf;
 }
 
 } // energyplus

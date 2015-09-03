@@ -68,13 +68,13 @@ namespace openstudio {
   SpacesSurfacesGridView::SpacesSurfacesGridView(bool isIP, const model::Model & model, QWidget * parent)
     : SpacesSubtabGridView(isIP, model, parent)
   {
-    //showStoryFilter();
-    //showThermalZoneFilter();
-    //showSpaceTypeFilter();
-    //showSurfaceTypeFilter();
-    //showOutsideBoundaryConditionFilter();
-    //showSunExposureFilter();
-    //showWindExposureFilter();
+    showStoryFilter();
+    showThermalZoneFilter();
+    showSpaceTypeFilter();
+    showSurfaceTypeFilter();
+    showOutsideBoundaryConditionFilter();
+    showSunExposureFilter();
+    showWindExposureFilter();
 
     m_filterGridLayout->setRowStretch(m_filterGridLayout->rowCount(), 100);
     m_filterGridLayout->setColumnStretch(m_filterGridLayout->columnCount(), 100);

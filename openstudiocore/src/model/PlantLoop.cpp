@@ -48,9 +48,10 @@
 #include "PlantEquipmentOperationHeatingLoad_Impl.hpp"
 #include "PlantEquipmentOperationCoolingLoad.hpp"
 #include "PlantEquipmentOperationCoolingLoad_Impl.hpp"
+#include "../utilities/core/Assert.hpp"
 #include <utilities/idd/OS_PlantLoop_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../utilities/core/Assert.hpp"
+#include <utilities/idd/IddFactory.hxx>
 
 namespace openstudio {
 
@@ -442,6 +443,18 @@ Splitter PlantLoop_Impl::demandSplitter()
   return demandComponents( IddObjectType::OS_Connector_Splitter ).front().cast<ConnectorSplitter>();
 }
 
+std::string PlantLoop_Impl::loadDistributionScheme()
+{
+  auto value = getString(OS_PlantLoopFields::LoadDistributionScheme,true);
+  OS_ASSERT(value);
+  return value.get();
+}
+
+bool PlantLoop_Impl::setLoadDistributionScheme(std::string scheme)
+{
+  return setString(OS_PlantLoopFields::LoadDistributionScheme,scheme);
+}
+
 double PlantLoop_Impl::maximumLoopTemperature()
 {
   return getDouble(OS_PlantLoopFields::MaximumLoopTemperature,true).get();
@@ -689,6 +702,7 @@ PlantLoop::PlantLoop(Model& model)
   SizingPlant sizingPlant(model,*this);
 
   autocalculatePlantLoopVolume();
+  setLoadDistributionScheme("Optimal");
 
   // supply side
 
@@ -746,7 +760,6 @@ PlantLoop::PlantLoop(Model& model)
   setLoopTemperatureSetpointNode(supplyOutletNode);
 
   setString(OS_PlantLoopFields::DemandSideConnectorListName,"");
-  setString(OS_PlantLoopFields::LoadDistributionScheme,"");
   setString(OS_PlantLoopFields::AvailabilityManagerListName,"");
   setString(OS_PlantLoopFields::PlantLoopDemandCalculationScheme,"");
   setString(OS_PlantLoopFields::CommonPipeSimulation,"");
@@ -1016,6 +1029,21 @@ bool PlantLoop::setPrimaryPlantEquipmentOperationScheme(const PlantEquipmentOper
 
 void PlantLoop::resetPrimaryPlantEquipmentOperationScheme() {
   getImpl<detail::PlantLoop_Impl>()->resetPrimaryPlantEquipmentOperationScheme();
+}
+
+std::string PlantLoop::loadDistributionScheme()
+{
+  return getImpl<detail::PlantLoop_Impl>()->loadDistributionScheme();
+}
+
+bool PlantLoop::setLoadDistributionScheme(std::string scheme)
+{
+  return getImpl<detail::PlantLoop_Impl>()->setLoadDistributionScheme(scheme);
+}
+
+std::vector<std::string> PlantLoop::loadDistributionSchemeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_PlantLoopFields::LoadDistributionScheme);
 }
 
 } // model
