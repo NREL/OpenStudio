@@ -766,9 +766,11 @@ Section "-Core installation"
   Var /GLOBAL sketchupArchErrorMessage
   Var /GLOBAL sketchupConfigStatement
   ${If} ${FileExists} "$INSTDIR\ruby-install\ruby\lib\libmsvcrt-ruby200.dll.a"
+    ; We are installing 32 bit OpenStudio
     StrCpy $sketchupArchErrorMessage "32-bit OpenStudio is incompatible with 64-bit SketchUp 2015"
     StrCpy $sketchupConfigStatement "if RUBY_PLATFORM=='i386-mingw32' then require '$INSTDIR\Ruby\openstudio' else raise LoadError, '$sketchupArchErrorMessage' end$\n"
   ${Else}
+    ; We are installing 64 bit OpenStudio
     StrCpy $sketchupArchErrorMessage "64-bit OpenStudio is incompatible with 32-bit SketchUp 2015"
     StrCpy $sketchupConfigStatement "if RUBY_PLATFORM=='x64-mingw32' then require '$INSTDIR\Ruby\openstudio' else raise LoadError, '$sketchupArchErrorMessage' end$\n"
   ${EndIf}
@@ -790,6 +792,7 @@ Section "-Core installation"
   IntOp $sketchupFound $sketchupFound + 1
   ; SketchUp 2015 32-bit
   StrCmp $sketchup15Dir "C:\Program Files (x86)\SketchUp\SketchUp 2015\" su15-32 0
+  
   ; SketchUp 2015 64-bit
   StrCmp $sketchup15Dir "C:\Program Files\SketchUp\SketchUp 2015\" su15-64 0
   ; Unknown install location
