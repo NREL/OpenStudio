@@ -147,24 +147,21 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitVentilator( Z
       // SupplyAirFanName
       idfObject.setString(ZoneHVAC_UnitVentilatorFields::SupplyAirFanName,_supplyAirFan->name().get() );
       // Supply Air Fan Inlet and Outlet Nodes
-      if( airOutletNode && airInletNode )
+      if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_ConstantVolume )
       {
-        if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_ConstantVolume )
-        {
-          _supplyAirFan->setString(Fan_ConstantVolumeFields::AirInletNodeName,mixedAirNodeName );
-          _supplyAirFan->setString(Fan_ConstantVolumeFields::AirOutletNodeName,fanOutletNodeName );
-        }
-        else if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_OnOff )
-        {
-          
-          _supplyAirFan->setString(Fan_OnOffFields::AirInletNodeName,mixedAirNodeName );
-          _supplyAirFan->setString(Fan_OnOffFields::AirOutletNodeName,fanOutletNodeName );
-        }
-        else if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_VariableVolume )
-        {
-          _supplyAirFan->setString(Fan_VariableVolumeFields::AirInletNodeName,mixedAirNodeName );
-          _supplyAirFan->setString(Fan_VariableVolumeFields::AirOutletNodeName,fanOutletNodeName );
-        }
+        _supplyAirFan->setString(Fan_ConstantVolumeFields::AirInletNodeName,mixedAirNodeName );
+        _supplyAirFan->setString(Fan_ConstantVolumeFields::AirOutletNodeName,fanOutletNodeName );
+      }
+      else if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_OnOff )
+      {
+        
+        _supplyAirFan->setString(Fan_OnOffFields::AirInletNodeName,mixedAirNodeName );
+        _supplyAirFan->setString(Fan_OnOffFields::AirOutletNodeName,fanOutletNodeName );
+      }
+      else if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_VariableVolume )
+      {
+        _supplyAirFan->setString(Fan_VariableVolumeFields::AirInletNodeName,mixedAirNodeName );
+        _supplyAirFan->setString(Fan_VariableVolumeFields::AirOutletNodeName,fanOutletNodeName );
       }
     }
   }
@@ -175,7 +172,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitVentilator( Z
 
   // Cooling Coil
   {
-    if ( coolingCoil ) {
+    if ( coolingCoil && airOutletNode ) {
       if( auto _coolingCoil = translateAndMapModelObject(coolingCoil.get()) )
       {
         // CoolingCoilObjectType
@@ -196,7 +193,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitVentilator( Z
 
   // Heating Coil
   {
-    if ( heatingCoil ) {
+    if ( heatingCoil && airOutletNode ) {
       if( auto _heatingCoil = translateAndMapModelObject(heatingCoil.get()) )
       {
         // HeatingCoilObjectType

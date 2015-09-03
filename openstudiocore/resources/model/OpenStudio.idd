@@ -21705,10 +21705,18 @@ OS:ZoneHVAC:EnergyRecoveryVentilator,
         \minimum 0.0
         \note 0.00236 m3/s-person corresponds to 5 ft3/min-person
         \note Used only when supply and exhaust air flow rates are autosized.
-  A8 ;  \field Availability Manager List Name
+  A8 ,  \field Availability Manager List Name
         \note Enter the name of an AvailabilityManagerAssignmentList object.
         \type object-list
         \object-list SystemAvailabilityManagerLists
+  A9 ,  \field Air Inlet Node Name
+        \required-field
+        \type object-list
+        \object-list ConnectionNames
+  A10;  \field Air Outlet Node Name
+        \required-field
+        \type object-list
+        \object-list ConnectionNames
 
 OS:ZoneHVAC:EnergyRecoveryVentilator:Controller,
   A1 , \field Handle

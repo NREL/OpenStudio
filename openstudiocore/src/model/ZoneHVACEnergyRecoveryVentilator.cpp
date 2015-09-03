@@ -26,6 +26,7 @@
 #include "HVACComponent_Impl.hpp"
 #include "Model.hpp"
 #include "HeatExchangerAirToAirSensibleAndLatent.hpp"
+#include "HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
 #include "FanOnOff.hpp"
 #include "ZoneHVACEnergyRecoveryVentilatorController.hpp"
 #include "ZoneHVACEnergyRecoveryVentilatorController_Impl.hpp"
@@ -129,12 +130,12 @@ namespace detail {
 
   unsigned ZoneHVACEnergyRecoveryVentilator_Impl::inletPort() const
   {
-    return 0; // this object has no inlet or outlet node
+    return OS_ZoneHVAC_EnergyRecoveryVentilatorFields::AirInletNodeName;
   }
 
   unsigned ZoneHVACEnergyRecoveryVentilator_Impl::outletPort() const
   {
-    return 0; // this object has no inlet or outlet node
+    return OS_ZoneHVAC_EnergyRecoveryVentilatorFields::AirOutletNodeName;
   }
 
   Schedule ZoneHVACEnergyRecoveryVentilator_Impl::availabilitySchedule() const {
@@ -332,6 +333,9 @@ ZoneHVACEnergyRecoveryVentilator::ZoneHVACEnergyRecoveryVentilator(const Model& 
   OS_ASSERT(getImpl<detail::ZoneHVACEnergyRecoveryVentilator_Impl>());
 
   auto heatExchanger = HeatExchangerAirToAirSensibleAndLatent( model );
+  // The Supply Air Outlet Temperature Control must be "No" in the heat exchanger, otherwise
+  // we need to add a Setpoint Manager on the Supply Air Outlet Node of the heat exchanger.
+  heatExchanger.setSupplyAirOutletTemperatureControl( false );
   auto supplyAirFan = FanOnOff( model );
   auto exhaustAirFan = FanOnOff( model );
 
@@ -367,6 +371,11 @@ ZoneHVACEnergyRecoveryVentilator::ZoneHVACEnergyRecoveryVentilator(
   auto alwaysOn = model.alwaysOnDiscreteSchedule();
   ok = setAvailabilitySchedule( alwaysOn );
   OS_ASSERT(ok);
+  if ( auto _heatExchanger = heatExchanger.optionalCast<HeatExchangerAirToAirSensibleAndLatent>() ) {
+    // The Supply Air Outlet Temperature Control must be "No" in the heat exchanger, otherwise
+    // we need to add a Setpoint Manager on the Supply Air Outlet Node of the heat exchanger.
+    _heatExchanger->setSupplyAirOutletTemperatureControl( false );
+  }
   ok = setHeatExchanger( heatExchanger );
   OS_ASSERT(ok);
   autosizeSupplyAirFlowRate();
