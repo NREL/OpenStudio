@@ -5598,22 +5598,18 @@ OS:SpaceInfiltration:DesignFlowRate,
   N5, \field Constant Term Coefficient
        \note "A" in Equation
        \type real
-       \minimum 0
        \default 1.0
   N6, \field Temperature Term Coefficient
        \note "B" in Equation
        \type real
-       \minimum 0
        \default 0.0
   N7, \field Velocity Term Coefficient
        \note "C" in Equation
        \type real
-       \minimum 0
        \default 0.0
   N8; \field Velocity Squared Term Coefficient
        \note "D" in Equation
        \type real
-       \minimum 0
        \default 0.0
      
 OS:SpaceInfiltration:EffectiveLeakageArea,
