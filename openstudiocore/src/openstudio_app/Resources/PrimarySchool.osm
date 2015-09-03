@@ -13012,7 +13012,7 @@ OS:StandardsInformation:Material,
 OS:Material,
   {f2c05177-e181-4317-9c34-287ca1db6a14}, !- Handle
   Air - Metal Wall Framing - 16 or 24 in. OC, !- Name
-  ,                                       !- Roughness
+  Smooth,                                 !- Roughness
   0.1397,                                 !- Thickness {m}
   1.22016793979183,                       !- Conductivity {W/m-K}
   1.28147706991681,                       !- Density {kg/m3}

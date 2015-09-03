@@ -442,7 +442,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			exec_statement("oconv materials/materials.rad #{scene_files.join(' ')} > model_vmx.oct")
 			
 			# make rfluxmtx do all the work
-			rad_command = "rfluxmtx #{rtrace_args} -ds .15 -faa -y #{rfluxmtxDim} -I -v - receivers_vmx.rad -i model_vmx.oct < numeric/merged_space.map"
+			rad_command = "rfluxmtx #{rtrace_args} -n #{sim_cores} -ds .15 -faa -y #{rfluxmtxDim} -I -v - receivers_vmx.rad -i model_vmx.oct < numeric/merged_space.map"
 			exec_statement(rad_command)
 	
 			# compute daylight coefficient matrices for window group control points
@@ -728,7 +728,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 							index = index + t_radGlareSensorViews[space_name].size
 						end
 					else
-						puts "INFO: simulation command generated no results, stuffing with 0's"
+						puts "WARN: an error has occurred; no results for space '#{space_name}'."
 						space = Array.new(space_size, 0)
 
 						if File.exists?("#{t_radPath}/numeric/#{space_name}.sns")        
@@ -1604,7 +1604,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			end
 
 		end #daylightMetrics()
-
 
 
 

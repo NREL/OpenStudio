@@ -775,6 +775,42 @@ OS:EvaporativeFluidCooler:SingleSpeed,
   ,                                       !- Blowdown Makeup Water Usage Schedule Name
   ;                                       !- Supply Water Storage Tank Name
 
+OS:EvaporativeFluidCooler:TwoSpeed,
+  {18aada6d-61ad-4dad-ad3b-8b72de1a97ac}, !- Handle
+  2 Spd Evap Fluid Cooler,   !- Name
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  autosize,                               !- High Fan Speed Air Flow Rate {m3/s}
+  autosize,                               !- High Fan Speed Fan Power {W}
+  autosize,                               !- Low Fan Speed Air Flow Rate {m3/s}
+  0.5,                                    !- Low Fan Speed Air Flow Rate Sizing Factor
+  autosize,                               !- Low Fan Speed Fan Power {W}
+  0.5,                                    !- Low Fan Speed Fan Power Sizing Factor
+  0.002208,                               !- Design Spray Water Flow Rate {m3/s}
+  UFactorTimesAreaAndDesignWaterFlowRate, !- Performance Input Method
+  ,                                       !- Outdoor Air Inlet Node Name
+  1.25,                                   !- Heat Rejection Capacity and Nominal Capacity Sizing Ratio
+  ,                                       !- High Speed Standard Design Capacity {W}
+  autosize,                               !- Low Speed Standard Design Capacity {W}
+  0.5,                                    !- Low Speed Standard Capacity Sizing Factor
+  autosize,                               !- High Fan Speed U-factor Times Area Value {W/K}
+  autosize,                               !- Low Fan Speed U-factor Times Area Value {W/K}
+  0.6,                                    !- Low Fan Speed U-Factor Times Area Sizing Factor
+  autosize,                               !- Design Water Flow Rate {m3/s}
+  ,                                       !- High Speed User Specified Design Capacity {W}
+  autosize,                               !- Low Speed User Specified Design Capacity {W}
+  0.5,                                    !- Low Speed User Specified Design Capacity Sizing Factor
+  ,                                       !- Design Entering Water Temperature {C}
+  ,                                       !- Design Entering Air Temperature {C}
+  ,                                       !- Design Entering Air Wet-bulb Temperature {C}
+  1,                                      !- High Speed Sizing Factor
+  SaturatedExit,                          !- Evaporation Loss Mode
+  ,                                       !- Evaporation Loss Factor {percent/K}
+  0.008,                                  !- Drift Loss Percent {percent}
+  ConcentrationRatio,                     !- Blowdown Calculation Mode
+  3,                                      !- Blowdown Concentration Ratio
+  ;                                       !- Blowdown Makeup Water Usage Schedule Name
+
 OS:AirTerminal:SingleDuct:Uncontrolled,
   {b883cca7-f436-48ce-ad23-7e8310c7a85d}, ! Handle
   Diffuser,                               ! Name
@@ -9317,4 +9353,178 @@ OS:ZoneVentilation:DesignFlowRate,
   ,                                       !- Maximum Outdoor Temperature Schedule Name
   40;                                     !- Maximum Wind Speed {m/s}
 
+OS:ZoneHVAC:Baseboard:RadiantConvective:Electric,
+  {32fb7bcc-647c-4d15-af95-8bc628371416}, !- Handle
+  Zone HVAC Baseboard Radiant Convective Electric, !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  HeatingDesignCapacity,                  !- Heating Design Capacity Method
+  autosize,                               !- Heating Design Capacity {W}
+  0,                                      !- Heating Design Capacity Per Floor Area {W/m2}
+  1,                                      !- Fraction of Autosized Heating Design Capacity
+  1,                                      !- Efficiency
+  0.2,                                    !- Fraction Radiant
+  0.3;                                    !- Fraction of Radiant Energy Incident on People
+
+OS:ZoneHVAC:Dehumidifier:DX,
+  {7cfae36c-6794-4c2b-a5ae-0c81d9fefd65}, !- Handle
+  Zone HVAC Dehumidifier,            !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  50.16,                                  !- Rated Water Removal {L/day}
+  3.412,                                  !- Rated Energy Factor {L/kWh}
+  0.12036,                                !- Rated Air Flow Rate {m3/s}
+  {76bf325d-47dc-4a51-99b8-003d845157bb}, !- Water Removal Curve Name
+  {4e677b6a-34c7-4cf4-a4d5-c704bea97e7f}, !- Energy Factor Curve Name
+  {3803b58a-8833-4a06-a04f-591fe46e3ac4}, !- Part Load Fraction Correlation Curve Name
+  10,                                     !- Minimum Dry-Bulb Temperature for Dehumidifier Operation {C}
+  32,                                     !- Maximum Dry-Bulb Temperature for Dehumidifier Operation {C}
+  0;                                      !- Off-Cycle Parasitic Electric Load {W}
+
+OS:Curve:Biquadratic,
+  {76bf325d-47dc-4a51-99b8-003d845157bb}, !- Handle
+  Dehumidifier Water Removal Curve,                    !- Name
+  -2.72487866408,                         !- Coefficient1 Constant
+  0.100711983591,                         !- Coefficient2 x
+  -0.000990538285,                        !- Coefficient3 x**2
+  0.050053043874,                         !- Coefficient4 y
+  -0.000203629282,                        !- Coefficient5 y**2
+  -0.000341750531,                        !- Coefficient6 x*y
+  21,                                     !- Minimum Value of x {BasedOnField A2}
+  32.22,                                  !- Maximum Value of x {BasedOnField A2}
+  40,                                     !- Minimum Value of y {BasedOnField A3}
+  80;                                     !- Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Biquadratic,
+  {4e677b6a-34c7-4cf4-a4d5-c704bea97e7f}, !- Handle
+  Dehumidifier Energy Factor Curve,                    !- Name
+  -2.388319068955,                        !- Coefficient1 Constant
+  0.093047739452,                         !- Coefficient2 x
+  -0.001369700327,                        !- Coefficient3 x**2
+  0.066533716758,                         !- Coefficient4 y
+  -0.000343198063,                        !- Coefficient5 y**2
+  -0.000562490295,                        !- Coefficient6 x*y
+  21,                                     !- Minimum Value of x {BasedOnField A2}
+  32.22,                                  !- Maximum Value of x {BasedOnField A2}
+  40,                                     !- Minimum Value of y {BasedOnField A3}
+  80;                                     !- Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Quadratic,
+  {3803b58a-8833-4a06-a04f-591fe46e3ac4}, !- Handle
+  Dehumidifier Part Load Curve,                      !- Name
+  0.95,                                   !- Coefficient1 Constant
+  0.05,                                   !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
+
+OS:PlantComponent:TemperatureSource,
+  {796ae1cd-7682-46f0-8264-38474d73831e}, !- Handle
+  Plant Component Temperature Source,   !- Name
+  ,                                       !- Inlet Node
+  ,                                       !- Outlet Node
+  autosize,                               !- Design Volume Flow Rate {m3/s}
+  Constant,                               !- Temperature Specification Type
+  8,                                      !- Source Temperature {C}
+  ;                                       !- Source Temperature Schedule Name {C}
+
+OS:LoadProfile:Plant,
+  {e1563386-b77e-4a7c-b840-03bb3c6321a7}, !- Handle
+  Load Profile,                   !- Name
+  ,                                       !- Inlet Node Name
+  ,                                       !- Outlet Node Name
+  {b7e02bb7-c3e4-45a7-a348-5866b7092426}, !- Load Schedule Name
+  0.002,                                  !- Peak Flow Rate {m3/s}
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}; !- Flow Rate Fraction Schedule Name
+
+OS:Schedule:Ruleset,
+  {b7e02bb7-c3e4-45a7-a348-5866b7092426}, !- Handle
+  Load Profile Schedule,                     !- Name
+  {e7abde92-45b2-45e9-9de6-9794b4b6edb4}, !- Schedule Type Limits Name
+  {bd081929-36d7-41c4-96d2-95c9c5f588ca}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {bd081929-36d7-41c4-96d2-95c9c5f588ca}, !- Handle
+  Schedule Day 1,                         !- Name
+  {e7abde92-45b2-45e9-9de6-9794b4b6edb4}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:ScheduleTypeLimits,
+  {e7abde92-45b2-45e9-9de6-9794b4b6edb4}, !- Handle
+  Dimensionless,                          !- Name
+  ,                                       !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
+  Continuous;                             !- Numeric Type
+
+OS:ThermalStorage:ChilledWater:Stratified,
+  {96287772-bccf-4162-a1d1-593d0c5d91c4}, !- Handle
+  Thermal Storage - Chilled Water Stratified, !- Name
+  50,                                     !- Tank Volume {m3}
+  8,                                      !- Tank Height {m}
+  VerticalCylinder,                       !- Tank Shape
+  ,                                       !- Tank Perimeter {m}
+  ,                                       !- Setpoint Temperature Schedule Name
+  2.5,                                    !- Deadband Temperature Difference {deltaC}
+  ,                                       !- Temperature Sensor Height {m}
+  ,                                       !- Minimum Temperature Limit {C}
+  ,                                       !- Nominal Cooling Capacity {W}
+  Outdoors,                               !- Ambient Temperature Indicator
+  {c3199601-9088-4db1-80a2-a72ce5be2376}, !- Ambient Temperature Schedule Name
+  ,                                       !- Ambient Temperature Thermal Zone Name
+  ,                                       !- Ambient Temperature Outdoor Air Node Name
+  ,                                       !- Uniform Skin Loss Coefficient per Unit Area to Ambient Temperature {W/m2-K}
+  ,                                       !- Use Side Inlet Node Name
+  ,                                       !- Use Side Outlet Node Name
+  1,                                      !- Use Side Heat Transfer Effectiveness
+  ,                                       !- Use Side Availability Schedule Name
+  autocalculate,                          !- Use Side Inlet Height {m}
+  0,                                      !- Use Side Outlet Height {m}
+  autosize,                               !- Use Side Design Flow Rate {m3/s}
+  ,                                       !- Source Side Inlet Node Name
+  ,                                       !- Source Side Outlet Node Name
+  1,                                      !- Source Side Heat Transfer Effectiveness
+  ,                                       !- Source Side Availability Schedule Name
+  0,                                      !- Source Side Inlet Height {m}
+  autocalculate,                          !- Source Side Outlet Height {m}
+  autosize,                               !- Source Side Design Flow Rate {m3/s}
+  4,                                      !- Tank Recovery Time {hr}
+  Fixed,                                  !- Inlet Mode
+  6,                                      !- Number of Nodes
+  0,                                      !- Additional Destratification Conductivity {W/m-K}
+  0,                                      !- Node 1 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 2 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 3 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 4 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 5 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 6 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 7 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 8 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 9 Additional Loss Coefficient {W/m2-K}
+  0;                                      !- Node 10 Additional Loss Coefficient {W/m2-K}
+
+OS:Schedule:Ruleset,
+  {c3199601-9088-4db1-80a2-a72ce5be2376}, !- Handle
+  Thermal Storage - Chilled Water Stratified Ambient Temp Schedule,                     !- Name
+  {92dfd9e8-d92e-43b9-841b-fc31bf02d5dd}, !- Schedule Type Limits Name
+  {09b28e72-3925-440b-bd8c-33cd5f82de4b}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {09b28e72-3925-440b-bd8c-33cd5f82de4b}, !- Handle
+  Schedule Day 1,                         !- Name
+  {92dfd9e8-d92e-43b9-841b-fc31bf02d5dd}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  48.89;                                  !- Value Until Time 1
+
+OS:ScheduleTypeLimits,
+  {92dfd9e8-d92e-43b9-841b-fc31bf02d5dd}, !- Handle
+  Temperature,                            !- Name
+  ,                                       !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
+  Continuous,                             !- Numeric Type
+  Temperature;                            !- Unit Type
 

@@ -33,6 +33,12 @@
 #include "../CoilHeatingElectric_Impl.hpp"
 #include "../ScheduleRuleset.hpp"
 #include "../ScheduleRuleset_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
+#include "../PortList.hpp"
+#include "../PortList_Impl.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
 #include "../Model.hpp"
 #include "../Model_Impl.hpp"
 
@@ -107,7 +113,7 @@ TEST_F(ModelFixture,AirTerminalSingleDuctSeriesPIUReheat)
     ASSERT_EQ(hvacSchedule.handle(),fanSchedule.handle()); 
   }
 
-  // test that addToNode (by proxy addBranchForHVACComponent) sets the fan schedule to match system availabilitySchedule
+  // test that addToNode (by proxy addBranchForZone) sets the fan schedule to match system availabilitySchedule
   {
     Model m; 
     Schedule schedule = m.alwaysOnDiscreteSchedule();
@@ -120,9 +126,28 @@ TEST_F(ModelFixture,AirTerminalSingleDuctSeriesPIUReheat)
     ScheduleRuleset hvacSchedule(m);
     airLoopHVAC.setAvailabilitySchedule(hvacSchedule);
 
-    airLoopHVAC.addBranchForHVACComponent(terminal);
+    ThermalZone zone(m);
+    airLoopHVAC.addBranchForZone(zone,terminal);
     auto fanSchedule = fan.availabilitySchedule();
     ASSERT_EQ(hvacSchedule.handle(),fanSchedule.handle()); 
+
+    EXPECT_EQ(9u,airLoopHVAC.demandComponents().size());
+    EXPECT_EQ(1u,zone.equipment().size());
+
+    auto zoneImpl = zone.getImpl<model::detail::ThermalZone_Impl>();
+    auto exhaustMo = zoneImpl->exhaustPortList().lastModelObject();
+    ASSERT_TRUE(exhaustMo);
+    auto exhaustNode = exhaustMo->optionalCast<Node>();
+    ASSERT_TRUE(exhaustNode);
+    ASSERT_TRUE(exhaustNode->outletModelObject());
+    ASSERT_EQ(terminal,exhaustNode->outletModelObject().get());
+
+    terminal.remove();
+
+    EXPECT_EQ(7u,airLoopHVAC.demandComponents().size());
+    EXPECT_TRUE(zone.equipment().empty());
+
+    EXPECT_FALSE(zoneImpl->exhaustPortList().lastModelObject());
   }
 }
 

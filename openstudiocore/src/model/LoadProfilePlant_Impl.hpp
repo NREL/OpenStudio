@@ -27,6 +27,7 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
+class Node;
 
 namespace detail {
 
@@ -64,7 +65,7 @@ namespace detail {
 
     virtual unsigned outletPort() override;
 
-    // virtual bool addToNode(Node & node) override;
+    virtual bool addToNode(Node & node) override;
 
     //@}
     /** @name Getters */

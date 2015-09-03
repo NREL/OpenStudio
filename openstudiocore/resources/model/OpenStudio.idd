@@ -5598,22 +5598,18 @@ OS:SpaceInfiltration:DesignFlowRate,
   N5, \field Constant Term Coefficient
        \note "A" in Equation
        \type real
-       \minimum 0
        \default 1.0
   N6, \field Temperature Term Coefficient
        \note "B" in Equation
        \type real
-       \minimum 0
        \default 0.0
   N7, \field Velocity Term Coefficient
        \note "C" in Equation
        \type real
-       \minimum 0
        \default 0.0
   N8; \field Velocity Squared Term Coefficient
        \note "D" in Equation
        \type real
-       \minimum 0
        \default 0.0
      
 OS:SpaceInfiltration:EffectiveLeakageArea,
@@ -14691,7 +14687,7 @@ OS:Coil:Heating:DX:VariableSpeed,
         \required-field
         \note must be lower than or equal to the highest speed number
    N2,  \field Rated Heating Capacity At Selected Nominal Speed Level
-        \units w
+        \units W
         \type real
         \autosizable
         \required-field
@@ -14770,7 +14766,7 @@ OS:Coil:Heating:DX:VariableSpeed:SpeedData,
         \reference CoilHeatingDXVariableSpeedSpeedData
    N1,  \field Reference Unit Gross Rated Heating Capacity
         \note Heating capacity not accounting for the effect of supply air fan heat
-        \units w
+        \units W
         \type real
         \minimum 0
         \required-field
@@ -14829,7 +14825,7 @@ OS:Coil:Cooling:DX:VariableSpeed,
         \required-field
         \note must be lower than or equal to the highest speed number
    N2,  \field Gross Rated Total Cooling Capacity At Selected Nominal Speed Level
-        \units w
+        \units W
         \type real
         \autosizable
         \required-field
@@ -14910,7 +14906,7 @@ OS:Coil:Cooling:DX:VariableSpeed:SpeedData,
         \type alpha
         \reference CoilCoolingDXVariableSpeedSpeedData
    N1,  \field Reference Unit Gross Rated Total Cooling Capacity
-        \units w
+        \units W
         \type real
         \minimum 0
         \required-field
@@ -14994,7 +14990,7 @@ OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit,
         \required-field
         \note must be lower than or equal to the highest speed number
    N2,  \field Rated Heating Capacity At Selected Nominal Speed Level
-        \units w
+        \units W
         \type real
         \autosizable
         \required-field
@@ -15028,7 +15024,7 @@ OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
         \reference CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData
    N1,  \field Reference Unit Gross Rated Heating Capacity
         \note Heating capacity not accounting for the effect of supply air fan heat
-        \units w
+        \units W
         \type real
         \minimum 0
         \required-field
@@ -15120,7 +15116,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit,
         \required-field
         \note must be lower than or equal to the highest speed number
    N2,  \field Gross Rated Total Cooling Capacity At Selected Nominal Speed Level
-        \units w
+        \units W
         \type real
         \autosizable
         \required-field
@@ -15168,7 +15164,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
         \type alpha
         \reference CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData
    N1,  \field Reference Unit Gross Rated Total Cooling Capacity
-        \units w
+        \units W
         \type real
         \minimum 0
         \required-field
@@ -17352,7 +17348,7 @@ OS:EvaporativeFluidCooler:TwoSpeed,
        \type real
        \units m3/s
        \minimum> 0.0
-       \autocalculatable
+       \autosizable
        \note Low speed air flow rate must be less than high speed air flow rate
   N4 , \field Low Fan Speed Air Flow Rate Sizing Factor
        \required-field
@@ -17363,7 +17359,7 @@ OS:EvaporativeFluidCooler:TwoSpeed,
        \type real
        \units W
        \minimum> 0.0
-       \autocalculatable
+       \autosizable
        \ip-units W
        \note This is the fan motor electric input power at low speed
   N6 , \field Low Fan Speed Fan Power Sizing Factor
@@ -17399,7 +17395,7 @@ OS:EvaporativeFluidCooler:TwoSpeed,
        \type real
        \units W
        \minimum> 0.0
-       \autocalculatable
+       \autosizable
   N11, \field Low Speed Standard Capacity Sizing Factor
        \required-field
        \type real
@@ -17417,7 +17413,7 @@ OS:EvaporativeFluidCooler:TwoSpeed,
        \units W/K
        \minimum> 0.0
        \maximum 300000.0
-       \autocalculatable
+       \autosizable
        \note Only used for Performance Input Method = UFactorTimesAreaAndDesignWaterFlowRate;
        \note for other input methods, this field is ignored.
        \note Low speed fluid cooler UA must be less than high speed fluid cooler UA
@@ -17443,7 +17439,7 @@ OS:EvaporativeFluidCooler:TwoSpeed,
        \type real
        \units W
        \minimum> 0.0
-       \autocalculatable
+       \autosizable
        \note Only used for Performance Input Method = UserSpecifiedDesignCapacity;
        \note for other Performance Input Methods, this field is ignored.
   N18, \field Low Speed User Specified Design Capacity Sizing Factor

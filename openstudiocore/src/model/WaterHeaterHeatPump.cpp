@@ -474,6 +474,24 @@ namespace detail {
     return newWaterHeater;
   }
 
+  std::vector<IdfObject> WaterHeaterHeatPump_Impl::remove()
+  {
+    auto t_tank = tank();
+    if( auto waterToWaterTank = t_tank.optionalCast<WaterToWaterComponent>() ) {
+      waterToWaterTank->removeFromPlantLoop();
+      waterToWaterTank->removeFromSecondaryPlantLoop();
+    } else {
+      // All tanks are WaterToWaterComponent at this time, but the api says they could be any HVACComponent,
+      // so this is a little dangerous. Consider enhanced APIs to remove HVACComponent from system. 
+      // Something we currently don't have.
+      // Ideally remove would just take care of all of this, but the way ParentObject::remove works out children remove methods
+      // aren't being called cleanly. 
+      LOG_AND_THROW("Unsupported tank " << t_tank.briefDescription() << " attached to WaterHeaterHeatPump " << briefDescription());
+    }
+
+    return ZoneHVACComponent_Impl::remove();
+  }
+
   std::vector<ModelObject> WaterHeaterHeatPump_Impl::children() const
   {
     std::vector<ModelObject> result;

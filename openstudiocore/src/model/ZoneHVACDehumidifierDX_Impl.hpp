@@ -126,6 +126,8 @@ namespace detail {
     /** @name Other */
     //@{
 
+    ModelObject clone(Model model) const override;
+
     //@}
    protected:
    private:
