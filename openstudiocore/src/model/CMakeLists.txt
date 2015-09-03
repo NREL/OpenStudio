@@ -437,6 +437,12 @@ set(${target_name}_src
   ElectricLoadCenterDistribution.hpp
   ElectricLoadCenterDistribution_Impl.hpp
   ElectricLoadCenterDistribution.cpp
+  ElectricLoadCenterInverterLookUpTable.hpp
+  ElectricLoadCenterInverterLookUpTable_Impl.hpp
+  ElectricLoadCenterInverterLookUpTable.cpp
+  ElectricLoadCenterInverterSimple.hpp
+  ElectricLoadCenterInverterSimple_Impl.hpp
+  ElectricLoadCenterInverterSimple.cpp
   EvaporativeCoolerDirectResearchSpecial.hpp
   EvaporativeCoolerDirectResearchSpecial_Impl.hpp
   EvaporativeCoolerDirectResearchSpecial.cpp
@@ -658,6 +664,12 @@ set(${target_name}_src
   PhotovoltaicPerformance.hpp
   PhotovoltaicPerformance_Impl.hpp
   PhotovoltaicPerformance.cpp
+  PhotovoltaicPerformanceEquivalentOneDiode.hpp
+  PhotovoltaicPerformanceEquivalentOneDiode_Impl.hpp
+  PhotovoltaicPerformanceEquivalentOneDiode.cpp
+  PhotovoltaicPerformanceSimple.hpp
+  PhotovoltaicPerformanceSimple_Impl.hpp
+  PhotovoltaicPerformanceSimple.cpp
   PipeAdiabatic.hpp
   PipeAdiabatic_Impl.hpp
   PipeAdiabatic.cpp
@@ -1294,6 +1306,8 @@ set(${target_name}_moc
   DesignSpecificationZoneAirDistribution_Impl.hpp
   ElectricEquipment_Impl.hpp
   ElectricEquipmentDefinition_Impl.hpp
+  ElectricLoadCenterInverterLookUpTable_Impl.hpp
+  ElectricLoadCenterInverterSimple_Impl.hpp
   EvaporativeCoolerDirectResearchSpecial_Impl.hpp
   ExteriorLights_Impl.hpp
   ExteriorLightsDefinition_Impl.hpp
@@ -1337,6 +1351,8 @@ set(${target_name}_moc
   OutsideSurfaceConvectionAlgorithm_Impl.hpp
   ParentObject_Impl.hpp
   People_Impl.hpp
+  PhotovoltaicPerformanceEquivalentOneDiode_Impl.hpp
+  PhotovoltaicPerformanceSimple_Impl.hpp
   PlanarSurface_Impl.hpp
   PlanarSurfaceGroup_Impl.hpp
   ProgramControl_Impl.hpp
