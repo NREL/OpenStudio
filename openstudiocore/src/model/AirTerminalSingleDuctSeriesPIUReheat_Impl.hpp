@@ -142,6 +142,8 @@ namespace detail {
     // Use carefully.  Removing (or moving) plenum will leave model in invalid state
     bool setInducedAirPlenumZone(ThermalZone & thermalZone);
 
+    std::vector<IdfObject> remove() override;
+
     //@}
    protected:
    private:
