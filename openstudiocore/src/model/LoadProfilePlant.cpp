@@ -26,6 +26,10 @@
 #include "ScheduleDay.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "PlantLoop.hpp"
+#include "PlantLoop_Impl.hpp"
 #include "../utilities/time/Time.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
@@ -152,6 +156,16 @@ namespace detail {
 
   boost::optional<Schedule> LoadProfilePlant_Impl::optionalFlowRateFractionSchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_LoadProfile_PlantFields::FlowRateFractionScheduleName);
+  }
+
+  bool LoadProfilePlant_Impl::addToNode(Node & node)
+  {
+    if( auto plant = node.plantLoop() ) {
+      if( plant->demandComponent(node.handle()) ) {
+        return StraightComponent_Impl::addToNode(node);
+      }
+    }
+    return false;
   }
 
 } // detail

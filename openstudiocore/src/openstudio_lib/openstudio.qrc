@@ -30,6 +30,8 @@
     <file>images/coilheatinglowtemprad_varflow.png</file>
     <file>images/coilheatingwater_baseboard.png</file>
     <file>images/coilsystem_cooling_dx.png</file>
+    <file>images/cool_coil_dx_vari_speed.png</file>
+    <file>images/ht_coil_dx_vari.png</file>
     <file>images/combo_box_arrows.png</file>
     <file>images/combo_box_arrows_gray.png</file>
     <file>images/coming_soon_building_summary.png</file>
@@ -50,6 +52,8 @@
     <file>images/cooling_tower_2speed.png</file>
     <file>images/cooling_tower_variable.png</file>
     <file>images/dehumidify_schedule_icon.png</file>
+    <file>images/baseboard_rad_convect_electric.png</file>
+    <file>images/dehumidifier_dx.png</file>
     <file>images/delete-icon.png</file>
     <file>images/delete.png</file>
     <file>images/delete_disabled.png</file>
@@ -89,6 +93,7 @@
     <file>images/electric_humidifier.png</file>
     <file>images/evap_cooled.png</file>
     <file>images/evap_fluid_cooler.png</file>
+    <file>images/evap_fluid_cooler_two_speed.png</file>
     <file>images/fan_constant.png</file>
     <file>images/fan_on_off.png</file>
     <file>images/fan_variable.png</file>
@@ -171,10 +176,13 @@
     <file>images/os_256.png</file>
     <file>images/osm-icon-open.png</file>
     <file>images/parallel_fan_terminal.png</file>
+    <file>images/pipe.png</file>
     <file>images/pipe_adiabatic.png</file>
     <file>images/pipe_indoor.png</file>
     <file>images/pipe_outdoor.png</file>
     <file>images/plant_loop_icon.png</file>
+    <file>images/plant_temp_source.png</file>
+    <file>images/plant_profile.png</file>
     <file>images/plenum_off.png</file>
     <file>images/plenum_on.png</file>
     <file>images/properties_icon_off.png</file>
@@ -261,6 +269,7 @@
     <file>images/system_type_10.png</file>
     <file>images/tempering_valve.png</file>
     <file>images/thermal_storage_ice.png</file>
+    <file>images/thermal_storage_strat.png</file>
     <file>images/thermostat.png</file>
     <file>images/toggle_arrow.png</file>
     <file>images/toggle_arrow_closed.png</file>
@@ -326,6 +335,7 @@
     <file>images/mini_icons/coilheatinglowtemprad_constflow.png</file>
     <file>images/mini_icons/coilheatinglowtemprad_varflow.png</file>
     <file>images/mini_icons/coilheatingwater_baseboard_mini.png</file>
+    <file>images/mini_icons/mini_ht_coil_dx_vari.png</file>
     <file>images/mini_icons/construct_inter_source.png</file>
     <file>images/mini_icons/construction.png</file>
     <file>images/mini_icons/construction_gnd.png</file>
@@ -345,6 +355,7 @@
     <file>images/mini_icons/electric_equipment_definition.png</file>
     <file>images/mini_icons/electric_furnace_mini.png</file>
     <file>images/mini_icons/evap_fluid_cooler.png</file>
+    <file>images/mini_icons/evap_fluid_cooler_two_speed.png</file>
     <file>images/mini_icons/facility.png</file>
     <file>images/mini_icons/fan_constant.png</file>
     <file>images/mini_icons/fan_on_off_mini.png</file>
@@ -393,12 +404,15 @@
     <file>images/mini_icons/mini_chiller_absorption_indirect.png</file>
     <file>images/mini_icons/mini_coil_system_water.png</file>
     <file>images/mini_icons/mini_coilsystem_cooling_DX.png</file>
+    <file>images/mini_icons/mini_cool_coil_dx_vari_speed.png</file>
     <file>images/mini_icons/mini_compressor.png</file>
     <file>images/mini_icons/mini_condenser_cascade.png</file>
     <file>images/mini_icons/mini_condensor.png</file>
     <file>images/mini_icons/mini_cooling_tower.png</file>
     <file>images/mini_icons/mini_cooling_tower_2speed.png</file>
     <file>images/mini_icons/mini_cooling_tower_variable.png</file>
+    <file>images/mini_icons/mini_baseboard_rad_convect_electric.png</file>
+    <file>images/mini_icons/mini_dehumidifier_dx.png</file>
     <file>images/mini_icons/mini_display_case.png</file>
     <file>images/mini_icons/mini_duct.png</file>
     <file>images/mini_icons/mini_dx_cooling_coil_multispeed.png</file>
@@ -416,14 +430,18 @@
     <file>images/mini_icons/mini_headered_pumps_variable.png</file>
     <file>images/mini_icons/mini_infiltration_leak.png</file>
     <file>images/mini_icons/mini_mechanical-sub-cooler.png</file>
+    <file>images/mini_icons/pipe.png</file>
     <file>images/mini_icons/mini_pipe_adiabatic.png</file>
     <file>images/mini_icons/mini_pipe_indoor.png</file>
     <file>images/mini_icons/mini_pipe_outdoor.png</file>
+    <file>images/mini_icons/mini_plant_temp_source.png</file>
+    <file>images/mini_icons/mini_plant_profile.png</file>
     <file>images/mini_icons/mini_refrigeration_system.png</file>
     <file>images/mini_icons/mini_single_ducts_constant_vol_4pipe.png</file>
     <file>images/mini_icons/mini_slhx.png</file>
     <file>images/mini_icons/mini_tempering_valve.png</file>
     <file>images/mini_icons/mini_thermal_storage_ice.png</file>
+    <file>images/mini_icons/mini_thermal_storage_strat.png</file>
     <file>images/mini_icons/mini_unitary_system.png</file>
     <file>images/mini_icons/mini_vrf_outdoor.png</file>
     <file>images/mini_icons/mini_vrf_unit.png</file>
