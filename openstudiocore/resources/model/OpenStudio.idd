@@ -14630,7 +14630,7 @@ OS:Coil:Heating:DX:VariableSpeed,
         \required-field
         \note must be lower than or equal to the highest speed number
    N2,  \field Rated Heating Capacity At Selected Nominal Speed Level
-        \units w
+        \units W
         \type real
         \autosizable
         \required-field
@@ -14709,7 +14709,7 @@ OS:Coil:Heating:DX:VariableSpeed:SpeedData,
         \reference CoilHeatingDXVariableSpeedSpeedData
    N1,  \field Reference Unit Gross Rated Heating Capacity
         \note Heating capacity not accounting for the effect of supply air fan heat
-        \units w
+        \units W
         \type real
         \minimum 0
         \required-field
@@ -14768,7 +14768,7 @@ OS:Coil:Cooling:DX:VariableSpeed,
         \required-field
         \note must be lower than or equal to the highest speed number
    N2,  \field Gross Rated Total Cooling Capacity At Selected Nominal Speed Level
-        \units w
+        \units W
         \type real
         \autosizable
         \required-field
@@ -14849,7 +14849,7 @@ OS:Coil:Cooling:DX:VariableSpeed:SpeedData,
         \type alpha
         \reference CoilCoolingDXVariableSpeedSpeedData
    N1,  \field Reference Unit Gross Rated Total Cooling Capacity
-        \units w
+        \units W
         \type real
         \minimum 0
         \required-field
@@ -14933,7 +14933,7 @@ OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit,
         \required-field
         \note must be lower than or equal to the highest speed number
    N2,  \field Rated Heating Capacity At Selected Nominal Speed Level
-        \units w
+        \units W
         \type real
         \autosizable
         \required-field
@@ -14967,7 +14967,7 @@ OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
         \reference CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData
    N1,  \field Reference Unit Gross Rated Heating Capacity
         \note Heating capacity not accounting for the effect of supply air fan heat
-        \units w
+        \units W
         \type real
         \minimum 0
         \required-field
@@ -15059,7 +15059,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit,
         \required-field
         \note must be lower than or equal to the highest speed number
    N2,  \field Gross Rated Total Cooling Capacity At Selected Nominal Speed Level
-        \units w
+        \units W
         \type real
         \autosizable
         \required-field
@@ -15107,7 +15107,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
         \type alpha
         \reference CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData
    N1,  \field Reference Unit Gross Rated Total Cooling Capacity
-        \units w
+        \units W
         \type real
         \minimum 0
         \required-field
