@@ -890,6 +890,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // DLM: is this a no-op?
       break;
     }
+  case openstudio::IddObjectType::OS_Coil_Heating_Water_Baseboard_Radiant:
+    {
+      // no-op
+      return retVal;
+    }
   case openstudio::IddObjectType::OS_CoilPerformance_DX_Cooling :
     {
       auto mo = modelObject.cast<CoilPerformanceDXCooling>();

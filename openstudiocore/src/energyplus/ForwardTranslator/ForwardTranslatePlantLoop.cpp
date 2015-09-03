@@ -67,6 +67,8 @@
 #include "../../model/WaterToWaterComponent_Impl.hpp"
 #include "../../model/CoilHeatingWaterBaseboard.hpp"
 #include "../../model/CoilHeatingWaterBaseboard_Impl.hpp"
+#include "../../model/CoilHeatingWaterBaseboardRadiant.hpp"
+#include "../../model/CoilHeatingWaterBaseboardRadiant_Impl.hpp"
 #include "../../model/CoilCoolingCooledBeam.hpp"
 #include "../../model/CoilCoolingCooledBeam_Impl.hpp"
 #include "../../model/StraightComponent.hpp"
@@ -158,6 +160,24 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
               //Get the name and the idd object from the idf object version of this
               objectName = idfContZnBB->name().get();
               iddType = idfContZnBB->iddObject().name();
+            }
+          }
+        }
+        //special case for ZoneHVAC:Baseeboard:RadiantConvective:Water.  In E+, this object appears on both the 
+        //zonehvac:equipmentlist and the branch.  In OpenStudio, this object was broken into 2 objects:
+        //ZoneHVACBaseboardRadiantConvectiveWater and CoilHeatingWaterBaseboardRadiant.  The ZoneHVAC goes onto the zone and
+        //has a child coil that goes onto the plantloop.  In order to get the correct translation to E+, we need
+        //to put the name of the containing ZoneHVACBaseboardRadiantConvectiveWater onto the branch.
+        if ( auto coilBBRad = modelObject.optionalCast<CoilHeatingWaterBaseboardRadiant>() )
+        {
+          if ( auto contZnBBRad = coilBBRad->containingZoneHVACComponent() )
+          {
+            //translate and map containingZoneHVACBBRadConvWater
+            if ( auto idfContZnBBRad = this->translateAndMapModelObject(*contZnBBRad) )
+            {
+              //Get the name and the idd object from the idf object version of this
+              objectName = idfContZnBBRad->name().get();
+              iddType = idfContZnBBRad->iddObject().name();
             }
           }
         }

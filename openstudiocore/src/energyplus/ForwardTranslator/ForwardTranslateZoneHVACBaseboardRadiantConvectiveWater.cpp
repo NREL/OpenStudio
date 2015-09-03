@@ -35,6 +35,8 @@
 #include "../../model/ZoneHVACEquipmentList_Impl.hpp"
 #include "../../model/ZoneHVACComponent.hpp"
 #include "../../model/ZoneHVACComponent_Impl.hpp"
+#include "../../model/CoilHeatingWaterBaseboardRadiant.hpp"
+#include "../../model/CoilHeatingWaterBaseboardRadiant_Impl.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/ZoneHVAC_Baseboard_RadiantConvective_Water_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -64,54 +66,62 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACBaseboardRadiantC
     }
   }
 
-  // InletNodeName
+  if ( auto heatingCoil = modelObject.heatingCoil().optionalCast<CoilHeatingWaterBaseboardRadiant>() ) {
 
+    // InletNodeName
+    if( auto node = heatingCoil->inletModelObject() ) {
+      idfObject.setString(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::InletNodeName,node->name().get());
+    }
 
-  // OutletNodeName
+    // OutletNodeName
+    if( auto node = heatingCoil->outletModelObject() ) {
+      idfObject.setString(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::OutletNodeName,node->name().get());
+    }
 
+    // RatedAverageWaterTemperature
+    if( (value = heatingCoil->ratedAverageWaterTemperature()) ) {
+      idfObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::RatedAverageWaterTemperature,value.get());
+    }
 
-  // RatedAverageWaterTemperature
-  if( (value = modelObject.ratedAverageWaterTemperature()) ) {
-    idfObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::RatedAverageWaterTemperature,value.get());
-  }
+    // RatedWaterMassFlowRate
+    if( (value = heatingCoil->ratedWaterMassFlowRate()) ) {
+      idfObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::RatedWaterMassFlowRate,value.get());
+    }
 
-  // RatedWaterMassFlowRate
-  if( (value = modelObject.ratedWaterMassFlowRate()) ) {
-    idfObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::RatedWaterMassFlowRate,value.get());
-  }
+    // HeatingDesignCapacityMethod
+    if( (s = heatingCoil->heatingDesignCapacityMethod()) ) {
+      idfObject.setString(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingDesignCapacityMethod,s.get());
+    }
 
-  // HeatingDesignCapacityMethod
-  if( (s = modelObject.heatingDesignCapacityMethod()) ) {
-    idfObject.setString(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingDesignCapacityMethod,s.get());
-  }
+    // HeatingDesignCapacity
+    if( heatingCoil->isHeatingDesignCapacityAutosized() ) {
+      idfObject.setString(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingDesignCapacity,"AutoSize");
+    } else if( (value = heatingCoil->heatingDesignCapacity()) ) {
+      idfObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingDesignCapacity,value.get());
+    }
 
-  // HeatingDesignCapacity
-  if( modelObject.isHeatingDesignCapacityAutosized() ) {
-    idfObject.setString(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingDesignCapacity,"AutoSize");
-  } else if( (value = modelObject.heatingDesignCapacity()) ) {
-    idfObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingDesignCapacity,value.get());
-  }
+    // HeatingDesignCapacityPerFloorArea
+    if( (value = heatingCoil->heatingDesignCapacityPerFloorArea()) ) {
+      idfObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingDesignCapacityPerFloorArea,value.get());
+    }
 
-  // HeatingDesignCapacityPerFloorArea
-  if( (value = modelObject.heatingDesignCapacityPerFloorArea()) ) {
-    idfObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingDesignCapacityPerFloorArea,value.get());
-  }
+    // FractionofAutosizedHeatingDesignCapacity
+    if( (value = heatingCoil->fractionofAutosizedHeatingDesignCapacity()) ) {
+      idfObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::FractionofAutosizedHeatingDesignCapacity,value.get());
+    }
 
-  // FractionofAutosizedHeatingDesignCapacity
-  if( (value = modelObject.fractionofAutosizedHeatingDesignCapacity()) ) {
-    idfObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::FractionofAutosizedHeatingDesignCapacity,value.get());
-  }
+    // MaximumWaterFlowRate
+    if( heatingCoil->isMaximumWaterFlowRateAutosized() ) {
+      idfObject.setString(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::MaximumWaterFlowRate,"AutoSize");
+    } else if( (value = heatingCoil->maximumWaterFlowRate()) ) {
+      idfObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::MaximumWaterFlowRate,value.get());
+    }
 
-  // MaximumWaterFlowRate
-  if( modelObject.isMaximumWaterFlowRateAutosized() ) {
-    idfObject.setString(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::MaximumWaterFlowRate,"AutoSize");
-  } else if( (value = modelObject.maximumWaterFlowRate()) ) {
-    idfObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::MaximumWaterFlowRate,value.get());
-  }
+    // ConvergenceTolerance
+    if( (value = heatingCoil->convergenceTolerance()) ) {
+      idfObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::ConvergenceTolerance,value.get());
+    }
 
-  // ConvergenceTolerance
-  if( (value = modelObject.convergenceTolerance()) ) {
-    idfObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::ConvergenceTolerance,value.get());
   }
 
   // FractionRadiant

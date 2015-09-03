@@ -26,6 +26,10 @@
 #include "Surface_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
+#include "HVACComponent.hpp"
+#include "HVACComponent_Impl.hpp"
+#include "CoilHeatingWaterBaseboardRadiant.hpp"
+#include "CoilHeatingWaterBaseboardRadiant_Impl.hpp"
 #include "Model.hpp"
 #include "Space.hpp"
 #include "ScheduleTypeLimits.hpp"
@@ -89,12 +93,12 @@ namespace detail {
 
   unsigned ZoneHVACBaseboardRadiantConvectiveWater_Impl::inletPort() const
   {
-    return OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::InletNodeName;
+    return 0; // this object has no inlet or outlet node
   }
 
   unsigned ZoneHVACBaseboardRadiantConvectiveWater_Impl::outletPort() const
   {
-    return OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::OutletNodeName;
+    return 0; // this object has no inlet or outlet node
   }
 
   boost::optional<ThermalZone> ZoneHVACBaseboardRadiantConvectiveWater_Impl::thermalZone() const
@@ -159,83 +163,48 @@ namespace detail {
     return surfaces;
   }
 
-  // bool ZoneHVACBaseboardRadiantConvectiveWater_Impl::addToNode(Node & node)
-  // {
-  //   return ZoneHVACComponent_Impl::addToNode(node);
-  // }
+  std::vector<ModelObject> ZoneHVACBaseboardRadiantConvectiveWater_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+    if (OptionalHVACComponent intermediate = optionalHeatingCoil()) {
+      result.push_back(*intermediate);
+    }
+    return result;
+  }
 
-  // ModelObject ZoneHVACBaseboardRadiantConvectiveWater_Impl::clone(Model model) const
-  // {
-  //   return ZoneHVACComponent_Impl::clone(node);
-  // }
+  ModelObject ZoneHVACBaseboardRadiantConvectiveWater_Impl::clone(Model model) const
+  {
+    auto baseboardRadConvWaterClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACBaseboardRadiantConvectiveWater>();
+
+    auto t_heatingCoil = heatingCoil();
+    auto heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
+
+    baseboardRadConvWaterClone.setHeatingCoil(heatingCoilClone);
+
+    if( model == this->model() ) {
+      if( auto plant = t_heatingCoil.plantLoop() ) {
+        plant->addDemandBranchForComponent(heatingCoilClone); 
+      }
+    }
+
+    return baseboardRadConvWaterClone;
+  }
+
+  std::vector<IdfObject> ZoneHVACBaseboardRadiantConvectiveWater_Impl::remove()
+  {
+    if( auto waterHeatingCoil = heatingCoil().optionalCast<CoilHeatingWaterBaseboardRadiant>() ) {
+      if( boost::optional<PlantLoop> plantLoop = waterHeatingCoil->plantLoop() ) {
+        plantLoop->removeDemandBranchWithComponent( waterHeatingCoil.get() );
+      }
+    }
+    return ZoneHVACComponent_Impl::remove();
+  }
 
   Schedule ZoneHVACBaseboardRadiantConvectiveWater_Impl::availabilitySchedule() const {
     boost::optional<Schedule> value = optionalAvailabilitySchedule();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Availability Schedule attached.");
     }
-    return value.get();
-  }
-
-  double ZoneHVACBaseboardRadiantConvectiveWater_Impl::ratedAverageWaterTemperature() const {
-    boost::optional<double> value = getDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::RatedAverageWaterTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  double ZoneHVACBaseboardRadiantConvectiveWater_Impl::ratedWaterMassFlowRate() const {
-    boost::optional<double> value = getDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::RatedWaterMassFlowRate,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  std::string ZoneHVACBaseboardRadiantConvectiveWater_Impl::heatingDesignCapacityMethod() const {
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingDesignCapacityMethod,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<double> ZoneHVACBaseboardRadiantConvectiveWater_Impl::heatingDesignCapacity() const {
-    return getDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingDesignCapacity,true);
-  }
-
-  bool ZoneHVACBaseboardRadiantConvectiveWater_Impl::isHeatingDesignCapacityAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingDesignCapacity, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
-    }
-    return result;
-  }
-
-  double ZoneHVACBaseboardRadiantConvectiveWater_Impl::heatingDesignCapacityPerFloorArea() const {
-    boost::optional<double> value = getDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingDesignCapacityPerFloorArea,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  double ZoneHVACBaseboardRadiantConvectiveWater_Impl::fractionofAutosizedHeatingDesignCapacity() const {
-    boost::optional<double> value = getDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::FractionofAutosizedHeatingDesignCapacity,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<double> ZoneHVACBaseboardRadiantConvectiveWater_Impl::maximumWaterFlowRate() const {
-    return getDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::MaximumWaterFlowRate,true);
-  }
-
-  bool ZoneHVACBaseboardRadiantConvectiveWater_Impl::isMaximumWaterFlowRateAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::MaximumWaterFlowRate, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
-    }
-    return result;
-  }
-
-  double ZoneHVACBaseboardRadiantConvectiveWater_Impl::convergenceTolerance() const {
-    boost::optional<double> value = getDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::ConvergenceTolerance,true);
-    OS_ASSERT(value);
     return value.get();
   }
 
@@ -251,67 +220,19 @@ namespace detail {
     return value.get();
   }
 
+  HVACComponent ZoneHVACBaseboardRadiantConvectiveWater_Impl::heatingCoil() const {
+    boost::optional<HVACComponent> value = optionalHeatingCoil();
+    if (!value) {
+      LOG_AND_THROW(briefDescription() << " does not have an Heating Coil attached.");
+    }
+    return value.get();
+  }
+
   bool ZoneHVACBaseboardRadiantConvectiveWater_Impl::setAvailabilitySchedule(Schedule& schedule) {
     bool result = setSchedule(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::AvailabilityScheduleName,
                               "ZoneHVACBaseboardRadiantConvectiveWater",
                               "Availability",
                               schedule);
-    return result;
-  }
-
-  bool ZoneHVACBaseboardRadiantConvectiveWater_Impl::setRatedAverageWaterTemperature(double ratedAverageWaterTemperature) {
-    bool result = setDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::RatedAverageWaterTemperature, ratedAverageWaterTemperature);
-    return result;
-  }
-
-  bool ZoneHVACBaseboardRadiantConvectiveWater_Impl::setRatedWaterMassFlowRate(double ratedWaterMassFlowRate) {
-    bool result = setDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::RatedWaterMassFlowRate, ratedWaterMassFlowRate);
-    return result;
-  }
-
-  bool ZoneHVACBaseboardRadiantConvectiveWater_Impl::setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod) {
-    bool result = setString(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingDesignCapacityMethod, heatingDesignCapacityMethod);
-    return result;
-  }
-
-  bool ZoneHVACBaseboardRadiantConvectiveWater_Impl::setHeatingDesignCapacity(boost::optional<double> heatingDesignCapacity) {
-    bool result(false);
-    if (heatingDesignCapacity) {
-      result = setDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingDesignCapacity, heatingDesignCapacity.get());
-    }
-    return result;
-  }
-
-  void ZoneHVACBaseboardRadiantConvectiveWater_Impl::autosizeHeatingDesignCapacity() {
-    bool result = setString(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingDesignCapacity, "autosize");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACBaseboardRadiantConvectiveWater_Impl::setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea) {
-    bool result = setDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingDesignCapacityPerFloorArea, heatingDesignCapacityPerFloorArea);
-    return result;
-  }
-
-  bool ZoneHVACBaseboardRadiantConvectiveWater_Impl::setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity) {
-    bool result = setDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::FractionofAutosizedHeatingDesignCapacity, fractionofAutosizedHeatingDesignCapacity);
-    return result;
-  }
-
-  void ZoneHVACBaseboardRadiantConvectiveWater_Impl::setMaximumWaterFlowRate(boost::optional<double> maximumWaterFlowRate) {
-    bool result(false);
-    if (maximumWaterFlowRate) {
-      result = setDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::MaximumWaterFlowRate, maximumWaterFlowRate.get());
-    }
-    OS_ASSERT(result);
-  }
-
-  void ZoneHVACBaseboardRadiantConvectiveWater_Impl::autosizeMaximumWaterFlowRate() {
-    bool result = setString(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::MaximumWaterFlowRate, "autosize");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACBaseboardRadiantConvectiveWater_Impl::setConvergenceTolerance(double convergenceTolerance) {
-    bool result = setDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::ConvergenceTolerance, convergenceTolerance);
     return result;
   }
 
@@ -325,8 +246,17 @@ namespace detail {
     return result;
   }
 
+  bool ZoneHVACBaseboardRadiantConvectiveWater_Impl::setHeatingCoil(const HVACComponent& radBaseboardHeatingCoil) {
+    bool result = setPointer(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingCoilName, radBaseboardHeatingCoil.handle());
+    return result;
+  }
+
   boost::optional<Schedule> ZoneHVACBaseboardRadiantConvectiveWater_Impl::optionalAvailabilitySchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::AvailabilityScheduleName);
+  }
+
+  boost::optional<HVACComponent> ZoneHVACBaseboardRadiantConvectiveWater_Impl::optionalHeatingCoil() const {
+    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingCoilName);
   }
 
 } // detail
@@ -340,23 +270,12 @@ ZoneHVACBaseboardRadiantConvectiveWater::ZoneHVACBaseboardRadiantConvectiveWater
   auto alwaysOn = model.alwaysOnDiscreteSchedule();
   ok = setAvailabilitySchedule( alwaysOn );
   OS_ASSERT(ok);
-  ok = setRatedAverageWaterTemperature( 87.78 );
-  OS_ASSERT(ok);
-  ok = setRatedWaterMassFlowRate( 0.063 );
-  OS_ASSERT(ok);
-  ok = setHeatingDesignCapacityMethod( "HeatingDesignCapacity" );
-  OS_ASSERT(ok);
-  autosizeHeatingDesignCapacity();
-  ok = setHeatingDesignCapacityPerFloorArea( 0 );
-  OS_ASSERT(ok);
-  ok = setFractionofAutosizedHeatingDesignCapacity( 1.0 );
-  OS_ASSERT(ok);
-  autosizeMaximumWaterFlowRate();
-  ok = setConvergenceTolerance( 0.001 );
-  OS_ASSERT(ok);
   ok = setFractionRadiant( 0.3 );
   OS_ASSERT(ok);
   ok = setFractionofRadiantEnergyIncidentonPeople( 0.3 );
+  OS_ASSERT(ok);
+  CoilHeatingWaterBaseboardRadiant coil( model );
+  ok = setHeatingCoil( coil );
   OS_ASSERT(ok);
 }
 
@@ -364,53 +283,8 @@ IddObjectType ZoneHVACBaseboardRadiantConvectiveWater::iddObjectType() {
   return IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_RadiantConvective_Water);
 }
 
-std::vector<std::string> ZoneHVACBaseboardRadiantConvectiveWater::heatingDesignCapacityMethodValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingDesignCapacityMethod);
-}
-
 Schedule ZoneHVACBaseboardRadiantConvectiveWater::availabilitySchedule() const {
   return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->availabilitySchedule();
-}
-
-double ZoneHVACBaseboardRadiantConvectiveWater::ratedAverageWaterTemperature() const {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->ratedAverageWaterTemperature();
-}
-
-double ZoneHVACBaseboardRadiantConvectiveWater::ratedWaterMassFlowRate() const {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->ratedWaterMassFlowRate();
-}
-
-std::string ZoneHVACBaseboardRadiantConvectiveWater::heatingDesignCapacityMethod() const {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->heatingDesignCapacityMethod();
-}
-
-boost::optional<double> ZoneHVACBaseboardRadiantConvectiveWater::heatingDesignCapacity() const {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->heatingDesignCapacity();
-}
-
-bool ZoneHVACBaseboardRadiantConvectiveWater::isHeatingDesignCapacityAutosized() const {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->isHeatingDesignCapacityAutosized();
-}
-
-double ZoneHVACBaseboardRadiantConvectiveWater::heatingDesignCapacityPerFloorArea() const {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->heatingDesignCapacityPerFloorArea();
-}
-
-double ZoneHVACBaseboardRadiantConvectiveWater::fractionofAutosizedHeatingDesignCapacity() const {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->fractionofAutosizedHeatingDesignCapacity();
-}
-
-boost::optional<double> ZoneHVACBaseboardRadiantConvectiveWater::maximumWaterFlowRate() const {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->maximumWaterFlowRate();
-}
-
-bool ZoneHVACBaseboardRadiantConvectiveWater::isMaximumWaterFlowRateAutosized() const {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->isMaximumWaterFlowRateAutosized();
-}
-
-double ZoneHVACBaseboardRadiantConvectiveWater::convergenceTolerance() const {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->convergenceTolerance();
 }
 
 double ZoneHVACBaseboardRadiantConvectiveWater::fractionRadiant() const {
@@ -421,48 +295,12 @@ double ZoneHVACBaseboardRadiantConvectiveWater::fractionofRadiantEnergyIncidento
   return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->fractionofRadiantEnergyIncidentonPeople();
 }
 
+HVACComponent ZoneHVACBaseboardRadiantConvectiveWater::heatingCoil() const {
+  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->heatingCoil();
+}
+
 bool ZoneHVACBaseboardRadiantConvectiveWater::setAvailabilitySchedule(Schedule& schedule) {
   return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->setAvailabilitySchedule(schedule);
-}
-
-bool ZoneHVACBaseboardRadiantConvectiveWater::setRatedAverageWaterTemperature(double ratedAverageWaterTemperature) {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->setRatedAverageWaterTemperature(ratedAverageWaterTemperature);
-}
-
-bool ZoneHVACBaseboardRadiantConvectiveWater::setRatedWaterMassFlowRate(double ratedWaterMassFlowRate) {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->setRatedWaterMassFlowRate(ratedWaterMassFlowRate);
-}
-
-bool ZoneHVACBaseboardRadiantConvectiveWater::setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod) {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->setHeatingDesignCapacityMethod(heatingDesignCapacityMethod);
-}
-
-bool ZoneHVACBaseboardRadiantConvectiveWater::setHeatingDesignCapacity(double heatingDesignCapacity) {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->setHeatingDesignCapacity(heatingDesignCapacity);
-}
-
-void ZoneHVACBaseboardRadiantConvectiveWater::autosizeHeatingDesignCapacity() {
-  getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->autosizeHeatingDesignCapacity();
-}
-
-bool ZoneHVACBaseboardRadiantConvectiveWater::setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea) {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->setHeatingDesignCapacityPerFloorArea(heatingDesignCapacityPerFloorArea);
-}
-
-bool ZoneHVACBaseboardRadiantConvectiveWater::setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity) {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->setFractionofAutosizedHeatingDesignCapacity(fractionofAutosizedHeatingDesignCapacity);
-}
-
-void ZoneHVACBaseboardRadiantConvectiveWater::setMaximumWaterFlowRate(double maximumWaterFlowRate) {
-  getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->setMaximumWaterFlowRate(maximumWaterFlowRate);
-}
-
-void ZoneHVACBaseboardRadiantConvectiveWater::autosizeMaximumWaterFlowRate() {
-  getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->autosizeMaximumWaterFlowRate();
-}
-
-bool ZoneHVACBaseboardRadiantConvectiveWater::setConvergenceTolerance(double convergenceTolerance) {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->setConvergenceTolerance(convergenceTolerance);
 }
 
 bool ZoneHVACBaseboardRadiantConvectiveWater::setFractionRadiant(double fractionRadiant) {
@@ -471,6 +309,10 @@ bool ZoneHVACBaseboardRadiantConvectiveWater::setFractionRadiant(double fraction
 
 bool ZoneHVACBaseboardRadiantConvectiveWater::setFractionofRadiantEnergyIncidentonPeople(double fractionofRadiantEnergyIncidentonPeople) {
   return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->setFractionofRadiantEnergyIncidentonPeople(fractionofRadiantEnergyIncidentonPeople);
+}
+
+bool ZoneHVACBaseboardRadiantConvectiveWater::setHeatingCoil(const HVACComponent& radBaseboardHeatingCoil) {
+  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->setHeatingCoil(radBaseboardHeatingCoil);
 }
 
 boost::optional<ThermalZone> ZoneHVACBaseboardRadiantConvectiveWater::thermalZone() {

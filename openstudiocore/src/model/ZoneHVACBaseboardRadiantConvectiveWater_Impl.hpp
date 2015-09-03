@@ -29,6 +29,7 @@ namespace model {
 class Schedule;
 class Surface;
 class ThermalZone;
+class HVACComponent;
 
 namespace detail {
 
@@ -62,19 +63,21 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned inletPort() const override;
-
-    virtual unsigned outletPort() const override;
-
     boost::optional<ThermalZone> thermalZone() const;
 
     bool addToThermalZone(ThermalZone & thermalZone) override;
 
     void removeFromThermalZone() override;
 
-    // virtual bool addToNode(Node & node) override;
+    virtual ModelObject clone(Model model) const override;
 
-    // virtual ModelObject clone(Model model) const override;
+    virtual unsigned inletPort() const override;
+
+    virtual unsigned outletPort() const override;
+
+    virtual std::vector<ModelObject> children() const override;
+
+    virtual std::vector<IdfObject> remove() override;
 
     //@}
     /** @name Getters */
@@ -82,29 +85,11 @@ namespace detail {
 
     Schedule availabilitySchedule() const;
 
-    double ratedAverageWaterTemperature() const;
-
-    double ratedWaterMassFlowRate() const;
-
-    std::string heatingDesignCapacityMethod() const;
-
-    boost::optional<double> heatingDesignCapacity() const;
-
-    bool isHeatingDesignCapacityAutosized() const;
-
-    double heatingDesignCapacityPerFloorArea() const;
-
-    double fractionofAutosizedHeatingDesignCapacity() const;
-
-    boost::optional<double> maximumWaterFlowRate() const;
-
-    bool isMaximumWaterFlowRateAutosized() const;
-
-    double convergenceTolerance() const;
-
     double fractionRadiant() const;
 
     double fractionofRadiantEnergyIncidentonPeople() const;
+
+    HVACComponent heatingCoil() const;
 
     //@}
     /** @name Setters */
@@ -112,29 +97,11 @@ namespace detail {
 
     bool setAvailabilitySchedule(Schedule& schedule);
 
-    bool setRatedAverageWaterTemperature(double ratedAverageWaterTemperature);
-
-    bool setRatedWaterMassFlowRate(double ratedWaterMassFlowRate);
-
-    bool setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod);
-
-    bool setHeatingDesignCapacity(boost::optional<double> heatingDesignCapacity);
-
-    void autosizeHeatingDesignCapacity();
-
-    bool setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea);
-
-    bool setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity);
-
-    void setMaximumWaterFlowRate(boost::optional<double> maximumWaterFlowRate);
-
-    void autosizeMaximumWaterFlowRate();
-
-    bool setConvergenceTolerance(double convergenceTolerance);
-
     bool setFractionRadiant(double fractionRadiant);
 
     bool setFractionofRadiantEnergyIncidentonPeople(double fractionofRadiantEnergyIncidentonPeople);
+
+    bool setHeatingCoil( const HVACComponent& heatingCoil );
 
     //@}
     /** @name Other */
@@ -151,6 +118,7 @@ namespace detail {
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
     boost::optional<Schedule> optionalAvailabilitySchedule() const;
+    boost::optional<HVACComponent> optionalHeatingCoil() const;
   };
 
 } // detail

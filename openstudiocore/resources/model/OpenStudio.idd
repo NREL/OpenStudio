@@ -14361,7 +14361,68 @@ OS:Coil:Heating:Water:Baseboard,
       \type object-list
       \required-field
       \object-list ConnectionNames
-   
+
+OS:Coil:Heating:Water:Baseboard:Radiant,
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2, \field Name
+      \type alpha
+      \required-field
+      \reference RadiantBaseboardHeatingCoil
+      \reference ConnectionObject
+  A3, \field Inlet Node Name
+      \required-field
+      \type object-list
+      \object-list ConnectionNames
+  A4, \field Outlet Node Name
+      \required-field
+      \type object-list
+      \object-list ConnectionNames
+  N1, \field Rated Average Water Temperature
+      \required-field
+      \type real
+      \maximum 150.0
+      \minimum 20.0
+      \units C
+  N2, \field Rated Water Mass Flow Rate
+      \required-field
+      \type real
+      \maximum 10.0
+      \minimum> 0.0
+      \units kg/s
+  A5, \field Heating Design Capacity Method
+      \required-field
+      \type choice
+      \key HeatingDesignCapacity
+      \key CapacityPerFloorArea
+      \key FractionOfAutosizedHeatingCapacity
+  N3, \field Heating Design Capacity
+      \required-field
+      \type real
+      \units W
+      \minimum 0.0
+      \autosizable
+      \ip-units W
+  N4, \field Heating Design Capacity Per Floor Area
+      \required-field
+      \type real
+      \units W/m2
+      \minimum 0.0
+  N5, \field Fraction of Autosized Heating Design Capacity
+      \required-field
+      \type real
+      \minimum 0.0
+  N6, \field Maximum Water Flow Rate
+      \required-field
+      \autosizable
+      \type real
+      \units m3/s
+  N7; \field Convergence Tolerance
+      \required-field
+      \type real
+      \minimum> 0.0
+
 OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
        \Min-fields 20
   A1,  \field Handle
@@ -21889,63 +21950,16 @@ OS:ZoneHVAC:Baseboard:RadiantConvective:Water,
        \required-field
        \type object-list
        \object-list ScheduleNames
-  A4,  \field Inlet Node Name
-       \required-field
+  A4;  \field Heating Coil Name
        \type object-list
-       \object-list ConnectionNames
-  A5,  \field Outlet Node Name
        \required-field
-       \type object-list
-       \object-list ConnectionNames
-  N1,  \field Rated Average Water Temperature
-       \required-field
-       \type real
-       \maximum 150.0
-       \minimum 20.0
-       \units C
-  N2,  \field Rated Water Mass Flow Rate
-       \required-field
-       \type real
-       \maximum 10.0
-       \minimum> 0.0
-       \units kg/s
-  A6,  \field Heating Design Capacity Method
-       \required-field
-       \type choice
-       \key HeatingDesignCapacity
-       \key CapacityPerFloorArea
-       \key FractionOfAutosizedHeatingCapacity
-  N3 , \field Heating Design Capacity
-       \required-field
-       \type real
-       \units W
-       \minimum 0.0
-       \autosizable
-       \ip-units W
-  N4 , \field Heating Design Capacity Per Floor Area
-       \required-field
-       \type real
-       \units W/m2
-       \minimum 0.0
-  N5 , \field Fraction of Autosized Heating Design Capacity
-       \required-field
-       \type real
-       \minimum 0.0
-  N6,  \field Maximum Water Flow Rate
-       \required-field
-       \autosizable
-       \type real
-       \units m3/s
-  N7,  \field Convergence Tolerance
-       \required-field
-       \type real
-       \minimum> 0.0
-  N8,  \field Fraction Radiant
+       \object-list RadiantBaseboardHeatingCoil
+  N1,  \field Fraction Radiant
        \required-field
        \type real
        \minimum 0
        \maximum 1
-  N9;  \field Fraction of Radiant Energy Incident on People
+  N2;  \field Fraction of Radiant Energy Incident on People
        \required-field
        \type real
        \minimum 0

@@ -50,36 +50,16 @@ class MODEL_API ZoneHVACBaseboardRadiantConvectiveWater : public ZoneHVACCompone
 
   static IddObjectType iddObjectType();
 
-  static std::vector<std::string> heatingDesignCapacityMethodValues();
-
   /** @name Getters */
   //@{
 
   Schedule availabilitySchedule() const;
 
-  double ratedAverageWaterTemperature() const;
-
-  double ratedWaterMassFlowRate() const;
-
-  std::string heatingDesignCapacityMethod() const;
-
-  boost::optional<double> heatingDesignCapacity() const;
-
-  bool isHeatingDesignCapacityAutosized() const;
-
-  double heatingDesignCapacityPerFloorArea() const;
-
-  double fractionofAutosizedHeatingDesignCapacity() const;
-
-  boost::optional<double> maximumWaterFlowRate() const;
-
-  bool isMaximumWaterFlowRateAutosized() const;
-
-  double convergenceTolerance() const;
-
   double fractionRadiant() const;
 
   double fractionofRadiantEnergyIncidentonPeople() const;
+
+  HVACComponent heatingCoil() const;
 
   //@}
   /** @name Setters */
@@ -87,29 +67,11 @@ class MODEL_API ZoneHVACBaseboardRadiantConvectiveWater : public ZoneHVACCompone
 
   bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setRatedAverageWaterTemperature(double ratedAverageWaterTemperature);
-
-  bool setRatedWaterMassFlowRate(double ratedWaterMassFlowRate);
-
-  bool setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod);
-
-  bool setHeatingDesignCapacity(double heatingDesignCapacity);
-
-  void autosizeHeatingDesignCapacity();
-
-  bool setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea);
-
-  bool setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity);
-
-  void setMaximumWaterFlowRate(double maximumWaterFlowRate);
-
-  void autosizeMaximumWaterFlowRate();
-
-  bool setConvergenceTolerance(double convergenceTolerance);
-
   bool setFractionRadiant(double fractionRadiant);
 
   bool setFractionofRadiantEnergyIncidentonPeople(double fractionofRadiantEnergyIncidentonPeople);
+
+  bool setHeatingCoil( const HVACComponent& heatingCoil );
 
   //@}
   /** @name Other */
