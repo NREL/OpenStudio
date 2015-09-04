@@ -112,7 +112,7 @@ namespace detail {
 
     bool removeGenerator(const Generator& generator);
 
-    bool resetGenerators();
+    void resetGenerators();
 
     bool setGeneratorOperationSchemeType(const std::string& generatorOperationSchemeType);
 

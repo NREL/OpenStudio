@@ -25,6 +25,8 @@
 #include "PlanarSurface_Impl.hpp"
 #include "PhotovoltaicPerformance.hpp"
 #include "PhotovoltaicPerformance_Impl.hpp"
+#include "PhotovoltaicPerformanceSimple.hpp"
+#include "PhotovoltaicPerformanceEquivalentOneDiode.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
@@ -110,8 +112,14 @@ namespace detail {
 
   ModelObject GeneratorPhotovoltaic_Impl::clone(Model model) const
   {
-    // DLM: TODO blank out surface in clone
-    return ParentObject_Impl::clone(model);
+    ModelObject result = ParentObject_Impl::clone(model);
+    result.cast<GeneratorPhotovoltaic>().resetSurface();
+    return result;
+  }
+
+  boost::optional<double> GeneratorPhotovoltaic_Impl::ratedThermalToElectricalPowerRatio() const
+  {
+    return boost::none;
   }
 
   boost::optional<PlanarSurface> GeneratorPhotovoltaic_Impl::surface() const {
@@ -174,11 +182,6 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  //bool GeneratorPhotovoltaic_Impl::setModulePerformance(const PVModules& pVModules) {
-  //  bool result = setPointer(OS_Generator_PhotovoltaicFields::ModulePerformanceName, pVModules.handle());
-  //  return result;
-  //}
-
   bool GeneratorPhotovoltaic_Impl::setHeatTransferIntegrationMode(const std::string& heatTransferIntegrationMode) {
     bool result = setString(OS_Generator_PhotovoltaicFields::HeatTransferIntegrationMode, heatTransferIntegrationMode);
     return result;
@@ -236,26 +239,24 @@ namespace detail {
 
 GeneratorPhotovoltaic GeneratorPhotovoltaic::simple(const Model& model)
 {
-  return GeneratorPhotovoltaic(model);
+  PhotovoltaicPerformanceSimple performance(model);
+  return GeneratorPhotovoltaic(model, performance);
 }
 
 GeneratorPhotovoltaic GeneratorPhotovoltaic::equivalentOneDiode(const Model& model)
 {
-  return GeneratorPhotovoltaic(model);
+  PhotovoltaicPerformanceEquivalentOneDiode performance(model);
+  return GeneratorPhotovoltaic(model, performance);
 }
 
-GeneratorPhotovoltaic::GeneratorPhotovoltaic(const Model& model)//, const PhotovoltaicPerformanceSimple& performance)
+GeneratorPhotovoltaic::GeneratorPhotovoltaic(const Model& model, const PhotovoltaicPerformance& performance)
   : Generator(GeneratorPhotovoltaic::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::GeneratorPhotovoltaic_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_Generator_PhotovoltaicFields::ModulePerformanceName
-  bool ok = true;
-  // ok = setHandle();
+  bool ok = setPointer(OS_Generator_PhotovoltaicFields::ModulePerformanceName, performance.handle());
   OS_ASSERT(ok);
-  // ok = setModulePerformance();
-  OS_ASSERT(ok);
+
 }
 
 IddObjectType GeneratorPhotovoltaic::iddObjectType() {

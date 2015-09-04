@@ -99,15 +99,7 @@ namespace detail {
   std::vector<ModelObject> ElectricLoadCenterDistribution_Impl::children() const
   {
     std::vector<ModelObject> result;
-    for (auto generator : generators()){
-      result.push_back(generator);
-    }
-
-    auto inverter = this->inverter();
-    if (inverter){
-      result.push_back(*inverter);
-    }
-
+    result.push_back(generatorModelObjectList());
     return result;
   }
 
@@ -123,12 +115,18 @@ namespace detail {
 
   ModelObject ElectricLoadCenterDistribution_Impl::clone(Model model) const
   {
+    // should this also clone the generators, inverters, and storage?
     return ParentObject_Impl::clone(model);
   }
 
   std::vector<Generator> ElectricLoadCenterDistribution_Impl::generators() const {
-    // DLM: TODO
-    return std::vector<Generator>();
+    std::vector<Generator> result;
+    for (auto modelObject : generatorModelObjectList().modelObjects()){
+      if (modelObject.optionalCast<Generator>()){
+        result.push_back(modelObject.cast<Generator>());
+      }
+    }
+    return result;
   }
 
   std::string ElectricLoadCenterDistribution_Impl::generatorOperationSchemeType() const {
@@ -177,17 +175,40 @@ namespace detail {
 
   bool ElectricLoadCenterDistribution_Impl::addGenerator(const Generator& generator)
   {
-    return false;
+    if (!isElectricalBussTypeDefaulted()){
+      // todo: check that generator is ok on thi= buss type
+    }
+    
+    bool result = generatorModelObjectList().addModelObject(generator);
+
+    if (result){
+      if (isElectricalBussTypeDefaulted()){
+        // TODO: update bus type
+      }
+    }
+
+    return result;
   }
 
   bool ElectricLoadCenterDistribution_Impl::removeGenerator(const Generator& generator)
   {
-    return false;
+    unsigned n1 = generatorModelObjectList().modelObjects().size();
+    generatorModelObjectList().removeModelObject(generator);
+    unsigned n2 = generatorModelObjectList().modelObjects().size();
+
+    bool result = (n1 > n2);
+    if (result){
+      if (n2 == 0){
+        resetElectricalBussType();
+      }
+    }
+    return result;
   }
 
-  bool ElectricLoadCenterDistribution_Impl::resetGenerators()
+  void ElectricLoadCenterDistribution_Impl::resetGenerators()
   {
-    return false;
+    generatorModelObjectList().removeAllModelObjects();
+    resetElectricalBussType();
   }
 
   bool ElectricLoadCenterDistribution_Impl::setGeneratorOperationSchemeType(const std::string& generatorOperationSchemeType) {
@@ -242,11 +263,15 @@ namespace detail {
   }
 
   bool ElectricLoadCenterDistribution_Impl::setInverter(const Inverter& inverter) {
+    // TODO: check bus type
+    // TODO: update bus type
     return setPointer(OS_ElectricLoadCenter_DistributionFields::InverterObjectName, inverter.handle());
   }
 
   void ElectricLoadCenterDistribution_Impl::resetInverter() {
     bool result = setString(OS_ElectricLoadCenter_DistributionFields::InverterObjectName, "");
+
+    // TODO: update bus type
     OS_ASSERT(result);
   }
 
@@ -345,15 +370,15 @@ boost::optional<Inverter> ElectricLoadCenterDistribution::inverter() const {
 //}
 
 bool ElectricLoadCenterDistribution::addGenerator(const Generator& generator){
-  return false;
+  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->addGenerator(generator);
 }
 
 bool ElectricLoadCenterDistribution::removeGenerator(const Generator& generator){
-  return false;
+  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->removeGenerator(generator);
 }
 
-bool ElectricLoadCenterDistribution::resetGenerators(){
-  return false;
+void ElectricLoadCenterDistribution::resetGenerators(){
+  getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetGenerators();
 }
 
 bool ElectricLoadCenterDistribution::setGeneratorOperationSchemeType(const std::string& generatorOperationSchemeType) {
@@ -388,13 +413,13 @@ void ElectricLoadCenterDistribution::resetGeneratorOperationSchemeType() {
 //  getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetTrackMeterSchemeMeterName();
 //}
 
-bool ElectricLoadCenterDistribution::setElectricalBussType(const std::string& electricalBussType) {
-  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setElectricalBussType(electricalBussType);
-}
+//bool ElectricLoadCenterDistribution::setElectricalBussType(const std::string& electricalBussType) {
+//  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setElectricalBussType(electricalBussType);
+//}
 
-void ElectricLoadCenterDistribution::resetElectricalBussType() {
-  getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetElectricalBussType();
-}
+//void ElectricLoadCenterDistribution::resetElectricalBussType() {
+//  getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetElectricalBussType();
+//}
 
 bool ElectricLoadCenterDistribution::setInverter(const Inverter& inverter) {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setInverter(inverter);

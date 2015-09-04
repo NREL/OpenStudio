@@ -49,19 +49,19 @@ namespace detail {
     //@{
 
     /// remove this object from any ElectricLoadCenterDistribution objects then remove from file
-    //virtual std::vector<openstudio::IdfObject> remove() override;
+    virtual std::vector<openstudio::IdfObject> remove() override;
+
+    virtual boost::optional<double> ratedElectricPowerOutput() const = 0;
+
+    virtual boost::optional<Schedule> availabilitySchedule() const = 0;
+
+    virtual boost::optional<double> ratedThermalToElectricalPowerRatio() const = 0;
 
     //@}
     /** @name Getters */
     //@{
 
-    // boost::optional<double> ratedElectricPowerOutput() const;
-    
-    // boost::optional<Schedule> availabilitySchedule() const;
-
-    // boost::optional<double> ratedThermalToElectricalPowerRatio() const;
-
-    // boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
+    boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 
     //@}
     /** @name Setters */

@@ -24165,7 +24165,7 @@ OS:Generator:Photovoltaic,
         \reference PVGeneratorNames
    A3 , \field Surface Name
         \type object-list
-        \object-list AllShadingAndHTSurfName
+        \object-list AllShadingAndHTSurfNames
    A4 , \field Module Performance Name
         \note PV array modeling details
         \required-field

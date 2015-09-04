@@ -90,7 +90,7 @@ class MODEL_API ElectricLoadCenterDistribution : public ParentObject {
 
   bool removeGenerator(const Generator& generator);
 
-  bool resetGenerators();
+  void resetGenerators();
 
   bool setGeneratorOperationSchemeType(const std::string& generatorOperationSchemeType);
 
@@ -108,9 +108,9 @@ class MODEL_API ElectricLoadCenterDistribution : public ParentObject {
 
   //void resetTrackMeterSchemeMeterName();
 
-  bool setElectricalBussType(const std::string& electricalBussType);
+  //bool setElectricalBussType(const std::string& electricalBussType);
 
-  void resetElectricalBussType();
+  //void resetElectricalBussType();
 
   bool setInverter(const Inverter& inverter);
 

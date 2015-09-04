@@ -26,6 +26,8 @@
 namespace openstudio {
 namespace model {
 
+class ElectricLoadCenterDistribution;
+
 namespace detail{
   class Generator_Impl;
 }
@@ -40,13 +42,20 @@ class MODEL_API Generator : public ParentObject {
 
   virtual ~Generator() {}
 
-  //boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
+  boost::optional<double> ratedElectricPowerOutput() const;
+
+  boost::optional<Schedule> availabilitySchedule() const;
+
+  boost::optional<double> ratedThermalToElectricalPowerRatio() const;
+
+  boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 
   protected:
 
   friend class Model;
-
   friend class openstudio::IdfObject;
+  friend class openstudio::detail::IdfObject_Impl;
+  friend class detail::Generator_Impl;
 
   /// @cond 
 

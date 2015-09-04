@@ -26,6 +26,8 @@
 namespace openstudio {
 namespace model {
 
+class ElectricLoadCenterDistribution;
+
 namespace detail{
   class Inverter_Impl;
 }
@@ -40,7 +42,7 @@ class MODEL_API Inverter : public ParentObject {
 
   virtual ~Inverter() {}
 
-  //boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
+  boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 
   protected:
 

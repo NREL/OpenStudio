@@ -23,6 +23,11 @@
 #include "ParentObject_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+#include "ElectricLoadCenterDistribution.hpp"
+#include "ElectricLoadCenterDistribution_Impl.hpp"
+#include "Schedule.hpp"
+#include "ModelObjectList.hpp"
+#include "ModelObjectList_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -57,6 +62,31 @@ Generator_Impl::Generator_Impl(const Generator_Impl& other,
 {
 }
 
+std::vector<openstudio::IdfObject> Generator_Impl::remove()
+{
+  boost::optional<ElectricLoadCenterDistribution> elcd = this->electricLoadCenterDistribution();
+  if (elcd){
+    elcd->removeGenerator(getObject<Generator>());
+  }
+  return ParentObject_Impl::remove();
+}
+
+boost::optional<ElectricLoadCenterDistribution> Generator_Impl::electricLoadCenterDistribution() const
+{
+  boost::optional<ElectricLoadCenterDistribution> result;
+  for (auto list : getObject<ModelObject>().getModelObjectSources<ModelObjectList>(ModelObjectList::iddObjectType())){
+    auto elcds = list.getModelObjectSources<ElectricLoadCenterDistribution>(ElectricLoadCenterDistribution::iddObjectType());
+    if (elcds.empty()){
+      // error
+    } else if (elcds.size() == 1u){
+      return elcds[0];
+    }else{
+      // error
+    }
+  }
+  return boost::none;
+}
+
 } // detail
 
 Generator::Generator(IddObjectType type,const Model& model)
@@ -69,6 +99,25 @@ Generator::Generator(std::shared_ptr<detail::Generator_Impl> p)
   : ParentObject(p)
 {}
 
+boost::optional<double> Generator::ratedElectricPowerOutput() const
+{
+  return getImpl<detail::Generator_Impl>()->ratedElectricPowerOutput();
+}
+
+boost::optional<Schedule> Generator::availabilitySchedule() const
+{
+  return getImpl<detail::Generator_Impl>()->availabilitySchedule();
+}
+
+boost::optional<double> Generator::ratedThermalToElectricalPowerRatio() const
+{
+  return getImpl<detail::Generator_Impl>()->ratedThermalToElectricalPowerRatio();
+}
+
+boost::optional<ElectricLoadCenterDistribution> Generator::electricLoadCenterDistribution() const
+{
+  return getImpl<detail::Generator_Impl>()->electricLoadCenterDistribution();
+}
 
 } // model
 

@@ -76,6 +76,12 @@ namespace detail {
     /// returns deletes reference to Surface from clone
     virtual ModelObject clone(Model model) const override;
 
+    virtual boost::optional<double> ratedElectricPowerOutput() const;
+
+    virtual boost::optional<Schedule> availabilitySchedule() const;
+
+    virtual boost::optional<double> ratedThermalToElectricalPowerRatio() const;
+
     //@}
     /** @name Getters */
     //@{
@@ -95,10 +101,6 @@ namespace detail {
     double numberOfModulesInSeries() const;
 
     bool isNumberOfModulesInSeriesDefaulted() const;
-
-    boost::optional<double> ratedElectricPowerOutput() const;
-
-    boost::optional<Schedule> availabilitySchedule() const;
 
     //@}
     /** @name Setters */

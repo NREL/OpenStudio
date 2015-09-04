@@ -23,6 +23,8 @@
 #include "ParentObject_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+#include "ElectricLoadCenterDistribution.hpp"
+#include "ElectricLoadCenterDistribution_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -57,6 +59,20 @@ Inverter_Impl::Inverter_Impl(const Inverter_Impl& other,
 {
 }
 
+boost::optional<ElectricLoadCenterDistribution> Inverter_Impl::electricLoadCenterDistribution() const
+{
+  auto elcds = getObject<ModelObject>().getModelObjectSources<ElectricLoadCenterDistribution>(ElectricLoadCenterDistribution::iddObjectType());
+  if (elcds.empty()){
+    // no error
+  } else if (elcds.size() == 1u){
+    return elcds[0];
+  } else{
+    // error
+  }
+
+  return boost::none;
+}
+
 } // detail
 
 Inverter::Inverter(IddObjectType type,const Model& model)
@@ -68,6 +84,11 @@ Inverter::Inverter(IddObjectType type,const Model& model)
 Inverter::Inverter(std::shared_ptr<detail::Inverter_Impl> p)
   : ParentObject(p)
 {}
+
+boost::optional<ElectricLoadCenterDistribution> Inverter::electricLoadCenterDistribution() const
+{
+  return getImpl<detail::Inverter_Impl>()->electricLoadCenterDistribution();
+}
 
 } // model
 
