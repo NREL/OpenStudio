@@ -176,14 +176,31 @@ namespace detail {
   bool ElectricLoadCenterDistribution_Impl::addGenerator(const Generator& generator)
   {
     if (!isElectricalBussTypeDefaulted()){
-      // todo: check that generator is ok on thi= buss type
+      // todo: check that generator is ok on this buss type
     }
-    
+
+    ModelObjectList list = generatorModelObjectList();
+    if (list.hasModelObject(generator)){
+      return false;
+    }
+
+    // previous load center
+    boost::optional<ElectricLoadCenterDistribution> previous = generator.electricLoadCenterDistribution();
+    if (previous){
+      previous->removeGenerator(generator);
+    }
+
+    // DLM: may have problems with signals here if inverter is temporarily on two load centers
     bool result = generatorModelObjectList().addModelObject(generator);
 
     if (result){
       if (isElectricalBussTypeDefaulted()){
         // TODO: update bus type
+      }
+    } else{
+      if (previous){
+        bool test = previous->addGenerator(generator);
+        OS_ASSERT(test);
       }
     }
 
@@ -192,17 +209,18 @@ namespace detail {
 
   bool ElectricLoadCenterDistribution_Impl::removeGenerator(const Generator& generator)
   {
-    unsigned n1 = generatorModelObjectList().modelObjects().size();
-    generatorModelObjectList().removeModelObject(generator);
-    unsigned n2 = generatorModelObjectList().modelObjects().size();
-
-    bool result = (n1 > n2);
-    if (result){
-      if (n2 == 0){
-        resetElectricalBussType();
-      }
+    ModelObjectList list = generatorModelObjectList();
+    if (!list.hasModelObject(generator)){
+      return false;
     }
-    return result;
+
+    generatorModelObjectList().removeModelObject(generator);
+
+    if (list.size() == 0){
+      resetElectricalBussType();
+    }
+
+    return true;
   }
 
   void ElectricLoadCenterDistribution_Impl::resetGenerators()
@@ -263,9 +281,34 @@ namespace detail {
   }
 
   bool ElectricLoadCenterDistribution_Impl::setInverter(const Inverter& inverter) {
-    // TODO: check bus type
-    // TODO: update bus type
-    return setPointer(OS_ElectricLoadCenter_DistributionFields::InverterObjectName, inverter.handle());
+
+    if (!isElectricalBussTypeDefaulted()){
+      // todo: check that inverter is ok on this buss type
+    }
+
+    // previous load center
+    boost::optional<ElectricLoadCenterDistribution> previous = inverter.electricLoadCenterDistribution();
+    if (previous){
+      previous->resetInverter();
+    }
+
+    // DLM: may have problems with signals here if inverter is temporarily on two load centers
+    bool result = setPointer(OS_ElectricLoadCenter_DistributionFields::InverterObjectName, inverter.handle());
+ 
+    if (result){
+      
+      // TODO: update bus type
+
+    } else{
+
+      if (previous){
+        bool test = previous->setInverter(inverter);
+        OS_ASSERT(test);
+      }
+
+    }
+    
+    return result;
   }
 
   void ElectricLoadCenterDistribution_Impl::resetInverter() {
