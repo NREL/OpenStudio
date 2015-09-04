@@ -779,6 +779,14 @@ TEST_F(ModelFixture,AirLoopHVAC_Availability)
     auto availabilityManager2 = airLoopHVAC.availabilityManager();
     EXPECT_TRUE(availabilityManager2);
     EXPECT_EQ(availabilityManager2.get(),availabilityManager);
+
+    airLoopHVAC.setNightCycleControlType("CycleOnAny");  
+    auto availabilityManager3 = airLoopHVAC.availabilityManager();
+    EXPECT_TRUE(availabilityManager3);
+    auto nightCycle = availabilityManager3->optionalCast<AvailabilityManagerNightCycle>();
+    EXPECT_TRUE(nightCycle);
+    EXPECT_EQ("CycleOnAny",nightCycle->controlType());
+    EXPECT_TRUE(availabilityManager.handle().isNull());
   }
 
   {
