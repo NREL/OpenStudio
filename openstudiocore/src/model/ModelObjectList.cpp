@@ -124,7 +124,15 @@ namespace detail {
     return result;
   }
 
+  unsigned ModelObjectList_Impl::size() const
+  {
+    return extensibleGroups().size();
+  }
+
   bool ModelObjectList_Impl::addModelObject(const ModelObject& modelObject ) {
+  
+    // DLM: should this class prevent duplicates in the list?
+
     WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
 
     bool ok = eg.setPointer(OS_ModelObjectListExtensibleFields::ModelObject,modelObject.handle());
@@ -135,9 +143,32 @@ namespace detail {
     return ok;
   }
 
+  bool ModelObjectList_Impl::hasModelObject(const ModelObject & modelObject) const
+  {
+    std::vector<IdfExtensibleGroup> groups = extensibleGroups();
+
+    for (const auto & group : groups)
+    {
+      // DLM: if an object was pointed to by this list but that object was deleted from the model, this list may have an empty field
+      // in that case getTarget may fail to return an object
+      boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ModelObjectListExtensibleFields::ModelObject);
+
+      OS_ASSERT(wo);
+
+      if (wo->handle() == modelObject.handle())
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   void ModelObjectList_Impl::removeModelObject(const ModelObject& modelObject ) {
-    WorkspaceExtensibleGroup eg = getGroupForModelObject(modelObject);
-    getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+    if (hasModelObject(modelObject)){
+      WorkspaceExtensibleGroup eg = getGroupForModelObject(modelObject);
+      getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+    }
   }
 
   void ModelObjectList_Impl::removeAllModelObjects() {
@@ -194,8 +225,16 @@ std::vector<ModelObject> ModelObjectList::modelObjects() const
   return getImpl<detail::ModelObjectList_Impl>()->modelObjects();
 }
 
+unsigned ModelObjectList::size() const {
+  return getImpl<detail::ModelObjectList_Impl>()->size();
+}
+
 bool ModelObjectList::addModelObject(const ModelObject& modelObject ) {
   return getImpl<detail::ModelObjectList_Impl>()->addModelObject(modelObject);
+}
+
+bool ModelObjectList::hasModelObject(const ModelObject & modelObject) const{
+  return getImpl<detail::ModelObjectList_Impl>()->hasModelObject(modelObject);
 }
 
 void ModelObjectList::removeModelObject(const ModelObject& modelObject ) {
