@@ -414,8 +414,10 @@ std::vector<HVACComponent> setpointComponents(const PlantLoop & plantLoop)
   std::vector<HVACComponent> result;
 
   for( const auto & comp : subsetCastVector<HVACComponent>(plantLoop.supplyComponents()) ) {
-    if( _isSetpointComponent(plantLoop,comp) ) {
-      result.push_back(operationSchemeComponent(comp));
+    if( ! comp.optionalCast<Node>() ) {
+      if( _isSetpointComponent(plantLoop,comp) ) {
+        result.push_back(operationSchemeComponent(comp));
+      }
     }
   }
 
