@@ -24430,15 +24430,10 @@ OS:ElectricLoadCenter:Distribution,
        \object-list ModelObjectLists
   A4 , \field Generator Operation Scheme Type
        \note required if Generator List is entered.
+       \memo Keys DemandLimit, TrackElectrical, TrackSchedule, TrackMeter, FollowThermal and FollowThermalLimitElectrical disabled for now
        \type choice
        \default Baseload
        \key Baseload
-!       \key DemandLimit
-!       \key TrackElectrical
-!       \key TrackSchedule
-!       \key TrackMeter
-!       \key FollowThermal
-!       \key FollowThermalLimitElectrical
   N1 , \field Demand Limit Scheme Purchased Electric Demand Limit
        \type real
        \units W
@@ -24452,12 +24447,9 @@ OS:ElectricLoadCenter:Distribution,
        \external-list autoRDDmeter
   A7 , \field Electrical Buss Type
        \type choice
-!       \key AlternatingCurrent
-!       \key AlternatingCurrentWithStorage
+       \memo Keys AlternatingCurrent, AlternatingCurrentWithStorage, DirectCurrentWithInverterDCStorage, and DirectCurrentWithInverterACStorage disabled for now
        \key DirectCurrentWithInverter
-!       \key DirectCurrentWithInverterDCStorage
-!       \key DirectCurrentWithInverterACStorage
-!       \default AlternatingCurrent
+       \default DirectCurrentWithInverter
   A8 , \field Inverter Object Name
        \note required when Electrical Buss Type=DirectCurrentWithInverter, DirectCurrentWithInverterDCStorage,
        \note or DirectCurrentWithInverterACStorage
