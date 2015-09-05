@@ -197,35 +197,6 @@ namespace openstudio {
           }
           );
 
-          std::function<std::vector<boost::optional<model::ModelObject> >(const model::Space &)> allConstructions(
-            [allInteriorPartitionSurfaces](const model::Space &t_space) {
-            std::vector<boost::optional<model::ModelObject> > allModelObjects;
-            std::vector<boost::optional<model::ConstructionBase> > allConstructions;
-            for (auto interiorPartitionSurface : allInteriorPartitionSurfaces(t_space)) {
-              auto construction = interiorPartitionSurface.cast<model::InteriorPartitionSurface>().construction();
-              if (construction) {
-                allConstructions.push_back(construction);
-              }
-              else {
-                allConstructions.push_back(boost::optional<model::ConstructionBase>());
-              }
-            }
-            allModelObjects.insert(allModelObjects.end(), allConstructions.begin(), allConstructions.end());
-
-            return allModelObjects;
-          }
-          );
-
-          std::function<std::vector<bool>(const model::Space &)> allConvertToInternalMass(
-            [allInteriorPartitionSurfaces](const model::Space &t_space) {
-            std::vector<bool> converttoInternalMass;
-            for (auto interiorPartitionSurface : allInteriorPartitionSurfaces(t_space)) {
-              converttoInternalMass.push_back(interiorPartitionSurface.cast<model::InteriorPartitionSurface>().converttoInternalMass());
-            }
-            return converttoInternalMass;
-          }
-          );
-
         if (field == SELECTED) {
           auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
           checkbox->setToolTip("Check to select all rows");
@@ -269,7 +240,7 @@ namespace openstudio {
             CastNullAdapter<model::InteriorPartitionSurface>(&model::InteriorPartitionSurface::setConstruction),
             boost::optional<std::function<void(model::InteriorPartitionSurface*)> >(NullAdapter(&model::InteriorPartitionSurface::resetConstruction)),
             DataSource(
-            allConstructions, 
+            allInteriorPartitionSurfaces,
             true
             )
             );
@@ -280,7 +251,7 @@ namespace openstudio {
             NullAdapter(&model::InteriorPartitionSurface::converttoInternalMass),
             NullAdapter(&model::InteriorPartitionSurface::setConverttoInternalMass),
             DataSource(
-            allConvertToInternalMass,
+            allInteriorPartitionSurfaces,
             true
             )
             );
