@@ -376,7 +376,7 @@ namespace openstudio {
       objectSelector->setObjectFilter(
         [text](const model::ModelObject &obj)->bool {
         try {
-          obj.cast<model::SpaceLoadInstance>();
+          //obj.cast<model::SpaceLoadInstance>();  TODO uncomment with correct type
           // This is a spaceloadinstance, so we want to see if it matches our filter
 
           if (text == INTERNALMASS)
@@ -414,6 +414,14 @@ namespace openstudio {
           else if (text == OTHEREQUIPMENT)
           {
             return static_cast<bool>(obj.optionalCast<model::OtherEquipment>());
+          }
+          else if (text == SPACEINFILTRATIONDESIGNFLOWRATE)
+          {
+            return static_cast<bool>(obj.optionalCast<model::SpaceInfiltrationDesignFlowRate>());
+          }
+          else if (text == SPACEINFILTRATIONEFFECTIVELEAKAGEAREA)
+          {
+            return static_cast<bool>(obj.optionalCast<model::SpaceInfiltrationEffectiveLeakageArea>());
           }
           else
           {
@@ -1151,6 +1159,20 @@ namespace openstudio {
             if (o)
             {
               model::OtherEquipment(*o).setParent(*t_spaceType);
+              return true;
+            }
+
+            boost::optional<model::SpaceInfiltrationDesignFlowRate> dfr = t_definition.optionalCast<model::SpaceInfiltrationDesignFlowRate>();
+            if (dfr)
+            {
+              model::SpaceInfiltrationDesignFlowRate(*dfr).setParent(*t_spaceType);
+              return true;
+            }
+
+            boost::optional<model::SpaceInfiltrationEffectiveLeakageArea> ela = t_definition.optionalCast<model::SpaceInfiltrationEffectiveLeakageArea>();
+            if (ela)
+            {
+              model::SpaceInfiltrationEffectiveLeakageArea(*ela).setParent(*t_spaceType);
               return true;
             }
 
