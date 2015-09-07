@@ -2541,9 +2541,15 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
   result.push_back(IddObjectType::OS_ZoneMixing);
 
-
   result.push_back(IddObjectType::OS_Refrigeration_System);
   result.push_back(IddObjectType::OS_Refrigeration_TranscriticalSystem);
+
+  result.push_back(IddObjectType::OS_ElectricLoadCenter_Distribution);
+  result.push_back(IddObjectType::OS_Generator_Photovoltaic);
+  result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
+  result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Simple);
+  result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_LookUpTable);
+  result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_Simple);
 
   // put these down here so they have a chance to be translated with their "parent"
   result.push_back(IddObjectType::OS_LifeCycleCost);
