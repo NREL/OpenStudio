@@ -50,17 +50,20 @@ class MODEL_API PhotovoltaicPerformanceSimple : public PhotovoltaicPerformance {
 
   static IddObjectType iddObjectType();
 
+  // DLM: remove
   static std::vector<std::string> conversionEfficiencyInputModeValues();
 
   /** @name Getters */
   //@{
 
+  // DLM, rename fractionOfSurfaceAreaWithActiveSolarCells
   double fractionofSurfaceAreawithActiveSolarCells() const;
 
   bool isFractionofSurfaceAreawithActiveSolarCellsDefaulted() const;
 
   boost::optional<std::string> conversionEfficiencyInputMode() const;
 
+  // DLM: rename, fixedEfficiency
   boost::optional<double> valueforCellEfficiencyifFixed() const;
 
   // TODO: Check return type. From object lists, some candidates are: Schedule.
@@ -70,14 +73,19 @@ class MODEL_API PhotovoltaicPerformanceSimple : public PhotovoltaicPerformance {
   /** @name Setters */
   //@{
 
+  // DLM: rename setFractionOfSurfaceAreaWithActiveSolarCells
   bool setFractionofSurfaceAreawithActiveSolarCells(double fractionofSurfaceAreawithActiveSolarCells);
 
+  // DLM: rename resetFractionOfSurfaceAreaWithActiveSolarCells
   void resetFractionofSurfaceAreawithActiveSolarCells();
 
+  // DLM: I like to remove the setter from the public API, then we just set it when user sets fixed efficiency or scheduled efficiency
   bool setConversionEfficiencyInputMode(std::string conversionEfficiencyInputMode);
 
+  // DLM: remove this too
   void resetConversionEfficiencyInputMode();
 
+  // DLM: I'd rename this, setFixedEfficiency
   bool setValueforCellEfficiencyifFixed(double valueforCellEfficiencyifFixed);
 
   void resetValueforCellEfficiencyifFixed();

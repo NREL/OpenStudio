@@ -47,7 +47,6 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
   boost::optional<Schedule> schedule;
 
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Distribution, modelObject);
-  m_idfObjects.push_back(idfObject);
 
   IdfObject generatorsIdf(openstudio::IddObjectType::ElectricLoadCenter_Generators);
   generatorsIdf.setName(idfObject.name().get() + " Generators");

@@ -39,8 +39,6 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterInverte
 {
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Inverter_LookUpTable, modelObject);
 
-  m_idfObjects.push_back(idfObject);
-
   return idfObject;
 }
 

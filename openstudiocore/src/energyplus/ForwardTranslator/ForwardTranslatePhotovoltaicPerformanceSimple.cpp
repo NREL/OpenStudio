@@ -38,9 +38,12 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translatePhotovoltaicPerformanceSimple(model::PhotovoltaicPerformanceSimple & modelObject)
 {
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::PhotovoltaicPerformance_Simple, modelObject);
-
-  m_idfObjects.push_back(idfObject);
   
+  // Evan, this is just hard coded for testing
+  idfObject.setDouble(PhotovoltaicPerformance_SimpleFields::FractionofSurfaceAreawithActiveSolarCells, 1.0);
+  idfObject.setString(PhotovoltaicPerformance_SimpleFields::ConversionEfficiencyInputMode, "Fixed");
+  idfObject.setDouble(PhotovoltaicPerformance_SimpleFields::ValueforCellEfficiencyifFixed, 0.2);
+
   return idfObject;
 }
 

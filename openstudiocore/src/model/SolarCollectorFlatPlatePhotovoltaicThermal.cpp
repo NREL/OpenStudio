@@ -195,17 +195,10 @@ namespace detail {
   bool SolarCollectorFlatPlatePhotovoltaicThermal_Impl::setSurface(const PlanarSurface& surface) {
     bool result(false);
 
-    if (surface.isAirWall()){
-      return false;
-    }
-
     // DLM: check for existing solar collectors or photovoltaic generators?
 
     if (surface.optionalCast<Surface>()){
-      Surface s = surface.cast<Surface>();
-      if (istringEqual("SunExposed", s.sunExposure())){
-        result = setPointer(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::SurfaceName, surface.handle());
-      }
+      result = setPointer(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::SurfaceName, surface.handle());
     } else if (surface.optionalCast<ShadingSurface>()){
       result = setPointer(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::SurfaceName, surface.handle());
     }

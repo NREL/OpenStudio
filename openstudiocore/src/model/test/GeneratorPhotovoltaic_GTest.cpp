@@ -62,6 +62,7 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_Simple) {
 
   EXPECT_TRUE(panel.setSurface(shadingSurface));
   EXPECT_TRUE(panel.surface());
+  EXPECT_EQ(1u, shadingSurface.generatorPhotovoltaics().size());
   panel.resetSurface();
   EXPECT_TRUE(panel.setHeatTransferIntegrationMode("IntegratedSurfaceOutsideFace"));
   EXPECT_EQ("IntegratedSurfaceOutsideFace", panel.heatTransferIntegrationMode());

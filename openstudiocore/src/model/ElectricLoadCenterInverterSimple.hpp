@@ -58,6 +58,7 @@ class MODEL_API ElectricLoadCenterInverterSimple : public Inverter {
   boost::optional<Schedule> availabilitySchedule() const;
 
   // TODO: Check return type. From object lists, some candidates are: Zone.
+  // DLM: the zone methods should be moved to the Inverter base class
   //boost::optional<Zone> zone() const;
 
   boost::optional<double> radiativeFraction() const;

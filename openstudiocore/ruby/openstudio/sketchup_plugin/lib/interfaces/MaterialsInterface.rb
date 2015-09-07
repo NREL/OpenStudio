@@ -51,7 +51,7 @@ module OpenStudio
     attr_reader :outdoors_ext, :outdoorssun_ext, :outdoorswind_ext, :outdoorssunwind_ext
     attr_reader :outdoors_int, :outdoorssun_int, :outdoorswind_int, :outdoorssunwind_int
     attr_reader :subext_ext, :subext_int, :subint_ext, :subint_int
-    attr_reader :air_wall, :solar_collector
+    attr_reader :air_wall, :solar_collector, :photovoltaic
     
     # for testing
     attr_accessor :observer
@@ -183,6 +183,14 @@ module OpenStudio
         @solar_collector.texture = Plugin.dir + "/lib/resources/SolarCollector.png"
         @solar_collector.texture.size = 180
         @solar_collector.alpha = 1.0
+      end
+      
+      @photovoltaic = @model_interface.skp_model.materials["OpenStudio_Photovoltaic"]
+      if (@photovoltaic.nil?)      
+        @photovoltaic = @model_interface.skp_model.materials.add("OpenStudio_Photovoltaic")
+        @photovoltaic.texture = Plugin.dir + "/lib/resources/SolarCollector.png"
+        @photovoltaic.texture.size = 180
+        @photovoltaic.alpha = 1.0
       end
       
     end

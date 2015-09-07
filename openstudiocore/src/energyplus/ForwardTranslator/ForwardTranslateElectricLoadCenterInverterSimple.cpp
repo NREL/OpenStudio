@@ -39,7 +39,8 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterInverte
 {
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Inverter_Simple, modelObject);
 
-  m_idfObjects.push_back(idfObject);
+  // Evan, this is just hard coded for testing
+  idfObject.setDouble(ElectricLoadCenter_Inverter_SimpleFields::InverterEfficiency, 0.9);
 
   return idfObject;
 }

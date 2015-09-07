@@ -58,6 +58,7 @@ class MODEL_API ElectricLoadCenterInverterLookUpTable : public Inverter {
   boost::optional<Schedule> availabilitySchedule() const;
 
   // TODO: Check return type. From object lists, some candidates are: Zone.
+  // DLM: the zone methods should be moved to the Inverter base class
   //boost::optional<Zone> zone() const;
 
   boost::optional<double> radiativeFraction() const;
@@ -68,16 +69,24 @@ class MODEL_API ElectricLoadCenterInverterLookUpTable : public Inverter {
 
   boost::optional<double> nominalVoltageInput() const;
 
+  // DLM: the IDD for these fields looks weird, there is no default and the field is not required but I don't
+  // see how the object would work without values for these fields
+  // DLM: rename, up case all words
   boost::optional<double> efficiencyat10PowerandNominalVoltage() const;
 
+  // DLM: rename, up case all words
   boost::optional<double> efficiencyat20PowerandNominalVoltage() const;
 
+  // DLM: rename, up case all words
   boost::optional<double> efficiencyat30PowerandNominalVoltage() const;
 
+  // DLM: rename, up case all words
   boost::optional<double> efficiencyat50PowerandNominalVoltage() const;
 
+  // DLM: rename, up case all words
   boost::optional<double> efficiencyat75PowerandNominalVoltage() const;
 
+  // DLM: rename, up case all words
   boost::optional<double> efficiencyat100PowerandNominalVoltage() const;
 
   //@}
@@ -110,28 +119,40 @@ class MODEL_API ElectricLoadCenterInverterLookUpTable : public Inverter {
 
   void resetNominalVoltageInput();
 
+  // DLM: rename, up case all words
   bool setEfficiencyat10PowerandNominalVoltage(double efficiencyat10PowerandNominalVoltage);
 
+  // DLM: rename, up case all words
   void resetEfficiencyat10PowerandNominalVoltage();
 
+  // DLM: rename, up case all words
   bool setEfficiencyat20PowerandNominalVoltage(double efficiencyat20PowerandNominalVoltage);
 
+  // DLM: rename, up case all words
   void resetEfficiencyat20PowerandNominalVoltage();
 
+  // DLM: rename, up case all words
   bool setEfficiencyat30PowerandNominalVoltage(double efficiencyat30PowerandNominalVoltage);
 
+  // DLM: rename, up case all words
   void resetEfficiencyat30PowerandNominalVoltage();
 
+  // DLM: rename, up case all words
   bool setEfficiencyat50PowerandNominalVoltage(double efficiencyat50PowerandNominalVoltage);
 
+  // DLM: rename, up case all words
   void resetEfficiencyat50PowerandNominalVoltage();
 
+  // DLM: rename, up case all words
   bool setEfficiencyat75PowerandNominalVoltage(double efficiencyat75PowerandNominalVoltage);
 
+  // DLM: rename, up case all words
   void resetEfficiencyat75PowerandNominalVoltage();
 
+  // DLM: rename, up case all words
   bool setEfficiencyat100PowerandNominalVoltage(double efficiencyat100PowerandNominalVoltage);
 
+  // DLM: rename, up case all words
   void resetEfficiencyat100PowerandNominalVoltage();
 
   //@}

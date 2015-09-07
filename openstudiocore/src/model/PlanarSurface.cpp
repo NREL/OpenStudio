@@ -566,8 +566,7 @@ namespace model {
 
     std::vector<GeneratorPhotovoltaic> PlanarSurface_Impl::generatorPhotovoltaics() const
     {
-      // DLM: TODO
-      return std::vector<GeneratorPhotovoltaic>();
+      return getObject<ModelObject>().getModelObjectSources<GeneratorPhotovoltaic>();
     }
     
     boost::optional<ModelObject> PlanarSurface_Impl::constructionAsModelObject() const

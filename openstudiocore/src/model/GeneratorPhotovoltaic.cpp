@@ -23,6 +23,10 @@
 #include "Model.hpp"
 #include "PlanarSurface.hpp"
 #include "PlanarSurface_Impl.hpp"
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
+#include "ShadingSurface.hpp"
+#include "ShadingSurface_Impl.hpp"
 #include "PhotovoltaicPerformance.hpp"
 #include "PhotovoltaicPerformance_Impl.hpp"
 #include "PhotovoltaicPerformanceSimple.hpp"
@@ -71,6 +75,12 @@ namespace detail {
   {
     static std::vector<std::string> result;
     if (result.empty()){
+      result.push_back("Generator Produced DC Electric Power");
+      result.push_back("Generator Produced DC Electric Energy");
+      result.push_back("Generator PV Cell Temperature");
+      result.push_back("Generator PV Short Circuit Current");
+      result.push_back("Generator PV Open Circuit Voltage");
+      result.push_back("Generator PV Array Efficiency");
     }
     return result;
   }
@@ -179,7 +189,12 @@ namespace detail {
   }
 
   bool GeneratorPhotovoltaic_Impl::setSurface(const PlanarSurface& surface) {
-    bool result = setPointer(OS_Generator_PhotovoltaicFields::SurfaceName, surface.handle());
+    bool result = false;
+    if (surface.optionalCast<Surface>()){
+      result = setPointer(OS_Generator_PhotovoltaicFields::SurfaceName, surface.handle());
+    }else if (surface.optionalCast<ShadingSurface>()){
+      result = setPointer(OS_Generator_PhotovoltaicFields::SurfaceName, surface.handle());
+    }
     return result;
   }
 

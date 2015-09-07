@@ -39,8 +39,6 @@ boost::optional<IdfObject> ForwardTranslator::translatePhotovoltaicPerformanceEq
 {
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::PhotovoltaicPerformance_EquivalentOneDiode, modelObject);
 
-  m_idfObjects.push_back(idfObject);
-
   return idfObject;
 }
 
