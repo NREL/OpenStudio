@@ -1171,6 +1171,24 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateElectricEquipment(equipment);
       break;
     }
+  case openstudio::IddObjectType::OS_ElectricLoadCenter_Distribution:
+  {
+    model::ElectricLoadCenterDistribution temp = modelObject.cast<ElectricLoadCenterDistribution>();
+    retVal = translateElectricLoadCenterDistribution(temp);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ElectricLoadCenter_Inverter_LookUpTable:
+  {
+    model::ElectricLoadCenterInverterLookUpTable temp = modelObject.cast<ElectricLoadCenterInverterLookUpTable>();
+    retVal = translateElectricLoadCenterInverterLookUpTable(temp);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ElectricLoadCenter_Inverter_Simple:
+  {
+    model::ElectricLoadCenterInverterSimple temp = modelObject.cast<ElectricLoadCenterInverterSimple>();
+    retVal = translateElectricLoadCenterInverterSimple(temp);
+    break;
+  }
   case openstudio::IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial :
     {
       model::EvaporativeCoolerDirectResearchSpecial evap = modelObject.cast<EvaporativeCoolerDirectResearchSpecial>();
@@ -1230,22 +1248,25 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       model::FanZoneExhaust fan = modelObject.cast<FanZoneExhaust>();
       retVal = translateFanZoneExhaust(fan);
       break;
-    }
-    
+    } 
   case openstudio::IddObjectType::OS_FluidCooler_SingleSpeed:
   {
     model::FluidCoolerSingleSpeed fluidCoolerSingleSpeed = modelObject.cast<FluidCoolerSingleSpeed>();
     retVal = translateFluidCoolerSingleSpeed(fluidCoolerSingleSpeed);
     break;
   }
-
   case openstudio::IddObjectType::OS_FluidCooler_TwoSpeed:
   {
     model::FluidCoolerTwoSpeed fluidCoolerTwoSpeed = modelObject.cast<FluidCoolerTwoSpeed>();
     retVal = translateFluidCoolerTwoSpeed(fluidCoolerTwoSpeed);
     break;
   }
-
+  case openstudio::IddObjectType::OS_Generator_Photovoltaic:
+  {
+    model::GeneratorPhotovoltaic temp = modelObject.cast<GeneratorPhotovoltaic>();
+    retVal = translateGeneratorPhotovoltaic(temp);
+    break;
+  }
   case openstudio::IddObjectType::OS_GroundHeatExchanger_HorizontalTrench :
     {
       auto mo = modelObject.cast<GroundHeatExchangerHorizontalTrench>();
@@ -1456,6 +1477,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateOtherEquipment(otherEquipment);
       break;
     }
+  case openstudio::IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode:
+  {
+    PhotovoltaicPerformanceEquivalentOneDiode temp = modelObject.cast<PhotovoltaicPerformanceEquivalentOneDiode>();
+    retVal = translatePhotovoltaicPerformanceEquivalentOneDiode(temp);
+    break;
+  }
+  case openstudio::IddObjectType::OS_PhotovoltaicPerformance_Simple:
+  {
+    PhotovoltaicPerformanceSimple temp = modelObject.cast<PhotovoltaicPerformanceSimple>();
+    retVal = translatePhotovoltaicPerformanceSimple(temp);
+    break;
+  }
   case openstudio::IddObjectType::OS_PlantLoop :
     {
       PlantLoop plantLoop = modelObject.cast<PlantLoop>();
