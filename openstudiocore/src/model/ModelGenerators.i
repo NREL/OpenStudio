@@ -43,12 +43,20 @@ MODELOBJECT_TEMPLATES(Generator);
 MODELOBJECT_TEMPLATES(Inverter);
 MODELOBJECT_TEMPLATES(GeneratorPhotovoltaic);
 MODELOBJECT_TEMPLATES(ElectricLoadCenterDistribution);
+MODELOBJECT_TEMPLATES(ElectricLoadCenterInverterLookUpTable);
+MODELOBJECT_TEMPLATES(ElectricLoadCenterInverterSimple);
+MODELOBJECT_TEMPLATES(PhotovoltaicPerformanceEquivalentOneDiode);
+MODELOBJECT_TEMPLATES(PhotovoltaicPerformanceSimple);
 
 SWIG_MODELOBJECT(PhotovoltaicPerformance, 0);
 SWIG_MODELOBJECT(Generator, 0);
 SWIG_MODELOBJECT(Inverter, 0);
 SWIG_MODELOBJECT(GeneratorPhotovoltaic, 1);
 SWIG_MODELOBJECT(ElectricLoadCenterDistribution, 1);
+SWIG_MODELOBJECT(ElectricLoadCenterInverterLookUpTable, 1);
+SWIG_MODELOBJECT(ElectricLoadCenterInverterSimple, 1);
+SWIG_MODELOBJECT(PhotovoltaicPerformanceEquivalentOneDiode, 1);
+SWIG_MODELOBJECT(PhotovoltaicPerformanceSimple, 1);
 
 #if defined(SWIGCSHARP) || defined(SWIGJAVA)
   %inline {
