@@ -65,6 +65,7 @@ TEST_F(ModelFixture, ElectricLoadCenterDistribution) {
   EXPECT_FALSE(elcd.addGenerator(panel1));
 
   ElectricLoadCenterInverterSimple inverter(model);
+  EXPECT_TRUE(inverter.name());
   EXPECT_TRUE(elcd.setInverter(inverter));
   ASSERT_TRUE(elcd.inverter());
   EXPECT_EQ(inverter.handle(), elcd.inverter()->handle());

@@ -140,3 +140,36 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_OneDiode) {
   PhotovoltaicPerformance performance = panel.photovoltaicPerformance();
   ASSERT_TRUE(performance.optionalCast<PhotovoltaicPerformanceEquivalentOneDiode>());
 }
+
+TEST_F(ModelFixture, GeneratorPhotovoltaic_Delete) {
+  Model model;
+
+  {
+    GeneratorPhotovoltaic panel = GeneratorPhotovoltaic::simple(model);
+    PhotovoltaicPerformance performance = panel.photovoltaicPerformance();
+
+    std::vector<IdfObject> removed = performance.remove();
+    EXPECT_EQ(0, removed.size());
+    EXPECT_NO_THROW(panel.photovoltaicPerformance());
+
+    removed = panel.remove();
+    ASSERT_EQ(2, removed.size());
+    EXPECT_EQ(GeneratorPhotovoltaic::iddObjectType(), removed[0].iddObject().type());
+    EXPECT_EQ(PhotovoltaicPerformanceSimple::iddObjectType(), removed[1].iddObject().type());
+  }
+
+  {
+    GeneratorPhotovoltaic panel = GeneratorPhotovoltaic::equivalentOneDiode(model);
+    PhotovoltaicPerformance performance = panel.photovoltaicPerformance();
+
+    std::vector<IdfObject> removed = performance.remove();
+    EXPECT_EQ(0, removed.size());
+    EXPECT_NO_THROW(panel.photovoltaicPerformance());
+
+    removed = panel.remove();
+    ASSERT_EQ(2, removed.size());
+    EXPECT_EQ(GeneratorPhotovoltaic::iddObjectType(), removed[0].iddObject().type());
+    EXPECT_EQ(PhotovoltaicPerformanceEquivalentOneDiode::iddObjectType(), removed[1].iddObject().type());
+  }
+
+}

@@ -75,6 +75,8 @@ namespace detail {
 
     /// returns deletes reference to Surface from clone
     virtual ModelObject clone(Model model) const override;
+    
+    virtual std::string generatorObjectType() const;
 
     virtual boost::optional<double> ratedElectricPowerOutput() const;
 

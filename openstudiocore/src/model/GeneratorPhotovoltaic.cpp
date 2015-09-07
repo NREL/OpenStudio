@@ -102,6 +102,7 @@ namespace detail {
 
   std::vector<openstudio::IdfObject> GeneratorPhotovoltaic_Impl::remove()
   {
+    //setString(OS_Generator_PhotovoltaicFields::ModulePerformanceName, "");
     return ParentObject_Impl::remove();
   }
 
@@ -115,6 +116,11 @@ namespace detail {
     ModelObject result = ParentObject_Impl::clone(model);
     result.cast<GeneratorPhotovoltaic>().resetSurface();
     return result;
+  }
+  
+  std::string GeneratorPhotovoltaic_Impl::generatorObjectType() const
+  {
+    return "Generator:Photovoltaic";
   }
 
   boost::optional<double> GeneratorPhotovoltaic_Impl::ratedThermalToElectricalPowerRatio() const

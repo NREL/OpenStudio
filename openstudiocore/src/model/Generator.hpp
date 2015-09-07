@@ -42,6 +42,8 @@ class MODEL_API Generator : public ParentObject {
 
   virtual ~Generator() {}
 
+  std::string generatorObjectType() const;
+  
   boost::optional<double> ratedElectricPowerOutput() const;
 
   boost::optional<Schedule> availabilitySchedule() const;

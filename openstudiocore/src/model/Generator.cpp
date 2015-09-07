@@ -99,6 +99,11 @@ Generator::Generator(std::shared_ptr<detail::Generator_Impl> p)
   : ParentObject(p)
 {}
 
+std::string Generator::generatorObjectType() const
+{
+  return getImpl<detail::Generator_Impl>()->generatorObjectType();
+}
+
 boost::optional<double> Generator::ratedElectricPowerOutput() const
 {
   return getImpl<detail::Generator_Impl>()->ratedElectricPowerOutput();

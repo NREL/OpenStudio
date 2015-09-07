@@ -37,7 +37,7 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translatePhotovoltaicPerformanceSimple(model::PhotovoltaicPerformanceSimple & modelObject)
 {
-  IdfObject idfObject(openstudio::IddObjectType::PhotovoltaicPerformance_Simple);
+  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::PhotovoltaicPerformance_Simple, modelObject);
 
   m_idfObjects.push_back(idfObject);
   

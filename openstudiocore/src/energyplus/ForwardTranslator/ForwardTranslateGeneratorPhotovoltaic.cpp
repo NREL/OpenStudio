@@ -22,6 +22,8 @@
 #include "../../model/Model.hpp"
 #include "../../model/GeneratorPhotovoltaic.hpp"
 #include "../../model/GeneratorPhotovoltaic_Impl.hpp"
+#include "../../model/PlanarSurface.hpp"
+#include "../../model/PhotovoltaicPerformance.hpp"
 
 #include <utilities/idd/Generator_Photovoltaic_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -37,9 +39,36 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateGeneratorPhotovoltaic(model::GeneratorPhotovoltaic & modelObject)
 {
-  IdfObject idfObject(openstudio::IddObjectType::Generator_Photovoltaic);
-
+  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Generator_Photovoltaic, modelObject);
   m_idfObjects.push_back(idfObject);
+
+  PhotovoltaicPerformance performance = modelObject.photovoltaicPerformance();
+  boost::optional<IdfObject> performanceIdf = translateAndMapModelObject(performance);
+  if (performanceIdf){
+    idfObject.setString(Generator_PhotovoltaicFields::PhotovoltaicPerformanceObjectType, performanceIdf->iddObject().name());
+    idfObject.setString(Generator_PhotovoltaicFields::ModulePerformanceName, performanceIdf->name().get());
+  } else{
+    LOG(Warn, "Generator:Photovoltaic '" << idfObject.name().get() << "' missing required field 'Module Performance Name'")
+  }
+
+  boost::optional<PlanarSurface> surface = modelObject.surface();
+  bool hasSurface = false;
+  if (surface){
+    boost::optional<IdfObject> surfaceIdf = translateAndMapModelObject(*surface);
+    if (surfaceIdf){
+      idfObject.setString(Generator_PhotovoltaicFields::SurfaceName, surfaceIdf->name().get());
+      hasSurface = true;
+    }
+  }
+  if (!hasSurface){
+    LOG(Warn, "Generator:Photovoltaic '" << idfObject.name().get() << "' missing required field 'Surface Name'")
+  }
+
+  idfObject.setString(Generator_PhotovoltaicFields::HeatTransferIntegrationMode, modelObject.heatTransferIntegrationMode());
+
+  idfObject.setDouble(Generator_PhotovoltaicFields::NumberofModulesinParallel, modelObject.numberOfModulesInParallel());
+  
+  idfObject.setDouble(Generator_PhotovoltaicFields::NumberofModulesinSeries, modelObject.numberOfModulesInSeries());
 
   return idfObject;
 }

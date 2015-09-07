@@ -24351,6 +24351,7 @@ OS:ElectricLoadCenter:Inverter:Simple,
         \type handle
         \required-field          
    A2 , \field Name
+        \required-field
         \reference InverterList
    A3 , \field Availability Schedule Name
         \note Availability schedule name for this system. Schedule value > 0 means the system is available.
@@ -24377,6 +24378,7 @@ OS:ElectricLoadCenter:Inverter:LookUpTable,
         \type handle
         \required-field           
    A2 , \field Name
+        \required-field
         \reference InverterList
    A3 , \field Availability Schedule Name
         \note Availability schedule name for this system. Schedule value > 0 means the system is available.

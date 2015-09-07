@@ -19,6 +19,7 @@
 
 #include "PhotovoltaicPerformance.hpp"
 #include "PhotovoltaicPerformance_Impl.hpp"
+#include "GeneratorPhotovoltaic.hpp"
 #include "ModelObject.hpp"
 #include "ModelObject_Impl.hpp"
 #include "Model.hpp"
@@ -55,6 +56,17 @@ PhotovoltaicPerformance_Impl::PhotovoltaicPerformance_Impl(const PhotovoltaicPer
                                                            bool keepHandles)
   : ModelObject_Impl(other, model, keepHandles)
 {
+}
+
+std::vector<openstudio::IdfObject> PhotovoltaicPerformance_Impl::remove()
+{
+  std::vector<openstudio::IdfObject> result;
+
+  if (getSources(GeneratorPhotovoltaic::iddObjectType()).empty()){
+    result = ModelObject_Impl::remove();
+  }
+
+  return result;
 }
 
 } // detail

@@ -48,6 +48,9 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
+    /// do not allow this object to be removed if it is referenced by a PhotovoltaicGenerator
+    virtual std::vector<openstudio::IdfObject> remove() override;
+
     //@}
     /** @name Getters */
     //@{
