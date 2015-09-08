@@ -47,6 +47,40 @@
     <rule IddField="Water Outlet Node Name" Access="HIDDEN"/>
     <rule IddField="Condensate Collection Water Storage Tank Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit">
+    <rule IddField="Water-to-Refrigerant HX Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Water-to-Refrigerant HX Water Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Indoor Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Indoor Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Energy Part Load Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Speed Data List" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedData">
+    <rule IddField="Total Cooling Capacity Function of Temperature Curve Name" Access="LOCKED"/>
+    <rule IddField="Total Cooling Capacity Function of Air Flow Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Total Cooling Capacity Function of Water Flow Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Energy Input Ratio Function of Temperature Curve Name" Access="LOCKED"/>
+    <rule IddField="Energy Input Ratio Function of Air Flow Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Energy Input Ratio Function of Water Flow Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Waste Heat Function of Temperature Curve Name" Access="LOCKED"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedData">
+    <rule IddField="Heating Capacity Function of Temperature Curve Name" Access="LOCKED"/>
+    <rule IddField="Total  Heating Capacity Function of Air Flow Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Heating Capacity Function of Water Flow Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Energy Input Ratio Function of Temperature Curve Name" Access="LOCKED"/>
+    <rule IddField="Energy Input Ratio Function of Air Flow Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Energy Input Ratio Function of Water Flow Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Waste Heat Function of Temperature Curve Name" Access="LOCKED"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit">
+    <rule IddField="Water-to-Refrigerant HX Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Water-to-Refrigerant HX Water Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Indoor Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Indoor Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Energy Part Load Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Speed Data List" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_ZoneHVAC_HighTemperatureRadiant">
     <rule IddField="Radiant Surface Type" Access="HIDDEN"/>
   </POLICY>
