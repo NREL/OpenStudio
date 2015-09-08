@@ -21,6 +21,8 @@
 #include "ModelFixture.hpp"
 #include "../CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit.hpp"
 #include "../CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl.hpp"
+#include "../CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.hpp"
+#include "../CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -37,4 +39,16 @@ TEST_F(ModelFixture,CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit)
      exit(0); 
   } ,
     ::testing::ExitedWithCode(0), "" );
+}
+
+TEST_F(ModelFixture,CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Remove)
+{
+  Model m; 
+  auto count = m.modelObjects().size();
+
+  CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit coil(m); 
+  CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData speed(m);
+  coil.addSpeed(speed);
+  coil.remove();
+  EXPECT_EQ(count,m.modelObjects().size());
 }

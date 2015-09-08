@@ -269,6 +269,9 @@ namespace detail {
   {
     if( isRemovable() )
     {
+      if( auto _stageDataList = speedDataList() ) {
+        _stageDataList->remove();
+      }
       return WaterToAirComponent_Impl::remove();
     }
 
