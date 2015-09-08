@@ -222,9 +222,13 @@ namespace detail {
 
   std::vector<ModelObject> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::children() const {
     std::vector<ModelObject> children;
+
     if( auto const _stageDataList = speedDataList() ) {
-      children.push_back( _stageDataList.get() );
+      for( const auto & mo : _stageDataList->modelObjects() ) {
+        children.push_back( mo );
+      }
     }
+
     children.push_back( energyPartLoadFractionCurve() );
     return children;
   }
