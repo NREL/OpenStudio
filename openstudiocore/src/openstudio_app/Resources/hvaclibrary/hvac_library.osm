@@ -9661,3 +9661,172 @@ OS:Curve:Cubic,
   0,                                      !- Minimum Value of x {BasedOnField A2}
   1;                                      !- Maximum Value of x {BasedOnField A2}
 
+OS:ZoneHVAC:UnitVentilator,
+  {ec80d9b9-e91e-42de-b461-0ff9c3299b1f}, !- Handle
+  Unit Ventilator - Cooling,              !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  autosize,                               !- Maximum Supply Air Flow Rate {m3/s}
+  VariablePercent,                        !- Outdoor Air Control Type
+  autosize,                               !- Minimum Outdoor Air Flow Rate {m3/s}
+  {fd825879-6f23-4878-89c7-5aa0a612c4b1}, !- Minimum Outdoor Air Schedule Name
+  autosize,                               !- Maximum Outdoor Air Flow Rate {m3/s}
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Maximum Outdoor Air Fraction or Temperature Schedule Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {a6eb7086-f867-4f03-bf3e-5436a8e8bfb9}, !- Supply Air Fan Name
+  ,                                       !- Supply Air Fan Operating Mode Schedule Name
+  ,                                       !- Heating Coil Name
+  0.001,                                  !- Heating Convergence Tolerance
+  {9df0dc8e-4b77-415f-9a7e-1a4fb56e6dfe}, !- Cooling Coil Name
+  0.001;                                  !- Cooling Convergence Tolerance
+
+OS:Fan:ConstantVolume,
+  {a6eb7086-f867-4f03-bf3e-5436a8e8bfb9}, !- Handle
+  Fan Constant Volume,                  !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Fan Efficiency
+  ,                                       !- Pressure Rise {Pa}
+  AutoSize,                               !- Maximum Flow Rate {m3/s}
+  ,                                       !- Motor Efficiency
+  ,                                       !- Motor In Airstream Fraction
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ;                                       !- End-Use Subcategory
+
+OS:Coil:Cooling:Water,
+  {9df0dc8e-4b77-415f-9a7e-1a4fb56e6dfe}, !- Handle
+  Unit Vent Cool Coil,                    !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Design Water Flow Rate {m3/s}
+  ,                                       !- Design Air Flow Rate {m3/s}
+  ,                                       !- Design Inlet Water Temperature {C}
+  ,                                       !- Design Inlet Air Temperature {C}
+  ,                                       !- Design Outlet Air Temperature {C}
+  ,                                       !- Design Inlet Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Design Outlet Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Type of Analysis
+  ;                                       !- Heat Exchanger Configuration
+
+OS:ZoneHVAC:UnitVentilator,
+  {b5536cc4-a63d-4985-825e-c958630de055}, !- Handle
+  Unit Ventilator - Heating,              !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  autosize,                               !- Maximum Supply Air Flow Rate {m3/s}
+  VariablePercent,                        !- Outdoor Air Control Type
+  autosize,                               !- Minimum Outdoor Air Flow Rate {m3/s}
+  {fd825879-6f23-4878-89c7-5aa0a612c4b1}, !- Minimum Outdoor Air Schedule Name
+  autosize,                               !- Maximum Outdoor Air Flow Rate {m3/s}
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Maximum Outdoor Air Fraction or Temperature Schedule Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {7bd8c0d0-d89c-401a-bfe2-34197acde9b9}, !- Supply Air Fan Name
+  ,                                       !- Supply Air Fan Operating Mode Schedule Name
+  {42db673d-336b-4c12-92d5-5801efd45985}, !- Heating Coil Name
+  0.001,                                  !- Heating Convergence Tolerance
+  ,                                       !- Cooling Coil Name
+  0.001;                                  !- Cooling Convergence Tolerance
+
+OS:Fan:ConstantVolume,
+  {7bd8c0d0-d89c-401a-bfe2-34197acde9b9}, !- Handle
+  Fan Constant Volume 1,                  !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Fan Efficiency
+  ,                                       !- Pressure Rise {Pa}
+  AutoSize,                               !- Maximum Flow Rate {m3/s}
+  ,                                       !- Motor Efficiency
+  ,                                       !- Motor In Airstream Fraction
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ;                                       !- End-Use Subcategory
+
+OS:Coil:Heating:Water,
+  {42db673d-336b-4c12-92d5-5801efd45985}, !- Handle
+  Unit Vent Heat Coil,                   !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- U-Factor Times Area Value {W/K}
+  ,                                       !- Maximum Water Flow Rate {m3/s}
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Performance Input Method
+  ,                                       !- Rated Capacity {W}
+  ,                                       !- Rated Inlet Water Temperature {C}
+  ,                                       !- Rated Inlet Air Temperature {C}
+  ,                                       !- Rated Outlet Water Temperature {C}
+  ,                                       !- Rated Outlet Air Temperature {C}
+  ;                                       !- Rated Ratio for Air and Water Convection
+
+OS:ZoneHVAC:UnitVentilator,
+  {7a038ce5-3c81-41ec-93c4-dad85dc94809}, !- Handle
+  Unit Ventilator - Heating - Cooling,    !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  autosize,                               !- Maximum Supply Air Flow Rate {m3/s}
+  VariablePercent,                        !- Outdoor Air Control Type
+  autosize,                               !- Minimum Outdoor Air Flow Rate {m3/s}
+  {fd825879-6f23-4878-89c7-5aa0a612c4b1}, !- Minimum Outdoor Air Schedule Name
+  autosize,                               !- Maximum Outdoor Air Flow Rate {m3/s}
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Maximum Outdoor Air Fraction or Temperature Schedule Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {53473293-5b6b-4350-ad43-4513bb2f6e87}, !- Supply Air Fan Name
+  ,                                       !- Supply Air Fan Operating Mode Schedule Name
+  {fc2d0aec-c206-4353-9bde-00e505d04ab2}, !- Heating Coil Name
+  0.001,                                  !- Heating Convergence Tolerance
+  {74c8d02c-6eff-4427-9c53-5783638ea38a}, !- Cooling Coil Name
+  0.001;                                  !- Cooling Convergence Tolerance
+
+OS:Fan:ConstantVolume,
+  {53473293-5b6b-4350-ad43-4513bb2f6e87}, !- Handle
+  Fan Constant Volume 1,                  !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Fan Efficiency
+  ,                                       !- Pressure Rise {Pa}
+  AutoSize,                               !- Maximum Flow Rate {m3/s}
+  ,                                       !- Motor Efficiency
+  ,                                       !- Motor In Airstream Fraction
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ;                                       !- End-Use Subcategory
+
+OS:Coil:Heating:Water,
+  {fc2d0aec-c206-4353-9bde-00e505d04ab2}, !- Handle
+  Coil Heating Water 1,                   !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- U-Factor Times Area Value {W/K}
+  ,                                       !- Maximum Water Flow Rate {m3/s}
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Performance Input Method
+  ,                                       !- Rated Capacity {W}
+  ,                                       !- Rated Inlet Water Temperature {C}
+  ,                                       !- Rated Inlet Air Temperature {C}
+  ,                                       !- Rated Outlet Water Temperature {C}
+  ,                                       !- Rated Outlet Air Temperature {C}
+  ;                                       !- Rated Ratio for Air and Water Convection
+
+OS:Coil:Cooling:Water,
+  {74c8d02c-6eff-4427-9c53-5783638ea38a}, !- Handle
+  Coil Cooling Water 1,                   !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Design Water Flow Rate {m3/s}
+  ,                                       !- Design Air Flow Rate {m3/s}
+  ,                                       !- Design Inlet Water Temperature {C}
+  ,                                       !- Design Inlet Air Temperature {C}
+  ,                                       !- Design Outlet Air Temperature {C}
+  ,                                       !- Design Inlet Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Design Outlet Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Type of Analysis
+  ;                                       !- Heat Exchanger Configuration
+
+

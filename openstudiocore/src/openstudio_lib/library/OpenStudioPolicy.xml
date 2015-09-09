@@ -1067,6 +1067,15 @@
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
   </POLICY>  
+  <POLICY IddObjectType="OS_ZoneHVAC_UnitVentilator">
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Supply Air Fan Name" Access="LOCKED"/>
+    <rule IddField="Heating Coil Name" Access="LOCKED"/>
+    <rule IddField="Cooling Coil Name" Access="LOCKED"/>
+    <rule IddField="Availability Manager List Name" Access="HIDDEN"/>
+    <rule IddField="Design Specification ZoneHVAC Sizing Object Name" Access="HIDDEN"/>
+  </POLICY>  
   <POLICY IddObjectType="OS_ZoneHVAC_EnergyRecoveryVentilator_Controller">
     <rule IddField="Electronic Enthalpy Limit Curve Name" Access="LOCKED"/>
   </POLICY>  
