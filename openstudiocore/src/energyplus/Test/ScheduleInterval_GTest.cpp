@@ -48,18 +48,21 @@ using namespace openstudio;
 
 TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_Hourly)
 {
+  // Create the values vector
   Vector values = linspace(1, 8760, 8760);
 
+  // Create an hourly interval time series that begins on 1/1 00:00
   TimeSeries timeseries(DateTime(Date(MonthOfYear::Jan, 1), Time(0,1,0)), Time(0,1,0), values, "");
 
   Model model;
 
+  // Create a schedule and make sure that it worked
   boost::optional<ScheduleInterval> scheduleInterval = ScheduleInterval::fromTimeSeries(timeseries, model);
   ASSERT_TRUE(scheduleInterval);
   EXPECT_TRUE(scheduleInterval->optionalCast<ScheduleFixedInterval>());
 
+  // Forward translate the schedule
   ForwardTranslator ft;
-
   Workspace workspace = ft.translateModel(model);
 
   std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_Compact);
@@ -68,8 +71,10 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_Hourly)
   boost::regex throughRegex("^Through:\\s*(.*)/\\s*(.*)\\s*");
   boost::regex untilRegex("^Until:\\s*(.*):(.*)\\s*");
 
-  workspace.save(toPath("./ForwardTranslator_ScheduleFixedInterval_Hourly.idf"), true);
+  // Write out the schedule - keep this around for now
+  //workspace.save(toPath("./ForwardTranslator_ScheduleFixedInterval_Hourly.idf"), true);
 
+  // Check the contents of the output
   unsigned N = objects[0].numFields();
   boost::optional<Date> lastDateThrough;
   bool until24Found = false;
@@ -149,21 +154,27 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_Hourly)
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Hourly_Shifted)
 {
+  // Create the values vector
   Vector values = linspace(1, 8760, 8760);
 
+  // Create a time series that starts at 12/31 23:00
   TimeSeries timeseries(DateTime(Date(MonthOfYear::Jan, 1)), Time(0, 1, 0), values, "");
 
   Model model;
 
+  // Create a schedule and make sure it worked
   boost::optional<ScheduleInterval> scheduleInterval = ScheduleInterval::fromTimeSeries(timeseries, model);
   ASSERT_TRUE(scheduleInterval);
   EXPECT_TRUE(scheduleInterval->optionalCast<ScheduleFixedInterval>());
 
+  // Verify that the schedule gives us back the time series
   TimeSeries ts = scheduleInterval->timeSeries();
-  EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1)), ts.firstReportDateTime());
+  // Oops, it doesn't. Maybe it shouldn't give back the exact time series, but it can't do this.
+  // Without this check, the schedule manages to pass everything else and the test succeeds.
+  EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(0,0,0)), ts.firstReportDateTime());
 
+  // Forward translate the schedule
   ForwardTranslator ft;
-
   Workspace workspace = ft.translateModel(model);
 
   std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_Compact);
@@ -172,8 +183,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Hourly_Shifted
   boost::regex throughRegex("^Through:\\s*(.*)/\\s*(.*)\\s*");
   boost::regex untilRegex("^Until:\\s*(.*):(.*)\\s*");
 
-  workspace.save(toPath("./ForwardTranslator_ScheduleFixedInterval_Hourly_Shifted.idf"), true);
+  // Write out the schedule -  keep this around for now
+  //workspace.save(toPath("./ForwardTranslator_ScheduleFixedInterval_Hourly_Shifted.idf"), true);
 
+  // Check the contents of the output
   unsigned N = objects[0].numFields();
   boost::optional<Date> lastDateThrough;
   bool until24Found = false;
@@ -253,18 +266,21 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Hourly_Shifted
 
 TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_20hours)
 {
+  // Create the values vector
   Vector values = linspace(20, 8760, 438);
 
+  // Create an interval time series starting 1/1 00:00 with 20 hour interval
   TimeSeries timeseries(DateTime(Date(MonthOfYear::Jan, 1),Time(0,20,0)), Time(0,20,0), values, "");
 
   Model model;
 
+  // Create a schedule and make sure it worked
   boost::optional<ScheduleInterval> scheduleInterval = ScheduleInterval::fromTimeSeries(timeseries, model);
   ASSERT_TRUE(scheduleInterval);
   EXPECT_TRUE(scheduleInterval->optionalCast<ScheduleFixedInterval>());
 
+  // Forward translate the schedule
   ForwardTranslator ft;
-
   Workspace workspace = ft.translateModel(model);
 
   std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_Compact);
@@ -273,8 +289,10 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_20hours)
   boost::regex throughRegex("^Through:\\s*(.*)/\\s*(.*)\\s*");
   boost::regex untilRegex("^Until:\\s*(.*):(.*)\\s*");
 
-  workspace.save(toPath("./ForwardTranslator_ScheduleFixedInterval_20hours.idf"), true);
+  // Write out the schedule - keep this around for now
+  //workspace.save(toPath("./ForwardTranslator_ScheduleFixedInterval_20hours.idf"), true);
 
+  // Check the contents of the output
   unsigned N = objects[0].numFields();
   boost::optional<Date> lastDateThrough;
   bool until24Found = false;
@@ -352,10 +370,12 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_20hours)
 
 TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_ThreePoint)
 {
+  // Create the values vector
   std::vector<double> vec(3,0.0);
   vec[2] = 1.0;
   Vector values = openstudio::createVector(vec);
 
+  // Create an interval time series starting 1/1 00:00 with interval 182.5 days
   TimeSeries timeseries(DateTime(Date(MonthOfYear::Jan, 1), Time(0,0,0)), Time(0,4380,0), values, "");
 
   Model model;
@@ -473,22 +493,25 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_TwoPoint)
 
 TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_Hourly)
 {
+  // Create the values vector and a vector of seconds from the start
   Vector values = linspace(1, 8760, 8760);
   std::vector<long> seconds(8760);
   for(unsigned i=0;i<seconds.size();i++) {
     seconds[i]=(i+1)*3600;
   }
 
+  // Create an hourly time series starting 1/1 00:00
   TimeSeries timeseries(DateTime(Date(MonthOfYear::Jan, 1), Time(0, 0, 0, 3600)), seconds, values, "");
 
   Model model;
 
+  // Creat a schedule and make sure it worked
   boost::optional<ScheduleInterval> scheduleInterval = ScheduleInterval::fromTimeSeries(timeseries, model);
   ASSERT_TRUE(scheduleInterval);
   ASSERT_TRUE(scheduleInterval->optionalCast<ScheduleVariableInterval>());
 
+  // Forward translate the schedule
   ForwardTranslator ft;
-
   Workspace workspace = ft.translateModel(model);
 
   std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_Compact);
@@ -497,8 +520,10 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_Hourly)
   boost::regex throughRegex("^Through:\\s*(.*)/\\s*(.*)\\s*");
   boost::regex untilRegex("^Until:\\s*(.*):(.*)\\s*");
 
-  workspace.save(toPath("./ForwardTranslator_ScheduleVariableInterval_Hourly.idf"), true);
+  // Write out the schedule - keep this around for now
+  //workspace.save(toPath("./ForwardTranslator_ScheduleVariableInterval_Hourly.idf"), true);
 
+  // Check the contents of the output
   unsigned N = objects[0].numFields();
   boost::optional<Date> lastDateThrough;
   bool until24Found = false;
@@ -578,23 +603,25 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_Hourly)
 
 TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_Hourly_Shifted)
 {
+  // Create the values vector and a vector of seconds from the start
   Vector values = linspace(1, 8760, 8760);
   std::vector<long> seconds(8760);
   for(unsigned i=0;i<seconds.size();i++) {
     seconds[i]=(i+1)*3600;
   }
 
-  // This time series actually starts at 12/31 23:00:00
+  // Create an hourly time series starting 12/31 23:00:00
   TimeSeries timeseries(DateTime(Date(MonthOfYear::Jan, 1)), seconds, values, "");
 
   Model model;
 
+  // Create a schedule and make sure it worked
   boost::optional<ScheduleInterval> scheduleInterval = ScheduleInterval::fromTimeSeries(timeseries, model);
   ASSERT_TRUE(scheduleInterval);
   ASSERT_TRUE(scheduleInterval->optionalCast<ScheduleVariableInterval>());
 
+  // Forward translate the schedule
   ForwardTranslator ft;
-
   Workspace workspace = ft.translateModel(model);
 
   std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_Compact);
@@ -603,8 +630,10 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_Hourly_Shift
   boost::regex throughRegex("^Through:\\s*(.*)/\\s*(.*)\\s*");
   boost::regex untilRegex("^Until:\\s*(.*):(.*)\\s*");
 
-  workspace.save(toPath("./ForwardTranslator_ScheduleVariableInterval_Hourly_Shifted.idf"), true);
+  // Write out the schedule - keep this around for now
+  //workspace.save(toPath("./ForwardTranslator_ScheduleVariableInterval_Hourly_Shifted.idf"), true);
 
+  // Check the contents of the output
   unsigned N = objects[0].numFields();
   boost::optional<Date> lastDateThrough;
   bool until24Found = false;
@@ -684,7 +713,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_Hourly_Shift
 
 TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_500)
 {
-
+  // A vector of time deltas, randomly generated
   long numbers[500] = {86313,48668,46739,86313,86313,35939,28787,81175,41086,60467,71308,36332,
     75050,44913,86313,36150,86313,86313,86313,86313,49633,23793,86313,86313,86313,78168,72707,
     56754,35868,29986,25413,40812,62829,31364,77455,76379,86313,50167,34835,70623,86313,70817,
@@ -721,22 +750,26 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_500)
     24318,26234,59933,43230,65930,86313,86313,54580};
 
   Vector values = linspace(1, 500, 500);
+
+  // Create the vector of seconds from start
   std::vector<long> seconds(500);
   seconds[0] = numbers[0];
   for(unsigned i=1;i<500;i++) {
     seconds[i]=numbers[i]+seconds[i-1];
   }
 
+  // Create a time series starting 1/1 00:00 with irregular interval
   TimeSeries timeseries(DateTime(Date(MonthOfYear::Jan, 1), Time(0,0,0,numbers[0])), seconds, values, "");
 
   Model model;
 
+  // Create a schedule and make sure it worked
   boost::optional<ScheduleInterval> scheduleInterval = ScheduleInterval::fromTimeSeries(timeseries, model);
   ASSERT_TRUE(scheduleInterval);
   ASSERT_TRUE(scheduleInterval->optionalCast<ScheduleVariableInterval>());
 
+  // Forward translate the schedule
   ForwardTranslator ft;
-
   Workspace workspace = ft.translateModel(model);
 
   std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_Compact);
@@ -745,8 +778,11 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_500)
   boost::regex throughRegex("^Through:\\s*(.*)/\\s*(.*)\\s*");
   boost::regex untilRegex("^Until:\\s*(.*):(.*)\\s*");
 
-  workspace.save(toPath("./ForwardTranslator_ScheduleVariableInterval_500.idf"), true);
+  // Write out the schedule - keep this around for now
+  //workspace.save(toPath("./ForwardTranslator_ScheduleVariableInterval_500.idf"), true);
 
+
+  // Check the contents of the output
   unsigned N = objects[0].numFields();
   boost::optional<Date> lastDateThrough;
   bool until24Found = false;
@@ -820,7 +856,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_500)
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleVariableInterval_500_Shifted)
 {
-
+  // The vector of time deltas, randomly generated
   long numbers[500] = { 86313, 48668, 46739, 86313, 86313, 35939, 28787, 81175, 41086, 60467, 71308, 36332,
     75050, 44913, 86313, 36150, 86313, 86313, 86313, 86313, 49633, 23793, 86313, 86313, 86313, 78168, 72707,
     56754, 35868, 29986, 25413, 40812, 62829, 31364, 77455, 76379, 86313, 50167, 34835, 70623, 86313, 70817,
@@ -856,24 +892,28 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleVariableInterval_500_Shifted
     76417, 86313, 86313, 66541, 51775, 86313, 86129, 36853, 86313, 70306, 46162, 86313, 86313, 29768, 46103,
     24318, 26234, 59933, 43230, 65930, 86313, 86313, 54580 };
 
+  // The vector of values
   Vector values = linspace(1, 500, 500);
+
+  // Create the vector of seconds from start
   std::vector<long> seconds(500);
   seconds[0] = numbers[0];
   for (unsigned i = 1; i<500; i++) {
     seconds[i] = numbers[i] + seconds[i - 1];
   }
 
-  // This time series actually starts on 12/31
+  // Create a time series starting 12/31 00:00:-86313 with irregular interval
   TimeSeries timeseries(DateTime(Date(MonthOfYear::Jan, 1)), seconds, values, "");
 
   Model model;
 
+  // Create a schedule and make sure it worked
   boost::optional<ScheduleInterval> scheduleInterval = ScheduleInterval::fromTimeSeries(timeseries, model);
   ASSERT_TRUE(scheduleInterval);
   ASSERT_TRUE(scheduleInterval->optionalCast<ScheduleVariableInterval>());
 
+  // Forward translate the schedule
   ForwardTranslator ft;
-
   Workspace workspace = ft.translateModel(model);
 
   std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_Compact);
@@ -882,8 +922,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleVariableInterval_500_Shifted
   boost::regex throughRegex("^Through:\\s*(.*)/\\s*(.*)\\s*");
   boost::regex untilRegex("^Until:\\s*(.*):(.*)\\s*");
 
-  workspace.save(toPath("./ForwardTranslator_ScheduleVariableInterval_500_Shifted.idf"), true);
+  // Write out the schedule - keep this around for now
+  //workspace.save(toPath("./ForwardTranslator_ScheduleVariableInterval_500_Shifted.idf"), true);
 
+  // Check the contents of the output
   unsigned N = objects[0].numFields();
   boost::optional<Date> lastDateThrough;
   bool until24Found = false;
