@@ -9528,3 +9528,136 @@ OS:ScheduleTypeLimits,
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
+OS:ZoneHVAC:EnergyRecoveryVentilator,
+  {fce70303-f18e-465a-a53a-014e2473b1d2}, !- Handle
+  Zone HVAC Energy Recovery Ventilator, !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  {865903c0-b04d-453a-80e3-217d60f8a56d}, !- Heat Exchanger Name
+  autosize,                               !- Supply Air Flow Rate {m3/s}
+  autosize,                               !- Exhaust Air Flow Rate {m3/s}
+  {d3ca499f-ae74-4f5d-831d-8464be067dcd}, !- Supply Air Fan Name
+  {39be15fa-c4bd-41c2-a950-a8d2ebacd3d6}, !- Exhaust Air Fan Name
+  {f750ab7e-f3cb-4fad-a275-bd21dbafff60}, !- Controller Name
+  0.000508,                               !- Ventilation Rate per Unit Floor Area {m3/s-m2}
+  0.00236,                                !- Ventilation Rate per Occupant {m3/s-person}
+  ,                                       !- Availability Manager List Name
+  ,                                       !- Air Inlet Node Name
+  ;                                       !- Air Outlet Node Name
+
+OS:ZoneHVAC:EnergyRecoveryVentilator:Controller,
+  {f750ab7e-f3cb-4fad-a275-bd21dbafff60}, !- Handle
+  ERV Controller, !- Name
+  ,                                       !- Temperature High Limit {C}
+  ,                                       !- Temperature Low Limit {C}
+  ,                                       !- Enthalpy High Limit {J/kg}
+  ,                                       !- Dewpoint Temperature Limit {C}
+  ,                                       !- Electronic Enthalpy Limit Curve Name
+  NoExhaustAirTemperatureLimit,           !- Exhaust Air Temperature Limit
+  NoExhaustAirEnthalpyLimit,              !- Exhaust Air Enthalpy Limit
+  ,                                       !- Time of Day Economizer Flow Control Schedule Name
+  No,                                     !- High Humidity Control Flag
+  1,                                      !- High Humidity Outdoor Air Flow Ratio
+  Yes;                                    !- Control High Indoor Humidity Based on Outdoor Humidity Ratio
+
+OS:HeatExchanger:AirToAir:SensibleAndLatent,
+  {865903c0-b04d-453a-80e3-217d60f8a56d}, !- Handle
+  ERV HX, !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule
+  autosize,                               !- Nominal Supply Air Flow Rate {m3/s}
+  0.76,                                   !- Sensible Effectiveness at 100% Heating Air Flow {dimensionless}
+  0.68,                                   !- Latent Effectiveness at 100% Heating Air Flow {dimensionless}
+  0.81,                                   !- Sensible Effectiveness at 75% Heating Air Flow {dimensionless}
+  0.73,                                   !- Latent Effectiveness at 75% Heating Air Flow {dimensionless}
+  0.76,                                   !- Sensible Effectiveness at 100% Cooling Air Flow {dimensionless}
+  0.68,                                   !- Latent Effectiveness at 100% Cooling Air Flow {dimensionless}
+  0.81,                                   !- Sensible Effectiveness at 75% Cooling Air Flow {dimensionless}
+  0.73,                                   !- Latent Effectiveness at 75% Cooling Air Flow {dimensionless}
+  ,                                       !- Supply Air Inlet Node
+  ,                                       !- Supply Air Outlet Node
+  ,                                       !- Exhaust Air Inlet Node
+  ,                                       !- Exhaust Air Outlet Node
+  0,                                      !- Nominal Electric Power {W}
+  No,                                     !- Supply Air Outlet Temperature Control
+  Plate,                                  !- Heat Exchanger Type
+  None,                                   !- Frost Control Type
+  1.7,                                    !- Threshold Temperature {C}
+  ,                                       !- Initial Defrost Time Fraction {dimensionless}
+  ,                                       !- Rate of Defrost Time Fraction Increase {1/K}
+  Yes;                                    !- Economizer Lockout
+
+OS:Fan:OnOff,
+  {d3ca499f-ae74-4f5d-831d-8464be067dcd}, !- Handle
+  ERV Supply Fan,                           !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  0.6,                                    !- Fan Efficiency
+  300,                                    !- Pressure Rise {Pa}
+  autosize,                               !- Maximum Flow Rate {m3/s}
+  0.8,                                    !- Motor Efficiency
+  1,                                      !- Motor In Airstream Fraction
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {98c553ef-35cf-4f9f-be94-757eb4401c7b}, !- Fan Power Ratio Function of Speed Ratio Curve Name
+  {16d536ff-a981-4a7c-ad2a-e40bcd7fdf88}, !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
+  ;                                       !- End-Use Subcategory
+
+OS:Curve:Exponent,
+  {98c553ef-35cf-4f9f-be94-757eb4401c7b}, !- Handle
+  Fan On Off Power Curve,                 !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 Constant
+  0,                                      !- Coefficient3 Constant
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1,                                      !- Maximum Value of x {BasedOnField A2}
+  ,                                       !- Minimum Curve Output {BasedOnField A3}
+  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  ,                                       !- Input Unit Type for X
+  ;                                       !- Output Unit Type
+
+OS:Curve:Cubic,
+  {16d536ff-a981-4a7c-ad2a-e40bcd7fdf88}, !- Handle
+  Fan On Off Efficiency Curve,            !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
+
+OS:Fan:OnOff,
+  {39be15fa-c4bd-41c2-a950-a8d2ebacd3d6}, !- Handle
+  ERV Exhaust Fan,                           !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  0.6,                                    !- Fan Efficiency
+  300,                                    !- Pressure Rise {Pa}
+  autosize,                               !- Maximum Flow Rate {m3/s}
+  0.8,                                    !- Motor Efficiency
+  1,                                      !- Motor In Airstream Fraction
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {831cc29b-3867-4324-a397-faf1ad696e4e}, !- Fan Power Ratio Function of Speed Ratio Curve Name
+  {4fcf6055-286e-4a76-b914-334d249852fa}, !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
+  ;                                       !- End-Use Subcategory
+
+OS:Curve:Exponent,
+  {831cc29b-3867-4324-a397-faf1ad696e4e}, !- Handle
+  Fan On Off Power Curve 1,               !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 Constant
+  0,                                      !- Coefficient3 Constant
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1,                                      !- Maximum Value of x {BasedOnField A2}
+  ,                                       !- Minimum Curve Output {BasedOnField A3}
+  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  ,                                       !- Input Unit Type for X
+  ;                                       !- Output Unit Type
+
+OS:Curve:Cubic,
+  {4fcf6055-286e-4a76-b914-334d249852fa}, !- Handle
+  Fan On Off Efficiency Curve 1,          !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
+

@@ -91,6 +91,7 @@
     <file>images/dxcoolingcoil_singlespeed.png</file>
     <file>images/electric_furnace.png</file>
     <file>images/electric_humidifier.png</file>
+    <file>images/energy_recov_vent.png</file>
     <file>images/evap_cooled.png</file>
     <file>images/evap_fluid_cooler.png</file>
     <file>images/evap_fluid_cooler_two_speed.png</file>
@@ -351,6 +352,7 @@
     <file>images/mini_icons/directEvap.png</file>
     <file>images/mini_icons/districtcooling.png</file>
     <file>images/mini_icons/districtheating.png</file>
+    <file>images/mini_icons/mini_energy_recov_vent.png</file>
     <file>images/mini_icons/electric_equipment.png</file>
     <file>images/mini_icons/electric_equipment_definition.png</file>
     <file>images/mini_icons/electric_furnace_mini.png</file>

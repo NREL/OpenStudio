@@ -1058,9 +1058,21 @@
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Outlet Node Name" Access="HIDDEN"/>
   </POLICY>  
+  <POLICY IddObjectType="OS_ZoneHVAC_EnergyRecoveryVentilator">
+    <rule IddField="Heat Exchanger Name" Access="LOCKED"/>
+    <rule IddField="Supply Air Fan Name" Access="LOCKED"/>
+    <rule IddField="Exhaust Air Fan Name" Access="LOCKED"/>
+    <rule IddField="Controller Name" Access="LOCKED"/>
+    <rule IddField="Availability Manager List Name" Access="HIDDEN"/>
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>  
+  <POLICY IddObjectType="OS_ZoneHVAC_EnergyRecoveryVentilator_Controller">
+    <rule IddField="Electronic Enthalpy Limit Curve Name" Access="LOCKED"/>
+  </POLICY>  
   <POLICY IddObjectType="OS_SolarCollectorPerformance_FlatPlate">
   </POLICY>  
-    <POLICY IddObjectType="OS_SolarCollectorPerformance_IntegralCollectorStorage">
+  <POLICY IddObjectType="OS_SolarCollectorPerformance_IntegralCollectorStorage">
     <rule IddField="ICS Collector Type" Access="LOCKED"/>
   </POLICY>  
   <POLICY IddObjectType="OS_SolarCollectorPerformance_PhotovoltaicThermal_Simple">
