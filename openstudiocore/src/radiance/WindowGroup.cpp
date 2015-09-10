@@ -114,37 +114,32 @@ namespace radiance{
     return m_shadingControl;
   }
 
-  boost::optional<std::string> WindowGroup::shadedBSDF() const
+  std::string WindowGroup::interiorShadeBSDF() const
   {
-    boost::optional<std::string> result;
+    std::string result = "air.xml";
     if (m_shadingControl){
-      boost::optional<model::Construction> shadedConstruction = m_shadingControl->construction();
-      boost::optional<model::ShadingMaterial> shadingMaterial;
 
-      if (shadedConstruction){
-        for (auto layer : shadedConstruction->layers()){
-          if (layer.optionalCast<model::ShadingMaterial>()){
-            shadingMaterial = layer.cast<model::ShadingMaterial>();
-          }
-        }
-      } else {
-        shadingMaterial = m_shadingControl->shadingMaterial();
-      }
-
-      if (shadingMaterial){
-        if (shadingMaterial->optionalCast<model::Blind>()){
-          result = "blinds.xml";
-        } else if (shadingMaterial->optionalCast<model::DaylightRedirectionDevice>()){
-          result = "1xliloX.xml";
-        } else if (shadingMaterial->optionalCast<model::Screen>()){
-          result = "05_shadecloth_light.xml";
-        } else if (shadingMaterial->optionalCast<model::Shade>()){
-          result = "05_shadecloth_light.xml";
-        } else {
-          LOG(Warn, "Unknown ShadingMaterial '" << shadingMaterial->name().get() << "' found for ShadingControl '" << m_shadingControl->name().get() << "'");
-        }
-      } else {
-        LOG(Warn, "No ShadingMaterial found for ShadingControl '" << m_shadingControl->name().get() << "'");
+      std::string shadingType = m_shadingControl->shadingType();
+      if (istringEqual("InteriorShade", shadingType)){
+        result = "05_shadecloth_light.xml";
+      } else if (istringEqual("ExteriorShade", shadingType)){
+        // shouldn't get here but use air if we do
+      } else if (istringEqual("ExteriorScreen", shadingType)){
+        // shouldn't get here but use air if we do
+      } else if (istringEqual("InteriorBlind", shadingType)){
+        result = "blinds.xml";
+      } else if (istringEqual("ExteriorBlind", shadingType)){
+        // shouldn't get here but use air if we do
+      } else if (istringEqual("BetweenGlassShade", shadingType)){
+        // shouldn't get here but use air if we do
+      } else if (istringEqual("BetweenGlassBlind", shadingType)){
+        // shouldn't get here but use air if we do
+      } else if (istringEqual("SwitchableGlazing", shadingType)){
+        // shouldn't get here but use air if we do
+      } else if (istringEqual("InteriorDaylightRedirectionDevice", shadingType)){
+        result = "1xliloX.xml";
+      }else{
+        LOG(Warn, "Unknown shadingType '" << shadingType << "' found for ShadingControl '" << m_shadingControl->name().get() << "'");
       }
 
     }

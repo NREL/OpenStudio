@@ -173,9 +173,9 @@ namespace radiance {
       for (openstudio::model::DaylightingControl daylightingControl : space.daylightingControls()){
         if (daylightingControl.isPrimaryDaylightingControl()){
           // ok
-        }else if (daylightingControl.isSecondaryDaylightingControl()){
+        } else if (daylightingControl.isSecondaryDaylightingControl()){
           // ok
-        }else{
+        } else{
           LOG(Warn, "DaylightingControl " << daylightingControl.name().get() << \
             " is not associated with this Space's ThermalZone, it will not be translated.");
           daylightingControl.remove();
@@ -196,6 +196,47 @@ namespace radiance {
       }
     }
 
+    // remove unsupported shading controls
+    for (auto& shadingControl : model.getConcreteModelObjects<openstudio::model::ShadingControl>()){
+      std::string shadingType = shadingControl.shadingType();
+      bool supported = false;
+      if (istringEqual("InteriorShade", shadingType)){
+        supported = true;
+      } else if (istringEqual("ExteriorShade", shadingType)){
+        supported = false;
+      } else if (istringEqual("ExteriorScreen", shadingType)){
+        supported = false;
+      } else if (istringEqual("InteriorBlind", shadingType)){
+        supported = true;
+      } else if (istringEqual("ExteriorBlind", shadingType)){
+        supported = false;
+      } else if (istringEqual("BetweenGlassShade", shadingType)){
+        supported = false;
+      } else if (istringEqual("BetweenGlassBlind", shadingType)){
+        supported = false;
+      } else if (istringEqual("SwitchableGlazing", shadingType)){
+        supported = false;
+      } else if (istringEqual("InteriorDaylightRedirectionDevice", shadingType)){
+        supported = true;
+      } else {
+        supported = false;
+        LOG(Warn, "Unknown shadingType '" << shadingType << "' found for ShadingControl '" << shadingControl.name().get() << "'");
+      }
+
+      if (!supported){
+        LOG(Warn, "Removing ShadingControl '" << shadingControl.name().get() << "' with unsupported shadingType '" << shadingType << "'");
+        shadingControl.remove();
+        continue;
+      }
+
+      std::string shadingControlType = shadingControl.shadingControlType();
+      if (istringEqual("AlwaysOff", shadingControlType)){
+        LOG(Info, "Removing ShadingControl '" << shadingControl.name().get() << "' with shadingControlType '" << shadingControlType << "'");
+        continue;
+      }
+    }
+
+
     if (numSpacesToSimulate == 0){
       LOG(Error, "Model does not contain any Radiance daylighting objects.");
       return outfiles;
@@ -205,6 +246,10 @@ namespace radiance {
     try{
 
       LOG(Debug, "Working Directory: " + openstudio::toString(outPath));
+
+      if (boost::filesystem::exists(outPath)){
+        boost::filesystem::remove(outPath);
+      }
 
       boost::filesystem::create_directories(outPath);
 
@@ -999,6 +1044,7 @@ namespace radiance {
   {
     std::vector<std::string> space_names;
 
+
     for (const auto & space : t_spaces)
     {
       std::string space_name = cleanName(space.name().get());
@@ -1450,10 +1496,7 @@ namespace radiance {
 
               // add the shade
 
-              shadeBSDF = "blinds.xml";
-              if (boost::optional<std::string> temp = windowGroup.shadedBSDF()){
-                shadeBSDF = *temp;
-              }
+              shadeBSDF = windowGroup.interiorShadeBSDF();
 
               rMaterial = "BSDF";
               matString = "6\n0 bsdf/" + shadeBSDF + " 0 0 1 .\n0\n0\n";
@@ -1507,7 +1550,7 @@ namespace radiance {
                 QFile inFile(toQString(":/resources/" + shadeBSDF));
                 if (inFile.open(QFile::ReadOnly)){
                   QTextStream docIn(&inFile);
-                  QString defaultFile = docIn.readAll();
+                  defaultFile = docIn.readAll();
                   inFile.close();
                 }
 

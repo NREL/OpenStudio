@@ -61,7 +61,7 @@ namespace radiance{
 
       boost::optional<model::ShadingControl> shadingControl() const;
 
-      boost::optional<std::string> shadedBSDF() const;
+      std::string interiorShadeBSDF() const;
 
       void addWindowPolygon(const openstudio::Point3dVector& windowPolygon);
 
