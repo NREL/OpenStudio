@@ -1611,7 +1611,7 @@ namespace radiance {
                 formatString((control.outwardNormal->z() * -1), 2) + "," + \
                 windowGroup.shadingControlType() + "," + \
                 windowGroup.shadingControlSetpoint() + "," + \
-                "air.xml, " + shadeBSDF + "\n");
+                "air.xml," + shadeBSDF + "\n");
             }
 
 //            if (rMaterial == "glass"){

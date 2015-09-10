@@ -2,7 +2,7 @@
   <schema_version>3.0</schema_version>
   <name>radiance_measure</name>
   <uid>1e3cfef8-b051-4e60-8bb0-ed2d29d4f45d</uid>
-  <version_id>9b44cc44-ca92-48fe-af7a-97d87cf7560a</version_id>
+  <version_id>a358c216-36ea-4919-a168-6e65bb592ca5</version_id>
   <xml_checksum>381B7733</xml_checksum>
   <class_name>RadianceMeasure</class_name>
   <display_name>Radiance Daylighting Measure</display_name>
@@ -135,12 +135,6 @@
       <checksum>13FF1228</checksum>
     </file>
     <file>
-      <filename>radiance_measure_test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>8780E96D</checksum>
-    </file>
-    <file>
       <version>
         <software_program>OpenStudio</software_program>
         <identifier>1.7.0</identifier>
@@ -149,7 +143,13 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>EAB3D798</checksum>
+      <checksum>13DACC00</checksum>
+    </file>
+    <file>
+      <filename>radiance_measure_test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>B733760A</checksum>
     </file>
   </files>
 </measure>
