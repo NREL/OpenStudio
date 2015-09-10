@@ -25,13 +25,14 @@
 namespace openstudio {
 namespace model {
 
+class Curve;
+
 namespace detail {
 
   class MODEL_API EvaporativeCoolerDirectResearchSpecial_Impl : public StraightComponent_Impl {
     Q_OBJECT;
 
     Q_PROPERTY(double coolerEffectiveness READ coolerEffectiveness WRITE setCoolerEffectiveness);
-    Q_PROPERTY(double recirculatingWaterPumpPowerConsumption READ recirculatingWaterPumpPowerConsumption WRITE setRecirculatingWaterPumpPowerConsumption);
     Q_PROPERTY(double driftLossFraction READ driftLossFraction WRITE setDriftLossFraction);
     Q_PROPERTY(double blowdownConcentrationRatio READ blowdownConcentrationRatio WRITE setBlowdownConcentrationRatio);
 
@@ -58,19 +59,19 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual std::vector<openstudio::IdfObject> remove();
+    virtual std::vector<openstudio::IdfObject> remove() override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned inletPort();
+    virtual unsigned inletPort() override;
 
-    virtual unsigned outletPort();
+    virtual unsigned outletPort() override;
 
-    virtual bool addToNode(Node & node);
+    virtual bool addToNode(Node & node) override;
 
     //@}
     /** @name Getters and Setters */
@@ -84,9 +85,13 @@ namespace detail {
 
     void setCoolerEffectiveness( double value );
 
-    double recirculatingWaterPumpPowerConsumption() const;
+    boost::optional<double> recirculatingWaterPumpPowerConsumption() const;
 
     void setRecirculatingWaterPumpPowerConsumption( double value );
+
+    void autosizeRecirculatingWaterPumpPowerConsumption();
+
+    bool isRecirculatingWaterPumpPowerConsumptionAutosized() const;
 
     boost::optional<Node> sensorNode() const;
 
@@ -99,6 +104,22 @@ namespace detail {
     double blowdownConcentrationRatio() const;
 
     void setBlowdownConcentrationRatio( double value );
+
+    boost::optional<Curve> effectivenessFlowRatioModifierCurve() const;
+
+    bool setEffectivenessFlowRatioModifierCurve(const Curve& curve);
+
+    void resetEffectivenessFlowRatioModifierCurve();
+
+    double waterPumpPowerSizingFactor() const;
+
+    void setWaterPumpPowerSizingFactor(double waterPumpPowerSizingFactor);
+
+    boost::optional<Curve> waterPumpPowerModifierCurve() const;
+
+    bool setWaterPumpPowerModifierCurve(const Curve& curve);
+
+    void resetWaterPumpPowerModifierCurve();
 
    private:
 

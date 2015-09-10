@@ -22,6 +22,7 @@
 #include "ResultsWebEngineView.hpp"
 #else
 #include "ResultsWebView.hpp"
+#include <QWebInspector>
 #endif
 
 #include "OSDocument.hpp"
@@ -51,10 +52,10 @@
 namespace openstudio {
 
 ResultsTabView::ResultsTabView(const QString & tabLabel,
-                               bool hasSubTab,
-                               QWidget * parent)
-                               : MainTabView(tabLabel,hasSubTab,parent),
-                                 m_resultsView(new ResultsView())
+  TabType tabType,
+  QWidget * parent)
+  : MainTabView(tabLabel, tabType, parent),
+  m_resultsView(new ResultsView())
 {
   addTabWidget(m_resultsView);
   m_resultsView->setAutoFillBackground(false);
@@ -89,12 +90,12 @@ ResultsView::ResultsView(QWidget *t_parent)
     m_openResultsViewerBtn(new QPushButton("Open ResultsViewer\nfor Detailed Reports"))
 {
 
-  QVBoxLayout * mainLayout = new QVBoxLayout;
+  auto mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
 
   connect(m_openResultsViewerBtn, &QPushButton::clicked, this, &ResultsView::openResultsViewerClicked);
   
-  QHBoxLayout * hLayout = new QHBoxLayout(this);
+  auto hLayout = new QHBoxLayout(this);
   mainLayout->addLayout(hLayout);
 
   m_reportLabel = new QLabel("Reports: ",this);
@@ -111,9 +112,18 @@ ResultsView::ResultsView(QWidget *t_parent)
   hLayout->addWidget(m_openResultsViewerBtn, 0, Qt::AlignVCenter);
 
   m_view = new ResultsWebView(this);
-  m_view->setContextMenuPolicy(Qt::NoContextMenu);
   m_view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   mainLayout->addWidget(m_view, 0, Qt::AlignTop);
+
+  #if _DEBUG || (__GNUC__ && !NDEBUG)
+    #if QT_VERSION >= 0x050400
+      // QWebEngine debug stuff
+    #else
+      m_view->page()->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+    #endif
+  #else
+    m_view->setContextMenuPolicy(Qt::NoContextMenu);
+  #endif
 }
 
 ResultsView::~ResultsView()
@@ -335,7 +345,7 @@ void ResultsView::populateComboBox(std::vector<openstudio::path> reports)
   if(m_comboBox->count()){
     m_comboBox->setCurrentIndex(0);
     for (int i = 0; i < m_comboBox->count(); ++i){
-      if (m_comboBox->itemText(i) == QString("Results | OpenStudio")){
+      if (m_comboBox->itemText(i) == QString("OpenStudio Results")){
         m_comboBox->setCurrentIndex(i);
         break;
       }
@@ -358,6 +368,11 @@ ResultsWebView::ResultsWebView(QWidget * parent) :
   QWebView(parent)
 #endif
 {
+  #if QT_VERSION >= 0x050400
+      // QWebEngine local storage
+  #else
+    this->page()->settings()->setAttribute(QWebSettings::LocalStorageEnabled, true);
+  #endif
 }
 
 QSize ResultsWebView::sizeHint() const

@@ -256,7 +256,7 @@ module OpenStudio
       
       if error
         msg  = "An error occurred in the OpenStudio SketchUp plug-in.\n\n"
-        msg += "It advised that you save a backup of your current OpenStudio model and restart SketchUp."
+        msg += "It is advised that you save a backup of your current OpenStudio model and restart SketchUp."
         UI.messagebox(msg)
       end
 
@@ -432,7 +432,7 @@ module OpenStudio
     end
 
     def energyplus_version
-      return('8.2.0')
+      return('8.3.0')
     end
     
     def minimal_template_path

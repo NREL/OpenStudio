@@ -71,13 +71,13 @@ OptionalModelObject ReverseTranslator::translateEvaporativeCoolerDirectResearchS
       mo->setName(s.get());
     }
 
-    boost::optional<double> value = workspaceObject.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::CoolerEffectiveness);
+    boost::optional<double> value = workspaceObject.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::CoolerDesignEffectiveness);
     if( s )
     {
       mo->setCoolerEffectiveness(value.get());
     }
 
-    value = workspaceObject.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpPowerConsumption);
+    value = workspaceObject.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpDesignPower);
     if( value )
     {
       mo->setRecirculatingWaterPumpPowerConsumption(value.get());

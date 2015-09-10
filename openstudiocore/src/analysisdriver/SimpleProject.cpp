@@ -1289,12 +1289,20 @@ namespace detail {
     BCLMeasure replaceModelMeasure = insertMeasure(*it);
     RubyMeasure swapModel(replaceModelMeasure,false); // false so not used in algorithms
     swapModel.setName("Alternate Model: " + toString(newPath.filename()));
-    // hard-code argument since can't get arguments from library
+    swapModel.setDisplayName("Alternate Model: " + toString(newPath.filename()));
+    // hard-code arguments since can't get arguments from library
+    OSArgumentVector args;
     OSArgument arg = OSArgument::makePathArgument("alternativeModelPath",true,"osm");
     arg.setDisplayName("Alternative Model Path");
     arg.setValue(newPath);
-    swapModel.setArgument(arg);
+    args.push_back(arg);
+    arg = OSArgument::makeStringArgument("measures_json", true);
+    arg.setDisplayName("Alternative Measures");
+    arg.setValue("[]");
+    args.push_back(arg);
+    swapModel.setArguments(args);
     amvar.push(swapModel);
+
     int pIndex = amvar.numMeasures(false) - 1;
 
     // add data point
@@ -1341,6 +1349,7 @@ namespace detail {
     bool ok = analysis.addDataPoint(dataPoint.get());
     OS_ASSERT(ok);
     dataPoint->setName(swapModel.name());
+    dataPoint->setDisplayName(swapModel.displayName());
     dataPoint->setDescription("Replace baseline model with '" + toString(newPath) + "'.");
 
     return true;

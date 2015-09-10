@@ -81,25 +81,25 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
   /** @name Virtual Methods */
   //@{
 
-  virtual ModelObject clone(Model model) const;
+  virtual ModelObject clone(Model model) const override;
 
-  virtual std::vector<ModelObject> children() const;
+  virtual std::vector<ModelObject> children() const override;
 
-  virtual IddObjectType iddObjectType() const;
+  virtual IddObjectType iddObjectType() const override;
 
-  virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+  virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-  virtual const std::vector<std::string> & outputVariableNames() const;
+  virtual const std::vector<std::string> & outputVariableNames() const override;
 
-  virtual bool addToNode(Node & node);
+  virtual bool addToNode(Node & node) override;
 
-  virtual unsigned supplyInletPort();
+  virtual unsigned supplyInletPort() override;
 
-  virtual unsigned supplyOutletPort();
+  virtual unsigned supplyOutletPort() override;
 
-  virtual unsigned demandInletPort();
+  virtual unsigned demandInletPort() override;
 
-  virtual unsigned demandOutletPort();
+  virtual unsigned demandOutletPort() override;
 
   //@}
   boost::optional<double> referenceCapacity() const;

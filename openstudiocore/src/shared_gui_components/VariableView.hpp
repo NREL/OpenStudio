@@ -41,11 +41,17 @@ class NewGroupDropZone;
 class NewGroupView;
 class VariableGroupContentView;
 class MeasureDropZone;
+class VariableHeaderView;
+class VariableContentView;
+class MeasureDropZone;
+class MeasureItemButton;
 
 } // measuretab
 
 namespace measuretab {
 
+// NewGroupView allows the user to add a new Variable (either for a MeasureGroup or a single fixed Measure)
+// NewGroupView is instantiated underneath a VariableGroupContentView
 class NewGroupView : public QWidget
 {
   Q_OBJECT
@@ -59,6 +65,7 @@ class NewGroupView : public QWidget
   NewGroupDropZone * dropZone;
 };
 
+// RectangularDropZone styles a rectangular drop zone
 class RectangularDropZone : public QWidget
 {
   Q_OBJECT
@@ -79,17 +86,18 @@ class RectangularDropZone : public QWidget
 
   protected:
 
-  void paintEvent(QPaintEvent *);
+  void paintEvent(QPaintEvent *) override;
 
-  void dropEvent(QDropEvent * event);
+  void dropEvent(QDropEvent * event) override;
 
-  void dragEnterEvent(QDragEnterEvent * event);
+  void dragEnterEvent(QDragEnterEvent * event) override;
 
   private:
 
   QString m_acceptedMimeType;
 };
 
+// Accepts drop of a measure and emits signal which is connected by VariableGroupItemDelegate
 class NewGroupDropZone : public RectangularDropZone
 {
   Q_OBJECT
@@ -101,13 +109,15 @@ class NewGroupDropZone : public RectangularDropZone
   virtual ~NewGroupDropZone() {}
 };
 
+// VariableGroupItemView displays a VariableGroupItem, e.g. all the Model or EnergyPlus MeasureGroups/Fixed Measures
+// It is configured by the VariableGroupItemDelegate
 class VariableGroupItemView : public OSCollapsibleView
 {
   Q_OBJECT
 
   public:
 
-  VariableGroupItemView(bool t_fixedMeasuresOnly, MeasureType measureType);
+  VariableGroupItemView(bool t_fixed, MeasureType measureType);
 
   virtual ~VariableGroupItemView() {}
 
@@ -130,6 +140,26 @@ class VariableGroupContentView : public QWidget
   NewGroupView * newFixedGroupView;
 
   OSListView * variableListView;
+};
+
+// VariableItemView displays a VariableItem (either a MeasureGroup or a fixed Measure)
+// It is configured by the VariableItemDelegate
+class VariableItemView : public OSCollapsibleView
+{
+  Q_OBJECT
+
+public:
+
+  VariableItemView(bool t_fixed);
+
+  virtual ~VariableItemView() {}
+
+  VariableHeaderView * variableHeaderView;
+
+  VariableContentView * variableContentView;
+
+protected:
+  void paintEvent(QPaintEvent *);
 };
 
 class VariableHeaderView : public OSHeader
@@ -173,25 +203,31 @@ class VariableContentView : public QWidget
 
   protected:
 
-  void paintEvent(QPaintEvent *);
+  void paintEvent(QPaintEvent *) override;
 };
 
-class VariableItemView : public OSCollapsibleView
+// MeasureItemView displays a MeasureItem (individual measure)
+// It is configured by MeasureItemDelegate
+class MeasureItemView : public QWidget
 {
   Q_OBJECT
 
-  public:
+public:
 
-  VariableItemView(bool t_fixed);
+  MeasureItemView(bool t_fixed);
 
-  virtual ~VariableItemView() {}
+  virtual ~MeasureItemView() {}
 
-  VariableHeaderView * variableHeaderView;
+  MeasureItemButton * measureItemButton;
 
-  VariableContentView * variableContentView;
+  QPushButton * duplicateButton;
 
-  protected:
-  void paintEvent(QPaintEvent *);
+  QPushButton * removeButton;
+
+protected:
+
+  void paintEvent(QPaintEvent *) override;
+
 };
 
 class MeasureDropZone : public RectangularDropZone
@@ -225,29 +261,9 @@ class MeasureItemButton : public QAbstractButton
 
   protected:
 
-  void paintEvent(QPaintEvent * e);
+  void paintEvent(QPaintEvent * e) override;
 };
 
-class MeasureItemView : public QWidget
-{
-  Q_OBJECT
-
- public:
-
-  MeasureItemView(bool t_fixed);
-
-  virtual ~MeasureItemView() {}
-
-  MeasureItemButton * measureItemButton;
-
-  QPushButton * duplicateButton;
-
-  QPushButton * removeButton;
-
- protected:
-
-  void paintEvent(QPaintEvent *);
-};
 
 } // measuretab
 

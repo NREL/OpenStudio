@@ -57,17 +57,21 @@ namespace detail {
 
     virtual ~Loop_Impl() {}
 
-    virtual Node supplyInletNode() const;
+    virtual Node supplyInletNode() const = 0;
 
-    virtual Node supplyOutletNode() const;
+    virtual Node supplyOutletNode() const = 0;
 
-    virtual Node demandInletNode() const;
+    virtual std::vector<Node> supplyOutletNodes() const = 0;
 
-    virtual Node demandOutletNode() const;
+    virtual Node demandInletNode() const = 0;
 
-    virtual std::vector<ModelObject> children() const;
+    virtual std::vector<Node> demandInletNodes() const = 0;
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual Node demandOutletNode() const = 0;
+
+    virtual std::vector<ModelObject> children() const override;
+
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual std::vector<ModelObject> supplyComponents( HVACComponent inletComp,
                                                        HVACComponent outletComp,
@@ -103,9 +107,9 @@ namespace detail {
                                                       openstudio::IddObjectType type
                                                       ) const;
 
-    virtual std::vector<openstudio::IdfObject> remove();
+    virtual std::vector<openstudio::IdfObject> remove() override;
 
-    virtual ModelObject clone(Model model) const;
+    virtual ModelObject clone(Model model) const override;
 
     virtual Splitter demandSplitter() = 0;
 

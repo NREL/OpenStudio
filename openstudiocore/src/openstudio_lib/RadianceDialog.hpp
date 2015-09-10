@@ -34,19 +34,19 @@ public:
 
   RadianceDialog(bool isIP, 
                  QWidget * radianceInspector,
-                 QWidget * parent = 0);
+                 QWidget * parent = nullptr);
 
   virtual ~RadianceDialog() {}
 
 private:
 
-  virtual void createLayout();
+  virtual void createLayout() override;
 
   QWidget * m_radianceInspector;
 
 protected slots:
 
-  void toggleUnits(bool displayIP);
+  void toggleUnits(bool displayIP) override;
 
 };
 

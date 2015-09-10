@@ -54,28 +54,28 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
 
   static OSAppBase * instance();
 
-  virtual boost::optional<openstudio::analysisdriver::SimpleProject> project();
-  virtual QWidget *mainWidget();
-  virtual MeasureManager &measureManager();
-  virtual boost::optional<openstudio::model::Model> currentModel();
-  virtual boost::optional<openstudio::Workspace> currentWorkspace();
-  virtual void updateSelectedMeasureState();
-  virtual void addMeasure();
-  virtual void duplicateSelectedMeasure();
-  virtual void updateMyMeasures();
-  virtual void updateBCLMeasures();
-  virtual void downloadUpdatedBCLMeasures();
-  virtual void openBclDlg();
-  virtual void chooseHorizontalEditTab();
-  virtual QSharedPointer<openstudio::EditController> editController();
+  virtual boost::optional<openstudio::analysisdriver::SimpleProject> project() override;
+  virtual QWidget *mainWidget() override;
+  virtual MeasureManager &measureManager() override;
+  virtual boost::optional<openstudio::model::Model> currentModel() override;
+  virtual boost::optional<openstudio::Workspace> currentWorkspace() override;
+  virtual void updateSelectedMeasureState() override;
+  virtual void addMeasure() override;
+  virtual void duplicateSelectedMeasure() override;
+  virtual void updateMyMeasures() override;
+  virtual void updateBCLMeasures() override;
+  virtual void downloadUpdatedBCLMeasures() override;
+  virtual void openBclDlg() override;
+  virtual void chooseHorizontalEditTab() override;
+  virtual QSharedPointer<openstudio::EditController> editController() override;
   boost::shared_ptr<WaitDialog> waitDialog() {return m_waitDialog;}
-  virtual bool notify(QObject * receiver, QEvent * e);
+  virtual bool notify(QObject * receiver, QEvent * e) override;
 
   protected:
 
-  virtual bool event(QEvent * e);
+  virtual bool event(QEvent * e) override;
 
-  virtual void childEvent(QChildEvent * e);
+  virtual void childEvent(QChildEvent * e) override;
 
   private:
 

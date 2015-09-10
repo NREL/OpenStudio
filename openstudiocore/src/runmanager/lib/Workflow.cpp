@@ -25,6 +25,7 @@
 
 #include "../../utilities/core/PathHelpers.hpp"
 #include "../../utilities/core/ApplicationPathHelpers.hpp"
+#include "../../utilities/bcl/BCLMeasure.hpp"
 
 namespace openstudio {
 namespace runmanager {
@@ -755,21 +756,10 @@ namespace runmanager {
   WorkItem Workflow::radianceDaylightCalculations(const openstudio::path &t_rubyIncludePath,
       const openstudio::path &t_radiancePath)
   {
+    LOG(Warn, "Workflow::radianceDaylightCalculations is deprecated and will be removed in a future release.")
     Workflow wf;
 
-    RubyJobBuilder rjb;
-    rjb.setIncludeDir(t_rubyIncludePath);
-    rjb.addScriptArgument("in.osm");
-    rjb.addScriptArgument(openstudio::toString(t_radiancePath));
-    rjb.addInputFile(FileSelection::Last, FileSource::All, ".*\\.osm", "in.osm");
-    openstudio::path scriptsPath = openstudio::getOpenStudioRubyScriptsPath() / openstudio::toPath("openstudio/radiance/");
-    rjb.addRequiredFile(scriptsPath / openstudio::toPath("ModelToRad.rb"), openstudio::toPath("ModelToRad.rb"));
-    rjb.addRequiredFile(scriptsPath / openstudio::toPath("DaylightSim.rb"), openstudio::toPath("DaylightSim.rb"));
-    rjb.addRequiredFile(scriptsPath / openstudio::toPath("DaylightSim-Simple.rb"), openstudio::toPath("DaylightSim-Simple.rb"));
-    rjb.addRequiredFile(scriptsPath / openstudio::toPath("MakeSchedules.rb"), openstudio::toPath("MakeSchedules.rb"));
-    rjb.addRequiredFile(scriptsPath / openstudio::toPath("DaylightMetrics.rb"), openstudio::toPath("DaylightMetrics.rb"));
-    rjb.copyRequiredFiles("osm", "osm", "in.epw");
-    rjb.setScriptFile(scriptsPath / openstudio::toPath("DaylightCalculations.rb"));
+    RubyJobBuilder rjb(BCLMeasure::radianceMeasure());
     rjb.addToWorkflow(wf);
 
     return wf.toWorkItems()[0];

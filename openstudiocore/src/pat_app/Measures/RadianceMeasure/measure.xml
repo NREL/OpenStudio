@@ -1,0 +1,155 @@
+<measure>
+  <schema_version>3.0</schema_version>
+  <name>radiance_measure</name>
+  <uid>1e3cfef8-b051-4e60-8bb0-ed2d29d4f45d</uid>
+  <version_id>9b44cc44-ca92-48fe-af7a-97d87cf7560a</version_id>
+  <xml_checksum>381B7733</xml_checksum>
+  <class_name>RadianceMeasure</class_name>
+  <display_name>Radiance Daylighting Measure</display_name>
+  <description>This measure uses Radiance instead of EnergyPlus for daylighting calculations with OpenStudio.</description>
+  <modeler_description>The OpenStudio model is converted to Radiance format. All spaces containing daylighting objects (illuminance map, daylighting control point, and optionally glare sensors) will have annual illuminance calculated using Radiance, and the OS mole's lighting schedules can be overwritten with those based on daylight responsive lighting controls.</modeler_description>
+  <arguments>
+    <argument>
+      <name>apply_schedules</name>
+      <display_name>Apply schedules</display_name>
+      <description>Replace lighting and shading control schedules with schedules computed by Radiance</description>
+      <type>Choice</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>Yes</default_value>
+      <choices>
+        <choice>
+          <value>Yes</value>
+          <display_name>Yes</display_name>
+        </choice>
+        <choice>
+          <value>No</value>
+          <display_name>No</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>write_sql</name>
+      <display_name>Write Radiance SqlFile</display_name>
+      <description>Write Radiance results to a SqlFile format</description>
+      <type>Choice</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>Yes</default_value>
+      <choices>
+        <choice>
+          <value>Yes</value>
+          <display_name>Yes</display_name>
+        </choice>
+        <choice>
+          <value>No</value>
+          <display_name>No</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>use_cores</name>
+      <display_name>Cores</display_name>
+      <description>Number of CPU cores to use for Radiance jobs. Default is to use all but one core</description>
+      <type>Choice</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>Default</default_value>
+      <choices>
+        <choice>
+          <value>Default</value>
+          <display_name>Default</display_name>
+        </choice>
+        <choice>
+          <value>Min</value>
+          <display_name>Min</display_name>
+        </choice>
+        <choice>
+          <value>Max</value>
+          <display_name>Max</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>rad_settings</name>
+      <display_name>Radiance Settings</display_name>
+      <description>Radiance simulation parameters. Default is to get these from the model; the Testing option is for testing the Radiance workflow only, as it uses very crude parameters for a fast simulation but very inaccurate results.</description>
+      <type>Choice</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>Model</default_value>
+      <choices>
+        <choice>
+          <value>Model</value>
+          <display_name>Model</display_name>
+        </choice>
+        <choice>
+          <value>Testing</value>
+          <display_name>Testing</display_name>
+        </choice>
+      </choices>
+    </argument>
+  </arguments>
+  <provenances/>
+  <tags>
+    <tag>Electric Lighting.Electric Lighting Controls</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ModelMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Intended Software Tool</name>
+      <value>Apply Measure Now</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Intended Software Tool</name>
+      <value>OpenStudio Application</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Intended Software Tool</name>
+      <value>Parametric Analysis Tool</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Intended Software Tool</name>
+      <value>Analysis Spreadsheet</value>
+      <datatype>string</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <filename>USA_CO_Golden-NREL.724666_TMY3.epw</filename>
+      <filetype>epw</filetype>
+      <usage_type>test</usage_type>
+      <checksum>BDF687C1</checksum>
+    </file>
+    <file>
+      <filename>test_model.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>13FF1228</checksum>
+    </file>
+    <file>
+      <filename>radiance_measure_test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>8780E96D</checksum>
+    </file>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>1.7.0</identifier>
+        <min_compatible>1.7.0</min_compatible>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>EAB3D798</checksum>
+    </file>
+  </files>
+</measure>

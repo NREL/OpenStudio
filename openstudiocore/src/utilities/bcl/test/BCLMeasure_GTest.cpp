@@ -143,12 +143,13 @@ TEST_F(BCLFixture, BCLMeasure_CTor)
 TEST_F(BCLFixture, PatApplicationMeasures)
 {
   std::vector<BCLMeasure> patApplicationMeasures = BCLMeasure::patApplicationMeasures();
-  ASSERT_EQ(4u, patApplicationMeasures.size());
+  ASSERT_EQ(5u, patApplicationMeasures.size());
 
   bool filesUpdated;
   bool xmlUpdated;
 
   BCLMeasure alternativeModelMeasure = BCLMeasure::alternativeModelMeasure();
+  ASSERT_TRUE(alternativeModelMeasure.primaryRubyScriptPath());
   filesUpdated = alternativeModelMeasure.checkForUpdatesFiles();
   ASSERT_FALSE(filesUpdated); // DLM: comment out to update built in PAT measures
   xmlUpdated = alternativeModelMeasure.checkForUpdatesXML();
@@ -158,6 +159,7 @@ TEST_F(BCLFixture, PatApplicationMeasures)
   }
 
   BCLMeasure reportRequestMeasure = BCLMeasure::reportRequestMeasure();
+  ASSERT_TRUE(reportRequestMeasure.primaryRubyScriptPath());
   filesUpdated = reportRequestMeasure.checkForUpdatesFiles();
   ASSERT_FALSE(filesUpdated); // DLM: comment out to update built in PAT measures
   xmlUpdated = reportRequestMeasure.checkForUpdatesXML();
@@ -167,6 +169,7 @@ TEST_F(BCLFixture, PatApplicationMeasures)
   }
 
   BCLMeasure standardReportMeasure = BCLMeasure::standardReportMeasure();
+  ASSERT_TRUE(standardReportMeasure.primaryRubyScriptPath());
   filesUpdated = standardReportMeasure.checkForUpdatesFiles();
   ASSERT_FALSE(filesUpdated); // DLM: comment out to update built in PAT measures
   xmlUpdated = standardReportMeasure.checkForUpdatesXML();
@@ -176,12 +179,23 @@ TEST_F(BCLFixture, PatApplicationMeasures)
   }
 
   BCLMeasure calibrationReportMeasure = BCLMeasure::calibrationReportMeasure();
+  ASSERT_TRUE(calibrationReportMeasure.primaryRubyScriptPath());
   filesUpdated = calibrationReportMeasure.checkForUpdatesFiles();
   ASSERT_FALSE(filesUpdated); // DLM: comment out to update built in PAT measures
   xmlUpdated = calibrationReportMeasure.checkForUpdatesXML();
   ASSERT_FALSE(xmlUpdated); // DLM: comment out to update built in PAT measures
   if (filesUpdated || xmlUpdated){
     calibrationReportMeasure.save();
+  }
+
+  BCLMeasure radianceMeasure = BCLMeasure::radianceMeasure();
+  ASSERT_TRUE(radianceMeasure.primaryRubyScriptPath());
+  filesUpdated = radianceMeasure.checkForUpdatesFiles();
+  ASSERT_FALSE(filesUpdated); // DLM: comment out to update built in PAT measures
+  xmlUpdated = radianceMeasure.checkForUpdatesXML();
+  ASSERT_FALSE(xmlUpdated); // DLM: comment out to update built in PAT measures
+  if (filesUpdated || xmlUpdated){
+    radianceMeasure.save();
   }
 
 }

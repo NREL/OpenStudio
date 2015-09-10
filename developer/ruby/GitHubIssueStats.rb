@@ -2,10 +2,10 @@ require 'github_api'
 require 'date'
 require 'yaml'
 
-begin_date = Time.parse('2015-01-22' + 'T06:00:00Z')
+begin_date = Time.parse('2015-08-24' + 'T06:00:00Z')
 
 end_date = Time.now
-#end_date = Time.parse('2015-02-19' + 'T06:00:00Z')
+end_date = Time.parse('2015-09-03' + 'T006:00:00Z')
 
 repo_owner = 'NREL'
 repo = 'OpenStudio'
@@ -13,7 +13,8 @@ repo = 'OpenStudio'
 github = Github.new
 if File.exists?(Dir.home + '/github_config.yml')
   github_options = YAML.load_file(Dir.home + '/github_config.yml')
-  github = Github.new oauth_token: github_options[:oauth_token]
+  token = github_options['oauth_token']
+  github = Github.new oauth_token: token
 end
 
 totalOpenIssues = Array.new

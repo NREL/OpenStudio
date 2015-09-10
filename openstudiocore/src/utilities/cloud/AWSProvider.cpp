@@ -37,7 +37,7 @@
 #include <QProcess>
 #include <QSettings>
 #include <QString>
-#include <QTemporaryFile>
+#include <QTemporaryDir>
 #include <QTextStream>
 #include <QUrl>
 
@@ -541,10 +541,14 @@ namespace openstudio{
         LOG_AND_THROW("AWS script cannot be found.");
       }
 
-      m_privateKey.setAutoRemove(false);
+      m_workingDir.setAutoRemove(false);
+      if (!m_workingDir.isValid()) logError("Unable to create temporary directory.");
     }
 
     // DLM: we should deal with running processes in the AWSProvider_Impl destructor
+    AWSProvider_Impl::~AWSProvider_Impl() {
+      m_workingDir.remove();
+    }
 
     std::vector<std::string> AWSProvider_Impl::availableRegions() {
       static std::vector<std::string> regions;
@@ -1452,10 +1456,10 @@ namespace openstudio{
     QProcess *AWSProvider_Impl::makeCheckInternetProcess() const
     {
       auto p = new QProcess();
+      p->setWorkingDirectory(m_workingDir.path());
       connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &AWSProvider_Impl::onCheckInternetComplete);
       QStringList args;
       addProcessArguments(args);
-      args << QString("EC2");
       args << QString("describe_availability_zones");
 
       p->start(toQString(m_ruby), args);
@@ -1466,10 +1470,10 @@ namespace openstudio{
     QProcess *AWSProvider_Impl::makeCheckServiceProcess() const
     {
       auto p = new QProcess();
+      p->setWorkingDirectory(m_workingDir.path());
       connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &AWSProvider_Impl::onCheckServiceComplete);
       QStringList args;
       addProcessArguments(args);
-      args << QString("EC2");
       args << QString("describe_availability_zones");
 
       p->start(toQString(m_ruby), args);
@@ -1480,10 +1484,10 @@ namespace openstudio{
     QProcess *AWSProvider_Impl::makeCheckValidateProcess() const
     {
       auto p = new QProcess();
+      p->setWorkingDirectory(m_workingDir.path());
       connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &AWSProvider_Impl::onCheckValidateComplete);
       QStringList args;
       addProcessArguments(args);
-      args << QString("EC2");
       args << QString("describe_availability_zones");
 
       p->start(toQString(m_ruby), args);
@@ -1494,10 +1498,10 @@ namespace openstudio{
     QProcess *AWSProvider_Impl::makeCheckResourcesProcess() const
     {
       auto p = new QProcess();
+      p->setWorkingDirectory(m_workingDir.path());
       connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &AWSProvider_Impl::onCheckResourcesComplete);
       QStringList args;
       addProcessArguments(args);
-      args << QString("EC2");
       args << QString("total_instances");
 
       p->start(toQString(m_ruby), args);
@@ -1508,13 +1512,13 @@ namespace openstudio{
     QProcess *AWSProvider_Impl::makeStartServerProcess() const
     {
       auto p = new QProcess();
+      p->setWorkingDirectory(m_workingDir.path());
       connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &AWSProvider_Impl::onServerStarted);
 
       connect(p, static_cast<void (QProcess::*)(QProcess::ProcessError)>(&QProcess::error), this, &AWSProvider_Impl::onServerStartedError);
 
       QStringList args;
       addProcessArguments(args);
-      args << QString("EC2");
       args << QString("launch_server");
 
       QJsonObject options;
@@ -1530,26 +1534,19 @@ namespace openstudio{
     QProcess *AWSProvider_Impl::makeStartWorkerProcess() const
     {
       auto p = new QProcess();
+      p->setWorkingDirectory(m_workingDir.path());
       connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &AWSProvider_Impl::onWorkerStarted);
       QStringList args;
       addProcessArguments(args);
-      args << QString("EC2");
       args << QString("launch_workers");
 
       QJsonObject options;
       options["instance_type"] = QJsonValue(toQString(m_awsSettings.workerInstanceType()));
       options["num"] = QJsonValue(static_cast<int>(m_awsSettings.numWorkers()));
-      options["server_id"] = QJsonValue(toQString(m_awsSession.serverId()));
-      options["server_procs"] = QJsonValue(static_cast<int>(m_awsSession.numServerProcessors()));
-      options["timestamp"] = QJsonValue(toQString(m_awsSession.timestamp()));
-
-      if (m_privateKey.open()) {
-        m_privateKey.write(m_awsSession.privateKey().c_str());
-        options["private_key"] = QJsonValue(m_privateKey.fileName());
-        m_privateKey.close();
-      }
       options["openstudio_version"] = QJsonValue(toQString(openStudioVersion()));
       args << QString(QJsonDocument(options).toJson(QJsonDocument::Compact));
+
+      writeState();
 
       p->start(toQString(m_ruby), args);
 
@@ -1559,11 +1556,11 @@ namespace openstudio{
     QProcess *AWSProvider_Impl::makeCheckServerRunningProcess() const
     {
       auto p = new QProcess();
+      p->setWorkingDirectory(m_workingDir.path());
       connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
         this, &AWSProvider_Impl::onCheckServerRunningComplete);
       QStringList args;
       addProcessArguments(args);
-      args << QString("EC2");
       args << QString("instance_status");
 
       QJsonObject options;
@@ -1578,11 +1575,11 @@ namespace openstudio{
     QProcess *AWSProvider_Impl::makeCheckWorkerRunningProcess() const
     {
       auto p = new QProcess();
+      p->setWorkingDirectory(m_workingDir.path());
       connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
         this, &AWSProvider_Impl::onCheckWorkerRunningComplete);
       QStringList args;
       addProcessArguments(args);
-      args << QString("EC2");
       args << QString("instance_status");
 
       p->start(toQString(m_ruby), args);
@@ -1593,21 +1590,13 @@ namespace openstudio{
     QProcess *AWSProvider_Impl::makeStopInstancesProcess() const
     {
       auto p = new QProcess();
+      p->setWorkingDirectory(m_workingDir.path());
       connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &AWSProvider_Impl::onInstancesStopped);
       QStringList args;
       addProcessArguments(args);
-      args << QString("EC2");
       args << QString("terminate_session");
 
-      QJsonObject options;
-      QStringList workerIds;
-      for (const std::string& workerId : m_awsSession.workerIds()) {
-        workerIds.push_back(toQString(workerId));
-      }
-      options["server_id"] = QJsonValue(toQString(m_awsSession.serverId()));
-      options["worker_ids"] = QJsonValue::fromVariant(workerIds);
-
-      args << QString(QJsonDocument(options).toJson(QJsonDocument::Compact));
+      writeState();
 
       p->start(toQString(m_ruby), args);
 
@@ -1617,21 +1606,13 @@ namespace openstudio{
     QProcess *AWSProvider_Impl::makeCheckTerminateProcess() const
     {
       auto p = new QProcess();
+      p->setWorkingDirectory(m_workingDir.path());
       connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &AWSProvider_Impl::onCheckTerminatedComplete);
       QStringList args;
       addProcessArguments(args);
-      args << QString("EC2");
       args << QString("termination_status");
 
-      QJsonObject options;
-      QStringList workerIds;
-      for (const std::string& workerId : m_awsSession.workerIds()) {
-        workerIds.push_back(toQString(workerId));
-      }
-      options["server_id"] = QJsonValue(toQString(m_awsSession.serverId()));
-      options["worker_ids"] = QJsonValue::fromVariant(workerIds);
-
-      args << QString(QJsonDocument(options).toJson(QJsonDocument::Compact));
+      writeState();
 
       p->start(toQString(m_ruby), args);
 
@@ -1641,11 +1622,11 @@ namespace openstudio{
     QProcess *AWSProvider_Impl::makeCheckEstimatedChargesProcess() const
     {
       auto p = new QProcess();
+      p->setWorkingDirectory(m_workingDir.path());
       connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
         this, &AWSProvider_Impl::onCheckEstimatedChargesComplete);
       QStringList args;
       addProcessArguments(args);
-      args << QString("CloudWatch");
       args << QString("estimated_charges");
 
       p->start(toQString(m_ruby), args);
@@ -1656,11 +1637,11 @@ namespace openstudio{
     QProcess *AWSProvider_Impl::makeCheckTotalInstancesProcess() const
     {
       auto p = new QProcess();
+      p->setWorkingDirectory(m_workingDir.path());
       connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
         this, &AWSProvider_Impl::onCheckTotalInstancesComplete);
       QStringList args;
       addProcessArguments(args);
-      args << QString("EC2");
       args << QString("total_instances");
 
       p->start(toQString(m_ruby), args);
@@ -1749,10 +1730,22 @@ namespace openstudio{
       if (!err.error) {
         if (!json.object().contains("error")) {
           m_awsSession.setTimestamp(QString::number(json.object().value("timestamp").toInt()).toStdString());
-          m_awsSession.setPrivateKey(json.object()["private_key"].toString().toStdString());
           m_awsSession.setServerUrl(Url(json.object()["server"].toObject()["ip"].toString()));
           m_awsSession.setServerId(json.object()["server"].toObject()["id"].toString().toStdString());
           m_awsSession.setNumServerProcessors(json.object()["server"].toObject()["procs"].toInt());
+
+          // Read keys and add to json
+          auto jsonObject = json.object();
+          for (const auto &filename : QStringList{"ec2_server_key.pem", "ec2_worker_key.pem", "ec2_worker_key.pub"}) {
+            QFile file(m_workingDir.path() + "/" + filename);
+            if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+              logError("Unable to open " + file.fileName().toStdString());
+              return false;
+            }
+            jsonObject[filename] = QJsonValue(QString(file.readAll()));
+          }
+          json = QJsonDocument(jsonObject);
+          m_awsSession.setPrivateKey(QString(json.toJson(QJsonDocument::Compact)).toStdString());
 
           emit CloudProvider_Impl::serverStarted(Url(json.object()["server"].toObject()["ip"].toString()));
 
@@ -1769,7 +1762,6 @@ namespace openstudio{
 
     bool AWSProvider_Impl::parseWorkerStartedResults(const ProcessResults &t_results)
     {
-      m_privateKey.remove();
       if (t_results.output.isEmpty()) {
         logError("WorkerStarted process failed to return output");
         return false;
@@ -1788,6 +1780,19 @@ namespace openstudio{
             emit CloudProvider_Impl::workerStarted(Url(worker.toObject()["ip"].toString()));
           }
           m_awsSession.setNumWorkerProcessors(numWorkerProcessors);
+
+          // Read keys and add to json
+          auto jsonObject = json.object();
+          for (const auto &filename : QStringList{"ec2_server_key.pem", "ec2_worker_key.pem", "ec2_worker_key.pub"}) {
+            QFile file(m_workingDir.path() + "/" + filename);
+            if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+              logError("Unable to open " + file.fileName().toStdString());
+              return false;
+            }
+            jsonObject[filename] = QJsonValue(QString(file.readAll()));
+          }
+          json = QJsonDocument(jsonObject);
+          m_awsSession.setPrivateKey(QString(json.toJson(QJsonDocument::Compact)).toStdString());
 
           emit CloudProvider_Impl::allWorkersStarted();
 
@@ -2063,6 +2068,38 @@ namespace openstudio{
       m_lastTotalInstances = parseCheckTotalInstancesResults(handleProcessCompleted(m_checkTotalInstancesProcess));
       emit totalInstancesAvailable();
       m_checkTotalInstancesProcess = nullptr;
+    }
+
+    void AWSProvider_Impl::writeState() const {
+      // Write instance info file and keys
+      auto json = QJsonDocument::fromJson(toQString(m_awsSession.privateKey()).toUtf8());
+
+      auto jsonObject = json.object(); 
+      auto serverObject = jsonObject["server"].toObject();
+      serverObject["private_key_file_name"] = m_workingDir.path() + "/ec2_server_key.pem";
+      serverObject["worker_private_key_file_name"] = m_workingDir.path() + "/ec2_worker_key.pem";
+      jsonObject["server"] = serverObject;
+      auto workers = jsonObject["workers"].toArray();
+      for (auto i = 0; i < workers.size(); ++i) {
+        auto workerObject = workers[i].toObject();
+        workerObject["private_key_file_name"] = m_workingDir.path() + "/ec2_server_key.pem";
+        workers[i] = workerObject;
+      }
+      jsonObject["workers"] = workers;
+      json = QJsonDocument(jsonObject);
+
+      for (const auto &filename : QStringList{"state.json", "ec2_server_key.pem", "ec2_worker_key.pem", "ec2_worker_key.pub"}) {
+        QFile file(m_workingDir.path() + "/" + filename);
+        if (filename == "state.json") {
+          if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            file.write(json.toJson(QJsonDocument::Compact));
+          }
+        } else {
+          if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            file.write(json.object()[filename].toString().toStdString().c_str());
+          }
+        }
+      }
     }
 
     bool AWSProvider_Impl::userAgreementSigned() const {

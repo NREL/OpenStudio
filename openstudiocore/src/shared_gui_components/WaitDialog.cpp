@@ -53,7 +53,7 @@ QSize WaitDialog::sizeHint() const
 
 void WaitDialog::createWidgets()
 {
-  QLabel * label = 0;
+  QLabel * label = nullptr;
 
   upperLayout()->addStretch();
 

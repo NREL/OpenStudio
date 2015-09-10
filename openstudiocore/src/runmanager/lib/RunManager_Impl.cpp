@@ -806,7 +806,7 @@ namespace detail {
           didsomething = false;
 
           // Reconcile parent / child relationships and move jobs to a different list when they can be
-          for (std::list<std::pair<RunManagerDB::Job, Job> >::iterator itr = loadedjobs.begin();
+          for (auto itr = loadedjobs.begin();
                itr != loadedjobs.end();
                ++itr)
           {
@@ -890,7 +890,7 @@ namespace detail {
           {
             didsomething = false;
 
-            for (std::list<std::pair<RunManagerDB::JobParam, JobParam> >::iterator itr = loadedparams.begin();
+            for (auto itr = loadedparams.begin();
                 itr != loadedparams.end();
                 ++itr)
             {

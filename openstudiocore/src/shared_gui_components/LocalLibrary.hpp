@@ -27,9 +27,10 @@ namespace openstudio{
   struct LocalLibrary {
     enum LibrarySource
     {
-      BCL,
-      USER,
-      COMBINED
+      BCL,       // from the bcl
+      USER,      // from the user
+      COMBINED,  // from all sources
+      OS         // installed with openstudio
     };
   };
 

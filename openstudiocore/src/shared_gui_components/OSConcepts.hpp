@@ -386,13 +386,13 @@ class CheckBoxConceptImpl : public CheckBoxConcept
   virtual ~CheckBoxConceptImpl() {}
 
 
-  virtual bool get(const ConceptProxy & t_obj)
+  virtual bool get(const ConceptProxy & t_obj) override
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_getter(&obj);
   }
 
-  virtual void set(const ConceptProxy & t_obj, bool value)
+  virtual void set(const ConceptProxy & t_obj, bool value) override
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_setter(&obj, value);
@@ -406,6 +406,72 @@ class CheckBoxConceptImpl : public CheckBoxConcept
 
 
 ///////////////////////////////////////////////////////////////////////////////////
+
+
+class CheckBoxConceptBoolReturn : public BaseConcept
+{
+public:
+
+  CheckBoxConceptBoolReturn(const Heading &t_heading,
+    const std::string & t_tooltip)
+    : BaseConcept(t_heading),
+    m_tooltip(t_tooltip)
+  {
+  }
+
+  virtual ~CheckBoxConceptBoolReturn() {}
+
+
+  virtual bool get(const ConceptProxy & obj) = 0;
+  virtual bool set(const ConceptProxy & obj, bool) = 0;
+
+  const std::string & tooltip() { return m_tooltip; }
+
+private:
+
+  std::string m_tooltip;
+
+};
+
+template<typename DataSourceType>
+class CheckBoxConceptBoolReturnImpl : public CheckBoxConceptBoolReturn
+{
+public:
+
+  CheckBoxConceptBoolReturnImpl(const Heading &t_heading,
+    const std::string & t_tooltip,
+    std::function<bool(DataSourceType *)> t_getter,
+    std::function<bool(DataSourceType *, bool)> t_setter)
+    : CheckBoxConceptBoolReturn(t_heading, t_tooltip),
+    m_getter(t_getter),
+    m_setter(t_setter)
+  {
+  }
+
+  virtual ~CheckBoxConceptBoolReturnImpl() {}
+
+
+  virtual bool get(const ConceptProxy & t_obj)
+  {
+    DataSourceType obj = t_obj.cast<DataSourceType>();
+    return m_getter(&obj);
+  }
+
+  virtual bool set(const ConceptProxy & t_obj, bool value)
+  {
+    DataSourceType obj = t_obj.cast<DataSourceType>();
+    return m_setter(&obj, value);
+  }
+
+private:
+
+  std::function<bool(DataSourceType *)>  m_getter;
+  std::function<bool(DataSourceType *, bool)> m_setter;
+};
+
+
+///////////////////////////////////////////////////////////////////////////////////
+
 
 /** Concept of being able to get and set std::string choices. */
 class ChoiceConcept {
@@ -444,7 +510,7 @@ class RequiredChoiceConceptImpl : public ChoiceConcept {
 
   virtual ~RequiredChoiceConceptImpl() {}
 
-  virtual std::vector<std::string> choices() {
+  virtual std::vector<std::string> choices() override {
     m_choicesMap.clear();
     std::vector<std::string> result;
     std::vector<ChoiceType> typedChoices = m_choices();
@@ -458,7 +524,7 @@ class RequiredChoiceConceptImpl : public ChoiceConcept {
     return result;
   }
 
-  virtual std::string get() {
+  virtual std::string get() override {
     ChoiceType typedValue = m_getter();
     std::string result = m_toString(typedValue);
     if (!m_choicesMap.size()) {
@@ -469,7 +535,7 @@ class RequiredChoiceConceptImpl : public ChoiceConcept {
     return result;
   }
 
-  virtual bool set(std::string value) {
+  virtual bool set(std::string value) override {
     if (!m_choicesMap.size()) {
       // Oops, we forgot to update the choices
       this->choices();
@@ -479,13 +545,13 @@ class RequiredChoiceConceptImpl : public ChoiceConcept {
     return m_setter(valuePair->second);
   }
 
-  virtual void clear() {
+  virtual void clear() override {
     if (m_reset) {
       (*m_reset)();
     }
   }
 
-  virtual bool isDefaulted() {
+  virtual bool isDefaulted() override {
     if (m_isDefaulted) {
       return (*m_isDefaulted)();
     }
@@ -551,7 +617,7 @@ class OptionalChoiceConceptImpl : public ChoiceConcept {
 
   virtual ~OptionalChoiceConceptImpl() {}
 
-  virtual std::vector<std::string> choices() {
+  virtual std::vector<std::string> choices() override {
     m_choicesMap.clear();
     std::vector<std::string> result;
     // optional, so blank string is always a choice
@@ -567,7 +633,7 @@ class OptionalChoiceConceptImpl : public ChoiceConcept {
     return result;
   }
 
-  virtual std::string get() {
+  virtual std::string get() override {
     std::string result;
     boost::optional<ChoiceType> typedValue = m_getter();
     if (typedValue.is_initialized()) {
@@ -615,7 +681,7 @@ class OptionalChoiceConceptImpl : public ChoiceConcept {
   }
 
 
-  virtual bool set(std::string value) {
+  virtual bool set(std::string value) override {
     if (value.empty()) {
       clear();
       return true;
@@ -625,13 +691,13 @@ class OptionalChoiceConceptImpl : public ChoiceConcept {
 
   }
 
-  virtual void clear() {
+  virtual void clear() override {
     if (m_reset) {
       (*m_reset)();
     }
   }
 
-  virtual bool editable() {
+  virtual bool editable() override {
     return m_editable;
   }
 
@@ -714,7 +780,7 @@ class ComboBoxRequiredChoiceImpl : public ComboBoxConcept
   virtual ~ComboBoxRequiredChoiceImpl() {}
 
 
-  virtual std::shared_ptr<ChoiceConcept> choiceConcept(const ConceptProxy& obj) {
+  virtual std::shared_ptr<ChoiceConcept> choiceConcept(const ConceptProxy& obj) override {
     std::shared_ptr<DataSourceType> dataSource = std::shared_ptr<DataSourceType>(
         new DataSourceType(obj.cast<DataSourceType>()));
     return std::shared_ptr<ChoiceConcept>(
@@ -763,7 +829,7 @@ class ComboBoxOptionalChoiceImpl : public ComboBoxConcept
 
   virtual ~ComboBoxOptionalChoiceImpl() {}
 
-  virtual std::shared_ptr<ChoiceConcept> choiceConcept(const ConceptProxy& obj) {
+  virtual std::shared_ptr<ChoiceConcept> choiceConcept(const ConceptProxy& obj) override {
     std::shared_ptr<DataSourceType> dataSource = std::shared_ptr<DataSourceType>(
         new DataSourceType(obj.cast<DataSourceType>()));
 
@@ -1120,13 +1186,13 @@ class NameLineEditConceptImpl : public NameLineEditConcept
 
   virtual ~NameLineEditConceptImpl() {}
 
-  virtual boost::optional<std::string> get(const ConceptProxy & t_obj, bool value)
+  virtual boost::optional<std::string> get(const ConceptProxy & t_obj, bool value) override
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_getter(&obj,value);
   }
 
-  virtual boost::optional<std::string> set(const ConceptProxy & t_obj, const std::string & value)
+  virtual boost::optional<std::string> set(const ConceptProxy & t_obj, const std::string & value) override
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     if (m_setter)
@@ -1137,7 +1203,7 @@ class NameLineEditConceptImpl : public NameLineEditConcept
     }
   }
 
-  virtual void reset(const ConceptProxy & t_obj)
+  virtual void reset(const ConceptProxy & t_obj) override
   {
     if (m_reset) {
       DataSourceType obj = t_obj.cast<DataSourceType>();
@@ -1145,7 +1211,7 @@ class NameLineEditConceptImpl : public NameLineEditConcept
     }
   }
 
-  virtual bool readOnly() const
+  virtual bool readOnly() const override
   {
     return m_setter ? false : true;
   }
@@ -1197,13 +1263,13 @@ public:
 
   virtual ~LoadNameConceptImpl() {}
 
-  virtual boost::optional<std::string> get(const ConceptProxy & t_obj, bool value)
+  virtual boost::optional<std::string> get(const ConceptProxy & t_obj, bool value) override
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_getter(&obj, value);
   }
 
-  virtual boost::optional<std::string> set(const ConceptProxy & t_obj, const std::string & value)
+  virtual boost::optional<std::string> set(const ConceptProxy & t_obj, const std::string & value) override
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     if (m_setter)
@@ -1215,7 +1281,7 @@ public:
     }
   }
 
-  virtual void reset(const ConceptProxy & t_obj)
+  virtual void reset(const ConceptProxy & t_obj) override
   {
     if (m_reset) {
       DataSourceType obj = t_obj.cast<DataSourceType>();
@@ -1223,7 +1289,7 @@ public:
     }
   }
 
-  virtual bool readOnly() const
+  virtual bool readOnly() const override
   {
     return m_setter ? false : true;
   }
@@ -1649,7 +1715,7 @@ class DropZoneConceptImpl : public DropZoneConcept
 
   virtual ~DropZoneConceptImpl() {}
 
-  virtual boost::optional<model::ModelObject> get(const ConceptProxy & obj)
+  virtual boost::optional<model::ModelObject> get(const ConceptProxy & obj) override
   {
     if(boost::optional<ValueType> result = getImpl(obj)) {
       return result->template optionalCast<model::ModelObject>();
@@ -1658,7 +1724,7 @@ class DropZoneConceptImpl : public DropZoneConcept
     }
   }
 
-  virtual bool set(const ConceptProxy & obj, const model::ModelObject & value)
+  virtual bool set(const ConceptProxy & obj, const model::ModelObject & value) override
   {
     if( boost::optional<ValueType> mo = value.optionalCast<ValueType>() ) {
       return setImpl(obj,mo.get());
@@ -1667,7 +1733,7 @@ class DropZoneConceptImpl : public DropZoneConcept
     }
   }
 
-  virtual void reset(const ConceptProxy & obj)
+  virtual void reset(const ConceptProxy & obj) override
   {
     resetImpl(obj);
   }
@@ -1738,7 +1804,7 @@ public:
 
   virtual ~RenderingColorConceptImpl() {}
 
-  virtual boost::optional<model::ModelObject> get(const ConceptProxy & obj)
+  virtual boost::optional<model::ModelObject> get(const ConceptProxy & obj) override
   {
     if (boost::optional<ValueType> result = getImpl(obj)) {
       return result->template optionalCast<model::ModelObject>();
@@ -1748,7 +1814,7 @@ public:
     }
   }
 
-  virtual bool set(const ConceptProxy & obj, const model::ModelObject & value)
+  virtual bool set(const ConceptProxy & obj, const model::ModelObject & value) override
   {
     if (boost::optional<ValueType> mo = value.optionalCast<ValueType>()) {
       return setImpl(obj, mo.get());

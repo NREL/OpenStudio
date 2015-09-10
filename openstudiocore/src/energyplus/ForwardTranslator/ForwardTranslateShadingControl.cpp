@@ -42,15 +42,18 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl( model::Sh
 
   idfObject.setString(WindowProperty_ShadingControlFields::Name, modelObject.name().get());
   
-  idfObject.setString(WindowProperty_ShadingControlFields::ShadingType, modelObject.shadingType());
-  
-  boost::optional<Construction> construction = modelObject.construction();
-  if (construction){
-    idfObject.setString(WindowProperty_ShadingControlFields::ConstructionwithShadingName, construction->name().get());
+  std::string shadingType = modelObject.shadingType();
+  if (istringEqual("InteriorDaylightRedirectionDevice", shadingType)){
+    idfObject.setString(WindowProperty_ShadingControlFields::ShadingType, "InteriorBlind");
+  } else{
+    idfObject.setString(WindowProperty_ShadingControlFields::ShadingType, shadingType);
   }
 
+  boost::optional<Construction> construction = modelObject.construction();
   boost::optional<ShadingMaterial> shadingMaterial = modelObject.shadingMaterial();
-  if (shadingMaterial){
+  if (construction){
+    idfObject.setString(WindowProperty_ShadingControlFields::ConstructionwithShadingName, construction->name().get());
+  }else if (shadingMaterial){
     idfObject.setString(WindowProperty_ShadingControlFields::ShadingDeviceMaterialName, shadingMaterial->name().get());
   }
   
@@ -65,8 +68,13 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl( model::Sh
     idfObject.setString(WindowProperty_ShadingControlFields::ShadingControlIsScheduled, "No");
   }
 
+  boost::optional<double> setpoint = modelObject.setpoint();
   if (istringEqual("OnIfHighSolarOnWindow", shadingControlType)){
-    idfObject.setDouble(WindowProperty_ShadingControlFields::Setpoint, 100.0);
+    if (!setpoint){
+      setpoint = 100; // W/m2
+    }
+    OS_ASSERT(setpoint);
+    idfObject.setDouble(WindowProperty_ShadingControlFields::Setpoint, *setpoint);
   }
 
   idfObject.setString(WindowProperty_ShadingControlFields::GlareControlIsActive, "No");
@@ -77,7 +85,7 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl( model::Sh
 
   //idfObject.setDouble(WindowProperty_ShadingControlFields::Setpoint2, 0.0);
 
-  return boost::optional<IdfObject>(idfObject);
+  return idfObject;
 }
 
 } // energyplus

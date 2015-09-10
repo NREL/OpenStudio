@@ -156,7 +156,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationWalkIn( Refr
 
     std::vector< std::pair<openstudio::Time, double> > defrostDefaultDay;
     std::vector< std::pair<openstudio::Time, double> > dripDownDefaultDay;
-    for( std::vector<openstudio::Time>::iterator _defrostStartTime = defrostStartTimes.begin();
+    for( auto _defrostStartTime = defrostStartTimes.begin();
        _defrostStartTime != defrostStartTimes.end();
        ++_defrostStartTime )
     {

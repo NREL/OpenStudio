@@ -58,19 +58,19 @@ namespace detail {
       virtual ~EnergyPlusPostProcessJob();
 
       // Reimplemented virtual functions from Job_Impl
-      virtual bool outOfDateImpl(const boost::optional<QDateTime> &) const;
-      virtual std::string description() const;
-      virtual Files outputFilesImpl() const;
-      virtual std::string getOutput() const;
-      virtual void cleanup();
+      virtual bool outOfDateImpl(const boost::optional<QDateTime> &) const override;
+      virtual std::string description() const override;
+      virtual Files outputFilesImpl() const override;
+      virtual std::string getOutput() const override;
+      virtual void cleanup() override;
 
-      virtual void requestStop();
+      virtual void requestStop() override;
 
-      virtual void basePathChanged();
+      virtual void basePathChanged() override;
 
     protected:
-      virtual void startImpl(const std::shared_ptr<ProcessCreator> &t_creator);
-      virtual void standardCleanImpl() { /* nothing to do for this job type */ }
+      virtual void startImpl(const std::shared_ptr<ProcessCreator> &t_creator) override;
+      virtual void standardCleanImpl() override { /* nothing to do for this job type */ }
 
 
     private:

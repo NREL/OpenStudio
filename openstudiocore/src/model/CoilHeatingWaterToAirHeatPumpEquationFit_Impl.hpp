@@ -53,19 +53,19 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual unsigned airInletPort();
+    virtual unsigned airInletPort() override;
 
-    virtual unsigned airOutletPort();
+    virtual unsigned airOutletPort() override;
 
-    virtual unsigned waterInletPort();
+    virtual unsigned waterInletPort() override;
 
-    virtual unsigned waterOutletPort();
+    virtual unsigned waterOutletPort() override;
 
-    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const;
+    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
     //@}
     /** @name Getters */
@@ -168,7 +168,7 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.CoilHeatingWaterToAirHeatPumpEquationFit");
 
-    virtual boost::optional<HVACComponent> containingHVACComponent() const;
+    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
   };
 

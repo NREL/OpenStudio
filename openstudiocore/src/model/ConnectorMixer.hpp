@@ -46,11 +46,11 @@ class MODEL_API ConnectorMixer : public Mixer {
 
   virtual ~ConnectorMixer() {}
 
-  unsigned outletPort();
+  unsigned outletPort() const override;
 
-  unsigned inletPort(unsigned branchIndex);
+  unsigned inletPort(unsigned branchIndex) const override;
 
-  unsigned nextInletPort();
+  unsigned nextInletPort() const override;
 
   virtual bool addToNode(Node & node);
 

@@ -41,6 +41,8 @@
 #include "../../model/AirLoopHVAC_Impl.hpp"
 #include "../../model/Thermostat.hpp"
 #include "../../model/Thermostat_Impl.hpp"
+#include "../../model/ThermostatSetpointDualSetpoint.hpp"
+#include "../../model/ThermostatSetpointDualSetpoint_Impl.hpp"
 #include "../../model/ZoneControlHumidistat.hpp"
 #include "../../model/ZoneControlThermostatStagedDualSetpoint.hpp"
 #include "../../model/DesignSpecificationOutdoorAir.hpp"
@@ -107,6 +109,7 @@
 #include "../../model/GlareSensor.hpp"
 #include "../../model/GlareSensor_Impl.hpp"
 #include "../../model/LifeCycleCost.hpp"
+#include "../../model/ZoneMixing.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/Workspace.hpp"
@@ -497,6 +500,13 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     }
   }
 
+  // translate zone mixing objects which supply air to this zone
+  ZoneMixingVector supplyZoneMixing = modelObject.supplyZoneMixing();
+  std::sort(supplyZoneMixing.begin(), supplyZoneMixing.end(), WorkspaceObjectNameLess());
+  for (ZoneMixing& mixing : supplyZoneMixing){
+    translateAndMapModelObject(mixing);
+  }
+
   // translate thermostat and/or humidistat
   if( ( modelObject.equipment().size() > 0 ) || modelObject.useIdealAirLoads() )
   {
@@ -505,37 +515,48 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     {
       if( thermostat->iddObjectType() == ZoneControlThermostatStagedDualSetpoint::iddObjectType() )
       {
-        auto _thermostat = translateAndMapModelObject(thermostat.get());
+        translateAndMapModelObject(thermostat.get());
       } else {
-        IdfObject zoneControlThermostat(openstudio::IddObjectType::ZoneControl_Thermostat);
-        zoneControlThermostat.setString(ZoneControl_ThermostatFields::Name,modelObject.name().get() + " Thermostat");
-        zoneControlThermostat.setString(ZoneControl_ThermostatFields::ZoneorZoneListName,modelObject.name().get());
-        m_idfObjects.push_back(zoneControlThermostat);
+        auto createZoneControlThermostat = [&]() {
+          IdfObject zoneControlThermostat(openstudio::IddObjectType::ZoneControl_Thermostat);
+          zoneControlThermostat.setString(ZoneControl_ThermostatFields::Name,modelObject.name().get() + " Thermostat");
+          zoneControlThermostat.setString(ZoneControl_ThermostatFields::ZoneorZoneListName,modelObject.name().get());
+          m_idfObjects.push_back(zoneControlThermostat);
 
-        IdfObject scheduleCompact(openstudio::IddObjectType::Schedule_Compact);
-        scheduleCompact.setName(modelObject.name().get() + " Thermostat Schedule");
-        m_idfObjects.push_back(scheduleCompact);
-        scheduleCompact.setString(1,modelObject.name().get() + " Thermostat Schedule Type Limits");
-        scheduleCompact.setString(2,"Through: 12/31");
-        scheduleCompact.setString(3,"For: AllDays");
-        scheduleCompact.setString(4,"Until: 24:00");
-        scheduleCompact.setString(5,"4");
+          IdfObject scheduleCompact(openstudio::IddObjectType::Schedule_Compact);
+          scheduleCompact.setName(modelObject.name().get() + " Thermostat Schedule");
+          m_idfObjects.push_back(scheduleCompact);
+          scheduleCompact.setString(1,modelObject.name().get() + " Thermostat Schedule Type Limits");
+          scheduleCompact.setString(2,"Through: 12/31");
+          scheduleCompact.setString(3,"For: AllDays");
+          scheduleCompact.setString(4,"Until: 24:00");
+          scheduleCompact.setString(5,"4");
 
-        IdfObject scheduleTypeLimits(openstudio::IddObjectType::ScheduleTypeLimits);
-        scheduleTypeLimits.setName(modelObject.name().get() + " Thermostat Schedule Type Limits");
-        m_idfObjects.push_back(scheduleTypeLimits);
-        scheduleTypeLimits.setString(1,"0");
-        scheduleTypeLimits.setString(2,"4");
-        scheduleTypeLimits.setString(3,"DISCRETE");
+          IdfObject scheduleTypeLimits(openstudio::IddObjectType::ScheduleTypeLimits);
+          scheduleTypeLimits.setName(modelObject.name().get() + " Thermostat Schedule Type Limits");
+          m_idfObjects.push_back(scheduleTypeLimits);
+          scheduleTypeLimits.setString(1,"0");
+          scheduleTypeLimits.setString(2,"4");
+          scheduleTypeLimits.setString(3,"DISCRETE");
 
-        zoneControlThermostat.setString(ZoneControl_ThermostatFields::ControlTypeScheduleName,scheduleCompact.name().get());
+          zoneControlThermostat.setString(ZoneControl_ThermostatFields::ControlTypeScheduleName,scheduleCompact.name().get());
 
-        if( boost::optional<IdfObject> idfThermostat = translateAndMapModelObject(thermostat.get()) )
-        {
-          StringVector values(zoneControlThermostat.iddObject().properties().numExtensible);
-          values[ZoneControl_ThermostatExtensibleFields::ControlObjectType] = idfThermostat->iddObject().name();
-          values[ZoneControl_ThermostatExtensibleFields::ControlName] = idfThermostat->name().get();
-          IdfExtensibleGroup eg = zoneControlThermostat.pushExtensibleGroup(values);
+          if( boost::optional<IdfObject> idfThermostat = translateAndMapModelObject(thermostat.get()) )
+          {
+            StringVector values(zoneControlThermostat.iddObject().properties().numExtensible);
+            values[ZoneControl_ThermostatExtensibleFields::ControlObjectType] = idfThermostat->iddObject().name();
+            values[ZoneControl_ThermostatExtensibleFields::ControlName] = idfThermostat->name().get();
+            IdfExtensibleGroup eg = zoneControlThermostat.pushExtensibleGroup(values);
+          }
+        };
+
+        // Only translate ThermostatSetpointDualSetpoint if there are schedules attached
+        if( auto dualSetpoint = thermostat->optionalCast<ThermostatSetpointDualSetpoint>() ) {
+          if( dualSetpoint->heatingSetpointTemperatureSchedule() && dualSetpoint->coolingSetpointTemperatureSchedule() ) {
+            createZoneControlThermostat();
+          }  
+        } else {
+          createZoneControlThermostat();
         }
       }
     }

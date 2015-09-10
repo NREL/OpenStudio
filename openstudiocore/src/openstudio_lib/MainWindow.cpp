@@ -93,7 +93,7 @@ MainWindow::MainWindow(bool isPlugin, QWidget *parent) :
 
   setCentralWidget(m_mainSplitter);  
 
-  MainMenu * mainMenu = new MainMenu(m_displayIP, m_isPlugin);
+  auto mainMenu = new MainMenu(m_displayIP, m_isPlugin);
   connect(mainMenu, &MainMenu::toggleUnitsClicked, this, &MainWindow::toggleUnits);
   connect(mainMenu, &MainMenu::downloadComponentsClicked, this, &MainWindow::downloadComponentsClicked);
   connect(mainMenu, &MainMenu::openLibDlgClicked, this, &MainWindow::openLibDlgClicked);

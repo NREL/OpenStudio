@@ -33,11 +33,6 @@ namespace detail {
 
   class MODEL_API DistrictCooling_Impl : public StraightComponent_Impl {
 
-    Q_OBJECT;
-    Q_PROPERTY(double nominalCapacity READ nominalCapacity WRITE setNominalCapacity);
-    Q_PROPERTY(openstudio::Quantity nominalCapacity_SI READ nominalCapacity_SI WRITE setNominalCapacity);
-    Q_PROPERTY(openstudio::Quantity nominalCapacity_IP READ nominalCapacity_IP WRITE setNominalCapacity);
-
    public:
 
     /** @name Constructors and Destructors */
@@ -59,39 +54,37 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual unsigned inletPort();
+    virtual unsigned inletPort() override;
 
-    virtual unsigned outletPort();
+    virtual unsigned outletPort() override;
 
     //@}
     /** @name Getters */
     //@{
 
 
-    double nominalCapacity() const;
+    boost::optional<double> nominalCapacity() const;
 
-    Quantity getNominalCapacity(bool returnIP=false) const;
-
+    bool isNominalCapacityAutosized() const;
 
     //@}
     /** @name Setters */
     //@{
-
-
-    bool setNominalCapacity(double nominalCapacity);
-
-    bool setNominalCapacity(const Quantity& nominalCapacity);
     
-    bool addToNode(Node & node);
+    bool addToNode(Node & node) override;
 
     //@}
     /** @name Other */
     //@{
 
+
+    bool setNominalCapacity(boost::optional<double> nominalCapacity);
+
+    void autosizeNominalCapacity();
 
 
     //@}
@@ -101,10 +94,6 @@ namespace detail {
    private:
 
     REGISTER_LOGGER("openstudio.model.DistrictCooling");
-
-    openstudio::Quantity nominalCapacity_SI() const;
-
-    openstudio::Quantity nominalCapacity_IP() const;
 
   };
 

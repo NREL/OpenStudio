@@ -141,23 +141,23 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
   : QWidget(parent),
   m_isIP(isIP)
 {
-  QVBoxLayout * layout = 0;
+  QVBoxLayout * layout = nullptr;
 
   layout = new QVBoxLayout();
   layout->setSpacing(0);
   layout->setContentsMargins(0,0,0,0);
   setLayout(layout);
 
-  QVBoxLayout * scrollLayout = new QVBoxLayout();
+  auto scrollLayout = new QVBoxLayout();
   scrollLayout->setSpacing(0);
   scrollLayout->setContentsMargins(0,0,0,0);
 
-  QWidget * scrollWidget = new QWidget();
+  auto scrollWidget = new QWidget();
   scrollWidget->setObjectName("ScrollWidget");
   scrollWidget->setStyleSheet("QWidget#ScrollWidget { background: transparent; }");
   scrollWidget->setLayout(scrollLayout);
 
-  QScrollArea * scrollArea = new QScrollArea();
+  auto scrollArea = new QScrollArea();
   scrollArea->setContentsMargins(0,0,0,0);
   scrollArea->setFrameStyle(QFrame::NoFrame);
   scrollArea->setWidget(scrollWidget);
@@ -305,6 +305,7 @@ void RefrigerationCaseGridController::addColumns(const QString &/*category*/, st
       auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
       checkbox->setToolTip("Check to select all rows");
       connect(checkbox.data(), &QCheckBox::stateChanged, this, &RefrigerationCaseGridController::selectAllStateChanged);
+      connect(checkbox.data(), &QCheckBox::stateChanged, this->gridView(), &OSGridView::gridRowSelectionChanged);
 
       addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row");
     }else if(field == RATEDAMBIENTRELATIVEHUMIDITY){
@@ -773,6 +774,7 @@ void RefrigerationWalkInGridController::addColumns(const QString &/*category*/, 
       auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
       checkbox->setToolTip("Check to select all rows");
       connect(checkbox.data(), &QCheckBox::stateChanged, this, &RefrigerationWalkInGridController::selectAllStateChanged);
+      connect(checkbox.data(), &QCheckBox::stateChanged, this->gridView(), &OSGridView::gridRowSelectionChanged);
 
       addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row");
     }else if(field == DEFROSTCONTROLTYPE){

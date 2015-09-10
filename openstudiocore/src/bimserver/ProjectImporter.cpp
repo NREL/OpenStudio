@@ -39,8 +39,8 @@ namespace bimserver {
   ProjectImporter::ProjectImporter(QWidget *parent) :
     QDialog(parent) 
   {
-    QGridLayout *subLayout = new QGridLayout;
-    QVBoxLayout *mainLayout = new QVBoxLayout;
+    auto subLayout = new QGridLayout;
+    auto mainLayout = new QVBoxLayout;
 
     QLabel *introLabel = new QLabel("Please select a project to import: ", this);
     m_proList = new QListWidget(this);
@@ -217,7 +217,7 @@ namespace bimserver {
   void ProjectImporter::newButton_clicked() 
   {
     m_statusBar->showMessage(tr("Create a new project and upload it to the server."), 2000);
-    QDialog newDialog(this);	
+    QDialog newDialog(this);
     QGridLayout newLayout;
     newDialog.setWindowTitle(tr("New Project"));
     newDialog.setLayout(&newLayout);
@@ -280,22 +280,23 @@ namespace bimserver {
 
     m_statusBar->showMessage(tr("Please specify the bimserver address/port and user credentials."), 2000);
     QDialog setDialog(this);
-    QGridLayout *setLayout = new QGridLayout;
+    auto setLayout = new QGridLayout;
     setDialog.setWindowTitle(tr("BIMserver Settings"));
 
     QLabel *set_introLabel = new QLabel(tr("Please enter the BIMserver information: "), this);
     QLabel *set_baddLabel = new QLabel(tr("BIMserver Address: http://"), this);
-    QLineEdit *set_baddEdit = new QLineEdit(this);
+    auto set_baddEdit = new QLineEdit(this);
     set_baddEdit->setPlaceholderText("eg: 127.0.0.1");
     QLabel *set_bportLabel = new QLabel(tr("BIMserver Port:"), this);
-    QLineEdit *set_bportEdit = new QLineEdit(this);
+    auto set_bportEdit = new QLineEdit(this);
     set_bportEdit->setPlaceholderText("eg: 8082");
     QLabel *set_unameLabel = new QLabel(tr("Username"), this);
-    QLineEdit *set_unameEdit = new QLineEdit(this);
+    auto set_unameEdit = new QLineEdit(this);
     set_unameEdit->setPlaceholderText("eg: admin@bimserver.org");
     QLabel *set_upassLabel = new QLabel(tr("Password"), this);
-    QLineEdit *set_upassEdit = new QLineEdit(this);
+    auto set_upassEdit = new QLineEdit(this);
     set_upassEdit->setPlaceholderText("eg: admin");
+    set_upassEdit->setEchoMode(QLineEdit::Password);
     QPushButton *set_okButton = new QPushButton(tr("Okay"), this);
     QPushButton *set_cancelButton = new QPushButton(tr("Cancel"), this);
 
@@ -342,17 +343,18 @@ namespace bimserver {
       QString usrname = set_unameEdit->text();
       QString psw = set_upassEdit->text();
 
-      m_settings->setValue("addr", address);
-      m_settings->setValue("port", port);
-      m_settings->setValue("usrname",usrname);
-      m_settings->setValue("psw", psw);
-
       if (!address.isEmpty() && !port.isEmpty() && !usrname.isEmpty() && !psw.isEmpty())
       { 
         //in debug mode, this pointer is 0xCDCDCDCD, and is not null, creates an error
         //if (m_bimserverConnection != nullptr) {
-        //	delete m_bimserverConnection;
+        //  delete m_bimserverConnection;
         //}
+
+        m_settings->setValue("addr", address);
+        m_settings->setValue("port", port);
+        m_settings->setValue("usrname", usrname);
+        m_settings->setValue("psw", psw);
+
         m_bimserverConnection = new BIMserverConnection(this, address, port);
 
         connect(m_bimserverConnection, &BIMserverConnection::osmStringRetrieved, this, &ProjectImporter::processOSMRetrieved);
@@ -371,7 +373,13 @@ namespace bimserver {
       else {
         m_proList->clear();
         m_ifcList->clear();
-        m_statusBar->showMessage("Settings not completed. Please fill in all fields in settings before continue", 2000);
+        
+        QMessageBox messageBox(this);
+        messageBox.setText(tr("BIMserver not set up"));
+        messageBox.setDetailedText(tr("Please provide valid BIMserver address, port, your username and password. You may ask your BIMserver manager for such information.\n"));
+        messageBox.exec();
+
+        settingButton_clicked();
       }
 
     } else {

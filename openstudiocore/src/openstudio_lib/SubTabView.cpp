@@ -110,10 +110,10 @@ void SubTabView::connectItemSelectorButtons()
 
 void SubTabView::createLayout()
 {
-  QWidget * leftWidget = new QWidget();
+  auto leftWidget = new QWidget();
   addWidget(leftWidget);
 
-  QVBoxLayout * outerLeftVLayout = new QVBoxLayout();
+  auto outerLeftVLayout = new QVBoxLayout();
   outerLeftVLayout->setContentsMargins(0, 0, 0, 0);
   outerLeftVLayout->setSpacing(0);
   leftWidget->setLayout(outerLeftVLayout);

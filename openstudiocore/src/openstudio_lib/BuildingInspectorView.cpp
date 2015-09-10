@@ -45,13 +45,12 @@
 #include <utilities/idd/OS_Building_FieldEnums.hxx>
 #include "../utilities/core/Assert.hpp"
 
-#include <QVBoxLayout>
-#include <QHBoxLayout>
+#include <QBoxLayout>
+#include <QColor>
+#include <QColorDialog>
 #include <QGridLayout>
 #include <QLabel>
 #include <QPushButton>
-#include <QColorDialog>
-#include <QColor>
 #include <QScrollArea>
 #include <QStackedWidget>
 
@@ -225,19 +224,19 @@ void BuildingDefaultScheduleSetVectorController::onDrop(const OSItemId& itemId)
 // BuildingInspectorView
 
 BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent )
-  : ModelObjectInspectorView(model, true, parent)
+  : ModelObjectInspectorView(model, true, parent),
+  m_isIP(isIP)
 {
-  m_isIP = isIP;
-
-  QWidget* hiddenWidget = new QWidget();
+  auto hiddenWidget = new QWidget();
   this->stackedWidget()->insertWidget(0, hiddenWidget);
 
-  QWidget* visibleWidget = new QWidget();
+  auto visibleWidget = new QWidget();
   this->stackedWidget()->insertWidget(1, visibleWidget);
 
-  this->stackedWidget()->setCurrentIndex(0);
+  //this->stackedWidget()->setCurrentIndex(0);
+  this->stackedWidget()->setCurrentIndex(1);
 
-  QGridLayout* mainGridLayout = new QGridLayout();
+  auto mainGridLayout = new QGridLayout();
   mainGridLayout->setContentsMargins(7,7,7,7);
   mainGridLayout->setSpacing(14);
   visibleWidget->setLayout(mainGridLayout);
@@ -245,9 +244,9 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   int row = 0;
 
   // name
-  QVBoxLayout* vLayout = new QVBoxLayout();
+  auto vLayout = new QVBoxLayout();
 
-  QLabel* label = new QLabel();
+  auto label = new QLabel();
   label->setText("Name: ");
   label->setStyleSheet("QLabel { font: bold; }");
   vLayout->addWidget(label);
@@ -294,8 +293,6 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
 
   mainGridLayout->addLayout(vLayout, row, 0);
   mainGridLayout->setRowMinimumHeight(row, 30);
-
-  /* DLM: disable for now 
 
   // Relocatable 
   vLayout = new QVBoxLayout();
@@ -410,8 +407,6 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   mainGridLayout->addLayout(vLayout, row, 0);
   mainGridLayout->setRowMinimumHeight(row, 30);
 
-  */
-
   ++row;
 
   line = new QFrame();
@@ -507,6 +502,10 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   mainGridLayout->setColumnMinimumWidth(1, 80);
   mainGridLayout->setColumnStretch(2,1);
   mainGridLayout->setRowStretch(row,1);
+
+  auto building = model.getConcreteModelObjects<model::Building>();
+  OS_ASSERT(building.size() == 1);
+  onSelectModelObject(building.at(0));
 }
 
 void BuildingInspectorView::onClearSelection()
@@ -535,9 +534,6 @@ void BuildingInspectorView::editStandardsBuildingType(const QString & text)
     }else{
       m_building->setStandardsBuildingType(standardsBuildingType);
     }
-
-    //m_building->resetStandardsSpaceType();
-    //populateStandardsSpaceTypes();
   }
 }
 
@@ -551,9 +547,6 @@ void BuildingInspectorView::standardsBuildingTypeChanged(const QString & text)
       m_building->setStandardsBuildingType(standardsBuildingType);
     }
     populateStandardsBuildingTypes();
-
-    //m_spaceType->resetStandardsSpaceType();
-    //populateStandardsSpaceTypes();
   }
 }
 
@@ -576,7 +569,6 @@ void BuildingInspectorView::attach(openstudio::model::Building& building)
 
   m_northAxisEdit->bind(building, "northAxis", m_isIP, std::string("isNorthAxisDefaulted"));
 
-  /* DLM: disable for now
   m_numberLivingUnits->bind(
     building,
     OptionalIntGetter(std::bind(&model::Building::standardsNumberOfLivingUnits, building)),
@@ -629,7 +621,7 @@ void BuildingInspectorView::attach(openstudio::model::Building& building)
     boost::optional<BasicQuery>(),
     boost::optional<BasicQuery>(),
     boost::optional<BasicQuery>());
-    */
+
   this->stackedWidget()->setCurrentIndex(1);
 }
 
@@ -641,7 +633,7 @@ void BuildingInspectorView::detach()
 
   m_nameEdit->unbind();
 
-  disconnect(m_standardsBuildingTypeComboBox, 0, this, 0);
+  disconnect(m_standardsBuildingTypeComboBox, nullptr, this, nullptr);
   m_standardsBuildingTypeComboBox->clear();
 
   m_spaceTypeVectorController->detach();
@@ -649,18 +641,17 @@ void BuildingInspectorView::detach()
   m_defaultScheduleSetVectorController->detach();
   m_northAxisEdit->unbind();
 
-  /* DLM: disable for now
   m_numberLivingUnits->unbind();
   m_numberStories->unbind();
   m_numberAboveGroundStories->unbind();
   m_relocatable->unbind();
   m_floorToCeilingHeight->unbind();
-  */
+
 }
 
 void BuildingInspectorView::populateStandardsBuildingTypes()
 {
-  disconnect(m_standardsBuildingTypeComboBox, 0, this, 0);
+  disconnect(m_standardsBuildingTypeComboBox, nullptr, this, nullptr);
 
   m_standardsBuildingTypeComboBox->clear();
   if (m_building){

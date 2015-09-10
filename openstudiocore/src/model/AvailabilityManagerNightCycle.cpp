@@ -40,7 +40,7 @@ namespace detail {
   AvailabilityManagerNightCycle_Impl::AvailabilityManagerNightCycle_Impl(const IdfObject& idfObject,
                                                                          Model_Impl* model,
                                                                          bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : AvailabilityManager_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == AvailabilityManagerNightCycle::iddObjectType());
   }
@@ -48,7 +48,7 @@ namespace detail {
   AvailabilityManagerNightCycle_Impl::AvailabilityManagerNightCycle_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                          Model_Impl* model,
                                                                          bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AvailabilityManager_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == AvailabilityManagerNightCycle::iddObjectType());
   }
@@ -56,7 +56,7 @@ namespace detail {
   AvailabilityManagerNightCycle_Impl::AvailabilityManagerNightCycle_Impl(const AvailabilityManagerNightCycle_Impl& other,
                                                                          Model_Impl* model,
                                                                          bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AvailabilityManager_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& AvailabilityManagerNightCycle_Impl::outputVariableNames() const
@@ -239,9 +239,11 @@ namespace detail {
 } // detail
 
 AvailabilityManagerNightCycle::AvailabilityManagerNightCycle(const Model& model)
-  : ModelObject(AvailabilityManagerNightCycle::iddObjectType(),model)
+  : AvailabilityManager(AvailabilityManagerNightCycle::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AvailabilityManagerNightCycle_Impl>());
+  setThermostatTolerance(1.0);
+  setCyclingRunTime(3600);
 }
 
 IddObjectType AvailabilityManagerNightCycle::iddObjectType() {
@@ -331,7 +333,7 @@ void AvailabilityManagerNightCycle::resetControlThermalZone() {
 
 /// @cond
 AvailabilityManagerNightCycle::AvailabilityManagerNightCycle(std::shared_ptr<detail::AvailabilityManagerNightCycle_Impl> impl)
-  : ModelObject(impl)
+  : AvailabilityManager(impl)
 {}
 /// @endcond
 

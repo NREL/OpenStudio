@@ -356,7 +356,7 @@ OS:StandardsInformation:Material,
 OS:Material,
   {22f8e67d-58e9-4aed-9adc-8fdd29179bfd}, !- Handle
   Air - Cavity - Wall Roof Ceiling - 4 in. or more, !- Name
-  ,                                       !- Roughness
+  Smooth,                                 !- Roughness
   0.1524,                                 !- Thickness {m}
   0.940308144239577,                      !- Conductivity {W/m-K}
   1.28147706991681,                       !- Density {kg/m3}
@@ -381,7 +381,7 @@ OS:StandardsInformation:Material,
 OS:Material,
   {3e4c0957-776a-4a92-b473-e855d2a30fa3}, !- Handle
   Air - Ceiling - 1 1/2 in.,              !- Name
-  ,                                       !- Roughness
+  Smooth,                                 !- Roughness
   0.0381,                                 !- Thickness {m}
   0.281244383285351,                      !- Conductivity {W/m-K}
   1.28147706991681,                       !- Density {kg/m3}
@@ -406,7 +406,7 @@ OS:StandardsInformation:Material,
 OS:Material,
   {3585e190-8f73-44ed-ac7c-9c14e1e3f746}, !- Handle
   Air - Ceiling - 1/2 in.,                !- Name
-  ,                                       !- Roughness
+  Smooth,                                 !- Roughness
   0.0127,                                 !- Thickness {m}
   0.0981326555832579,                     !- Conductivity {W/m-K}
   1.28147706991681,                       !- Density {kg/m3}
@@ -431,7 +431,7 @@ OS:StandardsInformation:Material,
 OS:Material,
   {d0722503-4a4c-47d2-bd21-9c1aaa3bf24f}, !- Handle
   Air - Ceiling - 3 1/2 in.,              !- Name
-  ,                                       !- Roughness
+  Smooth,                                 !- Roughness
   0.0889,                                 !- Thickness {m}
   0.631718153225558,                      !- Conductivity {W/m-K}
   1.28147706991681,                       !- Density {kg/m3}
@@ -456,7 +456,7 @@ OS:StandardsInformation:Material,
 OS:Material,
   {881cca3a-82d7-4e59-99b3-76cd951fe93b}, !- Handle
   Air - Ceiling - 3/4 in.,                !- Name
-  ,                                       !- Roughness
+  Smooth,                                 !- Roughness
   0.01905,                                !- Thickness {m}
   0.144170197708737,                      !- Conductivity {W/m-K}
   1.28147706991681,                       !- Density {kg/m3}
@@ -481,7 +481,7 @@ OS:StandardsInformation:Material,
 OS:Material,
   {b33f3069-0812-4ee7-b96a-e7904631a462}, !- Handle
   Air - Floor - 1 1/2 in.,                !- Name
-  ,                                       !- Roughness
+  Smooth,                                 !- Roughness
   0.0381,                                 !- Thickness {m}
   0.230706931027306,                      !- Conductivity {W/m-K}
   1.28147706991681,                       !- Density {kg/m3}
@@ -506,7 +506,7 @@ OS:StandardsInformation:Material,
 OS:Material,
   {f057a4c1-7b7b-4b47-92ca-24a09435ee1c}, !- Handle
   Air - Floor - 1/2 in.,                  !- Name
-  ,                                       !- Roughness
+  Smooth,                                 !- Roughness
   0.0127,                                 !- Thickness {m}
   0.0938058189173294,                     !- Conductivity {W/m-K}
   1.28147706991681,                       !- Density {kg/m3}
@@ -531,7 +531,7 @@ OS:StandardsInformation:Material,
 OS:Material,
   {d581f325-1749-44b7-85a1-13e062fee3c2}, !- Handle
   Air - Floor - 3 1/2 in.,                !- Name
-  ,                                       !- Roughness
+  Smooth,                                 !- Roughness
   0.0889,                                 !- Thickness {m}
   0.504855302180535,                      !- Conductivity {W/m-K}
   1.28147706991681,                       !- Density {kg/m3}
@@ -556,7 +556,7 @@ OS:StandardsInformation:Material,
 OS:Material,
   {9001814e-f876-44dd-b2a2-7c95b81a02b5}, !- Handle
   Air - Floor - 3/4 in.,                  !- Name
-  ,                                       !- Roughness
+  Smooth,                                 !- Roughness
   0.01905,                                !- Thickness {m}
   0.126862851045023,                      !- Conductivity {W/m-K}
   1.28147706991681,                       !- Density {kg/m3}
@@ -581,7 +581,7 @@ OS:StandardsInformation:Material,
 OS:Material,
   {5797829e-215f-4e8d-a961-15dae6b15f63}, !- Handle
   Air - Metal Wall Framing - 16 or 24 in. OC, !- Name
-  ,                                       !- Roughness
+  Smooth,                                 !- Roughness
   0.1397,                                 !- Thickness {m}
   1.22016793979183,                       !- Conductivity {W/m-K}
   1.28147706991681,                       !- Density {kg/m3}
@@ -606,7 +606,7 @@ OS:StandardsInformation:Material,
 OS:Material,
   {e7936390-7d95-42b2-b12c-dbcb4625970e}, !- Handle
   Air - Roof - 1 1/2 in.,                 !- Name
-  ,                                       !- Roughness
+  Smooth,                                 !- Roughness
   0.0381,                                 !- Thickness {m}
   0.271206122220397,                      !- Conductivity {W/m-K}
   1.28147706991681,                       !- Density {kg/m3}
@@ -631,7 +631,7 @@ OS:StandardsInformation:Material,
 OS:Material,
   {e1c31f3d-a257-402e-95ac-be925d81189f}, !- Handle
   Air - Roof - 1/2 in.,                   !- Name
-  ,                                       !- Roughness
+  Smooth,                                 !- Roughness
   0.0127,                                 !- Thickness {m}
   0.0951904066504265,                     !- Conductivity {W/m-K}
   1.28147706991681,                       !- Density {kg/m3}
@@ -656,7 +656,7 @@ OS:StandardsInformation:Material,
 OS:Material,
   {83338778-8113-41e4-98a2-fa025b9e76d4}, !- Handle
   Air - Roof - 3 1/2 in.,                 !- Name
-  ,                                       !- Roughness
+  Smooth,                                 !- Roughness
   0.0889,                                 !- Thickness {m}
   0.615795394294941,                      !- Conductivity {W/m-K}
   1.28147706991681,                       !- Density {kg/m3}
@@ -681,7 +681,7 @@ OS:StandardsInformation:Material,
 OS:Material,
   {e3608176-01d8-4801-a79c-9243740a7bb0}, !- Handle
   Air - Roof - 3/4 in.,                   !- Name
-  ,                                       !- Roughness
+  Smooth,                                 !- Roughness
   0.01905,                                !- Thickness {m}
   0.134131936643783,                      !- Conductivity {W/m-K}
   1.28147706991681,                       !- Density {kg/m3}
@@ -706,7 +706,7 @@ OS:StandardsInformation:Material,
 OS:Material,
   {cd724c0b-0661-455b-99bb-a86493d9978e}, !- Handle
   Air - Wall - 1 1/2 in.,                 !- Name
-  ,                                       !- Roughness
+  Smooth,                                 !- Roughness
   0.0381,                                 !- Thickness {m}
   0.24801427769102,                       !- Conductivity {W/m-K}
   1.28147706991681,                       !- Density {kg/m3}
@@ -731,7 +731,7 @@ OS:StandardsInformation:Material,
 OS:Material,
   {2456f2d7-6bc1-4f63-b67e-8761651e4b5a}, !- Handle
   Air - Wall - 1/2 in.,                   !- Name
-  ,                                       !- Roughness
+  Smooth,                                 !- Roughness
   0.0127,                                 !- Thickness {m}
   0.0938058189173294,                     !- Conductivity {W/m-K}
   1.28147706991681,                       !- Density {kg/m3}
@@ -756,7 +756,7 @@ OS:StandardsInformation:Material,
 OS:Material,
   {14afa61e-29f2-4231-90b6-afccad4a8225}, !- Handle
   Air - Wall - 3 1/2 in.,                 !- Name
-  ,                                       !- Roughness
+  Smooth,                                 !- Roughness
   0.0889,                                 !- Thickness {m}
   0.594161210965299,                      !- Conductivity {W/m-K}
   1.28147706991681,                       !- Density {kg/m3}
@@ -781,7 +781,7 @@ OS:StandardsInformation:Material,
 OS:Material,
   {e62b388d-f4ed-46fe-aeb0-c98c5b381c0c}, !- Handle
   Air - Wall - 3/4 in.,                   !- Name
-  ,                                       !- Roughness
+  Smooth,                                 !- Roughness
   0.01905,                                !- Thickness {m}
   0.128420512244757,                      !- Conductivity {W/m-K}
   1.28147706991681,                       !- Density {kg/m3}
@@ -19765,3 +19765,11 @@ OS:Construction,
   ,                                       !- Surface Rendering Name
   {4557071b-938f-44b0-a9dc-3c0809f3700a}; !- Layer 1
 
+OS:SpaceInfiltration:EffectiveLeakageArea,
+  {fa1b2cef-5376-4b21-8ebc-9ede6f08ab69}, !- Handle
+  Space Infiltration Effective Leakage Area 1, !- Name
+  {6e81b6eb-e552-4e68-8e12-8ff03c46a0d7}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  0.1,                                    !- Effective Air Leakage Area {m2}
+  0.1,                                    !- Stack Coefficient
+  0.1;                                    !- Wind Coefficient

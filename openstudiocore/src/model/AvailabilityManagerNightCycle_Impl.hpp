@@ -21,7 +21,7 @@
 #define MODEL_AVAILABILITYMANAGERNIGHTCYCLE_IMPL_HPP
 
 #include "ModelAPI.hpp"
-#include "ModelObject_Impl.hpp"
+#include "AvailabilityManager_Impl.hpp"
 #include "../utilities/units/Quantity.hpp"
 #include "../utilities/units/OSOptionalQuantity.hpp"
 
@@ -34,7 +34,7 @@ class ThermalZone;
 namespace detail {
 
   /** AvailabilityManagerNightCycle_Impl is a ModelObject_Impl that is the implementation class for AvailabilityManagerNightCycle.*/
-  class MODEL_API AvailabilityManagerNightCycle_Impl : public ModelObject_Impl {
+  class MODEL_API AvailabilityManagerNightCycle_Impl : public AvailabilityManager_Impl {
     Q_OBJECT;
 
     Q_PROPERTY(std::string controlType READ controlType WRITE setControlType RESET resetControlType);
@@ -68,11 +68,11 @@ namespace detail {
 
     virtual ~AvailabilityManagerNightCycle_Impl() {}
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
     Schedule applicabilitySchedule() const;
 

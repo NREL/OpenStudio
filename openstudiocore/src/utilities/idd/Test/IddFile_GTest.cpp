@@ -58,7 +58,7 @@ TEST_F(IddFixture, IddFile)
   boost::filesystem::ifstream inFile(iddPath); ASSERT_TRUE(inFile?true:false);
   OptionalIddFile loadedIddFile = IddFile::load(inFile);
   ASSERT_TRUE(loadedIddFile); inFile.close();
-  EXPECT_EQ("8.2.0",loadedIddFile->version());
+  EXPECT_EQ("8.3.0",loadedIddFile->version());
   EXPECT_EQ(epIddFile.objects().size(),loadedIddFile->objects().size());
   if (epIddFile.objects().size() != loadedIddFile->objects().size()) {
     // get sets of IddObjectType
@@ -280,7 +280,7 @@ TEST_F(IddFixture, IddFile_EpGroups) {
   std::stringstream ss;
   // uniqueness
   for (StringVector::const_iterator it = groups.begin(), itEnd = groups.end(); it != itEnd; ++it) {
-    StringVector::const_iterator loc = std::find_if(it+1,itEnd,std::bind(istringEqual,*it,std::placeholders::_1));
+    auto loc = std::find_if(it+1,itEnd,std::bind(istringEqual,*it,std::placeholders::_1));
     EXPECT_TRUE(loc == itEnd);
     if (loc != itEnd) {
       LOG(Debug,"The group name '" << *it << "' is repeated in epIddFile.");

@@ -50,6 +50,8 @@
 #include "../model/ThermalZone_Impl.hpp"
 #include "../model/WaterToAirComponent.hpp"
 #include "../model/WaterToAirComponent_Impl.hpp"
+#include "../model/WaterHeaterMixed.hpp"
+#include "../model/WaterHeaterMixed_Impl.hpp"
 #include "../model/ZoneHVACFourPipeFanCoil.hpp"
 #include "../model/ZoneHVACFourPipeFanCoil_Impl.hpp"
 #include "../model/ZoneHVACPackagedTerminalAirConditioner.hpp"
@@ -93,11 +95,11 @@ InspectorController::InspectorController()
 
 InspectorController::~InspectorController()
 {
-  if( m_inspectorView != 0 )
+  if( m_inspectorView != nullptr )
   {
     delete m_inspectorView;
 
-    m_inspectorView = 0;
+    m_inspectorView = nullptr;
   }
 }
 
@@ -200,7 +202,7 @@ void InspectorController::moveBranchForZoneReturn(model::ThermalZone & zone, con
 
 void InspectorController::onViewDestroyed(QObject * object)
 {
-  m_inspectorView = 0;
+  m_inspectorView = nullptr;
 }
 
 void InspectorController::addToLoop(model::Loop & loop, boost::optional<model::HVACComponent> & hvacComponent)
@@ -209,7 +211,11 @@ void InspectorController::addToLoop(model::Loop & loop, boost::optional<model::H
   {
     if( boost::optional<model::PlantLoop> plantLoop = loop.optionalCast<model::PlantLoop>() )
     {
-      plantLoop->addDemandBranchForComponent(hvacComponent.get());
+      if( hvacComponent->optionalCast<model::WaterHeaterMixed>() ) {
+        plantLoop->addSupplyBranchForComponent(hvacComponent.get());
+      } else {
+        plantLoop->addDemandBranchForComponent(hvacComponent.get());
+      }
     }
   }
 
@@ -274,7 +280,11 @@ void InspectorController::removeFromLoop(model::Loop & loop, boost::optional<mod
   {
     if( boost::optional<model::PlantLoop> plantLoop = loop.optionalCast<model::PlantLoop>() )
     {
-      plantLoop->removeDemandBranchWithComponent(hvacComponent.get());
+      if( hvacComponent->optionalCast<model::WaterHeaterMixed>() ) {
+        plantLoop->removeSupplyBranchWithComponent(hvacComponent.get());
+      } else {
+        plantLoop->removeDemandBranchWithComponent(hvacComponent.get());
+      }
     }
   }
 }

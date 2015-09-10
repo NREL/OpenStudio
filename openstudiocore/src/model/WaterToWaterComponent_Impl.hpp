@@ -68,21 +68,21 @@ class MODEL_API WaterToWaterComponent_Impl : public HVACComponent_Impl
    *  from this object on an AirLoopHVAC or PlantLoop. 
    *  @param[in]  isDemandComponent  Boolean passed in whether object is a demand or supply component
   **/
-  virtual std::vector<HVACComponent> edges(bool isDemandComponent);
+  virtual std::vector<HVACComponent> edges(bool isDemandComponent) override;
 
-  virtual boost::optional<ParentObject> parent() const;
+  virtual boost::optional<ParentObject> parent() const override;
 
-  virtual std::vector<ModelObject> children() const;
+  virtual std::vector<ModelObject> children() const override;
 
-  virtual bool addToNode(Node & node);
+  virtual bool addToNode(Node & node) override;
 
-  virtual std::vector<openstudio::IdfObject> remove();
+  virtual std::vector<openstudio::IdfObject> remove() override;
 
-  virtual ModelObject clone(Model model) const;
+  virtual ModelObject clone(Model model) const override;
 
-  void disconnect();
+  void disconnect() override;
 
-  boost::optional<PlantLoop> plantLoop() const;
+  boost::optional<PlantLoop> plantLoop() const override;
 
   boost::optional<PlantLoop> secondaryPlantLoop() const;
 
@@ -90,11 +90,26 @@ class MODEL_API WaterToWaterComponent_Impl : public HVACComponent_Impl
 
   bool removeFromSecondaryPlantLoop();
 
+  virtual unsigned tertiaryInletPort() const;
+
+  virtual unsigned tertiaryOutletPort() const;
+
+  boost::optional<PlantLoop> tertiaryPlantLoop() const;
+
+  bool removeFromTertiaryPlantLoop();
+
+  virtual bool addToTertiaryNode(Node & node);
+
+  boost::optional<ModelObject> tertiaryInletModelObject() const;
+
+  boost::optional<ModelObject> tertiaryOutletModelObject() const;
+
   protected:
 
   friend class Model_Impl;
 
   mutable boost::optional<PlantLoop> m_secondaryPlantLoop;
+  mutable boost::optional<PlantLoop> m_tertiaryPlantLoop;
 
   private:
 

@@ -19,8 +19,16 @@
 
 #include "WaterHeaterMixed.hpp"
 #include "WaterHeaterMixed_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "WaterHeaterHeatPump.hpp"
+#include "WaterHeaterHeatPump_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
+#include "ScheduleDay.hpp"
+#include "ScheduleDay_Impl.hpp"
+#include "ScheduleRuleset.hpp"
+#include "ScheduleRuleset_Impl.hpp"
 #include "CurveCubic.hpp"
 #include "CurveCubic_Impl.hpp"
 #include "ThermalZone.hpp"
@@ -1552,6 +1560,20 @@ namespace detail {
     return OS_WaterHeater_MixedFields::SourceSideOutletNodeName;
   }
 
+  boost::optional<ZoneHVACComponent> WaterHeaterMixed_Impl::containingZoneHVACComponent() const
+  {
+    auto hpwhs = model().getModelObjects<model::WaterHeaterHeatPump>();
+    auto t_Handle = handle();
+    
+    for( const auto & hpwh : hpwhs ) {
+      if( hpwh.tank().handle() == t_Handle ) {
+        return hpwh;
+      }
+    }
+
+    return boost::none;
+  }
+
 } // detail
 
 WaterHeaterMixed::WaterHeaterMixed(const Model& model)
@@ -1577,6 +1599,15 @@ WaterHeaterMixed::WaterHeaterMixed(const Model& model)
   autosizeUseSideDesignFlowRate();
   autosizeSourceSideDesignFlowRate();
   setIndirectWaterHeatingRecoveryTime(1.5);
+
+  setAmbientTemperatureIndicator("Schedule");
+  ScheduleRuleset amb_schedule(model);
+  amb_schedule.defaultDaySchedule().addValue(Time(0,24,0,0),22.0);
+  setAmbientTemperatureSchedule(amb_schedule);
+
+  ScheduleRuleset setpoint_schedule(model);
+  setpoint_schedule.defaultDaySchedule().addValue(Time(0,24,0,0),60.0);
+  setSetpointTemperatureSchedule(setpoint_schedule);
 }
 
 IddObjectType WaterHeaterMixed::iddObjectType() {

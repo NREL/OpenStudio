@@ -36,12 +36,12 @@ class OSItemList : public OSItemSelector {
 
   OSItemList(OSVectorController* vectorController,
              bool addScrollArea,
-             QWidget* parent = 0);
+             QWidget* parent = nullptr);
 
   virtual ~OSItemList() {}
 
   // return the selected item in the list, NULL if list is empty
-  OSItem* selectedItem() const;
+  OSItem* selectedItem() const override;
 
   // return the first item in the list, NULL if list is empty
   OSItem* firstItem();
@@ -87,11 +87,9 @@ signals:
 
   void itemsRequested();
 
-  void gridRowSelected(OSItem*);
-
 protected:
 
-  void paintEvent( QPaintEvent * event );
+  void paintEvent( QPaintEvent * event ) override;
 
 private:
 

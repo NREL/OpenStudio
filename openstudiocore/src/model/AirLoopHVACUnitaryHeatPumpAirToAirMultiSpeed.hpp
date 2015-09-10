@@ -91,6 +91,7 @@ class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed : public StraightCo
 
   double maximumTemperatureforHeatRecovery() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Load Supply Air Flow Rate" **/
   boost::optional<double> supplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
 
   bool isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const;
@@ -99,34 +100,42 @@ class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed : public StraightCo
 
   int numberofSpeedsforCooling() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Speed 1 Supply Air Flow Rate" **/
   boost::optional<double> speed1SupplyAirFlowRateDuringHeatingOperation() const;
 
   bool isSpeed1SupplyAirFlowRateDuringHeatingOperationAutosized() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Speed 2 Supply Air Flow Rate" **/
   boost::optional<double> speed2SupplyAirFlowRateDuringHeatingOperation() const;
 
   bool isSpeed2SupplyAirFlowRateDuringHeatingOperationAutosized() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Speed 3 Supply Air Flow Rate" **/
   boost::optional<double> speed3SupplyAirFlowRateDuringHeatingOperation() const;
 
   bool isSpeed3SupplyAirFlowRateDuringHeatingOperationAutosized() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Speed 4 Supply Air Flow Rate" **/
   boost::optional<double> speed4SupplyAirFlowRateDuringHeatingOperation() const;
 
   bool isSpeed4SupplyAirFlowRateDuringHeatingOperationAutosized() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Speed 1 Supply Air Flow Rate" **/
   boost::optional<double> speed1SupplyAirFlowRateDuringCoolingOperation() const;
 
   bool isSpeed1SupplyAirFlowRateDuringCoolingOperationAutosized() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Speed 2 Supply Air Flow Rate" **/
   boost::optional<double> speed2SupplyAirFlowRateDuringCoolingOperation() const;
 
   bool isSpeed2SupplyAirFlowRateDuringCoolingOperationAutosized() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Speed 3 Supply Air Flow Rate" **/
   boost::optional<double> speed3SupplyAirFlowRateDuringCoolingOperation() const;
 
   bool isSpeed3SupplyAirFlowRateDuringCoolingOperationAutosized() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Speed 4 Supply Air Flow Rate" **/
   boost::optional<double> speed4SupplyAirFlowRateDuringCoolingOperation() const;
 
   bool isSpeed4SupplyAirFlowRateDuringCoolingOperationAutosized() const;

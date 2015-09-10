@@ -114,9 +114,9 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
@@ -187,6 +187,10 @@ namespace detail {
     bool isKlemsSamplingDensityDefaulted() const;
 
     std::string skyDiscretizationResolution() const;
+
+    bool isCoarseSettings();
+
+    bool isFineSettings();
 
     //@}
     /** @name Setters */
@@ -259,6 +263,10 @@ namespace detail {
     bool setSkyDiscretizationResolution(std::string skyDiscretizationResolution);
 
     void resetSkyDiscretizationResolution();
+
+    void applyCoarseSettings();
+
+    void applyFineSettings();
 
     //@}
     /** @name Other */

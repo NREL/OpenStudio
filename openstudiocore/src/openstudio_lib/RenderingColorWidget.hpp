@@ -36,7 +36,7 @@ namespace openstudio {
 
   public:
 
-    RenderingColorWidget2(QWidget* parent = 0);
+    RenderingColorWidget2(QWidget* parent = nullptr);
 
     virtual ~RenderingColorWidget2() {}
 
@@ -73,7 +73,7 @@ class RenderingColorWidget : public QWidget
 
 public:
 
-  RenderingColorWidget(QWidget* parent = 0);
+  RenderingColorWidget(QWidget* parent = nullptr);
 
   virtual ~RenderingColorWidget() {}
 

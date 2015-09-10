@@ -30,7 +30,7 @@ class HVACSystemsTabView : public MainTabView
 
   public:
 
-  HVACSystemsTabView(QWidget * parent = 0);
+  HVACSystemsTabView(QWidget * parent = nullptr);
 
   virtual ~HVACSystemsTabView() {};
 };

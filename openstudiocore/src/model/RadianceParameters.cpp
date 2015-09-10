@@ -24,7 +24,6 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
-
 #include "../utilities/units/Unit.hpp"
 
 #include "../utilities/core/Assert.hpp"
@@ -488,6 +487,92 @@ namespace detail {
     return getLimitWeightDMX(true);
   }
 
+  void RadianceParameters_Impl::applyCoarseSettings()
+  {
+    setAccumulatedRaysperRecord(1);
+    setDirectThreshold(0.0);
+    setDirectCertainty(1.0);
+    setDirectJitter(1.0);
+    setDirectPretest(1.0);
+    setAmbientBouncesVMX(6);
+    setAmbientBouncesDMX(2);
+    setAmbientDivisionsVMX(4050);
+    setAmbientDivisionsDMX(512);
+    setAmbientSupersamples(256);
+    setLimitWeightVMX(0.001);
+    setLimitWeightDMX(0.001);
+    setKlemsSamplingDensity(500);
+    setSkyDiscretizationResolution("146");
+  }
+
+  bool RadianceParameters_Impl::isCoarseSettings()
+  {
+    bool result = false;
+
+    if (accumulatedRaysperRecord() == 1 &&
+      directThreshold() == 0.0 &&
+      directCertainty() == 1.0 &&
+      directJitter() == 1.0 &&
+      directPretest() == 1.0 &&
+      ambientBouncesVMX() == 6 &&
+      ambientBouncesDMX() == 2 &&
+      ambientDivisionsVMX() == 4050 &&
+      ambientDivisionsDMX() == 512 &&
+      ambientSupersamples() == 256 &&
+      limitWeightVMX() == 0.001 &&
+      limitWeightDMX() == 0.001 &&
+      klemsSamplingDensity() == 500 &&
+      skyDiscretizationResolution() == "146")
+    {
+      result = true;
+    }
+
+    return result;
+  }
+
+  void RadianceParameters_Impl::applyFineSettings()
+  {
+    setAccumulatedRaysperRecord(1);
+    setDirectThreshold(0.0);
+    setDirectCertainty(1.0);
+    setDirectJitter(1.0);
+    setDirectPretest(1.0);
+    setAmbientBouncesVMX(10);
+    setAmbientBouncesDMX(3);
+    setAmbientDivisionsVMX(65536);
+    setAmbientDivisionsDMX(1024);
+    setAmbientSupersamples(512);
+    setLimitWeightVMX(0.0000152);
+    setLimitWeightDMX(0.0001);
+    setKlemsSamplingDensity(1000);
+    setSkyDiscretizationResolution("2306");
+  }
+
+  bool RadianceParameters_Impl::isFineSettings()
+  {
+    bool result = false;
+
+    if (accumulatedRaysperRecord() == 1 &&
+      directThreshold() == 0.0 &&
+      directCertainty() == 1.0 &&
+      directJitter() == 1.0 &&
+      directPretest() == 1.0 &&
+      ambientBouncesVMX() == 10 &&
+      ambientBouncesDMX() == 3 &&
+      ambientDivisionsVMX() == 65536 &&
+      ambientDivisionsDMX() == 1024 &&
+      ambientSupersamples() == 512 &&
+      limitWeightVMX() == 0.0000152 &&
+      limitWeightDMX() == 0.0001 &&
+      klemsSamplingDensity() == 1000 &&
+      skyDiscretizationResolution() == "2306")
+    {
+      result = true;
+    }
+
+    return result;
+  }
+
 } // detail
 
 IddObjectType RadianceParameters::iddObjectType() {
@@ -767,57 +852,38 @@ void RadianceParameters::resetKlemsSamplingDensity() {
   getImpl<detail::RadianceParameters_Impl>()->resetKlemsSamplingDensity();
 }
 
+void RadianceParameters::applyCoarseSettings()
+{
+  getImpl<detail::RadianceParameters_Impl>()->applyCoarseSettings();
+}
+
+bool RadianceParameters::isCoarseSettings()
+{
+  return getImpl<detail::RadianceParameters_Impl>()->isCoarseSettings();
+}
+
+void RadianceParameters::applyFineSettings()
+{
+  getImpl<detail::RadianceParameters_Impl>()->applyFineSettings();
+}
+
+bool RadianceParameters::isFineSettings()
+{
+  return getImpl<detail::RadianceParameters_Impl>()->isFineSettings();
+}
+
 /// @cond
 RadianceParameters::RadianceParameters(std::shared_ptr<detail::RadianceParameters_Impl> impl)
   : ModelObject(impl)
 {
 }
 
-RadianceParameters::RadianceParameters(Model& model,
-                                       int accumulatedRaysperRecord,
-                                       double directThreshold,
-                                       double directCertainty,
-                                       double directJitter,
-                                       double directPretest,
-                                       int ambientBouncesVMX,
-                                       int ambientBouncesDMX,
-                                       int ambientDivisionsVMX,
-                                       int ambientDivisionsDMX,
-                                       int ambientSupersamples,
-                                       double LimitWeightVMX,
-                                       double LimitWeightDMX,
-                                       int klemsSamplingDensity,
-                                       std::string skyDiscretizationResolution)
+RadianceParameters::RadianceParameters(Model& model)
   : ModelObject(RadianceParameters::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::RadianceParameters_Impl>());
 
-  bool ok = setAccumulatedRaysperRecord(accumulatedRaysperRecord);
-  OS_ASSERT(ok);
-  ok = setDirectThreshold(directThreshold);
-  OS_ASSERT(ok);
-  ok = setDirectCertainty(directCertainty);
-  OS_ASSERT(ok);
-  ok = setDirectJitter(directJitter);
-  OS_ASSERT(ok);
-  ok = setDirectPretest(directPretest);
-  OS_ASSERT(ok);
-  ok = setAmbientBouncesVMX(ambientBouncesVMX);
-  OS_ASSERT(ok);
-  ok = setAmbientBouncesDMX(ambientBouncesDMX);
-  OS_ASSERT(ok);
-  ok = setAmbientDivisionsVMX(ambientDivisionsVMX);
-  OS_ASSERT(ok);
-  ok = setAmbientDivisionsDMX(ambientDivisionsDMX);
-  OS_ASSERT(ok);
-  ok = setAmbientSupersamples(ambientSupersamples);
-  OS_ASSERT(ok);
-  ok = setLimitWeightVMX(LimitWeightVMX);
-  OS_ASSERT(ok);
-  setLimitWeightDMX(LimitWeightDMX);
-  setKlemsSamplingDensity(klemsSamplingDensity);
-  ok = setSkyDiscretizationResolution(skyDiscretizationResolution);
-  OS_ASSERT(ok);
+  applyCoarseSettings();  
 }
 
 /// @endcond

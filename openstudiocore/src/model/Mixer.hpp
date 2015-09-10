@@ -37,37 +37,37 @@ class MODEL_API Mixer : public HVACComponent
   virtual ~Mixer() {}
 
   /** Returns the outlet port to the zone mixer. */
-  virtual unsigned outletPort();
+  virtual unsigned outletPort() const;
 
   /** Returns the inlet port for branchIndex.  Branches consequtively 
    *  indexed starting from 0. 
    */
-  virtual unsigned inletPort(unsigned branchIndex);
+  virtual unsigned inletPort(unsigned branchIndex) const;
   
   /** Returns the next available inlet port.  This will be the first port 
    *  with no connected objects */
-  virtual unsigned nextInletPort();
+  virtual unsigned nextInletPort() const;
 
   /** Returns the optional ModelObject connected to the outlet port.  
    *  If there is no connected object then the optional will be false. 
    */
-  virtual boost::optional<ModelObject> outletModelObject();
+  virtual boost::optional<ModelObject> outletModelObject() const;
 
   /** Returns the optional ModelObject connected to the branch designated by branchIndex. 
    *  If there is no connected object then the optional will be false.
    */
-  virtual boost::optional<ModelObject> inletModelObject(unsigned branchIndex);
+  virtual boost::optional<ModelObject> inletModelObject(unsigned branchIndex) const;
 
   /** Returns the optional ModelObject connected to the last branch of the mixer.
    *  If there are no connections to the mixer's inlet ports, then the 
    *  optional will be false.
    */
-  virtual boost::optional<ModelObject> lastInletModelObject();
+  virtual boost::optional<ModelObject> lastInletModelObject() const;
 
   /** Returns a vector of all objects connected to the mixer's inlet ports.
    *  If no objects are connected to the mixer then an empty vector will be returned.
    */
-  virtual std::vector<ModelObject> inletModelObjects();
+  virtual std::vector<ModelObject> inletModelObjects() const;
 
   /** Returns a new port after the branch specified by branchIndex */
   virtual unsigned newInletPortAfterBranch(unsigned branchIndex);
@@ -75,10 +75,10 @@ class MODEL_API Mixer : public HVACComponent
   /** Returns the branch index for the ModelObject specified by modelObject.
    *  The specified object must be connected to an inlet port of the mixer.
    */
-  virtual unsigned branchIndexForInletModelObject( ModelObject modelObject );
+  virtual unsigned branchIndexForInletModelObject( ModelObject modelObject ) const;
 
   /** Returns the index of the next available branch */
-  virtual unsigned nextBranchIndex();
+  virtual unsigned nextBranchIndex() const;
 
   /** Effectively disconnects anything connected to the inlet port
    *  at the specified branch index.  All branches after the specified 

@@ -22,11 +22,10 @@
 namespace openstudio {
 
 ConstructionsTabView::ConstructionsTabView(const model::Model & model,
-                                           const QString & tabLabel,
-                                           QWidget * parent)
-  : MainTabView(tabLabel,true,parent)
+  const QString & tabLabel,
+  QWidget * parent)
+  : MainTabView(tabLabel, MainTabView::SUB_TAB, parent)
 {
 }
-
 
 } // openstudio

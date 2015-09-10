@@ -52,19 +52,19 @@ class MODEL_API ControllerOutdoorAir_Impl : public ParentObject_Impl {
   virtual ~ControllerOutdoorAir_Impl();
 
   // Get all output variable names that could be associated with this object.
-  virtual const std::vector<std::string>& outputVariableNames() const;
+  virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual IddObjectType iddObjectType() const;
+  virtual IddObjectType iddObjectType() const override;
 
   // return the parent object in the hierarchy
-  virtual boost::optional<ParentObject> parent() const;
+  virtual boost::optional<ParentObject> parent() const override;
 
   // return any children objects in the hierarchy
-  virtual std::vector<ModelObject> children() const;
+  virtual std::vector<ModelObject> children() const override;
 
-  virtual std::vector<openstudio::IdfObject> remove();
+  virtual std::vector<openstudio::IdfObject> remove() override;
 
-  ModelObject clone(Model model) const;
+  ModelObject clone(Model model) const override;
 
   std::string getEconomizerControlType() const;
   void setEconomizerControlType( const std::string& value );
@@ -168,7 +168,7 @@ class MODEL_API ControllerOutdoorAir_Impl : public ParentObject_Impl {
   bool setTimeofDayEconomizerControlSchedule(Schedule& schedule);
   void resetTimeofDayEconomizerControlSchedule();
 
-  std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+  std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
  private:
 

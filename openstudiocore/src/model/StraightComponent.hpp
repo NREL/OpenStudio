@@ -47,6 +47,8 @@ class MODEL_API StraightComponent : public HVACComponent {
 
   std::vector<openstudio::IdfObject> remove();
 
+  bool removeFromLoop();
+
   /** Returns the inlet port. **/
    unsigned inletPort();
 

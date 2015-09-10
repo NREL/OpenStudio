@@ -38,7 +38,7 @@ class RemoveHardAssignedConstructions < OpenStudio::Ruleset::ModelUserScript
     super(model, runner, user_arguments)
 
     # this was added to give the user a chance to cancel the operation if they inadvertently hit it
-    continue_operation = runner.registerWarning("This will remove hard assigned constructions, click No to cancel.")
+    continue_operation = runner.yesNoPrompt("This will remove hard assigned constructions, click No to cancel.")
     if not continue_operation
       puts "Operation canceled, your model was not altered."
       runner.registerAsNotApplicable("Operation canceled, your model was not altered.")

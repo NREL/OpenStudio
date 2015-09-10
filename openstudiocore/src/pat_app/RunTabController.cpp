@@ -62,7 +62,7 @@ RunTabController::RunTabController()
 
   connect(runView->runStatusView->playButton, &PlayButton::clicked, this, &RunTabController::onPlayButtonClicked);
 
-  connect(runView->runStatusView, &RunStatusView::radianceEnabledChanged, this, &RunTabController::onRadianceEnabledChanged);
+  //connect(runView->runStatusView, &RunStatusView::radianceEnabledChanged, this, &RunTabController::onRadianceEnabledChanged);
 
   connect(runView->runStatusView->cloudOnButton, &CloudOnButton::clicked, PatApp::instance()->cloudMonitor().data(), &CloudMonitor::toggleCloud);
 
@@ -125,10 +125,10 @@ RunTabController::RunTabController()
     }
 
  
-    bool radianceEnabled = openstudio::projectHasRadiance(*project); 
-    LOG(Debug, "Project has radiance " << radianceEnabled);
-    runView->runStatusView->setRadianceEnabled(radianceEnabled);
-    m_radianceEnabled = radianceEnabled;
+    //bool radianceEnabled = openstudio::projectHasRadiance(*project); 
+    //LOG(Debug, "Project has radiance " << radianceEnabled);
+    //runView->runStatusView->setRadianceEnabled(radianceEnabled);
+    //m_radianceEnabled = radianceEnabled;
   }
 }
 
@@ -136,7 +136,7 @@ RunTabController::~RunTabController()
 {
   if( runView ) { delete runView; }
 }
-
+/*
 void RunTabController::onRadianceEnabledChanged(bool t_radianceEnabled)
 {
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
@@ -189,7 +189,8 @@ void RunTabController::onRadianceEnabledChanged(bool t_radianceEnabled)
   } 
 
 }
-
+*/
+/*
 void RunTabController::showRadianceWarningsAndErrors(const std::vector<std::string> & warnings,
                                             const std::vector<std::string> & errors)
 {
@@ -217,8 +218,8 @@ void RunTabController::showRadianceWarningsAndErrors(const std::vector<std::stri
 
   QMessageBox::critical(runView, "Radiance Warnings and Errors", errorsAndWarnings);
 }
-
-
+*/
+/*
 bool RunTabController::checkSeedForRadianceWarningsAndErrors(boost::optional<model::Model> &t_seedModel, runmanager::RunManager &t_runManager)
 {
   if (!t_seedModel)
@@ -243,9 +244,10 @@ bool RunTabController::checkSeedForRadianceWarningsAndErrors(boost::optional<mod
 
   return true;
 }
-
+*/
 void RunTabController::seedChanged()
 {
+  /*
   if (m_radianceEnabled)
   {
     boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
@@ -255,6 +257,7 @@ void RunTabController::seedChanged()
 
     checkSeedForRadianceWarningsAndErrors(seedModel, runManager);
   }
+  */
 }
 
 void RunTabController::onPlayButtonClicked()
@@ -280,6 +283,14 @@ void RunTabController::onPlayButtonClicked()
       // todo: check message
       QMessageBox::warning(runView, "No Baseline Model", "Cannot run analysis until a baseline model has been set on the first tab.");
       return;
+    }
+
+    // check for missing measure.rb file
+    for (const BCLMeasure measure : project->measures()){
+      if (!measure.primaryRubyScriptPath()){
+        QMessageBox::warning(runView, "Missing Ruby Script", toQString("Measure '" + measure.displayName() + "' is missing it's measure.rb file, update this measure and try again."));
+        return;
+      }
     }
 
     // version translation and weather file

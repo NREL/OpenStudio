@@ -94,6 +94,28 @@ class MODEL_API WaterToWaterComponent : public HVACComponent
    */
   bool removeFromSecondaryPlantLoop();
 
+  /** Tertiary plant loop applies to a limited number of WaterToWaterComponent types that 
+   *  interact with three plant systems.  One example is a water cooled chiller with heat recovery,
+   *  which can be connected to a chilled water, condenser, and heat recovery plant simultaneously.
+   */
+  boost::optional<PlantLoop> tertiaryPlantLoop() const;
+
+  /** Removes the component from the tertiaryPlantLoop if one is attached.
+   *  Repairs the tertiaryPlantLoop connections preserving the integrity of the loop.
+   */
+  bool removeFromTertiaryPlantLoop();
+
+  /** Add this WaterToWaterComponent to a tertiaryPlantLoop by making connections to the 
+   *  tertiary inlet and outlet.
+   */
+  virtual bool addToTertiaryNode(Node & node);
+
+  /** Returns the optional ModelObject connected to the tertiary inlet. **/
+  boost::optional<ModelObject> tertiaryInletModelObject() const;
+
+  /** Returns the optional ModelObject connected to the tertiary outlet. **/
+  boost::optional<ModelObject> tertiaryOutletModelObject() const;
+
   void disconnect();
 
   protected:

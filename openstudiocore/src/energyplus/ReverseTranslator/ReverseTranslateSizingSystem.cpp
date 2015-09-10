@@ -83,7 +83,7 @@ OptionalModelObject ReverseTranslator::translateSizingSystem( const WorkspaceObj
 
   // MinimumSystemAirFlowRatio
 
-  value = workspaceObject.getDouble(Sizing_SystemFields::MinimumSystemAirFlowRatio);
+  value = workspaceObject.getDouble(Sizing_SystemFields::CentralHeatingMaximumSystemAirFlowRatio);
   if( value )
   {
     sizingSystem.setMinimumSystemAirFlowRatio(value.get());
@@ -139,7 +139,7 @@ OptionalModelObject ReverseTranslator::translateSizingSystem( const WorkspaceObj
 
   // SizingOption
 
-  s = workspaceObject.getString(Sizing_SystemFields::SizingOption);
+  s = workspaceObject.getString(Sizing_SystemFields::TypeofZoneSumtoUse);
   if( s )
   {
     sizingSystem.setSizingOption(s.get());
@@ -187,7 +187,7 @@ OptionalModelObject ReverseTranslator::translateSizingSystem( const WorkspaceObj
 
   // CoolingDesignAirFlowMethod
 
-  s = workspaceObject.getString(Sizing_SystemFields::CoolingDesignAirFlowMethod);
+  s = workspaceObject.getString(Sizing_SystemFields::CoolingSupplyAirFlowRateMethod);
   if( s )
   {
     sizingSystem.setCoolingDesignAirFlowMethod(s.get());
@@ -195,7 +195,7 @@ OptionalModelObject ReverseTranslator::translateSizingSystem( const WorkspaceObj
 
   // CoolingDesignAirFlowRate
 
-  value = workspaceObject.getDouble(Sizing_SystemFields::CoolingDesignAirFlowRate);
+  value = workspaceObject.getDouble(Sizing_SystemFields::CoolingSupplyAirFlowRate);
   if( value )
   {
     sizingSystem.setCoolingDesignAirFlowRate(value.get());
@@ -203,7 +203,7 @@ OptionalModelObject ReverseTranslator::translateSizingSystem( const WorkspaceObj
 
   // HeatingDesignAirFlowMethod
 
-  s = workspaceObject.getString(Sizing_SystemFields::HeatingDesignAirFlowMethod);
+  s = workspaceObject.getString(Sizing_SystemFields::HeatingSupplyAirFlowRateMethod);
   if( s )
   {
     sizingSystem.setHeatingDesignAirFlowMethod(s.get());
@@ -211,7 +211,7 @@ OptionalModelObject ReverseTranslator::translateSizingSystem( const WorkspaceObj
 
   // HeatingDesignAirFlowRate
 
-  value = workspaceObject.getDouble(Sizing_SystemFields::HeatingDesignAirFlowRate);
+  value = workspaceObject.getDouble(Sizing_SystemFields::HeatingSupplyAirFlowRate);
   if( value )
   {
     sizingSystem.setHeatingDesignAirFlowRate(value.get());

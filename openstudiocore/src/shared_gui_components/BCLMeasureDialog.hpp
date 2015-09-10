@@ -47,7 +47,7 @@ class BCLMeasureDialog : public OSDialog
 
     virtual ~BCLMeasureDialog();
 
-    QSize sizeHint() const;
+    QSize sizeHint() const override;
 
     /// After calling exec() and getting appropriate return code
     /// Call createMeasure to create the new measure

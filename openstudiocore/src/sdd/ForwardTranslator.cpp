@@ -45,7 +45,6 @@
 #include "../model/ShadingSurface_Impl.hpp"
 #include "../model/ShadingSurfaceGroup.hpp"
 #include "../model/ShadingSurfaceGroup_Impl.hpp"
-#include "../model/AvailabilityManagerAssignmentList.hpp"
 #include "../model/CoilHeatingGasMultiStageStageData.hpp"
 #include "../model/Connection.hpp"
 #include "../model/CoolingTowerPerformanceCoolTools.hpp"
@@ -198,6 +197,7 @@ namespace sdd {
     QFile file(toQString(path));
     if (file.open(QFile::WriteOnly)){
       QTextStream textStream(&file);
+      textStream.setCodec("UTF-8");
       textStream << doc->toString(2);
       file.close();
       return true;
@@ -463,7 +463,6 @@ namespace sdd {
       }
     }
 
-    m_ignoreTypes.push_back(model::AvailabilityManagerAssignmentList::iddObjectType());
     m_ignoreTypes.push_back(model::BoilerSteam::iddObjectType());
     m_ignoreTypes.push_back(model::ClimateZones::iddObjectType()); // might not be translated but it is checked
     m_ignoreTypes.push_back(model::CoilCoolingDXMultiSpeedStageData::iddObjectType());

@@ -68,19 +68,32 @@ class MODEL_API ShadingControl : public ResourceObject {
   
   std::string shadingControlType() const;
 
+  bool isShadingControlTypeDefaulted() const;
+
   boost::optional<Schedule> schedule() const;
+
+  boost::optional<double> setpoint() const;
+
+  bool isSetpointDefaulted() const;
   
   //@}
   /** @name Setters */
   //@{
   
+  // DLM: should this be removed?
   bool setShadingType(const std::string& shadingType);
   
   bool setShadingControlType(const std::string& shadingControlType);
+
+  void resetShadingControlType();
   
   bool setSchedule(const Schedule& schedule);
   
   void resetSchedule();
+
+  bool setSetpoint(double setpoint);
+
+  void resetSetpoint();
 
   //@}
   /** @name Other */

@@ -53,10 +53,10 @@ namespace bimserver {
       ~ProjectImporter();
 
       /// Reimplemented the close event and guide it to the run() function
-      void closeEvent(QCloseEvent *event);
+      void closeEvent(QCloseEvent *event) override;
 
       /// Reimplemented the key press event of ESC and guide it to the run() function
-      void keyPressEvent(QKeyEvent *event);
+      void keyPressEvent(QKeyEvent *event) override;
 
     signals:
       /// OSM String is retrieved.
@@ -87,7 +87,7 @@ namespace bimserver {
       QString     m_ifcID;
       QListWidget *m_proList;
       QListWidget *m_ifcList;
-      QStatusBar	*m_statusBar;
+      QStatusBar  *m_statusBar;
       QEventLoop  *m_waitForOSM;
       QString     m_OSM;
 

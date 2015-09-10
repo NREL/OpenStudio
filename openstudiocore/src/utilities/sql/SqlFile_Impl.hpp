@@ -57,11 +57,14 @@ namespace openstudio{
 
       /// constructor from filesystem path, will throw ConstructorException if file does not exist
       /// or if file is not valid
-      SqlFile_Impl(const openstudio::path& path);
+      /// createIndexes will create useful indexes when opening an sqlite file but for faster opening
+      /// pass in false if those indexes are not needed
+      SqlFile_Impl(const openstudio::path& path, const bool createIndexes=true);
 
-
+      /// createIndexes will create useful indexes when creating an sqlite file but for faster creation
+      /// pass in false if those indexes are not needed
       SqlFile_Impl(const openstudio::path &t_path, const openstudio::EpwFile &t_epwFile, const openstudio::DateTime &t_simulationTime,
-          const openstudio::Calendar &t_calendar);
+          const openstudio::Calendar &t_calendar, const bool createIndexes=true);
 
       // virtual destructor
       virtual ~SqlFile_Impl();
@@ -612,7 +615,7 @@ namespace openstudio{
       std::vector<std::string> availableReportingFrequencies(const std::string& envPeriod);
 
       // version specific translation for reporting frequencies used in database to reporting frequency enum values
-      openstudio::ReportingFrequency reportingFrequencyFromDB(const std::string& dbReportingFrequency);
+      openstudio::OptionalReportingFrequency reportingFrequencyFromDB(const std::string& dbReportingFrequency);
 
       // return a vector of all the available variableName for environment period and reporting frequency
       std::vector<std::string> availableVariableNames(const std::string& envPeriod, const std::string&  reportingFrequency) const;
@@ -754,6 +757,8 @@ namespace openstudio{
       /// Returns the summary data for each install location and fuel type found in report variables
       std::vector<openstudio::SummaryData> getSummaryData() const;
 
+      // Insert a new report variable record into the database
+      // This does not support meter data
       void insertTimeSeriesData(const std::string &t_variableType, const std::string &t_indexGroup,
           const std::string &t_timestepType, const std::string &t_keyValue, const std::string &t_variableName,
           const openstudio::ReportingFrequency &t_reportingFrequency, const boost::optional<std::string> &t_scheduleName,
@@ -802,9 +807,14 @@ namespace openstudio{
       boost::optional<Date> timeSeriesStartDate(const DataDictionaryItem& dataDictionary);
 
       // return first date in time table used for start date of run period variables
-      openstudio::DateTime firstDateTime(bool includeHourAndMinute);
+      openstudio::DateTime firstDateTime(bool includeHourAndMinute, int envPeriodIndex);
 
+      // return last date in time table used for end date of run period variables
+      openstudio::DateTime lastDateTime(bool includeHourAndMinute, int envPeriodIndex);
+
+      // DLM: timeSeriesInterval seems pretty useless, can we remove it?
       boost::optional<Time> timeSeriesInterval(const DataDictionaryItem& dataDictionary);
+
       std::vector<DateTime> dateTimeVec(const DataDictionaryItem& dataDictionary);
 
       bool isValidConnection();

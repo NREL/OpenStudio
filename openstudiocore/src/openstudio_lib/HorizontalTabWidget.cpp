@@ -39,7 +39,7 @@ HorizontalTabWidget::HorizontalTabWidget(QWidget * parent)
 {
   //setObjectName("GrayWidget");
 
-  QVBoxLayout * mainLayout = new QVBoxLayout();
+  auto mainLayout = new QVBoxLayout();
 
   mainLayout->setSpacing(0);
 
@@ -68,7 +68,7 @@ HorizontalTabWidget::HorizontalTabWidget(QWidget * parent)
   m_tabBarLine->setStyleSheet("QWidget { border-top: 1px solid black; background-color: #95B3DE; }");
 
   // Page stack
-  
+
   m_pageStack = new QStackedWidget();
 
   m_pageStack->setObjectName("GrayWidget");
@@ -83,7 +83,7 @@ void HorizontalTabWidget::addTab( QWidget * widget,
                                   int id,
                                   const QString & label )
 {
-  QPushButton * button = new QPushButton(m_tabBar);
+  auto button = new QPushButton(m_tabBar);
 
   button->setText(label);
 
@@ -106,7 +106,7 @@ void HorizontalTabWidget::select()
 
   int index = 0;
 
-  for( std::vector<QPushButton*>::iterator  it = m_tabButtons.begin();
+  for( auto it = m_tabButtons.begin();
        it < m_tabButtons.end();
        ++it )
   {
@@ -230,7 +230,7 @@ void HorizontalTabWidget::hideTab(QWidget * widget, bool hide)
     }
   }
 
-  QPushButton * button = 0;
+  QPushButton * button = nullptr;
   button = m_tabButtons.at(index);
   OS_ASSERT(button);
   if(hide){

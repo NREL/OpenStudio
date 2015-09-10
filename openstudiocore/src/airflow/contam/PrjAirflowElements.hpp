@@ -134,30 +134,30 @@ public:
   /** Read object details from a Reader. */
   void readDetails(Reader &input);
   /** Write the object to a string. */
-  std::string write();
+  std::string write() override;
 
   //@}
   /** @name Getters and Setters */
   //@{
 
   /** Returns the element number, in order from 1 to the number of airflow elements. */
-  int nr() const;
+  int nr() const override;
   /** Sets the element number. This should only be done with care. */
-  void setNr(const int nr);
+  void setNr(const int nr) override;
   /** Returns the icon used to represent flow path. */
-  int icon() const;
+  int icon() const override;
   /** Sets the icon used to represent flow path. */
-  void setIcon(const int icon);
+  void setIcon(const int icon) override;
   /** Returns the element data type. */
-  std::string dataType() const {return "plr_orfc";}
+  std::string dataType() const override {return "plr_orfc";}
   /** Returns the element name. */
-  std::string name() const;
+  std::string name() const override;
   /** Sets the element name. */
-  void setName(const std::string &name);
+  void setName(const std::string &name) override;
   /** Returns the element description. */
-  std::string desc() const;
+  std::string desc() const override;
   /** Sets the element description. */
-  void setDesc(const std::string &desc);
+  void setDesc(const std::string &desc) override;
   /** Returns the laminar flow coefficient. */
   double lam() const;
   /** Sets the laminar flow coefficient. */
@@ -256,30 +256,30 @@ public:
   /** Read object details from a Reader. */
   void readDetails(Reader &input);
   /** Write the object to a string. */
-  std::string write();
+  std::string write() override;
 
   //@}
   /** @name Getters and Setters */
   //@{
 
   /** Returns the element number, in order from 1 to the number of airflow elements. */
-  int nr() const;
+  int nr() const override;
   /** Sets the element number. This should only be done with care. */
-  void setNr(const int nr);
+  void setNr(const int nr) override;
   /** Returns the icon used to represent flow path. */
-  int icon() const;
+  int icon() const override;
   /** Sets the icon used to represent flow path. */
-  void setIcon(const int icon);
+  void setIcon(const int icon) override;
   /** Returns the element data type. */
-  virtual std::string dataType() const=0;
+  virtual std::string dataType() const override = 0;
   /** Returns the element name. */
-  std::string name() const;
+  std::string name() const override;
   /** Sets the element name. */
-  void setName(const std::string &name);
+  void setName(const std::string &name) override;
   /** Returns the element description. */
-  std::string desc() const;
+  std::string desc() const override;
   /** Sets the element description. */
-  void setDesc(const std::string &desc);
+  void setDesc(const std::string &desc) override;
   /** Returns the laminar flow coefficient. */
   double lam() const;
   /** Sets the laminar flow coefficient. */
@@ -376,7 +376,7 @@ public:
   //@{
 
   /** Returns the element data type. */
-  std::string dataType() const {return "plr_leak1";}
+  std::string dataType() const override {return "plr_leak1";}
   //@}
 };
 
@@ -413,7 +413,7 @@ public:
   //@{
 
   /** Returns the element data type. */
-  std::string dataType() const {return "plr_leak2";}
+  std::string dataType() const override {return "plr_leak2";}
   //@}
 };
 
@@ -444,7 +444,7 @@ public:
   //@{
 
   /** Returns the element data type. */
-  std::string dataType() const {return "plr_leak3";}
+  std::string dataType() const override {return "plr_leak3";}
   //@}
 };
 
@@ -490,30 +490,30 @@ public:
   /** Read object details from a Reader. */
   void readDetails(Reader &input);
   /** Write the object to a string. */
-  std::string write();
+  std::string write() override;
 
   //@}
   /** @name Getters and Setters */
   //@{
 
   /** Returns the element number, in order from 1 to the number of airflow elements. */
-  int nr() const;
+  int nr() const override;
   /** Sets the element number. This should only be done with care. */
-  void setNr(const int nr);
+  void setNr(const int nr) override;
   /** Returns the icon used to represent flow path. */
-  int icon() const;
+  int icon() const override;
   /** Sets the icon used to represent flow path. */
-  void setIcon(const int icon);
+  void setIcon(const int icon) override;
   /** Returns the element data type. */
-  std::string dataType() const {return "plr_conn";}
+  std::string dataType() const override {return "plr_conn";}
   /** Returns the element name. */
-  std::string name() const;
+  std::string name() const override;
   /** Sets the element name. */
-  void setName(const std::string &name);
+  void setName(const std::string &name) override;
   /** Returns the element description. */
-  std::string desc() const;
+  std::string desc() const override;
   /** Sets the element description. */
-  void setDesc(const std::string &desc);
+  void setDesc(const std::string &desc) override;
   /** Returns the laminar flow coefficient. */
   double lam() const;
   /** Sets the laminar flow coefficient. */
@@ -594,30 +594,30 @@ public:
   /** Read object details from a Reader. */
   void readDetails(Reader &input);
   /** Write the object to a string. */
-  std::string write();
+  std::string write() override;
 
   //@}
   /** @name Getters and Setters */
   //@{
 
   /** Returns the element number, in order from 1 to the number of airflow elements. */
-  int nr() const;
+  int nr() const override;
   /** Sets the element number. This should only be done with care. */
-  void setNr(const int nr);
+  void setNr(const int nr) override;
   /** Returns the icon used to represent flow path. */
-  int icon() const;
+  int icon() const override;
   /** Sets the icon used to represent flow path. */
-  void setIcon(const int icon);
+  void setIcon(const int icon) override;
   /** Returns the element data type. */
-  virtual std::string dataType() const=0;
+  virtual std::string dataType() const override = 0;
   /** Returns the element name. */
-  std::string name() const;
+  std::string name() const override;
   /** Sets the element name. */
-  void setName(const std::string &name);
+  void setName(const std::string &name) override;
   /** Returns the element description. */
-  std::string desc() const;
+  std::string desc() const override;
   /** Sets the element description. */
-  void setDesc(const std::string &desc);
+  void setDesc(const std::string &desc) override;
   /** Returns the laminar flow coefficient. */
   double lam() const;
   /** Sets the laminar flow coefficient. */
@@ -667,7 +667,7 @@ public:
   //@{
 
   /** Returns the element data type. */
-  std::string dataType() const {return "plr_qcn";}
+  std::string dataType() const override {return "plr_qcn";}
   //@}
 };
 
@@ -696,7 +696,7 @@ public:
   //@{
 
   /** Returns the element data type. */
-  std::string dataType() const {return "plr_fcn";}
+  std::string dataType() const override {return "plr_fcn";}
   //@}
 };
 
@@ -746,30 +746,30 @@ public:
   /** Read object details from a Reader. */
   void readDetails(Reader &input);
   /** Write the object to a string. */
-  std::string write();
+  std::string write() override;
 
   //@}
   /** @name Getters and Setters */
   //@{
 
   /** Returns the element number, in order from 1 to the number of airflow elements. */
-  int nr() const;
+  int nr() const override;
   /** Sets the element number. This should only be done with care. */
-  void setNr(const int nr);
+  void setNr(const int nr) override;
   /** Returns the icon used to represent flow path. */
-  int icon() const;
+  int icon() const override;
   /** Sets the icon used to represent flow path. */
-  void setIcon(const int icon);
+  void setIcon(const int icon) override;
   /** Returns the element data type. */
-  std::string dataType() const {return "plr_test1";}
+  std::string dataType() const override {return "plr_test1";}
   /** Returns the element name. */
-  std::string name() const;
+  std::string name() const override;
   /** Sets the element name. */
-  void setName(const std::string &name);
+  void setName(const std::string &name) override;
   /** Returns the element description. */
-  std::string desc() const;
+  std::string desc() const override;
   /** Sets the element description. */
-  void setDesc(const std::string &desc);
+  void setDesc(const std::string &desc) override;
   /** Returns the laminar flow coefficient. */
   double lam() const;
   /** Sets the laminar flow coefficient. */
@@ -856,30 +856,30 @@ public:
   /** Read object details from a Reader. */
   void readDetails(Reader &input);
   /** Write the object to a string. */
-  std::string write();
+  std::string write() override;
 
   //@}
   /** @name Getters and Setters */
   //@{
 
   /** Returns the element number, in order from 1 to the number of airflow elements. */
-  int nr() const;
+  int nr() const override;
   /** Sets the element number. This should only be done with care. */
-  void setNr(const int nr);
+  void setNr(const int nr) override;
   /** Returns the icon used to represent flow path. */
-  int icon() const;
+  int icon() const override;
   /** Sets the icon used to represent flow path. */
-  void setIcon(const int icon);
+  void setIcon(const int icon) override;
   /** Returns the element data type. */
-  std::string dataType() const {return "plr_test2";}
+  std::string dataType() const override {return "plr_test2";}
   /** Returns the element name. */
-  std::string name() const;
+  std::string name() const override;
   /** Sets the element name. */
-  void setName(const std::string &name);
+  void setName(const std::string &name) override;
   /** Returns the element description. */
-  std::string desc() const;
+  std::string desc() const override;
   /** Sets the element description. */
-  void setDesc(const std::string &desc);
+  void setDesc(const std::string &desc) override;
   /** Returns the laminar flow coefficient. */
   double lam() const;
   /** Sets the laminar flow coefficient. */
@@ -986,30 +986,30 @@ public:
   /** Read object details from a Reader. */
   void readDetails(Reader &input);
   /** Write the object to a string. */
-  std::string write();
+  std::string write() override;
 
   //@}
   /** @name Getters and Setters */
   //@{
 
   /** Returns the element number, in order from 1 to the number of airflow elements. */
-  int nr() const;
+  int nr() const override;
   /** Sets the element number. This should only be done with care. */
-  void setNr(const int nr);
+  void setNr(const int nr) override;
   /** Returns the icon used to represent flow path. */
-  int icon() const;
+  int icon() const override;
   /** Sets the icon used to represent flow path. */
-  void setIcon(const int icon);
+  void setIcon(const int icon) override;
   /** Returns the element data type. */
-  std::string dataType() const {return "plr_crack";}
+  std::string dataType() const override {return "plr_crack";}
   /** Returns the element name. */
-  std::string name() const;
+  std::string name() const override;
   /** Sets the element name. */
-  void setName(const std::string &name);
+  void setName(const std::string &name) override;
   /** Returns the element description. */
-  std::string desc() const;
+  std::string desc() const override;
   /** Sets the element description. */
-  void setDesc(const std::string &desc);
+  void setDesc(const std::string &desc) override;
   /** Returns the laminar flow coefficient. */
   double lam() const;
   /** Sets the laminar flow coefficient. */
@@ -1096,30 +1096,30 @@ public:
   /** Read object details from a Reader. */
   void readDetails(Reader &input);
   /** Write the object to a string. */
-  std::string write();
+  std::string write() override;
 
   //@}
   /** @name Getters and Setters */
   //@{
 
   /** Returns the element number, in order from 1 to the number of airflow elements. */
-  int nr() const;
+  int nr() const override;
   /** Sets the element number. This should only be done with care. */
-  void setNr(const int nr);
+  void setNr(const int nr) override;
   /** Returns the icon used to represent flow path. */
-  int icon() const;
+  int icon() const override;
   /** Sets the icon used to represent flow path. */
-  void setIcon(const int icon);
+  void setIcon(const int icon) override;
   /** Returns the element data type. */
-  std::string dataType() const {return "plr_stair";}
+  std::string dataType() const override {return "plr_stair";}
   /** Returns the element name. */
-  std::string name() const;
+  std::string name() const override;
   /** Sets the element name. */
-  void setName(const std::string &name);
+  void setName(const std::string &name) override;
   /** Returns the element description. */
-  std::string desc() const;
+  std::string desc() const override;
   /** Sets the element description. */
-  void setDesc(const std::string &desc);
+  void setDesc(const std::string &desc) override;
   /** Returns the laminar flow coefficient. */
   double lam() const;
   /** Sets the laminar flow coefficient. */
@@ -1218,29 +1218,29 @@ public:
   /** Read object details from a Reader. */
   void readDetails(Reader &input);
   /** Write the object to a string. */
-  std::string write();
+  std::string write() override;
 
   //@}
   /** @name Getters and Setters */
   //@{
   /** Returns the element number, in order from 1 to the number of airflow elements. */
-  int nr() const;
+  int nr() const override;
   /** Sets the element number. This should only be done with care. */
-  void setNr(const int nr);
+  void setNr(const int nr) override;
   /** Returns the icon used to represent flow path. */
-  int icon() const;
+  int icon() const override;
   /** Sets the icon used to represent flow path. */
-  void setIcon(const int icon);
+  void setIcon(const int icon) override;
   /** Returns the element data type. */
-  std::string dataType() const {return "plr_shaft";}
+  std::string dataType() const override {return "plr_shaft";}
   /** Returns the element name. */
-  std::string name() const;
+  std::string name() const override;
   /** Sets the element name. */
-  void setName(const std::string &name);
+  void setName(const std::string &name) override;
   /** Returns the element description. */
-  std::string desc() const;
+  std::string desc() const override;
   /** Sets the element description. */
-  void setDesc(const std::string &desc);
+  void setDesc(const std::string &desc) override;
   /** Returns the laminar flow coefficient. */
   double lam() const;
   /** Sets the laminar flow coefficient. */
@@ -1345,29 +1345,29 @@ public:
   /** Read object details from a Reader. */
   void readDetails(Reader &input);
   /** Write the object to a string. */
-  std::string write();
+  std::string write() override;
 
   //@}
   /** @name Getters and Setters */
   //@{
   /** Returns the element number, in order from 1 to the number of airflow elements. */
-  int nr() const;
+  int nr() const override;
   /** Sets the element number. This should only be done with care. */
-  void setNr(const int nr);
+  void setNr(const int nr) override;
   /** Returns the icon used to represent flow path. */
-  int icon() const;
+  int icon() const override;
   /** Sets the icon used to represent flow path. */
-  void setIcon(const int icon);
+  void setIcon(const int icon) override;
   /** Returns the element data type. */
-  virtual std::string dataType() const = 0;
+  virtual std::string dataType() const override = 0;
   /** Returns the element name. */
-  std::string name() const;
+  std::string name() const override;
   /** Sets the element name. */
-  void setName(const std::string &name);
+  void setName(const std::string &name) override;
   /** Returns the element description. */
-  std::string desc() const;
+  std::string desc() const override;
   /** Sets the element description. */
-  void setDesc(const std::string &desc);
+  void setDesc(const std::string &desc) override;
   /** Returns the laminar flow coefficient. */
   double lam() const;
   /** Sets the laminar flow coefficient. */
@@ -1427,7 +1427,7 @@ public:
   /** @name Getters and Setters */
   //@{
   /** Returns the element data type. */
-  virtual std::string dataType() const {return "plr_bdq";}
+  virtual std::string dataType() const override {return "plr_bdq";}
   //@}
 };
 
@@ -1455,7 +1455,7 @@ public:
   /** @name Getters and Setters */
   //@{
   /** Returns the element data type. */
-  std::string dataType() const {return "plr_bdf";}
+  std::string dataType() const override {return "plr_bdf";}
   //@}
 };
 
@@ -1499,29 +1499,29 @@ public:
   /** Read object details from a Reader. */
   void readDetails(Reader &input);
   /** Write the object to a string. */
-  std::string write();
+  std::string write() override;
 
   //@}
   /** @name Getters and Setters */
   //@{
   /** Returns the element number, in order from 1 to the number of airflow elements. */
-  int nr() const;
+  int nr() const override;
   /** Sets the element number. This should only be done with care. */
-  void setNr(const int nr);
+  void setNr(const int nr) override;
   /** Returns the icon used to represent flow path. */
-  int icon() const;
+  int icon() const override;
   /** Sets the icon used to represent flow path. */
-  void setIcon(const int icon);
+  void setIcon(const int icon) override;
   /** Returns the element data type. */
-  virtual std::string dataType() const = 0;
+  virtual std::string dataType() const override = 0;
   /** Returns the element name. */
-  std::string name() const;
+  std::string name() const override;
   /** Sets the element name. */
-  void setName(const std::string &name);
+  void setName(const std::string &name) override;
   /** Returns the element description. */
-  std::string desc() const;
+  std::string desc() const override;
   /** Sets the element description. */
-  void setDesc(const std::string &desc);
+  void setDesc(const std::string &desc) override;
   /** Returns the flow rate coefficient. */
   double a() const;
   /** Sets the flow rate coefficient. */
@@ -1564,7 +1564,7 @@ public:
   //@{
 
   /** Returns the element data type. */
-  std::string dataType() const {return "qfr_qab";}
+  std::string dataType() const override {return "qfr_qab";}
   //@}
 };
 
@@ -1593,7 +1593,7 @@ public:
   //@{
 
   /** Returns the element data type. */
-  std::string dataType() const {return "qfr_fab";}
+  std::string dataType() const override {return "qfr_fab";}
   //@}
 };
 
@@ -1639,29 +1639,29 @@ public:
   /** Read object details from a Reader. */
   void readDetails(Reader &input);
   /** Write the object to a string. */
-  std::string write();
+  std::string write() override;
 
   //@}
   /** @name Getters and Setters */
   //@{
   /** Returns the element number, in order from 1 to the number of airflow elements. */
-  int nr() const;
+  int nr() const override;
   /** Sets the element number. This should only be done with care. */
-  void setNr(const int nr);
+  void setNr(const int nr) override;
   /** Returns the icon used to represent flow path. */
-  int icon() const;
+  int icon() const override;
   /** Sets the icon used to represent flow path. */
-  void setIcon(const int icon);
+  void setIcon(const int icon) override;
   /** Returns the element data type. */
-  std::string dataType() const {return "qfr_crack";}
+  std::string dataType() const override {return "qfr_crack";}
   /** Returns the element name. */
-  std::string name() const;
+  std::string name() const override;
   /** Sets the element name. */
-  void setName(const std::string &name);
+  void setName(const std::string &name) override;
   /** Returns the element description. */
-  std::string desc() const;
+  std::string desc() const override;
   /** Sets the element description. */
-  void setDesc(const std::string &desc);
+  void setDesc(const std::string &desc) override;
   /** Returns the flow rate coefficient. */
   double a() const;
   /** Sets the flow rate coefficient. */
@@ -1755,29 +1755,29 @@ public:
   /** Read object details from a Reader. */
   void readDetails(Reader &input);
   /** Write the object to a string. */
-  std::string write();
+  std::string write() override;
 
   //@}
   /** @name Getters and Setters */
   //@{
   /** Returns the element number, in order from 1 to the number of airflow elements. */
-  int nr() const;
+  int nr() const override;
   /** Sets the element number. This should only be done with care. */
-  void setNr(const int nr);
+  void setNr(const int nr) override;
   /** Returns the icon used to represent flow path. */
-  int icon() const;
+  int icon() const override;
   /** Sets the icon used to represent flow path. */
-  void setIcon(const int icon);
+  void setIcon(const int icon) override;
   /** Returns the element data type. */
-  std::string dataType() const {return "qfr_test2";}
+  std::string dataType() const override {return "qfr_test2";}
   /** Returns the element name. */
-  std::string name() const;
+  std::string name() const override;
   /** Sets the element name. */
-  void setName(const std::string &name);
+  void setName(const std::string &name) override;
   /** Returns the element description. */
-  std::string desc() const;
+  std::string desc() const override;
   /** Sets the element description. */
-  void setDesc(const std::string &desc);
+  void setDesc(const std::string &desc) override;
   /** Returns the flow rate coefficient. */
   double a() const;
   /** Sets the flow rate coefficient. */
@@ -1877,29 +1877,29 @@ public:
   /** Read object details from a Reader. */
   void readDetails(Reader &input);
   /** Write the object to a string. */
-  std::string write();
+  std::string write() override;
 
   //@}
   /** @name Getters and Setters */
   //@{
   /** Returns the element number, in order from 1 to the number of airflow elements. */
-  int nr() const;
+  int nr() const override;
   /** Sets the element number. This should only be done with care. */
-  void setNr(const int nr);
+  void setNr(const int nr) override;
   /** Returns the icon used to represent flow path. */
-  int icon() const;
+  int icon() const override;
   /** Sets the icon used to represent flow path. */
-  void setIcon(const int icon);
+  void setIcon(const int icon) override;
   /** Returns the element data type. */
-  std::string dataType() const {return "dor_door";}
+  std::string dataType() const override {return "dor_door";}
   /** Returns the element name. */
-  std::string name() const;
+  std::string name() const override;
   /** Sets the element name. */
-  void setName(const std::string &name);
+  void setName(const std::string &name) override;
   /** Returns the element description. */
-  std::string desc() const;
+  std::string desc() const override;
   /** Sets the element description. */
-  void setDesc(const std::string &desc);
+  void setDesc(const std::string &desc) override;
   /** Returns the laminar flow coefficient. */
   double lam() const;
   /** Sets the laminar flow coefficient. */
@@ -2001,29 +2001,29 @@ public:
   /** Read object details from a Reader. */
   void readDetails(Reader &input);
   /** Write the object to a string. */
-  std::string write();
+  std::string write() override;
 
   //@}
   /** @name Getters and Setters */
   //@{
   /** Returns the element number, in order from 1 to the number of airflow elements. */
-  int nr() const;
+  int nr() const override;
   /** Sets the element number. This should only be done with care. */
-  void setNr(const int nr);
+  void setNr(const int nr) override;
   /** Returns the icon used to represent flow path. */
-  int icon() const;
+  int icon() const override;
   /** Sets the icon used to represent flow path. */
-  void setIcon(const int icon);
+  void setIcon(const int icon) override;
   /** Returns the element data type. */
-  std::string dataType() const {return "dor_pl2";}
+  std::string dataType() const override {return "dor_pl2";}
   /** Returns the element name. */
-  std::string name() const;
+  std::string name() const override;
   /** Sets the element name. */
-  void setName(const std::string &name);
+  void setName(const std::string &name) override;
   /** Returns the element description. */
-  std::string desc() const;
+  std::string desc() const override;
   /** Sets the element description. */
-  void setDesc(const std::string &desc);
+  void setDesc(const std::string &desc) override;
   /** Returns the laminar flow coefficient. */
   double lam() const;
   /** Sets the laminar flow coefficient. */
@@ -2119,29 +2119,29 @@ public:
   /** Read object details from a Reader. */
   void readDetails(Reader &input);
   /** Write the object to a string. */
-  std::string write();
+  std::string write() override;
 
   //@}
   /** @name Getters and Setters */
   //@{
   /** Returns the element number, in order from 1 to the number of airflow elements. */
-  int nr() const;
+  int nr() const override;
   /** Sets the element number. This should only be done with care. */
-  void setNr(const int nr);
+  void setNr(const int nr) override;
   /** Returns the icon used to represent flow path. */
-  int icon() const;
+  int icon() const override;
   /** Sets the icon used to represent flow path. */
-  void setIcon(const int icon);
+  void setIcon(const int icon) override;
   /** Returns the element data type. */
-  std::string dataType() const = 0;
+  std::string dataType() const override = 0;
   /** Returns the element name. */
-  std::string name() const;
+  std::string name() const override;
   /** Sets the element name. */
-  void setName(const std::string &name);
+  void setName(const std::string &name) override;
   /** Returns the element description. */
-  std::string desc() const;
+  std::string desc() const override;
   /** Sets the element description. */
-  void setDesc(const std::string &desc);
+  void setDesc(const std::string &desc) override;
   /** Returns the design flow rate [kg/s or m^3/s]. */
   double Flow() const;
   /** Sets the design flow rate [kg/s or m^3/s]. */
@@ -2181,7 +2181,7 @@ public:
   /** @name Getters and Setters */
   //@{
   /** Returns the element data type. */
-  std::string dataType() const {return "fan_cmf";}
+  std::string dataType() const override {return "fan_cmf";}
   //@}
 };
 
@@ -2209,7 +2209,7 @@ public:
   /** @name Getters and Setters */
   //@{
   /** Returns the element data type. */
-  std::string dataType() const {return "fan_cvf";}
+  std::string dataType() const override {return "fan_cvf";}
   //@}
 };
 
@@ -2257,29 +2257,29 @@ public:
   /** Read object details from a Reader. */
   void readDetails(Reader &input);
   /** Write the object to a string. */
-  std::string write();
+  std::string write() override;
 
   //@}
   /** @name Getters and Setters */
   //@{
   /** Returns the element number, in order from 1 to the number of airflow elements. */
-  int nr() const;
+  int nr() const override;
   /** Sets the element number. This should only be done with care. */
-  void setNr(const int nr);
+  void setNr(const int nr) override;
   /** Returns the icon used to represent flow path. */
-  int icon() const;
+  int icon() const override;
   /** Sets the icon used to represent flow path. */
-  void setIcon(const int icon);
+  void setIcon(const int icon) override;
   /** Returns the element data type. */
-  std::string dataType() const {return "fan_fan";}
+  std::string dataType() const override {return "fan_fan";}
   /** Returns the element name. */
-  std::string name() const;
+  std::string name() const override;
   /** Sets the element name. */
-  void setName(const std::string &name);
+  void setName(const std::string &name) override;
   /** Returns the element description. */
-  std::string desc() const;
+  std::string desc() const override;
   /** Sets the element description. */
-  void setDesc(const std::string &desc);
+  void setDesc(const std::string &desc) override;
   /** Returns the laminar flow coefficient. */
   double lam() const;
   /** Sets the laminar flow coefficient. */
@@ -2385,27 +2385,27 @@ public:
   /** Read object details from a Reader. */
   void readDetails(Reader &input);
   /** Write the object to a string. */
-  std::string write();
+  std::string write() override;
 
   //@}
   /** @name Getters and Setters */
   //@{
   /** Returns the element number, in order from 1 to the number of airflow elements. */
-  int nr() const;
+  int nr() const override;
   /** Sets the element number. This should only be done with care. */
-  void setNr(const int nr);
+  void setNr(const int nr) override;
   /** Returns the icon used to represent flow path. */
-  int icon() const;
+  int icon() const override;
   /** Sets the icon used to represent flow path. */
-  void setIcon(const int icon);
+  void setIcon(const int icon) override;
   /** Returns the element name. */
-  std::string name() const;
+  std::string name() const override;
   /** Sets the element name. */
-  void setName(const std::string &name);
+  void setName(const std::string &name) override;
   /** Returns the element description. */
-  std::string desc() const;
+  std::string desc() const override;
   /** Sets the element description. */
-  void setDesc(const std::string &desc);
+  void setDesc(const std::string &desc) override;
   /** Returns the display units for x. */
   int u_x() const;
   /** Sets the display units for x. */
@@ -2447,7 +2447,7 @@ public:
   //@{
 
   /** Returns the element data type. */
-  std::string dataType() const {return "csf_fsp";}
+  std::string dataType() const override {return "csf_fsp";}
   //@}
 };
 
@@ -2475,7 +2475,7 @@ public:
   //@{
 
   /** Returns the element data type. */
-  std::string dataType() const {return "csf_qsp";}
+  std::string dataType() const override {return "csf_qsp";}
   //@}
 };
 
@@ -2503,7 +2503,7 @@ public:
   //@{
 
   /** Returns the element data type. */
-  std::string dataType() const {return "csf_psf";}
+  std::string dataType() const override {return "csf_psf";}
   //@}
 };
 
@@ -2531,7 +2531,7 @@ public:
   //@{
 
   /** Returns the element data type. */
-  std::string dataType() const {return "csf_psq";}
+  std::string dataType() const override {return "csf_psq";}
   //@}
 };
 
@@ -2574,29 +2574,29 @@ public:
   /** Read object details from a Reader. */
   void readDetails(Reader &input);
   /** Write the object to a string. */
-  std::string write();
+  std::string write() override;
 
   //@}
   /** @name Getters and Setters */
   //@{
   /** Returns the element number, in order from 1 to the number of airflow elements. */
-  int nr() const;
+  int nr() const override;
   /** Sets the element number. This should only be done with care. */
-  void setNr(const int nr);
+  void setNr(const int nr) override;
   /** Returns the icon used to represent flow path. */
-  int icon() const;
+  int icon() const override;
   /** Sets the icon used to represent flow path. */
-  void setIcon(const int icon);
+  void setIcon(const int icon) override;
   /** Returns the element data type. */
-  std::string dataType() const {return "sup_afe";}
+  std::string dataType() const override {return "sup_afe";}
   /** Returns the element name. */
-  std::string name() const;
+  std::string name() const override;
   /** Sets the element name. */
-  void setName(const std::string &name);
+  void setName(const std::string &name) override;
   /** Returns the element description. */
-  std::string desc() const;
+  std::string desc() const override;
   /** Sets the element description. */
-  void setDesc(const std::string &desc);
+  void setDesc(const std::string &desc) override;
   /** Returns the scheduled sub-element number (only one). */
   int sched() const;
   /** Sets the scheduled sub-element number (only one). */

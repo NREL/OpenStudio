@@ -46,7 +46,7 @@ class ModelObjectInspectorView : public OSInspectorView
 
     ModelObjectInspectorView(const openstudio::model::Model& model,
                              bool addScrollArea,
-                             QWidget * parent = 0);
+                             QWidget * parent = nullptr);
 
     virtual ~ModelObjectInspectorView() {}
 
@@ -65,20 +65,18 @@ class ModelObjectInspectorView : public OSInspectorView
 
     void itemsRequested();
 
-    void gridRowSelected(OSItem * item);
-
     void dropZoneItemClicked(OSItem* item);
-
 
   public slots:
 
     void selectModelObject(const openstudio::model::ModelObject& modelObject);
 
-    void onDropZoneItemClicked(OSItem* item);
-
   protected:
-    virtual void onSelectItem(OSItem *item);
-    virtual void onClearSelection();
+
+    virtual void onSelectItem(OSItem *item) override;
+
+    virtual void onClearSelection() override;
+
     virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) = 0;
 
     boost::optional<openstudio::model::ModelObject> modelObject() const;
@@ -101,17 +99,17 @@ class DefaultInspectorView : public ModelObjectInspectorView
   public:
 
     DefaultInspectorView(const model::Model& model,
-                         QWidget * parent = 0);
+                         QWidget * parent = nullptr);
 
     virtual ~DefaultInspectorView() {}
 
   protected:
 
-    virtual void onClearSelection();
+    virtual void onClearSelection() override;
 
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
 
-    virtual void onUpdate();
+    virtual void onUpdate() override;
 
   private:
     

@@ -57,6 +57,13 @@ class VariableItem;
 
 namespace measuretab {
 
+// the classes here are used in the measures tab of PAT as well as the measures tab of the App
+//
+// alternatives classes to these classes used on the design alternatives tab in PAT
+// are defined in \openstudiocore\src\pat_app\DesignAlternativesTabController.hpp
+  
+// VariableGroupListController controls a list of VariableGroupItems
+// Each VariableGroupItem represents a list of measures grouped by type
 class VariableGroupListController : public OSListController
 {
   Q_OBJECT
@@ -65,17 +72,18 @@ class VariableGroupListController : public OSListController
 
   VariableGroupListController(bool filterFixed, BaseApp *t_baseApp);
 
-  void addItem(QSharedPointer<OSListItem> item);
+  QSharedPointer<OSListItem> itemAt(int i) override;
 
-  QSharedPointer<OSListItem> itemAt(int i);
-
-  int count();
+  int count() override;
 
   private:
+
+  void addItem(QSharedPointer<OSListItem> item);
 
   std::vector<QSharedPointer<VariableGroupItem> > m_variableGroupItems;
 };
 
+// Each VariableGroupItem represents a list of measures grouped by type, e.g. all the Model Measures
 class VariableGroupItem : public OSListItem
 {
   Q_OBJECT
@@ -95,20 +103,24 @@ class VariableGroupItem : public OSListItem
   QString m_label;  
 };
 
+// VariableGroupItemDelegate views a VariableGroupItem and returns a VariableGroupItemView
 class VariableGroupItemDelegate : public OSItemDelegate
 {
   Q_OBJECT
 
   public:
 
-  VariableGroupItemDelegate(bool t_fixedMeasuresOnly);
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
+  explicit VariableGroupItemDelegate(bool t_fixedMeasuresOnly);
+
+  QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 
   private:
 
   bool m_fixedMeasuresOnly;
 };
 
+// VariableListController controls a list of VariableItems
+// It can add, remove, or change the order of MeasureGroups (which correspond to analysis::Variables)
 class VariableListController : public OSListController
 {
   Q_OBJECT
@@ -117,9 +129,9 @@ class VariableListController : public OSListController
 
   VariableListController(MeasureType measureType, bool designAlternatives, BaseApp *t_baseApp);
 
-  QSharedPointer<OSListItem> itemAt(int i);
+  QSharedPointer<OSListItem> itemAt(int i) override;
 
-  int count();
+  int count() override;
 
   void removeItemForVariable(analysis::MeasureGroup variable);
 
@@ -132,10 +144,11 @@ class VariableListController : public OSListController
   public slots:
 
   void addItemForDroppedMeasure(QDropEvent * event);
+
   void addFixedItemForDroppedMeasure(QDropEvent *event);
 
-
   private:
+
   REGISTER_LOGGER("openstudio.measuretab.VariableListController");
 
   void addItemForDroppedMeasureImpl(QDropEvent * event, bool t_fixed);
@@ -147,6 +160,7 @@ class VariableListController : public OSListController
   std::vector<analysis::MeasureGroup> variables() const;
 };
 
+// VariableItem represents a MeasureGroup (which corresponds to analysis::Variable)
 class VariableItem : public OSListItem
 {
   Q_OBJECT
@@ -179,6 +193,8 @@ class VariableItem : public OSListItem
 
   void setDisplayName(const QString & displayName);
 
+  bool isAlternativeModelVariable() const;
+
   private:
   REGISTER_LOGGER("openstudio.measuretab.VariableItem");
 
@@ -191,15 +207,17 @@ class VariableItem : public OSListItem
   MeasureType m_measureType;
 };
 
+// VariableItemDelegate views a VariableItem and returns a VariableItemView
 class VariableItemDelegate : public OSItemDelegate
 {
   Q_OBJECT
 
   public:
 
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
+  QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 };
 
+// VariableListController controls a list of MeasureItems which come from a VariableItem
 class MeasureListController : public OSListController
 {
   Q_OBJECT
@@ -208,9 +226,9 @@ class MeasureListController : public OSListController
 
   MeasureListController(VariableItem * variableItem, BaseApp *t_app);
 
-  QSharedPointer<OSListItem> itemAt(int i);
+  QSharedPointer<OSListItem> itemAt(int i) override;
 
-  int count();
+  int count() override;
 
   void addItemForDuplicateMeasure(const analysis::Measure& measure);
 
@@ -230,6 +248,7 @@ class MeasureListController : public OSListController
   QPointer<VariableItem> m_variableItem;
 };
 
+// MeasureItem represents an analysis::RubyMeasure)
 class MeasureItem : public OSListItem
 {
   Q_OBJECT
@@ -256,7 +275,9 @@ class MeasureItem : public OSListItem
 
   analysis::RubyMeasure measure() const;
 
-  bool isFixedMeasure() const;
+  OptionalBCLMeasure bclMeasure() const;
+
+  bool isAlternativeModelMeasure() const;
 
   public slots:
 
@@ -270,7 +291,7 @@ class MeasureItem : public OSListItem
 
   void remove();
 
-  void setSelected(bool isSelected);
+  void setSelected(bool isSelected) override;
 
   signals:
 
@@ -289,17 +310,20 @@ class MeasureItem : public OSListItem
   REGISTER_LOGGER("openstudio.measuretab.MeasureItem");
 };
 
+// MeasureItemDelegate views a MeasureItem and returns a MeasureItemView
 class MeasureItemDelegate : public OSItemDelegate
 {
   Q_OBJECT
 
   public:
 
-  MeasureItemDelegate(bool t_fixed) : m_fixed(t_fixed) {}
+  explicit MeasureItemDelegate(bool t_fixed);
 
-  QWidget * view(QSharedPointer<OSListItem> dataSource);
+  QWidget * view(QSharedPointer<OSListItem> dataSource) override;
 
   private:
+
+  MeasureItemDelegate();
 
   bool m_fixed;
 };

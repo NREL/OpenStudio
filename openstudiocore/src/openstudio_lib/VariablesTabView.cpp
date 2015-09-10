@@ -50,7 +50,7 @@ namespace openstudio {
       m_variable(t_variable),
       m_model(t_model)
   {
-    QHBoxLayout *hbox = new QHBoxLayout();
+    auto hbox = new QHBoxLayout();
     hbox->setContentsMargins(10,10,10,10);
     hbox->setSpacing(10);
 
@@ -78,7 +78,7 @@ namespace openstudio {
 
   VariablesList::~VariablesList() {
 
-    for (std::vector<VariableListItem*>::iterator itr = m_variables.begin();
+    for (auto itr = m_variables.begin();
           itr != m_variables.end();
           ++itr)
     {
@@ -144,14 +144,14 @@ namespace openstudio {
       static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
       this,
       &VariablesList::onRemoved);
-    QVBoxLayout *vbox = new QVBoxLayout();
+    auto vbox = new QVBoxLayout();
     vbox->setContentsMargins(10,10,10,10);
     vbox->setSpacing(10);
     setLayout(vbox);
 
     vbox->addWidget(new QLabel("<b>Possible Output Variables</b>"));
 
-    QVBoxLayout *innerbox = new QVBoxLayout();
+    auto innerbox = new QVBoxLayout();
     m_allOnBtn = new QPushButton("All On");
     m_allOnBtn->setFlat(true);
     m_allOnBtn->setObjectName("StandardGrayButton");
@@ -163,7 +163,7 @@ namespace openstudio {
 
     connect(m_allOnBtn, &QPushButton::clicked, this, &VariablesList::allOnClicked);
     connect(m_allOffBtn, &QPushButton::clicked, this, &VariablesList::allOffClicked);
-    QHBoxLayout *outerbox = new QHBoxLayout();
+    auto outerbox = new QHBoxLayout();
     outerbox->addLayout(innerbox);
     outerbox->addStretch();
 
@@ -302,7 +302,7 @@ namespace openstudio {
          itr != potentialOutputVariableMap.end();
          ++itr)
     {
-      QFrame *hline = new QFrame();
+      auto hline = new QFrame();
       hline->setFrameShape(QFrame::HLine);
       hline->setFrameShadow(QFrame::Sunken);
       m_listLayout->addWidget(hline);
@@ -310,7 +310,7 @@ namespace openstudio {
       PotentialOutputVariable pov = itr->second;
 
       //LOG(Debug, "Creating VariableListItem for: " << pov.name << ", " << pov.keyValue);
-      VariableListItem *li = new VariableListItem(pov.name, pov.keyValue, pov.variable, m_model);
+      auto li = new VariableListItem(pov.name, pov.keyValue, pov.variable, m_model);
       m_listLayout->addWidget(li);
       m_variables.push_back(li);
     }
@@ -321,9 +321,9 @@ namespace openstudio {
   }
 
   VariablesTabView::VariablesTabView(openstudio::model::Model t_model, QWidget * parent)
-    : MainTabView("Output Variables",false,parent)
+    : MainTabView("Output Variables", MainTabView::MAIN_TAB, parent)
   {
-    QScrollArea *scrollarea = new QScrollArea();
+    auto scrollarea = new QScrollArea();
     VariablesList *vl = new VariablesList(t_model);
     scrollarea->setWidget(vl);
     scrollarea->setWidgetResizable(true);

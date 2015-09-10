@@ -50,17 +50,18 @@ namespace openstudio{
       return std::string(reinterpret_cast<const char*>(column));
     }
 
-    SqlFile_Impl::SqlFile_Impl(const openstudio::path& path)
+    SqlFile_Impl::SqlFile_Impl(const openstudio::path& path, const bool createIndexes)
       : m_path(path), m_connectionOpen(false), m_supportedVersion(false)
     {
       if (boost::filesystem::exists(m_path)){
         m_path = boost::filesystem::canonical(m_path);
       }
       reopen();
+      if (createIndexes) this->createIndexes();
     }
 
     SqlFile_Impl::SqlFile_Impl(const openstudio::path &t_path, const openstudio::EpwFile &t_epwFile, const openstudio::DateTime &t_simulationTime,
-        const openstudio::Calendar &t_calendar)
+        const openstudio::Calendar &t_calendar, const bool createIndexes)
       : m_path(t_path)
     {
       if (boost::filesystem::exists(m_path)){
@@ -82,46 +83,50 @@ namespace openstudio{
       {
         execAndThrowOnError(
             /* extracted from real eplusout.sql */
-            "CREATE TABLE ComponentSizes (CompType TEXT, CompName TEXT, Description TEXT, Value REAL, Units TEXT);"
-            "CREATE TABLE ConstructionLayers (ConstructionIndex INTEGER, LayerIndex INTEGER, MaterialIndex INTEGER);"
-            "CREATE TABLE Constructions (ConstructionIndex INTEGER PRIMARY KEY, Name TEXT, TotalLayers INTEGER, TotalSolidLayers INTEGER, TotalGlassLayers INTEGER, InsideAbsorpVis REAL, OutsideAbsorpVis REAL, InsideAbsorpSolar REAL, OutsideAbsorpSolar REAL, InsideAbsorpThermal REAL, OutsideAbsorpThermal REAL, OutsideRoughness INTEGER, TypeIsWindow INTEGER, Uvalue REAL);"
-            "CREATE TABLE DaylightMapHourlyData (HourlyReportIndex INTEGER, X REAL, Y REAL, Illuminance REAL);"
-            "CREATE TABLE DaylightMapHourlyReports (HourlyReportIndex INTEGER PRIMARY KEY, MapNumber INTEGER, Month INTEGER, DayOfMonth INTEGER, Hour INTEGER);"
-            "CREATE TABLE DaylightMaps (MapNumber INTEGER PRIMARY KEY, MapName TEXT, Environment TEXT, Zone INTEGER, ReferencePt1 TEXT, ReferencePt2 TEXT, Z REAL);"
-            "CREATE TABLE EnvironmentPeriods (EnvironmentPeriodIndex INTEGER PRIMARY KEY, SimulationIndex INTEGER, EnvironmentName TEXT, EnvironmentType INTEGER);"
-            "CREATE TABLE Errors (ErrorIndex INTEGER PRIMARY KEY, SimulationIndex INTEGER, ErrorType INTEGER, ErrorMessage TEXT, Count INTEGER);"
-            "CREATE TABLE Materials (MaterialIndex INTEGER PRIMARY KEY, Name TEXT, MaterialType INTEGER, Roughness INTEGER, Conductivity REAL, Density REAL, IsoMoistCap REAL, Porosity REAL, Resistance REAL, ROnly INTEGER, SpecHeat REAL, ThermGradCoef REAL, Thickness REAL, VaporDiffus);"
-            "CREATE TABLE NominalBaseboardHeaters (NominalBaseboardHeaterIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, CapatLowTemperature REAL, LowTemperature REAL, CapatHighTemperature REAL, HighTemperature REAL, FractionRadiant REAL, FractionConvected REAL, EndUseSubcategory TEXT);"
-            "CREATE TABLE NominalElectricEquipment (NominalElectricEquipmentIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL, FractionLatent REAL, FractionRadiant REAL, FractionLost REAL, FractionConvected REAL, EndUseSubcategory TEXT);"
-            "CREATE TABLE NominalGasEquipment(NominalGasEquipmentIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL, FractionLatent REAL, FractionRadiant REAL, FractionLost REAL, FractionConvected REAL, EndUseSubcategory TEXT);"
-            "CREATE TABLE NominalHotWaterEquipment(NominalHotWaterEquipmentIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, SchedNo INTEGER, DesignLevel REAL, FractionLatent REAL, FractionRadiant REAL, FractionLost REAL, FractionConvected REAL, EndUseSubcategory TEXT);"
-            "CREATE TABLE NominalInfiltration (NominalInfiltrationIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL);"
-            "CREATE TABLE NominalLighting (NominalLightingIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL, FractionReturnAir REAL, FractionRadiant REAL, FractionShortWave REAL, FractionReplaceable REAL, FractionConvected REAL, EndUseSubcategory TEXT);"
-            "CREATE TABLE NominalOtherEquipment(NominalOtherEquipmentIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL, FractionLatent REAL, FractionRadiant REAL, FractionLost REAL, FractionConvected REAL, EndUseSubcategory TEXT);"
-            "CREATE TABLE NominalPeople (NominalPeopleIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER,NumberOfPeople INTEGER, NumberOfPeopleScheduleIndex INTEGER, ActivityScheduleIndex INTEGER, FractionRadiant REAL, FractionConvected REAL, WorkEfficiencyScheduleIndex INTEGER, ClothingEfficiencyScheduleIndex INTEGER, AirVelocityScheduleIndex INTEGER, Fanger INTEGER, Pierce INTEGER, KSU INTEGER, MRTCalcType INTEGER, SurfaceIndex INTEGER, AngleFactorListName TEXT, AngleFactorList INTEGER, UserSpecifeidSensibleFraction REAL, Show55Warning INTEGER);"
-            "CREATE TABLE NominalSteamEquipment(NominalSteamEquipmentIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL, FractionLatent REAL, FractionRadiant REAL, FractionLost REAL, FractionConvected REAL, EndUseSubcategory TEXT);"
-            "CREATE TABLE NominalVentilation (NominalVentilationIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL);"
-            "CREATE TABLE ReportMeterData(TimeIndex INTEGER, ReportMeterDataDictionaryIndex INTEGER, VariableValue REAL, ReportVariableExtendedDataIndex INTEGER);"
-            "CREATE TABLE ReportMeterDataDictionary (ReportMeterDataDictionaryIndex INTEGER PRIMARY KEY, VariableType TEXT, IndexGroup TEXT, TimestepType TEXT, KeyValue TEXT, VariableName TEXT, ReportingFrequency TEXT, ScheduleName TEXT, VariableUnits TEXT);"
-            "CREATE TABLE ReportMeterExtendedData (ReportMeterExtendedDataIndex INTEGER PRIMARY KEY, MaxValue REAL, MaxMonth INTEGER, MaxDay INTEGER, MaxHour INTEGER, MaxStartMinute INTEGER, MaxMinute INTEGER, MinValue REAL, MinMonth INTEGER, MinDay INTEGER, MinHour INTEGER, MinStartMinute INTEGER, MinMinute INTEGER);"
-            "CREATE TABLE ReportVariableData (TimeIndex INTEGER, ReportVariableDataDictionaryIndex INTEGER, VariableValue REAL, ReportVariableExtendedDataIndex INTEGER);"
-            "CREATE TABLE ReportVariableDataDictionary(ReportVariableDataDictionaryIndex INTEGER PRIMARY KEY, VariableType TEXT, IndexGroup TEXT, TimestepType TEXT, KeyValue TEXT, VariableName TEXT, ReportingFrequency TEXT, ScheduleName TEXT, VariableUnits TEXT);"
-            "CREATE TABLE ReportVariableExtendedData (ReportVariableExtendedDataIndex INTEGER PRIMARY KEY, MaxValue REAL, MaxMonth INTEGER, MaxDay INTEGER, MaxHour INTEGER, MaxStartMinute INTEGER, MaxMinute INTEGER, MinValue REAL, MinMonth INTEGER, MinDay INTEGER, MinHour INTEGER, MinStartMinute INTEGER, MinMinute INTEGER);"
-            "CREATE TABLE RoomAirModels (ZoneIndex INTEGER PRIMARY KEY, AirModelName TEXT, AirModelType INTEGER, TempCoupleScheme INTEGER, SimAirModel INTEGER);"
-            "CREATE TABLE Schedules (ScheduleIndex INTEGER PRIMARY KEY, ScheduleName TEXT, ScheduleType TEXT, ScheduleMinimum REAL, ScheduleMaximum REAL);"
             "CREATE TABLE Simulations (SimulationIndex INTEGER PRIMARY KEY, EnergyPlusVersion TEXT, TimeStamp TEXT, NumTimestepsPerHour INTEGER, Completed BOOL, CompletedSuccessfully BOOL);"
-            "CREATE TABLE StringTypes (StringTypeIndex INTEGER PRIMARY KEY, Value TEXT);"
-            "CREATE TABLE Strings (StringIndex INTEGER PRIMARY KEY, StringTypeIndex  INTEGER, Value TEXT);"
-            "CREATE TABLE Surfaces (SurfaceIndex INTEGER PRIMARY KEY, SurfaceName, ConstructionIndex INTEGER, ClassName TEXT, Area REAL, GrossArea REAL, Perimeter REAL, Azimuth REAL, Height REAL, Reveal REAL, Shape INTEGER, Sides INTEGER, Tilt REAL, Width REAL, HeatTransferSurf INTEGER, BaseSurfaceIndex INTEGER, ZoneIndex INTEGER, ExtBoundCond INTEGER,  ExtSolar INTEGER, ExtWind INTEGER);"
-            "CREATE TABLE SystemSizes (SystemName TEXT, Description TEXT, Value REAL, Units TEXT);"
-            "CREATE TABLE TabularData (ReportNameIndex INTEGER, ReportForStringIndex INTEGER, TableNameIndex INTEGER, SimulationIndex INTEGER, RowNameIndex INTEGER, ColumnNameIndex INTEGER, RowId INTEGER, ColumnId INTEGER, Value TEXT, UnitsIndex INTEGER);"
+            "CREATE TABLE EnvironmentPeriods ( EnvironmentPeriodIndex INTEGER PRIMARY KEY, SimulationIndex INTEGER, EnvironmentName TEXT, EnvironmentType INTEGER, FOREIGN KEY(SimulationIndex) REFERENCES Simulations(SimulationIndex) ON DELETE CASCADE ON UPDATE CASCADE );"
+            "CREATE TABLE Errors ( ErrorIndex INTEGER PRIMARY KEY, SimulationIndex INTEGER, ErrorType INTEGER, ErrorMessage TEXT, Count INTEGER, FOREIGN KEY(SimulationIndex) REFERENCES Simulations(SimulationIndex) ON DELETE CASCADE ON UPDATE CASCADE );"
             "CREATE TABLE Time (TimeIndex INTEGER PRIMARY KEY, Month INTEGER, Day INTEGER, Hour INTEGER, Minute INTEGER, Dst INTEGER, Interval INTEGER, IntervalType INTEGER, SimulationDays INTEGER, DayType TEXT, EnvironmentPeriodIndex INTEGER, WarmupFlag INTEGER);"
-            "CREATE TABLE ZoneGroups (ZoneGroupIndex INTEGER PRIMARY KEY, ZoneListName TEXT, ZoneListMultiplier INTEGER);"
-            "CREATE TABLE ZoneLists (ZoneListIndex INTEGER PRIMARY KEY, Name TEXT, ZoneIndex INTEGER);"
-            "CREATE TABLE ZoneSizes (ZoneName TEXT, LoadType TEXT, DesLoad REAL, CalcDesFlow REAL, UserDesFlow REAL, DesDayName TEXT, PeakHrMin TEXT, PeakTemp REAL, PeakHumRat REAL, CalcOutsideAirFlow REAL);"
             "CREATE TABLE Zones (ZoneIndex INTEGER PRIMARY KEY, ZoneName TEXT, RelNorth REAL, OriginX REAL, OriginY REAL, OriginZ REAL, CentroidX REAL, CentroidY REAL, CentroidZ REAL, OfType INTEGER, Multiplier REAL, ListMultiplier REAL, MinimumX REAL, MaximumX REAL, MinimumY REAL, MaximumY REAL, MinimumZ REAL, MaximumZ REAL, CeilingHeight REAL, Volume REAL, InsideConvectionAlgo INTEGER, OutsideConvectionAlgo INTEGER, FloorArea REAL, ExtGrossWallArea REAL, ExtNetWallArea REAL, ExtWindowArea REAL, IsPartOfTotalArea INTEGER);"
-            "CREATE VIEW ReportVariableWithTime AS SELECT ReportVariableData.*, Time.*, ReportVariableDataDictionary.*, ReportVariableExtendedData.* FROM ReportVariableData LEFT OUTER JOIN ReportVariableExtendedData INNER JOIN Time INNER JOIN ReportVariableDataDictionary ON (ReportVariableData.ReportVariableExtendedDataIndex = ReportVariableExtendedData.ReportVariableExtendedDataIndex) AND (ReportVariableData.TimeIndex = Time.TimeIndex) AND (ReportVariableDataDictionary.ReportVariableDataDictionaryIndex = ReportVariableData.ReportVariableDataDictionaryIndex);"
-            "CREATE VIEW TabularDataWithStrings AS SELECT td.Value Value, reportn.Value ReportName, fs.Value ReportForString, tn.Value TableName, rn.Value RowName, cn.Value ColumnName, u.Value Units, RowId FROM TabularData td INNER JOIN Strings reportn ON reportn.StringIndex=td.ReportNameIndex INNER JOIN Strings fs ON fs.StringIndex=td.ReportForStringIndex INNER JOIN Strings tn ON tn.StringIndex=td.TableNameIndex INNER JOIN Strings rn ON rn.StringIndex=td.RowNameIndex INNER JOIN Strings cn ON cn.StringIndex=td.ColumnNameIndex INNER JOIN Strings u ON u.StringIndex=td.UnitsIndex WHERE reportn.StringTypeIndex=1 AND fs.StringTypeIndex=2 AND tn.StringTypeIndex=3 AND rn.StringTypeIndex=4 AND cn.StringTypeIndex=5 AND u.StringTypeIndex=6;"
+            "CREATE TABLE ZoneLists ( ZoneListIndex INTEGER PRIMARY KEY, Name TEXT);"
+            "CREATE TABLE ZoneGroups ( ZoneGroupIndex INTEGER PRIMARY KEY, ZoneGroupName TEXT, ZoneListIndex INTEGER, ZoneListMultiplier INTEGER, FOREIGN KEY(ZoneListIndex) REFERENCES ZoneLists(ZoneListIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE ZoneInfoZoneLists (ZoneListIndex INTEGER NOT NULL, ZoneIndex INTEGER NOT NULL, PRIMARY KEY(ZoneListIndex, ZoneIndex), FOREIGN KEY(ZoneListIndex) REFERENCES ZoneLists(ZoneListIndex) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(ZoneIndex) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE );"
+            "CREATE TABLE Schedules (ScheduleIndex INTEGER PRIMARY KEY, ScheduleName TEXT, ScheduleType TEXT, ScheduleMinimum REAL, ScheduleMaximum REAL);"
+            "CREATE TABLE Materials ( MaterialIndex INTEGER PRIMARY KEY, Name TEXT, MaterialType INTEGER, Roughness INTEGER, Conductivity REAL, Density REAL, IsoMoistCap REAL, Porosity REAL, Resistance REAL, ROnly INTEGER, SpecHeat REAL, ThermGradCoef REAL, Thickness REAL, VaporDiffus REAL );"
+            "CREATE TABLE Constructions ( ConstructionIndex INTEGER PRIMARY KEY, Name TEXT, TotalLayers INTEGER, TotalSolidLayers INTEGER, TotalGlassLayers INTEGER, InsideAbsorpVis REAL, OutsideAbsorpVis REAL, InsideAbsorpSolar REAL, OutsideAbsorpSolar REAL, InsideAbsorpThermal REAL, OutsideAbsorpThermal REAL, OutsideRoughness INTEGER, TypeIsWindow INTEGER, Uvalue REAL);"
+            "CREATE TABLE ConstructionLayers ( ConstructionLayersIndex INTEGER PRIMARY KEY, ConstructionIndex INTEGER, LayerIndex INTEGER, MaterialIndex INTEGER, FOREIGN KEY(ConstructionIndex) REFERENCES Constructions(ConstructionIndex) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(MaterialIndex) REFERENCES Materials(MaterialIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE Surfaces ( SurfaceIndex INTEGER PRIMARY KEY, SurfaceName TEXT, ConstructionIndex INTEGER, ClassName TEXT, Area REAL, GrossArea REAL, Perimeter REAL, Azimuth REAL, Height REAL, Reveal REAL, Shape INTEGER, Sides INTEGER, Tilt REAL, Width REAL, HeatTransferSurf INTEGER, BaseSurfaceIndex INTEGER, ZoneIndex INTEGER, ExtBoundCond INTEGER,  ExtSolar INTEGER, ExtWind INTEGER, FOREIGN KEY(ConstructionIndex) REFERENCES Constructions(ConstructionIndex) ON UPDATE CASCADE, FOREIGN KEY(BaseSurfaceIndex) REFERENCES Surfaces(SurfaceIndex) ON UPDATE CASCADE, FOREIGN KEY(ZoneIndex) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE );"
+            "CREATE TABLE ReportDataDictionary(ReportDataDictionaryIndex INTEGER PRIMARY KEY, IsMeter INTEGER, Type TEXT, IndexGroup TEXT, TimestepType TEXT, KeyValue TEXT, Name TEXT, ReportingFrequency TEXT, ScheduleName TEXT, Units TEXT);"
+            "CREATE TABLE ReportData (ReportDataIndex INTEGER PRIMARY KEY, TimeIndex INTEGER, ReportDataDictionaryIndex INTEGER, Value REAL, FOREIGN KEY(TimeIndex) REFERENCES Time(TimeIndex) ON DELETE CASCADE ON UPDATE CASCADE FOREIGN KEY(ReportDataDictionaryIndex) REFERENCES ReportDataDictionary(ReportDataDictionaryIndex) ON DELETE CASCADE ON UPDATE CASCADE );"
+            "CREATE TABLE ReportExtendedData (ReportExtendedDataIndex INTEGER PRIMARY KEY, ReportDataIndex INTEGER, MaxValue REAL, MaxMonth INTEGER, MaxDay INTEGER, MaxHour INTEGER, MaxStartMinute INTEGER, MaxMinute INTEGER, MinValue REAL, MinMonth INTEGER, MinDay INTEGER, MinHour INTEGER, MinStartMinute INTEGER, MinMinute INTEGER, FOREIGN KEY(ReportDataIndex) REFERENCES ReportData(ReportDataIndex) ON DELETE CASCADE ON UPDATE CASCADE );"
+            "CREATE TABLE NominalPeople ( NominalPeopleIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER,NumberOfPeople INTEGER, NumberOfPeopleScheduleIndex INTEGER, ActivityScheduleIndex INTEGER, FractionRadiant REAL, FractionConvected REAL, WorkEfficiencyScheduleIndex INTEGER, ClothingEfficiencyScheduleIndex INTEGER, AirVelocityScheduleIndex INTEGER, Fanger INTEGER, Pierce INTEGER, KSU INTEGER, MRTCalcType INTEGER, SurfaceIndex INTEGER, AngleFactorListName TEXT, AngleFactorList INTEGER, UserSpecifeidSensibleFraction REAL, Show55Warning INTEGER, FOREIGN KEY(ZoneIndex) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(NumberOfPeopleScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE, FOREIGN KEY(ActivityScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE, FOREIGN KEY(WorkEfficiencyScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE, FOREIGN KEY(ClothingEfficiencyScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE, FOREIGN KEY(AirVelocityScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE, FOREIGN KEY(SurfaceIndex) REFERENCES Surfaces(SurfaceIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE NominalLighting ( NominalLightingIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL, FractionReturnAir REAL, FractionRadiant REAL, FractionShortWave REAL, FractionReplaceable REAL, FractionConvected REAL, EndUseSubcategory TEXT, FOREIGN KEY(ZoneIndex) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(ScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE NominalElectricEquipment (NominalElectricEquipmentIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL, FractionLatent REAL, FractionRadiant REAL, FractionLost REAL, FractionConvected REAL, EndUseSubcategory TEXT, FOREIGN KEY(ZoneIndex) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(ScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE NominalGasEquipment( NominalGasEquipmentIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL, FractionLatent REAL, FractionRadiant REAL, FractionLost REAL, FractionConvected REAL, EndUseSubcategory TEXT, FOREIGN KEY(ZoneIndex) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(ScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE NominalSteamEquipment( NominalSteamEquipmentIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL, FractionLatent REAL, FractionRadiant REAL, FractionLost REAL, FractionConvected REAL, EndUseSubcategory TEXT, FOREIGN KEY(ZoneIndex) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(ScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE NominalHotWaterEquipment(NominalHotWaterEquipmentIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, SchedNo INTEGER, DesignLevel REAL, FractionLatent REAL, FractionRadiant REAL, FractionLost REAL, FractionConvected REAL, EndUseSubcategory TEXT, FOREIGN KEY(ZoneIndex) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(SchedNo) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE NominalOtherEquipment( NominalOtherEquipmentIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL, FractionLatent REAL, FractionRadiant REAL, FractionLost REAL, FractionConvected REAL, EndUseSubcategory TEXT, FOREIGN KEY(ZoneIndex) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(ScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE NominalBaseboardHeaters ( NominalBaseboardHeaterIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, CapatLowTemperature REAL, LowTemperature REAL, CapatHighTemperature REAL, HighTemperature REAL, FractionRadiant REAL, FractionConvected REAL, EndUseSubcategory TEXT, FOREIGN KEY(ZoneIndex) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(ScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE NominalInfiltration ( NominalInfiltrationIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL, FOREIGN KEY(ZoneIndex) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(ScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE NominalVentilation ( NominalVentilationIndex INTEGER PRIMARY KEY, ObjectName TEXT, ZoneIndex INTEGER, ScheduleIndex INTEGER, DesignLevel REAL, FOREIGN KEY(ZoneIndex) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(ScheduleIndex) REFERENCES Schedules(ScheduleIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE ZoneSizes ( ZoneSizesIndex INTEGER PRIMARY KEY, ZoneName TEXT, LoadType TEXT, CalcDesLoad REAL, UserDesLoad REAL, CalcDesFlow REAL, UserDesFlow REAL, DesDayName TEXT, PeakHrMin TEXT, PeakTemp REAL, PeakHumRat REAL, CalcOutsideAirFlow REAL);"
+            "CREATE TABLE SystemSizes (SystemSizesIndex INTEGER PRIMARY KEY, SystemName TEXT, Description TEXT, Value REAL, Units TEXT);"
+            "CREATE TABLE ComponentSizes (ComponentSizesIndex INTEGER PRIMARY KEY, CompType TEXT, CompName TEXT, Description TEXT, Value REAL, Units TEXT);"
+            "CREATE TABLE RoomAirModels (ZoneIndex INTEGER PRIMARY KEY, AirModelName TEXT, AirModelType INTEGER, TempCoupleScheme INTEGER, SimAirModel INTEGER);"
+            "CREATE TABLE DaylightMaps ( MapNumber INTEGER PRIMARY KEY, MapName TEXT, Environment TEXT, Zone INTEGER, ReferencePt1 TEXT, ReferencePt2 TEXT, Z REAL, FOREIGN KEY(Zone) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE );"
+            "CREATE TABLE DaylightMapHourlyReports ( HourlyReportIndex INTEGER PRIMARY KEY, MapNumber INTEGER, Month INTEGER, DayOfMonth INTEGER, Hour INTEGER, FOREIGN KEY(MapNumber) REFERENCES DaylightMaps(MapNumber) ON DELETE CASCADE ON UPDATE CASCADE );"
+            "CREATE TABLE DaylightMapHourlyData ( HourlyDataIndex INTEGER PRIMARY KEY, HourlyReportIndex INTEGER, X REAL, Y REAL, Illuminance REAL, FOREIGN KEY(HourlyReportIndex) REFERENCES DaylightMapHourlyReports(HourlyReportIndex) ON DELETE CASCADE ON UPDATE CASCADE );"
+            "CREATE TABLE StringTypes ( StringTypeIndex INTEGER PRIMARY KEY, Value TEXT);"
+            "CREATE TABLE Strings ( StringIndex INTEGER PRIMARY KEY, StringTypeIndex INTEGER, Value TEXT, UNIQUE(StringTypeIndex, Value), FOREIGN KEY(StringTypeIndex) REFERENCES StringTypes(StringTypeIndex) ON UPDATE CASCADE );"
+            "CREATE TABLE TabularData ( TabularDataIndex INTEGER PRIMARY KEY, ReportNameIndex INTEGER, ReportForStringIndex INTEGER, TableNameIndex INTEGER, RowNameIndex INTEGER, ColumnNameIndex INTEGER, UnitsIndex INTEGER, SimulationIndex INTEGER, RowId INTEGER, ColumnId INTEGER, Value TEXT Value TEXT, FOREIGN KEY(ReportNameIndex) REFERENCES Strings(StringIndex) ON UPDATE CASCADE FOREIGN KEY(ReportForStringIndex) REFERENCES Strings(StringIndex) ON UPDATE CASCADE FOREIGN KEY(TableNameIndex) REFERENCES Strings(StringIndex) ON UPDATE CASCADE FOREIGN KEY(RowNameIndex) REFERENCES Strings(StringIndex) ON UPDATE CASCADE FOREIGN KEY(ColumnNameIndex) REFERENCES Strings(StringIndex) ON UPDATE CASCADE FOREIGN KEY(UnitsIndex) REFERENCES Strings(StringIndex) ON UPDATE CASCADE FOREIGN KEY(SimulationIndex) REFERENCES Simulations(SimulationIndex) ON DELETE CASCADE ON UPDATE CASCADE );"
+            "CREATE VIEW ReportVariableWithTime AS SELECT rd.ReportDataIndex, rd.TimeIndex, rd.ReportDataDictionaryIndex, red.ReportExtendedDataIndex, rd.Value, t.Month, t.Day, t.Hour, t.Minute, t.Dst, t.Interval, t.IntervalType, t.SimulationDays, t.DayType, t.EnvironmentPeriodIndex, t.WarmupFlag, rdd.IsMeter, rdd.Type, rdd.IndexGroup, rdd.TimestepType, rdd.KeyValue, rdd.Name, rdd.ReportingFrequency, rdd.ScheduleName, rdd.Units, red.MaxValue, red.MaxMonth, red.MaxDay, red.MaxStartMinute, red.MaxMinute, red.MinValue, red.MinMonth, red.MinDay, red.MinStartMinute, red.MinMinute FROM ReportData As rd INNER JOIN ReportDataDictionary As rdd ON rd.ReportDataDictionaryIndex = rdd.ReportDataDictionaryIndex LEFT OUTER JOIN ReportExtendedData As red ON rd.ReportDataIndex = red.ReportDataIndex INNER JOIN Time As t ON rd.TimeIndex = t.TimeIndex;"
+            "CREATE VIEW ReportVariableData AS SELECT rd.ReportDataIndex As rowid, rd.TimeIndex, rd.ReportDataDictionaryIndex As ReportVariableDataDictionaryIndex, rd.Value As VariableValue, red.ReportExtendedDataIndex As ReportVariableExtendedDataIndex FROM ReportData As rd LEFT OUTER JOIN ReportExtendedData As red ON rd.ReportDataIndex = red.ReportDataIndex;"
+            "CREATE VIEW ReportVariableDataDictionary AS SELECT rdd.ReportDataDictionaryIndex As ReportVariableDataDictionaryIndex, rdd.Type As VariableType, rdd.IndexGroup, rdd.TimestepType, rdd.KeyValue, rdd.Name As VariableName, rdd.ReportingFrequency, rdd.ScheduleName, rdd.Units As VariableUnits FROM ReportDataDictionary As rdd;"
+            "CREATE VIEW ReportVariableExtendedData AS SELECT red.ReportExtendedDataIndex As ReportVariableExtendedDataIndex, red.MaxValue, red.MaxMonth, red.MaxDay, red.MaxStartMinute, red.MaxMinute, red.MinValue, red.MinMonth, red.MinDay, red.MinStartMinute, red.MinMinute FROM ReportExtendedData As red;"
+            "CREATE VIEW ReportMeterData AS SELECT rd.ReportDataIndex As rowid, rd.TimeIndex, rd.ReportDataDictionaryIndex As ReportMeterDataDictionaryIndex, rd.Value As VariableValue, red.ReportExtendedDataIndex As ReportVariableExtendedDataIndex FROM ReportData As rd LEFT OUTER JOIN ReportExtendedData As red ON rd.ReportDataIndex = red.ReportDataIndex INNER JOIN ReportDataDictionary As rdd ON rd.ReportDataDictionaryIndex = rdd.ReportDataDictionaryIndex WHERE rdd.IsMeter = 1;"
+            "CREATE VIEW ReportMeterDataDictionary AS SELECT rdd.ReportDataDictionaryIndex As ReportMeterDataDictionaryIndex, rdd.Type As VariableType, rdd.IndexGroup, rdd.TimestepType, rdd.KeyValue, rdd.Name As VariableName, rdd.ReportingFrequency, rdd.ScheduleName, rdd.Units As VariableUnits FROM ReportDataDictionary As rdd WHERE rdd.IsMeter = 1;"
+            "CREATE VIEW ReportMeterExtendedData AS SELECT red.ReportExtendedDataIndex As ReportMeterExtendedDataIndex, red.MaxValue, red.MaxMonth, red.MaxDay, red.MaxStartMinute, red.MaxMinute, red.MinValue, red.MinMonth, red.MinDay, red.MinStartMinute, red.MinMinute FROM ReportExtendedData As red LEFT OUTER JOIN ReportData As rd ON rd.ReportDataIndex = red.ReportDataIndex INNER JOIN ReportDataDictionary As rdd ON rd.ReportDataDictionaryIndex = rdd.ReportDataDictionaryIndex WHERE rdd.IsMeter = 1;"
+            "CREATE VIEW TabularDataWithStrings AS SELECT td.TabularDataIndex, td.Value As Value, reportn.Value As ReportName, fs.Value As ReportForString, tn.Value As TableName, rn.Value As RowName, cn.Value As ColumnName, u.Value As Units FROM TabularData As td INNER JOIN Strings As reportn ON reportn.StringIndex=td.ReportNameIndex INNER JOIN Strings As fs ON fs.StringIndex=td.ReportForStringIndex INNER JOIN Strings As tn ON tn.StringIndex=td.TableNameIndex INNER JOIN Strings As rn ON rn.StringIndex=td.RowNameIndex INNER JOIN Strings As cn ON cn.StringIndex=td.ColumnNameIndex INNER JOIN Strings As u ON u.StringIndex=td.UnitsIndex;"
           );
 
       }
@@ -129,7 +134,7 @@ namespace openstudio{
       addSimulation(t_epwFile, t_simulationTime, t_calendar);
 
       reopen();
-      createIndexes();
+      if (createIndexes) this->createIndexes();
     }
 
 
@@ -138,31 +143,37 @@ namespace openstudio{
       if (m_connectionOpen)
       {
         try {
-          execAndThrowOnError("DROP INDEX rmdTI;");
+          execAndThrowOnError("DROP INDEX IF EXISTS rddMTR;");
         } catch (const std::runtime_error &e) {
           LOG(Trace, "Error dropping index: " + std::string(e.what()));
         }
 
         try {
-          execAndThrowOnError("DROP INDEX rmdDI;");
+          execAndThrowOnError("DROP INDEX IF EXISTS redRD;");
         } catch (const std::runtime_error &e) {
           LOG(Trace, "Error dropping index: " + std::string(e.what()));
         }
 
         try {
-          execAndThrowOnError("DROP INDEX rvdTI;");
+          execAndThrowOnError("DROP INDEX IF EXISTS rdTI;");
         } catch (const std::runtime_error &e) {
           LOG(Trace, "Error dropping index: " + std::string(e.what()));
         }
 
         try {
-          execAndThrowOnError("DROP INDEX rvdDI;");
+          execAndThrowOnError("DROP INDEX IF EXISTS rdDI;");
         } catch (const std::runtime_error &e) {
           LOG(Trace, "Error dropping index: " + std::string(e.what()));
         }
 
         try {
-          execAndThrowOnError("DROP INDEX dmhdHRI;");
+          execAndThrowOnError("DROP INDEX IF EXISTS dmhdHRI;");
+        } catch (const std::runtime_error &e) {
+          LOG(Trace, "Error dropping index: " + std::string(e.what()));
+        }
+
+        try {
+          execAndThrowOnError("DROP INDEX IF EXISTS dmhrMNI;");
         } catch (const std::runtime_error &e) {
           LOG(Trace, "Error dropping index: " + std::string(e.what()));
         }
@@ -174,31 +185,37 @@ namespace openstudio{
       if (m_connectionOpen)
       {
         try {
-          execAndThrowOnError("CREATE INDEX rmdTI ON ReportMeterData (TimeIndex ASC);");
+          execAndThrowOnError("CREATE INDEX IF NOT EXISTS rddMTR ON ReportDataDictionary (IsMeter);");
         } catch (const std::runtime_error &e) {
           LOG(Trace, "Error adding index: " + std::string(e.what()));
         }
 
         try {
-          execAndThrowOnError("CREATE INDEX rmdDI ON ReportMeterData (ReportMeterDataDictionaryIndex ASC);");
+          execAndThrowOnError("CREATE INDEX IF NOT EXISTS redRD ON ReportExtendedData (ReportDataIndex);");
         } catch (const std::runtime_error &e) {
           LOG(Trace, "Error adding index: " + std::string(e.what()));
         }
 
         try {
-          execAndThrowOnError("CREATE INDEX rvdTI ON ReportVariableData (TimeIndex ASC);");
+          execAndThrowOnError("CREATE INDEX IF NOT EXISTS rdTI ON ReportData (TimeIndex ASC);");
         } catch (const std::runtime_error &e) {
           LOG(Trace, "Error adding index: " + std::string(e.what()));
         }
 
         try {
-          execAndThrowOnError("CREATE INDEX rvdDI ON ReportVariableData (ReportVariableDataDictionaryIndex ASC);");
+          execAndThrowOnError("CREATE INDEX IF NOT EXISTS rdDI ON ReportData (ReportDataDictionaryIndex ASC);");
         } catch (const std::runtime_error &e) {
           LOG(Trace, "Error adding index: " + std::string(e.what()));
         }
 
         try {
-          execAndThrowOnError("CREATE INDEX dmhdHRI ON DaylightMapHourlyData (HourlyReportIndex ASC);");
+          execAndThrowOnError("CREATE INDEX IF NOT EXISTS dmhdHRI ON DaylightMapHourlyData (HourlyReportIndex ASC);");
+        } catch (const std::runtime_error &e) {
+          LOG(Trace, "Error adding index: " + std::string(e.what()));
+        }
+
+        try {
+          execAndThrowOnError("CREATE INDEX IF NOT EXISTS dmhrMNI ON DaylightMapHourlyReports (MapNumber);");
         } catch (const std::runtime_error &e) {
           LOG(Trace, "Error adding index: " + std::string(e.what()));
         }
@@ -441,34 +458,20 @@ namespace openstudio{
 
     bool SqlFile_Impl::isValidConnection()
     {
-      int code = -1;
-      if (m_db) {
-        sqlite3_stmt* sqlStmtPtr;
-        sqlite3_prepare_v2(m_db,"SELECT EnergyPlusVersion FROM Simulations",-1,&sqlStmtPtr,nullptr);
-        code = sqlite3_step(sqlStmtPtr);
-        if(code == SQLITE_ROW) {
-          // in 8.1 this is 'EnergyPlus-Windows-32 8.1.0.008, YMD=2014.11.08 22:49'
-          // in 8.2 this is 'EnergyPlus, Version 8.2.0-8397c2e30b, YMD=2015.01.09 08:37'
-          // radiance script is writing 'EnergyPlus, VERSION 8.2, (OpenStudio) YMD=2015.1.9 08:35:36'
-          boost::regex version_regex("\\d\\.\\d[\\.\\d]*");
-          std::string version_line = columnText(sqlite3_column_text(sqlStmtPtr,0));
-          boost::smatch version_match;
-          
-          if (boost::regex_search(version_line, version_match, version_regex)){
-            VersionString version(version_match[0].str());
-            if (version >= VersionString(7, 0) && version <= VersionString(energyPlusVersionMajor(), energyPlusVersionMinor())) {
-              m_supportedVersion = true;
-            } else {
-              m_supportedVersion = false;
-              LOG(Warn, "Using unsupported EnergyPlus version " << version.str());
-            }
-          } else{
-            LOG(Warn, "Using unknown EnergyPlus version");
-          }
-        }
-        sqlite3_finalize(sqlStmtPtr);
+      std::string energyPlusVersion = this->energyPlusVersion();
+      if (energyPlusVersion.empty()){
+        return false;
       }
-      return (code == SQLITE_ROW);
+
+      VersionString version(energyPlusVersion);
+      if (version >= VersionString(7, 0) && version <= VersionString(energyPlusVersionMajor(), energyPlusVersionMinor())) {
+        m_supportedVersion = true;
+      } else {
+        m_supportedVersion = false;
+        LOG(Warn, "Using unsupported EnergyPlus version " << version.str());
+      }
+
+      return true;
     }
 
 
@@ -633,13 +636,14 @@ namespace openstudio{
         const openstudio::ReportingFrequency &t_reportingFrequency, const boost::optional<std::string> &t_scheduleName,
         const std::string &t_variableUnits, const openstudio::TimeSeries &t_timeSeries)
     {
-      int datadicindex = getNextIndex("reportvariabledatadictionary", "ReportVariableDataDictionaryIndex");
+      int datadicindex = getNextIndex("reportdatadictionary", "ReportDataDictionaryIndex");
 
 
-      std::stringstream insertReportVariableDataDictionary;
-      insertReportVariableDataDictionary
-        << "insert into reportvariabledatadictionary (ReportVariableDataDictionaryIndex, VariableType, IndexGroup, TimestepType, KeyValue, VariableName, ReportingFrequency, ScheduleName, VariableUnits) values ("
+      std::stringstream insertReportDataDictionary;
+      insertReportDataDictionary
+        << "insert into reportdatadictionary (ReportDataDictionaryIndex, IsMeter, Type, IndexGroup, TimestepType, KeyValue, Name, ReportingFrequency, ScheduleName, Units) values ("
         << datadicindex << ", "
+        << "'0',"
         << "'" << t_variableType << "', "
         << "'" << t_indexGroup << "', "
         << "'" << t_timestepType << "', "
@@ -649,18 +653,18 @@ namespace openstudio{
 
       if (t_scheduleName)
       {
-        insertReportVariableDataDictionary
+        insertReportDataDictionary
           << "'" << *t_scheduleName << "', ";
       } else {
-        insertReportVariableDataDictionary
+        insertReportDataDictionary
           << "null, ";
       }
 
-      insertReportVariableDataDictionary
+      insertReportDataDictionary
         << "'" << t_variableUnits << "');";
 
 
-      execAndThrowOnError(insertReportVariableDataDictionary.str());
+      execAndThrowOnError(insertReportDataDictionary.str());
 
 
       std::vector<double> values = toStandardVector(t_timeSeries.values());
@@ -669,7 +673,7 @@ namespace openstudio{
       openstudio::DateTime firstdate = t_timeSeries.firstReportDateTime();
 
       // we'll let stmt1 have the transaction
-      PreparedStatement stmt("insert into reportvariabledata (TimeIndex, ReportVariableDataDictionaryIndex, VariableValue, ReportVariableExtendedDataIndex) values ( (select TimeIndex from time where Month=? and Day=? and Hour=? and Minute=? limit 1), ?, ?, null);", m_db, true);
+      PreparedStatement stmt("insert into reportdata (ReportDataIndex, TimeIndex, ReportDataDictionaryIndex, Value) values ( ?, (select TimeIndex from time where Month=? and Day=? and Hour=? and Minute=? limit 1), ?, ?);", m_db, true);
 
       for (size_t i = 0; i < values.size(); ++i)
       {
@@ -695,12 +699,14 @@ namespace openstudio{
 
         ++hour; // energyplus says time goes from 1-24 not from 0-23
 
-        stmt.bind(1, month);
-        stmt.bind(2, day);
-        stmt.bind(3, hour);
-        stmt.bind(4, minute);
-        stmt.bind(5, datadicindex);
-        stmt.bind(6, value);
+        int reportdataindex = getNextIndex("reportdata", "ReportDataIndex");
+        stmt.bind(1, reportdataindex);
+        stmt.bind(2, month);
+        stmt.bind(3, day);
+        stmt.bind(4, hour);
+        stmt.bind(5, minute);
+        stmt.bind(6, datadicindex);
+        stmt.bind(7, value);
 
         stmt.execute();
       }
@@ -1049,9 +1055,9 @@ namespace openstudio{
           meterName = "ENERGYTRANSFER:FACILITY";
         }
 
-        boost::optional<double> rowId = execAndReturnFirstDouble("SELECT RowID FROM tabulardatawithstrings WHERE ReportName='Economics Results Summary Report' AND ReportForString='Entire Facility' AND TableName='Tariff Summary' AND Value='" + meterName + "'");
-        if (rowId){
-          return execAndReturnFirstDouble("SELECT Value FROM tabulardatawithstrings WHERE ReportName='Economics Results Summary Report' AND ReportForString='Entire Facility' AND TableName='Tariff Summary' AND RowID=" + boost::lexical_cast<std::string>(*rowId) + " and ColumnName='Annual Cost (~~$~~)'");
+        auto rowName = execAndReturnFirstString("SELECT RowName FROM tabulardatawithstrings WHERE ReportName='Economics Results Summary Report' AND ReportForString='Entire Facility' AND TableName='Tariff Summary' AND Value='" + meterName + "'");
+        if (rowName){
+          return execAndReturnFirstDouble("SELECT Value FROM tabulardatawithstrings WHERE ReportName='Economics Results Summary Report' AND ReportForString='Entire Facility' AND TableName='Tariff Summary' AND RowName='" + rowName.get() + "' AND ColumnName='Annual Cost (~~$~~)'");
         }
         else {
           return boost::none; // Return an empty optional double, indicating that there is no annual cost for this energy type
@@ -1072,7 +1078,7 @@ namespace openstudio{
 
       // Return the cost per area
       boost::optional<double> costPerArea;
-      if ((totalBuildingArea && annualEnergyCost) && (totalBuildingArea > 0)){
+      if ((totalBuildingArea && annualEnergyCost) && (totalBuildingArea > 0.0)){
         costPerArea = *annualEnergyCost / *totalBuildingArea;
       }
 
@@ -1090,7 +1096,7 @@ namespace openstudio{
 
       // Return the cost per area
       boost::optional<double> costPerArea;
-      if ((totalBuildingArea && annualEnergyCost) && (totalBuildingArea > 0)){
+      if ((totalBuildingArea && annualEnergyCost) && (totalBuildingArea > 0.0)){
         costPerArea = *annualEnergyCost / *totalBuildingArea;
       }
 
@@ -1180,7 +1186,7 @@ namespace openstudio{
       return vec;
     };
 
-    ReportingFrequency SqlFile_Impl::reportingFrequencyFromDB(const std::string &dbReportingFrequency)
+    OptionalReportingFrequency SqlFile_Impl::reportingFrequencyFromDB(const std::string &dbReportingFrequency)
     {
       // EP+ version specific translation
       // use OPENSTUDIO_ENUM string handling
@@ -1189,8 +1195,7 @@ namespace openstudio{
         return result;
       }
       catch (...) {
-        // default value -- may want to return optional
-        return openstudio::ReportingFrequency::RunPeriod;
+        return boost::none;
       }
     };
 
@@ -2164,20 +2169,25 @@ namespace openstudio{
 
     openstudio::OptionalTime SqlFile_Impl::timeSeriesInterval(const DataDictionaryItem& dataDictionary)
     {
+      OptionalReportingFrequency freq = reportingFrequencyFromDB(dataDictionary.reportingFrequency);
+      if (!freq){
+        return boost::none;
+      }
+
       double minutes=0;
-      switch (reportingFrequencyFromDB(dataDictionary.reportingFrequency).value())
+      switch (freq->value())
       {
         case ReportingFrequency::Detailed:
           // unsupported
-          return boost::optional<openstudio::Time>();
+          return boost::none;
           break;
         case ReportingFrequency::Timestep:
           // unsupported
-          return boost::optional<openstudio::Time>();
+          return boost::none;
           break;
         case ReportingFrequency::Hourly:
           // unsupported - warmup days - see trac #236
-          return boost::optional<openstudio::Time>();
+          return boost::none;
           //        return boost::optional<openstudio::Time>(openstudio::Time(0,1,0,0));
           break;
         case ReportingFrequency::Daily:
@@ -2185,7 +2195,7 @@ namespace openstudio{
           break;
         case ReportingFrequency::Monthly:
           // unsupported
-          return boost::optional<openstudio::Time>();
+          return boost::none;
           break;
         case ReportingFrequency::RunPeriod:
           //          return boost::optional<openstudio::Time>();
@@ -2224,12 +2234,12 @@ namespace openstudio{
           break;
         default:
           // unsupported
-          return boost::optional<openstudio::Time>();
+          return boost::none;
           break;
       }
     }
 
-    openstudio::DateTime SqlFile_Impl::firstDateTime(bool includeHourAndMinute)
+    openstudio::DateTime SqlFile_Impl::firstDateTime(bool includeHourAndMinute, int envPeriodIndex)
     {
       // default until added to eplusout.sql from energy plus
       unsigned month=1, day=1, hour=1, minute=0;
@@ -2240,7 +2250,7 @@ namespace openstudio{
       if (m_db)
       {
         std::stringstream s;
-        s << "SELECT Month, Day, Hour, Minute from Time where Month is not NULL and Day is not null LIMIT 1";
+        s << "SELECT Month, Day, Hour, Minute from Time where Month is not NULL and Day is not null and EnvironmentPeriodIndex = " << envPeriodIndex << " LIMIT 1";
 
         sqlite3_stmt* sqlStmtPtr;
         int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, nullptr);
@@ -2253,6 +2263,9 @@ namespace openstudio{
           if (includeHourAndMinute){
             hour = sqlite3_column_int(sqlStmtPtr, 2);
             minute = sqlite3_column_int(sqlStmtPtr, 3);
+          } else{
+            hour = 1;
+            minute = 0;
           }
         }
         sqlite3_finalize(sqlStmtPtr);
@@ -2268,12 +2281,55 @@ namespace openstudio{
       return openstudio::DateTime(date, time);
     }
 
+    openstudio::DateTime SqlFile_Impl::lastDateTime(bool includeHourAndMinute, int envPeriodIndex)
+    {
+      // default until added to eplusout.sql from energy plus
+      unsigned month = 1, day = 1, hour = 1, minute = 0;
+
+      openstudio::YearDescription yd;
+      yd.isLeapYear = false;
+
+      if (m_db)
+      {
+        std::stringstream s;
+        s << "SELECT Month, Day, Hour, Minute from Time where Month is not NULL and Day is not null and EnvironmentPeriodIndex = " << envPeriodIndex << " order by TimeIndex DESC LIMIT 1";
+
+        sqlite3_stmt* sqlStmtPtr;
+        int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, nullptr);
+
+        code = sqlite3_step(sqlStmtPtr);
+        if (code == SQLITE_ROW)
+        {
+          month = sqlite3_column_int(sqlStmtPtr, 0);
+          day = sqlite3_column_int(sqlStmtPtr, 1);
+          if (includeHourAndMinute){
+            hour = sqlite3_column_int(sqlStmtPtr, 2);
+            minute = sqlite3_column_int(sqlStmtPtr, 3);
+          }else{
+            hour = 24;
+            minute = 0;
+          }
+        }
+        sqlite3_finalize(sqlStmtPtr);
+
+        // DLM: could also try to check DayType to find yearStartsOnDayOfWeek
+        if ((month == 2) && (day == 29)){
+          yd.isLeapYear = true;
+        }
+      }
+      // DLM: potential leap year problem
+      openstudio::Date date(monthOfYear(month), day, yd);
+      openstudio::Time time(0, hour, minute, 0);
+      return openstudio::DateTime(date, time);
+    }
+
+
     openstudio::OptionalTimeSeries SqlFile_Impl::timeSeries(const DataDictionaryItem& dataDictionary)
     {
       openstudio::OptionalTimeSeries ts;
       std::string units = dataDictionary.units;
 
-      boost::optional<openstudio::DateTime> startDateTime; 
+      boost::optional<openstudio::DateTime> firstReportDateTime;
       std::vector<long> stdSecondsFromFirstReport;
       stdSecondsFromFirstReport.reserve(8760);
 
@@ -2281,15 +2337,22 @@ namespace openstudio{
       stdValues.reserve(8760);
       boost::optional<unsigned> reportingIntervalMinutes;
 
+      ReportingFrequency reportingFrequency(ReportingFrequency::RunPeriod);
       bool isIntervalTimeSeries = false;
       try {
-        ReportingFrequency reportingFrequency(dataDictionary.reportingFrequency);
-        isIntervalTimeSeries = (reportingFrequency != ReportingFrequency::Detailed);
+        reportingFrequency = ReportingFrequency(dataDictionary.reportingFrequency);
+        isIntervalTimeSeries = (reportingFrequency == ReportingFrequency::Timestep) ||
+                               (reportingFrequency == ReportingFrequency::Hourly) ||
+                               (reportingFrequency == ReportingFrequency::Daily);
+
       }catch(const std::exception&){
       }
 
       if (m_db) 
       {
+        std::string energyPlusVersion = this->energyPlusVersion();
+        VersionString version(energyPlusVersion);
+
         std::stringstream s;
         s << "SELECT dt.VariableValue, Time.Month, Time.Day, Time.Hour, Time.Minute, Time.Interval FROM ";
         s << dataDictionary.table;
@@ -2330,19 +2393,40 @@ namespace openstudio{
           unsigned day = sqlite3_column_int(sqlStmtPtr, 2);
           unsigned intervalMinutes = sqlite3_column_int(sqlStmtPtr, 5); // used for run periods
 
-          if (!startDateTime){
-            if ((month==0) || (day==0)){
-              // gets called for RunPeriod reports, just returns the first date in the time table, not sure if this is right
-              startDateTime = firstDateTime(false);
-            }else{
-              // DLM: potential leap year problem
-              startDateTime = openstudio::DateTime(openstudio::Date(month, day), openstudio::Time(0,0,intervalMinutes,0));
+          if ((version.major() == 8) && (version.minor() == 3)){
+            // workaround for bug in E+ 8.3, issue #1692
+            if (reportingFrequency == ReportingFrequency::Daily){
+              intervalMinutes = 24 * 60;
+            } else if (reportingFrequency == ReportingFrequency::Monthly){
+              intervalMinutes = day * 24 * 60;
+            } else if (reportingFrequency == ReportingFrequency::RunPeriod){
+              DateTime firstDateTime = this->firstDateTime(false, dataDictionary.envPeriodIndex);
+              DateTime lastDateTime = this->lastDateTime(false, dataDictionary.envPeriodIndex);
+              Time deltaT = lastDateTime - firstDateTime;
+              intervalMinutes = deltaT.totalMinutes() + 60;
             }
           }
 
-          stdSecondsFromFirstReport.push_back(cumulativeSeconds);
+          if (!firstReportDateTime){
+            if ((month==0) || (day==0)){
+              // gets called for RunPeriod reports
+              firstReportDateTime = lastDateTime(false, dataDictionary.envPeriodIndex);
+            } else{
+              // DLM: potential leap year problem
+              if (intervalMinutes >= 24 * 60){
+                // Daily or Monthly
+                OS_ASSERT(intervalMinutes % (24 * 60) == 0);
+                firstReportDateTime = openstudio::DateTime(openstudio::Date(month, day), openstudio::Time(1, 0, 0, 0));
+              } else {
+                firstReportDateTime = openstudio::DateTime(openstudio::Date(month, day), openstudio::Time(0, 0, intervalMinutes, 0));
+              }
 
+            }
+          }
+
+          // Use the new way to create the time series with nonzero first entry
           cumulativeSeconds += 60*intervalMinutes;
+          stdSecondsFromFirstReport.push_back(cumulativeSeconds);
 
           // check if this interval is same as the others
           if (isIntervalTimeSeries && !reportingIntervalMinutes){
@@ -2359,14 +2443,14 @@ namespace openstudio{
         // must finalize to prevent memory leaks
         sqlite3_finalize(sqlStmtPtr);
 
-        if (startDateTime && !stdSecondsFromFirstReport.empty()){
+        if (firstReportDateTime && !stdSecondsFromFirstReport.empty()){
           if (isIntervalTimeSeries){
             openstudio::Time intervalTime(0,0,*reportingIntervalMinutes,0);
             openstudio::Vector values = createVector(stdValues);
-            ts = openstudio::TimeSeries(*startDateTime, intervalTime, values, units);
+            ts = openstudio::TimeSeries(*firstReportDateTime, intervalTime, values, units);
           }else{
             openstudio::Vector values = createVector(stdValues);
-            ts = openstudio::TimeSeries(*startDateTime, stdSecondsFromFirstReport, values, units);
+            ts = openstudio::TimeSeries(*firstReportDateTime, stdSecondsFromFirstReport, values, units);
           }
         }
       }
@@ -2444,6 +2528,33 @@ namespace openstudio{
       if (iEpRfNKv == m_dataDictionary.get<envPeriodReportingFrequencyNameKeyValue>().end()) {
         // not found
         LOG(Debug,"Tuple: " << queryEnvPeriod << ", " << reportingFrequency << ", " << timeSeriesName << ", " << keyValue << " not found in data dictionary.");
+
+        // DLM: this is not optimal, we should be making the find on the data dictionary case insensitive or using
+        // the functionality of mf_makeConsistent(std::vector<SqlFileTimeSeriesQuery>& queries)
+        std::string upperKeyValue = boost::to_upper_copy(keyValue);
+        if (upperKeyValue != keyValue){
+          LOG(Debug, "Trying query: " << queryEnvPeriod << ", " << reportingFrequency << ", " << timeSeriesName << ", " << upperKeyValue );
+          ts = timeSeries(queryEnvPeriod, reportingFrequency, timeSeriesName, upperKeyValue);
+        }
+
+        if (!ts){
+          if (istringEqual("Annual", reportingFrequency) || istringEqual("Environment", reportingFrequency)){
+            LOG(Debug, "Trying query: " << queryEnvPeriod << ", " << "Run Period" << ", " << timeSeriesName << ", " << upperKeyValue);
+            ts = timeSeries(queryEnvPeriod, "Run Period", timeSeriesName, keyValue);
+          }
+        }
+
+        if (!ts){
+          openstudio::OptionalReportingFrequency freq = reportingFrequencyFromDB(reportingFrequency);
+          if (freq){
+            if (reportingFrequency != freq->valueDescription()){
+              LOG(Debug, "Trying query: " << queryEnvPeriod << ", " << freq->valueDescription() << ", " << timeSeriesName << ", " << upperKeyValue);
+              ts = timeSeries(queryEnvPeriod, freq->valueDescription(), timeSeriesName, keyValue);
+            }
+          }
+        }
+        
+
       } else if (!iEpRfNKv->timeSeries.values().empty()) {
         ts = iEpRfNKv->timeSeries;
       } else {// lazy caching
@@ -2803,7 +2914,26 @@ namespace openstudio{
     // DLM@20100511: can we query this?
     std::string SqlFile_Impl::energyPlusVersion() const
     {
-      return "5-0-0";
+      std::string result;
+      if (m_db) {
+        sqlite3_stmt* sqlStmtPtr;
+        sqlite3_prepare_v2(m_db, "SELECT EnergyPlusVersion FROM Simulations", -1, &sqlStmtPtr, nullptr);
+        int code = sqlite3_step(sqlStmtPtr);
+        if (code == SQLITE_ROW) {
+          // in 8.1 this is 'EnergyPlus-Windows-32 8.1.0.008, YMD=2014.11.08 22:49'
+          // in 8.2 this is 'EnergyPlus, Version 8.2.0-8397c2e30b, YMD=2015.01.09 08:37'
+          // radiance script is writing 'EnergyPlus, VERSION 8.2, (OpenStudio) YMD=2015.1.9 08:35:36'
+          boost::regex version_regex("\\d\\.\\d[\\.\\d]*");
+          std::string version_line = columnText(sqlite3_column_text(sqlStmtPtr, 0));
+          boost::smatch version_match;
+
+          if (boost::regex_search(version_line, version_match, version_regex)){
+            result = version_match[0].str();
+          }
+        }
+        sqlite3_finalize(sqlStmtPtr);
+      }
+      return result;
     }
 
     /// Energy Plus eplusout.sql file name

@@ -47,14 +47,14 @@ OSCollapsibleItemList::OSCollapsibleItemList(bool addScrollArea, QWidget * paren
 { 
   this->setObjectName("GrayWidget"); 
 
-  QVBoxLayout* outerVLayout = new QVBoxLayout();
+  auto outerVLayout = new QVBoxLayout();
   outerVLayout->setContentsMargins(0,0,0,0);
   this->setLayout(outerVLayout);
 
-  QWidget* outerWidget = new QWidget();
+  auto outerWidget = new QWidget();
 
   if (addScrollArea){
-    QScrollArea* scrollArea = new QScrollArea();
+    auto scrollArea = new QScrollArea();
     scrollArea->setFrameStyle(QFrame::NoFrame);
     scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -161,26 +161,19 @@ void OSCollapsibleItemList::addCollapsibleItem(OSCollapsibleItem * collapsibleIt
 
   collapsibleItem->setStyleSheet(style);
 
-  connect(collapsibleItem, &OSCollapsibleItem::collapsableItemSelected,
-          this, &OSCollapsibleItemList::onCollapsableItemSelected);
+  connect(collapsibleItem, &OSCollapsibleItem::collapsableItemSelected, this, &OSCollapsibleItemList::onCollapsableItemSelected);
 
-  connect(collapsibleItem, &OSCollapsibleItem::itemSelected,
-          this, &OSCollapsibleItemList::onItemSelected);
+  connect(collapsibleItem, &OSCollapsibleItem::itemSelected, this, &OSCollapsibleItemList::onItemSelected);
 
-  connect(collapsibleItem, &OSCollapsibleItem::itemSelected,
-          this, &OSCollapsibleItemList::itemSelected);
+  connect(collapsibleItem, &OSCollapsibleItem::itemSelected, this, &OSCollapsibleItemList::itemSelected);
 
-  connect(collapsibleItem, &OSCollapsibleItem::itemReplacementDropped,
-          this, &OSCollapsibleItemList::itemReplacementDropped);
+  connect(collapsibleItem, &OSCollapsibleItem::itemReplacementDropped, this, &OSCollapsibleItemList::itemReplacementDropped);
 
-  connect(collapsibleItem, &OSCollapsibleItem::itemRemoveClicked,
-          this, &OSCollapsibleItemList::itemRemoveClicked);
+  connect(collapsibleItem, &OSCollapsibleItem::itemRemoveClicked, this, &OSCollapsibleItemList::itemRemoveClicked);
 
-  connect(collapsibleItem, &OSCollapsibleItem::selectionCleared,
-          this, &OSCollapsibleItemList::selectionCleared);
+  connect(collapsibleItem, &OSCollapsibleItem::selectionCleared, this, &OSCollapsibleItemList::selectionCleared);
 
-  connect(collapsibleItem, &OSCollapsibleItem::openLibDlgClicked,
-          this, &OSCollapsibleItemList::openLibDlgClicked);
+  connect(collapsibleItem, &OSCollapsibleItem::openLibDlgClicked, this, &OSCollapsibleItemList::openLibDlgClicked);
 
   if (!selectedItem()){
     collapsibleItem->itemList()->selectItem(collapsibleItem->itemList()->firstItem());

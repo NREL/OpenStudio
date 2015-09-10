@@ -39,7 +39,7 @@ PlanarSurfaceWidget::PlanarSurfaceWidget(bool isIP, QWidget * parent )
 
   setUnits(isIP);
 
-  QGridLayout* layout = new QGridLayout();
+  auto layout = new QGridLayout();
   layout->setContentsMargins(7,7,7,7);
   layout->setSpacing(7);
   this->setLayout(layout);
@@ -70,7 +70,7 @@ void PlanarSurfaceWidget::detach()
 void PlanarSurfaceWidget::clear()
 {
   QLayoutItem *child;
-  while ((child = this->layout()->takeAt(0)) != 0) {
+  while ((child = this->layout()->takeAt(0)) != nullptr) {
     QWidget* widget = child->widget();
     if (widget){
       delete widget;
@@ -97,7 +97,7 @@ void PlanarSurfaceWidget::refresh()
 
     QGridLayout* layout = qobject_cast<QGridLayout*>(this->layout());
 
-    QLabel* label = new QLabel();
+    auto label = new QLabel();
     label->setText("Number");
     label->setStyleSheet("QLabel { font: bold; }");
     layout->addWidget(label,0,0);

@@ -51,9 +51,6 @@ ModelObjectInspectorView::ModelObjectInspectorView(const openstudio::model::Mode
     m_model(model)
 {
   connect(this, &ModelObjectInspectorView::toggleUnitsClicked, this, &ModelObjectInspectorView::toggleUnits);
-
-  auto isConnected = connect(this, SIGNAL(dropZoneItemClicked(OSItem*)), this, SLOT(onDropZoneItemClicked(OSItem*)));
-  OS_ASSERT(isConnected);
 }
 
 void ModelObjectInspectorView::selectModelObject(const openstudio::model::ModelObject& modelObject)
@@ -100,27 +97,23 @@ void ModelObjectInspectorView::toggleUnits(bool displayIP)
 {
 }
 
-void ModelObjectInspectorView::onDropZoneItemClicked(OSItem* item)
-{
-}
-
 DefaultInspectorView::DefaultInspectorView(const model::Model& model,
                                            QWidget * parent )
   : ModelObjectInspectorView(model, true, parent)
 {
-  QWidget* hiddenWidget = new QWidget();
+  auto hiddenWidget = new QWidget();
   this->stackedWidget()->insertWidget(0, hiddenWidget);
 
-  QWidget* visibleWidget = new QWidget();
+  auto visibleWidget = new QWidget();
   this->stackedWidget()->insertWidget(1, visibleWidget);
 
   this->stackedWidget()->setCurrentIndex(0);
 
-  QVBoxLayout* mainVLayout = new QVBoxLayout();
+  auto mainVLayout = new QVBoxLayout();
   mainVLayout->setContentsMargins(7,7,7,7);
   mainVLayout->setSpacing(7);
 
-  QLabel * underConstructionLabel = new QLabel();
+  auto underConstructionLabel = new QLabel();
   underConstructionLabel->setPixmap(QPixmap(":/images/coming_soon_building_summary.png"));
   underConstructionLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   mainVLayout->addWidget(underConstructionLabel);

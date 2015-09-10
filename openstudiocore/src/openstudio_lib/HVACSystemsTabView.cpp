@@ -22,7 +22,7 @@
 namespace openstudio {
 
 HVACSystemsTabView::HVACSystemsTabView(QWidget * parent)
-  : MainTabView("HVAC Systems",false,parent)
+  : MainTabView("HVAC Systems", MainTabView::MAIN_TAB, parent)
 {
 }
 

@@ -60,22 +60,28 @@ public:
             boost::optional<StringSetter> set=boost::none,
             boost::optional<NoFailAction> reset=boost::none,
             boost::optional<BasicQuery> isDefaulted=boost::none);
-  
+
   void bind(model::ModelObject& modelObject,
             OptionalStringGetterBoolArg get,
             boost::optional<StringSetterOptionalStringReturn> set,
             boost::optional<NoFailAction> reset=boost::none,
             boost::optional<BasicQuery> isDefaulted=boost::none);
 
+  void bind(model::ModelObject& modelObject,
+    StringGetter get,
+    boost::optional<StringSetterVoidReturn> set = boost::none,
+    boost::optional<NoFailAction> reset = boost::none,
+    boost::optional<BasicQuery> isDefaulted = boost::none);
+
   void unbind();
 
 protected:
 
-  void mouseReleaseEvent(QMouseEvent* event);
+  void mouseReleaseEvent(QMouseEvent* event) override;
 
-  virtual void focusInEvent(QFocusEvent * e);
+  virtual void focusInEvent(QFocusEvent * e) override;
 
-  virtual void focusOutEvent(QFocusEvent * e);
+  virtual void focusOutEvent(QFocusEvent * e) override;
 
 signals:
 
@@ -111,6 +117,7 @@ signals:
   boost::optional<OptionalStringGetterBoolArg> m_getOptionalBoolArg;
   boost::optional<StringSetter> m_set;
   boost::optional<StringSetterOptionalStringReturn> m_setOptionalStringReturn;
+  boost::optional<StringSetterVoidReturn> m_setVoidReturn;
   boost::optional<NoFailAction> m_reset;
   boost::optional<BasicQuery> m_isDefaulted;
 

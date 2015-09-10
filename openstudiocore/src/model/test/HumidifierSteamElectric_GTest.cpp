@@ -64,30 +64,30 @@ TEST_F(ModelFixture,HumidifierSteamElectric_addToNode) {
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
-  EXPECT_FALSE(testObject.addToNode(inletNode));
-  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+  EXPECT_TRUE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)7, airLoop.demandComponents().size());
 
   PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
-  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
 
   Node demandOutletNode = plantLoop.demandOutletNode();
-  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+  EXPECT_TRUE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)7, plantLoop.demandComponents().size() );
 
   HumidifierSteamElectric testObject2(m);
   HumidifierSteamElectric testObject3(m);
 
   if( boost::optional<Node> OANode = outdoorAirSystem.outboardOANode() ) {
     EXPECT_TRUE(testObject2.addToNode(*OANode));
-    EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+    EXPECT_EQ( (unsigned)3, airLoop.supplyComponents().size() );
     EXPECT_EQ( (unsigned)3, outdoorAirSystem.oaComponents().size() );
   }
 
   if( boost::optional<Node> reliefNode = outdoorAirSystem.outboardReliefNode() ) {
     EXPECT_TRUE(testObject3.addToNode(*reliefNode));
-    EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+    EXPECT_EQ( (unsigned)3, airLoop.supplyComponents().size() );
     EXPECT_EQ( (unsigned)3, outdoorAirSystem.reliefComponents().size() );
   }
 
@@ -95,5 +95,5 @@ TEST_F(ModelFixture,HumidifierSteamElectric_addToNode) {
   supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)7, airLoop.supplyComponents().size() );
+  EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
 }

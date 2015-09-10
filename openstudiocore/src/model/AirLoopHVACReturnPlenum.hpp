@@ -56,17 +56,17 @@ class MODEL_API AirLoopHVACReturnPlenum : public Mixer {
 
   void resetThermalZone();
 
-  unsigned outletPort();
+  unsigned outletPort() const override;
 
-  unsigned inletPort(unsigned branchIndex);
+  unsigned inletPort(unsigned branchIndex) const override;
 
-  unsigned nextInletPort();
+  unsigned nextInletPort() const override;
 
   bool addToNode(Node & node);
 
   bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
-  bool addBranchForZone(openstudio::model::ThermalZone & thermalZone, StraightComponent & terminal);
+  bool addBranchForZone(openstudio::model::ThermalZone & thermalZone, HVACComponent & terminal);
 
  protected:
   /// @cond

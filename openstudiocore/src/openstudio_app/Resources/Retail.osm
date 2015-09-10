@@ -13012,7 +13012,7 @@ OS:StandardsInformation:Material,
 OS:Material,
   {8b5567ef-d5ad-4286-82ef-fed95e81ef59}, !- Handle
   Air - Metal Wall Framing - 16 or 24 in. OC, !- Name
-  ,                                       !- Roughness
+  Smooth,                                 !- Roughness
   0.1397,                                 !- Thickness {m}
   1.22016793979183,                       !- Conductivity {W/m-K}
   1.28147706991681,                       !- Density {kg/m3}
@@ -23483,3 +23483,11 @@ OS:Construction,
   ,                                       !- Surface Rendering Name
   {2d2abf95-38a2-4db0-a016-bd25835c7586}; !- Layer 1
 
+OS:SpaceInfiltration:EffectiveLeakageArea,
+  {fa1b2cef-5376-4b21-8ebc-9ede6f08ab69}, !- Handle
+  Space Infiltration Effective Leakage Area 1, !- Name
+  {6e81b6eb-e552-4e68-8e12-8ff03c46a0d7}, !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  0.1,                                    !- Effective Air Leakage Area {m2}
+  0.1,                                    !- Stack Coefficient
+  0.1;                                    !- Wind Coefficient

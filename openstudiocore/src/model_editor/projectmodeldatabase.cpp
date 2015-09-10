@@ -395,7 +395,7 @@ void Project::update() {
 }
 void Project::del() {
     if (typeIsCorrect() == false) {
-        std::auto_ptr<Project> p(upcastCopy());
+        std::unique_ptr<Project> p(upcastCopy());
         p->delRelations();
         p->onDelete();
         p->delRecord();
@@ -408,17 +408,17 @@ void Project::del() {
 bool Project::typeIsCorrect() {
     return type == type__;
 }
-std::auto_ptr<Project> Project::upcast() {
-    return auto_ptr<Project>(new Project(*this));
+std::unique_ptr<Project> Project::upcast() {
+    return unique_ptr<Project>(new Project(*this));
 }
-std::auto_ptr<Project> Project::upcastCopy() {
+std::unique_ptr<Project> Project::upcastCopy() {
     Project* np = new Project(*this);
     np->id = id;
     np->type = type;
     np->name = name;
     np->projecttype = projecttype;
     np->inDatabase = inDatabase;
-    return auto_ptr<Project>(np);
+    return unique_ptr<Project>(np);
 }
 std::ostream & operator<<(std::ostream& os, Project o) {
     os << "-------------------------------------" << std::endl;
@@ -581,7 +581,7 @@ void Analysis::update() {
 }
 void Analysis::del() {
     if (typeIsCorrect() == false) {
-        std::auto_ptr<Analysis> p(upcastCopy());
+        std::unique_ptr<Analysis> p(upcastCopy());
         p->delRelations();
         p->onDelete();
         p->delRecord();
@@ -594,17 +594,17 @@ void Analysis::del() {
 bool Analysis::typeIsCorrect() {
     return type == type__;
 }
-std::auto_ptr<Analysis> Analysis::upcast() {
-    return auto_ptr<Analysis>(new Analysis(*this));
+std::unique_ptr<Analysis> Analysis::upcast() {
+    return unique_ptr<Analysis>(new Analysis(*this));
 }
-std::auto_ptr<Analysis> Analysis::upcastCopy() {
+std::unique_ptr<Analysis> Analysis::upcastCopy() {
     Analysis* np = new Analysis(*this);
     np->id = id;
     np->type = type;
     np->name = name;
     np->analysistype = analysistype;
     np->inDatabase = inDatabase;
-    return auto_ptr<Analysis>(np);
+    return unique_ptr<Analysis>(np);
 }
 std::ostream & operator<<(std::ostream& os, Analysis o) {
     os << "-------------------------------------" << std::endl;
@@ -776,7 +776,7 @@ void Model::update() {
 }
 void Model::del() {
     if (typeIsCorrect() == false) {
-        std::auto_ptr<Model> p(upcastCopy());
+        std::unique_ptr<Model> p(upcastCopy());
         p->delRelations();
         p->onDelete();
         p->delRecord();
@@ -789,10 +789,10 @@ void Model::del() {
 bool Model::typeIsCorrect() {
     return type == type__;
 }
-std::auto_ptr<Model> Model::upcast() {
-    return auto_ptr<Model>(new Model(*this));
+std::unique_ptr<Model> Model::upcast() {
+    return unique_ptr<Model>(new Model(*this));
 }
-std::auto_ptr<Model> Model::upcastCopy() {
+std::unique_ptr<Model> Model::upcastCopy() {
     Model* np = new Model(*this);
     np->id = id;
     np->type = type;
@@ -800,7 +800,7 @@ std::auto_ptr<Model> Model::upcastCopy() {
     np->path = path;
     np->guid = guid;
     np->inDatabase = inDatabase;
-    return auto_ptr<Model>(np);
+    return unique_ptr<Model>(np);
 }
 std::ostream & operator<<(std::ostream& os, Model o) {
     os << "-------------------------------------" << std::endl;
@@ -956,7 +956,7 @@ void Result::update() {
 }
 void Result::del() {
     if (typeIsCorrect() == false) {
-        std::auto_ptr<Result> p(upcastCopy());
+        std::unique_ptr<Result> p(upcastCopy());
         p->delRelations();
         p->onDelete();
         p->delRecord();
@@ -969,16 +969,16 @@ void Result::del() {
 bool Result::typeIsCorrect() {
     return type == type__;
 }
-std::auto_ptr<Result> Result::upcast() {
-    return auto_ptr<Result>(new Result(*this));
+std::unique_ptr<Result> Result::upcast() {
+    return unique_ptr<Result>(new Result(*this));
 }
-std::auto_ptr<Result> Result::upcastCopy() {
+std::unique_ptr<Result> Result::upcastCopy() {
     Result* np = new Result(*this);
     np->id = id;
     np->type = type;
     np->value = value;
     np->inDatabase = inDatabase;
-    return auto_ptr<Result>(np);
+    return unique_ptr<Result>(np);
 }
 std::ostream & operator<<(std::ostream& os, Result o) {
     os << "-------------------------------------" << std::endl;
@@ -1131,7 +1131,7 @@ void ResultQuery::update() {
 }
 void ResultQuery::del() {
     if (typeIsCorrect() == false) {
-        std::auto_ptr<ResultQuery> p(upcastCopy());
+        std::unique_ptr<ResultQuery> p(upcastCopy());
         p->delRelations();
         p->onDelete();
         p->delRecord();
@@ -1144,16 +1144,16 @@ void ResultQuery::del() {
 bool ResultQuery::typeIsCorrect() {
     return type == type__;
 }
-std::auto_ptr<ResultQuery> ResultQuery::upcast() {
-    return auto_ptr<ResultQuery>(new ResultQuery(*this));
+std::unique_ptr<ResultQuery> ResultQuery::upcast() {
+    return unique_ptr<ResultQuery>(new ResultQuery(*this));
 }
-std::auto_ptr<ResultQuery> ResultQuery::upcastCopy() {
+std::unique_ptr<ResultQuery> ResultQuery::upcastCopy() {
     ResultQuery* np = new ResultQuery(*this);
     np->id = id;
     np->type = type;
     np->query = query;
     np->inDatabase = inDatabase;
-    return auto_ptr<ResultQuery>(np);
+    return unique_ptr<ResultQuery>(np);
 }
 std::ostream & operator<<(std::ostream& os, ResultQuery o) {
     os << "-------------------------------------" << std::endl;
@@ -1284,7 +1284,7 @@ void RequestedResult::update() {
 }
 void RequestedResult::del() {
     if (typeIsCorrect() == false) {
-        std::auto_ptr<RequestedResult> p(upcastCopy());
+        std::unique_ptr<RequestedResult> p(upcastCopy());
         p->delRelations();
         p->onDelete();
         p->delRecord();
@@ -1297,16 +1297,16 @@ void RequestedResult::del() {
 bool RequestedResult::typeIsCorrect() {
     return type == type__;
 }
-std::auto_ptr<RequestedResult> RequestedResult::upcast() {
-    return auto_ptr<RequestedResult>(new RequestedResult(*this));
+std::unique_ptr<RequestedResult> RequestedResult::upcast() {
+    return unique_ptr<RequestedResult>(new RequestedResult(*this));
 }
-std::auto_ptr<RequestedResult> RequestedResult::upcastCopy() {
+std::unique_ptr<RequestedResult> RequestedResult::upcastCopy() {
     RequestedResult* np = new RequestedResult(*this);
     np->id = id;
     np->type = type;
     np->result = result;
     np->inDatabase = inDatabase;
-    return auto_ptr<RequestedResult>(np);
+    return unique_ptr<RequestedResult>(np);
 }
 std::ostream & operator<<(std::ostream& os, RequestedResult o) {
     os << "-------------------------------------" << std::endl;

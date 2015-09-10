@@ -27,14 +27,13 @@ namespace openstudio {
 namespace model {
 
 class Node;
-
 class HVACComponent;
-
 class Mixer;
-
 class Splitter;
-
 class SizingPlant;
+class PlantEquipmentOperationScheme;
+class PlantEquipmentOperationHeatingLoad;
+class PlantEquipmentOperationCoolingLoad;
 
 namespace detail {
 
@@ -53,7 +52,11 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   virtual ~PlantLoop_Impl() {}
 
-  virtual IddObjectType iddObjectType() const;
+  virtual IddObjectType iddObjectType() const override;
+
+  std::string loadDistributionScheme();
+
+  bool setLoadDistributionScheme(std::string scheme);
 
   std::string fluidType();
 
@@ -97,33 +100,27 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   void resetCommonPipeSimulation();
 
-  //std::vector<ModelObject> supplyComponents(HVACComponent inletComp,
-  //                                          HVACComponent outletComp,
-  //                                          openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+  boost::optional<PlantEquipmentOperationHeatingLoad> plantEquipmentOperationHeatingLoad() const;
 
-  std::vector<ModelObject> demandComponents(HVACComponent inletComp,
-                                            HVACComponent outletComp,
-                                            openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+  bool setPlantEquipmentOperationHeatingLoad(const boost::optional<PlantEquipmentOperationHeatingLoad>& plantOperation);
 
-  //std::vector<ModelObject> supplyComponents(openstudio::IddObjectType type=openstudio::IddObjectType("Catchall"));
+  void resetPlantEquipmentOperationHeatingLoad();
 
-  std::vector<ModelObject> demandComponents(openstudio::IddObjectType type=openstudio::IddObjectType("Catchall"));
+  boost::optional<PlantEquipmentOperationCoolingLoad> plantEquipmentOperationCoolingLoad() const;
 
-  //std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+  bool setPlantEquipmentOperationCoolingLoad(const boost::optional<PlantEquipmentOperationCoolingLoad>& plantOperation);
 
-  boost::optional<ModelObject> component(openstudio::Handle handle);
+  void resetPlantEquipmentOperationCoolingLoad();
 
-  //std::vector<ModelObject> supplyComponents(std::vector<HVACComponent> inletComps,
-  //                                          std::vector<HVACComponent> outletComps,
-  //                                          openstudio::IddObjectType type );
+  boost::optional<PlantEquipmentOperationScheme> primaryPlantEquipmentOperationScheme() const;
 
-  std::vector<ModelObject> demandComponents(std::vector<HVACComponent> inletComps,
-                                            std::vector<HVACComponent> outletComps,
-                                            openstudio::IddObjectType type );
+  bool setPrimaryPlantEquipmentOperationScheme(const boost::optional<PlantEquipmentOperationScheme>& plantOperation);
 
-  virtual std::vector<openstudio::IdfObject> remove();
+  void resetPrimaryPlantEquipmentOperationScheme();
 
-  virtual ModelObject clone(Model model) const;
+  virtual std::vector<openstudio::IdfObject> remove() override;
+
+  virtual ModelObject clone(Model model) const override;
 
   unsigned supplyInletPort() const;
 
@@ -133,21 +130,25 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   unsigned demandOutletPort() const;
 
-  virtual Node supplyInletNode() const;
+  virtual Node supplyInletNode() const override;
 
-  virtual Node supplyOutletNode() const;
+  virtual Node supplyOutletNode() const override;
 
-  virtual Node demandInletNode() const;
+  virtual std::vector<Node> supplyOutletNodes() const override;
 
-  virtual Node demandOutletNode() const;
+  virtual Node demandInletNode() const override;
+
+  virtual std::vector<Node> demandInletNodes() const override;
+
+  virtual Node demandOutletNode() const override;
 
   Mixer supplyMixer();
 
   Splitter supplySplitter();
 
-  Mixer demandMixer();
+  Mixer demandMixer() override;
 
-  Splitter demandSplitter();
+  Splitter demandSplitter() override;
 
   bool addSupplyBranchForComponent( HVACComponent component );
 
@@ -161,7 +162,7 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   void setLoopTemperatureSetpointNode( Node & node );
 
-  std::vector<ModelObject> children() const;
+  std::vector<ModelObject> children() const override;
 
   SizingPlant sizingPlant() const;
 

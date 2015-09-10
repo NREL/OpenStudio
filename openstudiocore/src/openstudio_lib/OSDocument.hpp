@@ -164,8 +164,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
     CONSTRUCTIONS,
     LOADS,
     SPACE_TYPES,
-    BUILDING_STORIES,
     FACILITY,
+    SPACES,
     THERMAL_ZONES,
     HVAC_SYSTEMS,
     BUILDING_SUMMARY,
@@ -350,8 +350,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   boost::optional<analysisdriver::SimpleProject> m_simpleProject;
 
-  QString m_savePath;
-  QString m_modelTempDir;
+  QString m_savePath = QString();
+  QString m_modelTempDir = QString();
 
   int m_mainTabId = 0;
   int m_subTabId = 0;

@@ -82,7 +82,7 @@ namespace detail {
 
     boost::optional<double> toDouble(const Quantity& quantity) const;
 
-    virtual void populateValidityReport(ValidityReport& report,bool checkNames) const;
+    virtual void populateValidityReport(ValidityReport& report,bool checkNames) const override;
 
     virtual bool candidateIsCompatibleWithCurrentUse(const ScheduleTypeLimits& candidate) const = 0;
 

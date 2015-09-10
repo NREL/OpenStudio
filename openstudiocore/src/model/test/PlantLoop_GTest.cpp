@@ -41,6 +41,12 @@
 #include "../HVACTemplates.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../AirLoopHVAC_Impl.hpp"
+#include "../PlantEquipmentOperationCoolingLoad.hpp"
+#include "../PlantEquipmentOperationCoolingLoad_Impl.hpp"
+#include "../PlantEquipmentOperationHeatingLoad.hpp"
+#include "../PlantEquipmentOperationHeatingLoad_Impl.hpp"
+#include "../PlantEquipmentOperationOutdoorDryBulb.hpp"
+#include "../PlantEquipmentOperationOutdoorDryBulb_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
@@ -68,6 +74,8 @@ TEST_F(ModelFixture,PlantLoop_supplyComponents)
   
   PlantLoop plantLoop(m); 
   ASSERT_EQ( 5u,plantLoop.supplyComponents().size() );
+
+  EXPECT_EQ("Optimal",plantLoop.loadDistributionScheme());
 
   boost::optional<ModelObject> comp;
   comp = plantLoop.supplyComponents()[1];
@@ -116,6 +124,19 @@ TEST_F(ModelFixture,PlantLoop_supplyComponents)
 
   ASSERT_TRUE(plantLoop.removeSupplyBranchWithComponent(chiller2));
   ASSERT_EQ( 7u,plantLoop.supplyComponents().size() );
+}
+
+TEST_F(ModelFixture,PlantLoop_demandComponent)
+{
+  Model m; 
+  PlantLoop plantLoop(m); 
+
+  ASSERT_EQ( 1u,plantLoop.demandInletNodes().size() );
+
+  auto demandInletNode = plantLoop.demandInletNode();
+  auto mo = plantLoop.demandComponent(demandInletNode.handle());
+  ASSERT_TRUE(mo);
+  EXPECT_EQ( demandInletNode,mo.get() );
 }
 
 TEST_F(ModelFixture,PlantLoop_demandComponents)
@@ -261,7 +282,7 @@ TEST_F(ModelFixture, PlantLoop_edges)
   EXPECT_EQ(2, edges.size());
   bool found_coil_1 = false;
   bool found_coil_2 = false;
-  for( std::vector<HVACComponent>::iterator it = edges.begin(); it != edges.end(); ++it )
+  for( auto it = edges.begin(); it != edges.end(); ++it )
   {
     std::vector<HVACComponent> splitter_edges = (*it).getImpl<detail::HVACComponent_Impl>()->edges(false); // should be a coil
     ASSERT_EQ(1, splitter_edges.size());
@@ -291,7 +312,7 @@ TEST_F(ModelFixture, PlantLoop_edges)
   EXPECT_EQ(2, edges.size());
   bool found_chiller = false;
   bool found_pipe = false;
-  for( std::vector<HVACComponent>::iterator it = edges.begin(); it != edges.end(); ++it )
+  for( auto it = edges.begin(); it != edges.end(); ++it )
   {
     std::vector<HVACComponent> splitter_edges = (*it).getImpl<detail::HVACComponent_Impl>()->edges(false); // should be chiller or pipe
     ASSERT_EQ(1, splitter_edges.size());
@@ -320,7 +341,7 @@ TEST_F(ModelFixture, PlantLoop_edges)
   edges = demandSplitter2.getImpl<detail::HVACComponent_Impl>()->edges(true); // should be node
   EXPECT_EQ(1, edges.size());
   bool found_demand_chiller = false;
-  for( std::vector<HVACComponent>::iterator it = edges.begin(); it != edges.end(); ++it )
+  for( auto it = edges.begin(); it != edges.end(); ++it )
   {
     std::vector<HVACComponent> splitter_edges = (*it).getImpl<detail::HVACComponent_Impl>()->edges(true); // should be chiller
     ASSERT_EQ(1, splitter_edges.size());
@@ -358,5 +379,36 @@ TEST_F(ModelFixture, PlantLoop_removeBranchWithComponent)
 
   plantDemandComps = plant.demandComponents(splitter,mixer);
   EXPECT_EQ(5u,plantDemandComps.size());
+}
+
+TEST_F(ModelFixture, PlantLoop_OperationSchemes)
+{
+  Model m;
+  PlantLoop plant(m);
+
+  PlantEquipmentOperationCoolingLoad plantEquipmentOperationCoolingLoad(m);
+  EXPECT_TRUE(plant.setPlantEquipmentOperationCoolingLoad(plantEquipmentOperationCoolingLoad));
+  auto coolingLoad = plant.plantEquipmentOperationCoolingLoad();
+  EXPECT_TRUE(coolingLoad);
+  if( coolingLoad ) {
+    EXPECT_EQ(plantEquipmentOperationCoolingLoad,coolingLoad.get());
+  }
+
+  PlantEquipmentOperationHeatingLoad plantEquipmentOperationHeatingLoad(m);
+  EXPECT_TRUE(plant.setPlantEquipmentOperationHeatingLoad(plantEquipmentOperationHeatingLoad));
+  auto heatingLoad = plant.plantEquipmentOperationHeatingLoad();
+  EXPECT_TRUE(heatingLoad);
+  if( heatingLoad ) {
+    EXPECT_EQ(plantEquipmentOperationHeatingLoad,heatingLoad.get());
+  }
+
+  PlantEquipmentOperationOutdoorDryBulb plantEquipmentOperationOutdoorDryBulb(m);
+  EXPECT_TRUE(plant.setPrimaryPlantEquipmentOperationScheme(plantEquipmentOperationOutdoorDryBulb));
+  auto dryBulb = plant.primaryPlantEquipmentOperationScheme();
+  EXPECT_TRUE(dryBulb);
+  if( dryBulb ) {
+    EXPECT_EQ(plantEquipmentOperationOutdoorDryBulb,dryBulb.get());
+  }
+  
 }
 

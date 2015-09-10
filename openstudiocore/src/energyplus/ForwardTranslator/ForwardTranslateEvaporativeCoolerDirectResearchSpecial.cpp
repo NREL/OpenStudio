@@ -23,6 +23,8 @@
 #include "../../model/EvaporativeCoolerDirectResearchSpecial_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
+#include "../../model/Curve.hpp"
+#include "../../model/Curve_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/core/Logger.hpp"
@@ -60,11 +62,14 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeCoolerDirectRe
 
   // CoolerEffectiveness
   value = modelObject.coolerEffectiveness();
-  idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::CoolerEffectiveness,value);
+  idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::CoolerDesignEffectiveness,value);
 
   // RecirculatingWaterPumpPowerConsumption
-  value = modelObject.recirculatingWaterPumpPowerConsumption();
-  idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpPowerConsumption,value);
+  if ( modelObject.isRecirculatingWaterPumpPowerConsumptionAutosized() ) {
+    idfObject.setString(EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpDesignPower,"autosize");
+  } else if( (d = modelObject.recirculatingWaterPumpPowerConsumption()) ) {
+    idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpDesignPower,d.get());
+  }
 
   // AirInletNodeName
   temp = modelObject.inletModelObject();
@@ -113,6 +118,24 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeCoolerDirectRe
   {
     idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::BlowdownConcentrationRatio,value);
   }
+
+  // EffectivenessFlowRatioModifierCurveName
+  if( auto curve = modelObject.effectivenessFlowRatioModifierCurve() ) {
+    auto _curve = translateAndMapModelObject(curve.get());
+    OS_ASSERT(_curve);
+    idfObject.setString(EvaporativeCooler_Direct_ResearchSpecialFields::EffectivenessFlowRatioModifierCurveName,_curve->name().get());
+  }
+
+  // WaterPumpPowerSizingFactor
+  value = modelObject.waterPumpPowerSizingFactor();
+  idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::WaterPumpPowerSizingFactor,value);
+
+  // WaterPumpPowerModifierCurveName
+  if( auto curve = modelObject.waterPumpPowerModifierCurve() ) {
+    auto _curve = translateAndMapModelObject(curve.get());
+    OS_ASSERT(_curve);
+    idfObject.setString(EvaporativeCooler_Direct_ResearchSpecialFields::WaterPumpPowerModifierCurveName,_curve->name().get());
+  } 
 
   return boost::optional<IdfObject>(idfObject);
 }

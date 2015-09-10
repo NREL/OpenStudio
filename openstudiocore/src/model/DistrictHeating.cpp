@@ -67,17 +67,30 @@ namespace detail {
     return DistrictHeating::iddObjectType();
   }
 
-  double DistrictHeating_Impl::nominalCapacity() const {
-    boost::optional<double> value = getDouble(OS_DistrictHeatingFields::NominalCapacity,true);
-    OS_ASSERT(value);
-    return value.get();
+  boost::optional<double> DistrictHeating_Impl::nominalCapacity() const {
+    return getDouble(OS_DistrictHeatingFields::NominalCapacity,true);
   }
 
-  Quantity DistrictHeating_Impl::getNominalCapacity(bool returnIP) const {
-    OptionalDouble value = nominalCapacity();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_DistrictHeatingFields::NominalCapacity, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
+  bool DistrictHeating_Impl::isNominalCapacityAutosized() const {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_DistrictHeatingFields::NominalCapacity, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "autosize");
+    }
+    return result;
+  }
+
+  bool DistrictHeating_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
+    bool result(false);
+    if (nominalCapacity) {
+      result = setDouble(OS_DistrictHeatingFields::NominalCapacity, nominalCapacity.get());
+    }
+    return result;
+  }
+
+  void DistrictHeating_Impl::autosizeNominalCapacity() {
+    bool result = setString(OS_DistrictHeatingFields::NominalCapacity, "autosize");
+    OS_ASSERT(result);
   }
 
   unsigned DistrictHeating_Impl::inletPort()
@@ -88,27 +101,6 @@ namespace detail {
   unsigned DistrictHeating_Impl::outletPort()
   {
     return OS_DistrictHeatingFields::HotWaterOutletNodeName;
-  }
-  
-  bool DistrictHeating_Impl::setNominalCapacity(double nominalCapacity) {
-    bool result = setDouble(OS_DistrictHeatingFields::NominalCapacity, nominalCapacity);
-    return result;
-  }
-
-  bool DistrictHeating_Impl::setNominalCapacity(const Quantity& nominalCapacity) {
-    OptionalDouble value = getDoubleFromQuantity(OS_DistrictHeatingFields::NominalCapacity,nominalCapacity);
-    if (!value) {
-      return false;
-    }
-    return setNominalCapacity(value.get());
-  }
-
-  openstudio::Quantity DistrictHeating_Impl::nominalCapacity_SI() const {
-    return getNominalCapacity(false);
-  }
-
-  openstudio::Quantity DistrictHeating_Impl::nominalCapacity_IP() const {
-    return getNominalCapacity(true);
   }
 
   bool DistrictHeating_Impl::addToNode(Node & node)
@@ -130,6 +122,7 @@ DistrictHeating::DistrictHeating(const Model& model)
   : StraightComponent(DistrictHeating::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::DistrictHeating_Impl>());
+  autosizeNominalCapacity();
 }
 
 IddObjectType DistrictHeating::iddObjectType() {
@@ -137,22 +130,21 @@ IddObjectType DistrictHeating::iddObjectType() {
   return result;
 }
 
-double DistrictHeating::nominalCapacity() const {
+boost::optional<double> DistrictHeating::nominalCapacity() const {
   return getImpl<detail::DistrictHeating_Impl>()->nominalCapacity();
 }
 
-Quantity DistrictHeating::getNominalCapacity(bool returnIP) const {
-  return getImpl<detail::DistrictHeating_Impl>()->getNominalCapacity(returnIP);
+bool DistrictHeating::isNominalCapacityAutosized() const {
+  return getImpl<detail::DistrictHeating_Impl>()->isNominalCapacityAutosized();
 }
 
 bool DistrictHeating::setNominalCapacity(double nominalCapacity) {
   return getImpl<detail::DistrictHeating_Impl>()->setNominalCapacity(nominalCapacity);
 }
 
-bool DistrictHeating::setNominalCapacity(const Quantity& nominalCapacity) {
-  return getImpl<detail::DistrictHeating_Impl>()->setNominalCapacity(nominalCapacity);
+void DistrictHeating::autosizeNominalCapacity() {
+  getImpl<detail::DistrictHeating_Impl>()->autosizeNominalCapacity();
 }
-
 
 /// @cond
 

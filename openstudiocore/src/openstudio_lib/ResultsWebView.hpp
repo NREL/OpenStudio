@@ -30,9 +30,9 @@ namespace openstudio {
 
     public:
 
-      ResultsWebView(QWidget * parent = 0);
+      ResultsWebView(QWidget * parent = nullptr);
 
-      QSize sizeHint() const;
+      QSize sizeHint() const override;
   };
 
 } // openstudio

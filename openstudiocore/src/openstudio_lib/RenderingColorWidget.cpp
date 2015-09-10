@@ -46,7 +46,7 @@ namespace openstudio {
   RenderingColorWidget2::RenderingColorWidget2(QWidget * parent)
     : QWidget(parent)
   {
-    QVBoxLayout* layout = new QVBoxLayout();
+    auto layout = new QVBoxLayout();
     layout->setContentsMargins(0, 0, 0, 0);
     this->setLayout(layout);
 
@@ -250,12 +250,12 @@ RenderingColorWidget::RenderingColorWidget(QWidget * parent )
 {
   this->setObjectName("GrayWidget");
 
-  QHBoxLayout* hLayout = new QHBoxLayout();
+  auto hLayout = new QHBoxLayout();
   hLayout->setContentsMargins(0,0,0,0);
   hLayout->setSpacing(10);
   this->setLayout(hLayout);
 
-  QLabel* renderingColorLabel = new QLabel();
+  auto renderingColorLabel = new QLabel();
   renderingColorLabel->setText("Rendering Color: ");
   renderingColorLabel->setStyleSheet("QLabel { font: bold; }");
   hLayout->addWidget(renderingColorLabel);

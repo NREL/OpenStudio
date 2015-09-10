@@ -35,7 +35,7 @@ class LibraryTabWidget : public QWidget
 
   public:
 
-  LibraryTabWidget(QWidget * parent = 0);
+  LibraryTabWidget(QWidget * parent = nullptr);
 
   virtual ~LibraryTabWidget() {}
 

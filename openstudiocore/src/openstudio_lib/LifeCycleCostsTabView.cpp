@@ -42,7 +42,7 @@ namespace openstudio {
 LifeCycleCostsTabView::LifeCycleCostsTabView(const model::Model & model,
                                  const QString& modelTempDir,
                                  QWidget * parent)
-                                 : MainTabView("Life Cycle Costs",true,parent)
+                                 : MainTabView("Life Cycle Costs", MainTabView::SUB_TAB, parent)
 {
 }
 
@@ -64,7 +64,7 @@ void LifeCycleCostsView::createWidgets()
 
   QVBoxLayout * vLayout = nullptr;
 
-  QVBoxLayout * mainLayout = new QVBoxLayout();
+  auto mainLayout = new QVBoxLayout();
   mainLayout->setContentsMargins(10,10,10,10);
   mainLayout->setSpacing(20);
   setLayout(mainLayout);
@@ -115,7 +115,7 @@ void LifeCycleCostsView::createWidgets()
 
   // Analysis Length and Real Discount Rate
 
-  QGridLayout * gridLayout = new QGridLayout();
+  auto gridLayout = new QGridLayout();
   gridLayout->setContentsMargins(0,0,0,0);
   gridLayout->setSpacing(10);
 
@@ -195,10 +195,10 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
 
   QVBoxLayout * vLayout = nullptr;
 
-  QVBoxLayout * widgetLayout = new QVBoxLayout();
+  auto widgetLayout = new QVBoxLayout();
   widgetLayout->setContentsMargins(0,0,0,0);
 
-  QWidget * widget = new QWidget();
+  auto widget = new QWidget();
   widget->setLayout(widgetLayout);
 
   vLayout = new QVBoxLayout();
@@ -210,7 +210,7 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
 
   widgetLayout->addLayout(vLayout);
 
-  QGridLayout * gridLayout = new QGridLayout();
+  auto gridLayout = new QGridLayout();
   gridLayout->setContentsMargins(0,0,0,0);
   gridLayout->setSpacing(10);
 
@@ -373,11 +373,11 @@ QWidget * LifeCycleCostsView::createNistWidget()
 
   QVBoxLayout * vLayout = nullptr;
 
-  QGridLayout * gridLayout = new QGridLayout();
+  auto gridLayout = new QGridLayout();
   gridLayout->setContentsMargins(0,0,0,0);
   gridLayout->setSpacing(10);
 
-  QWidget * widget = new QWidget();
+  auto widget = new QWidget();
   widget->setLayout(gridLayout);
 
   vLayout = new QVBoxLayout();

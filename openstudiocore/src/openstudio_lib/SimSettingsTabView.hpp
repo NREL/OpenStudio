@@ -41,10 +41,10 @@ class SimSettingsTabView : public MainTabView
 public:
 
   SimSettingsTabView(bool isIP,
-                     const model::Model & model,
-                     const QString & tabLabel,
-                     bool hasSubTabs,
-                     QWidget * parent = 0);
+    const model::Model & model,
+    const QString & tabLabel,
+    TabType tabType,
+    QWidget * parent = nullptr);
 
   virtual ~SimSettingsTabView() {}
 

@@ -390,11 +390,11 @@ namespace openstudio{
   {
     openstudio::path result;
     if (applicationIsRunningFromBuildDirectory()){
-      result = getApplicationSourceDirectory() / toPath("src/pat_app/Measures/");
+      result = getApplicationSourceDirectory() / toPath("src/pat_app/Measures");
     }else{
-      result = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio-" + openStudioVersion() + "/pat/Measures/");
+      result = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio-" + openStudioVersion() + "/pat/Measures");
     }
-    return result;
+    return boost::filesystem::system_complete(result);
   }
 
   BCLMeasure BCLMeasure::alternativeModelMeasure() {
@@ -413,6 +413,10 @@ namespace openstudio{
     return BCLMeasure(patApplicationMeasuresDir() / toPath("CalibrationReports"));
   }
 
+  BCLMeasure BCLMeasure::radianceMeasure() {
+    return BCLMeasure(patApplicationMeasuresDir() / toPath("RadianceMeasure"));
+  }
+
   std::vector<BCLMeasure> BCLMeasure::localBCLMeasures()
   {
     return LocalBCL::instance().measures();
@@ -429,7 +433,7 @@ namespace openstudio{
     QSettings settings("OpenStudio", "BCLMeasure");
     QString value = settings.value("userMeasuresDir", QDir::homePath().append("/OpenStudio/Measures")).toString();
     openstudio::path result = toPath(value);
-    return result;
+    return boost::filesystem::system_complete(result);
   }
 
   bool BCLMeasure::setUserMeasuresDir(const openstudio::path& userMeasuresDir)
@@ -476,6 +480,82 @@ namespace openstudio{
     result.push_back("New Construction EE");
     result.push_back("Retrofit EE");
     result.push_back("Automatic Report Generation");
+    return result;
+  }
+
+  std::vector<std::string> BCLMeasure::suggestedFirstLevelTaxonomyTerms()
+  {
+    std::vector<std::string> result;
+    result.reserve(12);
+
+    result.push_back("Envelope");
+    result.push_back("Electric Lighting");
+    result.push_back("Equipment");
+    result.push_back("People");
+    result.push_back("HVAC");
+    result.push_back("Refrigeration");
+    result.push_back("Service Water Heating");
+    result.push_back("Onsite Power Generation");
+    result.push_back("Whole Building");
+    result.push_back("Economics");
+    result.push_back("Reporting");
+
+    return result;
+  }
+
+  std::vector<std::string> BCLMeasure::suggestedSecondLevelTaxonomyTerms(const std::string& firstLevelTaxonomyTerm)
+  {
+    std::vector<std::string> result;
+    result.reserve(12);
+
+    if (firstLevelTaxonomyTerm == "Envelope"){
+      result.push_back("Form");
+      result.push_back("Opaque");
+      result.push_back("Fenestration");
+      result.push_back("Construction Sets");
+      result.push_back("Daylighting");
+      result.push_back("Infiltration");
+    } else if (firstLevelTaxonomyTerm == "Electric Lighting"){
+      result.push_back("Electric Lighting Controls");
+      result.push_back("Lighting Equipment");
+    } else if (firstLevelTaxonomyTerm == "Equipment"){
+      result.push_back("Equipment Controls");
+      result.push_back("Electric Equipment");
+      result.push_back("Gas Equipment");
+    } else if (firstLevelTaxonomyTerm == "People"){
+      result.push_back("Characteristics");
+      result.push_back("People Schedules");
+    } else if (firstLevelTaxonomyTerm == "HVAC"){
+      result.push_back("HVAC Controls");
+      result.push_back("Heating");
+      result.push_back("Cooling");
+      result.push_back("Heat Rejection");
+      result.push_back("Energy Recovery");
+      result.push_back("Distribution");
+      result.push_back("Ventilation");
+      result.push_back("Whole System");
+    } else if (firstLevelTaxonomyTerm == "Refrigeration"){
+      result.push_back("Refrigeration Controls");
+      result.push_back("Cases and Walkins");
+      result.push_back("Compressors");
+      result.push_back("Condensers");
+      result.push_back("Heat Reclaim");
+    } else if (firstLevelTaxonomyTerm == "Service Water Heating"){
+      result.push_back("Water Use");
+      result.push_back("Water Heating");
+      result.push_back("Distribution");
+    } else if (firstLevelTaxonomyTerm == "Onsite Power Generation"){
+      result.push_back("Photovoltaic");
+    } else if (firstLevelTaxonomyTerm == "Whole Building"){
+      result.push_back("Whole Building Schedules");
+      result.push_back("Space Types");
+    } else if (firstLevelTaxonomyTerm == "Economics"){
+      result.push_back("Life Cycle Cost Analysis");
+    } else if (firstLevelTaxonomyTerm == "Reporting"){
+      result.push_back("QAQC");
+      result.push_back("Troubleshooting");
+    }
+
     return result;
   }
 
@@ -882,6 +962,7 @@ namespace openstudio{
     for (BCLFileReference file : m_bclXML.files()) {
       if (!exists(file.path())){
         result = true;
+        // what if this is the measure.rb file?
         filesToRemove.push_back(file);
       }else if (file.checkForUpdate()){
         result = true;
@@ -924,6 +1005,19 @@ namespace openstudio{
       if (!m_bclXML.hasFile(srcItemPath)){
         BCLFileReference file(srcItemPath, true);
         file.setUsageType("resource");
+        result = true;
+        filesToAdd.push_back(file);
+      }
+    }
+
+    // check for measure.rb
+    openstudio::path srcItemPath = m_directory / toPath("measure.rb");
+    if (!m_bclXML.hasFile(srcItemPath)){
+      if (exists(srcItemPath)){
+        BCLFileReference file(srcItemPath, true);
+        file.setUsageType("script");
+        // we don't know what the actual version this was created for, we also don't know minimum version
+        file.setSoftwareProgramVersion(openStudioVersion());
         result = true;
         filesToAdd.push_back(file);
       }

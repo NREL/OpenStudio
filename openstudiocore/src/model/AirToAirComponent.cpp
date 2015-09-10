@@ -169,6 +169,7 @@ std::vector<openstudio::IdfObject> AirToAirComponent_Impl::remove()
   {
     _model.connect(reliefInletModelObject.get(),reliefInletModelObjectPort.get(),reliefOutletNode.get(),reliefOutletNode->inletPort());
 
+    reliefInletNode->disconnect();
     reliefInletNode->remove();
   }
 
@@ -179,6 +180,8 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
 {
   Model _model = node.model(); 
   boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = node.airLoopHVACOutdoorAirSystem();
+
+  if( airLoopHVACOutdoorAirSystem() ) return false;
   
   if( oaSystem )
   {

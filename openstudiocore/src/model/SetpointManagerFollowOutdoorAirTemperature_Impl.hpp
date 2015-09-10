@@ -52,11 +52,11 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual bool addToNode(Node & node);
+    virtual bool addToNode(Node & node) override;
 
     //@}
     /** @name Getters and Setters */
@@ -78,18 +78,18 @@ namespace detail {
 
     void setMinimumSetpointTemperature(double value);
 
-    virtual boost::optional<Node> setpointNode() const;
+    virtual boost::optional<Node> setpointNode() const override;
 
-    virtual std::string controlVariable() const;
+    virtual std::string controlVariable() const override;
 
-    virtual bool setControlVariable(const std::string & value);
+    virtual bool setControlVariable(const std::string & value) override;
 
     //@}
    private:
 
-    virtual bool setSetpointNode(const Node & node );
+    virtual bool setSetpointNode(const Node & node ) override;
 
-    virtual void resetSetpointNode();
+    virtual void resetSetpointNode() override;
   };
 
 } // detail

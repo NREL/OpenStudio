@@ -23,6 +23,8 @@
 #include "Schedule_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
 #include "Model.hpp"
 #include <utilities/idd/OS_EvaporativeCooler_Direct_ResearchSpecial_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -148,14 +150,29 @@ namespace detail{
     this->setDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::CoolerEffectiveness,value);
   }
   
-  double EvaporativeCoolerDirectResearchSpecial_Impl::recirculatingWaterPumpPowerConsumption() const
+  boost::optional<double> EvaporativeCoolerDirectResearchSpecial_Impl::recirculatingWaterPumpPowerConsumption() const
   {
-    return this->getDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpPowerConsumption).get();
+    return this->getDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpPowerConsumption);
   }
   
   void EvaporativeCoolerDirectResearchSpecial_Impl::setRecirculatingWaterPumpPowerConsumption( double value )
   {
     this->setDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpPowerConsumption,value);
+  }
+
+  void EvaporativeCoolerDirectResearchSpecial_Impl::autosizeRecirculatingWaterPumpPowerConsumption()
+  {
+    this->setString(OS_EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpPowerConsumption,"Autosize");
+  }
+
+  bool EvaporativeCoolerDirectResearchSpecial_Impl::isRecirculatingWaterPumpPowerConsumptionAutosized() const
+  {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpPowerConsumption, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "autosize");
+    }
+    return result;
   }
   
   boost::optional<Node> EvaporativeCoolerDirectResearchSpecial_Impl::sensorNode() const
@@ -213,6 +230,43 @@ namespace detail{
     return false;
   }
 
+  boost::optional<Curve> EvaporativeCoolerDirectResearchSpecial_Impl::effectivenessFlowRatioModifierCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_EvaporativeCooler_Direct_ResearchSpecialFields::EffectivenessFlowRatioModifierCurveName);
+  }
+
+  double EvaporativeCoolerDirectResearchSpecial_Impl::waterPumpPowerSizingFactor() const {
+    boost::optional<double> value = getDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::WaterPumpPowerSizingFactor,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  boost::optional<Curve> EvaporativeCoolerDirectResearchSpecial_Impl::waterPumpPowerModifierCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_EvaporativeCooler_Direct_ResearchSpecialFields::WaterPumpPowerModifierCurveName);
+  }
+
+  bool EvaporativeCoolerDirectResearchSpecial_Impl::setEffectivenessFlowRatioModifierCurve(const Curve& curve) {
+    return setPointer(OS_EvaporativeCooler_Direct_ResearchSpecialFields::EffectivenessFlowRatioModifierCurveName, curve.handle());
+  }
+
+  void EvaporativeCoolerDirectResearchSpecial_Impl::resetEffectivenessFlowRatioModifierCurve() {
+    bool result = setString(OS_EvaporativeCooler_Direct_ResearchSpecialFields::EffectivenessFlowRatioModifierCurveName, "");
+    OS_ASSERT(result);
+  }
+
+  void EvaporativeCoolerDirectResearchSpecial_Impl::setWaterPumpPowerSizingFactor(double waterPumpPowerSizingFactor) {
+    bool result = setDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::WaterPumpPowerSizingFactor, waterPumpPowerSizingFactor);
+    OS_ASSERT(result);
+  }
+
+  bool EvaporativeCoolerDirectResearchSpecial_Impl::setWaterPumpPowerModifierCurve(const Curve& curve) {
+    return setPointer(OS_EvaporativeCooler_Direct_ResearchSpecialFields::WaterPumpPowerModifierCurveName, curve.handle());
+  }
+
+  void EvaporativeCoolerDirectResearchSpecial_Impl::resetWaterPumpPowerModifierCurve() {
+    bool result = setString(OS_EvaporativeCooler_Direct_ResearchSpecialFields::WaterPumpPowerModifierCurveName, "");
+    OS_ASSERT(result);
+  }
+
 } // detail
 
 // create a new EvaporativeCoolerDirectResearchSpecial object in the model's workspace
@@ -230,6 +284,8 @@ EvaporativeCoolerDirectResearchSpecial::EvaporativeCoolerDirectResearchSpecial(c
   setDriftLossFraction(0.0);
 
   setBlowdownConcentrationRatio(0.0);
+
+  setWaterPumpPowerSizingFactor(0.1);
 }
 
 Schedule EvaporativeCoolerDirectResearchSpecial::availabilitySchedule() const
@@ -262,7 +318,7 @@ void EvaporativeCoolerDirectResearchSpecial::setCoolerEffectiveness( double valu
   getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->setCoolerEffectiveness(value);
 }
 
-double EvaporativeCoolerDirectResearchSpecial::recirculatingWaterPumpPowerConsumption() const
+boost::optional<double> EvaporativeCoolerDirectResearchSpecial::recirculatingWaterPumpPowerConsumption() const
 {
   return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->recirculatingWaterPumpPowerConsumption();
 }
@@ -270,6 +326,17 @@ double EvaporativeCoolerDirectResearchSpecial::recirculatingWaterPumpPowerConsum
 void EvaporativeCoolerDirectResearchSpecial::setRecirculatingWaterPumpPowerConsumption( double value )
 {
   getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->setRecirculatingWaterPumpPowerConsumption(value);
+}
+
+
+void EvaporativeCoolerDirectResearchSpecial::autosizeRecirculatingWaterPumpPowerConsumption()
+{
+  getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->autosizeRecirculatingWaterPumpPowerConsumption();
+}
+
+bool EvaporativeCoolerDirectResearchSpecial::isRecirculatingWaterPumpPowerConsumptionAutosized() const
+{
+  return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->isRecirculatingWaterPumpPowerConsumptionAutosized();
 }
 
 boost::optional<Node> EvaporativeCoolerDirectResearchSpecial::sensorNode() const
@@ -300,6 +367,37 @@ double EvaporativeCoolerDirectResearchSpecial::blowdownConcentrationRatio() cons
 void EvaporativeCoolerDirectResearchSpecial::setBlowdownConcentrationRatio( double value )
 {
   getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->setBlowdownConcentrationRatio(value);
+}
+
+boost::optional<Curve> EvaporativeCoolerDirectResearchSpecial::effectivenessFlowRatioModifierCurve() const {
+  return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->effectivenessFlowRatioModifierCurve();
+}
+
+double EvaporativeCoolerDirectResearchSpecial::waterPumpPowerSizingFactor() const {
+  return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->waterPumpPowerSizingFactor();
+}
+
+boost::optional<Curve> EvaporativeCoolerDirectResearchSpecial::waterPumpPowerModifierCurve() const {
+  return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->waterPumpPowerModifierCurve();
+}
+bool EvaporativeCoolerDirectResearchSpecial::setEffectivenessFlowRatioModifierCurve(const Curve& curve) {
+  return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->setEffectivenessFlowRatioModifierCurve(curve);
+}
+
+void EvaporativeCoolerDirectResearchSpecial::resetEffectivenessFlowRatioModifierCurve() {
+  getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->resetEffectivenessFlowRatioModifierCurve();
+}
+
+void EvaporativeCoolerDirectResearchSpecial::setWaterPumpPowerSizingFactor(double waterPumpPowerSizingFactor) {
+  getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->setWaterPumpPowerSizingFactor(waterPumpPowerSizingFactor);
+}
+
+bool EvaporativeCoolerDirectResearchSpecial::setWaterPumpPowerModifierCurve(const Curve& curve) {
+  return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->setWaterPumpPowerModifierCurve(curve);
+}
+
+void EvaporativeCoolerDirectResearchSpecial::resetWaterPumpPowerModifierCurve() {
+  getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->resetWaterPumpPowerModifierCurve();
 }
 
 EvaporativeCoolerDirectResearchSpecial::EvaporativeCoolerDirectResearchSpecial(

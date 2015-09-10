@@ -21,10 +21,8 @@ require "pathname"
 
 if RUBY_PLATFORM =~ /darwin/
   mac_version = `/usr/bin/sw_vers -productVersion | tr -d "\n"`.split('.')
-  if mac_version[0].to_i <= 10
-    if mac_version[1].to_i < 8
-      raise LoadError, "OpenStudio is only compatible with OS 10.8 and later"
-    end
+  if mac_version[0].to_i < 10 || (mac_version[0].to_i == 10 && mac_version[1].to_i < 8)
+    raise LoadError, "OpenStudio is only compatible with OS 10.8 and later"
   end
 end
 
@@ -84,7 +82,6 @@ end
 
 # load ruby extensions
 require 'openstudioutilitiescore'
-require 'openstudioutilitieseconomics'
 require 'openstudioutilitiestime'
 require 'openstudioutilitiesdata'
 require 'openstudioutilitiesplot'
@@ -149,6 +146,13 @@ begin
   
   $OpenStudio_RubyExe = OpenStudio::Path.new(File.join(RbConfig::CONFIG['bindir'], RbConfig::CONFIG['ruby_install_name']).sub(/.*\s.*/m, '"\&"'))
   $OpenStudio_RubyExeDir = $OpenStudio_RubyExe.parent_path()
+
+  # add packaged gems to GEM_PATH
+  # The gem path of Ruby that is running is listed first (can be non-OpenStudio Ruby v2.0.0 to override our gems), followed by the version of Ruby we package as the default
+  ENV['GEM_PATH'] = "#{ENV['GEM_PATH']};#{RbConfig::CONFIG['rubylibprefix']}/gems/2.0.0;#{OpenStudio::getOpenStudioAWSRubyPath.to_s}/lib/ruby/gems/2.0.0"
+  
+  # require packaged gems here
+  
 
 rescue Exception=>e
 

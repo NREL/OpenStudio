@@ -52,9 +52,9 @@ class AbstractButtonItem : public QGraphicsObject
 
   protected:
 
-  void mousePressEvent(QGraphicsSceneMouseEvent * event);
+  void mousePressEvent(QGraphicsSceneMouseEvent * event) override;
 
-  void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
+  void mouseReleaseEvent(QGraphicsSceneMouseEvent * event) override;
 
   bool m_checked;
 
@@ -74,7 +74,7 @@ class ButtonItem : public QGraphicsObject
 
   virtual ~ButtonItem() {}
 
-  QRectF boundingRect() const;
+  QRectF boundingRect() const override;
 
   signals:
 
@@ -82,17 +82,17 @@ class ButtonItem : public QGraphicsObject
 
   protected:
 
-  void mousePressEvent(QGraphicsSceneMouseEvent * event);
+  void mousePressEvent(QGraphicsSceneMouseEvent * event) override;
 
-  void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
+  void mouseReleaseEvent(QGraphicsSceneMouseEvent * event) override;
 
-  void hoverEnterEvent(QGraphicsSceneHoverEvent * event);
+  void hoverEnterEvent(QGraphicsSceneHoverEvent * event) override;
 
-  void hoverLeaveEvent(QGraphicsSceneHoverEvent * event);
+  void hoverLeaveEvent(QGraphicsSceneHoverEvent * event) override;
 
   void paint(QPainter *painter, 
              const QStyleOptionGraphicsItem *option, 
-             QWidget *widget = nullptr);
+             QWidget *widget = nullptr) override;
 
   private:
 
@@ -144,7 +144,7 @@ class GridLayoutItem : public QGraphicsObject
 
   QSharedPointer<OSListController> listController() const;
 
-  QRectF boundingRect() const;
+  QRectF boundingRect() const override;
 
   QSizeF cellSize() const;
 
@@ -162,7 +162,7 @@ class GridLayoutItem : public QGraphicsObject
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
-              QWidget *widget = nullptr ) {}
+              QWidget *widget = nullptr ) override {}
 
   private slots:
 

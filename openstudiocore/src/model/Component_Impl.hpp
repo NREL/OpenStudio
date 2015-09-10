@@ -52,13 +52,13 @@ namespace detail {
 
     /** Implementation of openstudio::detail::Workspace_Impl::clone for Component_Impl. The returned
      *  value may be cast to type Component. */
-    virtual Workspace clone(bool keepHandles=false) const;
+    virtual Workspace clone(bool keepHandles=false) const override;
 
     /** Invalid to partially clone a Component. Always throws. In some cases, it may be possible to
      *  clone(), and then remove objects as desired. */
     virtual Workspace cloneSubset(const std::vector<Handle>& handles,
                                   bool keepHandles = false,
-                                  StrictnessLevel level = StrictnessLevel::Draft) const;
+                                  StrictnessLevel level = StrictnessLevel::Draft) const override;
 
     // no swap method here because no component-level data
 
@@ -80,49 +80,49 @@ namespace detail {
     //@{
 
     /** Override to return false. Components are always at Draft StrictnessLevel. */
-    virtual bool setStrictnessLevel(StrictnessLevel level);
+    virtual bool setStrictnessLevel(StrictnessLevel level) override;
 
     /** Override to return boost::none. */
-    virtual boost::optional<WorkspaceObject> addObject(const IdfObject& idfObject);
+    virtual boost::optional<WorkspaceObject> addObject(const IdfObject& idfObject) override;
 
     /** Override to return boost::none. */
-    virtual boost::optional<WorkspaceObject> insertObject(const IdfObject& idfObject);
+    virtual boost::optional<WorkspaceObject> insertObject(const IdfObject& idfObject) override;
 
     /** Override to return empty vector. */
-    virtual std::vector<WorkspaceObject> addObjects(const std::vector<IdfObject>& idfObjects);
+    virtual std::vector<WorkspaceObject> addObjects(const std::vector<IdfObject>& idfObjects) override;
 
     /** Override to return empty vector. */
-    virtual std::vector<WorkspaceObject> insertObjects(const std::vector<IdfObject>& idfObjects);
+    virtual std::vector<WorkspaceObject> insertObjects(const std::vector<IdfObject>& idfObjects) override;
 
     /** Override to return empty vector. */
     virtual std::vector<WorkspaceObject> addAndInsertObjects(const std::vector<IdfObject>& objectsToAdd,
-                                                             const std::vector<IdfObject>& objectsToInsert);
+                                                             const std::vector<IdfObject>& objectsToInsert) override;
 
     /** Override to return empty vector. */
-    virtual std::vector<WorkspaceObject> addObjects(const std::vector<WorkspaceObject>& objects);
+    virtual std::vector<WorkspaceObject> addObjects(const std::vector<WorkspaceObject>& objects) override;
 
     /** Override to return empty vector. */
-    virtual std::vector<WorkspaceObject> insertObjects(const std::vector<WorkspaceObject>& objects);
-
-    /** Override to return empty vector. */
-    virtual std::vector<WorkspaceObject> addAndInsertObjects(
-        const std::vector<WorkspaceObject>& objectsToAdd,
-        const std::vector<WorkspaceObject>& objectsToInsert);
+    virtual std::vector<WorkspaceObject> insertObjects(const std::vector<WorkspaceObject>& objects) override;
 
     /** Override to return empty vector. */
     virtual std::vector<WorkspaceObject> addAndInsertObjects(
         const std::vector<WorkspaceObject>& objectsToAdd,
-        const std::vector< std::vector<WorkspaceObject> >& objectsToInsert);
+        const std::vector<WorkspaceObject>& objectsToInsert) override;
+
+    /** Override to return empty vector. */
+    virtual std::vector<WorkspaceObject> addAndInsertObjects(
+        const std::vector<WorkspaceObject>& objectsToAdd,
+        const std::vector< std::vector<WorkspaceObject> >& objectsToInsert) override;
 
     /** Override to return false. */
-    virtual bool setSqlFile(const openstudio::SqlFile& sqlFile);
+    virtual bool setSqlFile(const openstudio::SqlFile& sqlFile) override;
 
     /** Override to return boost::none. */
-    virtual boost::optional<ComponentData> insertComponent(const Component& component);
+    virtual boost::optional<ComponentData> insertComponent(const Component& component) override;
 
     /** Override to return empty vector. */
-    virtual std::vector<openstudio::IdfObject> purgeUnusedResourceObjects();
-    virtual std::vector<openstudio::IdfObject> purgeUnusedResourceObjects(IddObjectType iddObjectType);
+    virtual std::vector<openstudio::IdfObject> purgeUnusedResourceObjects() override;
+    virtual std::vector<openstudio::IdfObject> purgeUnusedResourceObjects(IddObjectType iddObjectType) override;
 
     //@}
     /** @name Serialization */
@@ -131,12 +131,12 @@ namespace detail {
     /** Save Component to path. Will construct parent folder, but no further up the chain. Will
      *  only overwrite an existing file if overwrite==true. Will set extension to
      *  componentFileExtension(). */
-    virtual bool save(const openstudio::path& p, bool overwrite=false);
+    virtual bool save(const openstudio::path& p, bool overwrite=false) override;
 
     //@}
    public slots :
 
-    virtual void obsoleteComponentWatcher(const ComponentWatcher& watcher);
+    virtual void obsoleteComponentWatcher(const ComponentWatcher& watcher) override;
 
    private:
 

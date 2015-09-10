@@ -305,8 +305,8 @@ namespace detail {
       simulation_control.setRunSimulationforWeatherFileRunPeriods(true);
       simulation_control.setSolarDistribution("MinimalShadowing");
 
-			// purge unused 
-			outmodel.purgeUnusedResourceObjects();
+      // purge unused 
+      outmodel.purgeUnusedResourceObjects();
 
       outmodel.save(path, true);
 

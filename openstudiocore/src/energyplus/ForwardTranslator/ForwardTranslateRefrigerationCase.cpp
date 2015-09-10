@@ -190,7 +190,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCase( Refrig
 
     std::vector< std::pair<openstudio::Time, double> > defrostDefaultDay;
     std::vector< std::pair<openstudio::Time, double> > dripDownDefaultDay;
-    for( std::vector<openstudio::Time>::iterator _defrostStartTime = defrostStartTimes.begin();
+    for( auto _defrostStartTime = defrostStartTimes.begin();
        _defrostStartTime != defrostStartTimes.end();
        ++_defrostStartTime )
     {
@@ -250,22 +250,26 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCase( Refrig
     }
   }
 
-//DefrostEnergyCorrectionCurveType
-  s = modelObject.defrostEnergyCorrectionCurveType();
-  if (s) {
-    object.setString(Refrigeration_CaseFields::DefrostEnergyCorrectionCurveType,s.get());
+  //DefrostEnergyCorrectionCurveType
+  {
+    auto value = modelObject.defrostEnergyCorrectionCurveType();
+    object.setString(Refrigeration_CaseFields::DefrostEnergyCorrectionCurveType,value);
   }
 
-//DefrostEnergyCorrectionCurveName
-  boost::optional<CurveCubic> defrostEnergyCorrectionCurve = modelObject.defrostEnergyCorrectionCurve();
-
-  if( defrostEnergyCorrectionCurve )
+  //DefrostEnergyCorrectionCurveName
+  if( auto defrostEnergyCorrectionCurve = modelObject.defrostEnergyCorrectionCurve() )
   {
-    boost::optional<IdfObject> _defrostEnergyCorrectionCurve = translateAndMapModelObject(defrostEnergyCorrectionCurve.get());
+    auto type = modelObject.caseDefrostType();
+    // Only for these types or E+ will halt.
+    if( istringEqual(type,"HotGasWithTemperatureTermination") ||
+      istringEqual(type,"ElectricWithTemperatureTermination") ||
+      istringEqual(type,"HotFluidWithTemperatureTermination") ) {
+      boost::optional<IdfObject> _defrostEnergyCorrectionCurve = translateAndMapModelObject(defrostEnergyCorrectionCurve.get());
 
-    if( _defrostEnergyCorrectionCurve && _defrostEnergyCorrectionCurve->name() )
-    {
-      object.setString(Refrigeration_CaseFields::DefrostEnergyCorrectionCurveName,_defrostEnergyCorrectionCurve->name().get());
+      if( _defrostEnergyCorrectionCurve && _defrostEnergyCorrectionCurve->name() )
+      {
+        object.setString(Refrigeration_CaseFields::DefrostEnergyCorrectionCurveName,_defrostEnergyCorrectionCurve->name().get());
+      }
     }
   }
 

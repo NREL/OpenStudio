@@ -46,11 +46,11 @@ class MODEL_API AirLoopHVACZoneMixer : public Mixer {
 
   virtual ~AirLoopHVACZoneMixer() {}
 
-  unsigned outletPort();
+  unsigned outletPort() const override;
 
-  unsigned inletPort(unsigned branchIndex);
+  unsigned inletPort(unsigned branchIndex) const override;
   
-  unsigned nextInletPort();
+  unsigned nextInletPort() const override;
 
   bool addToNode(Node & node);
 

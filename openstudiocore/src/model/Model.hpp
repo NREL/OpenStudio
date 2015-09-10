@@ -114,6 +114,14 @@ class MODEL_API Model : public openstudio::Workspace {
    *  create a new schedule if necessary and add it to the model */
   Schedule alwaysOnDiscreteSchedule() const;
 
+  /** Get an always off schedule with discrete type limits if there is one.
+   *  create a new schedule if necessary and add it to the model */
+  Schedule alwaysOffDiscreteSchedule() const;
+
+  /** Get an always on schedule with continuous type limits if there is one.
+  *  create a new schedule if necessary and add it to the model */
+  Schedule alwaysOnContinuousSchedule() const;
+
   /** Get the space type used for plenums if there is one.
    *  Create a new space type if necessary and add it to the model */
   SpaceType plenumSpaceType() const;
@@ -377,7 +385,7 @@ class MODEL_API Model : public openstudio::Workspace {
   /** Protected constructor from impl. */
   Model(std::shared_ptr<detail::Model_Impl> impl);
 
-  virtual void addVersionObject();
+  virtual void addVersionObject() override;
 
   /// @endcond
  private:
@@ -401,7 +409,7 @@ bool MODEL_API compareInputAndOutput(const ModelObject& object,
                                      double inputResult,
                                      double outputResult,
                                      double tol,
-                                     LogLevel logLevel=Debug);
+                                     LogLevel logLevel=LogLevel::Debug);
 
 /// Returns an example model useful for testing.
 MODEL_API Model exampleModel();
