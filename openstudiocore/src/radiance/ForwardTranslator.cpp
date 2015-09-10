@@ -1604,13 +1604,14 @@ namespace radiance {
               // simple placeholder for WG0
               m_radDCmats.insert(windowGroup_name + ",n/a,n/a,n/a,n/a\n");
             }else{
-              // store window group normal
-              // hard coded shade algorithm: on if high solar (2), setpoint 2Klx (2000)
-              // hard coded shade type: blinds
+              // window group name, normal, control type, setpoint, unshaded bsdf, and shaded bsdf
               m_radDCmats.insert(windowGroup_name + "," + \
                 formatString((control.outwardNormal->x() * -1), 2) + " " + \
                 formatString((control.outwardNormal->y() * -1), 2) + " " + \
-                formatString((control.outwardNormal->z() * -1), 2) + ",2,2000,air.xml," + shadeBSDF + "\n");
+                formatString((control.outwardNormal->z() * -1), 2) + "," + \
+                windowGroup.shadingControlType() + "," + \
+                windowGroup.shadingControlSetpoint() + "," + \
+                "air.xml, " + shadeBSDF + "\n");
             }
 
 //            if (rMaterial == "glass"){
@@ -2142,7 +2143,7 @@ namespace radiance {
 
       // write radiance vmx materials list
       // format of this file is: window group, bsdf, bsdf
-      m_radDCmats.insert("#OpenStudio windowGroup->BSDF \"Mapping\" File\n# windowGroup,inwardNormal,shade control option,shade control setpoint,etc...\n");
+      m_radDCmats.insert("# OpenStudio windowGroup->BSDF \"Mapping\" File\n# windowGroup,inwardNormal,shade control type,shade control setpoint, unshaded bsdf, shaded bsdf\n");
       openstudio::path materials_dcfilename = t_radDir / openstudio::toPath("bsdf/mapping.rad");
       OFSTREAM materials_dcfile(materials_dcfilename);
       if (materials_dcfile.is_open()){

@@ -63,6 +63,11 @@ namespace radiance{
 
       std::string interiorShadeBSDF() const;
 
+      std::string shadingControlType() const;
+
+      // returns numeric value if it exists, returns schedule name for scheduled control, n/a otherwise
+      std::string shadingControlSetpoint() const;
+
       void addWindowPolygon(const openstudio::Point3dVector& windowPolygon);
 
       WindowGroupControl windowGroupControl() const;

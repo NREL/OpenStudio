@@ -34,6 +34,7 @@
 #include "../model/Screen_Impl.hpp"
 #include "../model/Shade.hpp"
 #include "../model/Shade_Impl.hpp"
+#include "../model/Schedule.hpp"
 #include "../utilities/geometry/Geometry.hpp"
 
 namespace openstudio{
@@ -143,6 +144,56 @@ namespace radiance{
       }
 
     }
+    return result;
+  }
+
+  std::string WindowGroup::shadingControlType() const
+  {
+    std::string result = "AlwaysOff";
+    if (m_shadingControl){
+      result = m_shadingControl->shadingControlType();
+
+      if (istringEqual("OnIfScheduleAllows", result)){
+        result = "OnIfHighSolarOnWindow";
+        LOG(Warn, "ShadingControlType 'OnIfHighSolarOnWindow' is not currently supported for ShadingControl '" << m_shadingControl->name().get() << "', using 'OnIfHighSolarOnWindow' instead.");
+      }
+    }
+
+    return result;
+  }
+
+  std::string WindowGroup::shadingControlSetpoint() const
+  {
+    std::string result = "n/a";
+    if (m_shadingControl){
+      std::string shadingControlType = this->shadingControlType();
+      
+      if (istringEqual("AlwaysOff", shadingControlType)){
+        result = "n/a";
+      } else if (istringEqual("AlwaysOn", shadingControlType)){
+        result = "n/a";
+      } else if (istringEqual("OnIfHighSolarOnWindow", shadingControlType)){
+        boost::optional<double> d = m_shadingControl->setpoint();
+        if (d){
+          std::stringstream ss;
+          ss << *d;
+          result = ss.str();
+        } else{
+          result = "2000"; // 2Klx (2000)
+        }
+      } else if (istringEqual("OnIfScheduleAllows", shadingControlType)){
+        boost::optional<openstudio::model::Schedule> schedule = m_shadingControl->schedule();
+        if (schedule){
+          result = schedule->name().get();
+        } else{
+          result = "";
+        }
+      } else{
+        result = "n/a";
+        LOG(Warn, "Unknown shadingControlType '" << shadingControlType << "' for ShadingControl '" << m_shadingControl->name().get() << "'.");
+      }
+    }
+
     return result;
   }
 

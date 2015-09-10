@@ -382,7 +382,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 				
 				rad_command = ""
 				
-				if wg[2].to_i == 0	# uncontrolled windows
+				if wg[2] == 'n/a' || wg[2] == 'AlwaysOff'	# uncontrolled windows
 		
 					# use more aggro simulation parameters because this is basically a view matrix
 					rtrace_args = "#{options_vmx}"
@@ -492,7 +492,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 				wg = row.split(",")[0]
 		
 				# do uncontrolled windows (WG0)
-				if wg[2].to_i == 0
+				if wg[2] == "n/a" || wg[2] == "AlwaysOff"
 					# keep header, convert to illuminance, but no transpose
 					exec_statement("dctimestep \"#{t_radPath}/output/dc/#{wg}.vmx\" annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > \"#{t_radPath}/output/ts/#{wg}.ill\"") 
 		
@@ -517,14 +517,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 	
 			# get annual values for window control sensors (note: convert to illuminance, no transpose, strip header)
 			exec_statement("dctimestep output/dc/window_controls.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - | getinfo - > output/ts/window_controls.ill")
-
-			# return the bsdf index for window group given by index at this hour
-			# this is deprecated
-			windowMapping = lambda { |index, hour| 
-				data = dmx_mapping_data[index]
-				# TODO remove this bit for shade controls
-				return 0
-			}
 	
 			puts "#{Time.now.getutc}: Merging results:"
 	
@@ -539,7 +531,19 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 				wgIllumFiles = Dir.glob("output/ts/#{windowGroup}_*.ill")
 
+        # possible values are "AlwaysOn", "AlwaysOff", "OnIfScheduleAllows", "OnIfHighSolarOnWindow"
+        shadeControlSetpoint = wg.split(",")[2].to_s
+
+        # DLM: we are not allowing scheduled setpoints for now, but when we do this would have to change
 				shadeControlSetpoint = wg.split(",")[3].to_f
+        
+        # DLM: hacktastic way to implement these options for now
+        if shadeControlSetpoint == "AlwaysOn"
+          shadeControlSetpoint = -1000
+        elsif 
+          shadeControlSetpoint == "AlwaysOff"
+          shadeControlSetpoint = 100000000
+        end
 
 				puts "#{Time.now.getutc}: Processing window group '#{windowGroup}', setpoint: #{shadeControlSetpoint} lux"  
 
@@ -631,7 +635,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			## window merge end
 
 
-			rawValues = parseResults(simulations, windowMapping, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_radPath, write_sql)
+			rawValues = parseResults(simulations, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_radPath, write_sql)
 
 			dcVectors = nil
 
@@ -664,7 +668,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 
 		# function renamed from execSimulation() to parseResults()
-		def parseResults(t_cmds, t_mapping, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_radPath, write_sql)
+		def parseResults(t_cmds, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_radPath, write_sql)
 
 			puts "#{Time.now.getutc}: Executing simulation"
 	
