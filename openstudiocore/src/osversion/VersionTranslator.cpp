@@ -47,6 +47,7 @@
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
+#include "../utilities/units/QuantityConverter.hpp"
 #include <utilities/idd/OS_ComponentData_FieldEnums.hxx>
 #include "../utilities/math/FloatCompare.hpp"
 
@@ -96,7 +97,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.7.5")] = &VersionTranslator::update_1_7_4_to_1_7_5;
   m_updateMethods[VersionString("1.8.4")] = &VersionTranslator::update_1_8_3_to_1_8_4;
   m_updateMethods[VersionString("1.8.5")] = &VersionTranslator::update_1_8_4_to_1_8_5;
-  m_updateMethods[VersionString("1.9.0")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.9.0")] = &VersionTranslator::update_1_8_5_to_1_9_0;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -2706,6 +2707,41 @@ std::string VersionTranslator::update_1_8_4_to_1_8_5(const IdfFile& idf_1_8_4, c
       } else {
         ss << object;
       }
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_8_5_to_1_9_0(const IdfFile& idf_1_8_5, const IddFileAndFactoryWrapper& idd_1_9_0)
+{
+  std::stringstream ss;
+
+  ss << idf_1_8_5.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_9_0.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_1_8_5.objects()) {
+    auto iddname = object.iddObject().name();
+    if (iddname == "OS:SpaceInfiltration:EffectiveLeakageArea") {
+      auto iddObject = idd_1_9_0.getObject("OS:SpaceInfiltration:EffectiveLeakageArea");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( i == 4 ) {
+          if( auto value = object.getDouble(i) ) {
+            newObject.setDouble(i,convert(value.get(),"m^2","cm^2").get());
+          }
+        } else if( auto s = object.getString(i) ) {
+          newObject.setString(i,s.get());
+        }
+      }
+      ss << newObject;
     } else {
       ss << object;
     }
