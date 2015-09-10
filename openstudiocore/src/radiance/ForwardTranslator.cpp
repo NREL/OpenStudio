@@ -1450,13 +1450,13 @@ namespace radiance {
 
               // add the shade
 
-              std::string shadedBSDF = "blinds.xml";
+              shadeBSDF = "blinds.xml";
               if (boost::optional<std::string> temp = windowGroup.shadedBSDF()){
-                shadedBSDF = *temp;
+                shadeBSDF = *temp;
               }
 
               rMaterial = "BSDF";
-              matString = "6\n0 bsdf/" + shadedBSDF + " 0 0 1 .\n0\n0\n";
+              matString = "6\n0 bsdf/" + shadeBSDF + " 0 0 1 .\n0\n0\n";
 
               m_radMaterials.insert("void " + rMaterial + " " + windowGroup_name + "_SHADE\n" + matString + "\n\n");
 
@@ -1494,7 +1494,7 @@ namespace radiance {
 
               // path to write bsdf
 
-              openstudio::path shadeBSDFPath = t_radDir / openstudio::toPath("bsdf") / shadedBSDF;
+              openstudio::path shadeBSDFPath = t_radDir / openstudio::toPath("bsdf") / shadeBSDF;
 
               if (!exists(shadeBSDFPath)){
 
