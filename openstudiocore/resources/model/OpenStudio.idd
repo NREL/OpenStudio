@@ -1,4 +1,4 @@
-!IDD_Version 1.8.5
+!IDD_Version 1.9.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -5634,7 +5634,7 @@ OS:SpaceInfiltration:EffectiveLeakageArea,
        \type object-list
        \object-list ScheduleNames
   N1 , \field Effective Air Leakage Area
-       \units m2
+       \units cm2
        \ip-units in2
        \note "AL" in Equation
        \minimum> 0
