@@ -220,6 +220,7 @@ ShadingControl::ShadingControl(const Construction& construction)
       break;
     }else if( layers[i].optionalCast<Screen>()){
       type = "Screen";
+      setShadingControlType("AlwaysOn");
       break;
     } else if (layers[i].optionalCast<DaylightRedirectionDevice>()){
       type = "DaylightRedirectionDevice";
@@ -271,6 +272,7 @@ ShadingControl::ShadingControl(const ShadingMaterial& shadingMaterial)
     type = "InteriorBlind";
   }else if(shadingMaterial.optionalCast<Screen>()){
     type = "ExteriorScreen";
+    setShadingControlType("AlwaysOn");
   } else if (shadingMaterial.optionalCast<DaylightRedirectionDevice>()){
     type = "InteriorDaylightRedirectionDevice";
     setShadingControlType("AlwaysOn");

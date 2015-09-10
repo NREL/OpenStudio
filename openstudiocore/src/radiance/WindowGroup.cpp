@@ -20,6 +20,20 @@
 #include "WindowGroup.hpp"
 #include "ForwardTranslator.hpp"
 
+#include "../model/ShadingControl.hpp"
+#include "../model/Construction.hpp"
+#include "../model/Material.hpp"
+#include "../model/Material_Impl.hpp"
+#include "../model/ShadingMaterial.hpp"
+#include "../model/ShadingMaterial_Impl.hpp"
+#include "../model/Blind.hpp"
+#include "../model/Blind_Impl.hpp"
+#include "../model/DaylightRedirectionDevice.hpp"
+#include "../model/DaylightRedirectionDevice_Impl.hpp"
+#include "../model/Screen.hpp"
+#include "../model/Screen_Impl.hpp"
+#include "../model/Shade.hpp"
+#include "../model/Shade_Impl.hpp"
 #include "../utilities/geometry/Geometry.hpp"
 
 namespace openstudio{
@@ -98,6 +112,43 @@ namespace radiance{
   boost::optional<model::ShadingControl> WindowGroup::shadingControl() const
   {
     return m_shadingControl;
+  }
+
+  boost::optional<std::string> WindowGroup::shadedBSDF() const
+  {
+    boost::optional<std::string> result;
+    if (m_shadingControl){
+      boost::optional<model::Construction> shadedConstruction = m_shadingControl->construction();
+      boost::optional<model::ShadingMaterial> shadingMaterial;
+
+      if (shadedConstruction){
+        for (auto layer : shadedConstruction->layers()){
+          if (layer.optionalCast<model::ShadingMaterial>()){
+            shadingMaterial = layer.cast<model::ShadingMaterial>();
+          }
+        }
+      } else {
+        shadingMaterial = m_shadingControl->shadingMaterial();
+      }
+
+      if (shadingMaterial){
+        if (shadingMaterial->optionalCast<model::Blind>()){
+          result = "blinds.xml";
+        } else if (shadingMaterial->optionalCast<model::DaylightRedirectionDevice>()){
+          result = "1xliloX.xml";
+        } else if (shadingMaterial->optionalCast<model::Screen>()){
+          result = "05_shadecloth_light.xml";
+        } else if (shadingMaterial->optionalCast<model::Shade>()){
+          result = "05_shadecloth_light.xml";
+        } else {
+          LOG(Warn, "Unknown ShadingMaterial '" << shadingMaterial->name().get() << "' found for ShadingControl '" << m_shadingControl->name().get() << "'");
+        }
+      } else {
+        LOG(Warn, "No ShadingMaterial found for ShadingControl '" << m_shadingControl->name().get() << "'");
+      }
+
+    }
+    return result;
   }
 
   void WindowGroup::addWindowPolygon(const openstudio::Point3dVector& windowPolygon)

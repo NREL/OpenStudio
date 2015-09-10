@@ -1450,8 +1450,13 @@ namespace radiance {
 
               // add the shade
 
+              std::string shadedBSDF = "blinds.xml";
+              if (boost::optional<std::string> temp = windowGroup.shadedBSDF()){
+                shadedBSDF = *temp;
+              }
+
               rMaterial = "BSDF";
-              matString = "6\n0 bsdf/blinds.xml 0 0 1 .\n0\n0\n";
+              matString = "6\n0 bsdf/" + shadedBSDF + " 0 0 1 .\n0\n0\n";
 
               m_radMaterials.insert("void " + rMaterial + " " + windowGroup_name + "_SHADE\n" + matString + "\n\n");
 
@@ -1481,77 +1486,75 @@ namespace radiance {
                 formatString(offsetVertex.z()) + "\n";
               }
 
+              // shade BSDF stuff
+
+              // make dir for BSDF files
+
+              openstudio::path bsdfoutpath = t_radDir / openstudio::toPath("bsdf");
+
+              // path to write bsdf
+
+              openstudio::path shadeBSDFPath = t_radDir / openstudio::toPath("bsdf") / shadedBSDF;
+
+              if (!exists(shadeBSDFPath)){
+
+                // add BSDF file to the collection of crap to copy up
+                t_outfiles.push_back(shadeBSDFPath);
+
+                // read BSDF from resource dll
+                // must be referenced in openstudiocore/src/radiance/radiance.qrc
+                QString defaultFile;
+                QFile inFile(toQString(":/resources/" + shadeBSDF));
+                if (inFile.open(QFile::ReadOnly)){
+                  QTextStream docIn(&inFile);
+                  QString defaultFile = docIn.readAll();
+                  inFile.close();
+                }
+
+                // write shade BSDF
+                QFile outFile(toQString(shadeBSDFPath));
+                bool opened = outFile.open(QIODevice::WriteOnly);
+                if (!opened){
+                  LOG_AND_THROW("Cannot write file to '" << toString(shadeBSDFPath) << "'");
+                }
+                QTextStream textStream(&outFile);
+                textStream << defaultFile;
+                outFile.close();
+
+              }
+
             }
 
+            // always add an airBSDF
 
-            // shade BSDF stuff
+            openstudio::path airBSDFPath = t_radDir / openstudio::toPath("bsdf") / openstudio::toPath("air.xml");
 
-            // make dir for BSDF files
+            if (!exists(airBSDFPath)){
 
-            openstudio::path bsdfoutpath = t_radDir / openstudio::toPath("bsdf");
+              // add BSDF file to the collection of crap to copy up
+              t_outfiles.push_back(airBSDFPath);
 
-            // Set shade BSDF
+              // read BSDF from resource dll
+              // must be in openstudiocore/src/radiance/radiance.qrc
+              QString defaultFile;
+              QFile inFileAir(":/resources/air.xml");
+              if (inFileAir.open(QFile::ReadOnly)){
+                QTextStream docIn(&inFileAir);
+                defaultFile = docIn.readAll();
+                inFileAir.close();
+              }
 
-            shadeBSDF = "blinds.xml";
-            // TODO get shade type from object
-                // if shade type = blind, shadeBSDF = blind.xml
-                // if shade type = louver, shadeBSDF = 1xliloX.xml
-                // if shade type = shadecloth, shadeBSDF = 05_shade_light.xml
-                // etc...
+              // write shade BSDF
+              QFile outFileAir(toQString(airBSDFPath));
+              bool opened = outFileAir.open(QIODevice::WriteOnly);
+              if (!opened){
+                LOG_AND_THROW("Cannot write file to '" << toString(airBSDFPath) << "'");
+              }
+              QTextStream textStream2(&outFileAir);
+              textStream2 << defaultFile;
+              outFileAir.close();
 
-            // path to write bsdf
-
-            openstudio::path shadeBSDFPath = t_radDir / openstudio::toPath("bsdf") / shadeBSDF;
-
-            // add BSDF file to the collection of crap to copy up
-            t_outfiles.push_back(shadeBSDFPath);
-
-            // read BSDF from resource dll
-            // must be referenced in openstudiocore/src/radiance/radiance.qrc
-            QString defaultFile;
-            QFile inFile(toQString(":/resources/" + shadeBSDF));
-            if (inFile.open(QFile::ReadOnly)){
-              QTextStream docIn(&inFile);
-              defaultFile = docIn.readAll();
-              inFile.close();
             }
-
-            // write shade BSDF
-            QFile outFile(toQString(shadeBSDFPath));
-            bool opened = outFile.open(QIODevice::WriteOnly);
-            if (!opened){
-              LOG_AND_THROW("Cannot write file to '" << toString(shadeBSDFPath) << "'");
-            }
-            QTextStream textStream(&outFile);
-            textStream << defaultFile;
-            outFile.close();
-
-            // add an airBSDF
-
-            shadeBSDFPath = t_radDir / openstudio::toPath("bsdf") / openstudio::toPath("air.xml");
-
-            // add BSDF file to the collection of crap to copy up
-            t_outfiles.push_back(shadeBSDFPath);
-
-            // read BSDF from resource dll
-            // must be in openstudiocore/src/radiance/radiance.qrc
-            QFile inFileAir(":/resources/air.xml");
-            if (inFileAir.open(QFile::ReadOnly)){
-              QTextStream docIn(&inFileAir);
-              defaultFile = docIn.readAll();
-              inFileAir.close();
-            }
-
-            // write shade BSDF
-            QFile outFileAir(toQString(shadeBSDFPath));
-            opened = outFileAir.open(QIODevice::WriteOnly);
-            if (!opened){
-              LOG_AND_THROW("Cannot write file to '" << toString(shadeBSDFPath) << "'");
-            }
-            QTextStream textStream2(&outFileAir);
-            textStream2 << defaultFile;
-            outFileAir.close();
-
 
             //store window group entry for mapping.rad
             if (windowGroup_name == "WG0"){
