@@ -47,6 +47,40 @@
     <rule IddField="Water Outlet Node Name" Access="HIDDEN"/>
     <rule IddField="Condensate Collection Water Storage Tank Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit">
+    <rule IddField="Water-to-Refrigerant HX Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Water-to-Refrigerant HX Water Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Indoor Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Indoor Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Energy Part Load Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Speed Data List" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedData">
+    <rule IddField="Total Cooling Capacity Function of Temperature Curve Name" Access="LOCKED"/>
+    <rule IddField="Total Cooling Capacity Function of Air Flow Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Total Cooling Capacity Function of Water Flow Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Energy Input Ratio Function of Temperature Curve Name" Access="LOCKED"/>
+    <rule IddField="Energy Input Ratio Function of Air Flow Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Energy Input Ratio Function of Water Flow Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Waste Heat Function of Temperature Curve Name" Access="LOCKED"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedData">
+    <rule IddField="Heating Capacity Function of Temperature Curve Name" Access="LOCKED"/>
+    <rule IddField="Total  Heating Capacity Function of Air Flow Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Heating Capacity Function of Water Flow Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Energy Input Ratio Function of Temperature Curve Name" Access="LOCKED"/>
+    <rule IddField="Energy Input Ratio Function of Air Flow Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Energy Input Ratio Function of Water Flow Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Waste Heat Function of Temperature Curve Name" Access="LOCKED"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit">
+    <rule IddField="Water-to-Refrigerant HX Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Water-to-Refrigerant HX Water Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Indoor Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Indoor Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Energy Part Load Fraction Curve Name" Access="LOCKED"/>
+    <rule IddField="Speed Data List" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_ZoneHVAC_HighTemperatureRadiant">
     <rule IddField="Radiant Surface Type" Access="HIDDEN"/>
   </POLICY>
@@ -1024,9 +1058,37 @@
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Outlet Node Name" Access="HIDDEN"/>
   </POLICY>  
+  <POLICY IddObjectType="OS_ZoneHVAC_EnergyRecoveryVentilator">
+    <rule IddField="Heat Exchanger Name" Access="LOCKED"/>
+    <rule IddField="Supply Air Fan Name" Access="LOCKED"/>
+    <rule IddField="Exhaust Air Fan Name" Access="LOCKED"/>
+    <rule IddField="Controller Name" Access="LOCKED"/>
+    <rule IddField="Availability Manager List Name" Access="HIDDEN"/>
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>  
+  <POLICY IddObjectType="OS_ZoneHVAC_UnitVentilator">
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Supply Air Fan Name" Access="LOCKED"/>
+    <rule IddField="Heating Coil Name" Access="LOCKED"/>
+    <rule IddField="Cooling Coil Name" Access="LOCKED"/>
+    <rule IddField="Availability Manager List Name" Access="HIDDEN"/>
+    <rule IddField="Design Specification ZoneHVAC Sizing Object Name" Access="HIDDEN"/>
+  </POLICY>  
+  <POLICY IddObjectType="OS_ZoneHVAC_EnergyRecoveryVentilator_Controller">
+    <rule IddField="Electronic Enthalpy Limit Curve Name" Access="LOCKED"/>
+  </POLICY>  
+  <POLICY IddObjectType="OS_ZoneHVAC_Baseboard_RadiantConvective_Water">
+    <rule IddField="Heating Coil Name" Access="LOCKED"/>
+  </POLICY>  
+  <POLICY IddObjectType="OS_Coil_Heating_Water_Baseboard_Radiant">
+    <rule IddField="Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>  
   <POLICY IddObjectType="OS_SolarCollectorPerformance_FlatPlate">
   </POLICY>  
-    <POLICY IddObjectType="OS_SolarCollectorPerformance_IntegralCollectorStorage">
+  <POLICY IddObjectType="OS_SolarCollectorPerformance_IntegralCollectorStorage">
     <rule IddField="ICS Collector Type" Access="LOCKED"/>
   </POLICY>  
   <POLICY IddObjectType="OS_SolarCollectorPerformance_PhotovoltaicThermal_Simple">

@@ -21,6 +21,8 @@
 #include "ModelFixture.hpp"
 #include "../CoilHeatingDXVariableSpeed.hpp"
 #include "../CoilHeatingDXVariableSpeed_Impl.hpp"
+#include "../CoilHeatingDXVariableSpeedSpeedData.hpp"
+#include "../CoilHeatingDXVariableSpeedSpeedData_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -38,3 +40,17 @@ TEST_F(ModelFixture,CoilHeatingDXVariableSpeed)
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
+
+TEST_F(ModelFixture,CoilHeatingDXVariableSpeed_Remove)
+{
+  Model m; 
+  auto count = m.modelObjects().size();
+
+  CoilHeatingDXVariableSpeed coil(m);
+  CoilHeatingDXVariableSpeedSpeedData speed1( m );
+  coil.addSpeed(speed1);
+  coil.remove();
+
+  EXPECT_EQ(count,m.modelObjects().size());
+}
+

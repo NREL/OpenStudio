@@ -477,6 +477,17 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  std::vector<IdfObject> CoilHeatingDXVariableSpeed_Impl::remove()
+  {
+    auto _stageDataList = speedDataList();
+    auto result = StraightComponent_Impl::remove();
+    if( (! result.empty()) && _stageDataList ) {
+      _stageDataList->remove();
+    }
+
+    return result;
+  }
+
 } // detail
 
 CoilHeatingDXVariableSpeed::CoilHeatingDXVariableSpeed(const Model& model)

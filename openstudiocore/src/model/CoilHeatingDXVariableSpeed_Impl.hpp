@@ -172,6 +172,8 @@ namespace detail {
 
     void removeAllSpeeds();
 
+    std::vector<IdfObject> remove() override;
+
     //@}
    protected:
    private:

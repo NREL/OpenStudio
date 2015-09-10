@@ -21850,6 +21850,7 @@ OS:ZoneHVAC:EnergyRecoveryVentilator:Controller,
        \note setpoint AND the outdoor humidity ratio is less than the indoor humidity ratio.
 
 OS:ZoneHVAC:UnitVentilator,
+  \min-fields 19
    A1 , \field Handle
         \type handle
         \required-field

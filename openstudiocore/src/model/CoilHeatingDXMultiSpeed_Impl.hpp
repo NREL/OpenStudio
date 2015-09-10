@@ -167,6 +167,8 @@ namespace detail {
 
     void removeAllStages();
 
+    std::vector<IdfObject> remove() override;
+
     //@}
    protected:
    private:
