@@ -94,6 +94,8 @@
 #include "../model/WaterHeaterHeatPump_Impl.hpp"
 #include "../model/ZoneHVACBaseboardConvectiveWater.hpp"
 #include "../model/ZoneHVACBaseboardConvectiveWater_Impl.hpp"
+#include "../model/ZoneHVACBaseboardRadiantConvectiveWater.hpp"
+#include "../model/ZoneHVACBaseboardRadiantConvectiveWater_Impl.hpp"
 #include "../model/ZoneHVACFourPipeFanCoil.hpp"
 #include "../model/ZoneHVACFourPipeFanCoil_Impl.hpp"
 #include "../model/ZoneHVACLowTempRadiantConstFlow.hpp"
@@ -435,6 +437,27 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
               this, &InspectorView::addToLoopClicked);
 
       connect(static_cast<ZoneHVACBaseboardConvectiveWaterInspectorView *>(m_currentView), &ZoneHVACBaseboardConvectiveWaterInspectorView::removeFromLoopClicked,
+              this, &InspectorView::removeFromLoopClicked);
+    }
+    else if( boost::optional<model::ZoneHVACBaseboardRadiantConvectiveWater> component = 
+             modelObject->optionalCast<model::ZoneHVACBaseboardRadiantConvectiveWater>()  )
+    {
+      if( m_currentView )
+      {
+        delete m_currentView;
+      }
+
+      m_currentView = new ZoneHVACBaseboardRadiantConvectiveWaterInspectorView();
+      connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
+
+      m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
+
+      m_vLayout->addWidget(m_currentView);
+
+      connect(static_cast<ZoneHVACBaseboardRadiantConvectiveWaterInspectorView *>(m_currentView), &ZoneHVACBaseboardRadiantConvectiveWaterInspectorView::addToLoopClicked,
+              this, &InspectorView::addToLoopClicked);
+
+      connect(static_cast<ZoneHVACBaseboardRadiantConvectiveWaterInspectorView *>(m_currentView), &ZoneHVACBaseboardRadiantConvectiveWaterInspectorView::removeFromLoopClicked,
               this, &InspectorView::removeFromLoopClicked);
     }
     else if( boost::optional<model::ZoneHVACFourPipeFanCoil> component = 
@@ -1578,6 +1601,69 @@ void ZoneHVACBaseboardConvectiveWaterInspectorView::layoutModelObject( model::Mo
   //check if the object is a zone baseboard
   boost::optional<model::ZoneHVACBaseboardConvectiveWater> baseboardConvtest = 
         modelObject.optionalCast<model::ZoneHVACBaseboardConvectiveWater>();
+  
+  if(baseboardConvtest){
+    //if it is, check if it has a heating coil
+    boost::optional<model::ModelObject> coilheatingbb = baseboardConvtest->heatingCoil();
+    m_heatingLoopChooserView->layoutModelObject(coilheatingbb);
+    waterHeatingCoil = true;
+  }
+ 
+  if( ! waterHeatingCoil )
+  {
+    boost::optional<model::ModelObject> moHeat;
+
+    m_heatingLoopChooserView->layoutModelObject(moHeat);
+  }
+}
+
+ZoneHVACBaseboardRadiantConvectiveWaterInspectorView::ZoneHVACBaseboardRadiantConvectiveWaterInspectorView( QWidget * parent )
+  : BaseInspectorView(parent)
+{
+  m_inspectorGadget = new InspectorGadget();
+  connect(this, &ZoneHVACBaseboardRadiantConvectiveWaterInspectorView::toggleUnitsClicked, m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(m_inspectorGadget, &InspectorGadget::workspaceObjectRemoved, this, &BaseInspectorView::workspaceObjectRemoved);
+
+  m_heatingLoopChooserView = new LoopChooserView();
+
+  m_libraryTabWidget->addTab( m_inspectorGadget,
+                              ":images/properties_icon_on.png",
+                              ":images/properties_icon_off.png" );
+
+  m_libraryTabWidget->addTab( m_heatingLoopChooserView,
+                              ":images/link_icon_on.png",
+                              ":images/link_icon_off.png" );
+
+  m_libraryTabWidget->setCurrentIndex(0);
+
+  connect(m_heatingLoopChooserView, &LoopChooserView::addToLoopClicked, this, &ZoneHVACBaseboardRadiantConvectiveWaterInspectorView::addToLoopClicked);
+  
+  connect(m_heatingLoopChooserView, &LoopChooserView::removeFromLoopClicked, this, &ZoneHVACBaseboardRadiantConvectiveWaterInspectorView::removeFromLoopClicked);
+}
+
+void ZoneHVACBaseboardRadiantConvectiveWaterInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP )
+{
+  m_modelObject = modelObject;
+
+  bool force=false;
+  bool recursive=true;
+  bool locked=readOnly;
+  bool hideChildren=false;
+  if( displayIP )
+  {
+    m_inspectorGadget->setUnitSystem(InspectorGadget::IP);
+  }
+  else
+  {
+    m_inspectorGadget->setUnitSystem(InspectorGadget::SI);
+  }
+  m_inspectorGadget->layoutModelObj(modelObject, force, recursive, locked, hideChildren);
+
+  bool waterHeatingCoil = false;
+  
+  //check if the object is a zone baseboard
+  boost::optional<model::ZoneHVACBaseboardRadiantConvectiveWater> baseboardConvtest = 
+        modelObject.optionalCast<model::ZoneHVACBaseboardRadiantConvectiveWater>();
   
   if(baseboardConvtest){
     //if it is, check if it has a heating coil

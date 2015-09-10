@@ -1,7 +1,7 @@
 
 OS:Version,
-  {885cfb79-12cd-4f39-a556-e753df9e45b3}, !- Handle
-  1.8.4;                                  !- Version Identifier
+  {68fe29c6-3b63-40f8-8853-63b8d881fc13}, !- Handle
+  1.9.0;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -710,7 +710,7 @@ OS:Coil:Heating:Water,
 
 OS:FluidCooler:SingleSpeed,
   {2a57ade5-7f14-4501-a925-ae7b0677ecf9}, !- Handle
-  Single Speed Fluid Cooler,            !- Name
+  Single Speed Fluid Cooler,              !- Name
   ,                                       !- Water Inlet Node
   ,                                       !- Water Outlet Node
   NominalCapacity,                        !- Performance Input Method
@@ -726,7 +726,7 @@ OS:FluidCooler:SingleSpeed,
 
 OS:FluidCooler:TwoSpeed,
   {39b76c30-fade-423d-87aa-36dae05dae7b}, !- Handle
-  Two Speed Fluid Cooler,               !- Name
+  Two Speed Fluid Cooler,                 !- Name
   ,                                       !- Water Inlet Node
   ,                                       !- Water Outlet Node
   NominalCapacity,                        !- Performance Input Method
@@ -777,7 +777,7 @@ OS:EvaporativeFluidCooler:SingleSpeed,
 
 OS:EvaporativeFluidCooler:TwoSpeed,
   {18aada6d-61ad-4dad-ad3b-8b72de1a97ac}, !- Handle
-  2 Spd Evap Fluid Cooler,   !- Name
+  2 Spd Evap Fluid Cooler,                !- Name
   ,                                       !- Water Inlet Node Name
   ,                                       !- Water Outlet Node Name
   autosize,                               !- High Fan Speed Air Flow Rate {m3/s}
@@ -2385,7 +2385,7 @@ OS:Schedule:Ruleset,
 
 OS:Schedule:Day,
   {2e133a0a-b7e9-47ba-8515-efaf35ce3011}, !- Handle
-  Schedule Day 1,                         !- Name
+  Schedule Day 9,                         !- Name
   {81cbda09-5e78-433c-aa14-d07601131750}, !- Schedule Type Limits Name
   ,                                       !- Interpolate to Timestep
   24,                                     !- Hour 1
@@ -9213,7 +9213,7 @@ OS:Duct,
 
 OS:Pipe:Outdoor,
   {17bbdd3d-44a9-4878-92cb-8e42f9140b18}, !- Handle
-  Outdoor Pipe,                         !- Name
+  Outdoor Pipe,                           !- Name
   {de11bfc1-7dc3-4a5b-a98d-46d3a33c1b82}, !- Construction
   ,                                       !- Fluid Inlet Node
   ,                                       !- Fluid Outlet Node
@@ -9235,7 +9235,7 @@ OS:Material,
 
 OS:Construction,
   {de11bfc1-7dc3-4a5b-a98d-46d3a33c1b82}, !- Handle
-  Pipe Construction,                         !- Name
+  Pipe Construction,                      !- Name
   ,                                       !- Surface Rendering Name
   {0e7d4a49-4eee-48f1-8cba-d3afc0f7239c}; !- Layer 1
 
@@ -9258,8 +9258,9 @@ OS:SolarCollector:FlatPlate:Water,
   {7a28412e-316b-4ed4-af83-aec518479b28}, !- SolarCollectorPerformance Name
   ,                                       !- Surface Name
   ,                                       !- Inlet Node Name
-  ;                                       !- Outlet Node Name
-  
+  ,                                       !- Outlet Node Name
+  ;                                       !- Maximum Flow Rate {m3/s}
+
 OS:SolarCollectorPerformance:FlatPlate,
   {7a28412e-316b-4ed4-af83-aec518479b28}, !- Handle
   Alternate Energy Technologies AE-32,    !- Name
@@ -9367,7 +9368,7 @@ OS:ZoneHVAC:Baseboard:RadiantConvective:Electric,
 
 OS:ZoneHVAC:Dehumidifier:DX,
   {7cfae36c-6794-4c2b-a5ae-0c81d9fefd65}, !- Handle
-  Zone HVAC Dehumidifier,            !- Name
+  Zone HVAC Dehumidifier,                 !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
@@ -9383,7 +9384,7 @@ OS:ZoneHVAC:Dehumidifier:DX,
 
 OS:Curve:Biquadratic,
   {76bf325d-47dc-4a51-99b8-003d845157bb}, !- Handle
-  Dehumidifier Water Removal Curve,                    !- Name
+  Dehumidifier Water Removal Curve,       !- Name
   -2.72487866408,                         !- Coefficient1 Constant
   0.100711983591,                         !- Coefficient2 x
   -0.000990538285,                        !- Coefficient3 x**2
@@ -9397,7 +9398,7 @@ OS:Curve:Biquadratic,
 
 OS:Curve:Biquadratic,
   {4e677b6a-34c7-4cf4-a4d5-c704bea97e7f}, !- Handle
-  Dehumidifier Energy Factor Curve,                    !- Name
+  Dehumidifier Energy Factor Curve,       !- Name
   -2.388319068955,                        !- Coefficient1 Constant
   0.093047739452,                         !- Coefficient2 x
   -0.001369700327,                        !- Coefficient3 x**2
@@ -9411,7 +9412,7 @@ OS:Curve:Biquadratic,
 
 OS:Curve:Quadratic,
   {3803b58a-8833-4a06-a04f-591fe46e3ac4}, !- Handle
-  Dehumidifier Part Load Curve,                      !- Name
+  Dehumidifier Part Load Curve,           !- Name
   0.95,                                   !- Coefficient1 Constant
   0.05,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -9420,7 +9421,7 @@ OS:Curve:Quadratic,
 
 OS:PlantComponent:TemperatureSource,
   {796ae1cd-7682-46f0-8264-38474d73831e}, !- Handle
-  Plant Component Temperature Source,   !- Name
+  Plant Component Temperature Source,     !- Name
   ,                                       !- Inlet Node
   ,                                       !- Outlet Node
   autosize,                               !- Design Volume Flow Rate {m3/s}
@@ -9430,7 +9431,7 @@ OS:PlantComponent:TemperatureSource,
 
 OS:LoadProfile:Plant,
   {e1563386-b77e-4a7c-b840-03bb3c6321a7}, !- Handle
-  Load Profile,                   !- Name
+  Load Profile,                           !- Name
   ,                                       !- Inlet Node Name
   ,                                       !- Outlet Node Name
   {b7e02bb7-c3e4-45a7-a348-5866b7092426}, !- Load Schedule Name
@@ -9439,13 +9440,13 @@ OS:LoadProfile:Plant,
 
 OS:Schedule:Ruleset,
   {b7e02bb7-c3e4-45a7-a348-5866b7092426}, !- Handle
-  Load Profile Schedule,                     !- Name
+  Load Profile Schedule,                  !- Name
   {e7abde92-45b2-45e9-9de6-9794b4b6edb4}, !- Schedule Type Limits Name
   {bd081929-36d7-41c4-96d2-95c9c5f588ca}; !- Default Day Schedule Name
 
 OS:Schedule:Day,
   {bd081929-36d7-41c4-96d2-95c9c5f588ca}, !- Handle
-  Schedule Day 1,                         !- Name
+  Schedule Day 10,                        !- Name
   {e7abde92-45b2-45e9-9de6-9794b4b6edb4}, !- Schedule Type Limits Name
   ,                                       !- Interpolate to Timestep
   24,                                     !- Hour 1
@@ -9454,7 +9455,7 @@ OS:Schedule:Day,
 
 OS:ScheduleTypeLimits,
   {e7abde92-45b2-45e9-9de6-9794b4b6edb4}, !- Handle
-  Dimensionless,                          !- Name
+  Dimensionless 1,                        !- Name
   ,                                       !- Lower Limit Value {BasedOnField A4}
   ,                                       !- Upper Limit Value {BasedOnField A4}
   Continuous;                             !- Numeric Type
@@ -9507,7 +9508,7 @@ OS:ThermalStorage:ChilledWater:Stratified,
 
 OS:Schedule:Ruleset,
   {c3199601-9088-4db1-80a2-a72ce5be2376}, !- Handle
-  Thermal Storage - Chilled Water Stratified Ambient Temp Schedule,                     !- Name
+  Thermal Storage - Chilled Water Stratified Ambient Temp Schedule, !- Name
   {92dfd9e8-d92e-43b9-841b-fc31bf02d5dd}, !- Schedule Type Limits Name
   {09b28e72-3925-440b-bd8c-33cd5f82de4b}; !- Default Day Schedule Name
 
@@ -9522,7 +9523,7 @@ OS:Schedule:Day,
 
 OS:ScheduleTypeLimits,
   {92dfd9e8-d92e-43b9-841b-fc31bf02d5dd}, !- Handle
-  Temperature,                            !- Name
+  Temperature 3,                          !- Name
   ,                                       !- Lower Limit Value {BasedOnField A4}
   ,                                       !- Upper Limit Value {BasedOnField A4}
   Continuous,                             !- Numeric Type
@@ -9530,7 +9531,7 @@ OS:ScheduleTypeLimits,
 
 OS:ZoneHVAC:EnergyRecoveryVentilator,
   {fce70303-f18e-465a-a53a-014e2473b1d2}, !- Handle
-  Zone HVAC Energy Recovery Ventilator, !- Name
+  Zone HVAC Energy Recovery Ventilator,   !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   {865903c0-b04d-453a-80e3-217d60f8a56d}, !- Heat Exchanger Name
   autosize,                               !- Supply Air Flow Rate {m3/s}
@@ -9546,7 +9547,7 @@ OS:ZoneHVAC:EnergyRecoveryVentilator,
 
 OS:ZoneHVAC:EnergyRecoveryVentilator:Controller,
   {f750ab7e-f3cb-4fad-a275-bd21dbafff60}, !- Handle
-  ERV Controller, !- Name
+  ERV Controller,                         !- Name
   ,                                       !- Temperature High Limit {C}
   ,                                       !- Temperature Low Limit {C}
   ,                                       !- Enthalpy High Limit {J/kg}
@@ -9561,7 +9562,7 @@ OS:ZoneHVAC:EnergyRecoveryVentilator:Controller,
 
 OS:HeatExchanger:AirToAir:SensibleAndLatent,
   {865903c0-b04d-453a-80e3-217d60f8a56d}, !- Handle
-  ERV HX, !- Name
+  ERV HX,                                 !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule
   autosize,                               !- Nominal Supply Air Flow Rate {m3/s}
   0.76,                                   !- Sensible Effectiveness at 100% Heating Air Flow {dimensionless}
@@ -9587,7 +9588,7 @@ OS:HeatExchanger:AirToAir:SensibleAndLatent,
 
 OS:Fan:OnOff,
   {d3ca499f-ae74-4f5d-831d-8464be067dcd}, !- Handle
-  ERV Supply Fan,                           !- Name
+  ERV Supply Fan,                         !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.6,                                    !- Fan Efficiency
   300,                                    !- Pressure Rise {Pa}
@@ -9602,7 +9603,7 @@ OS:Fan:OnOff,
 
 OS:Curve:Exponent,
   {98c553ef-35cf-4f9f-be94-757eb4401c7b}, !- Handle
-  Fan On Off Power Curve,                 !- Name
+  Fan On Off Power Curve 18,              !- Name
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 Constant
   0,                                      !- Coefficient3 Constant
@@ -9615,7 +9616,7 @@ OS:Curve:Exponent,
 
 OS:Curve:Cubic,
   {16d536ff-a981-4a7c-ad2a-e40bcd7fdf88}, !- Handle
-  Fan On Off Efficiency Curve,            !- Name
+  Fan On Off Efficiency Curve 17,         !- Name
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -9625,7 +9626,7 @@ OS:Curve:Cubic,
 
 OS:Fan:OnOff,
   {39be15fa-c4bd-41c2-a950-a8d2ebacd3d6}, !- Handle
-  ERV Exhaust Fan,                           !- Name
+  ERV Exhaust Fan,                        !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.6,                                    !- Fan Efficiency
   300,                                    !- Pressure Rise {Pa}
@@ -9640,7 +9641,7 @@ OS:Fan:OnOff,
 
 OS:Curve:Exponent,
   {831cc29b-3867-4324-a397-faf1ad696e4e}, !- Handle
-  Fan On Off Power Curve 1,               !- Name
+  Fan On Off Power Curve 17,              !- Name
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 Constant
   0,                                      !- Coefficient3 Constant
@@ -9653,7 +9654,7 @@ OS:Curve:Exponent,
 
 OS:Curve:Cubic,
   {4fcf6055-286e-4a76-b914-334d249852fa}, !- Handle
-  Fan On Off Efficiency Curve 1,          !- Name
+  Fan On Off Efficiency Curve 18,         !- Name
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -9678,11 +9679,13 @@ OS:ZoneHVAC:UnitVentilator,
   ,                                       !- Heating Coil Name
   0.001,                                  !- Heating Convergence Tolerance
   {9df0dc8e-4b77-415f-9a7e-1a4fb56e6dfe}, !- Cooling Coil Name
-  0.001;                                  !- Cooling Convergence Tolerance
+  0.001,                                  !- Cooling Convergence Tolerance
+  ,                                       !- Availability Manager List Name
+  ;                                       !- Design Specification ZoneHVAC Sizing Object Name
 
 OS:Fan:ConstantVolume,
   {a6eb7086-f867-4f03-bf3e-5436a8e8bfb9}, !- Handle
-  Fan Constant Volume,                  !- Name
+  Fan Constant Volume,                    !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Fan Efficiency
   ,                                       !- Pressure Rise {Pa}
@@ -9728,11 +9731,13 @@ OS:ZoneHVAC:UnitVentilator,
   {42db673d-336b-4c12-92d5-5801efd45985}, !- Heating Coil Name
   0.001,                                  !- Heating Convergence Tolerance
   ,                                       !- Cooling Coil Name
-  0.001;                                  !- Cooling Convergence Tolerance
+  0.001,                                  !- Cooling Convergence Tolerance
+  ,                                       !- Availability Manager List Name
+  ;                                       !- Design Specification ZoneHVAC Sizing Object Name
 
 OS:Fan:ConstantVolume,
   {7bd8c0d0-d89c-401a-bfe2-34197acde9b9}, !- Handle
-  Fan Constant Volume 1,                  !- Name
+  Fan Constant Volume 3,                  !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Fan Efficiency
   ,                                       !- Pressure Rise {Pa}
@@ -9745,7 +9750,7 @@ OS:Fan:ConstantVolume,
 
 OS:Coil:Heating:Water,
   {42db673d-336b-4c12-92d5-5801efd45985}, !- Handle
-  Unit Vent Heat Coil,                   !- Name
+  Unit Vent Heat Coil,                    !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- U-Factor Times Area Value {W/K}
   ,                                       !- Maximum Water Flow Rate {m3/s}
@@ -9778,7 +9783,9 @@ OS:ZoneHVAC:UnitVentilator,
   {fc2d0aec-c206-4353-9bde-00e505d04ab2}, !- Heating Coil Name
   0.001,                                  !- Heating Convergence Tolerance
   {74c8d02c-6eff-4427-9c53-5783638ea38a}, !- Cooling Coil Name
-  0.001;                                  !- Cooling Convergence Tolerance
+  0.001,                                  !- Cooling Convergence Tolerance
+  ,                                       !- Availability Manager List Name
+  ;                                       !- Design Specification ZoneHVAC Sizing Object Name
 
 OS:Fan:ConstantVolume,
   {53473293-5b6b-4350-ad43-4513bb2f6e87}, !- Handle
@@ -9829,4 +9836,25 @@ OS:Coil:Cooling:Water,
   ,                                       !- Type of Analysis
   ;                                       !- Heat Exchanger Configuration
 
+OS:ZoneHVAC:Baseboard:RadiantConvective:Water,
+  {5744f95f-3073-4cb6-b4b9-eec5351edc62}, !- Handle
+  Zone HVAC Baseboard Rad Conv Water, !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  {736ccca9-8208-41cf-a61e-c259b84086f5}, !- Heating Coil Name
+  0.3,                                    !- Fraction Radiant
+  0.3;                                    !- Fraction of Radiant Energy Incident on People
+
+OS:Coil:Heating:Water:Baseboard:Radiant,
+  {736ccca9-8208-41cf-a61e-c259b84086f5}, !- Handle
+  Coil Heating Water Baseboard Radiant, !- Name
+  ,                                       !- Inlet Node Name
+  ,                                       !- Outlet Node Name
+  87.78,                                  !- Rated Average Water Temperature {C}
+  0.063,                                  !- Rated Water Mass Flow Rate {kg/s}
+  HeatingDesignCapacity,                  !- Heating Design Capacity Method
+  autosize,                               !- Heating Design Capacity {W}
+  0,                                      !- Heating Design Capacity Per Floor Area {W/m2}
+  1,                                      !- Fraction of Autosized Heating Design Capacity
+  autosize,                               !- Maximum Water Flow Rate {m3/s}
+  0.001;                                  !- Convergence Tolerance
 

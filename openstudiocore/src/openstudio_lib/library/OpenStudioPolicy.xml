@@ -1079,6 +1079,13 @@
   <POLICY IddObjectType="OS_ZoneHVAC_EnergyRecoveryVentilator_Controller">
     <rule IddField="Electronic Enthalpy Limit Curve Name" Access="LOCKED"/>
   </POLICY>  
+  <POLICY IddObjectType="OS_ZoneHVAC_Baseboard_RadiantConvective_Water">
+    <rule IddField="Heating Coil Name" Access="LOCKED"/>
+  </POLICY>  
+  <POLICY IddObjectType="OS_Coil_Heating_Water_Baseboard_Radiant">
+    <rule IddField="Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>  
   <POLICY IddObjectType="OS_SolarCollectorPerformance_FlatPlate">
   </POLICY>  
   <POLICY IddObjectType="OS_SolarCollectorPerformance_IntegralCollectorStorage">
