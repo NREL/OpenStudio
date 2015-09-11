@@ -3432,7 +3432,7 @@ OS:Schedule:Day,
   ,                                       !- Interpolate to Timestep
   24,                                     !- Hour 1
   0,                                      !- Minute 1
-  50;                                     !- Value Until Time 1
+  15;                                     !- Value Until Time 1
 
 OS:Coil:Heating:LowTemperatureRadiant:VariableFlow,
   {0bb8d9e1-257b-4f72-872b-1c8352ebcff5}, !- Handle
@@ -3456,7 +3456,7 @@ OS:Schedule:Day,
   ,                                       !- Interpolate to Timestep
   24,                                     !- Hour 1
   0,                                      !- Minute 1
-  15;                                     !- Value Until Time 1
+  50;                                     !- Value Until Time 1
 
 OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow,
   {bc6be488-1c8b-43d3-8064-00a09ab21444}, !- Handle
