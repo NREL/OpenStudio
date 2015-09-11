@@ -93,11 +93,13 @@ boost::optional<IdfObject> ForwardTranslator::translateBoilerHotWater( BoilerHot
 
   // Normalized Boiler Efficiency Curve
 
-  if (OptionalCurve curve = modelObject.normalizedBoilerEfficiencyCurve()) 
-  {
-    if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
-    {
-      idfObject.setString(Boiler_HotWaterFields::NormalizedBoilerEfficiencyCurveName,_curve->name().get());
+  if( auto value = modelObject.efficiencyCurveTemperatureEvaluationVariable() ) {
+    if( ! value->empty() ) {
+      if( auto curve = modelObject.normalizedBoilerEfficiencyCurve() )  {
+        if( auto _curve = translateAndMapModelObject(curve.get()) ) {
+          idfObject.setString(Boiler_HotWaterFields::NormalizedBoilerEfficiencyCurveName,_curve->name().get());
+        }
+      }
     }
   }
 
