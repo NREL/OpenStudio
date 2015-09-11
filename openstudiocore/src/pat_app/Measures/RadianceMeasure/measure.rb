@@ -381,9 +381,9 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 				wg=row.split(",")[0]
 				
 				rad_command = ""
+								
+				if row.split(",")[2] == 'n/a' || row.split(",")[2] == 'AlwaysOff'	# uncontrolled windows
 				
-				if wg[2] == 'n/a' || wg[2] == 'AlwaysOff'	# uncontrolled windows
-		
 					# use more aggro simulation parameters because this is basically a view matrix
 					rtrace_args = "#{options_vmx}"
 			
@@ -402,7 +402,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 					exec_statement(rad_command)
 
 				else 	# window group has shade control 
-			
+		
 					# use more chill sim parameters
 					rtrace_args = "#{options_dmx}"
 						
@@ -492,7 +492,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 				wg = row.split(",")[0]
 		
 				# do uncontrolled windows (WG0)
-				if wg[2] == "n/a" || wg[2] == "AlwaysOff"
+				if row.split(",")[2] == "n/a" || row.split(",")[2] == "AlwaysOff"
 					# keep header, convert to illuminance, but no transpose
 					exec_statement("dctimestep \"#{t_radPath}/output/dc/#{wg}.vmx\" annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > \"#{t_radPath}/output/ts/#{wg}.ill\"") 
 		

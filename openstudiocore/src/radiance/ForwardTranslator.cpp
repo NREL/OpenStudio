@@ -2143,7 +2143,7 @@ namespace radiance {
 
       // write radiance vmx materials list
       // format of this file is: window group, bsdf, bsdf
-      m_radDCmats.insert("# OpenStudio windowGroup->BSDF \"Mapping\" File\n# windowGroup,inwardNormal,shade control type,shade control setpoint, unshaded bsdf, shaded bsdf\n");
+      m_radDCmats.insert("# OpenStudio windowGroup->BSDF \"Mapping\" File\n# windowGroup,inwardNormal,shade control type,shade control setpoint,unshaded bsdf,shaded bsdf\n");
       openstudio::path materials_dcfilename = t_radDir / openstudio::toPath("bsdf/mapping.rad");
       OFSTREAM materials_dcfile(materials_dcfilename);
       if (materials_dcfile.is_open()){
