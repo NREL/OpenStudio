@@ -291,27 +291,10 @@ void MainRightColumnController::configureForSchedulesSubTab(int subTabID)
   {
     case SchedulesTabController::YEAR_SETTINGS:
     {
-      doc->openSidebar();
-      //doc->closeSidebar();
-
-      break;
     }
     case SchedulesTabController::SCHEDULE_SETS:
     {
-      //std::vector<std::pair<IddObjectType, std::string> > typeList;
-
-      //typeList.push_back(std::make_pair(IddObjectType::OS_DefaultScheduleSet,"Default Schedule Sets"));
-
-      //QWidget * myModelWidget = new ModelObjectTypeListView(typeList,m_model,true,OSItemType::CollapsibleListHeader);
-
-      //setMyModelView(myModelWidget);
-
       model::Model lib = doc->componentLibrary();
-
-      //QWidget * libraryWidget = new ModelObjectTypeListView(typeList,lib,true,OSItemType::CollapsibleListHeader);
-
-      //setLibraryView(libraryWidget);
-
 
       // my model
       auto myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
@@ -342,8 +325,9 @@ void MainRightColumnController::configureForSchedulesSubTab(int subTabID)
       myLibraryList->addModelObjectType(IddObjectType::OS_DefaultScheduleSet, "Schedule Sets");
 
       setLibraryView(myLibraryList);
-
       doc->openSidebar();
+      //doc->closeSidebar();
+
       break;
     }
     case SchedulesTabController::SCHEDULES:
