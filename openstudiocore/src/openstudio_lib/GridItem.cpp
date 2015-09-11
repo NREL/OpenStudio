@@ -99,15 +99,13 @@ namespace openstudio {
 
 bool hasSPM(model::Node & node)
 {
-  bool value = false;
   auto spms = node.setpointManagers();
   for( auto & spm: spms ) {
-    if( istringEqual("Temperature",spm.controlVariable()) ) {
-      value = true;
-      break;
+    if ( spm.controlVariable().find( "Temperature" ) != std::string::npos ) {
+      return true;
     }
   }
-  return value;
+  return false;
 }
 
 GridItem::GridItem( QGraphicsItem * parent ):
@@ -2124,7 +2122,7 @@ void OneThreeNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
           it != _setpointManagers.end();
           ++it)
       {
-        if( istringEqual("Temperature", it->controlVariable()) )
+        if ( it->controlVariable().find( "Temperature" ) != std::string::npos )
         {
           if( it->iddObjectType() == SetpointManagerMixedAir::iddObjectType() )
           {
@@ -2337,7 +2335,7 @@ void TwoFourNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
           it != _setpointManagers.end();
           ++it)
       {
-        if( istringEqual("Temperature", it->controlVariable()) )
+        if ( it->controlVariable().find( "Temperature" ) != std::string::npos )
         {
           if( it->iddObjectType() == SetpointManagerMixedAir::iddObjectType() )
           {
@@ -2499,7 +2497,7 @@ void OAStraightNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
           it != _setpointManagers.end();
           ++it)
       {
-        if( istringEqual("Temperature", it->controlVariable()) )
+        if ( it->controlVariable().find( "Temperature" ) != std::string::npos )
         {
           if( it->iddObjectType() == SetpointManagerMixedAir::iddObjectType() )
           {
