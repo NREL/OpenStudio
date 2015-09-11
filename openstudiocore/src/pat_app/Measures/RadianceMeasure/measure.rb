@@ -532,19 +532,24 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 				wgIllumFiles = Dir.glob("output/ts/#{windowGroup}_*.ill")
 
         # possible values are "AlwaysOn", "AlwaysOff", "OnIfScheduleAllows", "OnIfHighSolarOnWindow"
-        shadeControlSetpoint = wg.split(",")[2].to_s
+        shadeControlType = wg.split(",")[2].to_s
 
         # DLM: we are not allowing scheduled setpoints for now, but when we do this would have to change
-				shadeControlSetpoint = wg.split(",")[3].to_f
-        
+
+        # RPG: setpoint is coming from OS control, in watts, so...
+				shadeControlSetpointWatts = wg.split(",")[3].to_f
+			
+				shadeControlSetpoint = shadeControlSetpointWatts * 179 # Radiance's luminous efficacy factor
+				        
         # DLM: hacktastic way to implement these options for now
-        if shadeControlSetpoint == "AlwaysOn"
+        if shadeControlType == "AlwaysOn"
           shadeControlSetpoint = -1000
         elsif 
-          shadeControlSetpoint == "AlwaysOff"
+          shadeControlType == "AlwaysOff"
           shadeControlSetpoint = 100000000
         end
 
+				
 				puts "#{Time.now.getutc}: Processing window group '#{windowGroup}', setpoint: #{shadeControlSetpoint} lux"  
 
 				# separate header from data; so, so ugly. 
