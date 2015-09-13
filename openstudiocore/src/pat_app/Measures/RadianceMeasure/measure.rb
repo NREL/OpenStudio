@@ -327,40 +327,45 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 		options_klemsDensity = ""
 		options_skyvecDensity = "1"
 
+		if rad_settings == "Model"
+			File.open("#{radPath}/options/treg.opt", "r") do |file|
+				tempIO = file.read
+				tempSettings = tempIO.split(" ")
+				options_klemsDensity = "#{tempSettings[0]} #{tempSettings[1]}"
+				options_skyvecDensity = tempSettings[3].split(":")[1]
+				options_tregVars = tempSettings[2..-1].join(" ")
+			end
+
+
+			File.open("#{radPath}/options/dmx.opt", "r") do |file|
+				tempIO = file.read
+				options_dmx = tempIO
+			end
+
+			File.open("#{radPath}/options/vmx.opt", "r") do |file|
+				tempIO = file.read
+				options_vmx = tempIO
+			end
+
+		end
+
+		# configure multiprocessing 
+		procsUsed = ""
+		if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
+			puts "Radiance does not support multiple cores on Windows"
+			procsUsed = ""
+		else
+			puts "Radiance using #{sim_cores} core(s)"
+			procsUsed = "-n #{sim_cores}"
+		end
+
+
+
 		# core functions
 
-		def calculateDaylightCoeffecients(radPath, sim_cores, t_catCommand, options_tregVars, options_klemsDensity, options_skyvecDensity, options_dmx, options_vmx, rad_settings)
+		def calculateDaylightCoeffecients(radPath, sim_cores, t_catCommand, options_tregVars, options_klemsDensity, options_skyvecDensity, options_dmx, options_vmx, rad_settings, procsUsed)
 
 
-			if rad_settings == "Model"
-				File.open("#{radPath}/options/treg.opt", "r") do |file|
-					tempIO = file.read
-					tempSettings = tempIO.split(" ")
-					options_klemsDensity = "#{tempSettings[0]} #{tempSettings[1]}"
-					options_skyvecDensity = tempSettings[3].split(":")[1]
-					options_tregVars = tempSettings[2..-1].join(" ")
-				end
-
-				File.open("#{radPath}/options/dmx.opt", "r") do |file|
-					tempIO = file.read
-					options_dmx = tempIO
-				end
-
-				File.open("#{radPath}/options/vmx.opt", "r") do |file|
-					tempIO = file.read
-					options_vmx = tempIO
-				end
-
-				# configure multiprocessing 
-				procsUsed = ""
-				if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
-					puts "Radiance does not support multiple cores on Windows"
-					procsUsed = ""
-				else
-					puts "Radiance using #{sim_cores} core(s)"
-					procsUsed = "-n #{sim_cores}"
-				end
-			end
 
 			haveWG0 = ""
 
@@ -1764,7 +1769,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 		# get the daylight coefficient matrices
 		calculateDaylightCoeffecients(radPath, sim_cores, catCommand, options_tregVars, options_klemsDensity, options_skyvecDensity, options_dmx, \
-		options_vmx, rad_settings)
+		options_vmx, rad_settings, procsUsed)
 
 		# make merged building-wide illuminance schedule(s)
 		values, dcVectors = runSimulation(space_names_to_calculate, sqlFile, sim_cores, options_skyvecDensity, site_latitude, site_longitude, \
