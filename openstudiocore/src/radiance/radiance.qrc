@@ -3,5 +3,6 @@
     <file>resources/blinds.xml</file>
     <file>resources/1xliloX.xml</file>
     <file>resources/air.xml</file>
+    <file>resources/05_shadecloth_light.xml</file>
   </qresource>
 </RCC>
