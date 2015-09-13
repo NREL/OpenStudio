@@ -383,8 +383,11 @@ namespace radiance {
         outfiles.push_back(tregoptpath);
         tregopt << "-c " << (int)radianceParameters.klemsSamplingDensity() << " ";
 
+
+
         if (radianceParameters.skyDiscretizationResolution() == "146"){
           tregopt << "-e MF:1 -f tregenza.cal -b tbin -bn Ntbins";
+          //tregopt << "-e MF:1 -f reinhartb.cal -b tbin -bn Ntbins";
         } else if (radianceParameters.skyDiscretizationResolution() == "578"){
           tregopt << "-e MF:2 -f reinhart.cal -b rbin -bn Nrbins";
         } else if (radianceParameters.skyDiscretizationResolution() == "2306"){
@@ -1508,7 +1511,19 @@ namespace radiance {
 
 
               // polygon header
-              m_radWindowGroupShades[windowGroup_name] += "#@rfluxmtx h=kf u=" + winUpVector + " o=output/dc/" + windowGroup_name + ".vmx\n";
+ 							// Add conditionals for sky divs, dummy. 
+ 							openstudio::model::RadianceParameters radianceParameters = m_model.getUniqueModelObject<openstudio::model::RadianceParameters>();
+
+ 							std::string tempSkyDivs = "146";
+ 							    
+              if (radianceParameters.skyDiscretizationResolution() == "146"){
+              	tempSkyDivs = "kf";          	
+              } else if (radianceParameters.skyDiscretizationResolution() == "578"){	
+              	tempSkyDivs = "r2";            	
+              } else if (radianceParameters.skyDiscretizationResolution() == "2306"){	
+            		tempSkyDivs = "r4"; 
+              }          
+              m_radWindowGroupShades[windowGroup_name] += "#@rfluxmtx h=" + tempSkyDivs +  " u=" + winUpVector + " o=output/dc/" + windowGroup_name + ".vmx\n";	
               m_radWindowGroupShades[windowGroup_name] += "\n# shade for SubSurface: " + subSurface_name + "\n";
 
               // write the polygon
