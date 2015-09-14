@@ -179,11 +179,11 @@ LoadProfilePlant::LoadProfilePlant(const Model& model)
 
   auto scheduleRuleset = ScheduleRuleset(model);
   auto scheduleDay = scheduleRuleset.defaultDaySchedule();
-  scheduleDay.addValue(Time(4),8000);
-  scheduleDay.addValue(Time(8),6000);
-  scheduleDay.addValue(Time(9),0);
-  scheduleDay.addValue(Time(12),6000);
-  scheduleDay.addValue(Time(24),10000);
+  scheduleDay.addValue(Time(0,4),8000);
+  scheduleDay.addValue(Time(0,8),6000);
+  scheduleDay.addValue(Time(0,9),0);
+  scheduleDay.addValue(Time(0,12),6000);
+  scheduleDay.addValue(Time(0,24),10000);
 
   bool ok = true;
   ok = setLoadSchedule( scheduleRuleset );
