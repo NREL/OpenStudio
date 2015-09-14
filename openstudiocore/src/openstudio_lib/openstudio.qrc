@@ -53,6 +53,7 @@
     <file>images/cooling_tower_variable.png</file>
     <file>images/dehumidify_schedule_icon.png</file>
     <file>images/baseboard_rad_convect_electric.png</file>
+    <file>images/baseboard_rad_convect_water.png</file>
     <file>images/dehumidifier_dx.png</file>
     <file>images/delete-icon.png</file>
     <file>images/delete.png</file>
@@ -91,6 +92,7 @@
     <file>images/dxcoolingcoil_singlespeed.png</file>
     <file>images/electric_furnace.png</file>
     <file>images/electric_humidifier.png</file>
+    <file>images/energy_recov_vent.png</file>
     <file>images/evap_cooled.png</file>
     <file>images/evap_fluid_cooler.png</file>
     <file>images/evap_fluid_cooler_two_speed.png</file>
@@ -283,6 +285,7 @@
     <file>images/toggle_true.png</file>
     <file>images/toggle_true_over.png</file>
     <file>images/unitary_system.png</file>
+    <file>images/unit_ventilator.png</file>
     <file>images/utility_calibration_warning.png</file>
     <file>images/v_divider_dots.png</file>
     <file>images/vav-reheat.png</file>
@@ -351,6 +354,7 @@
     <file>images/mini_icons/directEvap.png</file>
     <file>images/mini_icons/districtcooling.png</file>
     <file>images/mini_icons/districtheating.png</file>
+    <file>images/mini_icons/mini_energy_recov_vent.png</file>
     <file>images/mini_icons/electric_equipment.png</file>
     <file>images/mini_icons/electric_equipment_definition.png</file>
     <file>images/mini_icons/electric_furnace_mini.png</file>
@@ -412,6 +416,7 @@
     <file>images/mini_icons/mini_cooling_tower_2speed.png</file>
     <file>images/mini_icons/mini_cooling_tower_variable.png</file>
     <file>images/mini_icons/mini_baseboard_rad_convect_electric.png</file>
+    <file>images/mini_icons/mini_baseboard_rad_convect_water.png</file>
     <file>images/mini_icons/mini_dehumidifier_dx.png</file>
     <file>images/mini_icons/mini_display_case.png</file>
     <file>images/mini_icons/mini_duct.png</file>
@@ -443,6 +448,7 @@
     <file>images/mini_icons/mini_thermal_storage_ice.png</file>
     <file>images/mini_icons/mini_thermal_storage_strat.png</file>
     <file>images/mini_icons/mini_unitary_system.png</file>
+    <file>images/mini_icons/mini_unit_ventilator.png</file>
     <file>images/mini_icons/mini_vrf_outdoor.png</file>
     <file>images/mini_icons/mini_vrf_unit.png</file>
     <file>images/mini_icons/mini_walkin_case.png</file>

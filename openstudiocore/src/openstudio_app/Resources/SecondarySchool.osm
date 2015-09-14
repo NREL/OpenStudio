@@ -1,7 +1,7 @@
 
 OS:Version,
-  {f4a69b80-6851-40e5-ae1f-e006df061af4}, !- Handle
-  1.6.0;                                  !- Version Identifier
+  {b2c70dbe-c615-4176-93ef-4dd80aabb90a}, !- Handle
+  1.9.0;                                  !- Version Identifier
 
 OS:Construction,
   {5fd64656-de0b-4189-b2cb-362278b35c5e}, !- Handle
@@ -29656,8 +29656,121 @@ OS:Construction,
 OS:SpaceInfiltration:EffectiveLeakageArea,
   {fa1b2cef-5376-4b21-8ebc-9ede6f08ab69}, !- Handle
   Space Infiltration Effective Leakage Area 1, !- Name
-  {6e81b6eb-e552-4e68-8e12-8ff03c46a0d7}, !- Space or SpaceType Name
+  ,                                       !- Space or SpaceType Name
   ,                                       !- Schedule Name
-  0.1,                                    !- Effective Air Leakage Area {m2}
+  100,                                    !- Effective Air Leakage Area {cm2}
   0.1,                                    !- Stack Coefficient
   0.1;                                    !- Wind Coefficient
+
+OS:Site,
+  {510ac6e3-6e61-4dab-b5e5-409deef8f4b5}, !- Handle
+  Site 1,                                 !- Name
+  ,                                       !- Latitude {deg}
+  ,                                       !- Longitude {deg}
+  ,                                       !- Time Zone {hr}
+  ,                                       !- Elevation {m}
+  ;                                       !- Terrain
+
+OS:YearDescription,
+  {d4d4f3b3-3f8d-43f2-8c55-0b4572218dfd}; !- Handle
+
+OS:ClimateZones,
+  {6bde4cbd-2133-48b3-a5a7-c5a4b3434394}, !- Handle
+  ,                                       !- Active Institution
+  ,                                       !- Active Year
+  ASHRAE,                                 !- Climate Zone Institution Name 1
+  ANSI/ASHRAE Standard 169,               !- Climate Zone Document Name 1
+  2006,                                   !- Climate Zone Document Year 1
+  ,                                       !- Climate Zone Value 1
+  CEC,                                    !- Climate Zone Institution Name 2
+  California Climate Zone Descriptions,   !- Climate Zone Document Name 2
+  1995,                                   !- Climate Zone Document Year 2
+  ;                                       !- Climate Zone Value 2
+
+OS:LifeCycleCost:Parameters,
+  {d8f1c413-0099-44e0-91af-24fb44c357a6}, !- Handle
+  FEMP,                                   !- Analysis Type
+  ,                                       !- Discounting Convention
+  ,                                       !- Inflation Approach
+  ,                                       !- Real Discount Rate
+  ,                                       !- Nominal Discount Rate
+  ,                                       !- Inflation
+  ,                                       !- Base Date Month
+  ,                                       !- Base Date Year
+  ,                                       !- Service Date Month
+  ,                                       !- Service Date Year
+  ,                                       !- Length of Study Period in Years
+  ,                                       !- Tax Rate
+  ,                                       !- Depreciation Method
+  Yes;                                    !- Use NIST Fuel Escalation Rates
+
+OS:Facility,
+  {5c25e164-2abf-4c64-9c82-8b8e87c88827}; !- Handle
+
+OS:WindowMaterial:Blind,
+  {57a656b0-06ef-4771-ad1b-2a27d4d72bbc}, !- Handle
+  Window Material Blind 1,                !- Name
+  ,                                       !- Slat Orientation
+  0.025,                                  !- Slat Width {m}
+  0.01875,                                !- Slat Separation {m}
+  ,                                       !- Slat Thickness {m}
+  ,                                       !- Slat Angle {deg}
+  ,                                       !- Slat Conductivity {W/m-K}
+  ,                                       !- Slat Beam Solar Transmittance
+  0.5,                                    !- Front Side Slat Beam Solar Reflectance
+  0.5,                                    !- Back Side Slat Beam Solar Reflectance
+  ,                                       !- Slat Diffuse Solar Transmittance
+  0.5,                                    !- Front Side Slat Diffuse Solar Reflectance
+  0.5,                                    !- Back Side Slat Diffuse Solar Reflectance
+  0,                                      !- Slat Beam Visible Transmittance
+  ,                                       !- Front Side Slat Beam Visible Reflectance
+  ,                                       !- Back Side Slat Beam Visible Reflectance
+  ,                                       !- Slat Diffuse Visible Transmittance
+  ,                                       !- Front Side Slat Diffuse Visible Reflectance
+  ,                                       !- Back Side Slat Diffuse Visible Reflectance
+  ,                                       !- Slat Infrared Hemispherical Transmittance
+  ,                                       !- Front Side Slat Infrared Hemispherical Emissivity
+  ,                                       !- Back Side Slat Infrared Hemispherical Emissivity
+  ,                                       !- Blind to Glass Distance {m}
+  ,                                       !- Blind Top Opening Multiplier
+  ,                                       !- Blind Bottom Opening Multiplier
+  ,                                       !- Blind Left Side Opening Multiplier
+  ,                                       !- Blind Right Side Opening Multiplier
+  ,                                       !- Minimum Slat Angle {deg}
+  ;                                       !- Maximum Slat Angle {deg}
+
+OS:ShadingControl,
+  {64b03060-09c8-45a6-be3e-0f0090086f6a}, !- Handle
+  Shading Control 1,                      !- Name
+  InteriorBlind,                          !- Shading Type
+  ,                                       !- Construction with Shading Name
+  {57a656b0-06ef-4771-ad1b-2a27d4d72bbc}; !- Shading Device Material Name
+
+OS:WindowProperty:FrameAndDivider,
+  {98241f7b-1b8e-4151-8ed1-52b764874a82}, !- Handle
+  Window Property Frame And Divider 1,    !- Name
+  0.05081016,                             !- Frame Width {m}
+  0.05081016,                             !- Frame Outside Projection {m}
+  0.05081016,                             !- Frame Inside Projection {m}
+  ,                                       !- Frame Conductance {W/m2-K}
+  ,                                       !- Ratio of Frame-Edge Glass Conductance to Center-Of-Glass Conductance
+  ,                                       !- Frame Solar Absorptance
+  ,                                       !- Frame Visible Absorptance
+  ,                                       !- Frame Thermal Hemispherical Emissivity
+  ,                                       !- Divider Type
+  0,                                      !- Divider Width {m}
+  0,                                      !- Number of Horizontal Dividers
+  ,                                       !- Number of Vertical Dividers
+  ,                                       !- Divider Outside Projection {m}
+  ,                                       !- Divider Inside Projection {m}
+  ,                                       !- Divider Conductance {W/m2-K}
+  ,                                       !- Ratio of Divider-Edge Glass Conductance to Center-Of-Glass Conductance
+  ,                                       !- Divider Solar Absorptance
+  ,                                       !- Divider Visible Absorptance
+  ,                                       !- Divider Thermal Hemispherical Emissivity
+  ,                                       !- Outside Reveal Depth {m}
+  ,                                       !- Outside Reveal Solar Absorptance
+  ,                                       !- Inside Sill Depth {m}
+  ,                                       !- Inside Sill Solar Absorptance
+  ,                                       !- Inside Reveal Depth {m}
+  ;                                       !- Inside Reveal Solar Absorptance

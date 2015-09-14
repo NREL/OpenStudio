@@ -54,3 +54,16 @@ TEST_F(ModelFixture, CoilCoolingDXVariableSpeed_Speeds)
   ASSERT_EQ(2u,coil.speeds().size());
   
 }
+
+TEST_F(ModelFixture,CoilCoolingDXVariableSpeed_Remove)
+{
+  Model m; 
+  auto count = m.modelObjects().size();
+
+  CoilCoolingDXVariableSpeed coil(m);
+  CoilCoolingDXVariableSpeedSpeedData speed1( m );
+  coil.addSpeed(speed1);
+  coil.remove();
+
+  EXPECT_EQ(count,m.modelObjects().size());
+}

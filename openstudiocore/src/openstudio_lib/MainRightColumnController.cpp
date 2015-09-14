@@ -291,27 +291,10 @@ void MainRightColumnController::configureForSchedulesSubTab(int subTabID)
   {
     case SchedulesTabController::YEAR_SETTINGS:
     {
-      doc->openSidebar();
-      //doc->closeSidebar();
-
-      break;
     }
     case SchedulesTabController::SCHEDULE_SETS:
     {
-      //std::vector<std::pair<IddObjectType, std::string> > typeList;
-
-      //typeList.push_back(std::make_pair(IddObjectType::OS_DefaultScheduleSet,"Default Schedule Sets"));
-
-      //QWidget * myModelWidget = new ModelObjectTypeListView(typeList,m_model,true,OSItemType::CollapsibleListHeader);
-
-      //setMyModelView(myModelWidget);
-
       model::Model lib = doc->componentLibrary();
-
-      //QWidget * libraryWidget = new ModelObjectTypeListView(typeList,lib,true,OSItemType::CollapsibleListHeader);
-
-      //setLibraryView(libraryWidget);
-
 
       // my model
       auto myModelList = new ModelObjectTypeListView(m_model, true, OSItemType::CollapsibleListHeader);
@@ -342,8 +325,9 @@ void MainRightColumnController::configureForSchedulesSubTab(int subTabID)
       myLibraryList->addModelObjectType(IddObjectType::OS_DefaultScheduleSet, "Schedule Sets");
 
       setLibraryView(myLibraryList);
-
       doc->openSidebar();
+      //doc->closeSidebar();
+
       break;
     }
     case SchedulesTabController::SCHEDULES:
@@ -790,6 +774,11 @@ void MainRightColumnController::configureForSpacesSubTab(int subTabID)
   myModelList->setItemsType(OSItemType::LibraryItem);
   myModelList->setShowFilterLayout(true);
 
+  myModelList->addModelObjectType(IddObjectType::OS_InteriorPartitionSurface, "Interior Partition Surface");
+  myModelList->addModelObjectType(IddObjectType::OS_ShadingSurface, "Shading Surface");
+  myModelList->addModelObjectType(IddObjectType::OS_ShadingControl, "ShadingControl");
+  myModelList->addModelObjectType(IddObjectType::OS_WindowProperty_FrameAndDivider, "Frame And Divider Window Property");
+  myModelList->addModelObjectType(IddObjectType::OS_DaylightingDevice_Shelf, "DaylightingDevice Shelf");
   myModelList->addModelObjectType(IddObjectType::OS_SubSurface, "Sub Surfaces");
   myModelList->addModelObjectType(IddObjectType::OS_Surface, "Surfaces");
   myModelList->addModelObjectType(IddObjectType::OS_Construction_WindowDataFile, "Window Data File Constructions");
@@ -819,7 +808,7 @@ void MainRightColumnController::configureForSpacesSubTab(int subTabID)
   myModelList->addModelObjectType(IddObjectType::OS_DefaultConstructionSet, "Default Construction Sets");
   myModelList->addModelObjectType(IddObjectType::OS_SpaceType, "Space Types");
   myModelList->addModelObjectType(IddObjectType::OS_ThermalZone, "Thermal Zones");
-  myModelList->addModelObjectType(IddObjectType::OS_BuildingStory, "Building Stories");
+
   setMyModelView(myModelList);
 
   // Library
@@ -831,6 +820,9 @@ void MainRightColumnController::configureForSpacesSubTab(int subTabID)
   myLibraryList->setItemsType(OSItemType::LibraryItem);
   myLibraryList->setShowFilterLayout(true);
 
+  myLibraryList->addModelObjectType(IddObjectType::OS_ShadingControl, "ShadingControl");
+  myLibraryList->addModelObjectType(IddObjectType::OS_WindowProperty_FrameAndDivider, "Frame And Divider Window Property");
+  myLibraryList->addModelObjectType(IddObjectType::OS_DaylightingDevice_Shelf, "DaylightingDevice Shelf");
   myLibraryList->addModelObjectType(IddObjectType::OS_Fan_ZoneExhaust, "Fan Zone Exhaust");
   myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump, "PTHP");
   myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner, "PTAC");
@@ -909,7 +901,9 @@ void MainRightColumnController::configureForThermalZonesSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric,"Baseboard Convective Electric");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Water,"Baseboard Convective Water");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_RadiantConvective_Electric,"Baseboard Radiant Convective Electric");
+  libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_RadiantConvective_Water,"Baseboard Radiant Convective Water");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_Dehumidifier_DX,"Dehumidifier - DX");
+  libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_EnergyRecoveryVentilator,"ERV");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_FourPipeFanCoil,"Four Pipe Fan Coil");
   libraryWidget->addModelObjectType(IddObjectType::OS_Fan_ZoneExhaust,"Fan Zone Exhaust");  
   libraryWidget->addModelObjectType(IddObjectType::OS_WaterHeater_HeatPump,"Heat Pump Water Heater");
@@ -921,6 +915,7 @@ void MainRightColumnController::configureForThermalZonesSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric,"Low Temp Radiant Electric");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_HighTemperatureRadiant,"High Temp Radiant");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_UnitHeater,"Unit Heater");
+  libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_UnitVentilator,"Unit Ventilator");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneVentilation_DesignFlowRate,"Zone Ventilation Design Flow Rate");
   libraryWidget->addModelObjectType(IddObjectType::OS_Schedule_Compact,"Compact Schedules");
   libraryWidget->addModelObjectType(IddObjectType::OS_Schedule_Ruleset,"Schedule Rulesets");
