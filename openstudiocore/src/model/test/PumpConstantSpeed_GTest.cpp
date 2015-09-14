@@ -25,6 +25,8 @@
 #include "../PlantLoop.hpp"
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
 #include "../../utilities/units/Quantity.hpp"
 #include "../../utilities/units/Unit.hpp"
@@ -44,6 +46,16 @@ TEST_F(ModelFixture,PumpConstantSpeed_PumpConstantSpeed)
      exit(0); 
   } ,
     ::testing::ExitedWithCode(0), "" );
+}
+
+TEST_F(ModelFixture,PumpConstantSpeed_flowRateSchedule) {
+  Model m;
+  PumpConstantSpeed pump(m);
+  auto alwaysOnSchedule = m.alwaysOnDiscreteSchedule();
+  EXPECT_TRUE(pump.setPumpFlowRateSchedule(alwaysOnSchedule));
+  auto s = pump.pumpFlowRateSchedule();
+  EXPECT_TRUE(s); 
+  EXPECT_EQ(alwaysOnSchedule,s.get());
 }
 
 TEST_F(ModelFixture,PumpConstantSpeed_addToNode) {
