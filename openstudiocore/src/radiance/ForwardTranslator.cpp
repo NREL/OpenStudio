@@ -361,8 +361,8 @@ namespace radiance {
       if (tregopt.is_open()){
         outfiles.push_back(tregoptpath);
         tregopt << "-c " << (int)radianceParameters.klemsSamplingDensity() << " ";
-				tregopt << "-e MF:1 -f tregenza.cal -b tbin -bn Ntbins";
-				//restricted to Klems, user is warned when writing out window groups. 2015.09.13 RPG
+        tregopt << "-e MF:1 -f tregenza.cal -b tbin -bn Ntbins";
+        //restricted to Klems, user is warned when writing out window groups. 2015.09.13 RPG
         //if (radianceParameters.skyDiscretizationResolution() == "146"){
         //  tregopt << "-e MF:1 -f tregenza.cal -b tbin -bn Ntbins";
         //} else if (radianceParameters.skyDiscretizationResolution() == "578"){
@@ -392,7 +392,7 @@ namespace radiance {
 //         }
 //         skyfile << "void glow skyglow\n0\n0\n4\n1 1 1 0\n\nskyglow source sky\n0\n0\n4\n0 0 1 180\n";
 
-				skyfile << "#@rfluxmtx h=r1 u=Y\nvoid glow skyglow\n0\n0\n4\n1 1 1 0\n\nskyglow source sky\n0\n0\n4\n0 0 1 180\n";
+        skyfile << "#@rfluxmtx h=r1 u=Y\nvoid glow skyglow\n0\n0\n4\n1 1 1 0\n\nskyglow source sky\n0\n0\n4\n0 0 1 180\n";
 
       }else{
         LOG(Error, "Cannot open file '" << toString(dcskyfilepath) << "' for writing");
@@ -1491,19 +1491,19 @@ namespace radiance {
 
 
               // polygon header
- 							// Forcing Klems basis... RPG 2015.09.13 =(
- 							openstudio::model::RadianceParameters radianceParameters = m_model.getUniqueModelObject<openstudio::model::RadianceParameters>();
- 							std::string tempSkyDivs = "kf";
- 							    
-							if (radianceParameters.skyDiscretizationResolution() == "146"){
-								LOG(Info, windowGroup_name + " using Klems sampling basis.");
-							} else if (radianceParameters.skyDiscretizationResolution() == "578"){
-								LOG(Warn, windowGroup_name + " reset to Klems sampling basis.");
-							} else if (radianceParameters.skyDiscretizationResolution() == "2306"){
-								LOG(Warn, windowGroup_name + " reset to Klems sampling basis.");
-							}
-							m_radWindowGroupShades[windowGroup_name] += "#@rfluxmtx h=" + tempSkyDivs +  " u=" + winUpVector + " o=output/dc/" + windowGroup_name + ".vmx\n";	
-							m_radWindowGroupShades[windowGroup_name] += "\n# shade for SubSurface: " + subSurface_name + "\n";
+              // Forcing Klems basis... RPG 2015.09.13 =(
+              openstudio::model::RadianceParameters radianceParameters = m_model.getUniqueModelObject<openstudio::model::RadianceParameters>();
+              std::string tempSkyDivs = "kf";
+                  
+              if (radianceParameters.skyDiscretizationResolution() == "146"){
+                LOG(Info, windowGroup_name + " using Klems sampling basis.");
+              } else if (radianceParameters.skyDiscretizationResolution() == "578"){
+                LOG(Warn, windowGroup_name + " reset to Klems sampling basis.");
+              } else if (radianceParameters.skyDiscretizationResolution() == "2306"){
+                LOG(Warn, windowGroup_name + " reset to Klems sampling basis.");
+              }
+              m_radWindowGroupShades[windowGroup_name] += "#@rfluxmtx h=" + tempSkyDivs +  " u=" + winUpVector + " o=output/dc/" + windowGroup_name + ".vmx\n"; 
+              m_radWindowGroupShades[windowGroup_name] += "\n# shade for SubSurface: " + subSurface_name + "\n";
 
               // write the polygon
               m_radWindowGroupShades[windowGroup_name] += windowGroup_name + "_SHADE" + " polygon " + windowGroup_name + "_SHADE_" + subSurface_name + "\n";
