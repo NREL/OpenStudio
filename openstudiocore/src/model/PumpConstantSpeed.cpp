@@ -374,7 +374,7 @@ namespace detail {
   bool PumpConstantSpeed_Impl::setPumpFlowRateSchedule(Schedule& schedule) {
     bool result = setSchedule(OS_Pump_ConstantSpeedFields::PumpFlowRateSchedule,
                               "PumpConstantSpeed",
-                              "Pump Flow Rate Schedule",
+                              "Pump Flow Rate",
                               schedule);
     return result;
   }
