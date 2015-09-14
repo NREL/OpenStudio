@@ -292,7 +292,7 @@ namespace detail{
 
   void AirTerminalSingleDuctVAVReheat_Impl::autosizeMaximumAirFlowRate()
   {
-    this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumAirFlowRate,"Autocalculate");
+    this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumAirFlowRate,"AutoSize");
   }
 
   bool AirTerminalSingleDuctVAVReheat_Impl::isMaximumAirFlowRateAutosized() const
@@ -385,7 +385,7 @@ namespace detail{
 
   void AirTerminalSingleDuctVAVReheat_Impl::autosizeMaximumHotWaterOrSteamFlowRate()
   {
-    this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumHotWaterorSteamFlowRate,"Autocalculate");
+    this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumHotWaterorSteamFlowRate,"AutoSize");
   }
 
   bool AirTerminalSingleDuctVAVReheat_Impl::isMaximumHotWaterOrSteamFlowRateAutosized() const
@@ -461,7 +461,7 @@ namespace detail{
 
   void AirTerminalSingleDuctVAVReheat_Impl::autosizeMaximumFlowPerZoneFloorAreaDuringReheat()
   {
-    this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumFlowperZoneFloorAreaDuringReheat,"Autocalculate");
+    this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumFlowperZoneFloorAreaDuringReheat,"AutoSize");
   }
 
   bool AirTerminalSingleDuctVAVReheat_Impl::isMaximumFlowPerZoneFloorAreaDuringReheatAutosized() const
@@ -494,7 +494,7 @@ namespace detail{
 
   void AirTerminalSingleDuctVAVReheat_Impl::autosizeMaximumFlowFractionDuringReheat()
   {
-    this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumFlowFractionDuringReheat,"Autocalculate");
+    this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumFlowFractionDuringReheat,"AutoSize");
   }
 
   bool AirTerminalSingleDuctVAVReheat_Impl::isMaximumFlowFractionDuringReheatAutosized() const
