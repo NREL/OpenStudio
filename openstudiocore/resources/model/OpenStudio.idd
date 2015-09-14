@@ -13477,7 +13477,6 @@ OS:Coil:Cooling:Water,
        \type real
        \autosizable
        \units m3/s
-       \ip-units gal/min
        \minimum 0
        \default autosize
   N3, \field Design Inlet Water Temperature
