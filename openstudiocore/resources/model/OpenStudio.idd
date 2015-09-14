@@ -9682,7 +9682,7 @@ OS:AirTerminal:SingleDuct:VAV:Reheat,
        \note At no time will the maximum flow rate calculated here exceed the value of
        \note Maximum Air Flow Rate.
        \type real
-       \autocalculatable
+       \autosizable
        \units m3/s-m2
   N8, \field Maximum Flow Fraction During Reheat
        \note Used only when Reheat Coil Object Type = Coil:Heating:Water and Damper Heating Action = Reverse
@@ -9694,7 +9694,7 @@ OS:AirTerminal:SingleDuct:VAV:Reheat,
        \note At no time will the maximum flow rate calculated here exceed the value of
        \note Maximum Air Flow Rate.
        \type real
-       \autocalculatable
+       \autosizable
   N9, \field Maximum Reheat Air Temperature
        \note Specifies the maximum allowable supply air temperature leaving the reheat coil.
        \note If left blank, there is no limit and no default. If unknown, 35C (95F) is recommended.
