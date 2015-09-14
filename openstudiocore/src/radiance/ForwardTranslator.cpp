@@ -312,27 +312,6 @@ namespace radiance {
 
       // write Radiance options to file(s)
 
-      // 2- or 3-phase?
-
-      std::vector<openstudio::model::ShadingControl> shadingControls = m_model.getModelObjects<openstudio::model::ShadingControl>();
-      openstudio::path daylightsimoptpath = radDir / openstudio::toPath("options/daylightsim.opt");
-      OFSTREAM daylightsimopt(daylightsimoptpath);
-      if (daylightsimopt.is_open()){
-        outfiles.push_back(daylightsimoptpath);
-        if (shadingControls.empty())
-        {
-          // not 3-phase
-          daylightsimopt << "--x";
-        } else {
-          // yes 3-phase
-          daylightsimopt << "--z";
-        }
-
-      }else{
-        LOG(Error, "Cannot open file '" << toString(daylightsimoptpath) << "' for writing");
-      }
-
-
       // view matrix options
 
       openstudio::path vmxoptpath = radDir / openstudio::toPath("options/vmx.opt");
@@ -1511,17 +1490,16 @@ namespace radiance {
 
 
               // polygon header
- 							// Add conditionals for sky divs, dummy. 
+ 							// Forcing Klems basis... RPG 2015.09.13 =(
  							openstudio::model::RadianceParameters radianceParameters = m_model.getUniqueModelObject<openstudio::model::RadianceParameters>();
-
- 							std::string tempSkyDivs = "146";
+ 							std::string tempSkyDivs = "kf";
  							    
               if (radianceParameters.skyDiscretizationResolution() == "146"){
-              	tempSkyDivs = "kf";          	
-              } else if (radianceParameters.skyDiscretizationResolution() == "578"){	
-              	tempSkyDivs = "r2";            	
+              	LOG(Info, windowGroup_name + "using Klems sampling basis.");         	
+              } else if (radianceParameters.skyDiscretizationResolution() == "578"){
+              	LOG(Warn, windowGroup_name + "reset to Klems sampling basis.");          	
               } else if (radianceParameters.skyDiscretizationResolution() == "2306"){	
-            		tempSkyDivs = "r4"; 
+              	LOG(Warn, windowGroup_name + "reset to Klems sampling basis."); 
               }          
               m_radWindowGroupShades[windowGroup_name] += "#@rfluxmtx h=" + tempSkyDivs +  " u=" + winUpVector + " o=output/dc/" + windowGroup_name + ".vmx\n";	
               m_radWindowGroupShades[windowGroup_name] += "\n# shade for SubSurface: " + subSurface_name + "\n";
