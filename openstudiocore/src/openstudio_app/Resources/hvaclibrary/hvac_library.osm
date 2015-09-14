@@ -174,9 +174,9 @@ OS:SetpointManager:OutdoorAirReset,
   {6150d904-49c8-4db7-a235-001a6bfccac0}, !- Handle
   OA Temp Reset,                          !- Name
   Temperature,                            !- Control Variable
-  22,                                     !- Setpoint at Outdoor Low Temperature {C}
+  17,                                     !- Setpoint at Outdoor Low Temperature {C}
   10,                                     !- Outdoor Low Temperature {C}
-  10,                                     !- Setpoint at Outdoor High Temperature {C}
+  13,                                     !- Setpoint at Outdoor High Temperature {C}
   24,                                     !- Outdoor High Temperature {C}
   ,                                       !- Setpoint Node or NodeList Name
   ,                                       !- Schedule Name
