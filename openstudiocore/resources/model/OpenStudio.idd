@@ -18506,6 +18506,7 @@ OS:LoadProfile:Plant,
        \required-field
        \type real
        \units m3/s
+       \ip-units gal/min
   A6 ; \field Flow Rate Fraction Schedule Name
        \required-field
        \type object-list
@@ -23147,6 +23148,7 @@ OS:WaterUse:Equipment:Definition,
   N1 , \field Peak Flow Rate
        \required-field
        \units m3/s
+       \ip-units gal/min
        \type real
        \minimum 0.0
   A4 , \field Target Temperature Schedule Name
