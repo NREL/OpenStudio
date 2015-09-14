@@ -66,6 +66,17 @@ TEST_F(ModelFixture,PlantLoop_PlantLoop)
     ::testing::ExitedWithCode(0), "" );
 }
 
+TEST_F(ModelFixture,PlantLoop_Remove)
+{
+  Model m; 
+  auto size = m.modelObjects().size();
+  PlantLoop plantLoop(m); 
+
+  EXPECT_FALSE(plantLoop.remove().empty());
+
+  EXPECT_EQ(size,m.modelObjects().size());
+}
+
 TEST_F(ModelFixture,PlantLoop_supplyComponents)
 {
   Model m; 
