@@ -80,10 +80,10 @@ class RadianceMeasureTest < MiniTest::Unit::TestCase
     # load the test model
     #model = get_test_model('Default')
     #model = get_test_model('None')
-    model = get_test_model('Blind')
+    #model = get_test_model('Blind')
     #model = get_test_model('DaylightRedirectionDevice')
     #model = get_test_model('Screen')
-    #model = get_test_model('Shade'
+    model = get_test_model('Shade')
 
 		weather_file = runner.lastEpwFilePath.get
     epw_file = OpenStudio::EpwFile.new(weather_file)
