@@ -1550,6 +1550,8 @@ set(${target_name}_test_src
   test/Duct_GTest.cpp
   test/ElectricEquipment_GTest.cpp
   test/ElectricLoadCenterDistribution_GTest.cpp
+  test/ElectricLoadCenterInverterSimple_GTest.cpp
+  test/ElectricLoadCenterInverterLookUpTable_GTest.cpp
   test/EvaporativeCoolerDirectResearchSpecial_GTest.cpp
   test/EvaporativeCoolerIndirectResearchSpecial_GTest.cpp
   test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
@@ -1603,6 +1605,8 @@ set(${target_name}_test_src
   test/ParentObject_GTest.cpp
   test/People_GTest.cpp
   test/PeopleDefinition_GTest.cpp
+  test/PhotovoltaicPerformanceEquivalentOneDiode_GTest.cpp
+  test/PhotovoltaicPerformanceSimple_GTest.cpp
   test/PipeAdiabatic_GTest.cpp
   test/PipeIndoor_GTest.cpp
   test/PipeOutdoor_GTest.cpp
