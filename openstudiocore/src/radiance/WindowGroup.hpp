@@ -28,6 +28,7 @@
 
 #include "../utilities/geometry/Point3d.hpp"
 #include "../utilities/geometry/Vector3d.hpp"
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio{
 namespace radiance{
@@ -60,6 +61,13 @@ namespace radiance{
 
       boost::optional<model::ShadingControl> shadingControl() const;
 
+      std::string interiorShadeBSDF() const;
+
+      std::string shadingControlType() const;
+
+      // returns numeric value if it exists, returns schedule name for scheduled control, n/a otherwise
+      std::string shadingControlSetpoint() const;
+
       void addWindowPolygon(const openstudio::Point3dVector& windowPolygon);
 
       WindowGroupControl windowGroupControl() const;
@@ -75,6 +83,8 @@ namespace radiance{
       model::ConstructionBase m_construction;
       boost::optional<model::ShadingControl> m_shadingControl;
       std::vector<openstudio::Point3dVector> m_windowPolygons;
+
+      REGISTER_LOGGER("openstudio.radiance.ForwardTranslator");
   };
 
   // vector of WindowGroup

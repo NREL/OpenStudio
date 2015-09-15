@@ -214,16 +214,21 @@ ShadingControl::ShadingControl(const Construction& construction)
   for (; i >=0; --i){
     if (layers[i].optionalCast<Shade>()){
       type = "Shade";
+      LOG(Warn, "ShadingMaterial detected in shaded construction, prefer to use the ShadingControl constructor from ShadingMaterial.");
       break;
     }else if( layers[i].optionalCast<Blind>()){
       type = "Blind";
+      LOG(Warn, "ShadingMaterial detected in shaded construction, prefer to use the ShadingControl constructor from ShadingMaterial.");
       break;
     }else if( layers[i].optionalCast<Screen>()){
       type = "Screen";
+      setShadingControlType("AlwaysOn");
+      LOG(Warn, "ShadingMaterial detected in shaded construction, prefer to use the ShadingControl constructor from ShadingMaterial.");
       break;
     } else if (layers[i].optionalCast<DaylightRedirectionDevice>()){
       type = "DaylightRedirectionDevice";
       setShadingControlType("AlwaysOn");
+      LOG(Warn, "ShadingMaterial detected in shaded construction, prefer to use the ShadingControl constructor from ShadingMaterial.");
       break;
     }
   }
@@ -271,6 +276,7 @@ ShadingControl::ShadingControl(const ShadingMaterial& shadingMaterial)
     type = "InteriorBlind";
   }else if(shadingMaterial.optionalCast<Screen>()){
     type = "ExteriorScreen";
+    setShadingControlType("AlwaysOn");
   } else if (shadingMaterial.optionalCast<DaylightRedirectionDevice>()){
     type = "InteriorDaylightRedirectionDevice";
     setShadingControlType("AlwaysOn");

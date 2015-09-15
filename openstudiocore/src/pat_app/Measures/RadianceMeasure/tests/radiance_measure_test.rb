@@ -11,6 +11,44 @@ class RadianceMeasureTest < MiniTest::Unit::TestCase
 
   # def teardown
   # end
+  
+  def get_test_model(shade_type)
+    translator = OpenStudio::OSVersion::VersionTranslator.new
+    path = OpenStudio::Path.new(File.dirname(__FILE__) + "/test_model.osm")
+    model = translator.loadModel(path)
+    assert((not model.empty?))
+
+    model = model.get
+ 
+    new_shade_control = nil
+    if shade_type == 'Default'
+      # do nothing, use model as is
+    elsif shade_type == 'None'
+      # remove shading controls
+      model.getShadingControls.each do |control|
+        control.remove
+      end
+    elsif shade_type == 'Blind'
+      new_shade_control = OpenStudio::Model::ShadingControl.new(OpenStudio::Model::Blind.new(model))
+    elsif shade_type == 'DaylightRedirectionDevice'
+      new_shade_control = OpenStudio::Model::ShadingControl.new(OpenStudio::Model::DaylightRedirectionDevice.new(model))
+    elsif shade_type == 'Screen'
+      new_shade_control = OpenStudio::Model::ShadingControl.new(OpenStudio::Model::Screen.new(model))
+    elsif shade_type == 'Shade'
+      new_shade_control = OpenStudio::Model::ShadingControl.new(OpenStudio::Model::Shade.new(model))
+    end
+    
+    if new_shade_control
+      # replace all existing shading controls with the new one
+      model.getSubSurfaces.each do |s|
+        if !s.shadingControl.empty?
+          s.setShadingControl(new_shade_control)
+        end
+      end
+    end
+    
+    return model
+  end
 
   def test_number_of_arguments_and_argument_names
     # create an instance of the measure
@@ -40,12 +78,12 @@ class RadianceMeasureTest < MiniTest::Unit::TestCase
     runner.setLastEpwFilePath(File.dirname(__FILE__) + "/USA_CO_Golden-NREL.724666_TMY3.epw")  
     
     # load the test model
-    translator = OpenStudio::OSVersion::VersionTranslator.new
-    path = OpenStudio::Path.new(File.dirname(__FILE__) + "/test_model.osm")
-    model = translator.loadModel(path)
-    assert((not model.empty?))
-
-    model = model.get
+    #model = get_test_model('Default')
+    #model = get_test_model('None')
+    #model = get_test_model('Blind')
+    #model = get_test_model('DaylightRedirectionDevice')
+    #model = get_test_model('Screen')
+    model = get_test_model('Shade')
 
 		weather_file = runner.lastEpwFilePath.get
     epw_file = OpenStudio::EpwFile.new(weather_file)

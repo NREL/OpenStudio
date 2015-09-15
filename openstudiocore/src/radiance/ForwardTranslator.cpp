@@ -173,9 +173,9 @@ namespace radiance {
       for (openstudio::model::DaylightingControl daylightingControl : space.daylightingControls()){
         if (daylightingControl.isPrimaryDaylightingControl()){
           // ok
-        }else if (daylightingControl.isSecondaryDaylightingControl()){
+        } else if (daylightingControl.isSecondaryDaylightingControl()){
           // ok
-        }else{
+        } else{
           LOG(Warn, "DaylightingControl " << daylightingControl.name().get() << \
             " is not associated with this Space's ThermalZone, it will not be translated.");
           daylightingControl.remove();
@@ -196,6 +196,47 @@ namespace radiance {
       }
     }
 
+    // remove unsupported shading controls
+    for (auto& shadingControl : model.getConcreteModelObjects<openstudio::model::ShadingControl>()){
+      std::string shadingType = shadingControl.shadingType();
+      bool supported = false;
+      if (istringEqual("InteriorShade", shadingType)){
+        supported = true;
+      } else if (istringEqual("ExteriorShade", shadingType)){
+        supported = false;
+      } else if (istringEqual("ExteriorScreen", shadingType)){
+        supported = false;
+      } else if (istringEqual("InteriorBlind", shadingType)){
+        supported = true;
+      } else if (istringEqual("ExteriorBlind", shadingType)){
+        supported = false;
+      } else if (istringEqual("BetweenGlassShade", shadingType)){
+        supported = false;
+      } else if (istringEqual("BetweenGlassBlind", shadingType)){
+        supported = false;
+      } else if (istringEqual("SwitchableGlazing", shadingType)){
+        supported = false;
+      } else if (istringEqual("InteriorDaylightRedirectionDevice", shadingType)){
+        supported = true;
+      } else {
+        supported = false;
+        LOG(Warn, "Unknown shadingType '" << shadingType << "' found for ShadingControl '" << shadingControl.name().get() << "'");
+      }
+
+      if (!supported){
+        LOG(Warn, "Removing ShadingControl '" << shadingControl.name().get() << "' with unsupported shadingType '" << shadingType << "'");
+        shadingControl.remove();
+        continue;
+      }
+
+      std::string shadingControlType = shadingControl.shadingControlType();
+      if (istringEqual("AlwaysOff", shadingControlType)){
+        LOG(Info, "Removing ShadingControl '" << shadingControl.name().get() << "' with shadingControlType '" << shadingControlType << "'");
+        continue;
+      }
+    }
+
+
     if (numSpacesToSimulate == 0){
       LOG(Error, "Model does not contain any Radiance daylighting objects.");
       return outfiles;
@@ -205,6 +246,10 @@ namespace radiance {
     try{
 
       LOG(Debug, "Working Directory: " + openstudio::toString(outPath));
+
+      if (boost::filesystem::exists(outPath)){
+        boost::filesystem::remove(outPath);
+      }
 
       boost::filesystem::create_directories(outPath);
 
@@ -267,27 +312,6 @@ namespace radiance {
 
       // write Radiance options to file(s)
 
-      // 2- or 3-phase?
-
-      std::vector<openstudio::model::ShadingControl> shadingControls = m_model.getModelObjects<openstudio::model::ShadingControl>();
-      openstudio::path daylightsimoptpath = radDir / openstudio::toPath("options/daylightsim.opt");
-      OFSTREAM daylightsimopt(daylightsimoptpath);
-      if (daylightsimopt.is_open()){
-        outfiles.push_back(daylightsimoptpath);
-        if (shadingControls.empty())
-        {
-          // not 3-phase
-          daylightsimopt << "--x";
-        } else {
-          // yes 3-phase
-          daylightsimopt << "--z";
-        }
-
-      }else{
-        LOG(Error, "Cannot open file '" << toString(daylightsimoptpath) << "' for writing");
-      }
-
-
       // view matrix options
 
       openstudio::path vmxoptpath = radDir / openstudio::toPath("options/vmx.opt");
@@ -337,15 +361,16 @@ namespace radiance {
       if (tregopt.is_open()){
         outfiles.push_back(tregoptpath);
         tregopt << "-c " << (int)radianceParameters.klemsSamplingDensity() << " ";
-
-        if (radianceParameters.skyDiscretizationResolution() == "146"){
-          tregopt << "-e MF:1 -f tregenza.cal -b tbin -bn Ntbins";
-        } else if (radianceParameters.skyDiscretizationResolution() == "578"){
-          tregopt << "-e MF:2 -f reinhart.cal -b rbin -bn Nrbins";
-        } else if (radianceParameters.skyDiscretizationResolution() == "2306"){
-          tregopt << "-e MF:4 -f reinhart.cal -b rbin -bn Nrbins";
-        }
-        // TODO: make these values into a pulldown choice, add support for out of bounds
+        tregopt << "-e MF:1 -f tregenza.cal -b tbin -bn Ntbins";
+        //restricted to Klems, user is warned when writing out window groups. 2015.09.13 RPG
+        //if (radianceParameters.skyDiscretizationResolution() == "146"){
+        //  tregopt << "-e MF:1 -f tregenza.cal -b tbin -bn Ntbins";
+        //} else if (radianceParameters.skyDiscretizationResolution() == "578"){
+        //  tregopt << "-e MF:2 -f reinhart.cal -b rbin -bn Nrbins";
+        //} else if (radianceParameters.skyDiscretizationResolution() == "2306"){
+        //  tregopt << "-e MF:4 -f reinhart.cal -b rbin -bn Nrbins";
+        //}
+        // TODO: make these values into a pulldown choice, add support for higher resolution sampling bases and out of bounds
       }else{
         LOG(Error, "Cannot open file '" << toString(tregoptpath) << "' for writing");
       }
@@ -357,14 +382,17 @@ namespace radiance {
         outfiles.push_back(dcskyfilepath);
         // ground first (P0)!
         skyfile << "#@rfluxmtx h=u u=Y\nvoid glow groundglow\n0\n0\n4\n1 1 1 0\n\ngroundglow source ground\n0\n0\n4\n0 0 -1 180\n";
-        if (radianceParameters.skyDiscretizationResolution() == "146"){
-          skyfile << "#@rfluxmtx h=r1 u=Y\n";
-        } else if (radianceParameters.skyDiscretizationResolution() == "578"){
-          skyfile << "#@rfluxmtx h=r2 u=Y\n";
-        } else if (radianceParameters.skyDiscretizationResolution() == "2306"){
-          skyfile << "#@rfluxmtx h=r4 u=Y\n";
-        }
-        skyfile << "void glow skyglow\n0\n0\n4\n1 1 1 0\n\nskyglow source sky\n0\n0\n4\n0 0 1 180\n";
+
+//         if (radianceParameters.skyDiscretizationResolution() == "146"){
+//           skyfile << "#@rfluxmtx h=r1 u=Y\n";
+//         } else if (radianceParameters.skyDiscretizationResolution() == "578"){
+//           skyfile << "#@rfluxmtx h=r2 u=Y\n";
+//         } else if (radianceParameters.skyDiscretizationResolution() == "2306"){
+//           skyfile << "#@rfluxmtx h=r4 u=Y\n";
+//         }
+//         skyfile << "void glow skyglow\n0\n0\n4\n1 1 1 0\n\nskyglow source sky\n0\n0\n4\n0 0 1 180\n";
+
+        skyfile << "#@rfluxmtx h=r1 u=Y\nvoid glow skyglow\n0\n0\n4\n1 1 1 0\n\nskyglow source sky\n0\n0\n4\n0 0 1 180\n";
 
       }else{
         LOG(Error, "Cannot open file '" << toString(dcskyfilepath) << "' for writing");
@@ -999,6 +1027,7 @@ namespace radiance {
   {
     std::vector<std::string> space_names;
 
+
     for (const auto & space : t_spaces)
     {
       std::string space_name = cleanName(space.name().get());
@@ -1450,8 +1479,10 @@ namespace radiance {
 
               // add the shade
 
+              shadeBSDF = windowGroup.interiorShadeBSDF();
+
               rMaterial = "BSDF";
-              matString = "6\n0 bsdf/blinds.xml 0 0 1 .\n0\n0\n";
+              matString = "6\n0 bsdf/" + shadeBSDF + " 0 0 1 .\n0\n0\n";
 
               m_radMaterials.insert("void " + rMaterial + " " + windowGroup_name + "_SHADE\n" + matString + "\n\n");
 
@@ -1460,7 +1491,18 @@ namespace radiance {
 
 
               // polygon header
-              m_radWindowGroupShades[windowGroup_name] += "#@rfluxmtx h=kf u=" + winUpVector + " o=output/dc/" + windowGroup_name + ".vmx\n";
+              // Forcing Klems basis... RPG 2015.09.13 =(
+              openstudio::model::RadianceParameters radianceParameters = m_model.getUniqueModelObject<openstudio::model::RadianceParameters>();
+              std::string tempSkyDivs = "kf";
+                  
+              if (radianceParameters.skyDiscretizationResolution() == "146"){
+                LOG(Info, windowGroup_name + " using Klems sampling basis.");
+              } else if (radianceParameters.skyDiscretizationResolution() == "578"){
+                LOG(Warn, windowGroup_name + " reset to Klems sampling basis.");
+              } else if (radianceParameters.skyDiscretizationResolution() == "2306"){
+                LOG(Warn, windowGroup_name + " reset to Klems sampling basis.");
+              }
+              m_radWindowGroupShades[windowGroup_name] += "#@rfluxmtx h=" + tempSkyDivs +  " u=" + winUpVector + " o=output/dc/" + windowGroup_name + ".vmx\n"; 
               m_radWindowGroupShades[windowGroup_name] += "\n# shade for SubSurface: " + subSurface_name + "\n";
 
               // write the polygon
@@ -1481,228 +1523,91 @@ namespace radiance {
                 formatString(offsetVertex.z()) + "\n";
               }
 
+              // shade BSDF stuff
+
+              // make dir for BSDF files
+
+              openstudio::path bsdfoutpath = t_radDir / openstudio::toPath("bsdf");
+
+              // path to write bsdf
+
+              openstudio::path shadeBSDFPath = t_radDir / openstudio::toPath("bsdf") / shadeBSDF;
+
+              if (!exists(shadeBSDFPath)){
+
+                // add BSDF file to the collection of crap to copy up
+                t_outfiles.push_back(shadeBSDFPath);
+
+                // read BSDF from resource dll
+                // must be referenced in openstudiocore/src/radiance/radiance.qrc
+                QString defaultFile;
+                QFile inFile(toQString(":/resources/" + shadeBSDF));
+                if (inFile.open(QFile::ReadOnly)){
+                  QTextStream docIn(&inFile);
+                  defaultFile = docIn.readAll();
+                  inFile.close();
+                }
+
+                // write shade BSDF
+                QFile outFile(toQString(shadeBSDFPath));
+                bool opened = outFile.open(QIODevice::WriteOnly);
+                if (!opened){
+                  LOG_AND_THROW("Cannot write file to '" << toString(shadeBSDFPath) << "'");
+                }
+                QTextStream textStream(&outFile);
+                textStream << defaultFile;
+                outFile.close();
+
+              }
+
             }
 
+            // always add an airBSDF
 
-            // shade BSDF stuff
+            openstudio::path airBSDFPath = t_radDir / openstudio::toPath("bsdf") / openstudio::toPath("air.xml");
 
-            // make dir for BSDF files
+            if (!exists(airBSDFPath)){
 
-            openstudio::path bsdfoutpath = t_radDir / openstudio::toPath("bsdf");
+              // add BSDF file to the collection of crap to copy up
+              t_outfiles.push_back(airBSDFPath);
 
-            // Set shade BSDF
+              // read BSDF from resource dll
+              // must be in openstudiocore/src/radiance/radiance.qrc
+              QString defaultFile;
+              QFile inFileAir(":/resources/air.xml");
+              if (inFileAir.open(QFile::ReadOnly)){
+                QTextStream docIn(&inFileAir);
+                defaultFile = docIn.readAll();
+                inFileAir.close();
+              }
 
-            shadeBSDF = "blinds.xml";
-            // TODO get shade type from object
-                // if shade type = blind, shadeBSDF = blind.xml
-                // if shade type = louver, shadeBSDF = 1xliloX.xml
-                // if shade type = shadecloth, shadeBSDF = 05_shade_light.xml
-                // etc...
+              // write shade BSDF
+              QFile outFileAir(toQString(airBSDFPath));
+              bool opened = outFileAir.open(QIODevice::WriteOnly);
+              if (!opened){
+                LOG_AND_THROW("Cannot write file to '" << toString(airBSDFPath) << "'");
+              }
+              QTextStream textStream2(&outFileAir);
+              textStream2 << defaultFile;
+              outFileAir.close();
 
-            // path to write bsdf
-
-            openstudio::path shadeBSDFPath = t_radDir / openstudio::toPath("bsdf") / shadeBSDF;
-
-            // add BSDF file to the collection of crap to copy up
-            t_outfiles.push_back(shadeBSDFPath);
-
-            // read BSDF from resource dll
-            // must be referenced in openstudiocore/src/radiance/radiance.qrc
-            QString defaultFile;
-            QFile inFile(toQString(":/resources/" + shadeBSDF));
-            if (inFile.open(QFile::ReadOnly)){
-              QTextStream docIn(&inFile);
-              defaultFile = docIn.readAll();
-              inFile.close();
             }
-
-            // write shade BSDF
-            QFile outFile(toQString(shadeBSDFPath));
-            bool opened = outFile.open(QIODevice::WriteOnly);
-            if (!opened){
-              LOG_AND_THROW("Cannot write file to '" << toString(shadeBSDFPath) << "'");
-            }
-            QTextStream textStream(&outFile);
-            textStream << defaultFile;
-            outFile.close();
-
-            // add an airBSDF
-
-            shadeBSDFPath = t_radDir / openstudio::toPath("bsdf") / openstudio::toPath("air.xml");
-
-            // add BSDF file to the collection of crap to copy up
-            t_outfiles.push_back(shadeBSDFPath);
-
-            // read BSDF from resource dll
-            // must be in openstudiocore/src/radiance/radiance.qrc
-            QFile inFileAir(":/resources/air.xml");
-            if (inFileAir.open(QFile::ReadOnly)){
-              QTextStream docIn(&inFileAir);
-              defaultFile = docIn.readAll();
-              inFileAir.close();
-            }
-
-            // write shade BSDF
-            QFile outFileAir(toQString(shadeBSDFPath));
-            opened = outFileAir.open(QIODevice::WriteOnly);
-            if (!opened){
-              LOG_AND_THROW("Cannot write file to '" << toString(shadeBSDFPath) << "'");
-            }
-            QTextStream textStream2(&outFileAir);
-            textStream2 << defaultFile;
-            outFileAir.close();
-
 
             //store window group entry for mapping.rad
             if (windowGroup_name == "WG0"){
               // simple placeholder for WG0
               m_radDCmats.insert(windowGroup_name + ",n/a,n/a,n/a,n/a\n");
             }else{
-              // store window group normal
-              // hard coded shade algorithm: on if high solar (2), setpoint 2Klx (2000)
-              // hard coded shade type: blinds
+              // window group name, normal, control type, setpoint, unshaded bsdf, and shaded bsdf
               m_radDCmats.insert(windowGroup_name + "," + \
                 formatString((control.outwardNormal->x() * -1), 2) + " " + \
                 formatString((control.outwardNormal->y() * -1), 2) + " " + \
-                formatString((control.outwardNormal->z() * -1), 2) + ",2,2000,air.xml," + shadeBSDF + "\n");
+                formatString((control.outwardNormal->z() * -1), 2) + "," + \
+                windowGroup.shadingControlType() + "," + \
+                windowGroup.shadingControlSetpoint() + "," + \
+                "air.xml," + shadeBSDF + "\n");
             }
 
-//            if (rMaterial == "glass"){
-//
-//               // path to write bsdf to
-//               openstudio::path uncontrolledBSDFOut = t_radDir / openstudio::toPath("bsdf") / openstudio::toPath("/cl_Tn" + formatString(tVis, 2) + ".xml");
-//
-//               // add xml file to the collection of crap to copy up
-//               t_outfiles.push_back(uncontrolledBSDFOut);
-//
-//               // get BSDF from BCL
-//               boost::optional<openstudio::path> uncontrolledBSDF = getBSDF(tVis, 100, "None");
-//               if (uncontrolledBSDF){
-//                 // copy uncontrolledBSDF
-//                 boost::filesystem::copy_file(*uncontrolledBSDF, uncontrolledBSDFOut, boost::filesystem::copy_option::overwrite_if_exists);
-//               }else{
-//                 LOG(Warn, "Cannot download BSDF for this window group, using default (Tvis=44%)");
-//
-//                 // read default file
-//                 QString defaultFile;
-//                 QFile inFile(":/resources/cl_Tn0.44.xml");
-//                 if (inFile.open(QFile::ReadOnly)){
-//                   QTextStream docIn(&inFile);
-//                   defaultFile = docIn.readAll();
-//                   inFile.close();
-//                 }
-//
-//                 // write default file
-//                 QFile outFile(toQString(uncontrolledBSDFOut));
-//                 bool opened = outFile.open(QIODevice::WriteOnly);
-//                 if (!opened){
-//                   LOG_AND_THROW("Cannot write file to '" << toString(uncontrolledBSDFOut) << "'");
-//                 }
-//                 QTextStream textStream(&outFile);
-//                 textStream << defaultFile;
-//                 outFile.close();
-//               }
-//
-//               // path to write bsdf to
-//               openstudio::path controlledBSDFOut = t_radDir / openstudio::toPath("bsdf") / openstudio::toPath("/cl_Tn" + formatString(tVis, 2) + "_blinds.xml");
-//
-//               // add xml file to the collection of crap to copy up
-//               t_outfiles.push_back(controlledBSDFOut);
-//
-//               // get BSDF from BCL
-//               boost::optional<openstudio::path> controlledBSDF = getBSDF(tVis, 100, "Blind");
-//               if (controlledBSDF){
-//                 // copy controlledBSDF
-//                 boost::filesystem::copy_file(*controlledBSDF, controlledBSDFOut, boost::filesystem::copy_option::overwrite_if_exists);
-//               }else{
-//                 LOG(Warn, "Cannot download BSDF, using default.");
-//
-//                 // read default file
-//                 QString defaultFile;
-//                 QFile inFile(":/resources/cl_Tn0.44_blinds.xml");
-//                 if (inFile.open(QFile::ReadOnly)){
-//                   QTextStream docIn(&inFile);
-//                   defaultFile = docIn.readAll();
-//                   inFile.close();
-//                 }
-//
-//                 // write default file
-//                 QFile outFile(toQString(uncontrolledBSDFOut));
-//                 bool opened = outFile.open(QIODevice::WriteOnly);
-//                 if (!opened){
-//                   LOG_AND_THROW("Cannot write file to '" << toString(uncontrolledBSDFOut) << "'");
-//                 }
-//                 QTextStream textStream(&outFile);
-//                 textStream << defaultFile;
-//                 outFile.close();
-//               }
-//
-//               // store window group entry for mapping.rad
-//               if (windowGroup_name == "WG0"){
-//                 // simple placeholder for WG0
-//                 m_radDCmats.insert(windowGroup_name + ",n/a,n/a,n/a,n/a\n");
-//               }else{
-//                 // store window group normal (may not need anymore with rfluxmtx)
-//                 // hard coded shade algorithm: on if high solar (2), setpoint 2Klx (2000)
-//                 // hard coded shade type: blinds
-//                 m_radDCmats.insert(windowGroup_name + "," + \
-//                   formatString((control.outwardNormal->x() * -1), 2) + " " + \
-//                   formatString((control.outwardNormal->y() * -1), 2) + " " + \
-//                   formatString((control.outwardNormal->z() * -1), 2) + ",2,2000,cl_Tn" + \
-//                   formatString(tVis, 2) + ".xml,cl_Tn" + \
-//                   formatString(tVis, 2) + "_blinds.xml\n");
-//                 }
-
-//             } else if (rMaterial == "trans"){
-//
-//               // copy uncontrolledBSDF
-//               openstudio::path uncontrolledBSDFOut = t_radDir / openstudio::toPath("bsdf") / openstudio::toPath("/df_Tn" + formatString(tVis, 2) + ".xml");
-//
-//               // add xml file to the collection of crap to copy up
-//               t_outfiles.push_back(uncontrolledBSDFOut);
-//
-//               // get BSDF from BCL
-//               boost::optional<openstudio::path> uncontrolledBSDF = getBSDF(tVis, 0, "None");
-//               if (uncontrolledBSDF){
-//                 // copy controlledBSDF
-//                 boost::filesystem::copy_file(*uncontrolledBSDF, uncontrolledBSDFOut, boost::filesystem::copy_option::overwrite_if_exists);
-//               }else{
-//                 LOG(Warn, "Cannot download BSDF, using default.");
-//
-//                 // read default file
-//                 QString defaultFile;
-//                 QFile inFile(":/resources/df_Tn0.44.xml");
-//                 if (inFile.open(QFile::ReadOnly)){
-//                   QTextStream docIn(&inFile);
-//                   defaultFile = docIn.readAll();
-//                   inFile.close();
-//                 }
-//
-//                 // write default file
-//                 QFile outFile(toQString(uncontrolledBSDFOut));
-//                 bool opened = outFile.open(QIODevice::WriteOnly);
-//                 if (!opened){
-//                   LOG_AND_THROW("Cannot write file to '" << toString(uncontrolledBSDFOut) << "'");
-//                 }
-//                 QTextStream textStream(&outFile);
-//                 textStream << defaultFile;
-//                 outFile.close();
-//               }
-//
-//               // store window group entry for mapping.rad
-//
-//               // simple placeholder for WG0
-//               if (windowGroup_name == "WG0"){
-//                 m_radDCmats.insert(windowGroup_name + ",n/a\n");
-//               }else{
-//               // include normals for controlled WGs
-//                 m_radDCmats.insert(windowGroup_name + "," + \
-//                   formatString((control.outwardNormal->x() * -1), 2) + " " + \
-//                   formatString((control.outwardNormal->y() * -1), 2) + " " + \
-//                   formatString((control.outwardNormal->z() * -1), 2) + ",df_Tn" + formatString(tVis, 2) + ".xml\n");
-//               }
-
-            //}
 
           } else if (subSurfaceUpCase == "DOOR") {
 
@@ -2096,7 +2001,7 @@ namespace radiance {
 
       // write radiance vmx materials list
       // format of this file is: window group, bsdf, bsdf
-      m_radDCmats.insert("#OpenStudio windowGroup->BSDF \"Mapping\" File\n# windowGroup,inwardNormal,shade control option,shade control setpoint,etc...\n");
+      m_radDCmats.insert("# OpenStudio windowGroup->BSDF \"Mapping\" File\n# windowGroup,inwardNormal,shade control type,shade control setpoint,unshaded bsdf,shaded bsdf\n");
       openstudio::path materials_dcfilename = t_radDir / openstudio::toPath("bsdf/mapping.rad");
       OFSTREAM materials_dcfile(materials_dcfilename);
       if (materials_dcfile.is_open()){

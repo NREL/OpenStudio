@@ -43,8 +43,15 @@ class MODEL_API ShadingControl : public ResourceObject {
   /** @name Constructors and Destructors */
   //@{
 
+  /// Create a ShadingControl object which references the passed in construction for the shaded state.
+  /// This constructor should be used to model switchable glazing only at this time, other configurations 
+  /// will not be supported by the Radiance ForwardTranslator.  Note that changes to the construction made
+  /// after this constructor will not be reflected in this ShadingControl object.  If changes to the construction
+  /// are made a new ShadingControl object should be constructed.
   explicit ShadingControl(const Construction& construction);
 
+  /// Create a ShadingControl object which references the passed in material for the shading layer.
+  /// This constructor is preferred for all configurations other than switchable glazing.  
   explicit ShadingControl(const ShadingMaterial& shadingMaterial);
 
   virtual ~ShadingControl() {}
@@ -81,6 +88,8 @@ class MODEL_API ShadingControl : public ResourceObject {
   //@{
   
   // DLM: should this be removed?
+  /// Sets the shading type field.  There is no error checking to ensure that shadingType is correct
+  /// given the shaded construction or shading material.  
   bool setShadingType(const std::string& shadingType);
   
   bool setShadingControlType(const std::string& shadingControlType);
