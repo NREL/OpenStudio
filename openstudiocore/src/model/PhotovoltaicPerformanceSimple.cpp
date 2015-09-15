@@ -86,13 +86,13 @@ namespace detail {
     return result;
   }
 
-  double PhotovoltaicPerformanceSimple_Impl::fractionofSurfaceAreawithActiveSolarCells() const {
+  double PhotovoltaicPerformanceSimple_Impl::fractionOfSurfaceAreaWithActiveSolarCells() const {
     boost::optional<double> value = getDouble(OS_PhotovoltaicPerformance_SimpleFields::FractionofSurfaceAreawithActiveSolarCells,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool PhotovoltaicPerformanceSimple_Impl::isFractionofSurfaceAreawithActiveSolarCellsDefaulted() const {
+  bool PhotovoltaicPerformanceSimple_Impl::isfractionOfSurfaceAreaWithActiveSolarCellsDefaulted() const {
     return isEmpty(OS_PhotovoltaicPerformance_SimpleFields::FractionofSurfaceAreawithActiveSolarCells);
   }
 
@@ -100,7 +100,7 @@ namespace detail {
     return getString(OS_PhotovoltaicPerformance_SimpleFields::ConversionEfficiencyInputMode,true);
   }
 
-  boost::optional<double> PhotovoltaicPerformanceSimple_Impl::valueforCellEfficiencyifFixed() const {
+  boost::optional<double> PhotovoltaicPerformanceSimple_Impl::fixedEfficiency() const {
     return getDouble(OS_PhotovoltaicPerformance_SimpleFields::ValueforCellEfficiencyifFixed,true);
   }
 
@@ -108,12 +108,12 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PhotovoltaicPerformance_SimpleFields::EfficiencyScheduleName);
   }
 
-  bool PhotovoltaicPerformanceSimple_Impl::setFractionofSurfaceAreawithActiveSolarCells(double fractionofSurfaceAreawithActiveSolarCells) {
-    bool result = setDouble(OS_PhotovoltaicPerformance_SimpleFields::FractionofSurfaceAreawithActiveSolarCells, fractionofSurfaceAreawithActiveSolarCells);
+  bool PhotovoltaicPerformanceSimple_Impl::setFractionOfSurfaceAreaWithActiveSolarCells(double fractionOfSurfaceAreaWithActiveSolarCells) {
+    bool result = setDouble(OS_PhotovoltaicPerformance_SimpleFields::FractionofSurfaceAreawithActiveSolarCells, fractionOfSurfaceAreaWithActiveSolarCells);
     return result;
   }
 
-  void PhotovoltaicPerformanceSimple_Impl::resetFractionofSurfaceAreawithActiveSolarCells() {
+  void PhotovoltaicPerformanceSimple_Impl::resetFractionOfSurfaceAreaWithActiveSolarCells() {
     bool result = setString(OS_PhotovoltaicPerformance_SimpleFields::FractionofSurfaceAreawithActiveSolarCells, "");
     OS_ASSERT(result);
   }
@@ -124,21 +124,15 @@ namespace detail {
       result = setString(OS_PhotovoltaicPerformance_SimpleFields::ConversionEfficiencyInputMode, conversionEfficiencyInputMode.get());
     }
     else {
-      resetConversionEfficiencyInputMode();
       result = true;
     }
     return result;
   }
 
-  void PhotovoltaicPerformanceSimple_Impl::resetConversionEfficiencyInputMode() {
-    bool result = setString(OS_PhotovoltaicPerformance_SimpleFields::ConversionEfficiencyInputMode, "");
-    OS_ASSERT(result);
-  }
-
-  bool PhotovoltaicPerformanceSimple_Impl::setValueforCellEfficiencyifFixed(boost::optional<double> valueforCellEfficiencyifFixed) {
+  bool PhotovoltaicPerformanceSimple_Impl::setFixedEfficiency(boost::optional<double> fixedEfficiency) {
     bool result(false);
-    if (valueforCellEfficiencyifFixed) {
-      result = setDouble(OS_PhotovoltaicPerformance_SimpleFields::ValueforCellEfficiencyifFixed, valueforCellEfficiencyifFixed.get());
+    if (fixedEfficiency) {
+      result = setDouble(OS_PhotovoltaicPerformance_SimpleFields::ValueforCellEfficiencyifFixed, fixedEfficiency.get());
     }
     else {
       resetValueforCellEfficiencyifFixed();
@@ -182,49 +176,36 @@ IddObjectType PhotovoltaicPerformanceSimple::iddObjectType() {
   return IddObjectType(IddObjectType::OS_PhotovoltaicPerformance_Simple);
 }
 
-std::vector<std::string> PhotovoltaicPerformanceSimple::conversionEfficiencyInputModeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_PhotovoltaicPerformance_SimpleFields::ConversionEfficiencyInputMode);
+double PhotovoltaicPerformanceSimple::fractionOfSurfaceAreaWithActiveSolarCells() const {
+  return getImpl<detail::PhotovoltaicPerformanceSimple_Impl>()->fractionOfSurfaceAreaWithActiveSolarCells();
 }
 
-double PhotovoltaicPerformanceSimple::fractionofSurfaceAreawithActiveSolarCells() const {
-  return getImpl<detail::PhotovoltaicPerformanceSimple_Impl>()->fractionofSurfaceAreawithActiveSolarCells();
-}
-
-bool PhotovoltaicPerformanceSimple::isFractionofSurfaceAreawithActiveSolarCellsDefaulted() const {
-  return getImpl<detail::PhotovoltaicPerformanceSimple_Impl>()->isFractionofSurfaceAreawithActiveSolarCellsDefaulted();
+bool PhotovoltaicPerformanceSimple::isfractionOfSurfaceAreaWithActiveSolarCellsDefaulted() const {
+  return getImpl<detail::PhotovoltaicPerformanceSimple_Impl>()->isfractionOfSurfaceAreaWithActiveSolarCellsDefaulted();
 }
 
 boost::optional<std::string> PhotovoltaicPerformanceSimple::conversionEfficiencyInputMode() const {
   return getImpl<detail::PhotovoltaicPerformanceSimple_Impl>()->conversionEfficiencyInputMode();
 }
 
-boost::optional<double> PhotovoltaicPerformanceSimple::valueforCellEfficiencyifFixed() const {
-  return getImpl<detail::PhotovoltaicPerformanceSimple_Impl>()->valueforCellEfficiencyifFixed();
+boost::optional<double> PhotovoltaicPerformanceSimple::fixedEfficiency() const {
+  return getImpl<detail::PhotovoltaicPerformanceSimple_Impl>()->fixedEfficiency();
 }
 
 boost::optional<Schedule> PhotovoltaicPerformanceSimple::efficiencySchedule() const {
   return getImpl<detail::PhotovoltaicPerformanceSimple_Impl>()->efficiencySchedule();
 }
 
-bool PhotovoltaicPerformanceSimple::setFractionofSurfaceAreawithActiveSolarCells(double fractionofSurfaceAreawithActiveSolarCells) {
-  return getImpl<detail::PhotovoltaicPerformanceSimple_Impl>()->setFractionofSurfaceAreawithActiveSolarCells(fractionofSurfaceAreawithActiveSolarCells);
+bool PhotovoltaicPerformanceSimple::setFractionOfSurfaceAreaWithActiveSolarCells(double fractionOfSurfaceAreaWithActiveSolarCells) {
+  return getImpl<detail::PhotovoltaicPerformanceSimple_Impl>()->setFractionOfSurfaceAreaWithActiveSolarCells(fractionOfSurfaceAreaWithActiveSolarCells);
 }
 
-void PhotovoltaicPerformanceSimple::resetFractionofSurfaceAreawithActiveSolarCells() {
-  getImpl<detail::PhotovoltaicPerformanceSimple_Impl>()->resetFractionofSurfaceAreawithActiveSolarCells();
+void PhotovoltaicPerformanceSimple::resetFractionOfSurfaceAreaWithActiveSolarCells() {
+  getImpl<detail::PhotovoltaicPerformanceSimple_Impl>()->resetFractionOfSurfaceAreaWithActiveSolarCells();
 }
 
-bool PhotovoltaicPerformanceSimple::setConversionEfficiencyInputMode(std::string conversionEfficiencyInputMode) {
-  return getImpl<detail::PhotovoltaicPerformanceSimple_Impl>()->setConversionEfficiencyInputMode(conversionEfficiencyInputMode);
-}
-
-void PhotovoltaicPerformanceSimple::resetConversionEfficiencyInputMode() {
-  getImpl<detail::PhotovoltaicPerformanceSimple_Impl>()->resetConversionEfficiencyInputMode();
-}
-
-bool PhotovoltaicPerformanceSimple::setValueforCellEfficiencyifFixed(double valueforCellEfficiencyifFixed) {
-  return getImpl<detail::PhotovoltaicPerformanceSimple_Impl>()->setValueforCellEfficiencyifFixed(valueforCellEfficiencyifFixed);
+bool PhotovoltaicPerformanceSimple::setFixedEfficiency(double fixedEfficiency) {
+  return getImpl<detail::PhotovoltaicPerformanceSimple_Impl>()->setFixedEfficiency(fixedEfficiency);
 }
 
 void PhotovoltaicPerformanceSimple::resetValueforCellEfficiencyifFixed() {

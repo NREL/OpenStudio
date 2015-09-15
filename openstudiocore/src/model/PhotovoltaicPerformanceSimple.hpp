@@ -50,47 +50,31 @@ class MODEL_API PhotovoltaicPerformanceSimple : public PhotovoltaicPerformance {
 
   static IddObjectType iddObjectType();
 
-  // DLM: remove
-  static std::vector<std::string> conversionEfficiencyInputModeValues();
-
   /** @name Getters */
   //@{
 
-  // DLM, rename fractionOfSurfaceAreaWithActiveSolarCells
-  double fractionofSurfaceAreawithActiveSolarCells() const;
+  double fractionOfSurfaceAreaWithActiveSolarCells() const;
 
-  bool isFractionofSurfaceAreawithActiveSolarCellsDefaulted() const;
+  bool isfractionOfSurfaceAreaWithActiveSolarCellsDefaulted() const;
 
   boost::optional<std::string> conversionEfficiencyInputMode() const;
 
-  // DLM: rename, fixedEfficiency
-  boost::optional<double> valueforCellEfficiencyifFixed() const;
+  boost::optional<double> fixedEfficiency() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> efficiencySchedule() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // DLM: rename setFractionOfSurfaceAreaWithActiveSolarCells
-  bool setFractionofSurfaceAreawithActiveSolarCells(double fractionofSurfaceAreawithActiveSolarCells);
+  bool setFractionOfSurfaceAreaWithActiveSolarCells(double fractionOfSurfaceAreaWithActiveSolarCells);
 
-  // DLM: rename resetFractionOfSurfaceAreaWithActiveSolarCells
-  void resetFractionofSurfaceAreawithActiveSolarCells();
+  void resetFractionOfSurfaceAreaWithActiveSolarCells();
 
-  // DLM: I like to remove the setter from the public API, then we just set it when user sets fixed efficiency or scheduled efficiency
-  bool setConversionEfficiencyInputMode(std::string conversionEfficiencyInputMode);
-
-  // DLM: remove this too
-  void resetConversionEfficiencyInputMode();
-
-  // DLM: I'd rename this, setFixedEfficiency
-  bool setValueforCellEfficiencyifFixed(double valueforCellEfficiencyifFixed);
+  bool setFixedEfficiency(double fixedEfficiency);
 
   void resetValueforCellEfficiencyifFixed();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setEfficiencySchedule(Schedule& schedule);
 
   void resetEfficiencySchedule();

@@ -65,13 +65,13 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    double fractionofSurfaceAreawithActiveSolarCells() const;
+    double fractionOfSurfaceAreaWithActiveSolarCells() const;
 
-    bool isFractionofSurfaceAreawithActiveSolarCellsDefaulted() const;
+    bool isfractionOfSurfaceAreaWithActiveSolarCellsDefaulted() const;
 
     boost::optional<std::string> conversionEfficiencyInputMode() const;
 
-    boost::optional<double> valueforCellEfficiencyifFixed() const;
+    boost::optional<double> fixedEfficiency() const;
 
     // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> efficiencySchedule() const;
@@ -80,15 +80,13 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    bool setFractionofSurfaceAreawithActiveSolarCells(double fractionofSurfaceAreawithActiveSolarCells);
+    bool setFractionOfSurfaceAreaWithActiveSolarCells(double fractionOfSurfaceAreaWithActiveSolarCells);
 
-    void resetFractionofSurfaceAreawithActiveSolarCells();
+    void resetFractionOfSurfaceAreaWithActiveSolarCells();
 
     bool setConversionEfficiencyInputMode(boost::optional<std::string> conversionEfficiencyInputMode);
 
-    void resetConversionEfficiencyInputMode();
-
-    bool setValueforCellEfficiencyifFixed(boost::optional<double> valueforCellEfficiencyifFixed);
+    bool setFixedEfficiency(boost::optional<double> fixedEfficiency);
 
     void resetValueforCellEfficiencyifFixed();
 
