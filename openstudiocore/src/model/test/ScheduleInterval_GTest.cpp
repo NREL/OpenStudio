@@ -161,3 +161,51 @@ TEST_F(ModelFixture, Schedule_VariableInterval2)
   // this isn't really a variable schedule since all the reports are at the same interval
   EXPECT_TRUE(schedule.optionalCast<ScheduleVariableInterval>());
 }
+
+TEST_F(ModelFixture, Schedule_VariableInterval3)
+{
+  Model model;
+  ScheduleVariableInterval schedule(model);
+
+  Date startDate(MonthOfYear::Jan, 1);
+  Time intervalLength(0, 0, 60);
+  std::vector<DateTime> dateTimes;
+  Vector values(4380);
+  //dateTimes.push_back(DateTime(startDate, Time(0, 0, 0))); // do not report start of first interval
+  unsigned i = 0;
+  for (unsigned j = 0; j < 8760; ++j){
+    unsigned hr = j % 24 + 1;
+    // everyday report 0 until 8:00, then report the hour until 7:00 pm
+    if (hr == 8){
+      dateTimes.push_back(DateTime(startDate, intervalLength*(j + 1)));
+      values[i] = 0;
+      ++i;
+    } else if (hr > 8 && hr < 20){
+      dateTimes.push_back(DateTime(startDate, intervalLength*(j + 1)));
+      values[i] = hr;
+      ++i;
+    }
+  }
+  EXPECT_EQ(4380, dateTimes.size()); // date times does not include start time of first interval
+  EXPECT_EQ(4380, values.size());
+  EXPECT_EQ(Time(0, 8, 0), dateTimes[0].time());
+
+  TimeSeries timeSeries2(dateTimes, values, "");
+  EXPECT_TRUE(schedule.setTimeSeries(timeSeries2));
+
+  TimeSeries timeSeries3 = schedule.timeSeries();
+  EXPECT_EQ(Date(MonthOfYear::Jan, 1), timeSeries3.firstReportDateTime().date());
+  EXPECT_EQ(Time(0, 8, 0), timeSeries3.firstReportDateTime().time());
+
+  EXPECT_EQ(timeSeries2.firstReportDateTime(), timeSeries3.firstReportDateTime());
+  EXPECT_FALSE(timeSeries2.intervalLength());
+  EXPECT_FALSE(timeSeries3.intervalLength());
+  EXPECT_EQ(timeSeries2.values().size(), timeSeries3.values().size());
+
+  boost::optional<ScheduleInterval> newSchedule = ScheduleInterval::fromTimeSeries(timeSeries3, model);
+  ASSERT_TRUE(newSchedule);
+  EXPECT_NE(schedule.handle(), newSchedule->handle());
+
+  // this isn't really a variable schedule since all the reports are at the same interval
+  EXPECT_TRUE(schedule.optionalCast<ScheduleVariableInterval>());
+}
