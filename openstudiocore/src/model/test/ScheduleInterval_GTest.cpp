@@ -158,7 +158,6 @@ TEST_F(ModelFixture, Schedule_VariableInterval2)
   ASSERT_TRUE(newSchedule);
   EXPECT_NE(schedule.handle(), newSchedule->handle());
 
-  // this isn't really a variable schedule since all the reports are at the same interval
   EXPECT_TRUE(schedule.optionalCast<ScheduleVariableInterval>());
 }
 
@@ -206,6 +205,5 @@ TEST_F(ModelFixture, Schedule_VariableInterval3)
   ASSERT_TRUE(newSchedule);
   EXPECT_NE(schedule.handle(), newSchedule->handle());
 
-  // this isn't really a variable schedule since all the reports are at the same interval
   EXPECT_TRUE(schedule.optionalCast<ScheduleVariableInterval>());
 }
