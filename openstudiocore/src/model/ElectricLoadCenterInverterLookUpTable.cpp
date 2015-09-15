@@ -23,8 +23,8 @@
 // TODO: Check the following class names against object getters and setters.
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-//#include "Zone.hpp"
-//#include "Zone_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
 
@@ -91,9 +91,9 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ElectricLoadCenter_Inverter_LookUpTableFields::AvailabilityScheduleName);
   }
 
-  //boost::optional<Zone> ElectricLoadCenterInverterLookUpTable_Impl::zone() const {
-  //  return getObject<ModelObject>().getModelObjectTarget<Zone>(OS_ElectricLoadCenter_Inverter_LookUpTableFields::ZoneName);
-  //}
+  boost::optional<ThermalZone> ElectricLoadCenterInverterLookUpTable_Impl::thermalZone() const {
+    return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_ElectricLoadCenter_Inverter_LookUpTableFields::ZoneName);
+  }
 
   boost::optional<double> ElectricLoadCenterInverterLookUpTable_Impl::radiativeFraction() const {
     return getDouble(OS_ElectricLoadCenter_Inverter_LookUpTableFields::RadiativeFraction,true);
@@ -148,19 +148,19 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  //bool ElectricLoadCenterInverterLookUpTable_Impl::setZone(const boost::optional<Zone>& zone) {
-  //  bool result(false);
-  //  if (zone) {
-  //    result = setPointer(OS_ElectricLoadCenter_Inverter_LookUpTableFields::ZoneName, zone.get().handle());
-  //  }
-  //  else {
-  //    resetZone();
-  //    result = true;
-  //  }
-  //  return result;
-  //}
+  bool ElectricLoadCenterInverterLookUpTable_Impl::setThermalZone(const boost::optional<ThermalZone>& thermalZone) {
+    bool result(false);
+    if (thermalZone) {
+      result = setPointer(OS_ElectricLoadCenter_Inverter_LookUpTableFields::ZoneName, thermalZone.get().handle());
+    }
+    else {
+      resetThermalZone();
+      result = true;
+    }
+    return result;
+  }
 
-  void ElectricLoadCenterInverterLookUpTable_Impl::resetZone() {
+  void ElectricLoadCenterInverterLookUpTable_Impl::resetThermalZone() {
     bool result = setString(OS_ElectricLoadCenter_Inverter_LookUpTableFields::ZoneName, "");
     OS_ASSERT(result);
   }
@@ -356,9 +356,9 @@ boost::optional<Schedule> ElectricLoadCenterInverterLookUpTable::availabilitySch
   return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->availabilitySchedule();
 }
 
-//boost::optional<Zone> ElectricLoadCenterInverterLookUpTable::zone() const {
-//  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->zone();
-//}
+boost::optional<ThermalZone> ElectricLoadCenterInverterLookUpTable::thermalZone() const {
+  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->thermalZone();
+}
 
 boost::optional<double> ElectricLoadCenterInverterLookUpTable::radiativeFraction() const {
   return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->radiativeFraction();
@@ -408,12 +408,12 @@ void ElectricLoadCenterInverterLookUpTable::resetAvailabilitySchedule() {
   getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->resetAvailabilitySchedule();
 }
 
-//bool ElectricLoadCenterInverterLookUpTable::setZone(const Zone& zone) {
-//  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->setZone(zone);
-//}
+bool ElectricLoadCenterInverterLookUpTable::setThermalZone(const ThermalZone& thermalZone) {
+  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->setThermalZone(thermalZone);
+}
 
-void ElectricLoadCenterInverterLookUpTable::resetZone() {
-  getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->resetZone();
+void ElectricLoadCenterInverterLookUpTable::resetThermalZone() {
+  getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->resetThermalZone();
 }
 
 bool ElectricLoadCenterInverterLookUpTable::setRadiativeFraction(double radiativeFraction) {

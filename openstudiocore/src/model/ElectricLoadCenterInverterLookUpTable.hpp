@@ -29,7 +29,7 @@ namespace model {
 
 // TODO: Check the following class names against object getters and setters.
 class Schedule;
-//class Zone;
+class ThermalZone;
 
 namespace detail {
 
@@ -54,12 +54,10 @@ class MODEL_API ElectricLoadCenterInverterLookUpTable : public Inverter {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> availabilitySchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Zone.
-  // DLM: the zone methods should be moved to the Inverter base class
-  //boost::optional<Zone> zone() const;
+  // DLM: TODO the thermalZone methods should be moved to the Inverter base class
+  boost::optional<ThermalZone> thermalZone() const;
 
   boost::optional<double> radiativeFraction() const;
 
@@ -93,15 +91,13 @@ class MODEL_API ElectricLoadCenterInverterLookUpTable : public Inverter {
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setAvailabilitySchedule(Schedule& schedule);
 
   void resetAvailabilitySchedule();
 
-  // TODO: Check argument type. From object lists, some candidates are: Zone.
-  //bool setZone(const Zone& zone);
+  bool setThermalZone(const ThermalZone& thermalZone);
 
-  void resetZone();
+  void resetThermalZone();
 
   bool setRadiativeFraction(double radiativeFraction);
 

@@ -26,9 +26,8 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
-//class Zone;
+class ThermalZone;
 
 namespace detail {
 
@@ -66,11 +65,9 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> availabilitySchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Zone.
-    //boost::optional<Zone> zone() const;
+    boost::optional<ThermalZone> thermalZone() const;
 
     boost::optional<double> radiativeFraction() const;
 
@@ -80,15 +77,13 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setAvailabilitySchedule(Schedule& schedule);
 
     void resetAvailabilitySchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: Zone.
-    //bool setZone(const boost::optional<Zone>& zone);
+    bool setThermalZone(const boost::optional<ThermalZone>& thermalZone);
 
-    void resetZone();
+    void resetThermalZone();
 
     bool setRadiativeFraction(boost::optional<double> radiativeFraction);
 
