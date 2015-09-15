@@ -69,23 +69,23 @@ class MODEL_API ElectricLoadCenterInverterLookUpTable : public Inverter {
 
   // DLM: the IDD for these fields looks weird, there is no default and the field is not required but I don't
   // see how the object would work without values for these fields
-  // DLM: rename, up case all words
-  boost::optional<double> efficiencyat10PowerandNominalVoltage() const;
 
-  // DLM: rename, up case all words
-  boost::optional<double> efficiencyat20PowerandNominalVoltage() const;
+  boost::optional<double> efficiencyAt10PowerAndNominalVoltage() const;
 
-  // DLM: rename, up case all words
-  boost::optional<double> efficiencyat30PowerandNominalVoltage() const;
 
-  // DLM: rename, up case all words
-  boost::optional<double> efficiencyat50PowerandNominalVoltage() const;
+  boost::optional<double> efficiencyAt20PowerAndNominalVoltage() const;
 
-  // DLM: rename, up case all words
-  boost::optional<double> efficiencyat75PowerandNominalVoltage() const;
 
-  // DLM: rename, up case all words
-  boost::optional<double> efficiencyat100PowerandNominalVoltage() const;
+  boost::optional<double> efficiencyAt30PowerAndNominalVoltage() const;
+
+
+  boost::optional<double> efficiencyAt50PowerAndNominalVoltage() const;
+
+
+  boost::optional<double> efficiencyAt75PowerAndNominalVoltage() const;
+
+
+  boost::optional<double> efficiencyAt100PowerAndNominalVoltage() const;
 
   //@}
   /** @name Setters */
@@ -115,41 +115,41 @@ class MODEL_API ElectricLoadCenterInverterLookUpTable : public Inverter {
 
   void resetNominalVoltageInput();
 
-  // DLM: rename, up case all words
-  bool setEfficiencyat10PowerandNominalVoltage(double efficiencyat10PowerandNominalVoltage);
 
-  // DLM: rename, up case all words
-  void resetEfficiencyat10PowerandNominalVoltage();
+  bool setEfficiencyAt10PowerAndNominalVoltage(double efficiencyAt10PowerAndNominalVoltage);
 
-  // DLM: rename, up case all words
-  bool setEfficiencyat20PowerandNominalVoltage(double efficiencyat20PowerandNominalVoltage);
 
-  // DLM: rename, up case all words
-  void resetEfficiencyat20PowerandNominalVoltage();
+  void resetEfficiencyAt10PowerAndNominalVoltage();
 
-  // DLM: rename, up case all words
-  bool setEfficiencyat30PowerandNominalVoltage(double efficiencyat30PowerandNominalVoltage);
 
-  // DLM: rename, up case all words
-  void resetEfficiencyat30PowerandNominalVoltage();
+  bool setEfficiencyAt20PowerAndNominalVoltage(double efficiencyAt20PowerAndNominalVoltage);
 
-  // DLM: rename, up case all words
-  bool setEfficiencyat50PowerandNominalVoltage(double efficiencyat50PowerandNominalVoltage);
 
-  // DLM: rename, up case all words
-  void resetEfficiencyat50PowerandNominalVoltage();
+  void resetEfficiencyAt20PowerAndNominalVoltage();
 
-  // DLM: rename, up case all words
-  bool setEfficiencyat75PowerandNominalVoltage(double efficiencyat75PowerandNominalVoltage);
 
-  // DLM: rename, up case all words
-  void resetEfficiencyat75PowerandNominalVoltage();
+  bool setEfficiencyAt30PowerAndNominalVoltage(double efficiencyAt30PowerAndNominalVoltage);
 
-  // DLM: rename, up case all words
-  bool setEfficiencyat100PowerandNominalVoltage(double efficiencyat100PowerandNominalVoltage);
 
-  // DLM: rename, up case all words
-  void resetEfficiencyat100PowerandNominalVoltage();
+  void resetEfficiencyAt30PowerAndNominalVoltage();
+
+
+  bool setEfficiencyAt50PowerAndNominalVoltage(double efficiencyAt50PowerAndNominalVoltage);
+
+
+  void resetEfficiencyAt50PowerAndNominalVoltage();
+
+
+  bool setEfficiencyAt75PowerAndNominalVoltage(double efficiencyAt75PowerAndNominalVoltage);
+
+
+  void resetEfficiencyAt75PowerAndNominalVoltage();
+
+
+  bool setEfficiencyAt100PowerAndNominalVoltage(double efficiencyAt100PowerAndNominalVoltage);
+
+
+  void resetEfficiencyAt100PowerAndNominalVoltage();
 
   //@}
   /** @name Other */

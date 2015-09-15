@@ -64,9 +64,9 @@ namespace detail {
 
     bool isCelltypeDefaulted() const;
 
-    int numberofCellsinSeries() const;
+    int numberOfCellsInSeries() const;
 
-    bool isNumberofCellsinSeriesDefaulted() const;
+    bool isNumberOfCellsInSeriesDefaulted() const;
 
     double activeArea() const;
 
@@ -144,7 +144,7 @@ namespace detail {
 
     void resetCelltype();
 
-    bool setNumberofCellsinSeries(int numberofCellsinSeries);
+    bool setNumberofCellsinSeries(int numberOfCellsInSeries);
 
     void resetNumberofCellsinSeries();
 

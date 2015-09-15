@@ -111,27 +111,27 @@ namespace detail {
     return getDouble(OS_ElectricLoadCenter_Inverter_LookUpTableFields::NominalVoltageInput,true);
   }
 
-  boost::optional<double> ElectricLoadCenterInverterLookUpTable_Impl::efficiencyat10PowerandNominalVoltage() const {
+  boost::optional<double> ElectricLoadCenterInverterLookUpTable_Impl::efficiencyAt10PowerAndNominalVoltage() const {
     return getDouble(OS_ElectricLoadCenter_Inverter_LookUpTableFields::Efficiencyat10_PowerandNominalVoltage,true);
   }
 
-  boost::optional<double> ElectricLoadCenterInverterLookUpTable_Impl::efficiencyat20PowerandNominalVoltage() const {
+  boost::optional<double> ElectricLoadCenterInverterLookUpTable_Impl::efficiencyAt20PowerAndNominalVoltage() const {
     return getDouble(OS_ElectricLoadCenter_Inverter_LookUpTableFields::Efficiencyat20_PowerandNominalVoltage,true);
   }
 
-  boost::optional<double> ElectricLoadCenterInverterLookUpTable_Impl::efficiencyat30PowerandNominalVoltage() const {
+  boost::optional<double> ElectricLoadCenterInverterLookUpTable_Impl::efficiencyAt30PowerAndNominalVoltage() const {
     return getDouble(OS_ElectricLoadCenter_Inverter_LookUpTableFields::Efficiencyat30_PowerandNominalVoltage,true);
   }
 
-  boost::optional<double> ElectricLoadCenterInverterLookUpTable_Impl::efficiencyat50PowerandNominalVoltage() const {
+  boost::optional<double> ElectricLoadCenterInverterLookUpTable_Impl::efficiencyAt50PowerAndNominalVoltage() const {
     return getDouble(OS_ElectricLoadCenter_Inverter_LookUpTableFields::Efficiencyat50_PowerandNominalVoltage,true);
   }
 
-  boost::optional<double> ElectricLoadCenterInverterLookUpTable_Impl::efficiencyat75PowerandNominalVoltage() const {
+  boost::optional<double> ElectricLoadCenterInverterLookUpTable_Impl::efficiencyAt75PowerAndNominalVoltage() const {
     return getDouble(OS_ElectricLoadCenter_Inverter_LookUpTableFields::Efficiencyat75_PowerandNominalVoltage,true);
   }
 
-  boost::optional<double> ElectricLoadCenterInverterLookUpTable_Impl::efficiencyat100PowerandNominalVoltage() const {
+  boost::optional<double> ElectricLoadCenterInverterLookUpTable_Impl::efficiencyAt100PowerAndNominalVoltage() const {
     return getDouble(OS_ElectricLoadCenter_Inverter_LookUpTableFields::Efficiencyat100_PowerandNominalVoltage,true);
   }
 
@@ -233,104 +233,104 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool ElectricLoadCenterInverterLookUpTable_Impl::setEfficiencyat10PowerandNominalVoltage(boost::optional<double> efficiencyat10PowerandNominalVoltage) {
+  bool ElectricLoadCenterInverterLookUpTable_Impl::setEfficiencyAt10PowerAndNominalVoltage(boost::optional<double> efficiencyAt10PowerAndNominalVoltage) {
     bool result(false);
-    if (efficiencyat10PowerandNominalVoltage) {
-      result = setDouble(OS_ElectricLoadCenter_Inverter_LookUpTableFields::Efficiencyat10_PowerandNominalVoltage, efficiencyat10PowerandNominalVoltage.get());
+    if (efficiencyAt10PowerAndNominalVoltage) {
+      result = setDouble(OS_ElectricLoadCenter_Inverter_LookUpTableFields::Efficiencyat10_PowerandNominalVoltage, efficiencyAt10PowerAndNominalVoltage.get());
     }
     else {
-      resetEfficiencyat10PowerandNominalVoltage();
+      resetEfficiencyAt10PowerAndNominalVoltage();
       result = true;
     }
     return result;
   }
 
-  void ElectricLoadCenterInverterLookUpTable_Impl::resetEfficiencyat10PowerandNominalVoltage() {
+  void ElectricLoadCenterInverterLookUpTable_Impl::resetEfficiencyAt10PowerAndNominalVoltage() {
     bool result = setString(OS_ElectricLoadCenter_Inverter_LookUpTableFields::Efficiencyat10_PowerandNominalVoltage, "");
     OS_ASSERT(result);
   }
 
-  bool ElectricLoadCenterInverterLookUpTable_Impl::setEfficiencyat20PowerandNominalVoltage(boost::optional<double> efficiencyat20PowerandNominalVoltage) {
+  bool ElectricLoadCenterInverterLookUpTable_Impl::setEfficiencyAt20PowerAndNominalVoltage(boost::optional<double> efficiencyAt20PowerAndNominalVoltage) {
     bool result(false);
-    if (efficiencyat20PowerandNominalVoltage) {
-      result = setDouble(OS_ElectricLoadCenter_Inverter_LookUpTableFields::Efficiencyat20_PowerandNominalVoltage, efficiencyat20PowerandNominalVoltage.get());
+    if (efficiencyAt20PowerAndNominalVoltage) {
+      result = setDouble(OS_ElectricLoadCenter_Inverter_LookUpTableFields::Efficiencyat20_PowerandNominalVoltage, efficiencyAt20PowerAndNominalVoltage.get());
     }
     else {
-      resetEfficiencyat20PowerandNominalVoltage();
+      resetEfficiencyAt20PowerAndNominalVoltage();
       result = true;
     }
     return result;
   }
 
-  void ElectricLoadCenterInverterLookUpTable_Impl::resetEfficiencyat20PowerandNominalVoltage() {
+  void ElectricLoadCenterInverterLookUpTable_Impl::resetEfficiencyAt20PowerAndNominalVoltage() {
     bool result = setString(OS_ElectricLoadCenter_Inverter_LookUpTableFields::Efficiencyat20_PowerandNominalVoltage, "");
     OS_ASSERT(result);
   }
 
-  bool ElectricLoadCenterInverterLookUpTable_Impl::setEfficiencyat30PowerandNominalVoltage(boost::optional<double> efficiencyat30PowerandNominalVoltage) {
+  bool ElectricLoadCenterInverterLookUpTable_Impl::setEfficiencyAt30PowerAndNominalVoltage(boost::optional<double> efficiencyAt30PowerAndNominalVoltage) {
     bool result(false);
-    if (efficiencyat30PowerandNominalVoltage) {
-      result = setDouble(OS_ElectricLoadCenter_Inverter_LookUpTableFields::Efficiencyat30_PowerandNominalVoltage, efficiencyat30PowerandNominalVoltage.get());
+    if (efficiencyAt30PowerAndNominalVoltage) {
+      result = setDouble(OS_ElectricLoadCenter_Inverter_LookUpTableFields::Efficiencyat30_PowerandNominalVoltage, efficiencyAt30PowerAndNominalVoltage.get());
     }
     else {
-      resetEfficiencyat30PowerandNominalVoltage();
+      resetEfficiencyAt30PowerAndNominalVoltage();
       result = true;
     }
     return result;
   }
 
-  void ElectricLoadCenterInverterLookUpTable_Impl::resetEfficiencyat30PowerandNominalVoltage() {
+  void ElectricLoadCenterInverterLookUpTable_Impl::resetEfficiencyAt30PowerAndNominalVoltage() {
     bool result = setString(OS_ElectricLoadCenter_Inverter_LookUpTableFields::Efficiencyat30_PowerandNominalVoltage, "");
     OS_ASSERT(result);
   }
 
-  bool ElectricLoadCenterInverterLookUpTable_Impl::setEfficiencyat50PowerandNominalVoltage(boost::optional<double> efficiencyat50PowerandNominalVoltage) {
+  bool ElectricLoadCenterInverterLookUpTable_Impl::setEfficiencyAt50PowerAndNominalVoltage(boost::optional<double> efficiencyAt50PowerAndNominalVoltage) {
     bool result(false);
-    if (efficiencyat50PowerandNominalVoltage) {
-      result = setDouble(OS_ElectricLoadCenter_Inverter_LookUpTableFields::Efficiencyat50_PowerandNominalVoltage, efficiencyat50PowerandNominalVoltage.get());
+    if (efficiencyAt50PowerAndNominalVoltage) {
+      result = setDouble(OS_ElectricLoadCenter_Inverter_LookUpTableFields::Efficiencyat50_PowerandNominalVoltage, efficiencyAt50PowerAndNominalVoltage.get());
     }
     else {
-      resetEfficiencyat50PowerandNominalVoltage();
+      resetEfficiencyAt50PowerAndNominalVoltage();
       result = true;
     }
     return result;
   }
 
-  void ElectricLoadCenterInverterLookUpTable_Impl::resetEfficiencyat50PowerandNominalVoltage() {
+  void ElectricLoadCenterInverterLookUpTable_Impl::resetEfficiencyAt50PowerAndNominalVoltage() {
     bool result = setString(OS_ElectricLoadCenter_Inverter_LookUpTableFields::Efficiencyat50_PowerandNominalVoltage, "");
     OS_ASSERT(result);
   }
 
-  bool ElectricLoadCenterInverterLookUpTable_Impl::setEfficiencyat75PowerandNominalVoltage(boost::optional<double> efficiencyat75PowerandNominalVoltage) {
+  bool ElectricLoadCenterInverterLookUpTable_Impl::setEfficiencyAt75PowerAndNominalVoltage(boost::optional<double> efficiencyAt75PowerAndNominalVoltage) {
     bool result(false);
-    if (efficiencyat75PowerandNominalVoltage) {
-      result = setDouble(OS_ElectricLoadCenter_Inverter_LookUpTableFields::Efficiencyat75_PowerandNominalVoltage, efficiencyat75PowerandNominalVoltage.get());
+    if (efficiencyAt75PowerAndNominalVoltage) {
+      result = setDouble(OS_ElectricLoadCenter_Inverter_LookUpTableFields::Efficiencyat75_PowerandNominalVoltage, efficiencyAt75PowerAndNominalVoltage.get());
     }
     else {
-      resetEfficiencyat75PowerandNominalVoltage();
+      resetEfficiencyAt75PowerAndNominalVoltage();
       result = true;
     }
     return result;
   }
 
-  void ElectricLoadCenterInverterLookUpTable_Impl::resetEfficiencyat75PowerandNominalVoltage() {
+  void ElectricLoadCenterInverterLookUpTable_Impl::resetEfficiencyAt75PowerAndNominalVoltage() {
     bool result = setString(OS_ElectricLoadCenter_Inverter_LookUpTableFields::Efficiencyat75_PowerandNominalVoltage, "");
     OS_ASSERT(result);
   }
 
-  bool ElectricLoadCenterInverterLookUpTable_Impl::setEfficiencyat100PowerandNominalVoltage(boost::optional<double> efficiencyat100PowerandNominalVoltage) {
+  bool ElectricLoadCenterInverterLookUpTable_Impl::setEfficiencyAt100PowerAndNominalVoltage(boost::optional<double> efficiencyAt100PowerAndNominalVoltage) {
     bool result(false);
-    if (efficiencyat100PowerandNominalVoltage) {
-      result = setDouble(OS_ElectricLoadCenter_Inverter_LookUpTableFields::Efficiencyat100_PowerandNominalVoltage, efficiencyat100PowerandNominalVoltage.get());
+    if (efficiencyAt100PowerAndNominalVoltage) {
+      result = setDouble(OS_ElectricLoadCenter_Inverter_LookUpTableFields::Efficiencyat100_PowerandNominalVoltage, efficiencyAt100PowerAndNominalVoltage.get());
     }
     else {
-      resetEfficiencyat100PowerandNominalVoltage();
+      resetEfficiencyAt100PowerAndNominalVoltage();
       result = true;
     }
     return result;
   }
 
-  void ElectricLoadCenterInverterLookUpTable_Impl::resetEfficiencyat100PowerandNominalVoltage() {
+  void ElectricLoadCenterInverterLookUpTable_Impl::resetEfficiencyAt100PowerAndNominalVoltage() {
     bool result = setString(OS_ElectricLoadCenter_Inverter_LookUpTableFields::Efficiencyat100_PowerandNominalVoltage, "");
     OS_ASSERT(result);
   }
@@ -376,28 +376,28 @@ boost::optional<double> ElectricLoadCenterInverterLookUpTable::nominalVoltageInp
   return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->nominalVoltageInput();
 }
 
-boost::optional<double> ElectricLoadCenterInverterLookUpTable::efficiencyat10PowerandNominalVoltage() const {
-  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->efficiencyat10PowerandNominalVoltage();
+boost::optional<double> ElectricLoadCenterInverterLookUpTable::efficiencyAt10PowerAndNominalVoltage() const {
+  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->efficiencyAt10PowerAndNominalVoltage();
 }
 
-boost::optional<double> ElectricLoadCenterInverterLookUpTable::efficiencyat20PowerandNominalVoltage() const {
-  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->efficiencyat20PowerandNominalVoltage();
+boost::optional<double> ElectricLoadCenterInverterLookUpTable::efficiencyAt20PowerAndNominalVoltage() const {
+  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->efficiencyAt20PowerAndNominalVoltage();
 }
 
-boost::optional<double> ElectricLoadCenterInverterLookUpTable::efficiencyat30PowerandNominalVoltage() const {
-  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->efficiencyat30PowerandNominalVoltage();
+boost::optional<double> ElectricLoadCenterInverterLookUpTable::efficiencyAt30PowerAndNominalVoltage() const {
+  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->efficiencyAt30PowerAndNominalVoltage();
 }
 
-boost::optional<double> ElectricLoadCenterInverterLookUpTable::efficiencyat50PowerandNominalVoltage() const {
-  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->efficiencyat50PowerandNominalVoltage();
+boost::optional<double> ElectricLoadCenterInverterLookUpTable::efficiencyAt50PowerAndNominalVoltage() const {
+  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->efficiencyAt50PowerAndNominalVoltage();
 }
 
-boost::optional<double> ElectricLoadCenterInverterLookUpTable::efficiencyat75PowerandNominalVoltage() const {
-  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->efficiencyat75PowerandNominalVoltage();
+boost::optional<double> ElectricLoadCenterInverterLookUpTable::efficiencyAt75PowerAndNominalVoltage() const {
+  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->efficiencyAt75PowerAndNominalVoltage();
 }
 
-boost::optional<double> ElectricLoadCenterInverterLookUpTable::efficiencyat100PowerandNominalVoltage() const {
-  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->efficiencyat100PowerandNominalVoltage();
+boost::optional<double> ElectricLoadCenterInverterLookUpTable::efficiencyAt100PowerAndNominalVoltage() const {
+  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->efficiencyAt100PowerAndNominalVoltage();
 }
 
 bool ElectricLoadCenterInverterLookUpTable::setAvailabilitySchedule(Schedule& schedule) {
@@ -448,52 +448,52 @@ void ElectricLoadCenterInverterLookUpTable::resetNominalVoltageInput() {
   getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->resetNominalVoltageInput();
 }
 
-bool ElectricLoadCenterInverterLookUpTable::setEfficiencyat10PowerandNominalVoltage(double efficiencyat10PowerandNominalVoltage) {
-  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->setEfficiencyat10PowerandNominalVoltage(efficiencyat10PowerandNominalVoltage);
+bool ElectricLoadCenterInverterLookUpTable::setEfficiencyAt10PowerAndNominalVoltage(double efficiencyAt10PowerAndNominalVoltage) {
+  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->setEfficiencyAt10PowerAndNominalVoltage(efficiencyAt10PowerAndNominalVoltage);
 }
 
-void ElectricLoadCenterInverterLookUpTable::resetEfficiencyat10PowerandNominalVoltage() {
-  getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->resetEfficiencyat10PowerandNominalVoltage();
+void ElectricLoadCenterInverterLookUpTable::resetEfficiencyAt10PowerAndNominalVoltage() {
+  getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->resetEfficiencyAt10PowerAndNominalVoltage();
 }
 
-bool ElectricLoadCenterInverterLookUpTable::setEfficiencyat20PowerandNominalVoltage(double efficiencyat20PowerandNominalVoltage) {
-  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->setEfficiencyat20PowerandNominalVoltage(efficiencyat20PowerandNominalVoltage);
+bool ElectricLoadCenterInverterLookUpTable::setEfficiencyAt20PowerAndNominalVoltage(double efficiencyAt20PowerAndNominalVoltage) {
+  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->setEfficiencyAt20PowerAndNominalVoltage(efficiencyAt20PowerAndNominalVoltage);
 }
 
-void ElectricLoadCenterInverterLookUpTable::resetEfficiencyat20PowerandNominalVoltage() {
-  getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->resetEfficiencyat20PowerandNominalVoltage();
+void ElectricLoadCenterInverterLookUpTable::resetEfficiencyAt20PowerAndNominalVoltage() {
+  getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->resetEfficiencyAt20PowerAndNominalVoltage();
 }
 
-bool ElectricLoadCenterInverterLookUpTable::setEfficiencyat30PowerandNominalVoltage(double efficiencyat30PowerandNominalVoltage) {
-  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->setEfficiencyat30PowerandNominalVoltage(efficiencyat30PowerandNominalVoltage);
+bool ElectricLoadCenterInverterLookUpTable::setEfficiencyAt30PowerAndNominalVoltage(double efficiencyAt30PowerAndNominalVoltage) {
+  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->setEfficiencyAt30PowerAndNominalVoltage(efficiencyAt30PowerAndNominalVoltage);
 }
 
-void ElectricLoadCenterInverterLookUpTable::resetEfficiencyat30PowerandNominalVoltage() {
-  getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->resetEfficiencyat30PowerandNominalVoltage();
+void ElectricLoadCenterInverterLookUpTable::resetEfficiencyAt30PowerAndNominalVoltage() {
+  getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->resetEfficiencyAt30PowerAndNominalVoltage();
 }
 
-bool ElectricLoadCenterInverterLookUpTable::setEfficiencyat50PowerandNominalVoltage(double efficiencyat50PowerandNominalVoltage) {
-  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->setEfficiencyat50PowerandNominalVoltage(efficiencyat50PowerandNominalVoltage);
+bool ElectricLoadCenterInverterLookUpTable::setEfficiencyAt50PowerAndNominalVoltage(double efficiencyAt50PowerAndNominalVoltage) {
+  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->setEfficiencyAt50PowerAndNominalVoltage(efficiencyAt50PowerAndNominalVoltage);
 }
 
-void ElectricLoadCenterInverterLookUpTable::resetEfficiencyat50PowerandNominalVoltage() {
-  getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->resetEfficiencyat50PowerandNominalVoltage();
+void ElectricLoadCenterInverterLookUpTable::resetEfficiencyAt50PowerAndNominalVoltage() {
+  getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->resetEfficiencyAt50PowerAndNominalVoltage();
 }
 
-bool ElectricLoadCenterInverterLookUpTable::setEfficiencyat75PowerandNominalVoltage(double efficiencyat75PowerandNominalVoltage) {
-  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->setEfficiencyat75PowerandNominalVoltage(efficiencyat75PowerandNominalVoltage);
+bool ElectricLoadCenterInverterLookUpTable::setEfficiencyAt75PowerAndNominalVoltage(double efficiencyAt75PowerAndNominalVoltage) {
+  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->setEfficiencyAt75PowerAndNominalVoltage(efficiencyAt75PowerAndNominalVoltage);
 }
 
-void ElectricLoadCenterInverterLookUpTable::resetEfficiencyat75PowerandNominalVoltage() {
-  getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->resetEfficiencyat75PowerandNominalVoltage();
+void ElectricLoadCenterInverterLookUpTable::resetEfficiencyAt75PowerAndNominalVoltage() {
+  getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->resetEfficiencyAt75PowerAndNominalVoltage();
 }
 
-bool ElectricLoadCenterInverterLookUpTable::setEfficiencyat100PowerandNominalVoltage(double efficiencyat100PowerandNominalVoltage) {
-  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->setEfficiencyat100PowerandNominalVoltage(efficiencyat100PowerandNominalVoltage);
+bool ElectricLoadCenterInverterLookUpTable::setEfficiencyAt100PowerAndNominalVoltage(double efficiencyAt100PowerAndNominalVoltage) {
+  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->setEfficiencyAt100PowerAndNominalVoltage(efficiencyAt100PowerAndNominalVoltage);
 }
 
-void ElectricLoadCenterInverterLookUpTable::resetEfficiencyat100PowerandNominalVoltage() {
-  getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->resetEfficiencyat100PowerandNominalVoltage();
+void ElectricLoadCenterInverterLookUpTable::resetEfficiencyAt100PowerAndNominalVoltage() {
+  getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->resetEfficiencyAt100PowerAndNominalVoltage();
 }
 
 /// @cond

@@ -56,11 +56,11 @@ class MODEL_API PhotovoltaicPerformanceEquivalentOneDiode : public PhotovoltaicP
 
   bool isCelltypeDefaulted() const;
 
-  // DLM: rename, up case all words
-  int numberofCellsinSeries() const;
 
-  // DLM: rename, up case all words
-  bool isNumberofCellsinSeriesDefaulted() const;
+  int numberOfCellsInSeries() const;
+
+
+  bool isNumberOfCellsInSeriesDefaulted() const;
 
   double activeArea() const;
 
@@ -138,10 +138,10 @@ class MODEL_API PhotovoltaicPerformanceEquivalentOneDiode : public PhotovoltaicP
 
   void resetCelltype();
 
-  // DLM: rename, up case all words
-  bool setNumberofCellsinSeries(int numberofCellsinSeries);
 
-  // DLM: rename, up case all words
+  bool setNumberofCellsinSeries(int numberOfCellsInSeries);
+
+
   void resetNumberofCellsinSeries();
 
   bool setActiveArea(double activeArea);

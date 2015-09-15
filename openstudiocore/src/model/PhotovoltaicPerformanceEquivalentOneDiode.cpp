@@ -77,13 +77,13 @@ namespace detail {
     return isEmpty(OS_PhotovoltaicPerformance_EquivalentOneDiodeFields::Celltype);
   }
 
-  int PhotovoltaicPerformanceEquivalentOneDiode_Impl::numberofCellsinSeries() const {
+  int PhotovoltaicPerformanceEquivalentOneDiode_Impl::numberOfCellsInSeries() const {
     boost::optional<int> value = getInt(OS_PhotovoltaicPerformance_EquivalentOneDiodeFields::NumberofCellsinSeries,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool PhotovoltaicPerformanceEquivalentOneDiode_Impl::isNumberofCellsinSeriesDefaulted() const {
+  bool PhotovoltaicPerformanceEquivalentOneDiode_Impl::isNumberOfCellsInSeriesDefaulted() const {
     return isEmpty(OS_PhotovoltaicPerformance_EquivalentOneDiodeFields::NumberofCellsinSeries);
   }
 
@@ -267,8 +267,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool PhotovoltaicPerformanceEquivalentOneDiode_Impl::setNumberofCellsinSeries(int numberofCellsinSeries) {
-    bool result = setInt(OS_PhotovoltaicPerformance_EquivalentOneDiodeFields::NumberofCellsinSeries, numberofCellsinSeries);
+  bool PhotovoltaicPerformanceEquivalentOneDiode_Impl::setNumberofCellsinSeries(int numberOfCellsInSeries) {
+    bool result = setInt(OS_PhotovoltaicPerformance_EquivalentOneDiodeFields::NumberofCellsinSeries, numberOfCellsInSeries);
     return result;
   }
 
@@ -477,12 +477,12 @@ bool PhotovoltaicPerformanceEquivalentOneDiode::isCelltypeDefaulted() const {
   return getImpl<detail::PhotovoltaicPerformanceEquivalentOneDiode_Impl>()->isCelltypeDefaulted();
 }
 
-int PhotovoltaicPerformanceEquivalentOneDiode::numberofCellsinSeries() const {
-  return getImpl<detail::PhotovoltaicPerformanceEquivalentOneDiode_Impl>()->numberofCellsinSeries();
+int PhotovoltaicPerformanceEquivalentOneDiode::numberOfCellsInSeries() const {
+  return getImpl<detail::PhotovoltaicPerformanceEquivalentOneDiode_Impl>()->numberOfCellsInSeries();
 }
 
-bool PhotovoltaicPerformanceEquivalentOneDiode::isNumberofCellsinSeriesDefaulted() const {
-  return getImpl<detail::PhotovoltaicPerformanceEquivalentOneDiode_Impl>()->isNumberofCellsinSeriesDefaulted();
+bool PhotovoltaicPerformanceEquivalentOneDiode::isNumberOfCellsInSeriesDefaulted() const {
+  return getImpl<detail::PhotovoltaicPerformanceEquivalentOneDiode_Impl>()->isNumberOfCellsInSeriesDefaulted();
 }
 
 double PhotovoltaicPerformanceEquivalentOneDiode::activeArea() const {
@@ -629,8 +629,8 @@ void PhotovoltaicPerformanceEquivalentOneDiode::resetCelltype() {
   getImpl<detail::PhotovoltaicPerformanceEquivalentOneDiode_Impl>()->resetCelltype();
 }
 
-bool PhotovoltaicPerformanceEquivalentOneDiode::setNumberofCellsinSeries(int numberofCellsinSeries) {
-  return getImpl<detail::PhotovoltaicPerformanceEquivalentOneDiode_Impl>()->setNumberofCellsinSeries(numberofCellsinSeries);
+bool PhotovoltaicPerformanceEquivalentOneDiode::setNumberofCellsinSeries(int numberOfCellsInSeries) {
+  return getImpl<detail::PhotovoltaicPerformanceEquivalentOneDiode_Impl>()->setNumberofCellsinSeries(numberOfCellsInSeries);
 }
 
 void PhotovoltaicPerformanceEquivalentOneDiode::resetNumberofCellsinSeries() {

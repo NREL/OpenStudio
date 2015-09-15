@@ -78,17 +78,17 @@ namespace detail {
 
     boost::optional<double> nominalVoltageInput() const;
 
-    boost::optional<double> efficiencyat10PowerandNominalVoltage() const;
+    boost::optional<double> efficiencyAt10PowerAndNominalVoltage() const;
 
-    boost::optional<double> efficiencyat20PowerandNominalVoltage() const;
+    boost::optional<double> efficiencyAt20PowerAndNominalVoltage() const;
 
-    boost::optional<double> efficiencyat30PowerandNominalVoltage() const;
+    boost::optional<double> efficiencyAt30PowerAndNominalVoltage() const;
 
-    boost::optional<double> efficiencyat50PowerandNominalVoltage() const;
+    boost::optional<double> efficiencyAt50PowerAndNominalVoltage() const;
 
-    boost::optional<double> efficiencyat75PowerandNominalVoltage() const;
+    boost::optional<double> efficiencyAt75PowerAndNominalVoltage() const;
 
-    boost::optional<double> efficiencyat100PowerandNominalVoltage() const;
+    boost::optional<double> efficiencyAt100PowerAndNominalVoltage() const;
 
     //@}
     /** @name Setters */
@@ -118,29 +118,29 @@ namespace detail {
 
     void resetNominalVoltageInput();
 
-    bool setEfficiencyat10PowerandNominalVoltage(boost::optional<double> efficiencyat10PowerandNominalVoltage);
+    bool setEfficiencyAt10PowerAndNominalVoltage(boost::optional<double> efficiencyAt10PowerAndNominalVoltage);
 
-    void resetEfficiencyat10PowerandNominalVoltage();
+    void resetEfficiencyAt10PowerAndNominalVoltage();
 
-    bool setEfficiencyat20PowerandNominalVoltage(boost::optional<double> efficiencyat20PowerandNominalVoltage);
+    bool setEfficiencyAt20PowerAndNominalVoltage(boost::optional<double> efficiencyAt20PowerAndNominalVoltage);
 
-    void resetEfficiencyat20PowerandNominalVoltage();
+    void resetEfficiencyAt20PowerAndNominalVoltage();
 
-    bool setEfficiencyat30PowerandNominalVoltage(boost::optional<double> efficiencyat30PowerandNominalVoltage);
+    bool setEfficiencyAt30PowerAndNominalVoltage(boost::optional<double> efficiencyAt30PowerAndNominalVoltage);
 
-    void resetEfficiencyat30PowerandNominalVoltage();
+    void resetEfficiencyAt30PowerAndNominalVoltage();
 
-    bool setEfficiencyat50PowerandNominalVoltage(boost::optional<double> efficiencyat50PowerandNominalVoltage);
+    bool setEfficiencyAt50PowerAndNominalVoltage(boost::optional<double> efficiencyAt50PowerAndNominalVoltage);
 
-    void resetEfficiencyat50PowerandNominalVoltage();
+    void resetEfficiencyAt50PowerAndNominalVoltage();
 
-    bool setEfficiencyat75PowerandNominalVoltage(boost::optional<double> efficiencyat75PowerandNominalVoltage);
+    bool setEfficiencyAt75PowerAndNominalVoltage(boost::optional<double> efficiencyAt75PowerAndNominalVoltage);
 
-    void resetEfficiencyat75PowerandNominalVoltage();
+    void resetEfficiencyAt75PowerAndNominalVoltage();
 
-    bool setEfficiencyat100PowerandNominalVoltage(boost::optional<double> efficiencyat100PowerandNominalVoltage);
+    bool setEfficiencyAt100PowerAndNominalVoltage(boost::optional<double> efficiencyAt100PowerAndNominalVoltage);
 
-    void resetEfficiencyat100PowerandNominalVoltage();
+    void resetEfficiencyAt100PowerAndNominalVoltage();
 
     //@}
     /** @name Other */
