@@ -123,8 +123,11 @@ namespace detail {
 
   ModelObject GeneratorPhotovoltaic_Impl::clone(Model model) const
   {
-    ModelObject result = ParentObject_Impl::clone(model);
-    result.cast<GeneratorPhotovoltaic>().resetSurface();
+    GeneratorPhotovoltaic result = ModelObject_Impl::clone(model).cast<GeneratorPhotovoltaic>();
+    PhotovoltaicPerformance newPerformance = this->photovoltaicPerformance().clone(model).cast<PhotovoltaicPerformance>();
+    result.setPointer(OS_Generator_PhotovoltaicFields::ModulePerformanceName, newPerformance.handle());
+
+    result.resetSurface();
     return result;
   }
   

@@ -78,6 +78,8 @@ namespace detail {
 
     boost::optional<PlanarSurface> surface() const;
 
+    boost::optional<GeneratorPhotovoltaic> generatorPhotovoltaic() const;
+
     SolarCollectorPerformancePhotovoltaicThermalSimple solarCollectorPerformance() const;
 
     boost::optional<double> designFlowRate() const;
@@ -95,6 +97,10 @@ namespace detail {
     bool setSurface(const PlanarSurface& surface);
 
     void resetSurface();
+
+    bool setGeneratorPhotovoltaic(const GeneratorPhotovoltaic& generatorPhotovoltaic);
+
+    void resetGeneratorPhotovoltaic();
 
     bool setDesignFlowRate(double designFlowRate);
 

@@ -55,10 +55,15 @@ namespace detail {
     /** @name Getters */
     //@{
 
+    // DLM: really don't want to implement this for this object, feels too kludgy
+    //virtual boost::optional<ParentObject> parent() override;
+
     //@}
     /** @name Setters */
     //@{
 
+    // DLM: really don't want to implement this for this object, feels too kludgy
+    //virtual bool setParent(ParentObject& newParent) override;
 
     //@}
     /** @name Other */
