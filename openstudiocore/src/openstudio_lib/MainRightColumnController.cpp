@@ -808,6 +808,7 @@ void MainRightColumnController::configureForSpacesSubTab(int subTabID)
   myModelList->addModelObjectType(IddObjectType::OS_DefaultConstructionSet, "Default Construction Sets");
   myModelList->addModelObjectType(IddObjectType::OS_SpaceType, "Space Types");
   myModelList->addModelObjectType(IddObjectType::OS_ThermalZone, "Thermal Zones");
+  myModelList->addModelObjectType(IddObjectType::OS_BuildingStory, "Building Stories");
 
   setMyModelView(myModelList);
 
@@ -955,6 +956,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   myModelList->addModelObjectType(IddObjectType::OS_Chiller_Electric_EIR,"Chiller - Electric EIR");
   myModelList->addModelObjectType(IddObjectType::OS_Chiller_Absorption,"Chiller - Absorption");
   myModelList->addModelObjectType(IddObjectType::OS_Chiller_Absorption_Indirect,"Chiller - Indirect Absorption");
+  myModelList->addModelObjectType(IddObjectType::OS_Boiler_HotWater, "Boiler Hot Water");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset,"Schedules");
 
 
