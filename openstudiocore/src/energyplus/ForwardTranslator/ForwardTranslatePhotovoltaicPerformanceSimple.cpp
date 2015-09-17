@@ -22,6 +22,8 @@
 #include "../../model/Model.hpp"
 #include "../../model/PhotovoltaicPerformanceSimple.hpp"
 #include "../../model/PhotovoltaicPerformanceSimple_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
 
 #include <utilities/idd/PhotovoltaicPerformance_Simple_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -38,11 +40,24 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translatePhotovoltaicPerformanceSimple(model::PhotovoltaicPerformanceSimple & modelObject)
 {
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::PhotovoltaicPerformance_Simple, modelObject);
+
+  if (modelObject.name()) {
+    idfObject.setString(PhotovoltaicPerformance_SimpleFields::Name, modelObject.name().get());
+  }
+
+  if (modelObject.conversionEfficiencyInputMode()) {
+    idfObject.setString(PhotovoltaicPerformance_SimpleFields::ConversionEfficiencyInputMode, modelObject.conversionEfficiencyInputMode().get() );
+  }
+
+  idfObject.setDouble(PhotovoltaicPerformance_SimpleFields::FractionofSurfaceAreawithActiveSolarCells, modelObject.fractionOfSurfaceAreaWithActiveSolarCells());
   
-  // Evan, this is just hard coded for testing
-  idfObject.setDouble(PhotovoltaicPerformance_SimpleFields::FractionofSurfaceAreawithActiveSolarCells, 1.0);
-  idfObject.setString(PhotovoltaicPerformance_SimpleFields::ConversionEfficiencyInputMode, "Fixed");
-  idfObject.setDouble(PhotovoltaicPerformance_SimpleFields::ValueforCellEfficiencyifFixed, 0.2);
+  if (modelObject.fixedEfficiency()) {
+    idfObject.setDouble(PhotovoltaicPerformance_SimpleFields::ValueforCellEfficiencyifFixed, modelObject.fixedEfficiency().get());
+  }
+
+  if (modelObject.efficiencySchedule() && modelObject.efficiencySchedule().get().name()) {
+    idfObject.setString(PhotovoltaicPerformance_SimpleFields::EfficiencyScheduleName, modelObject.efficiencySchedule().get().name().get());
+  }
 
   return idfObject;
 }
