@@ -947,6 +947,8 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   myModelList->addModelObjectType(IddObjectType::OS_ZoneHVAC_FourPipeFanCoil,"Four Pipe Fan Coil");
   myModelList->addModelObjectType(IddObjectType::OS_WaterUse_Equipment_Definition,"Water Use Equipment Definition");  
   myModelList->addModelObjectType(IddObjectType::OS_WaterUse_Connections,"Water Use Connections");  
+  myModelList->addModelObjectType(IddObjectType::OS_WaterHeater_Mixed, "Water Heater Mixed");
+  myModelList->addModelObjectType(IddObjectType::OS_WaterHeater_Stratified, "Water Heater Stratified");
   myModelList->addModelObjectType(IddObjectType::OS_ThermalZone,"Thermal Zone");  
   myModelList->addModelObjectType(IddObjectType::OS_Refrigeration_System,"Refrigeration System");
   myModelList->addModelObjectType(IddObjectType::OS_Refrigeration_Condenser_WaterCooled,"Refrigeration Condenser Water Cooled");  
@@ -956,7 +958,6 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   myModelList->addModelObjectType(IddObjectType::OS_Chiller_Electric_EIR,"Chiller - Electric EIR");
   myModelList->addModelObjectType(IddObjectType::OS_Chiller_Absorption,"Chiller - Absorption");
   myModelList->addModelObjectType(IddObjectType::OS_Chiller_Absorption_Indirect,"Chiller - Indirect Absorption");
-  myModelList->addModelObjectType(IddObjectType::OS_Boiler_HotWater, "Boiler Hot Water");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset,"Schedules");
 
 
