@@ -231,7 +231,9 @@ ConvergenceLimits::ConvergenceLimits(std::shared_ptr<detail::ConvergenceLimits_I
 
 ConvergenceLimits::ConvergenceLimits(Model& model)
   : ModelObject(ConvergenceLimits::iddObjectType(),model)
-{}
+{
+  setMinimumSystemTimestep(1);
+}
 /// @endcond
 
 } // model
