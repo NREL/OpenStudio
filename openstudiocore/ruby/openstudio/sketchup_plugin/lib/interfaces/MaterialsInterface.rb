@@ -181,15 +181,15 @@ module OpenStudio
       if (@solar_collector.nil?)      
         @solar_collector = @model_interface.skp_model.materials.add("OpenStudio_SolarCollector")
         @solar_collector.texture = Plugin.dir + "/lib/resources/SolarCollector.png"
-        @solar_collector.texture.size = 180
+        @solar_collector.texture.size = 40
         @solar_collector.alpha = 1.0
       end
       
       @photovoltaic = @model_interface.skp_model.materials["OpenStudio_Photovoltaic"]
       if (@photovoltaic.nil?)      
         @photovoltaic = @model_interface.skp_model.materials.add("OpenStudio_Photovoltaic")
-        @photovoltaic.texture = Plugin.dir + "/lib/resources/SolarCollector.png"
-        @photovoltaic.texture.size = 180
+        @photovoltaic.texture = Plugin.dir + "/lib/resources/Photovoltaic.png"
+        @photovoltaic.texture.size = 40
         @photovoltaic.alpha = 1.0
       end
       
