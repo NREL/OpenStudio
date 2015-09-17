@@ -113,7 +113,7 @@ namespace detail {
   std::vector<openstudio::IdfObject> GeneratorPhotovoltaic_Impl::remove()
   {
     //setString(OS_Generator_PhotovoltaicFields::ModulePerformanceName, "");
-    return ParentObject_Impl::remove();
+    return Generator_Impl::remove();
   }
 
   std::vector<IddObjectType> GeneratorPhotovoltaic_Impl::allowableChildTypes() const

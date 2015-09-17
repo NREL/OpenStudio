@@ -84,8 +84,6 @@ class MODEL_API GeneratorPhotovoltaic : public Generator {
   /** @name Setters */
   //@{
 
-  /// Resets any GeneratorPhotovoltaic already on the surface
-  /// Returns false unless surface is exposed to sun
   bool setSurface(const PlanarSurface& surface);
 
   void resetSurface();
