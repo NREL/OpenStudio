@@ -26,7 +26,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
 class ThermalZone;
 
@@ -68,7 +67,7 @@ namespace detail {
 
     boost::optional<Schedule> availabilitySchedule() const;
 
-    boost::optional<ThermalZone> thermalZone() const;
+    virtual boost::optional<ThermalZone> thermalZone() const override;
 
     boost::optional<double> radiativeFraction() const;
 
@@ -98,9 +97,9 @@ namespace detail {
 
     void resetAvailabilitySchedule();
 
-    bool setThermalZone(const boost::optional<ThermalZone>& thermalZone);
+    virtual bool setThermalZone(const boost::optional<ThermalZone>& thermalZone) override;
 
-    void resetThermalZone();
+    virtual void resetThermalZone() override;
 
     bool setRadiativeFraction(boost::optional<double> radiativeFraction);
 

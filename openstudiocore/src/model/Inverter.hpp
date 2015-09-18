@@ -22,6 +22,7 @@
 
 #include "ModelAPI.hpp"
 #include "ParentObject.hpp"
+#include "ThermalZone.hpp"
 
 namespace openstudio {
 namespace model {
@@ -43,6 +44,12 @@ class MODEL_API Inverter : public ParentObject {
   virtual ~Inverter() {}
 
   boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
+
+  virtual boost::optional<ThermalZone> thermalZone() const;
+
+  virtual bool setThermalZone(const ThermalZone& thermalZone);
+
+  virtual void resetThermalZone();
 
   protected:
 

@@ -79,7 +79,7 @@ Inverter::Inverter(IddObjectType type,const Model& model)
   : ParentObject(type, model)
 {
   OS_ASSERT(getImpl<detail::Inverter_Impl>());
-}     
+}
 
 Inverter::Inverter(std::shared_ptr<detail::Inverter_Impl> p)
   : ParentObject(p)
@@ -88,6 +88,18 @@ Inverter::Inverter(std::shared_ptr<detail::Inverter_Impl> p)
 boost::optional<ElectricLoadCenterDistribution> Inverter::electricLoadCenterDistribution() const
 {
   return getImpl<detail::Inverter_Impl>()->electricLoadCenterDistribution();
+}
+
+boost::optional<ThermalZone> Inverter::thermalZone() const {
+  return getImpl<detail::Inverter_Impl>()->thermalZone();
+}
+
+bool Inverter::setThermalZone(const ThermalZone& thermalZone) {
+  return getImpl<detail::Inverter_Impl>()->setThermalZone(thermalZone);
+}
+
+void Inverter::resetThermalZone() {
+  getImpl<detail::Inverter_Impl>()->resetThermalZone();
 }
 
 } // model

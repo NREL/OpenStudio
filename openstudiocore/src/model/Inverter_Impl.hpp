@@ -21,6 +21,7 @@
 #define MODEL_INVERTER_IMPL_HPP
 
 #include "ParentObject_Impl.hpp"
+#include "ThermalZone_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -55,10 +56,15 @@ namespace detail {
 
     boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 
+    virtual boost::optional<ThermalZone> thermalZone() const = 0;
+
     //@}
     /** @name Setters */
     //@{
 
+    virtual bool setThermalZone(const boost::optional<ThermalZone>& thermalZone) = 0;
+
+    virtual void resetThermalZone() = 0;
 
     //@}
     /** @name Other */

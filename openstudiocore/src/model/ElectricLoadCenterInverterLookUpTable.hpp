@@ -27,7 +27,6 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
 class ThermalZone;
 
@@ -55,9 +54,6 @@ class MODEL_API ElectricLoadCenterInverterLookUpTable : public Inverter {
   //@{
 
   boost::optional<Schedule> availabilitySchedule() const;
-
-  // DLM: TODO the thermalZone methods should be moved to the Inverter base class
-  boost::optional<ThermalZone> thermalZone() const;
 
   boost::optional<double> radiativeFraction() const;
 
@@ -94,10 +90,6 @@ class MODEL_API ElectricLoadCenterInverterLookUpTable : public Inverter {
   bool setAvailabilitySchedule(Schedule& schedule);
 
   void resetAvailabilitySchedule();
-
-  bool setThermalZone(const ThermalZone& thermalZone);
-
-  void resetThermalZone();
 
   bool setRadiativeFraction(double radiativeFraction);
 

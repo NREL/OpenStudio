@@ -53,11 +53,7 @@ class MODEL_API ElectricLoadCenterInverterSimple : public Inverter {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> availabilitySchedule() const;
-
-  // DLM: TODO the thermalZone methods should be moved to the Inverter base class
-  boost::optional<ThermalZone> thermalZone() const;
 
   boost::optional<double> radiativeFraction() const;
 
@@ -70,10 +66,6 @@ class MODEL_API ElectricLoadCenterInverterSimple : public Inverter {
   bool setAvailabilitySchedule(Schedule& schedule);
 
   void resetAvailabilitySchedule();
-
-  bool setThermalZone(const ThermalZone& thermalZone);
-
-  void resetThermalZone();
 
   bool setRadiativeFraction(double radiativeFraction);
 

@@ -20,13 +20,12 @@
 #include "ElectricLoadCenterInverterLookUpTable.hpp"
 #include "ElectricLoadCenterInverterLookUpTable_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
-#include "../../model/ScheduleTypeLimits.hpp"
-#include "../../model/ScheduleTypeRegistry.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_ElectricLoadCenter_Inverter_LookUpTable_FieldEnums.hxx>
@@ -356,10 +355,6 @@ boost::optional<Schedule> ElectricLoadCenterInverterLookUpTable::availabilitySch
   return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->availabilitySchedule();
 }
 
-boost::optional<ThermalZone> ElectricLoadCenterInverterLookUpTable::thermalZone() const {
-  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->thermalZone();
-}
-
 boost::optional<double> ElectricLoadCenterInverterLookUpTable::radiativeFraction() const {
   return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->radiativeFraction();
 }
@@ -406,14 +401,6 @@ bool ElectricLoadCenterInverterLookUpTable::setAvailabilitySchedule(Schedule& sc
 
 void ElectricLoadCenterInverterLookUpTable::resetAvailabilitySchedule() {
   getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->resetAvailabilitySchedule();
-}
-
-bool ElectricLoadCenterInverterLookUpTable::setThermalZone(const ThermalZone& thermalZone) {
-  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->setThermalZone(thermalZone);
-}
-
-void ElectricLoadCenterInverterLookUpTable::resetThermalZone() {
-  getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->resetThermalZone();
 }
 
 bool ElectricLoadCenterInverterLookUpTable::setRadiativeFraction(double radiativeFraction) {
