@@ -26,7 +26,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
 
 namespace detail {
@@ -73,7 +72,6 @@ namespace detail {
 
     boost::optional<double> fixedEfficiency() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> efficiencySchedule() const;
 
     //@}
@@ -90,7 +88,6 @@ namespace detail {
 
     void resetValueforCellEfficiencyifFixed();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setEfficiencySchedule(Schedule& schedule);
 
     void resetEfficiencySchedule();
