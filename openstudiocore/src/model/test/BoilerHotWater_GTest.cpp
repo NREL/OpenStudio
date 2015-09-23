@@ -92,3 +92,26 @@ TEST_F(ModelFixture,BoilerHotWater_addToNode) {
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
   EXPECT_EQ( (unsigned)9, plantLoop.supplyComponents().size() );
 }
+
+TEST_F(ModelFixture,BoilerHotWater_remove) {
+  Model m;
+
+  PlantLoop plant(m);
+  BoilerHotWater b1(m);
+  BoilerHotWater b2(m);
+
+  plant.addSupplyBranchForComponent(b1);
+  {
+    auto node = b1.outletModelObject()->cast<Node>();
+    b2.addToNode(node);
+  }
+
+  auto n1 = b1.outletModelObject().get();
+  auto n2 = b2.outletModelObject().get();
+
+  b1.remove();
+  b2.remove();
+
+  EXPECT_TRUE(n1.handle().isNull());
+  EXPECT_TRUE(n2.handle().isNull());
+}
