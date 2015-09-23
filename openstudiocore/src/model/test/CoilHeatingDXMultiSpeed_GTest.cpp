@@ -21,6 +21,8 @@
 #include "ModelFixture.hpp"
 #include "../CoilHeatingDXMultiSpeed.hpp"
 #include "../CoilHeatingDXMultiSpeed_Impl.hpp"
+#include "../CoilHeatingDXMultiSpeedStageData.hpp"
+#include "../CoilHeatingDXMultiSpeedStageData_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -38,3 +40,15 @@ TEST_F(ModelFixture,CoilHeatingDXMultiSpeed)
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
+
+TEST_F(ModelFixture,CoilHeatingDXMultiSpeed_Remove)
+{
+  Model m; 
+
+  CoilHeatingDXMultiSpeed coil(m); 
+  CoilHeatingDXMultiSpeedStageData stage(m);
+  coil.addStage(stage);
+  coil.remove();
+  EXPECT_EQ(2u,m.modelObjects().size());
+}
+

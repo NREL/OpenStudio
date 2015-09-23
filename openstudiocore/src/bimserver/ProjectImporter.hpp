@@ -87,7 +87,7 @@ namespace bimserver {
       QString     m_ifcID;
       QListWidget *m_proList;
       QListWidget *m_ifcList;
-      QStatusBar	*m_statusBar;
+      QStatusBar  *m_statusBar;
       QEventLoop  *m_waitForOSM;
       QString     m_OSM;
 

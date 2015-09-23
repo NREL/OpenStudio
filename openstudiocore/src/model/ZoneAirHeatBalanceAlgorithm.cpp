@@ -149,7 +149,7 @@ ZoneAirHeatBalanceAlgorithm::ZoneAirHeatBalanceAlgorithm(Model& model)
 {
   OS_ASSERT(getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>());
 
-  setAlgorithm("AnalyticalSolution");
+  setAlgorithm("ThirdOrderBackwardDifference");
 }
 
 /// @endcond

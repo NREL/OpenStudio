@@ -66,6 +66,17 @@ TEST_F(ModelFixture,PlantLoop_PlantLoop)
     ::testing::ExitedWithCode(0), "" );
 }
 
+TEST_F(ModelFixture,PlantLoop_Remove)
+{
+  Model m; 
+  auto size = m.modelObjects().size();
+  PlantLoop plantLoop(m); 
+
+  EXPECT_FALSE(plantLoop.remove().empty());
+
+  EXPECT_EQ(size,m.modelObjects().size());
+}
+
 TEST_F(ModelFixture,PlantLoop_supplyComponents)
 {
   Model m; 
@@ -74,6 +85,8 @@ TEST_F(ModelFixture,PlantLoop_supplyComponents)
   
   PlantLoop plantLoop(m); 
   ASSERT_EQ( 5u,plantLoop.supplyComponents().size() );
+
+  EXPECT_EQ("Optimal",plantLoop.loadDistributionScheme());
 
   boost::optional<ModelObject> comp;
   comp = plantLoop.supplyComponents()[1];

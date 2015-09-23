@@ -101,12 +101,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEnergyRecoveryVen
   }
 
   // HumidistatControlZoneName
-  // TODO: Make sure this is correct logic
-  // if( (temp = modelObject.thermalZone()) ) {
-  //   if( auto _thermalZone = translateAndMapModelObject(temp.get()) ) {
-  //     idfObject.setString(ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::HumidistatControlZoneName,_thermalZone->name().get());
-  //   }
-  // }
+  // Set in parent object
 
   // HighHumidityOutdoorAirFlowRatio
   if( (value = modelObject.highHumidityOutdoorAirFlowRatio()) ) {

@@ -477,7 +477,7 @@ namespace detail {
     }
 
     auto demandInletNodes = t_airLoopHVAC->demandInletNodes();
-    for( auto i = 0; i < demandInletNodes.size(); ++i ) {
+    for( unsigned i = 0; i < demandInletNodes.size(); ++i ) {
       thermalZone.removeSupplyPlenum(i);
     }
     thermalZone.removeReturnPlenum();
@@ -942,19 +942,34 @@ namespace detail {
   
   bool AirLoopHVAC_Impl::setNightCycleControlType(std::string controlType)
   {
-    if( auto t_availabilityManager = availabilityManager() ) {
-      if( auto nightCycle = t_availabilityManager->optionalCast<AvailabilityManagerNightCycle>() ) {
-        return nightCycle->setControlType(controlType); 
-      } 
-    } else {
+    auto createNightCycleManager = [&]() {
+      boost::optional<AvailabilityManagerNightCycle> result;
       auto t_model = model();
       AvailabilityManagerNightCycle nightCycle(t_model);
       if( nightCycle.setControlType(controlType) ) {
-        auto result = setAvailabilityManager(nightCycle);
-        OS_ASSERT(result);
-        return true;
+        result = nightCycle;
       } else {
         nightCycle.remove();
+      }
+      return result;
+    };
+
+    if( auto t_availabilityManager = availabilityManager() ) {
+      if( auto nightCycle = t_availabilityManager->optionalCast<AvailabilityManagerNightCycle>() ) {
+        return nightCycle->setControlType(controlType); 
+      } else {
+        if( auto nightCycle = createNightCycleManager() ) {
+          t_availabilityManager->remove();
+          auto result = setAvailabilityManager(nightCycle.get());
+          OS_ASSERT(result);
+          return true;
+        }
+      } 
+    } else {
+      if( auto nightCycle = createNightCycleManager() ) {
+        auto result = setAvailabilityManager(nightCycle.get());
+        OS_ASSERT(result);
+        return true;
       }
     }
     return false;

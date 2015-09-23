@@ -1,4 +1,3 @@
-
 if (CMAKE_HOST_WIN32)
   # Necessary to do with FindOpenSSL on Windows
   cmake_minimum_required(VERSION 3.2.3)
@@ -10,8 +9,8 @@ endif()
 project(OpenStudio)
 
 set(CMAKE_VERSION_MAJOR 1)
-set(CMAKE_VERSION_MINOR 8)
-set(CMAKE_VERSION_PATCH 4)
+set(CMAKE_VERSION_MINOR 9)
+set(CMAKE_VERSION_PATCH 0)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
@@ -35,7 +34,7 @@ if(GIT_FOUND)
     set(CMAKE_VERSION_BUILD ${GIT_VERSION} CACHE STRING "Build number" FORCE) # git sha
   endif()
 
-  get_filename_component(GIT_DIR "${GIT_EXECUTABLE}" PATH)
+  get_filename_component(GIT_DIR "${GIT_EXECUTABLE}" DIRECTORY)
 else()
   set(GIT_DIR "")
 endif()
@@ -52,7 +51,7 @@ set(ENERGYPLUS_VERSION_MINOR 3)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "6d97d074ea" )
+set(ENERGYPLUS_BUILD_SHA "6d97d074ea")
 
 option(NIGHTLY_BUILD "Use configurations for Nightly Build" OFF)
 
@@ -188,7 +187,94 @@ if(APPLE)
 endif()
 
 # EnergyPlus
+if(UNIX)
+  if(APPLE)
+    set(ENERGYPLUS_EXPECTED_HASH 53a7ba6f36558daa1589ea3934f9c092)
+    set(ENERGYPLUS_PLATFORM "Darwin")
+  elseif(EXISTS "/etc/redhat-release")
+    set(ENERGYPLUS_EXPECTED_HASH 1824013d9f615dcc6355aa275f7eeb48)
+    set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
+  else()
+    set(ENERGYPLUS_EXPECTED_HASH 878bf1361ecb216a39b18dc8d9a729a7)
+    set(ENERGYPLUS_PLATFORM "Linux-x86_64")
+  endif()
+  set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_PLATFORM}")
+  if(EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.bz2")
+    file(MD5 "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.bz2" ENERGYPLUS_HASH)
+  endif()
+  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.bz2" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
+    message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_PLATFORM})")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_PLATFORM}.tar.bz2" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.bz2" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.bz2" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+  set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
+elseif(WIN32)
+  if(CMAKE_CL_64)
+    set(ENERGYPLUS_ARCH 64)
+    set(ENERGYPLUS_EXPECTED_HASH 2ef24be7756d063bcdc22b39088bf515)
+  else()
+    set(ENERGYPLUS_ARCH 32)
+    set(ENERGYPLUS_EXPECTED_HASH f9d3b3b8381c9fd27a4b973e2ec21688)
+  endif()
+  set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-win${OPENSSL_ARCH}")
+  if(EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
+    file(MD5 "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
+  endif()
+  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
+    message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_ARCH}-bit)")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/EnergyPlus-${ENERGYPLUS_VERSION}-win${ENERGYPLUS_ARCH}.zip" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+  set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/EnergyPlusV${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
+endif()
 find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
+
+# Radiance
+set(RADIANCE_VERSION "5.0.a.5")
+if(UNIX)
+  if(APPLE)
+    set(RADIANCE_EXPECTED_HASH c532f66090fb704cdf2691599a4d856c)
+    set(RADIANCE_PLATFORM "Darwin")
+  elseif(EXISTS "/etc/redhat-release")
+    set(RADIANCE_EXPECTED_HASH 21639a78cbd6547503a99e04f136ccf7)
+    set(RADIANCE_PLATFORM "Redhat-x86_64")
+  else()
+    set(RADIANCE_EXPECTED_HASH 7075023827ee89f3a0d23850ac59365d)
+    set(RADIANCE_PLATFORM "Linux-x86_64")
+  endif()
+  set(RADIANCE_PATH "Radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}")
+  if(EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.bz2")
+    file(MD5 "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.bz2" RADIANCE_HASH)
+  endif()
+  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.bz2" OR NOT "${RADIANCE_HASH}" MATCHES "${RADIANCE_EXPECTED_HASH}")
+    message(STATUS "Downloading Radiance ${RADIANCE_VERSION} (${RADIANCE_PLATFORM})")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/Radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.bz2" "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.bz2" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.bz2" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+  set(RADIANCE_LOCATION "${CMAKE_BINARY_DIR}/radiance")
+elseif(WIN32)
+  if(CMAKE_CL_64)
+    set(RADIANCE_ARCH 64)
+    set(RADIANCE_EXPECTED_HASH b0d9c121063960c510252819159ff9ff)
+  else()
+    set(RADIANCE_ARCH 32)
+    set(RADIANCE_EXPECTED_HASH 100f07457ac80f34cacb6e1caebef948)
+  endif()
+  set(RADIANCE_PATH "Radiance-${RADIANCE_VERSION}-win${RADIANCE_ARCH}")
+  if(EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip")
+    file(MD5 "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip" RADIANCE_HASH)
+  endif()
+  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip" OR NOT "${RADIANCE_HASH}" MATCHES "${RADIANCE_EXPECTED_HASH}")
+    message(STATUS "Downloading Radiance ${RADIANCE_VERSION} (${RADIANCE_ARCH}-bit)")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/Radiance-${RADIANCE_VERSION}-win${RADIANCE_ARCH}.zip" "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+  set(RADIANCE_LOCATION "${CMAKE_BINARY_DIR}/Radiance")
+endif()
 
 # Build Ruby gem
 option(BUILD_RUBY_GEM "Build Ruby Gem" OFF)
@@ -548,7 +634,7 @@ if(WIN32)
   endif()
 
   # Install required gems
-  set(ENV{BUNDLE_PATH} "${CMAKE_BUILD_DIR}/Ruby-prefix/src/Ruby/lib/ruby/gems/2.0.0")
+  set(ENV{BUNDLE_PATH} "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/ruby/gems/2.0.0")
   add_custom_command(TARGET Ruby
                      POST_BUILD
                      COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/bundle" "install" "--no-cache"
@@ -564,8 +650,8 @@ if(BUILD_SWIG)
   if(UNIX)
     # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
     ExternalProject_Add(SWIG
-      URL http://openstudio-resources.s3.amazonaws.com/dependencies/swig-3.0.6.tar.gz
-      URL_MD5 df43ae271642bcfa61c1e59f970f9963
+      URL http://openstudio-resources.s3.amazonaws.com/dependencies/swig-3.0.7.tar.gz
+      URL_MD5 7fff46c84b8c630ede5b0f0827e3d90a
 
       PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && ../SWIG/Tools/pcre-build.sh
       CONFIGURE_COMMAND ../SWIG/configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install
@@ -576,8 +662,8 @@ if(BUILD_SWIG)
   else()
     # SWIG requires MinGW to compile on windows, so we just copy in the prebuilt binary
     ExternalProject_Add(SWIG
-      URL http://openstudio-resources.s3.amazonaws.com/dependencies/swigwin-3.0.6.zip
-      URL_MD5 aacecb356084ca18cf5d952621e2e1dd
+      URL http://openstudio-resources.s3.amazonaws.com/dependencies/swigwin-3.0.7.zip
+      URL_MD5 d8b5a9ce49c819cc1bfc1e797b85ba7a
       CONFIGURE_COMMAND ""
       BUILD_COMMAND ""
       INSTALL_COMMAND ""
@@ -814,6 +900,8 @@ ExternalProject_Add(OSCore
     -DRUBY_LIBRARY:STRING=${RUBY_LIBRARY}
     -DDOXYGEN_EXECUTABLE:STRING=${DOXYGEN_EXECUTABLE}
     -DDOXYGEN_DOT_EXECUTABLE:STRING=${DOXYGEN_DOT_EXECUTABLE}
+    -DENERGYPLUS_LOCATION:PATH=$ENV{ENERGYPLUSDIR}
+    -DRADIANCE_LOCATION:PATH=${RADIANCE_LOCATION}
     -DOPENSSL_ROOT_DIR:PATH=${OPENSSL_ROOT_DIR}
     -DPATCH_EXE:PATH=${PATCH_EXE}
     -DMAXIMIZE_CPU_USAGE:BOOL=${MAXIMIZE_CPU_USAGE}
@@ -914,5 +1002,5 @@ if (BUILD_REGRESSIONS)
       -DQt5Concurrent_DIR:STRING=${Qt5Concurrent_DIR}
       -DQt5PrintSupport_DIR:STRING=${Qt5PrintSupport_DIR}
     INSTALL_COMMAND ""
-    )
+  )
 endif()

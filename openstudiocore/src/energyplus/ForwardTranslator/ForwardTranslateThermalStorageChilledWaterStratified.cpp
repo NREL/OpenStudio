@@ -154,9 +154,16 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalStorageChilledWate
 
   // Ambient Temperature Outdoor Air Node Name
   s = modelObject.ambientTemperatureOutdoorAirNodeName();
-  if( s )
+  if( s && (! s->empty()) )
   {
     idfObject.setString(ThermalStorage_ChilledWater_StratifiedFields::AmbientTemperatureOutdoorAirNodeName,s.get());
+  } else if( istringEqual(modelObject.ambientTemperatureIndicator(),"Outdoors") ) {
+    auto name = modelObject.name().get() + " OA Node";
+    IdfObject oaNodeListIdf(openstudio::IddObjectType::OutdoorAir_NodeList);
+    oaNodeListIdf.setString(0,name);
+    m_idfObjects.push_back(oaNodeListIdf);
+
+    idfObject.setString(openstudio::ThermalStorage_ChilledWater_StratifiedFields::AmbientTemperatureOutdoorAirNodeName, name);
   }
 
   // Uniform Skin Loss Coefficient per Unit Area to Ambient Temperature

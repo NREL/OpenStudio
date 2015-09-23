@@ -176,7 +176,18 @@ namespace detail {
       return TimeSeries(Date(MonthOfYear::Jan, 1), 0, Vector(), "");
     }
 
+    OptionalInt startMonth = this->startMonth();
+    OptionalInt startDay = this->startMonth();
+    // Grotesquely assume that the schedule starts at the start of the first day
+    OptionalInt startHour = 0;
+    OptionalInt startMinute = 0;
+    OS_ASSERT(startMonth);
+    OS_ASSERT(startDay);
+    OS_ASSERT(startHour);
+    OS_ASSERT(startMinute);
+
     DateTimeVector dateTimes;
+    dateTimes.push_back(DateTime(Date(MonthOfYear(*startMonth), *startDay), Time(0, *startHour, *startMinute)));
     Vector values(numExtensibleGroups);
     unsigned i = 0;
     for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups()))

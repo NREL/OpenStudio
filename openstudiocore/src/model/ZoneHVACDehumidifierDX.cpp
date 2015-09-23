@@ -88,6 +88,28 @@ namespace detail {
     return result;
   }
 
+  ModelObject ZoneHVACDehumidifierDX_Impl::clone(Model model) const
+  {
+    auto clone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACDehumidifierDX>();
+
+    {
+      auto curveClone = waterRemovalCurve().clone(model).cast<Curve>();
+      clone.setWaterRemovalCurve(curveClone);
+    }
+
+    {
+      auto curveClone = energyFactorCurve().clone(model).cast<Curve>();
+      clone.setEnergyFactorCurve(curveClone);
+    }
+
+    {
+      auto curveClone = partLoadFractionCorrelationCurve().clone(model).cast<Curve>();
+      clone.setPartLoadFractionCorrelationCurve(curveClone);
+    }
+
+    return clone;
+  }
+
   std::vector<ModelObject> ZoneHVACDehumidifierDX_Impl::children() const
   {
     std::vector<ModelObject> result;

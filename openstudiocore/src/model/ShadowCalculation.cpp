@@ -171,7 +171,7 @@ ShadowCalculation::ShadowCalculation(const Model& model)
 {
   OS_ASSERT(getImpl<detail::ShadowCalculation_Impl>());
 
-  this->setCalculationFrequency(7);
+  this->setCalculationFrequency(20);
 
   this->setMaximumFiguresInShadowOverlapCalculations(15000);
 }

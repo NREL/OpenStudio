@@ -262,7 +262,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"People","Air Velocity","airVelocitySchedule",true,"Velocity",0.0,OptionalDouble()},
     {"PhotovoltaicPerformanceSimple","Efficiency","efficiencySchedule",true,"",0.0,1.0},
     {"PlantComponentTemperatureSource","Source Temperature","sourceTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
-    { "PipeIndoor", "Ambient Temperature", "ambientTemperatureSchedule", true, "Temperature", 0.0, OptionalDouble() },
+    { "PipeIndoor", "Ambient Temperature", "ambientTemperatureSchedule", true, "Temperature", OptionalDouble(), OptionalDouble() },
     { "PipeIndoor", "Ambient Air Velocity", "ambientAirVelocitySchedule", true, "Velocity", 0.0, OptionalDouble() },
     {"PumpConstantSpeed","Pump Flow Rate","pumpFlowRateSchedule",true,"",0.0,1.0},
     {"PumpVariableSpeed","Pump Flow Rate","pumpFlowRateSchedule",true,"",0.0,1.0},

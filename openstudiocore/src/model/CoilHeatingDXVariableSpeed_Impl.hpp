@@ -56,9 +56,9 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     virtual unsigned inletPort() override;
 
@@ -171,6 +171,8 @@ namespace detail {
     void removeSpeed(const CoilHeatingDXVariableSpeedSpeedData& speed);
 
     void removeAllSpeeds();
+
+    std::vector<IdfObject> remove() override;
 
     //@}
    protected:

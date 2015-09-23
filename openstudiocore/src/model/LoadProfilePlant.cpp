@@ -26,7 +26,11 @@
 #include "ScheduleDay.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
-#include "../utilities/Time/Time.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "PlantLoop.hpp"
+#include "PlantLoop_Impl.hpp"
+#include "../utilities/time/Time.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
 
@@ -154,6 +158,16 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_LoadProfile_PlantFields::FlowRateFractionScheduleName);
   }
 
+  bool LoadProfilePlant_Impl::addToNode(Node & node)
+  {
+    if( auto plant = node.plantLoop() ) {
+      if( plant->demandComponent(node.handle()) ) {
+        return StraightComponent_Impl::addToNode(node);
+      }
+    }
+    return false;
+  }
+
 } // detail
 
 LoadProfilePlant::LoadProfilePlant(const Model& model)
@@ -165,11 +179,11 @@ LoadProfilePlant::LoadProfilePlant(const Model& model)
 
   auto scheduleRuleset = ScheduleRuleset(model);
   auto scheduleDay = scheduleRuleset.defaultDaySchedule();
-  scheduleDay.addValue(Time(4),8000);
-  scheduleDay.addValue(Time(8),6000);
-  scheduleDay.addValue(Time(9),0);
-  scheduleDay.addValue(Time(12),6000);
-  scheduleDay.addValue(Time(24),10000);
+  scheduleDay.addValue(Time(0,4),8000);
+  scheduleDay.addValue(Time(0,8),6000);
+  scheduleDay.addValue(Time(0,9),0);
+  scheduleDay.addValue(Time(0,12),6000);
+  scheduleDay.addValue(Time(0,24),10000);
 
   bool ok = true;
   ok = setLoadSchedule( scheduleRuleset );

@@ -135,6 +135,8 @@
 #define HOTWATEREQUIPMENT "Hot Water Equipment"
 #define STEAMEQUIPMENT "Steam Equipment"
 #define OTHEREQUIPMENT "Other Equipment"
+#define SPACEINFILTRATIONDESIGNFLOWRATE "Space Infiltration Design Flow Rate"
+#define SPACEINFILTRATIONEFFECTIVELEAKAGEAREA "Space Infiltration Effective Leakage Area"
 
 namespace openstudio {
 
@@ -185,7 +187,7 @@ namespace openstudio {
     layout->addWidget(m_filterLabel, Qt::AlignTop | Qt::AlignLeft);
 
     m_filters = new QComboBox();
-    m_filters->setFixedWidth(OSItem::ITEM_WIDTH);
+    m_filters->setFixedWidth(1.5*OSItem::ITEM_WIDTH);
 
     {
       m_filters->addItem(SHOWALLLOADS);
@@ -243,6 +245,18 @@ namespace openstudio {
       const QPixmap * pixMap = new QPixmap(":images/mini_icons/other_equipment.png");
       OS_ASSERT(pixMap);
       m_filters->addItem(*pixMap, OTHEREQUIPMENT);
+    }
+
+    {
+      auto pixMap = new QPixmap(":images/mini_icons/infiltration.png");
+      OS_ASSERT(pixMap);
+      m_filters->addItem(*pixMap, SPACEINFILTRATIONDESIGNFLOWRATE);
+    }
+
+    {
+      auto pixMap = new QPixmap(":images/mini_icons/mini_infiltration_leak.png");
+      OS_ASSERT(pixMap);
+      m_filters->addItem(*pixMap, SPACEINFILTRATIONEFFECTIVELEAKAGEAREA);
     }
 
     disableFilter();
@@ -362,7 +376,7 @@ namespace openstudio {
       objectSelector->setObjectFilter(
         [text](const model::ModelObject &obj)->bool {
         try {
-          obj.cast<model::SpaceLoadInstance>();
+          //obj.cast<model::SpaceLoadInstance>();  TODO uncomment with correct type
           // This is a spaceloadinstance, so we want to see if it matches our filter
 
           if (text == INTERNALMASS)
@@ -400,6 +414,14 @@ namespace openstudio {
           else if (text == OTHEREQUIPMENT)
           {
             return static_cast<bool>(obj.optionalCast<model::OtherEquipment>());
+          }
+          else if (text == SPACEINFILTRATIONDESIGNFLOWRATE)
+          {
+            return static_cast<bool>(obj.optionalCast<model::SpaceInfiltrationDesignFlowRate>());
+          }
+          else if (text == SPACEINFILTRATIONEFFECTIVELEAKAGEAREA)
+          {
+            return static_cast<bool>(obj.optionalCast<model::SpaceInfiltrationEffectiveLeakageArea>());
           }
           else
           {
@@ -1137,6 +1159,20 @@ namespace openstudio {
             if (o)
             {
               model::OtherEquipment(*o).setParent(*t_spaceType);
+              return true;
+            }
+
+            boost::optional<model::SpaceInfiltrationDesignFlowRate> dfr = t_definition.optionalCast<model::SpaceInfiltrationDesignFlowRate>();
+            if (dfr)
+            {
+              model::SpaceInfiltrationDesignFlowRate(*dfr).setParent(*t_spaceType);
+              return true;
+            }
+
+            boost::optional<model::SpaceInfiltrationEffectiveLeakageArea> ela = t_definition.optionalCast<model::SpaceInfiltrationEffectiveLeakageArea>();
+            if (ela)
+            {
+              model::SpaceInfiltrationEffectiveLeakageArea(*ela).setParent(*t_spaceType);
               return true;
             }
 

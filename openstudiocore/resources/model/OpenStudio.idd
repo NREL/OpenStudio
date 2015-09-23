@@ -1,4 +1,4 @@
-!IDD_Version 1.8.4
+!IDD_Version 1.9.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -146,7 +146,7 @@ OS:HeatBalanceAlgorithm,
        \key CombinedHeatAndMoistureFiniteElement
   N1, \field Surface Temperature Upper Limit
        \type real
-       \units F
+       \units C
        \minimum 200
        \default 200.0
   N2, \field Minimum Surface Convection Heat Transfer Coefficient Value
@@ -5598,22 +5598,18 @@ OS:SpaceInfiltration:DesignFlowRate,
   N5, \field Constant Term Coefficient
        \note "A" in Equation
        \type real
-       \minimum 0
        \default 1.0
   N6, \field Temperature Term Coefficient
        \note "B" in Equation
        \type real
-       \minimum 0
        \default 0.0
   N7, \field Velocity Term Coefficient
        \note "C" in Equation
        \type real
-       \minimum 0
        \default 0.0
   N8; \field Velocity Squared Term Coefficient
        \note "D" in Equation
        \type real
-       \minimum 0
        \default 0.0
      
 OS:SpaceInfiltration:EffectiveLeakageArea,
@@ -5638,7 +5634,7 @@ OS:SpaceInfiltration:EffectiveLeakageArea,
        \type object-list
        \object-list ScheduleNames
   N1 , \field Effective Air Leakage Area
-       \units m2
+       \units cm2
        \ip-units in2
        \note "AL" in Equation
        \minimum> 0
@@ -8198,6 +8194,7 @@ OS:AirLoopHVAC:UnitaryHeatPump:AirToAir:MultiSpeed,
         \type object-list
         \object-list HeatingCoilsElectricMultiStage
         \object-list HeatingCoilsGasMultiStage
+        \object-list HeatingCoilsDXMultiSpeed
    N1 , \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
         \type real
         \minimum -20.0
@@ -9685,7 +9682,7 @@ OS:AirTerminal:SingleDuct:VAV:Reheat,
        \note At no time will the maximum flow rate calculated here exceed the value of
        \note Maximum Air Flow Rate.
        \type real
-       \autocalculatable
+       \autosizable
        \units m3/s-m2
   N8, \field Maximum Flow Fraction During Reheat
        \note Used only when Reheat Coil Object Type = Coil:Heating:Water and Damper Heating Action = Reverse
@@ -9697,7 +9694,7 @@ OS:AirTerminal:SingleDuct:VAV:Reheat,
        \note At no time will the maximum flow rate calculated here exceed the value of
        \note Maximum Air Flow Rate.
        \type real
-       \autocalculatable
+       \autosizable
   N9, \field Maximum Reheat Air Temperature
        \note Specifies the maximum allowable supply air temperature leaving the reheat coil.
        \note If left blank, there is no limit and no default. If unknown, 35C (95F) is recommended.
@@ -13480,7 +13477,6 @@ OS:Coil:Cooling:Water,
        \type real
        \autosizable
        \units m3/s
-       \ip-units gal/min
        \minimum 0
        \default autosize
   N3, \field Design Inlet Water Temperature
@@ -14360,7 +14356,68 @@ OS:Coil:Heating:Water:Baseboard,
       \type object-list
       \required-field
       \object-list ConnectionNames
-   
+
+OS:Coil:Heating:Water:Baseboard:Radiant,
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2, \field Name
+      \type alpha
+      \required-field
+      \reference RadiantBaseboardHeatingCoil
+      \reference ConnectionObject
+  A3, \field Inlet Node Name
+      \required-field
+      \type object-list
+      \object-list ConnectionNames
+  A4, \field Outlet Node Name
+      \required-field
+      \type object-list
+      \object-list ConnectionNames
+  N1, \field Rated Average Water Temperature
+      \required-field
+      \type real
+      \maximum 150.0
+      \minimum 20.0
+      \units C
+  N2, \field Rated Water Mass Flow Rate
+      \required-field
+      \type real
+      \maximum 10.0
+      \minimum> 0.0
+      \units kg/s
+  A5, \field Heating Design Capacity Method
+      \required-field
+      \type choice
+      \key HeatingDesignCapacity
+      \key CapacityPerFloorArea
+      \key FractionOfAutosizedHeatingCapacity
+  N3, \field Heating Design Capacity
+      \required-field
+      \type real
+      \units W
+      \minimum 0.0
+      \autosizable
+      \ip-units W
+  N4, \field Heating Design Capacity Per Floor Area
+      \required-field
+      \type real
+      \units W/m2
+      \minimum 0.0
+  N5, \field Fraction of Autosized Heating Design Capacity
+      \required-field
+      \type real
+      \minimum 0.0
+  N6, \field Maximum Water Flow Rate
+      \required-field
+      \autosizable
+      \type real
+      \units m3/s
+  N7; \field Convergence Tolerance
+      \required-field
+      \type real
+      \minimum> 0.0
+
 OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
        \Min-fields 20
   A1,  \field Handle
@@ -14629,7 +14686,7 @@ OS:Coil:Heating:DX:VariableSpeed,
         \required-field
         \note must be lower than or equal to the highest speed number
    N2,  \field Rated Heating Capacity At Selected Nominal Speed Level
-        \units w
+        \units W
         \type real
         \autosizable
         \required-field
@@ -14708,7 +14765,7 @@ OS:Coil:Heating:DX:VariableSpeed:SpeedData,
         \reference CoilHeatingDXVariableSpeedSpeedData
    N1,  \field Reference Unit Gross Rated Heating Capacity
         \note Heating capacity not accounting for the effect of supply air fan heat
-        \units w
+        \units W
         \type real
         \minimum 0
         \required-field
@@ -14767,7 +14824,7 @@ OS:Coil:Cooling:DX:VariableSpeed,
         \required-field
         \note must be lower than or equal to the highest speed number
    N2,  \field Gross Rated Total Cooling Capacity At Selected Nominal Speed Level
-        \units w
+        \units W
         \type real
         \autosizable
         \required-field
@@ -14848,7 +14905,7 @@ OS:Coil:Cooling:DX:VariableSpeed:SpeedData,
         \type alpha
         \reference CoilCoolingDXVariableSpeedSpeedData
    N1,  \field Reference Unit Gross Rated Total Cooling Capacity
-        \units w
+        \units W
         \type real
         \minimum 0
         \required-field
@@ -14932,7 +14989,7 @@ OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit,
         \required-field
         \note must be lower than or equal to the highest speed number
    N2,  \field Rated Heating Capacity At Selected Nominal Speed Level
-        \units w
+        \units W
         \type real
         \autosizable
         \required-field
@@ -14966,7 +15023,7 @@ OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
         \reference CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData
    N1,  \field Reference Unit Gross Rated Heating Capacity
         \note Heating capacity not accounting for the effect of supply air fan heat
-        \units w
+        \units W
         \type real
         \minimum 0
         \required-field
@@ -15058,7 +15115,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit,
         \required-field
         \note must be lower than or equal to the highest speed number
    N2,  \field Gross Rated Total Cooling Capacity At Selected Nominal Speed Level
-        \units w
+        \units W
         \type real
         \autosizable
         \required-field
@@ -15106,7 +15163,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
         \type alpha
         \reference CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData
    N1,  \field Reference Unit Gross Rated Total Cooling Capacity
-        \units w
+        \units W
         \type real
         \minimum 0
         \required-field
@@ -17290,7 +17347,7 @@ OS:EvaporativeFluidCooler:TwoSpeed,
        \type real
        \units m3/s
        \minimum> 0.0
-       \autocalculatable
+       \autosizable
        \note Low speed air flow rate must be less than high speed air flow rate
   N4 , \field Low Fan Speed Air Flow Rate Sizing Factor
        \required-field
@@ -17301,7 +17358,7 @@ OS:EvaporativeFluidCooler:TwoSpeed,
        \type real
        \units W
        \minimum> 0.0
-       \autocalculatable
+       \autosizable
        \ip-units W
        \note This is the fan motor electric input power at low speed
   N6 , \field Low Fan Speed Fan Power Sizing Factor
@@ -17337,7 +17394,7 @@ OS:EvaporativeFluidCooler:TwoSpeed,
        \type real
        \units W
        \minimum> 0.0
-       \autocalculatable
+       \autosizable
   N11, \field Low Speed Standard Capacity Sizing Factor
        \required-field
        \type real
@@ -17355,7 +17412,7 @@ OS:EvaporativeFluidCooler:TwoSpeed,
        \units W/K
        \minimum> 0.0
        \maximum 300000.0
-       \autocalculatable
+       \autosizable
        \note Only used for Performance Input Method = UFactorTimesAreaAndDesignWaterFlowRate;
        \note for other input methods, this field is ignored.
        \note Low speed fluid cooler UA must be less than high speed fluid cooler UA
@@ -17381,7 +17438,7 @@ OS:EvaporativeFluidCooler:TwoSpeed,
        \type real
        \units W
        \minimum> 0.0
-       \autocalculatable
+       \autosizable
        \note Only used for Performance Input Method = UserSpecifiedDesignCapacity;
        \note for other Performance Input Methods, this field is ignored.
   N18, \field Low Speed User Specified Design Capacity Sizing Factor
@@ -18113,7 +18170,7 @@ OS:PlantLoop,
        \object-list ConnectorLists
   A15, \field Load Distribution Scheme
        \type choice
-       \default Sequential
+       \required-field
        \key Optimal
        \key Sequential
        \key Uniform
@@ -18449,6 +18506,7 @@ OS:LoadProfile:Plant,
        \required-field
        \type real
        \units m3/s
+       \ip-units gal/min
   A6 ; \field Flow Rate Fraction Schedule Name
        \required-field
        \type object-list
@@ -21704,10 +21762,18 @@ OS:ZoneHVAC:EnergyRecoveryVentilator,
         \minimum 0.0
         \note 0.00236 m3/s-person corresponds to 5 ft3/min-person
         \note Used only when supply and exhaust air flow rates are autosized.
-  A8 ;  \field Availability Manager List Name
+  A8 ,  \field Availability Manager List Name
         \note Enter the name of an AvailabilityManagerAssignmentList object.
         \type object-list
         \object-list SystemAvailabilityManagerLists
+  A9 ,  \field Air Inlet Node Name
+        \required-field
+        \type object-list
+        \object-list ConnectionNames
+  A10;  \field Air Outlet Node Name
+        \required-field
+        \type object-list
+        \object-list ConnectionNames
 
 OS:ZoneHVAC:EnergyRecoveryVentilator:Controller,
   A1 , \field Handle
@@ -21784,6 +21850,7 @@ OS:ZoneHVAC:EnergyRecoveryVentilator:Controller,
        \note setpoint AND the outdoor humidity ratio is less than the indoor humidity ratio.
 
 OS:ZoneHVAC:UnitVentilator,
+  \min-fields 19
    A1 , \field Handle
         \type handle
         \required-field
@@ -21880,63 +21947,16 @@ OS:ZoneHVAC:Baseboard:RadiantConvective:Water,
        \required-field
        \type object-list
        \object-list ScheduleNames
-  A4,  \field Inlet Node Name
-       \required-field
+  A4,  \field Heating Coil Name
        \type object-list
-       \object-list ConnectionNames
-  A5,  \field Outlet Node Name
        \required-field
-       \type object-list
-       \object-list ConnectionNames
-  N1,  \field Rated Average Water Temperature
-       \required-field
-       \type real
-       \maximum 150.0
-       \minimum 20.0
-       \units C
-  N2,  \field Rated Water Mass Flow Rate
-       \required-field
-       \type real
-       \maximum 10.0
-       \minimum> 0.0
-       \units kg/s
-  A6,  \field Heating Design Capacity Method
-       \required-field
-       \type choice
-       \key HeatingDesignCapacity
-       \key CapacityPerFloorArea
-       \key FractionOfAutosizedHeatingCapacity
-  N3 , \field Heating Design Capacity
-       \required-field
-       \type real
-       \units W
-       \minimum 0.0
-       \autosizable
-       \ip-units W
-  N4 , \field Heating Design Capacity Per Floor Area
-       \required-field
-       \type real
-       \units W/m2
-       \minimum 0.0
-  N5 , \field Fraction of Autosized Heating Design Capacity
-       \required-field
-       \type real
-       \minimum 0.0
-  N6,  \field Maximum Water Flow Rate
-       \required-field
-       \autosizable
-       \type real
-       \units m3/s
-  N7,  \field Convergence Tolerance
-       \required-field
-       \type real
-       \minimum> 0.0
-  N8,  \field Fraction Radiant
+       \object-list RadiantBaseboardHeatingCoil
+  N1,  \field Fraction Radiant
        \required-field
        \type real
        \minimum 0
        \maximum 1
-  N9;  \field Fraction of Radiant Energy Incident on People
+  N2;  \field Fraction of Radiant Energy Incident on People
        \required-field
        \type real
        \minimum 0
@@ -23128,6 +23148,7 @@ OS:WaterUse:Equipment:Definition,
   N1 , \field Peak Flow Rate
        \required-field
        \units m3/s
+       \ip-units gal/min
        \type real
        \minimum 0.0
   A4 , \field Target Temperature Schedule Name

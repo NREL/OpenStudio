@@ -29,7 +29,38 @@ class AddShadingControls < OpenStudio::Ruleset::ModelUserScript
   # then pass in the results on run
   def arguments(model)
     result = OpenStudio::Ruleset::OSArgumentVector.new
-
+    
+    material_hash = Hash.new
+    model.getShadingMaterials.each do |sm|
+      material_hash[sm.name.get] = sm
+    end
+    
+    material_handles = OpenStudio::StringVector.new
+    material_names = OpenStudio::StringVector.new
+    
+    material_handles << OpenStudio::toUUID("").to_s
+    material_names << "*None*"
+    
+    material_handles << OpenStudio::createUUID().to_s
+    material_names << "*New Blind*"
+    
+    material_handles << OpenStudio::createUUID().to_s
+    material_names << "*New DaylightRedirectionDevice*"
+    
+    material_handles << OpenStudio::createUUID().to_s
+    material_names << "*New Shade*"
+    
+    material_hash.sort.map do |material_name, material|
+      material_handles << material.handle.to_s
+      material_names << material_name
+    end
+    
+    material = OpenStudio::Ruleset::OSArgument::makeChoiceArgument("material", material_handles, material_names, true)
+    material.setDisplayName("Shading material.")
+    material.setDescription("Choose a shading material to deploy when sub surface is shaded.")
+    material.setDefaultValue("*None*")
+    result << material
+    
     construction_hash = Hash.new
     model.getConstructions.each do |c|
       c.layers.each do |layer|
@@ -52,30 +83,12 @@ class AddShadingControls < OpenStudio::Ruleset::ModelUserScript
     end
     
     construction = OpenStudio::Ruleset::OSArgument::makeChoiceArgument("construction", construction_handles, construction_names, true)
-    construction.setDisplayName("Choose shaded construction.")
+    construction.setDisplayName("Switchable construction.")
+    construction.setDescription("Choose a construction to represent the shaded state of a switchable glazing.")
     construction.setDefaultValue("*None*")
     result << construction
     
-    material_hash = Hash.new
-    model.getShadingMaterials.each do |sm|
-      material_hash[sm.name.get] = sm
-    end
     
-    material_handles = OpenStudio::StringVector.new
-    material_names = OpenStudio::StringVector.new
-    
-    material_handles << OpenStudio::toUUID("").to_s
-    material_names << "*None*"
-    
-    material_hash.sort.map do |material_name, material|
-      material_handles << material.handle.to_s
-      material_names << material_name
-    end
-    
-    material = OpenStudio::Ruleset::OSArgument::makeChoiceArgument("material", material_handles, material_names, true)
-    material.setDisplayName("Choose shading material.")
-    material.setDefaultValue("*None*")
-    result << material
     
     return result
   end
@@ -99,10 +112,32 @@ class AddShadingControls < OpenStudio::Ruleset::ModelUserScript
       construction = nil
     end
     
+    puts user_arguments
+   
     if not material.empty? and not material.get.to_ShadingMaterial.empty?
       material = material.get.to_ShadingMaterial.get
     else
-      material = nil
+      begin
+        material = nil
+        
+        # look at display name of material argument
+        user_arguments.each_value do |argument|
+          if argument.name == 'material'
+            puts 'found it!'
+            valueDisplayName = argument.valueDisplayName
+            if valueDisplayName == '*New Blind*'
+              material = OpenStudio::Model::Blind.new(model)
+            elsif valueDisplayName == '*New DaylightRedirectionDevice*'
+              material = OpenStudio::Model::DaylightRedirectionDevice.new(model)
+            elsif valueDisplayName == '*New Shade*'
+              material = OpenStudio::Model::Shade.new(model)
+            end
+          end
+        end
+      rescue Exception => e  
+        #puts e.message  
+        #puts e.backtrace.inspect  
+      end
     end
     
     if construction and material

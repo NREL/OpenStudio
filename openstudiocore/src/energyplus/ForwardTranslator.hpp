@@ -497,6 +497,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateCoilCoolingDXVariableSpeed( model::CoilCoolingDXVariableSpeed & modelObject );
 
+  boost::optional<IdfObject> translateCoilCoolingDXVariableSpeedWithoutUnitary( model::CoilCoolingDXVariableSpeed & modelObject );
+
   boost::optional<IdfObject> translateCoilCoolingWater( model::CoilCoolingWater & modelObject );
 
   boost::optional<IdfObject> translateCoilCoolingWaterToAirHeatPumpEquationFit( model::CoilCoolingWaterToAirHeatPumpEquationFit & modelObject );
@@ -514,6 +516,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateCoilHeatingDXVariableRefrigerantFlow( model::CoilHeatingDXVariableRefrigerantFlow & modelObject );
 
   boost::optional<IdfObject> translateCoilHeatingDXVariableSpeed( model::CoilHeatingDXVariableSpeed & modelObject );
+
+  boost::optional<IdfObject> translateCoilHeatingDXVariableSpeedWithoutUnitary( model::CoilHeatingDXVariableSpeed & modelObject );
 
   boost::optional<IdfObject> translateCoilHeatingElectric( model::CoilHeatingElectric & modelObject );
 

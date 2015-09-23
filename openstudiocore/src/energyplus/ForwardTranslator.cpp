@@ -690,6 +690,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateConvergenceLimits(limits);
       break;
     }
+  case openstudio::IddObjectType::OS_Coil_Cooling_CooledBeam:
+    {
+      // DLM: is this a no-op?
+      break;
+    }
   case openstudio::IddObjectType::OS_Coil_Cooling_DX_SingleSpeed :
     {
       model::CoilCoolingDXSingleSpeed coil = modelObject.cast<CoilCoolingDXSingleSpeed>();
@@ -739,7 +744,16 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   case openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableSpeed :
     {
       model::CoilCoolingDXVariableSpeed coil = modelObject.cast<CoilCoolingDXVariableSpeed>();
-      retVal = translateCoilCoolingDXVariableSpeed(coil);
+      if( this->isHVACComponentWithinUnitary(coil) ) {
+        retVal = translateCoilCoolingDXVariableSpeedWithoutUnitary(coil);
+      } else {
+        retVal = translateCoilCoolingDXVariableSpeed(coil);
+      }
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableSpeed_SpeedData :
+    {
+      // DLM: is this a no-op?
       break;
     }
   case openstudio::IddObjectType::OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlow :
@@ -770,6 +784,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateCoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit(coil);
       break;
     }
+  case openstudio::IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedData:
+    {
+      // DLM: is this a no-op?
+      break;
+    }
   case openstudio::IddObjectType::OS_Coil_Heating_Desuperheater :
     {
       model::CoilHeatingDesuperheater coil = modelObject.cast<CoilHeatingDesuperheater>();
@@ -792,10 +811,24 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateCoilHeatingDXMultiSpeed(coil);
       break;
     }
+  case openstudio::IddObjectType::OS_Coil_Heating_DX_MultiSpeed_StageData:
+    {
+      //DLM: is this a no-op?
+      break;
+    }
   case openstudio::IddObjectType::OS_Coil_Heating_DX_VariableSpeed :
     {
       model::CoilHeatingDXVariableSpeed coil = modelObject.cast<CoilHeatingDXVariableSpeed>();
-      retVal = translateCoilHeatingDXVariableSpeed(coil);
+      if( this->isHVACComponentWithinUnitary(coil) ) {
+        retVal = translateCoilHeatingDXVariableSpeedWithoutUnitary(coil);
+      } else {
+        retVal = translateCoilHeatingDXVariableSpeed(coil); 
+      }
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Heating_DX_VariableSpeed_SpeedData:
+    {
+      //DLM: is this a no-op?
       break;
     }
   case openstudio::IddObjectType::OS_Coil_Heating_Electric :
@@ -854,6 +887,21 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       model::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit coil = modelObject.cast<CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit>();
       retVal = translateCoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit(coil);
       break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedData:
+    {
+      // DLM: is this a no-op?
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Heating_Water_Baseboard:
+    {
+      // DLM: is this a no-op?
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Heating_Water_Baseboard_Radiant:
+    {
+      // no-op
+      return retVal;
     }
   case openstudio::IddObjectType::OS_CoilPerformance_DX_Cooling :
     {
@@ -926,6 +974,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::FFactorGroundFloorConstruction mo = modelObject.cast<FFactorGroundFloorConstruction>();
       retVal = translateFFactorGroundFloorConstruction(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Construction_WindowDataFile:
+    {
+      LOG(Warn, "OS_WindowDataFile is not currently translated");
       break;
     }
   case openstudio::IddObjectType::OS_Controller_MechanicalVentilation :
@@ -1090,6 +1143,16 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateDesignDay(designDay);
       break;
     }
+  case openstudio::IddObjectType::OS_SizingPeriod_WeatherFileConditionType:
+    {
+      LOG(Warn, "OS_SizingPeriod_WeatherFileConditionType is not currently translated");
+      return retVal;
+    }
+  case openstudio::IddObjectType::OS_SizingPeriod_WeatherFileDays:
+    {
+      LOG(Warn, "OS_SizingPeriod_WeatherFileDays is not currently translated");
+      return retVal;
+    }
   case openstudio::IddObjectType::OS_Sizing_Plant :
     {
       model::SizingPlant sizingPlant = modelObject.cast<SizingPlant>();
@@ -1147,6 +1210,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateDesignSpecificationOutdoorAir(designSpecificationOutdoorAir);
       break;
     }
+  case openstudio::IddObjectType::OS_DesignSpecification_ZoneAirDistribution:
+    {
+      // DLM: appears to be translated in SizingZone
+      break;
+    }
   case openstudio::IddObjectType::OS_DistrictCooling :
     {
       model::DistrictCooling districtCooling = modelObject.cast<DistrictCooling>();
@@ -1169,6 +1237,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::ElectricEquipment equipment = modelObject.cast<ElectricEquipment>();
       retVal = translateElectricEquipment(equipment);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ElectricEquipment_Definition:
+    {
+      // no-op
       break;
     }
   case openstudio::IddObjectType::OS_ElectricLoadCenter_Distribution:
@@ -1219,6 +1292,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateExteriorLights(lights);
       break;
     }
+  case openstudio::IddObjectType::OS_Exterior_Lights_Definition:
+    {
+      // no-op
+      break;
+    }
   case openstudio::IddObjectType::OS_Facility :
     {
       // no-op
@@ -1267,6 +1345,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translateGeneratorPhotovoltaic(temp);
     break;
   }
+  case openstudio::IddObjectType::OS_Glare_Sensor:
+    {
+      // no-op
+      break;
+    }
   case openstudio::IddObjectType::OS_GroundHeatExchanger_HorizontalTrench :
     {
       auto mo = modelObject.cast<GroundHeatExchangerHorizontalTrench>();
@@ -1315,6 +1398,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateHotWaterEquipment(hotWaterEquipment);
       break;
     }
+  case openstudio::IddObjectType::OS_HotWaterEquipment_Definition:
+    {
+      // no-op
+      break;
+    }
   case openstudio::IddObjectType::OS_Humidifier_Steam_Electric :
     {
       model::HumidifierSteamElectric humidifierSteamElectric = modelObject.cast<HumidifierSteamElectric>();
@@ -1331,6 +1419,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::GasEquipment equipment = modelObject.cast<GasEquipment>();
       retVal = translateGasEquipment(equipment);
+      break;
+    }
+  case openstudio::IddObjectType::OS_GasEquipment_Definition:
+    {
+      // no-op
       break;
     }
   case openstudio::IddObjectType::OS_IlluminanceMap :
@@ -1355,6 +1448,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::InternalMass internalMass = modelObject.cast<InternalMass>();
       retVal = translateInternalMass(internalMass);
+      break;
+    }
+  case openstudio::IddObjectType::OS_InternalMass_Definition:
+    {
+      // no-op
       break;
     }
   case openstudio::IddObjectType::OS_WaterHeater_Mixed :
@@ -1387,6 +1485,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateWaterUseEquipment(waterUseEquipment);
       break;
     }
+  case openstudio::IddObjectType::OS_WaterUse_Equipment_Definition:
+    {
+      // no-op
+      break;
+    }
   case openstudio::IddObjectType::OS_WindowMaterial_GasMixture :
     {
       model::GasMixture gasMixture = modelObject.cast<GasMixture>();
@@ -1417,16 +1520,41 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       LOG(Warn, "OS:LifeCycleCost:UsePriceEscalation '" << modelObject.name().get() << "' not translated to EnergyPlus.");
       return retVal;
     }
+  case openstudio::IddObjectType::OS_LightingDesignDay:
+    {
+      // no-op
+      break;
+    }
+  case openstudio::IddObjectType::OS_LightingSimulationControl:
+    {
+      // no-op
+      break;
+    }
+  case openstudio::IddObjectType::OS_LightingSimulationZone:
+    {
+      // no-op
+      break;
+    }
   case openstudio::IddObjectType::OS_Lights :
     {
       model::Lights lights = modelObject.cast<Lights>();
       retVal = translateLights(lights);
       break;
     }
+  case openstudio::IddObjectType::OS_Lights_Definition:
+    {
+      // no-op
+      break;
+    }
   case openstudio::IddObjectType::OS_Luminaire :
     {
       model::Luminaire luminaire = modelObject.cast<Luminaire>();
       retVal = translateLuminaire(luminaire);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Luminaire_Definition:
+    {
+      // no-op
       break;
     }
   case openstudio::IddObjectType::OS_Material :
@@ -1465,6 +1593,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateMeter(meter);
       break;
     }
+  case openstudio::IddObjectType::OS_ModelObjectList :
+    {
+      // no-op
+      break;
+    }
   case openstudio::IddObjectType::OS_Node :
     {
       model::Node node = modelObject.cast<Node>();
@@ -1489,6 +1622,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translatePhotovoltaicPerformanceSimple(temp);
     break;
   }
+  case openstudio::IddObjectType::OS_OtherEquipment_Definition:
+    {
+      //no-op
+      break;
+    }
   case openstudio::IddObjectType::OS_PlantLoop :
     {
       PlantLoop plantLoop = modelObject.cast<PlantLoop>();
@@ -1585,6 +1723,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translatePeople(people);
       break;
     }
+  case openstudio::IddObjectType::OS_People_Definition:
+    {
+      // no-op
+      break;
+    }
   case openstudio::IddObjectType::OS_Pipe_Adiabatic:
   {
     model::PipeAdiabatic pipe = modelObject.cast<PipeAdiabatic>();
@@ -1607,6 +1750,16 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::PortList portList = modelObject.cast<PortList>();
       retVal = translatePortList(portList);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ProgramControl:
+    {
+      LOG(Warn, "OS_ProgramControl is not currently translated");
+      break;
+    } 
+  case openstudio::IddObjectType::OS_RadianceParameters:
+    {
+      // no-op
       break;
     }
   case openstudio::IddObjectType::OS_Refrigeration_AirChiller :
@@ -1651,6 +1804,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateRefrigerationCondenserWaterCooled(refrigerationCondenserWaterCooled);
       break;
     }
+  case openstudio::IddObjectType::OS_Refrigeration_DefrostCycleParameters:
+    {
+      // DLM: is this a no-op?
+      break;
+    }
   case openstudio::IddObjectType::OS_Refrigeration_GasCooler_AirCooled:
     {
       model::RefrigerationGasCoolerAirCooled refrigerationGasCoolerAirCooled = modelObject.cast<RefrigerationGasCoolerAirCooled>();
@@ -1691,6 +1849,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::RefrigerationWalkIn refrigerationWalkIn = modelObject.cast<RefrigerationWalkIn>();
       retVal = translateRefrigerationWalkIn(refrigerationWalkIn);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Refrigeration_WalkIn_ZoneBoundary:
+    {
+      // DLM: is this a no-op
       break;
     }
   case openstudio::IddObjectType::OS_Rendering_Color :
@@ -2033,10 +2196,20 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // no-op
       return retVal;
     }
+  case openstudio::IddObjectType::OS_StandardsInformation_Material:
+    {
+      // no-op
+      return retVal;
+    }
   case openstudio::IddObjectType::OS_SteamEquipment :
     {
       model::SteamEquipment steamEquipment = modelObject.cast<SteamEquipment>();
       retVal = translateSteamEquipment(steamEquipment);
+      break;
+    }
+  case openstudio::IddObjectType::OS_SteamEquipment_Definition:
+    {
+      // no-op
       break;
     }
   case openstudio::IddObjectType::OS_Surface :
@@ -2105,6 +2278,46 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateTimestep(timestep);
       break;
     }
+  case openstudio::IddObjectType::OS_UtilityBill:
+    {
+      // no-op
+      break;
+    }
+  case openstudio::IddObjectType::OS_UtilityCost_Charge_Block:
+    {
+      LOG(Warn, "OS_UtilityCost_Charge_Block is not currently translated");
+      break;
+    }
+  case openstudio::IddObjectType::OS_UtilityCost_Charge_Simple:
+    {
+      LOG(Warn, "OS_UtilityCost_Charge_Simple is not currently translated");
+      break;
+    }
+  case openstudio::IddObjectType::OS_UtilityCost_Computation:
+    {
+      LOG(Warn, "OS_UtilityCost_Computation is not currently translated");
+      break;
+    }
+  case openstudio::IddObjectType::OS_UtilityCost_Qualify:
+    {
+      LOG(Warn, "OS_UtilityCost_Qualify is not currently translated");
+      break;
+    }
+  case openstudio::IddObjectType::OS_UtilityCost_Ratchet:
+    {
+      LOG(Warn, "OS_UtilityCost_Ratchet is not currently translated");
+      break;
+    }
+  case openstudio::IddObjectType::OS_UtilityCost_Tariff:
+    {
+      LOG(Warn, "OS_UtilityCost_Tariff is not currently translated");
+      break;
+    }
+  case openstudio::IddObjectType::OS_UtilityCost_Variable:
+    {
+      LOG(Warn, "OS_UtilityCost_Variable is not currently translated");
+      break;
+    }
   case openstudio::IddObjectType::OS_Version :
     {
       model::Version version = modelObject.cast<Version>();
@@ -2164,12 +2377,22 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateStandardGlazing(glazing);
       break;
     }
+  case openstudio::IddObjectType::OS_WindowMaterial_GlazingGroup_Thermochromic:
+    {
+      LOG(Warn, "OS_WindowMaterial_GlazingGroup_Thermochromic is not currently translated");
+      break;
+    }
   case  openstudio::IddObjectType::OS_WindowProperty_FrameAndDivider:
   {
     model::WindowPropertyFrameAndDivider frameAndDivider = modelObject.cast<WindowPropertyFrameAndDivider>();
     retVal = translateWindowPropertyFrameAndDivider(frameAndDivider);
     break;
   }
+  case openstudio::IddObjectType::OS_YearDescription:
+    {
+      // no-op
+      return retVal;
+    }
   case openstudio::IddObjectType::OS_ZoneAirContaminantBalance :
     {
       // no-op
@@ -2409,6 +2632,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_LifeCycleCost_UsePriceEscalation);
 
   result.push_back(IddObjectType::OS_SimulationControl);
+  result.push_back(IddObjectType::OS_ProgramControl);
   result.push_back(IddObjectType::OS_ConvergenceLimits);
   result.push_back(IddObjectType::OS_HeatBalanceAlgorithm);
   result.push_back(IddObjectType::OS_RunPeriod);

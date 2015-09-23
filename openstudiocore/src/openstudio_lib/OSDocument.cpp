@@ -746,7 +746,7 @@ namespace openstudio {
 
       connect(m_mainRightColumnController.get(), &MainRightColumnController::itemRemoveClicked, m_mainTabController.get(), &SpacesTabController::itemRemoveClicked);
 
-      connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForFacilitySubTab);
+      connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForSpacesSubTab);
 
       connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);
 

@@ -766,9 +766,11 @@ Section "-Core installation"
   Var /GLOBAL sketchupArchErrorMessage
   Var /GLOBAL sketchupConfigStatement
   ${If} ${FileExists} "$INSTDIR\ruby-install\ruby\lib\libmsvcrt-ruby200.dll.a"
+    ; We are installing 32 bit OpenStudio
     StrCpy $sketchupArchErrorMessage "32-bit OpenStudio is incompatible with 64-bit SketchUp 2015"
     StrCpy $sketchupConfigStatement "if RUBY_PLATFORM=='i386-mingw32' then require '$INSTDIR\Ruby\openstudio' else raise LoadError, '$sketchupArchErrorMessage' end$\n"
   ${Else}
+    ; We are installing 64 bit OpenStudio
     StrCpy $sketchupArchErrorMessage "64-bit OpenStudio is incompatible with 32-bit SketchUp 2015"
     StrCpy $sketchupConfigStatement "if RUBY_PLATFORM=='x64-mingw32' then require '$INSTDIR\Ruby\openstudio' else raise LoadError, '$sketchupArchErrorMessage' end$\n"
   ${EndIf}
@@ -777,26 +779,16 @@ Section "-Core installation"
   Var /GLOBAL sketchup15Dir
   Push $OUTDIR
 
-  ; Look for SketchUp 2015 32-bit
+  ; Look for SketchUp 2015 32-bit; if not installed, look for 64-bit
   ReadRegStr $sketchup15Dir HKLM "Software\SketchUp\SketchUp 2015\InstallLocation" ""
-  StrCmp $sketchup15Dir "" 0 su15found
-  ; Look for SketchUp 2015 64-bit if 32-bit was not found
+  StrCmp $sketchup15Dir "" 0 su15-32
   SetRegView 64
   ReadRegStr $sketchup15Dir HKLM "Software\SketchUp\SketchUp 2015\InstallLocation" ""
   SetRegView 32
-  StrCmp $sketchup15Dir "" su15done su15found
-
-  su15found:
-  IntOp $sketchupFound $sketchupFound + 1
-  ; SketchUp 2015 32-bit
-  StrCmp $sketchup15Dir "C:\Program Files (x86)\SketchUp\SketchUp 2015\" su15-32 0
-  ; SketchUp 2015 64-bit
-  StrCmp $sketchup15Dir "C:\Program Files\SketchUp\SketchUp 2015\" su15-64 0
-  ; Unknown install location
-  MessageBox MB_OK "Unrecognized SketchUp 2015 install location.  The OpenStudio SketchUp Plug-in will not be installed."
-  Goto su15done
+  StrCmp $sketchup15Dir "" su15done su15-64
 
   su15-32:
+  IntOp $sketchupFound $sketchupFound + 1
   ${If} ${FileExists} "$INSTDIR\ruby-install\ruby\lib\libmsvcrt-ruby200.dll.a"
     Goto su15install
   ${Else}
@@ -805,6 +797,7 @@ Section "-Core installation"
   ${EndIf}
 
   su15-64:
+  IntOp $sketchupFound $sketchupFound + 1
   ${If} ${FileExists} "$INSTDIR\ruby-install\ruby\lib\libx64-msvcrt-ruby200.dll.a"
     Goto su15install
   ${Else}

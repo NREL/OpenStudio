@@ -79,9 +79,17 @@ bool PlantEquipmentOperationRangeBasedScheme_Impl::addLoadRange(double upperLimi
       ModelObjectList modelObjectList(m);
 
       // Remove duplicates
-      auto equipmentCopy = equipment;
-      std::sort( equipmentCopy.begin(), equipmentCopy.end() );
-      equipmentCopy.erase( unique( equipmentCopy.begin(), equipmentCopy.end() ), equipmentCopy.end() );
+      //auto equipmentCopy = equipment;
+      //std::sort( equipmentCopy.begin(), equipmentCopy.end() );
+      //equipmentCopy.erase( unique( equipmentCopy.begin(), equipmentCopy.end() ), equipmentCopy.end() );
+      
+      // Remove duplicates primitively so that the order is preserved
+      std::vector<HVACComponent> equipmentCopy;
+      for( const auto & mo : equipment ) {
+        if( std::find(equipmentCopy.begin(),equipmentCopy.end(),mo) == equipmentCopy.end() ) {
+          equipmentCopy.push_back(mo);
+        }
+      }
       for( const auto & mo : equipmentCopy ) {
         modelObjectList.addModelObject(mo);
       }

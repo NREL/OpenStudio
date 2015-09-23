@@ -20,17 +20,17 @@
 #ifndef OPENSTUDIO_YEARSETTINGSWIDGET_HPP
 #define OPENSTUDIO_YEARSETTINGSWIDGET_HPP
 
-#include "../model/YearDescription.hpp"
-#include "../model/YearDescription_Impl.hpp"
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
+#include "../model/YearDescription.hpp"
+#include "../model/YearDescription_Impl.hpp"
+
+#include <QRadioButton>
 #include <QWidget>
 
-class QRadioButton;
+class QDate;
 
 class QDateEdit;
-
-class QDate;
 
 namespace openstudio {
 
@@ -58,6 +58,8 @@ class YearSettingsWidget : public QWidget
   static std::vector<std::string> months();
 
   YearSettingsWidget(const model::Model & model, QWidget * parent = nullptr);
+
+  bool calendarYearChecked();
 
   virtual ~YearSettingsWidget() {}
 
@@ -118,41 +120,41 @@ class YearSettingsWidget : public QWidget
   private:
 
   // year selection section
-  QRadioButton * m_calendarYearButton;
+  QRadioButton * m_calendarYearButton = nullptr;
 
-  OSComboBox * m_calendarYearEdit;
+  OSComboBox * m_calendarYearEdit = nullptr;
 
-  QRadioButton * m_firstDayOfYearButton;
+  QRadioButton * m_firstDayOfYearButton = nullptr;
 
-  OSComboBox * m_firstDayOfYearEdit;
+  OSComboBox * m_firstDayOfYearEdit = nullptr;
 
   // daylight savings section
 
-  OSSwitch * m_dstOnOffButton;
+  OSSwitch * m_dstOnOffButton = nullptr;
 
-  QRadioButton * m_dayOfWeekAndMonthStartButton;
+  QRadioButton * m_dayOfWeekAndMonthStartButton = nullptr;
 
-  OSComboBox * m_startWeekBox;
+  OSComboBox * m_startWeekBox = nullptr;
 
-  OSComboBox * m_startDayBox;
+  OSComboBox * m_startDayBox = nullptr;
 
-  OSComboBox * m_startMonthBox;
+  OSComboBox * m_startMonthBox = nullptr;
 
-  QRadioButton * m_dateStartButton;
+  QRadioButton * m_dateStartButton = nullptr;
 
-  QDateEdit * m_startDateEdit;
+  QDateEdit * m_startDateEdit = nullptr;
 
-  QRadioButton * m_dayOfWeekAndMonthEndButton;
+  QRadioButton * m_dayOfWeekAndMonthEndButton = nullptr;
 
-  OSComboBox * m_endWeekBox;
+  OSComboBox * m_endWeekBox = nullptr;
 
-  OSComboBox * m_endDayBox;
+  OSComboBox * m_endDayBox = nullptr;
 
-  OSComboBox * m_endMonthBox;
+  OSComboBox * m_endMonthBox = nullptr;
 
-  QRadioButton * m_dateEndButton;
+  QRadioButton * m_dateEndButton = nullptr;
 
-  QDateEdit * m_endDateEdit;
+  QDateEdit * m_endDateEdit = nullptr;
 
   // other
 

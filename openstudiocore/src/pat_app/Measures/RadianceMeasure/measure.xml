@@ -2,7 +2,7 @@
   <schema_version>3.0</schema_version>
   <name>radiance_measure</name>
   <uid>1e3cfef8-b051-4e60-8bb0-ed2d29d4f45d</uid>
-  <version_id>ae118d24-4a22-4ffc-8b25-5e6b4f427147</version_id>
+  <version_id>b5973223-046a-425c-ae0b-bc33e539cba2</version_id>
   <xml_checksum>381B7733</xml_checksum>
   <class_name>RadianceMeasure</class_name>
   <display_name>Radiance Daylighting Measure</display_name>
@@ -70,6 +70,25 @@
         </choice>
       </choices>
     </argument>
+    <argument>
+      <name>rad_settings</name>
+      <display_name>Radiance Settings</display_name>
+      <description>Radiance simulation parameters. Default is to get these from the model; the Testing option is for testing the Radiance workflow only, as it uses very crude parameters for a fast simulation but very inaccurate results.</description>
+      <type>Choice</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>Model</default_value>
+      <choices>
+        <choice>
+          <value>Model</value>
+          <display_name>Model</display_name>
+        </choice>
+        <choice>
+          <value>Testing</value>
+          <display_name>Testing</display_name>
+        </choice>
+      </choices>
+    </argument>
   </arguments>
   <provenances/>
   <tags>
@@ -110,16 +129,16 @@
       <checksum>BDF687C1</checksum>
     </file>
     <file>
-      <filename>radiance_measure_test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>2253BD73</checksum>
-    </file>
-    <file>
       <filename>test_model.osm</filename>
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
       <checksum>13FF1228</checksum>
+    </file>
+    <file>
+      <filename>radiance_measure_test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>F71FCE9A</checksum>
     </file>
     <file>
       <version>
@@ -130,7 +149,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>9120A0E5</checksum>
+      <checksum>B8FE1B44</checksum>
     </file>
   </files>
 </measure>

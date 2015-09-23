@@ -503,10 +503,9 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterStratified( Wa
   }
 
   // Number of Nodes
-  auto num_nodes = modelObject.numberofNodes();
-  if( num_nodes )
   {
-    idfObject.setInt(WaterHeater_StratifiedFields::NumberofNodes,value.get());
+    auto num_nodes = modelObject.numberofNodes();
+    idfObject.setInt(WaterHeater_StratifiedFields::NumberofNodes,num_nodes);
   }
 
   // Additional Destratification Conductivity

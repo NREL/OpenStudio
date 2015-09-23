@@ -340,7 +340,9 @@ namespace detail {
   std::vector<ModelObject> CoilHeatingDXVariableSpeed_Impl::children() const {
     std::vector<ModelObject> children;
     if( auto const _stageDataList = speedDataList() ) {
-      children.push_back( _stageDataList.get() );
+      for( const auto & mo : _stageDataList->modelObjects() ) {
+        children.push_back( mo );
+      }
     }
     children.push_back( energyPartLoadFractionCurve() );
     if ( auto curve = defrostEnergyInputRatioFunctionofTemperatureCurve() ) {
@@ -473,6 +475,17 @@ namespace detail {
   void CoilHeatingDXVariableSpeed_Impl::resetSpeedDataList() {
     bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::SpeedDataList, "");
     OS_ASSERT(result);
+  }
+
+  std::vector<IdfObject> CoilHeatingDXVariableSpeed_Impl::remove()
+  {
+    auto _stageDataList = speedDataList();
+    auto result = StraightComponent_Impl::remove();
+    if( (! result.empty()) && _stageDataList ) {
+      _stageDataList->remove();
+    }
+
+    return result;
   }
 
 } // detail

@@ -19,18 +19,18 @@ set(OPENSTUDIO_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VE
 set(OPENSTUDIO_LONG_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}.${CMAKE_VERSION_BUILD}")
 
 # EnergyPlus Idd version
-if( NOT ENERGYPLUS_VERSION_MAJOR )
+if(NOT ENERGYPLUS_VERSION_MAJOR)
   set(ENERGYPLUS_VERSION_MAJOR 8)
 endif()
-if( NOT ENERGYPLUS_VERSION_MINOR )
+if(NOT ENERGYPLUS_VERSION_MINOR)
   set(ENERGYPLUS_VERSION_MINOR 3)
 endif()
-if( NOT ENERGYPLUS_VERSION_PATCH )
+if(NOT ENERGYPLUS_VERSION_PATCH)
   set(ENERGYPLUS_VERSION_PATCH 0)
 endif()
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-if( NOT ENERGYPLUS_BUILD_SHA )
+if(NOT ENERGYPLUS_BUILD_SHA)
   set(ENERGYPLUS_BUILD_SHA "6d97d074ea")
 endif()
 
@@ -88,7 +88,7 @@ option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
 option(BUILD_TESTING "Build testing targets" OFF)
 
 # Build package
-# Requires: EnergyPlus
+# Requires: EnergyPlus, Radiance
 option(BUILD_PACKAGE "Build package" OFF)
 
 # Build test runner targets.
@@ -103,11 +103,6 @@ option(BUILD_R "Build R package" OFF)
 
 # Build Ruby gem
 option(BUILD_RUBY_GEM "Build Ruby Gem" OFF)
-
-if( BUILD_PACKAGE )
-  option(PACKAGE_RADIANCE "Package Radiance" OFF)
-  option(PACKAGE_ENERGYPLUS "Package EnergyPlus" ON)
-endif()
 
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -339,6 +334,7 @@ endif()
 # Dependencies
 
 # EnergyPlus
+set(ENV{ENERGYPLUSDIR} ${ENERGYPLUS_LOCATION})
 find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
 
 # Ruby
@@ -416,7 +412,7 @@ set(ALL_RUBY_BINDING_TARGETS "") # global list
 # build rdoc
 if(BUILD_DOCUMENTATION)
   if(WIN32)
-    get_filename_component(RUBY_BIN_DIR "${RUBY_EXECUTABLE}" PATH)
+    get_filename_component(RUBY_BIN_DIR "${RUBY_EXECUTABLE}" DIRECTORY)
     find_file(RDOC NAMES rdoc.bat HINTS $ENV{PATH} "${RUBY_BIN_DIR}")
     find_file(RI NAMES ri.bat HINTS $ENV{PATH} "${RUBY_BIN_DIR}")
   else()
@@ -689,7 +685,7 @@ list(APPEND QT_LIBS ${Qt5PrintSupport_LIBRARIES})
 ### recreating QT_LIBRARY_DIR for qt5
 if(WIN32 AND TARGET Qt5::Core)
   get_property(_Qt5_Core_LOCATION TARGET Qt5::Core PROPERTY LOCATION)
-  get_filename_component(QT_LIBRARY_DIR "${_Qt5_Core_LOCATION}" PATH)
+  get_filename_component(QT_LIBRARY_DIR "${_Qt5_Core_LOCATION}" DIRECTORY)
 else()
   set(QT_LIBRARY_DIR "")
 endif()
@@ -1004,7 +1000,7 @@ install(FILES "${CMAKE_SOURCE_DIR}/resources/resultsviewer/SmallOffice/SmallOffi
 
 
 # Install additional Documents, such as release notes
-install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_8_0_20150626.pdf" DESTINATION .)
+install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_9_0_20150925.pdf" DESTINATION .)
 
 ###############################################################################
 
@@ -1026,8 +1022,8 @@ if(NOT UNIX)
 
   install(DIRECTORY "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced" DESTINATION .)
 
-  get_filename_component(RubyEXEPath "${RUBY_EXECUTABLE}" PATH)
-  get_filename_component(RubyPath "${RubyEXEPath}" PATH)
+  get_filename_component(RubyEXEPath "${RUBY_EXECUTABLE}" DIRECTORY)
+  get_filename_component(RubyPath "${RubyEXEPath}" DIRECTORY)
   install(DIRECTORY "${RubyPath}/" DESTINATION "ruby-install/ruby")
 
   set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
@@ -1045,30 +1041,22 @@ if(NOT UNIX)
   endif()
 endif()
 
-if(PACKAGE_RADIANCE)
-  set(RADIANCE_LOCATION "" CACHE PATH "Location of Radiance to Package")
-
-  if(APPLE)
-    install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
-  elseif(MSVC)
-    install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
-  else()
-    install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
-  endif()
+# Package Radiance
+set(RADIANCE_LOCATION "" CACHE PATH "Location of Radiance to Package")
+if(APPLE)
+  install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+elseif(MSVC)
+  install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
+else()
+  install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
 endif()
 
-if(PACKAGE_ENERGYPLUS)
-  get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" PATH)
-
-  if(APPLE)
-    install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
-  elseif(MSVC)
-    install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
-  else()
-    install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
-  endif()
+# Package EnergyPlus
+get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
+if(APPLE)
+  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+elseif(MSVC)
+  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
+else()
+  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
 endif()
-
-
-
-

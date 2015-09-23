@@ -33457,6 +33457,7 @@ AirLoopHVAC:UnitaryHeatPump:AirToAir:MultiSpeed,
         \type object-list
         \object-list HeatingCoilsElectricMultiStage
         \object-list HeatingCoilsGasMultiStage
+        \object-list HeatingCoilsDXMultiSpeed
    N1 , \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
         \type real
         \default -8.0

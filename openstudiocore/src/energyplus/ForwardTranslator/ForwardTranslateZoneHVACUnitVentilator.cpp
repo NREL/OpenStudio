@@ -27,6 +27,13 @@
 #include "../../model/ZoneHVACUnitVentilator_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
+#include <utilities/idd/Coil_Cooling_Water_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Gas_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
+#include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
+#include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
+#include <utilities/idd/Fan_VariableVolume_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_UnitVentilator_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -108,13 +115,15 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitVentilator( Z
   }
 
   // AirInletNodeName
-  if( auto node = modelObject.inletNode() ) {
-    idfObject.setString(ZoneHVAC_UnitVentilatorFields::AirInletNodeName,node->name().get());
+  auto airInletNode = modelObject.inletNode();
+  if( airInletNode ) {
+    idfObject.setString(ZoneHVAC_UnitVentilatorFields::AirInletNodeName,airInletNode->name().get());
   }
 
   // AirOutletNodeName
-  if( auto node = modelObject.inletNode() ) {
-    idfObject.setString(ZoneHVAC_UnitVentilatorFields::AirInletNodeName,node->name().get());
+  auto airOutletNode = modelObject.outletNode();
+  if( airOutletNode ) {
+    idfObject.setString(ZoneHVAC_UnitVentilatorFields::AirOutletNodeName,airOutletNode->name().get());
   }
 
   // OutdoorAirNodeName
@@ -127,18 +136,91 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitVentilator( Z
   _oaNodeList.setString(0,oaNodeName);
   m_idfObjects.push_back(_oaNodeList);
 
-  // SupplyAirFanObjectType
-  // SupplyAirFanName
+  // Supply Air Fan
   {
     auto supplyAirFan = modelObject.supplyAirFan();
-    if( auto _supplyAirFan = translateAndMapModelObject(supplyAirFan) ) {
-      idfObject.setString(ZoneHVAC_UnitVentilatorFields::SupplyAirFanObjectType,_supplyAirFan->iddObject().name());
-      idfObject.setString(ZoneHVAC_UnitVentilatorFields::SupplyAirFanName,_supplyAirFan->name().get());
+    if( auto _supplyAirFan = translateAndMapModelObject(supplyAirFan) )
+    {
+      // SupplyAirFanObjectType
+      idfObject.setString(ZoneHVAC_UnitVentilatorFields::SupplyAirFanObjectType,_supplyAirFan->iddObject().name() );
+
+      // SupplyAirFanName
+      idfObject.setString(ZoneHVAC_UnitVentilatorFields::SupplyAirFanName,_supplyAirFan->name().get() );
+      // Supply Air Fan Inlet and Outlet Nodes
+      if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_ConstantVolume )
+      {
+        _supplyAirFan->setString(Fan_ConstantVolumeFields::AirInletNodeName,mixedAirNodeName );
+        _supplyAirFan->setString(Fan_ConstantVolumeFields::AirOutletNodeName,fanOutletNodeName );
+      }
+      else if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_OnOff )
+      {
+        
+        _supplyAirFan->setString(Fan_OnOffFields::AirInletNodeName,mixedAirNodeName );
+        _supplyAirFan->setString(Fan_OnOffFields::AirOutletNodeName,fanOutletNodeName );
+      }
+      else if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_VariableVolume )
+      {
+        _supplyAirFan->setString(Fan_VariableVolumeFields::AirInletNodeName,mixedAirNodeName );
+        _supplyAirFan->setString(Fan_VariableVolumeFields::AirOutletNodeName,fanOutletNodeName );
+      }
     }
   }
+
   // CoilOption
   auto heatingCoil = modelObject.heatingCoil();
   auto coolingCoil = modelObject.coolingCoil();
+
+  // Cooling Coil
+  {
+    if ( coolingCoil && airOutletNode ) {
+      if( auto _coolingCoil = translateAndMapModelObject(coolingCoil.get()) )
+      {
+        // CoolingCoilObjectType
+        idfObject.setString(ZoneHVAC_UnitVentilatorFields::CoolingCoilObjectType,_coolingCoil->iddObject().name() );
+        // CoolingCoilName
+        idfObject.setString(ZoneHVAC_UnitVentilatorFields::CoolingCoilName,_coolingCoil->name().get() );
+        // Cooling Coil Inlet and Outlet Nodes
+        auto coolingCoilOutletName = heatingCoil ? coolingCoilOutletNodeName : airOutletNode->name().get();
+
+        if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_Water )
+        {
+          _coolingCoil->setString(Coil_Cooling_WaterFields::AirInletNodeName,fanOutletNodeName );
+          _coolingCoil->setString(Coil_Cooling_WaterFields::AirOutletNodeName, coolingCoilOutletName );
+        }
+      }
+    }
+  }
+
+  // Heating Coil
+  {
+    if ( heatingCoil && airOutletNode ) {
+      if( auto _heatingCoil = translateAndMapModelObject(heatingCoil.get()) )
+      {
+        // HeatingCoilObjectType
+        idfObject.setString(ZoneHVAC_UnitVentilatorFields::HeatingCoilObjectType,_heatingCoil->iddObject().name() );
+        // HeatingCoilName
+        idfObject.setString(ZoneHVAC_UnitVentilatorFields::HeatingCoilName,_heatingCoil->name().get() );
+        // Heating Coil Inlet and Outlet Nodes
+        auto heatingCoilOutletName = coolingCoil ? coolingCoilOutletNodeName : fanOutletNodeName;
+
+        if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric)
+        {
+          _heatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName,heatingCoilOutletName);
+          _heatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName,airOutletNode->name().get());
+        }
+        else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Gas )
+        {
+          _heatingCoil->setString(Coil_Heating_GasFields::AirInletNodeName,heatingCoilOutletName);
+          _heatingCoil->setString(Coil_Heating_GasFields::AirOutletNodeName,airOutletNode->name().get());
+        }
+        else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water )
+        {
+          _heatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName,heatingCoilOutletName);
+          _heatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName,airOutletNode->name().get());
+        }
+      }
+    }
+  }
 
   if ( heatingCoil && coolingCoil ) {
     idfObject.setString(ZoneHVAC_UnitVentilatorFields::CoilOption,"HeatingAndCooling");
@@ -156,27 +238,10 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitVentilator( Z
       idfObject.setString(ZoneHVAC_UnitVentilatorFields::SupplyAirFanOperatingModeScheduleName,_schedule->name().get());
     }
   }
-  // HeatingCoilObjectType
-  // HeatingCoilName
-  if( heatingCoil ) {
-    if( auto _heatingCoil = translateAndMapModelObject(heatingCoil.get()) ) {
-      idfObject.setString(ZoneHVAC_UnitVentilatorFields::HeatingCoilObjectType,_heatingCoil->iddObject().name());
-      idfObject.setString(ZoneHVAC_UnitVentilatorFields::HeatingCoilName,_heatingCoil->name().get());
-    }
-  }
 
   // HeatingConvergenceTolerance
   if( (value = modelObject.heatingConvergenceTolerance()) ) {
     idfObject.setDouble(ZoneHVAC_UnitVentilatorFields::HeatingConvergenceTolerance,value.get());
-  }
-
-  // CoolingCoilObjectType
-  // CoolingCoilName
-  if( coolingCoil ) {
-    if( auto _coolingCoil = translateAndMapModelObject(coolingCoil.get()) ) {
-      idfObject.setString(ZoneHVAC_UnitVentilatorFields::CoolingCoilObjectType,_coolingCoil->iddObject().name());
-      idfObject.setString(ZoneHVAC_UnitVentilatorFields::CoolingCoilName,_coolingCoil->name().get());
-    }
   }
 
   // CoolingConvergenceTolerance

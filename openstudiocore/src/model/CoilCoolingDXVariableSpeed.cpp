@@ -394,7 +394,9 @@ namespace detail {
     std::vector<ModelObject> children;
     children.push_back( energyPartLoadFractionCurve() );
     if( auto const _stageDataList = speedDataList() ) {
-      children.push_back( _stageDataList.get() );
+      for( const auto & mo : _stageDataList->modelObjects() ) {
+        children.push_back( mo );
+      }
     }
     return children;
   }
@@ -535,6 +537,17 @@ namespace detail {
   void CoilCoolingDXVariableSpeed_Impl::resetSpeedDataList() {
     bool result = setString(OS_Coil_Cooling_DX_VariableSpeedFields::SpeedDataList, "");
     OS_ASSERT(result);
+  }
+
+  std::vector<IdfObject> CoilCoolingDXVariableSpeed_Impl::remove()
+  {
+    auto _stageDataList = speedDataList();
+    auto result = StraightComponent_Impl::remove();
+    if( (! result.empty()) && _stageDataList ) {
+      _stageDataList->remove();
+    }
+
+    return result;
   }
 
 } // detail
