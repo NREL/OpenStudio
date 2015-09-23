@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -110,10 +110,10 @@ void SubTabView::connectItemSelectorButtons()
 
 void SubTabView::createLayout()
 {
-  QWidget * leftWidget = new QWidget();
+  auto leftWidget = new QWidget();
   addWidget(leftWidget);
 
-  QVBoxLayout * outerLeftVLayout = new QVBoxLayout();
+  auto outerLeftVLayout = new QVBoxLayout();
   outerLeftVLayout->setContentsMargins(0, 0, 0, 0);
   outerLeftVLayout->setSpacing(0);
   leftWidget->setLayout(outerLeftVLayout);

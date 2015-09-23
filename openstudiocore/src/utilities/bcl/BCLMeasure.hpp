@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -57,9 +57,8 @@ namespace openstudio{
   OPENSTUDIO_ENUM( MeasureBadgeType,
     ((BCLMeasure))
     ((MyMeasure))
+    ((OSMeasure))
   );
-
-  
 
 
   /** BCLMeasure is a class for managing the contents of a BCL Measure directory including the xml description file.
@@ -102,6 +101,8 @@ namespace openstudio{
 
     static BCLMeasure calibrationReportMeasure();
 
+    static BCLMeasure radianceMeasure();
+
     /// Returns the path to the PAT application's measures directory.
     static openstudio::path patApplicationMeasuresDir();
 
@@ -125,6 +126,13 @@ namespace openstudio{
 
     /// Suggested values for "Intended Use Case" attribute
     static std::vector<std::string> suggestedIntendedUseCases();
+
+    /// Suggested values for the first level taxonomy tag
+    // DLM: we should move the TID code out of BuildingComponentDialog into BCLComponent
+    static std::vector<std::string> suggestedFirstLevelTaxonomyTerms();
+
+    /// Suggested values for the second level taxonomy tag
+    static std::vector<std::string> suggestedSecondLevelTaxonomyTerms(const std::string& firstLevelTaxonomyTerm);
 
     //@}
     /** @name Destructor */
@@ -287,7 +295,10 @@ namespace openstudio{
 
     static std::vector<BCLMeasure> getMeasuresInDir(openstudio::path dir);
 
-    void createDirectory(const openstudio::path& dir);
+    void createDirectory(const openstudio::path& dir) const;
+
+    // based on function in PathHelpers.hpp but checks if file is in this measure
+    bool copyDirectory(const path& source, const path& destination) const;
 
     std::string computeXMLChecksum() const;
 

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -43,24 +43,66 @@ namespace detail {
     : ParentObject_Impl(other, model, keepHandle)
   {}
 
-  unsigned ResourceObject_Impl::directUseCount() const {
-    return numSources();
+  unsigned ResourceObject_Impl::directUseCount(bool excludeChildren) const {
+
+    unsigned result = 0;
+
+    ModelObjectVector children;
+    if (excludeChildren){
+      children = this->children();
+    }
+
+    WorkspaceObjectVector sources = this->sources();
+    for (const WorkspaceObject& source : sources) {
+      if (excludeChildren){
+        // check if this is a child
+        auto it = std::find_if(children.begin(), children.end(),
+                               std::bind(handleEquals<ModelObject, Handle>, std::placeholders::_1, source.handle()));
+        if (it == children.end()){
+          // non-Child--count the use
+          ++result;
+        }
+      } else {
+        // count the use
+        ++result;
+      }
+    }
+
+    return result;
   }
 
-  unsigned ResourceObject_Impl::nonResourceObjectUseCount() const {
+  unsigned ResourceObject_Impl::nonResourceObjectUseCount(bool excludeChildren) const {
    
     unsigned result = 0;
+
+    ModelObjectVector children;
+    if (excludeChildren){
+      children = this->children();
+    }
 
     WorkspaceObjectVector sources = this->sources();
     for (const WorkspaceObject& source : sources) {
       OptionalResourceObject oro = source.optionalCast<ResourceObject>();
       if (oro) {
         // another ResourceObject, pass the request through
-        result += oro->nonResourceObjectUseCount();
+        result += oro->nonResourceObjectUseCount(excludeChildren);
       }
       else {
-        // non-ResourceObject--count the use
-        ++result;
+
+        if (excludeChildren){
+          // check if this is a child
+          auto it = std::find_if(children.begin(), children.end(),
+                                 std::bind(handleEquals<ModelObject, Handle>, std::placeholders::_1, source.handle()));
+          if (it == children.end()){
+            // non-ResourceObject and non-Child--count the use
+            ++result;
+          }
+        } else {
+          // non-ResourceObject--count the use
+          ++result;
+        }
+
+
       }
     }
 
@@ -79,12 +121,12 @@ ResourceObject::ResourceObject(std::shared_ptr<detail::ResourceObject_Impl> impl
   : ParentObject(impl)
 {}
 
-unsigned ResourceObject::directUseCount() const {
-  return getImpl<detail::ResourceObject_Impl>()->directUseCount();
+unsigned ResourceObject::directUseCount(bool excludeChildren) const {
+  return getImpl<detail::ResourceObject_Impl>()->directUseCount(excludeChildren);
 }
 
-unsigned ResourceObject::nonResourceObjectUseCount() const {
-  return getImpl<detail::ResourceObject_Impl>()->nonResourceObjectUseCount();
+unsigned ResourceObject::nonResourceObjectUseCount(bool excludeChildren) const {
+  return getImpl<detail::ResourceObject_Impl>()->nonResourceObjectUseCount(excludeChildren);
 }
 
 std::vector<ResourceObject> getRecursiveResources(const ModelObject& object) {

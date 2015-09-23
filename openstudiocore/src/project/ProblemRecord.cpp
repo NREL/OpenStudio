@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -27,11 +27,17 @@
 #include "MeasureGroupRecord_Impl.hpp"
 #include "OptimizationProblemRecord.hpp"
 #include "ProjectDatabase.hpp"
+#include "RubyContinuousVariableRecord.hpp"
+#include "RubyContinuousVariableRecord_Impl.hpp"
+#include "RubyMeasureRecord.hpp"
 #include "WorkflowRecord.hpp"
 
 #include "../analysis/InputVariable.hpp"
 #include "../analysis/OptimizationProblem.hpp"
 #include "../analysis/OptimizationProblem_Impl.hpp"
+#include "../analysis/RubyContinuousVariable.hpp"
+#include "../analysis/RubyContinuousVariable_Impl.hpp"
+#include "../analysis/RubyMeasure.hpp"
 #include "../analysis/WorkflowStep.hpp"
 
 #include "../runmanager/lib/RubyJobUtils.hpp"
@@ -245,12 +251,35 @@ namespace detail {
     if (!workflowRecords.empty()) {
       wrWIndex = workflowRecords[wrIndex].workflowIndex();
     }
+    OptionalRubyMeasureRecord lastRubyMeasureRecord;
+    OptionalRubyMeasure lastRubyMeasure;
     for (int i = 0, n = ivrN + wrN; i < n; ++i) {
       if (!wrWIndex || (ivrWIndex && (*ivrWIndex < *wrWIndex))) {
         // InputVariable is next
         OS_ASSERT(*ivrWIndex == wIndex); // saved and expected index into workflow match
         OS_ASSERT(ivrIndex < ivrN);      // there is an input variable record to deserialize
-        workflow.push_back(WorkflowStep(inputVariableRecords[ivrIndex].inputVariable()));
+        InputVariableRecord ivarR = inputVariableRecords[ivrIndex];
+        InputVariable ivar = ivarR.inputVariable();
+        if (ivar.optionalCast<RubyContinuousVariable>()) {
+          RubyContinuousVariable rcvar = ivar.cast<RubyContinuousVariable>();
+          RubyMeasureRecord rubyMeasureRecord = ivarR.cast<RubyContinuousVariableRecord>().rubyMeasureRecord();
+          RubyMeasure rubyMeasure = rcvar.measure();
+          if (lastRubyMeasureRecord) {
+            if (lastRubyMeasureRecord->id() == rubyMeasureRecord.id()) {
+              OS_ASSERT(lastRubyMeasureRecord->handle() == rubyMeasureRecord.handle());
+              rubyMeasure = lastRubyMeasure.get();
+              bool ok = rcvar.setRubyMeasure(rubyMeasure);
+              OS_ASSERT(ok);
+            }
+          }
+          lastRubyMeasureRecord = rubyMeasureRecord;
+          lastRubyMeasure = rubyMeasure;
+        }
+        else if (lastRubyMeasureRecord) {
+          lastRubyMeasureRecord.reset();
+          lastRubyMeasure.reset();
+        }
+        workflow.push_back(WorkflowStep(ivar));
         ++ivrIndex; // go to next input variable record
         ++wIndex;   // and next index into workflow
         OS_ASSERT(wIndex == int(workflow.size())); // next index into workflow should match current size
@@ -263,6 +292,10 @@ namespace detail {
       }
       else {
         // Workflow is next
+        if (lastRubyMeasureRecord) {
+          lastRubyMeasureRecord.reset();
+          lastRubyMeasure.reset();
+        }
         OS_ASSERT(wrWIndex);
         int temp = *wrWIndex; // for debugging
         OS_ASSERT(temp == wIndex); // saved index into workflow should match expected value

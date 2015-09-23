@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -22,8 +22,8 @@
 namespace openstudio {
 
 SchedulesTabView::SchedulesTabView(const model::Model & model,
-                                   QWidget * parent)
-  : MainTabView("Schedules",true,parent)
+  QWidget * parent)
+  : MainTabView("Schedules", MainTabView::SUB_TAB, parent)
 {
 }
 

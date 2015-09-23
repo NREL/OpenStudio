@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -26,12 +26,12 @@
 #include "ResultsViewerData.hpp"
 #include "BrowserView.hpp"
 #include "TabDropDock.hpp"
+#include "FloodPlot.hpp"
+#include "LinePlot.hpp"
 
 #include "../utilities/core/TemporaryDirectory.hpp"
 #include "../utilities/sql/SqlFile.hpp"
 #include "../utilities/data/TimeSeries.hpp"
-#include "../utilities/plot/FloodPlot.hpp"
-#include "../utilities/plot/LinePlot.hpp"
 
 #include <QMainWindow>
 #include <QTabWidget>
@@ -178,7 +178,7 @@ signals:
 private slots:
   void fileOpen();
   bool openRecentFile();
-  void closeEvent(QCloseEvent *evt);
+  void closeEvent(QCloseEvent *evt) override;
   void showTreeViewContextMenu(const QPoint &pos);
   void showTableViewContextMenu(const QPoint &pos);
   void loadFile(const QString& alias, const QString& filename);

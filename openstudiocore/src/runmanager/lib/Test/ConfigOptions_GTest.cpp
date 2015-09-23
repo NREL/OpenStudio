@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -81,6 +81,7 @@ TEST_F(RunManagerTestFixture, ConfigOptionsTest)
   ToolVersion e4(2,7);
   ToolVersion e5(2,7,1);
   ToolVersion e6(2);
+  ToolVersion e7(8,4,2,"TAG");
 
   ToolLocationInfo p1 = ToolLocationInfo(ToolType("EnergyPlus"), toPath("e1"));
   ToolLocationInfo p2 = ToolLocationInfo(ToolType("EnergyPlus"), toPath("e2"));
@@ -88,6 +89,7 @@ TEST_F(RunManagerTestFixture, ConfigOptionsTest)
   ToolLocationInfo p4 = ToolLocationInfo(ToolType("EnergyPlus"), toPath("e4"));
   ToolLocationInfo p5 = ToolLocationInfo(ToolType("EnergyPlus"), toPath("e5"));
   ToolLocationInfo p6 = ToolLocationInfo(ToolType("EnergyPlus"), toPath("e6"));
+  ToolLocationInfo p7 = ToolLocationInfo(ToolType("EnergyPlus"), toPath("e7"));
 
   co.setToolLocation(e6, p6);
   co.setToolLocation(e5, p5);
@@ -95,21 +97,27 @@ TEST_F(RunManagerTestFixture, ConfigOptionsTest)
   co.setToolLocation(e1, p1);
   co.setToolLocation(e4, p4);
   co.setToolLocation(e2, p2);
+  co.setToolLocation(e7, p7);
 
 
   // getEnergyPlus returns the most completely specified version of E+ that matches the passed
   // in requirements
 
-  EXPECT_EQ(static_cast<size_t>(6), co.getToolLocations().size());
+  EXPECT_EQ(static_cast<size_t>(7), co.getToolLocations().size());
 
   Tools tools = co.getTools();
 
-  EXPECT_EQ(tools.getTool("energyplus").version, e1);
+  EXPECT_EQ(tools.getTool("energyplus").version, e7);
   EXPECT_EQ(tools.getTool("energyplus", e3).version, e3);
   EXPECT_EQ(tools.getTool("energyplus", ToolVersion(3)).version, e2);
   EXPECT_EQ(tools.getTool("energyplus", ToolVersion(3, 2)).version, e2);
   EXPECT_EQ(tools.getTool("energyplus", ToolVersion(3, 1)).version, e3);
   EXPECT_EQ(tools.getTool("energyplus", ToolVersion(2)).version, e5);
+  EXPECT_EQ(tools.getTool("energyplus", ToolVersion(8)).version, e7);
+  EXPECT_EQ(tools.getTool("energyplus", ToolVersion(8,4)).version, e7);
+  EXPECT_EQ(tools.getTool("energyplus", ToolVersion(8,4,2)).version, e7);
+  EXPECT_EQ(tools.getTool("energyplus", ToolVersion(8,4,2, "TAG")).version, e7);
+  EXPECT_EQ(tools.getTool("energyplus", ToolVersion(boost::none,boost::none,boost::none,boost::optional<std::string>("TAG"))).version, e7);
 
   co.reset();
 

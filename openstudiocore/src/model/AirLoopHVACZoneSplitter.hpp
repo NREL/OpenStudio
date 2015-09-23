@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -52,16 +52,16 @@ class MODEL_API AirLoopHVACZoneSplitter : public Splitter {
   static IddObjectType iddObjectType();
 
   /** Returns the inlet port to the zone splitter. */
-  unsigned inletPort();
+  unsigned inletPort() override;
 
   /** Returns the outlet port for branchIndex.  Branches are sequentially
    *  indexed starting from 0.
    */
-  unsigned outletPort(unsigned branchIndex);
+  unsigned outletPort(unsigned branchIndex) override;
 
   /** Returns the next available outlet port.  This will be the first port
    *  with no connected objects */
-  unsigned nextOutletPort();
+  unsigned nextOutletPort() override;
 
   /** Returns a vector of all ZoneHVACEquipmentConnections objects connected
    *  to the splitter's outlets.

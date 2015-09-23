@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -108,6 +108,11 @@ namespace detail {
 
   bool ScheduleTypeLimits_Impl::isUnitTypeDefaulted() const {
     return isEmpty(OS_ScheduleTypeLimitsFields::UnitType);
+  }
+
+  boost::optional<Unit> ScheduleTypeLimits_Impl::units(bool returnIP) const
+  {
+    return ScheduleTypeLimits::units(unitType(), returnIP);
   }
 
   void ScheduleTypeLimits_Impl::setLowerLimitValue(boost::optional<double> lowerLimitValue) {
@@ -485,6 +490,10 @@ std::string ScheduleTypeLimits::unitType() const {
 
 bool ScheduleTypeLimits::isUnitTypeDefaulted() const {
   return getImpl<detail::ScheduleTypeLimits_Impl>()->isUnitTypeDefaulted();
+}
+
+boost::optional<Unit> ScheduleTypeLimits::units(bool returnIP) const {
+  return getImpl<detail::ScheduleTypeLimits_Impl>()->units(returnIP);
 }
 
 void ScheduleTypeLimits::setLowerLimitValue(double lowerLimitValue) {

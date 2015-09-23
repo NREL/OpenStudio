@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -92,7 +92,7 @@ namespace detail{
     std::vector<SetpointManager> _setpointManagers = node.setpointManagers();
     if( !_setpointManagers.empty() )
     {
-      for(std::vector<SetpointManager>::iterator it = _setpointManagers.begin();
+      for(auto it = _setpointManagers.begin();
         it != _setpointManagers.end();
         ++it)
       {

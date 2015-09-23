@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -56,15 +56,15 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
     //@{
 
-    virtual double thickness() const;
+    virtual double thickness() const override;
 
     virtual double thermalConductivity() const;
 
@@ -86,7 +86,7 @@ namespace detail {
 
     virtual double solarReflectance() const;
 
-    virtual boost::optional<double> getVisibleTransmittance() const;
+    virtual boost::optional<double> getVisibleTransmittance() const override;
 
     virtual double visibleAbsorptance() const;
 
@@ -100,7 +100,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    virtual bool setThickness(double value);
+    virtual bool setThickness(double value) override;
 
     virtual bool setThermalConductivity(double value);
 

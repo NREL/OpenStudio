@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -219,10 +219,9 @@ namespace openstudio{
 
   /// from impl
   Date::Date(const Date::ImplType& impl)
-    : m_assumedBaseYear(impl.year())
-  {
-    m_impl = ImplPtr(new ImplType(impl));
-  }
+    : m_impl(ImplPtr(new ImplType(impl))),
+      m_assumedBaseYear(impl.year())
+  {}
 
   /// Date from month, day of month
   Date::Date(MonthOfYear monthOfYear, unsigned dayOfMonth)

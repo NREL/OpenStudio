@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 namespace openstudio {
 
 ResultsTabController::ResultsTabController()
-  : MainTabController(new ResultsTabView("Results Summary",false))
+  : MainTabController(new ResultsTabView("Results Summary", MainTabView::MAIN_TAB))
 {
   m_resultsTabView = static_cast<ResultsTabView *>(mainContentWidget());
 

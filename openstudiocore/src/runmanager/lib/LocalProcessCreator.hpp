@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -56,7 +56,7 @@ namespace runmanager {
           const openstudio::path &t_outdir,
           const std::vector<openstudio::path> &t_expectedOutputFiles,
           const std::string &t_stdin,
-          const openstudio::path &t_basePath);
+          const openstudio::path &t_basePath) override;
 
   };
 

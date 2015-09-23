@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -21,18 +21,19 @@
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/StringHelpers.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
+#include <QBoxLayout>
+#include <QComboBox>
+#include <QGroupBox>
 #include <QLabel>
 #include <QLineEdit>
-#include <QTextEdit>
-#include <QComboBox>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
+#include <QListWidget>
+#include <QListWidgetItem>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QRadioButton>
-#include <QGroupBox>
-#include <QListWidgetItem>
-#include <QListWidget>
+#include <QTextEdit>
 
 namespace openstudio {
   
@@ -41,6 +42,7 @@ BCLMeasureDialog::BCLMeasureDialog(QWidget* parent)
   : OSDialog(false, parent)
 {
   setWindowTitle("Create New Measure");
+  setWindowModality(Qt::ApplicationModal);
 
   init();
 
@@ -122,6 +124,13 @@ QSize BCLMeasureDialog::sizeHint() const
 
 boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
 {
+  openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
+
+  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+    QMessageBox::information(this, "Cannot Create Measure", "Your My Measures Directory appears to be on a network drive that is not currently available.\nYou can change your specified My Measures Directory using 'Preferences->Change My Measures Directory'.", QMessageBox::Ok);
+    return boost::optional<openstudio::BCLMeasure>();
+  }
+
   std::string name = toString(m_nameLineEdit->text());
   std::string className = BCLMeasure::makeClassName(name);
   std::string lowerClassName = toUnderscoreCase(className);
@@ -140,7 +149,6 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
     measureType = MeasureType::ReportingMeasure;
   }
 
-  openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
   QString folderName = toQString(lowerClassName).append("/");
   openstudio::path measureDir = userMeasuresDir / toPath(folderName);
 
@@ -272,75 +280,16 @@ void BCLMeasureDialog::firstLevelTaxonomyChanged(const QString& newName)
   m_taxonomySecondLevelComboBox->clear();
   m_taxonomySecondLevelComboBox->setEnabled(false);
 
-  if (newName == "Envelope"){
-    m_taxonomySecondLevelComboBox->addItem("Form");
-    m_taxonomySecondLevelComboBox->addItem("Opaque");
-    m_taxonomySecondLevelComboBox->addItem("Fenestration");
-    m_taxonomySecondLevelComboBox->addItem("Construction Sets");
-    m_taxonomySecondLevelComboBox->addItem("Daylighting");
-    m_taxonomySecondLevelComboBox->addItem("Infiltration");
-    m_taxonomySecondLevelComboBox->setCurrentIndex(0);
-    m_taxonomySecondLevelComboBox->setEnabled(true);
-  }else if (newName == "Electric Lighting"){
-    m_taxonomySecondLevelComboBox->addItem("Electric Lighting Controls");
-    m_taxonomySecondLevelComboBox->addItem("Lighting Equipment");
-    m_taxonomySecondLevelComboBox->setCurrentIndex(0);
-    m_taxonomySecondLevelComboBox->setEnabled(true);
-  }else if (newName == "Equipment"){
-    m_taxonomySecondLevelComboBox->addItem("Equipment Controls");
-    m_taxonomySecondLevelComboBox->addItem("Electric Equipment");
-    m_taxonomySecondLevelComboBox->addItem("Gas Equipment");
-    m_taxonomySecondLevelComboBox->setCurrentIndex(0);
-    m_taxonomySecondLevelComboBox->setEnabled(true);
-  }else if (newName == "People"){
-    m_taxonomySecondLevelComboBox->addItem("Characteristics");
-    m_taxonomySecondLevelComboBox->addItem("People Schedules");
-    m_taxonomySecondLevelComboBox->setCurrentIndex(0);
-    m_taxonomySecondLevelComboBox->setEnabled(true);
-  }else if (newName == "HVAC"){
-    m_taxonomySecondLevelComboBox->addItem("HVAC Controls");
-    m_taxonomySecondLevelComboBox->addItem("Heating");
-    m_taxonomySecondLevelComboBox->addItem("Cooling");
-    m_taxonomySecondLevelComboBox->addItem("Heat Rejection");
-    m_taxonomySecondLevelComboBox->addItem("Energy Recovery");
-    m_taxonomySecondLevelComboBox->addItem("Distribution");
-    m_taxonomySecondLevelComboBox->addItem("Ventilation");
-    m_taxonomySecondLevelComboBox->addItem("Whole System");
-    m_taxonomySecondLevelComboBox->setCurrentIndex(0);
-    m_taxonomySecondLevelComboBox->setEnabled(true);
-  }else if (newName == "Refrigeration"){
-    m_taxonomySecondLevelComboBox->addItem("Refrigeration Controls");
-    m_taxonomySecondLevelComboBox->addItem("Cases and Walkins");
-    m_taxonomySecondLevelComboBox->addItem("Compressors");
-    m_taxonomySecondLevelComboBox->addItem("Condensers");
-    m_taxonomySecondLevelComboBox->addItem("Heat Reclaim");
-    m_taxonomySecondLevelComboBox->setCurrentIndex(0);
-    m_taxonomySecondLevelComboBox->setEnabled(true);    
-  }else if (newName == "Service Water Heating"){
-    m_taxonomySecondLevelComboBox->addItem("Water Use");
-    m_taxonomySecondLevelComboBox->addItem("Water Heating");
-    m_taxonomySecondLevelComboBox->addItem("Distribution");
-    m_taxonomySecondLevelComboBox->setCurrentIndex(0);
-    m_taxonomySecondLevelComboBox->setEnabled(true);
-  }else if (newName == "Onsite Power Generation"){
-    m_taxonomySecondLevelComboBox->addItem("Photovoltaic");
-    m_taxonomySecondLevelComboBox->setCurrentIndex(0);
-    m_taxonomySecondLevelComboBox->setEnabled(true);
-  }else if (newName == "Whole Building"){
-    m_taxonomySecondLevelComboBox->addItem("Whole Building Schedules");
-    m_taxonomySecondLevelComboBox->addItem("Space Types");
-    m_taxonomySecondLevelComboBox->setCurrentIndex(0);
-    m_taxonomySecondLevelComboBox->setEnabled(true);
-  }else if (newName == "Economics"){
-    m_taxonomySecondLevelComboBox->addItem("Life Cycle Cost Analysis");
-    m_taxonomySecondLevelComboBox->setCurrentIndex(0);
-    m_taxonomySecondLevelComboBox->setEnabled(true);
-  }else if (newName == "Reporting"){
-    m_taxonomySecondLevelComboBox->addItem("QAQC");
-    m_taxonomySecondLevelComboBox->addItem("Troubleshooting");
+  std::vector<std::string> secondLevelTerms = BCLMeasure::suggestedSecondLevelTaxonomyTerms(toString(newName));
+
+  if (!secondLevelTerms.empty()){
+    for (const std::string& secondLevelTerm : secondLevelTerms){
+      m_taxonomySecondLevelComboBox->addItem(toQString(secondLevelTerm));
+    }
     m_taxonomySecondLevelComboBox->setCurrentIndex(0);
     m_taxonomySecondLevelComboBox->setEnabled(true);
   }
+
 }
 
 void BCLMeasureDialog::init()
@@ -427,17 +376,12 @@ void BCLMeasureDialog::init()
   label->setObjectName("H2");
   tempVLayout->addWidget(label);
   m_taxonomyFirstLevelComboBox = new QComboBox(this);
-  m_taxonomyFirstLevelComboBox->addItem("Envelope");
-  m_taxonomyFirstLevelComboBox->addItem("Electric Lighting");
-  m_taxonomyFirstLevelComboBox->addItem("Equipment");
-  m_taxonomyFirstLevelComboBox->addItem("People");
-  m_taxonomyFirstLevelComboBox->addItem("HVAC");
-  m_taxonomyFirstLevelComboBox->addItem("Refrigeration");
-  m_taxonomyFirstLevelComboBox->addItem("Service Water Heating");
-  m_taxonomyFirstLevelComboBox->addItem("Onsite Power Generation");
-  m_taxonomyFirstLevelComboBox->addItem("Whole Building");
-  m_taxonomyFirstLevelComboBox->addItem("Economics");
-  m_taxonomyFirstLevelComboBox->addItem("Reporting");
+
+  std::vector<std::string> firstLevelTerms = BCLMeasure::suggestedFirstLevelTaxonomyTerms();
+  for (const std::string& firstLevelTerm : firstLevelTerms){
+    m_taxonomyFirstLevelComboBox->addItem(toQString(firstLevelTerm));
+  }
+
   m_taxonomySecondLevelComboBox = new QComboBox(this);
   auto tempHLayout2 = new QHBoxLayout;
   tempHLayout2->addWidget(m_taxonomyFirstLevelComboBox);
@@ -464,7 +408,7 @@ void BCLMeasureDialog::init()
   QStringListIterator it(intendedSoftwareTools);
   while (it.hasNext()){
     QString intendedSoftwareTool = it.next();
-    QListWidgetItem *listItem = new QListWidgetItem(intendedSoftwareTool, m_intendedSoftwareToolListWidget);
+    auto listItem = new QListWidgetItem(intendedSoftwareTool, m_intendedSoftwareToolListWidget);
     // DLM: defaults per David
     if (intendedSoftwareTool == "Analysis Spreadsheet"){
       listItem->setCheckState(Qt::Unchecked);
@@ -491,7 +435,7 @@ void BCLMeasureDialog::init()
   it = QStringListIterator(intendedUseCases);
   while (it.hasNext()){
     QString intendedUseCase = it.next();
-    QListWidgetItem *listItem = new QListWidgetItem(intendedUseCase, m_intendedUseCaseListWidget);
+    auto listItem = new QListWidgetItem(intendedUseCase, m_intendedUseCaseListWidget);
     // DLM: default to unchecked per David
     listItem->setCheckState(Qt::Unchecked);
     listItem->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);

@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -58,7 +58,31 @@ class Logger_Test < MiniTest::Unit::TestCase
     assert_equal(2, logStream.logMessages.size)
     
   end
+  
+  def test_LogChannelFilter
+    
+    assert(OpenStudio::Logger::instance())
+    assert(OpenStudio::Logger::instance().standardOutLogger())
+    
+    # create a StringStreamLogSink
+    logStream = OpenStudio::StringStreamLogSink.new()
+    assert(logStream.logLevel.empty?)
+    logStream.setLogLevel(OpenStudio::Warn)
+    assert((not logStream.logLevel.empty?))
+    assert_equal(OpenStudio::Warn, logStream.logLevel.get)
+    
+    # set channel regex
+    logStream.setChannelRegex("^model.*")
 
+    # invoke methods to test the log sinks
+    OpenStudio::logFree(OpenStudio::Warn, "utilities.test_instance", "Warn")
+    OpenStudio::logFree(OpenStudio::Warn, "model.test_instance", "Warn")
+    OpenStudio::logFree(OpenStudio::Warn, "gbxml.test_instance", "Warn")
+    
+    # check log sinks
+    assert_equal(1, logStream.logMessages.size)
+    
+  end
 end
 
 

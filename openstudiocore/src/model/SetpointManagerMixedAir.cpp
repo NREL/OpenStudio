@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -87,7 +87,7 @@ bool SetpointManagerMixedAir_Impl::addToNode(Node & node)
       std::vector<StraightComponent> fans;
       std::vector<ModelObject> supplyComponents = _airLoop->supplyComponents();
 
-      for( std::vector<ModelObject>::iterator it = supplyComponents.begin();
+      for( auto it = supplyComponents.begin();
            it != supplyComponents.end();
            ++it )
       {

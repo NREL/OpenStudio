@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -28,6 +28,7 @@
 
 #include "../../../model/Model.hpp"
 
+#include "../../../utilities/core/Application.hpp"
 #include "../../../utilities/idf/IdfFile.hpp"
 #include "../../../utilities/idf/IdfObject.hpp"
 #include "../../../utilities/data/EndUses.hpp"
@@ -48,6 +49,7 @@ using openstudio::SqlFile;
 
 TEST_F(RunManagerTestFixture, ParallelEnergyPlusJobTest)
 {
+  openstudio::Application::instance().application(false);
   double originalSiteEnergy = 0;
   double parallelSiteEnergy = 0;
 
@@ -93,6 +95,8 @@ TEST_F(RunManagerTestFixture, ParallelEnergyPlusJobTest)
 
     ASSERT_TRUE(sqlfile.netSiteEnergy());
     originalSiteEnergy = *sqlfile.netSiteEnergy();
+    ASSERT_TRUE(sqlfile.hoursSimulated());
+    EXPECT_EQ(8760, *sqlfile.hoursSimulated());
   }
 
   qint64 originaltime = et.restart();
@@ -125,7 +129,8 @@ TEST_F(RunManagerTestFixture, ParallelEnergyPlusJobTest)
           openstudio::path());
     workflow.add(tools);
 
-    workflow.parallelizeEnergyPlus(kit.getConfigOptions().getMaxLocalJobs(), 1);
+    int maxLocalJobs = kit.getConfigOptions().getMaxLocalJobs();
+    workflow.parallelizeEnergyPlus(maxLocalJobs > 3 ? 3 : maxLocalJobs, 1);
     openstudio::runmanager::Job job = workflow.create(outdir);
 
     kit.enqueue(job, true);

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -102,7 +102,7 @@ class RULESET_API OSRunner {
    *  with a default-constructed result, and keeps the userScript name for use in log messages.
    *  Should be called at the beginning of every UserScript. Is called by the UserScript C++
    *  classes' run methods. */
-  void prepareForUserScriptRun(const UserScript& userScript);
+  virtual void prepareForUserScriptRun(const UserScript& userScript);
 
   /** Registers error message with result, and sets result value to Fail. UserScripts
    *  should return false after calling this method. */

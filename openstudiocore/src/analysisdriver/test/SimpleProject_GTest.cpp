@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -120,7 +120,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_Open_IsNotPATProject) {
     Problem problem = retrieveProblem("Continuous",true,false);
 
     // DEFINE SEED
-    Model model = model::exampleModel();
+    Model model = fastExampleModel();
     openstudio::path p = toPath("./example.osm");
     model.save(p,true);
     FileReference seedModel(p);
@@ -158,7 +158,7 @@ TEST_F(AnalysisDriverFixture,PATProject_CreateOpenAndSaveAs) {
     // Populate it
     patProject.analysis().setName("PAT Project: Create, Open, and Save As");
 
-    Model model = model::exampleModel();
+    Model model = fastExampleModel();
     openstudio::path p = toPath("./example.osm");
     model.save(p,true);
     FileReference seedModel(p);
@@ -393,7 +393,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_EditProblemWithTwoWorkflows) {
     // Reopen, change and save
     SimpleProject project = getPATProject("SimpleProject_EditProblemWithTwoWorkflows");
 
-    Model model = exampleModel();
+    Model model = fastExampleModel();
     openstudio::path p = toPath("example.osm");
     model.save(p,false);
 
@@ -446,7 +446,7 @@ TEST_F(AnalysisDriverFixture, SimpleProject_ZipFileForCloud) {
 
 
 
-    Model model = model::exampleModel();
+    Model model = fastExampleModel();
     openstudio::path weatherFilePath = energyPlusWeatherDataPath() / toPath("USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw");
     EpwFile weatherFile(weatherFilePath);
     OptionalWeatherFile oWeatherFileObject = WeatherFile::setWeatherFile(model,weatherFile);
@@ -513,7 +513,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_AnalysisFixUpOfFilePaths) {
   analysis.setProblem(problem);
 
   // DEFINE SEED
-  Model model = model::exampleModel();
+  Model model = fastExampleModel();
   openstudio::path p = toPath("./example.osm");
   model.save(p,true);
   FileReference seedModel(p);

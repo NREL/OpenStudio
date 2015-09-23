@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ SurfaceNetworkBuilder::SurfaceNetworkBuilder(ProgressBar *progressBar) : m_progr
   m_logSink.setLogLevel(Info);
   m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.SurfaceNetworkBuilder"));
   m_logSink.setThreadId(QThread::currentThread());
-  m_progressBar = 0;
+  m_progressBar = nullptr;
 }
 
 void SurfaceNetworkBuilder::progress()

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -133,7 +133,7 @@ namespace detail{
     return result;
   }
 
-  double CoilHeatingGas_Impl::gasBurnerEfficiency()
+  double CoilHeatingGas_Impl::gasBurnerEfficiency() const
   {
     return this->getDouble(OS_Coil_Heating_GasFields::GasBurnerEfficiency).get();
   }
@@ -143,7 +143,7 @@ namespace detail{
     this->setDouble(OS_Coil_Heating_GasFields::GasBurnerEfficiency,val);
   }
 
-  double CoilHeatingGas_Impl::parasiticElectricLoad()
+  double CoilHeatingGas_Impl::parasiticElectricLoad() const
   {
     return this->getDouble(OS_Coil_Heating_GasFields::ParasiticElectricLoad).get();
   }
@@ -153,7 +153,7 @@ namespace detail{
     this->setDouble(OS_Coil_Heating_GasFields::ParasiticElectricLoad,val);
   }
 
-  double CoilHeatingGas_Impl::parasiticGasLoad()
+  double CoilHeatingGas_Impl::parasiticGasLoad() const
   {
     return this->getDouble(OS_Coil_Heating_GasFields::ParasiticGasLoad).get();
   }
@@ -456,6 +456,20 @@ CoilHeatingGas::CoilHeatingGas(const Model& model,
   setParasiticGasLoad(0);
 }
 
+CoilHeatingGas::CoilHeatingGas(const Model& model)
+  : StraightComponent(CoilHeatingGas::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::CoilHeatingGas_Impl>());
+
+  auto schedule = model.alwaysOnDiscreteSchedule();
+  setAvailableSchedule(schedule);
+
+  setGasBurnerEfficiency(0.8);
+  setString(openstudio::OS_Coil_Heating_GasFields::NominalCapacity,"AutoSize");
+  setParasiticElectricLoad(0);
+  setParasiticGasLoad(0);
+}
+
 CoilHeatingGas::CoilHeatingGas(std::shared_ptr<detail::CoilHeatingGas_Impl> p)
   : StraightComponent(p)
 {}
@@ -477,7 +491,7 @@ bool CoilHeatingGas::setAvailableSchedule(Schedule & schedule )
   return getImpl<detail::CoilHeatingGas_Impl>()->setAvailabilitySchedule( schedule );
 }
 
-double CoilHeatingGas::gasBurnerEfficiency()
+double CoilHeatingGas::gasBurnerEfficiency() const
 {
   return getImpl<detail::CoilHeatingGas_Impl>()->gasBurnerEfficiency();
 }
@@ -487,7 +501,7 @@ void CoilHeatingGas::setGasBurnerEfficiency(double val)
   getImpl<detail::CoilHeatingGas_Impl>()->setGasBurnerEfficiency(val);
 }
 
-double CoilHeatingGas::parasiticElectricLoad()
+double CoilHeatingGas::parasiticElectricLoad() const
 {
   return getImpl<detail::CoilHeatingGas_Impl>()->parasiticElectricLoad();
 }
@@ -497,7 +511,7 @@ void CoilHeatingGas::setParasiticElectricLoad(double val)
   getImpl<detail::CoilHeatingGas_Impl>()->setParasiticElectricLoad(val);
 }
 
-double CoilHeatingGas::parasiticGasLoad()
+double CoilHeatingGas::parasiticGasLoad() const
 {
   return getImpl<detail::CoilHeatingGas_Impl>()->parasiticGasLoad();
 }

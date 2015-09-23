@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -525,7 +525,7 @@ namespace detail {
     }    
   }
 
-  bool IdfObject_Impl::setQuantity (unsigned index, const Quantity q) {
+  bool IdfObject_Impl::setQuantity (unsigned index, const Quantity& q) {
     bool result = setQuantity(index,q,true);
     if (result) {
       this->emitChangeSignals();
@@ -533,7 +533,7 @@ namespace detail {
     return result;
   }
 
-  bool IdfObject_Impl::setQuantity(unsigned index, const Quantity q, bool checkValidity) {
+  bool IdfObject_Impl::setQuantity(unsigned index, const Quantity& q, bool checkValidity) {
     OptionalDouble value = getDoubleFromQuantity(index,q);
     if (!value) {
       return false;
@@ -1910,7 +1910,7 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
     return OSOptionalQuantity(*units);
   }
     
-  boost::optional<double> IdfObject_Impl::getDoubleFromQuantity(unsigned index, Quantity q) const {
+  boost::optional<double> IdfObject_Impl::getDoubleFromQuantity(unsigned index, const Quantity& q) const {
     OptionalDouble result;
   
     OptionalIddField iddField = m_iddObject.getField(index);
@@ -2088,7 +2088,7 @@ bool IdfObject::setDouble(unsigned index, double value)
   return m_impl->setDouble(index, value);
 }
 
-bool IdfObject::setQuantity(unsigned index, const Quantity q) {
+bool IdfObject::setQuantity(unsigned index, const Quantity& q) {
   return m_impl->setQuantity(index,q);
 }
 

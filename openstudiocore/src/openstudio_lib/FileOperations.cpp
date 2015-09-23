@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -238,7 +238,7 @@ namespace openstudio {
   openstudio::path createModelTempDir()
   {
     openstudio::path result;
-    QTemporaryFile * tempFile = new QTemporaryFile();
+    auto tempFile = new QTemporaryFile();
 
     if( tempFile->open() )
     {
@@ -425,8 +425,8 @@ namespace openstudio {
     removeDir(toQString(modelTempDir));
   }
 
-  bool saveRunManagerDatabase(const openstudio::path& osmPath, const openstudio::path& modelTempDir,                               
-                              bool useRadianceForDaylightingCalculations,
+  bool saveRunManagerDatabase(const openstudio::path& osmPath, const openstudio::path& modelTempDir,
+                              std::vector <double> useRadianceForDaylightingCalculations,
                               QWidget* parent)
   {
     return saveRunManagerDatabase(osmPath, modelTempDir, std::map<openstudio::path,std::vector<ruleset::UserScriptInfo> >(), 
@@ -435,7 +435,7 @@ namespace openstudio {
 
   bool saveRunManagerDatabase(const openstudio::path& osmPath, const openstudio::path& modelTempDir, 
                               const std::map<openstudio::path,std::vector<ruleset::UserScriptInfo> >& userScriptsByFolder, 
-                              bool useRadianceForDaylightingCalculations,
+                              std::vector <double> useRadianceForDaylightingCalculations,
                               QWidget* parent)
   {
     bool newToolsFound = false;
@@ -471,7 +471,7 @@ namespace openstudio {
 
       bool ruby_jobs_skipped = wf.addStandardWorkflow(scriptsDir, ruby_installed, getOpenStudioRubyIncludePath(), 
                                                       userScriptsByFolder, 
-                                                      useRadianceForDaylightingCalculations, 
+                                                      useRadianceForDaylightingCalculations.size() > 0, 
                                                       radiancePath,
                                                       modelTempDir / toPath("resources"), true);
       if (ruby_jobs_skipped)
@@ -506,21 +506,21 @@ namespace openstudio {
 
     std::vector<openstudio::runmanager::Job> jobs = rm.getJobs();
 
-    for (std::vector<openstudio::runmanager::Job>::iterator itr = jobs.begin();
+    for (auto itr = jobs.begin();
          itr != jobs.end();
          ++itr)
     {
       itr->setCanceled(true);
     }
 
-    for (std::vector<openstudio::runmanager::Job>::iterator itr = jobs.begin();
+    for (auto itr = jobs.begin();
          itr != jobs.end();
          ++itr)
     { 
       itr->requestStop();
     }
 
-    for (std::vector<openstudio::runmanager::Job>::iterator itr = jobs.begin();
+    for (auto itr = jobs.begin();
          itr != jobs.end();
          ++itr)
     {
@@ -529,7 +529,7 @@ namespace openstudio {
   }
 
   void startRunManager(openstudio::runmanager::RunManager& rm, const openstudio::path& osmPath, const openstudio::path& modelTempDir,
-      bool useRadianceForDaylightingCalculations, bool requireCalibrationReports, QWidget* parent)
+                       std::vector <double> useRadianceForDaylightingCalculations, bool requireCalibrationReports, QWidget* parent)
   {
 //    openstudio::path rmdbPath = modelTempDir / toPath("resources/run.db");
     openstudio::path simulationDir = toPath("run");
@@ -539,7 +539,7 @@ namespace openstudio {
       // disconnect signals from current jobs before clearing jobs
       std::vector<openstudio::runmanager::Job> jobs = rm.getJobs();
 
-      for (std::vector<openstudio::runmanager::Job>::iterator itr = jobs.begin();
+      for (auto itr = jobs.begin();
            itr != jobs.end();
            ++itr)
       {
@@ -582,7 +582,7 @@ namespace openstudio {
           bool test = addReportingMeasureWorkItem(workitems, calibrationReportsMeasure);
           OS_ASSERT(test);
         }
-
+        /*
         // check if we need to use radiance
         if (useRadianceForDaylightingCalculations)
         {
@@ -593,7 +593,7 @@ namespace openstudio {
             openstudio::path radiancePath = rad.back().localBinPath.parent_path();
 
             bool modeltoidffound(false);
-            for (std::vector<runmanager::WorkItem>::iterator itr = workitems.begin();
+            for (auto itr = workitems.begin();
                 itr != workitems.end();
                 ++itr)
             {
@@ -613,7 +613,7 @@ namespace openstudio {
                 QMessageBox::Ok);
           }
         }
-
+        */
         // add the report request measure before energyplus but after any other energyplus measures
         test = addReportRequestMeasureWorkItem(workitems, reportRequestMeasure);
         OS_ASSERT(test);
@@ -631,7 +631,7 @@ namespace openstudio {
       // connect signals to new jobs
       jobs = rm.getJobs();
 
-      for (std::vector<openstudio::runmanager::Job>::iterator itr = jobs.begin();
+      for (auto itr = jobs.begin();
           itr != jobs.end();
           ++itr)
       {
@@ -676,29 +676,9 @@ namespace openstudio {
     }
   }
 
-  bool usesRadianceForDaylightCalculations(openstudio::runmanager::RunManager rm)
-  {
-    std::vector<openstudio::runmanager::Job> jobs = rm.getJobs();
-
-    for (std::vector<openstudio::runmanager::Job>::const_iterator itr = jobs.begin();
-         itr != jobs.end();
-         ++itr)
-    {
-      if (itr->jobType() == openstudio::runmanager::JobType::Ruby)
-      {
-        if (!itr->allInputFiles().getAllByFilename("DaylightCalculations.rb").files().empty())
-        {
-          return true;
-        }
-      }
-    }
-
-    return false;
-  }
-
   bool findBCLMeasureWorkItem(const std::vector<runmanager::WorkItem>& workItems, const openstudio::UUID& uuid)
   {
-    for (std::vector<runmanager::WorkItem>::const_iterator itr = workItems.begin();
+    for (auto itr = workItems.begin();
          itr != workItems.end();
          ++itr)
     {
@@ -754,7 +734,7 @@ namespace openstudio {
 
     runmanager::WorkItem workItem = rubyJobBuilder.toWorkItem();
 
-    for (std::vector<runmanager::WorkItem>::iterator itr = workItems.begin();
+    for (auto itr = workItems.begin();
          itr != workItems.end();
          ++itr)
     {
@@ -787,7 +767,7 @@ namespace openstudio {
 
     runmanager::WorkItem workItem = rubyJobBuilder.toWorkItem();
 
-    for (std::vector<runmanager::WorkItem>::iterator itr = workItems.begin();
+    for (auto itr = workItems.begin();
          itr != workItems.end();
          ++itr)
     {

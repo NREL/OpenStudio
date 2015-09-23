@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -23,6 +23,7 @@
 
 #include "../RoofVegetation.hpp"
 #include "../RoofVegetation_Impl.hpp"
+#include "../StandardsInformationMaterial.hpp"
 
 #include "../../utilities/units/Quantity.hpp"
 #include "../../utilities/units/Unit.hpp"
@@ -347,3 +348,13 @@ TEST_F(ModelFixture,RoofVegetation_InitialVolumetricMoistureContentoftheSoilLaye
   EXPECT_EQ(units.standardString(),q2.units().standardString());
 }
 
+
+
+
+TEST_F(ModelFixture, RoofVegetation_StandardsInformation) {
+  Model model;
+  
+  RoofVegetation roofVegetation(model);
+  StandardsInformationMaterial info = roofVegetation.standardsInformation();
+
+}

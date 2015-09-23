@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -126,6 +126,10 @@ namespace detail {
       modelObjectClone.getImpl<RefrigerationCase_Impl>()->setCaseDefrostCycleParameters(caseDefrostCycleParameters->clone(model).cast<RefrigerationDefrostCycleParameters>());
     }
 
+    if( auto curve = defrostEnergyCorrectionCurve() ) {
+      modelObjectClone.setDefrostEnergyCorrectionCurve(curve->clone(model).cast<CurveCubic>());
+    }
+
     modelObjectClone.resetThermalZone();
 
     return modelObjectClone;
@@ -159,6 +163,11 @@ namespace detail {
     if (boost::optional<CurveCubic> intermediate = latentCaseCreditCurve()) {
       result.push_back(*intermediate);
     }
+
+    if( auto curve = defrostEnergyCorrectionCurve() ) {
+      result.push_back(curve.get());
+    }
+
     return result;
   }
 

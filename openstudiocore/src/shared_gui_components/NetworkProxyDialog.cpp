@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -145,7 +145,7 @@ namespace openstudio
   std::pair<QNetworkReply::NetworkError, QString> NetworkProxyDialog::testProxyConnection(const QNetworkProxy &t_proxy, QWidget *t_parent)
   {
     QProgressDialog dlg("Verifying Proxy Connection", "Cancel",0, 1000, t_parent);
-    dlg.setWindowModality(Qt::WindowModal);
+    dlg.setWindowModality(Qt::ApplicationModal);
     dlg.setValue(0);
     dlg.setMinimumDuration(1000);
 

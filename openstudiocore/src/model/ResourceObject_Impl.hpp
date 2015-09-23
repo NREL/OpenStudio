@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -50,19 +50,9 @@ namespace detail {
 
     virtual ~ResourceObject_Impl() {}
 
-    /** Returns the number of objects that use this resource directly. All usages count equally. 
-     *  For instance, the use of a Material in a LayeredConstruction counts as one use of the 
-     *  Material object, and usages of that LayeredConstruction do not add to the Material's use
-     *  count. */
-    unsigned directUseCount() const;
+    unsigned directUseCount(bool excludeChildren) const;
 
-    /** Returns the number of non-ResourceObjects that use this resource either directly or 
-     *  indirectly. Non-ResourceObjects include Building, Zone, Surface, Lights, and AirLoopHVAC,
-     *  for instance. An example of indirect use is the use of a Material object through inclusion 
-     *  in a Construction. If a particular Material is used in exactly one LayeredConstruction, which
-     *  is in turn used by three PlanarSurface objects, then the nonResourceObjectUseCount of both 
-     *  the Material and the LayeredConstruction is three. */
-    unsigned nonResourceObjectUseCount() const;
+    unsigned nonResourceObjectUseCount(bool excludeChildren) const;
 
    private:
 

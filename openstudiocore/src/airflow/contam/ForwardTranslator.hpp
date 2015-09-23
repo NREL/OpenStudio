@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef CONTAM_FORWARDTRANSLATOR_HPP
-#define CONTAM_FORWARDTRANSLATOR_HPP
+#ifndef AIRFLOW_CONTAM_FORWARDTRANSLATOR_HPP
+#define AIRFLOW_CONTAM_FORWARDTRANSLATOR_HPP
 
 #include "../AirflowAPI.hpp"
 
@@ -174,12 +174,12 @@ public:
   //@}
 
 protected:
-  virtual bool linkExteriorSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface);
-  virtual bool linkExteriorSubSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface, openstudio::model::SubSurface subSurface);
+  virtual bool linkExteriorSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface) override;
+  virtual bool linkExteriorSubSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface, openstudio::model::SubSurface subSurface) override;
   virtual bool linkInteriorSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface,
-    openstudio::model::Surface adjacentSurface, openstudio::model::Space adjacentSpace, openstudio::model::ThermalZone adjacentZone);
+    openstudio::model::Surface adjacentSurface, openstudio::model::Space adjacentSpace, openstudio::model::ThermalZone adjacentZone) override;
   virtual bool linkInteriorSubSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface, openstudio::model::SubSurface subSurface,
-    openstudio::model::SubSurface adjacentSubSurface, openstudio::model::Surface adjacentSurface, openstudio::model::Space adjacentSpace, openstudio::model::ThermalZone adjacentZone);
+    openstudio::model::SubSurface adjacentSubSurface, openstudio::model::Surface adjacentSurface, openstudio::model::Space adjacentSpace, openstudio::model::ThermalZone adjacentZone) override;
 
 
 private:
@@ -191,7 +191,7 @@ private:
   int addNewAirflowElement(contam::IndexModel model,std::string name,double flow,double n=0.65,double deltaP=75.0);
 
   // Clear out the translator and reset to the defaults
-  void clear();
+  void clear() override;
 
   // Really need to look at these and determine if they are really needed
   int tableLookup(QMap<std::string,int> map, std::string str, const char *name);
@@ -231,4 +231,4 @@ private:
 } // contam
 } // openstudio
 
-#endif // CONTAM_FORWARDTRANSLATOR_HPP
+#endif // AIRFLOW_CONTAM_FORWARDTRANSLATOR_HPP

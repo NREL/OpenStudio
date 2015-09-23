@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -111,13 +111,13 @@ public slots:
 
   virtual void onModelChanged(openstudio::model::Model&);
 
-  void onPushButtonNew(bool);
+  virtual void onPushButtonNew(bool);
 
-  void onPushButtonCopy(bool);
+  virtual void onPushButtonCopy(bool);
 
-  void onPushButtonDelete(bool);
+  virtual void onPushButtonDelete(bool);
 
-  void onPushButtonPurge(bool);
+  virtual void onPushButtonPurge(bool);
 
 signals:
 
@@ -135,10 +135,10 @@ signals:
 protected:
 
   // handle show event
-  virtual void showEvent(QShowEvent *t_event);
+  virtual void showEvent(QShowEvent *t_event) override;
 
   // handle close event
-  virtual void closeEvent(QCloseEvent *t_event);
+  virtual void closeEvent(QCloseEvent *t_event) override;
 
 private slots:
 

@@ -6,7 +6,7 @@ require_relative '../measure.rb'
 
 require 'fileutils'
 
-class ReportingMeasure_Test < MiniTest::Test
+class ReportingMeasure_Test < MiniTest::Unit::TestCase
 
   # class level variable
   @@co = OpenStudio::Runmanager::ConfigOptions.new(true)

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,7 +20,6 @@
 #ifndef OPENSTUDIO_MODELSUBTABVIEW_HPP
 #define OPENSTUDIO_MODELSUBTABVIEW_HPP
 
-#include "MainTabView.hpp"
 #include "SubTabView.hpp"
 
 #include "../model/Model.hpp"
@@ -49,7 +48,7 @@ class ModelSubTabView : public SubTabView
     ModelSubTabView(OSItemSelector* itemSelector,
                ModelObjectInspectorView* modelObjectInspectorView,
                bool showGridViewLayout = false,
-               QWidget* parent = 0);
+               QWidget* parent = nullptr);
 
     virtual ~ModelSubTabView() {}
 
@@ -71,9 +70,9 @@ class ModelSubTabView : public SubTabView
 
   protected slots:
 
-    virtual void onDropZoneItemClicked(OSItem* item);
+    virtual void onDropZoneItemClicked(OSItem* item) override;
 
-    //void onItemSelected(); EW: Dead slot
+    //void onItemSelected(); Evan: Dead slot
 
   private:
 

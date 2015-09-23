@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -121,7 +121,7 @@ ScaleFactorySingleton::ScaleFactorySingleton() {
 ScaleConstant ScaleFactorySingleton::m_recoverFromFailedCreate() const {
 
   // fatal error if no scales are registered since will never get valid scale.
-  if (m_exponentMap.size() == 0) {
+  if (m_exponentMap.empty()) {
     LOG_AND_THROW("No scales are registered with ScaleFactory.");
   }
 

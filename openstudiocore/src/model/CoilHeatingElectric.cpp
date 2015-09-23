@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -388,6 +388,15 @@ CoilHeatingElectric::CoilHeatingElectric(const Model& model, Schedule & schedule
 {
   OS_ASSERT(getImpl<detail::CoilHeatingElectric_Impl>());
 
+  setAvailabilitySchedule(schedule);
+}
+
+CoilHeatingElectric::CoilHeatingElectric(const Model& model)
+  : StraightComponent(CoilHeatingElectric::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::CoilHeatingElectric_Impl>());
+
+  auto schedule = model.alwaysOnDiscreteSchedule();
   setAvailabilitySchedule(schedule);
 }
 

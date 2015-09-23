@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -35,9 +35,19 @@ OSSwitch2::OSSwitch2( QWidget * parent )
   setFlat(true);
   setFixedSize(63,21);
 
-  setObjectName("OnOffSliderButton");
+  makeOnOff();
 
   this->setCheckable(true);
+}
+
+void OSSwitch2::makeOnOff()
+{
+  setObjectName("OnOffSliderButton");
+}
+
+void OSSwitch2::makeTrueFalse()
+{
+  setObjectName("TrueFalseSliderButton");
 }
 
 void OSSwitch2::bind(model::ModelObject & modelObject,

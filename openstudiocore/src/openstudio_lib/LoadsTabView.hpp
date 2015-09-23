@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ class LoadsTabView : public MainTabView
 public:
   LoadsTabView(const model::Model & model,
                const QString & tabLabel,
-               QWidget * parent = 0);
+               QWidget * parent = nullptr);
   virtual ~LoadsTabView() {}
 
 public slots:

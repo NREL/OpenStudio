@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -57,8 +57,6 @@ class SqliteMerge {
     // Here are the table updates...
     static void dropTabularData(sqlite3 *);
     static void tableTime(sqlite3 *);
-    static void tableReportMeterData(sqlite3 *);
-    static void tableReportMeterExtendedData(sqlite3 *);
     static void tableReportVariableData(sqlite3 *); 
     static void tableReportVariableExtendedData(sqlite3 *);
 

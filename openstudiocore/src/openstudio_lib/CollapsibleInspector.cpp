@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -43,7 +43,7 @@ void CollapsibleInspector::createLayout()
 {
   setContentsMargins(0,0,0,0);
 
-  QVBoxLayout * mainLayout = new QVBoxLayout();
+  auto mainLayout = new QVBoxLayout();
   mainLayout->setContentsMargins(0,0,0,0);
   mainLayout->setSpacing(0);
   setLayout(mainLayout);
@@ -84,20 +84,20 @@ void CollapsibleInspectorHeader::createLayout()
   setObjectName("CollapsibleInspectorHeader");
   setCheckable(true);
 
-  QHBoxLayout * mainHLayout = new QHBoxLayout();
-  mainHLayout->setContentsMargins(0,0,0,0);
-  mainHLayout->setSpacing(10);
+  auto mainHLayout = new QHBoxLayout();
+  mainHLayout->setContentsMargins(10,0,10,0);
+  mainHLayout->setSpacing(7);
   setLayout(mainHLayout);
 
   // Arrow
   m_arrowLabel = new QLabel();
-  mainHLayout->addWidget(m_arrowLabel);
+  mainHLayout->addWidget(m_arrowLabel, 0, Qt::AlignLeft);
 
   // Name
-  QLabel * textLabel = new QLabel(m_text);
+  auto textLabel = new QLabel(m_text);
   textLabel->setWordWrap(false);
   textLabel->setObjectName("H2");
-  mainHLayout->addWidget(textLabel);
+  mainHLayout->addWidget(textLabel, 0, Qt::AlignLeft);
 
   // Stretch
   mainHLayout->addStretch();
@@ -117,7 +117,7 @@ void CollapsibleInspectorHeader::setImage(bool isChecked)
   if(isChecked){
     m_arrowLabel->setPixmap(QPixmap(":/images/toggle_arrow.png"));
   }else{
-    m_arrowLabel->setPixmap(QPixmap(":/images/toggle_arrow_closed.png"));
+    m_arrowLabel->setPixmap(QPixmap(":/images/toggle_arrow_closed2.png"));
   }
 }
 

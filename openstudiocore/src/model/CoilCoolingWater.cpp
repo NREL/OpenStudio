@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -21,6 +21,8 @@
 #include "CoilCoolingWater_Impl.hpp"
 #include "ControllerWaterCoil.hpp"
 #include "ControllerWaterCoil_Impl.hpp"
+#include "CoilSystemCoolingWaterHeatExchangerAssisted.hpp"
+#include "CoilSystemCoolingWaterHeatExchangerAssisted_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 #include "Model.hpp"
@@ -302,39 +304,51 @@ namespace detail {
     bool success;
     
     success =  WaterToAirComponent_Impl::addToNode( node );
+    auto t_containingHVACComponent = containingHVACComponent();
+    auto t_containingZoneHVACComponent = containingZoneHVACComponent();
     
-    if( success && (! containingHVACComponent()) && (! containingZoneHVACComponent()) )
+    if( success && (! t_containingHVACComponent) && (! t_containingZoneHVACComponent) )
     {
-      if( boost::optional<ModelObject> _waterInletModelObject = waterInletModelObject() )
+      if( auto t_waterInletModelObject = waterInletModelObject() )
       {
-        Model _model = model();
+        Model t_model = model();
 
-        boost::optional<ControllerWaterCoil> oldController;
-
-        oldController = controllerWaterCoil();
-
-        if( oldController )
-        {
+        if( auto oldController = controllerWaterCoil() ) {
           oldController->remove();
         }
 
-        ControllerWaterCoil controller(_model);
-
-        boost::optional<Node> coilWaterInletNode = _waterInletModelObject->optionalCast<Node>();
-
+        ControllerWaterCoil controller(t_model);
+        auto coilWaterInletNode = t_waterInletModelObject->optionalCast<Node>();
         OS_ASSERT(coilWaterInletNode);
 
         controller.setActuatorNode(coilWaterInletNode.get());
 
-        if( boost::optional<ModelObject> mo = airOutletModelObject() )
-        {
-          if( boost::optional<Node> coilAirOutletNode = mo->optionalCast<Node>() )
-          {
+        if( auto mo = airOutletModelObject() ) {
+          if( auto coilAirOutletNode = mo->optionalCast<Node>() ) {
             controller.setSensorNode(coilAirOutletNode.get());
           }
         }
 
         controller.setAction("Reverse");
+      }
+    } else if( success && t_containingHVACComponent ) {
+      if( t_containingHVACComponent->optionalCast<CoilSystemCoolingWaterHeatExchangerAssisted>() ) {
+        if( auto t_waterInletModelObject = waterInletModelObject() ) {
+
+          if( auto oldController = controllerWaterCoil() ) {
+            oldController->remove();
+          }
+
+          auto t_model = model();
+          ControllerWaterCoil controller(t_model);
+
+          auto coilWaterInletNode = t_waterInletModelObject->optionalCast<Node>();
+          OS_ASSERT(coilWaterInletNode);
+          controller.setActuatorNode(coilWaterInletNode.get());
+          // sensor node will be established in translator since that node does not yet exist
+
+          controller.setAction("Reverse");
+        }
       }
     }
     
@@ -444,6 +458,17 @@ namespace detail {
         }
       }
     }
+
+    // CoilSystemCoolingWaterHeatExchangerAssisted
+    {
+      auto coilSystems = model().getConcreteModelObjects<CoilSystemCoolingWaterHeatExchangerAssisted>();
+      for( const auto & coilSystem : coilSystems ) {
+        if( coilSystem.coolingCoil().handle() == handle() ) {
+          return coilSystem;
+        }
+      }
+    }
+
     return boost::none;
   }
 
@@ -476,6 +501,15 @@ CoilCoolingWater::CoilCoolingWater(const Model& model, Schedule & availableSched
   OS_ASSERT(getImpl<detail::CoilCoolingWater_Impl>());
 
   setAvailableSchedule( availableSchedule );
+}
+
+CoilCoolingWater::CoilCoolingWater(const Model& model)
+  : WaterToAirComponent(CoilCoolingWater::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::CoilCoolingWater_Impl>());
+
+  auto schedule = model.alwaysOnDiscreteSchedule();
+  setAvailableSchedule(schedule);
 }
 
 CoilCoolingWater::CoilCoolingWater(std::shared_ptr<detail::CoilCoolingWater_Impl> p)

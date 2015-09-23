@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -48,7 +48,7 @@ std::vector<std::pair<int, std::string> > JobErrors::errorsByTypeWithCount(const
 
   boost::regex occurredTotalTimes(".*occurred ([0-9]+) total times.*");
 
-  for (std::vector<std::pair<ErrorType, std::string> >::const_iterator itr = allErrors.begin();
+  for (auto itr = allErrors.begin();
       itr != allErrors.end();
       ++itr)
   {

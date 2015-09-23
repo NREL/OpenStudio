@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -37,6 +37,7 @@
 #include "RunTabController.hpp"
 #include "RunView.hpp"
 #include "StartupView.hpp"
+
 #include <pat_app/VagrantConfiguration.hxx>
 
 #include "../shared_gui_components/BCLMeasureDialog.hpp"
@@ -108,11 +109,14 @@ namespace pat {
 
 PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUserScriptInfoGetter> &t_infoGetter )
   : QApplication(argc, argv),
+    m_startupView(nullptr),
+    m_loadingProjectView(nullptr),
     m_onlineBclDialog(nullptr),
     m_cloudDialog(nullptr),
+    m_monitorUseDialog(nullptr),
     m_measureManager(t_infoGetter, this)
 {
-  connect(this, &PatApp::userMeasuresDirChanged, &m_measureManager, &MeasureManager::updateMeasuresLists);
+  connect(this, &PatApp::userMeasuresDirChanged, &m_measureManager, static_cast<void (MeasureManager::*)(void)>(&MeasureManager::updateMeasuresLists));
 
   setOrganizationName("NREL");
   setOrganizationDomain("nrel.gov");
@@ -236,10 +240,17 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
 
   mainWindow->show();
 
-  if (!QDir().exists(toQString(BCLMeasure::userMeasuresDir()))){
-    BCLMeasure::setUserMeasuresDir(BCLMeasure::userMeasuresDir());
-  }
+  openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
 
+  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+    QMessageBox::information(this->mainWindow, "Network Connection Problem", "Unable to update Measures list.\nYour User Measures Directory appears to be a network directory and is not currently available.\nYou can change your specified User Measures Directory using Preferences->Change My Measures Directory.", QMessageBox::Ok);
+  }
+  else {
+    if (!QDir().exists(toQString(userMeasuresDir))) {
+      BCLMeasure::setUserMeasuresDir(userMeasuresDir);
+    }
+  }
+    
   m_measureManager.updateMeasuresLists();
 
   if (!fileName.isEmpty()){
@@ -259,6 +270,12 @@ PatApp::~PatApp()
   delete m_startupView;
 
   delete m_loadingProjectView;
+
+  delete m_onlineBclDialog;
+
+  delete m_cloudDialog;
+
+  delete m_monitorUseDialog;
 }
 
 PatApp * PatApp::instance()
@@ -663,7 +680,7 @@ void PatApp::on_closeMonitorUseDlg()
 
 void PatApp::showHelp()
 {
-  QDesktopServices::openUrl(QUrl("http://nrel.github.io/OpenStudio-user-documentation/comparative_analysis/parametric_studies/"));
+  QDesktopServices::openUrl(QUrl("http://nrel.github.io/OpenStudio-user-documentation/reference/parametric_studies/"));
 }
 
 void PatApp::showAbout()
@@ -757,9 +774,9 @@ bool PatApp::setSeed(const FileReference& currentSeedLocation) {
       }
 
       // DLM: TODO check imported model to see what this should do
-      if (projectHasRadiance(*m_project)){
-        removeRadianceFromProject(*m_project);
-      }
+      //if (projectHasRadiance(*m_project)){
+      //  removeRadianceFromProject(*m_project);
+      //}
       
       // get new number of variables and report out how many fixed measures were added
       int nvarsAdded = m_project->analysis().problem().numVariables() - nvars;
@@ -1093,7 +1110,7 @@ void PatApp::exportXml()
 
   //make results.xml inside the project directory
   openstudio::path resultsXmlPath = projectPath / toPath("results.xml");
-  openstudio::analysis::exportxml::ExportXML newXMLdoc;
+  openstudio::pat::ExportXML newXMLdoc;
   if (!newXMLdoc.exportXML(*m_project, toQString(resultsXmlPath))) {
     // user canceled, stop the export process
     mainWindow->setEnabled(true);
@@ -1184,12 +1201,26 @@ void PatApp::changeUserMeasuresDir()
 {
   openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
 
-  QString dirName = QFileDialog::getExistingDirectory( mainWindow,
-                                                       tr("Select My Measures Directory"),
-                                                       toQString(userMeasuresDir));
+  QString dirName("");
 
-  if(dirName.length() > 0){
-    userMeasuresDir = toPath(dirName);
+  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+    dirName = QFileDialog::getExistingDirectory(mainWindow,
+      tr("Select My Measures Directory"));
+  }
+  else {
+    dirName = QFileDialog::getExistingDirectory(mainWindow,
+      tr("Select My Measures Directory"),
+      toQString(userMeasuresDir));
+  }
+
+  userMeasuresDir = toPath(dirName);
+
+  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+    QMessageBox::information(this->mainWidget(), "Cannot Update User Measures", "Your My Measures Directory appears to be on a network drive that is not currently available.\nYou can change your specified My Measures Directory using 'Preferences->Change My Measures Directory'.", QMessageBox::Ok);
+    return;
+  }
+  
+  if(!userMeasuresDir.empty()){
     if (BCLMeasure::setUserMeasuresDir(userMeasuresDir)){
       emit userMeasuresDirChanged();
     }
@@ -1269,6 +1300,31 @@ bool PatApp::openFile(const QString& fileName)
     QDir dir = fileInfo.dir();
     QString dirAbsolutePath = dir.absolutePath();
     openstudio::path projectDir = openstudio::toPath(dirAbsolutePath);
+
+    // check if this is a simple project
+    if (!analysisdriver::SimpleProject::isExistingSimpleProject(projectDir)){
+      QMessageBox::warning(mainWindow,
+                           "Error Opening Project",
+                           QString("Unable to open project at '") + dirAbsolutePath + QString("'."));
+      //}
+      showStartupView();
+      return false;
+    }
+
+
+    // check if opening the project requires an update
+    if (analysisdriver::SimpleProject::requiresUpdate(projectDir)){
+      QMessageBox::StandardButton test = QMessageBox::question(mainWindow,
+                            "Project Requires Update",
+                            QString("Project at '") + dirAbsolutePath + QString("' requires update which may remove previous results."),
+                            QMessageBox::Ok | QMessageBox::Cancel,
+                            QMessageBox::Cancel);
+      if (test != QMessageBox::Ok){
+        showStartupView();
+        return false;
+      }
+    }
+
     openstudio::analysisdriver::SimpleProjectOptions options;
     options.setPauseRunManagerQueue(true); // do not start running when opening
     options.setInitializeRunManagerUI(false);
@@ -1292,6 +1348,11 @@ bool PatApp::openFile(const QString& fileName)
       }
 
       attachProject(project);
+
+      if (project->analysis().resultsAreInvalid()) {
+        project->clearAllResults();
+      }
+
       mainWindow->setWindowTitle("");
       mainWindow->setWindowFilePath(dir.absolutePath());
       if (m_project->analysis().isDirty())
@@ -1331,7 +1392,7 @@ bool PatApp::openFile(const QString& fileName)
         ss << std::endl << "Ensure that all measures are correctly located in the scripts directory.";
         LOG(Warn,ss.str());
         // DLM: which dialog should be parent?
-        QMessageBox::warning(0, 
+        QMessageBox::warning(nullptr, 
                              QString("Error opening measure and run data."),
                              toQString(ss.str()),
                              QMessageBox::Ok);
@@ -1383,7 +1444,7 @@ void PatApp::attachProject(boost::optional<analysisdriver::SimpleProject> projec
     // and use that. Call this original version when the run button is hit.
 
     // update built in measures that may have changed if we upgraded versions
-    m_measureManager.updatePatApplicationMeasures(*m_project);
+    m_measureManager.updateOpenStudioMeasures(*m_project);
 
     // cache the seed models here
     m_project->seedModel();
@@ -1394,7 +1455,7 @@ void PatApp::attachProject(boost::optional<analysisdriver::SimpleProject> projec
 
     openstudio::analysis::Analysis analysis = m_project->analysis();
 
-    // connect signals from the the analysis to this
+    // connect signals from the analysis to this
     bool isConnected = analysis.connect(SIGNAL(changed(ChangeType)), this, SLOT(markAsModified()));
     OS_ASSERT(isConnected);
 

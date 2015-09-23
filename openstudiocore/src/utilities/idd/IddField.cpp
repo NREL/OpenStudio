@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -195,7 +195,7 @@ namespace detail {
 
   bool IddField_Impl::isNameField() const {
     return (((properties().references.size() > 0) && (properties().objectLists.size() == 0)) ||
-            (boost::iequals("Name", name()) && (properties().type == IddFieldType::AlphaType)));
+            (boost::iequals("Name", name()) && ((properties().type == IddFieldType::AlphaType) || (properties().type == IddFieldType::NodeType))));
   }
 
   bool IddField_Impl::isObjectListField() const {
@@ -632,10 +632,9 @@ namespace detail {
 
 // CONSTRUCTORS
 
-IddField::IddField()
-{
-  m_impl = std::shared_ptr<detail::IddField_Impl>(new detail::IddField_Impl());
-}
+IddField::IddField() :
+  m_impl(std::shared_ptr<detail::IddField_Impl>(new detail::IddField_Impl()))
+{}
 
 // GETTERS
 

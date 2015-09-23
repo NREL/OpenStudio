@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -18,36 +18,39 @@
 **********************************************************************/
 
 #include "BuildingInspectorView.hpp"
+
+#include "../shared_gui_components/OSComboBox.hpp"
+#include "../shared_gui_components/OSIntegerEdit.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
-#include "OSVectorController.hpp"
-#include "../shared_gui_components/OSComboBox.hpp"
-#include "OSDropZone.hpp"
+#include "../shared_gui_components/OSSwitch.hpp"
+
 #include "ModelObjectItem.hpp"
+#include "OSDropZone.hpp"
+#include "OSVectorController.hpp"
 
 #include "../model/Building.hpp"
 #include "../model/Building_Impl.hpp"
-#include "../model/SpaceType.hpp"
-#include "../model/SpaceType_Impl.hpp"
+#include "../model/Component.hpp"
+#include "../model/ComponentData.hpp"
+#include "../model/ComponentData_Impl.hpp"
+#include "../model/Component_Impl.hpp"
 #include "../model/DefaultConstructionSet.hpp"
 #include "../model/DefaultConstructionSet_Impl.hpp"
 #include "../model/DefaultScheduleSet.hpp"
 #include "../model/DefaultScheduleSet_Impl.hpp"
-#include "../model/Component.hpp"
-#include "../model/Component_Impl.hpp"
-#include "../model/ComponentData.hpp"
-#include "../model/ComponentData_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
 
 #include <utilities/idd/OS_Building_FieldEnums.hxx>
 #include "../utilities/core/Assert.hpp"
 
-#include <QVBoxLayout>
-#include <QHBoxLayout>
+#include <QBoxLayout>
+#include <QColor>
+#include <QColorDialog>
 #include <QGridLayout>
 #include <QLabel>
 #include <QPushButton>
-#include <QColorDialog>
-#include <QColor>
 #include <QScrollArea>
 #include <QStackedWidget>
 
@@ -221,19 +224,19 @@ void BuildingDefaultScheduleSetVectorController::onDrop(const OSItemId& itemId)
 // BuildingInspectorView
 
 BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent )
-  : ModelObjectInspectorView(model, true, parent)
+  : ModelObjectInspectorView(model, true, parent),
+  m_isIP(isIP)
 {
-  m_isIP = isIP;
-
-  QWidget* hiddenWidget = new QWidget();
+  auto hiddenWidget = new QWidget();
   this->stackedWidget()->insertWidget(0, hiddenWidget);
 
-  QWidget* visibleWidget = new QWidget();
+  auto visibleWidget = new QWidget();
   this->stackedWidget()->insertWidget(1, visibleWidget);
 
-  this->stackedWidget()->setCurrentIndex(0);
+  //this->stackedWidget()->setCurrentIndex(0);
+  this->stackedWidget()->setCurrentIndex(1);
 
-  QGridLayout* mainGridLayout = new QGridLayout();
+  auto mainGridLayout = new QGridLayout();
   mainGridLayout->setContentsMargins(7,7,7,7);
   mainGridLayout->setSpacing(14);
   visibleWidget->setLayout(mainGridLayout);
@@ -241,9 +244,9 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   int row = 0;
 
   // name
-  QVBoxLayout* vLayout = new QVBoxLayout();
+  auto vLayout = new QVBoxLayout();
 
-  QLabel* label = new QLabel();
+  auto label = new QLabel();
   label->setText("Name: ");
   label->setStyleSheet("QLabel { font: bold; }");
   vLayout->addWidget(label);
@@ -256,8 +259,7 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
 
   ++row;
 
-  // building type 
-
+  // Measure Tags
   QFrame * line;
   line = new QFrame();
   line->setFrameShape(QFrame::HLine);
@@ -273,6 +275,7 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
 
   ++row;
 
+  // Standards Building Type
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
@@ -286,12 +289,123 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   m_standardsBuildingTypeComboBox->setFixedWidth(OSItem::ITEM_WIDTH);
   vLayout->addWidget(m_standardsBuildingTypeComboBox);
 
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout, row, 0);
+  mainGridLayout->setRowMinimumHeight(row, 30);
+
+  // Relocatable 
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Relocatable: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_relocatable = new OSSwitch2();
+  m_relocatable->makeTrueFalse();
+  vLayout->addWidget(m_relocatable);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout, row, 1);
+  mainGridLayout->setRowMinimumHeight(row, 30);
+
+  ++row;
+
+  // Nominal Floor to Ceiling Height
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Nominal Floor to Ceiling Height: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_floorToCeilingHeight = new OSQuantityEdit2("m", "m", "ft", m_isIP);
+  m_floorToCeilingHeight->doubleValidator()->setBottom(0);
+  connect(this, &BuildingInspectorView::toggleUnitsClicked, m_floorToCeilingHeight, &OSQuantityEdit2::onUnitSystemChange);
+  vLayout->addWidget(m_floorToCeilingHeight);
+
+  vLayout->addStretch();
+
   mainGridLayout->addLayout(vLayout,row,0);
   mainGridLayout->setRowMinimumHeight(row, 30);
 
-  // DLM: should we put "Standards Number of Stories", "Standards Number of Above Ground Stories", 
-  // or "Nominal Floor to Floor Height" in measure tags?  We could undeprecate "Building Sector Type" and put
+  // Nominal Floor to Floor Height
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Nominal Floor to Floor Height: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_floorToFloorHeight = new OSQuantityEdit2("m", "m", "ft", m_isIP);
+  m_floorToFloorHeight->doubleValidator()->setBottom(0);
+  connect(this, &BuildingInspectorView::toggleUnitsClicked, m_floorToFloorHeight, &OSQuantityEdit2::onUnitSystemChange);
+  vLayout->addWidget(m_floorToFloorHeight);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout, row, 1);
+  mainGridLayout->setRowMinimumHeight(row, 30);
+
+  // DLM: We could undeprecate "Building Sector Type" and put
   // it here too?
+
+  ++row;
+
+  // Standards Number of Stories
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Standards Number of Stories: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_numberStories = new OSIntegerEdit2();
+  m_numberStories->intValidator()->setBottom(0);
+  vLayout->addWidget(m_numberStories);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout, row, 0);
+  mainGridLayout->setRowMinimumHeight(row, 30);
+
+  // Standards Number of Above Ground Stories
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Standards Number of Above Ground Stories: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_numberAboveGroundStories = new OSIntegerEdit2();
+  m_numberAboveGroundStories->intValidator()->setBottom(0);
+  vLayout->addWidget(m_numberAboveGroundStories);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout, row, 1);
+  mainGridLayout->setRowMinimumHeight(row, 30);
+
+  ++row;
+
+  // Standards Number of Living Units
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Standards Number of Living Units: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_numberLivingUnits = new OSIntegerEdit2();
+  m_numberLivingUnits->intValidator()->setBottom(0);
+  vLayout->addWidget(m_numberLivingUnits);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout, row, 0);
+  mainGridLayout->setRowMinimumHeight(row, 30);
 
   ++row;
 
@@ -388,6 +502,10 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   mainGridLayout->setColumnMinimumWidth(1, 80);
   mainGridLayout->setColumnStretch(2,1);
   mainGridLayout->setRowStretch(row,1);
+
+  auto building = model.getConcreteModelObjects<model::Building>();
+  OS_ASSERT(building.size() == 1);
+  onSelectModelObject(building.at(0));
 }
 
 void BuildingInspectorView::onClearSelection()
@@ -416,9 +534,6 @@ void BuildingInspectorView::editStandardsBuildingType(const QString & text)
     }else{
       m_building->setStandardsBuildingType(standardsBuildingType);
     }
-
-    //m_building->resetStandardsSpaceType();
-    //populateStandardsSpaceTypes();
   }
 }
 
@@ -432,9 +547,6 @@ void BuildingInspectorView::standardsBuildingTypeChanged(const QString & text)
       m_building->setStandardsBuildingType(standardsBuildingType);
     }
     populateStandardsBuildingTypes();
-
-    //m_spaceType->resetStandardsSpaceType();
-    //populateStandardsSpaceTypes();
   }
 }
 
@@ -457,7 +569,58 @@ void BuildingInspectorView::attach(openstudio::model::Building& building)
 
   m_northAxisEdit->bind(building, "northAxis", m_isIP, std::string("isNorthAxisDefaulted"));
 
-  //m_floorToFloorHeightEdit->bind(building, "nominalFloortoFloorHeight", m_isIP, std::string("isNominalFloortoFloorHeightDefaulted"));
+  m_numberLivingUnits->bind(
+    building,
+    OptionalIntGetter(std::bind(&model::Building::standardsNumberOfLivingUnits, building)),
+    boost::optional<IntSetter>(std::bind(&model::Building::setStandardsNumberOfLivingUnits, building, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Building::resetStandardsNumberOfLivingUnits, building)));
+
+  m_numberStories->bind(
+    building,
+    OptionalIntGetter(std::bind(&model::Building::standardsNumberOfStories, building)),
+    boost::optional<IntSetter>(std::bind(&model::Building::setStandardsNumberOfStories, building, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Building::resetStandardsNumberOfStories, building)));
+
+  m_numberAboveGroundStories->bind(
+    building,
+    OptionalIntGetter(std::bind(&model::Building::standardsNumberOfAboveGroundStories, building)),
+    boost::optional<IntSetter>(std::bind(&model::Building::setStandardsNumberOfAboveGroundStories, building, std::placeholders::_1)),
+    boost::optional<NoFailAction>(std::bind(&model::Building::resetStandardsNumberOfAboveGroundStories, building)));
+
+  m_relocatable->bind(
+    building,
+    std::bind(&model::Building::relocatable, building),
+    boost::optional<BoolSetter>(std::bind(&model::Building::setRelocatable, building, std::placeholders::_1)),
+    boost::optional<NoFailAction>(),
+    boost::optional<BasicQuery>(std::bind(&model::Building::isRelocatableDefaulted, building))
+  );
+
+  m_floorToCeilingHeight->bind(
+    m_isIP,
+    *m_building,
+    OptionalDoubleGetter([this]() {return m_building->nominalFloortoCeilingHeight(); }),
+    //                                                   <return type (function pointer) (argument)> Note: use "::" when calling a member function, use only "*" when calling a static or free function
+    //boost::optional<DoubleSetter>(std::bind(static_cast<bool (model::Building::*)(double)>(&model::Building::setNominalFloortoCeilingHeight), m_building.get_ptr(), std::placeholders::_1)),
+    // Evan note: the line above and the line below accomplish the same thing, although the lambda function below is now preferred as it is considered more readable and perhaps slightly faster
+    boost::optional<DoubleSetter>([this](double d) { return m_building->setNominalFloortoCeilingHeight(d); }),
+    boost::optional<NoFailAction>([this]() { return m_building->resetNominalFloortoCeilingHeight(); }),
+    boost::optional<NoFailAction>(),
+    boost::optional<NoFailAction>(),
+    boost::optional<BasicQuery>(),
+    boost::optional<BasicQuery>(),
+    boost::optional<BasicQuery>());
+
+  m_floorToFloorHeight->bind(
+    m_isIP,
+    *m_building,
+    OptionalDoubleGetter([this]() {return m_building->nominalFloortoFloorHeight(); }),
+    boost::optional<DoubleSetter>([this](double d) { return m_building->setNominalFloortoFloorHeight(d); }),
+    boost::optional<NoFailAction>([this]() { return m_building->resetNominalFloortoFloorHeight(); }),
+    boost::optional<NoFailAction>(),
+    boost::optional<NoFailAction>(),
+    boost::optional<BasicQuery>(),
+    boost::optional<BasicQuery>(),
+    boost::optional<BasicQuery>());
 
   this->stackedWidget()->setCurrentIndex(1);
 }
@@ -470,19 +633,25 @@ void BuildingInspectorView::detach()
 
   m_nameEdit->unbind();
 
-  disconnect(m_standardsBuildingTypeComboBox, 0, this, 0);
+  disconnect(m_standardsBuildingTypeComboBox, nullptr, this, nullptr);
   m_standardsBuildingTypeComboBox->clear();
 
   m_spaceTypeVectorController->detach();
   m_defaultConstructionSetVectorController->detach();
   m_defaultScheduleSetVectorController->detach();
   m_northAxisEdit->unbind();
-  //m_floorToFloorHeightEdit->unbind();
+
+  m_numberLivingUnits->unbind();
+  m_numberStories->unbind();
+  m_numberAboveGroundStories->unbind();
+  m_relocatable->unbind();
+  m_floorToCeilingHeight->unbind();
+
 }
 
 void BuildingInspectorView::populateStandardsBuildingTypes()
 {
-  disconnect(m_standardsBuildingTypeComboBox, 0, this, 0);
+  disconnect(m_standardsBuildingTypeComboBox, nullptr, this, nullptr);
 
   m_standardsBuildingTypeComboBox->clear();
   if (m_building){

@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -215,7 +215,13 @@ module OpenStudio
     
     def create_entity
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-        
+      
+      if (@parent.nil?)
+        # how did this happen?
+        Plugin.log(OpenStudio::Error, "Parent #{@parent} is nil, cannot create entity for #{@model_object.name}")
+        return nil
+      end
+      
       if @parent.class == Space
         @entity = @parent.entity.entities.add_group
       else

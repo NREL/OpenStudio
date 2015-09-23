@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -20,9 +20,8 @@
 #ifndef RESULTSVIEWER_RESULTSVIEWERDATA_HPP
 #define RESULTSVIEWER_RESULTSVIEWERDATA_HPP
 
-#include "../utilities/plot/Plot2D.hpp"
-#include "../utilities/plot/LinePlot.hpp"
-#include "../utilities/plot/FloodPlot.hpp"
+#include "LinePlot.hpp"
+#include "FloodPlot.hpp"
 #include "../utilities/sql/SqlFile.hpp"
 
 #include <QMainWindow>

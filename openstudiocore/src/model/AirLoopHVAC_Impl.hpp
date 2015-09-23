@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -36,7 +36,8 @@ class ThermalZone;
 class PlantLoop;
 class SizingSystem;
 class StraightComponent;
-class AvailabilityManagerAssignmentList;
+class AvailabilityManagerScheduled;
+class AvailabilityManager;
 
 namespace detail {
 
@@ -78,17 +79,17 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   void autosizeDesignSupplyAirFlowRate();
 
-  Node supplyInletNode() const;
+  Node supplyInletNode() const override;
 
-  Node supplyOutletNode() const;
+  Node supplyOutletNode() const override;
 
-  std::vector<Node> supplyOutletNodes() const;
+  std::vector<Node> supplyOutletNodes() const override;
 
-  Node demandInletNode() const;
+  Node demandInletNode() const override;
 
-  std::vector<Node> demandInletNodes() const;
+  std::vector<Node> demandInletNodes() const override;
 
-  Node demandOutletNode() const;
+  Node demandOutletNode() const override;
 
   boost::optional<Node> reliefAirNode() const;
 
@@ -96,49 +97,66 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
-  std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
-
-  void addAirLoopComp(ModelObject targetObj, ModelObject newComp);
-
-  void removeAirLoopComp(ModelObject targetObj);
-
-  void replaceAirLoopSupplyComp(ModelObject targetObj, ModelObject newObj);
+  std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) override;
 
   boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
 
+  boost::optional<Splitter> supplySplitter() const;
+
+  bool removeSupplySplitter();
+
+  bool removeSupplySplitter(HVACComponent & hvacComponent);
+
+  boost::optional<Node> supplySplitterInletNode() const;
+
+  std::vector<Node> supplySplitterOutletNodes() const;
+
   AirLoopHVACZoneMixer zoneMixer();
 
-  AirLoopHVACZoneSplitter zoneSplitter();
+  AirLoopHVACZoneSplitter zoneSplitter() const;
+
+  std::vector<AirLoopHVACZoneSplitter> zoneSplitters() const;
 
   bool removeBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
-  virtual std::vector<openstudio::IdfObject> remove();
+  virtual std::vector<openstudio::IdfObject> remove() override;
 
-  virtual ModelObject clone(Model model) const;
+  virtual ModelObject clone(Model model) const override;
 
-  virtual const std::vector<std::string>& outputVariableNames() const;
+  virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual IddObjectType iddObjectType() const;
+  virtual IddObjectType iddObjectType() const override;
 
-  Splitter demandSplitter();
+  virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-  Mixer demandMixer();
+  Splitter demandSplitter() override;
+
+  Mixer demandMixer() override;
+
+  boost::optional<HVACComponent> supplyFan() const;
+
+  boost::optional<HVACComponent> returnFan() const;
+
+  boost::optional<HVACComponent> reliefFan() const;
 
   bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
-  bool addBranchForZone(ThermalZone & thermalZone, StraightComponent & airTerminal);
+  bool addBranchForZone(ThermalZone & thermalZone, HVACComponent & airTerminal);
 
   bool addBranchForZone(ThermalZone & thermalZone, 
                         Splitter & splitter,
                         Mixer & mixer,
-                        StraightComponent & airTerminal);
+                        HVACComponent & airTerminal);
 
   bool addBranchForZone(ThermalZone & thermalZone, 
                         Splitter & splitter,
                         Mixer & mixer);
 
   bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone, 
-                            boost::optional<StraightComponent> optAirTerminal);
+                            boost::optional<StraightComponent> & optAirTerminal);
+
+  bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone, 
+                            boost::optional<HVACComponent> & optAirTerminal);
 
   bool moveBranchForZone(ThermalZone & thermalZone,
                          Splitter & newSplitter);
@@ -150,9 +168,9 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   SizingSystem sizingSystem() const;
 
-  std::vector<ThermalZone> thermalZones();
+  std::vector<ThermalZone> thermalZones() const;
 
-  std::vector<ModelObject> children() const;
+  std::vector<ModelObject> children() const override;
 
   Schedule availabilitySchedule() const;
 
@@ -162,22 +180,51 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   std::string nightCycleControlType() const;
 
+  // boost::optional<Schedule> returnAirBypassFlowTemperatureSetpointSchedule() const;
+
+  // bool setReturnAirBypassFlowTemperatureSetpointSchedule(Schedule & temperatureSetpointSchedule);
+
+  // void resetReturnAirBypassFlowTemperatureSetpointSchedule();
+
   static bool addBranchForZoneImpl(ThermalZone & thermalZone, 
                                    AirLoopHVAC & airLoopHVAC,
                                    Splitter & splitter,
                                    Mixer & mixer,
-                                   boost::optional<StraightComponent> & optAirTerminal);
+                                   boost::optional<HVACComponent> & optAirTerminal);
 
   static boost::optional<ThermalZone> zoneForLastBranch(Mixer & mixer);
 
-  static boost::optional<StraightComponent> terminalForLastBranch(Mixer & mixer);
+  static boost::optional<HVACComponent> terminalForLastBranch(Mixer & mixer);
 
   static boost::optional<PlantLoop> plantForAirTerminal( HVACComponent & airTerminal );
 
   static void setPlantForAirTerminal( HVACComponent & airTerminal, PlantLoop & plantLoop );
-  private:
 
-  AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const;
+  unsigned supplyOutletPortA() const;
+
+  unsigned supplyOutletPortB() const;
+
+  unsigned supplyInletPort() const;
+
+  unsigned demandInletPortA() const;
+
+  unsigned demandInletPortB() const;
+
+  unsigned demandOutletPort() const;
+
+  static bool addDualDuctTerminalToNode(HVACComponent & terminal, const unsigned inletPortA, const unsigned inletPortB, const unsigned outletPort, Node & node);
+
+  static bool removeDualDuctTerminalFromAirLoopHVAC(HVACComponent & terminal, const unsigned inletPortA, const unsigned inletPortB, const unsigned outletPort);
+
+  bool isDualDuct() const;
+
+  boost::optional<AvailabilityManager> availabilityManager() const;
+
+  bool setAvailabilityManager(const AvailabilityManager & availabilityManager);
+
+  void resetAvailabilityManager();
+
+  private:
 
   REGISTER_LOGGER("openstudio.model.AirLoopHVAC");
 

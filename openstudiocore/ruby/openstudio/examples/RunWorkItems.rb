@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -96,7 +96,7 @@ params.append("cleanoutfiles", "standard");
 workflow.add(params)
 
 # set up tools
-ep_hash = OpenStudio::EnergyPlus::find_energyplus(8, 1)
+ep_hash = OpenStudio::EnergyPlus::find_energyplus(8, 3)
 ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s).parent_path
 tools = OpenStudio::Runmanager::ConfigOptions::makeTools(ep_path,
                                                          OpenStudio::Path.new,

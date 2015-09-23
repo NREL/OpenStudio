@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -51,16 +51,16 @@ namespace detail {
      virtual ~DakotaJob();
 
     protected:
-     virtual std::string descriptionImpl() const;
-     virtual std::string detailedDescriptionImpl() const;
+     virtual std::string descriptionImpl() const override;
+     virtual std::string detailedDescriptionImpl() const override;
 
      /// Returns required version of Dakota
-     virtual ToolVersion getToolVersionImpl(const std::string &t_toolName) const;
+     virtual ToolVersion getToolVersionImpl(const std::string &t_toolName) const override;
 
      /// Actual execution implementation
-     virtual void startHandlerImpl();
+     virtual void startHandlerImpl() override;
 
-     virtual void basePathChanged();
+     virtual void basePathChanged() override;
     private:
      void getFiles(const Files &t_files, const JobParams &t_params) const;
 

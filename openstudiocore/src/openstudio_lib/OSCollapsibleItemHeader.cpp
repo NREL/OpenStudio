@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -41,7 +41,8 @@ OSCollapsibleItemHeader::OSCollapsibleItemHeader(const std::string & text,
   setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed);
   setObjectName("OSCollapsibleItemHeader");
 
-  QHBoxLayout * mainHLayout = new QHBoxLayout();
+  auto mainHLayout = new QHBoxLayout();
+  mainHLayout->setContentsMargins(9, 0, 9, 0);
   setLayout(mainHLayout);
 
   // Label

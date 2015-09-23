@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -28,6 +28,10 @@
 #include "../../model/Space_Impl.hpp"
 #include "../../model/ConstructionBase.hpp"
 #include "../../model/ConstructionBase_Impl.hpp"
+#include "../../model/ShadingControl.hpp"
+#include "../../model/ShadingControl_Impl.hpp"
+#include "../../model/WindowPropertyFrameAndDivider.hpp"
+#include "../../model/WindowPropertyFrameAndDivider_Impl.hpp"
 
 #include <utilities/idd/FenestrationSurface_Detailed_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -157,14 +161,21 @@ OptionalModelObject ReverseTranslator::translateFenestrationSurfaceDetailed( con
 
   target = workspaceObject.getTarget(openstudio::FenestrationSurface_DetailedFields::ShadingControlName);
   if (target){
-    LOG(Warn, "Shading Control Name not yet mapped for FenestrationSurface:Detailed");
+    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+    if (modelObject && modelObject->optionalCast<model::ShadingControl>()){
+      subSurface->setShadingControl(modelObject->cast<model::ShadingControl>());
+    }
   }
 
   target = workspaceObject.getTarget(openstudio::FenestrationSurface_DetailedFields::FrameandDividerName);
   if (target){
-    LOG(Warn, "Frame and Divider Name not yet mapped for FenestrationSurface:Detailed");
+    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+    if (modelObject && modelObject->optionalCast<model::WindowPropertyFrameAndDivider>()){
+      subSurface->setWindowPropertyFrameAndDivider(modelObject->cast<model::WindowPropertyFrameAndDivider>());
+    }
   }
 
+  // DLM: what about multipliers on interior sub surfaces?
   OptionalInt i = workspaceObject.getInt(FenestrationSurface_DetailedFields::Multiplier);
   if (i) {
     subSurface->setMultiplier(*i);

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -25,6 +25,8 @@
 #include "ConstructionWithInternalSource_Impl.hpp"
 #include "HVACComponent.hpp"
 #include "HVACComponent_Impl.hpp"
+#include "WaterToAirComponent.hpp"
+#include "WaterToAirComponent_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include "Schedule.hpp"
@@ -81,13 +83,28 @@ namespace detail {
   {
     ZoneHVACLowTempRadiantVarFlow lowTempRadiantVarFlowClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACLowTempRadiantVarFlow>();
 
-    HVACComponent coolingCoilClone = this->coolingCoil().clone(model).cast<HVACComponent>();
+    auto t_coolingCoil = coolingCoil();
+    HVACComponent coolingCoilClone = t_coolingCoil.clone(model).cast<HVACComponent>();
 
-    HVACComponent heatingCoilClone = this->heatingCoil().clone(model).cast<HVACComponent>();
+    auto t_heatingCoil = heatingCoil();
+    HVACComponent heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
 
     lowTempRadiantVarFlowClone.setHeatingCoil(heatingCoilClone);
 
     lowTempRadiantVarFlowClone.setCoolingCoil(coolingCoilClone);
+
+    if( model == this->model() ) {
+      if( auto waterToAirComponent = t_coolingCoil.optionalCast<WaterToAirComponent>() ) {
+        if( auto plant = waterToAirComponent->plantLoop() ) {
+          plant->addDemandBranchForComponent(coolingCoilClone);
+        }
+      }
+      if( auto waterToAirComponent = t_heatingCoil.optionalCast<WaterToAirComponent>() ) {
+        if( auto plant = waterToAirComponent->plantLoop() ) {
+          plant->addDemandBranchForComponent(heatingCoilClone);
+        }
+      }
+    }
 
     return lowTempRadiantVarFlowClone;
   }

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -103,7 +103,7 @@ namespace openstudio{
     typename std::vector<T>::const_iterator it;
     it = find_if(vec.begin(),vec.end(),finder);
     if (it != vec.end()) {
-      index = it - vec.begin();
+      index = (int)(it - vec.begin());
     }
     return index;
   }

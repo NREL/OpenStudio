@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -138,4 +138,14 @@ TEST_F(IddFixture,IddObject_InsertHandleField) {
   EXPECT_EQ("A1",object.getField(0).get().fieldId());
   EXPECT_EQ("A2",object.getField(1).get().fieldId());
   EXPECT_EQ("N1",object.getField(2).get().fieldId());
+}
+
+TEST_F(IddFixture,IddObject_nameField) {
+  IddObjectType type(IddObjectType::NodeList);
+  IddObject nodeList = IddFactory::instance().getObject(type).get();
+
+  ASSERT_TRUE(nodeList.hasNameField());
+  auto i = nodeList.nameFieldIndex();
+  ASSERT_TRUE(i);
+  ASSERT_EQ(0u,i.get());
 }

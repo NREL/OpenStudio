@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -43,7 +43,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 require 'fileutils'
 
 require 'optparse'
@@ -88,7 +87,7 @@ end
 # quit if no model given
 if not ARGV[0]
   puts "No OpenStudio model provided, quitting. Try 'ModelToRad.rb -h' for options."
-  exit
+  exit false
 end
 
 #
@@ -125,19 +124,12 @@ if (not ARGV[1] or not File::file?(ARGV[1]) or File::directory?(ARGV[1]))
   puts "no sql file given, running EnergyPlus..."
  
   # find EnergyPlus
-  ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
-  ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
-  ep_parent_path = ep_path.parent_path()
+  co = OpenStudio::Runmanager::ConfigOptions.new 
+  co.fastFindEnergyPlus
 
+  # create the workflow
   workflow.addWorkflow(OpenStudio::Runmanager::Workflow.new("ModelToRadPreprocess->ModelToIdf->ExpandObjects->EnergyPlus"))
-
-  # add the tools
-  tools = OpenStudio::Runmanager::ConfigOptions::makeTools(ep_parent_path, 
-                                                           OpenStudio::Path.new, 
-                                                           OpenStudio::Path.new, 
-                                                           OpenStudio::Path.new,
-                                                           OpenStudio::Path.new)
-  workflow.add(tools)
+  workflow.add(co.getTools)
   
   #add rest of workflow
   modelToRad = OpenStudio::Runmanager::Workflow.new("ModelToRad")
@@ -183,9 +175,9 @@ runmanager.getJobs.each { |job|
     puts "The job in '" + job.outdir.to_s + "' did not finish successfully."
     job.errors.errors.each { |err|
       puts "ERROR: " + err
-      puts "Radiance export aborted."
     }
-    exit
+    puts "Radiance export aborted."
+    exit false
   end
   
   if not job.errors.warnings.empty?
@@ -212,8 +204,6 @@ runmanager.getJobs.each { |job|
 if options.verbose == 'v'
   radDir = outPath / OpenStudio::Path.new("radiance")
   puts "Done. Radiance model located at: #{radDir}."
-else 
-  puts "Done."
 end
 
 

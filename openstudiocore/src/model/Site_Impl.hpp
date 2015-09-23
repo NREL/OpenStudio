@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -28,7 +28,6 @@ namespace model {
 
 // forward declarations
 class ClimateZones;
-class TimeDependentValuation;
 class WeatherFile;
 class SiteGroundReflectance;
 class SiteGroundTemperatureBuildingSurface;
@@ -73,18 +72,18 @@ namespace detail {
     //@}
 
     // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const;
+    virtual boost::optional<ParentObject> parent() const override;
 
     // return any children objects in the hierarchy
-    virtual std::vector<ModelObject> children() const;
+    virtual std::vector<ModelObject> children() const override;
 
     /// get a vector of allowable children types
-    virtual std::vector<IddObjectType> allowableChildTypes() const;
+    virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
     // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     /** @name Getters */
     //@{
@@ -149,9 +148,6 @@ namespace detail {
 
     /** Unique ClimateZones object parented by Site. */
     boost::optional<ClimateZones> climateZones() const;
-
-    /** Unique TimeDependentValuation object parented by Site. */
-    boost::optional<TimeDependentValuation> timeDependentValuation() const;
 
     /** ShadingSurfaceGroup objects of type Site. */
     std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;

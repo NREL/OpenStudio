@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -21,12 +21,15 @@
 #define OPENSTUDIO_SCHEDULESTABCONTROLLER_HPP
 
 #include "MainTabController.hpp"
+
 #include "../model/Model.hpp"
 #include "../model/ScheduleRuleset.hpp"
 #include "../model/ScheduleRuleset_Impl.hpp"
-#include "../model/YearDescription.hpp"
-#include "../model/YearDescription_Impl.hpp"
+
+#include "../utilities/core/UUID.hpp"
+
 #include <boost/smart_ptr.hpp>
+
 #include <QObject>
 
 namespace openstudio {
@@ -49,8 +52,6 @@ class ScheduleSetsController;
 
 class SchedulesView;
 
-class YearSettingsWidget;
-
 class SchedulesTabController : public MainTabController
 {
   Q_OBJECT
@@ -60,8 +61,6 @@ class SchedulesTabController : public MainTabController
   SchedulesTabController(bool isIP, const model::Model & model);
 
   virtual ~SchedulesTabController() {}
-
-  YearSettingsWidget * yearSettingsWidget();
 
   enum TabID
   {
@@ -80,15 +79,17 @@ class SchedulesTabController : public MainTabController
 
   void addScheduleRuleset();
 
+  void copySelectedSchedule();
+
   void removeSelectedSchedule();
 
   void purgeUnusedScheduleRulesets();
 
-  void addRule(model::ScheduleRuleset & scheduleRuleset);
+  void addRule(model::ScheduleRuleset & scheduleRuleset, UUID scheduleDayHandle);
 
-  void addSummerProfile(model::ScheduleRuleset & scheduleRuleset);
+  void addSummerProfile(model::ScheduleRuleset & scheduleRuleset, UUID scheduleDayHandle);
 
-  void addWinterProfile(model::ScheduleRuleset & scheduleRuleset);
+  void addWinterProfile(model::ScheduleRuleset & scheduleRuleset, UUID scheduleDayHandle);
 
   void removeScheduleRule(model::ScheduleRule & scheduleRule);
 
@@ -97,20 +98,6 @@ class SchedulesTabController : public MainTabController
   void onStartDateTimeChanged(model::ScheduleRule & scheduleRule, const QDateTime & newDate);
 
   void onEndDateTimeChanged(model::ScheduleRule & scheduleRule, const QDateTime & newDate);
-
-  void setCalendarYear(int year);
-
-  void setFirstDayofYear(const QString & firstDayofYear);
-
-  void setDaylightSavingsTime(bool enabled);
-
-  void setDstStartDayOfWeekAndMonth(int newWeek, int newDay, int newMonth);
-
-  void setDstStartDate(const QDate & newdate);
-
-  void setDstEndDayOfWeekAndMonth(int newWeek, int newDay, int newMonth);
-
-  void setDstEndDate(const QDate & newdate);
 
   void onItemDropped(const OSItemId& itemId);
 
@@ -122,11 +109,7 @@ class SchedulesTabController : public MainTabController
 
   std::shared_ptr<ScheduleSetsController> m_scheduleSetsController;
 
-  YearSettingsWidget * m_yearSettingsWidget;
-
   model::Model m_model;
-
-  boost::optional<model::YearDescription> m_yearDescription;
 
   ScheduleDialog * m_scheduleDialog;
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
 #ifndef MODEL_SETPOINTMANAGERWARMESTTEMPERATUREFLOW_IMPL_HPP
 #define MODEL_SETPOINTMANAGERWARMESTTEMPERATUREFLOW_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SetpointManager_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "SetpointManager_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -55,15 +55,15 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
     //@{
 
-    std::string controlVariable() const;
+    std::string controlVariable() const override;
 
     double minimumSetpointTemperature() const;
 
@@ -77,7 +77,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    bool setControlVariable(const std::string & controlVariable);
+    bool setControlVariable(const std::string & controlVariable) override;
 
     bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
 
@@ -90,11 +90,11 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-    boost::optional<Node> setpointNode() const;
+    boost::optional<Node> setpointNode() const override;
 
-    bool setSetpointNode( const Node & node );
+    bool setSetpointNode( const Node & node ) override;
 
-    void resetSetpointNode();
+    void resetSetpointNode() override;
     //@}
    protected:
    private:

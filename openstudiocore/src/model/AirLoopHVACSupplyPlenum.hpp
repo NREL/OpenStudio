@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -56,11 +56,11 @@ class MODEL_API AirLoopHVACSupplyPlenum : public Splitter {
 
   void resetThermalZone();
 
-  unsigned inletPort();
+  unsigned inletPort() override;
 
-  unsigned outletPort(unsigned branchIndex);
+  unsigned outletPort(unsigned branchIndex) override;
 
-  unsigned nextOutletPort();
+  unsigned nextOutletPort() override;
 
   /** Insert this AirLoopHVACSupplyPlenum into HVAC system at node.
    *  Node must be immediatly after AirLoopHVACZoneSplitter and there
@@ -70,7 +70,7 @@ class MODEL_API AirLoopHVACSupplyPlenum : public Splitter {
 
   bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
-  bool addBranchForZone(openstudio::model::ThermalZone & thermalZone, StraightComponent & terminal);
+  bool addBranchForZone(openstudio::model::ThermalZone & thermalZone, HVACComponent & terminal);
 
  protected:
   /// @cond

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -35,8 +35,6 @@
 #include "../../model/Building_Impl.hpp"
 #include "../../model/Facility.hpp"
 #include "../../model/Facility_Impl.hpp"
-#include "../../model/TimeDependentValuation.hpp"
-#include "../../model/TimeDependentValuation_Impl.hpp"
 
 #include "../../energyplus/ReverseTranslator.hpp"
 
@@ -228,28 +226,6 @@ namespace detail {
       if (attribute){
         attributes.push_back(*attribute);
         attributes.back().setSource("OpenStudioPostProcess");
-      }
-
-      boost::optional<model::TimeDependentValuation> timeDependentValuation = model->getOptionalUniqueModelObject<model::TimeDependentValuation>();
-      if (timeDependentValuation){
-        LOG(Debug,"Extracting attributes from model::TimeDependentValuation.");      
-        boost::optional<Attribute> attribute;
-        
-        boost::optional<double> value = timeDependentValuation->energyTimeDependentValuation();
-        if (value){
-          attribute = Attribute("energyTimeDependentValuation", *value, "J");
-          attribute->setDisplayName("Energy Time Dependent Valuation");
-          attributes.push_back(*attribute);
-          attributes.back().setSource("OpenStudioPostProcess");
-        }
-
-        value = timeDependentValuation->costTimeDependentValuation();
-        if (value){
-          attribute = Attribute("costTimeDependentValuation", *value, "$");
-          attribute->setDisplayName("Cost Time Dependent Valuation");
-          attributes.push_back(*attribute);
-          attributes.back().setSource("OpenStudioPostProcess");
-        }
       }
 
       if (attributes.empty())

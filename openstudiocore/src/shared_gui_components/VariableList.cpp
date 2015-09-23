@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -39,10 +39,14 @@
 #include "../analysis/WorkflowStep.hpp"
 #include "../analysisdriver/SimpleProject.hpp"
 
+#include "../energyplus/ForwardTranslator.hpp"
+
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Containers.hpp"
 #include "../utilities/core/RubyException.hpp"
+#include "../utilities/bcl/BCLMeasure.hpp"
+#include "../utilities/plot/ProgressBar.hpp"
 
 #include <QByteArray>
 #include <QDialog>
@@ -347,11 +351,11 @@ void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bo
     // accept the event to make the icon refresh
     event->accept();
 
-    // don't allow user to drag standard reports or other built in measures 
-    if (m_app->measureManager().isPatApplicationMeasure(id)){
+    // don't allow user to drag standard reports or other managed measures 
+    if (m_app->measureManager().isManagedMeasure(id)){
       QMessageBox::warning( m_app->mainWidget(), 
           "Cannot add measure", 
-          "This measure conflicts with a built in measure and cannot be added. Create a duplicate of this measure to add to this project.");
+          "This measure conflicts with a managed measure and cannot be added. Create a duplicate of this measure to add to this project.");
       return;
     }
 
@@ -557,6 +561,21 @@ QString VariableItem::displayName() const
 void VariableItem::setDisplayName(const QString & displayName)
 {
   m_variable.setDisplayName(displayName.toStdString());
+}
+
+bool VariableItem::isAlternativeModelVariable() const
+{
+  if (boost::optional<analysisdriver::SimpleProject> project = m_app->project()){
+    
+    analysis::OptionalMeasureGroup modelSwapVariable = project->getAlternativeModelVariable();
+    analysis::OptionalMeasureGroup dvar = m_variable.optionalCast<analysis::MeasureGroup>();
+
+    if (modelSwapVariable && dvar && (*dvar == *modelSwapVariable)) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 bool VariableItem::isFixedMeasure()
@@ -842,6 +861,30 @@ analysis::RubyMeasure MeasureItem::measure() const
   return m_measure;
 }
 
+OptionalBCLMeasure MeasureItem::bclMeasure() const
+{
+  return m_measure.bclMeasure();
+}
+
+bool MeasureItem::isAlternativeModelMeasure() const
+{
+  if (boost::optional<analysisdriver::SimpleProject> project = m_app->project()){
+
+    analysis::OptionalMeasureGroup modelSwapVariable = project->getAlternativeModelVariable();
+
+    if (modelSwapVariable) {
+      std::vector<analysis::Measure> measures = modelSwapVariable->measures(false);
+      for (const auto measure : measures){
+        if (measure == m_measure){
+          return true;
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
 QString MeasureItem::name() const
 {
   return QString::fromStdString(m_measure.name());
@@ -869,7 +912,7 @@ void MeasureItem::setDisplayName(const QString & displayName)
 
 QString MeasureItem::description() const
 {
-  // ETH: Was pulling from measure, but this should be an instance-specific description.
+  // ETH: Was pulling from bcl measure, but this should be an instance-specific description.
   return QString::fromStdString(m_measure.description());
 }
 
@@ -905,7 +948,7 @@ QString MeasureItem::scriptFileName() const
 
 void MeasureItem::setDescription(const QString & description)
 {
-  // ETH: Was setting description on the measure itself (m_measure.measure()), however, this
+  // ETH: Was setting description on the measure itself (m_measure.bclMeasure()), however, this
   // description should be attached to the instantiated measure, not the global measure.
   m_measure.setDescription(description.toStdString());
 
@@ -1004,6 +1047,10 @@ void MeasureItem::setSelected(bool isSelected)
   //TODO
 }
 
+MeasureItemDelegate::MeasureItemDelegate(bool fixed)
+  : m_fixed(fixed)
+{}
+
 QWidget * MeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
   if(QSharedPointer<MeasureItem> measureItem = dataSource.objectCast<MeasureItem>())
@@ -1015,7 +1062,7 @@ QWidget * MeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     measureItemView->measureItemButton->nameLabel->setText(measureItem->displayName());
 
     connect(measureItem.data(), &MeasureItem::displayNameChanged, measureItemView->measureItemButton->nameLabel, &QLabel::setText);
-    
+
     // Duplicate
 
     connect(measureItemView->duplicateButton, &QPushButton::clicked, measureItem.data(), &MeasureItem::duplicate);
@@ -1031,13 +1078,13 @@ QWidget * MeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     connect(measureItemView->measureItemButton, &MeasureItemButton::clicked, measureItem.data(), &MeasureItem::toggleSelected);
 
     connect(measureItem.data(), &MeasureItem::selectedChanged, measureItemView->measureItemButton, &MeasureItemButton::setHasEmphasis);
-    
+
     // Warning Icon
 
     measureItemView->measureItemButton->cautionLabel->setVisible(measureItem->hasIncompleteArguments());
 
     connect(measureItem.data(), &MeasureItem::argumentsChanged, measureItemView->measureItemButton->cautionLabel, &QLabel::setVisible);
-    
+
     return measureItemView;
   }
 

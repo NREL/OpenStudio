@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -27,6 +27,9 @@
 
 #include <iomanip>
 
+#include <QFocusEvent>
+#include <QIntValidator>
+
 using openstudio::model::ModelObject;
 
 namespace openstudio {
@@ -37,6 +40,9 @@ OSIntegerEdit2::OSIntegerEdit2( QWidget * parent )
   this->setFixedWidth(90);
   this->setAcceptDrops(false);
   setEnabled(false);
+
+  m_intValidator = new QIntValidator();
+  this->setValidator(m_intValidator);
 }
 
 void OSIntegerEdit2::bind(model::ModelObject& modelObject,
@@ -173,6 +179,8 @@ void OSIntegerEdit2::unbind() {
 }
 
 void OSIntegerEdit2::onEditingFinished() {
+
+  emit inFocus(true, hasData());
 
   QString text = this->text();
   if (text.isEmpty() || m_text == text) return;
@@ -336,12 +344,43 @@ void OSIntegerEdit2::setPrecision(const std::string& str) {
   }
 }
 
+void OSIntegerEdit2::focusInEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason && m_hasClickFocus)
+  {
+    QString style("QLineEdit { background: #ffc627; }");
+    setStyleSheet(style);
+
+    emit inFocus(true, hasData());
+  }
+
+  QLineEdit::focusInEvent(e);
+}
+
+void OSIntegerEdit2::focusOutEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason && m_hasClickFocus)
+  {
+    QString style("QLineEdit { background: white; }");
+    setStyleSheet(style);
+
+    emit inFocus(false, false);
+  }
+  
+  QLineEdit::focusOutEvent(e);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 OSIntegerEdit::OSIntegerEdit( QWidget * parent )
   : m_isScientific(false)
 {
   this->setFixedWidth(90);
   this->setAcceptDrops(false);
   setEnabled(false);
+
+  m_intValidator = new QIntValidator();
+  this->setValidator(m_intValidator);
 }
 
 void OSIntegerEdit::bind(model::ModelObject& modelObject,

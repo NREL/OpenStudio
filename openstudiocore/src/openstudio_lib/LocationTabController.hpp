@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -21,8 +21,12 @@
 #define OPENSTUDIO_LOCATIONTABCONTROLLER_HPP
 
 #include "../model/Model.hpp"
+
+#include "LocationTabView.hpp"
 #include "MainTabController.hpp"
+
 #include <boost/smart_ptr.hpp>
+
 #include <QDir>
 #include <QObject>
 
@@ -34,7 +38,6 @@ namespace model {
   //class myModelClass;
 }
 
-class LocationTabView;
 class UtilityBillsController;
 
 class LocationTabController : public MainTabController
@@ -42,10 +45,13 @@ class LocationTabController : public MainTabController
   Q_OBJECT
 
 public:
-  LocationTabController(const model::Model& model,
-                        const QString& modelTempDir);
+
+  LocationTabController(bool isIP,
+    const model::Model& model,
+    const QString& modelTempDir);
 
   virtual ~LocationTabController() {}
+
 
   enum TabID
   {
@@ -58,12 +64,20 @@ public:
   };
 
 private:
+
+  bool calendarYearChecked();
+
+  LocationView * m_locationView = nullptr;
   std::shared_ptr<UtilityBillsController> m_utilityBillsController;
-  QStackedWidget * m_utilityBillsStackedWidget;
+  QStackedWidget * m_utilityBillsStackedWidget = nullptr;
   int m_warningWidgetIndex;
   int m_visibleWidgetIndex;
+  model::Model m_model;
 
 private slots:
+
+  void showUtilityBillSubTab();
+
   void showSubTabView(bool showSubTabView);
  
 };

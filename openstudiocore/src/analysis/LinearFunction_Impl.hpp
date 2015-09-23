@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -56,7 +56,7 @@ namespace detail {
 
     virtual ~LinearFunction_Impl() {}
 
-    virtual AnalysisObject clone() const;
+    virtual AnalysisObject clone() const override;
 
     //@}
     /** @name Getters */
@@ -64,7 +64,7 @@ namespace detail {
 
     std::vector<double> coefficients() const;
 
-    virtual double getValue(const DataPoint& dataPoint) const;
+    virtual double getValue(const DataPoint& dataPoint) const override;
 
     //@}
     /** @name Setters */
@@ -76,7 +76,7 @@ namespace detail {
     /** @name Protected in Public Class */
     //@{
 
-    virtual QVariant toVariant() const;
+    virtual QVariant toVariant() const override;
 
     static LinearFunction fromVariant(const QVariant& variant, const VersionString& version);
 

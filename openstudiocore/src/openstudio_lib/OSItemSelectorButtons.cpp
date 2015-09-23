@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -47,7 +47,7 @@ namespace openstudio {
 class AlwaysEmptyDropZoneVectorController : public OSVectorController
 {
 protected:
-  virtual std::vector<OSItemId> makeVector() { return std::vector<OSItemId>(); }
+  virtual std::vector<OSItemId> makeVector() override { return std::vector<OSItemId>(); }
 };
 
 OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
@@ -63,25 +63,23 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
 
   // drop zone
   
-  QHBoxLayout * dropZoneLayout = new QHBoxLayout();
-  dropZoneLayout->setContentsMargins(10,10,10,10);
-  
+  m_dropZoneLayout = new QHBoxLayout();
   m_dropZoneController = new AlwaysEmptyDropZoneVectorController();
   m_dropZone = new OSDropZone(m_dropZoneController);
   m_dropZone->setMaxItems(1);
-  dropZoneLayout->addWidget(m_dropZone);
-
-  m_vLayout->addLayout(dropZoneLayout);
+  m_dropZoneLayout->addWidget(m_dropZone);
+  m_vLayout->addLayout(m_dropZoneLayout);
+  m_dropZoneLayout->setContentsMargins(10,10,10,10);
 
   connect(m_dropZone, &OSDropZone::itemDropped, this, &OSItemSelectorButtons::itemDropped);
     
   // buttons
-  QWidget * buttonBox = new QWidget();
+  auto buttonBox = new QWidget();
   buttonBox->setObjectName("ButtonBox");
   buttonBox->setStyleSheet("QWidget#ButtonBox { background: #808080; border-top: 1px solid black; }");
   m_vLayout->addWidget(buttonBox);
 
-  QHBoxLayout * buttonLayout = new QHBoxLayout();
+  auto buttonLayout = new QHBoxLayout();
   buttonLayout->setContentsMargins(10,10,10,10);
   buttonLayout->setSpacing(5);
   buttonBox->setLayout(buttonLayout);
@@ -138,10 +136,12 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
 void OSItemSelectorButtons::showDropZone()
 {
   m_dropZone->show();
+  m_dropZoneLayout->setContentsMargins(10,10,10,10);
 }
 void OSItemSelectorButtons::hideDropZone()
 {
   m_dropZone->hide();
+  m_dropZoneLayout->setContentsMargins(0,0,0,0);
 }
 void OSItemSelectorButtons::enableDropZone()
 {

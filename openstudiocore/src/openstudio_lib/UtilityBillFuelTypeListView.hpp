@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -52,7 +52,7 @@ private slots:
   void objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&);
 
 protected:
-  virtual std::vector<OSItemId> makeVector();
+  virtual std::vector<OSItemId> makeVector() override;
 
 private:
   openstudio::IddObjectType m_iddObjectType;
@@ -69,7 +69,7 @@ public:
   UtilityBillFuelTypeListView(const model::Model& model,
     openstudio::FuelType fuelType,
     bool addScrollArea,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
 
   virtual ~UtilityBillFuelTypeListView() {}
 

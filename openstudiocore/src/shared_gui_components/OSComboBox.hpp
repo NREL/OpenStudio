@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -68,9 +68,9 @@ class OSObjectListCBDS : public OSComboBoxDataSource
 
   virtual ~OSObjectListCBDS() {}
 
-  int numberOfItems();
+  int numberOfItems() override;
 
-  QString valueAt(int i);
+  QString valueAt(int i) override;
 
   protected:
 
@@ -102,6 +102,10 @@ class OSComboBox2 : public QComboBox {
   OSComboBox2( QWidget * parent = nullptr, bool editable = false );
 
   virtual ~OSComboBox2() {}
+
+  void enableClickFocus() { this->setFocusPolicy(Qt::ClickFocus); }
+
+  bool hasData() { return !this->currentText().isEmpty(); }
 
   // interface for direct bind
   template<typename ChoiceType>
@@ -162,7 +166,11 @@ class OSComboBox2 : public QComboBox {
 
  protected:
 
-  bool event( QEvent * e );
+  bool event( QEvent * e ) override;
+
+ signals:
+
+  void inFocus(bool inFocus, bool hasData);
 
  private slots:
 
@@ -215,7 +223,7 @@ class OSComboBox : public QComboBox {
 
  protected:
 
-  bool event( QEvent * e );
+  bool event( QEvent * e ) override;
 
  private slots:
 

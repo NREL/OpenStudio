@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -27,31 +27,28 @@
 #include "ScheduleSetsController.hpp"
 #include "SchedulesTabView.hpp"
 #include "SchedulesView.hpp"
+#include "ScheduleDayView.hpp"
 #include "SubTabView.hpp"
-#include "YearSettingsWidget.hpp"
 
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
-#include "../model/RunPeriodControlDaylightSavingTime.hpp"
-#include "../model/RunPeriodControlDaylightSavingTime_Impl.hpp"
 #include "../model/ScheduleRule.hpp"
 #include "../model/ScheduleRuleset.hpp"
 #include "../model/ScheduleRuleset_Impl.hpp"
 #include "../model/ScheduleRule_Impl.hpp"
 #include "../model/ScheduleTypeLimits.hpp"
 
+#include "../utilities/core/Assert.hpp"
 #include "../utilities/idf/IdfFile.hpp"
 #include "../utilities/time/Date.hpp"
 #include "../utilities/time/Time.hpp"
 #include "../utilities/units/Unit.hpp"
-#include "../utilities/units/Quantity.hpp"
 #include "../utilities/units/OSOptionalQuantity.hpp"
-#include "../utilities/core/Assert.hpp"
+#include "../utilities/units/Quantity.hpp"
 
 #include "../energyplus/ReverseTranslator.hpp"
 
 #include <QApplication>
-#include <QDateTime>
 #include <QDialog>
 #include <QFileDialog>
 #include <QString>
@@ -60,17 +57,10 @@ namespace openstudio {
 
 SchedulesTabController::SchedulesTabController(bool isIP, const model::Model & model)
   : MainTabController(new SchedulesTabView(model)),
-    m_yearSettingsWidget(nullptr),
     m_model(model),
     m_scheduleDialog(nullptr),
     m_isIP(isIP)
 {
-  m_yearDescription = m_model.getUniqueModelObject<model::YearDescription>();
-
-  m_yearSettingsWidget = new YearSettingsWidget(m_model);
-  addQObject(m_yearSettingsWidget);
-  this->mainContentWidget()->addSubTab("Year Settings",m_yearSettingsWidget,YEAR_SETTINGS);
-
   m_scheduleSetsController = std::shared_ptr<ScheduleSetsController>( new ScheduleSetsController(m_model) );
   this->mainContentWidget()->addSubTab("Schedule Sets",m_scheduleSetsController->subTabView(),SCHEDULE_SETS);
 
@@ -87,6 +77,8 @@ SchedulesTabController::SchedulesTabController(bool isIP, const model::Model & m
   connect(m_scheduleSetsController.get(), &ScheduleSetsController::openLibDlgClicked, this, &SchedulesTabController::openLibDlgClicked);
 
   connect(m_schedulesView, &SchedulesView::addScheduleClicked, this, &SchedulesTabController::addScheduleRuleset);
+  
+  connect(m_schedulesView, &SchedulesView::copySelectedScheduleClicked, this, &SchedulesTabController::copySelectedSchedule);
 
   connect(m_schedulesView, &SchedulesView::removeSelectedScheduleClicked, this, &SchedulesTabController::removeSelectedSchedule);
 
@@ -108,27 +100,7 @@ SchedulesTabController::SchedulesTabController(bool isIP, const model::Model & m
 
   connect(m_schedulesView, &SchedulesView::itemDropped, this, &SchedulesTabController::onItemDropped);
 
-  connect(m_yearSettingsWidget, &YearSettingsWidget::calendarYearSelected, this, &SchedulesTabController::setCalendarYear);
-
-  connect(m_yearSettingsWidget, &YearSettingsWidget::firstDayofYearSelected, this, &SchedulesTabController::setFirstDayofYear);
-
-  connect(m_yearSettingsWidget, &YearSettingsWidget::daylightSavingTimeClicked, this, &SchedulesTabController::setDaylightSavingsTime);
-
-  connect(m_yearSettingsWidget, &YearSettingsWidget::dstStartDayOfWeekAndMonthChanged, this, &SchedulesTabController::setDstStartDayOfWeekAndMonth);
-
-  connect(m_yearSettingsWidget, &YearSettingsWidget::dstStartDateChanged, this, &SchedulesTabController::setDstStartDate);
-
-  connect(m_yearSettingsWidget, &YearSettingsWidget::dstEndDayOfWeekAndMonthChanged, this, &SchedulesTabController::setDstEndDayOfWeekAndMonth);
-
-  connect(m_yearSettingsWidget, &YearSettingsWidget::dstEndDateChanged, this, &SchedulesTabController::setDstEndDate);
-}
-
-YearSettingsWidget * SchedulesTabController::yearSettingsWidget()
-{
-  // assert non-null pointer
-  OS_ASSERT(m_yearSettingsWidget);
-
-  return m_yearSettingsWidget;
+  connect(m_schedulesView, &SchedulesView::modelObjectSelected, this, &SchedulesTabController::modelObjectSelected);
 }
 
 void SchedulesTabController::addScheduleRuleset()
@@ -146,6 +118,14 @@ void SchedulesTabController::showScheduleDialog()
   m_scheduleDialog->show();
 }
 
+void SchedulesTabController::copySelectedSchedule()
+{
+  if (boost::optional<model::ScheduleRuleset> schedule = m_schedulesView->currentSchedule())
+  {
+    schedule->clone();
+  }
+}
+
 void SchedulesTabController::removeSelectedSchedule()
 {
   if( boost::optional<model::ScheduleRuleset> schedule = m_schedulesView->currentSchedule() )
@@ -158,46 +138,81 @@ void SchedulesTabController::purgeUnusedScheduleRulesets()
 {
   std::vector<model::ScheduleRuleset> schedules = m_model.getConcreteModelObjects<model::ScheduleRuleset>();
 
-  for( std::vector<model::ScheduleRuleset>::iterator it = schedules.begin();
+  for( auto it = schedules.begin();
        it != schedules.end();
        ++it )
   {
-    if( it->directUseCount() == 0 )
+    if( it->directUseCount(true) == 0 )
     {
       it->remove();
     }
   }
 }
 
-void SchedulesTabController::addRule(model::ScheduleRuleset & scheduleRuleset)
+void SchedulesTabController::addRule(model::ScheduleRuleset & scheduleRuleset, UUID scheduleDayHandle)
 {
-  model::ScheduleRule rule(scheduleRuleset);
-
-  rule.daySchedule().addValue(Time(1,0),defaultStartingValue(rule.daySchedule()));
+  boost::optional<model::ScheduleRule> rule;
+  if (!scheduleDayHandle.isNull()){
+    boost::optional<model::ScheduleDay> scheduleDayToCopy = scheduleRuleset.model().getModelObject<model::ScheduleDay>(scheduleDayHandle);
+    if (scheduleDayToCopy){
+      rule = model::ScheduleRule(scheduleRuleset, scheduleDayToCopy->clone().cast<model::ScheduleDay>());
+    }
+  }
+  if (!rule){
+    rule = model::ScheduleRule(scheduleRuleset);
+    rule->daySchedule().addValue(Time(1, 0), defaultStartingValue(rule->daySchedule()));
+  }
+  OS_ASSERT(rule);
 }
 
-void SchedulesTabController::addSummerProfile(model::ScheduleRuleset & scheduleRuleset)
+void SchedulesTabController::addSummerProfile(model::ScheduleRuleset & scheduleRuleset, UUID scheduleDayHandle)
 {
-  model::ScheduleDay scheduleDay(scheduleRuleset.model());
+  boost::optional<model::ScheduleDay> scheduleDay;
+  if (!scheduleDayHandle.isNull()){
+    boost::optional<model::ScheduleDay> scheduleDayToCopy = scheduleRuleset.model().getModelObject<model::ScheduleDay>(scheduleDayHandle);
+    if (scheduleDayToCopy){
+      scheduleDay = scheduleDayToCopy->clone().cast<model::ScheduleDay>();
+    }
+  }
+  if (!scheduleDay){
+    scheduleDay = model::ScheduleDay(scheduleRuleset.model());
+    boost::optional<model::ScheduleTypeLimits> limits = scheduleRuleset.scheduleTypeLimits();
+    if (limits) {
+      scheduleDay->setScheduleTypeLimits(*limits);
+    }
+    scheduleDay->addValue(Time(1, 0), defaultStartingValue(*scheduleDay));
+  }
+  OS_ASSERT(scheduleDay);
 
-  scheduleDay.addValue(Time(1,0),defaultStartingValue(scheduleDay));
+  scheduleRuleset.setSummerDesignDaySchedule(*scheduleDay);
 
-  scheduleRuleset.setSummerDesignDaySchedule(scheduleDay);
-
-  scheduleDay.remove();
+  scheduleDay->remove();
 
   m_schedulesView->showSummerScheduleDay(scheduleRuleset);
 }
 
-void SchedulesTabController::addWinterProfile(model::ScheduleRuleset & scheduleRuleset)
+void SchedulesTabController::addWinterProfile(model::ScheduleRuleset & scheduleRuleset, UUID scheduleDayHandle)
 {
-  model::ScheduleDay scheduleDay(scheduleRuleset.model());
+  boost::optional<model::ScheduleDay> scheduleDay;
+  if (!scheduleDayHandle.isNull()){
+    boost::optional<model::ScheduleDay> scheduleDayToCopy = scheduleRuleset.model().getModelObject<model::ScheduleDay>(scheduleDayHandle);
+    if (scheduleDayToCopy){
+      scheduleDay = scheduleDayToCopy->clone().cast<model::ScheduleDay>();
+    }
+  }
+  if (!scheduleDay){
+    scheduleDay = model::ScheduleDay(scheduleRuleset.model());
+    boost::optional<model::ScheduleTypeLimits> limits = scheduleRuleset.scheduleTypeLimits();
+    if (limits) {
+      scheduleDay->setScheduleTypeLimits(*limits);
+    }
+    scheduleDay->addValue(Time(1, 0), defaultStartingValue(*scheduleDay));
+  }
+  OS_ASSERT(scheduleDay);
 
-  scheduleDay.addValue(Time(1,0),defaultStartingValue(scheduleDay));
+  scheduleRuleset.setWinterDesignDaySchedule(*scheduleDay);
 
-  scheduleRuleset.setWinterDesignDaySchedule(scheduleDay);
-
-  scheduleDay.remove();
+  scheduleDay->remove();
 
   m_schedulesView->showWinterScheduleDay(scheduleRuleset);
 }
@@ -207,15 +222,12 @@ void SchedulesTabController::onDayScheduleSceneChanged( DayScheduleScene * scene
   std::vector<CalendarSegmentItem *> segments = scene->segments();
 
   model::ScheduleDay scheduleDay = scene->scheduleDay();
-  bool isIP = scene->scheduleDayView()->isIP();
-  OptionalUnit units;
-  if (model::OptionalScheduleTypeLimits typeLimits = scheduleDay.scheduleTypeLimits()) {
-    units = typeLimits->getLowerLimitValue(isIP).units();
-  }
+
+  OptionalUnit units = scene->scheduleDayView()->units();
 
   scheduleDay.clearValues();
 
-  for( std::vector<CalendarSegmentItem *>::iterator it = segments.begin();
+  for( auto it = segments.begin();
        it < segments.end();
        ++it )
   {
@@ -276,66 +288,6 @@ void SchedulesTabController::removeScheduleRule(model::ScheduleRule & scheduleRu
   scheduleRule.remove();
 }
 
-void SchedulesTabController::setCalendarYear(int year)
-{
-  m_yearDescription->setCalendarYear(year);
-}
-
-void SchedulesTabController::setFirstDayofYear(const QString & firstDayofYear)
-{
-  m_yearDescription->resetCalendarYear();
-
-  m_yearDescription->setDayofWeekforStartDay(firstDayofYear.toStdString());
-}
-
-void SchedulesTabController::setDaylightSavingsTime(bool enabled)
-{
-  if( enabled )
-  {
-    m_model.getUniqueModelObject<model::RunPeriodControlDaylightSavingTime>();
-  }
-  else
-  {
-    if( boost::optional<model::RunPeriodControlDaylightSavingTime> dst =
-          m_model.getOptionalUniqueModelObject<model::RunPeriodControlDaylightSavingTime>() )
-    {
-      dst->remove();
-    }
-  }
-}
-
-void SchedulesTabController::setDstStartDayOfWeekAndMonth(int newWeek, int newDay, int newMonth)
-{
-  model::RunPeriodControlDaylightSavingTime dst =
-    m_model.getUniqueModelObject<model::RunPeriodControlDaylightSavingTime>();
-
-  dst.setStartDate(NthDayOfWeekInMonth(newWeek), DayOfWeek(newDay), MonthOfYear(newMonth));
-}
-
-void SchedulesTabController::setDstStartDate(const QDate & newdate)
-{
-  model::RunPeriodControlDaylightSavingTime dst =
-    m_model.getUniqueModelObject<model::RunPeriodControlDaylightSavingTime>();
-
-  dst.setStartDate(monthOfYear(newdate.month()),newdate.day());
-}
-
-void SchedulesTabController::setDstEndDayOfWeekAndMonth(int newWeek, int newDay, int newMonth)
-{
-  model::RunPeriodControlDaylightSavingTime dst =
-    m_model.getUniqueModelObject<model::RunPeriodControlDaylightSavingTime>();
-
-  dst.setEndDate(NthDayOfWeekInMonth(newWeek), DayOfWeek(newDay), MonthOfYear(newMonth));
-}
-
-void SchedulesTabController::setDstEndDate(const QDate & newdate)
-{
-  model::RunPeriodControlDaylightSavingTime dst =
-    m_model.getUniqueModelObject<model::RunPeriodControlDaylightSavingTime>();
-
-  dst.setEndDate(monthOfYear(newdate.month()),newdate.day());
-}
-
 void SchedulesTabController::onItemDropped(const OSItemId& itemId)
 {
   if( OSAppBase::instance()->currentDocument()->fromComponentLibrary(itemId) )
@@ -355,6 +307,10 @@ void SchedulesTabController::onItemDropped(const OSItemId& itemId)
 void SchedulesTabController::toggleUnits(bool displayIP)
 {
   m_isIP = displayIP;
+
+  if (m_scheduleDialog){
+    m_scheduleDialog->setIsIP(displayIP);
+  }
 }
 
 double SchedulesTabController::defaultStartingValue(const model::ScheduleDay& scheduleDay) {

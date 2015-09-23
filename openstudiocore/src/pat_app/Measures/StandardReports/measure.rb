@@ -1,141 +1,169 @@
 require 'erb'
+require 'json'
 
-#start the measure
-class StandardReports < OpenStudio::Ruleset::ReportingUserScript
+require "#{File.dirname(__FILE__)}/resources/os_lib_reporting"
+require "#{File.dirname(__FILE__)}/resources/os_lib_schedules"
+require "#{File.dirname(__FILE__)}/resources/os_lib_helper_methods"
 
-  #define the name that a user will see, this method may be deprecated as
-  #the display name in PAT comes from the name field in measure.xml
+# start the measure
+class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
+  # define the name that a user will see, this method may be deprecated as
+  # the display name in PAT comes from the name field in measure.xml
   def name
-    return "Standard Reports"
+    'OpenStudio Results'
   end
 
-  #define the arguments that the user will input
-  def arguments()
+  # human readable description
+  def description
+    'This measure creates high level tables and charts pulling both from model inputs and EnergyPlus results. It has building level information as well as detail on space types, thermal zones, HVAC systems, envelope characteristics, and economics. Click the heading above a chart to view a table of the chart data.'
+  end
+
+  # human readable description of modeling approach
+  def modeler_description
+    'For the most part consumption data comes from the tabular EnergyPlus results, however there are a few requests added for time series results. Space type and loop details come from the OpenStudio model. The code for this is modular, making it easy to use as a template for your own custom reports. The structure of the report uses bootstrap, and the graphs use dimple js.'
+  end
+
+  def possible_sections
+    result = []
+
+    # methods for sections in order that they will appear in report
+
+    result << 'building_summary_section'
+    # still need to extend building summary
+    # still need to populate site performance
+
+    result << 'annual_overview_section'
+    result << 'monthly_overview_section'
+    result << 'utility_bills_rates_section'
+    result << 'envelope_section_section'
+    result << 'space_type_breakdown_section'
+    result << 'space_type_details_section'
+
+    result << 'interior_lighting_section'
+    # consider binning to space types
+
+    result << 'plug_loads_section'
+    result << 'exterior_light_section'
+    result << 'water_use_section'
+
+    result << 'hvac_load_profile'
+    # TODO: - turn on hvac_part_load_profile_table once I have data for it
+
+    result << 'zone_condition_section'
+    result << 'zone_summary_section'
+
+    result << 'zone_equipment_detail_section' # TODO: - add in content from other measures
+    # result << 'air_loop_summary_section' # TODO: - stub only
+    result << 'air_loops_detail_section'
+    # later - on all loop detail sections get hard-sized value
+
+    # result << 'plant_loop_summary_section' # TODO: - stub only
+    result << 'plant_loops_detail_section'
+    result << 'outdoor_air_section'
+
+    result << 'cost_summary_section'
+    # find out how to get lifecycle cost with utility escalation
+    # consider second cost table listing all lifecycle cost objects in OSM (since can't see in GUI)
+
+    result << 'source_energy_section'
+
+    # result << 'co2_and_other_emissions_section'
+    # TODO: - add emissions factors object to our template model
+
+    # result << 'typical_load_profiles_section' # TODO: - stub only
+    result << 'schedules_overview_section'
+    # TODO: - clean up code to gather schedule profiles so I don't have to grab every 15 minutes
+
+    # see the method below in os_lib_reporting.rb to see a simple example of code to make a section of tables
+    # result << 'template_section'
+
+    # TODO: - some tables are so long on real models you loose header. Should we have scrolling within a table?
+    # TODO: - maybe sorting as well if it doesn't slow process down too much
+
+    result
+  end
+
+  # define the arguments that the user will input
+  def arguments
     args = OpenStudio::Ruleset::OSArgumentVector.new
 
-    return args
-  end #end the arguments method
+    # populate arguments
+    possible_sections.each do |method_name|
+      # get display name
+      arg = OpenStudio::Ruleset::OSArgument.makeBoolArgument(method_name, true)
+      display_name = eval("OsLib_Reporting.#{method_name}(nil,nil,nil,true)[:title]")
+      arg.setDisplayName(display_name)
+      arg.setDefaultValue(true)
+      args << arg
+    end
 
-  #define what happens when the measure is run
+    args
+  end # end the arguments method
+
+  def energyPlusOutputRequests(runner, user_arguments)
+    super(runner, user_arguments)
+
+    result = OpenStudio::IdfObjectVector.new
+
+    # use the built-in error checking
+    unless runner.validateUserArguments(arguments, user_arguments)
+      return result
+    end
+
+    if runner.getBoolArgumentValue('hvac_load_profile', user_arguments)
+      result << OpenStudio::IdfObject.load('Output:Variable,,Site Outdoor Air Drybulb Temperature,monthly;').get
+    end
+
+    if runner.getBoolArgumentValue('zone_condition_section', user_arguments)
+      result << OpenStudio::IdfObject.load('Output:Variable,,Zone Air Temperature,hourly;').get
+      result << OpenStudio::IdfObject.load('Output:Variable,,Zone Air Relative Humidity,hourly;').get
+    end
+
+    result
+  end
+
+  # define what happens when the measure is run
   def run(runner, user_arguments)
     super(runner, user_arguments)
 
-    #use the built-in error checking
-    if not runner.validateUserArguments(arguments(), user_arguments)
+    # get sql, model, and web assets
+    setup = OsLib_Reporting.setup(runner)
+    unless setup
       return false
     end
-    
-    os_version = OpenStudio::VersionString.new(OpenStudio::openStudioVersion())
-    min_version_feature1 = OpenStudio::VersionString.new("1.2.3")
+    model = setup[:model]
+    # workspace = setup[:workspace]
+    sql_file = setup[:sqlFile]
+    web_asset_path = setup[:web_asset_path]
 
-    # get the last model and sql file
-
-    model = runner.lastOpenStudioModel
-    if model.empty?
-      runner.registerError("Cannot find last model.")
+    # assign the user inputs to variables
+    args = OsLib_HelperMethods.createRunVariables(runner, model, user_arguments, arguments)
+    unless args
       return false
     end
-    model = model.get
 
-    sqlFile = runner.lastEnergyPlusSqlFile
-    if sqlFile.empty?
-      runner.registerError("Cannot find last sql file.")
-      return false
+    # reporting final condition
+    runner.registerInitialCondition('Gathering data from EnergyPlus SQL file and OSM model.')
+
+    # create a array of sections to loop through in erb file
+    @sections = []
+
+    # generate data for requested sections
+    sections_made = 0
+    possible_sections.each do |method_name|
+      next unless args[method_name]
+      eval("@sections <<  OsLib_Reporting.#{method_name}(model,sql_file,runner,false)")
+      sections_made += 1
     end
-    sqlFile = sqlFile.get
-    model.setSqlFile(sqlFile)
-
-    # put data into variables, these are available in the local scope binding
-    #building_name = model.getBuilding.name.get
-
-    web_asset_path = OpenStudio::getSharedResourcesPath() / OpenStudio::Path.new("web_assets")
-
-    energy = "var consumption = {\n"
-    fuel_type = ""
-    units = ""
-
-    site_energy_use = 0.0
-    OpenStudio::EndUseFuelType::getValues.each do |fuel_type|
-      energy << "\t\""
-      fuel_type = OpenStudio::EndUseFuelType.new(fuel_type).valueDescription
-      energy << OpenStudio::EndUseFuelType.new(fuel_type).valueDescription # append this to remove whitespace between words ".delete(' ')"
-      energy << " Consumption\":{\n\t\t\"units\":"
-      if fuel_type == "Electricity"
-        units = "\"kWh\""
-        unit_str = "kWh"
-      else
-        units = "\"Million Btu\""
-        unit_str = "MBtu"
-      end
-      fuel_type_aggregation = 0.0
-      energy << units
-      energy << ",\n\t\t\"data\":{\n\t\t\t\""
-      OpenStudio::EndUseCategoryType::getValues.each do |category_type|
-        fuel_and_category_aggregation = 0.0
-        category_str = OpenStudio::EndUseCategoryType.new(category_type).valueDescription
-        energy << category_str # append this to remove whitespace between words ".delete(' ')"
-        energy << "\":["
-        OpenStudio::MonthOfYear::getValues.each do |month|
-          if month >= 1 and month <= 12
-            if not sqlFile.energyConsumptionByMonth(OpenStudio::EndUseFuelType.new(fuel_type),
-                                                    OpenStudio::EndUseCategoryType.new(category_type),
-                                                    OpenStudio::MonthOfYear.new(month)).empty?
-              valInJ = sqlFile.energyConsumptionByMonth(OpenStudio::EndUseFuelType.new(fuel_type),
-                                                        OpenStudio::EndUseCategoryType.new(category_type),
-                                                        OpenStudio::MonthOfYear.new(month)).get
-              fuel_and_category_aggregation += valInJ
-              valInUnits = OpenStudio::convert(valInJ,"J",unit_str).get()
-              temp = sprintf "%.3f", valInUnits
-              energy << temp.to_s
-              energy << ","
-              if os_version >= min_version_feature1
-                month_str = OpenStudio::MonthOfYear.new(month).valueDescription
-                prefix_str = OpenStudio::toUnderscoreCase("#{fuel_type}_#{category_str}_#{month_str}")
-                runner.registerValue("#{prefix_str}_si",valInJ,"J")
-                runner.registerValue("#{prefix_str}_ip",valInUnits,unit_str)
-              end
-            else
-              energy << "0,"
-            end
-          end
-        end
-        energy = energy[0..-2]
-        energy << "],\n\t\t\t\""
-        if (os_version >= min_version_feature1) 
-          prefix_str = OpenStudio::toUnderscoreCase("#{fuel_type}_#{category_str}")
-          runner.registerValue("#{prefix_str}_si",fuel_and_category_aggregation,"J")
-          runner.registerValue("#{prefix_str}_ip",OpenStudio::convert(fuel_and_category_aggregation,"J",unit_str).get,unit_str)
-        end
-        fuel_type_aggregation += fuel_and_category_aggregation
-      end
-      energy = energy[0..-7]
-      energy << "\n\t\t}\n\t},\n"
-      if (os_version >= min_version_feature1)
-        runner.registerValue(OpenStudio::toUnderscoreCase("#{fuel_type}_si"),fuel_type_aggregation,"J")
-        runner.registerValue(OpenStudio::toUnderscoreCase("#{fuel_type}_ip"),
-                             OpenStudio::convert(fuel_type_aggregation,"J",unit_str).get,
-                             unit_str)
-      end
-      site_energy_use += fuel_type_aggregation
-    end
-    energy = energy[0..-3]
-    energy << "\n};\n"
-    if (os_version >= min_version_feature1)
-      runner.registerValue("site_energy_use_si",OpenStudio::convert(site_energy_use,"J","GJ").get,"GJ")
-      runner.registerValue("site_energy_use_ip",OpenStudio::convert(site_energy_use,"J","MBtu").get,"MBtu")
-    end
-
-    # echo out our values
-    #runner.registerInfo("This building is named #{building_name}.")
 
     # read in template
-    html_in_path = "#{File.dirname(__FILE__)}/resources/report.html.in"
+    html_in_path = "#{File.dirname(__FILE__)}/resources/report.html.erb"
     if File.exist?(html_in_path)
-        html_in_path = html_in_path
+      html_in_path = html_in_path
     else
-        html_in_path = "#{File.dirname(__FILE__)}/report.html.in"
+      html_in_path = "#{File.dirname(__FILE__)}/report.html.erb"
     end
-    html_in = ""
+    html_in = ''
     File.open(html_in_path, 'r') do |file|
       html_in = file.read
     end
@@ -145,11 +173,10 @@ class StandardReports < OpenStudio::Ruleset::ReportingUserScript
     html_out = renderer.result(binding)
 
     # write html file
-    html_out_path = "./report.html"
+    html_out_path = './report.html'
     File.open(html_out_path, 'w') do |file|
       file << html_out
-      
-      # make sure data is written to the disk one way or the other      
+      # make sure data is written to the disk one way or the other
       begin
         file.fsync
       rescue
@@ -157,17 +184,15 @@ class StandardReports < OpenStudio::Ruleset::ReportingUserScript
       end
     end
 
-    #closing the sql file
-    sqlFile.close()
+    # closing the sql file
+    sql_file.close
 
-    #reporting final condition
-    runner.registerFinalCondition("Standard Report generated successfully.")
+    # reporting final condition
+    runner.registerFinalCondition("Generated report with #{sections_made} sections to #{html_out_path}.")
 
-    return true
+    true
+  end # end the run method
+end # end the measure
 
-  end #end the run method
-
-end #end the measure
-
-#this allows the measure to be use by the application
-StandardReports.new.registerWithApplication
+# this allows the measure to be use by the application
+OpenStudioResults.new.registerWithApplication

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -108,10 +108,9 @@ void ScriptItem::refreshArgumentsFromScript(runmanager::RunManager t_rm)
 
 std::vector<ruleset::OSArgument> ScriptItem::osArguments() const {
   ruleset::OSArgumentVector result;
-  for (std::map<std::string,ruleset::OSArgument>::const_iterator itr = m_scriptInfo.arguments.begin(),
-       itrEnd = m_scriptInfo.arguments.end(); itr != itrEnd; ++itr)
+  for (const auto & elem : m_scriptInfo.arguments)
   {
-    result.push_back(itr->second);
+    result.push_back(elem.second);
   }
   return result;
 }

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@ namespace openstudio {
 LibraryTabWidget::LibraryTabWidget(QWidget * parent)
   : QWidget(parent)
 {
-  QVBoxLayout * mainLayout = new QVBoxLayout();
+  auto mainLayout = new QVBoxLayout();
 
   mainLayout->setSpacing(0);
 
@@ -100,7 +100,7 @@ void LibraryTabWidget::addTab( QWidget * widget,
                         const QString & selectedImagePath,
                         const QString & unSelectedImagePath )
 {
-  QPushButton * button = new QPushButton(m_tabBar);
+  auto button = new QPushButton(m_tabBar);
 
   button->setFixedSize(QSize(29,29));
 
@@ -123,7 +123,7 @@ void LibraryTabWidget::select()
 
   int index = 0;
 
-  for( std::vector<QPushButton*>::iterator  it = m_tabButtons.begin();
+  for( auto it = m_tabButtons.begin();
        it < m_tabButtons.end();
        ++it )
   {

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@ namespace detail {
 
     virtual ~DesignOfExperimentsOptions_Impl() {}
 
-    virtual AlgorithmOptions clone() const;
+    virtual AlgorithmOptions clone() const override;
 
     //@}
     /** @name Getters */
@@ -60,7 +60,7 @@ namespace detail {
     /** @name Absent or Protected in Public Class */
     //@{
 
-    virtual QVariant toVariant() const;
+    virtual QVariant toVariant() const override;
 
     static DesignOfExperimentsOptions fromVariant(const QVariant& variant, const VersionString& version);
 

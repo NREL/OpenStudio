@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -28,9 +28,12 @@
 #include "../model/AirLoopHVACZoneSplitter.hpp"
 #include "../model/AirLoopHVACZoneSplitter_Impl.hpp"
 #include "../model/AirLoopHVACOutdoorAirSystem.hpp"
+#include "../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "../model/ControllerOutdoorAir.hpp"
 #include "../model/FanConstantVolume.hpp"
+#include "../model/FanConstantVolume_Impl.hpp"
 #include "../model/FanVariableVolume.hpp"
+#include "../model/FanVariableVolume_Impl.hpp"
 #include "../model/FanOnOff.hpp"
 #include "../model/FanOnOff_Impl.hpp"
 #include "../model/FanZoneExhaust.hpp"
@@ -40,8 +43,11 @@
 #include "../model/CoilCoolingWaterToAirHeatPumpEquationFit.hpp"
 #include "../model/CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp"
 #include "../model/CoilCoolingDXSingleSpeed.hpp"
+#include "../model/CoilCoolingDXSingleSpeed_Impl.hpp"
 #include "../model/CoilCoolingDXTwoSpeed.hpp"
+#include "../model/CoilCoolingDXMultiSpeed.hpp"
 #include "../model/CoilHeatingGas.hpp"
+#include "../model/CoilHeatingGas_Impl.hpp"
 #include "../model/CoilHeatingElectric.hpp"
 #include "../model/CoilHeatingDXSingleSpeed.hpp"
 #include "../model/ControllerWaterCoil.hpp"
@@ -69,21 +75,26 @@
 #include "../model/Space_Impl.hpp"
 #include "../model/DesignSpecificationOutdoorAir.hpp"
 #include "../model/DesignSpecificationOutdoorAir_Impl.hpp"
-#include "../model/CurveCubic.hpp"
-#include "../model/CurveQuadratic.hpp"
-#include "../model/CurveBiquadratic.hpp"
 #include "../model/CoolingTowerSingleSpeed.hpp"
 #include "../model/CoolingTowerSingleSpeed_Impl.hpp"
 #include "../model/CoolingTowerVariableSpeed.hpp"
 #include "../model/CoolingTowerVariableSpeed_Impl.hpp"
 #include "../model/SetpointManagerFollowOutdoorAirTemperature.hpp"
+#include "../model/SetpointManagerFollowOutdoorAirTemperature_Impl.hpp"
 #include "../model/SetpointManagerMixedAir.hpp"
+#include "../model/SetpointManagerMixedAir_Impl.hpp"
 #include "../model/SetpointManagerSingleZoneReheat.hpp"
 #include "../model/SetpointManagerSingleZoneReheat_Impl.hpp"
 #include "../model/SetpointManagerScheduled.hpp"
+#include "../model/SetpointManagerScheduled_Impl.hpp"
+#include "../model/SetpointManagerScheduledDualSetpoint.hpp"
+#include "../model/SetpointManagerScheduledDualSetpoint_Impl.hpp"
 #include "../model/SetpointManagerWarmest.hpp"
+#include "../model/SetpointManagerWarmest_Impl.hpp"
 #include "../model/SetpointManagerWarmestTemperatureFlow.hpp"
+#include "../model/SetpointManagerWarmestTemperatureFlow_Impl.hpp"
 #include "../model/SetpointManagerOutdoorAirReset.hpp"
+#include "../model/SetpointManagerOutdoorAirReset_Impl.hpp"
 #include "../model/ThermalZone.hpp"
 #include "../model/ThermalZone_Impl.hpp"
 #include "../model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp"
@@ -95,12 +106,9 @@
 #include "../model/AirTerminalSingleDuctSeriesPIUReheat.hpp"
 #include "../model/AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp"
 #include "../model/ThermostatSetpointDualSetpoint.hpp"
+#include "../model/ThermostatSetpointDualSetpoint_Impl.hpp"
 #include "../model/Schedule.hpp"
 #include "../model/Schedule_Impl.hpp"
-#include "../model/FanVariableVolume.hpp"
-#include "../model/FanVariableVolume_Impl.hpp"
-#include "../model/FanConstantVolume.hpp"
-#include "../model/FanConstantVolume_Impl.hpp"
 #include "../model/PumpConstantSpeed.hpp"
 #include "../model/PumpConstantSpeed_Impl.hpp"
 #include "../model/PumpVariableSpeed.hpp"
@@ -109,10 +117,6 @@
 #include "../model/BoilerHotWater_Impl.hpp"
 #include "../model/ChillerElectricEIR.hpp"
 #include "../model/ChillerElectricEIR_Impl.hpp"
-#include "../model/CurveBiquadratic.hpp"
-#include "../model/CurveBiquadratic_Impl.hpp"
-#include "../model/CurveQuadratic.hpp"
-#include "../model/CurveQuadratic_Impl.hpp"
 #include "../model/CoilCoolingCooledBeam.hpp"
 #include "../model/CoilCoolingCooledBeam_Impl.hpp"
 #include "../model/CoilCoolingWater.hpp"
@@ -147,7 +151,6 @@
 #include "../model/SizingPlant_Impl.hpp"
 #include "../model/SizingSystem.hpp"
 #include "../model/SizingSystem_Impl.hpp"
-#include "../model/AirTerminalSingleDuctVAVReheat.hpp"
 #include "../model/AirTerminalSingleDuctVAVReheat_Impl.hpp"
 #include "../model/PipeAdiabatic.hpp"
 #include "../model/PipeAdiabatic_Impl.hpp"
@@ -4563,7 +4566,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
                                          model::PumpConstantSpeed::iddObjectType());
       if( constantPumps.size() > 0 )
       {
-        for( std::vector<model::ModelObject>::iterator it = constantPumps.begin();
+        for( auto it = constantPumps.begin();
              it != constantPumps.end();
              ++it )
         {
@@ -4581,7 +4584,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
                                                  model::PumpVariableSpeed::iddObjectType());
       if( variablePumps.size() > 0 )
       {
-        for( std::vector<model::ModelObject>::iterator it = variablePumps.begin();
+        for( auto it = variablePumps.begin();
              it != variablePumps.end();
              ++it )
         {
@@ -4849,7 +4852,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     // "Heating" components
     std::vector<model::BoilerHotWater> boilers = 
     subsetCastVector<model::BoilerHotWater>(plantLoop.supplyComponents(model::BoilerHotWater::iddObjectType()));
-    for(std::vector<model::BoilerHotWater>::iterator it = boilers.begin();
+    for(auto it = boilers.begin();
         it != boilers.end();
         ++it)
     {
@@ -4865,7 +4868,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
     std::vector<model::WaterHeaterMixed> waterHeaters =
     subsetCastVector<model::WaterHeaterMixed>(plantLoop.supplyComponents(model::WaterHeaterMixed::iddObjectType()));
-    for(std::vector<model::WaterHeaterMixed>::iterator it = waterHeaters.begin();
+    for(auto it = waterHeaters.begin();
         it != waterHeaters.end();
         ++it)
     {
@@ -4882,7 +4885,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     // "Cooling" components
     std::vector<model::ChillerElectricEIR> chillers =
     subsetCastVector<model::ChillerElectricEIR>(plantLoop.supplyComponents(model::ChillerElectricEIR::iddObjectType()));
-    for(std::vector<model::ChillerElectricEIR>::iterator it = chillers.begin();
+    for(auto it = chillers.begin();
         it != chillers.end();
         ++it)
     {
@@ -4898,7 +4901,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
     std::vector<model::CoolingTowerVariableSpeed> variableTowers =
     subsetCastVector<model::CoolingTowerVariableSpeed>(plantLoop.supplyComponents(model::CoolingTowerVariableSpeed::iddObjectType()));
-    for(std::vector<model::CoolingTowerVariableSpeed>::iterator it = variableTowers.begin();
+    for(auto it = variableTowers.begin();
         it != variableTowers.end();
         ++it)
     {
@@ -4914,7 +4917,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
     std::vector<model::CoolingTowerSingleSpeed> constantTowers =
     subsetCastVector<model::CoolingTowerSingleSpeed>(plantLoop.supplyComponents(model::CoolingTowerSingleSpeed::iddObjectType()));
-    for(std::vector<model::CoolingTowerSingleSpeed>::iterator it = constantTowers.begin();
+    for(auto it = constantTowers.begin();
         it != constantTowers.end();
         ++it)
     {
@@ -6861,6 +6864,433 @@ QDomElement ReverseTranslator::findAirSysElement(const QString & airSysName,cons
   }
 
   return QDomElement();
+}
+
+boost::optional<QDomElement> ForwardTranslator::translateAirLoopHVAC(const model::AirLoopHVAC& airLoop, QDomDocument& doc)
+{
+  auto result = doc.createElement("AirSys");
+  m_translatedObjects[airLoop.handle()] = result;
+
+  // Gather info about the system makeup
+  auto variableFans = airLoop.supplyComponents(model::FanVariableVolume::iddObjectType());
+  auto coilHeatingDXSingleSpeeds = airLoop.supplyComponents(model::CoilHeatingDXSingleSpeed::iddObjectType());
+  auto coilCoolingDXSingleSpeeds = airLoop.supplyComponents(model::CoilCoolingDXSingleSpeed::iddObjectType());
+  auto coilCoolingDXTwoSpeeds = airLoop.supplyComponents(model::CoilCoolingDXTwoSpeed::iddObjectType());
+  auto coilCoolingDXMultiSpeeds = airLoop.supplyComponents(model::CoilCoolingDXMultiSpeed::iddObjectType());
+  auto coilCoolingWaters = airLoop.supplyComponents(model::CoilCoolingWater::iddObjectType());
+  auto zones = airLoop.thermalZones();
+  auto supplyOutletNode = airLoop.supplyOutletNode();
+  auto spms = supplyOutletNode.setpointManagers();
+  auto singleZoneReheats = subsetCastVector<model::SetpointManagerSingleZoneReheat>(spms);
+  
+  // Name
+  auto name = airLoop.name().get();
+  auto nameElement = doc.createElement("Name");
+  result.appendChild(nameElement);
+  nameElement.appendChild(doc.createTextNode(escapeName(name)));
+  
+  // Type
+  // 1:  "PVAV"
+  // 2:  "VAV"
+  // 3:  "SZAC"
+  // 4:  "SZHP"
+  // 5:  "SZVAVAC"
+  // 6:  "SZVAVHP"
+  // 7:  "HV"
+  // 8:  "Exhaust" - TODO figure out how to identify this one
+  
+  const std::string PVAV = "PVAV";
+  const std::string VAV = "VAV";
+  const std::string SZAC = "SZAC";
+  const std::string SZHP = "SZHP";
+  const std::string SZVAVAC = "SZVAVAC";
+  const std::string SZVAVHP = "SZVAVHP";
+  const std::string HV = "HV";
+  const std::string EXHAUST = "EXHAUST";
+
+  std::string type;
+
+  if( coilCoolingDXTwoSpeeds.empty() &&
+    coilCoolingDXSingleSpeeds.empty() &&
+    coilCoolingDXMultiSpeeds.empty() &&
+    coilCoolingWaters.empty() )
+  {
+    type = HV;
+  } else {
+    if( ! variableFans.empty() ) { // Variable speed fan
+      if( ! singleZoneReheats.empty() ) { // Single zone reheat SPM
+        if( ! coilHeatingDXSingleSpeeds.empty() ) { // DX Heating (Heat pump)
+          type = SZVAVHP;
+        } else { // Not DX Heating (No heat pump)
+          type = SZVAVAC;
+        }
+      } else { // Anything besides single zone reheat
+        if( ! coilCoolingWaters.empty() ) { // Chilled water coil
+          type = VAV;
+        } else { // No chilled water coil
+          type = PVAV;
+        }
+      }
+    } else { // Not variable speed fan
+      if( ! singleZoneReheats.empty() ) { // Single zone reheat SPM
+        if( ! coilHeatingDXSingleSpeeds.empty() ) { // DX Heating (Heat pump)
+          type = SZHP;
+        } else { // Not DX Heating (No heat pump)
+          type = SZAC;
+        }
+      } else {
+        LOG(Warn,airLoop.briefDescription() << " does not directly map to an air system type. Assuming VAV even though there is no variable speed fan.")
+        type = VAV;
+      }
+    }
+  }
+
+  OS_ASSERT( ! type.empty() );
+
+  auto typeElement = doc.createElement("Type");
+  result.appendChild(typeElement);
+  typeElement.appendChild(doc.createTextNode(escapeName(type)));
+
+  // TODO
+  // SubType
+  // 1:  "SinglePackage"
+  // 2:  "SplitSystem"
+  // 3:  "CRAC"
+  // 4:  "CRAH"
+
+  // NightCycleFanCtrl
+  auto nightCycleFanCtrlElement = doc.createElement("NightCycleFanCtrl");
+  result.appendChild(nightCycleFanCtrlElement);
+
+  // OpenStudio string to represent night cycle control method
+  auto osNightCycleFanCtrl = airLoop.nightCycleControlType();
+  // Convert to SDD string
+  std::string nightCycleFanCtrl;
+  if( istringEqual(osNightCycleFanCtrl,"CycleOnAny") ) {
+    nightCycleFanCtrl = "CycleOnCallAnyZone";
+  } else if( istringEqual(osNightCycleFanCtrl,"CycleOnAnyZoneFansOnly") ) {
+    nightCycleFanCtrl = "CycleZoneFansOnly";
+  } else {
+    nightCycleFanCtrl = "StaysOff";
+  }
+
+  nightCycleFanCtrlElement.appendChild(doc.createTextNode(escapeName(nightCycleFanCtrl)));
+
+  // Cnt
+  auto cntElement = doc.createElement("Cnt");
+  result.appendChild(cntElement);
+  cntElement.appendChild(doc.createTextNode("1"));
+
+  // FanPos
+  QString fanPos;
+  auto inletComp = supplyOutletNode.inletModelObject();
+  OS_ASSERT(inletComp);
+  if( inletComp->optionalCast<model::FanConstantVolume>() || inletComp->optionalCast<model::FanVariableVolume>() )
+    fanPos = "DrawThrough"; 
+  else
+    fanPos = "BlowThrough";
+  auto fanPosElement = doc.createElement("FanPos");
+  result.appendChild(fanPosElement);
+  fanPosElement.appendChild(doc.createTextNode(fanPos));
+
+  // ClgCtrl 
+  for( const auto & spm : spms ) {
+    if( istringEqual(spm.controlVariable(),"Temperature") ) {
+      if( auto tempSPM = spm.optionalCast<model::SetpointManagerFollowOutdoorAirTemperature>() ) {
+        // SetpointManagerFollowOutdoorAirTemperature is not supported by CBECC so it is converted to oa reset.
+        LOG(Warn,tempSPM->briefDescription() << " is translated to ClgCtrl type OutsideAirReset in CBECC.");
+        auto clgCtrlElement = doc.createElement("ClgCtrl");
+        result.appendChild(clgCtrlElement);
+        clgCtrlElement.appendChild(doc.createTextNode("OutsideAirReset"));
+ 
+        auto clRstSupHiElement = doc.createElement("ClRstSupHi");
+        result.appendChild(clRstSupHiElement);
+        clRstSupHiElement.appendChild(doc.createTextNode("100"));
+ 
+        auto clRstSupLowElement = doc.createElement("ClRstSupLow");
+        result.appendChild(clRstSupLowElement);
+        clRstSupLowElement.appendChild(doc.createTextNode("0"));
+
+        auto clRstOutdrHiElement = doc.createElement("ClRstOutdrHi");
+        result.appendChild(clRstOutdrHiElement);
+        clRstOutdrHiElement.appendChild(doc.createTextNode("100"));
+
+        auto clRstOutdrLowElement = doc.createElement("ClRstOutdrLow");
+        result.appendChild(clRstOutdrLowElement);
+        clRstOutdrLowElement.appendChild(doc.createTextNode("0"));
+
+        m_translatedObjects[tempSPM->handle()] = clgCtrlElement;
+      } else if( auto tempSPM = spm.optionalCast<model::SetpointManagerOutdoorAirReset>() ) {
+        auto clgCtrlElement = doc.createElement("ClgCtrl");
+        result.appendChild(clgCtrlElement);
+        clgCtrlElement.appendChild(doc.createTextNode("OutsideAirReset"));
+ 
+        auto clRstSupHiElement = doc.createElement("ClRstSupHi");
+        result.appendChild(clRstSupHiElement);
+        auto clRstSupHi = convert(tempSPM->setpointatOutdoorHighTemperature(),"C","F").get();
+        clRstSupHiElement.appendChild(doc.createTextNode(QString::number(clRstSupHi)));
+ 
+        auto clRstSupLowElement = doc.createElement("ClRstSupLow");
+        result.appendChild(clRstSupLowElement);
+        auto clRstSupLow = convert(tempSPM->setpointatOutdoorLowTemperature(),"C","F").get();
+        clRstSupLowElement.appendChild(doc.createTextNode(QString::number(clRstSupLow)));
+
+        auto clRstOutdrHiElement = doc.createElement("ClRstOutdrHi");
+        result.appendChild(clRstOutdrHiElement);
+        auto clRstOutdrHi = convert(tempSPM->outdoorHighTemperature(),"C","F").get();
+        clRstOutdrHiElement.appendChild(doc.createTextNode(QString::number(clRstOutdrHi)));
+
+        auto clRstOutdrLowElement = doc.createElement("ClRstOutdrLow");
+        result.appendChild(clRstOutdrLowElement);
+        auto clRstOutdrLow = convert(tempSPM->outdoorHighTemperature(),"C","F").get();
+        clRstOutdrLowElement.appendChild(doc.createTextNode(QString::number(clRstOutdrLow)));
+
+        m_translatedObjects[tempSPM->handle()] = clgCtrlElement;
+      } else if( auto tempSPM = spm.optionalCast<model::SetpointManagerScheduled>() ) {
+        auto clgCtrlElement = doc.createElement("ClgCtrl");
+        result.appendChild(clgCtrlElement);
+        clgCtrlElement.appendChild(doc.createTextNode("Scheduled"));
+
+        auto clgSetPtSchRefElement = doc.createElement("ClgSetptSchRef");
+        result.appendChild(clgSetPtSchRefElement);
+        const auto & schedule = tempSPM->schedule();
+        clgSetPtSchRefElement.appendChild(doc.createTextNode(escapeName(schedule.name().get())));
+
+        m_translatedObjects[tempSPM->handle()] = clgCtrlElement;
+      } else if( auto tempSPM = spm.optionalCast<model::SetpointManagerScheduledDualSetpoint>() ) {
+        LOG(Error,tempSPM->briefDescription() << " is not supported by CBECC.");
+      } else if( auto tempSPM = spm.optionalCast<model::SetpointManagerSingleZoneReheat>() ) {
+        auto clgCtrlElement = doc.createElement("ClgCtrl");
+        result.appendChild(clgCtrlElement);
+        clgCtrlElement.appendChild(doc.createTextNode("NoSATControl"));
+
+        m_translatedObjects[tempSPM->handle()] = clgCtrlElement;
+      } else if( auto tempSPM = spm.optionalCast<model::SetpointManagerWarmestTemperatureFlow>() ) {
+        auto clgCtrlElement = doc.createElement("ClgCtrl");
+        result.appendChild(clgCtrlElement);
+        if( istringEqual(tempSPM->strategy(),"FlowFirst") ) {
+          clgCtrlElement.appendChild(doc.createTextNode("WarmestResetFlowFirst"));
+        } else {
+          clgCtrlElement.appendChild(doc.createTextNode("WarmestResetTemperatureFirst"));
+        }
+
+        auto clRstSupHiElement = doc.createElement("ClRstSupHi");
+        result.appendChild(clRstSupHiElement);
+        auto clRstSupHi = convert(tempSPM->maximumSetpointTemperature(),"C","F").get();
+        clRstSupHiElement.appendChild(doc.createTextNode(QString::number(clRstSupHi)));
+
+        auto clRstSupLowElement = doc.createElement("ClRstSupLow");
+        result.appendChild(clRstSupLowElement);
+        auto clRstSupLow = convert(tempSPM->maximumSetpointTemperature(),"C","F").get();
+        clRstSupLowElement.appendChild(doc.createTextNode(QString::number(clRstSupLow)));
+
+        auto dsgnAirFlowMinElement = doc.createElement("DsgnAirFlowMin");
+        result.appendChild(dsgnAirFlowMinElement);
+        auto dsgnAirFlowMin = tempSPM->minimumTurndownRatio();
+        dsgnAirFlowMinElement.appendChild(doc.createTextNode(QString::number(dsgnAirFlowMin)));
+
+        m_translatedObjects[tempSPM->handle()] = clgCtrlElement;
+      } else if( auto tempSPM = spm.optionalCast<model::SetpointManagerWarmest>() ) {
+        auto clgCtrlElement = doc.createElement("ClgCtrl");
+        result.appendChild(clgCtrlElement);
+        clgCtrlElement.appendChild(doc.createTextNode("WarmestReset"));
+
+        auto clRstSupHiElement = doc.createElement("ClRstSupHi");
+        result.appendChild(clRstSupHiElement);
+        auto clRstSupHi = convert(tempSPM->maximumSetpointTemperature(),"C","F").get();
+        clRstSupHiElement.appendChild(doc.createTextNode(QString::number(clRstSupHi)));
+
+        auto clRstSupLowElement = doc.createElement("ClRstSupLow");
+        result.appendChild(clRstSupLowElement);
+        auto clRstSupLow = convert(tempSPM->maximumSetpointTemperature(),"C","F").get();
+        clRstSupLowElement.appendChild(doc.createTextNode(QString::number(clRstSupLow)));
+
+        m_translatedObjects[tempSPM->handle()] = clgCtrlElement;
+      } else {
+        LOG(Error,spm.briefDescription() << " does not currently map into SDD format.")
+        // TODO Handle other SPMs
+      }
+
+      break;
+    }
+  }
+    
+  // Translate supply components
+
+  auto airSegElement = doc.createElement("AirSeg");
+  result.appendChild(airSegElement);
+
+  auto airSegNameElement = doc.createElement("Name");
+  airSegNameElement.appendChild(doc.createTextNode(QString::fromStdString(name + " Supply AirSeg")));
+  airSegElement.appendChild(airSegNameElement);
+
+  auto airSegTypeElement = doc.createElement("Type");
+  airSegTypeElement.appendChild(doc.createTextNode("Supply"));
+  airSegElement.appendChild(airSegTypeElement);
+
+  for( auto & comp : airLoop.supplyComponents() ) {
+    if( auto fan = comp.optionalCast<model::FanConstantVolume>() ) {
+      translateFanConstantVolume(fan.get(),airSegElement,doc);
+    } else if ( auto coil = comp.optionalCast<model::CoilCoolingDXSingleSpeed>() ) {
+      translateCoilCoolingDXSingleSpeed(coil.get(),airSegElement,doc);
+    } else if ( auto coil = comp.optionalCast<model::CoilHeatingGas>() ) {
+      translateCoilHeatingGas(coil.get(),airSegElement,doc);
+    } else if ( auto oasys = comp.optionalCast<model::AirLoopHVACOutdoorAirSystem>() ) {
+      translateAirLoopHVACOutdoorAirSystem(oasys.get(),result,doc);
+    } else {
+      // TODO Handle other supply component types
+      LOG(Warn,comp.briefDescription() << " does not currently map into SDD format.")
+    }
+  }
+
+  return result;
+}
+
+boost::optional<QDomElement> ForwardTranslator::translateAirLoopHVACOutdoorAirSystem(const openstudio::model::AirLoopHVACOutdoorAirSystem& oasys, QDomElement & airSysElement, QDomDocument& doc)
+{
+  auto result = doc.createElement("OACtrl");
+  airSysElement.appendChild(result);
+  m_translatedObjects[oasys.handle()] = result;
+
+  return result;
+}
+
+boost::optional<QDomElement> ForwardTranslator::translateCoilHeatingGas(const openstudio::model::CoilHeatingGas& coil, QDomElement & airSegElement, QDomDocument& doc)
+{
+  auto result = doc.createElement("CoilClg");
+  airSegElement.appendChild(result);
+  m_translatedObjects[coil.handle()] = result;
+
+  // Type
+  auto typeElement = doc.createElement("Type");
+  result.appendChild(typeElement);
+  typeElement.appendChild(doc.createTextNode("Furnace"));
+
+  // FuelSrc
+  auto fuelSrcElement = doc.createElement("FuelSrc");
+  result.appendChild(fuelSrcElement);
+  fuelSrcElement.appendChild(doc.createTextNode("NaturalGas"));
+
+  // CapTotGrossRtd
+  if( coil.isNominalCapacityAutosized() ) {
+    m_autoHardSize = true;
+  } else if( auto value = coil.nominalCapacity() ) {
+    auto capTotGrossRtdElement = doc.createElement("CapTotGrossRtd");
+    result.appendChild(capTotGrossRtdElement);
+    capTotGrossRtdElement.appendChild(doc.createTextNode(QString::number(convert(value.get(),"W","Btu/h").get())));
+  }
+
+  // FurnThrmlEff
+  auto furnThrmlEffElement = doc.createElement("FurnThrmlEff");
+  result.appendChild(furnThrmlEffElement);
+  furnThrmlEffElement.appendChild(doc.createTextNode(QString::number(convert(coil.gasBurnerEfficiency(),"W","Btu/h").get())));
+
+  return result;
+}
+
+boost::optional<QDomElement> ForwardTranslator::translateCoilCoolingDXSingleSpeed(const openstudio::model::CoilCoolingDXSingleSpeed& coil, QDomElement & airSegElement, QDomDocument& doc)
+{
+  auto result = doc.createElement("CoilClg");
+  airSegElement.appendChild(result);
+  m_translatedObjects[coil.handle()] = result;
+
+  // Type
+  auto typeElement = doc.createElement("Type");
+  result.appendChild(typeElement);
+  typeElement.appendChild(doc.createTextNode("DirectExpansion"));
+
+  // NumClgStages
+  auto numClgStagesElement = doc.createElement("NumClgStages");
+  result.appendChild(numClgStagesElement);
+  numClgStagesElement.appendChild(doc.createTextNode("1"));
+
+  // CapTotGrossRtd
+  if( coil.isRatedTotalCoolingCapacityAutosized() ) {
+    m_autoHardSize = true;
+  } else if( auto value = coil.ratedTotalCoolingCapacity() ) {
+    auto capTotGrossRtdElement = doc.createElement("CapTotGrossRtd");
+    result.appendChild(capTotGrossRtdElement);
+    capTotGrossRtdElement.appendChild(doc.createTextNode(QString::number(convert(value.get(),"W","Btu/h").get())));
+  }
+
+  // DXEER
+  if( auto cop = coil.ratedCOP() ) {
+    auto r = 0.12;
+    auto eer = (cop.get() * (1 - r)  - r) * 3.413;
+
+    auto dxEERElement = doc.createElement("DXEER");
+    result.appendChild(dxEERElement);
+    dxEERElement.appendChild(doc.createTextNode(QString::number(eer)));
+  } else {
+    m_autoEfficiency = true;
+  }
+
+  // CndsrType
+  auto cndsrTypeElement = doc.createElement("CndsrType");
+  result.appendChild(cndsrTypeElement);
+  cndsrTypeElement.appendChild(doc.createTextNode("Air"));
+
+  return result;
+}
+
+boost::optional<QDomElement> ForwardTranslator::translateFanConstantVolume(const openstudio::model::FanConstantVolume& fan, QDomElement & airSegElement, QDomDocument& doc)
+{
+  auto result = doc.createElement("Fan");
+  airSegElement.appendChild(result);
+  m_translatedObjects[fan.handle()] = result;
+
+  // CtrlMthd
+  auto ctrlMthdElement = doc.createElement("CtrlMthd"); 
+  result.appendChild(ctrlMthdElement);
+  ctrlMthdElement.appendChild(doc.createTextNode("ConstantVolume"));
+
+  // Class - Centrifugal | Axial
+  // TODO Define a way to deterimine or specify 
+  auto classElement = doc.createElement("Class");
+  result.appendChild(classElement);
+  classElement.appendChild(doc.createTextNode("Axial"));
+
+  // ModelingMthd  
+  auto modelingMthdElement = doc.createElement("ModelingMthd");
+  result.appendChild(modelingMthdElement);
+  modelingMthdElement.appendChild(doc.createTextNode("StaticPressure"));
+
+  // FlowCap
+  if( fan.isMaximumFlowRateAutosized() ) {
+    m_autoHardSize = true;
+  } else if( auto value = fan.maximumFlowRate() ) {
+    auto flowCapElement = doc.createElement("FlowCap");
+    result.appendChild(flowCapElement);
+    flowCapElement.appendChild(doc.createTextNode(QString::number(convert(value.get(),"m^3/s","cfm").get())));
+  }
+
+  // FlowEff
+  auto flowEffElement = doc.createElement("FlowEff");
+  result.appendChild(flowEffElement);
+  flowEffElement.appendChild(doc.createTextNode(QString::number(fan.fanEfficiency())));
+
+  // TotStaticPress
+  auto totStaticPressElement = doc.createElement("TotStaticPress");
+  result.appendChild(totStaticPressElement);
+  // Convert in PA to WC
+  totStaticPressElement.appendChild(doc.createTextNode(QString::number(fan.pressureRise() / 249.0889)));
+
+  // MtrEff
+  auto mtrEffElement = doc.createElement("MtrEff");
+  result.appendChild(mtrEffElement);
+  mtrEffElement.appendChild(doc.createTextNode(QString::number(fan.motorEfficiency())));
+
+  // MtrPos
+  auto mtrPosElement = doc.createElement("MtrfPos");
+  result.appendChild(mtrPosElement);
+  if( fan.motorInAirstreamFraction() >= 0.5 ) {
+    mtrPosElement.appendChild(doc.createTextNode("InAirStream"));
+  } else {
+    mtrPosElement.appendChild(doc.createTextNode("NotInAirStream"));
+  }
+
+
+  return result;
 }
 
 } // sdd

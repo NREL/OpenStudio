@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -53,7 +53,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
                                       false);
     EXPECT_EQ(5u,problem.workflow().size());
     analysis.setProblem(problem);
-    model::Model model = model::exampleModel();
+    model::Model model =fastExampleModel();
     openstudio::path p = toPath("./example.osm");
     model.save(p,true);
     FileReference seedModel(p);
@@ -277,69 +277,6 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     EXPECT_FALSE(treeErrors.errors().empty());
     EXPECT_FALSE(treeErrors.warnings().empty());
     EXPECT_FALSE(treeErrors.infos().empty());
-  }
-
-}
-
-TEST_F(AnalysisDriverFixture,DataPersistence_DakotaErrors) {
-
-  {
-    // Create and populate project
-    SimpleProject project = getCleanSimpleProject("DataPersistence_DakotaErrors");
-    Analysis analysis = project.analysis();
-    Problem problem = retrieveProblem(AnalysisDriverFixtureProblem::BuggyBCLMeasure,
-                                      true,
-                                      false);
-    analysis.setProblem(problem);
-    model::Model model = model::exampleModel();
-    openstudio::path p = toPath("./example.osm");
-    model.save(p,true);
-    FileReference seedModel(p);
-    project.setSeed(seedModel);
-    DDACEAlgorithmOptions algOpts(DDACEAlgorithmType::lhs);
-    // do not set samples so Dakota job will have errors
-    DDACEAlgorithm alg(algOpts);
-    analysis.setAlgorithm(alg);
-
-    // Run analysis
-    AnalysisRunOptions runOptions = standardRunOptions(project.projectDir());
-    project.analysisDriver().run(analysis,runOptions);
-    project.analysisDriver().waitForFinished();
-
-    // Check Dakota job and error information
-    ASSERT_TRUE(alg.job());
-    Job job = alg.job().get();
-    EXPECT_FALSE(job.running());
-    EXPECT_FALSE(job.outOfDate());
-    EXPECT_FALSE(job.canceled());
-    EXPECT_TRUE(job.lastRun());
-    JobErrors errors = job.errors();
-    EXPECT_EQ(OSResultValue(OSResultValue::Fail),errors.result);
-    EXPECT_FALSE(errors.succeeded());
-    EXPECT_FALSE(errors.errors().empty());
-    EXPECT_TRUE(errors.warnings().empty());
-    EXPECT_TRUE(errors.infos().empty());
-  }
-
-  {
-    // Re-open project
-    SimpleProject project = getSimpleProject("DataPersistence_DakotaErrors");
-    Analysis analysis = project.analysis();
-    DDACEAlgorithm alg = analysis.algorithm()->cast<DDACEAlgorithm>();
-
-    // Verify job and error information still there
-    ASSERT_TRUE(alg.job());
-    Job job = alg.job().get();
-    EXPECT_FALSE(job.running());
-    EXPECT_FALSE(job.outOfDate());
-    EXPECT_FALSE(job.canceled());
-    EXPECT_TRUE(job.lastRun());
-    JobErrors errors = job.errors();
-    EXPECT_EQ(OSResultValue(OSResultValue::Fail),errors.result);
-    EXPECT_FALSE(errors.succeeded());
-    EXPECT_FALSE(errors.errors().empty());
-    EXPECT_TRUE(errors.warnings().empty());
-    EXPECT_TRUE(errors.infos().empty());
   }
 
 }

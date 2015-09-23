@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -32,19 +32,19 @@ public:
 
   WaitDialog(const QString & windowTitle,
     const QString & windowMessage,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
 
   virtual ~WaitDialog();
 
-  QSize sizeHint() const;
+  QSize sizeHint() const override;
 
 protected slots:
 
-  virtual void on_cancelButton(bool checked);
+  virtual void on_cancelButton(bool checked) override;
 
 protected:
 
-  void closeEvent(QCloseEvent * event);
+  void closeEvent(QCloseEvent * event) override;
 
 private:
 

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -95,7 +95,7 @@ namespace detail {
 
     virtual ~Problem_Impl() {}
 
-    virtual AnalysisObject clone() const;
+    virtual AnalysisObject clone() const override;
 
     //@}
     /** @name Getters and Queries */
@@ -289,17 +289,17 @@ namespace detail {
     /** @name Protected in or Absent from Public Class */
     //@{
 
-    virtual QVariant toVariant() const;
+    virtual QVariant toVariant() const override;
 
     static Problem factoryFromVariant(const QVariant& variant, const VersionString& version);
 
     static Problem fromVariant(const QVariant& variant, const VersionString& version);
 
-    virtual QVariant toServerFormulationVariant() const;
+    virtual QVariant toServerFormulationVariant() const override;
 
     /// Relocate path data from originalBase to newBase.
     virtual void updateInputPathData(const openstudio::path& originalBase,
-                                     const openstudio::path& newBase);
+                                     const openstudio::path& newBase) override;
 
     //@}
    protected:

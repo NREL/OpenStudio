@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -36,23 +36,25 @@ class OSQuantityEdit;
 
 class OSQuantityEdit2;
 
+class StandardsInformationMaterialWidget;
+
 class WindowMaterialGlazingGroupThermochromicInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
 
   public:
 
-    WindowMaterialGlazingGroupThermochromicInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = 0);
+    WindowMaterialGlazingGroupThermochromicInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = nullptr);
 
     virtual ~WindowMaterialGlazingGroupThermochromicInspectorView() {}
 
   protected:
 
-    virtual void onClearSelection();
+    virtual void onClearSelection() override;
 
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
 
-    virtual void onUpdate();
+    virtual void onUpdate() override;
 
   private:
 
@@ -64,17 +66,16 @@ class WindowMaterialGlazingGroupThermochromicInspectorView : public ModelObjectI
 
     void refresh();
 
-    OSLineEdit * m_nameEdit;
-
-    OSQuantityEdit2 * m_opticalDataTemperature;
-
-    OSLineEdit * m_windowMaterialGlazingName;
-
     bool m_isIP;
 
-  public slots:
+    OSLineEdit * m_nameEdit = nullptr;
 
-    void toggleUnits(bool displayIP);
+    OSQuantityEdit2 * m_opticalDataTemperature = nullptr;
+
+    OSLineEdit * m_windowMaterialGlazingName = nullptr;
+
+    StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
+
 };
 
 } // openstudio

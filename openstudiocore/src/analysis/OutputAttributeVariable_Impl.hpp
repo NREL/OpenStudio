@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -56,11 +56,11 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual AnalysisObject clone() const;
+    virtual AnalysisObject clone() const override;
 
     /** Get the variable value from a dataPoint. Throws an openstudio::Exception if
      *  the Variable cannot be evaluated for dataPoint. */
-    virtual double getValue(const DataPoint& dataPoint) const;
+    virtual double getValue(const DataPoint& dataPoint) const override;
 
     //@}
     /** @name Getters */
@@ -78,7 +78,7 @@ namespace detail {
     /** @name Protected in Public Class */
     //@{
 
-    virtual QVariant toVariant() const;
+    virtual QVariant toVariant() const override;
 
     static OutputAttributeVariable fromVariant(const QVariant& variant, const VersionString& version);
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -36,8 +36,6 @@ namespace detail {
   /** ZoneHVACLowTempRadiantVarFlow_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACLowTempRadiantVarFlow.*/
   class MODEL_API ZoneHVACLowTempRadiantVarFlow_Impl : public ZoneHVACComponent_Impl {
 
-  Q_OBJECT
-
   public:
     /** @name Constructors and Destructors */
     //@{
@@ -60,21 +58,21 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual ModelObject clone(Model model) const;
+    virtual ModelObject clone(Model model) const override;
     
-    virtual std::vector<IdfObject> remove();
+    virtual std::vector<IdfObject> remove() override;
     
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
     
-    virtual std::vector<ModelObject> children() const;
+    virtual std::vector<ModelObject> children() const override;
 
-    virtual unsigned inletPort() const;
+    virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const;
+    virtual unsigned outletPort() const override;
 
     //@}
     /** @name Getters */
@@ -142,9 +140,9 @@ namespace detail {
     
     boost::optional<ThermalZone> thermalZone() const;
 
-    bool addToThermalZone(ThermalZone & thermalZone);
+    bool addToThermalZone(ThermalZone & thermalZone) override;
 
-    void removeFromThermalZone();
+    void removeFromThermalZone() override;
 
     //@}
     /** @name Other */

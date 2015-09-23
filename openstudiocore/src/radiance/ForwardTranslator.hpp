@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -40,6 +40,10 @@
 #include "../utilities/core/StringStreamLogSink.hpp"
 
 namespace openstudio {
+
+  class RemoteBCL;
+  class LocalBCL;
+
 namespace radiance {
 
   /* Translates OpenStudio Building Model to Radiance simulation input.
@@ -113,7 +117,9 @@ namespace radiance {
 
       // create materials library for model, shared for all Spaces
       std::set<std::string> m_radMaterials;
+      std::set<std::string> m_radMixMaterials;
       std::set<std::string> m_radMaterialsDC;
+      std::set<std::string> m_radMaterialsWG0;
 
       // materials list for rtcontrib
       std::set<std::string> m_radDCmats;
@@ -124,14 +130,19 @@ namespace radiance {
       // create space geometry, hashes of space name to file contents
       std::map<std::string, std::string> m_radSpaces;
       std::map<std::string, std::string> m_radSensors;
+      std::map<std::string, std::string> m_radSensorViews;
       std::map<std::string, std::string> m_radGlareSensors;
       std::map<std::string, std::string> m_radMaps;
       std::map<std::string, openstudio::Handle> m_radMapHandles;
       std::map<std::string, std::string> m_radViewPoints;
-      std::map<std::string, std::string> m_radWindowGroups; 
+      std::map<std::string, std::string> m_radWindowGroups;
+      std::map<std::string, std::string> m_radWindowGroupShades;
+      int m_windowGroupId;
+      std::string shadeBSDF;
 
       // get window group
-      WindowGroup getWindowGroup(double azimuth, const model::Space& space, const model::ConstructionBase& construction, 
+      WindowGroup getWindowGroup(const openstudio::Vector3d& outwardNormal, const model::Space& space, 
+                                 const model::ConstructionBase& construction, 
                                  const boost::optional<model::ShadingControl>& shadingControl,
                                  const openstudio::Point3dVector& polygon);
       std::vector<WindowGroup> m_windowGroups;
@@ -147,16 +158,22 @@ namespace radiance {
       void buildingSpaces(const openstudio::path &t_radDir, 
           const std::vector<openstudio::model::Space> &t_spaces,
           std::vector<openstudio::path> &t_outpaths);
-    
+
+    // get a bsdf possibly from the BCL
+    boost::optional<openstudio::path> getBSDF(double vlt, double vltSpecular, const std::string& shadeType);
+    boost::optional<std::string> getBSDF(openstudio::LocalBCL& bcl, double vlt, double vltSpecular, const std::string& shadeType, const std::string& searchTerm, unsigned tid);
+    boost::optional<std::string> getBSDF(openstudio::RemoteBCL& bcl, double vlt, double vltSpecular, const std::string& shadeType, const std::string& searchTerm, unsigned tid);
+
+
     StringStreamLogSink m_logSink;
 
     REGISTER_LOGGER("openstudio.radiance.ForwardTranslator");
 
   };
 
-  std::string formatString(double t_d, unsigned t_prec = 15);
+  RADIANCE_API std::string formatString(double t_d, unsigned t_prec = 15);
 
-  std::string cleanName(const std::string& name);
+  RADIANCE_API std::string cleanName(const std::string& name);
 
 } // radiance
 } // openstudio

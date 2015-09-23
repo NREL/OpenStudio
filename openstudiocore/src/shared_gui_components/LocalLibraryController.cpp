@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -27,6 +27,9 @@
 #include "OSListView.hpp"
 #include "OSViewSwitcher.hpp"
 
+#include "../openstudio_lib/MainWindow.hpp"
+#include "../openstudio_lib/OSAppBase.hpp"
+#include "../openstudio_lib/OSDocument.hpp"
 #include "../openstudio_lib/OSItem.hpp"
 
 #include "MeasureBadge.hpp"
@@ -34,6 +37,7 @@
 #include "../utilities/bcl/LocalBCL.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -44,6 +48,7 @@
 #include <QDrag>
 #include <QFile>
 #include <QLabel>
+#include <QMessageBox>
 #include <QMimeData>
 #include <QSettings>
 #include <QVariant>
@@ -145,8 +150,13 @@ void LocalLibraryController::showMeasures()
 void LocalLibraryController::showMyMeasuresFolder()
 {
   openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
-  QString path = QDir::toNativeSeparators(toQString(userMeasuresDir));
-  QDesktopServices::openUrl(QUrl("file:///" + path));
+
+  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+    QMessageBox::information(QApplication::activeWindow(), "Cannot Open Directory", "Your My Measures Directory appears to be on a network drive that is not currently available.\nYou can change your specified My Measures Directory using 'Preferences->Change My Measures Directory'.", QMessageBox::Ok);
+  } else {
+    QString path = QDir::toNativeSeparators(toQString(userMeasuresDir));
+    QDesktopServices::openUrl(QUrl("file:///" + path));
+  }
 }
 
 QSharedPointer<LibraryTypeListController> LocalLibraryController::createLibraryListController(const QDomDocument & taxonomy, LocalLibrary::LibrarySource source)
@@ -214,7 +224,7 @@ QWidget * LibraryTypeItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 { 
   if(QSharedPointer<LibraryTypeItem> item = dataSource.dynamicCast<LibraryTypeItem>())
   {
-    auto groupCollapsibleView = new OSCollapsibleView(nullptr);
+    auto groupCollapsibleView = new OSCollapsibleView();
 
     auto header = new DarkGradientHeader(); 
     header->label->setText(item->name());
@@ -287,7 +297,7 @@ QWidget * LibraryGroupItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 { 
   if(QSharedPointer<LibraryGroupItem> item = dataSource.dynamicCast<LibraryGroupItem>())
   {
-    auto groupCollapsibleView = new OSCollapsibleView(nullptr);
+    auto groupCollapsibleView = new OSCollapsibleView();
 
     auto header = new LibraryGroupItemHeader(); 
     header->label->setText(item->name());
@@ -365,7 +375,7 @@ QWidget * LibrarySubGroupItemDelegate::view(QSharedPointer<OSListItem> dataSourc
 { 
   if(QSharedPointer<LibrarySubGroupItem> item = dataSource.dynamicCast<LibrarySubGroupItem>())
   {
-    auto subGroupCollapsibleView = new OSCollapsibleView(nullptr);
+    auto subGroupCollapsibleView = new OSCollapsibleView();
 
     auto header = new LibrarySubGroupItemHeader(); 
 
@@ -567,8 +577,15 @@ QWidget * LibraryItemDelegate::view(QSharedPointer<OSListItem> dataSource)
       widget->m_measureTypeBadge->setVisible(true);
     }
 
-    if(libraryItem->m_source == LocalLibrary::BCL){
+    if (libraryItem->m_source == LocalLibrary::BCL){
       widget->m_measureBadge->setMeasureBadgeType(MeasureBadgeType::BCLMeasure);
+    } else if (libraryItem->m_source == LocalLibrary::USER){
+      widget->m_measureBadge->setMeasureBadgeType(MeasureBadgeType::MyMeasure);
+    }else if(libraryItem->m_source == LocalLibrary::OS){
+      widget->m_measureBadge->setMeasureBadgeType(MeasureBadgeType::OSMeasure);
+    } else{
+      //DLM: this should not happen, LocalLibrary::COMBINED
+      // libraryItem->m_source;
     }
 
     // Name
@@ -685,6 +702,8 @@ void LibraryListController::createItems()
 
   // create items
   openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
+  openstudio::path patApplicationMeasuresDir = BCLMeasure::patApplicationMeasuresDir();
+
   for( const auto & measure : measures )
   {
     if( m_taxonomyTag.compare(QString::fromStdString(measure.taxonomyTag()),Qt::CaseInsensitive) == 0 )
@@ -696,6 +715,8 @@ void LibraryListController::createItems()
         // check if this measure is in the my measures directory
         if (userMeasuresDir == measure.directory().parent_path()){
           source = LocalLibrary::USER;
+        } else if (patApplicationMeasuresDir == measure.directory().parent_path()){
+          source = LocalLibrary::OS;
         }else{
           source = LocalLibrary::BCL;
         }

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -475,7 +475,7 @@ namespace openstudio{
     m_files.push_back(file);
   }
 
-  bool BCLXML::hasFile(const openstudio::path& path)
+  bool BCLXML::hasFile(const openstudio::path& path) const
   {
     bool result = false;
 

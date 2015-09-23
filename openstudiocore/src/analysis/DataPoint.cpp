@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -704,7 +704,7 @@ namespace detail {
     onChange(AnalysisObject_Impl::Benign);
   }
 
-  void DataPoint_Impl::setResponseValues(const std::vector<double> values) {
+  void DataPoint_Impl::setResponseValues(const std::vector<double>& values) {
     m_responseValues = values;
     onChange(AnalysisObject_Impl::Benign);
   }
@@ -1249,7 +1249,7 @@ void DataPoint::markFailed() {
   getImpl<detail::DataPoint_Impl>()->markFailed();
 }
 
-void DataPoint::setResponseValues(const std::vector<double> values) {
+void DataPoint::setResponseValues(const std::vector<double>& values) {
   getImpl<detail::DataPoint_Impl>()->setResponseValues(values);
 }
 

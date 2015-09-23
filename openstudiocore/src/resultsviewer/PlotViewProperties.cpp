@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -269,7 +269,7 @@ void PlotViewProperties::updateCurves()
     if ( plotItem->rtti() == QwtPlotItem::Rtti_PlotCurve)
     {
       ui.cboCurves->addItem(plotItem->title().text());
-      m_curveVec.push_back((LinePlotCurve*)plotItem);
+      m_curveVec.push_back(static_cast<LinePlotCurve*>(plotItem));
     }
   }
 

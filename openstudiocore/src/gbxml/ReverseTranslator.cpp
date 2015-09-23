@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -441,23 +441,6 @@ namespace gbxml {
   boost::optional<model::ModelObject> ReverseTranslator::translateSurface(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
   {
     boost::optional<model::ModelObject> result;
-
-    QDomNodeList adjacentSpaceElements = element.elementsByTagName("AdjacentSpaceId");
-    if (adjacentSpaceElements.size() == 0){
-      LOG(Warn, "Surface has no adjacent spaces, will not be translated.");
-      return boost::none;
-    }else if (adjacentSpaceElements.size() == 2){
-      QString spaceId1 = adjacentSpaceElements.at(0).toElement().attribute("spaceIdRef");
-      QString spaceId2 = adjacentSpaceElements.at(1).toElement().attribute("spaceIdRef");
-      if (spaceId1 == spaceId2){
-        LOG(Warn, "Surface has two adjacent spaces which are the same space '" << toString(spaceId2) << "', will not be translated.");
-        return boost::none;
-      }
-    }else if (adjacentSpaceElements.size() > 2){
-      LOG(Error, "Surface has more than 2 adjacent surfaces, will not be translated.");
-      return boost::none;
-    }
-    
     std::vector<openstudio::Point3d> vertices;
 
     QDomNode planarGeometryElement = element.firstChildElement("PlanarGeometry");
@@ -514,6 +497,22 @@ namespace gbxml {
       return boost::none;
 
     }else{
+
+      QDomNodeList adjacentSpaceElements = element.elementsByTagName("AdjacentSpaceId");
+      if (adjacentSpaceElements.size() == 0){
+        LOG(Warn, "Surface has no adjacent spaces, will not be translated.");
+        return boost::none;
+      } else if (adjacentSpaceElements.size() == 2){
+        QString spaceId1 = adjacentSpaceElements.at(0).toElement().attribute("spaceIdRef");
+        QString spaceId2 = adjacentSpaceElements.at(1).toElement().attribute("spaceIdRef");
+        if (spaceId1 == spaceId2){
+          LOG(Warn, "Surface has two adjacent spaces which are the same space '" << toString(spaceId2) << "', will not be translated.");
+          return boost::none;
+        }
+      }else if (adjacentSpaceElements.size() > 2){
+        LOG(Error, "Surface has more than 2 adjacent surfaces, will not be translated.");
+        return boost::none;
+      }
 
       openstudio::model::Surface surface(vertices, model);
 

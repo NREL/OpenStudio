@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -27,16 +27,19 @@
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
 
+#include <QLabel>
 #include <QWidget>
 #include <QMouseEvent>
 #include <QGraphicsItem>
 
+class QBoxLayout;
 class QDropEvent;
 class QDragEnterEvent;
 class QDragLeaveEvent;
-class QBoxLayout;
-class QScrollArea;
+class QFocusEvent;
 class QPushButton;
+class QScrollArea;
+class QLabel;
 
 namespace openstudio {
 
@@ -54,7 +57,13 @@ class OSDropZone2 : public QWidget
 public:
 
   OSDropZone2();
+
   ~OSDropZone2() {}
+
+  void enableClickFocus() { this->setFocusPolicy(Qt::ClickFocus); }
+  bool hasData() { return !this->m_label->text().isEmpty(); }
+  void setDeleteObject(bool deleteObject) { m_deleteObject = deleteObject; }
+  bool deleteObject() { return m_deleteObject; }
 
   void bind(model::ModelObject & modelObject,
             OptionalModelObjectGetter get,
@@ -66,20 +75,25 @@ public:
 signals:
 
   void itemClicked(OSItem* item);
-
   void objectRemoved(boost::optional<model::ParentObject> parent);
+  void inFocus(bool inFocus, bool hasData);
 
 protected:
 
-  void paintEvent ( QPaintEvent * event );
-  void mouseReleaseEvent(QMouseEvent* event);
+  void paintEvent ( QPaintEvent * event ) override;
+  void mouseReleaseEvent(QMouseEvent* event) override;
+  virtual void focusInEvent(QFocusEvent * e) override;
+  virtual void focusOutEvent(QFocusEvent * e) override;
+
+public slots:
+
+  void onItemRemoveClicked();
 
 private slots:
 
   void refresh();
-  void dragEnterEvent(QDragEnterEvent *event);
-  void dropEvent(QDropEvent *event);
-  void onItemRemoveClicked();
+  void dragEnterEvent(QDragEnterEvent *event) override;
+  void dropEvent(QDropEvent *event) override;
 
 private:
 
@@ -87,9 +101,10 @@ private:
   boost::optional<ModelObjectSetter> m_set;
   boost::optional<NoFailAction> m_reset;
   boost::optional<model::ModelObject> m_modelObject;
-  QString m_text;
+  //QString m_text;
   OSItem * m_item = nullptr;
-
+  bool m_deleteObject = false;
+  QLabel * m_label;
 };
 
 class OSDropZone : public QWidget
@@ -102,7 +117,7 @@ public:
              const QString & text = "Drag From Library",
              const QSize & size = QSize(0,0),
              bool m_growsHorizontally = true,
-             QWidget * parent = 0 );
+             QWidget * parent = nullptr );
 
   virtual ~OSDropZone() {}
 
@@ -151,7 +166,7 @@ protected:
   // called when drop occurs, emit onDrop here if needed
   virtual void onDrop(const OSItemId& itemId);
 
-  void paintEvent ( QPaintEvent * event );
+  void paintEvent ( QPaintEvent * event ) override;
 
   //void resizeEvent(QResizeEvent * event);
 
@@ -189,7 +204,7 @@ public:
   OSItemDropZone(bool growsHorizontally,
                  const QString & text,
                  const QSize & size,
-                 QWidget * parent = 0);
+                 QWidget * parent = nullptr);
 
   virtual ~OSItemDropZone() {}
 
@@ -199,9 +214,9 @@ signals:
   void dropped( QDropEvent * event );
 
 protected:
-  void paintEvent ( QPaintEvent * event );
-  void dragEnterEvent( QDragEnterEvent * event );
-  void dropEvent( QDropEvent * event );
+  void paintEvent ( QPaintEvent * event ) override;
+  void dragEnterEvent( QDragEnterEvent * event ) override;
+  void dropEvent( QDropEvent * event ) override;
 
 private:
   QSize m_size;
@@ -222,7 +237,7 @@ class OSDropZoneItem : public QGraphicsObject
 
   virtual ~OSDropZoneItem() {}
 
-  QRectF boundingRect() const;
+  QRectF boundingRect() const override;
 
   void setSize(double width, double height);
 
@@ -238,11 +253,11 @@ class OSDropZoneItem : public QGraphicsObject
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
-              QWidget *widget );
+              QWidget *widget ) override;
 
-  void mousePressEvent(QGraphicsSceneMouseEvent * event);
-  void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
-  void dropEvent(QGraphicsSceneDragDropEvent *event);
+  void mousePressEvent(QGraphicsSceneMouseEvent * event) override;
+  void mouseReleaseEvent(QGraphicsSceneMouseEvent * event) override;
+  void dropEvent(QGraphicsSceneDragDropEvent *event) override;
 
   QString m_text;
 

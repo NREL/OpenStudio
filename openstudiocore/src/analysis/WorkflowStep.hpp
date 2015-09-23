@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -127,7 +127,7 @@ class ANALYSIS_API WorkflowStep : public AnalysisObject {
 
   /** Specialization of public method onChange so WorkflowStep can make the call on InputVariable
    *  (its child) if appropriate. */
-  virtual void onChange();
+  virtual void onChange() override;
  private:
   REGISTER_LOGGER("openstudio.analysis.WorkflowStep");
 };

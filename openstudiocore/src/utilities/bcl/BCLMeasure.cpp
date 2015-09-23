@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@
 
 namespace openstudio{
 
-  void BCLMeasure::createDirectory(const openstudio::path& dir){
+  void BCLMeasure::createDirectory(const openstudio::path& dir) const {
     if (exists(dir)){
       if (!isEmptyDirectory(dir)){
         LOG_AND_THROW("'" << toString(dir) << "' exists but is not an empty directory");
@@ -52,6 +52,36 @@ namespace openstudio{
         LOG_AND_THROW("'" << toString(dir) << "' cannot be created as an empty directory");
       }
     }
+  }
+
+  bool BCLMeasure::copyDirectory(const path& source, const path& destination) const {
+
+    if (!QDir().mkpath(toQString(destination)))
+    {
+      return false;
+    }
+
+    openstudio::path xmlPath = boost::filesystem::system_complete(m_bclXML.path());
+
+    QDir srcDir(toQString(source));
+    
+    for (const QFileInfo &info : srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot))
+    {
+      QString srcItemPath = toQString(source) + "/" + info.fileName();
+      QString dstItemPath = toQString(destination) + "/" + info.fileName();
+      if (info.isFile())
+      {
+        if (m_bclXML.hasFile(toPath(srcItemPath)) || (xmlPath == boost::filesystem::system_complete(toPath(srcItemPath))))
+        {
+          if (!QFile::copy(srcItemPath, dstItemPath))
+          {
+            return false;
+          }
+        }
+      }
+    }
+
+    return true;
   }
 
   BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, const openstudio::path& dir,
@@ -82,9 +112,11 @@ namespace openstudio{
     if (measureType == MeasureType::ModelMeasure){
       measureTemplate = ":/templates/ModelMeasure/measure.rb";
       testTemplate = ":/templates/ModelMeasure/tests/model_measure_test.rb";
+      testOSM = ":/templates/ModelMeasure/tests/example_model.osm";
       templateClassName = "ModelMeasure";
 
       createDirectory(dir / toPath("tests"));
+      testOSMPath = dir / toPath("tests/example_model.osm");
 
       std::string argName("space_name");
       std::string argDisplayName("New space name");
@@ -358,11 +390,11 @@ namespace openstudio{
   {
     openstudio::path result;
     if (applicationIsRunningFromBuildDirectory()){
-      result = getApplicationSourceDirectory() / toPath("src/pat_app/Measures/");
+      result = getApplicationSourceDirectory() / toPath("src/pat_app/Measures");
     }else{
-      result = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio-" + openStudioVersion() + "/pat/Measures/");
+      result = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio-" + openStudioVersion() + "/pat/Measures");
     }
-    return result;
+    return boost::filesystem::system_complete(result);
   }
 
   BCLMeasure BCLMeasure::alternativeModelMeasure() {
@@ -381,6 +413,10 @@ namespace openstudio{
     return BCLMeasure(patApplicationMeasuresDir() / toPath("CalibrationReports"));
   }
 
+  BCLMeasure BCLMeasure::radianceMeasure() {
+    return BCLMeasure(patApplicationMeasuresDir() / toPath("RadianceMeasure"));
+  }
+
   std::vector<BCLMeasure> BCLMeasure::localBCLMeasures()
   {
     return LocalBCL::instance().measures();
@@ -397,7 +433,7 @@ namespace openstudio{
     QSettings settings("OpenStudio", "BCLMeasure");
     QString value = settings.value("userMeasuresDir", QDir::homePath().append("/OpenStudio/Measures")).toString();
     openstudio::path result = toPath(value);
-    return result;
+    return boost::filesystem::system_complete(result);
   }
 
   bool BCLMeasure::setUserMeasuresDir(const openstudio::path& userMeasuresDir)
@@ -447,6 +483,82 @@ namespace openstudio{
     return result;
   }
 
+  std::vector<std::string> BCLMeasure::suggestedFirstLevelTaxonomyTerms()
+  {
+    std::vector<std::string> result;
+    result.reserve(12);
+
+    result.push_back("Envelope");
+    result.push_back("Electric Lighting");
+    result.push_back("Equipment");
+    result.push_back("People");
+    result.push_back("HVAC");
+    result.push_back("Refrigeration");
+    result.push_back("Service Water Heating");
+    result.push_back("Onsite Power Generation");
+    result.push_back("Whole Building");
+    result.push_back("Economics");
+    result.push_back("Reporting");
+
+    return result;
+  }
+
+  std::vector<std::string> BCLMeasure::suggestedSecondLevelTaxonomyTerms(const std::string& firstLevelTaxonomyTerm)
+  {
+    std::vector<std::string> result;
+    result.reserve(12);
+
+    if (firstLevelTaxonomyTerm == "Envelope"){
+      result.push_back("Form");
+      result.push_back("Opaque");
+      result.push_back("Fenestration");
+      result.push_back("Construction Sets");
+      result.push_back("Daylighting");
+      result.push_back("Infiltration");
+    } else if (firstLevelTaxonomyTerm == "Electric Lighting"){
+      result.push_back("Electric Lighting Controls");
+      result.push_back("Lighting Equipment");
+    } else if (firstLevelTaxonomyTerm == "Equipment"){
+      result.push_back("Equipment Controls");
+      result.push_back("Electric Equipment");
+      result.push_back("Gas Equipment");
+    } else if (firstLevelTaxonomyTerm == "People"){
+      result.push_back("Characteristics");
+      result.push_back("People Schedules");
+    } else if (firstLevelTaxonomyTerm == "HVAC"){
+      result.push_back("HVAC Controls");
+      result.push_back("Heating");
+      result.push_back("Cooling");
+      result.push_back("Heat Rejection");
+      result.push_back("Energy Recovery");
+      result.push_back("Distribution");
+      result.push_back("Ventilation");
+      result.push_back("Whole System");
+    } else if (firstLevelTaxonomyTerm == "Refrigeration"){
+      result.push_back("Refrigeration Controls");
+      result.push_back("Cases and Walkins");
+      result.push_back("Compressors");
+      result.push_back("Condensers");
+      result.push_back("Heat Reclaim");
+    } else if (firstLevelTaxonomyTerm == "Service Water Heating"){
+      result.push_back("Water Use");
+      result.push_back("Water Heating");
+      result.push_back("Distribution");
+    } else if (firstLevelTaxonomyTerm == "Onsite Power Generation"){
+      result.push_back("Photovoltaic");
+    } else if (firstLevelTaxonomyTerm == "Whole Building"){
+      result.push_back("Whole Building Schedules");
+      result.push_back("Space Types");
+    } else if (firstLevelTaxonomyTerm == "Economics"){
+      result.push_back("Life Cycle Cost Analysis");
+    } else if (firstLevelTaxonomyTerm == "Reporting"){
+      result.push_back("QAQC");
+      result.push_back("Troubleshooting");
+    }
+
+    return result;
+  }
+
   std::vector<BCLMeasure> BCLMeasure::getMeasuresInDir(openstudio::path dir)
   {
     LOG(Debug, "Loading measures in path: " << openstudio::toString(dir));
@@ -454,6 +566,11 @@ namespace openstudio{
 
     if (!exists(dir) || !is_directory(dir)){
       LOG(Debug, "Error Loading measures in path: " << openstudio::toString(dir));
+      return result;
+    }
+
+    if (isNetworkPath(dir) && !isNetworkPathAvailable(dir)) {
+      LOG(Debug, "Error Loading measures in unavailable network location: " << openstudio::toString(dir));
       return result;
     }
 
@@ -765,7 +882,11 @@ namespace openstudio{
         QString oldPath = toQString(fileRef.path());
         QString newPath = oldPath;
         if (!oldLowerClassName.empty() && !newLowerClassName.empty() && oldLowerClassName != newLowerClassName){
-          newPath.replace(toQString(oldLowerClassName), toQString(newLowerClassName));
+          QString temp = toQString(oldLowerClassName);
+          int index = newPath.lastIndexOf(temp);
+          if (index >= 0){
+            newPath.replace(index, temp.size(), toQString(newLowerClassName));
+          }
         }
 
         if (QFile::exists(newPath)) {
@@ -841,6 +962,7 @@ namespace openstudio{
     for (BCLFileReference file : m_bclXML.files()) {
       if (!exists(file.path())){
         result = true;
+        // what if this is the measure.rb file?
         filesToRemove.push_back(file);
       }else if (file.checkForUpdate()){
         result = true;
@@ -883,6 +1005,19 @@ namespace openstudio{
       if (!m_bclXML.hasFile(srcItemPath)){
         BCLFileReference file(srcItemPath, true);
         file.setUsageType("resource");
+        result = true;
+        filesToAdd.push_back(file);
+      }
+    }
+
+    // check for measure.rb
+    openstudio::path srcItemPath = m_directory / toPath("measure.rb");
+    if (!m_bclXML.hasFile(srcItemPath)){
+      if (exists(srcItemPath)){
+        BCLFileReference file(srcItemPath, true);
+        file.setUsageType("script");
+        // we don't know what the actual version this was created for, we also don't know minimum version
+        file.setSoftwareProgramVersion(openStudioVersion());
         result = true;
         filesToAdd.push_back(file);
       }
@@ -937,7 +1072,19 @@ namespace openstudio{
     }
 
     removeDirectory(newDir);
-    if (!copyDirectory(this->directory(), newDir)){
+
+    // DLM: do not copy entire directory, only copy tracked files
+    if (!this->copyDirectory(this->directory(), newDir)){
+      return boost::none;
+    }
+
+    openstudio::path tests = toPath("tests");
+    if (exists(this->directory() / tests) && !this->copyDirectory(this->directory() / tests, newDir / tests)){
+      return boost::none;
+    }
+
+    openstudio::path resources = toPath("resources");
+    if (exists(this->directory() / resources) && !this->copyDirectory(this->directory() / resources, newDir / resources)){
       return boost::none;
     }
 

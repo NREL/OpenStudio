@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -44,6 +44,12 @@ namespace openstudio {
       boost::optional<NoFailAction> reset = boost::none,
       boost::optional<BasicQuery> isDefaulted = boost::none);
 
+    void bind(model::ModelObject & modelObject,
+      BoolGetter get,
+      boost::optional<BoolSetterBoolReturn> set = boost::none,
+      boost::optional<NoFailAction> reset = boost::none,
+      boost::optional<BasicQuery> isDefaulted = boost::none);
+
     void unbind();
 
     private slots:
@@ -58,6 +64,7 @@ namespace openstudio {
     boost::optional<model::ModelObject> m_modelObject;
     boost::optional<BoolGetter> m_get;
     boost::optional<BoolSetter> m_set;
+    boost::optional<BoolSetterBoolReturn> m_setBoolReturn;
     boost::optional<NoFailAction> m_reset;
     boost::optional<BasicQuery> m_isDefaulted;
   };

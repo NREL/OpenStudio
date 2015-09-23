@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -19,8 +19,13 @@
 
 #include "OSLineEdit.hpp"
 
-#include "../openstudio_lib/OSItem.hpp"
+#include "../openstudio_lib/InspectorController.hpp"
+#include "../openstudio_lib/InspectorView.hpp"
+#include "../openstudio_lib/MainRightColumnController.hpp"
 #include "../openstudio_lib/ModelObjectItem.hpp"
+#include "../openstudio_lib/OSAppBase.hpp"
+#include "../openstudio_lib/OSDocument.hpp"
+#include "../openstudio_lib/OSItem.hpp"
 
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
@@ -29,6 +34,7 @@
 
 #include <boost/optional.hpp>
 
+#include <QFocusEvent>
 #include <QMouseEvent>
 #include <QString>
 
@@ -92,10 +98,25 @@ void OSLineEdit2::bind(model::ModelObject& modelObject,
   completeBind();
 }
 
+void OSLineEdit2::bind(model::ModelObject& modelObject,
+  StringGetter get,
+  boost::optional<StringSetterVoidReturn> set,
+  boost::optional<NoFailAction> reset,
+  boost::optional<BasicQuery> isDefaulted)
+{
+  m_modelObject = modelObject;
+  m_get = get;
+  m_setVoidReturn = set;
+  m_reset = reset;
+  m_isDefaulted = isDefaulted;
+
+  completeBind();
+}
+
 void OSLineEdit2::completeBind() {
   setEnabled(true);
 
-  if (!m_set && !m_setOptionalStringReturn)
+  if (!m_set && !m_setOptionalStringReturn && !m_setVoidReturn)
   {
     setReadOnly(true);
   }
@@ -123,6 +144,7 @@ void OSLineEdit2::unbind()
     m_getOptionalBoolArg.reset();
     m_set.reset();
     m_setOptionalStringReturn.reset();
+    m_setVoidReturn.reset();
     m_reset.reset();
     m_isDefaulted.reset();
     setEnabled(false);
@@ -130,15 +152,30 @@ void OSLineEdit2::unbind()
 }
 
 void OSLineEdit2::onEditingFinished() {
-  if(m_modelObject && m_set) {
+  if (m_modelObject && (m_set || m_setOptionalStringReturn || m_setVoidReturn)) {
     if (m_text != this->text().toStdString()) {
       m_text = this->text().toStdString();
-      bool result = (*m_set)(m_text);
+      auto result = false;
+      if (m_set) {
+        result = (*m_set)(m_text);
+      }
+      else if (m_setOptionalStringReturn) {
+        auto optionalStringReturn = (*m_setOptionalStringReturn)(m_text);
+        if (optionalStringReturn) {
+          result = true; // TODO
+        }
+        result = true;
+      }
+      else if (m_setVoidReturn) {
+        (*m_setVoidReturn)(m_text);
+        result = true;
+      }
       if (!result){
         //restore
         onModelObjectChange();
       }
       else {
+        emit inFocus(true, hasData());
         adjustWidth();
       }
     }
@@ -152,6 +189,7 @@ void OSLineEdit2::adjustWidth()
     QFont myFont;
     QFontMetrics fm(myFont);
     auto width = fm.width(toQString(m_text));
+    if (width < 80) width = 80;
     setFixedWidth(width + 10);
   }
 }
@@ -185,7 +223,6 @@ void OSLineEdit2::onModelObjectChangeInternal(bool startingup) {
         this->blockSignals(true);
         this->setText(QString::fromStdString(m_text));
         this->blockSignals(false);
-        adjustWidth();
         if (!startingup) m_timer.start(TIMEOUT_INTERVAL);
       }
     }
@@ -233,10 +270,49 @@ void OSLineEdit2::onItemRemoveClicked()
     if (m_modelObject) {
       parent = m_modelObject->parent();
     }
-    emit objectRemoved(parent);
     (*m_reset)();
+    if (m_deleteObject) {
+      m_modelObject->remove();
+    }
+    emit objectRemoved(parent);
   }
 }
+
+void OSLineEdit2::focusInEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason && m_hasClickFocus)
+  {
+    QString style("QLineEdit { background: #ffc627; }");
+    setStyleSheet(style);
+
+    emit inFocus(true, hasData());
+  }
+
+  QLineEdit::focusInEvent(e);
+}
+
+void OSLineEdit2::focusOutEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason && m_hasClickFocus)
+  {
+    QString style("QLineEdit { background: white; }");
+    setStyleSheet(style);
+
+    emit inFocus(false, false);
+
+#ifdef openstudio_lib_EXPORTS
+    auto mouseOverInspectorView = OSAppBase::instance()->currentDocument()->mainRightColumnController()->inspectorController()->inspectorView()->mouseOverInspectorView();
+    if (!mouseOverInspectorView) {
+      emit itemClicked(nullptr);
+    }
+#endif
+
+  }
+
+  QLineEdit::focusOutEvent(e);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 OSLineEdit::OSLineEdit( QWidget * parent )
   : QLineEdit(parent)

@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -162,15 +162,16 @@ module OpenStudio
             # Detach the drawing interface from the swapped surface.
             removed_interface = swapped_face.drawing_interface
             removed_interface.remove_observers
-            removed_interface.on_erase_entity
-            removed_interface.detach_entity
+            removed_interface.on_erase_entity 
+            removed_interface.detach_entity # changes properties via clean_entity
 
             # Restore the drawing interface to the original face.
+            # changes properties of swapped_face
             swapped_face.drawing_interface = @drawing_interface
             swapped_face.model_object_handle = @drawing_interface.model_object.handle
             
             @drawing_interface.entity = swapped_face
-            @drawing_interface.on_change_entity
+            @drawing_interface.on_change_entity # changes properties via paint_entity
             @drawing_interface.add_observers
             
             #Plugin.log(OpenStudio::Trace, "#{current_method_name}, swapped_face = #{swapped_face} now refers to swapped_face.drawing_interface = #{swapped_face.drawing_interface.class}")

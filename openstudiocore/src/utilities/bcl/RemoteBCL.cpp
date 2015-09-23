@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -17,7 +17,6 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 #include "LocalBCL.hpp"
-#include "OnDemandGenerator.hpp"
 #include "RemoteBCL.hpp"
 #include "../core/Application.hpp"
 #include "../core/Assert.hpp"
@@ -133,15 +132,6 @@ namespace openstudio{
     bool downloadStarted = const_cast<RemoteBCL*>(this)->downloadMeasure(uid);
     if(downloadStarted){
       return waitForMeasureDownload();
-    }
-    return boost::none;
-  }
-
-  boost::optional<BCLComponent> RemoteBCL::getOnDemandComponent(const OnDemandGenerator& generator) const
-  {
-    bool downloadStarted = const_cast<RemoteBCL*>(this)->callOnDemandGenerator(generator);
-    if(downloadStarted){
-      return waitForComponentDownload();
     }
     return boost::none;
   }
@@ -375,11 +365,6 @@ namespace openstudio{
     return m_lastMeasureDownload;
   }
 
-  boost::optional<OnDemandGenerator> RemoteBCL::lastOnDemandGenerator() const
-  {
-    return m_lastOnDemandGenerator;
-  }
-
   boost::optional<BCLMetaSearchResult> RemoteBCL::lastMetaSearch() const
   {
     return m_lastMetaSearch;
@@ -556,12 +541,6 @@ namespace openstudio{
     return m_lastMeasureDownload;
   }
 
-  boost::optional<OnDemandGenerator> RemoteBCL::waitForOnDemandGenerator(int msec) const
-  {
-    waitForLock(msec);
-    return m_lastOnDemandGenerator;
-  }
-
   boost::optional<BCLMetaSearchResult> RemoteBCL::waitForMetaSearch(int msec) const
   {
     waitForLock(msec);
@@ -639,115 +618,6 @@ namespace openstudio{
   bool RemoteBCL::downloadMeasure(const std::string& uid)
   {
     return downloadComponent(uid);
-  }
-
-  bool RemoteBCL::downloadOnDemandGenerator(const std::string& uid)
-  {
-    // can't start another download until last one is done
-    if (!m_mutex->tryLock()){
-      return false;
-    }
-
-    m_lastOnDemandGenerator.reset();
-
-    QString url = toQString(remoteUrl() + "/api/ondemandhelp/%1").arg(toQString(uid));
-    //LOG(Warn, toString(url));
-
-    // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
-    //OS_ASSERT(test);
-
-    // when the reply is finished call onOnDemandGeneratorResponseComplete
-    connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onOnDemandGeneratorResponseComplete);
-
-#ifndef QT_NO_OPENSSL
-    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
-#endif
-
-    QNetworkRequest request = QNetworkRequest(QUrl(url));
-    request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-    request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
-    m_networkManager->get(request);
-
-    return true;
-  }
-
-  bool RemoteBCL::callOnDemandGenerator(const OnDemandGenerator& generator)
-  {
-    // check if generator has all arguments it needs
-    if (!generator.checkArgumentValues()){
-      return false;
-    }
-
-    // can't start another download until last one is done
-    if (!m_mutex->tryLock()){
-      return false;
-    }
-
-    m_downloadFile = std::shared_ptr<QFile>(new QFile(QDir::tempPath().append(toQString("/"+generator.uid()+".bcl"))));
-    if (!m_downloadFile->open(QIODevice::WriteOnly | QIODevice::Truncate)){
-      m_mutex->unlock();
-      return false;
-    }
-    
-    m_downloadUid = generator.uid();
-
-    QUrl url = toQString(remoteUrl() + "/api/ondemand/%1").arg(toQString(generator.uid()));
-
-    QString arguments;
-    std::vector<OnDemandGeneratorArgument> activeArguments = generator.activeArguments();
-    for(std::vector<OnDemandGeneratorArgument>::const_iterator it = activeArguments.begin(), itend = activeArguments.end(); it != itend; ++it){
-      
-      arguments += toQString(it->name() + ":");
-
-      if (it->dataType() == OnDemandGeneratorArgumentType::String){
-        boost::optional<std::string> value = it->valueAsString();
-        OS_ASSERT(value);
-        arguments += toQString(*value);
-      }else if (it->dataType() == OnDemandGeneratorArgumentType::Float){
-        boost::optional<double> value = it->valueAsDouble();
-        OS_ASSERT(value);
-        arguments += QString::number(*value);
-      }else if (it->dataType() == OnDemandGeneratorArgumentType::Integer){
-        boost::optional<int> value = it->valueAsInteger();
-        OS_ASSERT(value);
-        arguments += QString::number(*value);
-      }else{
-        OS_ASSERT(false);
-      }
-
-      if (it < itend-1){
-        arguments += "|";
-      }
-    }
-    QUrlQuery query;
-    query.addQueryItem("arguments", arguments);
-    url.setQuery(query);
-    
-
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
-    request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
-
-    // for testing
-    //LOG(Warn, url.toString().toStdString());
-
-    // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
-    //OS_ASSERT(test);
-
-    // when the reply is finished call onDownloadComplete
-    connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onDownloadComplete);
-
-#ifndef QT_NO_OPENSSL
-    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
-#endif
-
-    m_downloadReply = m_networkManager->get(request);
-
-    connect(m_downloadReply, &QNetworkReply::readyRead, this, &RemoteBCL::downloadData);
-
-    return true;
   }
 
   bool RemoteBCL::startComponentLibraryMetaSearch(const std::string& searchTerm, const std::string& componentType, const std::string& filterType)
@@ -1024,20 +894,6 @@ namespace openstudio{
     return boost::none;
   }
 
-  boost::optional<OnDemandGenerator> RemoteBCL::processOnDemandGeneratorResponse(const RemoteQueryResponse& remoteQueryResponse) const
-  {
-    QDomElement root = remoteQueryResponse.domDocument().documentElement();
-
-    if (!root.isNull() && (root.tagName() == "ondemand")){
-      QDomElement nameElement = root.firstChildElement("name");
-      if (!nameElement.isNull()){
-        return OnDemandGenerator(root);
-      }
-    }
-
-    return boost::none;
-  }
-
   boost::optional<BCLMetaSearchResult> RemoteBCL::processMetaSearchResponse(const RemoteQueryResponse& remoteQueryResponse) const
   {
     QDomElement root = remoteQueryResponse.domDocument().documentElement();
@@ -1226,25 +1082,6 @@ namespace openstudio{
     } else {
       emit componentDownloaded(m_downloadUid, m_lastComponentDownload);
     }
-
-    reply->deleteLater();
-    m_mutex->unlock();
-  }
-
-  void RemoteBCL::onOnDemandGeneratorResponseComplete(QNetworkReply* reply)
-  {
-    boost::optional<RemoteQueryResponse> remoteQueryResponse = this->processReply(reply);
-    //Print response headers
-    /*for(int i=0; i<reply->rawHeaderList().size(); ++i){
-      QString str(reply->rawHeaderList()[i].constData());
-      std::cout << toString(str) << ": " << toString(reply->rawHeader(reply->rawHeaderList()[i] ).constData()) << std::endl;
-    }*/
-
-    if (remoteQueryResponse){
-      m_lastOnDemandGenerator = processOnDemandGeneratorResponse(*remoteQueryResponse);
-    }
-
-    emit onDemandGeneratorRecieved(m_downloadUid, m_lastOnDemandGenerator);
 
     reply->deleteLater();
     m_mutex->unlock();

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -792,6 +792,78 @@ CoilHeatingDXSingleSpeed::CoilHeatingDXSingleSpeed( const Model& model,
 
   setResistiveDefrostHeaterCapacity(2000.0);
 }
+
+CoilHeatingDXSingleSpeed::CoilHeatingDXSingleSpeed(const Model& model)
+  : StraightComponent(CoilHeatingDXSingleSpeed::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::CoilHeatingDXSingleSpeed_Impl>());
+
+  auto availabilitySchedule = model.alwaysOnDiscreteSchedule();
+  setAvailabilitySchedule(availabilitySchedule);
+
+  CurveCubic totalHeatingCapacityFunctionofTemperatureCurve(model);
+  totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient1Constant(0.758746);
+  totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient2x(0.027626);
+  totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient3xPOW2(0.000148716);
+  totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient4xPOW3(0.0000034992);
+  totalHeatingCapacityFunctionofTemperatureCurve.setMinimumValueofx(-20.0);
+  totalHeatingCapacityFunctionofTemperatureCurve.setMaximumValueofx(20.0);
+
+  CurveCubic totalHeatingCapacityFunctionofFlowFractionCurve(model);
+  totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient1Constant(0.84);
+  totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient2x(0.16);
+  totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient3xPOW2(0.0);
+  totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient4xPOW3(0.0);
+  totalHeatingCapacityFunctionofFlowFractionCurve.setMinimumValueofx(0.5);
+  totalHeatingCapacityFunctionofFlowFractionCurve.setMaximumValueofx(1.5);
+
+  CurveCubic energyInputRatioFunctionofTemperatureCurve(model);
+  energyInputRatioFunctionofTemperatureCurve.setCoefficient1Constant(1.19248);
+  energyInputRatioFunctionofTemperatureCurve.setCoefficient2x(-0.0300438);
+  energyInputRatioFunctionofTemperatureCurve.setCoefficient3xPOW2(0.00103745);
+  energyInputRatioFunctionofTemperatureCurve.setCoefficient4xPOW3(-0.000023328);
+  energyInputRatioFunctionofTemperatureCurve.setMinimumValueofx(-20.0);
+  energyInputRatioFunctionofTemperatureCurve.setMaximumValueofx(20.0);
+
+  CurveQuadratic energyInputRatioFunctionofFlowFractionCurve(model);
+  energyInputRatioFunctionofFlowFractionCurve.setCoefficient1Constant(1.3824);
+  energyInputRatioFunctionofFlowFractionCurve.setCoefficient2x(-0.4336);
+  energyInputRatioFunctionofFlowFractionCurve.setCoefficient3xPOW2(0.0512);
+  energyInputRatioFunctionofFlowFractionCurve.setMinimumValueofx(0.0);
+  energyInputRatioFunctionofFlowFractionCurve.setMaximumValueofx(1.0);
+
+  CurveQuadratic partLoadFractionCorrelationCurve(model);
+  partLoadFractionCorrelationCurve.setCoefficient1Constant(0.75);
+  partLoadFractionCorrelationCurve.setCoefficient2x(0.25);
+  partLoadFractionCorrelationCurve.setCoefficient3xPOW2(0.0);
+  partLoadFractionCorrelationCurve.setMinimumValueofx(0.0);
+  partLoadFractionCorrelationCurve.setMaximumValueofx(1.0);
+
+  setTotalHeatingCapacityFunctionofTemperatureCurve(totalHeatingCapacityFunctionofTemperatureCurve);
+
+  setTotalHeatingCapacityFunctionofFlowFractionCurve(totalHeatingCapacityFunctionofFlowFractionCurve);
+
+  setEnergyInputRatioFunctionofTemperatureCurve(energyInputRatioFunctionofTemperatureCurve);
+
+  setEnergyInputRatioFunctionofFlowFractionCurve(energyInputRatioFunctionofFlowFractionCurve);
+
+  setPartLoadFractionCorrelationCurve(partLoadFractionCorrelationCurve);
+
+  autosizeRatedTotalHeatingCapacity();
+
+  autosizeRatedAirFlowRate();
+
+  setRatedCOP(5.0);
+
+  setDefrostStrategy("Resistive");
+
+  setDefrostControl("Timed");
+
+  setDefrostTimePeriodFraction(0.166667);
+
+  setResistiveDefrostHeaterCapacity(2000.0);
+}
+
 
 IddObjectType CoilHeatingDXSingleSpeed::iddObjectType() {
   IddObjectType result(IddObjectType::OS_Coil_Heating_DX_SingleSpeed);

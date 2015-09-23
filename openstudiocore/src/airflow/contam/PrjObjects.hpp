@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef CONTAM_PRJOBJECTS_HPP
-#define CONTAM_PRJOBJECTS_HPP
+#ifndef AIRFLOW_CONTAM_PRJOBJECTS_HPP
+#define AIRFLOW_CONTAM_PRJOBJECTS_HPP
 
 #include "PrjDefines.hpp"
 #include "PrjObjectsImpl.hpp"
@@ -173,7 +173,7 @@ public:
   /** Returns the CFD zone name. */
   std::string cfdname() const;
   /** Sets the CFD zone name. */
-  void setCfdname(const std::string cfdname);
+  void setCfdname(const std::string &cfdname);
   /** Returns the X coordinate of one end of the cdaxis. */
   double X1() const;
   /** Sets the X coordinate of one end of the cdaxis. */
@@ -1563,7 +1563,7 @@ public:
   /** Write the object to a string. */
   virtual std::string write()=0;
   /** Convert an input string into a control node type enum. */
-  static Type convertTag(std::string string);
+  static Type convertTag(std::string &string);
   /** Read a control node element from a Reader object. */
   static ControlNode* readElement(Reader &input);
   // virtual void recompute(){}
@@ -1642,46 +1642,46 @@ public:
   /** Read object details from a Reader. */
   void readDetails(Reader &input);
   /** Write the object to a string. */
-  std::string write();
+  std::string write() override;
 
   //@}
   /** @name Getters and Setters */
   //@{
 
   /** Returns the node number, in order from 1 to the number of control nodes. */
-  int nr() const;
+  int nr() const override;
   /** Sets the element number. This should only be done with care. */
-  void setNr(const int nr);
+  void setNr(const int nr) override;
   /** Returns the node data type. */
-  virtual std::string dataType() const=0;
+  virtual std::string dataType() const override = 0;
   /** Returns the computation sequence number, which is set in ContamW. */
-  int seqnr() const;
+  int seqnr() const override;
   /** Sets the computation sequence number. */
-  void setSeqnr(const int seqnr);
+  void setSeqnr(const int seqnr) override;
   /** Returns the flags for offset & scale, time constant, and 1D sensor. */
-  unsigned int flags() const;
+  unsigned int flags() const override;
   /** Sets the flags for offset & scale, time constant, and 1D sensor. */
-  void setFlags(const unsigned int flags);
+  void setFlags(const unsigned int flags) override;
   /** Returns the number of required inputs. */
-  int inreq() const;
+  int inreq() const override;
   /** Sets the number of required inputs. */
-  void setInreq(const int inreq);
+  void setInreq(const int inreq) override;
   /** Returns the SketchPad number of input node #1. */
-  int n1() const;
+  int n1() const override;
   /** Sets the SketchPad number of input node #1. */
-  void setN1(const int n1);
+  void setN1(const int n1) override;
   /** Returns the SketchPad number of input node #2. */
-  int n2() const;
+  int n2() const override;
   /** Sets the SketchPad number of input node #2. */
-  void setN2(const int n2);
+  void setN2(const int n2) override;
   /** Returns the element name. */
-  std::string name() const;
+  std::string name() const override;
   /** Sets the element name. */
-  void setName(const std::string &name);
+  void setName(const std::string &name) override;
   /** Returns the element description. */
-  std::string desc() const;
+  std::string desc() const override;
   /** Sets the element description. */
-  void setDesc(const std::string &desc);
+  void setDesc(const std::string &desc) override;
   /** Returns the name of the value read from the file. */
   std::string valuename() const;
   /** Sets the name of the value read from the file. */
@@ -1711,7 +1711,7 @@ public:
   //@{
 
   /** Returns the node data type. */
-  std::string dataType() const {return "cvf";}
+  std::string dataType() const override {return "cvf";}
   //@}
 
 };
@@ -1736,7 +1736,7 @@ public:
   //@{
 
   /** Returns the node data type. */
-  std::string dataType() const {return "dvf";}
+  std::string dataType() const override {return "dvf";}
   //@}
 
 };

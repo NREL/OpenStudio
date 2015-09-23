@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -107,6 +107,12 @@ namespace openstudio{
       m_channelRegex = channelRegex;
 
       this->updateFilter(l);
+    }
+
+    void LogSink_Impl::setChannelRegex(const std::string& channelRegex)
+    {
+      boost::regex br(channelRegex);
+      setChannelRegex(br);
     }
 
     void LogSink_Impl::resetChannelRegex()
@@ -265,6 +271,11 @@ namespace openstudio{
   }
  
   void LogSink::setChannelRegex(const boost::regex& channelRegex)
+  {
+    m_impl->setChannelRegex(channelRegex);
+  }
+
+  void LogSink::setChannelRegex(const std::string& channelRegex)
   {
     m_impl->setChannelRegex(channelRegex);
   }

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -206,5 +206,46 @@ TEST_F(ModelFixture,People_Schedule_Quantities) {
   OSQuantityVector ipValues = defaultSchedule.getValues(true);
   EXPECT_EQ("W/person",ipValues.units().prettyString());
   EXPECT_DOUBLE_EQ(150.0,ipValues.values()[0]);
+}
+
+TEST_F(ModelFixture,People_Clone) {
+  Model library;
+  Model model;
+
+  PeopleDefinition definition(library); // ResourceObject
+  definition.setNumberofPeople(100.0);
+
+  People people(definition); // Not a ResourceObject
+  ScheduleRuleset activityLevelSchedule(library); // ResourceObject
+  people.setActivityLevelSchedule(activityLevelSchedule);
+
+  EXPECT_EQ(5u,library.modelObjects().size()); // PeopleDefinition, People, ScheduleRuleset, ScheduleDay, ScheduleTypeLimits
+
+  // Clone into the same Model
+  people.clone(library);
+  EXPECT_EQ(6u,library.modelObjects().size()); // PeopleDefinition, People * 2, ScheduleRuleset, ScheduleDay, ScheduleTypeLimits
+
+  auto allPeople = library.getModelObjects<People>();
+  EXPECT_EQ(2u,allPeople.size());
+
+  // Note the PeopleDefinition is shared because it is a ResourceObject
+  auto allPeopleDefinitions = library.getModelObjects<PeopleDefinition>();
+  EXPECT_EQ(1u,allPeopleDefinitions.size());
+
+  // Clone into a different Model
+  people.clone(model);
+
+  EXPECT_EQ(5u,model.modelObjects().size()); // PeopleDefinition, People, ScheduleRuleset, ScheduleDay, ScheduleTypeLimits
+
+  // Clone from library into the model again
+  people.clone(model);
+  EXPECT_EQ(6u,model.modelObjects().size()); // PeopleDefinition, People * 2, ScheduleRuleset, ScheduleDay, ScheduleTypeLimits
+
+  allPeople = model.getModelObjects<People>();
+  EXPECT_EQ(2u,allPeople.size());
+
+  // Note the PeopleDefinition is shared because it is a ResourceObject
+  allPeopleDefinitions = model.getModelObjects<PeopleDefinition>();
+  EXPECT_EQ(1u,allPeopleDefinitions.size());
 }
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -25,6 +25,8 @@
 #include "ScheduleTypeRegistry.hpp"
 #include "HVACComponent.hpp"
 #include "HVACComponent_Impl.hpp"
+#include "WaterToAirComponent.hpp"
+#include "WaterToAirComponent_Impl.hpp"
 #include "FanOnOff.hpp"
 #include "FanOnOff_Impl.hpp"
 #include "CoilHeatingWaterToAirHeatPumpEquationFit.hpp"
@@ -84,11 +86,14 @@ namespace detail {
 
     HVACComponent supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
 
-    HVACComponent heatingCoilClone = this->heatingCoil().clone(model).cast<HVACComponent>();
+    auto t_heatingCoil = heatingCoil();
+    HVACComponent heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
 
-    HVACComponent coolingCoilClone = this->coolingCoil().clone(model).cast<HVACComponent>();
+    auto t_coolingCoil = coolingCoil();
+    HVACComponent coolingCoilClone = t_coolingCoil.clone(model).cast<HVACComponent>();
 
-    HVACComponent supplementalHeatingCoilClone = this->supplementalHeatingCoil().clone(model).cast<HVACComponent>();
+    auto t_supplementalHeatingCoil = supplementalHeatingCoil();
+    HVACComponent supplementalHeatingCoilClone = t_supplementalHeatingCoil.clone(model).cast<HVACComponent>();
 
     wahpClone.setSupplyAirFan(supplyFanClone);
 
@@ -97,6 +102,24 @@ namespace detail {
     wahpClone.setCoolingCoil(coolingCoilClone);
 
     wahpClone.setSupplementalHeatingCoil(supplementalHeatingCoilClone);
+
+    if( model == this->model() ) {
+      if( auto waterToAirComponent = t_coolingCoil.optionalCast<WaterToAirComponent>() ) {
+        if( auto plant = waterToAirComponent->plantLoop() ) {
+          plant->addDemandBranchForComponent(coolingCoilClone);
+        }
+      }
+      if( auto waterToAirComponent = t_heatingCoil.optionalCast<WaterToAirComponent>() ) {
+        if( auto plant = waterToAirComponent->plantLoop() ) {
+          plant->addDemandBranchForComponent(heatingCoilClone);
+        }
+      }
+      if( auto waterToAirComponent = t_supplementalHeatingCoil.optionalCast<WaterToAirComponent>() ) {
+        if( auto plant = waterToAirComponent->plantLoop() ) {
+          plant->addDemandBranchForComponent(supplementalHeatingCoilClone);
+        }
+      }
+    }
 
     return wahpClone;
   }
@@ -524,33 +547,11 @@ namespace detail {
 
   bool ZoneHVACWaterToAirHeatPump_Impl::setHeatingCoil(HVACComponent& heatingCoilsWaterToAirHP) 
   {
-    bool isAllowedType = false;
-
-    if( heatingCoilsWaterToAirHP.iddObjectType() == IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit )
-    {
-      isAllowedType = true;
-    }
-
-    if( isAllowedType )
-    {
-      return setPointer(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatingCoilName,heatingCoilsWaterToAirHP.handle());
-    }
-    return false;
+    return setPointer(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatingCoilName,heatingCoilsWaterToAirHP.handle());
   }
 
   bool ZoneHVACWaterToAirHeatPump_Impl::setCoolingCoil(HVACComponent& coolingCoilsWaterToAirHP) {
-    bool isAllowedType = false;
-
-    if( coolingCoilsWaterToAirHP.iddObjectType() == IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit )
-    {
-      isAllowedType = true;
-    }
-
-    if( isAllowedType )
-    {
-      return setPointer(OS_ZoneHVAC_WaterToAirHeatPumpFields::CoolingCoilName,coolingCoilsWaterToAirHP.handle());
-    }
-    return false;
+    return setPointer(OS_ZoneHVAC_WaterToAirHeatPumpFields::CoolingCoilName,coolingCoilsWaterToAirHP.handle());
   }
 
   bool ZoneHVACWaterToAirHeatPump_Impl::setMaximumCyclingRate(boost::optional<double> maximumCyclingRate) {

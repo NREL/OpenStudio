@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -63,7 +63,7 @@ TEST_F(ModelFixture,RefrigerationSubcoolerMechanical_CapacityProvidingSystem)
   refrigerationSubcoolerMechanical.setCapacityProvidingSystem(refrigerationSystem);
 
   boost::optional<RefrigerationSystem> refrigerationSystem2 = refrigerationSubcoolerMechanical.capacityProvidingSystem();
-  EXPECT_TRUE(refrigerationSystem2 != NULL);
+  EXPECT_TRUE(refrigerationSystem2 != nullptr);
   EXPECT_EQ( refrigerationSystem.handle(), refrigerationSystem2.get().handle());
 }
 

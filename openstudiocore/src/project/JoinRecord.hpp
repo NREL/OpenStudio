@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -133,8 +133,6 @@ class PROJECT_API JoinRecord : public Record{
   static bool unlink(int leftId, int rightId, ProjectDatabase projectDatabase)
   {
     bool result = false;
-
-    std::vector<T> toRemove;
 
     QSqlQuery query(*(projectDatabase.qSqlDatabase()));
     query.prepare(toQString("SELECT * FROM " + T::databaseTableName() + " WHERE leftId=:leftId AND rightId=:rightId"));

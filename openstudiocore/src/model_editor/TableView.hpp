@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -43,9 +43,9 @@ signals:
   void eventUpDnKeyRelease();
 
 protected:
-  virtual void enterEvent(QEvent * event);
-  virtual void leaveEvent(QEvent * event);
-  virtual void keyReleaseEvent(QKeyEvent * event);
+  virtual void enterEvent(QEvent * event) override;
+  virtual void leaveEvent(QEvent * event) override;
+  virtual void keyReleaseEvent(QKeyEvent * event) override;
 
 private:
 

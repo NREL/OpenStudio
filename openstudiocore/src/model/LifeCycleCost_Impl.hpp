@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -53,9 +53,9 @@ public:
   // virtual destructor
   virtual ~LifeCycleCost_Impl(){}
 
-  virtual IddObjectType iddObjectType() const {return LifeCycleCost::iddObjectType();}
+  virtual IddObjectType iddObjectType() const override {return LifeCycleCost::iddObjectType();}
 
-  virtual const std::vector<std::string>& outputVariableNames() const;
+  virtual const std::vector<std::string>& outputVariableNames() const override;
 
   /** @name Getters */
   //@{

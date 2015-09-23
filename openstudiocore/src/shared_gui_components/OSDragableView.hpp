@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -55,13 +55,13 @@ class OSDragableView : public QWidget
 
   protected:
 
-  void mouseReleaseEvent(QMouseEvent* event);
+  void mouseReleaseEvent(QMouseEvent* event) override;
 
-  void mousePressEvent(QMouseEvent* event);
+  void mousePressEvent(QMouseEvent* event) override;
 
-  void mouseMoveEvent(QMouseEvent*event);
+  void mouseMoveEvent(QMouseEvent*event) override;
 
-  void leaveEvent(QEvent* event);
+  void leaveEvent(QEvent* event) override;
 
   private:
 

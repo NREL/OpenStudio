@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -43,7 +43,9 @@ namespace runmanager {
 
       ToolVersion(int t_major, int t_minor, int t_build);
 
-      ToolVersion(boost::optional<int> t_major, boost::optional<int> t_minor, boost::optional<int> t_build);
+      ToolVersion(int t_major, int t_minor, int t_build, std::string t_tag);
+
+      ToolVersion(boost::optional<int> t_major, boost::optional<int> t_minor, boost::optional<int> t_build, boost::optional<std::string> t_tag);
 
       /// \returns true if no part of the ToolVersion info is set
       bool empty() const;
@@ -78,18 +80,14 @@ namespace runmanager {
       /// \returns the build version number
       boost::optional<int> getBuild() const;
 
+      /// \returns the build tag (SHA/MD5/whatever) if set
+      boost::optional<std::string> getTag() const;
+
     private:
-      /// Helper for comparing two optional values, checking to see if they are set or not
-      /// \returns true if the values are equal, or if neither optional is set
-      static bool optional_equal(const boost::optional<int> &lhs, const boost::optional<int> &rhs);
-
-      /// Helper for comparing two optional values.
-      /// \returns true if both are set and lhs < rhs. true if lhs is not set and rhs is set. False otherwise
-      static bool optional_less_than(const boost::optional<int> &lhs, const boost::optional<int> &rhs);
-
       boost::optional<int> m_major;
       boost::optional<int> m_minor;
       boost::optional<int> m_build;
+      boost::optional<std::string> m_tag;
   };
 
 

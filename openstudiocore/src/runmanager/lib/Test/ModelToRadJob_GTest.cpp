@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -29,6 +29,7 @@
 
 #include "../../../model/Model.hpp"
 
+#include "../../../utilities/core/Application.hpp"
 #include "../../../utilities/idf/IdfFile.hpp"
 #include "../../../utilities/idf/IdfObject.hpp"
 #include "../../../utilities/data/EndUses.hpp"
@@ -47,6 +48,7 @@ using openstudio::SqlFile;
 
 TEST_F(RunManagerTestFixture, ModelToRadJob)
 {
+  openstudio::Application::instance().application(false);
   openstudio::path outdir = openstudio::toPath(QDir::tempPath()) / openstudio::toPath("ModelToRadJobRunTest");
   boost::filesystem::create_directories(outdir);
   openstudio::path db = outdir / openstudio::toPath("ModelToRadJobRunDB");

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -31,6 +31,7 @@
 #include "../analysisdriver/AnalysisDriverEnums.hpp"
 
 #include "../model/Model.hpp"
+#include "../utilities/idf/Workspace.hpp"
 
 #include "../shared_gui_components/BaseApp.hpp"
 #include "../shared_gui_components/BuildingComponentDialog.hpp"
@@ -104,9 +105,9 @@ class PatApp : public QApplication, public BaseApp
 
   openstudio::path resourcesPath() const; 
 
-  virtual bool notify(QObject* receiver, QEvent* event);
+  virtual bool notify(QObject* receiver, QEvent* event) override;
 
-  boost::optional<analysisdriver::SimpleProject> project() {return m_project;}
+  boost::optional<analysisdriver::SimpleProject> project() override {return m_project;}
 
   QSharedPointer<CloudMonitor> cloudMonitor() const;
 
@@ -130,7 +131,7 @@ class PatApp : public QApplication, public BaseApp
   // Will return false if there is no current project to save.
   bool userInteractiveSaveAsProject();
 
-  virtual QWidget *mainWidget(); 
+  virtual QWidget *mainWidget() override; 
 
   // The main window associated with this application.
   QPointer<PatMainWindow> mainWindow;
@@ -145,16 +146,21 @@ class PatApp : public QApplication, public BaseApp
 
   QSharedPointer<RunTabController> runTabController() const;
 
-  MeasureManager &measureManager();
+  MeasureManager &measureManager() override;
 
   const MeasureManager &measureManager() const;
 
-  boost::optional<openstudio::model::Model> currentModel()
+  boost::optional<openstudio::model::Model> currentModel() override
   {
     return boost::none; // Pat doesn't edit models
   }
 
-  virtual void updateSelectedMeasureState();
+  boost::optional<openstudio::Workspace> currentWorkspace() override
+  {
+    return boost::none; // Pat doesn't edit models
+  }
+
+  virtual void updateSelectedMeasureState() override;
 
   // The settings associated with the current user
   // independent of a particular project.
@@ -176,9 +182,9 @@ class PatApp : public QApplication, public BaseApp
     EDIT 
   };
 
-  virtual void chooseHorizontalEditTab();
+  virtual void chooseHorizontalEditTab() override;
 
-  virtual QSharedPointer<EditController> editController();
+  virtual QSharedPointer<EditController> editController() override;
 
  signals:
 
@@ -202,7 +208,7 @@ class PatApp : public QApplication, public BaseApp
 
   void exportSpreadsheet();
 
-  void openBclDlg();
+  void openBclDlg() override;
 
   void on_closeBclDlg();
 
@@ -218,15 +224,15 @@ class PatApp : public QApplication, public BaseApp
 
   void showAbout();
 
-  void addMeasure();
+  void addMeasure() override;
 
-  void duplicateSelectedMeasure();
+  void duplicateSelectedMeasure() override;
 
-  void updateMyMeasures();
+  void updateMyMeasures() override;
 
-  void updateBCLMeasures();
+  void updateBCLMeasures() override;
 
-  void downloadUpdatedBCLMeasures();
+  void downloadUpdatedBCLMeasures() override;
 
   // Consider removing this in favor of setAppState()
   void disableTabsDuringRun();

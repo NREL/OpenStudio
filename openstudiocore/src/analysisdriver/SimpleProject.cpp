@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -1289,12 +1289,20 @@ namespace detail {
     BCLMeasure replaceModelMeasure = insertMeasure(*it);
     RubyMeasure swapModel(replaceModelMeasure,false); // false so not used in algorithms
     swapModel.setName("Alternate Model: " + toString(newPath.filename()));
-    // hard-code argument since can't get arguments from library
+    swapModel.setDisplayName("Alternate Model: " + toString(newPath.filename()));
+    // hard-code arguments since can't get arguments from library
+    OSArgumentVector args;
     OSArgument arg = OSArgument::makePathArgument("alternativeModelPath",true,"osm");
     arg.setDisplayName("Alternative Model Path");
     arg.setValue(newPath);
-    swapModel.setArgument(arg);
+    args.push_back(arg);
+    arg = OSArgument::makeStringArgument("measures_json", true);
+    arg.setDisplayName("Alternative Measures");
+    arg.setValue("[]");
+    args.push_back(arg);
+    swapModel.setArguments(args);
     amvar.push(swapModel);
+
     int pIndex = amvar.numMeasures(false) - 1;
 
     // add data point
@@ -1341,6 +1349,7 @@ namespace detail {
     bool ok = analysis.addDataPoint(dataPoint.get());
     OS_ASSERT(ok);
     dataPoint->setName(swapModel.name());
+    dataPoint->setDisplayName(swapModel.displayName());
     dataPoint->setDescription("Replace baseline model with '" + toString(newPath) + "'.");
 
     return true;
@@ -2179,36 +2188,7 @@ boost::optional<SimpleProject> SimpleProject::open(const openstudio::path& proje
 {
   OptionalSimpleProject result;
 
-  if (!boost::filesystem::exists(projectDir) || !boost::filesystem::is_directory(projectDir)) {
-    LOG(Error,"Cannot open a SimpleProject at " << toString(projectDir) << ", because it either "
-        << "does not exist or is not a directory.");
-    return result;
-  }
-
-  openstudio::path projectDatabasePath;
-  for (boost::filesystem::directory_iterator it(projectDir),
-       itEnd = boost::filesystem::directory_iterator(); it != itEnd; ++it)
-  {
-    if (boost::filesystem::is_regular_file(it->status()))
-    {
-      // check for osp extension
-      openstudio::path p = it->path();
-      std::string ext = getFileExtension(p);
-      if (ext != "osp") {
-        continue;
-      }
-
-      // if projectDatabasePath already defined, log error and return
-      if (!projectDatabasePath.empty()) {
-        LOG(Error,"Cannot open a SimpleProject at " << toString(projectDir) << ", because it "
-            << "contains multiple ProjectDatabases.");
-        return result;
-      }
-
-      // otherwise keep
-      projectDatabasePath = p;
-    }
-  }
+  openstudio::path projectDatabasePath = getProjectDatabasePath(projectDir);
 
   OptionalProjectDatabase database = ProjectDatabase::open(
         projectDatabasePath,
@@ -2305,6 +2285,80 @@ boost::optional<SimpleProject> SimpleProject::create(const openstudio::path& pro
                                                           options)));
 
   return result;
+}
+
+bool SimpleProject::isExistingSimpleProject(const openstudio::path& projectDir)
+{
+  // DLM: duplicates some functionality in open
+
+  openstudio::path projectDatabasePath = getProjectDatabasePath(projectDir);
+  if (!boost::filesystem::exists(projectDatabasePath)) {
+    return false;
+  }
+
+  // todo: check that there is only one analysis in the database
+
+  return ProjectDatabase::isExistingProjectDatabase(projectDatabasePath);
+}
+
+bool SimpleProject::requiresUpdate(const openstudio::path& projectDir)
+{
+  // DLM: duplicates some functionality in open
+
+  openstudio::path projectDatabasePath = getProjectDatabasePath(projectDir);
+  if (!boost::filesystem::exists(projectDatabasePath)) {
+    return false;
+  }
+
+  // todo: check all the workflow stuff?
+
+  return ProjectDatabase::requiresUpdate(projectDatabasePath);
+}
+
+openstudio::path SimpleProject::getProjectDatabasePath(const openstudio::path& projectDir)
+{
+  openstudio::path projectDatabasePath;
+
+  if (!boost::filesystem::exists(projectDir) || !boost::filesystem::is_directory(projectDir)) {
+    LOG(Error, "Cannot open a SimpleProject at " << toString(projectDir) << ", because it either "
+        << "does not exist or is not a directory.");
+    return projectDatabasePath;
+  }
+
+  for (boost::filesystem::directory_iterator it(projectDir),
+       itEnd = boost::filesystem::directory_iterator(); it != itEnd; ++it)
+  {
+    if (boost::filesystem::is_regular_file(it->status()))
+    {
+      // check for osp extension
+      openstudio::path p = it->path();
+      std::string ext = getFileExtension(p);
+      if (ext != "osp") {
+        continue;
+      }
+
+      // if projectDatabasePath already defined, log error and return
+      if (!projectDatabasePath.empty()) {
+        // DLM: handle case where osp was copied to bad-project.osp
+        if ("bad-project.osp" == projectDatabasePath.filename()){
+          // replace projectDatabasePath with p
+          projectDatabasePath = p;
+        } else if ("bad-project.osp" == p.filename()){
+          // keep projectDatabasePath
+        } else{
+          // unknown which osp path to prefer
+          LOG(Error, "Cannot open a SimpleProject at " << toString(projectDir) << ", because it "
+              << "contains multiple ProjectDatabases.");
+          return openstudio::path();
+        }
+      }
+
+      // otherwise keep
+      projectDatabasePath = p;
+    }
+  }
+
+  return projectDatabasePath;
 }
 
 openstudio::path SimpleProject::projectDir() const {
@@ -2551,6 +2605,9 @@ boost::optional<SimpleProject> openPATProject(const openstudio::path& projectDir
   OptionalSimpleProject result = SimpleProject::open(projectDir,options);
   if (result) {
     bool save(false);
+
+    // DLM: changes to this workflow should really be done in version translation
+    // I am not going to try to test for this to allow user to cancel before new workflow steps are inserted
 
     // check for swap variable, try to add if not present
     if (!result->getAlternativeModelVariable()) {

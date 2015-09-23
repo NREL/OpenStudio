@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -38,6 +38,8 @@
 #include "Construction_Impl.hpp"
 #include "DaylightingDeviceShelf.hpp"
 #include "DaylightingDeviceShelf_Impl.hpp"
+#include "WindowPropertyFrameAndDivider.hpp"
+#include "WindowPropertyFrameAndDivider_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -444,6 +446,26 @@ namespace detail {
     return getObject<SubSurface>().getModelObjectTarget<ShadingControl>(OS_SubSurfaceFields::ShadingControlName);
   }
 
+  bool SubSurface_Impl::allowWindowPropertyFrameAndDivider() const
+  {
+    bool result = false;
+
+    std::string subSurfaceType = this->subSurfaceType();
+    if (istringEqual("FixedWindow", subSurfaceType) ||
+        istringEqual("OperableWindow", subSurfaceType) ||
+        istringEqual("GlassDoor", subSurfaceType))
+    {
+      result = true;
+    }
+
+    return result;
+  }
+
+  boost::optional<WindowPropertyFrameAndDivider> SubSurface_Impl::windowPropertyFrameAndDivider() const
+  {
+    return getObject<SubSurface>().getModelObjectTarget<WindowPropertyFrameAndDivider>(OS_SubSurfaceFields::FrameandDividerName);
+  }
+
   double SubSurface_Impl::multiplier() const {
     boost::optional<double> value = getDouble(OS_SubSurfaceFields::Multiplier,true);
     OS_ASSERT(value);
@@ -477,6 +499,10 @@ namespace detail {
 
       if (!allowShadingControl()){
         this->resetShadingControl();
+      }
+
+      if (!allowWindowPropertyFrameAndDivider()){
+        this->resetWindowPropertyFrameAndDivider();
       }
 
       if (!allowDaylightingDeviceShelf()){
@@ -533,6 +559,21 @@ namespace detail {
   {
     bool result = setString(OS_SubSurfaceFields::ShadingControlName, "");
     OS_ASSERT(result);  
+  }
+
+  bool SubSurface_Impl::setWindowPropertyFrameAndDivider(const WindowPropertyFrameAndDivider& windowPropertyFrameAndDivider)
+  {
+    bool result = false;
+    if (allowWindowPropertyFrameAndDivider()){
+      result = setPointer(OS_SubSurfaceFields::FrameandDividerName, windowPropertyFrameAndDivider.handle());
+    }
+    return result;
+  }
+
+  void SubSurface_Impl::resetWindowPropertyFrameAndDivider()
+  {
+    bool result = setString(OS_SubSurfaceFields::FrameandDividerName, "");
+    OS_ASSERT(result);
   }
 
   bool SubSurface_Impl::setMultiplier(double multiplier) {
@@ -711,7 +752,17 @@ namespace detail {
         }
 
         if (thisMinZ <= surfaceMinZ){
-          result = "Door";
+          bool isGlassDoor = false;
+          boost::optional<ConstructionBase> construction = this->construction();
+          if (construction && construction->isFenestration()){
+            isGlassDoor = true;
+          }
+
+          if (isGlassDoor){
+            result = "GlassDoor";
+          }else{
+            result = "Door";
+          }
         }else{
           result = "FixedWindow";
         }
@@ -984,6 +1035,16 @@ boost::optional<ShadingControl> SubSurface::shadingControl() const
   return getImpl<detail::SubSurface_Impl>()->shadingControl();
 }
 
+bool SubSurface::allowWindowPropertyFrameAndDivider() const
+{
+  return getImpl<detail::SubSurface_Impl>()->allowWindowPropertyFrameAndDivider();
+}
+
+boost::optional<WindowPropertyFrameAndDivider> SubSurface::windowPropertyFrameAndDivider() const
+{
+  return getImpl<detail::SubSurface_Impl>()->windowPropertyFrameAndDivider();
+}
+
 double SubSurface::multiplier() const {
   return getImpl<detail::SubSurface_Impl>()->multiplier();
 }
@@ -1054,6 +1115,16 @@ bool SubSurface::setShadingControl(const ShadingControl& shadingControl) {
 
 void SubSurface::resetShadingControl() {
   getImpl<detail::SubSurface_Impl>()->resetShadingControl();
+}
+
+bool SubSurface::setWindowPropertyFrameAndDivider(const WindowPropertyFrameAndDivider& windowPropertyFrameAndDivider)
+{
+  return getImpl<detail::SubSurface_Impl>()->setWindowPropertyFrameAndDivider(windowPropertyFrameAndDivider);
+}
+
+void SubSurface::resetWindowPropertyFrameAndDivider()
+{
+  getImpl<detail::SubSurface_Impl>()->resetWindowPropertyFrameAndDivider();
 }
 
 boost::optional<Surface> SubSurface::surface() const {

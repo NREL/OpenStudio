@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -331,7 +331,7 @@ bool ZoneImpl::setP0(const double P0)
   return true;
 }
 
-bool ZoneImpl::setP0(const std::string P0)
+bool ZoneImpl::setP0(const std::string &P0)
 {
   bool ok;
   FLOAT_CHECK(P0,&ok);
@@ -428,7 +428,7 @@ std::string ZoneImpl::cfdname() const
   return m_cfdname;
 }
 
-void ZoneImpl::setCfdname(const std::string cfdname)
+void ZoneImpl::setCfdname(const std::string &cfdname)
 {
   m_cfdname = cfdname;
 }

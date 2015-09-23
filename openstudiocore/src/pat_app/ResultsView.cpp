@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -987,23 +987,7 @@ void DataPointResultsView::update()
   else{
 
     name = m_dataPoint.name().c_str();
-
-    boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
-    if(project){
-      openstudio::analysis::Problem problem = project->analysis().problem();
-      std::vector<QVariant> variableValues = m_dataPoint.variableValues();
-      std::vector<boost::optional<analysis::Measure> > measures = problem.getMeasures(variableValues);
-      for (boost::optional<analysis::Measure> measure : measures) {
-        if (measure){
-          if (!measure->optionalCast<analysis::NullMeasure>()){
-            listOfMeasures += measure->name().c_str();
-            listOfMeasures += '\n';
-          }
-        }
-      }
-    }
-
-    listOfMeasures = listOfMeasures.trimmed();
+    listOfMeasures = getListOfMeasures(m_dataPoint);
 
     netSiteEnergyIntensity = getDifference("Net Site Energy Use Intensity");
     peakElectricDemand = getDifference("Instantaneous Peak Electricity Demand");
@@ -1442,8 +1426,19 @@ void DataPointCalibrationView::update()
   hLayout->setSpacing(0);
   this->setLayout(hLayout);
 
+  QString name;
+  QString listOfMeasures;
   QString style("QLabel {color: black;}");
   QString borderStyle("QLabel {border-right: 1px solid black; color: black;}");
+
+  name = m_dataPoint.name().c_str();
+
+  if (name == "Baseline") {
+    listOfMeasures = name;
+  }
+  else {
+    listOfMeasures = getListOfMeasures(m_dataPoint);
+  }
 
   m_nameLabel = new QLabel();
   m_nameLabel->setWordWrap(true);
@@ -1451,7 +1446,8 @@ void DataPointCalibrationView::update()
   m_nameLabel->setMinimumWidth(NAME_LABEL_WIDTH);
   //m_nameLabel->setFixedWidth(NAME_LABEL_WIDTH);
   m_nameLabel->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
-  m_nameLabel->setText(m_dataPoint.name().c_str());
+  m_nameLabel->setText(name);
+  m_nameLabel->setToolTip(listOfMeasures);
   hLayout->addWidget(m_nameLabel);
   hLayout->setStretchFactor(m_nameLabel, 100);
 
@@ -1468,18 +1464,21 @@ void DataPointCalibrationView::update()
       boost::optional<double> cvrmse = getCVRMSE(fuelType, m_dataPoint);
 
       auto label = new QLabel();
+      QString text;
       label->setStyleSheet(style);
       label->setFixedWidth(CALIBRATION_LABEL_WIDTH);
       label->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
       if (nmbe){
         if (std::abs(*nmbe) > m_calibrationMaxNMBE){
-          label->setText("<font color=\"red\">" + QString::number(*nmbe, 'f', 2) + "%</font>");
+          text = "<font color=\"red\">" + QString::number(*nmbe, 'f', 2) + "%</font>";
         }else{
-          label->setText(QString::number(*nmbe, 'f', 2) + "%");
+          text = QString::number(*nmbe, 'f', 2) + "%";
         }
       }else{
-        label->setText("--");
+        text = "--";
       }
+      label->setText(text);
+      label->setToolTip(text);
       hLayout->addWidget(label);
 
       label = new QLabel();
@@ -1488,13 +1487,15 @@ void DataPointCalibrationView::update()
       label->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
       if (cvrmse){
         if (*cvrmse > m_calibrationMaxCVRMSE){
-          label->setText("<font color=\"red\">" + QString::number(*cvrmse, 'f', 2) + "%</font>");
+          text = "<font color=\"red\">" + QString::number(*cvrmse, 'f', 2) + "%</font>";
         }else{
-          label->setText(QString::number(*cvrmse, 'f', 2) + "%");
+          text = QString::number(*cvrmse, 'f', 2) + "%";
         }
       }else{
-        label->setText("--");
+        text = "--";
       }
+      label->setText(text);
+      label->setToolTip(text);
       hLayout->addWidget(label);
     }
   }
@@ -1545,6 +1546,29 @@ void DataPointCalibrationView::paintEvent(QPaintEvent * e)
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
+QString getListOfMeasures(const openstudio::analysis::DataPoint & dataPoint)
+{
+  QString listOfMeasures;
+
+  boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+  if (project){
+    openstudio::analysis::Problem problem = project->analysis().problem();
+    std::vector<QVariant> variableValues = dataPoint.variableValues();
+    std::vector<boost::optional<analysis::Measure> > measures = problem.getMeasures(variableValues);
+    for (boost::optional<analysis::Measure> measure : measures) {
+      if (measure){
+        if (!measure->optionalCast<analysis::NullMeasure>()){
+          listOfMeasures += measure->name().c_str();
+          listOfMeasures += '\n';
+        }
+      }
+    }
+  }
+
+  listOfMeasures = listOfMeasures.trimmed();
+
+  return listOfMeasures;
+}
 
 } // pat
 

@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -156,13 +156,18 @@ module OpenStudio
       # parent is the containing entity except for sub surfaces
       
       if (@parent.nil?)
-        # Create a new space just for this surface.
-        Plugin.log(OpenStudio::Warn, "Creating containing SurfaceGroup for PlanarSurface #{@model_object.name}")
-        
-        @parent = @container_class.new
-        @parent.create_model_object
-        @parent.draw_entity
-        @parent.add_child(self)  # Would be nice to not have to call this
+      #  # Create a new group just for this surface.
+      #  Plugin.log(OpenStudio::Warn, "Creating containing SurfaceGroup for PlanarSurface #{@model_object.name}")
+      #  
+      #  @parent = @container_class.new
+      #  @parent.create_model_object
+      #  @model_object.setParent(@parent.model_object)
+      #  @parent.draw_entity
+      #  @parent.add_child(self)  # Would be nice to not have to call this
+      
+        # how did this happen?
+        Plugin.log(OpenStudio::Error, "Parent #{@parent} is nil, cannot create entity for #{@model_object.name}")
+        return nil
       end
       
       if @parent.deleted?
@@ -193,7 +198,7 @@ module OpenStudio
         
       begin
         @entity = containing_entity.entities.add_face(new_points)
-      rescue RuntimeError, ArgumentError, TypeError, Exception => error
+      rescue StandardError => error
         error_msg  = "containing_entity.entities.add_face failed: #{error.message} (#{error.class})"
         puts error_msg
         Plugin.log(OpenStudio::Error, error_msg)

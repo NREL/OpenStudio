@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -105,317 +105,278 @@ void SqliteMerge::mergeFiles()
 
 void SqliteMerge::dropTabularData(sqlite3 *db)
 {
-  std::stringstream cmd;
-  cmd << "delete from tabulardata";
-  executeCommand(db, cmd.str().c_str());
+  executeCommand(db, "DELETE FROM tabulardata");
 }
 
 void SqliteMerge::createABUPS(sqlite3 *db)
 {
-  std::stringstream cmd;
-  cmd << "CREATE TABLE ABUPS (Rowindex INTEGER PRIMARY KEY, EndUseName TEXT, Electricity REAL, ";
-  cmd << "NaturalGas REAL, OtherFuel REAL, DistrictCooling REAL, DistrictHeating REAL, Water REAL)";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  std::string cmd = "CREATE TABLE ABUPS (Rowindex INTEGER PRIMARY KEY, EndUseName TEXT, Electricity REAL, "
+    "NaturalGas REAL, OtherFuel REAL, DistrictCooling REAL, DistrictHeating REAL, Water REAL)";
+  executeCommand(db, cmd);
 
-  cmd << "INSERT INTO ABUPS (EndUseName) VALUES ('Heating'); ";
-  cmd << "INSERT INTO ABUPS (EndUseName) VALUES ('Cooling'); ";
-  cmd << "INSERT INTO ABUPS (EndUseName) VALUES ('Interior Lighting'); ";
-  cmd << "INSERT INTO ABUPS (EndUseName) VALUES ('Exterior Lighting'); ";
-  cmd << "INSERT INTO ABUPS (EndUseName) VALUES ('Interior Equipment'); ";
-  cmd << "INSERT INTO ABUPS (EndUseName) VALUES ('Exterior Equipment'); ";
-  cmd << "INSERT INTO ABUPS (EndUseName) VALUES ('Fans'); ";
-  cmd << "INSERT INTO ABUPS (EndUseName) VALUES ('Pumps'); ";
-  cmd << "INSERT INTO ABUPS (EndUseName) VALUES ('Heat Rejection'); ";
-  cmd << "INSERT INTO ABUPS (EndUseName) VALUES ('Humidification'); ";
-  cmd << "INSERT INTO ABUPS (EndUseName) VALUES ('Heat Recovery'); ";
-  cmd << "INSERT INTO ABUPS (EndUseName) VALUES ('Water Systems'); ";
-  cmd << "INSERT INTO ABUPS (EndUseName) VALUES ('Refrigeration'); ";
-  cmd << "INSERT INTO ABUPS (EndUseName) VALUES ('Generators'); ";
-  cmd << "INSERT INTO ABUPS (EndUseName) VALUES ('TotalEndUses'); ";
-  cmd << "UPDATE ABUPS SET Electricity =  0; ";
-  cmd << "UPDATE ABUPS SET NaturalGas =  0; ";
-  cmd << "UPDATE ABUPS SET OtherFuel =  0; ";
-  cmd << "UPDATE ABUPS SET DistrictCooling =  0; ";
-  cmd << "UPDATE ABUPS SET DistrictHeating =  0; ";
-  cmd << "UPDATE ABUPS SET Water =  0; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "INSERT INTO ABUPS (EndUseName) VALUES ('Heating'); "
+    "INSERT INTO ABUPS (EndUseName) VALUES ('Cooling'); "
+    "INSERT INTO ABUPS (EndUseName) VALUES ('Interior Lighting'); "
+    "INSERT INTO ABUPS (EndUseName) VALUES ('Exterior Lighting'); "
+    "INSERT INTO ABUPS (EndUseName) VALUES ('Interior Equipment'); "
+    "INSERT INTO ABUPS (EndUseName) VALUES ('Exterior Equipment'); "
+    "INSERT INTO ABUPS (EndUseName) VALUES ('Fans'); "
+    "INSERT INTO ABUPS (EndUseName) VALUES ('Pumps'); "
+    "INSERT INTO ABUPS (EndUseName) VALUES ('Heat Rejection'); "
+    "INSERT INTO ABUPS (EndUseName) VALUES ('Humidification'); "
+    "INSERT INTO ABUPS (EndUseName) VALUES ('Heat Recovery'); "
+    "INSERT INTO ABUPS (EndUseName) VALUES ('Water Systems'); "
+    "INSERT INTO ABUPS (EndUseName) VALUES ('Refrigeration'); "
+    "INSERT INTO ABUPS (EndUseName) VALUES ('Generators'); "
+    "INSERT INTO ABUPS (EndUseName) VALUES ('TotalEndUses'); "
+    "UPDATE ABUPS SET Electricity =  0; "
+    "UPDATE ABUPS SET NaturalGas =  0; "
+    "UPDATE ABUPS SET OtherFuel =  0; "
+    "UPDATE ABUPS SET DistrictCooling =  0; "
+    "UPDATE ABUPS SET DistrictHeating =  0; "
+    "UPDATE ABUPS SET Water =  0; ";
+  executeCommand(db, cmd);
+
   //heating
-  cmd << "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'Heating:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Heating'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'Heating:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Heating'; ";
+  executeCommand(db, cmd);
 
-  cmd << "UPDATE ABUPS SET NaturalGas = NaturalGas + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'Heating:Gas' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Heating'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "UPDATE ABUPS SET NaturalGas = NaturalGas + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'Heating:Gas' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Heating'; ";
+  executeCommand(db, cmd);
 
-  cmd << "UPDATE ABUPS SET DistrictHeating = DistrictHeating + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'Heating:DistrictHeating' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Heating'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "UPDATE ABUPS SET DistrictHeating = DistrictHeating + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'Heating:DistrictHeating' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Heating'; ";
+  executeCommand(db, cmd);
+
   //cooling
+  cmd = "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'Cooling:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Cooling'; ";
+  executeCommand(db, cmd);
 
-  cmd << "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'Cooling:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Cooling'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "UPDATE ABUPS SET NaturalGas = NaturalGas + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'Cooling:Gas' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Cooling'; ";
+  executeCommand(db, cmd);
 
-  cmd << "UPDATE ABUPS SET NaturalGas = NaturalGas + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'Cooling:Gas' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Cooling'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
-
-  cmd << "UPDATE ABUPS SET DistrictCooling = DistrictCooling + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'Cooling:DistrictCooling' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Cooling'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "UPDATE ABUPS SET DistrictCooling = DistrictCooling + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'Cooling:DistrictCooling' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Cooling'; ";
+  executeCommand(db, cmd);
 
   //Interior Lighting
-  cmd << "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'InteriorLights:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Interior Lighting'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'InteriorLights:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Interior Lighting'; ";
+  executeCommand(db, cmd);
 
   //Exterior Lighting
-  cmd << "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'ExteriorLights:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Exterior Lighting'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string  
+  cmd = "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'ExteriorLights:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Exterior Lighting'; ";
+  executeCommand(db, cmd);
 
   //Interior Equipment
-  cmd << "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'InteriorEquipment:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Interior Equipment'; ";
+  cmd = "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'InteriorEquipment:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Interior Equipment'; ";
+  executeCommand(db, cmd);
 
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string     
-  cmd << "UPDATE ABUPS SET NaturalGas = NaturalGas + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'InteriorEquipment:Gas' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Interior Equipment'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "UPDATE ABUPS SET NaturalGas = NaturalGas + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'InteriorEquipment:Gas' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Interior Equipment'; ";
+  executeCommand(db, cmd);
 
   // Exterior Equipment
-  cmd << "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'ExteriorEquipment:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Exterior Equipment'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'ExteriorEquipment:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Exterior Equipment'; ";
+  executeCommand(db, cmd);
 
-  cmd << "UPDATE ABUPS SET NaturalGas = NaturalGas + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'ExteriorEquipment:Gas' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Exterior Equipment'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "UPDATE ABUPS SET NaturalGas = NaturalGas + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'ExteriorEquipment:Gas' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Exterior Equipment'; ";
+  executeCommand(db, cmd);
 
   // Fans
-  cmd << "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'Fans:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Fans'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'Fans:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Fans'; ";
+  executeCommand(db, cmd);
 
   // Pumps
-  cmd << "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'Pumps:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Pumps'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'Pumps:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Pumps'; ";
+  executeCommand(db, cmd);
 
   //Heat Rejection
-  cmd << "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'HeatRejection:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Heat Rejection'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'HeatRejection:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Heat Rejection'; ";
+  executeCommand(db, cmd);
 
-  cmd << "UPDATE ABUPS SET OtherFuel = OtherFuel + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'HeatRejection:EnergyTransfer' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Heat Rejection'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "UPDATE ABUPS SET OtherFuel = OtherFuel + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'HeatRejection:EnergyTransfer' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Heat Rejection'; ";
+  executeCommand(db, cmd);
 
-  cmd << "UPDATE ABUPS SET Water = Water + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'HeatRejection:Water' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Heat Rejection'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "UPDATE ABUPS SET Water = Water + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'HeatRejection:Water' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Heat Rejection'; ";
+  executeCommand(db, cmd);
 
   //  Humidification
-  cmd << "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'Humidifier:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Humidification'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'Humidifier:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Humidification'; ";
+  executeCommand(db, cmd);
 
-  cmd << "UPDATE ABUPS SET Water = Water + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'Humidifier:Water' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Humidification'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string 
+  cmd = "UPDATE ABUPS SET Water = Water + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'Humidifier:Water' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Humidification'; ";
+  executeCommand(db, cmd);
 
   //  Heat Recovery 
-  cmd << "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'HeatRecovery:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Heat Recovery'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'HeatRecovery:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Heat Recovery'; ";
+  executeCommand(db, cmd);
 
   // Water Systems
-  cmd << "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'WaterSystems:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Water Systems'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'WaterSystems:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Water Systems'; ";
+  executeCommand(db, cmd);
 
-  cmd << "UPDATE ABUPS SET NaturalGas = NaturalGas + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'WaterSystems:Gas' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Water Systems'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "UPDATE ABUPS SET NaturalGas = NaturalGas + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'WaterSystems:Gas' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Water Systems'; ";
+  executeCommand(db, cmd);
 
-  cmd << "UPDATE ABUPS SET Water = Water + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'WaterSystems:Water' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Water Systems'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "UPDATE ABUPS SET Water = Water + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'WaterSystems:Water' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Water Systems'; ";
+  executeCommand(db, cmd);
 
   //  Refrigeration 
-  cmd << "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'Refrigeration:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Refrigeration'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'Refrigeration:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Refrigeration'; ";
+  executeCommand(db, cmd);
 
   //  Generators
-  cmd << "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'CoGeneration:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Generators'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "UPDATE ABUPS SET Electricity = Electricity + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'CoGeneration:Electricity' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Generators'; ";
+  executeCommand(db, cmd);
 
-  cmd << "UPDATE ABUPS SET NaturalGas = NaturalGas + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM ";
-  cmd << "time,reportmeterdata,reportmeterdatadictionary where ";
-  cmd << "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and ";
-  cmd << "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'CoGeneration:Gas' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Generators'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "UPDATE ABUPS SET NaturalGas = NaturalGas + (SELECT CASE WHEN sum(reportmeterdata.variablevalue) is not NULL THEN  sum(reportmeterdata.variablevalue) ELSE 0 END FROM "
+    "time,reportmeterdata,reportmeterdatadictionary where "
+    "time.daytype != 'WinterDesignDay' and time.daytype != 'SummerDesignDay' and time.daytype != 'customday1' and time.daytype != 'customday2' and time.timeindex = reportmeterdata.timeindex and "
+    "reportmeterdata.reportmeterdatadictionaryindex = reportmeterdatadictionary.reportmeterdatadictionaryindex and reportmeterdatadictionary.variablename = 'CoGeneration:Gas' and reportmeterdatadictionary.reportingfrequency = 'Hourly') where EndUseName = 'Generators'; ";
+  executeCommand(db, cmd);
 
   //TotalEndUses
-  cmd << "UPDATE ABUPS SET Electricity = (select Sum(Electricity) from ABUPS) where EndUseName = 'TotalEndUses'; ";
-  cmd << "UPDATE ABUPS SET NaturalGas = (select Sum(NaturalGas) from ABUPS) where EndUseName = 'TotalEndUses'; ";
-  cmd << "UPDATE ABUPS SET OtherFuel = (select Sum(OtherFuel) from ABUPS) where EndUseName = 'TotalEndUses'; ";
-  cmd << "UPDATE ABUPS SET DistrictCooling = (select Sum(DistrictCooling) from ABUPS) where EndUseName = 'TotalEndUses'; ";
-  cmd << "UPDATE ABUPS SET DistrictHeating = (select Sum(DistrictHeating) from ABUPS) where EndUseName = 'TotalEndUses'; ";
-  cmd << "UPDATE ABUPS SET Water = (select Sum(Water) from ABUPS) where EndUseName = 'TotalEndUses'; ";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "UPDATE ABUPS SET Electricity = (select Sum(Electricity) from ABUPS) where EndUseName = 'TotalEndUses'; "
+    "UPDATE ABUPS SET NaturalGas = (select Sum(NaturalGas) from ABUPS) where EndUseName = 'TotalEndUses'; "
+    "UPDATE ABUPS SET OtherFuel = (select Sum(OtherFuel) from ABUPS) where EndUseName = 'TotalEndUses'; "
+    "UPDATE ABUPS SET DistrictCooling = (select Sum(DistrictCooling) from ABUPS) where EndUseName = 'TotalEndUses'; "
+    "UPDATE ABUPS SET DistrictHeating = (select Sum(DistrictHeating) from ABUPS) where EndUseName = 'TotalEndUses'; "
+    "UPDATE ABUPS SET Water = (select Sum(Water) from ABUPS) where EndUseName = 'TotalEndUses'; ";
+  executeCommand(db, cmd);
 }
 
 
 void SqliteMerge::createView(sqlite3 *db)
 {
-  std::stringstream cmd;
+  std::string cmd;
 
-  cmd << "CREATE VIEW 'Electricity:Facility:Monthly' AS ";
-  cmd << "SELECT Time.Month, Time.Day, Time.hour, Time.TimeIndex, ReportMeterData.VariableValue from Time, ReportMeterData, ";
-  cmd << "ReportMeterDataDictionary where (time.TimeIndex = ReportMeterData.TimeIndex) and (ReportMeterData.ReportMeterDataDictionaryIndex = ";
-  cmd << "ReportMeterDataDictionary.ReportMeterDataDictionaryIndex) and (ReportMeterDataDictionary.VariableName = 'Electricity:Facility' and ";
-  cmd << "ReportMeterDataDictionary.ReportingFrequency = 'Monthly')";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "CREATE VIEW 'Electricity:Facility:Monthly' AS "
+    "SELECT Time.Month, Time.Day, Time.hour, Time.TimeIndex, ReportMeterData.VariableValue from Time, ReportMeterData, "
+    "ReportMeterDataDictionary where (time.TimeIndex = ReportMeterData.TimeIndex) and (ReportMeterData.ReportMeterDataDictionaryIndex = "
+    "ReportMeterDataDictionary.ReportMeterDataDictionaryIndex) and (ReportMeterDataDictionary.VariableName = 'Electricity:Facility' and "
+    "ReportMeterDataDictionary.ReportingFrequency = 'Monthly')";
+  executeCommand(db, cmd);
 
-  cmd << "CREATE VIEW 'Electricity:Facility:Hourly' AS ";
-  cmd << "SELECT Time.Month, Time.Day, Time.hour, Time.TimeIndex, ReportMeterData.VariableValue from Time, ReportMeterData, ";
-  cmd << "ReportMeterDataDictionary where (time.TimeIndex = ReportMeterData.TimeIndex) and (ReportMeterData.ReportMeterDataDictionaryIndex = ";
-  cmd << "ReportMeterDataDictionary.ReportMeterDataDictionaryIndex) and (ReportMeterDataDictionary.VariableName = 'Electricity:Facility' and ";
-  cmd << "ReportMeterDataDictionary.ReportingFrequency = 'Hourly')";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "CREATE VIEW 'Electricity:Facility:Hourly' AS "
+    "SELECT Time.Month, Time.Day, Time.hour, Time.TimeIndex, ReportMeterData.VariableValue from Time, ReportMeterData, "
+    "ReportMeterDataDictionary where (time.TimeIndex = ReportMeterData.TimeIndex) and (ReportMeterData.ReportMeterDataDictionaryIndex = "
+    "ReportMeterDataDictionary.ReportMeterDataDictionaryIndex) and (ReportMeterDataDictionary.VariableName = 'Electricity:Facility' and "
+    "ReportMeterDataDictionary.ReportingFrequency = 'Hourly')";
+  executeCommand(db, cmd);
 
-  cmd << "CREATE VIEW 'Gas:Facility:Monthly' AS ";
-  cmd << "SELECT Time.Month, Time.Day, Time.hour, Time.TimeIndex, ReportMeterData.VariableValue from Time, ReportMeterData, ";
-  cmd << "ReportMeterDataDictionary where (time.TimeIndex = ReportMeterData.TimeIndex) and (ReportMeterData.ReportMeterDataDictionaryIndex = ";
-  cmd << "ReportMeterDataDictionary.ReportMeterDataDictionaryIndex) and (ReportMeterDataDictionary.VariableName = 'Gas:Facility' and ";
-  cmd << "ReportMeterDataDictionary.ReportingFrequency = 'Monthly')";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "CREATE VIEW 'Gas:Facility:Monthly' AS "
+    "SELECT Time.Month, Time.Day, Time.hour, Time.TimeIndex, ReportMeterData.VariableValue from Time, ReportMeterData, "
+    "ReportMeterDataDictionary where (time.TimeIndex = ReportMeterData.TimeIndex) and (ReportMeterData.ReportMeterDataDictionaryIndex = "
+    "ReportMeterDataDictionary.ReportMeterDataDictionaryIndex) and (ReportMeterDataDictionary.VariableName = 'Gas:Facility' and "
+    "ReportMeterDataDictionary.ReportingFrequency = 'Monthly')";
+  executeCommand(db, cmd);
 
-  cmd << "CREATE VIEW 'Gas:Facility:Hourly' AS ";
-  cmd << "SELECT Time.Month, Time.Day, Time.hour, Time.TimeIndex, ReportMeterData.VariableValue from Time, ReportMeterData, ";
-  cmd << "ReportMeterDataDictionary where (time.TimeIndex = ReportMeterData.TimeIndex) and (ReportMeterData.ReportMeterDataDictionaryIndex = ";
-  cmd << "ReportMeterDataDictionary.ReportMeterDataDictionaryIndex) and (ReportMeterDataDictionary.VariableName = 'Gas:Facility' and ";
-  cmd << "ReportMeterDataDictionary.ReportingFrequency = 'Hourly')";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "CREATE VIEW 'Gas:Facility:Hourly' AS "
+    "SELECT Time.Month, Time.Day, Time.hour, Time.TimeIndex, ReportMeterData.VariableValue from Time, ReportMeterData, "
+    "ReportMeterDataDictionary where (time.TimeIndex = ReportMeterData.TimeIndex) and (ReportMeterData.ReportMeterDataDictionaryIndex = "
+    "ReportMeterDataDictionary.ReportMeterDataDictionaryIndex) and (ReportMeterDataDictionary.VariableName = 'Gas:Facility' and "
+    "ReportMeterDataDictionary.ReportingFrequency = 'Hourly')";
+  executeCommand(db, cmd);
 
-  cmd << "CREATE VIEW 'Fans:Electricity:Hourly' AS ";
-  cmd << "SELECT Time.Month, Time.Day, Time.hour, Time.TimeIndex, ReportMeterData.VariableValue from Time, ReportMeterData, ";
-  cmd << "ReportMeterDataDictionary where (time.TimeIndex = ReportMeterData.TimeIndex) and (ReportMeterData.ReportMeterDataDictionaryIndex = ";
-  cmd << "ReportMeterDataDictionary.ReportMeterDataDictionaryIndex) and (ReportMeterDataDictionary.VariableName = 'Fans:Electricity' and ";
-  cmd << "ReportMeterDataDictionary.ReportingFrequency = 'Hourly')";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "CREATE VIEW 'Fans:Electricity:Hourly' AS "
+    "SELECT Time.Month, Time.Day, Time.hour, Time.TimeIndex, ReportMeterData.VariableValue from Time, ReportMeterData, "
+    "ReportMeterDataDictionary where (time.TimeIndex = ReportMeterData.TimeIndex) and (ReportMeterData.ReportMeterDataDictionaryIndex = "
+    "ReportMeterDataDictionary.ReportMeterDataDictionaryIndex) and (ReportMeterDataDictionary.VariableName = 'Fans:Electricity' and "
+    "ReportMeterDataDictionary.ReportingFrequency = 'Hourly')";
+  executeCommand(db, cmd);
 
-  cmd << "CREATE VIEW 'Cooling:Electricity:Hourly' AS ";
-  cmd << "SELECT Time.Month, Time.Day, Time.hour, Time.TimeIndex, ReportMeterData.VariableValue from Time, ReportMeterData, ";
-  cmd << "ReportMeterDataDictionary where (time.TimeIndex = ReportMeterData.TimeIndex) and (ReportMeterData.ReportMeterDataDictionaryIndex = ";
-  cmd << "ReportMeterDataDictionary.ReportMeterDataDictionaryIndex) and (ReportMeterDataDictionary.VariableName = 'Cooling:Electricity' and ";
-  cmd << "ReportMeterDataDictionary.ReportingFrequency = 'Hourly')";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "CREATE VIEW 'Cooling:Electricity:Hourly' AS "
+    "SELECT Time.Month, Time.Day, Time.hour, Time.TimeIndex, ReportMeterData.VariableValue from Time, ReportMeterData, "
+    "ReportMeterDataDictionary where (time.TimeIndex = ReportMeterData.TimeIndex) and (ReportMeterData.ReportMeterDataDictionaryIndex = "
+    "ReportMeterDataDictionary.ReportMeterDataDictionaryIndex) and (ReportMeterDataDictionary.VariableName = 'Cooling:Electricity' and "
+    "ReportMeterDataDictionary.ReportingFrequency = 'Hourly')";
+  executeCommand(db, cmd);
 
-  cmd << "CREATE VIEW 'Heating:Gas:Hourly' AS ";
-  cmd << "SELECT Time.Month, Time.Day, Time.hour, Time.TimeIndex, ReportMeterData.VariableValue from Time, ReportMeterData, ";
-  cmd << "ReportMeterDataDictionary where (time.TimeIndex = ReportMeterData.TimeIndex) and (ReportMeterData.ReportMeterDataDictionaryIndex = ";
-  cmd << "ReportMeterDataDictionary.ReportMeterDataDictionaryIndex) and (ReportMeterDataDictionary.VariableName = 'Heating:Gas' and ";
-  cmd << "ReportMeterDataDictionary.ReportingFrequency = 'Hourly')";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "CREATE VIEW 'Heating:Gas:Hourly' AS "
+    "SELECT Time.Month, Time.Day, Time.hour, Time.TimeIndex, ReportMeterData.VariableValue from Time, ReportMeterData, "
+    "ReportMeterDataDictionary where (time.TimeIndex = ReportMeterData.TimeIndex) and (ReportMeterData.ReportMeterDataDictionaryIndex = "
+    "ReportMeterDataDictionary.ReportMeterDataDictionaryIndex) and (ReportMeterDataDictionary.VariableName = 'Heating:Gas' and "
+    "ReportMeterDataDictionary.ReportingFrequency = 'Hourly')";
+  executeCommand(db, cmd);
 
-  cmd << "CREATE VIEW 'InteriorLights:Electricity:Hourly' AS ";
-  cmd << "SELECT Time.Month, Time.Day, Time.hour, Time.TimeIndex, ReportMeterData.VariableValue from Time, ReportMeterData, ";
-  cmd << "ReportMeterDataDictionary where (time.TimeIndex = ReportMeterData.TimeIndex) and (ReportMeterData.ReportMeterDataDictionaryIndex = ";
-  cmd << "ReportMeterDataDictionary.ReportMeterDataDictionaryIndex) and (ReportMeterDataDictionary.VariableName = 'InteriorLights:Electricity' and ";
-  cmd << "ReportMeterDataDictionary.ReportingFrequency = 'Hourly')";
-  executeCommand(db, cmd.str().c_str());
-  cmd.str(std::string());  //clear out the string
+  cmd = "CREATE VIEW 'InteriorLights:Electricity:Hourly' AS "
+    "SELECT Time.Month, Time.Day, Time.hour, Time.TimeIndex, ReportMeterData.VariableValue from Time, ReportMeterData, "
+    "ReportMeterDataDictionary where (time.TimeIndex = ReportMeterData.TimeIndex) and (ReportMeterData.ReportMeterDataDictionaryIndex = "
+    "ReportMeterDataDictionary.ReportMeterDataDictionaryIndex) and (ReportMeterDataDictionary.VariableName = 'InteriorLights:Electricity' and "
+    "ReportMeterDataDictionary.ReportingFrequency = 'Hourly')";
+  executeCommand(db, cmd);
 }
 
 
@@ -425,7 +386,6 @@ void SqliteMerge::renameFinalDatabase(const openstudio::path &file)
   openstudio::path final_path =  m_working / openstudio::toPath(tmp.append(".sql"));
   boost::filesystem::remove_all( final_path);
   boost::filesystem::copy_file( file, final_path);
-  //std::cout << "creating " << final_path << std::endl;
 }
 
 
@@ -442,25 +402,18 @@ void SqliteMerge::loadFile(const openstudio::path &file)
 
 void SqliteMerge::summary(sqlite3 *db)
 {
-  //printNumberRows(db, "Time");
-  //printNumberRows(db, "ReportMeterData");
   printNumberRows(db, "Time");  
-  //ReturnNumberRows(db, "Time");  
-  //printNumberRows(db, "ReportMeterDataDictionary");
-  //printNumberRows(db, "ReportMeterExtendedData");
 }
 
 void SqliteMerge::printNumberRows(sqlite3 *db, const std::string &table)
 {
-  std::stringstream cmd;
-  cmd << "select count(*) from " << table;
+  std::string cmd = "select count(*) from " + table;
   std::cout << "\t" << table << " ";
   char *zErrMsg = nullptr;
-  int rc = sqlite3_exec(db, cmd.str().c_str(),
+  int rc = sqlite3_exec(db, cmd.c_str(),
       rowCount, nullptr, &zErrMsg);
   if (rc != SQLITE_OK)
   {
-    //fprintf(stderr, "SQL error: %s\n", zErrMsg);
     sqlite3_free(zErrMsg);
   }
   std::cout << std::endl;
@@ -469,11 +422,10 @@ void SqliteMerge::printNumberRows(sqlite3 *db, const std::string &table)
 void SqliteMerge::returnNumberRows(sqlite3 *db, const std::string &table) 
 {
   //results->clear();
-  std::stringstream cmd;
-  cmd << "select count(*) from " << table;
+  std::string cmd = "select count(*) from " + table;
   std::cout << "\t" << table << " ";
   char *zErrMsg = nullptr;
-  int rc = sqlite3_exec(db, cmd.str().c_str(),
+  int rc = sqlite3_exec(db, cmd.c_str(),
       rowCount, nullptr, &zErrMsg);
   if (rc != SQLITE_OK)
   {
@@ -518,8 +470,6 @@ void SqliteMerge::mergeDatabases(sqlite3 *dest, const openstudio::path &source)
    *  4. Report Meter Extended Data: modify, has summary stats
    */
 
-  tableReportMeterData(dest);
-  tableReportMeterExtendedData(dest);
   tableReportVariableData(dest);
   tableReportVariableExtendedData(dest);
   tableTime(dest);
@@ -531,99 +481,50 @@ void SqliteMerge::mergeDatabases(sqlite3 *dest, const openstudio::path &source)
 
 void SqliteMerge::tableReportVariableData(sqlite3 *db)
 {
-  std::stringstream cmd;
+  std::string cmd = "insert into reportData "
+    "select (ReportDataIndex+(select Max(ReportDataIndex)from reportData)-(select Min(ReportDataIndex) from merger.reportData)+1) as ReportDataIndex, "
+    "(TimeIndex+(select Max(TimeIndex)from time)-(select Min(TimeIndex) from merger.Time)+1) as TimeIndex, "
+    "ReportDataDictionaryIndex, Value "
+    "from merger.reportData ";
 
-  cmd << "insert into reportVariableData ";
-  //cmd << "select TimeIndex+(select Max(TimeIndex)from time) as TimeIndex, ";  
-  cmd << "select TimeIndex+(select Max(TimeIndex)from time)-(select Min(TimeIndex) from merger.Time)+1 as TimeIndex, ";
-  //cmd << "ReportVariableDataDictionaryIndex, VariableValue, ReportVariableExtendedDataIndex+(select Max(TimeIndex)from time) ";
-  cmd << "ReportVariableDataDictionaryIndex, VariableValue, ReportVariableExtendedDataIndex+(select Max(ReportVariableExtendedDataIndex)from reportVariableData)-(select Min(ReportVariableExtendedDataIndex) from merger.reportVariableData)+1 ";
-  cmd << "from merger.reportVariableData ";
-
-  executeCommand(db, cmd.str().c_str());
+  executeCommand(db, cmd);
 }
 //insert into reportVariableData select TimeIndex+(select Max(TimeIndex)from time) as TimeIndex, ReportVariableDataDictionaryIndex, VariableValue, ReportVariableExtendedDataIndex+(select Max(TimeIndex)from time) from reportMeterData2
 
 void SqliteMerge::tableReportVariableExtendedData(sqlite3 *db) 
 {
-  std::stringstream cmd;
+  std::string cmd = "insert into reportExtendedData "
+    "select ReportExtendedDataIndex+(select Max(ReportExtendedDataIndex)from reportExtendedData)-(select Min(ReportExtendedDataIndex) from merger.reportExtendedData)+1 as ReportExtendedDataIndex, "
+    "(ReportDataIndex+(select Max(ReportDataIndex)from reportData)-(select Min(ReportDataIndex) from merger.reportData)+1) as ReportDataIndex, "
+    "MaxValue, MaxMonth, MaxDay, MaxHour, MaxStartMinute, MaxMinute, MinValue, MinMonth, MinDay, MinHour, "
+    "MinStartMinute, MinMinute "
+    "from merger.ReportExtendedData ";
 
-  cmd << "insert into reportVariableExtendedData ";
-  //cmd << "select ReportVariableExtendedDataIndex+(select Max(TimeIndex)from time) as ReportVariableExtendedDataIndex, "; 
-  cmd << "select ReportVariableExtendedDataIndex+(select Max(ReportVariableExtendedDataIndex)from reportVariableExtendedData)-(select Min(ReportVariableExtendedDataIndex) from merger.reportVariableExtendedData)+1 as ReportVariableExtendedDataIndex, ";
-  cmd << "MaxValue, MaxMonth, MaxDay, MaxHour, MaxStartMinute, MaxMinute, MinValue, MinMonth, MinDay, MinHour, ";
-  cmd << "MinStartMinute, MinMinute ";
-  cmd << "from merger.ReportVariableExtendedData ";
-
-  executeCommand(db, cmd.str().c_str());
-  //insert into reportVariableExtendedData select ReportVariableExtendedDataIndex+(select Max(TimeIndex)from time) as ReportVariableExtendedDataIndex, MaxValue, MaxMonth, MaxDay, MaxHour, MaxStartMinute, MaxMinute, MinValue, MinMonth, MinDay, MinHour, MinStartMinute, MinMinute from ReportVariableExtendedData2
+  executeCommand(db, cmd);
 }
-void SqliteMerge::tableReportMeterData(sqlite3 *db)
-{
-  std::stringstream cmd;
-
-  cmd << "insert into reportMeterData ";
-  //cmd << "select TimeIndex+(select Max(TimeIndex)from time) as TimeIndex, ";  
-  cmd << "select TimeIndex+(select Max(TimeIndex)from time)-(select Min(TimeIndex) from merger.Time)+1 as TimeIndex, ";
-  //cmd << "ReportMeterDataDictionaryIndex, VariableValue, ReportVariableExtendedDataIndex+(select Max(TimeIndex)from time) ";
-  cmd << "ReportMeterDataDictionaryIndex, VariableValue, ReportVariableExtendedDataIndex+(select Max(ReportVariableExtendedDataIndex)from reportMeterData)-(select Min(ReportVariableExtendedDataIndex) from merger.reportMeterData)+1 ";
-  cmd << "from merger.reportMeterData ";
-
-  executeCommand(db, cmd.str().c_str());
-}
-//insert into reportMeterData select TimeIndex+(select Max(TimeIndex)from time) as TimeIndex, ReportMeterDataDictionaryIndex, VariableValue, ReportVariableExtendedDataIndex+(select Max(TimeIndex)from time) from reportMeterData2
 
 void SqliteMerge::tableTime(sqlite3 *db)
 {
-  std::stringstream cmd;
+  std::string cmd = "insert into time "
+    "select TimeIndex+(select Max(TimeIndex)from time)-(select Min(TimeIndex) from merger.Time)+1 as TimeIndex, "
+    "Month, Day, Hour, Minute, Dst, Interval, IntervalType, "
+    "SimulationDays+(select Max(SimulationDays)from time)-(select Min(SimulationDays) from merger.Time)+1 as SimulationDays, DayType, EnvironmentPeriodIndex, WarmupFlag "
+    "from merger.time ";
 
-  cmd << "insert into time ";
-  //cmd << "select NULL, ";
-  //cmd << "select TimeIndex+" << m_primaryKeyBase << ", ";
-  //cmd << "select TimeIndex+(select Max(TimeIndex)from time) as TimeIndex, ";
-  cmd << "select TimeIndex+(select Max(TimeIndex)from time)-(select Min(TimeIndex) from merger.Time)+1 as TimeIndex, ";
-  cmd << "Month, Day, Hour, Minute, Dst, Interval, IntervalType, ";
-  cmd << "SimulationDays+(select Max(SimulationDays)from time)-(select Min(SimulationDays) from merger.Time)+1 as SimulationDays, DayType, EnvironmentPeriodIndex, WarmupFlag ";
-  //cmd << "SimulationDays, DayType, EnvironmentPeriodIndex, WarmupFlag ";
-  cmd << "from merger.time ";
-  //cmd << "where merger.time.TimeIndex > 6";  6 = 3*2, 3 days of offset in test
-
-  executeCommand(db, cmd.str().c_str());
-  //insert into time select TimeIndex+(select Max(TimeIndex)from time) as TimeIndex, Month, Day, Hour, Minute, Dst, Interval, IntervalType, SimulationDays, DayType, EnvironmentPeriodIndex, WarmupFlag from Time2
-  //insert into Time select TimeIndex+((select Max(TimeIndex)from time)-(select Min(TimeIndex) from Time2)-1) as TimeIndex, Month, Day, Hour, Minute, Dst, Interval, IntervalType, SimulationDays, DayType, EnvironmentPeriodIndex, WarmupFlag from Time2
-}
-
-void SqliteMerge::tableReportMeterExtendedData(sqlite3 *db) 
-{
-  std::stringstream cmd;
-
-  cmd << "insert into reportMeterExtendedData ";
-  //cmd << "select ReportMeterExtendedDataIndex+(select Max(TimeIndex)from time) as ReportMeterExtendedDataIndex, "; 
-  cmd << "select ReportMeterExtendedDataIndex+(select Max(ReportMeterExtendedDataIndex)from reportMeterExtendedData)-(select Min(ReportMeterExtendedDataIndex) from merger.reportMeterExtendedData)+1 as ReportMeterExtendedDataIndex, ";
-  cmd << "MaxValue, MaxMonth, MaxDay, MaxHour, MaxStartMinute, MaxMinute, MinValue, MinMonth, MinDay, MinHour, ";
-  cmd << "MinStartMinute, MinMinute ";
-  cmd << "from merger.ReportMeterExtendedData ";
-
-  executeCommand(db, cmd.str().c_str());
-  //insert into reportMeterExtendedData select ReportMeterExtendedDataIndex+(select Max(TimeIndex)from time) as ReportMeterExtendedDataIndex, MaxValue, MaxMonth, MaxDay, MaxHour, MaxStartMinute, MaxMinute, MinValue, MinMonth, MinDay, MinHour, MinStartMinute, MinMinute from ReportMeterExtendedData2
+  executeCommand(db, cmd);
 }
 
 void SqliteMerge::printMeterData(sqlite3 * dest)
 {
-
-  std::stringstream cmd;
-
-  cmd << "select month, day, variableName, variableValue  ";
-  cmd << "from ReportMeterData a, ReportMeterDataDictionary b, time t ";
-  cmd << "where a.ReportMeterDataDictionaryIndex = b.ReportMeterDataDictionaryIndex ";
-  cmd << "and a.timeIndex = t.timeIndex";
+  std::string cmd = "select month, day, variableName, variableValue  "
+    "from ReportMeterData a, ReportMeterDataDictionary b, time t "
+    "where a.ReportMeterDataDictionaryIndex = b.ReportMeterDataDictionaryIndex "
+    "and a.timeIndex = t.timeIndex";
 
   char *zErrMsg = nullptr;
-  int rc = sqlite3_exec(dest, cmd.str().c_str(),
-      callback, nullptr, &zErrMsg);
+  int rc = sqlite3_exec(dest, cmd.c_str(), callback, nullptr, &zErrMsg);
   if (rc != SQLITE_OK)
   {
-    //fprintf(stderr, "SQL error: %s\n", zErrMsg);
     sqlite3_free(zErrMsg);
   }
 
@@ -648,18 +549,14 @@ bool SqliteMerge::begin(sqlite3 *dest)
 void SqliteMerge::attachDatabases(sqlite3 *destination, const openstudio::path &source){
 
   //std::cout << "Attaching database" << std::endl;
-  std::stringstream cmd;
-  cmd << "attach '" << openstudio::toString(source) << "' as merger";
-  std::string tmpCmd = cmd.str();
-  executeCommand(destination, tmpCmd);
+  executeCommand(destination, "attach '" + openstudio::toString(source) + "' as merger");
 
 }
 
 void SqliteMerge::detachDatabases(sqlite3 *destination)
 {
   //std::cout << "Detaching database" << std::endl;
-  std::string tmpCmd = "detach database merger";
-  executeCommand(destination, tmpCmd);
+  executeCommand(destination, "detach database merger");
 }
 
 bool SqliteMerge::executeCommand(sqlite3 *destination, const std::string &cmd)
@@ -675,8 +572,3 @@ bool SqliteMerge::executeCommand(sqlite3 *destination, const std::string &cmd)
   return true;
 
 }
-
-
-
-
-

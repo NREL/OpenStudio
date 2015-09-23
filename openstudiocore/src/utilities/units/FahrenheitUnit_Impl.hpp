@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -54,14 +54,14 @@ namespace detail {
     virtual ~FahrenheitUnit_Impl() {}
 
     /** Deep copy constructor. */
-    virtual Unit clone() const;
+    virtual Unit clone() const override;
 
     //@}
     /** @name Base Units and Scale */
     //@{
 
     /** Throws if baseUnit is not a valid for FahrenheitUnit. */
-    virtual void setBaseUnitExponent(const std::string& baseUnit, int exponent);
+    virtual void setBaseUnitExponent(const std::string& baseUnit, int exponent) override;
 
     //@}
    protected:

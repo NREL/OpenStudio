@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -58,6 +58,8 @@ class MODEL_API CoilCoolingWater : public WaterToAirComponent {
   /** Constructs a new CoilCoolingWater object and places it inside the
    *  model.  The coil is fully initialized with all companion objects. */
   CoilCoolingWater(const Model& model, Schedule & availableSchedule);
+
+  CoilCoolingWater(const Model& model);
 
   virtual ~CoilCoolingWater() {}
 

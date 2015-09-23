@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -21,8 +21,6 @@
 #define OPENSTUDIO_CONSTRUCTIONINTERNALSOURCEINSPECTORVIEW_HPP
 
 #include "ModelObjectInspectorView.hpp"
-
-#include "../model/StandardsInformationConstruction.hpp"
 
 class QComboBox;
 
@@ -46,31 +44,25 @@ class OSQuantityEdit;
 
 class OSComboBox2;
 
+class StandardsInformationConstructionWidget;
+
 class ConstructionInternalSourceInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
 
   public:
 
-    ConstructionInternalSourceInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = 0);
+    ConstructionInternalSourceInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = nullptr);
 
     virtual ~ConstructionInternalSourceInspectorView() {}
 
   protected:
 
-    virtual void onClearSelection();
+    virtual void onClearSelection() override;
 
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
 
-    virtual void onUpdate();
-
-  protected slots:
-
-    void standardsConstructionTypeChanged(const QString& text);
-
-    void editStandardsConstructionType(const QString& text);
-
-    void populateStandardsConstructionType();
+    virtual void onUpdate() override;
 
   private:
 
@@ -80,19 +72,15 @@ class ConstructionInternalSourceInspectorView : public ModelObjectInspectorView
 
     void detach();
 
-    void refresh();
+    bool m_isIP;
+
+    OSLineEdit * m_nameEdit;
+
+    StandardsInformationConstructionWidget * m_standardsInformationWidget;
 
     OSDropZone * m_constructionDZ;
 
     ConstructionObjectVectorController * m_constructionVC;
-
-    OSLineEdit * m_nameEdit;
-
-    OSComboBox2 * m_intendedSurfaceType;
-
-    QComboBox * m_standardsConstructionType;
-
-    boost::optional<openstudio::model::StandardsInformationConstruction> m_standardsInformation;
 
     OSIntegerEdit * m_sourcePresentAfterLayerNumberEdit;
 
@@ -101,12 +89,6 @@ class ConstructionInternalSourceInspectorView : public ModelObjectInspectorView
     OSIntegerEdit * m_dimensionsForTheCTFCalculationEdit;
 
     OSQuantityEdit * m_tubeSpacingEdit;
-
-    bool m_isIP;
-
-  public slots:
-
-    void toggleUnits(bool displayIP);
 };
 
 } // openstudio

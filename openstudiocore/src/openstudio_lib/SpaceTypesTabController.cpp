@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -48,9 +48,6 @@ SpaceTypesTabController::SpaceTypesTabController(bool isIP,
   OS_ASSERT(spaceTypeInspectorView);
 
   bool isConnected = false;
-
-  isConnected = connect(spaceTypeInspectorView, SIGNAL(gridRowSelected(OSItem*)), m_spaceTypesController.get(), SLOT(selectItem(OSItem*)));
-  OS_ASSERT(isConnected);
 
   isConnected = connect(this, SIGNAL(itemRemoveClicked(OSItem *)), m_spaceTypesController.get(), SLOT(removeItem(OSItem *)));
   OS_ASSERT(isConnected);

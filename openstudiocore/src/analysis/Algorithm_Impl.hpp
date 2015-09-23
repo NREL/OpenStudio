@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -61,7 +61,7 @@ namespace detail {
     //@{
 
     /** Disallow overwriting Algorithm names. */
-    virtual void setName(const std::string& newName);
+    virtual void setName(const std::string& newName) override;
 
     //@}
     /** @name Getters and Queries */
@@ -103,7 +103,7 @@ namespace detail {
 
     virtual void reset();
 
-    virtual QVariant toVariant() const;
+    virtual QVariant toVariant() const override;
 
     static Algorithm factoryFromVariant(const QVariant& variant, const VersionString& version);
 

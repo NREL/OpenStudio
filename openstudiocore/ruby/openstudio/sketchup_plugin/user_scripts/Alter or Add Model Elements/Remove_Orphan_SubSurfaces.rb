@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@ class RemoveOrphanSubSurfaces < OpenStudio::Ruleset::ModelUserScript
     super(model, runner, user_arguments)
 
     # this was added to give the user a chance to cancel the operation if they inadvertently hit it
-    continue_operation = runner.registerWarning("This will remove sub surfaces with no parent. Click Yes to proceed, click No to cancel.")
+    continue_operation = runner.yesNoPrompt("This will remove sub surfaces with no parent. Click Yes to proceed, click No to cancel.")
     if not continue_operation
       puts "Operation canceled, your model was not altered."
       runner.registerAsNotApplicable("Operation canceled, your model was not altered.")

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -28,10 +28,10 @@
 class OpenStudioLibFixture : public ::testing::Test {
  protected:
   // initialize for each test
-  virtual void SetUp();
+  virtual void SetUp() override;
 
   // tear down after each test
-  virtual void TearDown();
+  virtual void TearDown() override;
 
   // initialize static members
   static void SetUpTestCase();

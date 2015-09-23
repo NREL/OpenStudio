@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -58,15 +58,15 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    unsigned inletPort();
+    unsigned inletPort() override;
 
-    unsigned outletPort();
+    unsigned outletPort() override;
 
-    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const;
+    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
     //@}
     /** @name Getters */
@@ -112,7 +112,7 @@ namespace detail {
     /** @name Other */
     //@{
 
-    bool addToNode(Node & node);
+    bool addToNode(Node & node) override;
 
     //@}
    protected:

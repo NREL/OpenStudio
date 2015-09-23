@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -27,10 +27,10 @@ namespace openstudio {
 
 SummaryTabView::SummaryTabView(const model::Model & model,
                                QWidget * parent)
-                               : MainTabView("Building Summary",false,parent)
+                               : MainTabView("Building Summary", MainTabView::MAIN_TAB, parent)
 {
   // Hack code to remove when tab active
-  QLabel * underConstructionLabel = new QLabel();
+  auto underConstructionLabel = new QLabel();
   underConstructionLabel->setPixmap(QPixmap(":/images/coming_soon_building_summary.png"));
   underConstructionLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   bool success = this->addTabWidget(underConstructionLabel);

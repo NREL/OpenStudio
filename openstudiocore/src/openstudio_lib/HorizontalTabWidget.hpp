@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -37,7 +37,7 @@ class HorizontalTabWidget : public QWidget
 
   public:
 
-  HorizontalTabWidget(QWidget * parent = 0);
+  HorizontalTabWidget(QWidget * parent = nullptr);
 
   virtual ~HorizontalTabWidget() {}
 
@@ -55,7 +55,7 @@ class HorizontalTabWidget : public QWidget
   
   protected:
 
-  void paintEvent( QPaintEvent * event );
+  void paintEvent( QPaintEvent * event ) override;
 
   private slots:
 

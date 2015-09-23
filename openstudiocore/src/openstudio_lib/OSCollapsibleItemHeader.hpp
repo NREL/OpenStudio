@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@ class OSCollapsibleItemHeader : public QWidget
     OSCollapsibleItemHeader(const std::string& text,
                             const OSItemId& itemId,
                             OSItemType type = OSItemType::CollapsibleListHeader,
-                            QWidget * parent = 0);
+                            QWidget * parent = nullptr);
 
     virtual ~OSCollapsibleItemHeader() {}
 
@@ -54,11 +54,11 @@ class OSCollapsibleItemHeader : public QWidget
 
   protected:
 
-    void paintEvent(QPaintEvent * event);
-    void mouseReleaseEvent(QMouseEvent * event);
-    void mousePressEvent(QMouseEvent * event);
-    void leaveEvent(QEvent * event);
-    QSize sizeHint() const;
+    void paintEvent(QPaintEvent * event) override;
+    void mouseReleaseEvent(QMouseEvent * event) override;
+    void mousePressEvent(QMouseEvent * event) override;
+    void leaveEvent(QEvent * event) override;
+    QSize sizeHint() const override;
 
   private:
     void setImage(bool expanded);

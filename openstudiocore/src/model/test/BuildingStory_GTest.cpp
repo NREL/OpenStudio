@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -30,34 +30,29 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,BuildingStory_NominalZCoordinate_Quantity) {
+TEST_F(ModelFixture,BuildingStory_NominalZCoordinate) {
   Model model;
   // TODO: Check constructor.
   BuildingStory buildingStory(model);
 
-  Unit units = buildingStory.getNominalZCoordinate(true).units(); // Get IP units.
   // TODO: Check that value is appropriate (within bounds)
   double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(buildingStory.setNominalZCoordinate(testQ));
-  OSOptionalQuantity q = buildingStory.getNominalZCoordinate(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
+  buildingStory.setNominalZCoordinate(value);
+  boost::optional<double> result = buildingStory.nominalZCoordinate();
+  ASSERT_TRUE(result.is_initialized());
+  EXPECT_NEAR(value, result.get(), 1.0E-8);
 }
 
-TEST_F(ModelFixture,BuildingStory_NominalFloortoFloorHeight_Quantity) {
+TEST_F(ModelFixture,BuildingStory_NominalFloortoFloorHeight) {
   Model model;
-  // TODO: Check constructor.
-  BuildingStory buildingStory(model);
 
-  Unit units = buildingStory.getNominalFloortoFloorHeight(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
+  BuildingStory buildingStory(model);
+  EXPECT_FALSE(buildingStory.nominalFloortoFloorHeight());
+
   double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(buildingStory.setNominalFloortoFloorHeight(testQ));
-  Quantity q = buildingStory.getNominalFloortoFloorHeight(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
+  EXPECT_TRUE(buildingStory.setNominalFloortoFloorHeight(value));
+  boost::optional<double> result = buildingStory.nominalFloortoFloorHeight();
+  ASSERT_TRUE(result);
+  EXPECT_NEAR(value, *result, 1.0E-8);
 }
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -165,6 +165,18 @@ bool Splitter_Impl::isRemovable() const
   else
   {
     return true;
+  }
+}
+
+void Splitter_Impl::disconnect()
+{
+  ModelObject mo = this->getObject<ModelObject>();
+  auto _model = model();
+
+  _model.disconnect(mo, inletPort());
+  auto end = nextBranchIndex();
+  for( auto i = 0; i != end; ++i ) {
+    _model.disconnect(mo, outletPort(i));
   }
 }
 

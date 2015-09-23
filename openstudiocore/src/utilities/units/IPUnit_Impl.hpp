@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -57,21 +57,21 @@ namespace detail {
     virtual ~IPUnit_Impl() {}
 
     /** Deep copy constructor. */
-    virtual Unit clone() const;
+    virtual Unit clone() const override;
 
     //@}
     /** @name Base Units and Scale */
     //@{
 
     /** Throws if baseUnit is not a valid for IPUnit. */
-    virtual void setBaseUnitExponent(const std::string& baseUnit, int exponent);
+    virtual void setBaseUnitExponent(const std::string& baseUnit, int exponent) override;
 
     //@}
     /** @name Mathematical Operators */
     //@{
 
     /** Overloaded operator to account for relationship between lb_m and lb_f. */
-    virtual bool operator==(const Unit& rUnit) const;
+    virtual bool operator==(const Unit& rUnit) const override;
 
     /** Convert any non-zero lb_m exponent to lb_f. */
     void lbmToLbf();

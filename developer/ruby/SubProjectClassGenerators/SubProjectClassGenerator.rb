@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -190,7 +190,7 @@ class SubProjectClassGenerator
     
     if pImpl  
       result << "  typedef detail::" << className << "_Impl ImplType;\n\n"
-      result << "  explicit " << className << "(boost::shared_ptr<detail::" << className << "_Impl> impl);\n\n"
+      result << "  explicit " << className << "(std::shared_ptr<detail::" << className << "_Impl> impl);\n\n"
       result << "  friend class detail::" << @className << "_Impl;\n"
     end
       
@@ -206,7 +206,7 @@ class SubProjectClassGenerator
     result = String.new
   
     if @pImpl
-      result << className << "::" << className << "(boost::shared_ptr<detail::" << className << "_Impl> impl)\n"
+      result << className << "::" << className << "(std::shared_ptr<detail::" << className << "_Impl> impl)\n"
       if @baseClassName.empty?
         result << "  : m_impl(impl)\n"
       else

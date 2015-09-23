@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -55,7 +55,7 @@ public:
 
   SimSettingsView(bool isIP,
                   const model::Model & model,
-                  QWidget * parent = 0);
+                  QWidget * parent = nullptr);
 
   virtual ~SimSettingsView() {}
 
@@ -294,19 +294,23 @@ private:
   OSComboBox2 * m_skyDiffuseModelingAlgorithm;
 
   // SurfaceConvectionAlgorithmInside
-  OSLineEdit * m_algorithmSurfaceConvectionInside;
+  //OSLineEdit * m_algorithmSurfaceConvectionInside;
+  OSComboBox2 * m_algorithmSurfaceConvectionInside;
 
   // SurfaceConvectionAlgorithmOutside
-  OSLineEdit * m_algorithmSurfaceConvectionOutside;
+  //OSLineEdit * m_algorithmSurfaceConvectionOutside;
+  OSComboBox2 * m_algorithmSurfaceConvectionOutside;
 
   // HeatBalance
-  OSLineEdit * m_algorithmHeatBalance;
+  //OSLineEdit * m_algorithmHeatBalance;
+  OSComboBox2 * m_algorithmHeatBalance;
   OSQuantityEdit * m_surfaceTemperatureUpperLimit;
   OSQuantityEdit * m_minimumSurfaceConvectionHeatTransferCoefficientValue;
   OSQuantityEdit * m_maximumSurfaceConvectionHeatTransferCoefficientValue;
 
   // ZoneAirHeatBalanceAlgorithm
-  OSLineEdit * m_algorithmZoneAirHeatBalance;
+  //OSLineEdit * m_algorithmZoneAirHeatBalance;
+  OSComboBox2 * m_algorithmZoneAirHeatBalance;
 
   // ZoneAirContaminantBalance
   OSSwitch * m_carbonDioxideConcentration;

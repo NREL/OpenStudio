@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -20,110 +20,84 @@
 #include "WindowGroup.hpp"
 #include "ForwardTranslator.hpp"
 
+#include "../model/ShadingControl.hpp"
+#include "../model/Construction.hpp"
+#include "../model/Material.hpp"
+#include "../model/Material_Impl.hpp"
+#include "../model/ShadingMaterial.hpp"
+#include "../model/ShadingMaterial_Impl.hpp"
+#include "../model/Blind.hpp"
+#include "../model/Blind_Impl.hpp"
+#include "../model/DaylightRedirectionDevice.hpp"
+#include "../model/DaylightRedirectionDevice_Impl.hpp"
+#include "../model/Screen.hpp"
+#include "../model/Screen_Impl.hpp"
+#include "../model/Shade.hpp"
+#include "../model/Shade_Impl.hpp"
+#include "../model/Schedule.hpp"
 #include "../utilities/geometry/Geometry.hpp"
 
 namespace openstudio{
 namespace radiance{
 
-  WindowGroup::WindowGroup(double azimuth, const model::Space& space, const model::ConstructionBase& construction, 
-                            const boost::optional<model::ShadingControl>& shadingControl)
-    : m_azimuth(azimuth), m_space(space), m_construction(construction), m_shadingControl(shadingControl)
+  WindowGroup::WindowGroup(const openstudio::Vector3d& outwardNormal, const model::Space& space, 
+                           const model::ConstructionBase& construction,
+                           const boost::optional<model::ShadingControl>& shadingControl)
+    : m_outwardNormal(outwardNormal), m_space(space), m_construction(construction), m_shadingControl(shadingControl)
   {
-    m_name = makeName();
+    // start with a gross name, forward translator is in charge of nice names
+    m_name = "WG" + toString(createUUID());
+    m_outwardNormal.normalize();
   }
 
-  bool WindowGroup::operator==(const WindowGroup& other) const
-  {
-    if (!m_shadingControl && !other.shadingControl()){
-      return true;
-    }else if (m_shadingControl && !other.shadingControl()){
-      return false;
-    }else if (!m_shadingControl && other.shadingControl()){
-      return false;
-    }  
+ bool WindowGroup::operator==(const WindowGroup& other) const
+{
+  if (!m_shadingControl && !other.shadingControl()){
   
     if (m_space.handle() == other.space().handle()){
       if (m_construction.handle() == other.construction().handle()){
-        if (m_shadingControl->handle() == other.shadingControl()->handle()){
-          if (this->azimuthString() == other.azimuthString()){
-            return true;
-          }
+        double angle = std::abs(radToDeg(getAngle(m_outwardNormal, other.outwardNormal())));
+        const double tol = 1.0;
+        if (angle < tol){
+          return true;
         }
       }
     }
-
+    return false;
+  
+  }else if (m_shadingControl && !other.shadingControl()){
+    return false;
+  }else if (!m_shadingControl && other.shadingControl()){
     return false;
   }
+  
+  if (m_space.handle() == other.space().handle()){
+    if (m_construction.handle() == other.construction().handle()){
+      if (m_shadingControl->handle() == other.shadingControl()->handle()){
+        double angle = std::abs(radToDeg(getAngle(m_outwardNormal, other.outwardNormal())));
+        const double tol = 1.0;
+        if (angle < tol){
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
 
   std::string WindowGroup::name() const
   {
     return m_name;
   }
-  
-  double WindowGroup::azimuth() const
+
+  void WindowGroup::setName(const std::string& name)
   {
-    return m_azimuth;
+    m_name = name;
   }
-
-  std::string WindowGroup::azimuthString() const
+  
+  openstudio::Vector3d WindowGroup::outwardNormal() const
   {
-    // DLM: implement binning here
-// keep for future feature (offer auto-binning to window groups for highly tessellated facades)
-//
-//         if (azi >= 352.50 && azi < 7.50)
-//         {
-//           aperture_heading = "WG00";
-//         } else if (azi >= 7.50 && azi < 22.50) {
-//           aperture_heading = "WG01";
-//         } else if (azi >= 22.50 && azi < 37.50) {
-//           aperture_heading = "WG02";
-//         } else if (azi >= 37.50 && azi < 52.50) {
-//           aperture_heading = "WG03";
-//         } else if (azi >= 52.50 && azi < 67.50) {
-//           aperture_heading = "WG04";
-//         } else if (azi >= 67.50 && azi < 82.50) {
-//           aperture_heading = "WG05";
-//         } else if (azi >= 82.50 && azi < 97.50) {
-//           aperture_heading = "WG06";
-//         } else if (azi >= 97.50 && azi < 112.50) {
-//           aperture_heading = "WG07";
-//         } else if (azi >= 112.50 && azi < 127.50) {
-//           aperture_heading = "WG08";
-//         } else if (azi >= 127.50 && azi < 142.50) {
-//           aperture_heading = "WG09";
-//         } else if (azi >= 142.50 && azi < 157.50) {
-//           aperture_heading = "WG10";
-//         } else if (azi >= 157.51 && azi < 172.50) {
-//           aperture_heading = "WG11";
-//         } else if (azi >= 172.50 && azi < 187.50) {
-//           aperture_heading = "WG12";
-//         } else if (azi >= 187.50 && azi < 202.50) {
-//           aperture_heading = "WG13";
-//         } else if (azi >= 202.50 && azi < 217.50) {
-//           aperture_heading = "WG14";
-//         } else if (azi >= 217.51 && azi < 232.50) {
-//           aperture_heading = "WG15";
-//         } else if (azi >= 232.50 && azi < 247.50) {
-//           aperture_heading = "WG16";
-//         } else if (azi >= 247.50 && azi < 262.50) {
-//           aperture_heading = "WG17";
-//         } else if (azi >= 262.50 && azi < 277.50) {
-//           aperture_heading = "WG18";
-//         } else if (azi >= 277.50 && azi < 292.50) {
-//           aperture_heading = "WG19";
-//         } else if (azi >= 292.50 && azi < 307.50) {
-//           aperture_heading = "WG20";
-//         } else if (azi >= 207.50 && azi < 322.50) {
-//           aperture_heading = "WG21";
-//         } else if (azi >= 322.50 && azi < 337.50) {
-//           aperture_heading = "WG22";
-//         } else {
-//           aperture_heading = "WG23";
-//         }
-
-
-    std::string result = "AZ" + formatString(m_azimuth, 4);
-    return result;
+    return m_outwardNormal;
   }
   
   model::Space WindowGroup::space() const
@@ -141,12 +115,94 @@ namespace radiance{
     return m_shadingControl;
   }
 
+  std::string WindowGroup::interiorShadeBSDF() const
+  {
+    std::string result = "air.xml";
+    if (m_shadingControl){
+
+      std::string shadingType = m_shadingControl->shadingType();
+      if (istringEqual("InteriorShade", shadingType)){
+        result = "05_shadecloth_light.xml";
+      } else if (istringEqual("ExteriorShade", shadingType)){
+        // shouldn't get here but use air if we do
+      } else if (istringEqual("ExteriorScreen", shadingType)){
+        // shouldn't get here but use air if we do
+      } else if (istringEqual("InteriorBlind", shadingType)){
+        result = "blinds.xml";
+      } else if (istringEqual("ExteriorBlind", shadingType)){
+        // shouldn't get here but use air if we do
+      } else if (istringEqual("BetweenGlassShade", shadingType)){
+        // shouldn't get here but use air if we do
+      } else if (istringEqual("BetweenGlassBlind", shadingType)){
+        // shouldn't get here but use air if we do
+      } else if (istringEqual("SwitchableGlazing", shadingType)){
+        // shouldn't get here but use air if we do
+      } else if (istringEqual("InteriorDaylightRedirectionDevice", shadingType)){
+        result = "1xliloX.xml";
+      }else{
+        LOG(Warn, "Unknown shadingType '" << shadingType << "' found for ShadingControl '" << m_shadingControl->name().get() << "'");
+      }
+
+    }
+    return result;
+  }
+
+  std::string WindowGroup::shadingControlType() const
+  {
+    std::string result = "AlwaysOff";
+    if (m_shadingControl){
+      result = m_shadingControl->shadingControlType();
+
+      if (istringEqual("OnIfScheduleAllows", result)){
+        result = "OnIfHighSolarOnWindow";
+        LOG(Warn, "ShadingControlType 'OnIfHighSolarOnWindow' is not currently supported for ShadingControl '" << m_shadingControl->name().get() << "', using 'OnIfHighSolarOnWindow' instead.");
+      }
+    }
+
+    return result;
+  }
+
+  std::string WindowGroup::shadingControlSetpoint() const
+  {
+    std::string result = "n/a";
+    if (m_shadingControl){
+      std::string shadingControlType = this->shadingControlType();
+      
+      if (istringEqual("AlwaysOff", shadingControlType)){
+        result = "n/a";
+      } else if (istringEqual("AlwaysOn", shadingControlType)){
+        result = "n/a";
+      } else if (istringEqual("OnIfHighSolarOnWindow", shadingControlType)){
+        boost::optional<double> d = m_shadingControl->setpoint();
+        if (d){
+          std::stringstream ss;
+          ss << *d;
+          result = ss.str();
+        } else{
+          result = "2000"; // 2Klx (2000)
+        }
+      } else if (istringEqual("OnIfScheduleAllows", shadingControlType)){
+        boost::optional<openstudio::model::Schedule> schedule = m_shadingControl->schedule();
+        if (schedule){
+          result = schedule->name().get();
+        } else{
+          result = "";
+        }
+      } else{
+        result = "n/a";
+        LOG(Warn, "Unknown shadingControlType '" << shadingControlType << "' for ShadingControl '" << m_shadingControl->name().get() << "'.");
+      }
+    }
+
+    return result;
+  }
+
   void WindowGroup::addWindowPolygon(const openstudio::Point3dVector& windowPolygon)
   {
     m_windowPolygons.push_back(windowPolygon);
   }
 
-  std::string WindowGroup::windowGroupPoints() const
+  WindowGroupControl WindowGroup::windowGroupControl() const
   {
     boost::optional<double> largestArea;
     boost::optional<Point3d> centroid;
@@ -167,25 +223,30 @@ namespace radiance{
       }
     }
 
-    std::string result;
-    if (centroid && outwardNormal){
-      result = formatString(centroid->x()) + " " + formatString(centroid->y()) + " " + formatString(centroid->z()) + " " +
-               formatString(outwardNormal->x()) + " " + formatString(outwardNormal->y()) + " " + formatString(outwardNormal->z()) + "\n";
-    }
+    WindowGroupControl result;
+    result.largestArea = largestArea;
+    result.centroid = centroid;
+    result.outwardNormal = outwardNormal;
 
     return result;
   }
 
-  std::string WindowGroup::makeName() const
+  std::string WindowGroup::windowGroupPoints() const
   {
-    std::stringstream ss;
-    if (m_shadingControl){
-      ss << this->azimuthString() << "_" << m_space.name().get() << "_" << m_construction.name().get() << "_" << m_shadingControl->name().get();
-    }else{
-      ss << "UncontrolledWindows";
+    WindowGroupControl control = this->windowGroupControl();
+
+    std::string result;
+    if (control.centroid && control.outwardNormal){
+
+      double offset = 0.05;
+      Vector3d vec = control.outwardNormal.get();
+      vec.setLength(offset);
+      Point3d wcPoint = control.centroid.get() + vec;
+
+      result = formatString(wcPoint.x()) + " " + formatString(wcPoint.y()) + " " + formatString(wcPoint.z()) + " " +
+        formatString(control.outwardNormal->x()) + " " + formatString(control.outwardNormal->y()) + " " + formatString(control.outwardNormal->z()) + "\n";
     }
 
-    std::string result = cleanName(ss.str());
     return result;
   }
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -37,7 +37,7 @@ namespace openstudio {
 VerticalTabWidget::VerticalTabWidget(QWidget * parent)
   : QWidget(parent)
 {
-  QHBoxLayout * mainLayout = new QHBoxLayout();
+  auto mainLayout = new QHBoxLayout();
 
   mainLayout->setSpacing(0);
 
@@ -68,7 +68,7 @@ void VerticalTabWidget::addTabButton(int id,
   const QString & unSelectedImagePath,
   const QString & disabledImagePath)
 {
-  QPushButton * button = new QPushButton(m_tabBar);
+  auto button = new QPushButton(m_tabBar);
 
   button->setFixedSize(QSize(39, 42));
 
@@ -108,7 +108,7 @@ void VerticalTabWidget::select()
 
   int index = 0;
 
-  for( std::vector<QPushButton*>::iterator  it = m_tabButtons.begin();
+  for( auto it = m_tabButtons.begin();
        it < m_tabButtons.end();
        ++it ) {
     if( *it == button ){

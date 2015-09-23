@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -77,13 +77,34 @@ boost::optional<IdfObject> ForwardTranslator::translateSurface( model::Surface &
     }
   }
 
-  idfObject.setString(BuildingSurface_DetailedFields::OutsideBoundaryCondition, modelObject.outsideBoundaryCondition());
-
   boost::optional<Surface> adjacentSurface = modelObject.adjacentSurface();
+  std::string outsideBoundaryCondition = modelObject.outsideBoundaryCondition();
+  if (istringEqual("Surface", outsideBoundaryCondition)){
+    if (!adjacentSurface){
+      LOG(Warn, "Surface '" << modelObject.name().get() << "' has blank Outside Boundary Condition Object.  " 
+                "Changing Outside Boundary Condition from 'Surface' to 'Adiabatic'");
+
+      outsideBoundaryCondition = "Adiabatic";
+    }
+  }
+
+  if (istringEqual("Adiabatic", outsideBoundaryCondition)){
+    std::vector<SubSurface> subSurfaces = modelObject.subSurfaces();
+    if (!subSurfaces.empty()){
+      LOG(Warn, "Surface '" << modelObject.name().get() << "' is adiabatic, removing all sub surfaces");
+      for (auto subSurface : subSurfaces){
+        subSurface.remove();
+      }
+    }
+  }
+
+  idfObject.setString(BuildingSurface_DetailedFields::OutsideBoundaryCondition, outsideBoundaryCondition);
+
   if (adjacentSurface){
     idfObject.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, adjacentSurface->name().get());
   }
 
+  
   if (!modelObject.isSunExposureDefaulted()){
     idfObject.setString(BuildingSurface_DetailedFields::SunExposure, modelObject.sunExposure());
   }

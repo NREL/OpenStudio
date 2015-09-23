@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -40,7 +40,7 @@ public slots:
 signals:
 
 protected:
-  virtual QMimeData * mimeData(const QList<QListWidgetItem *> items) const;
+  virtual QMimeData * mimeData(const QList<QListWidgetItem *> items) const override;
 
 private:
   static QString mMimeType;

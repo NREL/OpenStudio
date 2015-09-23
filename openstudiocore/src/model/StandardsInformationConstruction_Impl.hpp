@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -71,18 +71,46 @@ namespace detail {
 
     std::string perturbableLayerType() const;
 
+    bool isPerturbableLayerTypeDefaulted() const;
+
+    boost::optional<std::string> otherPerturbableLayerType() const;
+
+    std::vector<std::string> suggestedConstructionStandards() const;
+
+    boost::optional<std::string> constructionStandard() const;
+
+    std::vector<std::string> suggestedConstructionStandardSources() const;
+
+    boost::optional<std::string> constructionStandardSource() const;
+
+    boost::optional<std::string> fenestrationType() const;
+
+    boost::optional<std::string> fenestrationAssemblyContext() const;
+
+    boost::optional<std::string> fenestrationNumberOfPanes() const;
+
+    boost::optional<std::string> fenestrationFrameType() const;
+
+    boost::optional<std::string> fenestrationDividerType() const;
+
+    boost::optional<std::string> fenestrationTint() const;
+
+    boost::optional<std::string> fenestrationGasFill() const;
+
+    bool fenestrationLowEmissivityCoating() const;
+
     // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const;
+    virtual boost::optional<ParentObject> parent() const override;
 
     /// set the parent, child may have to call non-const methods on the parent
-    virtual bool setParent(ParentObject& newParent);
+    virtual bool setParent(ParentObject& newParent) override;
 
     /** Get all output variables names that could be associated with this object. These variables
      *  may or may not be available for each simulation, need to check report variable dictionary
      *  to see if the variable is available. Each concrete class should override this method.*/
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Setters */
@@ -102,7 +130,52 @@ namespace detail {
     void resetPerturbableLayer();
 
     void setPerturbableLayerType(const std::string& type);
+
     void resetPerturbableLayerType();
+
+    void setOtherPerturbableLayerType(const std::string& otherPerturbableLayerType);
+
+    void resetOtherPerturbableLayerType();
+
+    void setConstructionStandard(const std::string& constructionStandard);
+
+    void resetConstructionStandard();
+
+    void setConstructionStandardSource(const std::string& constructionStandardSource);
+
+    void resetConstructionStandardSource();
+
+    bool setFenestrationType(const std::string& fenestrationType);
+
+    void resetFenestrationType();
+
+    bool setFenestrationAssemblyContext(const std::string& fenestrationAssemblyContext);
+
+    void resetFenestrationAssemblyContext();
+
+    bool setFenestrationNumberOfPanes(const std::string& fenestrationNumberOfPanes);
+
+    void resetFenestrationNumberOfPanes();
+
+    bool setFenestrationFrameType(const std::string& fenestrationFrameType);
+
+    void resetFenestrationFrameType();
+
+    bool setFenestrationDividerType(const std::string& fenestrationDividerType);
+
+    void resetFenestrationDividerType();
+
+    bool setFenestrationTint(const std::string& fenestrationTint);
+
+    void resetFenestrationTint();
+
+    bool setFenestrationGasFill(const std::string& fenestrationGasFill);
+
+    void resetFenestrationGasFill();
+
+    void setFenestrationLowEmissivityCoating(bool fenestrationLowEmissivityCoating);
+
+    void resetFenestrationLowEmissivityCoating();
 
     //@}
    protected:

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -190,7 +190,7 @@ namespace detail {
       // Portfolio Manager uses these to convert to kBtu
       //
       // Original source: 
-      // TABLE C–1 TO SUBPART C OF PART 98—DEFAULT CO2 EMISSION FACTORS AND HIGH HEAT VALUES FOR VARIOUS TYPES OF FUEL
+      // TABLE C-1 TO SUBPART C OF PART 98-DEFAULT CO2 EMISSION FACTORS AND HIGH HEAT VALUES FOR VARIOUS TYPES OF FUEL
       boost::optional<double> unitToKBtu;
       boost::optional<double> unitToM3;
 

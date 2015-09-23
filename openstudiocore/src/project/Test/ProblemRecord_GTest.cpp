@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -26,6 +26,8 @@
 #include "../../analysis/Problem_Impl.hpp"
 #include "../../analysis/RubyMeasure.hpp"
 #include "../../analysis/RubyMeasure_Impl.hpp"
+#include "../../analysis/RubyContinuousVariable.hpp"
+#include "../../analysis/RubyContinuousVariable_Impl.hpp"
 
 #include "../MeasureGroupRecord.hpp"
 #include "../MeasureGroupRecord_Impl.hpp"
@@ -42,7 +44,6 @@
 #include "../../utilities/core/Path.hpp"
 
 #include <resources.hxx>
-
 #include <OpenStudio.hxx>
 
 using namespace openstudio;
@@ -203,3 +204,46 @@ TEST_F(ProjectFixture, ProblemRecord)
     EXPECT_EQ(rubyMeasureRecord.handle(), measureGroupRecord.measureRecords(true)[0].handle());
   }
 }
+
+TEST_F(ProjectFixture, ProblemRecord_RubyContinuousVariables)
+{
+  // Create a database containing a ProblemRecord with a chain of 
+  // RubyContinuousVariables that reference the same RubyMeasure
+  analysis::Problem problem("Contains Linked RubyContinuousVariables");
+
+  // Measure with two RubyContinuousVariables  
+  analysis::RubyMeasure wwrScript(openstudio::toPath(rubyLibDir()) / 
+                                  openstudio::toPath("openstudio/sketchup_plugin/user_scripts/Alter or Add Model Elements/Set_Window_to_Wall_Ratio.rb"),
+                                  FileReferenceType::OSM,
+                                  FileReferenceType::OSM,
+                                  true);
+  ruleset::OSArgument arg = ruleset::OSArgument::makeDoubleArgument("wwr");
+  analysis::RubyContinuousVariable wwr("Window to Wall Ratio",arg,wwrScript);
+  wwr.setMinimum(0.15);
+  wwr.setMaximum(0.60);
+  problem.push(wwr);
+  arg = ruleset::OSArgument::makeDoubleArgument("offset");
+  analysis::RubyContinuousVariable offset("Window Offset from Floor",arg,wwrScript);
+  offset.setMinimum(0.5);
+  offset.setMaximum(2.0);
+  problem.push(offset);
+  EXPECT_EQ(wwr.measure(), offset.measure());
+  
+  // Project Database
+  ProjectDatabase database = getCleanDatabase("ProblemRecord_RubyContinuousVariables");
+
+  // Problem Record
+  ProblemRecord problemRecord = ProblemRecord::factoryFromProblem(problem,database);
+  database.save();
+
+  // Deserialize the problem and verify that the deserialized RubyMeasures are 
+  // all equal.  
+  problemRecord = ProblemRecord::getProblemRecords(database)[0];
+  problem = problemRecord.problem();
+  ASSERT_EQ(2u,problem.variables().size());
+  ASSERT_TRUE(problem.variables()[0].optionalCast<RubyContinuousVariable>());
+  ASSERT_TRUE(problem.variables()[1].optionalCast<RubyContinuousVariable>());
+  EXPECT_EQ(problem.variables()[0].cast<RubyContinuousVariable>().measure(), 
+            problem.variables()[1].cast<RubyContinuousVariable>().measure());
+}
+

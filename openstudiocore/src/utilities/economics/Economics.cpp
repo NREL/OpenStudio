@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 
 #define MAX_ERR 0.0001
 #define MAX_LIMIT 100000
-#define MAX_ITERATIONS 10000
+#define MAX_ITERATIONS 100
 
 namespace openstudio{
 

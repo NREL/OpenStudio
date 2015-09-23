@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -123,7 +123,7 @@ Dir.glob("#{dir}/*/") do |measure_dir|
   end
 end
 
-class TestAllMeasures_Test < MiniTest::Test
+class TestAllMeasures_Test < MiniTest::Unit::TestCase
   # def setup
   # end
 

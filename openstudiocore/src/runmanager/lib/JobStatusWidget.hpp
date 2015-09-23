@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -53,7 +53,7 @@ namespace openstudio {
           static const int numColumns = 5;
           static QStringList columnHeaders();
 
-          virtual bool operator<(const QStandardItem &qsi) const;
+          virtual bool operator<(const QStandardItem &qsi) const override;
 
         private slots:
           void jobOutputFileChanged(const openstudio::UUID &, const openstudio::runmanager::FileInfo &t_fi);

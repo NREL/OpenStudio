@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -51,14 +51,14 @@ OSInspectorView::OSInspectorView(bool addScrollArea, QWidget * parent)
 {
   this->setObjectName("GrayWidget");
 
-  QVBoxLayout* outerVLayout = new QVBoxLayout();
+  auto outerVLayout = new QVBoxLayout();
   outerVLayout->setContentsMargins(0,0,0,0);
   this->setLayout(outerVLayout);
 
   m_stackedWidget = new QStackedWidget();
 
   if (addScrollArea){
-    QScrollArea* scrollArea = new QScrollArea();
+    auto scrollArea = new QScrollArea();
     scrollArea->setFrameStyle(QFrame::NoFrame);
     scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);

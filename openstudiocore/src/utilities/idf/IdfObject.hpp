@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -220,7 +220,7 @@ class UTILITIES_API IdfObject {
 
   /** Sets the field at index to q, if possible. Returns false if the units of q cannot be converted
    *  to getUnits(index). */
-  bool setQuantity (unsigned index, const Quantity q);
+  bool setQuantity (unsigned index, const Quantity& q);
 
   /** Sets the field at index to value, if possible. Returns false if the value cannot be set for
    *  any reason. (Perhaps index >= numFields(), the field is not IntegerType, or the value is out 

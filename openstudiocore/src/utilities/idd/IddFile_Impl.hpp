@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -49,6 +49,9 @@ namespace detail{
 
     /// get version
     std::string version() const;
+
+    /// get build
+    std::string build() const;
 
     /// get header
     std::string header() const;
@@ -112,6 +115,9 @@ namespace detail{
 
     /// Version string required to be at top of any IddFile.
     std::string m_version;
+
+    /// Build string which might be at the top of an IddFile
+    std::string m_build;
 
     /// The first comment block in an IddFile is its header.
     std::string m_header;

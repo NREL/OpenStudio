@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -46,6 +46,9 @@ StartupMenu::StartupMenu(QWidget *parent) :
   action = new QAction(tr("SDD"), this);
   importMenu->addAction(action);
   connect(action, &QAction::triggered, this, &StartupMenu::importSDDClicked);
+  action = new QAction(tr("IFC"), this);
+  importMenu->addAction(action);
+  connect(action, &QAction::triggered, this, &StartupMenu::importIFCClicked);
 
   connect(loadFileAction, &QAction::triggered, this, &StartupMenu::loadFileClicked);
   connect(newAction, &QAction::triggered, this, &StartupMenu::newClicked);

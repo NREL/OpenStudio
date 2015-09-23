@@ -67,20 +67,20 @@ public:
   ~TreeModel();
 
   void loadModel(openstudio::model::Model& model);
-  QVariant data(const QModelIndex &index, int role) const;
+  QVariant data(const QModelIndex &index, int role) const override;
   openstudio::model::OptionalModelObject modelAtIndex(const QModelIndex &index) const;
-  Qt::ItemFlags flags(const QModelIndex &index) const;
-  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-  QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
-  QModelIndex parent(const QModelIndex &index) const;
-  int rowCount(const QModelIndex &parent = QModelIndex()) const;
-  int columnCount(const QModelIndex &parent = QModelIndex()) const;
-  bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
-  bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole);
+  Qt::ItemFlags flags(const QModelIndex &index) const override;
+  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+  QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
+  QModelIndex parent(const QModelIndex &index) const override;
+  int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+  int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+  bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+  bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole) override;
   bool addRows(const QModelIndexList rowList, openstudio::IddObjectType type = openstudio::IddObjectType("UserCustom"));
   bool removeRows(const QModelIndexList rowList, std::vector<openstudio::Handle>& handles);
   bool pasteRows(const QModelIndex& parentRow,   std::vector<openstudio::model::ModelObject>& modelObjectsToPaste);
-  Qt::DropActions supportedDropActions() const;
+  Qt::DropActions supportedDropActions() const override;
   QModelIndexList getPersistentIndexList() const;
   void toggleGUIDs();
 
@@ -93,7 +93,7 @@ protected:
 private:
   void setupModelData(const openstudio::model::ModelObject& object, TreeItem *parent);
   TreeItem *getItem(const QModelIndex &index) const;
-  bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
+  bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
   bool insertRows(const QModelIndex row, const QModelIndexList rowList, openstudio::IddObjectType type);
   void getObjectNames(const openstudio::model::ModelObject& object, QList<QVariant>& objectNames);
 

@@ -103,8 +103,6 @@ QComboBox {
     height: 19px;
     margin-top: 1px;
     border-radius: 3px;
-    /*padding: 1px 18px 1px 3px; */
-    min-width: 6em;
     padding-left: 5px;
     padding-right: 10px;
     padding-top: 1px;
@@ -566,6 +564,52 @@ QPushButton#OnOffSliderButton:hover {
   
 QPushButton#OnOffSliderButton:checked:hover {
   background-image: url(":/images/toggle_on_over.png");
+}
+
+QToolButton#TrueFalseSliderButton {
+  border: none;
+  background-image: url(":/images/toggle_false.png");
+}
+
+QToolButton#TrueFalseSliderButton:pressed {
+  border: none;
+  background: none;
+}
+  
+QToolButton#TrueFalseSliderButton:checked {
+  background-image: url(":/images/toggle_true.png");
+}
+
+QToolButton#TrueFalseSliderButton:hover {
+  border: none;
+  background-image: url(":/images/toggle_false_over.png");
+}
+  
+QToolButton#TrueFalseSliderButton:checked:hover {
+  background-image: url(":/images/toggle_true_over.png");
+}
+
+QPushButton#TrueFalseSliderButton {
+  border: none;
+  background-image: url(":/images/toggle_false.png");
+}
+
+QPushButton#TrueFalseSliderButton:pressed {
+  border: none;
+  background: none;
+}
+  
+QPushButton#TrueFalseSliderButton:checked {
+  background-image: url(":/images/toggle_true.png");
+}
+
+QPushButton#TrueFalseSliderButton:hover {
+  border: none;
+  background-image: url(":/images/toggle_false_over.png");
+}
+  
+QPushButton#TrueFalseSliderButton:checked:hover {
+  background-image: url(":/images/toggle_true_over.png");
 }
 
 QLabel#H1 {

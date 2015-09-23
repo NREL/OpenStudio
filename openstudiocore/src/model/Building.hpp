@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -69,16 +69,17 @@ class MODEL_API Building : public ParentObject {
   //@{
 
   double northAxis() const;
-
   bool isNorthAxisDefaulted() const;
 
-  double nominalFloortoFloorHeight() const;
-
-  bool isNominalFloortoFloorHeightDefaulted() const;
+  boost::optional<double> nominalFloortoFloorHeight() const;
 
   boost::optional<int> standardsNumberOfStories() const;
 
   boost::optional<int> standardsNumberOfAboveGroundStories() const;
+
+  boost::optional<int> standardsNumberOfLivingUnits() const;
+
+  boost::optional<double> nominalFloortoCeilingHeight() const;
 
   /// Returns the standards building type. This is a freeform field used to identify the building type for standards.
   /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
@@ -89,16 +90,17 @@ class MODEL_API Building : public ParentObject {
   /// returns standardsBuildingType.
   std::vector<std::string> suggestedStandardsBuildingTypes() const;
 
+  bool relocatable() const;
+  bool isRelocatableDefaulted() const;
+
   //@}
   /** @name Setters */
   //@{
 
   void setNorthAxis(double northAxis);
-
   void resetNorthAxis();
 
   bool setNominalFloortoFloorHeight(double nominalFloortoFloorHeight);
-
   void resetNominalFloortoFloorHeight();
 
   bool setStandardsNumberOfStories(int value);
@@ -107,11 +109,21 @@ class MODEL_API Building : public ParentObject {
   bool setStandardsNumberOfAboveGroundStories(int value);
   void resetStandardsNumberOfAboveGroundStories();
 
+  bool setStandardsNumberOfLivingUnits(int value);
+  void resetStandardsNumberOfLivingUnits();
+
+  bool setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight);
+  void resetNominalFloortoCeilingHeight(); 
+
   /// Sets the standards building type. This is a freeform field used to identify the building type for standards.
   /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
   /// More information can be found at https://github.com/NREL/openstudio-standards.
   bool setStandardsBuildingType(const std::string& standardsBuildingType);
   void resetStandardsBuildingType();
+
+  void setRelocatable(bool isRelocatable);
+  void resetRelocatable();
+
 
   //@}
   /** @name Other */

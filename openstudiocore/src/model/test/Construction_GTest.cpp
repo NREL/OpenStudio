@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -42,6 +42,8 @@
 #include "../FFactorGroundFloorConstruction_Impl.hpp"
 #include "../WindowDataFile.hpp"
 #include "../WindowDataFile_Impl.hpp"
+#include "../StandardsInformationConstruction.hpp"
+#include "../StandardsInformationConstruction_Impl.hpp"
 
 #include "../Material.hpp"
 #include "../Material_Impl.hpp"
@@ -339,30 +341,56 @@ TEST_F(ModelFixture, Construction_AddObjects) {
 
 TEST_F(ModelFixture, Construction_Clone)
 {
-  Model model;
+  Model library;
 
   // Create some materials
-  StandardOpaqueMaterial exterior(model);
-  AirGap air(model);
-  StandardOpaqueMaterial interior(model);
+  StandardOpaqueMaterial exterior(library);
+  AirGap air(library);
+  StandardOpaqueMaterial interior(library);
 
   OpaqueMaterialVector layers;
   layers.push_back(exterior);
   layers.push_back(air);
   layers.push_back(interior);
 
-  EXPECT_EQ(static_cast<unsigned>(3), model.getModelObjects<Material>().size());
+  EXPECT_EQ(static_cast<unsigned>(3), library.getModelObjects<Material>().size());
 
   Construction construction(layers);
   ASSERT_EQ(static_cast<unsigned>(3), construction.layers().size());
 
-  ModelObject clone = construction.clone(model);
+  // Clone into same model
+  ModelObject clone = construction.clone(library);
 
-  EXPECT_EQ(static_cast<unsigned>(3), model.getModelObjects<Material>().size());
+  // Material ResourceObject instances are shared resources so they have not been cloned
+  EXPECT_EQ(static_cast<unsigned>(3), library.getModelObjects<Material>().size());
 
+  // New handle for cloned construction
   EXPECT_FALSE(clone.handle() == construction.handle());
   ASSERT_TRUE(clone.optionalCast<Construction>());
+
   ASSERT_EQ(static_cast<unsigned>(3), clone.cast<Construction>().layers().size());
+
+  // Clone into a differnt model
+  Model model;
+
+  auto clone2 = construction.clone(model).cast<Construction>();
+  EXPECT_EQ(static_cast<unsigned>(3), model.getModelObjects<Material>().size());
+
+  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<Construction>().size());
+
+  // Make sure materials are still hooked up
+  ASSERT_EQ(static_cast<unsigned>(3), clone2.cast<Construction>().layers().size());
+
+  // Clone again
+  auto clone3 = construction.clone(model).cast<Construction>();
+  EXPECT_EQ(static_cast<unsigned>(3), model.getModelObjects<Material>().size());
+
+  EXPECT_EQ(static_cast<unsigned>(2), model.getModelObjects<Construction>().size());
+
+  // Make sure materials are still hooked up
+  ASSERT_EQ(static_cast<unsigned>(3), clone3.cast<Construction>().layers().size());
+
+  EXPECT_FALSE(clone2.handle() == clone3.handle());
 }
 
 TEST_F(ModelFixture, DuplicateMaterialName)
@@ -682,6 +710,53 @@ TEST_F(ModelFixture, Construction_EnsureUniqueLayers)
   EXPECT_NE(construction1.layers()[0].handle(), construction2.layers()[0].handle());
   EXPECT_NE(construction1.layers()[1].handle(), construction2.layers()[1].handle());
   EXPECT_NE(construction1.layers()[2].handle(), construction2.layers()[2].handle());
+
+}
+
+TEST_F(ModelFixture, Construction_StandardsInformationConstruction)
+{
+
+  EXPECT_FALSE(StandardsInformationConstruction::standardPerturbableLayerTypeValues().empty());
+  EXPECT_FALSE(StandardsInformationConstruction::fenestrationTypeValues().empty());
+  EXPECT_FALSE(StandardsInformationConstruction::fenestrationAssemblyContextValues().empty());
+  EXPECT_FALSE(StandardsInformationConstruction::fenestrationNumberOfPanesValues().empty());
+  EXPECT_FALSE(StandardsInformationConstruction::fenestrationFrameTypeValues().empty());
+  EXPECT_FALSE(StandardsInformationConstruction::fenestrationDividerTypeValues().empty());
+  EXPECT_FALSE(StandardsInformationConstruction::fenestrationTintValues().empty());
+  EXPECT_FALSE(StandardsInformationConstruction::fenestrationGasFillValues().empty());
+  EXPECT_FALSE(StandardsInformationConstruction::intendedSurfaceTypeValues().empty());
+
+  Model model;
+
+  Construction construction(model);
+  EXPECT_EQ(0, model.getModelObjects<StandardsInformationConstruction>().size());
+
+  StandardsInformationConstruction tmp = construction.standardsInformation();
+  EXPECT_EQ(1u, model.getModelObjects<StandardsInformationConstruction>().size());
+
+  StandardsInformationConstruction info = construction.standardsInformation();
+  EXPECT_EQ(1u, model.getModelObjects<StandardsInformationConstruction>().size());
+  EXPECT_EQ(toString(info.handle()), toString(tmp.handle()));
+  EXPECT_EQ(toString(construction.handle()), toString(info.construction().handle()));
+
+  EXPECT_FALSE(info.intendedSurfaceType());
+  EXPECT_TRUE(info.suggestedStandardsConstructionTypes().empty());
+
+  EXPECT_TRUE(info.setIntendedSurfaceType("ExteriorWall"));
+  ASSERT_TRUE(info.intendedSurfaceType());
+  EXPECT_EQ("ExteriorWall", info.intendedSurfaceType().get());
+  EXPECT_FALSE(info.suggestedStandardsConstructionTypes().empty());
+
+  EXPECT_FALSE(info.constructionStandard());
+  EXPECT_TRUE(info.suggestedConstructionStandardSources().empty());
+
+  info.setConstructionStandard("CEC Title24-2013");
+  ASSERT_TRUE(info.constructionStandard());
+  EXPECT_EQ("CEC Title24-2013", info.constructionStandard().get());
+ // EXPECT_FALSE(info.suggestedConstructionStandardSources().empty());
+
+  construction.remove();
+  EXPECT_EQ(0, model.getModelObjects<StandardsInformationConstruction>().size());
 
 }
 

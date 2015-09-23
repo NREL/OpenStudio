@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ module OpenStudio
       if not model_object.empty?
         model_object = model_object.get
       else
-        puts "RenderingColor: model_object is empty for #{handle.class}, #{handle.to_s}, #{Plugin.model_manager.model_interface.openstudio_model}"                    
+        puts "RenderingColor: model_object is empty for #{handle.class}, #{handle.to_s}, #{Plugin.model_manager.model_interface.openstudio_model}"                
         model_object = nil
       end
       return model_object
@@ -170,14 +170,9 @@ module OpenStudio
         had_observers = remove_observers
 
         name_changed = false
-        version_parts = Sketchup.version.split('.')
         begin
-          # Material.name= is not included until M1 release of SU 8
-          if version_parts[0].to_i >= 8 and
-            (version_parts[1].to_i >= 1 or version_parts[2].to_i >= 4811)
-              @entity.name = @model_object.name.get
-              name_changed = true
-          end
+          @entity.name = @model_object.name.get
+          name_changed = true
         rescue 
         end
         

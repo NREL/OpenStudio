@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -22,9 +22,6 @@ require 'openstudio'
 require 'minitest/autorun'
 
 require 'fileutils'
-require 'openstudio/energyplus/find_energyplus'
-
-
 
 class DaylightSim_Test < MiniTest::Unit::TestCase
   
@@ -47,8 +44,7 @@ class DaylightSim_Test < MiniTest::Unit::TestCase
     #create example model, attach epw file
     modelExample = OpenStudio::Model::exampleModel()
     modelFile = outdir / OpenStudio::Path.new("in.osm") 
-    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
-    epwPath = OpenStudio::Path.new(ep_hash[:energyplus_weatherdata].to_s) / OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.epw")
+    epwPath = OpenStudio::Path.new(OpenStudio::Path.new("#{$OpenStudio_ResourcePath}runmanager/USA_CO_Golden-NREL.724666_TMY3.epw"))
     epwFile = OpenStudio::EpwFile.new(epwPath)
     weatherFile = OpenStudio::Model::WeatherFile::setWeatherFile(modelExample, epwFile)
     assert((not weatherFile.empty?))

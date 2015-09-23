@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -94,4 +94,17 @@ TEST_F(ModelFixture,ShadingControl_Material) {
   ASSERT_TRUE(subSurface.shadingControl());
   ASSERT_TRUE(subSurface.shadingControl()->shadingMaterial());
   EXPECT_EQ(blind.handle(), subSurface.shadingControl()->shadingMaterial()->handle());
+}
+
+TEST_F(ModelFixture, ShadingControl_PurgeUnusedModelObjects) {
+  Model model;
+
+  Blind blind(model);
+  ShadingControl shadingControl(blind);
+
+  EXPECT_EQ(2u, model.objects().size());
+
+  model.purgeUnusedResourceObjects();
+
+  EXPECT_EQ(0, model.objects().size());
 }

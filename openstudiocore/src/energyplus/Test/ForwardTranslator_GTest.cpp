@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -283,10 +283,10 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateScheduleCompact) {
   ASSERT_TRUE(scheduleCompactIdf.name());
   EXPECT_EQ(scheduleCompact.name().get(),scheduleCompactIdf.name().get());
 
-  for( unsigned i = OS_Schedule_CompactFields::getValues().size(); i < scheduleCompact.numFields(); i++ )
+  for( size_t i = OS_Schedule_CompactFields::getValues().size(); i < scheduleCompact.numFields(); i++ )
   {
-    boost::optional<std::string> s1 = scheduleCompactIdf.getString(i-1);
-    boost::optional<std::string> s2 = scheduleCompact.getString(i);
+    boost::optional<std::string> s1 = scheduleCompactIdf.getString((int)i-1);
+    boost::optional<std::string> s2 = scheduleCompact.getString((int)i);
 
     ASSERT_TRUE(s1);
     ASSERT_TRUE(s2);
@@ -527,7 +527,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_MultiThreadedLogMessages) {
     {}
 
   protected:
-    void run(){
+    void run() override{
       workspace = translator.translateModel(model);
     }
   };
@@ -538,7 +538,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_MultiThreadedLogMessages) {
   Space space(model); // not in thermal zone will generate a warning
 
   // run in current thread
-  unsigned numWarnings = 0;
+  size_t numWarnings = 0;
   {
     ForwardTranslator translator;
     boost::optional<Workspace> workspace = translator.translateModel(model);

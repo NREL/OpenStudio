@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -31,37 +31,38 @@ class QComboBox;
 class QRadioButton;
 
 namespace openstudio{
+  namespace pat{
 
-class ExportXMLDialog : public OSDialog
-{
-  Q_OBJECT
+    class ExportXMLDialog : public OSDialog
+    {
+      Q_OBJECT
 
-  public:
+    public:
 
-    /// Constructor of the dialog to create a new BCL Measure
-    ExportXMLDialog(const std::vector<std::string>& alternatives, QWidget* parent = nullptr);
+      /// Constructor of the dialog to create a new BCL Measure
+      ExportXMLDialog(const std::vector<std::string>& alternatives, QWidget* parent = nullptr);
 
-    virtual ~ExportXMLDialog();
+      virtual ~ExportXMLDialog();
 
-    /// Returns the name of the EDA baseline model
-    std::string getEDABaseline();
+      /// Returns the name of the EDA baseline model
+      std::string getEDABaseline();
 
-    /// Returns the name of the proposed baseline model
-    std::string getProposedBaseline();
+      /// Returns the name of the proposed baseline model
+      std::string getProposedBaseline();
 
-    /// Returns the name of the certification baseline model
-    std::string getCertificationBaseline();
+      /// Returns the name of the certification baseline model
+      std::string getCertificationBaseline();
 
-  private:
+    private:
 
-    QComboBox* m_edaBaselineComboBox;
-    QComboBox* m_proposedBaselineComboBox;
-    QComboBox* m_certificationBaselineComboBox;
+      QComboBox* m_edaBaselineComboBox;
+      QComboBox* m_proposedBaselineComboBox;
+      QComboBox* m_certificationBaselineComboBox;
 
-    boost::optional<BCLMeasure> m_bclMeasureToCopy;
-};
+      boost::optional<BCLMeasure> m_bclMeasureToCopy;
+    };
 
-
+} // pat
 } // openstudio
 
 #endif // PATAPP_EXPORTXMLDIALOG_HPP

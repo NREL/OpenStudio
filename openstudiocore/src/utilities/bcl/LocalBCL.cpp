@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -20,7 +20,6 @@
 #include "BCLMeasure.hpp"
 #include "LocalBCL.hpp"
 #include "RemoteBCL.hpp"
-#include "OnDemandGenerator.hpp"
 #include "../core/Application.hpp"
 #include "../core/Assert.hpp"
 #include "../data/Attribute.hpp"
@@ -332,41 +331,6 @@ namespace openstudio{
       }catch(const std::exception&){
       }
     }
-    return boost::none;
-  }
-
-  boost::optional<BCLComponent> LocalBCL::getOnDemandComponent(const OnDemandGenerator& generator) const
-  {
-    if (!generator.checkArgumentValues()){
-      return boost::none;
-    }
-
-    std::vector<std::pair<std::string, std::string> > searchTerms;
-
-    searchTerms.push_back(std::make_pair<std::string, std::string>("OnDemandGenerator UID", generator.uid()));
-    searchTerms.push_back(std::make_pair<std::string, std::string>("OnDemandGenerator VID", generator.versionId()));
-
-    for (const OnDemandGeneratorArgument& argument : generator.activeArguments()) {
-
-      // can't handle other types for now
-      if (argument.dataType() != OnDemandGeneratorArgumentType::String){
-        return boost::none;
-      }
-
-      std::string value = "";
-      boost::optional<std::string> valueAsString = argument.valueAsString();
-      if (valueAsString){
-        value = *valueAsString;
-      }
-      searchTerms.push_back(std::make_pair(argument.name(), value));
-    }
-
-    std::vector<BCLComponent> components = componentAttributeSearch(searchTerms);
-
-    if (!components.empty()){
-      return components[0];
-    }
-
     return boost::none;
   }
 
@@ -715,7 +679,7 @@ namespace openstudio{
 
   std::set<std::pair<std::string, std::string> > LocalBCL::attributeSearch(
       const std::vector<std::pair<std::string, std::string> >& searchTerms,
-      const std::string componentType) const
+      const std::string& componentType) const
   {
     typedef std::vector<std::pair<std::string, std::string> > UidsVecType;
     typedef std::set<std::pair<std::string, std::string> > UidsType;

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -55,21 +55,23 @@ signals:
 
 protected:
 
-  virtual void onSelectItem(OSItem *item);
+  virtual void onSelectItem(OSItem *item) override;
 
-  virtual void onAddObject(const openstudio::IddObjectType& iddObjectType);
+  virtual void onAddObject(const openstudio::IddObjectType& iddObjectType) override;
 
-  virtual void onCopyObject(const openstudio::model::ModelObject& modelObject);
+  virtual void onAddObject(const openstudio::model::ModelObject& modelObject) override;
 
-  virtual void onRemoveObject(openstudio::model::ModelObject modelObject);
+  virtual void onCopyObject(const openstudio::model::ModelObject& modelObject) override;
 
-  virtual void onReplaceObject(openstudio::model::ModelObject modelObject, const OSItemId& replacementItemId);
+  virtual void onRemoveObject(openstudio::model::ModelObject modelObject) override;
 
-  virtual void onPurgeObjects(const openstudio::IddObjectType& iddObjectType);
+  virtual void onReplaceObject(openstudio::model::ModelObject modelObject, const OSItemId& replacementItemId) override;
 
-  virtual void onDrop(const OSItemId& itemId);
+  virtual void onPurgeObjects(const openstudio::IddObjectType& iddObjectType) override;
 
-  virtual void onInspectItem(OSItem* item);
+  virtual void onDrop(const OSItemId& itemId) override;
+
+  virtual void onInspectItem(OSItem* item) override;
 
 public slots:
 

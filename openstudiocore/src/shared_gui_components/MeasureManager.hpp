@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -26,6 +26,7 @@
 #include "../utilities/core/Path.hpp"
 #include "../utilities/core/UUID.hpp"
 #include "../ruleset/RubyUserScriptInfoGetter.hpp"
+#include "../model/Model.hpp"
 #include <vector>
 #include <map>
 #include <QSharedPointer>
@@ -94,11 +95,11 @@ class MeasureManager : public QObject
 
     virtual ~MeasureManager() {}
 
-    // Returns true if given measure is a pat application measure
-    bool isPatApplicationMeasure(const UUID & id) const;
+    // Returns true if given measure is managed by the application and not the user
+    bool isManagedMeasure(const UUID & id) const;
 
-    // Measures shipped with the PAT application.
-    std::vector<BCLMeasure> patApplicationMeasures() const;
+    // Measures shipped with OpenStudio.
+    std::vector<BCLMeasure> openstudioMeasures() const;
 
     // Measures downloaded from the BCL.
     std::vector<BCLMeasure> bclMeasures() const;
@@ -107,10 +108,10 @@ class MeasureManager : public QObject
     std::vector<BCLMeasure> myMeasures() const;
 
     // Get combined list of measures without duplicates, uses same logic as getMeasure
-    // If includePatApplicationMeasures is false then pat application measures will not be included, otherwise they will be.
-    std::vector<BCLMeasure> combinedMeasures(bool includePatApplicationMeasures=true) const;
+    // If includeOpenStudioMeasures is false then OpenStudio measures will not be included, otherwise they will be.
+    std::vector<BCLMeasure> combinedMeasures(bool includeOpenStudioMeasures = true) const;
 
-    // Retrieve a measure from patApplicationMeasures, myMeasures, and bclMeasures by id.
+    // Retrieve a measure from openstudioMeasures, myMeasures, and bclMeasures by id.
     boost::optional<BCLMeasure> getMeasure(const UUID & id);
 
     /// Updates an individual measure. Does not ask for user approval, approval is assumed.
@@ -123,7 +124,9 @@ class MeasureManager : public QObject
 
     // Updates the given set of measures in the current project. Does not ask for user approval. Approval is assumed
     // when this method is called.
-    void updateMeasures(analysisdriver::SimpleProject &t_project, const std::vector<BCLMeasure> &t_newMeasures, bool t_showMessage=true);
+    void updateMeasures(analysisdriver::SimpleProject &t_project, 
+      const std::vector<BCLMeasure> &t_newMeasures, 
+      bool t_showMessage=true);
 
     void setLibraryController(const QSharedPointer<LocalLibraryController> &t_libraryController);
 
@@ -142,11 +145,11 @@ class MeasureManager : public QObject
     /// Does not update the measures in the project at all
     void updateMeasuresLists();
 
-    /// For all measures in the "patApplicationMeasures" list which have changed relative to the version
+    /// For all measures in the "openstudioMeasures" list which have changed relative to the version
     /// in the project, update the project to the new version
     /// 
     /// Does not ask for user approval
-    void updatePatApplicationMeasures(analysisdriver::SimpleProject &t_project);
+    void updateOpenStudioMeasures(analysisdriver::SimpleProject &t_project);
 
     /// Updates the UI for all measures.
     /// For all measures in the "myMeasures" list which have changed relative to the version
@@ -181,8 +184,11 @@ class MeasureManager : public QObject
   private:
     REGISTER_LOGGER("openstudio.MeasureManager");
 
+    void updateMeasuresLists(bool updateUserMeasures);
+
     BaseApp *m_app;
-    std::map<UUID,BCLMeasure> m_patApplicationMeasures;
+    std::map<UUID,BCLMeasure> m_managedMeasures;
+    std::map<UUID,BCLMeasure> m_openstudioMeasures;
     std::map<UUID,BCLMeasure> m_myMeasures;
     std::map<UUID,BCLMeasure> m_bclMeasures;
     QSharedPointer<ruleset::RubyUserScriptInfoGetter> m_infoGetter;

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -192,7 +192,7 @@ VariableHeaderView::VariableHeaderView(bool t_fixed)
 
 
 VariableGroupItemView::VariableGroupItemView(bool t_fixedMeasuresOnly, MeasureType measureType)
-  : OSCollapsibleView(nullptr)
+  : OSCollapsibleView()
 {
   variableGroupHeader = new LightGradientHeader();
   variableGroupHeader->setMeasureType(measureType);
@@ -269,7 +269,7 @@ void VariableItemView::paintEvent(QPaintEvent *)
 
 
 VariableItemView::VariableItemView(bool t_fixed)
-  : OSCollapsibleView(nullptr)
+  : OSCollapsibleView()
 {
   setMaximumWidth(650);
 

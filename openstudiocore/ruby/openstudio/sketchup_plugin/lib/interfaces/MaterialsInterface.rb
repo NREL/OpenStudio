@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -51,7 +51,7 @@ module OpenStudio
     attr_reader :outdoors_ext, :outdoorssun_ext, :outdoorswind_ext, :outdoorssunwind_ext
     attr_reader :outdoors_int, :outdoorssun_int, :outdoorswind_int, :outdoorssunwind_int
     attr_reader :subext_ext, :subext_int, :subint_ext, :subint_int
-    attr_reader :air_wall
+    attr_reader :air_wall, :solar_collector
     
     # for testing
     attr_accessor :observer
@@ -177,6 +177,22 @@ module OpenStudio
         @air_wall.alpha = 0.25
       end
       
+      @solar_collector = @model_interface.skp_model.materials["OpenStudio_SolarCollector"]
+      if (@solar_collector.nil?)      
+        @solar_collector = @model_interface.skp_model.materials.add("OpenStudio_SolarCollector")
+        @solar_collector.texture = Plugin.dir + "/lib/resources/SolarCollector.png"
+        @solar_collector.texture.size = 40
+        @solar_collector.alpha = 1.0
+      end
+      
+      @photovoltaic = @model_interface.skp_model.materials["OpenStudio_Photovoltaic"]
+      if (@photovoltaic.nil?)      
+        @photovoltaic = @model_interface.skp_model.materials.add("OpenStudio_Photovoltaic")
+        @photovoltaic.texture = Plugin.dir + "/lib/resources/Photovoltaic.png"
+        @photovoltaic.texture.size = 40
+        @photovoltaic.alpha = 1.0
+      end
+      
     end
     
     def destroy
@@ -286,13 +302,14 @@ module OpenStudio
       return @render_defaults
     end
     
-    def render_defaults=(render_defaults)
-      #Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-      
-      @render_defaults = render_defaults
-      
-      @model_interface.request_paint
-    end
+    # DLM: can we remove this?
+    #def render_defaults=(render_defaults)
+    #  #Plugin.log(OpenStudio::Trace, "#{current_method_name}")
+    #  
+    #  @render_defaults = render_defaults
+    #  
+    #  @model_interface.request_paint
+    #end
     
     def rendering_mode
       #Plugin.log(OpenStudio::Trace, "#{current_method_name}")
@@ -302,7 +319,7 @@ module OpenStudio
 
     def rendering_mode=(rendering_mode)
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
-
+    
       if rendering_mode == RenderByConstruction or rendering_mode == RenderBySpaceType
         if @rendering_mode == rendering_mode
           # toggle render defaults

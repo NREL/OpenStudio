@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -30,10 +30,39 @@
 #include <QLineEdit>
 #include <QLabel>
 #include <QString>
+#include <QValidator>
+
+class QFocusEvent;
 
 namespace openstudio {
 
 class Unit;
+
+class QuantityLineEdit : public QLineEdit {
+  Q_OBJECT
+public:
+
+  QuantityLineEdit(QWidget * parent = nullptr);
+
+  virtual ~QuantityLineEdit() {}
+
+  void enableClickFocus() { this->m_hasClickFocus = true; }
+
+protected:
+
+  virtual void focusInEvent(QFocusEvent * e) override;
+
+  virtual void focusOutEvent(QFocusEvent * e) override;
+
+private:
+
+  bool m_hasClickFocus = false;
+
+signals:
+
+  void inFocus(bool inFocus);
+
+};
 
 class OSQuantityEdit2: public QWidget {
   Q_OBJECT
@@ -43,6 +72,12 @@ class OSQuantityEdit2: public QWidget {
                   const std::string& ipUnits, bool isIP, QWidget * parent = nullptr);
 
   virtual ~OSQuantityEdit2() {}
+
+  void enableClickFocus();
+
+  QDoubleValidator * doubleValidator() { return m_doubleValidator; }
+
+  bool hasData() { return !this->m_lineEdit->text().isEmpty(); }
 
   void bind(bool isIP,
             model::ModelObject& modelObject,
@@ -90,6 +125,10 @@ class OSQuantityEdit2: public QWidget {
 
   void unbind();
 
+ signals:
+
+  void inFocus(bool inFocus, bool hasData);
+
  public slots:
 
   void onUnitSystemChange(bool isIP);
@@ -102,12 +141,15 @@ class OSQuantityEdit2: public QWidget {
 
   void onModelObjectRemove(Handle handle);
 
+  void onInFocus(bool inFocus);
+
  private:
 
-  QLineEdit* m_lineEdit;
+  QuantityLineEdit* m_lineEdit;
   QLabel* m_units;
   QString m_text = "UNINITIALIZED";
   std::string m_unitsStr = "";
+  QDoubleValidator * m_doubleValidator;
 
   bool m_isIP;
   std::string m_modelUnits;
@@ -154,6 +196,8 @@ class OSQuantityEdit: public QWidget {
 
   virtual ~OSQuantityEdit() {}
 
+  QDoubleValidator * doubleValidator() { return m_doubleValidator; }
+
   void bind(model::ModelObject& modelObject,
             const char* property,
             bool isIP,
@@ -189,6 +233,7 @@ class OSQuantityEdit: public QWidget {
 
   bool m_isScientific;
   boost::optional<int> m_precision;
+  QDoubleValidator * m_doubleValidator;
 
   std::string propertyWithSystem() const;
 

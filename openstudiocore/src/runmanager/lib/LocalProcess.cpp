@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -141,7 +141,7 @@ namespace detail {
     using namespace boost::filesystem;
     std::set<openstudio::path> retval;
 
-    for (std::vector<std::pair<openstudio::path, openstudio::path> >::const_iterator itr = t_requiredFiles.begin();
+    for (auto itr = t_requiredFiles.begin();
          itr != t_requiredFiles.end();
          ++itr)
     {
@@ -224,7 +224,7 @@ namespace detail {
     LOG(Error, "Starting LocalProcess: " << openstudio::toString(m_tool.localBinPath));
 
     QStringList list;
-    for (std::vector<std::string>::const_iterator itr = m_parameters.begin();
+    for (auto itr = m_parameters.begin();
          itr != m_parameters.end();
          ++itr)
     {

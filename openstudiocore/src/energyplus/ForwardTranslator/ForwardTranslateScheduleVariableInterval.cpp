@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -120,8 +120,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleVariableInterval(
   //++fieldIndex;
   fieldIndex = startNewDay(idfObject,fieldIndex,lastDate);
 
-  for(unsigned int i=start; i < values.size()-1; i++)
-  {
+  for(unsigned int i=start; i < values.size()-1; i++){
     // Loop over the time series values and write out values to the 
     // schedule. This version is based on the seconds from the start
     // of the time series, so should not be vulnerable to round-off.
@@ -159,8 +158,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleVariableInterval(
       int minutes = time.minutes() + floor((time.seconds()/60.0) + 0.5);
       // This is a little dangerous, but all of the problematic 24:00 
       // times that might need to cause a day++ should be caught above.
-      if(minutes==60)
-      {
+      if(minutes==60){
         hours += 1;
         minutes = 0;
       }

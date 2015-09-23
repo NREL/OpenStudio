@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -97,7 +97,7 @@ class UTILITIES_API QuantityConverterSingleton {
 
   boost::optional<Quantity> m_convertToSI(const Quantity& original) const;
 
-  Quantity m_convertFromSI(const Quantity& original, const UnitSystem targetSys) const;
+  Quantity m_convertFromSI(const Quantity& original, const UnitSystem& targetSys) const;
 
   boost::optional<Quantity> m_convertToTargetFromSI(const Quantity& original,
                                                     const Unit& targetUnits) const;

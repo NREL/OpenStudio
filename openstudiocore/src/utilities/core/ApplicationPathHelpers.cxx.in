@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -114,9 +114,9 @@ namespace openstudio {
 #else
     candidate = getApplicationRunDirectory().parent_path() / expectedPath;
 #endif
-    std::cout << "candidate: " << openstudio::toString(candidate) << std::endl;
-    std::cout << "expectedPath: " << openstudio::toString(expectedPath) << std::endl;
-    std::cout << "buildPath: " << openstudio::toString(buildPath) << std::endl;
+    //std::cout << "candidate: " << openstudio::toString(candidate) << std::endl;
+    //std::cout << "expectedPath: " << openstudio::toString(expectedPath) << std::endl;
+    //std::cout << "buildPath: " << openstudio::toString(buildPath) << std::endl;
     // revert to build directory location for regression tests and other external projects
     // that link to a developer build of OpenStudio
     if (!boost::filesystem::exists(candidate)) {
@@ -272,10 +272,20 @@ namespace openstudio {
 
   std::vector<openstudio::path> getOpenStudioBareRubyPaths()
   {
+    // mirrors \openstudiocore\ruby\openstudio.rb
     std::vector<openstudio::path> filenames;
     filenames.push_back(openstudio::toPath("openstudioutilitiescore"));
+    filenames.push_back(openstudio::toPath("openstudioutilitiestime"));
+    filenames.push_back(openstudio::toPath("openstudioutilitiesdata"));
+    filenames.push_back(openstudio::toPath("openstudioutilitiesplot"));
+    filenames.push_back(openstudio::toPath("openstudioutilitiesgeometry"));
+    filenames.push_back(openstudio::toPath("openstudioutilitiessql"));
+    filenames.push_back(openstudio::toPath("openstudioutilitiesbcl"));
+    filenames.push_back(openstudio::toPath("openstudioutilitiescloud"));
+    filenames.push_back(openstudio::toPath("openstudioutilitiesunits"));
     filenames.push_back(openstudio::toPath("openstudioutilitiesidd"));
     filenames.push_back(openstudio::toPath("openstudioutilitiesidf"));
+    filenames.push_back(openstudio::toPath("openstudioutilitiesfiletypes"));
     filenames.push_back(openstudio::toPath("openstudioutilities"));
     filenames.push_back(openstudio::toPath("openstudiomodel"));
     filenames.push_back(openstudio::toPath("openstudiomodelcore"));
@@ -283,17 +293,22 @@ namespace openstudio {
     filenames.push_back(openstudio::toPath("openstudiomodelresources"));
     filenames.push_back(openstudio::toPath("openstudiomodelgeometry"));
     filenames.push_back(openstudio::toPath("openstudiomodelhvac"));
+    filenames.push_back(openstudio::toPath("openstudiomodelrefrigeration"));
     filenames.push_back(openstudio::toPath("openstudioenergyplus"));
     filenames.push_back(openstudio::toPath("openstudioradiance"));
     filenames.push_back(openstudio::toPath("openstudiogbxml"));
-    filenames.push_back(openstudio::toPath("openstudiorulesengine"));
+    filenames.push_back(openstudio::toPath("openstudioairflow"));
+    filenames.push_back(openstudio::toPath("openstudioosversion"));
     filenames.push_back(openstudio::toPath("openstudioruleset"));
     filenames.push_back(openstudio::toPath("openstudiorunmanager"));
-    filenames.push_back(openstudio::toPath("openstudiostandardsinterface"));
     filenames.push_back(openstudio::toPath("openstudioproject"));
     filenames.push_back(openstudio::toPath("openstudioanalysisdriver"));
     filenames.push_back(openstudio::toPath("openstudiomodeleditor"));
     filenames.push_back(openstudio::toPath("openstudioanalysis"));
+    filenames.push_back(openstudio::toPath("openstudiolib"));
+    filenames.push_back(openstudio::toPath("openstudioisomodel"));
+    filenames.push_back(openstudio::toPath("openstudiosdd"));
+
     return filenames;
   }
 
@@ -391,6 +406,67 @@ openstudio::path getOpenStudioEmbeddedRubyPath() {
 #else
   return openstudio::path();
 #endif
+}
+
+openstudio::path getEnergyPlusDirectory() {
+  openstudio::path cmakeEnergyPlusPath = openstudio::toPath("${ENERGYPLUS_EXE}");
+  openstudio::path cmakeEnergyPlusDirectory = cmakeEnergyPlusPath.parent_path();
+  openstudio::path energyPlusDirectoryName = cmakeEnergyPlusDirectory.filename();
+
+  if (applicationIsRunningFromBuildDirectory())
+  {
+    return cmakeEnergyPlusDirectory;
+  } else {
+#ifdef Q_OS_LINUX
+    return getApplicationInstallDirectory() / openstudio::toPath("share/openstudio-" + openStudioVersion()) / energyPlusDirectoryName;
+#elif defined(Q_OS_MAC)
+    return getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("sharedresources") / energyPlusDirectoryName;
+#else
+    return getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio") / energyPlusDirectoryName;
+#endif
+  }
+}
+
+openstudio::path getEnergyPlusExecutable() {
+  openstudio::path cmakeEnergyPlusPath = openstudio::toPath("${ENERGYPLUS_EXE}");
+  openstudio::path energyPlusFileName = cmakeEnergyPlusPath.filename();
+
+#ifdef Q_OS_LINUX
+    return getEnergyPlusDirectory() / energyPlusFileName;
+#elif defined(Q_OS_MAC)
+    return getEnergyPlusDirectory() / energyPlusFileName;
+#else
+   return getEnergyPlusDirectory() / energyPlusFileName;
+#endif
+}
+
+boost::optional<openstudio::path> getRadianceDirectory() {
+  openstudio::path cmakeRadianceDirectory = openstudio::toPath("${RADIANCE_LOCATION}");
+  openstudio::path radianceDirectoryName;
+  if (!cmakeRadianceDirectory.empty()){
+    radianceDirectoryName = cmakeRadianceDirectory.filename();
+  }
+
+  openstudio::path result;
+
+  if (applicationIsRunningFromBuildDirectory())
+  {
+    result = cmakeRadianceDirectory;
+  } else {
+#ifdef Q_OS_LINUX
+    result = getApplicationInstallDirectory() / openstudio::toPath("share/openstudio-" + openStudioVersion()) / radianceDirectoryName;
+#elif defined(Q_OS_MAC)
+    result = getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("sharedresources") / radianceDirectoryName;
+#else
+    result = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio") / radianceDirectoryName;
+#endif
+  }
+
+  if (exists(result)){
+    return result;
+  }
+
+  return boost::none;
 }
 
 } // openstudio

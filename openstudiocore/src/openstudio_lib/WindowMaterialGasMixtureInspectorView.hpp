@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -38,23 +38,25 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
+class StandardsInformationMaterialWidget;
+
 class WindowMaterialGasMixtureInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
 
   public:
 
-    WindowMaterialGasMixtureInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = 0);
+    WindowMaterialGasMixtureInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = nullptr);
 
     virtual ~WindowMaterialGasMixtureInspectorView() {}
 
   protected:
 
-    virtual void onClearSelection();
+    virtual void onClearSelection() override;
 
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
 
-    virtual void onUpdate();
+    virtual void onUpdate() override;
 
   private:
 
@@ -66,36 +68,35 @@ class WindowMaterialGasMixtureInspectorView : public ModelObjectInspectorView
 
     void refresh();
 
-    OSComboBox * m_gas1Type;
-    OSComboBox * m_gas2Type;
-    OSComboBox * m_gas3Type;
-    OSComboBox * m_gas4Type;
-
-    OSLineEdit * m_nameEdit;
-
-    OSLineEdit * m_2AEdit;
-
-    OSLineEdit * m_3AEdit;
-
-    OSLineEdit * m_4AEdit;
-
-    OSQuantityEdit * m_thickness;
-
-    OSIntegerEdit * m_numberOfGasesInMixture;
-
-    OSQuantityEdit * m_gas1Fraction;
-
-    OSQuantityEdit * m_gas2Fraction;
-
-    OSQuantityEdit * m_gas3Fraction;
-
-    OSQuantityEdit * m_gas4Fraction;
-
     bool m_isIP;
 
-  public slots:
+    OSLineEdit * m_nameEdit = nullptr;
 
-    void toggleUnits(bool displayIP);
+    OSComboBox * m_gas1Type = nullptr;
+    OSComboBox * m_gas2Type = nullptr;
+    OSComboBox * m_gas3Type = nullptr;
+    OSComboBox * m_gas4Type = nullptr;
+
+    OSLineEdit * m_2AEdit = nullptr;
+
+    OSLineEdit * m_3AEdit = nullptr;
+
+    OSLineEdit * m_4AEdit = nullptr;
+
+    OSQuantityEdit * m_thickness = nullptr;
+
+    OSIntegerEdit * m_numberOfGasesInMixture = nullptr;
+
+    OSQuantityEdit * m_gas1Fraction = nullptr;
+
+    OSQuantityEdit * m_gas2Fraction = nullptr;
+
+    OSQuantityEdit * m_gas3Fraction = nullptr;
+
+    OSQuantityEdit * m_gas4Fraction = nullptr;
+
+    StandardsInformationMaterialWidget * m_standardsInformationWidget = nullptr;
+
 };
 
 } // openstudio

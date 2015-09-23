@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -31,35 +31,38 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateZoneControlHumidistat( ZoneControlHumidistat& modelObject )
 {
-  // Name
-  IdfObject object = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneControl_Humidistat, modelObject);
+  boost::optional<IdfObject> result; 
 
-  // Zone Name
-  // set by ThermalZone
+  auto humidifyingSchedule = modelObject.humidifyingRelativeHumiditySetpointSchedule();
+  auto dehumidifyingSchedule = modelObject.dehumidifyingRelativeHumiditySetpointSchedule();
+  
+  if( humidifyingSchedule || dehumidifyingSchedule ) {
+    // Name
+    result = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneControl_Humidistat, modelObject);
 
-  // Humidifying Relative Humidity Setpoint Schedule Name
-  if( OptionalSchedule humidifyingSchedule = modelObject.humidifyingRelativeHumiditySetpointSchedule() )
-  {
-    boost::optional<IdfObject> _humidifyingSchedule = translateAndMapModelObject(humidifyingSchedule.get());
+    // Zone Name
+    // set by ThermalZone
 
-    if( _humidifyingSchedule && _humidifyingSchedule->name() )
-    {
-      object.setString(ZoneControl_HumidistatFields::HumidifyingRelativeHumiditySetpointScheduleName,_humidifyingSchedule->name().get());
+    // Humidifying Relative Humidity Setpoint Schedule Name
+    if( humidifyingSchedule ) {
+      boost::optional<IdfObject> _humidifyingSchedule = translateAndMapModelObject(humidifyingSchedule.get());
+
+      if( _humidifyingSchedule && _humidifyingSchedule->name() ) {
+        result->setString(ZoneControl_HumidistatFields::HumidifyingRelativeHumiditySetpointScheduleName,_humidifyingSchedule->name().get());
+      }
+    }
+
+    // Dehumidifying Relative Humidity Setpoint Schedule Name
+    if( dehumidifyingSchedule ) {
+      boost::optional<IdfObject> _dehumidifyingSchedule = translateAndMapModelObject(dehumidifyingSchedule.get());
+
+      if( _dehumidifyingSchedule && _dehumidifyingSchedule->name() ) {
+        result->setString(ZoneControl_HumidistatFields::DehumidifyingRelativeHumiditySetpointScheduleName,_dehumidifyingSchedule->name().get());
+      }
     }
   }
 
-  // Dehumidifying Relative Humidity Setpoint Schedule Name
-  if( OptionalSchedule dehumidifyingSchedule = modelObject.dehumidifyingRelativeHumiditySetpointSchedule() )
-  {
-    boost::optional<IdfObject> _dehumidifyingSchedule = translateAndMapModelObject(dehumidifyingSchedule.get());
-
-    if( _dehumidifyingSchedule && _dehumidifyingSchedule->name() )
-    {
-      object.setString(ZoneControl_HumidistatFields::DehumidifyingRelativeHumiditySetpointScheduleName,_dehumidifyingSchedule->name().get());
-    }
-  }
-
-  return object;
+  return result;
 }
 
 } // energyplus

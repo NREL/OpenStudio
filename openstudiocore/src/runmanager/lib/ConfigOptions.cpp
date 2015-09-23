@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -337,6 +337,14 @@ namespace runmanager {
     {
       exename = "energyplus";
     }
+    else if (eplus.first.getMajor() && eplus.first.getMajor() == 8 && eplus.first.getMinor() && eplus.first.getMinor() >= 3)
+    {
+      exename = "energyplus";
+    }
+    else if (eplus.first.getMajor() && eplus.first.getMajor() > 8)
+    {
+      exename = "energyplus";
+    }
 
 
     return openstudio::runmanager::ToolInfo(
@@ -542,6 +550,11 @@ namespace runmanager {
   {
     std::vector<openstudio::path> potentialpaths;
 
+    boost::optional<openstudio::path> radianceDirectory = getRadianceDirectory();
+    if (radianceDirectory){
+      potentialpaths.push_back(*radianceDirectory);
+    }
+
     QByteArray qba = qgetenv("RAYPATH");
     if (!qba.isEmpty())
     {
@@ -615,6 +628,9 @@ namespace runmanager {
   std::vector<openstudio::path> ConfigOptions::potentialEnergyPlusLocations() const
   {
     std::vector<openstudio::path> potentialpaths;
+
+    potentialpaths.push_back(getEnergyPlusDirectory());
+    potentialpaths.push_back(getEnergyPlusExecutable());
 
     QByteArray qba = qgetenv("ENERGYPLUSDIR");
     if (!qba.isEmpty())
@@ -774,11 +790,13 @@ namespace runmanager {
         QVariant vmajor = settings.value("major");
         QVariant vminor = settings.value("minor");
         QVariant vbuild = settings.value("build");
+        QVariant vtag = settings.value("tag");
 
         openstudio::runmanager::ToolVersion tv(
             vmajor.isValid()?vmajor.toInt():boost::optional<int>(),
             vminor.isValid()?vminor.toInt():boost::optional<int>(),
-            vbuild.isValid()?vbuild.toInt():boost::optional<int>()
+            vbuild.isValid()?vbuild.toInt():boost::optional<int>(),
+            vtag.isValid()?openstudio::toString(vtag.toString()):boost::optional<std::string>()
             );
 
         openstudio::runmanager::ToolLocationInfo tli(
@@ -792,7 +810,7 @@ namespace runmanager {
       }
     }
 
-    settings.endArray();  
+    settings.endArray();
 
 
     return tools;
@@ -825,10 +843,12 @@ namespace runmanager {
       QVariant vmajor;
       QVariant vminor;
       QVariant vbuild;
+      QVariant vtag;
 
       boost::optional<int> major = t_tools[i].first.getMajor();
       boost::optional<int> minor = t_tools[i].first.getMinor();
       boost::optional<int> build = t_tools[i].first.getBuild();
+      boost::optional<std::string> tag = t_tools[i].first.getTag();
 
       if (major)
       {
@@ -845,9 +865,16 @@ namespace runmanager {
         vbuild = *build;
       }
 
+      if (tag)
+      {
+        vtag = openstudio::toQString(*tag);
+      }
+
+
       settings.setValue("major", vmajor);
       settings.setValue("minor", vminor);
       settings.setValue("build", vbuild);
+      settings.setValue("tag", vtag);
 
       settings.setValue("toolType", openstudio::toQString(t_tools[i].second.toolType.valueName()));
       settings.setValue("binaryDir", openstudio::toQString(t_tools[i].second.binaryDir));
@@ -872,7 +899,7 @@ namespace runmanager {
       m_toolLocations 
         = std::set<std::pair<openstudio::runmanager::ToolVersion, openstudio::runmanager::ToolLocationInfo> >(mergedtools.begin(), mergedtools.end());
     }
-    
+
     if (t_onlyIfZeroTools)
     {
       if (getToolLocations().size() == 0) {

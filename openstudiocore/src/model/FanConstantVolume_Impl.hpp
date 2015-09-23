@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -65,22 +65,22 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual std::vector<openstudio::IdfObject> remove();
+    virtual std::vector<openstudio::IdfObject> remove() override;
 
-    virtual ModelObject clone(Model model) const;
+    virtual ModelObject clone(Model model) const override;
 
     // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned inletPort();
+    virtual unsigned inletPort() override;
 
-    virtual unsigned outletPort();
+    virtual unsigned outletPort() override;
 
-    virtual bool addToNode(Node & node);
+    virtual bool addToNode(Node & node) override;
 
     //@}
     /** @name Getters and Setters */
@@ -90,31 +90,31 @@ namespace detail {
     bool setAvailabilitySchedule(Schedule& s);
 
     // Get FanEfficiency
-    double fanEfficiency();
+    double fanEfficiency() const;
 
     // Set fanEfficiency
     void setFanEfficiency(double val);
 
     // Get PressureRise
-    double pressureRise();
+    double pressureRise() const;
 
     // Set PressureRise
     void setPressureRise(double val);
 
     // Get MotorEfficiency
-    double motorEfficiency();
+    double motorEfficiency() const;
 
     // Set MotorEfficiency
     void setMotorEfficiency(double val);
 
     // Get MotorInAirstreamFraction
-    double motorInAirstreamFraction();
+    double motorInAirstreamFraction() const;
 
     // Set MotorInAirstreamFraction
     void setMotorInAirstreamFraction(double val);
 
     // Get EndUseSubcategory
-    std::string endUseSubcategory();
+    std::string endUseSubcategory() const;
 
     // Set EndUseSubcategory
     void setEndUseSubcategory(std::string val);
@@ -147,9 +147,9 @@ namespace detail {
 
     bool setAvailibiltyScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
 
-    virtual boost::optional<HVACComponent> containingHVACComponent() const;
+    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
-    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const;
+    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
   };
 
 } // detail

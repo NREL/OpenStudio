@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -27,13 +27,15 @@
 
 namespace openstudio {
 
+  class ThermalZonesGridView;
+
 class ThermalZonesView : public ModelSubTabView
 {
   Q_OBJECT
 
 public:
 
-  ThermalZonesView(bool isIP, const model::Model & model, QWidget * parent = 0);
+  ThermalZonesView(bool isIP, const model::Model & model, QWidget * parent = nullptr);
 
   virtual ~ThermalZonesView() {}
 
@@ -46,9 +48,12 @@ class ThermalZoneView : public ModelObjectInspectorView
 
 public:
 
-  ThermalZoneView(bool isIP, const model::Model & model, QWidget * parent = 0);
+  ThermalZoneView(bool isIP, const model::Model & model, QWidget * parent = nullptr);
 
   virtual ~ThermalZoneView() {}
+
+  virtual bool supportsMultipleObjectSelection() const override { return true; }
+  virtual std::vector<model::ModelObject> selectedObjects() const override;
 
 public slots:
 
@@ -62,17 +67,19 @@ signals:
 
 protected:
 
-  void onClearSelection();
+  void onClearSelection() override;
 
-  void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+  void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
 
-  void onUpdate();
+  void onUpdate() override;
 
 private slots:
 
-  void toggleUnits(bool);
+  void toggleUnits(bool) override;
 
 private:
+
+  ThermalZonesGridView * m_thermalZonesGridView = nullptr;
 
   bool m_isIP;
 

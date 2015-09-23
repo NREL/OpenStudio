@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -32,14 +32,13 @@ namespace detail {
 };
 
 class Node;
-
 class Splitter;
-
 class Mixer;
-
 class HVACComponent;
-
 class SizingPlant;
+class PlantEquipmentOperationScheme;
+class PlantEquipmentOperationHeatingLoad;
+class PlantEquipmentOperationCoolingLoad;
 
 /** PlantLoop is an interface to the EnergyPlus IDD object
  *  named "PlantLoop"
@@ -57,6 +56,12 @@ class MODEL_API PlantLoop : public Loop {
   explicit PlantLoop(Model& model);
 
   virtual ~PlantLoop() {}
+
+  static std::vector<std::string> loadDistributionSchemeValues();
+
+  std::string loadDistributionScheme();
+
+  bool setLoadDistributionScheme(std::string scheme);
 
   std::string fluidType();
 
@@ -104,47 +109,51 @@ class MODEL_API PlantLoop : public Loop {
 
   void resetCommonPipeSimulation();
 
-  Node supplyInletNode() const;
+  /** In OpenStudio there are three levels of "priority" for PlantEquipmentOperationScheme instances.
+    * Priority here means that if there are multiple operation schemes that list the same equipment, 
+    * the one with the highest priority will define operation for that equipment.
+    * The operation scheme defined for primaryPlantEquipmentOperationScheme() is the highest priority,
+    * followed by any component setpoint operation. Heating and cooling load operation,
+    * defined by plantEquipmentOperationHeatingLoad() and plantEquipmentOperationCoolingLoad() has the lowest priority.
+    *
+    * No operation scheme is required for plant operation. OpenStudio will provide suitable defaults if none are provied.
+    * If any operation schemes, including primary, heating load, or cooling load, are defined then the default logic is 
+    * entirely disabled.
+    *
+    * OpenStudio does not define a PlantEquipmentOperationComponentSetpoint, which is defined in EnergyPlus, 
+    * but the funcitonality is supported. In OpenStudio placing a setpoint manager on a component outlet
+    * node will trigger OpenStudio to produce a component setpoint operation scheme on export to EnergyPlus.
+    * This component setpoint behavior is in place even if there are other primary, heating load, or cooling load schemes defined.
+    */
+  boost::optional<PlantEquipmentOperationHeatingLoad> plantEquipmentOperationHeatingLoad() const;
 
-  Node supplyOutletNode() const;
+  bool setPlantEquipmentOperationHeatingLoad(const PlantEquipmentOperationHeatingLoad& plantOperation);
 
-  Node demandInletNode() const;
+  void resetPlantEquipmentOperationHeatingLoad();
 
-  Node demandOutletNode() const;
+  boost::optional<PlantEquipmentOperationCoolingLoad> plantEquipmentOperationCoolingLoad() const;
 
-  /** Returns all of the demand side hvac equipment between
-   * inletComps and outletComps.  If type is given then the results will
-   * be limited to the given IddObjectType.  Multiple inlet and outlet nodes
-   * can be provided.
-   */
-  std::vector<ModelObject> demandComponents(std::vector<HVACComponent> inletComps,
-                                            std::vector<HVACComponent> outletComps,
-                                            openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+  bool setPlantEquipmentOperationCoolingLoad(const PlantEquipmentOperationCoolingLoad& plantOperation);
 
-  /** Returns all of the demand side hvac equipment between
-   * inletComp and outletComp.  If type is given then the results will
-   * be limited to the given IddObjectType.  Only one inlet and outlet node
-   * can be given.
-   */
-  std::vector<ModelObject> demandComponents(HVACComponent inletComp,
-                                            HVACComponent outletComp,
-                                            openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+  void resetPlantEquipmentOperationCoolingLoad();
 
-  /** Returns all of the demand side HVAC equipment within the air loop.
-   * If type is given then the results will be limited to the given IddObjectType.
-   */
-  std::vector<ModelObject> demandComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+  boost::optional<PlantEquipmentOperationScheme> primaryPlantEquipmentOperationScheme() const;
 
-  /** Returns all of the HVAC equipment within the air loop including both
-   * the supply and demand sides of the loop.
-   * If type is given then the results will be limited to the given IddObjectType.
-   */
-  //std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+  bool setPrimaryPlantEquipmentOperationScheme(const PlantEquipmentOperationScheme& plantOperation);
 
-  /** Returns an optional ModelObject with the given handle.
-   * If the handle is not within the PlantLoop then the optional will be false
-   */
-  boost::optional<ModelObject> component(openstudio::Handle handle);
+  void resetPrimaryPlantEquipmentOperationScheme();
+
+  Node supplyInletNode() const override;
+
+  Node supplyOutletNode() const override;
+
+  std::vector<Node> supplyOutletNodes() const override;
+
+  Node demandInletNode() const override;
+
+  std::vector<Node> demandInletNodes() const override;
+
+  Node demandOutletNode() const override;
 
   /** Returns the supply side Mixer. **/
   Mixer supplyMixer();
@@ -180,9 +189,9 @@ class MODEL_API PlantLoop : public Loop {
    */
   bool removeDemandBranchWithComponent( HVACComponent hvacComponent );
 
-  virtual std::vector<openstudio::IdfObject> remove();
+  virtual std::vector<openstudio::IdfObject> remove() override;
 
-  virtual ModelObject clone(Model model) const;
+  virtual ModelObject clone(Model model) const override;
 
   static IddObjectType iddObjectType();
 

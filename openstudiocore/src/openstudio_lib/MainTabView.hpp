@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -34,9 +34,18 @@ class MainTabView : public QWidget
   Q_OBJECT
 
 public:
-  MainTabView(const QString & tabLabel, bool hasSubTabs, QWidget * parent = 0);
+
+  enum TabType {
+    MAIN_TAB,
+    SUB_TAB,
+    GRIDVIEW_SUB_TAB
+  };
+
+  MainTabView(const QString & tabLabel, TabType tabType, QWidget * parent = nullptr);
 
   virtual ~MainTabView() {}
+
+  void setTabType(TabType tabTyp);
 
   ///! Use this method only if your tab will *NOT* have sub tabs
   bool addTabWidget(QWidget * widget);
@@ -55,35 +64,36 @@ public:
   // Public method for setting the current sub tab.
   bool selectSubTabByIndex(int index);
 
-signals:
-
-  void tabSelected(int id);
-
-  void toggleUnitsClicked(bool displayIP);
-
 protected:
 
   void setCurrentIndex(int index);
   void setCurrentWidget(QWidget * widget);
-  void paintEvent( QPaintEvent * event );
-  void resizeEvent( QResizeEvent * event );
-
-private slots:
-  void select();
+  void paintEvent( QPaintEvent * event ) override;
+  void resizeEvent( QResizeEvent * event ) override;
 
 private:
+
   QLabel * m_tabLabel;
   QStackedWidget * m_stackedWidget;
-  QWidget * m_tabBar;
   QWidget * m_mainWidget;
 
   std::vector<QString> m_selectedPixmaps;
   std::vector<QString> m_neighborSelectedPixmaps;
   std::vector<QString> m_unSelectedPixmaps;
-  std::vector<QPushButton *> m_tabButtons; 
-  std::vector<int> m_ids; 
+  std::vector<QPushButton *> m_tabButtons;
+  std::vector<int> m_ids;
 
-  bool m_hasSubTab;
+  TabType m_tabType;
+
+signals:
+
+  void tabSelected(int id);
+  void toggleUnitsClicked(bool displayIP);
+
+private slots:
+
+  void select();
+
 };
 
 } // namespace openstudio

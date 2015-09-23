@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -787,6 +787,57 @@ ChillerElectricEIR::ChillerElectricEIR(const Model& model,
 
   setBasinHeaterSetpointTemperature(10.0);
 
+  resetBasinHeaterSchedule();
+}
+
+ChillerElectricEIR::ChillerElectricEIR(const Model& model)
+  : WaterToWaterComponent(ChillerElectricEIR::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::ChillerElectricEIR_Impl>());
+
+  CurveBiquadratic ccFofT(model);
+  ccFofT.setCoefficient1Constant(1.0215158);
+  ccFofT.setCoefficient2x(0.037035864);
+  ccFofT.setCoefficient3xPOW2(0.0002332476);
+  ccFofT.setCoefficient4y(-0.003894048);
+  ccFofT.setCoefficient5yPOW2(-6.52536e-005);
+  ccFofT.setCoefficient6xTIMESY(-0.0002680452);
+  ccFofT.setMinimumValueofx(5.0);
+  ccFofT.setMaximumValueofx(10.0);
+  ccFofT.setMinimumValueofy(24.0);
+  ccFofT.setMaximumValueofy(35.0);
+
+  CurveBiquadratic eirToCorfOfT(model);
+  eirToCorfOfT.setCoefficient1Constant(0.70176857);
+  eirToCorfOfT.setCoefficient2x(-0.00452016);
+  eirToCorfOfT.setCoefficient3xPOW2(0.0005331096);
+  eirToCorfOfT.setCoefficient4y(-0.005498208);
+  eirToCorfOfT.setCoefficient5yPOW2(0.0005445792);
+  eirToCorfOfT.setCoefficient6xTIMESY(-0.0007290324);
+  eirToCorfOfT.setMinimumValueofx(5.0);
+  eirToCorfOfT.setMaximumValueofx(10.0);
+  eirToCorfOfT.setMinimumValueofy(24.0);
+  eirToCorfOfT.setMaximumValueofy(35.0);
+
+  CurveQuadratic eirToCorfOfPlr(model);
+  eirToCorfOfPlr.setCoefficient1Constant(0.06369119);
+  eirToCorfOfPlr.setCoefficient2x(0.58488832);
+  eirToCorfOfPlr.setCoefficient3xPOW2(0.35280274);
+  eirToCorfOfPlr.setMinimumValueofx(0.0);
+  eirToCorfOfPlr.setMaximumValueofx(1.0);
+
+  setCoolingCapacityFunctionOfTemperature(ccFofT);
+  setElectricInputToCoolingOutputRatioFunctionOfTemperature(eirToCorfOfT);
+  setElectricInputToCoolingOutputRatioFunctionOfPLR(eirToCorfOfPlr);
+
+  autosizeReferenceCapacity();
+  OS_ASSERT(setReferenceCOP(5.5f));
+  setDesignHeatRecoveryWaterFlowRate(0.0);
+  resetHeatRecoveryInletNodeName();
+  resetHeatRecoveryOutletNodeName();
+  setSizingFactor(1.0);
+  setBasinHeaterCapacity(0.0);
+  setBasinHeaterSetpointTemperature(10.0);
   resetBasinHeaterSchedule();
 }
 

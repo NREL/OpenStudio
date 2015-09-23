@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -48,6 +48,10 @@ namespace detail {
 
   std::string IddFile_Impl::version() const {
     return m_version;
+  }
+
+  std::string IddFile_Impl::build() const {
+    return m_build;
   }
 
   std::string IddFile_Impl::header() const {
@@ -191,6 +195,7 @@ namespace detail {
 
   }
 
+
   std::ostream& IddFile_Impl::print(std::ostream& os) const
   {
     os << m_header << std::endl;
@@ -267,6 +272,11 @@ namespace detail {
 
         // empty line
         continue;
+      }else if (boost::regex_search(line, matches, iddRegex::build())) {
+        m_build = std::string(matches[1].first,matches[1].second);
+        // this line belongs to the header
+        header << line << std::endl;
+
       }else if (boost::regex_match(line, iddRegex::commentOnlyLine())){
 
         if (!headerClosed){
@@ -365,9 +375,8 @@ namespace detail {
 // CONSTRUCTORS
 
 IddFile::IddFile()
-{
-  m_impl = std::shared_ptr<detail::IddFile_Impl>(new detail::IddFile_Impl());
-}
+  : m_impl(std::shared_ptr<detail::IddFile_Impl>(new detail::IddFile_Impl()))
+{}
 
 IddFile::IddFile(const IddFile& other)
   : m_impl(other.m_impl)
@@ -386,6 +395,10 @@ std::string IddFile::version() const
   return m_impl->version();
 }
 
+std::string IddFile::build() const
+{
+  return m_impl->build();
+}
 std::string IddFile::header() const
 {
   return m_impl->header();
@@ -454,6 +467,37 @@ OptionalIddFile IddFile::load(const openstudio::path& p) {
 std::ostream& IddFile::print(std::ostream& os) const
 {
   return m_impl->print(os);
+}
+
+std::pair<VersionString, std::string> IddFile::parseVersionBuild(const openstudio::path &p)
+{
+  std::ifstream ifs(openstudio::toString(p));
+
+  if (!ifs.good()) { 
+    throw std::runtime_error("Unable to open file for reading: " + openstudio::toString(p)); 
+  }
+
+  ifs.seekg(0, std::ios_base::end);
+  const auto end = ifs.tellg();
+  ifs.seekg(0, std::ios_base::beg);
+
+  const auto length_to_read = std::min(std::streampos(10000), end);
+
+  std::vector<char> data(length_to_read);
+  ifs.read(data.data(), length_to_read);
+  const std::string strdata(data.cbegin(), data.cend());
+
+  std::string build;
+  boost::smatch matches;
+  if (boost::regex_search(strdata, matches, iddRegex::build())) {
+    build = std::string(matches[1].first,matches[1].second);
+  }
+
+  if (boost::regex_search(strdata, matches, iddRegex::version())) {
+    return std::make_pair(VersionString(std::string(matches[1].first, matches[1].second)), build);
+  } 
+
+  throw std::runtime_error("Unable to parse version from IDD: " + openstudio::toString(p));
 }
 
 bool IddFile::save(const openstudio::path& p, bool overwrite) {

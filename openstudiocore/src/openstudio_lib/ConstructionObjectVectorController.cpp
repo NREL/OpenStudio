@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -140,14 +140,16 @@ void ConstructionObjectVectorController::setParentWidget(QWidget * parentWidget)
 ConstructionObjectVectorController::LayerType ConstructionObjectVectorController::getLayerType(IddObjectType iddObjectType)
 {
   if(iddObjectType == IddObjectType::OS_WindowMaterial_Blind ||
-   iddObjectType == IddObjectType::OS_WindowMaterial_Gas ||
-   iddObjectType == IddObjectType::OS_WindowMaterial_GasMixture ||
-   iddObjectType == IddObjectType::OS_WindowMaterial_Glazing ||
-   iddObjectType == IddObjectType::OS_WindowMaterial_Glazing_RefractionExtinctionMethod ||
-   iddObjectType == IddObjectType::OS_WindowMaterial_GlazingGroup_Thermochromic ||
-   iddObjectType == IddObjectType::OS_WindowMaterial_Screen ||
-   iddObjectType == IddObjectType::OS_WindowMaterial_Shade ||
-   iddObjectType == IddObjectType::OS_WindowMaterial_SimpleGlazingSystem){
+     iddObjectType == IddObjectType::OS_WindowMaterial_DaylightRedirectionDevice ||
+     iddObjectType == IddObjectType::OS_WindowMaterial_Gas ||
+     iddObjectType == IddObjectType::OS_WindowMaterial_GasMixture ||
+     iddObjectType == IddObjectType::OS_WindowMaterial_Glazing ||
+     iddObjectType == IddObjectType::OS_WindowMaterial_Glazing_RefractionExtinctionMethod ||
+     iddObjectType == IddObjectType::OS_WindowMaterial_GlazingGroup_Thermochromic ||
+     iddObjectType == IddObjectType::OS_WindowMaterial_Screen ||
+     iddObjectType == IddObjectType::OS_WindowMaterial_Shade ||
+     iddObjectType == IddObjectType::OS_WindowMaterial_SimpleGlazingSystem)
+  {
     return ConstructionObjectVectorController::FENESTRATION;
   }
   else if(iddObjectType == IddObjectType::OS_Material ||

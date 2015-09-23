@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -20,14 +20,18 @@
 #include <gtest/gtest.h>
 
 #include "ModelFixture.hpp"
+
 #include "../Model_Impl.hpp"
 #include "../Space.hpp"
 #include "../SpaceInfiltrationDesignFlowRate.hpp"
 #include "../SpaceInfiltrationDesignFlowRate_Impl.hpp"
+#include "../SpaceType.hpp"
+#include "../SpaceType_Impl.hpp"
+
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;
 using namespace openstudio::model;
-
 
 TEST_F(ModelFixture, SpaceInfiltrationDesignFlowRate)
 {
@@ -82,4 +86,25 @@ TEST_F(ModelFixture, SpaceInfiltrationDesignFlowRate)
   EXPECT_FALSE(spaceInfiltrationDesignFlowRate.flowperExteriorWallArea());
   ASSERT_TRUE(spaceInfiltrationDesignFlowRate.airChangesperHour());
   EXPECT_EQ(5.0, spaceInfiltrationDesignFlowRate.airChangesperHour().get());
+
+  boost::optional<model::ModelObject> clone1 = spaceInfiltrationDesignFlowRate.clone(spaceInfiltrationDesignFlowRate.model());
+  EXPECT_EQ(2u, model.numObjects());
+
+  boost::optional<model::ModelObject> clone2 = clone1->cast<model::SpaceInfiltrationDesignFlowRate>().clone(clone1->model());
+  EXPECT_EQ(3u, model.numObjects());
+  
+  auto spaceType1 = SpaceType(model);
+  auto success = clone1->cast<model::SpaceInfiltrationDesignFlowRate>().setSpaceType(spaceType1);
+  ASSERT_TRUE(success);
+
+  auto spaceType2 = SpaceType(model);
+  success = clone2->cast<model::SpaceInfiltrationDesignFlowRate>().setSpaceType(spaceType2);
+  ASSERT_TRUE(success);
+
+  success = clone2->cast<model::SpaceInfiltrationDesignFlowRate>().setSpaceType(spaceType1);
+  ASSERT_TRUE(success);
+
+  EXPECT_EQ(2, model.getObjectsByType(IddObjectType::OS_SpaceType).size());
+
+  EXPECT_EQ(3, model.getObjectsByType(IddObjectType::OS_SpaceInfiltration_DesignFlowRate).size());
 }

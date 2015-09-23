@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -20,11 +20,11 @@
 #ifndef RESULTSVIEWER_TABLEVIEW_HPP
 #define RESULTSVIEWER_TABLEVIEW_HPP
 
-#include "../utilities/plot/Plot2D.hpp"
-#include "../utilities/plot/LinePlot.hpp"
-#include "../utilities/plot/FloodPlot.hpp"
-#include "../utilities/sql/SqlFile.hpp"
+#include "LinePlot.hpp"
+#include "FloodPlot.hpp"
 #include "ResultsViewerData.hpp"
+
+#include "../utilities/sql/SqlFile.hpp"
 
 #include <QMainWindow>
 #include <QTableWidget>
@@ -66,8 +66,8 @@ public slots:
 
 
 protected:
-  void mouseMoveEvent(QMouseEvent *e);
-  void mousePressEvent(QMouseEvent *e);
+  void mouseMoveEvent(QMouseEvent *e) override;
+  void mousePressEvent(QMouseEvent *e) override;
   void performDrag();
   // internal plot2ddata creation without caching
   void performPlot2DDataDrag();

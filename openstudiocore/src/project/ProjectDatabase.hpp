@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -115,6 +115,14 @@ class PROJECT_API ProjectDatabase {
   static boost::optional<ProjectDatabase> open(const openstudio::path& path,
                                                bool pauseRunManager=false,
                                                bool initializeRunManagerUI=false);
+
+  /** Returns true if the directory contains an existing ProjectDatabase.*/
+  /// DLM: calling this on an existing database issues a Qt warning and may mess up the existing database
+  static bool isExistingProjectDatabase(const openstudio::path& path);
+
+  /** Returns true if the directory contains an existing ProjectDatabase and the project requires version translation.*/
+  /// DLM: calling this on an existing database issues a Qt warning and may mess up the existing database
+  static bool requiresUpdate(const openstudio::path& path);
 
   virtual ~ProjectDatabase() {}
 
@@ -350,6 +358,16 @@ class PROJECT_API ProjectDatabase {
   /// @endcond
 
   void initialize(const openstudio::path& path);
+
+  struct PreOpenCheckResult{
+    openstudio::path originalPath;
+    openstudio::path runManagerDBPath;
+    std::string version;
+  };
+
+  // must be called with fully qualified and normalized path
+  // DLM: calling this on an existing database issues a Qt warning and may mess up the existing database
+  static boost::optional<PreOpenCheckResult> preOpenCheck(const openstudio::path& path);
 
 };
 

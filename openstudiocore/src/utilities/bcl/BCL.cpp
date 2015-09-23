@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -465,54 +465,60 @@ namespace openstudio{
           .nodeValue().toStdString();
         std::string value = attributeElement.firstChildElement("value").firstChild()
           .nodeValue().toStdString();
-        //std::string datatype = attributeElement.firstChildElement("datatype").firstChild()
-        //  .nodeValue().toStdString();
+        std::string datatype = attributeElement.firstChildElement("datatype").firstChild()
+          .nodeValue().toStdString();
 
         // Units are optional
         std::string units = attributeElement.firstChildElement("units").firstChild()
           .nodeValue().toStdString();
+
+        bool doubleOk;
+        double doubleValue = toQString(value).toDouble(&doubleOk);
+
+        bool intOk;
+        int intValue = toQString(value).toInt(&intOk);
         
-        /*if (datatype == "float")
+        if (datatype == "float" && doubleOk)
         {
           if (units.empty())
           {
-            Attribute attr(name, boost::lexical_cast<double>(value));
+            Attribute attr(name, doubleValue);
             m_attributes.push_back(attr);
           }
           else
           {
-            Attribute attr(name, boost::lexical_cast<double>(value), units);
+            Attribute attr(name, doubleValue, units);
             m_attributes.push_back(attr);
           }
         }
-        else if (datatype == "int")
+        else if (datatype == "int" && intOk)
         {
           if (units.empty())
           {
-            Attribute attr(name, boost::lexical_cast<int>(value));
+            Attribute attr(name, intValue);
             m_attributes.push_back(attr);
           }
           else
           {
-            Attribute attr(name, boost::lexical_cast<int>(value), units);
+            Attribute attr(name, intValue, units);
             m_attributes.push_back(attr);
           }
         }
         // Assume string
         else
-        {*/
-        if (units.empty())
         {
-          Attribute attr(name, value);
-          m_attributes.push_back(attr);
-        }
-        else
-        {
-          Attribute attr(name, value, units);
-          m_attributes.push_back(attr);
-        }
+          if (units.empty())
+          {
+            Attribute attr(name, value);
+            m_attributes.push_back(attr);
+          }
+          else
+          {
+            Attribute attr(name, value, units);
+            m_attributes.push_back(attr);
+          }
           //LOG(Error, "Error: Unrecognized attribute datatype \"" << datatype << "\"");
-        //}
+        }
       }
       else
       {

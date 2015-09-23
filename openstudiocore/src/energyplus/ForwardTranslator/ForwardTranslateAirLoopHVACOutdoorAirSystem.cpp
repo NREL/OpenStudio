@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -183,29 +183,28 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
 
   unsigned i = 3;
   ModelObjectVector oaModelObjects = modelObject.oaComponents();
-  for( ModelObjectVector::iterator oaIt = oaModelObjects.begin();
+  for( auto oaIt = oaModelObjects.begin();
        oaIt != oaModelObjects.end();
        ++oaIt )
   {
-    if( ! oaIt->optionalCast<Node>() )
+    if( boost::optional<IdfObject> idfObject = translateAndMapModelObject(*oaIt) )
     {
-      if( boost::optional<IdfObject> idfObject = translateAndMapModelObject(*oaIt) )
-      {
-        equipmentListIdf.setString(i,idfObject->iddObject().name());
-        i++;
-        equipmentListIdf.setString(i,idfObject->name().get());
-        i++;
-      }
+      equipmentListIdf.setString(i,idfObject->iddObject().name());
+      i++;
+      equipmentListIdf.setString(i,idfObject->name().get());
+      i++;
     }
   }
 
   ModelObjectVector reliefModelObjects = modelObject.reliefComponents();
-  for( ModelObjectVector::iterator reliefIt = reliefModelObjects.begin();
+  for( auto reliefIt = reliefModelObjects.begin();
        reliefIt != reliefModelObjects.end();
        ++reliefIt )
   {
-    if( (! reliefIt->optionalCast<Node>()) && (! reliefIt->optionalCast<AirToAirComponent>()) )
-    {
+    // Make sure this is not an AirToAirComponent, 
+    // because those will be added to the equipment list
+    // from the oaComponents() side.
+    if( ! reliefIt->optionalCast<AirToAirComponent>() ) {
       if( boost::optional<IdfObject> idfObject = translateAndMapModelObject(*reliefIt) )
       {
         equipmentListIdf.setString(i,idfObject->iddObject().name());

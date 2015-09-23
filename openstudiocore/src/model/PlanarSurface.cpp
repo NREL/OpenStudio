@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -40,6 +40,8 @@
 #include "../utilities/geometry/Transformation.hpp"
 
 #include "../utilities/core/Assert.hpp"
+
+#include <utilities/idd/IddEnums.hxx>
 
 #include <boost/math/constants/constants.hpp>
 #include <boost/lexical_cast.hpp>
@@ -511,20 +513,24 @@ namespace model {
         Transformation faceTransformationInverse = faceTransformation.inverse();
 
         std::vector<Point3d> faceVertices = faceTransformationInverse*this->vertices();
+        std::reverse(faceVertices.begin(), faceVertices.end());
 
         std::vector<std::vector<Point3d> > faceHoles;
         for (const ModelObject& child : this->children()){
           OptionalPlanarSurface surface = child.optionalCast<PlanarSurface>();
           if (surface){
             if (surface->subtractFromGrossArea()){
-              faceHoles.push_back(faceTransformationInverse*surface->vertices());
+              std::vector<Point3d> holeVertices = faceTransformationInverse*surface->vertices();
+              std::reverse(holeVertices.begin(), holeVertices.end());
+              faceHoles.push_back(holeVertices);
             }
           }
         }
 
         std::vector<std::vector<Point3d> > faceTriangulation = computeTriangulation(faceVertices, faceHoles);
 
-        for (const std::vector<Point3d>& faceTriangle : faceTriangulation){
+        for (std::vector<Point3d> faceTriangle : faceTriangulation){
+          std::reverse(faceTriangle.begin(), faceTriangle.end());
           m_cachedTriangulation.push_back(faceTransformation*faceTriangle);
         }
       }
@@ -536,6 +542,24 @@ namespace model {
       boost::optional<Point3d> result = getCentroid(this->vertices());
       OS_ASSERT(result);
       return *result;
+    }
+
+    std::vector<ModelObject> PlanarSurface_Impl::solarCollectors() const
+    {
+      std::vector<ModelObject> result;
+      for (const ModelObject& modelObject : getObject<ModelObject>().getModelObjectSources<ModelObject>()){
+        switch (modelObject.iddObject().type().value()){
+        case IddObjectType::OS_SolarCollector_FlatPlate_PhotovoltaicThermal: // fall through
+        case IddObjectType::OS_SolarCollector_FlatPlate_Water: // fall through
+        case IddObjectType::OS_SolarCollector_IntegralCollectorStorage: // fall through
+          result.push_back(modelObject);
+          break;
+        default:
+          break;
+        }
+        
+      }
+      return result;
     }
 
     boost::optional<ModelObject> PlanarSurface_Impl::constructionAsModelObject() const
@@ -762,6 +786,11 @@ std::vector<std::vector<Point3d> > PlanarSurface::triangulation() const
 Point3d PlanarSurface::centroid() const
 {
   return getImpl<detail::PlanarSurface_Impl>()->centroid();
+}
+
+std::vector<ModelObject> PlanarSurface::solarCollectors() const
+{
+  return getImpl<detail::PlanarSurface_Impl>()->solarCollectors();
 }
 
 std::vector<PlanarSurface> PlanarSurface::findPlanarSurfaces(const std::vector<PlanarSurface>& planarSurfaces,

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -24,33 +24,39 @@
 
 namespace openstudio {
 
+class SpaceTypesGridView;
+
 class SpaceTypeInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
 
   public:
 
-    SpaceTypeInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = 0 );
+    SpaceTypeInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = nullptr );
 
     virtual ~SpaceTypeInspectorView() {}
 
+    virtual bool supportsMultipleObjectSelection() const override { return true; }
+    virtual std::vector<model::ModelObject> selectedObjects() const override;
+
   protected:
 
-    virtual void onClearSelection();
+    virtual void onClearSelection() override;
 
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
 
-    virtual void onUpdate();
+    virtual void onUpdate() override;
 
   private:
 
     void refresh();
 
     bool m_isIP;
+    SpaceTypesGridView *m_gridView;
 
   public slots:
 
-    void toggleUnits(bool displayIP);
+    void toggleUnits(bool displayIP) override;
 };
 
 } // openstudio

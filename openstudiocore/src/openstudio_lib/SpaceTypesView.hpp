@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ class SpaceTypesView : public ModelSubTabView
 
     SpaceTypesView(bool isIP, 
       const openstudio::model::Model& model,
-      QWidget * parent = 0);
+      QWidget * parent = nullptr);
 
     virtual ~SpaceTypesView() {}
 

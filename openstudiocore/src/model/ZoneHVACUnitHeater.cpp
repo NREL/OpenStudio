@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -69,17 +69,26 @@ namespace detail {
 
   ModelObject ZoneHVACUnitHeater_Impl::clone(Model model) const
   {
-  ZoneHVACUnitHeater unitHeaterClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACUnitHeater>();
+    ZoneHVACUnitHeater unitHeaterClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACUnitHeater>();
 
-  HVACComponent supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
+    HVACComponent supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
 
-  HVACComponent heatingCoilClone = this->heatingCoil().clone(model).cast<HVACComponent>();
+    auto t_heatingCoil = heatingCoil();
+    HVACComponent heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
 
-  unitHeaterClone.setSupplyAirFan(supplyFanClone);
+    unitHeaterClone.setSupplyAirFan(supplyFanClone);
 
-  unitHeaterClone.setHeatingCoil(heatingCoilClone);
+    unitHeaterClone.setHeatingCoil(heatingCoilClone);
 
-  return unitHeaterClone;
+    if( model == this->model() ) {
+      if( auto waterToAirComponent = t_heatingCoil.optionalCast<WaterToAirComponent>() ) {
+        if( auto plant = waterToAirComponent->plantLoop() ) {
+          plant->addDemandBranchForComponent(heatingCoilClone);
+        }
+      }
+    }
+
+    return unitHeaterClone;
   }
 
   std::vector<IdfObject> ZoneHVACUnitHeater_Impl::remove()

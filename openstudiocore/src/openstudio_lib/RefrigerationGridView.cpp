@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -54,6 +54,8 @@
 
 // These defines provide a common area for field display names
 // used on column headers, and other grid widgets
+
+#define SELECTED "All"
 
 // Display Case Fields
 #define ANTISWEATHEATERCONTROLTYPE "Anti Sweat Heater Control Type"
@@ -139,23 +141,23 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
   : QWidget(parent),
   m_isIP(isIP)
 {
-  QVBoxLayout * layout = 0;
+  QVBoxLayout * layout = nullptr;
 
   layout = new QVBoxLayout();
   layout->setSpacing(0);
   layout->setContentsMargins(0,0,0,0);
   setLayout(layout);
 
-  QVBoxLayout * scrollLayout = new QVBoxLayout();
+  auto scrollLayout = new QVBoxLayout();
   scrollLayout->setSpacing(0);
   scrollLayout->setContentsMargins(0,0,0,0);
 
-  QWidget * scrollWidget = new QWidget();
+  auto scrollWidget = new QWidget();
   scrollWidget->setObjectName("ScrollWidget");
   scrollWidget->setStyleSheet("QWidget#ScrollWidget { background: transparent; }");
   scrollWidget->setLayout(scrollLayout);
 
-  QScrollArea * scrollArea = new QScrollArea();
+  auto scrollArea = new QScrollArea();
   scrollArea->setContentsMargins(0,0,0,0);
   scrollArea->setFrameStyle(QFrame::NoFrame);
   scrollArea->setWidget(scrollWidget);
@@ -283,28 +285,35 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
 
 }
 
-void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
+void RefrigerationCaseGridController::addColumns(const QString &/*category*/, std::vector<QString> & fields)
 {
   // always show name column
-  fields.insert(fields.begin(), NAME);
+  fields.insert(fields.begin(), {NAME, SELECTED});
 
   m_baseConcepts.clear();
 
   for (const QString& field : fields) {
     if(field == RATEDAMBIENTTEMPERATURE){
-      addQuantityEditColumn(QString(RATEDAMBIENTTEMPERATURE),
+      addQuantityEditColumn(Heading(QString(RATEDAMBIENTTEMPERATURE)),
                             QString("C"),
                             QString("C"),
                             QString("F"),
                             m_isIP,
                             NullAdapter(&model::RefrigerationCase::ratedAmbientTemperature),
                             NullAdapter(&model::RefrigerationCase::setRatedAmbientTemperature));
+    }else if(field == SELECTED){
+      auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
+      checkbox->setToolTip("Check to select all rows");
+      connect(checkbox.data(), &QCheckBox::stateChanged, this, &RefrigerationCaseGridController::selectAllStateChanged);
+      connect(checkbox.data(), &QCheckBox::stateChanged, this->gridView(), &OSGridView::gridRowSelectionChanged);
+
+      addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row");
     }else if(field == RATEDAMBIENTRELATIVEHUMIDITY){
-      addValueEditColumn(QString(RATEDAMBIENTRELATIVEHUMIDITY),
+      addValueEditColumn(Heading(QString(RATEDAMBIENTRELATIVEHUMIDITY)),
                          NullAdapter(&model::RefrigerationCase::ratedAmbientRelativeHumidity),
                          NullAdapter(&model::RefrigerationCase::setRatedAmbientRelativeHumidity));
     }else if(field == RATEDTOTALCOOLINGCAPACITYPERUNITLENGTH){
-      addQuantityEditColumn(QString(RATEDTOTALCOOLINGCAPACITYPERUNITLENGTH),
+      addQuantityEditColumn(Heading(QString(RATEDTOTALCOOLINGCAPACITYPERUNITLENGTH)),
                             QString("W/m"),
                             QString("W/m"),
                             QString("Btu/hr*ft"),
@@ -312,15 +321,15 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
                             NullAdapter(&model::RefrigerationCase::ratedTotalCoolingCapacityperUnitLength),
                             NullAdapter(&model::RefrigerationCase::setRatedTotalCoolingCapacityperUnitLength));
     }else if(field == RATEDLATENTHEATRATIO){
-      addValueEditColumn(QString(RATEDLATENTHEATRATIO),
+      addValueEditColumn(Heading(QString(RATEDLATENTHEATRATIO)),
                          NullAdapter(&model::RefrigerationCase::ratedLatentHeatRatio),
                          NullAdapter(&model::RefrigerationCase::setRatedLatentHeatRatio));
     }else if(field == RATEDRUNTIMEFRACTION){
-      addValueEditColumn(QString(RATEDRUNTIMEFRACTION),
+      addValueEditColumn(Heading(QString(RATEDRUNTIMEFRACTION)),
                          NullAdapter(&model::RefrigerationCase::ratedRuntimeFraction),
                          NullAdapter(&model::RefrigerationCase::setRatedRuntimeFraction));
     }else if(field == CASELENGTH){
-      addQuantityEditColumn(QString(CASELENGTH),
+      addQuantityEditColumn(Heading(QString(CASELENGTH)),
                             QString("m"),
                             QString("m"),
                             QString("ft"),
@@ -328,7 +337,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
                             NullAdapter(&model::RefrigerationCase::caseLength),
                             NullAdapter(&model::RefrigerationCase::setCaseLength));
     }else if(field == CASEOPERATINGTEMPERATURE){
-      addQuantityEditColumn(QString(CASEOPERATINGTEMPERATURE),
+      addQuantityEditColumn(Heading(QString(CASEOPERATINGTEMPERATURE)),
                             QString("C"),
                             QString("C"),
                             QString("F"),
@@ -336,7 +345,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
                             NullAdapter(&model::RefrigerationCase::caseOperatingTemperature),
                             NullAdapter(&model::RefrigerationCase::setCaseOperatingTemperature));
     }else if(field == STANDARDCASEFANPOWERPERUNITLENGTH){
-      addQuantityEditColumn(QString(STANDARDCASEFANPOWERPERUNITLENGTH),
+      addQuantityEditColumn(Heading(QString(STANDARDCASEFANPOWERPERUNITLENGTH)),
                             QString("W/m"),
                             QString("W/m"),
                             QString("W/ft"),
@@ -344,7 +353,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
                             NullAdapter(&model::RefrigerationCase::standardCaseFanPowerperUnitLength),
                             NullAdapter(&model::RefrigerationCase::setStandardCaseFanPowerperUnitLength));
     }else if(field == OPERATINGCASEFANPOWERPERUNITLENGTH){
-      addQuantityEditColumn(QString(OPERATINGCASEFANPOWERPERUNITLENGTH),
+      addQuantityEditColumn(Heading(QString(OPERATINGCASEFANPOWERPERUNITLENGTH)),
                             QString("W/m"),
                             QString("W/m"),
                             QString("W/ft"),
@@ -352,11 +361,11 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
                             NullAdapter(&model::RefrigerationCase::operatingCaseFanPowerperUnitLength),
                             NullAdapter(&model::RefrigerationCase::setOperatingCaseFanPowerperUnitLength));
     }else if(field == FRACTIONOFLIGHTINGENERGYTOCASE){
-      addValueEditColumn(QString(FRACTIONOFLIGHTINGENERGYTOCASE),
+      addValueEditColumn(Heading(QString(FRACTIONOFLIGHTINGENERGYTOCASE)),
                          NullAdapter(&model::RefrigerationCase::fractionofLightingEnergytoCase),
                          NullAdapter(&model::RefrigerationCase::setFractionofLightingEnergytoCase));
     }else if(field == CASEANTISWEATHEATERPOWERPERUNITLENGTH){
-      addQuantityEditColumn(QString(CASEANTISWEATHEATERPOWERPERUNITLENGTH),
+      addQuantityEditColumn(Heading(QString(CASEANTISWEATHEATERPOWERPERUNITLENGTH)),
                             QString("W/m"),
                             QString("W/m"),
                             QString("W/ft"),
@@ -364,7 +373,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
                             NullAdapter(&model::RefrigerationCase::caseAntiSweatHeaterPowerperUnitLength),
                             NullAdapter(&model::RefrigerationCase::setCaseAntiSweatHeaterPowerperUnitLength));
     }else if(field == MINIMUMANTISWEATHEATERPOWERPERUNITLENGTH){
-      addQuantityEditColumn(QString(MINIMUMANTISWEATHEATERPOWERPERUNITLENGTH),
+      addQuantityEditColumn(Heading(QString(MINIMUMANTISWEATHEATERPOWERPERUNITLENGTH)),
                             QString("W/m"),
                             QString("W/m"),
                             QString("W/ft"),
@@ -372,7 +381,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
                             NullAdapter(&model::RefrigerationCase::minimumAntiSweatHeaterPowerperUnitLength),
                             NullAdapter(&model::RefrigerationCase::setMinimumAntiSweatHeaterPowerperUnitLength));
     }else if(field == CASEHEIGHT){
-      addQuantityEditColumn(QString(CASEHEIGHT),
+      addQuantityEditColumn(Heading(QString(CASEHEIGHT)),
                             QString("m"),
                             QString("m"),
                             QString("ft"),
@@ -380,11 +389,11 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
                             NullAdapter(&model::RefrigerationCase::caseHeight),
                             NullAdapter(&model::RefrigerationCase::setCaseHeight));
     }else if(field == FRACTIONOFANTISWEATHEATERENERGYTOCASE){
-      addValueEditColumn(QString(FRACTIONOFANTISWEATHEATERENERGYTOCASE),
+      addValueEditColumn(Heading(QString(FRACTIONOFANTISWEATHEATERENERGYTOCASE)),
                          NullAdapter(&model::RefrigerationCase::fractionofAntiSweatHeaterEnergytoCase),
                          NullAdapter(&model::RefrigerationCase::setFractionofAntiSweatHeaterEnergytoCase));
     }else if(field == CASEDEFROSTPOWERPERUNITLENGTH){
-      addQuantityEditColumn(QString(CASEDEFROSTPOWERPERUNITLENGTH),
+      addQuantityEditColumn(Heading(QString(CASEDEFROSTPOWERPERUNITLENGTH)),
                             QString("W/m"),
                             QString("W/m"),
                             QString("W/ft"),
@@ -392,11 +401,11 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
                             NullAdapter(&model::RefrigerationCase::caseDefrostPowerperUnitLength),
                             NullAdapter(&model::RefrigerationCase::setCaseDefrostPowerperUnitLength));
     }else if(field == UNDERCASEHVACRETURNAIRFRACTION){
-      addValueEditColumn(QString(UNDERCASEHVACRETURNAIRFRACTION),
+      addValueEditColumn(Heading(QString(UNDERCASEHVACRETURNAIRFRACTION)),
                          NullAdapter(&model::RefrigerationCase::underCaseHVACReturnAirFraction),
                          NullAdapter(&model::RefrigerationCase::setUnderCaseHVACReturnAirFraction));
     }else if(field == STANDARDCASELIGHTINGPOWERPERUNITLENGTH){
-      addQuantityEditColumn(QString(STANDARDCASELIGHTINGPOWERPERUNITLENGTH),
+      addQuantityEditColumn(Heading(QString(STANDARDCASELIGHTINGPOWERPERUNITLENGTH)),
                             QString("W/m"),
                             QString("W/m"),
                             QString("W/ft"),
@@ -404,11 +413,11 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
                             NullAdapter(&model::RefrigerationCase::standardCaseLightingPowerperUnitLength),
                             NullAdapter(&model::RefrigerationCase::setStandardCaseLightingPowerperUnitLength));
     }else if(field == HUMIDITYATZEROANTISWEATHEATERENERGY){
-      addValueEditColumn(QString(HUMIDITYATZEROANTISWEATHEATERENERGY),
+      addValueEditColumn(Heading(QString(HUMIDITYATZEROANTISWEATHEATERENERGY)),
                          NullAdapter(&model::RefrigerationCase::humidityatZeroAntiSweatHeaterEnergy),
                          NullAdapter(&model::RefrigerationCase::setHumidityatZeroAntiSweatHeaterEnergy));
     }else if(field == AVERAGEREFRIGERANTCHARGEINVENTORY){
-      addQuantityEditColumn(QString(AVERAGEREFRIGERANTCHARGEINVENTORY),
+      addQuantityEditColumn(Heading(QString(AVERAGEREFRIGERANTCHARGEINVENTORY)),
                             QString("kg/m"),
                             QString("kg/m"),
                             QString("lb/ft"),
@@ -417,7 +426,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
                             NullAdapter(&model::RefrigerationCase::setAverageRefrigerantChargeInventory));
     }else if(field == LATENTCASECREDITCURVETYPE){
       addComboBoxColumn<std::string, model::RefrigerationCase>(
-            QString(LATENTCASECREDITCURVETYPE),
+            Heading(QString(LATENTCASECREDITCURVETYPE)),
             static_cast<std::string(*)(const std::string&)>(&openstudio::toString),
             std::function<std::vector<std::string> ()>(&model::RefrigerationCase::latentCaseCreditCurveTypeValues),
             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::latentCaseCreditCurveType),
@@ -426,7 +435,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
             boost::optional<DataSource>());
     }else if(field == ANTISWEATHEATERCONTROLTYPE){
       addComboBoxColumn<std::string,model::RefrigerationCase>(
-            QString(ANTISWEATHEATERCONTROLTYPE),
+            Heading(QString(ANTISWEATHEATERCONTROLTYPE)),
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
             std::function<std::vector<std::string> ()>(&model::RefrigerationCase::antiSweatHeaterControlTypeValues),
             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::antiSweatHeaterControlType),
@@ -435,7 +444,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
             boost::optional<DataSource>());
     }else if(field == CASEDEFROSTTYPE){
       addComboBoxColumn<std::string,model::RefrigerationCase>(
-            QString(CASEDEFROSTTYPE),
+            Heading(QString(CASEDEFROSTTYPE)),
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
             std::function<std::vector<std::string> ()>(&model::RefrigerationCase::caseDefrostTypeValues),
             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::caseDefrostType),
@@ -444,7 +453,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
             boost::optional<DataSource>());
     }else if(field == DEFROSTENERGYCORRECTIONCURVETYPE){
       addComboBoxColumn<std::string,model::RefrigerationCase>(
-            QString(DEFROSTENERGYCORRECTIONCURVETYPE),
+            Heading(QString(DEFROSTENERGYCORRECTIONCURVETYPE)),
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
             std::function<std::vector<std::string> ()>(&model::RefrigerationCase::defrostEnergyCorrectionCurveTypeValues),
             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::defrostEnergyCorrectionCurveType),
@@ -452,7 +461,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
             boost::optional<std::function<void(model::RefrigerationCase *)> >(),
             boost::optional<DataSource>());
     }else if(field == INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH){
-      addQuantityEditColumn(QString(INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH),
+      addQuantityEditColumn(Heading(QString(INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH)),
                             QString("W/m"),
                             QString("W/m"),
                             QString("W/ft"),
@@ -460,7 +469,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
                             NullAdapter(&model::RefrigerationCase::installedCaseLightingPowerperUnitLength),
                             NullAdapter(&model::RefrigerationCase::setInstalledCaseLightingPowerperUnitLength));
     }else if(field == DESIGNEVAPORATORTEMPERATUREORBRINEINLETTEMPERATURE){
-      addQuantityEditColumn(QString(DESIGNEVAPORATORTEMPERATUREORBRINEINLETTEMPERATURE),
+      addQuantityEditColumn(Heading(QString(DESIGNEVAPORATORTEMPERATUREORBRINEINLETTEMPERATURE)),
                             QString("C"),
                             QString("C"),
                             QString("F"),
@@ -469,7 +478,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
                             NullAdapter(&model::RefrigerationCase::setDesignEvaporatorTemperatureorBrineInletTemperature));
     }else if(field == CASELIGHTINGSCHEDULE){
       addComboBoxColumn<model::Schedule,model::RefrigerationCase>(
-          QString(CASELIGHTINGSCHEDULE),
+          Heading(QString(CASELIGHTINGSCHEDULE)),
           &openstudio::objectName,
           std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
@@ -481,7 +490,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
           NullAdapter(&model::RefrigerationCase::resetCaseLightingSchedule));
     }else if(field == CASEDEFROSTSCHEDULE){
       addComboBoxColumn<model::Schedule,model::RefrigerationCase>(
-          QString(CASEDEFROSTSCHEDULE),
+          Heading(QString(CASEDEFROSTSCHEDULE)),
           &openstudio::objectName,
           std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
@@ -493,7 +502,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
           NullAdapter(&model::RefrigerationCase::resetCaseDefrostSchedule));
     }else if(field == CASEDEFROSTDRIPDOWNSCHEDULE){
       addComboBoxColumn<model::Schedule,model::RefrigerationCase>(
-          QString(CASEDEFROSTDRIPDOWNSCHEDULE),
+          Heading(QString(CASEDEFROSTDRIPDOWNSCHEDULE)),
           &openstudio::objectName,
           std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
@@ -505,7 +514,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
           NullAdapter(&model::RefrigerationCase::resetCaseDefrostDripDownSchedule));
     }else if(field == REFRIGERATEDCASERESTOCKINGSCHEDULE){
       addComboBoxColumn<model::Schedule,model::RefrigerationCase>(
-          QString(REFRIGERATEDCASERESTOCKINGSCHEDULE),
+          Heading(QString(REFRIGERATEDCASERESTOCKINGSCHEDULE)),
           &openstudio::objectName,
           std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
@@ -517,7 +526,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
           NullAdapter(&model::RefrigerationCase::resetRefrigeratedCaseRestockingSchedule));
     }else if(field == CASECREDITFRACTIONSCHEDULE){
       addComboBoxColumn<model::Schedule,model::RefrigerationCase>(
-          QString(CASECREDITFRACTIONSCHEDULE),
+          Heading(QString(CASECREDITFRACTIONSCHEDULE)),
           &openstudio::objectName,
           std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
@@ -529,7 +538,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
           NullAdapter(&model::RefrigerationCase::resetCaseCreditFractionSchedule));
     }else if(field == AVAILABILITYSCHEDULE){
         addComboBoxColumn<model::Schedule,model::RefrigerationCase>(
-          QString(AVAILABILITYSCHEDULE),
+          Heading(QString(AVAILABILITYSCHEDULE)),
           &openstudio::objectName,
           std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
@@ -541,7 +550,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
           NullAdapter(&model::RefrigerationCase::resetAvailabilitySchedule));
     }else if(field == THERMALZONE){
       addComboBoxColumn<model::ThermalZone,model::RefrigerationCase>( 
-          QString(THERMALZONE),
+          Heading(QString(THERMALZONE)),
           std::function<std::string (const openstudio::model::ThermalZone &)>(&openstudio::objectName),
           std::function<std::vector<model::ThermalZone> ()>(std::bind(&openstudio::sortByObjectName<model::ThermalZone>,
               std::bind(&model::Model::getConcreteModelObjects<model::ThermalZone>, m_model))),
@@ -551,7 +560,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
           boost::optional<openstudio::DataSource>());
     }else if(field == RACK){
       addComboBoxColumn<model::RefrigerationSystem,model::RefrigerationCase>(
-          QString(RACK),
+          Heading(QString(RACK)),
           &openstudio::objectName,
           std::function<std::vector<model::RefrigerationSystem> ()>(
             std::bind(&openstudio::sortByObjectName<model::RefrigerationSystem>,
@@ -562,7 +571,8 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
     }else if(field == DEFROSTENERGYCORRECTIONCURVE){
       //boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const; TODO
     }else if(field == NAME){
-      addNameLineEditColumn(QString(NAME),
+      addNameLineEditColumn(Heading(QString(NAME), false, false),
+                            false,
                             false,
                             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::name),
                             CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setName));
@@ -607,12 +617,6 @@ QString RefrigerationCaseGridController::getColor(const model:: ModelObject & mo
 void RefrigerationCaseGridController::checkSelectedFields()
 {
   if(!this->m_hasHorizontalHeader) return;
-
-  // Don't show the name column check box
-  // From above in addColumns, we know that NAME is the first entry
-  HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(0));
-  OS_ASSERT(horizontalHeaderWidget);
-  horizontalHeaderWidget->m_checkBox->hide();
 
   OSGridController::checkSelectedFields();
 }
@@ -749,26 +753,33 @@ void RefrigerationWalkInGridController::setCategoriesAndFields()
 
 }
 
-void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields)
+void RefrigerationWalkInGridController::addColumns(const QString &/*category*/, std::vector<QString> & fields)
 {
   // always show name column
-  fields.insert(fields.begin(), NAME);
+  fields.insert(fields.begin(), {NAME, SELECTED});
 
   m_baseConcepts.clear();
 
   for (const QString& field : fields) {
     if(field == DEFROSTTYPE){
       addComboBoxColumn<std::string,model::RefrigerationWalkIn>(
-            QString(DEFROSTTYPE),
+            Heading(QString(DEFROSTTYPE)),
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
             std::function<std::vector<std::string> ()>(&model::RefrigerationWalkIn::defrostTypeValues),
             CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::defrostType),
             CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setDefrostType),
             boost::optional<std::function<void(model::RefrigerationWalkIn *)> >(),
             boost::optional<DataSource>());
+    }else if(field == SELECTED){
+      auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
+      checkbox->setToolTip("Check to select all rows");
+      connect(checkbox.data(), &QCheckBox::stateChanged, this, &RefrigerationWalkInGridController::selectAllStateChanged);
+      connect(checkbox.data(), &QCheckBox::stateChanged, this->gridView(), &OSGridView::gridRowSelectionChanged);
+
+      addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row");
     }else if(field == DEFROSTCONTROLTYPE){
       addComboBoxColumn<std::string,model::RefrigerationWalkIn>(
-            QString(DEFROSTCONTROLTYPE),
+            Heading(QString(DEFROSTCONTROLTYPE)),
             static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
             std::function<std::vector<std::string> ()>(&model::RefrigerationWalkIn::defrostControlTypeValues),
             CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::defrostControlType),
@@ -776,7 +787,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
             boost::optional<std::function<void(model::RefrigerationWalkIn *)> >(),
             boost::optional<DataSource>());
     }else if(field == OPERATINGTEMPERATURE){
-      addQuantityEditColumn(QString(OPERATINGTEMPERATURE),
+      addQuantityEditColumn(Heading(QString(OPERATINGTEMPERATURE)),
                             QString("C"),
                             QString("C"),
                             QString("F"),
@@ -784,7 +795,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             NullAdapter(&model::RefrigerationWalkIn::operatingTemperature),
                             NullAdapter(&model::RefrigerationWalkIn::setOperatingTemperature));
     }else if(field == RATEDCOOLINGSOURCETEMPERATURE){
-      addQuantityEditColumn(QString(RATEDCOOLINGSOURCETEMPERATURE),
+      addQuantityEditColumn(Heading(QString(RATEDCOOLINGSOURCETEMPERATURE)),
                             QString("C"),
                             QString("C"),
                             QString("F"),
@@ -792,7 +803,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             NullAdapter(&model::RefrigerationWalkIn::ratedCoolingSourceTemperature),
                             NullAdapter(&model::RefrigerationWalkIn::setRatedCoolingSourceTemperature));
     }else if(field == RATEDCOOLINGCOILFANPOWER){
-      addQuantityEditColumn(QString(RATEDCOOLINGCOILFANPOWER),
+      addQuantityEditColumn(Heading(QString(RATEDCOOLINGCOILFANPOWER)),
                             QString("W"),
                             QString("W"),
                             QString("W"),
@@ -800,7 +811,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             NullAdapter(&model::RefrigerationWalkIn::ratedCoolingCoilFanPower),
                             NullAdapter(&model::RefrigerationWalkIn::setRatedCoolingCoilFanPower));
     }else if(field == RATEDCIRCULATIONFANPOWER){
-      addQuantityEditColumn(QString(RATEDCIRCULATIONFANPOWER),
+      addQuantityEditColumn(Heading(QString(RATEDCIRCULATIONFANPOWER)),
                             QString("W"),
                             QString("W"),
                             QString("W"),
@@ -808,7 +819,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             NullAdapter(&model::RefrigerationWalkIn::ratedCirculationFanPower),
                             NullAdapter(&model::RefrigerationWalkIn::setRatedCirculationFanPower));
     }else if(field == INSULATEDFLOORSURFACEAREA){
-      addQuantityEditColumn(QString(INSULATEDFLOORSURFACEAREA),
+      addQuantityEditColumn(Heading(QString(INSULATEDFLOORSURFACEAREA)),
                             QString("m2"),
                             QString("m2"),
                             QString("ft^2"),
@@ -816,7 +827,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             NullAdapter(&model::RefrigerationWalkIn::insulatedFloorSurfaceArea),
                             NullAdapter(&model::RefrigerationWalkIn::setInsulatedFloorSurfaceArea));
     }else if(field == INSULATEDFLOORUVALUE){
-      addQuantityEditColumn(QString(INSULATEDFLOORUVALUE),
+      addQuantityEditColumn(Heading(QString(INSULATEDFLOORUVALUE)),
                             QString("W/m^2*K"),
                             QString("W/m^2*K"),
                             QString("Btu/hr*ft^2*F"),
@@ -824,7 +835,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             NullAdapter(&model::RefrigerationWalkIn::insulatedFloorUValue),
                             NullAdapter(&model::RefrigerationWalkIn::setInsulatedFloorUValue));
     }else if(field == RATEDCOILCOOLINGCAPACITY){
-      addQuantityEditColumn(QString(RATEDCOILCOOLINGCAPACITY),
+      addQuantityEditColumn(Heading(QString(RATEDCOILCOOLINGCAPACITY)),
                             QString("W"),
                             QString("W"),
                             QString("Btu/hr"),
@@ -832,7 +843,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             NullAdapter(&model::RefrigerationWalkIn::ratedCoilCoolingCapacity),
                             NullAdapter(&model::RefrigerationWalkIn::setRatedCoilCoolingCapacity));
     }else if(field == RATEDTOTALHEATINGPOWER){
-      addQuantityEditColumn(QString(RATEDTOTALHEATINGPOWER),
+      addQuantityEditColumn(Heading(QString(RATEDTOTALHEATINGPOWER)),
                             QString("W"),
                             QString("W"),
                             QString("W"),
@@ -840,7 +851,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             NullAdapter(&model::RefrigerationWalkIn::ratedTotalHeatingPower),
                             NullAdapter(&model::RefrigerationWalkIn::setRatedTotalHeatingPower));
     }else if(field == RATEDTOTALLIGHTINGPOWER){
-      addQuantityEditColumn(QString(RATEDTOTALLIGHTINGPOWER),
+      addQuantityEditColumn(Heading(QString(RATEDTOTALLIGHTINGPOWER)),
                             QString("W"),
                             QString("W"),
                             QString("W"),
@@ -848,7 +859,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             NullAdapter(&model::RefrigerationWalkIn::ratedTotalLightingPower),
                             NullAdapter(&model::RefrigerationWalkIn::setRatedTotalLightingPower));
     }else if(field == AVERAGEREFRIGERANTCHARGEINVENTORY){
-      addQuantityEditColumn(QString(AVERAGEREFRIGERANTCHARGEINVENTORY),
+      addQuantityEditColumn(Heading(QString(AVERAGEREFRIGERANTCHARGEINVENTORY)),
                             QString("kg"),
                             QString("kg"),
                             QString("lb"),
@@ -857,7 +868,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             NullAdapter(&model::RefrigerationWalkIn::setAverageRefrigerantChargeInventory));
     }else if(field == DEFROSTSCHEDULE){
       addComboBoxColumn<model::Schedule, model::RefrigerationWalkIn>(
-          QString(DEFROSTSCHEDULE),
+          Heading(QString(DEFROSTSCHEDULE)),
           std::function<std::string (const model::Schedule &)>(&openstudio::objectName),
           std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
@@ -872,7 +883,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
 
           );
     }else if(field == DEFROSTPOWER){
-      addQuantityEditColumn(QString(DEFROSTPOWER),
+      addQuantityEditColumn(Heading(QString(DEFROSTPOWER)),
                             QString("W"),
                             QString("W"),
                             QString("W"),
@@ -880,12 +891,12 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             NullAdapter(&model::RefrigerationWalkIn::defrostPower),
                             NullAdapter(&model::RefrigerationWalkIn::setDefrostPower));
     }else if(field == TEMPERATURETERMINATIONDEFROSTFRACTIONTOICE){
-      addValueEditColumn(QString(TEMPERATURETERMINATIONDEFROSTFRACTIONTOICE),
+      addValueEditColumn(Heading(QString(TEMPERATURETERMINATIONDEFROSTFRACTIONTOICE)),
                          NullAdapter(&model::RefrigerationWalkIn::temperatureTerminationDefrostFractiontoIce),
                          NullAdapter(&model::RefrigerationWalkIn::setTemperatureTerminationDefrostFractiontoIce));
     }else if(field == AVAILABILITYSCHEDULE){
       addComboBoxColumn<model::Schedule,model::RefrigerationWalkIn>(
-          QString(AVAILABILITYSCHEDULE),
+          Heading(QString(AVAILABILITYSCHEDULE)),
           &openstudio::objectName,
           std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
@@ -898,7 +909,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
           //boost::optional<std::function<void(model::RefrigerationWalkIn*)> >(static_cast<void (model::RefrigerationWalkIn::*)()>(&model::RefrigerationWalkIn::resetAvailabilitySchedule)));
     }else if(field == HEATINGPOWERSCHEDULE){
       addComboBoxColumn<model::Schedule,model::RefrigerationWalkIn>(
-          QString(HEATINGPOWERSCHEDULE),
+          Heading(QString(HEATINGPOWERSCHEDULE)),
           &openstudio::objectName,
           std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
@@ -910,7 +921,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
           boost::optional<std::function<void (model::RefrigerationWalkIn*)> >(NullAdapter(&model::RefrigerationWalkIn::resetHeatingPowerSchedule)));
     }else if(field == LIGHTINGSCHEDULE){
       addComboBoxColumn<model::Schedule,model::RefrigerationWalkIn>(
-          QString(LIGHTINGSCHEDULE),
+          Heading(QString(LIGHTINGSCHEDULE)),
           &openstudio::objectName,
           std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
@@ -922,7 +933,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
           boost::optional<std::function<void (model::RefrigerationWalkIn*)> >(NullAdapter(&model::RefrigerationWalkIn::resetLightingSchedule)));
     }else if(field == DEFROSTDRIPDOWNSCHEDULE){
       addComboBoxColumn<model::Schedule,model::RefrigerationWalkIn>(
-          QString(DEFROSTDRIPDOWNSCHEDULE),
+          Heading(QString(DEFROSTDRIPDOWNSCHEDULE)),
           &openstudio::objectName,
           std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
@@ -934,7 +945,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
           boost::optional<std::function<void (model::RefrigerationWalkIn*)> >(NullAdapter(&model::RefrigerationWalkIn::resetDefrostDripDownSchedule)));
     }else if(field == RESTOCKINGSCHEDULE){
       addComboBoxColumn<model::Schedule,model::RefrigerationWalkIn>(
-          QString(RESTOCKINGSCHEDULE),
+          Heading(QString(RESTOCKINGSCHEDULE)),
           &openstudio::objectName,
           std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
@@ -947,13 +958,14 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
     }else if(field == ZONEBOUNDARIES){
       //std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries() const; TODO
     }else if(field == NAME){
-      addNameLineEditColumn(QString(NAME),
+      addNameLineEditColumn(Heading(QString(NAME), false, false),
+                            false,
                             false,
                             CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::name),
                             CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setName));
     }else if(field == RACK){
       addComboBoxColumn<model::RefrigerationSystem,model::RefrigerationWalkIn>(
-          QString(RACK),
+          Heading(QString(RACK)),
           &openstudio::objectName,
 
           std::function<std::vector<model::RefrigerationSystem> ()>(std::bind(&openstudio::sortByObjectName<model::RefrigerationSystem>,
@@ -965,7 +977,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
     }
     else if (field == ZONEBOUNDARYTHERMALZONE){
       addComboBoxColumn<model::ThermalZone, model::RefrigerationWalkIn>(
-        QString(ZONEBOUNDARYTHERMALZONE),
+        Heading(QString(ZONEBOUNDARYTHERMALZONE)),
         &openstudio::objectName,
         std::function<std::vector<model::ThermalZone>()>(std::bind(&openstudio::sortByObjectName<model::ThermalZone>,
         std::bind(&model::Model::getConcreteModelObjects<model::ThermalZone>, m_model))),
@@ -973,7 +985,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
         CastNullAdapter<model::RefrigerationWalkIn>(&model::RefrigerationWalkIn::setZoneBoundaryThermalZone),
         NullAdapter(&model::RefrigerationWalkIn::resetZoneBoundaryThermalZone));
     }else if (field == ZONEBOUNDARYTOTALINSULATEDSURFACEAREAFACINGZONE){
-      addQuantityEditColumn(QString(ZONEBOUNDARYTOTALINSULATEDSURFACEAREAFACINGZONE),
+      addQuantityEditColumn(Heading(QString(ZONEBOUNDARYTOTALINSULATEDSURFACEAREAFACINGZONE)),
                             QString("m^2"),
                             QString("m^2"),
                             QString("ft^2"),
@@ -981,7 +993,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             NullAdapter(&model::RefrigerationWalkIn::zoneBoundaryTotalInsulatedSurfaceAreaFacingZone),
                             NullAdapter(&model::RefrigerationWalkIn::setZoneBoundaryTotalInsulatedSurfaceAreaFacingZone));
     }else if(field == ZONEBOUNDARYAREAOFGLASSREACHINDOORSFACINGZONE){
-      addQuantityEditColumn(QString(ZONEBOUNDARYAREAOFGLASSREACHINDOORSFACINGZONE),
+      addQuantityEditColumn(Heading(QString(ZONEBOUNDARYAREAOFGLASSREACHINDOORSFACINGZONE)),
                             QString("m^2"),
                             QString("m^2"),
                             QString("ft^2"),
@@ -989,7 +1001,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             NullAdapter(&model::RefrigerationWalkIn::zoneBoundaryAreaofGlassReachInDoorsFacingZone),
                             NullAdapter(&model::RefrigerationWalkIn::setZoneBoundaryAreaofGlassReachInDoorsFacingZone));
     }else if(field == ZONEBOUNDARYHEIGHTOFGLASSREACHINDOORSFACINGZONE){
-      addQuantityEditColumn(QString(ZONEBOUNDARYHEIGHTOFGLASSREACHINDOORSFACINGZONE),
+      addQuantityEditColumn(Heading(QString(ZONEBOUNDARYHEIGHTOFGLASSREACHINDOORSFACINGZONE)),
                             QString("m"),
                             QString("m"),
                             QString("ft"),
@@ -997,7 +1009,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             NullAdapter(&model::RefrigerationWalkIn::zoneBoundaryHeightofGlassReachInDoorsFacingZone),
                             NullAdapter(&model::RefrigerationWalkIn::setZoneBoundaryHeightofGlassReachInDoorsFacingZone));
     }else if(field == ZONEBOUNDARYAREAOFSTOCKINGDOORSFACINGZONE){
-      addQuantityEditColumn(QString(ZONEBOUNDARYAREAOFSTOCKINGDOORSFACINGZONE),
+      addQuantityEditColumn(Heading(QString(ZONEBOUNDARYAREAOFSTOCKINGDOORSFACINGZONE)),
                             QString("m^2"),
                             QString("m^2"),
                             QString("ft^2"),
@@ -1005,7 +1017,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             NullAdapter(&model::RefrigerationWalkIn::zoneBoundaryAreaofStockingDoorsFacingZone),
                             NullAdapter(&model::RefrigerationWalkIn::setZoneBoundaryAreaofStockingDoorsFacingZone));
     }else if(field == ZONEBOUNDARYHEIGHTOFSTOCKINGDOORSFACINGZONE){
-      addQuantityEditColumn(QString(ZONEBOUNDARYHEIGHTOFSTOCKINGDOORSFACINGZONE),
+      addQuantityEditColumn(Heading(QString(ZONEBOUNDARYHEIGHTOFSTOCKINGDOORSFACINGZONE)),
                             QString("m"),
                             QString("m"),
                             QString("ft"),
@@ -1013,7 +1025,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             NullAdapter(&model::RefrigerationWalkIn::zoneBoundaryHeightofStockingDoorsFacingZone),
                             NullAdapter(&model::RefrigerationWalkIn::setZoneBoundaryHeightofStockingDoorsFacingZone));
     }else if(field == ZONEBOUNDARYINSULATEDSURFACEUVALUEFACINGZONE){
-      addQuantityEditColumn(QString(ZONEBOUNDARYINSULATEDSURFACEUVALUEFACINGZONE),
+      addQuantityEditColumn(Heading(QString(ZONEBOUNDARYINSULATEDSURFACEUVALUEFACINGZONE)),
                             QString("W/m^2*K"),
                             QString("W/m^2*K"),
                             QString("Btu/hr*ft^2*F"),
@@ -1021,7 +1033,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             NullAdapter(&model::RefrigerationWalkIn::zoneBoundaryInsulatedSurfaceUValueFacingZone),
                             NullAdapter(&model::RefrigerationWalkIn::setZoneBoundaryInsulatedSurfaceUValueFacingZone));
     }else if(field == ZONEBOUNDARYGLASSREACHINDOORUVALUEFACINGZONE){
-      addQuantityEditColumn(QString(ZONEBOUNDARYGLASSREACHINDOORUVALUEFACINGZONE),
+      addQuantityEditColumn(Heading(QString(ZONEBOUNDARYGLASSREACHINDOORUVALUEFACINGZONE)),
                             QString("W/m^2*K"),
                             QString("W/m^2*K"),
                             QString("Btu/hr*ft^2*F"),
@@ -1029,7 +1041,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             NullAdapter(&model::RefrigerationWalkIn::zoneBoundaryGlassReachInDoorUValueFacingZone),
                             NullAdapter(&model::RefrigerationWalkIn::setZoneBoundaryGlassReachInDoorUValueFacingZone));
     }else if(field == ZONEBOUNDARYSTOCKINGDOORUVALUEFACINGZONE){
-      addQuantityEditColumn(QString(ZONEBOUNDARYSTOCKINGDOORUVALUEFACINGZONE),
+      addQuantityEditColumn(Heading(QString(ZONEBOUNDARYSTOCKINGDOORUVALUEFACINGZONE)),
                             QString("W/m^2*K"),
                             QString("W/m^2*K"),
                             QString("Btu/hr*ft^2*F"),
@@ -1038,7 +1050,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
                             NullAdapter(&model::RefrigerationWalkIn::setZoneBoundaryStockingDoorUValueFacingZone));
     }else if(field == ZONEBOUNDARYSTOCKINGDOOROPENINGSCHEDULEFACINGZONE){
       addComboBoxColumn<model::Schedule,model::RefrigerationWalkIn>(
-          QString(ZONEBOUNDARYSTOCKINGDOOROPENINGSCHEDULEFACINGZONE),
+          Heading(QString(ZONEBOUNDARYSTOCKINGDOOROPENINGSCHEDULEFACINGZONE)),
           &openstudio::objectName,
           std::function<std::vector<model::Schedule> ()>(std::bind(&openstudio::sortByObjectName<model::Schedule>,
                       std::bind(&openstudio::model::getCompatibleSchedules,
@@ -1090,12 +1102,6 @@ QString RefrigerationWalkInGridController::getColor(const model:: ModelObject & 
 void RefrigerationWalkInGridController::checkSelectedFields()
 {
   if(!this->m_hasHorizontalHeader) return;
-
-  // Don't show the name column check box
-  // From above in addColumns, we know that NAME is the first entry
-  HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(0));
-  OS_ASSERT(horizontalHeaderWidget);
-  horizontalHeaderWidget->m_checkBox->hide();
 
   OSGridController::checkSelectedFields();
 }

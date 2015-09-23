@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -31,6 +31,7 @@ RadianceDialog::RadianceDialog(bool isIP,
   : OSDialog(parent),
   m_radianceInspector(radianceInspector)
 {
+  setWindowModality(Qt::ApplicationModal);
   createLayout();
 }
 
@@ -44,7 +45,7 @@ void RadianceDialog::createLayout()
   label->setObjectName("H1");
   upperLayout()->addWidget(label);
 
-  QVBoxLayout * vertLayout = new QVBoxLayout();
+  auto vertLayout = new QVBoxLayout();
   vertLayout->setContentsMargins(20,10,10,10);
   vertLayout->setSpacing(20);
   upperLayout()->addLayout(vertLayout);

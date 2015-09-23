@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -106,7 +106,7 @@ TEST_F(AnalysisDriverFixture,PostProcessJobs_PostProcessSecondXML) {
   Problem problem("No Variables PostProcessSecondXML Workflow",VariableVector(),simulationWorkflow);
 
   // DEFINE SEED
-  model::Model model = model::exampleModel();
+  model::Model model = fastExampleModel();
   // set weather file
   openstudio::path weatherFilePath = energyPlusWeatherDataPath() / toPath("USA_CO_Golden-NREL.724666_TMY3.epw");
   EpwFile epwFile(weatherFilePath);
@@ -198,7 +198,7 @@ TEST_F(AnalysisDriverFixture,PostProcessJobs_OpenStudioPostProcessAndResponses) 
                     responses);
 
   // DEFINE SEED
-  Model model = model::exampleModel();
+  Model model = fastExampleModel();
   EpwFile epwFile(energyPlusWeatherDataPath() / toPath("USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw"));
   WeatherFile::setWeatherFile(model,epwFile);
   openstudio::path p = toPath("./example.osm");

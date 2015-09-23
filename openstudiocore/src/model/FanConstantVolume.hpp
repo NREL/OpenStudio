@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -45,6 +45,8 @@ class MODEL_API FanConstantVolume : public StraightComponent {
    *  model.  The object is fully initialized with all companion objects. */
   FanConstantVolume(const Model& model,Schedule& s);
 
+  FanConstantVolume(const Model& model);
+
   virtual ~FanConstantVolume() {}
 
   //@}
@@ -57,19 +59,19 @@ class MODEL_API FanConstantVolume : public StraightComponent {
   Schedule availabilitySchedule() const;
 
   /** Returns the value of the FanEfficiency field. **/
-  double fanEfficiency();
+  double fanEfficiency() const;
 
   /** Returns the value of the PressureRise field. **/
-  double pressureRise();
+  double pressureRise() const;
 
   /** Returns the value of the MotorEfficiency field. **/
-  double motorEfficiency();
+  double motorEfficiency() const;
 
   /** Returns the value of the MotorInAirStreamFraction field. **/
-  double motorInAirstreamFraction();
+  double motorInAirstreamFraction() const;
 
   /** Returns the value of the EndUseSubcategory field. **/
-  std::string endUseSubcategory();
+  std::string endUseSubcategory() const;
 
   //@}
   /** @name Setters */

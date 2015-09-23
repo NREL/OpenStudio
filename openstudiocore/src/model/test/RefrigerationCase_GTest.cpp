@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -681,11 +681,11 @@ TEST_F(ModelFixture, RefrigerationCase_CloneTwoModelsWithDefaultData)
     refrigerationCaseCurves2 = model2.getModelObjects<CurveCubic>();
     EXPECT_EQ(1, refrigerationCaseCurves2.size());
 
-    for(std::vector<CurveCubic>::iterator it = refrigerationCaseCurves.begin(); it != refrigerationCaseCurves.end(); ++it) {
+    for(auto it = refrigerationCaseCurves.begin(); it != refrigerationCaseCurves.end(); ++it) {
         EXPECT_TRUE(it->parent());
     }
 
-    for(std::vector<CurveCubic>::iterator it = refrigerationCaseCurves2.begin(); it != refrigerationCaseCurves2.end(); ++it) {
+    for(auto it = refrigerationCaseCurves2.begin(); it != refrigerationCaseCurves2.end(); ++it) {
         EXPECT_TRUE(it->parent());
     }
 

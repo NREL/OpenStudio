@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -56,8 +56,6 @@
 #include <QMessageBox>
 #include <QRadioButton>
 
-#include <fstream>
-
 namespace openstudio {
 
 namespace pat {
@@ -97,7 +95,7 @@ RunView::RunView()
 }
 
 RunStatusView::RunStatusView()
-  : QWidget(), m_disableRadianceEvents(false)
+  : QWidget()
 {
   setStyleSheet("openstudio--pat--RunStatusView { background: #D5D5D5; border-bottom: 1px solid #8C8C8C; }");
 
@@ -111,10 +109,10 @@ RunStatusView::RunStatusView()
   mainHLayout->setSpacing(5);
   mainVLayout->addLayout(mainHLayout);
 
-  auto radianceHLayout = new QHBoxLayout(); 
-  radianceHLayout->setContentsMargins(5,5,5,5);
-  radianceHLayout->setSpacing(0);
-  mainVLayout->addLayout(radianceHLayout);
+  //auto radianceHLayout = new QHBoxLayout(); 
+  //radianceHLayout->setContentsMargins(5,5,5,5);
+  //radianceHLayout->setSpacing(0);
+  //mainVLayout->addLayout(radianceHLayout);
 
   auto buttonHLayout = new QHBoxLayout(); 
   buttonHLayout->setContentsMargins(5,5,5,5);
@@ -196,28 +194,28 @@ RunStatusView::RunStatusView()
 
   // "Radiance" Button Layout
  
-  QLabel *radianceLabel = new QLabel("<b>Select Daylight Simulation Engine</b>");
-  m_energyPlus = new QRadioButton("EnergyPlus");
-  m_radiance = new QRadioButton("Radiance");
+  //QLabel *radianceLabel = new QLabel("<b>Select Daylight Simulation Engine</b>");
+  //m_energyPlus = new QRadioButton("EnergyPlus");
+  //m_radiance = new QRadioButton("Radiance");
 
-  auto radianceWidget = new QWidget();
-  radianceWidget->setObjectName("RunStatusViewRadiance");
-  auto radianceInteriorLayout = new QHBoxLayout();
+  //auto radianceWidget = new QWidget();
+  //radianceWidget->setObjectName("RunStatusViewRadiance");
+  //auto radianceInteriorLayout = new QHBoxLayout();
 
-  connect(m_radiance, &QRadioButton::toggled, this, &RunStatusView::radianceToggled);
+  //connect(m_radiance, &QRadioButton::toggled, this, &RunStatusView::radianceToggled);
 
-  radianceWidget->setLayout(radianceInteriorLayout);
-  radianceInteriorLayout->addWidget(radianceLabel);
-  radianceInteriorLayout->addStretch();
-  radianceInteriorLayout->addWidget(m_energyPlus);
-  radianceInteriorLayout->addStretch();
-  radianceInteriorLayout->addWidget(m_radiance);
+  //radianceWidget->setLayout(radianceInteriorLayout);
+  //radianceInteriorLayout->addWidget(radianceLabel);
+  //radianceInteriorLayout->addStretch();
+  //radianceInteriorLayout->addWidget(m_energyPlus);
+  //radianceInteriorLayout->addStretch();
+  //radianceInteriorLayout->addWidget(m_radiance);
 
 
-  radianceHLayout->addSpacing(100);
-  radianceHLayout->addWidget(radianceWidget, 3);
-  radianceHLayout->addStretch(2);
-  radianceWidget->setStyleSheet("QWidget#RunStatusViewRadiance {background: #DADADA; border: 1px solid #A5A5A5;}");
+  //radianceHLayout->addSpacing(100);
+  //radianceHLayout->addWidget(radianceWidget, 3);
+  //radianceHLayout->addStretch(2);
+  //radianceWidget->setStyleSheet("QWidget#RunStatusViewRadiance {background: #DADADA; border: 1px solid #A5A5A5;}");
 
   // "Select All" Button Layout
 
@@ -293,21 +291,21 @@ RunStatusView::RunStatusView()
   setStatus(cloudStatus, analysisStatus);
 }
 
-void RunStatusView::setRadianceEnabled(bool t_radianceEnabled)
-{
-  m_disableRadianceEvents = true;
-  m_radiance->setChecked(t_radianceEnabled);
-  m_energyPlus->setChecked(!t_radianceEnabled);
-  m_disableRadianceEvents = false;
-}
+//void RunStatusView::setRadianceEnabled(bool t_radianceEnabled)
+//{
+//  m_disableRadianceEvents = true;
+//  m_radiance->setChecked(t_radianceEnabled);
+//  m_energyPlus->setChecked(!t_radianceEnabled);
+//  m_disableRadianceEvents = false;
+//}
 
-void RunStatusView::radianceToggled(bool t_checked)
-{
-  if (!m_disableRadianceEvents)
-  {
-    emit radianceEnabledChanged(t_checked);
-  }
-}
+//void RunStatusView::radianceToggled(bool t_checked)
+//{
+//  if (!m_disableRadianceEvents)
+//  {
+//    emit radianceEnabledChanged(t_checked);
+//  }
+//}
 
 void RunStatusView::setStatus(const CloudStatus & cloudStatus, analysisdriver::AnalysisStatus analysisStatus)
 {
@@ -1265,11 +1263,17 @@ void DataPointJobItemView::update()
     try{
       runmanager::Files files(m_workflowStepJob.outputFiles().get());
       openstudio::path stdErrPath = files.getLastByFilename("stderr").fullPath;
-      std::ifstream ifs(toString(stdErrPath).c_str());
-      std::string stdErrorMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
-      ifs.close();
-      if (!stdErrorMessage.empty()){
-        dataPointJobContentView->addStdErrorMessage(stdErrorMessage);
+
+      QFile file(toQString(stdErrPath));
+      if (file.open(QFile::ReadOnly))
+      {
+        QTextStream docIn(&file);
+        QString stdErrorMessage = docIn.readAll();
+        file.close();
+
+        if (!stdErrorMessage.isEmpty()){
+          dataPointJobContentView->addStdErrorMessage(toString(stdErrorMessage));
+        }
       }
     }catch(std::exception&){
 

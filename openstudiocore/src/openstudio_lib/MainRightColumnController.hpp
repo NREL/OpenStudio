@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -57,6 +57,8 @@ class MainRightColumnController : public OSQObjectController
 
   bool isMyModelTabHidden(){return m_myModelTabIsHidden;}
 
+  std::shared_ptr<InspectorController> inspectorController() { return m_inspectorController; };
+
   enum RightColumnTabID
   {
     MY_MODEL,
@@ -88,9 +90,9 @@ class MainRightColumnController : public OSQObjectController
 
   void configureForSpaceTypesSubTab(int subTabID);
 
-  void configureForBuildingStoriesSubTab(int subTabID);
-
   void configureForFacilitySubTab(int subTabID);
+
+  void configureForSpacesSubTab(int subTabID);
 
   void configureForThermalZonesSubTab(int subTabID);
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -214,6 +214,10 @@ class MODEL_API PlanarSurface : public ParentObject {
 
   /// Return the centroid of this planar surface's vertices
   Point3d centroid() const;
+
+  /// Returns any solar hot water collectors associated with this surface.
+  std::vector<ModelObject> solarCollectors() const;
+
 
  protected:
 

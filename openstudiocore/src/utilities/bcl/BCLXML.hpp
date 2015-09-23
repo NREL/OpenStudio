@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -154,7 +154,7 @@ namespace openstudio{
     void addFile(const BCLFileReference& file);
 
     /// check if has file reference by full path, returns true if file was found
-    bool hasFile(const openstudio::path& path);
+    bool hasFile(const openstudio::path& path) const;
 
     /// remove file reference by full path, returns true if file was found and removed
     bool removeFile(const openstudio::path& path);

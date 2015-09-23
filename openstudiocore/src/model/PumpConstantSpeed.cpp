@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -374,7 +374,7 @@ namespace detail {
   bool PumpConstantSpeed_Impl::setPumpFlowRateSchedule(Schedule& schedule) {
     bool result = setSchedule(OS_Pump_ConstantSpeedFields::PumpFlowRateSchedule,
                               "PumpConstantSpeed",
-                              "Pump Flow Rate Schedule",
+                              "Pump Flow Rate",
                               schedule);
     return result;
   }

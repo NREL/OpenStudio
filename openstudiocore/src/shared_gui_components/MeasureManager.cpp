@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,8 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include "LocalLibraryController.hpp"
+#include "MeasureManager.hpp"
+
 #include "BaseApp.hpp"
+#include "BCLMeasureDialog.hpp"
+#include "LocalLibraryController.hpp"
+#include "ProcessEventsProgressBar.hpp"
 
 #include "BuildingComponentDialog.hpp"
 #include "OSDialog.hpp"
@@ -42,6 +46,7 @@
 
 #include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/core/RubyException.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/bcl/RemoteBCL.hpp"
@@ -61,21 +66,14 @@
 #include <QRadioButton>
 #include <QProgressDialog>
 
-#include "MeasureManager.hpp"
-#include "BCLMeasureDialog.hpp"
-#include "ProcessEventsProgressBar.hpp"
-
 namespace openstudio {
-
 
 MeasureManager::MeasureManager(const QSharedPointer<ruleset::RubyUserScriptInfoGetter> &t_infoGetter, BaseApp *t_app)
   : m_app(t_app), m_infoGetter(t_infoGetter)
 {
 }
 
-
-std::pair<bool,std::string> MeasureManager::updateMeasure(analysisdriver::SimpleProject &t_project, 
-                                                          const BCLMeasure &t_measure)
+std::pair<bool,std::string> MeasureManager::updateMeasure(analysisdriver::SimpleProject &t_project, const BCLMeasure &t_measure)
 {
   std::pair<bool,std::string> result(true,"");
   try {
@@ -183,24 +181,29 @@ BCLMeasure MeasureManager::insertReplaceMeasure(analysisdriver::SimpleProject &t
 
 std::vector<ruleset::OSArgument> MeasureManager::getArguments(analysisdriver::SimpleProject &t_project, const BCLMeasure &t_measure)
 {
-  boost::optional<BCLMeasure> projectMeasure = t_project.getMeasureByUUID(t_measure.uuid());
-  boost::optional<openstudio::model::Model> appmodel = m_app->currentModel();
+  auto projectMeasure = t_project.getMeasureByUUID(t_measure.uuid());
+  // If currentModel and currentWorkspace are present then we are running from the OS Application
+  // If they are not there then the model and workspace are in the project managed by PAT
+  auto t_model = m_app->currentModel();
+  auto t_idf = m_app->currentWorkspace();
 
   if (projectMeasure
       && projectMeasure->versionUUID() == t_measure.versionUUID()
       && t_project.hasStoredArguments(*projectMeasure)
-      && !appmodel)
+      && ! t_model)
   {
     LOG(Info, "returning stored arguments for measure " << t_measure.displayName() << "(" << toString(t_measure.uuid()) << " version: " << toString(t_measure.versionUUID()) << ")");
     return t_project.getStoredArguments(*projectMeasure);
   } else {
-    boost::optional<openstudio::model::Model> model = t_project.seedModel();
-    boost::optional<openstudio::Workspace> idf = t_project.seedIdf();
+    auto model = t_project.seedModel();
+    auto idf = t_project.seedIdf();
 
-    if (appmodel)
-    {
-      model = appmodel;
-      idf = boost::none;
+    if( t_model ) {
+      model = t_model;
+    }
+
+    if( t_idf ) {
+      idf = t_idf;
     }
 
     ruleset::RubyUserScriptInfo info = m_infoGetter->getInfo(t_measure, model, idf);
@@ -340,15 +343,15 @@ void MeasureManager::updateMeasures(analysisdriver::SimpleProject &t_project,
   }
 }
 
-void MeasureManager::updatePatApplicationMeasures(analysisdriver::SimpleProject &t_project)
+void MeasureManager::updateOpenStudioMeasures(analysisdriver::SimpleProject &t_project)
 {
   updateMeasuresLists();
 
   std::vector<BCLMeasure> toUpdate;
 
-  std::vector<BCLMeasure> measures = patApplicationMeasures();
+  std::vector<BCLMeasure> measures = openstudioMeasures();
 
-  for (std::vector<BCLMeasure>::iterator itr = measures.begin();
+  for (auto itr = measures.begin();
       itr != measures.end();
       ++itr)
   {
@@ -375,7 +378,7 @@ void MeasureManager::updateBCLMeasures(analysisdriver::SimpleProject &t_project)
 
   for (auto & measure : measures)
   {
-    if (m_patApplicationMeasures.find(measure.uuid()) != m_patApplicationMeasures.end()){
+    if (m_openstudioMeasures.find(measure.uuid()) != m_openstudioMeasures.end()){
       // do not attempt to update built in measures with different version in bcl
       LOG(Warn, "Skipping update of built in measure");
       continue;
@@ -459,7 +462,7 @@ void MeasureManager::updateMyMeasures(analysisdriver::SimpleProject &t_project)
   for (auto & measure : measures)
   {
 
-    if (m_patApplicationMeasures.find(measure.uuid()) != m_patApplicationMeasures.end()){
+    if (m_openstudioMeasures.find(measure.uuid()) != m_openstudioMeasures.end()){
       // do not attempt to update built in measures
       LOG(Warn, "Skipping update of built in measure");
       continue;
@@ -478,19 +481,19 @@ void MeasureManager::updateMyMeasures(analysisdriver::SimpleProject &t_project)
   updateMeasures(t_project, toUpdate);
 }
 
-bool MeasureManager::isPatApplicationMeasure(const UUID & id) const
+bool MeasureManager::isManagedMeasure(const UUID & id) const
 {
-  if (m_patApplicationMeasures.find(id) != m_patApplicationMeasures.end()){
+  if (m_managedMeasures.find(id) != m_managedMeasures.end()){
     return true;
   }
   return false;
 }
 
-std::vector<BCLMeasure> MeasureManager::patApplicationMeasures() const
+std::vector<BCLMeasure> MeasureManager::openstudioMeasures() const
 {
   std::vector<BCLMeasure> result;
 
-  for(const auto & measure : m_patApplicationMeasures)
+  for (const auto & measure : m_openstudioMeasures)
   {
     result.push_back(measure.second);
   }
@@ -524,55 +527,87 @@ std::vector<BCLMeasure> MeasureManager::myMeasures() const
 
 void MeasureManager::updateMeasuresLists()
 {
-  m_patApplicationMeasures.clear();
+  openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
+
+  auto updateUserMeasures = true;
+  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+    updateUserMeasures = false;
+  }
+
+  updateMeasuresLists(updateUserMeasures);
+}
+
+void MeasureManager::updateMeasuresLists(bool updateUserMeasures)
+{
+  m_managedMeasures.clear();
+  m_openstudioMeasures.clear();
   m_myMeasures.clear();
   m_bclMeasures.clear();
-  
-  std::vector<BCLMeasure> patApplicationMeasures = BCLMeasure::patApplicationMeasures();
-  for( auto & measure : patApplicationMeasures )
+
+  // measures managed by the applications
+  BCLMeasure alternativeModelMeasure = BCLMeasure::alternativeModelMeasure();
+  m_managedMeasures.insert(std::pair<UUID, BCLMeasure>(alternativeModelMeasure.uuid(), alternativeModelMeasure));
+
+  BCLMeasure reportRequestMeasure = BCLMeasure::reportRequestMeasure();
+  m_managedMeasures.insert(std::pair<UUID, BCLMeasure>(reportRequestMeasure.uuid(), reportRequestMeasure));
+
+  BCLMeasure standardReportMeasure = BCLMeasure::standardReportMeasure();
+  m_managedMeasures.insert(std::pair<UUID, BCLMeasure>(standardReportMeasure.uuid(), standardReportMeasure));
+
+  BCLMeasure calibrationReportMeasure = BCLMeasure::calibrationReportMeasure();
+  m_managedMeasures.insert(std::pair<UUID, BCLMeasure>(calibrationReportMeasure.uuid(), calibrationReportMeasure));
+
+
+  std::vector<BCLMeasure> openstudioMeasures = BCLMeasure::patApplicationMeasures();
+  for (auto & measure : openstudioMeasures)
   {
     // installed measures should not change
-    // DLM: TODO!
-    //OS_ASSERT(!checkForUpdates(measure));
+    // DLM: However, we have found that developers are not good about updating these
+    if (checkForUpdates(measure)){
+      // save may not be able to succeed if measure is in Program Files
+      measure.save();
+    }
 
-    std::map<UUID,BCLMeasure>::iterator it = m_patApplicationMeasures.find(measure.uuid());
-    if (it != m_patApplicationMeasures.end()){
+    auto it = m_openstudioMeasures.find(measure.uuid());
+    if (it != m_openstudioMeasures.end()){
       // duplicate measure detected, user copy and paste
       LOG(Error, "UUID of built in measure at '" << measure.directory() << "' conflicts with other built in measure, measure at '" << it->second.directory() << "' will be used instead");
     }else{
-      m_patApplicationMeasures.insert(std::pair<UUID,BCLMeasure>(measure.uuid(),measure));
+      m_openstudioMeasures.insert(std::pair<UUID, BCLMeasure>(measure.uuid(), measure));
     }
   }
 
-  std::vector<BCLMeasure> userMeasures = BCLMeasure::userMeasures();
-  for( auto & measure : userMeasures )
-  {
-    if (checkForUpdates(measure)){
-      measure.save();
-    }
+  if (updateUserMeasures) {
+   std::vector<BCLMeasure> userMeasures = BCLMeasure::userMeasures();
+    for( auto & measure : userMeasures )
+    {
+      if (checkForUpdates(measure)){
+        measure.save();
+      }
 
-    bool updateUUID = false;
-    if (m_myMeasures.find(measure.uuid()) != m_myMeasures.end()){
-      updateUUID = true;
-    }
-    if (m_bclMeasures.find(measure.uuid()) != m_bclMeasures.end()){
-      updateUUID = true;
-    }
-    if (m_patApplicationMeasures.find(measure.uuid()) != m_patApplicationMeasures.end()){
-      updateUUID = true;
-    }
+      bool updateUUID = false;
+      if (m_myMeasures.find(measure.uuid()) != m_myMeasures.end()){
+        updateUUID = true;
+      }
+      if (m_bclMeasures.find(measure.uuid()) != m_bclMeasures.end()){
+        updateUUID = true;
+      }
+      if (m_openstudioMeasures.find(measure.uuid()) != m_openstudioMeasures.end()){
+        updateUUID = true;
+      }
 
-    if (updateUUID){
-      // duplicate measure detected, manual copy and paste likely cause
-      // assign measure a new UUID here and save
-      measure.changeUID();
-      measure.incrementVersionId();
-      measure.save();
-    }
+      if (updateUUID){
+        // duplicate measure detected, manual copy and paste likely cause
+        // assign measure a new UUID here and save
+        measure.changeUID();
+        measure.incrementVersionId();
+        measure.save();
+      }
 
-    m_myMeasures.insert(std::pair<UUID,BCLMeasure>(measure.uuid(),measure));
+      m_myMeasures.insert(std::pair<UUID,BCLMeasure>(measure.uuid(),measure));
+    }
   }
-
+ 
   std::vector<BCLMeasure> localBCLMeasures = BCLMeasure::localBCLMeasures();
   for( auto & measure : localBCLMeasures )
   {
@@ -581,7 +616,7 @@ void MeasureManager::updateMeasuresLists()
       measure.save();
     }
 
-    std::map<UUID,BCLMeasure>::iterator it = m_bclMeasures.find(measure.uuid());
+    auto it = m_bclMeasures.find(measure.uuid());
     if (it != m_bclMeasures.end()){
       // duplicate measure detected
       LOG(Error, "UUID of bcl measure at '" << measure.directory() << "' conflicts with other bcl measure, measure at '" << it->second.directory() << "' will be used instead");
@@ -595,8 +630,6 @@ void MeasureManager::updateMeasuresLists()
     m_libraryController->reset();
   }
 }
-
-
 
 void MeasureManager::addMeasure()
 {
@@ -684,14 +717,14 @@ QSharedPointer<ruleset::RubyUserScriptInfoGetter> MeasureManager::infoGetter() c
   return m_infoGetter;
 }
 
-std::vector<BCLMeasure> MeasureManager::combinedMeasures(bool includePatApplicationMeasures) const
+std::vector<BCLMeasure> MeasureManager::combinedMeasures(bool includeOpenStudioMeasures) const
 {
   std::vector<BCLMeasure> result;
   std::set<UUID> resultUUIDs;
   
-  if (includePatApplicationMeasures){
-    // insert pat application measures
-    for (std::map<UUID,BCLMeasure>::const_iterator it = m_patApplicationMeasures.begin(), itend = m_patApplicationMeasures.end(); it != itend; ++it){
+  if (includeOpenStudioMeasures){
+    // insert openstudio measures
+    for (auto it = m_openstudioMeasures.begin(), itend = m_openstudioMeasures.end(); it != itend; ++it){
       if (resultUUIDs.find(it->first) == resultUUIDs.end()){
         resultUUIDs.insert(it->first);
         result.push_back(it->second);
@@ -702,7 +735,7 @@ std::vector<BCLMeasure> MeasureManager::combinedMeasures(bool includePatApplicat
   }
 
   // insert my measures
-  for (std::map<UUID,BCLMeasure>::const_iterator it = m_myMeasures.begin(), itend = m_myMeasures.end(); it != itend; ++it){
+  for (auto it = m_myMeasures.begin(), itend = m_myMeasures.end(); it != itend; ++it){
     if (resultUUIDs.find(it->first) == resultUUIDs.end()){
       resultUUIDs.insert(it->first);
       result.push_back(it->second);
@@ -712,7 +745,7 @@ std::vector<BCLMeasure> MeasureManager::combinedMeasures(bool includePatApplicat
   }
 
    // insert bcl measures
-  for (std::map<UUID,BCLMeasure>::const_iterator it = m_bclMeasures.begin(), itend = m_bclMeasures.end(); it != itend; ++it){
+  for (auto it = m_bclMeasures.begin(), itend = m_bclMeasures.end(); it != itend; ++it){
     if (resultUUIDs.find(it->first) == resultUUIDs.end()){
       resultUUIDs.insert(it->first);
       result.push_back(it->second);
@@ -730,9 +763,9 @@ boost::optional<BCLMeasure> MeasureManager::getMeasure(const UUID & id)
 
   std::map<UUID,BCLMeasure>::iterator it;
   
-  // search pat application measures
-  it = m_patApplicationMeasures.find(id);
-  if( it != m_patApplicationMeasures.end() ) {
+  // search openstudio measures
+  it = m_openstudioMeasures.find(id);
+  if (it != m_openstudioMeasures.end()) {
     if (result){
       LOG(Error, "UUID of built in measure at '" << it->second.directory() << "' conflicts with other measure, measure at '" << result->directory() << "' will be used instead");
     }else{

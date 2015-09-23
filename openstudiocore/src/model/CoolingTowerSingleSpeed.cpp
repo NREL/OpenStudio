@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -1167,6 +1167,38 @@ CoolingTowerSingleSpeed::CoolingTowerSingleSpeed(const Model& model)
   setNominalCapacity(0.0);
 
   setFreeConvectionCapacity(0.0);
+
+  setBasinHeaterCapacity(0.0);
+
+  setBasinHeaterSetpointTemperature(0.0);
+
+  setString(OS_CoolingTower_SingleSpeedFields::BasinHeaterOperatingScheduleName,"");
+
+  setEvaporationLossMode("LossFactor");
+
+  setEvaporationLossFactor(0.2);
+
+  setDriftLossPercent(0.008);
+
+  setBlowdownCalculationMode("ConcentrationRatio");
+
+  setBlowdownConcentrationRatio(3.0);
+
+  setString(OS_CoolingTower_SingleSpeedFields::BlowdownMakeupWaterUsageScheduleName,"");
+
+  setString(OS_CoolingTower_SingleSpeedFields::OutdoorAirInletNodeName,"");
+
+  setCapacityControl("FanCycling");
+
+  setNumberofCells(1);
+
+  setCellControl("MinimalCell");
+
+  setCellMinimumWaterFlowRateFraction(0.33);
+
+  setCellMaximumWaterFlowRateFraction(2.5);
+
+  setSizingFactor(1.0);
 }
 
 IddObjectType CoolingTowerSingleSpeed::iddObjectType() {

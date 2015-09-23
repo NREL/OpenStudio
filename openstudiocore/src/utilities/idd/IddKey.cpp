@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -93,9 +93,8 @@ namespace detail {
 } // detail
 
 IddKey::IddKey()
-{
-  m_impl = std::shared_ptr<detail::IddKey_Impl>(new detail::IddKey_Impl());
-}
+  : m_impl(std::shared_ptr<detail::IddKey_Impl>(new detail::IddKey_Impl()))
+{}
 
 IddKey::IddKey(const IddKey& other)
   : m_impl(other.m_impl)

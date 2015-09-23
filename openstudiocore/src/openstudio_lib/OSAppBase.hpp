@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -31,6 +31,8 @@
 
 #include <boost/smart_ptr.hpp>
 
+class QEvent;
+
 namespace openstudio {
 
 class OSDocument;
@@ -52,24 +54,28 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
 
   static OSAppBase * instance();
 
-  virtual boost::optional<openstudio::analysisdriver::SimpleProject> project();
-  virtual QWidget *mainWidget();
-  virtual MeasureManager &measureManager();
-  virtual boost::optional<openstudio::model::Model> currentModel();
-  virtual void updateSelectedMeasureState();
-  virtual void addMeasure();
-  virtual void duplicateSelectedMeasure();
-  virtual void updateMyMeasures();
-  virtual void updateBCLMeasures();
-  virtual void downloadUpdatedBCLMeasures();
-  virtual void openBclDlg();
-  virtual void chooseHorizontalEditTab();
-  virtual QSharedPointer<openstudio::EditController> editController();
+  virtual boost::optional<openstudio::analysisdriver::SimpleProject> project() override;
+  virtual QWidget *mainWidget() override;
+  virtual MeasureManager &measureManager() override;
+  virtual boost::optional<openstudio::model::Model> currentModel() override;
+  virtual boost::optional<openstudio::Workspace> currentWorkspace() override;
+  virtual void updateSelectedMeasureState() override;
+  virtual void addMeasure() override;
+  virtual void duplicateSelectedMeasure() override;
+  virtual void updateMyMeasures() override;
+  virtual void updateBCLMeasures() override;
+  virtual void downloadUpdatedBCLMeasures() override;
+  virtual void openBclDlg() override;
+  virtual void chooseHorizontalEditTab() override;
+  virtual QSharedPointer<openstudio::EditController> editController() override;
   boost::shared_ptr<WaitDialog> waitDialog() {return m_waitDialog;}
+  virtual bool notify(QObject * receiver, QEvent * e) override;
 
-  public slots:
+  protected:
 
-    virtual void reloadFile(const QString& fileToLoad, bool modified, bool saveCurrentTabs) = 0;
+  virtual bool event(QEvent * e) override;
+
+  virtual void childEvent(QChildEvent * e) override;
 
   private:
 
@@ -78,6 +84,12 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
   QSharedPointer<openstudio::MeasureManager> m_measureManager;
 
   boost::shared_ptr<WaitDialog> m_waitDialog;
+
+  public slots:
+
+  virtual void reloadFile(const QString& fileToLoad, bool modified, bool saveCurrentTabs) = 0;
+
+  void showMeasureUpdateDlg();
 };
 
 } // openstudio

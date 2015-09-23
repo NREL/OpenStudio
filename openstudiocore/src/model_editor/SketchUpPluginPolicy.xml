@@ -3,9 +3,21 @@
 <ROOT>
 	<POLICY IddObjectType="OS_Building">
 		<rule IddField="Building Sector Type" Access="HIDDEN"/>
+    <rule IddField="Standards Number of Stories" Access="HIDDEN"/>
+    <rule IddField="Standards Number of Above Ground Stories" Access="HIDDEN"/>
+    <rule IddField="Standards Building Type" Access="HIDDEN"/>
+    <rule IddField="Standards Number of Living Units" Access="HIDDEN"/>
+    <rule IddField="Relocatable" Access="HIDDEN"/>
+    <rule IddField="Nominal Floor to Floor Height" Access="HIDDEN"/>
+    <rule IddField="Nominal Floor to Ceiling Height" Access="HIDDEN"/>
 	</POLICY>
+	<POLICY IddObjectType="OS_BuildingStory">
+		<rule IddField="Nominal Z Coordinate" Access="HIDDEN"/>
+    <rule IddField="Nominal Floor to Floor Height" Access="HIDDEN"/>
+    <rule IddField="Nominal Floor to Ceiling Height" Access="HIDDEN"/>
+	</POLICY>  
 	<POLICY IddObjectType="OS_ShadingControl">
-	    <rule IddField="Shading Type" Access="LOCKED"/>
+	  <rule IddField="Shading Type" Access="LOCKED"/>
 		<rule IddField="Construction with Shading Name" Access="LOCKED"/>
 		<rule IddField="Shading Device Material Name" Access="LOCKED"/>
 		<rule IddField="Setpoint" Access="HIDDEN"/>
@@ -29,6 +41,9 @@
 		<rule IddField="Vertex Y-coordinate" Access="HIDDEN"/>
 		<rule IddField="Vertex Z-coordinate" Access="HIDDEN"/>
 	</POLICY>
+	<POLICY IddObjectType="OS_ShadingSurfaceGroup">
+		<rule IddField="Shading Surface Type" Access="LOCKED"/>
+	</POLICY>	
 	<POLICY IddObjectType="OS_Surface">
 		<rule IddField="Space Name" Access="LOCKED"/>
 		<rule IddField="Number of Vertices" Access="HIDDEN"/>

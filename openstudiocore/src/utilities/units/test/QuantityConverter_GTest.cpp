@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -250,8 +250,8 @@ TEST_F(UnitsFixture,QuantityConverter_OSQuantityVector) {
 
 TEST_F(UnitsFixture,QuantityConverter_Profiling_QuantityVectorBaseCase) {
   QuantityVector result(testQuantityVector);
-  for (unsigned j = 0, n = result.size(); j < n; ++j) {
-    result[j] = convert(result[j],UnitSystem(UnitSystem::Wh)).get();
+  for (auto & elem : result) {
+    elem = convert(elem,UnitSystem(UnitSystem::Wh)).get();
   }
 }
 

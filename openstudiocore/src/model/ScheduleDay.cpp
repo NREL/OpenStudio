@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -163,7 +163,7 @@ namespace detail {
 
         if (hour && minute){
           openstudio::Time time(0, *hour, *minute);
-          if (time.totalDays() <= 0.0 || time.totalDays() > 1.0){
+          if (time.totalMinutes() <= 0.5 || time.totalDays() > 1.0){
             LOG(Error, "Time " << time << " in " << briefDescription() << " is out of range." );
           }else{
             result.push_back(time);
@@ -202,7 +202,7 @@ namespace detail {
 
   double ScheduleDay_Impl::getValue(const openstudio::Time& time) const
   {
-    if (time.totalDays() < 0.0 || time.totalDays() > 1.0){
+    if (time.totalMinutes() < 0.0 || time.totalDays() > 1.0){
       return 0.0;
     }
 
@@ -275,7 +275,7 @@ namespace detail {
   }
 
   bool ScheduleDay_Impl::addValue(const openstudio::Time& untilTime, double value) {
-    if (untilTime.totalDays() <= 0.0 || untilTime.totalDays() > 1.0) {
+    if (untilTime.totalMinutes() <= 0.5 || untilTime.totalDays() > 1.0) {
       return false;
     }
 

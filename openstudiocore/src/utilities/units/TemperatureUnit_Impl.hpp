@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -44,9 +44,11 @@ namespace detail {
 
     void setAsRelative();
 
-    virtual void operator*=(const Unit& rUnit);
+    virtual bool operator==(const Unit& rUnit) const override;
 
-    virtual void operator/=(const Unit& rUnit);
+    virtual void operator*=(const Unit& rUnit) override;
+
+    virtual void operator/=(const Unit& rUnit) override;
 
     //@}
    protected:

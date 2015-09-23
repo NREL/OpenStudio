@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -16,6 +16,8 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
+
+//#include <vld.h>
 
 #define COMPILING_FROM_OSAPP
 #include "../openstudio_lib/OpenStudioAPI.hpp"
@@ -72,20 +74,9 @@ int main(int argc, char *argv[])
     cont = false;
 
     std::vector<std::string> modules;
-    modules.push_back("openstudioutilitiescore");
-    modules.push_back("openstudioutilitiesbcl");
-    modules.push_back("openstudioutilitiesidd");
-    modules.push_back("openstudioutilitiesidf");
-    modules.push_back("openstudioutilities");
-    modules.push_back("openstudiomodel");
-    modules.push_back("openstudiomodelcore");
-    modules.push_back("openstudiomodelsimulation");
-    modules.push_back("openstudiomodelresources");
-    modules.push_back("openstudiomodelgeometry");
-    modules.push_back("openstudiomodelhvac");
-    modules.push_back("openstudiomodelrefrigeration");
-    modules.push_back("openstudioenergyplus");
-    modules.push_back("openstudioruleset");
+    for (const auto& path : openstudio::getOpenStudioBareRubyPaths()){
+      modules.push_back(openstudio::toString(path));
+    }
 
     //try {
     // Initialize the embedded Ruby interpreter

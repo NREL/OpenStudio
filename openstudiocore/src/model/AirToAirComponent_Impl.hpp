@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -60,11 +60,11 @@ namespace detail {
 
     boost::optional<ModelObject> secondaryAirOutletModelObject();
 
-    bool addToNode(Node & node);
+    bool addToNode(Node & node) override;
 
-    std::vector<openstudio::IdfObject> remove();
+    std::vector<openstudio::IdfObject> remove() override;
 
-    ModelObject clone(Model model) const;
+    ModelObject clone(Model model) const override;
 
    private:
 

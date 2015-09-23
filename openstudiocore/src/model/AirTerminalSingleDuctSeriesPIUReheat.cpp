@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -483,7 +483,77 @@ namespace detail {
     } else if( auto variableFan = component.optionalCast<FanVariableVolume>() ) {
       variableFan->setAvailabilitySchedule(schedule);
     }
-  };
+  }
+
+  std::vector<IdfObject> AirTerminalSingleDuctSeriesPIUReheat_Impl::remove()
+  {
+    Model _model = this->model();
+    ModelObject thisObject = this->getObject<ModelObject>();
+
+    HVACComponent _reheatCoil = reheatCoil();
+
+    boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
+    boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());
+    
+    boost::optional<ModelObject> targetModelObject = this->outletModelObject();
+    boost::optional<unsigned> targetPort = this->connectedObjectPort(this->outletPort());
+
+    std::vector<ThermalZone> thermalZones = _model.getConcreteModelObjects<ThermalZone>();
+    for( auto & thermalZone : thermalZones )
+    {
+      std::vector<ModelObject> equipment = thermalZone.equipment();
+
+      if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
+      {
+        thermalZone.removeEquipment(thisObject);
+
+        break;
+      }
+    }
+
+    if( boost::optional<Node> secondaryAirInletNode = this->secondaryAirInletNode() )
+    {
+      secondaryAirInletNode->remove();
+    }
+
+    if( sourcePort && sourceModelObject
+        && targetPort && targetModelObject )
+    {
+      if( boost::optional<Node> inletNode = sourceModelObject->optionalCast<Node>() )
+      {
+        if( boost::optional<ModelObject> source2ModelObject = inletNode->inletModelObject() )
+        {
+          if( boost::optional<unsigned> source2Port = inletNode->connectedObjectPort(inletNode->inletPort()) )
+          {
+            _model.connect( source2ModelObject.get(),
+                            source2Port.get(),
+                            targetModelObject.get(),
+                            targetPort.get() );
+
+            inletNode->disconnect();
+            inletNode->remove();
+
+            if( boost::optional<PlantLoop> loop = _reheatCoil.plantLoop() )
+            {
+              loop->removeDemandBranchWithComponent(_reheatCoil);
+            }
+
+            return StraightComponent_Impl::remove();
+          }
+        }
+      }
+    }
+
+    model().disconnect(getObject<ModelObject>(),inletPort());
+    model().disconnect(getObject<ModelObject>(),outletPort());
+
+    if( boost::optional<PlantLoop> loop = _reheatCoil.plantLoop() )
+    {
+      loop->removeDemandBranchWithComponent(_reheatCoil);
+    }
+
+    return StraightComponent_Impl::remove();
+  }
 
 } // detail
 

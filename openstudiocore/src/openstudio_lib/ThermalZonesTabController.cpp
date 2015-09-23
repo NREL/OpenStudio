@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -34,9 +34,6 @@ ThermalZonesTabController::ThermalZonesTabController(bool isIP, const model::Mod
   this->mainContentWidget()->addTabWidget(m_thermalZonesController->subTabView());
 
   bool isConnected = false;
-
-  isConnected = QObject::connect(m_thermalZonesController->subTabView()->inspectorView(), SIGNAL(gridRowSelected(OSItem*)), m_thermalZonesController.get(), SLOT(selectItem(OSItem*)));
-  OS_ASSERT(isConnected);
 
   isConnected = connect(this, SIGNAL(itemRemoveClicked(OSItem *)), m_thermalZonesController.get(), SLOT(removeItem(OSItem *)));
   OS_ASSERT(isConnected);

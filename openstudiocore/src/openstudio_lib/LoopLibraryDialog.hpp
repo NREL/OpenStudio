@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ class LoopLibraryDialog : public QDialog
 
   public:
 
-  LoopLibraryDialog(QWidget * parent = 0);
+  LoopLibraryDialog(QWidget * parent = nullptr);
 
   virtual ~LoopLibraryDialog() {}
 
@@ -48,7 +48,7 @@ class LoopLibraryDialog : public QDialog
 
   protected:
 
-  void paintEvent ( QPaintEvent * event );
+  void paintEvent ( QPaintEvent * event ) override;
 
   private slots:
 
@@ -70,7 +70,7 @@ class LoopItemView : public QWidget
   LoopItemView( const AddToModelEnum & addToModelEnum,
                 const QString & detailedText,
                 const QPixmap & pixmap,
-                QWidget * parent = 0 );
+                QWidget * parent = nullptr );
 
   virtual ~LoopItemView() {}
 

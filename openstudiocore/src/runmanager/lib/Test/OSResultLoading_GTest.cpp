@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -28,6 +28,7 @@
 #include "../../../model/Model.hpp"
 #include "../../../model/WeatherFile.hpp"
 
+#include "../../../utilities/core/Application.hpp"
 #include "../../../utilities/core/ApplicationPathHelpers.hpp"
 
 #include "../../../utilities/filetypes/EpwFile.hpp"
@@ -35,7 +36,6 @@
 #include "../../../utilities/idf/Workspace.hpp"
 #include "../../../utilities/idf/WorkspaceObject.hpp"
 
-#include <utilities/idd/OS_TimeDependentValuation_FieldEnums.hxx>
 #include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
 
 #include <boost/filesystem/path.hpp>
@@ -49,6 +49,7 @@ using namespace openstudio;
 
 TEST_F(RunManagerTestFixture, OSResultLoading)
 {
+  openstudio::Application::instance().application(false);
   openstudio::runmanager::RunManager rm;
   openstudio::runmanager::Workflow wf;
   openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("OSResultLoadingTest");
@@ -89,6 +90,7 @@ TEST_F(RunManagerTestFixture, OSResultLoading)
 
 TEST_F(RunManagerTestFixture, OSResultLoading_Success)
 {
+  openstudio::Application::instance().application(false);
   openstudio::runmanager::RunManager rm;
   openstudio::runmanager::Workflow wf;
   openstudio::path outdir = openstudio::tempDir() / openstudio::toPath("OSResultLoadingTestSuccess");

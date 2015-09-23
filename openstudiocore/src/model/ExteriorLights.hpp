@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -69,7 +69,7 @@ class MODEL_API ExteriorLights : public ModelObject {
 
   ExteriorLightsDefinition exteriorLightsDefinition() const;
 
-  Schedule schedule() const;
+  boost::optional<Schedule> schedule() const;
 
   std::string controlOption() const;
 
@@ -90,6 +90,8 @@ class MODEL_API ExteriorLights : public ModelObject {
   bool setExteriorLightsDefinition(const ExteriorLightsDefinition& exteriorLightsDefinition);
 
   bool setSchedule(Schedule& schedule);
+
+  void resetSchedule();
 
   bool setControlOption(std::string controlOption);
 

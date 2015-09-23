@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -429,9 +429,9 @@ void compareSurfaces(const WorkspaceObject& refObject, const WorkspaceObject& te
   // compare
   bool compare = true;
   for (unsigned i = 0; i < refObject.numExtensibleGroups(); ++i){
-    compare = compare && (abs(refVerts[i].x()-testVerts[i].x()) < 0.01);
-    compare = compare && (abs(refVerts[i].y()-testVerts[i].y()) < 0.01);
-    compare = compare && (abs(refVerts[i].z()-testVerts[i].z()) < 0.01);
+    compare = compare && (std::abs(refVerts[i].x()-testVerts[i].x()) < 0.01);
+    compare = compare && (std::abs(refVerts[i].y()-testVerts[i].y()) < 0.01);
+    compare = compare && (std::abs(refVerts[i].z()-testVerts[i].z()) < 0.01);
   }
   EXPECT_TRUE(compare);
   if (!compare){

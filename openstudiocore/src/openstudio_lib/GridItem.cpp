@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -60,18 +60,28 @@
 #include "../model/PlantLoop.hpp"
 #include "../model/PlantLoop_Impl.hpp"
 #include "../model/SetpointManager.hpp"
-#include "../model/SetpointManagerMixedAir.hpp"
-#include "../model/SetpointManagerOutdoorAirReset.hpp"
-#include "../model/SetpointManagerSingleZoneReheat.hpp"
-#include "../model/SetpointManagerScheduled.hpp"
+#include "../model/SetpointManagerColdest.hpp"
+#include "../model/SetpointManagerFollowGroundTemperature.hpp"
 #include "../model/SetpointManagerFollowOutdoorAirTemperature.hpp"
+#include "../model/SetpointManagerFollowSystemNodeTemperature.hpp"
+#include "../model/SetpointManagerMixedAir.hpp"
+#include "../model/SetpointManagerMultiZoneCoolingAverage.hpp"
+#include "../model/SetpointManagerMultiZoneHeatingAverage.hpp"
+#include "../model/SetpointManagerMultiZoneHumidityMaximum.hpp"
+#include "../model/SetpointManagerMultiZoneHumidityMinimum.hpp"
+#include "../model/SetpointManagerMultiZoneMaximumHumidityAverage.hpp"
+#include "../model/SetpointManagerMultiZoneMinimumHumidityAverage.hpp"
+#include "../model/SetpointManagerOutdoorAirPretreat.hpp"
+#include "../model/SetpointManagerOutdoorAirReset.hpp"
+#include "../model/SetpointManagerScheduled.hpp"
+#include "../model/SetpointManagerScheduledDualSetpoint.hpp"
+#include "../model/SetpointManagerSingleZoneHumidityMaximum.hpp"
+#include "../model/SetpointManagerSingleZoneHumidityMinimum.hpp"
+#include "../model/SetpointManagerSingleZoneOneStageCooling.hpp"
+#include "../model/SetpointManagerSingleZoneOneStageHeating.hpp"
+#include "../model/SetpointManagerSingleZoneReheat.hpp"
 #include "../model/SetpointManagerWarmest.hpp"
 #include "../model/SetpointManagerWarmestTemperatureFlow.hpp"
-#include "../model/SetpointManagerScheduledDualSetpoint.hpp"
-#include "../model/SetpointManagerOutdoorAirPretreat.hpp"
-#include "../model/SetpointManagerSingleZoneHumidityMinimum.hpp"
-#include "../model/SetpointManagerMultiZoneMinimumHumidityAverage.hpp"
-#include "../model/SetpointManagerMultiZoneHumidityMinimum.hpp"
 #include "../model/RenderingColor.hpp"
 #include "../model/RenderingColor_Impl.hpp"
 #include "../model/Node.hpp"
@@ -89,15 +99,13 @@ namespace openstudio {
 
 bool hasSPM(model::Node & node)
 {
-  bool value = false;
   auto spms = node.setpointManagers();
   for( auto & spm: spms ) {
-    if( istringEqual("Temperature",spm.controlVariable()) ) {
-      value = true;
-      break;
+    if ( spm.controlVariable().find( "Temperature" ) != std::string::npos ) {
+      return true;
     }
   }
-  return value;
+  return false;
 }
 
 GridItem::GridItem( QGraphicsItem * parent ):
@@ -433,7 +441,7 @@ HorizontalBranchItem::HorizontalBranchItem( std::vector<model::ModelObject> mode
     m_text("Drag From Library"),
     m_hasDualTwoRightSidePipes(false)
 {
-  for( std::vector<model::ModelObject>::iterator it = modelObjects.begin();
+  for( auto it = modelObjects.begin();
        it < modelObjects.end(); ++it )
   {
     if(model::OptionalNode comp = it->optionalCast<model::Node>())
@@ -486,7 +494,7 @@ HorizontalBranchItem::HorizontalBranchItem( std::vector<model::ModelObject> mode
     }
     else if(model::OptionalWaterUseConnections comp = it->optionalCast<model::WaterUseConnections>())
     {
-      WaterUseConnectionsItem * gridItem = new WaterUseConnectionsItem(this); 
+      auto gridItem = new WaterUseConnectionsItem(this); 
       gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
       m_gridItems.push_back(gridItem);
     }
@@ -575,7 +583,7 @@ void HorizontalBranchItem::setPadding( unsigned padding )
 {
   if( m_paddingItems.size() > padding )
   {
-    for( std::vector<OneThreeStraightItem *>::iterator it = m_paddingItems.begin() + padding;
+    for( auto it = m_paddingItems.begin() + padding;
          it < m_paddingItems.end(); 
          ++it )
     {
@@ -587,7 +595,7 @@ void HorizontalBranchItem::setPadding( unsigned padding )
   {
     for( unsigned i = m_paddingItems.size(); i < padding; i++ )
     {
-      OneThreeStraightItem * straightItem = new OneThreeStraightItem();
+      auto straightItem = new OneThreeStraightItem();
       straightItem->setParentItem(this);
       m_paddingItems.push_back( straightItem );
     }
@@ -605,7 +613,7 @@ void HorizontalBranchItem::layout()
 {
   int i = 0;
 
-  for( std::vector<GridItem *>::iterator it = m_gridItems.begin();
+  for( auto it = m_gridItems.begin();
        it < m_gridItems.end(); ++it )
   {
     if( m_isDropZone )
@@ -619,7 +627,7 @@ void HorizontalBranchItem::layout()
       (*it)->show();
     }
   }
-  for( std::vector<OneThreeStraightItem *>::iterator it = m_paddingItems.begin();
+  for( auto it = m_paddingItems.begin();
        it < m_paddingItems.end(); ++it )
   {
     if( m_isDropZone )
@@ -685,7 +693,7 @@ VerticalBranchItem::VerticalBranchItem( std::vector<model::ModelObject> modelObj
                                         QGraphicsItem * parent )
   : GridItem( parent )
 {
-  for( std::vector<model::ModelObject>::iterator it = modelObjects.begin();
+  for( auto it = modelObjects.begin();
        it < modelObjects.end(); ++it )
   {
     if(model::OptionalNode comp = it->optionalCast<model::Node>())
@@ -717,7 +725,7 @@ void VerticalBranchItem::setPadding( unsigned padding )
 {
   if( m_paddingItems.size() > padding )
   {
-    for( std::vector<TwoFourStraightItem *>::iterator it = m_paddingItems.begin() + padding;
+    for( auto it = m_paddingItems.begin() + padding;
          it < m_paddingItems.end(); 
          ++it )
     {
@@ -729,7 +737,7 @@ void VerticalBranchItem::setPadding( unsigned padding )
   {
     for( unsigned i = m_paddingItems.size(); i < padding; i++ )
     {
-      TwoFourStraightItem * straightItem = new TwoFourStraightItem();
+      auto straightItem = new TwoFourStraightItem();
       straightItem->setParentItem(this);
       m_paddingItems.push_back( straightItem );
     }
@@ -741,13 +749,13 @@ void VerticalBranchItem::setPadding( unsigned padding )
 void VerticalBranchItem::layout()
 {
   int j = 0;
-  for( std::vector<GridItem *>::iterator it = m_gridItems.begin();
+  for( auto it = m_gridItems.begin();
        it < m_gridItems.end(); ++it )
   {
     (*it)->setGridPos( 0, j );
     j = j + (*it)->getVGridLength();
   }
-  for( std::vector<TwoFourStraightItem *>::iterator it = m_paddingItems.begin();
+  for( auto it = m_paddingItems.begin();
        it < m_paddingItems.end(); ++it )
   {
     (*it)->setGridPos( 0, j );
@@ -764,7 +772,7 @@ ReverseVerticalBranchItem::ReverseVerticalBranchItem( std::vector<model::ModelOb
                                         QGraphicsItem * parent )
   : GridItem(parent)
 {
-  for( std::vector<model::ModelObject>::iterator it = modelObjects.begin();
+  for( auto it = modelObjects.begin();
        it < modelObjects.end(); ++it )
   {
     if(model::OptionalNode comp = it->optionalCast<model::Node>())
@@ -796,7 +804,7 @@ void ReverseVerticalBranchItem::setPadding( unsigned padding )
 {
   if( m_paddingItems.size() > padding )
   {
-    for( std::vector<FourTwoStraightItem *>::iterator it = m_paddingItems.begin() + padding;
+    for( auto it = m_paddingItems.begin() + padding;
          it < m_paddingItems.end(); 
          ++it )
     {
@@ -808,7 +816,7 @@ void ReverseVerticalBranchItem::setPadding( unsigned padding )
   {
     for( unsigned i = m_paddingItems.size(); i < padding; i++ )
     {
-      FourTwoStraightItem * straightItem = new FourTwoStraightItem();
+      auto straightItem = new FourTwoStraightItem();
       straightItem->setParentItem(this);
       m_paddingItems.push_back( straightItem );
     }
@@ -820,14 +828,14 @@ void ReverseVerticalBranchItem::setPadding( unsigned padding )
 void ReverseVerticalBranchItem::layout()
 {
   int j = 0;
-  for( std::vector<FourTwoStraightItem *>::iterator it = m_paddingItems.begin();
+  for( auto it = m_paddingItems.begin();
        it < m_paddingItems.end(); ++it )
   {
     (*it)->setGridPos( 0, j );
     j = j + (*it)->getVGridLength();
   }
 
-  for( std::vector<GridItem *>::reverse_iterator it = m_gridItems.rbegin();
+  for( auto it = m_gridItems.rbegin();
        it < m_gridItems.rend(); ++it )
   {
     (*it)->setGridPos( 0, j );
@@ -899,7 +907,7 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
 
   if( ! (splitterOutletObjects.front() == mixer) )
   {
-    for( std::vector<model::ModelObject>::iterator it1 = splitterOutletObjects.begin();
+    for( auto it1 = splitterOutletObjects.begin();
          it1 != splitterOutletObjects.end();
          ++it1 )
     {
@@ -912,7 +920,7 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
         {
           isSupplyPlenum = true;
           std::vector<model::ModelObject> plenumOutletObjects = plenumSplitter->outletModelObjects();
-          for( std::vector<model::ModelObject>::iterator it2 = plenumOutletObjects.begin();
+          for( auto it2 = plenumOutletObjects.begin();
                it2 != plenumOutletObjects.end();
                ++it2 )
           {
@@ -924,7 +932,7 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
             branchComponents.insert(branchComponents.begin(),*it1);
 
             std::vector<model::ModelObject> rBranchComponents;
-            for( std::vector<model::ModelObject>::reverse_iterator rit = branchComponents.rbegin();
+            for( auto rit = branchComponents.rbegin();
                  rit < branchComponents.rend(); ++rit )
             {
               rBranchComponents.push_back( *rit );
@@ -947,7 +955,7 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
         else
         {
           std::vector<model::ModelObject> rBranchComponents;
-          for( std::vector<model::ModelObject>::reverse_iterator rit = branchComponents.rbegin();
+          for( auto rit = branchComponents.rbegin();
                rit < branchComponents.rend(); ++rit )
           {
             rBranchComponents.push_back( *rit );
@@ -959,7 +967,7 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
   }
 
   std::sort(allBranchComponents.begin(),allBranchComponents.end(),sortBranches);
-  for(std::vector< std::vector<ModelObject> >::iterator it = allBranchComponents.begin();
+  for(auto it = allBranchComponents.begin();
       it != allBranchComponents.end();
       ++it)
   {
@@ -978,7 +986,7 @@ void HorizontalBranchGroupItem::setShowDropZone(bool showDropZone)
 {
   if( m_dropZoneBranchItem )
   {
-    std::vector<HorizontalBranchItem *>::iterator it =
+    auto it =
       std::find(m_branchItems.begin(),m_branchItems.end(),m_dropZoneBranchItem);
 
     if( it != m_branchItems.end() )
@@ -1013,7 +1021,7 @@ void HorizontalBranchGroupItem::layout()
   }
 
   int longestBranch = 0;
-  for( std::vector<HorizontalBranchItem *>::iterator it = m_branchItems.begin();
+  for( auto it = m_branchItems.begin();
        it < m_branchItems.end(); ++it )
   {
     if( (*it)->getHGridLength() > longestBranch )
@@ -1024,7 +1032,7 @@ void HorizontalBranchGroupItem::layout()
 
   setHGridLength( longestBranch );
 
-  for( std::vector<HorizontalBranchItem *>::iterator it = m_branchItems.begin();
+  for( auto it = m_branchItems.begin();
        it < m_branchItems.end(); ++it )
   {
     unsigned padding = longestBranch - (*it)->getHGridLength(); 
@@ -1036,7 +1044,7 @@ void HorizontalBranchGroupItem::layout()
 
   int j = 0;
   int lastj = 0;
-  for( std::vector<HorizontalBranchItem *>::iterator it = m_branchItems.begin();
+  for( auto it = m_branchItems.begin();
        it < m_branchItems.end(); ++it )
   {
     (*it)->setGridPos(0,j);
@@ -1075,7 +1083,7 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
 
   int i = 0;
 
-  for(std::vector<model::AirLoopHVACSupplyPlenum>::iterator it = supplyPlenums.begin();
+  for(auto it = supplyPlenums.begin();
       it != supplyPlenums.end();
       ++it)
   {
@@ -1094,7 +1102,7 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
     i++;
   }
 
-  for(std::vector<model::AirLoopHVACReturnPlenum>::iterator it = returnPlenums.begin();
+  for(auto it = returnPlenums.begin();
       it != returnPlenums.end();
       ++it)
   {
@@ -1168,7 +1176,7 @@ SystemItem::~SystemItem()
 
 int SystemItem::plenumIndex(const Handle & plenumHandle)
 {
-  std::map<Handle,int>::iterator it = m_plenumIndexMap.find(plenumHandle);
+  auto it = m_plenumIndexMap.find(plenumHandle);
   if( it != m_plenumIndexMap.end() )
   {
     return it->second;
@@ -1183,7 +1191,7 @@ QColor SystemItem::plenumColor(const Handle & plenumHandle)
 {
   QColor color;
 
-  std::map<Handle,QColor>::iterator it = m_plenumColorMap.find(plenumHandle);
+  auto it = m_plenumColorMap.find(plenumHandle);
   if( it != m_plenumColorMap.end() )
   {
     color = it->second;
@@ -1429,11 +1437,11 @@ void OneThreeWaterToAirItem::setModelObject( model::OptionalModelObject modelObj
     {
       if( waterToAirComponent->airLoopHVAC() && waterToAirComponent->plantLoop() )
       {
-        LinkItem * linkItem1 = new LinkItem(this);
+        auto linkItem1 = new LinkItem(this);
         linkItem1->setPos(40,5); 
         connect(linkItem1, &LinkItem::mouseClicked, this, &OneThreeWaterToAirItem::onLinkItemClicked);
         
-        LinkItem * linkItem2 = new LinkItem(this);
+        auto linkItem2 = new LinkItem(this);
         linkItem2->setPos(40,75); 
         connect(linkItem2, &LinkItem::mouseClicked, this, &OneThreeWaterToAirItem::onLinkItemClicked);
 
@@ -1513,11 +1521,11 @@ void OneThreeWaterToWaterItem::setModelObject( model::OptionalModelObject modelO
     {
       if( waterToWaterComponent->plantLoop() && waterToWaterComponent->secondaryPlantLoop() )
       {
-        LinkItem * linkItem1 = new LinkItem(this);
+        auto linkItem1 = new LinkItem(this);
         linkItem1->setPos(40,5); 
         connect(linkItem1, &LinkItem::mouseClicked, this, &OneThreeWaterToWaterItem::onLinkItemClicked);
         
-        LinkItem * linkItem2 = new LinkItem(this);
+        auto linkItem2 = new LinkItem(this);
         linkItem2->setPos(40,75); 
         connect(linkItem2, &LinkItem::mouseClicked, this, &OneThreeWaterToWaterItem::onLinkItemClicked);
 
@@ -1774,8 +1782,8 @@ OASupplyBranchItem::OASupplyBranchItem( std::vector<model::ModelObject> supplyMo
 {
   setAcceptHoverEvents(false);
 
-  std::vector<model::ModelObject>::iterator reliefIt = reliefModelObjects.begin();
-  std::vector<model::ModelObject>::iterator supplyIt = supplyModelObjects.begin();
+  auto reliefIt = reliefModelObjects.begin();
+  auto supplyIt = supplyModelObjects.begin();
 
   while(supplyIt < supplyModelObjects.end())
   {
@@ -1851,7 +1859,7 @@ OASupplyBranchItem::OASupplyBranchItem( std::vector<model::ModelObject> supplyMo
 void OASupplyBranchItem::layout()
 {
   int j = 0;
-  for( std::vector<GridItem *>::reverse_iterator it = m_gridItems.rbegin();
+  for( auto it = m_gridItems.rbegin();
        it < m_gridItems.rend(); ++it )
   {
     if( *it )
@@ -1878,8 +1886,8 @@ OAReliefBranchItem::OAReliefBranchItem( std::vector<model::ModelObject> reliefMo
 {
   setAcceptHoverEvents(false);
 
-  std::vector<model::ModelObject>::iterator reliefIt = reliefModelObjects.begin();
-  std::vector<model::ModelObject>::iterator supplyIt = supplyModelObjects.begin();
+  auto reliefIt = reliefModelObjects.begin();
+  auto supplyIt = supplyModelObjects.begin();
 
   while(reliefIt < reliefModelObjects.end())
   {
@@ -1955,7 +1963,7 @@ OAReliefBranchItem::OAReliefBranchItem( std::vector<model::ModelObject> reliefMo
 void OAReliefBranchItem::layout()
 {
   int j = 0;
-  for( std::vector<GridItem *>::reverse_iterator it = m_gridItems.rbegin();
+  for( auto it = m_gridItems.rbegin();
        it < m_gridItems.rend(); ++it )
   {
     if( *it )
@@ -2110,62 +2118,102 @@ void OneThreeNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     if( model::OptionalNode node = m_modelObject->optionalCast<model::Node>() )
     {
       std::vector<model::SetpointManager> _setpointManagers = node->setpointManagers();
-      for(std::vector<SetpointManager>::iterator it = _setpointManagers.begin();
+      for(auto it = _setpointManagers.begin();
           it != _setpointManagers.end();
           ++it)
       {
-        if( istringEqual("Temperature", it->controlVariable()) )
+        if ( it->controlVariable().find( "Temperature" ) != std::string::npos )
         {
           if( it->iddObjectType() == SetpointManagerMixedAir::iddObjectType() )
           {
-            painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_mixed.png"));
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_mixed.png"));
           }
           else if( it->iddObjectType() == SetpointManagerSingleZoneReheat::iddObjectType() )
           {
-            painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_singlezone.png"));
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_singlezone.png"));
           }
           else if( it->iddObjectType() == SetpointManagerScheduled::iddObjectType() )
           {
-            painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_scheduled.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerFollowOutdoorAirTemperature::iddObjectType() )
-          {
-            painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_follow_outdoorair.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerOutdoorAirReset::iddObjectType() )
-          {
-            painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_outdoorair.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerWarmest::iddObjectType() )
-          {
-            painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_warmest.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerWarmestTemperatureFlow::iddObjectType() )
-          {
-            painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_warmest_tempflow.png"));
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_scheduled.png"));
           }
           else if( it->iddObjectType() == SetpointManagerScheduledDualSetpoint::iddObjectType() )
           {
-            painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_dual.png"));
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_dual.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerWarmest::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_warmest.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerColdest::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_coldest.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerOutdoorAirReset::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_outdoorair.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerFollowGroundTemperature::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_follow_ground_temp.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerFollowOutdoorAirTemperature::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_follow_outdoorair.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerFollowSystemNodeTemperature::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_follow_system_node.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerMultiZoneCoolingAverage::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_multizone_cooling.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerMultiZoneHeatingAverage::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_multizone_heating.png"));
           }
           else if( it->iddObjectType() == SetpointManagerOutdoorAirPretreat::iddObjectType() )
           {
-            painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_pretreat.png"));
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_pretreat.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerSingleZoneOneStageCooling::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_onestage_cooling.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerSingleZoneOneStageHeating::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_onestage_heating.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerWarmestTemperatureFlow::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_warmest_tempflow.png"));
           }
           break;
         } else {
-          //else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMinimum::iddObjectType() )
-          //{
-          //  painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_single_zone_humidity_min.png"));
-          //}
-          //else if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMinimum::iddObjectType() )
-          //{
-          //  painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_multi_zone_humidity_min.png"));
-          //}
-          //else if( it->iddObjectType() == SetpointManagerMultiZoneMinimumHumidityAverage::iddObjectType() )
-          //{
-          //  painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_multi_zone_humidity_ave.png"));
-          //}
+          // if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMaximum::iddObjectType() )
+          // {
+          //   painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_multizone_humidity_max.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMinimum::iddObjectType() )
+          // {
+          //   painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_multizone_humidity_min.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerMultiZoneMaximumHumidityAverage::iddObjectType() )
+          // {
+          //   painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_multizone_maxhumidity_avg.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerMultiZoneMinimumHumidityAverage::iddObjectType() )
+          // {
+          //   painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_multizone_minhumidity_avg.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMaximum::iddObjectType() )
+          // {
+          //   painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_singlezone_humidity_max.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMinimum::iddObjectType() )
+          // {
+          //   painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_singlezone_humidity_min.png"));
+          // }
           //break;
         }
       }
@@ -2283,62 +2331,102 @@ void TwoFourNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
     if( model::OptionalNode node = m_modelObject->optionalCast<model::Node>() )
     {
       std::vector<model::SetpointManager> _setpointManagers = node->setpointManagers();
-      for(std::vector<SetpointManager>::iterator it = _setpointManagers.begin();
+      for(auto it = _setpointManagers.begin();
           it != _setpointManagers.end();
           ++it)
       {
-        if( istringEqual("Temperature", it->controlVariable()) )
+        if ( it->controlVariable().find( "Temperature" ) != std::string::npos )
         {
           if( it->iddObjectType() == SetpointManagerMixedAir::iddObjectType() )
           {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_mixed_right.png"));
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_mixed_right.png"));
           }
           else if( it->iddObjectType() == SetpointManagerSingleZoneReheat::iddObjectType() )
           {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_singlezone_right.png"));
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone_right.png"));
           }
           else if( it->iddObjectType() == SetpointManagerScheduled::iddObjectType() )
           {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_scheduled_right.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerFollowOutdoorAirTemperature::iddObjectType() )
-          {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_follow_outdoorair_right.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerOutdoorAirReset::iddObjectType() )
-          {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_outdoorair_right.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerWarmest::iddObjectType() )
-          {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_warmest_right.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerWarmestTemperatureFlow::iddObjectType() )
-          {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_warmest_tempflow_right.png"));
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_scheduled_right.png"));
           }
           else if( it->iddObjectType() == SetpointManagerScheduledDualSetpoint::iddObjectType() )
           {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_dual.png"));
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_dual_right.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerWarmest::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_warmest_right.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerColdest::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_coldest_right.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerOutdoorAirReset::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_outdoorair_right.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerFollowGroundTemperature::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_follow_ground_temp_right.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerFollowOutdoorAirTemperature::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_follow_outdoorair_right.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerFollowSystemNodeTemperature::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_follow_system_node_right.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerMultiZoneCoolingAverage::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_cooling_right.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerMultiZoneHeatingAverage::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_heating_right.png"));
           }
           else if( it->iddObjectType() == SetpointManagerOutdoorAirPretreat::iddObjectType() )
           {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_pretreat.png"));
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_pretreat_right.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerSingleZoneOneStageCooling::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_onestage_cooling_right.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerSingleZoneOneStageHeating::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_onestage_heating_right.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerWarmestTemperatureFlow::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_warmest_tempflow_right.png"));
           }
           break;
         } else {
-          //else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMinimum::iddObjectType() )
-          //{
-          //  painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_single_zone_humidity_min_right.png"));
-          //}
-          //else if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMinimum::iddObjectType() )
-          //{
-          //  painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_multi_zone_humidity_min_right.png"));
-          //}
-          //else if( it->iddObjectType() == SetpointManagerMultiZoneMinimumHumidityAverage::iddObjectType() )
-          //{
-          //  painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_multi_zone_humidity_ave_right.png"));
-          //}
+          // if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMaximum::iddObjectType() )
+          // {
+          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_humidity_max_right.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMinimum::iddObjectType() )
+          // {
+          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_humidity_min_right.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerMultiZoneMaximumHumidityAverage::iddObjectType() )
+          // {
+          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_maxhumidity_avg_right.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerMultiZoneMinimumHumidityAverage::iddObjectType() )
+          // {
+          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_minhumidity_avg_right.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMaximum::iddObjectType() )
+          // {
+          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone_humidity_max_right.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMinimum::iddObjectType() )
+          // {
+          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone_humidity_min_right.png"));
+          // }
           //break;
         }
       }
@@ -2405,62 +2493,102 @@ void OAStraightNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
     if( model::OptionalNode node = m_modelObject->optionalCast<model::Node>() )
     {
       std::vector<model::SetpointManager> _setpointManagers = node->setpointManagers();
-      for(std::vector<SetpointManager>::iterator it = _setpointManagers.begin();
+      for(auto it = _setpointManagers.begin();
           it != _setpointManagers.end();
           ++it)
       {
-        if( istringEqual("Temperature", it->controlVariable()) ) 
+        if ( it->controlVariable().find( "Temperature" ) != std::string::npos )
         {
           if( it->iddObjectType() == SetpointManagerMixedAir::iddObjectType() )
           {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_mixed.png"));
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_mixed.png"));
           }
           else if( it->iddObjectType() == SetpointManagerSingleZoneReheat::iddObjectType() )
           {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_singlezone.png"));
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone.png"));
           }
           else if( it->iddObjectType() == SetpointManagerScheduled::iddObjectType() )
           {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_scheduled.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerFollowOutdoorAirTemperature::iddObjectType() )
-          {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_follow_outdoorair.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerOutdoorAirReset::iddObjectType() )
-          {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_outdoorair.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerWarmest::iddObjectType() )
-          {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_warmest.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerWarmestTemperatureFlow::iddObjectType() )
-          {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_warmest_tempflow.png"));
-          }
-          else if( it->iddObjectType() == SetpointManagerOutdoorAirPretreat::iddObjectType() )
-          {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_pretreat.png"));
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_scheduled.png"));
           }
           else if( it->iddObjectType() == SetpointManagerScheduledDualSetpoint::iddObjectType() )
           {
-            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_dual.png"));
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_dual.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerWarmest::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_warmest.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerColdest::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_coldest.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerOutdoorAirReset::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_outdoorair.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerFollowGroundTemperature::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_follow_ground_temp.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerFollowOutdoorAirTemperature::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_follow_outdoorair.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerFollowSystemNodeTemperature::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_follow_system_node.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerMultiZoneCoolingAverage::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_cooling.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerMultiZoneHeatingAverage::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_heating.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerOutdoorAirPretreat::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_pretreat.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerSingleZoneOneStageCooling::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_onestage_cooling.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerSingleZoneOneStageHeating::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_onestage_heating.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerWarmestTemperatureFlow::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_warmest_tempflow.png"));
           }
           break;
         } else {
-          //else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMinimum::iddObjectType() )
-          //{
-          //  painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_single_zone_humidity_min.png"));
-          //}
-          //else if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMinimum::iddObjectType() )
-          //{
-          //  painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_multi_zone_humidity_min.png"));
-          //}
-          //else if( it->iddObjectType() == SetpointManagerMultiZoneMinimumHumidityAverage::iddObjectType() )
-          //{
-          //  painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_multi_zone_humidity_ave.png"));
-          //}
+          // if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMaximum::iddObjectType() )
+          // {
+          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_humidity_max.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMinimum::iddObjectType() )
+          // {
+          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_humidity_min.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerMultiZoneMaximumHumidityAverage::iddObjectType() )
+          // {
+          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_maxhumidity_avg.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerMultiZoneMinimumHumidityAverage::iddObjectType() )
+          // {
+          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_minhumidity_avg.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMaximum::iddObjectType() )
+          // {
+          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone_humidity_max.png"));
+          // }
+          // else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMinimum::iddObjectType() )
+          // {
+          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone_humidity_min.png"));
+          // }
           //break;
         }
       }
@@ -2788,7 +2916,7 @@ DemandSideItem::DemandSideItem( QGraphicsItem * parent,
   inletComponents.erase( inletComponents.begin() );
   inletComponents.erase( inletComponents.end() - 1 );
   std::vector<model::ModelObject> rInletComponents;
-  for( std::vector<model::ModelObject>::reverse_iterator rit = inletComponents.rbegin();
+  for( auto rit = inletComponents.rbegin();
        rit < inletComponents.rend(); ++rit )
   {
     rInletComponents.push_back( *rit );
@@ -2800,7 +2928,7 @@ DemandSideItem::DemandSideItem( QGraphicsItem * parent,
   outletComponents.erase( outletComponents.begin() );
   outletComponents.erase( outletComponents.end() - 1 );
   std::vector<model::ModelObject> rOutletComponents;
-  for( std::vector<model::ModelObject>::reverse_iterator rit = outletComponents.rbegin();
+  for( auto rit = outletComponents.rbegin();
        rit < outletComponents.rend(); ++rit )
   {
     rOutletComponents.push_back( *rit );
@@ -3292,7 +3420,7 @@ void NodeContextButtonItem::onRemoveSPMActionTriggered()
       model::Node node = gridItem->modelObject()->cast<model::Node>();
 
       std::vector<model::SetpointManager> _setpointManagers = node.setpointManagers();
-      for(std::vector<SetpointManager>::iterator it = _setpointManagers.begin();
+      for(auto it = _setpointManagers.begin();
           it != _setpointManagers.end();
           ++it)
       {

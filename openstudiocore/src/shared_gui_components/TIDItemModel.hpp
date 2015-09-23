@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -38,17 +38,17 @@ class TIDItemModel : public QAbstractItemModel
 
   virtual ~TIDItemModel();
 
-  QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+  QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const override;
 
-  Qt::ItemFlags flags(const QModelIndex & index) const;
+  Qt::ItemFlags flags(const QModelIndex & index) const override;
 
-  QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
+  QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const override;
 
-  QModelIndex parent(const QModelIndex & index) const;
+  QModelIndex parent(const QModelIndex & index) const override;
 
-  int rowCount(const QModelIndex & parent = QModelIndex()) const;
+  int rowCount(const QModelIndex & parent = QModelIndex()) const override;
 
-  int columnCount(const QModelIndex & parent = QModelIndex()) const;
+  int columnCount(const QModelIndex & parent = QModelIndex()) const override;
 
   QModelIndex indexForTID(int tid) const;
 

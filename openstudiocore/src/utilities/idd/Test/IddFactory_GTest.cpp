@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -51,9 +51,8 @@ TEST_F(IddFixture,IddFactory_Version_Header) {
   // EnergyPlus always has major, minor, patch and build
   VersionString epVersion(IddFactory::instance().getVersion(IddFileType::EnergyPlus));
   EXPECT_TRUE(epVersion.patch());
-  EXPECT_TRUE(epVersion.build());
   EXPECT_EQ(VersionString(energyPlusVersion()),epVersion);
-  EXPECT_FALSE(epVersion.fidelityEqual(VersionString(energyPlusVersion())));
+  EXPECT_TRUE(epVersion.fidelityEqual(VersionString(energyPlusVersion())));
 
   EXPECT_NO_THROW(IddFactory::instance().getHeader(IddFileType::OpenStudio));
   EXPECT_NO_THROW(IddFactory::instance().getHeader(IddFileType::EnergyPlus));
@@ -245,13 +244,14 @@ TEST_F(IddFixture,IddFactory_Units) {
         }
 
         siUnit = field.getUnits(false);
-        EXPECT_TRUE(siUnit || field.unitsBasedOnOtherField());
+        EXPECT_TRUE(siUnit || field.unitsBasedOnOtherField()) << object.name() << " field: " << field.name();
         if (siUnit) {
-          // could just return junk unit. if not junk, quantity will be convertable
+          // could just return junk unit. if not junk, quantity will be convertible
           // to UnitSystem::SI.
           Quantity q(1.0,*siUnit);
           OptionalQuantity testQ = convert(q,UnitSystem(UnitSystem::SI));
-          EXPECT_TRUE(testQ);
+          EXPECT_TRUE(testQ) << "Unable to convert unit '" << *iddUnits << "' to SI for field '"
+            << field.name() << "' in IddObject '" << object.name() << "'.";
           if (testQ) {
             goodUnits.insert(*iddUnits);
             EXPECT_TRUE(testQ->system() == UnitSystem::SI);

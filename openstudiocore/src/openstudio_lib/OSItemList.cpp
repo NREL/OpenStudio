@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -60,14 +60,14 @@ OSItemList::OSItemList(OSVectorController* vectorController,
 
   setStyleSheet(style);
 
-  QVBoxLayout* outerVLayout = new QVBoxLayout();
+  auto outerVLayout = new QVBoxLayout();
   outerVLayout->setContentsMargins(0,0,0,0);
   this->setLayout(outerVLayout);
 
-  QWidget* outerWidget = new QWidget();
+  auto outerWidget = new QWidget();
 
   if (addScrollArea){
-    QScrollArea* scrollArea = new QScrollArea();
+    auto scrollArea = new QScrollArea();
     scrollArea->setFrameStyle(QFrame::NoFrame);
     scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -190,7 +190,7 @@ void OSItemList::setItemIds(const std::vector<OSItemId>& itemIds)
   }
 
   QLayoutItem* child;
-  while( (child = m_vLayout->takeAt(0)) != 0 ){
+  while( (child = m_vLayout->takeAt(0)) != nullptr ){
     QWidget* widget = child->widget();
     if (widget){
       delete widget;

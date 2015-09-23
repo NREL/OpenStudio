@@ -11,9 +11,29 @@ inline std::string openStudioLongVersion()
   return "${OPENSTUDIO_LONG_VERSION}";
 }
 
+inline int energyPlusVersionMajor()
+{
+  return ${ENERGYPLUS_VERSION_MAJOR};
+}
+
+inline int energyPlusVersionMinor()
+{
+  return ${ENERGYPLUS_VERSION_MINOR};
+}
+
+inline int energyPlusVersionPatch()
+{
+  return ${ENERGYPLUS_VERSION_PATCH};
+}
+
 inline std::string energyPlusVersion()
 {
   return "${ENERGYPLUS_VERSION}";
+}
+
+inline std::string energyPlusBuildSHA()
+{
+  return "${ENERGYPLUS_BUILD_SHA}";
 }
 
 inline std::string rubyLibDir()

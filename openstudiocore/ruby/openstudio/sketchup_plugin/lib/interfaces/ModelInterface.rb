@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -141,7 +141,8 @@ module OpenStudio
       @untranslated_idf_objects = []
       
       # record the edit_transform at each stage in the active path
-      @active_path_transform = []
+      @active_path_transform = [] # an array of edit transforms or nil if we have lost track
+      @last_active_path = [] # the active path at last update or nil if we have lost track
       
       # map model_object handle to a vector of idf objects to restore if the model_object ever comes back
       @deleted_model_object_hash = Hash.new
@@ -217,17 +218,90 @@ module OpenStudio
     def update_active_path_transform
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       
-      active_path_transform_size = @active_path_transform.size 
-      active_path_size = 0
+      active_path_transform_size = @active_path_transform ? @active_path_transform.size : 0
+      last_active_path_size = @last_active_path ? @last_active_path.size : 0
 
       active_path = @skp_model.active_path
-      active_path_size = active_path.size if active_path
+      active_path_size = active_path ? active_path.size : 0
+      
+      #puts "active_path_transform_size = #{active_path_transform_size}"
+      #puts "last_active_path_size = #{last_active_path_size}"
+      #puts "active_path_size = #{active_path_size}"
+      
+      if active_path_size == 0
+        
+        # active path has been cleared, we can reset everything
+        #puts "reset"
 
-      if (active_path_transform_size > active_path_size)
-        @active_path_transform.pop
-      elsif (active_path_transform_size < active_path_size)
-        @active_path_transform << @skp_model.edit_transform
+        @active_path_transform = []
+        @last_active_path = []
+      
+      elsif (@active_path_transform.nil? || @last_active_path.nil?)
+      
+        # lost track previously but can't fix now
+        #puts "already nil"
+        
+      elsif (last_active_path_size == active_path_size)
+      
+        # active path same size
+        #puts "active_path same"
+        
+        is_ok = true
+        active_path.each_index do |i|
+          is_ok = false if active_path[i] != @last_active_path[i]
+        end
+        
+        if is_ok
+          # no-op
+        else
+          @active_path_transform = nil
+          @last_active_path = nil
+        end
+        
+      elsif (last_active_path_size - 1 == active_path_size)
+      
+        # active path has been reduced by 1
+        #puts "active_path reduced"
+
+        is_ok = true
+        active_path.each_index do |i|
+          is_ok = false if active_path[i] != @last_active_path[i]
+        end
+        
+        if is_ok
+          @active_path_transform.pop
+          @last_active_path = active_path
+        else
+          @active_path_transform = nil
+          @last_active_path = nil
+        end
+        
+       elsif (last_active_path_size + 1 == active_path_size)
+        
+        # active path has been increased by 1
+        #puts "active_path increased"
+    
+        is_ok = true
+        @last_active_path.each_index do |i|     
+          is_ok = false if active_path[i] != @last_active_path[i]
+        end
+        
+        if is_ok
+          @active_path_transform << @skp_model.edit_transform
+          @last_active_path = active_path
+        else
+          @active_path_transform = nil
+          @last_active_path = nil
+        end
+      
+      else
+        # lost track
+        #puts "active_path changed by too much"
+        
+        @active_path_transform = nil
+        @last_active_path = nil
       end
+
     end
     
     # get name of SketchUp file
@@ -560,7 +634,8 @@ module OpenStudio
                           "OS_Construction_CfactorUndergroundWall".to_IddObjectType,
                           "OS_Construction_FfactorGroundFloor".to_IddObjectType,
                           "OS_Construction_InternalSource".to_IddObjectType,
-                          "OS_Construction_WindowDataFile".to_IddObjectType]
+                          "OS_Construction_WindowDataFile".to_IddObjectType,
+                          "OS_WindowProperty_FrameAndDivider".to_IddObjectType]
                           
       # don't use clone yet to avoid duplicates, need to use clone eventually                    
       temp_model = import_objects_with_targets(other_model, idd_object_types)
@@ -683,7 +758,8 @@ module OpenStudio
                           "Construction_CfactorUndergroundWall".to_IddObjectType,
                           "Construction_FfactorGroundFloor".to_IddObjectType,
                           "Construction_InternalSource".to_IddObjectType,
-                          "Construction_WindowDataFile".to_IddObjectType]
+                          "Construction_WindowDataFile".to_IddObjectType,
+                          "WindowProperty_FrameAndDivider".to_IddObjectType]
         
       workspace = import_objects_with_targets(workspace, idd_object_types)
 

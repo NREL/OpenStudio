@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -46,6 +46,8 @@ class MODEL_API StraightComponent : public HVACComponent {
   virtual ~StraightComponent() {}
 
   std::vector<openstudio::IdfObject> remove();
+
+  bool removeFromLoop();
 
   /** Returns the inlet port. **/
    unsigned inletPort();

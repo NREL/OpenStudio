@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -37,6 +37,15 @@
 #include "../../analysis/HistogramBinDistribution.hpp"
 #include "../../analysis/GammaDistribution.hpp"
 #include "../../analysis/LoguniformDistribution.hpp"
+
+#include "../../model/DaylightingControl.hpp"
+#include "../../model/DaylightingControl_Impl.hpp"
+#include "../../model/IlluminanceMap.hpp"
+#include "../../model/IlluminanceMap_Impl.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/Surface_Impl.hpp"
+#include "../../model/Timestep.hpp"
+#include "../../model/Timestep_Impl.hpp"
 
 #include "../../project/ProjectDatabase.hpp"
 #include "../../project/ProblemRecord.hpp"
@@ -104,19 +113,9 @@ void AnalysisDriverFixture::SetUpTestCase() {
 
   // list of Ruby modules we want to load into the interpreter
   std::vector<std::string> modules;
-  modules.push_back("openstudioutilitiescore");
-  modules.push_back("openstudioutilitiesbcl");
-  modules.push_back("openstudioutilitiesidd");
-  modules.push_back("openstudioutilitiesidf");
-  modules.push_back("openstudioutilities");
-  modules.push_back("openstudiomodel");
-  modules.push_back("openstudiomodelcore");
-  modules.push_back("openstudiomodelsimulation");
-  modules.push_back("openstudiomodelresources");
-  modules.push_back("openstudiomodelgeometry");
-  modules.push_back("openstudiomodelhvac");
-  modules.push_back("openstudioenergyplus");
-  modules.push_back("openstudioruleset");
+  for (const auto& path : openstudio::getOpenStudioBareRubyPaths()){
+    modules.push_back(openstudio::toString(path));
+  }
 
   // Initialize the embedded Ruby interpreter
   std::shared_ptr<openstudio::detail::RubyInterpreter> rubyInterpreter(
@@ -354,6 +353,35 @@ openstudio::analysisdriver::AnalysisRunOptions AnalysisDriverFixture::standardRu
                                                                  dakotaExePath().parent_path());
   runOptions.setRunManagerTools(tools);
   return runOptions;
+}
+
+openstudio::model::Model AnalysisDriverFixture::fastExampleModel()
+{
+  openstudio::model::Model result = openstudio::model::exampleModel();
+
+  // remove daylighting objects
+  for (auto daylightingControl : result.getConcreteModelObjects<model::DaylightingControl>()){
+    daylightingControl.remove();
+  }
+  for (auto illuminanceMap : result.getConcreteModelObjects<model::IlluminanceMap>()){
+    illuminanceMap.remove();
+  }
+
+  // remove interior surfaces
+  for (auto surface : result.getConcreteModelObjects<model::Surface>()){
+    boost::optional<openstudio::model::Surface> otherSurface = surface.adjacentSurface();
+    if (otherSurface){
+      surface.remove();
+      otherSurface->remove();
+    }
+  }
+
+  // set timesteps per hour to 1
+  openstudio::model::Timestep timestep = result.getUniqueModelObject<openstudio::model::Timestep>();
+  timestep.setNumberOfTimestepsPerHour(1);
+
+  return result;
+
 }
 
 openstudio::analysis::Problem AnalysisDriverFixture::createMixedOsmIdfProblem()

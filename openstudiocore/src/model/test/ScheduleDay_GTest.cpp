@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -157,6 +157,31 @@ TEST_F(ModelFixture, Schedule_Day)
   EXPECT_FALSE(daySchedule.addValue(Time(0, -1, 0), -9999));
   EXPECT_EQ(3u, daySchedule.times().size());
   EXPECT_EQ(3u, daySchedule.values().size());
+
+
+  // Add small values
+  daySchedule.clearValues();
+  EXPECT_EQ(1u, daySchedule.times().size());
+  EXPECT_EQ(1u, daySchedule.values().size());
+  EXPECT_EQ(Time(0,24,0),daySchedule.times().front());
+
+  EXPECT_FALSE(daySchedule.addValue(Time(0, 0, 0, 10), -9999));
+  EXPECT_EQ(1u, daySchedule.times().size());
+  EXPECT_EQ(1u, daySchedule.values().size());
+
+  daySchedule.clearValues();
+  // 30 seconds is not accepted
+  EXPECT_FALSE(daySchedule.addValue(Time(0, 0, 0, 30), -9999));
+  EXPECT_EQ(1u, daySchedule.times().size());
+  EXPECT_EQ(1u, daySchedule.values().size());
+
+  daySchedule.clearValues();
+  EXPECT_TRUE(daySchedule.addValue(Time(0, 0, 0, 31), -9999));
+  EXPECT_EQ(2u, daySchedule.times().size());
+  EXPECT_EQ(2u, daySchedule.values().size());
+  // 31 seconds becomes 1 minute
+  EXPECT_EQ(Time(0,0,1),daySchedule.times().front());
+  EXPECT_EQ(Time(0,24,0),daySchedule.times().back());
 }
 
 TEST_F(ModelFixture, Schedule_Day_Interp)
@@ -274,4 +299,29 @@ TEST_F(ModelFixture, Schedule_Day_Remove)
   EXPECT_EQ(1.0, times[0].totalDays());
   EXPECT_EQ(2.0, values[0]);
 
+}
+
+TEST_F(ModelFixture, Schedule_Day_Clone)
+{
+  Model model;
+
+  ScheduleTypeLimits limits(model);
+
+  ScheduleDay daySchedule(model);
+  daySchedule.setScheduleTypeLimits(limits);
+
+  ASSERT_EQ(1u, daySchedule.resources().size());
+  EXPECT_EQ(limits.handle(), daySchedule.resources()[0].handle());
+
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleTypeLimits>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleDay>().size());
+
+  ScheduleDay daySchedule2 = daySchedule.clone(model).cast<ScheduleDay>();
+
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleTypeLimits>().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<ScheduleDay>().size());
+  ASSERT_TRUE(daySchedule.scheduleTypeLimits());
+  ASSERT_TRUE(daySchedule2.scheduleTypeLimits());
+  EXPECT_EQ(limits.handle(), daySchedule.scheduleTypeLimits()->handle());
+  EXPECT_EQ(daySchedule.scheduleTypeLimits()->handle(), daySchedule2.scheduleTypeLimits()->handle());
 }

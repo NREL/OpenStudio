@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -19,11 +19,17 @@
 
 #include "PathHelpers.hpp"
 #include "Logger.hpp"
+#include "Assert.hpp"
 #include <boost/filesystem.hpp>
 
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QRegularExpression>
+
+#ifdef Q_OS_WIN
+#include <Windows.h>
+#endif
 
 namespace openstudio {
 
@@ -327,6 +333,137 @@ bool isEmptyDirectory(const path& dirName)
 
   QDir dir(toQString(dirName));
   return dir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot).empty();
+}
+
+
+boost::optional<std::string> windowsDriveLetter(const path& p)
+{
+  boost::optional<std::string> result;
+  QString q = toQString(p);
+
+  QRegularExpression regex("^([a-zA-Z]):");
+  QRegularExpressionMatch match = regex.match(q);
+  if (match.hasMatch()){
+    result = toString(match.captured(1));
+  }
+
+  return result;
+}
+
+bool isNetworkPath(const path& p)
+{
+  if (p.empty() || !p.is_absolute()){
+    return false;
+  }
+
+#ifdef Q_OS_WIN
+
+  // if this is a windows drive, check if this is mapped to a remote drive
+  boost::optional<std::string> wdl = windowsDriveLetter(p);
+  if (wdl){
+    std::string pstring = wdl.get() + ":\\";
+    if (GetDriveType(pstring.c_str()) == DRIVE_REMOTE){
+      return true;
+    }
+  } 
+
+  // check if path begins with \\, e.g. \\server\file
+  QString q = toQString(p.string()); // toQString(p) converts backslashes to slashes
+  QRegularExpression regex("^\\\\\\\\");
+  QRegularExpressionMatch match = regex.match(q);
+  if (match.hasMatch()){
+    return true;
+  }
+
+#endif
+
+  return false;
+}
+
+bool isNetworkPathAvailable(const path& p)
+{
+  if (!isNetworkPath(p)){
+    return false;
+  }
+
+#ifdef Q_OS_WIN
+
+  std::string fullyQualifiedName;
+
+  // if we get a drive letter, use WNetGetConnection
+  boost::optional<std::string> wdl = windowsDriveLetter(p);
+  if (wdl){
+    std::string pstring = wdl.get() + ":";
+
+    TCHAR szDeviceName[MAX_PATH];
+    DWORD dwResult, cchBuff = sizeof(szDeviceName);
+    dwResult = WNetGetConnection(pstring.c_str(), szDeviceName, &cchBuff);
+    if (dwResult != NO_ERROR){
+      return false;
+    }
+
+    fullyQualifiedName = szDeviceName;
+  } else{
+
+    // otherwise we have a fully qualified resource name, e.g. \\server\file
+    fullyQualifiedName = p.string(); // toString(p) converts backslashes to slashes
+  }
+
+  // use WNetGetResourceInformation to check status
+  OS_ASSERT(!fullyQualifiedName.empty());
+
+  DWORD dwBufferSize = sizeof(NETRESOURCE);
+  LPBYTE lpBuffer;                  // buffer
+  NETRESOURCE nr;
+  LPTSTR pszSystem = NULL;          // variable-length strings
+
+  // Set the block of memory to zero; then initialize
+  // the NETRESOURCE structure. 
+  ZeroMemory(&nr, sizeof(nr));
+
+  nr.dwScope = RESOURCE_GLOBALNET;
+  nr.dwType = RESOURCETYPE_ANY;
+  nr.lpRemoteName = &fullyQualifiedName[0];
+
+  // First call the WNetGetResourceInformation function with 
+  // memory allocated to hold only a NETRESOURCE structure. This 
+  // method can succeed if all the NETRESOURCE pointers are NULL.
+  // If the call fails because the buffer is too small, allocate
+  // a larger buffer.
+  lpBuffer = (LPBYTE)malloc(dwBufferSize);
+  if (lpBuffer == NULL){
+    return false;
+  }
+
+  bool moreData = true;
+  while (moreData){
+    DWORD dwResult = WNetGetResourceInformation(&nr, lpBuffer, &dwBufferSize, &pszSystem);
+    if (dwResult == NO_ERROR){
+      free(lpBuffer);
+      return true;
+    } else if (dwResult == ERROR_MORE_DATA){
+
+      auto newptr = (LPBYTE)realloc(lpBuffer, dwBufferSize);
+      if (newptr == nullptr) {
+        // whoops we had a memory allocation error and we need to clean things up
+        free(lpBuffer);
+        throw std::runtime_error("Memory error while attempting to allocate buffer");
+      } else {
+        lpBuffer = newptr;
+      }
+
+      moreData = true;
+
+    } else {
+      moreData = false;
+    }
+  }
+
+  free(lpBuffer);
+
+#endif
+
+  return false;
 }
 
 } // openstudio

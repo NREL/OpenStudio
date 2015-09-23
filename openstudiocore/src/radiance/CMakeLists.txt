@@ -23,6 +23,8 @@ set(${target_name}_src
   WindowGroup.cpp
 )
 
+qt5_add_resources(${target_name}_qrc_src radiance.qrc)
+
 set(${target_name}_test_src
   Test/AnnualIlluminanceMap_GTest.cpp
   Test/ForwardTranslator_GTest.cpp
@@ -38,7 +40,7 @@ set(${target_name}_swig_src
   AnnualIlluminanceMap.i
 )
 
-add_library(${target_name} SHARED ${${target_name}_src})
+add_library(${target_name} SHARED ${${target_name}_src} ${${target_name}_qrc_src})
 target_link_libraries(${target_name} ${${target_name}_depends})
 AddPCH(${target_name})
 

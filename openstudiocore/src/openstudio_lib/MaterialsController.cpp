@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -26,6 +26,7 @@
 #include "../model/Blind.hpp"
 #include "../model/Component.hpp"
 #include "../model/Component_Impl.hpp"
+#include "../model/DaylightRedirectionDevice.hpp"
 #include "../model/InfraredTransparentMaterial.hpp"
 #include "../model/MasslessOpaqueMaterial.hpp"
 #include "../model/Material.hpp"
@@ -94,6 +95,9 @@ void MaterialsController::onAddObject(const openstudio::IddObjectType& iddObject
       break;
     case IddObjectType::OS_WindowMaterial_Blind:
       mat = openstudio::model::Blind(model);
+      break;
+    case IddObjectType::OS_WindowMaterial_DaylightRedirectionDevice:
+      mat = openstudio::model::DaylightRedirectionDevice(model);
       break;
     case IddObjectType::OS_WindowMaterial_Screen:
       mat = openstudio::model::Screen(model);

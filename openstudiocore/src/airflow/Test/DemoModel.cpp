@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -30,7 +30,6 @@
 #include "../../model/SubSurface.hpp"
 #include "../../model/DesignSpecificationOutdoorAir.hpp"
 #include "../../model/BuildingStory.hpp"
-#include "../../utilities/geometry/Point3d.hpp"
 #include "../../model/ThermostatSetpointDualSetpoint.hpp"
 #include "../../model/ThermostatSetpointDualSetpoint_Impl.hpp"
 #include "../../model/ThermalZone.hpp"

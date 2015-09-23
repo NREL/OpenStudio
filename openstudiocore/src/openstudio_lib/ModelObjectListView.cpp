@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -98,7 +98,7 @@ std::vector<OSItemId> ModelObjectListController::makeVector()
     // sort by name
     std::sort(bclresults.begin(), bclresults.end(), BCLComponentNameGreater());
 
-    for( std::vector<BCLComponent>::iterator it = bclresults.begin(); 
+    for( auto it = bclresults.begin(); 
          it != bclresults.end();
          ++it )
     {
@@ -133,11 +133,8 @@ ModelObjectListView::ModelObjectListView(const openstudio::IddObjectType& iddObj
                                          bool addScrollArea,
                                          bool showLocalBCL,
                                          QWidget * parent )
-  : OSItemList(new ModelObjectListController(iddObjectType, model,showLocalBCL), addScrollArea)
+  : OSItemList(new ModelObjectListController(iddObjectType, model,showLocalBCL), addScrollArea, parent)
 {
-  bool isConnected = false;
-  isConnected = connect(this, SIGNAL(gridRowSelected(OSItem*)), this, SLOT(selectItem(OSItem*)));
-  OS_ASSERT(isConnected);
 }
 
 boost::optional<openstudio::model::ModelObject> ModelObjectListView::selectedModelObject() const

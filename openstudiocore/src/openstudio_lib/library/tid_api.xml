@@ -10,7 +10,7 @@
 		<depth>0</depth>
 		<parents>0</parents>
 		<term>
-			<tid>34</tid>
+			<tid>1315</tid>
 			<vid>3</vid>
 			<name>Fenestration</name>
 			<description/>
@@ -19,22 +19,22 @@
 			<parents>27</parents>
 			<parents>127</parents>
 			<term>
-				<tid>151</tid>
+				<tid>1317</tid>
 				<vid>3</vid>
 				<name>Door</name>
 				<description/>
 				<weight>0</weight>
 				<depth>2</depth>
-				<parents>34</parents>
+				<parents>1315</parents>
 			</term>
 			<term>
-				<tid>140</tid>
+				<tid>1318</tid>
 				<vid>3</vid>
 				<name>Skylight</name>
 				<description/>
 				<weight>0</weight>
 				<depth>2</depth>
-				<parents>34</parents>
+				<parents>1315</parents>
 			</term>
 			<term>
 				<tid>143</tid>
@@ -43,16 +43,16 @@
 				<description/>
 				<weight>0</weight>
 				<depth>2</depth>
-				<parents>34</parents>
+				<parents>1315</parents>
 			</term>
 			<term>
-				<tid>139</tid>
+				<tid>1316</tid>
 				<vid>3</vid>
 				<name>Window</name>
 				<description/>
 				<weight>0</weight>
 				<depth>2</depth>
-				<parents>34</parents>
+				<parents>1315</parents>
 			</term>
 		</term>
 		<term>
@@ -243,6 +243,50 @@
       <weight>3</weight>
       <depth>1</depth>
       <parents>157</parents>
+    </term>
+  </term>
+  <term>
+    <tid>210</tid>
+    <vid>3</vid>
+    <name>HVAC</name>
+    <description></description>
+    <format>filtered_html</format>
+    <weight>0</weight>
+    <uuid>59c550d3-1664-4ba5-818c-046d8463a922</uuid>
+    <depth>0</depth>
+    <parents>0</parents>
+    <term>
+      <tid>1337</tid>
+      <vid>3</vid>
+      <name>Ductless Heat Pump</name>
+      <description></description>
+      <format>filtered_html</format>
+      <weight>0</weight>
+      <uuid>e181c648-e2d8-4d3c-9aaf-2efa6165ef47</uuid>
+      <depth>1</depth>
+      <parents>210</parents>
+      <term>
+        <tid>1338</tid>
+        <vid>3</vid>
+        <name>Indoor Unit</name>
+        <description></description>
+        <format>filtered_html</format>
+        <weight>0</weight>
+        <uuid>65143873-00ac-4337-ad47-6697356c5db0</uuid>
+        <depth>2</depth>
+        <parents>1337</parents>
+      </term>
+      <term>
+        <tid>1339</tid>
+        <vid>3</vid>
+        <name>Outdoor Unit</name>
+        <description></description>
+        <format>filtered_html</format>
+        <weight>0</weight>
+        <uuid>1f069178-22f9-4d91-b812-d6a6d0ce8695</uuid>
+        <depth>2</depth>
+        <parents>1337</parents>
+      </term>
     </term>
   </term>
 </taxonomy>

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -22,6 +22,8 @@
 
 #include "../model/DefaultConstructionSet.hpp"
 #include "../model/DefaultConstructionSet_Impl.hpp"
+#include "../model/DefaultSurfaceConstructions.hpp"
+#include "../model/DefaultSubSurfaceConstructions.hpp"
 
 #include "../utilities/core/Logger.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -55,6 +57,34 @@ void DefaultConstructionSetsController::onCopyObject(const openstudio::model::Mo
 
 void DefaultConstructionSetsController::onRemoveObject(openstudio::model::ModelObject modelObject)
 {
+  boost::optional<model::DefaultConstructionSet> dcs = modelObject.optionalCast<model::DefaultConstructionSet>();
+  if (dcs){
+    boost::optional<model::DefaultSurfaceConstructions> dsc = dcs->defaultExteriorSurfaceConstructions();
+    if (dsc && (dsc->directUseCount(true) == 1)){
+      dsc->remove();
+    }
+
+    dsc = dcs->defaultInteriorSurfaceConstructions();
+    if (dsc && (dsc->directUseCount(true) == 1)){
+      dsc->remove();
+    }
+
+    dsc = dcs->defaultGroundContactSurfaceConstructions();
+    if (dsc && (dsc->directUseCount(true) == 1)){
+      dsc->remove();
+    }
+
+    boost::optional<model::DefaultSubSurfaceConstructions> dssc = dcs->defaultExteriorSubSurfaceConstructions();
+    if (dssc && (dssc->directUseCount(true) == 1)){
+      dssc->remove();
+    }
+
+    dssc = dcs->defaultInteriorSubSurfaceConstructions();
+    if (dssc && (dssc->directUseCount(true) == 1)){
+      dssc->remove();
+    }
+  }
+
   modelObject.remove();
 }
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -104,9 +104,9 @@ class VRFSystemListController : public OSListController
 
   VRFController * vrfController() const;
 
-  QSharedPointer<OSListItem> itemAt(int i);
+  QSharedPointer<OSListItem> itemAt(int i) override;
 
-  int count();
+  int count() override;
 
   void reset();
 
@@ -136,7 +136,7 @@ class VRFSystemItemDelegate : public OSGraphicsItemDelegate
 
   virtual ~VRFSystemItemDelegate() {}
 
-  virtual QGraphicsObject * view(QSharedPointer<OSListItem> dataSource);
+  virtual QGraphicsObject * view(QSharedPointer<OSListItem> dataSource) override;
 };
 
 class VRFSystemListDropZoneItem : public OSListItem
@@ -145,7 +145,7 @@ class VRFSystemListDropZoneItem : public OSListItem
 
   public:
 
-  VRFSystemListDropZoneItem(OSListController * listController = 0);
+  VRFSystemListDropZoneItem(OSListController * listController = nullptr);
 
   ~VRFSystemListDropZoneItem() {}
 };
@@ -156,7 +156,7 @@ class VRFSystemListItem : public OSListItem
 
   public:
 
-  VRFSystemListItem(const model::AirConditionerVariableRefrigerantFlow & vrfSystem, OSListController * listController = 0);
+  VRFSystemListItem(const model::AirConditionerVariableRefrigerantFlow & vrfSystem, OSListController * listController = nullptr);
 
   virtual ~VRFSystemListItem() {}
 

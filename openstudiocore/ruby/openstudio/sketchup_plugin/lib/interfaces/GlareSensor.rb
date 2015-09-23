@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -69,6 +69,14 @@ module OpenStudio
     
     def check_model_object
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
+      
+      # Look up the Space drawing interface (might fail if the reference is bad)
+      if (not parent_from_model_object)
+        @model_interface.add_error("Error:  " + @model_object.name.to_s + "\n")
+        @model_interface.add_error("The space referenced by this glare sensor does not exist, it cannot be drawn.\n\n")
+        return(false)
+      end
+        
       return(super)
     end
 
@@ -115,13 +123,18 @@ module OpenStudio
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       
       if (@parent.nil?)        
-        puts "GlareSensor parent is nil"
-        
-        # Create a new space just for this DaylightingControl.
-        @parent = Space.new
-        @parent.create_model_object
-        @parent.draw_entity
-        @parent.add_child(self)  # Would be nice to not have to call this
+      #  # Create a new space just for this GlareSensor.
+      #  Plugin.log(OpenStudio::Warn, "Creating containing Space for GlareSensor #{@model_object.name}")
+      #  
+      #  @parent = Space.new
+      #  @parent.create_model_object
+      #  @model_object.setParent(@parent.model_object)
+      #  @parent.draw_entity
+      #  @parent.add_child(self)  # Would be nice to not have to call this
+      
+        # how did this happen?
+        Plugin.log(OpenStudio::Error, "Parent #{@parent} is nil, cannot create entity for glare sensor #{@model_object.name}")
+        return nil
       end    
 
       # add component definition

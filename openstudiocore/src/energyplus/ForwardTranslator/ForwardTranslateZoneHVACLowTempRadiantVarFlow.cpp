@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -162,6 +162,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
   {
     CoilHeatingLowTempRadiantVarFlow coilHeat = *coilOptionalHeating;
 
+    // Heating Design Capacity Method - introduced in 8.2.0 and not yet supported in OS
+    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacityMethod,"HeatingDesignCapacity");
+
+    // Heating Design Capacity - introduced in 8.2.0 and not yet supported in OS
+    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacity,"Autosize");
+    
     // field Maximum Hot Water Flow
     if( coilHeat.isMaximumHotWaterFlowAutosized() )
     {
@@ -217,6 +223,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
   if (coilOptionalCooling)
   {
     CoilCoolingLowTempRadiantVarFlow coilCool = *coilOptionalCooling;
+
+    // Cooling Design Capacity Method - introduced in 8.2.0 and not yet supported in OS
+    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityMethod,"CoolingDesignCapacity");
+
+    // Cooling Design Capacity - introduced in 8.2.0 and not yet supported in OS
+    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacity,"Autosize");
 
     // Field Maximum Cold Water Flow
     if( coilCool.isMaximumColdWaterFlowAutosized() )

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -650,11 +650,19 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
         double d = *(prop.minBoundValue);
         if (m_unitSystem == IP) {
           OptionalQuantity minQ = convert(Quantity(d,u_si),u);
+          if(prop.minBoundType == IddFieldProperties::ExclusiveBound) {
+            if( minQ ) {
+              minQ->setValue(minQ->value() + std::numeric_limits<double>::epsilon());
+            }
+          }
           if (minQ) {
             text->setMin(minQ->value());
           }
         }
         else {
+          if(prop.minBoundType == IddFieldProperties::ExclusiveBound) {
+            d = d + std::numeric_limits<double>::epsilon();
+          }
           text->setMin( d );
         }
       }
@@ -663,11 +671,19 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
         double d = *(prop.maxBoundValue);
         if (m_unitSystem == IP) {
           OptionalQuantity maxQ = convert(Quantity(d,u_si),u);
+          if( maxQ ) {
+            if(prop.maxBoundType == IddFieldProperties::ExclusiveBound) {
+              maxQ->setValue(maxQ->value() - std::numeric_limits<double>::epsilon());
+            }
+          }
           if (maxQ) {
             text->setMax(maxQ->value());
           }
         }
         else {
+          if(prop.maxBoundType == IddFieldProperties::ExclusiveBound) {
+            d = d - std::numeric_limits<double>::epsilon();
+          }
           text->setMax( d );
         }
       }
@@ -784,9 +800,6 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
   }
   commentText->setObjectName("IDFcomment");
 
-  label->setFocusPolicy(Qt::ClickFocus);
-  label->setFocusProxy( text );
-
   vbox->addWidget(commentText);
 
   if(exists)
@@ -833,24 +846,20 @@ void InspectorGadget::layoutComboBox( QVBoxLayout* layout,
 
     std::sort(names.begin(), names.end(), IstringCompare());
 
-    combo->addItem("");
-    /*if (!prop.required){
+    if (!prop.required){
       combo->addItem("");
-    }else{
-      combo->addItem("");
-    }*/
+    }
+
     for (const std::string& name : names){
       combo->addItem(name.c_str());   
     }
   }
   else
   {
-    combo->addItem("");
-    /*if (!prop.required){
+    if (!prop.required){
       combo->addItem("");
-    }else{
-      combo->addItem("");
-    }*/
+    }
+
     for (IddKey key : field.keys()){
       combo->addItem(key.name().c_str());
     }
@@ -910,6 +919,9 @@ void InspectorGadget::createExtensibleToolBar( QVBoxLayout* layout,
                                                const IddObjectProperties& props )
 {
   if( !props.extensible )
+    return;
+
+  if ( m_locked )
     return;
 
   auto frame = new QFrame(parent);

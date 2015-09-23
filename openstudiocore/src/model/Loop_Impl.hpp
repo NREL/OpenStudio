@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -57,17 +57,21 @@ namespace detail {
 
     virtual ~Loop_Impl() {}
 
-    virtual Node supplyInletNode() const;
+    virtual Node supplyInletNode() const = 0;
 
-    virtual Node supplyOutletNode() const;
+    virtual Node supplyOutletNode() const = 0;
 
-    virtual Node demandInletNode() const;
+    virtual std::vector<Node> supplyOutletNodes() const = 0;
 
-    virtual Node demandOutletNode() const;
+    virtual Node demandInletNode() const = 0;
 
-    virtual std::vector<ModelObject> children() const;
+    virtual std::vector<Node> demandInletNodes() const = 0;
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual Node demandOutletNode() const = 0;
+
+    virtual std::vector<ModelObject> children() const override;
+
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual std::vector<ModelObject> supplyComponents( HVACComponent inletComp,
                                                        HVACComponent outletComp,
@@ -75,11 +79,11 @@ namespace detail {
 
     virtual std::vector<ModelObject> demandComponents( HVACComponent inletComp,
                                                        HVACComponent outletComp,
-                                                       openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+                                                       openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
     virtual std::vector<ModelObject> supplyComponents(openstudio::IddObjectType type=openstudio::IddObjectType("Catchall")) const;
 
-    virtual std::vector<ModelObject> demandComponents(openstudio::IddObjectType type=openstudio::IddObjectType("Catchall"));
+    virtual std::vector<ModelObject> demandComponents(openstudio::IddObjectType type=openstudio::IddObjectType("Catchall")) const;
 
     virtual std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
@@ -89,7 +93,7 @@ namespace detail {
 
     virtual boost::optional<ModelObject> component(openstudio::Handle handle);
 
-    virtual boost::optional<ModelObject> demandComponent(openstudio::Handle handle);
+    virtual boost::optional<ModelObject> demandComponent(openstudio::Handle handle) const;
 
     virtual boost::optional<ModelObject> supplyComponent(openstudio::Handle handle) const;
 
@@ -101,11 +105,11 @@ namespace detail {
     virtual std::vector<ModelObject> demandComponents(std::vector<HVACComponent> inletComps,
                                                       std::vector<HVACComponent> outletComps,
                                                       openstudio::IddObjectType type
-                                                      );
+                                                      ) const;
 
-    virtual std::vector<openstudio::IdfObject> remove();
+    virtual std::vector<openstudio::IdfObject> remove() override;
 
-    virtual ModelObject clone(Model model) const;
+    virtual ModelObject clone(Model model) const override;
 
     virtual Splitter demandSplitter() = 0;
 

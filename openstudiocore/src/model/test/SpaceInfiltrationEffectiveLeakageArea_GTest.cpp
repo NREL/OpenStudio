@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -18,13 +18,17 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
+
 #include "ModelFixture.hpp"
 
 #include "../SpaceInfiltrationEffectiveLeakageArea.hpp"
 #include "../SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
+#include "../SpaceType.hpp"
+#include "../SpaceType_Impl.hpp"
 
 #include "../../utilities/units/Quantity.hpp"
 #include "../../utilities/units/Unit.hpp"
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -42,5 +46,26 @@ TEST_F(ModelFixture,SpaceInfiltrationEffectiveLeakageArea_Quantity) {
   EXPECT_EQ(spaceInfiltrationEffectiveLeakageArea.effectiveAirLeakageArea(), 0.1);
   EXPECT_EQ(spaceInfiltrationEffectiveLeakageArea.stackCoefficient(), 0.2);
   EXPECT_EQ(spaceInfiltrationEffectiveLeakageArea.windCoefficient(), 0.3);
+
+  boost::optional<model::ModelObject> clone1 = spaceInfiltrationEffectiveLeakageArea.clone(spaceInfiltrationEffectiveLeakageArea.model());
+  EXPECT_EQ(2u, model.numObjects());
+
+  boost::optional<model::ModelObject> clone2 = clone1->cast<model::SpaceInfiltrationEffectiveLeakageArea>().clone(clone1->model());
+  EXPECT_EQ(3u, model.numObjects());
+
+  auto spaceType1 = SpaceType(model);
+  auto success = clone1->cast<model::SpaceInfiltrationEffectiveLeakageArea>().setSpaceType(spaceType1);
+  ASSERT_TRUE(success);
+
+  auto spaceType2 = SpaceType(model);
+  success = clone2->cast<model::SpaceInfiltrationEffectiveLeakageArea>().setSpaceType(spaceType2);
+  ASSERT_TRUE(success);
+
+  success = clone2->cast<model::SpaceInfiltrationEffectiveLeakageArea>().setSpaceType(spaceType1);
+  ASSERT_TRUE(success);
+
+  EXPECT_EQ(2, model.getObjectsByType(IddObjectType::OS_SpaceType).size());
+
+  EXPECT_EQ(3, model.getObjectsByType(IddObjectType::OS_SpaceInfiltration_EffectiveLeakageArea).size());
 }
 

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -61,7 +61,7 @@ class LoopScene : public GridScene
   public:
   
   LoopScene( model::Loop loop,
-             QObject *parent = 0 );
+             QObject *parent = nullptr );
 
   virtual ~LoopScene() {}
 

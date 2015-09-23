@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -45,6 +45,8 @@ class MODEL_API FanVariableVolume : public StraightComponent {
   //@{
 
   FanVariableVolume(const Model& model, Schedule & schedule);
+
+  FanVariableVolume(const Model& model);
 
   virtual ~FanVariableVolume() {}
 

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -51,30 +51,4 @@ TEST_F(UnitsFixture,IddUnits_Grams) {
   ASSERT_TRUE(unit);
   EXPECT_TRUE(unit->system() == UnitSystem::SI);
   EXPECT_EQ(-3,unit->scale().exponent);
-}
-
-TEST_F(UnitsFixture,IddUnits_DefaultValue) {
-  IdfObject idfObject(IddObjectType::OS_Building);
-  // IdfObject::getQuantity(unsigned index, bool returnDefault=false, bool returnIP=false) const;
-
-  // this field is empty but has a default value of 3 m
-  EXPECT_TRUE(idfObject.getQuantity(OS_BuildingFields::NominalFloortoFloorHeight, false).empty());
-
-  OSOptionalQuantity siQ = idfObject.getQuantity(OS_BuildingFields::NominalFloortoFloorHeight, true, false);
-  ASSERT_FALSE(siQ.empty());
-  OptionalUnit mUnit = createUnit("m");
-  ASSERT_TRUE(mUnit);
-  EXPECT_EQ(*mUnit, siQ.get().units());
-  EXPECT_EQ(3.0, siQ.get().value());
-
-  OSOptionalQuantity ipQ = idfObject.getQuantity(OS_BuildingFields::NominalFloortoFloorHeight, true, true);
-  ASSERT_FALSE(ipQ.empty());
-  OptionalUnit ftUnit = createUnit("ft");
-  ASSERT_TRUE(ftUnit);
-  EXPECT_EQ(*ftUnit, ipQ.get().units());
-  EXPECT_NE(3.0, ipQ.get().value());
-  
-  OptionalQuantity q = QuantityConverter::instance().convert(ipQ.get(), *mUnit);
-  ASSERT_TRUE(q);
-  EXPECT_DOUBLE_EQ(3.0, q->value());
 }

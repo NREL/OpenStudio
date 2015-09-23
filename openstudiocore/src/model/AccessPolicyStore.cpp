@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -46,11 +46,11 @@ namespace openstudio
       bool startElement(const QString& namespaceURI,
                         const QString& localName,
                         const QString& qName,
-                        const QXmlAttributes& atts  );
+                        const QXmlAttributes& atts  ) override;
 
       bool endElement  ( const QString& namespaceURI,
                          const QString& localName,
-                         const QString& qName );
+                         const QString& qName ) override;
 
       bool error(QXmlParseException&);
       bool fatalError(QXmlParseException&);

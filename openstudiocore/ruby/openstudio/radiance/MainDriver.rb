@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -46,7 +46,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 require 'fileutils'
 
 require 'optparse'
@@ -116,7 +115,7 @@ end
 
 if modelPath.empty?
   puts "No OpenStudio model provided, quitting. Try 'MainDriver.rb -h' for options."
-  exit
+  exit false
 end
 
 sqlPath = ""
@@ -125,7 +124,7 @@ if ARGV[1]
     sqlPath = File.expand_path(ARGV[1])
   else
     puts "Invalid sql file given '#{ARGV[1]}'"
-    exit
+    exit false
   end
 end
 
@@ -138,7 +137,7 @@ $LOAD_PATH.each {|load_path| load_paths += "-I '#{load_path}' "}
 result = exec_statement("ruby #{load_paths} #{dirname}/ModelToRad.rb #{modelPath} #{sqlPath}")
 if not result
   puts "failed to run ModelToRad"
-  exit
+  exit false
 end
 
 # if no sqlPath given, glob under the modelPath to find it
@@ -151,7 +150,7 @@ if sqlPath.empty?
   end
   if sqlPath.empty?
     puts "could not find sqlPath after running ModelToRad"
-    exit
+    exit false
   end
 end
 
@@ -159,19 +158,19 @@ end
 result = exec_statement("ruby #{load_paths} #{dirname}/DaylightSim.rb #{modelPath} #{sqlPath} --dc --x")
 if not result
   puts "failed to run DaylightSim"
-  exit
+  exit false
 end
 
 # execute DaylightSim to run annual simulation
 result = exec_statement("ruby #{load_paths} #{dirname}/DaylightSim.rb #{modelPath} #{sqlPath} --dcts --x")
 if not result
   puts "failed to run DaylightSim"
-  exit
+  exit false
 end
 
 # execute MakeSchedules
 result = exec_statement("ruby #{load_paths} #{dirname}/MakeSchedules.rb #{modelPath} #{sqlPath} --keep")
 if not result
   puts "failed to run MakeSchedules"
-  exit
+  exit false
 end

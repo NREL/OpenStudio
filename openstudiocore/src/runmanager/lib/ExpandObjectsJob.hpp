@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -55,15 +55,15 @@ namespace detail {
 
 
     protected:
-      virtual std::string descriptionImpl() const;
-      virtual std::string detailedDescriptionImpl() const
+      virtual std::string descriptionImpl() const override;
+      virtual std::string detailedDescriptionImpl() const override
       {
         return "";
       }
-      virtual ToolVersion getToolVersionImpl(const std::string &t_toolName) const;
-      virtual void startHandlerImpl();
+      virtual ToolVersion getToolVersionImpl(const std::string &t_toolName) const override;
+      virtual void startHandlerImpl() override;
 
-      virtual void basePathChanged();
+      virtual void basePathChanged() override;
 
     private:
       REGISTER_LOGGER("openstudio.runmanager.ExpandObjectsJob");

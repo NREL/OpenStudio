@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -142,7 +142,7 @@ namespace detail {
   }
 
 
-  double FanConstantVolume_Impl::fanEfficiency()
+  double FanConstantVolume_Impl::fanEfficiency() const
   {
     return this->getDouble(OS_Fan_ConstantVolumeFields::FanEfficiency,true).get();
   }
@@ -152,7 +152,7 @@ namespace detail {
     this->setDouble(OS_Fan_ConstantVolumeFields::FanEfficiency,val);
   }
 
-  double FanConstantVolume_Impl::pressureRise()
+  double FanConstantVolume_Impl::pressureRise() const
   {
     return this->getDouble(OS_Fan_ConstantVolumeFields::PressureRise,true).get();
   }
@@ -162,7 +162,7 @@ namespace detail {
     this->setDouble(OS_Fan_ConstantVolumeFields::PressureRise,val);
   }
 
-  double FanConstantVolume_Impl::motorEfficiency()
+  double FanConstantVolume_Impl::motorEfficiency() const
   {
     return this->getDouble(OS_Fan_ConstantVolumeFields::MotorEfficiency,true).get();
   }
@@ -172,7 +172,7 @@ namespace detail {
     this->setDouble(OS_Fan_ConstantVolumeFields::MotorEfficiency,val);
   }
 
-  double FanConstantVolume_Impl::motorInAirstreamFraction()
+  double FanConstantVolume_Impl::motorInAirstreamFraction() const
   {
     return this->getDouble(OS_Fan_ConstantVolumeFields::MotorInAirstreamFraction,true).get();
   }
@@ -182,7 +182,7 @@ namespace detail {
     this->setDouble(OS_Fan_ConstantVolumeFields::MotorInAirstreamFraction,val);
   }
 
-  std::string FanConstantVolume_Impl::endUseSubcategory()
+  std::string FanConstantVolume_Impl::endUseSubcategory() const
   {
     return this->getString(OS_Fan_ConstantVolumeFields::EndUseSubcategory).get();
   }
@@ -464,6 +464,16 @@ FanConstantVolume::FanConstantVolume(const Model& model,
   setEndUseSubcategory("");
 }
 
+FanConstantVolume::FanConstantVolume(const Model& model)
+  : StraightComponent(FanConstantVolume::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::FanConstantVolume_Impl>());
+  setString(openstudio::OS_Fan_ConstantVolumeFields::MaximumFlowRate,"AutoSize");
+  auto s = model.alwaysOnDiscreteSchedule();
+  setAvailabilitySchedule(s);
+  setEndUseSubcategory("");
+}
+
 FanConstantVolume::FanConstantVolume(std::shared_ptr<detail::FanConstantVolume_Impl> p)
   : StraightComponent(p)
 {}
@@ -477,7 +487,7 @@ bool FanConstantVolume::setAvailabilitySchedule(Schedule& s)
   return getImpl<detail::FanConstantVolume_Impl>()->setAvailabilitySchedule(s);
 }
 
-double FanConstantVolume::fanEfficiency()
+double FanConstantVolume::fanEfficiency() const
 {
   return getImpl<detail::FanConstantVolume_Impl>()->fanEfficiency();
 }
@@ -487,7 +497,7 @@ void FanConstantVolume::setFanEfficiency(double val)
   getImpl<detail::FanConstantVolume_Impl>()->setFanEfficiency(val);
 }
 
-double FanConstantVolume::pressureRise()
+double FanConstantVolume::pressureRise() const
 {
   return getImpl<detail::FanConstantVolume_Impl>()->pressureRise();
 }
@@ -497,7 +507,7 @@ void FanConstantVolume::setPressureRise(double val)
   getImpl<detail::FanConstantVolume_Impl>()->setPressureRise(val);
 }
 
-double FanConstantVolume::motorEfficiency()
+double FanConstantVolume::motorEfficiency() const
 {
   return getImpl<detail::FanConstantVolume_Impl>()->motorEfficiency();
 }
@@ -507,7 +517,7 @@ void FanConstantVolume::setMotorEfficiency(double val)
   getImpl<detail::FanConstantVolume_Impl>()->setMotorEfficiency(val);
 }
 
-double FanConstantVolume::motorInAirstreamFraction()
+double FanConstantVolume::motorInAirstreamFraction() const
 {
   return getImpl<detail::FanConstantVolume_Impl>()->motorInAirstreamFraction();
 }
@@ -517,7 +527,7 @@ void FanConstantVolume::setMotorInAirstreamFraction(double val)
   getImpl<detail::FanConstantVolume_Impl>()->setMotorInAirstreamFraction(val);
 }
 
-std::string FanConstantVolume::endUseSubcategory()
+std::string FanConstantVolume::endUseSubcategory() const
 {
   return getImpl<detail::FanConstantVolume_Impl>()->endUseSubcategory();
 }

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -68,13 +68,13 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual boost::optional<ParentObject> parent() const;
+    virtual boost::optional<ParentObject> parent() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
     //@}
     /** @name Getters */
@@ -82,7 +82,7 @@ namespace detail {
 
     ExteriorLightsDefinition exteriorLightsDefinition() const;
 
-    Schedule schedule() const;
+    boost::optional<Schedule> schedule() const;
 
     std::string controlOption() const;
 
@@ -104,6 +104,7 @@ namespace detail {
 
     bool setSchedule(Schedule& schedule);
 
+    void resetSchedule();
     bool setControlOption(std::string controlOption);
 
     void resetControlOption();

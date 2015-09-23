@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -24,6 +24,7 @@
 #include "../Model.hpp"
 #include "../ScheduleConstant.hpp"
 #include "../ScheduleTypeLimits.hpp"
+#include "../ScheduleTypeLimits_Impl.hpp"
 #include "../LightsDefinition.hpp"
 #include "../Lights.hpp"
 
@@ -112,3 +113,89 @@ TEST_F(ModelFixture, ScheduleTypeRegistry_UseInSetSchedule) {
   EXPECT_DOUBLE_EQ(1.0,lightsLimits.upperLimitValue().get());
 }
 
+TEST_F(ModelFixture, ScheduleTypeRegistry_GetOrCreateScheduleTypeLimits) {
+  {
+    Model model;
+
+    ScheduleType scheduleType = ScheduleTypeRegistry::instance().getScheduleType("People", "Activity Level");
+
+    ASSERT_TRUE(scheduleType.lowerLimitValue);
+    EXPECT_EQ(0.0, scheduleType.lowerLimitValue.get());
+    EXPECT_FALSE(scheduleType.upperLimitValue);
+
+    ScheduleTypeLimits limits = ScheduleTypeRegistry::instance().getOrCreateScheduleTypeLimits(scheduleType, model);
+    ScheduleTypeLimits limits2 = ScheduleTypeRegistry::instance().getOrCreateScheduleTypeLimits(scheduleType, model);
+
+    EXPECT_EQ(limits.handle(), limits2.handle());
+
+    EXPECT_TRUE(isCompatible(scheduleType, limits));
+  }
+
+  {
+    Model model;
+
+    ScheduleType scheduleType = ScheduleTypeRegistry::instance().getScheduleType("RefrigerationCase", "Refrigerated Case Restocking");
+
+    ASSERT_TRUE(scheduleType.lowerLimitValue);
+    EXPECT_EQ(0.0, scheduleType.lowerLimitValue.get());
+    EXPECT_FALSE(scheduleType.upperLimitValue);
+
+    ScheduleTypeLimits limits = ScheduleTypeRegistry::instance().getOrCreateScheduleTypeLimits(scheduleType, model);
+    ScheduleTypeLimits limits2 = ScheduleTypeRegistry::instance().getOrCreateScheduleTypeLimits(scheduleType, model);
+
+    EXPECT_EQ(limits.handle(), limits2.handle());
+
+    EXPECT_TRUE(isCompatible(scheduleType, limits));
+  }
+
+  {
+    Model model;
+
+    ScheduleType scheduleType = ScheduleTypeRegistry::instance().getScheduleType("ThermostatSetpointDualSetpoint", "Heating Setpoint Temperature");
+    
+    EXPECT_FALSE(scheduleType.lowerLimitValue);
+    EXPECT_FALSE(scheduleType.upperLimitValue);
+
+    ScheduleTypeLimits limits = ScheduleTypeRegistry::instance().getOrCreateScheduleTypeLimits(scheduleType, model);
+    ScheduleTypeLimits limits2 = ScheduleTypeRegistry::instance().getOrCreateScheduleTypeLimits(scheduleType, model);
+
+    EXPECT_EQ(limits.handle(), limits2.handle());
+    EXPECT_EQ("Temperature", limits.name().get());
+
+    EXPECT_TRUE(isCompatible(scheduleType, limits));
+
+    ASSERT_EQ(1u, model.getConcreteModelObjectsByName<ScheduleTypeLimits>("Temperature").size());
+    EXPECT_EQ("Temperature", model.getConcreteModelObjectsByName<ScheduleTypeLimits>("Temperature")[0].name().get());
+
+    ModelObject scheduleType2 = limits.clone();
+    EXPECT_EQ("Temperature 1", scheduleType2.name().get());
+
+    EXPECT_EQ(2u, model.getConcreteModelObjectsByName<ScheduleTypeLimits>("Temperature").size());
+
+    limits.remove();
+
+    ASSERT_EQ(1u, model.getConcreteModelObjectsByName<ScheduleTypeLimits>("Temperature").size());
+    EXPECT_EQ("Temperature 1", model.getConcreteModelObjectsByName<ScheduleTypeLimits>("Temperature 1")[0].name().get());
+
+    limits = ScheduleTypeRegistry::instance().getOrCreateScheduleTypeLimits(scheduleType, model);
+    EXPECT_EQ(limits.handle(), scheduleType2.handle());
+    EXPECT_EQ("Temperature 1", limits.name().get());
+  }
+
+  {
+    Model model;
+    for (auto className : ScheduleTypeRegistry::instance().classNames()){
+      for (auto scheduleType : ScheduleTypeRegistry::instance().getScheduleTypesByClassName(className)){
+        ScheduleTypeLimits limits = ScheduleTypeRegistry::instance().getOrCreateScheduleTypeLimits(scheduleType, model);
+        ScheduleTypeLimits limits2 = ScheduleTypeRegistry::instance().getOrCreateScheduleTypeLimits(scheduleType, model);
+
+        EXPECT_EQ(limits.handle(), limits2.handle());
+
+        EXPECT_EQ(ScheduleTypeLimits::units(scheduleType.unitType, false), ScheduleTypeLimits::units(limits.unitType(), false));
+
+        EXPECT_TRUE(isCompatible(scheduleType, limits));
+      }
+    }
+  }
+
+}

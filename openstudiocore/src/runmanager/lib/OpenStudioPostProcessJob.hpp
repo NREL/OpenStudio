@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -58,19 +58,19 @@ namespace detail {
       virtual ~OpenStudioPostProcessJob();
 
       // Reimplemented virtual functions from Job_Impl
-      virtual bool outOfDateImpl(const boost::optional<QDateTime> &t_lastrun) const;
-      virtual std::string description() const;
-      virtual Files outputFilesImpl() const;
-      virtual std::string getOutput() const;
-      virtual void cleanup();
+      virtual bool outOfDateImpl(const boost::optional<QDateTime> &t_lastrun) const override;
+      virtual std::string description() const override;
+      virtual Files outputFilesImpl() const override;
+      virtual std::string getOutput() const override;
+      virtual void cleanup() override;
 
-      virtual void requestStop();
+      virtual void requestStop() override;
 
     protected:
-      virtual void startImpl(const std::shared_ptr<ProcessCreator> &t_creator);
+      virtual void startImpl(const std::shared_ptr<ProcessCreator> &t_creator) override;
 
-      virtual void basePathChanged();
-      virtual void standardCleanImpl() { /* nothing to do for this job type */ }
+      virtual void basePathChanged() override;
+      virtual void standardCleanImpl() override { /* nothing to do for this job type */ }
 
     private:
       REGISTER_LOGGER("openstudio.runmanager.OpenStudioPostProcessJob");

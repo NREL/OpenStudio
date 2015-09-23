@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -88,6 +88,7 @@ namespace runmanager {
       std::string pathstr = openstudio::toString(path);
       LOG(Debug, "Parsing tool version number from string: " << pathstr);
 
+      // DLM: this could be replaced by VersionString as well
       boost::regex reg(".*?V?([0-9]+)[\\.-]([0-9]+)[\\.-]?([0-9]*)([\\.-][0-9]+)?.*");
 
       boost::smatch results;
@@ -105,30 +106,23 @@ namespace runmanager {
       } 
     }
 
-    if (!toolver) 
+    if (!toolver || !toolver->getTag())
     {
       openstudio::path iddpath = t_path.parent_path() / openstudio::toPath("Energy+.idd");
 
       if (safeExists(iddpath))
       {
-        boost::optional<openstudio::IddFile> f = openstudio::IddFile::load(iddpath);
         LOG(Debug, "Unable to parse version of EnergyPlus from folder name, using idd version: " << openstudio::toString(iddpath));
 
-        if (f)
-        {
-          std::string version = f->version();
-          LOG(Debug, "Version string is: " << version);
-          boost::regex reg("([0-9]+)\\.([0-9]+)\\.([0-9]+)(\\.[0-9]+)?.*");
+        try {
+          const auto versionbuild = openstudio::IddFile::parseVersionBuild(iddpath);
+          const auto version = versionbuild.first;
+          LOG(Debug, "Version string is: " << version.str());
+          const auto tag = versionbuild.second;
 
-          boost::smatch results;
-          if (boost::regex_match(version, results, reg))
-          {
-            int major = atoi(results[1].str().c_str());
-            int minor = atoi(results[2].str().c_str());
-            int build = atoi(results[3].str().c_str());
-
-            toolver = QSharedPointer<ToolVersion>(new ToolVersion(major,minor, build));
-          }
+          toolver = QSharedPointer<ToolVersion>(new ToolVersion(version.major(), version.minor(), version.patch(), tag.empty() ? (boost::optional<std::string>()) : (boost::optional<std::string>(tag))));
+        } catch (const std::exception &e) {
+          LOG(Warn, "Unable to get version number from Idd: " << e.what());
         }
       }
     }
@@ -393,9 +387,8 @@ namespace runmanager {
             || openstudio::toPath("/mnt") == curPath
             || openstudio::toPath("/Volumes") == curPath
             || subPathMatch(curPath, boost::regex("lib.*", boost::regex::perl))
-            || subPathMatch(curPath, boost::regex("share", boost::regex::perl))
             || openstudio::toPath("C:/Windows") == curPath
-            || (subPathMatch(curPath, boost::regex("share", boost::regex::perl)) && !subPathMatch(curPath, boost::regex("openstudio", boost::regex::perl)))
+            || (subPathMatch(curPath, boost::regex("share", boost::regex::perl)) && !subPathMatch(curPath, boost::regex("openstudio.*", boost::regex::perl)))
             || openstudio::toPath("C:/Windows") == curPath
             || openstudio::toPath("C:/DAYSIM") == curPath
             || openstudio::toPath("C:/$Recycle.Bin") == curPath
@@ -404,7 +397,6 @@ namespace runmanager {
           {
             // don't scan it if it matches these things
           } else {
-
             // Otherwise queue for scanning
             if (t_searchedPaths[curPath] > 1)
             {
@@ -510,6 +502,7 @@ namespace runmanager {
       dlg->setMaximumWidth(400);
       dlg->setMinimumWidth(400);
       dlg->setCancelButtonText("Stop Scan");
+      dlg->setWindowModality(Qt::ApplicationModal);
       auto lbl = new QLabel(dlg.get());
       
       lbl->setWordWrap(true);

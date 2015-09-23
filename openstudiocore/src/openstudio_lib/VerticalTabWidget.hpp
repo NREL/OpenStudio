@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@ class VerticalTabWidget : public QWidget
 
   public:
 
-  VerticalTabWidget(QWidget * parent = 0);
+  VerticalTabWidget(QWidget * parent = nullptr);
 
   virtual ~VerticalTabWidget() {}
 

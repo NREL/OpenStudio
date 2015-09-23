@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -56,11 +56,11 @@ namespace detail {
     //@{
 
     /** Get the variable value from a dataPoint. */
-    virtual double getValue(const DataPoint& dataPoint) const;
+    virtual double getValue(const DataPoint& dataPoint) const override;
 
     /** Returns true if udesc is valid for this Variable. If returns false,
      *  setUncertaintyDescription will fail. */
-    virtual bool isValid(const UncertaintyDescription& udesc) const;
+    virtual bool isValid(const UncertaintyDescription& udesc) const override;
 
     //@}
     /** @name Getters and Queries */
@@ -77,7 +77,7 @@ namespace detail {
     /** @name Serialization */
     //@{
 
-    virtual QVariant toServerFormulationVariant() const;
+    virtual QVariant toServerFormulationVariant() const override;
 
     //@}
    protected:

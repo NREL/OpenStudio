@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -185,21 +185,21 @@ PeopleInspectorView::PeopleInspectorView(bool isIP, const openstudio::model::Mod
 {
   m_isIP = isIP;
 
-  QWidget* hiddenWidget = new QWidget();
+  auto hiddenWidget = new QWidget();
   this->stackedWidget()->insertWidget(0, hiddenWidget);
 
-  QWidget* visibleWidget = new QWidget();
+  auto visibleWidget = new QWidget();
   this->stackedWidget()->insertWidget(1, visibleWidget);
 
   this->stackedWidget()->setCurrentIndex(0);
 
-  QGridLayout* mainGridLayout = new QGridLayout();
+  auto mainGridLayout = new QGridLayout();
   mainGridLayout->setContentsMargins(7,7,7,7);
   mainGridLayout->setSpacing(14);
   visibleWidget->setLayout(mainGridLayout);
 
   // name
-  QVBoxLayout* vLayout = new QVBoxLayout();
+  auto vLayout = new QVBoxLayout();
 
   QLabel* label = new QLabel("Name:");
   label->setObjectName("H1");
@@ -309,18 +309,18 @@ PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP,
   //QWidget* hiddenWidget = new QWidget();
   //this->stackedWidget()->insertWidget(0, hiddenWidget);
 
-  QWidget* visibleWidget = new QWidget();
+  auto visibleWidget = new QWidget();
   this->stackedWidget()->addWidget(visibleWidget);
 
   //this->stackedWidget()->setCurrentIndex(0);
 
-  QGridLayout* mainGridLayout = new QGridLayout();
+  auto mainGridLayout = new QGridLayout();
   mainGridLayout->setContentsMargins(7,7,7,7);
   mainGridLayout->setSpacing(14);
   visibleWidget->setLayout(mainGridLayout);
 
   // name
-  QVBoxLayout* vLayout = new QVBoxLayout();
+  auto vLayout = new QVBoxLayout();
 
   QLabel* label = new QLabel("Name: ");
   label->setObjectName("H2");
@@ -381,7 +381,7 @@ PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP,
 
   vLayout = new QVBoxLayout();
 
-  label = new QLabel("Sensible Heat Fraction Radiant: ");
+  label = new QLabel("Sensible Heat Fraction: ");
   label->setObjectName("H2");
   vLayout->addWidget(label);
 

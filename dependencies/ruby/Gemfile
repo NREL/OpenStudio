@@ -1,0 +1,9 @@
+source 'http://rubygems.org'
+
+# System gems
+gem 'rake', '= 0.9.6'
+gem 'rdoc', '= 4.0.0'
+gem 'test-unit', '= 2.0.0.0'
+
+# OpenStudio
+gem 'openstudio-aws', '~> 0.4.0.pre1'

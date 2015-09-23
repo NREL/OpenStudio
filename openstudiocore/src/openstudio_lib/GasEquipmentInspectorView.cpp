@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -38,10 +38,10 @@ GasEquipmentDefinitionInspectorView::GasEquipmentDefinitionInspectorView(bool is
 {
   m_isIP = isIP;
 
-  QWidget* visibleWidget = new QWidget();
+  auto visibleWidget = new QWidget();
   this->stackedWidget()->addWidget(visibleWidget);
 
-  QGridLayout* mainGridLayout = new QGridLayout();
+  auto mainGridLayout = new QGridLayout();
   mainGridLayout->setContentsMargins(7,7,7,7);
   mainGridLayout->setSpacing(14);
   visibleWidget->setLayout(mainGridLayout);

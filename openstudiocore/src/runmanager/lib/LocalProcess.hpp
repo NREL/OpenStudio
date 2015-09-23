@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -88,17 +88,17 @@ namespace detail {
 
       virtual ~LocalProcess();
 
-      virtual void start();
-      virtual bool running() const;
-      virtual void waitForFinished();
-      virtual void cleanup(const std::vector<std::string> &t_files);
-      virtual std::vector<FileInfo> outputFiles() const;
-      virtual std::vector<FileInfo> inputFiles() const;
+      virtual void start() override;
+      virtual bool running() const override;
+      virtual void waitForFinished() override;
+      virtual void cleanup(const std::vector<std::string> &t_files) override;
+      virtual std::vector<FileInfo> outputFiles() const override;
+      virtual std::vector<FileInfo> inputFiles() const override;
 
 
     protected:
-      virtual void stopImpl();
-      virtual void cleanUpRequiredFiles();
+      virtual void stopImpl() override;
+      virtual void cleanUpRequiredFiles() override;
 
     private:
       REGISTER_LOGGER("openstudio.runmanager.LocalProcess");

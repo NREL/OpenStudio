@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -53,6 +53,33 @@ bool vectorEqual(const openstudio::Vector3d& a, const openstudio::Vector3d& b)
 {
   Vector3d diff = a-b;
   return diff.length() <= 0.0001;
+}
+
+double totalArea(const std::vector<std::vector<Point3d> >& polygons)
+{
+  double result = 0.0;
+  for (auto polygon : polygons){
+    boost::optional<double> a = getArea(polygon);
+    if (a){
+      result += a.get();
+    }
+  }
+  return result;
+}
+
+bool checkNormals(const openstudio::Vector3d& normal, const std::vector<std::vector<Point3d> >& polygons)
+{
+  for (auto polygon : polygons){
+    boost::optional<Vector3d> a = getOutwardNormal(polygon);
+    if (a){
+      if (!vectorEqual(normal, *a)){
+        return false;
+      }
+    }else{
+      return false;
+    }
+  }
+  return true;
 }
 
 // initialize for each test

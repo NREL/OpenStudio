@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -664,9 +664,8 @@ namespace detail {
 // CONSTRUCTORS
 
 IddObject::IddObject()
-{
-  m_impl = std::shared_ptr<detail::IddObject_Impl>(new detail::IddObject_Impl());
-}
+  : m_impl(std::shared_ptr<detail::IddObject_Impl>(new detail::IddObject_Impl()))
+{}
 
 IddObject::IddObject(const IddObject& other)
   : m_impl(other.m_impl)

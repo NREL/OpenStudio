@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 
 #include "../SqlFile.hpp"
 #include "../../core/Path.hpp"
-#include "../../plot/FloodPlot.hpp"
+#include "../../core/Application.hpp"
 #include "../../core/FileLogSink.hpp"
 
 #include <resources.hxx>
@@ -41,10 +41,10 @@ class IlluminanceMapFixture : public ::testing::Test {
 protected:
 
   // initialize for each test
-  virtual void SetUp() {}
+  virtual void SetUp() override {}
 
   // tear down after for each test
-  virtual void TearDown() {}
+  virtual void TearDown() override {}
 
   // initialize static members
   static void SetUpTestCase()
@@ -84,6 +84,8 @@ boost::optional<openstudio::FileLogSink> IlluminanceMapFixture::logFile;
 
 TEST_F(IlluminanceMapFixture, IlluminanceMapPlot)
 {
+  Application::instance().application(true);
+
   openstudio::DateTime dateTime(Date(MonthOfYear::Jul, 21), Time(0.5));
 
   const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
@@ -111,15 +113,6 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlot)
   Matrix v = sqlFile.illuminanceMap(mapName, dateTime);
   ASSERT_EQ(x.size(), v.size1());
   ASSERT_EQ(y.size(), v.size2());
-
-  MatrixFloodPlotData::Ptr data = MatrixFloodPlotData::create(x,y,v);
-  data->interpMethod(LinearInterp);
-
-  FloodPlot::Ptr fp = FloodPlot::create();
-  fp->floodPlotData(data);
-  fp->showContour(true);
-  fp->generateImage(toPath("testIlluminanceMapPlot.png"));
-
 }
 
 TEST_F(IlluminanceMapFixture, IlluminanceMapPlotMin)
@@ -181,29 +174,22 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeriesCount)
 
 TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeries)
 {
-    const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
+  Application::instance().application(true);
+
+  const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
 
   std::vector< std::pair<int, DateTime> > illuminanceMapReportIndicesDates;
   // list of hourly reports for the illuminance map
   illuminanceMapReportIndicesDates = sqlFile.illuminanceMapHourlyReportIndicesDates(mapName);
 
   ASSERT_FALSE(illuminanceMapReportIndicesDates.empty());
-
-  openstudio::MatrixFloodPlotData::Ptr data = openstudio::MatrixFloodPlotData::create(
-    sqlFile.illuminanceMapX(illuminanceMapReportIndicesDates[0].first),
-    sqlFile.illuminanceMapY(illuminanceMapReportIndicesDates[0].first),
-    sqlFile.illuminanceMap(illuminanceMapReportIndicesDates[0].first),
-    openstudio::LinearInterp);
-
-  FloodPlot::Ptr fp = FloodPlot::create();
-  fp->floodPlotData(data);
-  fp->showContour(true);
-  fp->generateImage(toPath("testIlluminanceMapPlotSeries.png"));
 }
 
 TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeriesOpt)
 {
-    const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
+  Application::instance().application(true);
+
+  const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
 
   std::vector< std::pair<int, DateTime> > illuminanceMapReportIndicesDates;
   // list of hourly reports for the illuminance map
@@ -216,17 +202,12 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeriesOpt)
   std::vector<double> illuminance;
 
   sqlFile.illuminanceMap(illuminanceMapReportIndicesDates[0].first,x,y,illuminance);
-
-  openstudio::MatrixFloodPlotData::Ptr data = openstudio::MatrixFloodPlotData::create(x,y,illuminance,openstudio::LinearInterp);
-
-  FloodPlot::Ptr fp = FloodPlot::create();
-  fp->floodPlotData(data);
-  fp->showContour(true);
-  fp->generateImage(toPath("testIlluminanceMapPlotSeriesOpt.png"));
 }
 
 TEST_F(IlluminanceMapFixture, IlluminanceMapMatrixBaseline)
 {
+  Application::instance().application(true);
+
   Vector x(9); 
   Vector y(9); 
 
@@ -240,14 +221,6 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapMatrixBaseline)
   for (unsigned i=0;i<9;i++)
     for (unsigned j=0;j<9;j++)
       m(i,j) = x(i)*y(8-j);
-
-  openstudio::MatrixFloodPlotData::Ptr data = openstudio::MatrixFloodPlotData::create(
-    x,y,m,openstudio::LinearInterp);
-
-  FloodPlot::Ptr fp = FloodPlot::create();
-  fp->floodPlotData(data);
-  fp->showContour(true);
-  fp->generateImage(toPath("testIlluminanceMapMatrixBaseline.png"));
 }
 
 

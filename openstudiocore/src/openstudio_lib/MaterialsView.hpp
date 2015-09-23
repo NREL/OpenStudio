@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@ class MaterialsView : public ModelSubTabView
                   const openstudio::model::Model& model,
                   const QString& tabLabel,
                   bool hasSubTabs,
-                  QWidget * parent = 0);
+                  QWidget * parent = nullptr);
 
     virtual ~MaterialsView() {}
 
@@ -57,17 +57,17 @@ class MaterialsInspectorView : public ModelObjectInspectorView
 
     MaterialsInspectorView(bool isIP,
                            const model::Model& model,
-                           QWidget * parent = 0);
+                           QWidget * parent = nullptr);
 
     virtual ~MaterialsInspectorView() {}
 
   protected:
 
-    virtual void onClearSelection();
+    virtual void onClearSelection() override;
 
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
 
-    virtual void onUpdate();
+    virtual void onUpdate() override;
 
   private:
 
@@ -78,6 +78,7 @@ class MaterialsInspectorView : public ModelObjectInspectorView
     void showMaterialNoMassInspectorView(const openstudio::model::ModelObject & modelObject);
     void showMaterialRoofVegetationInspectorView(const openstudio::model::ModelObject & modelObject);
     void showWindowMaterialBlindInspectorView(const openstudio::model::ModelObject & modelObject);
+    void showWindowMaterialDaylightRedirectionDeviceInspectorView(const openstudio::model::ModelObject & modelObject);
     void showWindowMaterialGasInspectorView(const openstudio::model::ModelObject & modelObject);
     void showWindowMaterialGasMixtureInspectorView(const openstudio::model::ModelObject & modelObject);
     void showWindowMaterialGlazingGroupThermochromicInspectorView(const openstudio::model::ModelObject & modelObject);
@@ -97,7 +98,7 @@ class MaterialsInspectorView : public ModelObjectInspectorView
 
   public slots:
 
-    void toggleUnits(bool displayIP);
+    void toggleUnits(bool displayIP) override;
 
 };
 

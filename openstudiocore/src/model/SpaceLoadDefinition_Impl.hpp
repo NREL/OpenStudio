@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -52,7 +52,7 @@ namespace detail {
     virtual ~SpaceLoadDefinition_Impl() {}
 
     /// Removes the definition and all instances.
-    virtual std::vector<openstudio::IdfObject> remove();
+    virtual std::vector<openstudio::IdfObject> remove() override;
 
     /// Returns all instances of this definition.
     std::vector<SpaceLoadInstance> instances() const;

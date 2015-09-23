@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -29,6 +29,9 @@
 
 #include <QLineEdit>
 #include <QString>
+#include <QValidator>
+
+class QFocusEvent;
 
 namespace openstudio {
 
@@ -40,6 +43,12 @@ class OSUnsignedEdit2: public QLineEdit {
   OSUnsignedEdit2(QWidget * parent = nullptr);
 
   virtual ~OSUnsignedEdit2() {}
+
+  void enableClickFocus() { this->m_hasClickFocus = true; }
+
+  bool hasData() { return !this->text().isEmpty(); }
+
+  QIntValidator * intValidator() { return m_intValidator; }
 
   void bind(model::ModelObject& modelObject,
             UnsignedGetter get,
@@ -82,6 +91,16 @@ class OSUnsignedEdit2: public QLineEdit {
             boost::optional<BasicQuery> isAutocalculated=boost::none);
 
   void unbind();
+  
+protected:
+
+  virtual void focusInEvent(QFocusEvent * e) override;
+
+  virtual void focusOutEvent(QFocusEvent * e) override;
+
+ signals:
+
+  void inFocus(bool inFocus, bool hasData);
 
  private slots:
 
@@ -105,8 +124,10 @@ class OSUnsignedEdit2: public QLineEdit {
   boost::optional<BasicQuery> m_isAutocalculated;
 
   bool m_isScientific;
+  bool m_hasClickFocus = false;
   boost::optional<int> m_precision;
   QString m_text = "UNINITIALIZED";
+  QIntValidator * m_intValidator = nullptr;
 
   void refreshTextAndLabel();
 
@@ -125,6 +146,8 @@ class OSUnsignedEdit: public QLineEdit {
   OSUnsignedEdit(QWidget * parent = nullptr);
 
   virtual ~OSUnsignedEdit() {}
+
+  QIntValidator * intValidator() { return m_intValidator; }
 
   void bind(model::ModelObject& modelObject,
             const char* property,
@@ -151,6 +174,7 @@ class OSUnsignedEdit: public QLineEdit {
 
   bool m_isScientific;
   boost::optional<int> m_precision;
+  QIntValidator * m_intValidator = nullptr;
 
   void refreshTextAndLabel();
 

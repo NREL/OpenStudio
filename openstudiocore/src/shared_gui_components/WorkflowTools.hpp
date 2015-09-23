@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -26,36 +26,22 @@
 
 namespace openstudio
 {
-  namespace runmanager
-  {
-    class RunManager;
-  }
-
-  namespace model
-  {
-    class Model;
-  }
 
   namespace analysis
   {
     class Problem;
   }
 
-  namespace analysisdriver
-  {
-    class SimpleProject;
-  }
+  //void getRadiancePreRunWarningsAndErrors(std::vector<std::string> &t_warnings, 
+  //    std::vector<std::string> &t_errors,
+  //    openstudio::runmanager::RunManager &t_runManager,
+  //    boost::optional<openstudio::model::Model> &t_model);
 
-  void getRadiancePreRunWarningsAndErrors(std::vector<std::string> &t_warnings, 
-      std::vector<std::string> &t_errors,
-      openstudio::runmanager::RunManager &t_runManager,
-      boost::optional<openstudio::model::Model> &t_model);
+  //bool projectHasRadiance(const openstudio::analysisdriver::SimpleProject &t_project);
 
-  bool projectHasRadiance(const openstudio::analysisdriver::SimpleProject &t_project);
+  //void addRadianceToProject(openstudio::analysisdriver::SimpleProject &t_project);
 
-  void addRadianceToProject(openstudio::analysisdriver::SimpleProject &t_project);
-
-  void removeRadianceFromProject(openstudio::analysisdriver::SimpleProject &t_project);
+  //void removeRadianceFromProject(openstudio::analysisdriver::SimpleProject &t_project);
 
   boost::optional<int> getModelMeasureInsertStep(const openstudio::analysis::Problem &t_problem);
 }

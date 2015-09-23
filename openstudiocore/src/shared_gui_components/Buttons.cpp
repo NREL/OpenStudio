@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -138,6 +138,72 @@ BlueButton::BlueButton(QWidget * parent)
   style.append("                             stop: 1 #535353 ); ");
   style.append("color: white; ");
   style.append("} ");
+
+  setStyleSheet(style);
+}
+
+AddButton::AddButton(QWidget * parent)
+  : QPushButton()
+{
+  setFlat(true);
+
+  setFixedSize(24, 24);
+
+  QString style;
+  style.append("QPushButton {"
+               "  background-image:url(':/images/add_off.png');"
+               "  border:none;"
+               "}");
+  style.append("QPushButton:hover {"
+               "  background-image:url(':/images/add_over.png');"
+               "}");
+  style.append("QPushButton:pressed {"
+               "  background-image:url(':/images/add_press.png');"
+               "}");
+
+  setStyleSheet(style);
+}
+
+SofterAddButton::SofterAddButton(QWidget * parent)
+  : QPushButton()
+{
+  setFlat(true);
+
+  setFixedSize(16, 16);
+
+  QString style;
+  style.append("QPushButton {"
+               "  background-image:url(':/shared_gui_components/images/add_softer_off.png');"
+               "  border:none;"
+               "}");
+  style.append("QPushButton:hover {"
+               "  background-image:url(':/shared_gui_components/images/add_softer_on.png');"
+               "}");
+  style.append("QPushButton:pressed {"
+               "  background-image:url(':/shared_gui_components/images/add_softer_press.png');"
+               "}");
+
+  setStyleSheet(style);
+}
+
+RemoveButton::RemoveButton(QWidget * parent)
+  : QPushButton()
+{
+  setFlat(true);
+
+  setFixedSize(24, 24);
+
+  QString style;
+  style.append("QPushButton {"
+               "  background-image:url(':/images/delete_off.png');"
+               "  border:none;"
+               "}");
+  style.append("QPushButton:hover {"
+               "  background-image:url(':/images/delete_over.png');"
+               "}");
+  style.append("QPushButton:pressed {"
+               "  background-image:url(':/images/delete_press.png');"
+               "}");
 
   setStyleSheet(style);
 }

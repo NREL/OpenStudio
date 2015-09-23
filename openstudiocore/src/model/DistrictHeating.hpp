@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -61,9 +61,9 @@ class MODEL_API DistrictHeating : public StraightComponent {
   //@{
 
 
-  double nominalCapacity() const;
+  boost::optional<double> nominalCapacity() const;
 
-  Quantity getNominalCapacity(bool returnIP=false) const;
+  bool isNominalCapacityAutosized() const;
 
   //@}
   /** @name Setters */
@@ -71,7 +71,7 @@ class MODEL_API DistrictHeating : public StraightComponent {
 
   bool setNominalCapacity(double nominalCapacity);
 
-  bool setNominalCapacity(const Quantity& nominalCapacity);
+  void autosizeNominalCapacity();
 
   //@}
   /** @name Other */

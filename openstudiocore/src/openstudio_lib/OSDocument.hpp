@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -61,6 +61,8 @@ class BuildingComponentDialog;
 
 class ApplyMeasureNowDialog;
 
+class Workspace;
+
 class OPENSTUDIO_API OSDocument : public OSQObjectController {
   Q_OBJECT
 
@@ -86,6 +88,14 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   // Sets the model associated with this document.
   // This will close all current windows, make sure to call app->setQuitOnLastWindowClosed(false) before calling this
   void setModel(const model::Model& model, bool modified, bool saveCurrentTabs);
+
+  // Returns the Workspace associated with this document's model
+  boost::optional<Workspace> workspace();
+
+  // Set the Workspace associated with this document's model.
+  // Workspace is created by idf translator when the scripts tab is shown.
+  // This is used to populate idf measure arguments.
+  void setWorkspace(const boost::optional<Workspace>& workspace);
 
   // Returns true if the document has unsaved changes.
   bool modified() const;
@@ -154,8 +164,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
     CONSTRUCTIONS,
     LOADS,
     SPACE_TYPES,
-    BUILDING_STORIES,
     FACILITY,
+    SPACES,
     THERMAL_ZONES,
     HVAC_SYSTEMS,
     BUILDING_SUMMARY,
@@ -187,6 +197,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   void importgbXMLClicked();
 
   void importSDDClicked();
+
+  void importIFCClicked();
 
   void loadFileClicked();
 
@@ -308,6 +320,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   openstudio::model::Model m_model;
 
+  boost::optional<Workspace> m_workspace;
+
   openstudio::model::Model m_compLibrary;
 
   openstudio::model::Model m_hvacCompLibrary;
@@ -336,8 +350,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   boost::optional<analysisdriver::SimpleProject> m_simpleProject;
 
-  QString m_savePath;
-  QString m_modelTempDir;
+  QString m_savePath = QString();
+  QString m_modelTempDir = QString();
 
   int m_mainTabId = 0;
   int m_subTabId = 0;

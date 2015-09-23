@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -48,6 +48,9 @@ class MODEL_API CoilCoolingDXMultiSpeedStageData : public ParentObject {
     Curve& energyInputRatioFunctionofFlowFraction,
     Curve& partLoadFractionCorrelation,
     Curve& wasteHeatFunctionofTemperature);
+
+  /** Create CoilCoolingDXMultiSpeedStageData with default curves **/
+  explicit CoilCoolingDXMultiSpeedStageData(const Model& model);
 
   virtual ~CoilCoolingDXMultiSpeedStageData() {}
 

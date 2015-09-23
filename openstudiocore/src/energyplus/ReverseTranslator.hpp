@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -255,9 +255,15 @@ class ENERGYPLUS_API ReverseTranslator {
 
   boost::optional<model::ModelObject> translateWindowMaterialSimpleGlazingSystem(const WorkspaceObject & workspaceObject);
 
-  boost::optional<model::ModelObject> translateZoneAirHeatBalanceAlgorithm(const WorkspaceObject & workspaceObject);
+  boost::optional<model::ModelObject> translateWindowPropertyFrameAndDivider(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateZone(const WorkspaceObject & workspaceObject);
+
+  boost::optional<model::ModelObject> translateZoneAirHeatBalanceAlgorithm(const WorkspaceObject & workspaceObject);
+
+  boost::optional<model::ModelObject> translateZoneAirMassFlowConservation(const WorkspaceObject & workspaceObject);
+  
+  boost::optional<model::ModelObject> translateZoneCrossMixing(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateZoneHVACEquipmentList(const WorkspaceObject & workspaceObject);
 
@@ -268,6 +274,8 @@ class ENERGYPLUS_API ReverseTranslator {
   boost::optional<model::ModelObject> translateZoneInfiltrationEffectiveLeakageArea(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateZoneList(const WorkspaceObject & workspaceObject);
+
+  boost::optional<model::ModelObject> translateZoneMixing(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateZoneVentilationDesignFlowRate(const WorkspaceObject & workspaceObject);
 

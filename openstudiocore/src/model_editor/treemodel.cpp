@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@
 #include "../model/Surface.hpp"
 #include "../model/SubSurface.hpp"
 #include "../model/Space.hpp"
-#include "../model/test/ModelFixture.hpp"
+//#include "../model/test/ModelFixture.hpp"
 #include <model_editor/treeitem.h>
 #include "TreeView.hpp"
 #include "TreeViewWidget.hpp"

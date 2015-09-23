@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -38,6 +38,13 @@ namespace iddRegex{
   /// matches[1], version identifier
   const boost::regex &version(){
     const static boost::regex result("^!IDD_Version ([0-9\\.]+)");
+    return result; 
+  }
+
+  /// Search for IDD build in line
+  /// matches[1], build identifier
+  const boost::regex &build(){
+    const static boost::regex result("^!IDD_BUILD (\\S+)");
     return result; 
   }
 

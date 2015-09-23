@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -45,7 +45,7 @@ class ModelObjectItem : public OSItem
     ModelObjectItem(const openstudio::model::ModelObject& modelObject,
                     bool isDefaulted,
                     OSItemType type,
-                    QWidget * parent = 0 );
+                    QWidget * parent = nullptr );
 
     virtual ~ModelObjectItem() {}
 
@@ -53,7 +53,7 @@ class ModelObjectItem : public OSItem
 
     openstudio::model::ModelObject modelObject() const;
 
-    virtual bool equal(const openstudio::OSItem *) const;
+    virtual bool equal(const openstudio::OSItem *) const override;
 
   private slots:
 

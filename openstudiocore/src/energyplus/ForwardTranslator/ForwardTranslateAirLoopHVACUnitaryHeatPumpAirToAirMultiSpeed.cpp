@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -37,6 +37,7 @@
 #include <utilities/idd/Coil_Heating_Gas_MultiStage_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_DX_MultiSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_MultiSpeed_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -214,9 +215,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
 
   // SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded
   if( modelObject.isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() ) {
-    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded,"AutoSize");
+    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::NoLoadSupplyAirFlowRate,"AutoSize");
   } else if( (value = modelObject.supplyAirFlowRateWhenNoCoolingorHeatingisNeeded()) ) {
-    idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded,value.get());
+    idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::NoLoadSupplyAirFlowRate,value.get());
   }
 
   // NumberofSpeedsforHeating
@@ -231,58 +232,58 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
 
   // Speed1SupplyAirFlowRateDuringHeatingOperation
   if( modelObject.isSpeed1SupplyAirFlowRateDuringHeatingOperationAutosized() ) {
-    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed1SupplyAirFlowRateDuringHeatingOperation,"AutoSize");
+    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::HeatingSpeed1SupplyAirFlowRate,"AutoSize");
   } else if( (value = modelObject.speed1SupplyAirFlowRateDuringHeatingOperation()) ) {
-    idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed1SupplyAirFlowRateDuringHeatingOperation,value.get());
+    idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::HeatingSpeed1SupplyAirFlowRate,value.get());
   }
 
   // Speed2SupplyAirFlowRateDuringHeatingOperation
   if( modelObject.isSpeed2SupplyAirFlowRateDuringHeatingOperationAutosized() ) {
-    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed2SupplyAirFlowRateDuringHeatingOperation,"AutoSize");
+    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::HeatingSpeed2SupplyAirFlowRate,"AutoSize");
   } else if( (value = modelObject.speed2SupplyAirFlowRateDuringHeatingOperation()) ) {
-    idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed2SupplyAirFlowRateDuringHeatingOperation,value.get());
+    idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::HeatingSpeed2SupplyAirFlowRate,value.get());
   }
 
   // Speed3SupplyAirFlowRateDuringHeatingOperation
   if( modelObject.isSpeed3SupplyAirFlowRateDuringHeatingOperationAutosized() ) {
-    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed3SupplyAirFlowRateDuringHeatingOperation,"AutoSize");
+    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::HeatingSpeed3SupplyAirFlowRate,"AutoSize");
   } else if( (value = modelObject.speed3SupplyAirFlowRateDuringHeatingOperation()) ) {
-    idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed3SupplyAirFlowRateDuringHeatingOperation,value.get());
+    idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::HeatingSpeed3SupplyAirFlowRate,value.get());
   }
 
   // Speed4SupplyAirFlowRateDuringHeatingOperation
   if( modelObject.isSpeed4SupplyAirFlowRateDuringHeatingOperationAutosized() ) {
-    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed4SupplyAirFlowRateDuringHeatingOperation,"AutoSize");
+    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::HeatingSpeed4SupplyAirFlowRate,"AutoSize");
   } else if( (value = modelObject.speed4SupplyAirFlowRateDuringHeatingOperation()) ) {
-    idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed4SupplyAirFlowRateDuringHeatingOperation,value.get());
+    idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::HeatingSpeed4SupplyAirFlowRate,value.get());
   }
 
   // Speed1SupplyAirFlowRateDuringCoolingOperation
   if( modelObject.isSpeed1SupplyAirFlowRateDuringCoolingOperationAutosized() ) {
-    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed1SupplyAirFlowRateDuringCoolingOperation,"AutoSize");
+    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::CoolingSpeed1SupplyAirFlowRate,"AutoSize");
   } else if( (value = modelObject.speed1SupplyAirFlowRateDuringCoolingOperation()) ) {
-    idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed1SupplyAirFlowRateDuringCoolingOperation,value.get());
+    idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::CoolingSpeed1SupplyAirFlowRate,value.get());
   }
 
   // Speed2SupplyAirFlowRateDuringCoolingOperation
   if( modelObject.isSpeed2SupplyAirFlowRateDuringCoolingOperationAutosized() ) {
-    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed2SupplyAirFlowRateDuringCoolingOperation,"AutoSize");
+    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::CoolingSpeed2SupplyAirFlowRate,"AutoSize");
   } else if( (value = modelObject.speed2SupplyAirFlowRateDuringCoolingOperation()) ) {
-    idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed2SupplyAirFlowRateDuringCoolingOperation,value.get());
+    idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::CoolingSpeed2SupplyAirFlowRate,value.get());
   }
 
   // Speed3SupplyAirFlowRateDuringCoolingOperation
   if( modelObject.isSpeed3SupplyAirFlowRateDuringCoolingOperationAutosized() ) {
-    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed3SupplyAirFlowRateDuringCoolingOperation,"AutoSize");
+    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::CoolingSpeed3SupplyAirFlowRate,"AutoSize");
   } else if( (value = modelObject.speed3SupplyAirFlowRateDuringCoolingOperation()) ) {
-    idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed3SupplyAirFlowRateDuringCoolingOperation,value.get());
+    idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::CoolingSpeed3SupplyAirFlowRate,value.get());
   }
 
   // Speed4SupplyAirFlowRateDuringCoolingOperation
   if( modelObject.isSpeed4SupplyAirFlowRateDuringCoolingOperationAutosized() ) {
-    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed4SupplyAirFlowRateDuringCoolingOperation,"AutoSize");
+    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::CoolingSpeed4SupplyAirFlowRate,"AutoSize");
   } else if( (value = modelObject.speed4SupplyAirFlowRateDuringCoolingOperation()) ) {
-    idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::Speed4SupplyAirFlowRateDuringCoolingOperation,value.get());
+    idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::CoolingSpeed4SupplyAirFlowRate,value.get());
   }
 
   std::string fanOutletNodeName;
@@ -330,6 +331,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
     }
   }
 
+  fixSPMsForUnitarySystem(modelObject,fanInletNodeName,fanOutletNodeName);
+
   if( _coolingCoil ) {
     if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_MultiSpeed ) {
       _coolingCoil->setString(Coil_Cooling_DX_MultiSpeedFields::AirInletNodeName,coolingCoilInletNodeName);
@@ -344,6 +347,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
     } else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water ) {
       _heatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName,heatingCoilInletNodeName);
       _heatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName,heatingCoilOutletNodeName);
+    } else if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_DX_MultiSpeed ) {
+      _heatingCoil->setString(Coil_Heating_DX_MultiSpeedFields::AirInletNodeName,heatingCoilInletNodeName);
+      _heatingCoil->setString(Coil_Heating_DX_MultiSpeedFields::AirOutletNodeName,heatingCoilOutletNodeName);
     }
   }
 

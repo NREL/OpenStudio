@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -69,14 +69,17 @@ class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAir : public StraightComponent
   
   Schedule availabilitySchedule() const;
   
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Supply Air Flow Rate" **/
   boost::optional<double> supplyAirFlowRateDuringCoolingOperation() const;
 
   bool isSupplyAirFlowRateDuringCoolingOperationAutosized() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Supply Air Flow Rate" **/
   boost::optional<double> supplyAirFlowRateDuringHeatingOperation() const;
 
   bool isSupplyAirFlowRateDuringHeatingOperationAutosized() const;
 
+  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Load Supply Air Flow Rate" **/
   boost::optional<double> supplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
 
   bool isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const;

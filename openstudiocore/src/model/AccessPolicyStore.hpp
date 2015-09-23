@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ namespace openstudio
      *
      * The Policy will restrict your access to ModelObject data.
      * Workspace objects have fields. you can index into those fields and
-     * get the value, change the value, ect. ModelObjects may not want to
+     * get the value, change the value, etc. ModelObjects may not want to
      * allow you to change things, or even show them. The policy is used to
      * build GUIs, it is not really something for general use in the backend
      * data manipulation side of things. The idea is that each program might have its
@@ -65,9 +65,9 @@ namespace openstudio
         \param index the index into the field vector
         \return defaults to FREE
         *
-        * If you send in an erronious index, or the policy didn't
+        * If you send in an erroneous index, or the policy didn't
         * load information for that index, you will get FREE back.
-        * (You might get suprising results when you ask a workspace object
+        * (You might get surprising results when you ask a workspace object
         * for that bogus index though. :) )
         */
       ACCESS_LEVEL getAccess(unsigned int index) const;

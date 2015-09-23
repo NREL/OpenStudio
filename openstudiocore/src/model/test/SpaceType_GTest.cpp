@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -24,11 +24,15 @@
 #include "../SpaceType.hpp"
 #include "../SpaceType_Impl.hpp"
 #include "../People.hpp"
+#include "../People_Impl.hpp"
 #include "../PeopleDefinition.hpp"
+#include "../PeopleDefinition_Impl.hpp"
 #include "../Building.hpp"
 #include "../Building_Impl.hpp"
 #include "../Space.hpp"
 #include "../ThermalZone.hpp"
+#include "../ScheduleRuleset.hpp"
+#include "../ScheduleRuleset_Impl.hpp"
 
 #include "../../utilities/data/Attribute.hpp"
 #include "../../utilities/geometry/Point3d.hpp"
@@ -196,3 +200,55 @@ TEST_F(ModelFixture, SpaceType_StandardsTypes) {
   EXPECT_EQ("Attic", suggestedStandardsSpaceTypes[0]);
   EXPECT_EQ("Plenum", suggestedStandardsSpaceTypes[1]);
 } 
+
+TEST_F(ModelFixture, SpaceType_Clone) {
+  Model library;
+  Model model;  
+
+  SpaceType librarySpaceType(library);
+
+  PeopleDefinition definition(library);
+  definition.setNumberofPeople(100.0);
+
+  People people(definition); // Not a ResourceObject
+  ScheduleRuleset activityLevelSchedule(library); // ResourceObject
+  people.setActivityLevelSchedule(activityLevelSchedule);
+  people.setSpaceType(librarySpaceType);
+
+  EXPECT_EQ(6u,library.modelObjects().size()); // SpaceType, PeopleDefinition, People, ScheduleRuleset, ScheduleDay, ScheduleTypeLimits
+
+  // Clone into same model
+  // Even though SpaceType is a resource object, because we call ::clone on it directly, we get a new one
+  librarySpaceType.clone(library);
+  EXPECT_EQ(8u,library.modelObjects().size()); // SpaceType * 2, PeopleDefinition, People * 2, ScheduleRuleset, ScheduleDay, ScheduleTypeLimits
+
+  EXPECT_EQ(2u,library.getModelObjects<SpaceType>().size());
+  EXPECT_EQ(2u,library.getModelObjects<People>().size());
+
+  // The referenced ResourceObject instances are not duplicated
+  EXPECT_EQ(1u,library.getModelObjects<PeopleDefinition>().size());
+  EXPECT_EQ(1u,library.getModelObjects<ScheduleRuleset>().size());
+
+  // Clone into a different model
+  librarySpaceType.clone(model);
+  EXPECT_EQ(6u,model.modelObjects().size());
+
+  auto modelSpaceTypes = model.getModelObjects<SpaceType>();
+  ASSERT_EQ(1u,modelSpaceTypes.size());
+
+  // SpaceType gets a new handle
+  EXPECT_NE(librarySpaceType.handle(),modelSpaceTypes.front().handle());
+
+  // Clone into model again
+  librarySpaceType.clone(model);
+  EXPECT_EQ(8u,model.modelObjects().size());
+
+  EXPECT_EQ(2u,model.getModelObjects<SpaceType>().size());
+  EXPECT_EQ(2u,model.getModelObjects<People>().size());
+
+  // The referenced ResourceObject instances are not duplicated
+  EXPECT_EQ(1u,model.getModelObjects<PeopleDefinition>().size());
+  EXPECT_EQ(1u,model.getModelObjects<ScheduleRuleset>().size());
+}
+
+

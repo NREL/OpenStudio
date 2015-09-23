@@ -40,16 +40,13 @@
   class QNetworkAccessManager;
   class QThread;  
   namespace openstudio{
-    class Plot2D;
-    class LinePlot;
-    class FloodPlot;
     class ProgressBar;
     class UpdateManager;
     class PathWatcher;
     class IdfObjectWatcher;
     class BCL;
-	class RemoteBCL;
-	class LocalBCL;
+    class RemoteBCL;
+    class LocalBCL;
     class WorkspaceObjectWatcher;
     class WorkspaceWatcher;
   }
@@ -62,9 +59,6 @@
 %ignore QDomDocument;
 %ignore QNetworkAccessManager;
 %ignore QThread;
-%ignore openstudio::Plot2D;
-%ignore openstudio::LinePlot;
-%ignore openstudio::FloodPlot;
 %ignore openstudio::ProgressBar;
 %ignore openstudio::UpdateManager;
 %ignore openstudio::PathWatcher;

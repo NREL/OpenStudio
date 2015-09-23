@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -35,53 +35,45 @@ namespace openstudio {
 // ConstructionVC
 
 ConstructionWindowDataFileInspectorView::ConstructionWindowDataFileInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-  : ModelObjectInspectorView(model, true, parent),
+  : ModelObjectInspectorView(model, parent),
+    m_isIP(isIP),
     m_nameEdit(nullptr),
-    m_urlEdit(nullptr),
-    m_isIP(isIP)
+    m_urlEdit(nullptr)
 {
   createLayout();
 }
 
 void ConstructionWindowDataFileInspectorView::createLayout()
 {
-  QWidget* visibleWidget = new QWidget();
+  auto visibleWidget = new QWidget();
   this->stackedWidget()->addWidget(visibleWidget);
 
-  QGridLayout* mainGridLayout = new QGridLayout();
-  mainGridLayout->setContentsMargins(7,7,7,7);
+  auto mainGridLayout = new QGridLayout();
+  mainGridLayout->setContentsMargins(7, 7, 7, 7);
   mainGridLayout->setSpacing(14);
   visibleWidget->setLayout(mainGridLayout);
 
-  // Name
-
-  QLabel* label = new QLabel("Name: ");
-  label->setObjectName("H2");
-  mainGridLayout->addWidget(label,0,0);
-
-  m_nameEdit = new OSLineEdit();
-  mainGridLayout->addWidget(m_nameEdit,1,0,1,3);
-
   // URL
 
-  label = new QLabel("URL: ");
+  QLabel * label = new QLabel("URL: ");
   label->setObjectName("H2");
-  mainGridLayout->addWidget(label,2,0);
+  mainGridLayout->addWidget(label, 2, 0);
 
   m_urlEdit = new OSLineEdit();
-  mainGridLayout->addWidget(m_urlEdit,3,0,1,3);
+  mainGridLayout->addWidget(m_urlEdit, 3, 0, 1, 3);
 
   // Stretch
 
-  mainGridLayout->setRowStretch(100,100);
+  mainGridLayout->setRowStretch(100, 100);
 
-  mainGridLayout->setColumnStretch(100,100);
+  mainGridLayout->setColumnStretch(100, 100);
 }
 
 void ConstructionWindowDataFileInspectorView::onClearSelection()
 {
-  ModelObjectInspectorView::onClearSelection(); // call parent implementation
   detach();
+
+  this->stackedWidget()->setCurrentIndex(0);
 }
 
 void ConstructionWindowDataFileInspectorView::onSelectModelObject(const openstudio::model::ModelObject& modelObject)
@@ -89,37 +81,23 @@ void ConstructionWindowDataFileInspectorView::onSelectModelObject(const openstud
   detach();
   model::WindowDataFile windowDataFile = modelObject.cast<model::WindowDataFile>();
   attach(windowDataFile);
-  refresh();
+
+  this->stackedWidget()->setCurrentIndex(1);
 }
 
 void ConstructionWindowDataFileInspectorView::onUpdate()
 {
-  refresh();
 }
 
 void ConstructionWindowDataFileInspectorView::attach(openstudio::model::WindowDataFile & windowDataFile)
 {
   m_nameEdit->bind(windowDataFile,"name");
   m_urlEdit->bind(windowDataFile,"url");
-
-  this->stackedWidget()->setCurrentIndex(1);
 }
 
 void ConstructionWindowDataFileInspectorView::detach()
 {
-  this->stackedWidget()->setCurrentIndex(0);
-
-  m_nameEdit->unbind();
   m_urlEdit->unbind();
-}
-
-void ConstructionWindowDataFileInspectorView::refresh()
-{
-}
-
-void ConstructionWindowDataFileInspectorView::toggleUnits(bool displayIP)
-{
-  m_isIP = displayIP;
 }
 
 } // openstudio

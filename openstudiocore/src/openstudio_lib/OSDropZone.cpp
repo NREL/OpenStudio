@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -20,11 +20,14 @@
 #include "OSDropZone.hpp"
 
 #include "IconLibrary.hpp"
+#include "InspectorController.hpp"
+#include "InspectorView.hpp"
+#include "MainRightColumnController.hpp"
+#include "ModelObjectItem.hpp"
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 #include "OSItem.hpp"
 #include "OSVectorController.hpp"
-#include "ModelObjectItem.hpp"
 
 #include "../model/ModelObject_Impl.hpp"
 #include "../model/Model_Impl.hpp"
@@ -35,9 +38,9 @@
 #include <QBoxLayout>
 #include <QDragEnterEvent>
 #include <QDropEvent>
+#include <QFocusEvent>
 #include <QGraphicsSceneDragDropEvent>
 #include <QGraphicsSceneMouseEvent>
-#include <QLabel>
 #include <QLayoutItem>
 #include <QMouseEvent>
 #include <QPainter>
@@ -68,7 +71,7 @@ OSDropZone::OSDropZone(OSVectorController* vectorController,
     m_text(text),
     m_size(size)
 {
-  QWidget * mainBox = new QWidget();
+  auto mainBox = new QWidget();
   mainBox->setObjectName("mainBox");
   mainBox->setStyleSheet("QWidget#mainBox { background: #CECECE; }");
 
@@ -266,7 +269,7 @@ void OSDropZone::onDrop(const OSItemId& itemId)
 void OSDropZone::setItemIds(const std::vector<OSItemId>& itemIds)
 {
   QLayoutItem* child;
-  while( (child = m_mainBoxLayout->takeAt(0)) != 0 ){
+  while( (child = m_mainBoxLayout->takeAt(0)) != nullptr ){
     QWidget* widget = child->widget();
     if (widget){
       delete widget;
@@ -321,7 +324,7 @@ void OSDropZone::setItemIds(const std::vector<OSItemId>& itemIds)
   }
 
   if (numItems < m_maxItems){
-    OSItemDropZone* dropZone = new OSItemDropZone(this->m_growsHorizontally, m_text, m_size);
+    auto dropZone = new OSItemDropZone(this->m_growsHorizontally, m_text, m_size);
     m_mainBoxLayout->addWidget(dropZone,0,Qt::AlignLeft);
 
     connect(dropZone, &OSItemDropZone::dropped, this, &OSDropZone::handleDrop);
@@ -394,7 +397,7 @@ OSItemDropZone::OSItemDropZone(bool growsHorizontally,
   mainLayout->setContentsMargins(10,10,10,10);
   setLayout(mainLayout);
 
-  QLabel * label = new QLabel();
+  auto label = new QLabel();
   label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   label->setText(text);
   label->setWordWrap(true);
@@ -568,10 +571,19 @@ OSDropZone2::OSDropZone2()
   QString style("QWidget#OSDropZone {\
     background: #CECECE;\
     border: 2px dashed #808080;\
-    border-radius: 10px; }");
+    border-radius: 5px; }");
   setStyleSheet(style);
 
-  setFixedSize(75,25);
+  auto layout = new QVBoxLayout();
+  layout->setContentsMargins(5,5,5,5);
+  setLayout(layout);
+
+  m_label = new QLabel();
+  layout->addWidget(m_label);
+
+  setFixedHeight(25);
+  setMinimumWidth(75);
+  setMaximumWidth(150);
 }
 
 void OSDropZone2::refresh()
@@ -587,18 +599,20 @@ void OSDropZone2::refresh()
 
   if (modelObject) {
     QString temp = QString::fromStdString(modelObject->name().get());
-    if (m_text == temp){
+    if (m_label->text() == temp){
       return;
     }
     else {
-      m_text = temp;
+      m_label->setText(temp);
     }
 
-    // Adjust the width to accommodate the text
-    QFont myFont;
-    QFontMetrics fm(myFont);
-    auto width = fm.width(m_text);
-    setFixedWidth(width + 10);
+    emit inFocus(true, hasData());
+
+    //// Adjust the width to accommodate the text
+    //QFont myFont;
+    //QFontMetrics fm(myFont);
+    //auto width = fm.width(m_text);
+    //setFixedWidth(width + 10);
   }
 
   update();
@@ -637,7 +651,7 @@ void OSDropZone2::paintEvent( QPaintEvent * event )
   QPainter p(this);
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 
-  p.drawText(rect(),Qt::AlignCenter,m_text);
+  //p.drawText(rect(),Qt::AlignCenter,m_text);
 }
 
 void OSDropZone2::dragEnterEvent(QDragEnterEvent *event)
@@ -664,15 +678,15 @@ void OSDropZone2::dropEvent(QDropEvent *event)
 
     connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSDropZone2::refresh);
 
-    // Tell EditView to display this object
-    //emit itemClicked(m_item); TODO For now, don't display on drop
-
     if(modelObject){
       if(OSAppBase::instance()->currentDocument()->fromComponentLibrary(itemId)){
         modelObject = modelObject->clone(m_modelObject->model());
         if (m_set)
         {
-          (*m_set)(modelObject.get());
+          bool success = (*m_set)(modelObject.get());
+          if (!success) {
+            modelObject->remove();
+          }
         }
         refresh();
       }
@@ -702,6 +716,8 @@ void OSDropZone2::mouseReleaseEvent(QMouseEvent * event)
         m_item = OSItem::makeItem(modelObjectToItemId(*modelObject, false));
         m_item->setParent(this);
         connect(m_item, &OSItem::itemRemoveClicked, this, &OSDropZone2::onItemRemoveClicked);
+
+        connect(modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSDropZone2::refresh);
       }
     }
 
@@ -709,6 +725,45 @@ void OSDropZone2::mouseReleaseEvent(QMouseEvent * event)
       emit itemClicked(m_item);
     }
   }
+}
+
+void OSDropZone2::focusInEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason)
+  {
+    if (hasData()) {
+      QString style("QWidget#OSDropZone {\
+                     background: #ffc627;\
+                     border: 2px dashed #808080;\
+                     border-radius: 5px; }");
+      setStyleSheet(style);
+    }
+
+    emit inFocus(true, hasData());
+  }
+
+  QWidget::focusInEvent(e);
+}
+
+void OSDropZone2::focusOutEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason)
+  {
+    QString style("QWidget#OSDropZone {\
+                   background: #CECECE;\
+                   border: 2px dashed #808080;\
+                   border-radius: 5px; }");
+    setStyleSheet(style);
+
+    emit inFocus(false, false);
+
+    auto mouseOverInspectorView = OSAppBase::instance()->currentDocument()->mainRightColumnController()->inspectorController()->inspectorView()->mouseOverInspectorView();
+    if (!mouseOverInspectorView) {
+      emit itemClicked(nullptr);
+    }
+  }
+
+  QWidget::focusOutEvent(e);
 }
 
 void OSDropZone2::onItemRemoveClicked()
@@ -720,9 +775,12 @@ void OSDropZone2::onItemRemoveClicked()
     if (modelObject) {
      parent = modelObject->parent();  
     }
-    emit objectRemoved(parent);
     (*m_reset)();
-  }
+    if (m_deleteObject) {
+      m_modelObject->remove();
+    }
+    emit objectRemoved(parent);
+ }
 }
 
 } // openstudio

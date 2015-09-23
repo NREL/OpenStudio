@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -223,6 +223,10 @@ CurveExponent::CurveExponent(const Model& model)
   setDouble(OS_Curve_ExponentFields::Coefficient3Constant,1.0);
   setDouble(OS_Curve_ExponentFields::MinimumValueofx,0.0);
   setDouble(OS_Curve_ExponentFields::MaximumValueofx,1.0);
+  setString(OS_Curve_ExponentFields::MinimumCurveOutput,"");
+  setString(OS_Curve_ExponentFields::MaximumCurveOutput,"");
+  setString(OS_Curve_ExponentFields::InputUnitTypeforX,"");
+  setString(OS_Curve_ExponentFields::OutputUnitType,"");
 }
 
 IddObjectType CurveExponent::iddObjectType() {

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -54,7 +54,7 @@ public:
   /** @name Constructors and Destructors */
   //@{
   /** Construct a new object. */
-  explicit SurfaceNetworkBuilder(ProgressBar *progressBar=0);
+  explicit SurfaceNetworkBuilder(ProgressBar *progressBar=nullptr);
   /** Destroy the translator.*/
   virtual ~SurfaceNetworkBuilder(){}
 

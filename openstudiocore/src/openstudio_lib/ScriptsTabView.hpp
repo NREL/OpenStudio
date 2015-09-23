@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -45,7 +45,7 @@ class ScriptsTabView : public MainTabView
 
   protected:
 
-  virtual void showEvent(QShowEvent *e);
+  virtual void showEvent(QShowEvent *e) override;
 
   private:
 

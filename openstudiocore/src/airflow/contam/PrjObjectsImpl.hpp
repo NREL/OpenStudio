@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef CONTAM_PRJOBJECTSIMPL_HPP
-#define CONTAM_PRJOBJECTSIMPL_HPP
+#ifndef AIRFLOW_CONTAM_PRJOBJECTSIMPL_HPP
+#define AIRFLOW_CONTAM_PRJOBJECTSIMPL_HPP
 
 #include "PrjDefines.hpp"
 #include "PrjReader.hpp"
@@ -89,7 +89,7 @@ public:
   /** Sets the initial zone pressure [Pa]. */
   bool setP0(const double P0);
   /** Sets the initial zone pressure [Pa]. */
-  bool setP0(const std::string P0);
+  bool setP0(const std::string &P0);
   /** Returns the zone name. */
   std::string name() const;
   /** Sets the zone name. */
@@ -125,7 +125,7 @@ public:
   /** Returns the CFD zone name. */
   std::string cfdname() const;
   /** Sets the CFD zone name. */
-  void setCfdname(const std::string cfdname);
+  void setCfdname(const std::string &cfdname);
   /** Returns the X coordinate of one end of the cdaxis. */
   double X1() const;
   /** Sets the X coordinate of one end of the cdaxis. */
@@ -1507,4 +1507,4 @@ private:
 } // contam
 } // openstudio
 
-#endif // CONTAM_PRJOBJECTSIMPL_HPP
+#endif // AIRFLOW_CONTAM_PRJOBJECTSIMPL_HPP

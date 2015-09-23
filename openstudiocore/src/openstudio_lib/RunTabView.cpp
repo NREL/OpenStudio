@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -23,6 +23,7 @@
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 #include "ScriptFolderListView.hpp"
+#include <OpenStudio.hxx>
 
 #include "../model/DaylightingControl.hpp"
 #include "../model/DaylightingControl_Impl.hpp"
@@ -75,8 +76,8 @@
 namespace openstudio {
 
 RunTabView::RunTabView(const model::Model & model,
-                       QWidget * parent)
-  : MainTabView("Run Simulation",true,parent)
+  QWidget * parent)
+  : MainTabView("Run Simulation", MainTabView::SUB_TAB, parent)
     //m_runView(new RunView(model)),
     //m_status(new openstudio::runmanager::JobStatusWidget(m_runView->runManager()))
 {
@@ -100,7 +101,7 @@ RunView::RunView(const model::Model & model,
   bool isConnected = t_runManager.connect(SIGNAL(statsChanged()), this, SLOT(runManagerStatsChanged()));
   OS_ASSERT(isConnected);
 
-  QGridLayout *mainLayout = new QGridLayout();
+  auto mainLayout = new QGridLayout();
   mainLayout->setContentsMargins(5,5,5,5);
   mainLayout->setSpacing(5);
   setLayout(mainLayout);
@@ -127,12 +128,12 @@ RunView::RunView(const model::Model & model,
   // Progress bar area
   m_progressBar = new QProgressBar();
  
-  QVBoxLayout *progressbarlayout = new QVBoxLayout();
+  auto progressbarlayout = new QVBoxLayout();
   progressbarlayout->addWidget(m_progressBar);
   m_statusLabel = new QLabel("Ready");
   progressbarlayout->addWidget(m_statusLabel);
   mainLayout->addLayout(progressbarlayout, 0, 1);
-
+  /*
   m_radianceGroup = new QButtonGroup(this);
 
   connect(m_radianceGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &RunView::on_radianceGroupClicked);
@@ -150,9 +151,9 @@ RunView::RunView(const model::Model & model,
  
   QLabel *radianceLabel = new QLabel("<b>Select Daylight Simulation Engine</b>");
 
-  QWidget *radianceWidget = new QWidget();
+  auto radianceWidget = new QWidget();
   radianceWidget->setObjectName("RunStatusViewRadiance");
-  QHBoxLayout *radianceInteriorLayout = new QHBoxLayout();
+  auto radianceInteriorLayout = new QHBoxLayout();
 
   radianceWidget->setLayout(radianceInteriorLayout);
   radianceInteriorLayout->addWidget(radianceLabel);
@@ -160,13 +161,13 @@ RunView::RunView(const model::Model & model,
   radianceInteriorLayout->addWidget(m_energyPlusButton);
   radianceInteriorLayout->addStretch();
   radianceInteriorLayout->addWidget(m_radianceButton);
-
+  */
 /*
   radianceHLayout->addSpacing(100);
   radianceHLayout->addWidget(radianceWidget, 3);
   radianceHLayout->addStretch(2);
   */
-  radianceWidget->setStyleSheet("QWidget#RunStatusViewRadiance {background: #DADADA; border: 1px solid #A5A5A5;}");
+  //radianceWidget->setStyleSheet("QWidget#RunStatusViewRadiance {background: #DADADA; border: 1px solid #A5A5A5;}");
 
 
 
@@ -191,16 +192,32 @@ RunView::RunView(const model::Model & model,
   groupBox->setLayout(radianceVLayout);
 */
 
-  mainLayout->addWidget(radianceWidget, 1, 1);
+  //mainLayout->addWidget(radianceWidget, 1, 1);
 
-  if (usesRadianceForDaylightCalculations(t_runManager))
-  {
-    m_radianceButton->setChecked(true);
+  //if (usesRadianceForDaylightCalculations(t_runManager))
+  //{
+  //  m_radianceButton->setChecked(true);
+  //} else {
+  //  m_energyPlusButton->setChecked(true);
+  //}
+
+  openstudio::runmanager::ToolVersion epversion = getRequiredEnergyPlusVersion();
+  if( auto tag = epversion.getTag() ) {
+    m_toolWarningLabel = new QLabel(openstudio::toQString("<b>Notice:</b> EnergyPlus " + 
+      std::to_string(epversion.getMajor().get()) + "." +
+      std::to_string(epversion.getMinor().get()) + "." +
+      std::to_string(epversion.getBuild().get()) + " Build \"" +
+      tag.get() + "\""
+      " is required and not yet located."
+      "  Run Preferences -> Scan For Tools to locate."));
   } else {
-    m_energyPlusButton->setChecked(true);
+    m_toolWarningLabel = new QLabel(openstudio::toQString("<b>Notice:</b> EnergyPlus " + 
+      std::to_string(epversion.getMajor().get()) + "." +
+      std::to_string(epversion.getMinor().get()) + "." +
+      std::to_string(epversion.getBuild().get()) +
+      " is required and not yet located."
+      "  Run Preferences -> Scan For Tools to locate."));
   }
-
-  m_toolWarningLabel = new QLabel(openstudio::toQString("<b>Notice:</b> EnergyPlus " + getRequiredEnergyPlusVersion().toString() + " is required and not yet located.  Run File->Scan For Tools to locate."));
   m_toolWarningLabel->hide();
 
   mainLayout->addWidget(m_toolWarningLabel, 2, 1);
@@ -219,7 +236,7 @@ RunView::RunView(const model::Model & model,
   updateRunManagerStats(t_runManager);
 }
 
-
+/*
 void RunView::getRadiancePreRunWarningsAndErrors(std::vector<std::string> & warnings,
                                                  std::vector<std::string> & errors)
 {
@@ -227,18 +244,12 @@ void RunView::getRadiancePreRunWarningsAndErrors(std::vector<std::string> & warn
   boost::optional<model::Model> model(m_model);
   openstudio::getRadiancePreRunWarningsAndErrors(warnings, errors, rm, model);
 }
-
+*/
 void RunView::locateEnergyPlus()
 {
   openstudio::runmanager::ConfigOptions co(true);
-  boost::optional<int> major = getRequiredEnergyPlusVersion().getMajor();
-  boost::optional<int> minor = getRequiredEnergyPlusVersion().getMinor();
-  bool energyplus_not_installed;
-  if (major && minor){
-    energyplus_not_installed = co.getTools().getAllByName("energyplus").getAllByVersion(openstudio::runmanager::ToolVersion(*major,*minor)).tools().size() == 0;
-  } else {
-    energyplus_not_installed = co.getTools().getAllByName("energyplus").getAllByVersion(openstudio::runmanager::ToolVersion(8,1)).tools().size() == 0;
-  }
+  openstudio::runmanager::ToolVersion epversion = getRequiredEnergyPlusVersion();
+  bool energyplus_not_installed = co.getTools().getAllByName("energyplus").getAllByVersion(epversion).tools().size() == 0;
   
   if (energyplus_not_installed){
     m_toolWarningLabel->show();
@@ -251,14 +262,14 @@ void RunView::updateToolsWarnings()
 {
   LOG(Debug, "updateToolsWarnings called");
   
-  getRadiancePreRunWarningsAndErrors(m_radianceWarnings,m_radianceErrors);
+  //getRadiancePreRunWarningsAndErrors(m_radianceWarnings,m_radianceErrors);
 
-  QString checkBoxText;
-  QString buttonText;
+  //QString checkBoxText;
+  //QString buttonText;
 
-  if(m_radianceErrors.size() > 0){
-    m_energyPlusButton->setChecked(true);
-  }
+  //if(m_radianceErrors.size() > 0){
+  //  m_energyPlusButton->setChecked(true);
+  //}
 
   locateEnergyPlus();
 }
@@ -391,7 +402,12 @@ void RunView::treeChanged(const openstudio::UUID &t_uuid)
 
 openstudio::runmanager::ToolVersion RunView::getRequiredEnergyPlusVersion()
 {
-  return openstudio::runmanager::ToolVersion::fromString(ENERGYPLUS_VERSION);
+  std::string sha = energyPlusBuildSHA();
+  if( ! sha.empty() ) {
+    return openstudio::runmanager::ToolVersion(energyPlusVersionMajor(),energyPlusVersionMinor(),energyPlusVersionPatch(),sha);
+  } else {
+    return openstudio::runmanager::ToolVersion(energyPlusVersionMajor(),energyPlusVersionMinor(),energyPlusVersionPatch());
+  }
 }
 
 void RunView::playButtonClicked(bool t_checked)
@@ -436,10 +452,25 @@ void RunView::playButtonClicked(bool t_checked)
     openstudio::runmanager::ToolVersion epver = getRequiredEnergyPlusVersion();
     if (co.getTools().getAllByName("energyplus").getAllByVersion(epver).tools().size() == 0)
     {
-      QMessageBox::information(this, 
-          "Missing EnergyPlus",
-          openstudio::toQString("EnergyPlus " + epver.toString() + " could not be located, simulation aborted."),
-          QMessageBox::Ok);
+      if( auto tag = epver.getTag() ) {
+        QMessageBox::information(this, 
+            "Missing EnergyPlus",
+            QString::fromStdString("EnergyPlus " +
+            std::to_string(epver.getMajor().get()) + "." +
+            std::to_string(epver.getMinor().get()) + "." +
+            std::to_string(epver.getBuild().get()) + " Build \"" +
+            tag.get() + "\" could not be located, simulation aborted."),
+            QMessageBox::Ok);
+      } else {
+        QMessageBox::information(this, 
+            "Missing EnergyPlus",
+            QString::fromStdString("EnergyPlus " +
+            std::to_string(epver.getMajor().get()) + "." +
+            std::to_string(epver.getMinor().get()) + "." +
+            std::to_string(epver.getBuild().get()) + 
+            " could not be located, simulation aborted."),
+            QMessageBox::Ok);
+      }
       m_playButton->setChecked(false);
       osdocument->enableTabsAfterRun();
       return;
@@ -456,16 +487,29 @@ void RunView::playButtonClicked(bool t_checked)
       return;
     }
 
-    // TODO call Dan's ModelToRad translator to determine if there are problems
-    if(m_radianceButton->isChecked() && (!m_radianceWarnings.empty() || !m_radianceErrors.empty())) {
-      showRadianceWarningsAndErrors(m_radianceWarnings, m_radianceErrors);
-      if(m_radianceErrors.size()){
+    // check for missing measure.rb file
+    for (const BCLMeasure measure : OSAppBase::instance()->project()->measures()){
+      if (!measure.primaryRubyScriptPath()){
+        QMessageBox::information(this, 
+            "Missing Ruby Script", 
+            toQString("Measure '" + measure.displayName() + "' is missing it's measure.rb file, update this measure and try again."),
+            QMessageBox::Ok);
+        m_playButton->setChecked(false);
+        osdocument->enableTabsAfterRun();
         return;
       }
-      else{
-        // check messageBox return value to run with warnings
-      }
     }
+
+    // TODO call Dan's ModelToRad translator to determine if there are problems
+    //if(m_radianceButton->isChecked() && (!m_radianceWarnings.empty() || !m_radianceErrors.empty())) {
+    //  showRadianceWarningsAndErrors(m_radianceWarnings, m_radianceErrors);
+    // if(m_radianceErrors.size()){
+    //    return;
+    //  }
+    //  else{
+    //    // check messageBox return value to run with warnings
+    //  }
+    //}
 
     m_canceling = false;
     m_outputWindow->clear();
@@ -487,14 +531,14 @@ void RunView::requestStartRunManager()
   std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
   bool requireCalibrationReports = (osdocument->model().getConcreteModelObjects<model::UtilityBill>().size() > 0);
   openstudio::runmanager::RunManager rm = runManager();
-  startRunManager(rm, m_modelPath, m_tempFolder, m_radianceButton->isChecked(), requireCalibrationReports, this);
+  startRunManager(rm, m_modelPath, m_tempFolder, std::vector<double>(), requireCalibrationReports, this);
 }
 
 openstudio::runmanager::RunManager RunView::runManager()
 {
   return OSAppBase::instance()->project()->runManager();
 }
-
+/*
 void RunView::showRadianceWarningsAndErrors(const std::vector<std::string> & warnings,
                                             const std::vector<std::string> & errors)
 {
@@ -523,7 +567,7 @@ void RunView::showRadianceWarningsAndErrors(const std::vector<std::string> & war
   QMessageBox::critical(this, "Radiance Warnings and Errors", errorsAndWarnings);
 }
 
-void RunView::on_radianceWarningsAndErrorsClicked(bool /*checked*/)
+void RunView::on_radianceWarningsAndErrorsClicked(bool checked)
 {
   showRadianceWarningsAndErrors(m_radianceWarnings,m_radianceErrors);
 }
@@ -543,5 +587,5 @@ void RunView::on_radianceGroupClicked(int idx)
     emit useRadianceStateChanged(false);
   }
 }
-
+*/
 } // openstudio

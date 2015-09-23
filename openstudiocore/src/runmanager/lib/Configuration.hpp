@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -44,14 +44,14 @@ namespace runmanager {
       virtual ~SpinBoxDelegate() {}
 
       QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-          const QModelIndex &index) const;
+          const QModelIndex &index) const override;
 
-      void setEditorData(QWidget *editor, const QModelIndex &index) const;
+      void setEditorData(QWidget *editor, const QModelIndex &index) const override;
       void setModelData(QWidget *editor, QAbstractItemModel *model,
-          const QModelIndex &index) const;
+          const QModelIndex &index) const override;
 
       void updateEditorGeometry(QWidget *editor,
-          const QStyleOptionViewItem &option, const QModelIndex &index) const;
+          const QStyleOptionViewItem &option, const QModelIndex &index) const override;
   };
 
   /// Editor delegate used during editing of the ToolInfo name
@@ -64,14 +64,14 @@ namespace runmanager {
       virtual ~ToolNameDelegate() {}
 
       QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-          const QModelIndex &index) const;
+          const QModelIndex &index) const override;
 
-      void setEditorData(QWidget *editor, const QModelIndex &index) const;
+      void setEditorData(QWidget *editor, const QModelIndex &index) const override;
       void setModelData(QWidget *editor, QAbstractItemModel *model,
-          const QModelIndex &index) const;
+          const QModelIndex &index) const override;
 
       void updateEditorGeometry(QWidget *editor,
-          const QStyleOptionViewItem &option, const QModelIndex &index) const;
+          const QStyleOptionViewItem &option, const QModelIndex &index) const override;
   };
 
 

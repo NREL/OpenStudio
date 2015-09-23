@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -59,8 +59,8 @@ ModelObjectTypeListView::ModelObjectTypeListView(const std::vector<std::pair<Idd
 void ModelObjectTypeListView::addModelObjectType(const IddObjectType& iddObjectType, const std::string& name)
 {
   OSCollapsibleItemHeader* collapsibleItemHeader = new OSCollapsibleItemHeader(name, OSItemId("", "", false), m_headerType);
-  ModelObjectListView* modelObjectListView = new ModelObjectListView(iddObjectType, m_model, false,m_showLocalBCL);
-  ModelObjectTypeItem* modelObjectTypeItem = new ModelObjectTypeItem(collapsibleItemHeader, modelObjectListView);
+  auto modelObjectListView = new ModelObjectListView(iddObjectType, m_model, false,m_showLocalBCL);
+  auto modelObjectTypeItem = new ModelObjectTypeItem(collapsibleItemHeader, modelObjectListView);
 
   addCollapsibleItem(modelObjectTypeItem);
 }

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -62,8 +62,12 @@ TEST(Project, ProjectRecord)
   if(boost::filesystem::exists(projectPath)){
     boost::filesystem::remove(projectPath);
   }
-  ProjectDatabase database(projectPath, runManager, true);
 
+  EXPECT_FALSE(ProjectDatabase::isExistingProjectDatabase(testPath));
+  EXPECT_FALSE(ProjectDatabase::requiresUpdate(testPath));
+  ProjectDatabase database(projectPath, runManager, true);
+  EXPECT_TRUE(ProjectDatabase::isExistingProjectDatabase(testPath));
+  EXPECT_FALSE(ProjectDatabase::requiresUpdate(testPath));
 
   openstudio::path modelPath = outdir / openstudio::toPath("ProjectRecordTest.osm");
   openstudio::model::exampleModel().save(modelPath, true);

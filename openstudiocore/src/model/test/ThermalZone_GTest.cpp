@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -20,41 +20,53 @@
 #include <gtest/gtest.h>
 
 #include "ModelFixture.hpp"
+
+#include "../AirLoopHVAC.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
+#include "../AirTerminalSingleDuctUncontrolled.hpp"
+#include "../CoilCoolingDXSingleSpeed.hpp"
+#include "../CoilHeatingWater.hpp"
+#include "../CurveBiquadratic.hpp"
+#include "../CurveQuadratic.hpp"
+#include "../ElectricEquipment.hpp"
+#include "../ElectricEquipmentDefinition.hpp"
+#include "../FanConstantVolume.hpp"
+#include "../LifeCycleCost.hpp"
+#include "../LifeCycleCost_Impl.hpp"
+#include "../Lights.hpp"
+#include "../LightsDefinition.hpp"
 #include "../Model_Impl.hpp"
-#include "../ThermalZone.hpp"
-#include "../ThermalZone_Impl.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../PortList.hpp"
+#include "../PortList_Impl.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../ScheduleRuleset.hpp"
+#include "../ScheduleRuleset_Impl.hpp"
+#include "../SetpointManagerSingleZoneReheat.hpp"
 #include "../SizingZone.hpp"
 #include "../SizingZone_Impl.hpp"
-#include "../AirLoopHVAC.hpp"
-#include "../StraightComponent.hpp"
 #include "../Space.hpp"
 #include "../SpaceInfiltrationDesignFlowRate.hpp"
 #include "../SpaceInfiltrationEffectiveLeakageArea.hpp"
-#include "../ScheduleCompact.hpp"
-#include "../AirTerminalSingleDuctUncontrolled.hpp"
-#include "../CurveBiquadratic.hpp"
-#include "../CurveQuadratic.hpp"
-#include "../FanConstantVolume.hpp"
-#include "../CoilHeatingWater.hpp"
-#include "../CoilCoolingDXSingleSpeed.hpp"
-#include "../ZoneHVACPackagedTerminalAirConditioner.hpp"
-#include "../LifeCycleCost.hpp"
-#include "../LifeCycleCost_Impl.hpp"
-#include "../ElectricEquipmentDefinition.hpp"
-#include "../ElectricEquipment.hpp"
-#include "../LightsDefinition.hpp"
-#include "../Lights.hpp"
+#include "../StraightComponent.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
+#include "../ThermostatSetpointDualSetpoint.hpp"
+#include "../ThermostatSetpointDualSetpoint_Impl.hpp"
 #include "../ZoneControlHumidistat.hpp"
-#include "../SetpointManagerSingleZoneReheat.hpp"
-#include "../AirLoopHVACZoneSplitter.hpp"
-#include "../Node.hpp"
-#include "../Node_Impl.hpp"
+#include "../ZoneHVACPackagedTerminalAirConditioner.hpp"
 
+
+#include "../ScheduleConstant.hpp"
+#include "../ZoneHVACUnitHeater.hpp"
+#include "../ZoneHVACUnitHeater_Impl.hpp"
+
+#include "../../utilities/core/Containers.hpp"
 #include "../../utilities/data/Attribute.hpp"
 #include "../../utilities/geometry/Point3d.hpp"
 #include "../../utilities/units/Quantity.hpp"
 #include "../../utilities/units/Unit.hpp"
-#include "../../utilities/core/Containers.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -519,4 +531,105 @@ TEST_F(ModelFixture, ThermalZone_ZoneControlHumidistat)
   EXPECT_EQ(humidistat, thermalZone.zoneControlHumidistat().get());
   thermalZone.resetZoneControlHumidistat();
   EXPECT_FALSE(thermalZone.zoneControlHumidistat());
+}
+
+TEST_F(ModelFixture, ThermalZone_Clone)
+{
+  Model m;
+  ThermalZone thermalZone(m);
+  
+  auto zoneAirNode = thermalZone.zoneAirNode();
+  
+  ZoneControlHumidistat humidistat(m);
+  thermalZone.setZoneControlHumidistat(humidistat);
+  ScheduleRuleset humidSchedule(m);
+  humidistat.setHumidifyingRelativeHumiditySetpointSchedule(humidSchedule);
+  ScheduleRuleset dehumidSchedule(m);
+  humidistat.setDehumidifyingRelativeHumiditySetpointSchedule(dehumidSchedule);
+  
+  ThermostatSetpointDualSetpoint thermostat(m);
+  thermalZone.setThermostat(thermostat);
+  ScheduleRuleset coolingSchedule(m);
+  thermostat.setCoolingSchedule(coolingSchedule);
+  ScheduleRuleset heatingSchedule(m);
+  thermostat.setHeatingSchedule(heatingSchedule);
+
+  auto thermalZoneClone = thermalZone.clone(m).cast<ThermalZone>();
+
+  auto humidistatClone = thermalZoneClone.zoneControlHumidistat();
+  ASSERT_TRUE(humidistatClone);
+  ASSERT_NE(humidistatClone.get(),humidistat);
+  auto humidSchedule2 = humidistatClone->humidifyingRelativeHumiditySetpointSchedule();
+  ASSERT_TRUE(humidSchedule2);
+  ASSERT_EQ(humidSchedule,humidSchedule2.get());
+  auto dehumidSchedule2 = humidistatClone->dehumidifyingRelativeHumiditySetpointSchedule();
+  ASSERT_TRUE(dehumidSchedule2);
+  ASSERT_EQ(dehumidSchedule,dehumidSchedule2.get());
+
+  auto thermostatClone = thermalZoneClone.thermostat();
+  ASSERT_TRUE(thermostatClone);
+  ASSERT_NE(thermostatClone.get(),thermostat);
+  auto coolingSchedule2 = thermostatClone->cast<ThermostatSetpointDualSetpoint>().coolingSetpointTemperatureSchedule();
+  ASSERT_TRUE(coolingSchedule2);
+  ASSERT_EQ(coolingSchedule,coolingSchedule2.get());
+  auto heatingSchedule2 = thermostatClone->cast<ThermostatSetpointDualSetpoint>().heatingSetpointTemperatureSchedule();
+  ASSERT_TRUE(heatingSchedule2);
+  ASSERT_EQ(heatingSchedule,heatingSchedule2.get());
+
+  EXPECT_FALSE(thermalZoneClone.zoneAirNode().handle().isNull());
+  EXPECT_EQ(zoneAirNode,thermalZone.zoneAirNode());
+  EXPECT_FALSE(thermalZone.zoneAirNode().handle().isNull());
+}
+
+TEST_F(ModelFixture, ThermalZone_SonOfClone)
+{
+  Model model;
+  ScheduleConstant schedule(model);
+  schedule.setValue(1.0); // Always on
+  FanConstantVolume fan(model, schedule);
+  CoilHeatingWater heatingCoil(model, schedule);
+  ZoneHVACUnitHeater zoneHVACUnitHeater(model, schedule, fan, heatingCoil);
+  ASSERT_FALSE(zoneHVACUnitHeater.thermalZone());
+
+  ThermalZone thermalZone(model);
+  auto success = zoneHVACUnitHeater.addToThermalZone(thermalZone);
+  ASSERT_TRUE(success);
+  ASSERT_TRUE(zoneHVACUnitHeater.thermalZone());
+
+  boost::optional<model::ModelObject> clone1 = zoneHVACUnitHeater.clone(model);
+  ASSERT_FALSE(clone1->cast<model::ZoneHVACComponent>().thermalZone());
+  ASSERT_TRUE(zoneHVACUnitHeater.thermalZone());
+  success = clone1->cast<model::ZoneHVACComponent>().addToThermalZone(thermalZone);
+  ASSERT_TRUE(success);
+  ASSERT_TRUE(zoneHVACUnitHeater.thermalZone());
+  ASSERT_TRUE(clone1->cast<model::ZoneHVACComponent>().thermalZone());
+
+  boost::optional<model::ModelObject> clone2 = zoneHVACUnitHeater.clone(model);
+  ASSERT_FALSE(clone2->cast<model::ZoneHVACComponent>().thermalZone());
+  ASSERT_TRUE(clone1->cast<model::ZoneHVACComponent>().thermalZone());
+  ASSERT_TRUE(zoneHVACUnitHeater.thermalZone());
+  success = clone2->cast<model::ZoneHVACComponent>().addToThermalZone(thermalZone);
+  ASSERT_TRUE(success);
+  ASSERT_TRUE(zoneHVACUnitHeater.thermalZone());
+  ASSERT_TRUE(clone1->cast<model::ZoneHVACComponent>().thermalZone());
+  ASSERT_TRUE(clone2->cast<model::ZoneHVACComponent>().thermalZone());
+}
+
+TEST_F(ModelFixture, ThermalZone_Ports)
+{
+  Model m;
+  ThermalZone zone(m);
+
+  auto inletPortList = zone.inletPortList();
+  auto exhaustPortList = zone.exhaustPortList();
+
+  auto inletPortListZone = inletPortList.thermalZone();
+  auto exhaustPortListZone = exhaustPortList.thermalZone();
+
+  EXPECT_EQ(zone.handle(),inletPortListZone.handle());
+  EXPECT_EQ(zone.handle(),exhaustPortListZone.handle());
+
+  zone.remove();
+  EXPECT_TRUE(inletPortList.handle().isNull());
+  EXPECT_TRUE(exhaustPortList.handle().isNull());
 }

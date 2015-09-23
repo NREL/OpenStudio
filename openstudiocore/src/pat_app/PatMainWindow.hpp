@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -104,13 +104,13 @@ class PatMainWindow : public QMainWindow
 
   protected:
 
-  void closeEvent(QCloseEvent * event);
+  void closeEvent(QCloseEvent * event) override;
 
-  void dragEnterEvent(QDragEnterEvent * event);
+  void dragEnterEvent(QDragEnterEvent * event) override;
   
-  void dropEvent(QDropEvent * event);
+  void dropEvent(QDropEvent * event) override;
 
-  QSize sizeHint() const;
+  QSize sizeHint() const override;
 
   private:
 

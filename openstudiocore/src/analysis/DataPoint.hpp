@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -313,7 +313,7 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
 
   void markFailed();
 
-  void setResponseValues(const std::vector<double> values);
+  void setResponseValues(const std::vector<double>& values);
 
   friend class Analysis; // for calling setParent
   friend class detail::Analysis_Impl;

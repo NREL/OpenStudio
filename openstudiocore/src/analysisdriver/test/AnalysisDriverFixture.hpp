@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -64,10 +64,10 @@ class AnalysisDriverFixture : public ::testing::Test {
   // TEST FIXTURE METHODS
 
   /// initialize for each test
-  virtual void SetUp();
+  virtual void SetUp() override;
 
   /// tear down after each test
-  virtual void TearDown();
+  virtual void TearDown() override;
 
   /// initialize static members
   static void SetUpTestCase();
@@ -115,6 +115,8 @@ class AnalysisDriverFixture : public ::testing::Test {
 
   static openstudio::analysisdriver::AnalysisRunOptions standardRunOptions(
       const openstudio::path& workingDirectory);
+
+  static openstudio::model::Model fastExampleModel();
 
   /// set up logging
   REGISTER_LOGGER("AnalysisDriverFixture");

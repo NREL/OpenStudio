@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -22,6 +22,8 @@
 #include "../Model.hpp"
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
+#include "../Splitter.hpp"
+#include "../Splitter_Impl.hpp"
 #include "../CurveBiquadratic.hpp"
 #include "../CurveBiquadratic_Impl.hpp"
 #include "../CurveQuadratic.hpp"
@@ -30,6 +32,8 @@
 #include "../FanConstantVolume_Impl.hpp"
 #include "../CoilHeatingWater.hpp"
 #include "../CoilHeatingWater_Impl.hpp"
+#include "../CoilCoolingWater.hpp"
+#include "../CoilCoolingWater_Impl.hpp"
 #include "../CoilCoolingDXSingleSpeed.hpp"
 #include "../CoilCoolingDXSingleSpeed_Impl.hpp"
 #include "../ZoneHVACPackagedTerminalAirConditioner.hpp"
@@ -216,5 +220,34 @@ TEST(ZoneHVACPackagedTerminalAirConditioner,ZoneHVACPackagedTerminalAirCondition
      exit(0); 
   } ,
     ::testing::ExitedWithCode(0), "" );
+
+  {
+    model::Model m; 
+    model::CoilHeatingWater heatingCoil(m);
+    model::CoilCoolingDXSingleSpeed coolingCoil(m);
+    model::FanConstantVolume fan(m);
+    auto s = m.alwaysOnDiscreteSchedule();
+
+    model::ZoneHVACPackagedTerminalAirConditioner ptac(m,s,fan,heatingCoil,coolingCoil);
+    model::PlantLoop plant(m);
+    EXPECT_TRUE(plant.addDemandBranchForComponent(heatingCoil));
+
+    auto ptacClone = ptac.clone(m).cast<model::ZoneHVACPackagedTerminalAirConditioner>();
+
+    auto heatingClone = ptacClone.heatingCoil();
+    EXPECT_TRUE(heatingClone.plantLoop());
+
+    auto heatingCoils = plant.demandComponents(model::CoilHeatingWater::iddObjectType());
+    EXPECT_EQ(2u,heatingCoils.size());
+
+    // If for some reason you try to add coil to plant again (like expecting older API behavior),
+    // everything is ok.
+    plant.addDemandBranchForComponent(heatingClone);
+
+    heatingCoils = plant.demandComponents(model::CoilHeatingWater::iddObjectType());
+    EXPECT_EQ(2u,heatingCoils.size());
+
+    EXPECT_EQ(2u,plant.demandSplitter().outletModelObjects().size());
+  }
 }
 

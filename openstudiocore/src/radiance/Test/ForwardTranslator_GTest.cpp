@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -283,4 +283,19 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoThermalZoneLinks)
   EXPECT_FALSE(ft.errors().empty());
   EXPECT_FALSE(ft.warnings().empty());
 
+}
+
+TEST(Radiance, ForwardTranslator_formatString)
+{
+  EXPECT_EQ("44", formatString(44.12345, 0));
+  EXPECT_EQ("44.1", formatString(44.12345, 1));
+  EXPECT_EQ("44.12", formatString(44.12345, 2));
+
+  EXPECT_EQ("45", formatString(44.6789, 0));
+  EXPECT_EQ("44.7", formatString(44.6789, 1));
+  EXPECT_EQ("44.68", formatString(44.6789, 2));
+
+  EXPECT_EQ("0", formatString(0.4412345, 0));
+  EXPECT_EQ("0.4", formatString(0.4412345, 1));
+  EXPECT_EQ("0.44", formatString(0.4412345, 2));
 }

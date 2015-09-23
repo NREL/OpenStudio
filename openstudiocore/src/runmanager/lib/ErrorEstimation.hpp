@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -38,9 +38,9 @@ namespace openstudio {
 
     struct RUNMANAGER_API FuelUse
     {
-      FuelUse(const openstudio::FuelType t_fuelType,
+      FuelUse(const openstudio::FuelType& t_fuelType,
           const double t_value,
-          const openstudio::Unit t_units)
+          const openstudio::Unit& t_units)
         : fuelType(t_fuelType), value(t_value), units(t_units)
       {
       }

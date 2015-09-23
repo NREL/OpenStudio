@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -49,23 +49,23 @@ class MODEL_API AirLoopHVACZoneMixer_Impl : public Mixer_Impl
   virtual ~AirLoopHVACZoneMixer_Impl();
 
   // Get all output variable names that could be associated with this object.
-  virtual const std::vector<std::string>& outputVariableNames() const;
+  virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual IddObjectType iddObjectType() const;
+  virtual IddObjectType iddObjectType() const override;
 
-  std::vector<openstudio::IdfObject> remove();
+  std::vector<openstudio::IdfObject> remove() override;
 
-  unsigned outletPort();
+  unsigned outletPort() const override;
 
-  unsigned inletPort(unsigned branchIndex);
+  unsigned inletPort(unsigned branchIndex) const override;
   
-  unsigned nextInletPort();
+  unsigned nextInletPort() const override;
 
-  virtual bool addToNode(Node & node);
+  virtual bool addToNode(Node & node) override;
 
-  virtual ModelObject clone(Model model) const;
+  virtual ModelObject clone(Model model) const override;
 
-  void disconnect();
+  void disconnect() override;
 
  private:
 

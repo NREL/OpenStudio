@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -83,9 +83,10 @@ boost::optional<IdfObject> ForwardTranslator::translateDistrictHeating( District
 
   ///////////////////////////////////////////////////////////////////////////
   //Nominal Capacity ///////////////////////////////////////////////////
-  if( (value = modelObject.nominalCapacity()) )
-  {
-   idfObject.setDouble(DistrictHeatingFields::NominalCapacity,value.get());
+  if( modelObject.isNominalCapacityAutosized() ) {
+    idfObject.setString(DistrictHeatingFields::NominalCapacity,"Autosize");
+  } else if( (value = modelObject.nominalCapacity()) ) {
+    idfObject.setDouble(DistrictHeatingFields::NominalCapacity,value.get());
   }
   //
   ////////////////////////////////////////////////////////////////////////

@@ -24,6 +24,7 @@
     <field name="majorVer" type="integer"/>
     <field name="minorVer" type="integer"/>
     <field name="buildVer" type="integer"/>
+    <field name="buildTag" type="string"/>
     <field name="linuxBinaryArchive" type="string"/>
   </object>
 
@@ -33,6 +34,7 @@
     <field name="majorVersion" type="integer"/>
     <field name="minorVersion" type="integer"/>
     <field name="buildVersion" type="integer"/>
+    <field name="buildTag" type="string"/>
     <field name="localBinPath" type="string"/>
     <field name="remoteArchive" type="string"/>
     <field name="remoteExe" type="string"/>

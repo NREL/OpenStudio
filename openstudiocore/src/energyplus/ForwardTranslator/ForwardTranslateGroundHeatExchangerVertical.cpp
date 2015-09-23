@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -63,7 +63,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGroundHeatExchangerVertic
   // Maximum Flow Rate
   if( (value = modelObject.maximumFlowRate()) )
   {
-    idfObject.setDouble(GroundHeatExchanger_VerticalFields::MaximumFlowRate,value.get());
+    idfObject.setDouble(GroundHeatExchanger_VerticalFields::DesignFlowRate,value.get());
   }
 
   // Number of Bore Holes

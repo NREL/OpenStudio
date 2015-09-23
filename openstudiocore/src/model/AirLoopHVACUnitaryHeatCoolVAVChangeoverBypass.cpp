@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -489,7 +489,7 @@ AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::AirLoopHVACUnitaryHeatCoolVAVChan
 {
   OS_ASSERT(getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>());
 
-  bool ok = true;
+  bool ok;
   ok = setCoolingCoil(coolingCoil);
   if( ! ok ) {
     LOG_AND_THROW("Unable to set cooling coil"); 

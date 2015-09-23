@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -45,7 +45,7 @@ public:
 
   virtual ~OSDialog() {}
 
-  QSize sizeHint() const;
+  QSize sizeHint() const override;
 
   void setSizeHint(const QSize & sizeHint);
 
@@ -65,15 +65,15 @@ protected:
 
   void setOkButtonAsDefault(bool isDefault);
 
-  void mouseMoveEvent(QMouseEvent *event);
+  void mouseMoveEvent(QMouseEvent *event) override;
 
-  void mouseReleaseEvent(QMouseEvent *event);
+  void mouseReleaseEvent(QMouseEvent *event) override;
   
-  void mousePressEvent(QMouseEvent *event);
+  void mousePressEvent(QMouseEvent *event) override;
 
-  void resizeEvent(QResizeEvent * event);
+  void resizeEvent(QResizeEvent * event) override;
 
-  void paintEvent(QPaintEvent *event);
+  void paintEvent(QPaintEvent *event) override;
 
   bool m_isIP;
 

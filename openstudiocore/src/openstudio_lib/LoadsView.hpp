@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -40,7 +40,7 @@ class LoadsView : public ModelSubTabView
 
     LoadsView(bool isIP,
               const openstudio::model::Model& model, 
-              QWidget * parent = 0);
+              QWidget * parent = nullptr);
 
     virtual ~LoadsView() {}
 
@@ -61,17 +61,17 @@ class LoadsInspectorView : public ModelObjectInspectorView
 
     LoadsInspectorView(bool isIP,
                        const model::Model& model,
-                       QWidget * parent = 0);
+                       QWidget * parent = nullptr);
 
     virtual ~LoadsInspectorView() {}
 
   protected:
 
-    virtual void onClearSelection();
+    virtual void onClearSelection() override;
 
-    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject) override;
 
-    virtual void onUpdate();
+    virtual void onUpdate() override;
 
     void showPeopleDefinitionsInspector(const openstudio::model::ModelObject& modelObject);
 
@@ -101,7 +101,7 @@ class LoadsInspectorView : public ModelObjectInspectorView
 
   public slots:
 
-    void toggleUnits(bool displayIP);
+    void toggleUnits(bool displayIP) override;
 
 };
 

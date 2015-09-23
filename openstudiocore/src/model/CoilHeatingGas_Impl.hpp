@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -38,10 +38,7 @@ namespace detail {
 
     Q_PROPERTY(boost::optional<openstudio::model::ModelObject> availabilitySchedule READ availabilityScheduleAsModelObject WRITE setAvailabilityScheduleAsModelObject);
 
-  Q_PROPERTY(double gasBurnerEfficiency READ gasBurnerEfficiency WRITE setGasBurnerEfficiency);
-  Q_PROPERTY(boost::optional<double> nominalCapacity READ nominalCapacity WRITE setNominalCapacity);
-  Q_PROPERTY(double parasiticElectricLoad READ parasiticElectricLoad WRITE setParasiticElectricLoad);
-  Q_PROPERTY(double parasiticGasLoad READ parasiticGasLoad WRITE setParasiticGasLoad);
+    Q_PROPERTY(boost::optional<double> nominalCapacity READ nominalCapacity WRITE setNominalCapacity);
   public:
     /** @name Constructors and Destructors */
     //2{
@@ -65,18 +62,18 @@ namespace detail {
     //@{
 
     // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned inletPort();
+    virtual unsigned inletPort() override;
 
-    virtual unsigned outletPort();
+    virtual unsigned outletPort() override;
 
-    virtual boost::optional<HVACComponent> containingHVACComponent() const;
-    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const;
+    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
     //@}
     /** @name Getters and Setters */
@@ -87,19 +84,19 @@ namespace detail {
     bool setAvailabilitySchedule(Schedule& schedule);
 
     // Get GasBurnerEfficiency
-    double gasBurnerEfficiency();
+    double gasBurnerEfficiency() const;
 
     // Set GasBurnerEfficiency
     void setGasBurnerEfficiency(double val);
 
     // Get ParasiticElectricLoad
-    double parasiticElectricLoad();
+    double parasiticElectricLoad() const;
 
     // Set parasiticElectricLoad
     void setParasiticElectricLoad(double val);
 
     // Get ParasiticGasLoad
-    double parasiticGasLoad();
+    double parasiticGasLoad() const;
 
     // Set parasiticGasLoad
     void setParasiticGasLoad(double val);
@@ -124,11 +121,11 @@ namespace detail {
 
     void resetPartLoadFractionCorrelationCurve();
 
-    std::vector<ModelObject> children() const;
+    std::vector<ModelObject> children() const override;
 
-    ModelObject clone(Model model) const;
+    ModelObject clone(Model model) const override;
 
-    bool addToNode(Node & node);
+    bool addToNode(Node & node) override;
 
     //@}
   private:

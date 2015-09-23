@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -93,7 +93,7 @@ MainWindow::MainWindow(bool isPlugin, QWidget *parent) :
 
   setCentralWidget(m_mainSplitter);  
 
-  MainMenu * mainMenu = new MainMenu(m_displayIP, m_isPlugin);
+  auto mainMenu = new MainMenu(m_displayIP, m_isPlugin);
   connect(mainMenu, &MainMenu::toggleUnitsClicked, this, &MainWindow::toggleUnits);
   connect(mainMenu, &MainMenu::downloadComponentsClicked, this, &MainWindow::downloadComponentsClicked);
   connect(mainMenu, &MainMenu::openLibDlgClicked, this, &MainWindow::openLibDlgClicked);
@@ -106,6 +106,7 @@ MainWindow::MainWindow(bool isPlugin, QWidget *parent) :
   connect(mainMenu, &MainMenu::importClicked, this, &MainWindow::importClicked);
   connect(mainMenu, &MainMenu::importgbXMLClicked, this, &MainWindow::importgbXMLClicked);
   connect(mainMenu, &MainMenu::importSDDClicked, this, &MainWindow::importSDDClicked);
+  connect(mainMenu, &MainMenu::importIFCClicked, this, &MainWindow::importIFCClicked);
   connect(mainMenu, &MainMenu::loadFileClicked, this, &MainWindow::loadFileClicked);
   connect(mainMenu, &MainMenu::loadLibraryClicked, this, &MainWindow::loadLibraryClicked);
   connect(mainMenu, &MainMenu::saveAsFileClicked, this, &MainWindow::saveAsFileClicked);

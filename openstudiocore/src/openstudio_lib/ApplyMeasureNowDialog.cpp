@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -73,18 +73,19 @@ namespace openstudio {
 
 ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
   : OSDialog(false, parent),
-  m_editController(0),
-  m_mainPaneStackedWidget(0),
-  m_rightPaneStackedWidget(0),
-  m_argumentsFailedTextEdit(0),
-  m_jobItemView(0),
-  m_timer(0),
-  m_showAdvancedOutput(0),
+  m_editController(nullptr),
+  m_mainPaneStackedWidget(nullptr),
+  m_rightPaneStackedWidget(nullptr),
+  m_argumentsFailedTextEdit(nullptr),
+  m_jobItemView(nullptr),
+  m_timer(nullptr),
+  m_showAdvancedOutput(nullptr),
   m_advancedOutput(QString()),
   m_workingDir(openstudio::path()),
-  m_advancedOutputDialog(0)
+  m_advancedOutputDialog(nullptr)
 {
   setWindowTitle("Apply Measure Now");
+  setWindowModality(Qt::ApplicationModal);
   setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   createWidgets();
 
@@ -115,9 +116,9 @@ QSize ApplyMeasureNowDialog::sizeHint() const
 
 void ApplyMeasureNowDialog::createWidgets()
 {
-  QWidget * widget = 0;
-  QBoxLayout * layout = 0;
-  QLabel * label = 0;
+  QWidget * widget = nullptr;
+  QBoxLayout * layout = nullptr;
+  QLabel * label = nullptr;
 
   openstudio::OSAppBase * app = OSAppBase::instance();
 
@@ -143,7 +144,7 @@ void ApplyMeasureNowDialog::createWidgets()
   m_rightPaneStackedWidget = new  QStackedWidget();
   m_argumentsFailedPageIdx = m_rightPaneStackedWidget->addWidget(m_argumentsFailedTextEdit);
 
-  OSViewSwitcher * viewSwitcher = new OSViewSwitcher();
+  auto viewSwitcher = new OSViewSwitcher();
   viewSwitcher->setView(m_editController->editView);
   m_argumentsOkPageIdx = m_rightPaneStackedWidget->addWidget(viewSwitcher);
 
@@ -160,7 +161,7 @@ void ApplyMeasureNowDialog::createWidgets()
   label = new QLabel("Running Measure");
   label->setObjectName("H2");
 
-  BusyWidget * busyWidget = new BusyWidget();
+  auto busyWidget = new BusyWidget();
 
   m_timer = new QTimer(this);
   connect(m_timer, &QTimer::timeout, busyWidget, &BusyWidget::rotate);
@@ -200,7 +201,7 @@ void ApplyMeasureNowDialog::createWidgets()
 
   //layout->addStretch();
 
-  QHBoxLayout * hLayout = new QHBoxLayout();
+  auto hLayout = new QHBoxLayout();
   hLayout->addWidget(m_showAdvancedOutput);
   hLayout->addStretch();
   layout->addLayout(hLayout);
@@ -208,7 +209,7 @@ void ApplyMeasureNowDialog::createWidgets()
   widget = new QWidget();
   widget->setLayout(layout);
 
-  QScrollArea * scrollArea = new QScrollArea();
+  auto scrollArea = new QScrollArea();
   scrollArea->setWidgetResizable(true);
   scrollArea->setWidget(widget);
 
@@ -281,7 +282,7 @@ void ApplyMeasureNowDialog::displayMeasure()
       OS_ASSERT(currentModel);
 
       // clone the current model in case arguments getting changes model
-      m_model = currentModel->clone().cast<model::Model>();
+      m_model = currentModel->clone(true).cast<model::Model>();
 
       // pass in an empty workspace for the idf since you know it is a model measure
       Workspace dummyIdf;
@@ -365,7 +366,6 @@ void ApplyMeasureNowDialog::runMeasure()
   m_timer->start(50);
   this->okButton()->hide();
   this->backButton()->hide();
-  OS_ASSERT(m_model);
 
   openstudio::OSAppBase * app = OSAppBase::instance();
   m_workingDir = openstudio::toPath(app->currentDocument()->modelTempDir()) / openstudio::toPath("ApplyMeasureNow");
@@ -373,11 +373,17 @@ void ApplyMeasureNowDialog::runMeasure()
   openstudio::path epwPath; // DLM: todo look at how this is done in the run tab
 
   removeWorkingDir();
+
+  // DLM: do we want to get the original model or the one that was potentially altered when getting arguments?
+  boost::optional<model::Model> currentModel = app->currentModel();
+  OS_ASSERT(currentModel);
+  currentModel->save(modelPath, true);
   
   // save cloned model to temp directory
-  m_model->save(modelPath,true); 
+  //OS_ASSERT(m_model);
+  //m_model->save(modelPath,true); 
 
-  // remove? this is shown only in debug (EW)
+  // remove? this is shown only in debug (Evan)
   QString path("Measure Output Location: ");
   path.append(toQString(m_workingDir));
   m_jobPath->setText(path);
@@ -451,10 +457,17 @@ void ApplyMeasureNowDialog::displayResults()
     try{
       runmanager::Files files(m_job->outputFiles());
       openstudio::path stdErrPath = files.getLastByFilename("stderr").fullPath;
-      std::ifstream ifs(toString(stdErrPath).c_str());
-      std::string stdMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
-      ifs.close();
-      m_advancedOutput = toQString(stdMessage);
+
+      m_advancedOutput = "";
+
+      QFile file(toQString(stdErrPath));
+      if (file.open(QFile::ReadOnly))
+      {
+        QTextStream docIn(&file);
+        m_advancedOutput = docIn.readAll();
+        file.close();
+      }
+
       m_advancedOutput += QString("\n");
     }catch(std::exception&){
     }
@@ -482,14 +495,14 @@ void ApplyMeasureNowDialog::removeWorkingDir()
 
 DataPointJobHeaderView::DataPointJobHeaderView()
   : OSHeader(new HeaderToggleButton()),
-  m_name(0),
-  m_lastRunTime(0),
-  m_status(0),
-  m_na(0),
-  m_warnings(0),
-  m_errors(0)
+  m_name(nullptr),
+  m_lastRunTime(nullptr),
+  m_status(nullptr),
+  m_na(nullptr),
+  m_warnings(nullptr),
+  m_errors(nullptr)
 {
-  QHBoxLayout * mainHLayout = new QHBoxLayout();
+  auto mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(15,5,5,5);
   mainHLayout->setSpacing(5);
   mainHLayout->setAlignment(Qt::AlignLeft);
@@ -583,9 +596,9 @@ void DataPointJobHeaderView::setNumErrors(unsigned numErrors)
 
 DataPointJobContentView::DataPointJobContentView()
   : QWidget(),
-  m_textEdit(0)
+  m_textEdit(nullptr)
 {
-  QHBoxLayout* mainHLayout = new QHBoxLayout();
+  auto mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(15,5,5,5);
   mainHLayout->setSpacing(0);
   mainHLayout->setAlignment(Qt::AlignLeft);
@@ -655,8 +668,8 @@ void DataPointJobContentView::addStdErrorMessage(const std::string& message)
 
 DataPointJobItemView::DataPointJobItemView()
   : OSCollapsibleView(true),
-  m_dataPointJobHeaderView(0),
-  m_dataPointJobContentView(0)
+  m_dataPointJobHeaderView(nullptr),
+  m_dataPointJobContentView(nullptr)
 {
   setStyleSheet("openstudio--pat--DataPointJobItemView { background: #C3C3C3; margin-left:10px; }");
 

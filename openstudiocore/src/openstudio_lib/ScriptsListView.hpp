@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -47,7 +47,7 @@ class ScriptsVectorController : public OSVectorController {
 
   virtual ~ScriptsVectorController();
 
-  virtual std::vector<OSItemId> makeVector();
+  virtual std::vector<OSItemId> makeVector() override;
 
   void updateData();
 
@@ -71,7 +71,7 @@ class ScriptsListView : public OSItemList {
       bool draggable,
       bool removeable,
       const std::shared_ptr<QFileSystemWatcher> &fswatcher = std::shared_ptr<QFileSystemWatcher>(new QFileSystemWatcher()),
-      QWidget* parent = 0);
+      QWidget* parent = nullptr);
 
   virtual ~ScriptsListView() {}
 

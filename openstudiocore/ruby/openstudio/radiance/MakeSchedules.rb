@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -44,7 +44,7 @@ require 'ostruct'
 
 if ARGV.length < 2
   puts "Usage: ruby MakeSchedules.rb 'C:\\path\\to\\model.osm' 'C:\\path\\to\\eplusout.sql'"
-  exit -1
+  exit false
 end
 
 modelPath = OpenStudio::Path.new(ARGV[0])

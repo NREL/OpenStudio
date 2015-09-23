@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@ public:
 
   CollapsibleInspector(QString text,
     QWidget * inspector,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
 
   virtual ~CollapsibleInspector() {}
 
@@ -63,15 +63,15 @@ class CollapsibleInspectorHeader : public QAbstractButton
 public:
 
   CollapsibleInspectorHeader(QString text,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
 
   void setChecked(bool isChecked);
 
 protected:
 
-  void paintEvent(QPaintEvent * event);
+  void paintEvent(QPaintEvent * event) override;
 
-  QSize sizeHint() const;
+  QSize sizeHint() const override;
 
 private:
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -204,8 +204,8 @@ namespace detail {
 
     /** Sets the field at index to q, if possible. Returns false if the units of q cannot be converted
      *  to getUnits(index). */
-    bool setQuantity (unsigned index, const Quantity q);
-    bool setQuantity (unsigned index, const Quantity q, bool checkValidity);
+    bool setQuantity (unsigned index, const Quantity& q);
+    bool setQuantity (unsigned index, const Quantity& q, bool checkValidity);
 
     /** Sets the field at index to value, if possible. Returns false if the value cannot be set for
      *  any reasons. (Perhaps index >= numFields(), the field is not IntegerType, or the value is out 
@@ -404,7 +404,7 @@ namespace detail {
 
     virtual OSOptionalQuantity getQuantityFromDouble(unsigned index, boost::optional<double> value, bool returnIP) const;
     
-    virtual boost::optional<double> getDoubleFromQuantity(unsigned index, Quantity q) const;
+    virtual boost::optional<double> getDoubleFromQuantity(unsigned index, const Quantity& q) const;
 
     // QUERY HELPERS
 

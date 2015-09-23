@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ namespace detail {
 
   /** ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACTerminalUnitVariableRefrigerantFlow.*/
   class MODEL_API ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl : public ZoneHVACComponent_Impl {
-    Q_OBJECT;
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -59,11 +59,11 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
     //@}
     /** @name Getters */
@@ -159,9 +159,9 @@ namespace detail {
     /** @name Other */
     //@{
 
-    unsigned inletPort() const;
+    unsigned inletPort() const override;
 
-    unsigned outletPort() const;
+    unsigned outletPort() const override;
 
     bool setSupplyAirFan(const HVACComponent & component);
 
@@ -169,9 +169,9 @@ namespace detail {
 
     bool setHeatingCoil(const CoilHeatingDXVariableRefrigerantFlow & component);
 
-    ModelObject clone(Model model) const;
+    ModelObject clone(Model model) const override;
 
-    std::vector<ModelObject> children() const;
+    std::vector<ModelObject> children() const override;
 
     //@}
    protected:

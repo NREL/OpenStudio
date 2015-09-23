@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -60,7 +60,7 @@ class RunTabController : public MainTabController
  signals:
     void resultsGenerated(const openstudio::path &t_sqlFile, const openstudio::path &t_radianceOutputFile);
     void toolsUpdated();
-    void useRadianceStateChanged(bool);
+    //void useRadianceStateChanged(bool);
 
 
  public slots:

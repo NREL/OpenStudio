@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -58,6 +58,8 @@ class MODEL_API CoilHeatingGas : public StraightComponent {
   explicit CoilHeatingGas(const Model& model,
                           Schedule& schedule);
 
+  explicit CoilHeatingGas(const Model& model);
+
   virtual ~CoilHeatingGas() {}
 
   //@}
@@ -80,19 +82,19 @@ class MODEL_API CoilHeatingGas : public StraightComponent {
   bool setAvailableSchedule(Schedule& schedule);
 
   /** Returns the value of the GasBurnerEfficiency field. **/
-  double gasBurnerEfficiency();
+  double gasBurnerEfficiency() const;
 
   /** Sets the value of the GasBurnerEfficiency field. **/
   void setGasBurnerEfficiency(double value);
 
   /** Returns the value of the ParasiticElectricLoad field. **/
-  double parasiticElectricLoad();
+  double parasiticElectricLoad() const;
 
   /** Sets the value of the ParasiticElectricLoad field. **/
   void setParasiticElectricLoad(double value);
 
   /** Returns the value of the ParasiticGasLoad field. **/
-  double parasiticGasLoad();
+  double parasiticGasLoad() const;
 
   /** Sets the value of the ParasiticGasLoad field. **/
   void setParasiticGasLoad(double value);

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -149,7 +149,7 @@ public slots:
 
 protected:
 
-  void paintEvent(QPaintEvent * e);
+  void paintEvent(QPaintEvent * e) override;
 
 private:
 
@@ -245,7 +245,7 @@ public slots:
 
 protected:
 
-  void paintEvent(QPaintEvent * e);
+  void paintEvent(QPaintEvent * e) override;
 
 private:
 
@@ -258,6 +258,8 @@ private:
   double m_calibrationMaxNMBE;
   double m_calibrationMaxCVRMSE;
 };
+
+QString getListOfMeasures(const openstudio::analysis::DataPoint & dataPoint);
 
 }
 

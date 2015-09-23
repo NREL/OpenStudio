@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef CONTAM_PRJMODELIMPL_HPP
-#define CONTAM_PRJMODELIMPL_HPP
+#ifndef AIRFLOW_CONTAM_PRJMODELIMPL_HPP
+#define AIRFLOW_CONTAM_PRJMODELIMPL_HPP
 
 #include "PrjDefines.hpp"
 #include "PrjReader.hpp"
@@ -284,7 +284,7 @@ public:
   void setU_a(const int u_a);
 
   RunControl rc() const;
-  void setRc(const RunControl rc);
+  void setRc(const RunControl &rc);
 
   std::vector<int> contaminants();
   std::vector <Species> species() const;
@@ -569,4 +569,4 @@ template <class T> void IndexModelImpl::renumberVector(std::vector<T> &vector)
 } // contam
 } // openstudio
 
-#endif // CONTAM_PRJMODELIMPL_HPP
+#endif // AIRFLOW_CONTAM_PRJMODELIMPL_HPP

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -56,20 +56,37 @@ namespace openstudio{
     std::vector< std::vector<Point3d> > m_newPolygons2;
   };
 
-  /// removes spikes from a polygon, requires that all vertices are in counter clockwise order on the z = 0 plane (e.g. in face coordinates) 
+  /// removes spikes from a polygon, requires that all vertices are in clockwise order on the z = 0 plane (i.e. in face coordinates but reversed) 
   UTILITIES_API std::vector<Point3d> removeSpikes(const std::vector<Point3d>& polygon, double tol);
   
-  /// returns true if point is inside polygon, requires that all vertices are in counter clockwise order on the z = 0 plane (e.g. in face coordinates) 
+  /// returns true if point is inside polygon, requires that all vertices are in clockwise order on the z = 0 plane (i.e. in face coordinates but reversed) 
   UTILITIES_API bool pointInPolygon(const Point3d& point, const std::vector<Point3d>& polygon, double tol);
-  
-  /// compute the union of two overlapping polygons, requires that all vertices are in counter clockwise order on the z = 0 plane (e.g. in face coordinates) 
+
+  /// compute the union of two overlapping polygons, requires that all vertices are in clockwise order on the z = 0 plane (i.e. in face coordinates but reversed) 
   UTILITIES_API boost::optional<std::vector<Point3d> > join(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2, double tol);
   
-  /// compute the union of many polygons, requires that all vertices are in counter clockwise order on the z = 0 plane (e.g. in face coordinates) 
+  /// compute the union of many polygons, requires that all vertices are in clockwise order on the z = 0 plane (i.e. in face coordinates but reversed) 
   UTILITIES_API std::vector<std::vector<Point3d> > joinAll(const std::vector<std::vector<Point3d> >& polygons, double tol);
 
-  /// intersect two polygons, requires that all vertices are in counter clockwise order on the z = 0 plane (e.g. in face coordinates) 
+  /// intersect two polygons, requires that all vertices are in clockwise order on the z = 0 plane (i.e. in face coordinates but reversed) 
   UTILITIES_API boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2, double tol);
+  
+  /// subtract all holes from polygon, requires that all vertices are in clockwise order on the z = 0 plane (i.e. in face coordinates but reversed) 
+  UTILITIES_API std::vector<std::vector<Point3d> > subtract(const std::vector<Point3d>& polygon, const std::vector<std::vector<Point3d> >& holes, double tol);
+
+  /// returns true polygon intersects iteself, requires that all vertices are in clockwise order on the z = 0 plane (i.e. in face coordinates but reversed) 
+  /// returns false if polygon has less than three vertices
+  UTILITIES_API bool selfIntersects(const std::vector<Point3d>& polygon, double tol);
+
+  /// returns true if polygon1 intersects polygon2, requires that all vertices are in clockwise order on the z = 0 plane (i.e. in face coordinates but reversed) 
+  /// returns false if either polygon has less than three vertices
+  UTILITIES_API bool intersects(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2, double tol);
+
+  /// returns true if geometry1 is completely within polygon2, requires that all vertices are in clockwise order on the z = 0 plane (i.e. in face coordinates but reversed) 
+  /// geometry1 can be a point or a polygon 
+  /// currently only tests that all points of geometry1 are within polygon2, better support when upgrade to boost 1.57
+  UTILITIES_API bool within(const Point3d& point1, const std::vector<Point3d>& polygon2, double tol);
+  UTILITIES_API bool within(const std::vector<Point3d>& geometry1, const std::vector<Point3d>& polygon2, double tol);
 
 } // openstudio
 

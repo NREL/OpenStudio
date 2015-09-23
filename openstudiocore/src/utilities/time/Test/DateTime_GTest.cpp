@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -105,7 +105,7 @@ TEST(DateTime, StringConstructor)
 
 TEST(DateTime, TMConstructor)
 {
-  time_t t = time(0);
+  time_t t = time(nullptr);
   tm* lt = localtime(&t);
   DateTime zd(*lt);
 

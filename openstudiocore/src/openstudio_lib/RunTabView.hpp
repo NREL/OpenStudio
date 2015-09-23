@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -52,9 +52,9 @@ namespace openstudio {
 
       RunListModel( RunView * runView );
 
-      int rowCount( const QModelIndex & parent = QModelIndex() ) const;
+      int rowCount( const QModelIndex & parent = QModelIndex() ) const override;
 
-      QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
+      QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const override;
 
       bool removeRows(int row, int count);
 
@@ -105,7 +105,7 @@ namespace openstudio {
     signals:
       void resultsGenerated(const openstudio::path &t_sqlFile, const openstudio::path &t_radianceResultsFile);
       void toolsUpdated();
-      void useRadianceStateChanged(bool);
+      //void useRadianceStateChanged(bool);
 
     public slots:
       void updateToolsWarnings();
@@ -115,18 +115,18 @@ namespace openstudio {
       void runManagerStatsChanged();
       void outputDataAdded(const openstudio::UUID &, const std::string &t_data);
       void treeChanged(const openstudio::UUID &t_uuid);
-      void on_radianceWarningsAndErrorsClicked(bool checked);
-      void on_radianceGroupClicked(int idx);
+      //void on_radianceWarningsAndErrorsClicked(bool checked);
+      //void on_radianceGroupClicked(int idx);
       void requestStartRunManager();
 
     private:
       REGISTER_LOGGER("openstudio::RunView");
       void runFinished(const openstudio::path &t_sqlFile, const openstudio::path &t_radianceOutputFile);
       static openstudio::runmanager::ToolVersion getRequiredEnergyPlusVersion();
-      void getRadiancePreRunWarningsAndErrors(std::vector<std::string> & warnings,
-                                              std::vector<std::string> & errors);
-      void showRadianceWarningsAndErrors(const std::vector<std::string> & warnings,
-                                         const std::vector<std::string> & errors);
+      //void getRadiancePreRunWarningsAndErrors(std::vector<std::string> & warnings,
+      //                                        std::vector<std::string> & errors);
+      //void showRadianceWarningsAndErrors(const std::vector<std::string> & warnings,
+      //                                   const std::vector<std::string> & errors);
       void locateEnergyPlus();
       void updateRunManagerStats(openstudio::runmanager::RunManager t_runManager);
 
@@ -146,11 +146,11 @@ namespace openstudio {
       model::Model m_model;
       QProgressBar * m_progressBar;
       QPlainTextEdit * m_outputWindow;
-      QButtonGroup * m_radianceGroup;
-      QRadioButton * m_radianceButton;
-      QRadioButton * m_energyPlusButton;
-      std::vector<std::string> m_radianceWarnings;
-      std::vector<std::string> m_radianceErrors;
+      //QButtonGroup * m_radianceGroup;
+      //QRadioButton * m_radianceButton;
+      //QRadioButton * m_energyPlusButton;
+      //std::vector<std::string> m_radianceWarnings;
+      //std::vector<std::string> m_radianceErrors;
       std::shared_ptr<RunListModel> m_runListModel;
       openstudio::path m_modelPath;
       openstudio::path m_tempFolder;
@@ -166,7 +166,7 @@ namespace openstudio {
     public:
 
       RunTabView(const model::Model & model,
-                  QWidget * parent = 0);
+                  QWidget * parent = nullptr);
 
       virtual ~RunTabView() {}
 

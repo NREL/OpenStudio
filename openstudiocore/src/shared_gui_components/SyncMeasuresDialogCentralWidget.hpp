@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -49,7 +49,7 @@ class SyncMeasuresDialogCentralWidget : public QWidget
 public:
   SyncMeasuresDialogCentralWidget(analysisdriver::SimpleProject * project,
     MeasureManager * measureManager,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
   virtual ~SyncMeasuresDialogCentralWidget() {}
 
   Component * checkedComponent() const;

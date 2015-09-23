@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -27,6 +27,9 @@
 
 #include <iomanip>
 
+#include <QFocusEvent>
+#include <QIntValidator>
+
 using openstudio::model::ModelObject;
 
 namespace openstudio {
@@ -37,6 +40,10 @@ OSUnsignedEdit2::OSUnsignedEdit2( QWidget * parent )
   this->setFixedWidth(90);
   this->setAcceptDrops(false);
   setEnabled(false);
+
+  m_intValidator = new QIntValidator();
+  m_intValidator->setBottom(0);
+  this->setValidator(m_intValidator);
 }
 
 void OSUnsignedEdit2::bind(model::ModelObject& modelObject,
@@ -173,6 +180,8 @@ void OSUnsignedEdit2::unbind() {
 }
 
 void OSUnsignedEdit2::onEditingFinished() {
+
+  emit inFocus(true, hasData());
 
   QString text = this->text();
   if (text.isEmpty() || m_text == text) return;
@@ -335,12 +344,44 @@ void OSUnsignedEdit2::setPrecision(const std::string& str) {
   }
 }
 
+void OSUnsignedEdit2::focusInEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason && m_hasClickFocus)
+  {
+    QString style("QLineEdit { background: #ffc627; }");
+    setStyleSheet(style);
+
+    emit inFocus(true, hasData());
+  }
+
+  QLineEdit::focusInEvent(e);
+}
+
+void OSUnsignedEdit2::focusOutEvent(QFocusEvent * e)
+{
+  if (e->reason() == Qt::MouseFocusReason && m_hasClickFocus)
+  {
+    QString style("QLineEdit { background: white; }");
+    setStyleSheet(style);
+
+    emit inFocus(false, false);
+  }
+
+  QLineEdit::focusOutEvent(e);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 OSUnsignedEdit::OSUnsignedEdit( QWidget * parent )
   : m_isScientific(false)
 {
   this->setFixedWidth(90);
   this->setAcceptDrops(false);
   setEnabled(false);
+
+  m_intValidator = new QIntValidator();
+  m_intValidator->setBottom(0);
+  this->setValidator(m_intValidator);
 }
 
 void OSUnsignedEdit::bind(model::ModelObject& modelObject,

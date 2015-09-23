@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -55,11 +55,11 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
     //@}
     /** @name Getters */
@@ -129,18 +129,20 @@ namespace detail {
     /** @name Other */
     //@{
 
-    unsigned inletPort();
-    unsigned outletPort();
+    unsigned inletPort() override;
+    unsigned outletPort() override;
     unsigned secondaryAirInletPort() const;
     boost::optional<Node> secondaryAirInletNode() const;
-    bool addToNode(Node & node);
-    std::vector<ModelObject> children() const;
-    ModelObject clone(Model model) const;
+    bool addToNode(Node & node) override;
+    std::vector<ModelObject> children() const override;
+    ModelObject clone(Model model) const override;
     void setFanAvailabilitySchedule(Schedule & schedule);
 
     // This is a non publlic method to draw recirculation air from a plenum
     // Use carefully.  Removing (or moving) plenum will leave model in invalid state
     bool setInducedAirPlenumZone(ThermalZone & thermalZone);
+
+    std::vector<IdfObject> remove() override;
 
     //@}
    protected:

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ public:
   Component(const BCLMeasure & bclMeasure,
     bool showAbridgedView = true,
     bool showCheckBox = true,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
   Component(const BCLSearchResult & bclSearchResult,
     bool showAbridgedView = true,
     bool showCheckBox = true,
@@ -59,7 +59,7 @@ public:
   void setChecked(bool checked);
   
 protected:
-  void paintEvent(QPaintEvent * event);
+  void paintEvent(QPaintEvent * event) override;
 
 private:
   void createAbridgedLayout();

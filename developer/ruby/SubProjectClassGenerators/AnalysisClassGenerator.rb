@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -96,7 +96,7 @@ class AnalysisClassGenerator < SubProjectClassGenerator
     
     result << "// TODO: Delete if this class is abstract.\n"
     result << @className << "::" << @className << "(const std::string& name)\n"
-    result << "  : " << @baseClassName << "(boost::shared_ptr<detail::" << @className << "_Impl>(\n"
+    result << "  : " << @baseClassName << "(std::shared_ptr<detail::" << @className << "_Impl>(\n"
     result << "        " << "new detail::" << @className << "_Impl(name)))\n"
     result << "{}\n\n"
     
@@ -111,7 +111,7 @@ class AnalysisClassGenerator < SubProjectClassGenerator
     
     buffer = "                          " + " " * @className.size
     
-    result << "  : " << @baseClassName << "(boost::shared_ptr<detail::" << @className << "_Impl>(\n"
+    result << "  : " << @baseClassName << "(std::shared_ptr<detail::" << @className << "_Impl>(\n"
     result << "        " << "new detail::" << @className << "_Impl(uuid,\n"
     result << buffer << "versionUUID,\n"
     result << buffer << "name,\n"

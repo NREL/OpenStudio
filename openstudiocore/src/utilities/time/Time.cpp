@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ namespace openstudio{
       result = static_cast<int>(floor(value));
     };
     return result;
-  };
+  }
 
   /// get current time of day
   Time Time::currentTime()
@@ -46,10 +46,9 @@ namespace openstudio{
   }
 
   /// Default constructor
-  Time::Time()
-  {
-    m_impl = ImplPtr(new ImplType(0, 0, 0, 0));
-  };
+  Time::Time() :
+    m_impl(ImplPtr(new ImplType(0, 0, 0, 0)))
+  {}
 
   /// Time from number of days, fractional values ok
   Time::Time(double fracDays)
@@ -64,7 +63,7 @@ namespace openstudio{
     int seconds = floor0(fracSeconds);
 
     m_impl = ImplPtr(new ImplType(hours, minutes, seconds, 0));
-  };
+  }
 
   /// Time from days, hours, minutes, seconds
   Time::Time(int days, int hours, int minutes, int seconds)
@@ -80,7 +79,7 @@ namespace openstudio{
       m_impl = ImplPtr(new ImplType(std::max(hours,0),std::max(minutes,0),std::max(seconds,0),0));
       *m_impl += negativeDuration;
     }
-  };
+  }
 
   Time::Time(const std::string& string)
   {
@@ -95,23 +94,22 @@ namespace openstudio{
   }
 
   /// copy constructor
-  Time::Time(const Time& other)
-  {
-    m_impl = ImplPtr(new ImplType(other.impl()));
-  };
+  Time::Time(const Time& other) :
+    m_impl(ImplPtr(new ImplType(other.impl())))
+  {}
 
   /// Time from impl 
   Time::Time(const ImplType& implType)
   {
     m_impl = ImplPtr(new ImplType(implType));
-  };
+  }
 
   /// assignment operator
   Time& Time::operator= (const Time& other)
   {
     m_impl = ImplPtr(new ImplType(other.impl()));
     return *this;
-  };
+  }
 
   /// addition operator
   Time Time::operator+ (const Time& time) const
@@ -119,14 +117,14 @@ namespace openstudio{
     Time result(*this);
     result += time;
     return result;
-  };
+  }
 
   /// assignment by addition operator
   Time& Time::operator+= (const Time& time)
   {
     (*m_impl)+= time.impl();
     return *this;
-  };
+  }
 
 
   std::string Time::toString() const
@@ -140,116 +138,116 @@ namespace openstudio{
     Time result(*this);
     result -= time;
     return result;
-  };
+  }
 
   /// assignment by difference operator
   Time& Time::operator-= (const Time& time)
   {
     (*m_impl)-= time.impl();
     return *this;
-  };
+  }
 
   /// multiplication operator
   Time Time::operator* (double mult) const
   {
     return Time(this->totalDays()*mult);
-  };
+  }
 
   /// division operator
   Time Time::operator/ (double div) const
   {
     return Time(this->totalDays()/div);
-  };
+  }
 
   /// equality operator
   bool Time::operator== (const Time& other) const
   {
     return totalSeconds() == other.totalSeconds();
-  };
+  }
 
   /// non-equality operator
   bool Time::operator!= (const Time& other) const
   {
     return totalSeconds() != other.totalSeconds();
-  };
+  }
 
   /// less than operator
   bool Time::operator< (const Time& rhs) const
   {
     return totalSeconds() < rhs.totalSeconds();
-  };
+  }
 
   /// less than equals operator
   bool Time::operator<= (const Time& rhs) const
   {
     return totalSeconds() <= rhs.totalSeconds();
-  };
+  }
 
   /// greater than operator
   bool Time::operator> (const Time& rhs) const
   { 
     return totalSeconds() > rhs.totalSeconds();
-  };
+  }
 
   /// greater than equals operator
   bool Time::operator>= (const Time& rhs) const
   {
     return totalSeconds() >= rhs.totalSeconds();
-  };
+  }
 
   /// whole number of days
   int Time::days() const
   {
     return floor0(totalDays());
-  };
+  }
 
   /// whole number of hours remaining after days
   int Time::hours() const
   {
     return (m_impl->hours() % 24);
-  };
+  }
 
   /// whole number of minutes remaining after hours
   int Time::minutes() const
   {
     return m_impl->minutes();
-  };
+  }
 
   /// whole number of seconds remaining after minutes
   int Time::seconds() const
   {
     return m_impl->seconds();
-  };
+  }
 
   /// entire time in days
   double Time::totalDays() const
   {
     return DAYS_PER_SECOND*totalSeconds();
-  };
+  }
 
   /// entire time in hours
   double Time::totalHours() const
   {
     return HOURS_PER_SECOND*totalSeconds();
-  };
+  }
 
   /// entire time in minutes
   double Time::totalMinutes() const
   {
     return MINUTES_PER_SECOND*totalSeconds();
-  };
+  }
 
   /// entire time in seconds
   int Time::totalSeconds() const
   {
     return m_impl->total_seconds();
-  };
+  }
 
   // reference to impl
   const Time::ImplType& Time::impl() const
   {
     return (*m_impl);
-  };
+  }
 
   // std::ostream operator<<
   std::ostream& operator<<(std::ostream& os, const Time& time)
@@ -265,6 +263,6 @@ namespace openstudio{
   bool TimeCompare::operator()(const Time& lhs, const Time& rhs) const
   {
     return lhs < rhs;
-  };
+  }
 
 } // openstudio

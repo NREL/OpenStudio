@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -142,6 +142,12 @@ class ANALYSISDRIVER_API SimpleProject {
       const openstudio::path& projectDir,
       const SimpleProjectOptions& options = SimpleProjectOptions(),
       bool ignoreExistingFiles = false);
+
+  /** Returns true if the directory contains an existing SimpleProject.*/
+  static bool isExistingSimpleProject(const openstudio::path& projectDir);
+
+  /** Returns true if the directory contains an existing SimpleProject and the project requires version translation.*/
+  static bool requiresUpdate(const openstudio::path& projectDir);
 
   //@}
   /** @name Getters and Queries */
@@ -401,6 +407,8 @@ class ANALYSISDRIVER_API SimpleProject {
 
   /// @endcond
  private:
+
+  static openstudio::path getProjectDatabasePath(const openstudio::path& projectDir);
 
   std::shared_ptr<detail::SimpleProject_Impl> m_impl;
 

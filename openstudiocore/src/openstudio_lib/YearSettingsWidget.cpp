@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -18,29 +18,31 @@
 **********************************************************************/
 
 #include "YearSettingsWidget.hpp"
+
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
-#include "../shared_gui_components/OSSwitch.hpp"
+
 #include "../shared_gui_components/OSComboBox.hpp"
-#include "../model/WeatherFile.hpp"
-#include "../model/WeatherFile_Impl.hpp"
+#include "../shared_gui_components/OSSwitch.hpp"
+
 #include "../model/RunPeriodControlDaylightSavingTime.hpp"
 #include "../model/RunPeriodControlDaylightSavingTime_Impl.hpp"
-#include "../utilities/time/Date.hpp"
+#include "../model/WeatherFile.hpp"
+#include "../model/WeatherFile_Impl.hpp"
+
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/filetypes/EpwFile.hpp"
-#include <QVBoxLayout>
-#include <QHBoxLayout>
+#include "../utilities/idd/IddEnums.hxx"
+#include "../utilities/time/Date.hpp"
+
+#include <QBoxLayout>
+#include <QButtonGroup>
+#include <QDateEdit>
+#include <QFrame>
 #include <QGridLayout>
 #include <QLabel>
-#include <QFrame>
-#include <QRadioButton>
-#include <QButtonGroup>
 #include <QPushButton>
-#include <QDateEdit>
 #include <QTimer>
-
-#include <utilities/idd/IddEnums.hxx>
 
 namespace openstudio {
 
@@ -55,7 +57,7 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
 {
   // Main Layout
 
-  QVBoxLayout * mainVLayout = new QVBoxLayout();
+  auto mainVLayout = new QVBoxLayout();
   mainVLayout->setContentsMargins(10,10,10,10);
   mainVLayout->setSpacing(10);
 
@@ -71,13 +73,13 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
   selectYearLabel->setObjectName("H2");
   mainVLayout->addWidget(selectYearLabel);
 
-  QGridLayout * yearGridLayout = new QGridLayout();
+  auto yearGridLayout = new QGridLayout();
   yearGridLayout->setContentsMargins(20,10,10,0);
   //yearGridLayout->setContentsMargins(20,10,10,0);
   yearGridLayout->setSpacing(10);
   mainVLayout->addLayout(yearGridLayout);
 
-  QButtonGroup * yearButtonGroup = new QButtonGroup(this);
+  auto yearButtonGroup = new QButtonGroup(this);
 
   m_calendarYearButton = new QRadioButton("Calendar Year",this);
   yearGridLayout->addWidget(m_calendarYearButton,0,0);
@@ -111,14 +113,14 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
 
   yearGridLayout->setColumnStretch(2,10);
 
-  QFrame * line1 = new QFrame();
+  auto line1 = new QFrame();
   line1->setFrameShape(QFrame::HLine);
   line1->setFrameShadow(QFrame::Sunken);
   mainVLayout->addWidget(line1);
 
   // DST
 
-  QHBoxLayout * dstHLayout1 = new QHBoxLayout();
+  auto dstHLayout1 = new QHBoxLayout();
   dstHLayout1->setContentsMargins(0,0,0,0);
   dstHLayout1->setSpacing(10);
 
@@ -133,7 +135,7 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
 
   mainVLayout->addLayout(dstHLayout1);
 
-  QGridLayout * dstGridLayout = new QGridLayout();
+  auto dstGridLayout = new QGridLayout();
   dstGridLayout->setContentsMargins(20,10,10,10);
   dstGridLayout->setSpacing(10);
   mainVLayout->addLayout(dstGridLayout);
@@ -144,7 +146,7 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
   startsLabel->setObjectName("H2");
   dstGridLayout->addWidget(startsLabel,0,0);
 
-  QButtonGroup * dstStartButtonGroup = new QButtonGroup(this);
+  auto dstStartButtonGroup = new QButtonGroup(this);
 
   m_dayOfWeekAndMonthStartButton = new QRadioButton("Define by Day of The Week And Month",this);
   dstStartButtonGroup->addButton(m_dayOfWeekAndMonthStartButton);
@@ -173,7 +175,7 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
   endsLabel->setObjectName("H2");
   dstGridLayout->addWidget(endsLabel,3,0);
 
-  QButtonGroup * dstEndButtonGroup = new QButtonGroup(this);
+  auto dstEndButtonGroup = new QButtonGroup(this);
 
   m_dayOfWeekAndMonthEndButton = new QRadioButton("Define by Day of The Week And Month",this);
   dstEndButtonGroup->addButton(m_dayOfWeekAndMonthEndButton);
@@ -204,7 +206,7 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
   std::vector<std::string> days = YearSettingsWidget::daysOfWeek();
   std::vector<std::string> months = YearSettingsWidget::months();
 
-  for( std::vector<std::string>::iterator it = weeks.begin();
+  for( auto it = weeks.begin();
        it < weeks.end();
        ++it )
   {
@@ -212,7 +214,7 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
     m_endWeekBox->addItem(QString::fromStdString(*it));
   }
 
-  for( std::vector<std::string>::iterator it = days.begin();
+  for( auto it = days.begin();
        it < days.end();
        ++it )
   {
@@ -220,7 +222,7 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
     m_endDayBox->addItem(QString::fromStdString(*it));
   }
 
-  for( std::vector<std::string>::iterator it = months.begin();
+  for( auto it = months.begin();
        it < months.end();
        ++it )
   {
@@ -270,6 +272,15 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
   connect(m_endMonthBox, static_cast<void (OSComboBox::*)(const QString &)>(&OSComboBox::currentIndexChanged),
     this, &YearSettingsWidget::onDstEndDayWeekMonthChanged);
   connect(m_endDateEdit, &QDateEdit::dateChanged, this, &YearSettingsWidget::dstEndDateChanged);
+}
+
+bool YearSettingsWidget::calendarYearChecked() {
+  if (m_calendarYearButton) {
+    return m_calendarYearButton->isChecked();
+  }
+  else {
+    return false;
+  }
 }
 
 void YearSettingsWidget::onWorkspaceObjectAdd(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wo)
@@ -556,7 +567,7 @@ std::vector<std::string> YearSettingsWidget::daysOfWeek()
 
   std::map<int, std::string> nameMap = DayOfWeek::getNames();
 
-  for( std::map<int, std::string>::iterator it = nameMap.begin();
+  for( auto it = nameMap.begin();
        it != nameMap.end();
        ++it )
   {
@@ -572,7 +583,7 @@ std::vector<std::string> YearSettingsWidget::months()
 
   std::map<int, std::string> nameMap = MonthOfYear::getDescriptions();
 
-  for( std::map<int, std::string>::iterator it = nameMap.begin();
+  for( auto it = nameMap.begin();
        it != nameMap.end();
        ++it )
   {

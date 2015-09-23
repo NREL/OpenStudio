@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -21,9 +21,6 @@
 #include "SetpointManagerWarmest_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
-#include "AirLoopHVAC.hpp"
-#include "AirLoopHVACOutdoorAirSystem.hpp"
-#include "Model.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
 #include <utilities/idd/OS_SetpointManager_Warmest_FieldEnums.hxx>
