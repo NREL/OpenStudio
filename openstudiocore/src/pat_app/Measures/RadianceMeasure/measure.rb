@@ -239,8 +239,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             # If this is an always-run Measure, need to check for file in different path
             alt_weath_path = File.expand_path(File.join(File.dirname(__FILE__), "../../../resources"))
             alt_epw_path = File.expand_path(File.join(alt_weath_path, test.get.to_s))
+            server_epw_path = File.expand_path(File.join(File.dirname(__FILE__), "../../weather/#{File.basename(test.get.to_s)}"))
             if File.exist?(alt_epw_path)
               epw_path = OpenStudio::Path.new(alt_epw_path)
+            elsif File.exist? server_epw_path
+              epw_path = OpenStudio::Path.new(server_epw_path)
             else
               runner.registerError("Model has been assigned a weather file, but the file is not in the specified location of '#{test.get}'.")
               return false
@@ -285,7 +288,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     OpenStudio::makeParentFolder(runDir, OpenStudio::Path.new(), true)
     puts "Creating workflow"
     
-    jobtree = workflow.create(OpenStudio::system_complete(runDir), OpenStudio::system_complete(modelPath), OpenStudio::Path.new(runner.lastEpwFilePath.get))
+    jobtree = workflow.create(OpenStudio::system_complete(runDir), OpenStudio::system_complete(modelPath), OpenStudio::Path.new(epw_path))
     runmanager.enqueue(jobtree, true)
     #runmanager.getJobs.each {|job| job.setBasePath(resourcePath)} # DLM: need to be able to get this from runner
     puts "Running jobs in #{runDir}"
