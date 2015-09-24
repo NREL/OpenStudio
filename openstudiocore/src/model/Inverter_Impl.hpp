@@ -62,7 +62,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    virtual bool setThermalZone(const boost::optional<ThermalZone>& thermalZone) = 0;
+    virtual bool setThermalZone(const ThermalZone& thermalZone) = 0;
 
     virtual void resetThermalZone() = 0;
 

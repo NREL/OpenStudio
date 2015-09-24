@@ -115,16 +115,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool ElectricLoadCenterInverterSimple_Impl::setThermalZone(const boost::optional<ThermalZone>& thermalZone) {
-    bool result(false);
-    if (thermalZone) {
-      result = setPointer(OS_ElectricLoadCenter_Inverter_SimpleFields::ZoneName, thermalZone.get().handle());
-    }
-    else {
-      resetThermalZone();
-      result = true;
-    }
-    return result;
+  bool ElectricLoadCenterInverterSimple_Impl::setThermalZone(const ThermalZone& thermalZone) {
+    return setPointer(OS_ElectricLoadCenter_Inverter_SimpleFields::ZoneName, thermalZone.handle());
   }
 
   void ElectricLoadCenterInverterSimple_Impl::resetThermalZone() {

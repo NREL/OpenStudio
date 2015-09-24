@@ -97,7 +97,7 @@ namespace detail {
 
     void resetAvailabilitySchedule();
 
-    virtual bool setThermalZone(const boost::optional<ThermalZone>& thermalZone) override;
+    virtual bool setThermalZone(const ThermalZone& thermalZone) override;
 
     virtual void resetThermalZone() override;
 
