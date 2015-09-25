@@ -22,14 +22,47 @@
 #include "ModelFixture.hpp"
 
 #include "../PhotovoltaicPerformanceSimple.hpp"
-#include "../PhotovoltaicPerformanceSimple_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../ScheduleCompact.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture, PhotovoltaicPerformanceSimple_Instantiate) {
+  auto result = false;
+  auto value = 0.1;
+
   Model model;
-  // TODO: Check constructor.
+
   PhotovoltaicPerformanceSimple photovoltaicPerformanceSimple(model);
+  
+  EXPECT_EQ(photovoltaicPerformanceSimple.fractionOfSurfaceAreaWithActiveSolarCells(),0.89);
+  EXPECT_TRUE(photovoltaicPerformanceSimple.isfractionOfSurfaceAreaWithActiveSolarCellsDefaulted());
+  result = photovoltaicPerformanceSimple.setFractionOfSurfaceAreaWithActiveSolarCells(value);
+  EXPECT_TRUE(result);
+  EXPECT_TRUE(photovoltaicPerformanceSimple.fractionOfSurfaceAreaWithActiveSolarCells());
+  EXPECT_EQ(photovoltaicPerformanceSimple.fractionOfSurfaceAreaWithActiveSolarCells(), value);
+  photovoltaicPerformanceSimple.resetFractionOfSurfaceAreaWithActiveSolarCells();
+  EXPECT_EQ(photovoltaicPerformanceSimple.fractionOfSurfaceAreaWithActiveSolarCells(), 0.89);
+
+  boost::optional<std::string> mode = photovoltaicPerformanceSimple.conversionEfficiencyInputMode();
+  EXPECT_FALSE(mode);
+
+  EXPECT_FALSE(photovoltaicPerformanceSimple.fixedEfficiency());
+  result = photovoltaicPerformanceSimple.setFixedEfficiency(value);
+  EXPECT_TRUE(result);
+  EXPECT_TRUE(photovoltaicPerformanceSimple.fixedEfficiency());
+  EXPECT_EQ(photovoltaicPerformanceSimple.fixedEfficiency().get(), value);
+  photovoltaicPerformanceSimple.resetValueforCellEfficiencyifFixed();
+  EXPECT_FALSE(photovoltaicPerformanceSimple.fixedEfficiency());
+
+  EXPECT_FALSE(photovoltaicPerformanceSimple.efficiencySchedule());
+  ScheduleCompact scheduleCompact(model);
+  result = photovoltaicPerformanceSimple.setEfficiencySchedule(scheduleCompact);
+  EXPECT_TRUE(result);
+  EXPECT_TRUE(photovoltaicPerformanceSimple.efficiencySchedule());
+  photovoltaicPerformanceSimple.resetEfficiencySchedule();
+  EXPECT_FALSE(photovoltaicPerformanceSimple.efficiencySchedule());
+
 }
 
