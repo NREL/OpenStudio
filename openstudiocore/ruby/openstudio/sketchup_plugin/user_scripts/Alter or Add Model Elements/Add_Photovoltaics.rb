@@ -57,10 +57,10 @@ class AddPhotovoltaics < OpenStudio::Ruleset::ModelUserScript
     result << fraction_area
     
     efficiency = OpenStudio::Ruleset::OSArgument::makeDoubleArgument("efficiency", true)
-    efficiency.setDisplayName("Fixed Efficiency.")
+    efficiency.setDisplayName("Fixed Cell Efficiency.")
     efficiency.setDefaultValue(0.2)
     result << efficiency
-    
+
     return result
   end
   
@@ -81,6 +81,7 @@ class AddPhotovoltaics < OpenStudio::Ruleset::ModelUserScript
     else
       elcd = OpenStudio::Model::ElectricLoadCenterDistribution.new(model)
       inverter = OpenStudio::Model::ElectricLoadCenterInverterSimple.new(model)
+      inverter.setInverterEfficiency(0.98)
       elcd.setInverter(inverter)
     end
     
