@@ -23,6 +23,8 @@
 #include "../SolarCollectorFlatPlatePhotovoltaicThermal_Impl.hpp"
 #include "../SolarCollectorPerformancePhotovoltaicThermalSimple.hpp"
 #include "../SolarCollectorPerformancePhotovoltaicThermalSimple_Impl.hpp"
+#include "../GeneratorPhotovoltaic.hpp"
+#include "../PhotovoltaicPerformanceSimple.hpp"
 #include "../Surface.hpp"
 #include "../ShadingSurface.hpp"
 #include "../Schedule.hpp"
@@ -124,11 +126,80 @@ TEST_F(ModelFixture, SolarCollectorFlatPlatePhotovoltaicThermal_addToNode) {
 }
 
 
+TEST_F(ModelFixture, SolarCollectorFlatPlatePhotovoltaicThermal_SetPerformance) {
+  {
+    Model model;
+
+    SolarCollectorFlatPlatePhotovoltaicThermal collector(model);
+    EXPECT_EQ(1u, model.getObjectsByType(SolarCollectorFlatPlatePhotovoltaicThermal::iddObjectType()).size());
+    EXPECT_EQ(1u, model.getObjectsByType(SolarCollectorPerformancePhotovoltaicThermalSimple::iddObjectType()).size());
+    EXPECT_NO_THROW(collector.solarCollectorPerformance());
+
+    collector.setSolarCollectorPerformance(collector.solarCollectorPerformance());
+    EXPECT_EQ(1u, model.getObjectsByType(SolarCollectorFlatPlatePhotovoltaicThermal::iddObjectType()).size());
+    EXPECT_EQ(1u, model.getObjectsByType(SolarCollectorPerformancePhotovoltaicThermalSimple::iddObjectType()).size());
+    EXPECT_NO_THROW(collector.solarCollectorPerformance());
+  }
+  {
+    Model model;
+
+    SolarCollectorFlatPlatePhotovoltaicThermal collector(model);
+    SolarCollectorFlatPlatePhotovoltaicThermal collector2(model);
+    EXPECT_EQ(2u, model.getObjectsByType(SolarCollectorFlatPlatePhotovoltaicThermal::iddObjectType()).size());
+    EXPECT_EQ(2u, model.getObjectsByType(SolarCollectorPerformancePhotovoltaicThermalSimple::iddObjectType()).size());
+    EXPECT_NO_THROW(collector.solarCollectorPerformance());
+    EXPECT_NO_THROW(collector2.solarCollectorPerformance());
+
+    collector.setSolarCollectorPerformance(collector2.solarCollectorPerformance());
+    EXPECT_EQ(2u, model.getObjectsByType(SolarCollectorFlatPlatePhotovoltaicThermal::iddObjectType()).size());
+    EXPECT_EQ(2u, model.getObjectsByType(SolarCollectorPerformancePhotovoltaicThermalSimple::iddObjectType()).size());
+    EXPECT_NO_THROW(collector.solarCollectorPerformance());
+    EXPECT_NO_THROW(collector2.solarCollectorPerformance());
+    EXPECT_NE(collector.solarCollectorPerformance().handle(), collector2.solarCollectorPerformance().handle());
+  }
+}
+
+TEST_F(ModelFixture, SolarCollectorFlatPlatePhotovoltaicThermal_PV) {
+  Model model;
+
+  SolarCollectorFlatPlatePhotovoltaicThermal collector(model);
+  SolarCollectorPerformancePhotovoltaicThermalSimple performance = collector.solarCollectorPerformance();
+
+  EXPECT_FALSE(collector.generatorPhotovoltaic());
+
+  GeneratorPhotovoltaic pv = GeneratorPhotovoltaic::simple(model);
+  EXPECT_TRUE(collector.setGeneratorPhotovoltaic(pv));
+  ASSERT_TRUE(collector.generatorPhotovoltaic());
+
+  collector.remove();
+
+  EXPECT_EQ(0u, model.getObjectsByType(SolarCollectorFlatPlatePhotovoltaicThermal::iddObjectType()).size());
+  EXPECT_EQ(0u, model.getObjectsByType(SolarCollectorPerformancePhotovoltaicThermalSimple::iddObjectType()).size());
+  EXPECT_EQ(1u, model.getObjectsByType(GeneratorPhotovoltaic::iddObjectType()).size());
+  EXPECT_EQ(1u, model.getObjectsByType(PhotovoltaicPerformanceSimple::iddObjectType()).size());
+
+}
+
+
 TEST_F(ModelFixture, SolarCollectorFlatPlatePhotovoltaicThermal_Clone) {
   {
     Model model;
     SolarCollectorFlatPlatePhotovoltaicThermal collector(model);
     SolarCollectorPerformancePhotovoltaicThermalSimple performance = collector.solarCollectorPerformance();
+
+    GeneratorPhotovoltaic pv = GeneratorPhotovoltaic::simple(model);
+    EXPECT_TRUE(collector.setGeneratorPhotovoltaic(pv));
+
+    Point3dVector points;
+    points.push_back(Point3d(0, 1, 0));
+    points.push_back(Point3d(0, 0, 0));
+    points.push_back(Point3d(1, 0, 0));
+    points.push_back(Point3d(1, 1, 0));
+
+    ShadingSurface shadingSurface(points, model);
+
+    EXPECT_TRUE(collector.setSurface(shadingSurface));
+    EXPECT_TRUE(pv.setSurface(shadingSurface));
 
     ModelObject clone = collector.clone(model);
     ASSERT_TRUE(clone.optionalCast<SolarCollectorFlatPlatePhotovoltaicThermal>());
@@ -137,11 +208,38 @@ TEST_F(ModelFixture, SolarCollectorFlatPlatePhotovoltaicThermal_Clone) {
 
     EXPECT_NE(collector.handle(), collector2.handle());
     EXPECT_NE(performance.handle(), performance2.handle());
+    EXPECT_FALSE(collector2.surface());
+
+    boost::optional<GeneratorPhotovoltaic> pv2 = collector2.generatorPhotovoltaic();
+    ASSERT_TRUE(pv2);
+    EXPECT_NE(pv.handle(), pv2->handle());
+    EXPECT_NE(pv.photovoltaicPerformance().handle(), pv2->photovoltaicPerformance().handle());
+    EXPECT_FALSE(pv2->surface());
+
+    EXPECT_EQ(2u, model.getObjectsByType(SolarCollectorFlatPlatePhotovoltaicThermal::iddObjectType()).size());
+    EXPECT_EQ(2u, model.getObjectsByType(SolarCollectorPerformancePhotovoltaicThermalSimple::iddObjectType()).size());
+    EXPECT_EQ(2u, model.getObjectsByType(GeneratorPhotovoltaic::iddObjectType()).size());
+    EXPECT_EQ(2u, model.getObjectsByType(PhotovoltaicPerformanceSimple::iddObjectType()).size());
+    EXPECT_EQ(1u, model.getObjectsByType(ShadingSurface::iddObjectType()).size());
   }
   {
     Model model;
     SolarCollectorFlatPlatePhotovoltaicThermal collector(model);
     SolarCollectorPerformancePhotovoltaicThermalSimple performance = collector.solarCollectorPerformance();
+
+    GeneratorPhotovoltaic pv = GeneratorPhotovoltaic::simple(model);
+    EXPECT_TRUE(collector.setGeneratorPhotovoltaic(pv));
+
+    Point3dVector points;
+    points.push_back(Point3d(0, 1, 0));
+    points.push_back(Point3d(0, 0, 0));
+    points.push_back(Point3d(1, 0, 0));
+    points.push_back(Point3d(1, 1, 0));
+
+    ShadingSurface shadingSurface(points, model);
+
+    EXPECT_TRUE(collector.setSurface(shadingSurface));
+    EXPECT_TRUE(pv.setSurface(shadingSurface));
 
     Model model2;
     ModelObject clone = collector.clone(model2);
@@ -151,5 +249,18 @@ TEST_F(ModelFixture, SolarCollectorFlatPlatePhotovoltaicThermal_Clone) {
 
     EXPECT_NE(collector.handle(), collector2.handle());
     EXPECT_NE(performance.handle(), performance2.handle());
+    EXPECT_FALSE(collector2.surface());
+
+    boost::optional<GeneratorPhotovoltaic> pv2 = collector2.generatorPhotovoltaic();
+    ASSERT_TRUE(pv2);
+    EXPECT_NE(pv.handle(), pv2->handle());
+    EXPECT_NE(pv.photovoltaicPerformance().handle(), pv2->photovoltaicPerformance().handle());
+    EXPECT_FALSE(pv2->surface());
+
+    EXPECT_EQ(1u, model2.getObjectsByType(SolarCollectorFlatPlatePhotovoltaicThermal::iddObjectType()).size());
+    EXPECT_EQ(1u, model2.getObjectsByType(SolarCollectorPerformancePhotovoltaicThermalSimple::iddObjectType()).size());
+    EXPECT_EQ(1u, model2.getObjectsByType(GeneratorPhotovoltaic::iddObjectType()).size());
+    EXPECT_EQ(1u, model2.getObjectsByType(PhotovoltaicPerformanceSimple::iddObjectType()).size());
+    EXPECT_EQ(0u, model2.getObjectsByType(ShadingSurface::iddObjectType()).size());
   }
 }

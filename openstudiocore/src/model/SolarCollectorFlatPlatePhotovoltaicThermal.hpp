@@ -28,6 +28,7 @@ namespace openstudio {
 namespace model {
 
 class PlanarSurface;
+class GeneratorPhotovoltaic;
 class SolarCollectorPerformancePhotovoltaicThermalSimple;
 
 namespace detail {
@@ -57,8 +58,7 @@ class MODEL_API SolarCollectorFlatPlatePhotovoltaicThermal : public StraightComp
 
   boost::optional<PlanarSurface> surface() const;
 
-  // TODO:
-  //boost::optional<PVGenerator> photovoltaic() const;
+  boost::optional<GeneratorPhotovoltaic> generatorPhotovoltaic() const;
 
   boost::optional<double> designFlowRate() const;
 
@@ -78,9 +78,9 @@ class MODEL_API SolarCollectorFlatPlatePhotovoltaicThermal : public StraightComp
 
   void resetSurface();
 
-  // TODO: 
-  //bool setPhotovoltaic(const PVGenerator& pVGenerator);
-  //void resetPhotovoltaic();
+  bool setGeneratorPhotovoltaic(const GeneratorPhotovoltaic& generatorPhotovoltaic);
+
+  void resetGeneratorPhotovoltaic();
 
   bool setDesignFlowRate(double designFlowRate);
 

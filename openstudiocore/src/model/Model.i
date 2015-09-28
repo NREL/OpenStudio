@@ -11,6 +11,7 @@
     from openstudiomodelgeometry import *
     from openstudiomodelhvac import *
     from openstudiomodelrefrigeration import *
+    from openstudiomodelgenerators import *
   %}
 
 #endif
@@ -24,5 +25,6 @@
 %import <model/ModelGeometry.i>
 %import <model/ModelHVAC.i>
 %import <model/ModelRefrigeration.i>
+%import <model/ModelGenerators.i>
 
 #endif //MODEL_I 
