@@ -92,6 +92,10 @@ namespace detail {
 
     void resetEfficiencySchedule();
 
+    void setFixedEfficiencyInputMode();
+
+    void setScheduleEfficiencyInputMode();
+
     //@}
     /** @name Other */
     //@{

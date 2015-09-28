@@ -137,6 +137,9 @@ namespace detail {
       resetValueforCellEfficiencyifFixed();
       result = true;
     }
+    if (result) {
+      setFixedEfficiencyInputMode();
+    }
     return result;
   }
 
@@ -150,11 +153,25 @@ namespace detail {
                               "PhotovoltaicPerformanceSimple",
                               "Efficiency",
                               schedule);
+    if (result) {
+      setScheduleEfficiencyInputMode();
+    }
     return result;
   }
 
   void PhotovoltaicPerformanceSimple_Impl::resetEfficiencySchedule() {
     bool result = setString(OS_PhotovoltaicPerformance_SimpleFields::EfficiencyScheduleName, "");
+    OS_ASSERT(result);
+    setScheduleEfficiencyInputMode();
+  }
+
+  void PhotovoltaicPerformanceSimple_Impl::setFixedEfficiencyInputMode() {
+    bool result = setString(OS_PhotovoltaicPerformance_SimpleFields::ConversionEfficiencyInputMode, "Fixed");
+    OS_ASSERT(result);
+  }
+
+  void PhotovoltaicPerformanceSimple_Impl::setScheduleEfficiencyInputMode() {
+    bool result = setString(OS_PhotovoltaicPerformance_SimpleFields::ConversionEfficiencyInputMode, "Scheduled");
     OS_ASSERT(result);
   }
 
@@ -164,6 +181,7 @@ PhotovoltaicPerformanceSimple::PhotovoltaicPerformanceSimple(const Model& model)
   : PhotovoltaicPerformance(PhotovoltaicPerformanceSimple::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::PhotovoltaicPerformanceSimple_Impl>());
+  getImpl<detail::PhotovoltaicPerformanceSimple_Impl>()->setFixedEfficiencyInputMode();
 
   // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
