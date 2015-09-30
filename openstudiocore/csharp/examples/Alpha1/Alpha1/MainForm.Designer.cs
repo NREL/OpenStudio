@@ -1,4 +1,4 @@
-﻿namespace Alpha1
+namespace Alpha1
 {
     partial class MainForm
     {

@@ -1,4 +1,4 @@
-﻿namespace RunManagerExample
+namespace RunManagerExample
 {
     partial class MainForm
     {
