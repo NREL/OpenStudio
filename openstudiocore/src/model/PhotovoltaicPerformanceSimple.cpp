@@ -162,7 +162,7 @@ namespace detail {
   void PhotovoltaicPerformanceSimple_Impl::resetEfficiencySchedule() {
     bool result = setString(OS_PhotovoltaicPerformance_SimpleFields::EfficiencyScheduleName, "");
     OS_ASSERT(result);
-    setScheduleEfficiencyInputMode();
+    setFixedEfficiencyInputMode();
   }
 
   void PhotovoltaicPerformanceSimple_Impl::setFixedEfficiencyInputMode() {
