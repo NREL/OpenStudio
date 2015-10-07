@@ -18,12 +18,16 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
   # human readable description
   def description
-    return "This measure uses Radiance instead of EnergyPlus for daylighting calculations with OpenStudio."
+    return "This measure uses Radiance instead of EnergyPlus for daylighting calculations with \
+    OpenStudio."
   end
 
   # human readable description of modeling approach
   def modeler_description
-    return "The OpenStudio model is converted to Radiance format. All spaces containing daylighting objects (illuminance map, daylighting control point, and optionally glare sensors) will have annual illuminance calculated using Radiance, and the OS mole's lighting schedules can be overwritten with those based on daylight responsive lighting controls."
+    return "The OpenStudio model is converted to Radiance format. All spaces containing \
+    daylighting objects (illuminance map, daylighting control point, and optionally glare sensors) \
+    will have annual illuminance calculated using Radiance, and the OS mole's lighting schedules \
+    can be overwritten with those based on daylight responsive lighting controls."
   end
 
   # define the arguments that the user will input
@@ -33,10 +37,12 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     chs = OpenStudio::StringVector.new
     chs << 'Yes'
     chs << 'No'
-    apply_schedules = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('apply_schedules', chs, true)
+    apply_schedules = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('apply_schedules', chs, \
+    true)
     apply_schedules.setDisplayName('Apply schedules')
     apply_schedules.setDefaultValue('Yes')
-    apply_schedules.setDescription('Replace lighting and shading control schedules with schedules computed by Radiance')
+    apply_schedules.setDescription('Replace lighting and shading control schedules with schedules \
+    computed by Radiance')
     args << apply_schedules
     
     chs = OpenStudio::StringVector.new
@@ -55,7 +61,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     use_cores = OpenStudio::Ruleset::OSArgument.makeChoiceArgument('use_cores', chs, true)
     use_cores.setDisplayName('Cores')
     use_cores.setDefaultValue('Default')
-    use_cores.setDescription('Number of CPU cores to use for Radiance jobs. Default is to use all but one core')
+    use_cores.setDescription('Number of CPU cores to use for Radiance jobs. Default is to use all \
+    but one core')
     args << use_cores
 
     chs = OpenStudio::StringVector.new
@@ -64,9 +71,10 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     rad_settings = OpenStudio::Ruleset::OSArgument.makeChoiceArgument('rad_settings', chs, true)
     rad_settings.setDisplayName('Radiance Settings')
     rad_settings.setDefaultValue('Model')
-    rad_settings.setDescription('Radiance simulation parameters. Default is to get these from the model; the Testing option is for testing the Radiance workflow only, as it uses very crude parameters for a fast simulation but very inaccurate results.')
+    rad_settings.setDescription('Radiance simulation parameters. Default is to get these from the \
+    model; the Testing option is for testing the Radiance workflow only, as it uses very crude \
+    parameters for a fast simulation but very inaccurate results.')
     args << rad_settings
-
 
     return args
   end
@@ -100,13 +108,13 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
     # Energyplus "pre-run" model dir
     epout_dir = "eplus_preprocess"
-    if !File.exists?(epout_dir)
+    if !File.exist?(epout_dir)
       FileUtils.mkdir_p(epout_dir)
     end
 
     # Radiance model dir
     rad_dir = "radiance"
-    if !File.exists?(rad_dir)
+    if !File.exist?(rad_dir)
       FileUtils.mkdir_p(rad_dir)
     end
 
@@ -124,16 +132,16 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 
     # UNIX-style which 
-    def which(cmd) 
-      exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : [''] 
-      ENV['PATH'].split(File::PATH_SEPARATOR).each do |path| 
-        exts.each do |ext| 
-          exe = "#{path}/#{cmd}#{ext}" 
-          return exe if File.executable? exe 
+    def which(cmd)
+      exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
+      ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
+        exts.each do |ext|
+          exe = "#{path}/#{cmd}#{ext}"
+          return exe if File.executable? exe
         end
-      end 
-      return nil 
-    end 
+      end
+      return nil
+    end
 
 
     # set up MP option
@@ -302,11 +310,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     radPath = modelPath.parent_path / OpenStudio::Path.new("radiance")
     
     # set up output dirs
-    FileUtils.mkdir_p("#{radPath}/output/dc") unless File.exists?("#{radPath}/output/dc")
-    FileUtils.mkdir_p("#{radPath}/output/ts") unless File.exists?("#{radPath}/output/ts")
-    FileUtils.mkdir_p("#{radPath}/output/dc/merged_space/maps") unless File.exists?("#{radPath}/output/dc/merged_space/maps")
-    FileUtils.mkdir_p("#{radPath}/sql") unless File.exists?("#{radPath}/sql")
-    FileUtils.mkdir_p("#{radPath}/wx") unless File.exists?("#{radPath}/wx")
+    FileUtils.mkdir_p("#{radPath}/output/dc") unless File.exist?("#{radPath}/output/dc")
+    FileUtils.mkdir_p("#{radPath}/output/ts") unless File.exist?("#{radPath}/output/ts")
+    FileUtils.mkdir_p("#{radPath}/output/dc/merged_space/maps") unless File.exist?("#{radPath}/output/dc/merged_space/maps")
+    FileUtils.mkdir_p("#{radPath}/sql") unless File.exist?("#{radPath}/sql")
+    FileUtils.mkdir_p("#{radPath}/wx") unless File.exist?("#{radPath}/wx")
  
     # copy Radiance model up
     # TODO be smarter about this.
@@ -719,7 +727,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
               space << subspacevalue[hour];
             end
 
-            if File.exists?("#{t_radPath}/numeric/#{space_name}.sns")        
+            if File.exist?("#{t_radPath}/numeric/#{space_name}.sns")        
               if index >= values.size
                 puts "index is #{index} but values.size is only #{values.size}"
               elsif hour >= values[index].size
@@ -729,7 +737,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
               index = index + 1
             end
 
-            if File.exists?("#{t_radPath}/numeric/#{space_name}.glr") and t_radGlareSensorViews[space_name]
+            if File.exist?("#{t_radPath}/numeric/#{space_name}.glr") and t_radGlareSensorViews[space_name]
               glareinput = values.slice(index, t_radGlareSensorViews[space_name].size)
 
               glaresensors = []
@@ -748,11 +756,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             puts "WARN: an error has occurred; no results for space '#{space_name}'."
             space = Array.new(space_size, 0)
 
-            if File.exists?("#{t_radPath}/numeric/#{space_name}.sns")        
+            if File.exist?("#{t_radPath}/numeric/#{space_name}.sns")        
               illum = Array.new(1, 0)
             end
 
-            if File.exists?("#{t_radPath}/numeric/#{space_name}.glr") and t_radGlareSensorViews[space_name]
+            if File.exist?("#{t_radPath}/numeric/#{space_name}.glr") and t_radGlareSensorViews[space_name]
               glaresensors = Array.new(t_radGlareSensorViews[space_name].size, 0)
             end
           end
@@ -989,7 +997,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
           # Write results
           
-          FileUtils.mkdir_p("#{Dir.pwd}/output/ts/#{space_name}/maps") unless File.exists?("#{Dir.pwd}/output/ts/#{space_name}/maps")
+          FileUtils.mkdir_p("#{Dir.pwd}/output/ts/#{space_name}/maps") unless File.exist?("#{Dir.pwd}/output/ts/#{space_name}/maps")
           f = File.open("#{Dir.pwd}/output/ts/#{space_name}/maps/#{space_name}_map.ill", "w")
           space = nil
           t_building.spaces.each do |s|
@@ -1031,7 +1039,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
             # glare to csv 
             
-            FileUtils.mkdir_p("#{Dir.pwd}/output/ts/#{space_name}/maps") unless File.exists?("#{Dir.pwd}/output/ts/#{space_name}/maps")
+            FileUtils.mkdir_p("#{Dir.pwd}/output/ts/#{space_name}/maps") unless File.exist?("#{Dir.pwd}/output/ts/#{space_name}/maps")
             f = File.open("#{Dir.pwd}/output/ts/#{space_name}/maps/#{space_name}_map.glr", "w")
             space = nil
             t_building.spaces.each do |s|
@@ -1759,11 +1767,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
         f.write IO.read("numeric/#{space_name}.map")
 
-        if File.exists?("numeric/#{space_name}.sns")        
+        if File.exist?("numeric/#{space_name}.sns")        
           f.write IO.read("numeric/#{space_name}.sns")
         end
 
-        if File.exists?("numeric/#{space_name}.glr")
+        if File.exist?("numeric/#{space_name}.glr")
           f.write IO.read("numeric/#{space_name}.glr")
 
         end
