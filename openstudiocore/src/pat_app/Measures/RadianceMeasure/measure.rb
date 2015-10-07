@@ -161,7 +161,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         sim_cores = 1
       end
     end
-    puts 'Using #{sim_cores} cores for Radiance jobs'
+    puts "Using #{sim_cores} cores for Radiance jobs"
 
 
     # help those poor Windows users out
@@ -296,7 +296,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     jobtree = workflow.create(OpenStudio::system_complete(runDir), OpenStudio::system_complete(modelPath), OpenStudio::Path.new(epw_path))
     runmanager.enqueue(jobtree, true)
     # runmanager.getJobs.each {|job| job.setBasePath(resourcePath)} # DLM: need to be able to get this from runner
-    puts 'Running jobs in #{runDir}'
+    puts "Running jobs in #{runDir}"
     runmanager.setPaused(false)
     runmanager.waitForFinished()
 
@@ -317,7 +317,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     FileUtils.copy_entry("#{epout_dir}/4-ModelToRad-0", rad_dir)
     FileUtils.cp("#{epout_dir}/3-EnergyPlus-0/eplusout.sql", "#{rad_dir}/sql")
 
-    # remove the E+ run dir so we don't confuse users 
+    # remove the E+ run dir so we don't confuse users
     FileUtils.rm_rf(epout_dir)
 
     # Set Radiance simulation settings
@@ -483,9 +483,9 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
       puts "#{Time.now.getutc}: Calculating annual daylight values for all window groups and shade states"
 
-      rawValues = Hash.new
-      values = Hash.new
-      dcVectors = Hash.new
+      rawValues = {}
+      values = {}
+      dcVectors = {}
 
               
       
@@ -517,24 +517,22 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           if wgXMLs.size > 2
             puts "WARN: Window Group #{wg} has #{wgXMLs.size.to_s} BSDFs (2 max supported by OpenStudio application)."
           end
-    
+
           wgXMLs.each_index do |i|
             rad_command = "dctimestep output/dc/#{wg}.vmx bsdf/#{wgXMLs[i].strip} output/dc/#{wg}.dmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}_#{wgXMLs[i].split[0]}.ill"
             runner.registerInfo("#{Time.now.getutc}: #{rad_command}")
             exec_statement(rad_command)
           end
-      
         end
-    
       end
-  
+
       # get annual values for window control sensors (note: convert to illuminance, no transpose, strip header)
       exec_statement("dctimestep output/dc/window_controls.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - | getinfo - > output/ts/window_controls.ill")
-  
+
       puts "#{Time.now.getutc}: Merging results:"
-  
+
       # do that window group/state merge thing
-  
+
       windowGroups = File.open("bsdf/mapping.rad")
       windowGroups.each do |wg|
 
@@ -562,7 +560,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           shadeControlSetpoint = 100000000
         end
 
-        
         puts "#{Time.now.getutc}: Processing window group '#{windowGroup}', setpoint: #{shadeControlSetpoint} lux"  
 
         # separate header from data; so, so ugly. 
@@ -707,7 +704,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       # write out illuminance to individual space/map files
       8760.times do |hour|
         index = 0;
-        splitvalues = Hash.new
+        splitvalues = {}
 
         t_space_names_to_calculate.each do |space_name|
           space_size = t_spaceWidths[space_name] * t_spaceHeights[space_name]
@@ -1380,7 +1377,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         udi_occupied = []
         udi_daylit_occupied = []
   
-  
         # get people timeseries from E+ run for this zone
         peopleTimeseries = sqlFile.timeSeries("Run Period 1".upcase, "Hourly", "Zone People Occupant Count", thermalZone.name.get.upcase)
   
@@ -1440,7 +1436,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
                 end
               end
             end
-      
+
             da = num_da.to_f / num.to_f
       
           elsif $METHOD == 1
@@ -1461,10 +1457,10 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
                 num_da += 1
                 num_cda += 1
               end
-              if map_value > 0 and map_value < daylightSetpoint  
+              if map_value > 0 && map_value < daylightSetpoint  
                 num_cda += map_value / daylightSetpoint 
               end
-              if map_value > 100 and map_value < 3000
+              if map_value > 100 && map_value < 3000
                 num_udi += 1
               end
             end
@@ -1488,7 +1484,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             udi_occupied[-1] = udi
           end
     
-          if daylit_hour and occupied_hour
+          if daylit_hour && occupied_hour
             da_daylit_occupied[-1] = da
             cda_daylit_occupied[-1] = cda
             udi_daylit_occupied[-1] = udi
@@ -1498,7 +1494,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
   
         # compute annual metrics for space
   
-        #Daylight Autonomy
+        # Daylight Autonomy
         da_daylit_sum = 0
         da_daylit_num = 0
         da_daylit.each do |da|
@@ -1532,7 +1528,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         annual_da_daylit_occupied = da_daylit_occupied_sum.to_f / da_daylit_occupied_num.to_f
         summary_report += "#{space_name},DA(#{daylightSetpoint.round(0)}),Daylit and Occupied Hours,#{annual_da_daylit_occupied.round(2)},#{da_daylit_occupied_sum.round(0)},#{da_daylit_occupied_num}\n"
   
-        #Continuous Daylight Autonomy
+        # Continuous Daylight Autonomy
         cda_daylit_sum = 0
         cda_daylit_num = 0
         cda_daylit.each do |cda|
@@ -1608,7 +1604,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
       # DLM: can we make some more metrics that are area weighted rather than just space weighted?
       building_average_space_sum = 0.0
-      building_average_space.each {|e| building_average_space_sum += e}
+      building_average_space.each { |e| building_average_space_sum += e}
 
       # catch zero condition
       if building_average_space_sum == 0.0
@@ -1625,18 +1621,14 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         file.puts summary_report
       end
 
-    end #daylightMetrics()
-
-
+    end # daylightMetrics()
 
     ## ## ## ## ## ##
 
-
-
     # actually do the thing
     
-    sqlOutFile = ""
-    radoutFile = ""
+    sqlOutFile = ''
+    radoutFile = ''
     
     # settle in, it's gonna be a bumpy ride...
     Dir.chdir("#{radPath}")
@@ -1652,7 +1644,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     if not sqlFile.connectionOpen
       puts "SqlFile #{sqlPath} connection is not open"
       return false
-    end 
+    end
 
     # set the sql file
     model.setSqlFile(sqlFile)
@@ -1690,24 +1682,24 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     building_transformation = building.transformation
 
     # create materials library for model, shared for all spaces
-    radMaterials = Array.new
+    radMaterials = []
 
     # create space geometry, hash of space name to file contents
-    radSpaces = Hash.new
-    radSensors = Hash.new
-    radGlareSensors = Hash.new
-    radGlareSensorViews = Hash.new
-    radMaps = Hash.new
-    radMapHandles = Hash.new
-    radMapPoints = Hash.new
-    radViewPoints = Hash.new
-    radDaylightingControls = Hash.new
-    radDaylightingControlPoints = Hash.new
-    spaceWidths = Hash.new
-    spaceHeights = Hash.new
+    radSpaces = {}
+    radSensors = {}
+    radGlareSensors = {}
+    radGlareSensorViews = {}
+    radMaps = {}
+    radMapHandles = {}
+    radMapPoints = {}
+    radViewPoints = {}
+    radDaylightingControls = {}
+    radDaylightingControlPoints = {}
+    spaceWidths = {}
+    spaceHeights = {}
 
     # loop through the model
-    space_names = Array.new
+    space_names = []
 
     building.spaces.each do |space|
       space_name = space.name.get.gsub(' ', '_').gsub(':', '_')
@@ -1738,11 +1730,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     end
 
 
-    space_names_to_calculate = Array.new
+    space_names_to_calculate = []
 
 
     # only do spaces with illuminance maps
-    space_names_to_calculate = Array.new
+    space_names_to_calculate = []
     space_names.each do |space_name|
       if not radMaps[space_name].nil?
         space_names_to_calculate << space_name
@@ -1776,27 +1768,26 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     end
 
     # get the daylight coefficient matrices
-    calculateDaylightCoeffecients(radPath, sim_cores, catCommand, options_tregVars, options_klemsDensity, options_skyvecDensity, options_dmx, \
-    options_vmx, rad_settings, procsUsed)
+    calculateDaylightCoeffecients(radPath, sim_cores, catCommand, options_tregVars, \
+    options_klemsDensity, options_skyvecDensity, options_dmx, options_vmx, rad_settings, procsUsed)
 
     # make merged building-wide illuminance schedule(s)
-    values, dcVectors = runSimulation(space_names_to_calculate, sqlFile, sim_cores, options_skyvecDensity, site_latitude, site_longitude, \
-    site_meridian, radPath, spaceWidths, spaceHeights, radGlareSensorViews, runner, write_sql)
-    
+    values, dcVectors = runSimulation(space_names_to_calculate, sqlFile, sim_cores, \
+    options_skyvecDensity, site_latitude, site_longitude, site_meridian, radPath, spaceWidths, \
+    spaceHeights, radGlareSensorViews, runner, write_sql)
 
     # make space-level illuminance schedules and radout.sql results database
     # hoping this is no longer necessary...
-    annualSimulation(sqlFile, epwFile, space_names_to_calculate, radMaps, spaceWidths, spaceHeights, radMapPoints, radGlareSensorViews, \
-    sim_cores, site_latitude, site_longitude, site_meridian, radPath, building, values, dcVectors, write_sql)
-
+    annualSimulation(sqlFile, epwFile, space_names_to_calculate, radMaps, \
+    spaceWidths, spaceHeights, radMapPoints, radGlareSensorViews, sim_cores, \
+    site_latitude, site_longitude, site_meridian, \
+    radPath, building, values, dcVectors, write_sql)
 
     # make new lighting power schedules based on Radiance daylight data
     makeSchedules(model, sqlFile)
 
-
     # compute daylight metrics for model
     daylightMetrics(model, sqlFile)
-
 
     # remove illuminance map and daylighting controls from model, so they are not re-simulated in E+
     model.getThermalZones.each do |thermalZone|
@@ -1804,27 +1795,25 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       thermalZone.resetSecondaryDaylightingControl
       thermalZone.resetIlluminanceMap
     end
-    
-    
+
     # report initial condition of model
     daylightAnalysisSpaces = []
     spaces = model.getSpaces
     spaces.each do |sp|
-      if sp.illuminanceMaps.size > 0 
+      if sp.illuminanceMaps.size > 0
         daylightAnalysisSpaces << sp
       end
     end
-    puts ""
+    puts ''
     runner.registerInitialCondition("Input building model contains #{model.getSpaces.size} spaces.")
 
     # report final condition of model
-    runner.registerFinalCondition("Measure ran Radiance on the #{daylightAnalysisSpaces.size} spaces containing daylighting objects.")
-    
+    runner.registerFinalCondition("Measure ran Radiance on the #{daylightAnalysisSpaces.size} \
+    spaces containing daylighting objects.")
+
     return true
 
-  end #run
-
+  end # run
 end
-
 # register the measure to be used by the application
 RadianceMeasure.new.registerWithApplication
