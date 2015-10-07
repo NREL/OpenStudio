@@ -79,12 +79,12 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     return args
   end
 
-
   def run(model, runner, user_arguments)
     super(model, runner, user_arguments)
 
     OpenStudio::Logger::instance().standardOutLogger().enable()
-    #OpenStudio::Logger::instance().standardOutLogger().setLogLevel(OpenStudio::Debug)
+    # Optionally enable debug-level logging
+    # OpenStudio::Logger::instance().standardOutLogger().setLogLevel(OpenStudio::Debug)
 
     # use the built-in error checking
     if !runner.validateUserArguments(arguments(model), user_arguments)
@@ -93,36 +93,35 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
     # assign the user inputs to variables
     apply_schedules = runner.getStringArgumentValue('apply_schedules', user_arguments)
-    
+
     write_sql = runner.getStringArgumentValue('write_sql', user_arguments)
 
-    if apply_schedules == "Yes" && write_sql == "No"
-      puts "lighting power schedules requested, will write Radiance sql results file"
-      write_sql = "Yes"
+    if apply_schedules == 'Yes' && write_sql == 'No'
+      puts 'lighting power schedules requested, will write Radiance sql results file'
+      write_sql = 'Yes'
     end
 
     use_cores = runner.getStringArgumentValue('use_cores', user_arguments)
 
     rad_settings = runner.getStringArgumentValue('rad_settings', user_arguments)
 
-
     # Energyplus "pre-run" model dir
-    epout_dir = "eplus_preprocess"
+    epout_dir = 'eplus_preprocess'
     if !File.exist?(epout_dir)
       FileUtils.mkdir_p(epout_dir)
     end
 
     # Radiance model dir
-    rad_dir = "radiance"
+    rad_dir = 'radiance'
     if !File.exist?(rad_dir)
       FileUtils.mkdir_p(rad_dir)
     end
 
-    ## Radiance Utilities 
+    ## Radiance Utilities
 
     # print statement and execute as system call
     def exec_statement(s)
-      if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
+      if /mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
         s = s.gsub("/", "\\")
       end
       puts "Executing: #{s}"
@@ -130,8 +129,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       return result
     end
 
-
-    # UNIX-style which 
+    # UNIX-style which
     def which(cmd)
       exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
       ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
@@ -143,14 +141,13 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       return nil
     end
 
-
     # set up MP option
     coreCount = OpenStudio::System::numberOfProcessors
-    sim_cores = "1"
+    sim_cores = '1'
 
-    if use_cores == "Max"
+    if use_cores == 'Max'
       sim_cores = coreCount
-    elsif use_cores == "Min"
+    elsif use_cores == 'Min'
       sim_cores = 1
     else
       sim_cores = coreCount - 1
@@ -160,18 +157,18 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     if /darwin/.match(RUBY_PLATFORM)
       ver = `defaults read loginwindow SystemVersionStampAsString`
       if ver.split(".")[1] == '10'
-        puts "Radiance multiprocessing disabled for MacOS 10.10.x, sorry."
+        puts 'Radiance multiprocessing disabled for MacOS 10.10.x, sorry.'
         sim_cores = 1
       end
     end
-    puts "Using #{sim_cores} cores for Radiance jobs"
+    puts 'Using #{sim_cores} cores for Radiance jobs'
 
 
     # help those poor Windows users out
     perlExtension = ""
     catCommand = "cat"
     osQuote = "\'"
-    if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
+    if /mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
       perlExtension = ".pl"
       catCommand = "type"
       osQuote = "\""
@@ -183,7 +180,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     # setup path to Radiance binaries
     co = OpenStudio::Runmanager::ConfigOptions.new(true);
     co.fastFindRadiance();
-    radiancePath = co.getTools().getLastByName("rad").localBinPath.parent_path
+    radiancePath = co.getTools().getLastByName('rad').localBinPath.parent_path
 
     path = OpenStudio::Path.new(radiancePath).to_s
     raypath = (OpenStudio::Path.new(radiancePath).parent_path() / 
@@ -192,7 +189,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     epw2weapath = (OpenStudio::Path.new(radiancePath) / OpenStudio::Path.new('epw2wea')).to_s
 
     programExtension = ''
-    if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
+    if /mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
       programExtension = ".exe"
       perlpath = ""
       if OpenStudio::applicationIsRunningFromBuildDirectory()
@@ -202,7 +199,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         perlpath = OpenStudio::getApplicationRunDirectory().parent_path() / 
         OpenStudio::Path.new("strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin")
       end
-      puts "Adding path for local perl: " + perlpath.to_s
+      puts 'Adding path for local perl: ' + perlpath.to_s
       ENV["PATH"] = ENV["PATH"] + ";" + path + ";" + perlpath.to_s
       ENV["RAYPATH"] = path + ";" + raypath + ";."
     else
@@ -218,15 +215,15 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     #ENV["EPW2WEAPATH"] = epw2weapath + programExtension
 
     if !which('perl')
-      puts "Perl could not be found in path, exiting"
+      puts 'Perl could not be found in path, exiting'
       exit false
     end
-    
+
     # get the epw file
     # TODO align with long-winded thread from 2015.07.28
-    
+
     epw_path = nil
-    
+
     # try runner first
     if runner.lastEpwFilePath.is_initialized
       test = runner.lastEpwFilePath.get.to_s
@@ -234,7 +231,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         epw_path = test
       end
     end
-        
+
     # try model second
     if !epw_path
       if model.weatherFile.is_initialized
@@ -266,79 +263,78 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         return false
       end
     end
-    
+
     ## ModelToRad Workflow
 
     # save osm for input to eplus pre-process
-    modelPath = OpenStudio::Path.new("eplusin.osm")
+    modelPath = OpenStudio::Path.new('eplusin.osm')
     model.save(modelPath,true)
 
     # find EnergyPlus
     co = OpenStudio::Runmanager::ConfigOptions.new 
     co.fastFindEnergyPlus
- 
+
     # make a workflow (EnergyPlus "pre-run" to get constructions and weather)
-    workflow = OpenStudio::Runmanager::Workflow.new("ModelToRadPreprocess->ModelToIdf->ExpandObjects->EnergyPlus")
+    workflow = OpenStudio::Runmanager::Workflow.new('ModelToRadPreprocess->ModelToIdf->ExpandObjects->EnergyPlus')
     workflow.add(co.getTools)
 
     # add model-to-rad workflow
-    modelToRad = OpenStudio::Runmanager::Workflow.new("ModelToRad")
+    modelToRad = OpenStudio::Runmanager::Workflow.new('ModelToRad')
     workflow.addWorkflow(modelToRad)
 
     # minimize file path lengths
-    workflow.addParam(OpenStudio::Runmanager::JobParam.new("flatoutdir"))
-    
+    workflow.addParam(OpenStudio::Runmanager::JobParam.new('flatoutdir'))
+
     # make the run manager
     runDir = OpenStudio::Path.new(epout_dir)
-    runmanager_path = OpenStudio::Path.new("runmanager.db")
+    runmanager_path = OpenStudio::Path.new('runmanager.db')
     runmanager = OpenStudio::Runmanager::RunManager.new(runmanager_path, true, true, false, false)
 
     OpenStudio::makeParentFolder(runDir, OpenStudio::Path.new(), true)
-    puts "Creating workflow"
+    puts 'Creating workflow'
     
     jobtree = workflow.create(OpenStudio::system_complete(runDir), OpenStudio::system_complete(modelPath), OpenStudio::Path.new(epw_path))
     runmanager.enqueue(jobtree, true)
-    #runmanager.getJobs.each {|job| job.setBasePath(resourcePath)} # DLM: need to be able to get this from runner
-    puts "Running jobs in #{runDir}"
+    # runmanager.getJobs.each {|job| job.setBasePath(resourcePath)} # DLM: need to be able to get this from runner
+    puts 'Running jobs in #{runDir}'
     runmanager.setPaused(false)
     runmanager.waitForFinished()
-
 
     ##  Radiance crap
 
     modelPath = OpenStudio::system_complete(modelPath)
     radPath = modelPath.parent_path / OpenStudio::Path.new("radiance")
-    
+
     # set up output dirs
     FileUtils.mkdir_p("#{radPath}/output/dc") unless File.exist?("#{radPath}/output/dc")
     FileUtils.mkdir_p("#{radPath}/output/ts") unless File.exist?("#{radPath}/output/ts")
     FileUtils.mkdir_p("#{radPath}/output/dc/merged_space/maps") unless File.exist?("#{radPath}/output/dc/merged_space/maps")
     FileUtils.mkdir_p("#{radPath}/sql") unless File.exist?("#{radPath}/sql")
     FileUtils.mkdir_p("#{radPath}/wx") unless File.exist?("#{radPath}/wx")
- 
+
     # copy Radiance model up
-    # TODO be smarter about this.
+    # TODO be smarter about this
     FileUtils.copy_entry("#{epout_dir}/4-ModelToRad-0", rad_dir)
     FileUtils.cp("#{epout_dir}/3-EnergyPlus-0/eplusout.sql", "#{rad_dir}/sql")
-    
+
     # remove the E+ run dir so we don't confuse users 
     FileUtils.rm_rf(epout_dir)
 
     # Set Radiance simulation settings
     # TODO: read settings directly from model
-    
+
     options_tregVars = ""
     options_dmx = ""
     options_vmx = ""
-    if rad_settings == "Testing"
-      options_tregVars = "-e MF:1 -f tregenza.cal -b tbin -bn Ntbins"
-      options_dmx = "-ab 1 -ad 128 -as 56 -dj 1 -dp 1 -dt 0.1 -dc 0.1 -lw 0.1 " 
-      options_vmx = "-ab 1 -ad 128 -as 56 -dj 1 -dp 1 -dt 0.1 -dc 0.1 -lw 0.1"
+    if rad_settings == 'Testing'
+      options_tregVars = '-e MF:1 -f tregenza.cal -b tbin -bn Ntbins'
+      options_dmx = '-ab 1 -ad 128 -as 56 -dj 1 -dp 1 -dt 0.1 -dc 0.1 -lw 0.1 '
+      options_vmx = '-ab 1 -ad 128 -as 56 -dj 1 -dp 1 -dt 0.1 -dc 0.1 -lw 0.1'
     end
     options_klemsDensity = ""
-    options_skyvecDensity = "1"
+    options_skyvecDensity = '1'
 
-    if rad_settings == "Model"
+    if rad_settings == 'Model'
       File.open("#{radPath}/options/treg.opt", "r") do |file|
         tempIO = file.read
         tempSettings = tempIO.split(" ")
@@ -346,7 +342,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         options_skyvecDensity = tempSettings[3].split(":")[1]
         options_tregVars = tempSettings[2..-1].join(" ")
       end
-
 
       File.open("#{radPath}/options/dmx.opt", "r") do |file|
         tempIO = file.read
@@ -370,13 +365,10 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       procsUsed = "-n #{sim_cores}"
     end
 
-
-
     # core functions
 
-    def calculateDaylightCoeffecients(radPath, sim_cores, t_catCommand, options_tregVars, options_klemsDensity, options_skyvecDensity, options_dmx, options_vmx, rad_settings, procsUsed)
-
-
+    def calculateDaylightCoeffecients(radPath, sim_cores, t_catCommand, options_tregVars, \
+    options_klemsDensity, options_skyvecDensity, options_dmx, options_vmx, rad_settings, procsUsed)
 
       haveWG0 = ""
 
@@ -425,14 +417,17 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           # do daylight matrices for controlled windows
           puts "#{Time.now.getutc}: computing daylight matrix for window group #{wg}..."
 
-          rad_command = "rfluxmtx #{rtrace_args} -n #{sim_cores} -fa -v \"scene/shades/#{wg}_SHADE.rad\" \"skies/dc_sky.rad\" -i model_dc.oct > \"output/dc/#{wg}.dmx\""
+          rad_command = "rfluxmtx #{rtrace_args} \
+          -n #{sim_cores} -fa \
+          -v \"scene/shades/#{wg}_SHADE.rad\" \
+          \"skies/dc_sky.rad\" \
+          -i model_dc.oct > \"output/dc/#{wg}.dmx\""
           puts "#{Time.now.getutc}: #{rad_command}"
           exec_statement(rad_command)
     
         end
         
       end  # calculate DMX
-
 
       # compute view matrices for all controlled window groups
 
@@ -468,7 +463,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         \"skies/dc_sky.rad\" > model_wc.oct")
       puts "#{Time.now.getutc}: computing DCs for window control points"
       
-      rad_command = "#{t_catCommand} \"numeric/window_controls.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
+      rad_command = "#{t_catCommand} \"numeric/window_controls.map\" | \
+      rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
       "-o \"output/dc/window_controls.vmx\" -m skyglow model_wc.oct"
       exec_statement(rad_command)
       
@@ -481,7 +477,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 
     # annual simulation dealio
-    def runSimulation(t_space_names_to_calculate, t_sqlFile, t_simCores, t_options_skyvecDensity, t_site_latitude, t_site_longitude, t_site_stdmeridian, t_radPath, \
+    def runSimulation(t_space_names_to_calculate, t_sqlFile, t_simCores, t_options_skyvecDensity, \
+    t_site_latitude, t_site_longitude, t_site_stdmeridian, t_radPath, \
     t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, runner, write_sql)
 
       puts "#{Time.now.getutc}: Calculating annual daylight values for all window groups and shade states"
