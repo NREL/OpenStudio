@@ -20,7 +20,7 @@
 #ifndef MODEL_ELECTRICLOADCENTERINVERTERLOOKUPTABLE_IMPL_HPP
 #define MODEL_ELECTRICLOADCENTERINVERTERLOOKUPTABLE_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "Inverter_Impl.hpp"
 
 namespace openstudio {

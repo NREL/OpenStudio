@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODEL_PLANTEQUIPMENTOPERATIONHeatingLOAD_HPP
-#define MODEL_PLANTEQUIPMENTOPERATIONHeatingLOAD_HPP
+#ifndef MODEL_PLANTEQUIPMENTOPERATIONHEATINGLOAD_HPP
+#define MODEL_PLANTEQUIPMENTOPERATIONHEATINGLOAD_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/PlantEquipmentOperationRangeBasedScheme.hpp>
+#include "ModelAPI.hpp"
+#include "PlantEquipmentOperationRangeBasedScheme.hpp"
 
 namespace openstudio {
 namespace model {
@@ -70,5 +70,5 @@ typedef std::vector<PlantEquipmentOperationHeatingLoad> PlantEquipmentOperationH
 } // model
 } // openstudio
 
-#endif // MODEL_PLANTEQUIPMENTOPERATIONHeatingLOAD_HPP
+#endif // MODEL_PLANTEQUIPMENTOPERATIONHEATINGLOAD_HPP
 

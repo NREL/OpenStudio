@@ -19,7 +19,7 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
 #include "../ZoneVentilationDesignFlowRate.hpp"
 #include "../ZoneVentilationDesignFlowRate_Impl.hpp"

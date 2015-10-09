@@ -19,8 +19,8 @@
 
 #include <gtest/gtest.h>
 #include "ModelFixture.hpp"
-#include <model/SetpointManagerColdest.hpp>
-#include <model/SetpointManagerColdest_Impl.hpp>
+#include "../SetpointManagerColdest.hpp"
+#include "../SetpointManagerColdest_Impl.hpp"
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
 #include "../AirLoopHVAC.hpp"

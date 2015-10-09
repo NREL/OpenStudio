@@ -17,27 +17,27 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SolarCollectorIntegralCollectorStorage.hpp>
-#include <model/SolarCollectorIntegralCollectorStorage_Impl.hpp>
+#include "SolarCollectorIntegralCollectorStorage.hpp"
+#include "SolarCollectorIntegralCollectorStorage_Impl.hpp"
 
-#include <model/SolarCollectorPerformanceIntegralCollectorStorage.hpp>
-#include <model/SolarCollectorPerformanceIntegralCollectorStorage_Impl.hpp>
-#include <model/PlanarSurface.hpp>
-#include <model/PlanarSurface_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurface_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Model.hpp>
+#include "SolarCollectorPerformanceIntegralCollectorStorage.hpp"
+#include "SolarCollectorPerformanceIntegralCollectorStorage_Impl.hpp"
+#include "PlanarSurface.hpp"
+#include "PlanarSurface_Impl.hpp"
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
+#include "ShadingSurface.hpp"
+#include "ShadingSurface_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "Model.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SolarCollector_IntegralCollectorStorage_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

@@ -20,7 +20,7 @@
 #ifndef MODEL_GENERATORPHOTOVOLTAIC_IMPL_HPP
 #define MODEL_GENERATORPHOTOVOLTAIC_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "Generator_Impl.hpp"
 
 namespace openstudio {

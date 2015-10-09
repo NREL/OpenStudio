@@ -20,7 +20,7 @@
 #ifndef MODEL_CHILLERHEATERPERFORMANCEELECTRICEIR_HPP
 #define MODEL_CHILLERHEATERPERFORMANCEELECTRICEIR_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ParentObject.hpp"
 
 namespace openstudio {

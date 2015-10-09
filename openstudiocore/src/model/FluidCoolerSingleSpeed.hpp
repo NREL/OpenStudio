@@ -20,7 +20,7 @@
 #ifndef MODEL_FLUIDCOOLERSINGLESPEED_HPP
 #define MODEL_FLUIDCOOLERSINGLESPEED_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
 
 namespace openstudio {

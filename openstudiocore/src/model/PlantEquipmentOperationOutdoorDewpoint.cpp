@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/PlantEquipmentOperationOutdoorDewpoint.hpp>
-#include <model/PlantEquipmentOperationOutdoorDewpoint_Impl.hpp>
+#include "PlantEquipmentOperationOutdoorDewpoint.hpp"
+#include "PlantEquipmentOperationOutdoorDewpoint_Impl.hpp"
 #include <utilities/idd/OS_PlantEquipmentOperation_OutdoorDewpoint_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
