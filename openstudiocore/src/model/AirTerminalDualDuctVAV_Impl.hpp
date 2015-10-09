@@ -20,8 +20,8 @@
 #ifndef MODEL_AIRTERMINALDUALDUCTVAV_IMPL_HPP
 #define MODEL_AIRTERMINALDUALDUCTVAV_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Mixer_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "Mixer_Impl.hpp"
 
 namespace openstudio {
 namespace model {

@@ -17,30 +17,30 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SolarCollectorFlatPlatePhotovoltaicThermal.hpp>
-#include <model/SolarCollectorFlatPlatePhotovoltaicThermal_Impl.hpp>
+#include "SolarCollectorFlatPlatePhotovoltaicThermal.hpp"
+#include "SolarCollectorFlatPlatePhotovoltaicThermal_Impl.hpp"
 
-#include <model/PlanarSurface.hpp>
-#include <model/PlanarSurface_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurface_Impl.hpp>
-#include <model/SolarCollectorPerformancePhotovoltaicThermalSimple.hpp>
-#include <model/SolarCollectorPerformancePhotovoltaicThermalSimple_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/GeneratorPhotovoltaic.hpp>
-#include <model/GeneratorPhotovoltaic_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
+#include "PlanarSurface.hpp"
+#include "PlanarSurface_Impl.hpp"
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
+#include "ShadingSurface.hpp"
+#include "ShadingSurface_Impl.hpp"
+#include "SolarCollectorPerformancePhotovoltaicThermalSimple.hpp"
+#include "SolarCollectorPerformancePhotovoltaicThermalSimple_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "GeneratorPhotovoltaic.hpp"
+#include "GeneratorPhotovoltaic_Impl.hpp"
+#include "Model.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
 
 #include <utilities/idd/OS_SolarCollector_FlatPlate_PhotovoltaicThermal_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

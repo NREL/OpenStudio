@@ -20,7 +20,7 @@
 #ifndef MODEL_CENTRALHEATPUMPSYSTEMMODULE_HPP
 #define MODEL_CENTRALHEATPUMPSYSTEMMODULE_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ParentObject.hpp"
 
 namespace openstudio {

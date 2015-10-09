@@ -19,10 +19,10 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/SetpointManagerMultiZoneMaximumHumidityAverage.hpp>
-#include <model/SetpointManagerMultiZoneMaximumHumidityAverage_Impl.hpp>
+#include "../SetpointManagerMultiZoneMaximumHumidityAverage.hpp"
+#include "../SetpointManagerMultiZoneMaximumHumidityAverage_Impl.hpp"
 
 #include <gtest/gtest.h>
 #include "ModelFixture.hpp"

@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SolarCollectorPerformanceIntegralCollectorStorage.hpp>
-#include <model/SolarCollectorPerformanceIntegralCollectorStorage_Impl.hpp>
+#include "SolarCollectorPerformanceIntegralCollectorStorage.hpp"
+#include "SolarCollectorPerformanceIntegralCollectorStorage_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_SolarCollectorPerformance_IntegralCollectorStorage_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

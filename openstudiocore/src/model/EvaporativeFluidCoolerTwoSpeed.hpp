@@ -20,7 +20,7 @@
 #ifndef MODEL_EVAPORATIVEFLUIDCOOLERTWOSPEED_HPP
 #define MODEL_EVAPORATIVEFLUIDCOOLERTWOSPEED_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
 
 namespace openstudio {

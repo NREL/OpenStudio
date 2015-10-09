@@ -20,7 +20,7 @@
 #ifndef MODEL_DUCT_HPP
 #define MODEL_DUCT_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
 
 namespace openstudio {

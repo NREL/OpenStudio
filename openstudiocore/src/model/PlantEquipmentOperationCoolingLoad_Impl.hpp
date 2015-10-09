@@ -20,8 +20,8 @@
 #ifndef MODEL_PLANTEQUIPMENTOPERATIONCOOLINGLOAD_IMPL_HPP
 #define MODEL_PLANTEQUIPMENTOPERATIONCOOLINGLOAD_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/PlantEquipmentOperationRangeBasedScheme_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "PlantEquipmentOperationRangeBasedScheme_Impl.hpp"
 
 namespace openstudio {
 namespace model {

@@ -20,8 +20,8 @@
 #ifndef MODEL_PLANTEQUIPMENTOPERATIONOUTDOORRELATIVEHUMIDITY_HPP
 #define MODEL_PLANTEQUIPMENTOPERATIONOUTDOORRELATIVEHUMIDITY_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/PlantEquipmentOperationRangeBasedScheme.hpp>
+#include "ModelAPI.hpp"
+#include "PlantEquipmentOperationRangeBasedScheme.hpp"
 
 namespace openstudio {
 namespace model {

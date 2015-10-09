@@ -20,7 +20,7 @@
 #ifndef MODEL_ZONEVENTILATIONDESIGNFLOWRATE_IMPL_HPP
 #define MODEL_ZONEVENTILATIONDESIGNFLOWRATE_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ZoneHVACComponent_Impl.hpp"
 
 namespace openstudio {

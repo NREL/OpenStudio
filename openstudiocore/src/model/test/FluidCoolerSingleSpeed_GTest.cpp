@@ -19,7 +19,7 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
 #include "../FluidCoolerSingleSpeed.hpp"
 #include "../FluidCoolerSingleSpeed_Impl.hpp"

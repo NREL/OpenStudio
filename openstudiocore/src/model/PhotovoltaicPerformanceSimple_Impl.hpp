@@ -20,7 +20,7 @@
 #ifndef MODEL_PHOTOVOLTAICPERFORMANCESIMPLE_IMPL_HPP
 #define MODEL_PHOTOVOLTAICPERFORMANCESIMPLE_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "PhotovoltaicPerformance_Impl.hpp"
 
 namespace openstudio {

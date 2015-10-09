@@ -18,9 +18,9 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/AvailabilityManagerHybridVentilation.hpp>
-#include <model/AvailabilityManagerHybridVentilation_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../AvailabilityManagerHybridVentilation.hpp"
+#include "../AvailabilityManagerHybridVentilation_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
