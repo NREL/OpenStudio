@@ -73,6 +73,12 @@
 #include "../model/Node_Impl.hpp"
 #include "../model/Space.hpp"
 #include "../model/Space_Impl.hpp"
+#include "../model/AirConditionerVariableRefrigerantFlow.hpp"
+#include "../model/AirConditionerVariableRefrigerantFlow_Impl.hpp"
+#include "../model/CoilCoolingDXVariableRefrigerantFlow.hpp"
+#include "../model/CoilCoolingDXVariableRefrigerantFlow_Impl.hpp"
+#include "../model/CoilHeatingDXVariableRefrigerantFlow.hpp"
+#include "../model/CoilHeatingDXVariableRefrigerantFlow_Impl.hpp"
 #include "../model/DesignSpecificationOutdoorAir.hpp"
 #include "../model/DesignSpecificationOutdoorAir_Impl.hpp"
 #include "../model/CoolingTowerSingleSpeed.hpp"
@@ -129,6 +135,8 @@
 #include "../model/PlantLoop_Impl.hpp"
 #include "../model/ZoneHVACComponent.hpp"
 #include "../model/ZoneHVACComponent_Impl.hpp"
+#include "../model/ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
+#include "../model/ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
 #include "../model/ZoneHVACPackagedTerminalAirConditioner.hpp"
 #include "../model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
 #include "../model/ZoneHVACPackagedTerminalHeatPump.hpp"
@@ -5871,7 +5879,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
   {
     // Fan
     boost::optional<model::HVACComponent> fan;
-    QDomElement fanElement = element.firstChildElement("Fan"); 
     if( auto mo = translateFan(fanElement,doc,model) ) {
       fan = mo->optionalCast<model::HVACComponent>();
     }
@@ -6415,7 +6422,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
 
       // FanElementControlMethod
 
-      QDomElement fanElementControlMethodElement = fanElement.firstChildElement("CtrlMthd");
+      QDomElement fanElementControlMethodElement = fanElement.firstChildElement("CtrlMthdSim");
 
       // FanElementMinFlow
 
@@ -6480,8 +6487,90 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
       fpfc.setName(name);
     }
   }
+  else if( istringEqual(type,"VRF") )
+  {
+    model::ZoneHVACTerminalUnitVariableRefrigerantFlow vrfTerminal(model);
+    result = vrfTerminal;
+
+    if( schedule ) {
+      vrfTerminal.setTerminalUnitAvailabilityschedule(schedule.get());
+    }
+
+    boost::optional<model::HVACComponent> fan;
+    if( auto mo = translateFan(fanElement,doc,model) ) {
+      fan = mo->optionalCast<model::HVACComponent>();
+    }
+    if( ! fan ) {
+      LOG(Error,name << " references an undefined fan.");
+    }
+
+    boost::optional<model::CoilCoolingDXVariableRefrigerantFlow> coolingCoil;
+    {
+      auto coolingCoilElement = element.firstChildElement("CoilClg");
+      if( ! coolingCoilElement.isNull() ) {
+        if( auto mo = translateCoilCoolingDXVariableRefrigerantFlow(coolingCoilElement,doc,model) ) {
+          coolingCoil = mo->optionalCast<model::CoilCoolingDXVariableRefrigerantFlow>();
+        }
+      }
+    }
+    if( ! coolingCoil ) {
+      LOG(Error,name << " references an undefined cooling coil");
+    }
+
+    boost::optional<model::CoilHeatingDXVariableRefrigerantFlow> heatingCoil;
+    {
+      auto heatingCoilElement = element.firstChildElement("CoilHtg");
+      if( ! heatingCoilElement.isNull() ) {
+        if( auto mo = translateCoilHeatingDXVariableRefrigerantFlow(heatingCoilElement,doc,model) ) {
+          heatingCoil = mo->optionalCast<model::CoilHeatingDXVariableRefrigerantFlow>();
+        }
+      }
+    }
+    if( ! heatingCoil ) {
+      LOG(Error,name << " references an undefined heating coil");
+    }
+
+    if( fan && coolingCoil && heatingCoil ) {
+      model::ZoneHVACTerminalUnitVariableRefrigerantFlow vrfTerminal(model,coolingCoil.get(),heatingCoil.get(),fan.get());
+      result = vrfTerminal;
+    }
+
+    //FanPos
+    {
+      // fan placement is not implemented in OS
+      // Fix this!
+      auto fanPosElement = element.firstChildElement("FanPos");
+    }
+
+    {
+      auto fanCtrlElement = element.firstChildElement("FanCtrl");
+    }
+
+  }
 
   return result;
+}
+
+boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoilHeatingDXVariableRefrigerantFlow(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
+{
+  if( ! istringEqual(element.tagName().toStdString(),"CoilHtg") ) {
+    return boost::none;
+  }
+
+  model::CoilHeatingDXVariableRefrigerantFlow coil(model);
+
+  return coil;
+}
+
+boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoilCoolingDXVariableRefrigerantFlow(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
+{
+  if( ! istringEqual(element.tagName().toStdString(),"CoilClg") ) {
+    return boost::none;
+  }
+
+  model::CoilCoolingDXVariableRefrigerantFlow coil(model);
+
+  return coil;
 }
 
 boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvDblQuad(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
@@ -7240,7 +7329,7 @@ boost::optional<QDomElement> ForwardTranslator::translateFanConstantVolume(const
   m_translatedObjects[fan.handle()] = result;
 
   // CtrlMthd
-  auto ctrlMthdElement = doc.createElement("CtrlMthd"); 
+  auto ctrlMthdElement = doc.createElement("CtrlMthdSim"); 
   result.appendChild(ctrlMthdElement);
   ctrlMthdElement.appendChild(doc.createTextNode("ConstantVolume"));
 
