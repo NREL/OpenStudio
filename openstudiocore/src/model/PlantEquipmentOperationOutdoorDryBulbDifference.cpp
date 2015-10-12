@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/PlantEquipmentOperationOutdoorDryBulbDifference.hpp>
-#include <model/PlantEquipmentOperationOutdoorDryBulbDifference_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include "PlantEquipmentOperationOutdoorDryBulbDifference.hpp"
+#include "PlantEquipmentOperationOutdoorDryBulbDifference_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 #include <utilities/idd/OS_PlantEquipmentOperation_OutdoorDryBulbDifference_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

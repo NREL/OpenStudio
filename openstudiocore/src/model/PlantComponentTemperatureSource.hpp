@@ -20,7 +20,7 @@
 #ifndef MODEL_PLANTCOMPONENTTEMPERATURESOURCE_HPP
 #define MODEL_PLANTCOMPONENTTEMPERATURESOURCE_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
 
 namespace openstudio {

@@ -18,13 +18,6 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-
-#include <model/test/ModelFixture.hpp>
-
-#include <model/SetpointManagerSingleZoneOneStageCooling.hpp>
-#include <model/SetpointManagerSingleZoneOneStageCooling_Impl.hpp>
-
-#include <gtest/gtest.h>
 #include "ModelFixture.hpp"
 #include "../SetpointManagerSingleZoneOneStageCooling.hpp"
 #include "../SetpointManagerSingleZoneOneStageCooling_Impl.hpp"

@@ -80,7 +80,8 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_Simple) {
   ASSERT_TRUE(panel.ratedElectricPowerOutput());
   EXPECT_EQ(10.0, panel.ratedElectricPowerOutput().get());
   panel.resetRatedElectricPowerOutput();
-  EXPECT_TRUE(panel.setAvailabilitySchedule(model.alwaysOnDiscreteSchedule()));
+  auto schedule = model.alwaysOnDiscreteSchedule();
+  EXPECT_TRUE(panel.setAvailabilitySchedule(schedule));
   ASSERT_TRUE(panel.availabilitySchedule());
   panel.resetAvailabilitySchedule();
 
@@ -134,7 +135,8 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_OneDiode) {
   ASSERT_TRUE(panel.ratedElectricPowerOutput());
   EXPECT_EQ(10.0, panel.ratedElectricPowerOutput().get());
   panel.resetRatedElectricPowerOutput();
-  EXPECT_TRUE(panel.setAvailabilitySchedule(model.alwaysOnDiscreteSchedule()));
+  auto schedule = model.alwaysOnDiscreteSchedule();
+  EXPECT_TRUE(panel.setAvailabilitySchedule(schedule));
   ASSERT_TRUE(panel.availabilitySchedule());
   panel.resetAvailabilitySchedule();
 

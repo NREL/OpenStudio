@@ -1,6 +1,6 @@
-OpenStudio is supported on Windows 7 - 8.1 (32-bit & 64-bit), OS X 10.9 - 10.10 (64-bit), and Ubuntu 14.04 (64-bit).
+OpenStudio is supported on Windows 7 - 10 (32-bit & 64-bit), OS X 10.9 - 10.10 (64-bit), and Ubuntu 14.04 (64-bit).
 
-OpenStudio 1.6.0 works with [EnergyPlus 8.2.0 Update 1](https://github.com/NREL/EnergyPlus/releases/tag/v8.2.0-Update-1.2), which is now bundled with the OpenStudio installer. It is no longer necessary to download and install EnergyPlus separately.
+OpenStudio 1.9.0 works with [EnergyPlus 8.3.0](https://github.com/NREL/EnergyPlus/releases/tag/v8.3.0), which is now bundled with the OpenStudio installer. It is no longer necessary to download and install EnergyPlus separately.
 
 #### Download and install SketchUp
 
@@ -8,7 +8,7 @@ OpenStudio 1.6.0 works with [EnergyPlus 8.2.0 Update 1](https://github.com/NREL/
 
 #### Download and install OpenStudio
 
-1. Login to the [OpenStudio website](http://nrel.github.io/OpenStudio-user-documentation/www.openstudio.net). Create an account if you don't have one.
+1. Login to the [OpenStudio website](https://www.openstudio.net/). Create an account if you don't have one.
 2. Click *Downloads* at the top of the page.
 3. Choose the installer that matches your operating system. The OpenStudio package contains the following tools:
   - SketchUp Plug-in
@@ -25,10 +25,8 @@ BCL content can be accessed from within the OpenStudio SketchUp Plug-in and from
 
 Enter the key through the OpenStudio SketchUp Plug-in under the menu `Plugins->OpenStudio User Scripts->Building Component Library->Setup BCL Key` and click *OK*. Or register the key through the OpenStudio Application under the menu `Components & Measures->Find Components`. If a key is not already registered, it will prompt you for one.
 
-#### Optional - Install Radiance
-If you want to be able to use Radiance for daylighting simulations, you must install Radiance.
-
-1. Download and install [Radiance 4.2.2](https://github.com/NREL/Radiance/releases/tag/4.2.2).
+#### Radiance
+OpenStudio 1.9.0 supports Radiance 5.0.a.5, which is bundled with the OpenStudio installer. It is no longer necessary to download and install Radiance separately.
 
 #### Optional - Install Ruby
 If you plan to use the OpenStudio SDK Ruby bindings via command prompt on Windows, you must install Ruby. OS X already has Ruby installed.
@@ -38,7 +36,7 @@ If you plan to use the OpenStudio SDK Ruby bindings via command prompt on Window
 3. Create a text file called with the following text inside:
 
     ```
-    require 'C:\Program Files (x86)\OpenStudio 1.6.0\Ruby\openstudio.rb'
+    require 'C:\Program Files (x86)\OpenStudio 1.9.0\Ruby\openstudio.rb'
     ```
 
 4. Save the file as `openstudio.rb` here: `C:\Ruby200\lib\ruby\site_ruby\openstudio.rb` (next to the 2.0.0 folder).

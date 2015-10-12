@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/PlantEquipmentOperationCoolingLoad.hpp>
-#include <model/PlantEquipmentOperationCoolingLoad_Impl.hpp>
+#include "PlantEquipmentOperationCoolingLoad.hpp"
+#include "PlantEquipmentOperationCoolingLoad_Impl.hpp"
 #include <utilities/idd/OS_PlantEquipmentOperation_CoolingLoad_FieldEnums.hxx>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 namespace openstudio {

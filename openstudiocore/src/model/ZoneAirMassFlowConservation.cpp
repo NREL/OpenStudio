@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ZoneAirMassFlowConservation.hpp>
-#include <model/ZoneAirMassFlowConservation_Impl.hpp>
+#include "ZoneAirMassFlowConservation.hpp"
+#include "ZoneAirMassFlowConservation_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_ZoneAirMassFlowConservation_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
