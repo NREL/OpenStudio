@@ -560,7 +560,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           shadeControlSetpoint = 100000000
         end
 
-        puts "#{Time.now.getutc}: Processing window group '#{windowGroup}', setpoint: #{shadeControlSetpoint} lux"  
+        puts "#{Time.now.getutc}: Processing window group '#{windowGroup}', shade setpoint: #{shadeControlSetpoint.round(0)} lux \(#{(shadeControlSetpoint / 10.76).round(0)} footcandles\)" 
 
         # separate header from data; so, so ugly. 
         header = []
