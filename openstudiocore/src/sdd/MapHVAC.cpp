@@ -60,6 +60,8 @@
 #include "../model/CurveQuadratic_Impl.hpp"
 #include "../model/Curve.hpp"
 #include "../model/Curve_Impl.hpp"
+#include "../model/Duct.hpp"
+#include "../model/Duct_Impl.hpp"
 #include "../model/ScheduleRuleset.hpp"
 #include "../model/ScheduleDay.hpp"
 #include "../model/ScheduleDay_Impl.hpp"
@@ -726,6 +728,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
   // Save the fan to add last
   boost::optional<model::Node> dropNode;
 
+  std::vector<model::ModelObject> coolingComponents;
+  std::vector<model::ModelObject> heatingComponents;
+
   for (int i = 0; i < airSegmentElements.count(); i++)
   {
     QDomElement airSegmentElement = airSegmentElements.at(i).toElement();
@@ -811,8 +816,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
             lastComponent = mo;
 
             model::HVACComponent hvacComponent = mo->cast<model::HVACComponent>();
-
             hvacComponent.addToNode(dropNode.get());
+
+            coolingComponents.push_back(mo.get());
 
             if( boost::optional<model::CoilCoolingWater> coilCoolingWater = hvacComponent.optionalCast<model::CoilCoolingWater>() )
             {
@@ -838,8 +844,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
             lastComponent = mo;
 
             model::HVACComponent hvacComponent = mo->cast<model::HVACComponent>();
-
             hvacComponent.addToNode(dropNode.get());
+
+            heatingComponents.push_back(mo.get());
 
             if( boost::optional<model::CoilHeatingWater> coilHeatingWater = hvacComponent.optionalCast<model::CoilHeatingWater>() )
             {
@@ -883,8 +890,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
             lastComponent = mo;
 
             model::HVACComponent hvacComponent = mo->cast<model::HVACComponent>();
-
             hvacComponent.addToNode(dropNode.get());
+
+            coolingComponents.push_back(mo.get());
 
             if( boost::optional<model::EvaporativeCoolerIndirectResearchSpecial> evap = hvacComponent.optionalCast<model::EvaporativeCoolerIndirectResearchSpecial>() )
             {
@@ -1349,123 +1357,105 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       spm.setSetpointatOutdoorHighTemperature(10.0);
     }
   }
-
-  // Mixed air setpoint managers
-
-  if( isFanDrawthrough )
+  else if( istringEqual(clgCtrlElement.text().toStdString(),"FixedDualSetpoint") )
   {
-    std::vector<model::ModelObject> supplyNodes = airLoopHVAC.supplyComponents(model::Node::iddObjectType());
+    double clgFixedSupTemp = 23.89;
+    double htgFixedSupTemp = 15.56;
 
-    for( const auto & supplyNode : supplyNodes)
-    {
-      if( supplyNode != airLoopHVAC.supplyInletNode() &&
-          supplyNode != airLoopHVAC.supplyOutletNode() )
-      {
-        model::Node node = supplyNode.cast<model::Node>();
+    auto midpoint = (clgFixedSupTemp + htgFixedSupTemp) / 2.0;
 
-        model::SetpointManagerMixedAir spm(model);
+    model::ScheduleRuleset schedule(model);
+    schedule.defaultDaySchedule().addValue(Time(1.0), midpoint);
+    model::SetpointManagerScheduled spm(model,schedule);
+    spm.setName(supplyOutletNode.name().get() + " SPM");
+    spm.addToNode(supplyOutletNode);
 
-        spm.addToNode(node);
-      }
+    QDomElement clgFixedSupTempElement = airSystemElement.firstChildElement("ClgFixedSupTemp");
+    value = clgFixedSupTempElement.text().toDouble(&ok);
+    if( ok ) {
+      clgFixedSupTemp = unitToUnit(value,"F","C").get();
+    } else {
+      LOG(Warn,nameElement.text().toStdString() << " requests fixed dual setpoint control, but does not define setpoints."
+        << " Using OpenStudio defaults.");
     }
-  }
-  else
-  {
-    if( deckSPM )
-    {
-      deckSPM->setName(airLoopHVAC.name().get() + " Deck SPM");
-      std::vector<model::ModelObject> supplyNodes;
 
-      if( boost::optional<model::Node> mixedAirNode = airLoopHVAC.mixedAirNode() )
-      {
-        supplyNodes = airLoopHVAC.supplyComponents(mixedAirNode.get(),supplyOutletNode,model::Node::iddObjectType());
+    QDomElement htgFixedSupTempElement = airSystemElement.firstChildElement("HtgFixedSupTemp");
+    value = htgFixedSupTempElement.text().toDouble(&ok);
+    if( ok ) {
+      htgFixedSupTemp = unitToUnit(value,"F","C").get();
+    } else {
+      LOG(Warn,nameElement.text().toStdString() << " requests fixed dual setpoint control, but does not define setpoints."
+        << " Using OpenStudio defaults.");
+    }
 
-        model::SetpointManagerMixedAir spm(model);
+    std::vector<model::ModelObject> downstreamComps;
+    auto fan = airLoopHVAC.supplyFan();
+    if( fan ) {
+      downstreamComps = airLoopHVAC.supplyComponents(fan.get(),airLoopHVAC.supplyOutletNode());
+    }
 
-        spm.addToNode(mixedAirNode.get());
-      }
-      else
-      {
-        supplyNodes = airLoopHVAC.supplyComponents(supplyInletNode,supplyOutletNode,model::Node::iddObjectType());
-      }
+    // Do this so there is "something" between the supplyOutletNode (which already has an SPM) and the
+    // other components where we are about to add a different SPM.
+    // Don't want to squash the existing spm.
+    if( downstreamComps.size() > 2u ) {
+      model::Duct duct(model);
+      duct.addToNode(supplyOutletNode);
+    }
 
-      if( supplyNodes.size() > 2 )
-      {
-        supplyNodes.erase(supplyNodes.begin());
+    std::vector<model::SetpointManagerMixedAir> newMixedAirSPMs;
 
-        supplyNodes.erase(supplyNodes.end() - 1);
-
-        for( const auto & supplyNode : supplyNodes)
+    auto addFixedDualSPMs = [&](const std::vector<model::ModelObject> & comps,double temp) {
+      for( const auto & comp : comps ) {
+        boost::optional<model::Node> outletNode;
         {
-          model::Node node = supplyNode.cast<model::Node>();
+          auto nextcomps = airLoopHVAC.supplyComponents(comp.cast<model::HVACComponent>(),supplyOutletNode);
+          OS_ASSERT(nextcomps.size() > 1u );
+          auto mo = nextcomps[1];
+          outletNode = mo.optionalCast<model::Node>();
+        }
+        OS_ASSERT(outletNode);
+        // Figure out if comp is before or after the fan
+        if( std::find(downstreamComps.begin(),downstreamComps.end(),comp) == downstreamComps.end() ) {
+          // Before fan
+          model::Duct duct(model);
+          auto ok = duct.addToNode(outletNode.get());
+          OS_ASSERT(ok);
+          model::ScheduleRuleset schedule(model);
+          schedule.defaultDaySchedule().addValue(Time(1.0), temp);
+          model::SetpointManagerScheduled spm(model,schedule);
+          auto ductOutletNode = duct.outletModelObject()->cast<model::Node>();
+          spm.addToNode(ductOutletNode);
+          model::SetpointManagerMixedAir spmMixedAir(model);
+          newMixedAirSPMs.push_back(spmMixedAir);
+          auto ductInletNode = duct.inletModelObject()->cast<model::Node>();
+          spmMixedAir.addToNode(ductInletNode); 
+          spmMixedAir.setReferenceSetpointNode(ductOutletNode);
+        } else {
+          // After fan
+          model::ScheduleRuleset schedule(model);
+          schedule.defaultDaySchedule().addValue(Time(1.0), temp);
+          model::SetpointManagerScheduled spm(model,schedule);
+          spm.addToNode(outletNode.get());
+        }
+      }
+    };
 
-          model::HVACComponent spmClone = deckSPM->clone(model).cast<model::HVACComponent>();
+    addFixedDualSPMs(coolingComponents,clgFixedSupTemp);
+    addFixedDualSPMs(heatingComponents,htgFixedSupTemp);
 
-          spmClone.addToNode(node);
+    // Fixup the fan reference nodes because adding ducts might have messed up the nodes around the fan
+    if( fan ) {
+      if( auto straightComponentFan = fan->optionalCast<model::StraightComponent>() ) {
+        auto fanInletNode = straightComponentFan->inletModelObject()->cast<model::Node>();
+        auto fanOutletNode = straightComponentFan->outletModelObject()->cast<model::Node>();
+        for( auto & spm : newMixedAirSPMs ) {
+          spm.setFanInletNode(fanInletNode);
+          spm.setFanOutletNode(fanOutletNode);
         }
       }
     }
+
   }
-
-  //// Give the nodes better names
-  //std::vector<model::ModelObject> comps = airLoopHVAC.supplyComponents();
-  //for( std::vector<model::ModelObject>::iterator it = comps.begin();
-  //     it != comps.end();
-  //     ++it )
-  //{
-  //  boost::optional<model::Node> node = it->optionalCast<model::Node>();
-  //  if( node && 
-  //      (it->handle() != supplyInletNode.handle()) )
-  //  {
-  //    model::ModelObject last = *(--it);
-  //    it->setName(last.name().get() + " Outlet Node");
-  //  }
-  //}
-
-  //supplyInletNode.setName(airLoopHVAC.name().get() + " Supply Inlet Node");
-  //airLoopHVAC.demandInletNode().setName(airLoopHVAC.name().get() + " Demand Inlet Node");
-  //airLoopHVAC.demandOutletNode().setName(airLoopHVAC.name().get() + " Demand Outlet Node");
-
-  //std::vector<model::ThermalZone> zones = subsetCastVector<model::ThermalZone>(airLoopHVAC.demandComponents());
-  //for(std::vector<model::ThermalZone>::iterator it = zones.begin();
-  //    it != zones.end();
-  //    ++it)
-  //{
-  //  std::string baseName = it->name().get();
-  //  if( boost::optional<model::ModelObject> mo = it->returnAirModelObject() )
-  //  {
-  //    mo->setName(baseName + " Outlet Node");
-  //  }
-
-  //  int i = 1;
-  //  std::vector<model::ModelObject> inletModelObjects = it->inletPortList().modelObjects();
-  //  for(std::vector<model::ModelObject>::iterator inletIt = inletModelObjects.begin();
-  //      inletIt != inletModelObjects.end();
-  //      ++inletIt)
-  //  {
-  //    inletIt->setName(it->name().get() + " Inlet Node " + boost::lexical_cast<std::string>(i));
-  //  }
-
-  //  i = 1;
-  //  std::vector<model::ModelObject> exhaustModelObjects = it->exhaustPortList().modelObjects();
-  //  for(std::vector<model::ModelObject>::iterator exhaustIt = exhaustModelObjects.begin();
-  //      exhaustIt != exhaustModelObjects.end();
-  //      ++exhaustIt)
-  //  {
-  //    exhaustIt->setName(it->name().get() + " Exhaust Node " + boost::lexical_cast<std::string>(i));
-  //  }
-  //}
-  
-  //model::Splitter splitter = airLoopHVAC.demandSplitter();
-  //std::vector<model::ModelObject> branchOutletObjects = splitter.outletModelObjects();
-  //int i = 1;
-  //for( std::vector<model::ModelObject>::iterator it = branchOutletObjects.begin();
-  //     it != branchOutletObjects.end();
-  //     ++it )
-  //{
-  //  it->setName(splitter.name().get() + " " + boost::lexical_cast<std::string>(i));
-  //  ++i;
-  //}
 
   return result;
 }
