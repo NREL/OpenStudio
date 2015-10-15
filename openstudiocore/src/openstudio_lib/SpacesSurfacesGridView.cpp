@@ -269,7 +269,7 @@ namespace openstudio {
             CastNullAdapter<model::Surface>(&model::Surface::sunExposure),
             CastNullAdapter<model::Surface>(&model::Surface::setSunExposure),
             boost::optional<std::function<void(model::Surface*)> >(NullAdapter(&model::Surface::resetSunExposure)),
-            boost::optional<std::function<bool(model::Surface*)>>(),
+            boost::optional<std::function<bool(model::Surface*)> >(NullAdapter(&model::Surface::isSunExposureDefaulted)),
             DataSource(
             allSurfaces,
             true
@@ -283,7 +283,7 @@ namespace openstudio {
             CastNullAdapter<model::Surface>(&model::Surface::windExposure),
             CastNullAdapter<model::Surface>(&model::Surface::setWindExposure),
             boost::optional<std::function<void(model::Surface*)> >(NullAdapter(&model::Surface::resetWindExposure)),
-            boost::optional<std::function<bool(model::Surface*)>>(),
+            boost::optional<std::function<bool(model::Surface*)> >(NullAdapter(&model::Surface::isWindExposureDefaulted)),
             DataSource(
             allSurfaces,
             true
