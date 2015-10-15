@@ -74,6 +74,8 @@
 #include "../model/SpaceLoadInstance_Impl.hpp"
 #include "../model/Space.hpp"
 #include "../model/Space_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
 #include "../model/SteamEquipment.hpp"
 #include "../model/SteamEquipment_Impl.hpp"
 #include "../model/SteamEquipmentDefinition.hpp"
@@ -224,6 +226,33 @@ namespace openstudio {
           loads.insert(loads.end(), OtherEquipment.begin(), OtherEquipment.end());
           loads.insert(loads.end(), SpaceInfiltrationDesignFlowRate.begin(), SpaceInfiltrationDesignFlowRate.end());
           loads.insert(loads.end(), SpaceInfiltrationEffectiveLeakageArea.begin(), SpaceInfiltrationEffectiveLeakageArea.end());
+
+          boost::optional<model::SpaceType> spaceType = t_space.spaceType();
+          if (spaceType) {
+            auto InternalMass = spaceType->internalMass();
+            auto People = spaceType->people();
+            auto Lights = spaceType->lights();
+            auto Luminaire = spaceType->luminaires();
+            auto ElectricEquipment = spaceType->electricEquipment();
+            auto GasEquipment = spaceType->gasEquipment();
+            auto HotWaterEquipment = spaceType->hotWaterEquipment();
+            auto SteamEquipment = spaceType->steamEquipment();
+            auto OtherEquipment = spaceType->otherEquipment();
+            auto SpaceInfiltrationDesignFlowRate = spaceType->spaceInfiltrationDesignFlowRates();
+            auto SpaceInfiltrationEffectiveLeakageArea = spaceType->spaceInfiltrationEffectiveLeakageAreas();
+
+            loads.insert(loads.end(), InternalMass.begin(), InternalMass.end());
+            loads.insert(loads.end(), People.begin(), People.end());
+            loads.insert(loads.end(), Lights.begin(), Lights.end());
+            loads.insert(loads.end(), Luminaire.begin(), Luminaire.end());
+            loads.insert(loads.end(), ElectricEquipment.begin(), ElectricEquipment.end());
+            loads.insert(loads.end(), GasEquipment.begin(), GasEquipment.end());
+            loads.insert(loads.end(), HotWaterEquipment.begin(), HotWaterEquipment.end());
+            loads.insert(loads.end(), SteamEquipment.begin(), SteamEquipment.end());
+            loads.insert(loads.end(), OtherEquipment.begin(), OtherEquipment.end());
+            loads.insert(loads.end(), SpaceInfiltrationDesignFlowRate.begin(), SpaceInfiltrationDesignFlowRate.end());
+            loads.insert(loads.end(), SpaceInfiltrationEffectiveLeakageArea.begin(), SpaceInfiltrationEffectiveLeakageArea.end());
+          }
 
           return loads;
         }
@@ -470,6 +499,129 @@ namespace openstudio {
 
           // Should never get here
           OS_ASSERT(false);
+        }
+        );
+        
+        const boost::optional<std::function<void(model::ModelObject *)> > resetMultiplier(
+          [](model::ModelObject *t_modelObject) {
+          boost::optional<model::InternalMass> im = t_modelObject->optionalCast<model::InternalMass>();
+          if (im)
+          {
+            im->resetMultiplier();
+          }
+
+          boost::optional<model::People> p = t_modelObject->optionalCast<model::People>();
+          if (p)
+          {
+            p->resetMultiplier();
+          }
+
+          boost::optional<model::Lights> light = t_modelObject->optionalCast<model::Lights>();
+          if (light)
+          {
+            light->resetMultiplier();
+          }
+
+          boost::optional<model::Luminaire> lum = t_modelObject->optionalCast<model::Luminaire>();
+          if (lum)
+          {
+            lum->resetMultiplier();
+          }
+
+          boost::optional<model::ElectricEquipment> e = t_modelObject->optionalCast<model::ElectricEquipment>();
+          if (e)
+          {
+            e->resetMultiplier();
+          }
+
+          boost::optional<model::GasEquipment> g = t_modelObject->optionalCast<model::GasEquipment>();
+          if (g)
+          {
+            g->resetMultiplier();
+          }
+
+          boost::optional<model::HotWaterEquipment> h = t_modelObject->optionalCast<model::HotWaterEquipment>();
+          if (h)
+          {
+            h->resetMultiplier();
+          }
+
+          boost::optional<model::SteamEquipment> se = t_modelObject->optionalCast<model::SteamEquipment>();
+          if (se)
+          {
+            se->resetMultiplier();
+          }
+
+          boost::optional<model::OtherEquipment> o = t_modelObject->optionalCast<model::OtherEquipment>();
+          if (o)
+          {
+            o->resetMultiplier();
+          }
+
+          // Should never get here
+          OS_ASSERT(false);
+        }
+        );
+
+        const boost::optional<std::function<bool(model::ModelObject *)> > isMultiplierDefaulted(
+          [](model::ModelObject *t_modelObject) {
+          boost::optional<model::InternalMass> im = t_modelObject->optionalCast<model::InternalMass>();
+          if (im)
+          {
+            return im->isMultiplierDefaulted();
+          }
+
+          boost::optional<model::People> p = t_modelObject->optionalCast<model::People>();
+          if (p)
+          {
+            return p->isMultiplierDefaulted();
+          }
+
+          boost::optional<model::Lights> light = t_modelObject->optionalCast<model::Lights>();
+          if (light)
+          {
+            return light->isMultiplierDefaulted();
+          }
+
+          boost::optional<model::Luminaire> lum = t_modelObject->optionalCast<model::Luminaire>();
+          if (lum)
+          {
+            return lum->isMultiplierDefaulted();
+          }
+
+          boost::optional<model::ElectricEquipment> e = t_modelObject->optionalCast<model::ElectricEquipment>();
+          if (e)
+          {
+            return e->isMultiplierDefaulted();
+          }
+
+          boost::optional<model::GasEquipment> g = t_modelObject->optionalCast<model::GasEquipment>();
+          if (g)
+          {
+            return g->isMultiplierDefaulted();
+          }
+
+          boost::optional<model::HotWaterEquipment> h = t_modelObject->optionalCast<model::HotWaterEquipment>();
+          if (h)
+          {
+            return h->isMultiplierDefaulted();
+          }
+
+          boost::optional<model::SteamEquipment> se = t_modelObject->optionalCast<model::SteamEquipment>();
+          if (se)
+          {
+            return se->isMultiplierDefaulted();
+          }
+
+          boost::optional<model::OtherEquipment> o = t_modelObject->optionalCast<model::OtherEquipment>();
+          if (o)
+          {
+            return o->isMultiplierDefaulted();
+          }
+
+          // Should never get here
+          OS_ASSERT(false);
+          return false;
         }
         );
 
@@ -837,8 +989,8 @@ namespace openstudio {
           addValueEditColumn(Heading(QString(MULTIPLIER)),
             multiplier,
             setMultiplier,
-            boost::optional<std::function<void(model::ModelObject *)>>(),
-            boost::optional<std::function<bool(model::ModelObject *)>>(),
+            resetMultiplier,
+            isMultiplierDefaulted,
             DataSource(
             allLoadsWithMultipliers,
             true
