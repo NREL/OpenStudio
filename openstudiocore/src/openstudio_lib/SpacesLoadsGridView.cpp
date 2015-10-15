@@ -497,6 +497,18 @@ namespace openstudio {
         }
         );
 
+        boost::optional<std::function<bool(model::ModelObject *)> > isActivityLevelScheduleDefaulted(
+          [](model::ModelObject *l) {
+          if (boost::optional<model::People> p = l->optionalCast<model::People>())
+          {
+            return p->isActivityLevelScheduleDefaulted();
+          }
+
+          OS_ASSERT(false);
+          return false;
+        }
+        );
+
         std::function<bool(model::ModelObject *, const model::Schedule &)> setSchedule(
           [](model::ModelObject *l, model::Schedule t_s) {
 
@@ -605,6 +617,62 @@ namespace openstudio {
           else
           {
             OS_ASSERT(false);
+          }
+        }
+        );
+
+        boost::optional<std::function<bool(model::ModelObject *)> > isScheduleDefaulted(
+          [](model::ModelObject *l) {
+
+          if (boost::optional<model::People> p = l->optionalCast<model::People>())
+          {
+            return p->isActivityLevelScheduleDefaulted();
+          }
+          else if (boost::optional<model::Lights> light = l->optionalCast<model::Lights>())
+          {
+            return light->isScheduleDefaulted();
+          }
+          else if (boost::optional<model::Luminaire> lum = l->optionalCast<model::Luminaire>())
+          {
+            return lum->isScheduleDefaulted();
+          }
+          else if (boost::optional<model::ElectricEquipment> e = l->optionalCast<model::ElectricEquipment>())
+          {
+            return e->isScheduleDefaulted();
+          }
+          else if (boost::optional<model::GasEquipment> g = l->optionalCast<model::GasEquipment>())
+          {
+            return g->isScheduleDefaulted();
+          }
+          else if (boost::optional<model::HotWaterEquipment> h = l->optionalCast<model::HotWaterEquipment>())
+          {
+            return h->isScheduleDefaulted();
+          }
+          else if (boost::optional<model::SteamEquipment> se = l->optionalCast<model::SteamEquipment>())
+          {
+            return se->isScheduleDefaulted();
+          }
+          else if (boost::optional<model::OtherEquipment> o = l->optionalCast<model::OtherEquipment>())
+          {
+            return o->isScheduleDefaulted();
+          }
+          else if (boost::optional<model::SpaceInfiltrationDesignFlowRate> f = l->optionalCast<model::SpaceInfiltrationDesignFlowRate>())
+          {
+            return f->isScheduleDefaulted();
+          }
+          else if (boost::optional<model::SpaceInfiltrationEffectiveLeakageArea> la = l->optionalCast<model::SpaceInfiltrationEffectiveLeakageArea>())
+          {
+            return la->isScheduleDefaulted();
+          }
+          else if (boost::optional<model::InternalMass> im = l->optionalCast<model::InternalMass>())
+          {
+            // Note: InternalMass does not have a schedule
+            return false;
+          }
+          else
+          {
+            OS_ASSERT(false);
+            return false;
           }
         }
         );
@@ -866,21 +934,25 @@ namespace openstudio {
             );
         }
         else if (field == SCHEDULE) {
+
           addDropZoneColumn(Heading(QString(SCHEDULE)),
             schedule,
             setSchedule,
             resetSchedule,
+            isScheduleDefaulted,
             DataSource(
             allLoadsWithSchedules,
             true
             )
             );
+
         }
         else if (field == ACTIVITYSCHEDULE) {
           addDropZoneColumn(Heading(QString(SCHEDULE)),
             activityLevelSchedule,
             setActivityLevelSchedule,
             resetActivityLevelSchedule,
+            isActivityLevelScheduleDefaulted,
             DataSource(
             allLoadsWithActivityLevelSchedules,
             true

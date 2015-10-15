@@ -222,6 +222,7 @@ namespace openstudio {
             CastNullAdapter<model::Surface>(&model::Surface::construction),
             CastNullAdapter<model::Surface>(&model::Surface::setConstruction),
             boost::optional<std::function<void(model::Surface*)> >(NullAdapter(&model::Surface::resetConstruction)),
+            boost::optional<std::function<bool(model::Surface*)> >(NullAdapter(&model::Surface::isConstructionDefaulted)),
             DataSource(
             allSurfaces,
             true
@@ -254,6 +255,7 @@ namespace openstudio {
             CastNullAdapter<model::Surface>(&model::Surface::adjacentSurface),
             setter,
             boost::optional<std::function<void(model::Surface*)> >(NullAdapter(&model::Surface::resetAdjacentSurface)),
+            boost::optional<std::function<bool(model::Surface*)> >(),
             DataSource(
             allSurfaces,
             true

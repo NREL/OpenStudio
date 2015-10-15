@@ -484,6 +484,7 @@ namespace openstudio {
             CastNullAdapter<model::SubSurface>(&model::SubSurface::construction),
             CastNullAdapter<model::SubSurface>(&model::SubSurface::setConstruction),
             boost::optional<std::function<void(model::SubSurface*)> >(NullAdapter(&model::SubSurface::resetConstruction)),
+            boost::optional<std::function<bool(model::SubSurface*)> >(NullAdapter(&model::SubSurface::isConstructionDefaulted)),
             DataSource(
             allSubSurfaces,
             true
@@ -502,6 +503,7 @@ namespace openstudio {
             CastNullAdapter<model::SubSurface>(&model::SubSurface::adjacentSubSurface),
             setter,
             boost::optional<std::function<void(model::SubSurface*)> >(NullAdapter(&model::SubSurface::resetAdjacentSubSurface)),
+            boost::optional<std::function<bool(model::SubSurface*)> >(),
             DataSource(
             allOutsideBoundaryConditionObjects,
             true
@@ -516,6 +518,7 @@ namespace openstudio {
             CastNullAdapter<model::SubSurface>(&model::SubSurface::shadingControl),
             CastNullAdapter<model::SubSurface>(&model::SubSurface::setShadingControl),
             boost::optional<std::function<void(model::SubSurface*)> >(NullAdapter(&model::SubSurface::resetShadingControl)),
+            boost::optional<std::function<bool(model::SubSurface*)> >(),
             DataSource(
             allSubSurfaces,
             true)
@@ -569,6 +572,7 @@ namespace openstudio {
             NullAdapter(&model::ShadingControl::schedule),
             setter,
             boost::optional<std::function<void(model::ShadingControl*)>>(CastNullAdapter<model::ShadingControl>(&model::ShadingControl::resetSchedule)),
+            boost::optional<std::function<bool(model::ShadingControl*)>>(),
             DataSource(
             allShadingControls,
             true
@@ -580,6 +584,7 @@ namespace openstudio {
             CastNullAdapter<model::SubSurface>(&model::SubSurface::windowPropertyFrameAndDivider),
             CastNullAdapter<model::SubSurface>(&model::SubSurface::setWindowPropertyFrameAndDivider),
             boost::optional<std::function<void(model::SubSurface*)> >(NullAdapter(&model::SubSurface::resetWindowPropertyFrameAndDivider)),
+            boost::optional<std::function<bool(model::SubSurface*)> >(),
             DataSource(
             allSubSurfaces,
             true)
@@ -903,6 +908,7 @@ namespace openstudio {
             CastNullAdapter<model::DaylightingDeviceShelf>(&model::DaylightingDeviceShelf::insideShelf),
             CastNullAdapter<model::DaylightingDeviceShelf>(&model::DaylightingDeviceShelf::setInsideShelf),
             boost::optional<std::function<void(model::DaylightingDeviceShelf *)>>(),
+            boost::optional<std::function<bool(model::DaylightingDeviceShelf *)>>(),
             DataSource(
             allDaylightingDeviceShelfs,
             true
@@ -914,6 +920,7 @@ namespace openstudio {
             CastNullAdapter<model::DaylightingDeviceShelf>(&model::DaylightingDeviceShelf::outsideShelf),
             CastNullAdapter<model::DaylightingDeviceShelf>(&model::DaylightingDeviceShelf::setOutsideShelf),
             boost::optional<std::function<void(model::DaylightingDeviceShelf *)>>(),
+            boost::optional<std::function<bool(model::DaylightingDeviceShelf *)>>(),
             DataSource(
             allDaylightingDeviceShelfs,
             true
