@@ -274,7 +274,7 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
   m_baseConcepts.clear();
 
   for (const QString& field : fields) {
-
+    // Evan note: addCheckBoxColumn does not yet handle reset and default
     if (field == DAYLIGHTSAVINGTIMEINDICATOR) {
       addCheckBoxColumn(Heading(QString(DAYLIGHTSAVINGTIMEINDICATOR), true, false),
         std::string("Check to enable daylight saving time indicator."),
@@ -310,44 +310,65 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
     else if (field == DAYOFMONTH) {
       addValueEditColumn(Heading(QString(DAYOFMONTH)),
         NullAdapter(&model::DesignDay::dayOfMonth),
-        NullAdapter(&model::DesignDay::setDayOfMonth)
+        NullAdapter(&model::DesignDay::setDayOfMonth),
+        boost::optional<std::function<void(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::resetDayOfMonth)),
+        boost::optional<std::function<bool(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::isDayOfMonthDefaulted)),
+        boost::optional<DataSource>()
         );
     }
     else if (field == MONTH) {
       addValueEditColumn(Heading(QString(MONTH)),
         NullAdapter(&model::DesignDay::month),
-        NullAdapter(&model::DesignDay::setMonth)
+        NullAdapter(&model::DesignDay::setMonth),
+        boost::optional<std::function<void(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::resetMonth)),
+        boost::optional<std::function<bool(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::isMonthDefaulted)),
+        boost::optional<DataSource>()
         );
     }
     // DOUBLE
     else if (field == SKYCLEARNESS) {
       addValueEditColumn(Heading(QString(SKYCLEARNESS)),
         NullAdapter(&model::DesignDay::skyClearness),
-        NullAdapter(&model::DesignDay::setSkyClearness)
+        NullAdapter(&model::DesignDay::setSkyClearness),
+        boost::optional<std::function<void(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::resetSkyClearness)),
+        boost::optional<std::function<bool(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::isSkyClearnessDefaulted)),
+        boost::optional<DataSource>()
         );
     }
     else if (field == ASHRAETAUB) {
       addValueEditColumn(Heading(QString(ASHRAETAUB)),
         NullAdapter(&model::DesignDay::ashraeTaub),
-        NullAdapter(&model::DesignDay::setAshraeTaub)
+        NullAdapter(&model::DesignDay::setAshraeTaub),
+        boost::optional<std::function<void(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::resetAshraeTaub)),
+        boost::optional<std::function<bool(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::isAshraeTaubDefaulted)),
+        boost::optional<DataSource>()
         );
     }
     else if (field == ASHRAETAUD) {
       addValueEditColumn(Heading(QString(ASHRAETAUD)),
         NullAdapter(&model::DesignDay::ashraeTaud),
-        NullAdapter(&model::DesignDay::setAshraeTaud)
+        NullAdapter(&model::DesignDay::setAshraeTaud),
+        boost::optional<std::function<void(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::resetAshraeTaud)),
+        boost::optional<std::function<bool(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::isAshraeTaudDefaulted)),
+        boost::optional<DataSource>()
         );
     }
     else if (field == WINDDIRECTION) {
       addValueEditColumn(Heading(QString(WINDDIRECTION)),
         NullAdapter(&model::DesignDay::windDirection),
-        NullAdapter(&model::DesignDay::setWindDirection)
+        NullAdapter(&model::DesignDay::setWindDirection),
+        boost::optional<std::function<void(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::resetWindDirection)),
+        boost::optional<std::function<bool(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::isWindDirectionDefaulted)),
+        boost::optional<DataSource>()
         );
     }
     else if (field == HUMIDITYINDICATINGCONDITIONSATMAXIMUMDRYBULB){
       addValueEditColumn(Heading(QString(HUMIDITYINDICATINGCONDITIONSATMAXIMUMDRYBULB)),
         NullAdapter(&model::DesignDay::humidityIndicatingConditionsAtMaximumDryBulb),
-        NullAdapter(&model::DesignDay::setHumidityIndicatingConditionsAtMaximumDryBulb)
+        NullAdapter(&model::DesignDay::setHumidityIndicatingConditionsAtMaximumDryBulb),
+        boost::optional<std::function<void(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::resetHumidityIndicatingConditionsAtMaximumDryBulb)),
+        boost::optional<std::function<bool(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted)),
+        boost::optional<DataSource>()
         );
     }
     // STRING
@@ -366,7 +387,10 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
         QString("F"),
         m_isIP,
         NullAdapter(&model::DesignDay::maximumDryBulbTemperature),
-        NullAdapter(&model::DesignDay::setMaximumDryBulbTemperature)
+        NullAdapter(&model::DesignDay::setMaximumDryBulbTemperature),
+        boost::optional<std::function<void(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::resetMaximumDryBulbTemperature)),
+        boost::optional<std::function<bool(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::isMaximumDryBulbTemperatureDefaulted)),
+        boost::optional<DataSource>()
         );
     }
     else if (field == DAILYDRYBULBTEMPERATURERANGE){
@@ -376,7 +400,10 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
         QString("F"),
         m_isIP,
         NullAdapter(&model::DesignDay::dailyDryBulbTemperatureRange),
-        NullAdapter(&model::DesignDay::setDailyDryBulbTemperatureRange)
+        NullAdapter(&model::DesignDay::setDailyDryBulbTemperatureRange),
+        boost::optional<std::function<void(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::resetDailyDryBulbTemperatureRange)),
+        boost::optional<std::function<bool(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::isDailyDryBulbTemperatureRangeDefaulted)),
+        boost::optional<DataSource>()
         );
     }
     else if (field == BAROMETRICPRESSURE){
@@ -386,7 +413,10 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
         QString("inHg"),
         m_isIP,
         NullAdapter(&model::DesignDay::barometricPressure),
-        NullAdapter(&model::DesignDay::setBarometricPressure)
+        NullAdapter(&model::DesignDay::setBarometricPressure),
+        boost::optional<std::function<void(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::resetBarometricPressure)),
+        boost::optional<std::function<bool(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::isBarometricPressureDefaulted)),
+        boost::optional<DataSource>()
         );
     }
     else if (field == WINDSPEED){
@@ -396,7 +426,10 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
         QString("miles/hr"),
         m_isIP,
         NullAdapter(&model::DesignDay::windSpeed),
-        NullAdapter(&model::DesignDay::setWindSpeed)
+        NullAdapter(&model::DesignDay::setWindSpeed),
+        boost::optional<std::function<void(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::resetWindSpeed)),
+        boost::optional<std::function<bool(model::DesignDay*)>>(CastNullAdapter<model::DesignDay>(&model::DesignDay::isWindSpeedDefaulted)),
+        boost::optional<DataSource>()
         );
     }
     else if (field == DAILYWETBULBTEMPERATURERANGE){
@@ -415,7 +448,8 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
         std::function<std::vector<std::string>()>(&model::DesignDay::validDayTypeValues),
         CastNullAdapter<model::DesignDay>(&model::DesignDay::dayType),
         CastNullAdapter<model::DesignDay>(&model::DesignDay::setDayType),
-        boost::optional<std::function<void(model::DesignDay *)> >(),
+        CastNullAdapter<model::DesignDay>(&model::DesignDay::resetDayType),
+        CastNullAdapter<model::DesignDay>(&model::DesignDay::isDayTypeDefaulted),
         boost::optional<DataSource>()
         );
     }
@@ -425,7 +459,8 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
         std::function<std::vector<std::string>()>(&model::DesignDay::validDryBulbTemperatureRangeModifierTypeValues),
         CastNullAdapter<model::DesignDay>(&model::DesignDay::dryBulbTemperatureRangeModifierType),
         CastNullAdapter<model::DesignDay>(&model::DesignDay::setDryBulbTemperatureRangeModifierType),
-        boost::optional<std::function<void(model::DesignDay *)> >(),
+        CastNullAdapter<model::DesignDay>(&model::DesignDay::resetDryBulbTemperatureRangeModifierType),
+        CastNullAdapter<model::DesignDay>(&model::DesignDay::isDryBulbTemperatureRangeModifierTypeDefaulted),
         boost::optional<DataSource>()
         );
     }
@@ -435,7 +470,8 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
         std::function<std::vector<std::string>()>(&model::DesignDay::validHumidityIndicatingTypeValues),
         CastNullAdapter<model::DesignDay>(&model::DesignDay::humidityIndicatingType),
         CastNullAdapter<model::DesignDay>(&model::DesignDay::setHumidityIndicatingType),
-        boost::optional<std::function<void(model::DesignDay *)> >(),
+        CastNullAdapter<model::DesignDay>(&model::DesignDay::resetHumidityIndicatingType),
+        CastNullAdapter<model::DesignDay>(&model::DesignDay::isHumidityIndicatingTypeDefaulted),
         boost::optional<DataSource>()
         );
     }
@@ -445,7 +481,8 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
         std::function<std::vector<std::string>()>(&model::DesignDay::validSolarModelIndicatorValues),
         CastNullAdapter<model::DesignDay>(&model::DesignDay::solarModelIndicator),
         CastNullAdapter<model::DesignDay>(&model::DesignDay::setSolarModelIndicator),
-        boost::optional<std::function<void(model::DesignDay *)> >(),
+        CastNullAdapter<model::DesignDay>(&model::DesignDay::resetSolarModelIndicator),
+        CastNullAdapter<model::DesignDay>(&model::DesignDay::isSolarModelIndicatorDefaulted),
         boost::optional<DataSource>()
         );
     }
