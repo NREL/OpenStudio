@@ -471,8 +471,8 @@ namespace openstudio {
           addValueEditColumn(Heading(QString(MULTIPLIER)),
             NullAdapter(&model::SubSurface::multiplier),
             NullAdapter(&model::SubSurface::setMultiplier),
-            boost::optional<std::function<void(model::SubSurface *)>>(),
-            boost::optional<std::function<bool(model::SubSurface *)>>(),
+            boost::optional<std::function<void(model::SubSurface*)> >(NullAdapter(&model::SubSurface::resetMultiplier)),
+            boost::optional<std::function<bool(model::SubSurface*)> >(NullAdapter(&model::SubSurface::isMultiplierDefaulted)),
             DataSource(
             allSubSurfaces,
             true
@@ -553,7 +553,8 @@ namespace openstudio {
             std::function<std::vector<std::string>()>(&model::ShadingControl::shadingControlTypeValues),
             CastNullAdapter<model::ShadingControl>(&model::ShadingControl::shadingControlType),
             CastNullAdapter<model::ShadingControl>(&model::ShadingControl::setShadingControlType),
-            boost::optional<std::function<void(model::ShadingControl *)> >(),
+            boost::optional<std::function<void(model::ShadingControl *)> >(NullAdapter(&model::ShadingControl::resetShadingControlType)),
+            boost::optional<std::function<bool(model::ShadingControl *)> >(NullAdapter(&model::ShadingControl::isShadingControlTypeDefaulted)),
             DataSource(
             allShadingControls,
             true
