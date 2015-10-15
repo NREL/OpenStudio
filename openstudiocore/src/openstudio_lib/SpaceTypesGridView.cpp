@@ -787,6 +787,129 @@ namespace openstudio {
         }
         );
 
+        const boost::optional<std::function<void(model::ModelObject *)> > resetMultiplier(
+          [](model::ModelObject *t_modelObject) {
+          boost::optional<model::InternalMass> im = t_modelObject->optionalCast<model::InternalMass>();
+          if (im)
+          {
+            im->resetMultiplier();
+          }
+
+          boost::optional<model::People> p = t_modelObject->optionalCast<model::People>();
+          if (p)
+          {
+            p->resetMultiplier();
+          }
+
+          boost::optional<model::Lights> light = t_modelObject->optionalCast<model::Lights>();
+          if (light)
+          {
+            light->resetMultiplier();
+          }
+
+          boost::optional<model::Luminaire> lum = t_modelObject->optionalCast<model::Luminaire>();
+          if (lum)
+          {
+            lum->resetMultiplier();
+          }
+
+          boost::optional<model::ElectricEquipment> e = t_modelObject->optionalCast<model::ElectricEquipment>();
+          if (e)
+          {
+            e->resetMultiplier();
+          }
+
+          boost::optional<model::GasEquipment> g = t_modelObject->optionalCast<model::GasEquipment>();
+          if (g)
+          {
+            g->resetMultiplier();
+          }
+
+          boost::optional<model::HotWaterEquipment> h = t_modelObject->optionalCast<model::HotWaterEquipment>();
+          if (h)
+          {
+            h->resetMultiplier();
+          }
+
+          boost::optional<model::SteamEquipment> se = t_modelObject->optionalCast<model::SteamEquipment>();
+          if (se)
+          {
+            se->resetMultiplier();
+          }
+
+          boost::optional<model::OtherEquipment> o = t_modelObject->optionalCast<model::OtherEquipment>();
+          if (o)
+          {
+            o->resetMultiplier();
+          }
+
+          // Should never get here
+          OS_ASSERT(false);
+        }
+        );
+
+        const boost::optional<std::function<bool(model::ModelObject *)> > isMultiplierDefaulted(
+          [](model::ModelObject *t_modelObject) {
+          boost::optional<model::InternalMass> im = t_modelObject->optionalCast<model::InternalMass>();
+          if (im)
+          {
+            return im->isMultiplierDefaulted();
+          }
+
+          boost::optional<model::People> p = t_modelObject->optionalCast<model::People>();
+          if (p)
+          {
+            return p->isMultiplierDefaulted();
+          }
+
+          boost::optional<model::Lights> light = t_modelObject->optionalCast<model::Lights>();
+          if (light)
+          {
+            return light->isMultiplierDefaulted();
+          }
+
+          boost::optional<model::Luminaire> lum = t_modelObject->optionalCast<model::Luminaire>();
+          if (lum)
+          {
+            return lum->isMultiplierDefaulted();
+          }
+
+          boost::optional<model::ElectricEquipment> e = t_modelObject->optionalCast<model::ElectricEquipment>();
+          if (e)
+          {
+            return e->isMultiplierDefaulted();
+          }
+
+          boost::optional<model::GasEquipment> g = t_modelObject->optionalCast<model::GasEquipment>();
+          if (g)
+          {
+            return g->isMultiplierDefaulted();
+          }
+
+          boost::optional<model::HotWaterEquipment> h = t_modelObject->optionalCast<model::HotWaterEquipment>();
+          if (h)
+          {
+            return h->isMultiplierDefaulted();
+          }
+
+          boost::optional<model::SteamEquipment> se = t_modelObject->optionalCast<model::SteamEquipment>();
+          if (se)
+          {
+            return se->isMultiplierDefaulted();
+          }
+
+          boost::optional<model::OtherEquipment> o = t_modelObject->optionalCast<model::OtherEquipment>();
+          if (o)
+          {
+            return o->isMultiplierDefaulted();
+          }
+
+          // Should never get here
+          OS_ASSERT(false);
+          return false;
+        }
+        );
+
         std::function<bool(model::ModelObject *, const model::Schedule &)> setActivityLevelSchedule(
           [](model::ModelObject *l, model::Schedule t_s) {
           if (boost::optional<model::People> p = l->optionalCast<model::People>())
@@ -1152,8 +1275,8 @@ namespace openstudio {
           addValueEditColumn(Heading(QString(MULTIPLIER)),
             multiplier,
             setMultiplier,
-            boost::optional<std::function<void(model::ModelObject *)>>(),
-            boost::optional<std::function<bool(model::ModelObject *)>>(),
+            resetMultiplier,
+            isMultiplierDefaulted,
             DataSource(
             allLoadsWithMultipliers,
             true
@@ -1297,21 +1420,25 @@ namespace openstudio {
         addDropZoneColumn(Heading(QString(DEFAULTCONSTRUCTIONSET)),
           CastNullAdapter<model::SpaceType>(&model::SpaceType::defaultConstructionSet),
           CastNullAdapter<model::SpaceType>(&model::SpaceType::setDefaultConstructionSet),
-          boost::optional<std::function<void(model::SpaceType*)>>(CastNullAdapter<model::SpaceType>(&model::SpaceType::resetDefaultConstructionSet)));
+          boost::optional<std::function<void(model::SpaceType*)>>(CastNullAdapter<model::SpaceType>(&model::SpaceType::resetDefaultConstructionSet))
+          );
 
       }
       else if (field == DEFAULTSCHEDULESET){
         addDropZoneColumn(Heading(QString(DEFAULTSCHEDULESET)),
           CastNullAdapter<model::SpaceType>(&model::SpaceType::defaultScheduleSet),
           CastNullAdapter<model::SpaceType>(&model::SpaceType::setDefaultScheduleSet),
-          boost::optional<std::function<void(model::SpaceType*)>>(CastNullAdapter<model::SpaceType>(&model::SpaceType::resetDefaultScheduleSet)));
+          boost::optional<std::function<void(model::SpaceType*)>>(CastNullAdapter<model::SpaceType>(&model::SpaceType::resetDefaultScheduleSet))
+          );
 
       }
       else if (field == DESIGNSPECIFICATIONOUTDOORAIR){
         addDropZoneColumn(Heading(QString(DESIGNSPECIFICATIONOUTDOORAIR)),
           CastNullAdapter<model::SpaceType>(&model::SpaceType::designSpecificationOutdoorAir),
           CastNullAdapter<model::SpaceType>(&model::SpaceType::setDesignSpecificationOutdoorAir),
-          boost::optional<std::function<void(model::SpaceType*)>>(CastNullAdapter<model::SpaceType>(&model::SpaceType::resetDesignSpecificationOutdoorAir)));
+          boost::optional<std::function<void(model::SpaceType*)>>(CastNullAdapter<model::SpaceType>(&model::SpaceType::resetDesignSpecificationOutdoorAir)),
+          boost::optional<std::function<bool(model::SpaceType*)>>(CastNullAdapter<model::SpaceType>(&model::SpaceType::isDesignSpecificationOutdoorAirDefaulted))
+          );
 
       }
       else if (field == RENDERINGCOLOR){
