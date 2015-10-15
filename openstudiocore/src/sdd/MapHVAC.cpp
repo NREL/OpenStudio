@@ -1143,6 +1143,77 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
   // Establish deck temperature
 
+  // Lambda for OACtrl types FixedDualSetpoint and ScheduledDualSetpoint
+  auto createDualSetpoints = [&](model::Schedule & coolingSchedule, model::Schedule & heatingSchedule) {
+    model::SetpointManagerScheduled spm(model,coolingSchedule);
+    spm.addToNode(supplyOutletNode);
+
+    std::vector<model::ModelObject> downstreamComps;
+    auto fan = airLoopHVAC.supplyFan();
+    if( fan ) {
+      downstreamComps = airLoopHVAC.supplyComponents(fan.get(),airLoopHVAC.supplyOutletNode());
+    }
+
+    // Do this so there is "something" between the supplyOutletNode (which already has an SPM) and the
+    // other components where we are about to add a different SPM.
+    // Don't want to squash the existing spm.
+    if( downstreamComps.size() > 2u ) {
+      model::Duct duct(model);
+      duct.setName( airLoopHVAC.name().get() + " OS Generated Outlet Duct");
+      duct.addToNode(supplyOutletNode);
+    }
+
+    std::vector<model::SetpointManagerMixedAir> newMixedAirSPMs;
+
+    auto addDualSPMs = [&](const std::vector<model::ModelObject> & comps,model::Schedule & schedule) {
+      for( const auto & comp : comps ) {
+        boost::optional<model::Node> outletNode;
+        {
+          auto nextcomps = airLoopHVAC.supplyComponents(comp.cast<model::HVACComponent>(),supplyOutletNode);
+          OS_ASSERT(nextcomps.size() > 1u );
+          auto mo = nextcomps[1];
+          outletNode = mo.optionalCast<model::Node>();
+        }
+        OS_ASSERT(outletNode);
+        // Figure out if comp is before or after the fan
+        if( std::find(downstreamComps.begin(),downstreamComps.end(),comp) == downstreamComps.end() ) {
+          // Before fan
+          model::Duct duct(model);
+          duct.setName(comp.name().get() + " OS Generated Outlet Duct");
+          auto ok = duct.addToNode(outletNode.get());
+          OS_ASSERT(ok);
+          model::SetpointManagerScheduled spm(model,schedule);
+          auto ductOutletNode = duct.outletModelObject()->cast<model::Node>();
+          spm.addToNode(ductOutletNode);
+          model::SetpointManagerMixedAir spmMixedAir(model);
+          newMixedAirSPMs.push_back(spmMixedAir);
+          auto ductInletNode = duct.inletModelObject()->cast<model::Node>();
+          spmMixedAir.addToNode(ductInletNode); 
+          spmMixedAir.setReferenceSetpointNode(ductOutletNode);
+        } else {
+          // After fan
+          model::SetpointManagerScheduled spm(model,schedule);
+          spm.addToNode(outletNode.get());
+        }
+      }
+    };
+
+    addDualSPMs(coolingComponents,coolingSchedule);
+    addDualSPMs(heatingComponents,heatingSchedule);
+
+    // Fixup the fan reference nodes because adding ducts might have messed up the nodes around the fan
+    if( fan ) {
+      if( auto straightComponentFan = fan->optionalCast<model::StraightComponent>() ) {
+        auto fanInletNode = straightComponentFan->inletModelObject()->cast<model::Node>();
+        auto fanOutletNode = straightComponentFan->outletModelObject()->cast<model::Node>();
+        for( auto & spm : newMixedAirSPMs ) {
+          spm.setFanInletNode(fanInletNode);
+          spm.setFanOutletNode(fanOutletNode);
+        }
+      }
+    }
+  };
+
   boost::optional<model::HVACComponent> deckSPM;
 
   if( istringEqual(clgCtrlElement.text().toStdString(),"Fixed") )
@@ -1362,14 +1433,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     double clgFixedSupTemp = 23.89;
     double htgFixedSupTemp = 15.56;
 
-    auto midpoint = (clgFixedSupTemp + htgFixedSupTemp) / 2.0;
-
-    model::ScheduleRuleset schedule(model);
-    schedule.defaultDaySchedule().addValue(Time(1.0), midpoint);
-    model::SetpointManagerScheduled spm(model,schedule);
-    spm.setName(supplyOutletNode.name().get() + " SPM");
-    spm.addToNode(supplyOutletNode);
-
     QDomElement clgFixedSupTempElement = airSystemElement.firstChildElement("ClgFixedSupTemp");
     value = clgFixedSupTempElement.text().toDouble(&ok);
     if( ok ) {
@@ -1388,73 +1451,56 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
         << " Using OpenStudio defaults.");
     }
 
-    std::vector<model::ModelObject> downstreamComps;
-    auto fan = airLoopHVAC.supplyFan();
-    if( fan ) {
-      downstreamComps = airLoopHVAC.supplyComponents(fan.get(),airLoopHVAC.supplyOutletNode());
+    model::ScheduleRuleset coolingSchedule(model);
+    coolingSchedule.setName(airLoopHVAC.name().get() + " Cooling SP Schedule");
+    coolingSchedule.defaultDaySchedule().addValue(Time(1.0), clgFixedSupTemp);
+
+    model::ScheduleRuleset heatingSchedule(model);
+    heatingSchedule.setName(airLoopHVAC.name().get() + " Heating SP Schedule");
+    heatingSchedule.defaultDaySchedule().addValue(Time(1.0), htgFixedSupTemp);
+
+    createDualSetpoints(coolingSchedule,heatingSchedule);
+  }
+  else if( istringEqual(clgCtrlElement.text().toStdString(),"ScheduledDualSetPoint") )
+  {
+    boost::optional<model::Schedule> coolingSchedule;
+    boost::optional<model::Schedule> heatingSchedule;
+
+    double clgFixedSupTemp = 23.89;
+    double htgFixedSupTemp = 15.56;
+
+    QDomElement clgSetptSchRefElement = airSystemElement.firstChildElement("ClgSetptSchRef");
+    std::string clgSetptSchRef = escapeName(clgSetptSchRefElement.text());
+    coolingSchedule = model.getModelObjectByName<model::Schedule>(clgSetptSchRef);
+
+    if( ! coolingSchedule ) {
+      LOG(Warn,nameElement.text().toStdString() << " requests scheduled dual setpoint control, but does not define schedules."
+        << " Using OpenStudio defaults.");
+
+      model::ScheduleRuleset schedule(model);
+      schedule.setName(airLoopHVAC.name().get() + " Cooling SP Schedule");
+      schedule.defaultDaySchedule().addValue(Time(1.0), clgFixedSupTemp);
+      coolingSchedule = schedule;
     }
 
-    // Do this so there is "something" between the supplyOutletNode (which already has an SPM) and the
-    // other components where we are about to add a different SPM.
-    // Don't want to squash the existing spm.
-    if( downstreamComps.size() > 2u ) {
-      model::Duct duct(model);
-      duct.addToNode(supplyOutletNode);
+    QDomElement htgSetptSchRefElement = airSystemElement.firstChildElement("HtgSetptSchRef");
+    std::string htgSetptSchRef = escapeName(htgSetptSchRefElement.text());
+    heatingSchedule = model.getModelObjectByName<model::Schedule>(htgSetptSchRef);
+
+    if( ! heatingSchedule ) {
+      LOG(Warn,nameElement.text().toStdString() << " requests scheduled dual setpoint control, but does not define schedules."
+        << " Using OpenStudio defaults.");
+
+      model::ScheduleRuleset schedule(model);
+      schedule.setName(airLoopHVAC.name().get() + " Heating SP Schedule");
+      schedule.defaultDaySchedule().addValue(Time(1.0), htgFixedSupTemp);
+      heatingSchedule = schedule;
     }
 
-    std::vector<model::SetpointManagerMixedAir> newMixedAirSPMs;
+    OS_ASSERT(coolingSchedule);
+    OS_ASSERT(heatingSchedule);
 
-    auto addFixedDualSPMs = [&](const std::vector<model::ModelObject> & comps,double temp) {
-      for( const auto & comp : comps ) {
-        boost::optional<model::Node> outletNode;
-        {
-          auto nextcomps = airLoopHVAC.supplyComponents(comp.cast<model::HVACComponent>(),supplyOutletNode);
-          OS_ASSERT(nextcomps.size() > 1u );
-          auto mo = nextcomps[1];
-          outletNode = mo.optionalCast<model::Node>();
-        }
-        OS_ASSERT(outletNode);
-        // Figure out if comp is before or after the fan
-        if( std::find(downstreamComps.begin(),downstreamComps.end(),comp) == downstreamComps.end() ) {
-          // Before fan
-          model::Duct duct(model);
-          auto ok = duct.addToNode(outletNode.get());
-          OS_ASSERT(ok);
-          model::ScheduleRuleset schedule(model);
-          schedule.defaultDaySchedule().addValue(Time(1.0), temp);
-          model::SetpointManagerScheduled spm(model,schedule);
-          auto ductOutletNode = duct.outletModelObject()->cast<model::Node>();
-          spm.addToNode(ductOutletNode);
-          model::SetpointManagerMixedAir spmMixedAir(model);
-          newMixedAirSPMs.push_back(spmMixedAir);
-          auto ductInletNode = duct.inletModelObject()->cast<model::Node>();
-          spmMixedAir.addToNode(ductInletNode); 
-          spmMixedAir.setReferenceSetpointNode(ductOutletNode);
-        } else {
-          // After fan
-          model::ScheduleRuleset schedule(model);
-          schedule.defaultDaySchedule().addValue(Time(1.0), temp);
-          model::SetpointManagerScheduled spm(model,schedule);
-          spm.addToNode(outletNode.get());
-        }
-      }
-    };
-
-    addFixedDualSPMs(coolingComponents,clgFixedSupTemp);
-    addFixedDualSPMs(heatingComponents,htgFixedSupTemp);
-
-    // Fixup the fan reference nodes because adding ducts might have messed up the nodes around the fan
-    if( fan ) {
-      if( auto straightComponentFan = fan->optionalCast<model::StraightComponent>() ) {
-        auto fanInletNode = straightComponentFan->inletModelObject()->cast<model::Node>();
-        auto fanOutletNode = straightComponentFan->outletModelObject()->cast<model::Node>();
-        for( auto & spm : newMixedAirSPMs ) {
-          spm.setFanInletNode(fanInletNode);
-          spm.setFanOutletNode(fanOutletNode);
-        }
-      }
-    }
-
+    createDualSetpoints(coolingSchedule.get(),heatingSchedule.get());
   }
 
   return result;
