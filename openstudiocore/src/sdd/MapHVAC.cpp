@@ -4991,148 +4991,133 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
 {
   boost::optional<openstudio::model::ModelObject> result;
 
-  double value;
-
-  bool ok;
-
-  boost::optional<double> mtrEff;
-
-  QDomElement mtrEffElement = pumpElement.firstChildElement("MtrEff");
-  value = mtrEffElement.text().toDouble(&ok);
-  if( ok )
-  {
-    mtrEff = value;
-  }
-
-  if( ! istringEqual(pumpElement.tagName().toStdString(),"Pump") )
-  {
+  if( ! istringEqual(pumpElement.tagName().toStdString(),"Pump") ) {
     return result;
   }
 
+  double value;
+  bool ok;
+
+  boost::optional<double> mtrEff;
+  boost::optional<double> totHd;
+  boost::optional<double> flowCap;
+  boost::optional<double> pwr;
+
+  auto pumpName = pumpElement.firstChildElement("Name").text().toStdString();
+
+  QDomElement mtrEffElement = pumpElement.firstChildElement("MtrEff");
+  value = mtrEffElement.text().toDouble(&ok);
+  if( ok ) {
+    mtrEff = value;
+  }
+
+  QDomElement totHdElement = pumpElement.firstChildElement("TotHd");
+  value = totHdElement.text().toDouble(&ok);
+  if( ok ) {
+    // ft water to Pa
+    totHd = value * 2989.067;
+  }
+
+  QDomElement flowCapElement = pumpElement.firstChildElement("FlowCap");
+  value = flowCapElement.text().toDouble(&ok);
+  if( ok ) {
+    flowCap = unitToUnit(value, "gal/min", "m^3/s").get();
+  }
+
+  QDomElement pwrElement = pumpElement.firstChildElement("Pwr");
+  value = pwrElement.text().toDouble(&ok);
+  if( ok ) {
+    // kW to W
+    pwr = value * 1000.0;
+  }
+
   QDomElement spdCtrlElement = pumpElement.firstChildElement("SpdCtrl");
-  
-  if( spdCtrlElement.text().toLower() == "constantspeed" )
-  {
+  if( spdCtrlElement.text().toLower() == "constantspeed" ) {
     model::PumpConstantSpeed pump(model);
+    pump.setName(pumpName);
 
-    pump.setRatedPumpHead(149453.0);
-
-    if( mtrEff )
-    {
+    if( mtrEff ) {
       pump.setMotorEfficiency(mtrEff.get());
     }
 
-    if( autosize() )
-    {
-      QDomElement totHdElement = pumpElement.firstChildElement("TotHd");
-      value = totHdElement.text().toDouble(&ok);
-      if( ok )
-      {
-        // ft water to Pa
-        double totHd = value * 2989.067;
-        pump.setRatedPumpHead(totHd);
+    if( autosize() ) {
+      if( totHd ) {
+        pump.setRatedPumpHead(totHd.get());
+      } else {
+        pump.setRatedPumpHead(149453.0);
+        LOG(Warn,pump.name().get() << " TotHd set to OpenStudio default");
       }
-    }
-    else
-    {
-      boost::optional<double> flowCap;
-      boost::optional<double> pwr;
-
-      QDomElement flowCapElement = pumpElement.firstChildElement("FlowCap");
-      value = flowCapElement.text().toDouble(&ok);
-      if( ok )
-      {
-        flowCap = unitToUnit(value, "gal/min", "m^3/s").get();
-      }
-
-      QDomElement pwrElement = pumpElement.firstChildElement("Pwr");
-      value = pwrElement.text().toDouble(&ok);
-      if( ok )
-      {
-        // kW to W
-        pwr = value * 1000.0;
-      }
-
-      if( flowCap && pwr )
-      {
-        if( equal(flowCap.get(),0.0) || equal(pwr.get(),0.0)  )
-        {
+    } else {
+      if( flowCap ) {
+        if( equal(flowCap.get(),0.0) ) {
           LOG(Warn,pump.name().get() << " has 0 capacity specified.");
         }
-        else
-        {
-          pump.setRatedFlowRate(flowCap.get());
-          pump.setRatedPowerConsumption(pwr.get());
-          pump.setRatedPumpHead(0.80 * pwr.get() / flowCap.get());
+        pump.setRatedFlowRate(flowCap.get());
+      }
+
+      if( pwr ) {
+        if( equal(pwr.get(),0.0) ) {
+          LOG(Warn,pump.name().get() << " has 0 pwr specified.");
         }
+        pump.setRatedPowerConsumption(pwr.get());
+      }
+
+      if( flowCap && pwr && (! totHd) ) {
+        pump.setRatedPumpHead(0.80 * pwr.get() / flowCap.get());
+        LOG(Warn,pump.name().get() << " TotHd set to OpenStudio default");
+      } else if( ! totHd ) {
+        pump.setRatedPumpHead(149453.0);
+        LOG(Warn,pump.name().get() << " TotHd set to OpenStudio default");
       }
     }
 
     result = pump;
-  }
-  else
-  {
+  } else {
     model::PumpVariableSpeed pump(model);
+    pump.setName(pumpName);
 
-    pump.setRatedPumpHead(149453.0);
-
-    if( mtrEff )
-    {
+    if( mtrEff ) {
       pump.setMotorEfficiency(mtrEff.get());
     }
 
     if( autosize() )
     {
-      QDomElement totHdElement = pumpElement.firstChildElement("TotHd");
-      value = totHdElement.text().toDouble(&ok);
-      if( ok )
-      {
-        // ft water to Pa
-        double totHd = value * 2989.067;
-        pump.setRatedPumpHead(totHd);
+      if( totHd ) {
+        pump.setRatedPumpHead(totHd.get());
+      } else {
+        pump.setRatedPumpHead(149453.0);
+        LOG(Warn,pump.name().get() << " TotHd set to OpenStudio default");
       }
     }
     else
     {
-      boost::optional<double> flowCap;
-      boost::optional<double> flowMin;
-      boost::optional<double> pwr;
-
-      QDomElement flowCapElement = pumpElement.firstChildElement("FlowCap");
-      value = flowCapElement.text().toDouble(&ok);
-      if( ok )
-      {
-        flowCap = unitToUnit(value, "gal/min", "m^3/s");
-      }
-
       QDomElement flowMinElement = pumpElement.firstChildElement("FlowMin");
       value = flowMinElement.text().toDouble(&ok);
-      if( ok )
-      {
-        flowMin = unitToUnit(value, "gal/min", "m^3/s");
+      if( ok ) {
+        auto flowMin = unitToUnit(value, "gal/min", "m^3/s").get();
+        pump.setMinimumFlowRate(flowMin);
       }
 
-      QDomElement pwrElement = pumpElement.firstChildElement("Pwr");
-      value = pwrElement.text().toDouble(&ok);
-      if( ok )
-      {
-        // kW to W
-        pwr = value * 1000.0;
-      }
-
-      if( flowMin && flowCap && pwr )
-      {
-        if( equal(flowCap.get(),0.0) || equal(pwr.get(),0.0)  )
-        {
+      if( flowCap ) {
+        if( equal(flowCap.get(),0.0) ) {
           LOG(Warn,pump.name().get() << " has 0 capacity specified.");
         }
-        else
-        {
-          pump.setRatedFlowRate(flowCap.get());
-          pump.setMinimumFlowRate(flowMin.get());
-          pump.setRatedPowerConsumption(pwr.get());
-          pump.setRatedPumpHead(0.80 * pwr.get() / flowCap.get());
+        pump.setRatedFlowRate(flowCap.get());
+      }
+
+      if( pwr ) {
+        if( equal(pwr.get(),0.0) ) {
+          LOG(Warn,pump.name().get() << " has 0 pwr specified.");
         }
+        pump.setRatedPowerConsumption(pwr.get());
+      }
+
+      if( flowCap && pwr && (! totHd) ) {
+        pump.setRatedPumpHead(0.80 * pwr.get() / flowCap.get());
+        LOG(Warn,pump.name().get() << " TotHd set to OpenStudio default");
+      } else if( ! totHd ) {
+        pump.setRatedPumpHead(149453.0);
+        LOG(Warn,pump.name().get() << " TotHd set to OpenStudio default");
       }
     }
 
