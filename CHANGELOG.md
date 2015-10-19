@@ -1,3 +1,7 @@
+## OpenStudio v1.9.2
+
+- ![removed:][removed] [#1907]( https://github.com/NREL/OpenStudio/issues/1907 ), Removed method AirTerminalSingleDuctVAVNoReheat::designSpecificationOutdoorAir in favor of a more user friendly API.
+
 ## OpenStudio v1.8.5
 ###### 2015-09-04 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.8.4...v1.8.5 )
 
