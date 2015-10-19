@@ -272,8 +272,8 @@ class MODEL_API SpaceType : public ResourceObject {
    *  numPeople). */
   boost::optional<double> electricEquipmentPowerPerFloorArea() const;
 
-  /** Sets the electricEquipmentPowerPerFloorArea, using electricEquipment()[0], if it existss,
-   *  as a template for the reamaining ElectricEquipment and ElectricEquipmentDefinition parameters.
+  /** Sets the electricEquipmentPowerPerFloorArea, using electricEquipment()[0], if it exists,
+   *  as a template for the remaining ElectricEquipment and ElectricEquipmentDefinition parameters.
    *  All other electricEquipment() in this SpaceType will be removed. */
   bool setElectricEquipmentPowerPerFloorArea(double electricEquipmentPowerPerFloorArea);
 
@@ -289,8 +289,8 @@ class MODEL_API SpaceType : public ResourceObject {
    *  numPeople). */
   boost::optional<double> electricEquipmentPowerPerPerson() const;
 
-  /** Sets the electricEquipmentPowerPerPerson, using electricEquipment()[0], if it existss,
-   *  as a template for the reamaining ElectricEquipment and ElectricEquipmentDefinition parameters.
+  /** Sets the electricEquipmentPowerPerPerson, using electricEquipment()[0], if it exists,
+   *  as a template for the remaining ElectricEquipment and ElectricEquipmentDefinition parameters.
    *  All other electricEquipment() in this SpaceType will be removed. */
   bool setElectricEquipmentPowerPerPerson(double electricEquipmentPowerPerPerson);
 
@@ -311,8 +311,8 @@ class MODEL_API SpaceType : public ResourceObject {
    *  numPeople). */
   boost::optional<double> gasEquipmentPowerPerFloorArea() const;
 
-  /** Sets the gasEquipmentPowerPerFloorArea, using gasEquipment()[0], if it existss,
-   *  as a template for the reamaining GasEquipment and GasEquipmentDefinition parameters.
+  /** Sets the gasEquipmentPowerPerFloorArea, using gasEquipment()[0], if it exists,
+   *  as a template for the remaining GasEquipment and GasEquipmentDefinition parameters.
    *  All other gasEquipment() in this SpaceType will be removed. */
   bool setGasEquipmentPowerPerFloorArea(double gasEquipmentPowerPerFloorArea);
 
@@ -326,8 +326,8 @@ class MODEL_API SpaceType : public ResourceObject {
    *  the underlying gasEquipment() data (without knowing floorArea and numPeople). */
   boost::optional<double> gasEquipmentPowerPerPerson() const;
 
-  /** Sets the gasEquipmentPowerPerPerson, using gasEquipment()[0], if it existss,
-   *  as a template for the reamaining GasEquipment and GasEquipmentDefinition parameters.
+  /** Sets the gasEquipmentPowerPerPerson, using gasEquipment()[0], if it exists,
+   *  as a template for the remaining GasEquipment and GasEquipmentDefinition parameters.
    *  All other gasEquipment() in this SpaceType will be removed. */
   bool setGasEquipmentPowerPerPerson(double gasEquipmentPowerPerPerson);
 

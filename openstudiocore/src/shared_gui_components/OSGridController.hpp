@@ -526,6 +526,7 @@ public:
                          std::function<boost::optional<ValueType> (DataSourceType *)>  getter,
                          std::function<bool (DataSourceType *, const ValueType &)> setter,
                          boost::optional<std::function<void(DataSourceType*)> > reset = boost::none,
+                         boost::optional<std::function<bool(DataSourceType*)> > isDefaulted = boost::none,
                          const boost::optional<DataSource> &t_source = boost::none)
   {
     m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(heading,getter,setter,reset)), t_source));
@@ -580,6 +581,8 @@ public:
 
   std::vector<model::ModelObject> m_modelObjects;
 
+  std::vector<model::ModelObject> m_inheritedModelObjects;
+
   model::Model & model() { return m_model; }
 
   OSGridView * gridView();
@@ -633,6 +636,10 @@ protected:
   model::Model m_model;
 
   bool m_isIP;
+
+  unsigned m_subrowCounter = 0;
+
+  std::vector<bool> m_subrowsInherited = std::vector<bool>();
 
   REGISTER_LOGGER("openstudio.OSGridController");
 

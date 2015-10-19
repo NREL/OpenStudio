@@ -74,6 +74,8 @@
 #include "../model/SpaceLoadInstance_Impl.hpp"
 #include "../model/Space.hpp"
 #include "../model/Space_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
 #include "../model/SteamEquipment.hpp"
 #include "../model/SteamEquipment_Impl.hpp"
 #include "../model/SteamEquipmentDefinition.hpp"
@@ -225,6 +227,33 @@ namespace openstudio {
           loads.insert(loads.end(), SpaceInfiltrationDesignFlowRate.begin(), SpaceInfiltrationDesignFlowRate.end());
           loads.insert(loads.end(), SpaceInfiltrationEffectiveLeakageArea.begin(), SpaceInfiltrationEffectiveLeakageArea.end());
 
+          boost::optional<model::SpaceType> spaceType = t_space.spaceType(); // this will provide inherited loads
+          if (spaceType) {
+            auto InternalMass = spaceType->internalMass();
+            auto People = spaceType->people();
+            auto Lights = spaceType->lights();
+            auto Luminaire = spaceType->luminaires();
+            auto ElectricEquipment = spaceType->electricEquipment();
+            auto GasEquipment = spaceType->gasEquipment();
+            auto HotWaterEquipment = spaceType->hotWaterEquipment();
+            auto SteamEquipment = spaceType->steamEquipment();
+            auto OtherEquipment = spaceType->otherEquipment();
+            auto SpaceInfiltrationDesignFlowRate = spaceType->spaceInfiltrationDesignFlowRates();
+            auto SpaceInfiltrationEffectiveLeakageArea = spaceType->spaceInfiltrationEffectiveLeakageAreas();
+
+            loads.insert(loads.end(), InternalMass.begin(), InternalMass.end());
+            loads.insert(loads.end(), People.begin(), People.end());
+            loads.insert(loads.end(), Lights.begin(), Lights.end());
+            loads.insert(loads.end(), Luminaire.begin(), Luminaire.end());
+            loads.insert(loads.end(), ElectricEquipment.begin(), ElectricEquipment.end());
+            loads.insert(loads.end(), GasEquipment.begin(), GasEquipment.end());
+            loads.insert(loads.end(), HotWaterEquipment.begin(), HotWaterEquipment.end());
+            loads.insert(loads.end(), SteamEquipment.begin(), SteamEquipment.end());
+            loads.insert(loads.end(), OtherEquipment.begin(), OtherEquipment.end());
+            loads.insert(loads.end(), SpaceInfiltrationDesignFlowRate.begin(), SpaceInfiltrationDesignFlowRate.end());
+            loads.insert(loads.end(), SpaceInfiltrationEffectiveLeakageArea.begin(), SpaceInfiltrationEffectiveLeakageArea.end());
+          }
+
           return loads;
         }
         );
@@ -315,6 +344,43 @@ namespace openstudio {
           loads.insert(loads.end(), OtherEquipment.begin(), OtherEquipment.end());
           //loads.insert(loads.end(), SpaceInfiltrationDesignFlowRate.begin(), SpaceInfiltrationDesignFlowRate.end());
           //loads.insert(loads.end(), SpaceInfiltrationEffectiveLeakageArea.begin(), SpaceInfiltrationEffectiveLeakageArea.end());
+
+          for (unsigned i = 0; i < SpaceInfiltrationDesignFlowRate.size(); ++i)
+          {
+            loads.emplace_back();
+          }
+
+          for (unsigned i = 0; i < SpaceInfiltrationEffectiveLeakageArea.size(); ++i)
+          {
+            loads.emplace_back();
+          }
+
+          boost::optional<model::SpaceType> spaceType = t_space.spaceType(); // this will provide inherited loads
+          if (spaceType) {
+            auto InternalMass = spaceType->internalMass();
+            auto People = spaceType->people();
+            auto Lights = spaceType->lights();
+            auto Luminaire = spaceType->luminaires();
+            auto ElectricEquipment = spaceType->electricEquipment();
+            auto GasEquipment = spaceType->gasEquipment();
+            auto HotWaterEquipment = spaceType->hotWaterEquipment();
+            auto SteamEquipment = spaceType->steamEquipment();
+            auto OtherEquipment = spaceType->otherEquipment();
+            auto SpaceInfiltrationDesignFlowRate = spaceType->spaceInfiltrationDesignFlowRates();
+            auto SpaceInfiltrationEffectiveLeakageArea = spaceType->spaceInfiltrationEffectiveLeakageAreas();
+
+            loads.insert(loads.end(), InternalMass.begin(), InternalMass.end());
+            loads.insert(loads.end(), People.begin(), People.end());
+            loads.insert(loads.end(), Lights.begin(), Lights.end());
+            loads.insert(loads.end(), Luminaire.begin(), Luminaire.end());
+            loads.insert(loads.end(), ElectricEquipment.begin(), ElectricEquipment.end());
+            loads.insert(loads.end(), GasEquipment.begin(), GasEquipment.end());
+            loads.insert(loads.end(), HotWaterEquipment.begin(), HotWaterEquipment.end());
+            loads.insert(loads.end(), SteamEquipment.begin(), SteamEquipment.end());
+            loads.insert(loads.end(), OtherEquipment.begin(), OtherEquipment.end());
+            //loads.insert(loads.end(), SpaceInfiltrationDesignFlowRate.begin(), SpaceInfiltrationDesignFlowRate.end());
+            //loads.insert(loads.end(), SpaceInfiltrationEffectiveLeakageArea.begin(), SpaceInfiltrationEffectiveLeakageArea.end());
+          }
 
           for (unsigned i = 0; i < SpaceInfiltrationDesignFlowRate.size(); ++i)
           {
@@ -472,6 +538,129 @@ namespace openstudio {
           OS_ASSERT(false);
         }
         );
+        
+        const boost::optional<std::function<void(model::ModelObject *)> > resetMultiplier(
+          [](model::ModelObject *t_modelObject) {
+          boost::optional<model::InternalMass> im = t_modelObject->optionalCast<model::InternalMass>();
+          if (im)
+          {
+            im->resetMultiplier();
+          }
+
+          boost::optional<model::People> p = t_modelObject->optionalCast<model::People>();
+          if (p)
+          {
+            p->resetMultiplier();
+          }
+
+          boost::optional<model::Lights> light = t_modelObject->optionalCast<model::Lights>();
+          if (light)
+          {
+            light->resetMultiplier();
+          }
+
+          boost::optional<model::Luminaire> lum = t_modelObject->optionalCast<model::Luminaire>();
+          if (lum)
+          {
+            lum->resetMultiplier();
+          }
+
+          boost::optional<model::ElectricEquipment> e = t_modelObject->optionalCast<model::ElectricEquipment>();
+          if (e)
+          {
+            e->resetMultiplier();
+          }
+
+          boost::optional<model::GasEquipment> g = t_modelObject->optionalCast<model::GasEquipment>();
+          if (g)
+          {
+            g->resetMultiplier();
+          }
+
+          boost::optional<model::HotWaterEquipment> h = t_modelObject->optionalCast<model::HotWaterEquipment>();
+          if (h)
+          {
+            h->resetMultiplier();
+          }
+
+          boost::optional<model::SteamEquipment> se = t_modelObject->optionalCast<model::SteamEquipment>();
+          if (se)
+          {
+            se->resetMultiplier();
+          }
+
+          boost::optional<model::OtherEquipment> o = t_modelObject->optionalCast<model::OtherEquipment>();
+          if (o)
+          {
+            o->resetMultiplier();
+          }
+
+          // Should never get here
+          OS_ASSERT(false);
+        }
+        );
+
+        const boost::optional<std::function<bool(model::ModelObject *)> > isMultiplierDefaulted(
+          [](model::ModelObject *t_modelObject) {
+          boost::optional<model::InternalMass> im = t_modelObject->optionalCast<model::InternalMass>();
+          if (im)
+          {
+            return im->isMultiplierDefaulted();
+          }
+
+          boost::optional<model::People> p = t_modelObject->optionalCast<model::People>();
+          if (p)
+          {
+            return p->isMultiplierDefaulted();
+          }
+
+          boost::optional<model::Lights> light = t_modelObject->optionalCast<model::Lights>();
+          if (light)
+          {
+            return light->isMultiplierDefaulted();
+          }
+
+          boost::optional<model::Luminaire> lum = t_modelObject->optionalCast<model::Luminaire>();
+          if (lum)
+          {
+            return lum->isMultiplierDefaulted();
+          }
+
+          boost::optional<model::ElectricEquipment> e = t_modelObject->optionalCast<model::ElectricEquipment>();
+          if (e)
+          {
+            return e->isMultiplierDefaulted();
+          }
+
+          boost::optional<model::GasEquipment> g = t_modelObject->optionalCast<model::GasEquipment>();
+          if (g)
+          {
+            return g->isMultiplierDefaulted();
+          }
+
+          boost::optional<model::HotWaterEquipment> h = t_modelObject->optionalCast<model::HotWaterEquipment>();
+          if (h)
+          {
+            return h->isMultiplierDefaulted();
+          }
+
+          boost::optional<model::SteamEquipment> se = t_modelObject->optionalCast<model::SteamEquipment>();
+          if (se)
+          {
+            return se->isMultiplierDefaulted();
+          }
+
+          boost::optional<model::OtherEquipment> o = t_modelObject->optionalCast<model::OtherEquipment>();
+          if (o)
+          {
+            return o->isMultiplierDefaulted();
+          }
+
+          // Should never get here
+          OS_ASSERT(false);
+          return false;
+        }
+        );
 
         std::function<bool(model::ModelObject *, const model::Schedule &)> setActivityLevelSchedule(
           [](model::ModelObject *l, model::Schedule t_s) {
@@ -494,6 +683,18 @@ namespace openstudio {
           else {
             //OS_ASSERT(false); TODO
           }
+        }
+        );
+
+        boost::optional<std::function<bool(model::ModelObject *)> > isActivityLevelScheduleDefaulted(
+          [](model::ModelObject *l) {
+          if (boost::optional<model::People> p = l->optionalCast<model::People>())
+          {
+            return p->isActivityLevelScheduleDefaulted();
+          }
+
+          OS_ASSERT(false);
+          return false;
         }
         );
 
@@ -605,6 +806,62 @@ namespace openstudio {
           else
           {
             OS_ASSERT(false);
+          }
+        }
+        );
+
+        boost::optional<std::function<bool(model::ModelObject *)> > isScheduleDefaulted(
+          [](model::ModelObject *l) {
+
+          if (boost::optional<model::People> p = l->optionalCast<model::People>())
+          {
+            return p->isActivityLevelScheduleDefaulted();
+          }
+          else if (boost::optional<model::Lights> light = l->optionalCast<model::Lights>())
+          {
+            return light->isScheduleDefaulted();
+          }
+          else if (boost::optional<model::Luminaire> lum = l->optionalCast<model::Luminaire>())
+          {
+            return lum->isScheduleDefaulted();
+          }
+          else if (boost::optional<model::ElectricEquipment> e = l->optionalCast<model::ElectricEquipment>())
+          {
+            return e->isScheduleDefaulted();
+          }
+          else if (boost::optional<model::GasEquipment> g = l->optionalCast<model::GasEquipment>())
+          {
+            return g->isScheduleDefaulted();
+          }
+          else if (boost::optional<model::HotWaterEquipment> h = l->optionalCast<model::HotWaterEquipment>())
+          {
+            return h->isScheduleDefaulted();
+          }
+          else if (boost::optional<model::SteamEquipment> se = l->optionalCast<model::SteamEquipment>())
+          {
+            return se->isScheduleDefaulted();
+          }
+          else if (boost::optional<model::OtherEquipment> o = l->optionalCast<model::OtherEquipment>())
+          {
+            return o->isScheduleDefaulted();
+          }
+          else if (boost::optional<model::SpaceInfiltrationDesignFlowRate> f = l->optionalCast<model::SpaceInfiltrationDesignFlowRate>())
+          {
+            return f->isScheduleDefaulted();
+          }
+          else if (boost::optional<model::SpaceInfiltrationEffectiveLeakageArea> la = l->optionalCast<model::SpaceInfiltrationEffectiveLeakageArea>())
+          {
+            return la->isScheduleDefaulted();
+          }
+          else if (boost::optional<model::InternalMass> im = l->optionalCast<model::InternalMass>())
+          {
+            // Note: InternalMass does not have a schedule
+            return false;
+          }
+          else
+          {
+            OS_ASSERT(false);
+            return false;
           }
         }
         );
@@ -769,12 +1026,11 @@ namespace openstudio {
           addValueEditColumn(Heading(QString(MULTIPLIER)),
             multiplier,
             setMultiplier,
-            boost::optional<std::function<void(model::ModelObject *)>>(),
-            boost::optional<std::function<bool(model::ModelObject *)>>(),
+            resetMultiplier,
+            isMultiplierDefaulted,
             DataSource(
             allLoadsWithMultipliers,
             true
-            //QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel, getter, setter)
             )
             );
 
@@ -866,21 +1122,25 @@ namespace openstudio {
             );
         }
         else if (field == SCHEDULE) {
+
           addDropZoneColumn(Heading(QString(SCHEDULE)),
             schedule,
             setSchedule,
             resetSchedule,
+            isScheduleDefaulted,
             DataSource(
             allLoadsWithSchedules,
             true
             )
             );
+
         }
         else if (field == ACTIVITYSCHEDULE) {
           addDropZoneColumn(Heading(QString(SCHEDULE)),
             activityLevelSchedule,
             setActivityLevelSchedule,
             resetActivityLevelSchedule,
+            isActivityLevelScheduleDefaulted,
             DataSource(
             allLoadsWithActivityLevelSchedules,
             true
@@ -916,6 +1176,14 @@ namespace openstudio {
   {
     m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getModelObjects<model::Space>());
     std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
+
+    m_inheritedModelObjects.clear();
+    for (auto modelObject : m_modelObjects) {
+      boost::optional<model::SpaceType> spaceType = modelObject.cast<model::Space>().spaceType();
+      if (spaceType) {
+        m_inheritedModelObjects.push_back(*spaceType);
+      }
+    }
   }
 
 } // openstudio
