@@ -227,7 +227,7 @@ namespace openstudio {
           loads.insert(loads.end(), SpaceInfiltrationDesignFlowRate.begin(), SpaceInfiltrationDesignFlowRate.end());
           loads.insert(loads.end(), SpaceInfiltrationEffectiveLeakageArea.begin(), SpaceInfiltrationEffectiveLeakageArea.end());
 
-          boost::optional<model::SpaceType> spaceType = t_space.spaceType();
+          boost::optional<model::SpaceType> spaceType = t_space.spaceType(); // this will provide inherited loads
           if (spaceType) {
             auto InternalMass = spaceType->internalMass();
             auto People = spaceType->people();
@@ -344,6 +344,43 @@ namespace openstudio {
           loads.insert(loads.end(), OtherEquipment.begin(), OtherEquipment.end());
           //loads.insert(loads.end(), SpaceInfiltrationDesignFlowRate.begin(), SpaceInfiltrationDesignFlowRate.end());
           //loads.insert(loads.end(), SpaceInfiltrationEffectiveLeakageArea.begin(), SpaceInfiltrationEffectiveLeakageArea.end());
+
+          for (unsigned i = 0; i < SpaceInfiltrationDesignFlowRate.size(); ++i)
+          {
+            loads.emplace_back();
+          }
+
+          for (unsigned i = 0; i < SpaceInfiltrationEffectiveLeakageArea.size(); ++i)
+          {
+            loads.emplace_back();
+          }
+
+          boost::optional<model::SpaceType> spaceType = t_space.spaceType(); // this will provide inherited loads
+          if (spaceType) {
+            auto InternalMass = spaceType->internalMass();
+            auto People = spaceType->people();
+            auto Lights = spaceType->lights();
+            auto Luminaire = spaceType->luminaires();
+            auto ElectricEquipment = spaceType->electricEquipment();
+            auto GasEquipment = spaceType->gasEquipment();
+            auto HotWaterEquipment = spaceType->hotWaterEquipment();
+            auto SteamEquipment = spaceType->steamEquipment();
+            auto OtherEquipment = spaceType->otherEquipment();
+            auto SpaceInfiltrationDesignFlowRate = spaceType->spaceInfiltrationDesignFlowRates();
+            auto SpaceInfiltrationEffectiveLeakageArea = spaceType->spaceInfiltrationEffectiveLeakageAreas();
+
+            loads.insert(loads.end(), InternalMass.begin(), InternalMass.end());
+            loads.insert(loads.end(), People.begin(), People.end());
+            loads.insert(loads.end(), Lights.begin(), Lights.end());
+            loads.insert(loads.end(), Luminaire.begin(), Luminaire.end());
+            loads.insert(loads.end(), ElectricEquipment.begin(), ElectricEquipment.end());
+            loads.insert(loads.end(), GasEquipment.begin(), GasEquipment.end());
+            loads.insert(loads.end(), HotWaterEquipment.begin(), HotWaterEquipment.end());
+            loads.insert(loads.end(), SteamEquipment.begin(), SteamEquipment.end());
+            loads.insert(loads.end(), OtherEquipment.begin(), OtherEquipment.end());
+            //loads.insert(loads.end(), SpaceInfiltrationDesignFlowRate.begin(), SpaceInfiltrationDesignFlowRate.end());
+            //loads.insert(loads.end(), SpaceInfiltrationEffectiveLeakageArea.begin(), SpaceInfiltrationEffectiveLeakageArea.end());
+          }
 
           for (unsigned i = 0; i < SpaceInfiltrationDesignFlowRate.size(); ++i)
           {
@@ -994,7 +1031,6 @@ namespace openstudio {
             DataSource(
             allLoadsWithMultipliers,
             true
-            //QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel, getter, setter)
             )
             );
 
@@ -1140,6 +1176,14 @@ namespace openstudio {
   {
     m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getModelObjects<model::Space>());
     std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
+
+    m_inheritedModelObjects.clear();
+    for (auto modelObject : m_modelObjects) {
+      boost::optional<model::SpaceType> spaceType = modelObject.cast<model::Space>().spaceType();
+      if (spaceType) {
+        m_inheritedModelObjects.push_back(*spaceType);
+      }
+    }
   }
 
 } // openstudio

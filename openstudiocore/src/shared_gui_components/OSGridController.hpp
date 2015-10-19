@@ -581,6 +581,8 @@ public:
 
   std::vector<model::ModelObject> m_modelObjects;
 
+  std::vector<model::ModelObject> m_inheritedModelObjects;
+
   model::Model & model() { return m_model; }
 
   OSGridView * gridView();
@@ -634,6 +636,10 @@ protected:
   model::Model m_model;
 
   bool m_isIP;
+
+  unsigned m_subrowCounter = 0;
+
+  std::vector<bool> m_subrowsInherited = std::vector<bool>();
 
   REGISTER_LOGGER("openstudio.OSGridController");
 
