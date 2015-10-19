@@ -2,12 +2,16 @@
   <schema_version>3.0</schema_version>
   <name>radiance_measure</name>
   <uid>1e3cfef8-b051-4e60-8bb0-ed2d29d4f45d</uid>
-  <version_id>5446bce9-15fa-4a9b-985d-41cd5113ed5e</version_id>
+  <version_id>d314cb0f-0ee8-4db0-aadb-ba199229cab5</version_id>
   <xml_checksum>381B7733</xml_checksum>
   <class_name>RadianceMeasure</class_name>
   <display_name>Radiance Daylighting Measure</display_name>
-  <description>This measure uses Radiance instead of EnergyPlus for daylighting calculations with     OpenStudio.</description>
-  <modeler_description>The OpenStudio model is converted to Radiance format. All spaces containing     daylighting objects (illuminance map, daylighting control point, and optionally glare sensors)     will have annual illuminance calculated using Radiance, and the OS mole's lighting schedules     can be overwritten with those based on daylight responsive lighting controls.</modeler_description>
+  <description>This measure uses Radiance instead of EnergyPlus for daylighting calculations with \
+    OpenStudio.</description>
+  <modeler_description>The OpenStudio model is converted to Radiance format. All spaces containing \
+    daylighting objects (illuminance map, daylighting control point, and optionally glare sensors) \
+    will have annual illuminance calculated using Radiance, and the OS model's lighting schedules \
+    can be overwritten with those based on daylight responsive lighting controls.</modeler_description>
   <arguments>
     <argument>
       <name>apply_schedules</name>
@@ -153,7 +157,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>CA92CB35</checksum>
+      <checksum>0881243F</checksum>
     </file>
   </files>
 </measure>
