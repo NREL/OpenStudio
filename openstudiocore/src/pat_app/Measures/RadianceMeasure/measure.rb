@@ -295,6 +295,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     runmanager.setPaused(false)
     runmanager.waitForFinished()
 
+    # DLM: need to check that this finished correctly
 
     ##  Radiance crap
 
