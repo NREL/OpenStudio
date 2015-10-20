@@ -308,6 +308,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 		runner.registerInfo("Ran Radiance Translator")
 
+    # DLM: need to check that this finished correctly
+
     ##  Radiance crap
 
     modelPath = OpenStudio::system_complete(modelPath)
