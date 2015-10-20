@@ -48,6 +48,7 @@ namespace model {
   class SubSurface;
   class PlantLoop;
   class AvailabilityManagerOptimumStart;
+  class AvailabilityManagerNightCycle;
 }
 
 namespace sdd {
@@ -183,6 +184,9 @@ namespace sdd {
     // then used to add the control zones when the zones are translated later.
     // The map is zone name => AVM 
     std::map<std::string,model::AvailabilityManagerOptimumStart> m_optimumStartControlZones;
+
+    // Similar to m_optimumStartControlZones but for night cycle manager
+    std::map<std::string,model::AvailabilityManagerNightCycle> m_nightCycleControlZones;
 
     REGISTER_LOGGER("openstudio.sdd.ReverseTranslator");
   };

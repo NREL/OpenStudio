@@ -30,6 +30,8 @@
 #include "../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "../model/AvailabilityManagerOptimumStart.hpp"
 #include "../model/AvailabilityManagerOptimumStart_Impl.hpp"
+#include "../model/AvailabilityManagerNightCycle.hpp"
+#include "../model/AvailabilityManagerNightCycle_Impl.hpp"
 #include "../model/Facility.hpp"
 #include "../model/Facility_Impl.hpp"
 #include "../model/Building.hpp"

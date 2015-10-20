@@ -79,6 +79,8 @@
 #include "../model/AirConditionerVariableRefrigerantFlow_Impl.hpp"
 #include "../model/AvailabilityManagerOptimumStart.hpp"
 #include "../model/AvailabilityManagerOptimumStart_Impl.hpp"
+#include "../model/AvailabilityManagerNightCycle.hpp"
+#include "../model/AvailabilityManagerNightCycle_Impl.hpp"
 #include "../model/CoilCoolingDXVariableRefrigerantFlow.hpp"
 #include "../model/CoilCoolingDXVariableRefrigerantFlow_Impl.hpp"
 #include "../model/CoilHeatingDXVariableRefrigerantFlow.hpp"
@@ -529,6 +531,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     airLoopHVAC.setAvailabilitySchedule(availabilitySchedule.get());
   }
 
+  auto controlZone = airSystemElement.firstChildElement("CtrlZnRef").text().toStdString();
+
   // Optimum Start
   auto optStartElement = airSystemElement.firstChildElement("OptStart");
   if( ! optStartElement.isNull() ) {
@@ -537,7 +541,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     auto optStartCtrlElement = airSystemElement.firstChildElement("OptStartCtrl");
     if( istringEqual(optStartCtrlElement.text().toStdString(),"ControlZone") ) {
       optimumStart.setControlType("ControlZone");
-      auto controlZone = airSystemElement.firstChildElement("CntrlZnRef").text().toStdString();
       auto pair = std::pair<std::string,model::AvailabilityManagerOptimumStart>(controlZone,optimumStart);
       m_optimumStartControlZones.insert(pair);
     } else {
@@ -581,13 +584,31 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     }
     else if( istringEqual(nightCycleFanCtrlElement.text().toStdString(),"CycleOnCallPrimaryZone") )
     {
-      airLoopHVAC.setNightCycleControlType("CycleOnAny");
+      model::AvailabilityManagerNightCycle nightCycle(model);
+      nightCycle.setControlType("CycleOnControlZone");
 
-      LOG(Warn,airLoopHVAC.name().get() << ": CycleOnAnyZoneFansOnly is not supported, using CycleOnAny.");
+      auto pair = std::pair<std::string,model::AvailabilityManagerNightCycle>(controlZone,nightCycle);
+      m_nightCycleControlZones.insert(pair);
     }
     else if( istringEqual(nightCycleFanCtrlElement.text().toStdString(),"CycleZoneFansOnly") )
     {
       airLoopHVAC.setNightCycleControlType("CycleOnAnyZoneFansOnly");
+    }
+
+    if( auto avm = airLoopHVAC.availabilityManager() ) {
+      if( auto nightCycle = avm->optionalCast<model::AvailabilityManagerNightCycle>() ) {
+        auto nightCycleTstatToleranceElement = airSystemElement.firstChildElement("NightCycleTstatTolerance");
+        auto nightCycleTstatTolerance = nightCycleTstatToleranceElement.text().toDouble(&ok); 
+        if( ok ) {
+          nightCycle->setThermostatTolerance(nightCycleTstatTolerance * 5.0 / 9.0);
+        }
+
+        auto nightCycleRunTimeElement = airSystemElement.firstChildElement("NightCycleRunTime");
+        auto nightCycleRunTime = nightCycleRunTimeElement.text().toDouble(&ok);
+        if( ok ) {
+          nightCycle->setCyclingRunTime(nightCycleRunTime);
+        }
+      }
     }
   }
 
@@ -3712,6 +3733,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     }
   }
 
+  // Set zone for night cycle, if applicable
+  {
+    auto nightCycle = m_nightCycleControlZones.find(thermalZone.name().get());
+    if( nightCycle != m_nightCycleControlZones.end() ) {
+      nightCycle->second.setControlThermalZone(thermalZone);
+    }
+  }
 
   // PrimaryAirConditioningSystemReference
   if( ! znSysElement.isNull() )
