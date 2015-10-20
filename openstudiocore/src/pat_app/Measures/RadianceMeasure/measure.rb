@@ -124,20 +124,19 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     # print statement and execute as system call
     def exec_statement(s)
       if /mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
-        s = s.gsub("/", "\\")
+        s = s.tr("/", "\\")
       end
-      puts 'Executing: #{s}'
+      puts "Executing: #{s}"
       result = system(s)
       return result
     end
-
 
     # UNIX-style which 
     def which(cmd) 
       exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
       ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
         exts.each do |ext|
-          exe = '#{path}/#{cmd}#{ext}'
+          exe = "#{path}/#{cmd}#{ext}"
           return exe if File.executable? exe
         end
       end
@@ -179,7 +178,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
     ## END Radiance Utilities
     
-    # setup path to Radiance binaries
+    # setup environment for Radiance and Perl
     co = OpenStudio::Runmanager::ConfigOptions.new(true);
     co.fastFindRadiance();
     radiancePath = co.getTools().getLastByName("rad").localBinPath.parent_path
@@ -214,13 +213,14 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       You may need to install a newer version of Radiance."
       exit false
     end
-    #ENV["EPW2WEAPATH"] = epw2weapath + programExtension
 
-    if !which('perl')
-      puts "Perl could not be found in path, exiting"
-      exit false
-    end
-    
+    ENV["EPW2WEAPATH"] = epw2weapath + programExtension
+
+ 		if !which("perl")
+ 		 puts "Perl could not be found in path, exiting"
+ 		 exit false
+ 		end
+     
     # get the epw file
     # TODO align with long-winded thread from 2015.07.28
     
@@ -316,12 +316,12 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     windowControls = Dir.glob("scene/glazing/WG*.rad")
     
     # set up output dirs
-    FileUtils.mkdir_p("#{radPath}/output/dc") unless File.exists("#{radPath}/output/dc")
-    FileUtils.mkdir_p("#{radPath}/output/ts") unless File.exists("#{radPath}/output/ts")
+    FileUtils.mkdir_p("#{radPath}/output/dc") unless File.exist?("#{radPath}/output/dc")
+    FileUtils.mkdir_p("#{radPath}/output/ts") unless File.exist?("#{radPath}/output/ts")
     FileUtils.mkdir_p("#{radPath}/output/dc/merged_space/maps") unless \
-    File.exists("#{radPath}/output/dc/merged_space/maps")
-    FileUtils.mkdir_p("#{radPath}/sql") unless File.exists("#{radPath}/sql")
-    FileUtils.mkdir_p("#{radPath}/wx") unless File.exists("#{radPath}/wx")
+    File.exist?("#{radPath}/output/dc/merged_space/maps")
+    FileUtils.mkdir_p("#{radPath}/sql") unless File.exist?("#{radPath}/sql")
+    FileUtils.mkdir_p("#{radPath}/wx") unless File.exist?("#{radPath}/wx")
  
     # copy Radiance model up
     # TODO be smarter about this.
@@ -389,7 +389,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       rfluxmtxDim = mapFile.readlines.size.to_s
 
       puts "#{Time.now.getutc}: passing #{rfluxmtxDim} calculation points to Radiance"
-      runner.registerInfo("#{Time.now.getutc}: passing #{rfluxmtxDim} calculation points to Radiance")
 
       # compute daylight matrices
 
@@ -416,7 +415,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           rad_command = "oconv \"materials/materials.rad\" \"materials/materials_WG0.rad\" model.rad \"skies/dc_sky.rad\" > model_WG0.oct"
           puts "#{Time.now.getutc}: #{rad_command}"
           exec_statement(rad_command)
-          runner.registerInfo("#{Time.now.getutc}: #{rad_command}")
 
           # do daylight coefficients for uncontrolled windows
           
@@ -499,12 +497,12 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     t_site_latitude, t_site_longitude, t_site_stdmeridian, t_radPath, \
     t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, runner, write_sql)
 
-      puts '#{Time.now.getutc}: Calculating annual daylight values for all window groups and \
-      shade states'
+      puts "#{Time.now.getutc}: Calculating annual daylight values for all window groups and \
+      shade states"
 
-      rawValues = Hash.new
-      values = Hash.new
-      dcVectors = Hash.new
+      rawValues = {}
+      values = {}
+      dcVectors = {}
 
               
       
@@ -512,7 +510,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
       simulations = []
 
-      exec_statement('gendaymtx -m #{t_options_skyvecDensity} \"wx/in.wea\" > annual-sky.mtx')
+      exec_statement("gendaymtx -m #{t_options_skyvecDensity} \"wx/in.wea\" > annual-sky.mtx")
 
       windowMaps = File::open("bsdf/mapping.rad")
   
@@ -534,7 +532,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     
           wgXMLs = row.split(",")[4..-1]
           if wgXMLs.size > 2
-            puts "WARN: Window Group #{wg} has #{wgXMLs.size.to_s} BSDFs (2 max supported by OpenStudio application)."
+            puts "WARN: Window Group #{wg} has #{wgXMLs.size} BSDFs (2 max supported by OpenStudio application)."
           end
     
           wgXMLs.each_index do |i|
@@ -648,7 +646,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
         end
 
-      end
+   end
 
       # make whole-building illuminance file
 
@@ -656,7 +654,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
       # there may not be a WG0...
   
-      if File.exist?('output/ts/WG0.ill')
+      if File.exist?("output/ts/WG0.ill")
         addFiles << "output/ts/WG0.ill "
       end
 
@@ -704,7 +702,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       return values, dcVectors;
   
     end # runSimulation()
-
 
     # function renamed from execSimulation() to parseResults()
     def parseResults(t_cmds, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_radPath, write_sql)
@@ -774,7 +771,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             puts "WARN: an error has occurred; no results for space '#{space_name}'."
             space = Array.new(space_size, 0)
 
-            if File.exists?("#{t_radPath}/numeric/#{space_name}.sns")        
+            if File.exist?("#{t_radPath}/numeric/#{space_name}.sns")        
               illum = Array.new(1, 0)
             end
 
@@ -970,12 +967,12 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
             illumValues, illumSensorValues, glareSensorValues = t_values[i][space_name]
 
-            timeSeriesIllum[i] = tsDateTime.to_s.gsub(" ",",") + "," + "#{dirNormIllum[i]},#{diffHorizIllum[i]}," + illumSensorValues.join(',') + "," + illumValues.join(',')
+            timeSeriesIllum[i] = tsDateTime.to_s.tr(" ",",") + "," + "#{dirNormIllum[i]},#{diffHorizIllum[i]}," + illumSensorValues.join(',') + "," + illumValues.join(',')
 
             # add glare sensor values
             if t_radGlareSensorViews[space_name]
               if not glareSensorValues.nil?
-                timeSeriesGlare[i] = tsDateTime.to_s.gsub(" ",",") + "," + glareSensorValues.join(',')
+                timeSeriesGlare[i] = tsDateTime.to_s.tr(" ",",") + "," + glareSensorValues.join(',')
 
                 if not glareSensorValues.empty?
                   sumDGP = 0
@@ -1015,11 +1012,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
           # Write results
           
-          FileUtils.mkdir_p("#{Dir.pwd}/output/ts/#{space_name}/maps") unless File.exists?("#{Dir.pwd}/output/ts/#{space_name}/maps")
+          FileUtils.mkdir_p("#{Dir.pwd}/output/ts/#{space_name}/maps") unless File.exist?("#{Dir.pwd}/output/ts/#{space_name}/maps")
           f = File.open("#{Dir.pwd}/output/ts/#{space_name}/maps/#{space_name}_map.ill", "w")
           space = nil
           t_building.spaces.each do |s|
-            this_name = s.name.get.gsub(' ', '_').gsub(':', '_')
+            this_name = s.name.get.tr(' ', '_').tr(':', '_')
             if this_name == space_name
               space = s
               break
@@ -1057,11 +1054,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
             # glare to csv 
             
-            FileUtils.mkdir_p("#{Dir.pwd}/output/ts/#{space_name}/maps") unless File.exists?("#{Dir.pwd}/output/ts/#{space_name}/maps")
+            FileUtils.mkdir_p("#{Dir.pwd}/output/ts/#{space_name}/maps") unless File.exist?("#{Dir.pwd}/output/ts/#{space_name}/maps")
             f = File.open("#{Dir.pwd}/output/ts/#{space_name}/maps/#{space_name}_map.glr", "w")
             space = nil
             t_building.spaces.each do |s|
-              this_name = s.name.get.gsub(' ', '_').gsub(':', '_')
+              this_name = s.name.get.tr(' ', '_').tr(':', '_')
               if this_name == space_name
                 space = s
                 break
@@ -1194,7 +1191,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
   
         space = space.get
   
-        space_name = space.name.get.gsub(' ', '_').gsub(':', '_')
+        space_name = space.name.get.tr(' ', '_').tr(':', '_')
 
         radSqlPath = OpenStudio::Path.new("output/radout.sql")
 
@@ -1204,7 +1201,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         radSqlFile = OpenStudio::SqlFile.new(radSqlPath)
 
           # use the daylight sensor input
-          spacename = space.name.get.gsub(' ', '_').gsub(':', '_')
+          spacename = space.name.get.tr(' ', '_').tr(':', '_')
           envPeriods = radSqlFile.availableEnvPeriods
 
           if envPeriods.size == 0
@@ -1229,7 +1226,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             end
             averageIlluminances << val
           #end
-         end
+          end
 
         daylightSetpoint = 0.0
 
@@ -1370,7 +1367,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
       daylightAnalysisSpaces.each do |space|
       
-        space_name = space.name.get.gsub(' ', '_').gsub(':', '_')
+        space_name = space.name.get.tr(' ', '_').tr(':', '_')
   
         thermalZone = space.thermalZone
         next if thermalZone.empty?
@@ -1383,7 +1380,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         daylightSetpoint = nil
         primaryDaylightingControl = thermalZone.primaryDaylightingControl
         if primaryDaylightingControl.empty?
-          puts "ThermalZone \"#{thermalZone.to_s}\" has no primary daylighting control, skipping"
+          puts "ThermalZone \"#{thermalZone}\" has no primary daylighting control, skipping"
           next
         else
           daylightSetpoint = primaryDaylightingControl.get.illuminanceSetpoint
@@ -1587,7 +1584,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         annual_cda_daylit_occupied = cda_daylit_occupied_sum.to_f / cda_daylit_occupied_num.to_f
         summary_report += "#{space_name},conDA(#{daylightSetpoint.round(0)}),Daylit and Occupied Hours,#{annual_cda_daylit_occupied.round(2)},#{cda_daylit_occupied_sum.round(0)},#{cda_daylit_occupied_num}\n"
 
-       # Useful Daylight Illuminance
+        # Useful Daylight Illuminance
         udi_daylit_sum = 0
         udi_daylit_num = 0
         udi_daylit.each do |udi|
@@ -1622,9 +1619,9 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         summary_report += "#{space_name},UDI(100-3000),Daylit and Occupied Hours,#{annual_udi_daylit_occupied.round(2)},#{cda_daylit_occupied_sum.round(0)},#{cda_daylit_occupied_num}\n"
 
         # now replace nil with 0 in each timeseries to radout.sql for plotting
-  
+
         building_average_space << annual_da_daylit_occupied
-  
+
       end
 
       # DLM: can we make some more metrics that are area weighted rather than just space weighted?
@@ -1648,11 +1645,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
     end #daylightMetrics()
 
-
-
     ## ## ## ## ## ##
-
-
 
     # actually do the thing
     
@@ -1694,7 +1687,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
     #puts "Executing epw2wea: #{epw2weapath}"
     #exec_statement("#{epw2weapath.to_s} #{epw_path.to_s} wx/in.wea")
-    exec_statement("epw2wea \"#{epw_path.to_s}\" wx/in.wea")
+    exec_statement("epw2wea \"#{epw_path}\" wx/in.wea")
 
     # get site info from .wea file
     # TODO may want to get this from properly set OS.site object
@@ -1711,27 +1704,27 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     building_transformation = building.transformation
 
     # create materials library for model, shared for all spaces
-    radMaterials = Array.new
+    radMaterials = []
 
     # create space geometry, hash of space name to file contents
-    radSpaces = Hash.new
-    radSensors = Hash.new
-    radGlareSensors = Hash.new
-    radGlareSensorViews = Hash.new
-    radMaps = Hash.new
-    radMapHandles = Hash.new
-    radMapPoints = Hash.new
-    radViewPoints = Hash.new
-    radDaylightingControls = Hash.new
-    radDaylightingControlPoints = Hash.new
-    spaceWidths = Hash.new
-    spaceHeights = Hash.new
+    radSpaces = {}
+    radSensors = {}
+    radGlareSensors = {}
+    radGlareSensorViews = {}
+    radMaps = {}
+    radMapHandles = {}
+    radMapPoints = {}
+    radViewPoints = {}
+    radDaylightingControls = {}
+    radDaylightingControlPoints = {}
+    spaceWidths = {}
+    spaceHeights = {}
 
     # loop through the model
-    space_names = Array.new
+    space_names = []
 
     building.spaces.each do |space|
-      space_name = space.name.get.gsub(' ', '_').gsub(':', '_')
+      space_name = space.name.get.tr(' ', '_').tr(':', '_')
       space_names << space_name
 
       space_transformation = space.transformation
@@ -1758,10 +1751,10 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       end
     end
 
-    space_names_to_calculate = Array.new
+    space_names_to_calculate = []
 
     # only do spaces with illuminance maps
-    space_names_to_calculate = Array.new
+    space_names_to_calculate = []
     space_names.each do |space_name|
       if not radMaps[space_name].nil?
         space_names_to_calculate << space_name
@@ -1770,7 +1763,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
     # merge window group control points
     File.open("numeric/window_controls.map", "w") do |f|
-
       windows = Dir.glob("numeric/WG*.pts")
       windows.each do |wg|
         f.write IO.read(wg)
@@ -1780,16 +1772,12 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     # merge calculation points
     File.open("numeric/merged_space.map", "w") do |f|
       space_names_to_calculate.each do |space_name|
-
         f.write IO.read("numeric/#{space_name}.map")
-
-        if File.exist?("numeric/#{space_name}.sns")        
+        if File.exist?("numeric/#{space_name}.sns")
           f.write IO.read("numeric/#{space_name}.sns")
         end
-
         if File.exist?("numeric/#{space_name}.glr")
           f.write IO.read("numeric/#{space_name}.glr")
-
         end
       end
     end
@@ -1802,14 +1790,12 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     values, dcVectors = runSimulation(space_names_to_calculate, sqlFile, sim_cores, \
     options_skyvecDensity, site_latitude, site_longitude, site_meridian, radPath, spaceWidths, \
     spaceHeights, radGlareSensorViews, runner, write_sql)
-    
 
     # make space-level illuminance schedules and radout.sql results database
     # hoping this is no longer necessary...
     annualSimulation(sqlFile, epwFile, space_names_to_calculate, radMaps, spaceWidths, \
-    spaceHeights, radMapPoints, radGlareSensorViews, sim_cores, site_latitude, site_longitude, \
-    site_meridian, radPath, building, values, dcVectors, write_sql)
-
+    spaceHeights, radMapPoints, radGlareSensorViews, sim_cores, site_latitude, \
+    site_longitude, site_meridian, radPath, building, values, dcVectors, write_sql)
 
     # make new lighting power schedules based on Radiance daylight data
     makeSchedules(model, sqlFile)
@@ -1823,8 +1809,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       thermalZone.resetSecondaryDaylightingControl
       thermalZone.resetIlluminanceMap
     end
-    
-    
+
     # report initial condition of model
     daylightAnalysisSpaces = []
     spaces = model.getSpaces
@@ -1839,11 +1824,9 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     # report final condition of model
     runner.registerFinalCondition('Measure ran Radiance on the #{daylightAnalysisSpaces.size} \
     spaces containing daylighting objects.')
-    
+
     return true
-
-  end #run
-
+  end # run
 end
 
 # register the measure to be used by the application
