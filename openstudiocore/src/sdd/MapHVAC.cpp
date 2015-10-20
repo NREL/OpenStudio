@@ -77,6 +77,8 @@
 #include "../model/Space_Impl.hpp"
 #include "../model/AirConditionerVariableRefrigerantFlow.hpp"
 #include "../model/AirConditionerVariableRefrigerantFlow_Impl.hpp"
+#include "../model/AvailabilityManagerOptimumStart.hpp"
+#include "../model/AvailabilityManagerOptimumStart_Impl.hpp"
 #include "../model/CoilCoolingDXVariableRefrigerantFlow.hpp"
 #include "../model/CoilCoolingDXVariableRefrigerantFlow_Impl.hpp"
 #include "../model/CoilHeatingDXVariableRefrigerantFlow.hpp"
@@ -483,6 +485,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
                                                   openstudio::model::Model& model )
 {
   boost::optional<openstudio::model::ModelObject> result;
+  bool ok = false;
 
   double value;
 
@@ -526,21 +529,66 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     airLoopHVAC.setAvailabilitySchedule(availabilitySchedule.get());
   }
 
-  QDomElement nightCycleFanCtrlElement = airSystemElement.firstChildElement("NightCycleFanCtrl");
-  
-  if( istringEqual(nightCycleFanCtrlElement.text().toStdString(),"CycleOnCallAnyZone") )
-  {
-    airLoopHVAC.setNightCycleControlType("CycleOnAny");
-  }
-  else if( istringEqual(nightCycleFanCtrlElement.text().toStdString(),"CycleOnCallPrimaryZone") )
-  {
-    airLoopHVAC.setNightCycleControlType("CycleOnAny");
+  // Optimum Start
+  auto optStartElement = airSystemElement.firstChildElement("OptStart");
+  if( ! optStartElement.isNull() ) {
+    model::AvailabilityManagerOptimumStart optimumStart(model);
 
-    LOG(Warn,airLoopHVAC.name().get() << ": CycleOnAnyZoneFansOnly is not supported, using CycleOnAny.");
-  }
-  else if( istringEqual(nightCycleFanCtrlElement.text().toStdString(),"CycleZoneFansOnly") )
-  {
-    airLoopHVAC.setNightCycleControlType("CycleOnAnyZoneFansOnly");
+    auto optStartCtrlElement = airSystemElement.firstChildElement("OptStartCtrl");
+    if( istringEqual(optStartCtrlElement.text().toStdString(),"ControlZone") ) {
+      optimumStart.setControlType("ControlZone");
+      auto controlZone = airSystemElement.firstChildElement("CntrlZnRef").text().toStdString();
+      auto pair = std::pair<std::string,model::AvailabilityManagerOptimumStart>(controlZone,optimumStart);
+      m_optimumStartControlZones.insert(pair);
+    } else {
+      optimumStart.setControlType("MaximumZoneList");
+    }
+
+    auto optStartMaxValElement = airSystemElement.firstChildElement("OptStartMaxVal");
+    auto optStartMaxVal = optStartMaxValElement.text().toDouble(&ok);
+    if(ok) {
+      optimumStart.setMaximumValueforOptimumStartTime(optStartMaxVal);
+    }
+
+    optimumStart.setControlAlgorithm("AdaptiveTemperatureGradient");
+    
+    auto optStartClgGradientElement = airSystemElement.firstChildElement("OptStartClgGradient");
+    auto optStartClgGradient = optStartClgGradientElement.text().toDouble(&ok);
+    if(ok) {
+      // Convert dF to dC, these are delta temperatures
+      optimumStart.setInitialTemperatureGradientduringCooling(optStartClgGradient * 5.0 / 9.0);
+    }
+
+    auto optStartHtgGradientElement = airSystemElement.firstChildElement("OptStartHtgGradient");
+    auto optStartHtgGradient = optStartHtgGradientElement.text().toDouble(&ok);
+    if(ok) {
+      // Convert dF to dC, these are delta temperatures
+      optimumStart.setInitialTemperatureGradientduringHeating(optStartHtgGradient * 5.0 / 9.0);
+    }
+
+    auto optStartNumDaysElement = airSystemElement.firstChildElement("OptStartNumDays");
+    auto optStartNumDays = optStartNumDaysElement.text().toInt(&ok);
+    if(ok) {
+      optimumStart.setNumberofPreviousDays(optStartNumDays);
+    }
+  } else {
+    // Night Cycle
+    QDomElement nightCycleFanCtrlElement = airSystemElement.firstChildElement("NightCycleFanCtrl");
+    
+    if( istringEqual(nightCycleFanCtrlElement.text().toStdString(),"CycleOnCallAnyZone") )
+    {
+      airLoopHVAC.setNightCycleControlType("CycleOnAny");
+    }
+    else if( istringEqual(nightCycleFanCtrlElement.text().toStdString(),"CycleOnCallPrimaryZone") )
+    {
+      airLoopHVAC.setNightCycleControlType("CycleOnAny");
+
+      LOG(Warn,airLoopHVAC.name().get() << ": CycleOnAnyZoneFansOnly is not supported, using CycleOnAny.");
+    }
+    else if( istringEqual(nightCycleFanCtrlElement.text().toStdString(),"CycleZoneFansOnly") )
+    {
+      airLoopHVAC.setNightCycleControlType("CycleOnAnyZoneFansOnly");
+    }
   }
 
   // Adjust Sizing:System Object
@@ -550,7 +598,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
   // clgDsgnSupAirTemp
   double clgDsgnSupAirTemp = 12.8;
   QDomElement clgSupAirTempElement = airSystemElement.firstChildElement("ClgDsgnSupAirTemp");
-  bool ok;
   value = clgSupAirTempElement.text().toDouble(&ok);
   if( ok )
   {
@@ -3656,6 +3703,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
       }
     }
   }
+
+  // Set zone for optimum start, if applicable
+  {
+    auto optimumStart = m_optimumStartControlZones.find(thermalZone.name().get());
+    if( optimumStart != m_optimumStartControlZones.end() ) {
+      optimumStart->second.setControlZone(thermalZone);
+    }
+  }
+
 
   // PrimaryAirConditioningSystemReference
   if( ! znSysElement.isNull() )

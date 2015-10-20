@@ -47,6 +47,7 @@ namespace model {
   class Surface;
   class SubSurface;
   class PlantLoop;
+  class AvailabilityManagerOptimumStart;
 }
 
 namespace sdd {
@@ -174,6 +175,14 @@ namespace sdd {
     openstudio::path m_path;
 
     ProgressBar* m_progressBar;
+
+    // This is storage to match control zones with optimum start AVMs
+    // This is used because the ThermalZone instances are not yet created when
+    // the air system and AVMs are translated.
+    // This map is populated when the air systems are translated,
+    // then used to add the control zones when the zones are translated later.
+    // The map is zone name => AVM 
+    std::map<std::string,model::AvailabilityManagerOptimumStart> m_optimumStartControlZones;
 
     REGISTER_LOGGER("openstudio.sdd.ReverseTranslator");
   };

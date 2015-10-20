@@ -28,6 +28,8 @@
 #include "../model/AirLoopHVAC_Impl.hpp"
 #include "../model/AirLoopHVACOutdoorAirSystem.hpp"
 #include "../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "../model/AvailabilityManagerOptimumStart.hpp"
+#include "../model/AvailabilityManagerOptimumStart_Impl.hpp"
 #include "../model/Facility.hpp"
 #include "../model/Facility_Impl.hpp"
 #include "../model/Building.hpp"
