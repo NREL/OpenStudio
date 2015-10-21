@@ -32,29 +32,42 @@
 namespace openstudio {
 
 ConstructionsTabController::ConstructionsTabController(bool isIP, const model::Model& model)
-  : MainTabController(new ConstructionsTabView(model, "Constructions"))
+  : MainTabController(new ConstructionsTabView(model, "Constructions")),
+  m_model(model),
+  m_isIP(isIP)
 {
-  m_defaultConstructionSetsController = std::shared_ptr<DefaultConstructionSetsController>(new DefaultConstructionSetsController(model));
-  m_constructionsController = std::shared_ptr<ConstructionsController>(new ConstructionsController(isIP, model));
-  m_materialsController = std::shared_ptr<MaterialsController>(new MaterialsController(isIP, model));
+  this->mainContentWidget()->addSubTab("Construction Sets", DEFAULT_CONSTRUCTIONS);
+  this->mainContentWidget()->addSubTab("Constructions", CONSTRUCTIONS);
+  this->mainContentWidget()->addSubTab("Materials", MATERIALS);
 
-  this->mainContentWidget()->addSubTab("Construction Sets", m_defaultConstructionSetsController->subTabView(),DEFAULT_CONSTRUCTIONS);
-  this->mainContentWidget()->addSubTab("Constructions", m_constructionsController->subTabView(),CONSTRUCTIONS);
-  this->mainContentWidget()->addSubTab("Materials", m_materialsController->subTabView(),MATERIALS);
-
-  connect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>(m_defaultConstructionSetsController->subTabView()), &ModelSubTabView::toggleUnitsClicked);
-
-  connect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>(m_constructionsController->subTabView()), &ModelSubTabView::toggleUnitsClicked);
-
-  connect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>(m_materialsController->subTabView()), &ModelSubTabView::toggleUnitsClicked);
-
-  connect(m_defaultConstructionSetsController.get(), &DefaultConstructionSetsController::downloadComponentsClicked, this, &ConstructionsTabController::downloadComponentsClicked);
-
-  connect(m_defaultConstructionSetsController.get(), &DefaultConstructionSetsController::openLibDlgClicked, this, &ConstructionsTabController::openLibDlgClicked);
+  setTab(0);
 }
 
 ConstructionsTabController::~ConstructionsTabController()
 {
+}
+
+void ConstructionsTabController::setTab(int index)
+{
+  switch (index){
+  case 0:
+    m_defaultConstructionSetsController = std::shared_ptr<DefaultConstructionSetsController>(new DefaultConstructionSetsController(m_model));
+    connect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>(m_defaultConstructionSetsController->subTabView()), &ModelSubTabView::toggleUnitsClicked);
+    connect(m_defaultConstructionSetsController.get(), &DefaultConstructionSetsController::downloadComponentsClicked, this, &ConstructionsTabController::downloadComponentsClicked);
+    connect(m_defaultConstructionSetsController.get(), &DefaultConstructionSetsController::openLibDlgClicked, this, &ConstructionsTabController::openLibDlgClicked);
+    break;
+  case 1:
+    m_constructionsController = std::shared_ptr<ConstructionsController>(new ConstructionsController(m_isIP, m_model));
+    connect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>(m_constructionsController->subTabView()), &ModelSubTabView::toggleUnitsClicked);
+    break;
+  case 2:
+    m_materialsController = std::shared_ptr<MaterialsController>(new MaterialsController(m_isIP, m_model));
+    connect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>(m_materialsController->subTabView()), &ModelSubTabView::toggleUnitsClicked);
+    break;
+  default:
+    OS_ASSERT(false);
+    break;
+  }
 }
 
 } // openstudio

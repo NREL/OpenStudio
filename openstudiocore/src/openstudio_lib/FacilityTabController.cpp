@@ -28,32 +28,57 @@
 namespace openstudio {
 
 FacilityTabController::FacilityTabController(bool isIP, const model::Model& model)
-  : MainTabController(new FacilityTabView())
+  : MainTabController(new FacilityTabView()),
+  m_model(model),
+  m_isIP(isIP)
 {
-  auto buildingInspectorView = new BuildingInspectorView(isIP, model);
-  this->mainContentWidget()->addSubTab("Building", buildingInspectorView, BUILDING);
-  connect(this, &FacilityTabController::toggleUnitsClicked, buildingInspectorView, &BuildingInspectorView::toggleUnitsClicked);
-  connect(buildingInspectorView, &BuildingInspectorView::dropZoneItemClicked, this, &FacilityTabController::dropZoneItemClicked);
+  mainContentWidget()->addSubTab("Building", BUILDING);
+  mainContentWidget()->addSubTab("Stories", STORIES);
+  mainContentWidget()->addSubTab("Shading", SHADING);
+  mainContentWidget()->addSubTab("Exterior Equipment", EXTERIOR_EQUIPMENT);
 
-  auto facilityStoriesGridView = new FacilityStoriesGridView(isIP, model);
-  this->mainContentWidget()->addSubTab("Stories", facilityStoriesGridView, STORIES);
-  connect(this, &FacilityTabController::toggleUnitsClicked, facilityStoriesGridView, &FacilityStoriesGridView::toggleUnitsClicked);
-  connect(facilityStoriesGridView, &FacilityStoriesGridView::dropZoneItemSelected, this, &FacilityTabController::dropZoneItemSelected);
-
-  auto facilityShadingGridView = new FacilityShadingGridView(isIP, model);
-  this->mainContentWidget()->addSubTab("Shading", facilityShadingGridView, SHADING);
-  connect(this, &FacilityTabController::toggleUnitsClicked, facilityShadingGridView, &FacilityShadingGridView::toggleUnitsClicked);
-  connect(facilityShadingGridView, &FacilityShadingGridView::dropZoneItemSelected, this, &FacilityTabController::dropZoneItemSelected);
-
-  auto facilityExteriorEquipmentGridView = new FacilityExteriorEquipmentGridView(isIP, model);
-  this->mainContentWidget()->addSubTab("Exterior Equipment", facilityExteriorEquipmentGridView, EXTERIOR_EQUIPMENT);
-  connect(this, &FacilityTabController::toggleUnitsClicked, facilityExteriorEquipmentGridView, &FacilityExteriorEquipmentGridView::toggleUnitsClicked);
-  connect(facilityExteriorEquipmentGridView, &FacilityExteriorEquipmentGridView::dropZoneItemSelected, this, &FacilityTabController::dropZoneItemSelected);
-
+  setTab(0);
 }
 
 void FacilityTabController::toggleUnits(bool displayIP)
 {
+}
+
+void FacilityTabController::setTab(int index)
+{
+  switch (index){
+  case 0:
+  {
+    auto buildingInspectorView = new BuildingInspectorView(m_isIP, m_model);
+    connect(this, &FacilityTabController::toggleUnitsClicked, buildingInspectorView, &BuildingInspectorView::toggleUnitsClicked);
+    connect(buildingInspectorView, &BuildingInspectorView::dropZoneItemClicked, this, &FacilityTabController::dropZoneItemClicked);
+    break;
+  }
+  case 1:
+  {
+    auto facilityStoriesGridView = new FacilityStoriesGridView(m_isIP, m_model);
+    connect(this, &FacilityTabController::toggleUnitsClicked, facilityStoriesGridView, &FacilityStoriesGridView::toggleUnitsClicked);
+    connect(facilityStoriesGridView, &FacilityStoriesGridView::dropZoneItemSelected, this, &FacilityTabController::dropZoneItemSelected);
+    break;
+  }
+  case 2:
+  {
+    auto facilityShadingGridView = new FacilityShadingGridView(m_isIP, m_model);
+    connect(this, &FacilityTabController::toggleUnitsClicked, facilityShadingGridView, &FacilityShadingGridView::toggleUnitsClicked);
+    connect(facilityShadingGridView, &FacilityShadingGridView::dropZoneItemSelected, this, &FacilityTabController::dropZoneItemSelected);
+    break;
+  }
+  case 3:
+  {
+    auto facilityExteriorEquipmentGridView = new FacilityExteriorEquipmentGridView(m_isIP, m_model);
+    connect(this, &FacilityTabController::toggleUnitsClicked, facilityExteriorEquipmentGridView, &FacilityExteriorEquipmentGridView::toggleUnitsClicked);
+    connect(facilityExteriorEquipmentGridView, &FacilityExteriorEquipmentGridView::dropZoneItemSelected, this, &FacilityTabController::dropZoneItemSelected);
+    break;
+  }
+  default:
+    OS_ASSERT(false);
+    break;
+  }
 }
 
 } // openstudio

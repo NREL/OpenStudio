@@ -50,6 +50,15 @@ class ConstructionsTabController : public MainTabController
     std::shared_ptr<DefaultConstructionSetsController> m_defaultConstructionSetsController;
     std::shared_ptr<ConstructionsController> m_constructionsController;
     std::shared_ptr<MaterialsController> m_materialsController;
+
+    model::Model m_model;
+
+    bool m_isIP;
+
+  public slots:
+
+    virtual void setTab(int index) override;
+
 };
 
 } // openstudio

@@ -57,50 +57,16 @@ namespace openstudio {
 
 SchedulesTabController::SchedulesTabController(bool isIP, const model::Model & model)
   : MainTabController(new SchedulesTabView(model)),
-    m_model(model),
     m_scheduleDialog(nullptr),
-    m_isIP(isIP)
+    m_model(model),
+    m_isIP(m_isIP)
 {
-  m_scheduleSetsController = std::shared_ptr<ScheduleSetsController>( new ScheduleSetsController(m_model) );
-  this->mainContentWidget()->addSubTab("Schedule Sets",m_scheduleSetsController->subTabView(),SCHEDULE_SETS);
-
-  m_schedulesView = new SchedulesView(m_isIP,m_model);
-  addQObject(m_schedulesView);
-  this->mainContentWidget()->addSubTab("Schedules",m_schedulesView,SCHEDULES);
+  mainContentWidget()->addSubTab("Schedule Sets", SCHEDULE_SETS);
+  mainContentWidget()->addSubTab("Schedules", SCHEDULES);
 
   connect(this, &SchedulesTabController::toggleUnitsClicked, this, &SchedulesTabController::toggleUnits);
 
-  connect(this, &SchedulesTabController::toggleUnitsClicked, m_schedulesView, &SchedulesView::toggleUnitsClicked);
-
-  connect(m_scheduleSetsController.get(), &ScheduleSetsController::downloadComponentsClicked, this, &SchedulesTabController::downloadComponentsClicked);
-
-  connect(m_scheduleSetsController.get(), &ScheduleSetsController::openLibDlgClicked, this, &SchedulesTabController::openLibDlgClicked);
-
-  connect(m_schedulesView, &SchedulesView::addScheduleClicked, this, &SchedulesTabController::addScheduleRuleset);
-  
-  connect(m_schedulesView, &SchedulesView::copySelectedScheduleClicked, this, &SchedulesTabController::copySelectedSchedule);
-
-  connect(m_schedulesView, &SchedulesView::removeSelectedScheduleClicked, this, &SchedulesTabController::removeSelectedSchedule);
-
-  connect(m_schedulesView, &SchedulesView::purgeUnusedScheduleRulesetsClicked, this, &SchedulesTabController::purgeUnusedScheduleRulesets);
-
-  connect(m_schedulesView, &SchedulesView::addRuleClicked, this, &SchedulesTabController::addRule);
-
-  connect(m_schedulesView, &SchedulesView::addSummerProfileClicked, this, &SchedulesTabController::addSummerProfile);
-
-  connect(m_schedulesView, &SchedulesView::addWinterProfileClicked, this, &SchedulesTabController::addWinterProfile);
-
-  connect(m_schedulesView, &SchedulesView::dayScheduleSceneChanged, this, &SchedulesTabController::onDayScheduleSceneChanged);
-
-  connect(m_schedulesView, &SchedulesView::startDateTimeChanged, this, &SchedulesTabController::onStartDateTimeChanged);
-
-  connect(m_schedulesView, &SchedulesView::endDateTimeChanged, this, &SchedulesTabController::onEndDateTimeChanged);
-
-  connect(m_schedulesView, &SchedulesView::removeScheduleRuleClicked, this, &SchedulesTabController::removeScheduleRule);
-
-  connect(m_schedulesView, &SchedulesView::itemDropped, this, &SchedulesTabController::onItemDropped);
-
-  connect(m_schedulesView, &SchedulesView::modelObjectSelected, this, &SchedulesTabController::modelObjectSelected);
+  setTab(0);
 }
 
 void SchedulesTabController::addScheduleRuleset()
@@ -420,6 +386,43 @@ double SchedulesTabController::defaultStartingValue(const model::ScheduleDay& sc
     } // if siU
   }
   return result;
+}
+
+void SchedulesTabController::setTab(int index)
+{
+  switch (index){
+  case 0:
+  {
+    m_scheduleSetsController = std::shared_ptr<ScheduleSetsController>(new ScheduleSetsController(m_model));
+    connect(m_scheduleSetsController.get(), &ScheduleSetsController::downloadComponentsClicked, this, &SchedulesTabController::downloadComponentsClicked);
+    connect(m_scheduleSetsController.get(), &ScheduleSetsController::openLibDlgClicked, this, &SchedulesTabController::openLibDlgClicked);
+    break;
+  }
+  case 1:
+  {
+    m_schedulesView = new SchedulesView(m_isIP, m_model);
+    addQObject(m_schedulesView); // EVAN note: WHAT'S HAPPENING HERE
+
+    connect(this, &SchedulesTabController::toggleUnitsClicked, m_schedulesView, &SchedulesView::toggleUnitsClicked);
+    connect(m_schedulesView, &SchedulesView::addScheduleClicked, this, &SchedulesTabController::addScheduleRuleset);
+    connect(m_schedulesView, &SchedulesView::copySelectedScheduleClicked, this, &SchedulesTabController::copySelectedSchedule);
+    connect(m_schedulesView, &SchedulesView::removeSelectedScheduleClicked, this, &SchedulesTabController::removeSelectedSchedule);
+    connect(m_schedulesView, &SchedulesView::purgeUnusedScheduleRulesetsClicked, this, &SchedulesTabController::purgeUnusedScheduleRulesets);
+    connect(m_schedulesView, &SchedulesView::addRuleClicked, this, &SchedulesTabController::addRule);
+    connect(m_schedulesView, &SchedulesView::addSummerProfileClicked, this, &SchedulesTabController::addSummerProfile);
+    connect(m_schedulesView, &SchedulesView::addWinterProfileClicked, this, &SchedulesTabController::addWinterProfile);
+    connect(m_schedulesView, &SchedulesView::dayScheduleSceneChanged, this, &SchedulesTabController::onDayScheduleSceneChanged);
+    connect(m_schedulesView, &SchedulesView::startDateTimeChanged, this, &SchedulesTabController::onStartDateTimeChanged);
+    connect(m_schedulesView, &SchedulesView::endDateTimeChanged, this, &SchedulesTabController::onEndDateTimeChanged);
+    connect(m_schedulesView, &SchedulesView::removeScheduleRuleClicked, this, &SchedulesTabController::removeScheduleRule);
+    connect(m_schedulesView, &SchedulesView::itemDropped, this, &SchedulesTabController::onItemDropped);
+    connect(m_schedulesView, &SchedulesView::modelObjectSelected, this, &SchedulesTabController::modelObjectSelected);
+    break;
+  }
+  default:
+    OS_ASSERT(false);
+    break;
+  }
 }
 
 } // openstudio

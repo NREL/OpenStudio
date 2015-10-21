@@ -21,11 +21,13 @@
 #define OPENSTUDIO_MAINTABVIEW_HPP
 
 #include <QWidget>
+
 #include <vector>
 
-class QStackedWidget;
-class QPushButton;
 class QLabel;
+class QPushButton;
+class QStackedWidget;
+class QVBoxLayout;
 
 namespace openstudio {
 
@@ -51,7 +53,9 @@ public:
   bool addTabWidget(QWidget * widget);
 
   ///! Use this method only if your tab will have sub tabs
-  bool addSubTab(const QString & subTabLabel, QWidget * widget, int id);
+  bool addSubTab(const QString & subTabLabel, int id);
+
+  void setSubTab(QWidget * widget);
 
   // Returns the id of the current sub tab.
   // Returns -1 if there are no sub tabs.
@@ -73,9 +77,10 @@ protected:
 
 private:
 
-  QLabel * m_tabLabel;
-  QStackedWidget * m_stackedWidget;
-  QWidget * m_mainWidget;
+  QLabel * m_tabLabel = nullptr;
+  QWidget * m_mainWidget = nullptr;
+  QWidget * m_currentInnerWidget = nullptr;
+  QVBoxLayout * m_innerLayout = nullptr;
 
   std::vector<QString> m_selectedPixmaps;
   std::vector<QString> m_neighborSelectedPixmaps;

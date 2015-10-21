@@ -18,9 +18,12 @@
 **********************************************************************/
 
 #include "RunTabController.hpp"
+
 #include "RunTabView.hpp"
+
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
+
 #include "../runmanager/lib/JobStatusWidget.hpp"
 
 #include "../utilities/core/Assert.hpp"
@@ -31,16 +34,17 @@ RunTabController::RunTabController(const model::Model & model, const openstudio:
     const openstudio::path &t_tempFolder, openstudio::runmanager::RunManager t_runManager)
   : MainTabController(new RunTabView(model)),
     m_runView(new RunView(model, t_modelPath, t_tempFolder, t_runManager)),
-    m_status(new openstudio::runmanager::JobStatusWidget(t_runManager))
+    m_status(new openstudio::runmanager::JobStatusWidget(t_runManager)),
+    m_model(model)
 {
-  mainContentWidget()->addSubTab("Output", m_runView,OUTPUT);
-  mainContentWidget()->addSubTab("Tree", m_status,TREE);
+  mainContentWidget()->addSubTab("Output", OUTPUT);
+  mainContentWidget()->addSubTab("Tree", TREE);
 
   connect(m_runView, &RunView::resultsGenerated, this, &RunTabController::resultsGenerated);
 
   connect(m_runView, &RunView::toolsUpdated, this, &RunTabController::toolsUpdated);
 
-  //connect(m_runView, &RunView::useRadianceStateChanged, this, &RunTabController::useRadianceStateChanged);
+  setTab(0);
 }
 
 openstudio::RunView * RunTabController::runView(){
@@ -58,6 +62,23 @@ runmanager::RunManager RunTabController::runManager() {
 void RunTabController::updateToolsWarnings()
 {
   m_runView->updateToolsWarnings();
+}
+
+void RunTabController::setTab(int index)
+{
+  switch (index){
+  case 0:
+  {
+    break;
+  }
+  case 1:
+  {
+    break;
+  }
+  default:
+    OS_ASSERT(false);
+    break;
+  }
 }
 
 } // openstudio

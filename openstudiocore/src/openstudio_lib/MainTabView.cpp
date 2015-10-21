@@ -19,17 +19,18 @@
 
 #include "MainTabView.hpp"
 
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QPainter>
+#include <QPixmap>
+#include <QPushButton>
+#include <QResizeEvent>
+#include <QStackedWidget>
+#include <QStyleOption>
+#include <QVBoxLayout>
+
 #include "../utilities/core/Assert.hpp"
 
-#include <QStackedWidget>
-#include <QPixmap>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QPushButton>
-#include <QLabel>
-#include <QStyleOption>
-#include <QPainter>
-#include <QResizeEvent>
 #include <vector>
 
 static const int TAB_SEPARATION = 10;
@@ -53,13 +54,15 @@ MainTabView::MainTabView(const QString & tabLabel, TabType tabType, QWidget * pa
   m_mainWidget->setObjectName("MainTabView");
   m_mainWidget->move(7,25);
 
-  auto innerLayout = new QVBoxLayout();
-  innerLayout->setSpacing(0);
-  m_mainWidget->setLayout(innerLayout);
+  m_innerLayout = new QVBoxLayout();
+  m_innerLayout->setSpacing(0);
+  m_mainWidget->setLayout(m_innerLayout);
+  //m_innerLayout->addWidget(m_currentInnerWidget);
 
-  m_stackedWidget = new QStackedWidget();
-  m_stackedWidget->setContentsMargins(0,0,0,0);
-  innerLayout->addWidget(m_stackedWidget);
+  auto label = new QLabel("Hello World");
+  label->setObjectName("H2");
+  //m_currentInnerWidget = label;
+  m_innerLayout->addWidget(label);
 
   setTabType(tabType);
 }
@@ -109,11 +112,15 @@ bool MainTabView::addTabWidget(QWidget * widget)
   OS_ASSERT(m_tabType == MAIN_TAB);
   if (m_tabType != MAIN_TAB) return false;
 
-  m_stackedWidget->addWidget(widget);
+  auto label = new QLabel("Hello World");
+  m_currentInnerWidget = label;
+
+  //m_currentInnerWidget = widget;
+
   return true;
 }
 
-bool MainTabView::addSubTab(const QString & subTablabel, QWidget * widget, int id)
+bool MainTabView::addSubTab(const QString & subTablabel, int id)
 {
   // This method should only be called in cases where the tab will have sub tabs
   OS_ASSERT(m_tabType != MAIN_TAB);
@@ -125,12 +132,20 @@ bool MainTabView::addSubTab(const QString & subTablabel, QWidget * widget, int i
   m_tabButtons.push_back(button);
   connect(button, &QPushButton::clicked, this, &MainTabView::select);
 
-  m_stackedWidget->addWidget(widget);
-
   m_ids.push_back(id);
 
   setCurrentIndex(0);
   return true;
+}
+
+void MainTabView::setSubTab(QWidget * widget)
+{
+  if (m_currentInnerWidget) {
+    m_innerLayout->removeWidget(m_currentInnerWidget);
+    m_currentInnerWidget->deleteLater();
+  }
+  m_currentInnerWidget = widget;
+  m_innerLayout->addWidget(m_currentInnerWidget);
 }
 
 void MainTabView::select()
@@ -157,7 +172,7 @@ void MainTabView::setCurrentIndex(int index)
   int xPos = m_tabLabel->width() + TAB_SEPARATION;
 
   for(unsigned i = 0; i < m_tabButtons.size(); i++)
-  {  
+  {
     QPushButton * button = m_tabButtons[i];
     QString style;
 
@@ -201,16 +216,16 @@ void MainTabView::setCurrentIndex(int index)
   button->setStyleSheet(style); 
   button->raise();
 
-  m_stackedWidget->setCurrentIndex(index);
+  //m_stackedWidget->setCurrentIndex(index);
 
   emit tabSelected(m_ids[index]);
 }
 
 void MainTabView::setCurrentWidget(QWidget * widget)
 {
-  int i = m_stackedWidget->indexOf(widget);
+  //int i = m_stackedWidget->indexOf(widget);
 
-  setCurrentIndex(i);
+  //setCurrentIndex(i);
 }
 
 void MainTabView::paintEvent ( QPaintEvent * event )
@@ -244,19 +259,21 @@ int MainTabView::subTabId() const
 
 int MainTabView::subTabIndex() const
 {
-  return m_stackedWidget->currentIndex();
+  //return m_stackedWidget->currentIndex();
+  OS_ASSERT(false);
+  return -1;
 }
 
 bool MainTabView::selectSubTabByIndex(int index)
 {
-  if (m_tabType != MAIN_TAB){
-    if(index < 0 || index >= m_stackedWidget->count()){
-      return false;
-    } else {
-      setCurrentIndex(index);
-      return true;
-    }
-  }
+  //if (m_tabType != MAIN_TAB){
+  //  if(index < 0 || index >= m_stackedWidget->count()){
+  //    return false;
+  //  } else {
+  //    setCurrentIndex(index);
+  //    return true;
+  //  }
+  //}
   return false;
 }
 

@@ -40,50 +40,16 @@ namespace openstudio {
 LocationTabController::LocationTabController(bool isIP,
   const model::Model & model,
   const QString& modelTempDir)
-  : MainTabController(new LocationTabView(model,modelTempDir)),
-  m_model(model)
+  : MainTabController(new LocationTabView(model, modelTempDir)),
+  m_model(model),
+  m_isIP(isIP),
+  m_modelTempDir(modelTempDir)
 {
-  m_locationView = new LocationView(isIP, model, modelTempDir);
-  mainContentWidget()->addSubTab("Weather File && Design Days", m_locationView, WEATHER_FILE);
-  connect(this, &LocationTabController::toggleUnitsClicked, m_locationView, &LocationView::toggleUnitsClicked);
-  connect(m_locationView, &LocationView::calendarYearSelectionChanged, this, &LocationTabController::showUtilityBillSubTab);
+  mainContentWidget()->addSubTab("Weather File && Design Days", WEATHER_FILE); 
+  mainContentWidget()->addSubTab("Life Cycle Costs", LIFE_CYCLE_COSTS);
+  mainContentWidget()->addSubTab("Utility Bills", UTILITY_BILLS);
 
-  auto lifeCycleCostsView = new LifeCycleCostsView(model);
-  mainContentWidget()->addSubTab("Life Cycle Costs",lifeCycleCostsView,LIFE_CYCLE_COSTS);
-
-  QLabel * label;
-
-  label = new QLabel();
-  label->setPixmap(QPixmap(":/images/utility_calibration_warning.png"));
-  label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-
-  m_utilityBillsController = std::shared_ptr<UtilityBillsController>(new UtilityBillsController(model));
-
-  m_utilityBillsStackedWidget = new QStackedWidget();
-  m_warningWidgetIndex = m_utilityBillsStackedWidget->addWidget(label);
-  m_visibleWidgetIndex = m_utilityBillsStackedWidget->addWidget(m_utilityBillsController->subTabView()); 
-
-  mainContentWidget()->addSubTab("Utility Bills",m_utilityBillsStackedWidget,UTILITY_BILLS);
-
-  showUtilityBillSubTab();
-
-  // Hack code to remove when tab active
-  label = new QLabel();
-  label->setPixmap(QPixmap(":/images/coming_soon_utility_rates.png"));
-  label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-  //mainContentWidget()->addSubTab("Utility Rates",label,UTILITY_RATES); This is too slow in coming, so hide until ready
-
-  // Hack code to remove when tab active
-  //label = new QLabel();
-  //label->setPixmap(QPixmap(":/images/coming_soon_ground_temperature.png"));
-  //label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-  //mainContentWidget()->addSubTab("Ground Temperature",label,GROUND_TEMPERATURE);
-
-  // Hack code to remove when tab active
-  //label = new QLabel();
-  //label->setPixmap(QPixmap(":/images/coming_soon_water_mains_temperature.png"));
-  //label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-  //mainContentWidget()->addSubTab("Water Mains Temperature",label,WATER_MAINS_TEMPERATURE);
+  setTab(0);
 }
 
 void LocationTabController::showUtilityBillSubTab()
@@ -126,6 +92,42 @@ void LocationTabController::showSubTabView(bool showSubTabView)
     m_utilityBillsStackedWidget->setCurrentIndex(m_visibleWidgetIndex);
   } else {
     m_utilityBillsStackedWidget->setCurrentIndex(m_warningWidgetIndex);
+  }
+}
+
+void LocationTabController::setTab(int index)
+{
+  switch (index){
+  case 0:
+  {
+    m_locationView = new LocationView(m_isIP, m_model, m_modelTempDir);
+    connect(this, &LocationTabController::toggleUnitsClicked, m_locationView, &LocationView::toggleUnitsClicked);
+    connect(m_locationView, &LocationView::calendarYearSelectionChanged, this, &LocationTabController::showUtilityBillSubTab);
+    break;
+  }
+  case 1:
+  {
+    auto lifeCycleCostsView = new LifeCycleCostsView(m_model);
+    break;
+  }
+  case 2:
+  {
+    QLabel * label = new QLabel();
+    label->setPixmap(QPixmap(":/images/utility_calibration_warning.png"));
+    label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+
+    m_utilityBillsController = std::shared_ptr<UtilityBillsController>(new UtilityBillsController(m_model));
+
+    m_utilityBillsStackedWidget = new QStackedWidget();
+    m_warningWidgetIndex = m_utilityBillsStackedWidget->addWidget(label);
+    m_visibleWidgetIndex = m_utilityBillsStackedWidget->addWidget(m_utilityBillsController->subTabView());
+
+    showUtilityBillSubTab();
+    break;
+  }
+  default:
+    OS_ASSERT(false);
+    break;
   }
 }
 

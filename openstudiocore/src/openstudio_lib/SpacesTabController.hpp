@@ -45,9 +45,19 @@ namespace openstudio {
     DAYLIGHTING
   };
 
+private:
+
+  model::Model m_model;
+
+  bool m_isIP;
+
+public slots:
+
+  virtual void setTab(int index) override;
+
 private slots:
 
-void toggleUnits(bool displayIP);
+  void toggleUnits(bool displayIP);
 
 };
 

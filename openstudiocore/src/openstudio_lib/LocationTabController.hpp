@@ -68,17 +68,28 @@ private:
   bool calendarYearChecked();
 
   LocationView * m_locationView = nullptr;
+
   std::shared_ptr<UtilityBillsController> m_utilityBillsController;
+
   QStackedWidget * m_utilityBillsStackedWidget = nullptr;
+
   int m_warningWidgetIndex;
+
   int m_visibleWidgetIndex;
+
+  QString m_modelTempDir;
+
   model::Model m_model;
+
+  bool m_isIP;
 
 private slots:
 
   void showUtilityBillSubTab();
 
   void showSubTabView(bool showSubTabView);
+
+  virtual void setTab(int index) override;
  
 };
 

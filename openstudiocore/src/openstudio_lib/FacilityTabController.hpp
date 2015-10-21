@@ -44,9 +44,15 @@ class FacilityTabController : public MainTabController
     EXTERIOR_EQUIPMENT
   };
 
+  model::Model m_model;
+
+  bool m_isIP;
+
   public slots:
   
   void toggleUnits(bool displayIP);
+
+  virtual void setTab(int index) override;
 };
 
 } // openstudio

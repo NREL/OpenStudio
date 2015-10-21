@@ -22,13 +22,10 @@
 
 #include "../shared_gui_components/OSQObjectController.hpp"
 
+#include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
 
 namespace openstudio {
-
-namespace model {
-  class Model;
-}
 
 class MainTabView;
 class OSItem;
@@ -45,6 +42,10 @@ class MainTabController : public OSQObjectController
 
     MainTabView* mainContentWidget() const;
 
+  private:
+
+    MainTabView* m_mainContentWidget;
+
   signals:
 
     void modelObjectSelected(model::OptionalModelObject & modelObject, bool readOnly);
@@ -59,11 +60,11 @@ class MainTabController : public OSQObjectController
 
     void downloadComponentsClicked();
 
-    void openLibDlgClicked();
+    void openLibDlgClicked();  
 
-  private:
-  
-    MainTabView* m_mainContentWidget;
+  public slots:
+
+    virtual void setTab(int index) {};
 };
 
 } // openstudio

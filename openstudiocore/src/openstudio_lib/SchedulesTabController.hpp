@@ -71,7 +71,23 @@ class SchedulesTabController : public MainTabController
 
   static double defaultStartingValue(const model::ScheduleDay& scheduleDay);
 
+ private:
+
+  void showScheduleDialog();
+
+  SchedulesView * m_schedulesView;
+
+  std::shared_ptr<ScheduleSetsController> m_scheduleSetsController;
+
+  ScheduleDialog * m_scheduleDialog;
+
+  model::Model m_model;
+
+  bool m_isIP;
+
   public slots:
+
+  virtual void setTab(int index) override;
 
   void toggleUnits(bool displayIP);
 
@@ -93,7 +109,7 @@ class SchedulesTabController : public MainTabController
 
   void removeScheduleRule(model::ScheduleRule & scheduleRule);
 
-  void onDayScheduleSceneChanged( DayScheduleScene * scene, double lowerLimitValue, double upperLimitValue );
+  void onDayScheduleSceneChanged(DayScheduleScene * scene, double lowerLimitValue, double upperLimitValue);
 
   void onStartDateTimeChanged(model::ScheduleRule & scheduleRule, const QDateTime & newDate);
 
@@ -101,19 +117,6 @@ class SchedulesTabController : public MainTabController
 
   void onItemDropped(const OSItemId& itemId);
 
- private:
-
-  void showScheduleDialog();
-
-  SchedulesView * m_schedulesView;
-
-  std::shared_ptr<ScheduleSetsController> m_scheduleSetsController;
-
-  model::Model m_model;
-
-  ScheduleDialog * m_scheduleDialog;
-
-  bool m_isIP;
 };
 
 } // openstudio

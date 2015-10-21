@@ -57,20 +57,26 @@ class RunTabController : public MainTabController
     TREE
   };
 
- signals:
+signals:
+
     void resultsGenerated(const openstudio::path &t_sqlFile, const openstudio::path &t_radianceOutputFile);
+  
     void toolsUpdated();
-    //void useRadianceStateChanged(bool);
-
-
- public slots:
-    void updateToolsWarnings();
 
  private:
 
   RunView * m_runView;
 
   openstudio::runmanager::JobStatusWidget * m_status;
+
+  model::Model m_model;
+
+public slots:
+
+  void updateToolsWarnings();
+
+  virtual void setTab(int index) override;
+
 };
 
 } // openstudio

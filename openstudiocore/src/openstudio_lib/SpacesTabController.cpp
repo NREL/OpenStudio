@@ -30,45 +30,77 @@
 
 namespace openstudio {
 
-  SpacesTabController::SpacesTabController(bool isIP, const model::Model& model)
-: MainTabController(new SpacesTabView())
+  SpacesTabController::SpacesTabController(bool isIP, const model::Model& model) 
+    : MainTabController(new SpacesTabView()),
+    m_model(model),
+    m_isIP(isIP)
 {
-  auto spacesSpacesGridView = new SpacesSpacesGridView(isIP, model);
-  this->mainContentWidget()->addSubTab("Properties", spacesSpacesGridView, SPACES);
-  connect(this, &SpacesTabController::toggleUnitsClicked, spacesSpacesGridView, &SpacesSpacesGridView::toggleUnitsClicked);
-  connect(spacesSpacesGridView, &SpacesSpacesGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+  this->mainContentWidget()->addSubTab("Properties", SPACES);
+  this->mainContentWidget()->addSubTab("Loads", LOADS);
+  this->mainContentWidget()->addSubTab("Surfaces", SURFACES);
+  this->mainContentWidget()->addSubTab("Subsurfaces", SUBSURFACES);
+  this->mainContentWidget()->addSubTab("Interior Partitions", INTERIOR_PARTITIONS);
+  this->mainContentWidget()->addSubTab("Shading", SHADING);
 
-  auto spacesLoadsGridView = new SpacesLoadsGridView(isIP, model);
-  this->mainContentWidget()->addSubTab("Loads", spacesLoadsGridView, LOADS);
-  connect(this, &SpacesTabController::toggleUnitsClicked, spacesLoadsGridView, &SpacesLoadsGridView::toggleUnitsClicked);
-  connect(spacesLoadsGridView, &SpacesLoadsGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
-
-  auto spacesSurfacesGridView = new SpacesSurfacesGridView(isIP, model);
-  this->mainContentWidget()->addSubTab("Surfaces", spacesSurfacesGridView, SURFACES);
-  connect(this, &SpacesTabController::toggleUnitsClicked, spacesSurfacesGridView, &SpacesSurfacesGridView::toggleUnitsClicked);
-  connect(spacesSurfacesGridView, &SpacesSurfacesGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
-
-  auto spacesSubsurfacesGridView = new SpacesSubsurfacesGridView(isIP, model);
-  this->mainContentWidget()->addSubTab("Subsurfaces", spacesSubsurfacesGridView, SUBSURFACES);
-  connect(this, &SpacesTabController::toggleUnitsClicked, spacesSubsurfacesGridView, &SpacesSubsurfacesGridView::toggleUnitsClicked);
-  connect(spacesSubsurfacesGridView, &SpacesSubsurfacesGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
-
-  auto spacesInteriorPartitionsGridView = new SpacesInteriorPartitionsGridView(isIP, model);
-  this->mainContentWidget()->addSubTab("Interior Partitions", spacesInteriorPartitionsGridView, INTERIOR_PARTITIONS);
-  connect(this, &SpacesTabController::toggleUnitsClicked, spacesInteriorPartitionsGridView, &SpacesInteriorPartitionsGridView::toggleUnitsClicked);
-  connect(spacesInteriorPartitionsGridView, &SpacesInteriorPartitionsGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
-
-  auto spacesShadingGridView = new SpacesShadingGridView(isIP, model);
-  this->mainContentWidget()->addSubTab("Shading", spacesShadingGridView, SHADING);
-  connect(this, &SpacesTabController::toggleUnitsClicked, spacesShadingGridView, &SpacesShadingGridView::toggleUnitsClicked);
-  connect(spacesShadingGridView, &SpacesShadingGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+  setTab(0);
 
   // Evan note: TODO SpacesDaylightingGridView may be a dead class, given the latest Radiance plans
-  //this->mainContentWidget()->addSubTab("Daylighting", new SpacesDaylightingGridView(isIP, model), DAYLIGHTING);
+  //this->mainContentWidget()->addSubTab("Daylighting", new SpacesDaylightingGridView(m_isIP, m_model), DAYLIGHTING);
 }
 
-  void SpacesTabController::toggleUnits(bool displayIP)
+void SpacesTabController::toggleUnits(bool displayIP)
 {
 }
 
-  } // openstudio
+void SpacesTabController::setTab(int index)
+{
+  switch (index){
+  case 0:
+  {
+    auto spacesSpacesGridView = new SpacesSpacesGridView(m_isIP, m_model);
+    connect(this, &SpacesTabController::toggleUnitsClicked, spacesSpacesGridView, &SpacesSpacesGridView::toggleUnitsClicked);
+    connect(spacesSpacesGridView, &SpacesSpacesGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+    break;
+  }
+  case 1:
+  {
+    auto spacesLoadsGridView = new SpacesLoadsGridView(m_isIP, m_model);
+    connect(this, &SpacesTabController::toggleUnitsClicked, spacesLoadsGridView, &SpacesLoadsGridView::toggleUnitsClicked);
+    connect(spacesLoadsGridView, &SpacesLoadsGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+    break;
+  }
+  case 2:
+  {
+    auto spacesSurfacesGridView = new SpacesSurfacesGridView(m_isIP, m_model);
+    connect(this, &SpacesTabController::toggleUnitsClicked, spacesSurfacesGridView, &SpacesSurfacesGridView::toggleUnitsClicked);
+    connect(spacesSurfacesGridView, &SpacesSurfacesGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+    break;
+  }
+  case 3:
+  {
+    auto spacesSubsurfacesGridView = new SpacesSubsurfacesGridView(m_isIP, m_model);
+    connect(this, &SpacesTabController::toggleUnitsClicked, spacesSubsurfacesGridView, &SpacesSubsurfacesGridView::toggleUnitsClicked);
+    connect(spacesSubsurfacesGridView, &SpacesSubsurfacesGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+    break;
+  }
+  case 4:
+  {
+    auto spacesInteriorPartitionsGridView = new SpacesInteriorPartitionsGridView(m_isIP, m_model);
+    connect(this, &SpacesTabController::toggleUnitsClicked, spacesInteriorPartitionsGridView, &SpacesInteriorPartitionsGridView::toggleUnitsClicked);
+    connect(spacesInteriorPartitionsGridView, &SpacesInteriorPartitionsGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+    break;
+  }
+  case 5:
+  {
+    auto spacesShadingGridView = new SpacesShadingGridView(m_isIP, m_model);
+    connect(this, &SpacesTabController::toggleUnitsClicked, spacesShadingGridView, &SpacesShadingGridView::toggleUnitsClicked);
+    connect(spacesShadingGridView, &SpacesShadingGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+    break;
+  }
+  default:
+    OS_ASSERT(false);
+    break;
+  }
+}
+
+} // openstudio
