@@ -2,7 +2,7 @@
   <schema_version>3.0</schema_version>
   <name>radiance_measure</name>
   <uid>1e3cfef8-b051-4e60-8bb0-ed2d29d4f45d</uid>
-  <version_id>8a5b392f-899f-404b-b6fa-ec8de4047bad</version_id>
+  <version_id>0bd58971-6244-4306-8cea-b57960db21f5</version_id>
   <xml_checksum>381B7733</xml_checksum>
   <class_name>RadianceMeasure</class_name>
   <display_name>Radiance Daylighting Measure</display_name>
@@ -163,7 +163,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>20032A43</checksum>
+      <checksum>48D8D47F</checksum>
     </file>
   </files>
 </measure>
