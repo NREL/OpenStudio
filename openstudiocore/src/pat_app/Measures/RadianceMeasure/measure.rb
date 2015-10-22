@@ -98,7 +98,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     write_sql = runner.getStringArgumentValue('write_sql', user_arguments)
 
     if apply_schedules == 'Yes' && write_sql == 'No'
-      puts 'lighting power schedules requested, will write Radiance sql results file'
+      runner.registerInfo('lighting power schedules requested, will write Radiance sql results file')
       write_sql = 'Yes'
     end
 
@@ -159,12 +159,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     if /darwin/.match(RUBY_PLATFORM)
       ver = `defaults read loginwindow SystemVersionStampAsString`
       if ver.split('.')[1] == '10'
-        puts 'Radiance multiprocessing disabled for MacOS 10.10.x, sorry.'
+        runner.registerInfo('Radiance multiprocessing disabled for MacOS 10.10.x, sorry.')
         sim_cores = 1
       end
     end
-    puts "Using #{sim_cores} cores for Radiance jobs"
-
+    runner.registerInfo("Using #{sim_cores} cores for Radiance jobs")
 
     # help those poor Windows users out
     perlExtension = ""
@@ -177,12 +176,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     end
 
     ## END Radiance Utilities
-    
+
     # setup environment for Radiance and Perl
     co = OpenStudio::Runmanager::ConfigOptions.new(true);
     co.fastFindRadiance();
     radiancePath = co.getTools().getLastByName("rad").localBinPath.parent_path
-
     path = OpenStudio::Path.new(radiancePath).to_s
     raypath = (OpenStudio::Path.new(radiancePath).parent_path() / 
     OpenStudio::Path.new('lib')).to_s()
@@ -200,7 +198,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         perlpath = OpenStudio::getApplicationRunDirectory().parent_path() / 
         OpenStudio::Path.new("strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin")
       end
-      puts "Adding path for local perl: " + perlpath.to_s
+      runner.registerInfo("Adding path for local perl: " + perlpath.to_s)
       ENV["PATH"] = ENV["PATH"] + ";" + path + ";" + perlpath.to_s
       ENV["RAYPATH"] = path + ";" + raypath + ";."
     else
@@ -209,15 +207,14 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     end
 
     if Dir.glob(epw2weapath + programExtension).empty?
-      puts "(test) Cannot find epw2wea tool in radiance installation at '#{radiancePath}'. \
-      You may need to install a newer version of Radiance."
+      runner.registerError("Cannot find epw2wea tool in radiance installation at '#{radiancePath}'. You may need to install a newer version of Radiance.")
       exit false
     end
 
     ENV["EPW2WEAPATH"] = epw2weapath + programExtension
 
  		if !which("perl")
- 		 puts "Perl could not be found in path, exiting"
+ 		 runner.registerError('Perl could not be found in path, exiting')
  		 exit false
  		end
      
@@ -298,16 +295,16 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     runmanager = OpenStudio::Runmanager::RunManager.new(runmanager_path, true, true, false, false)
 
     OpenStudio::makeParentFolder(runDir, OpenStudio::Path.new(), true)
-    puts "Creating workflow"
-    
+    runner.registerInfo('Creating workflow')
+
     jobtree = workflow.create(OpenStudio::system_complete(runDir), \
     OpenStudio::system_complete(modelPath), OpenStudio::Path.new(epw_path))
     runmanager.enqueue(jobtree, true)
-    puts "Running jobs in #{runDir}"
+    runner.registerInfo("Running jobs in #{runDir}")
     runmanager.setPaused(false)
     runmanager.waitForFinished()
 
-		runner.registerInfo("Ran Radiance Translator")
+		runner.registerInfo('Ran Radiance Translator')
 
     # DLM: need to check that this finished correctly
 
@@ -391,12 +388,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       mapFile=File.open("numeric/merged_space.map","r")
       rfluxmtxDim = mapFile.readlines.size.to_s
 
-      runner.registerInfo("RUNNER #{Time.now.getutc}: passing #{rfluxmtxDim} calculation points to Radiance")
-      puts "PUTS #{Time.now.getutc}: passing #{rfluxmtxDim} calculation points to Radiance"
-
+      runner.registerInfo("#{Time.now.getutc}: passing #{rfluxmtxDim} calculation points to Radiance")
+      puts "#{Time.now.getutc}: passing #{rfluxmtxDim} calculation points to Radiance"
 
       # compute daylight matrices
-
+      runner.registerInfo("#{Time.now.getutc}: computing daylight coefficient matrices")
       puts "#{Time.now.getutc}: computing daylight coefficient matrices"
 
       exec_statement("oconv materials/materials.rad model.rad > model_dc.oct", runner)
@@ -492,6 +488,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			#end
 
     puts "#{Time.now.getutc}: done (daylight coefficient matrices)."
+    runner.registerInfo("#{Time.now.getutc}: done (daylight coefficient matrices).")
 
     end # calculateDaylightCoeffecients()
 
@@ -500,8 +497,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     t_site_latitude, t_site_longitude, t_site_stdmeridian, t_radPath, \
     t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, runner, write_sql)
 
-      puts "#{Time.now.getutc}: Calculating annual daylight values for all window groups and \
-      shade states"
+      puts "#{Time.now.getutc}: Calculating annual daylight values for all window groups and shade states"
 
       rawValues = {}
       values = {}
@@ -526,31 +522,29 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         if row.split(",")[2] == "n/a" || row.split(",")[2] == "AlwaysOff"
           # keep header, convert to illuminance, but no transpose
           exec_statement("dctimestep \"#{t_radPath}/output/dc/#{wg}.vmx\" annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > \"#{t_radPath}/output/ts/#{wg}.ill\"", runner) 
-    
+
         else
-    
+
         # do all controlled window groups
-    
           wgXMLs = row.split(",")[4..-1]
           if wgXMLs.size > 2
             puts "WARN: Window Group #{wg} has #{wgXMLs.size} BSDFs (2 max supported by OpenStudio application)."
           end
-    
+
           wgXMLs.each_index do |i|
             rad_command = "dctimestep output/dc/#{wg}.vmx bsdf/#{wgXMLs[i].strip} output/dc/#{wg}.dmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}_#{wgXMLs[i].split[0]}.ill"
             runner.registerInfo("#{Time.now.getutc}: #{rad_command}")
             exec_statement(rad_command, runner)
           end
-      
+
         end
-    
+
       end
-  
-  
+
       # get annual values for window control sensors (note: convert to illuminance, no transpose, strip header)
       exec_statement("dctimestep output/dc/window_controls.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - | getinfo - > output/ts/window_controls.ill", runner)
   
-      puts "#{Time.now.getutc}: Merging results:"
+      puts "#{Time.now.getutc}: Merging results"
   
       # do that window group/state merge thing
   
@@ -581,8 +575,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 					shadeControlSetpoint = 100000000
 				end
 
-			
-				puts "#{Time.now.getutc}: Processing window group '#{windowGroup}', setpoint: #{shadeControlSetpoint} lux"  
+				runner.registerInfo("#{Time.now.getutc}: Processing window group '#{windowGroup}', setpoint: #{shadeControlSetpoint} lux")
 
 				# separate header from data; so, so ugly. 
 				header = []
@@ -606,7 +599,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 					end
 
 				end # that window group/state merge thing
-
 
         # get the window control point illuminances (should be headerless file)
     
@@ -632,7 +624,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             end
   
           end
-
 
           # you need to file these files, yo.
       
@@ -668,10 +659,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       end
       exec_statement("rmtxop -fa #{addFiles} -t | getinfo - > \"output/ts/merged_space.ill\"", runner)
 
-      
-
       ## window merge end
-
 
       rawValues = parseResults(simulations, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_radPath, write_sql, runner)
 
@@ -685,7 +673,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
         # check that we have all timeseries
         if (not diffHorizIllumAll) or (not dirNormIllumAll) or (not diffEfficacyAll) or (not dirNormEfficacyAll) or (not solarAltitudeAll) or (not solarAzimuthAll)
-          puts "Missing required timeseries"
+          runner.registerError('Missing required timeseries')
           exit false
         end
 
@@ -707,8 +695,10 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     # function renamed from execSimulation() to parseResults()
     def parseResults(t_cmds, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_radPath, write_sql, runner)
 
-      puts "#{Time.now.getutc}: Executing simulation"
-  
+      status_string = "#{Time.now.getutc}: parsing results"
+      puts status_string
+      runner.registerInfo(status_string)
+
       allValues = []
       values = []
 
@@ -719,7 +709,9 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         values << row.split(" ")
       end
 
-      puts "#{Time.now.getutc}: writing output"
+      status_string = "#{Time.now.getutc}: writing output"
+      puts status_string
+      runner.registerInfo(status_string)
 
       allhours = []
 
@@ -792,8 +784,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     
     end # parseResults()
 
-
-
     def getTimeSeries(t_sqlFile, t_envPeriod)
       diffHorizIllumAll = []; dirNormIllumAll = [];
       diffEfficacyAll = []; dirNormEfficacyAll = [];
@@ -829,8 +819,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       return diffHorizIllumAll, dirNormIllumAll, diffEfficacyAll, dirNormEfficacyAll, solarAltitudeAll, solarAzimuthAll, diffHorizUnits, dirNormUnits
 
     end # getTimeSeries()
-
-
 
     def buildSimulationTimes(t_sqlFile, t_envPeriod, t_diffHorizIllumAll, t_dirNormIllumAll, t_diffEfficacyAll, t_dirNormEfficacyAll, t_solarAltitudeAll, t_solarAzimuthAll)
 
@@ -876,14 +864,13 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     end # buildSimulationTimes()
 
 
-
     def writeTimeSeriesToSql(sqlfile, simDateTimes, illum, space_name, ts_name, ts_units)
       data = OpenStudio::Vector.new(illum.length)
       illum.length.times do |n|
         begin
           data[n] = illum[n].to_f;
         rescue Exception => e
-          puts "Error inserting data: " + illum[n] + " inserting 0 instead";
+          runner.registerInfo("Error inserting data: " + illum[n] + " inserting 0 instead");
           data[n] = 0;
         end
       end
@@ -895,7 +882,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         ts_units, illumTS);
 
     end # writeTimeSeriesToSql()
-
 
 
     def annualSimulation(t_sqlFile, t_epwFile, t_space_names_to_calculate, t_radMaps, t_spaceWidths, t_spaceHeights, t_radMapPoints, \
@@ -938,7 +924,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           meanDGP = []
           maxDGP = []
 
-          puts "#{Time.now.getutc}: Processing Space: #{space_name}"
+          runner.registerInfo("#{Time.now.getutc}: Processing Space: #{space_name}")
 
           timeSeriesIllum =[]
           timeSeriesGlare =[]
@@ -1042,7 +1028,9 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             xSpacing = (xmax-xmin)/nx
             ySpacing = (ymax-ymin)/ny
 
-            puts "#{Time.now.getutc}: writing Radiance results file..."
+            status_string = "#{Time.now.getutc}: writing Radiance results file..."
+            puts status_string
+            runner.registerInfo(status_string)
 
             # illuminance to csv
             
@@ -1076,7 +1064,10 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             # all results to sql
             
             if write_sql == "Yes"
-              puts "#{Time.now.getutc}: writing Radiance results database..."
+              status_string = "#{Time.now.getutc}: writing Radiance results database..."
+              puts status_string
+              runner.registerInfo(status_string)
+
               writeTimeSeriesToSql(sqlOutFile, simDateTimes, dirNormIllum, space_name, "Direct Normal Illuminance", "lux")
               writeTimeSeriesToSql(sqlOutFile, simDateTimes, diffHorizIllum, space_name, "Global Horizontal Illuminance", "lux")
               writeTimeSeriesToSql(sqlOutFile, simDateTimes, daylightSensorIlluminance, space_name, "Daylight Sensor Illuminance", "lux")
@@ -1148,7 +1139,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         spaces = thermalZone.spaces
 
         if spaces.empty?
-          puts "ThermalZone '#{thermalZone.name}' has no spaces, skipping."
+          runner.registerInfo("ThermalZone '#{thermalZone.name}' has no spaces, skipping.")
           next
         end
   
@@ -1157,7 +1148,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         peopleTimeseries = sqlFile.timeSeries("Run Period 1".upcase, "Hourly", "Zone People Occupant Count", thermalZone.name.get.upcase)
   
         if peopleTimeseries.empty?
-          puts "Cannot find timeseries 'Zone People Occupant Count' for ThermalZone '#{thermalZone.name}'."
+          runner.registerInfo("Cannot find timeseries 'Zone People Occupant Count' for ThermalZone '#{thermalZone.name}'.")
         end
   
         # get lights schedule for zone
@@ -1165,7 +1156,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
   
         if lightsTimeseries.empty?
           newname = thermalZone.name.get.sub(/^OS:/, '');
-          puts "Cannot find timeseries 'Zone Lights Electric Power' for ThermalZone '#{thermalZone.name}', skipping."
+          runner.registerInfo("Cannot find timeseries 'Zone Lights Electric Power' for ThermalZone '#{thermalZone.name}', skipping.")
           next
         end
   
@@ -1175,7 +1166,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         illuminanceMap = thermalZone.illuminanceMap
 
         if illuminanceMap.empty?
-          puts "Cannot find IlluminanceMap for ThermalZone '#{thermalZone.name}', skipping."
+          runner.registerInfo("Cannot find IlluminanceMap for ThermalZone '#{thermalZone.name}', skipping.")
           next
         end
 
@@ -1185,12 +1176,12 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         space = illuminanceMap.space
   
         if space.empty?
-          puts "Cannot find Space for IlluminanceMap '#{illuminanceMap.name}' in ThermalZone '#{thermalZone.name}', skipping."
+          runner.registerInfo("Cannot find Space for IlluminanceMap '#{illuminanceMap.name}' in ThermalZone '#{thermalZone.name}', skipping.")
           next
         end
-  
+
         space = space.get
-  
+
         space_name = space.name.get.tr(' ', '_').tr(':', '_')
 
         radSqlPath = OpenStudio::Path.new("output/radout.sql")
@@ -1205,14 +1196,14 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           envPeriods = radSqlFile.availableEnvPeriods
 
           if envPeriods.size == 0
-            puts "No available environment periods in radiance sql file, skipping"
+            runner.registerInfo("No available environment periods in radiance sql file, skipping")
             next
           end
 
           daylightSensor = radSqlFile.timeSeries(envPeriods[0], "Hourly", "Daylight Sensor Illuminance", space_name)
     
           if daylightSensor.empty?
-            puts "Daylight sensor data could not be loaded, skipping"
+            runner.registerInfo("Daylight sensor data could not be loaded, skipping")
             next
           end
 
@@ -1231,16 +1222,16 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         daylightSetpoint = 0.0
 
         primaryDaylightingControl = thermalZone.primaryDaylightingControl
-        if not primaryDaylightingControl.empty?
+        if !primaryDaylightingControl.empty?
           daylightSetpoint = primaryDaylightingControl.get.illuminanceSetpoint
         end
 
           secondaryDaylightingControl = thermalZone.secondaryDaylightingControl
-          if not secondaryDaylightingControl.empty?
+          if !secondaryDaylightingControl.empty?
             if daylightSetpoint == 0.0
               daylightSetpoint = secondaryDaylightingControl.get.illuminanceSetpoint
             else
-              "Ignoring secondary daylighting control in ThermalZone '#{thermalZone.name}'"
+              runner.registerInfo("Ignoring secondary daylighting control in ThermalZone '#{thermalZone.name}'")
           end
         end
   
@@ -1254,11 +1245,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         end
   
         if daylightSetpoint == 0.0
-          puts "Illuminance setpoint is not defined in Space '#{space.name}' or in ThermalZone '#{thermalZone.name}', skipping."
+          runner.registerInfo("Illuminance setpoint is not defined in Space '#{space.name}' or in ThermalZone '#{thermalZone.name}', skipping.")
           next
         end
   
-        puts "ThermalZone '#{thermalZone.name}' illuminance setpoint is: #{daylightSetpoint.round(0)} lux"
+        runner.registerInfo("ThermalZone '#{thermalZone.name}' illuminance setpoint is: #{daylightSetpoint.round(0)} lux")
   
         originalLightsValues = lightsTimeseries.values
         lightsValues = OpenStudio::Vector.new(averageIlluminances.size)
@@ -1279,11 +1270,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         lightingLevel = OpenStudio::maximum(lightsValues)
   
         if lightingLevel <= 0.0
-          puts "ThermalZone '#{thermalZone.name}' lighting level is less than or equal to 0, skipping"
+          runner.registerInfo("ThermalZone '#{thermalZone.name}' lighting level is less than or equal to 0, skipping")
           next
         end
   
-        puts "ThermalZone '#{thermalZone.name}' lighting level is: #{lightingLevel.round(0)} W"
+        runner.registerInfo("ThermalZone '#{thermalZone.name}' lighting level is: #{lightingLevel.round(0)} W")
   
         # normalize lights values
         averageIlluminances.each_index do |i|
@@ -1297,7 +1288,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         schedule = OpenStudio::Model::ScheduleInterval::fromTimeSeries(timeseries, model)
   
         if schedule.empty?
-          puts "Could not create modified lighting schedule for ThermalZone '#{thermalZone.name}', skipping"
+          runner.registerInfo("Could not create modified lighting schedule for ThermalZone '#{thermalZone.name}', skipping")
           next
         end
   
@@ -1338,7 +1329,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
       radoutFile = OpenStudio::SqlFile.new(radoutPath)
       if not sqlFile.connectionOpen
-        puts "SqlFile #{sqlPath} connection is not open"
+        runner.registerInfo("SqlFile #{sqlPath} connection is not open")
         return false
       end 
     
@@ -1380,13 +1371,13 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         daylightSetpoint = nil
         primaryDaylightingControl = thermalZone.primaryDaylightingControl
         if primaryDaylightingControl.empty?
-          puts "ThermalZone \"#{thermalZone}\" has no primary daylighting control, skipping"
+          runner.registerInfo("ThermalZone \"#{thermalZone}\" has no primary daylighting control, skipping")
           next
         else
           daylightSetpoint = primaryDaylightingControl.get.illuminanceSetpoint
         end
   
-        puts "Calculating Daylight Metrics for Space #{space_name}"
+        runner.registerInfo("Calculating Daylight Metrics for Space #{space_name}")
   
         da_daylit = []
         da_occupied = []
@@ -1397,15 +1388,14 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         udi_daylit = []
         udi_occupied = []
         udi_daylit_occupied = []
-  
-  
+
         # get people timeseries from E+ run for this zone
         peopleTimeseries = sqlFile.timeSeries("Run Period 1".upcase, "Hourly", "Zone People Occupant Count", thermalZone.name.get.upcase)
-  
+
         # loop over all timesteps, return type is std::vector< std::pair<int, DateTime> > 
         hourly_report_indices_dates = radoutFile.illuminanceMapHourlyReportIndicesDates(map_name)
         hourly_report_indices_dates.each do |hourly_report_index_date| 
-    
+
           # initialize metrics to nil for timestep
           da_daylit << nil
           da_occupied << nil
@@ -1432,7 +1422,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     
           # see if this is an occupied hour
           occupied_hour = false
-          if not peopleTimeseries.empty?
+          if !peopleTimeseries.empty?
             val = peopleTimeseries.get.value(hourly_report_date)
             if val > 0
               occupied_hour = true
@@ -1631,7 +1621,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       # catch zero condition
       if building_average_space_sum == 0.0
         building_average = 0.0
-        puts "warning: Daylight Autonomy for building is zero, check daylighting control point(s) setup."
+        runner.registerInfo("warning: Daylight Autonomy for building is zero, check daylighting control point(s) setup.")
       else
         building_average = building_average_space_sum / building_average_space.length
       end
@@ -1654,24 +1644,24 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     
     # settle in, it's gonna be a bumpy ride...
     Dir.chdir("#{radPath}")
-    puts "\nRunning radiance in directory: '#{Dir.pwd}'"
-    
+    runner.registerInfo("Radiance run directory: '#{Dir.pwd}'")
+
     epwFile = OpenStudio::OptionalEpwFile.new(OpenStudio::EpwFile.new(epw_path))
-        
+
     sqlPath = OpenStudio::Path.new("sql/eplusout.sql")
     sqlPath = OpenStudio::system_complete(sqlPath)
-    
+
     # load the sql file
     sqlFile = OpenStudio::SqlFile.new(sqlPath)
-    if not sqlFile.connectionOpen
-      puts "SqlFile #{sqlPath} connection is not open"
+    if !sqlFile.connectionOpen
+      runner.registerError("SqlFile #{sqlPath} connection is not open")
       return false
-    end 
+    end
 
     # set the sql file
     model.setSqlFile(sqlFile)
     if model.sqlFile.empty?
-      puts "Model's SqlFile is not initialized"
+      runner.registerError("Model's SqlFile is not initialized")
       return false
     end
 
@@ -1751,13 +1741,13 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     # only do spaces with illuminance maps
     space_names_to_calculate = []
     space_names.each do |space_name|
-      if not radMaps[space_name].nil?
+      if !radMaps[space_name].nil?
         space_names_to_calculate << space_name
       end
     end
 
     # merge window group control points
-    File.open("numeric/window_controls.map", "w") do |f|
+    File.open("numeric/window_controls.map", 'w') do |f|
       windows = Dir.glob("numeric/WG*.pts")
       windows.each do |wg|
         f.write IO.read(wg)
@@ -1765,7 +1755,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     end
 
     # merge calculation points
-    File.open("numeric/merged_space.map", "w") do |f|
+    File.open("numeric/merged_space.map", 'w') do |f|
       space_names_to_calculate.each do |space_name|
         f.write IO.read("numeric/#{space_name}.map")
         if File.exist?("numeric/#{space_name}.sns")
@@ -1813,12 +1803,10 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         daylightAnalysisSpaces << sp
       end
     end
-    puts ''
-    runner.registerInitialCondition('Input building model contains #{model.getSpaces.size} spaces.')
+    runner.registerInitialCondition("Input building model contains #{model.getSpaces.size} spaces.")
 
     # report final condition of model
-    runner.registerFinalCondition('Measure ran Radiance on the #{daylightAnalysisSpaces.size} \
-    spaces containing daylighting objects.')
+    runner.registerFinalCondition("Measure ran Radiance on the #{daylightAnalysisSpaces.size} spaces containing daylighting objects.")
 
     return true
   end # run
