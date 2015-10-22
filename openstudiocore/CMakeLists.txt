@@ -31,7 +31,7 @@ endif()
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
 if(NOT ENERGYPLUS_BUILD_SHA)
-  set(ENERGYPLUS_BUILD_SHA "6d97d074ea")
+  set(ENERGYPLUS_BUILD_SHA "832e4bb9cb")
 endif()
 
 # configure file with version information
