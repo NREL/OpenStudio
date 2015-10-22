@@ -40,10 +40,6 @@ RunTabController::RunTabController(const model::Model & model, const openstudio:
   mainContentWidget()->addSubTab("Output", OUTPUT);
   mainContentWidget()->addSubTab("Tree", TREE);
 
-  connect(m_runView, &RunView::resultsGenerated, this, &RunTabController::resultsGenerated);
-
-  connect(m_runView, &RunView::toolsUpdated, this, &RunTabController::toolsUpdated);
-
   setSubTab(0);
 }
 
@@ -69,10 +65,16 @@ void RunTabController::setSubTab(int index)
   switch (index){
   case 0:
   {
+    connect(m_runView, &RunView::resultsGenerated, this, &RunTabController::resultsGenerated);
+    connect(m_runView, &RunView::toolsUpdated, this, &RunTabController::toolsUpdated);
+    connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &RunTabController::setSubTab);
+    this->mainContentWidget()->setSubTab(m_runView);
     break;
   }
   case 1:
   {
+    connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &RunTabController::setSubTab);
+    this->mainContentWidget()->setSubTab(m_status);
     break;
   }
   default:
