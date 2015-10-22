@@ -64,7 +64,7 @@ class SchedulesTabController : public MainTabController
 
   enum TabID
   {
-    YEAR_SETTINGS,
+    //YEAR_SETTINGS,
     SCHEDULE_SETS,
     SCHEDULES
   };

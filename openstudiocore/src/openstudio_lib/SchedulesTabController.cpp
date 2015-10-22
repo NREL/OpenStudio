@@ -64,8 +64,6 @@ SchedulesTabController::SchedulesTabController(bool isIP, const model::Model & m
   mainContentWidget()->addSubTab("Schedule Sets", SCHEDULE_SETS);
   mainContentWidget()->addSubTab("Schedules", SCHEDULES);
 
-  connect(this, &SchedulesTabController::toggleUnitsClicked, this, &SchedulesTabController::toggleUnits);
-
   setSubTab(0);
 }
 
@@ -396,12 +394,15 @@ void SchedulesTabController::setSubTab(int index)
     m_scheduleSetsController = std::shared_ptr<ScheduleSetsController>(new ScheduleSetsController(m_model));
     connect(m_scheduleSetsController.get(), &ScheduleSetsController::downloadComponentsClicked, this, &SchedulesTabController::downloadComponentsClicked);
     connect(m_scheduleSetsController.get(), &ScheduleSetsController::openLibDlgClicked, this, &SchedulesTabController::openLibDlgClicked);
+    connect(this, &SchedulesTabController::toggleUnitsClicked, this, &SchedulesTabController::toggleUnits);
+    connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &SchedulesTabController::setSubTab);
+    this->mainContentWidget()->setSubTab(m_scheduleSetsController->subTabView());
     break;
   }
   case 1:
   {
     m_schedulesView = new SchedulesView(m_isIP, m_model);
-    addQObject(m_schedulesView); // EVAN note: WHAT'S HAPPENING HERE
+    addQObject(m_schedulesView);
 
     connect(this, &SchedulesTabController::toggleUnitsClicked, m_schedulesView, &SchedulesView::toggleUnitsClicked);
     connect(m_schedulesView, &SchedulesView::addScheduleClicked, this, &SchedulesTabController::addScheduleRuleset);
@@ -417,6 +418,9 @@ void SchedulesTabController::setSubTab(int index)
     connect(m_schedulesView, &SchedulesView::removeScheduleRuleClicked, this, &SchedulesTabController::removeScheduleRule);
     connect(m_schedulesView, &SchedulesView::itemDropped, this, &SchedulesTabController::onItemDropped);
     connect(m_schedulesView, &SchedulesView::modelObjectSelected, this, &SchedulesTabController::modelObjectSelected);
+    connect(this, &SchedulesTabController::toggleUnitsClicked, this, &SchedulesTabController::toggleUnits);
+    connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &SchedulesTabController::setSubTab);
+    this->mainContentWidget()->setSubTab(m_schedulesView);
     break;
   }
   default:
