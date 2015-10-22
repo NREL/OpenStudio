@@ -56,7 +56,7 @@ void ConstructionsTabController::setSubTab(int index)
     connect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>(m_defaultConstructionSetsController->subTabView()), &ModelSubTabView::toggleUnitsClicked);
     connect(m_defaultConstructionSetsController.get(), &DefaultConstructionSetsController::downloadComponentsClicked, this, &ConstructionsTabController::downloadComponentsClicked);
     connect(m_defaultConstructionSetsController.get(), &DefaultConstructionSetsController::openLibDlgClicked, this, &ConstructionsTabController::openLibDlgClicked);
-    connect(this, &ConstructionsTabController::setSubTab, this->mainContentWidget(), &MainTabView::tabSelected);
+    connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &ConstructionsTabController::setSubTab);
     this->mainContentWidget()->setSubTab(m_defaultConstructionSetsController->subTabView());
     break;
   }
@@ -65,7 +65,7 @@ void ConstructionsTabController::setSubTab(int index)
   {
     m_constructionsController = std::shared_ptr<ConstructionsController>(new ConstructionsController(m_isIP, m_model));
     connect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>(m_constructionsController->subTabView()), &ModelSubTabView::toggleUnitsClicked);
-    auto modelSubTabView = static_cast<ModelSubTabView*>(m_constructionsController->subTabView());
+    connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &ConstructionsTabController::setSubTab);
     this->mainContentWidget()->setSubTab(m_constructionsController->subTabView());
     break;
   }
@@ -74,6 +74,7 @@ void ConstructionsTabController::setSubTab(int index)
   {
     m_materialsController = std::shared_ptr<MaterialsController>(new MaterialsController(m_isIP, m_model));
     connect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>(m_materialsController->subTabView()), &ModelSubTabView::toggleUnitsClicked);
+    connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &ConstructionsTabController::setSubTab);
     this->mainContentWidget()->setSubTab(m_materialsController->subTabView());
     break;
   }
