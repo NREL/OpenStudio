@@ -89,7 +89,7 @@ private slots:
 
   void showSubTabView(bool showSubTabView);
 
-  virtual void setTab(int index) override;
+  virtual void setSubTab(int index) override;
  
 };
 

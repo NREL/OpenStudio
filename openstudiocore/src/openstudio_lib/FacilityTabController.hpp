@@ -52,7 +52,7 @@ class FacilityTabController : public MainTabController
   
   void toggleUnits(bool displayIP);
 
-  virtual void setTab(int index) override;
+  virtual void setSubTab(int index) override;
 };
 
 } // openstudio

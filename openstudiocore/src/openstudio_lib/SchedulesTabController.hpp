@@ -87,7 +87,7 @@ class SchedulesTabController : public MainTabController
 
   public slots:
 
-  virtual void setTab(int index) override;
+  virtual void setSubTab(int index) override;
 
   void toggleUnits(bool displayIP);
 

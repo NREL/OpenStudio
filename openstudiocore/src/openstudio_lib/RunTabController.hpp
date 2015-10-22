@@ -75,7 +75,7 @@ public slots:
 
   void updateToolsWarnings();
 
-  virtual void setTab(int index) override;
+  virtual void setSubTab(int index) override;
 
 };
 

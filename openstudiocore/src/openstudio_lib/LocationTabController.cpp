@@ -49,7 +49,7 @@ LocationTabController::LocationTabController(bool isIP,
   mainContentWidget()->addSubTab("Life Cycle Costs", LIFE_CYCLE_COSTS);
   mainContentWidget()->addSubTab("Utility Bills", UTILITY_BILLS);
 
-  setTab(0);
+  setSubTab(0);
 }
 
 void LocationTabController::showUtilityBillSubTab()
@@ -95,7 +95,7 @@ void LocationTabController::showSubTabView(bool showSubTabView)
   }
 }
 
-void LocationTabController::setTab(int index)
+void LocationTabController::setSubTab(int index)
 {
   switch (index){
   case 0:

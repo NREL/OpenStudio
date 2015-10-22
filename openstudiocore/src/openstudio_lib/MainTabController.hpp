@@ -64,7 +64,7 @@ class MainTabController : public OSQObjectController
 
   public slots:
 
-    virtual void setTab(int index) {};
+    virtual void setSubTab(int index) {};
 };
 
 } // openstudio

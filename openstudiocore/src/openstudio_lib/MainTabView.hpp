@@ -20,6 +20,7 @@
 #ifndef OPENSTUDIO_MAINTABVIEW_HPP
 #define OPENSTUDIO_MAINTABVIEW_HPP
 
+#include <QPointer>
 #include <QWidget>
 
 #include <vector>
@@ -30,6 +31,8 @@ class QStackedWidget;
 class QVBoxLayout;
 
 namespace openstudio {
+
+class OSViewSwitcher;
 
 class MainTabView : public QWidget
 {
@@ -45,7 +48,7 @@ public:
 
   MainTabView(const QString & tabLabel, TabType tabType, QWidget * parent = nullptr);
 
-  virtual ~MainTabView() {}
+  virtual ~MainTabView();
 
   void setTabType(TabType tabTyp);
 
@@ -67,6 +70,8 @@ public:
 
   // Public method for setting the current sub tab.
   bool selectSubTabByIndex(int index);
+
+  QPointer<OSViewSwitcher> m_editView;
 
 protected:
 

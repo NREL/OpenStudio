@@ -37,14 +37,14 @@ FacilityTabController::FacilityTabController(bool isIP, const model::Model& mode
   mainContentWidget()->addSubTab("Shading", SHADING);
   mainContentWidget()->addSubTab("Exterior Equipment", EXTERIOR_EQUIPMENT);
 
-  setTab(0);
+  setSubTab(0);
 }
 
 void FacilityTabController::toggleUnits(bool displayIP)
 {
 }
 
-void FacilityTabController::setTab(int index)
+void FacilityTabController::setSubTab(int index)
 {
   switch (index){
   case 0:
@@ -52,6 +52,7 @@ void FacilityTabController::setTab(int index)
     auto buildingInspectorView = new BuildingInspectorView(m_isIP, m_model);
     connect(this, &FacilityTabController::toggleUnitsClicked, buildingInspectorView, &BuildingInspectorView::toggleUnitsClicked);
     connect(buildingInspectorView, &BuildingInspectorView::dropZoneItemClicked, this, &FacilityTabController::dropZoneItemClicked);
+    this->mainContentWidget()->setSubTab(buildingInspectorView);
     break;
   }
   case 1:
@@ -59,6 +60,7 @@ void FacilityTabController::setTab(int index)
     auto facilityStoriesGridView = new FacilityStoriesGridView(m_isIP, m_model);
     connect(this, &FacilityTabController::toggleUnitsClicked, facilityStoriesGridView, &FacilityStoriesGridView::toggleUnitsClicked);
     connect(facilityStoriesGridView, &FacilityStoriesGridView::dropZoneItemSelected, this, &FacilityTabController::dropZoneItemSelected);
+    this->mainContentWidget()->setSubTab(facilityStoriesGridView);
     break;
   }
   case 2:
@@ -66,6 +68,7 @@ void FacilityTabController::setTab(int index)
     auto facilityShadingGridView = new FacilityShadingGridView(m_isIP, m_model);
     connect(this, &FacilityTabController::toggleUnitsClicked, facilityShadingGridView, &FacilityShadingGridView::toggleUnitsClicked);
     connect(facilityShadingGridView, &FacilityShadingGridView::dropZoneItemSelected, this, &FacilityTabController::dropZoneItemSelected);
+    this->mainContentWidget()->setSubTab(facilityShadingGridView);
     break;
   }
   case 3:
@@ -73,6 +76,7 @@ void FacilityTabController::setTab(int index)
     auto facilityExteriorEquipmentGridView = new FacilityExteriorEquipmentGridView(m_isIP, m_model);
     connect(this, &FacilityTabController::toggleUnitsClicked, facilityExteriorEquipmentGridView, &FacilityExteriorEquipmentGridView::toggleUnitsClicked);
     connect(facilityExteriorEquipmentGridView, &FacilityExteriorEquipmentGridView::dropZoneItemSelected, this, &FacilityTabController::dropZoneItemSelected);
+    this->mainContentWidget()->setSubTab(facilityExteriorEquipmentGridView);
     break;
   }
   default:

@@ -35,14 +35,14 @@ namespace openstudio {
     m_model(model),
     m_isIP(isIP)
 {
-  this->mainContentWidget()->addSubTab("Properties", SPACES);
-  this->mainContentWidget()->addSubTab("Loads", LOADS);
-  this->mainContentWidget()->addSubTab("Surfaces", SURFACES);
-  this->mainContentWidget()->addSubTab("Subsurfaces", SUBSURFACES);
-  this->mainContentWidget()->addSubTab("Interior Partitions", INTERIOR_PARTITIONS);
-  this->mainContentWidget()->addSubTab("Shading", SHADING);
+  mainContentWidget()->addSubTab("Properties", SPACES);
+  mainContentWidget()->addSubTab("Loads", LOADS);
+  mainContentWidget()->addSubTab("Surfaces", SURFACES);
+  mainContentWidget()->addSubTab("Subsurfaces", SUBSURFACES);
+  mainContentWidget()->addSubTab("Interior Partitions", INTERIOR_PARTITIONS);
+  mainContentWidget()->addSubTab("Shading", SHADING);
 
-  setTab(0);
+  setSubTab(0);
 
   // Evan note: TODO SpacesDaylightingGridView may be a dead class, given the latest Radiance plans
   //this->mainContentWidget()->addSubTab("Daylighting", new SpacesDaylightingGridView(m_isIP, m_model), DAYLIGHTING);
@@ -52,7 +52,7 @@ void SpacesTabController::toggleUnits(bool displayIP)
 {
 }
 
-void SpacesTabController::setTab(int index)
+void SpacesTabController::setSubTab(int index)
 {
   switch (index){
   case 0:
@@ -60,6 +60,7 @@ void SpacesTabController::setTab(int index)
     auto spacesSpacesGridView = new SpacesSpacesGridView(m_isIP, m_model);
     connect(this, &SpacesTabController::toggleUnitsClicked, spacesSpacesGridView, &SpacesSpacesGridView::toggleUnitsClicked);
     connect(spacesSpacesGridView, &SpacesSpacesGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+    this->mainContentWidget()->setSubTab(spacesSpacesGridView);
     break;
   }
   case 1:
@@ -67,6 +68,7 @@ void SpacesTabController::setTab(int index)
     auto spacesLoadsGridView = new SpacesLoadsGridView(m_isIP, m_model);
     connect(this, &SpacesTabController::toggleUnitsClicked, spacesLoadsGridView, &SpacesLoadsGridView::toggleUnitsClicked);
     connect(spacesLoadsGridView, &SpacesLoadsGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+    this->mainContentWidget()->setSubTab(spacesLoadsGridView);
     break;
   }
   case 2:
@@ -74,6 +76,7 @@ void SpacesTabController::setTab(int index)
     auto spacesSurfacesGridView = new SpacesSurfacesGridView(m_isIP, m_model);
     connect(this, &SpacesTabController::toggleUnitsClicked, spacesSurfacesGridView, &SpacesSurfacesGridView::toggleUnitsClicked);
     connect(spacesSurfacesGridView, &SpacesSurfacesGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+    this->mainContentWidget()->setSubTab(spacesSurfacesGridView);
     break;
   }
   case 3:
@@ -81,6 +84,7 @@ void SpacesTabController::setTab(int index)
     auto spacesSubsurfacesGridView = new SpacesSubsurfacesGridView(m_isIP, m_model);
     connect(this, &SpacesTabController::toggleUnitsClicked, spacesSubsurfacesGridView, &SpacesSubsurfacesGridView::toggleUnitsClicked);
     connect(spacesSubsurfacesGridView, &SpacesSubsurfacesGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+    this->mainContentWidget()->setSubTab(spacesSubsurfacesGridView);
     break;
   }
   case 4:
@@ -88,6 +92,7 @@ void SpacesTabController::setTab(int index)
     auto spacesInteriorPartitionsGridView = new SpacesInteriorPartitionsGridView(m_isIP, m_model);
     connect(this, &SpacesTabController::toggleUnitsClicked, spacesInteriorPartitionsGridView, &SpacesInteriorPartitionsGridView::toggleUnitsClicked);
     connect(spacesInteriorPartitionsGridView, &SpacesInteriorPartitionsGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+    this->mainContentWidget()->setSubTab(spacesInteriorPartitionsGridView);
     break;
   }
   case 5:
@@ -95,6 +100,7 @@ void SpacesTabController::setTab(int index)
     auto spacesShadingGridView = new SpacesShadingGridView(m_isIP, m_model);
     connect(this, &SpacesTabController::toggleUnitsClicked, spacesShadingGridView, &SpacesShadingGridView::toggleUnitsClicked);
     connect(spacesShadingGridView, &SpacesShadingGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+    this->mainContentWidget()->setSubTab(spacesShadingGridView);
     break;
   }
   default:

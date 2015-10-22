@@ -66,7 +66,7 @@ SchedulesTabController::SchedulesTabController(bool isIP, const model::Model & m
 
   connect(this, &SchedulesTabController::toggleUnitsClicked, this, &SchedulesTabController::toggleUnits);
 
-  setTab(0);
+  setSubTab(0);
 }
 
 void SchedulesTabController::addScheduleRuleset()
@@ -388,7 +388,7 @@ double SchedulesTabController::defaultStartingValue(const model::ScheduleDay& sc
   return result;
 }
 
-void SchedulesTabController::setTab(int index)
+void SchedulesTabController::setSubTab(int index)
 {
   switch (index){
   case 0:

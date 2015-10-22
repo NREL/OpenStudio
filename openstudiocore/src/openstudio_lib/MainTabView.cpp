@@ -19,6 +19,8 @@
 
 #include "MainTabView.hpp"
 
+#include "../shared_gui_components/OSViewSwitcher.hpp"
+
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPainter>
@@ -39,7 +41,8 @@ namespace openstudio {
 
 MainTabView::MainTabView(const QString & tabLabel, TabType tabType, QWidget * parent)
   : QWidget(parent),
-  m_tabType(tabType)
+  m_tabType(tabType),
+  m_editView(new OSViewSwitcher())
 {
   this->setObjectName("BlueGradientWidget");
 
@@ -50,21 +53,27 @@ MainTabView::MainTabView(const QString & tabLabel, TabType tabType, QWidget * pa
   m_tabLabel->setFixedWidth(m_tabLabel->width());
   m_tabLabel->move(7,5);
 
-  m_mainWidget = new QWidget(this);
-  m_mainWidget->setObjectName("MainTabView");
-  m_mainWidget->move(7,25);
+  auto label = new QLabel("Hello World");
+  label->setObjectName("H2");
+
+  m_editView->setView(label);
 
   m_innerLayout = new QVBoxLayout();
   m_innerLayout->setSpacing(0);
-  m_mainWidget->setLayout(m_innerLayout);
-  //m_innerLayout->addWidget(m_currentInnerWidget);
+  m_innerLayout->addWidget(m_editView);
 
-  auto label = new QLabel("Hello World");
-  label->setObjectName("H2");
-  //m_currentInnerWidget = label;
-  m_innerLayout->addWidget(label);
+  m_mainWidget = new QWidget(this);
+  m_mainWidget->setObjectName("MainTabView");
+  m_mainWidget->move(7,25);
+  m_mainWidget->setLayout(m_innerLayout);
 
   setTabType(tabType);
+}
+
+
+MainTabView::~MainTabView()
+{
+  if (m_editView) { delete m_editView; }
 }
 
 void MainTabView::setTabType(MainTabView::TabType tabType)
@@ -112,10 +121,7 @@ bool MainTabView::addTabWidget(QWidget * widget)
   OS_ASSERT(m_tabType == MAIN_TAB);
   if (m_tabType != MAIN_TAB) return false;
 
-  auto label = new QLabel("Hello World");
-  m_currentInnerWidget = label;
-
-  //m_currentInnerWidget = widget;
+  m_editView->setView(widget);
 
   return true;
 }
@@ -140,12 +146,7 @@ bool MainTabView::addSubTab(const QString & subTablabel, int id)
 
 void MainTabView::setSubTab(QWidget * widget)
 {
-  if (m_currentInnerWidget) {
-    m_innerLayout->removeWidget(m_currentInnerWidget);
-    m_currentInnerWidget->deleteLater();
-  }
-  m_currentInnerWidget = widget;
-  m_innerLayout->addWidget(m_currentInnerWidget);
+  m_editView->setView(widget);
 }
 
 void MainTabView::select()
@@ -216,16 +217,12 @@ void MainTabView::setCurrentIndex(int index)
   button->setStyleSheet(style); 
   button->raise();
 
-  //m_stackedWidget->setCurrentIndex(index);
-
   emit tabSelected(m_ids[index]);
 }
 
 void MainTabView::setCurrentWidget(QWidget * widget)
 {
-  //int i = m_stackedWidget->indexOf(widget);
-
-  //setCurrentIndex(i);
+  OS_ASSERT(false);
 }
 
 void MainTabView::paintEvent ( QPaintEvent * event )
@@ -247,6 +244,7 @@ void MainTabView::resizeEvent( QResizeEvent * event )
 
 int MainTabView::subTabId() const
 {
+  OS_ASSERT(false);
   if (m_tabType != MAIN_TAB)
   {
     return m_ids[subTabIndex()];
@@ -259,21 +257,20 @@ int MainTabView::subTabId() const
 
 int MainTabView::subTabIndex() const
 {
-  //return m_stackedWidget->currentIndex();
   OS_ASSERT(false);
   return -1;
 }
 
 bool MainTabView::selectSubTabByIndex(int index)
 {
-  //if (m_tabType != MAIN_TAB){
-  //  if(index < 0 || index >= m_stackedWidget->count()){
-  //    return false;
-  //  } else {
-  //    setCurrentIndex(index);
-  //    return true;
-  //  }
-  //}
+  if (m_tabType != MAIN_TAB){
+    if(index < 0){
+      return false;
+    } else {
+      setCurrentIndex(index);
+      return true;
+    }
+  }
   return false;
 }
 

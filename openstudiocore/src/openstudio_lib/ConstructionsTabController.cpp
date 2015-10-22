@@ -40,30 +40,43 @@ ConstructionsTabController::ConstructionsTabController(bool isIP, const model::M
   this->mainContentWidget()->addSubTab("Constructions", CONSTRUCTIONS);
   this->mainContentWidget()->addSubTab("Materials", MATERIALS);
 
-  setTab(0);
+  setSubTab(0);
 }
 
 ConstructionsTabController::~ConstructionsTabController()
 {
 }
 
-void ConstructionsTabController::setTab(int index)
+void ConstructionsTabController::setSubTab(int index)
 {
   switch (index){
   case 0:
+  {
     m_defaultConstructionSetsController = std::shared_ptr<DefaultConstructionSetsController>(new DefaultConstructionSetsController(m_model));
     connect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>(m_defaultConstructionSetsController->subTabView()), &ModelSubTabView::toggleUnitsClicked);
     connect(m_defaultConstructionSetsController.get(), &DefaultConstructionSetsController::downloadComponentsClicked, this, &ConstructionsTabController::downloadComponentsClicked);
     connect(m_defaultConstructionSetsController.get(), &DefaultConstructionSetsController::openLibDlgClicked, this, &ConstructionsTabController::openLibDlgClicked);
+    connect(this, &ConstructionsTabController::setSubTab, this->mainContentWidget(), &MainTabView::tabSelected);
+    this->mainContentWidget()->setSubTab(m_defaultConstructionSetsController->subTabView());
     break;
+  }
+
   case 1:
+  {
     m_constructionsController = std::shared_ptr<ConstructionsController>(new ConstructionsController(m_isIP, m_model));
     connect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>(m_constructionsController->subTabView()), &ModelSubTabView::toggleUnitsClicked);
+    auto modelSubTabView = static_cast<ModelSubTabView*>(m_constructionsController->subTabView());
+    this->mainContentWidget()->setSubTab(m_constructionsController->subTabView());
     break;
+  }
+
   case 2:
+  {
     m_materialsController = std::shared_ptr<MaterialsController>(new MaterialsController(m_isIP, m_model));
     connect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>(m_materialsController->subTabView()), &ModelSubTabView::toggleUnitsClicked);
+    this->mainContentWidget()->setSubTab(m_materialsController->subTabView());
     break;
+  }
   default:
     OS_ASSERT(false);
     break;

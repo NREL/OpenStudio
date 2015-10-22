@@ -44,7 +44,7 @@ RunTabController::RunTabController(const model::Model & model, const openstudio:
 
   connect(m_runView, &RunView::toolsUpdated, this, &RunTabController::toolsUpdated);
 
-  setTab(0);
+  setSubTab(0);
 }
 
 openstudio::RunView * RunTabController::runView(){
@@ -64,7 +64,7 @@ void RunTabController::updateToolsWarnings()
   m_runView->updateToolsWarnings();
 }
 
-void RunTabController::setTab(int index)
+void RunTabController::setSubTab(int index)
 {
   switch (index){
   case 0:
