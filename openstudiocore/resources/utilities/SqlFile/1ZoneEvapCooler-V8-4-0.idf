@@ -572,21 +572,21 @@
 
   Output:Constructions,Constructions;
 
-  Output:Variable,*,Outdoor Dry Bulb,hourly;
+  Output:Variable,*,Site Outdoor Air Drybulb Temperature,hourly;
 
-  Output:Variable,*,Outdoor Wet Bulb,hourly;
+  Output:Variable,*,Site Outdoor Air Wetbulb Temperature,hourly;
 
-  Output:Variable,*,Outdoor Humidity Ratio,hourly;
+  Output:Variable,*,Site Outdoor Air Humidity Ratio,hourly;
 
-  Output:Variable,*,Outdoor Relative Humidity,hourly;
+  Output:Variable,*,Site Outdoor Air Relative Humidity,hourly;
 
   Output:Variable,*,Zone Mean Air Temperature,hourly;
 
-  Output:Variable,Supply Outlet Node,System Node MassFlowRate,hourly;
+  Output:Variable,Supply Outlet Node,System Node Mass Flow Rate,hourly;
 
-  Output:Variable,*,System Node Temp,hourly;
+  Output:Variable,*,System Node Temperature,hourly;
 
-  Output:Variable,*,BaseBoard Electric Power,hourly;
+  Output:Variable,*,Baseboard Electric Power,hourly;
 
   Output:Meter:MeterFileOnly,Electricity:Facility,monthly;
 
