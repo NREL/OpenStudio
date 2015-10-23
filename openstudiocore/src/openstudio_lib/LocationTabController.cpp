@@ -103,26 +103,30 @@ void LocationTabController::setSubTab(int index)
     m_locationView = new LocationView(m_isIP, m_model, m_modelTempDir);
     connect(this, &LocationTabController::toggleUnitsClicked, m_locationView, &LocationView::toggleUnitsClicked);
     connect(m_locationView, &LocationView::calendarYearSelectionChanged, this, &LocationTabController::showUtilityBillSubTab);
+    connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &LocationTabController::setSubTab);
+    this->mainContentWidget()->setSubTab(m_locationView);
     break;
   }
   case 1:
   {
     auto lifeCycleCostsView = new LifeCycleCostsView(m_model);
+    connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &LocationTabController::setSubTab);
+    this->mainContentWidget()->setSubTab(lifeCycleCostsView);
     break;
   }
   case 2:
   {
+    m_utilityBillsController = std::shared_ptr<UtilityBillsController>(new UtilityBillsController(m_model));
+
     QLabel * label = new QLabel();
     label->setPixmap(QPixmap(":/images/utility_calibration_warning.png"));
     label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-
-    m_utilityBillsController = std::shared_ptr<UtilityBillsController>(new UtilityBillsController(m_model));
-
     m_utilityBillsStackedWidget = new QStackedWidget();
     m_warningWidgetIndex = m_utilityBillsStackedWidget->addWidget(label);
     m_visibleWidgetIndex = m_utilityBillsStackedWidget->addWidget(m_utilityBillsController->subTabView());
-
     showUtilityBillSubTab();
+    connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &LocationTabController::setSubTab);
+    this->mainContentWidget()->setSubTab(m_utilityBillsStackedWidget);
     break;
   }
   default:
