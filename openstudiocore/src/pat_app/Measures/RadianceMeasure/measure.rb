@@ -444,7 +444,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         
       end  # calculate DMX
 				
-			
 			#if windowControls.size > 1
 
 			# compute view matrices for all controlled window groups
@@ -496,11 +495,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
     # annual simulation dealio
     def runSimulation(
-    t_space_names_to_calculate, t_sqlFile, t_simCores, t_options_skyvecDensity, \
-    t_site_latitude, t_site_longitude, t_site_stdmeridian, t_radPath, \
-    t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, runner, write_sql)
+                      t_space_names_to_calculate, t_sqlFile, t_simCores, t_options_skyvecDensity,
+                      t_site_latitude, t_site_longitude, t_site_stdmeridian, t_radPath,
+                      t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, runner, write_sql)
 
-      puts "#{Time.now.getutc}: Calculating annual daylight values for all window groups and shade states"
+      runner.registerInfo("#{Time.now.getutc}: Calculating annual daylight values for all window groups and shade states")
 
       rawValues = {}
       values = {}
@@ -547,7 +546,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       # get annual values for window control sensors (note: convert to illuminance, no transpose, strip header)
       exec_statement("dctimestep output/dc/window_controls.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - | getinfo - > output/ts/window_controls.ill", runner)
   
-      puts "#{Time.now.getutc}: Merging results"
+      runner.registerInfo("#{Time.now.getutc}: Merging results")
   
       # do that window group/state merge thing
   
@@ -1128,7 +1127,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       end
     end # annualSimulation()
 
-    # makeSchedules() 
+    # makeSchedules()
+
     # write new lighting power schedules for the model
     
     def makeSchedules(model, sqlFile, runner)
@@ -1258,15 +1258,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         lightsValues = OpenStudio::Vector.new(averageIlluminances.size)
         averageIlluminances.each_index do |i|
           dimmingResponse = [(daylightSetpoint-averageIlluminances[i])/daylightSetpoint, 0].max
-          #puts "#{daylightSetpoint}, #{averageIlluminances[i]}, #{dimmingResponse}"
           lightsValues[i] = dimmingResponse*originalLightsValues[i]
 
-      #    is_occupied = false
-      #    if not peopleTimeseries.empty?
-      #      is_occupied = peopleTimeseries.get.values[i] > 0
-      #    end
-      #    
-      #    daValues[i] = is_occupied*(averageIlluminances[i] > daylightSetpoint)
         end
   
         # get max lighting power
