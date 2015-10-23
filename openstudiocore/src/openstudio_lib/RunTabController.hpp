@@ -21,6 +21,9 @@
 #define OPENSTUDIO_RUNTABCONTROLLER_HPP
 
 #include "MainTabController.hpp"
+
+#include "../runmanager/lib/RunManager.hpp"
+
 #include "../utilities/core/Path.hpp"
 
 namespace openstudio {
@@ -65,11 +68,18 @@ signals:
 
  private:
 
-  RunView * m_runView;
+  RunView * m_runView = nullptr;
 
-  openstudio::runmanager::JobStatusWidget * m_status;
+  openstudio::runmanager::JobStatusWidget * m_status = nullptr;
 
   model::Model m_model;
+
+  openstudio::path m_modelPath;
+
+  openstudio::path m_tempFolder;
+  
+  openstudio::runmanager::RunManager m_runManager;
+
 
 public slots:
 

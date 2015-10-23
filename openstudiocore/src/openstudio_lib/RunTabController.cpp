@@ -33,9 +33,10 @@ namespace openstudio {
 RunTabController::RunTabController(const model::Model & model, const openstudio::path &t_modelPath,
     const openstudio::path &t_tempFolder, openstudio::runmanager::RunManager t_runManager)
   : MainTabController(new RunTabView(model)),
-    m_runView(new RunView(model, t_modelPath, t_tempFolder, t_runManager)),
-    m_status(new openstudio::runmanager::JobStatusWidget(t_runManager)),
-    m_model(model)
+    m_model(model),
+    m_modelPath(t_modelPath),
+    m_tempFolder(t_tempFolder),
+    m_runManager(t_runManager)
 {
   mainContentWidget()->addSubTab("Output", OUTPUT);
   mainContentWidget()->addSubTab("Tree", TREE);
@@ -65,6 +66,7 @@ void RunTabController::setSubTab(int index)
   switch (index){
   case 0:
   {
+    m_runView = new RunView(m_model, m_modelPath, m_tempFolder, m_runManager);
     connect(m_runView, &RunView::resultsGenerated, this, &RunTabController::resultsGenerated);
     connect(m_runView, &RunView::toolsUpdated, this, &RunTabController::toolsUpdated);
     connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &RunTabController::setSubTab);
@@ -73,6 +75,7 @@ void RunTabController::setSubTab(int index)
   }
   case 1:
   {
+    m_status = new openstudio::runmanager::JobStatusWidget(m_runManager);
     connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &RunTabController::setSubTab);
     this->mainContentWidget()->setSubTab(m_status);
     break;
