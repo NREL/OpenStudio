@@ -379,8 +379,10 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
     # core functions
 
-    def calculateDaylightCoeffecients(radPath, sim_cores, t_catCommand, options_tregVars, \
-    options_klemsDensity, options_skyvecDensity, options_dmx, options_vmx, rad_settings, procsUsed, runner)
+    def calculateDaylightCoeffecients(
+                                      radPath, sim_cores, t_catCommand, options_tregVars,
+                                      options_klemsDensity, options_skyvecDensity, options_dmx, 
+                                      options_vmx, rad_settings, procsUsed, runner)
 
       haveWG0 = ""
 
@@ -493,7 +495,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     end # calculateDaylightCoeffecients()
 
     # annual simulation dealio
-    def runSimulation(t_space_names_to_calculate, t_sqlFile, t_simCores, t_options_skyvecDensity, \
+    def runSimulation(
+    t_space_names_to_calculate, t_sqlFile, t_simCores, t_options_skyvecDensity, \
     t_site_latitude, t_site_longitude, t_site_stdmeridian, t_radPath, \
     t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, runner, write_sql)
 
@@ -1388,13 +1391,14 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         udi_daylit = []
         udi_occupied = []
         udi_daylit_occupied = []
+        sda_credit = []
 
         # get people timeseries from E+ run for this zone
         peopleTimeseries = sqlFile.timeSeries("Run Period 1".upcase, "Hourly", "Zone People Occupant Count", thermalZone.name.get.upcase)
 
         # loop over all timesteps, return type is std::vector< std::pair<int, DateTime> > 
         hourly_report_indices_dates = radoutFile.illuminanceMapHourlyReportIndicesDates(map_name)
-        hourly_report_indices_dates.each do |hourly_report_index_date| 
+        hourly_report_indices_dates.each do |hourly_report_index_date|
 
           # initialize metrics to nil for timestep
           da_daylit << nil
@@ -1406,12 +1410,19 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           udi_daylit << nil
           udi_occupied << nil
           udi_daylit_occupied << nil
-  
+          sda_credit << nil
+
           # extract timestep and index
           hourly_report_index = hourly_report_index_date.first
           hourly_report_date = hourly_report_index_date.second
+
+          # SDA credit hour?
+          sda_hour = false
+          if hourly_report_date.to_s.split(' ')[1].split(':')[0].to_i >= 8 || hourly_report_date.to_s.split(' ')[1].split(':')[0].to_i <= 18
+            sda_hour = true
+          end
     
-          # see if this is a daylit hour
+          # daylit hour?
           daylit_hour = false
           if not exteriorIlluminanceTimeseries.empty?
             val = exteriorIlluminanceTimeseries[0].value(hourly_report_date)
@@ -1420,7 +1431,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             end
           end
     
-          # see if this is an occupied hour
+          # occupied hour?
           occupied_hour = false
           if !peopleTimeseries.empty?
             val = peopleTimeseries.get.value(hourly_report_date)
@@ -1428,13 +1439,14 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
               occupied_hour = true
             end
           end
-  
+
           da = 0
+
           if $METHOD == 0
-    
+
             # get map values
             map_values = radoutFile.illuminanceMap(hourly_report_index)
-      
+
             # compute number of map points with illuminance greater than setpoint
             size1 = map_values.size1
             size2 = map_values.size2
@@ -1448,38 +1460,44 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
                 end
               end
             end
-      
+
             da = num_da.to_f / num.to_f
-      
+
           elsif $METHOD == 1
-    
+
             x = OpenStudio::DoubleVector.new
             y = OpenStudio::DoubleVector.new
             map_values = OpenStudio::DoubleVector.new
-      
+
             radoutFile.illuminanceMap(hourly_report_index, x, y, map_values)
-      
-            # compute DA, conDA, and UDI
+
+            # compute DA, conDA, UDI, and SDA
             num = map_values.size
             num_da = 0
             num_cda = 0
             num_udi = 0
+            num_sda = 0
             map_values.each do |map_value|
               if map_value >= daylightSetpoint
                 num_da += 1
                 num_cda += 1
               end
-              if map_value > 0 and map_value < daylightSetpoint  
+              if map_value > 0 && map_value < daylightSetpoint  
                 num_cda += map_value / daylightSetpoint 
               end
-              if map_value > 100 and map_value < 3000
+              if map_value >= 100 && map_value <= 3000
                 num_udi += 1
+              end
+              # if map_value >= 300 && sda_hour == true
+              if map_value >= 300
+                num_sda += 1
               end
             end
       
             da = num_da.to_f / num.to_f
             cda = num_cda.to_f / num.to_f
             udi = num_udi.to_f / num.to_f
+            sda = num_sda.to_f / num.to_f
 
           end
 
@@ -1489,84 +1507,88 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             cda_daylit[-1] = cda
             udi_daylit[-1] = udi
           end
-    
+
           if occupied_hour
             da_occupied[-1] = da
             cda_occupied[-1] = cda
             udi_occupied[-1] = udi
           end
-    
+
           if daylit_hour and occupied_hour
             da_daylit_occupied[-1] = da
             cda_daylit_occupied[-1] = cda
             udi_daylit_occupied[-1] = udi
           end
+          
+          if sda_hour
+            sda_credit[-1] = sda
+          end
 
         end
-  
+
         # compute annual metrics for space
-  
+
         #Daylight Autonomy
         da_daylit_sum = 0
         da_daylit_num = 0
         da_daylit.each do |da|
-          if not da.nil?
+          if !da.nil?
             da_daylit_sum += da
             da_daylit_num += 1
           end
         end
         annual_da_daylit = da_daylit_sum.to_f / da_daylit_num.to_f
         summary_report += "#{space_name},DA(#{daylightSetpoint.round(0)}),Daylit Hours,#{annual_da_daylit.round(2)},#{da_daylit_sum.round(0)},#{da_daylit_num}\n"
-  
+
         da_occupied_sum = 0
         da_occupied_num = 0
         da_occupied.each do |da|
-          if not da.nil?
+          if !da.nil?
             da_occupied_sum += da
             da_occupied_num += 1
           end
         end
         annual_da_occupied = da_occupied_sum.to_f / da_occupied_num.to_f
         summary_report += "#{space_name},DA(#{daylightSetpoint.round(0)}),Occupied Hours,#{annual_da_occupied.round(2)},#{da_occupied_sum.round(0)},#{da_occupied_num}\n"
-  
+
         da_daylit_occupied_sum = 0
         da_daylit_occupied_num = 0
         da_daylit_occupied.each do |da|
-          if not da.nil?
+          if !da.nil?
             da_daylit_occupied_sum += da
             da_daylit_occupied_num += 1
           end
         end
         annual_da_daylit_occupied = da_daylit_occupied_sum.to_f / da_daylit_occupied_num.to_f
         summary_report += "#{space_name},DA(#{daylightSetpoint.round(0)}),Daylit and Occupied Hours,#{annual_da_daylit_occupied.round(2)},#{da_daylit_occupied_sum.round(0)},#{da_daylit_occupied_num}\n"
-  
-        #Continuous Daylight Autonomy
+
+        # Continuous Daylight Autonomy
         cda_daylit_sum = 0
         cda_daylit_num = 0
         cda_daylit.each do |cda|
-          if not cda.nil?
+          if !cda.nil?
             cda_daylit_sum += cda
             cda_daylit_num += 1
           end
         end
         annual_cda_daylit = cda_daylit_sum.to_f / cda_daylit_num.to_f
         summary_report += "#{space_name},conDA(#{daylightSetpoint.round(0)}),Daylit Hours,#{annual_cda_daylit.round(2)},#{cda_daylit_sum.round(0)},#{cda_daylit_num}\n"
-  
+
         cda_occupied_sum = 0
         cda_occupied_num = 0
         cda_occupied.each do |cda|
-          if not cda.nil?
+          if !cda.nil?
             cda_occupied_sum += cda
             cda_occupied_num += 1
           end
         end
         annual_cda_occupied = cda_occupied_sum.to_f / cda_occupied_num.to_f
         summary_report += "#{space_name},conDA(#{daylightSetpoint.round(0)}),#{annual_cda_occupied.round(2)},Occupied Hours#{cda_occupied_sum.round(0)},#{cda_occupied_num}\n"
-  
+
         cda_daylit_occupied_sum = 0
         cda_daylit_occupied_num = 0
         cda_daylit_occupied.each do |cda|
-          if not cda.nil?
+          if !cda.nil?
             cda_daylit_occupied_sum += cda
             cda_daylit_occupied_num += 1
           end
@@ -1578,29 +1600,29 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         udi_daylit_sum = 0
         udi_daylit_num = 0
         udi_daylit.each do |udi|
-          if not udi.nil?
+          if !udi.nil?
             udi_daylit_sum += udi
             udi_daylit_num += 1
           end
         end
         annual_udi_daylit = udi_daylit_sum.to_f / udi_daylit_num.to_f
         summary_report += "#{space_name},UDI(100-3000),Daylit Hours,#{annual_udi_daylit.round(2)},#{udi_daylit_sum.round(0)},#{udi_daylit_num}\n"
-  
+
         udi_occupied_sum = 0
         udi_occupied_num = 0
         udi_occupied.each do |udi|
-          if not udi.nil?
+          if !udi.nil?
             udi_occupied_sum += udi
             udi_occupied_num += 1
           end
         end
         annual_udi_occupied = udi_occupied_sum.to_f / udi_occupied_num.to_f
         summary_report += "#{space_name},UDI(100-3000),Occupied Hours,#{annual_udi_occupied.round(2)},#{udi_occupied_sum.round(0)},#{udi_occupied_num}\n"
-  
+
         udi_daylit_occupied_sum = 0
         udi_daylit_occupied_num = 0
         udi_daylit_occupied.each do |udi|
-          if not udi.nil?
+          if !udi.nil?
             udi_daylit_occupied_sum += udi
             udi_daylit_occupied_num += 1
           end
@@ -1608,9 +1630,21 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         annual_udi_daylit_occupied = udi_daylit_occupied_sum.to_f / cda_daylit_occupied_num.to_f
         summary_report += "#{space_name},UDI(100-3000),Daylit and Occupied Hours,#{annual_udi_daylit_occupied.round(2)},#{cda_daylit_occupied_sum.round(0)},#{cda_daylit_occupied_num}\n"
 
-        # now replace nil with 0 in each timeseries to radout.sql for plotting
+        # Spatial Daylight Autonomy (FWIW)
+        sda_sum = 0
+        sda_num = 0
+        sda_credit.each do |sda|
+          if !sda.nil?
+            sda_sum += sda
+            sda_num += 1
+          end
+        end
+        annual_sda = sda_sum.to_f / sda_num.to_f
+        summary_report += "#{space_name},sDA(300),#{annual_sda.round(2)}\n"
 
-        building_average_space << annual_da_daylit_occupied
+        # Make a building average (sDA)
+
+        building_average_space << annual_sda
 
       end
 
@@ -1621,19 +1655,19 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       # catch zero condition
       if building_average_space_sum == 0.0
         building_average = 0.0
-        runner.registerInfo("warning: Daylight Autonomy for building is zero, check daylighting control point(s) setup.")
+        runner.registerInfo("warning: Spatial Daylight Autonomy for building is zero, check daylighting control point(s) setup.")
       else
         building_average = building_average_space_sum / building_average_space.length
       end
 
       File.open("DaylightingMetrics.csv", 'w') do |file|
         file.puts "# OpenStudio Daylight Metrics Report"
-        file.puts "# Average daylight autonomy for building daylit spaces: #{building_average.round(2)}"
+        file.puts "# Average spatial daylight autonomy (sDA) for building daylit spaces: #{building_average.round(2)}"
         file.puts "# Space data format: [space_name] [metric(setpoint)] [input_hours_range] [metric_value] [hours_met] [input_hours]"       
         file.puts summary_report
       end
 
-    end #daylightMetrics()
+    end # daylightMetrics()
 
     ## ## ## ## ## ##
 
@@ -1687,9 +1721,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     facility = model.getFacility
     building = model.getBuilding
     building_transformation = building.transformation
-
-    # create materials library for model, shared for all spaces
-    radMaterials = []
 
     # create space geometry, hash of space name to file contents
     radSpaces = {}
@@ -1768,19 +1799,19 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     end
 
     # get the daylight coefficient matrices
-    calculateDaylightCoeffecients(radPath, sim_cores, catCommand, options_tregVars, \
+    calculateDaylightCoeffecients(radPath, sim_cores, catCommand, options_tregVars, 
     options_klemsDensity, options_skyvecDensity, options_dmx, options_vmx, rad_settings, procsUsed, runner)
 
     # make merged building-wide illuminance schedule(s)
-    values, dcVectors = runSimulation(space_names_to_calculate, sqlFile, sim_cores, \
-    options_skyvecDensity, site_latitude, site_longitude, site_meridian, radPath, spaceWidths, \
+    values, dcVectors = runSimulation(space_names_to_calculate, sqlFile, sim_cores, 
+    options_skyvecDensity, site_latitude, site_longitude, site_meridian, radPath, spaceWidths,
     spaceHeights, radGlareSensorViews, runner, write_sql)
 
     # make space-level illuminance schedules and radout.sql results database
     # hoping this is no longer necessary...
-    annualSimulation(sqlFile, epwFile, space_names_to_calculate, radMaps, spaceWidths, \
-    spaceHeights, radMapPoints, radGlareSensorViews, sim_cores, site_latitude, \
-    site_longitude, site_meridian, radPath, building, values, dcVectors, write_sql, runner)
+    annualSimulation(sqlFile, epwFile, space_names_to_calculate, radMaps, spaceWidths, spaceHeights,
+      radMapPoints, radGlareSensorViews, sim_cores, site_latitude, site_longitude,
+      site_meridian, radPath, building, values, dcVectors, write_sql, runner)
 
     # make new lighting power schedules based on Radiance daylight data
     makeSchedules(model, sqlFile, runner)
@@ -1812,5 +1843,5 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
   end # run
 end
 
-# register the measure to be used by the application
+# register the measure
 RadianceMeasure.new.registerWithApplication
