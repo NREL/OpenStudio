@@ -93,6 +93,10 @@ LocationTabView::LocationTabView(const model::Model & model,
 {
 }
 
+LocationTabView::~LocationTabView()
+{
+}
+
 LocationView::LocationView(bool isIP,
   const model::Model & model,
   const QString& modelTempDir)

@@ -20,6 +20,7 @@
 #include "LocationTabController.hpp"
 
 #include "LifeCycleCostsTabView.hpp"
+#include "LocationTabView.hpp"
 #include "UtilityBillsView.hpp"
 #include "UtilityBillsController.hpp"
 

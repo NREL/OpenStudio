@@ -38,7 +38,7 @@ class MainTabController : public OSQObjectController
 
     MainTabController(MainTabView* mainContentWidget);
 
-    virtual ~MainTabController(){ }
+    virtual ~MainTabController();
 
     MainTabView* mainContentWidget() const;
 

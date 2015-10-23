@@ -70,7 +70,6 @@ MainTabView::MainTabView(const QString & tabLabel, TabType tabType, QWidget * pa
   setTabType(tabType);
 }
 
-
 MainTabView::~MainTabView()
 {
   if (m_editView) { delete m_editView; }

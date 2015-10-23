@@ -74,6 +74,10 @@ UtilityBillsView::UtilityBillsView(const openstudio::model::Model& model, QWidge
     this, &UtilityBillsView::enableAddNewObjectButton);
 }
 
+UtilityBillsView::~UtilityBillsView()
+{
+}
+
 std::vector<std::pair<FuelType, std::string> > UtilityBillsView::utilityBillFuelTypesAndNames()
 {
   std::vector<std::pair<FuelType, std::string> > result;
@@ -93,9 +97,7 @@ std::vector<std::pair<FuelType, std::string> > UtilityBillsView::utilityBillFuel
   return result;
 }
 
-
 //**********************************************************************************************************
-
 
 UtilityBillsInspectorView::UtilityBillsInspectorView(const model::Model & model,
                                                      bool addScrollArea,
@@ -121,6 +123,10 @@ UtilityBillsInspectorView::UtilityBillsInspectorView(const model::Model & model,
     m_visibleWidgetIndex(0)
 {
   createWidgets();
+}
+
+UtilityBillsInspectorView::~UtilityBillsInspectorView()
+{
 }
 
 boost::optional<QString> UtilityBillsInspectorView::runPeriodDates()

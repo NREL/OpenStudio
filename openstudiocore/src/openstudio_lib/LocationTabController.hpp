@@ -22,7 +22,6 @@
 
 #include "../model/Model.hpp"
 
-#include "LocationTabView.hpp"
 #include "MainTabController.hpp"
 
 #include <boost/smart_ptr.hpp>
@@ -34,9 +33,7 @@ class QStackedWidget;
 
 namespace openstudio {
 
-namespace model {
-  //class myModelClass;
-}
+class LocationTabView;
 
 class UtilityBillsController;
 
