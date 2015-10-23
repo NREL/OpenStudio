@@ -52,47 +52,31 @@ LocationTabController::LocationTabController(bool isIP,
   setSubTab(0);
 }
 
-void LocationTabController::showUtilityBillSubTab()
+LocationTabController::~LocationTabController()
+{
+}
+
+bool LocationTabController::showUtilityBills()
 {
   // Determine if the utility bill sub-tab is shown
   boost::optional<model::YearDescription> yearDescription = m_model.yearDescription();
   if (yearDescription){
     boost::optional<int> calendarYear = yearDescription.get().calendarYear();
-    if (calendarYearChecked() && calendarYear){
+    if (calendarYear){
       boost::optional<model::WeatherFile> weatherFile = m_model.weatherFile();
       if (weatherFile){
         boost::optional<model::RunPeriod> runPeriod = m_model.getOptionalUniqueModelObject<model::RunPeriod>();
         if (runPeriod.is_initialized()){
-          m_utilityBillsStackedWidget->setCurrentIndex(m_visibleWidgetIndex);
-          return;
+          return true;
         }
         else {
-          m_utilityBillsStackedWidget->setCurrentIndex(m_warningWidgetIndex);
-          return;
+          return false;
         }
       }
     }
   }
   // Oops, missing some needed object above, so default to warning
-  m_utilityBillsStackedWidget->setCurrentIndex(m_warningWidgetIndex);
-}
-
-bool LocationTabController::calendarYearChecked() {
-  if (m_locationView) {
-    return m_locationView->calendarYearChecked();
-  }
-  else {
-    return false;
-  }
-}
-
-void LocationTabController::showSubTabView(bool showSubTabView)
-{
-  if(showSubTabView){
-    m_utilityBillsStackedWidget->setCurrentIndex(m_visibleWidgetIndex);
-  } else {
-    m_utilityBillsStackedWidget->setCurrentIndex(m_warningWidgetIndex);
-  }
+  return false;
 }
 
 void LocationTabController::setSubTab(int index)
@@ -100,11 +84,10 @@ void LocationTabController::setSubTab(int index)
   switch (index){
   case 0:
   {
-    m_locationView = new LocationView(m_isIP, m_model, m_modelTempDir);
-    connect(this, &LocationTabController::toggleUnitsClicked, m_locationView, &LocationView::toggleUnitsClicked);
-    connect(m_locationView, &LocationView::calendarYearSelectionChanged, this, &LocationTabController::showUtilityBillSubTab);
+    auto locationView = new LocationView(m_isIP, m_model, m_modelTempDir);
+    connect(this, &LocationTabController::toggleUnitsClicked, locationView, &LocationView::toggleUnitsClicked);
     connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &LocationTabController::setSubTab);
-    this->mainContentWidget()->setSubTab(m_locationView);
+    this->mainContentWidget()->setSubTab(locationView);
     break;
   }
   case 1:
@@ -116,17 +99,19 @@ void LocationTabController::setSubTab(int index)
   }
   case 2:
   {
-    m_utilityBillsController = std::shared_ptr<UtilityBillsController>(new UtilityBillsController(m_model));
-
-    QLabel * label = new QLabel();
-    label->setPixmap(QPixmap(":/images/utility_calibration_warning.png"));
-    label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    m_utilityBillsStackedWidget = new QStackedWidget();
-    m_warningWidgetIndex = m_utilityBillsStackedWidget->addWidget(label);
-    m_visibleWidgetIndex = m_utilityBillsStackedWidget->addWidget(m_utilityBillsController->subTabView());
-    showUtilityBillSubTab();
-    connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &LocationTabController::setSubTab);
-    this->mainContentWidget()->setSubTab(m_utilityBillsStackedWidget);
+    {
+      if (showUtilityBills()) {
+        auto utilityBillsController = new UtilityBillsController(m_model);
+        connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &LocationTabController::setSubTab);
+        this->mainContentWidget()->setSubTab(utilityBillsController->subTabView());
+      }
+      else {
+        auto label = new QLabel();
+        label->setPixmap(QPixmap(":/images/utility_calibration_warning.png"));
+        label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+        this->mainContentWidget()->setSubTab(label);
+      }
+    }
     break;
   }
   default:

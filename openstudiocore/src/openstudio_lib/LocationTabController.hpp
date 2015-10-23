@@ -50,32 +50,18 @@ public:
     const model::Model& model,
     const QString& modelTempDir);
 
-  virtual ~LocationTabController() {}
-
+  virtual ~LocationTabController();
 
   enum TabID
   {
     WEATHER_FILE,
     LIFE_CYCLE_COSTS,
-    UTILITY_BILLS,
-    UTILITY_RATES,
-    GROUND_TEMPERATURE,
-    WATER_MAINS_TEMPERATURE 
+    UTILITY_BILLS
   };
 
 private:
 
-  bool calendarYearChecked();
-
-  LocationView * m_locationView = nullptr;
-
-  std::shared_ptr<UtilityBillsController> m_utilityBillsController;
-
-  QStackedWidget * m_utilityBillsStackedWidget = nullptr;
-
-  int m_warningWidgetIndex;
-
-  int m_visibleWidgetIndex;
+  bool showUtilityBills();
 
   QString m_modelTempDir;
 
@@ -84,10 +70,6 @@ private:
   bool m_isIP;
 
 private slots:
-
-  void showUtilityBillSubTab();
-
-  void showSubTabView(bool showSubTabView);
 
   virtual void setSubTab(int index) override;
  
