@@ -39,7 +39,7 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateCoilWaterHeatingAirToWaterHeatPump( 
     CoilWaterHeatingAirToWaterHeatPump & modelObject)
 {
-  IdfObject idfObject(IddObjectType::Coil_WaterHeating_AirToWaterHeatPump);
+  IdfObject idfObject(IddObjectType::Coil_WaterHeating_AirToWaterHeatPump_Pumped);
   m_idfObjects.push_back(idfObject);
 
   // Name

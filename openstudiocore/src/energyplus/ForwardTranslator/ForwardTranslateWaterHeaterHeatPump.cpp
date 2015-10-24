@@ -55,7 +55,7 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPump( 
     WaterHeaterHeatPump & modelObject)
 {
-  IdfObject idfObject(IddObjectType::WaterHeater_HeatPump);
+  IdfObject idfObject(IddObjectType::WaterHeater_HeatPump_PumpedCondenser);
   m_idfObjects.push_back(idfObject);
 
   // Name

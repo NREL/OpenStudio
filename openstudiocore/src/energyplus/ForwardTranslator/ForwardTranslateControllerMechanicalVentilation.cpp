@@ -110,7 +110,11 @@ boost::optional<IdfObject> ForwardTranslator::translateControllerMechanicalVenti
   s = modelObject.systemOutdoorAirMethod();
   if( s )
   {
-    idfObject.setString(openstudio::Controller_MechanicalVentilationFields::SystemOutdoorAirMethod,s.get());
+    if( istringEqual("ProportionalControl",s.get()) ) {
+      idfObject.setString(openstudio::Controller_MechanicalVentilationFields::SystemOutdoorAirMethod,"");
+    } else {
+      idfObject.setString(openstudio::Controller_MechanicalVentilationFields::SystemOutdoorAirMethod,s.get());
+    }
   }
 
   m_idfObjects.push_back(idfObject);
