@@ -587,6 +587,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       model::AvailabilityManagerNightCycle nightCycle(model);
       nightCycle.setControlType("CycleOnControlZone");
 
+      airLoopHVAC.setAvailabilityManager(nightCycle);
+
       auto pair = std::pair<std::string,model::AvailabilityManagerNightCycle>(controlZone,nightCycle);
       m_nightCycleControlZones.insert(pair);
     }
