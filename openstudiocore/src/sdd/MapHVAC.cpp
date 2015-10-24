@@ -5124,10 +5124,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
       pump.setMotorEfficiency(mtrEff.get());
     }
 
+    if( totHd ) {
+      pump.setRatedPumpHead(totHd.get());
+    }
+
     if( autosize() ) {
-      if( totHd ) {
-        pump.setRatedPumpHead(totHd.get());
-      } else {
+      if( ! totHd ) {
         pump.setRatedPumpHead(149453.0);
         LOG(Warn,pump.name().get() << " TotHd set to OpenStudio default");
       }
@@ -5164,11 +5166,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
       pump.setMotorEfficiency(mtrEff.get());
     }
 
+    if( totHd ) {
+      pump.setRatedPumpHead(totHd.get());
+    }
+
     if( autosize() )
     {
-      if( totHd ) {
-        pump.setRatedPumpHead(totHd.get());
-      } else {
+      if( ! totHd ) {
         pump.setRatedPumpHead(149453.0);
         LOG(Warn,pump.name().get() << " TotHd set to OpenStudio default");
       }
