@@ -28,6 +28,8 @@
 #include "../utilities/core/StringStreamLogSink.hpp"
 
 #include "../model/Schedule.hpp"
+#include "../model/AvailabilityManagerOptimumStart.hpp"
+#include "../model/AvailabilityManagerNightCycle.hpp"
 #include "../model/ConstructionBase.hpp"
 
 class QDomDocument;
@@ -47,8 +49,6 @@ namespace model {
   class Surface;
   class SubSurface;
   class PlantLoop;
-  class AvailabilityManagerOptimumStart;
-  class AvailabilityManagerNightCycle;
 }
 
 namespace sdd {
