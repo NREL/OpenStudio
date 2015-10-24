@@ -3674,6 +3674,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   QDomElement znSysElement = findZnSysElement(primAirCondSysRefElement.text(),doc);
   QDomElement ventSysRefElement = thermalZoneElement.firstChildElement("VentSysRef");
 
+  // These will store values to set priority later
+  // Will be terminal or zone hvac
+  boost::optional<model::ModelObject> primAirCondEquip;
+  boost::optional<model::ModelObject> ventSysEquip;
+
   // ThermalZoneVentilationSystem
   if( ventSysRefElement.text() != primAirCondSysRefElement.text() )
   {
@@ -3685,6 +3690,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
       if( ! trmlUnitElement.isNull() ) {
         if( boost::optional<model::ModelObject> trmlUnit = translateTrmlUnit(trmlUnitElement,doc,model) )
         {
+          ventSysEquip = trmlUnit;
           airLoopHVAC->addBranchForZone(thermalZone,trmlUnit->cast<model::StraightComponent>());
           QDomElement inducedAirZnRefElement = trmlUnitElement.firstChildElement("InducedAirZnRef");
           if( boost::optional<model::ThermalZone> tz = model.getModelObjectByName<model::ThermalZone>(inducedAirZnRefElement.text().toStdString()) )
@@ -3727,26 +3733,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     }
   }
 
-  // Set zone for optimum start, if applicable
-  {
-    auto optimumStart = m_optimumStartControlZones.find(thermalZone.name().get());
-    if( optimumStart != m_optimumStartControlZones.end() ) {
-      optimumStart->second.setControlZone(thermalZone);
-    }
-  }
-
-  // Set zone for night cycle, if applicable
-  {
-    auto nightCycle = m_nightCycleControlZones.find(thermalZone.name().get());
-    if( nightCycle != m_nightCycleControlZones.end() ) {
-      nightCycle->second.setControlThermalZone(thermalZone);
-    }
-  }
-
   // PrimaryAirConditioningSystemReference
   if( ! znSysElement.isNull() )
   {
     boost::optional<model::ModelObject> mo = translateZnSys(znSysElement,doc,model);
+    primAirCondEquip = mo;
 
     if( mo )
     {
@@ -3792,6 +3783,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
       if( ! trmlUnitElement.isNull() ) {
         if( boost::optional<model::ModelObject> trmlUnit = translateTrmlUnit(trmlUnitElement,doc,model) )
         {
+          primAirCondEquip = trmlUnit;
           airLoopHVAC->addBranchForZone(thermalZone,trmlUnit->cast<model::StraightComponent>());
           QDomElement inducedAirZnRefElement = trmlUnitElement.firstChildElement("InducedAirZnRef");
           if( boost::optional<model::ThermalZone> tz = model.getModelObjectByName<model::ThermalZone>(inducedAirZnRefElement.text().toStdString()) )
@@ -3810,6 +3802,40 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
           }
         }
       }
+    }
+  }
+
+  if( primAirCondEquip ) {
+    auto priAirCondgSysPriorityElement = thermalZoneElement.firstChildElement("PriAirCondgSysPriority");
+    value = priAirCondgSysPriorityElement.text().toInt(&ok); 
+    if( ok ) {
+      thermalZone.setCoolingPriority(primAirCondEquip.get(),value);  
+      thermalZone.setHeatingPriority(primAirCondEquip.get(),value);  
+    }
+  }
+
+  if( ventSysEquip ) {
+    auto ventSysPriorityElement = thermalZoneElement.firstChildElement("VentSysPriority");
+    value = ventSysPriorityElement.text().toInt(&ok);
+    if( ok ) {
+      thermalZone.setCoolingPriority(ventSysEquip.get(),value);  
+      thermalZone.setHeatingPriority(ventSysEquip.get(),value);  
+    }
+  }
+
+  // Set zone for optimum start, if applicable
+  {
+    auto optimumStart = m_optimumStartControlZones.find(thermalZone.name().get());
+    if( optimumStart != m_optimumStartControlZones.end() ) {
+      optimumStart->second.setControlZone(thermalZone);
+    }
+  }
+
+  // Set zone for night cycle, if applicable
+  {
+    auto nightCycle = m_nightCycleControlZones.find(thermalZone.name().get());
+    if( nightCycle != m_nightCycleControlZones.end() ) {
+      nightCycle->second.setControlThermalZone(thermalZone);
     }
   }
 
