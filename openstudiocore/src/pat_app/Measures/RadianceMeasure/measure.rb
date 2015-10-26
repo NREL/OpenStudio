@@ -390,7 +390,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       mapFile=File.open("numeric/merged_space.map","r")
       rfluxmtxDim = mapFile.readlines.size.to_s
 
-      puts "Running Radiance"
+      puts "running Radiance..."
 
       runner.registerInfo("#{Time.now.getutc}: passing #{rfluxmtxDim} calculation points to Radiance")
 

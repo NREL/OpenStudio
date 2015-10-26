@@ -1856,9 +1856,15 @@ namespace radiance {
         m_radGlareSensors[space_name] = "";
         m_radGlareSensorViewsVTV[space_name] = "";
         m_radGlareSensorViewsVTA[space_name] = "";
-        	
+        
+				std::string sensor_name;
+				if (sensor.name()){
+					sensor_name = cleanName(sensor.name().get());
+				}
+				
         openstudio::Point3d sensor_point = openstudio::radiance::ForwardTranslator::getReferencePoint(sensor);
         // openstudio::Vector3dVector sensor_viewVector = openstudio::radiance::ForwardTranslator::getViewVectors(*sensor);
+        //std::string sensor_name = sensor.name();
         openstudio::Vector3dVector viewVectors = openstudio::radiance::ForwardTranslator::getViewVectors(sensor);
         // reverse the order so primary view is listed last in the file
         std::reverse(std::begin(viewVectors), std::end(viewVectors));        
@@ -1898,7 +1904,7 @@ namespace radiance {
         }
 
         // write glare sensors
-        openstudio::path filename = t_radDir / openstudio::toPath("numeric") / openstudio::toPath(space_name + ".glr");
+        openstudio::path filename = t_radDir / openstudio::toPath("numeric") / openstudio::toPath(space_name + "_" + sensor_name + ".glr");
         OFSTREAM file(filename);
         if (file.is_open()){
           t_outfiles.push_back(filename);
@@ -1910,7 +1916,7 @@ namespace radiance {
         LOG(Debug, "Wrote " << space_name << ".glr");
 
         // write glare sensor views (perspective)
-        filename = t_radDir / openstudio::toPath("views") / openstudio::toPath(space_name + ".gvp");
+        filename = t_radDir / openstudio::toPath("views") / openstudio::toPath(space_name + "_" + sensor_name + ".gvp");
         OFSTREAM file2(filename);
         if (file2.is_open()){
           t_outfiles.push_back(filename);
@@ -1922,7 +1928,7 @@ namespace radiance {
         LOG(Debug, "Wrote " << space_name << ".gvp");
 
         // write glare sensor views (fisheye)      
-        filename = t_radDir / openstudio::toPath("views") / openstudio::toPath(space_name + ".gvf");
+        filename = t_radDir / openstudio::toPath("views") / openstudio::toPath(space_name + "_" + sensor_name + ".gvf");
         OFSTREAM file3(filename);
         if (file3.is_open()){
           t_outfiles.push_back(filename);
