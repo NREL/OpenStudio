@@ -17056,7 +17056,6 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
        \minimum> 0.0
        \autosizable
 
-
 OS:EvaporativeCooler:Direct:ResearchSpecial,
        \min-fields 1
   A1, \field Handle
@@ -17083,6 +17082,12 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
        \ip-units W
        \minimum 0
        \autosizable
+  N3 , \field Primary Air Design Flow Rate  
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
   A4, \field Air Inlet Node Name
        \type object-list
        \required-field
@@ -17094,12 +17099,12 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
   A6, \field Sensor Node Name
        \type object-list
        \object-list Node
-  N3, \field Drift Loss Fraction
+  N4, \field Drift Loss Fraction
        \note Rate of drift loss as a fraction of evaporated water flow rate
        \type real
        \required-field
        \minimum 0
-  N4, \field Blowdown Concentration Ratio
+  N5, \field Blowdown Concentration Ratio
        \note Characterizes the rate of blowdown in the evaporative cooler.
        \note Blowdown is water intentionally drained from the cooler in order to offset the build up
        \note of solids in the water that would otherwise occur because of evaporation.
@@ -17122,7 +17127,7 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
        \note Curve:ExponentialSkewNormal, Curve:Sigmoid, Curve:RectuangularHyperbola1,
        \note Curve:RectangularHyperbola2, Curve:ExponentialDecay, Curve:DoubleExponentialDecay,
        \note Table:OneIndependentVariable   
-  N5,  \field Water Pump Power Sizing Factor
+  N6,  \field Water Pump Power Sizing Factor
        \type real
        \required-field
        \units W/(m3/s)
