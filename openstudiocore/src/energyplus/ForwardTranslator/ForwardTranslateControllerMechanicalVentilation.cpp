@@ -111,7 +111,7 @@ boost::optional<IdfObject> ForwardTranslator::translateControllerMechanicalVenti
   if( s )
   {
     if( istringEqual("ProportionalControl",s.get()) ) {
-      idfObject.setString(openstudio::Controller_MechanicalVentilationFields::SystemOutdoorAirMethod,"");
+      idfObject.setString(openstudio::Controller_MechanicalVentilationFields::SystemOutdoorAirMethod,"ProportionalControlBasedonOccupancySchedule");
     } else {
       idfObject.setString(openstudio::Controller_MechanicalVentilationFields::SystemOutdoorAirMethod,s.get());
     }
