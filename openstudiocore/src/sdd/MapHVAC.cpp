@@ -1209,9 +1209,40 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
   // Add Setpoint managers
 
-  QDomElement clgCtrlElement = airSystemElement.firstChildElement("ClgCtrl");
+  // Preheat Control
+  auto prehtCtrlElement = airSystemElement.firstChildElement("PrehtCtrl");
+  if( ! prehtCtrlElement.isNull() ) {
+    if(istringEqual(prehtCtrlElement.text().toStdString(),"Fixed")) {
+      auto prehtFixedSupTempElement = airSystemElement.firstChildElement("PrehtFixedSupTemp");
+      if( ! prehtFixedSupTempElement.isNull() ) {
+        value = prehtFixedSupTempElement.text().toDouble(&ok);
+        if( ok ) {
+          value = unitToUnit(value,"F","C").get();
+          for( auto & comp : heatingComponents ) {
+            auto nextcomps = airLoopHVAC.supplyComponents(comp.cast<model::HVACComponent>(),supplyOutletNode);
+            OS_ASSERT(nextcomps.size() > 1u );
+            auto mo = nextcomps[1];
+            auto outletNode = mo.optionalCast<model::Node>();
+            OS_ASSERT(outletNode);
+            if( outletNode.get() != supplyOutletNode ) {
+              model::ScheduleRuleset schedule(model);
+              schedule.setName(comp.name().get() + " Preheat Schedule");
+              auto scheduleDay = schedule.defaultDaySchedule();
+              scheduleDay.addValue(Time(1.0),value);
+              model::SetpointManagerScheduled spm(model,schedule);
+              spm.setName(comp.name().get() + " Preheat SPM");
+              spm.addToNode(outletNode.get());
+            } else {
+              LOG(Warn,"Ignoring \"PrehtCtrl\" for " + comp.name().get() + ", because it is the last component on the system"); 
+            }
+          }
+        }
+      }
+    }
+  }
 
   // Establish deck temperature
+  QDomElement clgCtrlElement = airSystemElement.firstChildElement("ClgCtrl");
 
   // Lambda for OACtrl types FixedDualSetpoint and ScheduledDualSetpoint
   auto createDualSetpoints = [&](model::Schedule & coolingSchedule, model::Schedule & heatingSchedule) {
@@ -1245,25 +1276,27 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
           outletNode = mo.optionalCast<model::Node>();
         }
         OS_ASSERT(outletNode);
-        // Figure out if comp is before or after the fan
-        if( std::find(downstreamComps.begin(),downstreamComps.end(),comp) == downstreamComps.end() ) {
-          // Before fan
-          model::Duct duct(model);
-          duct.setName(comp.name().get() + " OS Generated Outlet Duct");
-          auto ok = duct.addToNode(outletNode.get());
-          OS_ASSERT(ok);
-          model::SetpointManagerScheduled spm(model,schedule);
-          auto ductOutletNode = duct.outletModelObject()->cast<model::Node>();
-          spm.addToNode(ductOutletNode);
-          model::SetpointManagerMixedAir spmMixedAir(model);
-          newMixedAirSPMs.push_back(spmMixedAir);
-          auto ductInletNode = duct.inletModelObject()->cast<model::Node>();
-          spmMixedAir.addToNode(ductInletNode); 
-          spmMixedAir.setReferenceSetpointNode(ductOutletNode);
-        } else {
-          // After fan
-          model::SetpointManagerScheduled spm(model,schedule);
-          spm.addToNode(outletNode.get());
+        if( outletNode->setpointManagers().empty() ) {
+          // Figure out if comp is before or after the fan
+          if( std::find(downstreamComps.begin(),downstreamComps.end(),comp) == downstreamComps.end() ) {
+            // Before fan
+            model::Duct duct(model);
+            duct.setName(comp.name().get() + " OS Generated Outlet Duct");
+            auto ok = duct.addToNode(outletNode.get());
+            OS_ASSERT(ok);
+            model::SetpointManagerScheduled spm(model,schedule);
+            auto ductOutletNode = duct.outletModelObject()->cast<model::Node>();
+            spm.addToNode(ductOutletNode);
+            model::SetpointManagerMixedAir spmMixedAir(model);
+            newMixedAirSPMs.push_back(spmMixedAir);
+            auto ductInletNode = duct.inletModelObject()->cast<model::Node>();
+            spmMixedAir.addToNode(ductInletNode); 
+            spmMixedAir.setReferenceSetpointNode(ductOutletNode);
+          } else {
+            // After fan
+            model::SetpointManagerScheduled spm(model,schedule);
+            spm.addToNode(outletNode.get());
+          }
         }
       }
     };
