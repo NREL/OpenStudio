@@ -389,10 +389,11 @@ namespace radiance {
       }
 
       // write sample sky for renderings
-      openstudio::path renderskyfilepath = radDir / openstudio::toPath("skies/03211200.rad");
+      openstudio::path renderskyfilepath = radDir / openstudio::toPath("skies/sky_03211200_clr.rad");
       OFSTREAM renderskyfile(renderskyfilepath);
       if (renderskyfile.is_open()){
         outfiles.push_back(renderskyfilepath);
+        renderskyfile << "# CIE clear sky - Berkeley, CA - March 21 12:00 \n\n";
         renderskyfile << "void light solar\n0\n0\n3 6.92e+06 6.92e+06 6.92e+06\n\n";
         renderskyfile << "solar source sun\n0\n0\n4 0.067845 -0.617210 0.783868 0.5\n\n";
 				renderskyfile << "void brightfunc skyfunc\n2 skybr skybright.cal\n0\n7 1 1.16e+01 2.37e+01 6.92e-01 0.067845 -0.617210 0.783868\n\n";
@@ -1868,9 +1869,21 @@ namespace radiance {
           formatString(viewVector.y(), 3) + " " + \
           formatString(viewVector.z(), 3) + "\n";
                     
-          // glare sensor views
-        	m_radGlareSensorViews[space_name] = "";
-        	m_radGlareSensorViews[space_name] += \
+          // glare sensor views (perspective)
+        	m_radGlareSensorViewsVTV[space_name] = "";
+        	m_radGlareSensorViewsVTV[space_name] += \
+        	"rvu -vtv -vp " + \
+        	formatString(sensor_point.x(), 3) + " " + 
+        	formatString(sensor_point.y(), 3) + " " + \
+        	formatString(sensor_point.z(), 3) + " -vd " + \
+        	formatString(viewVector.x(), 3) + " " + \
+        	formatString(viewVector.y(), 3) + " " + \
+        	formatString(viewVector.z(), 3) + \
+        	" -vu 0 0 1 -vh 80 -vv 80 -vo 0 -vs 0 -vl 0\n";
+
+          // glare sensor views (fisheye)
+        	m_radGlareSensorViewsVTA[space_name] = "";
+        	m_radGlareSensorViewsVTA[space_name] += \
         	"rvu -vth -vp " + \
         	formatString(sensor_point.x(), 3) + " " + 
         	formatString(sensor_point.y(), 3) + " " + \
@@ -1878,7 +1891,7 @@ namespace radiance {
         	formatString(viewVector.x(), 3) + " " + \
         	formatString(viewVector.y(), 3) + " " + \
         	formatString(viewVector.z(), 3) + \
-        	" -vu 0 1 0 -vh 180 -vv 180 -vo 0 -vs 0 -vl 0\n";
+        	" -vu 0 0 1 -vh 180 -vv 180 -vo 0 -vs 0 -vl 0\n";
 
         }
 
@@ -1894,17 +1907,30 @@ namespace radiance {
 
         LOG(Debug, "Wrote " << space_name << ".glr");
 
-        // write glare sensor views        
-        filename = t_radDir / openstudio::toPath("views") / openstudio::toPath(space_name + ".gvf");
+        // write glare sensor views (perspective)      
+        filename = t_radDir / openstudio::toPath("views") / openstudio::toPath(space_name + ".gvp");
         OFSTREAM file2(filename);
         if (file2.is_open()){
           t_outfiles.push_back(filename);
-          file2 << m_radGlareSensorViews[space_name];
+          file2 << m_radGlareSensorViewsVTV[space_name];
+        } else{
+          LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
+        }
+
+        LOG(Debug, "Wrote " << space_name << ".gvp");
+
+        // write glare sensor views (fisheye)      
+        filename = t_radDir / openstudio::toPath("views") / openstudio::toPath(space_name + ".gvf");
+        OFSTREAM file3(filename);
+        if (file3.is_open()){
+          t_outfiles.push_back(filename);
+          file3 << m_radGlareSensorViewsVTA[space_name];
         } else{
           LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
         }
 
         LOG(Debug, "Wrote " << space_name << ".gvf");
+
         
       } // end glare sensor
 

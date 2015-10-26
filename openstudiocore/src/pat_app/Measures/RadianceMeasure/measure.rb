@@ -1819,6 +1819,9 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       thermalZone.resetIlluminanceMap
     end
 
+    # make check images 
+    
+
     # report initial condition of model
     daylightAnalysisSpaces = []
     spaces = model.getSpaces
