@@ -1854,10 +1854,14 @@ namespace radiance {
       for (const auto & sensor : glareSensors)
       {
         m_radGlareSensors[space_name] = "";
-
+        m_radGlareSensorViewsVTV[space_name] = "";
+        m_radGlareSensorViewsVTA[space_name] = "";
+        	
         openstudio::Point3d sensor_point = openstudio::radiance::ForwardTranslator::getReferencePoint(sensor);
         // openstudio::Vector3dVector sensor_viewVector = openstudio::radiance::ForwardTranslator::getViewVectors(*sensor);
         openstudio::Vector3dVector viewVectors = openstudio::radiance::ForwardTranslator::getViewVectors(sensor);
+        // reverse the order so primary view is listed last in the file
+        std::reverse(std::begin(viewVectors), std::end(viewVectors));        
         for (const Vector3d& viewVector : viewVectors){
 
           // glare sensor points
@@ -1870,7 +1874,6 @@ namespace radiance {
           formatString(viewVector.z(), 3) + "\n";
                     
           // glare sensor views (perspective)
-        	m_radGlareSensorViewsVTV[space_name] = "";
         	m_radGlareSensorViewsVTV[space_name] += \
         	"rvu -vtv -vp " + \
         	formatString(sensor_point.x(), 3) + " " + 
@@ -1882,7 +1885,6 @@ namespace radiance {
         	" -vu 0 0 1 -vh 80 -vv 80 -vo 0 -vs 0 -vl 0\n";
 
           // glare sensor views (fisheye)
-        	m_radGlareSensorViewsVTA[space_name] = "";
         	m_radGlareSensorViewsVTA[space_name] += \
         	"rvu -vth -vp " + \
         	formatString(sensor_point.x(), 3) + " " + 
@@ -1907,7 +1909,7 @@ namespace radiance {
 
         LOG(Debug, "Wrote " << space_name << ".glr");
 
-        // write glare sensor views (perspective)      
+        // write glare sensor views (perspective)
         filename = t_radDir / openstudio::toPath("views") / openstudio::toPath(space_name + ".gvp");
         OFSTREAM file2(filename);
         if (file2.is_open()){

@@ -390,12 +390,12 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       mapFile=File.open("numeric/merged_space.map","r")
       rfluxmtxDim = mapFile.readlines.size.to_s
 
+      puts "Running Radiance"
+
       runner.registerInfo("#{Time.now.getutc}: passing #{rfluxmtxDim} calculation points to Radiance")
-      puts "#{Time.now.getutc}: passing #{rfluxmtxDim} calculation points to Radiance"
 
       # compute daylight matrices
       runner.registerInfo("#{Time.now.getutc}: computing daylight coefficient matrices")
-      puts "#{Time.now.getutc}: computing daylight coefficient matrices"
 
       exec_statement("oconv materials/materials.rad model.rad > model_dc.oct", runner)
       windowMaps = File::open("bsdf/mapping.rad")
@@ -478,7 +478,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			rtrace_args = "#{options_dmx}"
 			exec_statement("oconv \"materials/materials.rad\" model.rad \
 				\"skies/dc_sky.rad\" > model_wc.oct", runner)
-			puts "#{Time.now.getutc}: computing DCs for window control points"
+			runner.registerInfo("#{Time.now.getutc}: computing DCs for window control points")
 		
 			rad_command = "#{t_catCommand} \"numeric/window_controls.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
 			"-o \"output/dc/window_controls.vmx\" -m skyglow model_wc.oct"
@@ -488,7 +488,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 				
 			#end
 
-    puts "#{Time.now.getutc}: done (daylight coefficient matrices)."
     runner.registerInfo("#{Time.now.getutc}: done (daylight coefficient matrices).")
 
     end # calculateDaylightCoeffecients()
@@ -530,7 +529,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         # do all controlled window groups
           wgXMLs = row.split(",")[4..-1]
           if wgXMLs.size > 2
-            puts "WARN: Window Group #{wg} has #{wgXMLs.size} BSDFs (2 max supported by OpenStudio application)."
+            runner.registerInfo("WARN: Window Group #{wg} has #{wgXMLs.size} BSDFs (2 max supported by OpenStudio application).")
           end
 
           wgXMLs.each_index do |i|
@@ -698,7 +697,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     def parseResults(t_cmds, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_radPath, write_sql, runner)
 
       status_string = "#{Time.now.getutc}: parsing results"
-      puts status_string
       runner.registerInfo(status_string)
 
       allValues = []
@@ -712,7 +710,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       end
 
       status_string = "#{Time.now.getutc}: writing output"
-      puts status_string
       runner.registerInfo(status_string)
 
       allhours = []
@@ -739,9 +736,9 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
             if File.exist?("#{t_radPath}/numeric/#{space_name}.sns")        
               if index >= values.size
-                puts "index is #{index} but values.size is only #{values.size}"
+                runner.registerInfo("index is #{index} but values.size is only #{values.size}")
               elsif hour >= values[index].size
-                puts "hour is #{hour} but values.size[index] is only #{values[index].size}"
+                runner.registerInfo("hour is #{hour} but values.size[index] is only #{values[index].size}")
               end
               illum = [values[index][hour]]
               index = index + 1
@@ -753,17 +750,16 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
               glaresensors = []
               glareinput.each do |val|
 
-                #Note, this replaced the call to rcalc with dgpSimplified, faster to do it 
-                #in here instead of calling out to rcalc for the number of vectors we are looking at per space
+                # Note, this replaced the call to rcalc with dgpSimplified, faster to do it here 
+                # instead of calling out to rcalc for the number of vectors we are looking at per space
                 adjustedval = [(0.0000622*val[hour].to_f)+0.184, 0].max
-                #          puts "Orig val: #{val} adjusted #{adjustedval}"
                 glaresensors << adjustedval
               end
 
               index = index + t_radGlareSensorViews[space_name].size
             end
           else
-            puts "WARN: an error has occurred; no results for space '#{space_name}'."
+            runner.registerInfo("WARN: an error has occurred; no results for space '#{space_name}'.")
             space = Array.new(space_size, 0)
 
             if File.exist?("#{t_radPath}/numeric/#{space_name}.sns")        
@@ -781,7 +777,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         allhours[hour] = splitvalues;
       end
 
-      puts "Returning annual results"
+      runner.registerInfo("Returning annual results")
       return allhours;
     
     end # parseResults()
@@ -896,13 +892,13 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       # for each environment period (design days, annual, or arbitrary) you will create a directory for results
       t_sqlFile.availableEnvPeriods.each do |envPeriod|
 
-        puts "envPeriod = '" + envPeriod.to_s + "'"
+        runner.registerInfo("envPeriod = '" + envPeriod.to_s + "'")
 
         diffHorizIllumAll, dirNormIllumAll, diffEfficacyAll, dirNormEfficacyAll, solarAltitudeAll, solarAzimuthAll, diffHorizUnits, dirNormUnits = getTimeSeries(t_sqlFile, envPeriod)
 
         # check that we have all timeseries
         if (not diffHorizIllumAll) or (not dirNormIllumAll) or (not diffEfficacyAll) or (not dirNormEfficacyAll) or (not solarAltitudeAll) or (not solarAzimuthAll)
-          puts "Missing required timeseries"
+          runner.registerError("Missing required timeseries")
           exit false
         end
 
@@ -1031,7 +1027,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             ySpacing = (ymax-ymin)/ny
 
             status_string = "#{Time.now.getutc}: writing Radiance results file..."
-            puts status_string
             runner.registerInfo(status_string)
 
             # illuminance to csv
@@ -1067,7 +1062,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             
             if write_sql == "Yes"
               status_string = "#{Time.now.getutc}: writing Radiance results database..."
-              puts status_string
               runner.registerInfo(status_string)
 
               writeTimeSeriesToSql(sqlOutFile, simDateTimes, dirNormIllum, space_name, "Direct Normal Illuminance", "lux")
