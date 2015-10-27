@@ -198,9 +198,9 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeCoolerIndirect
   // PrimaryDesignAirFlowRate
   d = modelObject.primaryDesignAirFlowRate();
   if( modelObject.isPrimaryDesignAirFlowRateAutosized() ) {
-    idfObject.setString(EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryDesignAirFlowRate,"Autosize");
+    idfObject.setString(EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryAirDesignFlowRate,"Autosize");
   } else if ( d ) {
-    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryDesignAirFlowRate,d.get());
+    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryAirDesignFlowRate,d.get());
   }
 
   return boost::optional<IdfObject>(idfObject);
