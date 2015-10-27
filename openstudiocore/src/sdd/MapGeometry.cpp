@@ -596,7 +596,7 @@ namespace sdd {
       //<InfModelCoefC>0.10016</InfModelCoefC>
       //<InfModelCoefD>0</InfModelCoefD>
 
-      //InfMthd = {AirChangesPerHour, FlowArea, FlowExteriorArea, FlowExteriorWallArea, FlowZone}
+      //InfMthd = {AirChangesPerHour, FlowArea, FlowExteriorArea, FlowExteriorWallArea, FlowSpace}
       QDomNodeList infMthdNodes = element.elementsByTagName("InfMthd");
       for (int i = 0; i < infMthdNodes.count(); i++){
         
@@ -609,9 +609,12 @@ namespace sdd {
 
         if ((!infMthdElement.isNull()) && (!dsgnInfRtElement.isNull())){
           
-          // DLM: for now this is the only method supported
-          if ((infMthdElement.text() == "FlowExteriorWallArea") ||
-              (infMthdElement.text() == "FlowArea")){
+
+          if ((infMthdElement.text() == "AirChangesPerHour") || 
+              (infMthdElement.text() == "FlowArea") ||
+              (infMthdElement.text() == "FlowExteriorArea") ||
+              (infMthdElement.text() == "FlowExteriorWallArea") ||
+              (infMthdElement.text() == "FlowSpace")){
 
             QDomElement infSchRefElement = elementByTagNameAndIndex(element,"InfSchRef",hasIndex,infIndex);
             QDomElement infModelCoefAElement = elementByTagNameAndIndex(element,"InfModelCoefA",hasIndex,infIndex); // unitless
@@ -631,14 +634,28 @@ namespace sdd {
             spaceInfiltrationDesignFlowRate.setName(infName);
             spaceInfiltrationDesignFlowRate.setSpace(space);
 
-            openstudio::Quantity dsgnInfRtIP(dsgnInfRtElement.text().toDouble(), openstudio::createUnit("cfm/ft^2",UnitSystem::BTU).get());
+            double dsnInfRt = dsgnInfRtElement.text().toDouble();
+
+            openstudio::Quantity dsgnInfRtIP(dsnInfRt, openstudio::createUnit("cfm", UnitSystem::BTU).get());
             OptionalQuantity dsgnInfRtSI = QuantityConverter::instance().convert(dsgnInfRtIP, siSys);
             OS_ASSERT(dsgnInfRtSI);
-            OS_ASSERT(dsgnInfRtSI->units() == SIUnit(SIExpnt(0,1,-1)));
-            if( infMthdElement.text() == "FlowArea" ) {
-              spaceInfiltrationDesignFlowRate.setFlowperSpaceFloorArea(dsgnInfRtSI->value());
-            }else{ // Assume FlowExteriorWallArea
-              spaceInfiltrationDesignFlowRate.setFlowperExteriorWallArea(dsgnInfRtSI->value());
+            OS_ASSERT(dsgnInfRtSI->units() == SIUnit(SIExpnt(0, 3, -1)));
+
+            openstudio::Quantity dsgnInfRtAreaIP(dsnInfRt, openstudio::createUnit("cfm/ft^2", UnitSystem::BTU).get());
+            OptionalQuantity dsgnInfRtAreaSI = QuantityConverter::instance().convert(dsgnInfRtAreaIP, siSys);
+            OS_ASSERT(dsgnInfRtAreaSI);
+            OS_ASSERT(dsgnInfRtAreaSI->units() == SIUnit(SIExpnt(0, 1, -1)));
+
+            if (infMthdElement.text() == "AirChangesPerHour") {
+              spaceInfiltrationDesignFlowRate.setAirChangesperHour(dsnInfRt);
+            }else if (infMthdElement.text() == "FlowArea") {
+                spaceInfiltrationDesignFlowRate.setFlowperSpaceFloorArea(dsgnInfRtAreaSI->value());
+            }else if (infMthdElement.text() == "FlowExteriorArea") {
+              spaceInfiltrationDesignFlowRate.setFlowperExteriorSurfaceArea(dsgnInfRtAreaSI->value());
+            }else if(infMthdElement.text() == "FlowExteriorWallArea") {
+              spaceInfiltrationDesignFlowRate.setFlowperExteriorWallArea(dsgnInfRtAreaSI->value());
+            }else if (infMthdElement.text() == "FlowSpace") {
+              spaceInfiltrationDesignFlowRate.setDesignFlowRate(dsgnInfRtSI->value());
             }
 
             if (!infSchRefElement.isNull()){
