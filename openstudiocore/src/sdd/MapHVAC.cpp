@@ -129,6 +129,8 @@
 #include "../model/BoilerHotWater_Impl.hpp"
 #include "../model/ChillerElectricEIR.hpp"
 #include "../model/ChillerElectricEIR_Impl.hpp"
+#include "../model/ChillerAbsorptionIndirect.hpp"
+#include "../model/ChillerAbsorptionIndirect_Impl.hpp"
 #include "../model/CoilCoolingCooledBeam.hpp"
 #include "../model/CoilCoolingCooledBeam_Impl.hpp"
 #include "../model/CoilCoolingWater.hpp"
@@ -5641,165 +5643,275 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
 {
   boost::optional<openstudio::model::ModelObject> result;
 
-  if( ! istringEqual(chillerElement.tagName().toStdString(),"Chlr") )
-  {
+  if( ! istringEqual(chillerElement.tagName().toStdString(),"Chlr") ) {
     return result;
   }
-
-  QDomElement nameElement = chillerElement.firstChildElement("Name");
-
-  // Cap_fTempCrvRef
-
-  boost::optional<model::CurveBiquadratic> cap_fTempCrv;
-  QDomElement cap_fTempCrvElement = chillerElement.firstChildElement("Cap_fTempCrvRef");
-  cap_fTempCrv = model.getModelObjectByName<model::CurveBiquadratic>(cap_fTempCrvElement.text().toStdString());
-  if( ! cap_fTempCrv )
-  {
-    LOG(Error,"Coil: " << nameElement.text().toStdString() << " Broken Cap_fTempCrv");
-
-    cap_fTempCrv = model::CurveBiquadratic(model);
-    cap_fTempCrv->setCoefficient1Constant(1.0215158);
-    cap_fTempCrv->setCoefficient2x(0.037035864);
-    cap_fTempCrv->setCoefficient3xPOW2(0.0002332476);
-    cap_fTempCrv->setCoefficient4y(-0.003894048);
-    cap_fTempCrv->setCoefficient5yPOW2(-6.52536e-005);
-    cap_fTempCrv->setCoefficient6xTIMESY(-0.0002680452);
-    cap_fTempCrv->setMinimumValueofx(5.0);
-    cap_fTempCrv->setMaximumValueofx(10.0);
-    cap_fTempCrv->setMinimumValueofy(24.0);
-    cap_fTempCrv->setMaximumValueofy(35.0);
-  }
-
-  // EIR_fTempCrvRef
-
-  boost::optional<model::CurveBiquadratic> eir_fTempCrv;
-  QDomElement eir_fTempCrvElement = chillerElement.firstChildElement("EIR_fTempCrvRef");
-  eir_fTempCrv = model.getModelObjectByName<model::CurveBiquadratic>(eir_fTempCrvElement.text().toStdString());
-  if( ! eir_fTempCrv )
-  {
-    LOG(Error,"Coil: " << nameElement.text().toStdString() << "Broken EIR_fTempCrvRef");
-
-    eir_fTempCrv = model::CurveBiquadratic(model);
-    eir_fTempCrv->setCoefficient1Constant(0.70176857);
-    eir_fTempCrv->setCoefficient2x(-0.00452016);
-    eir_fTempCrv->setCoefficient3xPOW2(0.0005331096);
-    eir_fTempCrv->setCoefficient4y(-0.005498208);
-    eir_fTempCrv->setCoefficient5yPOW2(0.0005445792);
-    eir_fTempCrv->setCoefficient6xTIMESY(-0.0007290324);
-    eir_fTempCrv->setMinimumValueofx(5.0);
-    eir_fTempCrv->setMaximumValueofx(10.0);
-    eir_fTempCrv->setMinimumValueofy(24.0);
-    eir_fTempCrv->setMaximumValueofy(35.0);
-  }
-
-  // EIR_fPLRCrvRef
-
-  boost::optional<model::CurveQuadratic> eir_fPLRCrv;
-  QDomElement eir_fPLRCrvElement = chillerElement.firstChildElement("EIR_fPLRCrvRef");
-  eir_fPLRCrv = model.getModelObjectByName<model::CurveQuadratic>(eir_fPLRCrvElement.text().toStdString());
-  if( ! eir_fPLRCrv )
-  {
-    LOG(Error,"Coil: " << nameElement.text().toStdString() << "Broken EIR_fPLRCrvRef");
-
-    eir_fPLRCrv = model::CurveQuadratic(model);
-    eir_fPLRCrv->setCoefficient1Constant(0.06369119);
-    eir_fPLRCrv->setCoefficient2x(0.58488832);
-    eir_fPLRCrv->setCoefficient3xPOW2(0.35280274);
-    eir_fPLRCrv->setMinimumValueofx(0.0);
-    eir_fPLRCrv->setMaximumValueofx(1.0);
-  }
-
-  model::ChillerElectricEIR chiller(model,cap_fTempCrv.get(),eir_fTempCrv.get(),eir_fPLRCrv.get());
-
-  // Name
-
-  chiller.setName(nameElement.text().toStdString());
 
   double value;
   bool ok;
 
-  // CndsrInRef
-  boost::optional<double> condDsgnSupWtrDelT;
-  QDomElement cndsrInRefElement = chillerElement.firstChildElement("CndsrFluidSegInRef");
-  boost::optional<model::PlantLoop> condenserSystem = loopForSupplySegment(cndsrInRefElement.text(),doc,model);
-  if( condenserSystem )
-  {
-    condenserSystem->addDemandBranchForComponent(chiller);
-    condDsgnSupWtrDelT = condenserSystem->sizingPlant().loopDesignTemperatureDifference();
-  }
+  auto name = chillerElement.firstChildElement("Name").text().toStdString();
+  auto typeElement = chillerElement.firstChildElement("Type");
 
-  // COP
-  boost::optional<double> cop;
-  QDomElement copElement = chillerElement.firstChildElement("COP");
-  value = copElement.text().toDouble(&ok);
-  if( ok )
-  {
-    chiller.setReferenceCOP(value);
-    cop = value;
-  }
+  if( istringEqual("AbsorptionSingleEffect",typeElement.text().toStdString()) ) {
+    model::ChillerAbsorptionIndirect chiller(model);
+    chiller.setName(name);
+    result = chiller;
 
-  // PartLdRatMin
-  QDomElement partLdRatMinElement = chillerElement.firstChildElement("PartLdRatMin");
-  value = partLdRatMinElement.text().toDouble(&ok);
-  if( ok )
-  {
-    chiller.setMinimumPartLoadRatio(value);
-  }
+    boost::optional<double> condDsgnSupWtrDelT;
+    boost::optional<double> condDsgnSupWtrT;
 
-  // UnldRatMin
-  QDomElement unldRatMinElement = chillerElement.firstChildElement("UnldRatMin");
-  value = unldRatMinElement.text().toDouble(&ok);
-  if( ok )
-  {
-    chiller.setMinimumUnloadingRatio(value);
-  }
-
-  if( ! autosize() )
-  {
-    // CapRtd
-    boost::optional<double> capRtd;
-    QDomElement capRtdElement = chillerElement.firstChildElement("CapRtd");
-    value = capRtdElement.text().toDouble(&ok);
-    if( ok )
-    {
-      capRtd = unitToUnit(value,"Btu/h","W");
+    auto cndsrInRefElement = chillerElement.firstChildElement("CndsrFluidSegInRef");
+    auto condenserSystem = loopForSupplySegment(cndsrInRefElement.text(),doc,model);
+    if( condenserSystem ) {
+      condenserSystem->addDemandBranchForComponent(chiller);
+      condDsgnSupWtrDelT = condenserSystem->sizingPlant().loopDesignTemperatureDifference();
+      condDsgnSupWtrT = condenserSystem->sizingPlant().designLoopExitTemperature();
     }
 
-    // EntTempDsgn
-    boost::optional<double> entTempDsgn;
-    QDomElement entTempDsgnElement = chillerElement.firstChildElement("EntTempDsgn");
-    value = entTempDsgnElement.text().toDouble(&ok);
-    if( ok )
-    {
-      entTempDsgn = unitToUnit(value,"F","C");
+    if( ! autosize() ) {
+      auto capRtdElement = chillerElement.firstChildElement("CapRtd");
+      value = capRtdElement.text().toDouble(&ok);
+      if( ok ) {
+        value = unitToUnit(value,"Btu/h","W").get();
+        chiller.setNominalCapacity(value);
+      }
+
+      auto auxPwrElement = chillerElement.firstChildElement("AuxPwr");
+      value = auxPwrElement.text().toDouble(&ok);
+      if( ok ) {
+        value = unitToUnit(value,"Btu/h","W").get();
+        chiller.setNominalPumpingPower(value);
+      }
+
+      auto wtrFlowCapElement = chillerElement.firstChildElement("WtrFlowCap");
+      value = wtrFlowCapElement.text().toDouble(&ok);
+      if( ok ) {
+        value = unitToUnit(value,"gal/min","m^3/s").get();
+        chiller.setDesignChilledWaterFlowRate(value);
+      }
+
+      auto genFluidFlowCapElement = chillerElement.firstChildElement("GenFluidFlowCap");
+      value = genFluidFlowCapElement.text().toDouble(&ok);
+      if( ok ) {
+        value = unitToUnit(value,"gal/min","m^3/s").get();
+        chiller.setDesignGeneratorFluidFlowRate(value);
+      }
     }
 
-    // LvgTempDsgn
-    boost::optional<double> lvgTempDsgn;
-    QDomElement lvgTempDsgnElement = chillerElement.firstChildElement("LvgTempDsgn");
-    value = lvgTempDsgnElement.text().toDouble(&ok);
-    if( ok )
-    {
-      lvgTempDsgn = unitToUnit(value,"F","C");
+    auto partLdRatMinElement = chillerElement.firstChildElement("PartLdRatMin");
+    value = partLdRatMinElement.text().toDouble(&ok);
+    if( ok ) {
+      chiller.setMinimumPartLoadRatio(value);
     }
 
-    if( capRtd && entTempDsgn && lvgTempDsgn && cop )
+    chiller.setMaximumPartLoadRatio(1.1);
+
+    chiller.setOptimumPartLoadRatio(1.0);
+
+    chiller.setChillerFlowMode("NotModulated");
+
+    chiller.setGeneratorHeatSourceType("Steam");
+
+    chiller.setTemperatureLowerLimitGeneratorInlet(60.0);
+
+    chiller.setSizingFactor(1.0);
+
     {
-      chiller.setReferenceCapacity(capRtd.get());
+      auto curveElement = chillerElement.firstChildElement("HIR_fPLRCrvRef");
+      if( auto curve = model.getModelObjectByName<model::Curve>(curveElement.text().toStdString()) ) {
+        auto oldCurve = chiller.generatorHeatInputFunctionofPartLoadRatioCurve();
+        if( chiller.setGeneratorHeatInputFunctionofPartLoadRatioCurve(curve.get()) ) {
+          oldCurve.remove();
+        }
+      }
+    }
 
-      double flow = capRtd.get() / ( cpWater * densityWater * (entTempDsgn.get() - lvgTempDsgn.get()));
+    {
+      auto curveElement = chillerElement.firstChildElement("HIR_fCndTempCrvRef");
+      if( auto curve = model.getModelObjectByName<model::Curve>(curveElement.text().toStdString()) ) {
+        auto oldCurve = chiller.generatorHeatInputCorrectionFunctionofCondenserTemperatureCurve();
+        if( chiller.setGeneratorHeatInputCorrectionFunctionofCondenserTemperatureCurve(curve.get()) ) {
+          oldCurve.remove();
+        }
+      }
+    }
 
-      chiller.setReferenceChilledWaterFlowRate(flow);
+    {
+      auto curveElement = chillerElement.firstChildElement("HIR_fEvapTempCrvRef");
+      if( auto curve = model.getModelObjectByName<model::Curve>(curveElement.text().toStdString()) ) {
+        auto oldCurve = chiller.generatorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve();
+        if( chiller.setGeneratorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve(curve.get()) ) {
+          oldCurve.remove();
+        }
+      }
+    }
 
-      if( condDsgnSupWtrDelT )
-      {
-        double condFlow = capRtd.get() * (1.0 + 1.0 / cop.get()) / ( cpWater * densityWater * condDsgnSupWtrDelT.get() );
-        chiller.setReferenceCondenserFluidFlowRate(condFlow);
+    {
+      auto curveElement = chillerElement.firstChildElement("Cap_fCndTempCrvRef");
+      if( auto curve = model.getModelObjectByName<model::Curve>(curveElement.text().toStdString()) ) {
+        auto oldCurve = chiller.capacityCorrectionFunctionofCondenserTemperatureCurve();
+        if( chiller.setCapacityCorrectionFunctionofCondenserTemperatureCurve(curve.get()) ) {
+          oldCurve.remove();
+        }
+      }
+    }
+
+    {
+      auto curveElement = chillerElement.firstChildElement("Cap_fEvapTempCrvRef");
+      if( auto curve = model.getModelObjectByName<model::Curve>(curveElement.text().toStdString()) ) {
+        auto oldCurve = chiller.capacityCorrectionFunctionofChilledWaterTemperatureCurve();
+        if( chiller.setCapacityCorrectionFunctionofChilledWaterTemperatureCurve(curve.get()) ) {
+          oldCurve.remove();
+        }
+      }
+    }
+
+    {
+      auto curveElement = chillerElement.firstChildElement("Cap_fGenTempCrvRef");
+      if( auto curve = model.getModelObjectByName<model::Curve>(curveElement.text().toStdString()) ) {
+        auto oldCurve = chiller.capacityCorrectionFunctionofGeneratorTemperatureCurve();
+        if( chiller.setCapacityCorrectionFunctionofGeneratorTemperatureCurve(curve.get()) ) {
+          oldCurve.remove();
+        }
+      }
+    }
+  } else {
+    // Cap_fTempCrvRef
+    boost::optional<model::CurveBiquadratic> cap_fTempCrv;
+    QDomElement cap_fTempCrvElement = chillerElement.firstChildElement("Cap_fTempCrvRef");
+    cap_fTempCrv = model.getModelObjectByName<model::CurveBiquadratic>(cap_fTempCrvElement.text().toStdString());
+    if( ! cap_fTempCrv ) {
+      LOG(Error,"Coil: " << name << " Broken Cap_fTempCrv");
+
+      cap_fTempCrv = model::CurveBiquadratic(model);
+      cap_fTempCrv->setCoefficient1Constant(1.0215158);
+      cap_fTempCrv->setCoefficient2x(0.037035864);
+      cap_fTempCrv->setCoefficient3xPOW2(0.0002332476);
+      cap_fTempCrv->setCoefficient4y(-0.003894048);
+      cap_fTempCrv->setCoefficient5yPOW2(-6.52536e-005);
+      cap_fTempCrv->setCoefficient6xTIMESY(-0.0002680452);
+      cap_fTempCrv->setMinimumValueofx(5.0);
+      cap_fTempCrv->setMaximumValueofx(10.0);
+      cap_fTempCrv->setMinimumValueofy(24.0);
+      cap_fTempCrv->setMaximumValueofy(35.0);
+    }
+
+    // EIR_fTempCrvRef
+    boost::optional<model::CurveBiquadratic> eir_fTempCrv;
+    QDomElement eir_fTempCrvElement = chillerElement.firstChildElement("EIR_fTempCrvRef");
+    eir_fTempCrv = model.getModelObjectByName<model::CurveBiquadratic>(eir_fTempCrvElement.text().toStdString());
+    if( ! eir_fTempCrv ) {
+      LOG(Error,"Coil: " << name << "Broken EIR_fTempCrvRef");
+
+      eir_fTempCrv = model::CurveBiquadratic(model);
+      eir_fTempCrv->setCoefficient1Constant(0.70176857);
+      eir_fTempCrv->setCoefficient2x(-0.00452016);
+      eir_fTempCrv->setCoefficient3xPOW2(0.0005331096);
+      eir_fTempCrv->setCoefficient4y(-0.005498208);
+      eir_fTempCrv->setCoefficient5yPOW2(0.0005445792);
+      eir_fTempCrv->setCoefficient6xTIMESY(-0.0007290324);
+      eir_fTempCrv->setMinimumValueofx(5.0);
+      eir_fTempCrv->setMaximumValueofx(10.0);
+      eir_fTempCrv->setMinimumValueofy(24.0);
+      eir_fTempCrv->setMaximumValueofy(35.0);
+    }
+
+    // EIR_fPLRCrvRef
+    boost::optional<model::CurveQuadratic> eir_fPLRCrv;
+    QDomElement eir_fPLRCrvElement = chillerElement.firstChildElement("EIR_fPLRCrvRef");
+    eir_fPLRCrv = model.getModelObjectByName<model::CurveQuadratic>(eir_fPLRCrvElement.text().toStdString());
+    if( ! eir_fPLRCrv ) {
+      LOG(Error,"Coil: " << name << "Broken EIR_fPLRCrvRef");
+
+      eir_fPLRCrv = model::CurveQuadratic(model);
+      eir_fPLRCrv->setCoefficient1Constant(0.06369119);
+      eir_fPLRCrv->setCoefficient2x(0.58488832);
+      eir_fPLRCrv->setCoefficient3xPOW2(0.35280274);
+      eir_fPLRCrv->setMinimumValueofx(0.0);
+      eir_fPLRCrv->setMaximumValueofx(1.0);
+    }
+
+    model::ChillerElectricEIR chiller(model,cap_fTempCrv.get(),eir_fTempCrv.get(),eir_fPLRCrv.get());
+    result = chiller;
+
+    // Name
+    chiller.setName(name);
+
+    // CndsrInRef
+    boost::optional<double> condDsgnSupWtrDelT;
+    QDomElement cndsrInRefElement = chillerElement.firstChildElement("CndsrFluidSegInRef");
+    boost::optional<model::PlantLoop> condenserSystem = loopForSupplySegment(cndsrInRefElement.text(),doc,model);
+    if( condenserSystem ) {
+      condenserSystem->addDemandBranchForComponent(chiller);
+      condDsgnSupWtrDelT = condenserSystem->sizingPlant().loopDesignTemperatureDifference();
+    }
+
+    // COP
+    boost::optional<double> cop;
+    QDomElement copElement = chillerElement.firstChildElement("COP");
+    value = copElement.text().toDouble(&ok);
+    if( ok ) {
+      chiller.setReferenceCOP(value);
+      cop = value;
+    }
+
+    // PartLdRatMin
+    QDomElement partLdRatMinElement = chillerElement.firstChildElement("PartLdRatMin");
+    value = partLdRatMinElement.text().toDouble(&ok);
+    if( ok ) {
+      chiller.setMinimumPartLoadRatio(value);
+    }
+
+    // UnldRatMin
+    QDomElement unldRatMinElement = chillerElement.firstChildElement("UnldRatMin");
+    value = unldRatMinElement.text().toDouble(&ok);
+    if( ok ) {
+      chiller.setMinimumUnloadingRatio(value);
+    }
+
+    if( ! autosize() ) {
+      // CapRtd
+      boost::optional<double> capRtd;
+      QDomElement capRtdElement = chillerElement.firstChildElement("CapRtd");
+      value = capRtdElement.text().toDouble(&ok);
+      if( ok ) {
+        capRtd = unitToUnit(value,"Btu/h","W");
+      }
+
+      // EntTempDsgn
+      boost::optional<double> entTempDsgn;
+      QDomElement entTempDsgnElement = chillerElement.firstChildElement("EntTempDsgn");
+      value = entTempDsgnElement.text().toDouble(&ok);
+      if( ok ) {
+        entTempDsgn = unitToUnit(value,"F","C");
+      }
+
+      // LvgTempDsgn
+      boost::optional<double> lvgTempDsgn;
+      QDomElement lvgTempDsgnElement = chillerElement.firstChildElement("LvgTempDsgn");
+      value = lvgTempDsgnElement.text().toDouble(&ok);
+      if( ok ) {
+        lvgTempDsgn = unitToUnit(value,"F","C");
+      }
+
+      if( capRtd && entTempDsgn && lvgTempDsgn && cop ) {
+        chiller.setReferenceCapacity(capRtd.get());
+
+        double flow = capRtd.get() / ( cpWater * densityWater * (entTempDsgn.get() - lvgTempDsgn.get()));
+
+        chiller.setReferenceChilledWaterFlowRate(flow);
+
+        if( condDsgnSupWtrDelT )
+        {
+          double condFlow = capRtd.get() * (1.0 + 1.0 / cop.get()) / ( cpWater * densityWater * condDsgnSupWtrDelT.get() );
+          chiller.setReferenceCondenserFluidFlowRate(condFlow);
+        }
       }
     }
   }
 
-  return chiller;
+  return result;
 }
 
 boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrHtr(
