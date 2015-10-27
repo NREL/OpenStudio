@@ -60,7 +60,7 @@ class SchedulesTabController : public MainTabController
 
   SchedulesTabController(bool isIP, const model::Model & model);
 
-  virtual ~SchedulesTabController() {}
+  virtual ~SchedulesTabController();
 
   enum TabID
   {
@@ -71,19 +71,21 @@ class SchedulesTabController : public MainTabController
 
   static double defaultStartingValue(const model::ScheduleDay& scheduleDay);
 
- private:
+  private:
 
   void showScheduleDialog();
 
-  SchedulesView * m_schedulesView;
-
-  std::shared_ptr<ScheduleSetsController> m_scheduleSetsController;
-
-  ScheduleDialog * m_scheduleDialog;
+  ScheduleDialog * m_scheduleDialog = nullptr;
 
   model::Model m_model;
 
   bool m_isIP;
+
+  QWidget * m_currentView = nullptr;
+
+  QObject * m_currentController = nullptr;
+
+  int m_currentIndex = -1;
 
   public slots:
 
