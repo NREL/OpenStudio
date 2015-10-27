@@ -41,43 +41,49 @@ RunTabController::RunTabController(const model::Model & model, const openstudio:
   mainContentWidget()->addSubTab("Output", OUTPUT);
   mainContentWidget()->addSubTab("Tree", TREE);
 
-  setSubTab(0);
+  connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &RunTabController::setSubTab);
 }
 
-openstudio::RunView * RunTabController::runView(){
-
-  // make sure non-null pointer
-  OS_ASSERT(m_runView);
-
-  return m_runView;
-}
-
-runmanager::RunManager RunTabController::runManager() {
-  return m_runView->runManager();
-}
-
-void RunTabController::updateToolsWarnings()
+RunTabController::~RunTabController()
 {
-  m_runView->updateToolsWarnings();
+  disconnect(this->mainContentWidget(), &MainTabView::tabSelected, this, &RunTabController::setSubTab);
 }
 
 void RunTabController::setSubTab(int index)
 {
+  if (m_currentIndex == index) {
+    return;
+  }
+  else {
+    m_currentIndex = index;
+  }
+
+  if (qobject_cast<RunView *>(m_currentView)) {
+    disconnect(qobject_cast<RunView *>(m_currentView), &RunView::resultsGenerated, this, &RunTabController::resultsGenerated);
+    disconnect(qobject_cast<RunView *>(m_currentView), &RunView::toolsUpdated, this, &RunTabController::toolsUpdated);
+  }
+  else if (qobject_cast< openstudio::runmanager::JobStatusWidget *>(m_currentView)) {
+  }
+  else if (m_currentView) {
+    // Oops! Should never get here
+    OS_ASSERT(false);
+  }
+
   switch (index){
   case 0:
   {
-    m_runView = new RunView(m_model, m_modelPath, m_tempFolder, m_runManager);
-    connect(m_runView, &RunView::resultsGenerated, this, &RunTabController::resultsGenerated);
-    connect(m_runView, &RunView::toolsUpdated, this, &RunTabController::toolsUpdated);
-    connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &RunTabController::setSubTab);
-    this->mainContentWidget()->setSubTab(m_runView);
+    auto runView = new RunView(m_model, m_modelPath, m_tempFolder, m_runManager);
+    connect(runView, &RunView::resultsGenerated, this, &RunTabController::resultsGenerated);
+    connect(runView, &RunView::toolsUpdated, this, &RunTabController::toolsUpdated);
+    this->mainContentWidget()->setSubTab(runView);
+    m_currentView = runView;
     break;
   }
   case 1:
   {
-    m_status = new openstudio::runmanager::JobStatusWidget(m_runManager);
-    connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &RunTabController::setSubTab);
-    this->mainContentWidget()->setSubTab(m_status);
+    auto status = new openstudio::runmanager::JobStatusWidget(m_runManager);
+    this->mainContentWidget()->setSubTab(status);
+    m_currentView = status;
     break;
   }
   default:

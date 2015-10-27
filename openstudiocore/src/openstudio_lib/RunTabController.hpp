@@ -48,11 +48,7 @@ class RunTabController : public MainTabController
   RunTabController(const model::Model & model, const openstudio::path &t_modelPath,
       const openstudio::path &t_tempFolder, openstudio::runmanager::RunManager t_runManager);
 
-  virtual ~RunTabController() {}
-
-  openstudio::RunView * runView();
-
-  runmanager::RunManager runManager();
+  virtual ~RunTabController();
 
   enum TabID
   {
@@ -68,10 +64,6 @@ signals:
 
  private:
 
-  RunView * m_runView = nullptr;
-
-  openstudio::runmanager::JobStatusWidget * m_status = nullptr;
-
   model::Model m_model;
 
   openstudio::path m_modelPath;
@@ -80,10 +72,11 @@ signals:
   
   openstudio::runmanager::RunManager m_runManager;
 
+  QWidget * m_currentView = nullptr;
+
+  int m_currentIndex = -1;
 
 public slots:
-
-  void updateToolsWarnings();
 
   virtual void setSubTab(int index) override;
 
