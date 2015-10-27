@@ -84,6 +84,7 @@ class MODEL_API ZoneAirMassFlowConservation : public ModelObject {
   /// is assumed self - balanced. If adjustZoneMixingForZoneAirMassFlowBalance is false then this input
   /// field has no impact on the simulation.
   /// The default value is "AddInfiltrationFlow".
+  /// As of EnergyPlus version 8.4 and above this property translates to Infiltration Balancing Method in idf format.
   bool setSourceZoneInfiltrationTreatment(const std::string& sourceZoneInfiltrationTreatment);
 
   void resetSourceZoneInfiltrationTreatment();
