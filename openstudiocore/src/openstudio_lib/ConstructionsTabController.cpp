@@ -40,42 +40,66 @@ ConstructionsTabController::ConstructionsTabController(bool isIP, const model::M
   this->mainContentWidget()->addSubTab("Constructions", CONSTRUCTIONS);
   this->mainContentWidget()->addSubTab("Materials", MATERIALS);
 
-  setSubTab(0);
+  connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &ConstructionsTabController::setSubTab);
 }
 
 ConstructionsTabController::~ConstructionsTabController()
 {
+  disconnect(this->mainContentWidget(), &MainTabView::tabSelected, this, &ConstructionsTabController::setSubTab);
 }
 
 void ConstructionsTabController::setSubTab(int index)
 {
+  if (m_currentIndex == index) {
+    return;
+  }
+  else {
+    m_currentIndex = index;
+  }
+
+  if (qobject_cast<DefaultConstructionSetsController *>(m_currentController)) {
+    disconnect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>((qobject_cast<DefaultConstructionSetsController *>(m_currentController))->subTabView()), &ModelSubTabView::toggleUnitsClicked);
+    disconnect(qobject_cast<DefaultConstructionSetsController *>(m_currentController), &DefaultConstructionSetsController::downloadComponentsClicked, this, &ConstructionsTabController::downloadComponentsClicked);
+    disconnect(qobject_cast<DefaultConstructionSetsController *>(m_currentController), &DefaultConstructionSetsController::openLibDlgClicked, this, &ConstructionsTabController::openLibDlgClicked);
+  }
+  else if (qobject_cast<ConstructionsController *>(m_currentController)) {
+    disconnect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>((qobject_cast<ConstructionsController *>(m_currentController))->subTabView()), &ModelSubTabView::toggleUnitsClicked);
+  }
+  else if (qobject_cast<MaterialsController *>(m_currentController)) {
+    disconnect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>((qobject_cast<MaterialsController *>(m_currentController))->subTabView()), &ModelSubTabView::toggleUnitsClicked);
+  }
+  else if (m_currentController) {
+    // Oops! Should never get here
+    OS_ASSERT(false);
+  }
+
   switch (index){
   case 0:
   {
-    m_defaultConstructionSetsController = std::shared_ptr<DefaultConstructionSetsController>(new DefaultConstructionSetsController(m_model));
-    connect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>(m_defaultConstructionSetsController->subTabView()), &ModelSubTabView::toggleUnitsClicked);
-    connect(m_defaultConstructionSetsController.get(), &DefaultConstructionSetsController::downloadComponentsClicked, this, &ConstructionsTabController::downloadComponentsClicked);
-    connect(m_defaultConstructionSetsController.get(), &DefaultConstructionSetsController::openLibDlgClicked, this, &ConstructionsTabController::openLibDlgClicked);
-    connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &ConstructionsTabController::setSubTab);
-    this->mainContentWidget()->setSubTab(m_defaultConstructionSetsController->subTabView());
+    auto defaultConstructionSetsController = new DefaultConstructionSetsController(m_model);
+    connect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>(defaultConstructionSetsController->subTabView()), &ModelSubTabView::toggleUnitsClicked);
+    connect(defaultConstructionSetsController, &DefaultConstructionSetsController::downloadComponentsClicked, this, &ConstructionsTabController::downloadComponentsClicked);
+    connect(defaultConstructionSetsController, &DefaultConstructionSetsController::openLibDlgClicked, this, &ConstructionsTabController::openLibDlgClicked);
+    this->mainContentWidget()->setSubTab(defaultConstructionSetsController->subTabView());
+    m_currentController = defaultConstructionSetsController;
     break;
   }
 
   case 1:
   {
-    m_constructionsController = std::shared_ptr<ConstructionsController>(new ConstructionsController(m_isIP, m_model));
-    connect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>(m_constructionsController->subTabView()), &ModelSubTabView::toggleUnitsClicked);
-    connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &ConstructionsTabController::setSubTab);
-    this->mainContentWidget()->setSubTab(m_constructionsController->subTabView());
+    auto constructionsController = new ConstructionsController(m_isIP, m_model);
+    connect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>(constructionsController->subTabView()), &ModelSubTabView::toggleUnitsClicked);
+    this->mainContentWidget()->setSubTab(constructionsController->subTabView());
+    m_currentController = constructionsController;
     break;
   }
 
   case 2:
   {
-    m_materialsController = std::shared_ptr<MaterialsController>(new MaterialsController(m_isIP, m_model));
-    connect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>(m_materialsController->subTabView()), &ModelSubTabView::toggleUnitsClicked);
-    connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &ConstructionsTabController::setSubTab);
-    this->mainContentWidget()->setSubTab(m_materialsController->subTabView());
+    auto materialsController = new MaterialsController(m_isIP, m_model);
+    connect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>(materialsController->subTabView()), &ModelSubTabView::toggleUnitsClicked);
+    this->mainContentWidget()->setSubTab(materialsController->subTabView());
+    m_currentController = materialsController;
     break;
   }
   default:
