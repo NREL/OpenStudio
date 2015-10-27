@@ -178,6 +178,8 @@
 #include "../model/EvaporativeCoolerDirectResearchSpecial_Impl.hpp"
 #include "../model/EvaporativeCoolerIndirectResearchSpecial.hpp"
 #include "../model/EvaporativeCoolerIndirectResearchSpecial_Impl.hpp"
+#include "../model/HeatExchangerFluidToFluid.hpp"
+#include "../model/HeatExchangerFluidToFluid_Impl.hpp"
 #include "../model/DaylightingControl.hpp"
 #include "../utilities/units/QuantityConverter.hpp"
 #include "../utilities/units/IPUnit.hpp"
@@ -4473,126 +4475,77 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     sizingPlant.setLoopType("Condenser");
   }
 
-  // Boilers
-
-  QDomNodeList boilerElements = fluidSysElement.elementsByTagName("Blr");
-
-  for (int i = 0; i < boilerElements.count(); i++)
-  {
-    QDomElement boilerElement = boilerElements.at(i).toElement();
-
-    if( boost::optional<model::ModelObject> mo = translateBoiler(boilerElement,doc,model) )
+  auto addBranchPump = [&](boost::optional<model::ModelObject> mo, QDomElement baseElement){
+    auto pumpElement = baseElement.firstChildElement("Pump"); 
+    if( ! pumpElement.isNull() )
     {
-      model::BoilerHotWater boiler = mo->cast<model::BoilerHotWater>();
-
-      plantLoop.addSupplyBranchForComponent(boiler);
-
-      QDomElement pumpElement = boilerElement.firstChildElement("Pump"); 
-
-      if( ! pumpElement.isNull() )
-      {
-        boost::optional<model::ModelObject> mo2 = translatePump(pumpElement,doc,model);
-
-        if( mo2 )
-        {
-          model::Node inletNode = boiler.inletModelObject()->cast<model::Node>();
-
-          if( boost::optional<model::PumpVariableSpeed> pump = mo2->optionalCast<model::PumpVariableSpeed>() )
-          {
-            pump->addToNode(inletNode);
-          }
-          else if( boost::optional<model::PumpConstantSpeed> pump = mo2->optionalCast<model::PumpConstantSpeed>() )
-          {
-            pump->addToNode(inletNode);
+      if( mo ) {
+        if( auto inletNode = mo->optionalCast<model::Node>() ) {
+          if( auto mo2 = translatePump(pumpElement,doc,model) ) {
+            if( boost::optional<model::PumpVariableSpeed> pump = mo2->optionalCast<model::PumpVariableSpeed>() ) {
+              pump->addToNode(inletNode.get());
+            } else if( boost::optional<model::PumpConstantSpeed> pump = mo2->optionalCast<model::PumpConstantSpeed>() ) {
+              pump->addToNode(inletNode.get());
+            }
           }
         }
       }
     }
+  };
+
+  // Boilers
+  auto boilerElements = fluidSysElement.elementsByTagName("Blr");
+  for (int i = 0; i < boilerElements.count(); i++) {
+    auto boilerElement = boilerElements.at(i).toElement();
+
+    if( boost::optional<model::ModelObject> mo = translateBoiler(boilerElement,doc,model) ) {
+      auto boiler = mo->cast<model::BoilerHotWater>();
+      plantLoop.addSupplyBranchForComponent(boiler);
+      addBranchPump(boiler.inletModelObject(),boilerElement);
+    }
   }
 
   // Chillers
+  auto chillerElements = fluidSysElement.elementsByTagName("Chlr");
+  for (int i = 0; i < chillerElements.count(); i++) {
+    auto chillerElement = chillerElements.at(i).toElement();
 
-  QDomNodeList chillerElements = fluidSysElement.elementsByTagName("Chlr");
-
-  for (int i = 0; i < chillerElements.count(); i++)
-  {
-    QDomElement chillerElement = chillerElements.at(i).toElement();
-
-    if( boost::optional<model::ModelObject> mo = translateChiller(chillerElement,doc,model) )
-    {
-      model::ChillerElectricEIR chiller = mo->cast<model::ChillerElectricEIR>();
-
+    if( auto mo = translateChiller(chillerElement,doc,model) ) {
+      auto chiller = mo->cast<model::ChillerElectricEIR>();
       plantLoop.addSupplyBranchForComponent(chiller);
+      addBranchPump(chiller.supplyInletModelObject(),chillerElement);
 
-      QDomElement pumpElement = chillerElement.firstChildElement("Pump"); 
-
-      if( ! pumpElement.isNull() )
-      {
-        boost::optional<model::ModelObject> mo2 = translatePump(pumpElement,doc,model);
-
-        if( mo2 )
-        {
-          model::Node inletNode = chiller.supplyInletModelObject()->cast<model::Node>();
-
-          if( boost::optional<model::PumpVariableSpeed> pump = mo2->optionalCast<model::PumpVariableSpeed>() )
-          {
-            pump->addToNode(inletNode);
-          }
-          else if( boost::optional<model::PumpConstantSpeed> pump = mo2->optionalCast<model::PumpConstantSpeed>() )
-          {
-            pump->addToNode(inletNode);
-          }
-        }
-      }
-
-      QDomElement evapHasBypassElement = chillerElement.firstChildElement("EvapHasBypass");
-
-      if( evapHasBypassElement.text() == "1" )
-      {
+      auto evapHasBypassElement = chillerElement.firstChildElement("EvapHasBypass");
+      if( evapHasBypassElement.text() == "1" ) {
         bypass = true;
       }
     }
   }
 
   // HtRej
+  auto htRejElements = fluidSysElement.elementsByTagName("HtRej");
+  for(int i = 0; i < htRejElements.count(); i++) {
+    auto htRejElement = htRejElements.at(i).toElement();
 
-  QDomNodeList htRejElements = fluidSysElement.elementsByTagName("HtRej");
-
-  for(int i = 0; i < htRejElements.count(); i++)
-  {
-    QDomElement htRejElement = htRejElements.at(i).toElement();
-
-    if( boost::optional<model::ModelObject> mo = translateHtRej(htRejElement,doc,model) )
-    {
-      model::StraightComponent tower = mo->cast<model::StraightComponent>();
-
+    if( auto mo = translateHtRej(htRejElement,doc,model) ) {
+      auto tower = mo->cast<model::StraightComponent>();
       plantLoop.addSupplyBranchForComponent(tower);
+      addBranchPump(tower.inletModelObject(),htRejElement);
+    }
+  }
 
-      QDomElement pumpElement = htRejElement.firstChildElement("Pump"); 
+  // HX
+  auto hxElements = fluidSysElement.elementsByTagName("HX");
+  for(int i = 0; i < hxElements.count(); i++) {
+    auto hxElement = hxElements.at(i).toElement();
 
-      if( ! pumpElement.isNull() )
-      {
-        boost::optional<model::ModelObject> mo2 = translatePump(pumpElement,doc,model);
-
-        if( mo2 )
-        {
-          model::Node inletNode = tower.inletModelObject()->cast<model::Node>();
-
-          if( boost::optional<model::PumpVariableSpeed> pump = mo2->optionalCast<model::PumpVariableSpeed>() )
-          {
-            pump->addToNode(inletNode);
-          }
-          else if( boost::optional<model::PumpConstantSpeed> pump = mo2->optionalCast<model::PumpConstantSpeed>() )
-          {
-            pump->addToNode(inletNode);
-          }
-        }
-      }
+    if( auto mo = translateHX(hxElement,doc,model) ) {
+      auto hx = mo->cast<model::HeatExchangerFluidToFluid>();
+      plantLoop.addSupplyBranchForComponent(hx);
     }
   }
 
   // Water Heaters
-
   QDomNodeList wtrHtrElements = fluidSysElement.elementsByTagName("WtrHtr");
 
   for (int i = 0; i < wtrHtrElements.count(); i++)
@@ -4606,7 +4559,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   }
 
   // Add a default bypass
-
   if(bypass)
   {
     model::PipeAdiabatic pipe(model);
@@ -4615,7 +4567,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   }
 
   // Add a default hot water heater for servicehotwater systems
-
   if( typeElement.text().toLower() == "servicehotwater" )
   {
     boost::optional<model::WaterHeaterMixed> waterHeater;
@@ -5632,6 +5583,82 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
     
     result->setName(nameElement.text().toStdString());
   }
+
+  return result;
+}
+
+boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHX(
+                                                  const QDomElement& hxElement, 
+                                                  const QDomDocument& doc,
+                                                  openstudio::model::Model& model )
+{
+  boost::optional<openstudio::model::ModelObject> result;
+
+  if( ! istringEqual(hxElement.tagName().toStdString(),"Chlr") ) {
+    return result;
+  }
+
+  double value;
+  bool ok;
+
+  model::HeatExchangerFluidToFluid hx(model);
+  result = hx;
+
+  auto name = hxElement.firstChildElement("Name").text().toStdString();
+  hx.setName(name);
+
+  auto cWFluidSegInRefElement = hxElement.firstChildElement("CWFluidSegInRef");
+  if( auto condenserSystem = loopForSupplySegment(cWFluidSegInRefElement.text(),doc,model) ) {
+    condenserSystem->addDemandBranchForComponent(hx);
+  }
+
+  if( ! autosize() ) {
+    auto cHWFluidFlowRtDsgnElement = hxElement.firstChildElement("CHWFluidFlowRtDsgn");
+    value = cHWFluidFlowRtDsgnElement.text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"gal/min","m^3/s").get();
+      hx.setLoopDemandSideDesignFlowRate(value);
+    } 
+
+    auto cWFluidFlowRtDsgnElement = hxElement.firstChildElement("CWFluidFlowRtDsgn");
+    value = cWFluidFlowRtDsgnElement.text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"gal/min","m^3/s").get();
+      hx.setLoopSupplySideDesignFlowRate(value);
+    }
+
+    auto uAElement = hxElement.firstChildElement("UA");
+    value = uAElement.text().toDouble(&ok);
+    if( ok ) {
+      // sdd units = Btu/(hr*ft^2*F), os units = W/(m^2*K) 
+      Quantity uaIP(value, BTUUnit(BTUExpnt(1,-2,-1,-1)));
+      auto uaSI = QuantityConverter::instance().convert(uaIP, UnitSystem(UnitSystem::Wh));
+      OS_ASSERT(uaSI);
+      OS_ASSERT(uaSI->units() == WhUnit(WhExpnt(1,0,-2,-1)));
+      hx.setHeatExchangerUFactorTimesAreaValue(uaSI->value());
+    }
+  } 
+
+  auto type = hxElement.firstChildElement("Type").text().toStdString();
+  if( istringEqual("CrossFlowSupplyMixed",type) ) {
+    hx.setHeatExchangeModelType("CrossFlowSupplyMixedDemandUnMixed");
+  } else if( istringEqual("CrossFlowDemandMixed",type) ) {
+    hx.setHeatExchangeModelType("CrossFlowDemandMixedSupplyUnMixed");
+  } else if ( ! hx.setHeatExchangeModelType(type) ) {
+    LOG(Warn,name + " Type field references an unsupported option " + type + ".");
+  }
+
+  hx.setMinimumTemperatureDifferencetoActivateHeatExchanger(1.1);
+
+  hx.setHeatTransferMeteringEndUseType("FreeCooling");
+
+  hx.setComponentOverrideCoolingControlTemperatureMode("Loop");
+
+  hx.setSizingFactor(1.0);
+
+  hx.setOperationMinimumTemperatureLimit(4.4);
+
+  hx.setOperationMinimumTemperatureLimit(21.1);
 
   return result;
 }
