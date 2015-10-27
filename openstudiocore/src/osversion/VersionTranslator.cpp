@@ -2767,6 +2767,7 @@ std::string VersionTranslator::update_1_9_2_to_1_9_3(const IdfFile& idf_1_9_2, c
   for (const IdfObject& object : idf_1_9_2.objects()) {
     auto iddname = object.iddObject().name();
     if (iddname == "OS:EvaporativeCooler:Direct:ResearchSpecial") {
+      auto iddObject = idd_1_9_3.getObject("OS:EvaporativeCooler:Direct:ResearchSpecial");
       OS_ASSERT(iddObject);
       IdfObject newObject(iddObject.get());
       for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
@@ -2775,7 +2776,7 @@ std::string VersionTranslator::update_1_9_2_to_1_9_3(const IdfFile& idf_1_9_2, c
             newObject.setDouble(i,value.get());
           }
         } else if( i == 5 ) {
-          newObject.setDouble(i,"Autosize");
+          newObject.setString(i,"Autosize");
         } else {
           if( auto value = object.getDouble(i) ) {
             newObject.setDouble(i + 1,value.get());
@@ -2783,7 +2784,7 @@ std::string VersionTranslator::update_1_9_2_to_1_9_3(const IdfFile& idf_1_9_2, c
         }
       }
       ss << newObject;
-      m_refactored.push_back(newObject);
+      m_refactored.push_back(std::pair<IdfObject,IdfObject>(object,newObject));
     } else {
       ss << object;
     }
