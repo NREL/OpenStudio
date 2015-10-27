@@ -389,7 +389,7 @@ namespace radiance {
       }
 
       // write sample sky for renderings
-      openstudio::path renderskyfilepath = radDir / openstudio::toPath("skies/sky_03211200_clr.rad");
+      openstudio::path renderskyfilepath = radDir / openstudio::toPath("skies/03211200_clr.sky");
       OFSTREAM renderskyfile(renderskyfilepath);
       if (renderskyfile.is_open()){
         outfiles.push_back(renderskyfilepath);
@@ -1888,7 +1888,7 @@ namespace radiance {
         	formatString(viewVector.x(), 3) + " " + \
         	formatString(viewVector.y(), 3) + " " + \
         	formatString(viewVector.z(), 3) + \
-        	" -vu 0 0 1 -vh 80 -vv 80 -vo 0 -vs 0 -vl 0\n";
+        	" -vu 0 0 1 -vh 60 -vv 90 -vo 0 -vs 0 -vl 0\n";
 
           // glare sensor views (fisheye)
         	m_radGlareSensorViewsVTA[space_name] += \
@@ -1916,7 +1916,7 @@ namespace radiance {
         LOG(Debug, "Wrote " << space_name << ".glr");
 
         // write glare sensor views (perspective)
-        filename = t_radDir / openstudio::toPath("views") / openstudio::toPath(space_name + "_" + sensor_name + ".gvp");
+        filename = t_radDir / openstudio::toPath("views") / openstudio::toPath(space_name + "_" + sensor_name + ".pvf");
         OFSTREAM file2(filename);
         if (file2.is_open()){
           t_outfiles.push_back(filename);
@@ -1925,10 +1925,10 @@ namespace radiance {
           LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
         }
 
-        LOG(Debug, "Wrote " << space_name << ".gvp");
+        LOG(Debug, "Wrote " << space_name << "_" << sensor_name << ".pvf");
 
         // write glare sensor views (fisheye)      
-        filename = t_radDir / openstudio::toPath("views") / openstudio::toPath(space_name + "_" + sensor_name + ".gvf");
+        filename = t_radDir / openstudio::toPath("views") / openstudio::toPath(space_name + "_" + sensor_name + ".fvf");
         OFSTREAM file3(filename);
         if (file3.is_open()){
           t_outfiles.push_back(filename);
@@ -1937,7 +1937,7 @@ namespace radiance {
           LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
         }
 
-        LOG(Debug, "Wrote " << space_name << ".gvf");
+        LOG(Debug, "Wrote " << space_name << "_" << sensor_name << ".fvf");
 
         
       } // end glare sensor

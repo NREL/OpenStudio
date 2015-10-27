@@ -376,19 +376,39 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       procsUsed = "-n #{sim_cores}"
     end
 
-
     # core functions
 
-    def calculateDaylightCoeffecients(
-                                      radPath, sim_cores, t_catCommand, options_tregVars,
+    def calculateDaylightCoeffecients(radPath, sim_cores, t_catCommand, options_tregVars,
                                       options_klemsDensity, options_skyvecDensity, options_dmx, 
                                       options_vmx, rad_settings, procsUsed, runner)
-
-      haveWG0 = ""
 
       # get calculation points array size (needed for rmtxop later)
       mapFile=File.open("numeric/merged_space.map","r")
       rfluxmtxDim = mapFile.readlines.size.to_s
+      
+      # sort out window groups, controls
+      haveWG0 = ""
+      haveWG1 = ""
+      windowGroupCheck = File.open("bsdf/mapping.rad")
+      windowGroupCheck.each do |row|
+
+        next if row[0] == "#"
+        wg=row.split(",")[0]
+         
+        if wg == "WG0"
+          haveWG0 = "True"
+        elsif wg == "WG1"
+          haveWG1 = "True"
+        end
+    
+      end  
+      windowGroupCheck.close
+      
+      if haveWG0 == "True"
+        puts "Have a Window Group Zero"
+      elsif haveWG1 == "True"
+        puts "Have window controls"
+      end
 
       puts "running Radiance..."
 
@@ -396,52 +416,55 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
       # compute daylight matrices
       runner.registerInfo("#{Time.now.getutc}: computing daylight coefficient matrices")
-
       exec_statement("oconv materials/materials.rad model.rad > model_dc.oct", runner)
+
       windowMaps = File::open("bsdf/mapping.rad")
+      
       windowMaps.each do |row|
+
         next if row[0] == "#"
         wg=row.split(",")[0]
         
         rad_command = ""
-                
-        if row.split(",")[2] == 'n/a' || row.split(",")[2] == 'AlwaysOff' # uncontrolled windows
-        
+           
+        if wg == "WG0"
+
+          puts "processing WG0"
+
+          # make WG0 octree (with shade-controlled window groups blacked out, if applicable)
+          
+          if haveWG1 == "True"
+            rad_command = "oconv \"materials/materials.rad\" \"materials/materials_WG0.rad\" model.rad \"skies/dc_sky.rad\" > model_WG0.oct"
+          else 
+            rad_command = "oconv \"materials/materials.rad\" model.rad \"skies/dc_sky.rad\" > model_WG0.oct"
+          end
+          exec_statement(rad_command, runner)
+          
           # use more aggro simulation parameters because this is basically a view matrix
           rtrace_args = "#{options_vmx}"
-      
-          # make special WG0 octree (all shade controlled window groups blacked out)
-          #specMaterialsWG0 = ""
-          #if windowControls.size > 1
-         # 	specMaterialsWG0 = ""
-          #end
-          rad_command = "oconv \"materials/materials.rad\" \"materials/materials_WG0.rad\" model.rad \"skies/dc_sky.rad\" > model_WG0.oct"
-          # runner.registerInfo("#{Time.now.getutc}: #{rad_command}")
-          exec_statement(rad_command, runner)
-
-          # do daylight coefficients for uncontrolled windows
           
-          runner.registerInfo("#{Time.now.getutc}: computing daylight/view matrix for static window group (#{wg})...")
-                    
+          runner.registerInfo("#{Time.now.getutc}: computing daylight/view matrix for uncontrolled windows (WG0)")
           rad_command = "#{t_catCommand} \"numeric/merged_space.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
           "-o \"output/dc/WG0.vmx\" -m skyglow model_WG0.oct"
           runner.registerInfo("#{Time.now.getutc}: #{rad_command}")
           exec_statement(rad_command, runner)
 
-        else  # window group has shade control 
-    
+        else
+
+          puts "processing controlled window groups"
+
           # use more chill sim parameters
           rtrace_args = "#{options_dmx}"
-            
+          
           # do daylight matrices for controlled windows
           runner.registerInfo("#{Time.now.getutc}: computing daylight matrix for window group #{wg}...")
 
           rad_command = "rfluxmtx #{rtrace_args} -n #{sim_cores} -fa -v \"scene/shades/#{wg}_SHADE.rad\" \"skies/dc_sky.rad\" -i model_dc.oct > \"output/dc/#{wg}.dmx\""
           runner.registerInfo("#{Time.now.getutc}: #{rad_command}")
           exec_statement(rad_command, runner)
-    
+
         end
-        
+
       end  # calculate DMX
 				
 			#if windowControls.size > 1
@@ -451,7 +474,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			# use fine params   
 			rtrace_args = "#{options_vmx}" 
 
-			runner.registerInfo("#{Time.now.getutc}: computing view matri(ces) for controlled windows")
+			runner.registerInfo("#{Time.now.getutc}: computing view matri(ces) for controlled window groups")
 		
 			# get the shaded window groups' shade polygons
 		
@@ -473,17 +496,21 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 			rad_command = "rfluxmtx #{rtrace_args} -n #{sim_cores} -ds .15 -faa -y #{rfluxmtxDim} -I -v - receivers_vmx.rad -i model_vmx.oct < numeric/merged_space.map"
 			exec_statement(rad_command, runner)
 
-			# compute daylight coefficient matrices for window group control points
-		
-			rtrace_args = "#{options_dmx}"
-			exec_statement("oconv \"materials/materials.rad\" model.rad \
-				\"skies/dc_sky.rad\" > model_wc.oct", runner)
-			runner.registerInfo("#{Time.now.getutc}: computing DCs for window control points")
-		
-			rad_command = "#{t_catCommand} \"numeric/window_controls.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
-			"-o \"output/dc/window_controls.vmx\" -m skyglow model_wc.oct"
-			exec_statement(rad_command, runner)
-		
+      if haveWG1 == "True"		
+
+  			# compute daylight coefficient matrices for window group control points
+
+        rtrace_args = "#{options_dmx}"
+        exec_statement("oconv \"materials/materials.rad\" model.rad \
+          \"skies/dc_sky.rad\" > model_wc.oct", runner)
+        runner.registerInfo("#{Time.now.getutc}: computing DCs for window control points")
+    
+        rad_command = "#{t_catCommand} \"numeric/window_controls.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
+        "-o \"output/dc/window_controls.vmx\" -m skyglow model_wc.oct"
+        exec_statement(rad_command, runner)
+
+		  end
+		  
 			# end VMX
 				
 			#end
@@ -498,19 +525,37 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
                       t_site_latitude, t_site_longitude, t_site_stdmeridian, t_radPath,
                       t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, runner, write_sql)
 
-      runner.registerInfo("#{Time.now.getutc}: Calculating annual daylight values for all window groups and shade states")
+      runner.registerInfo("#{Time.now.getutc}: Calculating annual daylight values")
 
       rawValues = {}
       values = {}
       dcVectors = {}
-      
+
+      # sort out window groups, controls
+      haveWG0 = ""
+      haveWG1 = ""
+      windowGroupCheck = File.open("bsdf/mapping.rad")
+      windowGroupCheck.each do |row|
+
+        next if row[0] == "#"
+        wg=row.split(",")[0]
+         
+        if wg == "WG0"
+          haveWG0 = "True"
+        elsif wg == "WG1"
+          haveWG1 = "True"
+        end
+    
+      end  
+      windowGroupCheck.close
+       
       # Run the simulation 
 
       simulations = []
 
       exec_statement("gendaymtx -m #{t_options_skyvecDensity} \"wx/in.wea\" > annual-sky.mtx", runner)
 
-      windowMaps = File::open("bsdf/mapping.rad")
+      windowMaps = File.open("bsdf/mapping.rad")
   
       # do annual sim for each window group and state
   
@@ -520,7 +565,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         wg = row.split(",")[0]
     
         # do uncontrolled windows (WG0)
-        if row.split(",")[2] == "n/a" || row.split(",")[2] == "AlwaysOff"
+        if wg == "WG0"
+        # if row.split(",")[2] == "n/a" || row.split(",")[2] == "AlwaysOff"
           # keep header, convert to illuminance, but no transpose
           exec_statement("dctimestep \"#{t_radPath}/output/dc/#{wg}.vmx\" annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > \"#{t_radPath}/output/ts/#{wg}.ill\"", runner) 
 
@@ -542,122 +588,127 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
       end
 
-      # get annual values for window control sensors (note: convert to illuminance, no transpose, strip header)
-      exec_statement("dctimestep output/dc/window_controls.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - | getinfo - > output/ts/window_controls.ill", runner)
+      if haveWG1 == "True"
+
+        # get annual values for window control sensors (note: convert to illuminance, no transpose, strip header)
+        exec_statement("dctimestep output/dc/window_controls.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - | getinfo - > output/ts/window_controls.ill", runner)
   
-      runner.registerInfo("#{Time.now.getutc}: Merging results")
+        runner.registerInfo("#{Time.now.getutc}: Merging results")
   
-      # do that window group/state merge thing
+        # do that window group/state merge thing
   
-			windowGroups = File.open("bsdf/mapping.rad")
-			windowGroups.each do |wg|
+        windowGroups = File.open("bsdf/mapping.rad")
+        windowGroups.each do |wg|
 
-				next if wg[0] == "#"
-				windowGroup = wg.split(",")[0]
-				next if windowGroup == "WG0"
+          next if wg[0] == "#"
+          windowGroup = wg.split(",")[0]
+          next if windowGroup == "WG0"
 
-				wgIllumFiles = Dir.glob("output/ts/#{windowGroup}_*.ill")
+          wgIllumFiles = Dir.glob("output/ts/#{windowGroup}_*.ill")
 
-				# possible values are "AlwaysOn", "AlwaysOff", "OnIfScheduleAllows", "OnIfHighSolarOnWindow"
-				shadeControlType = wg.split(",")[2].to_s
+          # possible values are "AlwaysOn", "AlwaysOff", "OnIfScheduleAllows", "OnIfHighSolarOnWindow"
+          shadeControlType = wg.split(",")[2].to_s
 
-				# DLM: we are not allowing scheduled setpoints for now, but when we do this would have to change
+          # DLM: we are not allowing scheduled setpoints for now, but when we do this would have to change
 
-				# RPG: setpoint is coming from OS control, in watts, so...
-				shadeControlSetpointWatts = wg.split(",")[3].to_f
-		
-				shadeControlSetpoint = shadeControlSetpointWatts * 179 # Radiance's luminous efficacy factor
-							
-				# DLM: hacktastic way to implement these options for now
-				if shadeControlType == "AlwaysOn"
-					shadeControlSetpoint = -1000
-				elsif 
-					shadeControlType == "AlwaysOff"
-					shadeControlSetpoint = 100000000
-				end
-
-				runner.registerInfo("#{Time.now.getutc}: Processing window group '#{windowGroup}', setpoint: #{shadeControlSetpoint} lux")
-
-				# separate header from data; so, so ugly. 
-				header = []
-				ill0 = []
-				ill1 = []
-
-				wgIllum_0 = File.open("#{wgIllumFiles[0]}").each_line do |line|
-					if line.chomp! =~ /^\s?\d/
-						ill0 << "#{line}\n"
-					else 
-						header << "#{line}\n"
-					end
-
-				end
-
-				wgIllum_1 = File.open("#{wgIllumFiles[1]}").each_line do |line|
-					if line.chomp! =~ /^\s?\d/
-						ill1 << "#{line}\n"
-					else 
-						next
-					end
-
-				end # that window group/state merge thing
-
-        # get the window control point illuminances (should be headerless file)
-    
-        windowControls = File.open("output/ts/window_controls.ill", "r")
-
-        windowControls.each do |row|
-  
-          data = row.split(" ")
-
-          wgMerge = []
-          wgShadeSched = []
-
-          # simple, window illuminance-based shade control
-
-          data.each_index do |i|
-
-            if data[i].to_f < shadeControlSetpoint
-              wgMerge << ill0[i]
-              wgShadeSched << "0\n"
-            else
-              wgMerge << ill1[i]
-              wgShadeSched << "1\n"
-            end
-  
+          # RPG: setpoint is coming from OS control, in watts, so...
+          shadeControlSetpointWatts = wg.split(",")[3].to_f
+          shadeControlSetpoint = shadeControlSetpointWatts * 179 # Radiance's luminous efficacy factor
+              
+          # DLM: hacktastic way to implement these options for now
+          if shadeControlType == "AlwaysOn"
+            shadeControlSetpoint = -1000
+          elsif 
+            shadeControlType == "AlwaysOff"
+            shadeControlSetpoint = 100000000
           end
 
-          # you need to file these files, yo.
+          runner.registerInfo("#{Time.now.getutc}: Processing window group '#{windowGroup}', setpoint: #{shadeControlSetpoint} lux")
+
+          # separate header from data; so, so ugly. 
+          header = []
+          ill0 = []
+          ill1 = []
+
+          wgIllum_0 = File.open("#{wgIllumFiles[0]}").each_line do |line|
+            if line.chomp! =~ /^\s?\d/
+              ill0 << "#{line}\n"
+            else 
+              header << "#{line}\n"
+            end
+
+          end
+
+          wgIllum_1 = File.open("#{wgIllumFiles[1]}").each_line do |line|
+            if line.chomp! =~ /^\s?\d/
+              ill1 << "#{line}\n"
+            else 
+              next
+            end
+
+          end # that window group/state merge thing
+
+          # get the window control point illuminances (should be headerless file)
+    
+          windowControls = File.open("output/ts/window_controls.ill", "r")
+
+          windowControls.each do |row|
+  
+            data = row.split(" ")
+
+            wgMerge = []
+            wgShadeSched = []
+
+            # simple, window illuminance-based shade control
+
+            data.each_index do |i|
+
+              if data[i].to_f < shadeControlSetpoint
+                wgMerge << ill0[i]
+                wgShadeSched << "0\n"
+              else
+                wgMerge << ill1[i]
+                wgShadeSched << "1\n"
+              end
+  
+            end
+
+            # you need to file these files, yo.
       
-          wgIllum = File.open("m_#{windowGroup}.ill", "w")
-          wgShade = File.open("#{windowGroup}.shd", "w")
-          header.each {|head| wgIllum.print "#{head}"}
-          wgMerge.each {|ts| wgIllum.print "#{ts}"}
-          wgShadeSched.each {|sh| wgShade.print "#{sh}"}
-          wgIllum.close
-          wgShade.close
-          FileUtils.rm Dir.glob('*.tmp')
+            wgIllum = File.open("m_#{windowGroup}.ill", "w")
+            wgShade = File.open("#{windowGroup}.shd", "w")
+            header.each {|head| wgIllum.print "#{head}"}
+            wgMerge.each {|ts| wgIllum.print "#{ts}"}
+            wgShadeSched.each {|sh| wgShade.print "#{sh}"}
+            wgIllum.close
+            wgShade.close
+            FileUtils.rm Dir.glob('*.tmp')
 
         end
-
+      end
    end
 
       # make whole-building illuminance file
-
       addFiles = ""
 
-      # there may not be a WG0...
-  
+      # get the uncontrolled windows results, if any
       if File.exist?("output/ts/WG0.ill")
         addFiles << "output/ts/WG0.ill "
+      else
+        runner.registerInfo("model has no uncontrolled windows")
+      end
+        
+      # get the controlled window group results (m_*.ill), if any
+      mergedWindows = Dir.glob("m_*.ill")
+      if mergedWindows.size > 0 
+        mergedWindows.each do |file|
+          addFiles << "+ #{file} "
+        end
+      else
+        runner.registerInfo("model has no controlled window groups")
       end
 
       # merge uncontrolled windows (WG0.ill) with blended controlled window groups (m_*.ill) 
-  
-      mergedWindows = Dir.glob("m_*.ill")
-
-      mergedWindows.each do |file|
-        addFiles << "+ #{file} "
-      end
       exec_statement("rmtxop -fa #{addFiles} -t | getinfo - > \"output/ts/merged_space.ill\"", runner)
 
       ## window merge end
@@ -696,7 +747,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     # function renamed from execSimulation() to parseResults()
     def parseResults(t_cmds, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_radPath, write_sql, runner)
 
-      status_string = "#{Time.now.getutc}: parsing results"
+      status_string = "#{Time.now.getutc}: parsing daylighting results"
       runner.registerInfo(status_string)
 
       allValues = []
@@ -708,9 +759,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       valuesFile.each do |row|
         values << row.split(" ")
       end
-
-      status_string = "#{Time.now.getutc}: writing output"
-      runner.registerInfo(status_string)
 
       allhours = []
 
