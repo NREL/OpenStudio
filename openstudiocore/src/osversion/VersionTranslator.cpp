@@ -2758,7 +2758,7 @@ std::string VersionTranslator::update_1_9_2_to_1_9_3(const IdfFile& idf_1_9_2, c
 {
   std::stringstream ss;
 
-  ss << idf_1_8_5.header() << std::endl << std::endl;
+  ss << idf_1_9_2.header() << std::endl << std::endl;
 
   // new version object
   IdfFile targetIdf(idd_1_9_3.iddFile());

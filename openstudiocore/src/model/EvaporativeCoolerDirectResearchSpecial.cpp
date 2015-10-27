@@ -180,7 +180,7 @@ namespace detail{
     return this->getDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::PrimaryAirDesignFlowRate);
   }
   
-  void EvaporativeCoolerDirectResearchSpecial_Impl::setPrimaryDesignAirFlowRate( double value )
+  void EvaporativeCoolerDirectResearchSpecial_Impl::setPrimaryAirDesignFlowRate( double value )
   {
     this->setDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::PrimaryAirDesignFlowRate,value);
   }
