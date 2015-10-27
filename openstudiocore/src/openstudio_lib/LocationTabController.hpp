@@ -66,6 +66,8 @@ private:
 
   bool m_isIP;
 
+  QWidget * m_currentView = nullptr;
+
 private slots:
 
   virtual void setSubTab(int index) override;

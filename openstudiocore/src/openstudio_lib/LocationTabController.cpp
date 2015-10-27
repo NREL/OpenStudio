@@ -82,6 +82,21 @@ bool LocationTabController::showUtilityBills()
 
 void LocationTabController::setSubTab(int index)
 {
+  if (qobject_cast<LocationView *>(m_currentView)) {
+    disconnect(this, &LocationTabController::toggleUnitsClicked, qobject_cast<LocationView *>(m_currentView), &LocationView::toggleUnitsClicked);
+    disconnect(this->mainContentWidget(), &MainTabView::tabSelected, this, &LocationTabController::setSubTab);
+  }
+  else if (qobject_cast<LifeCycleCostsView *>(m_currentView)) {
+    disconnect(this->mainContentWidget(), &MainTabView::tabSelected, this, &LocationTabController::setSubTab);
+  }
+  else if (qobject_cast<UtilityBillsInspectorView *>(m_currentView) || qobject_cast<QLabel *>(m_currentView)) {
+    disconnect(this->mainContentWidget(), &MainTabView::tabSelected, this, &LocationTabController::setSubTab);
+  }
+  else if (m_currentView) {
+    // Oops! Should never get here
+    OS_ASSERT(false);
+  }
+
   switch (index){
   case 0:
   {
@@ -89,6 +104,7 @@ void LocationTabController::setSubTab(int index)
     connect(this, &LocationTabController::toggleUnitsClicked, locationView, &LocationView::toggleUnitsClicked);
     connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &LocationTabController::setSubTab);
     this->mainContentWidget()->setSubTab(locationView);
+    m_currentView = locationView;
     break;
   }
   case 1:
@@ -96,23 +112,24 @@ void LocationTabController::setSubTab(int index)
     auto lifeCycleCostsView = new LifeCycleCostsView(m_model);
     connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &LocationTabController::setSubTab);
     this->mainContentWidget()->setSubTab(lifeCycleCostsView);
+    m_currentView = lifeCycleCostsView;
     break;
   }
   case 2:
   {
-    {
-      if (showUtilityBills()) {
-        auto utilityBillsController = new UtilityBillsController(m_model);
-        connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &LocationTabController::setSubTab);
-        this->mainContentWidget()->setSubTab(utilityBillsController->subTabView());
-      }
-      else {
-        auto label = new QLabel();
-        label->setPixmap(QPixmap(":/images/utility_calibration_warning.png"));
-        label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-        this->mainContentWidget()->setSubTab(label);
-      }
+    if (showUtilityBills()) {
+      auto utilityBillsController = new UtilityBillsController(m_model);
+      this->mainContentWidget()->setSubTab(utilityBillsController->subTabView());
+      m_currentView = utilityBillsController->subTabView();
     }
+    else {
+      auto label = new QLabel();
+      label->setPixmap(QPixmap(":/images/utility_calibration_warning.png"));
+      label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+      this->mainContentWidget()->setSubTab(label);
+      m_currentView = label;
+    }
+    connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &LocationTabController::setSubTab);
     break;
   }
   default:
