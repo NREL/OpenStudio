@@ -32,7 +32,7 @@ namespace openstudio {
 
     SpacesTabController(bool isIP, const model::Model & model);
 
-  virtual ~SpacesTabController() {}
+    virtual ~SpacesTabController();
 
   enum TabID
   {
@@ -50,6 +50,10 @@ private:
   model::Model m_model;
 
   bool m_isIP;
+
+  QWidget * m_currentView = nullptr;
+
+  int m_currentIndex = -1;
 
 public slots:
 

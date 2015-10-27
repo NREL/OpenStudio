@@ -68,6 +68,8 @@ private:
 
   QWidget * m_currentView = nullptr;
 
+  int m_currentIndex = -1;
+
 private slots:
 
   virtual void setSubTab(int index) override;

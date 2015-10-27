@@ -32,7 +32,7 @@ class FacilityTabController : public MainTabController
 
   FacilityTabController(bool isIP, const model::Model & model);
 
-  virtual ~FacilityTabController() {}
+  virtual ~FacilityTabController();
 
   private:
 
@@ -47,6 +47,10 @@ class FacilityTabController : public MainTabController
   model::Model m_model;
 
   bool m_isIP;
+
+  QWidget * m_currentView = nullptr;
+
+  int m_currentIndex = -1;
 
   public slots:
   

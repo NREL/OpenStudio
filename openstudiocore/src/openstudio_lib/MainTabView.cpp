@@ -21,7 +21,7 @@
 
 #include "../shared_gui_components/OSViewSwitcher.hpp"
 
-#include <QHBoxLayout>
+#include <QBoxLayout>
 #include <QLabel>
 #include <QPainter>
 #include <QPixmap>
@@ -29,7 +29,6 @@
 #include <QResizeEvent>
 #include <QStackedWidget>
 #include <QStyleOption>
-#include <QVBoxLayout>
 
 #include "../utilities/core/Assert.hpp"
 

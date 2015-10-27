@@ -51,10 +51,12 @@ LocationTabController::LocationTabController(bool isIP,
   mainContentWidget()->addSubTab("Utility Bills", UTILITY_BILLS);
 
   setSubTab(0);
+  connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &LocationTabController::setSubTab);
 }
 
 LocationTabController::~LocationTabController()
 {
+  disconnect(this->mainContentWidget(), &MainTabView::tabSelected, this, &LocationTabController::setSubTab);
 }
 
 bool LocationTabController::showUtilityBills()
@@ -82,15 +84,19 @@ bool LocationTabController::showUtilityBills()
 
 void LocationTabController::setSubTab(int index)
 {
+  if (m_currentIndex == index) {
+    return;
+  }
+  else {
+    m_currentIndex = index;
+  }
+
   if (qobject_cast<LocationView *>(m_currentView)) {
     disconnect(this, &LocationTabController::toggleUnitsClicked, qobject_cast<LocationView *>(m_currentView), &LocationView::toggleUnitsClicked);
-    disconnect(this->mainContentWidget(), &MainTabView::tabSelected, this, &LocationTabController::setSubTab);
   }
   else if (qobject_cast<LifeCycleCostsView *>(m_currentView)) {
-    disconnect(this->mainContentWidget(), &MainTabView::tabSelected, this, &LocationTabController::setSubTab);
   }
   else if (qobject_cast<UtilityBillsInspectorView *>(m_currentView) || qobject_cast<QLabel *>(m_currentView)) {
-    disconnect(this->mainContentWidget(), &MainTabView::tabSelected, this, &LocationTabController::setSubTab);
   }
   else if (m_currentView) {
     // Oops! Should never get here
@@ -102,7 +108,6 @@ void LocationTabController::setSubTab(int index)
   {
     auto locationView = new LocationView(m_isIP, m_model, m_modelTempDir);
     connect(this, &LocationTabController::toggleUnitsClicked, locationView, &LocationView::toggleUnitsClicked);
-    connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &LocationTabController::setSubTab);
     this->mainContentWidget()->setSubTab(locationView);
     m_currentView = locationView;
     break;
@@ -110,7 +115,6 @@ void LocationTabController::setSubTab(int index)
   case 1:
   {
     auto lifeCycleCostsView = new LifeCycleCostsView(m_model);
-    connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &LocationTabController::setSubTab);
     this->mainContentWidget()->setSubTab(lifeCycleCostsView);
     m_currentView = lifeCycleCostsView;
     break;
@@ -120,7 +124,7 @@ void LocationTabController::setSubTab(int index)
     if (showUtilityBills()) {
       auto utilityBillsController = new UtilityBillsController(m_model);
       this->mainContentWidget()->setSubTab(utilityBillsController->subTabView());
-      m_currentView = utilityBillsController->subTabView();
+      m_currentView = utilityBillsController->subTabView()->inspectorView();
     }
     else {
       auto label = new QLabel();
@@ -129,7 +133,6 @@ void LocationTabController::setSubTab(int index)
       this->mainContentWidget()->setSubTab(label);
       m_currentView = label;
     }
-    connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &LocationTabController::setSubTab);
     break;
   }
   default:
