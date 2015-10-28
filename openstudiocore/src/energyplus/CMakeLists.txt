@@ -141,6 +141,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateHeatBalanceAlgorithm.cpp
   ForwardTranslator/ForwardTranslateHeatExchangerAirToAirSensibleAndLatent.cpp
   ForwardTranslator/ForwardTranslateHeatExchangerFluidToFluid.cpp
+  ForwardTranslator/ForwardTranslateHeatPumpWaterToWaterEquationFitCooling.cpp
+  ForwardTranslator/ForwardTranslateHeatPumpWaterToWaterEquationFitHeating.cpp
   ForwardTranslator/ForwardTranslateHotWaterEquipment.cpp
   ForwardTranslator/ForwardTranslateHumidifierSteamElectric.cpp
   ForwardTranslator/ForwardTranslateIlluminanceMap.cpp

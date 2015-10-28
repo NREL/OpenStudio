@@ -1392,6 +1392,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateHeatExchangerFluidToFluid(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_HeatPump_WaterToWater_EquationFit_Cooling :
+    {
+      auto mo = modelObject.cast<HeatPumpWaterToWaterEquationFitCooling>();
+      retVal = translateHeatPumpWaterToWaterEquationFitCooling(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_HeatPump_WaterToWater_EquationFit_Heating :
+    {
+      auto mo = modelObject.cast<HeatPumpWaterToWaterEquationFitHeating>();
+      retVal = translateHeatPumpWaterToWaterEquationFitHeating(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_HotWaterEquipment :
     {
       model::HotWaterEquipment hotWaterEquipment = modelObject.cast<HotWaterEquipment>();
