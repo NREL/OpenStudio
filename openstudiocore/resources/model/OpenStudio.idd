@@ -10344,6 +10344,156 @@ OS:Boiler:Steam,
        \minimum> 0.0
        \default 1.0
 
+OS:HeatPump:WaterToWater:EquationFit:Heating,
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2,  \field Name
+        \type alpha
+        \required-field
+        \reference ConnectionObject
+   A3,  \field Source Side Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A4,  \field Source Side Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A5,  \field Load Side Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A6,  \field Load Side Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   N1,  \field Rated Load Side Flow Rate
+        \required-field
+        \type real
+        \minimum> 0.0
+        \units m3/s
+   N2,  \field Rated Source Side Flow Rate
+        \required-field
+        \type real
+        \minimum> 0.0
+        \units m3/s
+   N3,  \field Rated Heating Capacity
+        \required-field
+        \type real
+        \minimum> 0.0
+        \units W
+   N4,  \field Rated Heating Power Consumption
+        \required-field
+        \type real
+        \minimum> 0.0
+        \units W
+   N5,  \field Heating Capacity Coefficient 1
+        \required-field
+        \type real
+   N6,  \field Heating Capacity Coefficient 2
+        \required-field
+        \type real
+   N7,  \field Heating Capacity Coefficient 3
+        \required-field
+        \type real
+   N8,  \field Heating Capacity Coefficient 4
+        \required-field
+        \type real
+   N9,  \field Heating Capacity Coefficient 5
+        \required-field
+        \type real
+   N10, \field Heating Compressor Power Coefficient 1
+        \required-field
+        \type real
+   N11, \field Heating Compressor Power Coefficient 2
+        \required-field
+        \type real
+   N12, \field Heating Compressor Power Coefficient 3
+        \required-field
+        \type real
+   N13, \field Heating Compressor Power Coefficient 4
+        \required-field
+        \type real
+   N14; \field Heating Compressor Power Coefficient 5
+        \required-field
+        \type real
+
+OS:HeatPump:WaterToWater:EquationFit:Cooling,
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2,  \field Name
+        \type alpha
+        \required-field
+        \reference ConnectionObject
+   A3,  \field Source Side Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A4,  \field Source Side Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A5,  \field Load Side Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A6,  \field Load Side Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   N1,  \field Rated Load Side Flow Rate
+        \required-field
+        \type real
+        \minimum> 0.0
+        \units m3/s
+   N2,  \field Rated Source Side Flow Rate
+        \required-field
+        \type real
+        \minimum> 0.0
+        \units m3/s
+   N3,  \field Rated Cooling Capacity
+        \required-field
+        \type real
+        \minimum> 0.0
+        \units W
+   N4,  \field Rated Cooling Power Consumption
+        \required-field
+        \type real
+        \minimum> 0.0
+        \units W
+   N5,  \field Cooling Capacity Coefficient 1
+        \required-field
+        \type real
+   N6,  \field Cooling Capacity Coefficient 2
+        \required-field
+        \type real
+   N7,  \field Cooling Capacity Coefficient 3
+        \required-field
+        \type real
+   N8,  \field Cooling Capacity Coefficient 4
+        \required-field
+        \type real
+   N9,  \field Cooling Capacity Coefficient 5
+        \required-field
+        \type real
+   N10, \field Cooling Compressor Power Coefficient 1
+        \required-field
+        \type real
+   N11, \field Cooling Compressor Power Coefficient 2
+        \required-field
+        \type real
+   N12, \field Cooling Compressor Power Coefficient 3
+        \required-field
+        \type real
+   N13, \field Cooling Compressor Power Coefficient 4
+        \required-field
+        \type real
+   N14; \field Cooling Compressor Power Coefficient 5
+        \required-field
+        \type real
+
 OS:Chiller:Electric:EIR,
        \memo This chiller model is the empirical model from the DOE-2 building Energy
        \memo simulation program. Chiller performance at off-reference conditions is modeled
