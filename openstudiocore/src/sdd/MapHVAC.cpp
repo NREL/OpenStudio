@@ -4511,7 +4511,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     auto chillerElement = chillerElements.at(i).toElement();
 
     if( auto mo = translateChiller(chillerElement,doc,model) ) {
-      auto chiller = mo->cast<model::ChillerElectricEIR>();
+      auto chiller = mo->cast<model::WaterToWaterComponent>();
       plantLoop.addSupplyBranchForComponent(chiller);
       addBranchPump(chiller.supplyInletModelObject(),chillerElement);
 
