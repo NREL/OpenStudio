@@ -2772,14 +2772,17 @@ std::string VersionTranslator::update_1_9_2_to_1_9_3(const IdfFile& idf_1_9_2, c
       IdfObject newObject(iddObject.get());
       for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
         if( i < 5 ) {
-          if( auto value = object.getDouble(i) ) {
-            newObject.setDouble(i,value.get());
+          if( auto value = object.getString(i) ) {
+            newObject.setString(i,value.get());
           }
         } else if( i == 5 ) {
+          if( auto value = object.getString(i) ) {
+            newObject.setString(i + 1,value.get());
+          }
           newObject.setString(i,"Autosize");
         } else {
-          if( auto value = object.getDouble(i) ) {
-            newObject.setDouble(i + 1,value.get());
+          if( auto value = object.getString(i) ) {
+            newObject.setString(i + 1,value.get());
           }
         }
       }
