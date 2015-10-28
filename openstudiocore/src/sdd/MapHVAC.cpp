@@ -4541,7 +4541,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
     if( auto mo = translateHX(hxElement,doc,model) ) {
       auto hx = mo->cast<model::HeatExchangerFluidToFluid>();
-      plantLoop.addSupplyBranchForComponent(hx);
+      auto economizerIntegration = hxElement.firstChildElement("EconomizerIntegration").text().toStdString();
+      if( istringEqual("Nonintegrated",economizerIntegration) ) {
+        plantLoop.addSupplyBranchForComponent(hx);
+      } else {
+        auto node = plantLoop.supplyInletNode();
+        hx.addToNode(node);
+      }
     }
   }
 
@@ -5594,7 +5600,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHX(
 {
   boost::optional<openstudio::model::ModelObject> result;
 
-  if( ! istringEqual(hxElement.tagName().toStdString(),"Chlr") ) {
+  if( ! istringEqual(hxElement.tagName().toStdString(),"HX") ) {
     return result;
   }
 
@@ -5685,15 +5691,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
     chiller.setName(name);
     result = chiller;
 
-    boost::optional<double> condDsgnSupWtrDelT;
-    boost::optional<double> condDsgnSupWtrT;
-
     auto cndsrInRefElement = chillerElement.firstChildElement("CndsrFluidSegInRef");
     auto condenserSystem = loopForSupplySegment(cndsrInRefElement.text(),doc,model);
     if( condenserSystem ) {
       condenserSystem->addDemandBranchForComponent(chiller);
-      condDsgnSupWtrDelT = condenserSystem->sizingPlant().loopDesignTemperatureDifference();
-      condDsgnSupWtrT = condenserSystem->sizingPlant().designLoopExitTemperature();
+      value = condenserSystem->sizingPlant().designLoopExitTemperature();
+      chiller.setDesignCondenserWaterFlowRate(value);
     }
 
     if( ! autosize() ) {
@@ -5723,6 +5726,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
       if( ok ) {
         value = unitToUnit(value,"gal/min","m^3/s").get();
         chiller.setDesignGeneratorFluidFlowRate(value);
+      }
+
+      auto cndsrFlowCapElement = chillerElement.firstChildElement("CndsrFlowCap");
+      value = cndsrFlowCapElement.text().toDouble(&ok);
+      if( ok ) {
+        value = unitToUnit(value,"gal/min","m^3/s").get();
+        chiller.setDesignCondenserWaterFlowRate(value);
       }
     }
 
@@ -5866,12 +5876,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
     chiller.setName(name);
 
     // CndsrInRef
-    boost::optional<double> condDsgnSupWtrDelT;
     QDomElement cndsrInRefElement = chillerElement.firstChildElement("CndsrFluidSegInRef");
     boost::optional<model::PlantLoop> condenserSystem = loopForSupplySegment(cndsrInRefElement.text(),doc,model);
     if( condenserSystem ) {
       condenserSystem->addDemandBranchForComponent(chiller);
-      condDsgnSupWtrDelT = condenserSystem->sizingPlant().loopDesignTemperatureDifference();
+      value = condenserSystem->sizingPlant().designLoopExitTemperature();
+      chiller.setReferenceEnteringCondenserFluidTemperature(value);
     }
 
     // COP
@@ -5922,18 +5932,17 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
         lvgTempDsgn = unitToUnit(value,"F","C");
       }
 
-      if( capRtd && entTempDsgn && lvgTempDsgn && cop ) {
+      if( capRtd && entTempDsgn && lvgTempDsgn ) {
         chiller.setReferenceCapacity(capRtd.get());
-
         double flow = capRtd.get() / ( cpWater * densityWater * (entTempDsgn.get() - lvgTempDsgn.get()));
-
         chiller.setReferenceChilledWaterFlowRate(flow);
+      }
 
-        if( condDsgnSupWtrDelT )
-        {
-          double condFlow = capRtd.get() * (1.0 + 1.0 / cop.get()) / ( cpWater * densityWater * condDsgnSupWtrDelT.get() );
-          chiller.setReferenceCondenserFluidFlowRate(condFlow);
-        }
+      auto cndsrFlowCapElement = chillerElement.firstChildElement("CndsrFlowCap");
+      value = cndsrFlowCapElement.text().toDouble(&ok);
+      if( ok ) {
+        value = unitToUnit(value,"gal/min","m^3/s").get();
+        chiller.setReferenceCondenserFluidFlowRate(value);
       }
     }
   }
