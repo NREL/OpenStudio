@@ -511,7 +511,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       end # VMX for controlled window groups
 
     runner.registerInfo("#{Time.now.getutc}: done (daylight coefficient matrices).")
-
+    
     end # calculateDaylightCoeffecients()
 
     # annual simulation dealio
@@ -1699,6 +1699,35 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
     end # daylightMetrics()
 
+#    def genImages(radPath, sim_cores, t_catCommand, options_tregVars,
+#                  options_klemsDensity, options_skyvecDensity, options_dmx, 
+#                  options_vmx, rad_settings, procsUsed, runner)
+ 
+    def genImages(radPath, sim_cores, runner)
+      runner.registerInfo("generating report images")
+
+      rad_command = "oconv materials/materials.rad model.rad skies/03211200_clr.sky > images.oct"
+      exec_statement(rad_command, runner)
+      
+      views_cvf = Dir.glob('views/*.cvf')
+      views_cvf.each do |cvf|
+      
+        rad_command = "rpict -av .3 .3 .3 -ab 1 -vf #{cvf} images.oct | ra_bmp - #{cvf}.bmp"
+        exec_statement(rad_command, runner)
+
+      end
+      
+      views_pvf = Dir.glob('views/*.pvf')
+      views_pvf.each do |pvf|
+      
+        rad_command = "rpict -av .3 .3 .3 -ab 1 -vf #{pvf} images.oct | ra_bmp - #{pvf}.bmp"
+        exec_statement(rad_command, runner)
+
+      end
+    
+    end #genImages()
+
+
     ## ## ## ## ## ##
 
     # actually do the thing
@@ -1857,7 +1886,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     end
 
     # make check images 
-    
+    genImages(radPath, sim_cores, runner)
 
     # report initial condition of model
     daylightAnalysisSpaces = []
