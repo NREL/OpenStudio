@@ -1888,7 +1888,7 @@ namespace radiance {
         	formatString(viewVector.x(), 3) + " " + \
         	formatString(viewVector.y(), 3) + " " + \
         	formatString(viewVector.z(), 3) + \
-        	" -vu 0 0 1 -vh 60 -vv 90 -vo 0 -vs 0 -vl 0\n";
+        	" -vu 0 0 1 -vh 90 -vv 60 -vo 0 -vs 0 -vl 0\n";
 
           // glare sensor views (fisheye)
         	m_radGlareSensorViewsVTA[space_name] += \

@@ -406,7 +406,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       
       if haveWG0 == "True"
         puts "Have a Window Group Zero"
-      elsif haveWG1 == "True"
+      end
+      if haveWG1 == "True"
         puts "Have window controls"
       end
 
@@ -451,7 +452,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
         else
 
-          puts "processing controlled window groups"
+          puts "processing controlled window group #{wg}"
 
           # use more chill sim parameters
           rtrace_args = "#{options_dmx}"
@@ -467,53 +468,47 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
       end  # calculate DMX
 				
-			#if windowControls.size > 1
+			if haveWG1 == "True"
 
-			# compute view matrices for all controlled window groups
+        # compute view matrices for all controlled window groups
 
-			# use fine params   
-			rtrace_args = "#{options_vmx}" 
+        # use fine params   
+        rtrace_args = "#{options_vmx}" 
 
-			runner.registerInfo("#{Time.now.getutc}: computing view matri(ces) for controlled window groups")
-		
-			# get the shaded window groups' shade polygons
-		
-			wgInput = []
-			# get the SHADE polygons for sampling (NOT the GLAZING ones!)
-			Dir.glob("scene/shades/WG*.rad") {|file|
-				wgInput << file
-			}
+        runner.registerInfo("#{Time.now.getutc}: computing view matri(ces) for controlled window groups")
+    
+        # get the shaded window groups' shade polygons
+    
+        wgInput = []
+        # get the SHADE polygons for sampling (NOT the GLAZING ones!)
+        Dir.glob("scene/shades/WG*.rad") {|file|
+          wgInput << file
+        }
 
-			# make the receiver file
-			exec_statement("#{t_catCommand} \"materials/materials_vmx.rad\" #{wgInput.join(" ")} > receivers_vmx.rad", runner)
-		
-			# make the octree
-			scene_files = []
-			Dir.glob("scene/*.rad").each {|f| scene_files << f}
-			exec_statement("oconv materials/materials.rad #{scene_files.join(' ')} > model_vmx.oct", runner)
-		
-			# make rfluxmtx do all the work
-			rad_command = "rfluxmtx #{rtrace_args} -n #{sim_cores} -ds .15 -faa -y #{rfluxmtxDim} -I -v - receivers_vmx.rad -i model_vmx.oct < numeric/merged_space.map"
-			exec_statement(rad_command, runner)
+        # make the receiver file
+        exec_statement("#{t_catCommand} \"materials/materials_vmx.rad\" #{wgInput.join(" ")} > receivers_vmx.rad", runner)
+    
+        # make the octree
+        scene_files = []
+        Dir.glob("scene/*.rad").each {|f| scene_files << f}
+        exec_statement("oconv materials/materials.rad #{scene_files.join(' ')} > model_vmx.oct", runner)
+    
+        # make rfluxmtx do all the work
+        rad_command = "rfluxmtx #{rtrace_args} -n #{sim_cores} -ds .15 -faa -y #{rfluxmtxDim} -I -v - receivers_vmx.rad -i model_vmx.oct < numeric/merged_space.map"
+        exec_statement(rad_command, runner)
 
-      if haveWG1 == "True"		
-
-  			# compute daylight coefficient matrices for window group control points
+        # compute daylight coefficient matrices for window group control points
 
         rtrace_args = "#{options_dmx}"
         exec_statement("oconv \"materials/materials.rad\" model.rad \
           \"skies/dc_sky.rad\" > model_wc.oct", runner)
         runner.registerInfo("#{Time.now.getutc}: computing DCs for window control points")
-    
+  
         rad_command = "#{t_catCommand} \"numeric/window_controls.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
         "-o \"output/dc/window_controls.vmx\" -m skyglow model_wc.oct"
         exec_statement(rad_command, runner)
-
-		  end
-		  
-			# end VMX
-				
-			#end
+      
+      end # VMX for controlled window groups
 
     runner.registerInfo("#{Time.now.getutc}: done (daylight coefficient matrices).")
 
@@ -532,8 +527,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       dcVectors = {}
 
       # sort out window groups, controls
-      haveWG0 = ""
-      haveWG1 = ""
+      haveWG0 = "False"
+      haveWG1 = "False"
       windowGroupCheck = File.open("bsdf/mapping.rad")
       windowGroupCheck.each do |row|
 
