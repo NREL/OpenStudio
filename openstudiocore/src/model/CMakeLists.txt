@@ -1586,6 +1586,8 @@ set(${target_name}_test_src
   test/HeaderedPumpsVariableSpeed_GTest.cpp
   test/HeatExchangerAirToAirSensibleAndLatent_GTest.cpp
   test/HeatExchangerFluidToFluid_GTest.cpp
+  test/HeatPumpWaterToWaterEquationFitHeating_GTest.cpp
+  test/HeatPumpWaterToWaterEquationFitCooling_GTest.cpp
   test/HumidifierSteamElectric_GTest.cpp
   test/IlluminanceMap_GTest.cpp
   test/InteriorPartitionSurfaceGroup_GTest.cpp
