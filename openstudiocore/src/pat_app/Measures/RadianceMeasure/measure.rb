@@ -404,13 +404,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       end  
       windowGroupCheck.close
       
-      if haveWG0 == "True"
-        puts "Have a Window Group Zero"
-      end
-      if haveWG1 == "True"
-        puts "Have window controls"
-      end
-
       puts "running Radiance..."
 
       runner.registerInfo("#{Time.now.getutc}: passing #{rfluxmtxDim} calculation points to Radiance")
@@ -430,7 +423,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
            
         if wg == "WG0"
 
-          puts "processing WG0"
+          runner.registerInfo('processing WG0')
 
           # make WG0 octree (with shade-controlled window groups blacked out, if applicable)
           
@@ -452,7 +445,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
         else
 
-          puts "processing controlled window group #{wg}"
+          runner.registerInfo("processing controlled window group #{wg}")
 
           # use more chill sim parameters
           rtrace_args = "#{options_dmx}"
@@ -1690,7 +1683,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         building_average = building_average_space_sum / building_average_space.length
       end
 
-      File.open("DaylightingMetrics.csv", 'w') do |file|
+      File.open("output/daylight_metrics.csv", 'w') do |file|
         file.puts "# OpenStudio Daylight Metrics Report"
         file.puts "# Average spatial daylight autonomy (sDA) for building daylit spaces: #{building_average.round(2)}"
         file.puts "# Space data format: [space_name] [metric(setpoint)] [input_hours_range] [metric_value] [hours_met] [input_hours]"       
@@ -1705,8 +1698,22 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
  
     def genImages(radPath, sim_cores, runner)
       runner.registerInfo("generating report images")
+      
+      # temp fix ** until fwd translator merge!!
+      # write sample sky for renderings 
+      File.open("skies/TEMP_03211200_clr.sky", 'w') do |file|            
+        file.puts "# CIE clear sky - Berkeley, CA - March 21 12:00 \n\n"
+        file.puts "void light solar\n0\n0\n3 6.92e+06 6.92e+06 6.92e+06\n\n"
+        file.puts "solar source sun\n0\n0\n4 0.067845 -0.617210 0.783868 0.5\n\n"
+        file.puts "void brightfunc skyfunc\n2 skybr skybright.cal\n0\n7 1 1.16e+01 2.37e+01 6.92e-01 0.067845 -0.617210 0.783868\n\n"
+        file.puts "skyfunc glow skyglow\n0\n0\n4 1.000 1.000 1.000 0\n\n"
+        file.puts "skyglow source sky\n0\n0\n4 0 0 1 180\n\n"
+        file.puts "skyfunc glow groundglow\n0\n0\n4 1.000 1.000 1.000 0\n\n"
+        file.puts "groundglow source ground\n0\n0\n4 0 0 -1 180\n\n"
+      end   
 
-      rad_command = "oconv materials/materials.rad model.rad skies/03211200_clr.sky > images.oct"
+      # temp fix ** until fwd translator merge!!
+      rad_command = "oconv materials/materials.rad model.rad skies/TEMP_03211200_clr.sky > images.oct"
       exec_statement(rad_command, runner)
       
       views_cvf = Dir.glob('views/*.cvf')
