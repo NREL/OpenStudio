@@ -243,6 +243,21 @@ HeatPumpWaterToWaterEquationFitCooling::HeatPumpWaterToWaterEquationFitCooling(c
   : WaterToWaterComponent(HeatPumpWaterToWaterEquationFitCooling::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>());
+
+  setRatedLoadSideFlowRate(1.89E-03);
+  setRatedSourceSideFlowRate(1.89E-03);
+  setRatedCoolingCapacity(39890.91);
+  setRatedCoolingPowerConsumption(4790.00);
+  setCoolingCapacityCoefficient1(-1.52030596);
+  setCoolingCapacityCoefficient2(3.46625667);
+  setCoolingCapacityCoefficient3(-1.32267797);
+  setCoolingCapacityCoefficient4(0.09395678);
+  setCoolingCapacityCoefficient5(0.038975504);
+  setCoolingCompressorPowerCoefficient1(-8.59564386);
+  setCoolingCompressorPowerCoefficient2(0.96265085);
+  setCoolingCompressorPowerCoefficient3(8.69489229);
+  setCoolingCompressorPowerCoefficient4(0.02501669);
+  setCoolingCompressorPowerCoefficient5(-0.20132665);
 }
 
 IddObjectType HeatPumpWaterToWaterEquationFitCooling::iddObjectType() {
