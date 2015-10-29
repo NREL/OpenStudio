@@ -476,7 +476,7 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
 
 TEST_F(SqlFileFixture, Regressions) {
   // these files were created by running the 1ZoneEvapCooler.idf example file 
-  // adding the Output:SQLite,SimpleAndTabular; object
+  // adding the Output:SQLite,SimpleAndTabular object as well as several output variables
   // and using the USA_CO_Golden-NREL.724666_TMY3.epw weather file
   
   regressionTestSqlFile("1ZoneEvapCooler-V7-0-0.sql", 42.25, 20, 20);
