@@ -889,6 +889,18 @@
     <rule IddField="Source Side Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Source Side Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_HeatPump_WaterToWater_EquationFit_Cooling">
+    <rule IddField="Load Side Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Load Side Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Source Side Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Source Side Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_HeatPump_WaterToWater_EquationFit_Heating">
+    <rule IddField="Load Side Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Load Side Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Source Side Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Source Side Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_WaterHeater_HeatPump">
     <rule IddField="Air Inlet Node" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node" Access="HIDDEN"/>

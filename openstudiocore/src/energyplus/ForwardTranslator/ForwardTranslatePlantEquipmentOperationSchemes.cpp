@@ -73,6 +73,10 @@
 #include "../../model/SolarCollectorFlatPlatePhotovoltaicThermal_Impl.hpp"
 #include "../../model/PlantComponentTemperatureSource.hpp"
 #include "../../model/PlantComponentTemperatureSource_Impl.hpp"
+#include "../../model/HeatPumpWaterToWaterEquationFitHeating.hpp"
+#include "../../model/HeatPumpWaterToWaterEquationFitHeating_Impl.hpp"
+#include "../../model/HeatPumpWaterToWaterEquationFitCooling.hpp"
+#include "../../model/HeatPumpWaterToWaterEquationFitCooling_Impl.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/WorkspaceObjectOrder.hpp"
@@ -258,6 +262,18 @@ boost::optional<double> flowrate(const HVACComponent & component)
       result = mo.designVolumeFlowRate();
       break;
     }
+    case openstudio::IddObjectType::OS_HeatPump_WaterToWater_EquationFit_Cooling :
+    {
+      auto mo = component.cast<HeatPumpWaterToWaterEquationFitCooling>();
+      result = mo.ratedLoadSideFlowRate();
+      break;
+    }
+    case openstudio::IddObjectType::OS_HeatPump_WaterToWater_EquationFit_Heating :
+    {
+      auto mo = component.cast<HeatPumpWaterToWaterEquationFitHeating>();
+      result = mo.ratedLoadSideFlowRate();
+      break;
+    }
     default:
     {
       break;
@@ -360,6 +376,14 @@ ComponentType componentType(const HVACComponent & component)
     case openstudio::IddObjectType::OS_PlantComponent_TemperatureSource :
     {
       return ComponentType::BOTH;
+    }
+    case openstudio::IddObjectType::OS_HeatPump_WaterToWater_EquationFit_Heating :
+    {
+      return ComponentType::HEATING;
+    }
+    case openstudio::IddObjectType::OS_HeatPump_WaterToWater_EquationFit_Cooling :
+    {
+      return ComponentType::COOLING;
     }
     default:
     {
