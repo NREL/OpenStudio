@@ -1,4 +1,4 @@
-if (CMAKE_HOST_WIN32)
+if(CMAKE_HOST_WIN32)
   # Necessary to do with FindOpenSSL on Windows
   cmake_minimum_required(VERSION 3.2.3)
 else()
@@ -17,7 +17,7 @@ find_package(Git)
 
 if(NOT GIT_FOUND)
   find_program(GIT_EXECUTABLE git HINTS "$ENV{LOCALAPPDATA}/Programs/git/bin")
-  if (NOT GIT_EXECUTABLE_NOTFOUND)
+  if(NOT GIT_EXECUTABLE_NOTFOUND)
     set(GIT_FOUND TRUE)
   endif()
 endif()
@@ -195,8 +195,7 @@ if(UNIX)
     set(ENERGYPLUS_EXPECTED_HASH a52fc37e653c5563a198c95ed875f4e0)
     set(ENERGYPLUS_PLATFORM "Darwin")
   elseif(EXISTS "/etc/redhat-release")
-    # Needs updating
-    set(ENERGYPLUS_EXPECTED_HASH 1824013d9f615dcc6355aa275f7eeb48)
+    set(ENERGYPLUS_EXPECTED_HASH 7e43d3c7bb42cd9c259cdc06a60ea13e)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
     set(ENERGYPLUS_EXPECTED_HASH 009fda317009bfff52eb23532bbc2064)
@@ -337,7 +336,7 @@ if(MSVC)
     set(COMPILER_ARCH_TAG "")
   endif()
 
-  if (MSVC_VERSION STREQUAL "1800")
+  if(MSVC_VERSION STREQUAL "1800")
     set(COMPILER_VER_TAG "2013")
   else()
     set(COMPILER_VER_TAG "2014")
@@ -987,7 +986,7 @@ endif()
 ###############################################################################
 
 
-if (BUILD_REGRESSIONS)
+if(BUILD_REGRESSIONS)
   ExternalProject_Add(Regressions
     DEPENDS OSCore
     GIT_REPOSITORY git://github.com/NREL/OpenStudio-resources
