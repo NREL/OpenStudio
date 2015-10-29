@@ -570,32 +570,21 @@ OS:ZoneAirMassFlowConservation,
        \type handle
        \required-field       
   A2,  \field Adjust Zone Mixing For Zone Air Mass Flow Balance
-       \note If 'Yes', Zone mixing object flow rates are adjusted to balance the zone air mass flow
-       \note and additional infiltration air flow may be added if required in order to balance the
-       \note zone air mass flow.
        \type choice
        \key Yes
-       \default Yes
-       \note If this input field is specified as 'Yes', then EnergyPlus attempts to enforce
-       \note the zone air mass flow conservation. Mass conservation is enforced both for the receiving
-       \note and source zones if there is at least one mixing object defined. 
-  A3;  \field Source Zone Infiltration Treatment
-       \note This input field allows user to choose how zone infiltration flow is treated during
-       \note the zone air mass flow balance calculation.
+       \key No
+       \default No
+  A3,  \field Infiltration Balancing Method
        \type choice
        \key AddInfiltrationFlow
        \key AdjustInfiltrationFlow
+       \key None
        \default AddInfiltrationFlow
-       \note It has two choice KEYs: 'AddInfiltrationFlow' and 'AdjustInfiltrationFlow'.  If this
-       \note input is specified as 'AddInfiltrationFlow', then energy plus adds infiltration air
-       \note mass flow on top of the base flow, which is calculated using the infiltration object
-       \note user inputs, in order to balance the zone air mass flow.  The additional infiltration
-       \note air mass flow is not self-balanced.  If this input is specified as
-       \note 'AdjustInfiltrationFlow', then energy plus may adjust the base flow calculated using
-       \note the infiltration object user inputs in order to balance the zone air mass flow. If it
-       \note is not required to adjust the base infiltration air flow calculated from the user
-       \note specified infiltration object inputs, then the base infiltration air mass flow
-       \note is assumed self-balanced. 
+  A4;  \field Infiltration Balancing Zones
+       \type choice
+       \key MixingSourceZonesOnly
+       \key AllZones
+       \default MixingSourceZonesOnly
        
 OS:ZoneCapacitanceMultiplier:ResearchSpecial,
        \memo Multiplier altering the relative capacitance of the air compared to an empty zone

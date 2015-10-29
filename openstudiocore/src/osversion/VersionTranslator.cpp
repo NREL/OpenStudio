@@ -2770,24 +2770,47 @@ std::string VersionTranslator::update_1_9_2_to_1_9_3(const IdfFile& idf_1_9_2, c
       auto iddObject = idd_1_9_3.getObject("OS:EvaporativeCooler:Direct:ResearchSpecial");
       OS_ASSERT(iddObject);
       IdfObject newObject(iddObject.get());
-      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
-        if( i < 5 ) {
-          if( auto value = object.getString(i) ) {
-            newObject.setString(i,value.get());
+      for (size_t i = 0; i < object.numNonextensibleFields(); ++i) {
+        if (i < 5) {
+          if (auto value = object.getString(i)) {
+            newObject.setString(i, value.get());
           }
-        } else if( i == 5 ) {
-          if( auto value = object.getString(i) ) {
-            newObject.setString(i + 1,value.get());
+        } else if (i == 5) {
+          if (auto value = object.getString(i)) {
+            newObject.setString(i + 1, value.get());
           }
-          newObject.setString(i,"Autosize");
+          newObject.setString(i, "Autosize");
         } else {
-          if( auto value = object.getString(i) ) {
-            newObject.setString(i + 1,value.get());
+          if (auto value = object.getString(i)) {
+            newObject.setString(i + 1, value.get());
           }
         }
       }
       ss << newObject;
-      m_refactored.push_back(std::pair<IdfObject,IdfObject>(object,newObject));
+      m_refactored.push_back(std::pair<IdfObject, IdfObject>(object, newObject));
+    
+      }else if (iddname == "OS:ZoneAirMassFlowConservation") {
+        auto iddObject = idd_1_9_3.getObject("OS:ZoneAirMassFlowConservation");
+        OS_ASSERT(iddObject);
+        IdfObject newObject(iddObject.get());
+
+        if (auto value = object.getString(0)) { // Handle -> Handle
+          newObject.setString(0, value.get());
+        }
+        if (auto value = object.getString(1)) { // Adjust Zone Mixing For Zone Air Mass Flow Balance -> Adjust Zone Mixing For Zone Air Mass Flow Balance
+          newObject.setString(1, value.get());
+        } else{
+          // old default was Yes, new default is No
+        }
+        if (auto value = object.getString(2)) { // Source Zone Infiltration Treatment -> Infiltration Balancing Method
+          // old default was AddInfiltrationFlow, new default is AddInfiltrationFlow
+          // old keys AddInfiltrationFlow, AdjustInfiltrationFlow
+          // new keys AddInfiltrationFlow, AdjustInfiltrationFlow, None
+          newObject.setString(2, value.get());
+        }
+        // new field Infiltration Balancing Zones is defaulted to MixingSourceZonesOnly
+        ss << newObject;
+        m_refactored.push_back(std::pair<IdfObject, IdfObject>(object, newObject));
     } else {
       ss << object;
     }
