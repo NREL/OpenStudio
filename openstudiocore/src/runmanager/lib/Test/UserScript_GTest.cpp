@@ -599,11 +599,18 @@ TEST_F(RunManagerTestFixture, BCLMeasureRubyScriptEPWPath)
   std::vector<openstudio::runmanager::FileInfo> infiles = j.inputFiles();
   ASSERT_EQ(2u, infiles.size());
   
-  openstudio::runmanager::FileInfo fi = infiles[1];
-  //Make sure epw got attached properly
-  EXPECT_EQ("SimpleModel.osm", fi.filename);
-  ASSERT_EQ(1u, fi.requiredFiles.size());
-  ASSERT_EQ("in.epw", openstudio::toString(fi.requiredFiles[0].second));
+  for (auto fi : infiles){
+    if (fi.filename == "UserScriptAdapter.rb"){
+    }else if (fi.filename == "SimpleModel.osm"){
+      //Make sure epw got attached properly
+      EXPECT_EQ("SimpleModel.osm", fi.filename);
+      ASSERT_EQ(1u, fi.requiredFiles.size());
+      ASSERT_EQ("in.epw", openstudio::toString(fi.requiredFiles[0].second));
+    } else{
+      EXPECT_TRUE(false) << fi.filename;
+    }
+  }
+
 
   rm.setPaused(false);
 
