@@ -1,4 +1,5 @@
 include(${CMAKE_ROOT}/Modules/CheckFunctionExists.cmake)
+INCLUDE (CheckIncludeFiles)
 
 set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS HAVE_LIBSQLITE3)
 set(HAVE_LIBSQLITE3 1)

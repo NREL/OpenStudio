@@ -55,7 +55,6 @@ class MODEL_API AirTerminalSingleDuctVAVNoReheat : public StraightComponent {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   Schedule availabilitySchedule() const;
 
   boost::optional<double> maximumAirFlowRate() const;
@@ -72,17 +71,12 @@ class MODEL_API AirTerminalSingleDuctVAVNoReheat : public StraightComponent {
 
   bool isFixedMinimumAirFlowRateDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> minimumAirFlowFractionSchedule() const;
-
-  // TODO: Check return type. From object lists, some candidates are: DesignSpecificationOutdoorAir.
-  boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAirObject() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setAvailabilitySchedule(Schedule& schedule);
 
   bool setMaximumAirFlowRate(double maximumAirFlowRate);
@@ -103,15 +97,16 @@ class MODEL_API AirTerminalSingleDuctVAVNoReheat : public StraightComponent {
 
   void resetFixedMinimumAirFlowRate();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setMinimumAirFlowFractionSchedule(Schedule& schedule);
 
   void resetMinimumAirFlowFractionSchedule();
 
-  // TODO: Check argument type. From object lists, some candidates are: DesignSpecificationOutdoorAir.
-  bool setDesignSpecificationOutdoorAirObject(const DesignSpecificationOutdoorAir& designSpecificationOutdoorAir);
+  /** If true, OpenStudio will attach the DesignSpecificationOutdoorAir object associated
+    * with the terminal's zone on export to EnergyPlus idf format.
+    * This field replaces the functionality of the EnergyPlus field: Design Specification Outdoor Air Object Name.*/
+  bool controlForOutdoorAir() const;
 
-  void resetDesignSpecificationOutdoorAirObject();
+  void setControlForOutdoorAir(bool controlForOutdoorAir);
 
   //@}
   /** @name Other */

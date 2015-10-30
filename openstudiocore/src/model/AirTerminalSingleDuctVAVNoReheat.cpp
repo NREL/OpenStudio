@@ -158,10 +158,6 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowFractionScheduleName);
   }
 
-  boost::optional<DesignSpecificationOutdoorAir> AirTerminalSingleDuctVAVNoReheat_Impl::designSpecificationOutdoorAirObject() const {
-    return getObject<ModelObject>().getModelObjectTarget<DesignSpecificationOutdoorAir>(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::DesignSpecificationOutdoorAirObjectName);
-  }
-
   bool AirTerminalSingleDuctVAVNoReheat_Impl::setAvailabilitySchedule(Schedule& schedule) {
     bool result = setSchedule(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::AvailabilityScheduleName,
                               "AirTerminalSingleDuctVAVNoReheat",
@@ -268,23 +264,6 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool AirTerminalSingleDuctVAVNoReheat_Impl::setDesignSpecificationOutdoorAirObject(const boost::optional<DesignSpecificationOutdoorAir>& designSpecificationOutdoorAir) {
-    bool result(false);
-    if (designSpecificationOutdoorAir) {
-      result = setPointer(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::DesignSpecificationOutdoorAirObjectName, designSpecificationOutdoorAir.get().handle());
-    }
-    else {
-      resetDesignSpecificationOutdoorAirObject();
-      result = true;
-    }
-    return result;
-  }
-
-  void AirTerminalSingleDuctVAVNoReheat_Impl::resetDesignSpecificationOutdoorAirObject() {
-    bool result = setString(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::DesignSpecificationOutdoorAirObjectName, "");
-    OS_ASSERT(result);
-  }
-
   boost::optional<Schedule> AirTerminalSingleDuctVAVNoReheat_Impl::optionalAvailabilitySchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::AvailabilityScheduleName);
   }
@@ -301,15 +280,6 @@ namespace detail {
   boost::optional<ModelObject> AirTerminalSingleDuctVAVNoReheat_Impl::minimumAirFlowFractionScheduleAsModelObject() const {
     OptionalModelObject result;
     OptionalSchedule intermediate = minimumAirFlowFractionSchedule();
-    if (intermediate) {
-      result = *intermediate;
-    }
-    return result;
-  }
-
-  boost::optional<ModelObject> AirTerminalSingleDuctVAVNoReheat_Impl::designSpecificationOutdoorAirObjectAsModelObject() const {
-    OptionalModelObject result;
-    OptionalDesignSpecificationOutdoorAir intermediate = designSpecificationOutdoorAirObject();
     if (intermediate) {
       result = *intermediate;
     }
@@ -460,21 +430,14 @@ bool AirTerminalSingleDuctVAVNoReheat_Impl::addToNode(Node & node)
     return true;
   }
 
-  bool AirTerminalSingleDuctVAVNoReheat_Impl::setDesignSpecificationOutdoorAirObjectAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalDesignSpecificationOutdoorAir intermediate = modelObject->optionalCast<DesignSpecificationOutdoorAir>();
-      if (intermediate) {
-        DesignSpecificationOutdoorAir designSpecificationOutdoorAir(*intermediate);
-        return setDesignSpecificationOutdoorAirObject(designSpecificationOutdoorAir);
-      }
-      else {
-        return false;
-      }
-    }
-    else {
-      resetDesignSpecificationOutdoorAirObject();
-    }
-    return true;
+  bool AirTerminalSingleDuctVAVNoReheat_Impl::controlForOutdoorAir() const
+  {
+    return getBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ControlForOutdoorAir);
+  }
+  
+  void AirTerminalSingleDuctVAVNoReheat_Impl::setControlForOutdoorAir(bool controlForOutdoorAir)
+  {
+    setBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ControlForOutdoorAir,controlForOutdoorAir);
   }
 
 } // detail
@@ -491,11 +454,10 @@ AirTerminalSingleDuctVAVNoReheat::AirTerminalSingleDuctVAVNoReheat(const Model& 
         << "availability schedule to " << schedule.briefDescription() << ".");
   }
 
-  this->autosizeMaximumAirFlowRate();
-  this->setZoneMinimumAirFlowInputMethod("Constant");
-  this->setConstantMinimumAirFlowFraction(0.3);
-  this->setString(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::DesignSpecificationOutdoorAirObjectName,"");
-
+  autosizeMaximumAirFlowRate();
+  setZoneMinimumAirFlowInputMethod("Constant");
+  setConstantMinimumAirFlowFraction(0.3);
+  setControlForOutdoorAir(false);
 }
 
 IddObjectType AirTerminalSingleDuctVAVNoReheat::iddObjectType() {
@@ -540,10 +502,6 @@ bool AirTerminalSingleDuctVAVNoReheat::isFixedMinimumAirFlowRateDefaulted() cons
 
 boost::optional<Schedule> AirTerminalSingleDuctVAVNoReheat::minimumAirFlowFractionSchedule() const {
   return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->minimumAirFlowFractionSchedule();
-}
-
-boost::optional<DesignSpecificationOutdoorAir> AirTerminalSingleDuctVAVNoReheat::designSpecificationOutdoorAirObject() const {
-  return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->designSpecificationOutdoorAirObject();
 }
 
 bool AirTerminalSingleDuctVAVNoReheat::setAvailabilitySchedule(Schedule& schedule) {
@@ -594,12 +552,14 @@ void AirTerminalSingleDuctVAVNoReheat::resetMinimumAirFlowFractionSchedule() {
   getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->resetMinimumAirFlowFractionSchedule();
 }
 
-bool AirTerminalSingleDuctVAVNoReheat::setDesignSpecificationOutdoorAirObject(const DesignSpecificationOutdoorAir& designSpecificationOutdoorAir) {
-  return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->setDesignSpecificationOutdoorAirObject(designSpecificationOutdoorAir);
+bool AirTerminalSingleDuctVAVNoReheat::controlForOutdoorAir() const
+{
+  return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->controlForOutdoorAir();
 }
 
-void AirTerminalSingleDuctVAVNoReheat::resetDesignSpecificationOutdoorAirObject() {
-  getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->resetDesignSpecificationOutdoorAirObject();
+void AirTerminalSingleDuctVAVNoReheat::setControlForOutdoorAir(bool controlForOutdoorAir)
+{
+  getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->setControlForOutdoorAir(controlForOutdoorAir);
 }
 
 /// @cond
