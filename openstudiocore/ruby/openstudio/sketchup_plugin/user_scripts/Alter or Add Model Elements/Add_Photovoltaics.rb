@@ -76,9 +76,14 @@ class AddPhotovoltaics < OpenStudio::Ruleset::ModelUserScript
     
     elcd = runner.getOptionalWorkspaceObjectChoiceValue("elcd",user_arguments,model) #model is passed in because of argument type
     
+    # Flags to handle deletion of potentially empty ELCD and inverter
+    create_elcd = false
+    panel_fail = false
+    
     if not elcd.empty? and not elcd.get.to_ElectricLoadCenterDistribution.empty?
       elcd = elcd.get.to_ElectricLoadCenterDistribution.get
     else
+      create_elcd = true
       elcd = OpenStudio::Model::ElectricLoadCenterDistribution.new(model)
       inverter = OpenStudio::Model::ElectricLoadCenterInverterSimple.new(model)
       inverter.setInverterEfficiency(0.98)
@@ -110,10 +115,22 @@ class AddPhotovoltaics < OpenStudio::Ruleset::ModelUserScript
         runner.registerInfo("Added GeneratorPhotovoltaic '" + panel.name.to_s + "' for PlanarSurface '" + s.name.to_s + "'")
         elcd.addGenerator(panel)
       else
+        # At least one assignment of panel failed
+        panel_fail = true
         runner.registerWarning("Could not add GeneratorPhotovoltaic for PlanarSurface '" + s.name.to_s + "'")
         panel.remove
       end
     
+    end
+    
+    # If one panel assignment failed, check if the elcd and inverter are still used,
+    # otherwise will throw an EnergyPlus error
+    if panel_fail
+      # If no generators, remove inverter and ElectricLoadCenterDistribution
+      if elcd.generators.empty?
+        inverter.remove
+        elcd.remove
+      end
     end
     
     if not any_in_selection
