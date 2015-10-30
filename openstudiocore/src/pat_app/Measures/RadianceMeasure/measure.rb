@@ -1606,7 +1606,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           end
         end
         annual_cda_occupied = cda_occupied_sum.to_f / cda_occupied_num.to_f
-        summary_report += "#{space_name},conDA(#{daylightSetpoint.round(0)}),#{annual_cda_occupied.round(2)},Occupied Hours#{cda_occupied_sum.round(0)},#{cda_occupied_num}\n"
+        summary_report += "#{space_name},conDA(#{daylightSetpoint.round(0)}),Occupied Hours,#{annual_cda_occupied.round(2)},#{cda_occupied_sum.round(0)},#{cda_occupied_num}\n"
 
         cda_daylit_occupied_sum = 0
         cda_daylit_occupied_num = 0
@@ -1686,7 +1686,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       File.open("output/daylight_metrics.csv", 'w') do |file|
         file.puts "# OpenStudio Daylight Metrics Report"
         file.puts "# Average spatial daylight autonomy (sDA) for building daylit spaces: #{building_average.round(2)}"
-        file.puts "# Space data format: [space_name] [metric(setpoint)] [input_hours_range] [metric_value] [hours_met] [input_hours]"       
+        file.puts "#[space_name],[metric(setpoint)],[input_hours_range],[metric_value],[hours_met],[input_hours]"       
         file.puts summary_report
       end
 
