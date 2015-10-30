@@ -1691,7 +1691,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
     end # daylightMetrics()
 
-    def genImages(radPath, runner, site_latitude, site_longitude, site_meridian)
+    def genImages(radPath, runner, site_latitude, site_longitude, site_meridian, catCommand)
 
       runner.registerInfo("generating report images")
       
@@ -1706,7 +1706,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         file.puts "skyfunc glow groundglow\n0\n0\n4 1.400 0.900 0.600 0\n\n"
         file.puts "groundglow source ground\n0\n0\n4 0 0 -1 180\n\n"
       end   
-      exec_statement("cat skies/render_sky_input skies/render_sky_skyfuncs > skies/render.sky", runner)
+      exec_statement("#{catCommand} skies/render_sky_input skies/render_sky_skyfuncs > skies/render.sky", runner)
 
       # make octree
       rad_command = "oconv materials/materials.rad model.rad skies/render.sky > images.oct"
@@ -1893,7 +1893,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     end
 
     # make check images 
-    genImages(radPath, runner, site_latitude, site_longitude, site_meridian)
+    genImages(radPath, runner, site_latitude, site_longitude, site_meridian, catCommand)
 
     # cleanup
     FileUtils.rm('annual-sky.mtx')
