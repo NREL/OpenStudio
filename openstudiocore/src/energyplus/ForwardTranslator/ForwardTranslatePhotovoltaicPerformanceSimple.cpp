@@ -45,9 +45,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePhotovoltaicPerformanceSi
     idfObject.setString(PhotovoltaicPerformance_SimpleFields::Name, modelObject.name().get());
   }
 
-  if (modelObject.conversionEfficiencyInputMode()) {
-    idfObject.setString(PhotovoltaicPerformance_SimpleFields::ConversionEfficiencyInputMode, modelObject.conversionEfficiencyInputMode().get() );
-  }
+  idfObject.setString(PhotovoltaicPerformance_SimpleFields::ConversionEfficiencyInputMode, modelObject.conversionEfficiencyInputMode());
 
   idfObject.setDouble(PhotovoltaicPerformance_SimpleFields::FractionofSurfaceAreawithActiveSolarCells, modelObject.fractionOfSurfaceAreaWithActiveSolarCells());
   
