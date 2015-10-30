@@ -1439,12 +1439,12 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           hourly_report_index = hourly_report_index_date.first
           hourly_report_date = hourly_report_index_date.second
 
-          # SDA credit hour?
+          # SDA credit hour? (using 8:00-17:00 as the qualifying range, to comply with the 10 hour/day, 3,650 annual hours expectation)
           sda_hour = false
-          if hourly_report_date.to_s.split(' ')[1].split(':')[0].to_i >= 8 || hourly_report_date.to_s.split(' ')[1].split(':')[0].to_i <= 18
+          if hourly_report_date.to_s.split(' ')[1].split(':')[0].to_i >= 8 && hourly_report_date.to_s.split(' ')[1].split(':')[0].to_i <= 17
             sda_hour = true
           end
-    
+          
           # daylit hour?
           daylit_hour = false
           if not exteriorIlluminanceTimeseries.empty?
@@ -1511,8 +1511,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
               if map_value >= 100 && map_value <= 3000
                 num_udi += 1
               end
-              # if map_value >= 300 && sda_hour == true
-              if map_value >= 300
+              if map_value >= 300 && sda_hour == true
                 num_sda += 1
               end
             end
@@ -1650,7 +1649,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             udi_daylit_occupied_num += 1
           end
         end
-        annual_udi_daylit_occupied = udi_daylit_occupied_sum.to_f / cda_daylit_occupied_num.to_f
+        annual_udi_daylit_occupied = udi_daylit_occupied_sum.to_f / udi_daylit_occupied_num.to_f
         summary_report += "#{space_name},UDI(100-3000),Daylit and Occupied Hours,#{annual_udi_daylit_occupied.round(2)},#{cda_daylit_occupied_sum.round(0)},#{cda_daylit_occupied_num}\n"
 
         # Spatial Daylight Autonomy (FWIW)
@@ -1663,7 +1662,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           end
         end
         annual_sda = sda_sum.to_f / sda_num.to_f
-        summary_report += "#{space_name},sDA(300),#{annual_sda.round(2)}\n"
+        summary_report += "#{space_name},sDA(300),8AM-5PM (10 hours/day per IESNA LM-83-12),#{annual_sda.round(2)},#{sda_sum.round(0)},#{sda_num}\n"
 
         # Make a building average (sDA)
 
