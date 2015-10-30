@@ -406,7 +406,6 @@ namespace radiance {
         LOG(Error, "Cannot open file '" << toString(renderskyfilepath) << "' for writing");
       }
 
-
       // Hi Qual options (illuminance maps)
       openstudio::path mapsoptpath = radDir / openstudio::toPath("options/maps.opt");
       OFSTREAM mapsopt(mapsoptpath);

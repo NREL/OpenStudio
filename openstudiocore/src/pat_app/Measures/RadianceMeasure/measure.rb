@@ -1692,30 +1692,28 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
     end # daylightMetrics()
 
-#    def genImages(radPath, sim_cores, t_catCommand, options_tregVars,
-#                  options_klemsDensity, options_skyvecDensity, options_dmx, 
-#                  options_vmx, rad_settings, procsUsed, runner)
- 
-    def genImages(radPath, sim_cores, runner)
+    def genImages(radPath, runner, site_latitude, site_longitude, site_meridian)
+
       runner.registerInfo("generating report images")
       
-      # temp fix ** until fwd translator merge!!
-      # write sample sky for renderings 
-      File.open("skies/TEMP_03211200_clr.sky", 'w') do |file|            
-        file.puts "# CIE clear sky - Berkeley, CA - March 21 12:00 \n\n"
-        file.puts "void light solar\n0\n0\n3 6.92e+06 6.92e+06 6.92e+06\n\n"
-        file.puts "solar source sun\n0\n0\n4 0.067845 -0.617210 0.783868 0.5\n\n"
-        file.puts "void brightfunc skyfunc\n2 skybr skybright.cal\n0\n7 1 1.16e+01 2.37e+01 6.92e-01 0.067845 -0.617210 0.783868\n\n"
-        file.puts "skyfunc glow skyglow\n0\n0\n4 1.000 1.000 1.000 0\n\n"
+      # generate basic sky for renderings 
+      exec_statement("gensky 03 21 12 -a #{site_latitude} -o #{site_longitude} -m #{site_meridian} \
+      +s > skies/render_sky_input", runner)
+      File.open("skies/render_sky_skyfuncs", 'w') do |file|            
+        # blue sky
+        file.puts "skyfunc glow skyglow\n0\n0\n4 0.900 0.900 1.150 0\n\n"
         file.puts "skyglow source sky\n0\n0\n4 0 0 1 180\n\n"
-        file.puts "skyfunc glow groundglow\n0\n0\n4 1.000 1.000 1.000 0\n\n"
+        # brown ground
+        file.puts "skyfunc glow groundglow\n0\n0\n4 1.400 0.900 0.600 0\n\n"
         file.puts "groundglow source ground\n0\n0\n4 0 0 -1 180\n\n"
       end   
+      exec_statement("cat skies/render_sky_input skies/render_sky_skyfuncs > skies/render.sky", runner)
 
-      # temp fix ** until fwd translator merge!!
-      rad_command = "oconv materials/materials.rad model.rad skies/TEMP_03211200_clr.sky > images.oct"
+      # make octree
+      rad_command = "oconv materials/materials.rad model.rad skies/render.sky > images.oct"
       exec_statement(rad_command, runner)
       
+      # do views
       views_cvf = Dir.glob('views/*.cvf')
       views_cvf.each do |cvf|
       
@@ -1893,7 +1891,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     end
 
     # make check images 
-    genImages(radPath, sim_cores, runner)
+    genImages(radPath, runner, site_latitude, site_longitude, site_meridian)
 
     # report initial condition of model
     daylightAnalysisSpaces = []
