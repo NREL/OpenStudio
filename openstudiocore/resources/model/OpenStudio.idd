@@ -15456,7 +15456,7 @@ OS:Controller:OutdoorAir,
        \note Enter the name of the zone where the humidistat is located.
        \note This field is only used when the field High Humidity Control = Yes.
        \type object-list
-       \object-list ZoneNames
+       \object-list ThermalZoneNames
   N7, \field High Humidity Outdoor Air Flow Ratio
        \note Enter the ratio of outdoor air to the maximum outdoor air flow rate when modified air
        \note flow rates are active based on high indoor humidity.
@@ -24377,7 +24377,7 @@ OS:ElectricLoadCenter:Inverter:Simple,
         \note enter name of zone to receive inverter losses as heat
         \note if blank then inverter is assumed to be outdoors
         \type object-list
-        \object-list ZoneNames
+        \object-list ThermalZoneNames
    N1 , \field Radiative Fraction
         \minimum 0
         \maximum 1.0
@@ -24404,7 +24404,7 @@ OS:ElectricLoadCenter:Inverter:LookUpTable,
         \note Enter name of zone to receive inverter losses as heat
         \note if blank then inverter is assumed to be outdoors
         \type object-list
-        \object-list ZoneNames
+        \object-list ThermalZoneNames
    N1 , \field Radiative Fraction
         \minimum 0
         \maximum 1.0
