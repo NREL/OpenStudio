@@ -1714,19 +1714,22 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       exec_statement(rad_command, runner)
       
       # do views
-      views_cvf = Dir.glob('views/*.cvf')
-      views_cvf.each do |cvf|
+      views_daylighting_control = Dir.glob('views/*_dc.vfh')
+      views_daylighting_control.each do |dc|
       
-        rad_command = "rpict -av .3 .3 .3 -ab 1 -vf #{cvf} images.oct | ra_bmp - #{cvf}.bmp"
+        rad_command = "rpict -av .3 .3 .3 -ab 1 -vf #{dc} images.oct | ra_bmp - #{dc}.bmp"
         exec_statement(rad_command, runner)
 
       end
       
-      views_pvf = Dir.glob('views/*.pvf')
-      views_pvf.each do |pvf|
+      views_glare_sensor = Dir.glob('views/*_gs.vfv')
+      views_glare_sensor.each do |gv|
       
-        rad_command = "rpict -av .3 .3 .3 -ab 1 -vf #{pvf} images.oct | ra_bmp - #{pvf}.bmp"
+        rad_command = "rpict -av .3 .3 .3 -ab 1 -vf #{gv} images.oct > temp.hdr"
         exec_statement(rad_command, runner)
+        rad_command = "pcond -h temp.hdr | ra_bmp - #{gv}.bmp"
+        exec_statement(rad_command, runner)
+        FileUtils.rm('temp.hdr')
 
       end
     
@@ -1892,6 +1895,10 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
     # make check images 
     genImages(radPath, runner, site_latitude, site_longitude, site_meridian)
+
+    # cleanup
+    FileUtils.rm('annual-sky.mtx')
+    FileUtils.rm Dir.glob('*.oct')
 
     # report initial condition of model
     daylightAnalysisSpaces = []

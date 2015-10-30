@@ -169,12 +169,14 @@ namespace radiance {
         continue;
       }
 
-      // only allow assigned primary and secondary daylighting control points (as defined in thermal zone) through
+      // only allow assigned primary daylighting control points (as defined in thermal zone) through
       for (openstudio::model::DaylightingControl daylightingControl : space.daylightingControls()){
         if (daylightingControl.isPrimaryDaylightingControl()){
           // ok
         } else if (daylightingControl.isSecondaryDaylightingControl()){
-          // ok
+          LOG(Warn, "Secondary DaylightingControl " << daylightingControl.name().get() << \
+            " is not supported by Radiance, it will not be translated.");
+          daylightingControl.remove();
         } else{
           LOG(Warn, "DaylightingControl " << daylightingControl.name().get() << \
             " is not associated with this Space's ThermalZone, it will not be translated.");
@@ -1794,7 +1796,6 @@ namespace radiance {
       //  polygon = OpenStudio::Radiance::ForwardTranslator::getPolygon(luminaire)
       //}
 
-
       // get daylighting controls
       std::vector<openstudio::model::DaylightingControl> daylightingControls = space.daylightingControls();
       for (const auto & control : daylightingControls)
@@ -1834,7 +1835,7 @@ namespace radiance {
         formatString(sensor_aimVector.z(), 3) + \
         " -vu 0 1 0 -vh 180 -vv 180 -vo 0 -vs 0 -vl 0\n";
 
-        filename = t_radDir / openstudio::toPath("views") / openstudio::toPath(space_name + ".cvf");
+        filename = t_radDir / openstudio::toPath("views") / openstudio::toPath(space_name + "_dc.vfh");
         OFSTREAM file2(filename);
         if (file2.is_open()){
           t_outfiles.push_back(filename);
@@ -1843,7 +1844,7 @@ namespace radiance {
           LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
         }
 
-        LOG(Debug, "Wrote " << space_name << ".cvf");
+        LOG(Debug, "Wrote " << space_name << "_dc.vfh");
 
       } // end daylighting controls
 
@@ -1915,7 +1916,7 @@ namespace radiance {
         LOG(Debug, "Wrote " << space_name << ".glr");
 
         // write glare sensor views (perspective)
-        filename = t_radDir / openstudio::toPath("views") / openstudio::toPath(space_name + "_" + sensor_name + ".pvf");
+        filename = t_radDir / openstudio::toPath("views") / openstudio::toPath(space_name + "_" + sensor_name + "_gs.vfv");
         OFSTREAM file2(filename);
         if (file2.is_open()){
           t_outfiles.push_back(filename);
@@ -1924,10 +1925,10 @@ namespace radiance {
           LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
         }
 
-        LOG(Debug, "Wrote " << space_name << "_" << sensor_name << ".pvf");
+        LOG(Debug, "Wrote " << space_name << "_" << sensor_name << "_gs.vfv");
 
         // write glare sensor views (fisheye)      
-        filename = t_radDir / openstudio::toPath("views") / openstudio::toPath(space_name + "_" + sensor_name + ".fvf");
+        filename = t_radDir / openstudio::toPath("views") / openstudio::toPath(space_name + "_" + sensor_name + "_gs.vfh");
         OFSTREAM file3(filename);
         if (file3.is_open()){
           t_outfiles.push_back(filename);
@@ -1936,7 +1937,7 @@ namespace radiance {
           LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
         }
 
-        LOG(Debug, "Wrote " << space_name << "_" << sensor_name << ".fvf");
+        LOG(Debug, "Wrote " << space_name << "_" << sensor_name << "_gs.vfh");
 
         
       } // end glare sensor
