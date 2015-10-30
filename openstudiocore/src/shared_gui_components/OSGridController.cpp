@@ -901,7 +901,13 @@ namespace openstudio {
       OS_ASSERT(false);
     }
 
-  return widget;
+    // Is this widget inherited?
+    if (m_subrowCounter < m_subrowsInherited.size() && m_subrowsInherited.at(m_subrowCounter)) {
+      widget->setDisabled(true);
+      widget->setStyleSheet("color:green");
+    }
+
+    return widget;
   }
 
   void OSGridController::setConceptValue(model::ModelObject t_setterMO, model::ModelObject t_getterMO, const QSharedPointer<BaseConcept> &t_baseConcept)
@@ -1164,6 +1170,10 @@ namespace openstudio {
     // t_widget will be provided by ::makeWidget, it is the bindable control
     auto addWidget = [&](QWidget *t_widget, const boost::optional<model::ModelObject> &t_obj, const bool t_selector)
     {
+      if (column == 0) {
+        m_subrowsInherited.clear();
+      }
+
       auto holder = new Holder(this->gridView());
       holder->setMinimumHeight(widgetHeight);
       auto l = new QVBoxLayout(this->gridView());
@@ -1252,16 +1262,33 @@ namespace openstudio {
         // The spacing around the list is a little awkward. The padding might need to be set to 0
         // all the way around.
 
+        m_subrowCounter = 0;
+        auto subrowInherited = false;
+
         for (auto &item : dataSource->source().items(mo))
         {
           if (item)
           {
+            // Is this widget's subrow inherited?
+            // Check the first column of each potential subrow
+            if (column == 1) {
+              for (auto obj : m_inheritedModelObjects) {
+                if (item->cast<model::ModelObject>().parent()) {
+                  if (item->cast<model::ModelObject>().parent().get() == obj) {
+                    subrowInherited = true;
+                    break;
+                  }
+                }
+              }
+            }
+            m_subrowsInherited.push_back(subrowInherited);
             addWidget(makeWidget(item->cast<model::ModelObject>(), dataSource->innerConcept()), item->cast<model::ModelObject>(),
               baseConcept->isSelector() || dataSource->innerConcept()->isSelector());
           }
           else {
             addWidget(new QWidget(this->gridView()), boost::none, false);
           }
+          m_subrowCounter++;
         }
 
         if (dataSource->source().wantsPlaceholder())

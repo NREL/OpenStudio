@@ -538,6 +538,7 @@ namespace openstudio {
             CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::construction),
             CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::setConstruction),
             boost::optional<std::function<void(model::ShadingSurface*)> >(NullAdapter(&model::ShadingSurface::resetConstruction)),
+            boost::optional<std::function<bool(model::ShadingSurface*)> >(NullAdapter(&model::ShadingSurface::isConstructionDefaulted)),
             DataSource(
             allShadingSurfaces,
             true
@@ -556,6 +557,7 @@ namespace openstudio {
             CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::transmittanceSchedule),
             setter,
             boost::optional<std::function<void(model::ShadingSurface*)>>(CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::resetTransmittanceSchedule)),
+            boost::optional<std::function<bool(model::ShadingSurface*)> >(),
             DataSource(
             allShadingSurfaces,
             true

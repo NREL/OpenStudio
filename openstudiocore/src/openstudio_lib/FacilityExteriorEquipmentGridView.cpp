@@ -201,20 +201,27 @@ namespace openstudio {
           std::function<std::vector<std::string>()>(&model::ExteriorLights::controlOptionValues),
           CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::controlOption),
           CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::setControlOption),
-          boost::optional<std::function<void(model::ExteriorLights *)> >(),
+          boost::optional<std::function<void(model::ExteriorLights*)>>(CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::resetControlOption)),
+          boost::optional<std::function<bool(model::ExteriorLights*)>>(CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::isControlOptionDefaulted)),
           boost::optional<DataSource>()
           );
       }
       else if (field == MULTIPLIER){  
         addValueEditColumn(Heading(QString(MULTIPLIER)),
           NullAdapter(&model::ExteriorLights::multiplier),
-          NullAdapter(&model::ExteriorLights::setMultiplier)
+          NullAdapter(&model::ExteriorLights::setMultiplier),
+          boost::optional<std::function<void(model::ExteriorLights*)>>(CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::resetMultiplier)),
+          boost::optional<std::function<bool(model::ExteriorLights*)>>(CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::isMultiplierDefaulted)),
+          boost::optional<DataSource>()
           );
       }
       else if (field == ENDUSESUBCATEGORY){
         addValueEditColumn(Heading(QString(ENDUSESUBCATEGORY)),
           CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::endUseSubcategory),
-          CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::setEndUseSubcategory)
+          CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::setEndUseSubcategory),
+          boost::optional<std::function<void(model::ExteriorLights*)>>(CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::resetEndUseSubcategory)),
+          boost::optional<std::function<bool(model::ExteriorLights*)>>(CastNullAdapter<model::ExteriorLights>(&model::ExteriorLights::isEndUseSubcategoryDefaulted)),
+          boost::optional<DataSource>()
           );
       }
       else {

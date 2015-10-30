@@ -239,6 +239,7 @@ namespace openstudio {
             CastNullAdapter<model::InteriorPartitionSurface>(&model::InteriorPartitionSurface::construction),
             CastNullAdapter<model::InteriorPartitionSurface>(&model::InteriorPartitionSurface::setConstruction),
             boost::optional<std::function<void(model::InteriorPartitionSurface*)> >(NullAdapter(&model::InteriorPartitionSurface::resetConstruction)),
+            boost::optional<std::function<bool(model::InteriorPartitionSurface*)> >(NullAdapter(&model::InteriorPartitionSurface::isConstructionDefaulted)),
             DataSource(
             allInteriorPartitionSurfaces,
             true

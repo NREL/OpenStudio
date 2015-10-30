@@ -180,6 +180,13 @@ namespace detail {
           needsmonthlyoutput = true;
         }
 
+        // always request Output:Constructions
+        // DLM: these tables are not useful for getting visible transmittance in the SQL output https://github.com/NREL/EnergyPlus/issues/5272
+        //std::vector<openstudio::WorkspaceObject> outputConstructions = ws->getObjectsByType(IddObjectType::Output_Constructions);
+        //for (auto outputConstruction : outputConstructions){
+        //  outputConstruction.remove();
+        //}
+
         // this is a workaround for issue #1699
         // get all the meter requests
         std::vector<openstudio::WorkspaceObject> meterobjs;
@@ -517,11 +524,12 @@ namespace detail {
       ofs << "    Output:Meter,DistrictCooling:Facility,Timestep; !- [J]" << std::endl;
       ofs << "    Output:Meter,DistrictHeating:Facility,Timestep; !- [J]" << std::endl;
 
+      //// always report Output:Constructions
+      // DLM: these tables are not useful for getting visible transmittance in the SQL output https://github.com/NREL/EnergyPlus/issues/5272
+      //ofs << "    Output:Constructions,Constructions,Materials;";
 
       ofs.flush();
       ofs.close();
-
-
 
     } catch (const std::exception &e) {
       LOG(Error, "Error with EnergyPlusPreProcessJob: " + std::string(e.what()));

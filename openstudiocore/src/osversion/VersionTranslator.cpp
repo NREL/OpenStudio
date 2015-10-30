@@ -98,7 +98,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.8.4")] = &VersionTranslator::update_1_8_3_to_1_8_4;
   m_updateMethods[VersionString("1.8.5")] = &VersionTranslator::update_1_8_4_to_1_8_5;
   m_updateMethods[VersionString("1.9.0")] = &VersionTranslator::update_1_8_5_to_1_9_0;
-  m_updateMethods[VersionString("1.9.2")] = &VersionTranslator::update_1_9_1_to_1_9_2;
+  m_updateMethods[VersionString("1.9.3")] = &VersionTranslator::update_1_9_2_to_1_9_3;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -188,6 +188,7 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.8.5"));
   m_startVersions.push_back(VersionString("1.9.0"));
   m_startVersions.push_back(VersionString("1.9.1"));
+  m_startVersions.push_back(VersionString("1.9.2"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -2753,20 +2754,20 @@ std::string VersionTranslator::update_1_8_5_to_1_9_0(const IdfFile& idf_1_8_5, c
   return ss.str();
 }
 
-std::string VersionTranslator::update_1_9_1_to_1_9_2(const IdfFile& idf_1_9_1, const IddFileAndFactoryWrapper& idd_1_9_2)
+std::string VersionTranslator::update_1_9_2_to_1_9_3(const IdfFile& idf_1_9_2, const IddFileAndFactoryWrapper& idd_1_9_3)
 {
   std::stringstream ss;
 
-  ss << idf_1_9_1.header() << std::endl << std::endl;
+  ss << idf_1_9_2.header() << std::endl << std::endl;
 
   // new version object
-  IdfFile targetIdf(idd_1_9_2.iddFile());
+  IdfFile targetIdf(idd_1_9_3.iddFile());
   ss << targetIdf.versionObject().get();
 
-  for (const IdfObject& object : idf_1_9_1.objects()) {
+  for (const IdfObject& object : idf_1_9_2.objects()) {
     auto iddname = object.iddObject().name();
     if (iddname == "OS:AirTerminal:SingleDuct:VAV:Reheat") {
-      auto iddObject = idd_1_9_2.getObject("OS:AirTerminal:SingleDuct:VAV:Reheat");
+      auto iddObject = idd_1_9_3.getObject("OS:AirTerminal:SingleDuct:VAV:Reheat");
       OS_ASSERT(iddObject);
       IdfObject newObject(iddObject.get());
 
@@ -2781,7 +2782,7 @@ std::string VersionTranslator::update_1_9_1_to_1_9_2(const IdfFile& idf_1_9_1, c
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
     } else if (iddname == "OS:AirTerminal:SingleDuct:VAV:NoReheat") {
-      auto iddObject = idd_1_9_2.getObject("OS:AirTerminal:SingleDuct:VAV:NoReheat");
+      auto iddObject = idd_1_9_3.getObject("OS:AirTerminal:SingleDuct:VAV:NoReheat");
       OS_ASSERT(iddObject);
       IdfObject newObject(iddObject.get());
 
