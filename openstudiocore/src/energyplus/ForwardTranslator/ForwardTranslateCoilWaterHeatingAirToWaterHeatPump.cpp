@@ -26,7 +26,7 @@
 #include "../../model/Curve.hpp"
 #include "../../model/Curve_Impl.hpp"
 #include "../../utilities/core/Assert.hpp"
-#include <utilities/idd/Coil_WaterHeating_AirToWaterHeatPump_FieldEnums.hxx>
+#include <utilities/idd/Coil_WaterHeating_AirToWaterHeatPump_Pumped_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -39,7 +39,7 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateCoilWaterHeatingAirToWaterHeatPump( 
     CoilWaterHeatingAirToWaterHeatPump & modelObject)
 {
-  IdfObject idfObject(IddObjectType::Coil_WaterHeating_AirToWaterHeatPump);
+  IdfObject idfObject(IddObjectType::Coil_WaterHeating_AirToWaterHeatPump_Pumped);
   m_idfObjects.push_back(idfObject);
 
   // Name
@@ -49,135 +49,135 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilWaterHeatingAirToWate
 
   {
     auto value = modelObject.ratedHeatingCapacity();
-    idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPumpFields::RatedHeatingCapacity,value);
+    idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::RatedHeatingCapacity,value);
   }
 
   {
     auto value = modelObject.ratedCOP();
-    idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPumpFields::RatedCOP,value);
+    idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::RatedCOP,value);
   }
 
   {
     auto value = modelObject.ratedSensibleHeatRatio();
-    idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPumpFields::RatedSensibleHeatRatio,value);
+    idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::RatedSensibleHeatRatio,value);
   }
 
   {
     auto value = modelObject.ratedEvaporatorInletAirDryBulbTemperature();
-    idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPumpFields::RatedEvaporatorInletAirDryBulbTemperature,value);
+    idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::RatedEvaporatorInletAirDryBulbTemperature,value);
   }
 
   {
     auto value = modelObject.ratedEvaporatorInletAirWetBulbTemperature();
-    idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPumpFields::RatedEvaporatorInletAirWetBulbTemperature,value);
+    idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::RatedEvaporatorInletAirWetBulbTemperature,value);
   }
 
   {
     auto value = modelObject.ratedCondenserInletWaterTemperature();
-    idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPumpFields::RatedCondenserInletWaterTemperature,value);
+    idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::RatedCondenserInletWaterTemperature,value);
   }
 
   if( modelObject.isRatedEvaporatorAirFlowRateAutosized() ) {
-    idfObject.setString(Coil_WaterHeating_AirToWaterHeatPumpFields::RatedEvaporatorAirFlowRate,"Autosize");
+    idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::RatedEvaporatorAirFlowRate,"Autosize");
   } else if( auto value = modelObject.ratedEvaporatorAirFlowRate() ) {
-    idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPumpFields::RatedEvaporatorAirFlowRate,value.get());
+    idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::RatedEvaporatorAirFlowRate,value.get());
   }
 
   if( modelObject.isRatedCondenserWaterFlowRateAutosized() ) {
-    idfObject.setString(Coil_WaterHeating_AirToWaterHeatPumpFields::RatedCondenserWaterFlowRate,"Autosize");
+    idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::RatedCondenserWaterFlowRate,"Autosize");
   } else if( auto value = modelObject.ratedCondenserWaterFlowRate() ) {
-    idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPumpFields::RatedCondenserWaterFlowRate,value.get());
+    idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::RatedCondenserWaterFlowRate,value.get());
   }
 
   if( modelObject.evaporatorFanPowerIncludedinRatedCOP() ) {
-    idfObject.setString(Coil_WaterHeating_AirToWaterHeatPumpFields::EvaporatorFanPowerIncludedinRatedCOP,"Yes"); 
+    idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::EvaporatorFanPowerIncludedinRatedCOP,"Yes"); 
   } else {
-    idfObject.setString(Coil_WaterHeating_AirToWaterHeatPumpFields::EvaporatorFanPowerIncludedinRatedCOP,"No");
+    idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::EvaporatorFanPowerIncludedinRatedCOP,"No");
   }
 
   if( modelObject.condenserPumpPowerIncludedinRatedCOP() ) {
-    idfObject.setString(Coil_WaterHeating_AirToWaterHeatPumpFields::CondenserPumpPowerIncludedinRatedCOP,"Yes");
+    idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::CondenserPumpPowerIncludedinRatedCOP,"Yes");
   } else {
-    idfObject.setString(Coil_WaterHeating_AirToWaterHeatPumpFields::CondenserPumpPowerIncludedinRatedCOP,"No");
+    idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::CondenserPumpPowerIncludedinRatedCOP,"No");
   }
 
   if( modelObject.condenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP() ) {
-    idfObject.setString(Coil_WaterHeating_AirToWaterHeatPumpFields::CondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP,"Yes");
+    idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::CondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP,"Yes");
   } else {
-    idfObject.setString(Coil_WaterHeating_AirToWaterHeatPumpFields::CondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP,"No");
+    idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::CondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP,"No");
   }
 
   {
     auto value = modelObject.condenserWaterPumpPower();
-    idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPumpFields::CondenserWaterPumpPower,value);
+    idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::CondenserWaterPumpPower,value);
   }
 
   {
     auto value = modelObject.fractionofCondenserPumpHeattoWater();
-    idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPumpFields::FractionofCondenserPumpHeattoWater,value);
+    idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::FractionofCondenserPumpHeattoWater,value);
   }
 
   {
     auto value = modelObject.crankcaseHeaterCapacity();
-    idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPumpFields::CrankcaseHeaterCapacity,value);
+    idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::CrankcaseHeaterCapacity,value);
   }
 
   {
     auto value = modelObject.maximumAmbientTemperatureforCrankcaseHeaterOperation();
-    idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPumpFields::MaximumAmbientTemperatureforCrankcaseHeaterOperation,value);
+    idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::MaximumAmbientTemperatureforCrankcaseHeaterOperation,value);
   }
 
   {
     auto value = modelObject.evaporatorAirTemperatureTypeforCurveObjects();
-    idfObject.setString(Coil_WaterHeating_AirToWaterHeatPumpFields::EvaporatorAirTemperatureTypeforCurveObjects,value);
+    idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::EvaporatorAirTemperatureTypeforCurveObjects,value);
   }
 
   {
     auto curve = modelObject.heatingCapacityFunctionofTemperatureCurve();
     if( auto idf = translateAndMapModelObject(curve) ) {
-      idfObject.setString(Coil_WaterHeating_AirToWaterHeatPumpFields::HeatingCapacityFunctionofTemperatureCurveName,idf->name().get());
+      idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::HeatingCapacityFunctionofTemperatureCurveName,idf->name().get());
     }
   }
 
   {
     auto curve = modelObject.heatingCapacityFunctionofAirFlowFractionCurve();
     if( auto idf = translateAndMapModelObject(curve) ) {
-      idfObject.setString(Coil_WaterHeating_AirToWaterHeatPumpFields::HeatingCapacityFunctionofAirFlowFractionCurveName,idf->name().get());
+      idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::HeatingCapacityFunctionofAirFlowFractionCurveName,idf->name().get());
     }
   }
 
   {
     auto curve = modelObject.heatingCapacityFunctionofWaterFlowFractionCurve();
     if( auto idf = translateAndMapModelObject(curve) ) {
-      idfObject.setString(Coil_WaterHeating_AirToWaterHeatPumpFields::HeatingCapacityFunctionofWaterFlowFractionCurveName,idf->name().get());
+      idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::HeatingCapacityFunctionofWaterFlowFractionCurveName,idf->name().get());
     }
   }
 
   {
     auto curve = modelObject.heatingCOPFunctionofTemperatureCurve();
     if( auto idf = translateAndMapModelObject(curve) ) {
-      idfObject.setString(Coil_WaterHeating_AirToWaterHeatPumpFields::HeatingCOPFunctionofTemperatureCurveName,idf->name().get());
+      idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::HeatingCOPFunctionofTemperatureCurveName,idf->name().get());
     }
   }
 
   {
     auto curve = modelObject.heatingCOPFunctionofAirFlowFractionCurve();
     if( auto idf = translateAndMapModelObject(curve) ) {
-      idfObject.setString(Coil_WaterHeating_AirToWaterHeatPumpFields::HeatingCOPFunctionofAirFlowFractionCurveName,idf->name().get());
+      idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::HeatingCOPFunctionofAirFlowFractionCurveName,idf->name().get());
     }
   }
 
   {
     auto curve = modelObject.heatingCOPFunctionofWaterFlowFractionCurve();
     if( auto idf = translateAndMapModelObject(curve) ) {
-      idfObject.setString(Coil_WaterHeating_AirToWaterHeatPumpFields::HeatingCOPFunctionofWaterFlowFractionCurveName,idf->name().get());
+      idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::HeatingCOPFunctionofWaterFlowFractionCurveName,idf->name().get());
     }
   }
 
   {
     auto curve = modelObject.partLoadFractionCorrelationCurve();
     if( auto idf = translateAndMapModelObject(curve) ) {
-      idfObject.setString(Coil_WaterHeating_AirToWaterHeatPumpFields::PartLoadFractionCorrelationCurveName,idf->name().get());
+      idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::PartLoadFractionCorrelationCurveName,idf->name().get());
     }
   }
 

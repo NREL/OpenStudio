@@ -56,7 +56,7 @@ class MODEL_API PhotovoltaicPerformanceSimple : public PhotovoltaicPerformance {
 
   bool isfractionOfSurfaceAreaWithActiveSolarCellsDefaulted() const;
 
-  boost::optional<std::string> conversionEfficiencyInputMode() const;
+  std::string conversionEfficiencyInputMode() const;
 
   boost::optional<double> fixedEfficiency() const;
 
@@ -72,7 +72,7 @@ class MODEL_API PhotovoltaicPerformanceSimple : public PhotovoltaicPerformance {
 
   bool setFixedEfficiency(double fixedEfficiency);
 
-  void resetValueforCellEfficiencyifFixed();
+  void resetFixedEfficiency();
 
   bool setEfficiencySchedule(Schedule& schedule);
 

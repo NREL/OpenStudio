@@ -76,13 +76,13 @@ namespace detail {
     /// returns deletes reference to Surface from clone
     virtual ModelObject clone(Model model) const override;
     
-    virtual std::string generatorObjectType() const;
+    virtual std::string generatorObjectType() const override;
 
-    virtual boost::optional<double> ratedElectricPowerOutput() const;
+    virtual boost::optional<double> ratedElectricPowerOutput() const override;
 
-    virtual boost::optional<Schedule> availabilitySchedule() const;
+    virtual boost::optional<Schedule> availabilitySchedule() const override;
 
-    virtual boost::optional<double> ratedThermalToElectricalPowerRatio() const;
+    virtual boost::optional<double> ratedThermalToElectricalPowerRatio() const override;
 
     //@}
     /** @name Getters */

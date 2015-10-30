@@ -1309,8 +1309,6 @@ set(${target_name}_moc
   DesignSpecificationZoneAirDistribution_Impl.hpp
   ElectricEquipment_Impl.hpp
   ElectricEquipmentDefinition_Impl.hpp
-  ElectricLoadCenterInverterLookUpTable_Impl.hpp
-  ElectricLoadCenterInverterSimple_Impl.hpp
   EvaporativeCoolerDirectResearchSpecial_Impl.hpp
   ExteriorLights_Impl.hpp
   ExteriorLightsDefinition_Impl.hpp
@@ -1354,8 +1352,6 @@ set(${target_name}_moc
   OutsideSurfaceConvectionAlgorithm_Impl.hpp
   ParentObject_Impl.hpp
   People_Impl.hpp
-  PhotovoltaicPerformanceEquivalentOneDiode_Impl.hpp
-  PhotovoltaicPerformanceSimple_Impl.hpp
   PlanarSurface_Impl.hpp
   PlanarSurfaceGroup_Impl.hpp
   ProgramControl_Impl.hpp
