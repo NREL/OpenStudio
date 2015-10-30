@@ -67,6 +67,14 @@ namespace detail {
     std::string sourceZoneInfiltrationTreatment() const;
 
     bool isSourceZoneInfiltrationTreatmentDefaulted() const;
+    
+    std::string infiltrationBalancingMethod() const;
+
+    bool isInfiltrationBalancingMethodDefaulted() const;
+
+    std::string infiltrationBalancingZones() const;
+
+    bool isInfiltrationBalancingZonesDefaulted() const;
 
     //@}
     /** @name Setters */
@@ -79,6 +87,14 @@ namespace detail {
     bool setSourceZoneInfiltrationTreatment(const std::string& sourceZoneInfiltrationTreatment);
 
     void resetSourceZoneInfiltrationTreatment();
+
+    bool setInfiltrationBalancingMethod(const std::string& infiltrationBalancingMethod);
+
+    void resetInfiltrationBalancingMethod();
+
+    bool setInfiltrationBalancingZones(const std::string& infiltrationBalancingZones);
+
+    void resetInfiltrationBalancingZones();
 
     //@}
     /** @name Other */

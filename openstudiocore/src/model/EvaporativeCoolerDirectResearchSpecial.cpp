@@ -174,6 +174,31 @@ namespace detail{
     }
     return result;
   }
+
+  boost::optional<double> EvaporativeCoolerDirectResearchSpecial_Impl::primaryAirDesignFlowRate() const
+  {
+    return this->getDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::PrimaryAirDesignFlowRate);
+  }
+  
+  void EvaporativeCoolerDirectResearchSpecial_Impl::setPrimaryAirDesignFlowRate( double value )
+  {
+    this->setDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::PrimaryAirDesignFlowRate,value);
+  }
+
+  void EvaporativeCoolerDirectResearchSpecial_Impl::autosizePrimaryAirDesignFlowRate()
+  {
+    this->setString(OS_EvaporativeCooler_Direct_ResearchSpecialFields::PrimaryAirDesignFlowRate,"Autosize");
+  }
+
+  bool EvaporativeCoolerDirectResearchSpecial_Impl::isPrimaryAirDesignFlowRateAutosized() const
+  {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_EvaporativeCooler_Direct_ResearchSpecialFields::PrimaryAirDesignFlowRate, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "autosize");
+    }
+    return result;
+  }
   
   boost::optional<Node> EvaporativeCoolerDirectResearchSpecial_Impl::sensorNode() const
   {
@@ -398,6 +423,26 @@ bool EvaporativeCoolerDirectResearchSpecial::setWaterPumpPowerModifierCurve(cons
 
 void EvaporativeCoolerDirectResearchSpecial::resetWaterPumpPowerModifierCurve() {
   getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->resetWaterPumpPowerModifierCurve();
+}
+
+boost::optional<double> EvaporativeCoolerDirectResearchSpecial::primaryAirDesignFlowRate() const
+{
+  return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->primaryAirDesignFlowRate();
+}
+
+void EvaporativeCoolerDirectResearchSpecial::setPrimaryAirDesignFlowRate( double value )
+{
+  getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->setPrimaryAirDesignFlowRate(value);
+}
+
+void EvaporativeCoolerDirectResearchSpecial::autosizePrimaryAirDesignFlowRate()
+{
+  getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->autosizePrimaryAirDesignFlowRate();
+}
+
+bool EvaporativeCoolerDirectResearchSpecial::isPrimaryAirDesignFlowRateAutosized() const
+{
+  return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->isPrimaryAirDesignFlowRateAutosized();
 }
 
 EvaporativeCoolerDirectResearchSpecial::EvaporativeCoolerDirectResearchSpecial(

@@ -44,7 +44,12 @@ class MODEL_API ZoneAirMassFlowConservation : public ModelObject {
 
   static IddObjectType iddObjectType();
 
+  /** This method is deprecated as of OpenStudio 1.9.3. It will return an empty vector.**/
   static std::vector<std::string> sourceZoneInfiltrationTreatmentValues();
+
+  static std::vector<std::string> infiltrationBalancingMethodValues();
+
+  static std::vector<std::string> infiltrationBalancingZonesValues();
 
   /** @name Getters */
   //@{
@@ -53,40 +58,41 @@ class MODEL_API ZoneAirMassFlowConservation : public ModelObject {
 
   bool isAdjustZoneMixingForZoneAirMassFlowBalanceDefaulted() const;
 
+  /** This method is deprecated as of OpenStudio 1.9.3. It will return an empty string.**/
   std::string sourceZoneInfiltrationTreatment() const;
 
+  /** This method is deprecated as of OpenStudio 1.9.3. It will return false.**/
   bool isSourceZoneInfiltrationTreatmentDefaulted() const;
+
+  std::string infiltrationBalancingMethod() const;
+
+  bool isInfiltrationBalancingMethodDefaulted() const;
+
+  std::string infiltrationBalancingZones() const;
+
+  bool isInfiltrationBalancingZonesDefaulted() const;
 
   //@}
   /** @name Setters */
   //@{
 
-   /// If this input field is true, then EnergyPlus attempts to enforce the zone air mass flow conservation.
-   /// If it is specified as false, then EnergyPlus calculation defaults to zone air mass flow balance that 
-   /// does not include zone mixing objects and that assumes self - balanced simple flow objects per the 
-   /// default procedure, which may not necessarily enforce zone mass conservation unless the user specified
-   /// a balanced flow to begin with. Mass conservation is enforced both for the receiving
-   /// and source zones if there is at least one mixing object defined. 
-   /// The default value is false. 
-   /// (Note that false input may also results in balanced flow depending on the system specified).
   void setAdjustZoneMixingForZoneAirMassFlowBalance(bool adjustZoneMixingForZoneAirMassFlowBalance);
 
   void resetAdjustZoneMixingForZoneAirMassFlowBalance();
 
-  /// If this input is "AddInfiltrationFlow", then energy plus adds infiltration air
-  /// mass flow on top of the base flow, which is calculated using the infiltration object
-  /// user inputs, in order to balance the zone air mass flow. The additional infiltration
-  /// air mass flow is not self - balanced. If this input is specified as
-  /// "AdjustInfiltrationFlow", then energy plus may adjust the base flow calculated using
-  /// the infiltration object user inputs in order to balance the zone air mass flow. If it
-  /// is not required to adjust the base infiltration air flow calculated from the user
-  /// specified infiltration object inputs, then the base infiltration air mass flow
-  /// is assumed self - balanced. If adjustZoneMixingForZoneAirMassFlowBalance is false then this input
-  /// field has no impact on the simulation.
-  /// The default value is "AddInfiltrationFlow".
+  /** This method is deprecated as of OpenStudio 1.9.3.  It will return false.**/
   bool setSourceZoneInfiltrationTreatment(const std::string& sourceZoneInfiltrationTreatment);
 
+  /** This method is deprecated as of OpenStudio 1.9.3**/
   void resetSourceZoneInfiltrationTreatment();
+
+  bool setInfiltrationBalancingMethod(const std::string& infiltrationBalancingMethod);
+  
+  void resetInfiltrationBalancingMethod();
+
+  bool setInfiltrationBalancingZones(const std::string& infiltrationBalancingZones);
+
+  void resetInfiltrationBalancingZones();
 
   //@}
   /** @name Other */

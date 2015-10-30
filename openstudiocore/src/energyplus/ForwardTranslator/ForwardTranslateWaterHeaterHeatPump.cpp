@@ -38,8 +38,8 @@
 #include "../../model/FanOnOff.hpp"
 #include "../../model/FanOnOff_Impl.hpp"
 #include "../../utilities/core/Assert.hpp"
-#include <utilities/idd/WaterHeater_HeatPump_FieldEnums.hxx>
-#include <utilities/idd/Coil_WaterHeating_AirToWaterHeatPump_FieldEnums.hxx>
+#include <utilities/idd/WaterHeater_HeatPump_PumpedCondenser_FieldEnums.hxx>
+#include <utilities/idd/Coil_WaterHeating_AirToWaterHeatPump_Pumped_FieldEnums.hxx>
 #include <utilities/idd/WaterHeater_Mixed_FieldEnums.hxx>
 #include <utilities/idd/WaterHeater_Stratified_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
@@ -55,7 +55,7 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPump( 
     WaterHeaterHeatPump & modelObject)
 {
-  IdfObject idfObject(IddObjectType::WaterHeater_HeatPump);
+  IdfObject idfObject(IddObjectType::WaterHeater_HeatPump_PumpedCondenser);
   m_idfObjects.push_back(idfObject);
 
   // Name
@@ -64,86 +64,109 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPump(
   }
 
   if( auto mo = modelObject.availabilitySchedule() ) {
-    idfObject.setString(WaterHeater_HeatPumpFields::AvailabilityScheduleName,mo->name().get());
+    idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::AvailabilityScheduleName,mo->name().get());
   }
 
   {
     auto mo = modelObject.compressorSetpointTemperatureSchedule();
-    idfObject.setString(WaterHeater_HeatPumpFields::CompressorSetpointTemperatureScheduleName,mo.name().get());
+    idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::CompressorSetpointTemperatureScheduleName,mo.name().get());
   }
 
   {
     auto value = modelObject.deadBandTemperatureDifference();
-    idfObject.setDouble(WaterHeater_HeatPumpFields::DeadBandTemperatureDifference,value);
+    idfObject.setDouble(WaterHeater_HeatPump_PumpedCondenserFields::DeadBandTemperatureDifference,value);
   }
 
   if( modelObject.isCondenserWaterFlowRateAutosized() ) {
-    idfObject.setString(WaterHeater_HeatPumpFields::CondenserWaterFlowRate,"Autosize");
+    idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::CondenserWaterFlowRate,"Autosize");
   } else if( auto value = modelObject.condenserWaterFlowRate() ) {
-    idfObject.setDouble(WaterHeater_HeatPumpFields::CondenserWaterFlowRate,value.get());
+    idfObject.setDouble(WaterHeater_HeatPump_PumpedCondenserFields::CondenserWaterFlowRate,value.get());
   }
 
   if( modelObject.isEvaporatorAirFlowRateAutosized() ) {
-    idfObject.setString(WaterHeater_HeatPumpFields::EvaporatorAirFlowRate,"Autosize");
+    idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::EvaporatorAirFlowRate,"Autosize");
   } else if( auto value = modelObject.evaporatorAirFlowRate() ) {
-    idfObject.setDouble(WaterHeater_HeatPumpFields::EvaporatorAirFlowRate,value.get());
+    idfObject.setDouble(WaterHeater_HeatPump_PumpedCondenserFields::EvaporatorAirFlowRate,value.get());
   }
 
   {
     auto value = modelObject.inletAirConfiguration();
-    idfObject.setString(WaterHeater_HeatPumpFields::InletAirConfiguration,value);
+    idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::InletAirConfiguration,value);
   }
 
   if( auto mo = modelObject.inletAirTemperatureSchedule() ) {
-    idfObject.setString(WaterHeater_HeatPumpFields::InletAirTemperatureScheduleName,mo->name().get());
+    idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::InletAirTemperatureScheduleName,mo->name().get());
   }
 
   if( auto mo = modelObject.inletAirHumiditySchedule() ) {
-    idfObject.setString(WaterHeater_HeatPumpFields::InletAirHumidityScheduleName,mo->name().get());
+    idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::InletAirHumidityScheduleName,mo->name().get());
   }
 
   {
     auto value = modelObject.minimumInletAirTemperatureforCompressorOperation();
-    idfObject.setDouble(WaterHeater_HeatPumpFields::MinimumInletAirTemperatureforCompressorOperation,value);
+    idfObject.setDouble(WaterHeater_HeatPump_PumpedCondenserFields::MinimumInletAirTemperatureforCompressorOperation,value);
   }
 
   {
     auto value = modelObject.compressorLocation();
-    idfObject.setString(WaterHeater_HeatPumpFields::CompressorLocation,value);
+    idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::CompressorLocation,value);
   }
 
   if( auto mo = modelObject.compressorAmbientTemperatureSchedule() ) {
-    idfObject.setString(WaterHeater_HeatPumpFields::CompressorAmbientTemperatureScheduleName,mo->name().get());
+    idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::CompressorAmbientTemperatureScheduleName,mo->name().get());
   }
 
   {
     auto value = modelObject.fanPlacement();
-    idfObject.setString(WaterHeater_HeatPumpFields::FanPlacement,value);
+    idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::FanPlacement,value);
   }
 
   {
     auto value = modelObject.onCycleParasiticElectricLoad();
-    idfObject.setDouble(WaterHeater_HeatPumpFields::OnCycleParasiticElectricLoad,value);
+    idfObject.setDouble(WaterHeater_HeatPump_PumpedCondenserFields::OnCycleParasiticElectricLoad,value);
   }
 
   {
     auto value = modelObject.offCycleParasiticElectricLoad();
-    idfObject.setDouble(WaterHeater_HeatPumpFields::OffCycleParasiticElectricLoad,value);
+    idfObject.setDouble(WaterHeater_HeatPump_PumpedCondenserFields::OffCycleParasiticElectricLoad,value);
   }
 
   {
     auto value = modelObject.parasiticHeatRejectionLocation();
-    idfObject.setString(WaterHeater_HeatPumpFields::ParasiticHeatRejectionLocation,value);
+    idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::ParasiticHeatRejectionLocation,value);
   }
 
   {
     auto mo = modelObject.inletAirMixerSchedule();
-    idfObject.setString(WaterHeater_HeatPumpFields::InletAirMixerScheduleName,mo.name().get());
+    idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::InletAirMixerScheduleName,mo.name().get());
   }
 
   {
-    auto value = modelObject.controlSensorLocationInStratifiedTank();
-    idfObject.setString(WaterHeater_HeatPumpFields::ControlSensorLocationInStratifiedTank,value);
+    auto tank = modelObject.tank();
+    if( auto stratifiedTank = tank.optionalCast<model::WaterHeaterStratified>() ) {
+      auto value = modelObject.controlSensorLocationInStratifiedTank();
+      if( istringEqual(value,"Heater1") ) {
+        auto height = stratifiedTank->heater1Height();
+        idfObject.setDouble(WaterHeater_HeatPump_PumpedCondenserFields::ControlSensor1HeightInStratifiedTank,height);
+      } else if( istringEqual(value,"Heater2") ) {
+        auto height = stratifiedTank->heater2Height();
+        idfObject.setDouble(WaterHeater_HeatPump_PumpedCondenserFields::ControlSensor1HeightInStratifiedTank,height);
+      } else if( istringEqual(value,"SourceInlet") ) {
+        if( auto height = stratifiedTank->sourceSideInletHeight() ) {
+          idfObject.setDouble(WaterHeater_HeatPump_PumpedCondenserFields::ControlSensor1HeightInStratifiedTank,height.get());
+        }
+      } else if( istringEqual(value,"SourceOutlet") ) {
+        auto height = stratifiedTank->sourceSideOutletHeight();
+        idfObject.setDouble(WaterHeater_HeatPump_PumpedCondenserFields::ControlSensor1HeightInStratifiedTank,height);
+      } else if( istringEqual(value,"UseInlet") ) {
+        auto height = stratifiedTank->useSideInletHeight();
+        idfObject.setDouble(WaterHeater_HeatPump_PumpedCondenserFields::ControlSensor1HeightInStratifiedTank,height);
+      } else if( istringEqual(value,"UseOutlet") ) {
+        if( auto height = stratifiedTank->useSideOutletHeight() ) {
+          idfObject.setDouble(WaterHeater_HeatPump_PumpedCondenserFields::ControlSensor1HeightInStratifiedTank,height.get());
+        }
+      }
+    }
   }
 
   std::string condOutletTankInletNodeName =
@@ -152,8 +175,8 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPump(
   std::string tankOutletCondInletNodeName = 
     modelObject.name().get() + " Tank Outlet - Condenser Inlet";
 
-  idfObject.setString(WaterHeater_HeatPumpFields::CondenserWaterInletNodeName,tankOutletCondInletNodeName);
-  idfObject.setString(WaterHeater_HeatPumpFields::CondenserWaterOutletNodeName,condOutletTankInletNodeName);
+  idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::CondenserWaterInletNodeName,tankOutletCondInletNodeName);
+  idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::CondenserWaterOutletNodeName,condOutletTankInletNodeName);
 
   std::string airInletNodeName;
   std::string airOutletNodeName;
@@ -281,27 +304,27 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPump(
   {
     auto mo = modelObject.tank();
     if( auto idf = translateAndMapModelObject(mo) ) {
-      idfObject.setString(WaterHeater_HeatPumpFields::TankName,idf->name().get());
-      idfObject.setString(WaterHeater_HeatPumpFields::TankObjectType,idf->iddObject().name());
+      idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::TankName,idf->name().get());
+      idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::TankObjectType,idf->iddObject().name());
       if( mo.iddObjectType() == model::WaterHeaterMixed::iddObjectType() ) {
         idf->setString(WaterHeater_MixedFields::SourceSideOutletNodeName,tankOutletCondInletNodeName);
         idf->setString(WaterHeater_MixedFields::SourceSideInletNodeName,condOutletTankInletNodeName);
         auto waterHeaterMixed = mo.cast<model::WaterHeaterMixed>();
         if( auto node = waterHeaterMixed.supplyInletModelObject() ) {
-          idfObject.setString(WaterHeater_HeatPumpFields::TankUseSideInletNodeName,node->name().get());
+          idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::TankUseSideInletNodeName,node->name().get());
         }
         if( auto node = waterHeaterMixed.supplyOutletModelObject() ) {
-          idfObject.setString(WaterHeater_HeatPumpFields::TankUseSideOutletNodeName,node->name().get());
+          idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::TankUseSideOutletNodeName,node->name().get());
         }
       } else if( mo.iddObjectType() == model::WaterHeaterStratified::iddObjectType() ) {
         idf->setString(WaterHeater_StratifiedFields::SourceSideOutletNodeName,tankOutletCondInletNodeName);
         idf->setString(WaterHeater_StratifiedFields::SourceSideInletNodeName,condOutletTankInletNodeName);
         auto waterHeaterStratified = mo.cast<model::WaterHeaterStratified>();
         if( auto node = waterHeaterStratified.supplyInletModelObject() ) {
-          idfObject.setString(WaterHeater_HeatPumpFields::TankUseSideInletNodeName,node->name().get());
+          idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::TankUseSideInletNodeName,node->name().get());
         }
         if( auto node = waterHeaterStratified.supplyOutletModelObject() ) {
-          idfObject.setString(WaterHeater_HeatPumpFields::TankUseSideOutletNodeName,node->name().get());
+          idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::TankUseSideOutletNodeName,node->name().get());
         }
       } else {
         LOG(Error, modelObject.briefDescription() << " is attached to an unsupported type of tank: " << mo.briefDescription() );
@@ -312,13 +335,13 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPump(
   {
     auto mo = modelObject.dXCoil();
     if( auto idf = translateAndMapModelObject(mo) ) {
-      idfObject.setString(WaterHeater_HeatPumpFields::DXCoilName,idf->name().get());
-      idfObject.setString(WaterHeater_HeatPumpFields::DXCoilObjectType,idf->iddObject().name());
+      idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::DXCoilName,idf->name().get());
+      idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::DXCoilObjectType,idf->iddObject().name());
       if( mo.iddObjectType() == model::CoilWaterHeatingAirToWaterHeatPump::iddObjectType() ) {
-        idf->setString(Coil_WaterHeating_AirToWaterHeatPumpFields::CondenserWaterInletNodeName,tankOutletCondInletNodeName);
-        idf->setString(Coil_WaterHeating_AirToWaterHeatPumpFields::CondenserWaterOutletNodeName,condOutletTankInletNodeName);
-        idf->setString(Coil_WaterHeating_AirToWaterHeatPumpFields::EvaporatorAirInletNodeName,evapInletNodeName);
-        idf->setString(Coil_WaterHeating_AirToWaterHeatPumpFields::EvaporatorAirOutletNodeName,evapOutletNodeName);
+        idf->setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::CondenserWaterInletNodeName,tankOutletCondInletNodeName);
+        idf->setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::CondenserWaterOutletNodeName,condOutletTankInletNodeName);
+        idf->setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::EvaporatorAirInletNodeName,evapInletNodeName);
+        idf->setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::EvaporatorAirOutletNodeName,evapOutletNodeName);
       } else {
         LOG(Error, modelObject.briefDescription() << " is attached to an unsupported type of coil: " << mo.briefDescription() );
       }
@@ -328,8 +351,8 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPump(
   {
     auto mo = modelObject.fan();
     if( auto idf = translateAndMapModelObject(mo) ) {
-      idfObject.setString(WaterHeater_HeatPumpFields::FanName,idf->name().get());
-      idfObject.setString(WaterHeater_HeatPumpFields::FanObjectType,idf->iddObject().name());
+      idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::FanName,idf->name().get());
+      idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::FanObjectType,idf->iddObject().name());
       if( mo.iddObjectType() == model::FanOnOff::iddObjectType() ) {
         idf->setString(Fan_OnOffFields::AirInletNodeName,fanInletNodeName);
         idf->setString(Fan_OnOffFields::AirOutletNodeName,fanOutletNodeName);
@@ -339,13 +362,13 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPump(
     }
   }
 
-  idfObject.setString(WaterHeater_HeatPumpFields::AirInletNodeName,airInletNodeName);
-  idfObject.setString(WaterHeater_HeatPumpFields::AirOutletNodeName,airOutletNodeName);
-  idfObject.setString(WaterHeater_HeatPumpFields::OutdoorAirNodeName,outdoorAirNodeName);
-  idfObject.setString(WaterHeater_HeatPumpFields::ExhaustAirNodeName,exhaustAirNodeName);
-  idfObject.setString(WaterHeater_HeatPumpFields::InletAirZoneName,inletAirZoneName);
-  idfObject.setString(WaterHeater_HeatPumpFields::InletAirMixerNodeName,inletAirMixerNodeName);
-  idfObject.setString(WaterHeater_HeatPumpFields::OutletAirSplitterNodeName,outletAirSplitterNodeName);
+  idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::AirInletNodeName,airInletNodeName);
+  idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::AirOutletNodeName,airOutletNodeName);
+  idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::OutdoorAirNodeName,outdoorAirNodeName);
+  idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::ExhaustAirNodeName,exhaustAirNodeName);
+  idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::InletAirZoneName,inletAirZoneName);
+  idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::InletAirMixerNodeName,inletAirMixerNodeName);
+  idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::OutletAirSplitterNodeName,outletAirSplitterNodeName);
 
   return idfObject;
 }

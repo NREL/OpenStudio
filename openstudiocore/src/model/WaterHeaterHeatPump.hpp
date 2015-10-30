@@ -36,7 +36,9 @@ namespace detail {
 
 } // detail
 
-/** WaterHeaterHeatPump is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:WaterHeater:HeatPump'. */
+/** WaterHeaterHeatPump is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:WaterHeater:HeatPump'.
+ *  As of EnergyPlus version 8.4.0 this object maps to WaterHeaterHeatPumpPumpedCondenser in idf format.
+ */
 class MODEL_API WaterHeaterHeatPump : public ZoneHVACComponent {
  public:
   /** @name Constructors and Destructors */
