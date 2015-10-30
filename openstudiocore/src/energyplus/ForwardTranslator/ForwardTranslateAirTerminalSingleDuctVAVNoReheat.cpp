@@ -26,11 +26,14 @@
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/DesignSpecificationOutdoorAir.hpp"
+#include "../../model/DesignSpecificationOutdoorAir_Impl.hpp"
 #include <utilities/idd/AirTerminal_SingleDuct_VAV_NoReheat_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_AirDistributionUnit_FieldEnums.hxx>
-//#include <utilities/idd/Coil_Heating_Gas_FieldEnums.hxx>
-//#include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
-//#include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -170,6 +173,25 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctVAVN
     if( _minAirFlowFractionSchedule && _minAirFlowFractionSchedule->name() )
     {
       idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowFractionScheduleName,_minAirFlowFractionSchedule->name().get());
+    }
+  }
+
+  // ControlForOutdoorAir
+  {
+    if( modelObject.controlForOutdoorAir() ) {
+      if( auto airLoopHVAC = modelObject.airLoopHVAC() ) {
+        auto zones = airLoopHVAC->demandComponents(modelObject,airLoopHVAC->demandOutletNode(),model::ThermalZone::iddObjectType());
+        if( ! zones.empty() ) {
+          auto zone = zones.front();
+          auto spaces = zone.cast<model::ThermalZone>().spaces();
+          if( ! spaces.empty() ) {
+            if( auto designSpecificationOutdoorAir = spaces.front().designSpecificationOutdoorAir() ) {
+              idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::DesignSpecificationOutdoorAirObjectName,
+                designSpecificationOutdoorAir->name().get()); 
+            }
+          }
+        }
+      }  
     }
   }
 
