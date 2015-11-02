@@ -46,8 +46,10 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneAirMassFlowConservati
     idfObject.setString(ZoneAirMassFlowConservationFields::AdjustZoneMixingForZoneAirMassFlowBalance, "No");
   }
 
-  idfObject.setString(ZoneAirMassFlowConservationFields::InfiltrationBalancingMethod, modelObject.sourceZoneInfiltrationTreatment());
+  idfObject.setString(ZoneAirMassFlowConservationFields::InfiltrationBalancingMethod, modelObject.infiltrationBalancingMethod());
   
+  idfObject.setString(ZoneAirMassFlowConservationFields::InfiltrationBalancingZones, modelObject.infiltrationBalancingZones());
+
   return idfObject;
 }
 

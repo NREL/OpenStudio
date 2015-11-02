@@ -290,15 +290,15 @@ TEST_F(SqlFileFixture, CreateSqlFile)
 TEST_F(SqlFileFixture, AnnualTotalCosts) {
   
   // Total annual costs for all fuel types
-  EXPECT_NEAR(205810981.1, *(sqlFile2.annualTotalUtilityCost()), 0.1);
+  EXPECT_NEAR(205828990.6, *(sqlFile2.annualTotalUtilityCost()), 0.1);
 
   // Costs by fuel type
-  EXPECT_NEAR(28388.14, *(sqlFile2.annualTotalCost(FuelType::Electricity)), 0.1);
+  EXPECT_NEAR(28397.71, *(sqlFile2.annualTotalCost(FuelType::Electricity)), 0.1);
   EXPECT_NEAR(427.78, *(sqlFile2.annualTotalCost(FuelType::Gas)), 0.1);
   EXPECT_NEAR(330.76, *(sqlFile2.annualTotalCost(FuelType::DistrictCooling)), 0.1);
   EXPECT_NEAR(833.49, *(sqlFile2.annualTotalCost(FuelType::DistrictHeating)), 0.1);
   EXPECT_NEAR(0.85, *(sqlFile2.annualTotalCost(FuelType::Water)), 0.1);
-  EXPECT_NEAR(205781000, *(sqlFile2.annualTotalCost(FuelType::FuelOil_1)), 100);
+  EXPECT_NEAR(205799000, *(sqlFile2.annualTotalCost(FuelType::FuelOil_1)), 100);
 
   // Costs by total building area by fuel type
   EXPECT_NEAR(11.83, *(sqlFile2.annualTotalCostPerBldgArea(FuelType::Electricity)), 0.1);
@@ -476,7 +476,7 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
 
 TEST_F(SqlFileFixture, Regressions) {
   // these files were created by running the 1ZoneEvapCooler.idf example file 
-  // adding the Output:SQLite,SimpleAndTabular; object
+  // adding the Output:SQLite,SimpleAndTabular object as well as several output variables
   // and using the USA_CO_Golden-NREL.724666_TMY3.epw weather file
   
   regressionTestSqlFile("1ZoneEvapCooler-V7-0-0.sql", 42.25, 20, 20);

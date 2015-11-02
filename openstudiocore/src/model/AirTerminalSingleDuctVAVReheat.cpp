@@ -627,6 +627,16 @@ namespace detail{
     return true;
   }
 
+  bool AirTerminalSingleDuctVAVReheat_Impl::controlForOutdoorAir() const
+  {
+    return getBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ControlForOutdoorAir);
+  }
+  
+  void AirTerminalSingleDuctVAVReheat_Impl::setControlForOutdoorAir(bool controlForOutdoorAir)
+  {
+    setBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ControlForOutdoorAir,controlForOutdoorAir);
+  }
+
 } // detail
 
 AirTerminalSingleDuctVAVReheat::AirTerminalSingleDuctVAVReheat( const Model& model, 
@@ -643,33 +653,33 @@ AirTerminalSingleDuctVAVReheat::AirTerminalSingleDuctVAVReheat( const Model& mod
         << "availability schedule to " << availabilitySchedule.briefDescription() << ".");
   }
 
-  this->setReheatCoil(coil);
+  setReheatCoil(coil);
 
-  this->autosizeMaximumAirFlowRate();
+  autosizeMaximumAirFlowRate();
 
-  this->setZoneMinimumAirFlowMethod("Constant");
+  setZoneMinimumAirFlowMethod("Constant");
 
-  this->setConstantMinimumAirFlowFraction(0.3);
+  setConstantMinimumAirFlowFraction(0.3);
 
-  this->setFixedMinimumAirFlowRate(0.0);
+  setFixedMinimumAirFlowRate(0.0);
 
-  this->setMaximumFlowPerZoneFloorAreaDuringReheat(0.0);
+  setMaximumFlowPerZoneFloorAreaDuringReheat(0.0);
 
-  this->setMinimumHotWaterOrStreamFlowRate(0.0);
+  setMinimumHotWaterOrStreamFlowRate(0.0);
 
-  this->setConvergenceTolerance(0.001);
+  setConvergenceTolerance(0.001);
 
-  this->setDamperHeatingAction("Normal");
+  setDamperHeatingAction("Normal");
 
-  this->autosizeMaximumFlowPerZoneFloorAreaDuringReheat();
+  autosizeMaximumFlowPerZoneFloorAreaDuringReheat();
 
-  this->autosizeMaximumFlowFractionDuringReheat();
+  autosizeMaximumFlowFractionDuringReheat();
 
-  this->setMaximumReheatAirTemperature(35.0);
+  setMaximumReheatAirTemperature(35.0);
 
-  this->autosizeMaximumHotWaterOrSteamFlowRate();
+  autosizeMaximumHotWaterOrSteamFlowRate();
 
-  this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::DesignSpecificationOutdoorAirObjectName,"");
+  setControlForOutdoorAir(false);
 }
 
 Schedule AirTerminalSingleDuctVAVReheat::availabilitySchedule() const
@@ -872,6 +882,16 @@ HVACComponent AirTerminalSingleDuctVAVReheat::reheatCoil() const
 bool AirTerminalSingleDuctVAVReheat::setReheatCoil(HVACComponent & coil)
 {
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setReheatCoil(coil);
+}
+
+bool AirTerminalSingleDuctVAVReheat::controlForOutdoorAir() const
+{
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->controlForOutdoorAir();
+}
+
+void AirTerminalSingleDuctVAVReheat::setControlForOutdoorAir(bool controlForOutdoorAir)
+{
+  getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setControlForOutdoorAir(controlForOutdoorAir);
 }
 
 } // model

@@ -34,10 +34,27 @@ TEST_F(ModelFixture, ZoneAirMassFlowConservation)
   EXPECT_FALSE(model.getOptionalUniqueModelObject<ZoneAirMassFlowConservation>());
 
   ZoneAirMassFlowConservation zamfc = model.getUniqueModelObject<ZoneAirMassFlowConservation>();
-  EXPECT_TRUE(zamfc.adjustZoneMixingForZoneAirMassFlowBalance());
+
+  EXPECT_FALSE(zamfc.adjustZoneMixingForZoneAirMassFlowBalance());
   EXPECT_TRUE(zamfc.isAdjustZoneMixingForZoneAirMassFlowBalanceDefaulted());
-  EXPECT_EQ("AddInfiltrationFlow", zamfc.sourceZoneInfiltrationTreatment());
-  EXPECT_TRUE(zamfc.isSourceZoneInfiltrationTreatmentDefaulted());
+
+  EXPECT_EQ("AddInfiltrationFlow", zamfc.infiltrationBalancingMethod());
+  EXPECT_TRUE(zamfc.isInfiltrationBalancingMethodDefaulted());
+
+  EXPECT_EQ("MixingSourceZonesOnly", zamfc.infiltrationBalancingZones());
+  EXPECT_TRUE(zamfc.isInfiltrationBalancingZonesDefaulted());
+
+  zamfc.setAdjustZoneMixingForZoneAirMassFlowBalance(true);
+  EXPECT_TRUE(zamfc.adjustZoneMixingForZoneAirMassFlowBalance());
+  EXPECT_FALSE(zamfc.isAdjustZoneMixingForZoneAirMassFlowBalanceDefaulted());
+
+  EXPECT_TRUE(zamfc.setInfiltrationBalancingMethod("AdjustInfiltrationFlow"));
+  EXPECT_EQ("AdjustInfiltrationFlow", zamfc.infiltrationBalancingMethod());
+  EXPECT_FALSE(zamfc.isInfiltrationBalancingMethodDefaulted());
+
+  EXPECT_TRUE(zamfc.setInfiltrationBalancingZones("AllZones"));
+  EXPECT_EQ("AllZones", zamfc.infiltrationBalancingZones());
+  EXPECT_FALSE(zamfc.isInfiltrationBalancingZonesDefaulted());
 
   EXPECT_TRUE(model.getOptionalUniqueModelObject<ZoneAirMassFlowConservation>());
 }

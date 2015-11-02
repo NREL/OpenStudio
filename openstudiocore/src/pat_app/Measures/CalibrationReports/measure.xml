@@ -48,6 +48,7 @@
       <version>
         <software_program>OpenStudio</software_program>
         <identifier>1.7.0</identifier>
+        <min_compatible>1.7.0</min_compatible>
       </version>
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
