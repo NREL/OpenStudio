@@ -533,6 +533,12 @@ set(${target_name}_src
   HeatBalanceAlgorithm.hpp
   HeatBalanceAlgorithm_Impl.hpp
   HeatBalanceAlgorithm.cpp
+  HeatPumpWaterToWaterEquationFitCooling.hpp
+  HeatPumpWaterToWaterEquationFitCooling_Impl.hpp
+  HeatPumpWaterToWaterEquationFitCooling.cpp
+  HeatPumpWaterToWaterEquationFitHeating.hpp
+  HeatPumpWaterToWaterEquationFitHeating_Impl.hpp
+  HeatPumpWaterToWaterEquationFitHeating.cpp
   HeatExchangerAirToAirSensibleAndLatent.hpp
   HeatExchangerAirToAirSensibleAndLatent_Impl.hpp
   HeatExchangerAirToAirSensibleAndLatent.cpp
@@ -1576,6 +1582,8 @@ set(${target_name}_test_src
   test/HeaderedPumpsVariableSpeed_GTest.cpp
   test/HeatExchangerAirToAirSensibleAndLatent_GTest.cpp
   test/HeatExchangerFluidToFluid_GTest.cpp
+  test/HeatPumpWaterToWaterEquationFitHeating_GTest.cpp
+  test/HeatPumpWaterToWaterEquationFitCooling_GTest.cpp
   test/HumidifierSteamElectric_GTest.cpp
   test/IlluminanceMap_GTest.cpp
   test/InteriorPartitionSurfaceGroup_GTest.cpp

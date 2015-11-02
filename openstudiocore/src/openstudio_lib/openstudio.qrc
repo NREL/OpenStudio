@@ -317,6 +317,8 @@
     <file>images/zoom-out-over.png</file>
     <file>images/zoom-out-press.png</file>
     <file>images/zoom-out.png</file>
+    <file>images/heatpump_watertowater_equationfit_cooling.png</file>
+    <file>images/heatpump_watertowater_equationfit_heating.png</file>
 
     <file>library/OpenStudioPolicy.xml</file>
 
@@ -520,6 +522,8 @@
     <file>images/mini_icons/window_material_gasmixture.png</file>
     <file>images/mini_icons/window_material_glazing.png</file>
     <file>images/mini_icons/zonehvac_low_temperature_radiant_electric.png</file>
+    <file>images/mini_icons/heatpump_watertowater_equationfit_cooling.png</file>
+    <file>images/mini_icons/heatpump_watertowater_equationfit_heating.png</file>
 
 
     <file>library/tid_api.xml</file>
