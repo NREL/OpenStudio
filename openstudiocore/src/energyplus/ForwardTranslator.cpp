@@ -3062,8 +3062,8 @@ void ForwardTranslator::resolveMatchedSurfaceConstructionConflicts(model::Model&
       model::ConstructionBase c1 = constructionWithSearchDistance->first;
       model::ConstructionBase c2 = reverseConstruction(c1);
 
-      LOG(Info, "Surface '" << surface.name() << "' has a construction and '" << adjacentSurface->name() 
-             << "' does not, using '" << surface.name() << "'\'s construction." );
+      LOG(Info, "Surface '" << surface.nameString() << "' has a construction and '" << adjacentSurface->nameString()
+          << "' does not, using '" << surface.nameString() << "'\'s construction.");
 
       surface.setConstruction(c1);
       adjacentSurface->setConstruction(c2);
@@ -3077,8 +3077,8 @@ void ForwardTranslator::resolveMatchedSurfaceConstructionConflicts(model::Model&
       model::ConstructionBase c2 = adjacentConstructionWithSearchDistance->first;
       model::ConstructionBase c1 = reverseConstruction(c2);
 
-      LOG(Info, "Surface '" << adjacentSurface->name() << "' has a construction and '" << surface.name() 
-             << "' does not, using '" << adjacentSurface->name() << "'\'s construction." );
+      LOG(Info, "Surface '" << adjacentSurface->nameString() << "' has a construction and '" << surface.nameString()
+          << "' does not, using '" << adjacentSurface->nameString() << "'\'s construction.");
 
       surface.setConstruction(c1);
       adjacentSurface->setConstruction(c2);
@@ -3089,8 +3089,8 @@ void ForwardTranslator::resolveMatchedSurfaceConstructionConflicts(model::Model&
 
     if (!constructionWithSearchDistance && !adjacentConstructionWithSearchDistance){
       // no constructions, nothing to be done
-      LOG(Error, "No construction for either surface '" << surface.name()  
-        << "', and '" << adjacentSurface->name() << "'");
+      LOG(Error, "No construction for either surface '" << surface.nameString()
+          << "', and '" << adjacentSurface->nameString() << "'");
 
       processedSurfaces.insert(surface.handle());
       processedSurfaces.insert(adjacentSurface->handle());
@@ -3107,11 +3107,11 @@ void ForwardTranslator::resolveMatchedSurfaceConstructionConflicts(model::Model&
       model::ConstructionBase c2 = reverseConstruction(c1);
 
       if (c1.handle() != c2.handle()){
-        LOG(Warn, "Both surfaces '" << surface.name() << "', and '" << adjacentSurface->name() 
-               << "' reference the same construction '" << c1.name() << "' but it is not symmetric, creating a reversed copy." );
+        LOG(Warn, "Both surfaces '" << surface.nameString() << "', and '" << adjacentSurface->nameString()
+            << "' reference the same construction '" << c1.nameString() << "' but it is not symmetric, creating a reversed copy.");
 
         // DLM: use surface name to choose which surface gets the original copy, not a good way but at least repeatable
-        if (surface.name() < adjacentSurface->name()){
+        if (surface.nameString() < adjacentSurface->nameString()){
           surface.setConstruction(c1);
           adjacentSurface->setConstruction(c2);
         }else{
@@ -3132,8 +3132,8 @@ void ForwardTranslator::resolveMatchedSurfaceConstructionConflicts(model::Model&
       model::ConstructionBase c1 = constructionWithSearchDistance->first;
       model::ConstructionBase c2 = reverseConstruction(c1);
 
-      LOG(Info, "Surfaces '" << surface.name() << "', and '" << adjacentSurface->name() 
-             << "' reference different constructions, choosing '" << surface.name().get() << "'\'s construction based on search distance." );
+      LOG(Info, "Surfaces '" << surface.nameString() << "', and '" << adjacentSurface->nameString()
+          << "' reference different constructions, choosing '" << surface.nameString() << "'\'s construction based on search distance.");
 
       surface.setConstruction(c1);
       adjacentSurface->setConstruction(c2);
@@ -3147,8 +3147,8 @@ void ForwardTranslator::resolveMatchedSurfaceConstructionConflicts(model::Model&
       model::ConstructionBase c2 = adjacentConstructionWithSearchDistance->first;
       model::ConstructionBase c1 = reverseConstruction(c2);
 
-      LOG(Info, "Surfaces '" << surface.name() << "', and '" << adjacentSurface->name() 
-             << "' reference different constructions, choosing '" << adjacentSurface->name().get() << "'\'s construction based on search distance." );
+      LOG(Info, "Surfaces '" << surface.nameString() << "', and '" << adjacentSurface->nameString()
+          << "' reference different constructions, choosing '" << adjacentSurface->nameString() << "'\'s construction based on search distance.");
 
       surface.setConstruction(c1);
       adjacentSurface->setConstruction(c2);
@@ -3172,8 +3172,8 @@ void ForwardTranslator::resolveMatchedSurfaceConstructionConflicts(model::Model&
     }
 
     // give up for now, we can add more later
-    LOG(Error, "Could not resolve matched surface construction conflicts between surfaces '" << surface.name()  
-            << "', and '" << adjacentSurface->name() << "'");
+    LOG(Error, "Could not resolve matched surface construction conflicts between surfaces '" << surface.nameString()
+        << "', and '" << adjacentSurface->nameString() << "'");
     surface.setConstruction(constructionWithSearchDistance->first);
     adjacentSurface->setConstruction(adjacentConstructionWithSearchDistance->first);
     processedSurfaces.insert(surface.handle());
@@ -3209,8 +3209,8 @@ void ForwardTranslator::resolveMatchedSubSurfaceConstructionConflicts(model::Mod
       model::ConstructionBase c1 = constructionWithSearchDistance->first;
       model::ConstructionBase c2 = reverseConstruction(c1);
 
-      LOG(Info, "SubSurface '" << subSurface.name() << "' has a construction and '" << adjacentSubSurface->name() 
-             << "' does not, using '" << subSurface.name() << "'\'s construction." );
+      LOG(Info, "SubSurface '" << subSurface.nameString() << "' has a construction and '" << adjacentSubSurface->nameString()
+          << "' does not, using '" << subSurface.nameString() << "'\'s construction.");
 
       subSurface.setConstruction(c1);
       adjacentSubSurface->setConstruction(c2);
@@ -3224,8 +3224,8 @@ void ForwardTranslator::resolveMatchedSubSurfaceConstructionConflicts(model::Mod
       model::ConstructionBase c2 = adjacentConstructionWithSearchDistance->first;
       model::ConstructionBase c1 = reverseConstruction(c2);
 
-      LOG(Info, "SubSurface '" << adjacentSubSurface->name() << "' has a construction and '" << subSurface.name() 
-             << "' does not, using '" << adjacentSubSurface->name() << "'\'s construction." );
+      LOG(Info, "SubSurface '" << adjacentSubSurface->nameString() << "' has a construction and '" << subSurface.nameString()
+          << "' does not, using '" << adjacentSubSurface->nameString() << "'\'s construction.");
 
       subSurface.setConstruction(c1);
       adjacentSubSurface->setConstruction(c2);
@@ -3236,8 +3236,8 @@ void ForwardTranslator::resolveMatchedSubSurfaceConstructionConflicts(model::Mod
 
     if (!constructionWithSearchDistance && !adjacentConstructionWithSearchDistance){
       // no constructions, nothing to be done
-      LOG(Error, "No construction for either sub surface '" << subSurface.name()  
-        << "', and '" << adjacentSubSurface->name() << "'");
+      LOG(Error, "No construction for either sub surface '" << subSurface.nameString()
+          << "', and '" << adjacentSubSurface->nameString() << "'");
 
       processedSubSurfaces.insert(subSurface.handle());
       processedSubSurfaces.insert(adjacentSubSurface->handle());
@@ -3254,11 +3254,11 @@ void ForwardTranslator::resolveMatchedSubSurfaceConstructionConflicts(model::Mod
       model::ConstructionBase c2 = reverseConstruction(c1);
 
       if (c1.handle() != c2.handle()){
-        LOG(Warn, "Both sub surfaces '" << subSurface.name() << "', and '" << adjacentSubSurface->name() 
-               << "' reference the same construction '" << c1.name() << "' but it is not symmetric, creating a reversed copy." );
+        LOG(Warn, "Both sub surfaces '" << subSurface.nameString() << "', and '" << adjacentSubSurface->nameString()
+            << "' reference the same construction '" << c1.nameString() << "' but it is not symmetric, creating a reversed copy.");
 
         // DLM: use subSurface name to choose which surface gets the original copy, not a good way but at least repeatable
-        if (subSurface.name() < adjacentSubSurface->name()){
+        if (subSurface.nameString() < adjacentSubSurface->nameString()){
           subSurface.setConstruction(c1);
           adjacentSubSurface->setConstruction(c2);
         }else{
@@ -3279,8 +3279,8 @@ void ForwardTranslator::resolveMatchedSubSurfaceConstructionConflicts(model::Mod
       model::ConstructionBase c1 = constructionWithSearchDistance->first;
       model::ConstructionBase c2 = reverseConstruction(c1);
 
-      LOG(Info, "SubSurfaces '" << subSurface.name() << "', and '" << adjacentSubSurface->name() 
-             << "' reference different constructions, choosing '" << subSurface.name().get() << "'\'s construction based on search distance." );
+      LOG(Info, "SubSurfaces '" << subSurface.nameString() << "', and '" << adjacentSubSurface->nameString()
+          << "' reference different constructions, choosing '" << subSurface.nameString() << "'\'s construction based on search distance.");
 
       subSurface.setConstruction(c1);
       adjacentSubSurface->setConstruction(c2);
@@ -3294,8 +3294,8 @@ void ForwardTranslator::resolveMatchedSubSurfaceConstructionConflicts(model::Mod
       model::ConstructionBase c2 = adjacentConstructionWithSearchDistance->first;
       model::ConstructionBase c1 = reverseConstruction(c2);
 
-      LOG(Info, "SubSurfaces '" << subSurface.name() << "', and '" << adjacentSubSurface->name() 
-             << "' reference different constructions, choosing '" << adjacentSubSurface->name().get() << "'\'s construction based on search distance." );
+      LOG(Info, "SubSurfaces '" << subSurface.nameString() << "', and '" << adjacentSubSurface->nameString()
+          << "' reference different constructions, choosing '" << adjacentSubSurface->nameString() << "'\'s construction based on search distance.");
 
       subSurface.setConstruction(c1);
       adjacentSubSurface->setConstruction(c2);
@@ -3319,8 +3319,8 @@ void ForwardTranslator::resolveMatchedSubSurfaceConstructionConflicts(model::Mod
     }
 
     // give up for now, we can add more later
-    LOG(Error, "Could not resolve matched construction conflicts between sub surfaces '" << subSurface.name()  
-            << "', and '" << adjacentSubSurface->name() << "'");
+    LOG(Error, "Could not resolve matched construction conflicts between sub surfaces '" << subSurface.nameString()
+        << "', and '" << adjacentSubSurface->nameString() << "'");
     subSurface.setConstruction(constructionWithSearchDistance->first);
     adjacentSubSurface->setConstruction(adjacentConstructionWithSearchDistance->first);
     processedSubSurfaces.insert(subSurface.handle());

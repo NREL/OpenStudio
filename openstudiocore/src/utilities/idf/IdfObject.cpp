@@ -209,6 +209,15 @@ namespace detail {
     return boost::none;
   }
 
+  std::string IdfObject_Impl::nameString(bool returnDefault) const
+  {
+    boost::optional<std::string> temp = name(returnDefault);
+    if (temp){
+      return temp.get();
+    }
+    return "";
+  }
+
   std::string IdfObject_Impl::briefDescription() const {
     std::stringstream ss;
     ss << "Object of type '" << m_iddObject.type().valueDescription() << "'";
@@ -2012,6 +2021,10 @@ boost::optional<std::string> IdfObject::fieldComment(unsigned index, bool return
 
 boost::optional<std::string> IdfObject::name(bool returnDefault) const {
   return m_impl->name(returnDefault);
+}
+
+std::string IdfObject::nameString(bool returnDefault) const {
+  return m_impl->nameString(returnDefault);
 }
 
 std::string IdfObject::briefDescription() const {
