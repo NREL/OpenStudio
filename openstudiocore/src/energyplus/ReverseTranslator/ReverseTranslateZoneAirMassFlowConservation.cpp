@@ -53,7 +53,7 @@ namespace energyplus {
     }
   }
 
-  s = workspaceObject.getString(openstudio::ZoneAirMassFlowConservationFields::SourceZoneInfiltrationTreatment, true);
+  s = workspaceObject.getString(openstudio::ZoneAirMassFlowConservationFields::InfiltrationBalancingMethod, true);
   if (s){
     result.setSourceZoneInfiltrationTreatment(*s);
   }

@@ -68,7 +68,7 @@ namespace detail {
 
     bool isfractionOfSurfaceAreaWithActiveSolarCellsDefaulted() const;
 
-    boost::optional<std::string> conversionEfficiencyInputMode() const;
+    std::string conversionEfficiencyInputMode() const;
 
     boost::optional<double> fixedEfficiency() const;
 
@@ -82,19 +82,17 @@ namespace detail {
 
     void resetFractionOfSurfaceAreaWithActiveSolarCells();
 
-    bool setConversionEfficiencyInputMode(boost::optional<std::string> conversionEfficiencyInputMode);
+    bool setConversionEfficiencyInputMode(const std::string& conversionEfficiencyInputMode);
 
-    bool setFixedEfficiency(boost::optional<double> fixedEfficiency);
+    bool setFixedEfficiency(double fixedEfficiency);
 
-    void resetValueforCellEfficiencyifFixed();
+    void resetFixedEfficiency();
 
     bool setEfficiencySchedule(Schedule& schedule);
 
     void resetEfficiencySchedule();
 
-    void setFixedEfficiencyInputMode();
-
-    void setScheduleEfficiencyInputMode();
+    void setDefaultFixedEfficiency();
 
     //@}
     /** @name Other */

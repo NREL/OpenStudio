@@ -86,6 +86,16 @@ class MODEL_API EvaporativeCoolerDirectResearchSpecial : public StraightComponen
 
   bool isRecirculatingWaterPumpPowerConsumptionAutosized() const;
 
+  /** Returns the value of the PrimaryAirDesignFlowRate field. **/
+  boost::optional<double> primaryAirDesignFlowRate() const;
+
+  /** Sets the value of the PrimaryAirDesignFlowRate field. **/
+  void setPrimaryAirDesignFlowRate( double value );
+
+  void autosizePrimaryAirDesignFlowRate();
+
+  bool isPrimaryAirDesignFlowRateAutosized() const;
+
   /** Returns the Node referred to by the SensorNodeName field. **/
   boost::optional<Node> sensorNode() const;
 

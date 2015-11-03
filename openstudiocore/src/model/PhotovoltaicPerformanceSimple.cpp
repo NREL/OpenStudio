@@ -95,8 +95,10 @@ namespace detail {
     return isEmpty(OS_PhotovoltaicPerformance_SimpleFields::FractionofSurfaceAreawithActiveSolarCells);
   }
 
-  boost::optional<std::string> PhotovoltaicPerformanceSimple_Impl::conversionEfficiencyInputMode() const {
-    return getString(OS_PhotovoltaicPerformance_SimpleFields::ConversionEfficiencyInputMode,true);
+  std::string PhotovoltaicPerformanceSimple_Impl::conversionEfficiencyInputMode() const {
+    boost::optional<std::string> result = getString(OS_PhotovoltaicPerformance_SimpleFields::ConversionEfficiencyInputMode,true);
+    OS_ASSERT(result);
+    return result.get();
   }
 
   boost::optional<double> PhotovoltaicPerformanceSimple_Impl::fixedEfficiency() const {
@@ -117,35 +119,23 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool PhotovoltaicPerformanceSimple_Impl::setConversionEfficiencyInputMode(boost::optional<std::string> conversionEfficiencyInputMode) {
-    bool result(false);
-    if (conversionEfficiencyInputMode) {
-      result = setString(OS_PhotovoltaicPerformance_SimpleFields::ConversionEfficiencyInputMode, conversionEfficiencyInputMode.get());
-    }
-    else {
-      result = true;
+  bool PhotovoltaicPerformanceSimple_Impl::setConversionEfficiencyInputMode(const std::string& conversionEfficiencyInputMode) {
+    return setString(OS_PhotovoltaicPerformance_SimpleFields::ConversionEfficiencyInputMode, conversionEfficiencyInputMode);
+  }
+
+  bool PhotovoltaicPerformanceSimple_Impl::setFixedEfficiency(double fixedEfficiency) {
+    bool result = setDouble(OS_PhotovoltaicPerformance_SimpleFields::ValueforCellEfficiencyifFixed, fixedEfficiency);
+    if (result){
+      result = setConversionEfficiencyInputMode("Fixed");
+      OS_ASSERT(result);
+      result = setString(OS_PhotovoltaicPerformance_SimpleFields::EfficiencyScheduleName, "");
+      OS_ASSERT(result);
     }
     return result;
   }
 
-  bool PhotovoltaicPerformanceSimple_Impl::setFixedEfficiency(boost::optional<double> fixedEfficiency) {
-    bool result(false);
-    if (fixedEfficiency) {
-      result = setDouble(OS_PhotovoltaicPerformance_SimpleFields::ValueforCellEfficiencyifFixed, fixedEfficiency.get());
-    }
-    else {
-      resetValueforCellEfficiencyifFixed();
-      result = true;
-    }
-    if (result) {
-      setFixedEfficiencyInputMode();
-    }
-    return result;
-  }
-
-  void PhotovoltaicPerformanceSimple_Impl::resetValueforCellEfficiencyifFixed() {
-    bool result = setString(OS_PhotovoltaicPerformance_SimpleFields::ValueforCellEfficiencyifFixed, "");
-    OS_ASSERT(result);
+  void PhotovoltaicPerformanceSimple_Impl::resetFixedEfficiency() {
+    setDefaultFixedEfficiency();
   }
 
   bool PhotovoltaicPerformanceSimple_Impl::setEfficiencySchedule(Schedule& schedule) {
@@ -154,24 +144,20 @@ namespace detail {
                               "Efficiency",
                               schedule);
     if (result) {
-      setScheduleEfficiencyInputMode();
+      result = setConversionEfficiencyInputMode("Scheduled");
+      OS_ASSERT(result);
+      result = setString(OS_PhotovoltaicPerformance_SimpleFields::ValueforCellEfficiencyifFixed, "");
+      OS_ASSERT(result);
     }
     return result;
   }
 
   void PhotovoltaicPerformanceSimple_Impl::resetEfficiencySchedule() {
-    bool result = setString(OS_PhotovoltaicPerformance_SimpleFields::EfficiencyScheduleName, "");
-    OS_ASSERT(result);
-    setFixedEfficiencyInputMode();
+    setDefaultFixedEfficiency();
   }
 
-  void PhotovoltaicPerformanceSimple_Impl::setFixedEfficiencyInputMode() {
-    bool result = setString(OS_PhotovoltaicPerformance_SimpleFields::ConversionEfficiencyInputMode, "Fixed");
-    OS_ASSERT(result);
-  }
-
-  void PhotovoltaicPerformanceSimple_Impl::setScheduleEfficiencyInputMode() {
-    bool result = setString(OS_PhotovoltaicPerformance_SimpleFields::ConversionEfficiencyInputMode, "Scheduled");
+  void PhotovoltaicPerformanceSimple_Impl::setDefaultFixedEfficiency() {
+    bool result = setFixedEfficiency(0.12);
     OS_ASSERT(result);
   }
 
@@ -181,12 +167,7 @@ PhotovoltaicPerformanceSimple::PhotovoltaicPerformanceSimple(const Model& model)
   : PhotovoltaicPerformance(PhotovoltaicPerformanceSimple::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::PhotovoltaicPerformanceSimple_Impl>());
-  getImpl<detail::PhotovoltaicPerformanceSimple_Impl>()->setFixedEfficiencyInputMode();
-
-  // TODO: Appropriately handle the following required object-list fields.
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
+  getImpl<detail::PhotovoltaicPerformanceSimple_Impl>()->setDefaultFixedEfficiency();
 }
 
 IddObjectType PhotovoltaicPerformanceSimple::iddObjectType() {
@@ -201,7 +182,7 @@ bool PhotovoltaicPerformanceSimple::isfractionOfSurfaceAreaWithActiveSolarCellsD
   return getImpl<detail::PhotovoltaicPerformanceSimple_Impl>()->isfractionOfSurfaceAreaWithActiveSolarCellsDefaulted();
 }
 
-boost::optional<std::string> PhotovoltaicPerformanceSimple::conversionEfficiencyInputMode() const {
+std::string PhotovoltaicPerformanceSimple::conversionEfficiencyInputMode() const {
   return getImpl<detail::PhotovoltaicPerformanceSimple_Impl>()->conversionEfficiencyInputMode();
 }
 
@@ -225,8 +206,8 @@ bool PhotovoltaicPerformanceSimple::setFixedEfficiency(double fixedEfficiency) {
   return getImpl<detail::PhotovoltaicPerformanceSimple_Impl>()->setFixedEfficiency(fixedEfficiency);
 }
 
-void PhotovoltaicPerformanceSimple::resetValueforCellEfficiencyifFixed() {
-  getImpl<detail::PhotovoltaicPerformanceSimple_Impl>()->resetValueforCellEfficiencyifFixed();
+void PhotovoltaicPerformanceSimple::resetFixedEfficiency() {
+  getImpl<detail::PhotovoltaicPerformanceSimple_Impl>()->resetFixedEfficiency();
 }
 
 bool PhotovoltaicPerformanceSimple::setEfficiencySchedule(Schedule& schedule) {

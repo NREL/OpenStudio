@@ -7,7 +7,7 @@ endif()
 
 # Add google tests macro
 macro(ADD_GOOGLE_TESTS executable)
-  if (MSVC)
+  if(MSVC)
     file(TO_NATIVE_PATH "${QT_LIBRARY_DIR}" QT_LIB_PATH)
     set(NEWPATH "${QT_LIB_PATH};$ENV{PATH}")
   else()
@@ -1025,7 +1025,7 @@ function(QT5_WRAP_CPP_MINIMALLY outfiles)
   set(moc_options ${_WRAP_CPP_OPTIONS})
   set(moc_target ${_WRAP_CPP_TARGET})
 
-  if (moc_target AND CMAKE_VERSION VERSION_LESS 2.8.12)
+  if(moc_target AND CMAKE_VERSION VERSION_LESS 2.8.12)
     message(FATAL_ERROR "The TARGET parameter to qt5_wrap_cpp is only available when using CMake 2.8.12 or later.")
   endif()
   foreach(it ${moc_files})

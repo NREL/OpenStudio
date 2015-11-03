@@ -64,7 +64,7 @@ namespace openstudio{
     QDomElement choiceElement = element.firstChildElement("choices").firstChildElement("choice");
     while (!choiceElement.isNull()){
       if (choiceElement.hasChildNodes()){
-        std::string choiceValue = choiceElement.firstChildElement("type").firstChild().nodeValue().toStdString();
+        std::string choiceValue = choiceElement.firstChildElement("value").firstChild().nodeValue().toStdString();
         m_choiceValues.push_back(choiceValue);
 
         if (choiceElement.firstChildElement("display_name").isNull()){

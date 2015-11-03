@@ -121,6 +121,14 @@ namespace detail {
 
     void resetWaterPumpPowerModifierCurve();
 
+    boost::optional<double> primaryAirDesignFlowRate() const;
+
+    void setPrimaryAirDesignFlowRate( double value );
+
+    void autosizePrimaryAirDesignFlowRate();
+
+    bool isPrimaryAirDesignFlowRateAutosized() const;
+
    private:
 
     REGISTER_LOGGER("openstudio.model.EvaporativeCoolerDirectResearchSpecial");

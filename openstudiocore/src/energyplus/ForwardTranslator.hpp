@@ -165,6 +165,8 @@ class HeaderedPumpsVariableSpeed;
 class HeatBalanceAlgorithm;
 class HeatExchangerAirToAirSensibleAndLatent;
 class HeatExchangerFluidToFluid;
+class HeatPumpWaterToWaterEquationFitCooling;
+class HeatPumpWaterToWaterEquationFitHeating;
 class HotWaterEquipment;
 class HumidifierSteamElectric;
 class IlluminanceMap;
@@ -337,7 +339,7 @@ namespace detail
   struct ForwardTranslatorInitializer;
 };
 
-#define ENERGYPLUS_VERSION "8.3"
+#define ENERGYPLUS_VERSION "8.4"
 
 class ENERGYPLUS_API ForwardTranslator {
  public:
@@ -668,6 +670,10 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateHeatExchangerAirToAirSensibleAndLatent( model::HeatExchangerAirToAirSensibleAndLatent & modelObject );
 
   boost::optional<IdfObject> translateHeatExchangerFluidToFluid( model::HeatExchangerFluidToFluid & modelObject );
+
+  boost::optional<IdfObject> translateHeatPumpWaterToWaterEquationFitCooling( model::HeatPumpWaterToWaterEquationFitCooling & modelObject );
+
+  boost::optional<IdfObject> translateHeatPumpWaterToWaterEquationFitHeating( model::HeatPumpWaterToWaterEquationFitHeating & modelObject );
 
   boost::optional<IdfObject> translateHumidifierSteamElectric( model::HumidifierSteamElectric & modelObject );
 

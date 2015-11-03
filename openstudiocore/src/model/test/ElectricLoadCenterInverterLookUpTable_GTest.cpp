@@ -33,8 +33,13 @@ TEST_F(ModelFixture, ElectricLoadCenterInverterLookUpTable_Instantiate) {
   auto value = 0.1;
 
   Model model;
+  ThermalZone thermalZone(model);
 
   ElectricLoadCenterInverterLookUpTable electricLoadCenterInverterLookUpTable(model);
+
+  EXPECT_FALSE(electricLoadCenterInverterLookUpTable.thermalZone());
+  EXPECT_TRUE(electricLoadCenterInverterLookUpTable.setThermalZone(thermalZone));
+  ASSERT_TRUE(electricLoadCenterInverterLookUpTable.thermalZone());
 
   EXPECT_FALSE(electricLoadCenterInverterLookUpTable.availabilitySchedule());
   ScheduleCompact scheduleCompact(model);
