@@ -294,6 +294,7 @@ namespace openstudio {
     filenames.push_back(openstudio::toPath("openstudiomodelgeometry"));
     filenames.push_back(openstudio::toPath("openstudiomodelhvac"));
     filenames.push_back(openstudio::toPath("openstudiomodelrefrigeration"));
+    filenames.push_back(openstudio::toPath("openstudiomodelgenerators"));
     filenames.push_back(openstudio::toPath("openstudioenergyplus"));
     filenames.push_back(openstudio::toPath("openstudioradiance"));
     filenames.push_back(openstudio::toPath("openstudiogbxml"));

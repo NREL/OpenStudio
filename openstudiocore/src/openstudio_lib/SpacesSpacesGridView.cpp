@@ -207,7 +207,9 @@ namespace openstudio {
         addDropZoneColumn(Heading(QString(SPACETYPE)),
           CastNullAdapter<model::Space>(&model::Space::spaceType),
           CastNullAdapter<model::Space>(&model::Space::setSpaceType),
-          boost::optional<std::function<void(model::Space*)>>(CastNullAdapter<model::Space>(&model::Space::resetSpaceType))
+          boost::optional<std::function<void(model::Space*)>>(CastNullAdapter<model::Space>(&model::Space::resetSpaceType)),
+          boost::optional<std::function<bool(model::Space*)>>(CastNullAdapter<model::Space>(&model::Space::isSpaceTypeDefaulted)),
+          boost::optional<DataSource>()
           );
       }
       else if (field == DEFAULTCONSTRUCTIONSET) {
@@ -331,7 +333,9 @@ namespace openstudio {
         addDropZoneColumn(Heading(QString(DESIGNSPECIFICATIONOUTDOORAIROBJECTNAME)),
           CastNullAdapter<model::Space>(&model::Space::designSpecificationOutdoorAir),
           CastNullAdapter<model::Space>(&model::Space::setDesignSpecificationOutdoorAir),
-          boost::optional<std::function<void(model::Space*)>>(CastNullAdapter<model::Space>(&model::Space::resetDesignSpecificationOutdoorAir))
+          boost::optional<std::function<void(model::Space*)>>(CastNullAdapter<model::Space>(&model::Space::resetDesignSpecificationOutdoorAir)),
+          boost::optional<std::function<bool(model::Space*)>>(CastNullAdapter<model::Space>(&model::Space::isDesignSpecificationOutdoorAirDefaulted)),
+          boost::optional<DataSource>()
           );
       }
       else {

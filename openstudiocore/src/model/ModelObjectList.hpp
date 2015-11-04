@@ -50,7 +50,11 @@ class MODEL_API ModelObjectList : public ModelObject {
 
   ModelObject clone(Model model) const;
 
+  unsigned size() const;
+
   bool addModelObject(const ModelObject & modelObject );
+
+  bool hasModelObject(const ModelObject & modelObject) const;
 
   void removeModelObject(const ModelObject & modelObject );
 

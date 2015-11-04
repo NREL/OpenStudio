@@ -1244,6 +1244,24 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // no-op
       break;
     }
+  case openstudio::IddObjectType::OS_ElectricLoadCenter_Distribution:
+  {
+    model::ElectricLoadCenterDistribution temp = modelObject.cast<ElectricLoadCenterDistribution>();
+    retVal = translateElectricLoadCenterDistribution(temp);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ElectricLoadCenter_Inverter_LookUpTable:
+  {
+    model::ElectricLoadCenterInverterLookUpTable temp = modelObject.cast<ElectricLoadCenterInverterLookUpTable>();
+    retVal = translateElectricLoadCenterInverterLookUpTable(temp);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ElectricLoadCenter_Inverter_Simple:
+  {
+    model::ElectricLoadCenterInverterSimple temp = modelObject.cast<ElectricLoadCenterInverterSimple>();
+    retVal = translateElectricLoadCenterInverterSimple(temp);
+    break;
+  }
   case openstudio::IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial :
     {
       model::EvaporativeCoolerDirectResearchSpecial evap = modelObject.cast<EvaporativeCoolerDirectResearchSpecial>();
@@ -1308,19 +1326,23 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       model::FanZoneExhaust fan = modelObject.cast<FanZoneExhaust>();
       retVal = translateFanZoneExhaust(fan);
       break;
-    }
-    
+    } 
   case openstudio::IddObjectType::OS_FluidCooler_SingleSpeed:
   {
     model::FluidCoolerSingleSpeed fluidCoolerSingleSpeed = modelObject.cast<FluidCoolerSingleSpeed>();
     retVal = translateFluidCoolerSingleSpeed(fluidCoolerSingleSpeed);
     break;
   }
-
   case openstudio::IddObjectType::OS_FluidCooler_TwoSpeed:
   {
     model::FluidCoolerTwoSpeed fluidCoolerTwoSpeed = modelObject.cast<FluidCoolerTwoSpeed>();
     retVal = translateFluidCoolerTwoSpeed(fluidCoolerTwoSpeed);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Generator_Photovoltaic:
+  {
+    model::GeneratorPhotovoltaic temp = modelObject.cast<GeneratorPhotovoltaic>();
+    retVal = translateGeneratorPhotovoltaic(temp);
     break;
   }
   case openstudio::IddObjectType::OS_Glare_Sensor:
@@ -1368,6 +1390,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::HeatExchangerFluidToFluid mo = modelObject.cast<HeatExchangerFluidToFluid>();
       retVal = translateHeatExchangerFluidToFluid(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_HeatPump_WaterToWater_EquationFit_Cooling :
+    {
+      auto mo = modelObject.cast<HeatPumpWaterToWaterEquationFitCooling>();
+      retVal = translateHeatPumpWaterToWaterEquationFitCooling(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_HeatPump_WaterToWater_EquationFit_Heating :
+    {
+      auto mo = modelObject.cast<HeatPumpWaterToWaterEquationFitHeating>();
+      retVal = translateHeatPumpWaterToWaterEquationFitHeating(mo);
       break;
     }
   case openstudio::IddObjectType::OS_HotWaterEquipment :
@@ -1588,6 +1622,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateOtherEquipment(otherEquipment);
       break;
     }
+  case openstudio::IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode:
+  {
+    PhotovoltaicPerformanceEquivalentOneDiode temp = modelObject.cast<PhotovoltaicPerformanceEquivalentOneDiode>();
+    retVal = translatePhotovoltaicPerformanceEquivalentOneDiode(temp);
+    break;
+  }
+  case openstudio::IddObjectType::OS_PhotovoltaicPerformance_Simple:
+  {
+    PhotovoltaicPerformanceSimple temp = modelObject.cast<PhotovoltaicPerformanceSimple>();
+    retVal = translatePhotovoltaicPerformanceSimple(temp);
+    break;
+  }
   case openstudio::IddObjectType::OS_OtherEquipment_Definition:
     {
       //no-op
@@ -2731,9 +2777,15 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
   result.push_back(IddObjectType::OS_ZoneMixing);
 
-
   result.push_back(IddObjectType::OS_Refrigeration_System);
   result.push_back(IddObjectType::OS_Refrigeration_TranscriticalSystem);
+
+  result.push_back(IddObjectType::OS_ElectricLoadCenter_Distribution);
+  result.push_back(IddObjectType::OS_Generator_Photovoltaic);
+  result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
+  result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Simple);
+  result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_LookUpTable);
+  result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_Simple);
 
   // put these down here so they have a chance to be translated with their "parent"
   result.push_back(IddObjectType::OS_LifeCycleCost);

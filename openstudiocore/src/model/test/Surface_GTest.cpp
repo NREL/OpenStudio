@@ -640,6 +640,43 @@ TEST_F(ModelFixture, Surface_Construction_Relationship)
   //EXPECT_FALSE(relationship->relatedModelObject());
 }
 
+TEST_F(ModelFixture, OutsideBoundaryConditionCapitalization)
+{
+  Model model;
+
+  std::vector<Point3d> vertices;
+  vertices.push_back(Point3d(0, 0, 3));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(3, 0, 0));
+  vertices.push_back(Point3d(3, 0, 3));
+
+  Space space(model);
+  Surface wall(vertices, model);
+  wall.setSpace(space);
+  EXPECT_FALSE(wall.adjacentSurface());
+  EXPECT_EQ("Outdoors", wall.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", wall.sunExposure());
+  EXPECT_EQ("WindExposed", wall.windExposure());
+
+  EXPECT_TRUE(wall.setOutsideBoundaryCondition("ADIABATIC"));
+  EXPECT_FALSE(wall.adjacentSurface());
+  EXPECT_EQ("ADIABATIC", wall.outsideBoundaryCondition());
+  EXPECT_EQ("NoSun", wall.sunExposure());
+  EXPECT_EQ("NoWind", wall.windExposure());
+
+  EXPECT_TRUE(wall.setOutsideBoundaryCondition("outdoors"));
+  EXPECT_FALSE(wall.adjacentSurface());
+  EXPECT_EQ("outdoors", wall.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", wall.sunExposure());
+  EXPECT_EQ("WindExposed", wall.windExposure());
+
+  EXPECT_FALSE(wall.setOutsideBoundaryCondition("FlibbityGibbit"));
+  EXPECT_FALSE(wall.adjacentSurface());
+  EXPECT_EQ("outdoors", wall.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", wall.sunExposure());
+  EXPECT_EQ("WindExposed", wall.windExposure());
+}
+
 TEST_F(ModelFixture, AdjacentSurface)
 {
   Model model;

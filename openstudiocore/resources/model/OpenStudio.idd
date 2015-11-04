@@ -1,4 +1,4 @@
-!IDD_Version 1.9.0
+!IDD_Version 1.9.4
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -570,32 +570,21 @@ OS:ZoneAirMassFlowConservation,
        \type handle
        \required-field       
   A2,  \field Adjust Zone Mixing For Zone Air Mass Flow Balance
-       \note If 'Yes', Zone mixing object flow rates are adjusted to balance the zone air mass flow
-       \note and additional infiltration air flow may be added if required in order to balance the
-       \note zone air mass flow.
        \type choice
        \key Yes
-       \default Yes
-       \note If this input field is specified as 'Yes', then EnergyPlus attempts to enforce
-       \note the zone air mass flow conservation. Mass conservation is enforced both for the receiving
-       \note and source zones if there is at least one mixing object defined. 
-  A3;  \field Source Zone Infiltration Treatment
-       \note This input field allows user to choose how zone infiltration flow is treated during
-       \note the zone air mass flow balance calculation.
+       \key No
+       \default No
+  A3,  \field Infiltration Balancing Method
        \type choice
        \key AddInfiltrationFlow
        \key AdjustInfiltrationFlow
+       \key None
        \default AddInfiltrationFlow
-       \note It has two choice KEYs: 'AddInfiltrationFlow' and 'AdjustInfiltrationFlow'.  If this
-       \note input is specified as 'AddInfiltrationFlow', then energy plus adds infiltration air
-       \note mass flow on top of the base flow, which is calculated using the infiltration object
-       \note user inputs, in order to balance the zone air mass flow.  The additional infiltration
-       \note air mass flow is not self-balanced.  If this input is specified as
-       \note 'AdjustInfiltrationFlow', then energy plus may adjust the base flow calculated using
-       \note the infiltration object user inputs in order to balance the zone air mass flow. If it
-       \note is not required to adjust the base infiltration air flow calculated from the user
-       \note specified infiltration object inputs, then the base infiltration air mass flow
-       \note is assumed self-balanced. 
+  A4;  \field Infiltration Balancing Zones
+       \type choice
+       \key MixingSourceZonesOnly
+       \key AllZones
+       \default MixingSourceZonesOnly
        
 OS:ZoneCapacitanceMultiplier:ResearchSpecial,
        \memo Multiplier altering the relative capacitance of the air compared to an empty zone
@@ -2498,7 +2487,7 @@ OS:WindowMaterial:Blind,
        \minimum 0
        \maximum 180
        \default 180
-
+       
 OS:WindowMaterial:DaylightRedirectionDevice,
        \memo This object is not in EnergyPlus, this represents a film or louver which redirects daylighting.
        \min-fields 2
@@ -3088,7 +3077,7 @@ OS:WindowMaterial:SimpleGlazingSystem,
        \type real
        \minimum> 0
        \maximum< 1
-
+       
 OS:StandardsInformation:Material,
        \min-fields 2
   A1, \field Handle
@@ -9581,16 +9570,14 @@ OS:AirTerminal:SingleDuct:VAV:NoReheat,
        \note minimum and maximum schedule values is used for sizing normal-action reheat coils.
        \type object-list
        \object-list ScheduleNames
-  A8 ; \field Design Specification Outdoor Air Object Name
-       \type object-list
-       \object-list DesignSpecificationOutdoorAirNames
-       \note When the name of a DesignSpecification:OutdoorAir object is entered, the terminal
-       \note unit will increase flow as needed to meet this outdoor air requirement.
-       \note If Outdoor Air Flow per Person is non-zero, then the outdoor air requirement will
-       \note be computed based on the current number of occupants in the zone.
-       \note At no time will the supply air flow rate exceed the value for Maximum Air Flow Rate.
-       \note If this field is blank, then the terminal unit will not be controlled for outdoor air flow.
-	   
+  A8 ; \field Control For Outdoor Air
+       \note This field replaces the E+ field Design Specification Outdoor Air Object Name
+       \note Refer to OpenStudio API for details
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+
 OS:AirTerminal:SingleDuct:VAV:Reheat,
        \min-fields 1
   A1, \field Handle
@@ -9702,15 +9689,13 @@ OS:AirTerminal:SingleDuct:VAV:Reheat,
        \units C
        \minimum> 0
        \default 35.0
-  A12; \field Design Specification Outdoor Air Object Name
-       \note When the name of a DesignSpecification:OutdoorAir object is entered, the terminal
-       \note unit will increase flow as needed to meet this outdoor air requirement.
-       \note If Outdoor Air Flow per Person is non-zero, then the outdoor air requirement will
-       \note be computed based on the current number of occupants in the zone.
-       \note At no time will the supply air flow rate exceed the value for Maximum Air Flow Rate.
-       \note If this field is blank, then the terminal unit will not be controlled for outdoor air flow.
-       \type object-list
-       \object-list DesignSpecificationOutdoorAirNames
+  A12; \field Control For Outdoor Air
+       \note This field replaces the E+ field Design Specification Outdoor Air Object Name
+       \note Refer to OpenStudio API for details
+       \type choice
+       \key Yes
+       \key No
+       \required-field
 
 OS:AirTerminal:DualDuct:VAV:OutdoorAir,
        \memo Central air system terminal unit, dual duct, variable volume with special controls.
@@ -10343,6 +10328,156 @@ OS:Boiler:Steam,
        \type real
        \minimum> 0.0
        \default 1.0
+
+OS:HeatPump:WaterToWater:EquationFit:Heating,
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2,  \field Name
+        \type alpha
+        \required-field
+        \reference ConnectionObject
+   A3,  \field Source Side Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A4,  \field Source Side Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A5,  \field Load Side Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A6,  \field Load Side Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   N1,  \field Rated Load Side Flow Rate
+        \required-field
+        \type real
+        \minimum> 0.0
+        \units m3/s
+   N2,  \field Rated Source Side Flow Rate
+        \required-field
+        \type real
+        \minimum> 0.0
+        \units m3/s
+   N3,  \field Rated Heating Capacity
+        \required-field
+        \type real
+        \minimum> 0.0
+        \units W
+   N4,  \field Rated Heating Power Consumption
+        \required-field
+        \type real
+        \minimum> 0.0
+        \units W
+   N5,  \field Heating Capacity Coefficient 1
+        \required-field
+        \type real
+   N6,  \field Heating Capacity Coefficient 2
+        \required-field
+        \type real
+   N7,  \field Heating Capacity Coefficient 3
+        \required-field
+        \type real
+   N8,  \field Heating Capacity Coefficient 4
+        \required-field
+        \type real
+   N9,  \field Heating Capacity Coefficient 5
+        \required-field
+        \type real
+   N10, \field Heating Compressor Power Coefficient 1
+        \required-field
+        \type real
+   N11, \field Heating Compressor Power Coefficient 2
+        \required-field
+        \type real
+   N12, \field Heating Compressor Power Coefficient 3
+        \required-field
+        \type real
+   N13, \field Heating Compressor Power Coefficient 4
+        \required-field
+        \type real
+   N14; \field Heating Compressor Power Coefficient 5
+        \required-field
+        \type real
+
+OS:HeatPump:WaterToWater:EquationFit:Cooling,
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2,  \field Name
+        \type alpha
+        \required-field
+        \reference ConnectionObject
+   A3,  \field Source Side Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A4,  \field Source Side Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A5,  \field Load Side Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A6,  \field Load Side Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   N1,  \field Rated Load Side Flow Rate
+        \required-field
+        \type real
+        \minimum> 0.0
+        \units m3/s
+   N2,  \field Rated Source Side Flow Rate
+        \required-field
+        \type real
+        \minimum> 0.0
+        \units m3/s
+   N3,  \field Rated Cooling Capacity
+        \required-field
+        \type real
+        \minimum> 0.0
+        \units W
+   N4,  \field Rated Cooling Power Consumption
+        \required-field
+        \type real
+        \minimum> 0.0
+        \units W
+   N5,  \field Cooling Capacity Coefficient 1
+        \required-field
+        \type real
+   N6,  \field Cooling Capacity Coefficient 2
+        \required-field
+        \type real
+   N7,  \field Cooling Capacity Coefficient 3
+        \required-field
+        \type real
+   N8,  \field Cooling Capacity Coefficient 4
+        \required-field
+        \type real
+   N9,  \field Cooling Capacity Coefficient 5
+        \required-field
+        \type real
+   N10, \field Cooling Compressor Power Coefficient 1
+        \required-field
+        \type real
+   N11, \field Cooling Compressor Power Coefficient 2
+        \required-field
+        \type real
+   N12, \field Cooling Compressor Power Coefficient 3
+        \required-field
+        \type real
+   N13, \field Cooling Compressor Power Coefficient 4
+        \required-field
+        \type real
+   N14; \field Cooling Compressor Power Coefficient 5
+        \required-field
+        \type real
 
 OS:Chiller:Electric:EIR,
        \memo This chiller model is the empirical model from the DOE-2 building Energy
@@ -14356,7 +14491,7 @@ OS:Coil:Heating:Water:Baseboard,
       \type object-list
       \required-field
       \object-list ConnectionNames
-   
+
 OS:Coil:Heating:Water:Baseboard:Radiant,
   A1, \field Handle
       \type handle
@@ -15467,7 +15602,7 @@ OS:Controller:OutdoorAir,
        \note Enter the name of the zone where the humidistat is located.
        \note This field is only used when the field High Humidity Control = Yes.
        \type object-list
-       \object-list ZoneNames
+       \object-list ThermalZoneNames
   N7, \field High Humidity Outdoor Air Flow Ratio
        \note Enter the ratio of outdoor air to the maximum outdoor air flow rate when modified air
        \note flow rates are active based on high indoor humidity.
@@ -17056,7 +17191,6 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
        \minimum> 0.0
        \autosizable
 
-
 OS:EvaporativeCooler:Direct:ResearchSpecial,
        \min-fields 1
   A1, \field Handle
@@ -17083,6 +17217,12 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
        \ip-units W
        \minimum 0
        \autosizable
+  N3 , \field Primary Air Design Flow Rate  
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
   A4, \field Air Inlet Node Name
        \type object-list
        \required-field
@@ -17094,12 +17234,12 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
   A6, \field Sensor Node Name
        \type object-list
        \object-list Node
-  N3, \field Drift Loss Fraction
+  N4, \field Drift Loss Fraction
        \note Rate of drift loss as a fraction of evaporated water flow rate
        \type real
        \required-field
        \minimum 0
-  N4, \field Blowdown Concentration Ratio
+  N5, \field Blowdown Concentration Ratio
        \note Characterizes the rate of blowdown in the evaporative cooler.
        \note Blowdown is water intentionally drained from the cooler in order to offset the build up
        \note of solids in the water that would otherwise occur because of evaporation.
@@ -17122,7 +17262,7 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
        \note Curve:ExponentialSkewNormal, Curve:Sigmoid, Curve:RectuangularHyperbola1,
        \note Curve:RectangularHyperbola2, Curve:ExponentialDecay, Curve:DoubleExponentialDecay,
        \note Table:OneIndependentVariable   
-  N5,  \field Water Pump Power Sizing Factor
+  N6,  \field Water Pump Power Sizing Factor
        \type real
        \required-field
        \units W/(m3/s)
@@ -17704,7 +17844,7 @@ OS:Fan:ZoneExhaust,
   \min-fields 10
   A1, \field Handle
        \type handle
-       \required-field
+       \required-field  
   A2, \field Name
        \type alpha  
        \required-field
@@ -18063,12 +18203,12 @@ OS:PortList,
        \begin-extensible
        \type object-list
        \object-list ConnectionNames
-
+       
 OS:Pipe:Adiabatic,
       \memo Passes Inlet Node state variables to Outlet Node state variables
   A1, \field Handle
        \type handle
-       \required-field
+       \required-field      
   A2, \field Name
        \required-field
        \reference ConnectionObject
@@ -19364,7 +19504,7 @@ OS:SetpointManager:Coldest,
   A5 ; \field Setpoint Node or NodeList Name
        \type object-list
        \object-list Node
-       
+
 OS:SetpointManager:FollowGroundTemperature,
        \memo This setpoint manager is used to place a temperature setpoint on a
        \memo system node that is derived from a current ground temperature.
@@ -19375,7 +19515,7 @@ OS:SetpointManager:FollowGroundTemperature,
        \min-fields 7
   A1 , \field Handle
        \type handle
-       \required-field  
+       \required-field
   A2 , \field Name
        \required-field
        \reference SetpointManagers
@@ -19730,7 +19870,7 @@ OS:Sizing:System,
        \units kg-H2O/kg-Air
   N5, \field Precool Design Temperature
        \type real
-       \required-field      
+       \required-field
        \units C
   N6, \field Precool Design Humidity Ratio
        \type real
@@ -20999,7 +21139,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
    N8 ; \field Circuit Length
         \units m
         \default 106.7
-
+        
 OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
         \min-fields 9
    A1 , \field Handle
@@ -21055,7 +21195,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
    N3 ; \field Circuit Length
         \units m
         \default 106.7
-
+        
 OS:ZoneHVAC:PackagedTerminalHeatPump,
        \min-fields 24
   A1, \field Handle
@@ -21569,7 +21709,7 @@ OS:ZoneHVAC:WaterToAirHeatPump,
         \note Enter the name of an AvailabilityManagerAssignmentList object.
         \type object-list
         \object-list SystemAvailabilityManagerLists
-
+        
 OS:ZoneHVAC:UnitHeater,
        \min-fields 10
   A1 , \field Handle
@@ -21579,7 +21719,7 @@ OS:ZoneHVAC:UnitHeater,
        \note Unique name for this unit heater.
        \type alpha
        \required-field
-       \reference ConnectionObject
+       \reference ConnectionObject    
   A3 , \field Availability Schedule Name
        \note Schedule values of 0 denote the unit is off.
        \type object-list
@@ -22325,7 +22465,7 @@ OS:WaterHeater:Mixed,
        \note Time required to raise temperature of entire tank from 14.4C to 57.2C
        \units hr
        \minimum> 0.0
-        
+
 OS:WaterHeater:HeatPump,
        \min-fields 25
        \memo This object models an air-source heat pump for water heating.
@@ -23494,7 +23634,7 @@ OS:ThermalStorage:ChilledWater:Stratified,
        \required-field
        \type real
        \units W/m2-K
-        
+
 OS:Duct,
        \memo Passes inlet node state variables to outlet node state variables
        \min-fields 4
@@ -23609,7 +23749,7 @@ OS:FluidCooler:TwoSpeed,
        \required-field
   A2,  \field Name
        \required-field
-       \reference ConnectionObject    
+       \reference ConnectionObject
        \type alpha
        \note fluid cooler name
   A3,  \field Water Inlet Node
@@ -23740,7 +23880,7 @@ OS:FluidCooler:TwoSpeed,
   A6;  \field Outdoor Air Inlet Node
        \type object-list
        \object-list Node
-       
+
 OS:Pipe:Indoor,
        \memo Pipe model with transport delay and heat transfer to the environment.
   A1,  \field Handle
@@ -23911,7 +24051,7 @@ OS:SolarCollectorPerformance:IntegralCollectorStorage,
        \min-fields 20
   A1,  \field Handle
        \type handle
-       \required-field
+       \required-field  
   A2,  \field Name
        \required-field
        \type alpha
@@ -24109,10 +24249,10 @@ OS:SolarCollectorPerformance:PhotovoltaicThermal:Simple,
        \min-fields 7
   A1,  \field Handle
        \type handle
-       \required-field
+       \required-field 
   A2 , \field Name
        \type alpha
-       \required-field
+       \required-field 
        \reference FlatPlatePVTParameters
   N1 , \field Fraction of Surface Area with Active Thermal Collector
        \type real
@@ -24170,6 +24310,324 @@ OS:SolarCollector:FlatPlate:PhotovoltaicThermal,
        \units m3/s
        \autosizable
 
+\group Electric Load Center-Generator Specifications
+
+OS:Generator:Photovoltaic,
+        \memo Describes an array of photovoltaic (PV) modules. PV performance is taken from the
+        \memo referenced PhotovoltaicPerformance:* object. Array tilt, azimuth, and gross area
+        \memo are taken from the referenced building surface or shading surface. The array
+        \memo surface participates normally in all shading calculations.
+   A1 , \field Handle
+        \type handle
+        \required-field        
+   A2 , \field Name
+        \required-field
+        \reference GeneratorNames
+        \reference PVGeneratorNames
+   A3 , \field Surface Name
+        \type object-list
+        \object-list AllShadingAndHTSurfNames
+   A4 , \field Module Performance Name
+        \note PV array modeling details
+        \required-field
+        \type object-list
+        \object-list PVModules
+   A5 , \field Heat Transfer Integration Mode
+        \type choice
+        \key Decoupled
+        \key DecoupledUllebergDynamic
+        \key IntegratedSurfaceOutsideFace
+        \key IntegratedTranspiredCollector
+        \key IntegratedExteriorVentedCavity
+        \key PhotovoltaicThermalSolarCollector
+        \default Decoupled
+   N1 , \field Number of Modules in Parallel
+        \default 1
+        \units dimensionless
+        \minimum 1
+   N2 , \field Number of Modules in Series
+        \default 1
+        \units dimensionless
+        \minimum 1
+   N3 , \field Rated Electric Power Output
+        \type real
+        \units W
+   A6 ; \field Availability Schedule Name
+        \note Availability schedule name for this generator. Schedule value > 0 means the generator is available.
+        \note If this field is blank, the generator is always available.
+        \type object-list
+        \object-list ScheduleNames
+  
+OS:PhotovoltaicPerformance:Simple,
+        \memo Describes a simple model of photovoltaics that may be useful for early phase
+        \memo design analysis. In this model the user has direct access to the efficiency with
+        \memo which surfaces convert incident solar radiation to electricity and need not specify
+        \memo arrays of specific modules.
+   A1 , \field Handle
+        \type handle
+        \required-field        
+   A2 , \field Name
+        \required-field    
+        \reference PVModules
+   N1 , \field Fraction of Surface Area with Active Solar Cells
+        \type real
+        \units dimensionless
+        \minimum 0.0
+        \maximum 1.0
+        \default 0.89
+   A3 , \field Conversion Efficiency Input Mode
+        \type choice
+        \key Fixed
+        \key Scheduled
+   N2 , \field Value for Cell Efficiency if Fixed
+        \note Efficiency = (power generated [W])/(incident solar[W])
+        \type real
+        \minimum 0.0
+        \maximum 1.0
+   A4 ; \field Efficiency Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+
+OS:PhotovoltaicPerformance:EquivalentOne-Diode,
+        \memo Describes the performance characteristics of Photovoltaic (PV) modules to be modeled
+        \memo using an equivalent one-diode circuit.  This model is also known as
+        \memo the 4- or 5-parameter TRNSYS model for photovoltaics.
+   A1 , \field Handle
+        \type handle
+        \required-field        
+   A2 , \field Name
+        \required-field  
+        \reference PVModules
+   A3 , \field Cell type
+        \type choice
+        \default CrystallineSilicon
+        \key CrystallineSilicon
+        \key AmorphousSilicon
+   N1 , \field Number of Cells in Series
+        \default 36
+        \type integer
+        \units dimensionless
+        \minimum 0
+   N2 , \field Active Area
+        \note The total power output of the array is determined by the
+        \note number of modules (see above).  The Active Area is only
+        \note used to calculate the PV Array Efficiency output variable.
+        \default 0.89
+        \type real
+        \units m2
+        \minimum 0.1
+   N3 , \field Transmittance Absorptance Product
+        \default 0.95
+        \type real
+        \units dimensionless
+        \minimum 0.0
+        \maximum 1.0
+   N4 , \field Semiconductor Bandgap
+        \default 1.12
+        \type real
+        \units eV
+        \minimum 0.0
+   N5 , \field Shunt Resistance
+        \default 1000000.0
+        \type real
+        \units ohms
+        \minimum 0.0
+   N6 , \field Short Circuit Current
+        \default 6.5
+        \type real
+        \units A
+        \minimum 0.0
+   N7, \field Open Circuit Voltage
+        \default 21.6
+        \type real
+        \units V
+        \minimum 0.0
+   N8, \field Reference Temperature
+        \default 25
+        \type real
+        \units C
+        \minimum 0.0
+   N9, \field Reference Insolation
+        \default 1000
+        \type real
+        \units W/m2
+        \minimum 0.0
+   N10, \field Module Current at Maximum Power
+        \note Single module current at the maximum power point
+        \note and reference conditions.  Module Current, Module Voltage,
+        \note Number of Modules in Parallel and Number of Modules in Series
+        \note determine the maximum power output of the array.
+        \default 5.9
+        \type real
+        \units A
+        \minimum 0.0
+   N11, \field Module Voltage at Maximum Power
+        \note Single module voltage at the maximum power point
+        \note and reference conditions.  Module Current, Module Voltage,
+        \note Number of Modules in Parallel and Number of Modules in Series
+        \note determine the maximum power output of the array.
+        \default 17
+        \type real
+        \units V
+        \minimum 0.0
+   N12, \field Temperature Coefficient of Short Circuit Current
+        \default 0.02
+        \type real
+        \units A/K
+   N13, \field Temperature Coefficient of Open Circuit Voltage
+        \default -0.079
+        \type real
+        \units V/K
+   N14, \field Nominal Operating Cell Temperature Test Ambient Temperature
+        \default 20
+        \type real
+        \units C
+        \minimum 0.0
+   N15, \field Nominal Operating Cell Temperature Test Cell Temperature
+        \default 40
+        \type real
+        \units C
+        \minimum 0.0
+   N16, \field Nominal Operating Cell Temperature Test Insolation
+        \default 800
+        \type real
+        \units W/m2
+        \minimum 0.0
+   N17, \field Module Heat Loss Coefficient
+        \default 30
+        \type real
+        \units W/m2-K
+        \minimum 0.0
+   N18; \field Total Heat Capacity
+        \default 50000
+        \type real
+        \units J/m2-K
+        \minimum 0.0
+
+OS:ElectricLoadCenter:Inverter:Simple,
+        \memo Electric power inverter to convert from direct current (DC) to alternating current
+        \memo (AC) in an electric load center that contains photovoltaic modules. This input
+        \memo object is for the simplest inverter model and uses a fixed efficiency.
+   A1 , \field Handle
+        \type handle
+        \required-field          
+   A2 , \field Name
+        \required-field
+        \reference InverterList
+   A3 , \field Availability Schedule Name
+        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+        \note If this field is blank, the system is always available.
+        \type object-list
+        \object-list ScheduleNames
+   A4 , \field Zone Name
+        \note enter name of zone to receive inverter losses as heat
+        \note if blank then inverter is assumed to be outdoors
+        \type object-list
+        \object-list ThermalZoneNames
+   N1 , \field Radiative Fraction
+        \minimum 0
+        \maximum 1.0
+   N2 ; \field Inverter Efficiency
+        \minimum 0
+        \maximum 1.0
+
+OS:ElectricLoadCenter:Inverter:LookUpTable,
+        \memo   California Energy Commission tests and publishes data on inverters
+        \memo   This inverter model interpolates using CEC test data
+        \memo   Input data are at http://www.gosolarcalifornia.org/equipment/inverter_tests/summaries
+   A1 , \field Handle
+        \type handle
+        \required-field           
+   A2 , \field Name
+        \required-field
+        \reference InverterList
+   A3 , \field Availability Schedule Name
+        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+        \note If this field is blank, the system is always available.
+        \type object-list
+        \object-list ScheduleNames
+   A4 , \field Zone Name
+        \note Enter name of zone to receive inverter losses as heat
+        \note if blank then inverter is assumed to be outdoors
+        \type object-list
+        \object-list ThermalZoneNames
+   N1 , \field Radiative Fraction
+        \minimum 0
+        \maximum 1.0
+   N2 , \field Rated Maximum Continuous Output Power
+        \units W
+   N3 , \field Night Tare Loss Power
+        \units W
+   N4 , \field Nominal Voltage Input
+        \units V
+   N5 , \field Efficiency at 10% Power and Nominal Voltage
+        \minimum 0
+        \maximum 1.0
+   N6 , \field Efficiency at 20% Power and Nominal Voltage
+        \minimum 0
+        \maximum 1.0
+   N7 , \field Efficiency at 30% Power and Nominal Voltage
+        \minimum 0
+        \maximum 1.0
+   N8 , \field Efficiency at 50% Power and Nominal Voltage
+        \minimum 0
+        \maximum 1.0
+   N9 , \field Efficiency at 75% Power and Nominal Voltage
+        \minimum 0
+        \maximum 1.0
+   N10; \field Efficiency at 100% Power and Nominal Voltage
+        \minimum 0
+        \maximum 1.0
+
+OS:ElectricLoadCenter:Distribution,
+       \memo a list of meters that can be reported are available after a run on
+       \memo the meter dictionary file (.mdd) if the Output:VariableDictionary has been requested.
+  A1 , \field Handle
+       \type handle
+       \required-field      
+  A2 , \field Name
+       \required-field
+  A3 , \field Generator List Name
+       \type object-list
+       \required-field 
+       \object-list ModelObjectLists
+  A4 , \field Generator Operation Scheme Type
+       \note required if Generator List is entered.
+       \memo Keys DemandLimit, TrackElectrical, TrackSchedule, TrackMeter, FollowThermal and FollowThermalLimitElectrical disabled for now
+       \type choice
+       \default Baseload
+       \key Baseload
+  N1 , \field Demand Limit Scheme Purchased Electric Demand Limit
+       \type real
+       \units W
+  A5 , \field Track Schedule Name Scheme Schedule Name
+       \note required when Generator Operation Scheme Type=TrackSchedule
+       \type object-list
+       \object-list ScheduleNames
+  A6 , \field Track Meter Scheme Meter Name
+       \note required when Generator Operation Scheme Type=TrackMeter
+       \type external-list
+       \external-list autoRDDmeter
+  A7 , \field Electrical Buss Type
+       \type choice
+       \memo Keys AlternatingCurrent, AlternatingCurrentWithStorage, DirectCurrentWithInverterDCStorage, and DirectCurrentWithInverterACStorage disabled for now
+       \key DirectCurrentWithInverter
+       \default DirectCurrentWithInverter
+  A8 , \field Inverter Object Name
+       \note required when Electrical Buss Type=DirectCurrentWithInverter, DirectCurrentWithInverterDCStorage,
+       \note or DirectCurrentWithInverterACStorage
+       \type object-list
+       \object-list InverterList
+  A9 , \field Electrical Storage Object Name
+       \note required when Electrical Buss Type=AlternatingCurrentWithStorage, DirectCurrentWithInverterDCStorage,
+       \note or DirectCurrentWithInverterACStorage
+       \type object-list
+       \object-list ElecStorageList
+  A10; \field Transformer Object Name
+       \note required when power needs to be output from on-site generation to the grid via transformer
+       \type object-list
+       \object-list TransformerNames       
+       
 \group OpenStudio Economics
 
 OS:ComponentCost:Adjustments,

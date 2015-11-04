@@ -2,17 +2,22 @@
   <schema_version>3.0</schema_version>
   <name>radiance_measure</name>
   <uid>1e3cfef8-b051-4e60-8bb0-ed2d29d4f45d</uid>
-  <version_id>a7848917-6b82-47e6-b7cc-8c765eece22f</version_id>
+  <version_id>c4c16a32-6f16-46c5-8e7c-ca053527b1cd</version_id>
   <xml_checksum>381B7733</xml_checksum>
   <class_name>RadianceMeasure</class_name>
   <display_name>Radiance Daylighting Measure</display_name>
-  <description>This measure uses Radiance instead of EnergyPlus for daylighting calculations with OpenStudio.</description>
-  <modeler_description>The OpenStudio model is converted to Radiance format. All spaces containing daylighting objects (illuminance map, daylighting control point, and optionally glare sensors) will have annual illuminance calculated using Radiance, and the OS mole's lighting schedules can be overwritten with those based on daylight responsive lighting controls.</modeler_description>
+  <description>This measure uses Radiance instead of EnergyPlus for daylighting calculations with \
+    OpenStudio.</description>
+  <modeler_description>The OpenStudio model is converted to Radiance format. All spaces containing \
+    daylighting objects (illuminance map, daylighting control point, and optionally glare sensors) \
+    will have annual illuminance calculated using Radiance, and the OS model's lighting schedules \
+    can be overwritten with those based on daylight responsive lighting controls.</modeler_description>
   <arguments>
     <argument>
       <name>apply_schedules</name>
       <display_name>Apply schedules</display_name>
-      <description>Replace lighting and shading control schedules with schedules computed by Radiance</description>
+      <description>Replace lighting and shading control schedules with schedules \
+    computed by Radiance</description>
       <type>Choice</type>
       <required>true</required>
       <model_dependent>false</model_dependent>
@@ -50,7 +55,8 @@
     <argument>
       <name>use_cores</name>
       <display_name>Cores</display_name>
-      <description>Number of CPU cores to use for Radiance jobs. Default is to use all but one core</description>
+      <description>Number of CPU cores to use for Radiance jobs. Default is to use all \
+    but one core</description>
       <type>Choice</type>
       <required>true</required>
       <model_dependent>false</model_dependent>
@@ -73,7 +79,9 @@
     <argument>
       <name>rad_settings</name>
       <display_name>Radiance Settings</display_name>
-      <description>Radiance simulation parameters. Default is to get these from the model; the Testing option is for testing the Radiance workflow only, as it uses very crude parameters for a fast simulation but very inaccurate results.</description>
+      <description>Radiance simulation parameters. Default is to get these from the \
+    model; the Testing option is for testing the Radiance workflow only, as it uses very crude \
+    parameters for a fast simulation but very inaccurate results.</description>
       <type>Choice</type>
       <required>true</required>
       <model_dependent>false</model_dependent>
@@ -138,7 +146,7 @@
       <filename>radiance_measure_test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
-      <checksum>F71FCE9A</checksum>
+      <checksum>0361F12D</checksum>
     </file>
     <file>
       <version>
@@ -149,7 +157,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>25C150EE</checksum>
+      <checksum>233488C5</checksum>
     </file>
   </files>
 </measure>

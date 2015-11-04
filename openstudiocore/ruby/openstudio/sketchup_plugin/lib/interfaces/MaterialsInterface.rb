@@ -51,7 +51,7 @@ module OpenStudio
     attr_reader :outdoors_ext, :outdoorssun_ext, :outdoorswind_ext, :outdoorssunwind_ext
     attr_reader :outdoors_int, :outdoorssun_int, :outdoorswind_int, :outdoorssunwind_int
     attr_reader :subext_ext, :subext_int, :subint_ext, :subint_int
-    attr_reader :air_wall, :solar_collector
+    attr_reader :air_wall, :solar_collector, :photovoltaic
     
     # for testing
     attr_accessor :observer

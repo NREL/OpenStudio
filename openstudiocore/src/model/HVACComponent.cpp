@@ -226,7 +226,6 @@ namespace detail {
         newInletComponentOutletPort = inletNode->connectedObjectPort(inletNode->inletPort());
         OS_ASSERT(newInletComponent);
         OS_ASSERT(newInletComponentOutletPort);
-        inletNode->remove();
       } else {
         newInletComponent = inletComponent;
         newInletComponentOutletPort = inletComponentOutletPort;
@@ -234,6 +233,11 @@ namespace detail {
 
       _model.disconnect(thisObject,componentInletPort); 
       _model.disconnect(thisObject,componentOutletPort); 
+
+      // inletNode->remove() would have failed if we did it before the disconnect
+      if( inletNode && outletNode ) {
+        inletNode->remove();
+      }
 
       _model.connect( newInletComponent.get(), newInletComponentOutletPort.get(), 
                        outletComponent.get(), outletComponentInletPort.get() );
@@ -272,8 +276,6 @@ namespace detail {
       if( inletNode && outletNode ) {
         newOutletComponent = outletNode->outletModelObject();
         newOutletComponentInletPort = outletNode->connectedObjectPort(outletNode->outletPort());
-
-        outletNode->remove();
       }
 
       if( ! newOutletComponent ) newOutletComponent = outletComponent;
@@ -281,6 +283,11 @@ namespace detail {
 
       _model.disconnect(thisObject,componentInletPort); 
       _model.disconnect(thisObject,componentOutletPort); 
+
+      // outletNode->remove() would have failed if we did it before the disconnect
+      if( inletNode && outletNode ) {
+        outletNode->remove();
+      }
 
       model().connect( inletComponent.get(), inletComponentOutletPort.get(), 
                        newOutletComponent.get(), newOutletComponentInletPort.get() );

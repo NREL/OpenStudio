@@ -34,6 +34,7 @@ class PlanarSurfaceGroup;
 class PlanarSurface;
 class Space;
 class ConstructionBase;
+class GeneratorPhotovoltaic;
 
 namespace detail {
 
@@ -160,6 +161,9 @@ namespace detail {
     Point3d centroid() const;
 
     std::vector<ModelObject> solarCollectors() const;
+
+    std::vector<GeneratorPhotovoltaic> generatorPhotovoltaics() const;
+    
 
     //@}
    protected:

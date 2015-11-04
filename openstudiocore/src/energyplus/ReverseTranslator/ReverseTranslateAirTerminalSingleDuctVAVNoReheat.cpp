@@ -128,22 +128,6 @@ OptionalModelObject ReverseTranslator::translateAirTerminalSingleDuctVAVNoReheat
       }
     }
 
-    boost::optional<WorkspaceObject> _dsoa;
-
-    // DesignSpecificationOutdoorAirObjectName
-    _dsoa = workspaceObject.getTarget(AirTerminal_SingleDuct_VAV_NoReheatFields::DesignSpecificationOutdoorAirObjectName);
-    if( _dsoa )
-    {
-      boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(_dsoa.get());
-      if( mo )
-      {
-        if( boost::optional<DesignSpecificationOutdoorAir> dsoa = mo->optionalCast<DesignSpecificationOutdoorAir>() )
-        {
-          airTerminal->setDesignSpecificationOutdoorAirObject(dsoa.get());
-        }
-      }
-    }
-
     return airTerminal.get();
   }
   else

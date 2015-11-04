@@ -18,9 +18,9 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/AvailabilityManagerDifferentialThermostat.hpp>
-#include <model/AvailabilityManagerDifferentialThermostat_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../AvailabilityManagerDifferentialThermostat.hpp"
+#include "../AvailabilityManagerDifferentialThermostat_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

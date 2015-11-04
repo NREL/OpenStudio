@@ -23,6 +23,7 @@
 #include "../../model/PlanarSurface_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
+#include "../../model/GeneratorPhotovoltaic.hpp"
 #include "../../model/SolarCollectorFlatPlatePhotovoltaicThermal.hpp"
 #include "../../model/SolarCollectorFlatPlatePhotovoltaicThermal_Impl.hpp"
 #include "../../model/SolarCollectorPerformancePhotovoltaicThermalSimple.hpp"
@@ -71,7 +72,13 @@ namespace energyplus {
   }
 
   // PhotovoltaicName
-  // DLM: not implemented
+  OptionalGeneratorPhotovoltaic generatorPhotovoltaic = modelObject.generatorPhotovoltaic();
+  if (generatorPhotovoltaic){
+    // generator will be translated with the other generators
+    idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicName, generatorPhotovoltaic->name().get());
+  } else{
+    LOG(Warn, "SolarCollector:FlatPlate:PhotovoltaicThermal '" << name << "' does not reference a GeneratorPhotovoltaic.");
+  }
 
   // figure out if this is on an air loop or plant loop
   boost::optional<AirLoopHVAC> airLoopHVAC = modelObject.airLoopHVAC();

@@ -26,6 +26,12 @@
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/DesignSpecificationOutdoorAir.hpp"
+#include "../../model/DesignSpecificationOutdoorAir_Impl.hpp"
 #include <utilities/idd/AirTerminal_SingleDuct_VAV_Reheat_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_AirDistributionUnit_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Gas_FieldEnums.hxx>
@@ -232,6 +238,25 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctVAVR
   }
   _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirTerminalObjectType,idfObject.iddObject().name());
   _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirTerminalName,idfObject.name().get());
+
+  // ControlForOutdoorAir
+  {
+    if( modelObject.controlForOutdoorAir() ) {
+      if( auto airLoopHVAC = modelObject.airLoopHVAC() ) {
+        auto zones = airLoopHVAC->demandComponents(modelObject,airLoopHVAC->demandOutletNode(),model::ThermalZone::iddObjectType());
+        if( ! zones.empty() ) {
+          auto zone = zones.front();
+          auto spaces = zone.cast<model::ThermalZone>().spaces();
+          if( ! spaces.empty() ) {
+            if( auto designSpecificationOutdoorAir = spaces.front().designSpecificationOutdoorAir() ) {
+              idfObject.setString(AirTerminal_SingleDuct_VAV_ReheatFields::DesignSpecificationOutdoorAirObjectName,
+                designSpecificationOutdoorAir->name().get()); 
+            }
+          }
+        }
+      }  
+    }
+  }
 
   return _airDistributionUnit;
 }

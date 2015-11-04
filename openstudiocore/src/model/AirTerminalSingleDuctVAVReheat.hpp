@@ -169,6 +169,13 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
   /** Sets the value of the MaximumReheatAirTemperature field. */
   void setMaximumReheatAirTemperature( double value );
 
+  /** If true, OpenStudio will attach the DesignSpecificationOutdoorAir object associated
+    * with the terminal's zone on export to EnergyPlus idf format.
+    * This field replaces the functionality of the EnergyPlus field: Design Specification Outdoor Air Object Name.*/
+  bool controlForOutdoorAir() const;
+
+  void setControlForOutdoorAir(bool controlForOutdoorAir);
+
  protected:
 
   friend class Model;

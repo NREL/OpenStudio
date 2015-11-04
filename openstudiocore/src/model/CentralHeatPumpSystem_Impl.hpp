@@ -20,7 +20,7 @@
 #ifndef MODEL_CENTRALHEATPUMPSYSTEM_IMPL_HPP
 #define MODEL_CENTRALHEATPUMPSYSTEM_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "WaterToWaterComponent_Impl.hpp"
 
 namespace openstudio {

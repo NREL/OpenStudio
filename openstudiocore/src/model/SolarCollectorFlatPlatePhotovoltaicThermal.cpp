@@ -17,28 +17,30 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SolarCollectorFlatPlatePhotovoltaicThermal.hpp>
-#include <model/SolarCollectorFlatPlatePhotovoltaicThermal_Impl.hpp>
+#include "SolarCollectorFlatPlatePhotovoltaicThermal.hpp"
+#include "SolarCollectorFlatPlatePhotovoltaicThermal_Impl.hpp"
 
-#include <model/PlanarSurface.hpp>
-#include <model/PlanarSurface_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurface_Impl.hpp>
-#include <model/SolarCollectorPerformancePhotovoltaicThermalSimple.hpp>
-#include <model/SolarCollectorPerformancePhotovoltaicThermalSimple_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
+#include "PlanarSurface.hpp"
+#include "PlanarSurface_Impl.hpp"
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
+#include "ShadingSurface.hpp"
+#include "ShadingSurface_Impl.hpp"
+#include "SolarCollectorPerformancePhotovoltaicThermalSimple.hpp"
+#include "SolarCollectorPerformancePhotovoltaicThermalSimple_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "GeneratorPhotovoltaic.hpp"
+#include "GeneratorPhotovoltaic_Impl.hpp"
+#include "Model.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
 
 #include <utilities/idd/OS_SolarCollector_FlatPlate_PhotovoltaicThermal_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -71,7 +73,14 @@ namespace detail {
   {
 
     SolarCollectorFlatPlatePhotovoltaicThermal result = StraightComponent_Impl::clone(model).cast<SolarCollectorFlatPlatePhotovoltaicThermal>();
-    result.setSolarCollectorPerformance(this->solarCollectorPerformance());
+    SolarCollectorPerformancePhotovoltaicThermalSimple newPerformance = this->solarCollectorPerformance().clone(model).cast<SolarCollectorPerformancePhotovoltaicThermalSimple>();
+    result.setPointer(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicThermalModelPerformanceName, newPerformance.handle());
+
+    boost::optional<GeneratorPhotovoltaic> pv = this->generatorPhotovoltaic();
+    if (pv){
+      GeneratorPhotovoltaic newPV = pv->clone(model).cast<GeneratorPhotovoltaic>();
+      result.setGeneratorPhotovoltaic(newPV);
+    }
 
     // do not want to point to any surface after cloning
     result.resetSurface();
@@ -167,6 +176,11 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<PlanarSurface>(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::SurfaceName);
   }
 
+  boost::optional<GeneratorPhotovoltaic> SolarCollectorFlatPlatePhotovoltaicThermal_Impl::generatorPhotovoltaic() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<GeneratorPhotovoltaic>(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicName);
+  }
+
   boost::optional<double> SolarCollectorFlatPlatePhotovoltaicThermal_Impl::designFlowRate() const {
     return getDouble(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::DesignFlowRate,true);
   }
@@ -181,9 +195,21 @@ namespace detail {
   }
 
   bool SolarCollectorFlatPlatePhotovoltaicThermal_Impl::setSolarCollectorPerformance(const SolarCollectorPerformancePhotovoltaicThermalSimple& performance) {
-    // bool result(false);
+    bool result(false);
+    SolarCollectorPerformancePhotovoltaicThermalSimple current = this->solarCollectorPerformance();
+    if (current.handle() == performance.handle()){
+      return true; // no-op
+    }
     ModelObject clone = performance.clone(this->model());
-    return setSolarCollectorPerformanceNoClone(clone.cast<SolarCollectorPerformancePhotovoltaicThermalSimple>());
+    result = setSolarCollectorPerformanceNoClone(clone.cast<SolarCollectorPerformancePhotovoltaicThermalSimple>());
+    if (result){
+      current.remove();
+    } else{
+      result = setSolarCollectorPerformanceNoClone(current);
+      OS_ASSERT(result);
+      return false;
+    }
+    return result;
   }
 
   void SolarCollectorFlatPlatePhotovoltaicThermal_Impl::resetSolarCollectorPerformance() {
@@ -200,17 +226,10 @@ namespace detail {
   bool SolarCollectorFlatPlatePhotovoltaicThermal_Impl::setSurface(const PlanarSurface& surface) {
     bool result(false);
 
-    if (surface.isAirWall()){
-      return false;
-    }
-
     // DLM: check for existing solar collectors or photovoltaic generators?
 
     if (surface.optionalCast<Surface>()){
-      Surface s = surface.cast<Surface>();
-      if (istringEqual("SunExposed", s.sunExposure())){
-        result = setPointer(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::SurfaceName, surface.handle());
-      }
+      result = setPointer(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::SurfaceName, surface.handle());
     } else if (surface.optionalCast<ShadingSurface>()){
       result = setPointer(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::SurfaceName, surface.handle());
     }
@@ -220,6 +239,18 @@ namespace detail {
 
   void SolarCollectorFlatPlatePhotovoltaicThermal_Impl::resetSurface() {
     bool result = setString(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::SurfaceName, "");
+    OS_ASSERT(result);
+  }
+
+  bool SolarCollectorFlatPlatePhotovoltaicThermal_Impl::setGeneratorPhotovoltaic(const GeneratorPhotovoltaic& generatorPhotovoltaic)
+  {
+    // DLM: should we check that these reference the same surface?
+    return setPointer(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicName, generatorPhotovoltaic.handle());
+  }
+
+  void SolarCollectorFlatPlatePhotovoltaicThermal_Impl::resetGeneratorPhotovoltaic()
+  {
+    bool result = setString(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicName, "");
     OS_ASSERT(result);
   }
 
@@ -267,6 +298,10 @@ boost::optional<PlanarSurface> SolarCollectorFlatPlatePhotovoltaicThermal::surfa
   return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->surface();
 }
 
+boost::optional<GeneratorPhotovoltaic> SolarCollectorFlatPlatePhotovoltaicThermal::generatorPhotovoltaic() const{
+  return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->generatorPhotovoltaic();
+}
+
 boost::optional<double> SolarCollectorFlatPlatePhotovoltaicThermal::designFlowRate() const {
   return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->designFlowRate();
 }
@@ -281,6 +316,14 @@ bool SolarCollectorFlatPlatePhotovoltaicThermal::setSurface(const PlanarSurface&
 
 void SolarCollectorFlatPlatePhotovoltaicThermal::resetSurface() {
   return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->resetSurface();
+}
+
+bool SolarCollectorFlatPlatePhotovoltaicThermal::setGeneratorPhotovoltaic(const GeneratorPhotovoltaic& generatorPhotovoltaic){
+  return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->setGeneratorPhotovoltaic(generatorPhotovoltaic);
+}
+
+void SolarCollectorFlatPlatePhotovoltaicThermal::resetGeneratorPhotovoltaic(){
+  getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->resetGeneratorPhotovoltaic();
 }
 
 bool SolarCollectorFlatPlatePhotovoltaicThermal::setSolarCollectorPerformance(const SolarCollectorPerformancePhotovoltaicThermalSimple& performance) {

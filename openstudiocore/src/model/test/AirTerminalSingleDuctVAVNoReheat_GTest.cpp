@@ -418,10 +418,5 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_DesignSpecificationOutdoor
   DesignSpecificationOutdoorAir oa = DesignSpecificationOutdoorAir(m);
   
   AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(m,s);
-
-  EXPECT_FALSE(testObject.designSpecificationOutdoorAirObject());
-  EXPECT_TRUE(testObject.setDesignSpecificationOutdoorAirObject(oa));
-  EXPECT_TRUE(testObject.designSpecificationOutdoorAirObject());
-  EXPECT_EQ(oa, testObject.designSpecificationOutdoorAirObject().get());
 }
 

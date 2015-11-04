@@ -26,7 +26,6 @@
 #include "../../model/ChillerHeaterPerformanceElectricEIR.hpp"
 #include "../../model/ChillerHeaterPerformanceElectricEIR_Impl.hpp"
 #include "../../model/Curve.hpp"
-#include "../../model/Curve.hpp"
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/ChillerHeaterPerformance_Electric_EIR_FieldEnums.hxx>

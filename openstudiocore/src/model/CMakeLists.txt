@@ -437,6 +437,15 @@ set(${target_name}_src
   ElectricEquipmentDefinition.hpp
   ElectricEquipmentDefinition_Impl.hpp
   ElectricEquipmentDefinition.cpp
+  ElectricLoadCenterDistribution.hpp
+  ElectricLoadCenterDistribution_Impl.hpp
+  ElectricLoadCenterDistribution.cpp
+  ElectricLoadCenterInverterLookUpTable.hpp
+  ElectricLoadCenterInverterLookUpTable_Impl.hpp
+  ElectricLoadCenterInverterLookUpTable.cpp
+  ElectricLoadCenterInverterSimple.hpp
+  ElectricLoadCenterInverterSimple_Impl.hpp
+  ElectricLoadCenterInverterSimple.cpp
   EvaporativeCoolerDirectResearchSpecial.hpp
   EvaporativeCoolerDirectResearchSpecial_Impl.hpp
   EvaporativeCoolerDirectResearchSpecial.cpp
@@ -497,6 +506,12 @@ set(${target_name}_src
   GasMixture.hpp
   GasMixture_Impl.hpp
   GasMixture.cpp
+  Generator.hpp
+  Generator_Impl.hpp
+  Generator.cpp 
+  GeneratorPhotovoltaic.hpp
+  GeneratorPhotovoltaic_Impl.hpp
+  GeneratorPhotovoltaic.cpp  
   GlareSensor.hpp
   GlareSensor_Impl.hpp
   GlareSensor.cpp
@@ -518,6 +533,12 @@ set(${target_name}_src
   HeatBalanceAlgorithm.hpp
   HeatBalanceAlgorithm_Impl.hpp
   HeatBalanceAlgorithm.cpp
+  HeatPumpWaterToWaterEquationFitCooling.hpp
+  HeatPumpWaterToWaterEquationFitCooling_Impl.hpp
+  HeatPumpWaterToWaterEquationFitCooling.cpp
+  HeatPumpWaterToWaterEquationFitHeating.hpp
+  HeatPumpWaterToWaterEquationFitHeating_Impl.hpp
+  HeatPumpWaterToWaterEquationFitHeating.cpp
   HeatExchangerAirToAirSensibleAndLatent.hpp
   HeatExchangerAirToAirSensibleAndLatent_Impl.hpp
   HeatExchangerAirToAirSensibleAndLatent.cpp
@@ -562,6 +583,9 @@ set(${target_name}_src
   InteriorPartitionSurfaceGroup.hpp
   InteriorPartitionSurfaceGroup_Impl.hpp
   InteriorPartitionSurfaceGroup.cpp
+  Inverter.hpp
+  Inverter_Impl.hpp
+  Inverter.cpp  
   LayeredConstruction.hpp
   LayeredConstruction_Impl.hpp
   LayeredConstruction.cpp
@@ -646,6 +670,15 @@ set(${target_name}_src
   PeopleDefinition.hpp
   PeopleDefinition_Impl.hpp
   PeopleDefinition.cpp
+  PhotovoltaicPerformance.hpp
+  PhotovoltaicPerformance_Impl.hpp
+  PhotovoltaicPerformance.cpp
+  PhotovoltaicPerformanceEquivalentOneDiode.hpp
+  PhotovoltaicPerformanceEquivalentOneDiode_Impl.hpp
+  PhotovoltaicPerformanceEquivalentOneDiode.cpp
+  PhotovoltaicPerformanceSimple.hpp
+  PhotovoltaicPerformanceSimple_Impl.hpp
+  PhotovoltaicPerformanceSimple.cpp
   PipeAdiabatic.hpp
   PipeAdiabatic_Impl.hpp
   PipeAdiabatic.cpp
@@ -1211,6 +1244,8 @@ set(${target_name}_swig_src
   ModelResources.i
   ModelGeometry.i
   ModelHVAC.i
+  ModelRefrigeration.i
+  ModelGenerators.i
 )
 
 # Only need to moc files that have Q_OBJECT macro
@@ -1520,6 +1555,9 @@ set(${target_name}_test_src
   test/DistrictHeating_GTest.cpp
   test/Duct_GTest.cpp
   test/ElectricEquipment_GTest.cpp
+  test/ElectricLoadCenterDistribution_GTest.cpp
+  test/ElectricLoadCenterInverterSimple_GTest.cpp
+  test/ElectricLoadCenterInverterLookUpTable_GTest.cpp
   test/EvaporativeCoolerDirectResearchSpecial_GTest.cpp
   test/EvaporativeCoolerIndirectResearchSpecial_GTest.cpp
   test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
@@ -1535,6 +1573,7 @@ set(${target_name}_test_src
   test/GasEquipment_GTest.cpp
   test/GasMixture_GTest.cpp
   test/Gas_GTest.cpp
+  test/GeneratorPhotovoltaic_GTest.cpp
   test/GlareSensor_GTest.cpp
   test/GroundHeatExchangerHorizontalTrench_GTest.cpp
   test/GroundHeatExchangerVertical_GTest.cpp
@@ -1543,6 +1582,8 @@ set(${target_name}_test_src
   test/HeaderedPumpsVariableSpeed_GTest.cpp
   test/HeatExchangerAirToAirSensibleAndLatent_GTest.cpp
   test/HeatExchangerFluidToFluid_GTest.cpp
+  test/HeatPumpWaterToWaterEquationFitHeating_GTest.cpp
+  test/HeatPumpWaterToWaterEquationFitCooling_GTest.cpp
   test/HumidifierSteamElectric_GTest.cpp
   test/IlluminanceMap_GTest.cpp
   test/InteriorPartitionSurfaceGroup_GTest.cpp
@@ -1572,6 +1613,8 @@ set(${target_name}_test_src
   test/ParentObject_GTest.cpp
   test/People_GTest.cpp
   test/PeopleDefinition_GTest.cpp
+  test/PhotovoltaicPerformanceEquivalentOneDiode_GTest.cpp
+  test/PhotovoltaicPerformanceSimple_GTest.cpp
   test/PipeAdiabatic_GTest.cpp
   test/PipeIndoor_GTest.cpp
   test/PipeOutdoor_GTest.cpp
@@ -1729,4 +1772,6 @@ MAKE_SWIG_TARGET(OpenStudioModelHVAC model "${CMAKE_CURRENT_SOURCE_DIR}/ModelHVA
 
 MAKE_SWIG_TARGET(OpenStudioModelRefrigeration model "${CMAKE_CURRENT_SOURCE_DIR}/ModelRefrigeration.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelHVAC)
 
-MAKE_SWIG_TARGET(OpenStudioModel model "${CMAKE_CURRENT_SOURCE_DIR}/Model.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelRefrigeration)
+MAKE_SWIG_TARGET(OpenStudioModelGenerators model "${CMAKE_CURRENT_SOURCE_DIR}/ModelGenerators.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelRefrigeration)
+
+MAKE_SWIG_TARGET(OpenStudioModel model "${CMAKE_CURRENT_SOURCE_DIR}/Model.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelGenerators)

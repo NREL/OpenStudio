@@ -293,7 +293,9 @@ module OpenStudio
       
       if @model_object.solarCollectors.size > 0 
         @entity.material = @model_interface.materials_interface.solar_collector
-      end
+      elsif @model_object.generatorPhotovoltaics.size > 0 
+        @entity.material = @model_interface.materials_interface.photovoltaic
+      end      
       
     end
 

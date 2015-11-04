@@ -152,6 +152,10 @@ namespace detail {
 
     void setMaximumReheatAirTemperature( double value );
 
+    bool controlForOutdoorAir() const;
+
+    void setControlForOutdoorAir(bool controlForOutdoorAir);
+
    private:
 
     REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctVAVReheat");

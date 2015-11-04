@@ -148,7 +148,7 @@ bool ExportXML::exportXML(const analysisdriver::SimpleProject project, QString x
 
   //warn the user if summary results were missing
   if ( errors.size() > 0 ) {
-    QMessageBox::warning(pat::PatApp::instance()->mainWindow, "Export XML Report - Warnings", errors.join(", ") + QString(" will be skipped; summary results not available.  Make sure you've run the reporting measure 'Xcel EDA Reporting and QAQC' and that all external file models have at least one user defined measure."));
+    QMessageBox::warning(pat::PatApp::instance()->mainWindow, "Export XML Report - Warnings", errors.join(", ") + QString(" will be skipped; summary results not available.  Make sure you've run the reporting measure 'Xcel EDA Reporting and QAQC'."));
   }
 
   QFile file(xmlFilePath);
@@ -273,11 +273,6 @@ boost::optional<QDomElement> ExportXML::exportAlternative(QDomDocument& doc,
       for (const QDomElement& measureElem : exportSwapModelAlternatives(doc, measures)){
         measuresElem.appendChild(measureElem);
         numMeasures += 1;
-      }
-
-      // DLM: only check for this on alternative model measures
-      if (numMeasures == 0){
-        return boost::none;
       }
 
     } else {

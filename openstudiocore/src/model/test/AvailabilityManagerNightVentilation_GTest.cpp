@@ -18,9 +18,9 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/AvailabilityManagerNightVentilation.hpp>
-#include <model/AvailabilityManagerNightVentilation_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../AvailabilityManagerNightVentilation.hpp"
+#include "../AvailabilityManagerNightVentilation_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

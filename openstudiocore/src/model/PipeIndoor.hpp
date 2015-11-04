@@ -20,7 +20,7 @@
 #ifndef MODEL_PIPEINDOOR_HPP
 #define MODEL_PIPEINDOOR_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
 
 namespace openstudio {

@@ -20,8 +20,8 @@
 #ifndef MODEL_SOLARCOLLECTORFLATPLATEPHOTOVOLTAICTHERMAL_IMPL_HPP
 #define MODEL_SOLARCOLLECTORFLATPLATEPHOTOVOLTAICTHERMAL_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -78,6 +78,8 @@ namespace detail {
 
     boost::optional<PlanarSurface> surface() const;
 
+    boost::optional<GeneratorPhotovoltaic> generatorPhotovoltaic() const;
+
     SolarCollectorPerformancePhotovoltaicThermalSimple solarCollectorPerformance() const;
 
     boost::optional<double> designFlowRate() const;
@@ -95,6 +97,10 @@ namespace detail {
     bool setSurface(const PlanarSurface& surface);
 
     void resetSurface();
+
+    bool setGeneratorPhotovoltaic(const GeneratorPhotovoltaic& generatorPhotovoltaic);
+
+    void resetGeneratorPhotovoltaic();
 
     bool setDesignFlowRate(double designFlowRate);
 

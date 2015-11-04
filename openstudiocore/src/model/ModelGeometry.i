@@ -29,6 +29,9 @@
   %ignore openstudio::model::Space::thermalZone;
   %ignore openstudio::model::Space::setThermalZone;
   
+  // ignore GeneratorPhotovoltaic
+  %ignore openstudio::model::PlanarSurface::generatorPhotovoltaics;
+  
   // DLM: this is a proof of concept section to see how attributes work in C#
   %include <attribute.i>
 
@@ -83,6 +86,7 @@ class SpaceInfiltrationEffectiveLeakageArea;
 class DesignSpecificationOutdoorAir;
 class SpaceLoadInstance;
 class SpaceLoadDefinition;
+class GeneratorPhotovoltaic;
 }
 }
 

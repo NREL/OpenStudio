@@ -48,6 +48,7 @@ set(utilities_resources_src
   utilities/SqlFile/1ZoneEvapCooler-V8-1-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V8-2-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V8-3-0.sql
+  utilities/SqlFile/1ZoneEvapCooler-V8-4-0.sql
   utilities/Zip/test1.zip
 )
 
@@ -388,6 +389,18 @@ set(osversion_resources_src
   osversion/1_8_5/OpenStudio.idd
   osversion/1_8_5/example.osm
   osversion/1_8_5/example.osc
+  osversion/1_9_0/OpenStudio.idd
+  osversion/1_9_0/example.osm
+  osversion/1_9_0/example.osc
+  osversion/1_9_1/OpenStudio.idd
+  osversion/1_9_1/example.osm
+  osversion/1_9_1/example.osc
+  osversion/1_9_2/OpenStudio.idd
+  osversion/1_9_2/example.osm
+  osversion/1_9_2/example.osc
+  osversion/1_9_3/OpenStudio.idd
+  osversion/1_9_3/example.osm
+  osversion/1_9_3/example.osc
   osversion/unknown.osc
 )
 

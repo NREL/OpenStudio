@@ -17,30 +17,30 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SolarCollectorFlatPlateWater.hpp>
-#include <model/SolarCollectorFlatPlateWater_Impl.hpp>
+#include "SolarCollectorFlatPlateWater.hpp"
+#include "SolarCollectorFlatPlateWater_Impl.hpp"
 
-#include <model/SolarCollectorPerformanceFlatPlate.hpp>
-#include <model/SolarCollectorPerformanceFlatPlate_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurface_Impl.hpp>
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Model.hpp>
+#include "SolarCollectorPerformanceFlatPlate.hpp"
+#include "SolarCollectorPerformanceFlatPlate_Impl.hpp"
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
+#include "ShadingSurface.hpp"
+#include "ShadingSurface_Impl.hpp"
+#include "Connection.hpp"
+#include "Connection_Impl.hpp"
+#include "ModelObject.hpp"
+#include "ModelObject_Impl.hpp"
+#include "PlantLoop.hpp"
+#include "PlantLoop_Impl.hpp"
+#include "Node.hpp"
+#include "Model.hpp"
 
 #include <utilities/idd/OS_SolarCollector_FlatPlate_Water_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -178,17 +178,10 @@ namespace detail {
   bool SolarCollectorFlatPlateWater_Impl::setSurface(const PlanarSurface& surface) {
     bool result(false);
 
-    if (surface.isAirWall()){
-      return false;
-    }
-    
     // DLM: check for existing solar collectors or photovoltaic generators?
     
     if (surface.optionalCast<Surface>()){
-      Surface s = surface.cast<Surface>();
-      if (istringEqual("SunExposed", s.sunExposure())){
-        result = setPointer(OS_SolarCollector_FlatPlate_WaterFields::SurfaceName, surface.handle());
-      }
+      result = setPointer(OS_SolarCollector_FlatPlate_WaterFields::SurfaceName, surface.handle());
     } else if (surface.optionalCast<ShadingSurface>()){
       result = setPointer(OS_SolarCollector_FlatPlate_WaterFields::SurfaceName, surface.handle());
     }

@@ -34,6 +34,7 @@ namespace model {
 class PlanarSurfaceGroup;
 class Space;
 class ConstructionBase;
+class GeneratorPhotovoltaic;
 
 namespace detail {
   class PlanarSurface_Impl;
@@ -218,6 +219,8 @@ class MODEL_API PlanarSurface : public ParentObject {
   /// Returns any solar hot water collectors associated with this surface.
   std::vector<ModelObject> solarCollectors() const;
 
+  /// Returns any generator photovoltaics associated with this surface.
+  std::vector<GeneratorPhotovoltaic> generatorPhotovoltaics() const;
 
  protected:
 

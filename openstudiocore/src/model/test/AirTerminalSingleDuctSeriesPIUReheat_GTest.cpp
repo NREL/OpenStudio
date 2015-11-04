@@ -23,8 +23,6 @@
 #include "../AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../AirLoopHVAC_Impl.hpp"
-#include "../ThermalZone.hpp"
-#include "../ThermalZone_Impl.hpp"
 #include "../Schedule.hpp"
 #include "../Schedule_Impl.hpp"
 #include "../FanConstantVolume.hpp"

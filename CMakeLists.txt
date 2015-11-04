@@ -1,4 +1,4 @@
-if (CMAKE_HOST_WIN32)
+if(CMAKE_HOST_WIN32)
   # Necessary to do with FindOpenSSL on Windows
   cmake_minimum_required(VERSION 3.2.3)
 else()
@@ -10,14 +10,14 @@ project(OpenStudio)
 
 set(CMAKE_VERSION_MAJOR 1)
 set(CMAKE_VERSION_MINOR 9)
-set(CMAKE_VERSION_PATCH 0)
+set(CMAKE_VERSION_PATCH 4)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
 
 if(NOT GIT_FOUND)
   find_program(GIT_EXECUTABLE git HINTS "$ENV{LOCALAPPDATA}/Programs/git/bin")
-  if (NOT GIT_EXECUTABLE_NOTFOUND)
+  if(NOT GIT_EXECUTABLE_NOTFOUND)
     set(GIT_FOUND TRUE)
   endif()
 endif()
@@ -47,11 +47,11 @@ endif()
 
 # EnergyPlus Idd version
 set(ENERGYPLUS_VERSION_MAJOR 8)
-set(ENERGYPLUS_VERSION_MINOR 3)
+set(ENERGYPLUS_VERSION_MINOR 4)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "6d97d074ea")
+set(ENERGYPLUS_BUILD_SHA "832e4bb9cb")
 
 option(NIGHTLY_BUILD "Use configurations for Nightly Build" OFF)
 
@@ -169,7 +169,7 @@ if(APPLE)
   if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
     message(FATAL_ERROR "OSX Deployment Target Must Be Set")
   endif()
-  
+
   set(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "Arch" FORCE)
 
   if(NOT CMAKE_OSX_SYSROOT)
@@ -180,8 +180,11 @@ if(APPLE)
   elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.10.*")
     set(OSX_SDK "10.10")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
+  elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.11.*")
+    set(OSX_SDK "10.11")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
   else()
-    message(FATAL_ERROR "OSX Sysroot must use the 10.9 or 10.10 SDK")
+    message(FATAL_ERROR "OSX Sysroot must use the 10.9, 10.10, or 10.11 SDK")
   endif()
 
 endif()
@@ -189,13 +192,13 @@ endif()
 # EnergyPlus
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH 53a7ba6f36558daa1589ea3934f9c092)
+    set(ENERGYPLUS_EXPECTED_HASH a52fc37e653c5563a198c95ed875f4e0)
     set(ENERGYPLUS_PLATFORM "Darwin")
   elseif(EXISTS "/etc/redhat-release")
-    set(ENERGYPLUS_EXPECTED_HASH 1824013d9f615dcc6355aa275f7eeb48)
+    set(ENERGYPLUS_EXPECTED_HASH 7e43d3c7bb42cd9c259cdc06a60ea13e)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    set(ENERGYPLUS_EXPECTED_HASH 878bf1361ecb216a39b18dc8d9a729a7)
+    set(ENERGYPLUS_EXPECTED_HASH 009fda317009bfff52eb23532bbc2064)
     set(ENERGYPLUS_PLATFORM "Linux-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_PLATFORM}")
@@ -204,7 +207,7 @@ if(UNIX)
   endif()
   if(NOT EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.bz2" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
     message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_PLATFORM})")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_PLATFORM}.tar.bz2" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.bz2" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_PLATFORM}.tar.bz2" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.bz2" TIMEOUT 320 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.bz2" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
@@ -212,10 +215,10 @@ if(UNIX)
 elseif(WIN32)
   if(CMAKE_CL_64)
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH 2ef24be7756d063bcdc22b39088bf515)
+    set(ENERGYPLUS_EXPECTED_HASH 50a9a7fae70afc4ee069535199ec7789)
   else()
     set(ENERGYPLUS_ARCH 32)
-    set(ENERGYPLUS_EXPECTED_HASH f9d3b3b8381c9fd27a4b973e2ec21688)
+    set(ENERGYPLUS_EXPECTED_HASH 0ddb8262a6e34bff6b204f4d877ce222)
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-win${OPENSSL_ARCH}")
   if(EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
@@ -223,7 +226,7 @@ elseif(WIN32)
   endif()
   if(NOT EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
     message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_ARCH}-bit)")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/EnergyPlus-${ENERGYPLUS_VERSION}-win${ENERGYPLUS_ARCH}.zip" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/EnergyPlus-${ENERGYPLUS_VERSION}-win${ENERGYPLUS_ARCH}.zip" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" TIMEOUT 320 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
@@ -333,7 +336,7 @@ if(MSVC)
     set(COMPILER_ARCH_TAG "")
   endif()
 
-  if (MSVC_VERSION STREQUAL "1800")
+  if(MSVC_VERSION STREQUAL "1800")
     set(COMPILER_VER_TAG "2013")
   else()
     set(COMPILER_VER_TAG "2014")
@@ -366,7 +369,7 @@ if(MSVC)
     endif()
   endforeach()
 
-  # we want sort, this will do both a lexicographical sort of the version numbers, putting the newest last and picking the 
+  # we want sort, this will do both a lexicographical sort of the version numbers, putting the newest last and picking the
   # longest (aka opengl) last. Then we sort it in reverse to prefer the highest version numbers with opengl
   list(SORT QT_HINT_DIR)
   list(REVERSE QT_HINT_DIR)
@@ -431,7 +434,7 @@ ProcessorCount(CPUCOUNT)
 if(CPUCOUNT EQUAL 0)
   set(CPUCOUNT 1)
 endif()
-  
+
 if(UNIX)
   if(CPUCOUNT EQUAL 1)
     set(BOOST_CPUCOUNT "1")
@@ -494,7 +497,7 @@ if(MSVC AND NOT Boost_FOUND AND EXISTS "C:/local/boost_1_55_0/")
   if(MSVC12)
     set(BOOST_MSVC 12.0)
   endif()
-  
+
   if(EXISTS "C:/local/boost_1_55_0/lib${BOOST_ARCH}-msvc-${BOOST_MSVC}")
     set(BOOST_ROOT "C:/local/boost_1_55_0")
     set(BOOST_LIBRARYDIR "C:/local/boost_1_55_0/lib${BOOST_ARCH}-msvc-${BOOST_MSVC}")
@@ -595,7 +598,7 @@ if(BUILD_RUBY AND UNIX)
     INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE) install
   )
   set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
-  
+
   if(APPLE)
     set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby.2.0.0.dylib)
   else()
@@ -679,7 +682,7 @@ if(BUILD_BOOST)
       URL http://openstudio-resources.s3.amazonaws.com/dependencies/boost_1_55_0.tar.gz
       URL_MD5 93780777cfbf999a600f62883bd54b17
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./bootstrap.sh
-      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51.patch && ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/fchmodat.patch 
+      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51.patch && ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/fchmodat.patch
       BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 toolset=clang cxxflags=${apple-flags} linkflags=${apple-flags} variant=debug,release define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${BOOST_CPUCOUNT} install
       INSTALL_COMMAND ""
     )
@@ -983,7 +986,7 @@ endif()
 ###############################################################################
 
 
-if (BUILD_REGRESSIONS)
+if(BUILD_REGRESSIONS)
   ExternalProject_Add(Regressions
     DEPENDS OSCore
     GIT_REPOSITORY git://github.com/NREL/OpenStudio-resources
