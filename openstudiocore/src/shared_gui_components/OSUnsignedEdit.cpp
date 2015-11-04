@@ -46,6 +46,10 @@ OSUnsignedEdit2::OSUnsignedEdit2( QWidget * parent )
   this->setValidator(m_intValidator);
 }
 
+OSUnsignedEdit2::~OSUnsignedEdit2()
+{
+}
+
 void OSUnsignedEdit2::bind(model::ModelObject& modelObject,
                           UnsignedGetter get,
                           boost::optional<UnsignedSetter> set,

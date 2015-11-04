@@ -45,6 +45,10 @@ OSIntegerEdit2::OSIntegerEdit2( QWidget * parent )
   this->setValidator(m_intValidator);
 }
 
+OSIntegerEdit2::~OSIntegerEdit2()
+{
+}
+
 void OSIntegerEdit2::bind(model::ModelObject& modelObject,
                           IntGetter get,
                           boost::optional<IntSetter> set,

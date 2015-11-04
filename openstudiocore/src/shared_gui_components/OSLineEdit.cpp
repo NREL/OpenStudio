@@ -53,6 +53,10 @@ OSLineEdit2::OSLineEdit2( QWidget * parent )
   setEnabled(false);
 }
 
+OSLineEdit2::~OSLineEdit2()
+{
+}
+
 void OSLineEdit2::bind(model::ModelObject& modelObject,
                        StringGetter get,
                        boost::optional<StringSetter> set,

@@ -586,6 +586,10 @@ OSDropZone2::OSDropZone2()
   setMaximumWidth(150);
 }
 
+OSDropZone2::~OSDropZone2()
+{
+}
+
 void OSDropZone2::refresh()
 {
   boost::optional<model::ModelObject> modelObject;

@@ -45,6 +45,10 @@ OSDoubleEdit2::OSDoubleEdit2( QWidget * parent )
   this->setValidator(m_doubleValidator);
 }
 
+OSDoubleEdit2::~OSDoubleEdit2()
+{
+}
+
 void OSDoubleEdit2::bind(model::ModelObject& modelObject,
                          DoubleGetter get,
                          boost::optional<DoubleSetter> set,

@@ -175,6 +175,10 @@ OSComboBox2::OSComboBox2( QWidget * parent, bool editable )
   setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Fixed);
 }
 
+OSComboBox2::~OSComboBox2()
+{
+}
+
 bool OSComboBox2::event( QEvent * e )
 {
   if( e->type() == QEvent::Wheel )

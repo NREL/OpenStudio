@@ -71,7 +71,7 @@ class OSQuantityEdit2: public QWidget {
   OSQuantityEdit2(const std::string& modelUnits, const std::string& siUnits, 
                   const std::string& ipUnits, bool isIP, QWidget * parent = nullptr);
 
-  virtual ~OSQuantityEdit2() {}
+  virtual ~OSQuantityEdit2();
 
   void enableClickFocus();
 

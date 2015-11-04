@@ -32,6 +32,10 @@ namespace openstudio {
     setEnabled(false);
   }
 
+  OSCheckBox3::~OSCheckBox3()
+  {
+  }
+
   void OSCheckBox3::bind(model::ModelObject & modelObject,
     BoolGetter get,
     boost::optional<BoolSetter> set,

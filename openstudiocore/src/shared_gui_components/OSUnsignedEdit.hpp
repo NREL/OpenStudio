@@ -42,7 +42,7 @@ class OSUnsignedEdit2: public QLineEdit {
 
   OSUnsignedEdit2(QWidget * parent = nullptr);
 
-  virtual ~OSUnsignedEdit2() {}
+  virtual ~OSUnsignedEdit2();
 
   void enableClickFocus() { this->m_hasClickFocus = true; }
 
