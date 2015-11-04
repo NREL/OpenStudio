@@ -51,6 +51,8 @@
     <file>images/cooling_tower.png</file>
     <file>images/cooling_tower_2speed.png</file>
     <file>images/cooling_tower_variable.png</file>
+    <file>images/Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit.png</file>
+    <file>images/Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit.png</file>
     <file>images/dehumidify_schedule_icon.png</file>
     <file>images/baseboard_rad_convect_electric.png</file>
     <file>images/baseboard_rad_convect_water.png</file>
@@ -347,6 +349,8 @@
     <file>images/mini_icons/construction_undergnd.png</file>
     <file>images/mini_icons/cool_coil.png</file>
     <file>images/mini_icons/cooling_tower.png</file>
+    <file>images/mini_icons/Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit.png</file>
+    <file>images/mini_icons/Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit.png</file>
     <file>images/mini_icons/daylighting_control.png</file>
     <file>images/mini_icons/default_construction_set.png</file>
     <file>images/mini_icons/default_schedule_set.png</file>
