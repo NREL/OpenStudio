@@ -174,7 +174,7 @@ namespace openstudio{
 
     /// impl type is boost::gregorian::date
     typedef boost::gregorian::date ImplType;
-    typedef std::shared_ptr<ImplType> ImplPtr;
+    //typedef std::shared_ptr<ImplType> ImplPtr;
 
     REGISTER_LOGGER("utilities.time.Date");
 
@@ -297,7 +297,7 @@ namespace openstudio{
     void initFromYearDayOfYear(int year, unsigned dayOfYear);
 
     // pointer to impl
-    ImplPtr m_impl;
+    ImplType m_impl;
 
     // user provided base year is optional
     boost::optional<int> m_baseYear;
