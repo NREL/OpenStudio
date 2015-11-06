@@ -86,7 +86,7 @@ OptionalModelObject WaterToWaterComponent_Impl::demandOutletModelObject()
   return connectedObject(demandOutletPort());
 }
 
-std::vector<HVACComponent> WaterToWaterComponent_Impl::edges(boost::optional<HVACComponent> prev)
+std::vector<HVACComponent> WaterToWaterComponent_Impl::edges(const boost::optional<HVACComponent> & prev)
 {
   std::vector<HVACComponent> edges;
   

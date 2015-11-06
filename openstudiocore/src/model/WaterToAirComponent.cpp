@@ -89,7 +89,7 @@ boost::optional<ModelObject> WaterToAirComponent_Impl::waterOutletModelObject()
   return connectedObject( waterOutletPort() );
 }
 
-std::vector<HVACComponent> WaterToAirComponent_Impl::edges(boost::optional<HVACComponent> prev)
+std::vector<HVACComponent> WaterToAirComponent_Impl::edges(const boost::optional<HVACComponent> & prev)
 {
   std::vector<HVACComponent> edges;
   

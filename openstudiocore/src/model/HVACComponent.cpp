@@ -472,7 +472,7 @@ namespace detail {
     return ModelObject_Impl::clone(model);
   }
 
-  std::vector<HVACComponent> HVACComponent_Impl::edges(boost::optional<HVACComponent> previous)
+  std::vector<HVACComponent> HVACComponent_Impl::edges(const boost::optional<HVACComponent> & previous)
   {
     return std::vector<HVACComponent>();
   }
