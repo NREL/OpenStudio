@@ -244,7 +244,7 @@ namespace openstudio{
   }
 
   // reference to impl
-  const Time::ImplType& Time::impl() const
+  const Time::ImplType Time::impl() const
   {
     return m_impl;
   }

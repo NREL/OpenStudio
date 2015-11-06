@@ -286,7 +286,7 @@ namespace openstudio{
   protected:
 
     // reference to impl
-    const ImplType& impl() const;
+    const ImplType impl() const;
 
   private:
 
@@ -296,7 +296,6 @@ namespace openstudio{
     // initFromYearDayOfYear
     void initFromYearDayOfYear(int year, unsigned dayOfYear);
 
-    // pointer to impl
     ImplType m_impl;
 
     // user provided base year is optional

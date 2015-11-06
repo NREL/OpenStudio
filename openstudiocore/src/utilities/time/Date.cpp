@@ -472,8 +472,7 @@ namespace openstudio{
     }
   }
 
-  // reference to impl
-  const Date::ImplType& Date::impl() const
+  const Date::ImplType Date::impl() const
   {
     return m_impl;
   }

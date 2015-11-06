@@ -154,13 +154,11 @@ namespace openstudio{
 
     protected:
 
-      // reference to impl
-      const ImplType& impl() const;
+      const ImplType impl() const;
 
     private:
       REGISTER_LOGGER("utilities.time.Time");
 
-      // pointer to impl
       ImplType m_impl;
   };
 
