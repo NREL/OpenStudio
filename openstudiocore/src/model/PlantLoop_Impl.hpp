@@ -153,7 +153,7 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   bool removeSupplyBranchWithComponent( HVACComponent hvacComponent );
 
-  bool addDemandBranchForComponent( HVACComponent component );
+  bool addDemandBranchForComponent( HVACComponent component, bool tertiary = false );
 
   bool removeDemandBranchWithComponent( HVACComponent hvacComponent );
 

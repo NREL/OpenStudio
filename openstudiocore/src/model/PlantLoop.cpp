@@ -276,7 +276,7 @@ bool PlantLoop_Impl::removeSupplyBranchWithComponent( HVACComponent component )
   return removeBranchWithComponent(component,supplySplitter(),supplyMixer(),true);
 }
 
-bool PlantLoop_Impl::addDemandBranchForComponent( HVACComponent component )
+bool PlantLoop_Impl::addDemandBranchForComponent( HVACComponent component, bool tertiary )
 {
   Model _model = this->model();
 
@@ -297,7 +297,16 @@ bool PlantLoop_Impl::addDemandBranchForComponent( HVACComponent component )
         if ( (node->outletModelObject().get() == mixer) &&       
               (node->inletModelObject().get() == splitter) )       
         {
-          return component.addToNode(node.get());
+          if( auto waterToWater = component.optionalCast<WaterToWaterComponent>() ) {
+            if( tertiary ) {
+              return waterToWater->addToTertiaryNode(node.get());
+            } else {
+              return waterToWater->addToNode(node.get());
+            }
+          }
+          else {
+            return component.addToNode(node.get());
+          }
         }
       }
     }
@@ -314,7 +323,20 @@ bool PlantLoop_Impl::addDemandBranchForComponent( HVACComponent component )
   _model.connect(splitter,nextOutletPort,node,node.inletPort());
   _model.connect(node,node.outletPort(),mixer,nextInletPort);
 
-  if( component.addToNode(node) )
+   bool result = false;
+
+   if( auto waterToWater = component.optionalCast<WaterToWaterComponent>() ) {
+     if( tertiary ) {
+       result = waterToWater->addToTertiaryNode(node);
+     } else {
+       result = waterToWater->addToNode(node);
+     }
+   }
+   else {
+     result = component.addToNode(node);
+   }
+
+  if( result )
   {
     return true;
   }
@@ -804,9 +826,9 @@ Node PlantLoop::demandOutletNode() const
   return getImpl<detail::PlantLoop_Impl>()->demandOutletNode();
 }
 
-bool PlantLoop::addDemandBranchForComponent( HVACComponent component )
+bool PlantLoop::addDemandBranchForComponent( HVACComponent component, bool tertiary )
 {
-  return getImpl<detail::PlantLoop_Impl>()->addDemandBranchForComponent( component );
+  return getImpl<detail::PlantLoop_Impl>()->addDemandBranchForComponent( component, tertiary );
 }
 
 bool PlantLoop::addSupplyBranchForComponent( HVACComponent component )
