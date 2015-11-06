@@ -178,6 +178,21 @@ TEST(DateTime,ISO8601Conversions) {
   EXPECT_EQ(dateTime,copy.get());
 }
 
+TEST(DateTime, OutOfRangeYearTest) {
+
+  std::string timeString = "20151025T085412";
+  for (unsigned i = 0; i < 10000; ++i){
+    boost::optional<openstudio::DateTime> dateTime = openstudio::DateTime::fromISO8601(timeString);
+    ASSERT_TRUE(dateTime);
+    openstudio::Date date = dateTime->date();
+    for (unsigned j = 0; j < 10; ++j){
+      EXPECT_EQ(2015, date.year());
+      EXPECT_EQ(10, date.monthOfYear().value());
+      EXPECT_EQ(25, date.dayOfMonth());
+    }
+   }
+}
+
 
 /////////////////////////////////////////////////////////////
 // Calendar for 2008.  Format is day of month, day of year //

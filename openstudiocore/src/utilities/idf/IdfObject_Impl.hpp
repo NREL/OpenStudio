@@ -100,6 +100,10 @@ namespace detail {
      *  name will return the default name, if it exists. */
     boost::optional<std::string> name(bool returnDefault=false) const;
 
+    /** Returns the name if set or returns an empty string. Optionally, if returnDefault is passed in as true,
+    *  name will return the default name, if it exists. */
+    std::string nameString(bool returnDefault = false) const;
+
     /** Get a brief description of this object. Always includes iddObject().type(), and includes
      *  name() if available and not empty. */
     std::string briefDescription() const;
