@@ -181,7 +181,7 @@ class MODEL_API PlantLoop : public Loop {
    * This method will create a new ControllerWaterCoil if hvacComponent is a
    * CoilCoolingWater or a CoilHeatingWater.
    */
-  bool addDemandBranchForComponent( HVACComponent hvacComponent );
+  bool addDemandBranchForComponent( HVACComponent hvacComponent, bool tertiary = false );
 
   /** Removes the demand side branch that contains the specified hvacComponent.
    *  Does not remove the component from the model, but may remove surrounding,
