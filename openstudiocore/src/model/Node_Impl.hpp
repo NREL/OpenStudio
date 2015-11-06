@@ -59,11 +59,7 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const;
 
-    /** This function returns a vector of HVACComponent that are directly downstream
-     *  from this object on an AirLoopHVAC or PlantLoop. 
-     *  @param[in]  isDemandComponent  Boolean passed in whether object is a demand or supply component
-    **/
-    virtual std::vector<HVACComponent> edges(bool isDemandComponent);
+    virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & prev) override;
 
     unsigned inletPort();
 
