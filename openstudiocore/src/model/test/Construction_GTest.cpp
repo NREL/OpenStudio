@@ -814,7 +814,6 @@ TEST_F(ModelFixture, Construction_EnsureUniqueLayers)
 
 }
 
-
 TEST_F(ModelFixture, Construction_StandardsInformationConstruction)
 {
 

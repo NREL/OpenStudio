@@ -485,6 +485,46 @@ ZoneHVACTerminalUnitVariableRefrigerantFlow::ZoneHVACTerminalUnitVariableRefrige
   getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setSupplyAirFan(fan);
 }
 
+ZoneHVACTerminalUnitVariableRefrigerantFlow::ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model, 
+  const CoilCoolingDXVariableRefrigerantFlow & coolingCoil,
+  const CoilHeatingDXVariableRefrigerantFlow & heatingCoil,
+  const HVACComponent & fan)
+  : ZoneHVACComponent(ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>());
+
+  Schedule alwaysOnSchedule = model.alwaysOnDiscreteSchedule();
+  setTerminalUnitAvailabilityschedule(alwaysOnSchedule);
+
+  autosizeSupplyAirFlowRateDuringCoolingOperation();
+
+  autosizeSupplyAirFlowRateWhenNoCoolingisNeeded();
+
+  autosizeSupplyAirFlowRateDuringHeatingOperation();
+
+  autosizeSupplyAirFlowRateWhenNoHeatingisNeeded();
+
+  autosizeOutdoorAirFlowRateDuringCoolingOperation();
+
+  autosizeOutdoorAirFlowRateDuringHeatingOperation();
+
+  autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+
+  setSupplyAirFanOperatingModeSchedule(alwaysOnSchedule);
+
+  setZoneTerminalUnitOnParasiticElectricEnergyUse(30);
+
+  setZoneTerminalUnitOffParasiticElectricEnergyUse(20);
+
+  setRatedTotalHeatingCapacitySizingRatio(1.0);
+
+  getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setCoolingCoil(coolingCoil);
+
+  getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setHeatingCoil(heatingCoil);
+
+  getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setSupplyAirFan(fan);
+}
+
 IddObjectType ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType() {
   return IddObjectType(IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
 }

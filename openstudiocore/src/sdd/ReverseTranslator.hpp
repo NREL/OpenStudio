@@ -28,6 +28,8 @@
 #include "../utilities/core/StringStreamLogSink.hpp"
 
 #include "../model/Schedule.hpp"
+#include "../model/AvailabilityManagerOptimumStart.hpp"
+#include "../model/AvailabilityManagerNightCycle.hpp"
 #include "../model/ConstructionBase.hpp"
 
 class QDomDocument;
@@ -90,12 +92,15 @@ namespace sdd {
     boost::optional<openstudio::model::ModelObject> translateCrvCubic(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateCrvDblQuad(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateCrvQuad(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateCoilCoolingDXVariableRefrigerantFlow(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateCoilHeatingDXVariableRefrigerantFlow(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateFluidSys(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translatePump(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateBoiler(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateChiller(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateWtrHtr(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateHtRej(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateHX(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateBuilding(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> createSpace(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> createThermalZone(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
@@ -118,6 +123,9 @@ namespace sdd {
     // If found then looks for a model::Loop with that name and returns it
     // This is useful for hooking water coils up to their plant and maybe other things.
     boost::optional<model::PlantLoop> loopForSupplySegment(const QString & fluidSegmentName, const QDomDocument& doc, openstudio::model::Model& model);
+
+    // Return the supply segment by name
+    QDomElement supplySegment(const QString & fluidSegmentName, const QDomDocument& doc);
 
     // Retruns the ServiceHotWater loop in the SDD instance with a segment named fluidSegmentName
     // If the loop is not found in the model, this function will attempt to translate it out of the SDD.
@@ -169,6 +177,17 @@ namespace sdd {
     openstudio::path m_path;
 
     ProgressBar* m_progressBar;
+
+    // This is storage to match control zones with optimum start AVMs
+    // This is used because the ThermalZone instances are not yet created when
+    // the air system and AVMs are translated.
+    // This map is populated when the air systems are translated,
+    // then used to add the control zones when the zones are translated later.
+    // The map is zone name => AVM 
+    std::map<std::string,model::AvailabilityManagerOptimumStart> m_optimumStartControlZones;
+
+    // Similar to m_optimumStartControlZones but for night cycle manager
+    std::map<std::string,model::AvailabilityManagerNightCycle> m_nightCycleControlZones;
 
     REGISTER_LOGGER("openstudio.sdd.ReverseTranslator");
   };

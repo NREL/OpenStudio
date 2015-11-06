@@ -405,6 +405,13 @@ namespace detail {
       if (result){
         this->assignDefaultSunExposure(false);
         this->assignDefaultWindExposure(false);
+
+        if (istringEqual("Adiabatic", outsideBoundaryCondition)){
+          // remove all subsurfaces
+          for (auto subSurface : subSurfaces()){
+            subSurface.remove();
+          }
+        }
       }else if(adjacentSurface){
         // restore the adjacent surface if set boundary condition fails
         bool test = setAdjacentSurface(*adjacentSurface);
