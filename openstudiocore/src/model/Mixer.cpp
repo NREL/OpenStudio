@@ -149,11 +149,11 @@ std::vector<ModelObject> Mixer_Impl::inletModelObjects()
   return result;
 }
 
-std::vector<HVACComponent> Mixer_Impl::edges(boost::optional<HVACComponent> prev)
+std::vector<HVACComponent> Mixer_Impl::edges(const boost::optional<HVACComponent> & prev)
 {
   std::vector<HVACComponent> edges;
-  if( boost::optional<ModelObject> edgeModelObject = this->outletModelObject() ) {
-    if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+  if( auto edgeModelObject = this->outletModelObject() ) {
+    if( auto edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
       edges.push_back(*edgeObject);
     }
   }

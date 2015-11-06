@@ -64,7 +64,7 @@ class MODEL_API WaterToWaterComponent_Impl : public HVACComponent_Impl
 
   virtual boost::optional<ModelObject> demandOutletModelObject();
 
-  virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & prev);
+  virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & prev) override;
 
   virtual boost::optional<ParentObject> parent() const;
 

@@ -89,58 +89,55 @@ OptionalModelObject WaterToWaterComponent_Impl::demandOutletModelObject()
 std::vector<HVACComponent> WaterToWaterComponent_Impl::edges(const boost::optional<HVACComponent> & prev)
 {
   std::vector<HVACComponent> edges;
-  
-  if( prev) {
-    bool stop = false;
-    if( auto inletModelObject = supplyInletModelObject() ) {
-      if( prev.get() == inletModelObject.get() ) {
-        if( auto edgeModelObject = supplyOutletModelObject() ) {
-          auto edgeHVACComponent = edgeModelObject->optionalCast<HVACComponent>();
-          OS_ASSERT(edgeHVACComponent);
-          edges.push_back(edgeHVACComponent.get());
-          stop = true;
-        }
-      }
-    }
-    if( ! stop ) {
-      if( auto inletModelObject = demandInletModelObject() ) {
-        if( prev.get() == inletModelObject.get() ) {
-          if( auto edgeModelObject = demandOutletModelObject() ) {
-            auto edgeHVACComponent = edgeModelObject->optionalCast<HVACComponent>();
-            OS_ASSERT(edgeHVACComponent);
-            edges.push_back(edgeHVACComponent.get());
-            stop = true;
-          }
-        }
-      }
-    }
-    if( ! stop ) {
-      if( auto inletModelObject = tertiaryInletModelObject() ) {
-        if( prev.get() == inletModelObject.get() ) {
-          if( auto edgeModelObject = tertiaryOutletModelObject() ) {
-            auto edgeHVACComponent = edgeModelObject->optionalCast<HVACComponent>();
-            OS_ASSERT(edgeHVACComponent);
-            edges.push_back(edgeHVACComponent.get());
-          }
-        }
-      }
-    }
-  } else {
+
+  auto pushSupplyOutletModelObject = [&]() {
     if( auto edgeModelObject = supplyOutletModelObject() ) {
       auto edgeHVACComponent = edgeModelObject->optionalCast<HVACComponent>();
       OS_ASSERT(edgeHVACComponent);
       edges.push_back(edgeHVACComponent.get());
     }
+  };
+
+  auto pushDemandOutletModelObject = [&]() {
     if( auto edgeModelObject = demandOutletModelObject() ) {
       auto edgeHVACComponent = edgeModelObject->optionalCast<HVACComponent>();
       OS_ASSERT(edgeHVACComponent);
       edges.push_back(edgeHVACComponent.get());
     }
+  };
+
+  auto pushTertiaryOutletModelObject = [&]() {
     if( auto edgeModelObject = tertiaryOutletModelObject() ) {
       auto edgeHVACComponent = edgeModelObject->optionalCast<HVACComponent>();
       OS_ASSERT(edgeHVACComponent);
       edges.push_back(edgeHVACComponent.get());
     }
+  };
+  
+  if( prev) {
+    if( auto inletModelObject = supplyInletModelObject() ) {
+      if( prev.get() == inletModelObject.get() ) {
+        pushSupplyOutletModelObject();
+        return edges;
+      }
+    }
+    if( auto inletModelObject = demandInletModelObject() ) {
+      if( prev.get() == inletModelObject.get() ) {
+        pushDemandOutletModelObject();
+        return edges;
+      }
+    }
+    if( auto inletModelObject = tertiaryInletModelObject() ) {
+      if( prev.get() == inletModelObject.get() ) {
+        pushTertiaryOutletModelObject();
+        return edges;
+      }
+    }
+  } else {
+    pushSupplyOutletModelObject();
+    pushDemandOutletModelObject();
+    pushTertiaryOutletModelObject();
+    return edges;
   }
 
   return edges;

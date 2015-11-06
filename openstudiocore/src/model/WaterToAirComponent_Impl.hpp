@@ -51,7 +51,7 @@ class MODEL_API WaterToAirComponent_Impl : public HVACComponent_Impl {
 
   virtual boost::optional<ModelObject> waterOutletModelObject();
 
-  virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & previous);
+  virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & previous) override;
 
   virtual boost::optional<AirLoopHVAC> airLoopHVAC() const;
 

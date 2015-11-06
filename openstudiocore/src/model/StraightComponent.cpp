@@ -139,8 +139,8 @@ void StraightComponent_Impl::disconnect()
 std::vector<HVACComponent> StraightComponent_Impl::edges(const boost::optional<HVACComponent> & prev)
 {
   std::vector<HVACComponent> edges;
-  if( boost::optional<ModelObject> edgeModelObject = this->outletModelObject() ) {
-    if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+  if( auto edgeModelObject = outletModelObject() ) {
+    if( auto edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
       edges.push_back(*edgeObject);
     }
   }

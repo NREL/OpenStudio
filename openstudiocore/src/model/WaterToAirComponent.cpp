@@ -92,41 +92,40 @@ boost::optional<ModelObject> WaterToAirComponent_Impl::waterOutletModelObject()
 std::vector<HVACComponent> WaterToAirComponent_Impl::edges(const boost::optional<HVACComponent> & prev)
 {
   std::vector<HVACComponent> edges;
-  
-  if( prev) {
-    bool stop = false;
-    if( auto inletModelObject = waterInletModelObject() ) {
-      if( prev.get() == inletModelObject.get() ) {
-        if( auto edgeModelObject = waterOutletModelObject() ) {
-          auto edgeHVACComponent = edgeModelObject->optionalCast<HVACComponent>();
-          OS_ASSERT(edgeHVACComponent);
-          edges.push_back(edgeHVACComponent.get());
-          stop = true;
-        }
-      }
-    }
-    if( ! stop ) {
-      if( auto inletModelObject = airInletModelObject() ) {
-        if( prev.get() == inletModelObject.get() ) {
-          if( auto edgeModelObject = airOutletModelObject() ) {
-            auto edgeHVACComponent = edgeModelObject->optionalCast<HVACComponent>();
-            OS_ASSERT(edgeHVACComponent);
-            edges.push_back(edgeHVACComponent.get());
-          }
-        }
-      }
-    }
-  } else {
+
+  auto pushWaterOutletModelObject = [&]() {
     if( auto edgeModelObject = waterOutletModelObject() ) {
       auto edgeHVACComponent = edgeModelObject->optionalCast<HVACComponent>();
       OS_ASSERT(edgeHVACComponent);
       edges.push_back(edgeHVACComponent.get());
     }
+  };
+
+  auto pushAirOutletModelObject = [&]() {
     if( auto edgeModelObject = airOutletModelObject() ) {
       auto edgeHVACComponent = edgeModelObject->optionalCast<HVACComponent>();
       OS_ASSERT(edgeHVACComponent);
       edges.push_back(edgeHVACComponent.get());
     }
+  };
+  
+  if( prev) {
+    if( auto inletModelObject = waterInletModelObject() ) {
+      if( prev.get() == inletModelObject.get() ) {
+        pushWaterOutletModelObject();
+        return edges;
+      }
+    }
+    if( auto inletModelObject = airInletModelObject() ) {
+      if( prev.get() == inletModelObject.get() ) {
+        pushAirOutletModelObject();
+        return edges;
+      }
+    }
+  } else {
+    pushWaterOutletModelObject();
+    pushAirOutletModelObject();
+    return edges;
   }
 
   return edges;
