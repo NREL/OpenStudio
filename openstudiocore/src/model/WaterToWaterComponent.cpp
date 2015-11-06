@@ -86,22 +86,60 @@ OptionalModelObject WaterToWaterComponent_Impl::demandOutletModelObject()
   return connectedObject(demandOutletPort());
 }
 
-std::vector<HVACComponent> WaterToWaterComponent_Impl::edges(bool isDemandComponent)
+std::vector<HVACComponent> WaterToWaterComponent_Impl::edges(const boost::optional<HVACComponent> & prev)
 {
   std::vector<HVACComponent> edges;
-  if( isDemandComponent ) {
-    if( boost::optional<ModelObject> edgeModelObject = this->demandOutletModelObject() ) {
-      if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
-        edges.push_back(*edgeObject);
+
+  auto pushSupplyOutletModelObject = [&]() {
+    if( auto edgeModelObject = supplyOutletModelObject() ) {
+      auto edgeHVACComponent = edgeModelObject->optionalCast<HVACComponent>();
+      OS_ASSERT(edgeHVACComponent);
+      edges.push_back(edgeHVACComponent.get());
+    }
+  };
+
+  auto pushDemandOutletModelObject = [&]() {
+    if( auto edgeModelObject = demandOutletModelObject() ) {
+      auto edgeHVACComponent = edgeModelObject->optionalCast<HVACComponent>();
+      OS_ASSERT(edgeHVACComponent);
+      edges.push_back(edgeHVACComponent.get());
+    }
+  };
+
+  auto pushTertiaryOutletModelObject = [&]() {
+    if( auto edgeModelObject = tertiaryOutletModelObject() ) {
+      auto edgeHVACComponent = edgeModelObject->optionalCast<HVACComponent>();
+      OS_ASSERT(edgeHVACComponent);
+      edges.push_back(edgeHVACComponent.get());
+    }
+  };
+  
+  if( prev) {
+    if( auto inletModelObject = supplyInletModelObject() ) {
+      if( prev.get() == inletModelObject.get() ) {
+        pushSupplyOutletModelObject();
+        return edges;
+      }
+    }
+    if( auto inletModelObject = demandInletModelObject() ) {
+      if( prev.get() == inletModelObject.get() ) {
+        pushDemandOutletModelObject();
+        return edges;
+      }
+    }
+    if( auto inletModelObject = tertiaryInletModelObject() ) {
+      if( prev.get() == inletModelObject.get() ) {
+        pushTertiaryOutletModelObject();
+        return edges;
       }
     }
   } else {
-    if( boost::optional<ModelObject> edgeModelObject = this->supplyOutletModelObject() ) {
-      if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
-        edges.push_back(*edgeObject);
-      }
-    }
+    pushSupplyOutletModelObject();
+    pushDemandOutletModelObject();
+    pushTertiaryOutletModelObject();
+    return edges;
   }
+
   return edges;
 }
 
@@ -315,12 +353,51 @@ boost::optional<PlantLoop> WaterToWaterComponent_Impl::tertiaryPlantLoop() const
 
 bool WaterToWaterComponent_Impl::removeFromTertiaryPlantLoop()
 {
+  if( auto plant = tertiaryPlantLoop() ) {
+    return HVACComponent_Impl::removeFromLoop(plant->demandInletNode(),
+      plant->demandOutletNode(),
+      tertiaryInletPort(),
+      tertiaryOutletPort());
+  }
+
   return false;
 }
 
 bool WaterToWaterComponent_Impl::addToTertiaryNode(Node & node)
 {
-  return false;
+  auto _model = node.model(); 
+  auto thisModelObject = getObject<ModelObject>();
+  auto t_plantLoop = node.plantLoop();
+
+  boost::optional<unsigned> componentInletPort = tertiaryInletPort();
+  boost::optional<unsigned> componentOutletPort = tertiaryOutletPort();
+
+  boost::optional<HVACComponent> systemStartComponent;
+  boost::optional<HVACComponent> systemEndComponent;
+
+  if( node.getImpl<Node_Impl>()->isConnected(thisModelObject) ) return false;
+
+  if( t_plantLoop ) {
+    if( t_plantLoop->supplyComponent(node.handle()) ) {
+
+      systemStartComponent = t_plantLoop->supplyInletNode();
+      systemEndComponent = t_plantLoop->supplyOutletNode();
+
+      removeFromTertiaryPlantLoop();
+    } else if( t_plantLoop->demandComponent(node.handle()) ) {
+
+      systemStartComponent = t_plantLoop->demandInletNode();
+      systemEndComponent = t_plantLoop->demandOutletNode();
+
+      removeFromTertiaryPlantLoop();
+    }
+  }
+
+  if( systemStartComponent && systemEndComponent && componentOutletPort && componentInletPort ) {
+    return HVACComponent_Impl::addToNode(node,systemStartComponent.get(),systemEndComponent.get(),componentInletPort.get(),componentOutletPort.get());
+  } else {
+    return false;
+  }
 }
 
 boost::optional<ModelObject> WaterToWaterComponent_Impl::tertiaryInletModelObject() const

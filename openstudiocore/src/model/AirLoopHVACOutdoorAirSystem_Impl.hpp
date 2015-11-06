@@ -91,11 +91,7 @@ namespace detail {
 
     virtual bool addToNode(Node & node) override;
 
-    /** This function returns a vector of HVACComponent that are directly downstream
-     *  from this object on an AirLoopHVAC or PlantLoop. 
-     *  @param[in]  isDemandComponent  Boolean passed in whether object is a demand or supply component
-    **/
-    virtual std::vector<HVACComponent> edges(bool isDemandComponent) override;
+    virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & prev) override;
 
     std::vector<ModelObject> oaComponents() const;
 
