@@ -504,7 +504,7 @@ namespace sdd {
         }
       }
 
-      // Translate chilled and hot water systems
+      // Translate hot water systems
       for (int i = 0; i < fluidSysElements.count(); i++){
         if (fluidSysElements.at(i).firstChildElement("Name").isNull()){
           continue;
@@ -513,6 +513,33 @@ namespace sdd {
           continue;
         }
         if (fluidSysElements.at(i).firstChildElement("Type").text().toLower() == "condenserwater"){
+          continue;
+        }
+        if (fluidSysElements.at(i).firstChildElement("Type").text().toLower() == "chilledwater"){
+          continue;
+        }
+
+        QDomElement fluidSysElement = fluidSysElements.at(i).toElement();
+        boost::optional<model::ModelObject> plantLoop = translateFluidSys(fluidSysElement,doc,*result);
+        OS_ASSERT(plantLoop);
+
+        if (m_progressBar){
+          m_progressBar->setValue(m_progressBar->value() + 1);
+        }
+      }
+
+      // Translate chilled water systems
+      for (int i = 0; i < fluidSysElements.count(); i++){
+        if (fluidSysElements.at(i).firstChildElement("Name").isNull()){
+          continue;
+        }
+        if (fluidSysElements.at(i).firstChildElement("Type").text().toLower() == "servicehotwater"){
+          continue;
+        }
+        if (fluidSysElements.at(i).firstChildElement("Type").text().toLower() == "condenserwater"){
+          continue;
+        }
+        if (fluidSysElements.at(i).firstChildElement("Type").text().toLower() == "hotwater"){
           continue;
         }
 
@@ -648,6 +675,10 @@ namespace sdd {
               if( boost::optional<model::ModelObject> mo = comp->demandOutletModelObject() )
               {
                 mo->setName(comp->name().get() + " Demand Outlet Node");
+              }
+              if( boost::optional<model::ModelObject> mo = comp->tertiaryOutletModelObject() )
+              {
+                mo->setName(comp->name().get() + " Tertiary Demand Outlet Node");
               }
             }
             else if( boost::optional<model::Splitter> comp = it->optionalCast<model::Splitter>() )

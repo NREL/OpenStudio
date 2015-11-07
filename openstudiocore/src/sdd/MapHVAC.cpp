@@ -5699,6 +5699,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
       chiller.setDesignCondenserWaterFlowRate(value);
     }
 
+    auto genFluidSegInRefElement = chillerElement.firstChildElement("GenFluidSegInRef");
+    auto genSystem = loopForSupplySegment(genFluidSegInRefElement.text(),doc,model);
+    if( genSystem ) {
+      genSystem->addDemandBranchForComponent(chiller,true);
+    }
+
     if( ! autosize() ) {
       auto capRtdElement = chillerElement.firstChildElement("CapRtd");
       value = capRtdElement.text().toDouble(&ok);
@@ -5748,7 +5754,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
 
     chiller.setChillerFlowMode("NotModulated");
 
-    chiller.setGeneratorHeatSourceType("Steam");
+    if( chiller.tertiaryPlantLoop() ) {
+      chiller.setGeneratorHeatSourceType("HotWater");
+    } else {
+      chiller.setGeneratorHeatSourceType("Steam");
+    }
 
     chiller.setTemperatureLowerLimitGeneratorInlet(60.0);
 
