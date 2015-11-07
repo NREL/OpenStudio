@@ -48,7 +48,7 @@ namespace detail {
     std::string name() const;
 
     /// get properties
-    const IddKeyProperties& properties() const;
+    IddKeyProperties properties() const;
 
     /// load by parsing text
     static std::shared_ptr<IddKey_Impl> load(const std::string& name, const std::string& text);

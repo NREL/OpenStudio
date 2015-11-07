@@ -215,9 +215,8 @@ WaterUseEquipment::WaterUseEquipment(const WaterUseEquipmentDefinition& waterUse
   OS_ASSERT(getImpl<detail::WaterUseEquipment_Impl>());
 }
 
-const IddObjectType& WaterUseEquipment::iddObjectType() {
-  static IddObjectType result(IddObjectType::OS_WaterUse_Equipment);
-  return result;
+IddObjectType WaterUseEquipment::iddObjectType() {
+  return IddObjectType(IddObjectType::OS_WaterUse_Equipment);
 }
 
 boost::optional<Schedule> WaterUseEquipment::flowRateFractionSchedule() const {

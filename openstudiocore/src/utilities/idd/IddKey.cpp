@@ -45,7 +45,7 @@ namespace detail {
     return m_name;
   }
 
-  const IddKeyProperties& IddKey_Impl::properties() const
+  IddKeyProperties IddKey_Impl::properties() const
   {
     return m_properties;
   }
@@ -113,7 +113,7 @@ std::string IddKey::name() const
   return m_impl->name();
 }
 
-const IddKeyProperties& IddKey::properties() const
+IddKeyProperties IddKey::properties() const
 {
   return m_impl->properties();
 }

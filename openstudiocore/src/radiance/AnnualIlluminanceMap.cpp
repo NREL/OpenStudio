@@ -159,7 +159,7 @@ namespace radiance{
   }
 
   /// get the illuminance map in lux corresponding to date and time
-  const openstudio::Matrix& AnnualIlluminanceMap::illuminanceMap(const openstudio::DateTime& dateTime) const
+  openstudio::Matrix AnnualIlluminanceMap::illuminanceMap(const openstudio::DateTime& dateTime) const
   {
     auto it = m_dateTimeIlluminanceMap.find(dateTime);
     if (it != m_dateTimeIlluminanceMap.end()){

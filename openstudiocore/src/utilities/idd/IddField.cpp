@@ -69,7 +69,7 @@ namespace detail {
     return m_fieldId;
   }
 
-  const IddFieldProperties& IddField_Impl::properties() const
+  IddFieldProperties IddField_Impl::properties() const
   {
     return m_properties;
   }
@@ -648,7 +648,7 @@ std::string IddField::fieldId() const {
 }
 
 /// get properties
-const IddFieldProperties& IddField::properties() const
+IddFieldProperties IddField::properties() const
 {
   return m_impl->properties();
 }

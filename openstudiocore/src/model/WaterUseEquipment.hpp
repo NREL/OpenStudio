@@ -49,7 +49,7 @@ class MODEL_API WaterUseEquipment : public SpaceLoadInstance {
 
   virtual ~WaterUseEquipment() {}
 
-  static const IddObjectType& iddObjectType();
+  static IddObjectType iddObjectType();
 
   boost::optional<Schedule> flowRateFractionSchedule() const;
   bool setFlowRateFractionSchedule(Schedule& flowRateFractionSchedule);

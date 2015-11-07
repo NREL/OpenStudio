@@ -67,14 +67,14 @@ namespace detail {
     std::string group() const;
 
     /** Get the properties of this object. */
-    const IddObjectProperties& properties() const;
+    IddObjectProperties properties() const;
 
     /** Get all non-extensible \link IddField IddFields\endlink. */
-    const IddFieldVector& nonextensibleFields() const;
+    IddFieldVector nonextensibleFields() const;
 
     /** Get this object's extensible group, that is, the vector of extensible \link IddFields
      *  IddField\endlink. */
-    const IddFieldVector& extensibleGroup() const;
+    IddFieldVector extensibleGroup() const;
 
     /** Get the IddField at index, if it exists. Returns fields in extensible groups using the
      *  assumption that extensible groups repeat indefinitely. */

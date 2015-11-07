@@ -95,7 +95,7 @@ class UTILITIES_API Quantity {
   void setPrettyUnitsString(const std::string& str);
 
   /** Scale getter. */
-  const Scale& scale() const;
+  Scale scale() const;
 
   /// Sets the scale to the one registered in ScaleFactory for 10^scaleExponent.
   bool setScale(int scaleExponent);

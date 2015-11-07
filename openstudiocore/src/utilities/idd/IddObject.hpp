@@ -72,15 +72,15 @@ class UTILITIES_API IddObject {
   std::string group() const;
 
   /** Get the properties of this object. */
-  const IddObjectProperties& properties() const;
+  IddObjectProperties properties() const;
 
   /** Get all non-extensible \link IddField IddFields\endlink. */
-  const std::vector<IddField>& nonextensibleFields() const;
+  std::vector<IddField> nonextensibleFields() const;
 
   /** Get this object's extensible group, that is, the vector of extensible \link IddField
    *  IddFields \endlink that may be repeated indefinitely (except as capped by
    *  properties().maxFields) at the end of an IdfObject following this schema. */
-  const std::vector<IddField>& extensibleGroup() const;
+  std::vector<IddField> extensibleGroup() const;
 
   /** Get the IddField at index, if it exists. Returns fields in extensible groups using the
    *  assumption that extensible groups repeat indefinitely. */

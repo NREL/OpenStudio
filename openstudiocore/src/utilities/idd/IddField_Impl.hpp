@@ -58,7 +58,7 @@ namespace detail {
 
     /** Returns the properties of this field, that is, a list of IDD-markup information such as
      *  data type, default value, units, and numeric bounds. */
-    const IddFieldProperties& properties() const;
+    IddFieldProperties properties() const;
 
     /** Returns the SI or IP units associated with this field, if they exist. All IDF data is stored
      *  in  SI. The return value with returnIP == true can be used to convert underlying data to 
