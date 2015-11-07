@@ -85,6 +85,18 @@
 #include "../model/ZoneHVACComponent_Impl.hpp"
 #include "../model/PortList.hpp"
 #include "../model/PortList_Impl.hpp"
+#include "../model/ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "../model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
+#include "../model/ZoneHVACPackagedTerminalHeatPump.hpp"
+#include "../model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
+#include "../model/ZoneHVACWaterToAirHeatPump.hpp"
+#include "../model/ZoneHVACWaterToAirHeatPump_Impl.hpp"
+#include "../model/ZoneHVACFourPipeFanCoil.hpp"
+#include "../model/ZoneHVACFourPipeFanCoil_Impl.hpp"
+#include "../model/ZoneHVACBaseboardConvectiveElectric.hpp"
+#include "../model/ZoneHVACBaseboardConvectiveElectric_Impl.hpp"
+#include "../model/ZoneHVACBaseboardConvectiveWater.hpp"
+#include "../model/ZoneHVACBaseboardConvectiveWater_Impl.hpp"
 #include "../energyplus/ReverseTranslator.hpp"
 #include "../osversion/VersionTranslator.hpp"
 #include "../utilities/filetypes/EpwFile.hpp"
@@ -1098,6 +1110,57 @@ namespace sdd {
 
         var = model::OutputVariable("Baseboard Total Heating Rate",*result);
         var.setReportingFrequency(interval);
+
+        auto createOutputForNode = [&](const std::string & nodename) {
+          auto var = model::OutputVariable("System Node Temperature",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(nodename);
+          var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(nodename);
+        };
+
+        auto createOutputForZoneHVAC = [&](const model::ZoneHVACComponent & comp) {
+          auto name = comp.name().get();
+          if( auto mo = comp.inletNode() ) {
+            createOutputForNode(mo->name().get());
+          }
+          if( auto mo = comp.outletNode() ) {
+            createOutputForNode(mo->name().get());
+          }
+          auto mixedAirNodeName = name + " Mixed Air Node";
+          createOutputForNode(mixedAirNodeName);
+          auto reliefAirNodeName = name + " Relief Air Node";
+          createOutputForNode(reliefAirNodeName);
+          auto oaNodeName = name + " OA Node";
+          createOutputForNode(oaNodeName);
+        };
+
+        // Really need some abstraction so this sillyness isn't required
+        {
+          auto zonehvac = result->getModelObjects<model::ZoneHVACPackagedTerminalAirConditioner>();
+          for( const auto & comp : zonehvac ) {
+            createOutputForZoneHVAC(comp);
+          }
+        }
+        {
+          auto zonehvac = result->getModelObjects<model::ZoneHVACPackagedTerminalHeatPump>();
+          for( const auto & comp : zonehvac ) {
+            createOutputForZoneHVAC(comp);
+          }
+        }
+        {
+          auto zonehvac = result->getModelObjects<model::ZoneHVACWaterToAirHeatPump>();
+          for( const auto & comp : zonehvac ) {
+            createOutputForZoneHVAC(comp);
+          }
+        }
+        {
+          auto zonehvac = result->getModelObjects<model::ZoneHVACFourPipeFanCoil>();
+          for( const auto & comp : zonehvac ) {
+            createOutputForZoneHVAC(comp);
+          }
+        }
       }
 
       // SimVarsHVACSec
