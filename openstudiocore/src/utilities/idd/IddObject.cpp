@@ -307,10 +307,12 @@ namespace detail {
   {
     std::set<std::string> result;
     for (const IddField& field : m_fields){
-      result.insert(field.properties().objectLists.begin(),field.properties().objectLists.end());
+      IddFieldProperties properties = field.properties();
+      result.insert(properties.objectLists.begin(),properties.objectLists.end());
     }
     for (const IddField& field : m_extensibleFields){
-      result.insert(field.properties().objectLists.begin(),field.properties().objectLists.end());
+      IddFieldProperties properties = field.properties();
+      result.insert(properties.objectLists.begin(),properties.objectLists.end());
     }
     return result;
   }
@@ -319,12 +321,14 @@ namespace detail {
     std::set<std::string> result;
 
     if (isNonextensibleField(index)) {
-      result.insert(m_fields[index].properties().objectLists.begin(),m_fields[index].properties().objectLists.end());
+      IddFieldProperties properties = m_fields[index].properties();
+      result.insert(properties.objectLists.begin(),properties.objectLists.end());
     }
     else if (isExtensibleField(index)) {
       ExtensibleIndex eIndex = extensibleIndex(index);
-      result.insert(m_extensibleFields[eIndex.field].properties().objectLists.begin(),
-                    m_extensibleFields[eIndex.field].properties().objectLists.end());
+      IddFieldProperties properties = m_extensibleFields[eIndex.field].properties();
+      result.insert(properties.objectLists.begin(),
+                    properties.objectLists.end());
     }
 
     return result;
