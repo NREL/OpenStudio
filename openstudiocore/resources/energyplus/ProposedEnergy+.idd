@@ -10203,8 +10203,8 @@ RoomAir:Node:AirflowNetwork,
        \object-list AllHeatTranSurfNames
 
 RoomAir:Node:AirflowNetwork:InternalGains,
-      \extensible:4
-      \min-fields 5
+      \extensible:3
+      \min-fields 4
       \memo define the internal gains that are associated with one particular RoomAir:Node
   A1, \field Name
       \type Alpha
