@@ -203,7 +203,6 @@ set(project_directories
   model_editor
   openstudio_lib
   openstudio_app
-  pat_app
   sdd
 )
 
