@@ -29,6 +29,7 @@
     <file>images/coilheatinglowtemprad_constflow.png</file>
     <file>images/coilheatinglowtemprad_varflow.png</file>
     <file>images/coilheatingwater_baseboard.png</file>
+    <file>images/Coil_Heating_Water_Baseboard_Radiant.png</file>
     <file>images/coilsystem_cooling_dx.png</file>
     <file>images/cool_coil_dx_vari_speed.png</file>
     <file>images/ht_coil_dx_vari.png</file>
@@ -340,6 +341,7 @@
     <file>images/mini_icons/coilheatinglowtemprad_constflow.png</file>
     <file>images/mini_icons/coilheatinglowtemprad_varflow.png</file>
     <file>images/mini_icons/coilheatingwater_baseboard_mini.png</file>
+    <file>images/mini_icons/Coil_Heating_Water_Baseboard_Radiant.png</file>
     <file>images/mini_icons/mini_ht_coil_dx_vari.png</file>
     <file>images/mini_icons/construct_inter_source.png</file>
     <file>images/mini_icons/construction.png</file>
