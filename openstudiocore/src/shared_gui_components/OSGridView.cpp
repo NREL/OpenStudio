@@ -251,6 +251,10 @@ void OSGridView::deleteAll()
       OS_ASSERT(widget);
 
       delete widget;
+      // Using deleteLater is actually slower than calling delete directly on the widget
+      // deleteLater also introduces a strange redraw issue where the select all check box
+      // is not redrawn, after being checked.
+      //widget->deleteLater();
 
       delete child;
     }
