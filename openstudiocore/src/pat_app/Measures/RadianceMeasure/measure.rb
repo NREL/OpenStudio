@@ -7,6 +7,8 @@ require 'fileutils'
 require 'csv'
 require 'tempfile'
 require 'date'
+require 'json'
+require 'erb'
 
 # start the measure
 class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
@@ -60,7 +62,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     chs << 'Max'
     use_cores = OpenStudio::Ruleset::OSArgument.makeChoiceArgument('use_cores', chs, true)
     use_cores.setDisplayName('Cores')
-    use_cores.setDefaultValue('Default')
+    use_cores.setDefaultValue('Default')    
     use_cores.setDescription('Number of CPU cores to use for Radiance jobs. Default is to use all \
     but one core')
     args << use_cores
@@ -102,10 +104,10 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       write_sql = 'Yes'
     end
 
-    use_cores = runner.getStringArgumentValue('use_cores', user_arguments)
+    use_cores = runner.getStringArgumentValue('use_cores', user_arguments) # honor user arg
+  
 
     rad_settings = runner.getStringArgumentValue('rad_settings', user_arguments)
-
 
     # Energyplus "pre-run" model dir
     epout_dir = 'eplus_preprocess'
@@ -1663,7 +1665,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         end
         annual_sda = sda_sum.to_f / sda_num.to_f
         summary_report += "#{space_name},sDA(300),8AM-5PM (10 hours/day per IESNA LM-83-12),#{annual_sda.round(2)},#{sda_sum.round(0)},#{sda_num}\n"
-
+        
         # Make a building average (sDA)
 
         building_average_space << annual_sda
@@ -1680,6 +1682,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         runner.registerInfo("warning: Spatial Daylight Autonomy for building is zero, check daylighting control point(s) setup.")
       else
         building_average = building_average_space_sum / building_average_space.length
+        runner.registerValue("sDA", building_average.round(2))
       end
 
       File.open("output/daylight_metrics.csv", 'w') do |file|
@@ -1733,6 +1736,42 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       end
     
     end #genImages()
+
+#     def writeReport(space_names_to_calculate, runner) #make simple report of daylight metrics and renderings
+# 
+#       radiance_spaces << {:space_names_to_calculate}
+#       # read in template
+#       html_in_path = "#{File.dirname(__FILE__)}/resources/report.html.in"
+#       if File.exist?(html_in_path)
+#           html_in_path = html_in_path
+#       else
+#           html_in_path = "#{File.dirname(__FILE__)}/report.html.in"
+#       end
+#       html_in = ""
+#       File.open(html_in_path, 'r') do |file|
+#         html_in = file.read
+#       end
+#     
+#       # configure template with variable values
+#       os_data = JSON::generate(json, {:object_nl=>"", :array_nl=>"", :indent=>"", :space=>"", :space_before=>""})
+#       title = "View Model"
+#       renderer = ERB.new(html_in)
+#       html_out = renderer.result(binding)
+# 
+#       # write html file
+#       html_out_path = "./report.html"
+#       File.open(html_out_path, 'w') do |file|
+#         file << html_out
+#       
+#         # make sure data is written to the disk one way or the other      
+#         begin
+#           file.fsync
+#         rescue
+#           file.flush
+#         end
+#       end
+#     
+#    end # writeReport()
 
 
     ## ## ## ## ## ##
