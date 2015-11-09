@@ -961,21 +961,22 @@ namespace sdd {
       meter.setInstallLocationType(InstallLocationType::Facility);
       meter.setReportingFrequency("Hourly");
 
-      // Lights - Reg Ltg, NonReg Ltg
+      // Lights - ComplianceLtg, NonComplianceLtg
       meter = model::Meter(*result);
       meter.setFuelType(FuelType::Electricity);
       meter.setEndUseType(EndUseType::InteriorLights);
-      meter.setSpecificEndUse("Reg Ltg");
+      meter.setSpecificEndUse("ComplianceLtg");
       meter.setInstallLocationType(InstallLocationType::Facility);
       meter.setReportingFrequency("Hourly");
 
       meter = model::Meter(*result);
       meter.setFuelType(FuelType::Electricity);
       meter.setEndUseType(EndUseType::InteriorLights);
-      meter.setSpecificEndUse("NonReg Ltg");
+      meter.setSpecificEndUse("NonComplianceLtg");
       meter.setInstallLocationType(InstallLocationType::Facility);
       meter.setReportingFrequency("Hourly");
 
+      // Exterior Lights - Reg Ltg, NonReg Ltg 
       meter = model::Meter(*result);
       meter.setFuelType(FuelType::Electricity);
       meter.setEndUseType(EndUseType::ExteriorLights);
