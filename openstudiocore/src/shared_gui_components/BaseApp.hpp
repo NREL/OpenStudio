@@ -29,9 +29,9 @@ namespace openstudio {
   class EditController;
   class Workspace;
 
-  namespace analysisdriver {
-    class SimpleProject;
-  }
+  //namespace analysisdriver {
+  //  class SimpleProject;
+  //}
   
   namespace model {
     class Model;
@@ -43,7 +43,7 @@ namespace openstudio {
 
       virtual ~BaseApp() {}
 
-      virtual boost::optional<analysisdriver::SimpleProject> project() = 0;
+      //virtual boost::optional<analysisdriver::SimpleProject> project() = 0;
       virtual QWidget *mainWidget() = 0;
       virtual openstudio::MeasureManager &measureManager() = 0;
       virtual void updateSelectedMeasureState() = 0;
@@ -56,7 +56,7 @@ namespace openstudio {
       virtual void openBclDlg() = 0;
 
       virtual void chooseHorizontalEditTab() = 0;
-      virtual QSharedPointer<openstudio::EditController> editController() = 0;
+      //virtual QSharedPointer<openstudio::EditController> editController() = 0;
       virtual boost::optional<openstudio::model::Model> currentModel() = 0;
       virtual boost::optional<openstudio::Workspace> currentWorkspace() = 0;
   };

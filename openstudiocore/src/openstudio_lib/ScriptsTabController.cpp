@@ -23,7 +23,7 @@
 #include "ScriptFolderListView.hpp"
 #include "ScriptsTabView.hpp"
 
-#include "../shared_gui_components/VariableList.hpp"
+//#include "../shared_gui_components/VariableList.hpp"
 #include "../shared_gui_components/VariableView.hpp"
 
 #include "../model/Model.hpp"
@@ -34,8 +34,8 @@ ScriptsTabController::ScriptsTabController()
   : MainTabController(new ScriptsTabView(nullptr)), scriptsTabView(dynamic_cast<ScriptsTabView *>(mainContentWidget()))
 {
 
-  m_variableGroupListController = QSharedPointer<openstudio::measuretab::VariableGroupListController>(new openstudio::measuretab::VariableGroupListController(false, OSAppBase::instance()));
-  m_variableGroupItemDelegate = QSharedPointer<openstudio::measuretab::VariableGroupItemDelegate>(new openstudio::measuretab::VariableGroupItemDelegate(true));
+  //m_variableGroupListController = QSharedPointer<openstudio::measuretab::VariableGroupListController>(new openstudio::measuretab::VariableGroupListController(false, OSAppBase::instance()));
+  //m_variableGroupItemDelegate = QSharedPointer<openstudio::measuretab::VariableGroupItemDelegate>(new openstudio::measuretab::VariableGroupItemDelegate(true));
 
   //m_groups[MeasureType::ModelMeasure] = QString("OpenStudio Measures");
   ////m_groups[MeasureType::EnergyPlusMeasure] = QString("EnergyPlus Measures");
@@ -49,8 +49,8 @@ ScriptsTabController::ScriptsTabController()
   //  m_variableGroupListController->addItem(variableGroupItem);
   //}
 
-  scriptsTabView->variableGroupListView->setListController(m_variableGroupListController);
-  scriptsTabView->variableGroupListView->setDelegate(m_variableGroupItemDelegate);
+  //scriptsTabView->variableGroupListView->setListController(m_variableGroupListController);
+  //scriptsTabView->variableGroupListView->setDelegate(m_variableGroupItemDelegate);
 
 }
 

@@ -26,10 +26,10 @@
 #include "../shared_gui_components/Buttons.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/OSListView.hpp"
-#include "../shared_gui_components/SyncMeasuresDialog.hpp"
+//#include "../shared_gui_components/SyncMeasuresDialog.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
 
-#include "../analysisdriver/SimpleProject.hpp"
+//#include "../analysisdriver/SimpleProject.hpp"
 #include "../energyplus/ForwardTranslator.hpp"
 
 #include <QLabel>
@@ -91,16 +91,16 @@ void ScriptsTabView::showEvent(QShowEvent *e)
 
   // updateMeasures will need the model and idf workspace (in MeasureManager::getArguments
   // , so we use the app/doc as a cache and manage its update here.
-  if( auto project = app->project() ) {
-    if( auto model = app->currentModel() ) {
-      ProgressBar progress(app->mainWidget()); 
-      energyplus::ForwardTranslator translator;
-      auto workspace = translator.translateModel(model.get(),&progress);
-      doc->setWorkspace(workspace);
-        
-      OSAppBase::instance()->measureManager().updateMeasures(*project, project->measures(), false);
-    }
-  }
+  //if( auto project = app->project() ) {
+  //  if( auto model = app->currentModel() ) {
+  //    ProgressBar progress(app->mainWidget()); 
+  //    energyplus::ForwardTranslator translator;
+  //    auto workspace = translator.translateModel(model.get(),&progress);
+  //    doc->setWorkspace(workspace);
+  //      
+  //    OSAppBase::instance()->measureManager().updateMeasures(*project, project->measures(), false);
+  //  }
+  //}
   variableGroupListView->refreshAllViews();
 }
 
@@ -110,12 +110,12 @@ void ScriptsTabView::openUpdateMeasuresDlg()
 {
   openstudio::OSAppBase * app = OSAppBase::instance();
 
-  boost::optional<analysisdriver::SimpleProject> project = app->project();
-  OS_ASSERT(project);
+  //boost::optional<analysisdriver::SimpleProject> project = app->project();
+  //OS_ASSERT(project);
 
-  m_syncMeasuresDialog = boost::shared_ptr<SyncMeasuresDialog>(new SyncMeasuresDialog(&(project.get()),&(app->measureManager())));
-  m_syncMeasuresDialog->setGeometry(app->currentDocument()->mainWindow()->geometry());
-  m_syncMeasuresDialog->exec();
+  //m_syncMeasuresDialog = boost::shared_ptr<SyncMeasuresDialog>(new SyncMeasuresDialog(&(project.get()),&(app->measureManager())));
+  //m_syncMeasuresDialog->setGeometry(app->currentDocument()->mainWindow()->geometry());
+  //m_syncMeasuresDialog->exec();
 }
 
 } // openstudio

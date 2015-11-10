@@ -29,7 +29,7 @@
 
 #include "../ruleset/RubyUserScriptArgumentGetter.hpp"
 
-#include "../analysisdriver/SimpleProject.hpp"
+//#include "../analysisdriver/SimpleProject.hpp"
 
 #include <QObject>
 #include <QString>
@@ -59,7 +59,7 @@ class OSItemId;
 
 class BuildingComponentDialog;
 
-class ApplyMeasureNowDialog;
+//class ApplyMeasureNowDialog;
 
 class Workspace;
 
@@ -142,7 +142,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   // updates it to the current version and returns it.
   boost::optional<model::Component> getComponent(const OSItemId& itemId) const;
 
-  boost::optional<analysisdriver::SimpleProject> project() const;
+  // TODO Something new?
+  //boost::optional<analysisdriver::SimpleProject> project() const;
 
   // Returns the ScriptFolderListView, from which folder display names and
   // ruleset::UserScriptInfo is available.
@@ -186,7 +187,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   std::shared_ptr<MainRightColumnController> mainRightColumnController() const;
 
   // DLM: would like for this to not be a member variable since it is only used as a modal dialog with a well defined lifetime
-  boost::shared_ptr<ApplyMeasureNowDialog> m_applyMeasureNowDialog;
+  //boost::shared_ptr<ApplyMeasureNowDialog> m_applyMeasureNowDialog;
 
  signals:
 
@@ -348,7 +349,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   std::shared_ptr<MainRightColumnController> m_mainRightColumnController;
 
-  boost::optional<analysisdriver::SimpleProject> m_simpleProject;
+  //boost::optional<analysisdriver::SimpleProject> m_simpleProject;
 
   QString m_savePath = QString();
   QString m_modelTempDir = QString();

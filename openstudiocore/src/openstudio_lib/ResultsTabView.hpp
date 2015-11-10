@@ -25,7 +25,7 @@
 #include "../utilities/sql/SqlFile.hpp"
 #include "../utilities/units/Unit.hpp"
 
-#include "../runmanager/lib/RunManager.hpp"
+//#include "../runmanager/lib/RunManager.hpp"
 
 #include <QWidget>
 #if QT_VERSION >= 0x050400
@@ -61,7 +61,7 @@ namespace openstudio {
 
     private:
       REGISTER_LOGGER("openstudio::ResultsView");
-      openstudio::runmanager::RunManager runManager();
+      //openstudio::runmanager::RunManager runManager();
       void populateComboBox(std::vector<openstudio::path> reports);
 
       bool m_isIP;

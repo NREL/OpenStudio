@@ -19,7 +19,7 @@
 
 #include "OSAppBase.hpp"
 
-#include "ApplyMeasureNowDialog.hpp"
+//#include "ApplyMeasureNowDialog.hpp"
 #include "MainRightColumnController.hpp"
 #include "MainWindow.hpp"
 #include "OSDocument.hpp"
@@ -30,7 +30,7 @@
 #include "../shared_gui_components/LocalLibraryController.hpp"
 #include "../shared_gui_components/WaitDialog.hpp"
 
-#include "../analysisdriver/SimpleProject.hpp"
+//#include "../analysisdriver/SimpleProject.hpp"
 
 #include "../utilities/bcl/LocalBCL.hpp"
 #include "../utilities/core/PathHelpers.hpp"
@@ -91,17 +91,17 @@ void OSAppBase::showMeasureUpdateDlg()
   QMessageBox::information(this->mainWidget(), "Cannot Update User Measures", "Your My Measures Directory appears to be on a network drive that is not currently available.\nYou can change your specified My Measures Directory using 'Preferences->Change My Measures Directory'.", QMessageBox::Ok);
 }
 
-boost::optional<openstudio::analysisdriver::SimpleProject> OSAppBase::project()
-{
-  std::shared_ptr<OSDocument> document = currentDocument();
-
-  if (document)
-  {
-    return document->project();
-  } else {
-    return boost::optional<openstudio::analysisdriver::SimpleProject>();
-  }
-}
+//boost::optional<openstudio::analysisdriver::SimpleProject> OSAppBase::project()
+//{
+//  std::shared_ptr<OSDocument> document = currentDocument();
+//
+//  if (document)
+//  {
+//    return document->project();
+//  } else {
+//    return boost::optional<openstudio::analysisdriver::SimpleProject>();
+//  }
+//}
 
 QWidget *OSAppBase::mainWidget()
 {
@@ -144,33 +144,34 @@ MeasureManager &OSAppBase::measureManager()
 
 void OSAppBase::updateSelectedMeasureState()
 {
-  // DLM: this slot seems out of place here, seems like the connection from the measure list to enabling duplicate buttons, etc 
-  // should be tighter
-  std::shared_ptr<OSDocument> document = currentDocument();
+  // TODO figure this out with new stuff
+  //// DLM: this slot seems out of place here, seems like the connection from the measure list to enabling duplicate buttons, etc 
+  //// should be tighter
+  //std::shared_ptr<OSDocument> document = currentDocument();
 
-  if (document)
-  {
-    std::shared_ptr<MainRightColumnController> mainRightColumnController = document->mainRightColumnController();
+  //if (document)
+  //{
+  //  std::shared_ptr<MainRightColumnController> mainRightColumnController = document->mainRightColumnController();
 
-    if (mainRightColumnController)
-    {
-      if (measureManager().isMeasureSelected()){
-        // DLM: this logic is why we cannot remove m_applyMeasureNowDialog as member of OSDocument
-        if( document->m_applyMeasureNowDialog && document->m_applyMeasureNowDialog->isVisible()) {
-          document->m_applyMeasureNowDialog->displayMeasure();
-          document->m_applyMeasureNowDialog->m_localLibraryController->localLibraryView->duplicateMeasureButton->setEnabled(true);
-        } else {
-          mainRightColumnController->measuresLibraryController()->localLibraryView->duplicateMeasureButton->setEnabled(true);
-        }
-      }else{
-        if( document->m_applyMeasureNowDialog && document->m_applyMeasureNowDialog->isVisible()) {
-          document->m_applyMeasureNowDialog->m_localLibraryController->localLibraryView->duplicateMeasureButton->setEnabled(false);
-        } else {
-          mainRightColumnController->measuresLibraryController()->localLibraryView->duplicateMeasureButton->setEnabled(false);
-        }
-      }
-    }
-  }
+  //  if (mainRightColumnController)
+  //  {
+  //    if (measureManager().isMeasureSelected()){
+  //      // DLM: this logic is why we cannot remove m_applyMeasureNowDialog as member of OSDocument
+  //      if( document->m_applyMeasureNowDialog && document->m_applyMeasureNowDialog->isVisible()) {
+  //        document->m_applyMeasureNowDialog->displayMeasure();
+  //        document->m_applyMeasureNowDialog->m_localLibraryController->localLibraryView->duplicateMeasureButton->setEnabled(true);
+  //      } else {
+  //        mainRightColumnController->measuresLibraryController()->localLibraryView->duplicateMeasureButton->setEnabled(true);
+  //      }
+  //    }else{
+  //      if( document->m_applyMeasureNowDialog && document->m_applyMeasureNowDialog->isVisible()) {
+  //        document->m_applyMeasureNowDialog->m_localLibraryController->localLibraryView->duplicateMeasureButton->setEnabled(false);
+  //      } else {
+  //        mainRightColumnController->measuresLibraryController()->localLibraryView->duplicateMeasureButton->setEnabled(false);
+  //      }
+  //    }
+  //  }
+  //}
 }
 
 void OSAppBase::addMeasure()
@@ -189,15 +190,15 @@ void OSAppBase::updateMyMeasures()
 
   if (document)
   {
-    boost::optional<analysisdriver::SimpleProject> project = document->project();
-    if (project)
-    {
-      mainWidget()->setEnabled(false);
-      measureManager().updateMyMeasures(*project);
-      mainWidget()->setEnabled(true);
-    } else {
+    //boost::optional<analysisdriver::SimpleProject> project = document->project();
+    //if (project)
+    //{
+    //  mainWidget()->setEnabled(false);
+    //  measureManager().updateMyMeasures(*project);
+    //  mainWidget()->setEnabled(true);
+    //} else {
       LOG(Error, "Unable to update measures, there is no project set...");
-    }
+    //}
   } 
 }
 
@@ -207,15 +208,15 @@ void OSAppBase::updateBCLMeasures()
 
   if (document)
   {
-    boost::optional<analysisdriver::SimpleProject> project = document->project();
-    if (project)
-    {
-      mainWidget()->setEnabled(false);
-      measureManager().updateBCLMeasures(*project);
-      mainWidget()->setEnabled(true);
-    } else {
+    //boost::optional<analysisdriver::SimpleProject> project = document->project();
+    //if (project)
+    //{
+    //  mainWidget()->setEnabled(false);
+    //  measureManager().updateBCLMeasures(*project);
+    //  mainWidget()->setEnabled(true);
+    //} else {
       LOG(Error, "Unable to update measures, there is no project set...");
-    }
+    //}
   }
 
 }
@@ -245,17 +246,17 @@ void OSAppBase::chooseHorizontalEditTab()
   }
 }
 
-QSharedPointer<EditController> OSAppBase::editController()
-{
-  std::shared_ptr<OSDocument> document = currentDocument();
-
-  if (document)
-  {
-    return document->mainRightColumnController()->measuresEditController();
-  } else {
-    return QSharedPointer<EditController>();
-  }
-}
+//QSharedPointer<EditController> OSAppBase::editController()
+//{
+//  std::shared_ptr<OSDocument> document = currentDocument();
+//
+//  if (document)
+//  {
+//    return document->mainRightColumnController()->measuresEditController();
+//  } else {
+//    return QSharedPointer<EditController>();
+//  }
+//}
 
 } // openstudio
 

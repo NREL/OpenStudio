@@ -22,11 +22,9 @@
 
 #include "../ruleset/OSArgument.hpp"
 #include "../utilities/core/Logger.hpp"
-#include "../analysis/RubyMeasure.hpp"
 #include <QObject>
 #include <QPointer>
 #include <QSharedPointer> 
-#include "VariableList.hpp"
 
 class QWidget;
 
@@ -38,6 +36,7 @@ class EditRubyMeasureView;
 class EditNullView;
 class InputController;
 class InputView;
+class BaseApp;
 
 namespace measuretab {
 

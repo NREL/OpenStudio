@@ -255,53 +255,53 @@ void ResultsView::resultsGenerated(const openstudio::path &t_path, const openstu
   m_radianceResultsPath = t_radianceResultsPath;
 }
 
-openstudio::runmanager::RunManager ResultsView::runManager()
-{
-  return OSAppBase::instance()->project()->runManager();
-}
+//openstudio::runmanager::RunManager ResultsView::runManager()
+//{
+//  return OSAppBase::instance()->project()->runManager();
+//}
 
 void ResultsView::treeChanged(const openstudio::UUID &t_uuid)
 {
-  try {
-    openstudio::runmanager::Job j = runManager().getJob(t_uuid);
-    while (j.parent())
-    {
-      j = j.parent().get();
-    }
+  //try {
+  //  openstudio::runmanager::Job j = runManager().getJob(t_uuid);
+  //  while (j.parent())
+  //  {
+  //    j = j.parent().get();
+  //  }
 
-    openstudio::runmanager::TreeStatusEnum status = j.treeStatus();
+  //  openstudio::runmanager::TreeStatusEnum status = j.treeStatus();
 
-    QString fullPathString;
-    openstudio::path path;
+  //  QString fullPathString;
+  //  openstudio::path path;
 
-    if (status == openstudio::runmanager::TreeStatusEnum::Finished)
-    {
-      try {
-        openstudio::runmanager::Files f = j.treeAllFiles().getAllByFilename("report.html");
-        std::vector<openstudio::runmanager::FileInfo> t_files = f.files();
-        std::vector<openstudio::path> reports;
-        for (const openstudio::runmanager::FileInfo& file : t_files) {
-          reports.push_back(file.fullPath);
-        }
-        f = j.treeAllFiles().getAllByFilename("eplustbl.htm");
-        t_files = f.files();
-        for (const openstudio::runmanager::FileInfo& file : t_files) {
-          reports.push_back(file.fullPath);
-        }
-        populateComboBox(reports);
-      } catch (const std::exception &e) {
-        LOG(Debug, "Tree finished, error getting html file: " << e.what());
-      } catch (...) {
-        LOG(Debug, "Tree finished, error getting html file");
-        // no html file exists
-      }
-    } 
-  } catch (const std::exception &e) {
-    LOG(Debug, "Tree finished, error getting status: " << e.what());
-  } catch (...) {
-    LOG(Debug, "Tree finished, error getting status");
-    // no html file exists
-  }
+  //  if (status == openstudio::runmanager::TreeStatusEnum::Finished)
+  //  {
+  //    try {
+  //      openstudio::runmanager::Files f = j.treeAllFiles().getAllByFilename("report.html");
+  //      std::vector<openstudio::runmanager::FileInfo> t_files = f.files();
+  //      std::vector<openstudio::path> reports;
+  //      for (const openstudio::runmanager::FileInfo& file : t_files) {
+  //        reports.push_back(file.fullPath);
+  //      }
+  //      f = j.treeAllFiles().getAllByFilename("eplustbl.htm");
+  //      t_files = f.files();
+  //      for (const openstudio::runmanager::FileInfo& file : t_files) {
+  //        reports.push_back(file.fullPath);
+  //      }
+  //      populateComboBox(reports);
+  //    } catch (const std::exception &e) {
+  //      LOG(Debug, "Tree finished, error getting html file: " << e.what());
+  //    } catch (...) {
+  //      LOG(Debug, "Tree finished, error getting html file");
+  //      // no html file exists
+  //    }
+  //  } 
+  //} catch (const std::exception &e) {
+  //  LOG(Debug, "Tree finished, error getting status: " << e.what());
+  //} catch (...) {
+  //  LOG(Debug, "Tree finished, error getting status");
+  //  // no html file exists
+  //}
 }
 
 void ResultsView::populateComboBox(std::vector<openstudio::path> reports)

@@ -21,13 +21,6 @@
 
 #include "OSDocument.hpp"
 
-#include "../analysisdriver/SimpleProject.hpp"
-#include "../analysisdriver/AnalysisRunOptions.hpp"
-
-#include "../analysis/Analysis.hpp"
-#include "../analysis/Problem.hpp"
-#include "../analysis/DataPoint.hpp"
-
 #include "../runmanager/lib/RunManager.hpp"
 #include "../runmanager/lib/RubyJobUtils.hpp"
 #include "../runmanager/lib/WorkItem.hpp"
@@ -500,286 +493,286 @@ namespace openstudio {
     return newToolsFound;
   }
 
-  void pauseRunManager(openstudio::runmanager::RunManager& rm)
-  {
-    rm.setPaused(true);
+  //void pauseRunManager(openstudio::runmanager::RunManager& rm)
+  //{
+  //  rm.setPaused(true);
 
-    std::vector<openstudio::runmanager::Job> jobs = rm.getJobs();
+  //  std::vector<openstudio::runmanager::Job> jobs = rm.getJobs();
 
-    for (auto itr = jobs.begin();
-         itr != jobs.end();
-         ++itr)
-    {
-      itr->setCanceled(true);
-    }
+  //  for (auto itr = jobs.begin();
+  //       itr != jobs.end();
+  //       ++itr)
+  //  {
+  //    itr->setCanceled(true);
+  //  }
 
-    for (auto itr = jobs.begin();
-         itr != jobs.end();
-         ++itr)
-    { 
-      itr->requestStop();
-    }
+  //  for (auto itr = jobs.begin();
+  //       itr != jobs.end();
+  //       ++itr)
+  //  { 
+  //    itr->requestStop();
+  //  }
 
-    for (auto itr = jobs.begin();
-         itr != jobs.end();
-         ++itr)
-    {
-      itr->waitForFinished();
-    }
-  }
+  //  for (auto itr = jobs.begin();
+  //       itr != jobs.end();
+  //       ++itr)
+  //  {
+  //    itr->waitForFinished();
+  //  }
+  //}
 
-  void startRunManager(openstudio::runmanager::RunManager& rm, const openstudio::path& osmPath, const openstudio::path& modelTempDir,
-                       std::vector <double> useRadianceForDaylightingCalculations, bool requireCalibrationReports, QWidget* parent)
-  {
-//    openstudio::path rmdbPath = modelTempDir / toPath("resources/run.db");
-    openstudio::path simulationDir = toPath("run");
+  //void startRunManager(openstudio::runmanager::RunManager& rm, const openstudio::path& osmPath, const openstudio::path& modelTempDir,
+  //                     std::vector <double> useRadianceForDaylightingCalculations, bool requireCalibrationReports, QWidget* parent)
+  //{
+////    openstudio::path rmdbPath = modelTempDir / toPath("resources/run.db");
+  //  openstudio::path simulationDir = toPath("run");
 
-    try {
+  //  try {
 
-      // disconnect signals from current jobs before clearing jobs
-      std::vector<openstudio::runmanager::Job> jobs = rm.getJobs();
+  //    // disconnect signals from current jobs before clearing jobs
+  //    std::vector<openstudio::runmanager::Job> jobs = rm.getJobs();
 
-      for (auto itr = jobs.begin();
-           itr != jobs.end();
-           ++itr)
-      {
-        itr->disconnect();
-      }
+  //    for (auto itr = jobs.begin();
+  //         itr != jobs.end();
+  //         ++itr)
+  //    {
+  //      itr->disconnect();
+  //    }
 
-      rm.setPaused(true);
+  //    rm.setPaused(true);
 
-      // clear current jobs
-      rm.clearJobs();
+  //    // clear current jobs
+  //    rm.clearJobs();
 
-      if (boost::filesystem::exists(modelTempDir / toPath("resources") / simulationDir)) {
-        boost::filesystem::remove_all(modelTempDir / toPath("resources") / simulationDir);
-      }
-      
-      boost::optional<analysisdriver::SimpleProject> p = OSAppBase::instance()->project();
-      if (p)
-      {
-        openstudio::runmanager::ConfigOptions co(true);
+  //    if (boost::filesystem::exists(modelTempDir / toPath("resources") / simulationDir)) {
+  //      boost::filesystem::remove_all(modelTempDir / toPath("resources") / simulationDir);
+  //    }
+  //    
+  //    boost::optional<analysisdriver::SimpleProject> p = OSAppBase::instance()->project();
+  //    if (p)
+  //    {
+  //      openstudio::runmanager::ConfigOptions co(true);
 
-        analysis::Problem prob = p->analysis().problem();
-        analysisdriver::AnalysisRunOptions runOptions = standardRunOptions(*p);
-        std::vector<runmanager::WorkItem> workitems(prob.createWorkflow(p->baselineDataPoint(), runOptions.rubyIncludeDirectory()).toWorkItems());
+  //      analysis::Problem prob = p->analysis().problem();
+  //      analysisdriver::AnalysisRunOptions runOptions = standardRunOptions(*p);
+  //      std::vector<runmanager::WorkItem> workitems(prob.createWorkflow(p->baselineDataPoint(), runOptions.rubyIncludeDirectory()).toWorkItems());
 
-        openstudio::BCLMeasure reportRequestMeasure = openstudio::BCLMeasure::reportRequestMeasure();
-        openstudio::BCLMeasure standardReportsMeasure = openstudio::BCLMeasure::standardReportMeasure();
-        openstudio::BCLMeasure calibrationReportsMeasure = openstudio::BCLMeasure::calibrationReportMeasure();
+  //      openstudio::BCLMeasure reportRequestMeasure = openstudio::BCLMeasure::reportRequestMeasure();
+  //      openstudio::BCLMeasure standardReportsMeasure = openstudio::BCLMeasure::standardReportMeasure();
+  //      openstudio::BCLMeasure calibrationReportsMeasure = openstudio::BCLMeasure::calibrationReportMeasure();
 
-        // DLM: always add this measure even if the user has their own copy, this is more clear
-        //bool standardReportsFound = findBCLMeasureWorkItem(workitems, standardReportsMeasure.uuid());
-        //if (!standardReportsFound){
-          bool test = addReportingMeasureWorkItem(workitems, standardReportsMeasure);
-          OS_ASSERT(test);
-        //}
+  //      // DLM: always add this measure even if the user has their own copy, this is more clear
+  //      //bool standardReportsFound = findBCLMeasureWorkItem(workitems, standardReportsMeasure.uuid());
+  //      //if (!standardReportsFound){
+  //        bool test = addReportingMeasureWorkItem(workitems, standardReportsMeasure);
+  //        OS_ASSERT(test);
+  //      //}
 
-        // DLM: always add this measure even if the user has their own copy, this is more clear
-        //bool calibrationReportsFound = findBCLMeasureWorkItem(workitems, calibrationReportsMeasure.uuid());
-        //if (requireCalibrationReports && !calibrationReportsFound){
-        if (requireCalibrationReports){
-          bool test = addReportingMeasureWorkItem(workitems, calibrationReportsMeasure);
-          OS_ASSERT(test);
-        }
-        /*
-        // check if we need to use radiance
-        if (useRadianceForDaylightingCalculations)
-        {
-          std::vector<openstudio::runmanager::ToolInfo> rad = co.getTools().getAllByName("rad").tools();
+  //      // DLM: always add this measure even if the user has their own copy, this is more clear
+  //      //bool calibrationReportsFound = findBCLMeasureWorkItem(workitems, calibrationReportsMeasure.uuid());
+  //      //if (requireCalibrationReports && !calibrationReportsFound){
+  //      if (requireCalibrationReports){
+  //        bool test = addReportingMeasureWorkItem(workitems, calibrationReportsMeasure);
+  //        OS_ASSERT(test);
+  //      }
+  //      /*
+  //      // check if we need to use radiance
+  //      if (useRadianceForDaylightingCalculations)
+  //      {
+  //        std::vector<openstudio::runmanager::ToolInfo> rad = co.getTools().getAllByName("rad").tools();
 
-          if (!rad.empty())
-          {
-            openstudio::path radiancePath = rad.back().localBinPath.parent_path();
+  //        if (!rad.empty())
+  //        {
+  //          openstudio::path radiancePath = rad.back().localBinPath.parent_path();
 
-            bool modeltoidffound(false);
-            for (auto itr = workitems.begin();
-                itr != workitems.end();
-                ++itr)
-            {
-              if (itr->type == openstudio::runmanager::JobType::ModelToIdf)
-              {
-                workitems.insert(itr, runmanager::Workflow::radianceDaylightCalculations(runOptions.rubyIncludeDirectory(), radiancePath));
-                modeltoidffound = true;
-                break;
-              }
-            }
+  //          bool modeltoidffound(false);
+  //          for (auto itr = workitems.begin();
+  //              itr != workitems.end();
+  //              ++itr)
+  //          {
+  //            if (itr->type == openstudio::runmanager::JobType::ModelToIdf)
+  //            {
+  //              workitems.insert(itr, runmanager::Workflow::radianceDaylightCalculations(runOptions.rubyIncludeDirectory(), radiancePath));
+  //              modeltoidffound = true;
+  //              break;
+  //            }
+  //          }
 
-            OS_ASSERT(modeltoidffound);
-          } else {
-            QMessageBox::information(parent, 
-                "Error with initiating simulation.",
-                "Radiance simulation requested but radiance was not found.\nRadiance simulation will be skipped.",
-                QMessageBox::Ok);
-          }
-        }
-        */
-        // add the report request measure before energyplus but after any other energyplus measures
-        test = addReportRequestMeasureWorkItem(workitems, reportRequestMeasure);
-        OS_ASSERT(test);
+  //          OS_ASSERT(modeltoidffound);
+  //        } else {
+  //          QMessageBox::information(parent, 
+  //              "Error with initiating simulation.",
+  //              "Radiance simulation requested but radiance was not found.\nRadiance simulation will be skipped.",
+  //              QMessageBox::Ok);
+  //        }
+  //      }
+  //      */
+  //      // add the report request measure before energyplus but after any other energyplus measures
+  //      test = addReportRequestMeasureWorkItem(workitems, reportRequestMeasure);
+  //      OS_ASSERT(test);
 
-        runmanager::Workflow wf(workitems);
-        wf.add(co.getTools());
-        //openstudio::runmanager::JobParams params;
-        //params.append("cleanoutfiles", "none");
-        //wf.add(params);
-        runmanager::Job j = wf.create(modelTempDir / toPath("resources") / simulationDir, modelTempDir / openstudio::toPath("in.osm"));
-        runmanager::JobFactory::optimizeJobTree(j);
-        rm.enqueue(j, true);
-      }
+  //      runmanager::Workflow wf(workitems);
+  //      wf.add(co.getTools());
+  //      //openstudio::runmanager::JobParams params;
+  //      //params.append("cleanoutfiles", "none");
+  //      //wf.add(params);
+  //      runmanager::Job j = wf.create(modelTempDir / toPath("resources") / simulationDir, modelTempDir / openstudio::toPath("in.osm"));
+  //      runmanager::JobFactory::optimizeJobTree(j);
+  //      rm.enqueue(j, true);
+  //    }
 
-      // connect signals to new jobs
-      jobs = rm.getJobs();
+  //    // connect signals to new jobs
+  //    jobs = rm.getJobs();
 
-      for (auto itr = jobs.begin();
-          itr != jobs.end();
-          ++itr)
-      {
-        if (parent){
-          bool isConnected = itr->connect(SIGNAL(outputDataAdded(const openstudio::UUID &, const std::string &)), 
-                                          parent, SLOT(outputDataAdded(const openstudio::UUID &, const std::string &)));
-          OS_ASSERT(isConnected);
-        }
+  //    for (auto itr = jobs.begin();
+  //        itr != jobs.end();
+  //        ++itr)
+  //    {
+  //      if (parent){
+  //        bool isConnected = itr->connect(SIGNAL(outputDataAdded(const openstudio::UUID &, const std::string &)), 
+  //                                        parent, SLOT(outputDataAdded(const openstudio::UUID &, const std::string &)));
+  //        OS_ASSERT(isConnected);
+  //      }
 
-        if (!itr->parent())
-        {
-          // need to reset the base path of the top level job so it can find its osm in the saved
-          // location
-          
-          // run in model dir
-          //itr->setBasePath(osmPath.parent_path() / osmPath.stem());
+  //      if (!itr->parent())
+  //      {
+  //        // need to reset the base path of the top level job so it can find its osm in the saved
+  //        // location
+  //        
+  //        // run in model dir
+  //        //itr->setBasePath(osmPath.parent_path() / osmPath.stem());
 
-          // run in temp dir
-          itr->setBasePath(modelTempDir / toPath("resources"));
+  //        // run in temp dir
+  //        itr->setBasePath(modelTempDir / toPath("resources"));
 
-          if (parent){         
-            bool isConnected = itr->connect(SIGNAL(treeChanged(const openstudio::UUID &)), parent, SLOT(treeChanged(const openstudio::UUID &)));
-            OS_ASSERT(isConnected);
-          }
+  //        if (parent){         
+  //          bool isConnected = itr->connect(SIGNAL(treeChanged(const openstudio::UUID &)), parent, SLOT(treeChanged(const openstudio::UUID &)));
+  //          OS_ASSERT(isConnected);
+  //        }
 
-          std::shared_ptr<OSDocument> currentDocument = OSAppBase::instance()->currentDocument();
-          if (currentDocument){         
-            bool isConnected = itr->connect(SIGNAL(treeChanged(const openstudio::UUID &)), 
-              currentDocument.get(), SIGNAL(treeChanged(const openstudio::UUID &)));
-            OS_ASSERT(isConnected);
-          }
-        }
-      }
+  //        std::shared_ptr<OSDocument> currentDocument = OSAppBase::instance()->currentDocument();
+  //        if (currentDocument){         
+  //          bool isConnected = itr->connect(SIGNAL(treeChanged(const openstudio::UUID &)), 
+  //            currentDocument.get(), SIGNAL(treeChanged(const openstudio::UUID &)));
+  //          OS_ASSERT(isConnected);
+  //        }
+  //      }
+  //    }
 
-      rm.setPaused(false);
+  //    rm.setPaused(false);
 
-    } catch (const std::exception &e) {
-      QMessageBox::information(parent, 
-          "Error Initiating Simulation",
-          e.what(),
-          QMessageBox::Ok);
-    }
-  }
+  //  } catch (const std::exception &e) {
+  //    QMessageBox::information(parent, 
+  //        "Error Initiating Simulation",
+  //        e.what(),
+  //        QMessageBox::Ok);
+  //  }
+  //}
 
-  bool findBCLMeasureWorkItem(const std::vector<runmanager::WorkItem>& workItems, const openstudio::UUID& uuid)
-  {
-    for (auto itr = workItems.begin();
-         itr != workItems.end();
-         ++itr)
-    {
-      if (itr->type == openstudio::runmanager::JobType::UserScript)
-      {
+  //bool findBCLMeasureWorkItem(const std::vector<runmanager::WorkItem>& workItems, const openstudio::UUID& uuid)
+  //{
+  //  for (auto itr = workItems.begin();
+  //       itr != workItems.end();
+  //       ++itr)
+  //  {
+  //    if (itr->type == openstudio::runmanager::JobType::UserScript)
+  //    {
 
-        try {
-          runmanager::JobParam parameters = itr->params.get("ruby_bclmeasureparameters");
+  //      try {
+  //        runmanager::JobParam parameters = itr->params.get("ruby_bclmeasureparameters");
 
-          for (std::vector<runmanager::JobParam>::const_iterator itr = parameters.children.begin();
-               itr != parameters.children.end();
-               ++itr)
-          {
-            if (itr->value == "bcl_measure_uuid"){
-              openstudio::UUID bclMeasureUUID = openstudio::toUUID(itr->children.at(0).value);
-              if (bclMeasureUUID == uuid){
-                return true;
-              }
-            }
-          }
-        } catch (const std::exception &) {
-        }
-      }
-    }
+  //        for (std::vector<runmanager::JobParam>::const_iterator itr = parameters.children.begin();
+  //             itr != parameters.children.end();
+  //             ++itr)
+  //        {
+  //          if (itr->value == "bcl_measure_uuid"){
+  //            openstudio::UUID bclMeasureUUID = openstudio::toUUID(itr->children.at(0).value);
+  //            if (bclMeasureUUID == uuid){
+  //              return true;
+  //            }
+  //          }
+  //        }
+  //      } catch (const std::exception &) {
+  //      }
+  //    }
+  //  }
 
-    return false;
-  }
+  //  return false;
+  //}
 
-  bool addReportRequestMeasureWorkItem(std::vector<runmanager::WorkItem>& workItems, const openstudio::BCLMeasure& bclMeasure)
-  {
-    std::string reportingMeasureArgument = runmanager::getReportRequestMeasureArgument(workItems);
+  //bool addReportRequestMeasureWorkItem(std::vector<runmanager::WorkItem>& workItems, const openstudio::BCLMeasure& bclMeasure)
+  //{
+  //  std::string reportingMeasureArgument = runmanager::getReportRequestMeasureArgument(workItems);
 
-    ruleset::OSArgument argument = ruleset::OSArgument::makeStringArgument("measures_json", true, false);
-    argument.setValue(reportingMeasureArgument);
+  //  ruleset::OSArgument argument = ruleset::OSArgument::makeStringArgument("measures_json", true, false);
+  //  argument.setValue(reportingMeasureArgument);
 
-    std::vector<ruleset::OSArgument> arguments;
-    arguments.push_back(argument);
+  //  std::vector<ruleset::OSArgument> arguments;
+  //  arguments.push_back(argument);
 
-    runmanager::RubyJobBuilder rubyJobBuilder(bclMeasure, arguments);
+  //  runmanager::RubyJobBuilder rubyJobBuilder(bclMeasure, arguments);
 
-    rubyJobBuilder.addInputFile(openstudio::runmanager::FileSelection("last"),
-                                openstudio::runmanager::FileSource("All"),
-                                ".*\\.idf",
-                                "in.idf");
-    rubyJobBuilder.addInputFile(openstudio::runmanager::FileSelection("last"),
-                                openstudio::runmanager::FileSource("All"),
-                                ".*\\.osm",
-                                "in.osm");
+  //  rubyJobBuilder.addInputFile(openstudio::runmanager::FileSelection("last"),
+  //                              openstudio::runmanager::FileSource("All"),
+  //                              ".*\\.idf",
+  //                              "in.idf");
+  //  rubyJobBuilder.addInputFile(openstudio::runmanager::FileSelection("last"),
+  //                              openstudio::runmanager::FileSource("All"),
+  //                              ".*\\.osm",
+  //                              "in.osm");
 
-    // be able to access OpenStudio Ruby bindings
-    rubyJobBuilder.setIncludeDir(getOpenStudioRubyIncludePath());
+  //  // be able to access OpenStudio Ruby bindings
+  //  rubyJobBuilder.setIncludeDir(getOpenStudioRubyIncludePath());
 
 
-    runmanager::WorkItem workItem = rubyJobBuilder.toWorkItem();
+  //  runmanager::WorkItem workItem = rubyJobBuilder.toWorkItem();
 
-    for (auto itr = workItems.begin();
-         itr != workItems.end();
-         ++itr)
-    {
-      // currently we are doing ExpandObjects->(E+ Measures)->EnergyPlusPreProcess->EnergyPlus
-      if (itr->type == openstudio::runmanager::JobType::EnergyPlusPreProcess)
-      {
-        workItems.insert(itr, workItem);
-        return true;
-      }
-    }
+  //  for (auto itr = workItems.begin();
+  //       itr != workItems.end();
+  //       ++itr)
+  //  {
+  //    // currently we are doing ExpandObjects->(E+ Measures)->EnergyPlusPreProcess->EnergyPlus
+  //    if (itr->type == openstudio::runmanager::JobType::EnergyPlusPreProcess)
+  //    {
+  //      workItems.insert(itr, workItem);
+  //      return true;
+  //    }
+  //  }
 
-    return false;
-  }
+  //  return false;
+  //}
 
-  bool addReportingMeasureWorkItem(std::vector<runmanager::WorkItem>& workItems, const openstudio::BCLMeasure& bclMeasure)
-  {
-    runmanager::RubyJobBuilder rubyJobBuilder(bclMeasure);
+  //bool addReportingMeasureWorkItem(std::vector<runmanager::WorkItem>& workItems, const openstudio::BCLMeasure& bclMeasure)
+  //{
+  //  runmanager::RubyJobBuilder rubyJobBuilder(bclMeasure);
 
-    rubyJobBuilder.addInputFile(openstudio::runmanager::FileSelection("last"),
-                                openstudio::runmanager::FileSource("All"),
-                                ".*\\.idf",
-                                "in.idf");
-    rubyJobBuilder.addInputFile(openstudio::runmanager::FileSelection("last"),
-                                openstudio::runmanager::FileSource("All"),
-                                ".*\\.osm",
-                                "in.osm");
+  //  rubyJobBuilder.addInputFile(openstudio::runmanager::FileSelection("last"),
+  //                              openstudio::runmanager::FileSource("All"),
+  //                              ".*\\.idf",
+  //                              "in.idf");
+  //  rubyJobBuilder.addInputFile(openstudio::runmanager::FileSelection("last"),
+  //                              openstudio::runmanager::FileSource("All"),
+  //                              ".*\\.osm",
+  //                              "in.osm");
 
-    // be able to access OpenStudio Ruby bindings
-    rubyJobBuilder.setIncludeDir(getOpenStudioRubyIncludePath());
+  //  // be able to access OpenStudio Ruby bindings
+  //  rubyJobBuilder.setIncludeDir(getOpenStudioRubyIncludePath());
 
-    runmanager::WorkItem workItem = rubyJobBuilder.toWorkItem();
+  //  runmanager::WorkItem workItem = rubyJobBuilder.toWorkItem();
 
-    for (auto itr = workItems.begin();
-         itr != workItems.end();
-         ++itr)
-    {
-      if (itr->type == openstudio::runmanager::JobType::OpenStudioPostProcess)
-      {
-        workItems.insert(itr, workItem);
-        return true;
-      }
-    }
+  //  for (auto itr = workItems.begin();
+  //       itr != workItems.end();
+  //       ++itr)
+  //  {
+  //    if (itr->type == openstudio::runmanager::JobType::OpenStudioPostProcess)
+  //    {
+  //      workItems.insert(itr, workItem);
+  //      return true;
+  //    }
+  //  }
 
-    return false;
-  }
+  //  return false;
+  //}
 
   boost::optional<openstudio::model::Model> modelFromOSM(const openstudio::path& path, openstudio::osversion::VersionTranslator& versionTranslator, openstudio::ProgressBar* progressBar)
   {

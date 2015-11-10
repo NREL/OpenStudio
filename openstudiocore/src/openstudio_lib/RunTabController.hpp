@@ -25,10 +25,10 @@
 
 namespace openstudio {
 
-namespace runmanager {
-  class RunManager;
-  class JobStatusWidget;
-}
+//namespace runmanager {
+//  class RunManager;
+//  class JobStatusWidget;
+//}
 
 namespace model {
   class Model;
@@ -43,13 +43,13 @@ class RunTabController : public MainTabController
  public:
 
   RunTabController(const model::Model & model, const openstudio::path &t_modelPath,
-      const openstudio::path &t_tempFolder, openstudio::runmanager::RunManager t_runManager);
+      const openstudio::path &t_tempFolder);//, openstudio::runmanager::RunManager t_runManager);
 
   virtual ~RunTabController() {}
 
-  openstudio::RunView * runView();
+  //openstudio::RunView * runView();
 
-  runmanager::RunManager runManager();
+  //runmanager::RunManager runManager();
 
   enum TabID
   {
@@ -68,9 +68,9 @@ class RunTabController : public MainTabController
 
  private:
 
-  RunView * m_runView;
+  //RunView * m_runView;
 
-  openstudio::runmanager::JobStatusWidget * m_status;
+  //openstudio::runmanager::JobStatusWidget * m_status;
 };
 
 } // openstudio

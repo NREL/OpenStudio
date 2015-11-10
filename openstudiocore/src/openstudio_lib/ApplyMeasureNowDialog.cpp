@@ -20,14 +20,14 @@
 #include "ApplyMeasureNowDialog.hpp"
 
 #include "../shared_gui_components/BusyWidget.hpp"
-#include "../shared_gui_components/EditController.hpp"
+//#include "../shared_gui_components/EditController.hpp"
 #include "../shared_gui_components/EditView.hpp"
 #include "../shared_gui_components/LocalLibraryController.hpp"
 #include "../shared_gui_components/LocalLibraryView.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/OSViewSwitcher.hpp"
 #include "../shared_gui_components/TextEditDialog.hpp"
-#include "../shared_gui_components/VariableList.hpp"
+//#include "../shared_gui_components/VariableList.hpp"
 
 #include "MainRightColumnController.hpp"
 #include "OSAppBase.hpp"
@@ -73,7 +73,7 @@ namespace openstudio {
 
 ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
   : OSDialog(false, parent),
-  m_editController(nullptr),
+  //m_editController(nullptr),
   m_mainPaneStackedWidget(nullptr),
   m_rightPaneStackedWidget(nullptr),
   m_argumentsFailedTextEdit(nullptr),
@@ -132,7 +132,7 @@ void ApplyMeasureNowDialog::createWidgets()
   m_argumentsFailedTextEdit = new QTextEdit(FAILED_ARG_TEXT);
   m_argumentsFailedTextEdit->setReadOnly(true);
   
-  m_editController = QSharedPointer<EditController>( new EditController(true) );
+  //m_editController = QSharedPointer<EditController>( new EditController(true) );
   bool onlyShowModelMeasures = true;
   m_localLibraryController = QSharedPointer<LocalLibraryController>( new LocalLibraryController(app,onlyShowModelMeasures) );
   m_localLibraryController->localLibraryView->setStyleSheet("QStackedWidget { border-top: 0px; }");
@@ -145,7 +145,7 @@ void ApplyMeasureNowDialog::createWidgets()
   m_argumentsFailedPageIdx = m_rightPaneStackedWidget->addWidget(m_argumentsFailedTextEdit);
 
   auto viewSwitcher = new OSViewSwitcher();
-  viewSwitcher->setView(m_editController->editView);
+  //viewSwitcher->setView(m_editController->editView);
   m_argumentsOkPageIdx = m_rightPaneStackedWidget->addWidget(viewSwitcher);
 
   layout = new QHBoxLayout();
@@ -240,251 +240,251 @@ void ApplyMeasureNowDialog::createWidgets()
 
 void ApplyMeasureNowDialog::displayMeasure()
 {
-  this->okButton()->setText(APPLY_MEASURE);
-  this->okButton()->show();
-  this->okButton()->setEnabled(false);
+  //this->okButton()->setText(APPLY_MEASURE);
+  //this->okButton()->show();
+  //this->okButton()->setEnabled(false);
 
-  m_rightPaneStackedWidget->setCurrentIndex(m_argumentsOkPageIdx);
+  //m_rightPaneStackedWidget->setCurrentIndex(m_argumentsOkPageIdx);
 
-  m_bclMeasure.reset();
-  m_currentMeasureItem.clear();
-  m_job.reset();
-  m_model.reset();
-  m_reloadPath.reset();
+  //m_bclMeasure.reset();
+  //m_currentMeasureItem.clear();
+  //m_job.reset();
+  //m_model.reset();
+  //m_reloadPath.reset();
 
-  openstudio::OSAppBase * app = OSAppBase::instance();
+  //openstudio::OSAppBase * app = OSAppBase::instance();
 
-  QPointer<LibraryItem> selectedItem = m_localLibraryController->selectedItem();
+  //QPointer<LibraryItem> selectedItem = m_localLibraryController->selectedItem();
 
-  if (!selectedItem){
-    return;
-  }
+  //if (!selectedItem){
+  //  return;
+  //}
 
-  UUID id = selectedItem->uuid();
+  //UUID id = selectedItem->uuid();
 
-  try {
-    // Get the selected measure
-    m_bclMeasure = app->measureManager().getMeasure(id);
-    OS_ASSERT(m_bclMeasure);
-    OS_ASSERT(m_bclMeasure->measureType() == MeasureType::ModelMeasure);
+  //try {
+  //  // Get the selected measure
+  //  m_bclMeasure = app->measureManager().getMeasure(id);
+  //  OS_ASSERT(m_bclMeasure);
+  //  OS_ASSERT(m_bclMeasure->measureType() == MeasureType::ModelMeasure);
 
-    if (app->measureManager().checkForUpdates(*m_bclMeasure)){
-      m_bclMeasure->save();
-    }
+  //  if (app->measureManager().checkForUpdates(*m_bclMeasure)){
+  //    m_bclMeasure->save();
+  //  }
 
-    // measure
-    analysis::RubyMeasure rubyMeasure(*m_bclMeasure);
-    try{
-      // DLM: we don't want to use this, if we need to reload cached arguments for measure from member map we can
-      // we could use this t_project.hasStoredArguments(*projectMeasure)
-      
-      boost::optional<model::Model> currentModel = app->currentModel();
-      OS_ASSERT(currentModel);
+  //  // measure
+  //  analysis::RubyMeasure rubyMeasure(*m_bclMeasure);
+  //  try{
+  //    // DLM: we don't want to use this, if we need to reload cached arguments for measure from member map we can
+  //    // we could use this t_project.hasStoredArguments(*projectMeasure)
+  //    
+  //    boost::optional<model::Model> currentModel = app->currentModel();
+  //    OS_ASSERT(currentModel);
 
-      // clone the current model in case arguments getting changes model
-      m_model = currentModel->clone(true).cast<model::Model>();
+  //    // clone the current model in case arguments getting changes model
+  //    m_model = currentModel->clone(true).cast<model::Model>();
 
-      // pass in an empty workspace for the idf since you know it is a model measure
-      Workspace dummyIdf;
-      ruleset::RubyUserScriptInfo info = app->measureManager().infoGetter()->getInfo(*m_bclMeasure, m_model, dummyIdf);
-      std::vector<ruleset::OSArgument> args = info.arguments();
-      rubyMeasure.setArguments(args);
+  //    // pass in an empty workspace for the idf since you know it is a model measure
+  //    Workspace dummyIdf;
+  //    ruleset::RubyUserScriptInfo info = app->measureManager().infoGetter()->getInfo(*m_bclMeasure, m_model, dummyIdf);
+  //    std::vector<ruleset::OSArgument> args = info.arguments();
+  //    rubyMeasure.setArguments(args);
 
-      // DLM: don't save the arguments to the project, if we need to preserve user inputs save to member variable map or something
-      //t_project.registerArguments(t_measure, args);
+  //    // DLM: don't save the arguments to the project, if we need to preserve user inputs save to member variable map or something
+  //    //t_project.registerArguments(t_measure, args);
 
-    } catch (const RubyException & e) {
-      QString errorMessage("Failed to compute arguments for measure: \n\n");
-      errorMessage += QString::fromStdString(e.what());
-      errorMessage.prepend(FAILED_ARG_TEXT);
-      m_argumentsFailedTextEdit->setText(errorMessage);
-      m_rightPaneStackedWidget->setCurrentIndex(m_argumentsFailedPageIdx);
-      return;
-    }
+  //  } catch (const RubyException & e) {
+  //    QString errorMessage("Failed to compute arguments for measure: \n\n");
+  //    errorMessage += QString::fromStdString(e.what());
+  //    errorMessage.prepend(FAILED_ARG_TEXT);
+  //    m_argumentsFailedTextEdit->setText(errorMessage);
+  //    m_rightPaneStackedWidget->setCurrentIndex(m_argumentsFailedPageIdx);
+  //    return;
+  //  }
 
-    m_currentMeasureItem = QSharedPointer<measuretab::MeasureItem>(new measuretab::MeasureItem(rubyMeasure, app));
+  //  m_currentMeasureItem = QSharedPointer<measuretab::MeasureItem>(new measuretab::MeasureItem(rubyMeasure, app));
 
-    connect(m_currentMeasureItem.data(), &measuretab::MeasureItem::argumentsChanged, this, &ApplyMeasureNowDialog::disableOkButton);
+  //  connect(m_currentMeasureItem.data(), &measuretab::MeasureItem::argumentsChanged, this, &ApplyMeasureNowDialog::disableOkButton);
 
-    bool hasIncompleteArguments = m_currentMeasureItem->hasIncompleteArguments();
-    disableOkButton(hasIncompleteArguments);
+  //  bool hasIncompleteArguments = m_currentMeasureItem->hasIncompleteArguments();
+  //  disableOkButton(hasIncompleteArguments);
 
-    m_currentMeasureItem->setName(m_bclMeasure->name().c_str());
-    m_currentMeasureItem->setDisplayName(m_bclMeasure->displayName().c_str());
-    m_currentMeasureItem->setDescription(m_bclMeasure->description().c_str());
+  //  m_currentMeasureItem->setName(m_bclMeasure->name().c_str());
+  //  m_currentMeasureItem->setDisplayName(m_bclMeasure->displayName().c_str());
+  //  m_currentMeasureItem->setDescription(m_bclMeasure->description().c_str());
 
-    // DLM: this is ok, call with overload to ignore isItOKToClearResults
-    m_editController->setMeasureItem(m_currentMeasureItem.data(), app);
+  //  // DLM: this is ok, call with overload to ignore isItOKToClearResults
+  //  m_editController->setMeasureItem(m_currentMeasureItem.data(), app);
 
-  } catch (const std::exception & e) {
-    QString errorMessage("Failed to display measure: \n\n");
-    errorMessage += QString::fromStdString(e.what());
-    errorMessage.prepend(FAILED_ARG_TEXT);
-    m_argumentsFailedTextEdit->setText(errorMessage);
-    m_rightPaneStackedWidget->setCurrentIndex(m_argumentsFailedPageIdx);
-    return;
-  }
+  //} catch (const std::exception & e) {
+  //  QString errorMessage("Failed to display measure: \n\n");
+  //  errorMessage += QString::fromStdString(e.what());
+  //  errorMessage.prepend(FAILED_ARG_TEXT);
+  //  m_argumentsFailedTextEdit->setText(errorMessage);
+  //  m_rightPaneStackedWidget->setCurrentIndex(m_argumentsFailedPageIdx);
+  //  return;
+  //}
 }
 
 void ApplyMeasureNowDialog::runMeasure()
 {
-  runmanager::ConfigOptions co(true);
+  //runmanager::ConfigOptions co(true);
 
-  if (co.getTools().getAllByName("ruby").tools().size() == 0) 
-  {
-    QMessageBox::information(this,
-      "Missing Ruby",
-      "Ruby could not be located.\nOpenStudio will scan for tools.",
-      QMessageBox::Ok);
+  //if (co.getTools().getAllByName("ruby").tools().size() == 0) 
+  //{
+  //  QMessageBox::information(this,
+  //    "Missing Ruby",
+  //    "Ruby could not be located.\nOpenStudio will scan for tools.",
+  //    QMessageBox::Ok);
 
-    co.findTools(true);
-    openstudio::runmanager::RunManager rm;
-    rm.setConfigOptions(co);
-    rm.showConfigGui();
+  //  co.findTools(true);
+  //  openstudio::runmanager::RunManager rm;
+  //  rm.setConfigOptions(co);
+  //  rm.showConfigGui();
 
-    rm.getConfigOptions().saveQSettings();
+  //  rm.getConfigOptions().saveQSettings();
 
-    emit toolsUpdated();
+  //  emit toolsUpdated();
 
-    if (co.getTools().getAllByName("ruby").tools().size() == 0)
-    {
-      QMessageBox::information(this,
-        "Missing Ruby",
-        "Ruby was not located by tool search.\nPlease ensure Ruby correctly installed.\nSimulation aborted.",
-        QMessageBox::Ok);
+  //  if (co.getTools().getAllByName("ruby").tools().size() == 0)
+  //  {
+  //    QMessageBox::information(this,
+  //      "Missing Ruby",
+  //      "Ruby was not located by tool search.\nPlease ensure Ruby correctly installed.\nSimulation aborted.",
+  //      QMessageBox::Ok);
 
-      m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
-      m_timer->stop();
-      this->okButton()->hide();
-      this->backButton()->hide();
+  //    m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
+  //    m_timer->stop();
+  //    this->okButton()->hide();
+  //    this->backButton()->hide();
 
-      return;
-    }
-  }
+  //    return;
+  //  }
+  //}
 
-  m_mainPaneStackedWidget->setCurrentIndex(m_runningPageIdx);
-  m_timer->start(50);
-  this->okButton()->hide();
-  this->backButton()->hide();
+  //m_mainPaneStackedWidget->setCurrentIndex(m_runningPageIdx);
+  //m_timer->start(50);
+  //this->okButton()->hide();
+  //this->backButton()->hide();
 
-  openstudio::OSAppBase * app = OSAppBase::instance();
-  m_workingDir = openstudio::toPath(app->currentDocument()->modelTempDir()) / openstudio::toPath("ApplyMeasureNow");
-  openstudio::path modelPath = m_workingDir / openstudio::toPath("modelClone.osm");
-  openstudio::path epwPath; // DLM: todo look at how this is done in the run tab
+  //openstudio::OSAppBase * app = OSAppBase::instance();
+  //m_workingDir = openstudio::toPath(app->currentDocument()->modelTempDir()) / openstudio::toPath("ApplyMeasureNow");
+  //openstudio::path modelPath = m_workingDir / openstudio::toPath("modelClone.osm");
+  //openstudio::path epwPath; // DLM: todo look at how this is done in the run tab
 
-  removeWorkingDir();
+  //removeWorkingDir();
 
-  // DLM: do we want to get the original model or the one that was potentially altered when getting arguments?
-  boost::optional<model::Model> currentModel = app->currentModel();
-  OS_ASSERT(currentModel);
-  currentModel->save(modelPath, true);
-  
-  // save cloned model to temp directory
-  //OS_ASSERT(m_model);
-  //m_model->save(modelPath,true); 
+  //// DLM: do we want to get the original model or the one that was potentially altered when getting arguments?
+  //boost::optional<model::Model> currentModel = app->currentModel();
+  //OS_ASSERT(currentModel);
+  //currentModel->save(modelPath, true);
+  //
+  //// save cloned model to temp directory
+  ////OS_ASSERT(m_model);
+  ////m_model->save(modelPath,true); 
 
-  // remove? this is shown only in debug (Evan)
-  QString path("Measure Output Location: ");
-  path.append(toQString(m_workingDir));
-  m_jobPath->setText(path);
+  //// remove? this is shown only in debug (Evan)
+  //QString path("Measure Output Location: ");
+  //path.append(toQString(m_workingDir));
+  //m_jobPath->setText(path);
 
-  analysis::RubyMeasure rubyMeasure = m_currentMeasureItem->measure();
+  //analysis::RubyMeasure rubyMeasure = m_currentMeasureItem->measure();
 
-  // DLM: should be able to assert this
-  bool hasIncompleteArguments = m_currentMeasureItem->hasIncompleteArguments();
-  OS_ASSERT(!hasIncompleteArguments);
+  //// DLM: should be able to assert this
+  //bool hasIncompleteArguments = m_currentMeasureItem->hasIncompleteArguments();
+  //OS_ASSERT(!hasIncompleteArguments);
 
-  runmanager::RubyJobBuilder rjb(*m_bclMeasure, rubyMeasure.arguments());
+  //runmanager::RubyJobBuilder rjb(*m_bclMeasure, rubyMeasure.arguments());
 
-  openstudio::path p = getOpenStudioRubyIncludePath();
-  QString arg = "-I";
-  arg.append(toQString(p));
-  rjb.addToolArgument(arg.toStdString());
+  //openstudio::path p = getOpenStudioRubyIncludePath();
+  //QString arg = "-I";
+  //arg.append(toQString(p));
+  //rjb.addToolArgument(arg.toStdString());
 
-  openstudio::runmanager::Workflow wf;
-  rjb.addToWorkflow(wf);
-  wf.add(co.getTools());
-  wf.setInputFiles(modelPath, openstudio::path());
+  //openstudio::runmanager::Workflow wf;
+  //rjb.addToWorkflow(wf);
+  //wf.add(co.getTools());
+  //wf.setInputFiles(modelPath, openstudio::path());
 
-  m_job = wf.create(m_workingDir, modelPath);
+  //m_job = wf.create(m_workingDir, modelPath);
 
-  // DLM: you could make rm a class member then you would not have to call waitForFinished here
-  runmanager::RunManager rm;
-  bool queued = rm.enqueue(*m_job, true);
-  OS_ASSERT(queued);
-  std::vector<runmanager::Job> jobs = rm.getJobs();
-  OS_ASSERT(jobs.size() == 1);
-  rm.waitForFinished ();
+  //// DLM: you could make rm a class member then you would not have to call waitForFinished here
+  //runmanager::RunManager rm;
+  //bool queued = rm.enqueue(*m_job, true);
+  //OS_ASSERT(queued);
+  //std::vector<runmanager::Job> jobs = rm.getJobs();
+  //OS_ASSERT(jobs.size() == 1);
+  //rm.waitForFinished ();
 
-  QTimer::singleShot(0, this, SLOT(displayResults()));
+  //QTimer::singleShot(0, this, SLOT(displayResults()));
 }
 
 void ApplyMeasureNowDialog::displayResults()
 {
-  analysis::RubyMeasure rubyMeasure = m_currentMeasureItem->measure();
+  //analysis::RubyMeasure rubyMeasure = m_currentMeasureItem->measure();
 
-  try{
-    m_reloadPath = m_job->allFiles().getLastByFilename("out.osm").fullPath;
-  }catch(...){
-  }
-
-  m_mainPaneStackedWidget->setCurrentIndex(m_outputPageIdx);
-  m_timer->stop();
-
-  this->okButton()->setText(ACCEPT_CHANGES);
-  this->okButton()->show();
-  if (m_reloadPath){
-    this->okButton()->setEnabled(true);
-  }else{
-    this->okButton()->setEnabled(false);
-  }
-  this->backButton()->show();
-  this->backButton()->setEnabled(true);
-  this->cancelButton()->setEnabled(true);
-
-  runmanager::JobErrors jobErrors = m_job->errors();
-  OS_ASSERT(m_jobItemView);
-  m_jobItemView->update(rubyMeasure, *m_bclMeasure, jobErrors, *m_job);
-  m_jobItemView->setExpanded(true);
-
-  if(!jobErrors.errors().empty()){
-    this->okButton()->setDisabled(true);
-  }
-
-  m_advancedOutput.clear();
-  // DLM: always show these files if they exist?
-  //if(!jobErrors.succeeded()){
-    try{
-      runmanager::Files files(m_job->outputFiles());
-      openstudio::path stdErrPath = files.getLastByFilename("stderr").fullPath;
-
-      m_advancedOutput = "";
-
-      QFile file(toQString(stdErrPath));
-      if (file.open(QFile::ReadOnly))
-      {
-        QTextStream docIn(&file);
-        m_advancedOutput = docIn.readAll();
-        file.close();
-      }
-
-      m_advancedOutput += QString("\n");
-    }catch(std::exception&){
-    }
+  //try{
+  //  m_reloadPath = m_job->allFiles().getLastByFilename("out.osm").fullPath;
+  //}catch(...){
   //}
 
-  // DLM: always show these files if they exist?
-  //if(!jobErrors.succeeded()){
-    try{
-      runmanager::Files files(m_job->outputFiles());
-      openstudio::path stdOutPath = files.getLastByFilename("stdout").fullPath;
-      std::ifstream ifs(toString(stdOutPath).c_str());
-      std::string stdMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
-      ifs.close();
-      m_advancedOutput += toQString(stdMessage);
-    }catch(std::exception&){
-    }
+  //m_mainPaneStackedWidget->setCurrentIndex(m_outputPageIdx);
+  //m_timer->stop();
+
+  //this->okButton()->setText(ACCEPT_CHANGES);
+  //this->okButton()->show();
+  //if (m_reloadPath){
+  //  this->okButton()->setEnabled(true);
+  //}else{
+  //  this->okButton()->setEnabled(false);
   //}
+  //this->backButton()->show();
+  //this->backButton()->setEnabled(true);
+  //this->cancelButton()->setEnabled(true);
+
+  //runmanager::JobErrors jobErrors = m_job->errors();
+  //OS_ASSERT(m_jobItemView);
+  //m_jobItemView->update(rubyMeasure, *m_bclMeasure, jobErrors, *m_job);
+  //m_jobItemView->setExpanded(true);
+
+  //if(!jobErrors.errors().empty()){
+  //  this->okButton()->setDisabled(true);
+  //}
+
+  //m_advancedOutput.clear();
+  //// DLM: always show these files if they exist?
+  ////if(!jobErrors.succeeded()){
+  //  try{
+  //    runmanager::Files files(m_job->outputFiles());
+  //    openstudio::path stdErrPath = files.getLastByFilename("stderr").fullPath;
+
+  //    m_advancedOutput = "";
+
+  //    QFile file(toQString(stdErrPath));
+  //    if (file.open(QFile::ReadOnly))
+  //    {
+  //      QTextStream docIn(&file);
+  //      m_advancedOutput = docIn.readAll();
+  //      file.close();
+  //    }
+
+  //    m_advancedOutput += QString("\n");
+  //  }catch(std::exception&){
+  //  }
+  ////}
+
+  //// DLM: always show these files if they exist?
+  ////if(!jobErrors.succeeded()){
+  //  try{
+  //    runmanager::Files files(m_job->outputFiles());
+  //    openstudio::path stdOutPath = files.getLastByFilename("stdout").fullPath;
+  //    std::ifstream ifs(toString(stdOutPath).c_str());
+  //    std::string stdMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+  //    ifs.close();
+  //    m_advancedOutput += toQString(stdMessage);
+  //  }catch(std::exception&){
+  //  }
+  ////}
  
 }
 
@@ -688,71 +688,71 @@ void DataPointJobItemView::paintEvent(QPaintEvent * e)
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void DataPointJobItemView::update(analysis::RubyMeasure & rubyMeasure, BCLMeasure & bclMeasure, openstudio::runmanager::JobErrors jobErrors, openstudio::runmanager::Job job)
-{
-  OS_ASSERT(m_dataPointJobHeaderView);
-
-  m_dataPointJobHeaderView->setName(rubyMeasure.name());
-  m_dataPointJobHeaderView->setLastRunTime(job.lastRun());
-  m_dataPointJobHeaderView->setStatus(job.status(), job.canceled());
-
-  m_dataPointJobHeaderView->m_na->setText("");
-  m_dataPointJobHeaderView->m_warnings->setText("");
-  m_dataPointJobHeaderView->m_errors->setText("");
-
-  OS_ASSERT(m_dataPointJobContentView);
-  m_dataPointJobContentView->clear();
-
-  std::vector<std::string> initialConditions = jobErrors.initialConditions();
-  for (const std::string& initialCondition : initialConditions){
-    m_dataPointJobContentView->addInitialConditionMessage(initialCondition);
-  }
-
-  std::vector<std::string> finalConditions = jobErrors.finalConditions();
-  for (const std::string& finalCondition : finalConditions){
-    m_dataPointJobContentView->addFinalConditionMessage(finalCondition);
-  }
-
-  std::vector<std::string> errors = jobErrors.errors();
-  m_dataPointJobHeaderView->setNumErrors(errors.size());
-  for (const std::string& errorMessage : errors){
-    m_dataPointJobContentView->addErrorMessage(errorMessage);
-  }
-
-  // also display std err if job failed and it exists and is not empty
-  if (job.lastRun() && !job.running() && !jobErrors.succeeded()){
-    try{
-      runmanager::Files files(job.outputFiles());
-      openstudio::path stdErrPath = files.getLastByFilename("stderr").fullPath;
-      std::string stdErrPathStr = toString(stdErrPath);
-      std::ifstream ifs(stdErrPathStr.c_str());
-      std::string stdErrorMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
-      ifs.close();
-      if (!stdErrorMessage.empty()){
-        m_dataPointJobContentView->addStdErrorMessage(stdErrorMessage);
-      }
-    }catch(std::exception&){
-
-    }
-  }
-
-  std::vector<std::string> warnings = jobErrors.warnings();
-  m_dataPointJobHeaderView->setNumWarnings(warnings.size());
-  for (const std::string& warningMessage : warnings){
-    m_dataPointJobContentView->addWarningMessage(warningMessage);
-  }
-
-  std::vector<std::string> infos = jobErrors.infos();
-  for (const std::string& infoMessage : infos){
-    m_dataPointJobContentView->addInfoMessage(infoMessage);
-  }
-
-  if (jobErrors.result == ruleset::OSResultValue::NA){
-    m_dataPointJobHeaderView->setNA(true);
-  }else{
-    m_dataPointJobHeaderView->setNA(false);
-  }
-}
+//void DataPointJobItemView::update(analysis::RubyMeasure & rubyMeasure, BCLMeasure & bclMeasure, openstudio::runmanager::JobErrors jobErrors, openstudio::runmanager::Job job)
+//{
+//  OS_ASSERT(m_dataPointJobHeaderView);
+//
+//  m_dataPointJobHeaderView->setName(rubyMeasure.name());
+//  m_dataPointJobHeaderView->setLastRunTime(job.lastRun());
+//  m_dataPointJobHeaderView->setStatus(job.status(), job.canceled());
+//
+//  m_dataPointJobHeaderView->m_na->setText("");
+//  m_dataPointJobHeaderView->m_warnings->setText("");
+//  m_dataPointJobHeaderView->m_errors->setText("");
+//
+//  OS_ASSERT(m_dataPointJobContentView);
+//  m_dataPointJobContentView->clear();
+//
+//  std::vector<std::string> initialConditions = jobErrors.initialConditions();
+//  for (const std::string& initialCondition : initialConditions){
+//    m_dataPointJobContentView->addInitialConditionMessage(initialCondition);
+//  }
+//
+//  std::vector<std::string> finalConditions = jobErrors.finalConditions();
+//  for (const std::string& finalCondition : finalConditions){
+//    m_dataPointJobContentView->addFinalConditionMessage(finalCondition);
+//  }
+//
+//  std::vector<std::string> errors = jobErrors.errors();
+//  m_dataPointJobHeaderView->setNumErrors(errors.size());
+//  for (const std::string& errorMessage : errors){
+//    m_dataPointJobContentView->addErrorMessage(errorMessage);
+//  }
+//
+//  // also display std err if job failed and it exists and is not empty
+//  if (job.lastRun() && !job.running() && !jobErrors.succeeded()){
+//    try{
+//      runmanager::Files files(job.outputFiles());
+//      openstudio::path stdErrPath = files.getLastByFilename("stderr").fullPath;
+//      std::string stdErrPathStr = toString(stdErrPath);
+//      std::ifstream ifs(stdErrPathStr.c_str());
+//      std::string stdErrorMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+//      ifs.close();
+//      if (!stdErrorMessage.empty()){
+//        m_dataPointJobContentView->addStdErrorMessage(stdErrorMessage);
+//      }
+//    }catch(std::exception&){
+//
+//    }
+//  }
+//
+//  std::vector<std::string> warnings = jobErrors.warnings();
+//  m_dataPointJobHeaderView->setNumWarnings(warnings.size());
+//  for (const std::string& warningMessage : warnings){
+//    m_dataPointJobContentView->addWarningMessage(warningMessage);
+//  }
+//
+//  std::vector<std::string> infos = jobErrors.infos();
+//  for (const std::string& infoMessage : infos){
+//    m_dataPointJobContentView->addInfoMessage(infoMessage);
+//  }
+//
+//  if (jobErrors.result == ruleset::OSResultValue::NA){
+//    m_dataPointJobHeaderView->setNA(true);
+//  }else{
+//    m_dataPointJobHeaderView->setNA(false);
+//  }
+//}
 
 //***** SLOTS *****
 

@@ -23,12 +23,9 @@
 #include "../shared_gui_components/HeaderViews.hpp"
 #include "../shared_gui_components/OSDialog.hpp"
 #include "../shared_gui_components/OSListView.hpp"
-#include "../shared_gui_components/VariableList.hpp"
+#include "../runmanager/lib/Job.hpp"
 
 #include "../model/Model.hpp"
-
-#include "../analysis/Problem.hpp"
-#include "../analysis/RubyMeasure.hpp"
 
 #include "../utilities/bcl/BCLMeasure.hpp"
 
@@ -40,7 +37,7 @@ class QTimer;
 namespace openstudio{
 
 class DateTime;
-class EditController;
+//class EditController;
 class LocalLibraryController;
 
 class TextEditDialog;
@@ -50,6 +47,11 @@ class DataPointJobItemView;
 
 namespace runmanager {
   class AdvancedStatus;
+  class Job;
+}
+
+namespace measuretab {
+  class MeasureItem;
 }
 
 class ApplyMeasureNowDialog : public OSDialog
@@ -66,7 +68,7 @@ public:
 
   void displayMeasure();
 
-  QSharedPointer<EditController> m_editController;
+  //QSharedPointer<EditController> m_editController;
 
   QSharedPointer<LocalLibraryController> m_localLibraryController;
 
@@ -232,7 +234,7 @@ protected:
 
 public slots:
 
-  void update(analysis::RubyMeasure & rubyMeasure, BCLMeasure & bclMeasure, openstudio::runmanager::JobErrors jobErrors, openstudio::runmanager::Job job);
+  //void update(analysis::RubyMeasure & rubyMeasure, BCLMeasure & bclMeasure, openstudio::runmanager::JobErrors jobErrors, openstudio::runmanager::Job job);
 
 };
 

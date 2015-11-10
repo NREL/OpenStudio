@@ -212,7 +212,7 @@ endif()
 # some unit tests previously defined depend on the ruby bindings, set those here so they are all defined
 if(BUILD_TESTING)
   add_dependencies(openstudio_runmanager_tests ${ALL_RUBY_BINDING_TARGETS})
-  add_dependencies(openstudio_analysisdriver_tests ${ALL_RUBY_BINDING_TARGETS})
+  #add_dependencies(openstudio_analysisdriver_tests ${ALL_RUBY_BINDING_TARGETS})
 endif()
 
 # run all the unit tests

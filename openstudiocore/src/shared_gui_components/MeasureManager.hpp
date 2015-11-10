@@ -21,7 +21,6 @@
 #define SHAREDGUICOMPONENTS_MEASUREMANAGER_HPP
 
 #include "LocalLibraryController.hpp"
-#include "../analysisdriver/SimpleProject.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/core/Path.hpp"
 #include "../utilities/core/UUID.hpp"
@@ -114,27 +113,27 @@ class MeasureManager : public QObject
     // Retrieve a measure from openstudioMeasures, myMeasures, and bclMeasures by id.
     boost::optional<BCLMeasure> getMeasure(const UUID & id);
 
-    /// Updates an individual measure. Does not ask for user approval, approval is assumed.
-    /// \returns true if the update succeeded.
-    std::pair<bool,std::string> updateMeasure(analysisdriver::SimpleProject &t_project, const BCLMeasure &t_measure);
+    ///// Updates an individual measure. Does not ask for user approval, approval is assumed.
+    ///// \returns true if the update succeeded.
+    //std::pair<bool,std::string> updateMeasure(analysisdriver::SimpleProject &t_project, const BCLMeasure &t_measure);
 
-    // insert / replace a measure by UUID. If the measure already exists in the project
-    // the user is prompted as to how to deal with it. OSArguments are loaded as needed
-    BCLMeasure insertReplaceMeasure(analysisdriver::SimpleProject &t_project, const UUID &t_id);
+    //// insert / replace a measure by UUID. If the measure already exists in the project
+    //// the user is prompted as to how to deal with it. OSArguments are loaded as needed
+    //BCLMeasure insertReplaceMeasure(analysisdriver::SimpleProject &t_project, const UUID &t_id);
 
-    // Updates the given set of measures in the current project. Does not ask for user approval. Approval is assumed
-    // when this method is called.
-    void updateMeasures(analysisdriver::SimpleProject &t_project, 
-      const std::vector<BCLMeasure> &t_newMeasures, 
-      bool t_showMessage=true);
+    //// Updates the given set of measures in the current project. Does not ask for user approval. Approval is assumed
+    //// when this method is called.
+    //void updateMeasures(analysisdriver::SimpleProject &t_project, 
+    //  const std::vector<BCLMeasure> &t_newMeasures, 
+    //  bool t_showMessage=true);
 
     void setLibraryController(const QSharedPointer<LocalLibraryController> &t_libraryController);
 
-    std::vector<ruleset::OSArgument> getArguments(analysisdriver::SimpleProject &t_project, const BCLMeasure &t_measure);
+    //std::vector<ruleset::OSArgument> getArguments(analysisdriver::SimpleProject &t_project, const BCLMeasure &t_measure);
 
-    std::string suggestMeasureGroupName(const BCLMeasure &t_measure);
+    //std::string suggestMeasureGroupName(const BCLMeasure &t_measure);
 
-    std::string suggestMeasureName(const BCLMeasure &t_measure, bool t_fixed);
+    //std::string suggestMeasureName(const BCLMeasure &t_measure, bool t_fixed);
 
     bool isMeasureSelected();
 
@@ -145,28 +144,28 @@ class MeasureManager : public QObject
     /// Does not update the measures in the project at all
     void updateMeasuresLists();
 
-    /// For all measures in the "openstudioMeasures" list which have changed relative to the version
-    /// in the project, update the project to the new version
-    /// 
-    /// Does not ask for user approval
-    void updateOpenStudioMeasures(analysisdriver::SimpleProject &t_project);
+    ///// For all measures in the "openstudioMeasures" list which have changed relative to the version
+    ///// in the project, update the project to the new version
+    ///// 
+    ///// Does not ask for user approval
+    //void updateOpenStudioMeasures(analysisdriver::SimpleProject &t_project);
 
-    /// Updates the UI for all measures.
-    /// For all measures in the "myMeasures" list which have changed relative to the version
-    /// in the project, update the project to the new version
-    /// 
-    /// Does not ask for user approval
-    void updateMyMeasures(analysisdriver::SimpleProject &t_project);
+    ///// Updates the UI for all measures.
+    ///// For all measures in the "myMeasures" list which have changed relative to the version
+    ///// in the project, update the project to the new version
+    ///// 
+    ///// Does not ask for user approval
+    //void updateMyMeasures(analysisdriver::SimpleProject &t_project);
 
-    /// Updates the UI for all measures.
-    /// For all measures in the "bclMeasures" list which have changed relative to the version
-    /// in the project, update the project to the new version.
-    ///
-    /// Also checks installed measures and updates the project's version of them if 
-    /// appropriate. 
-    /// 
-    /// Does not ask for user approval
-    void updateBCLMeasures(analysisdriver::SimpleProject &t_project);
+    ///// Updates the UI for all measures.
+    ///// For all measures in the "bclMeasures" list which have changed relative to the version
+    ///// in the project, update the project to the new version.
+    /////
+    ///// Also checks installed measures and updates the project's version of them if 
+    ///// appropriate. 
+    ///// 
+    ///// Does not ask for user approval
+    //void updateBCLMeasures(analysisdriver::SimpleProject &t_project);
 
     /// Checks a BCL measure for updates, returns true if updated
     bool checkForUpdates(BCLMeasure& measure, bool force=false);

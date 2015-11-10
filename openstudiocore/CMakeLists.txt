@@ -196,9 +196,9 @@ set(project_directories
   osversion
   ruleset
   runmanager/lib
-  analysis
-  project
-  analysisdriver
+  #analysis
+  #project
+  #analysisdriver
   resultsviewer
   model_editor
   openstudio_lib
@@ -936,15 +936,15 @@ endif()
 
 set(all_lib_targets
   openstudio_runmanager
-  openstudio_project
+  #openstudio_project
   openstudio_osversion
   openstudio_model
   openstudio_modeleditor
   openstudio_utilities
   openstudio_energyplus
-  openstudio_analysisdriver
+  #openstudio_analysisdriver
   openstudio_ruleset
-  openstudio_analysis
+  #openstudio_analysis
   openstudio_radiance
   openstudio_gbxml
   openstudio_bimserver

@@ -13,8 +13,8 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 # source files
 set(${target_name}_SRC
-  ApplyMeasureNowDialog.cpp
-  ApplyMeasureNowDialog.hpp
+  #ApplyMeasureNowDialog.cpp
+  #ApplyMeasureNowDialog.hpp
   BCLComponentItem.cpp
   BCLComponentItem.hpp
   BuildingInspectorView.cpp
@@ -379,10 +379,10 @@ set(${target_name}_SRC
   ../shared_gui_components/Component.hpp
   ../shared_gui_components/ComponentList.cpp
   ../shared_gui_components/ComponentList.hpp
-  ../shared_gui_components/EditController.cpp
-  ../shared_gui_components/EditController.hpp
-  ../shared_gui_components/EditView.cpp
-  ../shared_gui_components/EditView.hpp
+  #../shared_gui_components/EditController.cpp
+  #../shared_gui_components/EditController.hpp
+  #../shared_gui_components/EditView.cpp
+  #../shared_gui_components/EditView.hpp
   ../shared_gui_components/FieldMethodTypedefs.hpp
   ../shared_gui_components/GraphicsItems.cpp
   ../shared_gui_components/GraphicsItems.hpp
@@ -444,16 +444,14 @@ set(${target_name}_SRC
   ../shared_gui_components/PageNavigator.hpp
   ../shared_gui_components/ProcessEventsProgressBar.cpp
   ../shared_gui_components/ProcessEventsProgressBar.hpp
-  ../shared_gui_components/SyncMeasuresDialog.cpp
-  ../shared_gui_components/SyncMeasuresDialog.hpp
-  ../shared_gui_components/SyncMeasuresDialogCentralWidget.cpp
-  ../shared_gui_components/SyncMeasuresDialogCentralWidget.hpp
+  #../shared_gui_components/SyncMeasuresDialog.cpp
+  #../shared_gui_components/SyncMeasuresDialog.hpp
+  #../shared_gui_components/SyncMeasuresDialogCentralWidget.cpp
+  #../shared_gui_components/SyncMeasuresDialogCentralWidget.hpp
   ../shared_gui_components/TextEditDialog.cpp
   ../shared_gui_components/TextEditDialog.hpp 
   ../shared_gui_components/TIDItemModel.cpp
   ../shared_gui_components/TIDItemModel.hpp
-  ../shared_gui_components/VariableList.cpp
-  ../shared_gui_components/VariableList.hpp
   ../shared_gui_components/VariableView.cpp
   ../shared_gui_components/VariableView.hpp
   ../shared_gui_components/WaitDialog.cpp
@@ -466,7 +464,7 @@ set(${target_name}_SRC
 
 # moc files
 set(${target_name}_moc
-  ApplyMeasureNowDialog.hpp
+  #ApplyMeasureNowDialog.hpp
   BCLComponentItem.hpp
   BuildingInspectorView.hpp
   CollapsibleInspector.hpp
@@ -647,8 +645,8 @@ set(${target_name}_moc
   ../shared_gui_components/CollapsibleComponentList.hpp
   ../shared_gui_components/Component.hpp
   ../shared_gui_components/ComponentList.hpp
-  ../shared_gui_components/EditController.hpp
-  ../shared_gui_components/EditView.hpp
+  #../shared_gui_components/EditController.hpp
+  #../shared_gui_components/EditView.hpp
   ../shared_gui_components/GraphicsItems.hpp
   ../shared_gui_components/HeaderViews.hpp
   ../shared_gui_components/LostCloudConnectionDialog.hpp
@@ -676,11 +674,10 @@ set(${target_name}_moc
   ../shared_gui_components/OSUnsignedEdit.hpp
   ../shared_gui_components/OSViewSwitcher.hpp
   ../shared_gui_components/PageNavigator.hpp
-  ../shared_gui_components/SyncMeasuresDialog.hpp
-  ../shared_gui_components/SyncMeasuresDialogCentralWidget.hpp
+  #../shared_gui_components/SyncMeasuresDialog.hpp
+  #../shared_gui_components/SyncMeasuresDialogCentralWidget.hpp
   ../shared_gui_components/TextEditDialog.hpp 
   ../shared_gui_components/TIDItemModel.hpp
-  ../shared_gui_components/VariableList.hpp
   ../shared_gui_components/VariableView.hpp
   ../shared_gui_components/WaitDialog.hpp
   ../shared_gui_components/NetworkProxyDialog.hpp
@@ -717,8 +714,8 @@ set(depends
   openstudio_modeleditor
   openstudio_runmanager
   #openstudio_ruleset
-  openstudio_analysis
-  openstudio_analysisdriver
+  #openstudio_analysis
+  #openstudio_analysisdriver
   openstudio_sdd
   openstudio_gbxml
   ${QT_LIBS}

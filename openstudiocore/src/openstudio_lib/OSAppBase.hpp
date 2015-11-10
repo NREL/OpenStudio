@@ -54,7 +54,7 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
 
   static OSAppBase * instance();
 
-  virtual boost::optional<openstudio::analysisdriver::SimpleProject> project() override;
+  //virtual boost::optional<openstudio::analysisdriver::SimpleProject> project() override;
   virtual QWidget *mainWidget() override;
   virtual MeasureManager &measureManager() override;
   virtual boost::optional<openstudio::model::Model> currentModel() override;
@@ -67,7 +67,7 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
   virtual void downloadUpdatedBCLMeasures() override;
   virtual void openBclDlg() override;
   virtual void chooseHorizontalEditTab() override;
-  virtual QSharedPointer<openstudio::EditController> editController() override;
+  //virtual QSharedPointer<openstudio::EditController> editController() override;
   boost::shared_ptr<WaitDialog> waitDialog() {return m_waitDialog;}
   virtual bool notify(QObject * receiver, QEvent * e) override;
 

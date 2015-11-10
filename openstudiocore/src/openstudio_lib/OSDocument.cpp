@@ -19,7 +19,7 @@
 
 #include "OSDocument.hpp"
 
-#include "ApplyMeasureNowDialog.hpp"
+//#include "ApplyMeasureNowDialog.hpp"
 #include "ConstructionsTabController.hpp"
 #include "FacilityTabController.hpp"
 #include "FileOperations.hpp"
@@ -61,7 +61,7 @@
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/WaitDialog.hpp"
 
-#include "../analysis/Analysis.hpp"
+//#include "../analysis/Analysis.hpp"
 
 #include "../model/Building.hpp"
 #include "../model/Building_Impl.hpp"
@@ -87,15 +87,15 @@
 
 #include "../osversion/VersionTranslator.hpp"
 
-#include "../analysis/DataPoint.hpp"
-#include "../analysis/MeasureGroup.hpp"
-#include "../analysis/MeasureGroup_Impl.hpp"
-#include "../analysis/NullMeasure.hpp"
-#include "../analysis/Problem.hpp"
-#include "../analysis/RubyMeasure.hpp"
-#include "../analysis/RubyMeasure_Impl.hpp"
+//#include "../analysis/DataPoint.hpp"
+//#include "../analysis/MeasureGroup.hpp"
+//#include "../analysis/MeasureGroup_Impl.hpp"
+//#include "../analysis/NullMeasure.hpp"
+//#include "../analysis/Problem.hpp"
+//#include "../analysis/RubyMeasure.hpp"
+//#include "../analysis/RubyMeasure_Impl.hpp"
 
-#include "../runmanager/lib/WorkItem.hpp"
+//#include "../runmanager/lib/WorkItem.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -177,144 +177,145 @@ namespace openstudio {
       modifiedOnLoad = false;
     }
 
-    openstudio::analysisdriver::SimpleProjectOptions options;
-    options.setPauseRunManagerQueue(true); // do not start running when opening
-    options.setInitializeRunManagerUI(true);
-    options.setLogLevel(Debug);
+    //openstudio::analysisdriver::SimpleProjectOptions options;
+    //options.setPauseRunManagerQueue(true); // do not start running when opening
+    //options.setInitializeRunManagerUI(true);
+    //options.setLogLevel(Debug);
 
-    // initialize project object
-    if (boost::filesystem::exists(openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources/project.osp")))
-    {
-      LOG(Debug, "project existed, opening");
-      m_simpleProject = openstudio::analysisdriver::SimpleProject::open(openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources"), options);
+    //// initialize project object
+    //if (boost::filesystem::exists(openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources/project.osp")))
+    //{
+    //  LOG(Debug, "project existed, opening");
+    //  m_simpleProject = openstudio::analysisdriver::SimpleProject::open(openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources"), options);
 
-      if (m_simpleProject)
-      {
-        // DLM: this does not seem very robust?
-        // fix up workflow as needed
-        bool save = false;
-        openstudio::analysis::Problem problem = m_simpleProject->analysis().problem();
-        OptionalInt index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ModelToIdf);
-        if (!index) {
-          problem.push(runmanager::WorkItem(runmanager::JobType::ModelToIdf));
-          save = true;
-        }
-        index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ExpandObjects);
-        if (!index) {
-          problem.push(runmanager::WorkItem(runmanager::JobType::ExpandObjects));
-          save = true;
-        }
-        index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::EnergyPlusPreProcess);
-        if (!index) {
-          problem.push(runmanager::WorkItem(runmanager::JobType::EnergyPlusPreProcess));
-          save = true;
-        }
-        index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::EnergyPlus);
-        if (!index) {
-          problem.push(runmanager::WorkItem(runmanager::JobType::EnergyPlus));
-          save = true;
-        }
-        index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::OpenStudioPostProcess);
-        if (!index) {
-          problem.push(runmanager::WorkItem(runmanager::JobType::OpenStudioPostProcess));
-          save = true;
-        }
+    //  if (m_simpleProject)
+    //  {
+    //    // DLM: this does not seem very robust?
+    //    // fix up workflow as needed
+    //    bool save = false;
+    //    openstudio::analysis::Problem problem = m_simpleProject->analysis().problem();
+    //    OptionalInt index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ModelToIdf);
+    //    if (!index) {
+    //      problem.push(runmanager::WorkItem(runmanager::JobType::ModelToIdf));
+    //      save = true;
+    //    }
+    //    index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ExpandObjects);
+    //    if (!index) {
+    //      problem.push(runmanager::WorkItem(runmanager::JobType::ExpandObjects));
+    //      save = true;
+    //    }
+    //    index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::EnergyPlusPreProcess);
+    //    if (!index) {
+    //      problem.push(runmanager::WorkItem(runmanager::JobType::EnergyPlusPreProcess));
+    //      save = true;
+    //    }
+    //    index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::EnergyPlus);
+    //    if (!index) {
+    //      problem.push(runmanager::WorkItem(runmanager::JobType::EnergyPlus));
+    //      save = true;
+    //    }
+    //    index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::OpenStudioPostProcess);
+    //    if (!index) {
+    //      problem.push(runmanager::WorkItem(runmanager::JobType::OpenStudioPostProcess));
+    //      save = true;
+    //    }
 
-        if (save)
-        {
-          m_simpleProject->save();
-        }
+    //    if (save)
+    //    {
+    //      m_simpleProject->save();
+    //    }
 
-        // check that all Ruby scripts exist, duplicates code in PatApp::openFile
-        std::stringstream ss;
-        for (const analysis::InputVariable& inputVariable : problem.variables()){
-          boost::optional<analysis::MeasureGroup> measureGroup = inputVariable.optionalCast<analysis::MeasureGroup>();
-          if (measureGroup){
-            for (const analysis::Measure& measure : measureGroup->measures(false)){
-              boost::optional<analysis::RubyMeasure> rubyMeasure = measure.optionalCast<analysis::RubyMeasure>();
-              if (rubyMeasure){
-                boost::optional<BCLMeasure> bclMeasure = rubyMeasure->bclMeasure();
-                if (!bclMeasure){
-                  ss << "Cannot find measure '" << rubyMeasure->name() << "' in scripts directory." << std::endl;
-                }
-              }
-            }
-          }
-        }
-        if (ss.str().size() > 0){
-          ss << std::endl << "Ensure that all measures are correctly located in the scripts directory.";
-          LOG(Warn, ss.str());
-          // DLM: which dialog should be parent?
-          QMessageBox::warning(0,
-            QString("Error opening measure and run data."),
-            toQString(ss.str()),
-            QMessageBox::Ok);
-        }
+    //    // check that all Ruby scripts exist, duplicates code in PatApp::openFile
+    //    std::stringstream ss;
+    //    for (const analysis::InputVariable& inputVariable : problem.variables()){
+    //      boost::optional<analysis::MeasureGroup> measureGroup = inputVariable.optionalCast<analysis::MeasureGroup>();
+    //      if (measureGroup){
+    //        for (const analysis::Measure& measure : measureGroup->measures(false)){
+    //          boost::optional<analysis::RubyMeasure> rubyMeasure = measure.optionalCast<analysis::RubyMeasure>();
+    //          if (rubyMeasure){
+    //            boost::optional<BCLMeasure> bclMeasure = rubyMeasure->bclMeasure();
+    //            if (!bclMeasure){
+    //              ss << "Cannot find measure '" << rubyMeasure->name() << "' in scripts directory." << std::endl;
+    //            }
+    //          }
+    //        }
+    //      }
+    //    }
+    //    if (ss.str().size() > 0){
+    //      ss << std::endl << "Ensure that all measures are correctly located in the scripts directory.";
+    //      LOG(Warn, ss.str());
+    //      // DLM: which dialog should be parent?
+    //      QMessageBox::warning(0,
+    //        QString("Error opening measure and run data."),
+    //        toQString(ss.str()),
+    //        QMessageBox::Ok);
+    //    }
 
-      }
-      else {
-        // save copy of databases about to be overwritten
-        openstudio::path projectDir = openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources");
-        boost::filesystem::copy_file(projectDir / toPath("run.db"),
-          projectDir / toPath("bad-run.db"),
-          boost::filesystem::copy_option::overwrite_if_exists);
-        boost::filesystem::copy_file(projectDir / toPath("project.osp"),
-          projectDir / toPath("bad-project.osp"),
-          boost::filesystem::copy_option::overwrite_if_exists);
-        // throw up warning message
-        std::stringstream ss;
-        ss << "The project.osp and run.db associated with this model could not be opened. ";
-        ss << "Copies have been saved as bad-run.db and bad-project.osp. New, blank databases ";
-        ss << "will be created. Compared to the original, the model will no longer contain any ";
-        ss << "measures or run data. If that data was present and is critical, it can be mined ";
-        ss << "from the 'bad-' database copies, which are in SQLite format. If you would like ";
-        ss << "to help us diagnose and fix the underlying cause of this problem, please save ";
-        ss << "your model and send a zipped-up copy of the .osm file and its companion folder ";
-        ss << "to OpenStudio@NREL.gov, along with a description of this model's history. Thank ";
-        ss << "you, and sorry for the inconvenience.";
-        LOG(Warn, ss.str());
-        // DLM: which dialog should be parent?
-        QMessageBox::warning(nullptr, 
-                             QString("Error opening measure and run data."),
-                             toQString(ss.str()),
-                             QMessageBox::Ok);
-      }
-    }
+    //  }
+    //  else {
+    //    // save copy of databases about to be overwritten
+    //    openstudio::path projectDir = openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources");
+    //    boost::filesystem::copy_file(projectDir / toPath("run.db"),
+    //      projectDir / toPath("bad-run.db"),
+    //      boost::filesystem::copy_option::overwrite_if_exists);
+    //    boost::filesystem::copy_file(projectDir / toPath("project.osp"),
+    //      projectDir / toPath("bad-project.osp"),
+    //      boost::filesystem::copy_option::overwrite_if_exists);
+    //    // throw up warning message
+    //    std::stringstream ss;
+    //    ss << "The project.osp and run.db associated with this model could not be opened. ";
+    //    ss << "Copies have been saved as bad-run.db and bad-project.osp. New, blank databases ";
+    //    ss << "will be created. Compared to the original, the model will no longer contain any ";
+    //    ss << "measures or run data. If that data was present and is critical, it can be mined ";
+    //    ss << "from the 'bad-' database copies, which are in SQLite format. If you would like ";
+    //    ss << "to help us diagnose and fix the underlying cause of this problem, please save ";
+    //    ss << "your model and send a zipped-up copy of the .osm file and its companion folder ";
+    //    ss << "to OpenStudio@NREL.gov, along with a description of this model's history. Thank ";
+    //    ss << "you, and sorry for the inconvenience.";
+    //    LOG(Warn, ss.str());
+    //    // DLM: which dialog should be parent?
+    //    QMessageBox::warning(nullptr, 
+    //                         QString("Error opening measure and run data."),
+    //                         toQString(ss.str()),
+    //                         QMessageBox::Ok);
+    //  }
+    //}
 
-    if (!m_simpleProject) {
-      LOG(Debug, "Creating new project");
-      m_simpleProject = openstudio::analysisdriver::SimpleProject::create(
-        openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources"),
-        options,
-        true);
+    //if (!m_simpleProject) {
+    //  LOG(Debug, "Creating new project");
+    //  m_simpleProject = openstudio::analysisdriver::SimpleProject::create(
+    //    openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources"),
+    //    options,
+    //    true);
 
-      openstudio::analysis::Problem problem = m_simpleProject->analysis().problem();
+    //  openstudio::analysis::Problem problem = m_simpleProject->analysis().problem();
 
-      // add swap variable
-      openstudio::analysis::MeasureGroup dvar("Alternative Model", openstudio::analysis::MeasureVector(1u, openstudio::analysis::NullMeasure()));
-      problem.push(dvar);
+    //  // add swap variable
+    //  openstudio::analysis::MeasureGroup dvar("Alternative Model", openstudio::analysis::MeasureVector(1u, openstudio::analysis::NullMeasure()));
+    //  problem.push(dvar);
 
-      // set up simulation workflow
-      problem.push(runmanager::WorkItem(runmanager::JobType::ModelToIdf));
-      problem.push(runmanager::WorkItem(runmanager::JobType::ExpandObjects));
-      problem.push(runmanager::WorkItem(runmanager::JobType::EnergyPlusPreProcess));
-      problem.push(runmanager::WorkItem(runmanager::JobType::EnergyPlus));
-      problem.push(runmanager::WorkItem(runmanager::JobType::OpenStudioPostProcess));
-    }
+    //  // set up simulation workflow
+    //  problem.push(runmanager::WorkItem(runmanager::JobType::ModelToIdf));
+    //  problem.push(runmanager::WorkItem(runmanager::JobType::ExpandObjects));
+    //  problem.push(runmanager::WorkItem(runmanager::JobType::EnergyPlusPreProcess));
+    //  problem.push(runmanager::WorkItem(runmanager::JobType::EnergyPlus));
+    //  problem.push(runmanager::WorkItem(runmanager::JobType::OpenStudioPostProcess));
+    //}
 
-  OS_ASSERT(m_simpleProject);
-  
-  // make sure project has baseline stuff setup
-  analysis::DataPoint baselineDataPoint = m_simpleProject->baselineDataPoint();
-  openstudio::analysis::Analysis analysis = m_simpleProject->analysis();
+  //OS_ASSERT(m_simpleProject);
+  //
+  //// make sure project has baseline stuff setup
+  //analysis::DataPoint baselineDataPoint = m_simpleProject->baselineDataPoint();
+  //openstudio::analysis::Analysis analysis = m_simpleProject->analysis();
 
-  // DLM: do we need to set seed model
+  //// DLM: do we need to set seed model
 
-  openstudio::runmanager::ConfigOptions co(true);
-  m_simpleProject->runManager().setConfigOptions(co);
+  //openstudio::runmanager::ConfigOptions co(true);
+  //m_simpleProject->runManager().setConfigOptions(co);
 
-  bool isConnected = analysis.connect(SIGNAL(changed(ChangeType)), this, SLOT(markAsModified()));
-  OS_ASSERT(isConnected);
+  bool isConnected;
+  //bool isConnected = analysis.connect(SIGNAL(changed(ChangeType)), this, SLOT(markAsModified()));
+  //OS_ASSERT(isConnected);
 
   m_verticalId = 0;
   m_subTabIds = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -849,7 +850,7 @@ namespace openstudio {
     case RUN_SIMULATION:
       // Run
 
-      m_mainTabController = std::shared_ptr<MainTabController>(new RunTabController(m_model, openstudio::toPath(m_savePath), openstudio::toPath(m_modelTempDir), m_simpleProject->runManager()));
+      m_mainTabController = std::shared_ptr<MainTabController>(new RunTabController(m_model, openstudio::toPath(m_savePath), openstudio::toPath(m_modelTempDir)));//, m_simpleProject->runManager()));
       m_mainWindow->setView(m_mainTabController->mainContentWidget(), RUN_SIMULATION);
 
       //connect(qobject_cast<RunTabController *>(m_mainTabController.get()), &RunTabController::useRadianceStateChanged, this, &OSDocument::markAsModified);
@@ -998,10 +999,10 @@ namespace openstudio {
     return m_savePath;
   }
 
-  boost::optional<analysisdriver::SimpleProject> OSDocument::project() const
-  {
-    return m_simpleProject;
-  }
+  //boost::optional<analysisdriver::SimpleProject> OSDocument::project() const
+  //{
+  //  return m_simpleProject;
+  //}
 
 
   QString OSDocument::modelTempDir() const
@@ -1245,26 +1246,26 @@ namespace openstudio {
     bool fileSaved = false;
 
     // save the project file
-    analysis::Analysis analysis = m_simpleProject->analysis();
+    //analysis::Analysis analysis = m_simpleProject->analysis();
 
-    if (analysis.dataPointsAreInvalid()){
-      // DLM: Elaine, is there any way to just remove datapoints that are invalid
-      // or do we have to remove them all?
-      // ETH@20130319 - Currently, you have to remove them all. Same with results. The ability to do
-      // this more judiciously would be nice.
-      bool completeRemoval = m_simpleProject->removeAllDataPoints();
-      if (!completeRemoval) {
-        QMessageBox::critical(mainWindow(), "Incomplete File Removal", QString("Removed all design alternatives from this project, but could not remove all of the associated files. Close all files and clear results to clean up your file system."));
-      }
-    }
-    else if (analysis.resultsAreInvalid()){
-      bool completeRemoval = m_simpleProject->clearAllResults();
-      if (!completeRemoval) {
-        QMessageBox::critical(mainWindow(), "Incomplete File Removal", QString("Removed all results from this project, but could not remove all of the result files. Close all files and clear results again to clean up your file system."));
-      }
-    }
+    //if (analysis.dataPointsAreInvalid()){
+    //  // DLM: Elaine, is there any way to just remove datapoints that are invalid
+    //  // or do we have to remove them all?
+    //  // ETH@20130319 - Currently, you have to remove them all. Same with results. The ability to do
+    //  // this more judiciously would be nice.
+    //  bool completeRemoval = m_simpleProject->removeAllDataPoints();
+    //  if (!completeRemoval) {
+    //    QMessageBox::critical(mainWindow(), "Incomplete File Removal", QString("Removed all design alternatives from this project, but could not remove all of the associated files. Close all files and clear results to clean up your file system."));
+    //  }
+    //}
+    //else if (analysis.resultsAreInvalid()){
+    //  bool completeRemoval = m_simpleProject->clearAllResults();
+    //  if (!completeRemoval) {
+    //    QMessageBox::critical(mainWindow(), "Incomplete File Removal", QString("Removed all results from this project, but could not remove all of the result files. Close all files and clear results again to clean up your file system."));
+    //  }
+    //}
 
-    m_simpleProject->save();
+    //m_simpleProject->save();
 
     if (!m_savePath.isEmpty())
     {
@@ -1292,27 +1293,27 @@ namespace openstudio {
 
   void OSDocument::scanForTools()
   {
-    openstudio::runmanager::RunManager rm;
-    openstudio::runmanager::ConfigOptions co = rm.getConfigOptions();
+    //openstudio::runmanager::RunManager rm;
+    //openstudio::runmanager::ConfigOptions co = rm.getConfigOptions();
 
-    co.findTools(true, false, true, true);
-    rm.setConfigOptions(co);
-    rm.showConfigGui();
+    //co.findTools(true, false, true, true);
+    //rm.setConfigOptions(co);
+    //rm.showConfigGui();
 
-    rm.getConfigOptions().saveQSettings();
+    //rm.getConfigOptions().saveQSettings();
 
     emit toolsUpdated();
   }
 
   void OSDocument::showRunManagerPreferences()
   {
-    openstudio::runmanager::ConfigOptions co(true);
+    //openstudio::runmanager::ConfigOptions co(true);
 
-    openstudio::runmanager::RunManager rm;
-    rm.setConfigOptions(co);
-    rm.showConfigGui();
+    //openstudio::runmanager::RunManager rm;
+    //rm.setConfigOptions(co);
+    //rm.showConfigGui();
 
-    rm.getConfigOptions().saveQSettings();
+    //rm.getConfigOptions().saveQSettings();
 
     emit toolsUpdated();
   }
@@ -1543,17 +1544,18 @@ namespace openstudio {
       }
     }
 
+    // TODO enable this
     // open modal dialog
-    m_applyMeasureNowDialog = boost::shared_ptr<ApplyMeasureNowDialog>(new ApplyMeasureNowDialog());
+    //m_applyMeasureNowDialog = boost::shared_ptr<ApplyMeasureNowDialog>(new ApplyMeasureNowDialog());
 
-    // connect signal before exec dialog
-    connect(m_applyMeasureNowDialog.get(), &ApplyMeasureNowDialog::toolsUpdated, this, &OSDocument::toolsUpdated);
+    //// connect signal before exec dialog
+    //connect(m_applyMeasureNowDialog.get(), &ApplyMeasureNowDialog::toolsUpdated, this, &OSDocument::toolsUpdated);
 
-    m_applyMeasureNowDialog->exec();
+    //m_applyMeasureNowDialog->exec();
 
-    // DLM: kill the dialog here as there is logic in the destructor that resets application state
-    // DLM: this seems overly complicated
-    m_applyMeasureNowDialog.reset();
+    //// DLM: kill the dialog here as there is logic in the destructor that resets application state
+    //// DLM: this seems overly complicated
+    //m_applyMeasureNowDialog.reset();
   }
 
   void OSDocument::openChangeMeasuresDirDlg()

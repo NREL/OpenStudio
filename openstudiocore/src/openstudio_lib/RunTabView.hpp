@@ -26,9 +26,9 @@
 #include "MainTabView.hpp"
 #include <QComboBox>
 #include <QWidget>
-#include "../runmanager/lib/ConfigOptions.hpp"
-#include "../runmanager/lib/RunManager.hpp"
-#include "../runmanager/lib/Workflow.hpp"
+//#include "../runmanager/lib/ConfigOptions.hpp"
+//#include "../runmanager/lib/RunManager.hpp"
+//#include "../runmanager/lib/Workflow.hpp"
 
 class QButtonGroup;
 class QPlainTextEdit;
@@ -40,124 +40,124 @@ class QToolButton;
 
 namespace openstudio {
 
-  class RunView;
+  //class RunView;
 
-  namespace runmanager {
-    class JobStatusWidget;
-  }
+  //namespace runmanager {
+  //  class JobStatusWidget;
+  //}
 
-  class RunListModel : public QAbstractListModel
-  {
-    public:
+  //class RunListModel : public QAbstractListModel
+  //{
+  //  public:
 
-      RunListModel( RunView * runView );
+  //    RunListModel( RunView * runView );
 
-      int rowCount( const QModelIndex & parent = QModelIndex() ) const override;
+  //    int rowCount( const QModelIndex & parent = QModelIndex() ) const override;
 
-      QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const override;
+  //    QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const override;
 
-      bool removeRows(int row, int count);
+  //    bool removeRows(int row, int count);
 
-      void emitDataChanged();
+  //    void emitDataChanged();
 
-    private:
+  //  private:
 
-      RunView * m_runView;
-  };
+  //    RunView * m_runView;
+  //};
 
-  class RunItemView : public QWidget
-  {
-    Q_OBJECT
+  //class RunItemView : public QWidget
+  //{
+  //  Q_OBJECT
 
-    public:
+  //  public:
 
-      //RunItemView(const model::myModelClass & run);
-      RunItemView();
+  //    //RunItemView(const model::myModelClass & run);
+  //    RunItemView();
 
-      virtual ~RunItemView() {}
+  //    virtual ~RunItemView() {}
 
-      //model::myModelClass run();
-      void run();
+  //    //model::myModelClass run();
+  //    void run();
 
-    private:
+  //  private:
 
-      //model::myModelClass m_run;
-  };
+  //    //model::myModelClass m_run;
+  //};
 
-  class RunView : public QWidget
-  {
-    Q_OBJECT;
+  //class RunView : public QWidget
+  //{
+  //  Q_OBJECT;
 
 
-    public:
+  //  public:
 
-      RunView(const model::Model & model,
-          const openstudio::path &t_modelPath,
-          const openstudio::path &t_tempFolder,
-          openstudio::runmanager::RunManager t_runManager);
+  //    RunView(const model::Model & model,
+  //        const openstudio::path &t_modelPath,
+  //        const openstudio::path &t_tempFolder,
+  //        openstudio::runmanager::RunManager t_runManager);
 
-      virtual ~RunView() {}
+  //    virtual ~RunView() {}
 
-      QStackedWidget * runStack();
+  //    QStackedWidget * runStack();
 
-      openstudio::runmanager::RunManager runManager();
+  //    openstudio::runmanager::RunManager runManager();
 
-    signals:
-      void resultsGenerated(const openstudio::path &t_sqlFile, const openstudio::path &t_radianceResultsFile);
-      void toolsUpdated();
-      //void useRadianceStateChanged(bool);
+  //  signals:
+  //    void resultsGenerated(const openstudio::path &t_sqlFile, const openstudio::path &t_radianceResultsFile);
+  //    void toolsUpdated();
+  //    //void useRadianceStateChanged(bool);
 
-    public slots:
-      void updateToolsWarnings();
+  //  public slots:
+  //    void updateToolsWarnings();
 
-    private slots:
-      void playButtonClicked(bool);
-      void runManagerStatsChanged();
-      void outputDataAdded(const openstudio::UUID &, const std::string &t_data);
-      void treeChanged(const openstudio::UUID &t_uuid);
-      //void on_radianceWarningsAndErrorsClicked(bool checked);
-      //void on_radianceGroupClicked(int idx);
-      void requestStartRunManager();
+  //  private slots:
+  //    void playButtonClicked(bool);
+  //    void runManagerStatsChanged();
+  //    void outputDataAdded(const openstudio::UUID &, const std::string &t_data);
+  //    void treeChanged(const openstudio::UUID &t_uuid);
+  //    //void on_radianceWarningsAndErrorsClicked(bool checked);
+  //    //void on_radianceGroupClicked(int idx);
+  //    void requestStartRunManager();
 
-    private:
-      REGISTER_LOGGER("openstudio::RunView");
-      void runFinished(const openstudio::path &t_sqlFile, const openstudio::path &t_radianceOutputFile);
-      static openstudio::runmanager::ToolVersion getRequiredEnergyPlusVersion();
-      //void getRadiancePreRunWarningsAndErrors(std::vector<std::string> & warnings,
-      //                                        std::vector<std::string> & errors);
-      //void showRadianceWarningsAndErrors(const std::vector<std::string> & warnings,
-      //                                   const std::vector<std::string> & errors);
-      void locateEnergyPlus();
-      void updateRunManagerStats(openstudio::runmanager::RunManager t_runManager);
+  //  private:
+  //    REGISTER_LOGGER("openstudio::RunView");
+  //    void runFinished(const openstudio::path &t_sqlFile, const openstudio::path &t_radianceOutputFile);
+  //    static openstudio::runmanager::ToolVersion getRequiredEnergyPlusVersion();
+  //    //void getRadiancePreRunWarningsAndErrors(std::vector<std::string> & warnings,
+  //    //                                        std::vector<std::string> & errors);
+  //    //void showRadianceWarningsAndErrors(const std::vector<std::string> & warnings,
+  //    //                                   const std::vector<std::string> & errors);
+  //    void locateEnergyPlus();
+  //    void updateRunManagerStats(openstudio::runmanager::RunManager t_runManager);
 
-      //openstudio::path loadRmdbPath() const;
-      //openstudio::path simulationDir() const;
-      //openstudio::path modelPath() const;
-      //openstudio::path scriptsDir() const;
+  //    //openstudio::path loadRmdbPath() const;
+  //    //openstudio::path simulationDir() const;
+  //    //openstudio::path modelPath() const;
+  //    //openstudio::path scriptsDir() const;
 
-      QWidget * m_runNavigatorWidget;
-      QToolButton * m_playButton;
-      QComboBox * m_chooser;
-      QStackedWidget * m_runStack;
-      QLabel * m_toolWarningLabel;
-      QLabel * m_warningsLabel;
-      QLabel * m_errorsLabel;
-      QLabel * m_statusLabel;
-      model::Model m_model;
-      QProgressBar * m_progressBar;
-      QPlainTextEdit * m_outputWindow;
-      //QButtonGroup * m_radianceGroup;
-      //QRadioButton * m_radianceButton;
-      //QRadioButton * m_energyPlusButton;
-      //std::vector<std::string> m_radianceWarnings;
-      //std::vector<std::string> m_radianceErrors;
-      std::shared_ptr<RunListModel> m_runListModel;
-      openstudio::path m_modelPath;
-      openstudio::path m_tempFolder;
-  
-      bool m_canceling;
-      bool m_statsConnected;
-  };
+  //    QWidget * m_runNavigatorWidget;
+  //    QToolButton * m_playButton;
+  //    QComboBox * m_chooser;
+  //    QStackedWidget * m_runStack;
+  //    QLabel * m_toolWarningLabel;
+  //    QLabel * m_warningsLabel;
+  //    QLabel * m_errorsLabel;
+  //    QLabel * m_statusLabel;
+  //    model::Model m_model;
+  //    QProgressBar * m_progressBar;
+  //    QPlainTextEdit * m_outputWindow;
+  //    //QButtonGroup * m_radianceGroup;
+  //    //QRadioButton * m_radianceButton;
+  //    //QRadioButton * m_energyPlusButton;
+  //    //std::vector<std::string> m_radianceWarnings;
+  //    //std::vector<std::string> m_radianceErrors;
+  //    std::shared_ptr<RunListModel> m_runListModel;
+  //    openstudio::path m_modelPath;
+  //    openstudio::path m_tempFolder;
+  //
+  //    bool m_canceling;
+  //    bool m_statsConnected;
+  //};
 
   class RunTabView : public MainTabView
   {

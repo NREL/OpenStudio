@@ -95,17 +95,17 @@ namespace openstudio {
                                              QWidget* parent = nullptr);
 
   // Pause the run manager
-  OPENSTUDIO_API void pauseRunManager(openstudio::runmanager::RunManager& rm);
+  //OPENSTUDIO_API void pauseRunManager(openstudio::runmanager::RunManager& rm);
 
-  // Start the run manager
-  OPENSTUDIO_API void startRunManager(openstudio::runmanager::RunManager& rm, const openstudio::path& osmPath, const openstudio::path& modelTempDir,
-                                      std::vector <double> useRadianceForDaylightingCalculations, bool requireCalibrationReports, QWidget* parent = nullptr);
+  //// Start the run manager
+  //OPENSTUDIO_API void startRunManager(openstudio::runmanager::RunManager& rm, const openstudio::path& osmPath, const openstudio::path& modelTempDir,
+  //                                    std::vector <double> useRadianceForDaylightingCalculations, bool requireCalibrationReports, QWidget* parent = nullptr);
 
-  OPENSTUDIO_API bool findBCLMeasureWorkItem(const std::vector<runmanager::WorkItem>& workItems, const openstudio::UUID& uuid);
-  
-  OPENSTUDIO_API bool addReportRequestMeasureWorkItem(std::vector<runmanager::WorkItem>& workItems, const openstudio::BCLMeasure& bclMeasure);
+  //OPENSTUDIO_API bool findBCLMeasureWorkItem(const std::vector<runmanager::WorkItem>& workItems, const openstudio::UUID& uuid);
+  //
+  //OPENSTUDIO_API bool addReportRequestMeasureWorkItem(std::vector<runmanager::WorkItem>& workItems, const openstudio::BCLMeasure& bclMeasure);
 
-  OPENSTUDIO_API bool addReportingMeasureWorkItem(std::vector<runmanager::WorkItem>& workItems, const openstudio::BCLMeasure& bclMeasure);
+  //OPENSTUDIO_API bool addReportingMeasureWorkItem(std::vector<runmanager::WorkItem>& workItems, const openstudio::BCLMeasure& bclMeasure);
 
   OPENSTUDIO_API boost::optional<openstudio::model::Model> modelFromOSM(const openstudio::path& path, openstudio::osversion::VersionTranslator& versionTranslator, openstudio::ProgressBar* progressBar = nullptr);
 
