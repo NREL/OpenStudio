@@ -40,9 +40,9 @@
 #include <QString>
 #include <QRegExp>
 
-#include "../runmanager/lib/FileInfo.hpp"
-#include "../runmanager/lib/JobStatusWidget.hpp"
-#include "../runmanager/lib/RunManager.hpp"
+//#include "../runmanager/lib/FileInfo.hpp"
+//#include "../runmanager/lib/JobStatusWidget.hpp"
+//#include "../runmanager/lib/RunManager.hpp"
 
 #include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/Assert.hpp"

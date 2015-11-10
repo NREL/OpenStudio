@@ -23,8 +23,8 @@
 #include "OSItem.hpp"
 
 #include "../ruleset/OSArgument.hpp"
-#include "../runmanager/lib/RunManager.hpp"
-#include "../runmanager/lib/RubyJobUtils.hpp"
+//#include "../runmanager/lib/RunManager.hpp"
+//#include "../runmanager/lib/RubyJobUtils.hpp"
 
 #include "../utilities/core/Path.hpp"
 
@@ -58,7 +58,7 @@ class ScriptItem : public OSItem {
 
   void setIsUserScript(bool isUserScript);
 
-  void refreshArgumentsFromScript(runmanager::RunManager t_rm);
+  //void refreshArgumentsFromScript(runmanager::RunManager t_rm);
 
   std::vector<ruleset::OSArgument> osArguments() const;
 
@@ -92,7 +92,7 @@ class ScriptItem : public OSItem {
 
  private:
   bool m_removed;
-  runmanager::ScriptInfo m_scriptInfo;
+  //runmanager::ScriptInfo m_scriptInfo;
 
   REGISTER_LOGGER("openstudio.ScriptItem");
 

@@ -51,7 +51,7 @@
 
 #include "../energyplus/ReverseTranslator.hpp"
 
-#include "../runmanager/lib/ConfigOptions.hpp"
+//#include "../runmanager/lib/ConfigOptions.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/filetypes/EpwFile.hpp"
@@ -555,8 +555,8 @@ void LocationView::onWeatherFileBtnClicked()
 
   QString lastPath = m_lastEpwPathOpened;
   if (lastPath.isEmpty() && m_lastDdyPathOpened.isEmpty()){
-    openstudio::runmanager::ConfigOptions co(true);
-    lastPath = toQString(co.getDefaultEPWLocation().native());
+    //openstudio::runmanager::ConfigOptions co(true);
+    //lastPath = toQString(co.getDefaultEPWLocation().native());
   } else if (lastPath.isEmpty()) {
     QString path = m_lastDdyPathOpened;
     lastPath = path.replace(".ddy", ".epw");
@@ -666,8 +666,8 @@ void LocationView::onDesignDayBtnClicked()
 
   QString lastPath = m_lastDdyPathOpened;
   if (lastPath.isEmpty() && m_lastEpwPathOpened.isEmpty()){
-    openstudio::runmanager::ConfigOptions co(true);
-    lastPath = toQString(co.getDefaultEPWLocation().native());
+    //openstudio::runmanager::ConfigOptions co(true);
+    //lastPath = toQString(co.getDefaultEPWLocation().native());
   } else if (lastPath.isEmpty()) {
     QString path = m_lastEpwPathOpened;
     lastPath = path.replace(".epw", ".ddy");

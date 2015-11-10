@@ -712,8 +712,8 @@ set(depends
   openstudio_model
   openstudio_energyplus
   openstudio_modeleditor
-  openstudio_runmanager
-  #openstudio_ruleset
+  #openstudio_runmanager
+  openstudio_ruleset
   #openstudio_analysis
   #openstudio_analysisdriver
   openstudio_sdd
@@ -756,4 +756,4 @@ set(${target_name}_swig_src
   OpenStudioLib.i
 )
 
-MAKE_SWIG_TARGET(OpenStudioLib openstudiolib "${CMAKE_CURRENT_SOURCE_DIR}/OpenStudioLib.i" "${${target_name}_swig_src}" ${target_name} "OpenStudioEnergyPlus;OpenStudioModelEditor;OpenStudioRunManager;OpenStudioRuleset")
+MAKE_SWIG_TARGET(OpenStudioLib openstudiolib "${CMAKE_CURRENT_SOURCE_DIR}/OpenStudioLib.i" "${${target_name}_swig_src}" ${target_name} "OpenStudioEnergyPlus;OpenStudioModelEditor;OpenStudioRuleset")

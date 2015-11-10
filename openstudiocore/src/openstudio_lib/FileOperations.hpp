@@ -50,10 +50,10 @@ namespace openstudio {
     class ReverseTranslator;
   }
 
-  namespace runmanager {
-    class RunManager;
-    class WorkItem;
-  }
+  //namespace runmanager {
+  //  class RunManager;
+  //  class WorkItem;
+  //}
 
   // Recursively remove dirName.
   // Returns true on success and false if there is an error.

@@ -21,9 +21,9 @@
 
 #include <QSysInfo>
 
-#include "../runmanager/lib/RunManager.hpp"
-#include "../runmanager/lib/WorkItem.hpp"
-#include "../runmanager/lib/Workflow.hpp"
+//#include "../runmanager/lib/RunManager.hpp"
+//#include "../runmanager/lib/WorkItem.hpp"
+//#include "../runmanager/lib/Workflow.hpp"
 
 #include "../model/ThermalZone.hpp"
 #include "../model/DaylightingControl.hpp"

@@ -195,7 +195,7 @@ set(project_directories
   isomodel
   osversion
   ruleset
-  runmanager/lib
+  #runmanager/lib
   #analysis
   #project
   #analysisdriver
@@ -935,7 +935,7 @@ else()
 endif()
 
 set(all_lib_targets
-  openstudio_runmanager
+  #openstudio_runmanager
   #openstudio_project
   openstudio_osversion
   openstudio_model

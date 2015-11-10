@@ -21,11 +21,11 @@
 
 #include "OSDocument.hpp"
 
-#include "../runmanager/lib/RunManager.hpp"
-#include "../runmanager/lib/RubyJobUtils.hpp"
-#include "../runmanager/lib/WorkItem.hpp"
-#include "../runmanager/lib/Workflow.hpp"
-#include "../runmanager/lib/JobFactory.hpp"
+//#include "../runmanager/lib/RunManager.hpp"
+//#include "../runmanager/lib/RubyJobUtils.hpp"
+//#include "../runmanager/lib/WorkItem.hpp"
+//#include "../runmanager/lib/Workflow.hpp"
+//#include "../runmanager/lib/JobFactory.hpp"
 
 #include "../model/Model.hpp"
 #include "../model/WeatherFile.hpp"
@@ -438,50 +438,50 @@ namespace openstudio {
     openstudio::path simulationDir = openstudio::toPath("run");
 
     try {
-      // this run db exists just to hold the jobs to be loaded from later, it is not unpaused
-      openstudio::runmanager::RunManager rm(rmdbPath, true, true, false);
+      //// this run db exists just to hold the jobs to be loaded from later, it is not unpaused
+      //openstudio::runmanager::RunManager rm(rmdbPath, true, true, false);
 
-      // this should not be necessary as rm was constructed with truncate set to true?
-      rm.clearJobs();
+      //// this should not be necessary as rm was constructed with truncate set to true?
+      //rm.clearJobs();
 
-      openstudio::runmanager::ConfigOptions co = rm.getConfigOptions();
+      //openstudio::runmanager::ConfigOptions co = rm.getConfigOptions();
 
-      newToolsFound = co.findTools(true, true, true, true);
-      rm.setConfigOptions(co);
+      //newToolsFound = co.findTools(true, true, true, true);
+      //rm.setConfigOptions(co);
 
-      openstudio::runmanager::Workflow wf;
+      //openstudio::runmanager::Workflow wf;
 
-      bool ruby_installed = rm.getConfigOptions().getTools().getAllByName("ruby").tools().size() > 0;
-      
-      openstudio::path radiancePath;
+      //bool ruby_installed = rm.getConfigOptions().getTools().getAllByName("ruby").tools().size() > 0;
+      //
+      //openstudio::path radiancePath;
 
-      std::vector<openstudio::runmanager::ToolInfo> rad = rm.getConfigOptions().getTools().getAllByName("rad").tools();
+      //std::vector<openstudio::runmanager::ToolInfo> rad = rm.getConfigOptions().getTools().getAllByName("rad").tools();
 
-      if (!rad.empty())
-      {
-        radiancePath = rad.back().localBinPath.parent_path();
-      } 
+      //if (!rad.empty())
+      //{
+      //  radiancePath = rad.back().localBinPath.parent_path();
+      //} 
 
-      bool ruby_jobs_skipped = wf.addStandardWorkflow(scriptsDir, ruby_installed, getOpenStudioRubyIncludePath(), 
-                                                      userScriptsByFolder, 
-                                                      useRadianceForDaylightingCalculations.size() > 0, 
-                                                      radiancePath,
-                                                      modelTempDir / toPath("resources"), true);
-      if (ruby_jobs_skipped)
-      {
-        QMessageBox::information(parent, 
-            "No Ruby Interpreter",
-            "Measures were provided but no ruby interpreter could be found. Scripts will not be run.",
-            QMessageBox::Ok);
-      }
+      //bool ruby_jobs_skipped = wf.addStandardWorkflow(scriptsDir, ruby_installed, getOpenStudioRubyIncludePath(), 
+      //                                                userScriptsByFolder, 
+      //                                                useRadianceForDaylightingCalculations.size() > 0, 
+      //                                                radiancePath,
+      //                                                modelTempDir / toPath("resources"), true);
+      //if (ruby_jobs_skipped)
+      //{
+      //  QMessageBox::information(parent, 
+      //      "No Ruby Interpreter",
+      //      "Measures were provided but no ruby interpreter could be found. Scripts will not be run.",
+      //      QMessageBox::Ok);
+      //}
 
-      openstudio::runmanager::Tools tools = rm.getConfigOptions().getTools();
-      wf.add(tools);
-      wf.addParam(runmanager::JobParam("flatoutdir"));
+      //openstudio::runmanager::Tools tools = rm.getConfigOptions().getTools();
+      //wf.add(tools);
+      //wf.addParam(runmanager::JobParam("flatoutdir"));
 
-      openstudio::runmanager::Job j = wf.create(simulationDir, toPath("../in.osm"));
+      //openstudio::runmanager::Job j = wf.create(simulationDir, toPath("../in.osm"));
 
-      rm.enqueue(j, true);
+      //rm.enqueue(j, true);
 
     } catch (const std::exception &e) {
       QMessageBox::information(parent, 
