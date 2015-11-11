@@ -307,11 +307,11 @@ namespace detail {
   {
     std::set<std::string> result;
     for (const IddField& field : m_fields){
-      IddFieldProperties properties = field.properties();
+      const IddFieldProperties& properties = field.properties();
       result.insert(properties.objectLists.begin(),properties.objectLists.end());
     }
     for (const IddField& field : m_extensibleFields){
-      IddFieldProperties properties = field.properties();
+      const IddFieldProperties& properties = field.properties();
       result.insert(properties.objectLists.begin(),properties.objectLists.end());
     }
     return result;
@@ -321,12 +321,12 @@ namespace detail {
     std::set<std::string> result;
 
     if (isNonextensibleField(index)) {
-      IddFieldProperties properties = m_fields[index].properties();
+      const IddFieldProperties& properties = m_fields[index].properties();
       result.insert(properties.objectLists.begin(),properties.objectLists.end());
     }
     else if (isExtensibleField(index)) {
       ExtensibleIndex eIndex = extensibleIndex(index);
-      IddFieldProperties properties = m_extensibleFields[eIndex.field].properties();
+      const IddFieldProperties& properties = m_extensibleFields[eIndex.field].properties();
       result.insert(properties.objectLists.begin(),
                     properties.objectLists.end());
     }
