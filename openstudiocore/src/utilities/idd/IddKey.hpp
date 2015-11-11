@@ -58,7 +58,7 @@ class UTILITIES_API IddKey {
   std::string name() const;
 
   /** Returns the key properties. */
-  IddKeyProperties properties() const;
+  const IddKeyProperties& properties() const;
 
   //@}
   /** @name Queries */

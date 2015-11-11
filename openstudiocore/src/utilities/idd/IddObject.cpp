@@ -84,17 +84,17 @@ namespace detail {
     return m_group;
   }
 
-  IddObjectProperties IddObject_Impl::properties() const
+  const IddObjectProperties& IddObject_Impl::properties() const
   {
     return m_properties;
   }
 
-  IddFieldVector IddObject_Impl::nonextensibleFields() const
+  const IddFieldVector& IddObject_Impl::nonextensibleFields() const
   {
     return m_fields;
   }
 
-  IddFieldVector IddObject_Impl::extensibleGroup() const
+  const IddFieldVector& IddObject_Impl::extensibleGroup() const
   {
     return m_extensibleFields;
   }
@@ -689,15 +689,15 @@ std::string IddObject::group() const {
   return m_impl->group();
 }
 
-IddObjectProperties IddObject::properties() const {
+const IddObjectProperties& IddObject::properties() const {
   return m_impl->properties();
 }
 
-IddFieldVector IddObject::nonextensibleFields() const {
+const IddFieldVector& IddObject::nonextensibleFields() const {
   return m_impl->nonextensibleFields();
 }
 
-IddFieldVector IddObject::extensibleGroup() const {
+const IddFieldVector& IddObject::extensibleGroup() const {
   return m_impl->extensibleGroup();
 }
 
