@@ -150,7 +150,7 @@ namespace detail {
     }
   }
 
-  const Scale& Unit_Impl::scale() const {
+  Scale Unit_Impl::scale() const {
     return m_scale();
   }
 
@@ -568,7 +568,7 @@ void Unit::setBaseUnitExponent(const std::string& baseUnit,int exponent) {
   getImpl<detail::Unit_Impl>()->setBaseUnitExponent(baseUnit,exponent);
 }
 
-const Scale& Unit::scale() const {
+Scale Unit::scale() const {
   return getImpl<detail::Unit_Impl>()->scale();
 }
 

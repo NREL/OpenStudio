@@ -62,7 +62,7 @@ class MODEL_API GasMixture : public GasLayer {
   /** @name Static Methods */
   //@{
 
-  static const std::vector<std::string>& validGasTypes();
+  static std::vector<std::string> validGasTypes();
 
   static IddObjectType iddObjectType();
 

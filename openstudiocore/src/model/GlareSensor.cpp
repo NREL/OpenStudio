@@ -312,9 +312,8 @@ GlareSensor::GlareSensor(const Model& model)
   OS_ASSERT(getImpl<detail::GlareSensor_Impl>());
 }
 
-const IddObjectType& GlareSensor::iddObjectType() {
-  static IddObjectType result(IddObjectType::OS_Glare_Sensor);
-  return result;
+IddObjectType GlareSensor::iddObjectType() {
+  return IddObjectType(IddObjectType::OS_Glare_Sensor);
 }
 
 double GlareSensor::positionXCoordinate() const {

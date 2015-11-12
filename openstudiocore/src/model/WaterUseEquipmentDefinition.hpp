@@ -46,7 +46,7 @@ class MODEL_API WaterUseEquipmentDefinition : public SpaceLoadDefinition {
 
   virtual ~WaterUseEquipmentDefinition() {}
 
-  static const IddObjectType& iddObjectType();
+  static IddObjectType iddObjectType();
 
   std::string endUseSubcategory() const;
   bool isEndUseSubcategoryDefaulted() const;

@@ -961,7 +961,7 @@ Gas::Gas(const Model& model,
   OS_ASSERT(ok);
 }
 
-const std::vector<std::string>& Gas::validGasTypes() {
+std::vector<std::string> Gas::validGasTypes() {
   static StringVector result;
   if (result.empty()) {
     result = getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),

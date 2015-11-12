@@ -106,7 +106,7 @@ void Quantity::setPrettyUnitsString( const std::string& str ) {
   return m_units.setPrettyString( str );
 }
 
-const Scale& Quantity::scale() const {
+Scale Quantity::scale() const {
   return m_units.scale();
 }
 
