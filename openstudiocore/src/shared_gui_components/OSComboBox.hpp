@@ -101,7 +101,7 @@ class OSComboBox2 : public QComboBox {
   
   OSComboBox2( QWidget * parent = nullptr, bool editable = false );
 
-  virtual ~OSComboBox2() {}
+  virtual ~OSComboBox2();
 
   void enableClickFocus() { this->setFocusPolicy(Qt::ClickFocus); }
 

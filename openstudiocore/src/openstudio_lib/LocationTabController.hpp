@@ -22,7 +22,6 @@
 
 #include "../model/Model.hpp"
 
-#include "LocationTabView.hpp"
 #include "MainTabController.hpp"
 
 #include <boost/smart_ptr.hpp>
@@ -34,9 +33,7 @@ class QStackedWidget;
 
 namespace openstudio {
 
-namespace model {
-  //class myModelClass;
-}
+class LocationTabView;
 
 class UtilityBillsController;
 
@@ -50,35 +47,32 @@ public:
     const model::Model& model,
     const QString& modelTempDir);
 
-  virtual ~LocationTabController() {}
-
+  virtual ~LocationTabController();
 
   enum TabID
   {
     WEATHER_FILE,
     LIFE_CYCLE_COSTS,
-    UTILITY_BILLS,
-    UTILITY_RATES,
-    GROUND_TEMPERATURE,
-    WATER_MAINS_TEMPERATURE 
+    UTILITY_BILLS
   };
 
 private:
 
-  bool calendarYearChecked();
+  bool showUtilityBills();
 
-  LocationView * m_locationView = nullptr;
-  std::shared_ptr<UtilityBillsController> m_utilityBillsController;
-  QStackedWidget * m_utilityBillsStackedWidget = nullptr;
-  int m_warningWidgetIndex;
-  int m_visibleWidgetIndex;
+  QString m_modelTempDir;
+
   model::Model m_model;
+
+  bool m_isIP;
+
+  QWidget * m_currentView = nullptr;
+
+  int m_currentIndex = -1;
 
 private slots:
 
-  void showUtilityBillSubTab();
-
-  void showSubTabView(bool showSubTabView);
+  virtual void setSubTab(int index) override;
  
 };
 

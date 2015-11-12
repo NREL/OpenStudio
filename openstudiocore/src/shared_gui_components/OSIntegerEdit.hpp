@@ -43,7 +43,7 @@ class OSIntegerEdit2: public QLineEdit {
 
   OSIntegerEdit2(QWidget * parent = nullptr);
 
-  virtual ~OSIntegerEdit2() {}
+  virtual ~OSIntegerEdit2();
 
   void enableClickFocus() { this->m_hasClickFocus = true; }
 

@@ -20,8 +20,8 @@
 #ifndef SHAREDGUICOMPONENTS_OSVIEWSWITCHER_HPP
 #define SHAREDGUICOMPONENTS_OSVIEWSWITCHER_HPP
  
-#include <QWidget>
 #include <QSharedPointer>
+#include <QWidget>
 
 class QStackedWidget;
 
@@ -35,7 +35,7 @@ class OSViewSwitcher : public QWidget
 
   OSViewSwitcher(QWidget * parent = nullptr);
 
-  virtual ~OSViewSwitcher() {}
+  virtual ~OSViewSwitcher();
 
   void setView(QWidget * view);
 

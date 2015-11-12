@@ -860,10 +860,6 @@ namespace openstudio {
 
       connect(this, &OSDocument::toolsUpdated, this, &OSDocument::markAsModified);
 
-      connect(this, &OSDocument::toolsUpdated, qobject_cast<RunTabController *>(m_mainTabController.get()), &RunTabController::updateToolsWarnings);
-
-      connect(qobject_cast<RunTabController *>(m_mainTabController.get()), &RunTabController::toolsUpdated, qobject_cast<RunTabController *>(m_mainTabController.get()), &RunTabController::updateToolsWarnings);
-
       connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForRunSimulationSubTab);
 
       connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, this, &OSDocument::updateSubTabSelected);

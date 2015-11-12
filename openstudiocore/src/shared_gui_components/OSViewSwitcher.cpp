@@ -18,11 +18,13 @@
  **********************************************************************/
 
 #include "OSViewSwitcher.hpp"
-#include <QWidget>
-#include <QVBoxLayout>
+
+#include <QBoxLayout>
+#include <QPainter>
 #include <QStackedWidget>
 #include <QStyleOption>
-#include <QPainter>
+
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -39,12 +41,19 @@ OSViewSwitcher::OSViewSwitcher(QWidget * parent)
   layout->addWidget(m_stack);
 }
 
+OSViewSwitcher::~OSViewSwitcher()
+{
+}
+
 void OSViewSwitcher::setView(QWidget * view)
 {
+
   if( QWidget * widget = m_stack->currentWidget() )
   {
     m_stack->removeWidget( widget );
+    widget->deleteLater();
   }
+  OS_ASSERT(m_stack->count() == 0);
 
   m_view = view;
 

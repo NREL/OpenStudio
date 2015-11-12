@@ -58,7 +58,7 @@ public:
 
   OSDropZone2();
 
-  ~OSDropZone2() {}
+  ~OSDropZone2();
 
   void enableClickFocus() { this->setFocusPolicy(Qt::ClickFocus); }
   bool hasData() { return !this->m_label->text().isEmpty(); }

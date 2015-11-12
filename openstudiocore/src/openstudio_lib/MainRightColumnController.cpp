@@ -289,9 +289,9 @@ void MainRightColumnController::configureForSchedulesSubTab(int subTabID)
 
   switch( subTabID )
   {
-    case SchedulesTabController::YEAR_SETTINGS:
-    {
-    }
+    //case SchedulesTabController::YEAR_SETTINGS:
+    //{
+    //}
     case SchedulesTabController::SCHEDULE_SETS:
     {
       model::Model lib = doc->componentLibrary();

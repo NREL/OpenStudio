@@ -21,6 +21,9 @@
 #define OPENSTUDIO_RUNTABCONTROLLER_HPP
 
 #include "MainTabController.hpp"
+
+#include "../runmanager/lib/RunManager.hpp"
+
 #include "../utilities/core/Path.hpp"
 
 namespace openstudio {
@@ -45,11 +48,7 @@ class RunTabController : public MainTabController
   RunTabController(const model::Model & model, const openstudio::path &t_modelPath,
       const openstudio::path &t_tempFolder, openstudio::runmanager::RunManager t_runManager);
 
-  virtual ~RunTabController() {}
-
-  openstudio::RunView * runView();
-
-  runmanager::RunManager runManager();
+  virtual ~RunTabController();
 
   enum TabID
   {
@@ -57,20 +56,30 @@ class RunTabController : public MainTabController
     TREE
   };
 
- signals:
+signals:
+
     void resultsGenerated(const openstudio::path &t_sqlFile, const openstudio::path &t_radianceOutputFile);
+  
     void toolsUpdated();
-    //void useRadianceStateChanged(bool);
-
-
- public slots:
-    void updateToolsWarnings();
 
  private:
 
-  RunView * m_runView;
+  model::Model m_model;
 
-  openstudio::runmanager::JobStatusWidget * m_status;
+  openstudio::path m_modelPath;
+
+  openstudio::path m_tempFolder;
+  
+  openstudio::runmanager::RunManager m_runManager;
+
+  QWidget * m_currentView = nullptr;
+
+  int m_currentIndex = -1;
+
+public slots:
+
+  virtual void setSubTab(int index) override;
+
 };
 
 } // openstudio

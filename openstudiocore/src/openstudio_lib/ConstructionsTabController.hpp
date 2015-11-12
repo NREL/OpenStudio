@@ -47,9 +47,18 @@ class ConstructionsTabController : public MainTabController
 
   private:
 
-    std::shared_ptr<DefaultConstructionSetsController> m_defaultConstructionSetsController;
-    std::shared_ptr<ConstructionsController> m_constructionsController;
-    std::shared_ptr<MaterialsController> m_materialsController;
+    model::Model m_model;
+
+    bool m_isIP;
+
+    QObject * m_currentController = nullptr;
+
+    int m_currentIndex = -1;
+
+  public slots:
+
+    virtual void setSubTab(int index) override;
+
 };
 
 } // openstudio

@@ -32,7 +32,7 @@ namespace openstudio {
 
     SpacesTabController(bool isIP, const model::Model & model);
 
-  virtual ~SpacesTabController() {}
+    virtual ~SpacesTabController();
 
   enum TabID
   {
@@ -45,9 +45,23 @@ namespace openstudio {
     DAYLIGHTING
   };
 
+private:
+
+  model::Model m_model;
+
+  bool m_isIP;
+
+  QWidget * m_currentView = nullptr;
+
+  int m_currentIndex = -1;
+
+public slots:
+
+  virtual void setSubTab(int index) override;
+
 private slots:
 
-void toggleUnits(bool displayIP);
+  void toggleUnits(bool displayIP);
 
 };
 

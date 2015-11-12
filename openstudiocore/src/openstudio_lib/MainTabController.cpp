@@ -18,6 +18,7 @@
 **********************************************************************/
 
 #include "MainTabController.hpp"
+
 #include "MainTabView.hpp"
 
 #include "../model/Model.hpp"
@@ -30,6 +31,10 @@ MainTabController::MainTabController(MainTabView* mainContentWidget)
   m_mainContentWidget = mainContentWidget;
 
   addQObject(mainContentWidget);
+}
+
+MainTabController::~MainTabController()
+{
 }
 
 MainTabView* MainTabController::mainContentWidget() const

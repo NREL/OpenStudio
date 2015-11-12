@@ -48,8 +48,8 @@ class LifeCycleCostsView : public QWidget
 public:
 
   LifeCycleCostsView(const model::Model & model);
-  
-  virtual ~LifeCycleCostsView() {}
+
+  virtual ~LifeCycleCostsView();
 
 private:
 
@@ -114,7 +114,7 @@ public:
                         const QString& modelTempDir,
                         QWidget * parent = nullptr);
 
-  virtual ~LifeCycleCostsTabView() {}
+  virtual ~LifeCycleCostsTabView();
 
 private:
 
