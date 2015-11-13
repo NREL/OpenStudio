@@ -9,8 +9,8 @@ ln -sFf "$2/Applications/${CMAKE_PROJECT_NAME} ${OPENSTUDIO_VERSION}/Ruby/openst
 
 #---------- Write a plugin-config.rb file for later installation ----------
 # And put it in the install folder for later reuse by the user if needed
-config_file="$ruby_install_dir/Plugins/OpenStudio/OpenStudio-config.rb"
-echo "require '$2/Applications/${CMAKE_PROJECT_NAME} ${OPENSTUDIO_VERSION}/Ruby/openstudio'" > "$config_file"
+config_file="$ruby_install_dir/Plugins/OpenStudio/OpenStudio-config"
+echo "$OPENSTUDIO_SKETCHUPPLUGIN_VERSION = '${OPENSTUDIO_VERSION}' \n require '$2/Applications/${CMAKE_PROJECT_NAME} ${OPENSTUDIO_VERSION}/Ruby/openstudio'" > "$config_file"
 chmod 755 "$config_file"
 chown $USER "$config_file"
 
@@ -22,7 +22,7 @@ mkdir -p "$SU15_support_dir/SketchUp/Plugins/OpenStudio"
 # copy the plugin into the directory
 cp "$ruby_install_dir/Plugins/OpenStudio.rb" "$SU15_support_dir/SketchUp/Plugins/OpenStudio.rb"
 cp "$ruby_install_dir/Plugins/OpenStudio/Startup.rb" "$SU15_support_dir/SketchUp/Plugins/OpenStudio/Startup.rb"
-cp "$config_file" "$SU15_support_dir/SketchUp/Plugins/OpenStudio/OpenStudio-config.rb"
+cp "$config_file" "$SU15_support_dir/SketchUp/Plugins/OpenStudio/OpenStudio-config"
 
 
 #---------- Installation Directory Icon ----------
