@@ -47,7 +47,7 @@ module OpenStudio
       
       return if not @enabled
 
-      if (entity.class == Sketchup::Group)
+      if (!entity.deleted? and entity.class == Sketchup::Group)
         #puts "ModelEntities.onElementAdded:" + entity.to_s
 
         if (entity.drawing_interface)
@@ -60,6 +60,8 @@ module OpenStudio
             # ends up getting added twice.
             proc = Proc.new {
               #puts "cut-paste/delete-undo surface group"
+              
+              # DLM: what if entity is deleted now?
 
               entity.drawing_interface.on_undelete_entity(entity)
             }
@@ -71,6 +73,8 @@ module OpenStudio
 
             proc = Proc.new {
               #puts "copy-paste surface group"
+              
+              # DLM: what if entity is deleted now?
 
               # At this point SketchUp has created a new Group object for 'entity'.
               # BUT the new Group and the original Group both reference the same ComponentDefinition
@@ -158,7 +162,7 @@ module OpenStudio
       else
         # A class other than Group was added to the Model.
 
-        if (entity.drawing_interface)
+        if (!entity.deleted? and entity.drawing_interface)
           # An EnergyPlus object was pasted outside of a Space or Shading Group.
 
           proc = Proc.new {
