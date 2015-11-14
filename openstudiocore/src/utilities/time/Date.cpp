@@ -132,9 +132,41 @@ namespace openstudio{
     // if the desired start day is set
     if(yearStartsOnDayOfWeek){
 
+      MonthOfYear month = Jan;
+      if (startMonth){
+        if ((startMonth.get() >= 1) && (startMonth.get() <= 12)){
+          month = MonthOfYear(startMonth.get());
+        } else{
+          // not valid
+        }
+      }
+
+      int dayOfMonth = 1;
+      if (startDayOfMonth){
+        if (startDayOfMonth.get() < 1){
+          // not valid
+        } else{
+          int maxDay = 31;
+          if (month == 2){
+            if (isLeapYear){
+              maxDay = 29;
+            } else{
+              maxDay = 28;
+            }
+          } else if ((month == 4) || (month == 6) || (month == 9) || (month == 11)){
+            maxDay = 30;
+          }
+          if (startDayOfMonth.get() <= maxDay){
+            dayOfMonth = startDayOfMonth.get();
+          } else{
+            // not valid
+          }
+        }
+      }
+
       // start incrementing or decrementing assumedYear until we match *yearStartsOn and assumedLeapYear
       while( (Date::isLeapYear(result) != isLeapYear) ||
-          (Date(Jan, 1, result).dayOfWeek() != *yearStartsOnDayOfWeek) ){
+             (Date(month, dayOfMonth, result).dayOfWeek() != *yearStartsOnDayOfWeek)){
         if (lookInFuture){
           ++result;
         }else{

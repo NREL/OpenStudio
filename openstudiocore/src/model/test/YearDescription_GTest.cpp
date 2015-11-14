@@ -24,6 +24,8 @@
 #include "../Model_Impl.hpp"
 #include "../YearDescription.hpp"
 #include "../YearDescription_Impl.hpp"
+#include "../RunPeriod.hpp"
+#include "../RunPeriod_Impl.hpp"
 
 #include <iostream>
 
@@ -35,7 +37,7 @@ TEST_F(ModelFixture, YearDescription)
   YearDescription yd = model.getUniqueModelObject<YearDescription>();
 
   EXPECT_FALSE(yd.calendarYear());
-  EXPECT_EQ("UseWeatherFile", yd.dayofWeekforStartDay());
+  EXPECT_EQ("Sunday", yd.dayofWeekforStartDay());
   EXPECT_TRUE(yd.isDayofWeekforStartDayDefaulted());
   EXPECT_FALSE(yd.isLeapYear());
   EXPECT_TRUE(yd.isIsLeapYearDefaulted());
@@ -57,7 +59,7 @@ TEST_F(ModelFixture, YearDescription)
   EXPECT_TRUE(yd.isIsLeapYearDefaulted());
 
   yd.resetCalendarYear();
-  EXPECT_EQ("UseWeatherFile", yd.dayofWeekforStartDay());
+  EXPECT_EQ("Sunday", yd.dayofWeekforStartDay());
   EXPECT_TRUE(yd.isDayofWeekforStartDayDefaulted());
   EXPECT_FALSE(yd.isLeapYear());
   EXPECT_TRUE(yd.isIsLeapYearDefaulted());
@@ -79,3 +81,57 @@ TEST_F(ModelFixture, YearDescription)
   EXPECT_TRUE(yd.isIsLeapYearDefaulted());
 }
 
+TEST_F(ModelFixture, YearDescription_RunPeriod)
+{
+  Model model;
+  RunPeriod runPeriod = model.getUniqueModelObject<RunPeriod>();
+  YearDescription yd = model.getUniqueModelObject<YearDescription>();
+  EXPECT_FALSE(yd.isLeapYear());
+
+  for (const auto& dayOfWeek : YearDescription::validDayofWeekforStartDayValues()){
+    EXPECT_EQ(1, runPeriod.getBeginMonth());
+    EXPECT_EQ(1, runPeriod.getBeginDayOfMonth());
+    EXPECT_TRUE(yd.setDayofWeekforStartDay(dayOfWeek));
+    EXPECT_FALSE(yd.isLeapYear());
+
+    openstudio::Date date = yd.makeDate(runPeriod.getBeginMonth(), runPeriod.getBeginDayOfMonth());
+    EXPECT_EQ(date.monthOfYear(), runPeriod.getBeginMonth());
+    EXPECT_EQ(date.dayOfMonth(), runPeriod.getBeginDayOfMonth());
+    EXPECT_EQ(dayOfWeek, date.dayOfWeek().valueName());
+
+    EXPECT_EQ(yd.assumedYear(), date.year());
+  }
+
+  runPeriod.setBeginMonth(1);
+  runPeriod.setBeginDayOfMonth(31);
+  for (const auto& dayOfWeek : YearDescription::validDayofWeekforStartDayValues()){
+    EXPECT_EQ(1, runPeriod.getBeginMonth());
+    EXPECT_EQ(31, runPeriod.getBeginDayOfMonth());
+    EXPECT_TRUE(yd.setDayofWeekforStartDay(dayOfWeek));
+    EXPECT_FALSE(yd.isLeapYear());
+
+    openstudio::Date date = yd.makeDate(runPeriod.getBeginMonth(), runPeriod.getBeginDayOfMonth());
+    EXPECT_EQ(date.monthOfYear(), runPeriod.getBeginMonth());
+    EXPECT_EQ(date.dayOfMonth(), runPeriod.getBeginDayOfMonth());
+    EXPECT_EQ(dayOfWeek, date.dayOfWeek().valueName());
+
+    EXPECT_EQ(yd.assumedYear(), date.year());
+  }
+  
+  runPeriod.setBeginMonth(2);
+  runPeriod.setBeginDayOfMonth(29);
+  for (const auto& dayOfWeek : YearDescription::validDayofWeekforStartDayValues()){
+    EXPECT_EQ(2, runPeriod.getBeginMonth());
+    EXPECT_EQ(29, runPeriod.getBeginDayOfMonth());
+    EXPECT_TRUE(yd.setDayofWeekforStartDay(dayOfWeek));
+    EXPECT_TRUE(yd.isLeapYear());
+
+    openstudio::Date date = yd.makeDate(runPeriod.getBeginMonth(), runPeriod.getBeginDayOfMonth());
+    EXPECT_EQ(date.monthOfYear(), runPeriod.getBeginMonth());
+    EXPECT_EQ(date.dayOfMonth(), runPeriod.getBeginDayOfMonth());
+    EXPECT_EQ(dayOfWeek, date.dayOfWeek().valueName());
+
+    EXPECT_EQ(yd.assumedYear(), date.year());
+  }
+
+}

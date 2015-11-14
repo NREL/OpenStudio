@@ -68,10 +68,18 @@ class MODEL_API RunPeriod : public ParentObject {
 
   // DLM@20110607: should all these sets return bool?
 
+  /// setting start or end date to 2/29 will set YearDescription.isLeapYear to true
   void setBeginMonth(int month);
+
+  /// setting start or end date to 2/29 will set YearDescription.isLeapYear to true
   void setBeginDayOfMonth(int day);
+
+  /// setting start or end date to 2/29 will set YearDescription.isLeapYear to true
   void setEndMonth(int month);
+
+  /// setting start or end date to 2/29 will set YearDescription.isLeapYear to true
   void setEndDayOfMonth(int day);
+
   void setUseWeatherFileHolidays(bool use);
   void setUseWeatherFileDaylightSavings(bool use);
   void setApplyWeekendHolidayRule(bool apply);

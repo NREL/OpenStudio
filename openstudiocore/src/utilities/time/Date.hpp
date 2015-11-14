@@ -153,8 +153,15 @@ namespace openstudio{
     /// is the year a leap year, defaults to false
     bool isLeapYear;
 
-    /// first day of the year, defaults to not set
+    /// first day of the simulation, defaults to not set
+    /// this field should really be named startDayOfWeek, not changed for backwards compatibility
     boost::optional<DayOfWeek> yearStartsOnDayOfWeek;
+
+    /// month of the first day of the simulation, defaults to 1
+    boost::optional<int> startMonth;
+
+    /// day of month of the first day of the simulation, defaults to 1
+    boost::optional<int> startDayOfMonth;
 
     /// look for year in future, defaults to false
     bool lookInFuture;

@@ -23,6 +23,8 @@
 
 #include "SimulationControl.hpp"
 #include "SimulationControl_Impl.hpp"
+#include "YearDescription.hpp"
+#include "YearDescription_Impl.hpp"
 #include "SkyTemperature.hpp"
 #include "SkyTemperature_Impl.hpp"
 #include "Model_Impl.hpp"
@@ -147,21 +149,25 @@ namespace detail {
   void RunPeriod_Impl::setBeginMonth(int month)
   {
     setInt(OS_RunPeriodFields::BeginMonth,month);
+    checkLeapDays();
   }
 
   void RunPeriod_Impl::setBeginDayOfMonth(int day)
   {
     setInt(OS_RunPeriodFields::BeginDayofMonth,day);
+    checkLeapDays();
   }
 
   void RunPeriod_Impl::setEndMonth(int month)
   {
     setInt(OS_RunPeriodFields::EndMonth,month);
+    checkLeapDays();
   }
 
   void RunPeriod_Impl::setEndDayOfMonth(int day)
   {
     setInt(OS_RunPeriodFields::EndDayofMonth,day);
+    checkLeapDays();
   }
 
   void RunPeriod_Impl::setUseWeatherFileHolidays(bool use)
@@ -213,6 +219,34 @@ namespace detail {
   void RunPeriod_Impl::setNumTimePeriodRepeats(int numRepeats)
   {
     setInt(OS_RunPeriodFields::NumberofTimesRunperiodtobeRepeated,numRepeats);
+  }
+
+  void RunPeriod_Impl::checkLeapDays()
+  {
+    boost::optional<int> month;
+    boost::optional<int> day;
+    bool hasLeapDay = false;
+
+    month = getInt(OS_RunPeriodFields::BeginMonth);
+    if (month && (month.get() == 2)){
+      day = this->getInt(OS_RunPeriodFields::BeginDayofMonth);
+      if (day && (day.get() == 29)){
+        hasLeapDay = true;
+      }
+    }
+
+    month = getInt(OS_RunPeriodFields::EndMonth);
+    if (month && (month.get() == 2)){
+      day = this->getInt(OS_RunPeriodFields::EndDayofMonth);
+      if (day && (day.get() == 29)){
+        hasLeapDay = true;
+      }
+    }
+
+    if (hasLeapDay){
+      YearDescription yd = model().getUniqueModelObject<YearDescription>();
+      yd.setIsLeapYear(true);
+    }
   }
 
   void RunPeriod_Impl::ensureNoLeapDays()
@@ -278,6 +312,7 @@ namespace detail {
   }
 
   bool RunPeriod_Impl::isAnnual() const {
+    // DLM: shouldn't this check that end-start = 365 or 366 days?
     if (getBeginMonth() != 1u) { return false; }
     if (getBeginDayOfMonth() != 1u) { return false; }
     if (getEndMonth() != 12u) { return false; }

@@ -99,7 +99,8 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.8.5")] = &VersionTranslator::update_1_8_4_to_1_8_5;
   m_updateMethods[VersionString("1.9.0")] = &VersionTranslator::update_1_8_5_to_1_9_0;
   m_updateMethods[VersionString("1.9.3")] = &VersionTranslator::update_1_9_2_to_1_9_3;
-  m_updateMethods[VersionString("1.9.5")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.9.5")] = &VersionTranslator::update_1_9_4_to_1_9_5;
+  //m_updateMethods[VersionString("1.9.5")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -2845,6 +2846,53 @@ std::string VersionTranslator::update_1_9_2_to_1_9_3(const IdfFile& idf_1_9_2, c
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_9_4_to_1_9_5(const IdfFile& idf_1_9_4, const IddFileAndFactoryWrapper& idd_1_9_5)
+{
+  std::stringstream ss;
+
+  ss << idf_1_9_4.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_9_5.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_1_9_4.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:YearDescription") {
+      auto iddObject = idd_1_9_3.getObject("OS:YearDescription");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      bool changed = false;
+      for (size_t i = 0; i < object.numNonextensibleFields(); ++i) {
+        if (i == 2) {
+          if (auto value = object.getString(i)) {
+            if (istringEqual("UseWeatherFile", value.get())){
+              newObject.setString(i, "Sunday");
+              changed = true;
+            }
+          }
+        } else {
+          if (auto value = object.getString(i)) {
+            newObject.setString(i, value.get());
+          }
+        }
+      }
+
+      ss << newObject;
+      if (changed){
+        m_refactored.push_back(std::pair<IdfObject, IdfObject>(object, newObject));
+      }
+
     } else {
       ss << object;
     }

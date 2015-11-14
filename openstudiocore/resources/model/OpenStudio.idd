@@ -509,9 +509,9 @@ OS:YearDescription,
        \type integer
   A3, \field Day of Week for Start Day
        \note Not used if calendar year is given
-       \note =<blank - use WeatherFile>|Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday];
+       \note Default Thursday chosen as that is what 1/1/2009 was, 2009 is default OpenStudio year
        \type choice
-       \default UseWeatherFile
+       \default Thursday
        \key Sunday
        \key Monday
        \key Tuesday
@@ -519,7 +519,6 @@ OS:YearDescription,
        \key Thursday
        \key Friday
        \key Saturday
-       \key UseWeatherFile
   A4; \field Is Leap Year
        \note Not used if calendar year is given
        \type choice

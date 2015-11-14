@@ -88,17 +88,26 @@ class MODEL_API YearDescription : public ParentObject {
   //@}
 
   /// Returns assumed year for date calculations.
+  /// Returns calendar year if set, otherwise finds a year for which the simulation start date
+  /// specified in RunPeriod object corresponds with dayofWeekforStartDay and isLeapYear.
   int assumedYear() const;
 
-  /// Returns a date which may be used in this model.
+  /// Returns a date which may be used in this model
+  /// Date will be consistent with current assumedYear.
   /// Will throw if dayOfMonth is not appropriate for monthOfYear.
   openstudio::Date makeDate(openstudio::MonthOfYear monthOfYear, unsigned dayOfMonth);
+
+  /// Returns a date which may be used in this model
+  /// Date will be consistent with current assumedYear.
+  /// Will throw if monthOfYear is out of range or dayOfMonth is not appropriate for monthOfYear.
   openstudio::Date makeDate(unsigned monthOfYear, unsigned dayOfMonth);
     
   /// nth weekday of month generators
+  /// Will throw if NthDayOfWeekInMonth cannot be satisfied
   openstudio::Date makeDate(openstudio::NthDayOfWeekInMonth n, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear);
   
-  /// day of year
+  /// day of year generator, dayOfYear is from beginning of year, not beginning of simulation
+  /// Will throw if greater than number of days in the year
   openstudio::Date makeDate(unsigned dayOfYear);
 
  protected:

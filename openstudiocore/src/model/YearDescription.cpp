@@ -237,6 +237,12 @@ namespace detail {
       }
     }
 
+    boost::optional<RunPeriod> runPeriod = model().getOptionalUniqueModelObject<RunPeriod>();
+    if (runPeriod){
+      yd.startMonth = runPeriod->getBeginMonth();
+      yd.startDayOfMonth = runPeriod->getBeginDayOfMonth();
+    }
+
     return yd.assumedYear();
   }
 
@@ -253,12 +259,14 @@ namespace detail {
 
     std::string dayofWeekforStartDay = this->dayofWeekforStartDay();
     if (!dayofWeekforStartDay.empty()){
-      if (istringEqual(dayofWeekforStartDay, "UseWeatherFile")){
-        LOG(Info, "'UseWeatherFile' is not yet a supported option for YearDescription");
-      }else{
-        openstudio::DayOfWeek dow(dayofWeekforStartDay);
-        yd.yearStartsOnDayOfWeek = dow;
-      }
+      openstudio::DayOfWeek dow(dayofWeekforStartDay);
+      yd.yearStartsOnDayOfWeek = dow;
+    }
+
+    boost::optional<RunPeriod> runPeriod = model().getOptionalUniqueModelObject<RunPeriod>();
+    if (runPeriod){
+      yd.startMonth = runPeriod->getBeginMonth();
+      yd.startDayOfMonth = runPeriod->getBeginDayOfMonth();
     }
 
     return openstudio::Date(monthOfYear, dayOfMonth, yd);

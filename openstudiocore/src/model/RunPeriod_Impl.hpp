@@ -67,6 +67,9 @@ namespace detail {
     void setUseWeatherFileSnowInd(bool snowInd);
     void setNumTimePeriodRepeats(int numRepeats);
 
+    // if contains the date 2/29 set isLeapYear on model's year description
+    void checkLeapDays();
+
     // ensure that this object does not contain the date 2/29
     void ensureNoLeapDays();
 
