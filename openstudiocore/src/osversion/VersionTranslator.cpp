@@ -2877,7 +2877,7 @@ std::string VersionTranslator::update_1_9_4_to_1_9_5(const IdfFile& idf_1_9_4, c
         if (i == 2) {
           if (auto value = object.getString(i)) {
             if (istringEqual("UseWeatherFile", value.get())){
-              newObject.setString(i, "Sunday");
+              newObject.setString(i, "Thursday");
               changed = true;
             }
           }
