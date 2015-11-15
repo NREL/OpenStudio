@@ -2868,7 +2868,7 @@ std::string VersionTranslator::update_1_9_4_to_1_9_5(const IdfFile& idf_1_9_4, c
     auto iddname = object.iddObject().name();
 
     if (iddname == "OS:YearDescription") {
-      auto iddObject = idd_1_9_3.getObject("OS:YearDescription");
+      auto iddObject = idd_1_9_5.getObject("OS:YearDescription");
       OS_ASSERT(iddObject);
       IdfObject newObject(iddObject.get());
 

@@ -37,7 +37,7 @@ TEST_F(ModelFixture, YearDescription)
   YearDescription yd = model.getUniqueModelObject<YearDescription>();
 
   EXPECT_FALSE(yd.calendarYear());
-  EXPECT_EQ("Sunday", yd.dayofWeekforStartDay());
+  EXPECT_EQ("Thursday", yd.dayofWeekforStartDay());
   EXPECT_TRUE(yd.isDayofWeekforStartDayDefaulted());
   EXPECT_FALSE(yd.isLeapYear());
   EXPECT_TRUE(yd.isIsLeapYearDefaulted());
@@ -59,7 +59,7 @@ TEST_F(ModelFixture, YearDescription)
   EXPECT_TRUE(yd.isIsLeapYearDefaulted());
 
   yd.resetCalendarYear();
-  EXPECT_EQ("Sunday", yd.dayofWeekforStartDay());
+  EXPECT_EQ("Thursday", yd.dayofWeekforStartDay());
   EXPECT_TRUE(yd.isDayofWeekforStartDayDefaulted());
   EXPECT_FALSE(yd.isLeapYear());
   EXPECT_TRUE(yd.isIsLeapYearDefaulted());
