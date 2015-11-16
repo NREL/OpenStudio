@@ -940,6 +940,10 @@ TEST_F(ModelFixture, DefaultSubSurfaceType)
     EXPECT_EQ("Door", s.subSurfaceType());
     s.assignDefaultSubSurfaceType();
     EXPECT_EQ("Door", s.subSurfaceType());
+
+    EXPECT_TRUE(s.setSubSurfaceType("GlassDoor"));
+    s.assignDefaultSubSurfaceType();
+    EXPECT_EQ("GlassDoor", s.subSurfaceType());
   }
   {
     // normal 0,1,0 not on bottom edge
@@ -986,5 +990,9 @@ TEST_F(ModelFixture, DefaultSubSurfaceType)
     EXPECT_EQ("Door", s.subSurfaceType());
     s.assignDefaultSubSurfaceType();
     EXPECT_EQ("Door", s.subSurfaceType());
+
+    s.setConstruction(construction);
+    s.assignDefaultSubSurfaceType();
+    EXPECT_EQ("GlassDoor", s.subSurfaceType());
   }
 }
