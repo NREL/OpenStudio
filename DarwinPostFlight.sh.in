@@ -23,6 +23,7 @@ mkdir -p "$SU15_support_dir/SketchUp/Plugins/OpenStudio"
 cp "$ruby_install_dir/Plugins/OpenStudio.rb" "$SU15_support_dir/SketchUp/Plugins/OpenStudio.rb"
 cp "$ruby_install_dir/Plugins/OpenStudio/Startup.rb" "$SU15_support_dir/SketchUp/Plugins/OpenStudio/Startup.rb"
 cp "$config_file" "$SU15_support_dir/SketchUp/Plugins/OpenStudio/OpenStudio-config"
+cp "$ruby_install_dir/Plugins/OpenStudio/OpenStudio.hash" "$SU15_support_dir/SketchUp/Plugins/OpenStudio/OpenStudio.hash"
 
 
 #---------- Installation Directory Icon ----------
