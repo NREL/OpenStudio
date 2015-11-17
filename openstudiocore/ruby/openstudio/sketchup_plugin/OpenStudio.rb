@@ -20,7 +20,7 @@
 require 'extensions.rb'   # defines the SketchupExtension class
 
 # look for the new plugin
-new_plugin = Sketchup.find_support_file("Startup.rb", "Plugins/OpenStudio")
+new_plugin = Sketchup.find_support_file("OpenStudio-config", "Plugins/OpenStudio")
 new_version = nil
 if new_plugin
 

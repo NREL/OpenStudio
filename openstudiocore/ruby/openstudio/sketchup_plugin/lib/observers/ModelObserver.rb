@@ -69,7 +69,8 @@ module OpenStudio
       
       return if not @enabled
 
-      Plugin.command_manager.save_openstudio  
+      # DLM: do we really want to tie saving OSM to saving SKP like this?
+      #Plugin.command_manager.save_openstudio  
     end
 
     def onPostSaveModel(model)

@@ -21,9 +21,7 @@ $OPENSTUDIO_SKETCHUPPLUGIN_VERSION = "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MIN
 $OPENSTUDIO_SKETCHUPPLUGIN_DEVELOPER_MENU = false
 
 begin
-  # Using this require to get around the fact that SketchUp's Ruby interpreter does not know
-  # about dl/import
-  require 'OpenStudio/OpenStudio-config'
+  load 'OpenStudio/OpenStudio-config'
 
   minimum_version = ''
   minimum_version_key = ''
