@@ -110,6 +110,11 @@ void EditController::updateDescription()
 
 void EditController::reset()
 {
+  // Evan note: It's bad to play with null pointers
+  if (!m_editNullView || !editView || !m_measureItem || !editRubyMeasureView) {
+    //return;
+  }
+
   editView->setView(m_editNullView);
 
   m_inputControllers.clear();

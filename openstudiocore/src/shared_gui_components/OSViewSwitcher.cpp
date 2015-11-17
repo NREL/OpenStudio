@@ -47,11 +47,17 @@ OSViewSwitcher::~OSViewSwitcher()
 
 void OSViewSwitcher::setView(QWidget * view)
 {
-
+  // Evan note: It's bad to play with null pointers
+  // Unfortunately, the app crashes if you don't them
+  if (!view) {
+    //return;
+  }
   if( QWidget * widget = m_stack->currentWidget() )
   {
     m_stack->removeWidget( widget );
-    widget->deleteLater();
+    // When we determine why there is a crash in Pat frm not
+    // using a null pointer, we can again delte these widgets
+    //widget->deleteLater();
   }
   OS_ASSERT(m_stack->count() == 0);
 
