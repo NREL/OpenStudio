@@ -6281,7 +6281,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
         if(istringEqual(typeElement.text().toStdString(),"HeatPump"))
         {
           if( auto hvacComp = mo->optionalCast<model::HVACComponent>() ) {
-            if( heatingCoil = hvacComp->optionalCast<model::CoilHeatingWaterToAirHeatPumpEquationFit>() ) {
+            if( (heatingCoil = hvacComp->optionalCast<model::CoilHeatingWaterToAirHeatPumpEquationFit>()) ) {
               htPumpSuppTempElement = heatingCoilElement.firstChildElement("HtPumpSuppTemp");
               htPumpCprsrLockoutTempElement = heatingCoilElement.firstChildElement("HtPumpCprsrLockoutTemp");
             }
@@ -6410,7 +6410,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
       if( auto mo = translateCoilHeating(heatingCoilElement,doc,model) ) {
         if(istringEqual(typeElement.text().toStdString(),"HeatPump"))
         {
-          if( heatingCoil = mo->optionalCast<model::HVACComponent>() ) {
+          if( (heatingCoil = mo->optionalCast<model::HVACComponent>()) ) {
             htPumpSuppTempElement = heatingCoilElement.firstChildElement("HtPumpSuppTemp");
             htPumpCprsrLockoutTempElement = heatingCoilElement.firstChildElement("HtPumpCprsrLockoutTemp");
           }
@@ -6670,7 +6670,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     // Heating Coil
     QDomElement heatingCoilElement = element.firstChildElement("CoilHtg"); 
     boost::optional<model::HVACComponent> heatingCoil;
-    if( mo = translateCoilHeating(heatingCoilElement,doc,model) ) {
+    if( (mo = translateCoilHeating(heatingCoilElement,doc,model)) ) {
       heatingCoil = mo->optionalCast<model::HVACComponent>();
     }
     if( ! heatingCoil ) {
