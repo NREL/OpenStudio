@@ -40,8 +40,8 @@ namespace openstudio {
 
 MainTabView::MainTabView(const QString & tabLabel, TabType tabType, QWidget * parent)
   : QWidget(parent),
-  m_tabType(tabType),
-  m_editView(new OSViewSwitcher())
+  m_editView(new OSViewSwitcher()),
+  m_tabType(tabType)
 {
   this->setObjectName("BlueGradientWidget");
 

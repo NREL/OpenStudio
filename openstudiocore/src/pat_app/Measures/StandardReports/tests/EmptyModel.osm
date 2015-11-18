@@ -1,0 +1,87 @@
+
+OS:Version,
+  {f619085d-7010-4746-908a-89032b2cf178}, !- Handle
+  1.9.5;                                  !- Version Identifier
+
+OS:Site,
+  {0a545789-8b9d-4e1f-b84e-8d745e2cce44}, !- Handle
+  Denver Centennial  Golden   Nr,         !- Name
+  39.74,                                  !- Latitude {deg}
+  -105.18,                                !- Longitude {deg}
+  -7,                                     !- Time Zone {hr}
+  1829,                                   !- Elevation {m}
+  ;                                       !- Terrain
+
+OS:YearDescription,
+  {8f80387e-5af4-461f-b76a-cf34fd1096ff}, !- Handle
+  ,                                       !- Calendar Year
+  Sunday;                                 !- Day of Week for Start Day
+
+OS:ClimateZones,
+  {34f597db-6ae3-4d1d-a0c1-1857094e2624}, !- Handle
+  ,                                       !- Active Institution
+  ,                                       !- Active Year
+  ASHRAE,                                 !- Climate Zone Institution Name 1
+  ANSI/ASHRAE Standard 169,               !- Climate Zone Document Name 1
+  2006,                                   !- Climate Zone Document Year 1
+  ,                                       !- Climate Zone Value 1
+  CEC,                                    !- Climate Zone Institution Name 2
+  California Climate Zone Descriptions,   !- Climate Zone Document Name 2
+  1995,                                   !- Climate Zone Document Year 2
+  ;                                       !- Climate Zone Value 2
+
+OS:Building,
+  {27d6ecc8-0de6-4091-8915-bc78e4c42eab}, !- Handle
+  Building 1,                             !- Name
+  ,                                       !- Building Sector Type
+  ,                                       !- North Axis {deg}
+  ,                                       !- Nominal Floor to Floor Height {m}
+  ,                                       !- Space Type Name
+  ,                                       !- Default Construction Set Name
+  ;                                       !- Default Schedule Set Name
+
+OS:Facility,
+  {fe15b1ea-56d9-49b4-b576-127e03921848}; !- Handle
+
+OS:LifeCycleCost:Parameters,
+  {1077e295-742d-4b6c-954b-84d770548b82}, !- Handle
+  ,                                       !- Analysis Type
+  ,                                       !- Discounting Convention
+  ,                                       !- Inflation Approach
+  ,                                       !- Real Discount Rate
+  ,                                       !- Nominal Discount Rate
+  ,                                       !- Inflation
+  ,                                       !- Base Date Month
+  ,                                       !- Base Date Year
+  ,                                       !- Service Date Month
+  ,                                       !- Service Date Year
+  ;                                       !- Length of Study Period in Years
+
+OS:WeatherFile,
+  {0a82c3f0-d07f-4adf-b745-f2d83075724c}, !- Handle
+  Denver Centennial  Golden   Nr,         !- City
+  CO,                                     !- State Province Region
+  USA,                                    !- Country
+  TMY3,                                   !- Data Source
+  724666,                                 !- WMO Number
+  39.74,                                  !- Latitude {deg}
+  -105.18,                                !- Longitude {deg}
+  -7,                                     !- Time Zone {hr}
+  1829,                                   !- Elevation {m}
+  file:files/USA_CO_Golden-NREL.724666_TMY3.epw, !- Url
+  BDF687C1;                               !- Checksum
+
+OS:RunPeriod,
+  {a5fbe55a-8a75-4569-9461-b573500d2f74}, !- Handle
+  Run Period 1,                           !- Name
+  1,                                      !- Begin Month
+  1,                                      !- Begin Day of Month
+  12,                                     !- End Month
+  31,                                     !- End Day of Month
+  ,                                       !- Use Weather File Holidays and Special Days
+  ,                                       !- Use Weather File Daylight Saving Period
+  ,                                       !- Apply Weekend Holiday Rule
+  ,                                       !- Use Weather File Rain Indicators
+  ,                                       !- Use Weather File Snow Indicators
+  ;                                       !- Number of Times Runperiod to be Repeated
+

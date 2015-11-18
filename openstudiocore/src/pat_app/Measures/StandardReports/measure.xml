@@ -2,7 +2,7 @@
   <schema_version>3.0</schema_version>
   <name>open_studio_results</name>
   <uid>fc337100-8634-404e-8966-01243d292a79</uid>
-  <version_id>e851177c-ec9f-4bdd-9b6b-c9818c0d1f76</version_id>
+  <version_id>2be31ca7-7a32-4cc9-8de9-0e6872b622e7</version_id>
   <xml_checksum>557BF06F</xml_checksum>
   <class_name>OpenStudioResults</class_name>
   <display_name>OpenStudio Results</display_name>
@@ -426,12 +426,6 @@
   </attributes>
   <files>
     <file>
-      <filename>ExampleModel.osm</filename>
-      <filetype>osm</filetype>
-      <usage_type>test</usage_type>
-      <checksum>5D95D22D</checksum>
-    </file>
-    <file>
       <filename>os_lib_schedules.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
@@ -442,12 +436,6 @@
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
       <checksum>A6430141</checksum>
-    </file>
-    <file>
-      <filename>OpenStudioResults_Test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>B7694F1B</checksum>
     </file>
     <file>
       <filename>report.html.erb</filename>
@@ -471,6 +459,24 @@
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
       <checksum>2CF6E6F4</checksum>
+    </file>
+    <file>
+      <filename>ExampleModel.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>D8511AF4</checksum>
+    </file>
+    <file>
+      <filename>OpenStudioResults_Test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>D921E791</checksum>
+    </file>
+    <file>
+      <filename>USA_CO_Golden-NREL.724666_TMY3.epw</filename>
+      <filetype>epw</filetype>
+      <usage_type>test</usage_type>
+      <checksum>BDF687C1</checksum>
     </file>
   </files>
 </measure>

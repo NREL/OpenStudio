@@ -42,9 +42,9 @@ LocationTabController::LocationTabController(bool isIP,
   const model::Model & model,
   const QString& modelTempDir)
   : MainTabController(new LocationTabView(model, modelTempDir)),
+  m_modelTempDir(modelTempDir),
   m_model(model),
-  m_isIP(isIP),
-  m_modelTempDir(modelTempDir)
+  m_isIP(isIP)
 {
   mainContentWidget()->addSubTab("Weather File && Design Days", WEATHER_FILE); 
   mainContentWidget()->addSubTab("Life Cycle Costs", LIFE_CYCLE_COSTS);

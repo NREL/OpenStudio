@@ -59,7 +59,7 @@ namespace openstudio {
 SchedulesTabController::SchedulesTabController(bool isIP, const model::Model & model)
   : MainTabController(new SchedulesTabView(model)),
     m_model(model),
-    m_isIP(m_isIP)
+    m_isIP(isIP)
 {
   mainContentWidget()->addSubTab("Schedule Sets", SCHEDULE_SETS);
   mainContentWidget()->addSubTab("Schedules", SCHEDULES);
