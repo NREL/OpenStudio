@@ -51,6 +51,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
     return boost::none;
   }
 
+  // If there is nothing but ZoneVentilationDesignFlowRate then stop
+  // We don't want a zone hvac equipment list in the idf
+  if( subsetCastVector<model::ZoneVentilationDesignFlowRate>(objects).size() == objects.size() ) {
+    return boost::none;
+  }
+
   std::vector<ModelObject> coolingVector = modelObject.equipmentInCoolingOrder();
   std::vector<ModelObject> heatingVector = modelObject.equipmentInHeatingOrder();
 
@@ -121,16 +127,17 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
     unsigned coolingPriority = coolingMap[elem];
     unsigned heatingPriority = heatingMap[elem];
 
-    boost::optional<IdfObject> _equipment = translateAndMapModelObject(elem);
+    boost::optional<IdfObject> _equipment;
 
-    if( _equipment && (! elem.optionalCast<ZoneVentilationDesignFlowRate>()) )
-    {
-      IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
-
-      eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentObjectType,_equipment->iddObject().name()); 
-      eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentName,_equipment->name().get()); 
-      eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence,coolingPriority); 
-      eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence,heatingPriority); 
+    // We will take care of ZoneVentilationDesignFlowRate elsewher since it doesn't belong on equipment list
+    if( ! elem.optionalCast<ZoneVentilationDesignFlowRate>() ) {
+      if( auto _equipment = translateAndMapModelObject(elem) ) {
+        IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
+        eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentObjectType,_equipment->iddObject().name()); 
+        eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentName,_equipment->name().get()); 
+        eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence,coolingPriority); 
+        eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence,heatingPriority); 
+      }
     }
   }
 
