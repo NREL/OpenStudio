@@ -515,7 +515,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
   // but for the E+ perspective it is not so we have to remove them,
   // and treat them differently.
   auto isZoneVentilationDesignFlowRate = [](const ModelObject & mo) {
-    return mo.optionalCast<model::ZoneVentilationDesignFlowRate>();
+    return (mo.iddObjectType() == ZoneVentilationDesignFlowRate::iddObjectType());
   };
   auto zoneVentilationBegin = std::remove_if(zoneEquipment.begin(),zoneEquipment.end(),isZoneVentilationDesignFlowRate);
   std::vector<model::ModelObject> zoneVentilationObjects(zoneVentilationBegin,zoneEquipment.end());
