@@ -753,10 +753,19 @@ namespace detail {
 
         if (thisMinZ <= surfaceMinZ){
           bool isGlassDoor = false;
+
+          // DLM: this surface could have been initialized to FixedWindow and get its construction
+          // from the default construction set, this was the source of #1924
           boost::optional<ConstructionBase> construction = this->construction();
-          if (construction && construction->isFenestration()){
+          if (!this->isConstructionDefaulted() && construction && construction->isFenestration()){
             isGlassDoor = true;
           }
+
+          boost::optional<std::string> value = getString(OS_SubSurfaceFields::SubSurfaceType);
+          if (value && istringEqual("GlassDoor", *value)){
+            isGlassDoor = true;
+          }
+
 
           if (isGlassDoor){
             result = "GlassDoor";
