@@ -5,7 +5,7 @@
 
 include(CheckTypeSize)
 include(CheckFunctionExists)
-include(CheckIncludeFile)
+include(CheckIncludeFiles)
 include(CheckCSourceCompiles)
 
 check_include_file(sys/types.h HAVE_SYS_TYPES_H)
