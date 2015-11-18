@@ -510,7 +510,6 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
   }
 
   auto zoneEquipment = modelObject.equipment();
-  auto zoneVentilationObjects = subsetCastVector<model::ZoneVentilationDesignFlowRate>(zoneEquipment);
 
   // In OS ZoneVentilationDesignFlowRate is considered zone equipment,
   // but for the E+ perspective it is not so we have to remove them,
@@ -518,8 +517,9 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
   auto isZoneVentilationDesignFlowRate = [](const ModelObject & mo) {
     return mo.optionalCast<model::ZoneVentilationDesignFlowRate>();
   };
-  zoneEquipment.erase(std::remove_if(zoneEquipment.begin(),zoneEquipment.end(),isZoneVentilationDesignFlowRate),
-    zoneEquipment.end());
+  auto zoneVentilationBegin = std::remove_if(zoneEquipment.begin(),zoneEquipment.end(),isZoneVentilationDesignFlowRate);
+  std::vector<model::ModelObject> zoneVentilationObjects(zoneVentilationBegin,zoneEquipment.end());
+  zoneEquipment.erase(zoneVentilationBegin,zoneEquipment.end());
 
   // translate thermostat and/or humidistat
   if( ( zoneEquipment.size() > 0 ) || modelObject.useIdealAirLoads() )
@@ -596,8 +596,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
 
   // ZoneVentilationDesignFlowRate does not go on equipment connections or associated list
   for( auto & zone_vent : zoneVentilationObjects ) {
-    auto mo = zone_vent.cast<model::ModelObject>();
-    translateAndMapModelObject(mo);
+    translateAndMapModelObject(zone_vent);
   }
 
   if( zoneEquipment.size() > 0 ) {
