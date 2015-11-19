@@ -5742,7 +5742,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
       }
     }
 
-    auto partLdRatMinElement = chillerElement.firstChildElement("PartLdRatMin");
+    auto partLdRatMinElement = chillerElement.firstChildElement("PLRMin");
     value = partLdRatMinElement.text().toDouble(&ok);
     if( ok ) {
       chiller.setMinimumPartLoadRatio(value);
@@ -5904,7 +5904,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
     }
 
     // PartLdRatMin
-    QDomElement partLdRatMinElement = chillerElement.firstChildElement("PartLdRatMin");
+    QDomElement partLdRatMinElement = chillerElement.firstChildElement("PLRMin");
     value = partLdRatMinElement.text().toDouble(&ok);
     if( ok ) {
       chiller.setMinimumPartLoadRatio(value);
