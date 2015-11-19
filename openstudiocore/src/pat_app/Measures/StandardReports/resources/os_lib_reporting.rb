@@ -231,7 +231,7 @@ module OsLib_Reporting
     target_units = 'building_name'
     value = model.getBuilding.name.to_s
     general_building_information[:data] << [display, value, target_units]
-    runner.registerValue(display, value, target_units)
+    runner.registerValue(display.downcase.gsub(" ","_"), value, target_units)
 
     # net site energy
     display = 'Net Site Energy'
@@ -240,7 +240,7 @@ module OsLib_Reporting
     value = OpenStudio.convert(sqlFile.netSiteEnergy.get, source_units, target_units).get
     value_neat = OpenStudio.toNeatString(value, 0, true)
     general_building_information[:data] << [display, value_neat, target_units]
-    runner.registerValue(display, value, target_units)
+    runner.registerValue(display.downcase.gsub(" ","_"), value, target_units)
 
     # total building area
     query = 'SELECT Value FROM tabulardatawithstrings WHERE '
@@ -261,7 +261,7 @@ module OsLib_Reporting
       value = OpenStudio.convert(query_results.get, source_units, target_units).get
       value_neat = OpenStudio.toNeatString(value, 0, true)
       general_building_information[:data] << [display, value_neat, target_units]
-      runner.registerValue(display, value, target_units)
+      runner.registerValue(display.downcase.gsub(" ","_"), value, target_units)
     end
 
     # EUI
@@ -272,7 +272,7 @@ module OsLib_Reporting
     value = OpenStudio.convert(eui, source_units, target_units).get
     value_neat = OpenStudio.toNeatString(value, 2, true)
     general_building_information[:data] << [display, value_neat, target_units]
-    runner.registerValue(display, value, target_units)
+    runner.registerValue(display.downcase.gsub(" ","_"), value, target_units)
 
     return general_building_information
   end
@@ -324,7 +324,7 @@ module OsLib_Reporting
       num_people = nil
       value_neat = OpenStudio.toNeatString(value, 0, true)
       output_data_space_type_breakdown[:data] << [display, value_neat]
-      runner.registerValue("Space Type - #{display}", value, units)
+      runner.registerValue("space_type_#{display.downcase.gsub(" ","_")}", value, units)
 
       # data for graph
       output_data_space_type_breakdown[:chart] << JSON.generate(label: display, value: value, color: color)
@@ -346,7 +346,7 @@ module OsLib_Reporting
       value = OpenStudio.convert(no_space_type_area_counter, 'm^2', units).get
       value_neat = OpenStudio.toNeatString(value, 0, true)
       output_data_space_type_breakdown[:data] << [display, value_neat]
-      runner.registerValue("Space Type - #{display}", value, units)
+      runner.registerValue("space_type_#{display.downcase.gsub(" ","_")}", value, units)
 
       # data for graph
       color = 'rgb(20,20,20)' # maybe do random or let d3 pick color instead of this?
@@ -390,7 +390,7 @@ module OsLib_Reporting
       value = OpenStudio.convert(total_end_use, 'GJ', target_units).get
       value_neat = OpenStudio.toNeatString(value, 0, true)
       output_data_end_use[:data] << [end_use, value_neat]
-      runner.registerValue("End Use - #{end_use}", value, target_units)
+      runner.registerValue("end_use_#{end_use.downcase.gsub(" ","_")}", value, target_units)
       if value > 0
         output_data_end_use[:chart] << JSON.generate(label: end_use, value: value, color: end_use_colors[counter])
       end
@@ -426,7 +426,7 @@ module OsLib_Reporting
       value = OpenStudio.convert(results.get, 'GJ', target_units).get
       value_neat = OpenStudio.toNeatString(value, 0, true)
       output_data_end_use_electricity[:data] << [end_use, value_neat]
-      runner.registerValue("End Use Electricity - #{end_use}", value, target_units)
+      runner.registerValue("end_use_electricity_#{end_use.downcase.gsub(" ","_")}", value, target_units)
       if value > 0
         output_data_end_use_electricity[:chart] << JSON.generate(label: end_use, value: value, color: end_use_colors[counter])
       end
@@ -464,7 +464,7 @@ module OsLib_Reporting
       value = results.get * 9.48 # manual conversion from GJ to therms
       value_neat = OpenStudio.toNeatString(value, 0, true)
       output_data_end_use_gas[:data] << [end_use, value_neat]
-      runner.registerValue("End Use Natural Gas - #{end_use}", value, target_units)
+      runner.registerValue("end_use_natural_gas_#{end_use.downcase.gsub(" ","_")}", value, target_units)
       if value > 0
         output_data_end_use_gas[:chart] << JSON.generate(label: end_use, value: value, color: end_use_colors[counter])
       end
@@ -509,7 +509,7 @@ module OsLib_Reporting
       value = OpenStudio.convert(results.get, 'GJ', target_units).get
       value_neat = OpenStudio.toNeatString(value, 0, true)
       output_data_energy_use[:data] << [fuel_type, value_neat]
-      runner.registerValue("Fuel - #{fuel_type}", value, target_units)
+      runner.registerValue("fuel_#{fuel_type.downcase.gsub(" ","_")}", value, target_units)
       if value > 0
         output_data_energy_use[:chart] << JSON.generate(label: fuel_type, value: value, color: color[counter])
       end
@@ -552,7 +552,7 @@ module OsLib_Reporting
         value = setpoint_not_met_cat_value.get
         value_neat = value # OpenStudio::toNeatString(value,0,true)
         setpoint_not_met_summary[:data] << [display, value_neat]
-        runner.registerValue("Unmet Hours - #{display}", value, target_units)
+        runner.registerValue("unmet_hours_#{display.downcase.gsub(" ","_")}", value, target_units)
 
       end
     end # setpoint_not_met_cat.each do
@@ -1532,7 +1532,7 @@ module OsLib_Reporting
       r_value_ip = OpenStudio.convert(1 / thermal_conductance, source_units, target_units).get
       r_value_ip_neat = OpenStudio.toNeatString(r_value_ip, 2, true)
       surface_data[:data] << [construction.name, net_area_ip_neat, surface_count, r_value_ip_neat]
-      runner.registerValue(construction.name.to_s, net_area_ip, area_units)
+      runner.registerValue(construction.name.to_s.downcase.gsub(" ","_"), net_area_ip, area_units)
     end
     envelope_tables << surface_data
 
@@ -1570,7 +1570,7 @@ module OsLib_Reporting
         u_factor_ip_neat = ''
       end
       sub_surface_data[:data] << [construction.name, net_area_ip_neat, surface_count, u_factor_ip_neat]
-      runner.registerValue(construction.name.to_s, net_area_ip, area_units)
+      runner.registerValue(construction.name.to_s.downcase.gsub(" ","_"), net_area_ip, area_units)
     end
     envelope_tables << sub_surface_data
 
@@ -1608,12 +1608,12 @@ module OsLib_Reporting
         # add data
         display = fenestration
         fenestration_data[:data] << [display, total.get, north.get, east.get, south.get, west.get]
-        runner.registerValue("#{display}", total.get, target_units)
+        runner.registerValue("#{display.downcase.gsub(" ","_")}", total.get, target_units)
 
         # skylight
         # skylight seems to provide back percentage vs. fraction. Changing to fraction to match vertical fenestration.
         fenestration_data[:data] << ['Skylight-Roof Ratio', skylight.get, '', '', '', '']
-        runner.registerValue('Skylight-Roof Ratio', skylight.get, target_units)
+        runner.registerValue('skylight_roof_ratio', skylight.get, target_units)
 
       end
     end
@@ -1677,7 +1677,7 @@ module OsLib_Reporting
         target_temp_range = ''
       end
       water_use_data[:data] << [instance.name, plant_loop, water_use_equipment_def.name, space, peak_flow_rate_ip_neat, water_use_equipment_flow_rate_sch, target_temp_range]
-      runner.registerValue(instance.name.to_s, peak_flow_rate_ip, target_units)
+      runner.registerValue(instance.name.to_s.downcase.gsub(" ","_"), peak_flow_rate_ip, target_units)
     end
 
     # don't create empty table
@@ -1724,8 +1724,8 @@ module OsLib_Reporting
       total_watts_ip_neat = OpenStudio.toNeatString(total_watts_ip, 2, true)
       consumption_ip_neat = OpenStudio.toNeatString(consumption_ip, 2, true)
       ext_light_data[:data] << ['Exterior Lighting Total', total_watts_ip_neat, consumption_ip_neat]
-      runner.registerValue('Exterior Lighting Total - Power ', total_watts_ip, power_units)
-      runner.registerValue('Exterior Lighting Total - Consumption ', consumption_ip, consumption_units)
+      runner.registerValue('exterior_lighting_total_power', total_watts_ip, power_units)
+      runner.registerValue('exterior_lighting_total_consumption', consumption_ip, consumption_units)
     end
 
     # don't create empty table
@@ -1766,7 +1766,7 @@ module OsLib_Reporting
       count = instance.multiplier
 
       @elevator_data[:data] << [instance.name.to_s, elec_equip_def.name, elev_zone.name.get, elev_power_neat, units, OpenStudio.toNeatString(count, 2, true)]
-      runner.registerValue(instance.name.to_s, elev_power, units)
+      runner.registerValue(instance.name.to_s.downcase.gsub(" ","_"), elev_power, units)
     end
 
     return @elevator_data
@@ -2238,7 +2238,7 @@ module OsLib_Reporting
               # do we want to register every value?
               # month_str = OpenStudio::MonthOfYear.new(month).valueDescription
               # prefix_str = OpenStudio::toUnderscoreCase("#{fuel_type}_#{category_str}_#{month_str}")
-              # runner.registerValue("#{prefix_str}_ip",valInUnits,unit_str)
+              # runner.registerValue("#{prefix_str.downcase.gsub(" ","_")}_ip",valInUnits,unit_str)
 
               # populate hash for monthly totals
               month = monthly_fuel[:header][month]
