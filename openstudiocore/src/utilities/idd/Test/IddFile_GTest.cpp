@@ -121,6 +121,9 @@ TEST_F(IddFixture, EpIddFile)
 // test idd file
 TEST_F(IddFixture, OSIddFile)
 {
+  // DLM: it is necessary to build openstudio_model_resources to update the OpenStudio.idd that this test works on
+  // I did not want to make utilities tests depend on openstudio_model_resources in cmake but that is an option
+
   StringStreamLogSink ss;
   ss.setLogLevel(Debug);
 
