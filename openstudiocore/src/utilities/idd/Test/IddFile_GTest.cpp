@@ -25,11 +25,14 @@
 
 #include "../../time/Time.hpp"
 
+
 #include "../../core/String.hpp"
+#include "../../core/StringStreamLogSink.hpp"
 #include "../../core/Path.hpp"
 #include "../../core/Containers.hpp"
 #include "../../core/Compare.hpp"
 
+#include <OpenStudio.hxx>
 #include <resources.hxx>
 
 #include <boost/algorithm/string.hpp>
@@ -47,17 +50,26 @@ using namespace openstudio;
 void testIddFile(const IddFile& iddFile);
 
 // test idd file
-TEST_F(IddFixture, IddFile)
+TEST_F(IddFixture, EpIddFile)
 {
   // from factory
-  SCOPED_TRACE("IddFile");
+  SCOPED_TRACE("EpIddFile");
   testIddFile(epIddFile);
+
+  StringStreamLogSink ss;
+  ss.setLogLevel(Debug);
 
   // from file
   path iddPath = resourcesPath()/toPath("energyplus/ProposedEnergy+.idd");
   boost::filesystem::ifstream inFile(iddPath); ASSERT_TRUE(inFile?true:false);
   OptionalIddFile loadedIddFile = IddFile::load(inFile);
   ASSERT_TRUE(loadedIddFile); inFile.close();
+
+  EXPECT_EQ(0, ss.logMessages().size());
+  for (auto logMessage : ss.logMessages()){
+    EXPECT_EQ("", logMessage.logMessage());
+  }
+
   EXPECT_EQ("8.4.0",loadedIddFile->version());
   EXPECT_EQ(epIddFile.objects().size(),loadedIddFile->objects().size());
   if (epIddFile.objects().size() != loadedIddFile->objects().size()) {
@@ -104,6 +116,67 @@ TEST_F(IddFixture, IddFile)
   }
 
   testIddFile(*loadedIddFile);
+}
+
+// test idd file
+TEST_F(IddFixture, OSIddFile)
+{
+  StringStreamLogSink ss;
+  ss.setLogLevel(Debug);
+
+  // from file
+  path iddPath = resourcesPath() / toPath("model/OpenStudio.idd");
+  boost::filesystem::ifstream inFile(iddPath); ASSERT_TRUE(inFile ? true : false);
+  OptionalIddFile loadedIddFile = IddFile::load(inFile);
+  ASSERT_TRUE(loadedIddFile); inFile.close();
+
+  EXPECT_EQ(0, ss.logMessages().size());
+  for (auto logMessage : ss.logMessages()){
+    EXPECT_EQ("", logMessage.logMessage());
+  }
+
+  EXPECT_EQ(openStudioVersion(), loadedIddFile->version());
+  EXPECT_EQ(osIddFile.objects().size(), loadedIddFile->objects().size());
+  if (osIddFile.objects().size() != loadedIddFile->objects().size()) {
+    // get sets of IddObjectType
+    IddObjectTypeSet osIddObjectTypes, loadedIddObjectTypes, diff;
+    for (const IddObject& iddObject : osIddFile.objects()) {
+      EXPECT_TRUE(iddObject.type() != IddObjectType::UserCustom);
+      osIddObjectTypes.insert(iddObject.type());
+    }
+    for (const IddObject& iddObject : loadedIddFile->objects()) {
+      if (iddObject.type() == IddObjectType::UserCustom) {
+        try {
+          IddObjectType iddObjectType(iddObject.name());
+          loadedIddObjectTypes.insert(iddObjectType);
+        } catch (...) {
+          LOG(Debug, "Unable to convert IddObject name '" << iddObject.name() << "' "
+              << "to IddObjectType.");
+        }
+      } else {
+        loadedIddObjectTypes.insert(iddObject.type());
+      }
+    }
+    std::set_difference(osIddObjectTypes.begin(), osIddObjectTypes.end(),
+                        loadedIddObjectTypes.begin(), loadedIddObjectTypes.end(),
+                        std::inserter(diff, diff.begin()));
+    std::stringstream ss;
+    for (const IddObjectType& iddType : diff) {
+      ss << "  " << iddType << std::endl;
+    }
+    diff.clear();
+    LOG(Debug, "The following object types are in osIddFile, but are not in loadedIddFile: "
+        << std::endl << ss.str());
+    ss.str("");
+    std::set_difference(loadedIddObjectTypes.begin(), loadedIddObjectTypes.end(),
+                        osIddObjectTypes.begin(), osIddObjectTypes.end(),
+                        std::inserter(diff, diff.begin()));
+    for (const IddObjectType& iddType : diff) {
+      ss << "  " << iddType << std::endl;
+    }
+    LOG(Debug, "The following object types are in loadedIddFile, but are not in osIddFile: "
+        << std::endl << ss.str());
+  }
 }
 
 // test single object, no fields
