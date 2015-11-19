@@ -516,7 +516,7 @@ namespace sdd {
       //<OccLatHtRt>200</OccLatHtRt> - Btu per h person
       //<OccSchRef>Office Occup Sched</OccSchRef>
 
-      QDomElement occDensElement = element.firstChildElement("OccDens");
+      QDomElement occDensElement = element.firstChildElement("OccDensSim");
       QDomElement occSensHtRtElement = element.firstChildElement("OccSensHtRt");
       QDomElement occLatHtRtElement = element.firstChildElement("OccLatHtRt");
       QDomElement occSchRefElement = element.firstChildElement("OccSchRef");
@@ -1987,7 +1987,7 @@ namespace sdd {
     // SpcFuncDefaultsRef - optional, do with space types
     // SpcFunc - compulsory, do with space types
     // FuncSchGrp - optional, do with space types
-    // OccDens - optional, do with space types
+    // OccDensSim - optional, do with space types
     // OccSensHtRt - optional, do with space types
     // OccLatHtRt - optional, do with space types
     // OccSchRef - optional, do with space types
