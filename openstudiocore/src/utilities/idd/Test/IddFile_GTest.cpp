@@ -65,6 +65,15 @@ TEST_F(IddFixture, EpIddFile)
   OptionalIddFile loadedIddFile = IddFile::load(inFile);
   ASSERT_TRUE(loadedIddFile); inFile.close();
 
+  for (auto iddObject : loadedIddFile->objects()){
+    for (auto iddField : iddObject.nonextensibleFields()){
+      iddField.properties();
+    }
+    for (auto iddField : iddObject.extensibleGroup()){
+      iddField.properties();
+    }
+  }
+
   EXPECT_EQ(0, ss.logMessages().size());
   for (auto logMessage : ss.logMessages()){
     EXPECT_EQ("", logMessage.logMessage());
@@ -132,6 +141,15 @@ TEST_F(IddFixture, OSIddFile)
   boost::filesystem::ifstream inFile(iddPath); ASSERT_TRUE(inFile ? true : false);
   OptionalIddFile loadedIddFile = IddFile::load(inFile);
   ASSERT_TRUE(loadedIddFile); inFile.close();
+
+  for (auto iddObject : loadedIddFile->objects()){
+    for (auto iddField : iddObject.nonextensibleFields()){
+      iddField.properties();
+    }
+    for (auto iddField : iddObject.extensibleGroup()){
+      iddField.properties();
+    }
+  }
 
   EXPECT_EQ(0, ss.logMessages().size());
   for (auto logMessage : ss.logMessages()){
