@@ -157,13 +157,21 @@ namespace detail {
     // TODO: Check return type. From object lists, some candidates are: ThermalZone.
     ThermalZone thermalZone() const;
 
+    std::string zoneCoolingDesignSupplyAirTemperatureInputMethod() const;
+
     double zoneCoolingDesignSupplyAirTemperature() const;
 
     Quantity getZoneCoolingDesignSupplyAirTemperature(bool returnIP=false) const;
 
+    double zoneCoolingDesignSupplyAirTemperatureDifference() const;
+
+    std::string zoneHeatingDesignSupplyAirTemperatureInputMethod() const;
+
     double zoneHeatingDesignSupplyAirTemperature() const;
 
     Quantity getZoneHeatingDesignSupplyAirTemperature(bool returnIP=false) const;
+
+    double zoneHeatingDesignSupplyAirTemperatureDifference() const;
 
     double zoneCoolingDesignSupplyAirHumidityRatio() const;
 
@@ -256,13 +264,21 @@ namespace detail {
     // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
     bool setThermalZone(const ThermalZone& thermalZone);
 
+    bool setZoneCoolingDesignSupplyAirTemperatureInputMethod(const std::string &value);
+
     void setZoneCoolingDesignSupplyAirTemperature(double zoneCoolingDesignSupplyAirTemperature);
 
     bool setZoneCoolingDesignSupplyAirTemperature(const Quantity& zoneCoolingDesignSupplyAirTemperature);
 
+    void setZoneCoolingDesignSupplyAirTemperatureDifference(double value);
+
+    bool setZoneHeatingDesignSupplyAirTemperatureInputMethod(const std::string &value);
+
     void setZoneHeatingDesignSupplyAirTemperature(double zoneHeatingDesignSupplyAirTemperature);
 
     bool setZoneHeatingDesignSupplyAirTemperature(const Quantity& zoneHeatingDesignSupplyAirTemperature);
+
+    void setZoneHeatingDesignSupplyAirTemperatureDifference(double value);
 
     bool setZoneCoolingDesignSupplyAirHumidityRatio(double zoneCoolingDesignSupplyAirHumidityRatio);
 

@@ -53,21 +53,30 @@ class MODEL_API SizingZone : public ModelObject {
   static IddObjectType iddObjectType();
 
   static std::vector<std::string> coolingDesignAirFlowMethodValues();
-
   static std::vector<std::string> heatingDesignAirFlowMethodValues();
+  static std::vector<std::string> zoneCoolingDesignSupplyAirTemperatureInputMethodValues();
+  static std::vector<std::string> zoneHeatingDesignSupplyAirTemperatureInputMethodValues();
 
   /** @name Getters */
   //@{
 
   ThermalZone thermalZone() const;
 
+  std::string zoneCoolingDesignSupplyAirTemperatureInputMethod() const;
+
   double zoneCoolingDesignSupplyAirTemperature() const;
 
   Quantity getZoneCoolingDesignSupplyAirTemperature(bool returnIP=false) const;
 
+  double zoneCoolingDesignSupplyAirTemperatureDifference() const;
+
+  std::string zoneHeatingDesignSupplyAirTemperatureInputMethod() const;
+
   double zoneHeatingDesignSupplyAirTemperature() const;
 
   Quantity getZoneHeatingDesignSupplyAirTemperature(bool returnIP=false) const;
+
+  double zoneHeatingDesignSupplyAirTemperatureDifference() const;
 
   double zoneCoolingDesignSupplyAirHumidityRatio() const;
 
@@ -157,13 +166,21 @@ class MODEL_API SizingZone : public ModelObject {
   /** @name Setters */
   //@{
 
+  bool setZoneCoolingDesignSupplyAirTemperatureInputMethod(const std::string &value);
+
   void setZoneCoolingDesignSupplyAirTemperature(double zoneCoolingDesignSupplyAirTemperature);
 
   bool setZoneCoolingDesignSupplyAirTemperature(const Quantity& zoneCoolingDesignSupplyAirTemperature);
 
+  void setZoneCoolingDesignSupplyAirTemperatureDifference(double value);
+
+  bool setZoneHeatingDesignSupplyAirTemperatureInputMethod(const std::string &value);
+
   void setZoneHeatingDesignSupplyAirTemperature(double zoneHeatingDesignSupplyAirTemperature);
 
   bool setZoneHeatingDesignSupplyAirTemperature(const Quantity& zoneHeatingDesignSupplyAirTemperature);
+
+  void setZoneHeatingDesignSupplyAirTemperatureDifference(double value);
 
   bool setZoneCoolingDesignSupplyAirHumidityRatio(double zoneCoolingDesignSupplyAirHumidityRatio);
 

@@ -77,27 +77,43 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingZone( SizingZone & 
   }
 
   // ZoneCoolingDesignSupplyAirTemperatureInputMethod
-
-  idfObject.setString(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureInputMethod,"SupplyAirTemperature");
+  {
+    s = modelObject.zoneCoolingDesignSupplyAirTemperatureInputMethod();
+    idfObject.setString(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureInputMethod,s.get());
+  }
 
   // ZoneCoolingDesignSupplyAirTemperature
-
   value = modelObject.zoneCoolingDesignSupplyAirTemperature();
   if( value )
   {
     idfObject.setDouble(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperature,value.get());
   }
 
-  // ZoneHeatingDesignSupplyAirTemperatureInputMethod
+  // zoneCoolingDesignSupplyAirTemperatureDifference
+  value = modelObject.zoneCoolingDesignSupplyAirTemperatureDifference();
+  if( value )
+  {
+    idfObject.setDouble(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureDifference,value.get());
+  }
 
-  idfObject.setString(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureInputMethod,"SupplyAirTemperature");
+  // ZoneHeatingDesignSupplyAirTemperatureInputMethod
+  {
+    s = modelObject.zoneHeatingDesignSupplyAirTemperatureInputMethod();
+    idfObject.setString(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureInputMethod,s.get());
+  }
 
   // ZoneHeatingDesignSupplyAirTemperature
-
   value = modelObject.zoneHeatingDesignSupplyAirTemperature();
   if( value )
   {
     idfObject.setDouble(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperature,value.get());
+  }
+
+  // ZoneHeatingDesignSupplyAirTemperatureDifference
+  value = modelObject.zoneHeatingDesignSupplyAirTemperatureDifference();
+  if( value )
+  {
+    idfObject.setDouble(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureDifference,value.get());
   }
 
   // ZoneCoolingDesignSupplyAirHumidityRatio

@@ -19951,39 +19951,57 @@ OS:Sizing:Zone,
        \type object-list
        \required-field
        \object-list ThermalZoneNames
+  A3, \field Zone Cooling Design Supply Air Temperature Input Method
+      \required-field
+      \type choice
+      \key SupplyAirTemperature
+      \key TemperatureDifference
   N1, \field Zone Cooling Design Supply Air Temperature
        \type real
        \required-field
        \units C
-  N2, \field Zone Heating Design Supply Air Temperature
+  N2, \field Zone Cooling Design Supply Air Temperature Difference
+       \required-field
+      \type real
+      \units deltaC
+  A4, \field Zone Heating Design Supply Air Temperature Input Method
+      \required-field
+      \type choice
+      \key SupplyAirTemperature
+      \key TemperatureDifference
+  N3, \field Zone Heating Design Supply Air Temperature
        \type real
        \required-field
        \units C
-  N3, \field Zone Cooling Design Supply Air Humidity Ratio
+  N4, \field Zone Heating Design Supply Air Temperature Difference
+      \required-field
+      \type real
+      \units deltaC
+  N5, \field Zone Cooling Design Supply Air Humidity Ratio
        \type real
        \required-field
        \units kg-H2O/kg-air
        \minimum 0
-  N4, \field Zone Heating Design Supply Air Humidity Ratio
+  N6, \field Zone Heating Design Supply Air Humidity Ratio
        \type real
        \required-field
        \units kg-H2O/kg-air
        \minimum 0
-  N5, \field Zone Heating Sizing Factor
+  N7, \field Zone Heating Sizing Factor
        \note if blank or zero, global heating sizing factor from Sizing:Parameters is used.
        \type real
        \minimum 0
-  N6, \field Zone Cooling Sizing Factor
+  N8, \field Zone Cooling Sizing Factor
        \note if blank or zero, global cooling sizing factor from Sizing:Parameters is used.
        \type real
        \minimum 0
-  A3, \field Cooling Design Air Flow Method
+  A5, \field Cooling Design Air Flow Method
        \type choice
        \default DesignDay
        \key Flow/Zone
        \key DesignDay
        \key DesignDayWithLimit
-  N7, \field Cooling Design Air Flow Rate
+  N9, \field Cooling Design Air Flow Rate
        \note This input is used if Cooling Design Air Flow Method is Flow/Zone
        \note This value will be multiplied by the global or zone sizing factor and
        \note by zone multipliers.
@@ -19991,33 +20009,33 @@ OS:Sizing:Zone,
        \units m3/s
        \minimum 0
        \default 0.0
-  N8, \field Cooling Minimum Air Flow per Zone Floor Area
+  N10, \field Cooling Minimum Air Flow per Zone Floor Area
        \note default is .15 cfm/ft2
        \note This input is used if Cooling Design Air Flow Method is design day with limit
        \type real
        \units m3/s-m2
        \minimum 0
        \default 0.000762
-  N9, \field Cooling Minimum Air Flow
+  N11, \field Cooling Minimum Air Flow
        \note This input is used if Cooling Design Air Flow Method is design day with limit
        \type real
        \units m3/s
        \minimum 0
        \default 0.0
-  N10, \field Cooling Minimum Air Flow Fraction
+  N12, \field Cooling Minimum Air Flow Fraction
        \note fraction of the Cooling design Air Flow Rate
        \note This input is currently used in sizing the Fan minimum Flow Rate.
        \note It does not currently affect other component autosizing.
        \type real
        \minimum 0
        \default 0.0
-  A4, \field Heating Design Air Flow Method
+  A6, \field Heating Design Air Flow Method
        \type choice
        \default DesignDay
        \key Flow/Zone
        \key DesignDay
        \key DesignDayWithLimit
-  N11, \field Heating Design Air Flow Rate
+  N13, \field Heating Design Air Flow Rate
        \note This input is used if Heating Design Air Flow Method is Flow/Zone.
        \note This value will be multiplied by the global or zone sizing factor and
        \note by zone multipliers.
@@ -20025,31 +20043,31 @@ OS:Sizing:Zone,
        \units m3/s
        \minimum 0
        \default 0.0
-  N12, \field Heating Maximum Air Flow per Zone Floor Area
+  N14, \field Heating Maximum Air Flow per Zone Floor Area
        \note default is .40 cfm/ft2
        \note This input is not currently used for autosizing any of the components.
        \type real
        \units m3/s-m2
        \minimum 0
        \default 0.002032
-  N13, \field Heating Maximum Air Flow
+  N15, \field Heating Maximum Air Flow
        \note default is 300 cfm
        \note This input is not currently used for autosizing any of the components.
        \type real
        \units m3/s
        \minimum 0
        \default 0.1415762
-  N14, \field Heating Maximum Air Flow Fraction
+  N16, \field Heating Maximum Air Flow Fraction
        \note fraction of the Heating Design Air Flow Rate
        \note This input is not currently used for autosizing any of the components.
        \type real
        \minimum 0
        \default 0.3
-  N15, \field Design Zone Air Distribution Effectiveness in Cooling Mode
+  N17, \field Design Zone Air Distribution Effectiveness in Cooling Mode
        \type real
        \minimum> 0
        \default 1.0
-  N16; \field Design Zone Air Distribution Effectiveness in Heating Mode
+  N18; \field Design Zone Air Distribution Effectiveness in Heating Mode
        \type real
        \minimum> 0
        \default 1.0
