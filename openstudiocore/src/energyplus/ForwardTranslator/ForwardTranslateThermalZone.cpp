@@ -29,6 +29,8 @@
 #include "../../model/PortList_Impl.hpp"
 #include "../../model/ZoneHVACEquipmentList.hpp"
 #include "../../model/ZoneHVACEquipmentList_Impl.hpp"
+#include "../../model/ZoneVentilationDesignFlowRate.hpp"
+#include "../../model/ZoneVentilationDesignFlowRate_Impl.hpp"
 #include "../../model/SizingZone.hpp"
 #include "../../model/SizingZone_Impl.hpp"
 #include "../../model/Schedule.hpp"
@@ -507,8 +509,20 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     translateAndMapModelObject(mixing);
   }
 
+  auto zoneEquipment = modelObject.equipment();
+
+  // In OS ZoneVentilationDesignFlowRate is considered zone equipment,
+  // but for the E+ perspective it is not so we have to remove them,
+  // and treat them differently.
+  auto isZoneVentilationDesignFlowRate = [](const ModelObject & mo) {
+    return (mo.iddObjectType() == ZoneVentilationDesignFlowRate::iddObjectType());
+  };
+  auto zoneVentilationBegin = std::remove_if(zoneEquipment.begin(),zoneEquipment.end(),isZoneVentilationDesignFlowRate);
+  std::vector<model::ModelObject> zoneVentilationObjects(zoneVentilationBegin,zoneEquipment.end());
+  zoneEquipment.erase(zoneVentilationBegin,zoneEquipment.end());
+
   // translate thermostat and/or humidistat
-  if( ( modelObject.equipment().size() > 0 ) || modelObject.useIdealAirLoads() )
+  if( ( zoneEquipment.size() > 0 ) || modelObject.useIdealAirLoads() )
   {
     // Thermostat
     if( auto thermostat = modelObject.thermostat() )
@@ -580,12 +594,13 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     m_idfObjects.push_back(idealLoadsAirSystem); 
   }
 
-  ModelObjectVector zoneEquipment = modelObject.equipment();
+  // ZoneVentilationDesignFlowRate does not go on equipment connections or associated list
+  for( auto & zone_vent : zoneVentilationObjects ) {
+    translateAndMapModelObject(zone_vent);
+  }
 
-  if( zoneEquipment.size() > 0 )
-  {
+  if( zoneEquipment.size() > 0 ) {
     // ZoneHVAC_EquipmentConnections
-
     IdfObject connectionsObject(openstudio::IddObjectType::ZoneHVAC_EquipmentConnections);
     m_idfObjects.push_back(connectionsObject);
 
