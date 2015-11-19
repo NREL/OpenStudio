@@ -3330,38 +3330,71 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   double value;
   bool ok;
 
-  QDomElement clgDsgnSupAirTempElement = thermalZoneElement.firstChildElement("ClgDsgnSupAirTemp");
-  value = clgDsgnSupAirTempElement.text().toDouble(&ok);
-  if( ok )
-  {
-    clgDsgnSupAirTemp = unitToUnit(value,"F","C").get();
-  }
-
-  QDomElement clgDsgnSizingFacElement = thermalZoneElement.firstChildElement("ClgDsgnSizingFac");
-  value = clgDsgnSizingFacElement.text().toDouble(&ok);
-  if( ok )
-  {
-    clgDsgnSizingFac = value;
-  }
-
-  QDomElement htgDsgnSupAirTempElement = thermalZoneElement.firstChildElement("HtgDsgnSupAirTemp");
-  value = htgDsgnSupAirTempElement.text().toDouble(&ok);
-  if( ok )
-  {
-    htgDsgnSupAirTemp = unitToUnit(value,"F","C").get();
-  }
-
-  QDomElement htgDsgnSizingFacElement = thermalZoneElement.firstChildElement("HtgDsgnSizingFac");
-  value = htgDsgnSizingFacElement.text().toDouble(&ok);
-  if( ok )
-  {
-    htgDsgnSizingFac = value; 
-  }
-
   model::SizingZone sizingZone = thermalZone.sizingZone();
+
+  {
+    QDomElement clgDsgnSupAirTempElement = thermalZoneElement.firstChildElement("ClgDsgnSupAirTemp");
+    value = clgDsgnSupAirTempElement.text().toDouble(&ok);
+    if( ok )
+    {
+      clgDsgnSupAirTemp = unitToUnit(value,"F","C").get();
+      sizingZone.setZoneCoolingDesignSupplyAirTemperatureInputMethod("SupplyAirTemperature");
+    }
+  }
+
+  {
+    auto clgDsgnSupAirTempDiffElement = thermalZoneElement.firstChildElement("ClgDsgnSupAirTempDiff");
+    value = clgDsgnSupAirTempDiffElement.text().toDouble(&ok);
+    if( ok )
+    {
+      value = value * 5.0 / 9.0; // delta F to C
+      sizingZone.setZoneCoolingDesignSupplyAirTemperatureDifference(value);
+      sizingZone.setZoneCoolingDesignSupplyAirTemperatureInputMethod("TemperatureDifference");
+    }
+  }
+
+  {
+    QDomElement clgDsgnSizingFacElement = thermalZoneElement.firstChildElement("ClgDsgnSizingFac");
+    value = clgDsgnSizingFacElement.text().toDouble(&ok);
+    if( ok )
+    {
+      clgDsgnSizingFac = value;
+    }
+  }
+
+  {
+    QDomElement htgDsgnSupAirTempElement = thermalZoneElement.firstChildElement("HtgDsgnSupAirTemp");
+    value = htgDsgnSupAirTempElement.text().toDouble(&ok);
+    if( ok )
+    {
+      htgDsgnSupAirTemp = unitToUnit(value,"F","C").get();
+      sizingZone.setZoneHeatingDesignSupplyAirTemperatureInputMethod("SupplyAirTemperature");
+    }
+  }
+
+  {
+    auto htgDsgnSupAirTempDiffElement = thermalZoneElement.firstChildElement("HtgDsgnSupAirTempDiff");
+    value = htgDsgnSupAirTempDiffElement.text().toDouble(&ok);
+    if( ok )
+    {
+      value = value * 5.0 / 9.0; // delta F to C
+      sizingZone.setZoneHeatingDesignSupplyAirTemperatureDifference(value);
+      sizingZone.setZoneHeatingDesignSupplyAirTemperatureInputMethod("TemperatureDifference");
+    }
+  }
+
+  {
+    QDomElement htgDsgnSizingFacElement = thermalZoneElement.firstChildElement("HtgDsgnSizingFac");
+    value = htgDsgnSizingFacElement.text().toDouble(&ok);
+    if( ok )
+    {
+      htgDsgnSizingFac = value; 
+    }
+  }
+
   sizingZone.setZoneCoolingDesignSupplyAirTemperature(clgDsgnSupAirTemp);
-  sizingZone.setZoneCoolingSizingFactor(clgDsgnSizingFac);
   sizingZone.setZoneHeatingDesignSupplyAirTemperature(htgDsgnSupAirTemp);
+  sizingZone.setZoneCoolingSizingFactor(clgDsgnSizingFac);
   sizingZone.setZoneHeatingSizingFactor(htgDsgnSizingFac);
 
   sizingZone.setCoolingMinimumAirFlowperZoneFloorArea(0.0);
