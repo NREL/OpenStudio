@@ -97,11 +97,13 @@ class AddPhotovoltaics < OpenStudio::Ruleset::ModelUserScript
     
     model.getPlanarSurfaces.each do |s|
 
-      next if not runner.inSelection(s)
+      next if !runner.inSelection(s)
     
-      next if not s.to_SubSurface.empty?
+      next if !s.to_SubSurface.empty?
       
-      next if not s.to_InteriorPartitionSurface.empty?
+      next if !s.to_InteriorPartitionSurface.empty?
+      
+      next if !s.generatorPhotovoltaics.empty?
       
       any_in_selection = true
       
@@ -123,18 +125,20 @@ class AddPhotovoltaics < OpenStudio::Ruleset::ModelUserScript
     
     end
     
-    # If one panel assignment failed, check if the elcd and inverter are still used,
-    # otherwise will throw an EnergyPlus error
+    # If one panel assignment failed, check if the elcd and inverter are still used
     if panel_fail
-      # If no generators, remove inverter and ElectricLoadCenterDistribution
-      if elcd.generators.empty?
-        inverter.remove
+      # If no generators, remove newly created inverter and ElectricLoadCenterDistribution
+      if create_elcd && elcd.generators.empty?
+        inverter = elcd.inverter
+        if !inverter.empty?
+          inverter.remove
+        end
         elcd.remove
       end
     end
     
     if not any_in_selection
-      runner.registerAsNotApplicable("No surfaces in the current selection. Please select surfaces or shading surfaces to apply photovoltaics to.")
+      runner.registerAsNotApplicable("No allowable surfaces in the current selection. Please select surfaces or shading surfaces to apply photovoltaics to.")
     end
     
     return(true)

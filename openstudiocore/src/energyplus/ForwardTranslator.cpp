@@ -39,6 +39,8 @@
 #include "../model/Building_Impl.hpp"
 #include "../model/UtilityBill.hpp"
 #include "../model/UtilityBill_Impl.hpp"
+#include "../model/ElectricLoadCenterDistribution.hpp"
+#include "../model/ElectricLoadCenterDistribution_Impl.hpp"
 #include "../model/ConcreteModelObjects.hpp"
 
 #include "../utilities/idf/Workspace.hpp"
@@ -249,6 +251,39 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
       }
     }
   }
+
+  // remove orphan photovoltaics
+  for (auto& pv : model.getConcreteModelObjects<GeneratorPhotovoltaic>()){
+    if (!pv.electricLoadCenterDistribution()){
+      LOG(Warn, "GeneratorPhotovoltaic " << pv.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
+      pv.remove();
+      continue;
+    }
+    if (!pv.surface()){
+      LOG(Warn, "GeneratorPhotovoltaic " << pv.name().get() << " is not referenced by any surface, it will not be translated.");
+      pv.remove();
+    }
+  }
+
+  // Remove empty electric load center distribution objects (e.g. with no generators)
+  // requested by jmarrec, https://github.com/NREL/OpenStudio/pull/1927
+  for (auto& elcd : model.getConcreteModelObjects<ElectricLoadCenterDistribution>()){
+    if (elcd.generators().empty()){
+      LOG(Warn, "ElectricLoadCenterDistribution " << elcd.name().get() << " is not referenced by any generators, it will not be translated.");
+      if (auto inverter = elcd.inverter()){
+        inverter->remove();
+      }
+      elcd.remove();
+    }
+  }
+
+  for (auto& inverter : model.getModelObjects<Inverter>()){
+    if (!inverter.electricLoadCenterDistribution()){
+      LOG(Warn, "Inverter " << inverter.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
+      inverter.remove();
+    }
+  }
+
 
 
   // temp code
