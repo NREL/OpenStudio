@@ -232,6 +232,17 @@ void ControllerWaterCoil_Impl::setActuatorNode( Node & node )
   this->setPointer(OS_Controller_WaterCoilFields::ActuatorNodeName,node.handle());
 }
 
+void ControllerWaterCoil_Impl::setWaterCoil( const HVACComponent & comp )
+{
+  auto result = setPointer(OS_Controller_WaterCoilFields::WaterCoilName,comp.handle());
+  OS_ASSERT(result);
+}
+
+boost::optional<HVACComponent> ControllerWaterCoil_Impl::waterCoil() const
+{
+  return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_Controller_WaterCoilFields::WaterCoilName);
+}
+
 } // detail
 
 ControllerWaterCoil::ControllerWaterCoil(const Model& model)

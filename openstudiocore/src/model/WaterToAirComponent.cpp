@@ -19,6 +19,8 @@
 
 #include "WaterToAirComponent.hpp"
 #include "WaterToAirComponent_Impl.hpp"
+#include "ControllerWaterCoil.hpp"
+#include "ControllerWaterCoil_Impl.hpp"
 #include "Model.hpp"
 
 #include "AirLoopHVAC.hpp"
@@ -316,6 +318,22 @@ bool WaterToAirComponent_Impl::removeFromPlantLoop()
   }
 
   return false;
+}
+
+boost::optional<ControllerWaterCoil> WaterToAirComponent_Impl::controllerWaterCoil()
+{
+  auto controllers = model().getConcreteModelObjects<ControllerWaterCoil>();
+  auto h = handle();
+
+  for( const auto & controller : controllers ) {
+    if( auto coil = controller.getImpl<detail::ControllerWaterCoil_Impl>()->waterCoil() ) {
+      if( coil->handle() == h ) {
+        return controller.optionalCast<ControllerWaterCoil>();
+      }
+    }
+  }
+
+  return boost::none;
 }
 
 } // detail

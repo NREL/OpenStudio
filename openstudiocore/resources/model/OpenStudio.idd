@@ -15630,7 +15630,10 @@ OS:Controller:WaterCoil,
        \type alpha
        \required-field
        \reference AirLoopControllers
-  A3, \field Control Variable
+  A3,  \field Water Coil Name
+       \type object-list
+       \object-list ConnectionObject
+  A4, \field Control Variable
        \note keys HumidityRatio or TemperatureAndHumidityRatio
        \note requires a ZoneControl:Humidistat object along
        \note with SetpointManager:SingleZone:Humidity:Maximum,
@@ -15641,21 +15644,21 @@ OS:Controller:WaterCoil,
        \key Temperature
        \key HumidityRatio
        \key TemperatureAndHumidityRatio
-  A4, \field Action
+  A5, \field Action
        \note Leave blank to have this automatically selected from coil type.
        \note Chilled water coils should be reverse action
        \note Hot water coils should be normal action
        \type choice
        \key Normal
        \key Reverse
-  A5, \field Actuator Variable
+  A6, \field Actuator Variable
        \type choice
        \default Flow
        \key Flow
-  A6, \field Sensor Node Name
+  A7, \field Sensor Node Name
        \type object-list
        \object-list Node
-  A7, \field Actuator Node Name
+  A8, \field Actuator Node Name
        \type object-list
        \object-list Node
   N1, \field Controller Convergence Tolerance
