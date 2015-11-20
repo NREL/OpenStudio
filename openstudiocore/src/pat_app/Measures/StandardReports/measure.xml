@@ -2,7 +2,7 @@
   <schema_version>3.0</schema_version>
   <name>open_studio_results</name>
   <uid>fc337100-8634-404e-8966-01243d292a79</uid>
-  <version_id>2be31ca7-7a32-4cc9-8de9-0e6872b622e7</version_id>
+  <version_id>333c98ed-15d0-4c1b-ae72-9beade490561</version_id>
   <xml_checksum>557BF06F</xml_checksum>
   <class_name>OpenStudioResults</class_name>
   <display_name>OpenStudio Results</display_name>
@@ -467,16 +467,22 @@
       <checksum>D8511AF4</checksum>
     </file>
     <file>
-      <filename>OpenStudioResults_Test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>D921E791</checksum>
-    </file>
-    <file>
       <filename>USA_CO_Golden-NREL.724666_TMY3.epw</filename>
       <filetype>epw</filetype>
       <usage_type>test</usage_type>
       <checksum>BDF687C1</checksum>
+    </file>
+    <file>
+      <filename>OpenStudioResults_Test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>3F951610</checksum>
+    </file>
+    <file>
+      <filename>EmptyModel.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>0B8191E5</checksum>
     </file>
   </files>
 </measure>
