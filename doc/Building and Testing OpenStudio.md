@@ -42,7 +42,7 @@ In CMake type the following:
 
 In a command window:
 
-	make –j8
+	make –j8 (8 indicates the number of virtual cores used)
 	make package_deb
 
 Copy .deb package from VM to Windows
@@ -68,7 +68,7 @@ In Visual Studio:
 - Open OpenStudio.sln
 - Select Release Solution Configuration
 - Build OpenStudio until "configuring done", and "generating done"
-- Cancel the build
+- Cancel the build (tip: set up [Kill Build Shortcut](https://github.com/NREL/OpenStudio/wiki/Suggested-Visual-Studio-2013-Configuration#kill-build-shortcut))
 - Open OpenStudioCore.sln
 - Select Release Solution Configuration
 - Build OpenStudioCore with IncrediBuild
@@ -169,6 +169,8 @@ In CMake check the following:
 
 - BUILD\_DOCUMENTATION
 
+Press `Configure` and `Generate` in CMake
+
 In Visual Studio:
 
 - Open OpenStudio.sln
@@ -210,7 +212,17 @@ In folder `C:\Git\OpenStudio_1\build\OSCore-prefix\src\OSCore-build\Products\Rel
 Sanity Testing Release Builds
 =============================
 
-TBD
+- On a clean Ubuntu VM, install OpenStudio
+
+- On a clean Mac VM, install the current version of SketchUp
+- On a clean Mac VM, install OpenStudio
+
+- On a clean Windows VM, install the current 32 bit version of SketchUp
+- On a clean Windows VM, install the current 32 bit version of OpenStudio
+
+- On a clean Windows VM, install the current 64 bit version of SketchUp
+- On a clean Windows VM, install the current 64 bit version of OpenStudio
+- Open SketchUp
 
 Version Update
 ==============
