@@ -440,7 +440,7 @@ TEST_F(ModelFixture, AirWall)
 
   // empty construction
   EXPECT_TRUE(surface.setConstruction(construction));
-  EXPECT_TRUE(surface.isAirWall());
+  EXPECT_FALSE(surface.isAirWall());
 
   // material
   layers.clear();
