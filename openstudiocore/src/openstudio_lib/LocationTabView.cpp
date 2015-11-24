@@ -439,28 +439,18 @@ void LocationView::saveQSettings() const
   settings.setValue("m_lastDdyPathOpened", m_lastDdyPathOpened);  
 }
 
-void LocationView::update(bool weatherFileBtnClicked)
+void LocationView::update()
 {
   boost::optional<model::WeatherFile> weatherFile = m_model.getOptionalUniqueModelObject<model::WeatherFile>();
   if (weatherFile) {
 
-    auto fileExists = false;
-
-    if (weatherFileBtnClicked) {
-      // An epw file was loaded into the model by the user clicking m_weatherFileBtn
-      // It's not yet saved in the model, so it's path will be different
-
-      // Check that the epw file newly loaded into the unsaved model exists
-      fileExists = QFile(m_lastEpwPathOpened).exists();
-    }
-    else {
+    auto fileExists = QFile(m_lastEpwPathOpened).exists();
+    if (!fileExists) {
 
       boost::optional<openstudio::path> epwPath = weatherFile->path();
-
       if (epwPath) {
         // If there is a path, and a file at that path, our job is done
         fileExists = QFile(epwPath->string().c_str()).exists();
-
         if (!fileExists) {
           // Construct the absolute path as dictated by the osm location, and check for the file
           QString savePath, filePath;
@@ -635,7 +625,7 @@ void LocationView::onWeatherFileBtnClicked()
 
       m_lastEpwPathOpened = QFileInfo(fileName).absoluteFilePath();
 
-      update(true);
+      update();
 
     }catch(...){
 
@@ -659,7 +649,7 @@ void LocationView::onWeatherFileBtnClicked()
         }
       }
 
-      update(true);
+      update();
     }
   }
 }
