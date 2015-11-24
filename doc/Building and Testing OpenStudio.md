@@ -180,7 +180,7 @@ In Visual Studio:
 - **Without** IncrediBuild, build ALL\_DOXYGEN
 - **Without** IncrediBuild, build ALL\_RDOC
 
-In folder `C:\Git\OpenStudio_1\build\OSCore-prefix\src\OSCore-build\doc`
+In folder `build\OSCore-prefix\src\OSCore-build\doc`
 
 - Extract zip OpenStudio-X.Y.Z-doc.zip to a similarly named directory
 
@@ -188,9 +188,9 @@ In S3:
 
 - Drag extracted directory into S3 directory `openstudio-sdk-documentation/cpp`
 
-For major releases, delete the content of `openstudio-sdk-documentation/cpp/latest` and drag in the contents of `C:\Git\OpenStudio_1\build\OSCore-prefix\src\OSCore-build\doc\OpenStudio-X.Y.Z-doc`
+For major releases, delete the content of `openstudio-sdk-documentation/cpp/latest` and drag in the contents of `uild\OSCore-prefix\src\OSCore-build\doc\OpenStudio-X.Y.Z-doc`
 
-In folder `C:\Git\OpenStudio_1\build\OSCore-prefix\src\OSCore-build\ruby\rdocify`
+In folder `build\OSCore-prefix\src\OSCore-build\ruby\rdocify`
 
 - Extract zip OpenStudio-X.Y.Z-rdoc.zip to a similarly named folder
 
@@ -203,7 +203,7 @@ In S3:
 OSVersion Testing
 =================
 
-In folder `C:\Git\OpenStudio_1\build\OSCore-prefix\src\OSCore-build\Products\Release`
+In folder `build\OSCore-prefix\src\OSCore-build\Products\Release`
 
 - Open cmd prompt
 - Drag and drop `openstudio_osversion_tests.exe` onto the prompt, then run
@@ -212,26 +212,36 @@ In folder `C:\Git\OpenStudio_1\build\OSCore-prefix\src\OSCore-build\Products\Rel
 Sanity Testing Release Builds
 =============================
 
-- On a clean Ubuntu VM, install OpenStudio
+- On a clean Ubuntu VM, install the current version of OpenStudio
+- Open OpenStudio, and make a model
+- Open PAT, make a project, and select the model above as your baseline model
 
 - On a clean Mac VM, install the current version of SketchUp
-- On a clean Mac VM, install OpenStudio
+- On a clean Mac VM, install the current version of OpenStudio
+- Open SketchUp, and make and save a model
+- Open OpenStudio, and open the model above
+- Open PAT, make a project, and select the model above as your baseline model
 
 - On a clean Windows VM, install the current 32 bit version of SketchUp
 - On a clean Windows VM, install the current 32 bit version of OpenStudio
+- Open SketchUp, and make and save a model
+- Open OpenStudio, and open the model above
+- Open PAT, make a project, and select the model above as your baseline model
 
 - On a clean Windows VM, install the current 64 bit version of SketchUp
 - On a clean Windows VM, install the current 64 bit version of OpenStudio
-- Open SketchUp
+- Open SketchUp, and make and save a model
+- Open OpenStudio, and open the model above
+- Open PAT, make a project, and select the model above as your baseline model
 
 Version Update
 ==============
 
-- Copy directory X.Y.Z to `C:\Git\OpenStudio_1\openstudiocore\resources\osversion` (new folder, 3 files)
-- In `C:\Git\OpenStudio_1` update `CMakeLists.txt` version (1 line)
-- In `C:\Git\OpenStudio_1\openstudiocore\resources` update `CMakeLists.txt` version (3 lines, 1 location)
-- In `C:\Git\OpenStudio_1\openstudiocore\resources\model` update `OpenStudio.idd` version (1 line)
-- In `C:\Git\OpenStudio_1\openstudiocore\src\osversion` update `VersionTranslator.cpp` version
+- Copy directory X.Y.Z to `openstudiocore\resources\osversion` (new folder, 3 files)
+- In the top level of your OpenStudio folder, update `CMakeLists.txt` version (1 line)
+- In `openstudiocore\resources` update `CMakeLists.txt` version (3 lines, 1 location)
+- In `openstudiocore\resources\model` update `OpenStudio.idd` version (1 line)
+- In `openstudiocore\src\osversion` update `VersionTranslator.cpp` version
 
 At https://github.com/NREL/OpenStudio
 
@@ -246,15 +256,15 @@ AMI BUILD
 =========
 With Git, pull OpenStudio-server master
 
-- Update version in `C:\Git\OpenStudio-server\CHANGELOG.md`
-- Update version in `C:\Git\OpenStudio-server\vagrant\chef\roles\openstudio.rb`
-- Update version in `C:\Git\OpenStudio-server\server\lib\openstudio_server\version.rb`
+- Update version in `CHANGELOG.md`
+- Update version in `vagrant\chef\roles\openstudio.rb`
+- Update version in `server\lib\openstudio_server\version.rb`
 
 With Git, commit above files (Commit Message = `Bump version`)
 
 In a command window:
 
-- In `C:\Git\OpenStudio-server`, run `rake release`
+- In the top level of your OpenStudio-server folder, run `rake release`
 
 Compatibility Matrix
 ====================
