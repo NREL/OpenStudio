@@ -1,6 +1,7 @@
 Process of Building and Testing OpenStudio for Release
 ======================================================
 Configured build environments: https://github.com/NREL/OpenStudio/wiki/Configuring-OpenStudio-Build-Environments
+
 - 64-bit Windows environment
 - 64-bit Ubuntu environment
 - 64-bit OS X environment
@@ -21,11 +22,13 @@ Builds
 
 Ubuntu
 ------
-With Git, pull iteration branch.
+With Git, pull `iteration` branch.
 
 In a command window:
 
-	cd openstudio/build
+    cd openstudio
+    mkdir build
+	cd build
 	ccmake ..
 
 In CMake check the following:
@@ -42,14 +45,14 @@ In CMake type the following:
 
 In a command window:
 
-	make –j8 (8 indicates the number of virtual cores used)
+	make –j8 (8 indicates the number of cores used)
 	make package_deb
 
 Copy .deb package from VM to Windows
 
 Windows 64-bit
 --------------
-With Git, pull iteration branch.
+With Git, pull `iteration` branch.
 
 In CMake, select current 64-bit compiler
 
@@ -99,11 +102,13 @@ In Visual Studio:
 
 Mac
 ---
-With Git, pull iteration branch.
+With Git, pull `iteration` branch.
 
 In a command window:
 
-	cd openstudio/build
+	cd openstudio
+    mkdir build
+    cd build
 	ccmake ..
 
 In CMake check the following:
@@ -129,9 +134,11 @@ In CMake type the following:
 
 In a command window:
 
-	make package –j8
-	CTRL + c
-	⌘ + q (to quit a Mac app)
+```bash
+make package –j8
+# When done:
+⌘ + q (to quit a Mac app)
+```
 
 Copy build to VM's share folder
 
@@ -188,7 +195,7 @@ In S3:
 
 - Drag extracted directory into S3 directory `openstudio-sdk-documentation/cpp`
 
-For major releases, delete the content of `openstudio-sdk-documentation/cpp/latest` and drag in the contents of `uild\OSCore-prefix\src\OSCore-build\doc\OpenStudio-X.Y.Z-doc`
+For major releases, delete the content of `openstudio-sdk-documentation/cpp/latest` and drag in the contents of `build\OSCore-prefix\src\OSCore-build\doc\OpenStudio-X.Y.Z-doc`
 
 In folder `build\OSCore-prefix\src\OSCore-build\ruby\rdocify`
 
@@ -212,27 +219,37 @@ In folder `build\OSCore-prefix\src\OSCore-build\Products\Release`
 Sanity Testing Release Builds
 =============================
 
+### Ubuntu
 - On a clean Ubuntu VM, install the current version of OpenStudio
 - Open OpenStudio, and make a model
 - Open PAT, make a project, and select the model above as your baseline model
 
-- On a clean Mac VM, install the current version of SketchUp
-- On a clean Mac VM, install the current version of OpenStudio
+### Mac
+- On a clean Mac VM, install the current version of SketchUp and OpenStudio
 - Open SketchUp, and make and save a model
 - Open OpenStudio, and open the model above
 - Open PAT, make a project, and select the model above as your baseline model
 
-- On a clean Windows VM, install the current 32 bit version of SketchUp
-- On a clean Windows VM, install the current 32 bit version of OpenStudio
+### 32-bit Windows
+- On a clean Windows VM, install the current 32-bit version of SketchUp and the current 32-bit version of OpenStudio
 - Open SketchUp, and make and save a model
 - Open OpenStudio, and open the model above
 - Open PAT, make a project, and select the model above as your baseline model
 
-- On a clean Windows VM, install the current 64 bit version of SketchUp
-- On a clean Windows VM, install the current 64 bit version of OpenStudio
+### 64-bit Windows
+- On a clean Windows VM, install the current 64-bit version of SketchUp and the current 64-bit version of OpenStudio
 - Open SketchUp, and make and save a model
 - Open OpenStudio, and open the model above
 - Open PAT, make a project, and select the model above as your baseline model
+
+### Tests to run
+- Test running PAT on the cloud on at least one platform
+- Test BCL downloads
+- Test user scripts in SketchUp
+- Test Apply Measures Now
+- Run simulation in OpenStudio
+- Run simulation in PAT
+- Test opening results in ResultsViewer
 
 Version Update
 ==============
@@ -243,10 +260,7 @@ Version Update
 - In `openstudiocore\resources\model` update `OpenStudio.idd` version (1 line)
 - In `openstudiocore\src\osversion` update `VersionTranslator.cpp` version
 
-At https://github.com/NREL/OpenStudio
-
-	t
-	VersionTranslator.cpp
+At https://github.com/NREL/OpenStudio/blob/develop/openstudiocore/src/osversion/VersionTranslator.cpp
 
 - Select "History", see edits if needed (usually use `defaultUpdate`, 2 lines)
 
