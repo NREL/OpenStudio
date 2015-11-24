@@ -26,7 +26,6 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
-class ControllerWaterCoil;
 
 namespace detail {
 
@@ -133,8 +132,6 @@ namespace detail {
     double ratedRatioForAirAndWaterConvection();
 
     void setRatedRatioForAirAndWaterConvection( double value );
-
-    boost::optional<ControllerWaterCoil> controllerWaterCoil();
 
     //@}
   private:
