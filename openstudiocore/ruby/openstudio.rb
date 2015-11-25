@@ -37,8 +37,22 @@ $: << "#{$OpenStudio_Dir}lib" # needed for gem case
 # add OpenStudio shared library locations to system path
 # we need to add these so that require can load the c++ shared libraries
 original_path = ENV['PATH']
+platform_specific_path = nil
 if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
-  ENV['PATH'] = "#{$OpenStudio_Dir};#{$OpenStudio_Dir}openstudio;#{original_path}"
+  front = []
+  back = []
+  original_path.split(';').each do |p|
+	if /SketchUp/.match(p)
+	  if /platform_specific/.match(p)
+	    platform_specific_path = p
+	  end
+	  front << p
+	else
+	  back << p
+	end
+  end
+
+  ENV['PATH'] = "#{front.join(';')};#{$OpenStudio_Dir};#{$OpenStudio_Dir}openstudio;#{back.join(';')}"
   
   # Pre-load our specific Qt Dll's on Windows to make sure we control which get loaded
   require 'Win32API'
@@ -120,12 +134,17 @@ require 'openstudiosdd'
 # restore original path
 ENV['PATH'] = original_path
 
-if (!OpenStudio::RemoteBCL::initializeSSL(OpenStudio::Path.new("#{$OpenStudio_Dir}OpenStudio")))
-  if (!OpenStudio::RemoteBCL::initializeSSL())
-    raise "Unable to initialize OpenSSL: Verify that ruby can access the OpenSSL libraries"
+have_open_ssl  = false
+if platform_specific_path
+  have_open_ssl = OpenStudio::RemoteBCL::initializeSSL(OpenStudio::Path.new(platform_specific_path))
+end
+if (!have_open_ssl)
+  if (!OpenStudio::RemoteBCL::initializeSSL(OpenStudio::Path.new("#{$OpenStudio_Dir}OpenStudio")))
+    if (!OpenStudio::RemoteBCL::initializeSSL())
+      raise "Unable to initialize OpenSSL: Verify that ruby can access the OpenSSL libraries"
+    end
   end
 end
-
 
 if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
   $OpenStudio_BinaryDir = "#{$OpenStudio_Dir}../bin/"
