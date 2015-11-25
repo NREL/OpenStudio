@@ -48,15 +48,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     args << apply_schedules
     
     chs = OpenStudio::StringVector.new
-    chs << 'Yes'
-    chs << 'No'
-    write_sql = OpenStudio::Ruleset::OSArgument.makeChoiceArgument('write_sql', chs, true)
-    write_sql.setDisplayName('Write Radiance SqlFile')
-    write_sql.setDefaultValue('Yes')
-    write_sql.setDescription('Write Radiance results to a SqlFile format')
-    args << write_sql
-
-    chs = OpenStudio::StringVector.new
     chs << 'Default'
     chs << 'Min'
     chs << 'Max'
@@ -97,16 +88,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     # assign the user inputs to variables
     apply_schedules = runner.getStringArgumentValue('apply_schedules', user_arguments)
     
-    write_sql = runner.getStringArgumentValue('write_sql', user_arguments)
-
-    if apply_schedules == 'Yes' && write_sql == 'No'
-      runner.registerInfo('lighting power schedules requested, will write Radiance sql results file')
-      write_sql = 'Yes'
-    end
-
     use_cores = runner.getStringArgumentValue('use_cores', user_arguments) # honor user arg
   
-
     rad_settings = runner.getStringArgumentValue('rad_settings', user_arguments)
 
     # Energyplus "pre-run" model dir
@@ -324,6 +307,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     File.exist?("#{radPath}/output/dc/merged_space/maps")
     FileUtils.mkdir_p("#{radPath}/sql") unless File.exist?("#{radPath}/sql")
     FileUtils.mkdir_p("#{radPath}/wx") unless File.exist?("#{radPath}/wx")
+    FileUtils.mkdir_p("#{radPath}/octrees") unless File.exist?("#{radPath}/octrees")
  
     # copy Radiance model up
     # TODO be smarter about this.
@@ -412,7 +396,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
       # compute daylight matrices
       runner.registerInfo("#{Time.now.getutc}: computing daylight coefficient matrices")
-      exec_statement("oconv materials/materials.rad model.rad > model_dc.oct", runner)
+      exec_statement("oconv materials/materials.rad model.rad > octrees/model_dc.oct", runner)
 
       windowMaps = File::open("bsdf/mapping.rad")
       
@@ -430,9 +414,9 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           # make WG0 octree (with shade-controlled window groups blacked out, if applicable)
           
           if haveWG1 == "True"
-            rad_command = "oconv \"materials/materials.rad\" \"materials/materials_WG0.rad\" model.rad \"skies/dc_sky.rad\" > model_WG0.oct"
+            rad_command = "oconv \"materials/materials.rad\" \"materials/materials_WG0.rad\" model.rad \"skies/dc_sky.rad\" > octrees/model_WG0.oct"
           else 
-            rad_command = "oconv \"materials/materials.rad\" model.rad \"skies/dc_sky.rad\" > model_WG0.oct"
+            rad_command = "oconv \"materials/materials.rad\" model.rad \"skies/dc_sky.rad\" > octrees/model_WG0.oct"
           end
           exec_statement(rad_command, runner)
           
@@ -441,67 +425,107 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           
           runner.registerInfo("#{Time.now.getutc}: computing daylight/view matrix for uncontrolled windows (WG0)")
           rad_command = "#{t_catCommand} \"numeric/merged_space.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
-          "-o \"output/dc/WG0.vmx\" -m skyglow model_WG0.oct"
+          "-o \"output/dc/WG0.vmx\" -m skyglow octrees/model_WG0.oct"
           runner.registerInfo("#{Time.now.getutc}: #{rad_command}")
           exec_statement(rad_command, runner)
 
         else
 
-          runner.registerInfo("processing controlled window group #{wg}")
-
-          # use more chill sim parameters
-          rtrace_args = "#{options_dmx}"
+          runner.registerInfo("processing shade-controlled window group #{wg}")
+          puts "processing shade-controlled window group #{wg}"
+                  
+          if row.split(",")[4].rstrip == "SWITCHABLE"
           
-          # do daylight matrices for controlled windows
-          runner.registerInfo("#{Time.now.getutc}: computing daylight matrix for window group #{wg}...")
+            puts "Window Group #{wg} has switchable glazing control"
 
-          rad_command = "rfluxmtx #{rtrace_args} -n #{sim_cores} -fa -v \"scene/shades/#{wg}_SHADE.rad\" \"skies/dc_sky.rad\" -i model_dc.oct > \"output/dc/#{wg}.dmx\""
-          runner.registerInfo("#{Time.now.getutc}: #{rad_command}")
-          exec_statement(rad_command, runner)
+            # make clear-state octree, black out WGO and all other WG shades
+            rad_command = "oconv \"materials/materials.rad\" materials/materials_blackout.rad materials/#{wg}_clear.mat model.rad \"skies/dc_sky.rad\" > octrees/model_#{wg}_clear.oct"
+            exec_statement(rad_command, runner)
 
-        end
+            # make tinted-state octree
+            rad_command = "oconv \"materials/materials.rad\" materials/materials_blackout.rad materials/#{wg}_tinted.mat model.rad \"skies/dc_sky.rad\" > octrees/model_#{wg}_tinted.oct"
+            exec_statement(rad_command, runner)
 
-      end  # calculate DMX
+            # do view matrix
+            rtrace_args = "#{options_vmx}"
+            
+            ["clear", "tinted"].each do |state|
+                 
+              runner.registerInfo("#{Time.now.getutc}: computing view matrix for window group '#{wg}' in #{state} state")
+              rad_command = "#{t_catCommand} \"numeric/merged_space.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
+              "-o \"output/dc/#{wg}_#{state}.vmx\" -m skyglow octrees/model_#{wg}_#{state}.oct"
+              runner.registerInfo("#{Time.now.getutc}: #{rad_command}")
+              exec_statement(rad_command, runner)
+            
+            end
+
+          else
+
+            # use more chill sim parameters
+            rtrace_args = "#{options_dmx}"
+          
+            # do daylight matrices for controlled windows
+            runner.registerInfo("#{Time.now.getutc}: computing daylight matrix for window group #{wg}...")
+
+            rad_command = "rfluxmtx #{rtrace_args} -n #{sim_cores} -fa -v \"scene/shades/#{wg}_SHADE.rad\" \"skies/dc_sky.rad\" -i octrees/model_dc.oct > \"output/dc/#{wg}.dmx\""
+            runner.registerInfo("#{Time.now.getutc}: #{rad_command}")
+            exec_statement(rad_command, runner)
+          
+          end
+
+        end # calculate DMX
+        
+        # do view matrices 
 				
-			if haveWG1 == "True"
+        if haveWG1 == "True"
+      
+          if row.split(",")[4].rstrip == "SWITCHABLE"
+          
+            puts "Switchable glazing window group #{wg} already calculated as single-phase view matrix" # we already got the view matrices for EC glass in the preceding step.
+        
+          else
 
-        # compute view matrices for all controlled window groups
+            # compute view matrices for shade controlled window groups all at once
 
-        # use fine params   
-        rtrace_args = "#{options_vmx}" 
+            # use fine params   
+            rtrace_args = "#{options_vmx}" 
 
-        runner.registerInfo("#{Time.now.getutc}: computing view matri(ces) for controlled window groups")
+            runner.registerInfo("#{Time.now.getutc}: computing view matri(ces) for window groups with shades")
     
-        # get the shaded window groups' shade polygons
+            # get the shaded window groups' shade polygons
     
-        wgInput = []
-        # get the SHADE polygons for sampling (NOT the GLAZING ones!)
-        Dir.glob("scene/shades/WG*.rad") {|file|
-          wgInput << file
-        }
+            wgInput = []
+            # get the SHADE polygons for sampling (NOT the GLAZING ones!)
+            Dir.glob("scene/shades/WG*.rad") {|file|
+              wgInput << file
+            }
 
-        # make the receiver file
-        exec_statement("#{t_catCommand} \"materials/materials_vmx.rad\" #{wgInput.join(" ")} > receivers_vmx.rad", runner)
+            # make the receiver file
+            exec_statement("#{t_catCommand} \"materials/materials_vmx.rad\" #{wgInput.join(" ")} > receivers_vmx.rad", runner)
     
-        # make the octree
-        scene_files = []
-        Dir.glob("scene/*.rad").each {|f| scene_files << f}
-        exec_statement("oconv materials/materials.rad #{scene_files.join(' ')} > model_vmx.oct", runner)
+            # make the octree
+            scene_files = []
+            Dir.glob("scene/*.rad").each {|f| scene_files << f}
+            exec_statement("oconv materials/materials.rad #{scene_files.join(' ')} > octrees/model_vmx.oct", runner)
     
-        # make rfluxmtx do all the work
-        rad_command = "rfluxmtx #{rtrace_args} -n #{sim_cores} -ds .15 -faa -y #{rfluxmtxDim} -I -v - receivers_vmx.rad -i model_vmx.oct < numeric/merged_space.map"
-        exec_statement(rad_command, runner)
+            # make rfluxmtx do all the work
+            rad_command = "rfluxmtx #{rtrace_args} -n #{sim_cores} -ds .15 -faa -y #{rfluxmtxDim} -I -v - receivers_vmx.rad -i octrees/model_vmx.oct < numeric/merged_space.map"
+            exec_statement(rad_command, runner)
+          
+          end
 
-        # compute daylight coefficient matrices for window group control points
+          # compute daylight coefficient matrices for window group control points
 
-        rtrace_args = "#{options_dmx}"
-        exec_statement("oconv \"materials/materials.rad\" model.rad \
-          \"skies/dc_sky.rad\" > model_wc.oct", runner)
-        runner.registerInfo("#{Time.now.getutc}: computing DCs for window control points")
-  
-        rad_command = "#{t_catCommand} \"numeric/window_controls.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
-        "-o \"output/dc/window_controls.vmx\" -m skyglow model_wc.oct"
-        exec_statement(rad_command, runner)
+          rtrace_args = "#{options_dmx}"
+          exec_statement("oconv \"materials/materials.rad\" model.rad \
+            \"skies/dc_sky.rad\" > octrees/model_wc.oct", runner)
+          runner.registerInfo("#{Time.now.getutc}: computing DCs for window control points")
+
+          rad_command = "#{t_catCommand} \"numeric/window_controls.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
+          "-o \"output/dc/window_controls.vmx\" -m skyglow octrees/model_wc.oct"
+          exec_statement(rad_command, runner)
+        
+        end
       
       end # VMX for controlled window groups
 
@@ -510,10 +534,9 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     end # calculateDaylightCoeffecients()
 
     # annual simulation dealio
-    def runSimulation(
-                      t_space_names_to_calculate, t_sqlFile, t_simCores, t_options_skyvecDensity,
+    def runSimulation(t_space_names_to_calculate, t_sqlFile, t_simCores, t_options_skyvecDensity,
                       t_site_latitude, t_site_longitude, t_site_stdmeridian, t_radPath,
-                      t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, runner, write_sql)
+                      t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, runner)
 
       runner.registerInfo("#{Time.now.getutc}: Calculating annual daylight values")
 
@@ -563,15 +586,27 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         else
 
         # do all controlled window groups
-          wgXMLs = row.split(",")[4..-1]
-          if wgXMLs.size > 2
-            runner.registerInfo("WARN: Window Group #{wg} has #{wgXMLs.size} BSDFs (2 max supported by OpenStudio application).")
-          end
+        
+          if row.split(",")[4].rstrip == "SWITCHABLE"
+          
+            # make single phase illuminance sched for each state
+            ["clear", "tinted"].each do |state|
+              exec_statement("dctimestep \"#{t_radPath}/output/dc/#{wg}_#{state}.vmx\" annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > \"#{t_radPath}/output/ts/#{wg}_#{state}.ill\"", runner)             
+            end
+          
+          else
+        
+            wgXMLs = row.split(",")[4..-1]
+            if wgXMLs.size > 2
+              runner.registerInfo("WARN: Window Group #{wg} has #{wgXMLs.size} BSDFs (2 max supported by OpenStudio application).")
+            end
 
-          wgXMLs.each_index do |i|
-            rad_command = "dctimestep output/dc/#{wg}.vmx bsdf/#{wgXMLs[i].strip} output/dc/#{wg}.dmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}_#{wgXMLs[i].split[0]}.ill"
-            runner.registerInfo("#{Time.now.getutc}: #{rad_command}")
-            exec_statement(rad_command, runner)
+            wgXMLs.each_index do |i|
+              rad_command = "dctimestep output/dc/#{wg}.vmx bsdf/#{wgXMLs[i].strip} output/dc/#{wg}.dmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}_#{wgXMLs[i].split[0]}.ill"
+              runner.registerInfo("#{Time.now.getutc}: #{rad_command}")
+              exec_statement(rad_command, runner)
+            end
+          
           end
 
         end
@@ -590,9 +625,9 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         windowGroups = File.open("bsdf/mapping.rad")
         windowGroups.each do |wg|
 
-          next if wg[0] == "#"
+          next if wg[0] == "#"              # skip header
           windowGroup = wg.split(",")[0]
-          next if windowGroup == "WG0"
+          next if windowGroup == "WG0"      # skip unshaded windows
 
           wgIllumFiles = Dir.glob("output/ts/#{windowGroup}_*.ill")
 
@@ -703,7 +738,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
       ## window merge end
 
-      rawValues = parseResults(simulations, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_radPath, write_sql, runner)
+      rawValues = parseResults(simulations, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_radPath, runner)
 
       dcVectors = nil
 
@@ -735,7 +770,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     end # runSimulation()
 
     # function renamed from execSimulation() to parseResults()
-    def parseResults(t_cmds, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_radPath, write_sql, runner)
+    def parseResults(t_cmds, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_radPath, runner)
 
       status_string = "#{Time.now.getutc}: parsing daylighting results"
       runner.registerInfo(status_string)
@@ -921,7 +956,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 
     def annualSimulation(t_sqlFile, t_epwFile, t_space_names_to_calculate, t_radMaps, t_spaceWidths, t_spaceHeights, t_radMapPoints, \
-      t_radGlareSensorViews, t_simCores, t_site_latitude, t_site_longitude, t_site_stdmeridian, t_outPath, t_building, t_values, t_dcVectors, write_sql, runner)
+      t_radGlareSensorViews, t_simCores, t_site_latitude, t_site_longitude, t_site_stdmeridian, t_outPath, t_building, t_values, t_dcVectors, runner)
       sqlOutPath = OpenStudio::Path.new("#{Dir.pwd}/output/radout.sql")
       if OpenStudio::exists(sqlOutPath)
         OpenStudio::remove(sqlOutPath)
@@ -1096,62 +1131,61 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
               f.close
             end
 
-            # all results to sql
-            
-            if write_sql == "Yes"
-              status_string = "#{Time.now.getutc}: writing Radiance results database..."
-              runner.registerInfo(status_string)
+            # all results to sql      
 
-              writeTimeSeriesToSql(sqlOutFile, simDateTimes, dirNormIllum, space_name, "Direct Normal Illuminance", "lux")
-              writeTimeSeriesToSql(sqlOutFile, simDateTimes, diffHorizIllum, space_name, "Global Horizontal Illuminance", "lux")
-              writeTimeSeriesToSql(sqlOutFile, simDateTimes, daylightSensorIlluminance, space_name, "Daylight Sensor Illuminance", "lux")
-              writeTimeSeriesToSql(sqlOutFile, simDateTimes, meanIlluminanceMap, space_name, "Mean Illuminance Map", "lux")
+            status_string = "#{Time.now.getutc}: writing Radiance results database..."
+            runner.registerInfo(status_string)
 
-              if t_radGlareSensorViews[space_name]
-                writeTimeSeriesToSql(sqlOutFile, simDateTimes, minDGP, space_name, "Minimum Simplified Daylight Glare Probability", "")
-                writeTimeSeriesToSql(sqlOutFile, simDateTimes, meanDGP, space_name, "Mean Simplified Daylight Glare Probability", "")
-                writeTimeSeriesToSql(sqlOutFile, simDateTimes, maxDGP, space_name, "Maximum Simplified Daylight Glare Probability", "")
-              end
+            writeTimeSeriesToSql(sqlOutFile, simDateTimes, dirNormIllum, space_name, "Direct Normal Illuminance", "lux")
+            writeTimeSeriesToSql(sqlOutFile, simDateTimes, diffHorizIllum, space_name, "Global Horizontal Illuminance", "lux")
+            writeTimeSeriesToSql(sqlOutFile, simDateTimes, daylightSensorIlluminance, space_name, "Daylight Sensor Illuminance", "lux")
+            writeTimeSeriesToSql(sqlOutFile, simDateTimes, meanIlluminanceMap, space_name, "Mean Illuminance Map", "lux")
 
-              # I really have no idea how to populate these fields
-              sqlOutFile.insertZone(space_name,
-                                    0,
-                                    0,0,0,
-                                    0,0,0,
-                                    0,
-                                    0,
-                                    0,
-                                    0, 0,
-                                    0, 0,
-                                    0, 0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    true)
-
-              xs = OpenStudio::DoubleVector.new()
-
-              nx.times do |n|
-                xs << xmin + (n * xSpacing)
-              end
-
-              ys = OpenStudio::DoubleVector.new()
-
-              ny.times do |n|
-                ys << ymin + (n * ySpacing)
-              end
-
-              sqlOutFile.insertIlluminanceMap(space_name, space_name + " DAYLIGHT MAP", t_epwFile.get().wmoNumber(),
-                                              simDateTimes, xs, ys, map.originZCoordinate, 
-                                              illuminanceMatrixMaps)
-          
+            if t_radGlareSensorViews[space_name]
+              writeTimeSeriesToSql(sqlOutFile, simDateTimes, minDGP, space_name, "Minimum Simplified Daylight Glare Probability", "")
+              writeTimeSeriesToSql(sqlOutFile, simDateTimes, meanDGP, space_name, "Mean Simplified Daylight Glare Probability", "")
+              writeTimeSeriesToSql(sqlOutFile, simDateTimes, maxDGP, space_name, "Maximum Simplified Daylight Glare Probability", "")
             end
+
+            # I really have no idea how to populate these fields
+            sqlOutFile.insertZone(space_name,
+                                  0,
+                                  0,0,0,
+                                  0,0,0,
+                                  0,
+                                  0,
+                                  0,
+                                  0, 0,
+                                  0, 0,
+                                  0, 0,
+                                  0,
+                                  0,
+                                  0,
+                                  0,
+                                  0,
+                                  0,
+                                  0,
+                                  0,
+                                  true)
+
+            xs = OpenStudio::DoubleVector.new()
+
+            nx.times do |n|
+              xs << xmin + (n * xSpacing)
+            end
+
+            ys = OpenStudio::DoubleVector.new()
+
+            ny.times do |n|
+              ys << ymin + (n * ySpacing)
+            end
+
+            sqlOutFile.insertIlluminanceMap(space_name, space_name + " DAYLIGHT MAP", t_epwFile.get().wmoNumber(),
+                                            simDateTimes, xs, ys, map.originZCoordinate, 
+                                            illuminanceMatrixMaps)
+          
           end
+          
         end
 
         sqlOutFile.createIndexes
@@ -1371,6 +1405,10 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
       building_average_space = []
       building_average = ""
+      building_average_space_cda = []
+      building_average_cda = ""
+      building_average_space_udi = []
+      building_average_udi = ""
 
       # loop through all the spaces
       # building = model.getBuilding
@@ -1406,6 +1444,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         end
   
         runner.registerInfo("Calculating Daylight Metrics for Space #{space_name}")
+  
+        puts "Calculating Daylight Metrics for Space #{space_name}"
   
         da_daylit = []
         da_occupied = []
@@ -1666,28 +1706,41 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         annual_sda = sda_sum.to_f / sda_num.to_f
         summary_report += "#{space_name},sDA(300),8AM-5PM (10 hours/day per IESNA LM-83-12),#{annual_sda.round(2)},#{sda_sum.round(0)},#{sda_num}\n"
         
-        # Make a building average (sDA)
-
-        building_average_space << annual_sda
+        # Make building average metrics
+        
+        # DA
+        building_average_space << annual_da_daylit_occupied
+        # cDA
+        building_average_space_cda << annual_cda_daylit_occupied
+        # UDI
+        building_average_space_udi << annual_udi_daylit_occupied
 
       end
 
       # DLM: can we make some more metrics that are area weighted rather than just space weighted?
       building_average_space_sum = 0.0
       building_average_space.each {|e| building_average_space_sum += e}
+      building_average_space_cda_sum = 0.0
+      building_average_space_cda.each {|e| building_average_space_cda_sum += e}
+      building_average_space_udi_sum = 0.0
+      building_average_space_udi.each {|e| building_average_space_udi_sum += e}
 
       # catch zero condition
       if building_average_space_sum == 0.0
         building_average = 0.0
-        runner.registerInfo("warning: Spatial Daylight Autonomy for building is zero, check daylighting control point(s) setup.")
+        runner.registerInfo("warning: Daylight Autonomy for building is zero, check daylighting control point(s) setup.")
       else
         building_average = building_average_space_sum / building_average_space.length
-        runner.registerValue("sDA", building_average.round(2))
+        runner.registerValue("DA", building_average.round(2))
+        building_average_cda = building_average_space_cda_sum / building_average_space_cda.length
+        runner.registerValue("cDA", building_average_cda.round(2))
+        building_average_udi = building_average_space_udi_sum / building_average_space_udi.length
+        runner.registerValue("UDI", building_average_udi.round(2))        
       end
 
       File.open("output/daylight_metrics.csv", 'w') do |file|
         file.puts "# OpenStudio Daylight Metrics Report"
-        file.puts "# Average spatial daylight autonomy (sDA) for building daylit spaces: #{building_average.round(2)}"
+        file.puts "# Building average daylight metrics (daylit spaces): DA = #{building_average.round(2)} cDA = #{building_average_cda.round(2)} UDI = #{building_average_udi.round(2)}"
         file.puts "#[space_name],[metric(setpoint)],[input_hours_range],[metric_value],[hours_met],[input_hours]"       
         file.puts summary_report
       end
@@ -1712,14 +1765,14 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       exec_statement("#{catCommand} skies/render_sky_input skies/render_sky_skyfuncs > skies/render.sky", runner)
 
       # make octree
-      rad_command = "oconv materials/materials.rad model.rad skies/render.sky > images.oct"
+      rad_command = "oconv materials/materials.rad model.rad skies/render.sky > octrees/images.oct"
       exec_statement(rad_command, runner)
       
       # do views
       views_daylighting_control = Dir.glob('views/*_dc.vfh')
       views_daylighting_control.each do |dc|
       
-        rad_command = "rpict -av .3 .3 .3 -ab 1 -vf #{dc} images.oct | ra_bmp - #{dc}.bmp"
+        rad_command = "rpict -av .3 .3 .3 -ab 1 -vf #{dc} octrees/images.oct | ra_bmp - #{dc}.bmp"
         exec_statement(rad_command, runner)
 
       end
@@ -1727,7 +1780,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       views_glare_sensor = Dir.glob('views/*_gs.vfv')
       views_glare_sensor.each do |gv|
       
-        rad_command = "rpict -av .3 .3 .3 -ab 1 -vf #{gv} images.oct > temp.hdr"
+        rad_command = "rpict -av .3 .3 .3 -ab 1 -vf #{gv} octrees/images.oct > temp.hdr"
         exec_statement(rad_command, runner)
         rad_command = "pcond -h temp.hdr | ra_bmp - #{gv}.bmp"
         exec_statement(rad_command, runner)
@@ -1910,13 +1963,13 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     # make merged building-wide illuminance schedule(s)
     values, dcVectors = runSimulation(space_names_to_calculate, sqlFile, sim_cores, 
     options_skyvecDensity, site_latitude, site_longitude, site_meridian, radPath, spaceWidths,
-    spaceHeights, radGlareSensorViews, runner, write_sql)
+    spaceHeights, radGlareSensorViews, runner)
 
     # make space-level illuminance schedules and radout.sql results database
     # hoping this is no longer necessary...
     annualSimulation(sqlFile, epwFile, space_names_to_calculate, radMaps, spaceWidths, spaceHeights,
       radMapPoints, radGlareSensorViews, sim_cores, site_latitude, site_longitude,
-      site_meridian, radPath, building, values, dcVectors, write_sql, runner)
+      site_meridian, radPath, building, values, dcVectors, runner)
 
     # make new lighting power schedules based on Radiance daylight data
     makeSchedules(model, sqlFile, runner)
@@ -1936,7 +1989,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
     # cleanup
     FileUtils.rm('annual-sky.mtx')
-    FileUtils.rm Dir.glob('*.oct')
+    #FileUtils.rm Dir.glob('*.oct')
 
     # report initial condition of model
     daylightAnalysisSpaces = []
