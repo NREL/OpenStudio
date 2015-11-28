@@ -151,9 +151,16 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
     # generate data for requested sections
     sections_made = 0
     possible_sections.each do |method_name|
-      next unless args[method_name]
-      eval("@sections <<  OsLib_Reporting.#{method_name}(model,sql_file,runner,false)")
-      sections_made += 1
+
+      begin
+        next unless args[method_name]
+        eval("@sections <<  OsLib_Reporting.#{method_name}(model,sql_file,runner,false)")
+        sections_made += 1
+      rescue => e
+        runner.registerWarning("Reporting section #{method_name} failed and will be skipped because: #{e}. Detail on error follows.")
+        runner.registerWarning("#{e.backtrace.join("\n")}")
+      end
+
     end
 
     # read in template

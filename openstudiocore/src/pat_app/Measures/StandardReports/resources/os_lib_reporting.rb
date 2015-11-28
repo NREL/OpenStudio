@@ -3387,7 +3387,7 @@ module OsLib_Reporting
         runner.registerError("Inflation approach: #{inf_appr.get} not recognized")
         return false
       end
-      runner.registerInfo("Inflation approach = #{inf_appr}")
+      runner.registerValue("inflation_approach", inf_appr)
     else
       runner.registerError('Could not determine inflation approach used')
       return false
@@ -3412,8 +3412,10 @@ module OsLib_Reporting
     length_yrs_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' AND ReportForString='Entire Facility' AND TableName='Life-Cycle Cost Parameters' AND RowName='Length of Study Period in Years' AND ColumnName='Value'"
     length_yrs = sqlFile.execAndReturnFirstInt(length_yrs_query)
     if length_yrs.is_initialized
+      #runner.registerError('test error')
+      return false
       length_yrs = length_yrs.get
-      runner.registerInitialCondition("Analysis length = #{length_yrs} yrs")
+      runner.registerValue("analysis_length", length_yrs, "yrs")
     else
       runner.registerError('Could not determine analysis length')
       return false
