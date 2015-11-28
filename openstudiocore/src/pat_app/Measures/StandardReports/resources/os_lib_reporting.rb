@@ -3412,8 +3412,6 @@ module OsLib_Reporting
     length_yrs_query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='Life-Cycle Cost Report' AND ReportForString='Entire Facility' AND TableName='Life-Cycle Cost Parameters' AND RowName='Length of Study Period in Years' AND ColumnName='Value'"
     length_yrs = sqlFile.execAndReturnFirstInt(length_yrs_query)
     if length_yrs.is_initialized
-      #runner.registerError('test error')
-      return false
       length_yrs = length_yrs.get
       runner.registerValue("analysis_length", length_yrs, "yrs")
     else
