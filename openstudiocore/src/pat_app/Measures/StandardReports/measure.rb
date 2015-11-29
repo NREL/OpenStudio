@@ -154,10 +154,23 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
 
       begin
         next unless args[method_name]
-        eval("@sections <<  OsLib_Reporting.#{method_name}(model,sql_file,runner,false)")
-        sections_made += 1
+        section = false
+        eval("section = OsLib_Reporting.#{method_name}(model,sql_file,runner,false)")
+        display_name = eval("OsLib_Reporting.#{method_name}(nil,nil,nil,true)[:title]")
+        if section
+          @sections << section
+          sections_made += 1
+          # look for emtpy tables and warn if skipped because returned empty
+          section[:tables].each do |table|
+            if not table
+              runner.registerWarning("Table in #{display_name} section returned false and will be skipped.")
+            end
+          end
+        else
+          runner.registerWarning("#{display_name} section returned false and will be skipped.")
+        end
       rescue => e
-        runner.registerWarning("Reporting section #{method_name} failed and will be skipped because: #{e}. Detail on error follows.")
+        runner.registerWarning("#{display_name} section failed and will be skipped because: #{e}. Detail on error follows.")
         runner.registerWarning("#{e.backtrace.join("\n")}")
       end
 

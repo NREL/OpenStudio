@@ -252,7 +252,7 @@ module OsLib_Reporting
     query << "Units='m2';"
     query_results = sqlFile.execAndReturnFirstDouble(query)
     if query_results.empty?
-      runner.registerError('Did not find value for total building area.')
+      runner.registerWarning('Did not find value for total building area.')
       return false
     else
       display = 'Total Building Area'
@@ -543,7 +543,7 @@ module OsLib_Reporting
       query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='SystemSummary' and TableName = 'Time Setpoint Not Met' and RowName= 'Facility' and ColumnName='#{cat}';"
       setpoint_not_met_cat_value = sqlFile.execAndReturnFirstDouble(query)
       if setpoint_not_met_cat_value.empty?
-        runner.registerError("Did not find value for #{cat}.")
+        runner.registerWarning("Did not find value for #{cat}.")
         return false
       else
         # net site energy
@@ -1602,7 +1602,7 @@ module OsLib_Reporting
       west = sqlFile.execAndReturnFirstDouble(query4)
       skylight = sqlFile.execAndReturnFirstDouble(query5)
       if total.empty? || north.empty? || east.empty? || south.empty? || west.empty?
-        runner.registerError('Did not find value for Window or Skylight Ratio')
+        runner.registerWarning('Did not find value for Window or Skylight Ratio')
         return false
       else
         # add data
@@ -1715,7 +1715,7 @@ module OsLib_Reporting
     total_watts = sqlFile.execAndReturnFirstDouble(query0)
     consumption = sqlFile.execAndReturnFirstDouble(query1)
     if total_watts.empty? || consumption.empty?
-      runner.registerError('Did not find value for Exterior Lighting Total.')
+      runner.registerWarning('Did not find value for Exterior Lighting Total.')
       return false
     else
       # add data
@@ -3384,12 +3384,12 @@ module OsLib_Reporting
       elsif inf_appr.get == 'CurrentDollar'
         inf_appr = 'Current Dollar'
       else
-        runner.registerError("Inflation approach: #{inf_appr.get} not recognized")
+        runner.registerWarning("Inflation approach: #{inf_appr.get} not recognized")
         return false
       end
       runner.registerValue("inflation_approach", inf_appr)
     else
-      runner.registerError('Could not determine inflation approach used')
+      runner.registerWarning('Could not determine inflation approach used')
       return false
     end
 
@@ -3400,11 +3400,11 @@ module OsLib_Reporting
       if base_yr.get.match(/\d\d\d\d/)
         base_yr = base_yr.get.match(/\d\d\d\d/)[0].to_f
       else
-        runner.registerError("Could not determine the analysis start year from #{base_yr.get}")
+        runner.registerWarning("Could not determine the analysis start year from #{base_yr.get}")
         return false
       end
     else
-      runner.registerError('Could not determine analysis start year')
+      runner.registerWarning('Could not determine analysis start year')
       return false
     end
 
@@ -3415,7 +3415,7 @@ module OsLib_Reporting
       length_yrs = length_yrs.get
       runner.registerValue("analysis_length", length_yrs, "yrs")
     else
-      runner.registerError('Could not determine analysis length')
+      runner.registerWarning('Could not determine analysis length')
       return false
     end
 

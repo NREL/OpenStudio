@@ -113,6 +113,7 @@
       <div id="tocItems" class="bs-docs-sidebar hidden-print well affix" role="complementary">
         <ul class="nav nav-pills nav-stacked" role="navigation">
           <% @sections.each do |section| %>
+              <% next if not section %>
               <li><a href="#<%= section[:title].gsub(' ', '_').gsub('/', '_') %>"><%= section[:title] %></a></li>
           <% end %>
         </ul>
@@ -122,8 +123,10 @@
       <h1>OpenStudio Results</h1>
       <% chart_index = table_index = 0 %>
       <% @sections.each do |section| %>
+          <% next if not section %>
           <h2 id="<%= section[:title].gsub(' ', '_').gsub('/', '_') %>"><%= section[:title] %></h2>
           <% section[:tables].each do |table| %>
+              <% next if not table %>
               <br>
               <button class="btn btn-primary" type="button" data-toggle="collapse" data-target=<%= "#table_#{table_index}" %> aria-expanded="false" aria-controls=<%= "table_#{table_index}" %>>
                 <% if not table[:title] == '' and table.has_key?(:chart_type) %>
