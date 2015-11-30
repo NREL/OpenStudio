@@ -264,6 +264,11 @@ module OsLib_Reporting
       runner.registerValue(display.downcase.gsub(" ","_"), value, target_units)
     end
 
+    # temp code to check OS vs. E+ area
+    puts "area test"
+    puts "E+ reported area is #{query_results.get}"
+    puts "OpenStudio reported area is #{model.getBuilding.floorArea}"
+
     # EUI
     eui =  sqlFile.netSiteEnergy.get / query_results.get
     display = 'EUI'
@@ -940,6 +945,7 @@ module OsLib_Reporting
 
   # summary of what to show for each type of plant loop component
   def self.plant_loop_component_summary_logic(component, model)
+    data_arrays = []
     if component.to_PumpConstantSpeed.is_initialized
       component = component.to_PumpConstantSpeed.get
       sizing_source_units = 'm^3/s'
@@ -959,7 +965,7 @@ module OsLib_Reporting
         value_ip_neat = 'Autosized'
       end
       description = 'Rated Power Consumption'
-      data_array =  [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
+      data_arrays <<  [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
 
     elsif component.to_PumpVariableSpeed.is_initialized
       component = component.to_PumpVariableSpeed.get
@@ -980,7 +986,7 @@ module OsLib_Reporting
         value_ip_neat = 'Autosized'
       end
       description = 'Rated Power Consumption'
-      data_array =  [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
+      data_arrays <<  [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
 
     elsif component.to_BoilerHotWater.is_initialized
       component = component.to_BoilerHotWater.get
@@ -997,7 +1003,7 @@ module OsLib_Reporting
       value = component.nominalThermalEfficiency
       value_neat = OpenStudio.toNeatString(value, 2, true)
       description = 'Nominal Thermal Efficiency'
-      data_array =  [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_neat, value_target_units, '']
+      data_arrays <<  [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_neat, value_target_units, '']
 
     elsif component.to_WaterHeaterMixed.is_initialized
       component = component.to_WaterHeaterMixed.get
@@ -1018,7 +1024,7 @@ module OsLib_Reporting
         value_neat = '' # not sure what that would default to if it wasn't there
       end
       description = 'Heater Thermal Efficiency'
-      data_array =  [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_neat, value_target_units, '']
+      data_arrays <<  [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_neat, value_target_units, '']
 
     elsif component.to_ChillerElectricEIR.is_initialized
       component = component.to_ChillerElectricEIR.get
@@ -1033,13 +1039,13 @@ module OsLib_Reporting
       value = component.referenceCOP
       value_neat = OpenStudio.toNeatString(value, 2, true)
       description = 'Reference COP'
-      data_array = [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_neat, '', '']
+      data_arrays << [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_neat, '', '']
 
       # second line to indicate if water or air cooled
       if component.secondaryPlantLoop.is_initialized
-        data_array = ["#{component.iddObject.name} (cont)", '', '', 'Chiller Source', component.secondaryPlantLoop.get.name, '', '']
+        data_arrays << ["#{component.iddObject.name} (cont)", '', '', 'Chiller Source', component.secondaryPlantLoop.get.name, '', '']
       else
-        data_array = ["#{component.iddObject.name} (cont)", '', '', 'Chiller Source', 'Air Cooled', '', '']
+        data_arrays << ["#{component.iddObject.name} (cont)", '', '', 'Chiller Source', 'Air Cooled', '', '']
       end
 
     elsif component.to_CoolingTowerSingleSpeed.is_initialized
@@ -1054,7 +1060,7 @@ module OsLib_Reporting
       else
         sizing_ip_neat = 'Autosized'
       end
-      data_array = ["#{component.iddObject.name} - Air", sizing_ip_neat, sizing_target_units, '', '', '', '']
+      data_arrays << ["#{component.iddObject.name} - Air", sizing_ip_neat, sizing_target_units, '', '', '', '']
 
       # data for air
       component = component.to_CoolingTowerSingleSpeed.get
@@ -1075,7 +1081,7 @@ module OsLib_Reporting
         value_ip_neat = 'Autosized'
       end
       description = 'Fan Power at Design Air Flow Rate'
-      data_array = ["#{component.iddObject.name} (cont) - Water", sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
+      data_arrays << ["#{component.iddObject.name} (cont) - Water", sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
 
     elsif component.to_SetpointManagerScheduled.is_initialized
       setpoint = component.to_SetpointManagerScheduled.get
@@ -1094,18 +1100,18 @@ module OsLib_Reporting
           target_units = 'raw si values'
         end
       end
-      data_array = [setpoint.iddObject.name, '', '', "Control Variable - #{setpoint.controlVariable}", schedule_values_pretty, target_units, '']
+      data_arrays << [setpoint.iddObject.name, '', '', "Control Variable - #{setpoint.controlVariable}", schedule_values_pretty, target_units, '']
 
     elsif component.to_SetpointManagerFollowOutdoorAirTemperature.is_initialized
       setpoint = component.to_SetpointManagerFollowOutdoorAirTemperature.get
       ref_temp_type = setpoint.referenceTemperatureType
-      data_array = [setpoint.iddObject.name, '', '', 'Reference Temperature Type', ref_temp_type, 'Choice', '']
+      data_arrays << [setpoint.iddObject.name, '', '', 'Reference Temperature Type', ref_temp_type, 'Choice', '']
 
     else
-      data_array = [component.iddObject.name, '', '', '', '', '', '']
+      data_arrays << [component.iddObject.name, '', '', '', '', '', '']
     end
 
-    return data_array
+    return data_arrays
   end
 
   # create table plant loop summary
@@ -1146,11 +1152,17 @@ module OsLib_Reporting
           if setpoint_managers.size > 0
             # setpoint type
             setpoint = setpoint_managers[0] # TODO: - could have more than one in some situations
-            output_data_plant_loops[:data] << OsLib_Reporting.plant_loop_component_summary_logic(setpoint, model)
+            data_arrays = OsLib_Reporting.plant_loop_component_summary_logic(setpoint, model)
+            data_arrays.each do |data_array| # typically just one, but in some cases there are a few
+              output_data_plant_loops[:data] << data_array
+            end
           end
         else
           # populate table for everything but setpoint managers, which are added above.
-          output_data_plant_loops[:data] << OsLib_Reporting.plant_loop_component_summary_logic(component, model)
+          data_arrays = OsLib_Reporting.plant_loop_component_summary_logic(component, model)
+          data_arrays.each do |data_array| # typically just one, but in some cases there are a few
+            output_data_plant_loops[:data] << data_array
+          end
         end
       end
 
