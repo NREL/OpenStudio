@@ -190,13 +190,13 @@ bool DateTime::operator>= (const DateTime& rhs) const
 }
 
 /// getter to date
-const Date& DateTime::date() const
+Date DateTime::date() const
 {
   return m_date;
 }
 
 /// getter to time
-const Time& DateTime::time() const
+Time DateTime::time() const
 {
   return m_time;
 }

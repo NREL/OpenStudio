@@ -9,20 +9,21 @@ ln -sFf "$2/Applications/${CMAKE_PROJECT_NAME} ${OPENSTUDIO_VERSION}/Ruby/openst
 
 #---------- Write a plugin-config.rb file for later installation ----------
 # And put it in the install folder for later reuse by the user if needed
-config_file="$ruby_install_dir/Plugins/OpenStudio/OpenStudio-config.rb"
-echo "require '$2/Applications/${CMAKE_PROJECT_NAME} ${OPENSTUDIO_VERSION}/Ruby/openstudio'" > "$config_file"
+config_file="$ruby_install_dir/Plugins/OpenStudio/OpenStudio-config"
+echo "$OPENSTUDIO_SKETCHUPPLUGIN_VERSION = '${OPENSTUDIO_VERSION}' \n require '$2/Applications/${CMAKE_PROJECT_NAME} ${OPENSTUDIO_VERSION}/Ruby/openstudio'" > "$config_file"
 chmod 755 "$config_file"
 chown $USER "$config_file"
 
 
-#---------- Install plugin for SketchUp 2015 ----------
-# Check for the SketchUp 15 Application Support directory
-SU15_support_dir="/Library/Application Support/SketchUp 2015"
-mkdir -p "$SU15_support_dir/SketchUp/Plugins/OpenStudio"
+#---------- Install plugin for SketchUp 201 ----------
+# Check for the SketchUp 16 Application Support directory
+SU16_support_dir="/Library/Application Support/SketchUp 2016"
+mkdir -p "$SU16_support_dir/SketchUp/Plugins/OpenStudio"
 # copy the plugin into the directory
-cp "$ruby_install_dir/Plugins/OpenStudio.rb" "$SU15_support_dir/SketchUp/Plugins/OpenStudio.rb"
-cp "$ruby_install_dir/Plugins/OpenStudio/Startup.rb" "$SU15_support_dir/SketchUp/Plugins/OpenStudio/Startup.rb"
-cp "$config_file" "$SU15_support_dir/SketchUp/Plugins/OpenStudio/OpenStudio-config.rb"
+cp "$ruby_install_dir/Plugins/OpenStudio.rb" "$SU16_support_dir/SketchUp/Plugins/OpenStudio.rb"
+cp "$ruby_install_dir/Plugins/OpenStudio/Startup.rb" "$SU16_support_dir/SketchUp/Plugins/OpenStudio/Startup.rb"
+cp "$config_file" "$SU16_support_dir/SketchUp/Plugins/OpenStudio/OpenStudio-config"
+cp "$ruby_install_dir/Plugins/OpenStudio/OpenStudio.hash" "$SU16_support_dir/SketchUp/Plugins/OpenStudio/OpenStudio.hash"
 
 
 #---------- Installation Directory Icon ----------

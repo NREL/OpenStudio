@@ -40,6 +40,10 @@ OSSwitch2::OSSwitch2( QWidget * parent )
   this->setCheckable(true);
 }
 
+OSSwitch2::~OSSwitch2()
+{
+}
+
 void OSSwitch2::makeOnOff()
 {
   setObjectName("OnOffSliderButton");

@@ -72,7 +72,7 @@ protected:
 
 private:
 
-  void update(bool weatherFileBtnClicked = false);
+  void update();
 
   void loadQSettings();
 
@@ -158,7 +158,8 @@ public:
   LocationTabView(const model::Model & model,
                   const QString& modelTempDir,
                   QWidget * parent = nullptr);
-  virtual ~LocationTabView() {}
+
+  virtual ~LocationTabView();
 
 private:
 

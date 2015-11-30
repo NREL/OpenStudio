@@ -26,6 +26,8 @@ namespace openstudio {
 
 namespace model {
 
+class ControllerWaterCoil;
+
 namespace detail {
 
 class MODEL_API WaterToAirComponent_Impl : public HVACComponent_Impl {
@@ -88,6 +90,8 @@ class MODEL_API WaterToAirComponent_Impl : public HVACComponent_Impl {
   virtual bool removeFromAirLoopHVAC();
 
   virtual bool removeFromPlantLoop();
+
+  boost::optional<ControllerWaterCoil> controllerWaterCoil();
  private:
   REGISTER_LOGGER("openstudio.model.WaterToAirComponent");
 };

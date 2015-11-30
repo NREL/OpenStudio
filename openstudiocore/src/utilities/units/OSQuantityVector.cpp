@@ -89,7 +89,7 @@ UnitSystem OSQuantityVector::system() const {
   return m_units.system();
 }
 
-const Scale& OSQuantityVector::scale() const {
+Scale OSQuantityVector::scale() const {
   return m_units.scale();
 }
 

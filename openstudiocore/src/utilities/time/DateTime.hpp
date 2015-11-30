@@ -106,10 +106,10 @@ class UTILITIES_API DateTime {
   bool operator>= (const DateTime& rhs) const;
 
   /// getter to date member
-  const Date& date() const;
+  Date date() const;
 
   /// getter to time member
-  const Time& time() const;
+  Time time() const;
 
   /// convert to string
   std::string toString() const;

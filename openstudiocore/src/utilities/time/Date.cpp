@@ -172,7 +172,6 @@ namespace openstudio{
   Date Date::fromDayOfYear(unsigned dayOfYear)
   {
     Date result;
-    result.m_impl.reset();
     result.m_assumedBaseYear = YearDescription().assumedYear();
     result.initFromYearDayOfYear(result.m_assumedBaseYear, dayOfYear);
     return result;
@@ -181,7 +180,6 @@ namespace openstudio{
   Date Date::fromDayOfYear(unsigned dayOfYear, int year)
   {
     Date result;
-    result.m_impl.reset();
     result.m_baseYear = year;
     result.m_assumedBaseYear = year;
     result.initFromYearDayOfYear(year, dayOfYear);
@@ -191,7 +189,6 @@ namespace openstudio{
   Date Date::fromDayOfYear(unsigned dayOfYear, const YearDescription& yearDescription)
   {
     Date result;
-    result.m_impl.reset();
     result.m_assumedBaseYear = yearDescription.assumedYear();
     result.initFromYearDayOfYear(result.m_assumedBaseYear, dayOfYear);
     return result;
@@ -219,7 +216,7 @@ namespace openstudio{
 
   /// from impl
   Date::Date(const Date::ImplType& impl)
-    : m_impl(ImplPtr(new ImplType(impl))),
+    : m_impl(impl),
       m_assumedBaseYear(impl.year())
   {}
 
@@ -251,14 +248,14 @@ namespace openstudio{
     boost::gregorian::date date;
     ss >> date;
 
-    m_impl = std::shared_ptr<boost::gregorian::date>(new boost::gregorian::date(date));
+    m_impl = date;
   }
 
   /// from tm
   Date::Date(tm t_tm)
-    : m_impl(new ImplType(boost::gregorian::date_from_tm(t_tm))),
-      m_baseYear(m_impl->year()),
-      m_assumedBaseYear(m_impl->year())
+    : m_impl(boost::gregorian::date_from_tm(t_tm)),
+      m_baseYear(m_impl.year()),
+      m_assumedBaseYear(m_impl.year())
   {
   }
 
@@ -273,7 +270,7 @@ namespace openstudio{
   {
     m_baseYear = other.m_baseYear;
     m_assumedBaseYear = other.m_assumedBaseYear;
-    m_impl = std::shared_ptr<ImplType>(new ImplType(*other.m_impl));
+    m_impl = other.m_impl;
     return *this;
   }
 
@@ -288,7 +285,7 @@ namespace openstudio{
   /// assignment by addition operator
   Date& Date::operator+= (const Time& time)
   {
-    (*m_impl) += date_duration(time.days());
+    m_impl += date_duration(time.days());
     return *this;
   }
 
@@ -303,14 +300,14 @@ namespace openstudio{
   /// assignment by difference operator
   Date& Date::operator-= (const Time& time)
   {
-    (*m_impl) -= date_duration(time.days());
+    m_impl -= date_duration(time.days());
     return *this;
   }
 
   /// time duration
   Time Date::operator- (const Date& date) const
   {
-    boost::gregorian::date_duration duration( (*m_impl)-(*date.m_impl) );
+    boost::gregorian::date_duration duration( (m_impl)-(date.m_impl) );
     return Time(duration.days());
   }
 
@@ -392,25 +389,25 @@ namespace openstudio{
 
   int Date::year() const
   {
-    return m_impl->year();
+    return m_impl.year();
   }
 
   /// month of year
   MonthOfYear Date::monthOfYear() const
   {
-    return m_impl->month().as_enum();
+    return m_impl.month().as_enum();
   }
 
   /// day of month
   unsigned Date::dayOfMonth() const
   {
-    return m_impl->day();
+    return m_impl.day();
   };
 
   /// day of year
   unsigned Date::dayOfYear() const
   {
-    return m_impl->day_of_year();
+    return m_impl.day_of_year();
   };
 
   /// is year a leap year
@@ -422,19 +419,21 @@ namespace openstudio{
   /// day of the week
   DayOfWeek Date::dayOfWeek() const
   {
-    return DayOfWeek(m_impl->day_of_week());
+    return DayOfWeek(m_impl.day_of_week());
   };
 
   // initFromYearMonthDay
   void Date::initFromYearMonthDay(int year, MonthOfYear monthOfYear, unsigned dayOfMonth)
   {
+    bool initialized = false;
     try{
       // construct with year, month, day
-      m_impl = ImplPtr(new ImplType(year, monthOfYear.value(), dayOfMonth));
+      m_impl = ImplType(year, monthOfYear.value(), dayOfMonth);
+      initialized = true;
     }catch(...){
     }
 
-    if (!m_impl || m_impl->is_not_a_date()){
+    if (!initialized || m_impl.is_not_a_date()){
       LOG_AND_THROW("Bad Date: year = " << year << ", month = " << monthOfYear << 
           ", day = " << dayOfMonth << ". ");
     }
@@ -443,6 +442,7 @@ namespace openstudio{
   // initFromYearDayOfYear
   void Date::initFromYearDayOfYear(int year, unsigned dayOfYear)
   {
+    bool initialized = false;
     try{
       // get days in this year, can throw bad_year
       unsigned daysInYear;
@@ -456,24 +456,25 @@ namespace openstudio{
       if ((dayOfYear >= 1) && (dayOfYear <= daysInYear)){
 
         // construct at Jan, 1 of year
-        m_impl = ImplPtr(new ImplType(year, 1, 1));
+        m_impl = ImplType(year, 1, 1);
 
         // add day of year minus one to impl
-        (*m_impl) += date_duration(dayOfYear-1);
+        m_impl += date_duration(dayOfYear-1);
+
+        initialized = true;
       };
 
     }catch(...){
     }
 
-    if (!m_impl || m_impl->is_not_a_date() ){
+    if (!initialized || m_impl.is_not_a_date()){
       LOG_AND_THROW("Bad Date: year = " << year << ", dayOfYear = " << dayOfYear <<  ". ");
     }
   }
 
-  // reference to impl
-  const Date::ImplType& Date::impl() const
+  const Date::ImplType Date::impl() const
   {
-    return *m_impl;
+    return m_impl;
   }
 
   // std::ostream operator<<

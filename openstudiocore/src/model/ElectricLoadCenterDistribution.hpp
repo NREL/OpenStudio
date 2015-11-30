@@ -39,7 +39,12 @@ namespace detail {
 
 } // detail
 
-/** ElectricLoadCenterDistribution is a ParentObject that wraps the OpenStudio IDD object 'OS:ElectricLoadCenter:Distribution'. */
+/** ElectricLoadCenterDistribution is a ParentObject that wraps the OpenStudio IDD object 'OS:ElectricLoadCenter:Distribution'. 
+ *  There is no ElectricLoadCenter:Generators object in OpenStudio.  Instead, the ElectricLoadCenterDistribution object references
+ *  a model object list which references all of the associated generators.  The rated electric power, availability schedule, and thermal
+ *  to electric power ratio fields are contained in the generator objects themselves rather than the ElectricLoadCenter:Generators 
+ *  as in EnergyPlus. Electric storage and transformers will be added at a later date.
+*/
 class MODEL_API ElectricLoadCenterDistribution : public ParentObject {
  public:
   /** @name Constructors and Destructors */
@@ -60,6 +65,7 @@ class MODEL_API ElectricLoadCenterDistribution : public ParentObject {
   /** @name Getters */
   //@{
 
+  /// Returns associated generators, note there is no ElectricLoadCenter:Generators object in OpenStudio.
   std::vector<Generator> generators() const;
 
   std::string generatorOperationSchemeType() const;

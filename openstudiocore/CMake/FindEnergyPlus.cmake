@@ -42,13 +42,15 @@
 # (To distributed this file outside of CMake, substitute the full
 #  License text for the above reference.)
 
-if(WIN32)
-  file(GLOB ENERGYPLUS_POSSIBLE_PATHS "C:/[eE]nergy[pP]lus?*")
-elseif(APPLE)
-  file(GLOB ENERGYPLUS_POSSIBLE_PATHS "/Applications/[eE]nergy[pP]lus?*")
-else()
-  file(GLOB ENERGYPLUS_POSSIBLE_PATHS "/usr/local/[eE]nergy[pP]lus?*")
-endif()
+file(GLOB ENERGYPLUS_POSSIBLE_PATHS "${CMAKE_BINARY_DIR}/../../../[eE]nergy[pP]lus?*")
+
+#if(WIN32)
+#  file(GLOB ENERGYPLUS_POSSIBLE_PATHS "C:/[eE]nergy[pP]lus?*")
+#elseif(APPLE)
+#  file(GLOB ENERGYPLUS_POSSIBLE_PATHS "/Applications/[eE]nergy[pP]lus?*")
+#else()
+#  file(GLOB ENERGYPLUS_POSSIBLE_PATHS "/usr/local/[eE]nergy[pP]lus?*")
+#endif()
 
 # sort possible paths in reverse order, favoring the ENERGYPLUSDIR environment variable
 list(SORT ENERGYPLUS_POSSIBLE_PATHS)

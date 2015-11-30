@@ -50,7 +50,7 @@ class MODEL_API GlareSensor : public SpaceItem {
   /** @name Static Methods */
   //@{
 
-  static const IddObjectType& iddObjectType();
+  static IddObjectType iddObjectType();
 
   //@}
   /** @name Getters */

@@ -1,7 +1,7 @@
 
 OS:Version,
-  {4a0cb79e-c287-4210-a5d4-4097cf8f2950}, !- Handle
-  1.7.3;                                  !- Version Identifier
+  {c843efa7-4fa9-4f01-a6da-dbd79214590f}, !- Handle
+  1.9.5;                                  !- Version Identifier
 
 OS:SimulationControl,
   {41f65c43-2dc9-4d82-a6e4-a562bae08803}, !- Handle
@@ -26,7 +26,7 @@ OS:SurfaceConvectionAlgorithm:Outside,
 OS:HeatBalanceAlgorithm,
   {fb07df21-178f-40a0-868e-360603ea5cfc}, !- Handle
   ConductionTransferFunction,             !- Algorithm
-  200;                                    !- Surface Temperature Upper Limit {F}
+  200;                                    !- Surface Temperature Upper Limit {C}
 
 OS:ZoneAirHeatBalanceAlgorithm,
   {82730f22-7533-4ae2-85c6-69dbcc9f2cda}, !- Handle
@@ -42,7 +42,7 @@ OS:ShadowCalculation,
 
 OS:Site,
   {5c1f9d16-87a5-488e-aa99-a6dd668a2146}, !- Handle
-  Site 1,                                 !- Name
+  Denver Centennial  Golden   Nr,         !- Name
   39.74,                                  !- Latitude {deg}
   -105.18,                                !- Longitude {deg}
   -7,                                     !- Time Zone {hr}
@@ -2668,6 +2668,7 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
   {ac27bd9e-96a8-4fed-b7aa-06b830184239}, !- Availability Schedule Name
   1,                                      !- Cooler Effectiveness
   0,                                      !- Recirculating Water Pump Power Consumption {W}
+  Autosize,                               !- Primary Air Design Flow Rate {m3/s}
   {b201c597-5991-47c6-a451-c8c9e15214eb}, !- Air Inlet Node Name
   {2fce10f1-d607-4e07-adcb-2af994cc2cce}, !- Air Outlet Node Name
   {8608f700-2023-4277-b10a-277f68b863fe}, !- Sensor Node Name
@@ -2769,34 +2770,17 @@ OS:AirLoopHVAC,
   {85cf90c9-9555-4437-9e91-1210fbc84bdd}, !- Handle
   Air Loop HVAC 1,                        !- Name
   ,                                       !- Controller List Name
-  {a6e9c929-fec9-4cf4-b78b-32345f6fb2a9}, !- Availability Manager List Name
+  {2a10bc52-cb2d-4a4a-a91e-d59204a88546}, !- Availability Schedule
+  ,                                       !- Availability Manager
   AutoSize,                               !- Design Supply Air Flow Rate {m3/s}
   ,                                       !- Branch List Name
   ,                                       !- Connector List Name
   {904dbc49-5b4a-45e5-8bbd-e4f75a22607f}, !- Supply Side Inlet Node Name
   {16266f96-6637-4945-89cc-89054b9eab85}, !- Demand Side Outlet Node Name
-  {718e601b-a6a4-4e69-ba90-1c6aeee6daa8}, !- Demand Side Inlet Node Names
-  {2a7e1904-be9e-4447-939d-5ac0f0fdc167}; !- Supply Side Outlet Node Names
-
-OS:AvailabilityManagerAssignmentList,
-  {a6e9c929-fec9-4cf4-b78b-32345f6fb2a9}, !- Handle
-  Availability Manager Assignment List 1, !- Name
-  {4cc3cfed-69eb-4c47-b66a-7b9c03b3fa4a}, !- Availability Manager Name 1
-  {e746611a-47a1-4979-a6b7-d1a12e5551c4}; !- Availability Manager Name 2
-
-OS:AvailabilityManager:Scheduled,
-  {4cc3cfed-69eb-4c47-b66a-7b9c03b3fa4a}, !- Handle
-  Availability Manager Scheduled 1,       !- Name
-  {2a10bc52-cb2d-4a4a-a91e-d59204a88546}; !- Schedule Name
-
-OS:AvailabilityManager:NightCycle,
-  {e746611a-47a1-4979-a6b7-d1a12e5551c4}, !- Handle
-  Availability Manager Night Cycle 1,     !- Name
-  ,                                       !- Applicability Schedule
-  ,                                       !- Fan Schedule
-  ,                                       !- Control Type
-  ,                                       !- Thermostat Tolerance {deltaC}
-  ;                                       !- Cycling Run Time {s}
+  {718e601b-a6a4-4e69-ba90-1c6aeee6daa8}, !- Demand Side Inlet Node A
+  {2a7e1904-be9e-4447-939d-5ac0f0fdc167}, !- Supply Side Outlet Node A
+  ,                                       !- Demand Side Inlet Node B
+  ;                                       !- Supply Side Outlet Node B
 
 OS:Node,
   {d23ccc0d-2206-4d45-ba97-61cd457755fa}, !- Handle
@@ -2909,7 +2893,24 @@ OS:Sizing:System,
   0,                                      !- Cooling Design Air Flow Rate {m3/s}
   DesignDay,                              !- Heating Design Air Flow Method
   0,                                      !- Heating Design Air Flow Rate {m3/s}
-  ZoneSum;                                !- System Outdoor Air Method
+  ZoneSum,                                !- System Outdoor Air Method
+  1,                                      !- Zone Maximum Outdoor Air Fraction {dimensionless}
+  0.0099676501,                           !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+  1,                                      !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+  3.9475456e-05,                          !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+  0.0099676501,                           !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+  1,                                      !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+  1,                                      !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+  3.1588213e-05,                          !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+  CoolingDesignCapacity,                  !- Cooling Design Capacity Method
+  Autosize,                               !- Cooling Design Capacity {W}
+  234.7,                                  !- Cooling Design Capacity Per Floor Area {W/m2}
+  1,                                      !- Fraction of Autosized Cooling Design Capacity
+  HeatingDesignCapacity,                  !- Heating Design Capacity Method
+  Autosize,                               !- Heating Design Capacity {W}
+  157,                                    !- Heating Design Capacity Per Floor Area {W/m2}
+  1,                                      !- Fraction of Autosized Heating Design Capacity
+  OnOff;                                  !- Central Cooling Capacity Control Method
 
 OS:Node,
   {1f57ab27-7640-49b5-8eb2-d9f55018c20c}, !- Handle
@@ -3234,7 +3235,7 @@ OS:WeatherFile,
   -105.18,                                !- Longitude {deg}
   -7,                                     !- Time Zone {hr}
   1829,                                   !- Elevation {m}
-  file:///C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/OpenStudioResults/tests/ExampleModel/files/USA_CO_Golden-NREL.724666_TMY3.epw, !- Url
+  file:files/USA_CO_Golden-NREL.724666_TMY3.epw, !- Url
   BDF687C1;                               !- Checksum
 
 OS:Rendering:Color,
@@ -4255,34 +4256,17 @@ OS:AirLoopHVAC,
   {61409aea-253c-4402-8ad5-5bd785fdbac1}, !- Handle
   VAV with Reheat,                        !- Name
   ,                                       !- Controller List Name
-  {fd6188a9-da81-4528-9fcc-cf30f2100b7d}, !- Availability Manager List Name
+  {2a10bc52-cb2d-4a4a-a91e-d59204a88546}, !- Availability Schedule
+  ,                                       !- Availability Manager
   AutoSize,                               !- Design Supply Air Flow Rate {m3/s}
   ,                                       !- Branch List Name
   ,                                       !- Connector List Name
   {4c93315e-9a78-4f50-b7a4-b5ba5b82c257}, !- Supply Side Inlet Node Name
   {855596af-2949-491a-99a6-bbad6c27533e}, !- Demand Side Outlet Node Name
-  {fbef7323-5917-4fee-a2b6-751e7d2ad41e}, !- Demand Side Inlet Node Names
-  {f020c5c7-4311-4868-9511-ea7f5599a48d}; !- Supply Side Outlet Node Names
-
-OS:AvailabilityManagerAssignmentList,
-  {fd6188a9-da81-4528-9fcc-cf30f2100b7d}, !- Handle
-  Availability Manager Assignment List 2, !- Name
-  {ac750f27-d2c6-4fc9-89ee-1bbe8ad8ec3c}, !- Availability Manager Name 1
-  {977654d6-6f14-4797-8970-c6c322a0a0cb}; !- Availability Manager Name 2
-
-OS:AvailabilityManager:Scheduled,
-  {ac750f27-d2c6-4fc9-89ee-1bbe8ad8ec3c}, !- Handle
-  Availability Manager Scheduled 2,       !- Name
-  {2a10bc52-cb2d-4a4a-a91e-d59204a88546}; !- Schedule Name
-
-OS:AvailabilityManager:NightCycle,
-  {977654d6-6f14-4797-8970-c6c322a0a0cb}, !- Handle
-  Availability Manager Night Cycle 2,     !- Name
-  ,                                       !- Applicability Schedule
-  ,                                       !- Fan Schedule
-  ,                                       !- Control Type
-  ,                                       !- Thermostat Tolerance {deltaC}
-  ;                                       !- Cycling Run Time {s}
+  {fbef7323-5917-4fee-a2b6-751e7d2ad41e}, !- Demand Side Inlet Node A
+  {f020c5c7-4311-4868-9511-ea7f5599a48d}, !- Supply Side Outlet Node A
+  ,                                       !- Demand Side Inlet Node B
+  ;                                       !- Supply Side Outlet Node B
 
 OS:Node,
   {e967a974-d4ff-4bdb-8426-73aec5d7d4db}, !- Handle
@@ -4395,7 +4379,24 @@ OS:Sizing:System,
   0,                                      !- Cooling Design Air Flow Rate {m3/s}
   DesignDay,                              !- Heating Design Air Flow Method
   0,                                      !- Heating Design Air Flow Rate {m3/s}
-  ZoneSum;                                !- System Outdoor Air Method
+  ZoneSum,                                !- System Outdoor Air Method
+  1,                                      !- Zone Maximum Outdoor Air Fraction {dimensionless}
+  0.0099676501,                           !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+  1,                                      !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+  3.9475456e-05,                          !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+  0.0099676501,                           !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+  1,                                      !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+  1,                                      !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+  3.1588213e-05,                          !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+  CoolingDesignCapacity,                  !- Cooling Design Capacity Method
+  Autosize,                               !- Cooling Design Capacity {W}
+  234.7,                                  !- Cooling Design Capacity Per Floor Area {W/m2}
+  1,                                      !- Fraction of Autosized Cooling Design Capacity
+  HeatingDesignCapacity,                  !- Heating Design Capacity Method
+  Autosize,                               !- Heating Design Capacity {W}
+  157,                                    !- Heating Design Capacity Per Floor Area {W/m2}
+  1,                                      !- Fraction of Autosized Heating Design Capacity
+  OnOff;                                  !- Central Cooling Capacity Control Method
 
 OS:Fan:VariableVolume,
   {54c34d4a-af73-4c46-ae03-a46763f4f00b}, !- Handle
@@ -4623,7 +4624,9 @@ OS:PlantLoop,
   Hot Water Loop,                         !- Name
   Water,                                  !- Fluid Type
   ,                                       !- User Defined Fluid Type
-  ,                                       !- Plant Equipment Operation Scheme Name
+  ,                                       !- Plant Equipment Operation Heating Load
+  ,                                       !- Plant Equipment Operation Cooling Load
+  ,                                       !- Primary Plant Equipment Operation Scheme
   {29bfcedc-4593-4a71-aaec-bbe669088467}, !- Loop Temperature Setpoint Node Name
   ,                                       !- Maximum Loop Temperature {C}
   ,                                       !- Minimum Loop Temperature {C}
@@ -4637,7 +4640,7 @@ OS:PlantLoop,
   {55c52303-c5fd-40ce-a37a-ad0d1a1507c6}, !- Demand Side Outlet Node Name
   ,                                       !- Demand Side Branch List Name
   ,                                       !- Demand Side Connector List Name
-  ,                                       !- Load Distribution Scheme
+  Optimal,                                !- Load Distribution Scheme
   ,                                       !- Availability Manager List Name
   ,                                       !- Plant Loop Demand Calculation Scheme
   ,                                       !- Common Pipe Simulation
@@ -4648,7 +4651,10 @@ OS:Sizing:Plant,
   {edd8eec8-fc22-4c64-904e-82c51d118e17}, !- Plant or Condenser Loop Name
   Heating,                                !- Loop Type
   82,                                     !- Design Loop Exit Temperature {C}
-  11;                                     !- Loop Design Temperature Difference {deltaC}
+  11,                                     !- Loop Design Temperature Difference {deltaC}
+  NonCoincident,                          !- Sizing Option
+  1,                                      !- Zone Timesteps in Averaging Window
+  None;                                   !- Coincident Sizing Factor Mode
 
 OS:Node,
   {4d2097d6-e7df-4cb2-84b2-32b4421193cc}, !- Handle
@@ -5142,7 +5148,9 @@ OS:PlantLoop,
   Chilled Water Loop,                     !- Name
   ,                                       !- Fluid Type
   ,                                       !- User Defined Fluid Type
-  ,                                       !- Plant Equipment Operation Scheme Name
+  ,                                       !- Plant Equipment Operation Heating Load
+  ,                                       !- Plant Equipment Operation Cooling Load
+  ,                                       !- Primary Plant Equipment Operation Scheme
   {9bdb0fe6-d88f-47ca-a341-e3c9ee54d7df}, !- Loop Temperature Setpoint Node Name
   ,                                       !- Maximum Loop Temperature {C}
   ,                                       !- Minimum Loop Temperature {C}
@@ -5156,7 +5164,7 @@ OS:PlantLoop,
   {1cc7c34b-4033-4cdb-96fb-d7f060b755d1}, !- Demand Side Outlet Node Name
   ,                                       !- Demand Side Branch List Name
   ,                                       !- Demand Side Connector List Name
-  ,                                       !- Load Distribution Scheme
+  Optimal,                                !- Load Distribution Scheme
   ,                                       !- Availability Manager List Name
   ,                                       !- Plant Loop Demand Calculation Scheme
   ,                                       !- Common Pipe Simulation
@@ -5167,7 +5175,10 @@ OS:Sizing:Plant,
   {fbec51ae-727e-4c19-ae1f-79b5ec576fed}, !- Plant or Condenser Loop Name
   Cooling,                                !- Loop Type
   7.22,                                   !- Design Loop Exit Temperature {C}
-  6.67;                                   !- Loop Design Temperature Difference {deltaC}
+  6.67,                                   !- Loop Design Temperature Difference {deltaC}
+  NonCoincident,                          !- Sizing Option
+  1,                                      !- Zone Timesteps in Averaging Window
+  None;                                   !- Coincident Sizing Factor Mode
 
 OS:Node,
   {00a05e19-8bec-4aa3-b0dd-0e1fcba6ac20}, !- Handle
@@ -5600,7 +5611,7 @@ OS:AirTerminal:SingleDuct:VAV:Reheat,
   Autocalculate,                          !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
   Autocalculate,                          !- Maximum Flow Fraction During Reheat
   35,                                     !- Maximum Reheat Air Temperature {C}
-  ;                                       !- Design Specification Outdoor Air Object Name
+  No;                                     !- Control For Outdoor Air
 
 OS:Node,
   {badce285-24b2-4ed8-a275-8c0815781460}, !- Handle
@@ -5803,7 +5814,9 @@ OS:PlantLoop,
   Condenser Water Loop,                   !- Name
   ,                                       !- Fluid Type
   ,                                       !- User Defined Fluid Type
-  ,                                       !- Plant Equipment Operation Scheme Name
+  ,                                       !- Plant Equipment Operation Heating Load
+  ,                                       !- Plant Equipment Operation Cooling Load
+  ,                                       !- Primary Plant Equipment Operation Scheme
   {7ca90e7a-9146-41ca-ae15-dfeaf235f770}, !- Loop Temperature Setpoint Node Name
   ,                                       !- Maximum Loop Temperature {C}
   ,                                       !- Minimum Loop Temperature {C}
@@ -5817,7 +5830,7 @@ OS:PlantLoop,
   {0b6d359f-cf5b-498c-9bbf-82ec92dbcaff}, !- Demand Side Outlet Node Name
   ,                                       !- Demand Side Branch List Name
   ,                                       !- Demand Side Connector List Name
-  ,                                       !- Load Distribution Scheme
+  Optimal,                                !- Load Distribution Scheme
   ,                                       !- Availability Manager List Name
   ,                                       !- Plant Loop Demand Calculation Scheme
   ,                                       !- Common Pipe Simulation
@@ -5828,7 +5841,10 @@ OS:Sizing:Plant,
   {8de69eda-6455-457b-9fc8-54f3b36ab4d5}, !- Plant or Condenser Loop Name
   Condenser,                              !- Loop Type
   29.4,                                   !- Design Loop Exit Temperature {C}
-  5.6;                                    !- Loop Design Temperature Difference {deltaC}
+  5.6,                                    !- Loop Design Temperature Difference {deltaC}
+  NonCoincident,                          !- Sizing Option
+  1,                                      !- Zone Timesteps in Averaging Window
+  None;                                   !- Coincident Sizing Factor Mode
 
 OS:Node,
   {819c2c62-3d78-4b14-bf42-2c64613921d8}, !- Handle

@@ -263,9 +263,8 @@ WaterUseEquipmentDefinition::WaterUseEquipmentDefinition(const Model& model)
   setPeakFlowRate(0.0);
 }
 
-const IddObjectType& WaterUseEquipmentDefinition::iddObjectType() {
-  static IddObjectType result(IddObjectType::OS_WaterUse_Equipment_Definition);
-  return result;
+IddObjectType WaterUseEquipmentDefinition::iddObjectType() {
+  return IddObjectType(IddObjectType::OS_WaterUse_Equipment_Definition);
 }
 
 std::string WaterUseEquipmentDefinition::endUseSubcategory() const {

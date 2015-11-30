@@ -43,7 +43,7 @@ class OSDoubleEdit2: public QLineEdit {
 
   OSDoubleEdit2(QWidget * parent = nullptr);
 
-  virtual ~OSDoubleEdit2() {}
+  virtual ~OSDoubleEdit2();
 
   void enableClickFocus() { this->m_hasClickFocus = true; }
 

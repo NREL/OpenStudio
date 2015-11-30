@@ -33,7 +33,7 @@ class OSSwitch2 : public QPushButton {
 
   OSSwitch2(QWidget * parent = nullptr);
 
-  virtual ~OSSwitch2() {}
+  virtual ~OSSwitch2();
 
   // Note: default
   void makeOnOff();

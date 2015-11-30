@@ -103,6 +103,8 @@ TEST(Date, YearDayOfYearConstructor)
   EXPECT_THROW(Date::fromDayOfYear(-1, 2008), openstudio::Exception);
   EXPECT_THROW(Date::fromDayOfYear(367, 2008), openstudio::Exception);
   EXPECT_THROW(Date::fromDayOfYear(366, 2009), openstudio::Exception);
+  EXPECT_THROW(Date::fromDayOfYear(1, -2009), openstudio::Exception);
+  EXPECT_THROW(Date::fromDayOfYear(1, 1000000), openstudio::Exception);
 };
 
 TEST(Date, MonthDayConstructor)

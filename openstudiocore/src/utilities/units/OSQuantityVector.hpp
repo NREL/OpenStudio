@@ -61,7 +61,7 @@ class UTILITIES_API OSQuantityVector {
   
   UnitSystem system() const;
 
-  const Scale& scale() const;
+  Scale scale() const;
 
   /** Creates a vector of separate quantities. Note that it is better to do mathematical 
    *  operations and convert units using OSOptionalQuantity. Only use this method once the 

@@ -77,6 +77,10 @@ OSQuantityEdit2::OSQuantityEdit2(const std::string& modelUnits, const std::strin
   m_lineEdit->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Fixed);
 }
 
+OSQuantityEdit2::~OSQuantityEdit2()
+{
+}
+
 void OSQuantityEdit2::bind(bool isIP,
                            model::ModelObject& modelObject,
                            DoubleGetter get,

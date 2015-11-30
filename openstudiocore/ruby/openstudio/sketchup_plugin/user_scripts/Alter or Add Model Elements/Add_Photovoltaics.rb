@@ -76,9 +76,14 @@ class AddPhotovoltaics < OpenStudio::Ruleset::ModelUserScript
     
     elcd = runner.getOptionalWorkspaceObjectChoiceValue("elcd",user_arguments,model) #model is passed in because of argument type
     
+    # Flags to handle deletion of potentially empty ELCD and inverter
+    create_elcd = false
+    panel_fail = false
+    
     if not elcd.empty? and not elcd.get.to_ElectricLoadCenterDistribution.empty?
       elcd = elcd.get.to_ElectricLoadCenterDistribution.get
     else
+      create_elcd = true
       elcd = OpenStudio::Model::ElectricLoadCenterDistribution.new(model)
       inverter = OpenStudio::Model::ElectricLoadCenterInverterSimple.new(model)
       inverter.setInverterEfficiency(0.98)
@@ -92,11 +97,13 @@ class AddPhotovoltaics < OpenStudio::Ruleset::ModelUserScript
     
     model.getPlanarSurfaces.each do |s|
 
-      next if not runner.inSelection(s)
+      next if !runner.inSelection(s)
     
-      next if not s.to_SubSurface.empty?
+      next if !s.to_SubSurface.empty?
       
-      next if not s.to_InteriorPartitionSurface.empty?
+      next if !s.to_InteriorPartitionSurface.empty?
+      
+      next if !s.generatorPhotovoltaics.empty?
       
       any_in_selection = true
       
@@ -110,14 +117,28 @@ class AddPhotovoltaics < OpenStudio::Ruleset::ModelUserScript
         runner.registerInfo("Added GeneratorPhotovoltaic '" + panel.name.to_s + "' for PlanarSurface '" + s.name.to_s + "'")
         elcd.addGenerator(panel)
       else
+        # At least one assignment of panel failed
+        panel_fail = true
         runner.registerWarning("Could not add GeneratorPhotovoltaic for PlanarSurface '" + s.name.to_s + "'")
         panel.remove
       end
     
     end
     
+    # If one panel assignment failed, check if the elcd and inverter are still used
+    if panel_fail
+      # If no generators, remove newly created inverter and ElectricLoadCenterDistribution
+      if create_elcd && elcd.generators.empty?
+        inverter = elcd.inverter
+        if !inverter.empty?
+          inverter.remove
+        end
+        elcd.remove
+      end
+    end
+    
     if not any_in_selection
-      runner.registerAsNotApplicable("No surfaces in the current selection. Please select surfaces or shading surfaces to apply photovoltaics to.")
+      runner.registerAsNotApplicable("No allowable surfaces in the current selection. Please select surfaces or shading surfaces to apply photovoltaics to.")
     end
     
     return(true)

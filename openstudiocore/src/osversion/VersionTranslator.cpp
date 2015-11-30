@@ -99,6 +99,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.8.5")] = &VersionTranslator::update_1_8_4_to_1_8_5;
   m_updateMethods[VersionString("1.9.0")] = &VersionTranslator::update_1_8_5_to_1_9_0;
   m_updateMethods[VersionString("1.9.3")] = &VersionTranslator::update_1_9_2_to_1_9_3;
+  m_updateMethods[VersionString("1.9.5")] = &VersionTranslator::update_1_9_4_to_1_9_5;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -189,6 +190,8 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.9.0"));
   m_startVersions.push_back(VersionString("1.9.1"));
   m_startVersions.push_back(VersionString("1.9.2"));
+  m_startVersions.push_back(VersionString("1.9.3"));
+  m_startVersions.push_back(VersionString("1.9.4"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -2839,6 +2842,76 @@ std::string VersionTranslator::update_1_9_2_to_1_9_3(const IdfFile& idf_1_9_2, c
       }
 
       newObject.setString(10,"No");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_9_4_to_1_9_5(const IdfFile& idf_1_9_4, const IddFileAndFactoryWrapper& idd_1_9_5)
+{
+  std::stringstream ss;
+
+  ss << idf_1_9_4.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_9_5.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_1_9_4.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:Controller:WaterCoil") {
+      auto iddObject = idd_1_9_5.getObject("OS:Controller:WaterCoil");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0,j = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( auto value = object.getString(i) ) {
+          newObject.setString(j,value.get());
+        }
+        if( i == 1 ) {
+          // new field after i = 1
+          ++j;
+        }
+        ++j;
+      }
+
+      // Figure out value of new field j = 2
+      // This is the handle of the associated water coil
+      // Past versions made this connection by matching the controller actuator node 
+      // to the coil water inlet node.
+      // To do this version translation we have to track down that node
+      if( auto actuatorNodeHandle = object.getString(6) ) {
+        auto coilHandle = [&](const IddObject & type, unsigned waterInletIndex){
+          boost::optional<std::string> result;
+          auto coils = idf_1_9_4.getObjectsByType(type);
+          for( const auto & coil : coils ) {
+            // waterInletConnection will be a handle to a connection object
+            if( auto waterInletConnectionHandle = coil.getString(waterInletIndex) ) {
+              if( auto waterInletConnection = idf_1_9_4.getObject(Handle(QString::fromStdString(waterInletConnectionHandle.get()))) ) {
+                if( auto sourceHandle = waterInletConnection->getString(2) ) {
+                  if( sourceHandle.get() == actuatorNodeHandle.get() ) {
+                    result = coil.handle().toString().toStdString();
+                    break;
+                  }
+                }
+              }
+            }
+          }
+          return result;
+        };
+        if( auto handle = coilHandle(idf_1_9_4.iddFile().getObject("OS:Coil:Cooling:Water").get(),10) ) {
+          newObject.setString(2,handle.get());
+        } else if( auto handle = coilHandle(idf_1_9_4.iddFile().getObject("OS:Coil:Heating:Water").get(),5) ) {
+          newObject.setString(2,handle.get());
+        }
+      }
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;

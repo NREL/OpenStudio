@@ -58,13 +58,13 @@ namespace radiance{
       //openstudio::DateTime::ConstVec dateTimes() const {return openstudio::DateTime::ConstVec(m_dateTimes.begin(), m_dateTimes.end());}
 
       /// get the x points corresponding to illuminance matrix columns in meters
-      const openstudio::Vector& xVector() const {return m_xVector;}
+      openstudio::Vector xVector() const {return m_xVector;}
 
       /// get the y points corresponding to illuminance matrix rows in meters
-      const openstudio::Vector& yVector() const {return m_yVector;}
+      openstudio::Vector yVector() const {return m_yVector;}
 
       /// get the illuminance map in lux corresponding to date and time
-      const openstudio::Matrix& illuminanceMap(const openstudio::DateTime& dateTime) const;
+      openstudio::Matrix illuminanceMap(const openstudio::DateTime& dateTime) const;
 
     private:
 

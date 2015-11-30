@@ -36,7 +36,7 @@ namespace openstudio {
 
     OSCheckBox3(QWidget * parent = nullptr);
 
-    virtual ~OSCheckBox3() {}
+    virtual ~OSCheckBox3();
 
     void bind(model::ModelObject & modelObject,
       BoolGetter get,

@@ -74,6 +74,10 @@ void MainRightColumnController::showHorizontalTab(int id)
   switch( id )
   {
     case MEASURE_LIBRARY:
+    // Evan note: It's bad to play with null pointers
+      if (!m_localLibraryController->localLibraryView) {
+        //return;
+      }
       horizontalTabWidget->mainViewSwitcher->setView(m_localLibraryController->localLibraryView);
 
       break;

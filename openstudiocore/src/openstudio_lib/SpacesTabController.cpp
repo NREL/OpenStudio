@@ -30,45 +30,130 @@
 
 namespace openstudio {
 
-  SpacesTabController::SpacesTabController(bool isIP, const model::Model& model)
-: MainTabController(new SpacesTabView())
+  SpacesTabController::SpacesTabController(bool isIP, const model::Model& model) 
+    : MainTabController(new SpacesTabView()),
+    m_model(model),
+    m_isIP(isIP)
 {
-  auto spacesSpacesGridView = new SpacesSpacesGridView(isIP, model);
-  this->mainContentWidget()->addSubTab("Properties", spacesSpacesGridView, SPACES);
-  connect(this, &SpacesTabController::toggleUnitsClicked, spacesSpacesGridView, &SpacesSpacesGridView::toggleUnitsClicked);
-  connect(spacesSpacesGridView, &SpacesSpacesGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+  mainContentWidget()->addSubTab("Properties", SPACES);
+  mainContentWidget()->addSubTab("Loads", LOADS);
+  mainContentWidget()->addSubTab("Surfaces", SURFACES);
+  mainContentWidget()->addSubTab("Subsurfaces", SUBSURFACES);
+  mainContentWidget()->addSubTab("Interior Partitions", INTERIOR_PARTITIONS);
+  mainContentWidget()->addSubTab("Shading", SHADING);
 
-  auto spacesLoadsGridView = new SpacesLoadsGridView(isIP, model);
-  this->mainContentWidget()->addSubTab("Loads", spacesLoadsGridView, LOADS);
-  connect(this, &SpacesTabController::toggleUnitsClicked, spacesLoadsGridView, &SpacesLoadsGridView::toggleUnitsClicked);
-  connect(spacesLoadsGridView, &SpacesLoadsGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
-
-  auto spacesSurfacesGridView = new SpacesSurfacesGridView(isIP, model);
-  this->mainContentWidget()->addSubTab("Surfaces", spacesSurfacesGridView, SURFACES);
-  connect(this, &SpacesTabController::toggleUnitsClicked, spacesSurfacesGridView, &SpacesSurfacesGridView::toggleUnitsClicked);
-  connect(spacesSurfacesGridView, &SpacesSurfacesGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
-
-  auto spacesSubsurfacesGridView = new SpacesSubsurfacesGridView(isIP, model);
-  this->mainContentWidget()->addSubTab("Subsurfaces", spacesSubsurfacesGridView, SUBSURFACES);
-  connect(this, &SpacesTabController::toggleUnitsClicked, spacesSubsurfacesGridView, &SpacesSubsurfacesGridView::toggleUnitsClicked);
-  connect(spacesSubsurfacesGridView, &SpacesSubsurfacesGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
-
-  auto spacesInteriorPartitionsGridView = new SpacesInteriorPartitionsGridView(isIP, model);
-  this->mainContentWidget()->addSubTab("Interior Partitions", spacesInteriorPartitionsGridView, INTERIOR_PARTITIONS);
-  connect(this, &SpacesTabController::toggleUnitsClicked, spacesInteriorPartitionsGridView, &SpacesInteriorPartitionsGridView::toggleUnitsClicked);
-  connect(spacesInteriorPartitionsGridView, &SpacesInteriorPartitionsGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
-
-  auto spacesShadingGridView = new SpacesShadingGridView(isIP, model);
-  this->mainContentWidget()->addSubTab("Shading", spacesShadingGridView, SHADING);
-  connect(this, &SpacesTabController::toggleUnitsClicked, spacesShadingGridView, &SpacesShadingGridView::toggleUnitsClicked);
-  connect(spacesShadingGridView, &SpacesShadingGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+  connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &SpacesTabController::setSubTab);
 
   // Evan note: TODO SpacesDaylightingGridView may be a dead class, given the latest Radiance plans
-  //this->mainContentWidget()->addSubTab("Daylighting", new SpacesDaylightingGridView(isIP, model), DAYLIGHTING);
+  //this->mainContentWidget()->addSubTab("Daylighting", new SpacesDaylightingGridView(m_isIP, m_model), DAYLIGHTING);
 }
 
-  void SpacesTabController::toggleUnits(bool displayIP)
+SpacesTabController::~SpacesTabController()
+{
+  disconnect(this->mainContentWidget(), &MainTabView::tabSelected, this, &SpacesTabController::setSubTab);
+}
+
+void SpacesTabController::toggleUnits(bool displayIP)
 {
 }
 
-  } // openstudio
+void SpacesTabController::setSubTab(int index)
+{
+  if (m_currentIndex == index) {
+    return;
+  }
+  else {
+    m_currentIndex = index;
+  }
+
+  if (qobject_cast<SpacesSpacesGridView *>(m_currentView)) {
+    disconnect(this, &SpacesTabController::toggleUnitsClicked, qobject_cast<SpacesSpacesGridView *>(m_currentView), &SpacesSpacesGridView::toggleUnitsClicked);
+    disconnect(qobject_cast<SpacesSpacesGridView *>(m_currentView), &SpacesSpacesGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+  }
+  else if (qobject_cast<SpacesLoadsGridView *>(m_currentView)) {
+    disconnect(this, &SpacesTabController::toggleUnitsClicked, qobject_cast<SpacesLoadsGridView *>(m_currentView), &SpacesLoadsGridView::toggleUnitsClicked);
+    disconnect(qobject_cast<SpacesLoadsGridView *>(m_currentView), &SpacesLoadsGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+  }
+  else if (qobject_cast<SpacesSurfacesGridView *>(m_currentView)) {
+    disconnect(this, &SpacesTabController::toggleUnitsClicked, qobject_cast<SpacesSurfacesGridView *>(m_currentView), &SpacesSurfacesGridView::toggleUnitsClicked);
+    disconnect(qobject_cast<SpacesSurfacesGridView *>(m_currentView), &SpacesSurfacesGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+  }
+  else if (qobject_cast<SpacesSubsurfacesGridView *>(m_currentView)) {
+    disconnect(this, &SpacesTabController::toggleUnitsClicked, qobject_cast<SpacesSubsurfacesGridView *>(m_currentView), &SpacesSubsurfacesGridView::toggleUnitsClicked);
+    disconnect(qobject_cast<SpacesSubsurfacesGridView *>(m_currentView), &SpacesSubsurfacesGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+  }
+  else if (qobject_cast<SpacesInteriorPartitionsGridView *>(m_currentView)) {
+    disconnect(this, &SpacesTabController::toggleUnitsClicked, qobject_cast<SpacesInteriorPartitionsGridView *>(m_currentView), &SpacesInteriorPartitionsGridView::toggleUnitsClicked);
+    disconnect(qobject_cast<SpacesInteriorPartitionsGridView *>(m_currentView), &SpacesInteriorPartitionsGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+  }
+  else if (qobject_cast<SpacesShadingGridView *>(m_currentView)) {
+    disconnect(this, &SpacesTabController::toggleUnitsClicked, qobject_cast<SpacesShadingGridView *>(m_currentView), &SpacesShadingGridView::toggleUnitsClicked);
+    disconnect(qobject_cast<SpacesShadingGridView *>(m_currentView), &SpacesShadingGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+  }
+  else if (m_currentView) {
+    // Oops! Should never get here
+    OS_ASSERT(false);
+  }
+
+  switch (index){
+  case 0:
+  {
+    auto spacesSpacesGridView = new SpacesSpacesGridView(m_isIP, m_model);
+    connect(this, &SpacesTabController::toggleUnitsClicked, spacesSpacesGridView, &SpacesSpacesGridView::toggleUnitsClicked);
+    connect(spacesSpacesGridView, &SpacesSpacesGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+    mainContentWidget()->setSubTab(spacesSpacesGridView);
+    m_currentView = spacesSpacesGridView;
+    break;
+  }
+  case 1:
+  {
+    auto spacesLoadsGridView = new SpacesLoadsGridView(m_isIP, m_model);
+    connect(this, &SpacesTabController::toggleUnitsClicked, spacesLoadsGridView, &SpacesLoadsGridView::toggleUnitsClicked);
+    connect(spacesLoadsGridView, &SpacesLoadsGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+    mainContentWidget()->setSubTab(spacesLoadsGridView);
+    m_currentView = spacesLoadsGridView;
+    break;
+  }
+  case 2:
+  {
+    auto spacesSurfacesGridView = new SpacesSurfacesGridView(m_isIP, m_model);
+    connect(this, &SpacesTabController::toggleUnitsClicked, spacesSurfacesGridView, &SpacesSurfacesGridView::toggleUnitsClicked);
+    connect(spacesSurfacesGridView, &SpacesSurfacesGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+    mainContentWidget()->setSubTab(spacesSurfacesGridView);
+    m_currentView = spacesSurfacesGridView;
+    break;
+  }
+  case 3:
+  {
+    auto spacesSubsurfacesGridView = new SpacesSubsurfacesGridView(m_isIP, m_model);
+    connect(this, &SpacesTabController::toggleUnitsClicked, spacesSubsurfacesGridView, &SpacesSubsurfacesGridView::toggleUnitsClicked);
+    connect(spacesSubsurfacesGridView, &SpacesSubsurfacesGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+    mainContentWidget()->setSubTab(spacesSubsurfacesGridView);
+    m_currentView = spacesSubsurfacesGridView;
+    break;
+  }
+  case 4:
+  {
+    auto spacesInteriorPartitionsGridView = new SpacesInteriorPartitionsGridView(m_isIP, m_model);
+    connect(this, &SpacesTabController::toggleUnitsClicked, spacesInteriorPartitionsGridView, &SpacesInteriorPartitionsGridView::toggleUnitsClicked);
+    connect(spacesInteriorPartitionsGridView, &SpacesInteriorPartitionsGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+    mainContentWidget()->setSubTab(spacesInteriorPartitionsGridView);
+    m_currentView = spacesInteriorPartitionsGridView;
+    break;
+  }
+  case 5:
+  {
+    auto spacesShadingGridView = new SpacesShadingGridView(m_isIP, m_model);
+    connect(this, &SpacesTabController::toggleUnitsClicked, spacesShadingGridView, &SpacesShadingGridView::toggleUnitsClicked);
+    connect(spacesShadingGridView, &SpacesShadingGridView::dropZoneItemSelected, this, &SpacesTabController::dropZoneItemSelected);
+    mainContentWidget()->setSubTab(spacesShadingGridView);
+    m_currentView = spacesShadingGridView;
+    break;
+  }
+  default:
+    OS_ASSERT(false);
+    break;
+  }
+}
+
+} // openstudio

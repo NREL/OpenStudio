@@ -483,7 +483,7 @@ namespace detail {
     } else if( auto variableFan = component.optionalCast<FanVariableVolume>() ) {
       variableFan->setAvailabilitySchedule(schedule);
     }
-  };
+  }
 
   std::vector<IdfObject> AirTerminalSingleDuctSeriesPIUReheat_Impl::remove()
   {

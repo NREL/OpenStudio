@@ -75,6 +75,30 @@ namespace detail {
     return StandardsInformationConstruction(getObject<ConstructionBase>());
   }
 
+  // not in the public api
+  double getNetAreaHelper(const PlanarSurface& planarSurface)
+  {
+    boost::optional<Space> space = planarSurface.space();
+
+    double multiplier = 1.0;
+    if (space){
+      multiplier = space->multiplier();
+    }
+
+    if (planarSurface.optionalCast<SubSurface>()){
+      multiplier = multiplier * planarSurface.cast<SubSurface>().multiplier();
+    }
+
+    if (planarSurface.optionalCast<InteriorPartitionSurface>()){
+      boost::optional<InteriorPartitionSurfaceGroup> interiorPartitionSurfaceGroup = planarSurface.cast<InteriorPartitionSurface>().interiorPartitionSurfaceGroup();
+      if (interiorPartitionSurfaceGroup){
+        multiplier = multiplier * interiorPartitionSurfaceGroup->multiplier();
+      }
+    }
+
+    return multiplier*planarSurface.netArea();
+  }
+
   double ConstructionBase_Impl::getNetArea() const
   {
     Handle handle = this->handle();
@@ -93,54 +117,37 @@ namespace detail {
       if (!constructionBase){
         continue;
       }
-     
+
       if (constructionBase->handle() == handle){
-        boost::optional<Space> space = planarSurface.space();
-        double multiplier = 1.0;
-        if (space){
-          multiplier = space->multiplier();
+        double netArea = getNetAreaHelper(planarSurface);
+
+        // avoid double counting construction for adjacent surface
+        if (planarSurface.optionalCast<Surface>()){
+          boost::optional<Surface> adjacentSurface = planarSurface.cast<Surface>().adjacentSurface();
+          if (adjacentSurface){
+            boost::optional<ConstructionBase> adjacentConstructionBase = adjacentSurface->construction();
+            if (adjacentConstructionBase && (constructionBase->handle() == adjacentConstructionBase->handle())){
+              adjacentPlanarSurfacesToSkip.insert(adjacentSurface->handle());
+              netArea = std::max(netArea, getNetAreaHelper(*adjacentSurface));
+            }
+          }
         }
 
         if (planarSurface.optionalCast<SubSurface>()){
-          multiplier = multiplier * planarSurface.cast<SubSurface>().multiplier();
-        }
-
-        if (planarSurface.optionalCast<InteriorPartitionSurface>()){
-          boost::optional<InteriorPartitionSurfaceGroup> interiorPartitionSurfaceGroup = planarSurface.cast<InteriorPartitionSurface>().interiorPartitionSurfaceGroup();
-          if (interiorPartitionSurfaceGroup){
-            multiplier = multiplier * interiorPartitionSurfaceGroup->multiplier();
+          boost::optional<SubSurface> adjacentSubSurface = planarSurface.cast<SubSurface>().adjacentSubSurface();
+          if (adjacentSubSurface){
+            boost::optional<ConstructionBase> adjacentConstructionBase = adjacentSubSurface->construction();
+            if (adjacentConstructionBase && (constructionBase->handle() == adjacentConstructionBase->handle())){
+              adjacentPlanarSurfacesToSkip.insert(adjacentSubSurface->handle());
+              netArea = std::max(netArea, getNetAreaHelper(*adjacentSubSurface));
+            }
           }
         }
 
-        result+= multiplier*planarSurface.netArea();
+        result += netArea;
       }
 
-      // avoid double counting construction for adjacent surface
-      if (planarSurface.optionalCast<Surface>()){
-        boost::optional<Surface> adjacentSurface = planarSurface.cast<Surface>().adjacentSurface();
-        if (adjacentSurface){
-          boost::optional<ConstructionBase> adjacentConstructionBase = adjacentSurface->construction();
-          if (adjacentConstructionBase && (constructionBase->handle() == adjacentConstructionBase->handle())){
-            adjacentPlanarSurfacesToSkip.insert(adjacentSurface->handle());
-          }else{
-            LOG(Error, "Could not resolve matched surface construction conflicts between surfaces '" << planarSurface.name()  
-                << "', and '" << adjacentSurface->name() << "', area calculation may be incorrect");
-          }
-        }
-      }else if (planarSurface.optionalCast<SubSurface>()){
-        boost::optional<SubSurface> adjacentSubSurface = planarSurface.cast<SubSurface>().adjacentSubSurface();
-        if (adjacentSubSurface){
-          boost::optional<ConstructionBase> adjacentConstructionBase = adjacentSubSurface->construction();
-          if (adjacentConstructionBase && (constructionBase->handle() == adjacentConstructionBase->handle())){
-            adjacentPlanarSurfacesToSkip.insert(adjacentSubSurface->handle());
-          }else{
-            LOG(Error, "Could not resolve matched sub surface construction conflicts between sub surfaces '" << planarSurface.name()  
-                << "', and '" << adjacentSubSurface->name() << "', area calculation may be incorrect");
-          }
-        }  
-      }
     }
-
     return result;
   }
 

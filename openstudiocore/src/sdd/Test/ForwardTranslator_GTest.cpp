@@ -80,7 +80,9 @@ TEST_F(SDDFixture, ForwardTranslator_exampleModel)
 
   EXPECT_TRUE(test);
 
-  // we do not currently support loading input xml
+  // DLM: the forward translator writes out an input SDD, the reverse translator reads a sim SDD
+  // these two are not compatible and round trip is not supported
+
   //ReverseTranslator reverseTranslator;
   //boost::optional<Model> model2 = reverseTranslator.loadModel(p);
 

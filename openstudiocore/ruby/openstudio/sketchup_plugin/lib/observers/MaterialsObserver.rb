@@ -54,7 +54,7 @@ module OpenStudio
       return if not @enabled
       
       proc = Proc.new {
-        if material.drawing_interface
+        if !material.deleted? and material.drawing_interface
           material.drawing_interface.update_model_object
         end
       }

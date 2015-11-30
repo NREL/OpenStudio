@@ -791,7 +791,7 @@ IddObjectType GasMixture::iddObjectType() {
   return IddObjectType(IddObjectType::OS_WindowMaterial_GasMixture);
 }
 
-const std::vector<std::string>& GasMixture::validGasTypes() {
+std::vector<std::string> GasMixture::validGasTypes() {
   static StringVector result;
   if (result.empty()) {
     result = getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),

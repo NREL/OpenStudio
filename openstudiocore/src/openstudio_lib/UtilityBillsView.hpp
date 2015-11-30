@@ -68,8 +68,8 @@ public:
 
   UtilityBillsView(const model::Model & model,
     QWidget * parent = nullptr);
-  
-  virtual ~UtilityBillsView() {}
+
+  virtual ~UtilityBillsView();
 
 private:
 
@@ -93,7 +93,7 @@ public:
     bool addScrollArea,
     QWidget * parent = nullptr);
 
-  virtual ~UtilityBillsInspectorView() {}
+  virtual ~UtilityBillsInspectorView();
 
   boost::optional<QString> runPeriodDates();
 

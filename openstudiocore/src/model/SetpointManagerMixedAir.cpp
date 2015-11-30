@@ -209,6 +209,7 @@ SetpointManagerMixedAir::SetpointManagerMixedAir(const Model& model)
   : SetpointManager(SetpointManagerMixedAir::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::SetpointManagerMixedAir_Impl>());
+  setControlVariable("Temperature");
 }
 
 SetpointManagerMixedAir::SetpointManagerMixedAir(
