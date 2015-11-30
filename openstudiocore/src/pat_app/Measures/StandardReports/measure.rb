@@ -170,6 +170,8 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
           runner.registerWarning("#{display_name} section returned false and will be skipped.")
         end
       rescue => e
+        display_name = eval("OsLib_Reporting.#{method_name}(nil,nil,nil,true)[:title]")
+        if display_name == nil then display_name == method_name end
         runner.registerWarning("#{display_name} section failed and will be skipped because: #{e}. Detail on error follows.")
         runner.registerWarning("#{e.backtrace.join("\n")}")
       end

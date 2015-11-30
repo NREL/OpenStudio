@@ -3247,7 +3247,7 @@ OS:Rendering:Color,
 
 OS:ThermalZone,
   {b4fbb6da-4142-456b-bacc-6bc90c4f66d0}, !- Handle
-  'Odd Zone Name',                        !- Name
+  David's Odd Zone Name,                  !- Name
   ,                                       !- Multiplier
   ,                                       !- Ceiling Height {m}
   ,                                       !- Volume {m3}

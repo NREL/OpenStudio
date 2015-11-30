@@ -269,10 +269,14 @@ module OsLib_Reporting
     display = 'EUI'
     source_units = 'GJ/m^2'
     target_units = 'kBtu/ft^2'
-    value = OpenStudio.convert(eui, source_units, target_units).get
-    value_neat = OpenStudio.toNeatString(value, 2, true)
+    if query_results.get == '0.0' # don't calculate EUI if building doesn't have any area
+      value = OpenStudio.convert(eui, source_units, target_units).get
+      value_neat = OpenStudio.toNeatString(value, 2, true)
+      runner.registerValue(display.downcase.gsub(" ","_"), value, target_units) # is it ok not to calc EUI if no area in model
+    else
+      value_neat = "can't calculate EUI."
+    end
     general_building_information[:data] << [display, value_neat, target_units]
-    runner.registerValue(display.downcase.gsub(" ","_"), value, target_units)
 
     return general_building_information
   end
@@ -870,13 +874,17 @@ module OsLib_Reporting
             thermostat = thermal_zone.thermostatSetpointDualSetpoint.get
             if thermostat.coolingSetpointTemperatureSchedule.is_initialized
               schedule_values = OsLib_Schedules.getMinMaxAnnualProfileValue(model, thermostat.coolingSetpointTemperatureSchedule.get)
-              unless schedule_values['min'].nil? then cooling_temp_ranges << schedule_values['min'] end
-              unless schedule_values['max'].nil? then cooling_temp_ranges << schedule_values['max'] end
+              unless schedule_values.nil?
+                cooling_temp_ranges << schedule_values['min']
+                cooling_temp_ranges << schedule_values['max']
+              end
             end
             if thermostat.heatingSetpointTemperatureSchedule.is_initialized
               schedule_values = OsLib_Schedules.getMinMaxAnnualProfileValue(model, thermostat.heatingSetpointTemperatureSchedule.get)
-              unless schedule_values['min'].nil? then heating_temps_ranges << schedule_values['min'] end
-              unless schedule_values['max'].nil? then heating_temps_ranges << schedule_values['max'] end
+              unless schedule_values.nil?
+                heating_temps_ranges << schedule_values['min']
+                heating_temps_ranges << schedule_values['max']
+              end
             end
           end
 
@@ -1670,9 +1678,13 @@ module OsLib_Reporting
       if water_use_equipment_def.targetTemperatureSchedule.is_initialized
         target_temp_sch = water_use_equipment_def.targetTemperatureSchedule.get
         schedule_values = OsLib_Schedules.getMinMaxAnnualProfileValue(model, target_temp_sch)
-        min_ip = OpenStudio.convert(schedule_values['min'], 'C', 'F').get
-        max_ip = OpenStudio.convert(schedule_values['max'], 'C', 'F').get
-        target_temp_range = "#{min_ip.round(1)} to #{max_ip.round(1)}"
+        if not schedule_values.nil?
+          min_ip = OpenStudio.convert(schedule_values['min'], 'C', 'F').get
+          max_ip = OpenStudio.convert(schedule_values['max'], 'C', 'F').get
+          target_temp_range = "#{min_ip.round(1)} to #{max_ip.round(1)}"
+        else
+          target_temp_range = "can't inspect schedule."
+        end
       else
         target_temp_range = ''
       end
