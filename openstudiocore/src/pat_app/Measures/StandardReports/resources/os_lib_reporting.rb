@@ -324,6 +324,13 @@ module OsLib_Reporting
       # data for space type breakdown
       display = spaceType.name.get
       floor_area_si = spaceType.floorArea
+      floor_area_si = 0
+      # loop through spaces so I can skip if not included in floor area
+      spaceType.spaces.each do |space|
+        next if not space.partofTotalFloorArea
+        floor_area_si += space.floorArea * space.multiplier
+      end
+
       value = OpenStudio.convert(floor_area_si, 'm^2', units).get
       num_people = nil
       value_neat = OpenStudio.toNeatString(value, 0, true)
@@ -341,7 +348,8 @@ module OsLib_Reporting
 
     spaces.each do |space|
       if space.spaceType.empty?
-        no_space_type_area_counter += space.floorArea
+        next if not space.partofTotalFloorArea
+        no_space_type_area_counter += space.floorArea * space.multiplier
       end
     end
 

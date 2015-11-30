@@ -2,7 +2,7 @@
   <schema_version>3.0</schema_version>
   <name>open_studio_results</name>
   <uid>fc337100-8634-404e-8966-01243d292a79</uid>
-  <version_id>5a483966-b868-4cf8-b351-40cc614edcad</version_id>
+  <version_id>29239cbc-d22f-4517-9eb7-d7f09356107e</version_id>
   <xml_checksum>557BF06F</xml_checksum>
   <class_name>OpenStudioResults</class_name>
   <display_name>OpenStudio Results</display_name>
@@ -473,22 +473,22 @@
       <checksum>29196CE5</checksum>
     </file>
     <file>
-      <filename>EdgeCaseModel.osm</filename>
+      <filename>EmptyModel.osm</filename>
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
-      <checksum>0456138C</checksum>
+      <checksum>E626DAAE</checksum>
     </file>
     <file>
       <filename>os_lib_reporting.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
-      <checksum>85F05142</checksum>
+      <checksum>D983412E</checksum>
     </file>
     <file>
-      <filename>EmptyModel.osm</filename>
+      <filename>EdgeCaseModel.osm</filename>
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
-      <checksum>00DCD920</checksum>
+      <checksum>C485F2C2</checksum>
     </file>
   </files>
 </measure>
