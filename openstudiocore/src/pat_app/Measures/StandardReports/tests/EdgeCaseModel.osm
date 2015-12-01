@@ -3199,10 +3199,10 @@ OS:ZoneCapacitanceMultiplier:ResearchSpecial,
 OS:RunPeriod,
   {eda09313-72c2-4707-b5d5-7df8afcc3ad0}, !- Handle
   Run Period 1,                           !- Name
-  1,                                      !- Begin Month
+  2,                                      !- Begin Month
   1,                                      !- Begin Day of Month
-  12,                                     !- End Month
-  31,                                     !- End Day of Month
+  11,                                     !- End Month
+  30,                                     !- End Day of Month
   ,                                       !- Use Weather File Holidays and Special Days
   ,                                       !- Use Weather File Daylight Saving Period
   ,                                       !- Apply Weekend Holiday Rule

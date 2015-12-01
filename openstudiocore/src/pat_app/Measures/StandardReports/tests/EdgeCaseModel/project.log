@@ -18,7 +18,7 @@
 [openstudio.runmanager.RunManager] <-1> Time to parse tools for uuid: {d6ac2a58-36bf-49cf-823b-c58af3747398} 0
 [openstudio.runmanager.RunManager] <-1> Time to parse params for uuid: {d6ac2a58-36bf-49cf-823b-c58af3747398} 0
 [openstudio.runmanager.RunManager] <-1> Time to parse files for uuid: {d6ac2a58-36bf-49cf-823b-c58af3747398} 0
-[openstudio.LocalLibraryController] <-2> Creating LocalLibraryController with base app 0x7fff58f32a20
+[openstudio.LocalLibraryController] <-2> Creating LocalLibraryController with base app 0x7fff568d7a20
 [utilities.bcl.BCLMeasure] <-2> Loading measures in path: /Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures
 [utilities.bcl.BCLMeasure] <-2> Attempting to load measure: /Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/.idea
 [utilities.bcl.BCLXML] <2> '/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/.idea/measure.xml' does not exist
@@ -430,12 +430,12 @@
 [openstudio.model.WeatherFile] <-2> Going to look for '/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/StandardReports/tests/EdgeCaseModel/files/USA_CO_Golden-NREL.724666_TMY3.epw'.
 [openstudio.model.WeatherFile] <-2> Going to look for '/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/StandardReports/tests/EdgeCaseModel/USA_CO_Golden-NREL.724666_TMY3.epw'.
 [openstudio.project.ProjectDatabase] <-1> DB Message: cannot start a transaction within a transaction Unable to begin transaction
-[saveModel] <-2> Saved model to '/var/folders/83/rcnbz4dd5qqgf7rpc69354_x0g1kng/T/OpenStudio.R17556/in.osm'
-[saveModelTempDir] <-2> Copying /var/folders/83/rcnbz4dd5qqgf7rpc69354_x0g1kng/T/OpenStudio.R17556/resources to /Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/StandardReports/tests/EdgeCaseModel
-[copyDir] <-1> copyDir '/var/folders/83/rcnbz4dd5qqgf7rpc69354_x0g1kng/T/OpenStudio.R17556/resources' to '/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/StandardReports/tests/EdgeCaseModel'
-[synchDirStructures] <-1> Synching destination '/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/StandardReports/tests/EdgeCaseModel' with source '/var/folders/83/rcnbz4dd5qqgf7rpc69354_x0g1kng/T/OpenStudio.R17556/resources'
-[synchDirStructures] <-1> Synching destination '/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/StandardReports/tests/EdgeCaseModel/files' with source '/var/folders/83/rcnbz4dd5qqgf7rpc69354_x0g1kng/T/OpenStudio.R17556/resources/files'
-[synchDirStructures] <-1> Synching destination '/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/StandardReports/tests/EdgeCaseModel/run' with source '/var/folders/83/rcnbz4dd5qqgf7rpc69354_x0g1kng/T/OpenStudio.R17556/resources/run'
-[synchDirStructures] <-1> Synching destination '/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/StandardReports/tests/EdgeCaseModel/scripts' with source '/var/folders/83/rcnbz4dd5qqgf7rpc69354_x0g1kng/T/OpenStudio.R17556/resources/scripts'
-[copyDir] <-1> copyDir '/var/folders/83/rcnbz4dd5qqgf7rpc69354_x0g1kng/T/OpenStudio.R17556/resources/files' to '/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/StandardReports/tests/EdgeCaseModel/files'
-[synchDirStructures] <-1> Synching destination '/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/StandardReports/tests/EdgeCaseModel/files' with source '/var/folders/83/rcnbz4dd5qqgf7rpc69354_x0g1kng/T/OpenStudio.R17556/resources/files'
+[saveModel] <-2> Saved model to '/var/folders/83/rcnbz4dd5qqgf7rpc69354_x0g1kng/T/OpenStudio.p70568/in.osm'
+[saveModelTempDir] <-2> Copying /var/folders/83/rcnbz4dd5qqgf7rpc69354_x0g1kng/T/OpenStudio.p70568/resources to /Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/StandardReports/tests/EdgeCaseModel
+[copyDir] <-1> copyDir '/var/folders/83/rcnbz4dd5qqgf7rpc69354_x0g1kng/T/OpenStudio.p70568/resources' to '/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/StandardReports/tests/EdgeCaseModel'
+[synchDirStructures] <-1> Synching destination '/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/StandardReports/tests/EdgeCaseModel' with source '/var/folders/83/rcnbz4dd5qqgf7rpc69354_x0g1kng/T/OpenStudio.p70568/resources'
+[synchDirStructures] <-1> Synching destination '/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/StandardReports/tests/EdgeCaseModel/files' with source '/var/folders/83/rcnbz4dd5qqgf7rpc69354_x0g1kng/T/OpenStudio.p70568/resources/files'
+[synchDirStructures] <-1> Synching destination '/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/StandardReports/tests/EdgeCaseModel/run' with source '/var/folders/83/rcnbz4dd5qqgf7rpc69354_x0g1kng/T/OpenStudio.p70568/resources/run'
+[synchDirStructures] <-1> Synching destination '/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/StandardReports/tests/EdgeCaseModel/scripts' with source '/var/folders/83/rcnbz4dd5qqgf7rpc69354_x0g1kng/T/OpenStudio.p70568/resources/scripts'
+[copyDir] <-1> copyDir '/var/folders/83/rcnbz4dd5qqgf7rpc69354_x0g1kng/T/OpenStudio.p70568/resources/files' to '/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/StandardReports/tests/EdgeCaseModel/files'
+[synchDirStructures] <-1> Synching destination '/Users/dgoldwas/Documents/GitHub/OpenStudio/openstudiocore/src/pat_app/Measures/StandardReports/tests/EdgeCaseModel/files' with source '/var/folders/83/rcnbz4dd5qqgf7rpc69354_x0g1kng/T/OpenStudio.p70568/resources/files'

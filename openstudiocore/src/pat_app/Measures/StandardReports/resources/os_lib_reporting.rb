@@ -183,6 +183,7 @@ module OsLib_Reporting
     general_tables << OsLib_Reporting.weather_summary_table(model, sqlFile, runner)
     general_tables << OsLib_Reporting.design_day_table(model, sqlFile, runner)
     general_tables << OsLib_Reporting.setpoint_not_met_summary_table(model, sqlFile, runner)
+    general_tables << OsLib_Reporting.setpoint_not_met_criteria_table(model, sqlFile, runner)
     # general_tables << OsLib_Reporting.site_performance_table(model,sqlFile,runner)
     site_power_generation_table = OsLib_Reporting.site_power_generation_table(model, sqlFile, runner)
     if site_power_generation_table
@@ -544,7 +545,7 @@ module OsLib_Reporting
     # unmet hours data output
     setpoint_not_met_summary = {}
     setpoint_not_met_summary[:title] = 'Unmet Hours Summary'
-    setpoint_not_met_summary[:header] = ['Time Setpoint Not Met', 'Value']
+    setpoint_not_met_summary[:header] = ['Time Setpoint Not Met', 'Time']
     target_units = 'hr'
     setpoint_not_met_summary[:units] = ['', target_units]
     setpoint_not_met_summary[:data] = []
@@ -577,6 +578,43 @@ module OsLib_Reporting
     end # setpoint_not_met_cat.each do
 
     return setpoint_not_met_summary
+  end
+
+  # create table for setpoint_not_met_criteria
+  def self.setpoint_not_met_criteria_table(model, sqlFile, runner)
+    # unmet hours data output
+    tolerance_summary = {}
+    tolerance_summary[:title] = 'Unmet Hours Tolerance'
+    tolerance_summary[:header] = ['Tolerance for Time Setpoint Not Met', 'Temperature']
+    target_units = 'F'
+    tolerance_summary[:units] = ['', target_units]
+    tolerance_summary[:data] = []
+
+    # create string for rows (transposing from what is in tabular data)
+    setpoint_not_met_cat = []
+    setpoint_not_met_cat << 'Heating'
+    setpoint_not_met_cat << 'Cooling'
+
+    # loop through  messages
+    setpoint_not_met_cat.each do |cat|
+      # Retrieve end use percentages from  table
+      query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='AnnualBuildingUtilityPerformanceSummary' and TableName = 'Setpoint Not Met Criteria' and RowName= 'Tolerance for Zone #{cat} Setpoint Not Met Time' and ColumnName='Degrees';"
+      setpoint_not_met_cat_value = sqlFile.execAndReturnFirstDouble(query)
+      if setpoint_not_met_cat_value.empty?
+        runner.registerWarning("Did not find value for #{cat}.")
+        return false
+      else
+        # net site energy
+        display = cat
+        source_units = 'C'
+        value = OpenStudio.convert(setpoint_not_met_cat_value.get.to_f,'K','R').get
+        value_neat = value.round(2)
+        tolerance_summary[:data] << [display, value_neat]
+        runner.registerValue("unmet_hours_tolerance_#{cat.downcase}", value, target_units)
+      end
+    end # setpoint_not_met_cat.each do
+
+    return tolerance_summary
   end
 
   # summary of what to show for each type of air loop component
@@ -2585,11 +2623,11 @@ module OsLib_Reporting
     # create table
     temperature_table = {}
     temperature_table[:title] = 'Temperature (Table values represent hours spent in each temperature range)'
-    temperature_table[:header] = ['Zone', 'Unmet Heating Hours']
+    temperature_table[:header] = ['Zone', 'Unmet Htg', 'Unmet Htg (Occ)']
     temperature_bins.each do |k, v|
       temperature_table[:header] << k
     end
-    temperature_table[:header] += ['Unmet Cooling Hours', 'Mean Temp']
+    temperature_table[:header] += ['Unmet Clg','Unmet Clg (Occ)', 'Mean Temp']
     temperature_table[:units] = ['', 'hr']
     temperature_bins.each do |k, v|
       temperature_table[:units] << 'F'
@@ -2639,12 +2677,16 @@ module OsLib_Reporting
         unmet_htg = sqlFile.execAndReturnFirstDouble(query_htg).get
         query_clg = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='SystemSummary' and TableName = 'Time Setpoint Not Met' and RowName= '#{key}' and ColumnName='During Cooling';"
         unmet_clg = sqlFile.execAndReturnFirstDouble(query_clg).get
+        query_htg_occ = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='SystemSummary' and TableName = 'Time Setpoint Not Met' and RowName= '#{key}' and ColumnName='During Occupied Heating';"
+        unmet_htg_occ = sqlFile.execAndReturnFirstDouble(query_htg).get
+        query_clg_occ = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='SystemSummary' and TableName = 'Time Setpoint Not Met' and RowName= '#{key}' and ColumnName='During Occupied Cooling';"
+        unmet_clg_occ = sqlFile.execAndReturnFirstDouble(query_clg).get
 
         # get mean temp
         mean = OpenStudio.convert(temp_sum / temp_counter.to_f, 'C', 'F').get
 
         # add rows to table
-        row_data = [key, unmet_htg.round]
+        row_data = [key, unmet_htg.round,unmet_htg_occ.round]
         row_color = ['', '']
         temperature_bins.each do |k, v|
           row_data << v
@@ -2658,7 +2700,7 @@ module OsLib_Reporting
             row_color << ''
           end
         end
-        row_data += [unmet_clg.round, "#{mean.round(1)} (F)"]
+        row_data += [unmet_clg.round, unmet_clg_occ.round, "#{mean.round(1)} (F)"]
         row_color += ['', '']
         temperature_table[:data] << row_data
         temperature_table[:data_color] << row_color
