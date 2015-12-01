@@ -3239,9 +3239,7 @@ module OsLib_Reporting
     rows_name_query = "SELECT DISTINCT  RowName FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_01_name}'"
     row_names = sqlFile.execAndReturnVectorOfString(rows_name_query).get
     rows = []
-    puts "looking for rows"
     row_names.each do |row_name|
-      puts row_name
       rows << row_name
     end
 
@@ -3269,8 +3267,6 @@ module OsLib_Reporting
         column_counter += 1
         next if header == '' || header == 'Heating/Cooling'
         query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_01_name}' and RowName= '#{row}' and ColumnName= '#{header}'"
-        puts "query for #{header}"
-        puts query
         if not zone_dd_table[:source_units][column_counter] == ''
           results = sqlFile.execAndReturnFirstDouble(query)
           row_data_ip = OpenStudio.convert(results.to_f, zone_dd_table[:source_units][column_counter], zone_dd_table[:units][column_counter]).get
@@ -3390,7 +3386,7 @@ module OsLib_Reporting
     report_name = 'OutdoorAirSummary'
     table_name = 'Average Outdoor Air During Occupied Hours'
     min_table_name = 'Minimum Outdoor Air During Occupied Hours'
-    columns = ['', 'Average Number of Occupants', 'Nominal Number of Occupants', 'Zone Volume', 'Avg. Mechanical Ventilation', 'Min. Mechanical Ventilation', 'Avg. Infiltration', 'Min. Infiltration']
+    columns = ['', 'Average Number of Occupants', 'Nominal Number of Occupants', 'Zone Volume', 'Avg. Mechanical Ventilation', 'Min. Mechanical Ventilation', 'Avg. Infiltration', 'Min. Infiltration', 'Avg. Simple Ventilation', 'Min. Simple Ventilation']
 
     # populate dynamic rows
     rows_name_query = "SELECT DISTINCT  RowName FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_name}'"
@@ -3406,8 +3402,8 @@ module OsLib_Reporting
     table[:header] = columns
     source_units_volume = 'm^3'
     target_units_volume = 'ft^3'
-    table[:units] = ['', '', '', target_units_volume, 'ach', 'ach', 'ach', 'ach']
-    table[:source_units] = ['', '', '', source_units_volume, 'ach', 'ach', 'ach', 'ach'] # used for conversation, not needed for rendering.
+    table[:units] = ['', '', '', target_units_volume, 'ach', 'ach', 'ach', 'ach','ach', 'ach']
+    table[:source_units] = ['', '', '', source_units_volume, 'ach', 'ach', 'ach', 'ach', 'ach', 'ach']
     table[:data] = []
 
     # run query and populate table

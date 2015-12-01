@@ -2,7 +2,7 @@
   <schema_version>3.0</schema_version>
   <name>open_studio_results</name>
   <uid>fc337100-8634-404e-8966-01243d292a79</uid>
-  <version_id>ae9cffb1-df5c-4c0d-8e55-b8efa27834af</version_id>
+  <version_id>567809a0-3151-496b-8a31-b595da9abb70</version_id>
   <xml_checksum>557BF06F</xml_checksum>
   <class_name>OpenStudioResults</class_name>
   <display_name>OpenStudio Results</display_name>
@@ -464,8 +464,8 @@
     <file>
       <version>
         <software_program>OpenStudio</software_program>
-        <identifier>1.7.5</identifier>
-        <min_compatible>1.7.5</min_compatible>
+        <identifier>1.9.4</identifier>
+        <min_compatible>1.9.4</min_compatible>
       </version>
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
@@ -482,13 +482,13 @@
       <filename>EdgeCaseModel.osm</filename>
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
-      <checksum>C485F2C2</checksum>
+      <checksum>E5788DD1</checksum>
     </file>
     <file>
       <filename>os_lib_reporting.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
-      <checksum>8739F794</checksum>
+      <checksum>2171F954</checksum>
     </file>
   </files>
 </measure>
