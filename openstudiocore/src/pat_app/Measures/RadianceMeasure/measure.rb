@@ -452,6 +452,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             ["clear", "tinted"].each do |state|
                  
               runner.registerInfo("#{Time.now.getutc}: computing view matrix for window group '#{wg}' in #{state} state")
+              puts "#{Time.now.getutc}: computing view matrix for window group '#{wg}' in #{state} state"
               rad_command = "#{t_catCommand} \"numeric/merged_space.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
               "-o \"output/dc/#{wg}_#{state}.vmx\" -m skyglow octrees/model_#{wg}_#{state}.oct"
               runner.registerInfo("#{Time.now.getutc}: #{rad_command}")
@@ -487,10 +488,12 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
             # compute view matrices for shade controlled window groups all at once
 
+            puts "in here, yo"
             # use fine params   
             rtrace_args = "#{options_vmx}" 
 
             runner.registerInfo("#{Time.now.getutc}: computing view matri(ces) for window groups with shades")
+            puts "#{Time.now.getutc}: computing view matri(ces) for window groups with shades"
     
             # get the shaded window groups' shade polygons
     

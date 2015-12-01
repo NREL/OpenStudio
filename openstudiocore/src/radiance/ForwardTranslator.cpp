@@ -1679,10 +1679,10 @@ namespace radiance {
 
             }else{
 
-							std::string shadeType = "air.xml";
+							std::string shadeType = "air.xml,";
 							if (shadingControl){
 								if (shadingControl->construction()){
-									shadeType = "SWITCHABLE";
+									shadeType = "SWITCHABLE,";
 								}
 							}
 								
