@@ -394,7 +394,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
       runner.registerInfo("#{Time.now.getutc}: passing #{rfluxmtxDim} calculation points to Radiance")
 
-      # compute daylight matrices
+      # process individual window groups
       runner.registerInfo("#{Time.now.getutc}: computing daylight coefficient matrices")
       exec_statement("oconv materials/materials.rad model.rad > octrees/model_dc.oct", runner)
 
@@ -405,13 +405,14 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         next if row[0] == "#"
         wg=row.split(",")[0]
         
-        rad_command = ""
-           
-        if wg == "WG0"
+        rad_command = "" 
+                 
+        if wg == "WG0" # window group zero (all uncontrolled windows) 
 
           runner.registerInfo('processing WG0')
+          puts 'processing WG0'
 
-          # make WG0 octree (with shade-controlled window groups blacked out, if applicable)
+          # make WG0 octree (with shade-controlled window groups blacked out, if any)
           
           if haveWG1 == "True"
             rad_command = "oconv \"materials/materials.rad\" \"materials/materials_WG0.rad\" model.rad \"skies/dc_sky.rad\" > octrees/model_WG0.oct"
@@ -423,30 +424,41 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           # use more aggro simulation parameters because this is basically a view matrix
           rtrace_args = "#{options_vmx}"
           
-          runner.registerInfo("#{Time.now.getutc}: computing daylight/view matrix for uncontrolled windows (WG0)")
+          rad_command = "#{Time.now.getutc}: computing daylight/view matrix for uncontrolled windows (WG0)"
+          runner.registerInfo(rad_command)
+          puts rad_command
+          
           rad_command = "#{t_catCommand} \"numeric/merged_space.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
           "-o \"output/dc/WG0.vmx\" -m skyglow octrees/model_WG0.oct"
-          runner.registerInfo("#{Time.now.getutc}: #{rad_command}")
           exec_statement(rad_command, runner)
+          puts rad_command
 
-        else
+        else # controlled window group
 
           runner.registerInfo("processing shade-controlled window group #{wg}")
           puts "processing shade-controlled window group #{wg}"
                   
-          if row.split(",")[4].rstrip == "SWITCHABLE"
+          if row.split(",")[4].rstrip == "SWITCHABLE" # has switchable glazing
           
-            puts "Window Group #{wg} has switchable glazing control"
+            rad_command = "Window Group '#{wg}' has switchable glazing control, calculating two view matrices"
+            runner.registerInfo("#{Time.now.getutc}: #{rad_command}")
+            puts rad_command
+     
+            # black out WG0 and all other WG shades
+            # start with base materials, then add WG0 blackout mats, then add WG1..-1 blackout mats
+            base_mats = "materials/materials.rad materials/materials_vmx.rad materials/materials_blackout.rad"
 
-            # make clear-state octree, black out WGO and all other WG shades
-            rad_command = "oconv \"materials/materials.rad\" materials/materials_blackout.rad materials/#{wg}_clear.mat model.rad \"skies/dc_sky.rad\" > octrees/model_#{wg}_clear.oct"
+            # make clear-state octree
+            rad_command = "oconv #{base_mats} materials/#{wg}_clear.mat model.rad skies/dc_sky.rad > octrees/model_#{wg}_clear.oct"
             exec_statement(rad_command, runner)
+            puts "#{Time.now.getutc}: #{rad_command}"
 
             # make tinted-state octree
-            rad_command = "oconv \"materials/materials.rad\" materials/materials_blackout.rad materials/#{wg}_tinted.mat model.rad \"skies/dc_sky.rad\" > octrees/model_#{wg}_tinted.oct"
+            rad_command = "oconv #{base_mats} materials/#{wg}_tinted.mat model.rad \"skies/dc_sky.rad\" > octrees/model_#{wg}_tinted.oct"
             exec_statement(rad_command, runner)
+            puts "#{Time.now.getutc}: #{rad_command}"
 
-            # do view matrix
+            # do view matrices, one for each tint state
             rtrace_args = "#{options_vmx}"
             
             ["clear", "tinted"].each do |state|
@@ -459,80 +471,85 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
               exec_statement(rad_command, runner)
             
             end
+            
+            puts "end #{wg}."
 
-          else
+          else # has shades
 
             # use more chill sim parameters
             rtrace_args = "#{options_dmx}"
           
             # do daylight matrices for controlled windows
-            runner.registerInfo("#{Time.now.getutc}: computing daylight matrix for window group #{wg}...")
+            rad_command = "#{Time.now.getutc}: computing daylight matrix for window group #{wg}..."
+            runner.registerInfo(rad_command)
+            puts rad_command
 
             rad_command = "rfluxmtx #{rtrace_args} -n #{sim_cores} -fa -v \"scene/shades/#{wg}_SHADE.rad\" \"skies/dc_sky.rad\" -i octrees/model_dc.oct > \"output/dc/#{wg}.dmx\""
             runner.registerInfo("#{Time.now.getutc}: #{rad_command}")
+            puts rad_command
             exec_statement(rad_command, runner)
+            
+            puts "end #{wg}."
           
           end
 
         end # calculate DMX
         
-        # do view matrices 
-				
-        if haveWG1 == "True"
+      end # individual window group processing
+        
+      # do remaining view matrices, if applicable
       
-          if row.split(",")[4].rstrip == "SWITCHABLE"
-          
-            puts "Switchable glazing window group #{wg} already calculated as single-phase view matrix" # we already got the view matrices for EC glass in the preceding step.
+      if haveWG1 == "True"
+    
+        # compute view matrices for shade controlled window groups all at once
+
+        # use fine params   
+        rtrace_args = "#{options_vmx}" 
+
+        rad_command = "#{Time.now.getutc}: computing view matri(ces) for all window groups with shades"
+        runner.registerInfo(rad_command)
+        puts rad_command 
+
+        # get the shaded window groups' shade polygons
+
+        wgInput = []
         
-          else
-
-            # compute view matrices for shade controlled window groups all at once
-
-            puts "in here, yo"
-            # use fine params   
-            rtrace_args = "#{options_vmx}" 
-
-            runner.registerInfo("#{Time.now.getutc}: computing view matri(ces) for window groups with shades")
-            puts "#{Time.now.getutc}: computing view matri(ces) for window groups with shades"
-    
-            # get the shaded window groups' shade polygons
-    
-            wgInput = []
-            # get the SHADE polygons for sampling (NOT the GLAZING ones!)
-            Dir.glob("scene/shades/WG*.rad") {|file|
-              wgInput << file
-            }
-
-            # make the receiver file
-            exec_statement("#{t_catCommand} \"materials/materials_vmx.rad\" #{wgInput.join(" ")} > receivers_vmx.rad", runner)
-    
-            # make the octree
-            scene_files = []
-            Dir.glob("scene/*.rad").each {|f| scene_files << f}
-            exec_statement("oconv materials/materials.rad #{scene_files.join(' ')} > octrees/model_vmx.oct", runner)
-    
-            # make rfluxmtx do all the work
-            rad_command = "rfluxmtx #{rtrace_args} -n #{sim_cores} -ds .15 -faa -y #{rfluxmtxDim} -I -v - receivers_vmx.rad -i octrees/model_vmx.oct < numeric/merged_space.map"
-            exec_statement(rad_command, runner)
-          
-          end
-
-          # compute daylight coefficient matrices for window group control points
-
-          rtrace_args = "#{options_dmx}"
-          exec_statement("oconv \"materials/materials.rad\" model.rad \
-            \"skies/dc_sky.rad\" > octrees/model_wc.oct", runner)
-          runner.registerInfo("#{Time.now.getutc}: computing DCs for window control points")
-
-          rad_command = "#{t_catCommand} \"numeric/window_controls.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
-          "-o \"output/dc/window_controls.vmx\" -m skyglow octrees/model_wc.oct"
-          exec_statement(rad_command, runner)
+        # get the SHADE polygons for sampling (NOT the GLAZING ones!)
+        # this will automatically omit switchable glazing-controlled window groups. ;)
         
-        end
+        Dir.glob("scene/shades/WG*.rad") {|file|
+          wgInput << file
+        }
+
+        # make the receiver file
+        exec_statement("#{t_catCommand} \"materials/materials_vmx.rad\" #{wgInput.join(" ")} > receivers_vmx.rad", runner)
+
+        # make the octree
+        scene_files = []
+        Dir.glob("scene/*.rad").each {|f| scene_files << f}
+        exec_statement("oconv materials/materials.rad #{scene_files.join(' ')} > octrees/model_vmx.oct", runner)
+
+        # make rfluxmtx do all the work
+        rad_command = "rfluxmtx #{rtrace_args} -n #{sim_cores} -ds .15 -faa -y #{rfluxmtxDim} -I -v - receivers_vmx.rad -i octrees/model_vmx.oct < numeric/merged_space.map"
+        exec_statement(rad_command, runner)
+        puts rad_command
+
+        # compute daylight coefficient matrices for window group control points
+
+        rtrace_args = "#{options_dmx}"
+        exec_statement("oconv \"materials/materials.rad\" model.rad \
+          \"skies/dc_sky.rad\" > octrees/model_wc.oct", runner)
+        runner.registerInfo("#{Time.now.getutc}: computing DCs for window control points")
+
+        rad_command = "#{t_catCommand} \"numeric/window_controls.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
+        "-o \"output/dc/window_controls.vmx\" -m skyglow octrees/model_wc.oct"
+        exec_statement(rad_command, runner)
       
       end # VMX for controlled window groups
 
-    runner.registerInfo("#{Time.now.getutc}: done (daylight coefficient matrices).")
+    rad_command = "#{Time.now.getutc}: done (daylight coefficient matrices)."
+    runner.registerInfo(rad_command)
+    puts rad_command
     
     end # calculateDaylightCoeffecients()
 
@@ -569,7 +586,9 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
       simulations = []
 
-      exec_statement("gendaymtx -m #{t_options_skyvecDensity} \"wx/in.wea\" > annual-sky.mtx", runner)
+      rad_command = "gendaymtx -m #{t_options_skyvecDensity} \"wx/in.wea\" > annual-sky.mtx"
+      exec_statement(rad_command, runner)
+      puts rad_command
 
       windowMaps = File.open("bsdf/mapping.rad")
   
@@ -651,7 +670,9 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             shadeControlSetpoint = 100000000
           end
 
-          runner.registerInfo("#{Time.now.getutc}: Processing window group '#{windowGroup}', setpoint: #{shadeControlSetpoint} lux")
+          rad_command = "#{Time.now.getutc}: Processing window group '#{windowGroup}', setpoint: #{shadeControlSetpoint} lux, input: #{wgIllumFiles}"
+          runner.registerInfo(rad_command)
+          puts rad_command
 
           # separate header from data; so, so ugly. 
           header = []
