@@ -240,16 +240,6 @@ namespace detail {
   {
     auto newMo = StraightComponent_Impl::clone(model).cast<ThermalStorageIceDetailed>();
 
-    {
-      auto mo = dischargingCurve().clone(model).cast<Curve>();
-      newMo.setDischargingCurve(mo);
-    }
-
-    {
-      auto mo = chargingCurve().clone(model).cast<Curve>();
-      newMo.setChargingCurve(mo);
-    }
-
     return newMo;
   }
 

@@ -79,11 +79,6 @@ namespace detail {
   {
     RefrigerationGasCoolerAirCooled modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationGasCoolerAirCooled>();
 
-    boost::optional<CurveLinear> heatRejectionCurve = ratedTotalHeatRejectionRateCurve();
-    if(heatRejectionCurve) {
-      modelObjectClone.setRatedTotalHeatRejectionRateCurve(heatRejectionCurve.get().clone(model).cast<CurveLinear>());
-    }
-
     // modelObjectClone.resetAirInletNode();
 
     return modelObjectClone;

@@ -92,21 +92,6 @@ namespace detail {
   {
     auto clone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACDehumidifierDX>();
 
-    {
-      auto curveClone = waterRemovalCurve().clone(model).cast<Curve>();
-      clone.setWaterRemovalCurve(curveClone);
-    }
-
-    {
-      auto curveClone = energyFactorCurve().clone(model).cast<Curve>();
-      clone.setEnergyFactorCurve(curveClone);
-    }
-
-    {
-      auto curveClone = partLoadFractionCorrelationCurve().clone(model).cast<Curve>();
-      clone.setPartLoadFractionCorrelationCurve(curveClone);
-    }
-
     return clone;
   }
 

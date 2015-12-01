@@ -219,7 +219,7 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_CloneModelWithCustomData)
     EXPECT_FALSE(testObjectClone.heatingSource());
     EXPECT_FALSE(testObjectClone.heatRejectionTarget());
     ASSERT_TRUE(testObjectClone.heatReclaimEfficiencyFunctionofTemperatureCurve());
-    EXPECT_NE(curve, testObjectClone.heatReclaimEfficiencyFunctionofTemperatureCurve().get());
+    EXPECT_EQ(curve, testObjectClone.heatReclaimEfficiencyFunctionofTemperatureCurve().get());
 }
 
 TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_CloneTwoModelWithCustomData)

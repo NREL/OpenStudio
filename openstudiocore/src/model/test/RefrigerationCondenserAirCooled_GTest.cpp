@@ -75,7 +75,7 @@ TEST_F(ModelFixture, RefrigerationCondenserAirCooled_CloneOneModelWithDefaultDat
   EXPECT_DOUBLE_EQ(7000.0, testObjectClone.ratedFanPower());
   EXPECT_EQ("VariableSpeed", testObjectClone.condenserFanSpeedControlType());
   EXPECT_DOUBLE_EQ(0.25, testObjectClone.minimumFanAirFlowRatio());
-  EXPECT_NE(testObject.ratedEffectiveTotalHeatRejectionRateCurve().get().handle(), testObjectClone.ratedEffectiveTotalHeatRejectionRateCurve().get().handle());
+  EXPECT_EQ(testObject.ratedEffectiveTotalHeatRejectionRateCurve().get().handle(), testObjectClone.ratedEffectiveTotalHeatRejectionRateCurve().get().handle());
 }
 
 TEST_F(ModelFixture, RefrigerationCondenserAirCooled_CloneOneModelWithCustomData)
@@ -104,8 +104,8 @@ TEST_F(ModelFixture, RefrigerationCondenserAirCooled_CloneOneModelWithCustomData
   EXPECT_EQ("TwoSpeed", testObjectClone.condenserFanSpeedControlType());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.minimumFanAirFlowRatio());
   EXPECT_FALSE(testObjectClone.airInletZone());
-  EXPECT_NE(testObject.ratedEffectiveTotalHeatRejectionRateCurve().get().handle(), testObjectClone.ratedEffectiveTotalHeatRejectionRateCurve().get().handle());
-  EXPECT_NE(heatRejectionCurve.handle(), testObjectClone.ratedEffectiveTotalHeatRejectionRateCurve().get().handle());
+  EXPECT_EQ(testObject.ratedEffectiveTotalHeatRejectionRateCurve().get().handle(), testObjectClone.ratedEffectiveTotalHeatRejectionRateCurve().get().handle());
+  EXPECT_EQ(heatRejectionCurve.handle(), testObjectClone.ratedEffectiveTotalHeatRejectionRateCurve().get().handle());
 }
 
 TEST_F(ModelFixture, RefrigerationCondenserAirCooled_CloneTwoModelsWithDefaultData)
@@ -123,7 +123,7 @@ TEST_F(ModelFixture, RefrigerationCondenserAirCooled_CloneTwoModelsWithDefaultDa
   RefrigerationCondenserAirCooled testObjectClone2 = testObject.clone(model2).cast<RefrigerationCondenserAirCooled>();
 
   std::vector<CurveLinear> refrigerationCondenserCurves = model.getModelObjects<CurveLinear>();
-  EXPECT_EQ(2, refrigerationCondenserCurves.size());
+  EXPECT_EQ(1, refrigerationCondenserCurves.size());
 
   refrigerationCondenserCurves2 = model2.getModelObjects<CurveLinear>();
   EXPECT_EQ(1, refrigerationCondenserCurves2.size());

@@ -182,7 +182,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_CloneOneModelWithCustomData)
   EXPECT_DOUBLE_EQ(999.0 ,testObjectClone.totalPumpHead().get());
   EXPECT_DOUBLE_EQ(0.5 ,testObjectClone.pumpMotorHeattoFluid());
   EXPECT_TRUE(testObjectClone.variableSpeedPumpCubicCurve());
-  EXPECT_NE(testObject.variableSpeedPumpCubicCurve().get().handle(), testObjectClone.variableSpeedPumpCubicCurve().get().handle());
+  EXPECT_EQ(testObject.variableSpeedPumpCubicCurve().get().handle(), testObjectClone.variableSpeedPumpCubicCurve().get().handle());
   EXPECT_FALSE(testObjectClone.distributionPipingZone());
   EXPECT_FALSE(testObjectClone.receiverSeparatorZone());
 }

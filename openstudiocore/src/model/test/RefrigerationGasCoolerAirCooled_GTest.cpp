@@ -124,7 +124,7 @@ TEST_F(ModelFixture, RefrigerationGasCoolerAirCooled_CloneModelWithDefaultData)
     EXPECT_DOUBLE_EQ(testObjectClone.gasCoolerRefrigerantOperatingChargeInventory(),0.0);
     EXPECT_DOUBLE_EQ(testObjectClone.gasCoolerReceiverRefrigerantInventory(),0.0);
     EXPECT_DOUBLE_EQ(testObjectClone.gasCoolerOutletPipingRefrigerantInventory(),0.0);
-    EXPECT_NE(testObject.ratedTotalHeatRejectionRateCurve().get().handle(), testObjectClone.ratedTotalHeatRejectionRateCurve().get().handle());
+    EXPECT_EQ(testObject.ratedTotalHeatRejectionRateCurve().get().handle(), testObjectClone.ratedTotalHeatRejectionRateCurve().get().handle());
 }
 
 //Test clone model with custom data

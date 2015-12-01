@@ -683,18 +683,6 @@ namespace detail {
   {
     ChillerElectricEIR chiller = WaterToWaterComponent_Impl::clone(model).cast<ChillerElectricEIR>();
 
-    CurveBiquadratic biQuadCurve = this->coolingCapacityFunctionOfTemperature().clone(model).cast<CurveBiquadratic>();
-
-    chiller.setCoolingCapacityFunctionOfTemperature(biQuadCurve);
-
-    biQuadCurve = this->electricInputToCoolingOutputRatioFunctionOfTemperature().clone(model).cast<CurveBiquadratic>();
-
-    chiller.setElectricInputToCoolingOutputRatioFunctionOfTemperature(biQuadCurve);
-
-    CurveQuadratic curve = this->electricInputToCoolingOutputRatioFunctionOfPLR().clone(model).cast<CurveQuadratic>();
-
-    chiller.setElectricInputToCoolingOutputRatioFunctionOfPLR(curve);
-
     return chiller;
   }
 

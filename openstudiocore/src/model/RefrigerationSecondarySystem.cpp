@@ -102,10 +102,6 @@ namespace detail {
   {
     RefrigerationSecondarySystem modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationSecondarySystem>();
 
-    if (boost::optional<CurveCubic> variableSpeedPumpCubicCurve = this->variableSpeedPumpCubicCurve()) {
-      modelObjectClone.setVariableSpeedPumpCubicCurve(variableSpeedPumpCubicCurve.get().clone(model).cast<CurveCubic>());
-    }
-
     if (boost::optional<ModelObjectList> caseAndWalkinList = this->refrigeratedCaseAndWalkInList()) {
       ModelObjectList caseAndWalkinListClone = caseAndWalkinList->clone(model).cast<ModelObjectList>();
       modelObjectClone.getImpl<detail::RefrigerationSecondarySystem_Impl>()->setRefrigeratedCaseAndWalkInList(caseAndWalkinListClone);

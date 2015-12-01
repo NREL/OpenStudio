@@ -77,20 +77,6 @@ namespace detail {
   {
     RefrigerationCompressor modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCompressor>();
 
-    CurveBicubic refPowerCurve = refrigerationCompressorPowerCurve();
-    modelObjectClone.setRefrigerationCompressorPowerCurve(refPowerCurve.clone(model).cast<CurveBicubic>());
-
-    CurveBicubic refCapacitryCurve = refrigerationCompressorCapacityCurve();
-    modelObjectClone.setRefrigerationCompressorCapacityCurve(refCapacitryCurve.clone(model).cast<CurveBicubic>());
-
-    if ( boost::optional<CurveBicubic> transPowerCurve = transcriticalCompressorPowerCurve() ) {
-      modelObjectClone.setTranscriticalCompressorPowerCurve(transPowerCurve.get().clone(model).cast<CurveBicubic>());
-    }
-
-    if ( boost::optional<CurveBicubic> transCapacitryCurve = transcriticalCompressorCapacityCurve() ) {
-      modelObjectClone.setTranscriticalCompressorCapacityCurve(transCapacitryCurve.get().clone(model).cast<CurveBicubic>());
-    }
-
     return modelObjectClone;
   }
 

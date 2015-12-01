@@ -472,41 +472,6 @@ namespace detail {
   {
     auto newMo = WaterToWaterComponent_Impl::clone(model).cast<ChillerAbsorptionIndirect>();
 
-    {
-      auto mo = generatorHeatInputFunctionofPartLoadRatioCurve().clone(model).cast<Curve>();
-      newMo.setGeneratorHeatInputFunctionofPartLoadRatioCurve(mo);
-    }
-
-    {
-      auto mo = pumpElectricInputFunctionofPartLoadRatioCurve().clone(model).cast<Curve>();
-      newMo.setPumpElectricInputFunctionofPartLoadRatioCurve(mo);
-    }
-
-    {
-      auto mo = capacityCorrectionFunctionofCondenserTemperatureCurve().clone(model).cast<Curve>();
-      newMo.setCapacityCorrectionFunctionofCondenserTemperatureCurve(mo);
-    }
-
-    {
-      auto mo = capacityCorrectionFunctionofChilledWaterTemperatureCurve().clone(model).cast<Curve>();
-      newMo.setCapacityCorrectionFunctionofChilledWaterTemperatureCurve(mo);
-    }
-
-    {
-      auto mo = capacityCorrectionFunctionofGeneratorTemperatureCurve().clone(model).cast<Curve>();
-      newMo.setCapacityCorrectionFunctionofGeneratorTemperatureCurve(mo);
-    }
-
-    {
-      auto mo = generatorHeatInputCorrectionFunctionofCondenserTemperatureCurve().clone(model).cast<Curve>();
-      newMo.setGeneratorHeatInputCorrectionFunctionofCondenserTemperatureCurve(mo);
-    }
-
-    {
-      auto mo = generatorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve().clone(model).cast<Curve>();
-      newMo.setGeneratorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve(mo);
-    }
-
     return newMo;
   }
 

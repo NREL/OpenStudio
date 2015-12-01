@@ -346,22 +346,6 @@ namespace detail {
   {
     auto newCoil = StraightComponent_Impl::clone(model).cast<CoilCoolingDXTwoStageWithHumidityControlMode>();
 
-    if( auto mo = normalModeStage1CoilPerformance() ) {
-      newCoil.setNormalModeStage1CoilPerformance(mo->clone(model).cast<CoilPerformanceDXCooling>());
-    }
-
-    if( auto mo = normalModeStage1Plus2CoilPerformance() ) {
-      newCoil.setNormalModeStage1Plus2CoilPerformance(mo->clone(model).cast<CoilPerformanceDXCooling>());
-    }
-
-    if( auto mo = dehumidificationMode1Stage1CoilPerformance() ) {
-      newCoil.setDehumidificationMode1Stage1CoilPerformance(mo->clone(model).cast<CoilPerformanceDXCooling>());
-    }
-
-    if( auto mo = dehumidificationMode1Stage1Plus2CoilPerformance() ) {
-      newCoil.setDehumidificationMode1Stage1Plus2CoilPerformance(mo->clone(model).cast<CoilPerformanceDXCooling>());
-    }
-
     return newCoil;
   }
 

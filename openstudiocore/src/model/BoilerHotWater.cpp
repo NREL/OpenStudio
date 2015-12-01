@@ -429,11 +429,6 @@ namespace detail {
   {
     BoilerHotWater newBoiler = StraightComponent_Impl::clone(model).cast<BoilerHotWater>();
 
-    if( boost::optional<Curve> c = normalizedBoilerEfficiencyCurve() )
-    {
-      newBoiler.setNormalizedBoilerEfficiencyCurve(c->clone(model).cast<Curve>());
-    }
-
     return newBoiler;
   }
 

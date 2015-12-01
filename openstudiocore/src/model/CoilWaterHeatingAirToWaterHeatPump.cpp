@@ -397,41 +397,6 @@ namespace detail {
   {
     auto newCoil = ModelObject_Impl::clone(model).cast<CoilWaterHeatingAirToWaterHeatPump>();
 
-    {
-      auto mo = heatingCapacityFunctionofTemperatureCurve().clone(model).cast<Curve>();
-      newCoil.setHeatingCapacityFunctionofTemperatureCurve(mo);
-    }
-
-    {
-      auto mo = heatingCapacityFunctionofAirFlowFractionCurve().clone(model).cast<Curve>();
-      newCoil.setHeatingCapacityFunctionofAirFlowFractionCurve(mo);
-    }
-
-    {
-      auto mo = heatingCapacityFunctionofWaterFlowFractionCurve().clone(model).cast<Curve>();
-      newCoil.setHeatingCapacityFunctionofWaterFlowFractionCurve(mo);
-    }
-
-    {
-      auto mo = heatingCOPFunctionofTemperatureCurve().clone(model).cast<Curve>();
-      newCoil.setHeatingCOPFunctionofTemperatureCurve(mo);
-    }
-
-    {
-      auto mo = heatingCOPFunctionofAirFlowFractionCurve().clone(model).cast<Curve>();
-      newCoil.setHeatingCOPFunctionofAirFlowFractionCurve(mo);
-    }
-
-    {
-      auto mo = heatingCOPFunctionofWaterFlowFractionCurve().clone(model).cast<Curve>();
-      newCoil.setHeatingCOPFunctionofWaterFlowFractionCurve(mo);
-    }
-
-    {
-      auto mo = partLoadFractionCorrelationCurve().clone(model).cast<Curve>();
-      newCoil.setPartLoadFractionCorrelationCurve(mo);
-    }
-
     return newCoil;
   }
 

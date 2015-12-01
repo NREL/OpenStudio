@@ -226,12 +226,6 @@ namespace detail {
   {
     CoilCoolingDXVariableRefrigerantFlow objectClone = HVACComponent_Impl::clone(model).cast<CoilCoolingDXVariableRefrigerantFlow>();
 
-    Curve curveClone = coolingCapacityRatioModifierFunctionofTemperatureCurve().clone(model).cast<Curve>();
-    objectClone.setCoolingCapacityRatioModifierFunctionofTemperatureCurve(curveClone);
-
-    curveClone = coolingCapacityModifierCurveFunctionofFlowFraction().clone(model).cast<Curve>();
-    objectClone.setCoolingCapacityModifierCurveFunctionofFlowFraction(curveClone);
-
     return objectClone;
   }
 

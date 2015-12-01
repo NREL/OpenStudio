@@ -385,8 +385,6 @@ namespace detail {
       t_clone.getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setSpeedDataList(speedDataListClone);
     }
 
-    t_clone.setEnergyPartLoadFractionCurve( energyPartLoadFractionCurve().clone(model).cast<Curve>() );
-
     return t_clone;
   }
 

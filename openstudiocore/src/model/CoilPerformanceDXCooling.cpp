@@ -474,33 +474,6 @@ namespace detail {
   ModelObject CoilPerformanceDXCooling_Impl::clone(Model model) const {
     auto newObject = ModelObject_Impl::clone(model).cast<CoilPerformanceDXCooling>();
 
-    {
-      auto mo = totalCoolingCapacityFunctionofTemperatureCurve();
-      newObject.setTotalCoolingCapacityFunctionofTemperatureCurve(mo.clone(model).cast<Curve>());
-    }
-    {
-      auto mo = totalCoolingCapacityFunctionofFlowFractionCurve();
-      newObject.setTotalCoolingCapacityFunctionofFlowFractionCurve(mo.clone(model).cast<Curve>());
-    }
-    {
-      auto mo = energyInputRatioFunctionofTemperatureCurve();
-      newObject.setEnergyInputRatioFunctionofTemperatureCurve(mo.clone(model).cast<Curve>());
-    }
-    {
-      auto mo = energyInputRatioFunctionofFlowFractionCurve();
-      newObject.setEnergyInputRatioFunctionofFlowFractionCurve(mo.clone(model).cast<Curve>());
-    }
-    {
-      auto mo = partLoadFractionCorrelationCurve();
-      newObject.setPartLoadFractionCorrelationCurve(mo.clone(model).cast<Curve>());
-    }
-    if( auto mo = sensibleHeatRatioFunctionofTemperatureCurve() ) {
-      newObject.setSensibleHeatRatioFunctionofTemperatureCurve(mo->clone(model).cast<Curve>());
-    }
-    if( auto mo = sensibleHeatRatioFunctionofFlowFractionCurve() ) {
-      newObject.setSensibleHeatRatioFunctionofFlowFractionCurve(mo->clone(model).cast<Curve>());
-    }
-
     return newObject;
   }
 
