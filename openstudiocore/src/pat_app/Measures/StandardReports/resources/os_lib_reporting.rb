@@ -265,9 +265,11 @@ module OsLib_Reporting
     end
 
     # temp code to check OS vs. E+ area
-    puts "area test"
-    puts "E+ reported area is #{query_results.get}"
-    puts "OpenStudio reported area is #{model.getBuilding.floorArea}"
+    energy_plus_area = query_results.get
+    open_studio_area = model.getBuilding.floorArea
+    if not energy_plus_area == open_studio_area
+      runner.registerWarning("EnergyPlus reported area is #{query_results.get} (m^2). OpenStudio reported area is #{model.getBuilding.floorArea} (m^2).")
+    end
 
     # EUI
     eui =  sqlFile.netSiteEnergy.get / query_results.get
@@ -281,7 +283,7 @@ module OsLib_Reporting
     else
       value_neat = "can't calculate EUI."
     end
-    general_building_information[:data] << [display, value_neat, target_units]
+    general_building_information[:data] << ["#{display} (Based on Net Site Energy and Total Building Area)", value_neat, target_units]
 
     return general_building_information
   end
@@ -1632,6 +1634,11 @@ module OsLib_Reporting
       query3 = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='InputVerificationandResultsSummary' and TableName='Window-Wall Ratio' and RowName='#{fenestration}' and ColumnName='South (135 to 225 deg)'"
       query4 = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='InputVerificationandResultsSummary' and TableName='Window-Wall Ratio' and RowName='#{fenestration}' and ColumnName='West (225 to 315 deg)'"
       query5 = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='InputVerificationandResultsSummary' and TableName='Skylight-Roof Ratio'  and RowName='Skylight-Roof Ratio'"
+      query6 = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='InputVerificationandResultsSummary' and TableName='Conditioned Window-Wall Ratio' and RowName='#{fenestration}' and ColumnName='Total'"
+      query7 = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='InputVerificationandResultsSummary' and TableName='Conditioned Window-Wall Ratio' and RowName='#{fenestration}' and ColumnName='North (315 to 45 deg)'"
+      query8 = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='InputVerificationandResultsSummary' and TableName='Conditioned Window-Wall Ratio' and RowName='#{fenestration}' and ColumnName='East (45 to 135 deg)'"
+      query9 = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='InputVerificationandResultsSummary' and TableName='Conditioned Window-Wall Ratio' and RowName='#{fenestration}' and ColumnName='South (135 to 225 deg)'"
+      query10 = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='InputVerificationandResultsSummary' and TableName='Conditioned Window-Wall Ratio' and RowName='#{fenestration}' and ColumnName='West (225 to 315 deg)'"
 
       total = sqlFile.execAndReturnFirstDouble(query0)
       north = sqlFile.execAndReturnFirstDouble(query1)
@@ -1639,14 +1646,21 @@ module OsLib_Reporting
       south = sqlFile.execAndReturnFirstDouble(query3)
       west = sqlFile.execAndReturnFirstDouble(query4)
       skylight = sqlFile.execAndReturnFirstDouble(query5)
-      if total.empty? || north.empty? || east.empty? || south.empty? || west.empty?
+      total_cond = sqlFile.execAndReturnFirstDouble(query6)
+      north_cond = sqlFile.execAndReturnFirstDouble(query7)
+      east_cond = sqlFile.execAndReturnFirstDouble(query8)
+      south_cond = sqlFile.execAndReturnFirstDouble(query9)
+      west_cond = sqlFile.execAndReturnFirstDouble(query10)
+      if total.empty? || north.empty? || east.empty? || south.empty? || west.empty? || total_cond.empty? || north_cond.empty? || east.empty? || south_cond.empty? || west_cond.empty? || skylight.empty?
         runner.registerWarning('Did not find value for Window or Skylight Ratio')
         return false
       else
         # add data
         display = fenestration
         fenestration_data[:data] << [display, total.get, north.get, east.get, south.get, west.get]
+        fenestration_data[:data] << ["#{display} (Conditioned)", total_cond.get, north_cond.get, east_cond.get, south_cond.get, west_cond.get]
         runner.registerValue("#{display.downcase.gsub(" ","_")}", total.get, target_units)
+        runner.registerValue("#{display.downcase.gsub(" ","_")}_conditioned", total_cond.get, target_units)
 
         # skylight
         # skylight seems to provide back percentage vs. fraction. Changing to fraction to match vertical fenestration.
