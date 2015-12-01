@@ -579,6 +579,9 @@ module OsLib_Reporting
 
   # summary of what to show for each type of air loop component
   def self.air_loop_component_summary_logic(component, model)
+
+    data_arrays = []
+
     if component.to_AirLoopHVACOutdoorAirSystem.is_initialized
       component = component.to_AirLoopHVACOutdoorAirSystem.get
       # get ControllerOutdoorAir
@@ -600,7 +603,7 @@ module OsLib_Reporting
       else
         value_ip_neat = 'Autosized'
       end
-      data_array = [component.iddObject.name, sizing_ip_neat, sizing_target_units, 'Minimum Outdoor Air Flow Rate', value_ip_neat, value_target_units, '']
+      data_arrays << [component.iddObject.name, sizing_ip_neat, sizing_target_units, 'Minimum Outdoor Air Flow Rate', value_ip_neat, value_target_units, '']
 
     elsif component.to_CoilCoolingDXSingleSpeed.is_initialized
       component = component.to_CoilCoolingDXSingleSpeed.get
@@ -617,7 +620,7 @@ module OsLib_Reporting
       value_ip = component.ratedCOP.get
       value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
       description = 'Rated COP'
-      data_array = [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
+      data_arrays << [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
 
     elsif component.to_CoilCoolingDXTwoSpeed.is_initialized
       component = component.to_CoilCoolingDXTwoSpeed.get
@@ -636,7 +639,7 @@ module OsLib_Reporting
       value_ip = component.ratedHighSpeedCOP.get
       value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
       description = 'Rated COP'
-      data_array = ["#{component.iddObject.name} - HighSpeed", sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
+      data_arrays << ["#{component.iddObject.name} - HighSpeed", sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
 
       # low speed
       sizing_source_units = 'W'
@@ -652,7 +655,7 @@ module OsLib_Reporting
       value_ip = component.ratedLowSpeedCOP.get
       value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
       description = 'Rated COP'
-      data_array = ["#{component.iddObject.name} (cont) - LowSpeed", sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
+      data_arrays << ["#{component.iddObject.name} (cont) - LowSpeed", sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
 
     elsif component.iddObject.name == 'OS:Coil:Cooling:Water'
       component = component.to_CoilCoolingWater.get
@@ -666,7 +669,7 @@ module OsLib_Reporting
       end
       value = component.plantLoop.get.name
       description = 'Plant Loop'
-      data_array = [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value, '', '']
+      data_arrays << [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value, '', '']
 
     elsif component.to_CoilHeatingGas.is_initialized
       component = component.to_CoilHeatingGas.get
@@ -683,7 +686,7 @@ module OsLib_Reporting
       value_ip = component.gasBurnerEfficiency
       value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
       description = 'Gas Burner Efficiency'
-      data_array = [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
+      data_arrays << [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
 
     elsif component.to_CoilHeatingElectric.is_initialized
       component = component.to_CoilHeatingElectric.get
@@ -700,7 +703,7 @@ module OsLib_Reporting
       value_ip = component.efficiency
       value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
       description = 'Efficiency'
-      data_array = [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
+      data_arrays << [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
 
     elsif component.to_CoilHeatingDXSingleSpeed.is_initialized
       component = component.to_CoilHeatingDXSingleSpeed.get
@@ -717,7 +720,7 @@ module OsLib_Reporting
       value_ip = component.ratedCOP # is optional for CoilCoolingDXSingleSpeed but is just a double for CoilHeatingDXSingleSpeed
       value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
       description = 'Rated COP'
-      data_array = [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
+      data_arrays << [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value_ip_neat, value_target_units, '']
 
     elsif component.to_CoilHeatingWater.is_initialized
       component = component.to_CoilHeatingWater.get
@@ -731,7 +734,7 @@ module OsLib_Reporting
       end
       value = component.plantLoop.get.name
       description = 'Plant Loop'
-      data_array = [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value, '', '']
+      data_arrays << [component.iddObject.name, sizing_ip_neat, sizing_target_units, description, value, '', '']
 
     elsif component.to_FanConstantVolume.is_initialized
       component = component.to_FanConstantVolume.get
@@ -747,7 +750,7 @@ module OsLib_Reporting
       value_target_units = 'inH_{2}O'
       value_ip = OpenStudio.convert(component.pressureRise, value_source_units, value_target_units).get
       value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
-      data_array = [component.iddObject.name, sizing_ip_neat, sizing_target_units, 'Pressure Rise', value_ip_neat, value_target_units, '']
+      data_arrays << [component.iddObject.name, sizing_ip_neat, sizing_target_units, 'Pressure Rise', value_ip_neat, value_target_units, '']
 
     elsif component.to_FanVariableVolume.is_initialized
       component = component.to_FanVariableVolume.get
@@ -763,7 +766,7 @@ module OsLib_Reporting
       value_target_units = 'inH_{2}O'
       value_ip = OpenStudio.convert(component.pressureRise, value_source_units, value_target_units).get
       value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
-      data_array = [component.iddObject.name, sizing_ip_neat, sizing_target_units, 'Pressure Rise', value_ip_neat, value_target_units, '']
+      data_arrays << [component.iddObject.name, sizing_ip_neat, sizing_target_units, 'Pressure Rise', value_ip_neat, value_target_units, '']
 
     elsif component.iddObject.name == 'OS:SetpointManager:Scheduled'
       setpoint = component.to_SetpointManagerScheduled.get
@@ -782,7 +785,7 @@ module OsLib_Reporting
           target_units = 'raw si values'
         end
       end
-      data_array = [setpoint.iddObject.name, '', '', "Control Variable - #{setpoint.controlVariable}", schedule_values_pretty, target_units, '']
+      data_arrays << [setpoint.iddObject.name, '', '', "Control Variable - #{setpoint.controlVariable}", schedule_values_pretty, target_units, '']
 
     elsif component.iddObject.name == 'OS:SetpointManager:SingleZone:Reheat'
       setpoint = component.to_SetpointManagerSingleZoneReheat.get
@@ -792,10 +795,10 @@ module OsLib_Reporting
       else
         control_zone_name = ''
       end
-      data_array = [component.iddObject.name, '', '', 'Control Zone', control_zone_name, '', '']
+      data_arrays << [component.iddObject.name, '', '', 'Control Zone', control_zone_name, '', '']
 
     else
-      data_array = [component.iddObject.name, '', '', '', '', '', '']
+      data_arrays << [component.iddObject.name, '', '', '', '', '', '']
     end
 
     # TODO: - add support for more types of objects
@@ -803,7 +806,7 @@ module OsLib_Reporting
     # thermal zones and terminals are handled directly in the air loop helper
     # since they operate over a collection of objects vs. a single component
 
-    return data_array
+    return data_arrays
   end
 
   # create table air loop summary
@@ -844,11 +847,18 @@ module OsLib_Reporting
           if setpoint_managers.size > 0
             # setpoint type
             setpoint = setpoint_managers[0] # TODO: - could have more than one in some situations
-            output_data_air_loops[:data] << OsLib_Reporting.air_loop_component_summary_logic(setpoint, model)
+            data_arrays = OsLib_Reporting.air_loop_component_summary_logic(setpoint, model)
+            data_arrays.each do |data_array|
+              output_data_air_loops[:data] << data_array
+            end
           end
         else
           # populate table for everything but setpoint managers, which are added above.
-          output_data_air_loops[:data] << OsLib_Reporting.air_loop_component_summary_logic(component, model)
+          data_arrays = OsLib_Reporting.air_loop_component_summary_logic(component, model)
+          data_arrays.each do |data_array|
+            output_data_air_loops[:data] << data_array
+          end
+
         end
 
         # gather controls information to use later
