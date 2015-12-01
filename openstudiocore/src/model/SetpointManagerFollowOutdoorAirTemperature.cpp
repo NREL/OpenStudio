@@ -77,9 +77,7 @@ namespace detail{
     if( added ) {
       return added;
     } else if( boost::optional<PlantLoop> plantLoop = node.plantLoop() ) {
-      if( plantLoop->supplyComponent(node.handle()) ) {
-        return this->setSetpointNode(node);
-      }
+      return this->setSetpointNode(node);
     }
     return added;
   }
