@@ -3230,8 +3230,8 @@ module OsLib_Reporting
 
     # data for query
     report_name = 'HVACSizingSummary'
-    table_01_name = 'Zone Cooling'
-    table_02_name = 'Zone Heating'
+    table_01_name = 'Zone Sensible Cooling'
+    table_02_name = 'Zone Sensible Heating'
     columns = ['', 'Heating/Cooling', 'Calculated Design Load', 'Design Load With Sizing Factor', 'Calculated Design Air Flow', 'Design Air Flow  With Sizing Factor', 'Date/Time Of Peak', 'Outdoor Temperature at Peak Load', 'Outdoor Humidity Ratio at Peak Load']
     columns_query = ['', 'Heating/Cooling', 'Calculated Design Load', 'User Design Load', 'Calculated Design Air Flow', 'User Design Air Flow', 'Date/Time Of Peak', 'Outdoor Temperature at Peak Load', 'Outdoor Humidity Ratio at Peak Load']
 
@@ -3239,13 +3239,15 @@ module OsLib_Reporting
     rows_name_query = "SELECT DISTINCT  RowName FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_01_name}'"
     row_names = sqlFile.execAndReturnVectorOfString(rows_name_query).get
     rows = []
+    puts "looking for rows"
     row_names.each do |row_name|
+      puts row_name
       rows << row_name
     end
 
     # create zone_dd_table
     zone_dd_table = {}
-    zone_dd_table[:title] = 'Zone Cooling and Heating Sizing'
+    zone_dd_table[:title] = 'Zone Sensible Cooling and Heating Sensible Sizing'
     zone_dd_table[:header] = columns
     source_units_power = 'W'
     target_units_power_clg = 'ton'
@@ -3267,6 +3269,8 @@ module OsLib_Reporting
         column_counter += 1
         next if header == '' || header == 'Heating/Cooling'
         query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_01_name}' and RowName= '#{row}' and ColumnName= '#{header}'"
+        puts "query for #{header}"
+        puts query
         if not zone_dd_table[:source_units][column_counter] == ''
           results = sqlFile.execAndReturnFirstDouble(query)
           row_data_ip = OpenStudio.convert(results.to_f, zone_dd_table[:source_units][column_counter], zone_dd_table[:units][column_counter]).get
