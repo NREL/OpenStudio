@@ -31,17 +31,17 @@ namespace model {
 namespace detail {
 
   Curve_Impl::Curve_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : ResourceObject_Impl(idfObject,model,keepHandle)
   {}
 
   Curve_Impl::Curve_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
                          Model_Impl* model, 
                          bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : ResourceObject_Impl(other,model,keepHandle)
   {}
 
   Curve_Impl::Curve_Impl(const Curve_Impl& other, Model_Impl* model, bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : ResourceObject_Impl(other,model,keepHandle)
   {}
 
   boost::optional<ParentObject> Curve_Impl::parent() const {
@@ -98,13 +98,13 @@ double Curve::evaluate(double x, double y, double z) const {
 
 /// @cond
 Curve::Curve(IddObjectType type, const Model& model)
-  : ModelObject(type,model) 
+  : ResourceObject(type,model) 
 {
   OS_ASSERT(getImpl<detail::Curve_Impl>());
 }
 
 Curve::Curve(std::shared_ptr<detail::Curve_Impl> impl)
-  : ModelObject(impl)
+  : ResourceObject(impl)
 {}
 /// @endcond
 
