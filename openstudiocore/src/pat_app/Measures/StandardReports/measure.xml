@@ -1,8 +1,8 @@
 <measure>
   <schema_version>3.0</schema_version>
   <name>open_studio_results</name>
-  <uid>fc337100-8634-404e-8966-01243d292a79</uid>
-  <version_id>567809a0-3151-496b-8a31-b595da9abb70</version_id>
+  <uid>a6b9a024-0912-4be3-a55d-57dfe0b8586c</uid>
+  <version_id>e09679c6-c75e-41ed-b360-bd7cdcfcad3a</version_id>
   <xml_checksum>557BF06F</xml_checksum>
   <class_name>OpenStudioResults</class_name>
   <display_name>OpenStudio Results</display_name>
