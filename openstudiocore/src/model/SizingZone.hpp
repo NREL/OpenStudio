@@ -162,6 +162,18 @@ class MODEL_API SizingZone : public ModelObject {
 
   bool isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted() const;
 
+  bool accountforDedicatedOutdoorAirSystem() const;
+
+  std::string dedicatedOutdoorAirSystemControlStrategy() const;
+
+  boost::optional<double> dedicatedOutdoorAirLowSetpointTemperatureforDesign() const;
+
+  bool isDedicatedOutdoorAirLowSetpointTemperatureforDesignAutosized() const;
+
+  boost::optional<double> dedicatedOutdoorAirHighSetpointTemperatureforDesign() const;
+
+  bool isDedicatedOutdoorAirHighSetpointTemperatureforDesignAutosized() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -269,6 +281,18 @@ class MODEL_API SizingZone : public ModelObject {
   bool setDesignZoneAirDistributionEffectivenessinHeatingMode(const Quantity& designZoneAirDistributionEffectivenessinHeatingMode);
 
   void resetDesignZoneAirDistributionEffectivenessinHeatingMode();
+
+  void setAccountforDedicatedOutdoorAirSystem(bool accountforDedicatedOutdoorAirSystem);
+
+  bool setDedicatedOutdoorAirSystemControlStrategy(std::string dedicatedOutdoorAirSystemControlStrategy);
+
+  void setDedicatedOutdoorAirLowSetpointTemperatureforDesign(double dedicatedOutdoorAirLowSetpointTemperatureforDesign);
+
+  void autosizeDedicatedOutdoorAirLowSetpointTemperatureforDesign();
+
+  void setDedicatedOutdoorAirHighSetpointTemperatureforDesign(double dedicatedOutdoorAirHighSetpointTemperatureforDesign);
+
+  void autosizeDedicatedOutdoorAirHighSetpointTemperatureforDesign();
 
   //@}
   /** @name Other */

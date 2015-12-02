@@ -20181,10 +20181,34 @@ OS:Sizing:Zone,
        \type real
        \minimum> 0
        \default 1.0
-  N18; \field Design Zone Air Distribution Effectiveness in Heating Mode
+  N18, \field Design Zone Air Distribution Effectiveness in Heating Mode
        \type real
        \minimum> 0
        \default 1.0
+  A6, \field Account for Dedicated Outdoor Air System
+      \note account for effect of dedicated outdoor air system supplying air directly to the zone
+      \type choice
+      \key Yes
+      \key No
+       \required-field
+  A7, \field Dedicated Outdoor Air System Control Strategy
+      \note 1)supply neutral ventilation air; 2)supply neutral dehumidified and reheated 
+      \note ventilation air; 3)supply cold ventilation air
+      \type choice
+      \key NeutralSupplyAir
+      \key NeutralDehumidifiedSupplyAir
+      \key ColdSupplyAir
+       \required-field
+  N19,\field Dedicated Outdoor Air Low Setpoint Temperature for Design
+      \type real
+      \units C
+      \autosizable
+       \required-field
+  N20;\field Dedicated Outdoor Air High Setpoint Temperature for Design
+      \type real
+      \units C
+      \autosizable
+       \required-field
 
 OS:Splitter,
        \extensible:1

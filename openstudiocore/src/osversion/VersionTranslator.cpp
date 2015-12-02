@@ -2750,36 +2750,6 @@ std::string VersionTranslator::update_1_8_5_to_1_9_0(const IdfFile& idf_1_8_5, c
       }
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
-    } else if (iddname == "OS:Sizing:Zone") {
-      auto iddObject = idd_1_9_0.getObject("OS:Sizing:Zone");
-      OS_ASSERT(iddObject);
-      IdfObject newObject(iddObject.get());
-
-      size_t newi = 0;
-      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
-        if( i == 2 ) {
-          newObject.setString(newi,"SupplyAirTemperature");
-          ++newi;
-          if( auto value = object.getString(i) ) {
-            newObject.setString(newi,value.get());
-          }
-          ++newi;
-          newObject.setDouble(newi,11.11);
-        } else if( i == 3 ) {
-          newObject.setString(newi,"SupplyAirTemperature");
-          ++newi;
-          if( auto value = object.getString(i) ) {
-            newObject.setString(newi,value.get());
-          }
-          ++newi;
-          newObject.setDouble(newi,11.11);
-        } else if( auto value = object.getString(i) ) {
-          newObject.setString(newi,value.get());
-        }
-        ++newi;
-      }
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
-      ss << newObject;
     } else {
       ss << object;
     }
@@ -2944,6 +2914,36 @@ std::string VersionTranslator::update_1_9_4_to_1_9_5(const IdfFile& idf_1_9_4, c
         }
       }
 
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else if (iddname == "OS:Sizing:Zone") {
+      auto iddObject = idd_1_9_5.getObject("OS:Sizing:Zone");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      size_t newi = 0;
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( i == 2 ) {
+          newObject.setString(newi,"SupplyAirTemperature");
+          ++newi;
+          if( auto value = object.getString(i) ) {
+            newObject.setString(newi,value.get());
+          }
+          ++newi;
+          newObject.setDouble(newi,11.11);
+        } else if( i == 3 ) {
+          newObject.setString(newi,"SupplyAirTemperature");
+          ++newi;
+          if( auto value = object.getString(i) ) {
+            newObject.setString(newi,value.get());
+          }
+          ++newi;
+          newObject.setDouble(newi,11.11);
+        } else if( auto value = object.getString(i) ) {
+          newObject.setString(newi,value.get());
+        }
+        ++newi;
+      }
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
     } else {
