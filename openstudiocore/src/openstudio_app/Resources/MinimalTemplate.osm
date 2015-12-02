@@ -1,7 +1,7 @@
 
 OS:Version,
-  {9d7190d1-4c08-43a7-ba62-09d8943f407b}, !- Handle
-  1.8.5;                                  !- Version Identifier
+  {db374bf0-0293-4316-a4fc-37bacc4cc6bf}, !- Handle
+  1.9.5;                                  !- Version Identifier
 
 OS:SpaceType,
   {e0526529-4fdb-4700-9395-efccd411628b}, !- Handle
@@ -7442,7 +7442,7 @@ OS:SpaceInfiltration:EffectiveLeakageArea,
   Space Infiltration Effective Leakage Area 1, !- Name
   ,                                       !- Space or SpaceType Name
   ,                                       !- Schedule Name
-  0.1,                                    !- Effective Air Leakage Area {m2}
+  100,                                    !- Effective Air Leakage Area {cm2}
   0.1,                                    !- Stack Coefficient
   0.1;                                    !- Wind Coefficient
 
@@ -7566,3 +7566,4 @@ OS:WindowProperty:FrameAndDivider,
   ,                                       !- Inside Sill Solar Absorptance
   ,                                       !- Inside Reveal Depth {m}
   ;                                       !- Inside Reveal Solar Absorptance
+

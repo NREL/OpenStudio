@@ -1,7 +1,7 @@
 
 OS:Version,
-  {5a05d0ff-62e7-4d58-8760-b977a20f97ff}, !- Handle
-  1.5.0;                                  !- Version Identifier
+  {2ed57eed-36b2-4ccc-804b-e8ca01d67117}, !- Handle
+  1.9.5;                                  !- Version Identifier
 
 OS:SpaceType,
   {d83c9d8c-b4ea-4352-92bc-43a5e8551039}, !- Handle
@@ -7200,4 +7200,46 @@ OS:Construction,
   Air Wall,                               !- Name
   ,                                       !- Surface Rendering Name
   {8ea9f6e6-0bb1-424a-a9d5-8fb8da2c8afe}; !- Layer 1
+
+OS:Site,
+  {a681498a-85e7-4863-8e88-41de132f72a1}, !- Handle
+  Site 1,                                 !- Name
+  ,                                       !- Latitude {deg}
+  ,                                       !- Longitude {deg}
+  ,                                       !- Time Zone {hr}
+  ,                                       !- Elevation {m}
+  ;                                       !- Terrain
+
+OS:YearDescription,
+  {40462d92-afed-48a4-8b77-5a2443b8826e}; !- Handle
+
+OS:ClimateZones,
+  {b6ae842a-4e61-4f54-8e8d-daf083d7d71d}, !- Handle
+  ,                                       !- Active Institution
+  ,                                       !- Active Year
+  ASHRAE,                                 !- Climate Zone Institution Name 1
+  ANSI/ASHRAE Standard 169,               !- Climate Zone Document Name 1
+  2006,                                   !- Climate Zone Document Year 1
+  ,                                       !- Climate Zone Value 1
+  CEC,                                    !- Climate Zone Institution Name 2
+  California Climate Zone Descriptions,   !- Climate Zone Document Name 2
+  1995,                                   !- Climate Zone Document Year 2
+  ;                                       !- Climate Zone Value 2
+
+OS:Facility,
+  {ad7ce0d2-1a17-410d-8427-12d480e80eb7}; !- Handle
+
+OS:LifeCycleCost:Parameters,
+  {7bd2cd18-ae00-4e9f-8dbc-af83cea58a21}, !- Handle
+  ,                                       !- Analysis Type
+  ,                                       !- Discounting Convention
+  ,                                       !- Inflation Approach
+  ,                                       !- Real Discount Rate
+  ,                                       !- Nominal Discount Rate
+  ,                                       !- Inflation
+  ,                                       !- Base Date Month
+  ,                                       !- Base Date Year
+  ,                                       !- Service Date Month
+  ,                                       !- Service Date Year
+  ;                                       !- Length of Study Period in Years
 

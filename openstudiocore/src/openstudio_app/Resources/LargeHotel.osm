@@ -1,7 +1,7 @@
 
 OS:Version,
-  {14dd260f-acd2-4c55-a51c-e5a545d102bb}, !- Handle
-  1.9.0;                                  !- Version Identifier
+  {2d3b7b51-7a81-494f-aee9-17cc311c0c06}, !- Handle
+  1.9.5;                                  !- Version Identifier
 
 OS:Construction,
   {8606b218-add5-485f-a3f4-19986c294dc6}, !- Handle
@@ -28913,3 +28913,4 @@ OS:WindowProperty:FrameAndDivider,
   ,                                       !- Inside Sill Solar Absorptance
   ,                                       !- Inside Reveal Depth {m}
   ;                                       !- Inside Reveal Solar Absorptance
+
