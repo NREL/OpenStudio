@@ -61,7 +61,9 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     args << rad_settings
 
     return args
+
   end
+
 
   def run(model, runner, user_arguments)
     super(model, runner, user_arguments)
@@ -288,10 +290,18 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     print_statement("Running jobs in #{runDir}", runner)
     runmanager.setPaused(false)
     runmanager.waitForFinished()
+        
+    if jobtree.treeErrors.succeeded
+      print_statement('OpenStudio to Radiance translation complete', runner)
+    
+    else   
+      jobtree.treeErrors.errors.each do |err|
+        print_statement("ERROR: #{err}", runner)
+      end
+      print_statement("Model issue(s) caused EnergyPlus preprocess failure, aborting.", runner)
+      abort()     
 
-		print_statement('OpenStudio to Radiance translation complete', runner)
-
-    # DLM: need to check that this finished correctly
+    end
 
     ##  Radiance crap
 
