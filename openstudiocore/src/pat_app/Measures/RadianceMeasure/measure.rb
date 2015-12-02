@@ -144,16 +144,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     else
       sim_cores = coreCount - 1
     end
-    # disable MP for Yosemite, because:
-    # http://radiance-online.org/pipermail/radiance-dev/2014-November/001442.html
-    if /darwin/.match(RUBY_PLATFORM)
-      ver = `defaults read loginwindow SystemVersionStampAsString`
-      if ver.split('.')[1] == '10'
-        print_statement('Radiance multiprocessing disabled for MacOS 10.10.x, sorry.', runner)
-        sim_cores = 1
-      end
+    if /mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
+      print_statement("Radiance multiprocessing features are not supported on Windows.", runner)
+      sim_cores = 1
     end
-    print_statement("Using #{sim_cores} cores for Radiance jobs", runner)
+    print_statement("Using #{sim_cores} core(s) for Radiance jobs", runner)
 
     # help those poor Windows users out
     perlExtension = ""
