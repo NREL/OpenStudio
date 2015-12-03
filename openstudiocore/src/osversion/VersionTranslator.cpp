@@ -2944,6 +2944,12 @@ std::string VersionTranslator::update_1_9_4_to_1_9_5(const IdfFile& idf_1_9_4, c
         }
         ++newi;
       }
+
+      newObject.setString(24,"No");
+      newObject.setString(25,"NeutralSupplyAir");
+      newObject.setString(26,"Autosize");
+      newObject.setString(27,"Autosize");
+
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
     } else {
