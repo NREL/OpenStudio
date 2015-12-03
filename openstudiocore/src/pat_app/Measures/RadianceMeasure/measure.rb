@@ -365,10 +365,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     # configure multiprocessing 
     procsUsed = ""
     if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
-      print_statement("Radiance does not support multiple cores on Windows", runner)
       procsUsed = ""
     else
-      print_statement("Radiance is using #{sim_cores} core(s)", runner)
       procsUsed = "-n #{sim_cores}"
     end
 
@@ -420,13 +418,17 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           print_statement("Computing view matrix for uncontrolled windows (WG0)", runner)
 
           # make WG0 octree (with shade-controlled window groups blacked out, if any)
-          
+          input_files = ""
           if haveWG1 == "True"
-            rad_command = "oconv \"materials/materials.rad\" \"materials/materials_WG0.rad\" model.rad \"skies/dc_sky.rad\" > octrees/model_WG0.oct"
+            input_files = "materials/materials.rad materials/materials_WG0.rad model.rad"
           else 
-            rad_command = "oconv \"materials/materials.rad\" model.rad \"skies/dc_sky.rad\" > octrees/model_WG0.oct"
+            input_files = "materials/materials.rad model.rad skies/dc_sky.rad"
           end
-          exec_statement(rad_command, runner)
+          
+          # for the calc, include unit sky
+          exec_statement("oconv #{input_files} skies/dc_sky.rad > octrees/model_WG0.oct", runner)
+          # for check images (insert sky later, in genImages())
+          exec_statement("oconv #{input_files} > octrees/debug_model_WG0.oct", runner)
           
           # use more aggro simulation parameters because this is basically a view matrix
           rtrace_args = "#{options_vmx}"
@@ -446,25 +448,22 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             # start with base materials, then add WG0 blackout mats, then add WG1..-1 blackout mats
             base_mats = "materials/materials.rad materials/materials_vmx.rad materials/materials_blackout.rad"
 
-            # make clear-state octree
-            rad_command = "oconv #{base_mats} materials/#{wg}_clear.mat model.rad skies/dc_sky.rad > octrees/model_#{wg}_clear.oct"
-            exec_statement(rad_command, runner)
-
-            # make tinted-state octree
-            rad_command = "oconv #{base_mats} materials/#{wg}_tinted.mat model.rad \"skies/dc_sky.rad\" > octrees/model_#{wg}_tinted.oct"
-            exec_statement(rad_command, runner)
-
             # do view matrices, one for each tint state
             rtrace_args = "#{options_vmx}"
             
             ["clear", "tinted"].each do |state|
-                 
+              
+              # for the calc
+              rad_command = "oconv #{base_mats} materials/#{wg}_#{state}.mat model.rad skies/dc_sky.rad > octrees/model_#{wg}_#{state}.oct" 
+              exec_statement(rad_command, runner)
+              # for check images
+              rad_command = "oconv #{base_mats} materials/#{wg}_#{state}.mat model.rad > octrees/debug_model_#{wg}_#{state}.oct" 
+              exec_statement(rad_command, runner)
+              
               print_statement("Computing view matrix for window group '#{wg}' in #{state} state", runner)
               exec_statement("#{t_catCommand} \"numeric/merged_space.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} -o \"output/dc/#{wg}_#{state}.vmx\" -m skyglow octrees/model_#{wg}_#{state}.oct", runner)
             
             end
-            
-            print_statement("end #{wg}.", runner)
 
           else # has shades
 
@@ -481,12 +480,29 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
         end # calculate DMX
         
+        if haveWG1 == "True"
+
+          # compute daylight coefficient matrices for window group control points
+
+          rtrace_args = "#{options_dmx}"
+          exec_statement("oconv \"materials/materials.rad\" model.rad \
+            \"skies/dc_sky.rad\" > octrees/model_wc.oct", runner)
+          print_statement("Computing DCs for window control points", runner)
+
+          rad_command = "#{t_catCommand} \"numeric/window_controls.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
+          "-o \"output/dc/window_controls.vmx\" -m skyglow octrees/model_wc.oct"
+          exec_statement(rad_command, runner)
+        
+        end
+
+        
       end # individual window group processing
         
       # do remaining view matrices, if applicable
       
-      if haveWG1 == "True"
-    
+      shade_check = Dir.glob("scene/shades/WG*.rad")     
+      if shade_check.length > 0
+          
         # compute view matrices for shade controlled window groups all at once
 
         # use fine params   
@@ -512,23 +528,14 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         scene_files = []
         Dir.glob("scene/*.rad").each {|f| scene_files << f}
         exec_statement("oconv materials/materials.rad #{scene_files.join(' ')} > octrees/model_vmx.oct", runner)
+        
 
         # make rfluxmtx do all the work
         rad_command = "rfluxmtx #{rtrace_args} -n #{sim_cores} -ds .15 -faa -y #{rfluxmtxDim} -I -v - receivers_vmx.rad -i octrees/model_vmx.oct < numeric/merged_space.map"
         exec_statement(rad_command, runner)
-
-        # compute daylight coefficient matrices for window group control points
-
-        rtrace_args = "#{options_dmx}"
-        exec_statement("oconv \"materials/materials.rad\" model.rad \
-          \"skies/dc_sky.rad\" > octrees/model_wc.oct", runner)
-        print_statement("Computing DCs for window control points", runner)
-
-        rad_command = "#{t_catCommand} \"numeric/window_controls.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
-        "-o \"output/dc/window_controls.vmx\" -m skyglow octrees/model_wc.oct"
-        exec_statement(rad_command, runner)
       
       end # VMX for controlled window groups
+
 
     print_statement("Daylight coefficient matrices computed.", runner)
     
@@ -1773,9 +1780,17 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       # do views
       views_daylighting_control = Dir.glob('views/*_dc.vfh')
       views_daylighting_control.each do |dc|
-      
+        
         rad_command = "rpict -av .3 .3 .3 -ab 1 -vf #{dc} octrees/images.oct | ra_bmp - #{dc}.bmp"
         exec_statement(rad_command, runner)
+        
+        # do "debug" images (individual window groups)
+        debug_images = Dir.glob('octrees/debug*.oct')
+        debug_images.each do |debug|
+          condition = debug.split("/")[1].split(".")[0]
+          exec_statement("oconv -i #{debug} skies/render.sky > octrees/debug_temp.oct", runner)       
+          exec_statement("rpict -av .3 .3 .3 -ab 1 -vf #{dc} octrees/debug_temp.oct | ra_bmp - #{dc}_#{condition}_DEBUG.bmp", runner)
+        end
 
       end
       

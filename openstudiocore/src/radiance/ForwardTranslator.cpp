@@ -2060,8 +2060,8 @@ namespace radiance {
         {
           
           // get the Radiance parameters... so we have them.
-					openstudio::model::RadianceParameters radianceParameters = m_model.getUniqueModelObject<openstudio::model::RadianceParameters>();
-					if(windowGroup_name != "WG0"){
+          openstudio::model::RadianceParameters radianceParameters = m_model.getUniqueModelObject<openstudio::model::RadianceParameters>();
+          if(windowGroup_name != "WG0"){
 						if (radianceParameters.skyDiscretizationResolution() == "146"){
 							LOG(Info, "writing out window group '" + windowGroup_name + "', using Klems sampling basis.");
 						} else if (radianceParameters.skyDiscretizationResolution() == "578"){
