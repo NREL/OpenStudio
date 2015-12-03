@@ -1566,16 +1566,9 @@ namespace radiance {
 
 									// polygon header
 									// Forcing Klems basis... RPG 2015.09.13 =(
-									openstudio::model::RadianceParameters radianceParameters = m_model.getUniqueModelObject<openstudio::model::RadianceParameters>();
+									// user is warned as files are written RPG 2015.12.03
 									std::string tempSkyDivs = "kf";
 									
-									if (radianceParameters.skyDiscretizationResolution() == "146"){
-										LOG(Info, windowGroup_name + " using Klems sampling basis.");
-									} else if (radianceParameters.skyDiscretizationResolution() == "578"){
-										LOG(Warn, windowGroup_name + " reset to Klems sampling basis.");
-									} else if (radianceParameters.skyDiscretizationResolution() == "2306"){
-										LOG(Warn, windowGroup_name + " reset to Klems sampling basis.");
-									}
 									m_radWindowGroupShades[windowGroup_name] += "#@rfluxmtx h=" + tempSkyDivs +  " u=" + winUpVector + " o=output/dc/" + windowGroup_name + ".vmx\n"; 
 									m_radWindowGroupShades[windowGroup_name] += "\n# shade for SubSurface: " + subSurface_name + "\n";
 
@@ -2065,6 +2058,19 @@ namespace radiance {
         //write windows (and glazed doors)
         if (m_radWindowGroups.find(windowGroup_name) != m_radWindowGroups.end())
         {
+          
+          // get the Radiance parameters... so we have them.
+					openstudio::model::RadianceParameters radianceParameters = m_model.getUniqueModelObject<openstudio::model::RadianceParameters>();
+					if(windowGroup_name != "WG0"){
+						if (radianceParameters.skyDiscretizationResolution() == "146"){
+							LOG(Info, "writing out window group '" + windowGroup_name + "', using Klems sampling basis.");
+						} else if (radianceParameters.skyDiscretizationResolution() == "578"){
+							LOG(Warn, "writing out window group '" + windowGroup_name + "', but sampling basis was reset to Klems (145).");
+						} else if (radianceParameters.skyDiscretizationResolution() == "2306"){
+							LOG(Warn, "writing out window group '" + windowGroup_name + "', but sampling basis was reset to Klems (145).");
+						}
+					}
+          
           openstudio::path glazefilename = t_radDir / openstudio::toPath("scene/glazing") / openstudio::toPath(windowGroup_name + ".rad");
           OFSTREAM glazefile(glazefilename);
           if (glazefile.is_open()){
