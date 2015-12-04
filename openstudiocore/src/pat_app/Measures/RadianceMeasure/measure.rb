@@ -455,8 +455,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             print_statement("Window Group '#{wg}' has switchable glazing control, calculating two view matrices", runner)
      
             # black out WG0 and all other WG shades
-            # start with base materials, then add WG0 blackout mats, then add WG1..-1 blackout mats
-            base_mats = "materials/materials.rad materials/materials_vmx.rad materials/materials_blackout.rad"
+            # start with base materials, then black everything out
+            base_mats = "materials/materials.rad materials/materials_blackout.rad"
 
             # do view matrices, one for each tint state
             rtrace_args = "#{options_vmx}"
@@ -483,10 +483,15 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             print_statement("Computing daylight matrix for window group '#{wg}'", runner)
             
             if image_type == 'Debug'
+              
               # make octrees for debug images
-              input_files = "materials/materials.rad materials/materials_vmx.rad materials/materials_WG0.rad scene/*.rad scene/glazing/*.rad"
-              exec_statement("oconv #{input_files} materials/#{wg}.mat > octrees/debug_model_#{wg}.oct", runner)
-              exec_statement("oconv #{input_files} materials/#{wg}.mat scene/shades/#{wg}_SHADE.rad > octrees/debug_model_#{wg}_shade.oct", runner)
+              # load materials, then black out all materials, then add in scene geometry and glazing (no shades)
+              input_files = "materials/materials.rad materials/materials_blackout.rad"
+              # now reset window group glazing material and make an octree
+              exec_statement("oconv #{input_files} materials/#{wg}.mat scene/*.rad scene/glazing/*.rad > octrees/debug_model_#{wg}.oct", runner)
+              # now reset window group shade material to actual and make an octree
+              exec_statement("oconv #{input_files} materials/#{wg}.mat materials/#{wg}_SHADE.mat scene/*.rad scene/glazing/*.rad scene/shades/#{wg}_SHADE.rad > octrees/debug_model_#{wg}_shade.oct", runner)
+            
             end
             
             rad_command = "rfluxmtx #{rtrace_args} -n #{sim_cores} -fa -v scene/shades/#{wg}_SHADE.rad skies/dc_sky.rad -i octrees/model_dc.oct > \"output/dc/#{wg}.dmx\""
@@ -1800,7 +1805,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       views_daylighting_control = Dir.glob('views/*_dc.vfh')
       views_daylighting_control.each do |dc|
         
-        rad_command = "rpict -av .3 .3 .3 -ab 1 -vf #{dc} octrees/images.oct | ra_bmp - #{dc}.bmp"
+        rad_command = "rpict -av .3 .3 .3 -ab 1 -vf #{dc} octrees/images.oct | ra_bmp - #{dc}_#{image_hour}.bmp"
         exec_statement(rad_command, runner)
         
         if image_type == 'Debug'
@@ -1810,7 +1815,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           debug_images.each do |debug|
             condition = debug.split("/")[1].split(".")[0]
             exec_statement("oconv -i #{debug} skies/site_0321_#{image_hour}.sky > octrees/debug_temp.oct", runner)       
-            exec_statement("rpict -av .3 .3 .3 -ab 1 -vf #{dc} octrees/debug_temp.oct | ra_bmp - #{dc}_#{condition}_DEBUG.bmp", runner)
+            exec_statement("rpict -av .3 .3 .3 -ab 1 -vf #{dc} octrees/debug_temp.oct | ra_bmp - #{dc}_#{condition}_#{image_hour}_DEBUG.bmp", runner)
           end
       
         end # debug images

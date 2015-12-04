@@ -1479,6 +1479,7 @@ namespace radiance {
               // add materials
               m_radMaterials.insert("void " + rMaterial + " glaz_" + rMaterial + "_tn-" + formatString(tn, 3) + "\n" + matString + "\n");
               m_radMaterialsDC.insert("void alias glaz_" + rMaterial + "_tn-" + formatString(tn, 3) + " WG0\n\n");
+              m_radMaterialsSwitchableBase.insert("void alias glaz_" + rMaterial + "_tn-" + formatString(tn, 3) + " WG0\n\n");
 
               // write the window polygon
               m_radWindowGroups[windowGroup_name] += "glaz_"+rMaterial+"_tn-"+formatString(tn, 3) + " polygon " + subSurface_name + "\n";
@@ -1556,7 +1557,7 @@ namespace radiance {
 							if (shadingControl){
 								if (shadingControl->construction()){
 
-									// construction means it's switchable glazing, so no shade needed,  
+									// a construction means it's switchable glazing, so no shade needed,  
 									// but make special materials files for window group calcs.
 									m_radMaterialsSwitchableBase.insert("void plastic " + windowGroup_name + "\n0\n0\n5\n0 0 0 0 0\n");
 									m_radMaterialsWG0.insert("void plastic " + windowGroup_name + "\n0\n0\n5\n0 0 0 0 0\n");
@@ -1577,6 +1578,7 @@ namespace radiance {
 									m_radMaterialsDC.insert("void light " + windowGroup_name + "_SHADE\n0\n0\n3\n1 1 1\n");
 									m_radMaterialsWG0.insert("void plastic " + windowGroup_name + "_SHADE\n0\n0\n5\n0 0 0 0 0\n");
 									m_radMaterialsSwitchableBase.insert("void plastic " + windowGroup_name + "_SHADE\n0\n0\n5\n0 0 0 0 0\n");
+									m_radMaterialsSwitchableBase.insert("void plastic " + windowGroup_name + "\n0\n0\n5\n0 0 0 0 0\n");
 
 									// polygon header
 									// Forcing Klems basis... RPG 2015.09.13 =(
@@ -1603,6 +1605,21 @@ namespace radiance {
 										formatString(offsetVertex.y()) + " " + \
 										formatString(offsetVertex.z()) + "\n";
 									}
+									
+									// make mat for single window group shade
+									std::string wgShadeMat = "";
+									wgShadeMat = "void " + rMaterial + " " + windowGroup_name + "_SHADE\n" + matString + "\n\n";
+									openstudio::path wgSingleFilename = t_radDir / openstudio::toPath("materials") / openstudio::toPath(windowGroup_name + "_SHADE.mat");					
+									OFSTREAM wgSingleFile(wgSingleFilename);
+									if (wgSingleFile.is_open()){
+										t_outfiles.push_back(wgSingleFilename);
+										wgSingleFile << wgShadeMat;
+									} else{
+										LOG(Error, "Cannot open file '" << toString(wgSingleFilename) << "' for writing");
+									}				
+
+									
+									
 
 									// shade BSDF stuff
 
@@ -2171,7 +2188,7 @@ namespace radiance {
       }
 
       // write radiance blackout materials file (blacks out everything)
-      m_radMaterialsSwitchableBase.insert("# OpenStudio Blackout Materials File\n# black out all windows.\n");
+      m_radMaterialsSwitchableBase.insert("# OpenStudio Blackout Materials File\n# black out all window and shade materials.\n\nvoid plastic WG0\n0\n0\n5\n0 0 0 0 0\n\n");
       openstudio::path materials_SwitchableBasefilename = t_radDir / openstudio::toPath("materials/materials_blackout.rad");
       OFSTREAM materials_SwitchableBasefile(materials_SwitchableBasefilename);
       if (materials_SwitchableBasefile.is_open()){
