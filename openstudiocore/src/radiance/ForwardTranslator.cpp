@@ -1520,10 +1520,24 @@ namespace radiance {
 										file2 << switchableGroup_wgMats;
 									} else{
 										LOG(Error, "Cannot open file '" << toString(filename2) << "' for writing");
-									}
+									}				
 									
-									
+								} else {
+								
+									// make mat for single window group
+									std::string wgMat = "";
+									wgMat = "void " + rMaterial + " " + windowGroup_name + "\n" + matString + "\n\n";
+									openstudio::path wgSingleFilename = t_radDir / openstudio::toPath("materials") / openstudio::toPath(windowGroup_name + ".mat");					
+									OFSTREAM wgSingleFile(wgSingleFilename);
+									if (wgSingleFile.is_open()){
+										t_outfiles.push_back(wgSingleFilename);
+										wgSingleFile << wgMat;
+									} else{
+										LOG(Error, "Cannot open file '" << toString(wgSingleFilename) << "' for writing");
+									}				
+								
 								}
+								
 							}
               // write the polygon
               m_radWindowGroups[windowGroup_name] += windowGroup_name + " polygon " + subSurface_name + "\n";
