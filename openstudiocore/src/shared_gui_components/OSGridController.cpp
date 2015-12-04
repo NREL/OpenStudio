@@ -283,6 +283,10 @@ namespace openstudio {
 
   void ObjectSelector::clearSelection()
   {
+    std::set<model::ModelObject> deselectedObjects;
+
+    auto selectedObjects = m_selectedObjects;
+
     m_selectedObjects.clear();
 
     for (auto obj : m_selectorObjects) {
@@ -339,10 +343,12 @@ namespace openstudio {
 
       if (objectVisible) {
         // add this to the selected set
-        m_selectedObjects.insert(obj);
+        deselectedObjects.insert(obj);
       }
 
     }
+
+    std::set_difference(selectedObjects.begin(), selectedObjects.end(), deselectedObjects.begin(), deselectedObjects.end(), inserter(m_selectedObjects, m_selectedObjects.begin()));
 
     m_grid->requestRefreshGrid();
   }
