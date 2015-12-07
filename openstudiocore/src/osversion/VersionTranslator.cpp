@@ -100,6 +100,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.9.0")] = &VersionTranslator::update_1_8_5_to_1_9_0;
   m_updateMethods[VersionString("1.9.3")] = &VersionTranslator::update_1_9_2_to_1_9_3;
   m_updateMethods[VersionString("1.9.5")] = &VersionTranslator::update_1_9_4_to_1_9_5;
+  m_updateMethods[VersionString("1.10.0")] = &VersionTranslator::update_1_9_5_to_1_10_0;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -192,6 +193,7 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.9.2"));
   m_startVersions.push_back(VersionString("1.9.3"));
   m_startVersions.push_back(VersionString("1.9.4"));
+  m_startVersions.push_back(VersionString("1.9.5"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -2910,6 +2912,72 @@ std::string VersionTranslator::update_1_9_4_to_1_9_5(const IdfFile& idf_1_9_4, c
           newObject.setString(2,handle.get());
         } else if( auto handle = coilHandle(idf_1_9_4.iddFile().getObject("OS:Coil:Heating:Water").get(),5) ) {
           newObject.setString(2,handle.get());
+        }
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_9_5_to_1_10_0(const IdfFile& idf_1_9_5, const IddFileAndFactoryWrapper& idd_1_10_0)
+{
+  std::stringstream ss;
+
+  ss << idf_1_9_5.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_10_0.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_1_9_5.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:AirTerminal:SingleDuct:VAV:Reheat") {
+      auto iddObject = idd_1_10_0.getObject("OS:AirTerminal:SingleDuct:VAV:Reheat");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( auto value = object.getString(i) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      // This is a redo because some models didn't get updated by the logic in
+      // 1.9.2 -> 1.9.3
+      {
+        auto controlForOA = object.getString(18);
+        if( (! controlForOA) || controlForOA->empty() ) {
+          newObject.setString(18,"No");
+        }
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else if (iddname == "OS:AirTerminal:SingleDuct:VAV:NoReheat") {
+      auto iddObject = idd_1_10_0.getObject("OS:AirTerminal:SingleDuct:VAV:NoReheat");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( auto value = object.getString(i) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      newObject.setString(10,"No");
+      // This is a redo because some models didn't get updated by the logic in
+      // 1.9.2 -> 1.9.3
+      {
+        auto controlForOA = object.getString(10);
+        if( (! controlForOA) || controlForOA->empty() ) {
+          newObject.setString(10,"No");
         }
       }
 

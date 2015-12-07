@@ -2926,6 +2926,7 @@ void ForwardTranslator::translateSchedules(const model::Model & model)
           (iddObjectType == IddObjectType::OS_Schedule_Ruleset) ||
           (iddObjectType == IddObjectType::OS_Schedule_FixedInterval) ||
           (iddObjectType == IddObjectType::OS_Schedule_VariableInterval)){
+        // This predates Model::alwaysOnDiscreteSchedule, but leaving it in place for now
         if (istringEqual("Always_On", workspaceObject.name().get())){
           m_alwaysOnSchedule = result;
         }
@@ -2935,6 +2936,16 @@ void ForwardTranslator::translateSchedules(const model::Model & model)
         }
       }
     }
+  }
+
+  // Make sure these get in the idf file
+  {
+    auto schedule = model.alwaysOnDiscreteSchedule();
+    translateAndMapModelObject(schedule);
+    schedule = model.alwaysOffDiscreteSchedule();
+    translateAndMapModelObject(schedule);
+    schedule = model.alwaysOnContinuousSchedule();
+    translateAndMapModelObject(schedule);
   }
 }
 

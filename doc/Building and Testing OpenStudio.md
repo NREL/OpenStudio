@@ -254,7 +254,7 @@ Sanity Testing Release Builds
 Version Update
 ==============
 
-- Copy directory X.Y.Z to `openstudiocore\resources\osversion` (new folder, 3 files)
+- In `build\OSCore-prefix\src\OSCore-build\resources\osversion` copy directory X.Y.Z to `openstudiocore\resources\osversion` (new folder, 3 files)
 - In the top level of your OpenStudio folder, update `CMakeLists.txt` version (1 line)
 - In `openstudiocore\resources` update `CMakeLists.txt` version (3 lines, 1 location)
 - In `openstudiocore\resources\model` update `OpenStudio.idd` version (1 line)
@@ -268,11 +268,20 @@ With Git, commit above files (Commit Message = `Updating version to X.Y.Z`)
 
 AMI BUILD
 =========
+On first use, install the required gems using a command prompt, with Ruby in the PATH.
+
+- In the top level of your OpenStudio-server folder, run
+
+```ruby
+gem install bundler
+bundler install
+```
+
 With Git, pull OpenStudio-server master
 
+- Update version in `server\lib\openstudio_server\version.rb`
 - Update version in `CHANGELOG.md`
 - Update version in `vagrant\chef\roles\openstudio.rb`
-- Update version in `server\lib\openstudio_server\version.rb`
 
 With Git, commit above files (Commit Message = `Bump version`)
 
