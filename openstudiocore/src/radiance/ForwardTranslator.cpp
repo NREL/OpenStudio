@@ -1620,7 +1620,6 @@ namespace radiance {
 
 									
 									
-
 									// shade BSDF stuff
 
 									// make dir for BSDF files

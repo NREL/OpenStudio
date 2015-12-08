@@ -665,7 +665,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
           # DLM: we are not allowing scheduled setpoints for now, but when we do this would have to change
 
-          # RPG: setpoint is coming from OS control, in watts, so...
+          # RPG: setpoint is coming from radiance::WindowGroup::ShadingControl, in LUX, so...
           shadeControlSetpointWatts = wg.split(",")[3].to_f
           shadeControlSetpoint = shadeControlSetpointWatts * 179 # Radiance's luminous efficacy factor
               
@@ -677,7 +677,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             shadeControlSetpoint = 100000000
           end
 
-          print_statement("Processing window group '#{windowGroup}', shade control setpoint: #{shadeControlSetpoint} lux, input: #{wgIllumFiles}", runner)
+          print_statement("Processing window group '#{windowGroup}', shade control setpoint: #{shadeControlSetpoint.round(0)} lux, input: #{wgIllumFiles}", runner)
 
           # separate header from data; so, so ugly. 
           header = []
