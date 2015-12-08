@@ -501,20 +501,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
         end # calculate DMX
         
-        if haveWG1 == "True"
-
-          # compute daylight coefficient matrices for window group control points
-
-          rtrace_args = "#{options_dmx}"
-          exec_statement("oconv \"materials/materials.rad\" model.rad skies/dc_sky.rad > octrees/model_wc.oct", runner)
-          print_statement("Computing DCs for window control points", runner)
-
-          rad_command = "#{t_catCommand} \"numeric/window_controls.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
-          "-o \"output/dc/window_controls.vmx\" -m skyglow octrees/model_wc.oct"
-          exec_statement(rad_command, runner)
-        
-        end
-
         
       end # individual window group processing
         
@@ -555,6 +541,22 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         exec_statement(rad_command, runner)
       
       end # VMX for controlled window groups
+      
+
+      if haveWG1 == "True"
+
+        # compute daylight coefficient matrix for window group control points
+
+        rtrace_args = "#{options_dmx}"
+        exec_statement("oconv \"materials/materials.rad\" model.rad skies/dc_sky.rad > octrees/model_wc.oct", runner)
+        print_statement("Computing DCs for window control points", runner)
+
+        rad_command = "#{t_catCommand} \"numeric/window_controls.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
+        "-o \"output/dc/window_controls.vmx\" -m skyglow octrees/model_wc.oct"
+        exec_statement(rad_command, runner)
+      
+      end
+
 
 
     print_statement("Daylight coefficient matrices computed.", runner)
@@ -665,7 +667,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
           # DLM: we are not allowing scheduled setpoints for now, but when we do this would have to change
 
-          # RPG: setpoint is coming from radiance::WindowGroup::ShadingControl, in LUX, so...
+          # RPG: setpoint is coming from radiance::WindowGroup::ShadingControl in watts, so...
           shadeControlSetpointWatts = wg.split(",")[3].to_f
           shadeControlSetpoint = shadeControlSetpointWatts * 179 # Radiance's luminous efficacy factor
               
