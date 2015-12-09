@@ -2707,7 +2707,7 @@ module OsLib_Reporting
       end
     else
       runner.registerWarning('An annual simulation was not run. Cannot get annual timeseries data')
-      return true
+      return false
     end
 
     # add table to array of tables
@@ -2805,7 +2805,7 @@ module OsLib_Reporting
       end
     else
       runner.registerWarning('An annual simulation was not run. Cannot get annual timeseries data')
-      return true
+      return false
     end
 
     # add table to array of tables
@@ -3093,7 +3093,7 @@ module OsLib_Reporting
       end # end of if output_timeseries.is_initialized
     else
       runner.registerWarning('An annual simulation was not run.  Cannot get annual timeseries data')
-      return true
+      return false
     end
 
     # populate tables
