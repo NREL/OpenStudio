@@ -2,7 +2,7 @@
   <schema_version>3.0</schema_version>
   <name>open_studio_results</name>
   <uid>a6b9a024-0912-4be3-a55d-57dfe0b8586c</uid>
-  <version_id>e09679c6-c75e-41ed-b360-bd7cdcfcad3a</version_id>
+  <version_id>7ad2651c-9dc3-420f-bedd-5665c7e7eb49</version_id>
   <xml_checksum>557BF06F</xml_checksum>
   <class_name>OpenStudioResults</class_name>
   <display_name>OpenStudio Results</display_name>
@@ -438,12 +438,6 @@
       <checksum>BDF687C1</checksum>
     </file>
     <file>
-      <filename>report.html.erb</filename>
-      <filetype>erb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>80D66C3F</checksum>
-    </file>
-    <file>
       <filename>ExampleModel.osm</filename>
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
@@ -462,17 +456,6 @@
       <checksum>C4185CAA</checksum>
     </file>
     <file>
-      <version>
-        <software_program>OpenStudio</software_program>
-        <identifier>1.9.4</identifier>
-        <min_compatible>1.9.4</min_compatible>
-      </version>
-      <filename>measure.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>script</usage_type>
-      <checksum>29196CE5</checksum>
-    </file>
-    <file>
       <filename>EmptyModel.osm</filename>
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
@@ -485,10 +468,27 @@
       <checksum>E5788DD1</checksum>
     </file>
     <file>
+      <filename>report.html.erb</filename>
+      <filetype>erb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>05897EEB</checksum>
+    </file>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>1.9.4</identifier>
+        <min_compatible>1.9.4</min_compatible>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>4650F490</checksum>
+    </file>
+    <file>
       <filename>os_lib_reporting.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
-      <checksum>2171F954</checksum>
+      <checksum>4BE468BF</checksum>
     </file>
   </files>
 </measure>

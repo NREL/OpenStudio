@@ -123,8 +123,18 @@
       <h1>OpenStudio Results</h1>
       <% chart_index = table_index = 0 %>
       <% @sections.each do |section| %>
+
           <% next if not section %>
           <h2 id="<%= section[:title].gsub(' ', '_').gsub('/', '_') %>"><%= section[:title] %></h2>
+
+          <% if section[:messages] %>
+              <% section[:messages].each do |message|%>
+                  <h5><i><%= message %></i></h5>
+              <% end %>
+          <% elsif section[:tables].size == 0 %>
+              <h5><i>No Data to Show for <%= section[:title] %></i></h5>
+          <% end %>
+
           <% section[:tables].each do |table| %>
               <% next if not table %>
               <br>
@@ -380,11 +390,6 @@
 
               <% end %>
 
-
-          <% end %>
-
-          <% if section[:tables].size == 0 %>
-              <h5><i>No Data to Show for <%= section[:title] %></i></h5>
           <% end %>
 
       <% end %>

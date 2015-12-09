@@ -3441,7 +3441,6 @@ module OsLib_Reporting
 
     # add table to array of tables
     outdoor_air_section_tables << table
-
     return @outdoor_air_section
   end
 
