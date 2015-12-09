@@ -514,7 +514,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         # use fine params   
         rtrace_args = "#{options_vmx}" 
 
-        print_statement("Computing view matri(ces) for all window groups with shades", runner)
+        print_statement("Computing view matri(ces) for all remaining window groups", runner)
 
         # get the shaded window groups' shade polygons
 
@@ -749,7 +749,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
    end
 
       # make whole-building illuminance file
-      print_statement("Merging window groups to building daylight illuminance schedule", runner)
+      print_statement("Merging window group daylight illuminance schedules to building daylight illuminance schedule", runner)
       addFiles = ""
 
       # get the uncontrolled windows results, if any
