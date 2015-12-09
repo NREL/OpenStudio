@@ -568,7 +568,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
                       t_site_latitude, t_site_longitude, t_site_stdmeridian, t_radPath,
                       t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, runner)
 
-      print_statement("Performing annual daylight simulation", runner)
+      print_statement("Performing annual daylight simulation(s)", runner)
 
       rawValues = {}
       values = {}
@@ -622,8 +622,10 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           if row.split(",")[4].rstrip == "SWITCHABLE"
           
             # make single phase illuminance sched for each state
-            ["clear", "tinted"].each do |state|
-              exec_statement("dctimestep output/dc/#{wg}_#{state}.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}_#{state}.ill", runner)             
+            states = ["clear", "tinted"]
+            states.each_index do |i|
+              print_statement("Calculating annual iluminance for window group '#{wg}', state: #{states.index(states[i])} (switchable glazing - #{states[i]})", runner)
+              exec_statement("dctimestep output/dc/#{wg}_#{states[i]}.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}_#{states.index(states[i])}.ill", runner)             
             end
           
           else
@@ -634,8 +636,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             end
 
             wgXMLs.each_index do |i|
-              rad_command = "dctimestep output/dc/#{wg}.vmx bsdf/#{wgXMLs[i].strip} output/dc/#{wg}.dmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}_#{wgXMLs[i].split[0]}.ill"
+              #rad_command = "dctimestep output/dc/#{wg}.vmx bsdf/#{wgXMLs[i].strip} output/dc/#{wg}.dmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}_INDEX#{wgXMLs.index[i]}_#{wgXMLs[i].split[0]}.ill"
+              print_statement("Calculating annual iluminance for window group '#{wg}', state: #{wgXMLs.index(wgXMLs[i])} (BSDF filename: '#{wgXMLs[i].split[0]}'):", runner)
+              rad_command = "dctimestep output/dc/#{wg}.vmx bsdf/#{wgXMLs[i].strip} output/dc/#{wg}.dmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}_#{wgXMLs.index(wgXMLs[i])}.ill"
               exec_statement(rad_command, runner)
+              
             end
           
           end
@@ -660,23 +665,22 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           windowGroup = wg.split(",")[0]
           next if windowGroup == "WG0"      # skip unshaded windows
 
-          wgIllumFiles = Dir.glob("output/ts/#{windowGroup}_*.ill")
+          wgIllumFiles = Dir.glob("output/ts/#{windowGroup}_*.ill").sort
 
           # possible values are "AlwaysOn", "AlwaysOff", "OnIfScheduleAllows", "OnIfHighSolarOnWindow"
           shadeControlType = wg.split(",")[2].to_s
 
           # DLM: we are not allowing scheduled setpoints for now, but when we do this would have to change
 
-          # RPG: setpoint is coming from radiance::WindowGroup::ShadingControl in watts, so...
-          shadeControlSetpointWatts = wg.split(",")[3].to_f
-          shadeControlSetpoint = shadeControlSetpointWatts * 179 # Radiance's luminous efficacy factor
+          # RPG: setpoint is coming from radiance::WindowGroup::ShadingControl in lux
+          shadeControlSetpoint = wg.split(",")[3].to_f 
               
           # DLM: hacktastic way to implement these options for now
           if shadeControlType == "AlwaysOn"
             shadeControlSetpoint = -1000
           elsif 
             shadeControlType == "AlwaysOff"
-            shadeControlSetpoint = 100000000
+            shadeControlSetpoint = 10000000000
           end
 
           print_statement("Processing window group '#{windowGroup}', shade control setpoint: #{shadeControlSetpoint.round(0)} lux, input: #{wgIllumFiles}", runner)
@@ -1985,7 +1989,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
     # merge window group control points
     File.open("numeric/window_controls.map", 'w') do |f|
-      windows = Dir.glob("numeric/WG*.pts")
+      windows = Dir.glob("numeric/WG*.pts").sort
       windows.each do |wg|
         f.write IO.read(wg)
       end
