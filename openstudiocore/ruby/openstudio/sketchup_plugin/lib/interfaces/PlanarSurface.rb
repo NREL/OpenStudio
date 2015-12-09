@@ -414,6 +414,59 @@ module OpenStudio
         add_observers if had_observers
       end
     end
+    
+    def pretty_print_object(object)
+      fields = []
+      
+      # print comment, if any
+      if !object.comment.empty?
+        fields << object.comment
+      end
+      
+      n = object.numFields
+      
+      if n == 0
+        fields << object.iddObject.name + ";"
+      else
+        fields << object.iddObject.name + ","
+
+        (0...n).each do |i|
+          this_field = "  "
+          if i > 0
+            other = object.getTarget(i)
+            if other.empty?
+              value = object.getString(i)
+              if !value.empty?
+                this_field += value.get.to_s
+              end
+            else
+              this_field += other.get.name.to_s
+            end
+          else
+            value = object.getString(i)
+            if !value.empty?
+              this_field += value.get.to_s
+            end
+          end
+          
+          if i == n-1
+            this_field += "; "
+          else
+            this_field += ", "
+          end
+          
+          comment = object.fieldComment(i,true)
+          if !comment.empty?
+            this_field += comment.get
+          end
+         
+          fields << this_field
+        end
+      end
+      
+      return fields.join("\n")
+      return object.to_s
+    end
 
     # Used by info tool
     def tooltip(flags = nil, inside_info = false )
@@ -466,10 +519,10 @@ module OpenStudio
               if (not layers.empty?)
                 if (inside_info) 
                   # inside
-                  tooltip = layers[-1].to_s
+                  tooltip = pretty_print_object(layers[-1])
                 else
                   # outside
-                  tooltip = layers[0].to_s
+                  tooltip = pretty_print_object(layers[0])
                 end
               end
             end
@@ -480,7 +533,7 @@ module OpenStudio
           # no modifier show construction
           construction = @model_object.construction
           if (not construction.empty?)
-            tooltip = construction.get.to_s
+            tooltip = pretty_print_object(construction.get)
           end
 
         end
@@ -494,7 +547,7 @@ module OpenStudio
         if not space.empty?
           space_type = space.get.spaceType
           if not space_type.empty?
-            tooltip = space_type.get.to_s
+            tooltip = pretty_print_object(space_type.get)
           end
         end
           
@@ -506,7 +559,7 @@ module OpenStudio
         if not space.empty?
           thermal_zone = space.get.thermalZone
           if not thermal_zone.empty?
-            tooltip = thermal_zone.get.to_s
+            tooltip = pretty_print_object(thermal_zone.get)
           end
         end
           
@@ -518,7 +571,7 @@ module OpenStudio
         if not space.empty?
           building_story = space.get.buildingStory
           if not building_story.empty?
-            tooltip = building_story.get.to_s
+            tooltip = pretty_print_object(building_story.get)
           end
         end
           
@@ -531,7 +584,7 @@ module OpenStudio
           if parent
             parent_object = parent.model_object
             if parent_object
-              tooltip = parent_object.to_s
+              tooltip = pretty_print_object(parent_object)
             end
           end
           
@@ -541,7 +594,7 @@ module OpenStudio
 
           construction = @model_object.construction
           if (not construction.empty?)
-            tooltip = construction.get.to_s
+            tooltip = pretty_print_object(construction.get)
           end
           
         elsif (flags & COPY_MODIFIER_MASK > 0)  # Ctrl key is down, show material 
@@ -557,10 +610,10 @@ module OpenStudio
               if (not layers.empty?)
                 if (inside_info) 
                   # inside
-                  tooltip = layers[-1].to_s
+                  tooltip = pretty_print_object(layers[-1])
                 else
                   # outside
-                  tooltip = layers[0].to_s
+                  tooltip = pretty_print_object(layers[0])
                 end
               end
             end
@@ -569,7 +622,7 @@ module OpenStudio
         else
         
           # No modifier key
-          tooltip = @model_object.to_s
+          tooltip = pretty_print_object(@model_object)
         end
         
       end

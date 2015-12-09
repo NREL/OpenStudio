@@ -207,24 +207,7 @@ module OpenStudio
         elsif (rendering_mode == RenderBySurfaceNormal)
           # no-op
         elsif (rendering_mode == RenderByConstruction)
-          
-          construction = nil
-          if model_object.is_a?(OpenStudio::Model::PlanarSurface)
-            if (not model_object.isConstructionDefaulted) or render_defaults
-              o_construction = model_object.construction
-              if not o_construction.empty?
-                construction = o_construction.get
-              end
-            end
-          end
-          
-          if construction
-            drawing_interface = construction.drawing_interface
-            idd_object_type = construction.iddObject.type
-            handles = OpenStudio::UUIDVector.new
-            handles << construction.handle  
-          end
-          
+          # select surface since there are no more construction objects in the inspector
         elsif (rendering_mode == RenderBySpaceType)
         
           space = nil
