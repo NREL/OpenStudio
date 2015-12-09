@@ -1818,7 +1818,7 @@ OS:Facility,
 OS:ThermalZone,
   {fc71e57a-151a-46b8-a678-25e6fe6f7b47}, !- Handle
   Thermal Zone 1,                         !- Name
-  ,                                       !- Multiplier
+  2,                                      !- Multiplier
   ,                                       !- Ceiling Height {m}
   ,                                       !- Volume {m3}
   ,                                       !- Floor Area {m2}
@@ -2036,7 +2036,7 @@ OS:Space,
   ,                                       !- Z Origin {m}
   {67d37358-1511-4b0b-a14a-17503161c3c7}, !- Building Story Name
   {b4fbb6da-4142-456b-bacc-6bc90c4f66d0}, !- Thermal Zone Name
-  Yes;                                    !- Part of Total Floor Area
+  No;                                     !- Part of Total Floor Area
 
 OS:Surface,
   {4693b256-3d38-4008-afd8-73c1f9cd15eb}, !- Handle
@@ -2267,7 +2267,8 @@ OS:Space,
   10,                                     !- Y Origin {m}
   ,                                       !- Z Origin {m}
   {67d37358-1511-4b0b-a14a-17503161c3c7}, !- Building Story Name
-  {fc71e57a-151a-46b8-a678-25e6fe6f7b47}; !- Thermal Zone Name
+  {fc71e57a-151a-46b8-a678-25e6fe6f7b47}, !- Thermal Zone Name
+  Yes;                                    !- Part of Total Floor Area
 
 OS:Surface,
   {21bffbe0-051c-4c4f-8a95-3214976c07ba}, !- Handle
@@ -3198,10 +3199,10 @@ OS:ZoneCapacitanceMultiplier:ResearchSpecial,
 OS:RunPeriod,
   {eda09313-72c2-4707-b5d5-7df8afcc3ad0}, !- Handle
   Run Period 1,                           !- Name
-  1,                                      !- Begin Month
+  2,                                      !- Begin Month
   1,                                      !- Begin Day of Month
-  12,                                     !- End Month
-  31,                                     !- End Day of Month
+  11,                                     !- End Month
+  30,                                     !- End Day of Month
   ,                                       !- Use Weather File Holidays and Special Days
   ,                                       !- Use Weather File Daylight Saving Period
   ,                                       !- Apply Weekend Holiday Rule
@@ -3247,7 +3248,7 @@ OS:Rendering:Color,
 
 OS:ThermalZone,
   {b4fbb6da-4142-456b-bacc-6bc90c4f66d0}, !- Handle
-  'Odd Zone Name',                        !- Name
+  David's Odd Zone Name,                  !- Name
   ,                                       !- Multiplier
   ,                                       !- Ceiling Height {m}
   ,                                       !- Volume {m3}

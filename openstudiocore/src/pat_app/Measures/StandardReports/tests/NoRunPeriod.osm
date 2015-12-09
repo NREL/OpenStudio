@@ -290,3 +290,78 @@ OS:Schedule:Day,
   0,                                      !- Minute 1
   0;                                      !- Value Until Time 1
 
+OS:RadianceParameters,
+  {fe4a5a85-32c5-4785-ae70-b24f51c453fb}, !- Handle
+  1,                                      !- Accumulated Rays per Record
+  0,                                      !- Direct Threshold
+  1,                                      !- Direct Certainty
+  1,                                      !- Direct Jitter
+  1,                                      !- Direct Pretest
+  6,                                      !- Ambient Bounces VMX
+  2,                                      !- Ambient Bounces DMX
+  4050,                                   !- Ambient Divisions VMX
+  512,                                    !- Ambient Divisions DMX
+  256,                                    !- Ambient Supersamples
+  0.001,                                  !- Limit Weight VMX
+  0.001,                                  !- Limit Weight DMX
+  500,                                    !- Klems Sampling Density
+  146;                                    !- Sky Discretization Resolution
+
+OS:SimulationControl,
+  {b2a7c437-4c4d-46b9-81e4-318d2365eae9}, !- Handle
+  ,                                       !- Do Zone Sizing Calculation
+  ,                                       !- Do System Sizing Calculation
+  ,                                       !- Do Plant Sizing Calculation
+  ,                                       !- Run Simulation for Sizing Periods
+  No;                                     !- Run Simulation for Weather File Run Periods
+
+OS:Sizing:Parameters,
+  {c48f85d6-ebc5-4eef-bac8-626815c4581c}, !- Handle
+  1.25,                                   !- Heating Sizing Factor
+  1.15;                                   !- Cooling Sizing Factor
+
+OS:ProgramControl,
+  {9f2d7807-af43-461b-a2aa-83784cd8f5a5}; !- Handle
+
+OS:Timestep,
+  {2d69fd7d-d234-4a0e-968a-a2ba3fe05a07}, !- Handle
+  6;                                      !- Number of Timesteps per Hour
+
+OS:OutputControl:ReportingTolerances,
+  {08ae695a-f862-4174-9db5-34eb96bfd595}; !- Handle
+
+OS:ConvergenceLimits,
+  {1e06ac8c-5f5f-4119-bcc7-623cbf8ba174}, !- Handle
+  1;                                      !- Minimum System Timestep {minutes}
+
+OS:ShadowCalculation,
+  {7d4181a6-a0b4-4298-b83a-2389f4ed0b0a}, !- Handle
+  20,                                     !- Calculation Frequency
+  15000;                                  !- Maximum Figures in Shadow Overlap Calculations
+
+OS:SurfaceConvectionAlgorithm:Inside,
+  {e61400b0-ff2d-4608-b23d-59e2d5b600f5}, !- Handle
+  TARP;                                   !- Algorithm
+
+OS:SurfaceConvectionAlgorithm:Outside,
+  {ebe5885e-2632-4d3d-94b8-916808cc65c8}, !- Handle
+  DOE-2;                                  !- Algorithm
+
+OS:HeatBalanceAlgorithm,
+  {33fce443-bfeb-4b4a-8dd7-16cbe1aa6204}, !- Handle
+  ConductionTransferFunction,             !- Algorithm
+  200;                                    !- Surface Temperature Upper Limit {C}
+
+OS:ZoneAirHeatBalanceAlgorithm,
+  {974bab62-c82a-4fc8-a686-b80e6f467d92}, !- Handle
+  ThirdOrderBackwardDifference;           !- Algorithm
+
+OS:ZoneAirContaminantBalance,
+  {6d1956f8-31a8-4249-82c8-eb274db474df}; !- Handle
+
+OS:ZoneCapacitanceMultiplier:ResearchSpecial,
+  {dd17a976-1fd5-4419-891d-0e68a39a5841}, !- Handle
+  ,                                       !- Temperature Capacity Multiplier
+  ,                                       !- Humidity Capacity Multiplier
+  ;                                       !- Carbon Dioxide Capacity Multiplier
+

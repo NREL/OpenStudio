@@ -1,8 +1,8 @@
 <measure>
   <schema_version>3.0</schema_version>
   <name>open_studio_results</name>
-  <uid>fc337100-8634-404e-8966-01243d292a79</uid>
-  <version_id>333c98ed-15d0-4c1b-ae72-9beade490561</version_id>
+  <uid>a6b9a024-0912-4be3-a55d-57dfe0b8586c</uid>
+  <version_id>31178bd6-548a-4cc7-a5ed-5f03f363d9b6</version_id>
   <xml_checksum>557BF06F</xml_checksum>
   <class_name>OpenStudioResults</class_name>
   <display_name>OpenStudio Results</display_name>
@@ -426,45 +426,10 @@
   </attributes>
   <files>
     <file>
-      <filename>os_lib_schedules.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>C4185CAA</checksum>
-    </file>
-    <file>
       <filename>os_lib_helper_methods.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
       <checksum>A6430141</checksum>
-    </file>
-    <file>
-      <filename>report.html.erb</filename>
-      <filetype>erb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>1351A912</checksum>
-    </file>
-    <file>
-      <version>
-        <software_program>OpenStudio</software_program>
-        <identifier>1.7.5</identifier>
-        <min_compatible>1.7.5</min_compatible>
-      </version>
-      <filename>measure.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>script</usage_type>
-      <checksum>F8DC75BF</checksum>
-    </file>
-    <file>
-      <filename>os_lib_reporting.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>2CF6E6F4</checksum>
-    </file>
-    <file>
-      <filename>ExampleModel.osm</filename>
-      <filetype>osm</filetype>
-      <usage_type>test</usage_type>
-      <checksum>D8511AF4</checksum>
     </file>
     <file>
       <filename>USA_CO_Golden-NREL.724666_TMY3.epw</filename>
@@ -473,16 +438,63 @@
       <checksum>BDF687C1</checksum>
     </file>
     <file>
-      <filename>OpenStudioResults_Test.rb</filename>
-      <filetype>rb</filetype>
+      <filename>ExampleModel.osm</filename>
+      <filetype>osm</filetype>
       <usage_type>test</usage_type>
-      <checksum>3F951610</checksum>
+      <checksum>B8C82F71</checksum>
+    </file>
+    <file>
+      <filename>os_lib_schedules.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>C4185CAA</checksum>
     </file>
     <file>
       <filename>EmptyModel.osm</filename>
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
-      <checksum>0B8191E5</checksum>
+      <checksum>E626DAAE</checksum>
+    </file>
+    <file>
+      <filename>EdgeCaseModel.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>E5788DD1</checksum>
+    </file>
+    <file>
+      <filename>report.html.erb</filename>
+      <filetype>erb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>05897EEB</checksum>
+    </file>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>1.9.4</identifier>
+        <min_compatible>1.9.4</min_compatible>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>4650F490</checksum>
+    </file>
+    <file>
+      <filename>os_lib_reporting.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>9686764B</checksum>
+    </file>
+    <file>
+      <filename>NoRunPeriod.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>ECD13CF2</checksum>
+    </file>
+    <file>
+      <filename>OpenStudioResults_Test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>83A917C2</checksum>
     </file>
   </files>
 </measure>

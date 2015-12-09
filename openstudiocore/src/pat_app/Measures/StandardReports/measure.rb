@@ -151,9 +151,46 @@ class OpenStudioResults < OpenStudio::Ruleset::ReportingUserScript
     # generate data for requested sections
     sections_made = 0
     possible_sections.each do |method_name|
-      next unless args[method_name]
-      eval("@sections <<  OsLib_Reporting.#{method_name}(model,sql_file,runner,false)")
-      sections_made += 1
+
+      begin
+        next unless args[method_name]
+        section = false
+        eval("section = OsLib_Reporting.#{method_name}(model,sql_file,runner,false)")
+        display_name = eval("OsLib_Reporting.#{method_name}(nil,nil,nil,true)[:title]")
+        if section
+          @sections << section
+          sections_made += 1
+          # look for emtpy tables and warn if skipped because returned empty
+          section[:tables].each do |table|
+            if not table
+              runner.registerWarning("A table in #{display_name} section returned false and was skipped.")
+              section[:messages] = ["One or more tables in #{display_name} section returned false and was skipped."]
+            end
+          end
+        else
+          runner.registerWarning("#{display_name} section returned false and was skipped.")
+          section = {}
+          section[:title] = "#{display_name}"
+          section[:tables] = []
+          section[:messages] = []
+          section[:messages] << "#{display_name} section returned false and was skipped."
+          @sections << section
+        end
+      rescue => e
+        display_name = eval("OsLib_Reporting.#{method_name}(nil,nil,nil,true)[:title]")
+        if display_name == nil then display_name == method_name end
+        runner.registerWarning("#{display_name} section failed and was skipped because: #{e}. Detail on error follows.")
+        runner.registerWarning("#{e.backtrace.join("\n")}")
+
+        # add in section heading with message if section fails
+        section = eval("OsLib_Reporting.#{method_name}(nil,nil,nil,true)")
+        section[:messages] = []
+        section[:messages] << "#{display_name} section failed and was skipped because: #{e}. Detail on error follows."
+        section[:messages] << ["#{e.backtrace.join("\n")}"]
+        @sections << section
+
+      end
+
     end
 
     # read in template
