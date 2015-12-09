@@ -513,6 +513,7 @@ namespace detail {
 
     if( boost::optional<Node> secondaryAirInletNode = this->secondaryAirInletNode() )
     {
+      secondaryAirInletNode->disconnect();
       secondaryAirInletNode->remove();
     }
 

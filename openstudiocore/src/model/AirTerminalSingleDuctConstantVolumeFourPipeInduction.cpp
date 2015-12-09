@@ -211,6 +211,7 @@ namespace detail {
 
     if( boost::optional<Node> t_inducedAirInletNode = inducedAirInletNode() )
     {
+      t_inducedAirInletNode->disconnect();
       t_inducedAirInletNode->remove();
     }
 

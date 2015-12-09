@@ -27,6 +27,9 @@
 #include "../AirLoopHVAC.hpp"
 #include "../PlantLoop.hpp"
 #include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
+#include "../PortList.hpp"
+#include "../PortList_Impl.hpp"
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
@@ -98,14 +101,25 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_remove
   ThermalZone thermalZone(m);
   PlantLoop plantLoop(m);
 
+  // KSB: I don't think it is the greatest idea to test these private methods,
+  // but this area has resulted in a simulation error so it needs to be tested
+  EXPECT_FALSE(thermalZone.getImpl<detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
+  EXPECT_FALSE(thermalZone.getImpl<detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
+
   airLoop.addBranchForZone(thermalZone, testObject);
   plantLoop.addDemandBranchForComponent(heatingCoil);
   plantLoop.addDemandBranchForComponent(coolingCoil);
+
+  EXPECT_TRUE(thermalZone.getImpl<detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
+  EXPECT_TRUE(thermalZone.getImpl<detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
 
   EXPECT_EQ((unsigned)10, plantLoop.demandComponents().size());
   EXPECT_EQ((unsigned)9, airLoop.demandComponents().size());
 
   testObject.remove();
+
+  EXPECT_FALSE(thermalZone.getImpl<detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
+  EXPECT_TRUE(thermalZone.getImpl<detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
 
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
   EXPECT_EQ((unsigned)7, airLoop.demandComponents().size());  
