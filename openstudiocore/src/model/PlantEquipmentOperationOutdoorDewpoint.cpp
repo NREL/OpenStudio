@@ -64,12 +64,12 @@ namespace detail {
 
   double PlantEquipmentOperationOutdoorDewpoint_Impl::maximumUpperLimit() const
   {
-    return -70.0;
+    return 70.0;
   }
 
   double PlantEquipmentOperationOutdoorDewpoint_Impl::minimumLowerLimit() const
   {
-    return 70.0;
+    return -70.0;
   }
 
 } // detail

@@ -32,7 +32,9 @@ namespace detail{
   class Generator_Impl;
 }
 
-/** Generator is the base class for generators.
+/** Generator is the base class for generators.  The ratedElectricPowerOutput, availabilitySchedule, and
+ *  ratedThermalToElectricalPowerRatio fields are mapped to fields in the ElectricLoadCenter:Generators object
+ *  in EnergyPlus.  The ElectricLoadCenter:Generators object does not exist in OpenStudio.
  */
 class MODEL_API Generator : public ParentObject {
 

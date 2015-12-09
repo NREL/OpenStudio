@@ -43,28 +43,53 @@ class RemoveOrphanPhotovoltaics < OpenStudio::Ruleset::ModelUserScript
       return false
     end
     
-    num_removed = 0
+    num_pv_removed = 0
+    num_elcd_removed = 0
+    num_inverter_removed = 0
+    
+    # remove pv panels that are not connected to both an ElectricLoadCenterDistribution and a Surface
     model.getGeneratorPhotovoltaics.each do |pv|
 
       elcd = pv.electricLoadCenterDistribution
       if elcd.empty?
         pv.remove
-        num_removed += 1
+        num_pv_removed += 1
         next
       end
       
       s = pv.surface
       if s.empty?
         pv.remove
-        num_removed += 1
+        num_pv_removed += 1
       end
 
     end
     
-    if num_removed == 0
-      runner.registerAsNotApplicable("No GeneratorPhotovoltaic objects removed.")
+    # remove ElectricLoadCenterDistributions without any generators
+    model.getElectricLoadCenterDistributions.each do |elcd|
+      if elcd.generators.empty?
+        inverter = elcd.inverter
+        if !inverter.empty?
+          inverter.get.remove
+          num_inverter_removed += 1
+        end
+        elcd.remove
+        num_elcd_removed += 1
+      end
+    end
+    
+    # remove inverters that are not connected to an ElectricLoadCenterDistribution
+    model.getInverters.each do |inverter|
+      if inverter.electricLoadCenterDistribution.empty?
+        inverter.remove
+        num_inverter_removed += 1
+      end
+    end
+    
+    if (num_pv_removed + num_elcd_removed + num_inverter_removed) == 0
+      runner.registerAsNotApplicable("No objects removed.")
     else
-      runner.registerInfo("#{num_removed} GeneratorPhotovoltaic objects removed.")
+      runner.registerInfo("#{num_pv_removed} GeneratorPhotovoltaic, #{num_elcd_removed} ElectricLoadCenterDistribution, #{num_inverter_removed} Inverter objects removed.")
     end
     
     return(true)

@@ -1,5 +1,5 @@
 # see the URL below for information on how to write OpenStudio measures
-# http://nrel.github.io/OpenStudio-user-documentation/measures/measure_writing_guide/
+# http://nrel.github.io/OpenStudio-user-documentation/reference/measure_writing_guide/
 
 # start the measure
 class ModelMeasure < OpenStudio::Ruleset::ModelUserScript

@@ -87,12 +87,12 @@ namespace detail {
 
   double PlantEquipmentOperationOutdoorDryBulbDifference_Impl::maximumUpperLimit() const
   {
-    return -50.0;
+    return 100.0;
   }
 
   double PlantEquipmentOperationOutdoorDryBulbDifference_Impl::minimumLowerLimit() const
   {
-    return 100.0;
+    return -50.0;
   }
 
 } // detail

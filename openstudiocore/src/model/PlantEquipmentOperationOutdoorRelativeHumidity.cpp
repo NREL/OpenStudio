@@ -64,12 +64,12 @@ namespace detail {
 
   double PlantEquipmentOperationOutdoorRelativeHumidity_Impl::maximumUpperLimit() const
   {
-    return 0.0;
+    return 100.0;
   }
 
   double PlantEquipmentOperationOutdoorRelativeHumidity_Impl::minimumLowerLimit() const
   {
-    return 100.0;
+    return 0.0;
   }
 
 } // detail

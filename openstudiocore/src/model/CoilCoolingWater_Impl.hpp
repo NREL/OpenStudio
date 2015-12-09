@@ -26,7 +26,6 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
-class ControllerWaterCoil;
 
 namespace detail {
 
@@ -145,8 +144,6 @@ namespace detail {
     std::string heatExchangerConfiguration();
 
     void setHeatExchangerConfiguration( std::string value );
-
-    boost::optional<ControllerWaterCoil> controllerWaterCoil();
 
   private:    
     REGISTER_LOGGER("openstudio.model.CoilCoolingWater");

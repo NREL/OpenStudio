@@ -130,6 +130,10 @@ class MODEL_API ControllerWaterCoil_Impl : public HVACComponent_Impl {
 
   void setActuatorNode( Node & node );
 
+  void setWaterCoil( const HVACComponent & comp );
+
+  boost::optional<HVACComponent> waterCoil() const;
+
   protected:
 
   private:

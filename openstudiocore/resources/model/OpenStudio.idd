@@ -1,4 +1,4 @@
-!IDD_Version 1.9.5
+!IDD_Version 1.10.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -6754,7 +6754,6 @@ OS:Refrigeration:GasCooler:AirCooled,
         \units W
         \minimum 0.0
         \default 5000.0
-        \required-field
   N2,   \field Minimum Fan Air Flow Ratio
         \note Minimum air flow fraction through gas cooler fan
         \type real
@@ -7446,7 +7445,6 @@ OS:Refrigeration:AirChiller,
         \type object-list
         \object-list ScheduleNames
   A4,   \field Capacity Rating Type
-        \required-field
         \note In each case, select the rating option that corresponds to the expected service conditions.
         \note For example, U.S. manufacturers quote a separate Unit Load Factor for wet or frosted coils.
         \note If the evaporating temperature is less than 0C, input the frosted coil value.
@@ -9353,7 +9351,6 @@ OS:AirTerminal:SingleDuct:ConstantVolume:FourPipeInduction,
        \autosizable
        \minimum 0.0
   N2,  \field Induction Ratio
-       \required-field
        \type real
        \minimum 0.0
        \default 2.5
@@ -11444,7 +11441,6 @@ OS:CoolingTower:TwoSpeed,
        \note Low speed air flow rate must be less than high speed air flow rate
        \note Low speed air flow rate must be greater than free convection air flow rate
   N6 , \field Low Fan Speed Air Flow Rate Sizing Factor
-       \required-field
        \type real
        \default 0.5
        \minimum> 0.0
@@ -11459,7 +11455,6 @@ OS:CoolingTower:TwoSpeed,
        \ip-units W
        \note This is the fan motor electric input power at low speed
   N8 , \field Low Fan Speed Fan Power Sizing Factor
-       \required-field
        \type real
        \default 0.16
        \minimum> 0.0
@@ -11475,7 +11470,6 @@ OS:CoolingTower:TwoSpeed,
        \note Low speed tower UA must be less than high speed tower UA
        \note Low speed tower UA must be greater than free convection tower UA
   N10, \field Low Fan Speed U-Factor Times Area Sizing Factor
-       \required-field
        \type real
        \default 0.6
        \minimum> 0.0
@@ -11489,7 +11483,6 @@ OS:CoolingTower:TwoSpeed,
        \default 0.0
        \autosizable
   N12, \field Free Convection Regime Air Flow Rate Sizing Factor
-       \required-field
        \type real
        \default 0.1
        \minimum> 0.0
@@ -11504,7 +11497,6 @@ OS:CoolingTower:TwoSpeed,
        \autosizable
        \note Leave field blank if Tower Performance Input Method is NominalCapacity
   N14, \field Free Convection U-Factor Times Area Value Sizing Factor
-       \required-field
        \type real
        \default 0.1
        \minimum> 0.0
@@ -11520,7 +11512,6 @@ OS:CoolingTower:TwoSpeed,
        \note the Design Air Flow Rate and the Design Water Flow Rate,
        \note or by specifying the tower nominal capacity
   N15, \field Heat Rejection Capacity and Nominal Capacity Sizing Ratio
-       \required-field
        \type real
        \default 1.25
   N16, \field High Speed Nominal Capacity
@@ -11546,7 +11537,6 @@ OS:CoolingTower:TwoSpeed,
        \note Capacity Sizing Ratio (e.g. 1.25) gives the actual tower heat
        \note rejection at these operating conditions.
   N18, \field Low Speed Nominal Capacity Sizing Factor
-       \required-field
        \type real
        \default 0.5
        \minimum> 0.0
@@ -11564,7 +11554,6 @@ OS:CoolingTower:TwoSpeed,
        \note free convection capacity times the Heat Rejection Capacity and Nominal Capacity Sizing Ratio
        \note (e.g. 1.25)  gives the actual tower heat rejection at these operating conditions
   N20, \field Free Convection Nominal Capacity Sizing Factor
-       \required-field
        \type real
        \default 0.1
        \minimum> 0.0
@@ -13029,7 +13018,6 @@ OS:Coil:Cooling:DX:MultiSpeed,
        \key Yes
        \key No
        \default No
-       \required-field
   N1 , \field Crankcase Heater Capacity
        \type real
        \minimum 0.0
@@ -15642,7 +15630,10 @@ OS:Controller:WaterCoil,
        \type alpha
        \required-field
        \reference AirLoopControllers
-  A3, \field Control Variable
+  A3,  \field Water Coil Name
+       \type object-list
+       \object-list ConnectionObject
+  A4, \field Control Variable
        \note keys HumidityRatio or TemperatureAndHumidityRatio
        \note requires a ZoneControl:Humidistat object along
        \note with SetpointManager:SingleZone:Humidity:Maximum,
@@ -15653,21 +15644,21 @@ OS:Controller:WaterCoil,
        \key Temperature
        \key HumidityRatio
        \key TemperatureAndHumidityRatio
-  A4, \field Action
+  A5, \field Action
        \note Leave blank to have this automatically selected from coil type.
        \note Chilled water coils should be reverse action
        \note Hot water coils should be normal action
        \type choice
        \key Normal
        \key Reverse
-  A5, \field Actuator Variable
+  A6, \field Actuator Variable
        \type choice
        \default Flow
        \key Flow
-  A6, \field Sensor Node Name
+  A7, \field Sensor Node Name
        \type object-list
        \object-list Node
-  A7, \field Actuator Node Name
+  A8, \field Actuator Node Name
        \type object-list
        \object-list Node
   N1, \field Controller Convergence Tolerance
@@ -16770,13 +16761,11 @@ OS:Table:MultiVariableLookup,
        \key EvaluateCurveToLimits
        \key LagrangeInterpolationLinearExtrapolation
        \default LagrangeInterpolationLinearExtrapolation
-       \required-field
   N1 , \field Number of Interpolation Points
        \type integer
        \minimum> 1
        \maximum 4
        \default 3
-       \required-field
   A4 , \field Curve Type
        \type choice
        \key Linear
@@ -16795,7 +16784,6 @@ OS:Table:MultiVariableLookup,
        \type choice
        \key SingleLineIndependentVariableWithMatrix
        \default SingleLineIndependentVariableWithMatrix
-       \required-field
   A6 , \field External File Name
        \type alpha
        \retaincase
@@ -16804,13 +16792,11 @@ OS:Table:MultiVariableLookup,
        \key Ascending
        \key Descending
        \default Ascending
-       \required-field
   A8 , \field X2 Sort Order
        \type choice
        \key Ascending
        \key Descending
        \default Ascending
-       \required-field
   N2 , \field Normalization Reference
        \type real
        \note This field is used to normalize the table output data.
@@ -16864,7 +16850,6 @@ OS:Table:MultiVariableLookup,
        \key Power
        \key Distance
        \default Dimensionless
-       \required-field
   A10 , \field Input Unit Type for X2
        \type choice
        \key Dimensionless
@@ -16874,7 +16859,6 @@ OS:Table:MultiVariableLookup,
        \key Power
        \key Distance
        \default Dimensionless
-       \required-field
   A11, \field Input Unit Type for X3
        \type choice
        \key Dimensionless
@@ -16884,7 +16868,6 @@ OS:Table:MultiVariableLookup,
        \key Power
        \key Distance
        \default Dimensionless
-       \required-field
   A12, \field Input Unit Type for X4
        \type choice
        \key Dimensionless
@@ -16894,7 +16877,6 @@ OS:Table:MultiVariableLookup,
        \key Power
        \key Distance
        \default Dimensionless
-       \required-field
   A13, \field Input Unit Type for X5
        \type choice
        \key Dimensionless
@@ -16904,14 +16886,12 @@ OS:Table:MultiVariableLookup,
        \key Power
        \key Distance
        \default Dimensionless
-       \required-field
   A14, \field Output Unit Type
        \type choice
        \key Dimensionless
        \key Capacity
        \key Power
        \default Dimensionless
-       \required-field
   N15, \field Number of Independent Variables
        \type integer
        \minimum 1
@@ -18080,7 +18060,6 @@ OS:HeatExchanger:FluidToFluid,
         \key CounterFlow
         \key Ideal
         \default Ideal
-        \required-field
    N3 , \field Heat Exchanger U-Factor Times Area Value
         \type real
         \units W/K
@@ -18100,7 +18079,6 @@ OS:HeatExchanger:FluidToFluid,
         \key DualDeadbandSetpointOnOff
         \key CoolingDifferentialOnOff
         \key CoolingSetpointOnOffWithComponentOverride
-        \required-field
         \default UncontrolledOn
    A10 , \field Heat Exchanger Setpoint Node Name
        \type object-list
@@ -18108,7 +18086,6 @@ OS:HeatExchanger:FluidToFluid,
    N4 , \field Minimum Temperature Difference to Activate Heat Exchanger
         \note Tolerance between control temperatures used to determine if heat exchanger should run.
         \type real
-        \required-field
         \minimum 0.0
         \maximum 50
         \default 0.01
@@ -18123,7 +18100,6 @@ OS:HeatExchanger:FluidToFluid,
         \key HeatRecoveryForHeating
         \key LoopToLoop
         \default LoopToLoop
-        \required-field
    A12, \field Component Override Loop Supply Side Inlet Node
        \type object-list
        \object-list Node
@@ -18131,7 +18107,6 @@ OS:HeatExchanger:FluidToFluid,
        \type object-list
        \object-list Node
    A14, \field Component Override Cooling Control Temperature Mode
-        \required-field
         \type choice
         \key WetBulbTemperature
         \key DryBulbTemperature
@@ -18140,7 +18115,6 @@ OS:HeatExchanger:FluidToFluid,
         \note This field is only used if Control Type is set to CoolingSetpointOnOffWithComponentOverride
    N5 , \field Sizing Factor
         \note Multiplies the autosized flow rates for this device
-        \required-field
         \type real
         \minimum> 0.0
         \default 1.0
@@ -20657,7 +20631,6 @@ OS:ZoneHVAC:Baseboard:Convective:Electric,
        \autosizable
        \ip-units W
   N2 ; \field Efficiency
-       \required-field
        \maximum 1.0
        \minimum> 0.0
        \default 1.0
@@ -24057,7 +24030,6 @@ OS:SolarCollectorPerformance:IntegralCollectorStorage,
        \type alpha
        \reference CollectorStoragePerformance
   A3,  \field ICS Collector Type
-       \required-field
        \type choice
        \key RectangularTank
        \default RectangularTank
@@ -24071,21 +24043,18 @@ OS:SolarCollectorPerformance:IntegralCollectorStorage,
        \minimum> 0
        \units m3
   N3,  \field Bottom Heat Loss Conductance
-       \required-field
        \type real
        \minimum> 0
        \default 0.40
        \units W/m2-K
        \note Heat loss conductance of the collector bottom insulation
   N4,  \field Side Heat Loss Conductance
-       \required-field
        \type real
        \minimum> 0
        \default 0.60
        \units W/m2-K
        \note heat loss conductance of the collector side insulation
   N5,  \field Aspect Ratio
-       \required-field
        \type real
        \minimum> 0.5
        \maximum< 1.0
@@ -24095,7 +24064,6 @@ OS:SolarCollectorPerformance:IntegralCollectorStorage,
        \note (long side of) of the collector.  Used to calculate the
        \note perimeter of the collector
   N6,  \field Collector Side Height
-       \required-field
        \type real
        \minimum> 0
        \maximum< 0.30
@@ -24104,7 +24072,6 @@ OS:SolarCollectorPerformance:IntegralCollectorStorage,
        \note This value is used to estimate collector side area for the heat
        \note loss calculation through the collector side
   N7,  \field Thermal Mass of Absorber Plate
-       \required-field
        \type real
        \minimum 0
        \default 0
@@ -24112,7 +24079,6 @@ OS:SolarCollectorPerformance:IntegralCollectorStorage,
        \note Calculated from the specific heat, density and thickness
        \note of the absorber plate.
   N8,  \field Number of Covers
-       \required-field
        \type integer
        \minimum 1
        \maximum 2
@@ -24121,7 +24087,6 @@ OS:SolarCollectorPerformance:IntegralCollectorStorage,
        \note glass as the outer cover and very thin transparent sheet such as
        \note Teflon as the inner cover.
   N9,  \field Cover Spacing
-       \required-field
        \type real
        \minimum> 0
        \maximum 0.20
@@ -24130,7 +24095,6 @@ OS:SolarCollectorPerformance:IntegralCollectorStorage,
        \note The gap between the transparent covers and between the inner cover
        \note and the absorber plate
   N10, \field Refractive Index of Outer Cover
-       \required-field
        \type real
        \minimum 1.0
        \maximum 2.0
@@ -24140,7 +24104,6 @@ OS:SolarCollectorPerformance:IntegralCollectorStorage,
        \note as the outer cover material, and used as the default outer cover
        \note with a value of 1.526.
   N11, \field Extinction Coefficient Times Thickness of Outer Cover
-       \required-field
        \type real
        \minimum 0.
        \default 0.045
@@ -24149,7 +24112,6 @@ OS:SolarCollectorPerformance:IntegralCollectorStorage,
        \note and with thickness of 3.0mm, the product of the extinction
        \note coefficient and thickness becomes 0.045 (=15 * 0.003)
   N12, \field Emissivity of Outer Cover
-       \required-field
        \type real
        \minimum> 0.
        \maximum< 1.0
@@ -24158,7 +24120,6 @@ OS:SolarCollectorPerformance:IntegralCollectorStorage,
        \note Thermal emissivity of the outer cover, commonly glass is used as
        \note the out collector cover material.
   N13, \field Refractive Index of Inner Cover
-       \required-field
        \type real
        \minimum 1.0
        \maximum 2.0
@@ -24167,7 +24128,6 @@ OS:SolarCollectorPerformance:IntegralCollectorStorage,
        \note Typical material is very thin sheet of Teflon (PTFE). The default
        \note value is refractive index of Teflon.
   N14, \field Extinction Coefficient Times Thickness of the inner Cover
-       \required-field
        \type real
        \minimum 0.
        \default 0.008
@@ -24176,7 +24136,6 @@ OS:SolarCollectorPerformance:IntegralCollectorStorage,
        \note extinction coefficient of approximately 40.0 and a thickness
        \note 0.2mm yields a default value of 0.008.
   N15, \field Emissivity of Inner Cover
-       \required-field
        \type real
        \minimum> 0.
        \maximum< 1.0
@@ -24184,7 +24143,6 @@ OS:SolarCollectorPerformance:IntegralCollectorStorage,
        \units dimensionless
        \note Thermal emissivity of the inner cover material
   N16, \field Absorptance of Absorber Plate
-       \required-field
        \type real
        \minimum> 0.
        \maximum< 1.0
@@ -24193,7 +24151,6 @@ OS:SolarCollectorPerformance:IntegralCollectorStorage,
        \note The absorber plate solar absorptance.  Copper is assumed as
        \note the default absorber plate.
   N17; \field Emissivity of Absorber Plate
-       \required-field
        \type real
        \minimum> 0.
        \maximum< 1.0
@@ -24223,7 +24180,6 @@ OS:SolarCollector:IntegralCollectorStorage,
        \type object-list
        \object-list AllShadingAndHTSurfNames
   A5 , \field Bottom Surface Boundary Conditions Type
-       \required-field
        \type choice
        \key OtherSideConditionsModel
        \key AmbientAir
