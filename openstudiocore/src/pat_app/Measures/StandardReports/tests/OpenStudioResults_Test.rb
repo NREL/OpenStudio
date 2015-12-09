@@ -318,12 +318,12 @@ class OpenStudioResults_Test < MiniTest::Unit::TestCase
 
     assert(File.exist?(model_out_path(test_name)))
     assert(File.exist?(sql_path(test_name)))
-    assert(File.exist?(epw_path))
+    #assert(File.exist?(''))
 
     # set up runner, this will happen automatically when measure is run in PAT or OpenStudio
     runner.setLastOpenStudioModelPath(OpenStudio::Path.new(model_out_path(test_name)))
     runner.setLastEnergyPlusWorkspacePath(OpenStudio::Path.new(workspace_path(test_name)))
-    runner.setLastEpwFilePath(epw_path)
+    runner.setLastEpwFilePath('')
     runner.setLastEnergyPlusSqlFilePath(OpenStudio::Path.new(sql_path(test_name)))
 
     # delete the output if it exists
