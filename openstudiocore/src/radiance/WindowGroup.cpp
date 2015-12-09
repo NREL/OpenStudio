@@ -180,7 +180,7 @@ namespace radiance{
           result = ss.str();
         } else{
         	// setting default in watts
-          result = "11.1731843575419"; // to be converted to 2Klx (2000) in Radiance Measure
+          result = "27.93296089385475"; // to be converted to 5Klx (5000) in Radiance Measure
         }
       } else if (istringEqual("OnIfScheduleAllows", shadingControlType)){
         boost::optional<openstudio::model::Schedule> schedule = m_shadingControl->schedule();
