@@ -120,7 +120,10 @@ namespace radiance {
       std::set<std::string> m_radMixMaterials;
       std::set<std::string> m_radMaterialsDC;
       std::set<std::string> m_radMaterialsWG0;
-
+			std::set<std::string> m_radMaterialsSwitchableBase;
+			
+			std::string switchableGroup_wgMats;
+			
       // materials list for rtcontrib
       std::set<std::string> m_radDCmats;
 
