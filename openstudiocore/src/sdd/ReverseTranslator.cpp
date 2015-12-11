@@ -615,6 +615,28 @@ namespace sdd {
         }
       }
 
+      // VRFSys
+      QDomNodeList vrfSystemElements = buildingElement.elementsByTagName("VRFSys");
+      if (m_progressBar){
+        m_progressBar->setWindowTitle(toString("Translating VRF Systems"));
+        m_progressBar->setMinimum(0);
+        m_progressBar->setMaximum(vrfSystemElements.count()); 
+        m_progressBar->setValue(0);
+      }
+
+      for (int i = 0; i < vrfSystemElements.count(); i++){
+        if (vrfSystemElements.at(i).firstChildElement("Name").isNull()){
+          continue;
+        }
+
+        QDomElement vrfSystemElement = vrfSystemElements.at(i).toElement();
+        translateVRFSys(vrfSystemElement,doc,*result);
+
+        if (m_progressBar){
+          m_progressBar->setValue(m_progressBar->value() + 1);
+        }
+      }
+
       // ThermalZone
       QDomNodeList thermalZoneElements = buildingElement.elementsByTagName("ThrmlZn");
       if (m_progressBar){

@@ -485,6 +485,463 @@ model::Schedule ReverseTranslator::serviceHotWaterSetpointSchedule(openstudio::m
   return m_serviceHotWaterSetpointSchedule.get();
 }
 
+boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFSys(
+                                                  const QDomElement& vrfSysElement, 
+                                                  const QDomDocument& doc,
+                                                  openstudio::model::Model& model )
+{
+  boost::optional<openstudio::model::ModelObject> result;
+
+  model::AirConditionerVariableRefrigerantFlow vrf(model);
+  result = vrf;
+
+  {
+    auto value = vrfSysElement.firstChildElement("Name").text().toStdString();
+    vrf.setName(value);
+  }
+
+  {
+    auto element = vrfSysElement.firstChildElement("AvailSchRef");
+    auto name = escapeName(element.text());
+    if( auto schedule = model.getModelObjectByName<model::Schedule>(name) ) {
+      vrf.setAvailabilitySchedule(schedule.get());
+    }
+  }
+
+  {
+    auto element = vrfSysElement.firstChildElement("HtRcvry");
+    if( istringEqual(element.text().toStdString(),"Yes") ) {
+      vrf.setHeatPumpWasteHeatRecovery(true);  
+    }
+  }
+
+  //{
+  //  auto element = vrfSysElement.firstChildElement("CndsrType");
+  //  vrf.setCondenserType(element.text().toStdString());
+  //}
+
+  {
+    auto element = vrfSysElement.firstChildElement("FuelType");
+    vrf.setFuelType(element.text().toStdString());
+  }
+
+  {
+    auto element = vrfSysElement.firstChildElement("MinPLR");
+    bool ok;
+    auto value = element.text().toDouble(&ok);
+    if( ok ) {
+      vrf.setMinimumHeatPumpPartLoadRatio(value);
+    }
+  }
+
+  {
+    auto element = vrfSysElement.firstChildElement("CtrlPriority");
+    vrf.setMasterThermostatPriorityControlType(element.text().toStdString());
+  }
+
+  {
+    // TODO Make this work
+    //auto element = vrfSysElement.firstChildElement("CtrlZnRef");
+  }
+
+  {
+    auto element = vrfSysElement.firstChildElement("CtrlSchRef");
+    if( auto schedule = model.getModelObjectByName<model::Schedule>(element.text().toStdString()) ) {
+      vrf.setThermostatPrioritySchedule(schedule.get());
+    }
+  }
+
+  if( ! autosize() ) {
+    auto element = vrfSysElement.firstChildElement("ClgCapRtd");
+    bool ok;
+    auto value = element.text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"Btu/h","W").get();
+      vrf.setRatedTotalCoolingCapacity(value);
+    }
+  }
+
+  {
+    auto element = vrfSysElement.firstChildElement("ClgEIR");
+    bool ok;
+    auto value = element.text().toDouble(&ok);
+    if( ok ) {
+      vrf.setRatedCoolingCOP(1.0 / value );
+    }
+  }
+
+  if( ! autosize() ) {
+    auto element = vrfSysElement.firstChildElement("HtgCapRtd");
+    bool ok;
+    auto value = element.text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"Btu/h","W").get();
+      vrf.setRatedTotalHeatingCapacity(value);
+    }
+  }
+
+  {
+    auto element = vrfSysElement.firstChildElement("HtgEIR");
+    bool ok;
+    auto value = element.text().toDouble(&ok);
+    if( ok ) {
+      vrf.setRatedHeatingCOP(1.0 / value );
+    }
+  }
+
+  {
+    auto element = vrfSysElement.firstChildElement("HtgToClgSizingRat");
+    bool ok;
+    auto value = element.text().toDouble(&ok);
+    if( ok ) {
+      vrf.setRatedTotalHeatingCapacitySizingRatio(value);
+    }
+  }
+
+  {
+    auto element = vrfSysElement.firstChildElement("ClgCprsrLockoutTempLow");
+    bool ok;
+    auto value = element.text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"F","C").get();
+      vrf.setMinimumOutdoorTemperatureinCoolingMode(value);
+    }
+  }
+
+  {
+    auto element = vrfSysElement.firstChildElement("ClgCprsrLockoutTempHi");
+    bool ok;
+    auto value = element.text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"F","C").get();
+      vrf.setMaximumOutdoorTemperatureinCoolingMode(value);
+    }
+  }
+
+  {
+    auto element = vrfSysElement.firstChildElement("HtgCprsrLockoutTempLow");
+    bool ok;
+    auto value = element.text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"F","C").get();
+      vrf.setMinimumOutdoorTemperatureinHeatingMode(value);
+    }
+  }
+
+  {
+    auto element = vrfSysElement.firstChildElement("HtgCprsrLockoutTempHi");
+    bool ok;
+    auto value = element.text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"F","C").get();
+      vrf.setMaximumOutdoorTemperatureinHeatingMode(value);
+    }
+  }
+
+  {
+    auto element = vrfSysElement.firstChildElement("HtRcvryCprsrLockoutTempLow");
+    bool ok;
+    auto value = element.text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"F","C").get();
+      vrf.setMinimumOutdoorTemperatureinHeatRecoveryMode(value);
+    }
+  }
+
+  {
+    auto element = vrfSysElement.firstChildElement("HtRcvryCprsrLockoutTempHigh");
+    bool ok;
+    auto value = element.text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"F","C").get();
+      vrf.setMaximumOutdoorTemperatureinHeatRecoveryMode(value);
+    }
+  }
+
+  {
+    auto element = vrfSysElement.firstChildElement("HtRcvryInitialClgCapFrac");
+    bool ok;
+    auto value = element.text().toDouble(&ok);
+    if( ok ) {
+      vrf.setInitialHeatRecoveryCoolingCapacityFraction(value);
+    }
+  }
+
+  {
+    auto element = vrfSysElement.firstChildElement("HtRcvryInitialClgEngyFrac");
+    bool ok;
+    auto value = element.text().toDouble(&ok);
+    if( ok ) {
+      vrf.setInitialHeatRecoveryCoolingEnergyFraction(value);
+    }
+  }
+
+  {
+    auto element = vrfSysElement.firstChildElement("HtRcvryInitialClgTimeCnst");
+    bool ok;
+    auto value = element.text().toDouble(&ok);
+    if( ok ) {
+      vrf.setHeatRecoveryCoolingCapacityTimeConstant(value);
+    }
+  }
+
+  {
+    auto element = vrfSysElement.firstChildElement("HtRcvryInitialHtgCapFrac");
+    bool ok;
+    auto value = element.text().toDouble(&ok);
+    if( ok ) {
+      vrf.setInitialHeatRecoveryHeatingCapacityFraction(value);
+    }
+  }
+
+  {
+    auto element = vrfSysElement.firstChildElement("HtRcvryInitialHtgTimeCnst");
+    bool ok;
+    auto value = element.text().toDouble(&ok);
+    if( ok ) {
+      vrf.setHeatRecoveryHeatingCapacityTimeConstant(value);
+    }
+  }
+
+  {
+    auto element = vrfSysElement.firstChildElement("HtRcvryInitialHtgEngyFrac");
+    bool ok;
+    auto value = element.text().toDouble(&ok);
+    if( ok ) {
+      vrf.setInitialHeatRecoveryHeatingEnergyFraction(value);
+    }
+  }
+
+  {
+    auto value = vrfSysElement.firstChildElement("DefHtSrc").text().toStdString();
+    if( istringEqual("HotGas",value) ) {
+      vrf.setDefrostStrategy("ReverseCycle");
+    } else if( istringEqual("Electric",value) ) {
+      vrf.setDefrostStrategy("Resistive");
+    }
+  }
+
+  {
+    auto value = vrfSysElement.firstChildElement("DefCtrl").text().toStdString();
+    if( istringEqual("OnDemand",value) ) {
+      vrf.setDefrostControl("OnDemand");
+    } else if( istringEqual("TimedCycle",value) ) {
+      vrf.setDefrostControl("Timed");
+    }
+  }
+
+  vrf.setDefrostTimePeriodFraction(0.058333);
+
+  if( ! autosize() ) {
+    auto element = vrfSysElement.firstChildElement("DefHtrCapSim");
+    bool ok;
+    auto value = element.text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"Btu/h","W").get();
+      vrf.setResistiveDefrostHeaterCapacity(value);
+    }
+  }
+
+  {
+    bool ok;
+    auto value = vrfSysElement.firstChildElement("DefCtrlTemp").text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"F","C").get();
+      vrf.setMaximumOutdoorDrybulbTemperatureforDefrostOperation(value);
+    }
+  }
+
+  if( ! autosize() ) {
+    bool ok;
+    auto value = vrfSysElement.firstChildElement("CprsrCrankcaseHtrCapSim").text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"Btu/h","W").get();
+      vrf.setCrankcaseHeaterPowerperCompressor(value);
+    }
+  }
+
+  {
+    bool ok;
+    auto value = vrfSysElement.firstChildElement("CprsrQty").text().toInt(&ok);
+    if( ok ) {
+      vrf.setNumberofCompressors(value);
+    }
+  }
+
+  {
+    bool ok;
+    auto value = vrfSysElement.firstChildElement("CrankcaseCtrlTemp").text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"F","C").get();
+      vrf.setMaximumOutdoorDrybulbTemperatureforCrankcaseHeater(value);
+    }
+  }
+
+  {
+    bool ok;
+    auto value = vrfSysElement.firstChildElement("EquivalentPipeLen").text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"ft","m").get();
+      vrf.setEquivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode(value);
+      vrf.setEquivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode(value);
+    }
+  }
+
+  {
+    bool ok;
+    auto value = vrfSysElement.firstChildElement("MaxDeltaHeight").text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"ft","m").get();
+      vrf.setVerticalHeightusedforPipingCorrectionFactor(value);
+    }
+  }
+
+  {
+    auto value = vrfSysElement.firstChildElement("HtgCurveOutdoorTempType").text().toStdString();
+    vrf.setHeatingPerformanceCurveOutdoorTemperatureType(value);
+  }
+
+  auto setCurve = [&](const std::string & elementName, 
+      const std::function<bool(model::AirConditionerVariableRefrigerantFlow &,const model::Curve &)> & osSetter,
+      const std::function<boost::optional<model::Curve>(model::AirConditionerVariableRefrigerantFlow &)> & osGetter) {
+
+    auto value = vrfSysElement.firstChildElement(QString::fromStdString(elementName)).text().toStdString();
+    auto newcurve = model.getModelObjectByName<model::Curve>(value);
+    if( newcurve ) {
+      if( auto oldcurve = osGetter(vrf) ) {
+        if( oldcurve.get() != newcurve.get() ) {
+          oldcurve->remove();
+        }
+      }
+      osSetter(vrf,newcurve.get());
+    }
+  };
+
+  setCurve("HtgCap_fTempLowCrvRef", 
+    &model::AirConditionerVariableRefrigerantFlow::setHeatingCapacityRatioModifierFunctionofLowTemperatureCurve,
+    &model::AirConditionerVariableRefrigerantFlow::heatingCapacityRatioModifierFunctionofLowTemperatureCurve);
+
+  setCurve("HtgCapBndry_fTempCurveRef",
+   &model::AirConditionerVariableRefrigerantFlow::setHeatingCapacityRatioBoundaryCurve,
+   &model::AirConditionerVariableRefrigerantFlow::heatingCapacityRatioBoundaryCurve); 
+
+  setCurve("HtgCap_fTempHiCrvRef",
+   &model::AirConditionerVariableRefrigerantFlow::setHeatingCapacityRatioModifierFunctionofHighTemperatureCurve,
+   &model::AirConditionerVariableRefrigerantFlow::heatingCapacityRatioModifierFunctionofHighTemperatureCurve); 
+
+  setCurve("HtgEIR_fTempLowCrvRef",
+   &model::AirConditionerVariableRefrigerantFlow::setHeatingEnergyInputRatioModifierFunctionofLowTemperatureCurve,
+   &model::AirConditionerVariableRefrigerantFlow::heatingEnergyInputRatioModifierFunctionofLowTemperatureCurve); 
+
+  setCurve("HtgEIRBndry_fTempCurveRef",
+   &model::AirConditionerVariableRefrigerantFlow::setHeatingEnergyInputRatioBoundaryCurve,
+   &model::AirConditionerVariableRefrigerantFlow::heatingEnergyInputRatioBoundaryCurve); 
+
+  setCurve("HtgEIR_fTempHiCrvRef",
+   &model::AirConditionerVariableRefrigerantFlow::setHeatingEnergyInputRatioModifierFunctionofHighTemperatureCurve,
+   &model::AirConditionerVariableRefrigerantFlow::heatingEnergyInputRatioModifierFunctionofHighTemperatureCurve); 
+
+  setCurve("HtgEIR_fPLRLowCrvRef",
+   &model::AirConditionerVariableRefrigerantFlow::setHeatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve,
+   &model::AirConditionerVariableRefrigerantFlow::heatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve); 
+
+  setCurve("HtgEIR_fPLRHiCrvRef",
+   &model::AirConditionerVariableRefrigerantFlow::setHeatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve,
+   &model::AirConditionerVariableRefrigerantFlow::heatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve); 
+
+  setCurve("HtgCap_fCombRatCrvRef",
+   &model::AirConditionerVariableRefrigerantFlow::setHeatingCombinationRatioCorrectionFactorCurve,
+   &model::AirConditionerVariableRefrigerantFlow::heatingCombinationRatioCorrectionFactorCurve); 
+
+  setCurve("HtRcvryHtgCap_fTempCrvRef",
+   &model::AirConditionerVariableRefrigerantFlow::setHeatRecoveryHeatingCapacityModifierCurve,
+   &model::AirConditionerVariableRefrigerantFlow::heatRecoveryHeatingCapacityModifierCurve); 
+
+  setCurve("HtRcvryHtgEIR_fTempCrvRef",
+   &model::AirConditionerVariableRefrigerantFlow::setHeatRecoveryHeatingEnergyModifierCurve,
+   &model::AirConditionerVariableRefrigerantFlow::heatRecoveryHeatingEnergyModifierCurve); 
+
+  setCurve("ClgCap_fTempLowCrvRef",
+   &model::AirConditionerVariableRefrigerantFlow::setCoolingCapacityRatioModifierFunctionofLowTemperatureCurve,
+   &model::AirConditionerVariableRefrigerantFlow::coolingCapacityRatioModifierFunctionofLowTemperatureCurve); 
+
+  setCurve("ClgCapBndry_fTempCurveRef",
+   &model::AirConditionerVariableRefrigerantFlow::setCoolingCapacityRatioBoundaryCurve,
+   &model::AirConditionerVariableRefrigerantFlow::coolingCapacityRatioBoundaryCurve); 
+
+  setCurve("ClgCap_fTempHiCrvRef",
+   &model::AirConditionerVariableRefrigerantFlow::setCoolingCapacityRatioModifierFunctionofHighTemperatureCurve,
+   &model::AirConditionerVariableRefrigerantFlow::coolingCapacityRatioModifierFunctionofHighTemperatureCurve); 
+
+  setCurve("ClgEIR_fTempLowCrvRef",
+   &model::AirConditionerVariableRefrigerantFlow::setCoolingEnergyInputRatioModifierFunctionofLowTemperatureCurve,
+   &model::AirConditionerVariableRefrigerantFlow::coolingEnergyInputRatioModifierFunctionofLowTemperatureCurve); 
+
+  setCurve("ClgEIRBndry_fTempCurveRef",
+   &model::AirConditionerVariableRefrigerantFlow::setCoolingEnergyInputRatioBoundaryCurve,
+   &model::AirConditionerVariableRefrigerantFlow::coolingEnergyInputRatioBoundaryCurve); 
+
+  setCurve("ClgEIR_fTempHiCrvRef",
+   &model::AirConditionerVariableRefrigerantFlow::setCoolingEnergyInputRatioModifierFunctionofHighTemperatureCurve,
+   &model::AirConditionerVariableRefrigerantFlow::coolingEnergyInputRatioModifierFunctionofHighTemperatureCurve); 
+
+  setCurve("ClgEIR_fPLRLowCrvRef",
+   &model::AirConditionerVariableRefrigerantFlow::setCoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve,
+   &model::AirConditionerVariableRefrigerantFlow::coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve); 
+
+  setCurve("ClgEIR_fPLRHiCrvRef",
+   &model::AirConditionerVariableRefrigerantFlow::setCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve,
+   &model::AirConditionerVariableRefrigerantFlow::coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve); 
+
+  setCurve("ClgEIR_fPLRHiCrvRef",
+   &model::AirConditionerVariableRefrigerantFlow::setCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve,
+   &model::AirConditionerVariableRefrigerantFlow::coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve); 
+
+  setCurve("ClgCap_fCombRatCrvRef",
+   &model::AirConditionerVariableRefrigerantFlow::setCoolingCombinationRatioCorrectionFactorCurve,
+   &model::AirConditionerVariableRefrigerantFlow::coolingCombinationRatioCorrectionFactorCurve); 
+
+  setCurve("HtRcvryClgCap_fTempCrvRef",
+   &model::AirConditionerVariableRefrigerantFlow::setHeatRecoveryCoolingCapacityModifierCurve,
+   &model::AirConditionerVariableRefrigerantFlow::heatRecoveryCoolingCapacityModifierCurve); 
+
+  setCurve("HtRcvryClgEIR_fTempCrvRef",
+   &model::AirConditionerVariableRefrigerantFlow::setHeatRecoveryCoolingEnergyModifierCurve,
+   &model::AirConditionerVariableRefrigerantFlow::heatRecoveryCoolingEnergyModifierCurve); 
+
+  setCurve("ClgPipeLoss_fPipeLenCrvRef",
+   &model::AirConditionerVariableRefrigerantFlow::setPipingCorrectionFactorforLengthinCoolingModeCurve,
+   &model::AirConditionerVariableRefrigerantFlow::pipingCorrectionFactorforLengthinCoolingModeCurve); 
+
+  setCurve("HtgPipeLoss_fPipeLenCrvRef",
+   &model::AirConditionerVariableRefrigerantFlow::setPipingCorrectionFactorforLengthinHeatingModeCurve,
+   &model::AirConditionerVariableRefrigerantFlow::pipingCorrectionFactorforLengthinHeatingModeCurve); 
+
+  setCurve("DefEIR_fTempCrvRef",
+   &model::AirConditionerVariableRefrigerantFlow::setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve,
+   &model::AirConditionerVariableRefrigerantFlow::defrostEnergyInputRatioModifierFunctionofTemperatureCurve); 
+
+  {
+    bool ok;
+    auto value = vrfSysElement.firstChildElement("ClgPipeLoss_fPipeHeightCoeff").text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"ft","m").get();
+      vrf.setPipingCorrectionFactorforHeightinCoolingModeCoefficient(value);
+    }
+  }
+
+  {
+    bool ok;
+    auto value = vrfSysElement.firstChildElement("HtgPipeLoss_fPipeHeightCoeff").text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"ft","m").get();
+      vrf.setPipingCorrectionFactorforHeightinHeatingModeCoefficient(value);
+    }
+  }
+
+  return result;
+}
+
 boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirSystem(
                                                   const QDomElement& airSystemElement, 
                                                   const QDomDocument& doc,
@@ -6850,13 +7307,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
   }
   else if( istringEqual(type,"VRF") )
   {
-    model::ZoneHVACTerminalUnitVariableRefrigerantFlow vrfTerminal(model);
-    result = vrfTerminal;
-
-    if( schedule ) {
-      vrfTerminal.setTerminalUnitAvailabilityschedule(schedule.get());
-    }
-
     boost::optional<model::HVACComponent> fan;
     if( auto mo = translateFan(fanElement,doc,model) ) {
       fan = mo->optionalCast<model::HVACComponent>();
@@ -6894,19 +7344,134 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     if( fan && coolingCoil && heatingCoil ) {
       model::ZoneHVACTerminalUnitVariableRefrigerantFlow vrfTerminal(model,coolingCoil.get(),heatingCoil.get(),fan.get());
       result = vrfTerminal;
-    }
 
-    //FanPos
-    {
-      // fan placement is not implemented in OS
-      // Fix this!
-      auto fanPosElement = element.firstChildElement("FanPos");
-    }
+      {
+        auto value = element.firstChildElement("VRFSysRef").text().toStdString();
+        auto vrfSys = model.getModelObjectByName<model::AirConditionerVariableRefrigerantFlow>(value);
+        if( vrfSys ) {
+          vrfSys->addTerminal(vrfTerminal);
+        } else {
+          LOG(Error,name << " references an undefined vrf system");
+        }
+      }
 
-    {
-      auto fanCtrlElement = element.firstChildElement("FanCtrl");
-    }
+      //FanPos
+      {
+        // fan placement is not implemented in OS
+        // Fix this!
+        auto fanPosElement = element.firstChildElement("FanPos");
+      }
 
+      // FanCtrl
+      {
+        auto fanCtrlElement = element.firstChildElement("FanCtrl"); 
+        if( istringEqual(fanCtrlElement.text().toStdString(),"Continuous") )
+        {
+          auto schedule = model.alwaysOnDiscreteSchedule();
+          vrfTerminal.setSupplyAirFanOperatingModeSchedule(schedule);
+        }
+      }
+
+      // ClgSupFanCap
+      if( ! autosize() ) {
+        bool ok; 
+        auto value = element.firstChildElement("ClgSupFanCap").text().toDouble(&ok);
+        if( ok ) {
+          value = unitToUnit(value,"cfm","m^3/s").get();
+          vrfTerminal.setSupplyAirFlowRateDuringCoolingOperation(value);    
+        }
+      }
+
+      // HtgSupFanCap
+      if( ! autosize() ) {
+        bool ok;
+        auto value = element.firstChildElement("HtgSupFanCap").text().toDouble(&ok);
+        if( ok ) {
+          value = unitToUnit(value,"cfm","m^3/s").get();
+          vrfTerminal.setSupplyAirFlowRateDuringHeatingOperation(value);
+        }
+      }
+
+      // NoClgSupFanCap
+      if( ! autosize() ) {
+        bool ok;
+        auto value = element.firstChildElement("NoClgSupFanCap").text().toDouble(&ok);
+        if( ok ) {
+          value = unitToUnit(value,"cfm","m^3/s").get();
+          vrfTerminal.setSupplyAirFlowRateWhenNoCoolingisNeeded(value);
+        }
+      }
+
+      // NoHtgSupFanCap
+      if( ! autosize() ) {
+        bool ok;
+        auto value = element.firstChildElement("NoHtgSupFanCap").text().toDouble(&ok);
+        if( ok ) {
+          value = unitToUnit(value,"cfm","m^3/s").get();
+          vrfTerminal.setSupplyAirFlowRateWhenNoHeatingisNeeded(value);
+        }
+      }
+
+      // ClgOAFlowCap
+      if( ! autosize() ) {
+        bool ok;
+        auto value = element.firstChildElement("ClgOAFlowCap").text().toDouble(&ok);
+        if( ok ) {
+          value = unitToUnit(value,"cfm","m^3/s").get();
+          vrfTerminal.setOutdoorAirFlowRateDuringCoolingOperation(value);
+        }
+      }
+
+      // HtgOAFlowCap
+      if( ! autosize() ) {
+        bool ok;
+        auto value = element.firstChildElement("HtgOAFlowCap").text().toDouble(&ok);
+        if( ok ) {
+          value = unitToUnit(value,"cfm","m^3/s").get();
+          vrfTerminal.setOutdoorAirFlowRateDuringHeatingOperation(value);
+        }
+      }
+
+      // NoClgHtgOAFlowCap
+      if( ! autosize() ) {
+        bool ok;
+        auto value = element.firstChildElement("NoClgHtgOAFlowCap").text().toDouble(&ok);
+        if( ok ) {
+          value = unitToUnit(value,"cfm","m^3/s").get();
+          vrfTerminal.setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(value);
+        }
+      }
+
+      //<ClgDsgnSupAirTemp>55</ClgDsgnSupAirTemp>
+      //<HtgDsgnSupAirTemp>95</HtgDsgnSupAirTemp>
+      
+      // AuxPwrOnSim
+      if( ! autosize() ) {
+        bool ok;
+        auto value = element.firstChildElement("AuxPwrOnSim").text().toDouble(&ok);
+        if( ok ) {
+          value = unitToUnit(value,"Btu/h","W").get();
+          vrfTerminal.setZoneTerminalUnitOnParasiticElectricEnergyUse(value);
+        }
+      }
+      
+      // AuxPwrOffSim
+      if( ! autosize() ) {
+        bool ok;
+        auto value = element.firstChildElement("AuxPwrOffSim").text().toDouble(&ok);
+        if( ok ) {
+          value = unitToUnit(value,"Btu/h","W").get();
+          vrfTerminal.setZoneTerminalUnitOffParasiticElectricEnergyUse(value);
+        }
+      }
+
+      // See ZoneSizing
+      // ClgDsgnSupAirTemp
+      // HtgDsgnSupAirTemp
+
+    } else {
+      LOG(Error,name << " could not be created.");
+    }
   }
 
   return result;
@@ -6920,6 +7485,52 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
 
   model::CoilHeatingDXVariableRefrigerantFlow coil(model);
 
+  {
+    auto value = element.firstChildElement("Name").text().toStdString();
+    coil.setName(value);
+  }
+
+  if( ! autosize() ) {
+    bool ok;
+    auto value = element.firstChildElement("CapTotGrossRtdSim").text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"Btu/h","W").get();
+      coil.setRatedTotalHeatingCapacity(value);
+    }
+  }
+
+  auto setCurve = [&](const std::string & elementName, 
+      const std::function<bool(model::CoilHeatingDXVariableRefrigerantFlow &,const model::Curve &)> & osSetter,
+      const std::function<model::Curve(model::CoilHeatingDXVariableRefrigerantFlow &)> & osGetter) {
+
+    auto value = element.firstChildElement(QString::fromStdString(elementName)).text().toStdString();
+    auto newcurve = model.getModelObjectByName<model::Curve>(value);
+    if( newcurve ) {
+      auto oldcurve = osGetter(coil);
+      if( oldcurve != newcurve.get() ) {
+        oldcurve.remove();
+      }
+      osSetter(coil,newcurve.get());
+    }
+  };
+
+  setCurve("Cap_fTempCrvRef",
+    &model::CoilHeatingDXVariableRefrigerantFlow::setHeatingCapacityRatioModifierFunctionofTemperatureCurve,
+    &model::CoilHeatingDXVariableRefrigerantFlow::heatingCapacityRatioModifierFunctionofTemperatureCurve);
+
+  setCurve("Cap_fFlowCrvRef",
+    &model::CoilHeatingDXVariableRefrigerantFlow::setHeatingCapacityModifierFunctionofFlowFractionCurve,
+    &model::CoilHeatingDXVariableRefrigerantFlow::heatingCapacityModifierFunctionofFlowFractionCurve);
+
+  if( ! autosize() ) {
+    bool ok;
+    auto value = element.parentNode().toElement().firstChildElement("Fan").firstChildElement("FlowCapSim").text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"cfm","m^3/s").get();
+      coil.setRatedAirFlowRate(value);
+    } 
+  }
+
   return coil;
 }
 
@@ -6930,6 +7541,52 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
   }
 
   model::CoilCoolingDXVariableRefrigerantFlow coil(model);
+
+  {
+    auto value = element.firstChildElement("Name").text().toStdString();
+    coil.setName(value);
+  }
+
+  if( ! autosize() ) {
+    bool ok;
+    auto value = element.firstChildElement("CapTotGrossRtdSim").text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"Btu/h","W").get();
+      coil.setRatedTotalCoolingCapacity(value);
+    }
+  }
+
+  auto setCurve = [&](const std::string & elementName, 
+      const std::function<bool(model::CoilCoolingDXVariableRefrigerantFlow &,const model::Curve &)> & osSetter,
+      const std::function<model::Curve(model::CoilCoolingDXVariableRefrigerantFlow &)> & osGetter) {
+
+    auto value = element.firstChildElement(QString::fromStdString(elementName)).text().toStdString();
+    auto newcurve = model.getModelObjectByName<model::Curve>(value);
+    if( newcurve ) {
+      auto oldcurve = osGetter(coil);
+      if( oldcurve != newcurve.get() ) {
+        oldcurve.remove();
+      }
+      osSetter(coil,newcurve.get());
+    }
+  };
+
+  setCurve("Cap_fTempCrvRef",
+    &model::CoilCoolingDXVariableRefrigerantFlow::setCoolingCapacityRatioModifierFunctionofTemperatureCurve,
+    &model::CoilCoolingDXVariableRefrigerantFlow::coolingCapacityRatioModifierFunctionofTemperatureCurve);
+
+  setCurve("Cap_fFlowCrvRef",
+    &model::CoilCoolingDXVariableRefrigerantFlow::setCoolingCapacityModifierCurveFunctionofFlowFraction,
+    &model::CoilCoolingDXVariableRefrigerantFlow::coolingCapacityModifierCurveFunctionofFlowFraction);
+
+  if( ! autosize() ) {
+    bool ok;
+    auto value = element.parentNode().toElement().firstChildElement("Fan").firstChildElement("FlowCapSim").text().toDouble(&ok);
+    if( ok ) {
+      value = unitToUnit(value,"cfm","m^3/s").get();
+      coil.setRatedAirFlowRate(value);
+    } 
+  }
 
   return coil;
 }
