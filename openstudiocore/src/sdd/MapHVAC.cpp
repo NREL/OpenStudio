@@ -202,6 +202,7 @@
 #include <QDomElement>
 #include <QStringList>
 #include <cmath>
+#include <functional>
 
 namespace openstudio {
 namespace sdd {
@@ -818,108 +819,108 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
   };
 
   setCurve("HtgCap_fTempLowCrvRef", 
-    &model::AirConditionerVariableRefrigerantFlow::setHeatingCapacityRatioModifierFunctionofLowTemperatureCurve,
-    &model::AirConditionerVariableRefrigerantFlow::heatingCapacityRatioModifierFunctionofLowTemperatureCurve);
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setHeatingCapacityRatioModifierFunctionofLowTemperatureCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::heatingCapacityRatioModifierFunctionofLowTemperatureCurve));
 
   setCurve("HtgCapBndry_fTempCurveRef",
-   &model::AirConditionerVariableRefrigerantFlow::setHeatingCapacityRatioBoundaryCurve,
-   &model::AirConditionerVariableRefrigerantFlow::heatingCapacityRatioBoundaryCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setHeatingCapacityRatioBoundaryCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::heatingCapacityRatioBoundaryCurve));
 
   setCurve("HtgCap_fTempHiCrvRef",
-   &model::AirConditionerVariableRefrigerantFlow::setHeatingCapacityRatioModifierFunctionofHighTemperatureCurve,
-   &model::AirConditionerVariableRefrigerantFlow::heatingCapacityRatioModifierFunctionofHighTemperatureCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setHeatingCapacityRatioModifierFunctionofHighTemperatureCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::heatingCapacityRatioModifierFunctionofHighTemperatureCurve));
 
   setCurve("HtgEIR_fTempLowCrvRef",
-   &model::AirConditionerVariableRefrigerantFlow::setHeatingEnergyInputRatioModifierFunctionofLowTemperatureCurve,
-   &model::AirConditionerVariableRefrigerantFlow::heatingEnergyInputRatioModifierFunctionofLowTemperatureCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setHeatingEnergyInputRatioModifierFunctionofLowTemperatureCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::heatingEnergyInputRatioModifierFunctionofLowTemperatureCurve));
 
   setCurve("HtgEIRBndry_fTempCurveRef",
-   &model::AirConditionerVariableRefrigerantFlow::setHeatingEnergyInputRatioBoundaryCurve,
-   &model::AirConditionerVariableRefrigerantFlow::heatingEnergyInputRatioBoundaryCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setHeatingEnergyInputRatioBoundaryCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::heatingEnergyInputRatioBoundaryCurve));
 
   setCurve("HtgEIR_fTempHiCrvRef",
-   &model::AirConditionerVariableRefrigerantFlow::setHeatingEnergyInputRatioModifierFunctionofHighTemperatureCurve,
-   &model::AirConditionerVariableRefrigerantFlow::heatingEnergyInputRatioModifierFunctionofHighTemperatureCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setHeatingEnergyInputRatioModifierFunctionofHighTemperatureCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::heatingEnergyInputRatioModifierFunctionofHighTemperatureCurve));
 
   setCurve("HtgEIR_fPLRLowCrvRef",
-   &model::AirConditionerVariableRefrigerantFlow::setHeatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve,
-   &model::AirConditionerVariableRefrigerantFlow::heatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setHeatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::heatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve));
 
   setCurve("HtgEIR_fPLRHiCrvRef",
-   &model::AirConditionerVariableRefrigerantFlow::setHeatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve,
-   &model::AirConditionerVariableRefrigerantFlow::heatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setHeatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::heatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve));
 
   setCurve("HtgCap_fCombRatCrvRef",
-   &model::AirConditionerVariableRefrigerantFlow::setHeatingCombinationRatioCorrectionFactorCurve,
-   &model::AirConditionerVariableRefrigerantFlow::heatingCombinationRatioCorrectionFactorCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setHeatingCombinationRatioCorrectionFactorCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::heatingCombinationRatioCorrectionFactorCurve));
 
   setCurve("HtRcvryHtgCap_fTempCrvRef",
-   &model::AirConditionerVariableRefrigerantFlow::setHeatRecoveryHeatingCapacityModifierCurve,
-   &model::AirConditionerVariableRefrigerantFlow::heatRecoveryHeatingCapacityModifierCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setHeatRecoveryHeatingCapacityModifierCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::heatRecoveryHeatingCapacityModifierCurve));
 
   setCurve("HtRcvryHtgEIR_fTempCrvRef",
-   &model::AirConditionerVariableRefrigerantFlow::setHeatRecoveryHeatingEnergyModifierCurve,
-   &model::AirConditionerVariableRefrigerantFlow::heatRecoveryHeatingEnergyModifierCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setHeatRecoveryHeatingEnergyModifierCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::heatRecoveryHeatingEnergyModifierCurve));
 
   setCurve("ClgCap_fTempLowCrvRef",
-   &model::AirConditionerVariableRefrigerantFlow::setCoolingCapacityRatioModifierFunctionofLowTemperatureCurve,
-   &model::AirConditionerVariableRefrigerantFlow::coolingCapacityRatioModifierFunctionofLowTemperatureCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setCoolingCapacityRatioModifierFunctionofLowTemperatureCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::coolingCapacityRatioModifierFunctionofLowTemperatureCurve));
 
   setCurve("ClgCapBndry_fTempCurveRef",
-   &model::AirConditionerVariableRefrigerantFlow::setCoolingCapacityRatioBoundaryCurve,
-   &model::AirConditionerVariableRefrigerantFlow::coolingCapacityRatioBoundaryCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setCoolingCapacityRatioBoundaryCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::coolingCapacityRatioBoundaryCurve));
 
   setCurve("ClgCap_fTempHiCrvRef",
-   &model::AirConditionerVariableRefrigerantFlow::setCoolingCapacityRatioModifierFunctionofHighTemperatureCurve,
-   &model::AirConditionerVariableRefrigerantFlow::coolingCapacityRatioModifierFunctionofHighTemperatureCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setCoolingCapacityRatioModifierFunctionofHighTemperatureCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::coolingCapacityRatioModifierFunctionofHighTemperatureCurve));
 
   setCurve("ClgEIR_fTempLowCrvRef",
-   &model::AirConditionerVariableRefrigerantFlow::setCoolingEnergyInputRatioModifierFunctionofLowTemperatureCurve,
-   &model::AirConditionerVariableRefrigerantFlow::coolingEnergyInputRatioModifierFunctionofLowTemperatureCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setCoolingEnergyInputRatioModifierFunctionofLowTemperatureCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::coolingEnergyInputRatioModifierFunctionofLowTemperatureCurve));
 
   setCurve("ClgEIRBndry_fTempCurveRef",
-   &model::AirConditionerVariableRefrigerantFlow::setCoolingEnergyInputRatioBoundaryCurve,
-   &model::AirConditionerVariableRefrigerantFlow::coolingEnergyInputRatioBoundaryCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setCoolingEnergyInputRatioBoundaryCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::coolingEnergyInputRatioBoundaryCurve));
 
   setCurve("ClgEIR_fTempHiCrvRef",
-   &model::AirConditionerVariableRefrigerantFlow::setCoolingEnergyInputRatioModifierFunctionofHighTemperatureCurve,
-   &model::AirConditionerVariableRefrigerantFlow::coolingEnergyInputRatioModifierFunctionofHighTemperatureCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setCoolingEnergyInputRatioModifierFunctionofHighTemperatureCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::coolingEnergyInputRatioModifierFunctionofHighTemperatureCurve));
 
   setCurve("ClgEIR_fPLRLowCrvRef",
-   &model::AirConditionerVariableRefrigerantFlow::setCoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve,
-   &model::AirConditionerVariableRefrigerantFlow::coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setCoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve));
 
   setCurve("ClgEIR_fPLRHiCrvRef",
-   &model::AirConditionerVariableRefrigerantFlow::setCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve,
-   &model::AirConditionerVariableRefrigerantFlow::coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve));
 
   setCurve("ClgEIR_fPLRHiCrvRef",
-   &model::AirConditionerVariableRefrigerantFlow::setCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve,
-   &model::AirConditionerVariableRefrigerantFlow::coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve));
 
   setCurve("ClgCap_fCombRatCrvRef",
-   &model::AirConditionerVariableRefrigerantFlow::setCoolingCombinationRatioCorrectionFactorCurve,
-   &model::AirConditionerVariableRefrigerantFlow::coolingCombinationRatioCorrectionFactorCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setCoolingCombinationRatioCorrectionFactorCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::coolingCombinationRatioCorrectionFactorCurve));
 
   setCurve("HtRcvryClgCap_fTempCrvRef",
-   &model::AirConditionerVariableRefrigerantFlow::setHeatRecoveryCoolingCapacityModifierCurve,
-   &model::AirConditionerVariableRefrigerantFlow::heatRecoveryCoolingCapacityModifierCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setHeatRecoveryCoolingCapacityModifierCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::heatRecoveryCoolingCapacityModifierCurve));
 
   setCurve("HtRcvryClgEIR_fTempCrvRef",
-   &model::AirConditionerVariableRefrigerantFlow::setHeatRecoveryCoolingEnergyModifierCurve,
-   &model::AirConditionerVariableRefrigerantFlow::heatRecoveryCoolingEnergyModifierCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setHeatRecoveryCoolingEnergyModifierCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::heatRecoveryCoolingEnergyModifierCurve));
 
   setCurve("ClgPipeLoss_fPipeLenCrvRef",
-   &model::AirConditionerVariableRefrigerantFlow::setPipingCorrectionFactorforLengthinCoolingModeCurve,
-   &model::AirConditionerVariableRefrigerantFlow::pipingCorrectionFactorforLengthinCoolingModeCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setPipingCorrectionFactorforLengthinCoolingModeCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::pipingCorrectionFactorforLengthinCoolingModeCurve));
 
   setCurve("HtgPipeLoss_fPipeLenCrvRef",
-   &model::AirConditionerVariableRefrigerantFlow::setPipingCorrectionFactorforLengthinHeatingModeCurve,
-   &model::AirConditionerVariableRefrigerantFlow::pipingCorrectionFactorforLengthinHeatingModeCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setPipingCorrectionFactorforLengthinHeatingModeCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::pipingCorrectionFactorforLengthinHeatingModeCurve));
 
   setCurve("DefEIR_fTempCrvRef",
-   &model::AirConditionerVariableRefrigerantFlow::setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve,
-   &model::AirConditionerVariableRefrigerantFlow::defrostEnergyInputRatioModifierFunctionofTemperatureCurve); 
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::defrostEnergyInputRatioModifierFunctionofTemperatureCurve));
 
   {
     bool ok;
@@ -7515,12 +7516,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
   };
 
   setCurve("Cap_fTempCrvRef",
-    &model::CoilHeatingDXVariableRefrigerantFlow::setHeatingCapacityRatioModifierFunctionofTemperatureCurve,
-    &model::CoilHeatingDXVariableRefrigerantFlow::heatingCapacityRatioModifierFunctionofTemperatureCurve);
+    std::mem_fn(&model::CoilHeatingDXVariableRefrigerantFlow::setHeatingCapacityRatioModifierFunctionofTemperatureCurve),
+    std::mem_fn(&model::CoilHeatingDXVariableRefrigerantFlow::heatingCapacityRatioModifierFunctionofTemperatureCurve) );
 
   setCurve("Cap_fFlowCrvRef",
-    &model::CoilHeatingDXVariableRefrigerantFlow::setHeatingCapacityModifierFunctionofFlowFractionCurve,
-    &model::CoilHeatingDXVariableRefrigerantFlow::heatingCapacityModifierFunctionofFlowFractionCurve);
+    std::mem_fn(&model::CoilHeatingDXVariableRefrigerantFlow::setHeatingCapacityModifierFunctionofFlowFractionCurve),
+    std::mem_fn(&model::CoilHeatingDXVariableRefrigerantFlow::heatingCapacityModifierFunctionofFlowFractionCurve));
 
   if( ! autosize() ) {
     bool ok;
@@ -7572,12 +7573,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
   };
 
   setCurve("Cap_fTempCrvRef",
-    &model::CoilCoolingDXVariableRefrigerantFlow::setCoolingCapacityRatioModifierFunctionofTemperatureCurve,
-    &model::CoilCoolingDXVariableRefrigerantFlow::coolingCapacityRatioModifierFunctionofTemperatureCurve);
+    std::mem_fn(&model::CoilCoolingDXVariableRefrigerantFlow::setCoolingCapacityRatioModifierFunctionofTemperatureCurve),
+    std::mem_fn(&model::CoilCoolingDXVariableRefrigerantFlow::coolingCapacityRatioModifierFunctionofTemperatureCurve));
 
   setCurve("Cap_fFlowCrvRef",
-    &model::CoilCoolingDXVariableRefrigerantFlow::setCoolingCapacityModifierCurveFunctionofFlowFraction,
-    &model::CoilCoolingDXVariableRefrigerantFlow::coolingCapacityModifierCurveFunctionofFlowFraction);
+    std::mem_fn(&model::CoilCoolingDXVariableRefrigerantFlow::setCoolingCapacityModifierCurveFunctionofFlowFraction),
+    std::mem_fn(&model::CoilCoolingDXVariableRefrigerantFlow::coolingCapacityModifierCurveFunctionofFlowFraction));
 
   if( ! autosize() ) {
     bool ok;
