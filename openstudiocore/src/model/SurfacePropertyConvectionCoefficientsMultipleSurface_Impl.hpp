@@ -26,17 +26,12 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
-class UserConvectionModels;
-class Schedule;
-class UserConvectionModels;
 
 namespace detail {
 
   /** SurfacePropertyConvectionCoefficientsMultipleSurface_Impl is a ModelObject_Impl that is the implementation class for SurfacePropertyConvectionCoefficientsMultipleSurface.*/
   class MODEL_API SurfacePropertyConvectionCoefficientsMultipleSurface_Impl : public ModelObject_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -69,79 +64,75 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    std::string surfaceType() const;
+    boost::optional<std::string> surfaceType() const;
 
-    std::string convectionCoefficient1Location() const;
+    boost::optional<std::string> convectionCoefficient1Location() const;
 
-    std::string convectionCoefficient1Type() const;
+    boost::optional<std::string> convectionCoefficient1Type() const;
 
     boost::optional<double> convectionCoefficient1() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> convectionCoefficient1Schedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UserConvectionModels.
-    boost::optional<UserConvectionModels> convectionCoefficient1UserCurve() const;
+    //boost::optional<UserConvectionModels> convectionCoefficient1UserCurve() const;
 
     boost::optional<std::string> convectionCoefficient2Location() const;
 
     boost::optional<std::string> convectionCoefficient2Type() const;
 
-    double convectionCoefficient2() const;
+    boost::optional<double> convectionCoefficient2() const;
 
-    bool isConvectionCoefficient2Defaulted() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> convectionCoefficient2Schedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UserConvectionModels.
-    boost::optional<UserConvectionModels> convectionCoefficient2UserCurve() const;
+    //boost::optional<UserConvectionModels> convectionCoefficient2UserCurve() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    bool setSurfaceType(std::string surfaceType);
+    bool setSurfaceType(const std::string& surfaceType);
 
-    bool setConvectionCoefficient1Location(std::string convectionCoefficient1Location);
+    void resetSurfaceType();
 
-    bool setConvectionCoefficient1Type(std::string convectionCoefficient1Type);
+    bool setConvectionCoefficient1Location(const std::string& convectionCoefficient1Location);
 
-    void setConvectionCoefficient1(boost::optional<double> convectionCoefficient1);
+    void resetConvectionCoefficient1Location();
+
+    bool setConvectionCoefficient1Type(const std::string& convectionCoefficient1Type);
+
+    void resetConvectionCoefficient1Type();
+
+    bool setConvectionCoefficient1(double convectionCoefficient1);
 
     void resetConvectionCoefficient1();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setConvectionCoefficient1Schedule(Schedule& schedule);
 
     void resetConvectionCoefficient1Schedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: UserConvectionModels.
-    bool setConvectionCoefficient1UserCurve(const boost::optional<UserConvectionModels>& userConvectionModels);
+    //bool setConvectionCoefficient1UserCurve(const boost::optional<UserConvectionModels>& userConvectionModels);
 
-    void resetConvectionCoefficient1UserCurve();
+    //void resetConvectionCoefficient1UserCurve();
 
-    bool setConvectionCoefficient2Location(boost::optional<std::string> convectionCoefficient2Location);
+    bool setConvectionCoefficient2Location(const std::string& convectionCoefficient2Location);
 
     void resetConvectionCoefficient2Location();
 
-    bool setConvectionCoefficient2Type(boost::optional<std::string> convectionCoefficient2Type);
+    bool setConvectionCoefficient2Type(const std::string& convectionCoefficient2Type);
 
     void resetConvectionCoefficient2Type();
 
-    void setConvectionCoefficient2(double convectionCoefficient2);
+    bool setConvectionCoefficient2(double convectionCoefficient2);
 
     void resetConvectionCoefficient2();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setConvectionCoefficient2Schedule(Schedule& schedule);
 
     void resetConvectionCoefficient2Schedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: UserConvectionModels.
-    bool setConvectionCoefficient2UserCurve(const boost::optional<UserConvectionModels>& userConvectionModels);
+    //bool setConvectionCoefficient2UserCurve(const boost::optional<UserConvectionModels>& userConvectionModels);
 
-    void resetConvectionCoefficient2UserCurve();
+    //void resetConvectionCoefficient2UserCurve();
 
     //@}
     /** @name Other */

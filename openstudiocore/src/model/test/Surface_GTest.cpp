@@ -63,6 +63,8 @@
 #include "../InteriorPartitionSurfaceGroup.hpp"
 #include "../ShadingSurface.hpp"
 #include "../ShadingSurfaceGroup.hpp"
+#include "../SurfacePropertyOtherSideCoefficients.hpp"
+#include "../SurfacePropertyOtherSideConditionsModel.hpp"
 
 #include "../../utilities/data/Attribute.hpp"
 #include "../../utilities/idf/IdfObject.hpp"
@@ -3460,4 +3462,16 @@ TEST_F(ModelFixture, Surface_Intersect_OneToFour){
       }
     }
   }
+}
+
+TEST_F(ModelFixture, SurfacePropertyOtherSideCoefficients)
+{
+  Model model;
+  SurfacePropertyOtherSideCoefficients otherSideCoefficients(model);
+}
+
+TEST_F(ModelFixture, SurfacePropertyOtherSideConditionsModel)
+{
+  Model model;
+  SurfacePropertyOtherSideConditionsModel otherSideModel(model);
 }

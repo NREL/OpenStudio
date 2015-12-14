@@ -26,14 +26,13 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
 
 namespace detail {
 
   /** SurfacePropertyOtherSideCoefficients_Impl is a ResourceObject_Impl that is the implementation class for SurfacePropertyOtherSideCoefficients.*/
   class MODEL_API SurfacePropertyOtherSideCoefficients_Impl : public ResourceObject_Impl {
-    Q_OBJECT;
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -66,7 +65,7 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    double combinedConvectiveRadiativeFilmCoefficient() const;
+    boost::optional<double> combinedConvectiveRadiativeFilmCoefficient() const;
 
     double constantTemperature() const;
 
@@ -92,7 +91,6 @@ namespace detail {
 
     bool isZoneAirTemperatureCoefficientDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> constantTemperatureSchedule() const;
 
     bool sinusoidalVariationofConstantTemperatureCoefficient() const;
@@ -115,7 +113,9 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setCombinedConvectiveRadiativeFilmCoefficient(double combinedConvectiveRadiativeFilmCoefficient);
+    bool setCombinedConvectiveRadiativeFilmCoefficient(double combinedConvectiveRadiativeFilmCoefficient);
+
+    void resetCombinedConvectiveRadiativeFilmCoefficient();
 
     void setConstantTemperature(double constantTemperature);
 
@@ -141,7 +141,6 @@ namespace detail {
 
     void resetZoneAirTemperatureCoefficient();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setConstantTemperatureSchedule(Schedule& schedule);
 
     void resetConstantTemperatureSchedule();
@@ -158,11 +157,11 @@ namespace detail {
 
     void resetPreviousOtherSideTemperatureCoefficient();
 
-    void setMinimumOtherSideTemperatureLimit(boost::optional<double> minimumOtherSideTemperatureLimit);
+    void setMinimumOtherSideTemperatureLimit(double minimumOtherSideTemperatureLimit);
 
     void resetMinimumOtherSideTemperatureLimit();
 
-    void setMaximumOtherSideTemperatureLimit(boost::optional<double> maximumOtherSideTemperatureLimit);
+    void setMaximumOtherSideTemperatureLimit(double maximumOtherSideTemperatureLimit);
 
     void resetMaximumOtherSideTemperatureLimit();
 

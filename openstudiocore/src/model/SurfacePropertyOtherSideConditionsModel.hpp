@@ -46,22 +46,22 @@ class MODEL_API SurfacePropertyOtherSideConditionsModel : public ResourceObject 
 
   static IddObjectType iddObjectType();
 
-  static std::vector<std::string> typeofModelingValues();
+  static std::vector<std::string> typeOfModelingValues();
 
   /** @name Getters */
   //@{
 
-  std::string typeofModeling() const;
+  std::string typeOfModeling() const;
 
-  bool isTypeofModelingDefaulted() const;
+  bool isTypeOfModelingDefaulted() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  bool setTypeofModeling(std::string typeofModeling);
+  bool setTypeOfModeling(const std::string& typeOfModeling);
 
-  void resetTypeofModeling();
+  void resetTypeOfModeling();
 
   //@}
   /** @name Other */

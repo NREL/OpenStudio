@@ -20,11 +20,8 @@
 #include "SurfacePropertyOtherSideCoefficients.hpp"
 #include "SurfacePropertyOtherSideCoefficients_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-#include "../../model/ScheduleTypeLimits.hpp"
-#include "../../model/ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_SurfaceProperty_OtherSideCoefficients_FieldEnums.hxx>
@@ -85,10 +82,8 @@ namespace detail {
     return result;
   }
 
-  double SurfacePropertyOtherSideCoefficients_Impl::combinedConvectiveRadiativeFilmCoefficient() const {
-    boost::optional<double> value = getDouble(OS_SurfaceProperty_OtherSideCoefficientsFields::CombinedConvective_RadiativeFilmCoefficient,true);
-    OS_ASSERT(value);
-    return value.get();
+  boost::optional<double> SurfacePropertyOtherSideCoefficients_Impl::combinedConvectiveRadiativeFilmCoefficient() const {
+    return getDouble(OS_SurfaceProperty_OtherSideCoefficientsFields::CombinedConvective_RadiativeFilmCoefficient,true);
   }
 
   double SurfacePropertyOtherSideCoefficients_Impl::constantTemperature() const {
@@ -193,9 +188,8 @@ namespace detail {
     return getDouble(OS_SurfaceProperty_OtherSideCoefficientsFields::MaximumOtherSideTemperatureLimit,true);
   }
 
-  void SurfacePropertyOtherSideCoefficients_Impl::setCombinedConvectiveRadiativeFilmCoefficient(double combinedConvectiveRadiativeFilmCoefficient) {
-    bool result = setDouble(OS_SurfaceProperty_OtherSideCoefficientsFields::CombinedConvective_RadiativeFilmCoefficient, combinedConvectiveRadiativeFilmCoefficient);
-    OS_ASSERT(result);
+  bool SurfacePropertyOtherSideCoefficients_Impl::setCombinedConvectiveRadiativeFilmCoefficient(double combinedConvectiveRadiativeFilmCoefficient) {
+    return setDouble(OS_SurfaceProperty_OtherSideCoefficientsFields::CombinedConvective_RadiativeFilmCoefficient, combinedConvectiveRadiativeFilmCoefficient);
   }
 
   void SurfacePropertyOtherSideCoefficients_Impl::setConstantTemperature(double constantTemperature) {
@@ -274,9 +268,9 @@ namespace detail {
   void SurfacePropertyOtherSideCoefficients_Impl::setSinusoidalVariationofConstantTemperatureCoefficient(bool sinusoidalVariationofConstantTemperatureCoefficient) {
     bool result = false;
     if (sinusoidalVariationofConstantTemperatureCoefficient) {
-      result = setBooleanFieldValue(OS_SurfaceProperty_OtherSideCoefficientsFields::SinusoidalVariationofConstantTemperatureCoefficient, "Yes");
+      result = setString(OS_SurfaceProperty_OtherSideCoefficientsFields::SinusoidalVariationofConstantTemperatureCoefficient, "Yes");
     } else {
-      result = setBooleanFieldValue(OS_SurfaceProperty_OtherSideCoefficientsFields::SinusoidalVariationofConstantTemperatureCoefficient, "No");
+      result = setString(OS_SurfaceProperty_OtherSideCoefficientsFields::SinusoidalVariationofConstantTemperatureCoefficient, "No");
     }
     OS_ASSERT(result);
   }
@@ -306,15 +300,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SurfacePropertyOtherSideCoefficients_Impl::setMinimumOtherSideTemperatureLimit(boost::optional<double> minimumOtherSideTemperatureLimit) {
-    bool result(false);
-    if (minimumOtherSideTemperatureLimit) {
-      result = setDouble(OS_SurfaceProperty_OtherSideCoefficientsFields::MinimumOtherSideTemperatureLimit, minimumOtherSideTemperatureLimit.get());
-    }
-    else {
-      resetMinimumOtherSideTemperatureLimit();
-      result = true;
-    }
+  void SurfacePropertyOtherSideCoefficients_Impl::setMinimumOtherSideTemperatureLimit(double minimumOtherSideTemperatureLimit) {
+    bool result = setDouble(OS_SurfaceProperty_OtherSideCoefficientsFields::MinimumOtherSideTemperatureLimit, minimumOtherSideTemperatureLimit);
     OS_ASSERT(result);
   }
 
@@ -323,15 +310,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SurfacePropertyOtherSideCoefficients_Impl::setMaximumOtherSideTemperatureLimit(boost::optional<double> maximumOtherSideTemperatureLimit) {
-    bool result(false);
-    if (maximumOtherSideTemperatureLimit) {
-      result = setDouble(OS_SurfaceProperty_OtherSideCoefficientsFields::MaximumOtherSideTemperatureLimit, maximumOtherSideTemperatureLimit.get());
-    }
-    else {
-      resetMaximumOtherSideTemperatureLimit();
-      result = true;
-    }
+  void SurfacePropertyOtherSideCoefficients_Impl::setMaximumOtherSideTemperatureLimit(double maximumOtherSideTemperatureLimit) {
+    bool result = setDouble(OS_SurfaceProperty_OtherSideCoefficientsFields::MaximumOtherSideTemperatureLimit, maximumOtherSideTemperatureLimit);
     OS_ASSERT(result);
   }
 
@@ -346,19 +326,13 @@ SurfacePropertyOtherSideCoefficients::SurfacePropertyOtherSideCoefficients(const
   : ResourceObject(SurfacePropertyOtherSideCoefficients::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
-  // setCombinedConvectiveRadiativeFilmCoefficient();
 }
 
 IddObjectType SurfacePropertyOtherSideCoefficients::iddObjectType() {
   return IddObjectType(IddObjectType::OS_SurfaceProperty_OtherSideCoefficients);
 }
 
-double SurfacePropertyOtherSideCoefficients::combinedConvectiveRadiativeFilmCoefficient() const {
+boost::optional<double> SurfacePropertyOtherSideCoefficients::combinedConvectiveRadiativeFilmCoefficient() const {
   return getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->combinedConvectiveRadiativeFilmCoefficient();
 }
 
@@ -446,8 +420,8 @@ boost::optional<double> SurfacePropertyOtherSideCoefficients::maximumOtherSideTe
   return getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->maximumOtherSideTemperatureLimit();
 }
 
-void SurfacePropertyOtherSideCoefficients::setCombinedConvectiveRadiativeFilmCoefficient(double combinedConvectiveRadiativeFilmCoefficient) {
-  getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->setCombinedConvectiveRadiativeFilmCoefficient(combinedConvectiveRadiativeFilmCoefficient);
+bool SurfacePropertyOtherSideCoefficients::setCombinedConvectiveRadiativeFilmCoefficient(double combinedConvectiveRadiativeFilmCoefficient) {
+  return getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->setCombinedConvectiveRadiativeFilmCoefficient(combinedConvectiveRadiativeFilmCoefficient);
 }
 
 void SurfacePropertyOtherSideCoefficients::setConstantTemperature(double constantTemperature) {

@@ -27,7 +27,6 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
 
 namespace detail {
@@ -53,7 +52,11 @@ class MODEL_API SurfacePropertyOtherSideCoefficients : public ResourceObject {
   /** @name Getters */
   //@{
 
-  double combinedConvectiveRadiativeFilmCoefficient() const;
+  /** If set, this field becomes the exterior convective/radiative film coefficient
+      and the other fields are used to calculate the outdoor air temperature
+      then exterior surface temperature based on outdoor air and specified coefficient.
+      If not set, then remaining fields calculate the outside surface temperature. **/
+  boost::optional<double> combinedConvectiveRadiativeFilmCoefficient() const;
 
   double constantTemperature() const;
 
@@ -79,7 +82,6 @@ class MODEL_API SurfacePropertyOtherSideCoefficients : public ResourceObject {
 
   bool isZoneAirTemperatureCoefficientDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> constantTemperatureSchedule() const;
 
   bool sinusoidalVariationofConstantTemperatureCoefficient() const;
@@ -102,7 +104,9 @@ class MODEL_API SurfacePropertyOtherSideCoefficients : public ResourceObject {
   /** @name Setters */
   //@{
 
-  void setCombinedConvectiveRadiativeFilmCoefficient(double combinedConvectiveRadiativeFilmCoefficient);
+  bool setCombinedConvectiveRadiativeFilmCoefficient(double combinedConvectiveRadiativeFilmCoefficient);
+
+  void resetCombinedConvectiveRadiativeFilmCoefficient();
 
   void setConstantTemperature(double constantTemperature);
 
@@ -127,8 +131,7 @@ class MODEL_API SurfacePropertyOtherSideCoefficients : public ResourceObject {
   void setZoneAirTemperatureCoefficient(double zoneAirTemperatureCoefficient);
 
   void resetZoneAirTemperatureCoefficient();
-
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
+  
   bool setConstantTemperatureSchedule(Schedule& schedule);
 
   void resetConstantTemperatureSchedule();
