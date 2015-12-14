@@ -4733,6 +4733,7 @@ OS:Surface,
        \type object-list
        \object-list SpaceNames
   A6, \field Outside Boundary Condition
+       \note Zone option which creates mirrored surfaces in EnergyPlus, is not allowed
        \type choice
        \required-field
        \key Adiabatic
@@ -5179,6 +5180,259 @@ OS:WindowProperty:FrameAndDivider,
        \maximum 1.0
        \default 0.0
          
+\group OpenStudio Advanced Construction, Surface, Zone Concepts
+
+OS:SurfaceProperty:ConvectionCoefficients:MultipleSurface,
+      \memo Allow user settable interior and/or exterior convection coefficients.
+      \memo Note that some other factors may limit the lower bounds for these values, such as
+      \memo for windows, the interior convection coefficient must be >.28,
+      \memo for trombe wall algorithm selection (zone), the interior convection coefficient must be >.1
+      \memo for TARP interior convection, the lower limit is also .1
+      \memo Minimum and maximum limits are set in HeatBalanceAlgorithm object.
+      \memo Defaults in HeatBalanceAlgorithm object are [.1,1000].
+  A1, \field Handle
+      \type handle
+      \required-field      
+  A2, \field Surface Type
+      \required-field
+      \type choice
+      \key AllExteriorSurfaces
+      \key AllExteriorWindows
+      \key AllExteriorWalls
+      \key AllExteriorRoofs
+      \key AllExteriorFloors
+      \key AllInteriorSurfaces
+      \key AllInteriorWalls
+      \key AllInteriorWindows
+      \key AllInteriorCeilings
+      \key AllInteriorFloors
+  A3, \field Convection Coefficient 1 Location
+      \required-field
+      \type choice
+      \key Outside
+      \key Inside
+  A4, \field Convection Coefficient 1 Type
+      \required-field
+      \type choice
+      \key Value
+      \key Schedule
+      \key Simple
+      \key SimpleCombined
+      \key TARP
+      \key DOE-2
+      \key MoWitt
+      \key AdaptiveConvectionAlgorithm
+      \key ASHRAEVerticalWall
+      \key WaltonUnstableHorizontalOrTilt
+      \key WaltonStableHorizontalOrTilt
+      \key FisherPedersenCeilingDiffuserWalls
+      \key FisherPedersenCeilingDiffuserCeiling
+      \key FisherPedersenCeilingDiffuserFloor
+      \key AlamdariHammondStableHorizontal
+      \key AlamdariHammondUnstableHorizontal
+      \key AlamdariHammondVerticalWall
+      \key KhalifaEq3WallAwayFromHeat
+      \key KhalifaEq4CeilingAwayFromHeat
+      \key KhalifaEq5WallNearHeat
+      \key KhalifaEq6NonHeatedWalls
+      \key KhalifaEq7Ceiling
+      \key AwbiHattonHeatedFloor
+      \key AwbiHattonHeatedWall
+      \key BeausoleilMorrisonMixedAssistedWall
+      \key BeausoleilMorrisonMixedOpposingWall
+      \key BeausoleilMorrisonMixedStableFloor
+      \key BeausoleilMorrisonMixedUnstableFloor
+      \key BeausoleilMorrisonMixedStableCeiling
+      \key BeausoleilMorrisonMixedUnstableCeiling
+      \key FohannoPolidoriVerticalWall
+      \key KaradagChilledCeiling
+      \key ISO15099Windows
+      \key GoldsteinNovoselacCeilingDiffuserWindow
+      \key GoldsteinNovoselacCeilingDiffuserWalls
+      \key GoldsteinNovoselacCeilingDiffuserFloor
+      \key NusseltJurges
+      \key McAdams
+      \key Mitchell
+      \key BlockenWindard
+      \key EmmelVertical
+      \key EmmelRoof
+      \key ClearRoof
+      \key UserCurve
+  N1, \field Convection Coefficient 1
+      \note used if Convection Type=Value, min and max limits are set in HeatBalanceAlgorithm object.
+      \note Default limits are Minimum >= 0.1 and Maximum <= 1000
+      \units W/m2-K
+  A5, \field Convection Coefficient 1 Schedule Name
+      \note used if Convection Type=Schedule,  min and max limits are set in HeatBalanceAlgorithm object.
+      \note Default limits are Minimum >= 0.1 and Maximum <= 1000
+      \type object-list
+      \object-list ScheduleNames
+  A6, \field Convection Coefficient 1 User Curve Name
+      \note used if Convection Type = UserCurve
+      \type object-list
+      \object-list UserConvectionModels
+  A7, \field Convection Coefficient 2 Location
+      \type choice
+      \key Outside
+      \key Inside
+  A8, \field Convection Coefficient 2 Type
+      \type choice
+      \type choice
+      \key Value
+      \key Schedule
+      \key Simple
+      \key SimpleCombined
+      \key TARP
+      \key DOE-2
+      \key MoWitt
+      \key AdaptiveConvectionAlgorithm
+      \key ASHRAEVerticalWall
+      \key WaltonUnstableHorizontalOrTilt
+      \key WaltonStableHorizontalOrTilt
+      \key FisherPedersenCeilingDiffuserWalls
+      \key FisherPedersenCeilingDiffuserCeiling
+      \key FisherPedersenCeilingDiffuserFloor
+      \key AlamdariHammondStableHorizontal
+      \key AlamdariHammondUnstableHorizontal
+      \key AlamdariHammondVerticalWall
+      \key KhalifaEq3WallAwayFromHeat
+      \key KhalifaEq4CeilingAwayFromHeat
+      \key KhalifaEq5WallNearHeat
+      \key KhalifaEq6NonHeatedWalls
+      \key KhalifaEq7Ceiling
+      \key AwbiHattonHeatedFloor
+      \key AwbiHattonHeatedWall
+      \key BeausoleilMorrisonMixedAssistedWall
+      \key BeausoleilMorrisonMixedOpposingWall
+      \key BeausoleilMorrisonMixedStableFloor
+      \key BeausoleilMorrisonMixedUnstableFloor
+      \key BeausoleilMorrisonMixedStableCeiling
+      \key BeausoleilMorrisonMixedUnstableCeiling
+      \key FohannoPolidoriVerticalWall
+      \key KaradagChilledCeiling
+      \key ISO15099Windows
+      \key GoldsteinNovoselacCeilingDiffuserWindow
+      \key GoldsteinNovoselacCeilingDiffuserWalls
+      \key GoldsteinNovoselacCeilingDiffuserFloor
+      \key NusseltJurges
+      \key McAdams
+      \key Mitchell
+      \key BlockenWindard
+      \key EmmelVertical
+      \key EmmelRoof
+      \key ClearRoof
+      \key UserCurve
+  N2, \field Convection Coefficient 2
+      \note used if Convection Type=Value, min and max limits are set in HeatBalanceAlgorithm object.
+      \note Default limits are Minimum >= 0.1 and Maximum <= 1000
+      \default .1
+      \units W/m2-K
+  A9, \field Convection Coefficient 2 Schedule Name
+      \note used if Convection Type=Schedule,  min and max limits are set in HeatBalanceAlgorithm object.
+      \note Default limits are Minimum >= 0.1 and Maximum <= 1000
+      \type object-list
+      \object-list ScheduleNames
+  A10; \field Convection Coefficient 2 User Curve Name
+      \note used if Convection Type = UserCurve
+      \type object-list
+      \object-list UserConvectionModels
+
+OS:SurfaceProperty:OtherSideCoefficients,
+      \memo This object sets the other side conditions for a surface in a variety of ways.
+      \min-fields 9
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2, \field Name
+      \required-field
+      \reference OutFaceEnvNames
+  N1, \field Combined Convective/Radiative Film Coefficient
+      \units W/m2-K
+      \required-field
+      \type real
+      \note if>0, this field becomes the exterior convective/radiative film coefficient
+      \note and the other fields are used to calculate the outdoor air temperature
+      \note then exterior surface temperature based on outdoor air and specified coefficient
+      \note if<=0, then remaining fields calculate the outside surface temperature
+      \note The following fields are used in the equation:
+      \note OtherSideTemp=N2*N3 + N4*OutdoorDry-bulb + N5*GroundTemp + N6*WindSpeed*OutdoorDry-bulb + N7*TempZone + N9*TempPrev
+  N2, \field Constant Temperature
+      \units C
+      \type real
+      \default 0
+      \note This parameter will be overwritten by the values from the Constant Temperature Schedule Name (below) if one is present
+  N3, \field Constant Temperature Coefficient
+      \note This coefficient is used even with a Schedule.  It should normally be 1.0 in that case.
+      \note This field is ignored if Sinusoidal Variation of Constant Temperature Coefficient = Yes.
+      \default 1
+  N4, \field External Dry-Bulb Temperature Coefficient
+      \type real
+      \default 0
+  N5, \field Ground Temperature Coefficient
+      \type real
+      \default 0
+  N6, \field Wind Speed Coefficient
+      \type real
+      \default 0
+  N7, \field Zone Air Temperature Coefficient
+      \type real
+      \default 0
+  A3, \field Constant Temperature Schedule Name
+      \note Name of schedule for values of constant temperature.
+      \note Schedule values replace any value specified in the field Constant Temperature.
+      \type object-list
+      \object-list ScheduleNames
+  A4, \field Sinusoidal Variation of Constant Temperature Coefficient
+      \note Optionally used to vary Constant Temperature Coefficient with unitary sine wave
+      \type choice
+      \key Yes
+      \key No
+      \default No
+  N8, \field Period of Sinusoidal Variation
+      \note Use with sinusoidal variation to define the time period
+      \type real
+      \units hr
+      \default 24
+      \minimum> 0
+  N9, \field Previous Other Side Temperature Coefficient
+      \note This coefficient multiplies the other side temperature result from the
+      \note previous zone timestep
+      \type real
+      \default 0
+ N10, \field Minimum Other Side Temperature Limit
+      \note This field specifies a lower limit for the other side temperature result.
+      \note Blank indicates no limit
+      \type real
+      \units C
+ N11; \field Maximum Other Side Temperature Limit
+      \note This field specifies an upper limit for the other side temperature result.
+      \note Blank indicates no limit
+      \type real
+      \units C
+
+OS:SurfaceProperty:OtherSideConditionsModel,
+      \memo This object sets up modifying the other side conditions for a surface from other model results.
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2, \field Name
+      \required-field
+      \reference OSCMNames
+      \reference OutFaceEnvNames
+  A3; \field Type of Modeling
+      \type choice
+      \key GapConvectionRadiation
+      \key UndergroundPipingSystemSurface
+      \key GroundCoupledSurface
+      \note GapConvectionRadiation provides boundary conditions for convection
+      \note  and linearized thermal radiation across a gap or cavity
+      \note  on the other side of the surface that are modeled separately.
+      \note UndergroundPipingSystemSurface provides boundary conditions for
+      \note  surfaces in contact with PipingSystem:Underground domains
+      \note GroundCoupledSurface provides boundary conditions for surfaces
+      \note  in contact with GroundDomain objects
+      \default GapConvectionRadiation
+      
 \group OpenStudio Space Loads
 
 OS:InternalMass,
