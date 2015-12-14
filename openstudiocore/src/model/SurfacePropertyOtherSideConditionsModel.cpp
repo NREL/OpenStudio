@@ -65,22 +65,22 @@ namespace detail {
     return SurfacePropertyOtherSideConditionsModel::iddObjectType();
   }
 
-  std::string SurfacePropertyOtherSideConditionsModel_Impl::typeofModeling() const {
+  std::string SurfacePropertyOtherSideConditionsModel_Impl::typeOfModeling() const {
     boost::optional<std::string> value = getString(OS_SurfaceProperty_OtherSideConditionsModelFields::TypeofModeling,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool SurfacePropertyOtherSideConditionsModel_Impl::isTypeofModelingDefaulted() const {
+  bool SurfacePropertyOtherSideConditionsModel_Impl::isTypeOfModelingDefaulted() const {
     return isEmpty(OS_SurfaceProperty_OtherSideConditionsModelFields::TypeofModeling);
   }
 
-  bool SurfacePropertyOtherSideConditionsModel_Impl::setTypeofModeling(std::string typeofModeling) {
-    bool result = setString(OS_SurfaceProperty_OtherSideConditionsModelFields::TypeofModeling, typeofModeling);
+  bool SurfacePropertyOtherSideConditionsModel_Impl::setTypeOfModeling(const std::string& typeOfModeling) {
+    bool result = setString(OS_SurfaceProperty_OtherSideConditionsModelFields::TypeofModeling, typeOfModeling);
     return result;
   }
 
-  void SurfacePropertyOtherSideConditionsModel_Impl::resetTypeofModeling() {
+  void SurfacePropertyOtherSideConditionsModel_Impl::resetTypeOfModeling() {
     bool result = setString(OS_SurfaceProperty_OtherSideConditionsModelFields::TypeofModeling, "");
     OS_ASSERT(result);
   }
@@ -102,25 +102,25 @@ IddObjectType SurfacePropertyOtherSideConditionsModel::iddObjectType() {
   return IddObjectType(IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel);
 }
 
-std::vector<std::string> SurfacePropertyOtherSideConditionsModel::typeofModelingValues() {
+std::vector<std::string> SurfacePropertyOtherSideConditionsModel::typeOfModelingValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_SurfaceProperty_OtherSideConditionsModelFields::TypeofModeling);
 }
 
-std::string SurfacePropertyOtherSideConditionsModel::typeofModeling() const {
-  return getImpl<detail::SurfacePropertyOtherSideConditionsModel_Impl>()->typeofModeling();
+std::string SurfacePropertyOtherSideConditionsModel::typeOfModeling() const {
+  return getImpl<detail::SurfacePropertyOtherSideConditionsModel_Impl>()->typeOfModeling();
 }
 
-bool SurfacePropertyOtherSideConditionsModel::isTypeofModelingDefaulted() const {
-  return getImpl<detail::SurfacePropertyOtherSideConditionsModel_Impl>()->isTypeofModelingDefaulted();
+bool SurfacePropertyOtherSideConditionsModel::isTypeOfModelingDefaulted() const {
+  return getImpl<detail::SurfacePropertyOtherSideConditionsModel_Impl>()->isTypeOfModelingDefaulted();
 }
 
-bool SurfacePropertyOtherSideConditionsModel::setTypeofModeling(std::string typeofModeling) {
-  return getImpl<detail::SurfacePropertyOtherSideConditionsModel_Impl>()->setTypeofModeling(typeofModeling);
+bool SurfacePropertyOtherSideConditionsModel::setTypeOfModeling(const std::string& typeOfModeling) {
+  return getImpl<detail::SurfacePropertyOtherSideConditionsModel_Impl>()->setTypeOfModeling(typeOfModeling);
 }
 
-void SurfacePropertyOtherSideConditionsModel::resetTypeofModeling() {
-  getImpl<detail::SurfacePropertyOtherSideConditionsModel_Impl>()->resetTypeofModeling();
+void SurfacePropertyOtherSideConditionsModel::resetTypeOfModeling() {
+  getImpl<detail::SurfacePropertyOtherSideConditionsModel_Impl>()->resetTypeOfModeling();
 }
 
 /// @cond

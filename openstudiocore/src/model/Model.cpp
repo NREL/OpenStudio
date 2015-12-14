@@ -493,6 +493,9 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(SteamEquipmentDefinition);
     REGISTER_CONSTRUCTOR(SubSurface);
     REGISTER_CONSTRUCTOR(Surface);
+    REGISTER_CONSTRUCTOR(SurfacePropertyConvectionCoefficientsMultipleSurface);
+    REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideCoefficients);
+    REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideConditionsModel);
     REGISTER_CONSTRUCTOR(TableMultiVariableLookup);
     REGISTER_CONSTRUCTOR(TemperingValve);
     REGISTER_CONSTRUCTOR(ThermochromicGlazing);
@@ -890,6 +893,9 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(SteamEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(SubSurface);
     REGISTER_COPYCONSTRUCTORS(Surface);
+    REGISTER_COPYCONSTRUCTORS(SurfacePropertyConvectionCoefficientsMultipleSurface);
+    REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideCoefficients);
+    REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideConditionsModel);
     REGISTER_COPYCONSTRUCTORS(TableMultiVariableLookup);
     REGISTER_COPYCONSTRUCTORS(TemperingValve);
     REGISTER_COPYCONSTRUCTORS(ThermochromicGlazing);

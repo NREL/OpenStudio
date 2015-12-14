@@ -5194,7 +5194,6 @@ OS:SurfaceProperty:ConvectionCoefficients:MultipleSurface,
       \type handle
       \required-field      
   A2, \field Surface Type
-      \required-field
       \type choice
       \key AllExteriorSurfaces
       \key AllExteriorWindows
@@ -5207,12 +5206,10 @@ OS:SurfaceProperty:ConvectionCoefficients:MultipleSurface,
       \key AllInteriorCeilings
       \key AllInteriorFloors
   A3, \field Convection Coefficient 1 Location
-      \required-field
       \type choice
       \key Outside
       \key Inside
   A4, \field Convection Coefficient 1 Type
-      \required-field
       \type choice
       \key Value
       \key Schedule
@@ -5277,7 +5274,6 @@ OS:SurfaceProperty:ConvectionCoefficients:MultipleSurface,
       \key Inside
   A8, \field Convection Coefficient 2 Type
       \type choice
-      \type choice
       \key Value
       \key Schedule
       \key Simple
@@ -5325,7 +5321,6 @@ OS:SurfaceProperty:ConvectionCoefficients:MultipleSurface,
   N2, \field Convection Coefficient 2
       \note used if Convection Type=Value, min and max limits are set in HeatBalanceAlgorithm object.
       \note Default limits are Minimum >= 0.1 and Maximum <= 1000
-      \default .1
       \units W/m2-K
   A9, \field Convection Coefficient 2 Schedule Name
       \note used if Convection Type=Schedule,  min and max limits are set in HeatBalanceAlgorithm object.
@@ -5348,12 +5343,12 @@ OS:SurfaceProperty:OtherSideCoefficients,
       \reference OutFaceEnvNames
   N1, \field Combined Convective/Radiative Film Coefficient
       \units W/m2-K
-      \required-field
+      \minimum> 0
       \type real
-      \note if>0, this field becomes the exterior convective/radiative film coefficient
+      \note if set, this field becomes the exterior convective/radiative film coefficient
       \note and the other fields are used to calculate the outdoor air temperature
       \note then exterior surface temperature based on outdoor air and specified coefficient
-      \note if<=0, then remaining fields calculate the outside surface temperature
+      \note if not set, then remaining fields calculate the outside surface temperature
       \note The following fields are used in the equation:
       \note OtherSideTemp=N2*N3 + N4*OutdoorDry-bulb + N5*GroundTemp + N6*WindSpeed*OutdoorDry-bulb + N7*TempZone + N9*TempPrev
   N2, \field Constant Temperature
