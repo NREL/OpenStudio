@@ -32,6 +32,8 @@ class ShadingControl;
 class ShadingSurfaceGroup;
 class DaylightingDeviceShelf;
 class WindowPropertyFrameAndDivider;
+class SurfacePropertyOtherSideCoefficients;
+class SurfacePropertyOtherSideConditionsModel;
 
 namespace detail {
 
@@ -140,6 +142,24 @@ class MODEL_API SubSurface : public PlanarSurface {
 
   /// reset the adjacent subsurface, will clear references on both this and adjacent sub surface 
   void resetAdjacentSubSurface();
+
+  /** Returns the adjacent SurfaceSurfacePropertyOtherSideCoefficients, if it exists. */
+  boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;
+
+  /** Sets the SurfacePropertyOtherSideCoefficients. */
+  bool setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients);
+
+  /** Resets the SurfacePropertyOtherSideCoefficients. */
+  void resetSurfacePropertyOtherSideCoefficients();
+
+  /** Returns the adjacent SurfacePropertyOtherSideConditionsModel, if it exists. */
+  boost::optional<SurfacePropertyOtherSideConditionsModel> surfacePropertyOtherSideConditionsModel() const;
+
+  /** Sets the SurfacePropertyOtherSideConditionsModel. */
+  bool setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel);
+
+  /** Resets the SurfacePropertyOtherSideConditionsModel. */
+  void resetSurfacePropertyOtherSideConditionsModel();
 
   /** Assign default sub surface type based on vertices. */
   void assignDefaultSubSurfaceType();

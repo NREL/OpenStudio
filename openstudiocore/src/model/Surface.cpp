@@ -2197,6 +2197,30 @@ void Surface::resetAdjacentSurface() {
   return getImpl<detail::Surface_Impl>()->resetAdjacentSurface();
 }
 
+boost::optional<SurfacePropertyOtherSideCoefficients> Surface::surfacePropertyOtherSideCoefficients() const {
+  return getImpl<detail::Surface_Impl>()->surfacePropertyOtherSideCoefficients();
+}
+
+bool Surface::setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients) {
+  return getImpl<detail::Surface_Impl>()->setSurfacePropertyOtherSideCoefficients(otherSideCoefficients);
+}
+
+void Surface::resetSurfacePropertyOtherSideCoefficients() {
+  return getImpl<detail::Surface_Impl>()->resetSurfacePropertyOtherSideCoefficients();
+}
+
+boost::optional<SurfacePropertyOtherSideConditionsModel> Surface::surfacePropertyOtherSideConditionsModel() const {
+  return getImpl<detail::Surface_Impl>()->surfacePropertyOtherSideConditionsModel();
+}
+
+bool Surface::setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel) {
+  return getImpl<detail::Surface_Impl>()->setSurfacePropertyOtherSideConditionsModel(otherSideModel);
+}
+
+void Surface::resetSurfacePropertyOtherSideConditionsModel() {
+  return getImpl<detail::Surface_Impl>()->resetSurfacePropertyOtherSideConditionsModel();
+}
+
 bool Surface::intersect(Surface& otherSurface) {
   return getImpl<detail::Surface_Impl>()->intersect(otherSurface);
 }

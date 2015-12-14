@@ -29,6 +29,8 @@
 #include "../Building.hpp"
 #include "../Building_Impl.hpp"
 #include "../Construction.hpp"
+#include "../SurfacePropertyOtherSideCoefficients.hpp"
+#include "../SurfacePropertyOtherSideConditionsModel.hpp"
 #include "../Model_Impl.hpp"
 
 #include "../../utilities/geometry/Geometry.hpp"
@@ -1001,4 +1003,147 @@ TEST_F(ModelFixture, SkylightPattern_PerimCore_Rotated)
   pattern = generateSkylightPattern(spaces, 180, 0.03, 1, 1);
   skylights = applySkylightPattern(pattern, model.getModelObjects<Space>(), boost::none);
   checkExpectedSkylightRatios(model, 600.0, 0.03, 0.005);
+}
+
+
+TEST_F(ModelFixture, DefaultSubSurfaceType)
+{
+  Model model;
+  std::vector<Point3d> vertices;
+
+  // with no base surface the default type is set by tilt only
+  {
+    // normal 0,0,1
+    vertices.clear();
+    vertices.push_back(Point3d(0, 1, 0));
+    vertices.push_back(Point3d(0, 0, 0));
+    vertices.push_back(Point3d(1, 0, 0));
+    vertices.push_back(Point3d(1, 1, 0));
+
+    SubSurface s(vertices, model);
+    s.assignDefaultSubSurfaceType();
+    EXPECT_EQ("Skylight", s.subSurfaceType());
+  }
+  {
+    // normal 0,1,0
+    vertices.clear();
+    vertices.push_back(Point3d(0, 0, 1));
+    vertices.push_back(Point3d(0, 0, 0));
+    vertices.push_back(Point3d(1, 0, 0));
+    vertices.push_back(Point3d(1, 0, 1));
+
+    SubSurface s(vertices, model);
+    s.assignDefaultSubSurfaceType();
+    EXPECT_EQ("FixedWindow", s.subSurfaceType());
+  }
+
+  // with base surface the default type is set based on base surface
+  vertices.clear();
+  vertices.push_back(Point3d(0, 0, 10));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(10, 0, 0));
+  vertices.push_back(Point3d(10, 0, 10));
+  Surface wall(vertices, model);
+
+  vertices.clear();
+  vertices.push_back(Point3d(0, 10, 0));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(10, 0, 0));
+  vertices.push_back(Point3d(10, 10, 0));
+  Surface roof(vertices, model);
+
+  {
+    // normal 0,0,1
+    vertices.clear();
+    vertices.push_back(Point3d(4, 5, 0));
+    vertices.push_back(Point3d(4, 4, 0));
+    vertices.push_back(Point3d(5, 4, 0));
+    vertices.push_back(Point3d(5, 5, 0));
+
+    SubSurface s(vertices, model);
+    s.setSurface(roof);
+    EXPECT_EQ("Skylight", s.subSurfaceType());
+    s.assignDefaultSubSurfaceType();
+    EXPECT_EQ("Skylight", s.subSurfaceType());
+  }
+  {
+    // normal 0,1,0 on bottom edge
+    vertices.clear();
+    vertices.push_back(Point3d(0, 0, 1));
+    vertices.push_back(Point3d(0, 0, 0));
+    vertices.push_back(Point3d(1, 0, 0));
+    vertices.push_back(Point3d(1, 0, 1));
+
+    SubSurface s(vertices, model);
+    s.setSurface(wall);
+    EXPECT_EQ("Door", s.subSurfaceType());
+    s.assignDefaultSubSurfaceType();
+    EXPECT_EQ("Door", s.subSurfaceType());
+
+    EXPECT_TRUE(s.setSubSurfaceType("GlassDoor"));
+    s.assignDefaultSubSurfaceType();
+    EXPECT_EQ("GlassDoor", s.subSurfaceType());
+  }
+  {
+    // normal 0,1,0 not on bottom edge
+    vertices.clear();
+    vertices.push_back(Point3d(4, 0, 5));
+    vertices.push_back(Point3d(4, 0, 4));
+    vertices.push_back(Point3d(5, 0, 4));
+    vertices.push_back(Point3d(5, 0, 5));
+
+    SubSurface s(vertices, model);
+    s.setSurface(wall);
+    EXPECT_EQ("FixedWindow", s.subSurfaceType());
+    s.assignDefaultSubSurfaceType();
+    EXPECT_EQ("FixedWindow", s.subSurfaceType());
+  }
+
+  // set default window construction, reproduces #1924
+  SimpleGlazing glazing(model);
+  Construction construction(model);
+  construction.insertLayer(0,glazing);
+  DefaultSubSurfaceConstructions defaultSubSurfaceConstructions(model);
+  defaultSubSurfaceConstructions.setFixedWindowConstruction(construction);
+  defaultSubSurfaceConstructions.setGlassDoorConstruction(construction);
+  DefaultConstructionSet defaultConstructions(model);
+  defaultConstructions.setDefaultExteriorSubSurfaceConstructions(defaultSubSurfaceConstructions);
+  Building building = model.getUniqueModelObject<Building>();
+  building.setDefaultConstructionSet(defaultConstructions);
+
+  // DLM also have to put surfaces in a space, default constructions are not working for loose surfaces
+  Space space(model);
+  roof.setSpace(space);
+  wall.setSpace(space);
+  
+  {
+    // normal 0,1,0 on bottom edge
+    vertices.clear();
+    vertices.push_back(Point3d(4, 0, 1));
+    vertices.push_back(Point3d(4, 0, 0));
+    vertices.push_back(Point3d(5, 0, 0));
+    vertices.push_back(Point3d(5, 0, 1));
+
+    SubSurface s(vertices, model);
+    s.setSurface(wall);
+    EXPECT_EQ("Door", s.subSurfaceType());
+    s.assignDefaultSubSurfaceType();
+    EXPECT_EQ("Door", s.subSurfaceType());
+
+    s.setConstruction(construction);
+    s.assignDefaultSubSurfaceType();
+    EXPECT_EQ("GlassDoor", s.subSurfaceType());
+  }
+}
+
+TEST_F(ModelFixture, SubSurface_SurfacePropertyOtherSideCoefficients)
+{
+  Model model;
+  SurfacePropertyOtherSideCoefficients otherSideCoefficients(model);
+}
+
+TEST_F(ModelFixture, SubSurface_SurfacePropertyOtherSideConditionsModel)
+{
+  Model model;
+  SurfacePropertyOtherSideConditionsModel otherSideModel(model);
 }
