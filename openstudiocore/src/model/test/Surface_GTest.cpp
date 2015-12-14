@@ -3501,13 +3501,13 @@ TEST_F(ModelFixture, Surface_Intersect_OneToFour){
   }
 }
 
-TEST_F(ModelFixture, SurfacePropertyOtherSideCoefficients)
+TEST_F(ModelFixture, Surface_SurfacePropertyOtherSideCoefficients)
 {
   Model model;
   SurfacePropertyOtherSideCoefficients otherSideCoefficients(model);
 }
 
-TEST_F(ModelFixture, SurfacePropertyOtherSideConditionsModel)
+TEST_F(ModelFixture, Surface_SurfacePropertyOtherSideConditionsModel)
 {
   Model model;
   SurfacePropertyOtherSideConditionsModel otherSideModel(model);

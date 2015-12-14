@@ -40,6 +40,8 @@
 #include "DaylightingDeviceShelf_Impl.hpp"
 #include "WindowPropertyFrameAndDivider.hpp"
 #include "WindowPropertyFrameAndDivider_Impl.hpp"
+#include "SurfacePropertyOtherSideCoefficients.hpp"
+#include "SurfacePropertyOtherSideConditionsModel.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -722,6 +724,36 @@ namespace detail {
     }
   }
 
+  boost::optional<SurfacePropertyOtherSideCoefficients> SubSurface_Impl::surfacePropertyOtherSideCoefficients() const
+  {
+    return boost::none;
+  }
+
+  bool SubSurface_Impl::setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients)
+  {
+    return false;
+  }
+
+  void SubSurface_Impl::resetSurfacePropertyOtherSideCoefficients()
+  {
+
+  }
+
+  boost::optional<SurfacePropertyOtherSideConditionsModel> SubSurface_Impl::surfacePropertyOtherSideConditionsModel() const
+  {
+    return boost::none;
+  }
+
+  bool SubSurface_Impl::setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel)
+  {
+    return false;
+  }
+
+  void SubSurface_Impl::resetSurfacePropertyOtherSideConditionsModel()
+  {
+
+  }
+
   std::string SubSurface_Impl::defaultSubSurfaceType() const
   {
     std::string result;
@@ -1157,6 +1189,30 @@ bool SubSurface::setAdjacentSubSurface(SubSurface& subSurface)
 void SubSurface::resetAdjacentSubSurface()
 {
   getImpl<detail::SubSurface_Impl>()->resetAdjacentSubSurface();
+}
+
+boost::optional<SurfacePropertyOtherSideCoefficients> SubSurface::surfacePropertyOtherSideCoefficients() const {
+  return getImpl<detail::Surface_Impl>()->surfacePropertyOtherSideCoefficients();
+}
+
+bool SubSurface::setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients) {
+  return getImpl<detail::Surface_Impl>()->setSurfacePropertyOtherSideCoefficients(otherSideCoefficients);
+}
+
+void SubSurface::resetSurfacePropertyOtherSideCoefficients() {
+  return getImpl<detail::Surface_Impl>()->resetSurfacePropertyOtherSideCoefficients();
+}
+
+boost::optional<SurfacePropertyOtherSideConditionsModel> SubSurface::surfacePropertyOtherSideConditionsModel() const {
+  return getImpl<detail::Surface_Impl>()->surfacePropertyOtherSideConditionsModel();
+}
+
+bool SubSurface::setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel) {
+  return getImpl<detail::Surface_Impl>()->setSurfacePropertyOtherSideConditionsModel(otherSideModel);
+}
+
+void SubSurface::resetSurfacePropertyOtherSideConditionsModel() {
+  return getImpl<detail::Surface_Impl>()->resetSurfacePropertyOtherSideConditionsModel();
 }
 
 void SubSurface::assignDefaultSubSurfaceType() {

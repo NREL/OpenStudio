@@ -37,6 +37,8 @@
 #include "ShadingSurface.hpp"
 #include "InteriorPartitionSurfaceGroup.hpp"
 #include "InteriorPartitionSurface.hpp"
+#include "SurfacePropertyOtherSideCoefficients.hpp"
+#include "SurfacePropertyOtherSideConditionsModel.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -802,6 +804,36 @@ namespace detail {
         subSurface.resetAdjacentSubSurface();
       }
     }
+  }
+
+  boost::optional<SurfacePropertyOtherSideCoefficients> Surface_Impl::surfacePropertyOtherSideCoefficients() const
+  {
+    return boost::none;
+  }
+
+  bool Surface_Impl::setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients)
+  {
+    return false;
+  }
+
+  void Surface_Impl::resetSurfacePropertyOtherSideCoefficients()
+  {
+
+  }
+
+  boost::optional<SurfacePropertyOtherSideConditionsModel> Surface_Impl::surfacePropertyOtherSideConditionsModel() const
+  {
+    return boost::none;
+  }
+
+  bool Surface_Impl::setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel)
+  {
+    return false;
+  }
+
+  void Surface_Impl::resetSurfacePropertyOtherSideConditionsModel()
+  {
+
   }
 
   bool Surface_Impl::intersect(Surface& otherSurface){
@@ -2032,6 +2064,30 @@ bool Surface::setAdjacentSurface(Surface& surface) {
 
 void Surface::resetAdjacentSurface() {
   return getImpl<detail::Surface_Impl>()->resetAdjacentSurface();
+}
+
+boost::optional<SurfacePropertyOtherSideCoefficients> Surface::surfacePropertyOtherSideCoefficients() const {
+  return getImpl<detail::Surface_Impl>()->surfacePropertyOtherSideCoefficients();
+}
+
+bool Surface::setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients) {
+  return getImpl<detail::Surface_Impl>()->setSurfacePropertyOtherSideCoefficients(otherSideCoefficients);
+}
+
+void Surface::resetSurfacePropertyOtherSideCoefficients() {
+  return getImpl<detail::Surface_Impl>()->resetSurfacePropertyOtherSideCoefficients();
+}
+
+boost::optional<SurfacePropertyOtherSideConditionsModel> Surface::surfacePropertyOtherSideConditionsModel() const {
+  return getImpl<detail::Surface_Impl>()->surfacePropertyOtherSideConditionsModel();
+}
+
+bool Surface::setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel) {
+  return getImpl<detail::Surface_Impl>()->setSurfacePropertyOtherSideConditionsModel(otherSideModel);
+}
+
+void Surface::resetSurfacePropertyOtherSideConditionsModel() {
+  return getImpl<detail::Surface_Impl>()->resetSurfacePropertyOtherSideConditionsModel();
 }
 
 bool Surface::intersect(Surface& otherSurface) {

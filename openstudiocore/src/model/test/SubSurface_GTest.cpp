@@ -32,6 +32,8 @@
 #include "../Construction.hpp"
 #include "../DefaultSubSurfaceConstructions.hpp"
 #include "../DefaultConstructionSet.hpp"
+#include "../SurfacePropertyOtherSideCoefficients.hpp"
+#include "../SurfacePropertyOtherSideConditionsModel.hpp"
 #include "../Model_Impl.hpp"
 
 #include "../../utilities/geometry/Geometry.hpp"
@@ -995,4 +997,16 @@ TEST_F(ModelFixture, DefaultSubSurfaceType)
     s.assignDefaultSubSurfaceType();
     EXPECT_EQ("GlassDoor", s.subSurfaceType());
   }
+}
+
+TEST_F(ModelFixture, SubSurface_SurfacePropertyOtherSideCoefficients)
+{
+  Model model;
+  SurfacePropertyOtherSideCoefficients otherSideCoefficients(model);
+}
+
+TEST_F(ModelFixture, SubSurface_SurfacePropertyOtherSideConditionsModel)
+{
+  Model model;
+  SurfacePropertyOtherSideConditionsModel otherSideModel(model);
 }
