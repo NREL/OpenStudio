@@ -136,14 +136,30 @@ namespace detail {
     return result;
   }
 
+  void SurfacePropertyConvectionCoefficientsMultipleSurface_Impl::resetSurfaceType() {
+    bool result = setString(OS_SurfaceProperty_ConvectionCoefficients_MultipleSurfaceFields::SurfaceType, "");
+    OS_ASSERT(result);
+  }
+
   bool SurfacePropertyConvectionCoefficientsMultipleSurface_Impl::setConvectionCoefficient1Location(const std::string& convectionCoefficient1Location) {
     bool result = setString(OS_SurfaceProperty_ConvectionCoefficients_MultipleSurfaceFields::ConvectionCoefficient1Location, convectionCoefficient1Location);
     return result;
   }
 
+  void SurfacePropertyConvectionCoefficientsMultipleSurface_Impl::resetConvectionCoefficient1Location() {
+    bool result = setString(OS_SurfaceProperty_ConvectionCoefficients_MultipleSurfaceFields::ConvectionCoefficient1Location, "");
+    OS_ASSERT(result);
+  }
+  
+
   bool SurfacePropertyConvectionCoefficientsMultipleSurface_Impl::setConvectionCoefficient1Type(const std::string& convectionCoefficient1Type) {
     bool result = setString(OS_SurfaceProperty_ConvectionCoefficients_MultipleSurfaceFields::ConvectionCoefficient1Type, convectionCoefficient1Type);
     return result;
+  }
+
+  void SurfacePropertyConvectionCoefficientsMultipleSurface_Impl::resetConvectionCoefficient1Type() {
+    bool result = setString(OS_SurfaceProperty_ConvectionCoefficients_MultipleSurfaceFields::ConvectionCoefficient1Type, "");
+    OS_ASSERT(result);
   }
 
   bool SurfacePropertyConvectionCoefficientsMultipleSurface_Impl::setConvectionCoefficient1(double convectionCoefficient1) {
@@ -327,12 +343,24 @@ bool SurfacePropertyConvectionCoefficientsMultipleSurface::setSurfaceType(const 
   return getImpl<detail::SurfacePropertyConvectionCoefficientsMultipleSurface_Impl>()->setSurfaceType(surfaceType);
 }
 
+void SurfacePropertyConvectionCoefficientsMultipleSurface::resetSurfaceType() {
+  getImpl<detail::SurfacePropertyConvectionCoefficientsMultipleSurface_Impl>()->resetSurfaceType();
+}
+
 bool SurfacePropertyConvectionCoefficientsMultipleSurface::setConvectionCoefficient1Location(const std::string& convectionCoefficient1Location) {
   return getImpl<detail::SurfacePropertyConvectionCoefficientsMultipleSurface_Impl>()->setConvectionCoefficient1Location(convectionCoefficient1Location);
 }
 
+void SurfacePropertyConvectionCoefficientsMultipleSurface::resetConvectionCoefficient1Location() {
+  getImpl<detail::SurfacePropertyConvectionCoefficientsMultipleSurface_Impl>()->resetConvectionCoefficient1Location();
+}
+
 bool SurfacePropertyConvectionCoefficientsMultipleSurface::setConvectionCoefficient1Type(const std::string& convectionCoefficient1Type) {
   return getImpl<detail::SurfacePropertyConvectionCoefficientsMultipleSurface_Impl>()->setConvectionCoefficient1Type(convectionCoefficient1Type);
+}
+
+void SurfacePropertyConvectionCoefficientsMultipleSurface::resetConvectionCoefficient1Type() {
+  getImpl<detail::SurfacePropertyConvectionCoefficientsMultipleSurface_Impl>()->resetConvectionCoefficient1Type();
 }
 
 bool SurfacePropertyConvectionCoefficientsMultipleSurface::setConvectionCoefficient1(double convectionCoefficient1) {
