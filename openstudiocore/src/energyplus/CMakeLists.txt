@@ -258,6 +258,9 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSteamEquipment.cpp
   ForwardTranslator/ForwardTranslateSubSurface.cpp
   ForwardTranslator/ForwardTranslateSurface.cpp
+  ForwardTranslator/ForwardTranslateSurfacePropertyConvectionCoefficientsMultipleSurface.cpp
+  ForwardTranslator/ForwardTranslateSurfacePropertyOtherSideCoefficients.cpp
+  ForwardTranslator/ForwardTranslateSurfacePropertyOtherSideConditionsModel.cpp
   ForwardTranslator/ForwardTranslateTableMultiVariableLookup.cpp
   ForwardTranslator/ForwardTranslateTemperingValve.cpp
   ForwardTranslator/ForwardTranslateThermalStorageIceDetailed.cpp

@@ -282,6 +282,9 @@ class SpaceType;
 class SteamEquipment;
 class SubSurface;
 class Surface;
+class SurfacePropertyConvectionCoefficientsMultipleSurface;
+class SurfacePropertyOtherSideCoefficients;
+class SurfacePropertyOtherSideConditionsModel;
 class TableMultiVariableLookup;
 class TemperingValve;
 class ThermalZone;
@@ -896,6 +899,12 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateSubSurface( model::SubSurface & modelObject );
 
   boost::optional<IdfObject> translateSurface( model::Surface & modelObject );
+
+  boost::optional<IdfObject> translateSurfacePropertyConvectionCoefficientsMultipleSurface(model::SurfacePropertyConvectionCoefficientsMultipleSurface & modelObject);
+
+  boost::optional<IdfObject> translateSurfacePropertyOtherSideCoefficients(model::SurfacePropertyOtherSideCoefficients & modelObject);
+
+  boost::optional<IdfObject> translateSurfacePropertyOtherSideConditionsModel(model::SurfacePropertyOtherSideConditionsModel & modelObject);
 
   boost::optional<IdfObject> translateTableMultiVariableLookup( model::TableMultiVariableLookup & modelObject );
 
