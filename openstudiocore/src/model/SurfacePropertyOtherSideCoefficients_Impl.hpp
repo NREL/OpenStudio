@@ -117,27 +117,27 @@ namespace detail {
 
     void resetCombinedConvectiveRadiativeFilmCoefficient();
 
-    void setConstantTemperature(double constantTemperature);
+    bool setConstantTemperature(double constantTemperature);
 
     void resetConstantTemperature();
 
-    void setConstantTemperatureCoefficient(double constantTemperatureCoefficient);
+    bool setConstantTemperatureCoefficient(double constantTemperatureCoefficient);
 
     void resetConstantTemperatureCoefficient();
 
-    void setExternalDryBulbTemperatureCoefficient(double externalDryBulbTemperatureCoefficient);
+    bool setExternalDryBulbTemperatureCoefficient(double externalDryBulbTemperatureCoefficient);
 
     void resetExternalDryBulbTemperatureCoefficient();
 
-    void setGroundTemperatureCoefficient(double groundTemperatureCoefficient);
+    bool setGroundTemperatureCoefficient(double groundTemperatureCoefficient);
 
     void resetGroundTemperatureCoefficient();
 
-    void setWindSpeedCoefficient(double windSpeedCoefficient);
+    bool setWindSpeedCoefficient(double windSpeedCoefficient);
 
     void resetWindSpeedCoefficient();
 
-    void setZoneAirTemperatureCoefficient(double zoneAirTemperatureCoefficient);
+    bool setZoneAirTemperatureCoefficient(double zoneAirTemperatureCoefficient);
 
     void resetZoneAirTemperatureCoefficient();
 
@@ -145,7 +145,7 @@ namespace detail {
 
     void resetConstantTemperatureSchedule();
 
-    void setSinusoidalVariationofConstantTemperatureCoefficient(bool sinusoidalVariationofConstantTemperatureCoefficient);
+    bool setSinusoidalVariationofConstantTemperatureCoefficient(bool sinusoidalVariationofConstantTemperatureCoefficient);
 
     void resetSinusoidalVariationofConstantTemperatureCoefficient();
 
@@ -153,15 +153,15 @@ namespace detail {
 
     void resetPeriodofSinusoidalVariation();
 
-    void setPreviousOtherSideTemperatureCoefficient(double previousOtherSideTemperatureCoefficient);
+    bool setPreviousOtherSideTemperatureCoefficient(double previousOtherSideTemperatureCoefficient);
 
     void resetPreviousOtherSideTemperatureCoefficient();
 
-    void setMinimumOtherSideTemperatureLimit(double minimumOtherSideTemperatureLimit);
+    bool setMinimumOtherSideTemperatureLimit(double minimumOtherSideTemperatureLimit);
 
     void resetMinimumOtherSideTemperatureLimit();
 
-    void setMaximumOtherSideTemperatureLimit(double maximumOtherSideTemperatureLimit);
+    bool setMaximumOtherSideTemperatureLimit(double maximumOtherSideTemperatureLimit);
 
     void resetMaximumOtherSideTemperatureLimit();
 

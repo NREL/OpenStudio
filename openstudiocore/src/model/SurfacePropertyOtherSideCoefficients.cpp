@@ -189,12 +189,18 @@ namespace detail {
   }
 
   bool SurfacePropertyOtherSideCoefficients_Impl::setCombinedConvectiveRadiativeFilmCoefficient(double combinedConvectiveRadiativeFilmCoefficient) {
-    return setDouble(OS_SurfaceProperty_OtherSideCoefficientsFields::CombinedConvective_RadiativeFilmCoefficient, combinedConvectiveRadiativeFilmCoefficient);
+    bool result = setDouble(OS_SurfaceProperty_OtherSideCoefficientsFields::CombinedConvective_RadiativeFilmCoefficient, combinedConvectiveRadiativeFilmCoefficient);
+    return result;
   }
 
-  void SurfacePropertyOtherSideCoefficients_Impl::setConstantTemperature(double constantTemperature) {
-    bool result = setDouble(OS_SurfaceProperty_OtherSideCoefficientsFields::ConstantTemperature, constantTemperature);
+  void SurfacePropertyOtherSideCoefficients_Impl::resetCombinedConvectiveRadiativeFilmCoefficient() {
+    bool result = setString(OS_SurfaceProperty_OtherSideCoefficientsFields::CombinedConvective_RadiativeFilmCoefficient, "");
     OS_ASSERT(result);
+  }
+
+  bool SurfacePropertyOtherSideCoefficients_Impl::setConstantTemperature(double constantTemperature) {
+    bool result = setDouble(OS_SurfaceProperty_OtherSideCoefficientsFields::ConstantTemperature, constantTemperature);
+    return result;
   }
 
   void SurfacePropertyOtherSideCoefficients_Impl::resetConstantTemperature() {
@@ -202,9 +208,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SurfacePropertyOtherSideCoefficients_Impl::setConstantTemperatureCoefficient(double constantTemperatureCoefficient) {
+  bool SurfacePropertyOtherSideCoefficients_Impl::setConstantTemperatureCoefficient(double constantTemperatureCoefficient) {
     bool result = setDouble(OS_SurfaceProperty_OtherSideCoefficientsFields::ConstantTemperatureCoefficient, constantTemperatureCoefficient);
-    OS_ASSERT(result);
+    return result;
   }
 
   void SurfacePropertyOtherSideCoefficients_Impl::resetConstantTemperatureCoefficient() {
@@ -212,9 +218,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SurfacePropertyOtherSideCoefficients_Impl::setExternalDryBulbTemperatureCoefficient(double externalDryBulbTemperatureCoefficient) {
+  bool SurfacePropertyOtherSideCoefficients_Impl::setExternalDryBulbTemperatureCoefficient(double externalDryBulbTemperatureCoefficient) {
     bool result = setDouble(OS_SurfaceProperty_OtherSideCoefficientsFields::ExternalDryBulbTemperatureCoefficient, externalDryBulbTemperatureCoefficient);
-    OS_ASSERT(result);
+    return result;
   }
 
   void SurfacePropertyOtherSideCoefficients_Impl::resetExternalDryBulbTemperatureCoefficient() {
@@ -222,9 +228,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SurfacePropertyOtherSideCoefficients_Impl::setGroundTemperatureCoefficient(double groundTemperatureCoefficient) {
+  bool SurfacePropertyOtherSideCoefficients_Impl::setGroundTemperatureCoefficient(double groundTemperatureCoefficient) {
     bool result = setDouble(OS_SurfaceProperty_OtherSideCoefficientsFields::GroundTemperatureCoefficient, groundTemperatureCoefficient);
-    OS_ASSERT(result);
+    return result;
   }
 
   void SurfacePropertyOtherSideCoefficients_Impl::resetGroundTemperatureCoefficient() {
@@ -232,9 +238,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SurfacePropertyOtherSideCoefficients_Impl::setWindSpeedCoefficient(double windSpeedCoefficient) {
+  bool SurfacePropertyOtherSideCoefficients_Impl::setWindSpeedCoefficient(double windSpeedCoefficient) {
     bool result = setDouble(OS_SurfaceProperty_OtherSideCoefficientsFields::WindSpeedCoefficient, windSpeedCoefficient);
-    OS_ASSERT(result);
+    return result;
   }
 
   void SurfacePropertyOtherSideCoefficients_Impl::resetWindSpeedCoefficient() {
@@ -242,9 +248,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SurfacePropertyOtherSideCoefficients_Impl::setZoneAirTemperatureCoefficient(double zoneAirTemperatureCoefficient) {
+  bool SurfacePropertyOtherSideCoefficients_Impl::setZoneAirTemperatureCoefficient(double zoneAirTemperatureCoefficient) {
     bool result = setDouble(OS_SurfaceProperty_OtherSideCoefficientsFields::ZoneAirTemperatureCoefficient, zoneAirTemperatureCoefficient);
-    OS_ASSERT(result);
+    return result;
   }
 
   void SurfacePropertyOtherSideCoefficients_Impl::resetZoneAirTemperatureCoefficient() {
@@ -265,14 +271,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SurfacePropertyOtherSideCoefficients_Impl::setSinusoidalVariationofConstantTemperatureCoefficient(bool sinusoidalVariationofConstantTemperatureCoefficient) {
+  bool SurfacePropertyOtherSideCoefficients_Impl::setSinusoidalVariationofConstantTemperatureCoefficient(bool sinusoidalVariationofConstantTemperatureCoefficient) {
     bool result = false;
     if (sinusoidalVariationofConstantTemperatureCoefficient) {
       result = setString(OS_SurfaceProperty_OtherSideCoefficientsFields::SinusoidalVariationofConstantTemperatureCoefficient, "Yes");
     } else {
       result = setString(OS_SurfaceProperty_OtherSideCoefficientsFields::SinusoidalVariationofConstantTemperatureCoefficient, "No");
     }
-    OS_ASSERT(result);
+    return result;
   }
 
   void SurfacePropertyOtherSideCoefficients_Impl::resetSinusoidalVariationofConstantTemperatureCoefficient() {
@@ -290,9 +296,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SurfacePropertyOtherSideCoefficients_Impl::setPreviousOtherSideTemperatureCoefficient(double previousOtherSideTemperatureCoefficient) {
+  bool SurfacePropertyOtherSideCoefficients_Impl::setPreviousOtherSideTemperatureCoefficient(double previousOtherSideTemperatureCoefficient) {
     bool result = setDouble(OS_SurfaceProperty_OtherSideCoefficientsFields::PreviousOtherSideTemperatureCoefficient, previousOtherSideTemperatureCoefficient);
-    OS_ASSERT(result);
+    return result;
   }
 
   void SurfacePropertyOtherSideCoefficients_Impl::resetPreviousOtherSideTemperatureCoefficient() {
@@ -300,9 +306,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SurfacePropertyOtherSideCoefficients_Impl::setMinimumOtherSideTemperatureLimit(double minimumOtherSideTemperatureLimit) {
+  bool SurfacePropertyOtherSideCoefficients_Impl::setMinimumOtherSideTemperatureLimit(double minimumOtherSideTemperatureLimit) {
     bool result = setDouble(OS_SurfaceProperty_OtherSideCoefficientsFields::MinimumOtherSideTemperatureLimit, minimumOtherSideTemperatureLimit);
-    OS_ASSERT(result);
+    return result;
   }
 
   void SurfacePropertyOtherSideCoefficients_Impl::resetMinimumOtherSideTemperatureLimit() {
@@ -310,9 +316,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SurfacePropertyOtherSideCoefficients_Impl::setMaximumOtherSideTemperatureLimit(double maximumOtherSideTemperatureLimit) {
+  bool SurfacePropertyOtherSideCoefficients_Impl::setMaximumOtherSideTemperatureLimit(double maximumOtherSideTemperatureLimit) {
     bool result = setDouble(OS_SurfaceProperty_OtherSideCoefficientsFields::MaximumOtherSideTemperatureLimit, maximumOtherSideTemperatureLimit);
-    OS_ASSERT(result);
+    return result;
   }
 
   void SurfacePropertyOtherSideCoefficients_Impl::resetMaximumOtherSideTemperatureLimit() {
@@ -424,48 +430,52 @@ bool SurfacePropertyOtherSideCoefficients::setCombinedConvectiveRadiativeFilmCoe
   return getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->setCombinedConvectiveRadiativeFilmCoefficient(combinedConvectiveRadiativeFilmCoefficient);
 }
 
-void SurfacePropertyOtherSideCoefficients::setConstantTemperature(double constantTemperature) {
-  getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->setConstantTemperature(constantTemperature);
+void SurfacePropertyOtherSideCoefficients::resetCombinedConvectiveRadiativeFilmCoefficient() {
+  getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->resetCombinedConvectiveRadiativeFilmCoefficient();
+}
+
+bool SurfacePropertyOtherSideCoefficients::setConstantTemperature(double constantTemperature) {
+  return getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->setConstantTemperature(constantTemperature);
 }
 
 void SurfacePropertyOtherSideCoefficients::resetConstantTemperature() {
   getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->resetConstantTemperature();
 }
 
-void SurfacePropertyOtherSideCoefficients::setConstantTemperatureCoefficient(double constantTemperatureCoefficient) {
-  getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->setConstantTemperatureCoefficient(constantTemperatureCoefficient);
+bool SurfacePropertyOtherSideCoefficients::setConstantTemperatureCoefficient(double constantTemperatureCoefficient) {
+  return getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->setConstantTemperatureCoefficient(constantTemperatureCoefficient);
 }
 
 void SurfacePropertyOtherSideCoefficients::resetConstantTemperatureCoefficient() {
   getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->resetConstantTemperatureCoefficient();
 }
 
-void SurfacePropertyOtherSideCoefficients::setExternalDryBulbTemperatureCoefficient(double externalDryBulbTemperatureCoefficient) {
-  getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->setExternalDryBulbTemperatureCoefficient(externalDryBulbTemperatureCoefficient);
+bool SurfacePropertyOtherSideCoefficients::setExternalDryBulbTemperatureCoefficient(double externalDryBulbTemperatureCoefficient) {
+  return getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->setExternalDryBulbTemperatureCoefficient(externalDryBulbTemperatureCoefficient);
 }
 
 void SurfacePropertyOtherSideCoefficients::resetExternalDryBulbTemperatureCoefficient() {
   getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->resetExternalDryBulbTemperatureCoefficient();
 }
 
-void SurfacePropertyOtherSideCoefficients::setGroundTemperatureCoefficient(double groundTemperatureCoefficient) {
-  getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->setGroundTemperatureCoefficient(groundTemperatureCoefficient);
+bool SurfacePropertyOtherSideCoefficients::setGroundTemperatureCoefficient(double groundTemperatureCoefficient) {
+  return getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->setGroundTemperatureCoefficient(groundTemperatureCoefficient);
 }
 
 void SurfacePropertyOtherSideCoefficients::resetGroundTemperatureCoefficient() {
   getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->resetGroundTemperatureCoefficient();
 }
 
-void SurfacePropertyOtherSideCoefficients::setWindSpeedCoefficient(double windSpeedCoefficient) {
-  getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->setWindSpeedCoefficient(windSpeedCoefficient);
+bool SurfacePropertyOtherSideCoefficients::setWindSpeedCoefficient(double windSpeedCoefficient) {
+  return getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->setWindSpeedCoefficient(windSpeedCoefficient);
 }
 
 void SurfacePropertyOtherSideCoefficients::resetWindSpeedCoefficient() {
   getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->resetWindSpeedCoefficient();
 }
 
-void SurfacePropertyOtherSideCoefficients::setZoneAirTemperatureCoefficient(double zoneAirTemperatureCoefficient) {
-  getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->setZoneAirTemperatureCoefficient(zoneAirTemperatureCoefficient);
+bool SurfacePropertyOtherSideCoefficients::setZoneAirTemperatureCoefficient(double zoneAirTemperatureCoefficient) {
+  return getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->setZoneAirTemperatureCoefficient(zoneAirTemperatureCoefficient);
 }
 
 void SurfacePropertyOtherSideCoefficients::resetZoneAirTemperatureCoefficient() {
@@ -480,8 +490,8 @@ void SurfacePropertyOtherSideCoefficients::resetConstantTemperatureSchedule() {
   getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->resetConstantTemperatureSchedule();
 }
 
-void SurfacePropertyOtherSideCoefficients::setSinusoidalVariationofConstantTemperatureCoefficient(bool sinusoidalVariationofConstantTemperatureCoefficient) {
-  getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->setSinusoidalVariationofConstantTemperatureCoefficient(sinusoidalVariationofConstantTemperatureCoefficient);
+bool SurfacePropertyOtherSideCoefficients::setSinusoidalVariationofConstantTemperatureCoefficient(bool sinusoidalVariationofConstantTemperatureCoefficient) {
+  return getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->setSinusoidalVariationofConstantTemperatureCoefficient(sinusoidalVariationofConstantTemperatureCoefficient);
 }
 
 void SurfacePropertyOtherSideCoefficients::resetSinusoidalVariationofConstantTemperatureCoefficient() {
@@ -496,24 +506,24 @@ void SurfacePropertyOtherSideCoefficients::resetPeriodofSinusoidalVariation() {
   getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->resetPeriodofSinusoidalVariation();
 }
 
-void SurfacePropertyOtherSideCoefficients::setPreviousOtherSideTemperatureCoefficient(double previousOtherSideTemperatureCoefficient) {
-  getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->setPreviousOtherSideTemperatureCoefficient(previousOtherSideTemperatureCoefficient);
+bool SurfacePropertyOtherSideCoefficients::setPreviousOtherSideTemperatureCoefficient(double previousOtherSideTemperatureCoefficient) {
+  return getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->setPreviousOtherSideTemperatureCoefficient(previousOtherSideTemperatureCoefficient);
 }
 
 void SurfacePropertyOtherSideCoefficients::resetPreviousOtherSideTemperatureCoefficient() {
   getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->resetPreviousOtherSideTemperatureCoefficient();
 }
 
-void SurfacePropertyOtherSideCoefficients::setMinimumOtherSideTemperatureLimit(double minimumOtherSideTemperatureLimit) {
-  getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->setMinimumOtherSideTemperatureLimit(minimumOtherSideTemperatureLimit);
+bool SurfacePropertyOtherSideCoefficients::setMinimumOtherSideTemperatureLimit(double minimumOtherSideTemperatureLimit) {
+  return getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->setMinimumOtherSideTemperatureLimit(minimumOtherSideTemperatureLimit);
 }
 
 void SurfacePropertyOtherSideCoefficients::resetMinimumOtherSideTemperatureLimit() {
   getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->resetMinimumOtherSideTemperatureLimit();
 }
 
-void SurfacePropertyOtherSideCoefficients::setMaximumOtherSideTemperatureLimit(double maximumOtherSideTemperatureLimit) {
-  getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->setMaximumOtherSideTemperatureLimit(maximumOtherSideTemperatureLimit);
+bool SurfacePropertyOtherSideCoefficients::setMaximumOtherSideTemperatureLimit(double maximumOtherSideTemperatureLimit) {
+  return getImpl<detail::SurfacePropertyOtherSideCoefficients_Impl>()->setMaximumOtherSideTemperatureLimit(maximumOtherSideTemperatureLimit);
 }
 
 void SurfacePropertyOtherSideCoefficients::resetMaximumOtherSideTemperatureLimit() {
