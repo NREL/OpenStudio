@@ -734,7 +734,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
   vrf.setDefrostTimePeriodFraction(0.058333);
 
   if( ! autosize() ) {
-    auto element = vrfSysElement.firstChildElement("DefHtrCapSim");
+    auto element = vrfSysElement.firstChildElement("DefHtrCap");
     bool ok;
     auto value = element.text().toDouble(&ok);
     if( ok ) {
@@ -754,7 +754,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
 
   if( ! autosize() ) {
     bool ok;
-    auto value = vrfSysElement.firstChildElement("CprsrCrankcaseHtrCapSim").text().toDouble(&ok);
+    auto value = vrfSysElement.firstChildElement("CprsrCrankcaseHtrCap").text().toDouble(&ok);
     if( ok ) {
       value = unitToUnit(value,"Btu/h","W").get();
       vrf.setCrankcaseHeaterPowerperCompressor(value);
