@@ -10,12 +10,51 @@ Configured build environments: https://github.com/NREL/OpenStudio/wiki/Configuri
 - IncrediBuild
 - S3
 - SketchUp
+- MarkdownPad 2
 
 Initial Steps
 =============
 If internal to NREL, connect to developer VPN (avoids certificate warnings, increases speed of uploads).
 
 With Git, merge `develop` into `iteration`.
+
+Release Notes
+=============
+If this is a major release, release notes must be written.
+
+- Contact each OpenStudio developer and get from them a list of features and bug fixes which they feel should be highlighted.
+- In the folder doc\ReleaseNotes copy the most recent release notes, and update the name to reflect the correct version, and date.
+- Incorporate the developers notes previously obtained.
+- Have the release notes reviewed for accuracy.
+- Generate a PDF from the word doc.
+- Generate a markdown document from the word doc.
+
+
+Update CHANGELOG.md
+=================
+
+### Set the desired stats date range
+- Open GitHubIssuesStats.rb, and adjust date range
+
+### Get the stats
+Open Git Bash
+
+In the Git Bash window, type the following
+
+- cd to the root folder of your local Git OpenStudio repository
+- cd developer/ruby
+- gem install github_api
+- ruby GitHubIssuesStats.rb
+
+### Pipe the stats out to a text file
+In the Git Bash window, type the following
+
+- ruby GitHubIssuesStats.rb > out.txt
+
+Open out.txt, and paste data into CHANGELOG.md
+
+Commit CHANGELOG.md
+
 
 Builds
 ======
@@ -59,7 +98,6 @@ In CMake, select current 64-bit compiler
 In CMake check the following:
 
 - BUILD\_CSHARP\_BINDINGS
-- BUILD\_DOCUMENTATION
 - BUILD\_PACKAGE
 - BUILD\_SWIG
 - BUILD\_TESTING
@@ -75,6 +113,8 @@ In Visual Studio:
 - Open OpenStudioCore.sln
 - Select Release Solution Configuration
 - Build OpenStudioCore with IncrediBuild
+- Open OpenStudio.sln
+- Build PACKAGE
 
 Windows 32-bit
 --------------
@@ -99,6 +139,8 @@ In Visual Studio:
 - Open OpenStudioCore.sln
 - Select Release Solution Configuration
 - Build OpenStudioCore with IncrediBuild
+- Open OpenStudio.sln
+- Build PACKAGE
 
 Mac
 ---
@@ -250,6 +292,13 @@ Sanity Testing Release Builds
 - Run simulation in OpenStudio
 - Run simulation in PAT
 - Test opening results in ResultsViewer
+
+OpenStudio News Update
+======================
+
+If this version is a major release
+
+- At https://www.openstudio.net/ click "Add Announcement" and publish a release note.
 
 Version Update
 ==============
