@@ -16,7 +16,11 @@ Initial Steps
 =============
 If internal to NREL, connect to developer VPN (avoids certificate warnings, increases speed of uploads).
 
-With Git, merge `develop` into `iteration`.
+- With Git, merge `develop` into `iteration`.
+
+If this is a major release
+
+- With Git, merge `develop` into `master`.
 
 Release Notes
 =============
@@ -190,7 +194,10 @@ https://github.com/NREL/OpenStudio/releases
 
 - Select "Draft a new release"
 - Set tag version = vX.Y.Z
-- Set Target = `iteration`
+- If this is a major release
+	- Set Target = `master`
+- Else If this is an iteration build
+	- Set Target = `iteration`
 - Set Release title = OpenStudio vX.Y.Z
 - Check "This is a pre-release" for an iteration build
 - Select "Save draft"
@@ -296,9 +303,19 @@ Sanity Testing Release Builds
 OpenStudio News Update
 ======================
 
-If this version is a major release
+If this is a major release, a news update must be written
 
 - At https://www.openstudio.net/ click "Add Announcement" and publish a release note.
+
+OpenStudio-Web Update
+=====================
+
+If this is a major release, OpenStudio-web must be updated
+
+In the docroot folder\
+
+- open update.html and update its build version, sha, and date (2 places)
+
 
 Version Update
 ==============
