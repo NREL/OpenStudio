@@ -324,6 +324,33 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingZone( SizingZone & 
     }
   }
 
+  if( modelObject.accountforDedicatedOutdoorAirSystem() ) {
+    idfObject.setString(Sizing_ZoneFields::AccountforDedicatedOutdoorAirSystem,"Yes");
+
+    {
+      auto value = modelObject.dedicatedOutdoorAirSystemControlStrategy();
+      idfObject.setString(Sizing_ZoneFields::DedicatedOutdoorAirSystemControlStrategy,value);
+    }
+
+    {
+      if( modelObject.isDedicatedOutdoorAirLowSetpointTemperatureforDesignAutosized() ) {
+        idfObject.setString(Sizing_ZoneFields::DedicatedOutdoorAirLowSetpointTemperatureforDesign,"Autosize");
+      } else if ( auto value = modelObject.dedicatedOutdoorAirLowSetpointTemperatureforDesign() ) {
+        idfObject.setDouble(Sizing_ZoneFields::DedicatedOutdoorAirLowSetpointTemperatureforDesign,value.get());
+      }
+    }
+
+    {
+      if( modelObject.isDedicatedOutdoorAirHighSetpointTemperatureforDesignAutosized() ) {
+        idfObject.setString(Sizing_ZoneFields::DedicatedOutdoorAirHighSetpointTemperatureforDesign,"Autosize");
+      } else if ( auto value = modelObject.dedicatedOutdoorAirHighSetpointTemperatureforDesign() ) {
+        idfObject.setDouble(Sizing_ZoneFields::DedicatedOutdoorAirHighSetpointTemperatureforDesign,value.get());
+      }
+    }
+  } else {
+    idfObject.setString(Sizing_ZoneFields::AccountforDedicatedOutdoorAirSystem,"No");
+  }
+
   return idfObject;
 }
 

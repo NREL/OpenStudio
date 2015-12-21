@@ -257,6 +257,18 @@ namespace detail {
 
     bool isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted() const;
 
+    bool accountforDedicatedOutdoorAirSystem() const;
+
+    std::string dedicatedOutdoorAirSystemControlStrategy() const;
+
+    boost::optional<double> dedicatedOutdoorAirLowSetpointTemperatureforDesign() const;
+
+    bool isDedicatedOutdoorAirLowSetpointTemperatureforDesignAutosized() const;
+
+    boost::optional<double> dedicatedOutdoorAirHighSetpointTemperatureforDesign() const;
+
+    bool isDedicatedOutdoorAirHighSetpointTemperatureforDesignAutosized() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -367,6 +379,18 @@ namespace detail {
     bool setDesignZoneAirDistributionEffectivenessinHeatingMode(const Quantity& designZoneAirDistributionEffectivenessinHeatingMode);
 
     void resetDesignZoneAirDistributionEffectivenessinHeatingMode();
+
+    void setAccountforDedicatedOutdoorAirSystem(bool accountforDedicatedOutdoorAirSystem);
+
+    bool setDedicatedOutdoorAirSystemControlStrategy(std::string dedicatedOutdoorAirSystemControlStrategy);
+
+    void setDedicatedOutdoorAirLowSetpointTemperatureforDesign(boost::optional<double> dedicatedOutdoorAirLowSetpointTemperatureforDesign);
+
+    void autosizeDedicatedOutdoorAirLowSetpointTemperatureforDesign();
+
+    void setDedicatedOutdoorAirHighSetpointTemperatureforDesign(boost::optional<double> dedicatedOutdoorAirHighSetpointTemperatureforDesign);
+
+    void autosizeDedicatedOutdoorAirHighSetpointTemperatureforDesign();
 
     //@}
     /** @name Other */
