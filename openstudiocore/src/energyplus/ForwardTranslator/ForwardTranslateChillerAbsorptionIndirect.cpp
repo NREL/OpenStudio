@@ -81,6 +81,14 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerAbsorptionIndirect
     }
   }
 
+  if( auto mo = modelObject.tertiaryInletModelObject() ) {
+    idfObject.setString(Chiller_Absorption_IndirectFields::GeneratorInletNodeName,mo->name().get());
+  }
+
+  if( auto mo = modelObject.tertiaryOutletModelObject() ) {
+    idfObject.setString(Chiller_Absorption_IndirectFields::GeneratorOutletNodeName,mo->name().get());
+  }
+
   if( modelObject.isNominalCapacityAutosized() ) {
     idfObject.setString(Chiller_Absorption_IndirectFields::NominalCapacity,"Autosize");
   } else if( auto value = modelObject.nominalCapacity() ) {
@@ -194,13 +202,15 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerAbsorptionIndirect
     idfObject.setString(Chiller_Absorption_IndirectFields::GeneratorHeatSourceType,value);
   }
 
-  // For now generator loops are not supported so this field needs to be blank
-  //if( modelObject.isDesignGeneratorFluidFlowRateAutosized() ) {
-  //  idfObject.setString(Chiller_Absorption_IndirectFields::DesignGeneratorFluidFlowRate,"Autosize");
-  //} else if( auto value = modelObject.designGeneratorFluidFlowRate() ) {
-  //  idfObject.setDouble(Chiller_Absorption_IndirectFields::DesignGeneratorFluidFlowRate,value.get());
-  //}
-  idfObject.setString(Chiller_Absorption_IndirectFields::DesignGeneratorFluidFlowRate,"");
+  if( modelObject.tertiaryPlantLoop() ) {
+    if( modelObject.isDesignGeneratorFluidFlowRateAutosized() ) {
+      idfObject.setString(Chiller_Absorption_IndirectFields::DesignGeneratorFluidFlowRate,"Autosize");
+    } else if( auto value = modelObject.designGeneratorFluidFlowRate() ) {
+      idfObject.setDouble(Chiller_Absorption_IndirectFields::DesignGeneratorFluidFlowRate,value.get());
+    }
+  } else {
+    idfObject.setString(Chiller_Absorption_IndirectFields::DesignGeneratorFluidFlowRate,"");
+  }
 
   {
     auto value = modelObject.temperatureLowerLimitGeneratorInlet();

@@ -78,7 +78,7 @@ class MODEL_API ZoneHVACComponent_Impl : public HVACComponent_Impl {
 
   boost::optional<AirLoopHVAC> airLoopHVAC() const override;
 
-  std::vector<HVACComponent> edges(bool isDemandComponent) override;
+  std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & prev) override;
 
  protected:
 

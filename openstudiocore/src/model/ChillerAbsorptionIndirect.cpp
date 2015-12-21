@@ -525,6 +525,14 @@ namespace detail {
     return result;
   }
 
+  unsigned ChillerAbsorptionIndirect_Impl::tertiaryInletPort() const {
+    return OS_Chiller_Absorption_IndirectFields::GeneratorInletNode;
+  }
+
+  unsigned ChillerAbsorptionIndirect_Impl::tertiaryOutletPort() const {
+    return OS_Chiller_Absorption_IndirectFields::GeneratorOutletNode;
+  }
+
 } // detail
 
 ChillerAbsorptionIndirect::ChillerAbsorptionIndirect(const Model& model)

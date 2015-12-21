@@ -479,7 +479,7 @@ namespace detail {
     return ModelObject_Impl::clone(model);
   }
 
-  std::vector<HVACComponent> HVACComponent_Impl::edges(bool isDemandComponent)
+  std::vector<HVACComponent> HVACComponent_Impl::edges(const boost::optional<HVACComponent> & previous)
   {
     return std::vector<HVACComponent>();
   }

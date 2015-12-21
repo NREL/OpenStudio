@@ -117,6 +117,7 @@ namespace sdd {
     boost::optional<openstudio::model::ModelObject> translateFan(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateThermalZone(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateTrmlUnit(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateVRFSys(const QDomElement& vrfSysElement, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateZnSys(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
 
     // Looks for a loop in the SDD instance with a segment named fluidSegmentName

@@ -75,6 +75,12 @@ namespace detail {
     return value.get();
   }
 
+  std::string SizingZone_Impl::zoneCoolingDesignSupplyAirTemperatureInputMethod() const {
+    boost::optional<std::string> value = getString(OS_Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureInputMethod,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
   double SizingZone_Impl::zoneCoolingDesignSupplyAirTemperature() const {
     boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperature,true);
     OS_ASSERT(value);
@@ -88,6 +94,18 @@ namespace detail {
     return result.get();
   }
 
+  double SizingZone_Impl::zoneCoolingDesignSupplyAirTemperatureDifference() const {
+    boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureDifference,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  std::string SizingZone_Impl::zoneHeatingDesignSupplyAirTemperatureInputMethod() const {
+    boost::optional<std::string> value = getString(OS_Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureInputMethod,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
   double SizingZone_Impl::zoneHeatingDesignSupplyAirTemperature() const {
     boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperature,true);
     OS_ASSERT(value);
@@ -99,6 +117,12 @@ namespace detail {
     OSOptionalQuantity result = getQuantityFromDouble(OS_Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperature, value, returnIP);
     OS_ASSERT(result.isSet());
     return result.get();
+  }
+
+  double SizingZone_Impl::zoneHeatingDesignSupplyAirTemperatureDifference() const {
+    boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureDifference,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
   double SizingZone_Impl::zoneCoolingDesignSupplyAirHumidityRatio() const {
@@ -354,6 +378,11 @@ namespace detail {
     return true;
   }
 
+  void SizingZone_Impl::setZoneCoolingDesignSupplyAirTemperatureDifference(double value) {
+    bool result = setDouble(OS_Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureDifference, value);
+    OS_ASSERT(result);
+  }
+
   void SizingZone_Impl::setZoneHeatingDesignSupplyAirTemperature(double zoneHeatingDesignSupplyAirTemperature) {
     bool result = setDouble(OS_Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperature, zoneHeatingDesignSupplyAirTemperature);
     OS_ASSERT(result);
@@ -366,6 +395,11 @@ namespace detail {
     }
     setZoneHeatingDesignSupplyAirTemperature(value.get());
     return true;
+  }
+
+  void SizingZone_Impl::setZoneHeatingDesignSupplyAirTemperatureDifference(double value) {
+    bool result = setDouble(OS_Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureDifference, value);
+    OS_ASSERT(result);
   }
 
   bool SizingZone_Impl::setZoneCoolingDesignSupplyAirHumidityRatio(double zoneCoolingDesignSupplyAirHumidityRatio) {
@@ -814,6 +848,14 @@ namespace detail {
     return false;
   }
 
+  bool SizingZone_Impl::setZoneCoolingDesignSupplyAirTemperatureInputMethod(const std::string &value) {
+    return setString(OS_Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureInputMethod, value);
+  }
+
+  bool SizingZone_Impl::setZoneHeatingDesignSupplyAirTemperatureInputMethod(const std::string &value) {
+    return setString(OS_Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureInputMethod, value);
+  }
+
 } // detail
 
 SizingZone::SizingZone(const Model& model, const ThermalZone & thermalZone)
@@ -823,7 +865,11 @@ SizingZone::SizingZone(const Model& model, const ThermalZone & thermalZone)
 
   setThermalZone(thermalZone);
 
+  setZoneCoolingDesignSupplyAirTemperatureInputMethod("SupplyAirTemperature");
+  setZoneCoolingDesignSupplyAirTemperatureDifference(11.11);
   setZoneCoolingDesignSupplyAirTemperature(14.0);
+  setZoneHeatingDesignSupplyAirTemperatureInputMethod("SupplyAirTemperature");
+  setZoneHeatingDesignSupplyAirTemperatureDifference(11.11);
   setZoneHeatingDesignSupplyAirTemperature(40.0);
   setZoneCoolingDesignSupplyAirHumidityRatio(0.0085);
   setZoneHeatingDesignSupplyAirHumidityRatio(0.0080);
@@ -845,8 +891,22 @@ std::vector<std::string> SizingZone::heatingDesignAirFlowMethodValues() {
                         OS_Sizing_ZoneFields::HeatingDesignAirFlowMethod);
 }
 
+std::vector<std::string> SizingZone::zoneCoolingDesignSupplyAirTemperatureInputMethodValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureInputMethod);
+}
+
+std::vector<std::string> SizingZone::zoneHeatingDesignSupplyAirTemperatureInputMethodValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureInputMethod);
+}
+
 ThermalZone SizingZone::thermalZone() const {
   return getImpl<detail::SizingZone_Impl>()->thermalZone();
+}
+
+std::string SizingZone::zoneCoolingDesignSupplyAirTemperatureInputMethod() const {
+  return getImpl<detail::SizingZone_Impl>()->zoneCoolingDesignSupplyAirTemperatureInputMethod();
 }
 
 double SizingZone::zoneCoolingDesignSupplyAirTemperature() const {
@@ -857,12 +917,24 @@ Quantity SizingZone::getZoneCoolingDesignSupplyAirTemperature(bool returnIP) con
   return getImpl<detail::SizingZone_Impl>()->getZoneCoolingDesignSupplyAirTemperature(returnIP);
 }
 
+double SizingZone::zoneCoolingDesignSupplyAirTemperatureDifference() const {
+  return getImpl<detail::SizingZone_Impl>()->zoneCoolingDesignSupplyAirTemperatureDifference();
+}
+
+std::string SizingZone::zoneHeatingDesignSupplyAirTemperatureInputMethod() const {
+  return getImpl<detail::SizingZone_Impl>()->zoneHeatingDesignSupplyAirTemperatureInputMethod();
+}
+
 double SizingZone::zoneHeatingDesignSupplyAirTemperature() const {
   return getImpl<detail::SizingZone_Impl>()->zoneHeatingDesignSupplyAirTemperature();
 }
 
 Quantity SizingZone::getZoneHeatingDesignSupplyAirTemperature(bool returnIP) const {
   return getImpl<detail::SizingZone_Impl>()->getZoneHeatingDesignSupplyAirTemperature(returnIP);
+}
+
+double SizingZone::zoneHeatingDesignSupplyAirTemperatureDifference() const {
+  return getImpl<detail::SizingZone_Impl>()->zoneHeatingDesignSupplyAirTemperatureDifference();
 }
 
 double SizingZone::zoneCoolingDesignSupplyAirHumidityRatio() const {
@@ -1045,8 +1117,16 @@ bool SizingZone::setZoneCoolingDesignSupplyAirTemperature(const Quantity& zoneCo
   return getImpl<detail::SizingZone_Impl>()->setZoneCoolingDesignSupplyAirTemperature(zoneCoolingDesignSupplyAirTemperature);
 }
 
+void SizingZone::setZoneCoolingDesignSupplyAirTemperatureDifference(double value) {
+  getImpl<detail::SizingZone_Impl>()->setZoneCoolingDesignSupplyAirTemperatureDifference(value);
+}
+
 void SizingZone::setZoneHeatingDesignSupplyAirTemperature(double zoneHeatingDesignSupplyAirTemperature) {
   getImpl<detail::SizingZone_Impl>()->setZoneHeatingDesignSupplyAirTemperature(zoneHeatingDesignSupplyAirTemperature);
+}
+
+void SizingZone::setZoneHeatingDesignSupplyAirTemperatureDifference(double value) {
+  getImpl<detail::SizingZone_Impl>()->setZoneHeatingDesignSupplyAirTemperatureDifference(value);
 }
 
 bool SizingZone::setZoneHeatingDesignSupplyAirTemperature(const Quantity& zoneHeatingDesignSupplyAirTemperature) {
@@ -1227,6 +1307,14 @@ bool SizingZone::setDesignZoneAirDistributionEffectivenessinHeatingMode(const Qu
 
 void SizingZone::resetDesignZoneAirDistributionEffectivenessinHeatingMode() {
   getImpl<detail::SizingZone_Impl>()->resetDesignZoneAirDistributionEffectivenessinHeatingMode();
+}
+
+bool SizingZone::setZoneCoolingDesignSupplyAirTemperatureInputMethod(const std::string &value) {
+  return getImpl<detail::SizingZone_Impl>()->setZoneCoolingDesignSupplyAirTemperatureInputMethod(value);
+}
+
+bool SizingZone::setZoneHeatingDesignSupplyAirTemperatureInputMethod(const std::string &value) {
+  return getImpl<detail::SizingZone_Impl>()->setZoneHeatingDesignSupplyAirTemperatureInputMethod(value);
 }
 
 /// @cond

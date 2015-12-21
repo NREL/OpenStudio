@@ -87,9 +87,9 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
 
   /** This function returns a vector of HVACComponent that are directly downstream
    *  from this object on an AirLoopHVAC or PlantLoop. 
-   *  @param[in]  isDemandComponent  Boolean passed in whether object is a demand or supply component
+   *  @param[in] previous is used to indicate which path of edges to return 
   **/
-  virtual std::vector<HVACComponent> edges(bool isDemandComponent);
+  virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & previous);
 
   virtual boost::optional<HVACComponent> containingHVACComponent() const;
 
@@ -113,9 +113,7 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
   friend class Model_Impl;
 
   mutable boost::optional<AirLoopHVAC> m_airLoopHVAC;
-
   mutable boost::optional<PlantLoop> m_plantLoop;
-
   mutable boost::optional<AirLoopHVACOutdoorAirSystem> m_airLoopHVACOutdoorAirSystem;
 
  private:

@@ -72,24 +72,24 @@ TEST_F(ModelFixture,AirLoopHVACOutdoorAirSystem_clone)
   ASSERT_EQ( openstudio::IddObjectType::OS_Controller_OutdoorAir, oaSystem2.getControllerOutdoorAir().iddObjectType().value() );
 }
 
-TEST_F(ModelFixture,AirLoopHVACOutdoorAirSystem_edges)
-{
-  Model m;
-  Schedule s = m.alwaysOnDiscreteSchedule();
-  AirLoopHVAC airLoop(m);
-  ControllerOutdoorAir controllerOutdoorAir(m);
-  AirLoopHVACOutdoorAirSystem outdoorAirSystem(m,controllerOutdoorAir);
-  CoilHeatingElectric coil(m, s);
-
-  Node supplyOutletNode = airLoop.supplyOutletNode();
-  outdoorAirSystem.addToNode(supplyOutletNode);
-  coil.addToNode(supplyOutletNode);
-  boost::optional<ModelObject> testObject = airLoop.supplyComponent(outdoorAirSystem.handle());
-  ASSERT_TRUE(testObject);
-  EXPECT_EQ(outdoorAirSystem, *testObject);
-  std::vector<HVACComponent> edges = outdoorAirSystem.getImpl<detail::HVACComponent_Impl>()->edges(false); // should be Node
-  ASSERT_EQ(1, edges.size());
-  edges = edges[0].getImpl<detail::HVACComponent_Impl>()->edges(false); // should be CoilHeatingElectric
-  ASSERT_EQ(1, edges.size());
-  EXPECT_EQ(coil, edges[0]);
-}
+//TEST_F(ModelFixture,AirLoopHVACOutdoorAirSystem_edges)
+//{
+//  Model m;
+//  Schedule s = m.alwaysOnDiscreteSchedule();
+//  AirLoopHVAC airLoop(m);
+//  ControllerOutdoorAir controllerOutdoorAir(m);
+//  AirLoopHVACOutdoorAirSystem outdoorAirSystem(m,controllerOutdoorAir);
+//  CoilHeatingElectric coil(m, s);
+//
+//  Node supplyOutletNode = airLoop.supplyOutletNode();
+//  outdoorAirSystem.addToNode(supplyOutletNode);
+//  coil.addToNode(supplyOutletNode);
+//  boost::optional<ModelObject> testObject = airLoop.supplyComponent(outdoorAirSystem.handle());
+//  ASSERT_TRUE(testObject);
+//  EXPECT_EQ(outdoorAirSystem, *testObject);
+//  std::vector<HVACComponent> edges = outdoorAirSystem.getImpl<detail::HVACComponent_Impl>()->edges(false); // should be Node
+//  ASSERT_EQ(1, edges.size());
+//  edges = edges[0].getImpl<detail::HVACComponent_Impl>()->edges(false); // should be CoilHeatingElectric
+//  ASSERT_EQ(1, edges.size());
+//  EXPECT_EQ(coil, edges[0]);
+//}
