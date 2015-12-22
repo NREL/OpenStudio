@@ -292,6 +292,7 @@ Sanity Testing Release Builds
 - Open PAT, make a project, and select the model above as your baseline model
 
 ### Tests to run
+- Use SketchUp to make a model on Windows 32 bit, Windows 64 bit, and Mac
 - Test running PAT on the cloud on at least one platform
 - Test BCL downloads
 - Test user scripts in SketchUp
