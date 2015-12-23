@@ -49,7 +49,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     use_cores = OpenStudio::Ruleset::OSArgument.makeChoiceArgument('use_cores', chs, true)
     use_cores.setDisplayName('Cores')
     use_cores.setDefaultValue('Default')    
-    use_cores.setDescription('Number of CPU cores to use for Radiance jobs. Default is to use all but one core')
+    use_cores.setDescription('Number of CPU cores to use for Radiance jobs. Default is to use all but one core, NOTE: this option is ignored on Windows.')
     args << use_cores
 
     chs = OpenStudio::StringVector.new
@@ -729,7 +729,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
                 wgMerge.send(:[]=, column_index, row_index, value)
               end
 
-              wgShadeSchedule << "0\n"
+              wgShadeSchedule << "#{row_index},#{window_illuminance.round(0)},#{shadeControlSetpoint.round(0)},0\n"
             else
               # puts "Ill1 Rows: #{ill0.row_count} Columns #{ill0.column_count}"
 
@@ -737,7 +737,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
                 wgMerge.send(:[]=, column_index, row_index, value.to_f)
               end
 
-              wgShadeSchedule << "1\n"
+              wgShadeSchedule << "#{row_index},#{window_illuminance.round(0)},#{shadeControlSetpoint.round(0)},1\n"
             end
           end
 
@@ -832,6 +832,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
       allhours = []
 
+      puts "### total values: #{values.size}"
+
       # write out illuminance to individual space/map files
       8760.times do |hour|
         index = 0;
@@ -841,11 +843,13 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           space_size = t_spaceWidths[space_name] * t_spaceHeights[space_name]
           space = []
           illum = []
-          glaresensors = nil
+          glaresensors = nil 
 
           if values.size > 0
             subspace = values.slice(index, space_size)
             index = index + space_size
+            
+            puts "### starting illuminance map for '#{space_name}'. index: #{index}, space_size: #{space_size}" 
 
             space = []
             subspace.each do |subspacevalue|
@@ -860,21 +864,30 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
               end
               illum = [values[index][hour]]
               index = index + 1
+              puts "### finished space map values, and index is now: #{index}"
             end
+            
+            # get ALL glare sensors for space
+            glare_sensor_points = Dir.glob("#{t_radPath}/numeric/#{space_name}*.glr")
+            if glare_sensor_points.size > 0 
+              glare_sensor_points.each do |glare_sensor|
+  #            if File.exist?("#{t_radPath}/numeric/#{space_name}.glr") and t_radGlareSensorViews[space_name]
+                glareinput = values.slice(index, t_radGlareSensorViews[space_name].size)
+                puts "### in glare sensors, and index is: #{index}, total glare sensors is: #{glare_sensor_points.size}"
 
-            if File.exist?("#{t_radPath}/numeric/#{space_name}.glr") and t_radGlareSensorViews[space_name]
-              glareinput = values.slice(index, t_radGlareSensorViews[space_name].size)
+                glaresensors = []
+                glareinput.each do |val|
 
-              glaresensors = []
-              glareinput.each do |val|
-
-                # Note, this replaced the call to rcalc with dgpSimplified, faster to do it here 
-                # instead of calling out to rcalc for the number of vectors we are looking at per space
-                adjustedval = [(0.0000622*val[hour].to_f)+0.184, 0].max
-                glaresensors << adjustedval
+                  if val[hour].to_f == 0.0
+                    adjustedval = 0.00
+                  else
+                    adjustedval = [(0.0000622*val[hour].to_f)+0.184, 0].max.round(2)
+                  end
+                  glaresensors << adjustedval 
+                end
               end
-
               index = index + t_radGlareSensorViews[space_name].size
+              puts "### index is now #{index}"
             end
           else
             print_statement("An error has occurred; no results for space '#{space_name}'.", runner)
@@ -883,7 +896,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             if File.exist?("#{t_radPath}/numeric/#{space_name}.sns")        
               illum = Array.new(1, 0)
             end
-
+   
             if File.exist?("#{t_radPath}/numeric/#{space_name}.glr") and t_radGlareSensorViews[space_name]
               glaresensors = Array.new(t_radGlareSensorViews[space_name].size, 0)
             end
@@ -1184,11 +1197,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             writeTimeSeriesToSql(sqlOutFile, simDateTimes, daylightSensorIlluminance, space_name, "Daylight Sensor Illuminance", "lux")
             writeTimeSeriesToSql(sqlOutFile, simDateTimes, meanIlluminanceMap, space_name, "Mean Illuminance Map", "lux")
 
-            if t_radGlareSensorViews[space_name]
-              writeTimeSeriesToSql(sqlOutFile, simDateTimes, minDGP, space_name, "Minimum Simplified Daylight Glare Probability", "")
-              writeTimeSeriesToSql(sqlOutFile, simDateTimes, meanDGP, space_name, "Mean Simplified Daylight Glare Probability", "")
-              writeTimeSeriesToSql(sqlOutFile, simDateTimes, maxDGP, space_name, "Maximum Simplified Daylight Glare Probability", "")
-            end
+#             if t_radGlareSensorViews[space_name]
+#               writeTimeSeriesToSql(sqlOutFile, simDateTimes, minDGP, space_name, "Minimum Simplified Daylight Glare Probability", "")
+#               writeTimeSeriesToSql(sqlOutFile, simDateTimes, meanDGP, space_name, "Mean Simplified Daylight Glare Probability", "")
+#               writeTimeSeriesToSql(sqlOutFile, simDateTimes, maxDGP, space_name, "Maximum Simplified Daylight Glare Probability", "")
+#             end
 
             # I really have no idea how to populate these fields
             sqlOutFile.insertZone(space_name,
@@ -1996,13 +2009,16 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     end
 
     # merge window group control points
-    File.open("numeric/window_controls.map", 'w') do |f|
-      windows = Dir.glob("numeric/WG*.pts").sort
-      windows.each do |wg|
-        f.write IO.read(wg)
+    window_groups = Dir.glob('numeric/WG*.pts')
+    if window_groups.size > 0
+      File.open("numeric/window_controls.map", 'w') do |f|
+        windows = Dir.glob("numeric/WG*.pts").sort
+        windows.each do |wg|
+          f.write IO.read(wg)
+        end
       end
     end
-
+    
     # merge calculation points
     File.open("numeric/merged_space.map", 'w') do |f|
       space_names_to_calculate.each do |space_name|
@@ -2010,8 +2026,14 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         if File.exist?("numeric/#{space_name}.sns")
           f.write IO.read("numeric/#{space_name}.sns")
         end
-        if File.exist?("numeric/#{space_name}.glr")
-          f.write IO.read("numeric/#{space_name}.glr")
+        glare_sensors = Dir.glob("numeric/#{space_name}*.glr")
+        if glare_sensors.size > 0
+          glare_sensors.each do |sensor|
+            print_statement("adding glare sensor '#{sensor}' to calculation points", runner)
+            f.write IO.read(sensor)
+          end
+        else
+          print_statement("WARN: no glare sensors found in model.", runner)
         end
       end
     end
