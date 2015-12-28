@@ -869,7 +869,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             
             # get ALL glare sensors for space
             glare_sensor_points = Dir.glob("#{t_radPath}/numeric/#{space_name}*.glr")
-            if glare_sensor_points.size > 0 
+            if glare_sensor_points.size > 0
+              puts "### glare sensor points: #{glare_sensor_points.size}"
               glare_sensor_points.each do |glare_sensor|
   #            if File.exist?("#{t_radPath}/numeric/#{space_name}.glr") and t_radGlareSensorViews[space_name]
                 glareinput = values.slice(index, t_radGlareSensorViews[space_name].size)
@@ -1171,7 +1172,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             # glare to csv 
             
             FileUtils.mkdir_p("#{Dir.pwd}/output/ts/#{space_name}/maps") unless File.exist?("#{Dir.pwd}/output/ts/#{space_name}/maps")
-            f = File.open("#{Dir.pwd}/output/ts/#{space_name}/maps/#{space_name}_map.glr", "w")
+            f = File.open("#{Dir.pwd}/output/ts/#{space_name}/maps/#{space_name}.glr", "w")
             space = nil
             t_building.spaces.each do |s|
               this_name = s.name.get.tr(' ', '_').tr(':', '_')
@@ -1992,10 +1993,15 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       end
 
       # get glare sensors
+      puts "### there are #{space.glareSensors.size} sensors in this space ('#{space_name})"
       space.glareSensors.each do |sensor|
         radGlareSensors[space_name] = ""
         radGlareSensorViews[space_name] = OpenStudio::Radiance::RadianceForwardTranslator::getViewVectors(sensor)
+        
+        puts "### glare sensor: '#{sensor.name.get.tr(' ', '_').tr(':', '_')}' has #{OpenStudio::Radiance::RadianceForwardTranslator::getViewVectors(sensor).size} views."
+        
       end
+
     end
 
     space_names_to_calculate = []
