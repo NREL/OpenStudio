@@ -11,6 +11,16 @@ require 'json'
 require 'erb'
 require 'matrix'
 
+
+class Array
+  def average 
+    fail "Cannot average 0 items" if self.size == 0
+    sum = self.inject(:+)
+    
+    (sum / self.size).to_f
+  end
+end
+  
 # start the measure
 class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
@@ -832,24 +842,24 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
       allhours = []
 
-      puts "### total values: #{values.size}"
-
       # write out illuminance to individual space/map files
       8760.times do |hour|
         index = 0;
-        splitvalues = Hash.new
+        splitvalues = {}
 
         t_space_names_to_calculate.each do |space_name|
           space_size = t_spaceWidths[space_name] * t_spaceHeights[space_name]
           space = []
           illum = []
-          glaresensors = nil 
+          glaresensors ||= {} # TODO: you can probably remove this
+          glaresensors[space_name] ||= {}
+          
 
           if values.size > 0
             subspace = values.slice(index, space_size)
             index = index + space_size
             
-            puts "### starting illuminance map for '#{space_name}'. index: #{index}, space_size: #{space_size}" 
+            puts "### starting illuminance map for '#{space_name}'. index: #{index}, space_size: #{space_size}" if hour == 0
 
             space = []
             subspace.each do |subspacevalue|
@@ -864,31 +874,32 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
               end
               illum = [values[index][hour]]
               index = index + 1
-              puts "### finished space map values, and index is now: #{index}"
+              puts "### finished space map values, and index is now: #{index}" if hour == 0
             end
             
-            # get ALL glare sensors for space
-            glare_sensor_points = Dir.glob("#{t_radPath}/numeric/#{space_name}*.glr")
-            if glare_sensor_points.size > 0
-              puts "### glare sensor points: #{glare_sensor_points.size}"
-              glare_sensor_points.each do |glare_sensor|
-  #            if File.exist?("#{t_radPath}/numeric/#{space_name}.glr") and t_radGlareSensorViews[space_name]
-                glareinput = values.slice(index, t_radGlareSensorViews[space_name].size)
-                puts "### in glare sensors, and index is: #{index}, total glare sensors is: #{glare_sensor_points.size}"
+            # get ALL glare sensors for space       
+            if t_radGlareSensorViews[space_name].keys.size > 0
+              t_radGlareSensorViews[space_name].each do |sensor, views|
+                sensor_index = t_radGlareSensorViews[space_name].keys.index(sensor)
+                
+                puts "### glare sensors '#{sensor}' has #{views.size} views" if hour == 0 
 
-                glaresensors = []
-                glareinput.each do |val|
-
-                  if val[hour].to_f == 0.0
-                    adjustedval = 0.00
-                  else
-                    adjustedval = [(0.0000622*val[hour].to_f)+0.184, 0].max.round(2)
+                views['view_definitions'].each_index do |view_index|
+                  puts "### index is #{index}; view_index is #{view_index}" if hour == 0           
+                  t_radGlareSensorViews[space_name][sensor][hour] ||= {}
+                  t_radGlareSensorViews[space_name][sensor][hour]["#{sensor_index}_#{view_index}"] ||= {}
+                  view_values = values.slice(index, 1).first   
+                  
+                  adjustedval = 0.00
+                  if view_values[hour].to_f != 0.00
+                    adjustedval = [(0.0000622*view_values[hour].to_f)+0.184, 0].max.round(2)
                   end
-                  glaresensors << adjustedval 
+                  t_radGlareSensorViews[space_name][sensor][hour]["#{sensor_index}_#{view_index}"]['dgp'] = adjustedval.round(2)                  
+                  t_radGlareSensorViews[space_name][sensor][hour]["#{sensor_index}_#{view_index}"]['raw'] = view_values[hour].to_f.round(2)                                   
+
+                  index += 1                 
                 end
               end
-              index = index + t_radGlareSensorViews[space_name].size
-              puts "### index is now #{index}"
             end
           else
             print_statement("An error has occurred; no results for space '#{space_name}'.", runner)
@@ -898,19 +909,30 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
               illum = Array.new(1, 0)
             end
    
-            if File.exist?("#{t_radPath}/numeric/#{space_name}.glr") and t_radGlareSensorViews[space_name]
-              glaresensors = Array.new(t_radGlareSensorViews[space_name].size, 0)
-            end
           end
 
-          splitvalues[space_name] = [space, illum, glaresensors]
+          # make an array that will have all the views
+          splitvalues[space_name] = [space, illum]
+          # iterate over each sensor and combine the views together
+          new_hash = {}
+          t_radGlareSensorViews[space_name].each do |sensor, v|
+            new_hash[sensor] = v[hour]
+          end
+          splitvalues[space_name] += [new_hash]
+          
         end
 
         allhours[hour] = splitvalues;
       end
+      
+      allhours
+      
+      require 'json'
+      File.open('glaresensor.json', 'w') { |f| f << JSON.pretty_generate(t_radGlareSensorViews)}
+      File.open('all_hours.json', 'w') { |f| f << JSON.pretty_generate( { all_hours: allhours } )}
 
       print_statement("Returning annual results", runner)
-      return allhours;
+      return allhours
     
     end # parseResults()
 
@@ -1074,32 +1096,23 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             # these must be declared in the thread otherwise will get overwritten on each loop
             tsDateTime = simTimes[i]
 
-            # <someday> (image based glare analysis)
-              #  system("gendaylit -ang #{tsSolarAlt} #{tsSolarAzi} -L #{tsDirectNormIllum} #{tsDiffuseHorIllum} \
-              #  | #{perlPrefix}genskyvec#{perlExtension} -m 1 | dctimestep \"#{outPath}/output/dc/#{space_name}/views/#{space_name}treg%03d.hdr\" | pfilt -1 -x /2 -y /2 > \
-              #  \"#{outPath}/output/dc/#{space_name}/views/#{tsDateTime.gsub(/[: ]/,'_')}.hdr\"")
-            # </someday>
-
             # Split up values by space
 
             illumValues, illumSensorValues, glareSensorValues = t_values[i][space_name]
+            
+            # Debug
+            # File.open('glareSensorValues.out', 'w') { |f| f.write(glareSensorValues.to_s) }
 
             timeSeriesIllum[i] = tsDateTime.to_s.tr(" ",",") + "," + "#{dirNormIllum[i]},#{diffHorizIllum[i]}," + illumSensorValues.join(',') + "," + illumValues.join(',')
 
-            # add glare sensor values
+            # add glare sensor values           
             if t_radGlareSensorViews[space_name]
               if not glareSensorValues.nil?
-                timeSeriesGlare[i] = tsDateTime.to_s.tr(" ",",") + "," + glareSensorValues.join(',')
-
-                if not glareSensorValues.empty?
-                  sumDGP = 0
-                  glareSensorValues.each do |val| 
-                    sumDGP += val
-                  end
-                  minDGP[i] = glareSensorValues.min
-                  meanDGP[i] = sumDGP / glareSensorValues.size.to_f
-                  maxDGP[i] = glareSensorValues.max
-                end
+                timeSeriesGlare[i] = tsDateTime.to_s.tr(" ",",")
+                glareSensorValues.each_key do |key|
+                  glare_values = glareSensorValues[key].map{ |_, v| v['dgp']}
+                  timeSeriesGlare[i] += ",#{key},#{glare_values.average.round(2)},#{glare_values.min.round(2)},#{glare_values.max.round(2)},raw,#{glare_values.join(',')}"
+                end  
               end
             end
 
@@ -1864,43 +1877,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     
     end #genImages()
 
-#     def writeReport(space_names_to_calculate, runner) #make simple report of daylight metrics and renderings
-# 
-#       radiance_spaces << {:space_names_to_calculate}
-#       # read in template
-#       html_in_path = "#{File.dirname(__FILE__)}/resources/report.html.in"
-#       if File.exist?(html_in_path)
-#           html_in_path = html_in_path
-#       else
-#           html_in_path = "#{File.dirname(__FILE__)}/report.html.in"
-#       end
-#       html_in = ""
-#       File.open(html_in_path, 'r') do |file|
-#         html_in = file.read
-#       end
-#     
-#       # configure template with variable values
-#       os_data = JSON::generate(json, {:object_nl=>"", :array_nl=>"", :indent=>"", :space=>"", :space_before=>""})
-#       title = "View Model"
-#       renderer = ERB.new(html_in)
-#       html_out = renderer.result(binding)
-# 
-#       # write html file
-#       html_out_path = "./report.html"
-#       File.open(html_out_path, 'w') do |file|
-#         file << html_out
-#       
-#         # make sure data is written to the disk one way or the other      
-#         begin
-#           file.fsync
-#         rescue
-#           file.flush
-#         end
-#       end
-#     
-#    end # writeReport()
-
-
     ## ## ## ## ## ##
 
     # actually do the thing
@@ -1957,7 +1933,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     # create space geometry, hash of space name to file contents
     radSpaces = {}
     radSensors = {}
-    radGlareSensors = {}
     radGlareSensorViews = {}
     radMaps = {}
     radMapHandles = {}
@@ -1993,15 +1968,16 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       end
 
       # get glare sensors
-      puts "### there are #{space.glareSensors.size} sensors in this space ('#{space_name})"
+      puts "### there are #{space.glareSensors.size} sensors in this space ('#{space_name}')"
       space.glareSensors.each do |sensor|
-        radGlareSensors[space_name] = ""
-        radGlareSensorViews[space_name] = OpenStudio::Radiance::RadianceForwardTranslator::getViewVectors(sensor)
+        tmp_sensor_name = sensor.name.get.tr(' ', '_').tr(':', '_')
+        radGlareSensorViews[space_name] ||= {}
+        radGlareSensorViews[space_name][tmp_sensor_name] ||= {}
+        radGlareSensorViews[space_name][tmp_sensor_name]['view_definitions'] = OpenStudio::Radiance::RadianceForwardTranslator.getViewVectors(sensor)
         
-        puts "### glare sensor: '#{sensor.name.get.tr(' ', '_').tr(':', '_')}' has #{OpenStudio::Radiance::RadianceForwardTranslator::getViewVectors(sensor).size} views."
-        
+        puts "### glare sensor: '#{tmp_sensor_name}' has #{OpenStudio::Radiance::RadianceForwardTranslator::getViewVectors(sensor).size} views."      
       end
-
+      
     end
 
     space_names_to_calculate = []
@@ -2032,14 +2008,14 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         if File.exist?("numeric/#{space_name}.sns")
           f.write IO.read("numeric/#{space_name}.sns")
         end
-        glare_sensors = Dir.glob("numeric/#{space_name}*.glr")
+        glare_sensors = Dir.glob("numeric/#{space_name}*.glr").sort
         if glare_sensors.size > 0
           glare_sensors.each do |sensor|
-            print_statement("adding glare sensor '#{sensor}' to calculation points", runner)
+            print_statement("added glare sensor '#{sensor}' to calculation points", runner)
             f.write IO.read(sensor)
           end
         else
-          print_statement("WARN: no glare sensors found in model.", runner)
+          print_statement("no glare sensors found in model", runner)
         end
       end
     end
