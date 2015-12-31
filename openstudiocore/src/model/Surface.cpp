@@ -38,6 +38,10 @@
 #include "InteriorPartitionSurfaceGroup.hpp"
 #include "InteriorPartitionSurface.hpp"
 #include "SurfacePropertyConvectionCoefficients.hpp"
+#include "SurfacePropertyOtherSideCoefficients.hpp"
+#include "SurfacePropertyOtherSideCoefficients_Impl.hpp"
+#include "SurfacePropertyOtherSideConditionsModel.hpp"
+#include "SurfacePropertyOtherSideConditionsModel_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -401,13 +405,25 @@ namespace detail {
     bool result = false;
     
     boost::optional<Surface> adjacentSurface = this->adjacentSurface();
+    boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients = this->surfacePropertyOtherSideCoefficients();
+    boost::optional<SurfacePropertyOtherSideConditionsModel> surfacePropertyOtherSideConditionsModel = this->surfacePropertyOtherSideConditionsModel();
 
     if (istringEqual("Surface", outsideBoundaryCondition)){
       if (adjacentSurface){
         result = setString(OS_SurfaceFields::OutsideBoundaryCondition, outsideBoundaryCondition, true);
       }
+    }else if (istringEqual("OtherSideCoefficients", outsideBoundaryCondition)){
+        if (surfacePropertyOtherSideCoefficients){
+          result = setString(OS_SurfaceFields::OutsideBoundaryCondition, outsideBoundaryCondition, true);
+        }
+    }else if (istringEqual("OtherSideConditionsModel", outsideBoundaryCondition)){
+      if (surfacePropertyOtherSideConditionsModel){
+          result = setString(OS_SurfaceFields::OutsideBoundaryCondition, outsideBoundaryCondition, true);
+        }
     }else{
       this->resetAdjacentSurface();
+      this->resetSurfacePropertyOtherSideCoefficients();
+      this->resetSurfacePropertyOtherSideConditionsModel();
       result = setString(OS_SurfaceFields::OutsideBoundaryCondition, outsideBoundaryCondition, true);
       if (result){
         this->assignDefaultSunExposure(false);
@@ -422,6 +438,14 @@ namespace detail {
       }else if(adjacentSurface){
         // restore the adjacent surface if set boundary condition fails
         bool test = setAdjacentSurface(*adjacentSurface);
+        OS_ASSERT(test);
+      } else if (surfacePropertyOtherSideCoefficients){
+        // restore the surfacePropertyOtherSideCoefficientse if set boundary condition fails
+        bool test = setSurfacePropertyOtherSideCoefficients(*surfacePropertyOtherSideCoefficients);
+        OS_ASSERT(test);
+      } else if (surfacePropertyOtherSideConditionsModel){
+        // restore the surfacePropertyOtherSideConditionsModel if set boundary condition fails
+        bool test = setSurfacePropertyOtherSideConditionsModel(*surfacePropertyOtherSideConditionsModel);
         OS_ASSERT(test);
       }
     }
@@ -811,6 +835,94 @@ namespace detail {
     }
   }
 
+  boost::optional<SurfacePropertyOtherSideCoefficients> Surface_Impl::surfacePropertyOtherSideCoefficients() const
+  {
+    return getObject<Surface>().getModelObjectTarget<SurfacePropertyOtherSideCoefficients>(OS_SurfaceFields::OutsideBoundaryConditionObject);
+  }
+
+  bool Surface_Impl::setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients)
+  {
+    boost::optional<Surface> adjacentSurface = this->adjacentSurface();
+    if (adjacentSurface){
+      resetAdjacentSurface();
+    }
+
+    // this is basically testing if surface is in same model as this
+    bool test = this->setPointer(OS_SurfaceFields::OutsideBoundaryConditionObject, otherSideCoefficients.handle());
+    if (test){
+      test = this->setString(OS_SurfaceFields::OutsideBoundaryCondition, "OtherSideCoefficients");
+      OS_ASSERT(test);
+      this->assignDefaultSunExposure();
+      this->assignDefaultWindExposure();
+    }
+    return test;
+  }
+
+  void Surface_Impl::resetSurfacePropertyOtherSideCoefficients()
+  {
+    bool test;
+
+    // need to be careful to only call assignDefaultBoundaryCondition if surfacePropertyOtherSideCoefficients
+    // is set as assignDefaultBoundaryCondition can call resetSurfacePropertyOtherSideCoefficients
+    boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients = this->surfacePropertyOtherSideCoefficients();
+    if (surfacePropertyOtherSideCoefficients){
+      test = setString(OS_SurfaceFields::OutsideBoundaryConditionObject, "");
+      OS_ASSERT(test);
+      this->assignDefaultBoundaryCondition();
+      this->assignDefaultSunExposure();
+      this->assignDefaultWindExposure();
+    }
+
+    // reset all sub surfaces
+    for (SubSurface subSurface : this->subSurfaces()){
+      subSurface.resetSurfacePropertyOtherSideCoefficients();
+    }
+  }
+
+  boost::optional<SurfacePropertyOtherSideConditionsModel> Surface_Impl::surfacePropertyOtherSideConditionsModel() const
+  {
+    return getObject<Surface>().getModelObjectTarget<SurfacePropertyOtherSideConditionsModel>(OS_SurfaceFields::OutsideBoundaryConditionObject);
+  }
+
+  bool Surface_Impl::setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel)
+  {
+    boost::optional<Surface> adjacentSurface = this->adjacentSurface();
+    if (adjacentSurface){
+      resetAdjacentSurface();
+    }
+
+    // this is basically testing if surface is in same model as this
+    bool test = this->setPointer(OS_SurfaceFields::OutsideBoundaryConditionObject, otherSideModel.handle());
+    if (test){
+      test = this->setString(OS_SurfaceFields::OutsideBoundaryCondition, "OtherSideConditionsModel");
+      OS_ASSERT(test);
+      this->assignDefaultSunExposure();
+      this->assignDefaultWindExposure();
+    }
+    return test;
+  }
+
+  void Surface_Impl::resetSurfacePropertyOtherSideConditionsModel()
+  {
+    bool test;
+
+    // need to be careful to only call assignDefaultBoundaryCondition if surfacePropertyOtherSideConditionsModel
+    // is set as assignDefaultBoundaryCondition can call resetSurfacePropertyOtherSideConditionsModel
+    boost::optional<SurfacePropertyOtherSideConditionsModel> surfacePropertyOtherSideConditionsModel = this->surfacePropertyOtherSideConditionsModel();
+    if (surfacePropertyOtherSideConditionsModel){
+      test = setString(OS_SurfaceFields::OutsideBoundaryConditionObject, "");
+      OS_ASSERT(test);
+      this->assignDefaultBoundaryCondition();
+      this->assignDefaultSunExposure();
+      this->assignDefaultWindExposure();
+    }
+
+    // reset all sub surfaces
+    for (SubSurface subSurface : this->subSurfaces()){
+      subSurface.resetSurfacePropertyOtherSideConditionsModel();
+    }
+  }
+
   bool Surface_Impl::intersect(Surface& otherSurface){
     boost::optional<SurfaceIntersection> intersection = computeIntersection(otherSurface);
     if (intersection){
@@ -1055,6 +1167,12 @@ namespace detail {
     if (this->adjacentSurface()){
       bool test = this->setOutsideBoundaryCondition("Surface", driverMethod);
       OS_ASSERT(test);
+    } else if (this->surfacePropertyOtherSideCoefficients()){
+      bool test = this->setOutsideBoundaryCondition("OtherSideCoefficients", driverMethod);
+      OS_ASSERT(test);
+    } else if (this->surfacePropertyOtherSideConditionsModel()){
+      bool test = this->setOutsideBoundaryCondition("OtherSideConditionsModel", driverMethod);
+      OS_ASSERT(test);
     }else if (istringEqual("Floor", this->surfaceType())){
       bool test = this->setOutsideBoundaryCondition("Ground", driverMethod);
       OS_ASSERT(test);
@@ -1071,13 +1189,32 @@ namespace detail {
 
   void Surface_Impl::assignDefaultSunExposure(bool driverMethod)
   {
-    //std::string outsideBoundaryCondition = this->outsideBoundaryCondition();
-    if (istringEqual("Outdoors", this->outsideBoundaryCondition())){
+    std::string outsideBoundaryCondition = this->outsideBoundaryCondition();  
+    if (istringEqual("Outdoors", outsideBoundaryCondition)){
       bool test = this->setSunExposure("SunExposed", driverMethod);
       OS_ASSERT(test);
-    }else{
+    }else if (istringEqual("Surface", this->outsideBoundaryCondition()) ||
+              istringEqual("Adiabatic", this->outsideBoundaryCondition()) ||
+              istringEqual("Ground", this->outsideBoundaryCondition()) ||
+              istringEqual("GroundFCfactorMethod", this->outsideBoundaryCondition()) || 
+              istringEqual("GroundSlabPreprocessorAverage", this->outsideBoundaryCondition()) ||
+              istringEqual("GroundSlabPreprocessorCore", this->outsideBoundaryCondition()) ||
+              istringEqual("GroundSlabPreprocessorPerimeter", this->outsideBoundaryCondition()) ||
+              istringEqual("GroundBasementPreprocessorAverageWall", this->outsideBoundaryCondition()) ||
+              istringEqual("GroundBasementPreprocessorAverageFloor", this->outsideBoundaryCondition()) || 
+              istringEqual("GroundBasementPreprocessorUpperWall", this->outsideBoundaryCondition()) ||
+              istringEqual("GroundBasementPreprocessorLowerWall", this->outsideBoundaryCondition())){
       bool test = this->setSunExposure("NoSun", driverMethod);
       OS_ASSERT(test);
+    }else{
+      std::string surfaceType = this->surfaceType();
+      if (istringEqual("Floor", surfaceType)){
+        bool test = this->setSunExposure("NoSun", driverMethod);
+        OS_ASSERT(test);
+      } else{
+        bool test = this->setSunExposure("SunExposed", driverMethod);
+        OS_ASSERT(test);
+      }
     }
   }
      
@@ -1088,13 +1225,32 @@ namespace detail {
 
   void Surface_Impl::assignDefaultWindExposure(bool driverMethod)
   {
-    //std::string outsideBoundaryCondition = this->outsideBoundaryCondition();
-    if (istringEqual("Outdoors", this->outsideBoundaryCondition())){
-      bool test = setWindExposure("WindExposed", driverMethod);
+    std::string outsideBoundaryCondition = this->outsideBoundaryCondition();
+    if (istringEqual("Outdoors", outsideBoundaryCondition)){
+      bool test = this->setWindExposure("WindExposed", driverMethod);
       OS_ASSERT(test);
-    }else{
-      bool test = setWindExposure("NoWind", driverMethod);
+    } else if (istringEqual("Surface", this->outsideBoundaryCondition()) ||
+               istringEqual("Adiabatic", this->outsideBoundaryCondition()) ||
+               istringEqual("Ground", this->outsideBoundaryCondition()) ||
+               istringEqual("GroundFCfactorMethod", this->outsideBoundaryCondition()) ||
+               istringEqual("GroundSlabPreprocessorAverage", this->outsideBoundaryCondition()) ||
+               istringEqual("GroundSlabPreprocessorCore", this->outsideBoundaryCondition()) ||
+               istringEqual("GroundSlabPreprocessorPerimeter", this->outsideBoundaryCondition()) ||
+               istringEqual("GroundBasementPreprocessorAverageWall", this->outsideBoundaryCondition()) ||
+               istringEqual("GroundBasementPreprocessorAverageFloor", this->outsideBoundaryCondition()) ||
+               istringEqual("GroundBasementPreprocessorUpperWall", this->outsideBoundaryCondition()) ||
+               istringEqual("GroundBasementPreprocessorLowerWall", this->outsideBoundaryCondition())){
+      bool test = this->setWindExposure("NoWind", driverMethod);
       OS_ASSERT(test);
+    } else{
+      std::string surfaceType = this->surfaceType();
+      if (istringEqual("Floor", surfaceType)){
+        bool test = this->setWindExposure("NoWind", driverMethod);
+        OS_ASSERT(test);
+      } else{
+        bool test = this->setWindExposure("WindExposed", driverMethod);
+        OS_ASSERT(test);
+      }
     }
   }
 

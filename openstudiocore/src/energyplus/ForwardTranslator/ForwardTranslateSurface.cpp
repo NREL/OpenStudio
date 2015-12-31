@@ -30,6 +30,8 @@
 #include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/ConstructionBase.hpp"
 #include "../../model/ConstructionBase_Impl.hpp"
+#include "../../model/SurfacePropertyOtherSideCoefficients.hpp"
+#include "../../model/SurfacePropertyOtherSideConditionsModel.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
@@ -78,11 +80,27 @@ boost::optional<IdfObject> ForwardTranslator::translateSurface( model::Surface &
   }
 
   boost::optional<Surface> adjacentSurface = modelObject.adjacentSurface();
+  boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients = modelObject.surfacePropertyOtherSideCoefficients();
+  boost::optional<SurfacePropertyOtherSideConditionsModel> surfacePropertyOtherSideConditionsModel = modelObject.surfacePropertyOtherSideConditionsModel();
   std::string outsideBoundaryCondition = modelObject.outsideBoundaryCondition();
   if (istringEqual("Surface", outsideBoundaryCondition)){
     if (!adjacentSurface){
       LOG(Warn, "Surface '" << modelObject.name().get() << "' has blank Outside Boundary Condition Object.  " 
                 "Changing Outside Boundary Condition from 'Surface' to 'Adiabatic'");
+
+      outsideBoundaryCondition = "Adiabatic";
+    }
+  }else if (istringEqual("OtherSideCoefficients", outsideBoundaryCondition)){
+    if (!surfacePropertyOtherSideCoefficients){
+      LOG(Warn, "Surface '" << modelObject.name().get() << "' has blank Outside Boundary Condition Object.  "
+          "Changing Outside Boundary Condition from 'Surface' to 'Adiabatic'");
+
+      outsideBoundaryCondition = "OtherSideCoefficients";
+    }
+  }else if (istringEqual("OtherSideConditionsModel", outsideBoundaryCondition)){
+    if (!surfacePropertyOtherSideConditionsModel){
+      LOG(Warn, "Surface '" << modelObject.name().get() << "' has blank Outside Boundary Condition Object.  "
+          "Changing Outside Boundary Condition from 'OtherSideConditionsModel' to 'Adiabatic'");
 
       outsideBoundaryCondition = "Adiabatic";
     }
@@ -101,10 +119,28 @@ boost::optional<IdfObject> ForwardTranslator::translateSurface( model::Surface &
   idfObject.setString(BuildingSurface_DetailedFields::OutsideBoundaryCondition, outsideBoundaryCondition);
 
   if (adjacentSurface){
+    // do not translate and map here, wait for adjacent surface to be translated on its own
     idfObject.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, adjacentSurface->name().get());
   }
 
-  
+  if (surfacePropertyOtherSideCoefficients){
+    boost::optional<IdfObject> osc = translateAndMapModelObject(*surfacePropertyOtherSideCoefficients);
+    if (osc && osc->name()){
+      idfObject.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, osc->name().get());
+    } else{
+      LOG(Error, "Surface '" << modelObject.name().get() << "', could not translate OutsideBoundaryConditionObject");
+    }
+  }
+
+  if (surfacePropertyOtherSideConditionsModel){
+    boost::optional<IdfObject> oscm = translateAndMapModelObject(*surfacePropertyOtherSideConditionsModel);
+    if (oscm && oscm->name()){
+      idfObject.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, oscm->name().get());
+    } else{
+      LOG(Error, "Surface '" << modelObject.name().get() << "', could not translate OutsideBoundaryConditionObject");
+    }
+  }
+
   if (!modelObject.isSunExposureDefaulted()){
     idfObject.setString(BuildingSurface_DetailedFields::SunExposure, modelObject.sunExposure());
   }
