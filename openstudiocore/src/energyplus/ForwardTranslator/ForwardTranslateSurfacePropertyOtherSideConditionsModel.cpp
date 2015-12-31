@@ -45,6 +45,8 @@ boost::optional<IdfObject> ForwardTranslator::translateSurfacePropertyOtherSideC
 {
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SurfaceProperty_OtherSideConditionsModel,
                                                        modelObject);
+
+  idfObject.setString(SurfaceProperty_OtherSideConditionsModelFields::TypeofModeling, modelObject.typeOfModeling());
   
   return idfObject;
 }

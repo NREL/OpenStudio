@@ -753,6 +753,218 @@ TEST_F(ModelFixture, AdjacentSurface)
   EXPECT_EQ("WindExposed", wall2.windExposure());
 }
 
+TEST_F(ModelFixture, AdjacentSurface_SurfacePropertyOtherSideCoefficients)
+{
+  Model model;
+
+  std::vector<Point3d> vertices;
+  vertices.push_back(Point3d(0, 0, 3));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(3, 0, 0));
+  vertices.push_back(Point3d(3, 0, 3));
+
+  Space space1(model);
+  Surface wall1(vertices, model);
+  wall1.setSpace(space1);
+  EXPECT_FALSE(wall1.adjacentSurface());
+  EXPECT_EQ("Outdoors", wall1.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", wall1.sunExposure());
+  EXPECT_EQ("WindExposed", wall1.windExposure());
+
+  std::reverse(vertices.begin(), vertices.end());
+
+  Space space2(model);
+  Surface wall2(vertices, model);
+  wall2.setSpace(space2);
+  EXPECT_FALSE(wall2.adjacentSurface());
+  EXPECT_EQ("Outdoors", wall2.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", wall2.sunExposure());
+  EXPECT_EQ("WindExposed", wall2.windExposure());
+
+  EXPECT_TRUE(wall1.setAdjacentSurface(wall2));
+  ASSERT_TRUE(wall1.adjacentSurface());
+  EXPECT_EQ(wall2.handle(), wall1.adjacentSurface()->handle());
+  ASSERT_TRUE(wall2.adjacentSurface());
+  EXPECT_EQ(wall1.handle(), wall2.adjacentSurface()->handle());
+  EXPECT_EQ("Surface", wall1.outsideBoundaryCondition());
+  EXPECT_EQ("NoSun", wall1.sunExposure());
+  EXPECT_EQ("NoWind", wall1.windExposure());
+  EXPECT_EQ("Surface", wall2.outsideBoundaryCondition());
+  EXPECT_EQ("NoSun", wall2.sunExposure());
+  EXPECT_EQ("NoWind", wall2.windExposure());
+
+  SurfacePropertyOtherSideCoefficients osc(model);
+  EXPECT_TRUE(wall1.setSurfacePropertyOtherSideCoefficients(osc));
+  ASSERT_TRUE(wall1.surfacePropertyOtherSideCoefficients());
+  EXPECT_EQ(osc.handle(), wall1.surfacePropertyOtherSideCoefficients()->handle());
+  EXPECT_FALSE(wall2.surfacePropertyOtherSideCoefficients());
+  EXPECT_FALSE(wall1.adjacentSurface());
+  EXPECT_FALSE(wall2.adjacentSurface());
+  EXPECT_EQ("OtherSideCoefficients", wall1.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", wall1.sunExposure());
+  EXPECT_EQ("WindExposed", wall1.windExposure());
+  EXPECT_EQ("Outdoors", wall2.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", wall2.sunExposure());
+  EXPECT_EQ("WindExposed", wall2.windExposure());
+
+  EXPECT_TRUE(wall1.setAdjacentSurface(wall2));
+  ASSERT_TRUE(wall1.adjacentSurface());
+  EXPECT_EQ(wall2.handle(), wall1.adjacentSurface()->handle());
+  ASSERT_TRUE(wall2.adjacentSurface());
+  EXPECT_EQ(wall1.handle(), wall2.adjacentSurface()->handle());
+  EXPECT_FALSE(wall1.surfacePropertyOtherSideConditionsModel());
+  EXPECT_EQ("Surface", wall1.outsideBoundaryCondition());
+  EXPECT_EQ("NoSun", wall1.sunExposure());
+  EXPECT_EQ("NoWind", wall1.windExposure());
+  EXPECT_EQ("Surface", wall2.outsideBoundaryCondition());
+  EXPECT_EQ("NoSun", wall2.sunExposure());
+  EXPECT_EQ("NoWind", wall2.windExposure());
+}
+
+TEST_F(ModelFixture, AdjacentSurface_SurfacePropertyOtherSideConditionsModel)
+{
+  Model model;
+
+  std::vector<Point3d> vertices;
+  vertices.push_back(Point3d(0, 0, 3));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(3, 0, 0));
+  vertices.push_back(Point3d(3, 0, 3));
+
+  Space space1(model);
+  Surface wall1(vertices, model);
+  wall1.setSpace(space1);
+  EXPECT_FALSE(wall1.adjacentSurface());
+  EXPECT_EQ("Outdoors", wall1.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", wall1.sunExposure());
+  EXPECT_EQ("WindExposed", wall1.windExposure());
+
+  std::reverse(vertices.begin(), vertices.end());
+
+  Space space2(model);
+  Surface wall2(vertices, model);
+  wall2.setSpace(space2);
+  EXPECT_FALSE(wall2.adjacentSurface());
+  EXPECT_EQ("Outdoors", wall2.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", wall2.sunExposure());
+  EXPECT_EQ("WindExposed", wall2.windExposure());
+
+  EXPECT_TRUE(wall1.setAdjacentSurface(wall2));
+  ASSERT_TRUE(wall1.adjacentSurface());
+  EXPECT_EQ(wall2.handle(), wall1.adjacentSurface()->handle());
+  ASSERT_TRUE(wall2.adjacentSurface());
+  EXPECT_EQ(wall1.handle(), wall2.adjacentSurface()->handle());
+  EXPECT_EQ("Surface", wall1.outsideBoundaryCondition());
+  EXPECT_EQ("NoSun", wall1.sunExposure());
+  EXPECT_EQ("NoWind", wall1.windExposure());
+  EXPECT_EQ("Surface", wall2.outsideBoundaryCondition());
+  EXPECT_EQ("NoSun", wall2.sunExposure());
+  EXPECT_EQ("NoWind", wall2.windExposure());
+
+  SurfacePropertyOtherSideConditionsModel oscm(model);
+  EXPECT_TRUE(wall1.setSurfacePropertyOtherSideConditionsModel(oscm));
+  ASSERT_TRUE(wall1.surfacePropertyOtherSideConditionsModel());
+  EXPECT_EQ(oscm.handle(), wall1.surfacePropertyOtherSideConditionsModel()->handle());
+  EXPECT_FALSE(wall2.surfacePropertyOtherSideConditionsModel());
+  EXPECT_FALSE(wall1.adjacentSurface());
+  EXPECT_FALSE(wall2.adjacentSurface());
+  EXPECT_EQ("OtherSideConditionsModel", wall1.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", wall1.sunExposure());
+  EXPECT_EQ("WindExposed", wall1.windExposure());
+  EXPECT_EQ("Outdoors", wall2.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", wall2.sunExposure());
+  EXPECT_EQ("WindExposed", wall2.windExposure());
+
+  EXPECT_TRUE(wall1.setAdjacentSurface(wall2));
+  ASSERT_TRUE(wall1.adjacentSurface());
+  EXPECT_EQ(wall2.handle(), wall1.adjacentSurface()->handle());
+  ASSERT_TRUE(wall2.adjacentSurface());
+  EXPECT_EQ(wall1.handle(), wall2.adjacentSurface()->handle());
+  EXPECT_FALSE(wall1.surfacePropertyOtherSideConditionsModel());
+  EXPECT_EQ("Surface", wall1.outsideBoundaryCondition());
+  EXPECT_EQ("NoSun", wall1.sunExposure());
+  EXPECT_EQ("NoWind", wall1.windExposure());
+  EXPECT_EQ("Surface", wall2.outsideBoundaryCondition());
+  EXPECT_EQ("NoSun", wall2.sunExposure());
+  EXPECT_EQ("NoWind", wall2.windExposure());
+}
+
+TEST_F(ModelFixture, SurfacePropertyOtherSideCoefficients)
+{
+  Model model;
+
+  std::vector<Point3d> vertices;
+  vertices.push_back(Point3d(0, 0, 3));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(3, 0, 0));
+  vertices.push_back(Point3d(3, 0, 3));
+
+  Space space1(model);
+  Surface wall1(vertices, model);
+  wall1.setSpace(space1);
+  EXPECT_FALSE(wall1.surfacePropertyOtherSideConditionsModel());
+  EXPECT_EQ("Outdoors", wall1.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", wall1.sunExposure());
+  EXPECT_EQ("WindExposed", wall1.windExposure());
+
+  SurfacePropertyOtherSideCoefficients osc(model);
+
+  EXPECT_TRUE(wall1.setSurfacePropertyOtherSideCoefficients(osc));
+  ASSERT_TRUE(wall1.surfacePropertyOtherSideCoefficients());
+  EXPECT_EQ(osc.handle(), wall1.surfacePropertyOtherSideCoefficients()->handle());
+  EXPECT_EQ("OtherSideCoefficients", wall1.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", wall1.sunExposure());
+  EXPECT_EQ("WindExposed", wall1.windExposure());
+
+  EXPECT_FALSE(wall1.setOutsideBoundaryCondition("FlibbityGibbit"));
+  EXPECT_EQ("OtherSideCoefficients", wall1.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", wall1.sunExposure());
+  EXPECT_EQ("WindExposed", wall1.windExposure());
+
+  EXPECT_TRUE(wall1.setOutsideBoundaryCondition("Adiabatic"));
+  EXPECT_EQ("Adiabatic", wall1.outsideBoundaryCondition());
+  EXPECT_EQ("NoSun", wall1.sunExposure());
+  EXPECT_EQ("NoWind", wall1.windExposure());
+}
+
+TEST_F(ModelFixture, SurfacePropertyOtherSideConditionsModel)
+{
+  Model model;
+
+  std::vector<Point3d> vertices;
+  vertices.push_back(Point3d(0, 0, 3));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(3, 0, 0));
+  vertices.push_back(Point3d(3, 0, 3));
+
+  Space space1(model);
+  Surface wall1(vertices, model);
+  wall1.setSpace(space1);
+  EXPECT_FALSE(wall1.surfacePropertyOtherSideConditionsModel());
+  EXPECT_EQ("Outdoors", wall1.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", wall1.sunExposure());
+  EXPECT_EQ("WindExposed", wall1.windExposure());
+
+  SurfacePropertyOtherSideConditionsModel oscm(model);
+
+  EXPECT_TRUE(wall1.setSurfacePropertyOtherSideConditionsModel(oscm));
+  ASSERT_TRUE(wall1.surfacePropertyOtherSideConditionsModel());
+  EXPECT_EQ(oscm.handle(), wall1.surfacePropertyOtherSideConditionsModel()->handle());
+  EXPECT_EQ("OtherSideConditionsModel", wall1.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", wall1.sunExposure());
+  EXPECT_EQ("WindExposed", wall1.windExposure());
+
+  EXPECT_FALSE(wall1.setOutsideBoundaryCondition("FlibbityGibbit"));
+  EXPECT_EQ("OtherSideConditionsModel", wall1.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", wall1.sunExposure());
+  EXPECT_EQ("WindExposed", wall1.windExposure());
+
+  EXPECT_TRUE(wall1.setOutsideBoundaryCondition("Outdoors"));
+  EXPECT_EQ("Outdoors", wall1.outsideBoundaryCondition());
+  EXPECT_EQ("SunExposed", wall1.sunExposure());
+  EXPECT_EQ("WindExposed", wall1.windExposure());
+}
+
 TEST_F(ModelFixture, Surface_BadSurfaceType)
 {
   Model model;
