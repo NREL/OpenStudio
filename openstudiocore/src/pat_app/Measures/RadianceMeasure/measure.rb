@@ -9,6 +9,7 @@ require 'tempfile'
 require 'date'
 require 'json'
 require 'erb'
+require 'matrix'
 
 # start the measure
 class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
@@ -73,6 +74,27 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
   end
 
+  def read_illuminance_file(filename, runner)
+    m = Matrix[]
+    data_section = false
+    header = []
+    data = []
+  
+    print_statement("Reading #{filename}", runner)
+    fail "Could not find illuminance file #{filename}" unless File.exist?(filename)
+    File.read(filename).each_line do |line|
+      data_section = true if line =~ /^\s?\d/  
+      if data_section
+        csv_line = CSV.parse_line(line.strip, {col_sep: " "})
+    
+        m = Matrix.rows(m.to_a << csv_line)
+      else
+        header << "#{line}"
+      end
+    end
+
+    return m, header
+  end
 
   def run(model, runner, user_arguments)
     super(model, runner, user_arguments)
@@ -642,11 +664,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
               exec_statement(rad_command, runner)
               
             end
-          
           end
-
         end
-
       end
 
       if haveWG1 == "True"
@@ -685,68 +704,57 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
           print_statement("Processing window group '#{windowGroup}', shade control setpoint: #{shadeControlSetpoint.round(0)} lux, input: #{wgIllumFiles}", runner)
 
-          # separate header from data; so, so ugly. 
-          header = []
-          ill0 = []
-          ill1 = []
+          ill0, header = read_illuminance_file(wgIllumFiles[0], runner)
+          ill1, _header = read_illuminance_file(wgIllumFiles[1], runner)        
+          
+          filename = "output/ts/window_controls.ill"          
+          windowControls, _header = read_illuminance_file(filename, runner)
+          
+          # print_statement("windowControls is #{windowControls.row_count} rows x #{windowControls.column_count} columns")
 
-          wgIllum_0 = File.open("#{wgIllumFiles[0]}").each_line do |line|
-            if line.chomp! =~ /^\s?\d/
-              ill0 << "#{line}\n"
-            else 
-              header << "#{line}\n"
+          wgMerge = Matrix.build(ill0.row_count, ill0.column_count) { 0 }
+          # puts "wgmerge is #{wgMerge.row_count} rows x #{wgMerge.column_count} columns"
+
+          wgShadeSchedule = []
+          windowControls.row(0).each_with_index do |window_illuminance, row_index|
+
+            window_illuminance = window_illuminance.to_f
+            # puts "Value is #{window_illuminance} #{row_index}"
+
+            # puts "wgmerge Rows #{wgMerge.row_count} Columns #{wgMerge.column_count}"
+            if window_illuminance < shadeControlSetpoint
+              # puts "Ill0 Rows: #{ill0.row_count} Columns #{ill0.column_count}"
+    
+              ill0.column(row_index).each_with_index do |value, column_index| 
+                wgMerge.send(:[]=, column_index, row_index, value)
+              end
+
+              wgShadeSchedule << "0\n"
+            else
+              # puts "Ill1 Rows: #{ill0.row_count} Columns #{ill0.column_count}"
+
+              ill1.column(row_index).each_with_index do |value, column_index| 
+                wgMerge.send(:[]=, column_index, row_index, value.to_f)
+              end
+
+              wgShadeSchedule << "1\n"
             end
-
           end
 
-          wgIllum_1 = File.open("#{wgIllumFiles[1]}").each_line do |line|
-            if line.chomp! =~ /^\s?\d/
-              ill1 << "#{line}\n"
-            else 
-              next
-            end
-
-          end # that window group/state merge thing
-
-          # get the window control point illuminances (should be headerless file)
-    
-          windowControls = File.open("output/ts/window_controls.ill", "r")
-
-          windowControls.each do |row|
-  
-            data = row.split(" ")
-
-            wgMerge = []
-            wgShadeSched = []
-
-            # simple, window illuminance-based shade control
-
-            data.each_index do |i|
-
-              if data[i].to_f < shadeControlSetpoint
-                wgMerge << ill0[i]
-                wgShadeSched << "0\n"
-              else
-                wgMerge << ill1[i]
-                wgShadeSched << "1\n"
-              end
-  
-            end
-
-            # you need to file these files, yo.
-      
-            wgIllum = File.open("m_#{windowGroup}.ill", "w")
-            wgShade = File.open("#{windowGroup}.shd", "w")
-            header.each {|head| wgIllum.print "#{head}"}
-            wgMerge.each {|ts| wgIllum.print "#{ts}"}
-            wgShadeSched.each {|sh| wgShade.print "#{sh}"}
-            wgIllum.close
-            wgShade.close
-            FileUtils.rm Dir.glob('*.tmp')
+          
+          # you need to file these files, yo.
+          wgIllum = File.open("m_#{windowGroup}.ill", "w")
+          wgShade = File.open("#{windowGroup}.shd", "w")
+          header.each {|head| wgIllum.print "#{head}"}
+          wgMerge.to_a.each {|array_ts| wgIllum.print " #{array_ts.join(" ")}\n"} # note leading space, for compatibility with default rfluxmtx output
+          wgShadeSchedule.each {|sh| wgShade.print "#{sh}"}
+          wgIllum.close
+          wgShade.close
+          FileUtils.rm Dir.glob('*.tmp')
+          
 
         end
       end
-   end
 
       # make whole-building illuminance file
       print_statement("Merging window group daylight illuminance schedules to building daylight illuminance schedule", runner)

@@ -1,6 +1,118 @@
-## OpenStudio v1.9.2
+## OpenStudio v1.10.0
+###### 2015-12-11 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.9.5...v1.10.0 )
 
+- ![Fixed:][fixed] [#1526]( https://github.com/NREL/OpenStudio/issues/1526 ), Floor/Ceiling Constructions creating issues with construction.getNetArea method
+- ![Fixed:][fixed] [#1608]( https://github.com/NREL/OpenStudio/issues/1608 ), Thermal Zone tab crash when editing zone equipment
+- ![Fixed:][fixed] [#1831]( https://github.com/NREL/OpenStudio/issues/1831 ), Select All in GridView should only select all rows/sub-rows that are currently visible (i.e. unfiltered)
+- ![Fixed:][fixed] [#1881]( https://github.com/NREL/OpenStudio/issues/1881 ), Default constructor for PlantEquipmentOperation:OutdoorDryBulb has temp limits reversed
+- ![Fixed:][fixed] [#1951]( https://github.com/NREL/OpenStudio/issues/1951 ), PAT 1.9.4 crashes when creating a new project or opening an existing one
+- ![Fixed:][fixed] [#1963]( https://github.com/NREL/OpenStudio/issues/1963 ), Render by surface type leaaves some surfaces transparent
+- ![Fixed:][fixed] [#1971]( https://github.com/NREL/OpenStudio/issues/1971 ), OS:LoadProfile:Plant Object not functioning properly 
+- ![Fixed:][fixed] [#1977]( https://github.com/NREL/OpenStudio/issues/1977 ), Setpoint managers are not allowed on plant demand side
+- ![Fixed:][fixed] [#1983]( https://github.com/NREL/OpenStudio/issues/1983 ), AddOutputVariable measure should support the "annual" reporting frequency
+- ![Fixed:][fixed] [#1984]( https://github.com/NREL/OpenStudio/issues/1984 ), View_data Measure Doesn't Rotate Shading Surfaces when North Axis is Rotated
+- ![Fixed:][fixed] [#1985]( https://github.com/NREL/OpenStudio/issues/1985 ), Control For Outdoor Air Field Not Initialized In AirTerminal Causes Crash
+- ![Fixed:][fixed] [#1986]( https://github.com/NREL/OpenStudio/issues/1986 ), Link to measure writing guide in new measure is wrong
+- ![Fixed:][fixed] [#1995]( https://github.com/NREL/OpenStudio/issues/1995 ), Induction terminals (still) not disconnecting cleanly
+
+## OpenStudio v1.9.5
+###### 2015-11-25 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.9.4...v1.9.5 )
+
+- ![Improved:][improved] [#1394]( https://github.com/NREL/OpenStudio/issues/1394 ), OS -> SDD Translate ZoneHVAC 
+- ![Fixed:][fixed] [#1905]( https://github.com/NREL/OpenStudio/issues/1905 ), Crash when clicking on Solar Flat Plat Collector in Plant Loop
+- ![Fixed:][fixed] [#1919]( https://github.com/NREL/OpenStudio/issues/1919 ), ZoneVentilation:DesignFlowRate won't work on zones without any zone equipment.
+- ![Fixed:][fixed] [#1924]( https://github.com/NREL/OpenStudio/issues/1924 ), SketchUp Plugin doors default to "glass door" vs. door
+- ![Fixed:][fixed] [#1936]( https://github.com/NREL/OpenStudio/issues/1936 ), Controller:WaterCoil node references not cleaned up on airloop edit
+- ![Fixed:][fixed] [#1948]( https://github.com/NREL/OpenStudio/issues/1948 ), OS 1.9 loses space loads when converting v1.8 model
+- ![Fixed:][fixed] [#1949]( https://github.com/NREL/OpenStudio/issues/1949 ), PAT and ResultsViewer 1.9.3 won't launch
+- ![Fixed:][fixed] [#1954]( https://github.com/NREL/OpenStudio/issues/1954 ), Crash before run simulation
+- ![Fixed:][fixed] [#1956]( https://github.com/NREL/OpenStudio/issues/1956 ), OS App 1.9.4 crashes in Apply Now when changing selected measure
+
+## OpenStudio v1.9.4
+###### 2015-11-12 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.9.3...v1.9.4 )
+
+- ![Improved:][improved] [#1911]( https://github.com/NREL/OpenStudio/issues/1911 ), Add support for E+ 8.4
+- ![Improved:][improved] [#1921]( https://github.com/NREL/OpenStudio/issues/1921 ), Add water to water heat pump
+- ![Fixed:][fixed] [#1460]( https://github.com/NREL/OpenStudio/issues/1460 ), Inherited Default Construction and Schedule Sets Not Displayed in Facility Tab
+- ![Fixed:][fixed] [#1598]( https://github.com/NREL/OpenStudio/issues/1598 ), dynamic generated argument choice values in measure.xml
+- ![Fixed:][fixed] [#1812]( https://github.com/NREL/OpenStudio/issues/1812 ), Build Win Version Ruby - Product extension is set to .so
+- ![Fixed:][fixed] [#1847]( https://github.com/NREL/OpenStudio/issues/1847 ), Space Tab - Shading sub tab is mising Shading Surface Name column
+- ![Fixed:][fixed] [#1861]( https://github.com/NREL/OpenStudio/issues/1861 ), Default BoilerHotWater::BoilerFlowMode
+- ![Fixed:][fixed] [#1892]( https://github.com/NREL/OpenStudio/issues/1892 ), Application says "Drop Zone" instead of "Drop Space Type" in the space type tab
+- ![Fixed:][fixed] [#1893]( https://github.com/NREL/OpenStudio/issues/1893 ), 1.9.0 Space tab: do not see inherited properties
+- ![Fixed:][fixed] [#1896]( https://github.com/NREL/OpenStudio/issues/1896 ), constructionId for SubSurface translated to Surface
+- ![Fixed:][fixed] [#1899]( https://github.com/NREL/OpenStudio/issues/1899 ), Crash when viewing plant loop on user model
+- ![Fixed:][fixed] [#1928]( https://github.com/NREL/OpenStudio/issues/1928 ), Unable to assign thermalZone to Inverter
+- ![Fixed:][fixed] [#1932]( https://github.com/NREL/OpenStudio/issues/1932 ), PAT XML Export is missing cash flow results in 1.9
+
+## OpenStudio v1.9.3
+###### 2015-11-02 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.9.2...v1.9.3 )
+
+- ![Improved:][improved] [#1907]( https://github.com/NREL/OpenStudio/issues/1907 ), Enable Design OA spec on terminal
+- ![Fixed:][fixed] [#1734]( https://github.com/NREL/OpenStudio/issues/1734 ), Weather file location 1.8.1
+- ![Fixed:][fixed] [#1900]( https://github.com/NREL/OpenStudio/issues/1900 ), User has to specify at least one measure on alternate model in PAT
+- ![Fixed:][fixed] [#1902]( https://github.com/NREL/OpenStudio/issues/1902 ), LayeredConstruction::visibleTransmittance doesn't work on multiple layer constructions
+- ![Fixed:][fixed] [#1917]( https://github.com/NREL/OpenStudio/issues/1917 ), Bug Report - Thermostat
+- ![Fixed:][fixed] [#1923]( https://github.com/NREL/OpenStudio/issues/1923 ), ElectricalLoadCenter:Generators is missing
+
+## OpenStudio v1.9.2
+###### 2015-10-19 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.9.1...v1.9.2 )
+
+- ![Improved:][improved] [#1303]( https://github.com/NREL/OpenStudio/issues/1303 ), Can't make choice arguments from model for E+ measures
+- ![Fixed:][fixed] [#298]( https://github.com/NREL/OpenStudio/issues/298 ), weather (epw) and ddy file path issues (Bugzilla #1163)
+- ![Fixed:][fixed] [#1549]( https://github.com/NREL/OpenStudio/issues/1549 ), Coordinate fine/coarse Sky Subdivision Params in idd
+- ![Fixed:][fixed] [#1555]( https://github.com/NREL/OpenStudio/issues/1555 ), Cannot set or view site name in app
 - ![removed:][removed] [#1907]( https://github.com/NREL/OpenStudio/issues/1907 ), Removed method AirTerminalSingleDuctVAVNoReheat::designSpecificationOutdoorAir in favor of a more user friendly API.
+
+## OpenStudio v1.9.1
+###### 2015-10-01 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.9.0...v1.9.1 )
+
+- ![Fixed:][fixed] [#1886]( https://github.com/NREL/OpenStudio/issues/1886 ), Incorrect units for  Refrigeration Walk-In Construction U-value 
+- ![Fixed:][fixed] [#1894]( https://github.com/NREL/OpenStudio/issues/1894 ), 1.9.0 Turning off "Run for sizing period" yet it still seems to run them
+
+## OpenStudio v1.9.0
+###### 2015-09-25 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.8.5...v1.9.0 )
+
+- ![Fixed:][fixed] [#404]( https://github.com/NREL/OpenStudio/issues/404 ), OS App Water Use Equipment Definitions, Peak Flow Rate Units always in SI units
+- ![Fixed:][fixed] [#470]( https://github.com/NREL/OpenStudio/issues/470 ), Odd temps on outdoor air temp reset in OS app
+- ![Fixed:][fixed] [#593]( https://github.com/NREL/OpenStudio/issues/593 ), Node.addSetPointManager() does not accept all types of  Setpoint Managers
+- ![Fixed:][fixed] [#1005]( https://github.com/NREL/OpenStudio/issues/1005 ), Coil Cooling/Heating Water to Air HP wrappers are empty in UI
+- ![Fixed:][fixed] [#1135]( https://github.com/NREL/OpenStudio/issues/1135 ), Radiance Parameters are reset to Coarse every time the osm is loaded
+- ![Fixed:][fixed] [#1347]( https://github.com/NREL/OpenStudio/issues/1347 ), Update web-assets for 1.6.0 package
+- ![Fixed:][fixed] [#1365]( https://github.com/NREL/OpenStudio/issues/1365 ), Design Flow Air Rate in CoilCoolingWater object uses fluid vs. air units
+- ![Fixed:][fixed] [#1468]( https://github.com/NREL/OpenStudio/issues/1468 ), Change peak flow rate in water use equipment definitions from cfm to gal/min
+- ![Fixed:][fixed] [#1543]( https://github.com/NREL/OpenStudio/issues/1543 ), Seeing "Autocalculate" in Maximum Air Flow Rate for termial object
+- ![Fixed:][fixed] [#1547]( https://github.com/NREL/OpenStudio/issues/1547 ), SpaceType Tab - Load filter should function on infiltration objects
+- ![Fixed:][fixed] [#1604]( https://github.com/NREL/OpenStudio/issues/1604 ), PumpConstantSpeed - PumpFlowRateSchedule not in schedule registry
+- ![Fixed:][fixed] [#1610]( https://github.com/NREL/OpenStudio/issues/1610 ), boiler efficiency curve causes fatal error
+- ![Fixed:][fixed] [#1636]( https://github.com/NREL/OpenStudio/issues/1636 ), Output Control Reporting Tolerance units default to SI despite app unit preference
+- ![Fixed:][fixed] [#1657]( https://github.com/NREL/OpenStudio/issues/1657 ), SketchUp Plug-in installation error message does not apply to all cases
+- ![Fixed:][fixed] [#1703]( https://github.com/NREL/OpenStudio/issues/1703 ), Radiance simulation does not use the EnergyPlus installed with OpenStudio
+- ![Fixed:][fixed] [#1749]( https://github.com/NREL/OpenStudio/issues/1749 ), Missing SetpointManager:Scheduled icon
+- ![Fixed:][fixed] [#1757]( https://github.com/NREL/OpenStudio/issues/1757 ), Schedule Sets sub tab "My Model" doesn't populate at first
+- ![Fixed:][fixed] [#1771]( https://github.com/NREL/OpenStudio/issues/1771 ), AirTerminalSingleDuctSeriesPIUReheat leaves ZoneHVAC:EquipmentList in bad state
+- ![Fixed:][fixed] [#1784]( https://github.com/NREL/OpenStudio/issues/1784 ), Crash When Deleting HPWH
+- ![Fixed:][fixed] [#1804]( https://github.com/NREL/OpenStudio/issues/1804 ), Pipe:Adiabatic icon doesn't show, OS 1.8.4 Develop Branch on Windows
+- ![Fixed:][fixed] [#1819]( https://github.com/NREL/OpenStudio/issues/1819 ), Material in templates is missing roughness and causes failed simulation
+- ![Fixed:][fixed] [#1834]( https://github.com/NREL/OpenStudio/issues/1834 ), Changing minimum values in SpaceInfiltration:DesignFlowRate object
+- ![Fixed:][fixed] [#1836]( https://github.com/NREL/OpenStudio/issues/1836 ), Fresh develop build Crash "Bad cast" after clicking on "Spaces" tab
+- ![Fixed:][fixed] [#1839]( https://github.com/NREL/OpenStudio/issues/1839 ), component setpoint operation scheme logic is flawed
+- ![Fixed:][fixed] [#1840]( https://github.com/NREL/OpenStudio/issues/1840 ), AVM Night Cycle Issue
+- ![Fixed:][fixed] [#1843]( https://github.com/NREL/OpenStudio/issues/1843 ), Space Tab - Subsurfaces sub-tab in lets you make new spaces with green "+"
+- ![Fixed:][fixed] [#1844]( https://github.com/NREL/OpenStudio/issues/1844 ), Space Tab - Shading Controls sub-tab 
+- ![Fixed:][fixed] [#1845]( https://github.com/NREL/OpenStudio/issues/1845 ), Default low temp radiant variable flow setpoint schedules reversed
+- ![Fixed:][fixed] [#1853]( https://github.com/NREL/OpenStudio/issues/1853 ), Number of WaterHeater:Stratified Nodes Fixed at One
+- ![Fixed:][fixed] [#1859]( https://github.com/NREL/OpenStudio/issues/1859 ), IP unit errors
+- ![Fixed:][fixed] [#1863]( https://github.com/NREL/OpenStudio/issues/1863 ), LoadProfilePlant default load schedule is incorrect
+- ![Fixed:][fixed] [#1866]( https://github.com/NREL/OpenStudio/issues/1866 ), PlantLoop::remove doesn't work!
+- ![Fixed:][fixed] [#1868]( https://github.com/NREL/OpenStudio/issues/1868 ), PAT 1.8.5 hanging when running multiple simulations
+- ![Fixed:][fixed] [#1873]( https://github.com/NREL/OpenStudio/issues/1873 ), Building Stories not exposed in "My Model" pane for Spaces > Property sub-tab
+- ![Fixed:][fixed] [#1874]( https://github.com/NREL/OpenStudio/issues/1874 ), WaterHeater:Mixed is missing form My Model, prevents some user use cases
+- ![Fixed:][fixed] [#1875]( https://github.com/NREL/OpenStudio/issues/1875 ), When you make a new schedule "Temperature" shows up twice in the Schedule Type list.
+- ![Fixed:][fixed] [#1879]( https://github.com/NREL/OpenStudio/issues/1879 ), OS App creates simulation settings objects different from E+ defaults
+- ![Fixed:][fixed] [#1887]( https://github.com/NREL/OpenStudio/issues/1887 ), Deleting a plant component can orphan a node
+- ![Fixed:][fixed] [#1891]( https://github.com/NREL/OpenStudio/issues/1891 ), Application is freezing when trying to remove plantloop from model
+0
 
 ## OpenStudio v1.8.5
 ###### 2015-09-04 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.8.4...v1.8.5 )
