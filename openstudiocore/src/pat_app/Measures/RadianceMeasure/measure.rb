@@ -863,7 +863,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
             space = []
             subspace.each do |subspacevalue|
-              space << subspacevalue[hour];
+              space << subspacevalue[hour].to_f.round(1);
             end
 
             if File.exist?("#{t_radPath}/numeric/#{space_name}.sns")        
@@ -872,7 +872,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
               elsif hour >= values[index].size
                 print_statement("Hour is #{hour} but values.size[index] is only #{values[index].size}", runner)
               end
-              illum = [values[index][hour]]
+              illum = [values[index][hour].to_f.round(1)]
               index = index + 1
               puts "### finished space map values, and index is now: #{index}" if hour == 0
             end
@@ -888,7 +888,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
                   puts "### index is #{index}; view_index is #{view_index}" if hour == 0           
                   t_radGlareSensorViews[space_name][sensor][hour] ||= {}
                   t_radGlareSensorViews[space_name][sensor][hour]["#{sensor_index}_#{view_index}"] ||= {}
-                  view_values = values.slice(index, 1).first   
+                  view_values = values.slice(index, 1).first                     
                   
                   adjustedval = 0.00
                   if view_values[hour].to_f != 0.00
@@ -928,8 +928,9 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       allhours
       
       require 'json'
-      File.open('glaresensor.json', 'w') { |f| f << JSON.pretty_generate(t_radGlareSensorViews)}
-      File.open('all_hours.json', 'w') { |f| f << JSON.pretty_generate( { all_hours: allhours } )}
+      File.open('output/glare.json', 'w') { |f| f << JSON.pretty_generate(t_radGlareSensorViews)}
+      File.open('output/ts/radout.json', 'w') { |f| f << JSON.pretty_generate( { all_hours: allhours } )}
+      File.open('output/ts/radout_f.json', 'w') { |f| f << JSON.pretty_generate( { all_hours: allhours } )}
 
       print_statement("Returning annual results", runner)
       return allhours
@@ -1197,7 +1198,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
             if t_radGlareSensorViews[space_name]
               f.print "## OpenStudio Daylight Simulation (glare) Results file\n"
-              f.print "## Data: month,day,time,DGPSimplified values\n"
+              f.print "## Space name: '#{space_name}\n"
+              f.print "## Data: month,day,time,sensor_name,DGPs(avg),DGPs(max),DGPs(min),raw,[raw values]...\n"
               timeSeriesGlare.each {|ts| f.print "#{ts}\n"}
               f.close
             end
