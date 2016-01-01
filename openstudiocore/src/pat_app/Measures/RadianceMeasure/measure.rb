@@ -752,8 +752,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             end
           end
 
-          
-          # you need to file these files, yo.
           wgIllum = File.open("output/ts/m_#{windowGroup}.ill", "w")
           wgShade = File.open("output/ts/#{windowGroup}.shd", "w")
           header.each {|head| wgIllum.print "#{head}"}
@@ -762,7 +760,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           wgIllum.close
           wgShade.close
           FileUtils.rm Dir.glob('*.tmp')
-          
 
         end
       end
@@ -840,7 +837,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       valuesFile.each do |row|
         values << row.split(" ")
       end
-
+     
       allhours = []
 
       # write out illuminance to individual space/map files
@@ -860,7 +857,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             subspace = values.slice(index, space_size)
             index = index + space_size
             
-            print_statement("### DEBUG: starting illuminance map for '#{space_name}'. space_size: #{space_size}, index is now at: #{index}, ", runner) if hour == 0 if debug_mode
+            print_statement("### DEBUG: starting illuminance map for '#{space_name}'. space_size: #{space_size}, index is now at: #{index}, ", runner) if hour == 0 && if debug_mode
             
             space = []
             subspace.each do |subspacevalue|
@@ -1198,7 +1195,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             if t_radGlareSensorViews[space_name]
               f.print "## OpenStudio Daylight Simulation (glare) Results file\n"
               f.print "## Space name: '#{space_name}\n"
-              f.print "## Data: month,day,time,sensor_name,DGPs(avg),DGPs(max),DGPs(min),raw,[raw values]...\n"
+              f.print "## Data: month,day,time,sensor_name,DGPs(avg),DGPs(min),DGPs(max),raw,[raw values]...\n"
               timeSeriesGlare.each {|ts| f.print "#{ts}\n"}
               f.close
             end
