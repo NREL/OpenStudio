@@ -1198,7 +1198,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             if t_radGlareSensorViews[space_name]
               f.print "## OpenStudio Daylight Simulation (glare) Results file\n"
               f.print "## Space name: '#{space_name}\n"
-              f.print "## Data: month,day,time,sensor_name,DGPs(avg),DGPs(max),DGPs(min),raw,[raw values]...\n"
+              f.print "## Data: month,day,time,sensor_name,DGPs(avg),DGPs(min),DGPs(max),raw,[raw values]...\n"
               timeSeriesGlare.each {|ts| f.print "#{ts}\n"}
               f.close
             end
@@ -1211,12 +1211,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             writeTimeSeriesToSql(sqlOutFile, simDateTimes, diffHorizIllum, space_name, "Global Horizontal Illuminance", "lux")
             writeTimeSeriesToSql(sqlOutFile, simDateTimes, daylightSensorIlluminance, space_name, "Daylight Sensor Illuminance", "lux")
             writeTimeSeriesToSql(sqlOutFile, simDateTimes, meanIlluminanceMap, space_name, "Mean Illuminance Map", "lux")
-
-#             if t_radGlareSensorViews[space_name]
-#               writeTimeSeriesToSql(sqlOutFile, simDateTimes, minDGP, space_name, "Minimum Simplified Daylight Glare Probability", "")
-#               writeTimeSeriesToSql(sqlOutFile, simDateTimes, meanDGP, space_name, "Mean Simplified Daylight Glare Probability", "")
-#               writeTimeSeriesToSql(sqlOutFile, simDateTimes, maxDGP, space_name, "Maximum Simplified Daylight Glare Probability", "")
-#             end
 
             # I really have no idea how to populate these fields
             sqlOutFile.insertZone(space_name,
@@ -2059,7 +2053,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       rm_list = "output/ts/m_*.ill", "output/ts/window_controls.ill", "output/ts/WG*.ill", "octrees/*.oct", "output/ts/*.shd"
       FileUtils.rm Dir.glob(rm_list)
     end
-    #FileUtils.rm Dir.glob('*.oct')
 
     # report initial condition of model
     daylightAnalysisSpaces = []
