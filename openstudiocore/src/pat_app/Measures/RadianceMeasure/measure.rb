@@ -1963,7 +1963,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       end
 
       # get glare sensors
-      print_statement("### DEBUG: there are #{space.glareSensors.size} sensors in this space ('#{space_name}')", runner) if debug_mode
+      print_statement("### DEBUG: there are #{space.glareSensors.size} glare sensors in this space ('#{space_name}')", runner) if debug_mode
       space.glareSensors.each do |sensor|
         tmp_sensor_name = sensor.name.get.tr(' ', '_').tr(':', '_')
         radGlareSensorViews[space_name] ||= {}
