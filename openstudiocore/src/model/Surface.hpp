@@ -30,6 +30,8 @@ class Space;
 class SubSurface;
 class ShadingSurfaceGroup;
 class ConstructionBase;
+class SurfacePropertyOtherSideCoefficients;
+class SurfacePropertyOtherSideConditionsModel;
 
 namespace detail {
 
@@ -145,6 +147,24 @@ class MODEL_API Surface : public PlanarSurface {
 
   /** Resets the adjacent Surface. */
   void resetAdjacentSurface();
+
+  /** Returns the adjacent SurfaceSurfacePropertyOtherSideCoefficients, if it exists. */
+  boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;
+
+  /** Sets the SurfacePropertyOtherSideCoefficients. */
+  bool setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients);
+
+  /** Resets the SurfacePropertyOtherSideCoefficients. */
+  void resetSurfacePropertyOtherSideCoefficients();
+
+  /** Returns the adjacent SurfacePropertyOtherSideConditionsModel, if it exists. */
+  boost::optional<SurfacePropertyOtherSideConditionsModel> surfacePropertyOtherSideConditionsModel() const;
+
+  /** Sets the SurfacePropertyOtherSideConditionsModel. */
+  bool setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel);
+
+  /** Resets the SurfacePropertyOtherSideConditionsModel. */
+  void resetSurfacePropertyOtherSideConditionsModel();
 
   /** Intersect with other Surface in other Space.
    *  Returns false if either surface has child windows.

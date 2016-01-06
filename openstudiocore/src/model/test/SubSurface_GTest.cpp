@@ -32,6 +32,8 @@
 #include "../Construction.hpp"
 #include "../DefaultSubSurfaceConstructions.hpp"
 #include "../DefaultConstructionSet.hpp"
+#include "../SurfacePropertyOtherSideCoefficients.hpp"
+#include "../SurfacePropertyOtherSideConditionsModel.hpp"
 #include "../Model_Impl.hpp"
 
 #include "../../utilities/geometry/Geometry.hpp"
@@ -404,6 +406,146 @@ TEST_F(ModelFixture, AdjacentSubSurface3)
   window1.resetMultiplier();
   EXPECT_EQ(1, window1.multiplier());
   EXPECT_EQ(1, window2.multiplier());
+}
+
+TEST_F(ModelFixture, AdjacentSubSurface_SurfacePropertyOtherSideCoefficients)
+{
+  Model model;
+
+  std::vector<Point3d> vertices;
+  vertices.push_back(Point3d(0, 0, 3));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(3, 0, 0));
+  vertices.push_back(Point3d(3, 0, 3));
+
+  Space space1(model);
+  Surface wall1(vertices, model);
+  wall1.setSpace(space1);
+  EXPECT_FALSE(wall1.adjacentSurface());
+
+  std::reverse(vertices.begin(), vertices.end());
+
+  Space space2(model);
+  Surface wall2(vertices, model);
+  wall2.setSpace(space2);
+  EXPECT_FALSE(wall2.adjacentSurface());
+
+  vertices.clear();
+  vertices.push_back(Point3d(1, 0, 2));
+  vertices.push_back(Point3d(1, 0, 1));
+  vertices.push_back(Point3d(2, 0, 1));
+  vertices.push_back(Point3d(2, 0, 2));
+
+  SubSurface window1(vertices, model);
+  EXPECT_FALSE(window1.adjacentSubSurface());
+
+  std::reverse(vertices.begin(), vertices.end());
+
+  SubSurface window2(vertices, model);
+  EXPECT_FALSE(window2.adjacentSubSurface());
+
+  EXPECT_FALSE(window1.setAdjacentSubSurface(window2));
+
+  EXPECT_TRUE(wall1.setAdjacentSurface(wall2));
+
+  EXPECT_FALSE(window1.adjacentSubSurface());
+
+  EXPECT_FALSE(window1.setAdjacentSubSurface(window2));
+
+  window1.setSurface(wall1);
+  window2.setSurface(wall2);
+
+  EXPECT_TRUE(window1.setAdjacentSubSurface(window2));
+
+  ASSERT_TRUE(window1.adjacentSubSurface());
+  EXPECT_EQ(window2.handle(), window1.adjacentSubSurface()->handle());
+  ASSERT_TRUE(window2.adjacentSubSurface());
+  EXPECT_EQ(window1.handle(), window2.adjacentSubSurface()->handle());
+
+  SurfacePropertyOtherSideCoefficients osc(model);
+  EXPECT_TRUE(window1.setSurfacePropertyOtherSideCoefficients(osc));
+  ASSERT_TRUE(window1.surfacePropertyOtherSideCoefficients());
+  EXPECT_EQ(osc.handle(), window1.surfacePropertyOtherSideCoefficients()->handle());
+  EXPECT_FALSE(window2.surfacePropertyOtherSideCoefficients());
+  EXPECT_FALSE(window1.adjacentSubSurface());
+  EXPECT_FALSE(window2.adjacentSubSurface());
+
+  EXPECT_TRUE(window1.setAdjacentSubSurface(window2));
+
+  ASSERT_TRUE(window1.adjacentSubSurface());
+  EXPECT_EQ(window2.handle(), window1.adjacentSubSurface()->handle());
+  ASSERT_TRUE(window2.adjacentSubSurface());
+  EXPECT_EQ(window1.handle(), window2.adjacentSubSurface()->handle());
+}
+
+TEST_F(ModelFixture, AdjacentSubSurface_SurfacePropertyOtherSideConditionsModel)
+{
+  Model model;
+
+  std::vector<Point3d> vertices;
+  vertices.push_back(Point3d(0, 0, 3));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(3, 0, 0));
+  vertices.push_back(Point3d(3, 0, 3));
+
+  Space space1(model);
+  Surface wall1(vertices, model);
+  wall1.setSpace(space1);
+  EXPECT_FALSE(wall1.adjacentSurface());
+
+  std::reverse(vertices.begin(), vertices.end());
+
+  Space space2(model);
+  Surface wall2(vertices, model);
+  wall2.setSpace(space2);
+  EXPECT_FALSE(wall2.adjacentSurface());
+
+  vertices.clear();
+  vertices.push_back(Point3d(1, 0, 2));
+  vertices.push_back(Point3d(1, 0, 1));
+  vertices.push_back(Point3d(2, 0, 1));
+  vertices.push_back(Point3d(2, 0, 2));
+
+  SubSurface window1(vertices, model);
+  EXPECT_FALSE(window1.adjacentSubSurface());
+
+  std::reverse(vertices.begin(), vertices.end());
+
+  SubSurface window2(vertices, model);
+  EXPECT_FALSE(window2.adjacentSubSurface());
+
+  EXPECT_FALSE(window1.setAdjacentSubSurface(window2));
+
+  EXPECT_TRUE(wall1.setAdjacentSurface(wall2));
+
+  EXPECT_FALSE(window1.adjacentSubSurface());
+
+  EXPECT_FALSE(window1.setAdjacentSubSurface(window2));
+
+  window1.setSurface(wall1);
+  window2.setSurface(wall2);
+
+  EXPECT_TRUE(window1.setAdjacentSubSurface(window2));
+
+  ASSERT_TRUE(window1.adjacentSubSurface());
+  EXPECT_EQ(window2.handle(), window1.adjacentSubSurface()->handle());
+  ASSERT_TRUE(window2.adjacentSubSurface());
+  EXPECT_EQ(window1.handle(), window2.adjacentSubSurface()->handle());
+
+  SurfacePropertyOtherSideConditionsModel oscm(model);
+  EXPECT_TRUE(window1.setSurfacePropertyOtherSideConditionsModel(oscm));
+  ASSERT_TRUE(window1.surfacePropertyOtherSideConditionsModel());
+  EXPECT_EQ(oscm.handle(), window1.surfacePropertyOtherSideConditionsModel()->handle());
+  EXPECT_FALSE(window2.surfacePropertyOtherSideConditionsModel());
+  EXPECT_FALSE(window1.adjacentSubSurface());
+  EXPECT_FALSE(window2.adjacentSubSurface());
+
+  EXPECT_TRUE(window1.setAdjacentSubSurface(window2));
+
+  ASSERT_TRUE(window1.adjacentSubSurface());
+  EXPECT_EQ(window2.handle(), window1.adjacentSubSurface()->handle());
+  ASSERT_TRUE(window2.adjacentSubSurface());
+  EXPECT_EQ(window1.handle(), window2.adjacentSubSurface()->handle());
 }
 
 TEST_F(ModelFixture, ExampleDaylightingControlPlacement)
@@ -995,4 +1137,16 @@ TEST_F(ModelFixture, DefaultSubSurfaceType)
     s.assignDefaultSubSurfaceType();
     EXPECT_EQ("GlassDoor", s.subSurfaceType());
   }
+}
+
+TEST_F(ModelFixture, SubSurface_SurfacePropertyOtherSideCoefficients)
+{
+  Model model;
+  SurfacePropertyOtherSideCoefficients otherSideCoefficients(model);
+}
+
+TEST_F(ModelFixture, SubSurface_SurfacePropertyOtherSideConditionsModel)
+{
+  Model model;
+  SurfacePropertyOtherSideConditionsModel otherSideModel(model);
 }
