@@ -2,7 +2,7 @@
   <schema_version>3.0</schema_version>
   <name>radiance_measure</name>
   <uid>1e3cfef8-b051-4e60-8bb0-ed2d29d4f45d</uid>
-  <version_id>558cdb31-2e4c-42a9-aa77-f74ab49d6265</version_id>
+  <version_id>3c7b2922-4d89-4795-98ae-8d0e15eb5a37</version_id>
   <xml_checksum>381B7733</xml_checksum>
   <class_name>RadianceMeasure</class_name>
   <display_name>Radiance Daylighting Measure</display_name>
@@ -12,7 +12,7 @@
     <argument>
       <name>apply_schedules</name>
       <display_name>Apply schedules</display_name>
-      <description>Replace lighting and shading control schedules with schedules computed by Radiance</description>
+      <description>Update lighting load schedules with those computed by Radiance</description>
       <type>Choice</type>
       <required>true</required>
       <model_dependent>false</model_dependent>
@@ -155,7 +155,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>CFDC9FCD</checksum>
+      <checksum>C2F96BBD</checksum>
     </file>
   </files>
 </measure>

@@ -49,7 +49,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     apply_schedules = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('apply_schedules', chs, true)
     apply_schedules.setDisplayName('Apply schedules')
     apply_schedules.setDefaultValue('Yes')
-    apply_schedules.setDescription('Replace lighting and shading control schedules with schedules computed by Radiance')
+    apply_schedules.setDescription('Update lighting load schedules with those computed by Radiance')
     args << apply_schedules
     
     chs = OpenStudio::StringVector.new
