@@ -193,11 +193,15 @@ set(economics_src
   economics/Economics.cpp
 )
 
+SET(GeographicLib optimized Geographic debug Geographic_d)
+
 set(${target_name}_depends
   sqlite
   litesql
   litesql-util
   miniziplib
+  geostarslib
+  ${GeographicLib}
   ${Boost_LIBRARIES}
   #JWD: On Ubuntu 14.04, the thread lib is included in Boost_LIBRARIES
   # ${CMAKE_THREAD_LIBS}

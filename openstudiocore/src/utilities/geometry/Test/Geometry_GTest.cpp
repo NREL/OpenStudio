@@ -136,18 +136,18 @@ TEST_F(GeometryFixture, Newall_Vector)
 
 TEST_F(GeometryFixture, DistanceLatLon)
 {
-  // expected test values from http://www.nhc.noaa.gov/gccalc.shtml
+  // expected test values from http://williams.best.vwh.net/gccalc.htm
 
-  // using 10 km threshold
+  // using 10 m threshold
 
   // San Francisco to New York
-  EXPECT_NEAR( 4138000, getDistanceLatLon(37.62, -122.38, 40.78, -73.88), 10000);
+  EXPECT_NEAR( 4150765, getDistanceLatLon(37.62, -122.38, 40.78, -73.88), 10);
 
   // Anchorage to New York
-  EXPECT_NEAR( 5414000, getDistanceLatLon(61.17, -150.02, 40.78, -73.88), 10000);
+  EXPECT_NEAR( 5432233, getDistanceLatLon(61.17, -150.02, 40.78, -73.88), 10);
 
   // Anchorage to San Francisco
-  EXPECT_NEAR( 3242000, getDistanceLatLon(61.17, -150.02, 37.62, -122.38), 10000);
+  EXPECT_NEAR( 3248030, getDistanceLatLon(61.17, -150.02, 37.62, -122.38), 10);
 }
 
 TEST_F(GeometryFixture, Centroid)
