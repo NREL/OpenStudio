@@ -38,22 +38,15 @@ Update CHANGELOG.md
 =================
 
 ### Set the desired stats date range
-- Open GitHubIssuesStats.rb, and adjust date range
+In folder `developer\ruby`
+- Open GitHubIssueStats.rb, and adjust date range
 
 ### Get the stats
-Open Git Bash
+In folder `developer\ruby`, open Git Bash and type the following
 
-In the Git Bash window, type the following
-
-- cd to the root folder of your local Git OpenStudio repository
-- cd developer/ruby
-- gem install github_api
-- ruby GitHubIssuesStats.rb
-
-### Pipe the stats out to a text file
-In the Git Bash window, type the following
-
-- ruby GitHubIssuesStats.rb > out.txt
+	gem install github_api
+	ruby GitHubIssueStats.rb
+	ruby GitHubIssueStats.rb > out.txt
 
 Open out.txt, and paste data into CHANGELOG.md
 
