@@ -101,7 +101,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.9.3")] = &VersionTranslator::update_1_9_2_to_1_9_3;
   m_updateMethods[VersionString("1.9.5")] = &VersionTranslator::update_1_9_4_to_1_9_5;
   m_updateMethods[VersionString("1.10.0")] = &VersionTranslator::update_1_9_5_to_1_10_0;
-  m_updateMethods[VersionString("1.10.1")] = &VersionTranslator::update_1_10_0_to_1_10_1;
+  m_updateMethods[VersionString("1.10.2")] = &VersionTranslator::update_1_10_1_to_1_10_2;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -196,6 +196,7 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.9.4"));
   m_startVersions.push_back(VersionString("1.9.5"));
   m_startVersions.push_back(VersionString("1.10.0"));
+  m_startVersions.push_back(VersionString("1.10.1"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -2994,19 +2995,19 @@ std::string VersionTranslator::update_1_9_5_to_1_10_0(const IdfFile& idf_1_9_5, 
   return ss.str();
 }
 
-std::string VersionTranslator::update_1_10_0_to_1_10_1(const IdfFile& idf_1_10_0, const IddFileAndFactoryWrapper& idd_1_10_1) {
+std::string VersionTranslator::update_1_10_1_to_1_10_2(const IdfFile& idf_1_10_1, const IddFileAndFactoryWrapper& idd_1_10_2) {
 
   std::stringstream ss;
 
-  ss << idf_1_10_0.header() << std::endl << std::endl;
+  ss << idf_1_10_1.header() << std::endl << std::endl;
 
   // new version object
-  IdfFile targetIdf(idd_1_10_1.iddFile());
+  IdfFile targetIdf(idd_1_10_2.iddFile());
   ss << targetIdf.versionObject().get();
 
-  auto zones = idf_1_10_0.getObjectsByType(idf_1_10_0.iddFile().getObject("OS:ThermalZone").get());
+  auto zones = idf_1_10_1.getObjectsByType(idf_1_10_1.iddFile().getObject("OS:ThermalZone").get());
 
-  for (const IdfObject& object : idf_1_10_0.objects()) {
+  for (const IdfObject& object : idf_1_10_1.objects()) {
     auto iddname = object.iddObject().name();
 
     if (iddname == "OS:ThermostatSetpoint:DualSetpoint") {
@@ -3035,7 +3036,7 @@ std::string VersionTranslator::update_1_10_0_to_1_10_1(const IdfFile& idf_1_10_0
       }
       ss << object;
     } else if (iddname == "OS:Sizing:Zone") {
-      auto iddObject = idd_1_10_1.getObject("OS:Sizing:Zone");
+      auto iddObject = idd_1_10_2.getObject("OS:Sizing:Zone");
       OS_ASSERT(iddObject);
       IdfObject newObject(iddObject.get());
 
