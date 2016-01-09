@@ -20,16 +20,15 @@
 #include "Geometry.hpp"
 #include "Intersection.hpp"
 #include "Transformation.hpp"
+#include "Point3d.hpp"
+#include "PointLatLon.hpp"
+#include "Vector3d.hpp"
 
 #include "../core/Assert.hpp"
 
 #include <boost/math/constants/constants.hpp>
 
 #include <polypartition/polypartition.h>
-
-#include <geostarslib/geoStars.h>
-
-#include <GeographicLib/Geodesic.hpp>
 
 #include <list>
 
@@ -350,28 +349,11 @@ namespace openstudio{
   /// lat and lon are specified in degrees
   double getDistanceLatLon(double lat1, double lon1, double lat2, double lon2)
   {
-    /*
-    double hgt1 = 0.0;
-    double hgt2 = 0.0;
-    double xyz[3], rae[3];
-    GEO_LOCATION loc1, loc2;
-
-    // Do the comps with Clarke 1866 ellisoid //
-    geoInitLocation(&loc1, lat1, lon1, hgt1, GEO_DATUM_DEFAULT, "Point 1");
-    geoInitLocation(&loc2, lat2, lon2, hgt2, GEO_DATUM_DEFAULT, "Point 2 ");
-
-    if (geoEfg2XyzDiff(&loc1, &loc2, xyz) == GEO_OK){
-      // Compute R,A,E between the sites //
-      geoXyz2Rae(xyz, rae);
-      return rae[0];
-    }
-    */
-
-    double s12;
-    const GeographicLib::Geodesic& geod = GeographicLib::Geodesic::WGS84();
-    geod.Inverse(lat1, lon1, lat2, lon2, s12);
-    return s12;
+    PointLatLon p1(lat1, lon1);
+    PointLatLon p2(lat2, lon2);
+    return (p1 - p2);
   }
+
 
   bool circularEqual(const Point3dVector& points1, const Point3dVector& points2, double tol)
   {

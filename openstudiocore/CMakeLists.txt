@@ -717,12 +717,6 @@ add_subdirectory(src/qwt)
 add_subdirectory(src/expat)
 ###############################################################################
 
-###############################################################################
-## geostars
-add_definitions(-DGEO_LIB)
-add_subdirectory(src/geostarslib)
-###############################################################################
-
 ################################################################################
 ## litesql
 include_directories(SYSTEM src/litesql/include src/litesql/library ${CMAKE_BINARY_DIR}/litesql)
@@ -967,7 +961,6 @@ set(all_lib_targets
   zkexpat
   qwt
   miniziplib
-  geostarslib
   sqlite
   litesql
   litesql-util
