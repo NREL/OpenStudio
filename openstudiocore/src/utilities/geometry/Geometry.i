@@ -31,7 +31,7 @@
 
 // create an instantiation of the optional classes
 %template(OptionalPoint3d) boost::optional<openstudio::Point3d>;
-%template(OptionalPoint3d) boost::optional<openstudio::PointLatLon>;
+%template(OptionalPointLatLon) boost::optional<openstudio::PointLatLon>;
 %template(OptionalVector3d) boost::optional<openstudio::Vector3d>;
 %template(OptionalPlane) boost::optional<openstudio::Plane>;
 %template(OptionalEulerAngles) boost::optional<openstudio::EulerAngles>;
@@ -41,7 +41,7 @@
 // create an instantiation of the vector classes
 %template(Point3dVector) std::vector<openstudio::Point3d>;
 %template(Point3dVectorVector) std::vector<std::vector<openstudio::Point3d> >; // for polygon subtraction routines
-%template(Point3dVector) std::vector<openstudio::PointLatLon>;
+%template(PointLatLonVector) std::vector<openstudio::PointLatLon>;
 %template(Vector3dVector) std::vector<openstudio::Vector3d>;  
 %ignore std::vector<openstudio::Plane>::vector(size_type);
 %ignore std::vector<openstudio::Plane>::resize(size_type);
