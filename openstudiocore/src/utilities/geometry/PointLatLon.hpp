@@ -71,18 +71,22 @@ namespace openstudio{
 
     /// converts a PointLatLon to a Point3d in a Local Cartesian frame centered on this with y oriented North and z oriented up
     Point3d toLocalCartesian(const PointLatLon& point) const;
+    std::vector<Point3d> toLocalCartesian(const std::vector<PointLatLon>& points) const;
 
     /// converts a Point3d in Local Cartesian coordinate system centered on this to LatLon
     PointLatLon fromLocalCartesian(const Point3d& point) const;
+    std::vector<PointLatLon> fromLocalCartesian(const std::vector<Point3d>& points) const;
 
     /// gets the UTM zone for this point
     int utmZone() const;
 
     /// converts a PointLatLon to a Point3d in UTM centered on this
     Point3d toUTM(const PointLatLon& point) const;
+    std::vector<Point3d> toUTM(const std::vector<PointLatLon>& points) const;
 
     /// converts a Point3d in UTM centered on this to LatLon
     PointLatLon fromUTM(const Point3d& point) const;
+    std::vector<PointLatLon> fromUTM(const std::vector<Point3d>& points) const;
 
   private:
 

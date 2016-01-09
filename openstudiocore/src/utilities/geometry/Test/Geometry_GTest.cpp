@@ -22,6 +22,7 @@
 
 #include "../Geometry.hpp"
 #include "../Point3d.hpp"
+#include "../PointLatLon.hpp"
 #include "../Vector3d.hpp"
 
 using namespace std;
@@ -702,4 +703,53 @@ TEST_F(GeometryFixture, Triangulate_Up)
   test = computeTriangulation(points1, holes, tol);
   EXPECT_TRUE(test.empty());
   EXPECT_TRUE(checkNormals(normal, test));
+}
+
+TEST_F(GeometryFixture, PointLatLon)
+{
+  // building in Portland
+  PointLatLon origin(45.521272355398, -122.686472758865);
+
+  Point3d localOrigin = origin.toLocalCartesian(origin);
+  EXPECT_DOUBLE_EQ(0, localOrigin.x());
+  EXPECT_DOUBLE_EQ(0, localOrigin.y());
+  EXPECT_DOUBLE_EQ(0, localOrigin.z());
+
+  PointLatLon origin2 = origin.fromLocalCartesian(localOrigin);
+  EXPECT_DOUBLE_EQ(origin.lon(), origin2.lon());
+  EXPECT_DOUBLE_EQ(origin.lat(), origin2.lat());
+  EXPECT_NEAR(origin.height(), origin2.height(), 0.001);
+
+  EXPECT_DOUBLE_EQ(0, (origin - origin2));
+  
+  PointLatLonVector footprint;
+  footprint.push_back(PointLatLon(45.521272355398, -122.686472758865));
+  footprint.push_back(PointLatLon(45.5214185583437, -122.687017007901));
+  footprint.push_back(PointLatLon(45.5216756691633, -122.686878595312));
+  footprint.push_back(PointLatLon(45.5215377823024, -122.686365888764));
+  footprint.push_back(PointLatLon(45.5214801020189, -122.686152903546));
+  footprint.push_back(PointLatLon(45.5212238483817, -122.686291351916));
+  footprint.push_back(PointLatLon(45.521272355398, -122.686472758865));
+
+  Point3dVector localFootprint = origin.toLocalCartesian(footprint);
+  ASSERT_EQ(footprint.size(), localFootprint.size());
+  
+  double expectedArea = 1853.0906095305727; // from GIS
+  boost::optional<double> calcArea = getArea(localFootprint);
+  ASSERT_TRUE(calcArea);
+  EXPECT_NEAR(expectedArea, *calcArea, 0.5);
+
+  PointLatLonVector footprint2 = origin.fromLocalCartesian(localFootprint);
+  ASSERT_EQ(footprint2.size(), localFootprint.size());
+
+  unsigned n = footprint.size();
+  for (unsigned i = 0; i < n; ++i){
+    EXPECT_DOUBLE_EQ(footprint2[i].lat(), footprint[i].lat());
+    EXPECT_DOUBLE_EQ(footprint2[i].lon(), footprint[i].lon());
+    EXPECT_NEAR(footprint2[i].height(), footprint[i].height(), 0.001);
+
+    double localDistance = getDistance(localFootprint[i], localOrigin);
+    double geodesicDistance = (footprint[i] - origin);
+    EXPECT_NEAR(localDistance, geodesicDistance, 0.001);
+  }
 }

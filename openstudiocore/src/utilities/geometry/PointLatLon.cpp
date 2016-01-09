@@ -95,12 +95,30 @@ namespace openstudio{
     return Point3d(x, y, z);
   }
 
+  std::vector<Point3d> PointLatLon::toLocalCartesian(const std::vector<PointLatLon>& points) const
+  {
+    std::vector<Point3d> result;
+    for (const auto& point : points){
+      result.push_back(toLocalCartesian(point));
+    }
+    return result;
+  }
+
   PointLatLon PointLatLon::fromLocalCartesian(const Point3d& point) const
   {
     initLocalCartesianConverter();
     double lat, lon, h;
     m_localCartesianConverter->Reverse(point.x(), point.y(), point.z(), lat, lon, h);
     return PointLatLon(lat, lon, h);
+  }
+  
+  std::vector<PointLatLon> PointLatLon::fromLocalCartesian(const std::vector<Point3d>& points) const
+  {
+    std::vector<PointLatLon> result;
+    for (const auto& point : points){
+      result.push_back(fromLocalCartesian(point));
+    }
+    return result;
   }
 
   int PointLatLon::utmZone() const
@@ -117,6 +135,15 @@ namespace openstudio{
     return Point3d(x, y, point.height());
   }
 
+  std::vector<Point3d> PointLatLon::toUTM(const std::vector<PointLatLon>& points) const
+  {
+    std::vector<Point3d> result;
+    for (const auto& point : points){
+      result.push_back(toUTM(point));
+    }
+    return result;
+  }
+
   PointLatLon PointLatLon::fromUTM(const Point3d& point) const
   {
     int zone;
@@ -129,6 +156,15 @@ namespace openstudio{
     double lat, lon, gamma, k;
     GeographicLib::UTMUPS::Reverse(zone, northp, point.x(), point.y(), lat, lon, gamma, k);
     return PointLatLon(lat, lon, point.z());
+  }
+
+  std::vector<PointLatLon> PointLatLon::fromUTM(const std::vector<Point3d>& points) const
+  {
+    std::vector<PointLatLon> result;
+    for (const auto& point : points){
+      result.push_back(fromUTM(point));
+    }
+    return result;
   }
 
   void PointLatLon::initLocalCartesianConverter() const
