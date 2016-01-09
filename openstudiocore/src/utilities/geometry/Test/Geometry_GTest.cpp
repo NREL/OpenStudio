@@ -709,6 +709,10 @@ TEST_F(GeometryFixture, PointLatLon)
 {
   // building in Portland
   PointLatLon origin(45.521272355398, -122.686472758865);
+  EXPECT_TRUE(origin == origin);
+
+  PointLatLon originCopy(45.521272355398, -122.686472758865);
+  EXPECT_TRUE(origin == originCopy);
 
   Point3d localOrigin = origin.toLocalCartesian(origin);
   EXPECT_DOUBLE_EQ(0, localOrigin.x());
@@ -719,6 +723,7 @@ TEST_F(GeometryFixture, PointLatLon)
   EXPECT_DOUBLE_EQ(origin.lon(), origin2.lon());
   EXPECT_DOUBLE_EQ(origin.lat(), origin2.lat());
   EXPECT_NEAR(origin.height(), origin2.height(), 0.001);
+  //EXPECT_TRUE(origin == origin2);
 
   EXPECT_DOUBLE_EQ(0, (origin - origin2));
   
