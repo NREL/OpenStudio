@@ -77,4 +77,12 @@
   }
 }
 
+%extend openstudio::PointLatLon{
+  std::string __str__() const {
+    std::ostringstream os;
+    os << *self;
+    return os.str();
+  }
+}
+
 #endif //UTILITIES_GEOMETRY_GEOMETRY_I 
