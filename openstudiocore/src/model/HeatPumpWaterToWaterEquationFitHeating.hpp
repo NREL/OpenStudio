@@ -20,7 +20,7 @@
 #ifndef MODEL_HEATPUMPWATERTOWATEREQUATIONFITHEATING_HPP
 #define MODEL_HEATPUMPWATERTOWATEREQUATIONFITHEATING_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "WaterToWaterComponent.hpp"
 
 namespace openstudio {
