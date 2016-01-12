@@ -87,7 +87,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     header = []
     data = []
   
-    print_statement("Reading #{filename}", runner)
+    print_statement("Reading '#{filename}'", runner)
     fail "Could not find illuminance file #{filename}" unless File.exist?(filename)
     File.read(filename).each_line do |line|
       data_section = true if line =~ /^\s?\d/  
@@ -689,6 +689,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         # do that window group/state merge thing
 
         wg_index = 0
+        
+        print_statement("### DEBUG: getting window shade control(s) values", runner)        
+        filename = "output/ts/window_controls.ill"          
+        windowControls, _header = read_illuminance_file(filename, runner)
+        print_statement("### DEBUG: windowControls matrix is #{windowControls.row_count} rows x #{windowControls.column_count} columns", runner)
 
         windowGroups = File.open("bsdf/mapping.rad")
         windowGroups.each do |wg|
@@ -708,7 +713,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           wg_normal_y = wg_normal.split(" ")[1].to_f
           wg_normal_z = wg_normal.split(" ")[2].to_f
    
-      
           # DLM: hacktastic way to implement these options for now
           if shadeControlType == "AlwaysOn"
             shadeControlSetpoint = -1000
@@ -717,27 +721,22 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             shadeControlSetpoint = 10000000000
           end
 
-          print_statement("Processing Window Group '#{windowGroup}'\noutward normal: #{wg_normal_x * -1} #{wg_normal_y * -1} #{wg_normal_z * -1}\nshade control setpoint: #{shadeControlSetpoint.round(0)} lux", runner)
+          print_statement("Processing Window Group '#{windowGroup}', (exterior normal: '#{wg_normal_x * -1} #{wg_normal_y * -1} #{wg_normal_z * -1}', shade control setpoint: #{shadeControlSetpoint.round(0)} lux)", runner)
 
           ill0, header = read_illuminance_file(wgIllumFiles[0], runner)
           ill1, _header = read_illuminance_file(wgIllumFiles[1], runner)        
   
-          filename = "output/ts/window_controls.ill"          
-          windowControls, _header = read_illuminance_file(filename, runner)
-  
-          print_statement("### DEBUG: windowControls is #{windowControls.row_count} rows x #{windowControls.column_count} columns", runner)
-
           wgMerge = Matrix.build(ill0.row_count, ill0.column_count) { 0 }
           print_statement("### DEBUG: wgmerge is #{wgMerge.row_count} rows x #{wgMerge.column_count} columns", runner)
 
           wgShadeSchedule = []
-  
+          print_statement("### DEBUG: window group = '#{wg.split(",")[0]}', window controls matrix index = '#{wg_index-1}' (zero-based)", runner)
           windowControls.row(wg_index-1).each_with_index do | illuminance, row_index|
 
             window_illuminance = illuminance.to_f
 
             if window_illuminance < shadeControlSetpoint
-              print_statement("### DEBUG: E(#{windowGroup}) is #{window_illuminance.round(0)} lux at index: #{row_index} /\\ STATE 0 (UP/CLEAR) /\\ Matrix check: Rows: #{ill0.row_count} Columns #{ill0.column_count}", runner) if row_index > 152 && row_index < 160
+              print_statement("### DEBUG: E(#{windowGroup}) is #{window_illuminance.round(0)} lux at index: #{row_index} /\\ STATE 0 (up/clear) /\\", runner) if row_index > 152 && row_index < 160 # print shade decisions for one day
 
               ill0.column(row_index).each_with_index do |value, column_index| 
                 wgMerge.send(:[]=, column_index, row_index, value)
@@ -745,7 +744,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
               wgShadeSchedule << "#{row_index},#{window_illuminance.round(0)},#{shadeControlSetpoint.round(0)},0\n"
             else
-              print_statement("### DEBUG: E(#{windowGroup}) is #{window_illuminance.round(0)} lux at index: #{row_index} \\/ STATE 1 (DN/TINTED) \\/ Matrix check: Rows: #{ill1.row_count} Columns #{ill1.column_count}", runner) if row_index > 152 && row_index < 160
+              print_statement("### DEBUG: E(#{windowGroup}) is #{window_illuminance.round(0)} lux at index: #{row_index} \\/ STATE 1 (dn/tinted) \\/", runner) if row_index > 152 && row_index < 160 # print shade decisions for one day
 
               ill1.column(row_index).each_with_index do |value, column_index| 
                 wgMerge.send(:[]=, column_index, row_index, value.to_f)
