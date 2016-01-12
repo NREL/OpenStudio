@@ -1,9 +1,22 @@
 <measure>
-  <name>Test Missing A Required Arg With No Default</name>
+  <schema_version>3.0</schema_version>
+  <name>test_missing_a_required_arg_with_no_default</name>
   <uid>cb163577-78e2-4bd5-886a-a37c7f217ffb</uid>
-  <version_id>48f5a3ce-6745-42c0-af92-0d4f0d69637c</version_id>
+  <version_id>52c3ed76-d541-4bac-8339-b6819fd4de0d</version_id>
+  <xml_checksum>AB76F4E8</xml_checksum>
+  <class_name>TestMissingARequiredArgWithNoDefault</class_name>
+  <display_name>Test - Missing a Required Argument with No Default</display_name>
   <description>Measure for testing ability of best practice UserScript writing to capture case when an argument is required but no value (including no default value) is provided.</description>
   <modeler_description></modeler_description>
+  <arguments>
+    <argument>
+      <name>required_argument</name>
+      <display_name>Required Argument</display_name>
+      <type>Integer</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+    </argument>
+  </arguments>
   <provenances/>
   <tags/>
   <attributes>
@@ -33,7 +46,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>1A5E045E</checksum>
+      <checksum>95755DB2</checksum>
     </file>
   </files>
 </measure>
