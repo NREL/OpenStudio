@@ -1,57 +1,9 @@
 <measure>
-  <schema_version>3.0</schema_version>
-  <name>set_window_to_wall_ratio_by_facade</name>
+  <name>Set Window to Wall Ratio by Facade</name>
   <uid>f347ae80-48b4-4c40-bfd4-6c5139b38136</uid>
-  <version_id>cee4beb5-a513-432d-8f71-571ded20b998</version_id>
-  <xml_checksum>6DE831F7</xml_checksum>
-  <class_name>SetWindowToWallRatioByFacade</class_name>
-  <display_name>Set Window to Wall Ratio by Facade</display_name>
+  <version_id>a0e33012-0183-45a0-8898-11f93f55164d</version_id>
   <description>This measure will set the window to wall ratio for exterior surfaces with a specified orientation. If one or more windows exist on an affected wall, they will be removed and replaced with a single ribbon window. Doors will not be removed. If the requested ratio can't be achieved then the wall will remain untouched.</description>
   <modeler_description>This measure identifies exterior surfaces of the proper orientation. Then it runs a method that removes existing windows and applies a new window with a specified window to wall ratio and sill height. The construction chosen for the new window is defaulted to what is assigned to the space, or inherited from a higher level object, such as the building. If the baseline model uses hard assigned constructions you may not get the expected results. The measure doesn't have any cost or lifecycle arguments, however if lifecycle objects exist for exterior wall and window constructions, then this measure will be able to calculate the economic impact of change in window to wall ratio.</modeler_description>
-  <arguments>
-    <argument>
-      <name>wwr</name>
-      <display_name>Window to Wall Ratio (fraction).</display_name>
-      <type>Double</type>
-      <required>true</required>
-      <model_dependent>false</model_dependent>
-      <default_value>0.4</default_value>
-    </argument>
-    <argument>
-      <name>sillHeight</name>
-      <display_name>Sill Height (in).</display_name>
-      <type>Double</type>
-      <required>true</required>
-      <model_dependent>false</model_dependent>
-      <default_value>30</default_value>
-    </argument>
-    <argument>
-      <name>facade</name>
-      <display_name>Cardinal Direction.</display_name>
-      <type>Choice</type>
-      <required>true</required>
-      <model_dependent>false</model_dependent>
-      <default_value>South</default_value>
-      <choices>
-        <choice>
-          <value>North</value>
-          <display_name>North</display_name>
-        </choice>
-        <choice>
-          <value>East</value>
-          <display_name>East</display_name>
-        </choice>
-        <choice>
-          <value>South</value>
-          <display_name>South</display_name>
-        </choice>
-        <choice>
-          <value>West</value>
-          <display_name>West</display_name>
-        </choice>
-      </choices>
-    </argument>
-  </arguments>
   <provenances/>
   <tags>
     <tag>Envelope.Fenestration</tag>
@@ -92,10 +44,15 @@
       <checksum>0B94403D</checksum>
     </file>
     <file>
+      <filename>SetWindowToWallRatioByFacade_Test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>4DACA891</checksum>
+    </file>
+    <file>
       <version>
         <software_program>OpenStudio</software_program>
         <identifier>0.10.2</identifier>
-        <min_compatible>0.10.2</min_compatible>
       </version>
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
@@ -113,12 +70,6 @@
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
       <checksum>7D0E12A4</checksum>
-    </file>
-    <file>
-      <filename>SetWindowToWallRatioByFacade_Test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>A465186E</checksum>
     </file>
   </files>
 </measure>

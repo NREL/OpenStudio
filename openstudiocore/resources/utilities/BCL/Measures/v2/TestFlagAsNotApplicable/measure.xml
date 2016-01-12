@@ -1,32 +1,9 @@
 <measure>
-  <schema_version>3.0</schema_version>
-  <name>test_flag_as_not_applicable</name>
+  <name>Test Flag As Not Applicable</name>
   <uid>1679ca80-aa30-42ab-82c3-8b4b958f509f</uid>
-  <version_id>5bf73baa-5e64-4ff5-8071-940901221882</version_id>
-  <xml_checksum>AB76F4E8</xml_checksum>
-  <class_name>TestFlagAsNotApplicable</class_name>
-  <display_name>Test - Flag as Not Applicable</display_name>
+  <version_id>37ad7563-6c45-46c7-b937-0a3dc583aa95</version_id>
   <description>Measure for testing the ability of UserScripts to register their end state as not applicable.</description>
   <modeler_description></modeler_description>
-  <arguments>
-    <argument>
-      <name>applicable</name>
-      <display_name>Initial applicable</display_name>
-      <type>Boolean</type>
-      <required>true</required>
-      <model_dependent>false</model_dependent>
-      <choices>
-        <choice>
-          <value>true</value>
-          <display_name>true</display_name>
-        </choice>
-        <choice>
-          <value>false</value>
-          <display_name>false</display_name>
-        </choice>
-      </choices>
-    </argument>
-  </arguments>
   <provenances/>
   <tags/>
   <attributes>
@@ -56,7 +33,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>6B2AD458</checksum>
+      <checksum>73C02886</checksum>
     </file>
   </files>
 </measure>
