@@ -119,10 +119,10 @@ TEST_F(ModelFixture, FanOnOff_Remove)
   EXPECT_EQ(0, fans.size());
 
   curveExponents = m.getModelObjects<CurveExponent>();
-  EXPECT_EQ(0, curveExponents.size());
+  EXPECT_EQ(1, curveExponents.size());
 
   curveCubics = m.getModelObjects<CurveCubic>();
-  EXPECT_EQ(0, curveCubics.size());
+  EXPECT_EQ(1, curveCubics.size());
 }
 
 TEST_F(ModelFixture,FanOnOff_addToNode)
@@ -176,8 +176,16 @@ TEST_F(ModelFixture, FanOnOff_CloneOneModelWithDefaultData)
   EXPECT_DOUBLE_EQ(0.8, testObjectClone.motorEfficiency());
   EXPECT_TRUE(testObjectClone.isMaximumFlowRateAutosized());
   EXPECT_DOUBLE_EQ(1.0, testObjectClone.motorInAirstreamFraction().get());
-  EXPECT_NE(testObject.fanPowerRatioFunctionofSpeedRatioCurve().handle(), testObjectClone.fanPowerRatioFunctionofSpeedRatioCurve().handle());
-  EXPECT_NE(testObject.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle(), testObjectClone.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle());
+  EXPECT_EQ(testObject.fanPowerRatioFunctionofSpeedRatioCurve().handle(), testObjectClone.fanPowerRatioFunctionofSpeedRatioCurve().handle());
+  EXPECT_EQ(testObject.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle(), testObjectClone.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle());
+
+  EXPECT_EQ(1, m.getModelObjects<CurveExponent>().size());
+  EXPECT_EQ(1, m.getModelObjects<CurveCubic>().size());
+
+  testObjectClone.remove();
+
+  EXPECT_EQ(1, m.getModelObjects<CurveExponent>().size());
+  EXPECT_EQ(1, m.getModelObjects<CurveCubic>().size());
 }
 
 TEST_F(ModelFixture, FanOnOff_CloneOneModelWithCustomData)
@@ -199,10 +207,10 @@ TEST_F(ModelFixture, FanOnOff_CloneOneModelWithCustomData)
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.pressureRise());
   EXPECT_DOUBLE_EQ(0.99, testObjectClone.fanEfficiency());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.maximumFlowRate().get());
-  EXPECT_NE(testObject.fanPowerRatioFunctionofSpeedRatioCurve().handle(), testObjectClone.fanPowerRatioFunctionofSpeedRatioCurve().handle());
-  EXPECT_NE(fanPowerFuncSpeedCurve.handle(), testObjectClone.fanPowerRatioFunctionofSpeedRatioCurve().handle());
-  EXPECT_NE(testObject.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle(), testObjectClone.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle());
-  EXPECT_NE(fanEfficiencyFuncSpeedCurve.handle(), testObjectClone.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle());
+  EXPECT_EQ(testObject.fanPowerRatioFunctionofSpeedRatioCurve().handle(), testObjectClone.fanPowerRatioFunctionofSpeedRatioCurve().handle());
+  EXPECT_EQ(fanPowerFuncSpeedCurve.handle(), testObjectClone.fanPowerRatioFunctionofSpeedRatioCurve().handle());
+  EXPECT_EQ(testObject.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle(), testObjectClone.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle());
+  EXPECT_EQ(fanEfficiencyFuncSpeedCurve.handle(), testObjectClone.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle());
 }
 
 TEST_F(ModelFixture, FanOnOff_CloneTwoModelsWithDefaultData)
@@ -216,12 +224,12 @@ TEST_F(ModelFixture, FanOnOff_CloneTwoModelsWithDefaultData)
   Model m2;
 
   std::vector<CurveExponent> powerCurves = m.getModelObjects<CurveExponent>();
-  EXPECT_EQ(2, powerCurves.size());
+  EXPECT_EQ(1, powerCurves.size());
   std::vector<CurveExponent> powerCurves2 = m2.getModelObjects<CurveExponent>();
   EXPECT_EQ(0, powerCurves2.size());
 
   std::vector<CurveCubic> efficiencyCurves = m.getModelObjects<CurveCubic>();
-  EXPECT_EQ(2, efficiencyCurves.size());
+  EXPECT_EQ(1, efficiencyCurves.size());
   std::vector<CurveCubic> efficiencyCurves2 = m2.getModelObjects<CurveCubic>();
   EXPECT_EQ(0, efficiencyCurves2.size());
 
@@ -279,12 +287,12 @@ TEST_F(ModelFixture, FanOnOff_CloneTwoModelsWithCustomData)
   Model m2;
 
   std::vector<CurveExponent> powerCurves = m.getModelObjects<CurveExponent>();
-  EXPECT_EQ(3, powerCurves.size());
+  EXPECT_EQ(2, powerCurves.size());
   std::vector<CurveExponent> powerCurves2 = m2.getModelObjects<CurveExponent>();
   EXPECT_EQ(0, powerCurves2.size());
 
   std::vector<CurveCubic> efficiencyCurves = m.getModelObjects<CurveCubic>();
-  EXPECT_EQ(3, efficiencyCurves.size());
+  EXPECT_EQ(2, efficiencyCurves.size());
   std::vector<CurveCubic> efficiencyCurves2 = m2.getModelObjects<CurveCubic>();
   EXPECT_EQ(0, efficiencyCurves2.size());
 

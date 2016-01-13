@@ -21,6 +21,8 @@
 #include "ModelFixture.hpp"
 #include "../CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit.hpp"
 #include "../CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl.hpp"
+#include "../Curve.hpp"
+#include "../Curve_Impl.hpp"
 #include "../CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.hpp"
 #include "../CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl.hpp"
 
@@ -50,5 +52,8 @@ TEST_F(ModelFixture,CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Remove
   CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData speed(m);
   coil.addSpeed(speed);
   coil.remove();
-  EXPECT_EQ(count,m.modelObjects().size());
+
+  auto curves = m.getModelObjects<model::Curve>();
+
+  EXPECT_EQ(count,m.modelObjects().size() - curves.size());
 }

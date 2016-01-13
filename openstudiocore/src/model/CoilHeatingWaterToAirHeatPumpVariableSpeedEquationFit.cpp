@@ -215,8 +215,6 @@ namespace detail {
       newCoil.getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->setSpeedDataList(speedDataListClone);
     }
 
-    newCoil.setEnergyPartLoadFractionCurve( energyPartLoadFractionCurve().clone(model).cast<Curve>() );
-
     return newCoil;
   }
 

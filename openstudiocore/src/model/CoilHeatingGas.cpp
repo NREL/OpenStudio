@@ -415,11 +415,6 @@ namespace detail{
   {
     CoilHeatingGas newCoil = StraightComponent_Impl::clone(model).cast<CoilHeatingGas>();
 
-    if( boost::optional<Curve> curve1 = partLoadFractionCorrelationCurve() )
-    {
-      newCoil.setPartLoadFractionCorrelationCurve(curve1->clone(model).cast<Curve>());
-    }
-
     return newCoil;
   }
 

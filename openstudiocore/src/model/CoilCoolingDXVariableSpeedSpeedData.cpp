@@ -229,11 +229,6 @@ namespace detail {
   ModelObject CoilCoolingDXVariableSpeedSpeedData_Impl::clone(Model model) const {
     auto t_clone = ParentObject_Impl::clone(model).cast<CoilCoolingDXVariableSpeedSpeedData>();
 
-    t_clone.setTotalCoolingCapacityFunctionofTemperatureCurve( totalCoolingCapacityFunctionofTemperatureCurve().clone(model).cast<Curve>() );
-    t_clone.setTotalCoolingCapacityFunctionofAirFlowFractionCurve( totalCoolingCapacityFunctionofAirFlowFractionCurve().clone(model).cast<Curve>() );
-    t_clone.setEnergyInputRatioFunctionofTemperatureCurve( energyInputRatioFunctionofTemperatureCurve().clone(model).cast<Curve>() );
-    t_clone.setEnergyInputRatioFunctionofAirFlowFractionCurve( energyInputRatioFunctionofAirFlowFractionCurve().clone(model).cast<Curve>() );
-
     return t_clone;
   }
 

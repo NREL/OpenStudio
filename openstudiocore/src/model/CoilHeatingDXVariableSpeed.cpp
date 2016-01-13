@@ -328,12 +328,6 @@ namespace detail {
       t_clone.getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setSpeedDataList(speedDataListClone);
     }
 
-    t_clone.setEnergyPartLoadFractionCurve( energyPartLoadFractionCurve().clone(model).cast<Curve>() );
-
-    if ( auto const curve = defrostEnergyInputRatioFunctionofTemperatureCurve() ) {
-      t_clone.setDefrostEnergyInputRatioFunctionofTemperatureCurve( curve->clone(model).cast<Curve>() );
-    }
-
     return t_clone;
   }
 

@@ -305,10 +305,6 @@ namespace detail {
       t_clone.getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setStageDataList(stageDataListClone);
     }
 
-    if ( auto const curve = defrostEnergyInputRatioFunctionofTemperatureCurve() ) {
-      t_clone.setDefrostEnergyInputRatioFunctionofTemperatureCurve( curve.get() );
-    }
-
     return t_clone;
   }
 

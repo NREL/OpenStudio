@@ -93,7 +93,7 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_Remove)
     EXPECT_EQ(1, heatRejectionTargets.size());
 
     curves = model.getModelObjects<CurveBiquadratic>();
-    EXPECT_EQ(0, curves.size());
+    EXPECT_EQ(1, curves.size());
 
     nodes = model.getModelObjects<Node>();
     EXPECT_EQ(0, nodes.size());
@@ -219,7 +219,7 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_CloneModelWithCustomData)
     EXPECT_FALSE(testObjectClone.heatingSource());
     EXPECT_FALSE(testObjectClone.heatRejectionTarget());
     ASSERT_TRUE(testObjectClone.heatReclaimEfficiencyFunctionofTemperatureCurve());
-    EXPECT_NE(curve, testObjectClone.heatReclaimEfficiencyFunctionofTemperatureCurve().get());
+    EXPECT_EQ(curve, testObjectClone.heatReclaimEfficiencyFunctionofTemperatureCurve().get());
 }
 
 TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_CloneTwoModelWithCustomData)

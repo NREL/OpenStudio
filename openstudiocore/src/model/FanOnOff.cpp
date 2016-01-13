@@ -370,12 +370,6 @@ namespace detail {
   {
     FanOnOff newFan = ModelObject_Impl::clone(model).cast<FanOnOff>();
 
-    Curve curve1 = fanPowerRatioFunctionofSpeedRatioCurve();
-    newFan.setFanPowerRatioFunctionofSpeedRatioCurve(curve1.clone(model).cast<Curve>());
-
-    Curve curve2 = fanEfficiencyRatioFunctionofSpeedRatioCurve();
-    newFan.setFanEfficiencyRatioFunctionofSpeedRatioCurve(curve2.clone(model).cast<Curve>());
-
     return newFan;
   }
 

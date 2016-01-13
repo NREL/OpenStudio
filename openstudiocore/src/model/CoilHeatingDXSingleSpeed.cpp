@@ -620,21 +620,6 @@ namespace detail {
   {
     CoilHeatingDXSingleSpeed newCoil = StraightComponent_Impl::clone(model).cast<CoilHeatingDXSingleSpeed>();
 
-    Curve curve1 = totalHeatingCapacityFunctionofTemperatureCurve();
-    newCoil.setTotalHeatingCapacityFunctionofTemperatureCurve(curve1.clone(model).cast<Curve>());
-
-    Curve curve2 = totalHeatingCapacityFunctionofFlowFractionCurve();
-    newCoil.setTotalHeatingCapacityFunctionofFlowFractionCurve(curve2.clone(model).cast<Curve>());
-
-    Curve curve3 = energyInputRatioFunctionofTemperatureCurve();
-    newCoil.setEnergyInputRatioFunctionofTemperatureCurve(curve3.clone(model).cast<Curve>());
-
-    Curve curve4 = energyInputRatioFunctionofFlowFractionCurve();
-    newCoil.setEnergyInputRatioFunctionofFlowFractionCurve(curve4.clone(model).cast<Curve>());
-
-    Curve curve5 = partLoadFractionCorrelationCurve();
-    newCoil.setPartLoadFractionCorrelationCurve(curve5.clone(model).cast<Curve>());
-
     return newCoil;
   }
 

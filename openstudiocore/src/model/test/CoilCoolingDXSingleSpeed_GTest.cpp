@@ -166,11 +166,11 @@ TEST_F(ModelFixture,CoilCoolingDXSingleSpeed_addToNode) {
   EXPECT_NE(testObject, testObjectClone);
   EXPECT_FALSE(testObjectClone.loop());
   EXPECT_FALSE(testObjectClone.airLoopHVAC());
-  EXPECT_NE(testObject.totalCoolingCapacityFunctionOfTemperatureCurve(), testObjectClone.totalCoolingCapacityFunctionOfTemperatureCurve());
-  EXPECT_NE(testObject.totalCoolingCapacityFunctionOfFlowFractionCurve(), testObjectClone.totalCoolingCapacityFunctionOfFlowFractionCurve());
-  EXPECT_NE(testObject.energyInputRatioFunctionOfTemperatureCurve(), testObjectClone.energyInputRatioFunctionOfTemperatureCurve());
-  EXPECT_NE(testObject.energyInputRatioFunctionOfFlowFractionCurve(), testObjectClone.energyInputRatioFunctionOfFlowFractionCurve());
-  EXPECT_NE(testObject.partLoadFractionCorrelationCurve(), testObjectClone.partLoadFractionCorrelationCurve());
+  EXPECT_EQ(testObject.totalCoolingCapacityFunctionOfTemperatureCurve(), testObjectClone.totalCoolingCapacityFunctionOfTemperatureCurve());
+  EXPECT_EQ(testObject.totalCoolingCapacityFunctionOfFlowFractionCurve(), testObjectClone.totalCoolingCapacityFunctionOfFlowFractionCurve());
+  EXPECT_EQ(testObject.energyInputRatioFunctionOfTemperatureCurve(), testObjectClone.energyInputRatioFunctionOfTemperatureCurve());
+  EXPECT_EQ(testObject.energyInputRatioFunctionOfFlowFractionCurve(), testObjectClone.energyInputRatioFunctionOfFlowFractionCurve());
+  EXPECT_EQ(testObject.partLoadFractionCorrelationCurve(), testObjectClone.partLoadFractionCorrelationCurve());
   EXPECT_TRUE(testObject.inletModelObject());
   EXPECT_TRUE(testObject.outletModelObject());
   EXPECT_FALSE(testObjectClone.inletModelObject());

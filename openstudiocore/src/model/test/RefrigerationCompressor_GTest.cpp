@@ -73,8 +73,8 @@ TEST_F(ModelFixture, RefrigerationCompressor_CloneOneModelWithDefaultData)
   EXPECT_DOUBLE_EQ(18.3, testObjectClone.ratedReturnGasTemperature().get());
   EXPECT_DOUBLE_EQ(0.0, testObjectClone.ratedSubcooling().get());
   EXPECT_EQ("Subcritical", testObjectClone.modeofOperation());
-  EXPECT_NE(testObject.refrigerationCompressorPowerCurve().handle(), testObjectClone.refrigerationCompressorPowerCurve().handle());
-  EXPECT_NE(testObject.refrigerationCompressorCapacityCurve().handle(), testObjectClone.refrigerationCompressorCapacityCurve().handle());
+  EXPECT_EQ(testObject.refrigerationCompressorPowerCurve().handle(), testObjectClone.refrigerationCompressorPowerCurve().handle());
+  EXPECT_EQ(testObject.refrigerationCompressorCapacityCurve().handle(), testObjectClone.refrigerationCompressorCapacityCurve().handle());
 }
 
 TEST_F(ModelFixture, RefrigerationCompressor_CloneOneModelWithCustomData)
@@ -177,12 +177,12 @@ TEST_F(ModelFixture, RefrigerationCompressor_CloneOneModelWithCustomData)
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.ratedReturnGasTemperature().get());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.ratedSubcooling().get());
   EXPECT_EQ("Transcritical", testObjectClone.modeofOperation());
-  EXPECT_NE(testObject.refrigerationCompressorPowerCurve().handle(), testObjectClone.refrigerationCompressorPowerCurve().handle());
-  EXPECT_NE(testObject.refrigerationCompressorCapacityCurve().handle(), testObjectClone.refrigerationCompressorCapacityCurve().handle());
-  EXPECT_NE(powerCurve.handle(), testObjectClone.refrigerationCompressorPowerCurve().handle());
-  EXPECT_NE(capacityCurve.handle(), testObjectClone.refrigerationCompressorCapacityCurve().handle());
-  EXPECT_NE(transPowerCurve.handle(), testObjectClone.transcriticalCompressorPowerCurve().get().handle());
-  EXPECT_NE(transCapacityCurve.handle(), testObjectClone.transcriticalCompressorCapacityCurve().get().handle());
+  EXPECT_EQ(testObject.refrigerationCompressorPowerCurve().handle(), testObjectClone.refrigerationCompressorPowerCurve().handle());
+  EXPECT_EQ(testObject.refrigerationCompressorCapacityCurve().handle(), testObjectClone.refrigerationCompressorCapacityCurve().handle());
+  EXPECT_EQ(powerCurve.handle(), testObjectClone.refrigerationCompressorPowerCurve().handle());
+  EXPECT_EQ(capacityCurve.handle(), testObjectClone.refrigerationCompressorCapacityCurve().handle());
+  EXPECT_EQ(transPowerCurve.handle(), testObjectClone.transcriticalCompressorPowerCurve().get().handle());
+  EXPECT_EQ(transCapacityCurve.handle(), testObjectClone.transcriticalCompressorCapacityCurve().get().handle());
 }
 
 TEST_F(ModelFixture, RefrigerationCompressor_CloneTwoModelsWithDefaultData)
@@ -200,7 +200,7 @@ TEST_F(ModelFixture, RefrigerationCompressor_CloneTwoModelsWithDefaultData)
   RefrigerationCompressor testObjectClone2 = testObject.clone(model2).cast<RefrigerationCompressor>();
 
   std::vector<CurveBicubic> refrigerationCompressorCurves = model.getModelObjects<CurveBicubic>();
-  EXPECT_EQ(4, refrigerationCompressorCurves.size());
+  EXPECT_EQ(2, refrigerationCompressorCurves.size());
 
   refrigerationCompressorCurves2 = model2.getModelObjects<CurveBicubic>();
   EXPECT_EQ(2, refrigerationCompressorCurves2.size());

@@ -21,7 +21,7 @@
 #define MODEL_CURVE_HPP
 
 #include "ModelAPI.hpp"
-#include "ModelObject.hpp"
+#include "ResourceObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -36,7 +36,7 @@ namespace detail {
  *  each of which is a function of one, two, or three variables. Curve requires its derived 
  *  classes to implement numVariables and evaluate. For examples of objects that use \link Curve
  *  Curves \endlink, see CoilCoolingDXSingleSpeed and PumpVariableSpeed. */
-class MODEL_API Curve : public ModelObject {
+class MODEL_API Curve : public ResourceObject {
  public:
   /** @name Constructors and Destructors */
   //@{

@@ -85,11 +85,6 @@ namespace detail {
       newTower.setModelCoefficient(mo->clone(model));
     }
 
-    if( boost::optional<CurveCubic> mo = fanPowerRatioFunctionofAirFlowRateRatioCurve() )
-    {
-      newTower.setFanPowerRatioFunctionofAirFlowRateRatioCurve(mo->clone(model).cast<CurveCubic>());
-    }
-
     return newTower;
   }
 
