@@ -16,7 +16,7 @@ set(utilities_resources_src
   utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/measure.xml
   utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/measure.rb
   utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/EnvelopeAndLoadTestModel_01.osm
-  utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/EnvelopeAndLoadTestModel_02_RotatedSpaceAndBuilding.osm
+  utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/EnvelopeAndLoadTestModel_02_Rotated.osm
   utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/ReverseTranslatedModel.osm
   utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/SetWindowToWallRatioByFacade_Test.rb
   utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/test.osm
