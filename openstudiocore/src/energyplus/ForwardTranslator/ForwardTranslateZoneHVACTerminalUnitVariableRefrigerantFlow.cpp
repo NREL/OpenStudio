@@ -23,6 +23,8 @@
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/FanOnOff.hpp"
 #include "../../model/FanOnOff_Impl.hpp"
+#include "../../model/FanConstantVolume.hpp"
+#include "../../model/FanConstantVolume_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
@@ -43,6 +45,7 @@
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/ZoneHVAC_TerminalUnit_VariableRefrigerantFlow_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
+#include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_VariableRefrigerantFlow_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_DX_VariableRefrigerantFlow_FieldEnums.hxx>
@@ -222,14 +225,13 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
 
     idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanObjectName,_fan->name().get());
 
-    if( fan.iddObject().type() == model::FanOnOff::iddObjectType() )
-    {
+    if( fan.iddObject().type() == model::FanOnOff::iddObjectType() ) {
       _fan->setString(Fan_OnOffFields::AirInletNodeName,heatOutletNodeName);
-
       _fan->setString(Fan_OnOffFields::AirOutletNodeName,outletNodeName);
-    }
-    else
-    {
+    } else if( fan.iddObject().type() == model::FanConstantVolume::iddObjectType() ) {
+      _fan->setString(Fan_ConstantVolumeFields::AirInletNodeName,heatOutletNodeName);
+      _fan->setString(Fan_ConstantVolumeFields::AirOutletNodeName,outletNodeName);
+    } else {
       LOG(Error, "VRF named " << modelObject.name().get() << " uses an unsupported fan type.");
     }
   }

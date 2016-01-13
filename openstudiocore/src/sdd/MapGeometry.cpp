@@ -516,7 +516,7 @@ namespace sdd {
       //<OccLatHtRt>200</OccLatHtRt> - Btu per h person
       //<OccSchRef>Office Occup Sched</OccSchRef>
 
-      QDomElement occDensElement = element.firstChildElement("OccDens");
+      QDomElement occDensElement = element.firstChildElement("OccDensSim");
       QDomElement occSensHtRtElement = element.firstChildElement("OccSensHtRt");
       QDomElement occLatHtRtElement = element.firstChildElement("OccLatHtRt");
       QDomElement occSchRefElement = element.firstChildElement("OccSchRef");
@@ -713,13 +713,14 @@ namespace sdd {
       //<IntLtgNonRegHtGnRadFrac>0.55</IntLtgNonRegHtGnRadFrac> - radiant fraction
 
 
-      QDomElement intLPDRegElement = element.firstChildElement("IntLPDReg");
+      QDomElement intLPDRegSimElement = element.firstChildElement("IntLPDRegSim");
       QDomElement intLtgRegSchRefElement = element.firstChildElement("IntLtgRegSchRef");
-      QDomElement intLtgRegHtGnSpcFracElement = element.firstChildElement("IntLtgRegHtGnSpcFrac");
-      QDomElement intLtgRegHtGnRadFracElement = element.firstChildElement("IntLtgRegHtGnRadFrac");
-      if (!intLPDRegElement.isNull() && (intLPDRegElement.text().toDouble() > 0)){
+      QDomElement intLtgRegHtGnSpcFracSimElement = element.firstChildElement("IntLtgRegHtGnSpcFracSim");
+      QDomElement intLtgRegHtGnRadFracSimElement = element.firstChildElement("IntLtgRegHtGnRadFracSim");
+      QDomElement intLtgRegEndUseElement = element.firstChildElement("IntLtgRegEndUseCat");
+      if (!intLPDRegSimElement.isNull() && (intLPDRegSimElement.text().toDouble() > 0)){
 
-        openstudio::Quantity lightingDensityIP(intLPDRegElement.text().toDouble(), openstudio::createUnit("W/ft^2").get());
+        openstudio::Quantity lightingDensityIP(intLPDRegSimElement.text().toDouble(), openstudio::createUnit("W/ft^2").get());
         OptionalQuantity lightingDensitySI = QuantityConverter::instance().convert(lightingDensityIP, whSys);
         OS_ASSERT(lightingDensitySI);
         OS_ASSERT(lightingDensitySI->units() == WhUnit(WhExpnt(1,0,-2)));
@@ -731,7 +732,12 @@ namespace sdd {
         openstudio::model::Lights lights(lightsDefinition);
         lights.setName(name + " Regulated Lights");
         lights.setSpace(space);
-        lights.setEndUseSubcategory("Reg Ltg");
+
+        std::string subCategory = "ComplianceLtg";
+        if (!intLtgRegEndUseElement.isNull()){
+          subCategory = intLtgRegEndUseElement.text().toStdString();
+        }
+        lights.setEndUseSubcategory(subCategory);
 
         if (!intLtgRegSchRefElement.isNull()){
           std::string scheduleName = escapeName(intLtgRegSchRefElement.text());
@@ -743,27 +749,28 @@ namespace sdd {
           }
         }
 
-        if (!intLtgRegHtGnSpcFracElement.isNull()){
-          double spaceFraction = intLtgRegHtGnSpcFracElement.text().toDouble();
+        if (!intLtgRegHtGnSpcFracSimElement.isNull()){
+          double spaceFraction = intLtgRegHtGnSpcFracSimElement.text().toDouble();
           double returnAirFraction = 1.0 - spaceFraction;
           lightsDefinition.setReturnAirFraction(returnAirFraction);
         
-          if (!intLtgRegHtGnRadFracElement.isNull()){
-            double fractionRadiant = intLtgRegHtGnRadFracElement.text().toDouble() * spaceFraction;
+          if (!intLtgRegHtGnRadFracSimElement.isNull()){
+            double fractionRadiant = intLtgRegHtGnRadFracSimElement.text().toDouble() * spaceFraction;
             lightsDefinition.setFractionRadiant(fractionRadiant);
           }
-        }else if (!intLtgRegHtGnRadFracElement.isNull()){
-          LOG(Warn, "IntLtgRegHtGnRadFracElement is specified for space '" << name << "' but IntLtgRegHtGnSpcFracElement is not, IntLtgNonRegHtGnRadFracElement will be ignored.");
+        }else if (!intLtgRegHtGnRadFracSimElement.isNull()){
+          LOG(Warn, "IntLtgRegHtGnRadFracSimElement is specified for space '" << name << "' but IntLtgRegHtGnSpcFracSimElement is not, IntLtgNonRegHtGnRadFracSimElement will be ignored.");
         }
       }
 
-      QDomElement intLPDNonRegElement = element.firstChildElement("IntLPDNonReg");
+      QDomElement intLPDNonRegSimElement = element.firstChildElement("IntLPDNonRegSim");
       QDomElement intLtgNonRegSchRefElement = element.firstChildElement("IntLtgNonRegSchRef");
-      QDomElement intLtgNonRegHtGnSpcFracElement = element.firstChildElement("IntLtgNonRegHtGnSpcFrac");
-      QDomElement intLtgNonRegHtGnRadFracElement = element.firstChildElement("IntLtgNonRegHtGnRadFrac");
-      if (!intLPDNonRegElement.isNull() && (intLPDNonRegElement.text().toDouble() > 0)){
+      QDomElement intLtgNonRegHtGnSpcFracSimElement = element.firstChildElement("IntLtgNonRegHtGnSpcFracSim");
+      QDomElement intLtgNonRegHtGnRadFracSimElement = element.firstChildElement("IntLtgNonRegHtGnRadFracSim");
+      QDomElement intLtgNonRegEndUseElement = element.firstChildElement("IntLtgNonRegEndUseCat");
+      if (!intLPDNonRegSimElement.isNull() && (intLPDNonRegSimElement.text().toDouble() > 0)){
 
-        openstudio::Quantity lightingDensityIP(intLPDNonRegElement.text().toDouble(), openstudio::createUnit("W/ft^2").get());
+        openstudio::Quantity lightingDensityIP(intLPDNonRegSimElement.text().toDouble(), openstudio::createUnit("W/ft^2").get());
         OptionalQuantity lightingDensitySI = QuantityConverter::instance().convert(lightingDensityIP, whSys);
         OS_ASSERT(lightingDensitySI);
         OS_ASSERT(lightingDensitySI->units() == WhUnit(WhExpnt(1,0,-2)));
@@ -775,7 +782,12 @@ namespace sdd {
         openstudio::model::Lights lights(lightsDefinition);
         lights.setName(name + " Non-Regulated Lights");
         lights.setSpace(space);
-        lights.setEndUseSubcategory("NonReg Ltg");
+
+        std::string subCategory = "NonComplianceLtg";
+        if (!intLtgRegEndUseElement.isNull()){
+          subCategory = intLtgNonRegEndUseElement.text().toStdString();
+        }
+        lights.setEndUseSubcategory(subCategory);
 
         if (!intLtgNonRegSchRefElement.isNull()){
           std::string scheduleName = escapeName(intLtgNonRegSchRefElement.text());
@@ -787,17 +799,17 @@ namespace sdd {
           }
         }
 
-        if (!intLtgNonRegHtGnSpcFracElement.isNull()){
-          double spaceFraction = intLtgNonRegHtGnSpcFracElement.text().toDouble();
+        if (!intLtgNonRegHtGnSpcFracSimElement.isNull()){
+          double spaceFraction = intLtgNonRegHtGnSpcFracSimElement.text().toDouble();
           double returnAirFraction = 1.0 - spaceFraction;
           lightsDefinition.setReturnAirFraction(returnAirFraction);
 
-          if (!intLtgNonRegHtGnRadFracElement.isNull()){
-            double fractionRadiant = intLtgNonRegHtGnRadFracElement.text().toDouble() * spaceFraction;
+          if (!intLtgNonRegHtGnRadFracSimElement.isNull()){
+            double fractionRadiant = intLtgNonRegHtGnRadFracSimElement.text().toDouble() * spaceFraction;
             lightsDefinition.setFractionRadiant(fractionRadiant);
           }
-        }else if (!intLtgNonRegHtGnRadFracElement.isNull()){
-          LOG(Warn, "IntLtgNonRegHtGnRadFracElement is specified for space '" << name << "' but IntLtgNonRegHtGnSpcFracElement is not, IntLtgNonRegHtGnRadFracElement will be ignored.");
+        }else if (!intLtgNonRegHtGnRadFracSimElement.isNull()){
+          LOG(Warn, "IntLtgNonRegHtGnRadFracSimElement is specified for space '" << name << "' but IntLtgNonRegHtGnSpcFracSimElement is not, IntLtgNonRegHtGnRadFracSimElement will be ignored.");
         }
       }
     }
@@ -1975,7 +1987,7 @@ namespace sdd {
     // SpcFuncDefaultsRef - optional, do with space types
     // SpcFunc - compulsory, do with space types
     // FuncSchGrp - optional, do with space types
-    // OccDens - optional, do with space types
+    // OccDensSim - optional, do with space types
     // OccSensHtRt - optional, do with space types
     // OccLatHtRt - optional, do with space types
     // OccSchRef - optional, do with space types

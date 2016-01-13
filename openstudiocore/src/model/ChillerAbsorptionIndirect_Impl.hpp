@@ -190,6 +190,8 @@ namespace detail {
     unsigned supplyOutletPort() override;
     unsigned demandInletPort() override;
     unsigned demandOutletPort() override;
+    unsigned tertiaryInletPort() const override;
+    unsigned tertiaryOutletPort() const override;
 
     std::vector<ModelObject> children() const override;
     ModelObject clone(Model model) const override;

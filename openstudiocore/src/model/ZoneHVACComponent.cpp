@@ -312,7 +312,7 @@ namespace detail {
     return boost::none;
   }
 
-  std::vector<HVACComponent> ZoneHVACComponent_Impl::edges(bool isDemandComponent)
+  std::vector<HVACComponent> ZoneHVACComponent_Impl::edges(const boost::optional<HVACComponent> & prev)
   {
     std::vector<HVACComponent> edges;
     if( boost::optional<Node> t_node = this->outletNode() ) {

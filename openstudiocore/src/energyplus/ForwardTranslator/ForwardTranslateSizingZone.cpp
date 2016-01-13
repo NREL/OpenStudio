@@ -77,27 +77,43 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingZone( SizingZone & 
   }
 
   // ZoneCoolingDesignSupplyAirTemperatureInputMethod
-
-  idfObject.setString(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureInputMethod,"SupplyAirTemperature");
+  {
+    s = modelObject.zoneCoolingDesignSupplyAirTemperatureInputMethod();
+    idfObject.setString(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureInputMethod,s.get());
+  }
 
   // ZoneCoolingDesignSupplyAirTemperature
-
   value = modelObject.zoneCoolingDesignSupplyAirTemperature();
   if( value )
   {
     idfObject.setDouble(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperature,value.get());
   }
 
-  // ZoneHeatingDesignSupplyAirTemperatureInputMethod
+  // zoneCoolingDesignSupplyAirTemperatureDifference
+  value = modelObject.zoneCoolingDesignSupplyAirTemperatureDifference();
+  if( value )
+  {
+    idfObject.setDouble(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureDifference,value.get());
+  }
 
-  idfObject.setString(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureInputMethod,"SupplyAirTemperature");
+  // ZoneHeatingDesignSupplyAirTemperatureInputMethod
+  {
+    s = modelObject.zoneHeatingDesignSupplyAirTemperatureInputMethod();
+    idfObject.setString(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureInputMethod,s.get());
+  }
 
   // ZoneHeatingDesignSupplyAirTemperature
-
   value = modelObject.zoneHeatingDesignSupplyAirTemperature();
   if( value )
   {
     idfObject.setDouble(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperature,value.get());
+  }
+
+  // ZoneHeatingDesignSupplyAirTemperatureDifference
+  value = modelObject.zoneHeatingDesignSupplyAirTemperatureDifference();
+  if( value )
+  {
+    idfObject.setDouble(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureDifference,value.get());
   }
 
   // ZoneCoolingDesignSupplyAirHumidityRatio
@@ -306,6 +322,33 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingZone( SizingZone & 
       eg.setString(Controller_MechanicalVentilationExtensibleFields::DesignSpecificationZoneAirDistributionObjectName,
                    designSpecificationZoneAirDistributionName);
     }
+  }
+
+  if( modelObject.accountforDedicatedOutdoorAirSystem() ) {
+    idfObject.setString(Sizing_ZoneFields::AccountforDedicatedOutdoorAirSystem,"Yes");
+
+    {
+      auto value = modelObject.dedicatedOutdoorAirSystemControlStrategy();
+      idfObject.setString(Sizing_ZoneFields::DedicatedOutdoorAirSystemControlStrategy,value);
+    }
+
+    {
+      if( modelObject.isDedicatedOutdoorAirLowSetpointTemperatureforDesignAutosized() ) {
+        idfObject.setString(Sizing_ZoneFields::DedicatedOutdoorAirLowSetpointTemperatureforDesign,"Autosize");
+      } else if ( auto value = modelObject.dedicatedOutdoorAirLowSetpointTemperatureforDesign() ) {
+        idfObject.setDouble(Sizing_ZoneFields::DedicatedOutdoorAirLowSetpointTemperatureforDesign,value.get());
+      }
+    }
+
+    {
+      if( modelObject.isDedicatedOutdoorAirHighSetpointTemperatureforDesignAutosized() ) {
+        idfObject.setString(Sizing_ZoneFields::DedicatedOutdoorAirHighSetpointTemperatureforDesign,"Autosize");
+      } else if ( auto value = modelObject.dedicatedOutdoorAirHighSetpointTemperatureforDesign() ) {
+        idfObject.setDouble(Sizing_ZoneFields::DedicatedOutdoorAirHighSetpointTemperatureforDesign,value.get());
+      }
+    }
+  } else {
+    idfObject.setString(Sizing_ZoneFields::AccountforDedicatedOutdoorAirSystem,"No");
   }
 
   return idfObject;
