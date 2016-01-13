@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -75,6 +75,12 @@ namespace detail {
     return value.get();
   }
 
+  std::string SizingZone_Impl::zoneCoolingDesignSupplyAirTemperatureInputMethod() const {
+    boost::optional<std::string> value = getString(OS_Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureInputMethod,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
   double SizingZone_Impl::zoneCoolingDesignSupplyAirTemperature() const {
     boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperature,true);
     OS_ASSERT(value);
@@ -88,6 +94,18 @@ namespace detail {
     return result.get();
   }
 
+  double SizingZone_Impl::zoneCoolingDesignSupplyAirTemperatureDifference() const {
+    boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureDifference,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  std::string SizingZone_Impl::zoneHeatingDesignSupplyAirTemperatureInputMethod() const {
+    boost::optional<std::string> value = getString(OS_Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureInputMethod,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
   double SizingZone_Impl::zoneHeatingDesignSupplyAirTemperature() const {
     boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperature,true);
     OS_ASSERT(value);
@@ -99,6 +117,12 @@ namespace detail {
     OSOptionalQuantity result = getQuantityFromDouble(OS_Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperature, value, returnIP);
     OS_ASSERT(result.isSet());
     return result.get();
+  }
+
+  double SizingZone_Impl::zoneHeatingDesignSupplyAirTemperatureDifference() const {
+    boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureDifference,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
   double SizingZone_Impl::zoneCoolingDesignSupplyAirHumidityRatio() const {
@@ -335,6 +359,44 @@ namespace detail {
     return isEmpty(OS_Sizing_ZoneFields::DesignZoneAirDistributionEffectivenessinHeatingMode);
   }
 
+  bool SizingZone_Impl::accountforDedicatedOutdoorAirSystem() const {
+    boost::optional<std::string> value = getString(OS_Sizing_ZoneFields::AccountforDedicatedOutdoorAirSystem,true);
+    OS_ASSERT(value);
+    return openstudio::istringEqual(value.get(), "Yes");
+  }
+
+  std::string SizingZone_Impl::dedicatedOutdoorAirSystemControlStrategy() const {
+    boost::optional<std::string> value = getString(OS_Sizing_ZoneFields::DedicatedOutdoorAirSystemControlStrategy,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  boost::optional<double> SizingZone_Impl::dedicatedOutdoorAirLowSetpointTemperatureforDesign() const {
+    return getDouble(OS_Sizing_ZoneFields::DedicatedOutdoorAirLowSetpointTemperatureforDesign,true);
+  }
+
+  bool SizingZone_Impl::isDedicatedOutdoorAirLowSetpointTemperatureforDesignAutosized() const {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_Sizing_ZoneFields::DedicatedOutdoorAirLowSetpointTemperatureforDesign, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "autosize");
+    }
+    return result;
+  }
+
+  boost::optional<double> SizingZone_Impl::dedicatedOutdoorAirHighSetpointTemperatureforDesign() const {
+    return getDouble(OS_Sizing_ZoneFields::DedicatedOutdoorAirHighSetpointTemperatureforDesign,true);
+  }
+
+  bool SizingZone_Impl::isDedicatedOutdoorAirHighSetpointTemperatureforDesignAutosized() const {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_Sizing_ZoneFields::DedicatedOutdoorAirHighSetpointTemperatureforDesign, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "autosize");
+    }
+    return result;
+  }
+
   bool SizingZone_Impl::setThermalZone(const ThermalZone& thermalZone) {
     bool result = setPointer(OS_Sizing_ZoneFields::ZoneorZoneListName, thermalZone.handle());
     return result;
@@ -354,6 +416,11 @@ namespace detail {
     return true;
   }
 
+  void SizingZone_Impl::setZoneCoolingDesignSupplyAirTemperatureDifference(double value) {
+    bool result = setDouble(OS_Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureDifference, value);
+    OS_ASSERT(result);
+  }
+
   void SizingZone_Impl::setZoneHeatingDesignSupplyAirTemperature(double zoneHeatingDesignSupplyAirTemperature) {
     bool result = setDouble(OS_Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperature, zoneHeatingDesignSupplyAirTemperature);
     OS_ASSERT(result);
@@ -366,6 +433,11 @@ namespace detail {
     }
     setZoneHeatingDesignSupplyAirTemperature(value.get());
     return true;
+  }
+
+  void SizingZone_Impl::setZoneHeatingDesignSupplyAirTemperatureDifference(double value) {
+    bool result = setDouble(OS_Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureDifference, value);
+    OS_ASSERT(result);
   }
 
   bool SizingZone_Impl::setZoneCoolingDesignSupplyAirHumidityRatio(double zoneCoolingDesignSupplyAirHumidityRatio) {
@@ -814,6 +886,48 @@ namespace detail {
     return false;
   }
 
+  bool SizingZone_Impl::setZoneCoolingDesignSupplyAirTemperatureInputMethod(const std::string &value) {
+    return setString(OS_Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureInputMethod, value);
+  }
+
+  bool SizingZone_Impl::setZoneHeatingDesignSupplyAirTemperatureInputMethod(const std::string &value) {
+    return setString(OS_Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureInputMethod, value);
+  }
+
+  void SizingZone_Impl::setAccountforDedicatedOutdoorAirSystem(bool accountforDedicatedOutdoorAirSystem) {
+    setBooleanFieldValue(OS_Sizing_ZoneFields::AccountforDedicatedOutdoorAirSystem, accountforDedicatedOutdoorAirSystem);
+  }
+
+  bool SizingZone_Impl::setDedicatedOutdoorAirSystemControlStrategy(std::string dedicatedOutdoorAirSystemControlStrategy) {
+    bool result = setString(OS_Sizing_ZoneFields::DedicatedOutdoorAirSystemControlStrategy, dedicatedOutdoorAirSystemControlStrategy);
+    return result;
+  }
+
+  void SizingZone_Impl::setDedicatedOutdoorAirLowSetpointTemperatureforDesign(boost::optional<double> dedicatedOutdoorAirLowSetpointTemperatureforDesign) {
+    bool result(false);
+    if (dedicatedOutdoorAirLowSetpointTemperatureforDesign) {
+      result = setDouble(OS_Sizing_ZoneFields::DedicatedOutdoorAirLowSetpointTemperatureforDesign, dedicatedOutdoorAirLowSetpointTemperatureforDesign.get());
+    }
+    OS_ASSERT(result);
+  }
+
+  void SizingZone_Impl::autosizeDedicatedOutdoorAirLowSetpointTemperatureforDesign() {
+    bool result = setString(OS_Sizing_ZoneFields::DedicatedOutdoorAirLowSetpointTemperatureforDesign, "autosize");
+    OS_ASSERT(result);
+  }
+
+  void SizingZone_Impl::setDedicatedOutdoorAirHighSetpointTemperatureforDesign(boost::optional<double> dedicatedOutdoorAirHighSetpointTemperatureforDesign) {
+    bool result(false);
+    if (dedicatedOutdoorAirHighSetpointTemperatureforDesign) {
+      result = setDouble(OS_Sizing_ZoneFields::DedicatedOutdoorAirHighSetpointTemperatureforDesign, dedicatedOutdoorAirHighSetpointTemperatureforDesign.get());
+    }
+    OS_ASSERT(result);
+  }
+
+  void SizingZone_Impl::autosizeDedicatedOutdoorAirHighSetpointTemperatureforDesign() {
+    bool result = setString(OS_Sizing_ZoneFields::DedicatedOutdoorAirHighSetpointTemperatureforDesign, "autosize");
+    OS_ASSERT(result);
+  }
 } // detail
 
 SizingZone::SizingZone(const Model& model, const ThermalZone & thermalZone)
@@ -823,12 +937,20 @@ SizingZone::SizingZone(const Model& model, const ThermalZone & thermalZone)
 
   setThermalZone(thermalZone);
 
+  setZoneCoolingDesignSupplyAirTemperatureInputMethod("SupplyAirTemperature");
+  setZoneCoolingDesignSupplyAirTemperatureDifference(11.11);
   setZoneCoolingDesignSupplyAirTemperature(14.0);
+  setZoneHeatingDesignSupplyAirTemperatureInputMethod("SupplyAirTemperature");
+  setZoneHeatingDesignSupplyAirTemperatureDifference(11.11);
   setZoneHeatingDesignSupplyAirTemperature(40.0);
   setZoneCoolingDesignSupplyAirHumidityRatio(0.0085);
   setZoneHeatingDesignSupplyAirHumidityRatio(0.0080);
   setCoolingDesignAirFlowMethod("DesignDay");
   setHeatingDesignAirFlowMethod("DesignDay");
+  setAccountforDedicatedOutdoorAirSystem(false);
+  setDedicatedOutdoorAirSystemControlStrategy("NeutralSupplyAir");
+  autosizeDedicatedOutdoorAirLowSetpointTemperatureforDesign();
+  autosizeDedicatedOutdoorAirHighSetpointTemperatureforDesign();
 }
 
 IddObjectType SizingZone::iddObjectType() {
@@ -845,8 +967,22 @@ std::vector<std::string> SizingZone::heatingDesignAirFlowMethodValues() {
                         OS_Sizing_ZoneFields::HeatingDesignAirFlowMethod);
 }
 
+std::vector<std::string> SizingZone::zoneCoolingDesignSupplyAirTemperatureInputMethodValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureInputMethod);
+}
+
+std::vector<std::string> SizingZone::zoneHeatingDesignSupplyAirTemperatureInputMethodValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureInputMethod);
+}
+
 ThermalZone SizingZone::thermalZone() const {
   return getImpl<detail::SizingZone_Impl>()->thermalZone();
+}
+
+std::string SizingZone::zoneCoolingDesignSupplyAirTemperatureInputMethod() const {
+  return getImpl<detail::SizingZone_Impl>()->zoneCoolingDesignSupplyAirTemperatureInputMethod();
 }
 
 double SizingZone::zoneCoolingDesignSupplyAirTemperature() const {
@@ -857,12 +993,24 @@ Quantity SizingZone::getZoneCoolingDesignSupplyAirTemperature(bool returnIP) con
   return getImpl<detail::SizingZone_Impl>()->getZoneCoolingDesignSupplyAirTemperature(returnIP);
 }
 
+double SizingZone::zoneCoolingDesignSupplyAirTemperatureDifference() const {
+  return getImpl<detail::SizingZone_Impl>()->zoneCoolingDesignSupplyAirTemperatureDifference();
+}
+
+std::string SizingZone::zoneHeatingDesignSupplyAirTemperatureInputMethod() const {
+  return getImpl<detail::SizingZone_Impl>()->zoneHeatingDesignSupplyAirTemperatureInputMethod();
+}
+
 double SizingZone::zoneHeatingDesignSupplyAirTemperature() const {
   return getImpl<detail::SizingZone_Impl>()->zoneHeatingDesignSupplyAirTemperature();
 }
 
 Quantity SizingZone::getZoneHeatingDesignSupplyAirTemperature(bool returnIP) const {
   return getImpl<detail::SizingZone_Impl>()->getZoneHeatingDesignSupplyAirTemperature(returnIP);
+}
+
+double SizingZone::zoneHeatingDesignSupplyAirTemperatureDifference() const {
+  return getImpl<detail::SizingZone_Impl>()->zoneHeatingDesignSupplyAirTemperatureDifference();
 }
 
 double SizingZone::zoneCoolingDesignSupplyAirHumidityRatio() const {
@@ -1033,6 +1181,30 @@ bool SizingZone::isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted(
   return getImpl<detail::SizingZone_Impl>()->isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted();
 }
 
+bool SizingZone::accountforDedicatedOutdoorAirSystem() const {
+  return getImpl<detail::SizingZone_Impl>()->accountforDedicatedOutdoorAirSystem();
+}
+
+std::string SizingZone::dedicatedOutdoorAirSystemControlStrategy() const {
+  return getImpl<detail::SizingZone_Impl>()->dedicatedOutdoorAirSystemControlStrategy();
+}
+
+boost::optional<double> SizingZone::dedicatedOutdoorAirLowSetpointTemperatureforDesign() const {
+  return getImpl<detail::SizingZone_Impl>()->dedicatedOutdoorAirLowSetpointTemperatureforDesign();
+}
+
+bool SizingZone::isDedicatedOutdoorAirLowSetpointTemperatureforDesignAutosized() const {
+  return getImpl<detail::SizingZone_Impl>()->isDedicatedOutdoorAirLowSetpointTemperatureforDesignAutosized();
+}
+
+boost::optional<double> SizingZone::dedicatedOutdoorAirHighSetpointTemperatureforDesign() const {
+  return getImpl<detail::SizingZone_Impl>()->dedicatedOutdoorAirHighSetpointTemperatureforDesign();
+}
+
+bool SizingZone::isDedicatedOutdoorAirHighSetpointTemperatureforDesignAutosized() const {
+  return getImpl<detail::SizingZone_Impl>()->isDedicatedOutdoorAirHighSetpointTemperatureforDesignAutosized();
+}
+
 bool SizingZone::setThermalZone(const ThermalZone& thermalZone) {
   return getImpl<detail::SizingZone_Impl>()->setThermalZone(thermalZone);
 }
@@ -1045,8 +1217,16 @@ bool SizingZone::setZoneCoolingDesignSupplyAirTemperature(const Quantity& zoneCo
   return getImpl<detail::SizingZone_Impl>()->setZoneCoolingDesignSupplyAirTemperature(zoneCoolingDesignSupplyAirTemperature);
 }
 
+void SizingZone::setZoneCoolingDesignSupplyAirTemperatureDifference(double value) {
+  getImpl<detail::SizingZone_Impl>()->setZoneCoolingDesignSupplyAirTemperatureDifference(value);
+}
+
 void SizingZone::setZoneHeatingDesignSupplyAirTemperature(double zoneHeatingDesignSupplyAirTemperature) {
   getImpl<detail::SizingZone_Impl>()->setZoneHeatingDesignSupplyAirTemperature(zoneHeatingDesignSupplyAirTemperature);
+}
+
+void SizingZone::setZoneHeatingDesignSupplyAirTemperatureDifference(double value) {
+  getImpl<detail::SizingZone_Impl>()->setZoneHeatingDesignSupplyAirTemperatureDifference(value);
 }
 
 bool SizingZone::setZoneHeatingDesignSupplyAirTemperature(const Quantity& zoneHeatingDesignSupplyAirTemperature) {
@@ -1227,6 +1407,38 @@ bool SizingZone::setDesignZoneAirDistributionEffectivenessinHeatingMode(const Qu
 
 void SizingZone::resetDesignZoneAirDistributionEffectivenessinHeatingMode() {
   getImpl<detail::SizingZone_Impl>()->resetDesignZoneAirDistributionEffectivenessinHeatingMode();
+}
+
+bool SizingZone::setZoneCoolingDesignSupplyAirTemperatureInputMethod(const std::string &value) {
+  return getImpl<detail::SizingZone_Impl>()->setZoneCoolingDesignSupplyAirTemperatureInputMethod(value);
+}
+
+bool SizingZone::setZoneHeatingDesignSupplyAirTemperatureInputMethod(const std::string &value) {
+  return getImpl<detail::SizingZone_Impl>()->setZoneHeatingDesignSupplyAirTemperatureInputMethod(value);
+}
+
+void SizingZone::setAccountforDedicatedOutdoorAirSystem(bool accountforDedicatedOutdoorAirSystem) {
+  getImpl<detail::SizingZone_Impl>()->setAccountforDedicatedOutdoorAirSystem(accountforDedicatedOutdoorAirSystem);
+}
+
+bool SizingZone::setDedicatedOutdoorAirSystemControlStrategy(std::string dedicatedOutdoorAirSystemControlStrategy) {
+  return getImpl<detail::SizingZone_Impl>()->setDedicatedOutdoorAirSystemControlStrategy(dedicatedOutdoorAirSystemControlStrategy);
+}
+
+void SizingZone::setDedicatedOutdoorAirLowSetpointTemperatureforDesign(double dedicatedOutdoorAirLowSetpointTemperatureforDesign) {
+  getImpl<detail::SizingZone_Impl>()->setDedicatedOutdoorAirLowSetpointTemperatureforDesign(dedicatedOutdoorAirLowSetpointTemperatureforDesign);
+}
+
+void SizingZone::autosizeDedicatedOutdoorAirLowSetpointTemperatureforDesign() {
+  getImpl<detail::SizingZone_Impl>()->autosizeDedicatedOutdoorAirLowSetpointTemperatureforDesign();
+}
+
+void SizingZone::setDedicatedOutdoorAirHighSetpointTemperatureforDesign(double dedicatedOutdoorAirHighSetpointTemperatureforDesign) {
+  getImpl<detail::SizingZone_Impl>()->setDedicatedOutdoorAirHighSetpointTemperatureforDesign(dedicatedOutdoorAirHighSetpointTemperatureforDesign);
+}
+
+void SizingZone::autosizeDedicatedOutdoorAirHighSetpointTemperatureforDesign() {
+  getImpl<detail::SizingZone_Impl>()->autosizeDedicatedOutdoorAirHighSetpointTemperatureforDesign();
 }
 
 /// @cond

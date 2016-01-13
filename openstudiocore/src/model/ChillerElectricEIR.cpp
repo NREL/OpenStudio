@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -682,18 +682,6 @@ namespace detail {
   ModelObject ChillerElectricEIR_Impl::clone(Model model) const
   {
     ChillerElectricEIR chiller = WaterToWaterComponent_Impl::clone(model).cast<ChillerElectricEIR>();
-
-    CurveBiquadratic biQuadCurve = this->coolingCapacityFunctionOfTemperature().clone(model).cast<CurveBiquadratic>();
-
-    chiller.setCoolingCapacityFunctionOfTemperature(biQuadCurve);
-
-    biQuadCurve = this->electricInputToCoolingOutputRatioFunctionOfTemperature().clone(model).cast<CurveBiquadratic>();
-
-    chiller.setElectricInputToCoolingOutputRatioFunctionOfTemperature(biQuadCurve);
-
-    CurveQuadratic curve = this->electricInputToCoolingOutputRatioFunctionOfPLR().clone(model).cast<CurveQuadratic>();
-
-    chiller.setElectricInputToCoolingOutputRatioFunctionOfPLR(curve);
 
     return chiller;
   }

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -1368,6 +1368,7 @@ if (_className::iddObjectType() == typeToCreate) { \
       std::shared_ptr<WaterToWaterComponent_Impl> waterToWaterComponentImpl;
       waterToWaterComponentImpl = waterToWaterComponent->getImpl<WaterToWaterComponent_Impl>();
       waterToWaterComponentImpl->m_secondaryPlantLoop = boost::none;
+      waterToWaterComponentImpl->m_tertiaryPlantLoop = boost::none;
     }
 
     Model m = model();
@@ -1406,6 +1407,7 @@ if (_className::iddObjectType() == typeToCreate) { \
           std::shared_ptr<WaterToWaterComponent_Impl> waterToWaterComponentImpl;
           waterToWaterComponentImpl = waterToWaterComponent->getImpl<WaterToWaterComponent_Impl>();
           waterToWaterComponentImpl->m_secondaryPlantLoop = boost::none;
+          waterToWaterComponentImpl->m_tertiaryPlantLoop = boost::none;
         }
       }
 
@@ -1438,6 +1440,7 @@ if (_className::iddObjectType() == typeToCreate) { \
           std::shared_ptr<WaterToWaterComponent_Impl> waterToWaterComponentImpl;
           waterToWaterComponentImpl = waterToWaterComponent->getImpl<WaterToWaterComponent_Impl>();
           waterToWaterComponentImpl->m_secondaryPlantLoop = boost::none;
+          waterToWaterComponentImpl->m_tertiaryPlantLoop = boost::none;
         }
       }
 

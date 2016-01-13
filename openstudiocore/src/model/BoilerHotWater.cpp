@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -428,11 +428,6 @@ namespace detail {
   ModelObject BoilerHotWater_Impl::clone(Model model) const
   {
     BoilerHotWater newBoiler = StraightComponent_Impl::clone(model).cast<BoilerHotWater>();
-
-    if( boost::optional<Curve> c = normalizedBoilerEfficiencyCurve() )
-    {
-      newBoiler.setNormalizedBoilerEfficiencyCurve(c->clone(model).cast<Curve>());
-    }
 
     return newBoiler;
   }

@@ -245,7 +245,7 @@ module OsLib_Reporting
 
     # total building area
     query = 'SELECT Value FROM tabulardatawithstrings WHERE '
-    query << "ReportName='AnnualBuildingUtilityPerformanceSummary' and " # Notice no space in SystemSummary
+    query << "ReportName='AnnualBuildingUtilityPerformanceSummary' and "
     query << "ReportForString='Entire Facility' and "
     query << "TableName='Building Area' and "
     query << "RowName='Total Building Area' and "
@@ -286,6 +286,13 @@ module OsLib_Reporting
     end
     general_building_information[:data] << ["#{display} (Based on Net Site Energy and Total Building Area)", value_neat, target_units]
 
+    # get standards building type
+    building_type = ''
+    if model.getBuilding.standardsBuildingType.is_initialized
+      building_type = model.getBuilding.standardsBuildingType.get
+    end
+    general_building_information[:data] << ['OpenStudio Standards Building Type',building_type,'']
+
     return general_building_information
   end
 
@@ -294,9 +301,9 @@ module OsLib_Reporting
     # space type data output
     output_data_space_type_breakdown = {}
     output_data_space_type_breakdown[:title] = ''
-    output_data_space_type_breakdown[:header] = ['Space Type Name', 'Floor Area']
+    output_data_space_type_breakdown[:header] = ['Space Type Name', 'Floor Area', 'Standards Building Type', 'Standards Space Type']
     units = 'ft^2'
-    output_data_space_type_breakdown[:units] = ['', units]
+    output_data_space_type_breakdown[:units] = ['', units,'','']
     output_data_space_type_breakdown[:data] = []
     output_data_space_type_breakdown[:chart_type] = 'simple_pie'
     output_data_space_type_breakdown[:chart] = []
@@ -342,7 +349,20 @@ module OsLib_Reporting
       value = OpenStudio.convert(floor_area_si, 'm^2', units).get
       num_people = nil
       value_neat = OpenStudio.toNeatString(value, 0, true)
-      output_data_space_type_breakdown[:data] << [display, value_neat]
+
+      # get standards information
+      if spaceType.standardsBuildingType.is_initialized
+        standards_building_type = spaceType.standardsBuildingType.get
+      else
+        standards_building_type = ''
+      end
+      if spaceType.standardsSpaceType.is_initialized
+        standards_space_type = spaceType.standardsSpaceType.get
+      else
+        standards_space_type = ''
+      end
+
+      output_data_space_type_breakdown[:data] << [display, value_neat,standards_building_type,standards_space_type]
       runner.registerValue("space_type_#{display.downcase.gsub(" ","_")}", value, units)
 
       # data for graph
@@ -1605,10 +1625,14 @@ module OsLib_Reporting
       net_area_ip = OpenStudio.convert(net_area, 'm^2', 'ft^2').get
       net_area_ip_neat = OpenStudio.toNeatString(net_area_ip, 0, true)
       surface_count = count
-      thermal_conductance = construction.thermalConductance.get
-      source_units = 'm^2*K/W'
-      r_value_ip = OpenStudio.convert(1 / thermal_conductance, source_units, target_units).get
-      r_value_ip_neat = OpenStudio.toNeatString(r_value_ip, 2, true)
+      if  construction.thermalConductance.is_initialized
+        thermal_conductance = construction.thermalConductance.get
+        source_units = 'm^2*K/W'
+        r_value_ip = OpenStudio.convert(1 / thermal_conductance, source_units, target_units).get
+        r_value_ip_neat = OpenStudio.toNeatString(r_value_ip, 2, true)
+      else
+        r_value_ip_neat = ''
+      end
       surface_data[:data] << [construction.name, net_area_ip_neat, surface_count, r_value_ip_neat]
       runner.registerValue(construction.name.to_s.downcase.gsub(" ","_"), net_area_ip, area_units)
     end
@@ -2127,6 +2151,19 @@ module OsLib_Reporting
       table[:data] << row_data
     end
 
+    # add in climate zone from OpenStudio model
+    # get ashrae climate zone from model
+    climate_zone = ''
+    climateZones = model.getClimateZones
+    climateZones.climateZones.each do |climateZone|
+      if climateZone.institution == "ASHRAE"
+        climate_zone = climateZone.value
+        next
+      end
+    end
+
+    table[:data] << ['ASHRAE Climate Zone',climate_zone]
+
     return table
   end
 
@@ -2623,16 +2660,16 @@ module OsLib_Reporting
     # create table
     temperature_table = {}
     temperature_table[:title] = 'Temperature (Table values represent hours spent in each temperature range)'
-    temperature_table[:header] = ['Zone', 'Unmet Htg', 'Unmet Htg (Occ)']
+    temperature_table[:header] = ['Zone', 'Unmet Htg', 'Unmet Htg - Occ']
     temperature_bins.each do |k, v|
       temperature_table[:header] << k
     end
-    temperature_table[:header] += ['Unmet Clg','Unmet Clg (Occ)', 'Mean Temp']
-    temperature_table[:units] = ['', 'hr']
+    temperature_table[:header] += ['Unmet Clg','Unmet Clg - Occ', 'Mean Temp']
+    temperature_table[:units] = ['', 'hr','hr']
     temperature_bins.each do |k, v|
       temperature_table[:units] << 'F'
     end
-    temperature_table[:units] += %w(hr F)
+    temperature_table[:units] += ['hr','hr','F']
     temperature_table[:data] = []
     temperature_table[:data_color] = []
 
@@ -3081,13 +3118,31 @@ module OsLib_Reporting
       output_timeseries = sqlFile.timeSeries(ann_env_pd, 'Monthly', 'Site Outdoor Air Drybulb Temperature', 'Environment')
       # loop through timeseries and move the data from an OpenStudio timeseries to a normal Ruby array (vector)
       if output_timeseries.is_initialized # checks to see if time_series exists
+
+        # see if filler needed at start or end of table/chart
+        num_blanks_start = output_timeseries.get.dateTimes[0].date.monthOfYear.value - 2
+        num_blanks_end = 12 - output_timeseries.get.values.size - num_blanks_start
+
+        # fill in blank data for partial year simulations
+        for i in 0..(num_blanks_start-1)
+          month = hvac_load_profile_monthly_table[:header][i + 1]
+          dry_bulb_monthly << ''
+        end
+
         output_timeseries = output_timeseries.get.values
         for i in 0..(output_timeseries.size - 1)
-          month = hvac_load_profile_monthly_table[:header][i + 1]
+          month = hvac_load_profile_monthly_table[:header][i + 1 + num_blanks_start]
           value = OpenStudio.convert(output_timeseries[i], 'C', 'F').get
           dry_bulb_monthly << value.round(1)
           hvac_load_profile_monthly_table[:chart] << JSON.generate(label: 'Outdoor Temp', label_x: month, value2: value, color: 'green')
         end # end of for i in 0..(output_timeseries.size - 1)
+
+        # fill in blank data for partial year simulations
+        for i in 0..(num_blanks_end-1)
+          month = hvac_load_profile_monthly_table[:header][i]
+          dry_bulb_monthly << ''
+        end
+
       else
         runner.registerWarning("Didn't find data for Site Outdoor Air Drybulb Temperature")
       end # end of if output_timeseries.is_initialized

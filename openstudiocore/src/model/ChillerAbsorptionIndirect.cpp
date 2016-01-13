@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -472,41 +472,6 @@ namespace detail {
   {
     auto newMo = WaterToWaterComponent_Impl::clone(model).cast<ChillerAbsorptionIndirect>();
 
-    {
-      auto mo = generatorHeatInputFunctionofPartLoadRatioCurve().clone(model).cast<Curve>();
-      newMo.setGeneratorHeatInputFunctionofPartLoadRatioCurve(mo);
-    }
-
-    {
-      auto mo = pumpElectricInputFunctionofPartLoadRatioCurve().clone(model).cast<Curve>();
-      newMo.setPumpElectricInputFunctionofPartLoadRatioCurve(mo);
-    }
-
-    {
-      auto mo = capacityCorrectionFunctionofCondenserTemperatureCurve().clone(model).cast<Curve>();
-      newMo.setCapacityCorrectionFunctionofCondenserTemperatureCurve(mo);
-    }
-
-    {
-      auto mo = capacityCorrectionFunctionofChilledWaterTemperatureCurve().clone(model).cast<Curve>();
-      newMo.setCapacityCorrectionFunctionofChilledWaterTemperatureCurve(mo);
-    }
-
-    {
-      auto mo = capacityCorrectionFunctionofGeneratorTemperatureCurve().clone(model).cast<Curve>();
-      newMo.setCapacityCorrectionFunctionofGeneratorTemperatureCurve(mo);
-    }
-
-    {
-      auto mo = generatorHeatInputCorrectionFunctionofCondenserTemperatureCurve().clone(model).cast<Curve>();
-      newMo.setGeneratorHeatInputCorrectionFunctionofCondenserTemperatureCurve(mo);
-    }
-
-    {
-      auto mo = generatorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve().clone(model).cast<Curve>();
-      newMo.setGeneratorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve(mo);
-    }
-
     return newMo;
   }
 
@@ -523,6 +488,14 @@ namespace detail {
     result.push_back(generatorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve());
 
     return result;
+  }
+
+  unsigned ChillerAbsorptionIndirect_Impl::tertiaryInletPort() const {
+    return OS_Chiller_Absorption_IndirectFields::GeneratorInletNode;
+  }
+
+  unsigned ChillerAbsorptionIndirect_Impl::tertiaryOutletPort() const {
+    return OS_Chiller_Absorption_IndirectFields::GeneratorOutletNode;
   }
 
 } // detail

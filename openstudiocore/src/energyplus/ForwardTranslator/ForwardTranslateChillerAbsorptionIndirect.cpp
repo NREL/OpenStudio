@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -79,6 +79,14 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerAbsorptionIndirect
     if( auto node = mo->optionalCast<Node>() ) {
       idfObject.setString(Chiller_Absorption_IndirectFields::CondenserOutletNodeName,node->name().get());
     }
+  }
+
+  if( auto mo = modelObject.tertiaryInletModelObject() ) {
+    idfObject.setString(Chiller_Absorption_IndirectFields::GeneratorInletNodeName,mo->name().get());
+  }
+
+  if( auto mo = modelObject.tertiaryOutletModelObject() ) {
+    idfObject.setString(Chiller_Absorption_IndirectFields::GeneratorOutletNodeName,mo->name().get());
   }
 
   if( modelObject.isNominalCapacityAutosized() ) {
@@ -194,13 +202,15 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerAbsorptionIndirect
     idfObject.setString(Chiller_Absorption_IndirectFields::GeneratorHeatSourceType,value);
   }
 
-  // For now generator loops are not supported so this field needs to be blank
-  //if( modelObject.isDesignGeneratorFluidFlowRateAutosized() ) {
-  //  idfObject.setString(Chiller_Absorption_IndirectFields::DesignGeneratorFluidFlowRate,"Autosize");
-  //} else if( auto value = modelObject.designGeneratorFluidFlowRate() ) {
-  //  idfObject.setDouble(Chiller_Absorption_IndirectFields::DesignGeneratorFluidFlowRate,value.get());
-  //}
-  idfObject.setString(Chiller_Absorption_IndirectFields::DesignGeneratorFluidFlowRate,"");
+  if( modelObject.tertiaryPlantLoop() ) {
+    if( modelObject.isDesignGeneratorFluidFlowRateAutosized() ) {
+      idfObject.setString(Chiller_Absorption_IndirectFields::DesignGeneratorFluidFlowRate,"Autosize");
+    } else if( auto value = modelObject.designGeneratorFluidFlowRate() ) {
+      idfObject.setDouble(Chiller_Absorption_IndirectFields::DesignGeneratorFluidFlowRate,value.get());
+    }
+  } else {
+    idfObject.setString(Chiller_Absorption_IndirectFields::DesignGeneratorFluidFlowRate,"");
+  }
 
   {
     auto value = modelObject.temperatureLowerLimitGeneratorInlet();

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -65,11 +65,7 @@ class MODEL_API Mixer_Impl : public HVACComponent_Impl
 
   virtual void removePortForBranch(unsigned branchIndex);
 
-  /** This function returns a vector of HVACComponent that are directly downstream
-   *  from this object on an AirLoopHVAC or PlantLoop. 
-   *  @param[in]  isDemandComponent  Boolean passed in whether object is a demand or supply component
-  **/
-  virtual std::vector<HVACComponent> edges(bool isDemandComponent) override;
+  virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & prev) override;
 
   bool isRemovable() const override;
 

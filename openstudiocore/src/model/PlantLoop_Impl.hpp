@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -154,7 +154,7 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   bool removeSupplyBranchWithComponent( HVACComponent hvacComponent );
 
-  bool addDemandBranchForComponent( HVACComponent component );
+  bool addDemandBranchForComponent( HVACComponent component, bool tertiary = false );
 
   bool removeDemandBranchWithComponent( HVACComponent hvacComponent );
 

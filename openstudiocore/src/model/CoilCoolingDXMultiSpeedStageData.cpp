@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -402,24 +402,6 @@ namespace detail {
 
   ModelObject CoilCoolingDXMultiSpeedStageData_Impl::clone(Model model) const {
     auto t_clone = ModelObject_Impl::clone(model).cast<CoilCoolingDXMultiSpeedStageData>();
-
-    auto curve = totalCoolingCapacityFunctionofTemperatureCurve().clone(model).cast<Curve>();
-    t_clone.setTotalCoolingCapacityFunctionofTemperatureCurve(curve);
-
-    curve = totalCoolingCapacityFunctionofFlowFractionCurve().clone(model).cast<Curve>();
-    t_clone.setTotalCoolingCapacityFunctionofFlowFractionCurve(curve);
-
-    curve = energyInputRatioFunctionofTemperatureCurve().clone(model).cast<Curve>();
-    t_clone.setEnergyInputRatioFunctionofTemperatureCurve(curve);
-
-    curve = energyInputRatioFunctionofFlowFractionCurve().clone(model).cast<Curve>();
-    t_clone.setEnergyInputRatioFunctionofFlowFractionCurve(curve);
-
-    curve = partLoadFractionCorrelationCurve().clone(model).cast<Curve>();
-    t_clone.setPartLoadFractionCorrelationCurve(curve);
-
-    curve = wasteHeatFunctionofTemperatureCurve().clone(model).cast<Curve>();
-    t_clone.setWasteHeatFunctionofTemperatureCurve(curve);
 
     return t_clone;
   }

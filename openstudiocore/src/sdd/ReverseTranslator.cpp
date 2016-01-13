@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -85,6 +85,18 @@
 #include "../model/ZoneHVACComponent_Impl.hpp"
 #include "../model/PortList.hpp"
 #include "../model/PortList_Impl.hpp"
+#include "../model/ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "../model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
+#include "../model/ZoneHVACPackagedTerminalHeatPump.hpp"
+#include "../model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
+#include "../model/ZoneHVACWaterToAirHeatPump.hpp"
+#include "../model/ZoneHVACWaterToAirHeatPump_Impl.hpp"
+#include "../model/ZoneHVACFourPipeFanCoil.hpp"
+#include "../model/ZoneHVACFourPipeFanCoil_Impl.hpp"
+#include "../model/ZoneHVACBaseboardConvectiveElectric.hpp"
+#include "../model/ZoneHVACBaseboardConvectiveElectric_Impl.hpp"
+#include "../model/ZoneHVACBaseboardConvectiveWater.hpp"
+#include "../model/ZoneHVACBaseboardConvectiveWater_Impl.hpp"
 #include "../energyplus/ReverseTranslator.hpp"
 #include "../osversion/VersionTranslator.hpp"
 #include "../utilities/filetypes/EpwFile.hpp"
@@ -504,7 +516,7 @@ namespace sdd {
         }
       }
 
-      // Translate chilled and hot water systems
+      // Translate hot water systems
       for (int i = 0; i < fluidSysElements.count(); i++){
         if (fluidSysElements.at(i).firstChildElement("Name").isNull()){
           continue;
@@ -513,6 +525,33 @@ namespace sdd {
           continue;
         }
         if (fluidSysElements.at(i).firstChildElement("Type").text().toLower() == "condenserwater"){
+          continue;
+        }
+        if (fluidSysElements.at(i).firstChildElement("Type").text().toLower() == "chilledwater"){
+          continue;
+        }
+
+        QDomElement fluidSysElement = fluidSysElements.at(i).toElement();
+        boost::optional<model::ModelObject> plantLoop = translateFluidSys(fluidSysElement,doc,*result);
+        OS_ASSERT(plantLoop);
+
+        if (m_progressBar){
+          m_progressBar->setValue(m_progressBar->value() + 1);
+        }
+      }
+
+      // Translate chilled water systems
+      for (int i = 0; i < fluidSysElements.count(); i++){
+        if (fluidSysElements.at(i).firstChildElement("Name").isNull()){
+          continue;
+        }
+        if (fluidSysElements.at(i).firstChildElement("Type").text().toLower() == "servicehotwater"){
+          continue;
+        }
+        if (fluidSysElements.at(i).firstChildElement("Type").text().toLower() == "condenserwater"){
+          continue;
+        }
+        if (fluidSysElements.at(i).firstChildElement("Type").text().toLower() == "hotwater"){
           continue;
         }
 
@@ -570,6 +609,28 @@ namespace sdd {
 
         QDomElement airSystemElement = airSystemElements.at(i).toElement();
         translateAirSystem(airSystemElement,doc,*result);
+
+        if (m_progressBar){
+          m_progressBar->setValue(m_progressBar->value() + 1);
+        }
+      }
+
+      // VRFSys
+      QDomNodeList vrfSystemElements = buildingElement.elementsByTagName("VRFSys");
+      if (m_progressBar){
+        m_progressBar->setWindowTitle(toString("Translating VRF Systems"));
+        m_progressBar->setMinimum(0);
+        m_progressBar->setMaximum(vrfSystemElements.count()); 
+        m_progressBar->setValue(0);
+      }
+
+      for (int i = 0; i < vrfSystemElements.count(); i++){
+        if (vrfSystemElements.at(i).firstChildElement("Name").isNull()){
+          continue;
+        }
+
+        QDomElement vrfSystemElement = vrfSystemElements.at(i).toElement();
+        translateVRFSys(vrfSystemElement,doc,*result);
 
         if (m_progressBar){
           m_progressBar->setValue(m_progressBar->value() + 1);
@@ -648,6 +709,10 @@ namespace sdd {
               if( boost::optional<model::ModelObject> mo = comp->demandOutletModelObject() )
               {
                 mo->setName(comp->name().get() + " Demand Outlet Node");
+              }
+              if( boost::optional<model::ModelObject> mo = comp->tertiaryOutletModelObject() )
+              {
+                mo->setName(comp->name().get() + " Tertiary Demand Outlet Node");
               }
             }
             else if( boost::optional<model::Splitter> comp = it->optionalCast<model::Splitter>() )
@@ -918,21 +983,22 @@ namespace sdd {
       meter.setInstallLocationType(InstallLocationType::Facility);
       meter.setReportingFrequency("Hourly");
 
-      // Lights - Reg Ltg, NonReg Ltg
+      // Lights - ComplianceLtg, NonComplianceLtg
       meter = model::Meter(*result);
       meter.setFuelType(FuelType::Electricity);
       meter.setEndUseType(EndUseType::InteriorLights);
-      meter.setSpecificEndUse("Reg Ltg");
+      meter.setSpecificEndUse("ComplianceLtg");
       meter.setInstallLocationType(InstallLocationType::Facility);
       meter.setReportingFrequency("Hourly");
 
       meter = model::Meter(*result);
       meter.setFuelType(FuelType::Electricity);
       meter.setEndUseType(EndUseType::InteriorLights);
-      meter.setSpecificEndUse("NonReg Ltg");
+      meter.setSpecificEndUse("NonComplianceLtg");
       meter.setInstallLocationType(InstallLocationType::Facility);
       meter.setReportingFrequency("Hourly");
 
+      // Exterior Lights - Reg Ltg, NonReg Ltg 
       meter = model::Meter(*result);
       meter.setFuelType(FuelType::Electricity);
       meter.setEndUseType(EndUseType::ExteriorLights);
@@ -1067,6 +1133,57 @@ namespace sdd {
 
         var = model::OutputVariable("Baseboard Total Heating Rate",*result);
         var.setReportingFrequency(interval);
+
+        auto createOutputForNode = [&](const std::string & nodename) {
+          auto var = model::OutputVariable("System Node Temperature",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(nodename);
+          var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(nodename);
+        };
+
+        auto createOutputForZoneHVAC = [&](const model::ZoneHVACComponent & comp) {
+          auto name = comp.name().get();
+          if( auto mo = comp.inletNode() ) {
+            createOutputForNode(mo->name().get());
+          }
+          if( auto mo = comp.outletNode() ) {
+            createOutputForNode(mo->name().get());
+          }
+          auto mixedAirNodeName = name + " Mixed Air Node";
+          createOutputForNode(mixedAirNodeName);
+          auto reliefAirNodeName = name + " Relief Air Node";
+          createOutputForNode(reliefAirNodeName);
+          auto oaNodeName = name + " OA Node";
+          createOutputForNode(oaNodeName);
+        };
+
+        // Really need some abstraction so this sillyness isn't required
+        {
+          auto zonehvac = result->getModelObjects<model::ZoneHVACPackagedTerminalAirConditioner>();
+          for( const auto & comp : zonehvac ) {
+            createOutputForZoneHVAC(comp);
+          }
+        }
+        {
+          auto zonehvac = result->getModelObjects<model::ZoneHVACPackagedTerminalHeatPump>();
+          for( const auto & comp : zonehvac ) {
+            createOutputForZoneHVAC(comp);
+          }
+        }
+        {
+          auto zonehvac = result->getModelObjects<model::ZoneHVACWaterToAirHeatPump>();
+          for( const auto & comp : zonehvac ) {
+            createOutputForZoneHVAC(comp);
+          }
+        }
+        {
+          auto zonehvac = result->getModelObjects<model::ZoneHVACFourPipeFanCoil>();
+          for( const auto & comp : zonehvac ) {
+            createOutputForZoneHVAC(comp);
+          }
+        }
       }
 
       // SimVarsHVACSec

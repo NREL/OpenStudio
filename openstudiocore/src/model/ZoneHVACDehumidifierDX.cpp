@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -91,21 +91,6 @@ namespace detail {
   ModelObject ZoneHVACDehumidifierDX_Impl::clone(Model model) const
   {
     auto clone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACDehumidifierDX>();
-
-    {
-      auto curveClone = waterRemovalCurve().clone(model).cast<Curve>();
-      clone.setWaterRemovalCurve(curveClone);
-    }
-
-    {
-      auto curveClone = energyFactorCurve().clone(model).cast<Curve>();
-      clone.setEnergyFactorCurve(curveClone);
-    }
-
-    {
-      auto curveClone = partLoadFractionCorrelationCurve().clone(model).cast<Curve>();
-      clone.setPartLoadFractionCorrelationCurve(curveClone);
-    }
 
     return clone;
   }

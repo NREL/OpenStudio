@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -78,11 +78,6 @@ namespace detail {
   ModelObject RefrigerationCondenserAirCooled_Impl::clone(Model model) const
   {
     RefrigerationCondenserAirCooled modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCondenserAirCooled>();
-
-    boost::optional<CurveLinear> heatRejectionCurve = ratedEffectiveTotalHeatRejectionRateCurve();
-    if(heatRejectionCurve){
-      modelObjectClone.setRatedEffectiveTotalHeatRejectionRateCurve(heatRejectionCurve.get().clone(model).cast<CurveLinear>());
-    }
 
     modelObjectClone.resetAirInletZone();
 

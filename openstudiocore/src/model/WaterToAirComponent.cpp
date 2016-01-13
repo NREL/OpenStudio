@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -91,22 +91,45 @@ boost::optional<ModelObject> WaterToAirComponent_Impl::waterOutletModelObject()
   return connectedObject( waterOutletPort() );
 }
 
-std::vector<HVACComponent> WaterToAirComponent_Impl::edges(bool isDemandComponent)
+std::vector<HVACComponent> WaterToAirComponent_Impl::edges(const boost::optional<HVACComponent> & prev)
 {
   std::vector<HVACComponent> edges;
-  if( isDemandComponent ) {
-    if( boost::optional<ModelObject> edgeModelObject = this->waterOutletModelObject() ) {
-      if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
-        edges.push_back(*edgeObject);
+
+  auto pushWaterOutletModelObject = [&]() {
+    if( auto edgeModelObject = waterOutletModelObject() ) {
+      auto edgeHVACComponent = edgeModelObject->optionalCast<HVACComponent>();
+      OS_ASSERT(edgeHVACComponent);
+      edges.push_back(edgeHVACComponent.get());
+    }
+  };
+
+  auto pushAirOutletModelObject = [&]() {
+    if( auto edgeModelObject = airOutletModelObject() ) {
+      auto edgeHVACComponent = edgeModelObject->optionalCast<HVACComponent>();
+      OS_ASSERT(edgeHVACComponent);
+      edges.push_back(edgeHVACComponent.get());
+    }
+  };
+  
+  if( prev) {
+    if( auto inletModelObject = waterInletModelObject() ) {
+      if( prev.get() == inletModelObject.get() ) {
+        pushWaterOutletModelObject();
+        return edges;
+      }
+    }
+    if( auto inletModelObject = airInletModelObject() ) {
+      if( prev.get() == inletModelObject.get() ) {
+        pushAirOutletModelObject();
+        return edges;
       }
     }
   } else {
-    if( boost::optional<ModelObject> edgeModelObject = this->airOutletModelObject() ) {
-      if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
-        edges.push_back(*edgeObject);
-      }
-    }
+    pushWaterOutletModelObject();
+    pushAirOutletModelObject();
+    return edges;
   }
+
   return edges;
 }
 

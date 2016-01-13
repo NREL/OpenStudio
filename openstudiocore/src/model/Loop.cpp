@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -115,7 +115,11 @@ namespace detail {
     if( handle == hvacComponent.handle() ) { 
       return hvacComponent;
     }
-    std::vector<HVACComponent> nodes = hvacComponent.getImpl<HVACComponent_Impl>()->edges(isDemandComponents);
+
+    boost::optional<HVACComponent> prev;
+    if( visited.size() >= 2u ) prev = visited.rbegin()[1];
+
+    std::vector<HVACComponent> nodes = hvacComponent.getImpl<HVACComponent_Impl>()->edges(prev);
 
     for(auto it = nodes.begin();
         it != nodes.end();
@@ -231,7 +235,10 @@ namespace detail {
   // when complete, paths will be populated with all nodes between the source node and sink
   void findModelObjects(const HVACComponent & sink, std::vector<HVACComponent> & visited, std::vector<HVACComponent> & paths, bool isDemandComponents)
   {
-    std::vector<HVACComponent> nodes = visited.back().getImpl<HVACComponent_Impl>()->edges(isDemandComponents);
+    boost::optional<HVACComponent> prev;
+    if( visited.size() >= 2u ) prev = visited.rbegin()[1];
+
+    std::vector<HVACComponent> nodes = visited.back().getImpl<HVACComponent_Impl>()->edges(prev);
 
     for(const auto & node : nodes)
     {

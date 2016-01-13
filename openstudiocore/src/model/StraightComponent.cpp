@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -136,11 +136,11 @@ void StraightComponent_Impl::disconnect()
   this->model().disconnect(mo, this->outletPort());
 }
 
-std::vector<HVACComponent> StraightComponent_Impl::edges(bool isDemandComponent)
+std::vector<HVACComponent> StraightComponent_Impl::edges(const boost::optional<HVACComponent> & prev)
 {
   std::vector<HVACComponent> edges;
-  if( boost::optional<ModelObject> edgeModelObject = this->outletModelObject() ) {
-    if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+  if( auto edgeModelObject = outletModelObject() ) {
+    if( auto edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
       edges.push_back(*edgeObject);
     }
   }

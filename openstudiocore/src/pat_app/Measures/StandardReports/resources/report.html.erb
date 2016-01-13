@@ -139,6 +139,7 @@
               <% next if not table %>
               <br>
               <button class="btn btn-primary" type="button" data-toggle="collapse" data-target=<%= "#table_#{table_index}" %> aria-expanded="false" aria-controls=<%= "table_#{table_index}" %>>
+                <% if not table.has_key?(:title) then table[:title] = '' end %>
                 <% if not table[:title] == '' and table.has_key?(:chart_type) %>
                     <%= table[:title] %> - view table
                     <% class_string = 'collapse' %>
@@ -162,7 +163,7 @@
                   <% end %>
                   <tr>
                     <% table[:header].each_with_index do |header, header_index| %>
-                        <% if table[:units][header_index] == '' or not table[:units][header_index] %>
+                        <% if not table[:units] or table[:units][header_index] == '' or not table[:units][header_index] %>
                             <th><%= header %></th>
                         <% else %>
                             <th><%= "#{header} (#{table[:units][header_index]})" %></th>
@@ -201,6 +202,7 @@
                         myChart.addSeries("label", dimple.plot.pie);
                         myChart.addLegend(225, 75, 175, 150, "left");
                         <% table[:chart].each do |i| %>
+                        <% next if JSON.parse(i)['color'] == nil %>
                         myChart.assignColor('<%= JSON.parse(i)['label'] %>', '<%= JSON.parse(i)['color'] %>', 'white', 1);
                         <% end %>
                         myChart.draw();
@@ -239,6 +241,7 @@
                             return legend._getEntries_old.apply(this, arguments).reverse();
                         };
                         <% table[:chart].each do |i| %>
+                        <% next if JSON.parse(i)['color'] == nil %>
                         myChart.assignColor('<%= JSON.parse(i)['label'] %>', '<%= JSON.parse(i)['color'] %>', 'gray', 1);
                         <% end %>
                         myChart.draw();
@@ -262,11 +265,31 @@
                         myChart.addSeries("label", dimple.plot.bar);
                         myChart.addLegend(900, 200, 125, 300, "left");
                         <% table[:chart].each do |i| %>
+                        <% next if JSON.parse(i)['color'] == nil %>
                         myChart.assignColor('<%= JSON.parse(i)['label'] %>', '<%= JSON.parse(i)['color'] %>', 'white', 1);
                         <% end %>
                         myChart.draw();
                         x.titleShape.text('<%= table[:chart_attributes][:label_x]%>');
                         y.titleShape.text('<%= table[:chart_attributes][:value]%>');
+                    </script>
+                  </div>
+
+              <% elsif table[:chart_type] == 'scatter' %>
+
+                  <% chart_index += 1 %>
+                  <div id="chartContainer_<%= chart_index %>">
+                    <script type="text/javascript">
+                        var svg = dimple.newSvg("#chartContainer_<%= chart_index %>", 1000, 400);
+                        var data = [<%= table[:chart].join(",") %>];
+                        var myChart = new dimple.chart(svg, data);
+                        myChart.setBounds(50, 20, 800, 300);
+                        var x = myChart.addMeasureAxis("x", "label_x")
+                        var y = myChart.addMeasureAxis("y", "label_y");
+                        myChart.addSeries(["index","label"], dimple.plot.bubble);
+                        myChart.addLegend(900, 200, 125, 300, "left");
+                        myChart.draw();
+                        x.titleShape.text('<%= table[:chart_attributes][:label_x]%>');
+                        y.titleShape.text('<%= table[:chart_attributes][:label_y]%>');
                     </script>
                   </div>
 
@@ -293,6 +316,7 @@
                         right.interpolation = "linear";
                         myChart.addLegend(950, 200, 125, 300, "left");
                         <% table[:chart].each do |i| %>
+                        <% next if JSON.parse(i)['color'] == nil %>
                         myChart.assignColor('<%= JSON.parse(i)['label'] %>', '<%= JSON.parse(i)['color'] %>', '<%= JSON.parse(i)['color'] %>', 1);
                         <% end %>
                         myChart.draw();
@@ -367,6 +391,7 @@
                                   return entries;
                               };
                               <% chart[:chart_data].each do |i| %>
+                              <% next if JSON.parse(i)['color'] == nil %>
                               myChart.assignColor('<%= JSON.parse(i)['label'] %>', '<%= JSON.parse(i)['color'] %>');
                               <% end %>
                               myChart.draw();

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -101,7 +101,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.9.3")] = &VersionTranslator::update_1_9_2_to_1_9_3;
   m_updateMethods[VersionString("1.9.5")] = &VersionTranslator::update_1_9_4_to_1_9_5;
   m_updateMethods[VersionString("1.10.0")] = &VersionTranslator::update_1_9_5_to_1_10_0;
-  m_updateMethods[VersionString("1.10.1")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.10.1")] = &VersionTranslator::update_1_10_0_to_1_10_1;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -2752,6 +2752,7 @@ std::string VersionTranslator::update_1_8_5_to_1_9_0(const IdfFile& idf_1_8_5, c
           newObject.setString(i,s.get());
         }
       }
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
     } else {
       ss << object;
@@ -2982,6 +2983,62 @@ std::string VersionTranslator::update_1_9_5_to_1_10_0(const IdfFile& idf_1_9_5, 
           newObject.setString(10,"No");
         }
       }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_10_0_to_1_10_1(const IdfFile& idf_1_10_0, const IddFileAndFactoryWrapper& idd_1_10_1)
+{
+  std::stringstream ss;
+
+  ss << idf_1_10_0.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_10_1.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_1_10_0.objects()) {
+    auto iddname = object.iddObject().name();
+    if (iddname == "OS:Sizing:Zone") {
+      auto iddObject = idd_1_10_1.getObject("OS:Sizing:Zone");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      size_t newi = 0;
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( i == 2 ) {
+          newObject.setString(newi,"SupplyAirTemperature");
+          ++newi;
+          if( auto value = object.getString(i) ) {
+            newObject.setString(newi,value.get());
+          }
+          ++newi;
+          newObject.setDouble(newi,11.11);
+        } else if( i == 3 ) {
+          newObject.setString(newi,"SupplyAirTemperature");
+          ++newi;
+          if( auto value = object.getString(i) ) {
+            newObject.setString(newi,value.get());
+          }
+          ++newi;
+          newObject.setDouble(newi,11.11);
+        } else if( auto value = object.getString(i) ) {
+          newObject.setString(newi,value.get());
+        }
+        ++newi;
+      }
+
+      newObject.setString(24,"No");
+      newObject.setString(25,"NeutralSupplyAir");
+      newObject.setString(26,"Autosize");
+      newObject.setString(27,"Autosize");
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;

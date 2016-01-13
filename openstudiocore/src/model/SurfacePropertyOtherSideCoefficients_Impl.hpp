@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #ifndef MODEL_SURFACEPROPERTYOTHERSIDECOEFFICIENTS_IMPL_HPP
 #define MODEL_SURFACEPROPERTYOTHERSIDECOEFFICIENTS_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ResourceObject_Impl.hpp"
 
 namespace openstudio {
