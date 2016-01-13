@@ -119,10 +119,10 @@ TEST_F(ModelFixture, FanOnOff_Remove)
   EXPECT_EQ(0, fans.size());
 
   curveExponents = m.getModelObjects<CurveExponent>();
-  EXPECT_EQ(0, curveExponents.size());
+  EXPECT_EQ(1, curveExponents.size());
 
   curveCubics = m.getModelObjects<CurveCubic>();
-  EXPECT_EQ(0, curveCubics.size());
+  EXPECT_EQ(1, curveCubics.size());
 }
 
 TEST_F(ModelFixture,FanOnOff_addToNode)
@@ -178,6 +178,14 @@ TEST_F(ModelFixture, FanOnOff_CloneOneModelWithDefaultData)
   EXPECT_DOUBLE_EQ(1.0, testObjectClone.motorInAirstreamFraction().get());
   EXPECT_EQ(testObject.fanPowerRatioFunctionofSpeedRatioCurve().handle(), testObjectClone.fanPowerRatioFunctionofSpeedRatioCurve().handle());
   EXPECT_EQ(testObject.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle(), testObjectClone.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle());
+
+  EXPECT_EQ(1, m.getModelObjects<CurveExponent>().size());
+  EXPECT_EQ(1, m.getModelObjects<CurveCubic>().size());
+
+  testObjectClone.remove();
+
+  EXPECT_EQ(1, m.getModelObjects<CurveExponent>().size());
+  EXPECT_EQ(1, m.getModelObjects<CurveCubic>().size());
 }
 
 TEST_F(ModelFixture, FanOnOff_CloneOneModelWithCustomData)

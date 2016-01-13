@@ -64,7 +64,7 @@ TEST_F(ModelFixture, RefrigerationGasCoolerAirCooled_Remove)
     EXPECT_EQ(0, refrigerationAirCooledGasCoolers.size());
 
     ratedTotalHeatRejectionRateCurve = model.getModelObjects<CurveLinear>();
-    EXPECT_EQ(0, ratedTotalHeatRejectionRateCurve.size());
+    EXPECT_EQ(1, ratedTotalHeatRejectionRateCurve.size());
 }
 
 //Test the methods that set and get the fields

@@ -113,7 +113,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_Remove)
   EXPECT_EQ(0, refrigerationModelObjectLists.size());
 
   refrigerationCurveCubics = model.getModelObjects<CurveCubic>();
-  EXPECT_EQ(0, refrigerationCurveCubics.size());
+  EXPECT_EQ(1, refrigerationCurveCubics.size());
 }
 
 TEST_F(ModelFixture, RefrigerationSecondarySystem_CloneOneModelWithDefaultData)
