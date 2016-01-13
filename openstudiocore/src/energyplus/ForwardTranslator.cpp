@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -2277,6 +2277,24 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateOutsideSurfaceConvectionAlgorithm(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_SurfaceProperty_ConvectionCoefficients_MultipleSurface:
+  {
+    model::SurfacePropertyConvectionCoefficientsMultipleSurface obj = modelObject.cast<SurfacePropertyConvectionCoefficientsMultipleSurface>();
+    retVal = translateSurfacePropertyConvectionCoefficientsMultipleSurface(obj);
+    break;
+  }
+  case openstudio::IddObjectType::OS_SurfaceProperty_OtherSideCoefficients:
+  {
+    model::SurfacePropertyOtherSideCoefficients obj = modelObject.cast<SurfacePropertyOtherSideCoefficients>();
+    retVal = translateSurfacePropertyOtherSideCoefficients(obj);
+    break;
+  }
+  case openstudio::IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel:
+  {
+    model::SurfacePropertyOtherSideConditionsModel obj = modelObject.cast<SurfacePropertyOtherSideConditionsModel>();
+    retVal = translateSurfacePropertyOtherSideConditionsModel(obj);
+    break;
+  }
   case openstudio::IddObjectType::OS_SubSurface :
     {
       model::SubSurface subSurface = modelObject.cast<SubSurface>();
@@ -2688,6 +2706,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ShadowCalculation);
   result.push_back(IddObjectType::OS_SurfaceConvectionAlgorithm_Inside);
   result.push_back(IddObjectType::OS_SurfaceConvectionAlgorithm_Outside);
+  result.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients_MultipleSurface);
   result.push_back(IddObjectType::OS_Timestep);
   result.push_back(IddObjectType::OS_Sizing_Parameters);
   result.push_back(IddObjectType::OS_ZoneAirContaminantBalance);
@@ -2865,6 +2884,9 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
   iddObjectTypes.push_back(IddObjectType::OS_DefaultSurfaceConstructions);
   iddObjectTypes.push_back(IddObjectType::OS_DefaultConstructionSet);
   iddObjectTypes.push_back(IddObjectType::OS_DefaultScheduleSet);
+
+  iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideCoefficients);
+  iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel);
 
   for (const IddObjectType& iddObjectType : iddObjectTypes){
     

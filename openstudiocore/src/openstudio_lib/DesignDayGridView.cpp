@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -395,9 +395,9 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
     }
     else if (field == DAILYDRYBULBTEMPERATURERANGE){
       addQuantityEditColumn(Heading(QString(DAILYDRYBULBTEMPERATURERANGE)),
-        QString("C"),
-        QString("C"),
-        QString("F"),
+        QString("K"),
+        QString("K"),
+        QString("R"),
         m_isIP,
         NullAdapter(&model::DesignDay::dailyDryBulbTemperatureRange),
         NullAdapter(&model::DesignDay::setDailyDryBulbTemperatureRange),
@@ -434,9 +434,9 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
     }
     else if (field == DAILYWETBULBTEMPERATURERANGE){
       addQuantityEditColumn(Heading(QString(DAILYWETBULBTEMPERATURERANGE)),
-        QString("C"),
-        QString("C"),
-        QString("F"),
+        QString("K"),
+        QString("K"),
+        QString("R"),
         m_isIP,
         NullAdapter(&model::DesignDay::dailyWetBulbTemperatureRange),
         NullAdapter(&model::DesignDay::setDailyWetBulbTemperatureRange)

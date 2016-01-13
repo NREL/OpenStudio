@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -905,9 +905,16 @@ namespace openstudio {
             );
         }
         else if (field == INSIDESHELFNAME) {
+
+          std::function<bool(model::DaylightingDeviceShelf *, const model::InteriorPartitionSurface&)> setter(
+            [](model::DaylightingDeviceShelf *t_shelf, const model::InteriorPartitionSurface& t_arg) {
+            return t_shelf->setInsideShelf(t_arg);
+          }
+          );
+
           addDropZoneColumn(Heading(QString(INSIDESHELFNAME)),
             CastNullAdapter<model::DaylightingDeviceShelf>(&model::DaylightingDeviceShelf::insideShelf),
-            CastNullAdapter<model::DaylightingDeviceShelf>(&model::DaylightingDeviceShelf::setInsideShelf),
+            setter,
             boost::optional<std::function<void(model::DaylightingDeviceShelf *)>>(),
             boost::optional<std::function<bool(model::DaylightingDeviceShelf *)>>(),
             DataSource(
@@ -917,9 +924,16 @@ namespace openstudio {
             );
         }
         else if (field == OUTSIDESHELFNAME) {
+          
+          std::function<bool(model::DaylightingDeviceShelf *, const model::ShadingSurface&)> setter(
+            [](model::DaylightingDeviceShelf *t_shelf, const model::ShadingSurface& t_arg) {
+            return t_shelf->setOutsideShelf(t_arg);
+          }
+          );
+
           addDropZoneColumn(Heading(QString(OUTSIDESHELFNAME)),
             CastNullAdapter<model::DaylightingDeviceShelf>(&model::DaylightingDeviceShelf::outsideShelf),
-            CastNullAdapter<model::DaylightingDeviceShelf>(&model::DaylightingDeviceShelf::setOutsideShelf),
+            setter,
             boost::optional<std::function<void(model::DaylightingDeviceShelf *)>>(),
             boost::optional<std::function<bool(model::DaylightingDeviceShelf *)>>(),
             DataSource(

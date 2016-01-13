@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -40,6 +40,10 @@
 #include "DaylightingDeviceShelf_Impl.hpp"
 #include "WindowPropertyFrameAndDivider.hpp"
 #include "WindowPropertyFrameAndDivider_Impl.hpp"
+#include "SurfacePropertyOtherSideCoefficients.hpp"
+#include "SurfacePropertyOtherSideCoefficients_Impl.hpp"
+#include "SurfacePropertyOtherSideConditionsModel.hpp"
+#include "SurfacePropertyOtherSideConditionsModel_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -722,6 +726,62 @@ namespace detail {
     }
   }
 
+  boost::optional<SurfacePropertyOtherSideCoefficients> SubSurface_Impl::surfacePropertyOtherSideCoefficients() const
+  {
+    return getObject<SubSurface>().getModelObjectTarget<SurfacePropertyOtherSideCoefficients>(OS_SubSurfaceFields::OutsideBoundaryConditionObject);
+  }
+
+  bool SubSurface_Impl::setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients)
+  {
+    boost::optional<SubSurface> adjacentSubSurface = this->adjacentSubSurface();
+    if (adjacentSubSurface){
+      resetAdjacentSubSurface();
+    }
+
+    // this is basically testing if otherSideCoefficients is in same model as this
+    bool test = this->setPointer(OS_SubSurfaceFields::OutsideBoundaryConditionObject, otherSideCoefficients.handle());
+    if (!test){
+      if (adjacentSubSurface){
+        setAdjacentSubSurface(*adjacentSubSurface);
+      }
+    }
+    return test;
+  }
+
+  void SubSurface_Impl::resetSurfacePropertyOtherSideCoefficients()
+  {
+    bool test = setString(OS_SubSurfaceFields::OutsideBoundaryConditionObject, "");
+    OS_ASSERT(test);
+  }
+
+  boost::optional<SurfacePropertyOtherSideConditionsModel> SubSurface_Impl::surfacePropertyOtherSideConditionsModel() const
+  {
+    return getObject<SubSurface>().getModelObjectTarget<SurfacePropertyOtherSideConditionsModel>(OS_SubSurfaceFields::OutsideBoundaryConditionObject);
+  }
+
+  bool SubSurface_Impl::setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel)
+  {
+    boost::optional<SubSurface> adjacentSubSurface = this->adjacentSubSurface();
+    if (adjacentSubSurface){
+      resetAdjacentSubSurface();
+    }
+
+    // this is basically testing if otherSideModel is in same model as this
+    bool test = this->setPointer(OS_SubSurfaceFields::OutsideBoundaryConditionObject, otherSideModel.handle());
+    if (!test){
+      if (adjacentSubSurface){
+        setAdjacentSubSurface(*adjacentSubSurface);
+      }
+    }
+    return test;
+  }
+
+  void SubSurface_Impl::resetSurfacePropertyOtherSideConditionsModel()
+  {
+    bool test = setString(OS_SubSurfaceFields::OutsideBoundaryConditionObject, "");
+    OS_ASSERT(test);
+  }
+
   std::string SubSurface_Impl::defaultSubSurfaceType() const
   {
     std::string result;
@@ -1157,6 +1217,30 @@ bool SubSurface::setAdjacentSubSurface(SubSurface& subSurface)
 void SubSurface::resetAdjacentSubSurface()
 {
   getImpl<detail::SubSurface_Impl>()->resetAdjacentSubSurface();
+}
+
+boost::optional<SurfacePropertyOtherSideCoefficients> SubSurface::surfacePropertyOtherSideCoefficients() const {
+  return getImpl<detail::SubSurface_Impl>()->surfacePropertyOtherSideCoefficients();
+}
+
+bool SubSurface::setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients) {
+  return getImpl<detail::SubSurface_Impl>()->setSurfacePropertyOtherSideCoefficients(otherSideCoefficients);
+}
+
+void SubSurface::resetSurfacePropertyOtherSideCoefficients() {
+  return getImpl<detail::SubSurface_Impl>()->resetSurfacePropertyOtherSideCoefficients();
+}
+
+boost::optional<SurfacePropertyOtherSideConditionsModel> SubSurface::surfacePropertyOtherSideConditionsModel() const {
+  return getImpl<detail::SubSurface_Impl>()->surfacePropertyOtherSideConditionsModel();
+}
+
+bool SubSurface::setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel) {
+  return getImpl<detail::SubSurface_Impl>()->setSurfacePropertyOtherSideConditionsModel(otherSideModel);
+}
+
+void SubSurface::resetSurfacePropertyOtherSideConditionsModel() {
+  return getImpl<detail::SubSurface_Impl>()->resetSurfacePropertyOtherSideConditionsModel();
 }
 
 void SubSurface::assignDefaultSubSurfaceType() {
