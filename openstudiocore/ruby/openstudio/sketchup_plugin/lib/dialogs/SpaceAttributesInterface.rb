@@ -174,16 +174,26 @@ module OpenStudio
           else
             assigned_const_set = drawing_interface.model_object.setString(3,selected_const_set.to_s)
           end
-
-          # set space's parent zone values
-          # (I could probalby make array of unique values and loop outside of main loop so I don't reset the string over and over for spaces that share zones)
+          
+          # get thermostat object from input name
+          # make thermostat list
+          thermostat_objects = model_interface.openstudio_model.getThermostatSetpointDualSetpoints # singular or plural
+          thermostat_objects.each do |object|
+            if object.name.to_s == thermostat
+              thermostat = object
+              next
+            end
+          end
 
           parent_zone = drawing_interface.model_object.thermalZone
           if not parent_zone.empty?
 
+            # clone and rename thermostat
+            new_thermostat = thermostat.clone(model_interface.openstudio_model).to_Thermostat.get
+            new_thermostat.setName("thermostat #{parent_zone.get.name}")
+
             # assign thermostat to parent zone object
-            assigned_thermostat_status = parent_zone.get.setString(19,thermostat.to_s)
-            #puts "thermostat, #{thermostat.to_s}, #{assigned_thermostat_status}"
+            parent_zone.get.setThermostat(new_thermostat)
 
             # assign parent zone's ideal air loads status
             if ideal_loads.to_s == "Yes"
