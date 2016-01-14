@@ -195,7 +195,11 @@ set(economics_src
   economics/Economics.cpp
 )
 
-SET(GeographicLib optimized Geographic debug Geographic_d)
+if(UNIX)
+  SET(GeographicLib libGeographic)
+else()
+  SET(GeographicLib optimized Geographic debug Geographic_d)
+endif()
 
 set(${target_name}_depends
   sqlite
