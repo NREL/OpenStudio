@@ -753,7 +753,7 @@ set(GTEST_INCLUDE_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest/inclu
 set(GTEST_LIB_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest-build)
 
 ExternalProject_Add(GeographicLib
-  URL https://openstudio-resources.s3.amazonaws.com/dependencies/GeographicLib-1.45.zip
+  URL http://openstudio-resources.s3.amazonaws.com/dependencies/GeographicLib-1.45.zip
   URL_MD5 c3c8f989d700fc88c8ce4584cb298cee
   #PATCH_COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_SOURCE_DIR}/dependencies/GeographicLib ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib
   INSTALL_COMMAND ""
