@@ -770,7 +770,11 @@ ExternalProject_Add(GeographicLib
 )
 
 set(GEOGRAPHIC_INCLUDE_DIR ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib/include)
-set(GEOGRAPHIC_LIB_DIR ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib-build/lib)
+if(UNIX)
+  set(GEOGRAPHIC_LIB_DIR ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib-build/src)
+else()
+  set(GEOGRAPHIC_LIB_DIR ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib-build/lib)
+endif()
 
 if(BUILD_QT)
   set(Qt5Widgets_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Widgets)
