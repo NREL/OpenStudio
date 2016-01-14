@@ -196,7 +196,7 @@ set(economics_src
 )
 
 if(UNIX)
-  SET(GeographicLib libGeographic)
+  SET(GeographicLib Geographic)
 else()
   SET(GeographicLib optimized Geographic debug Geographic_d)
 endif()
