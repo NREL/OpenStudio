@@ -2,7 +2,7 @@
   <schema_version>3.0</schema_version>
   <name>calibration_reports</name>
   <uid>e6642d40-7366-4647-8724-53a37991d579</uid>
-  <version_id>46dbbef5-d4b9-4247-9118-230d1ce0e1d1</version_id>
+  <version_id>5f63612c-36b7-4512-a03b-7dfc86f4e14e</version_id>
   <xml_checksum>2C8A3EEF</xml_checksum>
   <class_name>CalibrationReports</class_name>
   <display_name>Calibration Reports</display_name>
@@ -54,6 +54,12 @@
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
       <checksum>C73203EF</checksum>
+    </file>
+    <file>
+      <filename>0111_cal_test_b.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>D00AF8B5</checksum>
     </file>
   </files>
 </measure>
