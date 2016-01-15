@@ -31,6 +31,7 @@
 #include "../model/AvailabilityManagerOptimumStart.hpp"
 #include "../model/AvailabilityManagerNightCycle.hpp"
 #include "../model/ConstructionBase.hpp"
+#include "../model/AirConditionerVariableRefrigerantFlow.hpp"
 
 class QDomDocument;
 class QDomElement;
@@ -189,6 +190,9 @@ namespace sdd {
 
     // Similar to m_optimumStartControlZones but for night cycle manager
     std::map<std::string,model::AvailabilityManagerNightCycle> m_nightCycleControlZones;
+
+    // Map from vrf system to master control zone name
+    std::map<std::string,model::AirConditionerVariableRefrigerantFlow> m_vrfSystemControlZones;
 
     REGISTER_LOGGER("openstudio.sdd.ReverseTranslator");
   };

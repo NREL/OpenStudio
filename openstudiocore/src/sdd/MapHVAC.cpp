@@ -541,8 +541,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
   }
 
   {
-    // TODO Make this work
-    //auto element = vrfSysElement.firstChildElement("CtrlZnRef");
+    auto element = vrfSysElement.firstChildElement("CtrlZnRef");
+    auto text = element.text().toStdString(); 
+    if( ! text.empty() ) {
+      m_vrfSystemControlZones.insert(std::pair<std::string,model::AirConditionerVariableRefrigerantFlow>(text,vrf));
+    }
   }
 
   {
@@ -902,6 +905,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
 	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setCoolingCombinationRatioCorrectionFactorCurve),
 	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::coolingCombinationRatioCorrectionFactorCurve));
 
+  setCurve("ClgEIR_fCyclingRatCrvRef",
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setCoolingPartLoadFractionCorrelationCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::coolingPartLoadFractionCorrelationCurve));
+
   setCurve("HtRcvryClgCap_fTempCrvRef",
 	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setHeatRecoveryCoolingCapacityModifierCurve),
 	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::heatRecoveryCoolingCapacityModifierCurve));
@@ -921,6 +928,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
   setCurve("DefEIR_fTempCrvRef",
 	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve),
 	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::defrostEnergyInputRatioModifierFunctionofTemperatureCurve));
+
+  setCurve("HtgEIR_fCyclingRatCrvRef",
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::setHeatingPartLoadFractionCorrelationCurve),
+	  std::mem_fn(&model::AirConditionerVariableRefrigerantFlow::heatingPartLoadFractionCorrelationCurve));
 
   {
     bool ok;
@@ -4276,25 +4287,19 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
         zoneHVACComponent->addToThermalZone(thermalZone);
 
         // If not the ventilation system we lock down the oa system of the zone equipment
-        if( primAirCondSysRefElement.text() != ventSysRefElement.text() )
-        {
+        if( primAirCondSysRefElement.text() != ventSysRefElement.text() ) {
           if( boost::optional<model::ZoneHVACPackagedTerminalAirConditioner> ptac = 
-              zoneHVACComponent->optionalCast<model::ZoneHVACPackagedTerminalAirConditioner>() )
-          {
+              zoneHVACComponent->optionalCast<model::ZoneHVACPackagedTerminalAirConditioner>() ) {
             ptac->setOutdoorAirFlowRateDuringHeatingOperation(0.0);
             ptac->setOutdoorAirFlowRateDuringCoolingOperation(0.0);
-            ptac->setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(0.0);
-          }
+            ptac->setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(0.0); }
           else if( boost::optional<model::ZoneHVACPackagedTerminalHeatPump> pthp = 
-              zoneHVACComponent->optionalCast<model::ZoneHVACPackagedTerminalHeatPump>() )
-          {
+              zoneHVACComponent->optionalCast<model::ZoneHVACPackagedTerminalHeatPump>() ) {
             pthp->setOutdoorAirFlowRateDuringHeatingOperation(0.0);
             pthp->setOutdoorAirFlowRateDuringCoolingOperation(0.0);
             pthp->setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(0.0);
-          }
-          else if( boost::optional<model::ZoneHVACFourPipeFanCoil> fanCoil = 
-              zoneHVACComponent->optionalCast<model::ZoneHVACFourPipeFanCoil>() )
-          {
+          } else if( boost::optional<model::ZoneHVACFourPipeFanCoil> fanCoil = 
+              zoneHVACComponent->optionalCast<model::ZoneHVACFourPipeFanCoil>() ) {
             fanCoil->setMaximumOutdoorAirFlowRate(0.0);
           }
         }
@@ -4364,6 +4369,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     auto nightCycle = m_nightCycleControlZones.find(thermalZone.name().get());
     if( nightCycle != m_nightCycleControlZones.end() ) {
       nightCycle->second.setControlThermalZone(thermalZone);
+    }
+  }
+
+  // Set the master control zone for vrf system, if applicable
+  {
+    auto vrfSystem = m_vrfSystemControlZones.find(thermalZone.name().get());
+    if( vrfSystem != m_vrfSystemControlZones.end() ) {
+      vrfSystem->second.setZoneforMasterThermostatLocation(thermalZone);
     }
   }
 
@@ -7344,6 +7357,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
 
     if( fan && coolingCoil && heatingCoil ) {
       model::ZoneHVACTerminalUnitVariableRefrigerantFlow vrfTerminal(model,coolingCoil.get(),heatingCoil.get(),fan.get());
+      vrfTerminal.setName(name);
+      if( schedule ) {
+        vrfTerminal.setTerminalUnitAvailabilityschedule(schedule.get());
+      }
+
       result = vrfTerminal;
 
       {
