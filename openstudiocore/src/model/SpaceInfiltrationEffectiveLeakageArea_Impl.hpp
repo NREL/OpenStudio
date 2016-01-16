@@ -82,6 +82,8 @@ namespace detail {
 
     virtual bool hardApplySchedules() override;
 
+    virtual bool isAbsolute() const override;
+
     //@}
     /** @name Getters */
     //@{

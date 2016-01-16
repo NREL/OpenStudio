@@ -148,6 +148,14 @@ namespace detail {
     return isEmpty(OS_LightsFields::Multiplier);
   }
 
+  bool Lights_Impl::isAbsolute() const {
+    LightsDefinition definition = lightsDefinition();
+    if (definition.lightingLevel()) {
+      return true;
+    }
+    return false;
+  }
+
   std::string Lights_Impl::endUseSubcategory() const {
     boost::optional<std::string> value = getString(OS_LightsFields::EndUseSubcategory,true);
     OS_ASSERT(value);

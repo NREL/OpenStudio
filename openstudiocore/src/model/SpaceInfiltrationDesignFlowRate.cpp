@@ -139,6 +139,14 @@ namespace detail {
     return result;
   }
 
+  bool SpaceInfiltrationDesignFlowRate_Impl::isAbsolute() const
+  {
+    if (designFlowRate()){
+      return true;
+    }
+    return false;
+  }
+
   std::string SpaceInfiltrationDesignFlowRate_Impl::designFlowRateCalculationMethod() const {
     boost::optional<std::string> value = getString(OS_SpaceInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod,true);
     OS_ASSERT(value);

@@ -153,6 +153,14 @@ namespace detail {
     return isEmpty(OS_SteamEquipmentFields::Multiplier);
   }
 
+  bool SteamEquipment_Impl::isAbsolute() const {
+    SteamEquipmentDefinition definition = steamEquipmentDefinition();
+    if (definition.designLevel()) {
+      return true;
+    }
+    return false;
+  }
+
   std::string SteamEquipment_Impl::endUseSubcategory() const {
     boost::optional<std::string> value = getString(OS_SteamEquipmentFields::EndUseSubcategory,true);
     OS_ASSERT(value);

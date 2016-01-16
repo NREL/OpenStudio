@@ -110,6 +110,11 @@ namespace detail {
     return result;
   }
 
+  bool SpaceInfiltrationEffectiveLeakageArea_Impl::isAbsolute() const
+  {
+    return true;
+  }
+
   double SpaceInfiltrationEffectiveLeakageArea_Impl::effectiveAirLeakageArea() const {
     boost::optional<double> value = getDouble(OS_SpaceInfiltration_EffectiveLeakageAreaFields::EffectiveAirLeakageArea,true);
     OS_ASSERT(value);
