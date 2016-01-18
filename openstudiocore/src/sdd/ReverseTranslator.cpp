@@ -402,6 +402,15 @@ namespace sdd {
         }
       }
 
+      QDomNodeList crvLinElements = projectElement.elementsByTagName("CrvLin");
+      for (int i = 0; i < crvLinElements.count(); i++){
+        QDomElement crvLinElement = crvLinElements.at(i).toElement();
+        boost::optional<model::ModelObject> curve = translateCrvLin(crvLinElement, doc, *result);
+        if (!curve){
+          LOG(Error, "Failed to translate 'CrvLin' element " << i);
+        }
+      }
+
       // do schedules before loads
       QDomNodeList scheduleDayElements = projectElement.elementsByTagName("SchDay");
       if (m_progressBar){
