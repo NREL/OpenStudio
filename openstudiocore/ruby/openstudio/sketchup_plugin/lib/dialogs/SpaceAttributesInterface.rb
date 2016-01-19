@@ -149,6 +149,9 @@ module OpenStudio
       num_total = selection.length
       num_complete = 0
 
+      # get model
+      model = model_interface.openstudio_model
+
       # loop through selection
       selection.each do |entity|
         drawing_interface = entity.drawing_interface
@@ -177,11 +180,11 @@ module OpenStudio
           
           # get thermostat object from input name
           # make thermostat list
-          thermostat_objects = model_interface.openstudio_model.getThermostatSetpointDualSetpoints # singular or plural
+          thermostat_objects = model.getThermostats
           thermostat_objects.each do |object|
             if object.name.to_s == thermostat
               thermostat = object
-              next
+              break
             end
           end
 
@@ -190,9 +193,10 @@ module OpenStudio
 
             # clone and rename thermostat
             new_thermostat = thermostat.clone(model_interface.openstudio_model).to_Thermostat.get
-            new_thermostat.setName("thermostat #{parent_zone.get.name}")
+            new_thermostat.setName("#{parent_zone.get.name} Thermostat")
 
             # assign thermostat to parent zone object
+            # setThermostat will delete thermostat previouslly associated with the zone
             parent_zone.get.setThermostat(new_thermostat)
 
             # assign parent zone's ideal air loads status
