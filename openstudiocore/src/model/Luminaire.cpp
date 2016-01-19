@@ -236,6 +236,10 @@ namespace detail {
     return isEmpty(OS_LuminaireFields::Multiplier);
   }
 
+  bool Luminaire_Impl::isAbsolute() const {
+    return true;
+  }
+
   std::string Luminaire_Impl::endUseSubcategory() const {
     boost::optional<std::string> value = getString(OS_LuminaireFields::EndUseSubcategory,true);
     OS_ASSERT(value);

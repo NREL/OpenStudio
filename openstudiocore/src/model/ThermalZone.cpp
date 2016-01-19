@@ -1202,6 +1202,19 @@ namespace detail {
 
     }
 
+    // if all spaces share a common space type, ensure that there are no absolute loads
+    if (spaceType){
+      for (const auto& child : spaceType->children()){
+        if (child.optionalCast<SpaceLoad>()){
+          if (child.cast<SpaceLoad>().isAbsolute()){
+            LOG(Warn, "SpaceType '" << spaceType->name() << "' contains absolute loads, cannot be shared by combined spaces.")
+            spaceType.reset();
+            break;
+          }
+        }
+      }
+    }
+
     // if some spaces are part of floor area but others are not, set floor area here
     if (needToSetFloorArea){
       if (isEmpty(OS_ThermalZoneFields::FloorArea)){

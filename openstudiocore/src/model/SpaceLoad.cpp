@@ -149,5 +149,10 @@ bool SpaceLoad::hardApplySchedules()
   return getImpl<detail::SpaceLoad_Impl>()->hardApplySchedules();
 }    
 
+bool SpaceLoad::isAbsolute() const
+{
+  return getImpl<detail::SpaceLoad_Impl>()->isAbsolute();
+}
+
 } // model
 } // openstudio

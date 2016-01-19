@@ -196,6 +196,14 @@ namespace detail {
     return isEmpty(OS_PeopleFields::Multiplier);
   }
 
+  bool People_Impl::isAbsolute() const {
+    PeopleDefinition definition = peopleDefinition();
+    if (definition.numberofPeople()) {
+      return true;
+    }
+    return false;
+  }
+
   bool People_Impl::setMultiplier(double multiplier) {
     bool result = setDouble(OS_PeopleFields::Multiplier, multiplier);
     return result;
