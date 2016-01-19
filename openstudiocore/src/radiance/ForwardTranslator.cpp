@@ -241,7 +241,7 @@ namespace radiance {
 
 
     if (numSpacesToSimulate == 0){
-      LOG(Error, "Model does not contain any Radiance daylighting objects.");
+      LOG(Error, "Model does not contain any spaces configured for Radiance; check illuminance map and daylighting control point assignments.");
       return outfiles;
     }
 

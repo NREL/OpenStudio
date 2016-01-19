@@ -2752,6 +2752,7 @@ std::string VersionTranslator::update_1_8_5_to_1_9_0(const IdfFile& idf_1_8_5, c
           newObject.setString(i,s.get());
         }
       }
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
     } else {
       ss << object;
@@ -2994,6 +2995,7 @@ std::string VersionTranslator::update_1_9_5_to_1_10_0(const IdfFile& idf_1_9_5, 
 }
 
 std::string VersionTranslator::update_1_10_0_to_1_10_1(const IdfFile& idf_1_10_0, const IddFileAndFactoryWrapper& idd_1_10_1) {
+
   std::stringstream ss;
 
   ss << idf_1_10_0.header() << std::endl << std::endl;
@@ -3008,7 +3010,6 @@ std::string VersionTranslator::update_1_10_0_to_1_10_1(const IdfFile& idf_1_10_0
     auto iddname = object.iddObject().name();
 
     if (iddname == "OS:ThermostatSetpoint:DualSetpoint") {
-
       // Get all of the zones that point to this thermostat
       std::vector<IdfObject> referencingZones;
       for( const auto & zone : zones ) {
@@ -3032,6 +3033,42 @@ std::string VersionTranslator::update_1_10_0_to_1_10_1(const IdfFile& idf_1_10_0
         }
       }
       ss << object;
+    } else if (iddname == "OS:Sizing:Zone") {
+      auto iddObject = idd_1_10_1.getObject("OS:Sizing:Zone");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      size_t newi = 0;
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( i == 2 ) {
+          newObject.setString(newi,"SupplyAirTemperature");
+          ++newi;
+          if( auto value = object.getString(i) ) {
+            newObject.setString(newi,value.get());
+          }
+          ++newi;
+          newObject.setDouble(newi,11.11);
+        } else if( i == 3 ) {
+          newObject.setString(newi,"SupplyAirTemperature");
+          ++newi;
+          if( auto value = object.getString(i) ) {
+            newObject.setString(newi,value.get());
+          }
+          ++newi;
+          newObject.setDouble(newi,11.11);
+        } else if( auto value = object.getString(i) ) {
+          newObject.setString(newi,value.get());
+        }
+        ++newi;
+      }
+
+      newObject.setString(24,"No");
+      newObject.setString(25,"NeutralSupplyAir");
+      newObject.setString(26,"Autosize");
+      newObject.setString(27,"Autosize");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
     } else {
       ss << object;
     }
