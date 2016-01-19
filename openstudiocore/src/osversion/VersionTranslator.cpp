@@ -101,7 +101,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.9.3")] = &VersionTranslator::update_1_9_2_to_1_9_3;
   m_updateMethods[VersionString("1.9.5")] = &VersionTranslator::update_1_9_4_to_1_9_5;
   m_updateMethods[VersionString("1.10.0")] = &VersionTranslator::update_1_9_5_to_1_10_0;
-  m_updateMethods[VersionString("1.10.1")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.10.1")] = &VersionTranslator::update_1_10_0_to_1_10_1;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -2985,6 +2985,53 @@ std::string VersionTranslator::update_1_9_5_to_1_10_0(const IdfFile& idf_1_9_5, 
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_10_0_to_1_10_1(const IdfFile& idf_1_10_0, const IddFileAndFactoryWrapper& idd_1_10_1) {
+  std::stringstream ss;
+
+  ss << idf_1_10_0.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_10_1.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  auto zones = idf_1_10_0.getObjectsByType(idf_1_10_0.iddFile().getObject("OS:ThermalZone").get());
+
+  for (const IdfObject& object : idf_1_10_0.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:ThermostatSetpoint:DualSetpoint") {
+
+      // Get all of the zones that point to this thermostat
+      std::vector<IdfObject> referencingZones;
+      for( const auto & zone : zones ) {
+        if( auto thermostateHandle = zone.getString(19) ) {
+          if( auto thermostat = idf_1_10_0.getObject(toUUID(thermostateHandle.get())) ) {
+            if( thermostat.get() == object ) {
+              referencingZones.push_back(zone);
+            }
+          }
+        }
+      }
+
+      // Clone the thermostat for every zone after the first
+      if( referencingZones.size() > 1u ) {
+        for( auto it = (referencingZones.begin() + 1); it != referencingZones.end(); ++it ) {
+          auto newThermostat = object.clone();
+          ss << newThermostat;
+          m_new.push_back(newThermostat);
+          auto newHandle = newThermostat.getString(0).get();
+          it->setString(19,newHandle); 
+        }
+      }
+      ss << object;
     } else {
       ss << object;
     }
