@@ -55,6 +55,8 @@
 #include "../ThermostatSetpointDualSetpoint.hpp"
 #include "../ThermostatSetpointDualSetpoint_Impl.hpp"
 #include "../ZoneControlHumidistat.hpp"
+#include "../ZoneControlContaminantController.hpp"
+#include "../ZoneControlContaminantController_Impl.hpp"
 #include "../ZoneHVACPackagedTerminalAirConditioner.hpp"
 
 
@@ -633,3 +635,34 @@ TEST_F(ModelFixture, ThermalZone_Ports)
   EXPECT_TRUE(inletPortList.handle().isNull());
   EXPECT_TRUE(exhaustPortList.handle().isNull());
 }
+
+TEST_F(ModelFixture, ThermalZone_ZoneControlContaminantController)
+{
+  Model m;
+  ThermalZone zone(m);
+
+  ZoneControlContaminantController controller(m);
+  auto result = zone.setZoneControlContaminantController(controller);
+  EXPECT_TRUE(result);
+
+  auto returnValue = zone.zoneControlContaminantController();
+  EXPECT_TRUE(returnValue);
+
+  EXPECT_EQ(controller,returnValue.get());
+
+  zone.resetZoneControlContaminantController();
+  EXPECT_FALSE(zone.zoneControlContaminantController());
+
+  EXPECT_EQ(1u,m.getModelObjects<model::ZoneControlContaminantController>().size());
+
+  controller.remove();
+  EXPECT_TRUE(m.getModelObjects<model::ZoneControlContaminantController>().empty());
+
+  ZoneControlContaminantController controller2(m); 
+  zone.setZoneControlContaminantController(controller2);
+  auto zone2 = zone.clone().cast<model::ThermalZone>();
+
+  EXPECT_TRUE(zone2.zoneControlContaminantController());
+  EXPECT_EQ(2u,m.getModelObjects<model::ZoneControlContaminantController>().size());
+}
+

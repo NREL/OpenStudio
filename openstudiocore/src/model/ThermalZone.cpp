@@ -69,6 +69,8 @@
 #include "Thermostat_Impl.hpp"
 #include "ThermostatSetpointDualSetpoint.hpp"
 #include "ThermostatSetpointDualSetpoint_Impl.hpp"
+#include "ZoneControlContaminantController.hpp"
+#include "ZoneControlContaminantController_Impl.hpp"
 #include "ZoneControlHumidistat.hpp"
 #include "ZoneControlHumidistat_Impl.hpp"
 #include "DesignSpecificationOutdoorAir.hpp"
@@ -1950,6 +1952,11 @@ namespace detail {
       tz.setZoneControlHumidistat(humidistatClone);
     }
 
+    if( auto t_controller = zoneControlContaminantController() ) {
+      auto controllerClone = t_controller->clone(model).cast<ZoneControlContaminantController>();
+      tz.setZoneControlContaminantController(controllerClone);
+    }
+
     // DLM: do not clone zone mixing objects
 
     return tz;
@@ -2269,6 +2276,34 @@ namespace detail {
     return result;
   }
 
+  boost::optional<ZoneControlContaminantController> ThermalZone_Impl::zoneControlContaminantController() const
+  {
+    auto h = handle();
+
+    auto controllers = model().getModelObjects<ZoneControlContaminantController>();
+    for( const auto & controller : controllers ) {
+      if( auto zone = controller.getImpl<detail::ZoneControlContaminantController_Impl>()->controlledZone() ) {
+        if( zone->handle() == h ) {
+          return controller;
+        }
+      }
+    }
+
+    return boost::none;
+  }
+
+  bool ThermalZone_Impl::setZoneControlContaminantController(const ZoneControlContaminantController & contaminantController)
+  {
+    auto tz = getObject<ThermalZone>();
+    return contaminantController.getImpl<detail::ZoneControlContaminantController_Impl>()->setControlledZone(tz);
+  }
+
+  void ThermalZone_Impl::resetZoneControlContaminantController()
+  {
+    if( auto controller = zoneControlContaminantController() ) {
+      controller->getImpl<detail::ZoneControlContaminantController_Impl>()->resetControlledZone();
+    }
+  }
 
 } // detail
 
@@ -2839,6 +2874,21 @@ std::vector<ZoneMixing> ThermalZone::supplyZoneMixing() const
 std::vector<ZoneMixing> ThermalZone::exhaustZoneMixing() const
 {
   return getImpl<detail::ThermalZone_Impl>()->exhaustZoneMixing();
+}
+
+boost::optional<ZoneControlContaminantController> ThermalZone::zoneControlContaminantController() const
+{
+  return getImpl<detail::ThermalZone_Impl>()->zoneControlContaminantController();
+}
+
+bool ThermalZone::setZoneControlContaminantController(const ZoneControlContaminantController & contaminantController)
+{
+  return getImpl<detail::ThermalZone_Impl>()->setZoneControlContaminantController(contaminantController);
+}
+
+void ThermalZone::resetZoneControlContaminantController()
+{
+  getImpl<detail::ThermalZone_Impl>()->resetZoneControlContaminantController();
 }
 
 /// @cond

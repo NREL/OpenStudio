@@ -283,8 +283,10 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateWaterUseConnections.cpp
   ForwardTranslator/ForwardTranslateWaterUseEquipment.cpp
   ForwardTranslator/ForwardTranslateWindowPropertyFrameAndDivider.cpp  
+  ForwardTranslator/ForwardTranslateZoneAirContaminantBalance.cpp
   ForwardTranslator/ForwardTranslateZoneAirHeatBalanceAlgorithm.cpp
   ForwardTranslator/ForwardTranslateZoneAirMassFlowConservation.cpp
+  ForwardTranslator/ForwardTranslateZoneControlContaminantController.cpp
   ForwardTranslator/ForwardTranslateZoneControlHumidistat.cpp
   ForwardTranslator/ForwardTranslateZoneControlThermostatStagedDualSetpoint.cpp
   ForwardTranslator/ForwardTranslateZoneHVACBaseboardConvectiveElectric.cpp
