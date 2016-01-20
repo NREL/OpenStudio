@@ -244,6 +244,7 @@
     <rule IddField="Group Rendering Name" Access="HIDDEN"/>
     <rule IddField="Thermostat Name" Access="HIDDEN"/>
     <rule IddField="Use Ideal Air Loads" Access="HIDDEN"/>
+    <rule IddField="Humidistat Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_EvaporativeCooler_Direct_ResearchSpecial">
     <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
