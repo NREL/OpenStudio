@@ -3013,11 +3013,9 @@ std::string VersionTranslator::update_1_10_0_to_1_10_1(const IdfFile& idf_1_10_0
       // Get all of the zones that point to this thermostat
       std::vector<IdfObject> referencingZones;
       for( const auto & zone : zones ) {
-        if( auto thermostateHandle = zone.getString(19) ) {
-          if( auto thermostat = idf_1_10_0.getObject(toUUID(thermostateHandle.get())) ) {
-            if( thermostat.get() == object ) {
-              referencingZones.push_back(zone);
-            }
+        if( auto thermostatHandle = zone.getString(19) ) {
+          if( toUUID(thermostatHandle.get()) == object.handle() ) {
+            referencingZones.push_back(zone);
           }
         }
       }
