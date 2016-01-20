@@ -160,6 +160,14 @@ namespace detail {
     return isEmpty(OS_OtherEquipmentFields::Multiplier);
   }
 
+  bool OtherEquipment_Impl::isAbsolute() const {
+    OtherEquipmentDefinition definition = otherEquipmentDefinition();
+    if (definition.designLevel()) {
+      return true;
+    }
+    return false;
+  }
+
   bool OtherEquipment_Impl::setOtherEquipmentDefinition(const OtherEquipmentDefinition& definition) {
     return setPointer(definitionIndex(),definition.handle());
   }

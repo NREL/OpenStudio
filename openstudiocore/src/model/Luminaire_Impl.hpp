@@ -120,6 +120,8 @@ namespace detail {
 
     virtual bool isMultiplierDefaulted() const override;
 
+    virtual bool isAbsolute() const override;
+
     //@}
     /** @name Getters */
     //@{

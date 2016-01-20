@@ -138,6 +138,14 @@ namespace detail {
     return isEmpty(OS_ElectricEquipmentFields::Multiplier);
   }
 
+  bool ElectricEquipment_Impl::isAbsolute() const {
+    ElectricEquipmentDefinition definition = electricEquipmentDefinition();
+    if (definition.designLevel()) {
+      return true;
+    }
+    return false;
+  }
+
   std::string ElectricEquipment_Impl::endUseSubcategory() const {
     boost::optional<std::string> value = getString(OS_ElectricEquipmentFields::EndUseSubcategory,true);
     OS_ASSERT(value);
