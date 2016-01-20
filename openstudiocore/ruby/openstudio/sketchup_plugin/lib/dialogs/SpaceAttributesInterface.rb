@@ -152,6 +152,20 @@ module OpenStudio
       # get model
       model = model_interface.openstudio_model
 
+      # get thermostat object from input name
+      thermostat_objects = model.getThermostats
+      found_thermostat = false
+      thermostat_objects.each do |object|
+        if object.name.to_s == thermostat
+          thermostat = object
+          found_thermostat = true
+          break
+        end
+      end
+      if not found_thermostat
+        puts "Can't find thermostat in model matching selected name. Won't set thermostat for selected thermal zones."
+      end
+
       # loop through selection
       selection.each do |entity|
         drawing_interface = entity.drawing_interface
@@ -177,27 +191,18 @@ module OpenStudio
           else
             assigned_const_set = drawing_interface.model_object.setString(3,selected_const_set.to_s)
           end
-          
-          # get thermostat object from input name
-          # make thermostat list
-          thermostat_objects = model.getThermostats
-          thermostat_objects.each do |object|
-            if object.name.to_s == thermostat
-              thermostat = object
-              break
-            end
-          end
 
           parent_zone = drawing_interface.model_object.thermalZone
           if not parent_zone.empty?
 
-            # clone and rename thermostat
-            new_thermostat = thermostat.clone(model_interface.openstudio_model).to_Thermostat.get
-            new_thermostat.setName("#{parent_zone.get.name} Thermostat")
+            if found_thermostat
+              # clone and rename thermostat
+              new_thermostat = thermostat.clone(model).to_Thermostat.get
+              new_thermostat.setName("#{parent_zone.get.name} Thermostat")
 
-            # assign thermostat to parent zone object
-            # setThermostat will delete thermostat previouslly associated with the zone
-            parent_zone.get.setThermostat(new_thermostat)
+              # setThermostat will delete thermostat previouslly associated with the zone
+              parent_zone.get.setThermostat(new_thermostat)
+            end
 
             # assign parent zone's ideal air loads status
             if ideal_loads.to_s == "Yes"
