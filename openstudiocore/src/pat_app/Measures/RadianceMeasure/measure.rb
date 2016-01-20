@@ -879,7 +879,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             end
             
             # get ALL glare sensors for space       
-            if t_radGlareSensorViews[space_name].keys.size > 0
+            if t_radGlareSensorViews[space_name] && t_radGlareSensorViews[space_name].keys.size > 0
               t_radGlareSensorViews[space_name].each do |sensor, views|
                 sensor_index = t_radGlareSensorViews[space_name].keys.index(sensor)
                 
@@ -916,8 +916,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           splitvalues[space_name] = [space, illum]
           # iterate over each sensor and combine the views together
           new_hash = {}
-          t_radGlareSensorViews[space_name].each do |sensor, v|
-            new_hash[sensor] = v[hour]
+          
+          if t_radGlareSensorViews[space_name]
+            t_radGlareSensorViews[space_name].each do |sensor, v|
+              new_hash[sensor] = v[hour]
+            end
           end
           splitvalues[space_name] += [new_hash]
           
