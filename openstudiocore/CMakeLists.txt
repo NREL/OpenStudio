@@ -555,6 +555,10 @@ add_definitions(-DGTEST_HAS_TR1_TUPLE=0)
 include_directories(SYSTEM ${GTEST_INCLUDE_DIR})
 link_directories(${GTEST_LIB_DIR})
 
+# Geographic library
+include_directories(SYSTEM ${GEOGRAPHIC_INCLUDE_DIR})
+link_directories(${GEOGRAPHIC_LIB_DIR})
+
 # Boost
 if(APPLE)
   set(Boost_USE_STATIC_LIBS ON)
