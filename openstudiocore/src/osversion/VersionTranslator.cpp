@@ -2994,8 +2994,8 @@ std::string VersionTranslator::update_1_9_5_to_1_10_0(const IdfFile& idf_1_9_5, 
   return ss.str();
 }
 
-std::string VersionTranslator::update_1_10_0_to_1_10_1(const IdfFile& idf_1_10_0, const IddFileAndFactoryWrapper& idd_1_10_1)
-{
+std::string VersionTranslator::update_1_10_0_to_1_10_1(const IdfFile& idf_1_10_0, const IddFileAndFactoryWrapper& idd_1_10_1) {
+
   std::stringstream ss;
 
   ss << idf_1_10_0.header() << std::endl << std::endl;
@@ -3004,9 +3004,37 @@ std::string VersionTranslator::update_1_10_0_to_1_10_1(const IdfFile& idf_1_10_0
   IdfFile targetIdf(idd_1_10_1.iddFile());
   ss << targetIdf.versionObject().get();
 
+  auto zones = idf_1_10_0.getObjectsByType(idf_1_10_0.iddFile().getObject("OS:ThermalZone").get());
+
   for (const IdfObject& object : idf_1_10_0.objects()) {
     auto iddname = object.iddObject().name();
-    if (iddname == "OS:Sizing:Zone") {
+
+    if (iddname == "OS:ThermostatSetpoint:DualSetpoint") {
+      // Get all of the zones that point to this thermostat
+      std::vector<IdfObject> referencingZones;
+      for( const auto & zone : zones ) {
+        if( auto thermostatHandle = zone.getString(19) ) {
+          if( toUUID(thermostatHandle.get()) == object.handle() ) {
+            referencingZones.push_back(zone);
+          }
+        }
+      }
+
+      // Clone the thermostat for every zone after the first
+      if( referencingZones.size() > 1u ) {
+        for( auto & referencingZone : referencingZones ) {
+          // This will leave the original thermostate hanging out alone in most circumstances
+          // but since we are messing with the name it is probably best
+          auto newThermostat = object.clone();
+          newThermostat.setName(referencingZone.nameString() + " Thermostat");
+          ss << newThermostat;
+          m_new.push_back(newThermostat);
+          auto newHandle = newThermostat.getString(0).get();
+          referencingZone.setString(19,newHandle); 
+        }
+      }
+      ss << object;
+    } else if (iddname == "OS:Sizing:Zone") {
       auto iddObject = idd_1_10_1.getObject("OS:Sizing:Zone");
       OS_ASSERT(iddObject);
       IdfObject newObject(iddObject.get());
