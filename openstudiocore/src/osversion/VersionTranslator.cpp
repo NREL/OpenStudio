@@ -3022,12 +3022,15 @@ std::string VersionTranslator::update_1_10_0_to_1_10_1(const IdfFile& idf_1_10_0
 
       // Clone the thermostat for every zone after the first
       if( referencingZones.size() > 1u ) {
-        for( auto it = (referencingZones.begin() + 1); it != referencingZones.end(); ++it ) {
+        for( auto & referencingZone : referencingZones ) {
+          // This will leave the original thermostate hanging out alone in most circumstances
+          // but since we are messing with the name it is probably best
           auto newThermostat = object.clone();
+          newThermostat.setName(referencingZone.nameString() + " Thermostat");
           ss << newThermostat;
           m_new.push_back(newThermostat);
           auto newHandle = newThermostat.getString(0).get();
-          it->setString(19,newHandle); 
+          referencingZone.setString(19,newHandle); 
         }
       }
       ss << object;
