@@ -1019,6 +1019,7 @@ namespace detail {
 
   bool ThermalZone_Impl::setZoneControlHumidistat(const ZoneControlHumidistat & humidistat)
   {
+    resetZoneControlHumidistat();
     return setPointer(OS_ThermalZoneFields::HumidistatName, humidistat.handle());
   }
 
@@ -2294,6 +2295,7 @@ namespace detail {
 
   bool ThermalZone_Impl::setZoneControlContaminantController(const ZoneControlContaminantController & contaminantController)
   {
+    resetZoneControlContaminantController();
     auto tz = getObject<ThermalZone>();
     return contaminantController.getImpl<detail::ZoneControlContaminantController_Impl>()->setControlledZone(tz);
   }
@@ -2301,7 +2303,7 @@ namespace detail {
   void ThermalZone_Impl::resetZoneControlContaminantController()
   {
     if( auto controller = zoneControlContaminantController() ) {
-      controller->getImpl<detail::ZoneControlContaminantController_Impl>()->resetControlledZone();
+      controller->remove();
     }
   }
 
