@@ -688,6 +688,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
     auto value = element.text().toDouble(&ok);
     if( ok ) {
       vrf.setHeatRecoveryCoolingCapacityTimeConstant(value);
+      vrf.setHeatRecoveryCoolingEnergyTimeConstant(value);
     }
   }
 
@@ -706,6 +707,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
     auto value = element.text().toDouble(&ok);
     if( ok ) {
       vrf.setHeatRecoveryHeatingCapacityTimeConstant(value);
+      vrf.setHeatRecoveryHeatingEnergyTimeConstant(value);
     }
   }
 
@@ -802,7 +804,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
 
   {
     bool ok;
-    auto value = vrfSysElement.firstChildElement("MaxDeltaHeight").text().toDouble(&ok);
+    auto value = vrfSysElement.firstChildElement("MaxDeltaHgt").text().toDouble(&ok);
     if( ok ) {
       value = unitToUnit(value,"ft","m").get();
       vrf.setVerticalHeightusedforPipingCorrectionFactor(value);
@@ -811,7 +813,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
 
   {
     auto value = vrfSysElement.firstChildElement("HtgCrvOutdoorTempType").text().toStdString();
-    vrf.setHeatingPerformanceCurveOutdoorTemperatureType(value);
+    if( istringEqual(value,"WetBulb") ) {
+      vrf.setHeatingPerformanceCurveOutdoorTemperatureType("WetBulbTemperature");
+    } else if( istringEqual(value,"DryBulb") ) {
+      vrf.setHeatingPerformanceCurveOutdoorTemperatureType("DryBulbTemperature");
+    }
   }
 
   auto setCurve = [&](const std::string & elementName, 
@@ -946,7 +952,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
     bool ok;
     auto value = vrfSysElement.firstChildElement("ClgPipeLoss_fPipeHgtCoeff").text().toDouble(&ok);
     if( ok ) {
-      value = unitToUnit(value,"ft","m").get();
+      value = unitToUnit(value,"1/ft","1/m").get();
       vrf.setPipingCorrectionFactorforHeightinCoolingModeCoefficient(value);
     }
   }
@@ -955,7 +961,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
     bool ok;
     auto value = vrfSysElement.firstChildElement("HtgPipeLoss_fPipeHgtCoeff").text().toDouble(&ok);
     if( ok ) {
-      value = unitToUnit(value,"ft","m").get();
+      value = unitToUnit(value,"1/ft","1/m").get();
       vrf.setPipingCorrectionFactorforHeightinHeatingModeCoefficient(value);
     }
   }
@@ -7400,70 +7406,70 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
         }
       }
 
-      // ClgSupFanCap
+      // ClgSupFanCapSim
       if( ! autosize() ) {
         bool ok; 
-        auto value = element.firstChildElement("ClgSupFanCap").text().toDouble(&ok);
+        auto value = element.firstChildElement("ClgSupFanCapSim").text().toDouble(&ok);
         if( ok ) {
           value = unitToUnit(value,"cfm","m^3/s").get();
           vrfTerminal.setSupplyAirFlowRateDuringCoolingOperation(value);    
         }
       }
 
-      // HtgSupFanCap
+      // HtgSupFanCapSim
       if( ! autosize() ) {
         bool ok;
-        auto value = element.firstChildElement("HtgSupFanCap").text().toDouble(&ok);
+        auto value = element.firstChildElement("HtgSupFanCapSim").text().toDouble(&ok);
         if( ok ) {
           value = unitToUnit(value,"cfm","m^3/s").get();
           vrfTerminal.setSupplyAirFlowRateDuringHeatingOperation(value);
         }
       }
 
-      // NoClgSupFanCap
+      // NoClgSupFanCapSim
       if( ! autosize() ) {
         bool ok;
-        auto value = element.firstChildElement("NoClgSupFanCap").text().toDouble(&ok);
+        auto value = element.firstChildElement("NoClgSupFanCapSim").text().toDouble(&ok);
         if( ok ) {
           value = unitToUnit(value,"cfm","m^3/s").get();
           vrfTerminal.setSupplyAirFlowRateWhenNoCoolingisNeeded(value);
         }
       }
 
-      // NoHtgSupFanCap
+      // NoHtgSupFanCapSim
       if( ! autosize() ) {
         bool ok;
-        auto value = element.firstChildElement("NoHtgSupFanCap").text().toDouble(&ok);
+        auto value = element.firstChildElement("NoHtgSupFanCapSim").text().toDouble(&ok);
         if( ok ) {
           value = unitToUnit(value,"cfm","m^3/s").get();
           vrfTerminal.setSupplyAirFlowRateWhenNoHeatingisNeeded(value);
         }
       }
 
-      // ClgOAFlowCap
+      // ClgOAFlowCapSim
       if( ! autosize() ) {
         bool ok;
-        auto value = element.firstChildElement("ClgOAFlowCap").text().toDouble(&ok);
+        auto value = element.firstChildElement("ClgOAFlowCapSim").text().toDouble(&ok);
         if( ok ) {
           value = unitToUnit(value,"cfm","m^3/s").get();
           vrfTerminal.setOutdoorAirFlowRateDuringCoolingOperation(value);
         }
       }
 
-      // HtgOAFlowCap
+      // HtgOAFlowCapSim
       if( ! autosize() ) {
         bool ok;
-        auto value = element.firstChildElement("HtgOAFlowCap").text().toDouble(&ok);
+        auto value = element.firstChildElement("HtgOAFlowCapSim").text().toDouble(&ok);
         if( ok ) {
           value = unitToUnit(value,"cfm","m^3/s").get();
           vrfTerminal.setOutdoorAirFlowRateDuringHeatingOperation(value);
         }
       }
 
-      // NoClgHtgOAFlowCap
+      // NoClgHtgOAFlowCapSim
       if( ! autosize() ) {
         bool ok;
-        auto value = element.firstChildElement("NoClgHtgOAFlowCap").text().toDouble(&ok);
+        auto value = element.firstChildElement("NoClgHtgOAFlowCapSim").text().toDouble(&ok);
         if( ok ) {
           value = unitToUnit(value,"cfm","m^3/s").get();
           vrfTerminal.setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(value);
@@ -7542,11 +7548,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     }
   };
 
-  setCurve("Cap_fTempCrvRef",
+  setCurve("HtPumpCap_fTempCrvRef",
     std::mem_fn(&model::CoilHeatingDXVariableRefrigerantFlow::setHeatingCapacityRatioModifierFunctionofTemperatureCurve),
     std::mem_fn(&model::CoilHeatingDXVariableRefrigerantFlow::heatingCapacityRatioModifierFunctionofTemperatureCurve) );
 
-  setCurve("Cap_fFlowCrvRef",
+  setCurve("HtPumpCap_fFlowCrvRef",
     std::mem_fn(&model::CoilHeatingDXVariableRefrigerantFlow::setHeatingCapacityModifierFunctionofFlowFractionCurve),
     std::mem_fn(&model::CoilHeatingDXVariableRefrigerantFlow::heatingCapacityModifierFunctionofFlowFractionCurve));
 

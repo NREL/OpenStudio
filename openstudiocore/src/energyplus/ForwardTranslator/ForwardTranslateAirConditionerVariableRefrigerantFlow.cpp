@@ -897,7 +897,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
 
   // HeatRecoveryCoolingCapacityTimeConstant
 
-  if( (value = modelObject.heatRecoveryCoolingEnergyTimeConstant()) )
+  if( (value = modelObject.heatRecoveryCoolingCapacityTimeConstant()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::HeatRecoveryCoolingCapacityTimeConstant,value.get());
   }
