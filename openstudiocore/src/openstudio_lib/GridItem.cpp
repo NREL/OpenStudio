@@ -1075,8 +1075,8 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
 
   m_loopScene->addItem(this);
 
-  model::Node supplyInletNode = m_loop.supplyInletNode();
-  model::Node supplyOutletNode = m_loop.supplyOutletNode();
+  auto supplyInletNode = m_loop.supplyInletNode();
+  auto supplyOutletNodes = m_loop.supplyOutletNodes();
 
   std::vector<model::AirLoopHVACSupplyPlenum> supplyPlenums = subsetCastVector<model::AirLoopHVACSupplyPlenum>(loop.demandComponents());
   std::vector<model::AirLoopHVACReturnPlenum> returnPlenums = subsetCastVector<model::AirLoopHVACReturnPlenum>(loop.demandComponents());
@@ -1123,7 +1123,7 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
 
   m_supplySideItem = new SupplySideItem( this,
                                          supplyInletNode,
-                                         supplyOutletNode);
+                                         supplyOutletNodes);
 
   m_supplySideItem->setGridPos(0,0);
 
@@ -3060,10 +3060,10 @@ void DemandSideItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
 
 SupplySideItem::SupplySideItem( QGraphicsItem * parent, 
                                 model::Node supplyInletNode, 
-                                model::Node supplyOutletNode )
+                                std::vector<model::Node> supplyOutletNodes )
   : GridItem( parent ),
     m_supplyInletNode(supplyInletNode),
-    m_supplyOutletNode(supplyOutletNode),
+    m_supplyOutletNodes(supplyOutletNodes),
     m_outletBranchItem(nullptr), 
     m_inletBranchItem(nullptr),
     m_mainBranchGroupItem(nullptr),
@@ -3078,14 +3078,15 @@ SupplySideItem::SupplySideItem( QGraphicsItem * parent,
     m_inletSpacer(nullptr),
     m_outletSpacer(nullptr)
 {
-  model::Node _supplyInletNode = m_supplyInletNode;
-  model::Node _supplyOutletNode = m_supplyOutletNode;
-  model::Loop loop = m_supplyInletNode.loop().get();
+  auto _supplyInletNode = m_supplyInletNode;
+  auto _supplyOutletNode = m_supplyOutletNodes.front();
+  auto loop = m_supplyInletNode.loop().get();
 
-  boost::optional<model::AirLoopHVAC> airLoop = loop.optionalCast<model::AirLoopHVAC>();
+  auto plantLoop = loop.optionalCast<model::PlantLoop>();
+  auto airLoop = loop.optionalCast<model::AirLoopHVAC>();
+
   boost::optional<model::AirLoopHVACOutdoorAirSystem> oaSystem;
-  if( airLoop )
-  {
+  if( airLoop ) {
     oaSystem = airLoop->airLoopHVACOutdoorAirSystem();
   }
 
@@ -3095,8 +3096,8 @@ SupplySideItem::SupplySideItem( QGraphicsItem * parent,
   m_outletNodeItem = new TwoFourNodeItem(this);
   m_outletNodeItem->setModelObject( _supplyOutletNode );
 
-  if( airLoop && oaSystem )
-  {
+  if( airLoop && oaSystem ) {
+
     m_oaSystemItem = new OASystemItem(oaSystem.get(),this);
 
     std::vector<model::ModelObject> returnComponents = 
@@ -3110,63 +3111,63 @@ SupplySideItem::SupplySideItem( QGraphicsItem * parent,
     mainComponents.erase( mainComponents.end() - 1 );
 
     m_outletBranchItem = new HorizontalBranchItem( mainComponents, this );
-  }
-  else
-  {
-    boost::optional<model::Splitter> splitter;
-    boost::optional<model::Mixer> mixer;
 
-    if( boost::optional<model::PlantLoop> plant = loop.optionalCast<model::PlantLoop>() )
-    {
-      splitter = plant->supplySplitter();
-      mixer = plant->supplyMixer();
-    }
+  } else if( airLoop ) {
 
-    if( splitter && mixer )
-    {
-      m_splitterItem = new SupplySplitterItem(this);
-      m_splitterItem->setModelObject(splitter.get());
-
-      m_mixerItem = new SupplyMixerItem(this);
-      m_mixerItem->setModelObject(mixer.get());
-
-      m_mainBranchGroupItem = new HorizontalBranchGroupItem( splitter.get(),
-                                                             mixer.get(),
-                                                             this );
-
-      m_mainBranchGroupItem->setShowDropZone(true);
-
-      m_mixerItem->setNumberBranches( m_mainBranchGroupItem->numberOfBranches() );
-      m_splitterItem->setNumberBranches( m_mainBranchGroupItem->numberOfBranches() );
-
-      std::vector<model::ModelObject> inletComponents; 
-      inletComponents = loop.supplyComponents(m_supplyInletNode,splitter.get());
-      inletComponents.erase( inletComponents.begin() );
-      inletComponents.erase( inletComponents.end() - 1 );
-      m_inletBranchItem = new HorizontalBranchItem(inletComponents,this);
-
-      std::vector<model::ModelObject> outletComponents; 
-      outletComponents = loop.supplyComponents(mixer.get(),m_supplyOutletNode);
-      outletComponents.erase( outletComponents.begin() );
-      outletComponents.erase( outletComponents.end() - 1 );
-      m_outletBranchItem = new HorizontalBranchItem(outletComponents,this);
-
-      if( inletComponents.size() == 0 )
-      {
-        m_inletSpacer = new OneThreeStraightItem(this);
-      }
-
-      if( outletComponents.size() == 0 )
-      {
-        m_outletSpacer = new OneThreeStraightItem(this);
-      }
-    }
-    else
-    {
+    if( m_supplyOutletNodes.size() == 1u ) {
       std::vector<model::ModelObject> supplyComponents = loop.supplyComponents(); 
       supplyComponents.erase( supplyComponents.begin() );
       supplyComponents.erase( supplyComponents.end() - 1 );
       m_outletBranchItem = new HorizontalBranchItem( supplyComponents, this );
+    } else {
+      OS_ASSERT(m_supplyOutletNodes.size() == 2u);
+      auto splitter = airLoop->supplySplitter();
+      OS_ASSERT(splitter);
+      m_splitterItem = new SupplySplitterItem(this);
+      m_splitterItem->setModelObject(splitter.get());
+    }
+
+  } else if( plantLoop) {
+
+    auto splitter = plantLoop->supplySplitter();
+    auto mixer = plantLoop->supplyMixer();
+
+    // we must have a plant to have splitter AND mixer
+    m_splitterItem = new SupplySplitterItem(this);
+    m_splitterItem->setModelObject(splitter);
+
+    m_mixerItem = new SupplyMixerItem(this);
+    m_mixerItem->setModelObject(mixer);
+
+    m_mainBranchGroupItem = new HorizontalBranchGroupItem( splitter,
+                                                           mixer,
+                                                           this );
+
+    m_mainBranchGroupItem->setShowDropZone(true);
+
+    m_mixerItem->setNumberBranches( m_mainBranchGroupItem->numberOfBranches() );
+    m_splitterItem->setNumberBranches( m_mainBranchGroupItem->numberOfBranches() );
+
+    std::vector<model::ModelObject> inletComponents; 
+    inletComponents = loop.supplyComponents(m_supplyInletNode,splitter);
+    inletComponents.erase( inletComponents.begin() );
+    inletComponents.erase( inletComponents.end() - 1 );
+    m_inletBranchItem = new HorizontalBranchItem(inletComponents,this);
+
+    std::vector<model::ModelObject> outletComponents; 
+    outletComponents = loop.supplyComponents(mixer,_supplyOutletNode);
+    outletComponents.erase( outletComponents.begin() );
+    outletComponents.erase( outletComponents.end() - 1 );
+    m_outletBranchItem = new HorizontalBranchItem(outletComponents,this);
+
+    if( inletComponents.size() == 0 )
+    {
+      m_inletSpacer = new OneThreeStraightItem(this);
+    }
+
+    if( outletComponents.size() == 0 )
+    {
+      m_outletSpacer = new OneThreeStraightItem(this);
     }
   }
 

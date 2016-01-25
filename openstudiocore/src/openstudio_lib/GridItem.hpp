@@ -843,7 +843,7 @@ class SupplySideItem : public GridItem
 
   SupplySideItem( QGraphicsItem * parent, 
                   model::Node supplyInletNode, 
-                  model::Node supplyOutletNode );
+                  std::vector<model::Node> supplyOutletNodes );
 
   void paint(QPainter *painter, 
              const QStyleOptionGraphicsItem *option, 
@@ -861,7 +861,7 @@ class SupplySideItem : public GridItem
 
   model::Node m_supplyInletNode;
 
-  model::Node m_supplyOutletNode;
+  std::vector<model::Node> m_supplyOutletNodes;
 
   HorizontalBranchItem * m_outletBranchItem;
 
