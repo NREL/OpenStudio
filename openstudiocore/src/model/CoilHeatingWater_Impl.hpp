@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -26,7 +26,6 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
-class ControllerWaterCoil;
 
 namespace detail {
 
@@ -133,8 +132,6 @@ namespace detail {
     double ratedRatioForAirAndWaterConvection();
 
     void setRatedRatioForAirAndWaterConvection( double value );
-
-    boost::optional<ControllerWaterCoil> controllerWaterCoil();
 
     //@}
   private:

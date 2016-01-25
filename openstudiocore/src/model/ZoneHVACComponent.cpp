@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -312,7 +312,7 @@ namespace detail {
     return boost::none;
   }
 
-  std::vector<HVACComponent> ZoneHVACComponent_Impl::edges(bool isDemandComponent)
+  std::vector<HVACComponent> ZoneHVACComponent_Impl::edges(const boost::optional<HVACComponent> & prev)
   {
     std::vector<HVACComponent> edges;
     if( boost::optional<Node> t_node = this->outletNode() ) {

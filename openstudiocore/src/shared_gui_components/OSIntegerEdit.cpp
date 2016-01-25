@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -43,6 +43,10 @@ OSIntegerEdit2::OSIntegerEdit2( QWidget * parent )
 
   m_intValidator = new QIntValidator();
   this->setValidator(m_intValidator);
+}
+
+OSIntegerEdit2::~OSIntegerEdit2()
+{
 }
 
 void OSIntegerEdit2::bind(model::ModelObject& modelObject,

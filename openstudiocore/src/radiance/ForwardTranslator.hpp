@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -120,7 +120,10 @@ namespace radiance {
       std::set<std::string> m_radMixMaterials;
       std::set<std::string> m_radMaterialsDC;
       std::set<std::string> m_radMaterialsWG0;
-
+			std::set<std::string> m_radMaterialsSwitchableBase;
+			
+			std::string switchableGroup_wgMats;
+			
       // materials list for rtcontrib
       std::set<std::string> m_radDCmats;
 

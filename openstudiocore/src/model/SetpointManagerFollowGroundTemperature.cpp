@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -72,9 +72,7 @@ namespace detail {
     if( added ) {
       return added;
     } else if( boost::optional<PlantLoop> plantLoop = node.plantLoop() ) {
-      if( plantLoop->supplyComponent(node.handle()) ) {
-        return this->setSetpointNode(node);
-      }
+      return this->setSetpointNode(node);
     }
     return added;
   }

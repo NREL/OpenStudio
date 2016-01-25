@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -18,6 +18,7 @@
 **********************************************************************/
 
 #include "MainTabController.hpp"
+
 #include "MainTabView.hpp"
 
 #include "../model/Model.hpp"
@@ -30,6 +31,10 @@ MainTabController::MainTabController(MainTabView* mainContentWidget)
   m_mainContentWidget = mainContentWidget;
 
   addQObject(mainContentWidget);
+}
+
+MainTabController::~MainTabController()
+{
 }
 
 MainTabView* MainTabController::mainContentWidget() const

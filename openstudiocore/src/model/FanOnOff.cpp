@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -369,12 +369,6 @@ namespace detail {
   ModelObject FanOnOff_Impl::clone(Model model) const
   {
     FanOnOff newFan = ModelObject_Impl::clone(model).cast<FanOnOff>();
-
-    Curve curve1 = fanPowerRatioFunctionofSpeedRatioCurve();
-    newFan.setFanPowerRatioFunctionofSpeedRatioCurve(curve1.clone(model).cast<Curve>());
-
-    Curve curve2 = fanEfficiencyRatioFunctionofSpeedRatioCurve();
-    newFan.setFanEfficiencyRatioFunctionofSpeedRatioCurve(curve2.clone(model).cast<Curve>());
 
     return newFan;
   }

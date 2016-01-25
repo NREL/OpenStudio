@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -860,10 +860,6 @@ namespace openstudio {
       connect(qobject_cast<RunTabController *>(m_mainTabController.get()), &RunTabController::toolsUpdated, this, &OSDocument::markAsModified);
 
       connect(this, &OSDocument::toolsUpdated, this, &OSDocument::markAsModified);
-
-      connect(this, &OSDocument::toolsUpdated, qobject_cast<RunTabController *>(m_mainTabController.get()), &RunTabController::updateToolsWarnings);
-
-      connect(qobject_cast<RunTabController *>(m_mainTabController.get()), &RunTabController::toolsUpdated, qobject_cast<RunTabController *>(m_mainTabController.get()), &RunTabController::updateToolsWarnings);
 
       connect(m_mainTabController->mainContentWidget(), &MainTabView::tabSelected, m_mainRightColumnController.get(), &MainRightColumnController::configureForRunSimulationSubTab);
 

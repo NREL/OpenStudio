@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -414,11 +414,6 @@ namespace detail{
   ModelObject CoilHeatingGas_Impl::clone(Model model) const
   {
     CoilHeatingGas newCoil = StraightComponent_Impl::clone(model).cast<CoilHeatingGas>();
-
-    if( boost::optional<Curve> curve1 = partLoadFractionCorrelationCurve() )
-    {
-      newCoil.setPartLoadFractionCorrelationCurve(curve1->clone(model).cast<Curve>());
-    }
 
     return newCoil;
   }

@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -53,7 +53,7 @@ module OpenStudio
 
         Plugin.log(OpenStudio::Info, "SurfaceGroupEntitiesObserver.onElementAdded: adding #{entity} to #{@drawing_interface.entity}")  
 
-        if (entity.class == Sketchup::Face and not entity.deleted?)  # In SU7, deleted entities get passed in sometimes.
+        if (!entity.deleted? and entity.class == Sketchup::Face)  # In SU7, deleted entities get passed in sometimes.
         
           Plugin.log(OpenStudio::Info, "entityID = #{entity.entityID}")  
 
@@ -257,7 +257,7 @@ module OpenStudio
             end
           end
 
-        elsif ((entity.is_a?(Sketchup::Group) or entity.is_a?(Sketchup::ComponentInstance) or entity.is_a?(Sketchup::ComponentDefinition)) and not entity.deleted?)
+        elsif (!entity.deleted? and (entity.is_a?(Sketchup::Group) or entity.is_a?(Sketchup::ComponentInstance) or entity.is_a?(Sketchup::ComponentDefinition)))
 
           if (drawing_interface = entity.drawing_interface)
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -326,6 +326,9 @@
 #include "SteamEquipmentDefinition.hpp"
 #include "SubSurface.hpp"
 #include "Surface.hpp"
+#include "SurfacePropertyConvectionCoefficientsMultipleSurface.hpp"
+#include "SurfacePropertyOtherSideCoefficients.hpp"
+#include "SurfacePropertyOtherSideConditionsModel.hpp"
 #include "TableMultiVariableLookup.hpp"
 #include "TemperingValve.hpp"
 #include "ThermalZone.hpp"
@@ -691,6 +694,9 @@
 #include "SteamEquipmentDefinition_Impl.hpp"
 #include "SubSurface_Impl.hpp"
 #include "Surface_Impl.hpp"
+#include "SurfacePropertyConvectionCoefficientsMultipleSurface_Impl.hpp"
+#include "SurfacePropertyOtherSideCoefficients_Impl.hpp"
+#include "SurfacePropertyOtherSideConditionsModel_Impl.hpp"
 #include "TableMultiVariableLookup_Impl.hpp"
 #include "TemperingValve_Impl.hpp"
 #include "ThermalZone_Impl.hpp"

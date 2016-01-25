@@ -16,7 +16,7 @@ set(utilities_resources_src
   utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/measure.xml
   utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/measure.rb
   utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/EnvelopeAndLoadTestModel_01.osm
-  utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/EnvelopeAndLoadTestModel_02_RotatedSpaceAndBuilding.osm
+  utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/EnvelopeAndLoadTestModel_02_Rotated.osm
   utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/ReverseTranslatedModel.osm
   utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/SetWindowToWallRatioByFacade_Test.rb
   utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/test.osm
@@ -401,6 +401,15 @@ set(osversion_resources_src
   osversion/1_9_3/OpenStudio.idd
   osversion/1_9_3/example.osm
   osversion/1_9_3/example.osc
+  osversion/1_9_4/OpenStudio.idd
+  osversion/1_9_4/example.osm
+  osversion/1_9_4/example.osc
+  osversion/1_9_5/OpenStudio.idd
+  osversion/1_9_5/example.osm
+  osversion/1_9_5/example.osc
+  osversion/1_10_0/OpenStudio.idd
+  osversion/1_10_0/example.osm
+  osversion/1_10_0/example.osc
   osversion/unknown.osc
 )
 

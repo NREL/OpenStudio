@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -43,10 +43,10 @@ namespace radiance{
       virtual ~HeaderInfo () {}
 
       /// get the x points corresponding to illuminance matrix columns in meters
-      const openstudio::Vector& xVector() const {return m_xVector;}
+      openstudio::Vector xVector() const {return m_xVector;}
 
       /// get the y points corresponding to illuminance matrix rows in meters
-      const openstudio::Vector& yVector() const {return m_yVector;}
+      openstudio::Vector yVector() const {return m_yVector;}
 
     private:
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -118,16 +118,8 @@ namespace detail {
   {
     RefrigerationCase modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCase>();
 
-    if (boost::optional<CurveCubic> latentCaseCreditCurve = this->latentCaseCreditCurve()) {
-      modelObjectClone.setLatentCaseCreditCurve(latentCaseCreditCurve.get().clone(model).cast<CurveCubic>());
-    }
-
     if (boost::optional<RefrigerationDefrostCycleParameters> caseDefrostCycleParameters = this->optionalCaseDefrostCycleParameters()) {
       modelObjectClone.getImpl<RefrigerationCase_Impl>()->setCaseDefrostCycleParameters(caseDefrostCycleParameters->clone(model).cast<RefrigerationDefrostCycleParameters>());
-    }
-
-    if( auto curve = defrostEnergyCorrectionCurve() ) {
-      modelObjectClone.setDefrostEnergyCorrectionCurve(curve->clone(model).cast<CurveCubic>());
     }
 
     modelObjectClone.resetThermalZone();

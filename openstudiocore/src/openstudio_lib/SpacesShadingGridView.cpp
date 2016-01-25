@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -54,7 +54,7 @@
 #define SHADINGSURFACEGROUP "Shading Surface Group" // read only
 #define CONSTRUCTION "Construction"
 #define TRANSMITTANCESCHEDULE "Transmittance Schedule"
-#define SHADEDSURFACENAME "Shaded Surface Name" // DAN note: need model method for suggestions
+#define SHADEDSURFACENAME "Shading Surface Name" // DAN note: need model method for suggestions
 #define DAYLIGHTINGSHELFNAME "Daylighting Shelf Name" // read only
 
 namespace openstudio {
@@ -120,7 +120,7 @@ namespace openstudio {
   {
     {
       std::vector<QString> fields;
-      //fields.push_back(SHADEDSURFACENAME);
+      fields.push_back(SHADEDSURFACENAME);
       fields.push_back(SHADINGSURFACEGROUP);
       fields.push_back(CONSTRUCTION);  
       fields.push_back(TRANSMITTANCESCHEDULE);
@@ -206,6 +206,18 @@ namespace openstudio {
             allShadingSurfaceGroups,
             true
             )
+            );
+        }
+        else if (field == SHADEDSURFACENAME) {
+          addNameLineEditColumn(Heading(QString(SHADEDSURFACENAME), true, false),
+            false,
+            false,
+            CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::name),
+            CastNullAdapter<model::ShadingSurface>(&model::ShadingSurface::setName),
+            boost::optional<std::function<void(model::ShadingSurface *)>>(),
+            DataSource(
+            allShadingSurfaces,
+            true)
             );
         }
         else if (field == SHADINGSURFACEGROUP) {

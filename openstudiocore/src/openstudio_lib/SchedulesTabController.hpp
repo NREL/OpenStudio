@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -60,18 +60,36 @@ class SchedulesTabController : public MainTabController
 
   SchedulesTabController(bool isIP, const model::Model & model);
 
-  virtual ~SchedulesTabController() {}
+  virtual ~SchedulesTabController();
 
   enum TabID
   {
-    YEAR_SETTINGS,
+    //YEAR_SETTINGS,
     SCHEDULE_SETS,
     SCHEDULES
   };
 
   static double defaultStartingValue(const model::ScheduleDay& scheduleDay);
 
+  private:
+
+  void showScheduleDialog();
+
+  ScheduleDialog * m_scheduleDialog = nullptr;
+
+  model::Model m_model;
+
+  bool m_isIP;
+
+  QWidget * m_currentView = nullptr;
+
+  QObject * m_currentController = nullptr;
+
+  int m_currentIndex = -1;
+
   public slots:
+
+  virtual void setSubTab(int index) override;
 
   void toggleUnits(bool displayIP);
 
@@ -93,7 +111,7 @@ class SchedulesTabController : public MainTabController
 
   void removeScheduleRule(model::ScheduleRule & scheduleRule);
 
-  void onDayScheduleSceneChanged( DayScheduleScene * scene, double lowerLimitValue, double upperLimitValue );
+  void onDayScheduleSceneChanged(DayScheduleScene * scene, double lowerLimitValue, double upperLimitValue);
 
   void onStartDateTimeChanged(model::ScheduleRule & scheduleRule, const QDateTime & newDate);
 
@@ -101,19 +119,6 @@ class SchedulesTabController : public MainTabController
 
   void onItemDropped(const OSItemId& itemId);
 
- private:
-
-  void showScheduleDialog();
-
-  SchedulesView * m_schedulesView;
-
-  std::shared_ptr<ScheduleSetsController> m_scheduleSetsController;
-
-  model::Model m_model;
-
-  ScheduleDialog * m_scheduleDialog;
-
-  bool m_isIP;
 };
 
 } // openstudio

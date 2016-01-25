@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -72,7 +72,7 @@ protected:
 
 private:
 
-  void update(bool weatherFileBtnClicked = false);
+  void update();
 
   void loadQSettings();
 
@@ -158,7 +158,8 @@ public:
   LocationTabView(const model::Model & model,
                   const QString& modelTempDir,
                   QWidget * parent = nullptr);
-  virtual ~LocationTabView() {}
+
+  virtual ~LocationTabView();
 
 private:
 

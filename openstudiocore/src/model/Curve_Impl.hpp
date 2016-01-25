@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #define MODEL_CURVE_IMPL_HPP
 
 #include "ModelAPI.hpp"
-#include "ModelObject_Impl.hpp"
+#include "ResourceObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -29,7 +29,7 @@ namespace model {
 namespace detail {
 
   /** Curve_Impl is a ModelObject_Impl that is the implementation class for Curve. */
-  class MODEL_API Curve_Impl : public ModelObject_Impl {
+  class MODEL_API Curve_Impl : public ResourceObject_Impl {
     Q_OBJECT;
     Q_PROPERTY(int numVariables READ numVariables);
    public:

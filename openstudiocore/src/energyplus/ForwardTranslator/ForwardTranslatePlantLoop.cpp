@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -273,8 +273,20 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
         }
         else if( loop.demandComponent(waterToWaterComponent->handle()) )
         {
-          inletNode = waterToWaterComponent->demandInletModelObject()->optionalCast<Node>();
-          outletNode = waterToWaterComponent->demandOutletModelObject()->optionalCast<Node>();
+          if( auto tertiaryInletModelObject = waterToWaterComponent->tertiaryInletModelObject() ) {
+            if( auto tertiaryInletNode = tertiaryInletModelObject->optionalCast<Node>() ) {
+              if( loop.demandComponent(tertiaryInletNode->handle()) ) {
+                inletNode = tertiaryInletNode;
+                if( auto tertiaryOutletModelObject = waterToWaterComponent->tertiaryOutletModelObject() ) {
+                  outletNode = tertiaryOutletModelObject->optionalCast<Node>();
+                }
+              }
+            }
+          }
+          if( ! inletNode ) {
+            inletNode = waterToWaterComponent->demandInletModelObject()->optionalCast<Node>();
+            outletNode = waterToWaterComponent->demandOutletModelObject()->optionalCast<Node>();
+          }
         }
         //special case for WaterHeater:HeatPump. In E+, this object appears on both the 
         //zonehvac:equipmentlist and the branch.  In OpenStudio the tank (WaterHeater:Mixed)

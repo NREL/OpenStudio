@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -304,80 +304,22 @@ namespace detail {
     bool success;
     
     success =  WaterToAirComponent_Impl::addToNode( node );
-    auto t_containingHVACComponent = containingHVACComponent();
     auto t_containingZoneHVACComponent = containingZoneHVACComponent();
     
-    if( success && (! t_containingHVACComponent) && (! t_containingZoneHVACComponent) )
-    {
-      if( auto t_waterInletModelObject = waterInletModelObject() )
-      {
-        Model t_model = model();
-
+    if( success && (! t_containingZoneHVACComponent) ) {
+      if( auto t_waterInletModelObject = waterInletModelObject() ) {
         if( auto oldController = controllerWaterCoil() ) {
           oldController->remove();
         }
 
+        Model t_model = model();
         ControllerWaterCoil controller(t_model);
-        auto coilWaterInletNode = t_waterInletModelObject->optionalCast<Node>();
-        OS_ASSERT(coilWaterInletNode);
-
-        controller.setActuatorNode(coilWaterInletNode.get());
-
-        if( auto mo = airOutletModelObject() ) {
-          if( auto coilAirOutletNode = mo->optionalCast<Node>() ) {
-            controller.setSensorNode(coilAirOutletNode.get());
-          }
-        }
-
+        controller.getImpl<detail::ControllerWaterCoil_Impl>()->setWaterCoil(getObject<HVACComponent>());
         controller.setAction("Reverse");
-      }
-    } else if( success && t_containingHVACComponent ) {
-      if( t_containingHVACComponent->optionalCast<CoilSystemCoolingWaterHeatExchangerAssisted>() ) {
-        if( auto t_waterInletModelObject = waterInletModelObject() ) {
-
-          if( auto oldController = controllerWaterCoil() ) {
-            oldController->remove();
-          }
-
-          auto t_model = model();
-          ControllerWaterCoil controller(t_model);
-
-          auto coilWaterInletNode = t_waterInletModelObject->optionalCast<Node>();
-          OS_ASSERT(coilWaterInletNode);
-          controller.setActuatorNode(coilWaterInletNode.get());
-          // sensor node will be established in translator since that node does not yet exist
-
-          controller.setAction("Reverse");
-        }
       }
     }
     
     return success;
-  }
-
-  boost::optional<ControllerWaterCoil> CoilCoolingWater_Impl::controllerWaterCoil()
-  {
-    boost::optional<Node> coilWaterInletNode;
-
-    if( boost::optional<ModelObject> mo = waterInletModelObject() )
-    {
-      coilWaterInletNode = mo->optionalCast<Node>();
-    }
-
-    if( coilWaterInletNode )
-    {
-      std::vector<ControllerWaterCoil> controllers = this->model().getConcreteModelObjects<ControllerWaterCoil>();
-
-      for( const auto & controller : controllers )
-      {
-        if( controller.actuatorNode() == coilWaterInletNode )
-        {
-          return controller;
-        }
-      }
-    }
-
-    return boost::none;
   }
 
   bool CoilCoolingWater_Impl::removeFromPlantLoop()

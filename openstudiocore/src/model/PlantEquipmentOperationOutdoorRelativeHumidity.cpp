@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -64,12 +64,12 @@ namespace detail {
 
   double PlantEquipmentOperationOutdoorRelativeHumidity_Impl::maximumUpperLimit() const
   {
-    return 0.0;
+    return 100.0;
   }
 
   double PlantEquipmentOperationOutdoorRelativeHumidity_Impl::minimumLowerLimit() const
   {
-    return 100.0;
+    return 0.0;
   }
 
 } // detail

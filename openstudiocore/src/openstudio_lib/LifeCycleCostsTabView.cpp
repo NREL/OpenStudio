@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -46,6 +46,10 @@ LifeCycleCostsTabView::LifeCycleCostsTabView(const model::Model & model,
 {
 }
 
+LifeCycleCostsTabView::~LifeCycleCostsTabView()
+{
+}
+
 LifeCycleCostsView::LifeCycleCostsView(const model::Model & model)
   : QWidget(),
     m_model(model)
@@ -53,6 +57,10 @@ LifeCycleCostsView::LifeCycleCostsView(const model::Model & model)
   m_lifeCycleCostParameters = m_model.getUniqueModelObject<model::LifeCycleCostParameters>();
   createWidgets();
   attach(m_lifeCycleCostParameters.get());
+}
+
+LifeCycleCostsView::~LifeCycleCostsView()
+{
 }
 
 void LifeCycleCostsView::createWidgets()

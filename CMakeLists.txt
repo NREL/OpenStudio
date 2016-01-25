@@ -9,8 +9,8 @@ endif()
 project(OpenStudio)
 
 set(CMAKE_VERSION_MAJOR 1)
-set(CMAKE_VERSION_MINOR 9)
-set(CMAKE_VERSION_PATCH 4)
+set(CMAKE_VERSION_MINOR 10)
+set(CMAKE_VERSION_PATCH 1)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)

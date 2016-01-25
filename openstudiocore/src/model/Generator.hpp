@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -32,7 +32,9 @@ namespace detail{
   class Generator_Impl;
 }
 
-/** Generator is the base class for generators.
+/** Generator is the base class for generators.  The ratedElectricPowerOutput, availabilitySchedule, and
+ *  ratedThermalToElectricalPowerRatio fields are mapped to fields in the ElectricLoadCenter:Generators object
+ *  in EnergyPlus.  The ElectricLoadCenter:Generators object does not exist in OpenStudio.
  */
 class MODEL_API Generator : public ParentObject {
 

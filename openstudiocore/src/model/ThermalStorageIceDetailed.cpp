@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -239,16 +239,6 @@ namespace detail {
   ModelObject ThermalStorageIceDetailed_Impl::clone(Model model) const
   {
     auto newMo = StraightComponent_Impl::clone(model).cast<ThermalStorageIceDetailed>();
-
-    {
-      auto mo = dischargingCurve().clone(model).cast<Curve>();
-      newMo.setDischargingCurve(mo);
-    }
-
-    {
-      auto mo = chargingCurve().clone(model).cast<Curve>();
-      newMo.setChargingCurve(mo);
-    }
 
     return newMo;
   }

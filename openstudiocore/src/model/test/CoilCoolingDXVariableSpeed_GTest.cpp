@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -21,6 +21,8 @@
 #include "ModelFixture.hpp"
 #include "../CoilCoolingDXVariableSpeed.hpp"
 #include "../CoilCoolingDXVariableSpeed_Impl.hpp"
+#include "../Curve.hpp"
+#include "../Curve_Impl.hpp"
 #include "../CoilCoolingDXVariableSpeedSpeedData.hpp"
 
 using namespace openstudio;
@@ -65,5 +67,7 @@ TEST_F(ModelFixture,CoilCoolingDXVariableSpeed_Remove)
   coil.addSpeed(speed1);
   coil.remove();
 
-  EXPECT_EQ(count,m.modelObjects().size());
+  auto curves = m.getModelObjects<model::Curve>();
+
+  EXPECT_EQ(count,m.modelObjects().size() - curves.size());
 }

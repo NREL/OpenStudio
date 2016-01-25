@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -55,6 +55,12 @@
 #include <QSettings>
 #include <QTimer>
 #include <QWidget>
+
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <string>
+#include <iterator>
 
 namespace openstudio {
 
@@ -211,13 +217,139 @@ namespace openstudio {
 
   void ObjectSelector::selectAll()
   {
-    m_selectedObjects = m_selectorObjects;
+    m_selectedObjects.clear();
+
+    for (auto obj : m_selectorObjects) {
+
+      auto range = m_widgetMap.equal_range(boost::optional<model::ModelObject>(obj));
+
+      assert(range.first != range.second);
+
+      // Find the row that contains this object
+      auto row = std::make_tuple(range.first->second->row, range.first->second->subrow);
+
+      auto objectVisible = m_objectFilter(obj);
+
+      if (objectVisible) {
+        if (std::get<1>(row)) {
+          // We have a matched sub row
+          auto parent = obj.parent();
+          if (parent) {
+            // Check if we are filtering on the sub row's parent object
+            if (m_filteredObjects.count(*parent) != 0) {
+              objectVisible = false;
+            }
+
+            if (objectVisible) {
+              // We still haven't matched the sub row, let's look up 1 more level
+              auto parentsParent = parent->parent();
+              // Evan's note:
+              //   in the case of SpacesSubsurfacesGridView,
+              //   obj.parent() returns Surface,
+              //   but our common currency is Space.
+              //   obj.parent()->parent() returns Space
+
+              if (parentsParent) {
+                // Check if we are filtering on the sub row's parent's parent object
+                if (m_filteredObjects.count(*parentsParent) != 0) {
+                  objectVisible = false;
+                }
+              }
+            }
+          }
+          // Hmmm, still no match, let's check if we
+          // are filtering on the sub row's object
+          if (objectVisible && m_filteredObjects.count(obj) != 0) {
+            objectVisible = false;
+          }
+        }
+        else{
+          // We only matched the row
+          if (m_filteredObjects.count(obj) != 0) {
+            objectVisible = false;
+          }
+        }
+      }
+
+      if (objectVisible) {
+        // add this to the selected set
+        m_selectedObjects.insert(obj);
+      }
+
+    }
+
     m_grid->requestRefreshGrid();
   }
 
   void ObjectSelector::clearSelection()
   {
+    std::set<model::ModelObject> deselectedObjects;
+
+    auto selectedObjects = m_selectedObjects;
+
     m_selectedObjects.clear();
+
+    for (auto obj : m_selectorObjects) {
+
+      auto range = m_widgetMap.equal_range(boost::optional<model::ModelObject>(obj));
+
+      assert(range.first != range.second);
+
+      // Find the row that contains this object
+      auto row = std::make_tuple(range.first->second->row, range.first->second->subrow);
+
+      auto objectVisible = m_objectFilter(obj);
+
+      if (objectVisible) {
+        if (std::get<1>(row)) {
+          // We have a matched sub row
+          auto parent = obj.parent();
+          if (parent) {
+            // Check if we are filtering on the sub row's parent object
+            if (m_filteredObjects.count(*parent) != 0) {
+              objectVisible = false;
+            }
+
+            if (objectVisible) {
+              // We still haven't matched the sub row, let's look up 1 more level
+              auto parentsParent = parent->parent();
+              // Evan's note:
+              //   in the case of SpacesSubsurfacesGridView,
+              //   obj.parent() returns Surface,
+              //   but our common currency is Space.
+              //   obj.parent()->parent() returns Space
+
+              if (parentsParent) {
+                // Check if we are filtering on the sub row's parent's parent object
+                if (m_filteredObjects.count(*parentsParent) != 0) {
+                  objectVisible = false;
+                }
+              }
+            }
+          }
+          // Hmmm, still no match, let's check if we
+          // are filtering on the sub row's object
+          if (objectVisible && m_filteredObjects.count(obj) != 0) {
+            objectVisible = false;
+          }
+        }
+        else{
+          // We only matched the row
+          if (m_filteredObjects.count(obj) != 0) {
+            objectVisible = false;
+          }
+        }
+      }
+
+      if (objectVisible) {
+        // add this to the selected set
+        deselectedObjects.insert(obj);
+      }
+
+    }
+
+    std::set_difference(selectedObjects.begin(), selectedObjects.end(), deselectedObjects.begin(), deselectedObjects.end(), inserter(m_selectedObjects, m_selectedObjects.begin()));
+
     m_grid->requestRefreshGrid();
   }
 

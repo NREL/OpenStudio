@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -289,11 +289,11 @@ namespace detail {
     return ThermalZone::iddObjectType();
   }
 
-  std::vector<HVACComponent> ThermalZone_Impl::edges(bool isDemandComponent)
+  std::vector<HVACComponent> ThermalZone_Impl::edges(const boost::optional<HVACComponent> & prev)
   {
     std::vector<HVACComponent> edges;
-    if( boost::optional<ModelObject> edgeModelObject = this->returnAirModelObject() ) {
-      if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+    if( auto edgeModelObject = this->returnAirModelObject() ) {
+      if( auto edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
         edges.push_back(*edgeObject);
       }
     }

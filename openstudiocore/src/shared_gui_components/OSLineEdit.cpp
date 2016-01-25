@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -51,6 +51,10 @@ OSLineEdit2::OSLineEdit2( QWidget * parent )
 {
   this->setAcceptDrops(false);
   setEnabled(false);
+}
+
+OSLineEdit2::~OSLineEdit2()
+{
 }
 
 void OSLineEdit2::bind(model::ModelObject& modelObject,

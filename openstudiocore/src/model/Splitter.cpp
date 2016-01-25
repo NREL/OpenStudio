@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -68,9 +68,9 @@ boost::optional<ModelObject> Splitter_Impl::outletModelObject(unsigned branchInd
   return connectedObject( outletPort( branchIndex ) );
 }
 
-std::vector<HVACComponent> Splitter_Impl::edges(bool isDemandComponent)
+std::vector<HVACComponent> Splitter_Impl::edges(const boost::optional<HVACComponent> & prev)
 {
-  return castVector<HVACComponent>(this->outletModelObjects());
+  return castVector<HVACComponent>(outletModelObjects());
 }
 
 boost::optional<ModelObject> Splitter_Impl::lastOutletModelObject()

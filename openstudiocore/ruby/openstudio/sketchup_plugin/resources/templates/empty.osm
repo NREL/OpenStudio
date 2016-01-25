@@ -1,7 +1,7 @@
 
 OS:Version,
-  {a252d2fa-66d6-4619-8aa9-1abbe0f9abfd}, !- Handle
-  1.5.0;                                  !- Version Identifier
+  {26c2842a-38ce-4e93-8f28-f46f28ade6ff}, !- Handle
+  1.10.0;                                 !- Version Identifier
 
 OS:ClimateZones,
   {8a3ac41c-57d4-48e4-a48e-1f232e262211}, !- Handle
@@ -90,7 +90,7 @@ OS:SurfaceConvectionAlgorithm:Outside,
 OS:HeatBalanceAlgorithm,
   {5a22c4c4-a6a6-4769-b0a8-f79498f98a6d}, !- Handle
   ConductionTransferFunction,             !- Algorithm
-  200;                                    !- Surface Temperature Upper Limit {F}
+  200;                                    !- Surface Temperature Upper Limit {C}
 
 OS:ZoneAirHeatBalanceAlgorithm,
   {24c912f8-6f7f-4792-8ea0-a8d47b3c41a1}, !- Handle
@@ -131,4 +131,13 @@ OS:Building,
 
 OS:Facility,
   {b6e6be84-f909-42a5-9deb-ef70c0296721}; !- Handle
+
+OS:Site,
+  {f38b0e3c-04e1-4822-940e-9b46c436222c}, !- Handle
+  Site 1,                                 !- Name
+  ,                                       !- Latitude {deg}
+  ,                                       !- Longitude {deg}
+  ,                                       !- Time Zone {hr}
+  ,                                       !- Elevation {m}
+  ;                                       !- Terrain
 

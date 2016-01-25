@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -179,7 +179,8 @@ namespace radiance{
           ss << *d;
           result = ss.str();
         } else{
-          result = "2000"; // 2Klx (2000)
+        	// setting default in lux
+          result = "5000";
         }
       } else if (istringEqual("OnIfScheduleAllows", shadingControlType)){
         boost::optional<openstudio::model::Schedule> schedule = m_shadingControl->schedule();

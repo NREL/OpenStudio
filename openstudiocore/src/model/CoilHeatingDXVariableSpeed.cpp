@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -326,12 +326,6 @@ namespace detail {
     if (auto speedDataList = this->speedDataList()) {
       auto speedDataListClone = speedDataList->clone(model).cast<ModelObjectList>();
       t_clone.getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setSpeedDataList(speedDataListClone);
-    }
-
-    t_clone.setEnergyPartLoadFractionCurve( energyPartLoadFractionCurve().clone(model).cast<Curve>() );
-
-    if ( auto const curve = defrostEnergyInputRatioFunctionofTemperatureCurve() ) {
-      t_clone.setDefrostEnergyInputRatioFunctionofTemperatureCurve( curve->clone(model).cast<Curve>() );
     }
 
     return t_clone;

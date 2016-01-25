@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -961,7 +961,7 @@ Gas::Gas(const Model& model,
   OS_ASSERT(ok);
 }
 
-const std::vector<std::string>& Gas::validGasTypes() {
+std::vector<std::string> Gas::validGasTypes() {
   static StringVector result;
   if (result.empty()) {
     result = getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),

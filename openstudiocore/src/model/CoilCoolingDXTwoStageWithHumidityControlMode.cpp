@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -345,22 +345,6 @@ namespace detail {
   ModelObject CoilCoolingDXTwoStageWithHumidityControlMode_Impl::clone(Model model) const
   {
     auto newCoil = StraightComponent_Impl::clone(model).cast<CoilCoolingDXTwoStageWithHumidityControlMode>();
-
-    if( auto mo = normalModeStage1CoilPerformance() ) {
-      newCoil.setNormalModeStage1CoilPerformance(mo->clone(model).cast<CoilPerformanceDXCooling>());
-    }
-
-    if( auto mo = normalModeStage1Plus2CoilPerformance() ) {
-      newCoil.setNormalModeStage1Plus2CoilPerformance(mo->clone(model).cast<CoilPerformanceDXCooling>());
-    }
-
-    if( auto mo = dehumidificationMode1Stage1CoilPerformance() ) {
-      newCoil.setDehumidificationMode1Stage1CoilPerformance(mo->clone(model).cast<CoilPerformanceDXCooling>());
-    }
-
-    if( auto mo = dehumidificationMode1Stage1Plus2CoilPerformance() ) {
-      newCoil.setDehumidificationMode1Stage1Plus2CoilPerformance(mo->clone(model).cast<CoilPerformanceDXCooling>());
-    }
 
     return newCoil;
   }

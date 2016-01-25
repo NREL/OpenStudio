@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -21,6 +21,8 @@
 #include "ModelFixture.hpp"
 #include "../CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit.hpp"
 #include "../CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl.hpp"
+#include "../Curve.hpp"
+#include "../Curve_Impl.hpp"
 #include "../CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.hpp"
 #include "../CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl.hpp"
 
@@ -50,6 +52,9 @@ TEST_F(ModelFixture,CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Remove
   CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData speed(m);
   coil.addSpeed(speed);
   coil.remove();
-  EXPECT_EQ(count,m.modelObjects().size());
+
+  auto curves = m.getModelObjects<model::Curve>();
+
+  EXPECT_EQ(count,m.modelObjects().size() - curves.size());
 }
 

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -584,6 +584,10 @@ OSDropZone2::OSDropZone2()
   setFixedHeight(25);
   setMinimumWidth(75);
   setMaximumWidth(150);
+}
+
+OSDropZone2::~OSDropZone2()
+{
 }
 
 void OSDropZone2::refresh()

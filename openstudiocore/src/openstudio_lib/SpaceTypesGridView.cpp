@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -160,7 +160,7 @@ namespace openstudio {
     auto spaceTypeModelObjects = subsetCastVector<model::ModelObject>(spaceTypes);
 
     m_gridController = new SpaceTypesGridController(m_isIP, "Space Types", IddObjectType::OS_SpaceType, model, spaceTypeModelObjects);
-    auto gridView = new OSGridView(m_gridController, "Space Types", "Drop\nZone", false, parent);
+    auto gridView = new OSGridView(m_gridController, "Space Types", "Drop\nSpace Type", false, parent);
 
     // Load Filter
 

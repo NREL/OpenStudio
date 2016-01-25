@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -124,9 +124,17 @@ TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat) {
     airLoopHVAC.setAvailabilitySchedule(hvacSchedule);
 
     ThermalZone zone(m);
+    // KSB: I don't think it is the greatest idea to test these private methods,
+    // but this area has resulted in a simulation error so it needs to be tested
+    EXPECT_FALSE(zone.getImpl<detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
+    EXPECT_FALSE(zone.getImpl<detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
+
     airLoopHVAC.addBranchForZone(zone,terminal);
     auto fanSchedule = fan.availabilitySchedule();
     ASSERT_EQ(hvacSchedule.handle(),fanSchedule.handle()); 
+
+    EXPECT_TRUE(zone.getImpl<detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
+    EXPECT_TRUE(zone.getImpl<detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
 
     EXPECT_EQ(9u,airLoopHVAC.demandComponents().size());
     EXPECT_EQ(1u,zone.equipment().size());
@@ -140,6 +148,9 @@ TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat) {
     ASSERT_EQ(terminal,exhaustNode->outletModelObject().get());
 
     terminal.remove();
+
+    EXPECT_FALSE(zone.getImpl<detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
+    EXPECT_TRUE(zone.getImpl<detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
 
     EXPECT_EQ(7u,airLoopHVAC.demandComponents().size());
     EXPECT_TRUE(zone.equipment().empty());

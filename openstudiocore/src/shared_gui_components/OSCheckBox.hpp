@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ namespace openstudio {
 
     OSCheckBox3(QWidget * parent = nullptr);
 
-    virtual ~OSCheckBox3() {}
+    virtual ~OSCheckBox3();
 
     void bind(model::ModelObject & modelObject,
       BoolGetter get,

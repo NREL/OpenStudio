@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -248,14 +248,6 @@ namespace detail {
 
   ModelObject CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::clone(Model model) const {
     auto t_clone = ParentObject_Impl::clone(model).cast<CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData>();
-
-    t_clone.setHeatingCapacityFunctionofTemperatureCurve( heatingCapacityFunctionofTemperatureCurve().clone(model).cast<Curve>() );
-    t_clone.setTotalHeatingCapacityFunctionofAirFlowFractionCurve( totalHeatingCapacityFunctionofAirFlowFractionCurve().clone(model).cast<Curve>() );
-    t_clone.setHeatingCapacityFunctionofWaterFlowFractionCurve( heatingCapacityFunctionofWaterFlowFractionCurve().clone(model).cast<Curve>() );
-    t_clone.setEnergyInputRatioFunctionofTemperatureCurve( energyInputRatioFunctionofTemperatureCurve().clone(model).cast<Curve>() );
-    t_clone.setEnergyInputRatioFunctionofAirFlowFractionCurve( energyInputRatioFunctionofAirFlowFractionCurve().clone(model).cast<Curve>() );
-    t_clone.setEnergyInputRatioFunctionofWaterFlowFractionCurve( energyInputRatioFunctionofWaterFlowFractionCurve().clone(model).cast<Curve>() );
-    t_clone.setWasteHeatFunctionofTemperatureCurve( wasteHeatFunctionofTemperatureCurve().clone(model).cast<Curve>() );
 
     return t_clone;
   }

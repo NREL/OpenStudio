@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -43,7 +43,7 @@ class OSIntegerEdit2: public QLineEdit {
 
   OSIntegerEdit2(QWidget * parent = nullptr);
 
-  virtual ~OSIntegerEdit2() {}
+  virtual ~OSIntegerEdit2();
 
   void enableClickFocus() { this->m_hasClickFocus = true; }
 

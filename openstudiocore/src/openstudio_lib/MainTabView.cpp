@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -19,17 +19,19 @@
 
 #include "MainTabView.hpp"
 
+#include "../shared_gui_components/OSViewSwitcher.hpp"
+
+#include <QBoxLayout>
+#include <QLabel>
+#include <QPainter>
+#include <QPixmap>
+#include <QPushButton>
+#include <QResizeEvent>
+#include <QStackedWidget>
+#include <QStyleOption>
+
 #include "../utilities/core/Assert.hpp"
 
-#include <QStackedWidget>
-#include <QPixmap>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QPushButton>
-#include <QLabel>
-#include <QStyleOption>
-#include <QPainter>
-#include <QResizeEvent>
 #include <vector>
 
 static const int TAB_SEPARATION = 10;
@@ -38,6 +40,7 @@ namespace openstudio {
 
 MainTabView::MainTabView(const QString & tabLabel, TabType tabType, QWidget * parent)
   : QWidget(parent),
+  m_editView(new OSViewSwitcher()),
   m_tabType(tabType)
 {
   this->setObjectName("BlueGradientWidget");
@@ -49,19 +52,26 @@ MainTabView::MainTabView(const QString & tabLabel, TabType tabType, QWidget * pa
   m_tabLabel->setFixedWidth(m_tabLabel->width());
   m_tabLabel->move(7,5);
 
+  auto label = new QLabel("Hello World");
+  label->setObjectName("H2");
+
+  m_editView->setView(label);
+
+  m_innerLayout = new QVBoxLayout();
+  m_innerLayout->setSpacing(0);
+  m_innerLayout->addWidget(m_editView);
+
   m_mainWidget = new QWidget(this);
   m_mainWidget->setObjectName("MainTabView");
   m_mainWidget->move(7,25);
-
-  auto innerLayout = new QVBoxLayout();
-  innerLayout->setSpacing(0);
-  m_mainWidget->setLayout(innerLayout);
-
-  m_stackedWidget = new QStackedWidget();
-  m_stackedWidget->setContentsMargins(0,0,0,0);
-  innerLayout->addWidget(m_stackedWidget);
+  m_mainWidget->setLayout(m_innerLayout);
 
   setTabType(tabType);
+}
+
+MainTabView::~MainTabView()
+{
+  if (m_editView) { delete m_editView; }
 }
 
 void MainTabView::setTabType(MainTabView::TabType tabType)
@@ -109,11 +119,12 @@ bool MainTabView::addTabWidget(QWidget * widget)
   OS_ASSERT(m_tabType == MAIN_TAB);
   if (m_tabType != MAIN_TAB) return false;
 
-  m_stackedWidget->addWidget(widget);
+  m_editView->setView(widget);
+
   return true;
 }
 
-bool MainTabView::addSubTab(const QString & subTablabel, QWidget * widget, int id)
+bool MainTabView::addSubTab(const QString & subTablabel, int id)
 {
   // This method should only be called in cases where the tab will have sub tabs
   OS_ASSERT(m_tabType != MAIN_TAB);
@@ -125,12 +136,15 @@ bool MainTabView::addSubTab(const QString & subTablabel, QWidget * widget, int i
   m_tabButtons.push_back(button);
   connect(button, &QPushButton::clicked, this, &MainTabView::select);
 
-  m_stackedWidget->addWidget(widget);
-
   m_ids.push_back(id);
 
   setCurrentIndex(0);
   return true;
+}
+
+void MainTabView::setSubTab(QWidget * widget)
+{
+  m_editView->setView(widget);
 }
 
 void MainTabView::select()
@@ -157,7 +171,7 @@ void MainTabView::setCurrentIndex(int index)
   int xPos = m_tabLabel->width() + TAB_SEPARATION;
 
   for(unsigned i = 0; i < m_tabButtons.size(); i++)
-  {  
+  {
     QPushButton * button = m_tabButtons[i];
     QString style;
 
@@ -201,16 +215,12 @@ void MainTabView::setCurrentIndex(int index)
   button->setStyleSheet(style); 
   button->raise();
 
-  m_stackedWidget->setCurrentIndex(index);
-
   emit tabSelected(m_ids[index]);
 }
 
 void MainTabView::setCurrentWidget(QWidget * widget)
 {
-  int i = m_stackedWidget->indexOf(widget);
-
-  setCurrentIndex(i);
+  OS_ASSERT(false);
 }
 
 void MainTabView::paintEvent ( QPaintEvent * event )
@@ -232,6 +242,7 @@ void MainTabView::resizeEvent( QResizeEvent * event )
 
 int MainTabView::subTabId() const
 {
+  OS_ASSERT(false);
   if (m_tabType != MAIN_TAB)
   {
     return m_ids[subTabIndex()];
@@ -244,13 +255,14 @@ int MainTabView::subTabId() const
 
 int MainTabView::subTabIndex() const
 {
-  return m_stackedWidget->currentIndex();
+  OS_ASSERT(false);
+  return -1;
 }
 
 bool MainTabView::selectSubTabByIndex(int index)
 {
   if (m_tabType != MAIN_TAB){
-    if(index < 0 || index >= m_stackedWidget->count()){
+    if(index < 0){
       return false;
     } else {
       setCurrentIndex(index);

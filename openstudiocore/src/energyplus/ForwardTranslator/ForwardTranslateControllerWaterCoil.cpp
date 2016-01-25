@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -23,6 +23,8 @@
 #include "../../model/Node_Impl.hpp"
 #include "../../model/ControllerWaterCoil.hpp"
 #include "../../model/ControllerWaterCoil_Impl.hpp"
+#include "../../model/WaterToAirComponent.hpp"
+#include "../../model/WaterToAirComponent_Impl.hpp"
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/Controller_WaterCoil_FieldEnums.hxx>
@@ -76,18 +78,29 @@ boost::optional<IdfObject> ForwardTranslator::translateControllerWaterCoil( Cont
     idfObject.setString(Controller_WaterCoilFields::ActuatorVariable,s.get());
   }
 
+  boost::optional<model::WaterToAirComponent> waterCoil;
+  if( auto hvacComp = modelObject.getImpl<model::detail::ControllerWaterCoil_Impl>()->waterCoil() ) {
+    waterCoil = hvacComp->optionalCast<model::WaterToAirComponent>();
+  }
+
   // SensorNodeName
 
-  if( boost::optional<Node> node = modelObject.sensorNode() )
-  {
+  if( boost::optional<Node> node = modelObject.sensorNode() ) {
     idfObject.setString(Controller_WaterCoilFields::SensorNodeName,node->name().get());
+  } else if( waterCoil ) {
+    if( auto node = waterCoil->airOutletModelObject() ) {
+      idfObject.setString(Controller_WaterCoilFields::SensorNodeName,node->name().get());
+    }
   }
 
   // ActuatorNodeName
 
-  if( boost::optional<Node> node = modelObject.actuatorNode() )
-  {
+  if( boost::optional<Node> node = modelObject.actuatorNode() ) {
     idfObject.setString(Controller_WaterCoilFields::ActuatorNodeName,node->name().get());
+  } else if( waterCoil ) {
+    if( auto node = waterCoil->waterInletModelObject() ) {
+      idfObject.setString(Controller_WaterCoilFields::ActuatorNodeName,node->name().get());
+    }
   }
 
   // ControllerConvergenceTolerance

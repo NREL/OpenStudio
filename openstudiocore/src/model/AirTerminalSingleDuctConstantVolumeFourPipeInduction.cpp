@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -211,6 +211,7 @@ namespace detail {
 
     if( boost::optional<Node> t_inducedAirInletNode = inducedAirInletNode() )
     {
+      t_inducedAirInletNode->disconnect();
       t_inducedAirInletNode->remove();
     }
 

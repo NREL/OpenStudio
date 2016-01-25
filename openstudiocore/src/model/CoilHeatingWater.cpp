@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -83,71 +83,22 @@ namespace detail{
 
   bool CoilHeatingWater_Impl::addToNode(Node & node)
   {
-    bool success;
+    bool success =  WaterToAirComponent_Impl::addToNode( node );
     
-    success =  WaterToAirComponent_Impl::addToNode( node );
-    
-    if( success && (! containingHVACComponent()) && (! containingZoneHVACComponent()) )
-    {
-      if( boost::optional<ModelObject> _waterInletModelObject = waterInletModelObject() )
-      {
-        Model _model = model();
-
-        boost::optional<ControllerWaterCoil> oldController;
-
-        oldController = controllerWaterCoil();
-
-        if( oldController )
-        {
+    if( success && (! containingHVACComponent()) && (! containingZoneHVACComponent()) ) {
+      if( boost::optional<ModelObject> _waterInletModelObject = waterInletModelObject() ) {
+        if( auto oldController = controllerWaterCoil() ) {
           oldController->remove();
         }
 
+        Model _model = model();
         ControllerWaterCoil controller(_model);
-
-        boost::optional<Node> coilWaterInletNode = _waterInletModelObject->optionalCast<Node>();
-
-        OS_ASSERT(coilWaterInletNode);
-
-        controller.setActuatorNode(coilWaterInletNode.get());
-
-        if( boost::optional<ModelObject> mo = airOutletModelObject() )
-        {
-          if( boost::optional<Node> coilAirOutletNode = mo->optionalCast<Node>() )
-          {
-            controller.setSensorNode(coilAirOutletNode.get());
-          }
-        }
-
+        controller.getImpl<detail::ControllerWaterCoil_Impl>()->setWaterCoil(getObject<HVACComponent>());
         controller.setAction("Normal");
       }
     }
 
     return success;
-  }
-
-  boost::optional<ControllerWaterCoil> CoilHeatingWater_Impl::controllerWaterCoil()
-  {
-    boost::optional<Node> coilWaterInletNode;
-
-    if( boost::optional<ModelObject> mo = waterInletModelObject() )
-    {
-      coilWaterInletNode = mo->optionalCast<Node>();
-    }
-
-    if( coilWaterInletNode )
-    {
-      std::vector<ControllerWaterCoil> controllers = this->model().getConcreteModelObjects<ControllerWaterCoil>();
-
-      for( const auto & controller : controllers )
-      {
-        if( controller.actuatorNode() == coilWaterInletNode )
-        {
-          return controller;
-        }
-      }
-    }
-
-    return boost::none;
   }
 
   bool CoilHeatingWater_Impl::removeFromPlantLoop()

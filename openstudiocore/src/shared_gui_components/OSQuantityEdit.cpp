@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -75,6 +75,10 @@ OSQuantityEdit2::OSQuantityEdit2(const std::string& modelUnits, const std::strin
   setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
   m_units->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
   m_lineEdit->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Fixed);
+}
+
+OSQuantityEdit2::~OSQuantityEdit2()
+{
 }
 
 void OSQuantityEdit2::bind(bool isIP,

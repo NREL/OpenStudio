@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -89,7 +89,7 @@ UnitSystem OSQuantityVector::system() const {
   return m_units.system();
 }
 
-const Scale& OSQuantityVector::scale() const {
+Scale OSQuantityVector::scale() const {
   return m_units.scale();
 }
 

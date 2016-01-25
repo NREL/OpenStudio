@@ -1054,6 +1054,15 @@ set(${target_name}_src
   Surface.hpp
   Surface_Impl.hpp
   Surface.cpp
+  SurfacePropertyConvectionCoefficientsMultipleSurface.cpp
+  SurfacePropertyConvectionCoefficientsMultipleSurface.hpp
+  SurfacePropertyConvectionCoefficientsMultipleSurface_Impl.hpp
+  SurfacePropertyOtherSideCoefficients.cpp
+  SurfacePropertyOtherSideCoefficients.hpp
+  SurfacePropertyOtherSideCoefficients_Impl.hpp
+  SurfacePropertyOtherSideConditionsModel.cpp
+  SurfacePropertyOtherSideConditionsModel.hpp
+  SurfacePropertyOtherSideConditionsModel_Impl.hpp
   TableMultiVariableLookup.hpp
   TableMultiVariableLookup_Impl.hpp
   TableMultiVariableLookup.cpp
@@ -1703,6 +1712,7 @@ set(${target_name}_test_src
   test/SteamEquipment_GTest.cpp
   test/SubSurface_GTest.cpp
   test/Surface_GTest.cpp
+  test/SurfacePropertyConvectionCoefficientsMultipleSurface_GTest.cpp
   test/TableMultiVariableLookup_GTest.cpp
   test/ThermalZone_GTest.cpp
   test/ThermalStorageIceDetailed_GTest.cpp

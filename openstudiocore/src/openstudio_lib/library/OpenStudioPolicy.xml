@@ -362,9 +362,6 @@
     <rule IddField="Control Variable" Access="HIDDEN"/>
     <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
   </POLICY>
-  <POLICY IddObjectType="OS_SetpointManager_SingleZone_Reheat">
-    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
-  </POLICY>
   <POLICY IddObjectType="OS_SetpointManager_Warmest">
     <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
   </POLICY>

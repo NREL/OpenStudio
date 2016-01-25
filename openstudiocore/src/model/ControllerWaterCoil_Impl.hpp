@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -129,6 +129,10 @@ class MODEL_API ControllerWaterCoil_Impl : public HVACComponent_Impl {
   void setSensorNode( Node & node );
 
   void setActuatorNode( Node & node );
+
+  void setWaterCoil( const HVACComponent & comp );
+
+  boost::optional<HVACComponent> waterCoil() const;
 
   protected:
 

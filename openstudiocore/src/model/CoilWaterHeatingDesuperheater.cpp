@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -111,10 +111,6 @@ namespace detail {
 
   ModelObject CoilWaterHeatingDesuperheater_Impl::clone(Model model) const {
     CoilWaterHeatingDesuperheater modelObjectClone = ModelObject_Impl::clone(model).cast<CoilWaterHeatingDesuperheater>();
-
-    if ( boost::optional<CurveBiquadratic> heatReclaimCurve = heatReclaimEfficiencyFunctionofTemperatureCurve() ) {
-      modelObjectClone.setHeatReclaimEfficiencyFunctionofTemperatureCurve(heatReclaimCurve.get().clone(model).cast<CurveBiquadratic>());
-    }
 
     modelObjectClone.resetHeatingSource();
 

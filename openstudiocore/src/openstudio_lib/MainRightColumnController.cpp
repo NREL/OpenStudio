@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -289,9 +289,9 @@ void MainRightColumnController::configureForSchedulesSubTab(int subTabID)
 
   switch( subTabID )
   {
-    case SchedulesTabController::YEAR_SETTINGS:
-    {
-    }
+    //case SchedulesTabController::YEAR_SETTINGS:
+    //{
+    //}
     case SchedulesTabController::SCHEDULE_SETS:
     {
       model::Model lib = doc->componentLibrary();
@@ -809,6 +809,7 @@ void MainRightColumnController::configureForSpacesSubTab(int subTabID)
   myModelList->addModelObjectType(IddObjectType::OS_SpaceType, "Space Types");
   myModelList->addModelObjectType(IddObjectType::OS_ThermalZone, "Thermal Zones");
   myModelList->addModelObjectType(IddObjectType::OS_BuildingStory, "Building Stories");
+  myModelList->addModelObjectType(IddObjectType::OS_InteriorPartitionSurface, "Interior Partition Surface");
 
   setMyModelView(myModelList);
 

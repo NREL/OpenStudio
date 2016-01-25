@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -570,7 +570,7 @@ TEST_F(ModelFixture, RefrigerationCase_CloneOneModelWithDefaultData)
 
     RefrigerationCase testObjectClone = testObject.clone(model).cast<RefrigerationCase>();
 
-    EXPECT_NE(testObject.latentCaseCreditCurve().handle(), testObjectClone.latentCaseCreditCurve().handle());
+    EXPECT_EQ(testObject.latentCaseCreditCurve().handle(), testObjectClone.latentCaseCreditCurve().handle());
 
     EXPECT_DOUBLE_EQ( 24.0, testObjectClone.ratedAmbientTemperature() );  
     EXPECT_DOUBLE_EQ( 55.0, testObjectClone.ratedAmbientRelativeHumidity() );
@@ -636,8 +636,8 @@ TEST_F(ModelFixture, RefrigerationCase_CloneOneModelWithCustomData)
 
     RefrigerationCase testObjectClone = testObject.clone(model).cast<RefrigerationCase>();
 
-    EXPECT_NE(testObject.latentCaseCreditCurve().handle(), testObjectClone.latentCaseCreditCurve().handle());
-    EXPECT_NE(latentCaseCreditCurve.handle(), testObjectClone.latentCaseCreditCurve().handle());
+    EXPECT_EQ(testObject.latentCaseCreditCurve().handle(), testObjectClone.latentCaseCreditCurve().handle());
+    EXPECT_EQ(latentCaseCreditCurve.handle(), testObjectClone.latentCaseCreditCurve().handle());
     EXPECT_DOUBLE_EQ( 28.5, testObjectClone.ratedAmbientTemperature() );  
     EXPECT_DOUBLE_EQ( 58.0, testObjectClone.ratedAmbientRelativeHumidity() );
     EXPECT_DOUBLE_EQ( 1200.1, testObjectClone.ratedTotalCoolingCapacityperUnitLength() ); 
@@ -676,7 +676,7 @@ TEST_F(ModelFixture, RefrigerationCase_CloneTwoModelsWithDefaultData)
     RefrigerationCase testObjectClone2 = testObject.clone(model2).cast<RefrigerationCase>();
 
     std::vector<CurveCubic> refrigerationCaseCurves = model.getModelObjects<CurveCubic>();
-    EXPECT_EQ(2, refrigerationCaseCurves.size());
+    EXPECT_EQ(1, refrigerationCaseCurves.size());
 
     refrigerationCaseCurves2 = model2.getModelObjects<CurveCubic>();
     EXPECT_EQ(1, refrigerationCaseCurves2.size());
@@ -689,7 +689,7 @@ TEST_F(ModelFixture, RefrigerationCase_CloneTwoModelsWithDefaultData)
         EXPECT_TRUE(it->parent());
     }
 
-    EXPECT_NE(testObject.latentCaseCreditCurve().handle(), testObjectClone.latentCaseCreditCurve().handle());
+    EXPECT_EQ(testObject.latentCaseCreditCurve().handle(), testObjectClone.latentCaseCreditCurve().handle());
     EXPECT_NE(testObjectClone2.handle(), testObjectClone.handle());
 
     EXPECT_DOUBLE_EQ( 24.0, testObjectClone2.ratedAmbientTemperature() );  

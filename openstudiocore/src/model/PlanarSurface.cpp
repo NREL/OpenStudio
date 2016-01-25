@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -227,8 +227,8 @@ namespace model {
           OS_ASSERT(layers.size() == 1u);
           result = layers[0].optionalCast<AirWallMaterial>();
         }else if (construction.numLayers() == 0) {
-          LOG(Error, "Air wall detected with zero layers, classifying as air wall");
-          result = true;
+          LOG(Info, "Construction detected with zero layers, classifying as non-air wall");
+          result = false;
         }else {
           LOG(Error, "Air wall detected with more than one layer, classifying as non-air wall");
           result = false;

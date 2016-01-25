@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -123,7 +123,7 @@ namespace detail {
     if (!result){
       std::string shadingControlType = this->shadingControlType();
       if (istringEqual("OnIfHighSolarOnWindow", shadingControlType)){
-        result = 120.2; // W/m2, evaluates to 2,000 FC in Radiance simulation
+        result = 5000; // lux
       }
     }
     return result;

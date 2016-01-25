@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -190,6 +190,8 @@ namespace detail {
     unsigned supplyOutletPort() override;
     unsigned demandInletPort() override;
     unsigned demandOutletPort() override;
+    unsigned tertiaryInletPort() const override;
+    unsigned tertiaryOutletPort() const override;
 
     std::vector<ModelObject> children() const override;
     ModelObject clone(Model model) const override;

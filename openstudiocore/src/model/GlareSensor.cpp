@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -312,9 +312,8 @@ GlareSensor::GlareSensor(const Model& model)
   OS_ASSERT(getImpl<detail::GlareSensor_Impl>());
 }
 
-const IddObjectType& GlareSensor::iddObjectType() {
-  static IddObjectType result(IddObjectType::OS_Glare_Sensor);
-  return result;
+IddObjectType GlareSensor::iddObjectType() {
+  return IddObjectType(IddObjectType::OS_Glare_Sensor);
 }
 
 double GlareSensor::positionXCoordinate() const {

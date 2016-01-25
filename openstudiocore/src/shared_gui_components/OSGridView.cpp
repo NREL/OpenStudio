@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -251,6 +251,10 @@ void OSGridView::deleteAll()
       OS_ASSERT(widget);
 
       delete widget;
+      // Using deleteLater is actually slower than calling delete directly on the widget
+      // deleteLater also introduces a strange redraw issue where the select all check box
+      // is not redrawn, after being checked.
+      //widget->deleteLater();
 
       delete child;
     }

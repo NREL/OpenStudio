@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -83,21 +83,6 @@ namespace detail{
   ModelObject CoilCoolingDXSingleSpeed_Impl::clone(Model model) const
   {
     CoilCoolingDXSingleSpeed newCoil = StraightComponent_Impl::clone(model).cast<CoilCoolingDXSingleSpeed>();
-
-    Curve ccfot = totalCoolingCapacityFunctionOfTemperatureCurve();
-    newCoil.setTotalCoolingCapacityFunctionOfTemperatureCurve(ccfot.clone(model).cast<Curve>());
-
-    Curve ccfof = totalCoolingCapacityFunctionOfFlowFractionCurve();
-    newCoil.setTotalCoolingCapacityFunctionOfFlowFractionCurve(ccfof.clone(model).cast<Curve>());
-
-    Curve eifot = energyInputRatioFunctionOfTemperatureCurve();
-    newCoil.setEnergyInputRatioFunctionOfTemperatureCurve(eifot.clone(model).cast<Curve>());
-
-    Curve eifof = energyInputRatioFunctionOfFlowFractionCurve();
-    newCoil.setEnergyInputRatioFunctionOfFlowFractionCurve(eifof.clone(model).cast<Curve>());
-
-    Curve plfcc = partLoadFractionCorrelationCurve();
-    newCoil.setPartLoadFractionCorrelationCurve(plfcc.clone(model).cast<Curve>());
 
     return newCoil;
   }

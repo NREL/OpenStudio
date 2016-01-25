@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -87,12 +87,12 @@ namespace detail {
 
   double PlantEquipmentOperationOutdoorDryBulbDifference_Impl::maximumUpperLimit() const
   {
-    return -50.0;
+    return 100.0;
   }
 
   double PlantEquipmentOperationOutdoorDryBulbDifference_Impl::minimumLowerLimit() const
   {
-    return 100.0;
+    return -50.0;
   }
 
 } // detail

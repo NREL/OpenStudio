@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -230,6 +230,17 @@ void ControllerWaterCoil_Impl::setSensorNode( Node & node )
 void ControllerWaterCoil_Impl::setActuatorNode( Node & node )
 {
   this->setPointer(OS_Controller_WaterCoilFields::ActuatorNodeName,node.handle());
+}
+
+void ControllerWaterCoil_Impl::setWaterCoil( const HVACComponent & comp )
+{
+  auto result = setPointer(OS_Controller_WaterCoilFields::WaterCoilName,comp.handle());
+  OS_ASSERT(result);
+}
+
+boost::optional<HVACComponent> ControllerWaterCoil_Impl::waterCoil() const
+{
+  return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_Controller_WaterCoilFields::WaterCoilName);
 }
 
 } // detail

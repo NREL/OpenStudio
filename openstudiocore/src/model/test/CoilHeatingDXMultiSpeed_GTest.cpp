@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -21,6 +21,8 @@
 #include "ModelFixture.hpp"
 #include "../CoilHeatingDXMultiSpeed.hpp"
 #include "../CoilHeatingDXMultiSpeed_Impl.hpp"
+#include "../Curve.hpp"
+#include "../Curve_Impl.hpp"
 #include "../CoilHeatingDXMultiSpeedStageData.hpp"
 #include "../CoilHeatingDXMultiSpeedStageData_Impl.hpp"
 
@@ -49,6 +51,8 @@ TEST_F(ModelFixture,CoilHeatingDXMultiSpeed_Remove)
   CoilHeatingDXMultiSpeedStageData stage(m);
   coil.addStage(stage);
   coil.remove();
-  EXPECT_EQ(2u,m.modelObjects().size());
+
+  auto curves = m.getModelObjects<model::Curve>();
+  EXPECT_EQ(2u + curves.size(),m.modelObjects().size());
 }
 
