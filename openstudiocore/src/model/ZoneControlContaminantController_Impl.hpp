@@ -109,6 +109,8 @@ namespace detail {
 
     void resetControlledZone();
 
+    ModelObject clone(Model model) const;
+
     //@}
    protected:
    private:

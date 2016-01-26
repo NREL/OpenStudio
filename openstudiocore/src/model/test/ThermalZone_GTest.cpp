@@ -55,6 +55,7 @@
 #include "../ThermostatSetpointDualSetpoint.hpp"
 #include "../ThermostatSetpointDualSetpoint_Impl.hpp"
 #include "../ZoneControlHumidistat.hpp"
+#include "../ZoneControlHumidistat_Impl.hpp"
 #include "../ZoneControlContaminantController.hpp"
 #include "../ZoneControlContaminantController_Impl.hpp"
 #include "../ZoneHVACPackagedTerminalAirConditioner.hpp"
@@ -521,20 +522,6 @@ TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost3)
   EXPECT_EQ(100, newSpace->electricEquipment()[1].definition().lifeCycleCosts()[0].totalCost());
 }
 
-TEST_F(ModelFixture, ThermalZone_ZoneControlHumidistat)
-{
-  Model m;
-  ThermalZone thermalZone(m);
-  ZoneControlHumidistat humidistat(m);
-
-  EXPECT_FALSE(thermalZone.zoneControlHumidistat());
-  EXPECT_TRUE(thermalZone.setZoneControlHumidistat(humidistat));
-  ASSERT_TRUE(thermalZone.zoneControlHumidistat());
-  EXPECT_EQ(humidistat, thermalZone.zoneControlHumidistat().get());
-  thermalZone.resetZoneControlHumidistat();
-  EXPECT_FALSE(thermalZone.zoneControlHumidistat());
-}
-
 TEST_F(ModelFixture, ThermalZone_Clone)
 {
   Model m;
@@ -636,33 +623,138 @@ TEST_F(ModelFixture, ThermalZone_Ports)
   EXPECT_TRUE(exhaustPortList.handle().isNull());
 }
 
+TEST_F(ModelFixture, ThermalZone_Thermostat)
+{
+  {
+    Model m;
+
+    ThermalZone zone1(m);
+    ThermostatSetpointDualSetpoint thermostat1(m);
+
+    EXPECT_TRUE(zone1.setThermostat(thermostat1));
+    EXPECT_TRUE(zone1.setThermostat(thermostat1));
+
+    ASSERT_TRUE(thermostat1.thermalZone());
+    EXPECT_EQ(zone1,thermostat1.thermalZone().get());
+
+    auto returnvalue = zone1.thermostat();
+    ASSERT_TRUE(returnvalue);
+    EXPECT_EQ(thermostat1,returnvalue.get());
+
+    ThermalZone zone2(m);
+
+    EXPECT_TRUE(zone2.setThermostat(thermostat1));
+    returnvalue = zone2.thermostat();
+    ASSERT_TRUE(returnvalue);
+    EXPECT_NE(returnvalue.get(),thermostat1);
+    auto thermostats = m.getModelObjects<Thermostat>();
+    EXPECT_EQ(2u,thermostats.size());
+
+    ThermostatSetpointDualSetpoint themostat2(m);
+    EXPECT_TRUE(zone2.setThermostat(themostat2));
+    EXPECT_TRUE(returnvalue->handle().isNull());
+    EXPECT_EQ(2u,m.getModelObjects<Thermostat>().size());
+  }
+
+  {
+    Model m;
+    ThermalZone zone(m);
+    ThermostatSetpointDualSetpoint thermostat(m); 
+    zone.setThermostat(thermostat);
+    auto zone2 = zone.clone().cast<model::ThermalZone>();
+
+    EXPECT_TRUE(zone2.thermostat());
+    EXPECT_EQ(2u,m.getModelObjects<model::Thermostat>().size());
+  }
+}
+
 TEST_F(ModelFixture, ThermalZone_ZoneControlContaminantController)
 {
-  Model m;
-  ThermalZone zone(m);
+  {
+    Model m;
 
-  ZoneControlContaminantController controller(m);
-  auto result = zone.setZoneControlContaminantController(controller);
-  EXPECT_TRUE(result);
+    ThermalZone zone1(m);
+    ZoneControlContaminantController controller1(m);
 
-  auto returnValue = zone.zoneControlContaminantController();
-  EXPECT_TRUE(returnValue);
+    EXPECT_TRUE(zone1.setZoneControlContaminantController(controller1));
+    EXPECT_TRUE(zone1.setZoneControlContaminantController(controller1));
 
-  EXPECT_EQ(controller,returnValue.get());
+    ASSERT_TRUE(controller1.controlledZone());
+    EXPECT_EQ(zone1,controller1.controlledZone().get());
 
-  zone.resetZoneControlContaminantController();
-  EXPECT_FALSE(zone.zoneControlContaminantController());
+    auto returnvalue = zone1.zoneControlContaminantController();
+    ASSERT_TRUE(returnvalue);
+    EXPECT_EQ(controller1,returnvalue.get());
 
-  EXPECT_EQ(1u,m.getModelObjects<model::ZoneControlContaminantController>().size());
+    ThermalZone zone2(m);
 
-  controller.remove();
-  EXPECT_TRUE(m.getModelObjects<model::ZoneControlContaminantController>().empty());
+    EXPECT_TRUE(zone2.setZoneControlContaminantController(controller1));
+    returnvalue = zone2.zoneControlContaminantController();
+    ASSERT_TRUE(returnvalue);
+    EXPECT_NE(returnvalue.get(),controller1);
+    auto controllers = m.getModelObjects<ZoneControlContaminantController>();
+    EXPECT_EQ(2u,controllers.size());
 
-  ZoneControlContaminantController controller2(m); 
-  zone.setZoneControlContaminantController(controller2);
-  auto zone2 = zone.clone().cast<model::ThermalZone>();
+    ZoneControlContaminantController controller2(m);
+    EXPECT_TRUE(zone2.setZoneControlContaminantController(controller2));
+    EXPECT_TRUE(returnvalue->handle().isNull());
+    EXPECT_EQ(2u,m.getModelObjects<ZoneControlContaminantController>().size());
+  }
 
-  EXPECT_TRUE(zone2.zoneControlContaminantController());
-  EXPECT_EQ(2u,m.getModelObjects<model::ZoneControlContaminantController>().size());
+  {
+    Model m;
+    ThermalZone zone(m);
+    ZoneControlContaminantController controller(m); 
+    zone.setZoneControlContaminantController(controller);
+    auto zone2 = zone.clone().cast<model::ThermalZone>();
+
+    EXPECT_TRUE(zone2.zoneControlContaminantController());
+    EXPECT_EQ(2u,m.getModelObjects<model::ZoneControlContaminantController>().size());
+  }
+}
+
+TEST_F(ModelFixture, ThermalZone_ZoneControlHumidistat)
+{
+  {
+    Model m;
+
+    ThermalZone zone1(m);
+    ZoneControlHumidistat controller1(m);
+
+    EXPECT_TRUE(zone1.setZoneControlHumidistat(controller1));
+    EXPECT_TRUE(zone1.setZoneControlHumidistat(controller1));
+
+    ASSERT_TRUE(controller1.controlledZone());
+    EXPECT_EQ(zone1,controller1.controlledZone().get());
+
+    auto returnvalue = zone1.zoneControlHumidistat();
+    ASSERT_TRUE(returnvalue);
+    EXPECT_EQ(controller1,returnvalue.get());
+
+    ThermalZone zone2(m);
+
+    EXPECT_TRUE(zone2.setZoneControlHumidistat(controller1));
+    returnvalue = zone2.zoneControlHumidistat();
+    ASSERT_TRUE(returnvalue);
+    EXPECT_NE(returnvalue.get(),controller1);
+    auto controllers = m.getModelObjects<ZoneControlHumidistat>();
+    EXPECT_EQ(2u,controllers.size());
+
+    ZoneControlHumidistat controller2(m);
+    EXPECT_TRUE(zone2.setZoneControlHumidistat(controller2));
+    EXPECT_TRUE(returnvalue->handle().isNull());
+    EXPECT_EQ(2u,m.getModelObjects<ZoneControlHumidistat>().size());
+  }
+
+  {
+    Model m;
+    ThermalZone zone(m);
+    ZoneControlHumidistat controller(m); 
+    zone.setZoneControlHumidistat(controller);
+    auto zone2 = zone.clone().cast<model::ThermalZone>();
+
+    EXPECT_TRUE(zone2.zoneControlHumidistat());
+    EXPECT_EQ(2u,m.getModelObjects<model::ZoneControlHumidistat>().size());
+  }
 }
 

@@ -19,6 +19,8 @@
 
 #include "ZoneControlContaminantController.hpp"
 #include "ZoneControlContaminantController_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "Schedule.hpp"
@@ -193,6 +195,13 @@ namespace detail {
     setString(OS_ZoneControl_ContaminantControllerFields::ControlledZoneName,"");
   }
 
+  ModelObject ZoneControlContaminantController_Impl::clone(Model model) const
+  {
+    auto clone = ModelObject_Impl::clone(model);
+    clone.setString(OS_ZoneControl_ContaminantControllerFields::ControlledZoneName,"");
+    return clone;
+  }
+
 } // detail
 
 ZoneControlContaminantController::ZoneControlContaminantController(const Model& model)
@@ -263,6 +272,10 @@ bool ZoneControlContaminantController::setGenericContaminantSetpointSchedule(Sch
 
 void ZoneControlContaminantController::resetGenericContaminantSetpointSchedule() {
   getImpl<detail::ZoneControlContaminantController_Impl>()->resetGenericContaminantSetpointSchedule();
+}
+
+boost::optional<ThermalZone> ZoneControlContaminantController::controlledZone() const {
+  return getImpl<detail::ZoneControlContaminantController_Impl>()->controlledZone();
 }
 
 /// @cond
