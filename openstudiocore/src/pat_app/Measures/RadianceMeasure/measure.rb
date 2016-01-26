@@ -2051,7 +2051,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
     # cleanup
     FileUtils.rm('annual-sky.mtx')
-    FileUtils.rm('model.rad')
     unless debug_mode
       rm_list = "output/ts/m_*.ill", "output/ts/window_controls.ill", "output/ts/WG*.ill", "octrees/*.oct", "output/ts/*.shd"
       FileUtils.rm Dir.glob(rm_list)
