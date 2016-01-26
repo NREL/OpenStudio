@@ -45,6 +45,7 @@
 #include "../../model/Thermostat_Impl.hpp"
 #include "../../model/ThermostatSetpointDualSetpoint.hpp"
 #include "../../model/ThermostatSetpointDualSetpoint_Impl.hpp"
+#include "../../model/ZoneControlContaminantController.hpp"
 #include "../../model/ZoneControlHumidistat.hpp"
 #include "../../model/ZoneControlThermostatStagedDualSetpoint.hpp"
 #include "../../model/DesignSpecificationOutdoorAir.hpp"
@@ -581,6 +582,11 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       if( boost::optional<IdfObject> idfHumidistat = translateAndMapModelObject(humidistat.get()) ) {
         idfHumidistat->setString(ZoneControl_HumidistatFields::ZoneName,modelObject.name().get());
       }
+    }
+
+    // ZoneControlContaminantController
+    if( auto controller = modelObject.zoneControlContaminantController() ) {
+      translateAndMapModelObject(controller.get());
     }
   }
 

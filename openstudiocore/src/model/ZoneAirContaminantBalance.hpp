@@ -26,7 +26,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
 
 namespace detail {
@@ -36,7 +35,6 @@ namespace detail {
 } // detail
 
 /** ZoneAirContaminantBalance is a ModelObject that wraps the OpenStudio IDD object 'OS:ZoneAirContaminantBalance'. */
-// DLM: this class is not translated to E+
 class MODEL_API ZoneAirContaminantBalance : public ModelObject {
  public:
   /** @name Constructors and Destructors */
@@ -55,7 +53,6 @@ class MODEL_API ZoneAirContaminantBalance : public ModelObject {
 
   bool isCarbonDioxideConcentrationDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> outdoorCarbonDioxideSchedule() const;
 
   //@}
@@ -66,7 +63,6 @@ class MODEL_API ZoneAirContaminantBalance : public ModelObject {
 
   void resetCarbonDioxideConcentration();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setOutdoorCarbonDioxideSchedule(Schedule& schedule);
 
   void resetOutdoorCarbonDioxideSchedule();
