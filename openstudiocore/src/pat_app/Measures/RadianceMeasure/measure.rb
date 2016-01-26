@@ -1,5 +1,5 @@
 # see the URL below for information on how to write OpenStudio measures:
-# http://nrel.github.io/OpenStudio-user-documentation/measures/measure_writing_guide/
+# http://nrel.github.io/OpenStudio-user-documentation/reference/measure_writing_guide/
 
 # design document for this measure is at https://docs.google.com/document/d/16_TLRuhc4VFs2o0gRAp81hRObet7-s6fUEWo3HO7LpE/edit#
 

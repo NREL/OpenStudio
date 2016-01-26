@@ -1,4 +1,4 @@
-!IDD_Version 1.10.1
+!IDD_Version 1.10.3
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -15695,6 +15695,8 @@ OS:Controller:MechanicalVentilation,
        \key VentilationRateProcedure
        \key IndoorAirQualityProcedure
        \key ProportionalControl
+       \key ProportionalControlBasedonOccupancySchedule
+       \key ProportionalControlBasedOnDesignOccupancy
   A6, \field Thermal Zone
        \note A zone name or a zone list name may be used here
        \type object-list
@@ -15707,6 +15709,47 @@ OS:Controller:MechanicalVentilation,
   A8;  \field Design Specification Zone Air Distribution Object
        \type object-list
        \object-list DesignSpecificationZoneAirDistributionNames
+
+OS:ZoneControl:ContaminantController,
+       \min-fields 8
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+  A3 , \field Controlled Zone Name
+       \type object-list
+       \object-list ThermalZoneNames
+  A4 , \field Carbon Dioxide Control Availability Schedule Name
+       \note Availability schedule name for CO2 controller. Schedule value > 0 means the CO2
+       \note controller is enabled. If this field is blank, then CO2  controller is always enabled.
+       \type object-list
+       \object-list ScheduleNames
+  A5 , \field Carbon Dioxide Setpoint Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Schedule values should be carbon dioxide concentration in parts per million (ppm)
+  A6 , \field Minimum Carbon Dioxide Concentration Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Schedule values should be carbon dioxide concentration in parts per
+       \note million (ppm)
+       \note This field is used when the field System Outdoor Air Method =
+       \note ProportionalControlBasedonOccupancySchedule or ProportionalControlBasedOnDesignOccupancy
+       \note in Controller:MechanicalVentilation
+  A7 , \field Generic Contaminant Control Availability Schedule Name
+       \note Availability schedule name for generic contaminant controller. Schedule value > 0 means
+       \note the generic contaminant controller is enabled. If this field is blank, then generic
+       \note contaminant controller is always enabled.
+       \type object-list
+       \object-list ScheduleNames
+  A8 ; \field Generic Contaminant Setpoint Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Schedule values should be generic contaminant concentration in parts per
+       \note million (ppm)
+       \note This field is used when the field System Outdoor Air Method =
+       \note IndoorAirQualityProcedureGenericContaminant in Controller:MechanicalVentilation
 
 OS:Controller:OutdoorAir,
        \min-fields 17

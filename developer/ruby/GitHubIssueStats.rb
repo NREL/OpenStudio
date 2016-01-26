@@ -2,10 +2,10 @@ require 'github_api'
 require 'date'
 require 'yaml'
 
-begin_date = Time.parse('2015-08-24' + 'T06:00:00Z')
+begin_date = Time.parse('2016-01-08' + 'T06:00:00Z')
 
 end_date = Time.now
-end_date = Time.parse('2015-09-03' + 'T006:00:00Z')
+end_date = Time.parse('2016-01-21' + 'T006:00:00Z')
 
 repo_owner = 'NREL'
 repo = 'OpenStudio'

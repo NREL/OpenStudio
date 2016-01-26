@@ -101,7 +101,8 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.9.3")] = &VersionTranslator::update_1_9_2_to_1_9_3;
   m_updateMethods[VersionString("1.9.5")] = &VersionTranslator::update_1_9_4_to_1_9_5;
   m_updateMethods[VersionString("1.10.0")] = &VersionTranslator::update_1_9_5_to_1_10_0;
-  m_updateMethods[VersionString("1.10.1")] = &VersionTranslator::update_1_10_0_to_1_10_1;
+  m_updateMethods[VersionString("1.10.2")] = &VersionTranslator::update_1_10_1_to_1_10_2;
+  m_updateMethods[VersionString("1.10.3")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -196,6 +197,8 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.9.4"));
   m_startVersions.push_back(VersionString("1.9.5"));
   m_startVersions.push_back(VersionString("1.10.0"));
+  m_startVersions.push_back(VersionString("1.10.1"));
+  m_startVersions.push_back(VersionString("1.10.2"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -2994,20 +2997,48 @@ std::string VersionTranslator::update_1_9_5_to_1_10_0(const IdfFile& idf_1_9_5, 
   return ss.str();
 }
 
-std::string VersionTranslator::update_1_10_0_to_1_10_1(const IdfFile& idf_1_10_0, const IddFileAndFactoryWrapper& idd_1_10_1)
-{
+std::string VersionTranslator::update_1_10_1_to_1_10_2(const IdfFile& idf_1_10_1, const IddFileAndFactoryWrapper& idd_1_10_2) {
+
   std::stringstream ss;
 
-  ss << idf_1_10_0.header() << std::endl << std::endl;
+  ss << idf_1_10_1.header() << std::endl << std::endl;
 
   // new version object
-  IdfFile targetIdf(idd_1_10_1.iddFile());
+  IdfFile targetIdf(idd_1_10_2.iddFile());
   ss << targetIdf.versionObject().get();
 
-  for (const IdfObject& object : idf_1_10_0.objects()) {
+  auto zones = idf_1_10_1.getObjectsByType(idf_1_10_1.iddFile().getObject("OS:ThermalZone").get());
+
+  for (const IdfObject& object : idf_1_10_1.objects()) {
     auto iddname = object.iddObject().name();
-    if (iddname == "OS:Sizing:Zone") {
-      auto iddObject = idd_1_10_1.getObject("OS:Sizing:Zone");
+
+    if (iddname == "OS:ThermostatSetpoint:DualSetpoint") {
+      // Get all of the zones that point to this thermostat
+      std::vector<IdfObject> referencingZones;
+      for( const auto & zone : zones ) {
+        if( auto thermostatHandle = zone.getString(19) ) {
+          if( toUUID(thermostatHandle.get()) == object.handle() ) {
+            referencingZones.push_back(zone);
+          }
+        }
+      }
+
+      // Clone the thermostat for every zone after the first
+      if( referencingZones.size() > 1u ) {
+        for( auto & referencingZone : referencingZones ) {
+          // This will leave the original thermostate hanging out alone in most circumstances
+          // but since we are messing with the name it is probably best
+          auto newThermostat = object.clone();
+          newThermostat.setName(referencingZone.nameString() + " Thermostat");
+          ss << newThermostat;
+          m_new.push_back(newThermostat);
+          auto newHandle = newThermostat.getString(0).get();
+          referencingZone.setString(19,newHandle); 
+        }
+      }
+      ss << object;
+    } else if (iddname == "OS:Sizing:Zone") {
+      auto iddObject = idd_1_10_2.getObject("OS:Sizing:Zone");
       OS_ASSERT(iddObject);
       IdfObject newObject(iddObject.get());
 

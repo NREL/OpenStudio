@@ -38,22 +38,15 @@ Update CHANGELOG.md
 =================
 
 ### Set the desired stats date range
-- Open GitHubIssuesStats.rb, and adjust date range
+In folder `developer\ruby`
+- Open GitHubIssueStats.rb, and adjust date range
 
 ### Get the stats
-Open Git Bash
+In folder `developer\ruby`, open Git Bash and type the following
 
-In the Git Bash window, type the following
-
-- cd to the root folder of your local Git OpenStudio repository
-- cd developer/ruby
-- gem install github_api
-- ruby GitHubIssuesStats.rb
-
-### Pipe the stats out to a text file
-In the Git Bash window, type the following
-
-- ruby GitHubIssuesStats.rb > out.txt
+	gem install github_api
+	ruby GitHubIssueStats.rb
+	ruby GitHubIssueStats.rb > out.txt
 
 Open out.txt, and paste data into CHANGELOG.md
 
@@ -292,6 +285,8 @@ Sanity Testing Release Builds
 - Open PAT, make a project, and select the model above as your baseline model
 
 ### Tests to run
+- Test prior version of OpenStudio model
+- Test prior version of PAT project
 - Use SketchUp to make a model on Windows 32 bit, Windows 64 bit, and Mac
 - Test running PAT on the cloud on at least one platform
 - Test BCL downloads
@@ -321,17 +316,19 @@ In the docroot folder\
 Version Update
 ==============
 
+The current version (X.Y.Z) being built, and the updated version (X.Y.Z+1) for the upcoming iteration need to be correctly incorporated into their respective documents.
+
 - In `build\OSCore-prefix\src\OSCore-build\resources\osversion` copy directory X.Y.Z to `openstudiocore\resources\osversion` (new folder, 3 files)
-- In the top level of your OpenStudio folder, update `CMakeLists.txt` version (1 line)
-- In `openstudiocore\resources` update `CMakeLists.txt` version (3 lines, 1 location)
-- In `openstudiocore\resources\model` update `OpenStudio.idd` version (1 line)
-- In `openstudiocore\src\osversion` update `VersionTranslator.cpp` version
+- In the top level of your OpenStudio folder, update `CMakeLists.txt` version to X.Y.Z+1 (1 line)
+- In `openstudiocore\resources` update `CMakeLists.txt` version to X.Y.Z (3 lines, 1 location)
+- In `openstudiocore\resources\model` update `OpenStudio.idd` version to X.Y.Z+1 (1 line)
+- In `openstudiocore\src\osversion` update `VersionTranslator.cpp` version to X.Y.Z+1 in first location, and X.Y.Z in second location
 
 At https://github.com/NREL/OpenStudio/blob/develop/openstudiocore/src/osversion/VersionTranslator.cpp
 
-- Select "History", see edits if needed (usually use `defaultUpdate`, 2 lines)
+- Select "History", see edits if needed (usually use `defaultUpdate` in first location, 1 line for each of 2 locations)
 
-With Git, commit above files (Commit Message = `Updating version to X.Y.Z`)
+With Git, commit above files (Commit Message = `Updating version to X.Y.Z+1`)
 
 AMI BUILD
 =========

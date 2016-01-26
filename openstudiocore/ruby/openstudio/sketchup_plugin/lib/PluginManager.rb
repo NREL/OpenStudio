@@ -164,7 +164,7 @@ module OpenStudio
       add_event( proc )
       
       if $OPENSTUDIO_SKETCHUPPLUGIN_LAUNCH_GETTING_STARTED_ON_START
-        UI.openURL("http://nrel.github.io/OpenStudio-user-documentation/next_steps/sketchup_plugin_interface/")
+        UI.openURL("http://nrel.github.io/OpenStudio-user-documentation/reference/sketchup_plugin_interface/")
       end
       
       @process_events_timer_id = nil

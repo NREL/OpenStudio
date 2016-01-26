@@ -1,3 +1,20 @@
+## OpenStudio v1.10.2
+###### 2016-01-21 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.10.1...v1.10.2 )
+
+Closed Issues: 3 (#1713, #1947, #2028)
+- ![Fixed:][fixed] [#1713]( https://github.com/NREL/OpenStudio/issues/1713 ), open studio not working on windows 8.1
+- ![Fixed:][fixed] [#1947]( https://github.com/NREL/OpenStudio/issues/1947 ), Expose all fields of the Sizing:Zone object
+- ![Fixed:][fixed] [#2028]( https://github.com/NREL/OpenStudio/issues/2028 ), Forward Translation error when multiple spaces of same space type in a zone when load type is design load
+
+## OpenStudio v1.10.1
+###### 2016-01-08 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.10.0...v1.10.1 )
+
+- ![Fixed:][fixed] [#1959]( https://github.com/NREL/OpenStudio/issues/1959 ), Building of OpenStudio on Mac doesn't find EnergyPlus or Radiance
+- ![Fixed:][fixed] [#2002]( https://github.com/NREL/OpenStudio/issues/2002 ), Removing arguments from a measure leaves orphan arguments in XML
+- ![Fixed:][fixed] [#2003]( https://github.com/NREL/OpenStudio/issues/2003 ), GUI Configuration Failure - OS 1.9.0 and 1.9.5 for Load Profile Plant Object 
+- ![Fixed:][fixed] [#2004]( https://github.com/NREL/OpenStudio/issues/2004 ), 64 bit C# bindings have a 32 bit dll
+- ![Fixed:][fixed] [#2014]( https://github.com/NREL/OpenStudio/issues/2014 ), Openstudio application 1.10
+
 ## OpenStudio v1.10.0
 ###### 2015-12-11 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.9.5...v1.10.0 )
 
@@ -6,7 +23,7 @@
 - ![Fixed:][fixed] [#1831]( https://github.com/NREL/OpenStudio/issues/1831 ), Select All in GridView should only select all rows/sub-rows that are currently visible (i.e. unfiltered)
 - ![Fixed:][fixed] [#1881]( https://github.com/NREL/OpenStudio/issues/1881 ), Default constructor for PlantEquipmentOperation:OutdoorDryBulb has temp limits reversed
 - ![Fixed:][fixed] [#1951]( https://github.com/NREL/OpenStudio/issues/1951 ), PAT 1.9.4 crashes when creating a new project or opening an existing one
-- ![Fixed:][fixed] [#1963]( https://github.com/NREL/OpenStudio/issues/1963 ), Render by surface type leaaves some surfaces transparent
+- ![Fixed:][fixed] [#1963]( https://github.com/NREL/OpenStudio/issues/1963 ), Render by surface type leaves some surfaces transparent
 - ![Fixed:][fixed] [#1971]( https://github.com/NREL/OpenStudio/issues/1971 ), OS:LoadProfile:Plant Object not functioning properly 
 - ![Fixed:][fixed] [#1977]( https://github.com/NREL/OpenStudio/issues/1977 ), Setpoint managers are not allowed on plant demand side
 - ![Fixed:][fixed] [#1983]( https://github.com/NREL/OpenStudio/issues/1983 ), AddOutputVariable measure should support the "annual" reporting frequency
