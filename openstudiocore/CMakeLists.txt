@@ -556,8 +556,8 @@ include_directories(SYSTEM ${GTEST_INCLUDE_DIR})
 link_directories(${GTEST_LIB_DIR})
 
 # Geographic library
-include_directories(SYSTEM ${GEOGRAPHIC_INCLUDE_DIR})
-link_directories(${GEOGRAPHIC_LIB_DIR})
+find_package(GeographicLib REQUIRED)
+include_directories(SYSTEM ${GeographicLib_INCLUDE_DIRS})
 
 # Boost
 if(APPLE)
