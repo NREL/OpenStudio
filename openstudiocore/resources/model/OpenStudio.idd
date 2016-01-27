@@ -1015,7 +1015,6 @@ OS:SizingPeriod:DesignDay,
        \note Humidity Indicating Type
        \note required-field if Humidity Indicating Day Schedule is not used
        \type real
-       \units BasedOnField A3
   N4, \field Barometric Pressure
        \note This field's value is also checked against the calculated "standard barometric pressure"
        \note for the location.  If out of range (>10%), then is replaced by standard value.
@@ -4329,11 +4328,9 @@ OS:ScheduleTypeLimits,
   N1, \field Lower Limit Value
        \note lower limit (real or integer) for the Schedule Type.  e.g. if fraction, this is 0.0
        \type real
-       \units BasedOnField A4
   N2, \field Upper Limit Value
        \note upper limit (real or integer) for the Schedule Type.  e.g. if fraction, this is 1.0
        \type real
-       \units BasedOnField A4
   A3, \field Numeric Type
        \note Numeric type is either Continuous (all numbers within the min and
        \note max are valid or Discrete (only integer numbers between min and
@@ -4957,7 +4954,6 @@ OS:ShadingControl,
        \note the control test passes. Schedule Name is required if Shading Control Is Scheduled = Yes.
        \note If Schedule Name is not specified, shading control is assumed to be active at all times.
   N1 , \field Setpoint
-       \units BasedOnField A4
        \note W/m2 for solar-based controls, W for cooling- or heating-based controls,
        \note deg C for temperature-based controls.
        \note Unused for Shading Control Type = AlwaysOn, AlwaysOff, OnIfScheduleAllows,
@@ -4994,7 +4990,6 @@ OS:ShadingControl,
        \note Required if Type of Slat Angle Control for Blinds = ScheduledSlatAngle
        \note Schedule values should be degrees (0 minimum, 180 maximum)
   N2 ; \field Setpoint 2
-       \units BasedOnField A4
        \note W/m2 for solar-based controls, deg C for temperature-based controls.
        \note Used only as the second setpoint for the following two-setpoint control types:
        \note OnIfHighOutdoorAirTempAndHighSolarOnWindow, OnIfHighOutdoorAirTempAndHighHorizontalSolar,
@@ -15989,19 +15984,15 @@ OS:Curve:Linear,
   N3, \field Minimum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N4, \field Maximum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N5, \field Minimum Curve Output
        \note Specify the minimum value calculated by this curve object
        \type real
-       \units BasedOnField A3
   N6, \field Maximum Curve Output
        \note Specify the maximum value calculated by this curve object
        \type real
-       \units BasedOnField A3
   A3, \field Input Unit Type for X
        \type choice
        \default Dimensionless
@@ -16046,19 +16037,15 @@ OS:Curve:Quadratic,
   N4, \field Minimum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N5, \field Maximum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N6, \field Minimum Curve Output
        \note Specify the minimum value calculated by this curve object
        \type real
-       \units BasedOnField A3
   N7, \field Maximum Curve Output
        \note Specify the maximum value calculated by this curve object
        \type real
-       \units BasedOnField A3
   A3, \field Input Unit Type for X
        \type choice
        \default Dimensionless
@@ -16105,19 +16092,15 @@ OS:Curve:Cubic,
   N5, \field Minimum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N6, \field Maximum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N7, \field Minimum Curve Output
        \note Specify the minimum value calculated by this curve object
        \type real
-       \units BasedOnField A3
   N8, \field Maximum Curve Output
        \note Specify the maximum value calculated by this curve object
        \type real
-       \units BasedOnField A3
   A3, \field Input Unit Type for X
        \type choice
        \default Dimensionless
@@ -16164,19 +16147,15 @@ OS:Curve:Quartic,
   N6, \field Minimum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N7, \field Maximum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N8, \field Minimum Curve Output
        \note Specify the minimum value calculated by this curve object
        \type real
-       \units BasedOnField A3
   N9, \field Maximum Curve Output
        \note Specify the maximum value calculated by this curve object
        \type real
-       \units BasedOnField A3
   A3, \field Input Unit Type for X
        \type choice
        \default Dimensionless
@@ -16219,20 +16198,16 @@ OS:Curve:Exponent,
        \note Specify the minimum value of the independent variable x allowed
        \type real
        \required-field
-       \units BasedOnField A2
   N5, \field Maximum Value of x
        \note Specify the maximum value of the independent variable x allowed
        \type real
        \required-field
-       \units BasedOnField A2
   N6, \field Minimum Curve Output
        \note Specify the minimum value calculated by this curve object
        \type real
-       \units BasedOnField A3
   N7, \field Maximum Curve Output
        \note Specify the maximum value calculated by this curve object
        \type real
-       \units BasedOnField A3
   A3, \field Input Unit Type for X
        \type choice
        \default Dimensionless
@@ -16297,27 +16272,21 @@ OS:Curve:Bicubic,
   N11, \field Minimum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N12, \field Maximum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N13, \field Minimum Value of y
        \type real
        \required-field
-       \units BasedOnField A3
   N14, \field Maximum Value of y
        \type real
        \required-field
-       \units BasedOnField A3
   N15, \field Minimum Curve Output
        \note Specify the minimum value calculated by this curve object
        \type real
-       \units BasedOnField A4
   N16, \field Maximum Curve Output
        \note Specify the maximum value calculated by this curve object
        \type real
-       \units BasedOnField A4
   A3, \field Input Unit Type for X
        \type choice
        \default Dimensionless
@@ -16379,27 +16348,21 @@ OS:Curve:Biquadratic,
   N7, \field Minimum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N8, \field Maximum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N9, \field Minimum Value of y
        \type real
        \required-field
-       \units BasedOnField A3
   N10, \field Maximum Value of y
        \type real
        \required-field
-       \units BasedOnField A3
   N11, \field Minimum Curve Output
        \note Specify the minimum value calculated by this curve object
        \type real
-       \units BasedOnField A4
   N12, \field Maximum Curve Output
        \note Specify the maximum value calculated by this curve object
        \type real
-       \units BasedOnField A4
   A3, \field Input Unit Type for X
        \type choice
        \default Dimensionless
@@ -16458,27 +16421,21 @@ OS:Curve:QuadraticLinear,
   N7, \field Minimum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N8, \field Maximum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N9, \field Minimum Value of y
        \type real
        \required-field
-       \units BasedOnField A3
   N10, \field Maximum Value of y
        \type real
        \required-field
-       \units BasedOnField A3
   N11, \field Minimum Curve Output
        \note Specify the minimum value calculated by this curve object
        \type real
-       \units BasedOnField A4
   N12, \field Maximum Curve Output
        \note Specify the maximum value calculated by this curve object
        \type real
-       \units BasedOnField A4
   A3, \field Input Unit Type for X
        \type choice
        \default Dimensionless
@@ -16579,30 +16536,22 @@ OS:Curve:Triquadratic,
        \type real
   N28, \field Minimum Value of x
        \type real
-       \units BasedOnField A2
   N29, \field Maximum Value of x
        \type real
-       \units BasedOnField A2
   N30, \field Minimum Value of y
        \type real
-       \units BasedOnField A3
   N31, \field Maximum Value of y
        \type real
-       \units BasedOnField A3
   N32, \field Minimum Value of z
        \type real
-       \units BasedOnField A4
   N33, \field Maximum Value of z
        \type real
-       \units BasedOnField A4
   N34, \field Minimum Curve Output
        \note Specify the minimum value calculated by this curve object
        \type real
-       \units BasedOnField A5
   N35, \field Maximum Curve Output
        \note Specify the maximum value calculated by this curve object
        \type real
-       \units BasedOnField A5
   A3, \field Input Unit Type for X
        \type choice
        \default Dimensionless
@@ -16758,19 +16707,15 @@ OS:Curve:ExponentialSkewNormal,
   N5, \field Minimum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N6, \field Maximum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N7, \field Minimum Curve Output
        \note Specify the minimum value calculated by this curve object
        \type real
-       \units BasedOnField A3
   N8, \field Maximum Curve Output
        \note Specify the maximum value calculated by this curve object
        \type real
-       \units BasedOnField A3
   A3, \field Input Unit Type for x
        \type choice
        \default Dimensionless
@@ -16809,19 +16754,15 @@ OS:Curve:Sigmoid,
   N6, \field Minimum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N7, \field Maximum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N8, \field Minimum Curve Output
        \note Specify the minimum value calculated by this curve object
        \type real
-       \units BasedOnField A3
   N9, \field Maximum Curve Output
        \note Specify the maximum value calculated by this curve object
        \type real
-       \units BasedOnField A3
   A3, \field Input Unit Type for x
        \type choice
        \default Dimensionless
@@ -16854,19 +16795,15 @@ OS:Curve:RectangularHyperbola1,
   N4, \field Minimum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N5, \field Maximum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N6, \field Minimum Curve Output
        \note Specify the minimum value calculated by this curve object
        \type real
-       \units BasedOnField A3
   N7, \field Maximum Curve Output
        \note Specify the maximum value calculated by this curve object
        \type real
-       \units BasedOnField A3
   A3, \field Input Unit Type for x
        \type choice
        \default Dimensionless
@@ -16899,19 +16836,15 @@ OS:Curve:RectangularHyperbola2,
   N4, \field Minimum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N5, \field Maximum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N6, \field Minimum Curve Output
        \note Specify the minimum value calculated by this curve object
        \type real
-       \units BasedOnField A3
   N7, \field Maximum Curve Output
        \note Specify the maximum value calculated by this curve object
        \type real
-       \units BasedOnField A3
   A3, \field Input Unit Type for x
        \type choice
        \default Dimensionless
@@ -16944,19 +16877,15 @@ OS:Curve:ExponentialDecay,
   N4, \field Minimum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N5, \field Maximum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N6, \field Minimum Curve Output
        \note Specify the minimum value calculated by this curve object
        \type real
-       \units BasedOnField A3
   N7, \field Maximum Curve Output
        \note Specify the maximum value calculated by this curve object
        \type real
-       \units BasedOnField A3
   A3, \field Input Unit Type for x
        \type choice
        \default Dimensionless
@@ -16993,19 +16922,15 @@ OS:Curve:DoubleExponentialDecay,
   N6, \field Minimum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N7, \field Maximum Value of x
        \type real
        \required-field
-       \units BasedOnField A2
   N8, \field Minimum Curve Output
        \note Specify the minimum value calculated by this curve object
        \type real
-       \units BasedOnField A3
   N9, \field Maximum Curve Output
        \note Specify the maximum value calculated by this curve object
        \type real
-       \units BasedOnField A3
   A3, \field Input Unit Type for x
        \type choice
        \default Dimensionless
@@ -17097,42 +17022,30 @@ OS:Table:MultiVariableLookup,
        \note This field is not allowed to be set equal to 0.
   N3 , \field Minimum Value of X1
        \type real
-       \unitsBasedOnField A8
   N4 , \field Maximum Value of X1
        \type real
-       \unitsBasedOnField A8
   N5 , \field Minimum Value of X2
        \type real
-       \unitsBasedOnField A9
   N6 , \field Maximum Value of X2
        \type real
-       \unitsBasedOnField A9
   N7 , \field Minimum Value of X3
        \type real
-       \unitsBasedOnField A10
   N8 , \field Maximum Value of X3
        \type real
-       \unitsBasedOnField A10
   N9 , \field Minimum Value of X4
        \type real
-       \unitsBasedOnField A11
   N10, \field Maximum Value of X4
        \type real
-       \unitsBasedOnField A11
   N11, \field Minimum Value of X5
        \type real
-       \unitsBasedOnField A12
   N12, \field Maximum Value of X5
        \type real
-       \unitsBasedOnField A12
   N13, \field Minimum Table Output
        \type real
        \note Specify the minimum value calculated by this curve object
-       \unitsBasedOnField A13
   N14, \field Maximum Table Output
        \type real
        \note Specify the maximum value calculated by this curve object
-       \unitsBasedOnField A13
   A9 , \field Input Unit Type for X1
        \type choice
        \key Dimensionless
