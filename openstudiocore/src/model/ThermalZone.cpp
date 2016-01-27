@@ -977,18 +977,13 @@ namespace detail {
 
   bool ThermalZone_Impl::setThermostatSetpointDualSetpoint(const ThermostatSetpointDualSetpoint & thermostat)
   {
-    resetThermostat();
-    return setPointer(OS_ThermalZoneFields::ThermostatName, thermostat.handle());
+    return setThermostat(thermostat);
   }
 
   void ThermalZone_Impl::resetThermostatSetpointDualSetpoint()
   {
-    if( boost::optional<ThermostatSetpointDualSetpoint> thermostat = this->thermostatSetpointDualSetpoint() )
-    {
-      thermostat->remove();
-    }
-
-    setString(OS_ThermalZoneFields::ThermostatName, "");
+    // This will reset other thermostat types, but I think that is ok
+    resetThermostat();
   }
 
   boost::optional<Thermostat> ThermalZone_Impl::thermostat() const
@@ -998,14 +993,32 @@ namespace detail {
 
   bool ThermalZone_Impl::setThermostat(const Thermostat & thermostat)
   {
-    resetThermostat();
-    return setPointer(OS_ThermalZoneFields::ThermostatName, thermostat.handle());
+    auto t_model = model();
+
+    if( t_model != thermostat.model() ) {
+      return false;
+    }
+
+    if( auto currentZone = thermostat.thermalZone() ) {
+      if( currentZone->handle() == handle() ) {
+        // or should it be false?
+        // I think this is similar to what you would see in 
+        // Lights::setSpace() under similar conditions
+        return true;
+      } else {
+        auto thermostatClone = thermostat.clone(t_model).cast<Thermostat>();
+        resetThermostat();
+        return setPointer(OS_ThermalZoneFields::ThermostatName, thermostatClone.handle());
+      }
+    } else {
+      resetThermostat();
+      return setPointer(OS_ThermalZoneFields::ThermostatName, thermostat.handle());
+    }
   }
 
   void ThermalZone_Impl::resetThermostat()
   {
-    if( boost::optional<Thermostat> thermostat = this->thermostat() )
-    {
+    if( boost::optional<Thermostat> thermostat = this->thermostat() ) {
       thermostat->remove();
     }
 
@@ -1019,14 +1032,29 @@ namespace detail {
 
   bool ThermalZone_Impl::setZoneControlHumidistat(const ZoneControlHumidistat & humidistat)
   {
-    resetZoneControlHumidistat();
-    return setPointer(OS_ThermalZoneFields::HumidistatName, humidistat.handle());
+    auto t_model = model();
+
+    if( t_model != humidistat.model() ) {
+      return false;
+    }
+
+    if( auto currentZone = humidistat.controlledZone() ) {
+      if( currentZone->handle() == handle() ) {
+        return true;
+      } else {
+        auto humidistatClone = humidistat.clone(t_model).cast<ZoneControlHumidistat>();
+        resetZoneControlHumidistat();
+        return setPointer(OS_ThermalZoneFields::HumidistatName, humidistatClone.handle());
+      }
+    } else {
+      resetZoneControlHumidistat();
+      return setPointer(OS_ThermalZoneFields::HumidistatName, humidistat.handle());
+    }
   }
 
   void ThermalZone_Impl::resetZoneControlHumidistat()
   {
-    if( boost::optional<ZoneControlHumidistat> humidistat = this->zoneControlHumidistat() )
-    {
+    if( boost::optional<ZoneControlHumidistat> humidistat = this->zoneControlHumidistat() ) {
       humidistat->remove();
     }
 
@@ -1929,6 +1957,9 @@ namespace detail {
     // the original zone and the original node.
     tz.setString(OS_ThermalZoneFields::ZoneAirNodeName,"");
 
+    tz.setString(OS_ThermalZoneFields::ThermostatName,"");
+    tz.setString(OS_ThermalZoneFields::HumidistatName,"");
+
     Node node(model);
     model.connect(tz,tz.zoneAirPort(),node,node.inletPort());
 
@@ -2295,9 +2326,25 @@ namespace detail {
 
   bool ThermalZone_Impl::setZoneControlContaminantController(const ZoneControlContaminantController & contaminantController)
   {
-    resetZoneControlContaminantController();
-    auto tz = getObject<ThermalZone>();
-    return contaminantController.getImpl<detail::ZoneControlContaminantController_Impl>()->setControlledZone(tz);
+    auto t_model = model();
+
+    if( t_model != contaminantController.model() ) {
+      return false;
+    }
+
+    if( auto currentZone = contaminantController.controlledZone() ) {
+      if( currentZone->handle() == handle() ) {
+        return true;
+      } else {
+        auto controllerClone = contaminantController.clone(t_model).cast<ZoneControlContaminantController>();
+        auto tz = getObject<ThermalZone>();
+        return controllerClone.getImpl<detail::ZoneControlContaminantController_Impl>()->setControlledZone(tz);
+      }
+    } else {
+      resetZoneControlContaminantController();
+      auto tz = getObject<ThermalZone>();
+      return contaminantController.getImpl<detail::ZoneControlContaminantController_Impl>()->setControlledZone(tz);
+    }
   }
 
   void ThermalZone_Impl::resetZoneControlContaminantController()

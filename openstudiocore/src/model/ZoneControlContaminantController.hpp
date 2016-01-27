@@ -52,6 +52,8 @@ class MODEL_API ZoneControlContaminantController : public ModelObject {
   /** @name Getters */
   //@{
 
+  boost::optional<ThermalZone> controlledZone() const;
+
   boost::optional<Schedule> carbonDioxideControlAvailabilitySchedule() const;
 
   boost::optional<Schedule> carbonDioxideSetpointSchedule() const;
