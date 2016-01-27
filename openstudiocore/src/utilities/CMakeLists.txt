@@ -200,7 +200,7 @@ set(${target_name}_depends
   litesql
   litesql-util
   miniziplib
-  ${GeographicLib_STATIC}
+  GeographicLib_STATIC
   ${Boost_LIBRARIES}
   #JWD: On Ubuntu 14.04, the thread lib is included in Boost_LIBRARIES
   # ${CMAKE_THREAD_LIBS}
