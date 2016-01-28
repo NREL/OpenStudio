@@ -72,7 +72,7 @@ In CMake check the following:
 - BUILD\_PACKAGE
 - BUILD\_SWIG
 - CMAKE\_BUILD\_TYPE = Release
-- CMAKE\_BINARY\_DEB
+- CPACK\_BINARY\_DEB
 
 In CMake type the following:
 
