@@ -2730,10 +2730,21 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
       // Type 
 
       QDomElement znSysTypeElement = parentElement.firstChildElement("Type");
+      QDomElement znSysFanCtrlElement = parentElement.firstChildElement("FanCtrl");
 
       if( znSysTypeElement.text().compare("FPFC",Qt::CaseInsensitive) == 0 || 
           znSysTypeElement.text().compare("PTHP",Qt::CaseInsensitive) == 0 ||
-          znSysTypeElement.text().compare("WSHP",Qt::CaseInsensitive) == 0 )
+          znSysTypeElement.text().compare("WSHP",Qt::CaseInsensitive) == 0 ||
+          ( 
+            istringEqual(znSysTypeElement.text().toStdString(),"VRF") && 
+            istringEqual(znSysFanCtrlElement.text().toStdString(),"Continuous") && 
+            istringEqual(fanControlMethodElement.text().toStdString(),"TwoSpeed") 
+          ) ||
+          ( 
+            istringEqual(znSysTypeElement.text().toStdString(),"VRF") && 
+            istringEqual(znSysFanCtrlElement.text().toStdString(),"Cycling")
+          )
+        )
       {
         model::Schedule schedule = alwaysOnSchedule(model);
 
