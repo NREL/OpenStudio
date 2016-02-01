@@ -1887,7 +1887,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     
     # settle in, it's gonna be a bumpy ride...
     Dir.chdir("#{radPath}")
-    print_statement("Radiance run directory: '#{Dir.pwd}'", runner)
+    print_statement("Radiance working directory: '#{Dir.pwd}'", runner)
 
     epwFile = OpenStudio::OptionalEpwFile.new(OpenStudio::EpwFile.new(epw_path))
 
