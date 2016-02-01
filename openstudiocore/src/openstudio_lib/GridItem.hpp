@@ -689,6 +689,10 @@ class HorizontalBranchGroupItem : public GridItem
                              model::Mixer & mixer,
                              QGraphicsItem * parent = nullptr );
 
+  HorizontalBranchGroupItem( model::Splitter & splitter,
+                             std::vector<model::Node> & supplyOutletNodes,
+                             QGraphicsItem * parent ); 
+
   void layout();
 
   void setShowDropZone(bool showDropZone);
@@ -704,8 +708,6 @@ class HorizontalBranchGroupItem : public GridItem
   private:
 
   model::Splitter m_splitter;
-
-  model::Mixer m_mixer;
 
   std::vector<HorizontalBranchItem *> m_branchItems;
 
@@ -869,19 +871,23 @@ class SupplySideItem : public GridItem
 
   HorizontalBranchGroupItem * m_mainBranchGroupItem;
 
-  OASystemItem * m_oaSystemItem;
-
   TwoFourNodeItem * m_inletNodeItem;
 
   TwoFourNodeItem * m_outletNodeItem;  
 
-  ThreeFourStraightItem * m_rightElbowItem;
+  TwoFourNodeItem * m_outletNodeItem2;  
 
   OneFourStraightItem * m_leftElbowItem;
 
   VerticalBranchItem * m_leftVerticalItem;
 
+  ThreeFourStraightItem * m_rightElbowItem;
+
+  ThreeFourStraightItem * m_rightElbowItem2;
+
   VerticalBranchItem * m_rightVerticalItem;
+
+  VerticalBranchItem * m_rightVerticalItem2;
 
   SupplySplitterItem * m_splitterItem;
   
@@ -892,6 +898,8 @@ class SupplySideItem : public GridItem
   OneThreeStraightItem * m_inletSpacer;
 
   OneThreeStraightItem * m_outletSpacer;
+
+  HorizontalBranchItem * m_dualDuctHorizontalSpace;
 };
 
 class SystemCenterItem : public GridItem
