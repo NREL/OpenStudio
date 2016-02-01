@@ -263,7 +263,8 @@ class OneThreeStraightItem : public GridItem
 {
   public:
 
-  OneThreeStraightItem(QGraphicsItem * parent = nullptr );
+  // if dual is true there are two parallel lines
+  OneThreeStraightItem(QGraphicsItem * parent = nullptr, bool dualDuct = false);
 
   void paint(QPainter *painter, 
              const QStyleOptionGraphicsItem *option, 
@@ -272,6 +273,10 @@ class OneThreeStraightItem : public GridItem
   protected:
 
   void mouseReleaseEvent( QGraphicsSceneMouseEvent * event ) override;
+
+  private:
+
+  bool m_dualDuct;
 };
 
 class SupplyPlenumItem : public GridItem
@@ -756,12 +761,43 @@ class ReverseVerticalBranchItem : public GridItem
   std::vector<FourTwoStraightItem *> m_paddingItems;
 };
 
+// This is the thing on the demand side of a dual duct
+// where the second stream intersects the first forming a tee.
+// The streams are not physically combined but visual they combine,
+// into the same grid items (ie one grid item show both streams).
+class DualDuctTee : public GridItem
+{
+  public:
+
+  DualDuctTee(QGraphicsItem * parent = nullptr);
+
+  protected:
+
+  void paint(QPainter *painter, 
+             const QStyleOptionGraphicsItem *option, 
+             QWidget *widget = nullptr) override;
+};
+
+// This is the elbow used on the demand side of a dual duct
+class TwoThreeStraightItem2 : public GridItem
+{
+  public:
+
+  TwoThreeStraightItem2(QGraphicsItem * parent = nullptr);
+
+  protected:
+
+  void paint(QPainter *painter, 
+             const QStyleOptionGraphicsItem *option, 
+             QWidget *widget = nullptr) override;
+};
+
 class DemandSideItem : public GridItem
 {
   public:
 
   DemandSideItem( QGraphicsItem * parent,
-                  model::Node demandInletNode, 
+                  std::vector<model::Node> demandInletNodes, 
                   model::Node demandOutletNode );
 
   void paint(QPainter *painter, 
@@ -778,7 +814,7 @@ class DemandSideItem : public GridItem
 
   private:
 
-  model::Node m_demandInletNode;
+  std::vector<model::Node> m_demandInletNodes;
 
   model::Node m_demandOutletNode;
 
@@ -792,7 +828,11 @@ class DemandSideItem : public GridItem
 
   MixerItem * m_mixerItem;
 
-  TwoThreeStraightItem * m_rightElbow;
+  // A TwoFourStraightItem if single duct
+  // or a TwoFourStraightItem2 if a dual duct
+  GridItem * m_rightElbow;
+
+  DualDuctTee * m_rightElbow2;
 
   OneTwoStraightItem * m_leftElbow;
 
@@ -800,7 +840,11 @@ class DemandSideItem : public GridItem
 
   VerticalBranchItem * m_rightVertical;
 
+  VerticalBranchItem * m_rightVertical2;
+
   TwoFourNodeItem * m_inletNode;
+
+  TwoFourNodeItem * m_inletNode2;
 
   TwoFourNodeItem * m_outletNode;
 
@@ -911,6 +955,10 @@ class SystemCenterItem : public GridItem
   void paint(QPainter *painter, 
              const QStyleOptionGraphicsItem *option, 
              QWidget *widget = nullptr) override;
+
+  private:
+
+  bool m_dualDuct;
 };
 
 class SystemItem : public GridItem
