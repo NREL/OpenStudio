@@ -224,12 +224,15 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         OpenStudio::Path.new("strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin")
       end
       print_statement("Adding path for local perl: " + perlpath.to_s, runner)
-      ENV["PATH"] = ENV["PATH"] + ";" + path + ";" + perlpath.to_s
+      ENV["PATH"] = path + ";" + ENV["PATH"] + ";" + perlpath.to_s
       ENV["RAYPATH"] = path + ";" + raypath + ";."
     else
-      ENV["PATH"] = ENV["PATH"] + ":" + path
+      ENV["PATH"] = path + ":" + ENV["PATH"]
       ENV["RAYPATH"] = path + ":" + raypath + ":."
     end
+    
+    print_statement("Radiance bin: #{path}", runner)
+    print_statement("Radiance lib: #{raypath}", runner)
 
     if Dir.glob(epw2weapath + programExtension).empty?
       runner.registerError("Cannot find epw2wea tool in radiance installation at '#{radiancePath}'. You may need to install a newer version of Radiance.")
