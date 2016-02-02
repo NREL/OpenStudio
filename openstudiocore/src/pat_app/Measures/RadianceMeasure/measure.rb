@@ -10,7 +10,7 @@ require 'date'
 require 'json'
 require 'erb'
 require 'matrix'
-
+require 'open3'
 
 class Array
   def average 
@@ -208,7 +208,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     radiancePath = co.getTools().getLastByName("rad").localBinPath.parent_path
     path = OpenStudio::Path.new(radiancePath).to_s
     raypath = (OpenStudio::Path.new(radiancePath).parent_path() / 
-    OpenStudio::Path.new('lib')).to_s()
+    OpenStudio::Path.new('lib')).to_s()   
 
     epw2weapath = (OpenStudio::Path.new(radiancePath) / OpenStudio::Path.new('epw2wea')).to_s
 
@@ -231,9 +231,12 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       ENV["RAYPATH"] = path + ":" + raypath + ":."
     end
     
-    print_statement("Radiance bin: #{path}", runner)
-    print_statement("Radiance lib: #{raypath}", runner)
-
+    # Radiance version detection and environment reportage                 
+    ver = Open3.capture2("#{path}/rcontrib -version")
+    print_statement("Radiance version info: #{ver[0]}", runner)
+    print_statement("Radiance binary dir: #{path}", runner)
+    print_statement("Radiance library dir: #{raypath}", runner)
+    
     if Dir.glob(epw2weapath + programExtension).empty?
       runner.registerError("Cannot find epw2wea tool in radiance installation at '#{radiancePath}'. You may need to install a newer version of Radiance.")
       exit false
