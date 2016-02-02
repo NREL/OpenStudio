@@ -558,7 +558,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
   }
 
   if( ! autosize() ) {
-    auto element = vrfSysElement.firstChildElement("ClgCapRtd");
+    auto element = vrfSysElement.firstChildElement("ClgCapGrossRtd");
     bool ok;
     auto value = element.text().toDouble(&ok);
     if( ok ) {
@@ -577,7 +577,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
   }
 
   if( ! autosize() ) {
-    auto element = vrfSysElement.firstChildElement("HtgCapRtd");
+    auto element = vrfSysElement.firstChildElement("HtgCapGrossRtd");
     bool ok;
     auto value = element.text().toDouble(&ok);
     if( ok ) {
@@ -7413,6 +7413,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
         if( istringEqual(fanCtrlElement.text().toStdString(),"Continuous") )
         {
           auto schedule = model.alwaysOnDiscreteSchedule();
+          vrfTerminal.setSupplyAirFanOperatingModeSchedule(schedule);
+        } else {
+          auto schedule = model.alwaysOffDiscreteSchedule();
           vrfTerminal.setSupplyAirFanOperatingModeSchedule(schedule);
         }
       }
