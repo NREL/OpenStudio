@@ -194,7 +194,7 @@ set(project_directories
   airflow
   isomodel
   osversion
-  ruleset
+  measure
   #runmanager/lib
   #analysis
   #project
@@ -943,7 +943,7 @@ set(all_lib_targets
   openstudio_utilities
   openstudio_energyplus
   #openstudio_analysisdriver
-  openstudio_ruleset
+  openstudio_measure
   #openstudio_analysis
   openstudio_radiance
   openstudio_gbxml

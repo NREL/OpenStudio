@@ -1,46 +1,39 @@
-set(target_name openstudio_ruleset)
+set(target_name openstudio_measure)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/)
 
 set(${target_name}_src
   mainpage.hpp
-  ModelUserScript.cpp
-  ModelUserScript.hpp
+  EmbeddedRubyMeasureInfoGetter.hpp
+  EnergyPlusMeasure.cpp
+  EnergyPlusMeasure.hpp
+  MeasureAPI.hpp
+  ModelMeasure.cpp
+  ModelMeasure.hpp
   OSArgument.cpp
   OSArgument.hpp
+  OSMeasure.cpp
+  OSMeasure.hpp
   OSResult.cpp
   OSResult.hpp
   OSRunner.cpp
   OSRunner.hpp
-  ReportingUserScript.cpp
-  ReportingUserScript.hpp
-  RubyUserScriptArgumentGetter.cpp
-  RubyUserScriptArgumentGetter.hpp
-  RubyUserScriptInfoGetter.cpp
-  RubyUserScriptInfoGetter.hpp
-  RulesetAPI.hpp
-  TranslationUserScript.cpp
-  TranslationUserScript.hpp
-  UserScript.cpp
-  UserScript.hpp
-  UtilityUserScript.cpp
-  UtilityUserScript.hpp
-  WorkspaceUserScript.cpp
-  WorkspaceUserScript.hpp
-  EmbeddedRubyUserScriptArgumentGetter.hpp
-  EmbeddedRubyUserScriptInfoGetter.hpp
+  ReportingMeasure.cpp
+  ReportingMeasure.hpp
+  RubyMeasureInfoGetter.cpp
+  RubyMeasureInfoGetter.hpp
 )
 
 set(${target_name}_test_src
-  test/RulesetFixture.hpp
-  test/RulesetFixture.cpp
-  test/UserScript_GTest.cpp
+  test/MeasureFixture.hpp
+  test/MeasureFixture.cpp
+  test/OSMeasure_GTest.cpp
   test/OSArgument_GTest.cpp
   test/EmbeddedRuby_GTest.cpp
 )
 
 set(${target_name}_swig_src
-  Ruleset.i
+  Measure.i
 )
 
 set(${target_name}_depends
@@ -82,7 +75,7 @@ CREATE_SRC_GROUPS("${${target_name}_test_src}")
 CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 
 CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends};${RUBY_LIBRARY}")
-MAKE_SWIG_TARGET(OpenStudioRuleset ruleset "${CMAKE_CURRENT_SOURCE_DIR}/Ruleset.i" "${${target_name}_swig_src}" ${target_name} OpenStudioOSVersion)
+MAKE_SWIG_TARGET(OpenStudioMeasure measure "${CMAKE_CURRENT_SOURCE_DIR}/Measure.i" "${${target_name}_swig_src}" ${target_name} OpenStudioOSVersion)
 
 if(BUILD_TESTING)
   add_dependencies("${target_name}_tests"
@@ -99,7 +92,7 @@ if(BUILD_TESTING)
     "ruby_OpenStudioModelGeometry"
     "ruby_OpenStudioModelHVAC"
     "ruby_OpenStudioEnergyPlus"
-    "ruby_OpenStudioRuleset"
+    "ruby_OpenStudioMeasure"
   )
   
   if(APPLE)
