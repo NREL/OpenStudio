@@ -30,55 +30,55 @@
 namespace openstudio {
 namespace measure {
 
-  RubyUserScriptInfo::RubyUserScriptInfo(const std::string& error)
+  OSMeasureInfo::OSMeasureInfo(const std::string& error)
     : m_error(error)
   {}
 
-  RubyUserScriptInfo::RubyUserScriptInfo(const MeasureType& measureType,
-                                         const std::string& className,
-                                         const std::string& name,
-                                         const std::string& description,
-                                         const std::string& modelerDescription,
-                                         const std::vector<OSArgument>& arguments)
+  OSMeasureInfo::OSMeasureInfo(const MeasureType& measureType,
+                               const std::string& className,
+                               const std::string& name,
+                               const std::string& description,
+                               const std::string& modelerDescription,
+                               const std::vector<OSArgument>& arguments)
     : m_measureType(measureType), m_className(className), m_name(name), m_description(description), m_modelerDescription(modelerDescription), m_arguments(arguments)
   {}
 
-  boost::optional<std::string> RubyUserScriptInfo::error() const
+  boost::optional<std::string> OSMeasureInfo::error() const
   {
     return m_error;
   }
 
-  MeasureType RubyUserScriptInfo::measureType() const
+  MeasureType OSMeasureInfo::measureType() const
   {
     return m_measureType;
   }
 
-  std::string RubyUserScriptInfo::className() const
+  std::string OSMeasureInfo::className() const
   {
     return m_className;
   }
 
-  std::string RubyUserScriptInfo::name() const
+  std::string OSMeasureInfo::name() const
   {
     return m_name;
   }
 
-  std::string RubyUserScriptInfo::description() const
+  std::string OSMeasureInfo::description() const
   {
     return m_description;
   }
 
-  std::string RubyUserScriptInfo::modelerDescription() const
+  std::string OSMeasureInfo::modelerDescription() const
   {
     return m_modelerDescription;
   }
 
-  std::vector<OSArgument> RubyUserScriptInfo::arguments() const
+  std::vector<OSArgument> OSMeasureInfo::arguments() const
   {
     return m_arguments;
   }
 
-  bool RubyUserScriptInfo::update(BCLMeasure& measure) const
+  bool OSMeasureInfo::update(BCLMeasure& measure) const
   {
     bool result = false;
 
@@ -175,7 +175,7 @@ namespace measure {
     return result;
   }
 
-  RubyUserScriptInfo RubyMeasureInfoGetter::getInfo(
+  OSMeasureInfo OSMeasureInfoGetter::getInfo(
     const BCLMeasure& measure,
     const boost::optional<model::Model>& model,
     const boost::optional<Workspace>& workspace)
@@ -278,7 +278,7 @@ std::string infoExtractorRubyFunction() {
   ss << "    }" << std::endl;
   ss << "  end" << std::endl;
   ss << std::endl;
-  ss << "  return OpenStudio::Ruleset::RubyUserScriptInfo.new(measureType, className, name, description, modelerDescription, args)" << std::endl;
+  ss << "  return OpenStudio::Ruleset::OSMeasureInfo.new(measureType, className, name, description, modelerDescription, args)" << std::endl;
   ss << "end" << std::endl;
   return ss.str();
 }

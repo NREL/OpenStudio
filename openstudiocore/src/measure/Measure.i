@@ -1,5 +1,5 @@
-#ifndef RULESET_I
-#define RULESET_I
+#ifndef MEASURE_I
+#define MEASURE_I
 
 #ifdef SWIGPYTHON
 %module openstudioruleset
@@ -9,7 +9,7 @@
 #define UTILITIES_API
 #define MODEL_API
 #define STANDARDSINTERFACE_API
-#define RULESET_API
+#define MEASURE_API
 
 %include <utilities/core/CommonInclude.i>
 %import <utilities/core/CommonImport.i>
@@ -18,20 +18,20 @@
 
 %ignore openstudio::detail;
 %ignore openstudio::model::detail;
-%ignore openstudio::ruleset::detail;
+%ignore openstudio::measure::detail;
 
 %{
-  #include <ruleset/ModelUserScript.hpp>
-  #include <ruleset/OSArgument.hpp>
-  #include <ruleset/OSResult.hpp>
-  #include <ruleset/OSRunner.hpp>
-  #include <ruleset/ReportingUserScript.hpp>
-  #include <ruleset/RubyUserScriptArgumentGetter.hpp>
-  #include <ruleset/RubyUserScriptInfoGetter.hpp>
-  #include <ruleset/TranslationUserScript.hpp>
-  #include <ruleset/UserScript.hpp>
-  #include <ruleset/UtilityUserScript.hpp>
-  #include <ruleset/WorkspaceUserScript.hpp>
+  #include <measure/ModelOSMeasure.hpp>
+  #include <measure/OSArgument.hpp>
+  #include <measure/OSResult.hpp>
+  #include <measure/OSRunner.hpp>
+  #include <measure/ReportingOSMeasure.hpp>
+  #include <measure/RubyUserScriptArgumentGetter.hpp>
+  #include <measure/RubyMeasureInfoGetter.hpp>
+  #include <measure/TranslationOSMeasure.hpp>
+  #include <measure/OSMeasure.hpp>
+  #include <measure/UtilityOSMeasure.hpp>
+  #include <measure/WorkspaceOSMeasure.hpp>
 
   #include <model/Component.hpp>
   #include <model/ConcreteModelObjects.hpp>
@@ -41,20 +41,20 @@
 
   using namespace openstudio;
   using namespace openstudio::model;
-  using namespace openstudio::ruleset;
+  using namespace openstudio::measure;
 %}
 
 //user scripts
-%ignore std::vector<openstudio::ruleset::OSArgument>::vector(size_type);
-%ignore std::vector<openstudio::ruleset::OSArgument>::resize(size_type);
-%template(OSArgumentVector) std::vector<openstudio::ruleset::OSArgument>;
-%template(OptionalOSArgument) boost::optional<openstudio::ruleset::OSArgument>;
-%template(OptionalOSResult) boost::optional<openstudio::ruleset::OSResult>;
-%template(OSArgumentMap) std::map<std::string, openstudio::ruleset::OSArgument>;
+%ignore std::vector<openstudio::measure::OSArgument>::vector(size_type);
+%ignore std::vector<openstudio::measure::OSArgument>::resize(size_type);
+%template(OSArgumentVector) std::vector<openstudio::measure::OSArgument>;
+%template(OptionalOSArgument) boost::optional<openstudio::measure::OSArgument>;
+%template(OptionalOSResult) boost::optional<openstudio::measure::OSResult>;
+%template(OSArgumentMap) std::map<std::string, openstudio::measure::OSArgument>;
 
-%template(UserScriptInfo) std::pair<openstudio::path,std::vector<openstudio::ruleset::OSArgument> >;
-%template(UserScriptInfoVector) std::vector< std::pair<openstudio::path, std::vector<openstudio::ruleset::OSArgument> > >;
-%template(FolderPathToUserScriptsInfoMap) std::map<openstudio::path,std::vector< std::pair<openstudio::path, std::vector<openstudio::ruleset::OSArgument> > > >;
+%template(UserScriptInfo) std::pair<openstudio::path,std::vector<openstudio::measure::OSArgument> >;
+%template(UserScriptInfoVector) std::vector< std::pair<openstudio::path, std::vector<openstudio::measure::OSArgument> > >;
+%template(FolderPathToUserScriptsInfoMap) std::map<openstudio::path,std::vector< std::pair<openstudio::path, std::vector<openstudio::measure::OSArgument> > > >;
 
 %feature("director") UserScript;
 %feature("director") ModelUserScript;
@@ -64,17 +64,15 @@
 %feature("director") ReportingUserScript;
 %feature("director") OSRunner;
 
-%include <ruleset/OSArgument.hpp>
-%include <ruleset/OSResult.hpp>
-%include <ruleset/OSRunner.hpp>
-%include <ruleset/UserScript.hpp>
-%include <ruleset/ModelUserScript.hpp>
-%include <ruleset/WorkspaceUserScript.hpp>
-%include <ruleset/TranslationUserScript.hpp>
-%include <ruleset/UtilityUserScript.hpp>
-%include <ruleset/ReportingUserScript.hpp>
+%include <measure/OSArgument.hpp>
+%include <measure/OSResult.hpp>
+%include <measure/OSRunner.hpp>
+%include <measure/OSMeasure.hpp>
+%include <measure/ModelMeasure.hpp>
+%include <measure/EnergyPlusMeasure.hpp>
+%include <measure/ReportingMeasure.hpp>
 
-%extend openstudio::ruleset::OSArgument {
+%extend openstudio::measure::OSArgument {
   std::string __str__() {
     std::ostringstream os;
     os << *self;
@@ -84,18 +82,15 @@
 
 #if defined SWIGRUBY
 
-  %ignore RubyUserScriptArgumentGetter;
   %ignore RubyUserScripInfoGetter;
 
   // Abstract class. Just need static method.
-  %include <ruleset/RubyUserScriptArgumentGetter.hpp>
-  %include <ruleset/RubyUserScriptInfoGetter.hpp>
+  %include <measure/RubyMeasureInfoGetter.hpp>
 
   %init %{
-    rb_eval_string("OpenStudio::Ruleset.instance_eval { def getArguments(measure,model=OpenStudio::Model::OptionalModel.new,workspace=OpenStudio::OptionalWorkspace.new) eval(OpenStudio::Ruleset::argumentExtractorRubyFunction); return argumentExtractor(measure,OpenStudio::Model::OptionalModel.new(model),OpenStudio::OptionalWorkspace.new(workspace)); end }");
     rb_eval_string("OpenStudio::Ruleset.instance_eval { def getInfo(measure,model=OpenStudio::Model::OptionalModel.new,workspace=OpenStudio::OptionalWorkspace.new) eval(OpenStudio::Ruleset::infoExtractorRubyFunction); return infoExtractor(measure,OpenStudio::Model::OptionalModel.new(model),OpenStudio::OptionalWorkspace.new(workspace)); end }");
   %}
 
 #endif
 
-#endif // RULESET_I
+#endif // MEASURE_I

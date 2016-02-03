@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef RULESET_OSRUNNER_HPP
-#define RULESET_OSRUNNER_HPP
+#ifndef MEASURE_OSRUNNER_HPP
+#define MEASURE_OSRUNNER_HPP
 
-#include "RulesetAPI.hpp"
+#include "MeasureAPI.hpp"
 
 #include "OSResult.hpp"
 
@@ -43,14 +43,14 @@ namespace model {
   class ModelObject;
 }
 
-namespace ruleset {
+namespace measure {
 
 class OSArgument;
-class UserScript;
+class OSMeasure;
 
-/** OSRunner is a concrete base class for application-specific classes that run \link UserScript
- *  UserScripts\endlink. */
-class RULESET_API OSRunner {
+/** OSRunner is a concrete base class for application-specific classes that run \link OSMeasure
+ *  OSMeasures\endlink. */
+class MEASURE_API OSRunner {
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -63,10 +63,10 @@ class RULESET_API OSRunner {
   /** @name Getters and Queries */
   //@{
 
-  /** Returns the OSResult for the last UserScript run by this OSRunner. (prepareForUserScriptRun
+  /** Returns the OSResult for the last OSMeasure run by this OSRunner. (prepareForMeasureRun
    *  should be called prior to each run to ensure that result() corresponds to a single script, and
    *  is not instead a running result over multiple scripts. One way to ensure that this happens is
-   *  to call the default version of run in ModelUserScript, etc. at the beginning of any particular
+   *  to call the default version of run in ModelMeasure, etc. at the beginning of any particular
    *  run method.) */
   OSResult result() const;
 
@@ -98,28 +98,28 @@ class RULESET_API OSRunner {
    *  implementation simply creates a map, with no information added, from arguments. */
   virtual std::map<std::string, OSArgument> getUserInput(std::vector<OSArgument>& arguments) const;
 
-  /** Initializes OSRunner for capturing data on a particular userScript. Replaces result
-   *  with a default-constructed result, and keeps the userScript name for use in log messages.
-   *  Should be called at the beginning of every UserScript. Is called by the UserScript C++
+  /** Initializes OSRunner for capturing data on a particular measure. Replaces result
+   *  with a default-constructed result, and keeps the measure name for use in log messages.
+   *  Should be called at the beginning of every OSMeasure. Is called by the OSMeasure C++
    *  classes' run methods. */
-  virtual void prepareForUserScriptRun(const UserScript& userScript);
+  virtual void prepareForMeasureRun(const OSMeasure& measure);
 
-  /** Registers error message with result, and sets result value to Fail. UserScripts
+  /** Registers error message with result, and sets result value to Fail. OSMeasures
    *  should return false after calling this method. */
   virtual void registerError(const std::string& message);
 
   /** Registers warning message with result. Base class returns true. Derived classes
-   *  may choose to present a prompt to the user. The UserScript should exit (return false) if
+   *  may choose to present a prompt to the user. The OSMeasure should exit (return false) if
    *  false is returned. */
   virtual bool registerWarning(const std::string& message);
 
   /** Registers info message with result. Base class returns true. Derived classes
-   *  may choose to present a prompt to the user. The UserScript should exit (return false) if
+   *  may choose to present a prompt to the user. The OSMeasure should exit (return false) if
    *  false is returned. */
   virtual bool registerInfo(const std::string& message);
 
   /** Sets result value to NA, and registers a corresponding info message. In most circumstances,
-   *  UserScripts should return true after calling this method. */
+   *  OSMeasures should return true after calling this method. */
   virtual void registerAsNotApplicable(const std::string& message);
 
   /** Sets the result initial condition to message. */
@@ -193,7 +193,7 @@ class RULESET_API OSRunner {
    *  user_arguments, and if all required script_arguments have been set or have defaults
    *  in user_arguments. Otherwise, returns false and \link registerError registers an
    *  error\endlink if there are any type mismatches, or if any required or defaulted
-   *  arguments are missing (entirely, or their values are not set). All other discrepencies
+   *  arguments are missing (entirely, or their values are not set). All other discrepancies
    *  are \link registerWarning logged as warnings\endlink. */
   bool validateUserArguments(const std::vector<OSArgument>& script_arguments,
                              const std::map<std::string, OSArgument>& user_arguments);
@@ -292,7 +292,7 @@ class RULESET_API OSRunner {
   void resetLastEpwFilePath();
 
  private:
-  REGISTER_LOGGER("openstudio.ruleset.OSRunner");
+  REGISTER_LOGGER("openstudio.measure.OSRunner");
 
   OSResult m_result;
   std::string m_measureName;
@@ -309,7 +309,7 @@ class RULESET_API OSRunner {
 
 };
 
-} // ruleset
+} // measure
 } // openstudio
 
-#endif // RULESET_OSRUNNER_HPP
+#endif // MEASURE_OSRUNNER_HPP

@@ -18,7 +18,7 @@
  **********************************************************************/
 
 namespace openstudio {
-namespace ruleset {
+namespace measure {
 
 /** \mainpage OpenStudio %Ruleset 
  *

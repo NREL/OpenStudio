@@ -1,17 +1,17 @@
-#ifndef RULESET_RULESETAPI_HPP
-#define RULESET_RULESETAPI_HPP
+#ifndef MEASURE_MEASUREAPI_HPP
+#define MEASURE_MEASUREAPI_HPP
 
 #if _WIN32 || _MSC_VER
 
-#ifdef openstudio_ruleset_EXPORTS
-#define RULESET_API __declspec(dllexport)
-#define RULESET_TEMPLATE_EXT 
+#ifdef openstudio_measure_EXPORTS
+#define MEASURE_API __declspec(dllexport)
+#define MEASURE_TEMPLATE_EXT 
 #else
-#define RULESET_API __declspec(dllimport)
-#define RULESET_TEMPLATE_EXT extern
+#define MEASURE_API __declspec(dllimport)
+#define MEASURE_TEMPLATE_EXT extern
 #endif
 #else
-#define RULESET_API
+#define MEASURE_API
 #endif
 
 #endif

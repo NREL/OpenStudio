@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include "WorkspaceUserScript.hpp"
+#include "EnergyPlusMeasure.hpp"
 
 #include "OSArgument.hpp"
 #include "OSRunner.hpp"
@@ -25,22 +25,22 @@
 #include "../utilities/idf/Workspace.hpp"
 
 namespace openstudio {
-namespace ruleset {
+namespace measure {
 
-WorkspaceUserScript::~WorkspaceUserScript() {}
+EnergyPlusMeasure::~EnergyPlusMeasure() {}
 
-std::vector<UserScriptArgument> WorkspaceUserScript::arguments(const openstudio::Workspace& workspace) const
+std::vector<UserScriptArgument> EnergyPlusMeasure::arguments(const openstudio::Workspace& workspace) const
 {
   return UserScriptArgumentVector();
 }
 
-bool WorkspaceUserScript::run(openstudio::Workspace& workspace,
-                              OSRunner& runner,
-                              const std::map<std::string, OSArgument>& user_arguments) const
+bool EnergyPlusMeasure::run(openstudio::Workspace& workspace,
+                            OSRunner& runner,
+                            const std::map<std::string, OSArgument>& user_arguments) const
 {
-  runner.prepareForUserScriptRun(*this);
+  runner.prepareForMeasureRun(*this);
   return true;
 }
 
-} // ruleset
+} // measure
 } // openstudio

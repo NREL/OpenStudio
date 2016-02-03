@@ -20,7 +20,7 @@
 #include "OSRunner.hpp"
 
 #include "OSArgument.hpp"
-#include "UserScript.hpp"
+#include "OSMeasure.hpp"
 
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/WorkspaceObject.hpp"
@@ -30,7 +30,7 @@
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
-namespace ruleset {
+namespace measure {
 
 OSRunner::OSRunner()
 {}
@@ -114,11 +114,11 @@ std::map<std::string, OSArgument> OSRunner::getUserInput(std::vector<OSArgument>
   return convertOSArgumentVectorToMap(arguments);
 }
 
-void OSRunner::prepareForUserScriptRun(const UserScript& userScript) {
+void OSRunner::prepareForMeasureRun(const OSMeasure& measure) {
   m_result = OSResult();
-  m_measureName = userScript.name();
+  m_measureName = measure.name();
   std::stringstream ss;
-  ss << "openstudio.ruleset." << m_measureName;
+  ss << "openstudio.measure." << m_measureName;
   m_channel = ss.str();
 }
 
@@ -797,5 +797,5 @@ void OSRunner::resetLastEpwFilePath()
   m_lastEpwFile.reset();
 }
 
-} // ruleset
+} // measure
 } // openstudio

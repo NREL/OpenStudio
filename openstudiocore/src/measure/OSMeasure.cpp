@@ -17,33 +17,33 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include "UserScript.hpp"
+#include "OSMeasure.hpp"
 
 namespace openstudio {
-namespace ruleset {
+namespace measure {
 
-UserScript::~UserScript()
+OSMeasure::~OSMeasure()
 {}
 
-std::string UserScript::name() const{
+std::string OSMeasure::name() const{
   return "";
 }
 
-std::string UserScript::description() const{
+std::string OSMeasure::description() const{
   return "";
 }
 
-std::string UserScript::modeler_description() const{
+std::string OSMeasure::modeler_description() const{
   return "";
 }
 
-bool UserScript::registerWithSketchUp() const {
+bool OSMeasure::registerWithSketchUp() const {
   return false;
 }
 
-bool UserScript::registerWithApplication() const {
+bool OSMeasure::registerWithApplication() const {
   return false;
 }
 
-} // ruleset
+} // measure
 } // openstudio

@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef RULESET_MODELUSERSCRIPT_HPP
-#define RULESET_MODELUSERSCRIPT_HPP
+#ifndef MEASURE_MODELMEASURE_HPP
+#define MEASURE_MODELMEASURE_HPP
 
-#include "RulesetAPI.hpp"
-#include "UserScript.hpp"
+#include "MeasureAPI.hpp"
+#include "OSMeasure.hpp"
 
 #include "../utilities/core/Logger.hpp"
 
@@ -31,15 +31,15 @@ namespace model {
   class Model;
 }
 
-namespace ruleset {
+namespace measure {
 
-/** ModelUserScript is an abstract base class for UserScripts that operate on OpenStudio Models. */
-class RULESET_API ModelUserScript : public UserScript {
+/** ModelMeasure is an abstract base class for UserScripts that operate on OpenStudio Models. */
+class MEASURE_API ModelMeasure : public OSMeasure {
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  virtual ~ModelUserScript();
+  virtual ~ModelMeasure();
 
   //@}
   /** @name Getters */
@@ -57,9 +57,9 @@ class RULESET_API ModelUserScript : public UserScript {
   //@{
 
   /** Run the script on the given model with the given runner and user_arguments. The base class
-   *  implementation calls runner.prepareForUserScriptRun(*this) and should be called at the
+   *  implementation calls runner.prepareForMeasureRun(*this) and should be called at the
    *  beginning of derived class implementations of this method. (In C++, that call looks like
-   *  ModelUserScript::run(model, runner, user_arguments). In Ruby that call looks like
+   *  ModelMeasure::run(model, runner, user_arguments). In Ruby that call looks like
    *  super(model, runner, user_arguments). */
   virtual bool run(openstudio::model::Model& model,
                    OSRunner& runner,
@@ -68,13 +68,13 @@ class RULESET_API ModelUserScript : public UserScript {
   //@}
   //
  protected:
-  ModelUserScript() {}
+  ModelMeasure() {}
 
  private:
-  REGISTER_LOGGER("openstudio.ruleset.ModelUserScript");
+  REGISTER_LOGGER("openstudio.measure.ModelMeasure");
 };
 
-} // ruleset
+} // measure
 } // openstudio
 
-#endif // RULESET_MODELUSERSCRIPT_HPP
+#endif // MEASURE_MODELMEASURE_HPP

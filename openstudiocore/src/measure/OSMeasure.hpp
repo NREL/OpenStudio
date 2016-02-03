@@ -17,28 +17,28 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef RULESET_USERSCRIPT_HPP
-#define RULESET_USERSCRIPT_HPP
+#ifndef MEASURE_OSMEASURE_HPP
+#define MEASURE_OSMEASURE_HPP
 
-#include "RulesetAPI.hpp"
+#include "MeasureAPI.hpp"
 
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
-namespace ruleset {
+namespace measure {
 
 class OSArgument;
 class OSRunner;
 
-/** UserScript is an abstract base class for a user script. There are derived types that operate
+/** OSMeasure is an abstract base class for a user script. There are derived types that operate
  *  on OpenStudio Models and EnergyPlus Workspaces. */
-class RULESET_API UserScript {
+class MEASURE_API OSMeasure {
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  virtual ~UserScript();
+  virtual ~OSMeasure();
 
   //@}
   /** @name Getters */
@@ -66,20 +66,20 @@ class RULESET_API UserScript {
   OS_DEPRECATED virtual bool registerWithApplication() const;
 
  protected:
-  UserScript() {}
+  OSMeasure() {}
 
   //@}
  private:
-  REGISTER_LOGGER("openstudio.ruleset.UserScript");
+  REGISTER_LOGGER("openstudio.measure.OSMeasure");
 };
 
-/** \relates UserScript */
-typedef boost::optional<UserScript> OptionalUserScript;
+/** \relates OSMeasure */
+typedef boost::optional<OSMeasure> OptionalOSMeasure;
 
-/** \relates UserScript */
-typedef std::vector<UserScript> UserScriptVector;
+/** \relates OSMeasure */
+typedef std::vector<OSMeasure> OSMeasureVector;
 
-} // ruleset
+} // measure
 } // openstudio
 
-#endif // RULESET_USERSCRIPT_HPP
+#endif // MEASURE_OSMEASURE_HPP

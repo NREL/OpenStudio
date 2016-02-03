@@ -28,7 +28,7 @@
 #include <QDomElement>
 
 namespace openstudio {
-namespace ruleset {
+namespace measure {
 
 OSResult::OSResult()
   : m_value(OSResultValue::Success)
@@ -326,5 +326,5 @@ void OSResult::logMessagesToXml(QDomDocument& doc,
   }
 }
 
-} // ruleset
+} // measure
 } // openstudio

@@ -17,35 +17,35 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef RULESET_EMBEDDEDRUBYUSERSCRIPTINFOGETTER_HPP
-#define RULESET_EMBEDDEDRUBYUSERSCRIPTINFOGETTER_HPP
+#ifndef MEASURE_EMBEDDEDRUBYMEASUREINFOGETTER_HPP
+#define MEASURE_EMBEDDEDRUBYMEASUREINFOGETTER_HPP
 
-#include "RubyUserScriptInfoGetter.hpp"
+#include "RubyMeasureInfoGetter.hpp"
 
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
 
 namespace openstudio {
-namespace ruleset {
+namespace measure {
 
   /** Should only be instantiated in C++ Applications. For an example of how to use this, see
-   *  src/ruleset/test/EmbeddedRuby_GTest.cpp. */
+   *  src/measure/test/EmbeddedRuby_GTest.cpp. */
   template<typename RubyInterpreterType>
-  class EmbeddedRubyUserScriptInfoGetter : public RubyUserScriptInfoGetter {
+  class EmbeddedRubyMeasureInfoGetter : public RubyMeasureInfoGetter {
    public:
-    EmbeddedRubyUserScriptInfoGetter(const std::shared_ptr<RubyInterpreterType>& rubyInterpreter)
+    EmbeddedRubyMeasureInfoGetter(const std::shared_ptr<RubyInterpreterType>& rubyInterpreter)
       : m_rubyInterpreter(rubyInterpreter)
     {
       m_rubyInterpreter->template registerType<openstudio::BCLMeasure>("openstudio::BCLMeasure");
       m_rubyInterpreter->template registerType<openstudio::Workspace>("openstudio::Workspace");
       m_rubyInterpreter->template registerType<openstudio::model::Model>("openstudio::model::Model");
-      //m_rubyInterpreter->template registerType<openstudio::ruleset::OSArgument>("openstudio::ruleset::OSArgument");
-      m_rubyInterpreter->template registerType<openstudio::ruleset::RubyUserScriptInfo>("openstudio::ruleset::RubyUserScriptInfo");
+      //m_rubyInterpreter->template registerType<openstudio::measure::OSArgument>("openstudio::measure::OSArgument");
+      m_rubyInterpreter->template registerType<openstudio::measure::RubyUserScriptInfo>("openstudio::measure::RubyUserScriptInfo");
 
       m_rubyInterpreter->evalString(infoExtractorRubyFunction());
     }
 
-    virtual ~EmbeddedRubyUserScriptInfoGetter() {}
+    virtual ~EmbeddedRubyMeasureInfoGetter() {}
 
     RubyUserScriptInfo getInfo(const BCLMeasure& measure) override {
       return m_rubyInterpreter->template execWithReturn<RubyUserScriptInfo>(
@@ -75,7 +75,7 @@ namespace ruleset {
     std::shared_ptr<RubyInterpreterType> m_rubyInterpreter;
   };
 
-} // ruleset
+} // measure
 } // openstudio
 
-#endif // RULESET_EMBEDDEDRUBYUSERSCRIPTINFOGETTER_HPP
+#endif // MEASURE_EMBEDDEDRUBYMEASUREINFOGETTER_HPP

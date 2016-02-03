@@ -36,7 +36,7 @@
 #include <sstream>
 
 namespace openstudio {
-namespace ruleset {
+namespace measure {
 
 OSArgument::OSArgument(const UUID& uuid,
                        const UUID& versionUUID,
@@ -1361,7 +1361,7 @@ namespace detail {
                                                                      std::bind(&QVariant::toString,std::placeholders::_1))));
         }
         catch (...) {
-          LOG_FREE(Warn,"openstudio.ruleset.OSArgument","Unable to deserialize partial list of choice display names.");
+          LOG_FREE(Warn,"openstudio.measure.OSArgument","Unable to deserialize partial list of choice display names.");
         }
       }
     }
@@ -1395,5 +1395,5 @@ namespace detail {
 
 } // detail
 
-} // ruleset
+} // measure
 } // openstudio

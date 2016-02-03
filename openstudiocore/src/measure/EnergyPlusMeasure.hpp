@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef RULESET_WORKSPACEUSERSCRIPT_HPP
-#define RULESET_WORKSPACEUSERSCRIPT_HPP
+#ifndef MEASURE_ENERGYPLUSMEASURE_HPP
+#define MEASURE_ENERGYPLUSMEASURE_HPP
 
-#include "RulesetAPI.hpp"
-#include "UserScript.hpp"
+#include "MeasureAPI.hpp"
+#include "OSMeasure.hpp"
 
 #include "../utilities/core/Logger.hpp"
 
@@ -29,17 +29,16 @@ namespace openstudio {
 
 class Workspace;
 
-namespace ruleset {
+namespace measure {
 
-/** WorkspaceUserScript is an abstract base class for UserScripts that operate on OpenStudio
- *  Workspaces. Most commonly, WorkspaceUserScripts will be designed to operate on EnergyPlus
- *  IDFs. */
-class RULESET_API WorkspaceUserScript : public UserScript {
+/** EnergyPlusMeasure is an abstract base class for OSMeasures that operate on EnergyPlus
+ *  Workspaces. */
+class MEASURE_API EnergyPlusMeasure : public OSMeasure {
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  virtual ~WorkspaceUserScript();
+  virtual ~EnergyPlusMeasure();
 
   //@}
   /** @name Getters */
@@ -57,9 +56,9 @@ class RULESET_API WorkspaceUserScript : public UserScript {
   //@{
 
   /** Run the script on the given workspace with the given runner and user_arguments. The base
-   *  class implementation calls runner.prepareForUserScriptRun(*this) and should be called at the
+   *  class implementation calls runner.prepareForMeasureRun(*this) and should be called at the
    *  beginning of derived class implementations of this method. (In C++, that call looks like
-   *  WorkspaceUserScript::run(workspace, runner, user_arguments). In Ruby that call looks like
+   *  EnergyPlusMeasure::run(workspace, runner, user_arguments). In Ruby that call looks like
    *  super(workspace, runner, user_arguments). */
   virtual bool run(openstudio::Workspace& workspace,
                    OSRunner& runner,
@@ -68,13 +67,13 @@ class RULESET_API WorkspaceUserScript : public UserScript {
   //@}
  
  protected:
-  WorkspaceUserScript() {}
+   EnergyPlusMeasure() {}
 
  private:
-  REGISTER_LOGGER("openstudio.ruleset.WorkspaceUserScript");
+  REGISTER_LOGGER("openstudio.measure.EnergyPlusMeasure");
 };
 
-} // ruleset
+} // measure
 } // openstudio
 
-#endif // RULESET_WORKSPACEUSERSCRIPT_HPP
+#endif // MEASURE_ENERGYPLUSMEASURE_HPP

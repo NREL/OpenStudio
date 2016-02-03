@@ -14,14 +14,14 @@ set(${target_name}_src
   OSArgument.hpp
   OSMeasure.cpp
   OSMeasure.hpp
+  OSMeasureInfoGetter.cpp
+  OSMeasureInfoGetter.hpp
   OSResult.cpp
   OSResult.hpp
   OSRunner.cpp
   OSRunner.hpp
   ReportingMeasure.cpp
   ReportingMeasure.hpp
-  RubyMeasureInfoGetter.cpp
-  RubyMeasureInfoGetter.hpp
 )
 
 set(${target_name}_test_src

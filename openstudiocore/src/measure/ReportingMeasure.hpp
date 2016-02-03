@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef RULESET_REPORTINGUSERSCRIPT_HPP
-#define RULESET_REPORTINGUSERSCRIPT_HPP
+#ifndef MEASURE_REPORTINGMEASURE_HPP
+#define MEASURE_REPORTINGMEASURE_HPP
 
-#include "RulesetAPI.hpp"
-#include "UserScript.hpp"
+#include "MeasureAPI.hpp"
+#include "OSMeasure.hpp"
 
 #include "../utilities/core/Logger.hpp"
 
@@ -29,15 +29,15 @@ namespace openstudio {
 
   class IdfObject;
 
-namespace ruleset {
+namespace measure {
 
-/** ReportingUserScript is an abstract base class for UserScripts that generate reports. */
-class RULESET_API ReportingUserScript : public UserScript {
+/** ReportingMeasure is an abstract base class for UserScripts that generate reports. */
+class MEASURE_API ReportingMeasure : public OSMeasure {
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  virtual ~ReportingUserScript();
+  virtual ~ReportingMeasure();
 
   //@}
   /** @name Getters */
@@ -55,9 +55,9 @@ class RULESET_API ReportingUserScript : public UserScript {
   //@{
 
   /** Run the script with the given runner and user_arguments. The base class implementation calls
-   *  runner.prepareForUserScriptRun(*this) and should be called at the beginning of derived class
+   *  runner.prepareForMeasureRun(*this) and should be called at the beginning of derived class
    *  implementations of this method. (In C++, that call looks like
-   *  ReportingUserScript::run(runner, user_arguments). In Ruby that call looks like
+   *  ReportingMeasure::run(runner, user_arguments). In Ruby that call looks like
    *  super(runner, user_arguments). */
   virtual bool run(OSRunner& runner,
                    const std::map<std::string, OSArgument>& user_arguments) const;
@@ -73,13 +73,13 @@ class RULESET_API ReportingUserScript : public UserScript {
                                                           const std::map<std::string, OSArgument>& user_arguments) const;
   //@}
  protected:
-  ReportingUserScript() {}
+  ReportingMeasure() {}
 
  private:
-  REGISTER_LOGGER("openstudio.ruleset.ReportingUserScript");
+  REGISTER_LOGGER("openstudio.measure.ReportingMeasure");
 };
 
-} // ruleset
+} // measure
 } // openstudio
 
-#endif // RULESET_REPORTINGUSERSCRIPT_HPP
+#endif // MEASURE_REPORTINGMEASURE_HPP

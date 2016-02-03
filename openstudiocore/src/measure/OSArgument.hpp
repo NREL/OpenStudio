@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef RULESET_OSARGUMENT_HPP
-#define RULESET_OSARGUMENT_HPP
+#ifndef MEASURE_OSARGUMENT_HPP
+#define MEASURE_OSARGUMENT_HPP
 
-#include "RulesetAPI.hpp"
+#include "MeasureAPI.hpp"
 
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idd/IddEnums.hpp"
@@ -31,7 +31,7 @@
 #include <QVariant>
 
 namespace openstudio {
-namespace ruleset {
+namespace measure {
 
 /** \class OSArgumentType
  *  \brief Listing of OSArgument data types. Quantity type is deprecated.
@@ -60,7 +60,7 @@ OPENSTUDIO_ENUM( OSArgumentType,
 
 // ETH@20121211 - Perhaps add MeanStdDev or StatisticalMoments. Could even tack on an
 // UncertaintyDescriptionType string, or move the whole UncertaintyDescription class down
-// into ruleset.
+// into measure.
 
 /** \class OSDomainType
  *  \brief Methods for restricting the domain of an OSArgument.
@@ -83,7 +83,7 @@ OPENSTUDIO_ENUM( OSDomainType,
 typedef OSArgumentType UserScriptArgumentType;
 
 /** OSArgument is an argument to a UserScript or a Ruleset. **/
-class RULESET_API OSArgument {
+class MEASURE_API OSArgument {
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -441,7 +441,7 @@ class RULESET_API OSArgument {
 
   //@}
  private:
-  REGISTER_LOGGER("openstudio.ruleset.OSArgument");
+  REGISTER_LOGGER("openstudio.measure.OSArgument");
 
   // ETH@20121211 - Why are these friend declarations here?!
   // JMT@20130124 - Because all of the constructors are private and the SWIG wrapper for pair needs 
@@ -499,7 +499,7 @@ typedef std::map<std::string,OSArgument> OSArgumentMap;
 typedef std::pair< openstudio::path,std::vector<OSArgument> > UserScriptInfo;
 
 /** Prints argument data to ostream for debugging purposes. \relates OSArgument */
-RULESET_API std::ostream& operator<<(std::ostream& os, const OSArgument& arg);
+MEASURE_API std::ostream& operator<<(std::ostream& os, const OSArgument& arg);
 
 // ETH@20121211 - These typedefs are just to preserve the old names for the near to
 // medium-term future (to avoid breaking existing scripts).
@@ -521,7 +521,7 @@ typedef std::map<std::string,OSArgument> UserScriptArgumentMap;
  *  The resulting argument does not attempt to preserve workspace, so the handles and
  *  names will only be valid if the workspace to which the argument is applied is the same
  *  or closely related to workspace. \relates OSArgument */
-RULESET_API OSArgument makeChoiceArgumentOfWorkspaceObjects(
+MEASURE_API OSArgument makeChoiceArgumentOfWorkspaceObjects(
     const std::string& name,
     const IddObjectType& iddObjectType,
     const Workspace& workspace,
@@ -532,21 +532,21 @@ RULESET_API OSArgument makeChoiceArgumentOfWorkspaceObjects(
  *  referenceName. The resulting argument does not attempt to preserve workspace, so the
  *  handles and names will only be valid if the workspace to which the argument is applied
  *  is the same or closely related to workspace. \relates OSArgument */
-RULESET_API OSArgument makeChoiceArgumentOfWorkspaceObjects(
+MEASURE_API OSArgument makeChoiceArgumentOfWorkspaceObjects(
     const std::string& name,
     const std::string& referenceName,
     const Workspace& workspace,
     bool required=true);
 
 /** Converts a vector of OSArgument to a map of OSArgument using name as the key. \relates OSArgument */
-RULESET_API std::map<std::string,OSArgument> convertOSArgumentVectorToMap(const std::vector<OSArgument>& arguments);
+MEASURE_API std::map<std::string,OSArgument> convertOSArgumentVectorToMap(const std::vector<OSArgument>& arguments);
 
 namespace detail {
 
   /** Non-member function to convert argument into a QJSON-ready QVariant. */
-  RULESET_API QVariant toVariant(const OSArgument& argument);
+  MEASURE_API QVariant toVariant(const OSArgument& argument);
 
-  RULESET_API OSArgument toOSArgument(const QVariant& variant, const VersionString& version);
+  MEASURE_API OSArgument toOSArgument(const QVariant& variant, const VersionString& version);
 
   QVariant toQuantityQVariant(const QVariantMap& map,
                               const std::string& valueKey,
@@ -554,7 +554,7 @@ namespace detail {
 
 }
 
-} // ruleset
+} // measure
 } // openstudio
 
-#endif // RULESET_OSARGUMENT_HPP
+#endif // MEASURE_OSARGUMENT_HPP

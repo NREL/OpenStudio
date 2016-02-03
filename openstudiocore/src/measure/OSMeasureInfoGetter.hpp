@@ -97,29 +97,29 @@ private:
  *  See src/measure/test/EmbeddedRuby_GTest.cpp for this use case. If your application is written in 
  *  Ruby, this functionality is available through non-member helper function 
  *  Opudio::Measure::infoExtractorRubyFunction(BCLMeasure), see 
- *  ruby/openstudio/measure/test/RubyUserScriptArgumentGetter_Test.rb for an example. */
-class MEASURE_API RubyMeasureInfoGetter {
+ *  ruby/openstudio/measure/test/OSMeasureInfoGetter_Test.rb for an example. */
+class MEASURE_API OSMeasureInfoGetter {
  public:
-   virtual ~RubyMeasureInfoGetter() {}
+   virtual ~OSMeasureInfoGetter() {}
 
-   virtual RubyUserScriptInfo getInfo(const BCLMeasure& measure) = 0;
+   virtual OSMeasureInfo getInfo(const BCLMeasure& measure) = 0;
 
    /** Use this method to pass in a (EnergyPlus) Workspace or a (OpenStudio) Model. */
-   virtual RubyUserScriptInfo getInfo(const BCLMeasure& measure, const Workspace& workspace) = 0;
+   virtual OSMeasureInfo getInfo(const BCLMeasure& measure, const Workspace& workspace) = 0;
 
-   virtual RubyUserScriptInfo getInfo(const BCLMeasure& measure,
-                                      const model::Model& model,
-                                      const Workspace& workspace) = 0;
+   virtual OSMeasureInfo getInfo(const BCLMeasure& measure,
+                                 const model::Model& model,
+                                 const Workspace& workspace) = 0;
 
-   RubyUserScriptInfo getInfo(const BCLMeasure& measure,
-                              const boost::optional<model::Model>& model,
-                              const boost::optional<Workspace>& workspace);
+   OSMeasureInfo getInfo(const BCLMeasure& measure,
+                         const boost::optional<model::Model>& model,
+                         const boost::optional<Workspace>& workspace);
 };
 
 /** Non-member function that returns Ruby code text for retrieving info from a BCLMeasure. This
- *  function is used by both the embedded Ruby (RubyScriptArgumentGetter) and native Ruby 
- *  (OpenStudio::Ruleset::getArguments) implementations of the functionality, such that either usage
- *  pathway should produce identical results. \relates RubyMeasureInfoGetter */
+ *  function is used by both the embedded Ruby OSMeasureInfoGetter and native Ruby 
+ *  (OpenStudio::Measure::getInfo) implementations of the functionality, such that either usage
+ *  pathway should produce identical results. \relates OSMeasureInfoGetter */
 MEASURE_API std::string infoExtractorRubyFunction();
 
 } // measure

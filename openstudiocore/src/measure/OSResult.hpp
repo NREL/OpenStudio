@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef RULESET_OSRESULT_HPP
-#define RULESET_OSRESULT_HPP
+#ifndef MEASURE_OSRESULT_HPP
+#define MEASURE_OSRESULT_HPP
 
-#include "RulesetAPI.hpp"
+#include "MeasureAPI.hpp"
 
 #include "../utilities/core/Enum.hpp"
 #include "../utilities/core/Logger.hpp"
@@ -33,7 +33,7 @@ class QDomDocument;
 class QDomElement;
 
 namespace openstudio {
-namespace ruleset {
+namespace measure {
 
 /** \class OSResultValue
  *  \brief Possible outcomes of running a UserScript or a Ruleset.
@@ -54,7 +54,7 @@ OPENSTUDIO_ENUM( OSResultValue,
 
 /** Class for documenting the outcome of running a UserScript or a Ruleset. There is an overall
  *  result flag (available from value()), and a number of message types. */
-class RULESET_API OSResult {
+class MEASURE_API OSResult {
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -118,7 +118,7 @@ class RULESET_API OSResult {
 
   //@}
  private:
-  REGISTER_LOGGER("openstudio.ruleset.OSResult")
+  REGISTER_LOGGER("openstudio.measure.OSResult")
 
   OSResultValue m_value;
   std::vector<LogMessage> m_errors;
@@ -140,7 +140,7 @@ class RULESET_API OSResult {
 /** \relates OSResult */
 typedef boost::optional<OSResult> OptionalOSResult;
 
-} // ruleset
+} // measure
 } // openstudio
 
-#endif // RULESET_OSRESULT_HPP
+#endif // MEASURE_OSRESULT_HPP

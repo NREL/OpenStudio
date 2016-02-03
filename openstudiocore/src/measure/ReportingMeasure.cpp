@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include "ReportingUserScript.hpp"
+#include "ReportingMeasure.hpp"
 
 #include "OSArgument.hpp"
 #include "OSRunner.hpp"
@@ -25,26 +25,26 @@
 #include <vector>
 
 namespace openstudio {
-namespace ruleset {
+namespace measure {
 
-ReportingUserScript::~ReportingUserScript() {}
+ReportingMeasure::~ReportingMeasure() {}
 
-std::vector<OSArgument> ReportingUserScript::arguments() const {
+std::vector<OSArgument> ReportingMeasure::arguments() const {
   return UserScriptArgumentVector();
 }
 
-bool ReportingUserScript::run(OSRunner& runner,
-                              const std::map<std::string, OSArgument>& user_arguments) const
+bool ReportingMeasure::run(OSRunner& runner,
+                           const std::map<std::string, OSArgument>& user_arguments) const
 {
-  runner.prepareForUserScriptRun(*this);
+  runner.prepareForMeasureRun(*this);
   return true;
 }
 
-std::vector<IdfObject> ReportingUserScript::energyPlusOutputRequests(OSRunner& runner,
+std::vector<IdfObject> ReportingMeasure::energyPlusOutputRequests(OSRunner& runner,
                               const std::map<std::string, OSArgument>& user_arguments) const
 {
   return std::vector<IdfObject>();
 }
 
-} // ruleset
+} // measure
 } // openstudio

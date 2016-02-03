@@ -17,28 +17,28 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include "ModelUserScript.hpp"
+#include "ModelMeasure.hpp"
 
 #include "OSArgument.hpp"
 #include "OSRunner.hpp"
 
 namespace openstudio {
-namespace ruleset {
+namespace measure {
 
-ModelUserScript::~ModelUserScript()
+ModelMeasure::~ModelMeasure()
 {}
 
-std::vector<UserScriptArgument> ModelUserScript::arguments(const openstudio::model::Model& model) const {
+std::vector<UserScriptArgument> ModelMeasure::arguments(const openstudio::model::Model& model) const {
   return UserScriptArgumentVector();
 }
 
-bool ModelUserScript::run(openstudio::model::Model& model,
+bool ModelMeasure::run(openstudio::model::Model& model,
                           OSRunner& runner,
                           const std::map<std::string, OSArgument>& user_arguments) const
 {
-  runner.prepareForUserScriptRun(*this);
+  runner.prepareForMeasureRun(*this);
   return true;
 }
 
-} // ruleset
+} // measure
 } // openstudio
