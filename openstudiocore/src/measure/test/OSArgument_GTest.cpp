@@ -18,7 +18,7 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include "RulesetFixture.hpp"
+#include "MeasureFixture.hpp"
 
 #include "../OSArgument.hpp"
 
@@ -26,7 +26,7 @@
 #include <map>
 
 using namespace openstudio;
-using namespace openstudio::ruleset;
+using namespace openstudio::measure;
 
 
 TEST_F(RulesetFixture, OSArgument_Clone) {

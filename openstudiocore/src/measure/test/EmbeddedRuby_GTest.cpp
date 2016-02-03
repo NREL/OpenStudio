@@ -18,7 +18,7 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include "RulesetFixture.hpp"
+#include "MeasureFixture.hpp"
 
 #include "../OSArgument.hpp"
 
@@ -39,12 +39,11 @@
 #include "../../utilities/core/RubyInterpreter.hpp"
 
 // This one is a bit more globally accessible, but no one can instantiate the template without the two above
-#include "../EmbeddedRubyUserScriptArgumentGetter.hpp"
-#include "../EmbeddedRubyUserScriptInfoGetter.hpp"
+#include "../EmbeddedRubyMeasureInfoGetter.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
-using namespace openstudio::ruleset;
+using namespace openstudio::measure;
 
 
 #if defined(_MSC_VER)
@@ -112,40 +111,11 @@ TEST_F(RulesetFixture, UserScript_EmbeddedRubyTest) {
   EXPECT_EQ(v[1], 8);
   EXPECT_EQ(v[2], 3 * 2 + 8);
 
-  // Deprecated RubyUserScriptArgumentGetter
-  {
-    // Initialize the argument getter
-    std::shared_ptr<openstudio::ruleset::RubyUserScriptArgumentGetter>
-      rsc(new openstudio::ruleset::EmbeddedRubyUserScriptArgumentGetter<openstudio::detail::RubyInterpreter>(ri));
-
-    // Test calling the actual function we are concerned about
-    std::vector<OSArgument> args;
-
-    Model someModel;
-    Workspace someWorkspace(StrictnessLevel::Draft, IddFileType::EnergyPlus);
-
-    openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/");
-    boost::optional<BCLMeasure> oMeasure = BCLMeasure::load(dir);
-    ASSERT_TRUE(oMeasure);
-    BCLMeasure measure = oMeasure.get();
-
-    // Works no matter what overloaded form we use. If not provided, empty models are passed to
-    // the arguments method.
-    args = rsc->getArguments(measure);
-    EXPECT_EQ(3u, args.size());
-    args = rsc->getArguments(measure, someModel);
-    EXPECT_EQ(3u, args.size());
-    args = rsc->getArguments(measure, someWorkspace);
-    EXPECT_EQ(3u, args.size());
-    args = rsc->getArguments(measure, someModel, someWorkspace);
-    EXPECT_EQ(3u, args.size());
-  }
- 
-  // New RubyUserScriptInfoGetter
+  // New OSMeasureInfoGetter
   {
     // Initialize the info getter
-    std::shared_ptr<openstudio::ruleset::RubyUserScriptInfoGetter>
-      rsc(new openstudio::ruleset::EmbeddedRubyUserScriptInfoGetter<openstudio::detail::RubyInterpreter>(ri));
+    std::shared_ptr<openstudio::measure::OSMeasureInfoGetter>
+      rsc(new openstudio::measure::EmbeddedRubyMeasureInfoGetter<openstudio::detail::RubyInterpreter>(ri));
 
     // Test calling the actual function we are concerned about
     
@@ -159,7 +129,7 @@ TEST_F(RulesetFixture, UserScript_EmbeddedRubyTest) {
 
     // Works no matter what overloaded form we use. If not provided, empty models are passed to
     // the arguments method.
-    RubyUserScriptInfo info = rsc->getInfo(measure);
+    OSMeasureInfo info = rsc->getInfo(measure);
     EXPECT_EQ(3u, info.arguments().size());
     info = rsc->getInfo(measure, someModel);
     EXPECT_EQ(3u, info.arguments().size());

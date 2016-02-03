@@ -21,17 +21,15 @@
 %ignore openstudio::measure::detail;
 
 %{
-  #include <measure/ModelOSMeasure.hpp>
   #include <measure/OSArgument.hpp>
   #include <measure/OSResult.hpp>
   #include <measure/OSRunner.hpp>
-  #include <measure/ReportingOSMeasure.hpp>
-  #include <measure/RubyUserScriptArgumentGetter.hpp>
-  #include <measure/RubyMeasureInfoGetter.hpp>
-  #include <measure/TranslationOSMeasure.hpp>
   #include <measure/OSMeasure.hpp>
-  #include <measure/UtilityOSMeasure.hpp>
-  #include <measure/WorkspaceOSMeasure.hpp>
+  #include <measure/OSMeasureInfoGetter.hpp>
+  
+  #include <measure/EnergyPlusMeasure.hpp>
+  #include <measure/ModelMeasure.hpp>
+  #include <measure/ReportingMeasure.hpp>
 
   #include <model/Component.hpp>
   #include <model/ConcreteModelObjects.hpp>
@@ -52,16 +50,10 @@
 %template(OptionalOSResult) boost::optional<openstudio::measure::OSResult>;
 %template(OSArgumentMap) std::map<std::string, openstudio::measure::OSArgument>;
 
-%template(UserScriptInfo) std::pair<openstudio::path,std::vector<openstudio::measure::OSArgument> >;
-%template(UserScriptInfoVector) std::vector< std::pair<openstudio::path, std::vector<openstudio::measure::OSArgument> > >;
-%template(FolderPathToUserScriptsInfoMap) std::map<openstudio::path,std::vector< std::pair<openstudio::path, std::vector<openstudio::measure::OSArgument> > > >;
-
-%feature("director") UserScript;
-%feature("director") ModelUserScript;
-%feature("director") WorkspaceUserScript;
-%feature("director") TranslatorUserScript;
-%feature("director") UtilityUserScript;
-%feature("director") ReportingUserScript;
+%feature("director") OSMeasure;
+%feature("director") ModelMeasure;
+%feature("director") EnergyPlusMeasure;
+%feature("director") ReportingMeasure;
 %feature("director") OSRunner;
 
 %include <measure/OSArgument.hpp>
@@ -82,13 +74,12 @@
 
 #if defined SWIGRUBY
 
-  %ignore RubyUserScripInfoGetter;
+  %ignore OSMeasureInfoGetter;
 
-  // Abstract class. Just need static method.
-  %include <measure/RubyMeasureInfoGetter.hpp>
+  %include <measure/OSMeasureInfoGetter.hpp>
 
   %init %{
-    rb_eval_string("OpenStudio::Ruleset.instance_eval { def getInfo(measure,model=OpenStudio::Model::OptionalModel.new,workspace=OpenStudio::OptionalWorkspace.new) eval(OpenStudio::Ruleset::infoExtractorRubyFunction); return infoExtractor(measure,OpenStudio::Model::OptionalModel.new(model),OpenStudio::OptionalWorkspace.new(workspace)); end }");
+    rb_eval_string("OpenStudio::Measure.instance_eval { def getInfo(measure,model=OpenStudio::Model::OptionalModel.new,workspace=OpenStudio::OptionalWorkspace.new) eval(OpenStudio::Ruleset::infoExtractorRubyFunction); return infoExtractor(measure,OpenStudio::Model::OptionalModel.new(model),OpenStudio::OptionalWorkspace.new(workspace)); end }");
   %}
 
 #endif

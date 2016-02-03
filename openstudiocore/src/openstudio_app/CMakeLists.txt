@@ -264,7 +264,7 @@ if(APPLE)
       \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioosversion.bundle\"
       \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioproject.bundle\"
       \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioradiance.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioruleset.bundle\"
+      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomeasure.bundle\"
       \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiorunmanager.bundle\"
       \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiosdd.bundle\"
       \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilities.bundle\"

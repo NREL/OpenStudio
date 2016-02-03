@@ -27,8 +27,6 @@
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
 
-#include "../ruleset/RubyUserScriptArgumentGetter.hpp"
-
 //#include "../analysisdriver/SimpleProject.hpp"
 
 #include <QObject>

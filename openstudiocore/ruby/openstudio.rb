@@ -200,73 +200,93 @@ end
 module OpenStudio
 module Ruleset
 
-# support for name deprecated as of 0.10.1
-class UserScriptArgument < OSArgument
-end
+  # support for name deprecated as of 0.10.1
+  class UserScriptArgument < OpenStudio::Measure::OSArgument
+    def initialize
+      OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "UserScriptArgument is deprecated, use OpenStudio::Measure::Argument instead.")
+      super
+    end
+  end
 
-# support for name deprecated as of 0.10.1
-class OptionalUserScriptArgument < OptionalOSArgument
-end
+  # support for name deprecated as of 0.10.1
+  class OptionalUserScriptArgument < OpenStudio::Measure::OptionalOSArgument
+    def initialize
+      OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "OptionalUserScriptArgument is deprecated, use OpenStudio::Measure::OptionalOSArgument instead.")
+      super
+    end  
+  end
 
-# support for name deprecated as of 0.10.1
-class UserScriptArgumentVector < OSArgumentVector
-end
+  # support for name deprecated as of 0.10.1
+  class UserScriptArgumentVector < OpenStudio::Measure::OSArgumentVector
+    def initialize
+      OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "UserScriptArgumentVector is deprecated, use OpenStudio::Measure::OSArgumentVector instead.")
+      super
+    end    
+  end
 
-# support for name deprecated as of 0.10.1
-class UserScriptArgumentMap < OSArgumentMap
-end
-
+  # support for name deprecated as of 0.10.1
+  class UserScriptArgumentMap < OpenStudio::Measure::OSArgumentMap
+    def initialize
+      OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "UserScriptArgumentMap is deprecated, use OpenStudio::Measure::OSArgumentMap instead.")
+      super
+    end      
+  end
+  
+  # support for name deprecated as of 2.0.0
+  class UserScript < OpenStudio::Measure::OSMeasure
+    def initialize
+      OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "UserScript is deprecated, use OpenStudio::Measure::OSMeasure instead.")
+      super
+    end      
+  end
+  
+  # support for name deprecated as of 2.0.0
+  class ModelUserScript < OpenStudio::Measure::ModelMeasure
+    def initialize
+      OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "ModelUserScript is deprecated, use OpenStudio::Measure::ModelMeasure instead.")
+      super
+    end      
+  end
+  
+  # support for name deprecated as of 2.0.0
+  class WorkspaceUserScript < OpenStudio::Measure::EnergyPlusMeasure
+    def initialize
+      OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "WorkspaceUserScript is deprecated, use OpenStudio::Measure::EnergyPlusMeasure instead.")
+      super
+    end      
+  end
+  
+  # support for name deprecated as of 2.0.0
+  class ReportingUserScript < OpenStudio::Measure::ReportingMeasure
+    def initialize
+      OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "ReportingUserScript is deprecated, use OpenStudio::Measure::ReportingMeasure instead.")
+      super
+    end      
+  end
+  
+  # support for name deprecated as of 2.0.0
+  class OSArgument < OpenStudio::Measure::OSArgument
+    def initialize
+      OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "OSArgument is deprecated, use OpenStudio::Measure::OSArgument instead.")
+      super
+    end      
+  end
+  
+  # support for name deprecated as of 2.0.0
+  class OSResult < OpenStudio::Measure::OSResult
+    def initialize
+      OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "OSResult is deprecated, use OpenStudio::Measure::OSResult instead.")
+      super
+    end      
+  end
+  
+  # support for name deprecated as of 2.0.0
+  class OSRunner < OpenStudio::Measure::OSRunner
+    def initialize
+      OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "OSRunner is deprecated, use OpenStudio::Measure::OSRunner instead.")
+      super
+    end      
+  end
+  
 end # module Ruleset
 
-#module Analysis
-#
-## support for name deprecated as of 0.10.5
-#class OutputAttributeContinuousVariable < OutputAttributeVariable
-#end
-#
-## support for name deprecated as of 0.10.5
-#class OptionalOutputAttributeContinuousVariable < OptionalOutputAttributeVariable
-#end
-#
-## support for name deprecated as of 0.10.5
-#class OutputAttributeContinuousVariableVector < OutputAttributeVariableVector
-#end
-#
-## support for name deprecated as of 1.0.3
-#class DiscretePerturbation < Measure
-#end
-#
-## support for name deprecated as of 1.0.3
-#class OptionalDiscretePerturbation < OptionalMeasure
-#end
-#
-## support for name deprecated as of 1.0.3
-#class DiscretePerturbationVector < MeasureVector
-#end
-#
-## support for name deprecated as of 1.0.3
-#class NullPerturbation < NullMeasure
-#end
-#
-## support for name deprecated as of 1.0.3
-#class OptionalNullPerturbation < OptionalNullMeasure
-#end
-#
-## support for name deprecated as of 1.0.3
-#class NullPerturbationVector < NullMeasureVector
-#end
-#
-## support for name deprecated as of 1.0.3
-#class RubyPerturbation < RubyMeasure
-#end
-#
-## support for name deprecated as of 1.0.3
-#class OptionalRubyPerturbation < OptionalRubyMeasure
-#end
-#
-## support for name deprecated as of 1.0.3
-#class RubyPerturbationVector < RubyMeasureVector
-#end
-#
-#end # module Analysis
-end

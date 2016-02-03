@@ -86,7 +86,7 @@ void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseA
 
   // Inputs
 
-  std::vector<ruleset::OSArgument> arguments = m_measureItem->arguments();
+  std::vector<measure::OSArgument> arguments = m_measureItem->arguments();
 
   for( const auto & arg : arguments )
   {
@@ -146,13 +146,13 @@ class EditMeasureMessageBox : public QMessageBox
   }
 };
 
-InputController::InputController(EditController * editController,const ruleset::OSArgument & argument, BaseApp *t_app)
+InputController::InputController(EditController * editController,const measure::OSArgument & argument, BaseApp *t_app)
   : QObject(),
     m_app(t_app),
     m_editController(editController),
     m_argument(argument)
 {
-  if( m_argument.type() == ruleset::OSArgumentType::Double )
+  if( m_argument.type() == measure::OSArgumentType::Double )
   {
     auto doubleInputView = new DoubleInputView();
 
@@ -171,7 +171,7 @@ InputController::InputController(EditController * editController,const ruleset::
 
     inputView = doubleInputView;
   }
-  else if( m_argument.type() == ruleset::OSArgumentType::Choice )
+  else if( m_argument.type() == measure::OSArgumentType::Choice )
   {
     auto choiceInputView = new ChoiceInputView();
 
@@ -230,7 +230,7 @@ InputController::InputController(EditController * editController,const ruleset::
 
     inputView = choiceInputView;
   }
-  else if( m_argument.type() == ruleset::OSArgumentType::Boolean )
+  else if( m_argument.type() == measure::OSArgumentType::Boolean )
   {
     auto boolInputView = new BoolInputView();
 
@@ -253,7 +253,7 @@ InputController::InputController(EditController * editController,const ruleset::
 
     inputView = boolInputView;
   }
-  else if( m_argument.type() == ruleset::OSArgumentType::Integer )
+  else if( m_argument.type() == measure::OSArgumentType::Integer )
   {
     auto integerInputView = new IntegerInputView();
 
@@ -272,7 +272,7 @@ InputController::InputController(EditController * editController,const ruleset::
 
     inputView = integerInputView;
   }
-  else if( m_argument.type() == ruleset::OSArgumentType::String )
+  else if( m_argument.type() == measure::OSArgumentType::String )
   {
     auto stringInputView = new StringInputView();
 
@@ -360,9 +360,9 @@ bool InputController::isArgumentIncomplete() const
 {
   // Get the argument from the ruby perturbation by the same name as m_argument
 
-  std::vector<ruleset::OSArgument> argumentVector = m_editController->measureItem()->measure().arguments();
+  std::vector<measure::OSArgument> argumentVector = m_editController->measureItem()->measure().arguments();
 
-  std::map<std::string,ruleset::OSArgument> argumentMap = convertOSArgumentVectorToMap(argumentVector);
+  std::map<std::string, measure::OSArgument> argumentMap = convertOSArgumentVectorToMap(argumentVector);
 
   auto it = argumentMap.find(m_argument.name());
 

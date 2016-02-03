@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include "RulesetFixture.hpp"
+#include "MeasureFixture.hpp"
 
 
 #include "../../utilities/core/Path.hpp"
@@ -33,7 +33,6 @@
 // and in this order
 
 #include "../../utilities/core/RubyInterpreter.hpp"
-#include "../ruleset/EmbeddedRubyUserScriptArgumentGetter.hpp"
 
 using openstudio::FileLogSink;
 using openstudio::toPath;

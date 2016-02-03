@@ -182,7 +182,7 @@ void ScriptFolderListView::saveOSArguments() {
   }
 }
 
-std::vector<ruleset::UserScriptInfo> ScriptFolderListView::folderUserScripts(
+std::vector<measure::OSMeasureInfo> ScriptFolderListView::folderUserScripts(
     const openstudio::path& folder) const
 {
   auto it = m_scriptsListViews.find(folder);

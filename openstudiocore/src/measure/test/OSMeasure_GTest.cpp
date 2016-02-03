@@ -18,13 +18,13 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include "RulesetFixture.hpp"
+#include "MeasureFixture.hpp"
 
 #include "../OSArgument.hpp"
 #include "../OSRunner.hpp"
 #include "../OSResult.hpp"
-#include "../ModelUserScript.hpp"
-#include "../UserScript.hpp"
+#include "../OSMeasure.hpp"
+#include "../ModelMeasure.hpp"
 
 #include "../../model/Model.hpp"
 #include "../../model/Space.hpp"
@@ -44,7 +44,7 @@
 
 using namespace openstudio;
 using namespace openstudio::model;
-using namespace openstudio::ruleset;
+using namespace openstudio::measure;
 
 class TestOSRunner : public OSRunner {
  public:
@@ -56,7 +56,7 @@ class TestOSRunner : public OSRunner {
 };
 
 // derive some test classes
-class TestModelUserScript1 : public ModelUserScript {
+class TestModelUserScript1 : public ModelMeasure {
  public:
 
   virtual std::string name() const override {
@@ -68,7 +68,7 @@ class TestModelUserScript1 : public ModelUserScript {
                    OSRunner& runner,
                    const std::map<std::string, OSArgument>& user_arguments) const override
   {
-    ModelUserScript::run(model,runner,user_arguments);
+    ModelMeasure::run(model,runner,user_arguments);
 
     // no arguments, so do not bother validating them
 
@@ -145,7 +145,7 @@ TEST_F(RulesetFixture, UserScript_TestModelUserScript1) {
   EXPECT_EQ("Removed the 2 original spaces, and added one new one named 'Space 1'.",result.finalCondition()->logMessage());
 }
 
-class TestModelUserScript2 : public ModelUserScript {
+class TestModelUserScript2 : public ModelMeasure {
  public:
   virtual std::string name() const override {
     return "TestModelUserScript2";
@@ -173,7 +173,7 @@ class TestModelUserScript2 : public ModelUserScript {
                    OSRunner& runner,
                    const std::map<std::string, OSArgument>& user_arguments) const override
   {
-    ModelUserScript::run(model,runner,user_arguments); // initializes runner
+    ModelMeasure::run(model,runner,user_arguments); // initializes runner
 
     // calls runner.registerAttribute for 'lights_definition' and 'multiplier'
     if (!runner.validateUserArguments(arguments(model),user_arguments)) {
