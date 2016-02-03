@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef RULESET_RUBYUSERSCRIPTINFOGETTER_HPP
-#define RULESET_RUBYUSERSCRIPTINFOGETTER_HPP
+#ifndef MEASURE_OSMEASUREINFOGETTER_HPP
+#define MEASURE_OSMEASUREINFOGETTER_HPP
 
-#include "RulesetAPI.hpp"
+#include "MeasureAPI.hpp"
 
 #include "OSArgument.hpp"
 
@@ -38,23 +38,23 @@ namespace model {
   class Model;
 }
 
-namespace ruleset {
+namespace measure {
 
-/** BCLMeasureInfo contains information that can be extracted from a by the Ruby parser.
+/** OSMeasureInfo contains information that can be extracted from an OSMeasure by a parser.
  */
-class RULESET_API RubyUserScriptInfo {
+class MEASURE_API OSMeasureInfo {
 public:
 
   /// Constructor used when Ruby interpreter fails to get information about the script
-  RubyUserScriptInfo(const std::string& error);
+  OSMeasureInfo(const std::string& error);
 
   /// Constructor used when Ruby interpreter succeeds to get information about the script
-  RubyUserScriptInfo(const MeasureType& measureType,
-                     const std::string& className,
-                     const std::string& name,
-                     const std::string& description,
-                     const std::string& modelerDescription,
-                     const std::vector<OSArgument>& arguments);
+  OSMeasureInfo(const MeasureType& measureType,
+                const std::string& className,
+                const std::string& name,
+                const std::string& description,
+                const std::string& modelerDescription,
+                const std::vector<OSArgument>& arguments);
 
   /// will be empty if information was successfully extracted from the script, otherwise includes error information
   boost::optional<std::string> error() const;
@@ -82,7 +82,7 @@ public:
   bool update(BCLMeasure& measure) const;
 
 private:
-  REGISTER_LOGGER("openstudio.ruleset.RubyUserScriptInfo");
+  REGISTER_LOGGER("openstudio.measure.OSMeasureInfo");
 
   boost::optional<std::string> m_error;
   MeasureType m_measureType;
@@ -93,15 +93,14 @@ private:
   std::vector<OSArgument> m_arguments;
 };
 
-/** Interface class for using embedded Ruby to extract arguments from a Ruby measure (UserScript).
- *  See the documentation for detail::RubyUserScriptArgumentGetter_Impl and 
- *  src/ruleset/test/EmbeddedRuby_GTest.cpp for this use case. If your application is written in 
+/** Interface class for using embedded Ruby to extract arguments from an OSMeasure.
+ *  See src/measure/test/EmbeddedRuby_GTest.cpp for this use case. If your application is written in 
  *  Ruby, this functionality is available through non-member helper function 
- *  OpenStudio::Ruleset::getArguments(BCLMeasure), see 
- *  ruby/openstudio/ruleset/test/RubyUserScriptArgumentGetter_Test.rb for an example. */
-class RULESET_API RubyUserScriptInfoGetter {
+ *  Opudio::Measure::infoExtractorRubyFunction(BCLMeasure), see 
+ *  ruby/openstudio/measure/test/RubyUserScriptArgumentGetter_Test.rb for an example. */
+class MEASURE_API RubyMeasureInfoGetter {
  public:
-   virtual ~RubyUserScriptInfoGetter() {}
+   virtual ~RubyMeasureInfoGetter() {}
 
    virtual RubyUserScriptInfo getInfo(const BCLMeasure& measure) = 0;
 
@@ -120,10 +119,10 @@ class RULESET_API RubyUserScriptInfoGetter {
 /** Non-member function that returns Ruby code text for retrieving info from a BCLMeasure. This
  *  function is used by both the embedded Ruby (RubyScriptArgumentGetter) and native Ruby 
  *  (OpenStudio::Ruleset::getArguments) implementations of the functionality, such that either usage
- *  pathway should produce identical results. \relates RubyUserScriptInfoGetter */
-RULESET_API std::string infoExtractorRubyFunction();
+ *  pathway should produce identical results. \relates RubyMeasureInfoGetter */
+MEASURE_API std::string infoExtractorRubyFunction();
 
-} // ruleset
+} // measure
 } // openstudio
 
-#endif // RULESET_RUBYUSERSCRIPTINFOGETTER_HPP
+#endif // MEASURE_OSMEASUREINFOGETTER_HPP

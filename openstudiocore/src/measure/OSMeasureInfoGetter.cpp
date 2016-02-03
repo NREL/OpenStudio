@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include "RubyUserScriptInfoGetter.hpp"
+#include "OSMeasureInfoGetter.hpp"
 
 #include "../model/Model.hpp"
 
@@ -28,7 +28,7 @@
 #include <sstream>
 
 namespace openstudio {
-namespace ruleset {
+namespace measure {
 
   RubyUserScriptInfo::RubyUserScriptInfo(const std::string& error)
     : m_error(error)
@@ -175,7 +175,7 @@ namespace ruleset {
     return result;
   }
 
-  RubyUserScriptInfo RubyUserScriptInfoGetter::getInfo(
+  RubyUserScriptInfo RubyMeasureInfoGetter::getInfo(
     const BCLMeasure& measure,
     const boost::optional<model::Model>& model,
     const boost::optional<Workspace>& workspace)
@@ -283,5 +283,5 @@ std::string infoExtractorRubyFunction() {
   return ss.str();
 }
 
-} // ruleset
+} // measure
 } // openstudio
