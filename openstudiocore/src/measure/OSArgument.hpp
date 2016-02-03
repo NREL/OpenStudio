@@ -82,7 +82,7 @@ OPENSTUDIO_ENUM( OSDomainType,
 /** Preserves old name for OSArgumentType. \deprecated */
 typedef OSArgumentType UserScriptArgumentType;
 
-/** OSArgument is an argument to a UserScript or a Ruleset. **/
+/** OSArgument is an argument to an OSMeasure. **/
 class MEASURE_API OSArgument {
  public:
   /** @name Constructors and Destructors */
@@ -201,7 +201,7 @@ class MEASURE_API OSArgument {
   boost::optional<std::string> units() const;
 
   /** Returns true if this argument is required, that is, if the argument must have a value or
-   *  default value for the UserScript or Ruleset to run properly. */
+   *  default value for the measure to run properly. */
   bool required() const;
 
   /** Returns true if this argument's properties can changed based on the specific model used in the 

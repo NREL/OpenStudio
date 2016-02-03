@@ -36,7 +36,7 @@ namespace openstudio {
 namespace measure {
 
 /** \class OSResultValue
- *  \brief Possible outcomes of running a UserScript or a Ruleset.
+ *  \brief Possible outcomes of running a measure.
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
  *  macro call is:
  *  \code

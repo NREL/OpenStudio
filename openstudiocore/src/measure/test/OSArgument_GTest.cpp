@@ -29,7 +29,7 @@ using namespace openstudio;
 using namespace openstudio::measure;
 
 
-TEST_F(RulesetFixture, OSArgument_Clone) {
+TEST_F(MeasureFixture, OSArgument_Clone) {
 
   std::vector<std::string> choices;
   choices.push_back("On");
@@ -112,7 +112,7 @@ TEST_F(RulesetFixture, OSArgument_Clone) {
 
 }
 
-TEST_F(RulesetFixture, OSArgument_ClearValue) {
+TEST_F(MeasureFixture, OSArgument_ClearValue) {
   std::vector<std::string> choices;
   choices.push_back("On");
   choices.push_back("Off");
@@ -155,7 +155,7 @@ TEST_F(RulesetFixture, OSArgument_ClearValue) {
   EXPECT_ANY_THROW(choiceArgument.valueAsString());
 }
 
-TEST_F(RulesetFixture, OSArgument_Domain) {
+TEST_F(MeasureFixture, OSArgument_Domain) {
   
   OSArgument doubleArg = OSArgument::makeDoubleArgument("double", true);
   OSArgument integerArg = OSArgument::makeIntegerArgument("integer", true);

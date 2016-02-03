@@ -121,12 +121,8 @@ require 'openstudioradiance'
 require 'openstudiogbxml'
 require 'openstudioairflow'
 require 'openstudioosversion'
-require 'openstudioruleset'
-#require 'openstudiorunmanager'
-#require 'openstudioproject'
-#require 'openstudioanalysisdriver'
+require 'openstudiomeasure'
 require 'openstudiomodeleditor'
-#require 'openstudioanalysis'
 require 'openstudiolib'
 require 'openstudioisomodel'
 require 'openstudiosdd'
@@ -289,4 +285,4 @@ module Ruleset
   end
   
 end # module Ruleset
-
+end # module OpenStudio

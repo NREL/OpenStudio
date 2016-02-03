@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef RULESET_TEST_RULESETFIXTURE_HPP
-#define RULESET_TEST_RULESETFIXTURE_HPP
+#ifndef RULESET_TEST_MeasureFixture_HPP
+#define RULESET_TEST_MeasureFixture_HPP
 
 #include <gtest/gtest.h>
 
@@ -30,7 +30,7 @@
 
 #include <resources.hxx>
 
-class RulesetFixture : public ::testing::Test {
+class MeasureFixture : public ::testing::Test {
  protected:
 
   // TEST FIXTURE METHODS
@@ -48,12 +48,12 @@ class RulesetFixture : public ::testing::Test {
   static void TearDownTestCase();
 
   /// set up logging
-  REGISTER_LOGGER("RulesetFixture");
+  REGISTER_LOGGER("MeasureFixture");
 
   /// static data
   static boost::optional<openstudio::FileLogSink> logFile;
 
-  virtual ~RulesetFixture() {}
+  virtual ~MeasureFixture() {}
 };
 
-#endif // RULESET_TEST_RULESETFIXTURE_HPP
+#endif // RULESET_TEST_MeasureFixture_HPP

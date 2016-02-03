@@ -207,41 +207,35 @@ std::string infoExtractorRubyFunction() {
   ss << "  end" << std::endl << std::endl;
   // Check list of objects in memory before loading the script
   ss << "  currentObjects = Hash.new" << std::endl;
-  ss << "  ObjectSpace.each_object(OpenStudio::Ruleset::UserScript) { |obj| currentObjects[obj] = true }" << std::endl << std::endl; 
+  ss << "  ObjectSpace.each_object(OpenStudio::Measure::OSMeasure) { |obj| currentObjects[obj] = true }" << std::endl << std::endl; 
   ss << "  ObjectSpace.garbage_collect" << std::endl;
   // This line is REQUIRED or the ObjectSpace order will change when garbage collection runs automatically
-  // If ~12 measures are added and garbage collection runs, the following loop to grab the first userscript
+  // If ~12 measures are added and garbage collection runs, the following loop to grab the first measure
   //   will get the wrong one and return incorrect arguments
   ss << "  ObjectSpace.garbage_collect" << std::endl;
   ss << "  load scriptPath.get.to_s # need load in case have seen this script before" << std::endl;
   ss << std::endl;
-  ss << "  userScript = nil" << std::endl;
+  ss << "  measure = nil" << std::endl;
   ss << "  type = String.new" << std::endl;
-  ss << "  ObjectSpace.each_object(OpenStudio::Ruleset::UserScript) do |obj|" << std::endl;
+  ss << "  ObjectSpace.each_object(OpenStudio::Measure::OSMeasure) do |obj|" << std::endl;
   ss << "    if not currentObjects[obj]" << std::endl;
-  ss << "      if obj.is_a? OpenStudio::Ruleset::UtilityUserScript" << std::endl;
-  ss << "        userScript = obj" << std::endl;
-  ss << "        type = \"utility\"" << std::endl;
-  ss << "      elsif obj.is_a? OpenStudio::Ruleset::ModelUserScript" << std::endl;
-  ss << "        userScript = obj" << std::endl;
+  ss << "      if obj.is_a? OpenStudio::Measure::ModelMeasure" << std::endl;
+  ss << "        measure = obj" << std::endl;
   ss << "        type = \"model\"" << std::endl;
-  ss << "      elsif obj.is_a? OpenStudio::Ruleset::WorkspaceUserScript" << std::endl;
-  ss << "        userScript = obj" << std::endl;
-  ss << "        type = \"workspace\"" << std::endl;
-  ss << "      elsif obj.is_a? OpenStudio::Ruleset::TranslationUserScript" << std::endl;
-  ss << "        userScript = obj" << std::endl;
-  ss << "        type = \"translation\"" << std::endl;
-  ss << "      elsif obj.is_a? OpenStudio::Ruleset::ReportingUserScript" << std::endl;
-  ss << "        userScript = obj" << std::endl;
+  ss << "      elsif obj.is_a? OpenStudio::Measure::EnergyPlusMeasure" << std::endl;
+  ss << "        measure = obj" << std::endl;
+  ss << "        type = \"energyplus\"" << std::endl;
+  ss << "      elsif obj.is_a? OpenStudio::Measure::ReportingMeasure" << std::endl;
+  ss << "        measure = obj" << std::endl;
   ss << "        type = \"report\"" << std::endl;
   ss << "      end" << std::endl;
   ss << "    end" << std::endl;
   ss << "  end" << std::endl;
   ss << std::endl;
-  ss << "  if not userScript" << std::endl;
-  ss << "    raise \"Unable to extract OpenStudio::Ruleset::UserScript object from \" + " << std::endl;
+  ss << "  if not measure" << std::endl;
+  ss << "    raise \"Unable to extract OpenStudio::Measure::OSMeasure object from \" + " << std::endl;
   ss << "        scriptPath.get.to_s + \". The script should contain a class that derives \" + " << std::endl;
-  ss << "        \"from OpenStudio::Ruleset::UserScript and should close with a line stating \" + " << std::endl;
+  ss << "        \"from OpenStudio::Measure::OSMeasure and should close with a line stating \" + " << std::endl;
   ss << "        \"the class name followed by .new.registerWithApplication.\"" << std::endl;
   ss << "  end" << std::endl;
   ss << std::endl;
@@ -252,33 +246,24 @@ std::string infoExtractorRubyFunction() {
   ss << "  name = className if name.empty?" << std::endl;
   ss << "  description = userScript.description" << std::endl;
   ss << "  modelerDescription = userScript.modeler_description" << std::endl;
-  ss << "  args = OpenStudio::Ruleset::OSArgumentVector.new" << std::endl;
+  ss << "  args = OpenStudio::Measure::OSArgumentVector.new" << std::endl;
   ss << "  model = OpenStudio::Model::Model.new" << std::endl;
   ss << "  workspace = OpenStudio::Workspace.new(\"Draft\".to_StrictnessLevel," << std::endl;
   ss << "                                        \"EnergyPlus\".to_IddFileType)" << std::endl;
   ss << "  model = optionalModel.get if not optionalModel.empty?" << std::endl;
   ss << "  workspace = optionalWorkspace.get if not optionalWorkspace.empty?" << std::endl;
-  ss << "  if type == \"utility\"" << std::endl;
-  ss << "    measureType = OpenStudio::MeasureType.new(\"UtilityMeasure\")" << std::endl;
-  ss << "    args = userScript.arguments" << std::endl;
-  ss << "  elsif type == \"report\"" << std::endl;
+  ss << "  if type == \"report\"" << std::endl;
   ss << "    measureType = OpenStudio::MeasureType.new(\"ReportingMeasure\")" << std::endl;
-  ss << "    args = userScript.arguments()" << std::endl;
+  ss << "    args = measure.arguments()" << std::endl;
   ss << "  elsif type == \"model\"" << std::endl;
   ss << "    measureType = OpenStudio::MeasureType.new(\"ModelMeasure\")" << std::endl;
-  ss << "    args = userScript.arguments(model)" << std::endl;
-  ss << "  elsif type == \"workspace\"" << std::endl;
+  ss << "    args = measure.arguments(model)" << std::endl;
+  ss << "  elsif type == \"energyplus\"" << std::endl;
   ss << "    measureType = OpenStudio::MeasureType.new(\"EnergyPlusMeasure\")" << std::endl;
-  ss << "    args = userScript.arguments(workspace)" << std::endl;
-  ss << "  elsif type == \"translation\"" << std::endl;
-  ss << "    measureType = OpenStudio::MeasureType.new(\"TranslationMeasure\")" << std::endl; // DLM: don't have this in BCLMeasure yet?
-  ss << "    args = userScript.arguments(model)" << std::endl;
-  ss << "    userScript.arguments(workspace).each { |arg|" << std::endl;
-  ss << "      args << arg" << std::endl;
-  ss << "    }" << std::endl;
+  ss << "    args = measure.arguments(workspace)" << std::endl;
   ss << "  end" << std::endl;
   ss << std::endl;
-  ss << "  return OpenStudio::Ruleset::OSMeasureInfo.new(measureType, className, name, description, modelerDescription, args)" << std::endl;
+  ss << "  return OpenStudio::Measure::OSMeasureInfo.new(measureType, className, name, description, modelerDescription, args)" << std::endl;
   ss << "end" << std::endl;
   return ss.str();
 }

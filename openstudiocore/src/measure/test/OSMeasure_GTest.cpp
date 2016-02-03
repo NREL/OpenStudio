@@ -95,7 +95,7 @@ class TestModelUserScript1 : public ModelMeasure {
 
 };
 
-TEST_F(RulesetFixture, UserScript_TestModelUserScript1) {
+TEST_F(MeasureFixture, UserScript_TestModelUserScript1) {
   TestModelUserScript1 script;
   EXPECT_EQ("TestModelUserScript1", script.name());
 
@@ -115,11 +115,11 @@ TEST_F(RulesetFixture, UserScript_TestModelUserScript1) {
   EXPECT_EQ(0u,result.info().size());
   ASSERT_TRUE(result.initialCondition());
   EXPECT_TRUE(result.initialCondition()->logLevel() == Info);
-  EXPECT_EQ("openstudio.ruleset." + script.name(),result.initialCondition()->logChannel());
+  EXPECT_EQ("openstudio.measure." + script.name(),result.initialCondition()->logChannel());
   EXPECT_EQ("Initial model had 0 spaces.",result.initialCondition()->logMessage());
   ASSERT_TRUE(result.finalCondition());
   EXPECT_TRUE(result.finalCondition()->logLevel() == Info);
-  EXPECT_EQ("openstudio.ruleset." + script.name(),result.finalCondition()->logChannel());
+  EXPECT_EQ("openstudio.measure." + script.name(),result.finalCondition()->logChannel());
   EXPECT_EQ("Removed the 0 original spaces, and added one new one named 'Space 1'.",result.finalCondition()->logMessage());
 
   // test with populated model
@@ -137,11 +137,11 @@ TEST_F(RulesetFixture, UserScript_TestModelUserScript1) {
   EXPECT_EQ(0u,result.info().size());
   ASSERT_TRUE(result.initialCondition());
   EXPECT_TRUE(result.initialCondition()->logLevel() == Info);
-  EXPECT_EQ("openstudio.ruleset." + script.name(),result.initialCondition()->logChannel());
+  EXPECT_EQ("openstudio.measure." + script.name(),result.initialCondition()->logChannel());
   EXPECT_EQ("Initial model had 2 spaces.",result.initialCondition()->logMessage());
   ASSERT_TRUE(result.finalCondition());
   EXPECT_TRUE(result.finalCondition()->logLevel() == Info);
-  EXPECT_EQ("openstudio.ruleset." + script.name(),result.finalCondition()->logChannel());
+  EXPECT_EQ("openstudio.measure." + script.name(),result.finalCondition()->logChannel());
   EXPECT_EQ("Removed the 2 original spaces, and added one new one named 'Space 1'.",result.finalCondition()->logMessage());
 }
 
@@ -254,7 +254,7 @@ class TestModelUserScript2 : public ModelMeasure {
   }
 };
 
-TEST_F(RulesetFixture, UserScript_TestModelUserScript2) {
+TEST_F(MeasureFixture, UserScript_TestModelUserScript2) {
   TestModelUserScript2 script;
   EXPECT_EQ("TestModelUserScript2", script.name());
 

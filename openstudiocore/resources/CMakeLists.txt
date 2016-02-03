@@ -569,22 +569,22 @@ add_custom_target(openstudio_analysisdriver_resources
 CREATE_SRC_GROUPS("${analysisdriver_resources_src}")
 
 ########################################################
-# ruleset resources
+# measure resources
 # clear runs, calls to RUN_ENERGYPLUS will populate this
 set(ENERGYPLUS_OUTPUTS "")
 
-set(ruleset_resources_src)
+set(measure_resources_src)
 
 # update the resources
-UPDATE_RESOURCES("${ruleset_resources_src}")
+UPDATE_RESOURCES("${measure_resources_src}")
 
 # add target
-add_custom_target(openstudio_ruleset_resources
-  DEPENDS ${ruleset_resources_src} ${ENERGYPLUS_OUTPUTS}
-  SOURCES ${ruleset_resources_src}
+add_custom_target(openstudio_measure_resources
+  DEPENDS ${measure_resources_src} ${ENERGYPLUS_OUTPUTS}
+  SOURCES ${measure_resources_src}
 )
 
-CREATE_SRC_GROUPS("${ruleset_resources_src}")
+CREATE_SRC_GROUPS("${measure_resources_src}")
 
 ########################################################
 # energyplus resources

@@ -51,7 +51,7 @@ using namespace openstudio::measure;
 #pragma warning( disable : 4996 )
 #endif
 
-TEST_F(RulesetFixture, UserScript_EmbeddedRubyTest) {
+TEST_F(MeasureFixture, EmbeddedRubyTest) {
   const char *argv[] = {"executable"};
   char **argvpnc = const_cast<char **>(argv);
 

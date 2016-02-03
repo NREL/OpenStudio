@@ -37,7 +37,7 @@
 using openstudio::FileLogSink;
 using openstudio::toPath;
 
-void RulesetFixture::SetUp() 
+void MeasureFixture::SetUp() 
 {
   // required for EmbeddedRubyTest
   // the ruby interpreter must be initialized this way exactly once
@@ -53,11 +53,11 @@ void RulesetFixture::SetUp()
 
 }
 
-void RulesetFixture::TearDown() {}
+void MeasureFixture::TearDown() {}
 
-void RulesetFixture::SetUpTestCase() {
+void MeasureFixture::SetUpTestCase() {
   // set up logging
-  logFile = FileLogSink(toPath("./RulesetFixture.log"));
+  logFile = FileLogSink(toPath("./MeasureFixture.log"));
   logFile->setLogLevel(Info);
   openstudio::Logger::instance().standardOutLogger().disable();
 
@@ -67,10 +67,10 @@ void RulesetFixture::SetUpTestCase() {
   boost::filesystem::create_directories(p);
 }
 
-void RulesetFixture::TearDownTestCase() {
+void MeasureFixture::TearDownTestCase() {
   logFile->disable();
 }
 
 // static variables
-boost::optional<openstudio::FileLogSink> RulesetFixture::logFile;
+boost::optional<openstudio::FileLogSink> MeasureFixture::logFile;
 

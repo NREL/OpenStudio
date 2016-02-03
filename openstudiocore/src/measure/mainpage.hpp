@@ -20,9 +20,9 @@
 namespace openstudio {
 namespace measure {
 
-/** \mainpage OpenStudio %Ruleset 
+/** \mainpage OpenStudio %Measure 
  *
- *  The OpenStudio %Ruleset sub-project provides classes for building model parameterization, 
+ *  The OpenStudio %Measure sub-project provides classes for building model parameterization, 
  *  manipulation, and queries. \link UserScript UserScripts\endlink are typically instantiated
  *  in Ruby scripts packaged as BCLMeasures (see openstudio::BCLMeasure in the utilities
  *  sub-project).
