@@ -33,6 +33,13 @@ DateTime DateTime::now()
   return DateTime(Date(now.date()), Time(now.time_of_day()));
 }
 
+/// get the utc time now
+DateTime DateTime::nowUTC()
+{
+  posix_time::ptime now = posix_time::second_clock::universal_time();
+  return DateTime(Date(now.date()), Time(now.time_of_day()));
+}
+
 /// default constructor
 DateTime::DateTime()
 {

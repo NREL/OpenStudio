@@ -40,7 +40,7 @@ namespace openstudio{
   {
     m_uid = removeBraces(UUID::createUuid());
     m_versionId = removeBraces(UUID::createUuid());
-    m_versionModified = DateTime::now().toISO8601();
+    m_versionModified = DateTime::nowUTC().toISO8601();
   }
 
   BCLXML::BCLXML(const openstudio::path& xmlPath):
@@ -806,7 +806,7 @@ namespace openstudio{
   void BCLXML::incrementVersionId()
   {
     m_versionId = removeBraces(UUID::createUuid());
-    m_versionModified = DateTime::now().toISO8601();
+    m_versionModified = DateTime::nowUTC().toISO8601();
   }
 
   bool BCLXML::checkForUpdatesXML()
