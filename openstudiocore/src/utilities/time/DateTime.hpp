@@ -48,6 +48,9 @@ class UTILITIES_API DateTime {
   /// get the local time now
   static DateTime now();
 
+  /// get the UTC time now
+  static DateTime nowUTC();
+
   /// default constructor
   DateTime();
 

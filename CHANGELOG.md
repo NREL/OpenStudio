@@ -1,3 +1,11 @@
+## OpenStudio v1.10.2
+###### 2016-01-21 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.10.1...v1.10.2 )
+
+Closed Issues: 3 (#1713, #1947, #2028)
+- ![Fixed:][fixed] [#1713]( https://github.com/NREL/OpenStudio/issues/1713 ), open studio not working on windows 8.1
+- ![Fixed:][fixed] [#1947]( https://github.com/NREL/OpenStudio/issues/1947 ), Expose all fields of the Sizing:Zone object
+- ![Fixed:][fixed] [#2028]( https://github.com/NREL/OpenStudio/issues/2028 ), Forward Translation error when multiple spaces of same space type in a zone when load type is design load
+
 ## OpenStudio v1.10.1
 ###### 2016-01-08 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.10.0...v1.10.1 )
 

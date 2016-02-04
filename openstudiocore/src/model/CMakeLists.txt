@@ -1087,6 +1087,9 @@ set(${target_name}_src
   ZoneControlThermostatStagedDualSetpoint.hpp
   ZoneControlThermostatStagedDualSetpoint_Impl.hpp
   ZoneControlThermostatStagedDualSetpoint.cpp
+  ZoneControlContaminantController.hpp
+  ZoneControlContaminantController_Impl.hpp
+  ZoneControlContaminantController.cpp
   Timestep.hpp
   Timestep_Impl.hpp
   Timestep.cpp
@@ -1729,6 +1732,7 @@ set(${target_name}_test_src
   test/YearDescription_GTest.cpp
   test/ZoneAirMassFlowConservation_GTest.cpp
   test/ZoneCapacitanceMultiplierResearchSpecial_GTest.cpp
+  test/ZoneControlContaminantController_GTest.cpp
   test/ZoneHVACBaseboardConvectiveElectric_GTest.cpp
   test/ZoneHVACBaseboardConvectiveWater_GTest.cpp
   test/ZoneHVACBaseboardRadiantConvectiveElectric_GTest.cpp

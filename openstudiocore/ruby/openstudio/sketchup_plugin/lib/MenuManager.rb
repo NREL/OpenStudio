@@ -570,7 +570,7 @@ module OpenStudio
       @openstudio_cmd.status_bar_text = "Launch Openstudio"
       @openstudio_cmd.set_validation_proc { enable_if_model_interface }
       
-      @online_help_cmd = UI::Command.new("Online Help") { UI.openURL("http://nrel.github.io/OpenStudio-user-documentation/next_steps/sketchup_plugin_interface/")  }
+      @online_help_cmd = UI::Command.new("Online Help") { UI.openURL("http://nrel.github.io/OpenStudio-user-documentation/reference/sketchup_plugin_interface/")  }
       @online_help_cmd.small_icon = Plugin.dir + "/lib/resources/icons/Help-16.png"
       @online_help_cmd.large_icon = Plugin.dir + "/lib/resources/icons/Help-24.png"
       @online_help_cmd.tooltip = "Online OpenStudio Help"

@@ -710,6 +710,9 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
       text->setValidator( valid );
     }
 
+    if (s == "m(m<sup>2</sup>)") {
+      s = "cm<sup>2</sup>";
+    }
     QLabel* units = new QLabel( s.c_str(), parent );
     units->setTextFormat(Qt::RichText);
 

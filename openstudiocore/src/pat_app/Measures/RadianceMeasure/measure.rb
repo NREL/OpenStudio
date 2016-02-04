@@ -1,5 +1,5 @@
 # see the URL below for information on how to write OpenStudio measures:
-# http://nrel.github.io/OpenStudio-user-documentation/measures/measure_writing_guide/
+# http://nrel.github.io/OpenStudio-user-documentation/reference/measure_writing_guide/
 
 # design document for this measure is at https://docs.google.com/document/d/16_TLRuhc4VFs2o0gRAp81hRObet7-s6fUEWo3HO7LpE/edit#
 
@@ -10,7 +10,7 @@ require 'date'
 require 'json'
 require 'erb'
 require 'matrix'
-
+require 'open3'
 
 class Array
   def average 
@@ -208,7 +208,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     radiancePath = co.getTools().getLastByName("rad").localBinPath.parent_path
     path = OpenStudio::Path.new(radiancePath).to_s
     raypath = (OpenStudio::Path.new(radiancePath).parent_path() / 
-    OpenStudio::Path.new('lib')).to_s()
+    OpenStudio::Path.new('lib')).to_s()   
 
     epw2weapath = (OpenStudio::Path.new(radiancePath) / OpenStudio::Path.new('epw2wea')).to_s
 
@@ -224,13 +224,19 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         OpenStudio::Path.new("strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin")
       end
       print_statement("Adding path for local perl: " + perlpath.to_s, runner)
-      ENV["PATH"] = ENV["PATH"] + ";" + path + ";" + perlpath.to_s
+      ENV["PATH"] = path + ";" + ENV["PATH"] + ";" + perlpath.to_s
       ENV["RAYPATH"] = path + ";" + raypath + ";."
     else
-      ENV["PATH"] = ENV["PATH"] + ":" + path
+      ENV["PATH"] = path + ":" + ENV["PATH"]
       ENV["RAYPATH"] = path + ":" + raypath + ":."
     end
-
+    
+    # Radiance version detection and environment reportage                 
+    ver = Open3.capture2("#{path}/rcontrib -version")
+    print_statement("Radiance version info: #{ver[0]}", runner)
+    print_statement("Radiance binary dir: #{path}", runner)
+    print_statement("Radiance library dir: #{raypath}", runner)
+    
     if Dir.glob(epw2weapath + programExtension).empty?
       runner.registerError("Cannot find epw2wea tool in radiance installation at '#{radiancePath}'. You may need to install a newer version of Radiance.")
       exit false
@@ -1884,7 +1890,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     
     # settle in, it's gonna be a bumpy ride...
     Dir.chdir("#{radPath}")
-    print_statement("Radiance run directory: '#{Dir.pwd}'", runner)
+    print_statement("Radiance working directory: '#{Dir.pwd}'", runner)
 
     epwFile = OpenStudio::OptionalEpwFile.new(OpenStudio::EpwFile.new(epw_path))
 
@@ -2051,7 +2057,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
     # cleanup
     FileUtils.rm('annual-sky.mtx')
-    FileUtils.rm('model.rad')
     unless debug_mode
       rm_list = "output/ts/m_*.ill", "output/ts/window_controls.ill", "output/ts/WG*.ill", "octrees/*.oct", "output/ts/*.shd"
       FileUtils.rm Dir.glob(rm_list)
