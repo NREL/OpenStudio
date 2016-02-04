@@ -1,0 +1,62 @@
+{
+  "root": "../root/",
+	"weather_file": "Golden_NREL.epw",
+	"seed": "example.osm",
+	"steps": [
+		{
+			"measure_dir_name": "IncreaseWallRValue",
+			"arguments": [
+				{
+					"name": "cost",
+					"value": 123.321
+				},
+				{
+					"name": "percent_increase",
+					"value": 5
+				},
+				{
+					"name": "operating_expenses",
+					"value": 0
+				}
+			]
+		},
+		{
+			"measure_dir_name": "IncreaseRoofRValue",
+			"arguments": [
+				{
+					"name": "cost",
+					"value": 321.123
+				},
+				{
+					"name": "percent_increase",
+					"value": 15
+				},
+				{
+					"name": "space_type",
+					"value": "*All*"
+				}
+			]
+		},
+		{
+			"measure_dir_name": "DecreaseThermalMass",
+			"arguments": [
+				{
+					"name": "has_bool",
+					"value": true
+				},
+				{
+					"name": "percent_decrease",
+					"value": 5
+				}
+			]
+		}
+	],
+	"file_format_version": "0.1",
+	"osa_id": "92e4ff34-a531-4c6f-9be4-b96ad2c4ec18",
+	"osa_hash": 72345978234,
+	"osd_id": "e7c2d3e7-7d9b-4a90-837c-44b44f77a89a",
+	"osd_hash": 978234,
+	"created_at": "2015-12-31T14:49:24Z",
+	"updated_at": "2016-02-01T10:38:12Z",
+	"id": "5c545de1-a7db-4089-92a3-80b29a16fa12"
+}

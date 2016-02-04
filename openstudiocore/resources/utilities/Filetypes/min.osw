@@ -1,0 +1,53 @@
+{
+	"weather_file": "",
+	"seed": "",
+	"steps": [
+		{
+			"measure_dir_name": "IncreaseWallRValue",
+			"arguments": [
+				{
+					"name": "cost",
+					"value": 123.321
+				},
+				{
+					"name": "percent_increase",
+					"value": 5
+				},
+				{
+					"name": "operating_expenses",
+					"value": 0
+				}
+			]
+		},
+		{
+			"measure_dir_name": "IncreaseRoofRValue",
+			"arguments": [
+				{
+					"name": "cost",
+					"value": 321.123
+				},
+				{
+					"name": "percent_increase",
+					"value": 15
+				},
+				{
+					"name": "space_type",
+					"value": "*All*"
+				}
+			]
+		},
+		{
+			"measure_dir_name": "DecreaseThermalMass",
+			"arguments": [
+				{
+					"name": "has_bool",
+					"value": true
+				},
+				{
+					"name": "percent_decrease",
+					"value": 5
+				}
+			]
+		}
+	]
+}

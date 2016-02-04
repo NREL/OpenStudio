@@ -712,6 +712,11 @@ add_subdirectory(src/qwt)
 add_subdirectory(src/expat)
 ###############################################################################
 
+###############################################################################
+## jsoncpp
+add_subdirectory(src/jsoncpp)
+###############################################################################
+
 ################################################################################
 ## litesql
 include_directories(SYSTEM src/litesql/include src/litesql/library ${CMAKE_BINARY_DIR}/litesql)
@@ -957,6 +962,7 @@ set(all_lib_targets
   qwt
   miniziplib
   sqlite
+  jsoncpp
   litesql
   litesql-util
   ${ALL_RUBY_BINDING_TARGETS}

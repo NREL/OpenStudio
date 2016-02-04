@@ -102,6 +102,8 @@ set(data_src
 set(filetypes_src
   filetypes/EpwFile.hpp
   filetypes/EpwFile.cpp
+  filetypes/WorkflowJSON.hpp
+  filetypes/WorkflowJSON.cpp
 )
 
 set(geometry_src
@@ -195,6 +197,7 @@ set(economics_src
 
 set(${target_name}_depends
   sqlite
+  jsoncpp
   litesql
   litesql-util
   miniziplib
@@ -378,6 +381,7 @@ set(${target_name}_test_src
   economics/test/Economics_GTest.cpp
   
   filetypes/test/EpwFile_GTest.cpp
+  filetypes/test/WorkflowJSON_GTest.cpp
   
   geometry/Test/BoundingBox_GTest.cpp
   geometry/Test/GeometryFixture.hpp
