@@ -50,7 +50,7 @@ In folder `developer\ruby`, open Git Bash and type the following
 
 Open out.txt, and paste data into CHANGELOG.md
 
-Commit CHANGELOG.md
+Commit CHANGELOG.md to the develop branch
 
 
 Builds
@@ -345,7 +345,7 @@ With Git, pull OpenStudio-server master
 
 - Update version in `server\lib\openstudio_server\version.rb`
 - Update version in `CHANGELOG.md`
-- Update version in `vagrant\chef\roles\openstudio.rb`
+- Update version and version_revision with the openstudio SHA in `vagrant\chef\roles\openstudio.rb`
 
 With Git, commit above files (Commit Message = `Bump version`)
 
