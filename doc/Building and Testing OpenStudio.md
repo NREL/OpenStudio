@@ -328,7 +328,7 @@ At https://github.com/NREL/OpenStudio/blob/develop/openstudiocore/src/osversion/
 
 - Select "History", see edits if needed (usually use `defaultUpdate` in first location, 1 line for each of 2 locations)
 
-With Git, commit above files (Commit Message = `Updating version to X.Y.Z+1`)
+With Git, commit above files (Commit Message = `Updating version to X.Y.Z+1`) to the develop branch
 
 AMI BUILD
 =========
