@@ -162,6 +162,7 @@ class OSVERSION_API VersionTranslator {
   int m_nObjectsFinalIdf;
   int m_nObjectsFinalModel;
   bool m_isComponent;
+  std::vector<IdfObject> m_cbeccSizingObjects;
 
   boost::optional<model::Model> updateVersion(std::istream& is, 
                                               bool isComponent,
