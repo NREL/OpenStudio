@@ -60,11 +60,11 @@ Dir.glob("#{dir}/**/") do |measure_dir|
       
       # try to load the ruby measure
       begin
-        info = OpenStudio::Ruleset.getInfo(measure)
+        info = OpenStudio::Measure.getInfo(measure)
         info.update(measure)
       rescue Exception => e  
         # failed to get info, put error into the measure's xml
-        info = OpenStudio::Ruleset::RubyUserScriptInfo.new(e.message)
+        info = OpenStudio::Measure::RubyUserScriptInfo.new(e.message)
         info.update(measure)
       end
 

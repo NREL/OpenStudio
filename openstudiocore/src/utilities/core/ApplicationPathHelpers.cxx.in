@@ -300,12 +300,8 @@ namespace openstudio {
     filenames.push_back(openstudio::toPath("openstudiogbxml"));
     filenames.push_back(openstudio::toPath("openstudioairflow"));
     filenames.push_back(openstudio::toPath("openstudioosversion"));
-    filenames.push_back(openstudio::toPath("openstudioruleset"));
-    filenames.push_back(openstudio::toPath("openstudiorunmanager"));
-    filenames.push_back(openstudio::toPath("openstudioproject"));
-    filenames.push_back(openstudio::toPath("openstudioanalysisdriver"));
+    filenames.push_back(openstudio::toPath("openstudiomeasure"));
     filenames.push_back(openstudio::toPath("openstudiomodeleditor"));
-    filenames.push_back(openstudio::toPath("openstudioanalysis"));
     filenames.push_back(openstudio::toPath("openstudiolib"));
     filenames.push_back(openstudio::toPath("openstudioisomodel"));
     filenames.push_back(openstudio::toPath("openstudiosdd"));

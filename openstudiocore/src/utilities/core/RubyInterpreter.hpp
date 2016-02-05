@@ -676,6 +676,103 @@ namespace openstudio
             evalString("require '" + openstudio::toString(t_moduleSearchPath / openstudio::toPath(*itr)) + "'");
           }
 
+             evalString("\
+# 'typedefs' for backwards compatibility\
+module OpenStudio\
+module Ruleset\
+\
+# support for name deprecated as of 0.10.1\
+class UserScriptArgument < OpenStudio::Measure::OSArgument\
+def initialize\
+OpenStudio::logFree(OpenStudio::Warn, 'OpenStudio.Measure', 'UserScriptArgument is deprecated, use OpenStudio::Measure::Argument instead.')\
+super\
+end\
+end\
+\
+# support for name deprecated as of 0.10.1\
+class OptionalUserScriptArgument < OpenStudio::Measure::OptionalOSArgument\
+def initialize\
+OpenStudio::logFree(OpenStudio::Warn, 'OpenStudio.Measure', 'OptionalUserScriptArgument is deprecated, use OpenStudio::Measure::OptionalOSArgument instead.')\
+super\
+end\
+end\
+\
+# support for name deprecated as of 0.10.1\
+class UserScriptArgumentVector < OpenStudio::Measure::OSArgumentVector\
+def initialize\
+OpenStudio::logFree(OpenStudio::Warn, 'OpenStudio.Measure', 'UserScriptArgumentVector is deprecated, use OpenStudio::Measure::OSArgumentVector instead.')\
+super\
+end\
+  end\
+  \
+  # support for name deprecated as of 0.10.1\
+  class UserScriptArgumentMap < OpenStudio::Measure::OSArgumentMap\
+  def initialize\
+  OpenStudio::logFree(OpenStudio::Warn, 'OpenStudio.Measure', 'UserScriptArgumentMap is deprecated, use OpenStudio::Measure::OSArgumentMap instead.')\
+  super\
+  end\
+  end\
+  \
+  # support for name deprecated as of 2.0.0\
+  class UserScript < OpenStudio::Measure::OSMeasure\
+  def initialize\
+  OpenStudio::logFree(OpenStudio::Warn, 'OpenStudio.Measure', 'UserScript is deprecated, use OpenStudio::Measure::OSMeasure instead.')\
+  super\
+  end\
+  end\
+  \
+  # support for name deprecated as of 2.0.0\
+  class ModelUserScript < OpenStudio::Measure::ModelMeasure\
+  def initialize\
+  OpenStudio::logFree(OpenStudio::Warn, 'OpenStudio.Measure', 'ModelUserScript is deprecated, use OpenStudio::Measure::ModelMeasure instead.')\
+  super\
+  end\
+  end\
+  \
+  # support for name deprecated as of 2.0.0\
+  class WorkspaceUserScript < OpenStudio::Measure::EnergyPlusMeasure\
+  def initialize\
+  OpenStudio::logFree(OpenStudio::Warn, 'OpenStudio.Measure', 'WorkspaceUserScript is deprecated, use OpenStudio::Measure::EnergyPlusMeasure instead.')\
+  super\
+  end\
+  end\
+  \
+  # support for name deprecated as of 2.0.0\
+  class ReportingUserScript < OpenStudio::Measure::ReportingMeasure\
+  def initialize\
+  OpenStudio::logFree(OpenStudio::Warn, 'OpenStudio.Measure', 'ReportingUserScript is deprecated, use OpenStudio::Measure::ReportingMeasure instead.')\
+  super\
+  end\
+  end\
+  \
+  # support for name deprecated as of 2.0.0\
+  class OSArgument < OpenStudio::Measure::OSArgument\
+  def initialize\
+  OpenStudio::logFree(OpenStudio::Warn, 'OpenStudio.Measure', 'OSArgument is deprecated, use OpenStudio::Measure::OSArgument instead.')\
+  super\
+  end\
+  end\
+  \
+  # support for name deprecated as of 2.0.0\
+  class OSResult < OpenStudio::Measure::OSResult\
+  def initialize\
+  OpenStudio::logFree(OpenStudio::Warn, 'OpenStudio.Measure', 'OSResult is deprecated, use OpenStudio::Measure::OSResult instead.')\
+  super\
+  end\
+end\
+\
+# support for name deprecated as of 2.0.0\
+class OSRunner < OpenStudio::Measure::OSRunner\
+def initialize\
+OpenStudio::logFree(OpenStudio::Warn, 'OpenStudio.Measure', 'OSRunner is deprecated, use OpenStudio::Measure::OSRunner instead.')\
+super\
+end\
+end\
+\
+end # module Ruleset\
+end # module OpenStudio\
+");
+
           // register some default types that we want to pass in / out of the ruby system
           registerType<int>("int");
           registerType<long>("long");

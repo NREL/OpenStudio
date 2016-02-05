@@ -241,11 +241,11 @@ std::string infoExtractorRubyFunction() {
   ss << std::endl;
 // The following lines may throw
   ss << "  measureType = nil" << std::endl;
-  ss << "  className = userScript.class.to_s" << std::endl;
-  ss << "  name = userScript.name" << std::endl;
+  ss << "  className = measure.class.to_s" << std::endl;
+  ss << "  name = measure.name" << std::endl;
   ss << "  name = className if name.empty?" << std::endl;
-  ss << "  description = userScript.description" << std::endl;
-  ss << "  modelerDescription = userScript.modeler_description" << std::endl;
+  ss << "  description = measure.description" << std::endl;
+  ss << "  modelerDescription = measure.modeler_description" << std::endl;
   ss << "  args = OpenStudio::Measure::OSArgumentVector.new" << std::endl;
   ss << "  model = OpenStudio::Model::Model.new" << std::endl;
   ss << "  workspace = OpenStudio::Workspace.new(\"Draft\".to_StrictnessLevel," << std::endl;
