@@ -39,6 +39,7 @@
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
+#include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../utilities/idf/ValidityReport.hpp"
 #include "../utilities/core/PathHelpers.hpp"
@@ -102,7 +103,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.9.5")] = &VersionTranslator::update_1_9_4_to_1_9_5;
   m_updateMethods[VersionString("1.10.0")] = &VersionTranslator::update_1_9_5_to_1_10_0;
   m_updateMethods[VersionString("1.10.2")] = &VersionTranslator::update_1_10_1_to_1_10_2;
-  m_updateMethods[VersionString("1.10.3")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.10.4")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -199,6 +200,7 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.10.0"));
   m_startVersions.push_back(VersionString("1.10.1"));
   m_startVersions.push_back(VersionString("1.10.2"));
+  m_startVersions.push_back(VersionString("1.10.3"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -447,6 +449,42 @@ void VersionTranslator::initializeMap(std::istream& is) {
   IddFileAndFactoryWrapper iddFile = getIddFile(currentVersion);
   if (iddFile.iddFileType() == IddFileType::UserCustom) {
     oIdfFile = IdfFile::load(is,iddFile.iddFile());
+    if( currentVersion == VersionString(1,9,0) ) {
+      if( oIdfFile ) {
+        auto sizingObjects = oIdfFile->getObjectsByType(iddFile.getObject("OS:Sizing:Zone").get());
+
+        // Figure out if the OS:Sizing:Zone object looks like it is from CBECC
+        // it will have extra fields that would were not in the "real" 1.9.0 IDD
+        bool fromCBECC = false;
+        for( auto const & object : sizingObjects ) {
+          if( auto value = object.getString(2) ) {
+            if( istringEqual("SupplyAirTemperature", value.get()) ||
+                istringEqual("TemperatureDifference", value.get()) ) {
+              fromCBECC = true;
+              break;
+            }
+          }
+        }
+
+        if( fromCBECC ) {
+          // Remove the sizing objects so that the translation will proceed smoothly
+          oIdfFile->removeObjects(sizingObjects);
+
+          // Get a special CBECC idd file,
+          // load the idf file again against that idd,
+          // get the sizing objects and save them for later,
+          // we will reintrodce the sizing objects in the version 1.10.2 phase of the translation
+          // when they were officially part of OS
+          auto cbeccIddFile = IddFile::load( getSharedResourcesPath() / "osversion/1_9_0_CBECC/OpenStudio.idd");
+          OS_ASSERT(cbeccIddFile);
+          is.seekg(0, std::ios::beg);
+          auto cbeccIdfFile = IdfFile::load(is,cbeccIddFile.get());
+          OS_ASSERT(cbeccIdfFile);
+          m_cbeccSizingObjects = cbeccIdfFile->getObjectsByType(cbeccIddFile->getObject("OS:Sizing:Zone").get());
+        }
+
+      }
+    }
   }
   else {
     oIdfFile = IdfFile::load(is,iddFile.iddFileType());
@@ -3076,6 +3114,26 @@ std::string VersionTranslator::update_1_10_1_to_1_10_2(const IdfFile& idf_1_10_1
     } else {
       ss << object;
     }
+  }
+
+  // Reintroduce m_cbeccSizingObjects 
+  for( auto const & sizingObject : m_cbeccSizingObjects ) {
+    auto iddObject = idd_1_10_2.getObject("OS:Sizing:Zone");
+    OS_ASSERT(iddObject);
+    IdfObject newObject(iddObject.get());
+
+    for( size_t i = 0; i < sizingObject.numNonextensibleFields(); ++i ) {
+      if( auto value = sizingObject.getString(i) ) {
+        newObject.setString(i,value.get());
+      }
+    }
+    newObject.setString(24,"No");
+    newObject.setString(25,"NeutralSupplyAir");
+    newObject.setString(26,"Autosize");
+    newObject.setString(27,"Autosize");
+
+    m_new.push_back( newObject );
+    ss << newObject;
   }
 
   return ss.str();
