@@ -283,7 +283,7 @@ TEST_F(RunManagerTestFixture, JobStatePersistence_Uncompleted)
     {
       if (itr->lastRun())
       {
-        ASSERT_LT(*(itr->lastRun()), now);
+        EXPECT_LT(*(itr->lastRun()), now);
         openstudio::runmanager::JobErrors errors = itr->errors();
         ASSERT_TRUE(errors.allErrors.empty());
         ASSERT_TRUE(errors.succeeded());
@@ -309,8 +309,8 @@ TEST_F(RunManagerTestFixture, JobStatePersistence_Uncompleted)
         ++itr)
     {
       ASSERT_TRUE(itr->lastRun());
-
-      if ( *(itr->lastRun()) < now)
+      openstudio::DateTime lastRun = *(itr->lastRun());
+      if ( lastRun < now)
       {
         ++previouslyrun;
       } else {
@@ -319,8 +319,8 @@ TEST_F(RunManagerTestFixture, JobStatePersistence_Uncompleted)
 
     }
 
-    ASSERT_EQ(previouslyrun, 3);
-    ASSERT_EQ(newlyrun, 2);
+    EXPECT_EQ(previouslyrun, 3);
+    EXPECT_EQ(newlyrun, 2);
 
     ASSERT_FALSE(rm.workPending());
   }

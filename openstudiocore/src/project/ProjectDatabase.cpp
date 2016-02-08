@@ -186,6 +186,7 @@ namespace detail {
     // make sure we are the last one using database connection
     OS_ASSERT(m_qSqlDatabase.use_count() == 1);
 
+    QString connectionName = m_qSqlDatabase->connectionName();
     m_qSqlDatabase->close();
     m_qSqlDatabase.reset(); // actually delete the database before removeDatabase
     QSqlDatabase::removeDatabase(toQString(m_path));

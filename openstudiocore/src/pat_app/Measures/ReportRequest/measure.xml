@@ -2,7 +2,8 @@
   <schema_version>3.0</schema_version>
   <name>report_request</name>
   <uid>060ee477-b04c-4a1b-8788-312d796ad132</uid>
-  <version_id>f94b5a86-30a0-44b7-bfae-0e420f74034a</version_id>
+  <version_id>0934c09f-d74b-41c3-bacc-2b3607c0b4ce</version_id>
+  <version_modified>20160204T225930</version_modified>
   <xml_checksum>2CF2EA46</xml_checksum>
   <class_name>ReportRequest</class_name>
   <display_name>Report Request</display_name>
@@ -65,7 +66,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>86D45CBF</checksum>
+      <checksum>53AE26C3</checksum>
     </file>
   </files>
 </measure>

@@ -38,12 +38,20 @@ namespace openstudio{
     return result;
   }
 
-  /// get current time of day
+  /// get current local time of day
   Time Time::currentTime()
   {
     posix_time::ptime now = posix_time::second_clock::local_time();
     return Time(now.time_of_day());
   }
+
+  /// get current UTC time of day
+  Time Time::currentTimeUTC()
+  {
+    posix_time::ptime now = posix_time::second_clock::universal_time();
+    return Time(now.time_of_day());
+  }
+
 
   /// Default constructor
   Time::Time() :

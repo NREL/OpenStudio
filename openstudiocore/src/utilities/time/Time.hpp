@@ -62,8 +62,11 @@ namespace openstudio{
       //typedef std::shared_ptr<ImplType> ImplPtr;
 
 
-      /// get current time of day
+      /// get current local time of day
       static Time currentTime();
+
+      /// get the current UTC time of day
+      static Time currentTimeUTC();
 
       /// default constructor
       Time();

@@ -84,35 +84,39 @@ boost::optional<openstudio::FileLogSink> IlluminanceMapFixture::logFile;
 
 TEST_F(IlluminanceMapFixture, IlluminanceMapPlot)
 {
-  Application::instance().application(true);
+  if (!Application::instance().hasApplication()){
+    Application::instance().application(true);
+  }
+  if (Application::instance().hasGUI()){
 
-  openstudio::DateTime dateTime(Date(MonthOfYear::Jul, 21), Time(0.5));
+    openstudio::DateTime dateTime(Date(MonthOfYear::Jul, 21), Time(0.5));
 
-  const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
-  // MapName in EnergyPlus 7.0: CLASSROOM ILLUMINANCE MAP at 0.76m Illuminance [lux] (Hourly)
-  // MapName in EnergyPlus 7.1: CLASSROOM:Denver Centennial  Golden   Nr CO USA TMY3 WMO#=724666:CLASSROOM ILLUMINANCE MAP at 0.76m Illuminance [lux] (Hourly)
+    const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
+    // MapName in EnergyPlus 7.0: CLASSROOM ILLUMINANCE MAP at 0.76m Illuminance [lux] (Hourly)
+    // MapName in EnergyPlus 7.1: CLASSROOM:Denver Centennial  Golden   Nr CO USA TMY3 WMO#=724666:CLASSROOM ILLUMINANCE MAP at 0.76m Illuminance [lux] (Hourly)
 
-  std::vector<string> illuminanceMapNames = sqlFile.illuminanceMapNames();
-  ASSERT_EQ(static_cast<unsigned>(1), illuminanceMapNames.size());
-  ASSERT_TRUE(boost::algorithm::contains(illuminanceMapNames[0], ":" + mapName));
+    std::vector<string> illuminanceMapNames = sqlFile.illuminanceMapNames();
+    ASSERT_EQ(static_cast<unsigned>(1), illuminanceMapNames.size());
+    ASSERT_TRUE(boost::algorithm::contains(illuminanceMapNames[0], ":" + mapName));
 
-  Vector x = sqlFile.illuminanceMapX(mapName, dateTime);
-  ASSERT_EQ(static_cast<unsigned>(9), x.size());
+    Vector x = sqlFile.illuminanceMapX(mapName, dateTime);
+    ASSERT_EQ(static_cast<unsigned>(9), x.size());
 
-  Vector y = sqlFile.illuminanceMapY(mapName, dateTime);
-  ASSERT_EQ(static_cast<unsigned>(9), y.size());
+    Vector y = sqlFile.illuminanceMapY(mapName, dateTime);
+    ASSERT_EQ(static_cast<unsigned>(9), y.size());
 
-  // eventually will want to check these points against input file
-  // these are currently negative from input file because
-  // classroom zone has angle of relative north = 180 degrees
-  EXPECT_NEAR(-8.2296, x[0], 0.00001);
-  EXPECT_NEAR(-0.9144, x[8], 0.00001);
-  EXPECT_NEAR(-8.2296, y[0], 0.00001);
-  EXPECT_NEAR(-0.9144, y[8], 0.00001);
+    // eventually will want to check these points against input file
+    // these are currently negative from input file because
+    // classroom zone has angle of relative north = 180 degrees
+    EXPECT_NEAR(-8.2296, x[0], 0.00001);
+    EXPECT_NEAR(-0.9144, x[8], 0.00001);
+    EXPECT_NEAR(-8.2296, y[0], 0.00001);
+    EXPECT_NEAR(-0.9144, y[8], 0.00001);
 
-  Matrix v = sqlFile.illuminanceMap(mapName, dateTime);
-  ASSERT_EQ(x.size(), v.size1());
-  ASSERT_EQ(y.size(), v.size2());
+    Matrix v = sqlFile.illuminanceMap(mapName, dateTime);
+    ASSERT_EQ(x.size(), v.size1());
+    ASSERT_EQ(y.size(), v.size2());
+  }
 }
 
 TEST_F(IlluminanceMapFixture, IlluminanceMapPlotMin)
@@ -174,53 +178,67 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeriesCount)
 
 TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeries)
 {
-  Application::instance().application(true);
+  if (!Application::instance().hasApplication()){
+    Application::instance().application(true);
+  }
+  if (Application::instance().hasGUI()){
 
-  const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
+    const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
 
-  std::vector< std::pair<int, DateTime> > illuminanceMapReportIndicesDates;
-  // list of hourly reports for the illuminance map
-  illuminanceMapReportIndicesDates = sqlFile.illuminanceMapHourlyReportIndicesDates(mapName);
+    std::vector< std::pair<int, DateTime> > illuminanceMapReportIndicesDates;
+    // list of hourly reports for the illuminance map
+    illuminanceMapReportIndicesDates = sqlFile.illuminanceMapHourlyReportIndicesDates(mapName);
 
-  ASSERT_FALSE(illuminanceMapReportIndicesDates.empty());
+    ASSERT_FALSE(illuminanceMapReportIndicesDates.empty());
+  }
 }
 
 TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeriesOpt)
 {
-  Application::instance().application(true);
+  if (!Application::instance().hasApplication()){
+    Application::instance().application(true);
+  }
+  if (Application::instance().hasGUI()){
 
-  const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
+    const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
 
-  std::vector< std::pair<int, DateTime> > illuminanceMapReportIndicesDates;
-  // list of hourly reports for the illuminance map
-  illuminanceMapReportIndicesDates = sqlFile.illuminanceMapHourlyReportIndicesDates(mapName);
-  
-  ASSERT_FALSE(illuminanceMapReportIndicesDates.empty());
+    std::vector< std::pair<int, DateTime> > illuminanceMapReportIndicesDates;
+    // list of hourly reports for the illuminance map
+    illuminanceMapReportIndicesDates = sqlFile.illuminanceMapHourlyReportIndicesDates(mapName);
 
-  std::vector<double> x;
-  std::vector<double> y;
-  std::vector<double> illuminance;
+    ASSERT_FALSE(illuminanceMapReportIndicesDates.empty());
 
-  sqlFile.illuminanceMap(illuminanceMapReportIndicesDates[0].first,x,y,illuminance);
+    std::vector<double> x;
+    std::vector<double> y;
+    std::vector<double> illuminance;
+
+    sqlFile.illuminanceMap(illuminanceMapReportIndicesDates[0].first, x, y, illuminance);
+  }
 }
 
 TEST_F(IlluminanceMapFixture, IlluminanceMapMatrixBaseline)
 {
-  Application::instance().application(true);
-
-  Vector x(9); 
-  Vector y(9); 
-
-  Matrix m(9,9);
-
-  for (unsigned i=0;i<9;i++)
-  {
-    x(i)=i;
-    y(i)=i;
+  if (!Application::instance().hasApplication()){
+    Application::instance().application(true);
   }
-  for (unsigned i=0;i<9;i++)
-    for (unsigned j=0;j<9;j++)
-      m(i,j) = x(i)*y(8-j);
+  if (Application::instance().hasGUI()){
+
+    Vector x(9);
+    Vector y(9);
+
+    Matrix m(9, 9);
+
+    for (unsigned i = 0; i < 9; i++)
+    {
+      x(i) = i;
+      y(i) = i;
+    }
+    for (unsigned i = 0; i < 9; i++){
+      for (unsigned j = 0; j < 9; j++){
+        m(i, j) = x(i)*y(8 - j);
+      }
+    }
+  }
 }
 
 
