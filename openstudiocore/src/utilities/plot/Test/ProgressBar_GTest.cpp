@@ -20,6 +20,7 @@
 #include <gtest/gtest.h>
 
 #include "../ProgressBar.hpp"
+#include "../../core/Application.hpp"
 #include "../../core/System.hpp"
 #include "../../idf/Workspace.hpp"
 #include "../../idf/WorkspaceObject.hpp"
@@ -58,44 +59,59 @@ private:
 
 TEST(ProgressBar, BasicTest)
 {
-  ProgressBar pb;
-  for (int i = 0; i <= 100; ++i){
-    pb.setValue(i);
-    EXPECT_EQ(i, pb.value());
-    System::msleep(10);
+  if (!Application::instance().hasApplication()){
+    Application::instance().application(true);
+  }
+  if (Application::instance().hasGUI()){
+    ProgressBar pb;
+    for (int i = 0; i <= 100; ++i){
+      pb.setValue(i);
+      EXPECT_EQ(i, pb.value());
+      System::msleep(10);
+    }
   }
 }
 
 TEST(ProgressBar, AdvancedTest)
 {
-  ProgressBar pb1;
-  ProgressBar pb2;
-  ProgressBar pb3;
+  if (!Application::instance().hasApplication()){
+    Application::instance().application(true);
+  }
+  if (Application::instance().hasGUI()){
+    ProgressBar pb1;
+    ProgressBar pb2;
+    ProgressBar pb3;
 
-  for (unsigned i = 0; i <= 100; ++i){
-    pb1.setValue(i);
-    pb2.setValue(100-i);
-    pb3.setValue((10*i)%100);
-    System::msleep(10);
+    for (unsigned i = 0; i <= 100; ++i){
+      pb1.setValue(i);
+      pb2.setValue(100 - i);
+      pb3.setValue((10 * i) % 100);
+      System::msleep(10);
+    }
   }
 }
 
 TEST(ProgressBar, WorkspaceTest)
 {
-  ProgressBar2 pb;
-  EXPECT_FALSE(pb.called());
+  if (!Application::instance().hasApplication()){
+    Application::instance().application(true);
+  }
+  if (Application::instance().hasGUI()){
+    ProgressBar2 pb;
+    EXPECT_FALSE(pb.called());
 
-  StrictnessLevel level(StrictnessLevel::Draft);
-  IddFileType fileType(IddFileType::EnergyPlus);
-  Workspace workspace(level,fileType);
-  workspace.connectProgressBar(pb);
+    StrictnessLevel level(StrictnessLevel::Draft);
+    IddFileType fileType(IddFileType::EnergyPlus);
+    Workspace workspace(level, fileType);
+    workspace.connectProgressBar(pb);
 
-  IdfObjectVector objects;
-  objects.push_back(IdfObject(IddObjectType::Zone));
-  workspace.addObjects(objects);
+    IdfObjectVector objects;
+    objects.push_back(IdfObject(IddObjectType::Zone));
+    workspace.addObjects(objects);
 
-  System::msleep(10);
+    System::msleep(10);
 
-  EXPECT_TRUE(pb.called());
+    EXPECT_TRUE(pb.called());
+  }
 }
 

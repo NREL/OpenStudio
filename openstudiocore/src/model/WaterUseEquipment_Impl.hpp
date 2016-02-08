@@ -66,6 +66,8 @@ class MODEL_API WaterUseEquipment_Impl : public SpaceLoadInstance_Impl {
 
   virtual bool isMultiplierDefaulted() const override;
 
+  virtual bool isAbsolute() const override;
+
   virtual bool setDefinition(const SpaceLoadDefinition& definition) override;
 
   virtual std::vector<IdfObject> remove() override;

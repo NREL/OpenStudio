@@ -20,10 +20,14 @@
 #include "ZoneControlHumidistat.hpp"
 #include "ZoneControlHumidistat_Impl.hpp"
 
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
 
 #include <utilities/idd/OS_ZoneControl_Humidistat_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -119,6 +123,20 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<ThermalZone> ZoneControlHumidistat_Impl::controlledZone() const
+  {
+    Handle h = handle();
+    auto zones = model().getModelObjects<model::ThermalZone>();
+    for( const auto & zone: zones ) {
+      if( auto humidistat = zone.zoneControlHumidistat() ) {
+        if( humidistat->handle() == h ) {
+          return zone;
+        }
+      }
+    }
+    return boost::none;
+  }
+
 } // detail
 
 ZoneControlHumidistat::ZoneControlHumidistat(const Model& model)
@@ -153,6 +171,10 @@ void ZoneControlHumidistat::resetHumidifyingRelativeHumiditySetpointSchedule() {
 
 void ZoneControlHumidistat::resetDehumidifyingRelativeHumiditySetpointSchedule() {
   getImpl<detail::ZoneControlHumidistat_Impl>()->resetDehumidifyingRelativeHumiditySetpointSchedule();
+}
+
+boost::optional<ThermalZone> ZoneControlHumidistat::controlledZone() const {
+  return getImpl<detail::ZoneControlHumidistat_Impl>()->controlledZone();
 }
 
 /// @cond

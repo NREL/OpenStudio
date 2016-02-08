@@ -2276,6 +2276,7 @@ namespace openstudio{
         }
       }
       // DLM: potential leap year problem
+      // DLM: get standard time zone?
       openstudio::Date date(monthOfYear(month), day, yd);
       openstudio::Time time(0, hour, minute, 0);
       return openstudio::DateTime(date, time);
@@ -2318,6 +2319,7 @@ namespace openstudio{
         }
       }
       // DLM: potential leap year problem
+      // DLM: get standard time zone?
       openstudio::Date date(monthOfYear(month), day, yd);
       openstudio::Time time(0, hour, minute, 0);
       return openstudio::DateTime(date, time);
@@ -2413,6 +2415,7 @@ namespace openstudio{
               firstReportDateTime = lastDateTime(false, dataDictionary.envPeriodIndex);
             } else{
               // DLM: potential leap year problem
+              // DLM: get standard time zone?
               if (intervalMinutes >= 24 * 60){
                 // Daily or Monthly
                 OS_ASSERT(intervalMinutes % (24 * 60) == 0);
@@ -2499,6 +2502,7 @@ namespace openstudio{
           minute = sqlite3_column_int(sqlStmtPtr, 3);
 
           // DLM: potential leap year problem
+          // DLM: get standard time zone?
           openstudio::DateTime dateTime(openstudio::Date(monthOfYear(month),day), openstudio::Time(0,hour, minute, 0));
           dateTimes.push_back(dateTime);
 
@@ -2896,6 +2900,7 @@ namespace openstudio{
       }
 
       // DLM: potential leap year problem
+      // DLM: get standard time zone?
       DateTime dstStart(Date(openstudio::monthOfYear(startMonth),startDay), Time(startDay, startHour, startMinute,0));
       DateTime dstEnd(Date(openstudio::monthOfYear(endMonth),endDay), Time(endDay, endHour, endMinute,0));
 
@@ -3343,6 +3348,7 @@ namespace openstudio{
         pair.first = sqlite3_column_int(sqlStmtPtr,0);
 
         // DLM: potential leap year problem
+        // DLM: get standard time zone?
         pair.second = DateTime( Date( monthOfYear( sqlite3_column_int(sqlStmtPtr,1) ), sqlite3_column_int(sqlStmtPtr,2) ), Time( 0, sqlite3_column_int(sqlStmtPtr, 3), 0, 0) );
         reportIndicesDates.push_back( pair );
         // step to next row
@@ -3381,6 +3387,7 @@ namespace openstudio{
       sqlite3_finalize(sqlStmtPtr);
 
       // DLM: potential leap year problem
+      // DLM: get standard time zone?
       return DateTime(Date(monthOfYear(month),dayOfMonth), Time(0,hour, 0, 0));
     }
 

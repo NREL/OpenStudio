@@ -195,6 +195,7 @@
 #include "../utilities/units/UnitFactory.hpp"
 #include "../utilities/math/FloatCompare.hpp"
 #include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/geometry/Point3d.hpp"
 #include "../utilities/geometry/BoundingBox.hpp"
 
 #include <QFile>

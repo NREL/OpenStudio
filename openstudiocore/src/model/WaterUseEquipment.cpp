@@ -207,6 +207,11 @@ namespace detail {
     return true;
   }
 
+  bool WaterUseEquipment_Impl::isAbsolute() const
+  {
+    return true;
+  }
+
 } // detail
 
 WaterUseEquipment::WaterUseEquipment(const WaterUseEquipmentDefinition& waterUseEquipmentDefinition)

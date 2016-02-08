@@ -89,7 +89,6 @@ class AddShadingControls < OpenStudio::Ruleset::ModelUserScript
     result << construction
     
     
-    
     return result
   end
   

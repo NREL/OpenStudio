@@ -48,6 +48,12 @@ class UTILITIES_API DateTime {
   /// get the local time now
   static DateTime now();
 
+  /// get the UTC time now
+  static DateTime nowUTC();
+
+  /// get the current UTC offset
+  static double localOffsetUTC();
+
   /// default constructor
   DateTime();
 
@@ -56,6 +62,9 @@ class UTILITIES_API DateTime {
 
   /// constructor from Date and Time
   DateTime(const Date& date, const Time& timeFromDate);
+
+  /// constructor from Date and Time and UTC Offset
+  DateTime(const Date& date, const Time& timeFromDate, double utcOffset);
 
   /// copy constructor
   DateTime(const DateTime& other);
@@ -111,13 +120,16 @@ class UTILITIES_API DateTime {
   /// getter to time member
   Time time() const;
 
+  /// UTC offset in hours, local time = UTC time + UTC offset
+  double utcOffset() const;
+
   /// convert to string
   std::string toString() const;
 
   /// convert to ISO 8601 string
   std::string toISO8601() const;
 
-  /// convert to epoch time_t
+  /// convert to epoch time_t in UTC time
   time_t toEpoch() const;
   
   /// construct from ISO 8601 string
@@ -133,6 +145,7 @@ class UTILITIES_API DateTime {
 
   Date m_date;
   Time m_time;
+  double m_utcOffset;
 };
 
 /// optional DateTime

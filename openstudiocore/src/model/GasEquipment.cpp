@@ -138,6 +138,14 @@ namespace detail {
     return isEmpty(OS_GasEquipmentFields::Multiplier);
   }
 
+  bool GasEquipment_Impl::isAbsolute() const {
+    GasEquipmentDefinition definition = gasEquipmentDefinition();
+    if (definition.designLevel()) {
+      return true;
+    }
+    return false;
+  }
+
   std::string GasEquipment_Impl::endUseSubcategory() const {
     boost::optional<std::string> value = getString(OS_GasEquipmentFields::EndUseSubcategory,true);
     OS_ASSERT(value);
