@@ -88,6 +88,8 @@
 #include "../model/Node_Impl.hpp"
 #include "../model/Splitter.hpp"
 #include "../model/Splitter_Impl.hpp"
+#include "../model/AirLoopHVACZoneSplitter.hpp"
+#include "../model/AirLoopHVACZoneSplitter_Impl.hpp"
 #include "../model/Mixer.hpp"
 #include "../model/ThermalZone.hpp"
 #include "../model/ThermalZone_Impl.hpp"
@@ -435,11 +437,13 @@ QRectF LinkItem::boundingRect() const
 }
 
 HorizontalBranchItem::HorizontalBranchItem( std::vector<model::ModelObject> modelObjects,
-                                            QGraphicsItem * parent)
+                                            QGraphicsItem * parent,
+                                            bool dualDuct )
   : GridItem( parent ),
     m_isDropZone(false),
     m_text("Drag From Library"),
-    m_hasDualTwoRightSidePipes(false)
+    m_hasDualTwoRightSidePipes(false),
+    m_dualDuct(dualDuct)
 {
   for( auto it = modelObjects.begin(); it < modelObjects.end(); ++it ) {
     if(model::OptionalNode comp = it->optionalCast<model::Node>()) {
@@ -573,8 +577,7 @@ void HorizontalBranchItem::setPadding( unsigned padding )
   {
     for( unsigned i = m_paddingItems.size(); i < padding; i++ )
     {
-      auto straightItem = new OneThreeStraightItem();
-      straightItem->setParentItem(this);
+      auto straightItem = new OneThreeStraightItem(this,m_dualDuct);
       m_paddingItems.push_back( straightItem );
     }
   }
@@ -2708,8 +2711,46 @@ void OASystemItem::paint(QPainter *painter,
 
 SplitterItem::SplitterItem( QGraphicsItem * parent )
   : GridItem( parent ),
-    m_numberBranches(1)
+    m_numberBranches(1),
+    m_firstDuct1Index(0),
+    m_firstDuct2Index(0)
 {
+
+  // A Predicate that returns true on either m_type or DualDuct
+  struct Predicate {
+    Predicate(TerminalType type)
+      : m_type(type)
+    {}
+
+    bool operator()(TerminalType t_type) {
+      if( (t_type == m_type) || (t_type == TerminalType::DualDuct) ) {
+        return true;
+      } else {
+        return false;
+      } 
+    }
+
+    TerminalType m_type;
+  };
+
+  if( ! m_terminalTypes.empty() ) {
+
+    {
+      auto terminalIt = std::find_if(m_terminalTypes.begin(),m_terminalTypes.end(),Predicate(SplitterItem::SingleDuct1));
+      if( terminalIt != m_terminalTypes.end() ) {
+        m_firstDuct1Index = std::distance(m_terminalTypes.begin(), terminalIt);
+      }
+    }
+
+    {
+      auto terminalIt = std::find_if(m_terminalTypes.begin(),m_terminalTypes.end(),Predicate(SplitterItem::SingleDuct2));
+      if( terminalIt != m_terminalTypes.end() ) {
+        m_firstDuct2Index = std::distance(m_terminalTypes.begin(), terminalIt);
+      }
+    }
+
+  }
+
 }
 
 void SplitterItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -2719,8 +2760,6 @@ void SplitterItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
   painter->setRenderHint(QPainter::Antialiasing, true);
   painter->setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
   painter->setBrush(QBrush(Qt::lightGray,Qt::SolidPattern));
-
-  painter->drawLine(50,50,50,(((m_numberBranches * 2) - 1) * 100) - 50);
 
   int midpointIndex;
   if( m_numberBranches == 1 )
@@ -2734,16 +2773,65 @@ void SplitterItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
   {
     midpointIndex = m_numberBranches - 1;
   }
-  painter->drawLine(50,(midpointIndex * 100) + 50,100,(midpointIndex * 100) + 50);
 
-  int j = 50;
-  for( int branchIndex = 1; branchIndex <= m_numberBranches; branchIndex++ )
-  {
-    painter->drawLine(0,j,50,j);
-    j = j + 200;
+  if( m_terminalTypes.empty() ) {
+    painter->drawLine(50,50,50,(((m_numberBranches * 2) - 1) * 100) - 50);
+    painter->drawLine(50,(midpointIndex * 100) + 50,100,(midpointIndex * 100) + 50);
+
+    int j = 50;
+    for( int branchIndex = 1; branchIndex <= m_numberBranches; branchIndex++ )
+    {
+      painter->drawLine(0,j,50,j);
+      j = j + 200;
+    }
+  } else {
+    // if m_terminalTypes is not empty then we probably have a dual duct and things get more complicated
+    // because we have to draw two splitters in one
+
+    // Draw the two longest vertical lines 
+    painter->drawLine(75,m_firstDuct1Index * 100 + 25,75,(((m_numberBranches * 2) - 1) * 100) - 75);
+    painter->drawLine(25,m_firstDuct2Index * 100 + 75,25,(((m_numberBranches * 2) - 1) * 100) - 25);
+
+    // Draw the leader into the vertical pipe for duct 2
+    painter->drawLine(75,(midpointIndex * 100) + 25,100,(midpointIndex * 100) + 25);
+
+    // Draw the leader into the vertical pipe for duct 1
+    painter->drawLine(25,(midpointIndex * 100) + 75,65,(midpointIndex * 100) + 75);
+    painter->drawLine(85,(midpointIndex * 100) + 75,100,(midpointIndex * 100) + 75);
+    painter->drawArc(65,(midpointIndex * 100) + 65,20,20,0,2880);
+
+    // Draw the horizontal hops from duct 1 to the terminal
+    for( int j = m_firstDuct1Index; j < m_terminalTypes.size() + 1; ++j )
+    {
+      // Check to make sure we have to hop
+      if( j > m_firstDuct2Index ) {
+        painter->drawLine(0,j * 200 + 25,15,j * 200 + 25);
+        painter->drawLine(35,j * 200 + 25,75,j * 200 + 25);
+        painter->drawArc(15,j * 200 + 15,20,20,0,2880);
+      } else {
+        painter->drawLine(0,j * 200 + 25,75,j * 200 + 25);
+      }
+    }
+
+    // Draw the horizontal lines from duct 2 to terminal
+    for( int j = m_firstDuct2Index; j < m_terminalTypes.size() + 1; ++j )
+    {
+      painter->drawLine(0,j * 200 + 75,25,j * 200 + 75);
+    }
+
+    // Draw the horizontal line to the drop zone
+    //painter->drawLine(0,((((m_numberBranches * 2) - 1) * 100) - 25),75,((((m_numberBranches * 2) - 1) * 100) - 25));
+    //painter->drawLine(0,((((m_numberBranches * 2) - 1) * 100) - 75),25,((((m_numberBranches * 2) - 1) * 100) - 75));
   }
 }
 
+void SplitterItem::setTerminalTypes( std::vector< SplitterItem::TerminalType > types )
+{
+  // We want the number of branches to be in sync with the number of terminal/terminal types
+  // Add one for the drop zone
+  setNumberBranches( types.size() + 1 );
+  m_terminalTypes = types;
+}
 
 void SplitterItem::setNumberBranches( int branches )
 {
@@ -2966,23 +3054,62 @@ DemandSideItem::DemandSideItem( QGraphicsItem * parent,
     m_outletSpacer(nullptr)
 {
   model::Loop loop = m_demandInletNodes[0].loop().get(); 
-
-  model::Splitter splitter = loop.demandSplitter();
   model::Mixer mixer = loop.demandMixer();
+  model::Splitter splitter = loop.demandSplitter();
+
+  std::vector<model::Splitter> splitters;
+
+  // Do we have a dual duct system
+  auto dualDuct = false;
+  std::vector<SplitterItem::TerminalType> terminalTypes;
+  if( m_demandInletNodes.size() == 2u ) {
+    dualDuct = true;
+    if( auto airLoop = loop.optionalCast<model::AirLoopHVAC>() ) {
+      auto splitters = airLoop->zoneSplitters();
+      OS_ASSERT(splitters.size() == 2u);
+
+      auto zones = airLoop->thermalZones();
+      for( const auto & zone : zones ) {
+        // What terminal types do we have 
+        // Could be a mix of single and dual duct terminals
+        // See if zone is on the m_demandInletNodes[0] path
+        bool singleDuct1Terminal = false;
+        bool singleDuct2Terminal = false;
+        if( airLoop->demandComponents(m_demandInletNodes[0],zone).size() > 0u ) {
+          singleDuct1Terminal = true;
+        }
+        if( airLoop->demandComponents(m_demandInletNodes[1],zone).size() > 0u ) {
+          singleDuct2Terminal = true;
+        }
+        auto terminalType = SplitterItem::None;
+        if( singleDuct1Terminal && singleDuct2Terminal ) {
+          terminalType = SplitterItem::DualDuct;
+        } else if( singleDuct1Terminal ) {
+          terminalType = SplitterItem::SingleDuct1;
+        } else if( singleDuct2Terminal ) {
+          terminalType = SplitterItem::SingleDuct2;
+        }
+        terminalTypes.push_back(terminalType);
+      }
+    }
+  }
 
   m_zoneBranches = new HorizontalBranchGroupItem( splitter,
                                                   mixer,
                                                   this );
   m_zoneBranches->setShowDropZone(true);
 
+  // We only show one splitter
+  // even though a dual duct will have two
+  // Instead of two splitters we make a "double" line splitter
   m_splitterItem = new SplitterItem(this);
   m_splitterItem->setModelObject(splitter);
+  m_splitterItem->setNumberBranches( m_zoneBranches->numberOfBranches() );
+  m_splitterItem->setTerminalTypes(terminalTypes);
 
   m_mixerItem = new MixerItem(this);
   m_mixerItem->setModelObject(mixer);
-
   m_mixerItem->setNumberBranches( m_zoneBranches->numberOfBranches() );
-  m_splitterItem->setNumberBranches( m_zoneBranches->numberOfBranches() );
 
   auto inletComponents = loop.demandComponents(m_demandInletNodes[0],splitter);
   inletComponents.erase( inletComponents.begin() );
@@ -2991,7 +3118,7 @@ DemandSideItem::DemandSideItem( QGraphicsItem * parent,
   for( auto rit = inletComponents.rbegin(); rit < inletComponents.rend(); ++rit ) {
     rInletComponents.push_back( *rit );
   }
-  m_inletBranch = new HorizontalBranchItem(rInletComponents,this);
+  m_inletBranch = new HorizontalBranchItem(rInletComponents,this,dualDuct);
 
   auto outletComponents = loop.demandComponents(mixer,m_demandOutletNode);
   outletComponents.erase( outletComponents.begin() );
@@ -3011,9 +3138,7 @@ DemandSideItem::DemandSideItem( QGraphicsItem * parent,
   m_inletNode = new TwoFourNodeItem(this);
   m_inletNode->setModelObject(demandInletNodes[0]);
 
-  auto dualDuct = false;
-
-  if( m_demandInletNodes.size() == 2u ) {
+  if( dualDuct ) {
     m_rightElbow2 = new DualDuctTee(this);
     m_rightVertical2 = new VerticalBranchItem(vertComps,this);
     m_inletNode2 = new TwoFourNodeItem(this);
@@ -3033,22 +3158,6 @@ DemandSideItem::DemandSideItem( QGraphicsItem * parent,
   }
 
   layout();
-}
-
-int DemandSideItem::numberBranches()
-{
-  return m_mixerItem->numberBranches();
-}
-
-void DemandSideItem::setPadding( unsigned padding )
-{
-  m_padding = padding;
-  layout();
-}
-
-unsigned DemandSideItem::padding()
-{
-  return m_padding;
 }
 
 void DemandSideItem::layout()
@@ -3122,6 +3231,22 @@ void DemandSideItem::layout()
 
   setHGridLength(i + 1);
   setVGridLength(m_zoneBranches->getVGridLength() + 1);
+}
+
+int DemandSideItem::numberBranches()
+{
+  return m_mixerItem->numberBranches();
+}
+
+void DemandSideItem::setPadding( unsigned padding )
+{
+  m_padding = padding;
+  layout();
+}
+
+unsigned DemandSideItem::padding()
+{
+  return m_padding;
 }
 
 void DemandSideItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

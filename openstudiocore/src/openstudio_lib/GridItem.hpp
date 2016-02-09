@@ -162,11 +162,26 @@ class SplitterItem : public GridItem
 
   int numberBranches();
 
+  // SingleDuct1 means a terminal is attached to the demand inlet node 1 branch
+  // SingleDuct2 means a terminal is attached to the demand inlet node 2 branch
+  // DualDuct means there is a dual duct terminal
+  enum TerminalType { SingleDuct1, SingleDuct2, DualDuct, None };
+
+  // The size of the types vector is equal to the number of zones connected to the system
+  // This is also expected to be equal to the number of branches
+  void setTerminalTypes( std::vector< TerminalType > types );
+
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
   private:
 
   int m_numberBranches;
+
+  std::vector<TerminalType> m_terminalTypes;
+
+  int m_firstDuct1Index;
+
+  int m_firstDuct2Index;
 };
 
 class MixerItem : public GridItem
@@ -649,7 +664,8 @@ class HorizontalBranchItem : public GridItem
   public:
 
   HorizontalBranchItem( std::vector<model::ModelObject> modelObjects,
-                        QGraphicsItem * parent = nullptr );
+                        QGraphicsItem * parent = nullptr,
+                        bool dualDuct = false );
 
   void setPadding( unsigned );
 
@@ -684,6 +700,8 @@ class HorizontalBranchItem : public GridItem
   QString m_text;
 
   bool m_hasDualTwoRightSidePipes;
+
+  bool m_dualDuct;
 };
 
 class HorizontalBranchGroupItem : public GridItem
