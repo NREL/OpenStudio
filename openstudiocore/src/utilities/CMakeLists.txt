@@ -95,6 +95,8 @@ set(data_src
   data/Tag.cpp
   data/TimeSeries.hpp
   data/TimeSeries.cpp
+  data/Variant.hpp
+  data/Variant.cpp  
   data/Vector.hpp
   data/Vector.cpp
 )
@@ -161,6 +163,8 @@ set(bcl_src
   bcl/BCLMeasure.cpp
   bcl/BCLMeasureArgument.hpp
   bcl/BCLMeasureArgument.cpp  
+  bcl/BCLMeasureOutput.hpp
+  bcl/BCLMeasureOutput.cpp   
   bcl/BCLXML.hpp
   bcl/BCLXML.cpp
   bcl/LocalBCL.hpp
@@ -379,6 +383,7 @@ set(${target_name}_test_src
   data/Test/EndUses_GTest.cpp
   data/Test/Matrix_GTest.cpp
   data/Test/TimeSeries_GTest.cpp
+  data/Test/Variant_GTest.cpp
   data/Test/Vector_GTest.cpp
   
   economics/test/Economics_GTest.cpp
@@ -476,6 +481,7 @@ set(${target_name}_swig_src
   data/EndUses.i
   data/Matrix.i
   data/TimeSeries.i
+  data/Variant.i
   data/Vector.i
   plot/Plot.i
   plot/ProgressBar.i

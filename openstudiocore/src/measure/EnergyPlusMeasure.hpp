@@ -51,6 +51,9 @@ class MEASURE_API EnergyPlusMeasure : public OSMeasure {
    *  collecting user arguments. The base class implementation returns an empty vector. */
   virtual std::vector<OSArgument> arguments(const openstudio::Workspace& workspace) const;
 
+  /** Returns the outputs for this script. The base class implementation returns an empty vector. */
+  virtual std::vector<OSOutput> outputs() const;
+
   //@}
   /** @name Actions */
   //@{

@@ -196,6 +196,12 @@ OSArgument OSArgument::makePathArgument(const std::string& name,
   return result;
 }
 
+OSArgument OSArgument::makeSeparatorArgument(const std::string& name, bool modelDependent)
+{
+  OSArgument result(name, OSArgumentType::Separator, false, modelDependent);
+  return result;
+}
+
 openstudio::UUID OSArgument::uuid() const {
   return m_uuid;
 }

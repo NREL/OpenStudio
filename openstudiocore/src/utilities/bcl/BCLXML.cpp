@@ -143,6 +143,18 @@ namespace openstudio{
         }
         argumentElement = argumentElement.nextSiblingElement("argument");
       }
+
+      QDomElement outputElement = element.firstChildElement("outputs").firstChildElement("output");
+      while (!outputElement.isNull()){
+        if (outputElement.hasChildNodes()){
+          try{
+            m_outputs.push_back(BCLMeasureOutput(outputElement));
+          } catch (const std::exception&){
+            LOG(Error, "Bad output in xml");
+          }
+        }
+        outputElement = outputElement.nextSiblingElement("output");
+      }
     }
 
     QDomElement fileElement = element.firstChildElement("files").firstChildElement("file");
@@ -382,6 +394,11 @@ namespace openstudio{
     return m_arguments;
   }
 
+  std::vector<BCLMeasureOutput> BCLXML::outputs() const
+  {
+    return m_outputs;
+  }
+
   std::vector<BCLFileReference> BCLXML::files() const
   {
     return m_files;
@@ -486,6 +503,12 @@ namespace openstudio{
   {
     incrementVersionId();
     m_arguments = arguments;
+  }
+
+  void BCLXML::setOutputs(const std::vector<BCLMeasureOutput>& outputs)
+  {
+    incrementVersionId();
+    m_outputs = outputs;
   }
 
   void BCLXML::addFile(const BCLFileReference& file)
@@ -679,6 +702,14 @@ namespace openstudio{
         QDomElement argumentElement = doc.createElement("argument");
         element.appendChild(argumentElement);
         argument.writeValues(doc, argumentElement);
+      }
+
+      element = doc.createElement("outputs");
+      docElement.appendChild(element);
+      for (const BCLMeasureOutput& output : m_outputs){
+        QDomElement outputElement = doc.createElement("output");
+        element.appendChild(outputElement);
+        output.writeValues(doc, outputElement);
       }
     }
 
@@ -901,10 +932,11 @@ namespace openstudio{
     //ss << toJSONWithoutMetadata(m_attributes); // don't use this because it may change
 
     // tags are edited in the xml
-    ss << "Tags: " << std::endl;
-    for (const std::string& tag : m_tags){
-      ss << "  " << tag << std::endl;
-    }
+    // DLM: taxonomy tag is the only tag and is now in the ruby file
+    //ss << "Tags: " << std::endl;
+    //for (const std::string& tag : m_tags){
+    //  ss << "  " << tag << std::endl;
+    //}
 
     //std::cout << "Checksum computed on:" << std::endl;
     //std::cout << ss.str() << std::endl;

@@ -33,10 +33,36 @@ namespace openstudio {
 namespace measure {
 
 OSRunner::OSRunner()
+  : m_currentStep(0), m_unitsPreference("SI")
+{}
+
+OSRunner::OSRunner(const WorkflowJSON& workflow)
+  : m_workflow(workflow), m_currentStep(0), m_unitsPreference("SI")
 {}
 
 OSRunner::~OSRunner()
 {}
+
+WorkflowJSON OSRunner::workflow() const
+{
+  return WorkflowJSON();
+}
+
+unsigned OSRunner::currentStep() const
+{
+  return m_currentStep;
+}
+
+std::vector<OSResult> OSRunner::previousResults() const
+{
+  return m_previousResults;
+}
+
+std::string OSRunner::unitsPreference() const
+{
+  return m_unitsPreference;
+}
+
 
 OSResult OSRunner::result() const {
   return m_result;
@@ -114,8 +140,32 @@ std::map<std::string, OSArgument> OSRunner::getUserInput(std::vector<OSArgument>
   return convertOSArgumentVectorToMap(arguments);
 }
 
-void OSRunner::prepareForMeasureRun(const OSMeasure& measure) {
+void OSRunner::reset()
+{
+  // m_workflow;
+  m_currentStep = 0;
+  m_previousResults.clear();
+  //m_unitsPreference;
+
   m_result = OSResult();
+  m_measureName = "";
+  m_channel = "";
+}
+
+void OSRunner::incrementStep()
+{
+  m_previousResults.push_back(m_result);
+  m_result = OSResult();
+
+  m_measureName = "";
+  m_channel = "";
+  ++m_currentStep;
+}
+
+void OSRunner::prepareForMeasureRun(const OSMeasure& measure) {
+  // DLM: also in incrementStep
+  m_result = OSResult();
+
   m_measureName = measure.name();
   std::stringstream ss;
   ss << "openstudio.measure." << m_measureName;

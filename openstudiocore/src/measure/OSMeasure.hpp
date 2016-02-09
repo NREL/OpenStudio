@@ -29,6 +29,7 @@ namespace openstudio {
 namespace measure {
 
 class OSArgument;
+class OSOutput;
 class OSRunner;
 
 /** OSMeasure is an abstract base class for a user script. There are derived types that operate
@@ -44,13 +45,16 @@ class MEASURE_API OSMeasure {
   /** @name Getters */
   //@{
 
-  /// user facing name of this script, defaults to empty
+  /// user facing name of this measure, defaults to empty
   virtual std::string name() const;
 
-  /// user facing description of this script, defaults to empty
+  /// user facing description of this measure, defaults to empty
   virtual std::string description() const;
 
-  /// user facing technical description of this script, defaults to empty
+  /// user facing BCL taxonomy of this measure, defaults to empty
+  virtual std::string taxonomy() const;
+
+  /// user facing technical description of this measure, defaults to empty
   virtual std::string modeler_description() const;
 
   //@}

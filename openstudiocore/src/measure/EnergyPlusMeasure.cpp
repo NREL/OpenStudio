@@ -20,6 +20,7 @@
 #include "EnergyPlusMeasure.hpp"
 
 #include "OSArgument.hpp"
+#include "OSOutput.hpp"
 #include "OSRunner.hpp"
 
 #include "../utilities/idf/Workspace.hpp"
@@ -29,9 +30,13 @@ namespace measure {
 
 EnergyPlusMeasure::~EnergyPlusMeasure() {}
 
-std::vector<UserScriptArgument> EnergyPlusMeasure::arguments(const openstudio::Workspace& workspace) const
+std::vector<OSArgument> EnergyPlusMeasure::arguments(const openstudio::Workspace& workspace) const
 {
-  return UserScriptArgumentVector();
+  return OSArgumentVector();
+}
+
+std::vector<OSOutput> EnergyPlusMeasure::outputs() const {
+  return OSOutputVector();
 }
 
 bool EnergyPlusMeasure::run(openstudio::Workspace& workspace,

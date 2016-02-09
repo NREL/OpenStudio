@@ -33,6 +33,10 @@ std::string OSMeasure::description() const{
   return "";
 }
 
+std::string OSMeasure::taxonomy() const{
+  return "";
+}
+
 std::string OSMeasure::modeler_description() const{
   return "";
 }

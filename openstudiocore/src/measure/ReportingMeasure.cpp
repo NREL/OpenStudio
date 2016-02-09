@@ -20,6 +20,7 @@
 #include "ReportingMeasure.hpp"
 
 #include "OSArgument.hpp"
+#include "OSOutput.hpp"
 #include "OSRunner.hpp"
 
 #include <vector>
@@ -30,7 +31,11 @@ namespace measure {
 ReportingMeasure::~ReportingMeasure() {}
 
 std::vector<OSArgument> ReportingMeasure::arguments() const {
-  return UserScriptArgumentVector();
+  return OSArgumentVector();
+}
+
+std::vector<OSOutput> ReportingMeasure::outputs() const {
+  return OSOutputVector();
 }
 
 bool ReportingMeasure::run(OSRunner& runner,

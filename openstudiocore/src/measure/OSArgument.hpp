@@ -46,6 +46,7 @@ OPENSTUDIO_ENUM( OSArgumentType,
   ((String)(String)(4))
   ((Choice)(Choice)(5))
   ((Path)(Path)(6))
+  ((Separator)(Separator)(7))
 );
  *  \endcode */
 OPENSTUDIO_ENUM( OSArgumentType,
@@ -56,6 +57,7 @@ OPENSTUDIO_ENUM( OSArgumentType,
   ((String)(String)(4))
   ((Choice)(Choice)(5))
   ((Path)(Path)(6))
+  ((Separator)(Separator)(7))
 );
 
 // ETH@20121211 - Perhaps add MeanStdDev or StatisticalMoments. Could even tack on an
@@ -97,6 +99,7 @@ class MEASURE_API OSArgument {
   OSArgument(const std::string& name, const OSArgumentType& type, bool required, bool modelDependent);
 
   /** Constructor provided for deserialization; not for general use. */
+  // DLM: OS 2.0, remove?
   OSArgument(const UUID& uuid,
              const UUID& versionUUID,
              const std::string& name,
@@ -116,6 +119,7 @@ class MEASURE_API OSArgument {
              const std::string& extension);
 
   /** Constructor provided for deserialization; not for general use. */
+  // DLM: OS 2.0, remove?
   OSArgument(const UUID& uuid,
              const UUID& versionUUID,
              const std::string& name,
@@ -177,6 +181,9 @@ class MEASURE_API OSArgument {
                                      const std::string& extension,
                                      bool required = true, 
                                      bool modelDependent = false);
+
+  /** Creates a separator OSArgument, cannot be used to store a value, cannot be required. */
+  static OSArgument makeSeparatorArgument(const std::string& name, bool modelDependent = false);
 
   /** @name Getters */
   //@{
@@ -500,21 +507,6 @@ typedef std::pair< openstudio::path,std::vector<OSArgument> > UserScriptInfo;
 
 /** Prints argument data to ostream for debugging purposes. \relates OSArgument */
 MEASURE_API std::ostream& operator<<(std::ostream& os, const OSArgument& arg);
-
-// ETH@20121211 - These typedefs are just to preserve the old names for the near to
-// medium-term future (to avoid breaking existing scripts).
-
-/** \relates OSArgument \deprecated */
-typedef OSArgument UserScriptArgument;
-
-/** \relates OSArgument \deprecated */
-typedef boost::optional<OSArgument> OptionalUserScriptArgument;
-
-/** \relates OSArgument \deprecated */
-typedef std::vector<OSArgument> UserScriptArgumentVector;
-
-/** \relates OSArgument \deprecated */
-typedef std::map<std::string,OSArgument> UserScriptArgumentMap;
 
 /** Creates a choice argument with object handles as its values and object names as
  *  its display names by querying workspace for all of its objects of type iddObjectType.

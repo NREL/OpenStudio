@@ -29,7 +29,7 @@
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/sql/SqlFile.hpp"
 #include "../utilities/filetypes/EpwFile.hpp"
-
+#include "../utilities/filetypes/WorkflowJSON.hpp"
 #include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
@@ -55,7 +55,10 @@ class MEASURE_API OSRunner {
   /** @name Constructors and Destructors */
   //@{
 
+  // DLM: require a workflow?
   OSRunner();
+
+  OSRunner(const WorkflowJSON& workflow);
 
   virtual ~OSRunner();
 
@@ -63,7 +66,19 @@ class MEASURE_API OSRunner {
   /** @name Getters and Queries */
   //@{
 
-  /** Returns the OSResult for the last OSMeasure run by this OSRunner. (prepareForMeasureRun
+  /** Returns the workflow currently being run. New in OS 2.0. */
+  WorkflowJSON workflow() const;
+
+  /** Returns the current step in the workflow being run, indexing starts at 0. New in OS 2.0. */
+  unsigned currentStep() const;
+
+  /** Returns results from the previous steps that were run. New in OS 2.0. */
+  std::vector<OSResult> previousResults() const;
+
+  /** Returns preferred unit system, either 'IP' or 'SI'. New in OS 2.0. */
+  std::string unitsPreference() const;
+
+  /** Returns the OSResult for the current/last OSMeasure run by this OSRunner. (prepareForMeasureRun
    *  should be called prior to each run to ensure that result() corresponds to a single script, and
    *  is not instead a running result over multiple scripts. One way to ensure that this happens is
    *  to call the default version of run in ModelMeasure, etc. at the beginning of any particular
@@ -267,6 +282,12 @@ class MEASURE_API OSRunner {
 
   //@}
 
+  // reset the runner between workflows
+  void reset();
+
+  // incrementing step copies result to previous results
+  void incrementStep();
+
   // supports in-memory job chaining
   void setLastOpenStudioModel(const openstudio::model::Model& lastOpenStudioModel);
   void resetLastOpenStudioModel();
@@ -294,6 +315,12 @@ class MEASURE_API OSRunner {
  private:
   REGISTER_LOGGER("openstudio.measure.OSRunner");
 
+  WorkflowJSON m_workflow;
+  unsigned m_currentStep;
+  std::vector<OSResult> m_previousResults;
+  std::string m_unitsPreference;
+
+  // current data
   OSResult m_result;
   std::string m_measureName;
   std::string m_channel;

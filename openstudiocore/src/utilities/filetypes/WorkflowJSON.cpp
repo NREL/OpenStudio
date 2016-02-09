@@ -27,6 +27,35 @@
 #include <fstream>
 
 namespace openstudio{
+
+WorkflowStep::WorkflowStep(const std::string& measureDirName)
+  : m_measureDirName(measureDirName)
+{}
+
+std::string WorkflowStep::measureDirName() const
+{
+  return m_measureDirName;
+}
+
+std::map<std::string, Variant> WorkflowStep::arguments() const
+{
+  return m_arguments;
+}
+
+void WorkflowStep::setArgument(const std::string& name, const Variant& value)
+{
+  m_arguments.insert(std::make_pair(name, value));
+}
+
+void WorkflowStep::removeArgument(const std::string& name)
+{
+  m_arguments.erase(name);
+}
+
+void WorkflowStep::clearArguments()
+{
+  m_arguments.clear();
+}
   
 WorkflowJSON::WorkflowJSON()
 {}
@@ -140,6 +169,16 @@ openstudio::path WorkflowJSON::measuresDir() const
     return openstudio::path();
   }
   return rootPath / toPath("measures/");
+}
+
+std::vector<WorkflowStep> WorkflowJSON::workflowSteps() const
+{
+  return m_workflowSteps;
+}
+
+void WorkflowJSON::setWorkflowSteps(const std::vector<WorkflowStep>& steps)
+{
+  m_workflowSteps = steps;
 }
 
 } // openstudio

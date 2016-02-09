@@ -23,6 +23,7 @@
 #include "MeasureAPI.hpp"
 
 #include "OSArgument.hpp"
+#include "OSOutput.hpp"
 
 #include "../utilities/core/Optional.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
@@ -53,8 +54,10 @@ public:
                 const std::string& className,
                 const std::string& name,
                 const std::string& description,
+                const std::string& taxonomy,
                 const std::string& modelerDescription,
-                const std::vector<OSArgument>& arguments);
+                const std::vector<OSArgument>& arguments, 
+                const std::vector<OSOutput>& outputs);
 
   /// will be empty if information was successfully extracted from the script, otherwise includes error information
   boost::optional<std::string> error() const;
@@ -71,11 +74,17 @@ public:
   /// result of measure's description method if information was successfully extracted from the script, otherwise empty
   std::string description() const;
 
+  /// result of measure's taxonomy method if information was successfully extracted from the script, otherwise empty
+  std::string taxonomy() const;
+
   /// result of measure's modeler_description method if information was successfully extracted from the script, otherwise empty
   std::string modelerDescription() const;
 
   /// result of measure's arguments method called with empty model if information was successfully extracted from the script, otherwise empty
   std::vector<OSArgument> arguments() const;
+
+  /// result of measure's outputs method called with empty model if information was successfully extracted from the script, otherwise empty
+  std::vector<OSOutput> outputs() const;
 
   /// Compares the measure's information from the xml with information extracted from the ruby measure
   /// Updates the measure if needed, returns true if an update was performed
@@ -89,8 +98,10 @@ private:
   std::string m_className;
   std::string m_name;
   std::string m_description;
+  std::string m_taxonomy;
   std::string m_modelerDescription;
   std::vector<OSArgument> m_arguments;
+  std::vector<OSOutput> m_outputs;
 };
 
 /** Interface class for using embedded Ruby to extract arguments from an OSMeasure.

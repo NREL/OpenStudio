@@ -38,9 +38,12 @@ namespace measure {
                                const std::string& className,
                                const std::string& name,
                                const std::string& description,
+                               const std::string& taxonomy,
                                const std::string& modelerDescription,
-                               const std::vector<OSArgument>& arguments)
-    : m_measureType(measureType), m_className(className), m_name(name), m_description(description), m_modelerDescription(modelerDescription), m_arguments(arguments)
+                               const std::vector<OSArgument>& arguments,
+                               const std::vector<OSOutput>& outputs)
+    : m_measureType(measureType), m_className(className), m_name(name), m_description(description), m_taxonomy(taxonomy),
+      m_modelerDescription(modelerDescription), m_arguments(arguments), m_outputs(outputs)
   {}
 
   boost::optional<std::string> OSMeasureInfo::error() const
@@ -68,6 +71,11 @@ namespace measure {
     return m_description;
   }
 
+  std::string OSMeasureInfo::taxonomy() const
+  {
+    return m_taxonomy;
+  }
+
   std::string OSMeasureInfo::modelerDescription() const
   {
     return m_modelerDescription;
@@ -76,6 +84,11 @@ namespace measure {
   std::vector<OSArgument> OSMeasureInfo::arguments() const
   {
     return m_arguments;
+  }
+
+  std::vector<OSOutput> OSMeasureInfo::outputs() const
+  {
+    return m_outputs;
   }
 
   bool OSMeasureInfo::update(BCLMeasure& measure) const
@@ -119,6 +132,11 @@ namespace measure {
     if (!m_description.empty() && measure.description() != m_description){
       result = true;
       measure.setDescription(m_description);
+    }
+
+    if (!m_taxonomy.empty() && measure.taxonomyTag() != m_taxonomy){
+      result = true;
+      measure.setTaxonomyTag(m_taxonomy);
     }
 
     if (!m_modelerDescription.empty() && measure.modelerDescription() != m_modelerDescription){
@@ -171,6 +189,8 @@ namespace measure {
         }
       }
     }
+
+    // DLM: todo, update outputs
 
     return result;
   }
@@ -245,8 +265,10 @@ std::string infoExtractorRubyFunction() {
   ss << "  name = measure.name" << std::endl;
   ss << "  name = className if name.empty?" << std::endl;
   ss << "  description = measure.description" << std::endl;
+  ss << "  taxonomy = measure.taxonomy" << std::endl;
   ss << "  modelerDescription = measure.modeler_description" << std::endl;
   ss << "  args = OpenStudio::Measure::OSArgumentVector.new" << std::endl;
+  ss << "  outputs = OpenStudio::Measure::OSOutputVector.new" << std::endl;
   ss << "  model = OpenStudio::Model::Model.new" << std::endl;
   ss << "  workspace = OpenStudio::Workspace.new(\"Draft\".to_StrictnessLevel," << std::endl;
   ss << "                                        \"EnergyPlus\".to_IddFileType)" << std::endl;
@@ -255,15 +277,18 @@ std::string infoExtractorRubyFunction() {
   ss << "  if type == \"report\"" << std::endl;
   ss << "    measureType = OpenStudio::MeasureType.new(\"ReportingMeasure\")" << std::endl;
   ss << "    args = measure.arguments()" << std::endl;
+  ss << "    outputs = measure.outputs()" << std::endl;
   ss << "  elsif type == \"model\"" << std::endl;
   ss << "    measureType = OpenStudio::MeasureType.new(\"ModelMeasure\")" << std::endl;
   ss << "    args = measure.arguments(model)" << std::endl;
+  ss << "    outputs = measure.outputs()" << std::endl;
   ss << "  elsif type == \"energyplus\"" << std::endl;
   ss << "    measureType = OpenStudio::MeasureType.new(\"EnergyPlusMeasure\")" << std::endl;
   ss << "    args = measure.arguments(workspace)" << std::endl;
+  ss << "    outputs = measure.outputs()" << std::endl;
   ss << "  end" << std::endl;
   ss << std::endl;
-  ss << "  return OpenStudio::Measure::OSMeasureInfo.new(measureType, className, name, description, modelerDescription, args)" << std::endl;
+  ss << "  return OpenStudio::Measure::OSMeasureInfo.new(measureType, className, name, description, taxonomy, modelerDescription, args, outputs)" << std::endl;
   ss << "end" << std::endl;
   return ss.str();
 }

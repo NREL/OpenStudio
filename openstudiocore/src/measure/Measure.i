@@ -22,6 +22,7 @@
 
 %{
   #include <measure/OSArgument.hpp>
+  #include <measure/OSOutput.hpp>
   #include <measure/OSResult.hpp>
   #include <measure/OSRunner.hpp>
   #include <measure/OSMeasure.hpp>
@@ -47,8 +48,14 @@
 %ignore std::vector<openstudio::measure::OSArgument>::resize(size_type);
 %template(OSArgumentVector) std::vector<openstudio::measure::OSArgument>;
 %template(OptionalOSArgument) boost::optional<openstudio::measure::OSArgument>;
-%template(OptionalOSResult) boost::optional<openstudio::measure::OSResult>;
 %template(OSArgumentMap) std::map<std::string, openstudio::measure::OSArgument>;
+
+%ignore std::vector<openstudio::measure::OSOutput>::vector(size_type);
+%ignore std::vector<openstudio::measure::OSOutput>::resize(size_type);
+%template(OSOutputVector) std::vector<openstudio::measure::OSOutput>;
+%template(OptionalOSOutput) boost::optional<openstudio::measure::OSOutput>;
+
+%template(OptionalOSResult) boost::optional<openstudio::measure::OSResult>;
 
 %feature("director") OSMeasure;
 %feature("director") ModelMeasure;
@@ -57,6 +64,7 @@
 %feature("director") OSRunner;
 
 %include <measure/OSArgument.hpp>
+%include <measure/OSOutput.hpp>
 %include <measure/OSResult.hpp>
 %include <measure/OSRunner.hpp>
 %include <measure/OSMeasure.hpp>
@@ -65,6 +73,14 @@
 %include <measure/ReportingMeasure.hpp>
 
 %extend openstudio::measure::OSArgument {
+  std::string __str__() {
+    std::ostringstream os;
+    os << *self;
+    return os.str();
+  }
+};
+
+%extend openstudio::measure::OSOutput {
   std::string __str__() {
     std::ostringstream os;
     os << *self;

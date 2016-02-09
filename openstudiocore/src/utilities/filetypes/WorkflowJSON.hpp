@@ -24,10 +24,36 @@
 
 #include "../core/Logger.hpp"
 #include "../core/Path.hpp"
+#include "../data/Variant.hpp"
 
 #include <jsoncpp/json.h>
 
 namespace openstudio{
+  
+/** Class for accessing the OpenStudio Workflow (OSW) JSON format. */
+class UTILITIES_API WorkflowStep
+{
+public:
+  
+  WorkflowStep(const std::string& measureDirName);
+
+  std::string measureDirName() const;
+    
+  // DLM: OSW JSON examples have vector but run method takes map 
+  std::map<std::string, Variant> arguments() const;
+
+  void setArgument(const std::string& name, const Variant& value);
+
+  void removeArgument(const std::string& name);
+
+  void clearArguments();
+
+private:
+
+  std::string m_measureDirName;
+  std::map<std::string, Variant> m_arguments;
+
+};
 
 /** Class for accessing the OpenStudio Workflow (OSW) JSON format. */
 class UTILITIES_API WorkflowJSON
@@ -64,6 +90,12 @@ public:
   /** Returns the absolute path to the measures directory, can be empty. */
   openstudio::path measuresDir() const;
 
+  /** Returns the workflow steps. */
+  std::vector<WorkflowStep> workflowSteps() const;
+
+  /** Assigns the workflow steps. */
+  void setWorkflowSteps(const std::vector<WorkflowStep>& steps);
+
 private:
 
   // configure logging
@@ -71,6 +103,7 @@ private:
   
   openstudio::path m_path;
   Json::Value m_json;
+  std::vector<WorkflowStep> m_workflowSteps;
 };
 
 } // openstudio

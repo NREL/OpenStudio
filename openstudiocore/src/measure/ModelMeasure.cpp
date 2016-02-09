@@ -20,6 +20,7 @@
 #include "ModelMeasure.hpp"
 
 #include "OSArgument.hpp"
+#include "OSOutput.hpp"
 #include "OSRunner.hpp"
 
 namespace openstudio {
@@ -28,8 +29,12 @@ namespace measure {
 ModelMeasure::~ModelMeasure()
 {}
 
-std::vector<UserScriptArgument> ModelMeasure::arguments(const openstudio::model::Model& model) const {
-  return UserScriptArgumentVector();
+std::vector<OSArgument> ModelMeasure::arguments(const openstudio::model::Model& model) const {
+  return OSArgumentVector();
+}
+
+std::vector<OSOutput> ModelMeasure::outputs() const {
+  return OSOutputVector();
 }
 
 bool ModelMeasure::run(openstudio::model::Model& model,

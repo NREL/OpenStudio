@@ -52,6 +52,9 @@ class MEASURE_API ModelMeasure : public OSMeasure {
    *  collecting user arguments. The base class implementation returns an empty vector. */
   virtual std::vector<OSArgument> arguments(const openstudio::model::Model& model) const;
 
+  /** Returns the outputs for this script. The base class implementation returns an empty vector. */
+  virtual std::vector<OSOutput> outputs() const;
+
   //@}
   /** @name Actions */
   //@{

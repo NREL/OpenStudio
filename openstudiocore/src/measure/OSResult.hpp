@@ -63,6 +63,7 @@ class MEASURE_API OSResult {
   OSResult();
 
   /** Construct from XML content. Called by OSResult::load. */
+  // DLM: OS 2.0, remove?
   explicit OSResult(const QDomElement& element);
 
   //@}
@@ -111,9 +112,11 @@ class MEASURE_API OSResult {
 
   /** Loads OSResult from the XML .ossr file at path p, if possible. Otherwise, returns 
    *  boost::none. */
+  // DLM: OS 2.0, remove?
   static boost::optional<OSResult> load(const openstudio::path& p);
 
   /** Saves this OSResult to path p (using an XML format and extension .ossr). */
+  // DLM: OS 2.0, remove?
   bool save(const openstudio::path& p, bool overwrite = false) const;
 
   //@}
