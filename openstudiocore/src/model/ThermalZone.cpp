@@ -2269,6 +2269,13 @@ namespace detail {
     return result;
   }
 
+  boost::optional<HVACComponent> ThermalZone_Impl::airLoopHVACTerminal() const
+  {
+    boost::optional<HVACComponent> result;
+
+    return result;
+  }
+
 
 } // detail
 
@@ -2839,6 +2846,11 @@ std::vector<ZoneMixing> ThermalZone::supplyZoneMixing() const
 std::vector<ZoneMixing> ThermalZone::exhaustZoneMixing() const
 {
   return getImpl<detail::ThermalZone_Impl>()->exhaustZoneMixing();
+}
+
+boost::optional<HVACComponent> ThermalZone::airLoopHVACTerminal() const
+{
+  return getImpl<detail::ThermalZone_Impl>()->airLoopHVACTerminal();
 }
 
 /// @cond

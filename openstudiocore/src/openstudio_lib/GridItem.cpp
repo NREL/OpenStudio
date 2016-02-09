@@ -436,6 +436,24 @@ QRectF LinkItem::boundingRect() const
   return QRectF(0.0,0.0,20.0,20.0);
 }
 
+std::vector<GridItem *> HorizontalBranchItem::itemFactory(std::vector<model::ModelObject> modelObjects)
+{
+  std::vector<GridItem *> result;
+
+  return result;
+}
+
+HorizontalBranchItem::HorizontalBranchItem( std::vector< std::vector<model::ModelObject> > modelObjectsBeforeTerminal,
+                      std::vector<model::ModelObject> modelObjectsAfterTerminal,
+                      QGraphicsItem * parent )
+  : GridItem( parent ),
+    m_isDropZone(false),
+    m_text("Drag From Library"),
+    m_hasDualTwoRightSidePipes(false),
+    m_dualDuct(true)
+{
+}
+
 HorizontalBranchItem::HorizontalBranchItem( std::vector<model::ModelObject> modelObjects,
                                             QGraphicsItem * parent,
                                             bool dualDuct )
@@ -904,84 +922,68 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
     m_splitter(splitter),
     m_dropZoneBranchItem(nullptr)
 {
-  boost::optional<model::Loop> optionalLoop = splitter.loop();
-  OS_ASSERT( optionalLoop );
-  model::Loop loop = optionalLoop.get(); 
-
-  std::vector<model::ModelObject> splitterOutletObjects = splitter.outletModelObjects();
-  bool isSupplySide = loop.supplyComponent(splitter.handle());
-
   std::vector<model::ModelObject> branchComponents;
   std::vector< std::vector<model::ModelObject> > allBranchComponents;
+  auto splitterOutletObjects = splitter.outletModelObjects();
 
   if( ! (splitterOutletObjects.front() == mixer) )
   {
-    for( auto it1 = splitterOutletObjects.begin();
-         it1 != splitterOutletObjects.end();
-         ++it1 )
-    {
-      bool isSupplyPlenum = false;
-      if( boost::optional<model::Node> node = it1->optionalCast<model::Node>() )
-      {
-        boost::optional<model::ModelObject> outletMo = node->outletModelObject();
-        OS_ASSERT(outletMo);
-        if(boost::optional<model::Splitter> plenumSplitter = outletMo->optionalCast<model::Splitter>())
-        {
-          isSupplyPlenum = true;
-          std::vector<model::ModelObject> plenumOutletObjects = plenumSplitter->outletModelObjects();
-          for( auto it2 = plenumOutletObjects.begin();
-               it2 != plenumOutletObjects.end();
-               ++it2 )
-          {
-            boost::optional<model::HVACComponent> comp1 = it2->optionalCast<model::HVACComponent>();
-            OS_ASSERT(comp1);
-            branchComponents = loop.components(comp1.get(),mixer);
-            branchComponents.pop_back();
-            branchComponents.insert(branchComponents.begin(),plenumSplitter.get());
-            branchComponents.insert(branchComponents.begin(),*it1);
+    auto loop = splitter.loop();
+    OS_ASSERT(loop);
+    auto airLoop = loop->optionalCast<model::AirLoopHVAC>();
 
-            std::vector<model::ModelObject> rBranchComponents;
-            for( auto rit = branchComponents.rbegin();
-                 rit < branchComponents.rend(); ++rit )
-            {
-              rBranchComponents.push_back( *rit );
-            }
-            allBranchComponents.push_back(rBranchComponents);
-          }
+    bool isSupplySide = loop->supplyComponent(splitter.handle());
+
+    if( airLoop && (! isSupplySide) ) {
+      auto splitters = airLoop->zoneSplitters(); 
+      auto zones = airLoop->thermalZones();
+      
+      for( const auto & zone : zones ) {
+        std::vector< std::vector<model::ModelObject> > allCompsBeforeTerminal;
+
+        auto terminal = zone.airLoopHVACTerminal();
+
+        // Need to account for more than one splitter,
+        // ie dual duct
+        for( const auto & splitter : splitters ) {
+          auto compsBeforeTerminal = airLoop->demandComponents(splitter,terminal.get());
+          compsBeforeTerminal.pop_back();
+          allCompsBeforeTerminal.push_back(compsBeforeTerminal);
         }
-      }
-      if( ! isSupplyPlenum )
+
+        auto compsAfterTerminal = airLoop->demandComponents(terminal.get(),mixer);
+        compsAfterTerminal.pop_back();
+      } 
+    } else {
+      for( auto it1 = splitterOutletObjects.begin(); it1 != splitterOutletObjects.end(); ++it1 )
       {
-        boost::optional<model::HVACComponent> comp1 = it1->optionalCast<model::HVACComponent>();
+        auto comp1 = it1->optionalCast<model::HVACComponent>();
         OS_ASSERT(comp1);
-        branchComponents = loop.components(comp1.get(),mixer);
-        branchComponents.erase(branchComponents.end() - 1);
+        branchComponents = loop->components(comp1.get(),mixer);
+        branchComponents.pop_back();
 
-        if( isSupplySide )
-        {
+        if( isSupplySide ) {
           allBranchComponents.push_back(branchComponents);
-        }
-        else
-        {
+        } else {
           std::vector<model::ModelObject> rBranchComponents;
           for( auto rit = branchComponents.rbegin();
-               rit < branchComponents.rend(); ++rit )
-          {
+               rit < branchComponents.rend(); ++rit ) {
             rBranchComponents.push_back( *rit );
           }
           allBranchComponents.push_back(rBranchComponents);
         }
       }
+
+      std::sort(allBranchComponents.begin(),allBranchComponents.end(),sortBranches);
+      for(auto it = allBranchComponents.begin();
+          it != allBranchComponents.end();
+          ++it)
+      {
+        m_branchItems.push_back(new HorizontalBranchItem(*it,this));
+      }
     }
   }
 
-  std::sort(allBranchComponents.begin(),allBranchComponents.end(),sortBranches);
-  for(auto it = allBranchComponents.begin();
-      it != allBranchComponents.end();
-      ++it)
-  {
-    m_branchItems.push_back(new HorizontalBranchItem(*it,this));
-  }
 
   layout();
 }
@@ -2715,42 +2717,6 @@ SplitterItem::SplitterItem( QGraphicsItem * parent )
     m_firstDuct1Index(0),
     m_firstDuct2Index(0)
 {
-
-  // A Predicate that returns true on either m_type or DualDuct
-  struct Predicate {
-    Predicate(TerminalType type)
-      : m_type(type)
-    {}
-
-    bool operator()(TerminalType t_type) {
-      if( (t_type == m_type) || (t_type == TerminalType::DualDuct) ) {
-        return true;
-      } else {
-        return false;
-      } 
-    }
-
-    TerminalType m_type;
-  };
-
-  if( ! m_terminalTypes.empty() ) {
-
-    {
-      auto terminalIt = std::find_if(m_terminalTypes.begin(),m_terminalTypes.end(),Predicate(SplitterItem::SingleDuct1));
-      if( terminalIt != m_terminalTypes.end() ) {
-        m_firstDuct1Index = std::distance(m_terminalTypes.begin(), terminalIt);
-      }
-    }
-
-    {
-      auto terminalIt = std::find_if(m_terminalTypes.begin(),m_terminalTypes.end(),Predicate(SplitterItem::SingleDuct2));
-      if( terminalIt != m_terminalTypes.end() ) {
-        m_firstDuct2Index = std::distance(m_terminalTypes.begin(), terminalIt);
-      }
-    }
-
-  }
-
 }
 
 void SplitterItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -2803,7 +2769,7 @@ void SplitterItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     // Draw the horizontal hops from duct 1 to the terminal
     for( int j = m_firstDuct1Index; j < m_terminalTypes.size() + 1; ++j )
     {
-      // Check to make sure we have to hop
+      // Check to make sure we need to hop
       if( j > m_firstDuct2Index ) {
         painter->drawLine(0,j * 200 + 25,15,j * 200 + 25);
         painter->drawLine(35,j * 200 + 25,75,j * 200 + 25);
@@ -2818,10 +2784,6 @@ void SplitterItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     {
       painter->drawLine(0,j * 200 + 75,25,j * 200 + 75);
     }
-
-    // Draw the horizontal line to the drop zone
-    //painter->drawLine(0,((((m_numberBranches * 2) - 1) * 100) - 25),75,((((m_numberBranches * 2) - 1) * 100) - 25));
-    //painter->drawLine(0,((((m_numberBranches * 2) - 1) * 100) - 75),25,((((m_numberBranches * 2) - 1) * 100) - 75));
   }
 }
 
@@ -2831,6 +2793,41 @@ void SplitterItem::setTerminalTypes( std::vector< SplitterItem::TerminalType > t
   // Add one for the drop zone
   setNumberBranches( types.size() + 1 );
   m_terminalTypes = types;
+
+  // A Predicate that returns true on either m_type or DualDuct
+  struct Predicate {
+    Predicate(TerminalType type)
+      : m_type(type)
+    {}
+
+    bool operator()(TerminalType t_type) {
+      if( (t_type == m_type) || (t_type == TerminalType::DualDuct) ) {
+        return true;
+      } else {
+        return false;
+      } 
+    }
+
+    TerminalType m_type;
+  };
+
+  if( ! m_terminalTypes.empty() ) {
+
+    {
+      auto terminalIt = std::find_if(m_terminalTypes.begin(),m_terminalTypes.end(),Predicate(SplitterItem::SingleDuct1));
+      if( terminalIt != m_terminalTypes.end() ) {
+        m_firstDuct1Index = std::distance(m_terminalTypes.begin(), terminalIt);
+      }
+    }
+
+    {
+      auto terminalIt = std::find_if(m_terminalTypes.begin(),m_terminalTypes.end(),Predicate(SplitterItem::SingleDuct2));
+      if( terminalIt != m_terminalTypes.end() ) {
+        m_firstDuct2Index = std::distance(m_terminalTypes.begin(), terminalIt);
+      }
+    }
+
+  }
 }
 
 void SplitterItem::setNumberBranches( int branches )
@@ -3075,10 +3072,10 @@ DemandSideItem::DemandSideItem( QGraphicsItem * parent,
         // See if zone is on the m_demandInletNodes[0] path
         bool singleDuct1Terminal = false;
         bool singleDuct2Terminal = false;
-        if( airLoop->demandComponents(m_demandInletNodes[0],zone).size() > 0u ) {
+        if( airLoop->demandComponents(splitters[0],zone).size() > 0u ) {
           singleDuct1Terminal = true;
         }
-        if( airLoop->demandComponents(m_demandInletNodes[1],zone).size() > 0u ) {
+        if( airLoop->demandComponents(splitters[1],zone).size() > 0u ) {
           singleDuct2Terminal = true;
         }
         auto terminalType = SplitterItem::None;
@@ -3105,7 +3102,9 @@ DemandSideItem::DemandSideItem( QGraphicsItem * parent,
   m_splitterItem = new SplitterItem(this);
   m_splitterItem->setModelObject(splitter);
   m_splitterItem->setNumberBranches( m_zoneBranches->numberOfBranches() );
-  m_splitterItem->setTerminalTypes(terminalTypes);
+  if( dualDuct ) {
+    m_splitterItem->setTerminalTypes(terminalTypes);
+  }
 
   m_mixerItem = new MixerItem(this);
   m_mixerItem->setModelObject(mixer);

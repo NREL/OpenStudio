@@ -663,9 +663,20 @@ class HorizontalBranchItem : public GridItem
 {
   public:
 
+  // Dual duct means there will be two parallel paths within one item
   HorizontalBranchItem( std::vector<model::ModelObject> modelObjects,
                         QGraphicsItem * parent = nullptr,
                         bool dualDuct = false );
+
+  // This signature is always used on a dual duct
+  // modelObjectsBeforeTerminal is what it says, the outer vector has size = 2, for the two parallel paths
+  // After the terminal the paths come togethor (the dual duct terminal is a mixer) and we 
+  // have a single linear series of components from then on to the zone mixer
+  HorizontalBranchItem( std::vector< std::vector<model::ModelObject> > modelObjectsBeforeTerminal,
+                        std::vector<model::ModelObject> modelObjectsAfterTerminal,
+                        QGraphicsItem * parent = nullptr);
+
+  static std::vector<GridItem *> itemFactory(std::vector<model::ModelObject> modelObjects);
 
   void setPadding( unsigned );
 
