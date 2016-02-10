@@ -39,7 +39,10 @@ TEST(Filetypes, WorkflowJSON_Min)
     EXPECT_TRUE(workflow.seedPath().empty());
     EXPECT_TRUE(workflow.weatherPath().empty());
 
-    EXPECT_EQ(2u, workflow.workflowSteps().size());
+    ASSERT_EQ(3u, workflow.workflowSteps().size());
+    EXPECT_EQ("IncreaseWallRValue", workflow.workflowSteps()[0].measureDirName());
+    EXPECT_EQ("IncreaseRoofRValue", workflow.workflowSteps()[1].measureDirName());
+    EXPECT_EQ("DecreaseThermalMass", workflow.workflowSteps()[2].measureDirName());
   }catch(...){
     ASSERT_TRUE(false);
   }
@@ -57,7 +60,10 @@ TEST(Filetypes, WorkflowJSON_Full)
     EXPECT_EQ(p.parent_path() / toPath("../root/seed/example.osm"), workflow.seedPath());
     EXPECT_EQ(p.parent_path() / toPath("../root/weather/Golden_NREL.epw"), workflow.weatherPath());
 
-    EXPECT_EQ(2u, workflow.workflowSteps().size());
+    ASSERT_EQ(3u, workflow.workflowSteps().size());
+    EXPECT_EQ("IncreaseWallRValue", workflow.workflowSteps()[0].measureDirName());
+    EXPECT_EQ("IncreaseRoofRValue", workflow.workflowSteps()[1].measureDirName());
+    EXPECT_EQ("DecreaseThermalMass", workflow.workflowSteps()[2].measureDirName());
   } catch (...){
     ASSERT_TRUE(false);
   }
