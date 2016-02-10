@@ -135,7 +135,7 @@ public:
 
 private:
 
-  void parse(const Json::Value& json);
+  Attribute parse(const std::string& name, const Json::Value& json);
 
   Json::Value json(bool includeHash) const;
 

@@ -96,7 +96,7 @@ WorkflowJSON::WorkflowJSON(const std::string& s)
     std::string errors = reader.getFormattedErrorMessages();
     LOG_AND_THROW("WorkflowJSON cannot be processed, " << errors);
   }
-
+  parse("", json);
 }
 
 WorkflowJSON::WorkflowJSON(const openstudio::path& p)
@@ -116,6 +116,7 @@ WorkflowJSON::WorkflowJSON(const openstudio::path& p)
     std::string errors = reader.getFormattedErrorMessages();
     LOG_AND_THROW("WorkflowJSON '" << toString(m_path) << "' cannot be processed, " << errors);
   }
+  parse("", json);
 }
 
 boost::optional<WorkflowJSON> WorkflowJSON::load(const std::string& s)
@@ -238,17 +239,26 @@ std::vector<Attribute> WorkflowJSON::attributes() const
 
 boost::optional<Attribute> WorkflowJSON::getAttribute(const std::string& name) const
 {
+  for (const Attribute& attribute : m_attributes){
+    if (attribute.name() == name){
+      return attribute;
+    }
+  }
   return boost::none;
 }
 
 void WorkflowJSON::removeAttribute(const std::string& name)
 {
-
+  m_attributes.erase(std::remove_if(m_attributes.begin(),
+                                    m_attributes.end(),
+                                    [&name](const Attribute& attribute){return (attribute.name() == name); }),
+                    m_attributes.end());
 }
 
 void WorkflowJSON::setAttribute(const Attribute& attribute)
 {
-
+  removeAttribute(attribute.name());
+  m_attributes.push_back(attribute);
 }
 
 void WorkflowJSON::clearAttributes()
@@ -266,14 +276,88 @@ void WorkflowJSON::setWorkflowSteps(const std::vector<WorkflowStep>& steps)
   m_workflowSteps = steps;
 }
 
-void WorkflowJSON::parse(const Json::Value& json)
+Attribute WorkflowJSON::parse(const std::string& name, const Json::Value& json)
 {
-  Json::Value root = json.get("root", ".");
-  if (root.isConvertibleTo(Json::stringValue)){
-    
-  }
-  
+  bool topLevel = name.empty();
 
+  std::vector<openstudio::Attribute> attributeVector;
+
+  if (json.isObject()) {
+    std::vector<std::string> members = json.getMemberNames();
+    for (auto it = members.begin(); it != members.end(); ++it){
+      Json::Value child = json[*it];
+      Attribute attribute = parse(*it, child);
+      attributeVector.push_back(attribute);
+      if (topLevel){
+        m_attributes.push_back(attribute);
+      } 
+    }
+  } else if (json.isArray()) {
+    unsigned n = json.size();
+    for (unsigned i = 0; i < n; ++i){
+      Json::Value child = json[i];
+      Attribute attribute = parse("obj", child);
+      attributeVector.push_back(attribute);
+      if (topLevel){
+        m_attributes.push_back(attribute);
+      }
+    }
+  } else if (json.isString()) {
+    std::string val = json.asString();
+    Attribute attribute(name, val);
+    return attribute;
+  } else if (json.isBool()) {
+    bool val = json.asBool();
+    Attribute attribute(name, val);
+    return attribute;
+  } else if (json.isInt()) {
+    int val = json.asInt();
+    Attribute attribute(name, val);
+    return attribute;
+  } else if (json.isUInt()) {
+    int val = (int)json.asUInt();
+    Attribute attribute(name, val);
+    return attribute;
+  } else if (json.isDouble()) {
+    double val = json.asDouble();
+    Attribute attribute(name, val);
+    return attribute;
+  } else{
+  }
+
+  Attribute attribute(name, attributeVector);
+
+  if (topLevel){
+    //std::cout << attribute.toString();
+    boost::optional<Attribute> attribute = getAttribute("steps");
+    if (attribute){
+
+      if (attribute->valueType().value() == AttributeValueType::AttributeVector){
+        std::vector<Attribute> steps = attribute->valueAsAttributeVector();
+        for (const Attribute& step : steps){
+          std::string measureDirName;
+          boost::optional<Attribute> measureDirNameAttribute = step.findChildByName("measure_dir_name");
+          if (measureDirNameAttribute && (measureDirNameAttribute->valueType().value() == AttributeValueType::String)){
+            measureDirName = measureDirNameAttribute->valueAsString();
+          } else{
+            continue;
+          }
+
+          WorkflowStep workflowStep(measureDirName);
+
+
+          boost::optional<Attribute> arguments = step.findChildByName("arguments");
+
+
+          m_workflowSteps.push_back(workflowStep);
+        }
+      }
+
+      removeAttribute("steps");
+    }
+  }
+
+  return attribute;
 }
 
 Json::Value WorkflowJSON::json(bool includeHash) const

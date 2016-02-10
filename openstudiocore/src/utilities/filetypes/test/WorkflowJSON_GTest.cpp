@@ -35,9 +35,11 @@ TEST(Filetypes, WorkflowJSON_Min)
 
     WorkflowJSON workflow(p);
     EXPECT_EQ(p, workflow.path());
-    EXPECT_EQ(p.parent_path(), workflow.rootPath());
+    EXPECT_EQ(p.parent_path() / toPath("/."), workflow.rootPath());
     EXPECT_TRUE(workflow.seedPath().empty());
     EXPECT_TRUE(workflow.weatherPath().empty());
+
+    EXPECT_EQ(2u, workflow.workflowSteps().size());
   }catch(...){
     ASSERT_TRUE(false);
   }
@@ -54,6 +56,8 @@ TEST(Filetypes, WorkflowJSON_Full)
     EXPECT_EQ(p.parent_path() / toPath("../root/"), workflow.rootPath());
     EXPECT_EQ(p.parent_path() / toPath("../root/seed/example.osm"), workflow.seedPath());
     EXPECT_EQ(p.parent_path() / toPath("../root/weather/Golden_NREL.epw"), workflow.weatherPath());
+
+    EXPECT_EQ(2u, workflow.workflowSteps().size());
   } catch (...){
     ASSERT_TRUE(false);
   }
