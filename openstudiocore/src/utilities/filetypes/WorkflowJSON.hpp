@@ -25,6 +25,7 @@
 #include "../core/Logger.hpp"
 #include "../core/Path.hpp"
 #include "../data/Variant.hpp"
+#include "../data/Attribute.hpp"
 
 #include <jsoncpp/json.h>
 
@@ -42,7 +43,13 @@ public:
   // DLM: OSW JSON examples have vector but run method takes map 
   std::map<std::string, Variant> arguments() const;
 
+  boost::optional<Variant> getArgument(const std::string& name) const;
+
   void setArgument(const std::string& name, const Variant& value);
+  void setArgument(const std::string& name, bool value);
+  void setArgument(const std::string& name, double value);
+  void setArgument(const std::string& name, int value);
+  void setArgument(const std::string& name, const std::string& value);
 
   void removeArgument(const std::string& name);
 
@@ -62,12 +69,24 @@ public:
 
   /** Create a new, empty workflow. */
   WorkflowJSON();
-  
+
+  /** Constructor with string, will throw if string is incorrect. */
+  WorkflowJSON(const std::string& s);
+
   /** Constructor with path, will throw if path does not exist or file is incorrect. */
   WorkflowJSON(const openstudio::path& p);
-  
+
+  /** Attempt to load a WorkflowJSON from string */
+  static boost::optional<WorkflowJSON> load(const std::string& s);
+
   /** Attempt to load a WorkflowJSON from path */
   static boost::optional<WorkflowJSON> load(const openstudio::path& p);
+
+  /** Get the workflow as a string. */
+  std::string string() const;
+
+  /** Get a hash of the workflow. */
+  std::string hash() const;
 
   /** Saves this file to the current location. */
   bool save() const;
@@ -78,17 +97,35 @@ public:
   /** Returns the original path this workflow was loaded from, can be empty. */
   openstudio::path path() const;
 
-  /** Returns the absolute path to the root directory, can be empty. */
+  /** Returns the absolute path to the root directory, can be empty. 
+   ** Key name is 'root', default value is '.' */
   openstudio::path rootPath() const;
 
-  /** Returns the absolute path to the seed file, can be empty. */
+  /** Returns the absolute path to the seed file, can be empty. 
+   ** Key name is 'seed', default value is '' */
   openstudio::path seedPath() const;
 
-  /** Returns the absolute path to the weather file, can be empty. */
+  /** Returns the absolute path to the weather file, can be empty. 
+   ** Key name is 'weather_file', default value is '' */
   openstudio::path weatherPath() const;
 
   /** Returns the absolute path to the measures directory, can be empty. */
   openstudio::path measuresDir() const;
+
+  /** Returns the attributes (other than steps). */
+  std::vector<Attribute> attributes() const;
+
+  /** Gets an attribute (other than steps). */
+  boost::optional<Attribute> getAttribute(const std::string& name) const;
+
+  /** Removes an attribute (other than steps). */
+  void removeAttribute(const std::string& name);
+
+  /** Sets an attribute (other than steps). */
+  void setAttribute(const Attribute& attribute);
+  
+  /** Clears all attributes (other than steps). */
+  void clearAttributes();
 
   /** Returns the workflow steps. */
   std::vector<WorkflowStep> workflowSteps() const;
@@ -98,11 +135,16 @@ public:
 
 private:
 
+  void parse(const Json::Value& json);
+
+  Json::Value json(bool includeHash) const;
+
   // configure logging
   REGISTER_LOGGER("openstudio.WorkflowJSON");
   
   openstudio::path m_path;
-  Json::Value m_json;
+  
+  std::vector<Attribute> m_attributes; // does not store 'steps'
   std::vector<WorkflowStep> m_workflowSteps;
 };
 

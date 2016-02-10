@@ -42,9 +42,35 @@ std::map<std::string, Variant> WorkflowStep::arguments() const
   return m_arguments;
 }
 
+boost::optional<Variant> WorkflowStep::getArgument(const std::string& name) const
+{
+  // todo
+  return boost::none;
+}
+
 void WorkflowStep::setArgument(const std::string& name, const Variant& value)
 {
   m_arguments.insert(std::make_pair(name, value));
+}
+
+void WorkflowStep::setArgument(const std::string& name, bool value)
+{
+  setArgument(name, Variant(value));
+}
+
+void WorkflowStep::setArgument(const std::string& name, double value)
+{
+  setArgument(name, Variant(value));
+}
+
+void WorkflowStep::setArgument(const std::string& name, int value)
+{
+  setArgument(name, Variant(value));
+}
+
+void WorkflowStep::setArgument(const std::string& name, const std::string& value)
+{
+  setArgument(name, Variant(value));
 }
 
 void WorkflowStep::removeArgument(const std::string& name)
@@ -60,6 +86,19 @@ void WorkflowStep::clearArguments()
 WorkflowJSON::WorkflowJSON()
 {}
 
+WorkflowJSON::WorkflowJSON(const std::string& s)
+  : m_path()
+{
+  Json::Reader reader;
+  Json::Value json;
+  bool parsingSuccessful = reader.parse(s, json);
+  if (!parsingSuccessful){
+    std::string errors = reader.getFormattedErrorMessages();
+    LOG_AND_THROW("WorkflowJSON cannot be processed, " << errors);
+  }
+
+}
+
 WorkflowJSON::WorkflowJSON(const openstudio::path& p)
   : m_path(p)
 {
@@ -71,11 +110,22 @@ WorkflowJSON::WorkflowJSON(const openstudio::path& p)
   std::ifstream ifs(openstudio::toString(m_path));
   
   Json::Reader reader;
-  bool parsingSuccessful = reader.parse(ifs, m_json);
+  Json::Value json;
+  bool parsingSuccessful = reader.parse(ifs, json);
   if ( !parsingSuccessful ){
     std::string errors = reader.getFormattedErrorMessages();
     LOG_AND_THROW("WorkflowJSON '" << toString(m_path) << "' cannot be processed, " << errors);
   }
+}
+
+boost::optional<WorkflowJSON> WorkflowJSON::load(const std::string& s)
+{
+  boost::optional<WorkflowJSON> result;
+  try {
+    result = WorkflowJSON(s);
+  } catch (const std::exception&){
+  }
+  return result;
 }
 
 boost::optional<WorkflowJSON> WorkflowJSON::load(const openstudio::path& p)
@@ -86,6 +136,16 @@ boost::optional<WorkflowJSON> WorkflowJSON::load(const openstudio::path& p)
   }catch(const std::exception&){
   }
   return result;
+}
+
+std::string WorkflowJSON::string() const
+{
+  return "";
+}
+
+std::string WorkflowJSON::hash() const
+{
+  return "";
 }
 
 bool WorkflowJSON::save() const
@@ -106,9 +166,9 @@ openstudio::path WorkflowJSON::path() const
 openstudio::path WorkflowJSON::rootPath() const
 {
   openstudio::path rootPath = toPath(".");
-  Json::Value root = m_json.get("root", ".");
-  if (root.isConvertibleTo(Json::stringValue)){
-    rootPath = toPath(root.asString());
+  boost::optional<Attribute> attribute = getAttribute("root");
+  if (attribute && (AttributeValueType::String == attribute->valueType().value())){
+    rootPath = toPath(attribute->valueAsString());
   }
 
   if (rootPath.is_absolute()){
@@ -130,9 +190,9 @@ openstudio::path WorkflowJSON::seedPath() const
   }
 
   std::string seedName;
-  Json::Value seed = m_json.get("seed", "");
-  if (seed.isConvertibleTo(Json::stringValue)){
-    seedName = seed.asString();
+  boost::optional<Attribute> attribute = getAttribute("seed");
+  if (attribute && (AttributeValueType::String == attribute->valueType().value())){
+    seedName = attribute->valueAsString();
   }
 
   if (seedName.empty()){
@@ -150,9 +210,9 @@ openstudio::path WorkflowJSON::weatherPath() const
   }
 
   std::string weatherName;
-  Json::Value weather = m_json.get("weather_file", "");
-  if (weather.isConvertibleTo(Json::stringValue)){
-    weatherName = weather.asString();
+  boost::optional<Attribute> attribute = getAttribute("weather_file");
+  if (attribute && (AttributeValueType::String == attribute->valueType().value())){
+    weatherName = attribute->valueAsString();
   }
 
   if (weatherName.empty()){
@@ -171,6 +231,31 @@ openstudio::path WorkflowJSON::measuresDir() const
   return rootPath / toPath("measures/");
 }
 
+std::vector<Attribute> WorkflowJSON::attributes() const
+{
+  return m_attributes;
+}
+
+boost::optional<Attribute> WorkflowJSON::getAttribute(const std::string& name) const
+{
+  return boost::none;
+}
+
+void WorkflowJSON::removeAttribute(const std::string& name)
+{
+
+}
+
+void WorkflowJSON::setAttribute(const Attribute& attribute)
+{
+
+}
+
+void WorkflowJSON::clearAttributes()
+{
+  m_attributes.clear();
+}
+
 std::vector<WorkflowStep> WorkflowJSON::workflowSteps() const
 {
   return m_workflowSteps;
@@ -179,6 +264,21 @@ std::vector<WorkflowStep> WorkflowJSON::workflowSteps() const
 void WorkflowJSON::setWorkflowSteps(const std::vector<WorkflowStep>& steps)
 {
   m_workflowSteps = steps;
+}
+
+void WorkflowJSON::parse(const Json::Value& json)
+{
+  Json::Value root = json.get("root", ".");
+  if (root.isConvertibleTo(Json::stringValue)){
+    
+  }
+  
+
+}
+
+Json::Value WorkflowJSON::json(bool includeHash) const
+{
+  return Json::Value();
 }
 
 } // openstudio
