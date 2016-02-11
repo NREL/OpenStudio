@@ -37,6 +37,7 @@ class UTILITIES_API WorkflowStep
 public:
   
   WorkflowStep(const std::string& measureDirName);
+  WorkflowStep(const Attribute& attribute);
 
   std::string measureDirName() const;
     
@@ -56,6 +57,9 @@ public:
   void clearArguments();
 
 private:
+
+  // configure logging
+  REGISTER_LOGGER("openstudio.WorkflowStep");
 
   std::string m_measureDirName;
   std::map<std::string, Variant> m_arguments;
@@ -83,10 +87,16 @@ public:
   static boost::optional<WorkflowJSON> load(const openstudio::path& p);
 
   /** Get the workflow as a string. */
-  std::string string() const;
+  std::string string(bool includeHash=true) const;
 
-  /** Get a hash of the workflow. */
+  /** Get a stored hash of the workflow. */
   std::string hash() const;
+
+  /** Compute the current hash of the workflow. */
+  std::string computeHash() const;
+
+  /** Check for updates and return true if there are any, updates value of the stored hash. */
+  bool checkForUpdates();
 
   /** Saves this file to the current location. */
   bool save() const;
@@ -123,6 +133,10 @@ public:
 
   /** Sets an attribute (other than steps). */
   void setAttribute(const Attribute& attribute);
+  void setAttribute(const std::string& name, bool value);
+  void setAttribute(const std::string& name, double value);
+  void setAttribute(const std::string& name, int value);
+  void setAttribute(const std::string& name, const std::string& value);
   
   /** Clears all attributes (other than steps). */
   void clearAttributes();
