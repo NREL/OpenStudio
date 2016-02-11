@@ -138,6 +138,14 @@ namespace detail {
     return isEmpty(OS_HotWaterEquipmentFields::Multiplier);
   }
 
+  bool HotWaterEquipment_Impl::isAbsolute() const {
+    HotWaterEquipmentDefinition definition = hotWaterEquipmentDefinition();
+    if (definition.designLevel()) {
+      return true;
+    }
+    return false;
+  }
+
   std::string HotWaterEquipment_Impl::endUseSubcategory() const {
     boost::optional<std::string> value = getString(OS_HotWaterEquipmentFields::EndUseSubcategory,true);
     OS_ASSERT(value);

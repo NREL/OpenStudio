@@ -115,6 +115,14 @@ namespace detail {
     return isEmpty(OS_InternalMassFields::Multiplier);
   }
 
+  bool InternalMass_Impl::isAbsolute() const {
+    InternalMassDefinition definition = internalMassDefinition();
+    if (definition.surfaceArea()) {
+      return true;
+    }
+    return false;
+  }
+
   bool InternalMass_Impl::setMultiplier(double multiplier) {
     bool result = setDouble(OS_InternalMassFields::Multiplier, multiplier);
     return result;

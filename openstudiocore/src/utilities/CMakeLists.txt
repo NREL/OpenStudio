@@ -117,6 +117,8 @@ set(geometry_src
   geometry/Plane.cpp
   geometry/Point3d.hpp
   geometry/Point3d.cpp
+  geometry/PointLatLon.hpp
+  geometry/PointLatLon.cpp  
   geometry/Transformation.hpp
   geometry/Transformation.cpp
   geometry/Vector3d.hpp
@@ -198,6 +200,7 @@ set(${target_name}_depends
   litesql
   litesql-util
   miniziplib
+  GeographicLib_STATIC
   ${Boost_LIBRARIES}
   #JWD: On Ubuntu 14.04, the thread lib is included in Boost_LIBRARIES
   # ${CMAKE_THREAD_LIBS}

@@ -46,7 +46,7 @@ class MODEL_API SpaceLoad : public SpaceItem {
 
   void resetSpaceType();
 
-  /// Converts space load levels to abosolute values rather than by per area, etc.
+  /// Converts space load levels to absolute values rather than by per area, etc.
   /// Also hard sizes any costs associated with this load.
   /// Only possible if this space load is parented by a space, returns false if 
   /// parented by a space type.
@@ -54,6 +54,9 @@ class MODEL_API SpaceLoad : public SpaceItem {
 
   /// Directly applies default schedules to this space load if found.
   bool hardApplySchedules();
+
+  /// Returns true if the load represents an absolute quantity that must be added when combining space types
+  bool isAbsolute() const;
 
  protected:
 

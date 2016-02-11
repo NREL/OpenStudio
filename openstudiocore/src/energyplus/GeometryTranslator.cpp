@@ -27,6 +27,9 @@
 #include "../model/ShadingSurface.hpp"
 
 #include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/geometry/Point3d.hpp"
+#include "../utilities/geometry/Vector3d.hpp"
+
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Optional.hpp"
 #include "../utilities/core/Containers.hpp"

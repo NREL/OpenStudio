@@ -10,7 +10,7 @@ project(OpenStudio)
 
 set(CMAKE_VERSION_MAJOR 1)
 set(CMAKE_VERSION_MINOR 10)
-set(CMAKE_VERSION_PATCH 1)
+set(CMAKE_VERSION_PATCH 4)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
@@ -749,9 +749,33 @@ ExternalProject_Add(GoogleTest
   -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
 )
 
-
 set(GTEST_INCLUDE_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest/include)
 set(GTEST_LIB_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest-build)
+
+ExternalProject_Add(GeographicLib
+  URL http://openstudio-resources.s3.amazonaws.com/dependencies/GeographicLib-1.45.zip
+  URL_MD5 c3c8f989d700fc88c8ce4584cb298cee
+  #PATCH_COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_SOURCE_DIR}/dependencies/GeographicLib ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib
+  INSTALL_COMMAND ""
+  CMAKE_CACHE_ARGS
+  -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
+  -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
+  -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
+  -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+  -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
+  -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
+  -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
+  -DCMAKE_MODULE_LINKER_FLAGS:STRING=${CMAKE_MODULE_LINKER_FLAGS}
+  -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
+  -DGEOGRAPHICLIB_LIB_TYPE:STRING=STATIC
+  -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
+)
+
+# Don't confuse "GEOGRAPHICLIB"_Dir as something that refers to the 
+# actual library compiled unit. This variable just refers to where the project is at.
+# We will use this to find the cmake config file provided by the project,
+# and that config file will tell us everything we need to know about the project's targets.
+set(GeographicLib_DIR ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib-build/)
 
 if(BUILD_QT)
   set(Qt5Widgets_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Widgets)
@@ -810,6 +834,8 @@ set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)
 # Set up the dependencies for OpenStudioCore
 set(OpenStudioCore_DEPENDS GoogleTest)
 
+list(APPEND OpenStudioCore_DEPENDS GeographicLib)
+
 if(BUILD_QT)
   list(APPEND OpenStudioCore_DEPENDS Qt)
 endif()
@@ -848,6 +874,8 @@ ExternalProject_Add(OSCore
   CMAKE_CACHE_ARGS
     -DGTEST_LIB_DIR:PATH=${GTEST_LIB_DIR}
     -DGTEST_INCLUDE_DIR:PATH=${GTEST_INCLUDE_DIR}
+    -DGEOGRAPHIC_LIB_DIR:PATH=${GEOGRAPHIC_LIB_DIR}
+    -DGEOGRAPHIC_INCLUDE_DIR:PATH=${GEOGRAPHIC_INCLUDE_DIR}
     -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
     -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
     -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
@@ -908,6 +936,7 @@ ExternalProject_Add(OSCore
     -DOPENSSL_ROOT_DIR:PATH=${OPENSSL_ROOT_DIR}
     -DPATCH_EXE:PATH=${PATCH_EXE}
     -DMAXIMIZE_CPU_USAGE:BOOL=${MAXIMIZE_CPU_USAGE}
+    -DGeographicLib_DIR:PATH=${GeographicLib_DIR}
     INSTALL_COMMAND ""
 )
 

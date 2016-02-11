@@ -149,6 +149,23 @@ module OpenStudio
       num_total = selection.length
       num_complete = 0
 
+      # get model
+      model = model_interface.openstudio_model
+
+      # get thermostat object from input name
+      thermostat_objects = model.getThermostats
+      found_thermostat = false
+      thermostat_objects.each do |object|
+        if object.name.to_s == thermostat
+          thermostat = object
+          found_thermostat = true
+          break
+        end
+      end
+      if not found_thermostat
+        puts "Can't find thermostat in model matching selected name. Won't set thermostat for selected thermal zones."
+      end
+
       # loop through selection
       selection.each do |entity|
         drawing_interface = entity.drawing_interface
@@ -175,15 +192,17 @@ module OpenStudio
             assigned_const_set = drawing_interface.model_object.setString(3,selected_const_set.to_s)
           end
 
-          # set space's parent zone values
-          # (I could probalby make array of unique values and loop outside of main loop so I don't reset the string over and over for spaces that share zones)
-
           parent_zone = drawing_interface.model_object.thermalZone
           if not parent_zone.empty?
 
-            # assign thermostat to parent zone object
-            assigned_thermostat_status = parent_zone.get.setString(19,thermostat.to_s)
-            #puts "thermostat, #{thermostat.to_s}, #{assigned_thermostat_status}"
+            if found_thermostat
+              # clone and rename thermostat
+              new_thermostat = thermostat.clone(model).to_Thermostat.get
+              new_thermostat.setName("#{parent_zone.get.name} Thermostat")
+
+              # setThermostat will delete thermostat previouslly associated with the zone
+              parent_zone.get.setThermostat(new_thermostat)
+            end
 
             # assign parent zone's ideal air loads status
             if ideal_loads.to_s == "Yes"

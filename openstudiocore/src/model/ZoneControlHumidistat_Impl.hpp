@@ -68,6 +68,8 @@ namespace detail {
 
     boost::optional<Schedule> dehumidifyingRelativeHumiditySetpointSchedule() const;
 
+    boost::optional<ThermalZone> controlledZone() const;
+
     //@}
     /** @name Setters */
     //@{
