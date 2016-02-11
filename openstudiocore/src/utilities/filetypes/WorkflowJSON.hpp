@@ -30,6 +30,13 @@
 #include <jsoncpp/json.h>
 
 namespace openstudio{
+
+  /** TODO:
+  * Variant class: remove
+  * Attribute class: simplify interface, not use QVariant, handle JSON objects (currently just does arrays), provide better JSON support
+  * WorkflowJSON class: ensure that this can read and write arbitrary JSON 
+  * WorkflowStep class: build around Attribute
+  */
   
 /** Class for accessing the OpenStudio Workflow (OSW) JSON format. */
 class UTILITIES_API WorkflowStep
