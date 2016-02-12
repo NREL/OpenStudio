@@ -2271,9 +2271,17 @@ namespace detail {
 
   boost::optional<HVACComponent> ThermalZone_Impl::airLoopHVACTerminal() const
   {
-    boost::optional<HVACComponent> result;
+    if( auto mo = inletPortList().airLoopHVACModelObject() ) {
+      if( auto node = mo->optionalCast<Node>() ) {
+        if( auto nodeInlet = node->inletModelObject() ) {
+          if( ! nodeInlet->optionalCast<Splitter>() ) {
+            return nodeInlet->optionalCast<HVACComponent>();
+          }
+        }
+      }
+    }
 
-    return result;
+    return boost::none;
   }
 
 
