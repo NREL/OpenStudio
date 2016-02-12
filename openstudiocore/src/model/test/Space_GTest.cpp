@@ -46,6 +46,7 @@
 #include "../PeopleDefinition.hpp"
 #include "../Schedule.hpp"
 #include "../LifeCycleCost.hpp"
+#include "../LifeCycleCost_Impl.hpp"
 #include "../SpaceInfiltrationDesignFlowRate.hpp"
 #include "../AirLoopHVACSupplyPlenum.hpp"
 #include "../AirLoopHVACReturnPlenum.hpp"
@@ -1463,4 +1464,19 @@ TEST_F(ModelFixture, Space_Intersect_FourToOne){
       }
     }
   }
+}
+
+TEST_F(ModelFixture, Space_LifeCycleCost)
+{
+  Model model;
+  Space space(model);
+  EXPECT_EQ(0, space.lifeCycleCosts().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<LifeCycleCost>().size());
+  boost::optional<LifeCycleCost> lifeCycleCost = LifeCycleCost::createLifeCycleCost("New Cost", space, 1, "CostPerEach", "Construction");
+  ASSERT_TRUE(lifeCycleCost);
+  EXPECT_EQ(1u, space.lifeCycleCosts().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<LifeCycleCost>().size());
+  space.remove();
+  EXPECT_TRUE(lifeCycleCost->handle().isNull());
+  EXPECT_EQ(0, model.getConcreteModelObjects<LifeCycleCost>().size());
 }
