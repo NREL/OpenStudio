@@ -2,7 +2,7 @@
   <schema_version>3.0</schema_version>
   <name>open_studio_results</name>
   <uid>1f6c1e2e-d66d-42ff-bf05-0fc50d3dfb7c</uid>
-  <version_id>727595bd-db2c-440a-a895-85e7c1924e64</version_id>
+  <version_id>ef075f4d-cbd0-44f0-96bf-9dc697186c08</version_id>
   <xml_checksum>557BF06F</xml_checksum>
   <class_name>OpenStudioResults</class_name>
   <display_name>OpenStudio Results</display_name>
@@ -485,16 +485,16 @@
       <checksum>463388F8</checksum>
     </file>
     <file>
-      <filename>os_lib_reporting.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>A82D6373</checksum>
-    </file>
-    <file>
       <filename>NoRunPeriod.osm</filename>
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
       <checksum>ECD13CF2</checksum>
+    </file>
+    <file>
+      <filename>os_lib_reporting.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>BFB84E0E</checksum>
     </file>
   </files>
 </measure>
