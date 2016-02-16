@@ -324,6 +324,18 @@ class OneThreeStraightItem : public GridItem
   bool m_dualDuct;
 };
 
+class OneThreeDualDuctMixerItem : public GridItem
+{
+  public:
+
+  // if dual is true there are two parallel lines
+  OneThreeDualDuctMixerItem(QGraphicsItem * parent = nullptr, bool dualDuct = false);
+
+  void paint(QPainter *painter, 
+             const QStyleOptionGraphicsItem *option, 
+             QWidget *widget = nullptr) override;
+};
+
 class SupplyPlenumItem : public GridItem
 {
   public:

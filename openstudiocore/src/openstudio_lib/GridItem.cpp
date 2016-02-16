@@ -27,6 +27,7 @@
 #include "MainRightColumnController.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
 
 #include <QPainter>
 #include <QMimeData>
@@ -55,6 +56,10 @@
 #include "../model/AirLoopHVACSupplyPlenum_Impl.hpp"
 #include "../model/AirLoopHVACReturnPlenum.hpp"
 #include "../model/AirLoopHVACReturnPlenum_Impl.hpp"
+#include "../model/AirLoopHVACZoneMixer.hpp"
+#include "../model/AirLoopHVACZoneMixer_Impl.hpp"
+#include "../model/AirLoopHVACZoneSplitter.hpp"
+#include "../model/AirLoopHVACZoneSplitter_Impl.hpp"
 #include "../model/AirToAirComponent.hpp"
 #include "../model/AirToAirComponent_Impl.hpp"
 #include "../model/PlantLoop.hpp"
@@ -567,6 +572,15 @@ std::vector<GridItem *> HorizontalBranchItem::itemFactory(std::vector<model::Mod
         gridItem->setDeletable(true);
       }
       result.push_back(gridItem);
+    } else if(boost::optional<model::Mixer> comp = it->optionalCast<model::Mixer>()) {
+      // Expecting dual duct terminal which is a mixer
+      GridItem * gridItem = new OneThreeDualDuctMixerItem(parent); 
+      gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
+      if( comp->isRemovable() )
+      {
+        gridItem->setDeletable(true);
+      }
+      result.push_back(gridItem);
     }
   }
 
@@ -994,6 +1008,66 @@ bool sortBranches(std::vector<ModelObject> i, std::vector<ModelObject> j)
   return iModelObject->name().get() < jModelObject->name().get();
 }
 
+// Given a splitter / mixer pair, return the "center" ModelObject for each branch
+// That is the first thing that is either 1) a zone, 2) not a splitter/mixer or node, 3) a node if that is all that is found
+// This will be used later to find the components both upstream and downstream of the center ModelObject
+// This is unfortunately tricky, but necessary to handle air system demand branches that involve plenums
+std::vector<model::HVACComponent> centerHVACComponents( model::Splitter & splitter, model::Mixer & mixer)
+{
+  std::vector<model::HVACComponent> result;
+
+  auto loop = splitter.loop();
+
+  auto removeUnwantedSplitterMixerNodesPred = [](const model::HVACComponent & modelObject) {
+    if( modelObject.optionalCast<model::AirLoopHVACZoneSplitter>() ) {
+      return true;
+    } else if( modelObject.optionalCast<model::AirLoopHVACZoneMixer>() ) {
+      return true;
+    } else if( modelObject.optionalCast<model::AirLoopHVACSupplyPlenum>() ) {
+      return true;
+    } else if( modelObject.optionalCast<model::AirLoopHVACReturnPlenum>() ) {
+      return true;
+    } else if( modelObject.optionalCast<model::Node>() ) {
+      return true;
+    }
+
+    return false;
+  };
+
+  if( loop ) {
+    auto outletObjects = subsetCastVector<model::HVACComponent>(splitter.outletModelObjects());
+    for( const auto & object : outletObjects ) {
+      auto branchObjects = subsetCastVector<model::HVACComponent>(loop->demandComponents(object,mixer));
+
+      auto zones = subsetCastVector<model::ThermalZone>(branchObjects);
+      if( ! zones.empty() ) {
+        result.insert(result.end(),zones.begin(),zones.end());
+        continue;
+      }
+      
+      // reducedSet is remains with the things from "2" not a plitter/mixer or node
+      // We are expecting a terminal. ie a branch with only a terminal and nodes on it
+      auto reducedSetIt = std::remove_if(branchObjects.begin(),branchObjects.end(),removeUnwantedSplitterMixerNodesPred);
+      if( reducedSetIt != branchObjects.end() ) {
+        result.push_back(*reducedSetIt);
+        continue;
+      }
+
+      // If we get here then we should only have nodes
+      // ie a branch with only a single node on it.
+      auto nodes = subsetCastVector<model::Node>(branchObjects);
+      if( ! nodes.empty() ) {
+        result.push_back(nodes.front());
+      }
+    }
+  }
+
+  WorkspaceObjectNameLess sorter;
+  std::sort(result.begin(),result.end(),sorter);
+
+  return result;
+}
+
 // This is an overload for laying out branch groups for dual duct paths
 HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter,
                                                       std::vector<model::Node> & supplyOutletNodes,
@@ -1030,12 +1104,20 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
     m_splitter(splitter),
     m_dropZoneBranchItem(nullptr)
 {
-  std::vector<model::ModelObject> branchComponents;
-  std::vector< std::vector<model::ModelObject> > allBranchComponents;
   auto splitterOutletObjects = splitter.outletModelObjects();
 
   if( ! (splitterOutletObjects.front() == mixer) )
   {
+    auto reverseVector = [](const std::vector<model::ModelObject> & modelObjects) {
+      std::vector<model::ModelObject> rModelObjects;
+
+      for( auto rit = modelObjects.rbegin(); rit < modelObjects.rend(); ++rit ) {
+        rModelObjects.push_back( *rit );
+      }
+
+      return rModelObjects;
+    };
+
     auto loop = splitter.loop();
     OS_ASSERT(loop);
     auto airLoop = loop->optionalCast<model::AirLoopHVAC>();
@@ -1043,53 +1125,77 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
     bool isSupplySide = loop->supplyComponent(splitter.handle());
 
     if( airLoop && (! isSupplySide) ) {
-      auto splitters = airLoop->zoneSplitters(); 
-      auto zones = airLoop->thermalZones();
+      // Why is there these extra hoops for air loop demand?
+      // The reason is because of plenums. If we go from splitter outlet node,
+      // to mixer inlet node (when there are plenums) there may be more than one path,
+      // and we will receive all of those extra ModelObject instances from ::demandComponents
+      auto centerComps = centerHVACComponents(splitter,mixer);
+      auto splitters = airLoop->zoneSplitters();
       
-      for( const auto & zone : zones ) {
+      if( splitters.size() == 2u ) {
         std::pair< std::vector<model::ModelObject>, std::vector<model::ModelObject> > allCompsBeforeTerminal;
 
-        auto terminal = zone.airLoopHVACTerminal();
+        for( const auto & centerComp : centerComps ) {
+          boost::optional<model::HVACComponent> keyComp = centerComp;
+          if( auto zone = centerComp.optionalCast<model::ThermalZone>() ) {
+            if( auto terminal = zone->airLoopHVACTerminal() ) {
+              keyComp = terminal;
+            }
+          }
+          OS_ASSERT(keyComp);
+          {
+            auto compsBeforeTerminal = airLoop->demandComponents(splitters[0],keyComp.get());
+            compsBeforeTerminal.erase(compsBeforeTerminal.begin());
+            compsBeforeTerminal.pop_back();
+            allCompsBeforeTerminal.first = reverseVector(compsBeforeTerminal);
+          }
 
-        // Need to account for more than one splitter,
-        // ie dual duct
-        //for( const auto & splitter : splitters ) {
-        //  auto compsBeforeTerminal = airLoop->demandComponents(splitter,terminal.get());
-        //  compsBeforeTerminal.pop_back();
-        //  allCompsBeforeTerminal.push_back(compsBeforeTerminal);
-        //}
-        {
-          auto compsBeforeTerminal = airLoop->demandComponents(splitters[0],terminal.get());
-          compsBeforeTerminal.pop_back();
-          allCompsBeforeTerminal.first = compsBeforeTerminal;
+          {
+            auto compsBeforeTerminal = airLoop->demandComponents(splitters[1],keyComp.get());
+            compsBeforeTerminal.erase(compsBeforeTerminal.begin());
+            compsBeforeTerminal.pop_back();
+            allCompsBeforeTerminal.second = reverseVector(compsBeforeTerminal);
+          }
+
+          auto compsAfterTerminal = airLoop->demandComponents(keyComp.get(),mixer);
+          // We want the center but not the mixer
+          compsAfterTerminal.pop_back();
+          auto rCompsAfterTerminal = reverseVector(compsAfterTerminal);
+
+          m_branchItems.push_back(new HorizontalBranchItem(allCompsBeforeTerminal,rCompsAfterTerminal,this));
         }
-        if( splitters.size() == 2u ) {
-          auto compsBeforeTerminal = airLoop->demandComponents(splitters[1],terminal.get());
-          compsBeforeTerminal.pop_back();
-          allCompsBeforeTerminal.second = compsBeforeTerminal;
-        }
+      } else {
+        for( const auto & centerComp : centerComps ) {
+          auto comps = airLoop->demandComponents(splitter,centerComp);
+          // We don't want the splitter or the centerComp
+          comps.erase(comps.begin());
+          comps.pop_back();
 
-        auto compsAfterTerminal = airLoop->demandComponents(terminal.get(),mixer);
-        compsAfterTerminal.pop_back();
+          auto compsAfterCenter = airLoop->demandComponents(centerComp,mixer);
+          // We want the centerComp but not the mixer
+          compsAfterCenter.pop_back();
 
-        m_branchItems.push_back(new HorizontalBranchItem(allCompsBeforeTerminal,compsAfterTerminal,this));
-      } 
+          comps.insert(comps.end(),compsAfterCenter.begin(),compsAfterCenter.end());
+
+          auto rComps = reverseVector(comps);
+
+          m_branchItems.push_back(new HorizontalBranchItem(rComps,this));
+        } 
+      }
     } else {
+      std::vector< std::vector<model::ModelObject> > allBranchComponents;
+
       for( auto it1 = splitterOutletObjects.begin(); it1 != splitterOutletObjects.end(); ++it1 )
       {
         auto comp1 = it1->optionalCast<model::HVACComponent>();
         OS_ASSERT(comp1);
-        branchComponents = loop->components(comp1.get(),mixer);
+        auto branchComponents = loop->components(comp1.get(),mixer);
         branchComponents.pop_back();
 
         if( isSupplySide ) {
           allBranchComponents.push_back(branchComponents);
         } else {
-          std::vector<model::ModelObject> rBranchComponents;
-          for( auto rit = branchComponents.rbegin();
-               rit < branchComponents.rend(); ++rit ) {
-            rBranchComponents.push_back( *rit );
-          }
+          auto rBranchComponents = reverseVector(branchComponents);
           allBranchComponents.push_back(rBranchComponents);
         }
       }
@@ -1513,6 +1619,28 @@ void ReturnPlenumItem::paint(QPainter *painter,
     QPointF(25,60),
   };
   painter->drawPolygon(points,4);
+}
+
+OneThreeDualDuctMixerItem::OneThreeDualDuctMixerItem( QGraphicsItem * parent, bool dualDuct )
+  : GridItem(parent)
+{
+}
+
+void OneThreeDualDuctMixerItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+  GridItem::paint(painter,option,widget);
+
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
+  painter->drawLine(0,50,25,50);
+  painter->drawLine(100,25,75,25);
+  painter->drawLine(100,75,75,75);
+
+  if( modelObject() )
+  {
+    const QPixmap * qPixmap = IconLibrary::Instance().findIcon( modelObject()->iddObject().type().value() );
+    painter->drawPixmap(0,0,100,100,*qPixmap);
+  }
 }
 
 OneThreeStraightItem::OneThreeStraightItem( QGraphicsItem * parent, bool dualDuct )
