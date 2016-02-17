@@ -236,6 +236,11 @@ namespace detail {
     return t_clone;
   }
 
+  bool AirTerminalDualDuctVAV_Impl::isRemovable() const
+  {
+    return HVACComponent_Impl::isRemovable();
+  }
+
 } // detail
 
 AirTerminalDualDuctVAV::AirTerminalDualDuctVAV(const Model& model)
