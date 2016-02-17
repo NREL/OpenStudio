@@ -1089,9 +1089,7 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
     auto branchComponents = loop.components(inlet,outlet);
     branchComponents.pop_back();
 
-    //if( ! branchComponents.empty() ) {
-      m_branchItems.push_back(new HorizontalBranchItem(branchComponents,this));
-    //}
+    m_branchItems.push_back(new HorizontalBranchItem(branchComponents,this));
   }
 
   layout();
@@ -1205,6 +1203,17 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
 unsigned HorizontalBranchGroupItem::numberOfBranches() const
 {
   return m_branchItems.size();  
+}
+
+std::vector<int> HorizontalBranchGroupItem::branchBaselineGridPositions() const
+{
+  std::vector<int> result;
+
+  for( const auto & branchItem : m_branchItems ) {
+    result.emplace_back(branchItem->getYGridPos() + branchItem->getVGridLength() - 1);
+  }
+
+  return result;
 }
 
 void HorizontalBranchGroupItem::setShowDropZone(bool showDropZone)
@@ -3099,23 +3108,24 @@ int SplitterItem::numberBranches()
 }
 
 SupplySplitterItem::SupplySplitterItem( QGraphicsItem * parent )
-  : GridItem( parent ),
-    m_numberBranches(1)
+  : GridItem( parent )
 {
+  setNumberBranches(1);
 }
 
 void SupplySplitterItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
   GridItem::paint(painter,option,widget);
+  int t_numberBranches = numberBranches();
 
   painter->setRenderHint(QPainter::Antialiasing, true);
   painter->setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
   painter->setBrush(QBrush(Qt::lightGray,Qt::SolidPattern));
 
-  painter->drawLine(50,50,50,(((m_numberBranches * 2) - 1) * 100) - 50);
+  painter->drawLine(50,50,50,(((t_numberBranches * 2) - 1) * 100) - 50);
 
   int midpointIndex;
-  if( m_numberBranches == 1 )
+  if( t_numberBranches == 1 )
   {
     midpointIndex = 0;
     QPixmap qPixmap(":images/supply_splitter.png");
@@ -3123,27 +3133,46 @@ void SupplySplitterItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
   }
   else
   {
-    midpointIndex = m_numberBranches - 1;
+    midpointIndex = t_numberBranches - 1;
   }
   painter->drawLine(0,(midpointIndex * 100) + 50,50,(midpointIndex * 100) + 50);
 
   int j = 50;
-  for( int branchIndex = 1; branchIndex <= m_numberBranches; branchIndex++ )
+  for( int branchIndex = 1; branchIndex <= t_numberBranches; branchIndex++ )
   {
     painter->drawLine(50,j,100,j);
     j = j + 200;
   }
 }
 
+void SupplySplitterItem::setBranchGridPositions(const std::vector<int> & branchGridPositions)
+{
+  m_baselineBranchPositions = branchGridPositions;
+
+  if( ! branchGridPositions.empty() ) {
+    m_vLength = branchGridPositions.back() + 1;
+  } else {
+    m_vLength = 1;
+  }
+}
+
 void SupplySplitterItem::setNumberBranches( int branches )
 {
-  m_numberBranches = branches;
-  m_vLength = (branches * 2) - 1;
+  std::vector<int> branchGridPositions;
+
+  int jPos = 0;
+  // If client uses this method we assume 1 unit height for each branch with 1 unit separating each one
+  for( int i = 0; i < branches; ++i ) {
+    branchGridPositions.push_back(jPos);
+    jPos = jPos + 2;
+  }
+
+  setBranchGridPositions(branchGridPositions);
 }
 
 int SupplySplitterItem::numberBranches()
 {
-  return m_numberBranches;
+  return m_baselineBranchPositions.size();
 }
 
 MixerItem::MixerItem( QGraphicsItem * parent )
@@ -3577,7 +3606,16 @@ SupplySideItem::SupplySideItem( QGraphicsItem * parent,
       m_mainBranchGroupItem = new HorizontalBranchGroupItem( splitter.get(),
                                                              m_supplyOutletNodes,
                                                              this );
-      m_splitterItem->setNumberBranches( m_mainBranchGroupItem->numberOfBranches() );
+      auto branchBaselineGridPositions = m_mainBranchGroupItem->branchBaselineGridPositions();
+      OS_ASSERT(branchBaselineGridPositions.size() == 2u);
+
+      std::vector<int> splitterPositions;
+      auto firstBranchBaselineGridPosition = branchBaselineGridPositions.front();
+      for(const auto & branchPos : branchBaselineGridPositions) {
+        splitterPositions.emplace_back(branchPos - firstBranchBaselineGridPosition);
+      }
+
+      m_splitterItem->setBranchGridPositions(splitterPositions);
     }
 
     {
@@ -3666,7 +3704,13 @@ void SupplySideItem::layout()
 
   if( m_mainBranchGroupItem ) {
     halfBranchGroupHeight = m_mainBranchGroupItem->getVGridLength() / 2;
-    j = halfBranchGroupHeight;
+    auto branchPositions = m_mainBranchGroupItem->branchBaselineGridPositions();    
+    if( branchPositions.size() > 1 ) {
+      // If we have explicit branch positions, then find the midpoint of those
+      // instead of the simple vGridLength / 2
+      halfBranchGroupHeight = (branchPositions.back() - branchPositions.front()) / 2.0;
+    }
+    j = m_mainBranchGroupItem->getVGridLength() - halfBranchGroupHeight;
   }
 
   if( m_inletBranchItem ) {
@@ -3725,7 +3769,7 @@ void SupplySideItem::layout()
   }
 
   if( m_mainBranchGroupItem ) {
-    m_mainBranchGroupItem->setGridPos(i,j - halfBranchGroupHeight);
+    m_mainBranchGroupItem->setGridPos(i,j + 1 - (m_mainBranchGroupItem->getVGridLength() - halfBranchGroupHeight));
     i = i + m_mainBranchGroupItem->getHGridLength();
   }
 

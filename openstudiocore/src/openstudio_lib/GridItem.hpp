@@ -184,12 +184,9 @@ class SplitterItem : public GridItem
 
   private:
 
-  int m_numberBranches;
-
   std::vector<TerminalType> m_terminalTypes;
-
+  int m_numberBranches;
   int m_firstDuct1Index;
-
   int m_firstDuct2Index;
 };
 
@@ -220,11 +217,18 @@ class SupplySplitterItem : public GridItem
 
   int numberBranches();
 
+  // See related method HorizontalBranchGroupItem::branchBaselineGridPositions
+  // This method is used to get the splitter to line up with the horizontal lines in 
+  // the HorizontalBranchGroupItem.
+  // SupplySideItem will coordinate this
+  // The size should be equal to numberBranches
+  void setBranchGridPositions( const std::vector<int> & branchGridPositions );
+
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
   private:
 
-  int m_numberBranches;
+  std::vector<int> m_baselineBranchPositions; 
 };
 
 class SupplyMixerItem : public GridItem
@@ -813,6 +817,13 @@ class HorizontalBranchGroupItem : public GridItem
 
   unsigned numberOfBranches() const;
 
+  // HorizontalBranchGroupItem instances normally have a series of parallel branches
+  // that are each 1 grid unit in height. If we have a dual duct there might be oa systems on the branches
+  // and this messes up the assumption about each branch being 1 grid unit high.
+  // This method will return the "baseline" (ie where the horizontal black line is) grid pos
+  // for each branch.
+  std::vector<int> branchBaselineGridPositions() const;
+
   protected:
 
   virtual void paint(QPainter *painter, 
@@ -822,9 +833,7 @@ class HorizontalBranchGroupItem : public GridItem
   private:
 
   model::Splitter m_splitter;
-
   std::vector<HorizontalBranchItem *> m_branchItems;
-
   HorizontalBranchItem * m_dropZoneBranchItem;
 };
 
