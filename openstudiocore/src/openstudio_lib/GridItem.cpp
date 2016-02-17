@@ -1089,9 +1089,9 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
     auto branchComponents = loop.components(inlet,outlet);
     branchComponents.pop_back();
 
-    if( ! branchComponents.empty() ) {
+    //if( ! branchComponents.empty() ) {
       m_branchItems.push_back(new HorizontalBranchItem(branchComponents,this));
-    }
+    //}
   }
 
   layout();
