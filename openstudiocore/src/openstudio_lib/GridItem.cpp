@@ -1131,56 +1131,44 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
       // and we will receive all of those extra ModelObject instances from ::demandComponents
       auto centerComps = centerHVACComponents(splitter,mixer);
       auto splitters = airLoop->zoneSplitters();
-      
-      if( splitters.size() == 2u ) {
-        std::pair< std::vector<model::ModelObject>, std::vector<model::ModelObject> > allCompsBeforeTerminal;
 
-        for( const auto & centerComp : centerComps ) {
-          boost::optional<model::HVACComponent> keyComp = centerComp;
-          if( auto zone = centerComp.optionalCast<model::ThermalZone>() ) {
-            if( auto terminal = zone->airLoopHVACTerminal() ) {
-              keyComp = terminal;
-            }
-          }
-          OS_ASSERT(keyComp);
-          {
-            auto compsBeforeTerminal = airLoop->demandComponents(splitters[0],keyComp.get());
-            compsBeforeTerminal.erase(compsBeforeTerminal.begin());
-            compsBeforeTerminal.pop_back();
-            allCompsBeforeTerminal.first = reverseVector(compsBeforeTerminal);
-          }
+      std::pair< std::vector<model::ModelObject>, std::vector<model::ModelObject> > allCompsBeforeTerminal;
 
-          {
-            auto compsBeforeTerminal = airLoop->demandComponents(splitters[1],keyComp.get());
-            compsBeforeTerminal.erase(compsBeforeTerminal.begin());
-            compsBeforeTerminal.pop_back();
-            allCompsBeforeTerminal.second = reverseVector(compsBeforeTerminal);
+      for( const auto & centerComp : centerComps ) {
+        boost::optional<model::HVACComponent> keyComp = centerComp;
+        if( auto zone = centerComp.optionalCast<model::ThermalZone>() ) {
+          if( auto terminal = zone->airLoopHVACTerminal() ) {
+            keyComp = terminal;
           }
+        }
+        OS_ASSERT(keyComp);
+        {
+          auto compsBeforeTerminal = airLoop->demandComponents(splitters[0],keyComp.get());
+          compsBeforeTerminal.erase(compsBeforeTerminal.begin());
+          compsBeforeTerminal.pop_back();
+          allCompsBeforeTerminal.first = reverseVector(compsBeforeTerminal);
+        }
 
-          auto compsAfterTerminal = airLoop->demandComponents(keyComp.get(),mixer);
-          // We want the center but not the mixer
-          compsAfterTerminal.pop_back();
-          auto rCompsAfterTerminal = reverseVector(compsAfterTerminal);
+        auto compsAfterTerminal = airLoop->demandComponents(keyComp.get(),mixer);
+        // We want the center but not the mixer
+        compsAfterTerminal.pop_back();
+        auto rCompsAfterTerminal = reverseVector(compsAfterTerminal);
+
+        if( keyComp->optionalCast<model::Mixer>() ) {
+          // We must have a dual duct for this branch
+          OS_ASSERT(splitters.size() == 2u);
+
+          auto compsBeforeTerminal = airLoop->demandComponents(splitters[1],keyComp.get());
+          compsBeforeTerminal.erase(compsBeforeTerminal.begin());
+          compsBeforeTerminal.pop_back();
+          allCompsBeforeTerminal.second = reverseVector(compsBeforeTerminal);
 
           m_branchItems.push_back(new HorizontalBranchItem(allCompsBeforeTerminal,rCompsAfterTerminal,this));
+        } else {
+          auto comps = rCompsAfterTerminal;
+          comps.insert(comps.end(),allCompsBeforeTerminal.first.begin(),allCompsBeforeTerminal.first.end());
+          m_branchItems.push_back(new HorizontalBranchItem(comps,this));
         }
-      } else {
-        for( const auto & centerComp : centerComps ) {
-          auto comps = airLoop->demandComponents(splitter,centerComp);
-          // We don't want the splitter or the centerComp
-          comps.erase(comps.begin());
-          comps.pop_back();
-
-          auto compsAfterCenter = airLoop->demandComponents(centerComp,mixer);
-          // We want the centerComp but not the mixer
-          compsAfterCenter.pop_back();
-
-          comps.insert(comps.end(),compsAfterCenter.begin(),compsAfterCenter.end());
-
-          auto rComps = reverseVector(comps);
-
-          m_branchItems.push_back(new HorizontalBranchItem(rComps,this));
-        } 
       }
     } else {
       std::vector< std::vector<model::ModelObject> > allBranchComponents;
