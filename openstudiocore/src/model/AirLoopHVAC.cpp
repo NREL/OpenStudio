@@ -267,9 +267,7 @@ namespace detail {
   {
     OptionalAirLoopHVACOutdoorAirSystem result;
     ModelObjectVector modelObjects;
-    modelObjects = supplyComponents( this->supplyInletNode(),
-                                     this->supplyOutletNodes().front(),
-                                     openstudio::IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem );
+    modelObjects = supplyComponents( openstudio::IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem );
     if( modelObjects.size() == 1 )
     {
       if( OptionalAirLoopHVACOutdoorAirSystem oaSystem
