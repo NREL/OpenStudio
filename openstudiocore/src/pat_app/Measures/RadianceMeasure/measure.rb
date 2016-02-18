@@ -231,8 +231,12 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       ENV["RAYPATH"] = path + ":" + raypath + ":."
     end
     
-    # Radiance version detection and environment reportage                 
-    ver = Open3.capture2("#{path}/rcontrib -version")
+    # Radiance version detection and environment reportage
+    # Need to help Open3 on Windows...                
+    returnDir = Dir.pwd
+    Dir.chdir(path)
+    ver = Open3.capture2("rcontrib#{programExtension} -version")
+    Dir.chdir(returnDir)
     print_statement("Radiance version info: #{ver[0]}", runner)
     print_statement("Radiance binary dir: #{path}", runner)
     print_statement("Radiance library dir: #{raypath}", runner)
