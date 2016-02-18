@@ -1458,12 +1458,17 @@ void SystemItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 
 SystemCenterItem::SystemCenterItem( QGraphicsItem * parent, model::Loop loop )
   : GridItem(parent),
-    m_dualDuct(false)
+    m_supplyDualDuct(false),
+    m_demandDualDuct(false)
 {
   this->setModelObject(loop);
 
   if( loop.supplyOutletNodes().size() == 2u ) {
-    m_dualDuct = true;
+    m_supplyDualDuct = true;
+  }
+
+  if( loop.demandInletNodes().size() == 2u ) {
+    m_demandDualDuct = true;
   }
 }
 
@@ -1478,8 +1483,11 @@ void SystemCenterItem::paint( QPainter *painter,
   painter->setBrush(QBrush(Qt::lightGray,Qt::SolidPattern));
   painter->drawRect(0,yOrigin,100,101);
   painter->drawRect((m_hLength - 1) * 100,yOrigin,100,101);
-  if( m_dualDuct ) {
-    painter->drawRect((m_hLength - 3) * 100,yOrigin,100,101);
+  if( m_supplyDualDuct ) {
+    painter->drawRect((m_hLength - 3) * 100,yOrigin,100,51);
+  }
+  if( m_demandDualDuct ) {
+    painter->drawRect((m_hLength - 3) * 100,50,100,51);
   }
 
   painter->setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
@@ -1491,13 +1499,20 @@ void SystemCenterItem::paint( QPainter *painter,
                      );
   painter->drawPixmap((m_hLength - 1) * 100 + 37.5,yOrigin + 25,25,25,QPixmap(":/images/arrow.png"));
 
-  if( m_dualDuct ) {
+  if( m_supplyDualDuct ) {
     painter->drawLine( (m_hLength - 3) * 100 + 50,
                        yOrigin,
                        (m_hLength - 3) * 100 + 50,
-                       yOrigin + 100
+                       yOrigin + 50
                        );
     painter->drawPixmap((m_hLength - 3) * 100 + 37.5,yOrigin + 25,25,25,QPixmap(":/images/arrow.png"));
+  }
+  if( m_demandDualDuct ) {
+    painter->drawLine( (m_hLength - 3) * 100 + 50,
+                       yOrigin + 50,
+                       (m_hLength - 3) * 100 + 50,
+                       yOrigin + 100
+                       );
   }
 
   painter->setPen(QPen(Qt::black,1,Qt::DashLine, Qt::RoundCap));

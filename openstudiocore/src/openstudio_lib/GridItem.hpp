@@ -1076,7 +1076,8 @@ class SystemCenterItem : public GridItem
 
   private:
 
-  bool m_dualDuct;
+  bool m_supplyDualDuct;
+  bool m_demandDualDuct;
 };
 
 class SystemItem : public GridItem
