@@ -3116,33 +3116,23 @@ SupplySplitterItem::SupplySplitterItem( QGraphicsItem * parent )
 void SupplySplitterItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
   GridItem::paint(painter,option,widget);
-  int t_numberBranches = numberBranches();
 
   painter->setRenderHint(QPainter::Antialiasing, true);
   painter->setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
   painter->setBrush(QBrush(Qt::lightGray,Qt::SolidPattern));
 
-  painter->drawLine(50,50,50,(((t_numberBranches * 2) - 1) * 100) - 50);
-
-  int midpointIndex;
-  if( t_numberBranches == 1 )
-  {
-    midpointIndex = 0;
+  int midpointIndex = 0;
+  if( m_baselineBranchPositions.size() > 1 ) {
+    midpointIndex = (m_baselineBranchPositions.back() - m_baselineBranchPositions.front()) / 2;
+    for( const auto & pos : m_baselineBranchPositions ) {
+      painter->drawLine(50,pos * 100 + 50,100,pos * 100 + 50);
+    }
+    painter->drawLine(50,m_baselineBranchPositions.front() * 100 + 50,50,m_baselineBranchPositions.back() * 100 + 50);
+  } else {
     QPixmap qPixmap(":images/supply_splitter.png");
-    painter->drawPixmap(12,(midpointIndex * 100) + 12,75,75,qPixmap);
-  }
-  else
-  {
-    midpointIndex = t_numberBranches - 1;
+    painter->drawPixmap(12,12,75,75,qPixmap);
   }
   painter->drawLine(0,(midpointIndex * 100) + 50,50,(midpointIndex * 100) + 50);
-
-  int j = 50;
-  for( int branchIndex = 1; branchIndex <= t_numberBranches; branchIndex++ )
-  {
-    painter->drawLine(50,j,100,j);
-    j = j + 200;
-  }
 }
 
 void SupplySplitterItem::setBranchGridPositions(const std::vector<int> & branchGridPositions)
@@ -3708,7 +3698,7 @@ void SupplySideItem::layout()
     if( branchPositions.size() > 1 ) {
       // If we have explicit branch positions, then find the midpoint of those
       // instead of the simple vGridLength / 2
-      halfBranchGroupHeight = (branchPositions.back() - branchPositions.front()) / 2.0;
+      halfBranchGroupHeight = (branchPositions.back() - branchPositions.front() + 1) / 2.0;
     }
     j = m_mainBranchGroupItem->getVGridLength() - halfBranchGroupHeight;
   }
@@ -3764,7 +3754,7 @@ void SupplySideItem::layout()
   }
 
   if( m_splitterItem ) {
-    m_splitterItem->setGridPos(i,j - halfBranchGroupHeight);
+    m_splitterItem->setGridPos(i,j - (m_splitterItem->getVGridLength() - 1) / 2);
     i++;
   }
 
@@ -3797,14 +3787,17 @@ void SupplySideItem::layout()
 
   // dual ducts have extra have an extra elbow and vertical item
   if( m_outletNodeItem2 ) {
-    m_dualDuctHorizontalSpace->setPadding(2);
-    m_dualDuctHorizontalSpace->setGridPos(i,j - halfBranchGroupHeight);
-    m_rightElbowItem->setGridPos(i + 2,j - halfBranchGroupHeight);
-    m_rightVerticalItem->setGridPos(i + 2,j - halfBranchGroupHeight + 1);
-    m_rightVerticalItem->setPadding(halfBranchGroupHeight + 1);
-    m_outletNodeItem->setGridPos(i + 2,j + halfBranchGroupHeight + 1);
-    m_outletNodeItem2->setGridPos(i,j + halfBranchGroupHeight + 1);
+    OS_ASSERT(m_mainBranchGroupItem);
 
+    int topedge = m_mainBranchGroupItem->branchBaselineGridPositions().front() + 1;
+    m_dualDuctHorizontalSpace->setPadding(2);
+    m_dualDuctHorizontalSpace->setGridPos(i,topedge);
+    m_rightElbowItem->setGridPos(i + 2,topedge);
+    m_rightVerticalItem->setGridPos(i + 2,topedge + 1);
+    m_rightVerticalItem->setPadding(m_mainBranchGroupItem->getVGridLength());
+    m_outletNodeItem->setGridPos(i + 2,j + halfBranchGroupHeight + 1);
+
+    m_outletNodeItem2->setGridPos(i,j + halfBranchGroupHeight + 1);
     m_rightElbowItem2->setGridPos(i,j + halfBranchGroupHeight);
 
     i = i + 2;
