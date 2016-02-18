@@ -3047,23 +3047,41 @@ void SplitterItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     painter->drawLine(85,(midpointIndex * 100) + 75,100,(midpointIndex * 100) + 75);
     painter->drawArc(65,(midpointIndex * 100) + 65,20,20,0,2880);
 
-    // Draw the horizontal hops from duct 1 to the terminal
-    for( int j = m_firstDuct1Index; j < m_terminalTypes.size() + 1; ++j )
+    // Draw the horizontal hops from duct 2 to the terminal
+    for( int j = m_firstDuct2Index; j < m_terminalTypes.size() + 1; ++j )
     {
-      // Check to make sure we need to hop
-      if( j > m_firstDuct2Index ) {
+      if( j < m_terminalTypes.size() ) {
+        if( ((m_terminalTypes[j] == TerminalType::DualDuct) || (m_terminalTypes[j] == TerminalType::SingleDuct2)) ) {
+          // Check to make sure we need to hop
+          if( j > m_firstDuct1Index ) {
+            painter->drawLine(0,j * 200 + 25,15,j * 200 + 25);
+            painter->drawLine(35,j * 200 + 25,75,j * 200 + 25);
+            painter->drawArc(15,j * 200 + 15,20,20,0,2880);
+          } else {
+            painter->drawLine(0,j * 200 + 25,75,j * 200 + 25);
+          }
+        }
+      } else {
+        // This last one is for the drop zone
         painter->drawLine(0,j * 200 + 25,15,j * 200 + 25);
         painter->drawLine(35,j * 200 + 25,75,j * 200 + 25);
         painter->drawArc(15,j * 200 + 15,20,20,0,2880);
-      } else {
-        painter->drawLine(0,j * 200 + 25,75,j * 200 + 25);
       }
     }
 
-    // Draw the horizontal lines from duct 2 to terminal
-    for( int j = m_firstDuct2Index; j < m_terminalTypes.size() + 1; ++j )
+    // Draw the horizontal lines from duct 1 to terminal
+    for( int j = m_firstDuct1Index; j < m_terminalTypes.size() + 1; ++j )
     {
-      painter->drawLine(0,j * 200 + 75,25,j * 200 + 75);
+      if( j < m_terminalTypes.size() ) {
+        auto type = m_terminalTypes[j];
+        if( type == TerminalType::DualDuct ) {
+          painter->drawLine(0,j * 200 + 75,25,j * 200 + 75);
+        } else {
+          painter->drawLine(0,j * 200 + 50,25,j * 200 + 50);
+        }
+      } else {
+        painter->drawLine(0,j * 200 + 75,25,j * 200 + 75);
+      }
     }
   }
 }
@@ -3344,7 +3362,6 @@ DemandSideItem::DemandSideItem( QGraphicsItem * parent,
   model::Loop loop = m_demandInletNodes[0].loop().get(); 
   model::Mixer mixer = loop.demandMixer();
   model::Splitter splitter = loop.demandSplitter();
-
   std::vector<model::Splitter> splitters;
 
   // Do we have a dual duct system
@@ -3356,17 +3373,18 @@ DemandSideItem::DemandSideItem( QGraphicsItem * parent,
       auto splitters = airLoop->zoneSplitters();
       OS_ASSERT(splitters.size() == 2u);
 
-      auto zones = airLoop->thermalZones();
-      for( const auto & zone : zones ) {
+      //auto zones = airLoop->thermalZones();
+      auto comps = centerHVACComponents(splitter,mixer);
+      for( const auto & comp : comps ) {
         // What terminal types do we have 
         // Could be a mix of single and dual duct terminals
         // See if zone is on the m_demandInletNodes[0] path
         bool singleDuct1Terminal = false;
         bool singleDuct2Terminal = false;
-        if( airLoop->demandComponents(splitters[0],zone).size() > 0u ) {
+        if( airLoop->demandComponents(splitters[0],comp).size() > 0u ) {
           singleDuct1Terminal = true;
         }
-        if( airLoop->demandComponents(splitters[1],zone).size() > 0u ) {
+        if( airLoop->demandComponents(splitters[1],comp).size() > 0u ) {
           singleDuct2Terminal = true;
         }
         auto terminalType = SplitterItem::None;
