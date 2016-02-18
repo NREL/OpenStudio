@@ -3700,13 +3700,13 @@ void SupplySideItem::layout()
       // instead of the simple vGridLength / 2
       halfBranchGroupHeight = (branchPositions.back() - branchPositions.front() + 1) / 2.0;
     }
-    j = m_mainBranchGroupItem->getVGridLength() - halfBranchGroupHeight;
+    j = m_mainBranchGroupItem->getVGridLength() - halfBranchGroupHeight - 1;
   }
 
   if( m_inletBranchItem ) {
     auto height = m_inletBranchItem->getVGridLength();
     if( height > j ) {
-      j = height;
+      j = height - 1;
     }
   }
 
@@ -3789,7 +3789,7 @@ void SupplySideItem::layout()
   if( m_outletNodeItem2 ) {
     OS_ASSERT(m_mainBranchGroupItem);
 
-    int topedge = m_mainBranchGroupItem->branchBaselineGridPositions().front() + 1;
+    int topedge = m_mainBranchGroupItem->branchBaselineGridPositions().front();
     m_dualDuctHorizontalSpace->setPadding(2);
     m_dualDuctHorizontalSpace->setGridPos(i,topedge);
     m_rightElbowItem->setGridPos(i + 2,topedge);
