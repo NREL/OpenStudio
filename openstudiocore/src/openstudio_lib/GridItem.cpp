@@ -3789,7 +3789,7 @@ void SupplySideItem::layout()
   if( m_outletNodeItem2 ) {
     OS_ASSERT(m_mainBranchGroupItem);
 
-    int topedge = m_mainBranchGroupItem->branchBaselineGridPositions().front();
+    int topedge = m_mainBranchGroupItem->getYGridPos() + m_mainBranchGroupItem->branchBaselineGridPositions().front();
     m_dualDuctHorizontalSpace->setPadding(2);
     m_dualDuctHorizontalSpace->setGridPos(i,topedge);
     m_rightElbowItem->setGridPos(i + 2,topedge);
