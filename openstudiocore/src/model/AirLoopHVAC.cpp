@@ -1308,9 +1308,10 @@ namespace detail {
         // Get comps upstream and downstream of zone splitter for this leg
         // Exclude the zone splitter itself
         auto upstreamComps = t_airLoopHVAC->demandComponents(demandInletNode,zoneSplitter);
-        upstreamComps.erase(upstreamComps.end() - 1);
+        upstreamComps.pop_back();
         auto downstreamComps = t_airLoopHVAC->demandComponents(zoneSplitter,terminalInletNode.get());
         downstreamComps.erase(downstreamComps.begin());
+        OS_ASSERT(! downstreamComps.empty());
 
         boost::optional<AirLoopHVACSupplyPlenum> supplyPlenum;
         auto supplyPlenums = subsetCastVector<AirLoopHVACSupplyPlenum>(downstreamComps);
@@ -1339,6 +1340,8 @@ namespace detail {
             supplyPlenum->remove();
           }
         }
+
+        zoneSplitter.removePortForBranch(zoneSplitter.branchIndexForOutletModelObject(downstreamComps.front()));
 
         terminalInletNode->getImpl<detail::Node_Impl>()->disconnect();
         terminalInletNode->remove();
