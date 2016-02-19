@@ -233,10 +233,16 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     
     # Radiance version detection and environment reportage                 
     ver = Open3.capture2("#{path}/rcontrib -version")
+    # need to help Open3 on Windows (path sep issues)             
+    returnDir = Dir.pwd
+    Dir.chdir(path)
+    ver = Open3.capture2("rcontrib#{programExtension} -version")
+    # aaaannnddd, we're back...
+    Dir.chdir(returnDir)
     print_statement("Radiance version info: #{ver[0]}", runner)
     print_statement("Radiance binary dir: #{path}", runner)
     print_statement("Radiance library dir: #{raypath}", runner)
-    
+
     if Dir.glob(epw2weapath + programExtension).empty?
       runner.registerError("Cannot find epw2wea tool in radiance installation at '#{radiancePath}'. You may need to install a newer version of Radiance.")
       exit false
