@@ -664,6 +664,12 @@
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_AirTerminal_DualDuct_VAV">
+    <rule IddField="Air Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Hot Air Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Cold Air Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Design Specification Outdoor Air Object Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_AirTerminal_SingleDuct_InletSideMixer">
     <rule IddField="Terminal Unit Outlet" Access="HIDDEN"/>
     <rule IddField="Terminal Unit Primary Air Inlet" Access="HIDDEN"/>
