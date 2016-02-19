@@ -2460,8 +2460,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     }
   case openstudio::IddObjectType::OS_ZoneAirContaminantBalance :
     {
-      // no-op
-      return retVal;
+      auto mo = modelObject.cast<ZoneAirContaminantBalance>();
+      retVal = translateZoneAirContaminantBalance(mo); 
+      break;
     }
   case openstudio::IddObjectType::OS_ZoneAirHeatBalanceAlgorithm :
     {
@@ -2479,6 +2480,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       // no-op
       return retVal;
+    }
+  case openstudio::IddObjectType::OS_ZoneControl_ContaminantController :
+    {
+      auto mo = modelObject.cast<ZoneControlContaminantController>();
+      retVal = translateZoneControlContaminantController(mo);
+      break;
     }
   case openstudio::IddObjectType::OS_ZoneControl_Humidistat :
     {

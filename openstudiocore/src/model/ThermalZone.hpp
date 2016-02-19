@@ -36,6 +36,7 @@ class IlluminanceMap;
 class RenderingColor;
 class ThermostatSetpointDualSetpoint;
 class Thermostat;
+class ZoneControlContaminantController;
 class ZoneControlHumidistat;
 class SizingZone;
 class PortList;
@@ -99,6 +100,8 @@ class MODEL_API ThermalZone : public HVACComponent {
   boost::optional<ThermostatSetpointDualSetpoint> thermostatSetpointDualSetpoint() const;
 
   boost::optional<ZoneControlHumidistat> zoneControlHumidistat() const;
+
+  boost::optional<ZoneControlContaminantController> zoneControlContaminantController() const;
 
   double fractionofZoneControlledbyPrimaryDaylightingControl() const;
 
@@ -169,6 +172,10 @@ class MODEL_API ThermalZone : public HVACComponent {
   bool setZoneControlHumidistat(const ZoneControlHumidistat & humidistat);
 
   void resetZoneControlHumidistat();
+
+  bool setZoneControlContaminantController(const ZoneControlContaminantController & contaminantController);
+
+  void resetZoneControlContaminantController();
 
   bool setFractionofZoneControlledbyPrimaryDaylightingControl(double fractionofZoneControlledbyPrimaryDaylightingControl);
   

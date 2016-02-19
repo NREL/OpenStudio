@@ -27,6 +27,7 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
+class ThermalZone;
 
 namespace detail {
 
@@ -50,6 +51,8 @@ class MODEL_API ZoneControlHumidistat : public ModelObject {
 
   /** @name Getters */
   //@{
+
+  boost::optional<ThermalZone> controlledZone() const;
 
   boost::optional<Schedule> humidifyingRelativeHumiditySetpointSchedule() const;
 

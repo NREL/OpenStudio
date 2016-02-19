@@ -36,6 +36,7 @@ class RenderingColor;
 class HVACTemplateZoneIdealLoadsAirSystem;
 class ThermostatSetpointDualSetpoint;
 class Thermostat;
+class ZoneControlContaminantController;
 class ZoneControlHumidistat;
 class ThermalZone;
 class SizingZone;
@@ -173,6 +174,8 @@ namespace detail {
 
     boost::optional<Thermostat> thermostat() const;
 
+    boost::optional<ZoneControlContaminantController> zoneControlContaminantController() const;
+
     boost::optional<ZoneControlHumidistat> zoneControlHumidistat() const;
 
     double fractionofZoneControlledbyPrimaryDaylightingControl() const;
@@ -240,6 +243,10 @@ namespace detail {
     bool setZoneControlHumidistat(const ZoneControlHumidistat & humidistat);
 
     void resetZoneControlHumidistat();
+
+    bool setZoneControlContaminantController(const ZoneControlContaminantController & contaminantController);
+
+    void resetZoneControlContaminantController();
 
     bool setFractionofZoneControlledbyPrimaryDaylightingControl(double fractionofZoneControlledbyPrimaryDaylightingControl);
     

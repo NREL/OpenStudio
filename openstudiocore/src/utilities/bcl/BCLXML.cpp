@@ -28,6 +28,7 @@
 #include "../core/System.hpp"
 #include "../core/Checksum.hpp"
 #include "../core/Assert.hpp"
+#include "../time/DateTime.hpp"
 
 #include <QDomDocument>
 #include <QFile>
@@ -39,6 +40,7 @@ namespace openstudio{
   {
     m_uid = removeBraces(UUID::createUuid());
     m_versionId = removeBraces(UUID::createUuid());
+    m_versionModified = DateTime::nowUTC().toISO8601();
   }
 
   BCLXML::BCLXML(const openstudio::path& xmlPath):
@@ -94,6 +96,16 @@ namespace openstudio{
 
     if (m_name.empty() || m_uid.empty() || m_versionId.empty()){
       LOG_AND_THROW("'" << toString(xmlPath) << "' is not a correct BCL XML");
+    }
+
+    if (element.firstChildElement("version_modified").isNull()){
+      m_versionModified = "";
+    } else {
+      m_versionModified = element.firstChildElement("version_modified").firstChild().nodeValue().toStdString();
+      if (!DateTime::fromISO8601(m_versionModified)){
+        // not an allowable date time
+        m_versionModified = "";
+      }
     }
 
     if (m_bclXMLType == BCLXMLType::MeasureXML){
@@ -324,6 +336,15 @@ namespace openstudio{
   std::string BCLXML::versionId() const
   {
     return m_versionId;
+  }
+
+  boost::optional<DateTime> BCLXML::versionModified() const
+  {
+    boost::optional<DateTime> result;
+    if (!m_versionModified.empty()){
+      result = DateTime::fromISO8601(m_versionModified);
+    }
+    return result;
   }
 
   std::string BCLXML::xmlChecksum() const
@@ -621,6 +642,12 @@ namespace openstudio{
     docElement.appendChild(element);
     element.appendChild(doc.createTextNode(toQString(m_versionId)));
 
+    if (!m_versionModified.empty()){
+      element = doc.createElement("version_modified");
+      docElement.appendChild(element);
+      element.appendChild(doc.createTextNode(toQString(m_versionModified)));
+    }
+
     element = doc.createElement("xml_checksum");
     docElement.appendChild(element);
     element.appendChild(doc.createTextNode(toQString(m_xmlChecksum)));
@@ -773,11 +800,13 @@ namespace openstudio{
   void BCLXML::changeUID()
   {
     m_uid = removeBraces(UUID::createUuid());
+    // DLM: should this call incrementVersionId() ?
   }
 
   void BCLXML::incrementVersionId()
   {
     m_versionId = removeBraces(UUID::createUuid());
+    m_versionModified = DateTime::nowUTC().toISO8601();
   }
 
   bool BCLXML::checkForUpdatesXML()

@@ -66,8 +66,11 @@ class ReportingMeasure_Test < MiniTest::Unit::TestCase
     workspace.addObjects(idf_output_requests)
     rt = OpenStudio::EnergyPlus::ReverseTranslator.new
     request_model = rt.translateWorkspace(workspace)
-    
-    model = OpenStudio::Model::Model.load(model_in_path).get
+
+    translator = OpenStudio::OSVersion::VersionTranslator.new
+    model = translator.loadModel(model_in_path)
+    assert((not model.empty?))
+    model = model.get
     model.addObjects(request_model.objects)
     model.save(model_out_path(test_name), true)
 

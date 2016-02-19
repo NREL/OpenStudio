@@ -1,3 +1,19 @@
+## OpenStudio v1.10.3
+###### 2016-01-21 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.10.2...v1.10.3 )
+
+Closed Issues: 11 (#123, #713, #985, #1897, #1968, #2012, #2026, #2040, #2042, #2049, #2056)
+- ![Improved:][improved] [#713]( https://github.com/NREL/OpenStudio/issues/713 ), Support multiple glare sensors per space
+- ![Improved:][improved] [#985]( https://github.com/NREL/OpenStudio/issues/985 ), Allow shared thermostats
+- ![Improved:][improved] [#1968]( https://github.com/NREL/OpenStudio/issues/1968 ), Add new oa method to ControllerMechanicalVentilation
+- ![Fixed:][fixed] [#123]( https://github.com/NREL/OpenStudio/issues/123 ), Address changes made to shared thermostats with make unique (Bugzilla #722)
+- ![Fixed:][fixed] [#1897]( https://github.com/NREL/OpenStudio/issues/1897 ), Biquadratic curve min/max value edits not retained
+- ![Fixed:][fixed] [#2012]( https://github.com/NREL/OpenStudio/issues/2012 ), Fix Glare Sensor Support
+- ![Fixed:][fixed] [#2026]( https://github.com/NREL/OpenStudio/issues/2026 ), PAT is breaking 1.9.0 files when opening with 1.10
+- ![Fixed:][fixed] [#2040]( https://github.com/NREL/OpenStudio/issues/2040 ), New Geo lib breaks OpenStudio-Resources build
+- ![Fixed:][fixed] [#2042]( https://github.com/NREL/OpenStudio/issues/2042 ), Assign thermostat to zones problem
+- ![Fixed:][fixed] [#2049]( https://github.com/NREL/OpenStudio/issues/2049 ), fix ownership issues with zone controllers
+- ![Fixed:][fixed] [#2056]( https://github.com/NREL/OpenStudio/issues/2056 ), Radiance Path Order
+
 ## OpenStudio v1.10.2
 ###### 2016-01-21 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.10.1...v1.10.2 )
 

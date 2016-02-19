@@ -10,7 +10,7 @@ project(OpenStudio)
 
 set(CMAKE_VERSION_MAJOR 1)
 set(CMAKE_VERSION_MINOR 10)
-set(CMAKE_VERSION_PATCH 3)
+set(CMAKE_VERSION_PATCH 4)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
@@ -767,14 +767,15 @@ ExternalProject_Add(GeographicLib
   -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
   -DCMAKE_MODULE_LINKER_FLAGS:STRING=${CMAKE_MODULE_LINKER_FLAGS}
   -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
+  -DGEOGRAPHICLIB_LIB_TYPE:STRING=STATIC
+  -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
 )
 
-set(GEOGRAPHIC_INCLUDE_DIR ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib/include)
-if(UNIX)
-  set(GEOGRAPHIC_LIB_DIR ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib-build/src)
-else()
-  set(GEOGRAPHIC_LIB_DIR ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib-build/lib)
-endif()
+# Don't confuse "GEOGRAPHICLIB"_Dir as something that refers to the 
+# actual library compiled unit. This variable just refers to where the project is at.
+# We will use this to find the cmake config file provided by the project,
+# and that config file will tell us everything we need to know about the project's targets.
+set(GeographicLib_DIR ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib-build/)
 
 if(BUILD_QT)
   set(Qt5Widgets_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Widgets)
@@ -832,7 +833,8 @@ set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)
 
 # Set up the dependencies for OpenStudioCore
 set(OpenStudioCore_DEPENDS GoogleTest)
-set(OpenStudioCore_DEPENDS GeographicLib)
+
+list(APPEND OpenStudioCore_DEPENDS GeographicLib)
 
 if(BUILD_QT)
   list(APPEND OpenStudioCore_DEPENDS Qt)
@@ -934,6 +936,7 @@ ExternalProject_Add(OSCore
     -DOPENSSL_ROOT_DIR:PATH=${OPENSSL_ROOT_DIR}
     -DPATCH_EXE:PATH=${PATCH_EXE}
     -DMAXIMIZE_CPU_USAGE:BOOL=${MAXIMIZE_CPU_USAGE}
+    -DGeographicLib_DIR:PATH=${GeographicLib_DIR}
     INSTALL_COMMAND ""
 )
 
