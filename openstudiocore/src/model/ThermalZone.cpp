@@ -2368,7 +2368,6 @@ namespace detail {
       controller->remove();
     }
   }
->>>>>>> origin/develop
 
 } // detail
 
