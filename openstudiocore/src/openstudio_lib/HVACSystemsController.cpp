@@ -716,6 +716,14 @@ void HVACSystemsController::addToModel(AddToModelEnum addToModelEnum)
 
       break;
     }
+    case ADDTOMODEL_DUAL_AIRLOOPHVAC:
+    {
+      model::AirLoopHVAC airLoopHVAC(m_model,true);
+
+      loop = airLoopHVAC;
+
+      break;
+    }
     case ADDTOMODEL_PLANTLOOP:
     {
       model::PlantLoop plantLoop(m_model);

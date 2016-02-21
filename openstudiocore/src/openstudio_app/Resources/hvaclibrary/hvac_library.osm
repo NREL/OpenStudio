@@ -1,7 +1,7 @@
 
 OS:Version,
-  {7a451f4c-02a0-4a3a-adb4-05303fa87ae6}, !- Handle
-  1.9.3;                                  !- Version Identifier
+  {5a955812-1d5c-4f31-9917-e05681c33207}, !- Handle
+  1.10.3;                                 !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -614,6 +614,17 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
   ,                                       !- Effectiveness Flow Ratio Modifier Curve Name
   0.1;                                    !- Water Pump Power Sizing Factor {W/(m3/s)}
 
+OS:AirTerminal:DualDuct:VAV,
+  {1a944c0e-23c0-4649-bb65-af3745a1927f}, !- Handle
+  Dual Duct VAV,           !- Name
+  ,                                       !- Availability Schedule
+  ,                                       !- Air Outlet Node
+  ,                                       !- Hot Air Inlet Node
+  ,                                       !- Cold Air Inlet Node
+  autosize,                               !- Maximum Damper Air Flow Rate {m3/s}
+  0.3,                                    !- Zone Minimum Air Flow Fraction
+  ;                                       !- Design Specification Outdoor Air Object
+
 OS:AirTerminal:SingleDuct:VAV:HeatAndCool:NoReheat,
   {bf4b3859-f66c-48ce-b600-88c7d76d5d5e}, !- Handle
   VAV Heat And Cool No Reheat,            !- Name
@@ -831,28 +842,28 @@ OS:AirTerminal:SingleDuct:VAV:NoReheat,
   0.3,                                    !- Constant Minimum Air Flow Fraction
   ,                                       !- Fixed Minimum Air Flow Rate {m3/s}
   ,                                       !- Minimum Air Flow Fraction Schedule Name
-  ;                                       !- Design Specification Outdoor Air Object Name
+  No;                                     !- Control For Outdoor Air
 
 OS:AirTerminal:SingleDuct:VAV:Reheat,
-  {293eff65-3e25-4c91-97bc-a0d600b4e09b}, ! Handle
-  VAV Gas Rht,                            ! Name
-  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
-  ,                                       ! Air Inlet Node Name
-  Autosize,                               ! Maximum Air Flow Rate {m3/s}
-  Constant,                               ! Zone Minimum Air Flow Input Method
-  0.29999999999999999,                    ! Constant Minimum Air Flow Fraction
-  0,                                      ! Fixed Minimum Air Flow Rate {m3/s}
-  ,                                       ! Minimum Air Flow Fraction Schedule Name
-  {da758cb3-2282-4b60-a6a5-a3f283ede607}, ! Reheat Coil Name
-  Autosize,                               ! Maximum Hot Water or Steam Flow Rate {m3/s}
-  0,                                      ! Minimum Hot Water or Steam Flow Rate {m3/s}
-  ,                                       ! Air Outlet Node Name
-  0.001,                                  ! Convergence Tolerance
-  Normal,                                 ! Damper Heating Action
-  Autocalculate,                          ! Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
-  Autocalculate,                          ! Maximum Flow Fraction During Reheat
-  35,                                     ! Maximum Reheat Air Temperature {C}
-  ;                                       ! Design Specification Outdoor Air Object Name
+  {293eff65-3e25-4c91-97bc-a0d600b4e09b}, !- Handle
+  VAV Gas Rht,                            !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Air Inlet Node Name
+  Autosize,                               !- Maximum Air Flow Rate {m3/s}
+  Constant,                               !- Zone Minimum Air Flow Input Method
+  0.29999999999999999,                    !- Constant Minimum Air Flow Fraction
+  0,                                      !- Fixed Minimum Air Flow Rate {m3/s}
+  ,                                       !- Minimum Air Flow Fraction Schedule Name
+  {da758cb3-2282-4b60-a6a5-a3f283ede607}, !- Reheat Coil Name
+  Autosize,                               !- Maximum Hot Water or Steam Flow Rate {m3/s}
+  0,                                      !- Minimum Hot Water or Steam Flow Rate {m3/s}
+  ,                                       !- Air Outlet Node Name
+  0.001,                                  !- Convergence Tolerance
+  Normal,                                 !- Damper Heating Action
+  Autocalculate,                          !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
+  Autocalculate,                          !- Maximum Flow Fraction During Reheat
+  35,                                     !- Maximum Reheat Air Temperature {C}
+  No;                                     !- Control For Outdoor Air
 
 OS:Coil:Heating:Gas,
   {da758cb3-2282-4b60-a6a5-a3f283ede607}, ! Handle
@@ -868,24 +879,25 @@ OS:Coil:Heating:Gas,
   0;                                      ! Parasitic Gas Load {W}
 
 OS:AirTerminal:SingleDuct:VAV:Reheat,
-  {0ecb2b1e-1405-4f99-8a45-10ad352ed99d}, ! Handle
-  VAV Elec Rht,                           ! Name
-  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
-  ,                                       ! Air Inlet Node Name
-  Autosize,                               ! Maximum Air Flow Rate {m3/s}
-  Constant,                               ! Zone Minimum Air Flow Input Method
-  0.29999999999999999,                    ! Constant Minimum Air Flow Fraction
-  0,                                      ! Fixed Minimum Air Flow Rate {m3/s}
-  ,                                       ! Minimum Air Flow Fraction Schedule Name
-  {5fb0024b-7b12-40a7-8612-5f462dff4e2a}, ! Reheat Coil Name
-  Autosize,                               ! Maximum Hot Water or Steam Flow Rate {m3/s}
-  0,                                      ! Minimum Hot Water or Steam Flow Rate {m3/s}
-  ,                                       ! Air Outlet Node Name
-  0.001,                                  ! Convergence Tolerance
-  Normal,                                 ! Damper Heating Action
-  Autocalculate,                          ! Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
-  Autocalculate,                          ! Maximum Flow Fraction During Reheat
-  35;                                     ! Maximum Reheat Air Temperature {C}
+  {0ecb2b1e-1405-4f99-8a45-10ad352ed99d}, !- Handle
+  VAV Elec Rht,                           !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Air Inlet Node Name
+  Autosize,                               !- Maximum Air Flow Rate {m3/s}
+  Constant,                               !- Zone Minimum Air Flow Input Method
+  0.29999999999999999,                    !- Constant Minimum Air Flow Fraction
+  0,                                      !- Fixed Minimum Air Flow Rate {m3/s}
+  ,                                       !- Minimum Air Flow Fraction Schedule Name
+  {5fb0024b-7b12-40a7-8612-5f462dff4e2a}, !- Reheat Coil Name
+  Autosize,                               !- Maximum Hot Water or Steam Flow Rate {m3/s}
+  0,                                      !- Minimum Hot Water or Steam Flow Rate {m3/s}
+  ,                                       !- Air Outlet Node Name
+  0.001,                                  !- Convergence Tolerance
+  Normal,                                 !- Damper Heating Action
+  Autocalculate,                          !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
+  Autocalculate,                          !- Maximum Flow Fraction During Reheat
+  35,                                     !- Maximum Reheat Air Temperature {C}
+  No;                                     !- Control For Outdoor Air
 
 OS:Coil:Heating:Electric,
   {5fb0024b-7b12-40a7-8612-5f462dff4e2a}, ! Handle
@@ -898,24 +910,25 @@ OS:Coil:Heating:Electric,
   ;                                       ! Design Specification Outdoor Air Object Name
 
 OS:AirTerminal:SingleDuct:VAV:Reheat,
-  {cc2e44f3-2b98-4dc8-a19c-f457d3fec8db}, ! Handle
-  VAV HW Rht,                             ! Name
-  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
-  ,                                       ! Air Inlet Node Name
-  Autosize,                               ! Maximum Air Flow Rate {m3/s}
-  Constant,                               ! Zone Minimum Air Flow Input Method
-  0.29999999999999999,                    ! Constant Minimum Air Flow Fraction
-  0,                                      ! Fixed Minimum Air Flow Rate {m3/s}
-  ,                                       ! Minimum Air Flow Fraction Schedule Name
-  {d39dcf38-ea17-465c-8bfa-6020a5f9e8c2}, ! Reheat Coil Name
-  Autosize,                               ! Maximum Hot Water or Steam Flow Rate {m3/s}
-  0,                                      ! Minimum Hot Water or Steam Flow Rate {m3/s}
-  ,                                       ! Air Outlet Node Name
-  0.001,                                  ! Convergence Tolerance
-  Normal,                                 ! Damper Heating Action
-  Autocalculate,                          ! Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
-  Autocalculate,                          ! Maximum Flow Fraction During Reheat
-  35;                                     ! Maximum Reheat Air Temperature {C}
+  {cc2e44f3-2b98-4dc8-a19c-f457d3fec8db}, !- Handle
+  VAV HW Rht,                             !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Air Inlet Node Name
+  Autosize,                               !- Maximum Air Flow Rate {m3/s}
+  Constant,                               !- Zone Minimum Air Flow Input Method
+  0.29999999999999999,                    !- Constant Minimum Air Flow Fraction
+  0,                                      !- Fixed Minimum Air Flow Rate {m3/s}
+  ,                                       !- Minimum Air Flow Fraction Schedule Name
+  {d39dcf38-ea17-465c-8bfa-6020a5f9e8c2}, !- Reheat Coil Name
+  Autosize,                               !- Maximum Hot Water or Steam Flow Rate {m3/s}
+  0,                                      !- Minimum Hot Water or Steam Flow Rate {m3/s}
+  ,                                       !- Air Outlet Node Name
+  0.001,                                  !- Convergence Tolerance
+  Normal,                                 !- Damper Heating Action
+  Autocalculate,                          !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
+  Autocalculate,                          !- Maximum Flow Fraction During Reheat
+  35,                                     !- Maximum Reheat Air Temperature {C}
+  No;                                     !- Control For Outdoor Air
 
 OS:Coil:Heating:Water,
   {d39dcf38-ea17-465c-8bfa-6020a5f9e8c2}, ! Handle
@@ -9861,7 +9874,7 @@ OS:Coil:Heating:Water:Baseboard:Radiant,
 
 OS:HeatPump:WaterToWater:EquationFit:Cooling,
   {7a4b6fbd-816c-4681-b75e-681b1d27e876}, !- Handle
-  Heat Pump - Water To Water - Cooling, !- Name
+  Heat Pump - Water To Water - Cooling,   !- Name
   ,                                       !- Source Side Inlet Node Name
   ,                                       !- Source Side Outlet Node Name
   ,                                       !- Load Side Inlet Node Name
@@ -9883,7 +9896,7 @@ OS:HeatPump:WaterToWater:EquationFit:Cooling,
 
 OS:HeatPump:WaterToWater:EquationFit:Heating,
   {80f71496-82ae-4ad8-b677-1ca17b0ca84a}, !- Handle
-  Heat Pump - Water To Water - Heating, !- Name
+  Heat Pump - Water To Water - Heating,   !- Name
   ,                                       !- Source Side Inlet Node Name
   ,                                       !- Source Side Outlet Node Name
   ,                                       !- Load Side Inlet Node Name

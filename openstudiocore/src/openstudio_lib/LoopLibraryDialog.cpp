@@ -119,6 +119,10 @@ LoopLibraryDialog::LoopLibraryDialog(QWidget * parent)
            QString("Empty Air Loop"),
            QPixmap(":/images/air_loop_icon.png") );
 
+  newItem( ADDTOMODEL_DUAL_AIRLOOPHVAC,
+           QString("Dual Duct Air Loop"),
+           QPixmap(":/images/air_loop_icon.png") );
+
   newItem( ADDTOMODEL_PLANTLOOP,
            QString("Empty Plant Loop"),
            QPixmap(":/images/plant_loop_icon.png") );
