@@ -617,7 +617,7 @@ HorizontalBranchItem::HorizontalBranchItem( std::pair< std::vector<model::ModelO
   };
 
   bool stop = false;
-  int i = 0;
+  unsigned i = 0;
   while( ! stop ) {
     stop = true;
 
