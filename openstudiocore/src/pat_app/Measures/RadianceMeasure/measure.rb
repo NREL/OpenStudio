@@ -103,6 +103,28 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     return m, header
   end
 
+
+  # better OS detection
+  # will call out Git Bash shells as Windows machines, optionally differentiates Mac versus *nix
+  module OS
+    def OS.windows
+      (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
+    end
+
+    def OS.mac
+     (/darwin/ =~ RUBY_PLATFORM) != nil
+    end
+
+    def OS.unix
+      !OS.windows
+    end
+
+    def OS.linux
+      OS.unix and not OS.mac
+    end
+  end
+
+
   def run(model, runner, user_arguments)
     super(model, runner, user_arguments)
 
@@ -134,11 +156,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       FileUtils.mkdir_p(rad_dir)
     end
 
-    ## Radiance Utilities 
+    ## Radiance Utilities
 
     # print statement and execute as system call
     def exec_statement(s, runner)
-      if /mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
+      if OS.windows
         s = s.tr("/", "\\")
       end
       runner.registerInfo("#{s}")
@@ -150,14 +172,14 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
     # print statement for OS-Server and OSApp
     def print_statement(s, runner)
-      if /mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
+      #if /mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
+      if OS.windows
         s = s.tr("/", "\\")
       end
       runner.registerInfo("#{s}")
       # additional puts for OSApp until v2.0...
       puts "[Radiance Measure #{Time.now.getutc}]: #{s}"
     end
-
 
     # UNIX-style which 
     def which(cmd) 
@@ -182,7 +204,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     else
       sim_cores = coreCount - 1
     end
-    if /mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
+    if OS.windows #/mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
       print_statement("Radiance multiprocessing features are not supported on Windows.", runner)
       sim_cores = 1
     end
@@ -192,7 +214,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     perlExtension = ""
     catCommand = "cat"
     osQuote = "\'"
-    if /mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
+    if OS.windows #/mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
       perlExtension = ".pl"
       catCommand = "type"
       osQuote = "\""
@@ -213,7 +235,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     epw2weapath = (OpenStudio::Path.new(radiancePath) / OpenStudio::Path.new('epw2wea')).to_s
 
     programExtension = ""
-    if /mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
+    if OS.windows #/mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
       programExtension = ".exe"
       perlpath = ""
       if OpenStudio::applicationIsRunningFromBuildDirectory()
@@ -242,6 +264,9 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     print_statement("Radiance version info: #{ver[0]}", runner)
     print_statement("Radiance binary dir: #{path}", runner)
     print_statement("Radiance library dir: #{raypath}", runner)
+
+    print_statement("Running on Windows (sorry)", runner) if OS.windows && debug_mode
+    print_statement("Running on unix", runner) if OS.unix && debug_mode
 
     if Dir.glob(epw2weapath + programExtension).empty?
       runner.registerError("Cannot find epw2wea tool in radiance installation at '#{radiancePath}'. You may need to install a newer version of Radiance.")
@@ -414,7 +439,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
     # configure multiprocessing 
     procsUsed = ""
-    if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
+    if OS.windows
       procsUsed = ""
     else
       procsUsed = "-n #{sim_cores}"
