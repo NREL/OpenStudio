@@ -3048,12 +3048,12 @@ void SplitterItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     painter->drawArc(65,(midpointIndex * 100) + 65,20,20,0,2880);
 
     // Draw the horizontal hops from duct 2 to the terminal
-    for( int j = m_firstDuct2Index; j < m_terminalTypes.size() + 1; ++j )
+    for( unsigned j = m_firstDuct2Index; j < m_terminalTypes.size() + 1; ++j )
     {
       if( j < m_terminalTypes.size() ) {
         if( ((m_terminalTypes[j] == TerminalType::DualDuct) || (m_terminalTypes[j] == TerminalType::SingleDuct2)) ) {
           // Check to make sure we need to hop
-          if( j > m_firstDuct1Index ) {
+          if( j > static_cast<unsigned>(m_firstDuct1Index)) {
             painter->drawLine(0,j * 200 + 25,15,j * 200 + 25);
             painter->drawLine(35,j * 200 + 25,75,j * 200 + 25);
             painter->drawArc(15,j * 200 + 15,20,20,0,2880);
@@ -3070,7 +3070,7 @@ void SplitterItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     }
 
     // Draw the horizontal lines from duct 1 to terminal
-    for( int j = m_firstDuct1Index; j < m_terminalTypes.size() + 1; ++j )
+    for( unsigned j = m_firstDuct1Index; j < m_terminalTypes.size() + 1; ++j )
     {
       if( j < m_terminalTypes.size() ) {
         auto type = m_terminalTypes[j];
