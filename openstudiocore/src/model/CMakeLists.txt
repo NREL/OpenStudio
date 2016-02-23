@@ -281,6 +281,9 @@ set(${target_name}_src
   CoilWaterHeatingAirToWaterHeatPump.hpp
   CoilWaterHeatingAirToWaterHeatPump_Impl.hpp
   CoilWaterHeatingAirToWaterHeatPump.cpp
+  CoilWaterHeatingAirToWaterHeatPumpWrapped.hpp
+  CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl.hpp
+  CoilWaterHeatingAirToWaterHeatPumpWrapped.cpp
   CoilWaterHeatingDesuperheater.hpp
   CoilWaterHeatingDesuperheater_Impl.hpp
   CoilWaterHeatingDesuperheater.cpp
