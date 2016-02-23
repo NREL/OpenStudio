@@ -56,7 +56,7 @@ namespace detail {
 
     virtual std::vector<ModelObject> children() const override;
 
-    virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & prev);
+    virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & prev) override;
 
     //@}
     /** @name Getters */
