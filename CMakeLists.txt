@@ -47,11 +47,11 @@ endif()
 
 # EnergyPlus Idd version
 set(ENERGYPLUS_VERSION_MAJOR 8)
-set(ENERGYPLUS_VERSION_MINOR 4)
+set(ENERGYPLUS_VERSION_MINOR 5)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "832e4bb9cb")
+set(ENERGYPLUS_BUILD_SHA "85848eef40")
 
 option(NIGHTLY_BUILD "Use configurations for Nightly Build" OFF)
 
@@ -192,8 +192,8 @@ endif()
 # EnergyPlus
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH a52fc37e653c5563a198c95ed875f4e0)
-    set(ENERGYPLUS_PLATFORM "Darwin")
+    set(ENERGYPLUS_EXPECTED_HASH f7ccbe2f42d37386390f6b1440f7997c)
+    set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     set(ENERGYPLUS_EXPECTED_HASH 7e43d3c7bb42cd9c259cdc06a60ea13e)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
