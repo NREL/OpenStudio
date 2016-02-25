@@ -62,6 +62,7 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
   /** @name Getters */
   //@{
 
+  /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Design Maximum Flow Rate" **/
   boost::optional<double> ratedFlowRate() const;
 
   OSOptionalQuantity getRatedFlowRate(bool returnIP=false) const;
@@ -70,12 +71,14 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
 
   bool isRatedFlowRateAutosized() const;
 
+  /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Design Pump Head" **/
   double ratedPumpHead() const;
 
   Quantity getRatedPumpHead(bool returnIP=false) const;
 
   bool isRatedPumpHeadDefaulted() const;
 
+  /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Design Power Consumption" **/
   boost::optional<double> ratedPowerConsumption() const;
 
   OSOptionalQuantity getRatedPowerConsumption(bool returnIP=false) const;
@@ -120,6 +123,7 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
 
   bool isCoefficient4ofthePartLoadPerformanceCurveDefaulted() const;
 
+  /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Design Minimum Flow Rate" **/
   double minimumFlowRate() const;
 
   Quantity getMinimumFlowRate(bool returnIP=false) const;

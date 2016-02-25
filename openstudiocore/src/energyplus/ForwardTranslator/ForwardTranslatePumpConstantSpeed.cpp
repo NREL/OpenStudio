@@ -81,29 +81,29 @@ boost::optional<IdfObject> ForwardTranslator::translatePumpConstantSpeed(
 
   if( modelObject.isRatedFlowRateAutosized() )
   {
-    idfObject.setString(Pump_ConstantSpeedFields::RatedFlowRate,"Autosize");
+    idfObject.setString(Pump_ConstantSpeedFields::DesignFlowRate,"Autosize");
   }
   else if( (value = modelObject.ratedFlowRate()) )
   {
-    idfObject.setDouble(Pump_ConstantSpeedFields::RatedFlowRate,value.get());
+    idfObject.setDouble(Pump_ConstantSpeedFields::DesignFlowRate,value.get());
   }
 
   // RatedPumpHead
 
   if( (value = modelObject.ratedPumpHead()) )
   {
-    idfObject.setDouble(Pump_ConstantSpeedFields::RatedPumpHead,value.get());
+    idfObject.setDouble(Pump_ConstantSpeedFields::DesignPumpHead,value.get());
   }
 
   // RatedPowerConsumption
 
   if( modelObject.isRatedPowerConsumptionAutosized() )
   {
-    idfObject.setString(Pump_ConstantSpeedFields::RatedPowerConsumption,"Autosize");
+    idfObject.setString(Pump_ConstantSpeedFields::DesignPowerConsumption,"Autosize");
   }
   else if( (value = modelObject.ratedPowerConsumption()) )
   {
-    idfObject.setDouble(Pump_ConstantSpeedFields::RatedPowerConsumption,value.get());
+    idfObject.setDouble(Pump_ConstantSpeedFields::DesignPowerConsumption,value.get());
   }
 
   // MotorEfficiency

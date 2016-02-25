@@ -141,9 +141,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
     idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumAirFlowRate,"Autosize");
   }
 
-  // HotWaterorSteamInletNodeName
-  idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::HotWaterorSteamInletNodeName,"");
-
   // MaximumHotWaterOrSteamFlowRate
   value = modelObject.maximumHotWaterorSteamFlowRate();
   
