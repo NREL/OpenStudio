@@ -450,6 +450,8 @@ namespace detail {
     std::vector<ZoneMixing> supplyZoneMixing() const;
     std::vector<ZoneMixing> exhaustZoneMixing() const;
 
+    boost::optional<HVACComponent> airLoopHVACTerminal() const;
+
    protected:
 
    private:

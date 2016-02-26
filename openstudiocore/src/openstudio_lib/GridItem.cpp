@@ -27,6 +27,7 @@
 #include "MainRightColumnController.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
 
 #include <QPainter>
 #include <QMimeData>
@@ -55,6 +56,10 @@
 #include "../model/AirLoopHVACSupplyPlenum_Impl.hpp"
 #include "../model/AirLoopHVACReturnPlenum.hpp"
 #include "../model/AirLoopHVACReturnPlenum_Impl.hpp"
+#include "../model/AirLoopHVACZoneMixer.hpp"
+#include "../model/AirLoopHVACZoneMixer_Impl.hpp"
+#include "../model/AirLoopHVACZoneSplitter.hpp"
+#include "../model/AirLoopHVACZoneSplitter_Impl.hpp"
 #include "../model/AirToAirComponent.hpp"
 #include "../model/AirToAirComponent_Impl.hpp"
 #include "../model/PlantLoop.hpp"
@@ -88,6 +93,8 @@
 #include "../model/Node_Impl.hpp"
 #include "../model/Splitter.hpp"
 #include "../model/Splitter_Impl.hpp"
+#include "../model/AirLoopHVACZoneSplitter.hpp"
+#include "../model/AirLoopHVACZoneSplitter_Impl.hpp"
 #include "../model/Mixer.hpp"
 #include "../model/ThermalZone.hpp"
 #include "../model/ThermalZone_Impl.hpp"
@@ -108,12 +115,12 @@ bool hasSPM(model::Node & node)
   return false;
 }
 
-GridItem::GridItem( QGraphicsItem * parent ):
-  QGraphicsObject( parent ),
+// Begin move these
+
+ModelObjectGraphicsItem::ModelObjectGraphicsItem(QGraphicsItem * parent)
+  : QGraphicsObject(parent),
   m_deleteAble(false),
   m_highlight(false),
-  m_hLength(1),
-  m_vLength(1),
   m_removeButtonItem(nullptr),
   m_enableHighlight(true)
 {
@@ -125,26 +132,26 @@ GridItem::GridItem( QGraphicsItem * parent ):
   {
     GridScene * gridScene = static_cast<GridScene *>(_scene);
 
-    connect(this, &GridItem::modelObjectSelected, gridScene, &GridScene::modelObjectSelected);
+    connect(this, &ModelObjectGraphicsItem::modelObjectSelected, gridScene, &GridScene::modelObjectSelected);
 
-    connect(this, &GridItem::removeModelObjectClicked, gridScene, &GridScene::removeModelObjectClicked);
+    connect(this, &ModelObjectGraphicsItem::removeModelObjectClicked, gridScene, &GridScene::removeModelObjectClicked);
 
-    connect(this, static_cast<void (GridItem::*)(OSItemId, model::HVACComponent&)>(&GridItem::hvacComponentDropped),
+    connect(this, static_cast<void (ModelObjectGraphicsItem::*)(OSItemId, model::HVACComponent&)>(&ModelObjectGraphicsItem::hvacComponentDropped),
       gridScene, static_cast<void (GridScene::*)(OSItemId, model::HVACComponent&)>(&GridScene::hvacComponentDropped));
 
-    connect(this, static_cast<void (GridItem::*)(OSItemId)>(&GridItem::hvacComponentDropped),
+    connect(this, static_cast<void (ModelObjectGraphicsItem::*)(OSItemId)>(&ModelObjectGraphicsItem::hvacComponentDropped),
       gridScene, static_cast<void (GridScene::*)(OSItemId)>(&GridScene::hvacComponentDropped));
 
-    connect(this, &GridItem::innerNodeClicked, gridScene, &GridScene::innerNodeClicked);
+    connect(this, &ModelObjectGraphicsItem::innerNodeClicked, gridScene, &GridScene::innerNodeClicked);
   }
 }
 
-void GridItem::setEnableHighlight(bool highlight)
+void ModelObjectGraphicsItem::setEnableHighlight(bool highlight)
 {
   m_enableHighlight = highlight;
 }
 
-void GridItem::setDeletable(bool deletable)
+void ModelObjectGraphicsItem::setDeletable(bool deletable)
 {
   if( deletable )
   {
@@ -152,7 +159,7 @@ void GridItem::setDeletable(bool deletable)
 
     m_removeButtonItem->setPos(boundingRect().width() - 30, boundingRect().height() - 30);
   
-    connect(m_removeButtonItem, &RemoveButtonItem::mouseClicked, this, &GridItem::onRemoveButtonClicked);
+    connect(m_removeButtonItem, &RemoveButtonItem::mouseClicked, this, &ModelObjectGraphicsItem::onRemoveButtonClicked);
   }
   else
   {
@@ -165,7 +172,7 @@ void GridItem::setDeletable(bool deletable)
   }
 }
 
-void GridItem::onRemoveButtonClicked()
+void ModelObjectGraphicsItem::onRemoveButtonClicked()
 {
   if( m_modelObject )
   {
@@ -173,46 +180,21 @@ void GridItem::onRemoveButtonClicked()
   }
 }
 
-QRectF GridItem::boundingRect() const
-{
-  return QRectF(0,0,m_hLength * 100,m_vLength * 100);
-}
-
-void GridItem::hoverEnterEvent(QGraphicsSceneHoverEvent * event)
+void ModelObjectGraphicsItem::hoverEnterEvent(QGraphicsSceneHoverEvent * event)
 {
   event->accept();
   m_highlight = true;
   update();
 }
 
-void GridItem::hoverLeaveEvent(QGraphicsSceneHoverEvent * event)
+void ModelObjectGraphicsItem::hoverLeaveEvent(QGraphicsSceneHoverEvent * event)
 {
   event->accept();
   m_highlight = false;
   update();
 }
 
-void GridItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-  painter->setPen(QPen(Qt::black,4,Qt::NoPen, Qt::RoundCap));
-  painter->setBrush(QBrush(Qt::lightGray,Qt::SolidPattern));
-  painter->drawRect(0,0,m_hLength * 100,m_vLength * 100);
-
-  if(isSelected())
-  {
-    painter->setBrush(QBrush(QColor(128,128,128),Qt::SolidPattern));
-    painter->drawRect(0,0,m_hLength * 100,m_vLength * 100);
-  }
-
-  if(m_highlight && m_enableHighlight)
-  {
-    painter->setPen(QPen(Qt::black,4,Qt::NoPen, Qt::RoundCap));
-    painter->setBrush(QBrush(QColor(127, 127, 127, 127)));
-    painter->drawRect(0,0,m_hLength * 100,m_vLength * 100);
-  }
-}
-
-QVariant GridItem::itemChange( GraphicsItemChange change, const QVariant & value )
+QVariant ModelObjectGraphicsItem::itemChange( GraphicsItemChange change, const QVariant & value )
 {
   if( change == QGraphicsItem::ItemSelectedHasChanged )
   {
@@ -234,32 +216,7 @@ QVariant GridItem::itemChange( GraphicsItemChange change, const QVariant & value
   return QGraphicsItem::itemChange(change,value);
 }
 
-void GridItem::setGridPos(int x, int y)
-{
-  setPos(x * 100, y * 100);
-}
-
-int GridItem::getXGridPos()
-{
-  return x() / 100;
-}
-
-int GridItem::getYGridPos()
-{
-  return y() / 100;
-}
-
-void GridItem::setHGridLength(int l)
-{
-  m_hLength = l;
-}
-
-void GridItem::setVGridLength(int l)
-{
-  m_vLength = l;
-}
-
-void GridItem::setModelObject( model::OptionalModelObject modelObject )
+void ModelObjectGraphicsItem::setModelObject( model::OptionalModelObject modelObject )
 {
   m_modelObject = modelObject;
 
@@ -282,7 +239,7 @@ void GridItem::setModelObject( model::OptionalModelObject modelObject )
   if( m_modelObject )
   {
     connect(m_modelObject->getImpl<detail::IdfObject_Impl>().get(), &detail::IdfObject_Impl::onNameChange,
-            this, &GridItem::onNameChange);
+            this, &ModelObjectGraphicsItem::onNameChange);
 
     setFlag(QGraphicsItem::ItemIsSelectable);
 
@@ -290,7 +247,7 @@ void GridItem::setModelObject( model::OptionalModelObject modelObject )
   }
 }
 
-void GridItem::onNameChange()
+void ModelObjectGraphicsItem::onNameChange()
 {
   if( m_modelObject )
   {
@@ -301,34 +258,24 @@ void GridItem::onNameChange()
   }
 }
 
-model::OptionalModelObject GridItem::modelObject()
+model::OptionalModelObject ModelObjectGraphicsItem::modelObject()
 {
   return m_modelObject;
 }
 
-int GridItem::getHGridLength()
-{
-  return m_hLength;
-}
-
-int GridItem::getVGridLength()
-{
-  return m_vLength;
-}
-
-void GridItem::dragEnterEvent(QGraphicsSceneDragDropEvent *event)  
+void ModelObjectGraphicsItem::dragEnterEvent(QGraphicsSceneDragDropEvent *event)  
 {
   m_highlight = true;
   update();
 }
 
-void GridItem::dragLeaveEvent(QGraphicsSceneDragDropEvent *event)  
+void ModelObjectGraphicsItem::dragLeaveEvent(QGraphicsSceneDragDropEvent *event)  
 {
   m_highlight = false;
   update();
 }
 
-void GridItem::dropEvent(QGraphicsSceneDragDropEvent *event)
+void ModelObjectGraphicsItem::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
   event->accept();
 
@@ -358,6 +305,76 @@ void GridItem::dropEvent(QGraphicsSceneDragDropEvent *event)
       }
     }
   }
+}
+
+
+// End move these to 
+
+GridItem::GridItem( QGraphicsItem * parent ):
+  ModelObjectGraphicsItem( parent ),
+  m_hLength(1),
+  m_vLength(1)
+{
+}
+
+QRectF GridItem::boundingRect() const
+{
+  return QRectF(0,0,m_hLength * 100,m_vLength * 100);
+}
+
+void GridItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+  painter->setPen(QPen(Qt::black,4,Qt::NoPen, Qt::RoundCap));
+  painter->setBrush(QBrush(Qt::lightGray,Qt::SolidPattern));
+  painter->drawRect(0,0,m_hLength * 100,m_vLength * 100);
+
+  if(isSelected())
+  {
+    painter->setBrush(QBrush(QColor(128,128,128),Qt::SolidPattern));
+    painter->drawRect(0,0,m_hLength * 100,m_vLength * 100);
+  }
+
+  if(m_highlight && m_enableHighlight)
+  {
+    painter->setPen(QPen(Qt::black,4,Qt::NoPen, Qt::RoundCap));
+    painter->setBrush(QBrush(QColor(127, 127, 127, 127)));
+    painter->drawRect(0,0,m_hLength * 100,m_vLength * 100);
+  }
+}
+
+void GridItem::setGridPos(int x, int y)
+{
+  setPos(x * 100, y * 100);
+}
+
+int GridItem::getXGridPos()
+{
+  return x() / 100;
+}
+
+int GridItem::getYGridPos()
+{
+  return y() / 100;
+}
+
+void GridItem::setHGridLength(int l)
+{
+  m_hLength = l;
+}
+
+void GridItem::setVGridLength(int l)
+{
+  m_vLength = l;
+}
+
+int GridItem::getHGridLength()
+{
+  return m_hLength;
+}
+
+int GridItem::getVGridLength()
+{
+  return m_vLength;
 }
 
 LinkItem::LinkItem(QGraphicsItem * parent)
@@ -434,112 +451,217 @@ QRectF LinkItem::boundingRect() const
   return QRectF(0.0,0.0,20.0,20.0);
 }
 
-HorizontalBranchItem::HorizontalBranchItem( std::vector<model::ModelObject> modelObjects,
-                                            QGraphicsItem * parent)
-  : GridItem( parent ),
-    m_isDropZone(false),
-    m_text("Drag From Library"),
-    m_hasDualTwoRightSidePipes(false)
+HalfHeightItem::HalfHeightItem(QGraphicsItem * parent)
+  : ModelObjectGraphicsItem(parent)
 {
-  for( auto it = modelObjects.begin();
-       it < modelObjects.end(); ++it )
+}
+
+QRectF HalfHeightItem::boundingRect() const
+{
+  return QRectF(0,0,100,50);
+}
+
+HalfHeightOneThreeStraightItem::HalfHeightOneThreeStraightItem(QGraphicsItem * parent)
+  : HalfHeightItem(parent)
+{
+}
+
+void HalfHeightOneThreeStraightItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
+  painter->drawLine(0,25,100,25);
+
+  if( modelObject() )
   {
-    if(model::OptionalNode comp = it->optionalCast<model::Node>())
-    {
-      GridItem * gridItem = new OneThreeNodeItem(this); 
+    const QPixmap * qPixmap = IconLibrary::Instance().findIcon( modelObject()->iddObject().type().value() );
+    painter->drawPixmap(37,12,25,25,*qPixmap);
+  }
+}
+
+HalfHeightOneThreeNodeItem::HalfHeightOneThreeNodeItem(QGraphicsItem * parent)
+  : HalfHeightItem(parent)
+{
+}
+
+void HalfHeightOneThreeNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
+  painter->setBrush(QBrush(Qt::lightGray,Qt::SolidPattern));
+  painter->drawLine(0,25,100,25);
+  setZValue(1);
+  painter->drawEllipse(43,17,15,15);
+}
+
+std::vector<GridItem *> HorizontalBranchItem::itemFactory(std::vector<model::ModelObject> modelObjects, QGraphicsItem * parent)
+{
+  std::vector<GridItem *> result;
+
+  for( auto it = modelObjects.begin(); it < modelObjects.end(); ++it ) {
+    if(model::OptionalNode comp = it->optionalCast<model::Node>()) {
+      GridItem * gridItem = new OneThreeNodeItem(parent); 
       gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
       if( comp->isRemovable() )
       {
         gridItem->setDeletable(true);
       }
-      m_gridItems.push_back(gridItem);
-    }
-    else if(model::OptionalAirLoopHVACOutdoorAirSystem comp = it->optionalCast<model::AirLoopHVACOutdoorAirSystem>())
-    {
-      GridItem * gridItem = new OAMixerItem(this); 
+      result.push_back(gridItem);
+    } else if(model::OptionalAirLoopHVACOutdoorAirSystem comp = it->optionalCast<model::AirLoopHVACOutdoorAirSystem>()) {
+      GridItem * gridItem = new OASystemItem(comp.get(),parent); 
+      if( comp->isRemovable() )
+      {
+        gridItem->setDeletable(true);
+      }
+      result.push_back(gridItem);
+    } else if(model::OptionalThermalZone comp = it->optionalCast<model::ThermalZone>()) {
+      GridItem * gridItem = new OneThreeStraightItem(parent); 
       gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
       if( comp->isRemovable() )
       {
         gridItem->setDeletable(true);
       }
-      m_gridItems.push_back(gridItem);
-    }
-    else if(model::OptionalThermalZone comp = it->optionalCast<model::ThermalZone>())
-    {
-      GridItem * gridItem = new OneThreeStraightItem(this); 
+      result.push_back(gridItem);
+    } else if(model::OptionalAirLoopHVACSupplyPlenum comp = it->optionalCast<model::AirLoopHVACSupplyPlenum>()) {
+      GridItem * gridItem = new SupplyPlenumItem(comp.get(),parent); 
+      if( comp->isRemovable() )
+      {
+        gridItem->setDeletable(true);
+      }
+      result.push_back(gridItem);
+    } else if(model::OptionalAirLoopHVACReturnPlenum comp = it->optionalCast<model::AirLoopHVACReturnPlenum>()) {
+      GridItem * gridItem = new ReturnPlenumItem(comp.get(),parent); 
+      if( comp->isRemovable() )
+      {
+        gridItem->setDeletable(true);
+      }
+      result.push_back(gridItem);
+    } else if(model::OptionalWaterUseConnections comp = it->optionalCast<model::WaterUseConnections>()) {
+      auto gridItem = new WaterUseConnectionsItem(parent); 
+      gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
+      result.push_back(gridItem);
+    } else if(model::OptionalStraightComponent comp = it->optionalCast<model::StraightComponent>()) {
+      GridItem * gridItem = new OneThreeStraightItem(parent); 
       gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
       if( comp->isRemovable() )
       {
         gridItem->setDeletable(true);
       }
-      m_gridItems.push_back(gridItem);
-    }
-    else if(model::OptionalAirLoopHVACSupplyPlenum comp = it->optionalCast<model::AirLoopHVACSupplyPlenum>())
-    {
-      GridItem * gridItem = new SupplyPlenumItem(comp.get(),this); 
-      if( comp->isRemovable() )
-      {
-        gridItem->setDeletable(true);
-      }
-      m_gridItems.push_back(gridItem);
-    }
-    else if(model::OptionalAirLoopHVACReturnPlenum comp = it->optionalCast<model::AirLoopHVACReturnPlenum>())
-    {
-      GridItem * gridItem = new ReturnPlenumItem(comp.get(),this); 
-      if( comp->isRemovable() )
-      {
-        gridItem->setDeletable(true);
-      }
-      m_gridItems.push_back(gridItem);
-    }
-    else if(model::OptionalWaterUseConnections comp = it->optionalCast<model::WaterUseConnections>())
-    {
-      auto gridItem = new WaterUseConnectionsItem(this); 
-      gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
-      m_gridItems.push_back(gridItem);
-    }
-    else if(model::OptionalStraightComponent comp = it->optionalCast<model::StraightComponent>())
-    {
-      GridItem * gridItem = new OneThreeStraightItem(this); 
+      result.push_back(gridItem);
+    } else if(boost::optional<model::WaterToAirComponent> comp = it->optionalCast<model::WaterToAirComponent>()) {
+      GridItem * gridItem = new OneThreeWaterToAirItem(parent); 
       gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
       if( comp->isRemovable() )
       {
         gridItem->setDeletable(true);
       }
-      m_gridItems.push_back(gridItem);
-    }
-    else if(boost::optional<model::WaterToAirComponent> comp = it->optionalCast<model::WaterToAirComponent>())
-    {
-      GridItem * gridItem = new OneThreeWaterToAirItem(this); 
+      result.push_back(gridItem);
+    } else if(boost::optional<model::WaterToWaterComponent> comp = it->optionalCast<model::WaterToWaterComponent>()) {
+      GridItem * gridItem = new OneThreeWaterToWaterItem(parent); 
       gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
       if( comp->isRemovable() )
       {
         gridItem->setDeletable(true);
       }
-      m_gridItems.push_back(gridItem);
-    }
-    else if(boost::optional<model::WaterToWaterComponent> comp = it->optionalCast<model::WaterToWaterComponent>())
-    {
-      GridItem * gridItem = new OneThreeWaterToWaterItem(this); 
+      result.push_back(gridItem);
+    } else if(boost::optional<model::ZoneHVACComponent> comp = it->optionalCast<model::ZoneHVACComponent>()) {
+      GridItem * gridItem = new OneThreeStraightItem(parent); 
       gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
       if( comp->isRemovable() )
       {
         gridItem->setDeletable(true);
       }
-      m_gridItems.push_back(gridItem);
-    }
-    else if(boost::optional<model::ZoneHVACComponent> comp = it->optionalCast<model::ZoneHVACComponent>())
-    {
-      GridItem * gridItem = new OneThreeStraightItem(this); 
+      result.push_back(gridItem);
+    } else if(boost::optional<model::Mixer> comp = it->optionalCast<model::Mixer>()) {
+      // Expecting dual duct terminal which is a mixer
+      GridItem * gridItem = new OneThreeDualDuctMixerItem(parent); 
       gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
       if( comp->isRemovable() )
       {
         gridItem->setDeletable(true);
       }
-      m_gridItems.push_back(gridItem);
+      result.push_back(gridItem);
     }
   }
 
+  return result;
+}
+
+HorizontalBranchItem::HorizontalBranchItem( std::pair< std::vector<model::ModelObject>, std::vector<model::ModelObject> > modelObjectsBeforeTerminal,
+                      std::vector<model::ModelObject> modelObjectsAfterTerminal,
+                      QGraphicsItem * parent )
+  : GridItem( parent ),
+    m_isDropZone(false),
+    m_text("Drag From Library"),
+    m_hasDualTwoRightSidePipes(false),
+    m_dualDuct(true)
+{
+  std::vector<GridItem *> beforeTerminalItems;
+
+  auto halfItemFactory = [&](const boost::optional<model::ModelObject> & modelObject, QGraphicsItem * parent) {
+    HalfHeightItem * halfHeightItem; 
+
+    if( modelObject ) {
+      if( modelObject->iddObjectType() == model::Node::iddObjectType() ) {
+        halfHeightItem = new HalfHeightOneThreeNodeItem(parent);
+        halfHeightItem->setModelObject(modelObject);
+      } else {
+        halfHeightItem = new HalfHeightOneThreeStraightItem(parent);
+        halfHeightItem->setModelObject(modelObject);
+      }
+    } else {
+      halfHeightItem = new HalfHeightOneThreeStraightItem(parent);
+    }
+
+    return halfHeightItem;
+  };
+
+  bool stop = false;
+  unsigned i = 0;
+  while( ! stop ) {
+    stop = true;
+
+    boost::optional<model::ModelObject> modelObject1;
+    boost::optional<model::ModelObject> modelObject2;
+
+    if( i < modelObjectsBeforeTerminal.first.size() ) {
+      modelObject1 = modelObjectsBeforeTerminal.first[i];
+      stop = false;
+    }
+    if( i < modelObjectsBeforeTerminal.second.size() ) {
+      modelObject2 = modelObjectsBeforeTerminal.second[i];
+      stop = false;
+    }
+
+    if( ! stop ) {
+      // New horizontal item 
+      auto item = new GridItem(this);
+      beforeTerminalItems.push_back(item);
+      auto halfHeightItem1 = halfItemFactory(modelObject1,item);
+      halfHeightItem1->setPos(0,0);
+      auto halfHeightItem2 = halfItemFactory(modelObject2,item);
+      halfHeightItem2->setPos(0,50);
+    }
+
+    ++i;
+  }
+
+
+  m_gridItems = itemFactory(modelObjectsAfterTerminal,this);
+  m_gridItems.insert(m_gridItems.end(),beforeTerminalItems.begin(),beforeTerminalItems.end());
+  layout();
+}
+
+HorizontalBranchItem::HorizontalBranchItem( std::vector<model::ModelObject> modelObjects,
+                                            QGraphicsItem * parent,
+                                            bool dualDuct )
+  : GridItem( parent ),
+    m_isDropZone(false),
+    m_text("Drag From Library"),
+    m_hasDualTwoRightSidePipes(false),
+    m_dualDuct(dualDuct)
+{
+  m_gridItems = itemFactory(modelObjects,this);
   layout();
 }
 
@@ -595,8 +717,7 @@ void HorizontalBranchItem::setPadding( unsigned padding )
   {
     for( unsigned i = m_paddingItems.size(); i < padding; i++ )
     {
-      auto straightItem = new OneThreeStraightItem();
-      straightItem->setParentItem(this);
+      auto straightItem = new OneThreeStraightItem(this,m_dualDuct);
       m_paddingItems.push_back( straightItem );
     }
   }
@@ -612,38 +733,38 @@ unsigned HorizontalBranchItem::padding()
 void HorizontalBranchItem::layout()
 {
   int i = 0;
+  int j = 1;
 
-  for( auto it = m_gridItems.begin();
-       it < m_gridItems.end(); ++it )
-  {
-    if( m_isDropZone )
-    {
-      (*it)->hide();
-    }
-    else
-    {
-      (*it)->setGridPos( i, 0 );
-      i = i + (*it)->getHGridLength();
-      (*it)->show();
+  for( auto & gridItem : m_gridItems ) {
+    auto height = gridItem->getVGridLength();
+    if( height > j ) {
+      j = height;
     }
   }
-  for( auto it = m_paddingItems.begin();
-       it < m_paddingItems.end(); ++it )
-  {
-    if( m_isDropZone )
-    {
+
+  for( auto & gridItem : m_gridItems ) {
+    if( m_isDropZone ) {
+      gridItem->hide();
+    } else {
+      gridItem->setGridPos( i, (j - gridItem->getVGridLength()) );
+      i = i + gridItem->getHGridLength();
+      gridItem->show();
+    }
+  }
+
+  for( auto it = m_paddingItems.begin(); it < m_paddingItems.end(); ++it ) {
+    if( m_isDropZone ) {
       i = i + (*it)->getHGridLength();
       (*it)->hide();
-    }
-    else
-    {
-      (*it)->setGridPos( i, 0 );
+    } else {
+      (*it)->setGridPos( i, j - 1 );
       i = i + (*it)->getHGridLength();
       (*it)->show();
     }
   }
 
   setHGridLength( i );
+  setVGridLength( j );
 }
 
 void HorizontalBranchItem::setHasTwoRightSidePipes( bool dualRight )
@@ -887,92 +1008,194 @@ bool sortBranches(std::vector<ModelObject> i, std::vector<ModelObject> j)
   return iModelObject->name().get() < jModelObject->name().get();
 }
 
+// Given a splitter / mixer pair, return the "center" ModelObject for each branch
+// That is the first thing that is either 1) a zone, 2) not a splitter/mixer or node, 3) a node if that is all that is found
+// This will be used later to find the components both upstream and downstream of the center ModelObject
+// This is unfortunately tricky, but necessary to handle air system demand branches that involve plenums
+std::vector<model::HVACComponent> centerHVACComponents( model::Splitter & splitter, model::Mixer & mixer)
+{
+  std::vector<model::HVACComponent> result;
+
+  auto loop = splitter.loop();
+
+  auto removeUnwantedSplitterMixerNodesPred = [](const model::HVACComponent & modelObject) {
+    if( modelObject.optionalCast<model::AirLoopHVACZoneSplitter>() ) {
+      return true;
+    } else if( modelObject.optionalCast<model::AirLoopHVACZoneMixer>() ) {
+      return true;
+    } else if( modelObject.optionalCast<model::AirLoopHVACSupplyPlenum>() ) {
+      return true;
+    } else if( modelObject.optionalCast<model::AirLoopHVACReturnPlenum>() ) {
+      return true;
+    } else if( modelObject.optionalCast<model::Node>() ) {
+      return true;
+    }
+
+    return false;
+  };
+
+  if( loop ) {
+    auto outletObjects = subsetCastVector<model::HVACComponent>(splitter.outletModelObjects());
+    for( const auto & object : outletObjects ) {
+      auto branchObjects = subsetCastVector<model::HVACComponent>(loop->demandComponents(object,mixer));
+
+      auto zones = subsetCastVector<model::ThermalZone>(branchObjects);
+      if( ! zones.empty() ) {
+        result.insert(result.end(),zones.begin(),zones.end());
+        continue;
+      }
+      
+      // reducedSet is remains with the things from "2" not a plitter/mixer or node
+      // We are expecting a terminal. ie a branch with only a terminal and nodes on it
+      auto reducedSetIt = std::remove_if(branchObjects.begin(),branchObjects.end(),removeUnwantedSplitterMixerNodesPred);
+      if( reducedSetIt != branchObjects.end() ) {
+        result.push_back(*reducedSetIt);
+        continue;
+      }
+
+      // If we get here then we should only have nodes
+      // ie a branch with only a single node on it.
+      auto nodes = subsetCastVector<model::Node>(branchObjects);
+      if( ! nodes.empty() ) {
+        result.push_back(nodes.front());
+      }
+    }
+  }
+
+  WorkspaceObjectNameLess sorter;
+  std::sort(result.begin(),result.end(),sorter);
+
+  return result;
+}
+
+// This is an overload for laying out branch groups for dual duct paths
+HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter,
+                                                      std::vector<model::Node> & supplyOutletNodes,
+                                                      QGraphicsItem * parent ) 
+  : GridItem(parent),
+    m_splitter(splitter),
+    m_dropZoneBranchItem(nullptr)
+{
+  auto optionalLoop = splitter.loop();
+  OS_ASSERT( optionalLoop );
+  model::Loop loop = optionalLoop.get(); 
+
+  auto splitterOutletObjects = splitter.outletModelObjects();
+
+  for( size_t i = 0; i < 2; ++i ) {
+    auto inlet = splitterOutletObjects[i].cast<model::HVACComponent>();
+    auto outlet = supplyOutletNodes[i].cast<model::HVACComponent>();
+
+    auto branchComponents = loop.components(inlet,outlet);
+    branchComponents.pop_back();
+
+    m_branchItems.push_back(new HorizontalBranchItem(branchComponents,this));
+  }
+
+  layout();
+}
+
 HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter,
                                                       model::Mixer & mixer,
                                                       QGraphicsItem * parent ) 
   : GridItem(parent),
     m_splitter(splitter),
-    m_mixer(mixer),
     m_dropZoneBranchItem(nullptr)
 {
-  boost::optional<model::Loop> optionalLoop = splitter.loop();
-  OS_ASSERT( optionalLoop );
-  model::Loop loop = optionalLoop.get(); 
-
-  std::vector<model::ModelObject> splitterOutletObjects = splitter.outletModelObjects();
-  bool isSupplySide = loop.supplyComponent(splitter.handle());
-
-  std::vector<model::ModelObject> branchComponents;
-  std::vector< std::vector<model::ModelObject> > allBranchComponents;
+  auto splitterOutletObjects = splitter.outletModelObjects();
 
   if( ! (splitterOutletObjects.front() == mixer) )
   {
-    for( auto it1 = splitterOutletObjects.begin();
-         it1 != splitterOutletObjects.end();
-         ++it1 )
-    {
-      bool isSupplyPlenum = false;
-      if( boost::optional<model::Node> node = it1->optionalCast<model::Node>() )
-      {
-        boost::optional<model::ModelObject> outletMo = node->outletModelObject();
-        OS_ASSERT(outletMo);
-        if(boost::optional<model::Splitter> plenumSplitter = outletMo->optionalCast<model::Splitter>())
-        {
-          isSupplyPlenum = true;
-          std::vector<model::ModelObject> plenumOutletObjects = plenumSplitter->outletModelObjects();
-          for( auto it2 = plenumOutletObjects.begin();
-               it2 != plenumOutletObjects.end();
-               ++it2 )
-          {
-            boost::optional<model::HVACComponent> comp1 = it2->optionalCast<model::HVACComponent>();
-            OS_ASSERT(comp1);
-            branchComponents = loop.components(comp1.get(),mixer);
-            branchComponents.erase(branchComponents.end() - 1);
-            branchComponents.insert(branchComponents.begin(),plenumSplitter.get());
-            branchComponents.insert(branchComponents.begin(),*it1);
+    auto reverseVector = [](const std::vector<model::ModelObject> & modelObjects) {
+      std::vector<model::ModelObject> rModelObjects;
 
-            std::vector<model::ModelObject> rBranchComponents;
-            for( auto rit = branchComponents.rbegin();
-                 rit < branchComponents.rend(); ++rit )
-            {
-              rBranchComponents.push_back( *rit );
-            }
-            allBranchComponents.push_back(rBranchComponents);
+      for( auto rit = modelObjects.rbegin(); rit < modelObjects.rend(); ++rit ) {
+        rModelObjects.push_back( *rit );
+      }
+
+      return rModelObjects;
+    };
+
+    auto loop = splitter.loop();
+    OS_ASSERT(loop);
+    auto airLoop = loop->optionalCast<model::AirLoopHVAC>();
+
+    bool isSupplySide = loop->supplyComponent(splitter.handle());
+
+    if( airLoop && (! isSupplySide) ) {
+      // Why is there these extra hoops for air loop demand?
+      // The reason is because of plenums. If we go from splitter outlet node,
+      // to mixer inlet node (when there are plenums) there may be more than one path,
+      // and we will receive all of those extra ModelObject instances from ::demandComponents
+      auto centerComps = centerHVACComponents(splitter,mixer);
+      auto splitters = airLoop->zoneSplitters();
+
+      std::pair< std::vector<model::ModelObject>, std::vector<model::ModelObject> > allCompsBeforeTerminal;
+
+      for( const auto & centerComp : centerComps ) {
+        boost::optional<model::HVACComponent> keyComp = centerComp;
+        if( auto zone = centerComp.optionalCast<model::ThermalZone>() ) {
+          if( auto terminal = zone->airLoopHVACTerminal() ) {
+            keyComp = terminal;
           }
+        }
+        OS_ASSERT(keyComp);
+        {
+          auto compsBeforeTerminal = airLoop->demandComponents(splitters[0],keyComp.get());
+          compsBeforeTerminal.erase(compsBeforeTerminal.begin());
+          compsBeforeTerminal.pop_back();
+          allCompsBeforeTerminal.first = reverseVector(compsBeforeTerminal);
+        }
+
+        auto compsAfterTerminal = airLoop->demandComponents(keyComp.get(),mixer);
+        // We want the center but not the mixer
+        compsAfterTerminal.pop_back();
+        auto rCompsAfterTerminal = reverseVector(compsAfterTerminal);
+
+        if( keyComp->optionalCast<model::Mixer>() ) {
+          // We must have a dual duct for this branch
+          OS_ASSERT(splitters.size() == 2u);
+
+          auto compsBeforeTerminal = airLoop->demandComponents(splitters[1],keyComp.get());
+          compsBeforeTerminal.erase(compsBeforeTerminal.begin());
+          compsBeforeTerminal.pop_back();
+          allCompsBeforeTerminal.second = reverseVector(compsBeforeTerminal);
+
+          m_branchItems.push_back(new HorizontalBranchItem(allCompsBeforeTerminal,rCompsAfterTerminal,this));
+        } else {
+          auto comps = rCompsAfterTerminal;
+          comps.insert(comps.end(),allCompsBeforeTerminal.first.begin(),allCompsBeforeTerminal.first.end());
+          m_branchItems.push_back(new HorizontalBranchItem(comps,this));
         }
       }
-      if( ! isSupplyPlenum )
-      {
-        boost::optional<model::HVACComponent> comp1 = it1->optionalCast<model::HVACComponent>();
-        OS_ASSERT(comp1);
-        branchComponents = loop.components(comp1.get(),mixer);
-        branchComponents.erase(branchComponents.end() - 1);
+    } else {
+      std::vector< std::vector<model::ModelObject> > allBranchComponents;
 
-        if( isSupplySide )
-        {
+      for( auto it1 = splitterOutletObjects.begin(); it1 != splitterOutletObjects.end(); ++it1 )
+      {
+        auto comp1 = it1->optionalCast<model::HVACComponent>();
+        OS_ASSERT(comp1);
+        auto branchComponents = loop->components(comp1.get(),mixer);
+        branchComponents.pop_back();
+
+        if( isSupplySide ) {
           allBranchComponents.push_back(branchComponents);
-        }
-        else
-        {
-          std::vector<model::ModelObject> rBranchComponents;
-          for( auto rit = branchComponents.rbegin();
-               rit < branchComponents.rend(); ++rit )
-          {
-            rBranchComponents.push_back( *rit );
-          }
+        } else {
+          auto rBranchComponents = reverseVector(branchComponents);
           allBranchComponents.push_back(rBranchComponents);
         }
+      }
+
+      std::sort(allBranchComponents.begin(),allBranchComponents.end(),sortBranches);
+      for(auto it = allBranchComponents.begin();
+          it != allBranchComponents.end();
+          ++it)
+      {
+        m_branchItems.push_back(new HorizontalBranchItem(*it,this));
       }
     }
   }
 
-  std::sort(allBranchComponents.begin(),allBranchComponents.end(),sortBranches);
-  for(auto it = allBranchComponents.begin();
-      it != allBranchComponents.end();
-      ++it)
-  {
-    m_branchItems.push_back(new HorizontalBranchItem(*it,this));
-  }
 
   layout();
 }
@@ -980,6 +1203,17 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
 unsigned HorizontalBranchGroupItem::numberOfBranches() const
 {
   return m_branchItems.size();  
+}
+
+std::vector<int> HorizontalBranchGroupItem::branchBaselineGridPositions() const
+{
+  std::vector<int> result;
+
+  for( const auto & branchItem : m_branchItems ) {
+    result.emplace_back(branchItem->getYGridPos() + branchItem->getVGridLength() - 1);
+  }
+
+  return result;
 }
 
 void HorizontalBranchGroupItem::setShowDropZone(bool showDropZone)
@@ -1075,8 +1309,8 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
 
   m_loopScene->addItem(this);
 
-  model::Node supplyInletNode = m_loop.supplyInletNode();
-  model::Node supplyOutletNode = m_loop.supplyOutletNode();
+  auto supplyInletNode = m_loop.supplyInletNode();
+  auto supplyOutletNodes = m_loop.supplyOutletNodes();
 
   std::vector<model::AirLoopHVACSupplyPlenum> supplyPlenums = subsetCastVector<model::AirLoopHVACSupplyPlenum>(loop.demandComponents());
   std::vector<model::AirLoopHVACReturnPlenum> returnPlenums = subsetCastVector<model::AirLoopHVACReturnPlenum>(loop.demandComponents());
@@ -1123,15 +1357,15 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
 
   m_supplySideItem = new SupplySideItem( this,
                                          supplyInletNode,
-                                         supplyOutletNode);
+                                         supplyOutletNodes);
 
   m_supplySideItem->setGridPos(0,0);
 
-  model::Node demandInletNode = m_loop.demandInletNode();
-  model::Node demandOutletNode = m_loop.demandOutletNode();
+  auto demandInletNodes = m_loop.demandInletNodes();
+  auto demandOutletNode = m_loop.demandOutletNode();
 
   m_demandSideItem = new DemandSideItem( this,
-                                         demandInletNode,
+                                         demandInletNodes,
                                          demandOutletNode );
 
   m_demandSideItem->setGridPos(0,m_supplySideItem->getVGridLength() + 1);
@@ -1223,9 +1457,19 @@ void SystemItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 } 
 
 SystemCenterItem::SystemCenterItem( QGraphicsItem * parent, model::Loop loop )
-  : GridItem(parent)
+  : GridItem(parent),
+    m_supplyDualDuct(false),
+    m_demandDualDuct(false)
 {
   this->setModelObject(loop);
+
+  if( loop.supplyOutletNodes().size() == 2u ) {
+    m_supplyDualDuct = true;
+  }
+
+  if( loop.demandInletNodes().size() == 2u ) {
+    m_demandDualDuct = true;
+  }
 }
 
 void SystemCenterItem::paint( QPainter *painter, 
@@ -1237,8 +1481,14 @@ void SystemCenterItem::paint( QPainter *painter,
   painter->setRenderHint(QPainter::Antialiasing, true);
   painter->setPen(QPen(Qt::black,4,Qt::NoPen, Qt::RoundCap));
   painter->setBrush(QBrush(Qt::lightGray,Qt::SolidPattern));
-  painter->drawRect(0,yOrigin,100,100);
-  painter->drawRect((m_hLength - 1) * 100,yOrigin,100,100);
+  painter->drawRect(0,yOrigin,100,101);
+  painter->drawRect((m_hLength - 1) * 100,yOrigin,100,101);
+  if( m_supplyDualDuct ) {
+    painter->drawRect((m_hLength - 3) * 100,yOrigin,100,51);
+  }
+  if( m_demandDualDuct ) {
+    painter->drawRect((m_hLength - 3) * 100,50,100,51);
+  }
 
   painter->setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
   painter->drawLine(50,yOrigin,50,yOrigin + 100);
@@ -1247,11 +1497,26 @@ void SystemCenterItem::paint( QPainter *painter,
                      (m_hLength - 1) * 100 + 50,
                      yOrigin + 100
                      );
+  painter->drawPixmap((m_hLength - 1) * 100 + 37.5,yOrigin + 25,25,25,QPixmap(":/images/arrow.png"));
+
+  if( m_supplyDualDuct ) {
+    painter->drawLine( (m_hLength - 3) * 100 + 50,
+                       yOrigin,
+                       (m_hLength - 3) * 100 + 50,
+                       yOrigin + 50
+                       );
+    painter->drawPixmap((m_hLength - 3) * 100 + 37.5,yOrigin + 25,25,25,QPixmap(":/images/arrow.png"));
+  }
+  if( m_demandDualDuct ) {
+    painter->drawLine( (m_hLength - 3) * 100 + 50,
+                       yOrigin + 50,
+                       (m_hLength - 3) * 100 + 50,
+                       yOrigin + 100
+                       );
+  }
 
   painter->setPen(QPen(Qt::black,1,Qt::DashLine, Qt::RoundCap));
   painter->drawLine( 0,yOrigin + 50,(m_hLength) * 100,yOrigin + 50 );
-
-  painter->drawPixmap((m_hLength - 1) * 100 + 37.5,yOrigin + 25,25,25,QPixmap(":/images/arrow.png"));
 
   painter->rotate(180);
   painter->drawPixmap(-62,-(yOrigin + 75),25,25,QPixmap(":/images/arrow.png"));
@@ -1368,8 +1633,31 @@ void ReturnPlenumItem::paint(QPainter *painter,
   painter->drawPolygon(points,4);
 }
 
-OneThreeStraightItem::OneThreeStraightItem( QGraphicsItem * parent )
+OneThreeDualDuctMixerItem::OneThreeDualDuctMixerItem( QGraphicsItem * parent, bool dualDuct )
   : GridItem(parent)
+{
+}
+
+void OneThreeDualDuctMixerItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+  GridItem::paint(painter,option,widget);
+
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
+  painter->drawLine(0,50,25,50);
+  painter->drawLine(100,25,75,25);
+  painter->drawLine(100,75,75,75);
+
+  if( modelObject() )
+  {
+    const QPixmap * qPixmap = IconLibrary::Instance().findIcon( modelObject()->iddObject().type().value() );
+    painter->drawPixmap(0,0,100,100,*qPixmap);
+  }
+}
+
+OneThreeStraightItem::OneThreeStraightItem( QGraphicsItem * parent, bool dualDuct )
+  : GridItem(parent),
+    m_dualDuct(dualDuct)
 {
 }
 
@@ -1379,7 +1667,12 @@ void OneThreeStraightItem::paint(QPainter *painter, const QStyleOptionGraphicsIt
 
   painter->setRenderHint(QPainter::Antialiasing, true);
   painter->setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
-  painter->drawLine(0,50,100,50);
+  if( m_dualDuct ) {
+    painter->drawLine(0,25,100,25);
+    painter->drawLine(0,75,100,75);
+  } else {
+    painter->drawLine(0,50,100,50);
+  }
 
   if( modelObject() )
   {
@@ -2221,6 +2514,27 @@ void OneThreeNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
   }
 }
 
+OneThreeDualDuctItem::OneThreeDualDuctItem(QGraphicsItem * parent)
+  : GridItem(parent)
+{
+}
+
+void OneThreeDualDuctItem::setModelObject( model::OptionalModelObject modelObject )
+{
+  m_modelObject = modelObject;
+}
+
+void OneThreeDualDuctItem::setModelObject2( model::OptionalModelObject modelObject )
+{
+  m_modelObject2 = modelObject;
+}
+
+void OneThreeDualDuctItem::paint(QPainter *painter, 
+                             const QStyleOptionGraphicsItem *option, 
+                             QWidget *widget)
+{
+}
+
 FourFiveNodeItem::FourFiveNodeItem( QGraphicsItem * parent )
   : GridItem( parent )
 {
@@ -2680,7 +2994,9 @@ void OASystemItem::paint(QPainter *painter,
 
 SplitterItem::SplitterItem( QGraphicsItem * parent )
   : GridItem( parent ),
-    m_numberBranches(1)
+    m_numberBranches(1),
+    m_firstDuct1Index(0),
+    m_firstDuct2Index(0)
 {
 }
 
@@ -2691,8 +3007,6 @@ void SplitterItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
   painter->setRenderHint(QPainter::Antialiasing, true);
   painter->setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
   painter->setBrush(QBrush(Qt::lightGray,Qt::SolidPattern));
-
-  painter->drawLine(50,50,50,(((m_numberBranches * 2) - 1) * 100) - 50);
 
   int midpointIndex;
   if( m_numberBranches == 1 )
@@ -2706,16 +3020,114 @@ void SplitterItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
   {
     midpointIndex = m_numberBranches - 1;
   }
-  painter->drawLine(50,(midpointIndex * 100) + 50,100,(midpointIndex * 100) + 50);
 
-  int j = 50;
-  for( int branchIndex = 1; branchIndex <= m_numberBranches; branchIndex++ )
-  {
-    painter->drawLine(0,j,50,j);
-    j = j + 200;
+  if( m_terminalTypes.empty() ) {
+    painter->drawLine(50,50,50,(((m_numberBranches * 2) - 1) * 100) - 50);
+    painter->drawLine(50,(midpointIndex * 100) + 50,100,(midpointIndex * 100) + 50);
+
+    int j = 50;
+    for( int branchIndex = 1; branchIndex <= m_numberBranches; branchIndex++ )
+    {
+      painter->drawLine(0,j,50,j);
+      j = j + 200;
+    }
+  } else {
+    // if m_terminalTypes is not empty then we probably have a dual duct and things get more complicated
+    // because we have to draw two splitters in one
+
+    // Draw the two longest vertical lines 
+    painter->drawLine(75,m_firstDuct1Index * 100 + 25,75,(((m_numberBranches * 2) - 1) * 100) - 75);
+    painter->drawLine(25,m_firstDuct2Index * 100 + 75,25,(((m_numberBranches * 2) - 1) * 100) - 25);
+
+    // Draw the leader into the vertical pipe for duct 2
+    painter->drawLine(75,(midpointIndex * 100) + 25,100,(midpointIndex * 100) + 25);
+
+    // Draw the leader into the vertical pipe for duct 1
+    painter->drawLine(25,(midpointIndex * 100) + 75,65,(midpointIndex * 100) + 75);
+    painter->drawLine(85,(midpointIndex * 100) + 75,100,(midpointIndex * 100) + 75);
+    painter->drawArc(65,(midpointIndex * 100) + 65,20,20,0,2880);
+
+    // Draw the horizontal hops from duct 2 to the terminal
+    for( unsigned j = m_firstDuct2Index; j < m_terminalTypes.size() + 1; ++j )
+    {
+      if( j < m_terminalTypes.size() ) {
+        if( ((m_terminalTypes[j] == TerminalType::DualDuct) || (m_terminalTypes[j] == TerminalType::SingleDuct2)) ) {
+          // Check to make sure we need to hop
+          if( j > static_cast<unsigned>(m_firstDuct1Index)) {
+            painter->drawLine(0,j * 200 + 25,15,j * 200 + 25);
+            painter->drawLine(35,j * 200 + 25,75,j * 200 + 25);
+            painter->drawArc(15,j * 200 + 15,20,20,0,2880);
+          } else {
+            painter->drawLine(0,j * 200 + 25,75,j * 200 + 25);
+          }
+        }
+      } else {
+        // This last one is for the drop zone
+        painter->drawLine(0,j * 200 + 25,15,j * 200 + 25);
+        painter->drawLine(35,j * 200 + 25,75,j * 200 + 25);
+        painter->drawArc(15,j * 200 + 15,20,20,0,2880);
+      }
+    }
+
+    // Draw the horizontal lines from duct 1 to terminal
+    for( unsigned j = m_firstDuct1Index; j < m_terminalTypes.size() + 1; ++j )
+    {
+      if( j < m_terminalTypes.size() ) {
+        auto type = m_terminalTypes[j];
+        if( type == TerminalType::DualDuct ) {
+          painter->drawLine(0,j * 200 + 75,25,j * 200 + 75);
+        } else {
+          painter->drawLine(0,j * 200 + 50,25,j * 200 + 50);
+        }
+      } else {
+        painter->drawLine(0,j * 200 + 75,25,j * 200 + 75);
+      }
+    }
   }
 }
 
+void SplitterItem::setTerminalTypes( std::vector< SplitterItem::TerminalType > types )
+{
+  // We want the number of branches to be in sync with the number of terminal/terminal types
+  // Add one for the drop zone
+  setNumberBranches( types.size() + 1 );
+  m_terminalTypes = types;
+
+  // A Predicate that returns true on either m_type or DualDuct
+  struct Predicate {
+    Predicate(TerminalType type)
+      : m_type(type)
+    {}
+
+    bool operator()(TerminalType t_type) {
+      if( (t_type == m_type) || (t_type == TerminalType::DualDuct) ) {
+        return true;
+      } else {
+        return false;
+      } 
+    }
+
+    TerminalType m_type;
+  };
+
+  if( ! m_terminalTypes.empty() ) {
+
+    {
+      auto terminalIt = std::find_if(m_terminalTypes.begin(),m_terminalTypes.end(),Predicate(SplitterItem::SingleDuct1));
+      if( terminalIt != m_terminalTypes.end() ) {
+        m_firstDuct1Index = std::distance(m_terminalTypes.begin(), terminalIt);
+      }
+    }
+
+    {
+      auto terminalIt = std::find_if(m_terminalTypes.begin(),m_terminalTypes.end(),Predicate(SplitterItem::SingleDuct2));
+      if( terminalIt != m_terminalTypes.end() ) {
+        m_firstDuct2Index = std::distance(m_terminalTypes.begin(), terminalIt);
+      }
+    }
+
+  }
+}
 
 void SplitterItem::setNumberBranches( int branches )
 {
@@ -2729,9 +3141,9 @@ int SplitterItem::numberBranches()
 }
 
 SupplySplitterItem::SupplySplitterItem( QGraphicsItem * parent )
-  : GridItem( parent ),
-    m_numberBranches(1)
+  : GridItem( parent )
 {
+  setNumberBranches(1);
 }
 
 void SupplySplitterItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -2742,38 +3154,48 @@ void SupplySplitterItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
   painter->setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
   painter->setBrush(QBrush(Qt::lightGray,Qt::SolidPattern));
 
-  painter->drawLine(50,50,50,(((m_numberBranches * 2) - 1) * 100) - 50);
-
-  int midpointIndex;
-  if( m_numberBranches == 1 )
-  {
-    midpointIndex = 0;
+  int midpointIndex = 0;
+  if( m_baselineBranchPositions.size() > 1 ) {
+    midpointIndex = (m_baselineBranchPositions.back() - m_baselineBranchPositions.front()) / 2;
+    for( const auto & pos : m_baselineBranchPositions ) {
+      painter->drawLine(50,pos * 100 + 50,100,pos * 100 + 50);
+    }
+    painter->drawLine(50,m_baselineBranchPositions.front() * 100 + 50,50,m_baselineBranchPositions.back() * 100 + 50);
+  } else {
     QPixmap qPixmap(":images/supply_splitter.png");
-    painter->drawPixmap(12,(midpointIndex * 100) + 12,75,75,qPixmap);
-  }
-  else
-  {
-    midpointIndex = m_numberBranches - 1;
+    painter->drawPixmap(12,12,75,75,qPixmap);
   }
   painter->drawLine(0,(midpointIndex * 100) + 50,50,(midpointIndex * 100) + 50);
+}
 
-  int j = 50;
-  for( int branchIndex = 1; branchIndex <= m_numberBranches; branchIndex++ )
-  {
-    painter->drawLine(50,j,100,j);
-    j = j + 200;
+void SupplySplitterItem::setBranchGridPositions(const std::vector<int> & branchGridPositions)
+{
+  m_baselineBranchPositions = branchGridPositions;
+
+  if( ! branchGridPositions.empty() ) {
+    m_vLength = branchGridPositions.back() + 1;
+  } else {
+    m_vLength = 1;
   }
 }
 
 void SupplySplitterItem::setNumberBranches( int branches )
 {
-  m_numberBranches = branches;
-  m_vLength = (branches * 2) - 1;
+  std::vector<int> branchGridPositions;
+
+  int jPos = 0;
+  // If client uses this method we assume 1 unit height for each branch with 1 unit separating each one
+  for( int i = 0; i < branches; ++i ) {
+    branchGridPositions.push_back(jPos);
+    jPos = jPos + 2;
+  }
+
+  setBranchGridPositions(branchGridPositions);
 }
 
 int SupplySplitterItem::numberBranches()
 {
-  return m_numberBranches;
+  return m_baselineBranchPositions.size();
 }
 
 MixerItem::MixerItem( QGraphicsItem * parent )
@@ -2873,69 +3295,148 @@ void SupplyMixerItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
   }
 }
 
+TwoThreeStraightItem2::TwoThreeStraightItem2(QGraphicsItem * parent)
+  : GridItem( parent )
+{
+}
+
+void TwoThreeStraightItem2::paint(QPainter *painter, 
+                                 const QStyleOptionGraphicsItem *option, 
+                                 QWidget *widget)
+{
+  GridItem::paint(painter,option,widget);
+
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setBrush(QBrush(Qt::lightGray,Qt::SolidPattern));
+  painter->setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
+
+  painter->drawLine( 0,75,50,75 );
+  painter->drawLine( 50,0,50,75 );
+}
+
+DualDuctTee::DualDuctTee(QGraphicsItem * parent) 
+  : GridItem( parent )
+{
+  setHGridLength(2);
+}
+
+void DualDuctTee::paint(QPainter *painter, 
+                                   const QStyleOptionGraphicsItem *option, 
+                                   QWidget *widget)
+{
+  GridItem::paint(painter,option,widget);
+
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setBrush(QBrush(Qt::lightGray,Qt::SolidPattern));
+  painter->setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
+
+  painter->drawLine( 0,25,50,25 );
+  painter->drawLine( 50,0,50,25 );
+  painter->drawLine( 0,75,m_hLength * 100,75 );
+}
+
 DemandSideItem::DemandSideItem( QGraphicsItem * parent,
-                                model::Node demandInletNode, 
+                                std::vector<model::Node> demandInletNodes, 
                                 model::Node demandOutletNode )
   : GridItem( parent ),
-    m_demandInletNode(demandInletNode),
+    m_demandInletNodes(demandInletNodes),
     m_demandOutletNode(demandOutletNode),
-    m_inletBranch(nullptr), 
+    m_inletBranch(nullptr),
     m_outletBranch(nullptr),
     m_zoneBranches(nullptr),
     m_splitterItem(nullptr),
     m_mixerItem(nullptr),
+    m_rightElbow(nullptr),
+    m_rightElbow2(nullptr),
+    m_leftElbow(nullptr),
+    m_leftVertical(nullptr),
+    m_rightVertical(nullptr),
+    m_rightVertical2(nullptr),
     m_inletNode(nullptr),
+    m_inletNode2(nullptr),
     m_outletNode(nullptr),
     m_padding(0),
     m_inletSpacer(nullptr),
     m_outletSpacer(nullptr)
 {
-  model::Loop loop = m_demandInletNode.loop().get(); 
-
-  model::Splitter splitter = loop.demandSplitter();
-
+  model::Loop loop = m_demandInletNodes[0].loop().get(); 
   model::Mixer mixer = loop.demandMixer();
+  model::Splitter splitter = loop.demandSplitter();
+  std::vector<model::Splitter> splitters;
+
+  // Do we have a dual duct system
+  auto dualDuct = false;
+  std::vector<SplitterItem::TerminalType> terminalTypes;
+  if( m_demandInletNodes.size() == 2u ) {
+    dualDuct = true;
+    if( auto airLoop = loop.optionalCast<model::AirLoopHVAC>() ) {
+      auto splitters = airLoop->zoneSplitters();
+      OS_ASSERT(splitters.size() == 2u);
+
+      //auto zones = airLoop->thermalZones();
+      auto comps = centerHVACComponents(splitter,mixer);
+      for( const auto & comp : comps ) {
+        // What terminal types do we have 
+        // Could be a mix of single and dual duct terminals
+        // See if zone is on the m_demandInletNodes[0] path
+        bool singleDuct1Terminal = false;
+        bool singleDuct2Terminal = false;
+        if( airLoop->demandComponents(splitters[0],comp).size() > 0u ) {
+          singleDuct1Terminal = true;
+        }
+        if( airLoop->demandComponents(splitters[1],comp).size() > 0u ) {
+          singleDuct2Terminal = true;
+        }
+        auto terminalType = SplitterItem::None;
+        if( singleDuct1Terminal && singleDuct2Terminal ) {
+          terminalType = SplitterItem::DualDuct;
+        } else if( singleDuct1Terminal ) {
+          terminalType = SplitterItem::SingleDuct1;
+        } else if( singleDuct2Terminal ) {
+          terminalType = SplitterItem::SingleDuct2;
+        }
+        terminalTypes.push_back(terminalType);
+      }
+    }
+  }
 
   m_zoneBranches = new HorizontalBranchGroupItem( splitter,
                                                   mixer,
                                                   this );
-
   m_zoneBranches->setShowDropZone(true);
 
+  // We only show one splitter
+  // even though a dual duct will have two
+  // Instead of two splitters we make a "double" line splitter
   m_splitterItem = new SplitterItem(this);
   m_splitterItem->setModelObject(splitter);
+  m_splitterItem->setNumberBranches( m_zoneBranches->numberOfBranches() );
+  if( dualDuct ) {
+    m_splitterItem->setTerminalTypes(terminalTypes);
+  }
 
   m_mixerItem = new MixerItem(this);
   m_mixerItem->setModelObject(mixer);
-
   m_mixerItem->setNumberBranches( m_zoneBranches->numberOfBranches() );
-  m_splitterItem->setNumberBranches( m_zoneBranches->numberOfBranches() );
 
-  std::vector<model::ModelObject> inletComponents; 
-  inletComponents = loop.demandComponents(m_demandInletNode,splitter);
+  auto inletComponents = loop.demandComponents(m_demandInletNodes[0],splitter);
   inletComponents.erase( inletComponents.begin() );
-  inletComponents.erase( inletComponents.end() - 1 );
+  inletComponents.pop_back();
   std::vector<model::ModelObject> rInletComponents;
-  for( auto rit = inletComponents.rbegin();
-       rit < inletComponents.rend(); ++rit )
-  {
+  for( auto rit = inletComponents.rbegin(); rit < inletComponents.rend(); ++rit ) {
     rInletComponents.push_back( *rit );
   }
-  m_inletBranch = new HorizontalBranchItem(rInletComponents,this);
+  m_inletBranch = new HorizontalBranchItem(rInletComponents,this,dualDuct);
 
-  std::vector<model::ModelObject> outletComponents; 
-  outletComponents = loop.demandComponents(mixer,m_demandOutletNode);
+  auto outletComponents = loop.demandComponents(mixer,m_demandOutletNode);
   outletComponents.erase( outletComponents.begin() );
-  outletComponents.erase( outletComponents.end() - 1 );
+  outletComponents.pop_back();
   std::vector<model::ModelObject> rOutletComponents;
-  for( auto rit = outletComponents.rbegin();
-       rit < outletComponents.rend(); ++rit )
-  {
+  for( auto rit = outletComponents.rbegin(); rit < outletComponents.rend(); ++rit ) {
     rOutletComponents.push_back( *rit );
   }
   m_outletBranch = new HorizontalBranchItem(rOutletComponents,this);
 
-  m_rightElbow = new TwoThreeStraightItem(this);
   m_leftElbow = new OneTwoStraightItem(this);
   std::vector<model::ModelObject> vertComps;
   m_leftVertical = new VerticalBranchItem(vertComps,this);
@@ -2943,19 +3444,101 @@ DemandSideItem::DemandSideItem( QGraphicsItem * parent,
   m_outletNode = new TwoFourNodeItem(this);
   m_outletNode->setModelObject(demandOutletNode);
   m_inletNode = new TwoFourNodeItem(this);
-  m_inletNode->setModelObject(demandInletNode);
+  m_inletNode->setModelObject(demandInletNodes[0]);
 
-  if( rInletComponents.size() == 0 )
-  {
-    m_inletSpacer = new OneThreeStraightItem(this);
+  if( dualDuct ) {
+    m_rightElbow2 = new DualDuctTee(this);
+    m_rightVertical2 = new VerticalBranchItem(vertComps,this);
+    m_inletNode2 = new TwoFourNodeItem(this);
+    m_inletNode2->setModelObject(demandInletNodes[1]);
+    m_rightElbow = new TwoThreeStraightItem2(this);
+    dualDuct = true;
+  } else {
+    m_rightElbow = new TwoThreeStraightItem(this);
   }
 
-  if( rOutletComponents.size() == 0 )
-  {
+  if( rInletComponents.size() == 0 ) {
+    m_inletSpacer = new OneThreeStraightItem(this,dualDuct);
+  }
+
+  if( rOutletComponents.size() == 0 ) {
     m_outletSpacer = new OneThreeStraightItem(this);
   }
 
   layout();
+}
+
+void DemandSideItem::layout()
+{
+  int midpoint = 0;
+
+  if( m_zoneBranches ) {
+    midpoint = (m_zoneBranches->getVGridLength() / 2);
+  }
+
+  m_outletNode->setGridPos(0,0);
+
+  m_leftVertical->setPadding(midpoint);  
+  m_leftVertical->setGridPos(0,1);
+  int i = 0;
+
+  m_leftElbow->setGridPos(i,midpoint + 1);
+  i = i + 1;
+
+  if( m_outletSpacer ) {
+    m_outletSpacer->setGridPos(i,midpoint + 1);
+    i = i + m_outletSpacer->getHGridLength();
+  }
+
+  if( m_padding % 2 == 0) {
+    m_outletBranch->setPadding( m_padding / 2 );
+  } else {
+    m_outletBranch->setPadding( (m_padding / 2) + 1 );
+  }
+
+  m_outletBranch->setGridPos(i,midpoint + 1);
+  i = i + m_outletBranch->getHGridLength();
+
+  m_mixerItem->setGridPos(i,1);
+  i = i + 1;
+
+  m_zoneBranches->show();
+  m_zoneBranches->setGridPos(i,1); 
+  i = i + m_zoneBranches->getHGridLength();
+
+  m_splitterItem->setGridPos(i,1);
+  i = i + 1;
+
+  m_inletBranch->setPadding( m_padding / 2 );
+  m_inletBranch->setGridPos(i,midpoint + 1);
+  i = i + m_inletBranch->getHGridLength();
+
+  if( m_inletSpacer ) {
+    m_inletSpacer->setGridPos(i,midpoint + 1);
+    i = i + m_inletSpacer->getHGridLength();
+  }
+
+  // dual duct requires extra stuff
+  if( m_inletNode2 ) {
+    m_rightElbow2->setGridPos(i,midpoint + 1);
+    m_rightVertical2->setPadding(midpoint);
+    m_rightVertical2->setGridPos(i,1);
+    m_inletNode2->setGridPos(i,0);
+
+    i = i + 2;
+    m_rightElbow->setGridPos(i,midpoint + 1);
+    m_rightVertical->setPadding(midpoint);  
+    m_rightVertical->setGridPos(i,1);
+    m_inletNode->setGridPos(i,0);
+  } else {
+    m_rightElbow->setGridPos(i,midpoint + 1);
+    m_rightVertical->setPadding(midpoint);  
+    m_rightVertical->setGridPos(i,1);
+    m_inletNode->setGridPos(i,0);
+  }
+
+  setHGridLength(i + 1);
+  setVGridLength(m_zoneBranches->getVGridLength() + 1);
 }
 
 int DemandSideItem::numberBranches()
@@ -2974,85 +3557,6 @@ unsigned DemandSideItem::padding()
   return m_padding;
 }
 
-void DemandSideItem::layout()
-{
-  int midpoint = 0;
-
-  if( m_zoneBranches )
-  {
-    midpoint = (m_zoneBranches->getVGridLength() / 2);
-  }
-
-  m_outletNode->setGridPos(0,0);
-
-  m_leftVertical->setPadding(midpoint);  
-  m_leftVertical->setGridPos(0,1);
-
-  int i = 0;
-
-  m_leftElbow->setGridPos(i,midpoint + 1);
-
-  i = i + 1;
-
-  if( m_outletSpacer )
-  {
-    m_outletSpacer->setGridPos(i,midpoint + 1);
-
-    i = i + m_outletSpacer->getHGridLength();
-  }
-
-  if( m_padding % 2 == 0)
-  {
-    m_outletBranch->setPadding( m_padding / 2 );
-  }
-  else
-  {
-    m_outletBranch->setPadding( (m_padding / 2) + 1 );
-  }
-
-  m_outletBranch->setGridPos(i,midpoint + 1);
-
-  i = i + m_outletBranch->getHGridLength();
-
-  m_mixerItem->setGridPos(i,1);
-
-  i = i + 1;
-
-  m_zoneBranches->show();
-
-  m_zoneBranches->setGridPos(i,1); 
-
-  i = i + m_zoneBranches->getHGridLength();
-
-  m_splitterItem->setGridPos(i,1);
-
-  i = i + 1;
-
-  m_inletBranch->setPadding( m_padding / 2 );
-
-  m_inletBranch->setGridPos(i,midpoint + 1);
-
-  i = i + m_inletBranch->getHGridLength();
-
-  if( m_inletSpacer )
-  {
-    m_inletSpacer->setGridPos(i,midpoint + 1);
-
-    i = i + m_inletSpacer->getHGridLength();
-  }
-
-  m_rightElbow->setGridPos(i,midpoint + 1);
-
-  m_rightVertical->setPadding(midpoint);  
-  m_rightVertical->setGridPos(i,1);
-
-  m_inletNode->setGridPos(i,0);
-
-  setHGridLength(i + 1);
-
-  setVGridLength(m_zoneBranches->getVGridLength() + 1);
-}
-
 void DemandSideItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 
@@ -3060,114 +3564,131 @@ void DemandSideItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
 
 SupplySideItem::SupplySideItem( QGraphicsItem * parent, 
                                 model::Node supplyInletNode, 
-                                model::Node supplyOutletNode )
+                                std::vector<model::Node> supplyOutletNodes )
   : GridItem( parent ),
     m_supplyInletNode(supplyInletNode),
-    m_supplyOutletNode(supplyOutletNode),
+    m_supplyOutletNodes(supplyOutletNodes),
     m_outletBranchItem(nullptr), 
     m_inletBranchItem(nullptr),
     m_mainBranchGroupItem(nullptr),
-    m_oaSystemItem(nullptr),
     m_inletNodeItem(nullptr),
     m_outletNodeItem(nullptr),
+    m_outletNodeItem2(nullptr),
+    m_leftElbowItem(nullptr),
     m_leftVerticalItem(nullptr),
+    m_rightElbowItem(nullptr),
+    m_rightElbowItem2(nullptr),
     m_rightVerticalItem(nullptr),
+    m_rightVerticalItem2(nullptr),
     m_splitterItem(nullptr),
     m_mixerItem(nullptr),
     m_padding(0),
     m_inletSpacer(nullptr),
-    m_outletSpacer(nullptr)
+    m_outletSpacer(nullptr),
+    m_dualDuctHorizontalSpace(nullptr)
 {
-  model::Node _supplyInletNode = m_supplyInletNode;
-  model::Node _supplyOutletNode = m_supplyOutletNode;
-  model::Loop loop = m_supplyInletNode.loop().get();
+  auto _supplyOutletNode = m_supplyOutletNodes.front();
+  auto loop = m_supplyInletNode.loop().get();
 
-  boost::optional<model::AirLoopHVAC> airLoop = loop.optionalCast<model::AirLoopHVAC>();
+  auto plantLoop = loop.optionalCast<model::PlantLoop>();
+  auto airLoop = loop.optionalCast<model::AirLoopHVAC>();
+
   boost::optional<model::AirLoopHVACOutdoorAirSystem> oaSystem;
-  if( airLoop )
-  {
+  boost::optional<model::Splitter> splitter;
+  boost::optional<model::Mixer> mixer;
+
+  if( airLoop ) {
     oaSystem = airLoop->airLoopHVACOutdoorAirSystem();
+    splitter = airLoop->supplySplitter();
+  }
+
+  if( plantLoop ) {
+    mixer = plantLoop->supplyMixer();
+    splitter = plantLoop->supplySplitter();
   }
 
   m_inletNodeItem = new TwoFourNodeItem(this);
-  m_inletNodeItem->setModelObject( _supplyInletNode );
+  m_inletNodeItem->setModelObject( m_supplyInletNode );
 
   m_outletNodeItem = new TwoFourNodeItem(this);
-  m_outletNodeItem->setModelObject( _supplyOutletNode );
+  m_outletNodeItem->setModelObject( m_supplyOutletNodes[0] );
 
-  if( airLoop && oaSystem )
-  {
-    m_oaSystemItem = new OASystemItem(oaSystem.get(),this);
+  if( splitter && (! mixer) ) {
+    OS_ASSERT(m_supplyOutletNodes.size() == 2u);
 
-    std::vector<model::ModelObject> returnComponents = 
-      airLoop->supplyComponents(_supplyInletNode, oaSystem->returnAirModelObject()->cast<model::Node>());
-    returnComponents.erase( returnComponents.begin() );
-
-    m_inletBranchItem = new HorizontalBranchItem( returnComponents,this );
-
-    std::vector<model::ModelObject> mainComponents =
-      airLoop->supplyComponents(oaSystem->mixedAirModelObject()->cast<model::Node>(), _supplyOutletNode);
-    mainComponents.erase( mainComponents.end() - 1 );
-
-    m_outletBranchItem = new HorizontalBranchItem( mainComponents, this );
-  }
-  else
-  {
-    boost::optional<model::Splitter> splitter;
-    boost::optional<model::Mixer> mixer;
-
-    if( boost::optional<model::PlantLoop> plant = loop.optionalCast<model::PlantLoop>() )
     {
-      splitter = plant->supplySplitter();
-      mixer = plant->supplyMixer();
+      auto comps = airLoop->supplyComponents(m_supplyInletNode, splitter.get());
+      comps.pop_back();
+      m_inletBranchItem = new HorizontalBranchItem( comps,this );
     }
 
-    if( splitter && mixer )
+    m_splitterItem = new SupplySplitterItem(this);
+    m_splitterItem->setModelObject(splitter.get());
+
     {
-      m_splitterItem = new SupplySplitterItem(this);
-      m_splitterItem->setModelObject(splitter.get());
-
-      m_mixerItem = new SupplyMixerItem(this);
-      m_mixerItem->setModelObject(mixer.get());
-
       m_mainBranchGroupItem = new HorizontalBranchGroupItem( splitter.get(),
-                                                             mixer.get(),
+                                                             m_supplyOutletNodes,
                                                              this );
+      auto branchBaselineGridPositions = m_mainBranchGroupItem->branchBaselineGridPositions();
+      OS_ASSERT(branchBaselineGridPositions.size() == 2u);
 
-      m_mainBranchGroupItem->setShowDropZone(true);
-
-      m_mixerItem->setNumberBranches( m_mainBranchGroupItem->numberOfBranches() );
-      m_splitterItem->setNumberBranches( m_mainBranchGroupItem->numberOfBranches() );
-
-      std::vector<model::ModelObject> inletComponents; 
-      inletComponents = loop.supplyComponents(m_supplyInletNode,splitter.get());
-      inletComponents.erase( inletComponents.begin() );
-      inletComponents.erase( inletComponents.end() - 1 );
-      m_inletBranchItem = new HorizontalBranchItem(inletComponents,this);
-
-      std::vector<model::ModelObject> outletComponents; 
-      outletComponents = loop.supplyComponents(mixer.get(),m_supplyOutletNode);
-      outletComponents.erase( outletComponents.begin() );
-      outletComponents.erase( outletComponents.end() - 1 );
-      m_outletBranchItem = new HorizontalBranchItem(outletComponents,this);
-
-      if( inletComponents.size() == 0 )
-      {
-        m_inletSpacer = new OneThreeStraightItem(this);
+      std::vector<int> splitterPositions;
+      auto firstBranchBaselineGridPosition = branchBaselineGridPositions.front();
+      for(const auto & branchPos : branchBaselineGridPositions) {
+        splitterPositions.emplace_back(branchPos - firstBranchBaselineGridPosition);
       }
 
-      if( outletComponents.size() == 0 )
-      {
-        m_outletSpacer = new OneThreeStraightItem(this);
-      }
+      m_splitterItem->setBranchGridPositions(splitterPositions);
     }
-    else
+
     {
-      std::vector<model::ModelObject> supplyComponents = loop.supplyComponents(); 
-      supplyComponents.erase( supplyComponents.begin() );
-      supplyComponents.erase( supplyComponents.end() - 1 );
-      m_outletBranchItem = new HorizontalBranchItem( supplyComponents, this );
+      std::vector<model::ModelObject> comps;
+      m_rightElbowItem2 = new ThreeFourStraightItem(this);
+      m_rightVerticalItem2 = new VerticalBranchItem(comps,this);
+      m_dualDuctHorizontalSpace = new HorizontalBranchItem(comps,this);
+      m_outletNodeItem2 = new TwoFourNodeItem(this);
+      m_outletNodeItem2->setModelObject( m_supplyOutletNodes[1] );
     }
+  } else if( splitter && mixer ) {
+    m_splitterItem = new SupplySplitterItem(this);
+    m_splitterItem->setModelObject(splitter.get());
+
+    m_mixerItem = new SupplyMixerItem(this);
+    m_mixerItem->setModelObject(mixer.get());
+
+    m_mainBranchGroupItem = new HorizontalBranchGroupItem( splitter.get(),
+                                                           mixer.get(),
+                                                           this );
+    m_mainBranchGroupItem->setShowDropZone(true);
+
+    m_mixerItem->setNumberBranches( m_mainBranchGroupItem->numberOfBranches() );
+    m_splitterItem->setNumberBranches( m_mainBranchGroupItem->numberOfBranches() );
+
+    auto inletComponents = loop.supplyComponents(m_supplyInletNode,splitter.get());
+    inletComponents.erase( inletComponents.begin() );
+    inletComponents.pop_back();
+    m_inletBranchItem = new HorizontalBranchItem(inletComponents,this);
+
+    auto outletComponents = loop.supplyComponents(mixer.get(),_supplyOutletNode);
+    outletComponents.erase( outletComponents.begin() );
+    outletComponents.pop_back();
+    m_outletBranchItem = new HorizontalBranchItem(outletComponents,this);
+
+    if( inletComponents.size() == 0 ) {
+      m_inletSpacer = new OneThreeStraightItem(this);
+    }
+
+    if( outletComponents.size() == 0 ) {
+      m_outletSpacer = new OneThreeStraightItem(this);
+    }
+  } else {
+    auto inletComponents = loop.supplyComponents(m_supplyInletNode,_supplyOutletNode);
+    inletComponents.erase( inletComponents.begin() );
+    inletComponents.pop_back();
+    m_inletBranchItem = new HorizontalBranchItem(inletComponents,this);
+
+    std::vector<model::ModelObject> comps;
+    m_outletBranchItem = new HorizontalBranchItem(comps,this);
   }
 
   m_rightElbowItem = new ThreeFourStraightItem(this);
@@ -3201,127 +3722,129 @@ void SupplySideItem::layout()
   int i = 0;
   int j = 0; // Represents the centerline 
 
+  // Figure out the maximum vertical height of the flow path items
   int halfBranchGroupHeight = 0;
 
-  if( m_mainBranchGroupItem )
-  {
+  if( m_mainBranchGroupItem ) {
     halfBranchGroupHeight = m_mainBranchGroupItem->getVGridLength() / 2;
-
-    j = halfBranchGroupHeight;
+    auto branchPositions = m_mainBranchGroupItem->branchBaselineGridPositions();    
+    if( branchPositions.size() > 1 ) {
+      // If we have explicit branch positions, then find the midpoint of those
+      // instead of the simple vGridLength / 2
+      halfBranchGroupHeight = (branchPositions.back() - branchPositions.front() + 1) / 2.0;
+    }
+    j = m_mainBranchGroupItem->getVGridLength() - halfBranchGroupHeight - 1;
   }
 
-  if( m_oaSystemItem )
-  {
-    int j2 = m_oaSystemItem->getVGridLength() - 1;
-
-    if( j2 > j )
-    {
-      j = j2;
+  if( m_inletBranchItem ) {
+    auto height = m_inletBranchItem->getVGridLength();
+    if( height > j ) {
+      j = height - 1;
     }
-  } 
+  }
 
+  if( m_outletBranchItem ) {
+    auto height = m_outletBranchItem->getVGridLength();
+    if( height > j ) {
+      j = height;
+    }
+  }
+
+  // Now put things in position
   m_inletNodeItem->setGridPos(i,j + halfBranchGroupHeight + 1);
 
-  if( halfBranchGroupHeight > 0 )
-  {
+  if( halfBranchGroupHeight > 0 ) {
     m_leftVerticalItem->setGridPos(i,j + 1);
     m_leftVerticalItem->setPadding(halfBranchGroupHeight);
     m_leftVerticalItem->show();
-  }
-  else
-  {
+  } else {
     m_leftVerticalItem->hide();
   }
 
   m_leftElbowItem->setGridPos(i,j);
-
   i++;
 
-  if( m_inletBranchItem )
-  {
-    m_inletBranchItem->setGridPos(i,j);
+  if( m_inletBranchItem ) {
+    m_inletBranchItem->setGridPos(i,(j - m_inletBranchItem->getVGridLength() + 1));
 
-    if( m_padding % 2 == 0)
-    {
-      m_inletBranchItem->setPadding( m_padding / 2 );
-    }
-    else
-    {
-      m_inletBranchItem->setPadding( (m_padding / 2) + 1 );
+    // if dual duct put all of the padding on the inlet branch
+    if( m_outletNodeItem2 ) {
+      m_inletBranchItem->setPadding( m_padding );
+    } else {
+      if( m_padding % 2 == 0) {
+        m_inletBranchItem->setPadding( m_padding / 2 );
+      } else {
+        m_inletBranchItem->setPadding( (m_padding / 2) + 1 );
+      }
     }
 
     i = i + m_inletBranchItem->getHGridLength();
   }
 
-  if( m_inletSpacer )
-  {
+  if( m_inletSpacer ) {
     m_inletSpacer->setGridPos(i,j);
-
     i = i + m_inletSpacer->getHGridLength();
   }
 
-  if( m_oaSystemItem )
-  {
-    m_oaSystemItem->setGridPos(i,0);
-
-    i = i + m_oaSystemItem->getHGridLength();
-  }
-
-  if( m_splitterItem )
-  {
-    m_splitterItem->setGridPos(i,j - halfBranchGroupHeight);
-
+  if( m_splitterItem ) {
+    m_splitterItem->setGridPos(i,j - (m_splitterItem->getVGridLength() - 1) / 2);
     i++;
   }
 
-  if( m_mainBranchGroupItem )
-  {
-    m_mainBranchGroupItem->setGridPos(i,j - halfBranchGroupHeight);
-
+  if( m_mainBranchGroupItem ) {
+    m_mainBranchGroupItem->setGridPos(i,j + 1 - (m_mainBranchGroupItem->getVGridLength() - halfBranchGroupHeight));
     i = i + m_mainBranchGroupItem->getHGridLength();
   }
 
-  if( m_mixerItem )
-  {
+  if( m_mixerItem ) {
     m_mixerItem->setGridPos(i,j - halfBranchGroupHeight);
-
     i++;
   }
 
-  if( m_outletSpacer )
-  {
+  if( m_outletSpacer ) {
     m_outletSpacer->setGridPos(i,j);
-
     i = i + m_outletSpacer->getHGridLength();
   }
 
-  m_outletBranchItem->setGridPos(i,j);
+  if( m_outletBranchItem ) {
+    m_outletBranchItem->setGridPos(i,(j - m_inletBranchItem->getVGridLength() + 1));
 
-  if( m_inletBranchItem )
-  {
-    m_outletBranchItem->setPadding(m_padding / 2);
-  }
-  else
-  {
-    m_outletBranchItem->setPadding(m_padding);
-  }
+    if( m_inletBranchItem ) {
+      m_outletBranchItem->setPadding(m_padding / 2);
+    } else {
+      m_outletBranchItem->setPadding(m_padding);
+    }
 
-  i = i + m_outletBranchItem->getHGridLength();
-
-  m_rightElbowItem->setGridPos(i,j);
-
-  if( halfBranchGroupHeight > 0 )
-  {
-    m_rightVerticalItem->setGridPos(i,j + 1);
-    m_rightVerticalItem->setPadding(halfBranchGroupHeight);
-    m_rightVerticalItem->show();
-  }
-  else
-  {
-    m_rightVerticalItem->hide();
+    i = i + m_outletBranchItem->getHGridLength();
   }
 
-  m_outletNodeItem->setGridPos(i,j + halfBranchGroupHeight + 1);
+  // dual ducts have extra have an extra elbow and vertical item
+  if( m_outletNodeItem2 ) {
+    OS_ASSERT(m_mainBranchGroupItem);
+
+    int topedge = m_mainBranchGroupItem->getYGridPos() + m_mainBranchGroupItem->branchBaselineGridPositions().front();
+    m_dualDuctHorizontalSpace->setPadding(2);
+    m_dualDuctHorizontalSpace->setGridPos(i,topedge);
+    m_rightElbowItem->setGridPos(i + 2,topedge);
+    m_rightVerticalItem->setGridPos(i + 2,topedge + 1);
+    m_rightVerticalItem->setPadding(m_mainBranchGroupItem->getVGridLength());
+    m_outletNodeItem->setGridPos(i + 2,j + halfBranchGroupHeight + 1);
+
+    m_outletNodeItem2->setGridPos(i,j + halfBranchGroupHeight + 1);
+    m_rightElbowItem2->setGridPos(i,j + halfBranchGroupHeight);
+
+    i = i + 2;
+  } else {
+    m_rightElbowItem->setGridPos(i,j);
+    if( halfBranchGroupHeight > 0 ) {
+      m_rightVerticalItem->setGridPos(i,j + 1);
+      m_rightVerticalItem->setPadding(halfBranchGroupHeight);
+      m_rightVerticalItem->show();
+    } else {
+      m_rightVerticalItem->hide();
+    }
+    m_outletNodeItem->setGridPos(i,j + halfBranchGroupHeight + 1);
+  }
 
   setHGridLength(i + 1);
   setVGridLength(j + halfBranchGroupHeight + 2);

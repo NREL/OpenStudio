@@ -2145,6 +2145,7 @@ module OsLib_Reporting
         query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_name}' and RowName= '#{row}' and ColumnName= '#{header}'"
         results = sqlFile.execAndReturnFirstString(query) # this is first time I needed string vs. double for weather file
         # TODO: - would be nice to get units from first column
+        if row == "Elevation" then results = "#{OpenStudio::convert(results.get.to_f,"m","ft").get.round} (ft)" end
         row_data << results
       end
 
@@ -2186,8 +2187,8 @@ module OsLib_Reporting
     table = {}
     table[:title] = 'Sizing Period Design Days'
     table[:header] = columns
-    table[:source_units] = ['', 'C', 'C', '', '', 'm/s', '']
-    table[:units] = ['', 'F', 'F', '', '', 'mph', '']
+    table[:source_units] = ['', 'C', 'K', '', '', 'm/s', '']
+    table[:units] = ['', 'F', 'R', '', '', 'mph', '']
     table[:data] = []
 
     # run query and populate table

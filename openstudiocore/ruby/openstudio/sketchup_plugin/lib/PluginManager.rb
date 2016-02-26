@@ -98,16 +98,14 @@ module OpenStudio
         # set up logging
         OpenStudio::Logger::instance.standardOutLogger.disable
         @log_file = OpenStudio::FileLogSink.new(OpenStudio::Path.new(self.log_path))
-        disable_logging
+        #disable_logging
         
-        if $OPENSTUDIO_SKETCHUPPLUGIN_DEVELOPER_MENU
-          #@log_file.setLogLevel(OpenStudio::Error)
-          #@log_file.setLogLevel(OpenStudio::Warn)
-          #@log_file.setLogLevel(OpenStudio::Info)
-          #@log_file.setLogLevel(OpenStudio::Debug)
-          @log_file.setLogLevel(OpenStudio::Trace)
-          #enable_logging # DLM: Todo, comment this out
-        end
+        #@log_file.setLogLevel(OpenStudio::Error)
+        #@log_file.setLogLevel(OpenStudio::Warn)
+        #@log_file.setLogLevel(OpenStudio::Info)
+        #@log_file.setLogLevel(OpenStudio::Debug)
+        @log_file.setLogLevel(OpenStudio::Trace)
+        #enable_logging # DLM: Todo, comment this out
       end
 
       self.log(OpenStudio::Info, "OpenStudio Plugin started")

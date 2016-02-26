@@ -234,6 +234,8 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   std::vector<ModelObject> equipment() const;
 
+  boost::optional<HVACComponent> airLoopHVACTerminal() const;
+
   /// returns all spaces in this thermal zone
   std::vector<Space> spaces() const;
 

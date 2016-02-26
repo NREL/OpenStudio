@@ -99,11 +99,11 @@ void LoopScene::layout()
 
 DemandSideItem * LoopScene::createDemandSide()
 {
-  model::Node demandInletNode = m_loop.demandInletNode();
-  model::Node demandOutletNode = m_loop.demandOutletNode();
+  auto demandInletNodes = m_loop.demandInletNodes();
+  auto demandOutletNode = m_loop.demandOutletNode();
 
   DemandSideItem * demandSideItem = new DemandSideItem( nullptr,
-                                                        demandInletNode,
+                                                        demandInletNodes,
                                                         demandOutletNode );
 
   return demandSideItem;
@@ -111,12 +111,12 @@ DemandSideItem * LoopScene::createDemandSide()
 
 SupplySideItem * LoopScene::createSupplySide()
 {
-  model::Node supplyInletNode = m_loop.supplyInletNode();
-  model::Node supplyOutletNode = m_loop.supplyOutletNode();
+  auto supplyInletNode = m_loop.supplyInletNode();
+  auto supplyOutletNodes = m_loop.supplyOutletNodes();
 
   SupplySideItem * supplySideItem = new SupplySideItem( nullptr,
                                                         supplyInletNode,
-                                                        supplyOutletNode);
+                                                        supplyOutletNodes);
 
   return supplySideItem;
 }
