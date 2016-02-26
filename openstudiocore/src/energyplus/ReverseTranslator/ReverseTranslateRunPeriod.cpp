@@ -80,7 +80,12 @@ OptionalModelObject ReverseTranslator::translateRunPeriod( const WorkspaceObject
     }else{
       // create a year description
       yd = runPeriod.model().getUniqueModelObject<model::YearDescription>();
-      yd->setDayofWeekforStartDay(*optS);
+      if (istringEqual(*optS, "UseWeatherFile")){
+        // DLM: TODO look up day of the week for the first day in 2009?
+        yd->setDayofWeekforStartDay("Thursday");
+      } else {
+        yd->setDayofWeekforStartDay(*optS);
+      }
     }
 
   }//if(optS)

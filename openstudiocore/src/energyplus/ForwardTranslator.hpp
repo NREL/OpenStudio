@@ -304,6 +304,7 @@ class WaterHeaterStratified;
 class WaterUseConnections;
 class WaterUseEquipment;
 class WindowPropertyFrameAndDivider;
+class YearDescription;
 class ZoneAirHeatBalanceAlgorithm;
 class ZoneAirMassFlowConservation;
 class ZoneControlHumidistat;
@@ -948,6 +949,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateWaterUseEquipment( model::WaterUseEquipment & modelObject );
 
   boost::optional<IdfObject> translateWindowPropertyFrameAndDivider(model::WindowPropertyFrameAndDivider & modelObject);
+
+  boost::optional<IdfObject> translateYearDescription(model::YearDescription & modelObject);
 
   boost::optional<IdfObject> translateZoneAirHeatBalanceAlgorithm( model::ZoneAirHeatBalanceAlgorithm & modelObject );
 

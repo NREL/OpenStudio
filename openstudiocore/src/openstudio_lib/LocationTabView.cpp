@@ -615,22 +615,31 @@ void LocationView::onWeatherFileBtnClicked()
         }
       }
 
-      // set run period based on weather file
-      openstudio::model::RunPeriod runPeriod = m_model.getUniqueModelObject<openstudio::model::RunPeriod>();
-      runPeriod.setBeginMonth(epwFile.startDate().monthOfYear().value());
-      runPeriod.setBeginDayOfMonth(epwFile.startDate().dayOfMonth());
-      runPeriod.setEndMonth(epwFile.endDate().monthOfYear().value());
-      runPeriod.setEndDayOfMonth(epwFile.endDate().dayOfMonth());
+
 
       // set the calendar year or start day of week
       openstudio::model::YearDescription yearDescription = m_model.getUniqueModelObject<openstudio::model::YearDescription>();
       boost::optional<int> startDateActualYear = epwFile.startDateActualYear();
       if (startDateActualYear){
+        // set year info and run period based on AMY weather file
         yearDescription.resetDayofWeekforStartDay();
         yearDescription.setCalendarYear(*startDateActualYear);
+
+        openstudio::model::RunPeriod runPeriod = m_model.getUniqueModelObject<openstudio::model::RunPeriod>();
+        runPeriod.setBeginMonth(epwFile.startDate().monthOfYear().value());
+        runPeriod.setBeginDayOfMonth(epwFile.startDate().dayOfMonth());
+        runPeriod.setEndMonth(epwFile.endDate().monthOfYear().value());
+        runPeriod.setEndDayOfMonth(epwFile.endDate().dayOfMonth());
       }else{
-        yearDescription.resetCalendarYear();
-        yearDescription.setDayofWeekforStartDay(epwFile.startDayOfWeek().valueName());
+        // DLM: do not reset year info or run period when changing weather file to an epw
+        //yearDescription.resetCalendarYear();
+        //yearDescription.setDayofWeekforStartDay(epwFile.startDayOfWeek().valueName());
+        
+        //openstudio::model::RunPeriod runPeriod = m_model.getUniqueModelObject<openstudio::model::RunPeriod>();
+        //runPeriod.setBeginMonth(epwFile.startDate().monthOfYear().value());
+        //runPeriod.setBeginDayOfMonth(epwFile.startDate().dayOfMonth());
+        //runPeriod.setEndMonth(epwFile.endDate().monthOfYear().value());
+        //runPeriod.setEndDayOfMonth(epwFile.endDate().dayOfMonth());
       }
 
       m_lastEpwPathOpened = QFileInfo(fileName).absoluteFilePath();

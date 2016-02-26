@@ -279,7 +279,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateWaterHeaterStratified.cpp
   ForwardTranslator/ForwardTranslateWaterUseConnections.cpp
   ForwardTranslator/ForwardTranslateWaterUseEquipment.cpp
-  ForwardTranslator/ForwardTranslateWindowPropertyFrameAndDivider.cpp  
+  ForwardTranslator/ForwardTranslateWindowPropertyFrameAndDivider.cpp
+  ForwardTranslator/ForwardTranslateYearDescription.cpp
   ForwardTranslator/ForwardTranslateZoneAirHeatBalanceAlgorithm.cpp
   ForwardTranslator/ForwardTranslateZoneAirMassFlowConservation.cpp
   ForwardTranslator/ForwardTranslateZoneControlHumidistat.cpp

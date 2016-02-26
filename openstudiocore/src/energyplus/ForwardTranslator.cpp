@@ -2402,8 +2402,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   }
   case openstudio::IddObjectType::OS_YearDescription:
     {
-      // no-op
-      return retVal;
+      model::YearDescription yd = modelObject.cast<YearDescription>();
+      retVal = translateYearDescription(yd);
+      break;
     }
   case openstudio::IddObjectType::OS_ZoneAirContaminantBalance :
     {
@@ -2647,6 +2648,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ProgramControl);
   result.push_back(IddObjectType::OS_ConvergenceLimits);
   result.push_back(IddObjectType::OS_HeatBalanceAlgorithm);
+  result.push_back(IddObjectType::OS_YearDescription);
   result.push_back(IddObjectType::OS_RunPeriod);
   result.push_back(IddObjectType::OS_RunPeriodControl_DaylightSavingTime);
   result.push_back(IddObjectType::OS_RunPeriodControl_SpecialDays);
