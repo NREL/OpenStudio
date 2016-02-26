@@ -13953,41 +13953,6 @@ AirflowNetwork:IntraZone:Linkage,
       \note Only used when one of two nodes defined above are not located in the same zone, and
       \note the input of the Component Name field in this object is ignored
 
-AirflowNetwork:IntraZone:Linkage,
-      \min-fields 4
-      \memo This object defines the connection between two nodes and a component used 
-      \memo in the combination of RoomAir and AirflowNetwork model.
- A1 , \field Name
-      \required-field
-      \type alpha
-      \note Enter a unique name for this object.
-      \reference AirflowNetwork LinkageNames
- A2 , \field Node 1 Name
-      \required-field
-      \type alpha
-      \object-list AirflowNetworkNodeNames
-      \object-list ZoneNames
-      \note Enter the name of zone or AirflowNetwork Node.
- A3 , \field Node 2 Name
-      \required-field
-      \type alpha
-      \object-list AirflowNetworkNodeNames
-      \object-list ZoneNames
-      \note Enter the name of zone or AirflowNetwork Node.
- A4 , \field Component Name
-      \type object-list
-      \object-list AirflowNetworkComponentNames
-      \note Enter the name of an AirflowNetwork component. A component is one of the
-      \note following AirflowNetwork:Multizone:Component objects: 
-      \note AirflowNetwork:MultiZone:Surface:Crack,
-      \note AirflowNetwork:MultiZone:Surface:EffectiveLeakageArea,
-      \note If the next field is specified, this field can be either blank or ignored.
- A5 ; \field AirflowNetwork:MultiZone:Surface Name
-      \type object-list
-      \object-list SurfAndSubSurfNames
-      \note Only used when one of two nodes defined above are not located in the same zone, and
-      \note the input of the Component Name field in this object is ignored
-
 \group Exterior Equipment
        ! This equipment is used merely for reporting.
 Exterior:Lights,
@@ -25173,78 +25138,6 @@ AirTerminal:SingleDuct:VAV:HeatAndCool:NoReheat,
        \minimum 0.0
        \maximum 1.0
        \note fraction of maximum air flow
-
-AirTerminal:SingleDuct:VAV:HeatAndCool:Reheat,
-       \memo Central air system terminal unit, single duct, variable volume for both cooling and
-       \memo heating, with reheat coil (hot water, electric, gas, or steam).
-       \min-fields 12
-  A1,  \field Name
-       \required-field
-  A2 , \field Availability Schedule Name
-       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
-       \note If this field is blank, the system is always available.
-       \type object-list
-       \object-list ScheduleNames
-  A3,  \field Damper Air Outlet Node Name
-       \required-field
-       \type node
-       \note the outlet node of the damper and the inlet node of the reheat coil
-       \note this is an internal node to the terminal unit and connects the damper and reheat coil
-  A4,  \field Air Inlet Node Name
-       \required-field
-       \type node
-       \note the inlet node to the terminal unit and the damper
-  N1,  \field Maximum Air Flow Rate
-       \required-field
-       \units m3/s
-       \minimum> 0.0
-       \autosizable
-  N2,  \field Zone Minimum Air Flow Fraction
-       \required-field
-       \minimum 0.0
-       \maximum 1.0
-       \note fraction of maximum air flow
-  A5,  \field Hot Water or Steam Inlet Node Name
-       \deprecated
-       \type node
-  A6,  \field Reheat Coil Object Type
-       \required-field
-       \type choice
-       \key Coil:Heating:Water
-       \key Coil:Heating:Electric
-       \key Coil:Heating:Gas
-       \key Coil:Heating:Steam
-  A7,  \field Reheat Coil Name
-       \required-field
-       \type object-list
-       \object-list HeatingCoilName
-  N3,  \field Maximum Hot Water or Steam Flow Rate
-       \note Not used when reheat coil type is gas or electric
-       \units m3/s
-       \minimum 0.0
-       \autosizable
-       \ip-units gal/min
-  N4,  \field Minimum Hot Water or Steam Flow Rate
-       \note Not used when reheat coil type is gas or electric
-       \units m3/s
-       \minimum 0.0
-       \default 0.0
-       \ip-units gal/min
-  A8,  \field Air Outlet Node Name
-       \required-field
-       \type node
-       \note The outlet node of the terminal unit and the reheat coil.
-       \note This is also the zone inlet node.
-  N5,  \field Convergence Tolerance
-       \type real
-       \minimum> 0.0
-       \default 0.001
-  N6; \field Maximum Reheat Air Temperature
-      \note Specifies the maximum allowable supply air temperature leaving the reheat coil.
-      \note If left blank, there is no limit and no default. If unknown, 35C (95F) is recommended.
-      \type real
-      \units C
-      \minimum> 0.0
 
 AirTerminal:SingleDuct:SeriesPIU:Reheat,
        \memo Central air system terminal unit, single duct, variable volume, series powered
