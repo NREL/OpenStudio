@@ -1,7 +1,7 @@
 
 OS:Version,
-  {f619085d-7010-4746-908a-89032b2cf178}, !- Handle
-  1.9.5;                                  !- Version Identifier
+  {a0b3f299-e3b9-4a3b-992f-a158768ed019}, !- Handle
+  1.10.5;                                 !- Version Identifier
 
 OS:Site,
   {0a545789-8b9d-4e1f-b84e-8d745e2cce44}, !- Handle
@@ -106,134 +106,134 @@ OS:Schedule:Constant,
 OS:ScheduleTypeLimits,
   {86996550-e222-4f42-ac0c-79730acfcae9}, !- Handle
   OnOff,                                  !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  1,                                      !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
   Discrete,                               !- Numeric Type
   Availability;                           !- Unit Type
 
 OS:ScheduleTypeLimits,
   {ea510019-270f-4f74-a8a7-e18061943433}, !- Handle
   Dimensionless,                          !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous;                             !- Numeric Type
 
 OS:ScheduleTypeLimits,
   {eec0e163-c142-4837-9615-9d6b24743094}, !- Handle
   Fractional,                             !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  1,                                      !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
   Continuous;                             !- Numeric Type
 
 OS:ScheduleTypeLimits,
   {ba808a67-7e6f-4a0e-9f89-def235281648}, !- Handle
   ActivityLevel,                          !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   ActivityLevel;                          !- Unit Type
 
 OS:ScheduleTypeLimits,
   {cd7c5aa1-a707-46e5-ae4f-6850c9c9f30b}, !- Handle
   Capacity,                               !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Capacity;                               !- Unit Type
 
 OS:ScheduleTypeLimits,
   {abb48550-a221-48c9-8bba-cf84f6d972e9}, !- Handle
   ClothingInsulation,                     !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   ClothingInsulation;                     !- Unit Type
 
 OS:ScheduleTypeLimits,
   {812fee2c-f10d-4b65-8d37-ec22513287bc}, !- Handle
   ControlMode,                            !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  1,                                      !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
   Discrete,                               !- Numeric Type
   ControlMode;                            !- Unit Type
 
 OS:ScheduleTypeLimits,
   {a92a4399-2942-4ca6-9aeb-a8e0a87632a7}, !- Handle
   DeltaTemperature,                       !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   DeltaTemperature;                       !- Unit Type
 
 OS:ScheduleTypeLimits,
   {efb4d17e-b5a1-4ae4-a8ac-1be4c8eb0d6f}, !- Handle
   Dimensionless 1,                        !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  1,                                      !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Dimensionless;                          !- Unit Type
 
 OS:ScheduleTypeLimits,
   {673bc936-bcb4-4526-bf8f-8b7ccd3b2562}, !- Handle
   LinearPowerDensity,                     !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   LinearPowerDensity;                     !- Unit Type
 
 OS:ScheduleTypeLimits,
   {cc3c8f90-e859-4d0a-b08a-5b99ec765121}, !- Handle
   MassFlowRate,                           !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   MassFlowRate;                           !- Unit Type
 
 OS:ScheduleTypeLimits,
   {76cec689-f816-4ee3-aa3f-cc8ed9a7d892}, !- Handle
   Percent,                                !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  100,                                    !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  100,                                    !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Percent;                                !- Unit Type
 
 OS:ScheduleTypeLimits,
   {d29310ac-c60a-483a-a406-03c31fbf685b}, !- Handle
   Pressure,                               !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Pressure;                               !- Unit Type
 
 OS:ScheduleTypeLimits,
   {bcf4a70b-180d-45ca-b619-a3bdd786427f}, !- Handle
   RotationsPerMinute,                     !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   RotationsPerMinute;                     !- Unit Type
 
 OS:ScheduleTypeLimits,
   {699fc495-8d2e-4e8c-8c09-255a3f5d18a9}, !- Handle
   Temperature,                            !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
 OS:ScheduleTypeLimits,
   {f43d6e35-6a21-4cf5-a802-858576dc643d}, !- Handle
   Velocity,                               !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Velocity;                               !- Unit Type
 
 OS:ScheduleTypeLimits,
   {6ee33ecc-173c-4311-a8d4-9a575a45c787}, !- Handle
   VolumetricFlowRate,                     !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   VolumetricFlowRate;                     !- Unit Type
 
