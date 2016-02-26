@@ -2717,9 +2717,9 @@ module OsLib_Reporting
         query_clg = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='SystemSummary' and TableName = 'Time Setpoint Not Met' and RowName= '#{key}' and ColumnName='During Cooling';"
         unmet_clg = sqlFile.execAndReturnFirstDouble(query_clg).get
         query_htg_occ = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='SystemSummary' and TableName = 'Time Setpoint Not Met' and RowName= '#{key}' and ColumnName='During Occupied Heating';"
-        unmet_htg_occ = sqlFile.execAndReturnFirstDouble(query_htg).get
+        unmet_htg_occ = sqlFile.execAndReturnFirstDouble(query_htg_occ).get
         query_clg_occ = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='SystemSummary' and TableName = 'Time Setpoint Not Met' and RowName= '#{key}' and ColumnName='During Occupied Cooling';"
-        unmet_clg_occ = sqlFile.execAndReturnFirstDouble(query_clg).get
+        unmet_clg_occ = sqlFile.execAndReturnFirstDouble(query_clg_occ).get
 
         # get mean temp
         mean = OpenStudio.convert(temp_sum / temp_counter.to_f, 'C', 'F').get
