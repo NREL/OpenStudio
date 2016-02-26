@@ -25207,6 +25207,10 @@ AirTerminal:SingleDuct:SeriesPIU:Reheat,
        \minimum 0.0
        \default 0.0
        \ip-units gal/min
+  N6;  \field Convergence Tolerance
+       \type real
+       \minimum> 0.0
+       \default 0.001
 
 AirTerminal:SingleDuct:ParallelPIU:Reheat,
        \memo Central air system terminal unit, single duct, variable volume, parallel powered
