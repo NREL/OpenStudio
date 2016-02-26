@@ -4,63 +4,65 @@
 ! Layer 1: Roof Membrane
 ! Layer 2: Roof Insulation
 ! Layer 3: Metal Decking
- 
 !  Version,
 !    7.2.0.002;              !- Version Identifier
- 
+
+!  Version,
+!    8.5;                    !- Version Identifier
+
   Material,
     Roof Membrane,           !- Name
     VeryRough,               !- Roughness
-    0.0095,                  !- Thickness
-    0.16,                    !- Conductivity
-    1121.29,                 !- Density
-    1460,                    !- Specific Heat
+    0.0095,                  !- Thickness {m}
+    0.16,                    !- Conductivity {W/m-K}
+    1121.29,                 !- Density {kg/m3}
+    1460,                    !- Specific Heat {J/kg-K}
     0.9,                     !- Thermal Absorptance
     0.7,                     !- Solar Absorptance
     0.7;                     !- Visible Absorptance
- 
+
   Material,
     Roof Insulation,         !- Name
     MediumRough,             !- Roughness
-    0.124958,                !- Thickness
-    0.049,                   !- Conductivity
-    265,                     !- Density
-    836.8,                   !- Specific Heat
+    0.124958,                !- Thickness {m}
+    0.049,                   !- Conductivity {W/m-K}
+    265,                     !- Density {kg/m3}
+    836.8,                   !- Specific Heat {J/kg-K}
     0.9,                     !- Thermal Absorptance
     0.7,                     !- Solar Absorptance
     0.7;                     !- Visible Absorptance
- 
+
   Material,
     Metal Decking,           !- Name
     MediumSmooth,            !- Roughness
-    0.001524,                !- Thickness
-    45.006,                  !- Conductivity
-    7680,                    !- Density
-    418.4,                   !- Specific Heat
+    0.001524,                !- Thickness {m}
+    45.006,                  !- Conductivity {W/m-K}
+    7680,                    !- Density {kg/m3}
+    418.4,                   !- Specific Heat {J/kg-K}
     0.9,                     !- Thermal Absorptance
     0.7,                     !- Solar Absorptance
     0.3;                     !- Visible Absorptance
- 
+
   Construction,
     IEAD_R-15 ci_Roof-LargeOffice,  !- Name
     Roof Membrane,           !- Outside Layer
     Roof Insulation,         !- Layer 2
     Metal Decking;           !- Layer 3
- 
+
 ! Cost Source: RSMeans 2009
- 
+
   ComponentCost:LineItem,
     IEAD_R-15 ci_Roof-LargeOffice,  !- Name
     ,                        !- Type
     Construction,            !- Line Item Type
     IEAD_R-15 ci_Roof-LargeOffice,  !- Item Name
-    ,                        !- Object End Use Key
-    ,                        !- Cost per Each
-    93.540,                  !- Cost per Area
-    ,                        !- Cost per Unit of Output Capacity
-    ,                        !- Cost per Unit of Output Capacity per COP
-    ,                        !- Cost per Volume
-    ,                        !- Cost per Volume Rate
-    ,                        !- Cost per Energy per Temperature Difference
-    ;                        !- Quantity
- 
+    ,                        !- Object End-Use Key
+    ,                        !- Cost per Each {$}
+    93.540,                  !- Cost per Area {$/m2}
+    ,                        !- Cost per Unit of Output Capacity {$/kW}
+    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
+    ,                        !- Cost per Volume {$/m3}
+    ,                        !- Cost per Volume Rate {$/(m3/s)}
+    ,                        !- Cost per Energy per Temperature Difference {$/(W/K)}
+    ;                        !- Quantity {dimensionless}
+

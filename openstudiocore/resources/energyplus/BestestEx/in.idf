@@ -5,7 +5,7 @@
 !BESTEST-EX Case L200EX-PH BASE-CASE, developed by NREL
 !Use EnergyPlus IDFEditor to view inputs in IP units
 
-  Version,8.4;
+  Version,8.5;
 
   SimulationControl,
     No,                      !- Do Zone Sizing Calculation
@@ -21,7 +21,7 @@
     0.04,                    !- Loads Convergence Tolerance Value
     0.004,                   !- Temperature Convergence Tolerance Value {deltaC}
     MinimalShadowing,        !- Solar Distribution
-    ,                        !- Maximum Number of Warmup Days
+    25,                      !- Maximum Number of Warmup Days
     6;                       !- Minimum Number of Warmup Days
 
   ShadowCalculation,
@@ -693,7 +693,7 @@
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     1.737275,8.229199,0.000000,  !- X,Y,Z ==> Vertex 1 {m}
     17.372753,8.229199,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -741,7 +741,7 @@
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     0.000000,8.229199,0.000000,  !- X,Y,Z ==> Vertex 1 {m}
     1.737275,8.229199,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -757,7 +757,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     0.000000,0.000000,2.438281,  !- X,Y,Z ==> Vertex 1 {m}
     0.000000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -789,7 +789,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     0.000000,8.229199,2.438281,  !- X,Y,Z ==> Vertex 1 {m}
     0.000000,8.229199,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -805,7 +805,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     17.372753,0.000000,2.438281,  !- X,Y,Z ==> Vertex 1 {m}
     17.372753,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -821,7 +821,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     17.372753,8.229199,2.438281,  !- X,Y,Z ==> Vertex 1 {m}
     17.372753,8.229199,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -853,7 +853,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     3,                       !- Number of Vertices
     0.000000,8.229199,0.000000,  !- X,Y,Z ==> Vertex 1 {m}
     0.000000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -868,7 +868,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     17.372753,4.114599,1.371533,  !- X,Y,Z ==> Vertex 1 {m}
     17.372753,8.229199,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -884,7 +884,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     3,                       !- Number of Vertices
     17.372753,0.000000,0.000000,  !- X,Y,Z ==> Vertex 1 {m}
     17.372753,8.229199,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -899,7 +899,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     0.000000,4.114599,1.371533,  !- X,Y,Z ==> Vertex 1 {m}
     0.000000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -917,7 +917,7 @@
     autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     6.095703,8.229199,2.032917,  !- X,Y,Z ==> Vertex 1 {m}
     6.095703,8.229199,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -933,7 +933,7 @@
     autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     11.277050,0.000000,2.032917,  !- X,Y,Z ==> Vertex 1 {m}
     11.277050,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -949,7 +949,7 @@
     autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     0.609570,0.000000,1.828711,  !- X,Y,Z ==> Vertex 1 {m}
     0.609570,0.000000,0.609570,  !- X,Y,Z ==> Vertex 2 {m}
@@ -965,7 +965,7 @@
     autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     17.372753,0.609570,1.828711,  !- X,Y,Z ==> Vertex 1 {m}
     17.372753,0.609570,0.609570,  !- X,Y,Z ==> Vertex 2 {m}
@@ -981,7 +981,7 @@
     autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     17.372753,6.095703,1.828711,  !- X,Y,Z ==> Vertex 1 {m}
     17.372753,6.095703,0.609570,  !- X,Y,Z ==> Vertex 2 {m}
@@ -997,7 +997,7 @@
     autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     17.372753,5.181347,2.285896,  !- X,Y,Z ==> Vertex 1 {m}
     17.372753,5.181347,0.457185,  !- X,Y,Z ==> Vertex 2 {m}
@@ -1013,7 +1013,7 @@
     autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     17.372753,3.047851,2.285896,  !- X,Y,Z ==> Vertex 1 {m}
     17.372753,3.047851,0.457185,  !- X,Y,Z ==> Vertex 2 {m}
@@ -1029,7 +1029,7 @@
     autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     0.000000,7.619628,1.828711,  !- X,Y,Z ==> Vertex 1 {m}
     0.000000,7.619628,0.609570,  !- X,Y,Z ==> Vertex 2 {m}
@@ -1045,7 +1045,7 @@
     autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     0.000000,2.133496,1.828711,  !- X,Y,Z ==> Vertex 1 {m}
     0.000000,2.133496,0.609570,  !- X,Y,Z ==> Vertex 2 {m}
@@ -1061,7 +1061,7 @@
     autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     0.000000,3.047851,2.285896,  !- X,Y,Z ==> Vertex 1 {m}
     0.000000,3.047851,0.457185,  !- X,Y,Z ==> Vertex 2 {m}
@@ -1077,7 +1077,7 @@
     autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     0.000000,5.181347,2.285896,  !- X,Y,Z ==> Vertex 1 {m}
     0.000000,5.181347,0.457185,  !- X,Y,Z ==> Vertex 2 {m}
@@ -1093,7 +1093,7 @@
     autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     12.496191,8.229199,2.285896,  !- X,Y,Z ==> Vertex 1 {m}
     12.496191,8.229199,0.457185,  !- X,Y,Z ==> Vertex 2 {m}
@@ -1109,7 +1109,7 @@
     autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     4.266992,8.229199,1.828711,  !- X,Y,Z ==> Vertex 1 {m}
     4.266992,8.229199,0.609570,  !- X,Y,Z ==> Vertex 2 {m}
@@ -1125,7 +1125,7 @@
     autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     10.362695,8.229199,2.285896,  !- X,Y,Z ==> Vertex 1 {m}
     10.362695,8.229199,0.457185,  !- X,Y,Z ==> Vertex 2 {m}
@@ -1141,7 +1141,7 @@
     autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     16.763182,8.229199,1.828711,  !- X,Y,Z ==> Vertex 1 {m}
     16.763182,8.229199,0.609570,  !- X,Y,Z ==> Vertex 2 {m}
@@ -1157,7 +1157,7 @@
     autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     7.010058,0.000000,2.285896,  !- X,Y,Z ==> Vertex 1 {m}
     7.010058,0.000000,0.457185,  !- X,Y,Z ==> Vertex 2 {m}
@@ -1173,7 +1173,7 @@
     autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     4.876562,0.000000,2.285896,  !- X,Y,Z ==> Vertex 1 {m}
     4.876562,0.000000,0.457185,  !- X,Y,Z ==> Vertex 2 {m}
@@ -1189,7 +1189,7 @@
     autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     13.105761,0.000000,1.828711,  !- X,Y,Z ==> Vertex 1 {m}
     13.105761,0.000000,0.609570,  !- X,Y,Z ==> Vertex 2 {m}
@@ -1313,15 +1313,15 @@
     ,                        !- Heating Availability Schedule Name
     ,                        !- Cooling Availability Schedule Name
     ConstantSupplyHumidityRatio,  !- Dehumidification Control Type
-    ,                        !- Cooling Sensible Heat Ratio {dimensionless}
+    0.7,                     !- Cooling Sensible Heat Ratio {dimensionless}
     ConstantSupplyHumidityRatio,  !- Humidification Control Type
     ,                        !- Design Specification Outdoor Air Object Name
     ,                        !- Outdoor Air Inlet Node Name
-    ,                        !- Demand Controlled Ventilation Type
-    ,                        !- Outdoor Air Economizer Type
-    ,                        !- Heat Recovery Type
-    ,                        !- Sensible Heat Recovery Effectiveness {dimensionless}
-    ;                        !- Latent Heat Recovery Effectiveness {dimensionless}
+    None,                    !- Demand Controlled Ventilation Type
+    NoEconomizer,            !- Outdoor Air Economizer Type
+    None,                    !- Heat Recovery Type
+    0.70,                    !- Sensible Heat Recovery Effectiveness {dimensionless}
+    0.65;                    !- Latent Heat Recovery Effectiveness {dimensionless}
 
   ZoneHVAC:EquipmentList,
     ZONE ONE Equipment,      !- Name
