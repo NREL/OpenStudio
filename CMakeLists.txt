@@ -192,7 +192,7 @@ endif()
 # EnergyPlus
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH f7ccbe2f42d37386390f6b1440f7997c)
+    set(ENERGYPLUS_EXPECTED_HASH faa0f5bb2a179ebab9ec4f162ef6b87c)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     set(ENERGYPLUS_EXPECTED_HASH 7e43d3c7bb42cd9c259cdc06a60ea13e)
