@@ -78,6 +78,9 @@ class MEASURE_API OSRunner {
   /** Returns preferred unit system, either 'IP' or 'SI'. New in OS 2.0. */
   std::string unitsPreference() const;
 
+  /** Returns preferred language, e.g. 'en' or 'fr'. New in OS 2.0. */
+  std::string languagePreference() const;
+
   /** Returns the OSResult for the current/last OSMeasure run by this OSRunner. (prepareForMeasureRun
    *  should be called prior to each run to ensure that result() corresponds to a single script, and
    *  is not instead a running result over multiple scripts. One way to ensure that this happens is
@@ -312,6 +315,16 @@ class MEASURE_API OSRunner {
   void setLastEpwFilePath(const openstudio::path& lastEpwFilePath);
   void resetLastEpwFilePath();
 
+  /** Sets preferred unit system, either 'IP' or 'SI'. New in OS 2.0. */
+  bool setUnitsPreference(const std::string& unitsPreference);
+
+  void resetUnitsPreference();
+
+  /** Sets preferred language, e.g. 'en' or 'fr'. New in OS 2.0. */
+  bool setLanguagePreference(const std::string& languagePreference);
+
+  void resetLanguagePreference();
+
  private:
   REGISTER_LOGGER("openstudio.measure.OSRunner");
 
@@ -319,6 +332,7 @@ class MEASURE_API OSRunner {
   unsigned m_currentStep;
   std::vector<OSResult> m_previousResults;
   std::string m_unitsPreference;
+  std::string m_languagePreference;
 
   // current data
   OSResult m_result;

@@ -33,11 +33,11 @@ namespace openstudio {
 namespace measure {
 
 OSRunner::OSRunner()
-  : m_currentStep(0), m_unitsPreference("SI")
+  : m_currentStep(0), m_unitsPreference("IP"), m_languagePreference("en")
 {}
 
 OSRunner::OSRunner(const WorkflowJSON& workflow)
-  : m_workflow(workflow), m_currentStep(0), m_unitsPreference("SI")
+  : m_workflow(workflow), m_currentStep(0), m_unitsPreference("IP"), m_languagePreference("en")
 {}
 
 OSRunner::~OSRunner()
@@ -63,6 +63,10 @@ std::string OSRunner::unitsPreference() const
   return m_unitsPreference;
 }
 
+std::string OSRunner::languagePreference() const
+{
+  return m_languagePreference;
+}
 
 OSResult OSRunner::result() const {
   return m_result;
@@ -145,7 +149,8 @@ void OSRunner::reset()
   // m_workflow;
   m_currentStep = 0;
   m_previousResults.clear();
-  //m_unitsPreference;
+  //m_unitsPreference // do not reset
+  //m_languagePreference; // do not reset
 
   m_result = OSResult();
   m_measureName = "";
@@ -845,6 +850,28 @@ void OSRunner::resetLastEpwFilePath()
 {
   m_lastEpwFilePath.reset();
   m_lastEpwFile.reset();
+}
+
+bool OSRunner::setUnitsPreference(const std::string& unitsPreference)
+{
+  m_unitsPreference = unitsPreference;
+  return true;
+}
+
+void OSRunner::resetUnitsPreference()
+{
+  m_unitsPreference = "IP";
+}
+
+bool OSRunner::setLanguagePreference(const std::string& languagePreference)
+{
+  m_languagePreference = languagePreference;
+  return true;
+}
+
+void OSRunner::resetLanguagePreference()
+{
+  m_languagePreference = "en";
 }
 
 } // measure
