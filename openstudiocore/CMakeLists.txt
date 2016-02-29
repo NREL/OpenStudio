@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 2.8.11)
 
 project(OpenStudioCore)
 
+if( POLICY CMP0022 ) 
+  cmake_policy(SET CMP0022 NEW)
+endif()
 cmake_policy(SET CMP0020 NEW)
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.0")
   cmake_policy(SET CMP0042 NEW)
