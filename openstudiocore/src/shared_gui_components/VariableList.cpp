@@ -634,7 +634,7 @@ QWidget * VariableItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     auto variableItemView = new VariableItemView(variableItem->isFixedMeasure());
     variableItemView->variableHeaderView->variableNameEdit->setText(variableItem->displayName());
 
-    connect(variableItemView->variableHeaderView->variableNameEdit, &QLineEdit::textEdited, variableItem.data(), &VariableItem::setName);
+    connect(variableItemView->variableHeaderView->variableNameEdit, &QLineEdit::textEdited, variableItem.data(), &VariableItem::setDisplayName);
 
     QSharedPointer<MeasureListController> measureListController = variableItem->measureListController();
     variableItemView->variableContentView->measureListView->setListController(measureListController);
