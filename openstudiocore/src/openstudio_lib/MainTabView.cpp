@@ -52,7 +52,7 @@ MainTabView::MainTabView(const QString & tabLabel, TabType tabType, QWidget * pa
   m_tabLabel->setFixedWidth(m_tabLabel->width());
   m_tabLabel->move(7,5);
 
-  auto label = new QLabel("Hello World");
+  auto label = new QLabel();
   label->setObjectName("H2");
 
   m_editView->setView(label);
@@ -240,24 +240,24 @@ void MainTabView::resizeEvent( QResizeEvent * event )
   m_mainWidget->resize(newSize);
 }
 
-int MainTabView::subTabId() const
-{
-  OS_ASSERT(false);
-  if (m_tabType != MAIN_TAB)
-  {
-    return m_ids[subTabIndex()];
-  }
-  else
-  {
-    return -1;
-  }
-}
+//int MainTabView::subTabId() const
+//{
+//  OS_ASSERT(false);
+//  if (m_tabType != MAIN_TAB)
+//  {
+//    return m_ids[subTabIndex()];
+//  }
+//  else
+//  {
+//    return -1;
+//  }
+//}
 
-int MainTabView::subTabIndex() const
-{
-  OS_ASSERT(false);
-  return -1;
-}
+//int MainTabView::subTabIndex() const
+//{
+//  OS_ASSERT(false);
+//  return -1;
+//}
 
 bool MainTabView::selectSubTabByIndex(int index)
 {

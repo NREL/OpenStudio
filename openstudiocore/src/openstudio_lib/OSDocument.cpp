@@ -389,13 +389,7 @@ namespace openstudio {
 
   int OSDocument::subTabIndex()
   {
-    MainTabView * mainTabView = m_mainWindow->view();
-    if (mainTabView){
-      return mainTabView->subTabIndex();
-    }
-    else {
-      return -1;
-    }
+    return m_subTabId;
   }
 
   void OSDocument::initializeModel()
@@ -604,6 +598,8 @@ namespace openstudio {
 
   void OSDocument::createTab(int verticalId)
   {
+    if (m_verticalId == verticalId) return;
+
     m_mainTabController.reset();
 
     m_verticalId = verticalId;
@@ -1113,7 +1109,7 @@ namespace openstudio {
 
     //m_mainWindow->selectHorizontalTab(LIBRARY);
 
-  //boost::optional<model::ModelObject> mo;
+    //boost::optional<model::ModelObject> mo;
 
     //m_inspectorController->layoutModelObject(mo);
   }
