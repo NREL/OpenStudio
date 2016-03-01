@@ -918,7 +918,9 @@ namespace detail {
   /** Baseline Pressure Drop Adjustment **/
   // Return the Baseline Pdrop
   double AirLoopHVAC_Impl::baselinePressureDropAdjustment() const {
-    return getDouble(OS_AirLoopHVACFields::BaselinePressureDropAdjustment,true);
+    boost::optional<double> result = getDouble(OS_AirLoopHVACFields::BaselinePressureDropAdjustment,true);
+    OS_ASSERT(result); // ok to assert since there is a default in the IDD, want to assert because .get below will cause a crash if result is empty
+    return result.get();
   }
   
   // Set the Baseline Pdrop
