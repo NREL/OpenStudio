@@ -92,11 +92,11 @@ class MODEL_API AirLoopHVAC : public Loop
   
   
   /** Baseline Pressure Drop Adjustment **/
-  boost::optional<double> baselinePressureDropAdjustment() const;
+  double baselinePressureDropAdjustment() const;
   
-  void setBaselinePressureDropAdjustment(boost::optional<double> baselinePressureDropAdjustment);
+  bool setBaselinePressureDropAdjustment(double baselinePressureDropAdjustment);
   
-  void resetBaselinePressureDropAdjustment();
+  bool resetBaselinePressureDropAdjustment();
 
 
   /** Returns the supply inlet node. */

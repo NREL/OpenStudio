@@ -80,11 +80,11 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
   void autosizeDesignSupplyAirFlowRate();
   
   /** Baseline Pressure Drop Adjustment **/
-  boost::optional<double> baselinePressureDropAdjustment() const;
+  double baselinePressureDropAdjustment() const;
   
-  void setBaselinePressureDropAdjustment(boost::optional<double> baselinePressureDropAdjustment);
+  bool setBaselinePressureDropAdjustment(double baselinePressureDropAdjustment);
   
-  void resetBaselinePressureDropAdjustment();
+  bool resetBaselinePressureDropAdjustment();
  
 
   Node supplyInletNode() const override;

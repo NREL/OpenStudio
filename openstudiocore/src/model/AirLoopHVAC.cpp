@@ -916,30 +916,22 @@ namespace detail {
   }
   
   /** Baseline Pressure Drop Adjustment **/
-  // Return the basleine Pdrop
-  boost::optional<double> AirLoopHVAC_Impl::baselinePressureDropAdjustment() const {
+  // Return the Baseline Pdrop
+  double AirLoopHVAC_Impl::baselinePressureDropAdjustment() const {
     return getDouble(OS_AirLoopHVACFields::BaselinePressureDropAdjustment,true);
   }
   
-  
   // Set the Baseline Pdrop
-  void AirLoopHVAC_Impl::setBaselinePressureDropAdjustment(boost::optional<double> baselinePressureDropAdjustment) {
-    bool result(false);
-    if (baselinePressureDropAdjustment) {
-      result = setDouble(OS_AirLoopHVACFields::BaselinePressureDropAdjustment, baselinePressureDropAdjustment.get());
-    }
-    else {
-      resetBaselinePressureDropAdjustment();
-      result = true;
-    }
+  bool AirLoopHVAC_Impl::setBaselinePressureDropAdjustment(double baselinePressureDropAdjustment) {
+    result = setDouble(OS_AirLoopHVACFields::BaselinePressureDropAdjustment, baselinePressureDropAdjustment);
     OS_ASSERT(result);
   }
   
   // Reset Baseline Pdrop
   void AirLoopHVAC_Impl::resetBaselinePressureDropAdjustment() {
-    bool result = setString(OS_AirLoopHVACFields::BaselinePressureDropAdjustment, "");
+    bool result = setDouble(OS_AirLoopHVACFields::BaselinePressureDropAdjustment, 0);
     OS_ASSERT(result);
-  } 
+  }
   
 
   Schedule AirLoopHVAC_Impl::availabilitySchedule() const
@@ -1771,11 +1763,11 @@ void AirLoopHVAC::autosizeDesignSupplyAirFlowRate() {
 
 
 /** Presure Drop Adjustments **/  
-boost::optional<double> AirLoopHVAC::baselinePressureDropAdjustment() const {
+double AirLoopHVAC::baselinePressureDropAdjustment() const {
   return getImpl<detail::AirLoopHVAC_Impl>()->baselinePressureDropAdjustment();
 }
 
-void AirLoopHVAC::setBaselinePressureDropAdjustment(double baselinePressureDropAdjustment) {
+bool AirLoopHVAC::setBaselinePressureDropAdjustment(double baselinePressureDropAdjustment) {
   getImpl<detail::AirLoopHVAC_Impl>()->setBaselinePressureDropAdjustment(baselinePressureDropAdjustment);
 }
 
