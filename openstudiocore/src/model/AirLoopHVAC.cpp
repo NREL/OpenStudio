@@ -923,8 +923,8 @@ namespace detail {
   
   // Set the Baseline Pdrop
   bool AirLoopHVAC_Impl::setBaselinePressureDropAdjustment(double baselinePressureDropAdjustment) {
-    result = setDouble(OS_AirLoopHVACFields::BaselinePressureDropAdjustment, baselinePressureDropAdjustment);
-    OS_ASSERT(result);
+    bool result = setDouble(OS_AirLoopHVACFields::BaselinePressureDropAdjustment, baselinePressureDropAdjustment);
+    return result;
   }
   
   // Reset Baseline Pdrop
