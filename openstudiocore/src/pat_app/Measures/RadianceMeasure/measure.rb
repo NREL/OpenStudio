@@ -474,7 +474,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       end  
       windowGroupCheck.close
       
-      if 1000 < rfluxmtxDim.to_i && rfluxmtxDim.to_i < 3000
+      if 1000 < rfluxmtxDim.to_i && rfluxmtxDim.to_i < 2999
         print_statement("WARN: Model contains a large number of Radiance calculation points (#{rfluxmtxDim}), will produce large results files and potential memory issues.", runner)
       elsif 3000 < rfluxmtxDim.to_i
         print_statement("ERROR: Too many calculation points in model (#{rfluxmtxDim}). Consider reducing the number or resolution of illuminance maps in this model.", runner)
@@ -823,30 +823,48 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       end
 
       # make whole-building illuminance file
-      print_statement("Merging window group daylight illuminance schedules to building daylight illuminance schedule", runner)
-      addFiles = ""
+
+      print_statement("Creating whole-building daylight results file...", runner)
+
+      # get the controlled window group results (m_*.ill), if any
+      mergeWindows = Dir.glob("output/ts/m_*.ill")
+      if mergeWindows.size > 0
+        print_statement("Gathering shade-controlled window group results (#{mergeWindows.size} total)", runner)
+      else
+        print_statement("INFO: Model has 0 controlled window groups", runner)
+      end
 
       # get the uncontrolled windows results, if any
       if File.exist?("output/ts/WG0.ill")
-        print_statement("Adding uncontrolled window results", runner)
-        addFiles << "output/ts/WG0.ill "
+        mergeWindows.insert(0, "output/ts/WG0.ill")
       else
-        print_statement("Model has no uncontrolled windows", runner)
-      end
-        
-      # get the controlled window group results (m_*.ill), if any
-      mergedWindows = Dir.glob("output/ts/m_*.ill")
-      if mergedWindows.size > 0
-        print_statement("Adding shade-controlled window group(s) results", runner)
-        mergedWindows.each do |file|
-          addFiles << "+ #{file} "
-        end
-      else
-        print_statement("Model has no controlled window groups", runner)
+        print_statement("INFO: Model has no uncontrolled windows.", runner)
       end
 
-      # merge uncontrolled windows (WG0.ill) with blended controlled window groups (m_*.ill) 
-      exec_statement("rmtxop -fa #{addFiles} -t | getinfo - > output/merged_space.ill", runner)
+      if mergeWindows.size == 0
+        print_statement("ERROR: no illuminance results.", runner)
+        exit false
+      elsif mergeWindows.size == 1
+        # go straight to final building results file format
+        print_statement("Finalizing output...", runner)
+        exec_statement("rmtxop -fa #{mergeWindows[0]} -t | getinfo - > output/merged_space.ill", runner)
+      else
+        # make initial building results from first window group
+        print_statement("Starting final building illumimance file with #{mergeWindows[0]}...", runner)
+        exec_statement("rmtxop -fa #{mergeWindows[0]} -t > output/final_merge.tmp", runner)
+        # add remaining groups, one at a time
+        mergeWindows[1..-1].each do |merge|
+          print_statement("adding #{merge}...", runner)
+          temp_fname = rand(36**15).to_s(36)
+          exec_statement("rmtxop -fa output/final_merge.tmp + #{merge} -t > #{temp_fname}", runner)
+          FileUtils.mv temp_fname, 'output/final_merge.tmp'
+        end
+        # strip header
+        print_statement("Finalizing output...", runner)
+        exec_statement("rmtxop -fa output/final_merge.tmp -t | getinfo - > output/merged_space.ill", runner)
+        # system("rm output/ts/final_merge.tmp")
+        print_statement("Done.", runner)
+      end
 
       ## window merge end
 
