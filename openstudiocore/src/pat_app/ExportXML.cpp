@@ -84,7 +84,7 @@ bool ExportXML::exportXML(const analysisdriver::SimpleProject project, QString x
   analysis::DataPointVector dataPoints = analysis.dataPoints();
   std::vector<std::string> alternativeNames;
   for (const analysis::DataPoint& datapoint : dataPoints) {
-    alternativeNames.push_back(datapoint.name());
+    alternativeNames.push_back(datapoint.displayName());
   } 
 
   // open modal dialog
@@ -137,10 +137,10 @@ bool ExportXML::exportXML(const analysisdriver::SimpleProject project, QString x
       if ( boost::optional<QDomElement> alternativeElem = exportAlternative(doc, *reportAttr, datapoint, jobs, edaBaselineName, proposedBaselineName, certificationBaselineName) ) {
         alternativesElem.appendChild(*alternativeElem);
       } else{
-        errors << toQString(datapoint.name());
+        errors << toQString(datapoint.displayName());
       }
     }else{
-      errors << toQString(datapoint.name());
+		errors << toQString(datapoint.displayName());
     }
     // drop this DataPoint's Model and SqlFile from memory
     datapoint.clearFileDataFromCache();
@@ -178,23 +178,23 @@ boost::optional<QDomElement> ExportXML::exportAlternative(QDomDocument& doc,
   //name
   QDomElement nameElem = doc.createElement("name");
   alternative.appendChild(nameElem);
-  QString name = toQString(dataPt.name());
+  QString name = toQString(dataPt.displayName());
   nameElem.appendChild(doc.createTextNode(name));
   
   //baseline type
-  if ( dataPt.name() == edaBaselineName ) {
+  if (dataPt.displayName() == edaBaselineName) {
     QDomElement nameElem = doc.createElement("baseline_type");
     alternative.appendChild(nameElem);
     nameElem.appendChild(doc.createTextNode("EDA Baseline"));
   }
   
-  if ( dataPt.name() == proposedBaselineName ) {
+  if (dataPt.displayName() == proposedBaselineName) {
     QDomElement nameElem = doc.createElement("baseline_type");
     alternative.appendChild(nameElem);
     nameElem.appendChild(doc.createTextNode("Proposed Baseline"));
   }
   
-  if ( dataPt.name() == certificationBaselineName ) {
+  if (dataPt.displayName() == certificationBaselineName) {
     QDomElement nameElem = doc.createElement("baseline_type");
     alternative.appendChild(nameElem);
     nameElem.appendChild(doc.createTextNode("Certification Baseline"));
@@ -447,7 +447,7 @@ boost::optional<QDomElement> ExportXML::exportMeasure(QDomDocument& doc,
         //name
         QString measureName = "unknown";
         if (boost::optional<analysis::RubyMeasure> rubyMeasure = measure->optionalCast<analysis::RubyMeasure>()) {
-          measureName = toQString(rubyMeasure->name());
+          measureName = toQString(rubyMeasure->displayName());
         }
         QDomElement instanceNameElem = doc.createElement("name");
         measureElem.appendChild(instanceNameElem);
