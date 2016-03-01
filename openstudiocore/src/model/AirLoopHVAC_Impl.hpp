@@ -84,7 +84,7 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
   
   bool setBaselinePressureDropAdjustment(double baselinePressureDropAdjustment);
   
-  bool resetBaselinePressureDropAdjustment();
+  void resetBaselinePressureDropAdjustment();
  
 
   Node supplyInletNode() const override;

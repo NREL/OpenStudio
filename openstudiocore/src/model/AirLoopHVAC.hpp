@@ -96,7 +96,7 @@ class MODEL_API AirLoopHVAC : public Loop
   
   bool setBaselinePressureDropAdjustment(double baselinePressureDropAdjustment);
   
-  bool resetBaselinePressureDropAdjustment();
+  void resetBaselinePressureDropAdjustment();
 
 
   /** Returns the supply inlet node. */

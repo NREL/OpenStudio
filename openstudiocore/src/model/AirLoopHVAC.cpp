@@ -1770,7 +1770,7 @@ double AirLoopHVAC::baselinePressureDropAdjustment() const {
 }
 
 bool AirLoopHVAC::setBaselinePressureDropAdjustment(double baselinePressureDropAdjustment) {
-  getImpl<detail::AirLoopHVAC_Impl>()->setBaselinePressureDropAdjustment(baselinePressureDropAdjustment);
+  return getImpl<detail::AirLoopHVAC_Impl>()->setBaselinePressureDropAdjustment(baselinePressureDropAdjustment);
 }
 
 void AirLoopHVAC::resetBaselinePressureDropAdjustment() {

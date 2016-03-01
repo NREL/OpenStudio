@@ -8272,9 +8272,14 @@ OS:AirLoopHVAC,
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A14; \field Return Air Bypass Flow Temperature Setpoint Schedule Name
+  A14, \field Return Air Bypass Flow Temperature Setpoint Schedule Name
        \type object-list
        \object-list ScheduleNames
+  N2; \field Baseline Pressure Drop Adjustment 
+       \note Calculate it as a function of the total Supply CFM for the loop.
+       \type real
+       \units Pa.s/m3
+       \default 0
 
 OS:AirLoopHVAC:ControllerList,
        \memo List controllers in order of control sequence
