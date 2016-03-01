@@ -914,6 +914,27 @@ namespace detail {
     bool result = setString(OS_AirLoopHVACFields::DesignSupplyAirFlowRate, "autosize");
     OS_ASSERT(result);
   }
+  
+  /** Baseline Pressure Drop Adjustment **/
+  // Return the Baseline Pdrop
+  double AirLoopHVAC_Impl::baselinePressureDropAdjustment() const {
+    boost::optional<double> result = getDouble(OS_AirLoopHVACFields::BaselinePressureDropAdjustment,true);
+    OS_ASSERT(result); // ok to assert since there is a default in the IDD, want to assert because .get below will cause a crash if result is empty
+    return result.get();
+  }
+  
+  // Set the Baseline Pdrop
+  bool AirLoopHVAC_Impl::setBaselinePressureDropAdjustment(double baselinePressureDropAdjustment) {
+    bool result = setDouble(OS_AirLoopHVACFields::BaselinePressureDropAdjustment, baselinePressureDropAdjustment);
+    return result;
+  }
+  
+  // Reset Baseline Pdrop
+  void AirLoopHVAC_Impl::resetBaselinePressureDropAdjustment() {
+    bool result = setDouble(OS_AirLoopHVACFields::BaselinePressureDropAdjustment, 0);
+    OS_ASSERT(result);
+  }
+  
 
   Schedule AirLoopHVAC_Impl::availabilitySchedule() const
   {
@@ -1740,6 +1761,24 @@ void AirLoopHVAC::resetDesignSupplyAirFlowRate() {
 void AirLoopHVAC::autosizeDesignSupplyAirFlowRate() {
   getImpl<detail::AirLoopHVAC_Impl>()->autosizeDesignSupplyAirFlowRate();
 }
+
+
+
+/** Presure Drop Adjustments **/  
+double AirLoopHVAC::baselinePressureDropAdjustment() const {
+  return getImpl<detail::AirLoopHVAC_Impl>()->baselinePressureDropAdjustment();
+}
+
+bool AirLoopHVAC::setBaselinePressureDropAdjustment(double baselinePressureDropAdjustment) {
+  return getImpl<detail::AirLoopHVAC_Impl>()->setBaselinePressureDropAdjustment(baselinePressureDropAdjustment);
+}
+
+void AirLoopHVAC::resetBaselinePressureDropAdjustment() {
+  getImpl<detail::AirLoopHVAC_Impl>()->resetBaselinePressureDropAdjustment();
+}
+
+
+
 
 Schedule AirLoopHVAC::availabilitySchedule() const
 {
