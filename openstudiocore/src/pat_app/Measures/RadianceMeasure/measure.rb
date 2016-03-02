@@ -103,6 +103,28 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     return m, header
   end
 
+
+  # better OS detection
+  # will call out Git Bash shells as Windows machines, optionally differentiates Mac versus *nix
+  module OS
+    def OS.windows
+      (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
+    end
+
+    def OS.mac
+     (/darwin/ =~ RUBY_PLATFORM) != nil
+    end
+
+    def OS.unix
+      !OS.windows
+    end
+
+    def OS.linux
+      OS.unix and not OS.mac
+    end
+  end
+
+
   def run(model, runner, user_arguments)
     super(model, runner, user_arguments)
 
@@ -134,11 +156,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       FileUtils.mkdir_p(rad_dir)
     end
 
-    ## Radiance Utilities 
+    ## Radiance Utilities
 
     # print statement and execute as system call
     def exec_statement(s, runner)
-      if /mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
+      if OS.windows
         s = s.tr("/", "\\")
       end
       runner.registerInfo("#{s}")
@@ -150,14 +172,14 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
     # print statement for OS-Server and OSApp
     def print_statement(s, runner)
-      if /mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
+      #if /mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
+      if OS.windows
         s = s.tr("/", "\\")
       end
       runner.registerInfo("#{s}")
       # additional puts for OSApp until v2.0...
       puts "[Radiance Measure #{Time.now.getutc}]: #{s}"
     end
-
 
     # UNIX-style which 
     def which(cmd) 
@@ -182,7 +204,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     else
       sim_cores = coreCount - 1
     end
-    if /mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
+    if OS.windows #/mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
       print_statement("Radiance multiprocessing features are not supported on Windows.", runner)
       sim_cores = 1
     end
@@ -192,10 +214,12 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     perlExtension = ""
     catCommand = "cat"
     osQuote = "\'"
-    if /mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
+    rt_io_format = "-ff"
+    if OS.windows #/mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
       perlExtension = ".pl"
       catCommand = "type"
       osQuote = "\""
+      rt_io_format = "-fa"
     end
 
     ## END Radiance Utilities
@@ -213,7 +237,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     epw2weapath = (OpenStudio::Path.new(radiancePath) / OpenStudio::Path.new('epw2wea')).to_s
 
     programExtension = ""
-    if /mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
+    if OS.windows #/mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
       programExtension = ".exe"
       perlpath = ""
       if OpenStudio::applicationIsRunningFromBuildDirectory()
@@ -232,7 +256,6 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     end
     
     # Radiance version detection and environment reportage                 
-    ver = Open3.capture2("#{path}/rcontrib -version")
     # need to help Open3 on Windows (path sep issues)             
     returnDir = Dir.pwd
     Dir.chdir(path)
@@ -242,6 +265,9 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     print_statement("Radiance version info: #{ver[0]}", runner)
     print_statement("Radiance binary dir: #{path}", runner)
     print_statement("Radiance library dir: #{raypath}", runner)
+
+    print_statement("Running on Windows (sorry)", runner) if OS.windows && debug_mode
+    print_statement("Running on unix", runner) if OS.unix && debug_mode
 
     if Dir.glob(epw2weapath + programExtension).empty?
       runner.registerError("Cannot find epw2wea tool in radiance installation at '#{radiancePath}'. You may need to install a newer version of Radiance.")
@@ -414,7 +440,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
     # configure multiprocessing 
     procsUsed = ""
-    if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
+    if OS.windows
       procsUsed = ""
     else
       procsUsed = "-n #{sim_cores}"
@@ -447,8 +473,15 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     
       end  
       windowGroupCheck.close
-
-      print_statement("Passing #{rfluxmtxDim} calculation points to Radiance", runner)
+      
+      if 1000 < rfluxmtxDim.to_i && rfluxmtxDim.to_i < 2999
+        print_statement("WARN: Model contains a large number of Radiance calculation points (#{rfluxmtxDim}), will produce large results files and potential memory issues.", runner)
+      elsif 3000 < rfluxmtxDim.to_i
+        print_statement("ERROR: Too many calculation points in model (#{rfluxmtxDim}). Consider reducing the number or resolution of illuminance maps in this model.", runner)
+        exit false
+      else
+        print_statement("Passing #{rfluxmtxDim} calculation points to Radiance", runner)
+      end
 
       # process individual window groups
       print_statement("Computing daylight coefficient matrices", runner)
@@ -486,7 +519,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           # use more aggro simulation parameters because this is basically a view matrix
           rtrace_args = "#{options_vmx}"
           
-          rad_command = "#{t_catCommand} numeric/merged_space.map | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} -o output/dc/WG0.vmx -m skyglow octrees/model_WG0.oct"
+          ### foo (-faf)
+          rad_command = "#{t_catCommand} numeric/merged_space.map | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} -faa -o output/dc/WG0.vmx -m skyglow octrees/model_WG0.oct"
           exec_statement(rad_command, runner)
 
         else # controlled window group
@@ -513,7 +547,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
                 exec_statement("oconv #{base_mats} materials/#{wg}_#{state}.mat model.rad > octrees/debug_model_#{wg}_#{state}.oct", runner)
               end
               print_statement("Computing view matrix for window group '#{wg}' in #{state} state", runner)
-              exec_statement("#{t_catCommand} \"numeric/merged_space.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} -o \"output/dc/#{wg}_#{state}.vmx\" -m skyglow octrees/model_#{wg}_#{state}.oct", runner)
+              ### foo (-faf)
+              exec_statement("#{t_catCommand} \"numeric/merged_space.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} -faa -o \"output/dc/#{wg}_#{state}.vmx\" -m skyglow octrees/model_#{wg}_#{state}.oct", runner)
             
             end
 
@@ -537,7 +572,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             
             end
             
-            rad_command = "rfluxmtx #{rtrace_args} -n #{sim_cores} -fa -v scene/shades/#{wg}_SHADE.rad skies/dc_sky.rad -i octrees/model_dc.oct > \"output/dc/#{wg}.dmx\""
+            ### foo (-faa)
+            rad_command = "rfluxmtx #{rtrace_args} -n #{sim_cores} -faa -v scene/shades/#{wg}_SHADE.rad skies/dc_sky.rad -i octrees/model_dc.oct > \"output/dc/#{wg}.dmx\""
             exec_statement(rad_command, runner)
           
           end
@@ -580,6 +616,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         
 
         # make rfluxmtx do all the work
+        ### foo (-faf)
         rad_command = "rfluxmtx #{rtrace_args} -n #{sim_cores} -ds .15 -faa -y #{rfluxmtxDim} -I -v - receivers_vmx.rad -i octrees/model_vmx.oct < numeric/merged_space.map"
         exec_statement(rad_command, runner)
         
@@ -596,7 +633,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         exec_statement("oconv \"materials/materials.rad\" model.rad skies/dc_sky.rad > octrees/model_wc.oct", runner)
         print_statement("Computing DCs for window control points", runner)
 
-        rad_command = "#{t_catCommand} \"numeric/window_controls.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{options_tregVars} " + \
+        ### foo (keep this one as ASCII)
+        rad_command = "#{t_catCommand} \"numeric/window_controls.map\" | rcontrib #{rtrace_args} #{procsUsed} -I+ -faa -fo #{options_tregVars} " + \
         "-o \"output/dc/window_controls.vmx\" -m skyglow octrees/model_wc.oct"
         exec_statement(rad_command, runner)
       
@@ -657,6 +695,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         if wg == "WG0"
         # if row.split(",")[2] == "n/a" || row.split(",")[2] == "AlwaysOff"
           # keep header, convert to illuminance, but no transpose
+          ### foo (-ff)
           rad_command = "dctimestep output/dc/#{wg}.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}.ill"
           exec_statement(rad_command, runner)
 
@@ -670,6 +709,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             states = ["clear", "tinted"]
             states.each_index do |i|
               print_statement("Calculating annual iluminance for window group '#{wg}', state: #{states.index(states[i])} (switchable glazing - #{states[i]})", runner)
+              ### foo (-ff)
               exec_statement("dctimestep output/dc/#{wg}_#{states[i]}.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}_#{states.index(states[i])}.ill", runner)             
             end
           
@@ -684,6 +724,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
               #rad_command = "dctimestep output/dc/#{wg}.vmx bsdf/#{wgXMLs[i].strip} output/dc/#{wg}.dmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}_INDEX#{wgXMLs.index[i]}_#{wgXMLs[i].split[0]}.ill"
               print_statement("Calculating annual iluminance for window group '#{wg}', state: #{wgXMLs.index(wgXMLs[i])} (BSDF filename: '#{wgXMLs[i].split[0]}'):", runner)
               rad_command = "dctimestep output/dc/#{wg}.vmx bsdf/#{wgXMLs[i].strip} output/dc/#{wg}.dmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}_#{wgXMLs.index(wgXMLs[i])}.ill"
+              ### orig ^^^
+              ###rad_command = "dctimestep output/dc/#{wg}.vmx bsdf/#{wgXMLs[i].strip} output/dc/#{wg}.dmx annual-sky.mtx | rmtxop -ff -c 47.4 120 11.6 - > output/ts/#{wg}_#{wgXMLs.index(wgXMLs[i])}.ill"
               exec_statement(rad_command, runner)
               
             end
@@ -694,6 +736,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       if haveWG1 == "True"
 
         # get annual values for window control sensors (note: convert to illuminance, no transpose, strip header)
+        ### foo leave at -fa
         exec_statement("dctimestep output/dc/window_controls.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - | getinfo - > output/ts/window_controls.ill", runner)
   
         print_statement("Blending window group results per shade control schedule", runner)
@@ -702,7 +745,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
         wg_index = 0
         
-        print_statement("### DEBUG: getting window shade control(s) values", runner)        
+        print_statement("### DEBUG: getting window shade control(s) values", runner) 
         filename = "output/ts/window_controls.ill"          
         windowControls, _header = read_illuminance_file(filename, runner)
         print_statement("### DEBUG: windowControls matrix is #{windowControls.row_count} rows x #{windowControls.column_count} columns", runner)
@@ -780,30 +823,48 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
       end
 
       # make whole-building illuminance file
-      print_statement("Merging window group daylight illuminance schedules to building daylight illuminance schedule", runner)
-      addFiles = ""
+
+      print_statement("Creating whole-building daylight results file...", runner)
+
+      # get the controlled window group results (m_*.ill), if any
+      mergeWindows = Dir.glob("output/ts/m_*.ill")
+      if mergeWindows.size > 0
+        print_statement("Gathering shade-controlled window group results (#{mergeWindows.size} total)", runner)
+      else
+        print_statement("INFO: Model has 0 controlled window groups", runner)
+      end
 
       # get the uncontrolled windows results, if any
       if File.exist?("output/ts/WG0.ill")
-        print_statement("Adding uncontrolled window results", runner)
-        addFiles << "output/ts/WG0.ill "
+        mergeWindows.insert(0, "output/ts/WG0.ill")
       else
-        print_statement("Model has no uncontrolled windows", runner)
-      end
-        
-      # get the controlled window group results (m_*.ill), if any
-      mergedWindows = Dir.glob("output/ts/m_*.ill")
-      if mergedWindows.size > 0
-        print_statement("Adding shade-controlled window group(s) results", runner)
-        mergedWindows.each do |file|
-          addFiles << "+ #{file} "
-        end
-      else
-        print_statement("Model has no controlled window groups", runner)
+        print_statement("INFO: Model has no uncontrolled windows.", runner)
       end
 
-      # merge uncontrolled windows (WG0.ill) with blended controlled window groups (m_*.ill) 
-      exec_statement("rmtxop -fa #{addFiles} -t | getinfo - > output/merged_space.ill", runner)
+      if mergeWindows.size == 0
+        print_statement("ERROR: no illuminance results.", runner)
+        exit false
+      elsif mergeWindows.size == 1
+        # go straight to final building results file format
+        print_statement("Finalizing output...", runner)
+        exec_statement("rmtxop -fa #{mergeWindows[0]} -t | getinfo - > output/merged_space.ill", runner)
+      else
+        # make initial building results from first window group
+        print_statement("Starting final building illumimance file with #{mergeWindows[0]}...", runner)
+        exec_statement("rmtxop -fa #{mergeWindows[0]} -t > output/final_merge.tmp", runner)
+        # add remaining groups, one at a time
+        mergeWindows[1..-1].each do |merge|
+          print_statement("adding #{merge}...", runner)
+          temp_fname = rand(36**15).to_s(36)
+          exec_statement("rmtxop -fa output/final_merge.tmp + #{merge} -t > #{temp_fname}", runner)
+          FileUtils.mv temp_fname, 'output/final_merge.tmp'
+        end
+        # strip header
+        print_statement("Finalizing output...", runner)
+        exec_statement("rmtxop -fa output/final_merge.tmp -t | getinfo - > output/merged_space.ill", runner)
+        # system("rm output/ts/final_merge.tmp")
+        print_statement("Done.", runner)
+      end
 
       ## window merge end
 
