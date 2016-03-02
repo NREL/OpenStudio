@@ -60,11 +60,17 @@ foreach(f ${RUBY_TEST_SRC})
   endforeach()
 endforeach()
 
+# add a custom target to build openstudio_cli
+add_custom_target(openstudio_cli DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/install/openstudio_cli.rb")
+add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/install/openstudio_cli.rb"
+                   COMMAND "${CMAKE_COMMAND}" -E copy "${CMAKE_SOURCE_DIR}/ruby/openstudio_cli.rb" "${CMAKE_CURRENT_BINARY_DIR}/install/openstudio_cli.rb"
+                   DEPENDS "${CMAKE_SOURCE_DIR}/ruby/openstudio_cli.rb"
+                  )
+
 # configure ruby files for installer
 file(COPY "${CMAKE_SOURCE_DIR}/ruby/openstudio.rb" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/install")
 file(COPY "${CMAKE_SOURCE_DIR}/ruby/Win32API.so" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/install")
 configure_file("${CMAKE_SOURCE_DIR}/ruby/openstudio_test.in" "${CMAKE_CURRENT_BINARY_DIR}/install/openstudio_test.rb")
-configure_file("${CMAKE_SOURCE_DIR}/ruby/openstudio_cli.rb" "${CMAKE_CURRENT_BINARY_DIR}/install/openstudio_cli.rb")
 # OpenStudio/OpenStudio-config will be written by the installer because it points to installed location
 file(COPY "${CMAKE_SOURCE_DIR}/ruby/openstudio/sketchup_plugin/Startup.rb" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/install/SketchUp/Plugins/OpenStudio/")
 file(COPY "${CMAKE_SOURCE_DIR}/ruby/openstudio/sketchup_plugin/OpenStudio.hash" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/install/SketchUp/Plugins/OpenStudio/")
@@ -188,9 +194,15 @@ foreach(POSSIBLE_CONFIGURATION ${POSSIBLE_CONFIGURATIONS})
   file(COPY "${CMAKE_SOURCE_DIR}/ruby/openstudio_dev.rb" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}")
   file(RENAME "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}/openstudio_dev.rb" "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}/openstudio.rb")
 
+  add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/install/openstudio_cli.rb"
+                     COMMAND "${CMAKE_COMMAND}" -E copy "${CMAKE_SOURCE_DIR}/ruby/openstudio_cli.rb" "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}/openstudio_cli.rb"
+                     DEPENDS "${CMAKE_SOURCE_DIR}/ruby/openstudio_cli.rb"
+                     APPEND
+                    )
+                  
   configure_file("${CMAKE_SOURCE_DIR}/ruby/config.in" "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}/config.rb")
   configure_file("${CMAKE_SOURCE_DIR}/ruby/openstudio_test.in" "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}/openstudio_test.rb")
-  configure_file("${CMAKE_SOURCE_DIR}/ruby/openstudio_cli.rb" "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}/openstudio_cli.rb")
+  
 
   file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}/SketchUp/Plugins/OpenStudio/OpenStudio-config" "$OPENSTUDIO_SKETCHUPPLUGIN_VERSION = '${CMAKE_CURRENT_BINARY_DIR}' \n require '${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}/openstudio.rb'")
   file(COPY "${CMAKE_SOURCE_DIR}/ruby/openstudio/sketchup_plugin/Startup.rb" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}/SketchUp/Plugins/OpenStudio")
