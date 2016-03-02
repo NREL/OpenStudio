@@ -416,9 +416,10 @@ void RunStatusView::setStatus(const CloudStatus & cloudStatus, analysisdriver::A
   cloudLostConnectionButton->hide();
 
   // TEMPORARY CLOUD DISABLE
-  //cloudOnButton->show();
-  //cloudOnButton->setEnabled(false);
-  //cloudOnButton->setToolTip("PAT cloud functionality is temporarily disabled and will be resolved in a future release");
+  cloudOnButton->show();
+  cloudOnButton->setEnabled(false);
+  cloudOnButton->setToolTip("PAT cloud functionality is disabled until OpenStudio 2.0");
+  /*
   if( cloudStatus == CLOUD_STOPPED ){
     cloudOnButton->show();
     // don't allow turn on cloud while running, starting, or stopping analysis
@@ -446,7 +447,7 @@ void RunStatusView::setStatus(const CloudStatus & cloudStatus, analysisdriver::A
   }else if( cloudStatus == CLOUD_ERROR ){
     cloudLostConnectionButton->show();
   }
-
+  */
 }
 
 void RunStatusView::paintEvent(QPaintEvent * e)
