@@ -965,7 +965,7 @@ void AlternativeModelMeasureListController::alternativeModelMeasureItemRemoved()
 
 void AlternativeModelMeasureListController::emitModelReset()
 {
-  modelReset();
+  emit modelReset();
 }
 
 analysis::OptionalRubyMeasure AlternativeModelMeasureListController::rubySwapMeasure() const
