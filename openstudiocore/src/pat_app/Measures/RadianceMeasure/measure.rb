@@ -786,13 +786,13 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           print_statement("### DEBUG: wgmerge is #{wgMerge.row_count} rows x #{wgMerge.column_count} columns", runner)
 
           wgShadeSchedule = []
-          print_statement("### DEBUG: window group = '#{wg.split(",")[0]}', window controls matrix index = '#{wg_index-1}' (zero-based)", runner)
+          print_statement("### DEBUG: window group = '#{wg.split(",")[0]}', window controls matrix index = '#{wg_index-1}'", runner)
           windowControls.row(wg_index-1).each_with_index do | illuminance, row_index|
 
             window_illuminance = illuminance.to_f
 
             if window_illuminance < shadeControlSetpoint
-              print_statement("### DEBUG: E(#{windowGroup}) is #{window_illuminance.round(0)} lux at index: #{row_index} /\\ STATE 0 (up/clear) /\\", runner) if row_index > 152 && row_index < 160 # print shade decisions for one day
+              print_statement("### DEBUG: E(#{windowGroup}) is #{window_illuminance.round(0)} lux at index #{row_index}: STATE=0 (up/clear)", runner) if row_index > 152 && row_index < 160 # print shade decisions for one day
 
               ill0.column(row_index).each_with_index do |value, column_index| 
                 wgMerge.send(:[]=, column_index, row_index, value)
@@ -800,7 +800,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
               wgShadeSchedule << "#{row_index},#{window_illuminance.round(0)},#{shadeControlSetpoint.round(0)},0\n"
             else
-              print_statement("### DEBUG: E(#{windowGroup}) is #{window_illuminance.round(0)} lux at index: #{row_index} \\/ STATE 1 (dn/tinted) \\/", runner) if row_index > 152 && row_index < 160 # print shade decisions for one day
+              print_statement("### DEBUG: E(#{windowGroup}) is #{window_illuminance.round(0)} lux at index #{row_index}: STATE=1 (dn/tinted)", runner) if row_index > 152 && row_index < 160 # print shade decisions for one day
 
               ill1.column(row_index).each_with_index do |value, column_index| 
                 wgMerge.send(:[]=, column_index, row_index, value.to_f)
