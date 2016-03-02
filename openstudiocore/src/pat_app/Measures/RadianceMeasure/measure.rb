@@ -762,7 +762,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           wgIllumFiles = Dir.glob("output/ts/#{windowGroup}_*.ill").sort
 
           shadeControlType = wg.split(",")[2].to_s
-          shadeControlSetpoint = wg.split(",")[3].to_f
+          shadeControlSetpointWatts = wg.split(",")[3].to_f
+          shadeControlSetpoint = shadeControlSetpointWatts * 179 # Radiance's luminous efficacy factor
           wg_normal = wg.split(",")[1]
           wg_normal_x = wg_normal.split(" ")[0].to_f
           wg_normal_y = wg_normal.split(" ")[1].to_f
