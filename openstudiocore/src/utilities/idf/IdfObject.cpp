@@ -443,7 +443,7 @@ namespace detail {
         m_fields.push_back(newName);
         m_diffs.push_back(IdfObjectDiff(i, boost::none, newName));
       }
-      return newName; // success!
+      return _newName; // success!
     }
     return boost::none; // no name
   }
