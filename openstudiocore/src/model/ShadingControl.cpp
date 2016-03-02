@@ -123,7 +123,7 @@ namespace detail {
     if (!result){
       std::string shadingControlType = this->shadingControlType();
       if (istringEqual("OnIfHighSolarOnWindow", shadingControlType)){
-        result = 5000; // lux
+        result = 27; // w/m^2
       }
     }
     return result;

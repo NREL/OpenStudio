@@ -762,7 +762,8 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           wgIllumFiles = Dir.glob("output/ts/#{windowGroup}_*.ill").sort
 
           shadeControlType = wg.split(",")[2].to_s
-          shadeControlSetpoint = wg.split(",")[3].to_f
+          shadeControlSetpointWatts = wg.split(",")[3].to_f
+          shadeControlSetpoint = shadeControlSetpointWatts * 179 # Radiance's luminous efficacy factor
           wg_normal = wg.split(",")[1]
           wg_normal_x = wg_normal.split(" ")[0].to_f
           wg_normal_y = wg_normal.split(" ")[1].to_f
@@ -785,13 +786,13 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           print_statement("### DEBUG: wgmerge is #{wgMerge.row_count} rows x #{wgMerge.column_count} columns", runner)
 
           wgShadeSchedule = []
-          print_statement("### DEBUG: window group = '#{wg.split(",")[0]}', window controls matrix index = '#{wg_index-1}' (zero-based)", runner)
+          print_statement("### DEBUG: window group = '#{wg.split(",")[0]}', window controls matrix index = '#{wg_index-1}'", runner)
           windowControls.row(wg_index-1).each_with_index do | illuminance, row_index|
 
             window_illuminance = illuminance.to_f
 
             if window_illuminance < shadeControlSetpoint
-              print_statement("### DEBUG: E(#{windowGroup}) is #{window_illuminance.round(0)} lux at index: #{row_index} /\\ STATE 0 (up/clear) /\\", runner) if row_index > 152 && row_index < 160 # print shade decisions for one day
+              print_statement("### DEBUG: E(#{windowGroup}) is #{window_illuminance.round(0)} lux at index #{row_index}: STATE=0 (up/clear)", runner) if row_index > 152 && row_index < 160 # print shade decisions for one day
 
               ill0.column(row_index).each_with_index do |value, column_index| 
                 wgMerge.send(:[]=, column_index, row_index, value)
@@ -799,7 +800,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
               wgShadeSchedule << "#{row_index},#{window_illuminance.round(0)},#{shadeControlSetpoint.round(0)},0\n"
             else
-              print_statement("### DEBUG: E(#{windowGroup}) is #{window_illuminance.round(0)} lux at index: #{row_index} \\/ STATE 1 (dn/tinted) \\/", runner) if row_index > 152 && row_index < 160 # print shade decisions for one day
+              print_statement("### DEBUG: E(#{windowGroup}) is #{window_illuminance.round(0)} lux at index #{row_index}: STATE=1 (dn/tinted)", runner) if row_index > 152 && row_index < 160 # print shade decisions for one day
 
               ill1.column(row_index).each_with_index do |value, column_index| 
                 wgMerge.send(:[]=, column_index, row_index, value.to_f)
