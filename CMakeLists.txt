@@ -39,7 +39,7 @@ else()
   set(GIT_DIR "")
 endif()
 
-find_program(PATCH_EXE patch HINTS "${GIT_DIR}" "${GIT_DIR}/../bin/")
+find_program(PATCH_EXE patch HINTS "${GIT_DIR}" "${GIT_DIR}/../bin/" "${GIT_DIR}/../usr/bin/")
 string(COMPARE EQUAL "${PATCH_EXE}" "PATCH_EXE-NOTFOUND" PATCH_EXE_NOTFOUND)
 if(PATCH_EXE_NOTFOUND)
   message(SEND_ERROR "Required program patch not found")
