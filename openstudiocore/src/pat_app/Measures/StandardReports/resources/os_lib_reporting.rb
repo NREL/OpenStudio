@@ -268,8 +268,8 @@ module OsLib_Reporting
     # temp code to check OS vs. E+ area
     energy_plus_area = query_results.get
     open_studio_area = model.getBuilding.floorArea
-    if not energy_plus_area == open_studio_area
-      runner.registerWarning("EnergyPlus reported area is #{query_results.get} (m^2). OpenStudio reported area is #{model.getBuilding.floorArea} (m^2).")
+    if not (energy_plus_area - open_studio_area).abs < 1.0
+      runner.registerWarning("EnergyPlus reported area is #{query_results.get.round} (m^2). OpenStudio reported area is #{model.getBuilding.floorArea.round} (m^2).")
     end
 
     # EUI
