@@ -1,7 +1,20 @@
+## OpenStudio v1.10.4
+###### 2016-02-21 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.10.3...v1.10.4 )
+
+- ![Fixed:][fixed] [#1929]( https://github.com/NREL/OpenStudio/issues/1929 ), Radiance Measure flails when initial E+ run fails.
+- ![Fixed:][fixed] [#1930]( https://github.com/NREL/OpenStudio/issues/1930 ), Support switchable glazing in Radiance Measure
+- ![Fixed:][fixed] [#2064]( https://github.com/NREL/OpenStudio/issues/2064 ), CBECC generated files fail to open in current OS (1.10.2)
+- ![Fixed:][fixed] [#2065]( https://github.com/NREL/OpenStudio/issues/2065 ), Tariff Selection Time And Date Dependent measure has wrong season for winter demand charge
+- ![Fixed:][fixed] [#2069]( https://github.com/NREL/OpenStudio/issues/2069 ), Fix delta temperature in design day table
+- ![Fixed:][fixed] [#2071]( https://github.com/NREL/OpenStudio/issues/2071 ), Missing Object Types in Sketchup Plugin Inspector
+- ![Fixed:][fixed] [#2072]( https://github.com/NREL/OpenStudio/issues/2072 ), Cannot create thermostats in Sketchup 2016 with OS 1.10
+- ![Fixed:][fixed] [#2074]( https://github.com/NREL/OpenStudio/issues/2074 ), Deleting space orphans lifecycle cost objects that had been associated with the space
+- ![Fixed:][fixed] [#2082]( https://github.com/NREL/OpenStudio/issues/2082 ), Autosize water heater ends in IDF without WaterHeater:Sizing object
+- ![Fixed:][fixed] [#2083]( https://github.com/NREL/OpenStudio/issues/2083 ), Fix Radiance version sniff
+
 ## OpenStudio v1.10.3
 ###### 2016-01-21 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.10.2...v1.10.3 )
 
-Closed Issues: 11 (#123, #713, #985, #1897, #1968, #2012, #2026, #2040, #2042, #2049, #2056)
 - ![Improved:][improved] [#713]( https://github.com/NREL/OpenStudio/issues/713 ), Support multiple glare sensors per space
 - ![Improved:][improved] [#985]( https://github.com/NREL/OpenStudio/issues/985 ), Allow shared thermostats
 - ![Improved:][improved] [#1968]( https://github.com/NREL/OpenStudio/issues/1968 ), Add new oa method to ControllerMechanicalVentilation
@@ -17,7 +30,6 @@ Closed Issues: 11 (#123, #713, #985, #1897, #1968, #2012, #2026, #2040, #2042, #
 ## OpenStudio v1.10.2
 ###### 2016-01-21 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.10.1...v1.10.2 )
 
-Closed Issues: 3 (#1713, #1947, #2028)
 - ![Fixed:][fixed] [#1713]( https://github.com/NREL/OpenStudio/issues/1713 ), open studio not working on windows 8.1
 - ![Fixed:][fixed] [#1947]( https://github.com/NREL/OpenStudio/issues/1947 ), Expose all fields of the Sizing:Zone object
 - ![Fixed:][fixed] [#2028]( https://github.com/NREL/OpenStudio/issues/2028 ), Forward Translation error when multiple spaces of same space type in a zone when load type is design load

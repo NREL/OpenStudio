@@ -451,6 +451,32 @@ class DiagnosticScript < OpenStudio::Ruleset::UtilityUserScript
     else
       puts "no orphaned PortList objects were found"
     end
+  
+    # find and remove orphan LifeCycleCost objects
+    puts ""
+    puts "Removing LifeCycleCost objects that are not connected to any model object"
+    #get all LifeCycleCost objects in the model
+    lcc_objects = model.getObjectsByType("OS:LifeCycleCost".to_IddObjectType)
+    #make an array to store the names of the orphan LifeCycleCost objects
+    orphaned_lcc_objects = Array.new
+    #loop through all LifeCycleCost objects, checking for missing Item Name
+    lcc_objects.each do |lcc_object|
+      if lcc_object.isEmpty(4)
+        orphaned_lcc_objects << lcc_object.handle
+        puts "*(error)#{lcc_object.name} is not connected to any object"
+        if remove_errors
+          puts "**(removing object)#{lcc_object.name} is not connected to any model object"
+          lcc_object.remove
+          savediagnostic = true
+        end
+      end
+    end
+    #summarize the results
+    if orphaned_lcc_objects.length > 0
+      puts "#{orphaned_lcc_objects.length} orphaned LifeCycleCost objects were found"
+    else
+      puts "no orphaned LifeCycleCost objects were found"
+    end
     
     puts ""
     puts ">>diagnostic test complete"

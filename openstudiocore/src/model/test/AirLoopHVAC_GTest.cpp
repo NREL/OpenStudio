@@ -857,8 +857,18 @@ TEST_F(ModelFixture,AirLoopHVAC_dualDuct)
     }
 
     EXPECT_EQ(8u,airLoopHVAC.supplyComponents().size());
-
     EXPECT_EQ(5u,airLoopHVAC.demandComponents().size());
+
+    {
+      auto comps = airLoopHVAC.components(airLoopHVAC.supplySplitter()->outletModelObjects()[0].cast<Node>(),
+                                          airLoopHVAC.supplyOutletNodes()[0].cast<Node>());
+      EXPECT_EQ(3u,comps.size());
+    }
+    {
+      auto comps = airLoopHVAC.components(airLoopHVAC.supplySplitter()->outletModelObjects()[1].cast<Node>(),
+                                          airLoopHVAC.supplyOutletNodes()[1].cast<Node>());
+      EXPECT_EQ(3u,comps.size());
+    }
   }
 
   // Unmake dual duct

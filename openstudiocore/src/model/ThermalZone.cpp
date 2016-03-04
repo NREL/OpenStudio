@@ -2308,6 +2308,21 @@ namespace detail {
     return result;
   }
 
+  boost::optional<HVACComponent> ThermalZone_Impl::airLoopHVACTerminal() const
+  {
+    if( auto mo = inletPortList().airLoopHVACModelObject() ) {
+      if( auto node = mo->optionalCast<Node>() ) {
+        if( auto nodeInlet = node->inletModelObject() ) {
+          if( ! nodeInlet->optionalCast<Splitter>() ) {
+            return nodeInlet->optionalCast<HVACComponent>();
+          }
+        }
+      }
+    }
+
+    return boost::none;
+  }
+
   boost::optional<ZoneControlContaminantController> ThermalZone_Impl::zoneControlContaminantController() const
   {
     auto h = handle();
@@ -2923,6 +2938,11 @@ std::vector<ZoneMixing> ThermalZone::supplyZoneMixing() const
 std::vector<ZoneMixing> ThermalZone::exhaustZoneMixing() const
 {
   return getImpl<detail::ThermalZone_Impl>()->exhaustZoneMixing();
+}
+
+boost::optional<HVACComponent> ThermalZone::airLoopHVACTerminal() const
+{
+  return getImpl<detail::ThermalZone_Impl>()->airLoopHVACTerminal();
 }
 
 boost::optional<ZoneControlContaminantController> ThermalZone::zoneControlContaminantController() const

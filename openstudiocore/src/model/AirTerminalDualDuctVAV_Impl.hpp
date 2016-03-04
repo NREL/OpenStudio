@@ -118,6 +118,8 @@ namespace detail {
 
     virtual ModelObject clone(Model model) const override;
 
+    bool isRemovable() const override;
+
     //@}
    protected:
    private:
