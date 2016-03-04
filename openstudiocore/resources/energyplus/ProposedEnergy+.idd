@@ -42979,6 +42979,7 @@ FluidCooler:TwoSpeed,
        \type node
 
 GroundHeatExchanger:Vertical,
+ \extensible:2
  \min-fields 20
  \memo Variable short time step vertical ground heat exchanger model based on
  \memo Yavuztruk, C., J.D.Spitler. 1999. A Short Time Step response Factor Model for
