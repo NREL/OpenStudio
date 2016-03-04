@@ -863,7 +863,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         # strip header
         print_statement("Finalizing output...", runner)
         exec_statement("rmtxop -fa output/final_merge.tmp -t | getinfo - > output/merged_space.ill", runner)
-        # system("rm output/ts/final_merge.tmp")
+        FileUtils.rm 'output/final_merge.tmp'
         print_statement("Done.", runner)
       end
 
