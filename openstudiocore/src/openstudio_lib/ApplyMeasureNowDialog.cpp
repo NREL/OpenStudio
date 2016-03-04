@@ -286,7 +286,7 @@ void ApplyMeasureNowDialog::displayMeasure()
 
   //    // pass in an empty workspace for the idf since you know it is a model measure
   //    Workspace dummyIdf;
-  //    ruleset::RubyUserScriptInfo info = app->measureManager().infoGetter()->getInfo(*m_bclMeasure, m_model, dummyIdf);
+  //    ruleset::OSMeasureInfo info = app->measureManager().infoGetter()->getInfo(*m_bclMeasure, m_model, dummyIdf);
   //    std::vector<ruleset::OSArgument> args = info.arguments();
   //    rubyMeasure.setArguments(args);
 

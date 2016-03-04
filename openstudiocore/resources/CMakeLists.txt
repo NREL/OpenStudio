@@ -35,6 +35,8 @@ set(utilities_resources_src
   utilities/Filetypes/USA_CO_Golden-NREL.wrap.amy
   utilities/Filetypes/TDV_2008_kBtu_CZ13.csv
   utilities/Filetypes/TUN_Tunis.607150_IWEC.epw
+  utilities/Filetypes/min.osw
+  utilities/Filetypes/full.osw
   utilities/Idf/CommentTest.idf
   utilities/Idf/DosLineEndingTest.idf
   utilities/Idf/UnixLineEndingTest.idf
@@ -62,56 +64,6 @@ add_custom_target(openstudio_utilities_resources
 )
 
 CREATE_SRC_GROUPS("${utilities_resources_src}")
-
-########################################################
-# runmanager resources
-# clear runs, calls to RUN_ENERGYPLUS will populate this
-set(ENERGYPLUS_OUTPUTS "")
-
-set(runmanager_resources_src
-  runmanager/5ZoneWarmest.idf
-  runmanager/create_os_result.rb
-  runmanager/create_os_result_success.rb
-  runmanager/databasev1.db
-  runmanager/DummyMeasure/measure.rb
-  runmanager/DummyMeasure/measure.xml
-  runmanager/DummyMeasureEPW/measure.rb
-  runmanager/DummyMeasureEPW/measure.xml
-  runmanager/in.file
-  runmanager/jsonworkflowtest/small_seed.json
-  runmanager/jsonworkflowtest/inputs/measures/adjust_thermostat_setpoints_by_degrees/measure.rb
-  runmanager/jsonworkflowtest/inputs/measures/adjust_thermostat_setpoints_by_degrees/measure.xml
-  runmanager/jsonworkflowtest/inputs/measures/increase_insulation_r_value_for_exterior_walls/measure.rb
-  runmanager/jsonworkflowtest/inputs/measures/increase_insulation_r_value_for_exterior_walls/measure.xml
-  runmanager/jsonworkflowtest/inputs/measures/increase_insulation_r_value_for_roofs/measure.rb
-  runmanager/jsonworkflowtest/inputs/measures/increase_insulation_r_value_for_roofs/measure.xml
-  runmanager/jsonworkflowtest/inputs/measures/reduce_lighting_loads_by_percentage/measure.rb
-  runmanager/jsonworkflowtest/inputs/measures/reduce_lighting_loads_by_percentage/measure.xml
-  runmanager/jsonworkflowtest/inputs/measures/reduce_space_infiltration_by_percentage/measure.rb
-  runmanager/jsonworkflowtest/inputs/measures/reduce_space_infiltration_by_percentage/measure.xml
-  runmanager/jsonworkflowtest/inputs/measures/reduce_ventilation_by_percentage/measure.rb
-  runmanager/jsonworkflowtest/inputs/measures/reduce_ventilation_by_percentage/measure.xml
-  runmanager/killtree.sh
-  runmanager/SimpleModel.osm
-  runmanager/test.ies
-  runmanager/test.rb
-  runmanager/test.xml
-  runmanager/USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw
-  runmanager/USA_CO_Golden-NREL.724666_TMY3.epw
-  runmanager/USA_FL_Tampa.Intl.AP.722110_TMY3.epw
-)
-
-# update the resources
-UPDATE_RESOURCES("${runmanager_resources_src}")
-
-# add target
-add_custom_target(openstudio_runmanager_resources
-  DEPENDS ${runmanager_resources_src} ${ENERGYPLUS_OUTPUTS}
-  SOURCES ${runmanager_resources_src}
-)
-
-CREATE_SRC_GROUPS("${runmanager_resources_src}")
-
 
 ########################################################
 # model resources
@@ -511,89 +463,22 @@ add_custom_target(openstudio_lib_resources
 CREATE_SRC_GROUPS("${openstudio_lib_resources_src}")
 
 ########################################################
-# project resources
+# measure resources
 # clear runs, calls to RUN_ENERGYPLUS will populate this
 set(ENERGYPLUS_OUTPUTS "")
 
-set(project_resources_src
-  project/buildings/SmallOffice.idf
-  project/locations/LocationDependSets.imf
-  project/version/project_0_8_0.osp
-  project/version/project_0_8_0.db
-  project/version/project_0_8_3.osp
-  project/version/project_0_8_3.db
-  project/version/project_0_9_0.osp
-  project/version/project_0_9_0.db
-  project/version/project_0_10_0.osp
-  project/version/project_0_10_0.db
-  project/version/project_0_10_2.osp
-  project/version/project_0_10_2.db
-  project/version/project_0_10_3.osp
-  project/version/project_0_10_3.db
-  project/version/project_0_10_4.osp
-  project/version/project_0_10_4.db
-  project/version/project_0_11_5.osp
-  project/version/project_0_11_5.db
-  project/version/project_1_0_2.osp
-  project/version/project_1_0_2.db
-  project/version/project_1_0_3.osp
-  project/version/project_1_0_3.db
-  project/version/project_1_0_4.osp
-  project/version/project_1_0_4.db
-  project/version/project_1_0_6.osp
-  project/version/project_1_0_6.db
-  project/version/project_1_3_3.osp
-  project/version/project_1_3_3.db
-)
+set(measure_resources_src)
 
 # update the resources
-UPDATE_RESOURCES("${project_resources_src}")
+UPDATE_RESOURCES("${measure_resources_src}")
 
 # add target
-add_custom_target(openstudio_project_resources
-  DEPENDS ${project_resources_src} ${ENERGYPLUS_OUTPUTS}
-  SOURCES ${project_resources_src}
+add_custom_target(openstudio_measure_resources
+  DEPENDS ${measure_resources_src} ${ENERGYPLUS_OUTPUTS}
+  SOURCES ${measure_resources_src}
 )
 
-CREATE_SRC_GROUPS("${project_resources_src}")
-
-########################################################
-# analysisdriver resources
-# clear runs, calls to RUN_ENERGYPLUS will populate this
-set(ENERGYPLUS_OUTPUTS "")
-
-set(analysisdriver_resources_src
-  analysisdriver/PostProcessSecondXML.rb
-)
-
-# update the resources
-UPDATE_RESOURCES("${analysisdriver_resources_src}")
-
-# add target
-add_custom_target(openstudio_analysisdriver_resources
-  DEPENDS ${analysisdriver_resources_src} ${ENERGYPLUS_OUTPUTS}
-  SOURCES ${analysisdriver_resources_src}
-)
-
-CREATE_SRC_GROUPS("${analysisdriver_resources_src}")
-
-########################################################
-# ruleset resources
-# clear runs, calls to RUN_ENERGYPLUS will populate this
-set(ENERGYPLUS_OUTPUTS "")
-
-set(ruleset_resources_src)
-
-# update the resources
-UPDATE_RESOURCES("${ruleset_resources_src}")
-
-# add target
-add_custom_target(openstudio_ruleset_resources
-  DEPENDS ${ruleset_resources_src} ${ENERGYPLUS_OUTPUTS}
-  SOURCES ${ruleset_resources_src}
-)
-
-CREATE_SRC_GROUPS("${ruleset_resources_src}")
+CREATE_SRC_GROUPS("${measure_resources_src}")
 
 ########################################################
 # energyplus resources
@@ -752,48 +637,6 @@ add_custom_target(openstudio_sdd_resources
 )
 
 CREATE_SRC_GROUPS("${sdd_resources_src}")
-
-########################################################
-# analysis resources
-# clear runs, calls to RUN_ENERGYPLUS will populate this
-set(ENERGYPLUS_OUTPUTS "")
-
-set(analysis_resources_src
-  analysis/version/analysis_1-0-3.json
-  analysis/version/data_point_1-0-3.json
-  analysis/version/analysis_1-0-4.json
-  analysis/version/data_point_1-0-4.json
-  analysis/version/analysis_1-1-1.json
-  analysis/version/data_point_1-1-1.json
-  analysis/pat_export/formulation.json
-  analysis/pat_export/seed/example.osm
-  analysis/pat_export/seed/example/files/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw
-  analysis/pat_export/scripts/aeb20d61-b773-4d20-a2ef-fe948cdc2858/measure.rb
-  analysis/pat_export/scripts/aeb20d61-b773-4d20-a2ef-fe948cdc2858/measure.xml
-  analysis/pat_export/scripts/ReportRequest/measure.rb
-  analysis/pat_export/scripts/ReportRequest/measure.xml
-  analysis/pat_export/scripts/StandardReports/measure.rb
-  analysis/pat_export/scripts/StandardReports/measure.xml
-  analysis/pat_export/scripts/StandardReports/resources/os_lib_helper_methods.rb
-  analysis/pat_export/scripts/StandardReports/resources/os_lib_reporting.rb
-  analysis/pat_export/scripts/StandardReports/resources/os_lib_schedules.rb
-  analysis/pat_export/scripts/StandardReports/resources/report.html.erb
-  analysis/pat_export/data_point_469b52c3-4aae-4cdd-b580-5c9494eefa11/data_point.json
-  analysis/pat_export/data_point_d85b5ffa-b8f0-4bc1-b8af-da6df0da4267/data_point.json
-  analysis/pat_export/data_point_df7ceb48-88a7-44c3-86ac-bd3227d2b1e1/data_point.json
-)
-
-# update the resources
-UPDATE_RESOURCES("${analysis_resources_src}")
-
-# add target
-add_custom_target(openstudio_analysis_resources
-  DEPENDS ${analysis_resources_src} ${ENERGYPLUS_OUTPUTS}
-  SOURCES ${analysis_resources_src}
-)
-
-CREATE_SRC_GROUPS("${analysis_resources_src}")
-
 
 ########################################################
 # isomodel resources

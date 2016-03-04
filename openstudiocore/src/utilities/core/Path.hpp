@@ -38,7 +38,7 @@ namespace openstudio {
 typedef boost::filesystem::path path;
 
 // allow wpath to be written to cout on Windows
-UTILITIES_API std::ostream& operator<<(std::ostream& os, const path& p);
+UTILITIES_API ::std::ostream& operator<<(::std::ostream& os, const path& p);
 
 /** path to a temporary directory. */
 UTILITIES_API path tempDir();

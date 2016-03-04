@@ -171,6 +171,8 @@ namespace openstudio{
 
     std::vector <BCLMeasureArgument> arguments() const;
 
+    std::vector <BCLMeasureOutput> outputs() const;
+
     // ETH: provenance?
     // DLM: we can do this later
 
@@ -201,6 +203,7 @@ namespace openstudio{
 
     void setArguments(const std::vector<BCLMeasureArgument>& arguments);
 
+    void setOutputs(const std::vector<BCLMeasureOutput>& outputs);
 
     //@}
     /** @name Operators */

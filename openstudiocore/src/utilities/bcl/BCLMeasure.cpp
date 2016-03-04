@@ -105,6 +105,7 @@ namespace openstudio{
     QString templateDescription = "DESCRIPTION_TEXT";
     QString templateModelerDescription = "MODELER_DESCRIPTION_TEXT";
     std::vector<BCLMeasureArgument> arguments;
+    std::vector<BCLMeasureOutput> outputs;
     QString testOSM;
     QString resourceFile;
     openstudio::path testOSMPath;
@@ -293,6 +294,7 @@ namespace openstudio{
     m_bclXML.setDescription(description);
     m_bclXML.setModelerDescription(modelerDescription);
     m_bclXML.setArguments(arguments);
+    m_bclXML.setOutputs(outputs);
     m_bclXML.addTag(taxonomyTag);
     this->setMeasureType(measureType);
 
@@ -658,6 +660,11 @@ namespace openstudio{
     return m_bclXML.arguments();
   }
 
+  std::vector<BCLMeasureOutput> BCLMeasure::outputs() const
+  {
+    return m_bclXML.outputs();
+  }
+
   std::vector<std::string> BCLMeasure::tags() const
   {
     return m_bclXML.tags();
@@ -708,9 +715,14 @@ namespace openstudio{
     m_bclXML.setModelerDescription(description);
   }
 
-  void BCLMeasure::setArguments(const std::vector<BCLMeasureArgument>& arguments)
+  void BCLMeasure::setArguments(const std::vector<BCLMeasureArgument>& args)
   {
-    m_bclXML.setArguments(arguments);
+    m_bclXML.setArguments(args);
+  }
+
+  void BCLMeasure::setOutputs(const std::vector<BCLMeasureOutput>& outputs)
+  {
+    m_bclXML.setOutputs(outputs);
   }
 
    std::string BCLMeasure::taxonomyTag() const

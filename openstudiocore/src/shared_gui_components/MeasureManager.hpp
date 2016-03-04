@@ -24,7 +24,7 @@
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/core/Path.hpp"
 #include "../utilities/core/UUID.hpp"
-#include "../ruleset/RubyUserScriptInfoGetter.hpp"
+#include "../measure/OSMeasureInfoGetter.hpp"
 #include "../model/Model.hpp"
 #include <vector>
 #include <map>
@@ -89,8 +89,8 @@ class MeasureManager : public QObject
   Q_OBJECT;
 
   public:
-    // Constructor taking a RubyUserScriptInfoGetter
-    MeasureManager(const QSharedPointer<ruleset::RubyUserScriptInfoGetter> &t_infoGetter, BaseApp *t_app);
+    // Constructor taking a OSMeasureInfoGetter
+    MeasureManager(const QSharedPointer<measure::OSMeasureInfoGetter> &t_infoGetter, BaseApp *t_app);
 
     virtual ~MeasureManager() {}
 
@@ -137,7 +137,7 @@ class MeasureManager : public QObject
 
     bool isMeasureSelected();
 
-    QSharedPointer<ruleset::RubyUserScriptInfoGetter> infoGetter() const;
+    QSharedPointer<measure::OSMeasureInfoGetter> infoGetter() const;
 
   public slots:
     /// Update the UI display for all measures. Does recompute the measure's XML.
@@ -190,7 +190,7 @@ class MeasureManager : public QObject
     std::map<UUID,BCLMeasure> m_openstudioMeasures;
     std::map<UUID,BCLMeasure> m_myMeasures;
     std::map<UUID,BCLMeasure> m_bclMeasures;
-    QSharedPointer<ruleset::RubyUserScriptInfoGetter> m_infoGetter;
+    QSharedPointer<measure::OSMeasureInfoGetter> m_infoGetter;
     QSharedPointer<LocalLibraryController> m_libraryController;
 };
 

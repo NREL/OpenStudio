@@ -40,7 +40,7 @@
 
 //#include "../runmanager/lib/RunManager.hpp"
 
-#include "../ruleset/OSArgument.hpp"
+#include "../measure/OSArgument.hpp"
 
 #include "../model/Model.hpp"
 
@@ -68,7 +68,7 @@
 
 namespace openstudio {
 
-MeasureManager::MeasureManager(const QSharedPointer<ruleset::RubyUserScriptInfoGetter> &t_infoGetter, BaseApp *t_app)
+MeasureManager::MeasureManager(const QSharedPointer<measure::OSMeasureInfoGetter> &t_infoGetter, BaseApp *t_app)
   : m_app(t_app), m_infoGetter(t_infoGetter)
 {
 }
@@ -206,7 +206,7 @@ MeasureManager::MeasureManager(const QSharedPointer<ruleset::RubyUserScriptInfoG
 //      idf = t_idf;
 //    }
 //
-//    ruleset::RubyUserScriptInfo info = m_infoGetter->getInfo(t_measure, model, idf);
+//    ruleset::OSMeasureInfo info = m_infoGetter->getInfo(t_measure, model, idf);
 //    std::vector<ruleset::OSArgument> args = info.arguments();
 //    LOG(Info, "Loaded " << args.size() << " arguments for measure " << t_measure.displayName() << "(" << toString(t_measure.uuid()) << " version: " << toString(t_measure.versionUUID()) << ")");
 //    t_project.registerArguments(t_measure, args);
@@ -410,11 +410,11 @@ bool MeasureManager::checkForUpdates(BCLMeasure& measure, bool force)
   if (result || force){
     // if files updated or being forced to, try to load the ruby measure
     try{
-      ruleset::RubyUserScriptInfo info = m_infoGetter->getInfo(measure);
+      measure::OSMeasureInfo info = m_infoGetter->getInfo(measure);
       info.update(measure);
     } catch(const std::exception& e) {
       // failed to get info, put error into the measure's xml
-      ruleset::RubyUserScriptInfo info(e.what());
+      measure::OSMeasureInfo info(e.what());
       info.update(measure);
     }
   }
@@ -712,7 +712,7 @@ bool MeasureManager::isMeasureSelected()
   return false;
 }
 
-QSharedPointer<ruleset::RubyUserScriptInfoGetter> MeasureManager::infoGetter() const
+QSharedPointer<measure::OSMeasureInfoGetter> MeasureManager::infoGetter() const
 {
   return m_infoGetter;
 }

@@ -109,8 +109,8 @@ void ScriptItem::setIsUserScript(bool isUserScript) {
 //}
 
 
-std::vector<ruleset::OSArgument> ScriptItem::osArguments() const {
-  ruleset::OSArgumentVector result;
+std::vector<measure::OSArgument> ScriptItem::osArguments() const {
+  measure::OSArgumentVector result;
   //for (const auto & elem : m_scriptInfo.arguments)
   //{
   //  result.push_back(elem.second);
@@ -118,9 +118,10 @@ std::vector<ruleset::OSArgument> ScriptItem::osArguments() const {
   return result;
 }
 
-boost::optional<ruleset::UserScriptInfo> ScriptItem::userScriptInfo() const {
+boost::optional<measure::OSMeasureInfo> ScriptItem::userScriptInfo() const {
   if (isUserScript()) {
-    return ruleset::UserScriptInfo(path(),osArguments());
+    OS_ASSERT(false);
+    //return measure::OSMeasureInfo(path(),osArguments());
   }
   return boost::none;
 }
@@ -145,7 +146,7 @@ openstudio::path ScriptItem::resourcesPath() const {
   return openstudio::path();
 }
 
-void ScriptItem::setOSArgument(const ruleset::OSArgument& arg)
+void ScriptItem::setOSArgument(const measure::OSArgument& arg)
 {
   //m_scriptInfo.arguments[arg.name()] = arg;
   //m_scriptInfo.argsChanged = true;

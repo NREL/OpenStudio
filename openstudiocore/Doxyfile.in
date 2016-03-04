@@ -1979,7 +1979,7 @@ PREDEFINED             = "UTILITIES_API=" \
                          "RUNMANAGER_API=" \
                          "PROJECT_API=" \
                          "STANDARDSINTERFACE_API=" \
-                         "RULESET_API=" \
+                         "MEASURE_API=" \
                          "RULESENGINE_API=" \
                          "ANALYSIS_API=" \
                          "QDialog=" \

@@ -37,7 +37,7 @@ TEST(Filetypes, EpwFile)
     // COMMENTS 1,California Climate Zone 01 Version 2;
     // COMMENTS 2, -- Ground temps produced with a standard soil diffusivity of 2.3225760E-03 {m**2/day}
     // DATA PERIODS,1,1,Data,Sunday, 1/ 1,12/31
-    path p = resourcesPath() / toPath("runmanager/USA_CO_Golden-NREL.724666_TMY3.epw");
+    path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
     EpwFile epwFile(p);
     EXPECT_EQ(p, epwFile.path());
     EXPECT_EQ("F188656D", epwFile.checksum());
@@ -62,7 +62,7 @@ TEST(Filetypes, EpwFile)
 TEST(Filetypes, EpwFile_Data)
 {
   try{
-    path p = resourcesPath() / toPath("runmanager/USA_CO_Golden-NREL.724666_TMY3.epw");
+    path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
     EpwFile epwFile(p);
     EXPECT_EQ(p, epwFile.path());
     EXPECT_EQ("F188656D", epwFile.checksum());

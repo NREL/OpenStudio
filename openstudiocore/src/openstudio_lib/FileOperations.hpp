@@ -22,7 +22,8 @@
 
 #include "OpenStudioAPI.hpp"
 
-#include "../ruleset/OSArgument.hpp"
+#include "../measure/OSArgument.hpp"
+#include "../measure/OSMeasureInfoGetter.hpp"
 
 #include "../utilities/core/Path.hpp"
 
@@ -90,7 +91,7 @@ namespace openstudio {
                                              std::vector <double> useRadianceForDaylightingCalculations,
                                              QWidget* parent = nullptr);
   OPENSTUDIO_API bool saveRunManagerDatabase(const openstudio::path& osmPath, const openstudio::path& modelTempDir, 
-                                             const std::map<openstudio::path,std::vector<ruleset::UserScriptInfo> >& userScriptsByFolder,
+                                             const std::map<openstudio::path,std::vector<measure::OSMeasureInfo> >& userScriptsByFolder,
                                              std::vector <double> useRadianceForDaylightingCalculations,
                                              QWidget* parent = nullptr);
 

@@ -25,7 +25,8 @@
 #include "OSVectorController.hpp"
 #include "OSItemList.hpp"
 
-#include "../ruleset/OSArgument.hpp"
+#include "../measure/OSArgument.hpp"
+#include "../measure/OSMeasureInfoGetter.hpp"
 
 #include "../model/Model.hpp"
 
@@ -77,7 +78,7 @@ class ScriptsListView : public OSItemList {
 
   void updateData();
 
-  std::vector<ruleset::UserScriptInfo> userScripts();
+  std::vector<measure::OSMeasureInfo> userScripts();
 };
 
 

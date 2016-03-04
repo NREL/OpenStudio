@@ -22,7 +22,8 @@
 
 #include "OSItem.hpp"
 
-#include "../ruleset/OSArgument.hpp"
+#include "../measure/OSArgument.hpp"
+#include "../measure/OSMeasureInfoGetter.hpp"
 //#include "../runmanager/lib/RunManager.hpp"
 //#include "../runmanager/lib/RubyJobUtils.hpp"
 
@@ -60,9 +61,9 @@ class ScriptItem : public OSItem {
 
   //void refreshArgumentsFromScript(runmanager::RunManager t_rm);
 
-  std::vector<ruleset::OSArgument> osArguments() const;
+  std::vector<measure::OSArgument> osArguments() const;
 
-  boost::optional<ruleset::UserScriptInfo> userScriptInfo() const;
+  boost::optional<measure::OSMeasureInfo> userScriptInfo() const;
 
   /** Returns the resources path that corresponds to this script's path, if possible.
    *  Otherwise, returns the root scripts path. */
@@ -84,7 +85,7 @@ class ScriptItem : public OSItem {
 
  public slots:
 
-  void setOSArgument(const ruleset::OSArgument& arg);
+  void setOSArgument(const measure::OSArgument& arg);
 
  private slots:
 

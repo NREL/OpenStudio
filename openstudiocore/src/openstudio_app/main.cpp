@@ -23,12 +23,13 @@
 #include "../openstudio_lib/OpenStudioAPI.hpp"
 #include "OpenStudioApp.hpp"
 
+#include "../measure/OSArgument.hpp"
+
 #include "../openstudio_lib/MainWindow.hpp"
 #include "../utilities/core/Application.hpp"
 #include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/FileLogSink.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
-#include "../ruleset/OSArgument.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/String.hpp"
 #include "../utilities/idf/Workspace_Impl.hpp"
@@ -44,7 +45,7 @@
 #define WSAAPI
 #include "../utilities/core/Path.hpp"
 #include "../utilities/core/RubyInterpreter.hpp"
-#include "../ruleset/EmbeddedRubyUserScriptInfoGetter.hpp"
+#include "../measure/EmbeddedRubyMeasureInfoGetter.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -85,9 +86,9 @@ int main(int argc, char *argv[])
           openstudio::getOpenStudioRubyScriptsPath(),
           modules));
 
-    // Initialize the argument getter
-    QSharedPointer<openstudio::ruleset::RubyUserScriptInfoGetter> infoGetter(
-      new openstudio::ruleset::EmbeddedRubyUserScriptInfoGetter<openstudio::detail::RubyInterpreter>(rubyInterpreter));
+    // Initialize the measure info getter
+    QSharedPointer<openstudio::measure::OSMeasureInfoGetter> infoGetter(
+      new openstudio::measure::EmbeddedRubyMeasureInfoGetter<openstudio::detail::RubyInterpreter>(rubyInterpreter));
 
     // Make the run path the default plugin search location
     QCoreApplication::addLibraryPath(openstudio::toQString(openstudio::getApplicationRunDirectory()));

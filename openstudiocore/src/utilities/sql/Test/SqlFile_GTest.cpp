@@ -198,7 +198,7 @@ TEST_F(SqlFileFixture, CreateSqlFile)
 
   {
     openstudio::SqlFile sql(outfile,
-        openstudio::EpwFile(resourcesPath() / toPath("runmanager/USA_CO_Golden-NREL.724666_TMY3.epw")),
+        openstudio::EpwFile(resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw")),
         openstudio::DateTime::now(),
         c);
 

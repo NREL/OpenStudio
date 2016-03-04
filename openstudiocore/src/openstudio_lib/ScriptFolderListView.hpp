@@ -22,7 +22,8 @@
 
 #include "OSCollapsibleItemList.hpp"
 
-#include "../ruleset/OSArgument.hpp"
+#include "../measure/OSArgument.hpp"
+#include "../measure/OSMeasureInfoGetter.hpp"
 
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
@@ -71,7 +72,7 @@ class ScriptFolderListView : public OSCollapsibleItemList {
 
   void saveOSArguments();
 
-  std::vector<ruleset::UserScriptInfo> folderUserScripts(const openstudio::path& folder) const;
+  std::vector<measure::OSMeasureInfo> folderUserScripts(const openstudio::path& folder) const;
 
   std::shared_ptr<QFileSystemWatcher> fsWatcher() const;
 

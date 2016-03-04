@@ -139,11 +139,11 @@ void ScriptsListView::updateData() {
   qobject_cast<ScriptsVectorController *>(vectorController())->updateData();
 }
 
-std::vector<ruleset::UserScriptInfo> ScriptsListView::userScripts() {
-  std::vector<ruleset::UserScriptInfo> result;
+std::vector<measure::OSMeasureInfo> ScriptsListView::userScripts() {
+  std::vector<measure::OSMeasureInfo> result;
   for (OSItem* item : items()) {
     ScriptItem* scriptItem = qobject_cast<ScriptItem*>(item);
-    if (boost::optional<ruleset::UserScriptInfo> info = scriptItem->userScriptInfo()) {
+    if (boost::optional<measure::OSMeasureInfo> info = scriptItem->userScriptInfo()) {
       result.push_back(*info);
     }
   }

@@ -33,7 +33,7 @@
 
 #include "../osversion/VersionTranslator.hpp"
 
-#include "../ruleset/OSArgument.hpp"
+#include "../measure/OSArgument.hpp"
 
 #include "../energyplus/ReverseTranslator.hpp"
 
@@ -422,12 +422,12 @@ namespace openstudio {
                               std::vector <double> useRadianceForDaylightingCalculations,
                               QWidget* parent)
   {
-    return saveRunManagerDatabase(osmPath, modelTempDir, std::map<openstudio::path,std::vector<ruleset::UserScriptInfo> >(), 
+    return saveRunManagerDatabase(osmPath, modelTempDir, std::map<openstudio::path,std::vector<measure::OSMeasureInfo> >(), 
         useRadianceForDaylightingCalculations, parent);
   }
 
   bool saveRunManagerDatabase(const openstudio::path& osmPath, const openstudio::path& modelTempDir, 
-                              const std::map<openstudio::path,std::vector<ruleset::UserScriptInfo> >& userScriptsByFolder, 
+                              const std::map<openstudio::path,std::vector<measure::OSMeasureInfo> >& userScriptsByFolder, 
                               std::vector <double> useRadianceForDaylightingCalculations,
                               QWidget* parent)
   {

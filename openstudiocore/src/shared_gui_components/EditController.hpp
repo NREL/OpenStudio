@@ -20,7 +20,7 @@
 #ifndef SHAREDGUICOMPONENTS_EDITCONTROLLER_HPP
 #define SHAREDGUICOMPONENTS_EDITCONTROLLER_HPP
 
-#include "../ruleset/OSArgument.hpp"
+#include "../measure/OSArgument.hpp"
 #include "../utilities/core/Logger.hpp"
 #include <QObject>
 #include <QPointer>
@@ -86,7 +86,7 @@ class InputController : public QObject
 
   public:
 
-  InputController(EditController * editController,const ruleset::OSArgument & argument, BaseApp *t_app);
+  InputController(EditController * editController,const measure::OSArgument & argument, BaseApp *t_app);
 
   virtual ~InputController();
 
@@ -110,7 +110,7 @@ class InputController : public QObject
 
   QPointer<EditController> m_editController;
 
-  ruleset::OSArgument m_argument;
+  measure::OSArgument m_argument;
 };
 
 } // openstudio
