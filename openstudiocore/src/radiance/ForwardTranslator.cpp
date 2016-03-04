@@ -165,7 +165,7 @@ namespace radiance {
       // remove any spaces not associated with a thermal zone
       boost::optional<openstudio::model::ThermalZone> thermalZone = space.thermalZone();
       if (!thermalZone){
-        LOG(Warn, "Space " << space.name().get() << " is not associated with a ThermalZone, it will not be translated.");
+        LOG(Error, "Model translation failure; space " << space.name().get() << " is not associated with a ThermalZone, could not be translated.");
         space.remove();
         continue;
       }
@@ -1160,7 +1160,7 @@ namespace radiance {
 
           boost::optional<model::ConstructionBase> construction = subSurface.construction();
           if (!construction){
-            LOG(Warn, "SubSurface " << subSurface.name().get() << " is not associated with a Construction, it will not be translated.");
+            LOG(Error, "SubSurface " << subSurface.name().get() << " is not associated with a Construction, it cannot not be translated. Radiance model translation failed.");
             continue;
           }
 
@@ -1180,7 +1180,7 @@ namespace radiance {
           {
             if (!subSurface.visibleTransmittance())
             {
-              LOG(Warn, "Cannot determine visible transmittance for SubSurface " << subSurface.name().get() << ", it will not be translated.");
+              LOG(Error, "Cannot determine visible transmittance for SubSurface " << subSurface.name().get() << ", it cannot not be translated. Radiance model translation failed.");
               continue;
             }
 
@@ -1746,11 +1746,11 @@ namespace radiance {
 
           } else if (subSurfaceUpCase == "TUBULARDAYLIGHTDOME") {
 
-            LOG(Warn, "subsurface is a tdd dome, not translated (not yet implemented in Radiance).");
+            LOG(Error, "subsurface is a tdd dome (not yet implemented in Radiance), model translation halted.");
 
           } else if (subSurfaceUpCase == "TUBULARDAYLIGHTDIFFUSER") {
 
-            LOG(Warn, "subsurface is a tdd diffuser, not translated (not yet implemented in Radiance).");
+            LOG(Error, "subsurface is a tdd diffuser (not yet implemented in Radiance), model translation halted.");
 
           }
 
