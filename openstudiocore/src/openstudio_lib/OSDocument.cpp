@@ -598,7 +598,10 @@ namespace openstudio {
 
   void OSDocument::createTab(int verticalId)
   {
-    if (m_verticalId == verticalId) return;
+    if (m_runningApplyMeasureNow) {
+      m_runningApplyMeasureNow = false;
+      return;
+    }
 
     m_mainTabController.reset();
 
@@ -1508,13 +1511,13 @@ namespace openstudio {
     // save model if dirty
     if (this->modified()){
 
-    auto messageBox = new QMessageBox(this->mainWindow());
-    messageBox->setText("You must save your model before applying a measure.");
-    messageBox->setInformativeText("Do you want to save your model now?");
-    messageBox->setStandardButtons(QMessageBox::Save | QMessageBox::Cancel);
-    messageBox->setDefaultButton(QMessageBox::Save);
-    messageBox->button(QMessageBox::Save)->setShortcut(QKeySequence(Qt::Key_S));
-    messageBox->setIcon(QMessageBox::Question);
+      auto messageBox = new QMessageBox(this->mainWindow());
+      messageBox->setText("You must save your model before applying a measure.");
+      messageBox->setInformativeText("Do you want to save your model now?");
+      messageBox->setStandardButtons(QMessageBox::Save | QMessageBox::Cancel);
+      messageBox->setDefaultButton(QMessageBox::Save);
+      messageBox->button(QMessageBox::Save)->setShortcut(QKeySequence(Qt::Key_S));
+      messageBox->setIcon(QMessageBox::Question);
 
       int ret = messageBox->exec();
 
@@ -1534,6 +1537,8 @@ namespace openstudio {
         OS_ASSERT(false);
       }
     }
+
+    m_runningApplyMeasureNow = true;
 
     // open modal dialog
     m_applyMeasureNowDialog = boost::shared_ptr<ApplyMeasureNowDialog>(new ApplyMeasureNowDialog());
