@@ -473,8 +473,8 @@ namespace openstudio {
     if (!m_tabButtonsCreated) {
       m_tabButtonsCreated = true;
       createTabButtons();
+      createTab(m_verticalId);
     }
-    createTab(m_verticalId);
 
     QTimer::singleShot(0, this, SLOT(initializeModel()));
 
@@ -598,11 +598,6 @@ namespace openstudio {
 
   void OSDocument::createTab(int verticalId)
   {
-    if (m_runningApplyMeasureNow) {
-      m_runningApplyMeasureNow = false;
-      return;
-    }
-
     m_mainTabController.reset();
 
     m_verticalId = verticalId;
@@ -1537,8 +1532,6 @@ namespace openstudio {
         OS_ASSERT(false);
       }
     }
-
-    m_runningApplyMeasureNow = true;
 
     // open modal dialog
     m_applyMeasureNowDialog = boost::shared_ptr<ApplyMeasureNowDialog>(new ApplyMeasureNowDialog());
