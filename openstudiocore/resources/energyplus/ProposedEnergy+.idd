@@ -25311,7 +25311,6 @@ AirTerminal:SingleDuct:ConstantVolume:FourPipeInduction,
        \autosizable
        \minimum 0.0
   N2,  \field Induction Ratio
-       \required-field
        \type real
        \minimum 0.0
        \default 2.5
@@ -39054,7 +39053,6 @@ Chiller:Electric:ReformulatedEIR,
        \note Type LeavingCondenserWaterTemperature: based on the leaving condenser water temperature.
        \note Type Lift: based on the normalized lift, which is the temperature difference between the
        \note leaving condenser water temperature and the leaving evaporator water temperature.
-       \required-field
        \type choice
        \key LeavingCondenserWaterTemperature
        \key Lift
@@ -40054,7 +40052,6 @@ ChillerHeater:Absorption:DirectFired,
   A1,  \field Name
        \required-field
   N1 , \field Nominal Cooling Capacity
-       \required-field
        \autosizable
        \default autosize
        \units W
@@ -40145,7 +40142,6 @@ ChillerHeater:Absorption:DirectFired,
             \note The water flow rate at design conditions through the condenser.
             \autosizable
             \default autosize
-            \required-field
             \units m3/s
             \ip-units gal/min
             \note This field is not used for Condenser Type = AirCooled
@@ -40242,7 +40238,6 @@ ChillerHeater:Absorption:DirectFired,
   A17  ,  \field Chiller Flow Mode
        \deprecated
   A18  ,  \field Fuel Type
-            \required-field
             \type choice
             \key NaturalGas
             \key PropaneGas
@@ -40266,7 +40261,6 @@ ChillerHeater:Absorption:DoubleEffect,
        \type alpha
        \required-field
   N1 , \field Nominal Cooling Capacity
-       \required-field
        \autosizable
        \default autosize
        \units W
@@ -40358,7 +40352,6 @@ ChillerHeater:Absorption:DoubleEffect,
        \note This field is not used for Condenser Type = AirCooled
        \autosizable
        \default autosize
-       \required-field
        \units m3/s
        \ip-units gal/min
   N14, \field Design Hot Water Flow Rate
@@ -43062,7 +43055,6 @@ GroundHeatExchanger:Vertical,
         \minimum> 0.0
         \units years
   N14,  \field G-Function Reference Ratio
-        \required-field
         \type real
         \minimum> 0.0
         \units dimensionless
