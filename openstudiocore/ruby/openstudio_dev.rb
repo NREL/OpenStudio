@@ -251,6 +251,12 @@ module Ruleset
       super
     end      
   end
+    
+  # support for name deprecated as of 2.0.0
+  def self.convertOSArgumentVectorToMap(argument_vector)
+    OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "OpenStudio::Ruleset::convertOSArgumentVectorToMap is deprecated, use OpenStudio::Measure::convertOSArgumentVectorToMap instead.")
+    return OpenStudio::Measure::convertOSArgumentVectorToMap(argument_vector)
+  end      
   
   # support for name deprecated as of 2.0.0
   class OSArgumentVector < OpenStudio::Measure::OSArgumentVector
