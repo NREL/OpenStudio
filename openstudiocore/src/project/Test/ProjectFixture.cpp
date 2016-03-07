@@ -88,7 +88,11 @@ openstudio::project::ProjectDatabase ProjectFixture::getDatabase(
 void ProjectFixture::removeAllDatabases() {
   for (const openstudio::path& dbDir : databaseDirs) {
     if (boost::filesystem::exists(dbDir)) {
-      boost::filesystem::remove_all(dbDir);
+      try{
+        boost::filesystem::remove_all(dbDir);
+      } catch (const std::exception&){
+
+      }
     }
   }
   databaseDirs.clear();

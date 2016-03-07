@@ -37,7 +37,7 @@ TEST_F(BCLFixture, BCLMeasure)
 
   EXPECT_EQ("Set Window to Wall Ratio by Facade", measure->name());
   EXPECT_EQ("f347ae80-48b4-4c40-bfd4-6c5139b38136", measure->uid());
-  EXPECT_EQ("a0e33012-0183-45a0-8898-11f93f55164d", measure->versionId());
+  EXPECT_EQ("a0e33012-0183-45a0-8898-11f93f55164e", measure->versionId());
   EXPECT_EQ("This measure will set the window to wall ratio for exterior surfaces with a specified orientation. If one or more windows exist on an affected wall, they will be removed and replaced with a single ribbon window. Doors will not be removed. If the requested ratio can't be achieved then the wall will remain untouched.", measure->description());
   EXPECT_EQ("This measure identifies exterior surfaces of the proper orientation. Then it runs a method that removes existing windows and applies a new window with a specified window to wall ratio and sill height. The construction chosen for the new window is defaulted to what is assigned to the space, or inherited from a higher level object, such as the building. If the baseline model uses hard assigned constructions you may not get the expected results. The measure doesn't have any cost or lifecycle arguments, however if lifecycle objects exist for exterior wall and window constructions, then this measure will be able to calculate the economic impact of change in window to wall ratio.", measure->modelerDescription());
 
