@@ -366,6 +366,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   bool m_enableTabsAfterRun = true;
 
   bool m_tabButtonsCreated = false;
+
 };
 
 } // openstudio

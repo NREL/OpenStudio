@@ -389,13 +389,7 @@ namespace openstudio {
 
   int OSDocument::subTabIndex()
   {
-    MainTabView * mainTabView = m_mainWindow->view();
-    if (mainTabView){
-      return mainTabView->subTabIndex();
-    }
-    else {
-      return -1;
-    }
+    return m_subTabId;
   }
 
   void OSDocument::initializeModel()
@@ -479,8 +473,8 @@ namespace openstudio {
     if (!m_tabButtonsCreated) {
       m_tabButtonsCreated = true;
       createTabButtons();
+      createTab(m_verticalId);
     }
-    createTab(m_verticalId);
 
     QTimer::singleShot(0, this, SLOT(initializeModel()));
 
@@ -1113,7 +1107,7 @@ namespace openstudio {
 
     //m_mainWindow->selectHorizontalTab(LIBRARY);
 
-  //boost::optional<model::ModelObject> mo;
+    //boost::optional<model::ModelObject> mo;
 
     //m_inspectorController->layoutModelObject(mo);
   }
@@ -1512,13 +1506,13 @@ namespace openstudio {
     // save model if dirty
     if (this->modified()){
 
-    auto messageBox = new QMessageBox(this->mainWindow());
-    messageBox->setText("You must save your model before applying a measure.");
-    messageBox->setInformativeText("Do you want to save your model now?");
-    messageBox->setStandardButtons(QMessageBox::Save | QMessageBox::Cancel);
-    messageBox->setDefaultButton(QMessageBox::Save);
-    messageBox->button(QMessageBox::Save)->setShortcut(QKeySequence(Qt::Key_S));
-    messageBox->setIcon(QMessageBox::Question);
+      auto messageBox = new QMessageBox(this->mainWindow());
+      messageBox->setText("You must save your model before applying a measure.");
+      messageBox->setInformativeText("Do you want to save your model now?");
+      messageBox->setStandardButtons(QMessageBox::Save | QMessageBox::Cancel);
+      messageBox->setDefaultButton(QMessageBox::Save);
+      messageBox->button(QMessageBox::Save)->setShortcut(QKeySequence(Qt::Key_S));
+      messageBox->setIcon(QMessageBox::Question);
 
       int ret = messageBox->exec();
 
