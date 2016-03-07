@@ -406,6 +406,34 @@ namespace openstudio {
       modelPath = setFileExtension(osmPath,modelFileExtension(),false,true);
     }
 
+    // do before saving the osm
+    boost::optional<model::WeatherFile> weatherFile = model.getOptionalUniqueModelObject<model::WeatherFile>();
+    if (weatherFile){
+      boost::optional<openstudio::path> weatherFilePath = weatherFile->path();
+      if (weatherFilePath){
+        if (weatherFilePath->is_complete()){
+          // copy weather file to the temp dir under modelTempDir/files if the absolute path exists
+          bool test;
+          openstudio::path destPath = modelTempDir / toPath("files") / weatherFilePath->filename();
+
+          // must remove file, QFile::copy does not overwrite
+          QFileInfo destInfo(toQString(destPath));
+          if (destInfo.exists() && destInfo.isFile()){
+            test = QFile::remove(toQString(destPath));
+            if (!test){
+              LOG_FREE(Error, "saveModel", "Could not remove previous weather filw at '" << toString(destPath) << "'");
+            }
+          }
+
+          // copy weather file
+          test = QFile::copy(toQString(*weatherFilePath), toQString(destPath));
+
+          // make the url relative to temp dir
+          test = weatherFile->makeUrlRelative(modelTempDir);
+        }
+      }
+    }
+
     // save osm to temp directory, saveModelTempDir will copy to real location
     openstudio::path tempModelPath = modelTempDir / toPath("in.osm");
     Workspace(model).save(tempModelPath,true); 
@@ -415,8 +443,9 @@ namespace openstudio {
     // DLM: eventually put saveRunManagerDatabase here, needs to happen before saveModelTempDir
 
     // DLM: eventually add this back in too
+    // DLM: for now this is accomplished by calling saveModelTempDir after saveModel in all cases
     //saveModelTempDir(modelTempDir, modelPath);
-    
+
     return modelPath;
   }
 

@@ -52,7 +52,7 @@ MainTabView::MainTabView(const QString & tabLabel, TabType tabType, QWidget * pa
   m_tabLabel->setFixedWidth(m_tabLabel->width());
   m_tabLabel->move(7,5);
 
-  auto label = new QLabel("Hello World");
+  auto label = new QLabel();
   label->setObjectName("H2");
 
   m_editView->setView(label);
