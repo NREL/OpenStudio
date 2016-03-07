@@ -490,6 +490,7 @@ void AlternativeModelMeasureItemView::onFirstLevelTaxonomyTagChanged()
 {
   std::string firstLevelTerm = toString(taxonomyFirstLevelComboBox->currentText());
 
+  bool wasBlocked = taxonomySecondLevelComboBox->blockSignals(true);
   taxonomySecondLevelComboBox->clear();
   taxonomySecondLevelComboBox->setEnabled(false);
 
@@ -502,6 +503,7 @@ void AlternativeModelMeasureItemView::onFirstLevelTaxonomyTagChanged()
     taxonomySecondLevelComboBox->setCurrentIndex(0);
     taxonomySecondLevelComboBox->setEnabled(true);
   }
+  taxonomySecondLevelComboBox->blockSignals(wasBlocked);
 }
 
 void AlternativeModelMeasureItemView::paintEvent(QPaintEvent * e)
