@@ -78,7 +78,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     args << debug_mode
 
     cleanup_data = OpenStudio::Ruleset::OSArgument::makeBoolArgument('cleanup_data', false)
-    cleanup_data.setDisplayName('Cleanup data')
+    cleanup_data.setDisplayName('Cleanup Data')
     cleanup_data.setDefaultValue('false')
     cleanup_data.setDescription('Delete Radiance input and (most) output data, post-simulation (lighting schedules are passed to OpenStudio model (and daylight metrics are passed to OpenStudio-server, if applicable)')
     args << cleanup_data
@@ -2093,11 +2093,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             print_statement("added glare sensor '#{sensor}' to calculation points", runner)
             f.write IO.read(sensor)
           end
-        else
-          print_statement("no glare sensors found in model", runner)
         end
       end
     end
+
+    print_statement("Warning: 'Cleanup data' option was selected; will delete ancilary Radiance data and all Radiance input files, post-simulation.",runner) if debug_mode && cleanup_data
 
     # get the daylight coefficient matrices
     calculateDaylightCoeffecients(radPath, sim_cores, catCommand, options_tregVars, 
@@ -2133,7 +2133,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     # cleanup
     FileUtils.rm('annual-sky.mtx')
     unless debug_mode
-      rm_list = "output/ts/m_*.ill", "output/ts/window_controls.ill", "output/ts/WG*.ill", "output/ts/*.shd"
+      rm_list = "output/ts/m_*.ill", "output/ts/window_controls.ill", "output/ts/WG*.ill", "octrees/*.oct", "output/ts/*.shd"
       FileUtils.rm Dir.glob(rm_list)
     end
     if cleanup_data
