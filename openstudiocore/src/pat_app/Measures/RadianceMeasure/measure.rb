@@ -74,8 +74,14 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     debug_mode = OpenStudio::Ruleset::OSArgument::makeBoolArgument('debug_mode', false)
     debug_mode.setDisplayName('Debug Mode')
     debug_mode.setDefaultValue('false')
-    debug_mode.setDescription('Generates additional log messages, images for each window group, and saves all window group output.')
+    debug_mode.setDescription('Generate additional log messages, images for each window group, and save all window group output.')
     args << debug_mode
+
+    cleanup_data = OpenStudio::Ruleset::OSArgument::makeBoolArgument('cleanup_data', false)
+    cleanup_data.setDisplayName('Cleanup data')
+    cleanup_data.setDefaultValue('false')
+    cleanup_data.setDescription('Delete Radiance input and (most) output data, post-simulation (lighting schedules are passed to OpenStudio model (and daylight metrics are passed to OpenStudio-server, if applicable)')
+    args << cleanup_data
 
     return args
 
@@ -143,6 +149,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     use_cores = runner.getStringArgumentValue('use_cores', user_arguments)
     rad_settings = runner.getStringArgumentValue('rad_settings', user_arguments)
     debug_mode = runner.getBoolArgumentValue('debug_mode',user_arguments)
+    cleanup_data = runner.getBoolArgumentValue('cleanup_data',user_arguments)
     
     # Energyplus "pre-run" model dir
     epout_dir = 'eplus_preprocess'
@@ -2126,8 +2133,14 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     # cleanup
     FileUtils.rm('annual-sky.mtx')
     unless debug_mode
-      rm_list = "output/ts/m_*.ill", "output/ts/window_controls.ill", "output/ts/WG*.ill", "octrees/*.oct", "output/ts/*.shd"
+      rm_list = "output/ts/m_*.ill", "output/ts/window_controls.ill", "output/ts/WG*.ill", "output/ts/*.shd"
       FileUtils.rm Dir.glob(rm_list)
+    end
+    if cleanup_data
+      print_statement("Deleting most Radiance I/O to preserve disk space...", runner)
+      print_statement("WARN: deleting debug files because 'Cleanup data' option was selected!",runner) if debug_mode
+      clean_list = "bsdf", "materials", "numeric", "octrees", "options", "scene", "skies", "sql", "views", "wx", "output/dc", "output/ts"
+      FileUtils.rm_rf(clean_list)
     end
 
     # report initial condition of model
