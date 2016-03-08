@@ -138,6 +138,19 @@ QCoreApplication* ApplicationSingleton::application(bool gui)
   return m_qApplication;
 }
 
+bool ApplicationSingleton::hasApplication() const
+{
+  return (m_qApplication != nullptr);
+}
+
+bool ApplicationSingleton::hasGUI() const
+{
+  if (hasApplication()){
+    return dynamic_cast<QApplication*>(m_qApplication);
+  }
+  return false;
+}
+
 /// set the QApplication, this should be done before calling application(), no op if it has already been set
 bool ApplicationSingleton::setApplication(QCoreApplication* qApplication)
 {

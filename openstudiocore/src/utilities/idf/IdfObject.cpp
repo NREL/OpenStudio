@@ -198,12 +198,16 @@ namespace detail {
       bool validIndex = m_fields.size() > index;
       if (returnDefault && validIndex && m_fields[index].empty()) {
         if (OptionalString stringDefault = m_iddObject.nonextensibleFields()[index].properties().stringDefault) {
-          return stringDefault;
+          if (stringDefault){
+            return decodeString(*stringDefault);
+          } else{
+            return boost::none;
+          }
         }
-        return m_fields[index];
+        return decodeString(m_fields[index]);
       }
       else if (validIndex) {
-        return m_fields[index];
+        return decodeString(m_fields[index]);
       }
     }
     return boost::none;
@@ -255,7 +259,10 @@ namespace detail {
     if (returnUninitializedEmpty && (result && result->empty())){
       result.reset();
     }
-    return result;
+    if (result){
+      return decodeString(*result);
+    }
+    return boost::none;
   }
 
   boost::optional<double> IdfObject_Impl::getDouble(unsigned index, bool returnDefault) const
@@ -411,8 +418,10 @@ namespace detail {
     return result;
   }
 
-  boost::optional<std::string> IdfObject_Impl::setName(const std::string& newName, bool checkValidity) 
+  boost::optional<std::string> IdfObject_Impl::setName(const std::string& _newName, bool checkValidity) 
   {
+    std::string newName = encodeString(_newName);
+
     // check Idd to see if this object has a name
     if (OptionalUnsigned index = m_iddObject.nameFieldIndex()) {
       // if so, change the name, or create it
@@ -434,7 +443,7 @@ namespace detail {
         m_fields.push_back(newName);
         m_diffs.push_back(IdfObjectDiff(i, boost::none, newName));
       }
-      return newName; // success!
+      return _newName; // success!
     }
     return boost::none; // no name
   }
@@ -463,7 +472,9 @@ namespace detail {
     return result;
   }
 
-  bool IdfObject_Impl::setString(unsigned index, const std::string& value, bool checkValidity) {
+  bool IdfObject_Impl::setString(unsigned index, const std::string& _value, bool checkValidity) {
+    std::string value = encodeString(_value);
+
     if (m_iddObject.hasNameField() && (index == m_iddObject.nameFieldIndex())) {
       return IdfObject_Impl::setName(value,checkValidity); 
     }
@@ -1966,6 +1977,29 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
   {
     return m_fieldComments;
   }
+
+  std::string IdfObject_Impl::encodeString(const std::string& value) const
+  {
+    std::string result(value);
+    boost::replace_all(result, ",", "&#44");
+    boost::replace_all(result, ";", "&#59");
+    boost::replace_all(result, "!", "&#33");
+    boost::replace_all(result, "\n", "&#10");
+    boost::replace_all(result, "\r", "&#13");
+    return result;
+  }
+
+  std::string IdfObject_Impl::decodeString(const std::string& value) const
+  {
+    std::string result(value);
+    boost::replace_all(result, "&#44", ",");
+    boost::replace_all(result, "&#59", ";");
+    boost::replace_all(result, "&#33", "!");
+    boost::replace_all(result, "&#10", "\n");
+    boost::replace_all(result, "&#13", "\r");
+    return result;
+  }
+
 
 } // detail
 

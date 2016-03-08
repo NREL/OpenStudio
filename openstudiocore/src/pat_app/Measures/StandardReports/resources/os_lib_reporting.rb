@@ -268,8 +268,8 @@ module OsLib_Reporting
     # temp code to check OS vs. E+ area
     energy_plus_area = query_results.get
     open_studio_area = model.getBuilding.floorArea
-    if not energy_plus_area == open_studio_area
-      runner.registerWarning("EnergyPlus reported area is #{query_results.get} (m^2). OpenStudio reported area is #{model.getBuilding.floorArea} (m^2).")
+    if not (energy_plus_area - open_studio_area).abs < 1.0
+      runner.registerWarning("EnergyPlus reported area is #{query_results.get.round} (m^2). OpenStudio reported area is #{model.getBuilding.floorArea.round} (m^2).")
     end
 
     # EUI
@@ -994,8 +994,8 @@ module OsLib_Reporting
       else
         heating_temps_ranges_pretty = "#{OpenStudio.convert(heating_temps_ranges.min, 'C', 'F').get.round(1)} to #{OpenStudio.convert(heating_temps_ranges.max, 'C', 'F').get.round(1)}"
       end
-      output_data_air_loops[:data] << ['Thermal Zones', '', '', 'thermostat ranges for heating', cooling_temp_ranges_pretty, 'F', '']
-      output_data_air_loops[:data] << ['Thermal Zones', '', '', 'thermostat ranges for cooling', heating_temps_ranges_pretty, 'F', '']
+      output_data_air_loops[:data] << ['Thermal Zones', '', '', 'thermostat ranges for cooling', cooling_temp_ranges_pretty, 'F', '']
+      output_data_air_loops[:data] << ['Thermal Zones', '', '', 'thermostat ranges for heating', heating_temps_ranges_pretty, 'F', '']
       output_data_air_loops[:data] << ['Terminal Types Used', '', '', terminals.uniq.sort.join(', '), '', '', terminals.size]
 
       # controls summary
@@ -2146,6 +2146,7 @@ module OsLib_Reporting
         results = sqlFile.execAndReturnFirstString(query) # this is first time I needed string vs. double for weather file
         # TODO: - would be nice to get units from first column
         if row == "Elevation" then results = "#{OpenStudio::convert(results.get.to_f,"m","ft").get.round} (ft)" end
+        #if row == "Elevation" then results = "#{results.class} (f)" end
         row_data << results
       end
 
@@ -2716,16 +2717,16 @@ module OsLib_Reporting
         query_clg = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='SystemSummary' and TableName = 'Time Setpoint Not Met' and RowName= '#{key}' and ColumnName='During Cooling';"
         unmet_clg = sqlFile.execAndReturnFirstDouble(query_clg).get
         query_htg_occ = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='SystemSummary' and TableName = 'Time Setpoint Not Met' and RowName= '#{key}' and ColumnName='During Occupied Heating';"
-        unmet_htg_occ = sqlFile.execAndReturnFirstDouble(query_htg).get
+        unmet_htg_occ = sqlFile.execAndReturnFirstDouble(query_htg_occ).get
         query_clg_occ = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='SystemSummary' and TableName = 'Time Setpoint Not Met' and RowName= '#{key}' and ColumnName='During Occupied Cooling';"
-        unmet_clg_occ = sqlFile.execAndReturnFirstDouble(query_clg).get
+        unmet_clg_occ = sqlFile.execAndReturnFirstDouble(query_clg_occ).get
 
         # get mean temp
         mean = OpenStudio.convert(temp_sum / temp_counter.to_f, 'C', 'F').get
 
         # add rows to table
         row_data = [key, unmet_htg.round,unmet_htg_occ.round]
-        row_color = ['', '']
+        row_color = ['','','']
         temperature_bins.each do |k, v|
           row_data << v
           if v > 2000
@@ -2739,7 +2740,7 @@ module OsLib_Reporting
           end
         end
         row_data += [unmet_clg.round, unmet_clg_occ.round, "#{mean.round(1)} (F)"]
-        row_color += ['', '']
+        row_color += ['','','']
         temperature_table[:data] << row_data
         temperature_table[:data_color] << row_color
       end
