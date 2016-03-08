@@ -758,3 +758,52 @@ TEST_F(GeometryFixture, PointLatLon)
     EXPECT_NEAR(localDistance, geodesicDistance, 0.001);
   }
 }
+
+TEST_F(GeometryFixture, PointLatLon_Elevation)
+{
+  // building in Portland
+  PointLatLon origin(45.521272355398, -122.686472758865);
+  EXPECT_TRUE(origin == origin);
+
+  Point3d localOrigin = origin.toLocalCartesian(origin);
+  EXPECT_DOUBLE_EQ(0.0, localOrigin.x());
+  EXPECT_DOUBLE_EQ(0.0, localOrigin.y());
+  EXPECT_DOUBLE_EQ(0.0, localOrigin.z());
+
+  PointLatLon testLatLon(45.521272355398, -122.686472758865, 30.0);
+  EXPECT_FALSE(origin == testLatLon);
+  EXPECT_DOUBLE_EQ(origin.lat(), testLatLon.lat());
+  EXPECT_DOUBLE_EQ(origin.lon(), testLatLon.lon());
+  EXPECT_DOUBLE_EQ(30.0, testLatLon.height());
+
+  Point3d test = origin.toLocalCartesian(testLatLon);
+  EXPECT_NEAR(0.0, test.x(), 0.001);
+  EXPECT_NEAR(0.0, test.y(), 0.001);
+  EXPECT_NEAR(30.0, test.z(), 0.001);
+
+  // calculated distance using:
+  // http://www.movable-type.co.uk/scripts/latlong.html
+  testLatLon = PointLatLon(45.521272355398, -122.687017007901, 0.0);
+  EXPECT_FALSE(origin == testLatLon);
+  EXPECT_DOUBLE_EQ(origin.lat(), testLatLon.lat());
+  EXPECT_DOUBLE_EQ(-122.687017007901, testLatLon.lon());
+  EXPECT_DOUBLE_EQ(0.0, testLatLon.height());
+
+  test = origin.toLocalCartesian(testLatLon);
+  EXPECT_NEAR(-42.521429845143913, test.x(), 0.001);
+  EXPECT_NEAR(0.0, test.y(), 0.001);
+  EXPECT_NEAR(0.0, test.z(), 0.001);
+
+  // calculated distance using:
+  // http://www.movable-type.co.uk/scripts/latlong.html
+  testLatLon = PointLatLon(45.521272355398, -122.687017007901, 30.0);
+  EXPECT_FALSE(origin == testLatLon);
+  EXPECT_DOUBLE_EQ(origin.lat(), testLatLon.lat());
+  EXPECT_DOUBLE_EQ(-122.687017007901, testLatLon.lon());
+  EXPECT_DOUBLE_EQ(30.0, testLatLon.height());
+
+  test = origin.toLocalCartesian(testLatLon);
+  EXPECT_NEAR(-42.521429845143913, test.x(), 0.001);
+  EXPECT_NEAR(0.0, test.y(), 0.001);
+  EXPECT_NEAR(30.0, test.z(), 0.001);
+}
