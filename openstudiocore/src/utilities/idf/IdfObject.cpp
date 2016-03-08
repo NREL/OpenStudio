@@ -1984,6 +1984,8 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
     boost::replace_all(result, ",", "&#44");
     boost::replace_all(result, ";", "&#59");
     boost::replace_all(result, "!", "&#33");
+    boost::replace_all(result, "\n", "&#10");
+    boost::replace_all(result, "\r", "&#13");
     return result;
   }
 
@@ -1993,6 +1995,8 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
     boost::replace_all(result, "&#44", ",");
     boost::replace_all(result, "&#59", ";");
     boost::replace_all(result, "&#33", "!");
+    boost::replace_all(result, "&#10", "\n");
+    boost::replace_all(result, "&#13", "\r");
     return result;
   }
 
