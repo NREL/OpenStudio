@@ -79,11 +79,13 @@
 #include "../utilities/bcl/RemoteBCL.hpp"
 #include "../utilities/core/Application.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Checksum.hpp"
 #include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/data/Attribute.hpp"
 #include "../utilities/idf/IdfFile.hpp"
 #include "../utilities/idf/ValidityReport.hpp"
 #include "../utilities/idf/Workspace.hpp"
+#include "../utilities/filetypes/EpwFile.hpp"
 
 #include "../osversion/VersionTranslator.hpp"
 
@@ -443,6 +445,18 @@ namespace openstudio {
 
     m_model = model;
 
+    // convert absolute weather file paths to relative in the model, also copy the epw file to the temp dir
+    // remove the weather file object if something goes wrong
+    bool weatherFileOk = this->fixWeatherFileInTemp(true);
+    if (!weatherFileOk){
+      // weather file in model was reset because the file did not exist or it was not a valid EPW
+      modified = true;
+
+      // connect to slot that would show user error dialog
+      // DLM: Evan todo
+      //QTimer::singleShot(0, this, SLOT(weatherFileReset()));
+    }
+
     connect(m_model.getImpl<model::detail::Model_Impl>().get(), &model::detail::Model_Impl::onChange, this, &OSDocument::markAsModified);
 
     std::shared_ptr<OSDocument> currentDocument = app->currentDocument();
@@ -466,9 +480,6 @@ namespace openstudio {
     else {
       QTimer::singleShot(0, this, SLOT(markAsUnmodified()));
     }
-
-    // DLM: this might work to reload weather file if changed?
-    this->setFullWeatherFilePath();
 
     if (!m_tabButtonsCreated) {
       m_tabButtonsCreated = true;
@@ -1005,29 +1016,159 @@ namespace openstudio {
     updateWindowFilePath();
   }
 
-  bool OSDocument::setFullWeatherFilePath()
+  bool OSDocument::fixWeatherFileInTemp(bool opening)
   {
-    bool result = false;
-
+    // look for existing weather file 
     boost::optional<model::WeatherFile> weatherFile = m_model.getOptionalUniqueModelObject<model::WeatherFile>();
-    if (weatherFile){
-      boost::optional<openstudio::path> weatherFilePath = weatherFile->path();
-      if (weatherFilePath){
-        if (!weatherFilePath->is_complete()){
-          //if (!m_savePath.isEmpty()){
-          //  openstudio::path osmPath = toPath(m_savePath);
-          //  openstudio::path searchDir = osmPath.parent_path() / osmPath.stem();
-          //  result = weatherFile->makeUrlAbsolute(searchDir);
-          //}
-          if (!m_modelTempDir.isEmpty()){
-            openstudio::path searchDir = toPath(m_modelTempDir) / toPath("resources/");
-            result = weatherFile->makeUrlAbsolute(searchDir);
-          }
-        }
-      }
+
+    // no weather file, nothing to do
+    if (!weatherFile){
+      return true;
     }
 
-    return result;
+    boost::optional<openstudio::path> weatherFilePath = weatherFile->path();
+
+    // no weather file path, nothing to do
+    if (!weatherFilePath){
+      return true;
+    }
+
+    OS_ASSERT(!m_modelTempDir.isEmpty());
+
+    openstudio::path tempResourcesDir = toPath(m_modelTempDir) / toPath("resources/");
+    openstudio::path tempFilesDir = toPath(m_modelTempDir) / toPath("resources/files/");
+
+    // was the path in weather file object absolute
+    bool epwPathAbsolute = false;
+
+    // absolute path to the weather file in the user's directory
+    openstudio::path epwInUserPath;
+    boost::optional<std::string> epwInUserPathChecksum;
+
+    // absolute path to the weather file in the temp directory
+    openstudio::path epwInTempPath;
+    boost::optional<std::string> epwInTempPathChecksum;
+
+    // check if weather file path is absolute
+    if (weatherFilePath->is_complete()){
+        
+      // absolute weather file path
+      epwPathAbsolute = true;
+
+      epwInUserPath = *weatherFilePath;
+      if (boost::filesystem::exists(epwInUserPath)){
+        epwInUserPathChecksum = checksum(epwInUserPath);
+      }
+
+      epwInTempPath = tempFilesDir / epwInUserPath.filename();
+      if (boost::filesystem::exists(epwInTempPath)){
+        epwInTempPathChecksum = checksum(epwInTempPath);
+      }
+
+
+    } else {
+
+      // relative weather file path
+      epwPathAbsolute = false;
+
+      if (!m_savePath.isEmpty()){
+        openstudio::path osmPath = toPath(m_savePath);
+        openstudio::path searchDir = osmPath.parent_path() / osmPath.stem();
+
+        epwInUserPath = searchDir / *weatherFilePath;
+        if (boost::filesystem::exists(epwInUserPath)){
+          epwInUserPathChecksum = checksum(epwInUserPath);
+        }
+      }
+
+      epwInTempPath = tempResourcesDir / *weatherFilePath;
+      if (boost::filesystem::exists(epwInTempPath)){
+        epwInTempPathChecksum = checksum(epwInTempPath);
+      }
+
+    }
+
+    OS_ASSERT(!epwInTempPath.empty());
+
+    // check if we need to do the file copy
+    bool doCopy = false;
+    openstudio::path copySource;
+    openstudio::path copyDest;
+
+    if (epwInUserPathChecksum && epwInTempPathChecksum){
+
+      // file exists in both places
+      if (epwInUserPathChecksum.get() == epwInTempPathChecksum.get()){
+        // file is same in both places
+        doCopy = false;
+
+      } else{
+
+        if (opening || epwPathAbsolute){
+          // file in user's path should be preferred to what is in temp dir
+          doCopy = true;
+          copySource = epwInUserPath;
+          copyDest = epwInTempPath;
+        } else{
+          // do not copy from temp to user dir
+          doCopy = false;
+        }
+      }
+
+    } else if (!epwInUserPathChecksum){
+
+      // file does not exist in user path
+      doCopy = false;
+      
+    } else if (!epwInTempPathChecksum){
+
+      // file does not exist in temp path but does exist in user dir
+      doCopy = true;
+      copySource = epwInUserPath;
+      copyDest = epwInTempPath;
+
+    } else{
+
+      // file does not exist anywhere
+      weatherFile->remove();
+      return false;
+    }
+
+    if (!doCopy && !epwPathAbsolute){
+      // no need to copy file or adjust model
+      return true;
+    }
+
+    // duplicating code in LocationView::onWeatherFileBtnClicked
+
+    if (doCopy){
+      try{
+        boost::filesystem::copy_file(copySource, copyDest, boost::filesystem::copy_option::overwrite_if_exists);
+      } catch (...){
+        // copy failed
+        weatherFile->remove();
+        return false;
+      }
+    } 
+    
+    if (epwPathAbsolute){
+      try{
+        EpwFile epwFile(epwInTempPath);
+
+        weatherFile = openstudio::model::WeatherFile::setWeatherFile(m_model, epwFile);
+        OS_ASSERT(weatherFile);
+
+        weatherFile->makeUrlRelative(tempResourcesDir);
+
+      } catch (...){
+        // epw file not valid
+        weatherFile->remove();
+        return false;
+      }
+
+    }
+
+    return true;
   }
 
   int OSDocument::verticalTabIndex()
@@ -1262,6 +1403,10 @@ namespace openstudio {
 
     if (!m_savePath.isEmpty())
     {
+      // do before saving the osm
+      // DLM: should not happen unless user sets an absolute path to epw file in a measure
+      fixWeatherFileInTemp(false);
+
       // saves the model to modelTempDir / in.osm
       openstudio::path modelPath = saveModel(this->model(), toPath(m_savePath), toPath(m_modelTempDir));
 

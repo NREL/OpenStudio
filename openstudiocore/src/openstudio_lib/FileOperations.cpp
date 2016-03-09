@@ -326,29 +326,7 @@ namespace openstudio {
       modified = true;
     }
 
-    boost::optional<model::WeatherFile> weatherFile = model.getOptionalUniqueModelObject<model::WeatherFile>();
-    if (weatherFile){
-      LOG_FREE(Debug, "updateModelTempDir", "existing weather file found in osm");
-      boost::optional<openstudio::path> epwPath = weatherFile->path();
-      if (epwPath){
-        LOG_FREE(Debug, "updateModelTempDir", "existing weather file path: " << toString(*epwPath));
-        if (epwPath->is_complete() || (!epwPath->empty() && toString(*epwPath->begin()) != "files"))
-        {
-          LOG_FREE(Debug, "updateModelTempDir", "existing weather file path is not relative to osmfolder: " << toString(modelTempDir));
-          openstudio::path newPath = modelTempDir / toPath("resources/files") / epwPath->filename();
-          try {
-            boost::filesystem::copy_file(*epwPath, newPath, boost::filesystem::copy_option::overwrite_if_exists);
-            EpwFile epwFile(newPath);
-            boost::optional<openstudio::model::WeatherFile> newweatherfile = openstudio::model::WeatherFile::setWeatherFile(model, epwFile);
-            newweatherfile->makeUrlRelative(modelTempDir / toPath("resources"));
-            LOG_FREE(Debug, "updateModelTempDir", "existing weather file moved to new location: " << toString(newPath));
-            modified = true;
-          } catch (...) {
-            LOG_FREE(Error, "updateModelTempDir", "Unable to copy file from " << toString(*epwPath) << " to " << toString(newPath));
-          }
-        }
-      }
-    }
+    // weather file is fixed in OSDocument::fixWeatherFileOnOpen
 
     return modified;
   }
@@ -404,38 +382,6 @@ namespace openstudio {
 
     if (getFileExtension(osmPath).empty()) {
       modelPath = setFileExtension(osmPath,modelFileExtension(),false,true);
-    }
-
-    // do before saving the osm
-    boost::optional<model::WeatherFile> weatherFile = model.getOptionalUniqueModelObject<model::WeatherFile>();
-    if (weatherFile){
-      boost::optional<openstudio::path> weatherFilePath = weatherFile->path();
-      if (weatherFilePath){
-        if (weatherFilePath->is_complete()){
-          // copy weather file to the temp dir under modelTempDir/files if the absolute path exists
-          bool test;
-          openstudio::path destPath = modelTempDir / toPath("files") / weatherFilePath->filename();
-
-          // must remove file, QFile::copy does not overwrite
-          QFileInfo destInfo(toQString(destPath));
-          if (destInfo.exists() && destInfo.isFile()){
-            test = QFile::remove(toQString(destPath));
-            if (!test){
-              LOG_FREE(Error, "saveModel", "Could not remove previous weather file at '" << toString(destPath) << "'");
-            }
-          }
-
-          // copy weather file
-          test = QFile::copy(toQString(*weatherFilePath), toQString(destPath));
-
-          // make the url relative to temp dir
-          openstudio::path searchDir = modelTempDir / toPath("resources/");
-          test = weatherFile->makeUrlRelative(searchDir);
-          
-          //openstudio::path searchDir = osmPath.parent_path() / osmPath.stem();
-          //test = weatherFile->makeUrlRelative(searchDir);
-        }
-      }
     }
 
     // save osm to temp directory, saveModelTempDir will copy to real location

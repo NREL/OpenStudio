@@ -311,8 +311,10 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   // Used by save and saveAs.
   void setSavePath(const QString & savePath);
 
-  // Attempts to make the model's weather file have a fully qualified path
-  bool setFullWeatherFilePath();
+  // When opening an OSM, check the model for a weather file, if a weather file is listed
+  // copy it into the temp directory.  If the listed weather file cannot be found, remove the 
+  // weather file object.  Returns false if the user's weather file is reset, returns true otherwise.
+  bool fixWeatherFileInTemp(bool opening);
 
   void createTab(int verticalId);
 
