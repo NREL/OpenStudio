@@ -874,7 +874,7 @@ void AlternativeModelMeasureListController::addAlternativeModelMeasure()
   QJsonArray modelMeasures = this->modelMeasures();
 
   QJsonObject newMeasure;
-  newMeasure.insert("uuid", UUID::createUuid().toString());
+  newMeasure.insert("uuid", toQString(openstudio::createUUID()));
   newMeasure.insert("displayName", QString("New User Defined Measure"));
   newMeasure.insert("description", QString("New User Defined Measure Description"));
   newMeasure.insert("taxonomyTag", QString("Envelope.Form"));

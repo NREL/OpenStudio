@@ -102,7 +102,7 @@ void VRFController::refreshNow()
 
     if( m_currentSystem )
     {
-      m_detailView->setId(OSItemId(m_currentSystem->handle().toString(),modelToSourceId(m_currentSystem->model()),false));
+      m_detailView->setId(OSItemId(toQString(m_currentSystem->handle()), modelToSourceId(m_currentSystem->model()),false));
 
       connect(m_detailView.data(), &VRFSystemView::inspectClicked, this, &VRFController::inspectOSItem);
 
@@ -112,7 +112,7 @@ void VRFController::refreshNow()
           ++it)
       {
         auto vrfTerminalView = new VRFTerminalView();
-        vrfTerminalView->setId(OSItemId(it->handle().toString(),modelToSourceId(it->model()),false));
+        vrfTerminalView->setId(OSItemId(toQString(it->handle()), modelToSourceId(it->model()),false));
         m_detailView->addVRFTerminalView(vrfTerminalView);
         connect(vrfTerminalView, &VRFTerminalView::componentDroppedOnZone, this, &VRFController::onVRFTerminalViewDrop);
         connect(vrfTerminalView, &VRFTerminalView::removeZoneClicked, this, &VRFController::onRemoveZoneClicked);
@@ -156,7 +156,7 @@ void VRFController::onVRFSystemViewDrop(const OSItemId & itemid)
     if( auto component = doc->getComponent(itemid) ) {
       if( auto terminal = component->primaryObject().optionalCast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>() ) {
         // Ugly hack to avoid the component being treated as a resource.
-        component->componentData().setString(OS_ComponentDataFields::UUID,createUUID().toString().toStdString());
+        component->componentData().setString(OS_ComponentDataFields::UUID, toString(createUUID()));
         std::cout << component->componentData().getString(OS_ComponentDataFields::UUID) << std::endl;;
         if( auto componentData = m_currentSystem->model().insertComponent(component.get()) ) {
           terminal = componentData->primaryComponentObject().optionalCast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>();
@@ -223,7 +223,7 @@ void VRFController::onVRFTerminalViewDrop(const OSItemId & terminalId, const OSI
         if( auto component = doc->getComponent(terminalId) ) {
           if( auto terminal = component->primaryObject().optionalCast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>() ) {
             // Ugly hack to avoid the component being treated as a resource.
-            component->componentData().setString(OS_ComponentDataFields::UUID,createUUID().toString().toStdString());
+            component->componentData().setString(OS_ComponentDataFields::UUID, toString(createUUID()));
             if( auto componentData = m_currentSystem->model().insertComponent(component.get()) ) {
               terminal = componentData->primaryComponentObject().optionalCast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>();
               OS_ASSERT(terminal);
@@ -306,7 +306,7 @@ void VRFController::zoomOutToSystemGridView()
 void VRFController::inspectOSItem(const OSItemId & itemid)
 {
   OS_ASSERT(m_currentSystem);
-  boost::optional<model::ModelObject> mo = m_currentSystem->model().getModelObject<model::ModelObject>(Handle(itemid.itemId()));
+  boost::optional<model::ModelObject> mo = m_currentSystem->model().getModelObject<model::ModelObject>(toUUID(itemid.itemId()));
 
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
   OS_ASSERT(doc);
@@ -400,7 +400,7 @@ void VRFSystemListController::addSystem(const OSItemId & itemid)
     if( auto component = doc->getComponent(itemid) ) {
       if( auto system = component->primaryObject().optionalCast<model::AirConditionerVariableRefrigerantFlow>() ) {
         // Ugly hack to avoid the component being treated as a resource.
-        component->componentData().setString(OS_ComponentDataFields::UUID,createUUID().toString().toStdString());
+        component->componentData().setString(OS_ComponentDataFields::UUID, toString(createUUID()));
         if( auto componentData = model->insertComponent(component.get()) ) {
           system = componentData->primaryComponentObject().optionalCast<model::AirConditionerVariableRefrigerantFlow>();
           OS_ASSERT(system);

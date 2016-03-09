@@ -249,7 +249,7 @@ class PROJECT_API ProjectDatabase {
 
     QSqlQuery query(*(this->qSqlDatabase()));
     query.prepare(toQString("SELECT * FROM " + T::ObjectRecordType::databaseTableName() + " WHERE handle=:handle"));
-    query.bindValue(":handle",handle.toString());
+    query.bindValue(":handle", toQString(handle));
     try {
       assertExec(query);
       if (query.first()) {

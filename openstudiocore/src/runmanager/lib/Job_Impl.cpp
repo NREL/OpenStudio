@@ -1693,10 +1693,10 @@ namespace detail {
 
     if (t_other.get() == this)
     {
-      LOG(Info, "Updating job is current job, nothing to do: " << toString(uuid().toString())); 
+      LOG(Info, "Updating job is current job, nothing to do: " << toString(uuid())); 
       return;
     } else {
-      LOG(Info, "Updating job: " << toString(uuid().toString()));
+      LOG(Info, "Updating job: " << toString(uuid()));
     }
 
     QWriteLocker l(&m_mutex);

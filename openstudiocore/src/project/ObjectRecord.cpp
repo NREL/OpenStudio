@@ -44,7 +44,7 @@ namespace detail {
       m_description(description),
       m_timestampCreate(DateTime::now()),
       m_timestampLast(m_timestampCreate),
-      m_uuidLast(this->handle().toString())
+      m_uuidLast(this->handle())
   {}
 
   ObjectRecord_Impl::ObjectRecord_Impl(const ProjectDatabase& projectDatabase,
@@ -57,7 +57,7 @@ namespace detail {
       m_description(description),
       m_timestampCreate(DateTime::now()),
       m_timestampLast(m_timestampCreate),
-      m_uuidLast(this->handle().toString())
+      m_uuidLast(this->handle())
   {}
 
   ObjectRecord_Impl::ObjectRecord_Impl(const ProjectDatabase& projectDatabase,

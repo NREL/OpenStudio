@@ -195,7 +195,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
           m_osDocument->setSavePath("");
           QTimer::singleShot(0, m_osDocument.get(), SLOT(markAsModified())); 
         }else{
-          LOG_FREE(Warn, "OpenStudio", "Incorrect second argument '" << args.at(1) << "'");
+          LOG_FREE(Warn, "OpenStudio", "Incorrect second argument '" << toString(args.at(1)) << "'");
         }
       }
 

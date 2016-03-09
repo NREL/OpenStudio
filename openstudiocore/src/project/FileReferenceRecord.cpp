@@ -549,7 +549,7 @@ boost::optional<FileReferenceRecord> FileReferenceRecord::getFileReferenceRecord
   QSqlQuery query(*(database.qSqlDatabase()));
   query.prepare(toQString("SELECT * FROM " + FileReferenceRecord::databaseTableName() + 
       " WHERE handle=:handle"));
-  query.bindValue(":handle",handle.toString());
+  query.bindValue(":handle", toQString(handle));
   assertExec(query);
   if (query.first()) {
     result = FileReferenceRecord(query, database);

@@ -845,7 +845,7 @@ NewPlenumDialog::NewPlenumDialog(QWidget * parent)
   {
     if( (! it->isPlenum()) && it->equipment().empty() && (! it->airLoopHVAC()) )
     {
-      zoneChooser->addItem(QString::fromStdString(it->name().get()),it->handle().toString());
+      zoneChooser->addItem(QString::fromStdString(it->name().get()),toQString(it->handle()));
     }
   }
 
@@ -1021,7 +1021,7 @@ void ThermalZoneInspectorView::onSupplyPlenumChooserChanged(int newIndex)
   OS_ASSERT(thermalZone);
 
   QString newPlenumString = m_plenumChooser->supplyPlenumChooser->itemData(newIndex).toString();
-  Handle newPlenumHandle(newPlenumString);
+  Handle newPlenumHandle(toUUID(newPlenumString));
 
   emit moveBranchForZoneSupplySelected(thermalZone.get(),newPlenumHandle);
 }
@@ -1034,7 +1034,7 @@ void ThermalZoneInspectorView::onReturnPlenumChooserChanged(int newIndex)
   OS_ASSERT(thermalZone);
 
   QString newPlenumString = m_plenumChooser->returnPlenumChooser->itemData(newIndex).toString();
-  Handle newPlenumHandle(newPlenumString);
+  Handle newPlenumHandle(toUUID(newPlenumString));
 
   emit moveBranchForZoneReturnSelected(thermalZone.get(),newPlenumHandle);
 }
@@ -1047,7 +1047,7 @@ void ThermalZoneInspectorView::onNewSupplyPlenumClicked()
   if( result == QDialog::Accepted )
   {
     QComboBox * cb = dialog.zoneChooser;
-    Handle newZoneHandle(cb->itemData(cb->currentIndex()).toString());
+    Handle newZoneHandle(toUUID(cb->itemData(cb->currentIndex()).toString()));
     if( ! newZoneHandle.isNull() )
     {
       OS_ASSERT(m_modelObject);
@@ -1068,7 +1068,7 @@ void ThermalZoneInspectorView::onNewReturnPlenumClicked()
   if( result == QDialog::Accepted )
   {
     QComboBox * cb = dialog.zoneChooser;
-    Handle newZoneHandle(cb->itemData(cb->currentIndex()).toString());
+    Handle newZoneHandle(toUUID(cb->itemData(cb->currentIndex()).toString()));
     if( ! newZoneHandle.isNull() )
     {
       OS_ASSERT(m_modelObject);
@@ -1159,11 +1159,11 @@ void ThermalZoneInspectorView::update()
     boost::optional<model::ThermalZone> t_plenumZone = it->thermalZone();
     if( t_plenumZone )
     {
-      supplyChooser->addItem(supplyPixmap,QString::fromStdString(t_plenumZone->name().get()),it->handle().toString());
+      supplyChooser->addItem(supplyPixmap,QString::fromStdString(t_plenumZone->name().get()),toQString(it->handle()));
     }
     else 
     {
-      supplyChooser->addItem(supplyPixmap,QString::fromStdString(it->name().get()),it->handle().toString());
+      supplyChooser->addItem(supplyPixmap,QString::fromStdString(it->name().get()),toQString(it->handle()));
     }
   }
   supplyChooser->addItem("Ducted Supply - No Plenum","");
@@ -1176,7 +1176,7 @@ void ThermalZoneInspectorView::update()
   }
   else
   {
-    supplyChooser->setCurrentIndex(supplyChooser->findData(thisZoneSupplyPlenums.front().handle().toString()));
+    supplyChooser->setCurrentIndex(supplyChooser->findData(toQString(thisZoneSupplyPlenums.front().handle())));
   }
   supplyChooser->blockSignals(false);
 
@@ -1213,11 +1213,11 @@ void ThermalZoneInspectorView::update()
     boost::optional<model::ThermalZone> t_plenumZone = it->thermalZone();
     if( t_plenumZone )
     {
-      returnChooser->addItem(returnPixmap,QString::fromStdString(t_plenumZone->name().get()),it->handle().toString());
+      returnChooser->addItem(returnPixmap,QString::fromStdString(t_plenumZone->name().get()), toQString(it->handle()));
     }
     else 
     {
-      returnChooser->addItem(returnPixmap,QString::fromStdString(it->name().get()),it->handle().toString());
+      returnChooser->addItem(returnPixmap,QString::fromStdString(it->name().get()), toQString(it->handle()));
     }
   }
   returnChooser->addItem("Ducted Return - No Plenum","");
@@ -1230,7 +1230,7 @@ void ThermalZoneInspectorView::update()
   }
   else
   {
-    returnChooser->setCurrentIndex(returnChooser->findData(thisZoneReturnPlenums.front().handle().toString()));
+    returnChooser->setCurrentIndex(returnChooser->findData(toQString(thisZoneReturnPlenums.front().handle())));
   }
   returnChooser->blockSignals(false);
 }

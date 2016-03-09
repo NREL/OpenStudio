@@ -12,16 +12,13 @@
 namespace openstudio{
 
   #ifdef SWIGRUBY
-    %rename("nil?") isNull();
+    %rename("nil?") is_nil();
   #endif
 
   class UUID {
   public:
-    bool operator!= ( const UUID & other ) const;
-    bool operator< ( const UUID & other ) const;
-    bool operator== ( const UUID & other ) const;
-    bool operator> ( const UUID & other ) const;
-    bool isNull () const;
+    bool is_nil() const;
+    bool isNull() const;
     ~UUID();
 
   protected:
@@ -41,7 +38,27 @@ namespace openstudio{
     }
     
     std::string __str__() const{
-      return openstudio::toString(self->toString());
+      return openstudio::toString(*self);
+    }
+
+    bool isNull() const {
+      return self->is_nil();
+    }
+
+    bool operator!= ( const UUID & other ) const {
+      return *self != other;
+    }
+
+    bool operator< ( const UUID & other ) const {
+      return *self < other;
+    }
+
+    bool operator== ( const UUID & other ) const {
+      return *self == other;
+    }
+
+    bool operator> ( const UUID & other ) const {
+      return *self > other;
     }
   };
 

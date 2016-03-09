@@ -88,7 +88,7 @@ namespace detail {
 
     value = query.value(DakotaAlgorithmRecord::ColumnsType::jobUUID);
     if (value.isValid() && !value.isNull() && !value.toString().isEmpty()) {
-      m_jobUUID = openstudio::UUID(value.toString());
+      m_jobUUID = toUUID(value.toString());
     }
   }
 
@@ -185,7 +185,7 @@ namespace detail {
     }
 
     if (m_jobUUID) {
-      query.bindValue(DakotaAlgorithmRecord::ColumnsType::jobUUID, m_jobUUID->toString());
+      query.bindValue(DakotaAlgorithmRecord::ColumnsType::jobUUID, toQString(*m_jobUUID));
     }
     else {
       query.bindValue(DakotaAlgorithmRecord::ColumnsType::jobUUID, QVariant(QVariant::String));
@@ -223,7 +223,7 @@ namespace detail {
 
     value = query.value(DakotaAlgorithmRecord::ColumnsType::jobUUID);
     if (value.isValid() && !value.isNull() && !value.toString().isEmpty()) {
-      m_lastJobUUID = openstudio::UUID(value.toString());
+      m_lastJobUUID = toUUID(value.toString());
     }else{
       m_lastJobUUID.reset();
     }
@@ -260,7 +260,7 @@ namespace detail {
 
     value = query.value(DakotaAlgorithmRecord::ColumnsType::jobUUID);
     if (value.isValid() && !value.isNull() && !value.toString().isEmpty()) {
-      openstudio::UUID testUUID(value.toString());
+      openstudio::UUID testUUID(toUUID(value.toString()));
       result = result && m_lastJobUUID && (m_lastJobUUID.get() == testUUID);
     }else{
       result = result && !m_lastJobUUID;

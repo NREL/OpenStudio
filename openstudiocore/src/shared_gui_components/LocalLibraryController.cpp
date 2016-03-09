@@ -560,7 +560,7 @@ QWidget * LibraryItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     MeasureType measureType = libraryItem->m_bclMeasure.measureType();
 
     // NOTE: replaces needed to trim unwanted curly braces
-    QString measureUUID = libraryItem->m_bclMeasure.uuid().toString().replace("{", "").replace("}", "").toStdString().c_str();
+    QString measureUUID = toQString(libraryItem->m_bclMeasure.uuid()).replace("{", "").replace("}", "");
 
     std::vector<std::string> localUUIDs = (LocalBCL::instance().measureUids());
 

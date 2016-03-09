@@ -147,7 +147,7 @@ namespace detail {
 
     value = query.value(DataPointRecordColumns::topLevelJobUUID);
     if (value.isValid() && !value.isNull() && !value.toString().isEmpty()) {
-      m_topLevelJobUUID = openstudio::UUID(value.toString());
+      m_topLevelJobUUID = toUUID(value.toString());
     }
 
     value = query.value(DataPointRecordColumns::dakotaParametersFiles);
@@ -672,7 +672,7 @@ namespace detail {
       query.bindValue(DataPointRecordColumns::sqlOutputDataRecordId, QVariant(QVariant::Int));
     }
     if (m_topLevelJobUUID) {
-      query.bindValue(DataPointRecordColumns::topLevelJobUUID, m_topLevelJobUUID->toString());
+      query.bindValue(DataPointRecordColumns::topLevelJobUUID, toQString(*m_topLevelJobUUID));
     }
     else {
       query.bindValue(DataPointRecordColumns::topLevelJobUUID, QVariant(QVariant::String));
@@ -755,7 +755,7 @@ namespace detail {
 
     value = query.value(DataPointRecordColumns::topLevelJobUUID);
     if (value.isValid() && !value.isNull() && !value.toString().isEmpty()) {
-      m_lastTopLevelJobUUID = openstudio::UUID(value.toString());
+      m_lastTopLevelJobUUID = toUUID(value.toString());
     }else{
       m_lastTopLevelJobUUID.reset();
     }
@@ -834,7 +834,7 @@ namespace detail {
 
     value = query.value(DataPointRecordColumns::topLevelJobUUID);
     if (value.isValid() && !value.isNull() && !value.toString().isEmpty()) {
-      openstudio::UUID testUUID(value.toString());
+      openstudio::UUID testUUID(toUUID(value.toString()));
       result = result && m_lastTopLevelJobUUID && (m_lastTopLevelJobUUID.get() == testUUID);
     }else{
       result = result && !m_lastTopLevelJobUUID;

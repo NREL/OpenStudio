@@ -193,7 +193,7 @@ bool InspectorDialog::setSelectedObjectHandles(const std::vector<openstudio::Han
 
     QString handleString = m_tableWidget->item(i,0)->data(Qt::UserRole).toString();
     //std::string temp = toString(handleString);
-    Handle handle(handleString);
+    Handle handle(toUUID(handleString));
 
     auto it = std::find(m_selectedObjectHandles.begin(),
                         m_selectedObjectHandles.end(),
@@ -1117,7 +1117,7 @@ void InspectorDialog::loadTableWidgetData()
 
     auto tableItem = new QTableWidgetItem(displayName);
     tableItem->setFlags(Qt::NoItemFlags | Qt::ItemIsEnabled | Qt::ItemIsSelectable);
-    QString handleString(object.handle().toString());
+    QString handleString(toQString(object.handle()));
     //std::string temp = toString(handleString);
     tableItem->setData(Qt::UserRole, handleString);
     m_tableWidget->setItem(i,j++,tableItem);
@@ -1151,7 +1151,7 @@ void InspectorDialog::getTableWidgetSelected(std::vector<openstudio::Handle>& se
     if (column == 0){
       QString handleString = selectedItems.at(i)->data(Qt::UserRole).toString();
       //std::string temp = toString(handleString);
-      selectedHandles.push_back(Handle(handleString));
+      selectedHandles.push_back(Handle(toUUID(handleString)));
     }
   }
 

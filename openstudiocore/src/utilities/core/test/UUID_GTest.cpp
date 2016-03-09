@@ -58,7 +58,7 @@ TEST(UUID, Constuctors)
   EXPECT_TRUE(uuid == uuid3);
 
   // from bad string
-  UUID uuid4 = toUUID("Not a UUID");
+  UUID uuid4 = toUUID(std::string("Not a UUID"));
   EXPECT_TRUE(uuid4.isNull());
 }
 
@@ -80,7 +80,7 @@ TEST(UUID, UUID_QVariant)
 {
   UUID uuid = createUUID();
   QVariant variant = QVariant::fromValue(uuid);
-  EXPECT_EQ("QUuid", std::string(variant.typeName()));
+  EXPECT_EQ("openstudio::UUID", std::string(variant.typeName()));
   ASSERT_TRUE(variant.canConvert<UUID>());
   UUID uuid2 = variant.value<UUID>();
   EXPECT_TRUE(uuid == uuid2);

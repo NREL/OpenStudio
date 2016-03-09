@@ -22,17 +22,79 @@
 
 #include "../UtilitiesAPI.hpp"
 
-#include <QUuid>
 #include <QMetaType>
 #include <boost/optional.hpp>
+#include <boost/uuid/uuid.hpp>
 #include <vector>
 #include <ostream>
 #include <string>
 
 namespace openstudio {
+       class UTILITIES_API UUID;
+
+       /// create a UUID
+       UTILITIES_API UUID createUUID();
+
+       /// create a UUID from a std::string, does not throw, may return a null UUID
+       UTILITIES_API UUID toUUID(const std::string& str);
+
+       /// create a UUID from a std::string, does not throw, may return a null UUID
+       UTILITIES_API UUID toUUID(const QString& str);
+
+       /// create a std::string from a UUID
+       UTILITIES_API std::string toString(const UUID& uuid);
+
+       /// create a QString from a UUID
+       UTILITIES_API QString toQString(const UUID& uuid);
+
+       /// create a unique name, prefix << " " << UUID.
+       UTILITIES_API std::string createUniqueName(const std::string& prefix);
+
+       /// create a std::string without curly brackets from a UUID
+       UTILITIES_API std::string removeBraces(const UUID& uuid);
+
+       UTILITIES_API std::ostream& operator<<(std::ostream& os, const UUID& uuid);
+
+       UTILITIES_API bool operator!= (const UUID & lhs, const UUID & rhs);
+       UTILITIES_API bool operator< (const UUID & lhs, const UUID & rhs);
+       UTILITIES_API bool operator== (const UUID & lhs, const UUID & rhs);
+       UTILITIES_API bool operator> (const UUID & lhs, const UUID & rhs);
 
   /// Universally Unique Identifier
-  typedef QUuid UUID;
+  class UTILITIES_API UUID : private boost::uuids::uuid
+  {
+    public:
+      UUID();
+      using boost::uuids::uuid::is_nil;
+
+      bool isNull() const {
+        return is_nil();
+      }
+
+      using boost::uuids::uuid::iterator;
+      using boost::uuids::uuid::const_iterator;
+      using boost::uuids::uuid::begin;
+      using boost::uuids::uuid::end;
+
+    private:
+      explicit UUID(const boost::uuids::uuid &);
+
+      UTILITIES_API friend UUID openstudio::createUUID();
+      UTILITIES_API friend UUID openstudio::toUUID(const std::string& str);
+      UTILITIES_API friend UUID openstudio::toUUID(const QString& str);
+      UTILITIES_API friend std::string openstudio::toString(const UUID& uuid);
+      UTILITIES_API friend QString openstudio::toQString(const UUID& uuid);
+      UTILITIES_API friend std::string openstudio::createUniqueName(const std::string& prefix);
+      UTILITIES_API friend std::string openstudio::removeBraces(const UUID& uuid);
+      UTILITIES_API friend bool openstudio::operator!= (const UUID & lhs, const UUID & rhs);
+      UTILITIES_API friend bool openstudio::operator< (const UUID & lhs, const UUID & rhs);
+      UTILITIES_API friend bool openstudio::operator== (const UUID & lhs, const UUID & rhs);
+      UTILITIES_API friend bool openstudio::operator> (const UUID & lhs, const UUID & rhs);
+
+      static UUID random_generate();
+      static UUID string_generate(const std::string &);
+
+  };
 
   /// optional UUID
   typedef boost::optional<UUID> OptionalUUID;
@@ -40,22 +102,6 @@ namespace openstudio {
   /// vector of UUID
   typedef std::vector<UUID> UUIDVector;
 
-  /// create a UUID
-  UTILITIES_API UUID createUUID();
-
-  /// create a UUID from a std::string, does not throw, may return a null UUID
-  UTILITIES_API UUID toUUID(const std::string& str);
-
-  /// create a std::string from a UUID
-  UTILITIES_API std::string toString(const UUID& uuid);
-
-  /// create a unique name, prefix << " " << UUID.
-  UTILITIES_API std::string createUniqueName(const std::string& prefix);
-
-  /// create a std::string without curly brackets from a UUID
-  UTILITIES_API std::string removeBraces(const UUID& uuid);
-
-  UTILITIES_API std::ostream& operator<<(std::ostream& os,const UUID& uuid);
 
 } // openstudio
 
