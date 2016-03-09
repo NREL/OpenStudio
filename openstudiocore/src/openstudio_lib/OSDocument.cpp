@@ -1033,6 +1033,8 @@ namespace openstudio {
       return true;
     }
 
+    boost::optional<std::string> weatherFileChecksum = weatherFile->checksum();
+
     OS_ASSERT(!m_modelTempDir.isEmpty());
 
     openstudio::path tempResourcesDir = toPath(m_modelTempDir) / toPath("resources/");
@@ -1115,6 +1117,12 @@ namespace openstudio {
         }
       }
 
+    } else if (!epwInUserPathChecksum && !epwInTempPathChecksum){
+
+      // file does not exist anywhere
+      weatherFile->remove();
+      return false;
+
     } else if (!epwInUserPathChecksum){
 
       // file does not exist in user path
@@ -1127,14 +1135,23 @@ namespace openstudio {
       copySource = epwInUserPath;
       copyDest = epwInTempPath;
 
-    } else{
-
-      // file does not exist anywhere
-      weatherFile->remove();
-      return false;
     }
 
-    if (!doCopy && !epwPathAbsolute){
+
+    bool checksumMismatch = false;
+    if (doCopy){
+      OS_ASSERT(epwInUserPathChecksum);
+      if (weatherFileChecksum){
+        checksumMismatch = (epwInUserPathChecksum.get() != weatherFileChecksum.get());
+      }
+    }else{
+      OS_ASSERT(epwInTempPathChecksum);
+      if (weatherFileChecksum){
+        checksumMismatch = (epwInTempPathChecksum.get() != weatherFileChecksum.get());
+      }
+    }
+
+    if (!doCopy && !epwPathAbsolute && !checksumMismatch){
       // no need to copy file or adjust model
       return true;
     }
