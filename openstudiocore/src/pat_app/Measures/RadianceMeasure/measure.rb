@@ -131,6 +131,16 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
   end
 
 
+  # check for number of rmtxop processes
+  def mergeCount()
+    if OS.windows
+      # TODO: properly handle the Windows case
+      return 1
+    else 
+      return `pgrep rmtxop`.split.size
+    end
+  end
+
   def run(model, runner, user_arguments)
     super(model, runner, user_arguments)
 
@@ -221,12 +231,10 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     perlExtension = ""
     catCommand = "cat"
     osQuote = "\'"
-    rt_io_format = "-ff"
     if OS.windows #/mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
       perlExtension = ".pl"
       catCommand = "type"
       osQuote = "\""
-      rt_io_format = "-fa"
     end
 
     ## END Radiance Utilities
@@ -703,9 +711,14 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         # if row.split(",")[2] == "n/a" || row.split(",")[2] == "AlwaysOff"
           # keep header, convert to illuminance, but no transpose
           ### foo (-ff)
+          
+          while mergeCount() > 1
+            puts "waiting in rmtxop queue..."
+            sleep(5)
+          end
           rad_command = "dctimestep output/dc/#{wg}.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}.ill"
           exec_statement(rad_command, runner)
-
+          
         else
 
         # do all controlled window groups
@@ -715,6 +728,10 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             # make single phase illuminance sched for each state
             states = ["clear", "tinted"]
             states.each_index do |i|
+              while mergeCount() > 1
+                puts "waiting in rmtxop queue..."
+                sleep(5)
+              end
               print_statement("Calculating annual iluminance for window group '#{wg}', state: #{states.index(states[i])} (switchable glazing - #{states[i]})", runner)
               ### foo (-ff)
               exec_statement("dctimestep output/dc/#{wg}_#{states[i]}.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}_#{states.index(states[i])}.ill", runner)             
@@ -729,6 +746,10 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
             wgXMLs.each_index do |i|
               #rad_command = "dctimestep output/dc/#{wg}.vmx bsdf/#{wgXMLs[i].strip} output/dc/#{wg}.dmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}_INDEX#{wgXMLs.index[i]}_#{wgXMLs[i].split[0]}.ill"
+              while mergeCount() > 1
+                puts "waiting in rmtxop queue..."
+                sleep(5)
+              end
               print_statement("Calculating annual iluminance for window group '#{wg}', state: #{wgXMLs.index(wgXMLs[i])} (BSDF filename: '#{wgXMLs[i].split[0]}'):", runner)
               rad_command = "dctimestep output/dc/#{wg}.vmx bsdf/#{wgXMLs[i].strip} output/dc/#{wg}.dmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}_#{wgXMLs.index(wgXMLs[i])}.ill"
               ### orig ^^^
@@ -744,8 +765,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
         # get annual values for window control sensors (note: convert to illuminance, no transpose, strip header)
         ### foo leave at -fa
-        exec_statement("dctimestep output/dc/window_controls.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - | getinfo - > output/ts/window_controls.ill", runner)
-  
+        while mergeCount() > 1
+          puts "waiting in rmtxop queue..."
+          sleep(5)
+        end
+        exec_statement("dctimestep output/dc/window_controls.vmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - | getinfo - > output/ts/window_controls.ill", runner)  
         print_statement("Blending window group results per shade control schedule", runner)
   
         # do that window group/state merge thing
@@ -854,20 +878,36 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         exit false
       elsif mergeWindows.size == 1
         # go straight to final building results file format
+        while mergeCount() > 1
+          puts "waiting in rmtxop queue..."
+          sleep(5)
+        end        
         print_statement("Finalizing output...", runner)
         exec_statement("rmtxop -fa #{mergeWindows[0]} -t | getinfo - > output/merged_space.ill", runner)
       else
         # make initial building results from first window group
+        while mergeCount() > 1
+          puts "waiting in rmtxop queue..."
+          sleep(5)
+        end
         print_statement("Starting final building illumimance file with #{mergeWindows[0]}...", runner)
         exec_statement("rmtxop -fa #{mergeWindows[0]} -t > output/final_merge.tmp", runner)
         # add remaining groups, one at a time
         mergeWindows[1..-1].each do |merge|
           print_statement("adding #{merge}...", runner)
           temp_fname = rand(36**15).to_s(36)
+          while mergeCount() > 1
+            puts "waiting in rmtxop queue..."
+            sleep(5)
+          end
           exec_statement("rmtxop -fa output/final_merge.tmp + #{merge} -t > #{temp_fname}", runner)
           FileUtils.mv temp_fname, 'output/final_merge.tmp'
         end
         # strip header
+        while mergeCount() > 1
+          puts "waiting in rmtxop queue..."
+          sleep(5)
+        end
         print_statement("Finalizing output...", runner)
         exec_statement("rmtxop -fa output/final_merge.tmp -t | getinfo - > output/merged_space.ill", runner)
         FileUtils.rm 'output/final_merge.tmp'
