@@ -421,7 +421,7 @@ namespace openstudio {
           if (destInfo.exists() && destInfo.isFile()){
             test = QFile::remove(toQString(destPath));
             if (!test){
-              LOG_FREE(Error, "saveModel", "Could not remove previous weather filw at '" << toString(destPath) << "'");
+              LOG_FREE(Error, "saveModel", "Could not remove previous weather file at '" << toString(destPath) << "'");
             }
           }
 
@@ -429,7 +429,11 @@ namespace openstudio {
           test = QFile::copy(toQString(*weatherFilePath), toQString(destPath));
 
           // make the url relative to temp dir
-          test = weatherFile->makeUrlRelative(modelTempDir);
+          openstudio::path searchDir = modelTempDir / toPath("resources/");
+          test = weatherFile->makeUrlRelative(searchDir);
+          
+          //openstudio::path searchDir = osmPath.parent_path() / osmPath.stem();
+          //test = weatherFile->makeUrlRelative(searchDir);
         }
       }
     }

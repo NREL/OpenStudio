@@ -1014,9 +1014,13 @@ namespace openstudio {
       boost::optional<openstudio::path> weatherFilePath = weatherFile->path();
       if (weatherFilePath){
         if (!weatherFilePath->is_complete()){
-          if (!m_savePath.isEmpty()){
-            openstudio::path osmPath = toPath(m_savePath);
-            openstudio::path searchDir = osmPath.parent_path() / osmPath.stem();
+          //if (!m_savePath.isEmpty()){
+          //  openstudio::path osmPath = toPath(m_savePath);
+          //  openstudio::path searchDir = osmPath.parent_path() / osmPath.stem();
+          //  result = weatherFile->makeUrlAbsolute(searchDir);
+          //}
+          if (!m_modelTempDir.isEmpty()){
+            openstudio::path searchDir = toPath(m_modelTempDir) / toPath("resources/");
             result = weatherFile->makeUrlAbsolute(searchDir);
           }
         }
