@@ -1168,22 +1168,26 @@ namespace openstudio {
       }
     } 
     
-    if (epwPathAbsolute){
-      try{
-        EpwFile epwFile(epwInTempPath);
 
-        weatherFile = openstudio::model::WeatherFile::setWeatherFile(m_model, epwFile);
-        OS_ASSERT(weatherFile);
+    try{
+      EpwFile epwFile(epwInTempPath);
 
-        weatherFile->makeUrlRelative(tempResourcesDir);
+      weatherFile = openstudio::model::WeatherFile::setWeatherFile(m_model, epwFile);
+      OS_ASSERT(weatherFile);
 
-      } catch (...){
-        // epw file not valid
-        weatherFile->remove();
-        return false;
+      weatherFile->makeUrlRelative(tempResourcesDir);
+
+    } catch (...){
+      // epw file not valid
+      weatherFile->remove();
+
+      if (doCopy){
+        boost::filesystem::remove_all(copyDest);
       }
 
+      return false;
     }
+
 
     return true;
   }
