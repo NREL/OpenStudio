@@ -1,6 +1,6 @@
 !-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
 
-  Version,8.4;
+  Version,8.5;
 
 !-   ===========  ALL OBJECTS IN CLASS: BUILDING ===========
 
@@ -38,7 +38,7 @@
     Yes,                     !- Use Weather File Daylight Saving Period
     No,                      !- Apply Weekend Holiday Rule
     Yes,                     !- Use Weather File Rain Indicators
-    ;                        !- Use Weather File Snow Indicators
+    Yes;                     !- Use Weather File Snow Indicators
 
 !-   ===========  ALL OBJECTS IN CLASS: LOCATION ===========
 
@@ -578,7 +578,7 @@
     0.0,                     !- X Origin {m}
     0.0,                     !- Y Origin {m}
     0.0,                     !- Z Origin {m}
-    ,                        !- Type
+    1,                       !- Type
     1;                       !- Multiplier
 
   BuildingSurface:Detailed,
@@ -606,7 +606,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     0.000000,10.000000,4.000000,  !- X,Y,Z ==> Vertex 1 {m}
     0.000000,10.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -622,7 +622,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     0.000000,0.000000,4.000000,  !- X,Y,Z ==> Vertex 1 {m}
     0.000000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -638,7 +638,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     0.000000,10.000000,4.000000,  !- X,Y,Z ==> Vertex 1 {m}
     0.000000,0.000000,4.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -654,7 +654,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     10.000000,10.000000,4.000000,  !- X,Y,Z ==> Vertex 1 {m}
     10.000000,10.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -670,7 +670,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     10.000000,0.000000,4.000000,  !- X,Y,Z ==> Vertex 1 {m}
     10.000000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -683,7 +683,7 @@
     North Wall,              !- Building Surface Name
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     1,                       !- Starting X Coordinate {m}
     1,                       !- Starting Z Coordinate {m}
     1,                       !- Length {m}
@@ -695,7 +695,7 @@
     East Wall,               !- Building Surface Name
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     1,                       !- Starting X Coordinate {m}
     1,                       !- Starting Z Coordinate {m}
     1,                       !- Length {m}
@@ -707,7 +707,7 @@
     South Wall,              !- Building Surface Name
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     1,                       !- Starting X Coordinate {m}
     1,                       !- Starting Z Coordinate {m}
     1,                       !- Length {m}
@@ -719,7 +719,7 @@
     West Wall,               !- Building Surface Name
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     1,                       !- Starting X Coordinate {m}
     1,                       !- Starting Z Coordinate {m}
     1,                       !- Length {m}
@@ -731,7 +731,7 @@
     Roof,                    !- Building Surface Name
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     1,                       !- Starting X Coordinate {m}
     1,                       !- Starting Z Coordinate {m}
     1,                       !- Length {m}
@@ -743,7 +743,7 @@
     Floor,                   !- Building Surface Name
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     1,                       !- Starting X Coordinate {m}
     1,                       !- Starting Z Coordinate {m}
     1,                       !- Length {m}

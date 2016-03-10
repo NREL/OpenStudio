@@ -1,13 +1,16 @@
 !  Version,
 !    7.2.0.002;              !- Version Identifier
- 
+
+!  Version,
+!    8.5;                    !- Version Identifier
+
   Output:VariableDictionary,IDF,Unsorted;
- 
+
   Output:Constructions,Constructions;
- 
+
   OutputControl:Table:Style,
     HTML;                    !- Column Separator
- 
+
   Output:Table:SummaryReports,
     AnnualBuildingUtilityPerformanceSummary,  !- Report 1 Name
     ComponentCostEconomicsSummary,  !- Report 2 Name
@@ -15,7 +18,7 @@
     Climate Summary,         !- Report 4 Name
     EquipmentSummary,        !- Report 5 Name
     EnvelopeSummary;         !- Report 6 Name
- 
+
   Output:Table:Monthly,
     Occupant Comfort Data Summary,  !- Name
     3,                       !- Digits After Decimal
@@ -31,24 +34,24 @@
     SumOrAverageDuringHoursShown,  !- Aggregation Type for Variable or Meter 5
     FANGERPMV,               !- Variable or Meter 6 Name
     SumOrAverageDuringHoursShown;  !- Aggregation Type for Variable or Meter 6
- 
+
   Output:EnvironmentalImpactFactors,
     Monthly;                 !- Reporting Frequency
- 
+
   EnvironmentalImpactFactors,
     0.663,                   !- District Heating Efficiency
     4.18,                    !- District Cooling COP {W/W}
     0.585,                   !- Steam Conversion Efficiency
-    80.7272,                 !- Total Carbon Equivalent Emission Factor From NOx {kg/kg}
+    80.7272,                 !- Total Carbon Equivalent Emission Factor From N2O {kg/kg}
     6.2727,                  !- Total Carbon Equivalent Emission Factor From CH4 {kg/kg}
     0.2727;                  !- Total Carbon Equivalent Emission Factor From CO2 {kg/kg}
- 
+
   Output:Table:Monthly,
     Source Energy Use Summary,  !- Name
     4,                       !- Digits After Decimal
     Source:Facility,         !- Variable or Meter 1 Name
     SumOrAverage;            !- Aggregation Type for Variable or Meter 1
- 
+
   Output:Table:Monthly,
     Emissions Data Summary,  !- Name
     4,                       !- Digits After Decimal
@@ -66,7 +69,7 @@
     SumOrAverage,            !- Aggregation Type for Variable or Meter 6
     Carbon Equivalent:Facility,  !- Variable or Meter 7 Name
     SumOrAverage;            !- Aggregation Type for Variable or Meter 7
- 
+
   Output:Table:Monthly,
     Outdoor Air Summary,     !- Name
     3,                       !- Digits After Decimal
@@ -80,7 +83,7 @@
     SumOrAverageDuringHoursShown,  !- Aggregation Type for Variable or Meter 4
     Zone Ventilation Air Change Rate,  !- Variable or Meter 5 Name
     SumOrAverageDuringHoursShown;  !- Aggregation Type for Variable or Meter 5
- 
+
   Output:Table:Monthly,
     Ventilation Load Components,  !- Name
     3,                       !- Digits After Decimal
@@ -100,7 +103,7 @@
     SumOrAverage,            !- Aggregation Type for Variable or Meter 7
     Zone Mechanical Ventilation Heating Load Decrease,  !- Variable or Meter 8 Name
     SumOrAverage;            !- Aggregation Type for Variable or Meter 8
- 
+
   Output:Table:Monthly,
     Overall HVAC Air System Loads,  !- Name
     3,                       !- Digits After Decimal
@@ -108,7 +111,7 @@
     SumOrAverage,            !- Aggregation Type for Variable or Meter 1
     Air Loop Total Cooling Energy,  !- Variable or Meter 2 Name
     SumOrAverage;            !- Aggregation Type for Variable or Meter 2
- 
+
   Output:Table:Monthly,
     Overall HVAC System Energy,  !- Name
     3,                       !- Digits After Decimal
@@ -116,7 +119,7 @@
     SumOrAverage,            !- Aggregation Type for Variable or Meter 1
     Heating:Gas,             !- Variable or Meter 2 Name
     SumOrAverage;            !- Aggregation Type for Variable or Meter 2
- 
+
   Output:Table:Monthly,
     Components of Peak Electrical Demand,  !- Name
     3,                       !- Digits After Decimal
@@ -154,7 +157,7 @@
     ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 16
     ElectricityProduced:Facility,  !- Variable or Meter 17 Name
     ValueWhenMaximumOrMinimum;  !- Aggregation Type for Variable or Meter 17
- 
+
   Output:Table:Monthly,
     Components of Peak Net Electrical Demand,  !- Name
     3,                       !- Digits After Decimal
@@ -192,15 +195,15 @@
     ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 16
     ElectricityProduced:Facility,  !- Variable or Meter 17 Name
     ValueWhenMaximumOrMinimum;  !- Aggregation Type for Variable or Meter 17
- 
+
   Output:Meter:MeterFileOnly,Electricity:Facility,hourly;
- 
+
   Output:Meter:MeterFileOnly,ElectricityProduced:Facility,hourly;
- 
+
   Output:Meter:MeterFileOnly,ElectricityNet:Facility,hourly;
- 
+
   Output:Meter:MeterFileOnly,Gas:Facility,hourly;
- 
+
   Output:Table:Monthly,
     Setpoints Not Met With Temperatures,  !- Name
     2,                       !- Digits After Decimal
@@ -220,7 +223,7 @@
     HoursNonZero,            !- Aggregation Type for Variable or Meter 7
     Zone Mean Air Temperature,  !- Variable or Meter 8 Name
     SumOrAverageDuringHoursShown;  !- Aggregation Type for Variable or Meter 8
- 
+
   Output:Table:Monthly,
     Comfort Report - Simple 55,  !- Name
     2,                       !- Digits After Decimal
@@ -236,54 +239,54 @@
     HoursNonZero,            !- Aggregation Type for Variable or Meter 5
     Zone Mean Air Temperature,  !- Variable or Meter 6 Name
     SumOrAverageDuringHoursShown;  !- Aggregation Type for Variable or Meter 6
- 
+
   Output:Meter,Electricity:Facility,RunPeriod;
- 
+
   Output:Meter,ElectricityPurchased:Facility,RunPeriod;
- 
+
   Output:Meter,ElectricityProduced:Facility,RunPeriod;
- 
+
   Output:Meter,ElectricitySurplusSold:Facility,RunPeriod;
- 
+
   Output:Meter,ElectricityNet:Facility,RunPeriod;
- 
+
   Output:Meter,Source:Facility,RunPeriod;
- 
+
   Output:Meter,CO2:Facility,RunPeriod;
- 
+
   Output:Meter,Electricity:Building,RunPeriod;
- 
+
   Output:Meter,Electricity:Plant,RunPeriod;
- 
+
   Output:Meter,Electricity:HVAC,RunPeriod;
- 
+
   Output:Meter,InteriorLights:Electricity,RunPeriod;
- 
+
   Output:Meter,InteriorEquipment:Electricity,RunPeriod;
- 
+
   Output:Meter,Refrigeration:Electricity,RunPeriod;
- 
+
   Output:Meter,Fans:Electricity,RunPeriod;
- 
+
   Output:Meter,Zone Exhaust Fans:Fans:Electricity,RunPeriod;
- 
+
   Output:Meter,ExteriorLights:Electricity,RunPeriod;
- 
+
   Output:Meter,Cooling:Electricity,RunPeriod;
- 
+
   Output:Meter,Pumps:Electricity,RunPeriod;
- 
+
   Output:Meter,Heating:Electricity,RunPeriod;
- 
+
   Output:Meter,Gas:Facility,RunPeriod;
- 
+
   Output:Meter,InteriorEquipment:Gas,RunPeriod;
- 
+
   Output:Meter,Heating:Gas,RunPeriod;
- 
+
   Output:Meter,Gas:Plant,RunPeriod;
- 
+
   Output:Meter,Water Heater:WaterSystems:Gas,RunPeriod;
- 
+
   Output:Meter,Water:Facility,RunPeriod;
- 
+

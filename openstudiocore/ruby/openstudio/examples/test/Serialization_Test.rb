@@ -18,7 +18,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 
 require 'minitest/autorun'
 

@@ -18,7 +18,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 require 'minitest/autorun'
 
 class ParallelEnergyPlus_Test < MiniTest::Unit::TestCase
@@ -35,9 +34,9 @@ class ParallelEnergyPlus_Test < MiniTest::Unit::TestCase
     epw_path = OpenStudio::Path.new($OpenStudio_ResourcePath + "runmanager/USA_CO_Golden-NREL.724666_TMY3.epw") 
 
     # Get energyplus configuration
-    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,4)
-    ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
-    ep_parent_path = ep_path.parent_path();
+    co = OpenStudio::Runmanager::ConfigOptions.new
+    co.fastFindEnergyPlus()
+    co.fastFindRuby()
 
     # Generate some reasonable output directory name
     outdir = OpenStudio::tempDir() / OpenStudio::Path.new("parallelenergyplustest1")
@@ -53,13 +52,7 @@ class ParallelEnergyPlus_Test < MiniTest::Unit::TestCase
       OpenStudio::Runmanager::JobFactory::createParallelEnergyPlusJobTree(7, 1)));
 
     # Set up the basic general tools needed. This takes care of EnergyPlus, XMLPreprocessor, Radiance, Ruby 
-    workflow.add(
-      OpenStudio::Runmanager::ConfigOptions::makeTools(ep_parent_path, 
-                                                       OpenStudio::Path.new, 
-                                                       OpenStudio::Path.new, 
-                                                       $OpenStudio_RubyExeDir,
-                                                       OpenStudio::Path.new)
-    )
+    workflow.add(co.getTools)
 
     # Create a runmanager
     run_manager = OpenStudio::Runmanager::RunManager.new(OpenStudio::tempDir() / OpenStudio::Path.new("ParallelEnergyPlusTest1.db"), true)

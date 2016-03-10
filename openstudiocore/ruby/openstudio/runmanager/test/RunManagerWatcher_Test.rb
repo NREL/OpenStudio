@@ -18,7 +18,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 require 'minitest/autorun'
 
 class RunManagerWatcherImpl < OpenStudio::Runmanager::RunManagerWatcher
@@ -62,67 +61,64 @@ class RunManagerWatcher_Test < MiniTest::Unit::TestCase
     OpenStudio::Logger.instance.standardOutLogger.setLogLevel(-2)
     #    OpenStudio::Logger.instance.standardOutLogger.disable
 
-    dir = OpenStudio::Path.new($OpenStudio_ResourcePath) / OpenStudio::Path.new("/utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade");
-    osm = OpenStudio::Path.new($OpenStudio_ResourcePath) / OpenStudio::Path.new("/runmanager/SimpleModel.osm");
-    epw = OpenStudio::Path.new($OpenStudio_ResourcePath) / OpenStudio::Path.new("/runmanager/USA_CO_Golden-NREL.724666_TMY3.epw");
+    dir = OpenStudio::Path.new($OpenStudio_ResourcePath) / OpenStudio::Path.new("/utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade")
+    osm = OpenStudio::Path.new($OpenStudio_ResourcePath) / OpenStudio::Path.new("/runmanager/SimpleModel.osm")
+    epw = OpenStudio::Path.new($OpenStudio_ResourcePath) / OpenStudio::Path.new("/runmanager/USA_CO_Golden-NREL.724666_TMY3.epw")
 
-    measure = OpenStudio::BCLMeasure::load(dir);
+    measure = OpenStudio::BCLMeasure::load(dir)
 
-    wf = OpenStudio::Runmanager::Workflow.new();
+    wf = OpenStudio::Runmanager::Workflow.new()
 
-    wwr = OpenStudio::Ruleset::OSArgument::makeDoubleArgument("wwr");
+    wwr = OpenStudio::Ruleset::OSArgument::makeDoubleArgument("wwr")
     wwr.setValue(0.1)
 
-    sillHeight = OpenStudio::Ruleset::OSArgument::makeDoubleArgument("sillHeight");
+    sillHeight = OpenStudio::Ruleset::OSArgument::makeDoubleArgument("sillHeight")
     sillHeight.setValue(0.2)
 
-    facade = OpenStudio::Ruleset::OSArgument::makeStringArgument("facade");
-    facade.setValue("North");
+    facade = OpenStudio::Ruleset::OSArgument::makeStringArgument("facade")
+    facade.setValue("North")
 
-    args  = OpenStudio::Ruleset::OSArgumentVector.new();
+    args  = OpenStudio::Ruleset::OSArgumentVector.new()
     args << wwr
     args << sillHeight
     args << facade
 
     # Add job one
-    rubyjobbuilder = OpenStudio::Runmanager::RubyJobBuilder.new(measure.get(), args);
-    rubyjobbuilder.setIncludeDir(OpenStudio::getOpenStudioRubyIncludePath());
-    wf.addJob(rubyjobbuilder.toWorkItem());
+    rubyjobbuilder = OpenStudio::Runmanager::RubyJobBuilder.new(measure.get(), args)
+    rubyjobbuilder.setIncludeDir(OpenStudio::getOpenStudioRubyIncludePath())
+    wf.addJob(rubyjobbuilder.toWorkItem())
 
     # add job two
-    args2  = OpenStudio::Ruleset::OSArgumentVector.new();
+    args2  = OpenStudio::Ruleset::OSArgumentVector.new()
     args2 << wwr
-    sillHeight.setValue(0.3);
+    sillHeight.setValue(0.3)
     args2 << sillHeight
-    facade.setValue("East");
+    facade.setValue("East")
     args2 << facade
-    rubyjobbuilder2 = OpenStudio::Runmanager::RubyJobBuilder.new(measure.get(), args2);
-    rubyjobbuilder2.setIncludeDir(OpenStudio::getOpenStudioRubyIncludePath());
-    wf.addJob(rubyjobbuilder2.toWorkItem());
+    rubyjobbuilder2 = OpenStudio::Runmanager::RubyJobBuilder.new(measure.get(), args2)
+    rubyjobbuilder2.setIncludeDir(OpenStudio::getOpenStudioRubyIncludePath())
+    wf.addJob(rubyjobbuilder2.toWorkItem())
 
 
-    wf.addJob(OpenStudio::Runmanager::JobType.new("ModelToIdf"));
-    wf.addJob(OpenStudio::Runmanager::JobType.new("EnergyPlus"));
+    wf.addJob(OpenStudio::Runmanager::JobType.new("ModelToIdf"))
+    wf.addJob(OpenStudio::Runmanager::JobType.new("EnergyPlus"))
 
-    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,4)
-    ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
-    ep_parent_path = ep_path.parent_path();
+    co = OpenStudio::Runmanager::ConfigOptions.new
+    co.fastFindEnergyPlus()
+    co.fastFindRuby()
 
-    tools = OpenStudio::Runmanager::ConfigOptions::makeTools(ep_parent_path, OpenStudio::Path.new(), OpenStudio::Path.new(), 
-                                                 $OpenStudio_RubyExeDir, OpenStudio::Path.new())
-
-    wf.add(tools);
-    wf.addParam(OpenStudio::Runmanager::JobParam.new("flatoutdir"));
+    wf.add(co.getTools)
+    wf.addParam(OpenStudio::Runmanager::JobParam.new("flatoutdir"))
 
     outdir = OpenStudio::tempDir() / OpenStudio::Path.new("runmanagerwatchertest")
-    jobtree = wf.create(outdir, osm, epw);
+    jobtree = wf.create(outdir, osm, epw)
     OpenStudio::Runmanager::JobFactory::optimizeJobTree(jobtree)
 
     # Create a runmanager
     run_manager = OpenStudio::Runmanager::RunManager.new(OpenStudio::tempDir() / OpenStudio::Path.new("runmanagerwatchertest.db"), true)
     watcher = RunManagerWatcherImpl.new(run_manager)
 
-    puts outdir;
+    puts outdir
 
     # run the job tree
     run_manager.enqueue(jobtree, true)
@@ -143,7 +139,7 @@ class RunManagerWatcher_Test < MiniTest::Unit::TestCase
     assert(counts[OpenStudio::Runmanager::JobType.new("EnergyPlus").value] == 1)
 
     # check to make sure exactly ONE *tree* finished
-    assert(counts[999] == 1);
+    assert(counts[999] == 1)
 
   end
 end

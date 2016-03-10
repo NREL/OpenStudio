@@ -240,24 +240,24 @@ void MainTabView::resizeEvent( QResizeEvent * event )
   m_mainWidget->resize(newSize);
 }
 
-int MainTabView::subTabId() const
-{
-  OS_ASSERT(false);
-  if (m_tabType != MAIN_TAB)
-  {
-    return m_ids[subTabIndex()];
-  }
-  else
-  {
-    return -1;
-  }
-}
+//int MainTabView::subTabId() const
+//{
+//  OS_ASSERT(false);
+//  if (m_tabType != MAIN_TAB)
+//  {
+//    return m_ids[subTabIndex()];
+//  }
+//  else
+//  {
+//    return -1;
+//  }
+//}
 
-int MainTabView::subTabIndex() const
-{
-  OS_ASSERT(false);
-  return -1;
-}
+//int MainTabView::subTabIndex() const
+//{
+//  OS_ASSERT(false);
+//  return -1;
+//}
 
 bool MainTabView::selectSubTabByIndex(int index)
 {

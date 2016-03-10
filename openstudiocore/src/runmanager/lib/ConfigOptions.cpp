@@ -680,6 +680,16 @@ namespace runmanager {
     return potentialpaths;
   }
 
+  std::vector<openstudio::path> ConfigOptions::potentialRubyLocations() const
+  {
+    std::vector<openstudio::path> potentialpaths;
+
+    potentialpaths.push_back(getOpenStudioEmbeddedRubyPath());
+    potentialpaths.push_back(getOpenStudioAWSRubyPath());
+
+    return potentialpaths;
+  }
+
   void ConfigOptions::fastFindRadiance()
   {
     std::vector<std::pair<openstudio::runmanager::ToolVersion, openstudio::runmanager::ToolLocationInfo> >
@@ -697,6 +707,14 @@ namespace runmanager {
     m_toolLocations.insert(foundTools.begin(), foundTools.end());
 
     setIDFEPWDefaults();
+  }
+
+  void ConfigOptions::fastFindRuby()
+  {
+    std::vector<std::pair<openstudio::runmanager::ToolVersion, openstudio::runmanager::ToolLocationInfo> >
+      foundTools = openstudio::runmanager::ToolFinder::findTools(potentialRubyLocations(), false);
+
+    m_toolLocations.insert(foundTools.begin(), foundTools.end());
   }
 
   void ConfigOptions::loadQSettingsData() 

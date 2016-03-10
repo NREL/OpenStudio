@@ -6,7 +6,7 @@ require "#{File.dirname(__FILE__)}/../measure.rb"
 
 require 'fileutils'
 
-require 'test/unit'
+require 'minitest/autorun'
 
 class CalibrationReports_Test < MiniTest::Unit::TestCase
 

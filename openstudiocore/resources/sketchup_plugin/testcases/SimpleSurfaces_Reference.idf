@@ -1,7 +1,7 @@
 ! Basecase reference for SimpleSurfaces_Test
 !-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
 
-  Version,8.4;
+  Version,8.5;
 
 !-   ===========  ALL OBJECTS IN CLASS: BUILDING ===========
 
@@ -285,7 +285,7 @@
     30.0,                    !- X Origin {m}
     40.0,                    !- Y Origin {m}
     0.0,                     !- Z Origin {m}
-    ,                        !- Type
+    1,                       !- Type
     1;                       !- Multiplier
 
   BuildingSurface:Detailed,
@@ -313,7 +313,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     30.000000,40.000000,4.000000,  !- X,Y,Z ==> Vertex 1 {m}
     30.000000,40.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -345,7 +345,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     38.000000,71.000000,4.000000,  !- X,Y,Z ==> Vertex 1 {m}
     38.000000,71.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -361,7 +361,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     18.000000,56.000000,4.000000,  !- X,Y,Z ==> Vertex 1 {m}
     30.000000,40.000000,4.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -377,7 +377,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     18.000000,56.000000,4.000000,  !- X,Y,Z ==> Vertex 1 {m}
     18.000000,56.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -436,7 +436,7 @@
     50.0,                    !- X Origin {m}
     55.0,                    !- Y Origin {m}
     0.0,                     !- Z Origin {m}
-    ,                        !- Type
+    1,                       !- Type
     1;                       !- Multiplier
 
   BuildingSurface:Detailed,
@@ -464,7 +464,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     58.000000,86.000000,4.000000,  !- X,Y,Z ==> Vertex 1 {m}
     58.000000,86.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -480,7 +480,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     50.000000,55.000000,4.000000,  !- X,Y,Z ==> Vertex 1 {m}
     50.000000,55.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -496,7 +496,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     38.000000,71.000000,4.000000,  !- X,Y,Z ==> Vertex 1 {m}
     50.000000,55.000000,4.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -512,7 +512,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     70.000000,70.000000,4.000000,  !- X,Y,Z ==> Vertex 1 {m}
     70.000000,70.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -541,10 +541,10 @@
     Exterior Window,         !- Construction Name
     Zone1 Front Wall,        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     38.000000,46.000000,3.000000,  !- X,Y,Z ==> Vertex 1 {m}
     38.000000,46.000000,1.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -567,10 +567,10 @@
     Exterior Door,           !- Construction Name
     Zone2 Front Wall,        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     58.000000,61.000000,2.000000,  !- X,Y,Z ==> Vertex 1 {m}
     58.000000,61.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -613,10 +613,10 @@
     Interior Window,         !- Construction Name
     Zone1 Interior Wall,     !- Building Surface Name
     Zone2 Interior Window,   !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     45.200000,61.400000,3.000000,  !- X,Y,Z ==> Vertex 1 {m}
     45.200000,61.400000,1.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -629,10 +629,10 @@
     Interior Window,         !- Construction Name
     Zone2 Interior Wall,     !- Building Surface Name
     Zone1 Interior Window,   !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     39.200000,69.400000,3.000000,  !- X,Y,Z ==> Vertex 1 {m}
     39.200000,69.400000,1.000000,  !- X,Y,Z ==> Vertex 2 {m}

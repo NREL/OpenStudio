@@ -1,4 +1,4 @@
-  Version,8.4;
+  Version,8.5;
 
   Timestep,4;
 
@@ -48,7 +48,7 @@
     WinterDesignDay,         !- Day Type
     -15,                     !- Maximum Dry-Bulb Temperature {C}
     0,                       !- Daily Dry-Bulb Temperature Range {deltaC}
-    ,                        !- Dry-Bulb Temperature Range Modifier Type
+    DefaultMultipliers,      !- Dry-Bulb Temperature Range Modifier Type
     ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     -15,                     !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
@@ -65,8 +65,8 @@
     ASHRAEClearSky,          !- Solar Model Indicator
     ,                        !- Beam Solar Day Schedule Name
     ,                        !- Diffuse Solar Day Schedule Name
-    ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
-    ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0;                       !- Sky Clearness
 
   SizingPeriod:DesignDay,
@@ -76,7 +76,7 @@
     SummerDesignDay,         !- Day Type
     35.8,                    !- Maximum Dry-Bulb Temperature {C}
     14.8,                    !- Daily Dry-Bulb Temperature Range {deltaC}
-    ,                        !- Dry-Bulb Temperature Range Modifier Type
+    DefaultMultipliers,      !- Dry-Bulb Temperature Range Modifier Type
     ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     15.7,                    !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
@@ -93,8 +93,8 @@
     ASHRAEClearSky,          !- Solar Model Indicator
     ,                        !- Beam Solar Day Schedule Name
     ,                        !- Diffuse Solar Day Schedule Name
-    ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
-    ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     1;                       !- Sky Clearness
 
   SurfaceConvectionAlgorithm:Inside,TARP;
@@ -2894,7 +2894,7 @@
     NO,                      !- Shading Control Is Scheduled
     NO,                      !- Glare Control Is Active
     Frosted Glass,           !- Shading Device Material Name
-    ,                        !- Type of Slat Angle Control for Blinds
+    FixedSlatAngle,          !- Type of Slat Angle Control for Blinds
     ;                        !- Slat Angle Schedule Name
 
 ! Currently all bedroom windows (incl. clerestories) and the bathroom clerestories have insulation.
@@ -2910,7 +2910,7 @@
     YES,                     !- Shading Control Is Scheduled
     NO,                      !- Glare Control Is Active
     Insulated Shade,         !- Shading Device Material Name
-    ,                        !- Type of Slat Angle Control for Blinds
+    FixedSlatAngle,          !- Type of Slat Angle Control for Blinds
     ;                        !- Slat Angle Schedule Name
 
   Schedule:Compact,
@@ -3798,7 +3798,7 @@
     YES,                     !- Shading Control Is Scheduled
     NO,                      !- Glare Control Is Active
     Trombe Shade,            !- Shading Device Material Name
-    ,                        !- Type of Slat Angle Control for Blinds
+    FixedSlatAngle,          !- Type of Slat Angle Control for Blinds
     ;                        !- Slat Angle Schedule Name
 
   Schedule:Compact,
@@ -4238,15 +4238,15 @@
     ,                        !- Heating Availability Schedule Name
     ,                        !- Cooling Availability Schedule Name
     ConstantSupplyHumidityRatio,  !- Dehumidification Control Type
-    ,                        !- Cooling Sensible Heat Ratio {dimensionless}
+    0.7,                     !- Cooling Sensible Heat Ratio {dimensionless}
     ConstantSupplyHumidityRatio,  !- Humidification Control Type
     ,                        !- Design Specification Outdoor Air Object Name
     ,                        !- Outdoor Air Inlet Node Name
-    ,                        !- Demand Controlled Ventilation Type
-    ,                        !- Outdoor Air Economizer Type
-    ,                        !- Heat Recovery Type
-    ,                        !- Sensible Heat Recovery Effectiveness {dimensionless}
-    ;                        !- Latent Heat Recovery Effectiveness {dimensionless}
+    None,                    !- Demand Controlled Ventilation Type
+    NoEconomizer,            !- Outdoor Air Economizer Type
+    None,                    !- Heat Recovery Type
+    0.70,                    !- Sensible Heat Recovery Effectiveness {dimensionless}
+    0.65;                    !- Latent Heat Recovery Effectiveness {dimensionless}
 
   ZoneControl:Thermostat,
     Bedroom2 Thermostat,     !- Name
@@ -4288,15 +4288,15 @@
     ,                        !- Heating Availability Schedule Name
     ,                        !- Cooling Availability Schedule Name
     ConstantSupplyHumidityRatio,  !- Dehumidification Control Type
-    ,                        !- Cooling Sensible Heat Ratio {dimensionless}
+    0.7,                     !- Cooling Sensible Heat Ratio {dimensionless}
     ConstantSupplyHumidityRatio,  !- Humidification Control Type
     ,                        !- Design Specification Outdoor Air Object Name
     ,                        !- Outdoor Air Inlet Node Name
-    ,                        !- Demand Controlled Ventilation Type
-    ,                        !- Outdoor Air Economizer Type
-    ,                        !- Heat Recovery Type
-    ,                        !- Sensible Heat Recovery Effectiveness {dimensionless}
-    ;                        !- Latent Heat Recovery Effectiveness {dimensionless}
+    None,                    !- Demand Controlled Ventilation Type
+    NoEconomizer,            !- Outdoor Air Economizer Type
+    None,                    !- Heat Recovery Type
+    0.70,                    !- Sensible Heat Recovery Effectiveness {dimensionless}
+    0.65;                    !- Latent Heat Recovery Effectiveness {dimensionless}
 
   ZoneControl:Thermostat,
     Bedroom3 Thermostat,     !- Name
@@ -4338,15 +4338,15 @@
     ,                        !- Heating Availability Schedule Name
     ,                        !- Cooling Availability Schedule Name
     ConstantSupplyHumidityRatio,  !- Dehumidification Control Type
-    ,                        !- Cooling Sensible Heat Ratio {dimensionless}
+    0.7,                     !- Cooling Sensible Heat Ratio {dimensionless}
     ConstantSupplyHumidityRatio,  !- Humidification Control Type
     ,                        !- Design Specification Outdoor Air Object Name
     ,                        !- Outdoor Air Inlet Node Name
-    ,                        !- Demand Controlled Ventilation Type
-    ,                        !- Outdoor Air Economizer Type
-    ,                        !- Heat Recovery Type
-    ,                        !- Sensible Heat Recovery Effectiveness {dimensionless}
-    ;                        !- Latent Heat Recovery Effectiveness {dimensionless}
+    None,                    !- Demand Controlled Ventilation Type
+    NoEconomizer,            !- Outdoor Air Economizer Type
+    None,                    !- Heat Recovery Type
+    0.70,                    !- Sensible Heat Recovery Effectiveness {dimensionless}
+    0.65;                    !- Latent Heat Recovery Effectiveness {dimensionless}
 
   ZoneControl:Thermostat,
     Bedroom4 Thermostat,     !- Name
@@ -4388,15 +4388,15 @@
     ,                        !- Heating Availability Schedule Name
     ,                        !- Cooling Availability Schedule Name
     ConstantSupplyHumidityRatio,  !- Dehumidification Control Type
-    ,                        !- Cooling Sensible Heat Ratio {dimensionless}
+    0.7,                     !- Cooling Sensible Heat Ratio {dimensionless}
     ConstantSupplyHumidityRatio,  !- Humidification Control Type
     ,                        !- Design Specification Outdoor Air Object Name
     ,                        !- Outdoor Air Inlet Node Name
-    ,                        !- Demand Controlled Ventilation Type
-    ,                        !- Outdoor Air Economizer Type
-    ,                        !- Heat Recovery Type
-    ,                        !- Sensible Heat Recovery Effectiveness {dimensionless}
-    ;                        !- Latent Heat Recovery Effectiveness {dimensionless}
+    None,                    !- Demand Controlled Ventilation Type
+    NoEconomizer,            !- Outdoor Air Economizer Type
+    None,                    !- Heat Recovery Type
+    0.70,                    !- Sensible Heat Recovery Effectiveness {dimensionless}
+    0.65;                    !- Latent Heat Recovery Effectiveness {dimensionless}
 
   Output:VariableDictionary,Regular;
 

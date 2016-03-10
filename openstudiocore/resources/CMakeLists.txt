@@ -604,7 +604,6 @@ CREATE_SRC_GROUPS("${ruleset_resources_src}")
 set(ENERGYPLUS_OUTPUTS "")
 
 set(energyplus_resources_src
-  energyplus/Energy+.idd
   energyplus/ProposedEnergy+.idd
   energyplus/NewFileTemplate.idf
   energyplus/5ZoneAirCooled/in.idf

@@ -582,6 +582,8 @@ void LocationView::onWeatherFileBtnClicked()
         }
       }
       
+      // duplicate code in OSDocument::fixWeatherFilePath
+
       boost::filesystem::copy_file(epwPath, newPath, boost::filesystem::copy_option::overwrite_if_exists);
       
       // this can throw
