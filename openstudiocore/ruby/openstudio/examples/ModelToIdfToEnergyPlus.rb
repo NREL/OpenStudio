@@ -36,7 +36,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 
 osm_path = OpenStudio::Path.new(ARGV[0])
 

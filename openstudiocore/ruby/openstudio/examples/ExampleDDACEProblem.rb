@@ -51,7 +51,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 require 'openstudio/analysis/find_dakota'
 require 'fileutils'
 

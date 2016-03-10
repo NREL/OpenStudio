@@ -44,7 +44,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 require 'openstudio/model/user_scripts/SummaryTable_Objects_Attributes_Relationships.rb'
 require 'openstudio/ruleset/NonInteractiveUserScriptRunner.rb'
 
