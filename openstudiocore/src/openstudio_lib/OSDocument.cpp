@@ -453,8 +453,7 @@ namespace openstudio {
       modified = true;
 
       // connect to slot that would show user error dialog
-      // DLM: Evan todo
-      //QTimer::singleShot(0, this, SLOT(weatherFileReset()));
+      QTimer::singleShot(0, this, SLOT(weatherFileReset()));
     }
 
     connect(m_model.getImpl<model::detail::Model_Impl>().get(), &model::detail::Model_Impl::onChange, this, &OSDocument::markAsModified);
@@ -493,6 +492,11 @@ namespace openstudio {
     m_mainWindow->setVisible(wasVisible);
 
     QTimer::singleShot(0, this, SLOT(showStartTabAndStartSubTab()));
+  }
+
+  void OSDocument::weatherFileReset()
+  {
+    QMessageBox::warning(mainWindow(), "Missing Weather File", "Invalid weather file object, weather file object has been reset. Please choose another weather file.");
   }
 
   void OSDocument::createTabButtons()

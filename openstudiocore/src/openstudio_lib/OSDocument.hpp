@@ -294,6 +294,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void disableTabsDuringRun();
 
+  void weatherFileReset();
+
  private:
 
   enum fileType{
