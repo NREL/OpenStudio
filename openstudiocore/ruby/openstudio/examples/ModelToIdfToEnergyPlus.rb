@@ -36,12 +36,11 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 
 osm_path = OpenStudio::Path.new(ARGV[0])
 
 # find energyplus
-ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,4)
+ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,5)
 ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
 idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
 ep_dir = File.dirname(ep_path.to_s)

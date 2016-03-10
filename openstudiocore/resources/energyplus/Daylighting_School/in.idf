@@ -33,7 +33,7 @@
 ! WeatherFileName=USA_CO_Boulder_TMY2.epw
 ! End SimMetaData
 
-  Version,8.4;
+  Version,8.5;
 
   Timestep,6;
 
@@ -121,7 +121,7 @@
     WinterDesignDay,         !- Day Type
     -18.6,                   !- Maximum Dry-Bulb Temperature {C}
     0.0,                     !- Daily Dry-Bulb Temperature Range {deltaC}
-    ,                        !- Dry-Bulb Temperature Range Modifier Type
+    DefaultMultipliers,      !- Dry-Bulb Temperature Range Modifier Type
     ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     -18.6,                   !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
@@ -138,8 +138,8 @@
     ASHRAEClearSky,          !- Solar Model Indicator
     ,                        !- Beam Solar Day Schedule Name
     ,                        !- Diffuse Solar Day Schedule Name
-    ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
-    ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0.00;                    !- Sky Clearness
 
  ! BOULDER_CO_USA Annual Cooling (DB=>MWB) .4%, MaxDB=32.9°C MWB=15.9°C
@@ -151,7 +151,7 @@
     SummerDesignDay,         !- Day Type
     32.9,                    !- Maximum Dry-Bulb Temperature {C}
     15.2,                    !- Daily Dry-Bulb Temperature Range {deltaC}
-    ,                        !- Dry-Bulb Temperature Range Modifier Type
+    DefaultMultipliers,      !- Dry-Bulb Temperature Range Modifier Type
     ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     15.9,                    !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
@@ -168,8 +168,8 @@
     ASHRAEClearSky,          !- Solar Model Indicator
     ,                        !- Beam Solar Day Schedule Name
     ,                        !- Diffuse Solar Day Schedule Name
-    ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
-    ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     1.00;                    !- Sky Clearness
 
  ! BOULDER_CO_USA Annual Cooling (WB=>MDB) .4%, MDB=27.4°C WB=18.6°C
@@ -181,7 +181,7 @@
     SummerDesignDay,         !- Day Type
     27.4,                    !- Maximum Dry-Bulb Temperature {C}
     15.2,                    !- Daily Dry-Bulb Temperature Range {deltaC}
-    ,                        !- Dry-Bulb Temperature Range Modifier Type
+    DefaultMultipliers,      !- Dry-Bulb Temperature Range Modifier Type
     ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     18.6,                    !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
@@ -198,8 +198,8 @@
     ASHRAEClearSky,          !- Solar Model Indicator
     ,                        !- Beam Solar Day Schedule Name
     ,                        !- Diffuse Solar Day Schedule Name
-    ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
-    ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     1.00;                    !- Sky Clearness
 
   ScheduleTypeLimits,
@@ -1108,7 +1108,7 @@
     0.3000,                  !- Fraction Radiant
     AUTOCALCULATE,           !- Sensible Heat Fraction
     ACTIVITY_SCH,            !- Activity Level Schedule Name
-    ,                        !- Carbon Dioxide Generation Rate {m3/s-W}
+    3.82E-8,                 !- Carbon Dioxide Generation Rate {m3/s-W}
     No,                      !- Enable ASHRAE 55 Comfort Warnings
     ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
@@ -1208,15 +1208,15 @@
     ,                        !- Zone Heating Sizing Factor
     ,                        !- Zone Cooling Sizing Factor
     DesignDay,               !- Cooling Design Air Flow Method
-    ,                        !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Cooling Minimum Air Flow {m3/s}
+    0,                       !- Cooling Design Air Flow Rate {m3/s}
+    .000762,                 !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+    0,                       !- Cooling Minimum Air Flow {m3/s}
     0.0,                     !- Cooling Minimum Air Flow Fraction
     DesignDay,               !- Heating Design Air Flow Method
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+    .1415762,                !- Heating Maximum Air Flow {m3/s}
+    0.3;                     !- Heating Maximum Air Flow Fraction
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Classroom,       !- Name
@@ -1467,7 +1467,7 @@
     AUTOSIZE,                !- Gross Rated Sensible Heat Ratio
     3,                       !- Gross Rated Cooling COP {W/W}
     AUTOSIZE,                !- Rated Air Flow Rate {m3/s}
-    ,                        !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    773.3,                   !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
     PSZ-AC:1_OA-PSZ-AC:1_CoolCNode,  !- Air Inlet Node Name
     PSZ-AC:1_CoolC-PSZ-AC:1_HeatCNode,  !- Air Outlet Node Name
     PSZ-AC:1_CoolCStandard10Ton_CapFT,  !- Total Cooling Capacity Function of Temperature Curve Name
@@ -2381,7 +2381,7 @@
     NO,                      !- Shading Control Is Scheduled
     NO,                      !- Glare Control Is Active
     MEDIUM REFLECT - MEDIUM TRANS SHADE,  !- Shading Device Material Name
-    ,                        !- Type of Slat Angle Control for Blinds
+    FixedSlatAngle,          !- Type of Slat Angle Control for Blinds
     ;                        !- Slat Angle Schedule Name
 
   WindowMaterial:Shade,

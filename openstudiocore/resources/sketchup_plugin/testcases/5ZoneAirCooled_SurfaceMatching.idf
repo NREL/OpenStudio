@@ -100,7 +100,7 @@
 ! Environmental Emissions:        None
 ! Utility Tariffs:                None
 
-  Version,8.4;
+  Version,8.5;
 
   Building,
     Building,                !- Name
@@ -224,7 +224,7 @@
     WinterDesignDay,         !- Day Type
     -17.3,                   !- Maximum Dry-Bulb Temperature {C}
     0.0,                     !- Daily Dry-Bulb Temperature Range {deltaC}
-    ,                        !- Dry-Bulb Temperature Range Modifier Type
+    DefaultMultipliers,      !- Dry-Bulb Temperature Range Modifier Type
     ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     -17.3,                   !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
@@ -241,8 +241,8 @@
     ASHRAEClearSky,          !- Solar Model Indicator
     ,                        !- Beam Solar Day Schedule Name
     ,                        !- Diffuse Solar Day Schedule Name
-    ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
-    ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0.0;                     !- Sky Clearness
 
 ! CHICAGO_IL_USA Annual Cooling 1% Design Conditions, MaxDB=  31.5°C MCWB=  23.0°C
@@ -254,7 +254,7 @@
     SummerDesignDay,         !- Day Type
     31.5,                    !- Maximum Dry-Bulb Temperature {C}
     10.7,                    !- Daily Dry-Bulb Temperature Range {deltaC}
-    ,                        !- Dry-Bulb Temperature Range Modifier Type
+    DefaultMultipliers,      !- Dry-Bulb Temperature Range Modifier Type
     ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     23.0,                    !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
@@ -271,8 +271,8 @@
     ASHRAEClearSky,          !- Solar Model Indicator
     ,                        !- Beam Solar Day Schedule Name
     ,                        !- Diffuse Solar Day Schedule Name
-    ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
-    ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     1.0;                     !- Sky Clearness
 
   Site:GroundTemperature:BuildingSurface,20.03,20.03,20.13,20.30,20.43,20.52,20.62,20.77,20.78,20.55,20.44,20.20;
@@ -855,7 +855,7 @@
     ,                        !- People per Zone Floor Area {person/m2}
     ,                        !- Zone Floor Area per Person {m2/person}
     0.3,                     !- Fraction Radiant
-    ,                        !- Sensible Heat Fraction
+    Autocalculate,           !- Sensible Heat Fraction
     ActSchd;                 !- Activity Level Schedule Name
 
   Lights,
@@ -1066,7 +1066,7 @@
     ,                        !- People per Zone Floor Area {person/m2}
     ,                        !- Zone Floor Area per Person {m2/person}
     0.3,                     !- Fraction Radiant
-    ,                        !- Sensible Heat Fraction
+    Autocalculate,           !- Sensible Heat Fraction
     ActSchd;                 !- Activity Level Schedule Name
 
   Lights,
@@ -1241,7 +1241,7 @@
     ,                        !- People per Zone Floor Area {person/m2}
     ,                        !- Zone Floor Area per Person {m2/person}
     0.3,                     !- Fraction Radiant
-    ,                        !- Sensible Heat Fraction
+    Autocalculate,           !- Sensible Heat Fraction
     ActSchd;                 !- Activity Level Schedule Name
 
   Lights,
@@ -1432,7 +1432,7 @@
     ,                        !- People per Zone Floor Area {person/m2}
     ,                        !- Zone Floor Area per Person {m2/person}
     0.3,                     !- Fraction Radiant
-    ,                        !- Sensible Heat Fraction
+    Autocalculate,           !- Sensible Heat Fraction
     ActSchd;                 !- Activity Level Schedule Name
 
   Lights,
@@ -1607,7 +1607,7 @@
     ,                        !- People per Zone Floor Area {person/m2}
     ,                        !- Zone Floor Area per Person {m2/person}
     0.3,                     !- Fraction Radiant
-    ,                        !- Sensible Heat Fraction
+    Autocalculate,           !- Sensible Heat Fraction
     ActSchd;                 !- Activity Level Schedule Name
 
   Lights,
@@ -1751,15 +1751,15 @@
     0.0,                     !- Zone Heating Sizing Factor
     0.0,                     !- Zone Cooling Sizing Factor
     DesignDayWithLimit,      !- Cooling Design Air Flow Method
-    ,                        !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Cooling Minimum Air Flow {m3/s}
-    ,                        !- Cooling Minimum Air Flow Fraction
+    0,                       !- Cooling Design Air Flow Rate {m3/s}
+    .000762,                 !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+    0,                       !- Cooling Minimum Air Flow {m3/s}
+    0,                       !- Cooling Minimum Air Flow Fraction
     DesignDay,               !- Heating Design Air Flow Method
-    ,                        !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    0,                       !- Heating Design Air Flow Rate {m3/s}
+    .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+    .1415762,                !- Heating Maximum Air Flow {m3/s}
+    0.3;                     !- Heating Maximum Air Flow Fraction
 
   DesignSpecification:OutdoorAir,
     SZ DSOA SPACE1-1,        !- Name
@@ -1782,15 +1782,15 @@
     0.0,                     !- Zone Heating Sizing Factor
     0.0,                     !- Zone Cooling Sizing Factor
     DesignDayWithLimit,      !- Cooling Design Air Flow Method
-    ,                        !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Cooling Minimum Air Flow {m3/s}
-    ,                        !- Cooling Minimum Air Flow Fraction
+    0,                       !- Cooling Design Air Flow Rate {m3/s}
+    .000762,                 !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+    0,                       !- Cooling Minimum Air Flow {m3/s}
+    0,                       !- Cooling Minimum Air Flow Fraction
     DesignDay,               !- Heating Design Air Flow Method
-    ,                        !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    0,                       !- Heating Design Air Flow Rate {m3/s}
+    .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+    .1415762,                !- Heating Maximum Air Flow {m3/s}
+    0.3;                     !- Heating Maximum Air Flow Fraction
 
   DesignSpecification:OutdoorAir,
     SZ DSOA SPACE2-1,        !- Name
@@ -1813,15 +1813,15 @@
     0.0,                     !- Zone Heating Sizing Factor
     0.0,                     !- Zone Cooling Sizing Factor
     DesignDayWithLimit,      !- Cooling Design Air Flow Method
-    ,                        !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Cooling Minimum Air Flow {m3/s}
-    ,                        !- Cooling Minimum Air Flow Fraction
+    0,                       !- Cooling Design Air Flow Rate {m3/s}
+    .000762,                 !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+    0,                       !- Cooling Minimum Air Flow {m3/s}
+    0,                       !- Cooling Minimum Air Flow Fraction
     DesignDay,               !- Heating Design Air Flow Method
-    ,                        !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    0,                       !- Heating Design Air Flow Rate {m3/s}
+    .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+    .1415762,                !- Heating Maximum Air Flow {m3/s}
+    0.3;                     !- Heating Maximum Air Flow Fraction
 
   DesignSpecification:OutdoorAir,
     SZ DSOA SPACE3-1,        !- Name
@@ -1844,15 +1844,15 @@
     0.0,                     !- Zone Heating Sizing Factor
     0.0,                     !- Zone Cooling Sizing Factor
     DesignDayWithLimit,      !- Cooling Design Air Flow Method
-    ,                        !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Cooling Minimum Air Flow {m3/s}
-    ,                        !- Cooling Minimum Air Flow Fraction
+    0,                       !- Cooling Design Air Flow Rate {m3/s}
+    .000762,                 !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+    0,                       !- Cooling Minimum Air Flow {m3/s}
+    0,                       !- Cooling Minimum Air Flow Fraction
     DesignDay,               !- Heating Design Air Flow Method
-    ,                        !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    0,                       !- Heating Design Air Flow Rate {m3/s}
+    .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+    .1415762,                !- Heating Maximum Air Flow {m3/s}
+    0.3;                     !- Heating Maximum Air Flow Fraction
 
   DesignSpecification:OutdoorAir,
     SZ DSOA SPACE4-1,        !- Name
@@ -1875,15 +1875,15 @@
     0.0,                     !- Zone Heating Sizing Factor
     0.0,                     !- Zone Cooling Sizing Factor
     DesignDayWithLimit,      !- Cooling Design Air Flow Method
-    ,                        !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Cooling Minimum Air Flow {m3/s}
-    ,                        !- Cooling Minimum Air Flow Fraction
+    0,                       !- Cooling Design Air Flow Rate {m3/s}
+    .000762,                 !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+    0,                       !- Cooling Minimum Air Flow {m3/s}
+    0,                       !- Cooling Minimum Air Flow Fraction
     DesignDay,               !- Heating Design Air Flow Method
-    ,                        !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    0,                       !- Heating Design Air Flow Rate {m3/s}
+    .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+    .1415762,                !- Heating Maximum Air Flow {m3/s}
+    0.3;                     !- Heating Maximum Air Flow Fraction
 
   DesignSpecification:OutdoorAir,
     SZ DSOA SPACE5-1,        !- Name
@@ -2412,7 +2412,7 @@
     16.6,                    !- Rated Inlet Air Temperature {C}
     71.1,                    !- Rated Outlet Water Temperature {C}
     32.2,                    !- Rated Outlet Air Temperature {C}
-    ;                        !- Rated Ratio for Air and Water Convection
+    0.5;                     !- Rated Ratio for Air and Water Convection
 
   Coil:Heating:Water,
     SPACE2-1 Zone Coil,      !- Name
@@ -2429,7 +2429,7 @@
     16.6,                    !- Rated Inlet Air Temperature {C}
     71.1,                    !- Rated Outlet Water Temperature {C}
     32.2,                    !- Rated Outlet Air Temperature {C}
-    ;                        !- Rated Ratio for Air and Water Convection
+    0.5;                     !- Rated Ratio for Air and Water Convection
 
   Coil:Heating:Water,
     SPACE3-1 Zone Coil,      !- Name
@@ -2446,7 +2446,7 @@
     16.6,                    !- Rated Inlet Air Temperature {C}
     71.1,                    !- Rated Outlet Water Temperature {C}
     32.2,                    !- Rated Outlet Air Temperature {C}
-    ;                        !- Rated Ratio for Air and Water Convection
+    0.5;                     !- Rated Ratio for Air and Water Convection
 
   Coil:Heating:Water,
     SPACE4-1 Zone Coil,      !- Name
@@ -2463,7 +2463,7 @@
     16.6,                    !- Rated Inlet Air Temperature {C}
     71.1,                    !- Rated Outlet Water Temperature {C}
     32.2,                    !- Rated Outlet Air Temperature {C}
-    ;                        !- Rated Ratio for Air and Water Convection
+    0.5;                     !- Rated Ratio for Air and Water Convection
 
   Coil:Heating:Water,
     SPACE5-1 Zone Coil,      !- Name
@@ -2480,7 +2480,7 @@
     16.6,                    !- Rated Inlet Air Temperature {C}
     71.1,                    !- Rated Outlet Water Temperature {C}
     32.2,                    !- Rated Outlet Air Temperature {C}
-    ;                        !- Rated Ratio for Air and Water Convection
+    0.5;                     !- Rated Ratio for Air and Water Convection
 
   AirLoopHVAC:ReturnPath,
     ReturnAirPath1,          !- Name
@@ -2611,7 +2611,7 @@
     16.6,                    !- Rated Inlet Air Temperature {C}
     71.1,                    !- Rated Outlet Water Temperature {C}
     32.2,                    !- Rated Outlet Air Temperature {C}
-    ;                        !- Rated Ratio for Air and Water Convection
+    0.5;                     !- Rated Ratio for Air and Water Convection
 
   Coil:Cooling:Water,
     OA Cooling Coil 1,       !- Name
@@ -2669,7 +2669,7 @@
     16.6,                    !- Rated Inlet Air Temperature {C}
     71.1,                    !- Rated Outlet Water Temperature {C}
     32.2,                    !- Rated Outlet Air Temperature {C}
-    ;                        !- Rated Ratio for Air and Water Convection
+    0.5;                     !- Rated Ratio for Air and Water Convection
 
   Fan:VariableVolume,
     Supply Fan 1,            !- Name
@@ -2789,7 +2789,7 @@
     10,                      !- Minimum Loop Temperature {C}
     autosize,                !- Maximum Loop Flow Rate {m3/s}
     0.0,                     !- Minimum Loop Flow Rate {m3/s}
-    ,                        !- Plant Loop Volume {m3}
+    Autocalculate,           !- Plant Loop Volume {m3}
     HW Supply Inlet Node,    !- Plant Side Inlet Node Name
     HW Supply Outlet Node,   !- Plant Side Outlet Node Name
     Heating Supply Side Branches,  !- Plant Side Branch List Name
@@ -3100,16 +3100,16 @@
     HW Circ Pump,            !- Name
     HW Supply Inlet Node,    !- Inlet Node Name
     HW Pump Outlet Node,     !- Outlet Node Name
-    autosize,                !- Rated Flow Rate {m3/s}
-    179352,                  !- Rated Pump Head {Pa}
-    autosize,                !- Rated Power Consumption {W}
+    autosize,                !- Design Maximum Flow Rate {m3/s}
+    179352,                  !- Design Pump Head {Pa}
+    autosize,                !- Design Power Consumption {W}
     0.9,                     !- Motor Efficiency
     0.0,                     !- Fraction of Motor Inefficiencies to Fluid Stream
     0,                       !- Coefficient 1 of the Part Load Performance Curve
     1,                       !- Coefficient 2 of the Part Load Performance Curve
     0,                       !- Coefficient 3 of the Part Load Performance Curve
     0,                       !- Coefficient 4 of the Part Load Performance Curve
-    0,                       !- Minimum Flow Rate {m3/s}
+    0,                       !- Design Minimum Flow Rate {m3/s}
     INTERMITTENT;            !- Pump Control Type
 
   PlantLoop,
@@ -3122,7 +3122,7 @@
     1,                       !- Minimum Loop Temperature {C}
     autosize,                !- Maximum Loop Flow Rate {m3/s}
     0.0,                     !- Minimum Loop Flow Rate {m3/s}
-    ,                        !- Plant Loop Volume {m3}
+    Autocalculate,           !- Plant Loop Volume {m3}
     CW Supply Inlet Node,    !- Plant Side Inlet Node Name
     CW Supply Outlet Node,   !- Plant Side Outlet Node Name
     Cooling Supply Side Branches,  !- Plant Side Branch List Name
@@ -3388,16 +3388,16 @@
     CW Circ Pump,            !- Name
     CW Supply Inlet Node,    !- Inlet Node Name
     CW Pump Outlet Node,     !- Outlet Node Name
-    autosize,                !- Rated Flow Rate {m3/s}
-    179352,                  !- Rated Pump Head {Pa}
-    autosize,                !- Rated Power Consumption {W}
+    autosize,                !- Design Maximum Flow Rate {m3/s}
+    179352,                  !- Design Pump Head {Pa}
+    autosize,                !- Design Power Consumption {W}
     0.9,                     !- Motor Efficiency
     0.0,                     !- Fraction of Motor Inefficiencies to Fluid Stream
     0,                       !- Coefficient 1 of the Part Load Performance Curve
     1,                       !- Coefficient 2 of the Part Load Performance Curve
     0,                       !- Coefficient 3 of the Part Load Performance Curve
     0,                       !- Coefficient 4 of the Part Load Performance Curve
-    0,                       !- Minimum Flow Rate {m3/s}
+    0,                       !- Design Minimum Flow Rate {m3/s}
     INTERMITTENT,            !- Pump Control Type
     CoolingPumpAvailSched;   !- Pump Flow Rate Schedule Name
 

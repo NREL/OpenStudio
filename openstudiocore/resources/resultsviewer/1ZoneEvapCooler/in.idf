@@ -60,7 +60,7 @@
 ! Floor Area:              232.25 m2
 ! Number of Stories:       1
 
-  Version,8.4;
+  Version,8.5;
 
   Timestep,6;
 
@@ -123,7 +123,7 @@
     WinterDesignDay,         !- Day Type
     -18.8,                   !- Maximum Dry-Bulb Temperature {C}
     0.0,                     !- Daily Dry-Bulb Temperature Range {deltaC}
-    ,                        !- Dry-Bulb Temperature Range Modifier Type
+    DefaultMultipliers,      !- Dry-Bulb Temperature Range Modifier Type
     ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     -18.8,                   !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
@@ -140,8 +140,8 @@
     ASHRAEClearSky,          !- Solar Model Indicator
     ,                        !- Beam Solar Day Schedule Name
     ,                        !- Diffuse Solar Day Schedule Name
-    ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
-    ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0.00;                    !- Sky Clearness
 
  ! Denver Centennial Annual Cooling Design Conditions Wind Speed=4.9m/s Wind Dir=0
@@ -155,7 +155,7 @@
     SummerDesignDay,         !- Day Type
     32,                      !- Maximum Dry-Bulb Temperature {C}
     15.2,                    !- Daily Dry-Bulb Temperature Range {deltaC}
-    ,                        !- Dry-Bulb Temperature Range Modifier Type
+    DefaultMultipliers,      !- Dry-Bulb Temperature Range Modifier Type
     ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     15.5,                    !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
@@ -172,8 +172,8 @@
     ASHRAEClearSky,          !- Solar Model Indicator
     ,                        !- Beam Solar Day Schedule Name
     ,                        !- Diffuse Solar Day Schedule Name
-    ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
-    ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     1.00;                    !- Sky Clearness
 
   Material:NoMass,
@@ -538,7 +538,7 @@
     HeatingDesignCapacity,   !- Heating Design Capacity Method
     8000,                    !- Heating Design Capacity {W}
     ,                        !- Heating Design Capacity Per Floor Area {W/m2}
-    ,                        !- Fraction of Autosized Heating Design Capacity
+    1.0,                     !- Fraction of Autosized Heating Design Capacity
     0.97;                    !- Efficiency
 
   ZoneControl:Thermostat,

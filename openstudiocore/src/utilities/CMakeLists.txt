@@ -200,7 +200,6 @@ set(${target_name}_depends
   litesql
   litesql-util
   miniziplib
-  GeographicLib_STATIC
   ${Boost_LIBRARIES}
   #JWD: On Ubuntu 14.04, the thread lib is included in Boost_LIBRARIES
   # ${CMAKE_THREAD_LIBS}
@@ -505,7 +504,7 @@ if(NOT APPLE)
   )
 endif()
 
-target_link_libraries(${target_name} ${${target_name}_depends})
+target_link_libraries(${target_name} PUBLIC ${${target_name}_depends} PRIVATE GeographicLib_STATIC)
 CREATE_SRC_GROUPS("${${target_name}_test_src}")
 CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
 

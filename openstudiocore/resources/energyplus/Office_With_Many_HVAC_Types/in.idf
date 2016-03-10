@@ -1,14 +1,14 @@
-  Version,8.4;
+  Version,8.5;
 
   Building,
     Building 1,              !- Name
-    ,                        !- North Axis {deg}
-    ,                        !- Terrain
-    ,                        !- Loads Convergence Tolerance Value
-    ,                        !- Temperature Convergence Tolerance Value {deltaC}
-    ,                        !- Solar Distribution
-    ,                        !- Maximum Number of Warmup Days
-    ;                        !- Minimum Number of Warmup Days
+    0.0,                     !- North Axis {deg}
+    Suburbs,                 !- Terrain
+    .04,                     !- Loads Convergence Tolerance Value
+    .4,                      !- Temperature Convergence Tolerance Value {deltaC}
+    FullExterior,            !- Solar Distribution
+    25,                      !- Maximum Number of Warmup Days
+    6;                       !- Minimum Number of Warmup Days
 
   Zone,
     Thermal Zone: Story 1 Core Space,  !- Name
@@ -16,11 +16,11 @@
     4.57,                    !- X Origin {m}
     4.57,                    !- Y Origin {m}
     0,                       !- Z Origin {m}
-    ,                        !- Type
-    ,                        !- Multiplier
-    ,                        !- Ceiling Height {m}
-    ,                        !- Volume {m3}
-    ,                        !- Floor Area {m2}
+    1,                       !- Type
+    1,                       !- Multiplier
+    Autocalculate,           !- Ceiling Height {m}
+    Autocalculate,           !- Volume {m3}
+    Autocalculate,           !- Floor Area {m2}
     ,                        !- Zone Inside Convection Algorithm
     ;                        !- Zone Outside Convection Algorithm
 
@@ -33,8 +33,8 @@
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     30.86,10.86,0,  !- X,Y,Z ==> Vertex 1 {m}
     30.86,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -49,8 +49,8 @@
     Surface 4,               !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,10.86,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     0,10.86,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -65,8 +65,8 @@
     Surface 10,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     30.86,10.86,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     30.86,10.86,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,10.86,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -81,8 +81,8 @@
     Surface 16,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     30.86,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     30.86,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     30.86,10.86,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -97,8 +97,8 @@
     Surface 22,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     30.86,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -113,8 +113,8 @@
     Surface 55,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     30.86,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     30.86,10.86,3.8,  !- X,Y,Z ==> Vertex 2 {m}
     0,10.86,3.8,  !- X,Y,Z ==> Vertex 3 {m}
@@ -439,15 +439,15 @@
     OS:Curve:Biquadratic 14, !- Energy Input Ratio Function of Temperature Curve Name
     OS:Curve:Quadratic 18,   !- Energy Input Ratio Function of Flow Fraction Curve Name
     OS:Curve:Quadratic 19,   !- Part Load Fraction Correlation Curve Name
-    ,                        !- Nominal Time for Condensate Removal to Begin {s}
-    ,                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
-    ,                        !- Maximum Cycling Rate {cycles/hr}
-    ,                        !- Latent Capacity Time Constant {s}
+    0.0,                     !- Nominal Time for Condensate Removal to Begin {s}
+    0.0,                     !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+    0.0,                     !- Maximum Cycling Rate {cycles/hr}
+    0.0,                     !- Latent Capacity Time Constant {s}
     ,                        !- Condenser Air Inlet Node Name
     AirCooled,               !- Condenser Type
     0,                       !- Evaporative Condenser Effectiveness {dimensionless}
     ,                        !- Evaporative Condenser Air Flow Rate {m3/s}
-    ,                        !- Evaporative Condenser Pump Rated Power Consumption {W}
+    0.0,                     !- Evaporative Condenser Pump Rated Power Consumption {W}
     0,                       !- Crankcase Heater Capacity {W}
     0,                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
     ,                        !- Supply Water Storage Tank Name
@@ -506,11 +506,11 @@
     35.43,                   !- X Origin {m}
     4.57,                    !- Y Origin {m}
     0,                       !- Z Origin {m}
-    ,                        !- Type
-    ,                        !- Multiplier
-    ,                        !- Ceiling Height {m}
-    ,                        !- Volume {m3}
-    ,                        !- Floor Area {m2}
+    1,                       !- Type
+    1,                       !- Multiplier
+    Autocalculate,           !- Ceiling Height {m}
+    Autocalculate,           !- Volume {m3}
+    Autocalculate,           !- Floor Area {m2}
     ,                        !- Zone Inside Convection Algorithm
     ;                        !- Zone Outside Convection Algorithm
 
@@ -523,8 +523,8 @@
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     4.57,15.43,0,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,-4.57,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -539,8 +539,8 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     4.57,-4.57,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,-4.57,0,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,15.43,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -552,11 +552,11 @@
     ASHRAE 90.1-2007 ExtWindow Metal ClimateZone 4-6,  !- Construction Name
     Surface 14,              !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
-    ,                        !- Number of Vertices
+    1.0,                     !- Multiplier
+    Autocalculate,           !- Number of Vertices
     4.57,-4.5446,1.90290297355282,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,-4.5446,0.76,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,15.4046,0.76,  !- X,Y,Z ==> Vertex 3 {m}
@@ -571,8 +571,8 @@
     Surface 23,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,-4.57,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -587,8 +587,8 @@
     Surface 28,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,10.86,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     0,10.86,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -603,8 +603,8 @@
     Surface 9,               !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     4.57,15.43,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,15.43,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,10.86,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -619,8 +619,8 @@
     Surface 43,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     4.57,-4.57,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,15.43,3.8,  !- X,Y,Z ==> Vertex 2 {m}
     0,10.86,3.8,  !- X,Y,Z ==> Vertex 3 {m}
@@ -723,7 +723,7 @@
     Autosize,                !- Gross Rated Heating Capacity {W}
     5,                       !- Gross Rated Heating COP {W/W}
     Autosize,                !- Rated Air Flow Rate {m3/s}
-    ,                        !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
+    773.3,                   !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
     PTHP Cooling Coil Outlet Node,  !- Air Inlet Node Name
     PTHP Heating Coil Outlet Node,  !- Air Outlet Node Name
     OS:Curve:Biquadratic 11, !- Heating Capacity Function of Temperature Curve Name
@@ -857,15 +857,15 @@
     OS:Curve:Biquadratic 10, !- Energy Input Ratio Function of Temperature Curve Name
     OS:Curve:Quadratic 12,   !- Energy Input Ratio Function of Flow Fraction Curve Name
     OS:Curve:Quadratic 13,   !- Part Load Fraction Correlation Curve Name
-    ,                        !- Nominal Time for Condensate Removal to Begin {s}
-    ,                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
-    ,                        !- Maximum Cycling Rate {cycles/hr}
-    ,                        !- Latent Capacity Time Constant {s}
+    0.0,                     !- Nominal Time for Condensate Removal to Begin {s}
+    0.0,                     !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+    0.0,                     !- Maximum Cycling Rate {cycles/hr}
+    0.0,                     !- Latent Capacity Time Constant {s}
     ,                        !- Condenser Air Inlet Node Name
     AirCooled,               !- Condenser Type
     0,                       !- Evaporative Condenser Effectiveness {dimensionless}
     ,                        !- Evaporative Condenser Air Flow Rate {m3/s}
-    ,                        !- Evaporative Condenser Pump Rated Power Consumption {W}
+    0.0,                     !- Evaporative Condenser Pump Rated Power Consumption {W}
     0,                       !- Crankcase Heater Capacity {W}
     0,                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
     ,                        !- Supply Water Storage Tank Name
@@ -924,11 +924,11 @@
     4.57,                    !- X Origin {m}
     15.43,                   !- Y Origin {m}
     0,                       !- Z Origin {m}
-    ,                        !- Type
-    ,                        !- Multiplier
-    ,                        !- Ceiling Height {m}
-    ,                        !- Volume {m3}
-    ,                        !- Floor Area {m2}
+    1,                       !- Type
+    1,                       !- Multiplier
+    Autocalculate,           !- Ceiling Height {m}
+    Autocalculate,           !- Volume {m3}
+    Autocalculate,           !- Floor Area {m2}
     ,                        !- Zone Inside Convection Algorithm
     ;                        !- Zone Outside Convection Algorithm
 
@@ -941,8 +941,8 @@
     Surface 27,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     30.86,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -957,8 +957,8 @@
     Surface 3,               !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     -4.57,4.57,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     -4.57,4.57,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -973,8 +973,8 @@
     Surface 37,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     30.86,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     35.43,4.57,3.8,  !- X,Y,Z ==> Vertex 2 {m}
     -4.57,4.57,3.8,  !- X,Y,Z ==> Vertex 3 {m}
@@ -989,8 +989,8 @@
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     35.43,4.57,0,  !- X,Y,Z ==> Vertex 1 {m}
     30.86,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1005,8 +1005,8 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     35.43,4.57,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     35.43,4.57,0,  !- X,Y,Z ==> Vertex 2 {m}
     -4.57,4.57,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1018,11 +1018,11 @@
     ASHRAE 90.1-2007 ExtWindow Metal ClimateZone 4-6,  !- Construction Name
     Surface 8,               !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
-    ,                        !- Number of Vertices
+    1.0,                     !- Multiplier
+    Autocalculate,           !- Number of Vertices
     35.4046,4.57,1.90144964104413,  !- X,Y,Z ==> Vertex 1 {m}
     35.4046,4.57,0.76,  !- X,Y,Z ==> Vertex 2 {m}
     -4.5446,4.57,0.76,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1037,8 +1037,8 @@
     Surface 17,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     30.86,-2.04187384066908e-015,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     30.86,-2.04187384066908e-015,0,  !- X,Y,Z ==> Vertex 2 {m}
     35.43,4.57,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1131,7 +1131,7 @@
     Always On Discrete,      !- Availability Schedule Name
     No,                      !- Demand Controlled Ventilation
     ZoneSum,                 !- System Outdoor Air Method
-    ,                        !- Zone Maximum Outdoor Air Fraction {dimensionless}
+    1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     Thermal Zone: Story 1 North Perimeter Space,  !- Zone 1 Name
     90.1-2007 - Office - OpenOffice Ventilation,  !- Design Specification Outdoor Air Object Name 1
     Thermal Zone: Story 1 North Perimeter Space Design Spec Zone Air Dist;  !- Design Specification Zone Air Distribution Object Name 1
@@ -1142,11 +1142,11 @@
     0,                       !- X Origin {m}
     0,                       !- Y Origin {m}
     0,                       !- Z Origin {m}
-    ,                        !- Type
-    ,                        !- Multiplier
-    ,                        !- Ceiling Height {m}
-    ,                        !- Volume {m3}
-    ,                        !- Floor Area {m2}
+    1,                       !- Type
+    1,                       !- Multiplier
+    Autocalculate,           !- Ceiling Height {m}
+    Autocalculate,           !- Volume {m3}
+    Autocalculate,           !- Floor Area {m2}
     ,                        !- Zone Inside Convection Algorithm
     ;                        !- Zone Outside Convection Algorithm
 
@@ -1159,8 +1159,8 @@
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     35.43,4.57,0,  !- X,Y,Z ==> Vertex 1 {m}
     40,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1175,8 +1175,8 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     40,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1188,11 +1188,11 @@
     ASHRAE 90.1-2007 ExtWindow Metal ClimateZone 4-6,  !- Construction Name
     Surface 20,              !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
-    ,                        !- Number of Vertices
+    1.0,                     !- Multiplier
+    Autocalculate,           !- Number of Vertices
     0.0254,0,1.90144964104413,  !- X,Y,Z ==> Vertex 1 {m}
     0.0254,0,0.76,  !- X,Y,Z ==> Vertex 2 {m}
     39.9746,0,0.76,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1207,8 +1207,8 @@
     Surface 5,               !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     4.57,4.57,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,4.57,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1223,8 +1223,8 @@
     Surface 29,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     35.43,4.57,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     35.43,4.57,0,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,4.57,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1239,8 +1239,8 @@
     Surface 15,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     40,4.08374768133815e-015,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     40,4.08374768133815e-015,0,  !- X,Y,Z ==> Vertex 2 {m}
     35.43,4.57,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1255,8 +1255,8 @@
     Surface 49,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     40,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     35.43,4.57,3.8,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,4.57,3.8,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1347,7 +1347,7 @@
     Always On Discrete,      !- Availability Schedule Name
     No,                      !- Demand Controlled Ventilation
     ZoneSum,                 !- System Outdoor Air Method
-    ,                        !- Zone Maximum Outdoor Air Fraction {dimensionless}
+    1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     Thermal Zone: Story 1 South Perimeter Space,  !- Zone 1 Name
     90.1-2007 - Office - OpenOffice Ventilation,  !- Design Specification Outdoor Air Object Name 1
     Thermal Zone: Story 1 South Perimeter Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name 1
@@ -1361,11 +1361,11 @@
     0,                       !- X Origin {m}
     0,                       !- Y Origin {m}
     0,                       !- Z Origin {m}
-    ,                        !- Type
-    ,                        !- Multiplier
-    ,                        !- Ceiling Height {m}
-    ,                        !- Volume {m3}
-    ,                        !- Floor Area {m2}
+    1,                       !- Type
+    1,                       !- Multiplier
+    Autocalculate,           !- Ceiling Height {m}
+    Autocalculate,           !- Volume {m3}
+    Autocalculate,           !- Floor Area {m2}
     ,                        !- Zone Inside Convection Algorithm
     ;                        !- Zone Outside Convection Algorithm
 
@@ -1378,8 +1378,8 @@
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,20,0,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,15.43,0,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,4.57,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1394,8 +1394,8 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,20,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     0,20,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1407,11 +1407,11 @@
     ASHRAE 90.1-2007 ExtWindow Metal ClimateZone 4-6,  !- Construction Name
     Surface 2,               !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
-    ,                        !- Number of Vertices
+    1.0,                     !- Multiplier
+    Autocalculate,           !- Number of Vertices
     0,19.9746,1.90290297355282,  !- X,Y,Z ==> Vertex 1 {m}
     0,19.9746,0.76,  !- X,Y,Z ==> Vertex 2 {m}
     0,0.0253999999999976,0.76,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1426,8 +1426,8 @@
     Surface 11,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     4.57,15.43,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,15.43,0,  !- X,Y,Z ==> Vertex 2 {m}
     3.84711686258183e-030,20,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1442,8 +1442,8 @@
     Surface 26,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     4.57,4.57,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,4.57,0,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,15.43,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1458,8 +1458,8 @@
     Surface 21,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,4.57,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1474,8 +1474,8 @@
     Surface 31,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,4.57,3.8,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,15.43,3.8,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1567,11 +1567,11 @@
     4.57,                    !- X Origin {m}
     4.57,                    !- Y Origin {m}
     3.8,                     !- Z Origin {m}
-    ,                        !- Type
-    ,                        !- Multiplier
-    ,                        !- Ceiling Height {m}
-    ,                        !- Volume {m3}
-    ,                        !- Floor Area {m2}
+    1,                       !- Type
+    1,                       !- Multiplier
+    Autocalculate,           !- Ceiling Height {m}
+    Autocalculate,           !- Volume {m3}
+    Autocalculate,           !- Floor Area {m2}
     ,                        !- Zone Inside Convection Algorithm
     ;                        !- Zone Outside Convection Algorithm
 
@@ -1584,8 +1584,8 @@
     Surface 30,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     30.86,10.86,0,  !- X,Y,Z ==> Vertex 1 {m}
     30.86,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1600,8 +1600,8 @@
     Surface 34,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,10.86,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     0,10.86,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1616,8 +1616,8 @@
     Surface 40,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     30.86,10.86,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     30.86,10.86,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,10.86,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1632,8 +1632,8 @@
     Surface 46,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     30.86,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     30.86,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     30.86,10.86,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1648,8 +1648,8 @@
     Surface 52,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     30.86,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1664,8 +1664,8 @@
     Surface 85,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     30.86,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     30.86,10.86,3.8,  !- X,Y,Z ==> Vertex 2 {m}
     0,10.86,3.8,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1794,7 +1794,7 @@
     Always On Discrete,      !- Availability Schedule Name
     No,                      !- Demand Controlled Ventilation
     ZoneSum,                 !- System Outdoor Air Method
-    ,                        !- Zone Maximum Outdoor Air Fraction {dimensionless}
+    1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     Thermal Zone: Story 2 Core Space,  !- Zone 1 Name
     90.1-2007 - Office - OpenOffice Ventilation,  !- Design Specification Outdoor Air Object Name 1
     Thermal Zone: Story 2 Core Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name 1
@@ -1808,11 +1808,11 @@
     35.43,                   !- X Origin {m}
     4.57,                    !- Y Origin {m}
     3.8,                     !- Z Origin {m}
-    ,                        !- Type
-    ,                        !- Multiplier
-    ,                        !- Ceiling Height {m}
-    ,                        !- Volume {m3}
-    ,                        !- Floor Area {m2}
+    1,                       !- Type
+    1,                       !- Multiplier
+    Autocalculate,           !- Ceiling Height {m}
+    Autocalculate,           !- Volume {m3}
+    Autocalculate,           !- Floor Area {m2}
     ,                        !- Zone Inside Convection Algorithm
     ;                        !- Zone Outside Convection Algorithm
 
@@ -1825,8 +1825,8 @@
     Surface 18,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     4.57,15.43,0,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,-4.57,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1841,8 +1841,8 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     4.57,-4.57,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,-4.57,0,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,15.43,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1854,11 +1854,11 @@
     ASHRAE 90.1-2007 ExtWindow Metal ClimateZone 4-6,  !- Construction Name
     Surface 44,              !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
-    ,                        !- Number of Vertices
+    1.0,                     !- Multiplier
+    Autocalculate,           !- Number of Vertices
     4.57,-4.5446,1.90290297355282,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,-4.5446,0.76,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,15.4046,0.76,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1873,8 +1873,8 @@
     Surface 53,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,-4.57,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1889,8 +1889,8 @@
     Surface 58,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,10.86,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     0,10.86,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1905,8 +1905,8 @@
     Surface 39,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     4.57,15.43,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,15.43,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,10.86,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -1921,8 +1921,8 @@
     Surface 73,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     4.57,-4.57,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,15.43,3.8,  !- X,Y,Z ==> Vertex 2 {m}
     0,10.86,3.8,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2052,11 +2052,11 @@
     4.57,                    !- X Origin {m}
     15.43,                   !- Y Origin {m}
     3.8,                     !- Z Origin {m}
-    ,                        !- Type
-    ,                        !- Multiplier
-    ,                        !- Ceiling Height {m}
-    ,                        !- Volume {m3}
-    ,                        !- Floor Area {m2}
+    1,                       !- Type
+    1,                       !- Multiplier
+    Autocalculate,           !- Ceiling Height {m}
+    Autocalculate,           !- Volume {m3}
+    Autocalculate,           !- Floor Area {m2}
     ,                        !- Zone Inside Convection Algorithm
     ;                        !- Zone Outside Convection Algorithm
 
@@ -2069,8 +2069,8 @@
     Surface 12,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     35.43,4.57,0,  !- X,Y,Z ==> Vertex 1 {m}
     30.86,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2085,8 +2085,8 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     35.43,4.57,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     35.43,4.57,0,  !- X,Y,Z ==> Vertex 2 {m}
     -4.57,4.57,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2098,11 +2098,11 @@
     ASHRAE 90.1-2007 ExtWindow Metal ClimateZone 4-6,  !- Construction Name
     Surface 38,              !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
-    ,                        !- Number of Vertices
+    1.0,                     !- Multiplier
+    Autocalculate,           !- Number of Vertices
     35.4046,4.57,1.90144964104413,  !- X,Y,Z ==> Vertex 1 {m}
     35.4046,4.57,0.76,  !- X,Y,Z ==> Vertex 2 {m}
     -4.5446,4.57,0.76,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2117,8 +2117,8 @@
     Surface 47,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     30.86,-2.04187384066908e-015,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     30.86,-2.04187384066908e-015,0,  !- X,Y,Z ==> Vertex 2 {m}
     35.43,4.57,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2133,8 +2133,8 @@
     Surface 57,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     30.86,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2149,8 +2149,8 @@
     Surface 33,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     -4.57,4.57,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     -4.57,4.57,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2165,8 +2165,8 @@
     Surface 67,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     30.86,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     35.43,4.57,3.8,  !- X,Y,Z ==> Vertex 2 {m}
     -4.57,4.57,3.8,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2257,7 +2257,7 @@
     Always On Discrete,      !- Availability Schedule Name
     No,                      !- Demand Controlled Ventilation
     ZoneSum,                 !- System Outdoor Air Method
-    ,                        !- Zone Maximum Outdoor Air Fraction {dimensionless}
+    1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     Thermal Zone: Story 2 North Perimeter Space,  !- Zone 1 Name
     90.1-2007 - Office - OpenOffice Ventilation,  !- Design Specification Outdoor Air Object Name 1
     Thermal Zone: Story 2 North Perimeter Space Design Spec Zone Air Dist;  !- Design Specification Zone Air Distribution Object Name 1
@@ -2268,11 +2268,11 @@
     0,                       !- X Origin {m}
     0,                       !- Y Origin {m}
     3.8,                     !- Z Origin {m}
-    ,                        !- Type
-    ,                        !- Multiplier
-    ,                        !- Ceiling Height {m}
-    ,                        !- Volume {m3}
-    ,                        !- Floor Area {m2}
+    1,                       !- Type
+    1,                       !- Multiplier
+    Autocalculate,           !- Ceiling Height {m}
+    Autocalculate,           !- Volume {m3}
+    Autocalculate,           !- Floor Area {m2}
     ,                        !- Zone Inside Convection Algorithm
     ;                        !- Zone Outside Convection Algorithm
 
@@ -2285,8 +2285,8 @@
     Surface 24,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     35.43,4.57,0,  !- X,Y,Z ==> Vertex 1 {m}
     40,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2301,8 +2301,8 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     40,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2314,11 +2314,11 @@
     ASHRAE 90.1-2007 ExtWindow Metal ClimateZone 4-6,  !- Construction Name
     Surface 50,              !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
-    ,                        !- Number of Vertices
+    1.0,                     !- Multiplier
+    Autocalculate,           !- Number of Vertices
     0.0254,0,1.90144964104413,  !- X,Y,Z ==> Vertex 1 {m}
     0.0254,0,0.76,  !- X,Y,Z ==> Vertex 2 {m}
     39.9746,0,0.76,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2333,8 +2333,8 @@
     Surface 35,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     4.57,4.57,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,4.57,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2349,8 +2349,8 @@
     Surface 59,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     35.43,4.57,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     35.43,4.57,0,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,4.57,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2365,8 +2365,8 @@
     Surface 45,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     40,4.08374768133815e-015,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     40,4.08374768133815e-015,0,  !- X,Y,Z ==> Vertex 2 {m}
     35.43,4.57,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2381,8 +2381,8 @@
     Surface 79,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     40,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     35.43,4.57,3.8,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,4.57,3.8,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2452,7 +2452,6 @@
     Coil Heating Electric 3, !- Reheat Coil Name
     Autosize,                !- Maximum Hot Water or Steam Flow Rate {m3/s}
     0,                       !- Minimum Hot Water or Steam Flow Rate {m3/s}
-    ,                        !- Hot Water or Steam Inlet Node Name
     0.001;                   !- Convergence Tolerance
 
   Coil:Heating:Electric,
@@ -2522,7 +2521,7 @@
     Always On Discrete,      !- Availability Schedule Name
     No,                      !- Demand Controlled Ventilation
     ZoneSum,                 !- System Outdoor Air Method
-    ,                        !- Zone Maximum Outdoor Air Fraction {dimensionless}
+    1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     Thermal Zone: Story 2 South Perimeter Space,  !- Zone 1 Name
     90.1-2007 - Office - OpenOffice Ventilation,  !- Design Specification Outdoor Air Object Name 1
     Thermal Zone: Story 2 South Perimeter Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name 1
@@ -2536,11 +2535,11 @@
     0,                       !- X Origin {m}
     0,                       !- Y Origin {m}
     3.8,                     !- Z Origin {m}
-    ,                        !- Type
-    ,                        !- Multiplier
-    ,                        !- Ceiling Height {m}
-    ,                        !- Volume {m3}
-    ,                        !- Floor Area {m2}
+    1,                       !- Type
+    1,                       !- Multiplier
+    Autocalculate,           !- Ceiling Height {m}
+    Autocalculate,           !- Volume {m3}
+    Autocalculate,           !- Floor Area {m2}
     ,                        !- Zone Inside Convection Algorithm
     ;                        !- Zone Outside Convection Algorithm
 
@@ -2553,8 +2552,8 @@
     Surface 6,               !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,20,0,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,15.43,0,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,4.57,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2569,8 +2568,8 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,20,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     0,20,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2582,11 +2581,11 @@
     ASHRAE 90.1-2007 ExtWindow Metal ClimateZone 4-6,  !- Construction Name
     Surface 32,              !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
-    ,                        !- Number of Vertices
+    1.0,                     !- Multiplier
+    Autocalculate,           !- Number of Vertices
     0,19.9746,1.90290297355282,  !- X,Y,Z ==> Vertex 1 {m}
     0,19.9746,0.76,  !- X,Y,Z ==> Vertex 2 {m}
     0,0.0253999999999976,0.76,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2601,8 +2600,8 @@
     Surface 41,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     4.57,15.43,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,15.43,0,  !- X,Y,Z ==> Vertex 2 {m}
     3.84711686258183e-030,20,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2617,8 +2616,8 @@
     Surface 56,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     4.57,4.57,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,4.57,0,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,15.43,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2633,8 +2632,8 @@
     Surface 51,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,4.57,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2649,8 +2648,8 @@
     Surface 61,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,4.57,3.8,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,15.43,3.8,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2720,7 +2719,6 @@
     Coil Heating Electric 4, !- Reheat Coil Name
     Autosize,                !- Maximum Hot Water or Steam Flow Rate {m3/s}
     0,                       !- Minimum Hot Water or Steam Flow Rate {m3/s}
-    ,                        !- Hot Water or Steam Inlet Node Name
     0.001;                   !- Convergence Tolerance
 
   Coil:Heating:Electric,
@@ -2791,11 +2789,11 @@
     4.57,                    !- X Origin {m}
     4.57,                    !- Y Origin {m}
     7.6,                     !- Z Origin {m}
-    ,                        !- Type
-    ,                        !- Multiplier
-    ,                        !- Ceiling Height {m}
-    ,                        !- Volume {m3}
-    ,                        !- Floor Area {m2}
+    1,                       !- Type
+    1,                       !- Multiplier
+    Autocalculate,           !- Ceiling Height {m}
+    Autocalculate,           !- Volume {m3}
+    Autocalculate,           !- Floor Area {m2}
     ,                        !- Zone Inside Convection Algorithm
     ;                        !- Zone Outside Convection Algorithm
 
@@ -2808,8 +2806,8 @@
     Surface 60,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     30.86,10.86,0,  !- X,Y,Z ==> Vertex 1 {m}
     30.86,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2824,8 +2822,8 @@
     Surface 64,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,10.86,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     0,10.86,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2840,8 +2838,8 @@
     Surface 70,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     30.86,10.86,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     30.86,10.86,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,10.86,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2856,8 +2854,8 @@
     Surface 76,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     30.86,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     30.86,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     30.86,10.86,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2872,8 +2870,8 @@
     Surface 82,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     30.86,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -2888,8 +2886,8 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     30.86,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     30.86,10.86,3.8,  !- X,Y,Z ==> Vertex 2 {m}
     0,10.86,3.8,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3018,7 +3016,7 @@
     Always On Discrete,      !- Availability Schedule Name
     No,                      !- Demand Controlled Ventilation
     ZoneSum,                 !- System Outdoor Air Method
-    ,                        !- Zone Maximum Outdoor Air Fraction {dimensionless}
+    1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     Thermal Zone: Story 3 Core Space,  !- Zone 1 Name
     90.1-2007 - Office - OpenOffice Ventilation,  !- Design Specification Outdoor Air Object Name 1
     Thermal Zone: Story 3 Core Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name 1
@@ -3035,11 +3033,11 @@
     35.43,                   !- X Origin {m}
     4.57,                    !- Y Origin {m}
     7.6,                     !- Z Origin {m}
-    ,                        !- Type
-    ,                        !- Multiplier
-    ,                        !- Ceiling Height {m}
-    ,                        !- Volume {m3}
-    ,                        !- Floor Area {m2}
+    1,                       !- Type
+    1,                       !- Multiplier
+    Autocalculate,           !- Ceiling Height {m}
+    Autocalculate,           !- Volume {m3}
+    Autocalculate,           !- Floor Area {m2}
     ,                        !- Zone Inside Convection Algorithm
     ;                        !- Zone Outside Convection Algorithm
 
@@ -3052,8 +3050,8 @@
     Surface 48,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     4.57,15.43,0,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,-4.57,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3068,8 +3066,8 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     4.57,-4.57,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,-4.57,0,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,15.43,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3081,11 +3079,11 @@
     ASHRAE 90.1-2007 ExtWindow Metal ClimateZone 4-6,  !- Construction Name
     Surface 74,              !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
-    ,                        !- Number of Vertices
+    1.0,                     !- Multiplier
+    Autocalculate,           !- Number of Vertices
     4.57,-4.5446,1.90290297355282,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,-4.5446,0.76,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,15.4046,0.76,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3100,8 +3098,8 @@
     Surface 83,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,-4.57,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3116,8 +3114,8 @@
     Surface 88,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,10.86,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     0,10.86,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3132,8 +3130,8 @@
     Surface 69,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     4.57,15.43,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,15.43,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,10.86,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3148,8 +3146,8 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     4.57,-4.57,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,15.43,3.8,  !- X,Y,Z ==> Vertex 2 {m}
     0,10.86,3.8,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3287,11 +3285,11 @@
     4.57,                    !- X Origin {m}
     15.43,                   !- Y Origin {m}
     7.6,                     !- Z Origin {m}
-    ,                        !- Type
-    ,                        !- Multiplier
-    ,                        !- Ceiling Height {m}
-    ,                        !- Volume {m3}
-    ,                        !- Floor Area {m2}
+    1,                       !- Type
+    1,                       !- Multiplier
+    Autocalculate,           !- Ceiling Height {m}
+    Autocalculate,           !- Volume {m3}
+    Autocalculate,           !- Floor Area {m2}
     ,                        !- Zone Inside Convection Algorithm
     ;                        !- Zone Outside Convection Algorithm
 
@@ -3304,8 +3302,8 @@
     Surface 42,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     35.43,4.57,0,  !- X,Y,Z ==> Vertex 1 {m}
     30.86,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3320,8 +3318,8 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     35.43,4.57,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     35.43,4.57,0,  !- X,Y,Z ==> Vertex 2 {m}
     -4.57,4.57,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3333,11 +3331,11 @@
     ASHRAE 90.1-2007 ExtWindow Metal ClimateZone 4-6,  !- Construction Name
     Surface 68,              !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
-    ,                        !- Number of Vertices
+    1.0,                     !- Multiplier
+    Autocalculate,           !- Number of Vertices
     35.4046,4.57,1.90144964104413,  !- X,Y,Z ==> Vertex 1 {m}
     35.4046,4.57,0.76,  !- X,Y,Z ==> Vertex 2 {m}
     -4.5446,4.57,0.76,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3352,8 +3350,8 @@
     Surface 77,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     30.86,-2.04187384066908e-015,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     30.86,-2.04187384066908e-015,0,  !- X,Y,Z ==> Vertex 2 {m}
     35.43,4.57,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3368,8 +3366,8 @@
     Surface 87,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     30.86,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3384,8 +3382,8 @@
     Surface 63,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     -4.57,4.57,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     -4.57,4.57,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3400,8 +3398,8 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     30.86,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     35.43,4.57,3.8,  !- X,Y,Z ==> Vertex 2 {m}
     -4.57,4.57,3.8,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3531,11 +3529,11 @@
     0,                       !- X Origin {m}
     0,                       !- Y Origin {m}
     7.6,                     !- Z Origin {m}
-    ,                        !- Type
-    ,                        !- Multiplier
-    ,                        !- Ceiling Height {m}
-    ,                        !- Volume {m3}
-    ,                        !- Floor Area {m2}
+    1,                       !- Type
+    1,                       !- Multiplier
+    Autocalculate,           !- Ceiling Height {m}
+    Autocalculate,           !- Volume {m3}
+    Autocalculate,           !- Floor Area {m2}
     ,                        !- Zone Inside Convection Algorithm
     ;                        !- Zone Outside Convection Algorithm
 
@@ -3548,8 +3546,8 @@
     Surface 54,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     35.43,4.57,0,  !- X,Y,Z ==> Vertex 1 {m}
     40,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3564,8 +3562,8 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     40,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3577,11 +3575,11 @@
     ASHRAE 90.1-2007 ExtWindow Metal ClimateZone 4-6,  !- Construction Name
     Surface 80,              !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
-    ,                        !- Number of Vertices
+    1.0,                     !- Multiplier
+    Autocalculate,           !- Number of Vertices
     0.0254,0,1.90144964104413,  !- X,Y,Z ==> Vertex 1 {m}
     0.0254,0,0.76,  !- X,Y,Z ==> Vertex 2 {m}
     39.9746,0,0.76,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3596,8 +3594,8 @@
     Surface 65,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     4.57,4.57,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,4.57,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3612,8 +3610,8 @@
     Surface 89,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     35.43,4.57,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     35.43,4.57,0,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,4.57,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3628,8 +3626,8 @@
     Surface 75,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     40,4.08374768133815e-015,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     40,4.08374768133815e-015,0,  !- X,Y,Z ==> Vertex 2 {m}
     35.43,4.57,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3644,8 +3642,8 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     40,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     35.43,4.57,3.8,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,4.57,3.8,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3715,7 +3713,6 @@
     Coil Heating Electric 6, !- Reheat Coil Name
     Autosize,                !- Maximum Hot Water or Steam Flow Rate {m3/s}
     0,                       !- Minimum Hot Water or Steam Flow Rate {m3/s}
-    ,                        !- Hot Water or Steam Inlet Node Name
     0.001;                   !- Convergence Tolerance
 
   Coil:Heating:Electric,
@@ -3785,7 +3782,7 @@
     Always On Discrete,      !- Availability Schedule Name
     No,                      !- Demand Controlled Ventilation
     ZoneSum,                 !- System Outdoor Air Method
-    ,                        !- Zone Maximum Outdoor Air Fraction {dimensionless}
+    1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     Thermal Zone: Story 3 South Perimeter Space,  !- Zone 1 Name
     90.1-2007 - Office - OpenOffice Ventilation,  !- Design Specification Outdoor Air Object Name 1
     Thermal Zone: Story 3 South Perimeter Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name 1
@@ -3799,11 +3796,11 @@
     0,                       !- X Origin {m}
     0,                       !- Y Origin {m}
     7.6,                     !- Z Origin {m}
-    ,                        !- Type
-    ,                        !- Multiplier
-    ,                        !- Ceiling Height {m}
-    ,                        !- Volume {m3}
-    ,                        !- Floor Area {m2}
+    1,                       !- Type
+    1,                       !- Multiplier
+    Autocalculate,           !- Ceiling Height {m}
+    Autocalculate,           !- Volume {m3}
+    Autocalculate,           !- Floor Area {m2}
     ,                        !- Zone Inside Convection Algorithm
     ;                        !- Zone Outside Convection Algorithm
 
@@ -3816,8 +3813,8 @@
     Surface 36,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,20,0,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,15.43,0,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,4.57,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3832,8 +3829,8 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,20,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     0,20,0,  !- X,Y,Z ==> Vertex 2 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3845,11 +3842,11 @@
     ASHRAE 90.1-2007 ExtWindow Metal ClimateZone 4-6,  !- Construction Name
     Surface 62,              !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
-    ,                        !- Number of Vertices
+    1.0,                     !- Multiplier
+    Autocalculate,           !- Number of Vertices
     0,19.9746,1.90290297355282,  !- X,Y,Z ==> Vertex 1 {m}
     0,19.9746,0.76,  !- X,Y,Z ==> Vertex 2 {m}
     0,0.0253999999999976,0.76,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3864,8 +3861,8 @@
     Surface 71,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     4.57,15.43,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,15.43,0,  !- X,Y,Z ==> Vertex 2 {m}
     3.84711686258183e-030,20,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3880,8 +3877,8 @@
     Surface 86,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     4.57,4.57,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,4.57,0,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,15.43,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3896,8 +3893,8 @@
     Surface 81,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,4.57,0,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3912,8 +3909,8 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
-    ,                        !- Number of Vertices
+    Autocalculate,           !- View Factor to Ground
+    Autocalculate,           !- Number of Vertices
     0,0,3.8,  !- X,Y,Z ==> Vertex 1 {m}
     4.57,4.57,3.8,  !- X,Y,Z ==> Vertex 2 {m}
     4.57,15.43,3.8,  !- X,Y,Z ==> Vertex 3 {m}
@@ -3983,7 +3980,6 @@
     Coil Heating Electric 7, !- Reheat Coil Name
     Autosize,                !- Maximum Hot Water or Steam Flow Rate {m3/s}
     0,                       !- Minimum Hot Water or Steam Flow Rate {m3/s}
-    ,                        !- Hot Water or Steam Inlet Node Name
     0.001;                   !- Convergence Tolerance
 
   Coil:Heating:Electric,
@@ -5769,7 +5765,7 @@
     ,                        !- Time of Day Economizer Control Schedule Name
     No,                      !- High Humidity Control
     ,                        !- Humidistat Control Zone Name
-    ,                        !- High Humidity Outdoor Air Flow Ratio
+    1.0,                     !- High Humidity Outdoor Air Flow Ratio
     Yes,                     !- Control High Indoor Humidity Based on Outdoor Humidity Ratio
     BypassWhenWithinEconomizerLimits;  !- Heat Recovery Bypass Control Type
 
@@ -5984,7 +5980,7 @@
     ,                        !- Time of Day Economizer Control Schedule Name
     No,                      !- High Humidity Control
     ,                        !- Humidistat Control Zone Name
-    ,                        !- High Humidity Outdoor Air Flow Ratio
+    1.0,                     !- High Humidity Outdoor Air Flow Ratio
     Yes,                     !- Control High Indoor Humidity Based on Outdoor Humidity Ratio
     BypassWhenWithinEconomizerLimits;  !- Heat Recovery Bypass Control Type
 
@@ -6207,7 +6203,7 @@
     ,                        !- Time of Day Economizer Control Schedule Name
     No,                      !- High Humidity Control
     ,                        !- Humidistat Control Zone Name
-    ,                        !- High Humidity Outdoor Air Flow Ratio
+    1.0,                     !- High Humidity Outdoor Air Flow Ratio
     Yes,                     !- Control High Indoor Humidity Based on Outdoor Humidity Ratio
     BypassWhenWithinEconomizerLimits;  !- Heat Recovery Bypass Control Type
 
@@ -6325,15 +6321,15 @@
     Curve Biquadratic 2,     !- Energy Input Ratio Function of Temperature Curve Name
     Curve Quadratic 2,       !- Energy Input Ratio Function of Flow Fraction Curve Name
     Curve Quadratic 3,       !- Part Load Fraction Correlation Curve Name
-    ,                        !- Nominal Time for Condensate Removal to Begin {s}
-    ,                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
-    ,                        !- Maximum Cycling Rate {cycles/hr}
-    ,                        !- Latent Capacity Time Constant {s}
+    0.0,                     !- Nominal Time for Condensate Removal to Begin {s}
+    0.0,                     !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+    0.0,                     !- Maximum Cycling Rate {cycles/hr}
+    0.0,                     !- Latent Capacity Time Constant {s}
     ,                        !- Condenser Air Inlet Node Name
     AirCooled,               !- Condenser Type
     0,                       !- Evaporative Condenser Effectiveness {dimensionless}
     ,                        !- Evaporative Condenser Air Flow Rate {m3/s}
-    ,                        !- Evaporative Condenser Pump Rated Power Consumption {W}
+    0.0,                     !- Evaporative Condenser Pump Rated Power Consumption {W}
     0,                       !- Crankcase Heater Capacity {W}
     0,                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
     ,                        !- Supply Water Storage Tank Name
@@ -6530,7 +6526,7 @@
     ,                        !- Time of Day Economizer Control Schedule Name
     No,                      !- High Humidity Control
     ,                        !- Humidistat Control Zone Name
-    ,                        !- High Humidity Outdoor Air Flow Ratio
+    1.0,                     !- High Humidity Outdoor Air Flow Ratio
     Yes,                     !- Control High Indoor Humidity Based on Outdoor Humidity Ratio
     BypassWhenWithinEconomizerLimits;  !- Heat Recovery Bypass Control Type
 
@@ -6899,7 +6895,7 @@
     ,                        !- Time of Day Economizer Control Schedule Name
     No,                      !- High Humidity Control
     ,                        !- Humidistat Control Zone Name
-    ,                        !- High Humidity Outdoor Air Flow Ratio
+    1.0,                     !- High Humidity Outdoor Air Flow Ratio
     Yes,                     !- Control High Indoor Humidity Based on Outdoor Humidity Ratio
     BypassWhenWithinEconomizerLimits;  !- Heat Recovery Bypass Control Type
 
@@ -7276,7 +7272,7 @@
     ,                        !- Time of Day Economizer Control Schedule Name
     No,                      !- High Humidity Control
     ,                        !- Humidistat Control Zone Name
-    ,                        !- High Humidity Outdoor Air Flow Ratio
+    1.0,                     !- High Humidity Outdoor Air Flow Ratio
     Yes,                     !- Control High Indoor Humidity Based on Outdoor Humidity Ratio
     BypassWhenWithinEconomizerLimits;  !- Heat Recovery Bypass Control Type
 
@@ -7556,7 +7552,7 @@
     ,                        !- Time of Day Economizer Control Schedule Name
     No,                      !- High Humidity Control
     ,                        !- Humidistat Control Zone Name
-    ,                        !- High Humidity Outdoor Air Flow Ratio
+    1.0,                     !- High Humidity Outdoor Air Flow Ratio
     Yes,                     !- Control High Indoor Humidity Based on Outdoor Humidity Ratio
     BypassWhenWithinEconomizerLimits;  !- Heat Recovery Bypass Control Type
 
@@ -7714,8 +7710,8 @@
     Chilled Water Loop Demand Connector List,  !- Demand Side Connector List Name
     Optimal,                 !- Load Distribution Scheme
     ,                        !- Availability Manager List Name
-    ,                        !- Plant Loop Demand Calculation Scheme
-    ;                        !- Common Pipe Simulation
+    SingleSetpoint,          !- Plant Loop Demand Calculation Scheme
+    None;                    !- Common Pipe Simulation
 
   PlantEquipmentOperationSchemes,
     Chilled Water Loop Operation Scheme List,  !- Name
@@ -7768,7 +7764,7 @@
 
   Branch,
     Chilled Water Loop Supply Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:VariableSpeed,      !- Component 1 Object Type
     Pump Variable Speed 3,   !- Component 1 Name
@@ -7780,21 +7776,21 @@
     Pump Variable Speed 3,   !- Name
     Node 127,                !- Inlet Node Name
     Node 133,                !- Outlet Node Name
-    Autosize,                !- Rated Flow Rate {m3/s}
-    179352,                  !- Rated Pump Head {Pa}
-    Autosize,                !- Rated Power Consumption {W}
+    Autosize,                !- Design Maximum Flow Rate {m3/s}
+    179352,                  !- Design Pump Head {Pa}
+    Autosize,                !- Design Power Consumption {W}
     0.9,                     !- Motor Efficiency
     0,                       !- Fraction of Motor Inefficiencies to Fluid Stream
     0,                       !- Coefficient 1 of the Part Load Performance Curve
     1,                       !- Coefficient 2 of the Part Load Performance Curve
     0,                       !- Coefficient 3 of the Part Load Performance Curve
     0,                       !- Coefficient 4 of the Part Load Performance Curve
-    0,                       !- Minimum Flow Rate {m3/s}
+    0,                       !- Design Minimum Flow Rate {m3/s}
     Intermittent;            !- Pump Control Type
 
   Branch,
     Chilled Water Loop Supply Branch 1,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Chiller:Electric:EIR,    !- Component 1 Object Type
     Chiller Electric EIR 1,  !- Component 1 Name
@@ -7826,7 +7822,7 @@
     1,                       !- Fraction of Compressor Electric Consumption Rejected by Condenser
     2,                       !- Leaving Chilled Water Lower Temperature Limit {C}
     NotModulated,            !- Chiller Flow Mode
-    ,                        !- Design Heat Recovery Water Flow Rate {m3/s}
+    0.0,                     !- Design Heat Recovery Water Flow Rate {m3/s}
     ,                        !- Heat Recovery Inlet Node Name
     ,                        !- Heat Recovery Outlet Node Name
     1;                       !- Sizing Factor
@@ -7867,7 +7863,7 @@
 
   Branch,
     Chilled Water Loop Supply Branch 2,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 8,        !- Component 1 Name
@@ -7882,7 +7878,7 @@
 
   Branch,
     Chilled Water Loop Supply Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 9,        !- Component 1 Name
@@ -7926,7 +7922,7 @@
 
   Branch,
     Chilled Water Loop Demand Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 11,       !- Component 1 Name
@@ -7941,7 +7937,7 @@
 
   Branch,
     Chilled Water Loop Demand Branch 1,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Cooling:Water,      !- Component 1 Object Type
     Coil Cooling Water 1,    !- Component 1 Name
@@ -7951,7 +7947,7 @@
 
   Branch,
     Chilled Water Loop Demand Branch 2,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 10,       !- Component 1 Name
@@ -7966,7 +7962,7 @@
 
   Branch,
     Chilled Water Loop Demand Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Chilled Water Loop Demand Bypass Pipe,  !- Component 1 Name
@@ -7981,7 +7977,7 @@
 
   Branch,
     Chilled Water Loop Demand Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 12,       !- Component 1 Name
@@ -8015,8 +8011,8 @@
     Chilled Water Loop 1 Demand Connector List,  !- Demand Side Connector List Name
     Optimal,                 !- Load Distribution Scheme
     ,                        !- Availability Manager List Name
-    ,                        !- Plant Loop Demand Calculation Scheme
-    ;                        !- Common Pipe Simulation
+    SingleSetpoint,          !- Plant Loop Demand Calculation Scheme
+    None;                    !- Common Pipe Simulation
 
   PlantEquipmentOperationSchemes,
     Chilled Water Loop 1 Operation Scheme List,  !- Name
@@ -8069,7 +8065,7 @@
 
   Branch,
     Chilled Water Loop 1 Supply Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:VariableSpeed,      !- Component 1 Object Type
     Pump Variable Speed 5,   !- Component 1 Name
@@ -8081,21 +8077,21 @@
     Pump Variable Speed 5,   !- Name
     Node 183,                !- Inlet Node Name
     Node 189,                !- Outlet Node Name
-    Autosize,                !- Rated Flow Rate {m3/s}
-    179352,                  !- Rated Pump Head {Pa}
-    Autosize,                !- Rated Power Consumption {W}
+    Autosize,                !- Design Maximum Flow Rate {m3/s}
+    179352,                  !- Design Pump Head {Pa}
+    Autosize,                !- Design Power Consumption {W}
     0.9,                     !- Motor Efficiency
     0,                       !- Fraction of Motor Inefficiencies to Fluid Stream
     0,                       !- Coefficient 1 of the Part Load Performance Curve
     1,                       !- Coefficient 2 of the Part Load Performance Curve
     0,                       !- Coefficient 3 of the Part Load Performance Curve
     0,                       !- Coefficient 4 of the Part Load Performance Curve
-    0,                       !- Minimum Flow Rate {m3/s}
+    0,                       !- Design Minimum Flow Rate {m3/s}
     Intermittent;            !- Pump Control Type
 
   Branch,
     Chilled Water Loop 1 Supply Branch 1,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 18,       !- Component 1 Name
@@ -8110,7 +8106,7 @@
 
   Branch,
     Chilled Water Loop 1 Supply Branch 2,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     DistrictCooling,         !- Component 1 Object Type
     District Cooling,        !- Component 1 Name
@@ -8126,7 +8122,7 @@
 
   Branch,
     Chilled Water Loop 1 Supply Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 19,       !- Component 1 Name
@@ -8167,7 +8163,7 @@
 
   Branch,
     Chilled Water Loop 1 Demand Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Chilled Water Loop 1 Demand Inlet Pipe,  !- Component 1 Name
@@ -8182,7 +8178,7 @@
 
   Branch,
     Chilled Water Loop 1 Demand Branch 1,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Cooling:Water,      !- Component 1 Object Type
     Coil Cooling Water 2,    !- Component 1 Name
@@ -8192,7 +8188,7 @@
 
   Branch,
     Chilled Water Loop 1 Demand Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Chilled Water Loop 1 Demand Bypass Pipe,  !- Component 1 Name
@@ -8207,7 +8203,7 @@
 
   Branch,
     Chilled Water Loop 1 Demand Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Chilled Water Loop 1 Demand Outlet Pipe,  !- Component 1 Name
@@ -8241,8 +8237,8 @@
     Condenser Water Loop Demand Connector List,  !- Demand Side Connector List Name
     Optimal,                 !- Load Distribution Scheme
     ,                        !- Availability Manager List Name
-    ,                        !- Plant Loop Demand Calculation Scheme
-    ;                        !- Common Pipe Simulation
+    SingleSetpoint,          !- Plant Loop Demand Calculation Scheme
+    None;                    !- Common Pipe Simulation
 
   PlantEquipmentOperationSchemes,
     Condenser Water Loop Operation Scheme List,  !- Name
@@ -8295,7 +8291,7 @@
 
   Branch,
     Condenser Water Loop Supply Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:VariableSpeed,      !- Component 1 Object Type
     Pump Variable Speed 4,   !- Component 1 Name
@@ -8307,21 +8303,21 @@
     Pump Variable Speed 4,   !- Name
     Node 146,                !- Inlet Node Name
     Node 156,                !- Outlet Node Name
-    Autosize,                !- Rated Flow Rate {m3/s}
-    179352,                  !- Rated Pump Head {Pa}
-    Autosize,                !- Rated Power Consumption {W}
+    Autosize,                !- Design Maximum Flow Rate {m3/s}
+    179352,                  !- Design Pump Head {Pa}
+    Autosize,                !- Design Power Consumption {W}
     0.9,                     !- Motor Efficiency
     0,                       !- Fraction of Motor Inefficiencies to Fluid Stream
     0,                       !- Coefficient 1 of the Part Load Performance Curve
     1,                       !- Coefficient 2 of the Part Load Performance Curve
     0,                       !- Coefficient 3 of the Part Load Performance Curve
     0,                       !- Coefficient 4 of the Part Load Performance Curve
-    0,                       !- Minimum Flow Rate {m3/s}
+    0,                       !- Design Minimum Flow Rate {m3/s}
     Intermittent;            !- Pump Control Type
 
   Branch,
     Condenser Water Loop Supply Branch 1,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     CoolingTower:SingleSpeed,!- Component 1 Object Type
     Cooling Tower Single Speed 1,  !- Component 1 Name
@@ -8338,14 +8334,14 @@
     Autosize,                !- Design Fan Power {W}
     Autosize,                !- Design U-Factor Times Area Value {W/K}
     Autosize,                !- Free Convection Air Flow Rate {m3/s}
-    ,                        !- Free Convection Air Flow Rate Sizing Factor
+    0.1,                     !- Free Convection Air Flow Rate Sizing Factor
     Autosize,                !- Free Convection U-Factor Times Area Value {W/K}
-    ,                        !- Free Convection U-Factor Times Area Value Sizing Factor
+    0.1,                     !- Free Convection U-Factor Times Area Value Sizing Factor
     UFactorTimesAreaAndDesignWaterFlowRate,  !- Performance Input Method
-    ,                        !- Heat Rejection Capacity and Nominal Capacity Sizing Ratio
+    1.25,                    !- Heat Rejection Capacity and Nominal Capacity Sizing Ratio
     ,                        !- Nominal Capacity {W}
     0,                       !- Free Convection Capacity {W}
-    ,                        !- Free Convection Nominal Capacity Sizing Factor
+    0.1,                     !- Free Convection Nominal Capacity Sizing Factor
     0,                       !- Basin Heater Capacity {W/K}
     2,                       !- Basin Heater Setpoint Temperature {C}
     ,                        !- Basin Heater Operating Schedule Name
@@ -8366,7 +8362,7 @@
 
   Branch,
     Condenser Water Loop Supply Branch 2,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 13,       !- Component 1 Name
@@ -8381,7 +8377,7 @@
 
   Branch,
     Condenser Water Loop Supply Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 14,       !- Component 1 Name
@@ -8425,7 +8421,7 @@
 
   Branch,
     Condenser Water Loop Demand Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 16,       !- Component 1 Name
@@ -8440,7 +8436,7 @@
 
   Branch,
     Condenser Water Loop Demand Branch 1,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Chiller:Electric:EIR,    !- Component 1 Object Type
     Chiller Electric EIR 1,  !- Component 1 Name
@@ -8450,7 +8446,7 @@
 
   Branch,
     Condenser Water Loop Demand Branch 2,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 15,       !- Component 1 Name
@@ -8465,7 +8461,7 @@
 
   Branch,
     Condenser Water Loop Demand Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Condenser Water Loop Demand Bypass Pipe,  !- Component 1 Name
@@ -8480,7 +8476,7 @@
 
   Branch,
     Condenser Water Loop Demand Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 17,       !- Component 1 Name
@@ -8514,8 +8510,8 @@
     Hot Water Loop Demand Connector List,  !- Demand Side Connector List Name
     Optimal,                 !- Load Distribution Scheme
     ,                        !- Availability Manager List Name
-    ,                        !- Plant Loop Demand Calculation Scheme
-    ;                        !- Common Pipe Simulation
+    SingleSetpoint,          !- Plant Loop Demand Calculation Scheme
+    None;                    !- Common Pipe Simulation
 
   PlantEquipmentOperationSchemes,
     Hot Water Loop Operation Scheme List,  !- Name
@@ -8568,7 +8564,7 @@
 
   Branch,
     Hot Water Loop Supply Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:VariableSpeed,      !- Component 1 Object Type
     Pump Variable Speed 1,   !- Component 1 Name
@@ -8580,21 +8576,21 @@
     Pump Variable Speed 1,   !- Name
     Node 63,                 !- Inlet Node Name
     Node 69,                 !- Outlet Node Name
-    Autosize,                !- Rated Flow Rate {m3/s}
-    179352,                  !- Rated Pump Head {Pa}
-    Autosize,                !- Rated Power Consumption {W}
+    Autosize,                !- Design Maximum Flow Rate {m3/s}
+    179352,                  !- Design Pump Head {Pa}
+    Autosize,                !- Design Power Consumption {W}
     0.9,                     !- Motor Efficiency
     0,                       !- Fraction of Motor Inefficiencies to Fluid Stream
     0,                       !- Coefficient 1 of the Part Load Performance Curve
     1,                       !- Coefficient 2 of the Part Load Performance Curve
     0,                       !- Coefficient 3 of the Part Load Performance Curve
     0,                       !- Coefficient 4 of the Part Load Performance Curve
-    0,                       !- Minimum Flow Rate {m3/s}
+    0,                       !- Design Minimum Flow Rate {m3/s}
     Intermittent;            !- Pump Control Type
 
   Branch,
     Hot Water Loop Supply Branch 1,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Boiler:HotWater,         !- Component 1 Object Type
     Boiler Hot Water 1,      !- Component 1 Name
@@ -8641,7 +8637,7 @@
 
   Branch,
     Hot Water Loop Supply Branch 2,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 1,        !- Component 1 Name
@@ -8656,7 +8652,7 @@
 
   Branch,
     Hot Water Loop Supply Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 2,        !- Component 1 Name
@@ -8706,7 +8702,7 @@
 
   Branch,
     Hot Water Loop Demand Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Hot Water Loop Demand Inlet Pipe,  !- Component 1 Name
@@ -8721,7 +8717,7 @@
 
   Branch,
     Hot Water Loop Demand Branch 1,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Coil Heating Water 1,    !- Component 1 Name
@@ -8731,7 +8727,7 @@
 
   Branch,
     Hot Water Loop Demand Branch 2,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Coil Heating Water 2,    !- Component 1 Name
@@ -8741,7 +8737,7 @@
 
   Branch,
     Hot Water Loop Demand Branch 3,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Coil Heating Water 3,    !- Component 1 Name
@@ -8751,7 +8747,7 @@
 
   Branch,
     Hot Water Loop Demand Branch 4,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     PTAC HW Htg Coil,        !- Component 1 Name
@@ -8761,7 +8757,7 @@
 
   Branch,
     Hot Water Loop Demand Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Hot Water Loop Demand Bypass Pipe,  !- Component 1 Name
@@ -8776,7 +8772,7 @@
 
   Branch,
     Hot Water Loop Demand Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Hot Water Loop Demand Outlet Pipe,  !- Component 1 Name
@@ -8810,8 +8806,8 @@
     Hot Water Loop 1 Demand Connector List,  !- Demand Side Connector List Name
     Optimal,                 !- Load Distribution Scheme
     ,                        !- Availability Manager List Name
-    ,                        !- Plant Loop Demand Calculation Scheme
-    ;                        !- Common Pipe Simulation
+    SingleSetpoint,          !- Plant Loop Demand Calculation Scheme
+    None;                    !- Common Pipe Simulation
 
   PlantEquipmentOperationSchemes,
     Hot Water Loop 1 Operation Scheme List,  !- Name
@@ -8864,7 +8860,7 @@
 
   Branch,
     Hot Water Loop 1 Supply Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:VariableSpeed,      !- Component 1 Object Type
     Pump Variable Speed 2,   !- Component 1 Name
@@ -8876,21 +8872,21 @@
     Pump Variable Speed 2,   !- Name
     Node 111,                !- Inlet Node Name
     Node 117,                !- Outlet Node Name
-    Autosize,                !- Rated Flow Rate {m3/s}
-    179352,                  !- Rated Pump Head {Pa}
-    Autosize,                !- Rated Power Consumption {W}
+    Autosize,                !- Design Maximum Flow Rate {m3/s}
+    179352,                  !- Design Pump Head {Pa}
+    Autosize,                !- Design Power Consumption {W}
     0.9,                     !- Motor Efficiency
     0,                       !- Fraction of Motor Inefficiencies to Fluid Stream
     0,                       !- Coefficient 1 of the Part Load Performance Curve
     1,                       !- Coefficient 2 of the Part Load Performance Curve
     0,                       !- Coefficient 3 of the Part Load Performance Curve
     0,                       !- Coefficient 4 of the Part Load Performance Curve
-    0,                       !- Minimum Flow Rate {m3/s}
+    0,                       !- Design Minimum Flow Rate {m3/s}
     Intermittent;            !- Pump Control Type
 
   Branch,
     Hot Water Loop 1 Supply Branch 1,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 3,        !- Component 1 Name
@@ -8905,7 +8901,7 @@
 
   Branch,
     Hot Water Loop 1 Supply Branch 2,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     DistrictHeating,         !- Component 1 Object Type
     District Heating,        !- Component 1 Name
@@ -8921,7 +8917,7 @@
 
   Branch,
     Hot Water Loop 1 Supply Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 7,        !- Component 1 Name
@@ -8974,7 +8970,7 @@
 
   Branch,
     Hot Water Loop 1 Demand Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 5,        !- Component 1 Name
@@ -8989,7 +8985,7 @@
 
   Branch,
     Hot Water Loop 1 Demand Branch 1,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 4,        !- Component 1 Name
@@ -9004,7 +9000,7 @@
 
   Branch,
     Hot Water Loop 1 Demand Branch 2,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Coil Heating Water 4,    !- Component 1 Name
@@ -9014,7 +9010,7 @@
 
   Branch,
     Hot Water Loop 1 Demand Branch 3,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Coil Heating Water 5,    !- Component 1 Name
@@ -9024,7 +9020,7 @@
 
   Branch,
     Hot Water Loop 1 Demand Branch 4,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Coil Heating Water 6,    !- Component 1 Name
@@ -9034,7 +9030,7 @@
 
   Branch,
     Hot Water Loop 1 Demand Branch 5,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Coil Heating Water 7,    !- Component 1 Name
@@ -9044,7 +9040,7 @@
 
   Branch,
     Hot Water Loop 1 Demand Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Hot Water Loop 1 Demand Bypass Pipe,  !- Component 1 Name
@@ -9059,7 +9055,7 @@
 
   Branch,
     Hot Water Loop 1 Demand Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Pipe Adiabatic 6,        !- Component 1 Name
@@ -9215,8 +9211,8 @@
     ASHRAEClearSky,          !- Solar Model Indicator
     ,                        !- Beam Solar Day Schedule Name
     ,                        !- Diffuse Solar Day Schedule Name
-    ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
-    ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0;                       !- Sky Clearness
 
   SizingPeriod:DesignDay,
@@ -9243,8 +9239,8 @@
     ASHRAEClearSky,          !- Solar Model Indicator
     ,                        !- Beam Solar Day Schedule Name
     ,                        !- Diffuse Solar Day Schedule Name
-    ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
-    ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0;                       !- Sky Clearness
 
   SizingPeriod:DesignDay,
@@ -9271,8 +9267,8 @@
     ASHRAEClearSky,          !- Solar Model Indicator
     ,                        !- Beam Solar Day Schedule Name
     ,                        !- Diffuse Solar Day Schedule Name
-    ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
-    ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0;                       !- Sky Clearness
 
   ZoneList,
@@ -9287,10 +9283,10 @@
     ,                        !- Lighting Level {W}
     5.38195520835486,        !- Watts per Zone Floor Area {W/m2}
     ,                        !- Watts per Person {W/person}
-    ,                        !- Return Air Fraction
-    ,                        !- Fraction Radiant
-    ,                        !- Fraction Visible
-    ;                        !- Fraction Replaceable
+    0,                       !- Return Air Fraction
+    0,                       !- Fraction Radiant
+    0,                       !- Fraction Visible
+    1.0;                     !- Fraction Replaceable
 
   People,
     90.1-2007 - Office - Corridor People,  !- Name
@@ -9301,7 +9297,7 @@
     0.0107639104167097,      !- People per Zone Floor Area {person/m2}
     ,                        !- Zone Floor Area per Person {m2/person}
     0.3,                     !- Fraction Radiant
-    ,                        !- Sensible Heat Fraction
+    Autocalculate,           !- Sensible Heat Fraction
     Medium Office Activity;  !- Activity Level Schedule Name
 
   ElectricEquipment,
@@ -9312,9 +9308,9 @@
     ,                        !- Design Level {W}
     1.72222566667356,        !- Watts per Zone Floor Area {W/m2}
     ,                        !- Watts per Person {W/person}
-    ,                        !- Fraction Latent
-    ,                        !- Fraction Radiant
-    ;                        !- Fraction Lost
+    0,                       !- Fraction Latent
+    0,                       !- Fraction Radiant
+    0;                       !- Fraction Lost
 
   ZoneInfiltration:DesignFlowRate,
     90.1-2007 - Office - Corridor Infiltration,  !- Name
@@ -9325,10 +9321,10 @@
     ,                        !- Flow per Zone Floor Area {m3/s-m2}
     0.000226568,             !- Flow per Exterior Surface Area {m3/s-m2}
     ,                        !- Air Changes per Hour {1/hr}
-    ,                        !- Constant Term Coefficient
-    ,                        !- Temperature Term Coefficient
-    ,                        !- Velocity Term Coefficient
-    ;                        !- Velocity Squared Term Coefficient
+    1,                       !- Constant Term Coefficient
+    0,                       !- Temperature Term Coefficient
+    0,                       !- Velocity Term Coefficient
+    0;                       !- Velocity Squared Term Coefficient
 
   ZoneList,
     90.1-2007 - Office - OpenOffice,  !- Name
@@ -9355,10 +9351,10 @@
     ,                        !- Lighting Level {W}
     11.8403014583807,        !- Watts per Zone Floor Area {W/m2}
     ,                        !- Watts per Person {W/person}
-    ,                        !- Return Air Fraction
-    ,                        !- Fraction Radiant
-    ,                        !- Fraction Visible
-    ;                        !- Fraction Replaceable
+    0,                       !- Return Air Fraction
+    0,                       !- Fraction Radiant
+    0,                       !- Fraction Visible
+    1.0;                     !- Fraction Replaceable
 
   People,
     90.1-2007 - Office - OpenOffice People,  !- Name
@@ -9369,7 +9365,7 @@
     0.056510529687726,       !- People per Zone Floor Area {person/m2}
     ,                        !- Zone Floor Area per Person {m2/person}
     0.3,                     !- Fraction Radiant
-    ,                        !- Sensible Heat Fraction
+    Autocalculate,           !- Sensible Heat Fraction
     Medium Office Activity;  !- Activity Level Schedule Name
 
   ElectricEquipment,
@@ -9380,9 +9376,9 @@
     ,                        !- Design Level {W}
     7.6423763958639,         !- Watts per Zone Floor Area {W/m2}
     ,                        !- Watts per Person {W/person}
-    ,                        !- Fraction Latent
-    ,                        !- Fraction Radiant
-    ;                        !- Fraction Lost
+    0,                       !- Fraction Latent
+    0,                       !- Fraction Radiant
+    0;                       !- Fraction Lost
 
   ZoneInfiltration:DesignFlowRate,
     90.1-2007 - Office - OpenOffice Infiltration,  !- Name
@@ -9393,10 +9389,10 @@
     ,                        !- Flow per Zone Floor Area {m3/s-m2}
     0.000226568,             !- Flow per Exterior Surface Area {m3/s-m2}
     ,                        !- Air Changes per Hour {1/hr}
-    ,                        !- Constant Term Coefficient
-    ,                        !- Temperature Term Coefficient
-    ,                        !- Velocity Term Coefficient
-    ;                        !- Velocity Squared Term Coefficient
+    1,                       !- Constant Term Coefficient
+    0,                       !- Temperature Term Coefficient
+    0,                       !- Velocity Term Coefficient
+    0;                       !- Velocity Squared Term Coefficient
 
   SetpointManager:Scheduled,
     Setpoint Manager Scheduled 5,  !- Name
@@ -9663,9 +9659,9 @@
     0.03,                    !- Real Discount Rate
     ,                        !- Nominal Discount Rate
     ,                        !- Inflation
-    ,                        !- Base Date Month
+    January,                 !- Base Date Month
     2011,                    !- Base Date Year
-    ,                        !- Service Date Month
+    January,                 !- Service Date Month
     2011,                    !- Service Date Year
     25,                      !- Length of Study Period in Years
     ,                        !- Tax rate

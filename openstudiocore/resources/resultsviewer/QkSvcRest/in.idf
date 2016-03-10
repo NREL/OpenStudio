@@ -69,7 +69,7 @@
 ! ExtWallConstruction=Wood-Framed and Other
 ! End SimMetaData
 
-  Version,8.4;
+  Version,8.5;
 
   Timestep,6;
 
@@ -239,7 +239,7 @@
     WinterDesignDay,         !- Day Type
     -20.6,                   !- Maximum Dry-Bulb Temperature {C}
     0.0,                     !- Daily Dry-Bulb Temperature Range {deltaC}
-    ,                        !- Dry-Bulb Temperature Range Modifier Type
+    DefaultMultipliers,      !- Dry-Bulb Temperature Range Modifier Type
     ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     -20.6,                   !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
@@ -256,8 +256,8 @@
     ASHRAEClearSky,          !- Solar Model Indicator
     ,                        !- Beam Solar Day Schedule Name
     ,                        !- Diffuse Solar Day Schedule Name
-    ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
-    ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0.00;                    !- Sky Clearness
 
  ! CHICAGO_IL_USA Annual Cooling (WB=>MDB) .4%, MDB=31.2°C WB=25.5°C
@@ -269,7 +269,7 @@
     SummerDesignDay,         !- Day Type
     31.2,                    !- Maximum Dry-Bulb Temperature {C}
     10.7,                    !- Daily Dry-Bulb Temperature Range {deltaC}
-    ,                        !- Dry-Bulb Temperature Range Modifier Type
+    DefaultMultipliers,      !- Dry-Bulb Temperature Range Modifier Type
     ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     25.5,                    !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
@@ -286,8 +286,8 @@
     ASHRAEClearSky,          !- Solar Model Indicator
     ,                        !- Beam Solar Day Schedule Name
     ,                        !- Diffuse Solar Day Schedule Name
-    ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
-    ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     1.00;                    !- Sky Clearness
 
   ScheduleTypeLimits,
@@ -1942,7 +1942,7 @@
     0.3000,                  !- Fraction Radiant
     AUTOCALCULATE,           !- Sensible Heat Fraction
     ACTIVITY_SCH,            !- Activity Level Schedule Name
-    ,                        !- Carbon Dioxide Generation Rate {m3/s-W}
+    3.82E-8,                 !- Carbon Dioxide Generation Rate {m3/s-W}
     No,                      !- Enable ASHRAE 55 Comfort Warnings
     ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
@@ -2042,15 +2042,15 @@
     ,                        !- Zone Heating Sizing Factor
     ,                        !- Zone Cooling Sizing Factor
     DesignDayWithLimit,      !- Cooling Design Air Flow Method
-    ,                        !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+    0,                       !- Cooling Design Air Flow Rate {m3/s}
+    .000762,                 !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
     0.83363,                 !- Cooling Minimum Air Flow {m3/s}
     0.0,                     !- Cooling Minimum Air Flow Fraction
     DesignDay,               !- Heating Design Air Flow Method
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+    .1415762,                !- Heating Maximum Air Flow {m3/s}
+    0.3;                     !- Heating Maximum Air Flow Fraction
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Dining,          !- Name
@@ -2281,7 +2281,7 @@
     0.3000,                  !- Fraction Radiant
     AUTOCALCULATE,           !- Sensible Heat Fraction
     ACTIVITY_SCH,            !- Activity Level Schedule Name
-    ,                        !- Carbon Dioxide Generation Rate {m3/s-W}
+    3.82E-8,                 !- Carbon Dioxide Generation Rate {m3/s-W}
     No,                      !- Enable ASHRAE 55 Comfort Warnings
     ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
@@ -2376,7 +2376,7 @@
     0.1000,                  !- Fraction Latent
     0.2000,                  !- Fraction Radiant
     0.7000,                  !- Fraction Lost
-    ,                        !- Carbon Dioxide Generation Rate {m3/s-W}
+    0.0,                     !- Carbon Dioxide Generation Rate {m3/s-W}
     MiscGas;                 !- End-Use Subcategory
 
   ComponentCost:LineItem,
@@ -2438,15 +2438,15 @@
     ,                        !- Zone Heating Sizing Factor
     ,                        !- Zone Cooling Sizing Factor
     DesignDayWithLimit,      !- Cooling Design Air Flow Method
-    ,                        !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+    0,                       !- Cooling Design Air Flow Rate {m3/s}
+    .000762,                 !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
     0,                       !- Cooling Minimum Air Flow {m3/s}
     0.0,                     !- Cooling Minimum Air Flow Fraction
     DesignDay,               !- Heating Design Air Flow Method
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+    .1415762,                !- Heating Maximum Air Flow {m3/s}
+    0.3;                     !- Heating Maximum Air Flow Fraction
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Kitchen,         !- Name
@@ -2542,14 +2542,14 @@
     ,                        !- Reclamation Water Storage Tank Name
     ,                        !- Hot Water Supply Temperature Schedule Name
     ,                        !- Cold Water Supply Temperature Schedule Name
-    ,                        !- Drain Water Heat Exchanger Type
-    ,                        !- Drain Water Heat Exchanger Destination
+    None,                    !- Drain Water Heat Exchanger Type
+    Plant,                   !- Drain Water Heat Exchanger Destination
     ,                        !- Drain Water Heat Exchanger U-Factor Times Area {W/K}
     Kitchen Water Equipment; !- Water Use Equipment 1 Name
 
   WaterUse:Equipment,
     Kitchen Water Equipment, !- Name
-    ,                        !- End-Use Subcategory
+    General,                 !- End-Use Subcategory
     4.20555555555556E-5,     !- Peak Flow Rate {m3/s}
     BLDG_SWH_SCH,            !- Flow Rate Fraction Schedule Name
     Kitchen Water Equipment Temp Sched,  !- Target Temperature Schedule Name
@@ -2696,17 +2696,17 @@
     AIRCOOLED,               !- Condenser Type
     ,                        !- Water-Cooled Condenser Inlet Node Name
     ,                        !- Water-Cooled Condenser Outlet Node Name
-    ,                        !- Water-Cooled Loop Flow Type
+    VariableFlow,            !- Water-Cooled Loop Flow Type
     ,                        !- Water-Cooled Condenser Outlet Temperature Schedule Name
     ,                        !- Water-Cooled Condenser Design Flow Rate {m3/s}
     ,                        !- Water-Cooled Condenser Maximum Flow Rate {m3/s}
-    ,                        !- Water-Cooled Condenser Maximum Water Outlet Temperature {C}
-    ,                        !- Water-Cooled Condenser Minimum Water Inlet Temperature {C}
+    55.0,                    !- Water-Cooled Condenser Maximum Water Outlet Temperature {C}
+    10.0,                    !- Water-Cooled Condenser Minimum Water Inlet Temperature {C}
     ,                        !- Evaporative Condenser Availability Schedule Name
-    ,                        !- Evaporative Condenser Effectiveness {dimensionless}
-    ,                        !- Evaporative Condenser Air Flow Rate {m3/s}
-    ,                        !- Basin Heater Capacity {W/K}
-    ,                        !- Basin Heater Setpoint Temperature {C}
+    0.9,                     !- Evaporative Condenser Effectiveness {dimensionless}
+    Autocalculate,           !- Evaporative Condenser Air Flow Rate {m3/s}
+    200.0,                   !- Basin Heater Capacity {W/K}
+    2.0,                     !- Basin Heater Setpoint Temperature {C}
     ,                        !- Design Evaporative Condenser Water Pump Power {W}
     ,                        !- Evaporative Water Supply Tank Name
     RACK1_condenserInlet,    !- Condenser Air Inlet Node Name
@@ -2801,17 +2801,17 @@
     AIRCOOLED,               !- Condenser Type
     ,                        !- Water-Cooled Condenser Inlet Node Name
     ,                        !- Water-Cooled Condenser Outlet Node Name
-    ,                        !- Water-Cooled Loop Flow Type
+    VariableFlow,            !- Water-Cooled Loop Flow Type
     ,                        !- Water-Cooled Condenser Outlet Temperature Schedule Name
     ,                        !- Water-Cooled Condenser Design Flow Rate {m3/s}
     ,                        !- Water-Cooled Condenser Maximum Flow Rate {m3/s}
-    ,                        !- Water-Cooled Condenser Maximum Water Outlet Temperature {C}
-    ,                        !- Water-Cooled Condenser Minimum Water Inlet Temperature {C}
+    55.0,                    !- Water-Cooled Condenser Maximum Water Outlet Temperature {C}
+    10.0,                    !- Water-Cooled Condenser Minimum Water Inlet Temperature {C}
     ,                        !- Evaporative Condenser Availability Schedule Name
-    ,                        !- Evaporative Condenser Effectiveness {dimensionless}
-    ,                        !- Evaporative Condenser Air Flow Rate {m3/s}
-    ,                        !- Basin Heater Capacity {W/K}
-    ,                        !- Basin Heater Setpoint Temperature {C}
+    0.9,                     !- Evaporative Condenser Effectiveness {dimensionless}
+    Autocalculate,           !- Evaporative Condenser Air Flow Rate {m3/s}
+    200.0,                   !- Basin Heater Capacity {W/K}
+    2.0,                     !- Basin Heater Setpoint Temperature {C}
     ,                        !- Design Evaporative Condenser Water Pump Power {W}
     ,                        !- Evaporative Water Supply Tank Name
     RACK2_condenserInlet,    !- Condenser Air Inlet Node Name
@@ -3143,7 +3143,7 @@
     ALWAYS_ON,               !- Availability Schedule Name
     Yes,                     !- Demand Controlled Ventilation
     VentilationRateProcedure,!- System Outdoor Air Method
-    ,                        !- Zone Maximum Outdoor Air Fraction {dimensionless}
+    1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     Dining,                  !- Zone 1 Name
     CM DSOA Dining,          !- Design Specification Outdoor Air Object Name 1
     CM DSZAD Dining;         !- Design Specification Zone Air Distribution Object Name 1
@@ -3176,7 +3176,7 @@
     AUTOSIZE,                !- Gross Rated Sensible Heat Ratio
     3.451477211,             !- Gross Rated Cooling COP {W/W}
     AUTOSIZE,                !- Rated Air Flow Rate {m3/s}
-    ,                        !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    773.3,                   !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
     PSZ-AC_1:1_OA-PSZ-AC_1:1_CoolCNode,  !- Air Inlet Node Name
     PSZ-AC_1:1_CoolC-PSZ-AC_1:1_HeatCNode,  !- Air Outlet Node Name
     PSZ-AC_1:1_CoolCStandard10Ton_CapFT,  !- Total Cooling Capacity Function of Temperature Curve Name
@@ -3457,7 +3457,7 @@
     ALWAYS_ON,               !- Availability Schedule Name
     Yes,                     !- Demand Controlled Ventilation
     VentilationRateProcedure,!- System Outdoor Air Method
-    ,                        !- Zone Maximum Outdoor Air Fraction {dimensionless}
+    1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     Kitchen,                 !- Zone 1 Name
     CM DSOA Kitchen,         !- Design Specification Outdoor Air Object Name 1
     CM DSZAD Kitchen;        !- Design Specification Zone Air Distribution Object Name 1
@@ -3490,7 +3490,7 @@
     AUTOSIZE,                !- Gross Rated Sensible Heat Ratio
     3.428306789,             !- Gross Rated Cooling COP {W/W}
     AUTOSIZE,                !- Rated Air Flow Rate {m3/s}
-    ,                        !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    773.3,                   !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
     PSZ-AC_2:2_OA-PSZ-AC_2:2_CoolCNode,  !- Air Inlet Node Name
     PSZ-AC_2:2_CoolC-PSZ-AC_2:2_HeatCNode,  !- Air Outlet Node Name
     PSZ-AC_2:2_CoolCStandard10Ton_CapFT,  !- Total Cooling Capacity Function of Temperature Curve Name
@@ -3682,7 +3682,7 @@
 
   Branch,
     SWHSys1 Supply Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:VariableSpeed,      !- Component 1 Object Type
     SWHSys1 Pump,            !- Component 1 Name
@@ -3692,7 +3692,7 @@
 
   Branch,
     SWHSys1 Supply Equipment Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     WaterHeater:Mixed,       !- Component 1 Object Type
     SWHSys1 Water Heater,    !- Component 1 Name
@@ -3704,16 +3704,16 @@
     SWHSys1 Pump,            !- Name
     SWHSys1 Supply Inlet Node,  !- Inlet Node Name
     SWHSys1 Pump-SWHSys1 Water HeaterNodeviaConnector,  !- Outlet Node Name
-    AUTOSIZE,                !- Rated Flow Rate {m3/s}
-    0.1,                     !- Rated Pump Head {Pa}
-    AUTOSIZE,                !- Rated Power Consumption {W}
+    AUTOSIZE,                !- Design Maximum Flow Rate {m3/s}
+    0.1,                     !- Design Pump Head {Pa}
+    AUTOSIZE,                !- Design Power Consumption {W}
     1,                       !- Motor Efficiency
     0.0,                     !- Fraction of Motor Inefficiencies to Fluid Stream
     0,                       !- Coefficient 1 of the Part Load Performance Curve
     1,                       !- Coefficient 2 of the Part Load Performance Curve
     0,                       !- Coefficient 3 of the Part Load Performance Curve
     0,                       !- Coefficient 4 of the Part Load Performance Curve
-    0.0,                     !- Minimum Flow Rate {m3/s}
+    0.0,                     !- Design Minimum Flow Rate {m3/s}
     Intermittent,            !- Pump Control Type
     ;                        !- Pump Flow Rate Schedule Name
 
@@ -3726,25 +3726,25 @@
     Cycle,                   !- Heater Control Type
     845000,                  !- Heater Maximum Capacity {W}
     ,                        !- Heater Minimum Capacity {W}
-    ,                        !- Heater Ignition Minimum Flow Rate {m3/s}
-    ,                        !- Heater Ignition Delay {s}
+    0.0,                     !- Heater Ignition Minimum Flow Rate {m3/s}
+    0.0,                     !- Heater Ignition Delay {s}
     NATURALGAS,              !- Heater Fuel Type
     0.8,                     !- Heater Thermal Efficiency
     ,                        !- Part Load Factor Curve Name
     20,                      !- Off Cycle Parasitic Fuel Consumption Rate {W}
     NATURALGAS,              !- Off Cycle Parasitic Fuel Type
     0.8,                     !- Off Cycle Parasitic Heat Fraction to Tank
-    ,                        !- On Cycle Parasitic Fuel Consumption Rate {W}
+    0.0,                     !- On Cycle Parasitic Fuel Consumption Rate {W}
     NATURALGAS,              !- On Cycle Parasitic Fuel Type
-    ,                        !- On Cycle Parasitic Heat Fraction to Tank
+    0.0,                     !- On Cycle Parasitic Heat Fraction to Tank
     SCHEDULE,                !- Ambient Temperature Indicator
     SWHSys1 Water Heater Ambient Temperature Schedule Name,  !- Ambient Temperature Schedule Name
     ,                        !- Ambient Temperature Zone Name
     ,                        !- Ambient Temperature Outdoor Air Node Name
     6.0,                     !- Off Cycle Loss Coefficient to Ambient Temperature {W/K}
-    ,                        !- Off Cycle Loss Fraction to Zone
+    1.0,                     !- Off Cycle Loss Fraction to Zone
     6.0,                     !- On Cycle Loss Coefficient to Ambient Temperature {W/K}
-    ,                        !- On Cycle Loss Fraction to Zone
+    1.0,                     !- On Cycle Loss Fraction to Zone
     ,                        !- Peak Use Flow Rate {m3/s}
     ,                        !- Use Flow Rate Fraction Schedule Name
     ,                        !- Cold Water Supply Temperature Schedule Name
@@ -3774,7 +3774,7 @@
 
   Branch,
     SWHSys1 Supply Equipment Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     SWHSys1 Supply Equipment Bypass Pipe,  !- Component 1 Name
@@ -3789,7 +3789,7 @@
 
   Branch,
     SWHSys1 Supply Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     SWHSys1 Supply Outlet Pipe,  !- Component 1 Name
@@ -3830,7 +3830,7 @@
 
   Branch,
     SWHSys1 Demand Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     SWHSys1 Demand Inlet Pipe,  !- Component 1 Name
@@ -3845,7 +3845,7 @@
 
   Branch,
     SWHSys1 Demand Load Branch 1,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     WaterUse:Connections,    !- Component 1 Object Type
     Kitchen Water Equipment, !- Component 1 Name
@@ -3855,7 +3855,7 @@
 
   Branch,
     SWHSys1 Demand Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     SWHSys1 Demand Bypass Pipe,  !- Component 1 Name
@@ -3870,7 +3870,7 @@
 
   Branch,
     SWHSys1 Demand Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     SWHSys1 Demand Outlet Pipe,  !- Component 1 Name
