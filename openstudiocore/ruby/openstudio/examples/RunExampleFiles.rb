@@ -37,7 +37,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 
 # maximum simulations, may be nil
 max_simulations = nil

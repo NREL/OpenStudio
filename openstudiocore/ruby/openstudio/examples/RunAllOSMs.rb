@@ -37,7 +37,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 
 osmDir = OpenStudio::Path.new(ARGV[0])
 weatherFileDir = OpenStudio::system_complete(OpenStudio::Path.new(ARGV[1]))
