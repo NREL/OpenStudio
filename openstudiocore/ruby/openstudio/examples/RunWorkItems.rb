@@ -56,7 +56,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 
 # non-argument parameters
 log_level = 0 # Warn (Info = -1, Debug = -2, Trace = -3)
@@ -96,14 +95,10 @@ params.append("cleanoutfiles", "standard");
 workflow.add(params)
 
 # set up tools
-ep_hash = OpenStudio::EnergyPlus::find_energyplus(8, 3)
-ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s).parent_path
-tools = OpenStudio::Runmanager::ConfigOptions::makeTools(ep_path,
-                                                         OpenStudio::Path.new,
-                                                         OpenStudio::Path.new,
-                                                         $OpenStudio_RubyExeDir,
-                                                         OpenStudio::Path.new)
-workflow.add(tools)
+co = OpenStudio::Runmanager::ConfigOptions.new
+co.fastFindEnergyPlus()
+co.fastFindRuby()
+workflow.add(co.getTools)
 
 # run workflow
 weather_file_path = OpenStudio::Path.new

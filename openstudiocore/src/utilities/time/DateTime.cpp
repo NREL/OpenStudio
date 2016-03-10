@@ -49,6 +49,7 @@ double DateTime::localOffsetUTC()
 
 /// default constructor
 DateTime::DateTime()
+  : m_utcOffset(0.0)
 {
 }
 

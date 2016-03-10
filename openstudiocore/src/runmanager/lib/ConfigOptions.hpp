@@ -78,6 +78,9 @@ namespace runmanager {
       //! Automatically find tools and add them to the ConfigOptions
       bool findTools(bool t_showProgressDialog, bool t_onlyIfZeroTools=false, bool t_promptUser=false, bool t_checkQSettings=false);
 
+      //! Automatically find Ruby if it is in a well defined, known place, then add to ConfigOptions
+      void fastFindRuby();
+
       //! Automatically find EnergyPlus if it is in a well defined, known place, then add to ConfigOptions
       void fastFindEnergyPlus();
 
@@ -230,6 +233,10 @@ namespace runmanager {
     
     private:
       REGISTER_LOGGER("RunManager.ConfigOptions");
+
+      //! Returns a vector of paths that may contain Ruby
+      std::vector<openstudio::path> potentialRubyLocations() const;
+
       //! Returns a vector of paths that may contain EnergyPlus
       std::vector<openstudio::path> potentialEnergyPlusLocations() const;
 

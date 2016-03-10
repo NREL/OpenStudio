@@ -18,7 +18,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 require 'minitest/autorun'
 
 class AdvancedRubyWorkflow_Test < MiniTest::Unit::TestCase
@@ -28,19 +27,24 @@ class AdvancedRubyWorkflow_Test < MiniTest::Unit::TestCase
     # General setup
     epw_path = OpenStudio::Path.new($OpenStudio_ResourcePath + "runmanager/USA_CO_Golden-NREL.724666_TMY3.epw") 
 
+    # Get energyplus configuration
+    co = OpenStudio::Runmanager::ConfigOptions.new(true)
+    co.fastFindEnergyPlus()
+    co.fastFindRuby()
+    
     # Generate some reasonable output directory name
-    outdir = OpenStudio::tempDir() / OpenStudio::Path.new("rubyscriptexample2"); 
+    outdir = OpenStudio::tempDir() / OpenStudio::Path.new("rubyscriptexample2") 
     osm_path = outdir / OpenStudio::Path.new("in.osm") 
-    OpenStudio::Model::exampleModel().save(osm_path, true);
+    OpenStudio::Model::exampleModel().save(osm_path, true)
 
 
     # Create a new workflow. 
-    workflow = OpenStudio::Runmanager::Workflow.new();
+    workflow = OpenStudio::Runmanager::Workflow.new()
 
     # Create a new ruby job
-    rubyjobbuilder = OpenStudio::Runmanager::RubyJobBuilder.new();
+    rubyjobbuilder = OpenStudio::Runmanager::RubyJobBuilder.new()
     rubyscriptfile = OpenStudio::Path.new(File.expand_path(File.dirname(__FILE__))) / OpenStudio::Path.new("../rubyscripts/PerturbObject.rb")
-    puts "Script file set to: " + rubyscriptfile.to_s();
+    puts "Script file set to: " + rubyscriptfile.to_s()
     rubyjobbuilder.setScriptFile(rubyscriptfile)
     rubyjobbuilder.addInputFile(OpenStudio::Runmanager::FileSelection.new("last"),
                                 OpenStudio::Runmanager::FileSource.new("All"),
@@ -56,18 +60,12 @@ class AdvancedRubyWorkflow_Test < MiniTest::Unit::TestCase
     workflow.addJob(rubyjobbuilder.toWorkItem())
 
     # Set up the basic general tools needed. This takes care of EnergyPlus, XMLPreprocessor, Radiance, Ruby 
-    workflow.add(
-      OpenStudio::Runmanager::ConfigOptions::makeTools(OpenStudio::Path.new, 
-                                                       OpenStudio::Path.new, 
-                                                       OpenStudio::Path.new, 
-                                                       $OpenStudio_RubyExeDir,
-                                                       OpenStudio::Path.new)
-    )
+    workflow.add(co.getTools)
 
     # Create a second ruby job
-    rubyjobbuilder = OpenStudio::Runmanager::RubyJobBuilder.new();
+    rubyjobbuilder = OpenStudio::Runmanager::RubyJobBuilder.new()
     rubyscriptfile = OpenStudio::Path.new(File.expand_path(File.dirname(__FILE__))) / OpenStudio::Path.new("../rubyscripts/PerturbObject.rb")
-    puts "Script file set to: " + rubyscriptfile.to_s();
+    puts "Script file set to: " + rubyscriptfile.to_s()
     rubyjobbuilder.setScriptFile(rubyscriptfile)
     rubyjobbuilder.addInputFile(OpenStudio::Runmanager::FileSelection.new("last"),
                                 OpenStudio::Runmanager::FileSource.new("All"),
@@ -89,7 +87,7 @@ class AdvancedRubyWorkflow_Test < MiniTest::Unit::TestCase
     jobtree = workflow.create(outdir, osm_path, epw_path)
 
     # Queue it up
-    run_manager.enqueue(jobtree, true);
+    run_manager.enqueue(jobtree, true)
 
     # Run it out
     run_manager.waitForFinished()
