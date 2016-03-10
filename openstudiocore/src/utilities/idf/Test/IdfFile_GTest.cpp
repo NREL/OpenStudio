@@ -95,7 +95,7 @@ TEST_F(IdfFixture, IdfFile_Header) {
   file.setHeader(header);
   EXPECT_EQ("! Multi-line \n! Non-comment.",file.header());
 }
-
+/*
 TEST_F(IdfFixture, IdfFile_UnixLineEndings) {
   OptionalIdfFile oFile = IdfFile::load(resourcesPath()/toPath("utilities/Idf/UnixLineEndingTest.idf"));
   ASSERT_TRUE(oFile);
@@ -152,3 +152,4 @@ TEST_F(IdfFixture, IdfFile_ObjectComments) {
   ASSERT_TRUE(outFile?true:false);
   oFile->print(outFile);
 }
+*/
