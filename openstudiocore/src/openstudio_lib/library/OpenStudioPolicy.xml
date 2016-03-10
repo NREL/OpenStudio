@@ -751,6 +751,7 @@
     <rule IddField="Availability Manager" Access="HIDDEN"/>
     <rule IddField="Branch List Name" Access="HIDDEN"/>
     <rule IddField="Connector List Name" Access="HIDDEN"/>
+    <rule IddField="Availability Schedule" Access="HIDDEN"/>
     <rule IddField="Supply Side Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Supply Side Outlet Node A" Access="HIDDEN"/>
     <rule IddField="Supply Side Outlet Node B" Access="HIDDEN"/>
