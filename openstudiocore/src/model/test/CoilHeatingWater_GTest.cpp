@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -21,6 +21,8 @@
 #include "ModelFixture.hpp"
 #include "../CoilHeatingWater.hpp"
 #include "../CoilHeatingWater_Impl.hpp"
+#include "../ControllerWaterCoil.hpp"
+#include "../ControllerWaterCoil_Impl.hpp"
 #include "../ScheduleCompact.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../PlantLoop.hpp"
@@ -149,3 +151,16 @@ TEST_F(ModelFixture,CoilHeatingWater_remove4)
   ASSERT_EQ( (unsigned)3, airLoop.supplyComponents().size() );
   ASSERT_EQ( (unsigned)1, m.getModelObjects<CoilHeatingWater>().size() );
 }
+
+TEST_F(ModelFixture,CoilHeatingWater_controller)
+{
+  Model m; 
+  ScheduleCompact s(m);
+  CoilHeatingWater coil(m,s); 
+
+  ControllerWaterCoil controller(m);
+  controller.getImpl<detail::ControllerWaterCoil_Impl>()->setWaterCoil(coil);
+
+  EXPECT_TRUE(coil.controllerWaterCoil());
+}
+

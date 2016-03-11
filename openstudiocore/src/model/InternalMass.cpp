@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -113,6 +113,14 @@ namespace detail {
 
   bool InternalMass_Impl::isMultiplierDefaulted() const {
     return isEmpty(OS_InternalMassFields::Multiplier);
+  }
+
+  bool InternalMass_Impl::isAbsolute() const {
+    InternalMassDefinition definition = internalMassDefinition();
+    if (definition.surfaceArea()) {
+      return true;
+    }
+    return false;
   }
 
   bool InternalMass_Impl::setMultiplier(double multiplier) {

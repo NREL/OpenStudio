@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -830,13 +830,24 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     }
   case openstudio::IddObjectType::ZoneAirHeatBalanceAlgorithm:
     {
+      // DLM: why is this commented out?
       //modelObject = translateZoneAirHeatBalanceAlgorithm(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::ZoneAirMassFlowConservation:
+  {
+    modelObject = translateZoneAirMassFlowConservation(workspaceObject);
+    break;
+  }
   case openstudio::IddObjectType::ZoneControl_Thermostat :
     {
       break; // no-op
     }
+  case openstudio::IddObjectType::ZoneCrossMixing:
+  {
+    modelObject = translateZoneCrossMixing(workspaceObject);
+    break;
+  }
   case openstudio::IddObjectType::ZoneHVAC_EquipmentList :
     {
       //modelObject = translateZoneHVACEquipmentList(workspaceObject);
@@ -862,6 +873,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateZone(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::ZoneMixing:
+  {
+    modelObject = translateZoneMixing(workspaceObject);
+    break;
+  }
   case openstudio::IddObjectType::ZoneVentilation_DesignFlowRate :
     {
       modelObject = translateZoneVentilationDesignFlowRate(workspaceObject);

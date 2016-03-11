@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -525,7 +525,7 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_Analysis2_NoSimulate_Roundtrip
   }
   EXPECT_EQ(0u,formulationCopy.dataPoints().size());
 }
-
+/*
 TEST_F(AnalysisFixture, PatExportRun)
 {
   openstudio::path patdir = resourcesPath() / openstudio::toPath("analysis") / openstudio::toPath("pat_export");
@@ -593,3 +593,4 @@ TEST_F(AnalysisFixture, PatExportRun)
 
   EXPECT_FALSE(dataPoint.failed());
 }
+*/

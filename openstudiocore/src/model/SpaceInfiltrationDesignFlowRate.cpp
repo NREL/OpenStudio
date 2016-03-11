@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -137,6 +137,14 @@ namespace detail {
       result = this->setSchedule(*schedule);
     }
     return result;
+  }
+
+  bool SpaceInfiltrationDesignFlowRate_Impl::isAbsolute() const
+  {
+    if (designFlowRate()){
+      return true;
+    }
+    return false;
   }
 
   std::string SpaceInfiltrationDesignFlowRate_Impl::designFlowRateCalculationMethod() const {

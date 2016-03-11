@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -131,7 +131,7 @@ class UTILITIES_API Unit {
   void setBaseUnitExponent(const std::string& baseUnit,int exponent);
 
   /// Scale getter.
-  const Scale& scale() const;
+  Scale scale() const;
 
   /** Sets the scale to the one registered in ScaleFactory for 10^scaleExponent. Returns true
    *  if successful, false if no Scale with exponent == scaleExponent exists in ScaleFactory.

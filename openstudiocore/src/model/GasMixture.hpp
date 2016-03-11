@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -62,7 +62,7 @@ class MODEL_API GasMixture : public GasLayer {
   /** @name Static Methods */
   //@{
 
-  static const std::vector<std::string>& validGasTypes();
+  static std::vector<std::string> validGasTypes();
 
   static IddObjectType iddObjectType();
 

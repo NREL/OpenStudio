@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -43,7 +43,7 @@ class OSDoubleEdit2: public QLineEdit {
 
   OSDoubleEdit2(QWidget * parent = nullptr);
 
-  virtual ~OSDoubleEdit2() {}
+  virtual ~OSDoubleEdit2();
 
   void enableClickFocus() { this->m_hasClickFocus = true; }
 

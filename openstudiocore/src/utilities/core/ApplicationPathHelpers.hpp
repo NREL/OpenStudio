@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -79,6 +79,9 @@ namespace openstudio {
 
   /// \returns The path to the packaged EnergyPlus executable.
   UTILITIES_API openstudio::path getEnergyPlusExecutable();
+
+  /// \returns The packaged Radiance installation if it exists.
+  UTILITIES_API boost::optional<openstudio::path> getRadianceDirectory();
 
 } // openstudio
 

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -269,7 +269,7 @@ void InspectorGadget::clear(bool recursive)
   }
 
   // This line is commented out to prevent a crash when displaying the Inspector Gadget
-  // within SketchUp 2015.  We have no idea why this works or what repercussions it may cause
+  // within SketchUp 2016.  We have no idea why this works or what repercussions it may cause
   //m_workspaceObj.reset();
 }
 
@@ -710,6 +710,9 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
       text->setValidator( valid );
     }
 
+    if (s == "m(m<sup>2</sup>)") {
+      s = "cm<sup>2</sup>";
+    }
     QLabel* units = new QLabel( s.c_str(), parent );
     units->setTextFormat(Qt::RichText);
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -113,6 +113,14 @@ class MODEL_API Model : public openstudio::Workspace {
   /** Get an always on schedule with discrete type limits if there is one.
    *  create a new schedule if necessary and add it to the model */
   Schedule alwaysOnDiscreteSchedule() const;
+
+  /** Get an always off schedule with discrete type limits if there is one.
+   *  create a new schedule if necessary and add it to the model */
+  Schedule alwaysOffDiscreteSchedule() const;
+
+  /** Get an always on schedule with continuous type limits if there is one.
+  *  create a new schedule if necessary and add it to the model */
+  Schedule alwaysOnContinuousSchedule() const;
 
   /** Get the space type used for plenums if there is one.
    *  Create a new space type if necessary and add it to the model */
@@ -401,7 +409,7 @@ bool MODEL_API compareInputAndOutput(const ModelObject& object,
                                      double inputResult,
                                      double outputResult,
                                      double tol,
-                                     LogLevel logLevel=Debug);
+                                     LogLevel logLevel=LogLevel::Debug);
 
 /// Returns an example model useful for testing.
 MODEL_API Model exampleModel();

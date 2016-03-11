@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
 #ifndef MODEL_CHILLERABSORPTIONINDIRECT_IMPL_HPP
 #define MODEL_CHILLERABSORPTIONINDIRECT_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/WaterToWaterComponent_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "WaterToWaterComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -54,9 +54,9 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
@@ -186,13 +186,15 @@ namespace detail {
     /** @name Other */
     //@{
 
-    unsigned supplyInletPort();
-    unsigned supplyOutletPort();
-    unsigned demandInletPort();
-    unsigned demandOutletPort();
+    unsigned supplyInletPort() override;
+    unsigned supplyOutletPort() override;
+    unsigned demandInletPort() override;
+    unsigned demandOutletPort() override;
+    unsigned tertiaryInletPort() const override;
+    unsigned tertiaryOutletPort() const override;
 
-    std::vector<ModelObject> children() const;
-    ModelObject clone(Model model) const;
+    std::vector<ModelObject> children() const override;
+    ModelObject clone(Model model) const override;
 
     //@}
    protected:

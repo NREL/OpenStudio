@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -39,6 +39,7 @@
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
+#include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../utilities/idf/ValidityReport.hpp"
 #include "../utilities/core/PathHelpers.hpp"
@@ -47,6 +48,7 @@
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
+#include "../utilities/units/QuantityConverter.hpp"
 #include <utilities/idd/OS_ComponentData_FieldEnums.hxx>
 #include "../utilities/math/FloatCompare.hpp"
 
@@ -94,7 +96,14 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.5.4")] = &VersionTranslator::update_1_5_3_to_1_5_4;
   m_updateMethods[VersionString("1.7.2")] = &VersionTranslator::update_1_7_1_to_1_7_2;
   m_updateMethods[VersionString("1.7.5")] = &VersionTranslator::update_1_7_4_to_1_7_5;
-  m_updateMethods[VersionString("1.8.0")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.8.4")] = &VersionTranslator::update_1_8_3_to_1_8_4;
+  m_updateMethods[VersionString("1.8.5")] = &VersionTranslator::update_1_8_4_to_1_8_5;
+  m_updateMethods[VersionString("1.9.0")] = &VersionTranslator::update_1_8_5_to_1_9_0;
+  m_updateMethods[VersionString("1.9.3")] = &VersionTranslator::update_1_9_2_to_1_9_3;
+  m_updateMethods[VersionString("1.9.5")] = &VersionTranslator::update_1_9_4_to_1_9_5;
+  m_updateMethods[VersionString("1.10.0")] = &VersionTranslator::update_1_9_5_to_1_10_0;
+  m_updateMethods[VersionString("1.10.2")] = &VersionTranslator::update_1_10_1_to_1_10_2;
+  m_updateMethods[VersionString("1.10.5")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -176,6 +185,23 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.7.3"));
   m_startVersions.push_back(VersionString("1.7.4"));
   m_startVersions.push_back(VersionString("1.7.5"));
+  m_startVersions.push_back(VersionString("1.8.0"));
+  m_startVersions.push_back(VersionString("1.8.1"));
+  m_startVersions.push_back(VersionString("1.8.2"));
+  m_startVersions.push_back(VersionString("1.8.3"));
+  m_startVersions.push_back(VersionString("1.8.4"));
+  m_startVersions.push_back(VersionString("1.8.5"));
+  m_startVersions.push_back(VersionString("1.9.0"));
+  m_startVersions.push_back(VersionString("1.9.1"));
+  m_startVersions.push_back(VersionString("1.9.2"));
+  m_startVersions.push_back(VersionString("1.9.3"));
+  m_startVersions.push_back(VersionString("1.9.4"));
+  m_startVersions.push_back(VersionString("1.9.5"));
+  m_startVersions.push_back(VersionString("1.10.0"));
+  m_startVersions.push_back(VersionString("1.10.1"));
+  m_startVersions.push_back(VersionString("1.10.2"));
+  m_startVersions.push_back(VersionString("1.10.3"));
+  m_startVersions.push_back(VersionString("1.10.4"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -424,6 +450,42 @@ void VersionTranslator::initializeMap(std::istream& is) {
   IddFileAndFactoryWrapper iddFile = getIddFile(currentVersion);
   if (iddFile.iddFileType() == IddFileType::UserCustom) {
     oIdfFile = IdfFile::load(is,iddFile.iddFile());
+    if( currentVersion == VersionString(1,9,0) ) {
+      if( oIdfFile ) {
+        auto sizingObjects = oIdfFile->getObjectsByType(iddFile.getObject("OS:Sizing:Zone").get());
+
+        // Figure out if the OS:Sizing:Zone object looks like it is from CBECC
+        // it will have extra fields that would were not in the "real" 1.9.0 IDD
+        bool fromCBECC = false;
+        for( auto const & object : sizingObjects ) {
+          if( auto value = object.getString(2) ) {
+            if( istringEqual("SupplyAirTemperature", value.get()) ||
+                istringEqual("TemperatureDifference", value.get()) ) {
+              fromCBECC = true;
+              break;
+            }
+          }
+        }
+
+        if( fromCBECC ) {
+          // Remove the sizing objects so that the translation will proceed smoothly
+          oIdfFile->removeObjects(sizingObjects);
+
+          // Get a special CBECC idd file,
+          // load the idf file again against that idd,
+          // get the sizing objects and save them for later,
+          // we will reintrodce the sizing objects in the version 1.10.2 phase of the translation
+          // when they were officially part of OS
+          auto cbeccIddFile = IddFile::load( getSharedResourcesPath() / "osversion/1_9_0_CBECC/OpenStudio.idd");
+          OS_ASSERT(cbeccIddFile);
+          is.seekg(0, std::ios::beg);
+          auto cbeccIdfFile = IdfFile::load(is,cbeccIddFile.get());
+          OS_ASSERT(cbeccIdfFile);
+          m_cbeccSizingObjects = cbeccIdfFile->getObjectsByType(cbeccIddFile->getObject("OS:Sizing:Zone").get());
+        }
+
+      }
+    }
   }
   else {
     oIdfFile = IdfFile::load(is,iddFile.iddFileType());
@@ -2539,6 +2601,540 @@ std::string VersionTranslator::update_1_7_4_to_1_7_5(const IdfFile& idf_1_7_4, c
     } else {
       ss << object;
     }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_8_3_to_1_8_4(const IdfFile& idf_1_8_3, const IddFileAndFactoryWrapper& idd_1_8_4)
+{
+  std::stringstream ss;
+
+  ss << idf_1_8_3.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_8_4.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_1_8_3.objects()) {
+    auto iddname = object.iddObject().name();
+    if (iddname == "OS:PlantLoop") {
+      auto iddObject = idd_1_8_4.getObject("OS:PlantLoop");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < 4; ++i ) {
+        if( auto s = object.getString(i) ) {
+          newObject.setString(i,s.get());
+        }
+      }
+
+      for( size_t i = 5; i < 23; ++i ) {
+        if( auto s = object.getString(i) ) {
+          newObject.setString(i + 2,s.get());
+        }
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else if (iddname == "OS:AirLoopHVAC") {
+      auto iddObject = idd_1_8_4.getObject("OS:AirLoopHVAC");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      // Handle
+      if( auto value = object.getString(0) ) {
+        newObject.setString(0,value.get());
+      }
+
+      // Name
+      if( auto value = object.getString(1) ) {
+        newObject.setString(1,value.get());
+      }
+
+      // Controller List Name
+      // Not used
+
+      // AvailabilityManagerAssignmentList
+      auto availabilityManagerListHandle = object.getString(3);
+      OS_ASSERT(availabilityManagerListHandle);
+      auto availabilityManagerList = idf_1_8_3.getObject(toUUID(availabilityManagerListHandle.get()));
+      OS_ASSERT(availabilityManagerList);
+
+      auto availabilityManagerScheduledHandle = availabilityManagerList->getString(2);
+      OS_ASSERT(availabilityManagerScheduledHandle);
+      auto availabilityManagerScheduled = idf_1_8_3.getObject(toUUID(availabilityManagerScheduledHandle.get()));
+      OS_ASSERT(availabilityManagerScheduled);
+
+      auto availabilityScheduleHandle = availabilityManagerScheduled->getString(2);
+      OS_ASSERT(availabilityScheduleHandle);
+      auto availabilitySchedule = idf_1_8_3.getObject(toUUID(availabilityScheduleHandle.get()));
+      OS_ASSERT(availabilitySchedule);
+
+      auto availabilityManagerNightCycleHandle = availabilityManagerList->getString(3);
+      OS_ASSERT(availabilityManagerNightCycleHandle);
+      auto availabilityManagerNightCycle = idf_1_8_3.getObject(toUUID(availabilityManagerNightCycleHandle.get()));
+      OS_ASSERT(availabilityManagerNightCycle);
+
+      auto controlType = availabilityManagerNightCycle->getString(4);
+
+      // Availability Schedule
+      newObject.setString(3,toString(availabilitySchedule->handle()));
+
+      // Availability Manager
+      if( controlType && (istringEqual("CycleOnAny",controlType.get()) || istringEqual("CycleOnControlZone",controlType.get()) || istringEqual("CycleOnAnyZoneFansOnly",controlType.get())) ) {
+        newObject.setString(4,toString(availabilityManagerNightCycle->handle()));
+      }
+
+      // All the remaining fields are unchanged but shifted down one to account for new field
+      for( size_t i = 4; i < 15; ++i ) {
+        if( auto value = object.getString(i) ) {
+          newObject.setString(i + 1,value.get());
+        }
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else if(iddname == "OS:AvailabilityManager:Scheduled") {
+      m_deprecated.push_back(object);
+    } else if(iddname == "OS:AvailabilityManagerAssignmentList") {
+      m_deprecated.push_back(object);
+    } else if(iddname == "OS:AvailabilityManager:NightCycle") {
+      auto controlType = object.getString(4);
+      if( controlType && (istringEqual("CycleOnAny",controlType.get()) || istringEqual("CycleOnControlZone",controlType.get()) || istringEqual("CycleOnAnyZoneFansOnly",controlType.get())) ) {
+        ss << object;
+      } else {
+        m_deprecated.push_back(object);
+      } 
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_8_4_to_1_8_5(const IdfFile& idf_1_8_4, const IddFileAndFactoryWrapper& idd_1_8_5)
+{
+  std::stringstream ss;
+
+  ss << idf_1_8_4.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_8_5.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_1_8_4.objects()) {
+    auto iddname = object.iddObject().name();
+    if (iddname == "OS:SetpointManager:Scheduled") {
+      if( (! object.getString(2)) || object.getString(2).get().empty()  ) {
+        auto iddObject = idd_1_8_5.getObject("OS:SetpointManager::Scheduled");
+        OS_ASSERT(iddObject);
+        IdfObject newObject(iddObject.get());
+
+        for( size_t i = 0; i < 5; ++i ) {
+          if( i == 2 ) {
+            newObject.setString(i,"Temperature");
+          } else if( auto s = object.getString(i) ) {
+            newObject.setString(i,s.get());
+          }
+        }
+        ss << newObject;
+      } else {
+        ss << object;
+      }
+    } else if (iddname == "OS:PlantLoop") {
+      if( (! object.getString(20)) || object.getString(20).get().empty()  ) {
+        auto iddObject = idd_1_8_5.getObject("OS:PlantLoop");
+        OS_ASSERT(iddObject);
+        IdfObject newObject(iddObject.get());
+
+        for( size_t i = 0; i < 25; ++i ) {
+          if( i == 20 ) {
+            newObject.setString(i,"Optimal");
+          } else if( auto s = object.getString(i) ) {
+            newObject.setString(i,s.get());
+          }
+        }
+        ss << newObject;
+      } else {
+        ss << object;
+      }
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_8_5_to_1_9_0(const IdfFile& idf_1_8_5, const IddFileAndFactoryWrapper& idd_1_9_0)
+{
+  std::stringstream ss;
+
+  ss << idf_1_8_5.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_9_0.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_1_8_5.objects()) {
+    auto iddname = object.iddObject().name();
+    if (iddname == "OS:SpaceInfiltration:EffectiveLeakageArea") {
+      auto iddObject = idd_1_9_0.getObject("OS:SpaceInfiltration:EffectiveLeakageArea");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( i == 4 ) {
+          if( auto value = object.getDouble(i) ) {
+            newObject.setDouble(i,convert(value.get(),"m^2","cm^2").get());
+          }
+        } else if( auto s = object.getString(i) ) {
+          newObject.setString(i,s.get());
+        }
+      }
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_9_2_to_1_9_3(const IdfFile& idf_1_9_2, const IddFileAndFactoryWrapper& idd_1_9_3)
+{
+  std::stringstream ss;
+
+  ss << idf_1_9_2.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_9_3.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_1_9_2.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:EvaporativeCooler:Direct:ResearchSpecial") {
+      auto iddObject = idd_1_9_3.getObject("OS:EvaporativeCooler:Direct:ResearchSpecial");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+      for (size_t i = 0; i < object.numNonextensibleFields(); ++i) {
+        if (i < 5) {
+          if (auto value = object.getString(i)) {
+            newObject.setString(i, value.get());
+          }
+        } else if (i == 5) {
+          if (auto value = object.getString(i)) {
+            newObject.setString(i + 1, value.get());
+          }
+          newObject.setString(i, "Autosize");
+        } else {
+          if (auto value = object.getString(i)) {
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+      ss << newObject;
+      m_refactored.push_back(std::pair<IdfObject, IdfObject>(object, newObject));
+    
+    }else if (iddname == "OS:ZoneAirMassFlowConservation") {
+      auto iddObject = idd_1_9_3.getObject("OS:ZoneAirMassFlowConservation");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      if (auto value = object.getString(0)) { // Handle -> Handle
+        newObject.setString(0, value.get());
+      }
+      if (auto value = object.getString(1)) { // Adjust Zone Mixing For Zone Air Mass Flow Balance -> Adjust Zone Mixing For Zone Air Mass Flow Balance
+        newObject.setString(1, value.get());
+      } else{
+        // old default was Yes, new default is No
+      }
+      if (auto value = object.getString(2)) { // Source Zone Infiltration Treatment -> Infiltration Balancing Method
+        // old default was AddInfiltrationFlow, new default is AddInfiltrationFlow
+        // old keys AddInfiltrationFlow, AdjustInfiltrationFlow
+        // new keys AddInfiltrationFlow, AdjustInfiltrationFlow, None
+        newObject.setString(2, value.get());
+      }
+      // new field Infiltration Balancing Zones is defaulted to MixingSourceZonesOnly
+      ss << newObject;
+      m_refactored.push_back(std::pair<IdfObject, IdfObject>(object, newObject));
+    }else if (iddname == "OS:AirTerminal:SingleDuct:VAV:Reheat") {
+      auto iddObject = idd_1_9_3.getObject("OS:AirTerminal:SingleDuct:VAV:Reheat");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( auto value = object.getString(i) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      newObject.setString(18,"No");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else if (iddname == "OS:AirTerminal:SingleDuct:VAV:NoReheat") {
+      auto iddObject = idd_1_9_3.getObject("OS:AirTerminal:SingleDuct:VAV:NoReheat");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( auto value = object.getString(i) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      newObject.setString(10,"No");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_9_4_to_1_9_5(const IdfFile& idf_1_9_4, const IddFileAndFactoryWrapper& idd_1_9_5)
+{
+  std::stringstream ss;
+
+  ss << idf_1_9_4.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_9_5.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_1_9_4.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:Controller:WaterCoil") {
+      auto iddObject = idd_1_9_5.getObject("OS:Controller:WaterCoil");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0,j = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( auto value = object.getString(i) ) {
+          newObject.setString(j,value.get());
+        }
+        if( i == 1 ) {
+          // new field after i = 1
+          ++j;
+        }
+        ++j;
+      }
+
+      // Figure out value of new field j = 2
+      // This is the handle of the associated water coil
+      // Past versions made this connection by matching the controller actuator node 
+      // to the coil water inlet node.
+      // To do this version translation we have to track down that node
+      if( auto actuatorNodeHandle = object.getString(6) ) {
+        auto coilHandle = [&](const IddObject & type, unsigned waterInletIndex){
+          boost::optional<std::string> result;
+          auto coils = idf_1_9_4.getObjectsByType(type);
+          for( const auto & coil : coils ) {
+            // waterInletConnection will be a handle to a connection object
+            if( auto waterInletConnectionHandle = coil.getString(waterInletIndex) ) {
+              if( auto waterInletConnection = idf_1_9_4.getObject(Handle(QString::fromStdString(waterInletConnectionHandle.get()))) ) {
+                if( auto sourceHandle = waterInletConnection->getString(2) ) {
+                  if( sourceHandle.get() == actuatorNodeHandle.get() ) {
+                    result = coil.handle().toString().toStdString();
+                    break;
+                  }
+                }
+              }
+            }
+          }
+          return result;
+        };
+        if( auto handle = coilHandle(idf_1_9_4.iddFile().getObject("OS:Coil:Cooling:Water").get(),10) ) {
+          newObject.setString(2,handle.get());
+        } else if( auto handle = coilHandle(idf_1_9_4.iddFile().getObject("OS:Coil:Heating:Water").get(),5) ) {
+          newObject.setString(2,handle.get());
+        }
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_9_5_to_1_10_0(const IdfFile& idf_1_9_5, const IddFileAndFactoryWrapper& idd_1_10_0)
+{
+  std::stringstream ss;
+
+  ss << idf_1_9_5.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_10_0.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_1_9_5.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:AirTerminal:SingleDuct:VAV:Reheat") {
+      auto iddObject = idd_1_10_0.getObject("OS:AirTerminal:SingleDuct:VAV:Reheat");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( auto value = object.getString(i) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      // This is a redo because some models didn't get updated by the logic in
+      // 1.9.2 -> 1.9.3
+      {
+        auto controlForOA = object.getString(18);
+        if( (! controlForOA) || controlForOA->empty() ) {
+          newObject.setString(18,"No");
+        }
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else if (iddname == "OS:AirTerminal:SingleDuct:VAV:NoReheat") {
+      auto iddObject = idd_1_10_0.getObject("OS:AirTerminal:SingleDuct:VAV:NoReheat");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( auto value = object.getString(i) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      newObject.setString(10,"No");
+      // This is a redo because some models didn't get updated by the logic in
+      // 1.9.2 -> 1.9.3
+      {
+        auto controlForOA = object.getString(10);
+        if( (! controlForOA) || controlForOA->empty() ) {
+          newObject.setString(10,"No");
+        }
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_10_1_to_1_10_2(const IdfFile& idf_1_10_1, const IddFileAndFactoryWrapper& idd_1_10_2) {
+
+  std::stringstream ss;
+
+  ss << idf_1_10_1.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_10_2.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  auto zones = idf_1_10_1.getObjectsByType(idf_1_10_1.iddFile().getObject("OS:ThermalZone").get());
+
+  for (const IdfObject& object : idf_1_10_1.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:ThermostatSetpoint:DualSetpoint") {
+      // Get all of the zones that point to this thermostat
+      std::vector<IdfObject> referencingZones;
+      for( const auto & zone : zones ) {
+        if( auto thermostatHandle = zone.getString(19) ) {
+          if( toUUID(thermostatHandle.get()) == object.handle() ) {
+            referencingZones.push_back(zone);
+          }
+        }
+      }
+
+      // Clone the thermostat for every zone after the first
+      if( referencingZones.size() > 1u ) {
+        for( auto & referencingZone : referencingZones ) {
+          // This will leave the original thermostate hanging out alone in most circumstances
+          // but since we are messing with the name it is probably best
+          auto newThermostat = object.clone();
+          newThermostat.setName(referencingZone.nameString() + " Thermostat");
+          ss << newThermostat;
+          m_new.push_back(newThermostat);
+          auto newHandle = newThermostat.getString(0).get();
+          referencingZone.setString(19,newHandle); 
+        }
+      }
+      ss << object;
+    } else if (iddname == "OS:Sizing:Zone") {
+      auto iddObject = idd_1_10_2.getObject("OS:Sizing:Zone");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      size_t newi = 0;
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( i == 2 ) {
+          newObject.setString(newi,"SupplyAirTemperature");
+          ++newi;
+          if( auto value = object.getString(i) ) {
+            newObject.setString(newi,value.get());
+          }
+          ++newi;
+          newObject.setDouble(newi,11.11);
+        } else if( i == 3 ) {
+          newObject.setString(newi,"SupplyAirTemperature");
+          ++newi;
+          if( auto value = object.getString(i) ) {
+            newObject.setString(newi,value.get());
+          }
+          ++newi;
+          newObject.setDouble(newi,11.11);
+        } else if( auto value = object.getString(i) ) {
+          newObject.setString(newi,value.get());
+        }
+        ++newi;
+      }
+
+      newObject.setString(24,"No");
+      newObject.setString(25,"NeutralSupplyAir");
+      newObject.setString(26,"Autosize");
+      newObject.setString(27,"Autosize");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else {
+      ss << object;
+    }
+  }
+
+  // Reintroduce m_cbeccSizingObjects 
+  for( auto const & sizingObject : m_cbeccSizingObjects ) {
+    auto iddObject = idd_1_10_2.getObject("OS:Sizing:Zone");
+    OS_ASSERT(iddObject);
+    IdfObject newObject(iddObject.get());
+
+    for( size_t i = 0; i < sizingObject.numNonextensibleFields(); ++i ) {
+      if( auto value = sizingObject.getString(i) ) {
+        newObject.setString(i,value.get());
+      }
+    }
+    newObject.setString(24,"No");
+    newObject.setString(25,"NeutralSupplyAir");
+    newObject.setString(26,"Autosize");
+    newObject.setString(27,"Autosize");
+
+    m_new.push_back( newObject );
+    ss << newObject;
   }
 
   return ss.str();

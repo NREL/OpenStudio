@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -326,29 +326,7 @@ namespace openstudio {
       modified = true;
     }
 
-    boost::optional<model::WeatherFile> weatherFile = model.getOptionalUniqueModelObject<model::WeatherFile>();
-    if (weatherFile){
-      LOG_FREE(Debug, "updateModelTempDir", "existing weather file found in osm");
-      boost::optional<openstudio::path> epwPath = weatherFile->path();
-      if (epwPath){
-        LOG_FREE(Debug, "updateModelTempDir", "existing weather file path: " << toString(*epwPath));
-        if (epwPath->is_complete() || (!epwPath->empty() && toString(*epwPath->begin()) != "files"))
-        {
-          LOG_FREE(Debug, "updateModelTempDir", "existing weather file path is not relative to osmfolder: " << toString(modelTempDir));
-          openstudio::path newPath = modelTempDir / toPath("resources/files") / epwPath->filename();
-          try {
-            boost::filesystem::copy_file(*epwPath, newPath, boost::filesystem::copy_option::overwrite_if_exists);
-            EpwFile epwFile(newPath);
-            boost::optional<openstudio::model::WeatherFile> newweatherfile = openstudio::model::WeatherFile::setWeatherFile(model, epwFile);
-            newweatherfile->makeUrlRelative(modelTempDir / toPath("resources"));
-            LOG_FREE(Debug, "updateModelTempDir", "existing weather file moved to new location: " << toString(newPath));
-            modified = true;
-          } catch (...) {
-            LOG_FREE(Error, "updateModelTempDir", "Unable to copy file from " << toString(*epwPath) << " to " << toString(newPath));
-          }
-        }
-      }
-    }
+    // weather file is fixed in OSDocument::fixWeatherFileOnOpen
 
     return modified;
   }
@@ -415,8 +393,9 @@ namespace openstudio {
     // DLM: eventually put saveRunManagerDatabase here, needs to happen before saveModelTempDir
 
     // DLM: eventually add this back in too
+    // DLM: for now this is accomplished by calling saveModelTempDir after saveModel in all cases
     //saveModelTempDir(modelTempDir, modelPath);
-    
+
     return modelPath;
   }
 
@@ -425,8 +404,8 @@ namespace openstudio {
     removeDir(toQString(modelTempDir));
   }
 
-  bool saveRunManagerDatabase(const openstudio::path& osmPath, const openstudio::path& modelTempDir,                               
-                              bool useRadianceForDaylightingCalculations,
+  bool saveRunManagerDatabase(const openstudio::path& osmPath, const openstudio::path& modelTempDir,
+                              std::vector <double> useRadianceForDaylightingCalculations,
                               QWidget* parent)
   {
     return saveRunManagerDatabase(osmPath, modelTempDir, std::map<openstudio::path,std::vector<ruleset::UserScriptInfo> >(), 
@@ -435,7 +414,7 @@ namespace openstudio {
 
   bool saveRunManagerDatabase(const openstudio::path& osmPath, const openstudio::path& modelTempDir, 
                               const std::map<openstudio::path,std::vector<ruleset::UserScriptInfo> >& userScriptsByFolder, 
-                              bool useRadianceForDaylightingCalculations,
+                              std::vector <double> useRadianceForDaylightingCalculations,
                               QWidget* parent)
   {
     bool newToolsFound = false;
@@ -471,7 +450,7 @@ namespace openstudio {
 
       bool ruby_jobs_skipped = wf.addStandardWorkflow(scriptsDir, ruby_installed, getOpenStudioRubyIncludePath(), 
                                                       userScriptsByFolder, 
-                                                      useRadianceForDaylightingCalculations, 
+                                                      useRadianceForDaylightingCalculations.size() > 0, 
                                                       radiancePath,
                                                       modelTempDir / toPath("resources"), true);
       if (ruby_jobs_skipped)
@@ -529,7 +508,7 @@ namespace openstudio {
   }
 
   void startRunManager(openstudio::runmanager::RunManager& rm, const openstudio::path& osmPath, const openstudio::path& modelTempDir,
-      bool useRadianceForDaylightingCalculations, bool requireCalibrationReports, QWidget* parent)
+                       std::vector <double> useRadianceForDaylightingCalculations, bool requireCalibrationReports, QWidget* parent)
   {
 //    openstudio::path rmdbPath = modelTempDir / toPath("resources/run.db");
     openstudio::path simulationDir = toPath("run");
@@ -582,7 +561,7 @@ namespace openstudio {
           bool test = addReportingMeasureWorkItem(workitems, calibrationReportsMeasure);
           OS_ASSERT(test);
         }
-
+        /*
         // check if we need to use radiance
         if (useRadianceForDaylightingCalculations)
         {
@@ -613,7 +592,7 @@ namespace openstudio {
                 QMessageBox::Ok);
           }
         }
-
+        */
         // add the report request measure before energyplus but after any other energyplus measures
         test = addReportRequestMeasureWorkItem(workitems, reportRequestMeasure);
         OS_ASSERT(test);
@@ -674,26 +653,6 @@ namespace openstudio {
           e.what(),
           QMessageBox::Ok);
     }
-  }
-
-  bool usesRadianceForDaylightCalculations(openstudio::runmanager::RunManager rm)
-  {
-    std::vector<openstudio::runmanager::Job> jobs = rm.getJobs();
-
-    for (std::vector<openstudio::runmanager::Job>::const_iterator itr = jobs.begin();
-         itr != jobs.end();
-         ++itr)
-    {
-      if (itr->jobType() == openstudio::runmanager::JobType::Ruby)
-      {
-        if (!itr->allInputFiles().getAllByFilename("DaylightCalculations.rb").files().empty())
-        {
-          return true;
-        }
-      }
-    }
-
-    return false;
   }
 
   bool findBCLMeasureWorkItem(const std::vector<runmanager::WorkItem>& workItems, const openstudio::UUID& uuid)

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -18,12 +18,12 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/ChillerAbsorptionIndirect.hpp>
-#include <model/PlantLoop_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Node.hpp>
+#include "ModelFixture.hpp"
+#include "../ChillerAbsorptionIndirect.hpp"
+#include "../PlantLoop_Impl.hpp"
+#include "../PlantLoop.hpp"
+#include "../Node_Impl.hpp"
+#include "../Node.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -71,17 +71,22 @@ TEST_F(ModelFixture,ChillerAbsorptionIndirect)
       EXPECT_EQ(7u,condenserPlant.demandComponents().size());
     }
 
-    //{
-    //  PlantLoop generatorPlant(m);
-    //  auto node = generatorPlant.demandInletNode();
-    //  EXPECT_TRUE(chiller.addToTertiaryNode(node));
-    //  auto plant = chiller.tertiaryPlantLoop();
-    //  EXPECT_TRUE(plant);
-    //  if( plant ) {
-    //    EXPECT_EQ(generatorPlant.handle(),plant->handle());
-    //  }
+    {
+      PlantLoop generatorPlant(m);
+      auto node = generatorPlant.demandInletNode();
+      EXPECT_TRUE(chiller.addToTertiaryNode(node));
+      auto plant = chiller.tertiaryPlantLoop();
+      EXPECT_TRUE(plant);
+      if( plant ) {
+        EXPECT_EQ(generatorPlant.handle(),plant->handle());
+      }
 
-    //  EXPECT_EQ(7u,generatorPlant.demandComponents().size());
-    //}
+      EXPECT_EQ(7u,generatorPlant.demandComponents().size());
+
+      EXPECT_TRUE( chiller.removeFromTertiaryPlantLoop() );
+      plant = chiller.tertiaryPlantLoop();
+      EXPECT_FALSE(plant);
+      EXPECT_EQ(5u,generatorPlant.demandComponents().size());
+    }
   }
 }

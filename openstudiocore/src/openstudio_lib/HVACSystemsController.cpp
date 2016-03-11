@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -711,6 +711,14 @@ void HVACSystemsController::addToModel(AddToModelEnum addToModelEnum)
     case ADDTOMODEL_AIRLOOPHVAC:
     {
       model::AirLoopHVAC airLoopHVAC(m_model);
+
+      loop = airLoopHVAC;
+
+      break;
+    }
+    case ADDTOMODEL_DUAL_AIRLOOPHVAC:
+    {
+      model::AirLoopHVAC airLoopHVAC(m_model,true);
 
       loop = airLoopHVAC;
 

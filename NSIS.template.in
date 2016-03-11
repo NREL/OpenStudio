@@ -39,7 +39,7 @@
   VIProductVersion "@CPACK_PACKAGE_VERSION@.0"
   VIAddVersionKey ProductName "@CPACK_PACKAGE_INSTALL_DIRECTORY@"
   VIAddVersionKey CompanyName "NREL"
-  VIAddVersionKey LegalCopyright "Copyright (c) 2015 National Renewable Energy Laboratory"
+  VIAddVersionKey LegalCopyright "Copyright (c) 2016 National Renewable Energy Laboratory"
   VIAddVersionKey FileDescription "@CPACK_PACKAGE_INSTALL_DIRECTORY@"
   VIAddVersionKey FileVersion "@CPACK_PACKAGE_VERSION@"
   VIAddVersionKey ProductVersion "@CPACK_PACKAGE_VERSION@"
@@ -766,69 +766,63 @@ Section "-Core installation"
   Var /GLOBAL sketchupArchErrorMessage
   Var /GLOBAL sketchupConfigStatement
   ${If} ${FileExists} "$INSTDIR\ruby-install\ruby\lib\libmsvcrt-ruby200.dll.a"
-    StrCpy $sketchupArchErrorMessage "32-bit OpenStudio is incompatible with 64-bit SketchUp 2015"
-    StrCpy $sketchupConfigStatement "if RUBY_PLATFORM=='i386-mingw32' then require '$INSTDIR\Ruby\openstudio' else raise LoadError, '$sketchupArchErrorMessage' end$\n"
+    ; We are installing 32 bit OpenStudio
+    StrCpy $sketchupArchErrorMessage "32-bit OpenStudio is incompatible with 64-bit SketchUp 2016"
+    StrCpy $sketchupConfigStatement "$OPENSTUDIO_SKETCHUPPLUGIN_VERSION = '@CPACK_PACKAGE_VERSION@' $\n if RUBY_PLATFORM=='i386-mingw32' then require '$INSTDIR\Ruby\openstudio' else raise LoadError, '$sketchupArchErrorMessage' end$\n"
   ${Else}
-    StrCpy $sketchupArchErrorMessage "64-bit OpenStudio is incompatible with 32-bit SketchUp 2015"
-    StrCpy $sketchupConfigStatement "if RUBY_PLATFORM=='x64-mingw32' then require '$INSTDIR\Ruby\openstudio' else raise LoadError, '$sketchupArchErrorMessage' end$\n"
+    ; We are installing 64 bit OpenStudio
+    StrCpy $sketchupArchErrorMessage "64-bit OpenStudio is incompatible with 32-bit SketchUp 2016"
+    StrCpy $sketchupConfigStatement "$OPENSTUDIO_SKETCHUPPLUGIN_VERSION = '@CPACK_PACKAGE_VERSION@' $\n if RUBY_PLATFORM=='x64-mingw32' then require '$INSTDIR\Ruby\openstudio' else raise LoadError, '$sketchupArchErrorMessage' end$\n"
   ${EndIf}
 
-  ; Install for SketchUp 2015
-  Var /GLOBAL sketchup15Dir
+  ; Install for SketchUp 2016
+  Var /GLOBAL sketchup16Dir
   Push $OUTDIR
 
-  ; Look for SketchUp 2015 32-bit
-  ReadRegStr $sketchup15Dir HKLM "Software\SketchUp\SketchUp 2015\InstallLocation" ""
-  StrCmp $sketchup15Dir "" 0 su15found
-  ; Look for SketchUp 2015 64-bit if 32-bit was not found
+  ; Look for SketchUp 2016 32-bit; if not installed, look for 64-bit
+  ReadRegStr $sketchup16Dir HKLM "Software\SketchUp\SketchUp 2016\InstallLocation" ""
+  StrCmp $sketchup16Dir "" 0 su16-32
   SetRegView 64
-  ReadRegStr $sketchup15Dir HKLM "Software\SketchUp\SketchUp 2015\InstallLocation" ""
+  ReadRegStr $sketchup16Dir HKLM "Software\SketchUp\SketchUp 2016\InstallLocation" ""
   SetRegView 32
-  StrCmp $sketchup15Dir "" su15done su15found
+  StrCmp $sketchup16Dir "" su16done su16-64
 
-  su15found:
+  su16-32:
   IntOp $sketchupFound $sketchupFound + 1
-  ; SketchUp 2015 32-bit
-  StrCmp $sketchup15Dir "C:\Program Files (x86)\SketchUp\SketchUp 2015\" su15-32 0
-  ; SketchUp 2015 64-bit
-  StrCmp $sketchup15Dir "C:\Program Files\SketchUp\SketchUp 2015\" su15-64 0
-  ; Unknown install location
-  MessageBox MB_OK "Unrecognized SketchUp 2015 install location.  The OpenStudio SketchUp Plug-in will not be installed."
-  Goto su15done
-
-  su15-32:
   ${If} ${FileExists} "$INSTDIR\ruby-install\ruby\lib\libmsvcrt-ruby200.dll.a"
-    Goto su15install
+    Goto su16install
   ${Else}
     MessageBox MB_OK "$sketchupArchErrorMessage.  The OpenStudio SketchUp Plug-in will not be installed."
-    Goto su15done
+    Goto su16done
   ${EndIf}
 
-  su15-64:
+  su16-64:
+  IntOp $sketchupFound $sketchupFound + 1
   ${If} ${FileExists} "$INSTDIR\ruby-install\ruby\lib\libx64-msvcrt-ruby200.dll.a"
-    Goto su15install
+    Goto su16install
   ${Else}
     MessageBox MB_OK "$sketchupArchErrorMessage.  The OpenStudio SketchUp Plug-in will not be installed."
-    Goto su15done
+    Goto su16done
   ${EndIf}
 
-  su15install:
-  SetOutPath "$APPDATA\SketchUp\SketchUp 2015\SketchUp\Plugins"
+  su16install:
+  SetOutPath "$APPDATA\SketchUp\SketchUp 2016\SketchUp\Plugins"
   file /oname=OpenStudio.rb "@CPACK_PACKAGE_FILE_NAME@\Ruby\Plugins\OpenStudio.rb"
-  SetOutPath "$APPDATA\SketchUp\SketchUp 2015\SketchUp\Plugins\OpenStudio"
+  SetOutPath "$APPDATA\SketchUp\SketchUp 2016\SketchUp\Plugins\OpenStudio"
   file /oname=Startup.rb "@CPACK_PACKAGE_FILE_NAME@\Ruby\Plugins\OpenStudio\Startup.rb"
-  FileOpen $0 "$APPDATA\SketchUp\SketchUp 2015\SketchUp\Plugins\OpenStudio\OpenStudio-config.rb" w
+  file /oname=OpenStudio.hash "@CPACK_PACKAGE_FILE_NAME@\Ruby\Plugins\OpenStudio\OpenStudio.hash"
+  FileOpen $0 "$APPDATA\SketchUp\SketchUp 2016\SketchUp\Plugins\OpenStudio\OpenStudio-config" w
   FileWrite $0 "$sketchupConfigStatement"
   FileClose $0
 
-  su15done:
+  su16done:
   IntCmp $sketchupFound 0 0 +2 +2
-  MessageBox MB_OK "Unable to locate your SketchUp 2015 installation.  SketchUp Make is freely available for personal and educational use at http://www.sketchup.com/, and SketchUp Pro is available for professional work.  If you wish to use the OpenStudio SketchUp Plug-in please download and install SketchUp 2015 now; the OpenStudio SketchUp Plug-in will launch automatically when you start SketchUp."
+  MessageBox MB_OK "Unable to locate your SketchUp 2016 installation.  SketchUp Make is freely available for personal and educational use at http://www.sketchup.com/, and SketchUp Pro is available for professional work.  If you wish to use the OpenStudio SketchUp Plug-in please download and install SketchUp 2016 now; the OpenStudio SketchUp Plug-in will launch automatically when you start SketchUp."
   Pop $0
   SetOutPath $0
 
-  ; Write out extra copy of OpenStudio-config.rb in install path so user can easily manually install plugin
-  FileOpen $0 "$INSTDIR\Ruby\Plugins\OpenStudio\OpenStudio-config.rb" w
+  ; Write out extra copy of OpenStudio-config in install path so user can easily manually install plugin
+  FileOpen $0 "$INSTDIR\Ruby\Plugins\OpenStudio\OpenStudio-config" w
   FileWrite $0 "$sketchupConfigStatement"
   FileClose $0
 

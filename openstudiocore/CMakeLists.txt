@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 2.8.11)
 
 project(OpenStudioCore)
 
+if( POLICY CMP0022 ) 
+  cmake_policy(SET CMP0022 NEW)
+endif()
 cmake_policy(SET CMP0020 NEW)
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.0")
   cmake_policy(SET CMP0042 NEW)
@@ -19,19 +22,19 @@ set(OPENSTUDIO_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VE
 set(OPENSTUDIO_LONG_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}.${CMAKE_VERSION_BUILD}")
 
 # EnergyPlus Idd version
-if( NOT ENERGYPLUS_VERSION_MAJOR )
+if(NOT ENERGYPLUS_VERSION_MAJOR)
   set(ENERGYPLUS_VERSION_MAJOR 8)
 endif()
-if( NOT ENERGYPLUS_VERSION_MINOR )
-  set(ENERGYPLUS_VERSION_MINOR 3)
+if(NOT ENERGYPLUS_VERSION_MINOR)
+  set(ENERGYPLUS_VERSION_MINOR 5)
 endif()
-if( NOT ENERGYPLUS_VERSION_PATCH )
+if(NOT ENERGYPLUS_VERSION_PATCH)
   set(ENERGYPLUS_VERSION_PATCH 0)
 endif()
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-if( NOT ENERGYPLUS_BUILD_SHA )
-  set(ENERGYPLUS_BUILD_SHA "6d97d074ea")
+if(NOT ENERGYPLUS_BUILD_SHA)
+  set(ENERGYPLUS_BUILD_SHA "85848eef40")
 endif()
 
 # configure file with version information
@@ -41,7 +44,7 @@ configure_file(${CMAKE_SOURCE_DIR}/OpenStudio.in ${CMAKE_BINARY_DIR}/src/OpenStu
 if(APPLE)
   set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${OPENSTUDIO_VERSION}")
   set(MACOSX_BUNDLE_BUNDLE_VERSION "${CMAKE_VERSION_BUILD}")
-  set(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2015 National Renewable Energy Laboratory")
+  set(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2016 National Renewable Energy Laboratory")
 endif()
 
 # compiler id for about boxes
@@ -88,7 +91,7 @@ option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
 option(BUILD_TESTING "Build testing targets" OFF)
 
 # Build package
-# Requires: EnergyPlus
+# Requires: EnergyPlus, Radiance
 option(BUILD_PACKAGE "Build package" OFF)
 
 # Build test runner targets.
@@ -103,11 +106,6 @@ option(BUILD_R "Build R package" OFF)
 
 # Build Ruby gem
 option(BUILD_RUBY_GEM "Build Ruby Gem" OFF)
-
-if( BUILD_PACKAGE )
-  option(PACKAGE_RADIANCE "Package Radiance" OFF)
-  option(PACKAGE_ENERGYPLUS "Package EnergyPlus" ON)
-endif()
 
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -339,6 +337,11 @@ endif()
 # Dependencies
 
 # EnergyPlus
+set(ENV{ENERGYPLUSDIR} ${ENERGYPLUS_LOCATION})
+unset(ENERGYPLUS_FOUND CACHE)
+unset(ENERGYPLUS_EXE CACHE)
+unset(ENERGYPLUS_IDD CACHE)
+unset(ENERGYPLUS_WEATHER_DIR CACHE)
 find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
 
 # Ruby
@@ -416,7 +419,7 @@ set(ALL_RUBY_BINDING_TARGETS "") # global list
 # build rdoc
 if(BUILD_DOCUMENTATION)
   if(WIN32)
-    get_filename_component(RUBY_BIN_DIR "${RUBY_EXECUTABLE}" PATH)
+    get_filename_component(RUBY_BIN_DIR "${RUBY_EXECUTABLE}" DIRECTORY)
     find_file(RDOC NAMES rdoc.bat HINTS $ENV{PATH} "${RUBY_BIN_DIR}")
     find_file(RI NAMES ri.bat HINTS $ENV{PATH} "${RUBY_BIN_DIR}")
   else()
@@ -555,6 +558,10 @@ add_definitions(-DGTEST_HAS_TR1_TUPLE=0)
 include_directories(SYSTEM ${GTEST_INCLUDE_DIR}) 
 link_directories(${GTEST_LIB_DIR})
 
+# Geographic library
+find_package(GeographicLib REQUIRED)
+include_directories(SYSTEM ${GeographicLib_INCLUDE_DIRS})
+
 # Boost
 if(APPLE)
   set(Boost_USE_STATIC_LIBS ON)
@@ -689,7 +696,7 @@ list(APPEND QT_LIBS ${Qt5PrintSupport_LIBRARIES})
 ### recreating QT_LIBRARY_DIR for qt5
 if(WIN32 AND TARGET Qt5::Core)
   get_property(_Qt5_Core_LOCATION TARGET Qt5::Core PROPERTY LOCATION)
-  get_filename_component(QT_LIBRARY_DIR "${_Qt5_Core_LOCATION}" PATH)
+  get_filename_component(QT_LIBRARY_DIR "${_Qt5_Core_LOCATION}" DIRECTORY)
 else()
   set(QT_LIBRARY_DIR "")
 endif()
@@ -747,19 +754,30 @@ if(UNIX)
   if(APPLE)
     set(AWS_RUBY_PATH ruby-2.0.0-aws-Darwin)
     set(AWS_RUBY_DESTINATION ".")
-    set(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p594-aws-Darwin.tar.bz2)
-    set(AWS_RUBY_CHECKSUM 580550e0f6027820b4dfb12a186f6fcc)
-
+    set(AWS_RUBY_URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0-p645-aws-Darwin.tar.bz2)
+    set(AWS_RUBY_CHECKSUM 49bceb609b5c1d6d41f824115af46ec4)
   elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
     set(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-x86_64)
     set(AWS_RUBY_DESTINATION "lib/openstudio-${OPENSTUDIO_VERSION}")
-    set(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p594-aws-Linux-x86_64.tar.bz2)
-    set(AWS_RUBY_CHECKSUM c1b0fa5588b71d94ba557f32b73b9af1)
+    set(AWS_RUBY_URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0-p645-aws-Linux-x86_64.tar.bz2)
+    set(AWS_RUBY_CHECKSUM c46c9e93770749208222aa43ca99fe62)
   endif()
 
   file(DOWNLOAD ${AWS_RUBY_URL} "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}.tar.bz2" TIMEOUT 120 INACTIVITY_TIMEOUT 120)
   execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}")
   execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}.tar.bz2" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+
+  # Install required gems
+  set(ENV{BUNDLE_PATH} "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}/lib/ruby/gems/2.0.0")
+  execute_process(COMMAND "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}/bin/ruby" "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}/bin/bundle" "install" "--no-cache"
+                  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/../dependencies/ruby"
+                  TIMEOUT 120
+  )
+  execute_process(COMMAND "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}/bin/ruby" "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}/bin/bundle" "clean" "--force"
+                  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/../dependencies/ruby"
+                  TIMEOUT 120
+  )
+
   install(
     DIRECTORY "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}"
     DESTINATION "${AWS_RUBY_DESTINATION}"
@@ -828,31 +846,32 @@ if(BUILD_PYTHON_BINDINGS)
   
   add_test(NAME "PythonSanityCheck" 
     COMMAND "${PYTHON_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/python/testpath.py"
-	WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/Products/python"
-    )
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/Products/python"
+  )
 	
   if (MSVC)
     file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}" NATIVE_BINARY_DIR)
     add_custom_command(
-	  OUTPUT "${CMAKE_BINARY_DIR}/python_copied.stamp"
-	  COMMAND ${CMAKE_COMMAND} -E touch "${CMAKE_BINARY_DIR}/python_copied.stamp"
+      OUTPUT "${CMAKE_BINARY_DIR}/python_copied.stamp"
+      COMMAND ${CMAKE_COMMAND} -E touch "${CMAKE_BINARY_DIR}/python_copied.stamp"
       COMMAND cmd /C del "${NATIVE_BINARY_DIR}\\Products\\python\\$<CONFIGURATION>\\*.py"
       COMMAND cmd /C copy "${NATIVE_BINARY_DIR}\\Products\\python\\*.py" "${NATIVE_BINARY_DIR}\\Products\\python\\$<CONFIGURATION>"
-	  DEPENDS ALL_PYTHON_BINDINGS
+      DEPENDS ALL_PYTHON_BINDINGS
     )
 
     add_custom_target(PYTHON_SDK ALL
-	  DEPENDS "${CMAKE_BINARY_DIR}/python_copied.stamp")
+      DEPENDS "${CMAKE_BINARY_DIR}/python_copied.stamp"
+    )
 
     set_property(TEST PythonSanityCheck
       PROPERTY ENVIRONMENT
       "PYTHONPATH=${CMAKE_BINARY_DIR}/Products/python/$<CONFIGURATION>"  
-      )
+    )
   else()
     set_property(TEST PythonSanityCheck
       PROPERTY ENVIRONMENT
       "PYTHONPATH=${CMAKE_BINARY_DIR}/Products/python"
-      )
+    )
   endif()
 
 endif()
@@ -891,7 +910,7 @@ if(BUILD_DOCUMENTATION)
   # Zip documentation
   if(WIN32)
     if(NOT EXISTS "${CMAKE_BINARY_DIR}/7za.exe")
-      file(DOWNLOAD "http://developer.nrel.gov/downloads/buildings/openstudio/src/7za.zip" "${CMAKE_BINARY_DIR}/7za.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 EXPECTED_MD5 860077d3f314e939abab680218a3febe)
+      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/7za.zip" "${CMAKE_BINARY_DIR}/7za.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 EXPECTED_MD5 860077d3f314e939abab680218a3febe)
       execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/7za.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
     endif()
     add_custom_command(TARGET ALL_DOXYGEN
@@ -992,7 +1011,7 @@ install(FILES "${CMAKE_SOURCE_DIR}/resources/resultsviewer/SmallOffice/SmallOffi
 
 
 # Install additional Documents, such as release notes
-install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_7_0_20150327.pdf" DESTINATION .)
+install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_10_0_20151218.pdf" DESTINATION .)
 
 ###############################################################################
 
@@ -1014,8 +1033,8 @@ if(NOT UNIX)
 
   install(DIRECTORY "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced" DESTINATION .)
 
-  get_filename_component(RubyEXEPath "${RUBY_EXECUTABLE}" PATH)
-  get_filename_component(RubyPath "${RubyEXEPath}" PATH)
+  get_filename_component(RubyEXEPath "${RUBY_EXECUTABLE}" DIRECTORY)
+  get_filename_component(RubyPath "${RubyEXEPath}" DIRECTORY)
   install(DIRECTORY "${RubyPath}/" DESTINATION "ruby-install/ruby")
 
   set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
@@ -1033,30 +1052,22 @@ if(NOT UNIX)
   endif()
 endif()
 
-if(PACKAGE_RADIANCE)
-  set(RADIANCE_DIR "" CACHE PATH "Location of Radiance to Package")
-
-  if(APPLE)
-    install(DIRECTORY "${RADIANCE_DIR}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
-  elseif(MSVC)
-    install(DIRECTORY "${RADIANCE_DIR}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
-  else()
-    install(DIRECTORY "${RADIANCE_DIR}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
-  endif()
+# Package Radiance
+set(RADIANCE_LOCATION "" CACHE PATH "Location of Radiance to Package")
+if(APPLE)
+  install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+elseif(MSVC)
+  install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
+else()
+  install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
 endif()
 
-if(PACKAGE_ENERGYPLUS)
-  get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" PATH)
-
-  if(APPLE)
-    install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
-  elseif(MSVC)
-    install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
-  else()
-    install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
-  endif()
+# Package EnergyPlus
+get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
+if(APPLE)
+  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+elseif(MSVC)
+  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
+else()
+  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
 endif()
-
-
-
-

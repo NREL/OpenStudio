@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -134,13 +134,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctVAVH
   // ZoneMinimumAirFlowFraction
   if( (value = modelObject.zoneMinimumAirFlowFraction()) ) {
     idfObject.setDouble(AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::ZoneMinimumAirFlowFraction,value.get());
-  }
-
-  // HotWaterorSteamInletNodeName
-  if( auto waterCoil = coil.optionalCast<WaterToAirComponent>() ) {
-    if( auto node = waterCoil->waterInletModelObject() ) {
-      idfObject.setString(AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::HotWaterorSteamInletNodeName,node->name().get());
-    }
   }
 
   if( _coil ) {

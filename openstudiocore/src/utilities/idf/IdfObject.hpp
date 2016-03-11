@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -122,6 +122,10 @@ class UTILITIES_API IdfObject {
   /** Get the name of the object, if it exists. Optionally, if returnDefault is passed in as true, 
    *  name will return the default name, if it exists. */
   boost::optional<std::string> name(bool returnDefault=false) const;
+
+  /** Returns the name if set or returns an empty string. Optionally, if returnDefault is passed in as true, 
+   *  name will return the default name, if it exists. */
+  std::string nameString(bool returnDefault=false) const;
 
   /** Get a brief description of this object. Always includes iddObject().type(), and includes
    *  name() if available and not empty. */

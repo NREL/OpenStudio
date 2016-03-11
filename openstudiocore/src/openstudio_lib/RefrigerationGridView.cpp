@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -305,6 +305,7 @@ void RefrigerationCaseGridController::addColumns(const QString &/*category*/, st
       auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
       checkbox->setToolTip("Check to select all rows");
       connect(checkbox.data(), &QCheckBox::stateChanged, this, &RefrigerationCaseGridController::selectAllStateChanged);
+      connect(checkbox.data(), &QCheckBox::stateChanged, this->gridView(), &OSGridView::gridRowSelectionChanged);
 
       addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row");
     }else if(field == RATEDAMBIENTRELATIVEHUMIDITY){
@@ -773,6 +774,7 @@ void RefrigerationWalkInGridController::addColumns(const QString &/*category*/, 
       auto checkbox = QSharedPointer<QCheckBox>(new QCheckBox());
       checkbox->setToolTip("Check to select all rows");
       connect(checkbox.data(), &QCheckBox::stateChanged, this, &RefrigerationWalkInGridController::selectAllStateChanged);
+      connect(checkbox.data(), &QCheckBox::stateChanged, this->gridView(), &OSGridView::gridRowSelectionChanged);
 
       addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row");
     }else if(field == DEFROSTCONTROLTYPE){
@@ -828,7 +830,7 @@ void RefrigerationWalkInGridController::addColumns(const QString &/*category*/, 
       addQuantityEditColumn(Heading(QString(INSULATEDFLOORUVALUE)),
                             QString("W/m^2*K"),
                             QString("W/m^2*K"),
-                            QString("Btu/hr*ft^2*F"),
+                            QString("Btu/ft^2*h*R"),
                             m_isIP,
                             NullAdapter(&model::RefrigerationWalkIn::insulatedFloorUValue),
                             NullAdapter(&model::RefrigerationWalkIn::setInsulatedFloorUValue));
@@ -1026,7 +1028,7 @@ void RefrigerationWalkInGridController::addColumns(const QString &/*category*/, 
       addQuantityEditColumn(Heading(QString(ZONEBOUNDARYINSULATEDSURFACEUVALUEFACINGZONE)),
                             QString("W/m^2*K"),
                             QString("W/m^2*K"),
-                            QString("Btu/hr*ft^2*F"),
+                            QString("Btu/ft^2*h*R"),
                             m_isIP,
                             NullAdapter(&model::RefrigerationWalkIn::zoneBoundaryInsulatedSurfaceUValueFacingZone),
                             NullAdapter(&model::RefrigerationWalkIn::setZoneBoundaryInsulatedSurfaceUValueFacingZone));
@@ -1034,7 +1036,7 @@ void RefrigerationWalkInGridController::addColumns(const QString &/*category*/, 
       addQuantityEditColumn(Heading(QString(ZONEBOUNDARYGLASSREACHINDOORUVALUEFACINGZONE)),
                             QString("W/m^2*K"),
                             QString("W/m^2*K"),
-                            QString("Btu/hr*ft^2*F"),
+                            QString("Btu/ft^2*h*R"),
                             m_isIP,
                             NullAdapter(&model::RefrigerationWalkIn::zoneBoundaryGlassReachInDoorUValueFacingZone),
                             NullAdapter(&model::RefrigerationWalkIn::setZoneBoundaryGlassReachInDoorUValueFacingZone));
@@ -1042,7 +1044,7 @@ void RefrigerationWalkInGridController::addColumns(const QString &/*category*/, 
       addQuantityEditColumn(Heading(QString(ZONEBOUNDARYSTOCKINGDOORUVALUEFACINGZONE)),
                             QString("W/m^2*K"),
                             QString("W/m^2*K"),
-                            QString("Btu/hr*ft^2*F"),
+                            QString("Btu/ft^2*h*R"),
                             m_isIP,
                             NullAdapter(&model::RefrigerationWalkIn::zoneBoundaryStockingDoorUValueFacingZone),
                             NullAdapter(&model::RefrigerationWalkIn::setZoneBoundaryStockingDoorUValueFacingZone));

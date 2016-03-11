@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -73,7 +73,13 @@ namespace detail {
     
     std::string shadingControlType() const;
 
+    bool isShadingControlTypeDefaulted() const;
+
     boost::optional<Schedule> schedule() const;
+
+    boost::optional<double> setpoint() const;
+
+    bool isSetpointDefaulted() const;
 
     //@}
     /** @name Setters */
@@ -82,10 +88,16 @@ namespace detail {
     bool setShadingType(const std::string& shadingType);
     
     bool setShadingControlType(const std::string& shadingControlType);
+
+    void resetShadingControlType();
     
     bool setSchedule(const Schedule& schedule);
     
     void resetSchedule();
+
+    bool setSetpoint(double setpoint);
+
+    void resetSetpoint();
 
     //@}
     /** @name Other */

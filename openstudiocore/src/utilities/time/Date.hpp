@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -174,7 +174,7 @@ namespace openstudio{
 
     /// impl type is boost::gregorian::date
     typedef boost::gregorian::date ImplType;
-    typedef std::shared_ptr<ImplType> ImplPtr;
+    //typedef std::shared_ptr<ImplType> ImplPtr;
 
     REGISTER_LOGGER("utilities.time.Date");
 
@@ -286,7 +286,7 @@ namespace openstudio{
   protected:
 
     // reference to impl
-    const ImplType& impl() const;
+    const ImplType impl() const;
 
   private:
 
@@ -296,8 +296,7 @@ namespace openstudio{
     // initFromYearDayOfYear
     void initFromYearDayOfYear(int year, unsigned dayOfYear);
 
-    // pointer to impl
-    ImplPtr m_impl;
+    ImplType m_impl;
 
     // user provided base year is optional
     boost::optional<int> m_baseYear;

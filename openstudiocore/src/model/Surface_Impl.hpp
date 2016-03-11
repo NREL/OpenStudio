@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -32,6 +32,8 @@ class Surface;
 class ShadingSurfaceGroup;
 class SurfaceIntersection;
 class ConstructionBase;
+class SurfacePropertyOtherSideCoefficients;
+class SurfacePropertyOtherSideConditionsModel;
 
 namespace detail {
 
@@ -203,6 +205,18 @@ namespace detail {
     bool setAdjacentSurface(Surface& surface);
 
     void resetAdjacentSurface();
+    
+    boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;
+
+    bool setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients);
+
+    void resetSurfacePropertyOtherSideCoefficients();
+
+    boost::optional<SurfacePropertyOtherSideConditionsModel> surfacePropertyOtherSideConditionsModel() const;
+
+    bool setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel);
+
+    void resetSurfacePropertyOtherSideConditionsModel();
 
     bool intersect(Surface& otherSurface);
     boost::optional<SurfaceIntersection> computeIntersection(Surface& otherSurface);

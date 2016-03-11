@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -36,11 +36,17 @@ namespace openstudio {
 
     OSCheckBox3(QWidget * parent = nullptr);
 
-    virtual ~OSCheckBox3() {}
+    virtual ~OSCheckBox3();
 
     void bind(model::ModelObject & modelObject,
       BoolGetter get,
       boost::optional<BoolSetter> set = boost::none,
+      boost::optional<NoFailAction> reset = boost::none,
+      boost::optional<BasicQuery> isDefaulted = boost::none);
+
+    void bind(model::ModelObject & modelObject,
+      BoolGetter get,
+      boost::optional<BoolSetterBoolReturn> set = boost::none,
       boost::optional<NoFailAction> reset = boost::none,
       boost::optional<BasicQuery> isDefaulted = boost::none);
 
@@ -58,6 +64,7 @@ namespace openstudio {
     boost::optional<model::ModelObject> m_modelObject;
     boost::optional<BoolGetter> m_get;
     boost::optional<BoolSetter> m_set;
+    boost::optional<BoolSetterBoolReturn> m_setBoolReturn;
     boost::optional<NoFailAction> m_reset;
     boost::optional<BasicQuery> m_isDefaulted;
   };

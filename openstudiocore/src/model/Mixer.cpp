@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -56,17 +56,17 @@ Mixer_Impl::Mixer_Impl(const Mixer_Impl& other,
 {
 }
 
-boost::optional<ModelObject> Mixer_Impl::outletModelObject()
+boost::optional<ModelObject> Mixer_Impl::outletModelObject() const
 {
   return connectedObject( outletPort() );
 }
 
-boost::optional<ModelObject> Mixer_Impl::inletModelObject(unsigned branchIndex)
+boost::optional<ModelObject> Mixer_Impl::inletModelObject(unsigned branchIndex) const
 {
   return connectedObject( inletPort( branchIndex ) );
 }
 
-boost::optional<ModelObject> Mixer_Impl::lastInletModelObject()
+boost::optional<ModelObject> Mixer_Impl::lastInletModelObject() const
 {
   std::vector<ModelObject> objects = inletModelObjects();
   if( objects.size() > 0 )
@@ -98,7 +98,7 @@ unsigned Mixer_Impl::newInletPortAfterBranch(unsigned branchIndex)
   return inletPort(branchIndex++);
 }
 
-unsigned Mixer_Impl::branchIndexForInletModelObject( ModelObject modelObject )
+unsigned Mixer_Impl::branchIndexForInletModelObject( ModelObject modelObject ) const
 {
   unsigned stop = nextBranchIndex();
 
@@ -112,7 +112,7 @@ unsigned Mixer_Impl::branchIndexForInletModelObject( ModelObject modelObject )
   return 0;
 }
 
-unsigned Mixer_Impl::nextBranchIndex()
+unsigned Mixer_Impl::nextBranchIndex() const
 {
   unsigned i = 0;
   OptionalModelObject modelObject;
@@ -138,7 +138,7 @@ void Mixer_Impl::removePortForBranch(unsigned branchIndex)
   }
 }
 
-std::vector<ModelObject> Mixer_Impl::inletModelObjects()
+std::vector<ModelObject> Mixer_Impl::inletModelObjects() const
 {
   std::vector<ModelObject> result;
   unsigned stop = nextBranchIndex();
@@ -149,11 +149,11 @@ std::vector<ModelObject> Mixer_Impl::inletModelObjects()
   return result;
 }
 
-std::vector<HVACComponent> Mixer_Impl::edges(bool isDemandComponent)
+std::vector<HVACComponent> Mixer_Impl::edges(const boost::optional<HVACComponent> & prev)
 {
   std::vector<HVACComponent> edges;
-  if( boost::optional<ModelObject> edgeModelObject = this->outletModelObject() ) {
-    if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+  if( auto edgeModelObject = this->outletModelObject() ) {
+    if( auto edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
       edges.push_back(*edgeObject);
     }
   }
@@ -184,37 +184,37 @@ Mixer::Mixer(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::Mixer_Impl>());
 }     
 
-unsigned Mixer::outletPort()
+unsigned Mixer::outletPort() const
 {
   return getImpl<detail::Mixer_Impl>()->outletPort();
 }     
 
-unsigned Mixer::inletPort(unsigned branchIndex)
+unsigned Mixer::inletPort(unsigned branchIndex) const
 {
   return getImpl<detail::Mixer_Impl>()->inletPort(branchIndex);
 }     
 
-unsigned Mixer::nextInletPort()
+unsigned Mixer::nextInletPort() const
 {
   return getImpl<detail::Mixer_Impl>()->nextInletPort();
 }     
 
-boost::optional<ModelObject> Mixer::outletModelObject()
+boost::optional<ModelObject> Mixer::outletModelObject() const
 {
   return getImpl<detail::Mixer_Impl>()->outletModelObject();
 }     
 
-boost::optional<ModelObject> Mixer::inletModelObject(unsigned branchIndex)
+boost::optional<ModelObject> Mixer::inletModelObject(unsigned branchIndex) const
 {
   return getImpl<detail::Mixer_Impl>()->inletModelObject(branchIndex);
 }     
 
-boost::optional<ModelObject> Mixer::lastInletModelObject()
+boost::optional<ModelObject> Mixer::lastInletModelObject() const
 {
   return getImpl<detail::Mixer_Impl>()->lastInletModelObject();
 }     
 
-std::vector<ModelObject> Mixer::inletModelObjects()
+std::vector<ModelObject> Mixer::inletModelObjects() const
 {
   return getImpl<detail::Mixer_Impl>()->inletModelObjects();
 }     
@@ -224,12 +224,12 @@ unsigned Mixer::newInletPortAfterBranch(unsigned branchIndex)
   return getImpl<detail::Mixer_Impl>()->newInletPortAfterBranch(branchIndex);
 }     
 
-unsigned Mixer::branchIndexForInletModelObject( ModelObject modelObject )
+unsigned Mixer::branchIndexForInletModelObject( ModelObject modelObject ) const
 {
   return getImpl<detail::Mixer_Impl>()->branchIndexForInletModelObject(modelObject);
 }     
 
-unsigned Mixer::nextBranchIndex()
+unsigned Mixer::nextBranchIndex() const
 {
   return getImpl<detail::Mixer_Impl>()->nextBranchIndex();
 }     

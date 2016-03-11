@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -136,6 +136,14 @@ namespace detail {
 
   bool ElectricEquipment_Impl::isMultiplierDefaulted() const {
     return isEmpty(OS_ElectricEquipmentFields::Multiplier);
+  }
+
+  bool ElectricEquipment_Impl::isAbsolute() const {
+    ElectricEquipmentDefinition definition = electricEquipmentDefinition();
+    if (definition.designLevel()) {
+      return true;
+    }
+    return false;
   }
 
   std::string ElectricEquipment_Impl::endUseSubcategory() const {

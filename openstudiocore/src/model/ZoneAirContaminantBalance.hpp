@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -26,7 +26,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
 
 namespace detail {
@@ -54,7 +53,6 @@ class MODEL_API ZoneAirContaminantBalance : public ModelObject {
 
   bool isCarbonDioxideConcentrationDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> outdoorCarbonDioxideSchedule() const;
 
   //@}
@@ -65,7 +63,6 @@ class MODEL_API ZoneAirContaminantBalance : public ModelObject {
 
   void resetCarbonDioxideConcentration();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setOutdoorCarbonDioxideSchedule(Schedule& schedule);
 
   void resetOutdoorCarbonDioxideSchedule();

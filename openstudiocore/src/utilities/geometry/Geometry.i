@@ -6,6 +6,7 @@
   using namespace openstudio;
   #include <utilities/geometry/Vector3d.hpp>
   #include <utilities/geometry/Point3d.hpp>
+  #include <utilities/geometry/PointLatLon.hpp>
   #include <utilities/geometry/Plane.hpp>
   #include <utilities/geometry/EulerAngles.hpp>
   #include <utilities/geometry/Geometry.hpp>
@@ -30,6 +31,7 @@
 
 // create an instantiation of the optional classes
 %template(OptionalPoint3d) boost::optional<openstudio::Point3d>;
+%template(OptionalPointLatLon) boost::optional<openstudio::PointLatLon>;
 %template(OptionalVector3d) boost::optional<openstudio::Vector3d>;
 %template(OptionalPlane) boost::optional<openstudio::Plane>;
 %template(OptionalEulerAngles) boost::optional<openstudio::EulerAngles>;
@@ -39,6 +41,7 @@
 // create an instantiation of the vector classes
 %template(Point3dVector) std::vector<openstudio::Point3d>;
 %template(Point3dVectorVector) std::vector<std::vector<openstudio::Point3d> >; // for polygon subtraction routines
+%template(PointLatLonVector) std::vector<openstudio::PointLatLon>;
 %template(Vector3dVector) std::vector<openstudio::Vector3d>;  
 %ignore std::vector<openstudio::Plane>::vector(size_type);
 %ignore std::vector<openstudio::Plane>::resize(size_type);
@@ -50,6 +53,7 @@
 
 %include <utilities/geometry/Vector3d.hpp>
 %include <utilities/geometry/Point3d.hpp>
+%include <utilities/geometry/PointLatLon.hpp>
 %include <utilities/geometry/Plane.hpp>
 %include <utilities/geometry/EulerAngles.hpp>
 %include <utilities/geometry/Geometry.hpp>
@@ -67,6 +71,14 @@
 
 %extend openstudio::Point3d{
   std::string SWIG_TO_STRING_NAME() const {
+    std::ostringstream os;
+    os << *self;
+    return os.str();
+  }
+}
+
+%extend openstudio::PointLatLon{
+  std::string __str__() const {
     std::ostringstream os;
     os << *self;
     return os.str();

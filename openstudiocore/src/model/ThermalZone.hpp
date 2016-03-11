@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -36,9 +36,11 @@ class IlluminanceMap;
 class RenderingColor;
 class ThermostatSetpointDualSetpoint;
 class Thermostat;
+class ZoneControlContaminantController;
 class ZoneControlHumidistat;
 class SizingZone;
 class PortList;
+class ZoneMixing;
 
 namespace detail {
 
@@ -98,6 +100,8 @@ class MODEL_API ThermalZone : public HVACComponent {
   boost::optional<ThermostatSetpointDualSetpoint> thermostatSetpointDualSetpoint() const;
 
   boost::optional<ZoneControlHumidistat> zoneControlHumidistat() const;
+
+  boost::optional<ZoneControlContaminantController> zoneControlContaminantController() const;
 
   double fractionofZoneControlledbyPrimaryDaylightingControl() const;
 
@@ -169,6 +173,10 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   void resetZoneControlHumidistat();
 
+  bool setZoneControlContaminantController(const ZoneControlContaminantController & contaminantController);
+
+  void resetZoneControlContaminantController();
+
   bool setFractionofZoneControlledbyPrimaryDaylightingControl(double fractionofZoneControlledbyPrimaryDaylightingControl);
   
   bool setFractionofZoneControlledbyPrimaryDaylightingControl(const Quantity& fractionofZoneControlledbyPrimaryDaylightingControl);
@@ -225,6 +233,8 @@ class MODEL_API ThermalZone : public HVACComponent {
   void resetRenderingColor();
 
   std::vector<ModelObject> equipment() const;
+
+  boost::optional<HVACComponent> airLoopHVACTerminal() const;
 
   /// returns all spaces in this thermal zone
   std::vector<Space> spaces() const;
@@ -389,9 +399,23 @@ class MODEL_API ThermalZone : public HVACComponent {
   */
   bool setSupplyPlenum(const ThermalZone & plenumZone);
 
+  /** Overload of setSupplyPlenum()
+    * This variation can account for dual duct systems, branchIndex can be 0 or 1
+    * indicating which branch of a dual duct system to attach to.
+    * branchIndex 0 corresponds to the branch of demandInletNode(0).
+    */
+  bool setSupplyPlenum(const ThermalZone & plenumZone, unsigned branchIndex);
+
   /** Remove any supply plenum serving this zone
   */
   void removeSupplyPlenum();
+
+  /** Overload of removeSupplyPlenum()
+    * This variation can account for dual duct systems, branchIndex can be 0 or 1
+    * indicating which branch of a dual duct system to attach to.
+    * branchIndex 0 corresponds to the branch of demandInletNode(0).
+  */
+  void removeSupplyPlenum(unsigned branchIndex);
 
   /** Establish plenumZone as the return plenum for this ThermalZone.
   *   This ThermalZone must already be attached to AirLoopHVAC.
@@ -403,6 +427,15 @@ class MODEL_API ThermalZone : public HVACComponent {
   /** Remove any return plenum serving this zone
   */
   void removeReturnPlenum();
+
+  /** Returns all ZoneMixing objects associated with this zone, includes supply and exhaust mixing objects */
+  std::vector<ZoneMixing> zoneMixing() const;
+
+  /** Returns all ZoneMixing objects which supply air to this zone */
+  std::vector<ZoneMixing> supplyZoneMixing() const;
+
+  /** Returns all ZoneMixing objects which exhaust air from this zone */
+  std::vector<ZoneMixing> exhaustZoneMixing() const;
 
   //@}
  protected:

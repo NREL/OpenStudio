@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -18,9 +18,9 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/CoilSystemCoolingDXHeatExchangerAssisted.hpp>
-#include <model/CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../CoilSystemCoolingDXHeatExchangerAssisted.hpp"
+#include "../CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

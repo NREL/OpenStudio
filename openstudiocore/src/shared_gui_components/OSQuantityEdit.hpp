@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -71,7 +71,7 @@ class OSQuantityEdit2: public QWidget {
   OSQuantityEdit2(const std::string& modelUnits, const std::string& siUnits, 
                   const std::string& ipUnits, bool isIP, QWidget * parent = nullptr);
 
-  virtual ~OSQuantityEdit2() {}
+  virtual ~OSQuantityEdit2();
 
   void enableClickFocus();
 

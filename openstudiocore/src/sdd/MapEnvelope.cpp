@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -67,16 +67,24 @@ namespace sdd {
     boost::optional<openstudio::model::ModelObject> result;
 
     QDomElement nameElement = element.firstChildElement("Name");
-    OS_ASSERT(!nameElement.isNull()); // what type of error handling do we want?
+    std::string name;
+    if (nameElement.isNull()){
+      LOG(Error, "ConsAssm element 'Name' is empty.")
+    } else{
+      name = escapeName(nameElement.text());
+    }
 
     QDomElement specificationElement = element.firstChildElement("SpecMthd");
-    OS_ASSERT(!specificationElement.isNull()); // what type of error handling do we want?
+    if (specificationElement.isNull()){
+      LOG(Error, "ConsAssm element 'SpecMthd' is empty for construction named '" << name << "'. Construction will not be created");
+      return boost::none;
+    }
 
     if (specificationElement.text() == "Layers" ||
         specificationElement.text() == "UFactor" ){ // temp code
 
       openstudio::model::Construction construction(model);
-      construction.setName(escapeName(nameElement.text()));
+      construction.setName(name);
 
       std::vector<model::Material> materials;
       QDomNodeList materialElements = element.elementsByTagName("MatRef");
@@ -87,18 +95,24 @@ namespace sdd {
         if( ! material )
         {
           LOG(Error,"Construction: " << construction.name().get() << " references material: " << materialName << " that is not defined.");
+        
+          // DLM: what to do?  Remove the construction?
+        } else{
+          materials.push_back(*material);
         }
-        OS_ASSERT(material); // what type of error handling do we want?
-        materials.push_back(*material);
       }
 
       bool test = construction.setLayers(materials);
-      OS_ASSERT(test); // what type of error handling do we want?
+      if (!test){
+        LOG(Error, "Failed to set material layers for Construction: " << construction.name().get() << ".");
+
+        // DLM: what to do?  Remove the construction?
+      }
 
       bool wasFastNaming = model.fastNaming();
       model.setFastNaming(false);
 
-      size_t n = materials.size();
+      unsigned n = (unsigned) materials.size();
       construction.ensureUniqueLayers();
       materials = construction.layers(); // DLM: get materials again in case new ones were cloned
 
@@ -201,11 +215,15 @@ namespace sdd {
       // DLM: per input from David Reddy this construction will be cloned 
       // for each surface that uses it and height set per surface
       // 
-      openstudio::model::CFactorUndergroundWallConstruction construction(model);
-      construction.setName(escapeName(nameElement.text()));
 
-      QDomElement cFactorElement = element.firstChildElement("CFactor"); 
-      OS_ASSERT(!cFactorElement.isNull());
+      QDomElement cFactorElement = element.firstChildElement("CFactor");
+      if (cFactorElement.isNull()){
+        LOG(Error, "ConsAssm required element 'CFactor' is empty for construction named '" << name << "'. Construction will not be created");
+        return boost::none;
+      }
+
+      openstudio::model::CFactorUndergroundWallConstruction construction(model);
+      construction.setName(name);
 
       // sdd units = Btu/(hr*ft^2*F), os units = W/(m^2*K) 
       Quantity cFactorIP(cFactorElement.text().toDouble(), BTUUnit(BTUExpnt(1,-2,-1,-1)));
@@ -220,12 +238,15 @@ namespace sdd {
 
       // DLM: per input from David Reddy this construction will be cloned 
       // for each surface that uses it and area and perimeter set per surface
-      // 
-      openstudio::model::FFactorGroundFloorConstruction construction(model);
-      construction.setName(escapeName(nameElement.text()));
 
-      QDomElement fFactorElement = element.firstChildElement("FFactor"); 
-      OS_ASSERT(!fFactorElement.isNull());
+      QDomElement fFactorElement = element.firstChildElement("FFactor");
+      if (fFactorElement.isNull()){
+        LOG(Error, "ConsAssm required element 'FFactor' is empty for construction named '" << name << "'. Construction will not be created");
+        return boost::none;
+      }
+
+      openstudio::model::FFactorGroundFloorConstruction construction(model);
+      construction.setName(name);
             
       // sdd units = Btu/(hr*ft*F), os units = W/(m*K)
       Quantity fFactorIP(fFactorElement.text().toDouble(), BTUUnit(BTUExpnt(1,-1,-1,-1)));
@@ -258,6 +279,13 @@ namespace sdd {
     QDomElement nameElement = element.firstChildElement("Name");
     QDomElement uFactorElement = element.firstChildElement("UFactor"); // Btu/h-ft2-F
 
+    if (nameElement.isNull()){
+      LOG(Error, "DrCons element 'Name' is empty.  Construction will not be created.");
+    }
+    if (uFactorElement.isNull()){
+      LOG(Error, "DrCons element 'UFactor' is empty.  Construction will not be created.");
+    }
+
     if (!nameElement.isNull() && !uFactorElement.isNull()){
       
       // sdd units = Btu/(hr*ft^2*F), os units = W/m^2-K
@@ -285,6 +313,7 @@ namespace sdd {
 
       return construction;
     }
+
     return boost::none;
   }
 
@@ -302,6 +331,19 @@ namespace sdd {
     QDomElement shgcElement = element.firstChildElement("SHGC"); // unitless
     QDomElement uFactorElement = element.firstChildElement("UFactor"); // Btu/h-ft2-F
     QDomElement vtElement = element.firstChildElement("VT"); // unitless
+
+    if (nameElement.isNull()){
+      LOG(Error, "FenCons element 'Name' is empty.  Construction will not be created.");
+    }
+    if (shgcElement.isNull()){
+      LOG(Error, "FenCons element 'SHGC' is empty.  Construction will not be created.");
+    }
+    if (uFactorElement.isNull()){
+      LOG(Error, "FenCons element 'UFactor' is empty.  Construction will not be created.");
+    }
+    if (vtElement.isNull()){
+      LOG(Error, "FenCons element 'VT' is empty.  Construction will not be created.");
+    }
 
     if (!nameElement.isNull() && !shgcElement.isNull() && !uFactorElement.isNull() && !vtElement.isNull()){
       
@@ -353,6 +395,13 @@ namespace sdd {
     //QDomElement visibleAbsorptanceElement = element.firstChildElement("VisAbs"); // 0-1
     QDomElement rValueElement = element.firstChildElement("RVal"); // hr*ft2*degF/Btu
 
+    if (nameElement.isNull()){
+      LOG(Error, "Mat element 'Name' is empty.  Material will not be created.");
+      return boost::none;
+    }
+
+    std::string name = escapeName(nameElement.text());
+
     /*
     OS:Material
       Name - required
@@ -369,7 +418,7 @@ namespace sdd {
       
       openstudio::model::StandardOpaqueMaterial material(model);
 
-      material.setName(escapeName(nameElement.text()));
+      material.setName(name);
 
       // DLM: set on construction
       //std::string roughness = "MediumRough";
@@ -439,7 +488,7 @@ namespace sdd {
       
       openstudio::model::MasslessOpaqueMaterial material(model);
 
-      material.setName(escapeName(nameElement.text()));
+      material.setName(name);
 
       // DLM: set on construction
       //std::string roughness = "MediumRough";
@@ -472,6 +521,8 @@ namespace sdd {
 
       return material;
     }
+
+    LOG(Error, "Material named '" << name << "' could not be created.")
 
     return boost::none;
   }
@@ -568,7 +619,7 @@ namespace sdd {
         // DLM: warn?
       }
 
-      size_t n = layers.size();
+      unsigned n = (unsigned) layers.size();
       if (n > 0){
 
         std::string extRoughness;

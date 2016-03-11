@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -169,6 +169,7 @@ std::vector<openstudio::IdfObject> AirToAirComponent_Impl::remove()
   {
     _model.connect(reliefInletModelObject.get(),reliefInletModelObjectPort.get(),reliefOutletNode.get(),reliefOutletNode->inletPort());
 
+    reliefInletNode->disconnect();
     reliefInletNode->remove();
   }
 

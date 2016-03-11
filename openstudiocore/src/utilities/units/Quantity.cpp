@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -106,7 +106,7 @@ void Quantity::setPrettyUnitsString( const std::string& str ) {
   return m_units.setPrettyString( str );
 }
 
-const Scale& Quantity::scale() const {
+Scale Quantity::scale() const {
   return m_units.scale();
 }
 
@@ -201,11 +201,22 @@ void Quantity::lbfToLbm()
   OS_ASSERT(baseUnitExponent("lb_f") == 0);
 }
 
-Quantity& Quantity::operator+=(const Quantity& rQuantity) {
+Quantity& Quantity::operator+=(const Quantity& temp) {
 
-  if (this == &rQuantity) {
+  if (this == &temp) {
     m_value *= 2.0;
     return *this;
+  }
+
+  // copy input reference so we can change its properties
+  Quantity rQuantity(temp);
+
+  if (isTemperature() && rQuantity.isTemperature()) {
+    if (!isAbsolute() && rQuantity.isAbsolute()) {
+      setAsAbsolute();
+    } else if (isAbsolute() && !rQuantity.isAbsolute()){
+      rQuantity.setAsAbsolute();
+    }
   }
 
   if (m_units != rQuantity.m_units) {
@@ -221,20 +232,33 @@ Quantity& Quantity::operator+=(const Quantity& rQuantity) {
     m_value += rQuantity.value();
   }
 
-  if (isTemperature() && rQuantity.isTemperature()) {
-    if (!isAbsolute() && rQuantity.isAbsolute()) {
-      setAsAbsolute();
-    }
-  }
-
   return *this;
 }
 
-Quantity& Quantity::operator-=(const Quantity& rQuantity) {
+Quantity& Quantity::operator-=(const Quantity& temp) {
 
-  if (this == &rQuantity) {
+  if (this == &temp) {
     m_value = 0.0;
     return *this;
+  }
+
+  // copy input reference so we can change its properties
+  Quantity rQuantity(temp);
+
+  if (isTemperature() && rQuantity.isTemperature()) {
+    if (isAbsolute() && rQuantity.isAbsolute()) {
+      // units must be the same, check that exponent on this is 1
+      std::vector<std::string> bus = baseUnits();
+      OS_ASSERT(bus.size() == 1);
+      if (baseUnitExponent(bus[0]) == 1) {
+        setAsRelative();
+        rQuantity.setAsRelative();
+      }
+    } else if (!isAbsolute() && rQuantity.isAbsolute()) {
+      setAsAbsolute();
+    } else if (isAbsolute() && !rQuantity.isAbsolute()) {
+      rQuantity.setAsAbsolute();
+    }
   }
 
   if (m_units != rQuantity.m_units) {
@@ -248,20 +272,6 @@ Quantity& Quantity::operator-=(const Quantity& rQuantity) {
   }
   else {
     m_value -= rQuantity.value();
-  }
-
-  if (isTemperature() && rQuantity.isTemperature()) {
-    if (isAbsolute() && rQuantity.isAbsolute()) {
-      // units must be the same, check that exponent on this is 1
-      std::vector<std::string> bus = baseUnits();
-      assert(bus.size() == 1);
-      if (baseUnitExponent(bus[0]) == 1) {
-        setAsRelative();
-      }
-    }
-    else if (!isAbsolute() && rQuantity.isAbsolute()) {
-      setAsAbsolute();
-    }
   }
 
   return *this;

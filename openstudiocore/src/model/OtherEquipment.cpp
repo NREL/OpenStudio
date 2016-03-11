@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -158,6 +158,14 @@ namespace detail {
 
   bool OtherEquipment_Impl::isMultiplierDefaulted() const {
     return isEmpty(OS_OtherEquipmentFields::Multiplier);
+  }
+
+  bool OtherEquipment_Impl::isAbsolute() const {
+    OtherEquipmentDefinition definition = otherEquipmentDefinition();
+    if (definition.designLevel()) {
+      return true;
+    }
+    return false;
   }
 
   bool OtherEquipment_Impl::setOtherEquipmentDefinition(const OtherEquipmentDefinition& definition) {

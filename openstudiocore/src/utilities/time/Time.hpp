@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -59,11 +59,14 @@ namespace openstudio{
 
       /// impl type is boost::posix_time::time_duration
       typedef boost::posix_time::time_duration ImplType;
-      typedef std::shared_ptr<ImplType> ImplPtr;
+      //typedef std::shared_ptr<ImplType> ImplPtr;
 
 
-      /// get current time of day
+      /// get current local time of day
       static Time currentTime();
+
+      /// get the current UTC time of day
+      static Time currentTimeUTC();
 
       /// default constructor
       Time();
@@ -154,14 +157,12 @@ namespace openstudio{
 
     protected:
 
-      // reference to impl
-      const ImplType& impl() const;
+      const ImplType impl() const;
 
     private:
       REGISTER_LOGGER("utilities.time.Time");
 
-      // pointer to impl
-      ImplPtr m_impl;
+      ImplType m_impl;
   };
 
   /// optional Time

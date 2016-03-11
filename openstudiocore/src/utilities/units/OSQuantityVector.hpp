@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -61,7 +61,7 @@ class UTILITIES_API OSQuantityVector {
   
   UnitSystem system() const;
 
-  const Scale& scale() const;
+  Scale scale() const;
 
   /** Creates a vector of separate quantities. Note that it is better to do mathematical 
    *  operations and convert units using OSOptionalQuantity. Only use this method once the 

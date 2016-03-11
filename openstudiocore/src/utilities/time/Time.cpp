@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -38,16 +38,24 @@ namespace openstudio{
     return result;
   }
 
-  /// get current time of day
+  /// get current local time of day
   Time Time::currentTime()
   {
     posix_time::ptime now = posix_time::second_clock::local_time();
     return Time(now.time_of_day());
   }
 
+  /// get current UTC time of day
+  Time Time::currentTimeUTC()
+  {
+    posix_time::ptime now = posix_time::second_clock::universal_time();
+    return Time(now.time_of_day());
+  }
+
+
   /// Default constructor
   Time::Time() :
-    m_impl(ImplPtr(new ImplType(0, 0, 0, 0)))
+    m_impl(0, 0, 0, 0)
   {}
 
   /// Time from number of days, fractional values ok
@@ -62,7 +70,7 @@ namespace openstudio{
     double fracSeconds = SECONDS_PER_MINUTE * (fracMinutes-minutes);
     int seconds = floor0(fracSeconds);
 
-    m_impl = ImplPtr(new ImplType(hours, minutes, seconds, 0));
+    m_impl = ImplType(hours, minutes, seconds, 0);
   }
 
   /// Time from days, hours, minutes, seconds
@@ -71,13 +79,13 @@ namespace openstudio{
     hours += HOURS_PER_DAY*days;
     if ((hours*minutes >= 0) && (hours*seconds >= 0) && (minutes*seconds >= 0)) {
       // same sign, carry on
-      m_impl = ImplPtr(new ImplType(hours, minutes, seconds, 0));
+      m_impl = ImplType(hours, minutes, seconds, 0);
     }
     else {
       // mixed sign
       ImplType negativeDuration(std::min(hours,0),std::min(minutes,0),std::min(seconds,0),0);
-      m_impl = ImplPtr(new ImplType(std::max(hours,0),std::max(minutes,0),std::max(seconds,0),0));
-      *m_impl += negativeDuration;
+      m_impl = ImplType(std::max(hours,0),std::max(minutes,0),std::max(seconds,0),0);
+      m_impl += negativeDuration;
     }
   }
 
@@ -85,29 +93,29 @@ namespace openstudio{
   {
     boost::posix_time::time_duration td = boost::posix_time::duration_from_string(string);
 
-    m_impl = std::shared_ptr<boost::posix_time::time_duration>(new boost::posix_time::time_duration(td));
+    m_impl = boost::posix_time::time_duration(td);
   }
 
   Time::Time(tm t_tm)
-    : m_impl(new ImplType(t_tm.tm_hour, t_tm.tm_min, t_tm.tm_sec))
+    : m_impl(t_tm.tm_hour, t_tm.tm_min, t_tm.tm_sec)
   {
   }
 
   /// copy constructor
   Time::Time(const Time& other) :
-    m_impl(ImplPtr(new ImplType(other.impl())))
+    m_impl(other.impl())
   {}
 
   /// Time from impl 
   Time::Time(const ImplType& implType)
   {
-    m_impl = ImplPtr(new ImplType(implType));
+    m_impl = implType;
   }
 
   /// assignment operator
   Time& Time::operator= (const Time& other)
   {
-    m_impl = ImplPtr(new ImplType(other.impl()));
+    m_impl = other.impl();
     return *this;
   }
 
@@ -122,14 +130,14 @@ namespace openstudio{
   /// assignment by addition operator
   Time& Time::operator+= (const Time& time)
   {
-    (*m_impl)+= time.impl();
+    m_impl+= time.impl();
     return *this;
   }
 
 
   std::string Time::toString() const
   {
-    return boost::posix_time::to_simple_string(*m_impl);
+    return boost::posix_time::to_simple_string(m_impl);
   }
 
   /// difference operator
@@ -143,7 +151,7 @@ namespace openstudio{
   /// assignment by difference operator
   Time& Time::operator-= (const Time& time)
   {
-    (*m_impl)-= time.impl();
+    m_impl-= time.impl();
     return *this;
   }
 
@@ -204,19 +212,19 @@ namespace openstudio{
   /// whole number of hours remaining after days
   int Time::hours() const
   {
-    return (m_impl->hours() % 24);
+    return (m_impl.hours() % 24);
   }
 
   /// whole number of minutes remaining after hours
   int Time::minutes() const
   {
-    return m_impl->minutes();
+    return m_impl.minutes();
   }
 
   /// whole number of seconds remaining after minutes
   int Time::seconds() const
   {
-    return m_impl->seconds();
+    return m_impl.seconds();
   }
 
   /// entire time in days
@@ -240,13 +248,13 @@ namespace openstudio{
   /// entire time in seconds
   int Time::totalSeconds() const
   {
-    return m_impl->total_seconds();
+    return m_impl.total_seconds();
   }
 
   // reference to impl
-  const Time::ImplType& Time::impl() const
+  const Time::ImplType Time::impl() const
   {
-    return (*m_impl);
+    return m_impl;
   }
 
   // std::ostream operator<<

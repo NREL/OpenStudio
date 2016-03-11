@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -51,9 +51,12 @@ class MODEL_API ConstructionBase : public ResourceObject {
 
   //@}
 
-  /** Returns the sum of the surface area of all planer surfaces that use this construction (m^2). 
+  /** Returns the sum of the surface area of all planar surfaces that use this construction (m^2). 
    *  If this construction is used by a Surface that contains one or more \link SubSurface 
-   *  SubSurfaces \endlink, than the SubSurface areas are subtracted out of the total. */
+   *  SubSurfaces \endlink, than the SubSurface areas are subtracted out of the total. 
+   *  If two adjacent surfaces both reference the same construction then only the area of the largest 
+   *  adjacent surface will be counted.  If two adjacent surfaces reference different constructions then
+   *  the net area of each adjacent surface will be included in the net area for their respective constructions.*/
   double getNetArea() const;
 
   /** Set the u-factor of this surface in W/m^2*K, if possible. value should already include

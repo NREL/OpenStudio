@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -791,7 +791,7 @@ IddObjectType GasMixture::iddObjectType() {
   return IddObjectType(IddObjectType::OS_WindowMaterial_GasMixture);
 }
 
-const std::vector<std::string>& GasMixture::validGasTypes() {
+std::vector<std::string> GasMixture::validGasTypes() {
   static StringVector result;
   if (result.empty()) {
     result = getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),

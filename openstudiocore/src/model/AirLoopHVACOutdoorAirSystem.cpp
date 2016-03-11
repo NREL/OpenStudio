@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -19,8 +19,6 @@
 
 #include "AirLoopHVACOutdoorAirSystem.hpp"
 #include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
-#include "AvailabilityManagerScheduled.hpp"
-#include "AvailabilityManagerScheduled_Impl.hpp"
 #include "AirToAirComponent.hpp"
 #include "AirToAirComponent_Impl.hpp"
 #include "WaterToAirComponent.hpp"
@@ -275,11 +273,11 @@ namespace detail {
     return ModelObject_Impl::remove();
   }
 
-  std::vector<HVACComponent> AirLoopHVACOutdoorAirSystem_Impl::edges(bool isDemandComponent)
+  std::vector<HVACComponent> AirLoopHVACOutdoorAirSystem_Impl::edges(const boost::optional<HVACComponent> & prev)
   {
     std::vector<HVACComponent> edges;
-    if( boost::optional<ModelObject> edgeModelObject = this->mixedAirModelObject() ) {
-      if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+    if( auto edgeModelObject = this->mixedAirModelObject() ) {
+      if( auto edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
         edges.push_back(*edgeObject);
       }
     }

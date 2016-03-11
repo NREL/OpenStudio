@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -47,7 +47,7 @@
 #include "ModelExtensibleGroup.hpp"
 
 #include "../utilities/idf/ValidityReport.hpp"
-
+#include "../utilities/sql/SqlFile.hpp"
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
@@ -586,6 +586,38 @@ namespace detail {
       }
       catch (...) {}
     }
+    /*
+    // duplicates code in PlanarSurface_Impl::visibleTransmittance
+    if (!result){
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen())
+      {
+        boost::optional<std::string> name = this->name();
+        if (name){
+          std::string query = "SELECT RowName FROM tabulardatawithstrings WHERE \
+ReportName = 'EnvelopeSummary' AND \
+ReportForString = 'Entire Facility' AND \
+ColumnName = 'Construction' AND \
+Value = '";
+          query += boost::to_upper_copy(*name);
+          query += "';";
+          boost::optional<std::string> surfaceName = mySqlFile->execAndReturnFirstString(query);
+          if (surfaceName){
+
+            query = "SELECT Value FROM tabulardatawithstrings WHERE \
+ReportName = 'EnvelopeSummary' AND \
+ReportForString = 'Entire Facility' AND \
+ColumnName = 'Glass Visible Transmittance' AND \
+RowName = '";
+            query += boost::to_upper_copy(*surfaceName);
+            query += "';";
+            result = mySqlFile->execAndReturnFirstDouble(query);
+          }
+        }
+      }
+    }
+    */
+    
     return result;
   }
 

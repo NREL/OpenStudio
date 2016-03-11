@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -209,6 +209,7 @@ SetpointManagerMixedAir::SetpointManagerMixedAir(const Model& model)
   : SetpointManager(SetpointManagerMixedAir::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::SetpointManagerMixedAir_Impl>());
+  setControlVariable("Temperature");
 }
 
 SetpointManagerMixedAir::SetpointManagerMixedAir(

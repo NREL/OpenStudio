@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -48,6 +48,22 @@
 using namespace openstudio;
 using namespace openstudio::model;
 using namespace openstudio::radiance;
+
+std::string printPaths(const std::vector<path>& paths){
+  std::stringstream result;
+  for (auto path : paths){
+    result << toString(path) << std::endl;
+  }
+  return result.str();
+}
+
+std::string printLogMessages(const std::vector<LogMessage>& messages){
+  std::stringstream result;
+  for (auto message : messages){
+    result << message.logMessage() << std::endl;
+  }
+  return result.str();
+}
 
 TEST(Radiance, ForwardTranslator_SurfaceOnlyOnGround)
 {
@@ -196,9 +212,9 @@ TEST(Radiance, ForwardTranslator_ExampleModelWithShadingControl)
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
   EXPECT_TRUE(boost::filesystem::exists(outpath));
-  EXPECT_FALSE(outpaths.empty());
-  EXPECT_TRUE(ft.errors().empty());
-  EXPECT_TRUE(ft.warnings().empty());
+  EXPECT_FALSE(outpaths.empty()) << printPaths(outpaths);
+  EXPECT_TRUE(ft.errors().empty()) << printLogMessages(ft.errors());
+  EXPECT_TRUE(ft.warnings().empty()) << printLogMessages(ft.warnings());
 }
 
 

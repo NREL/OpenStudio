@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -101,7 +101,7 @@ class OSComboBox2 : public QComboBox {
   
   OSComboBox2( QWidget * parent = nullptr, bool editable = false );
 
-  virtual ~OSComboBox2() {}
+  virtual ~OSComboBox2();
 
   void enableClickFocus() { this->setFocusPolicy(Qt::ClickFocus); }
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -33,6 +33,18 @@ namespace detail {
 
   void TemperatureUnit_Impl::setAsRelative() {
     m_absolute = false;
+  }
+
+  bool TemperatureUnit_Impl::operator==(const Unit& rUnit) const {
+    bool result = Unit_Impl::operator==(rUnit);
+    if (result){
+      if (rUnit.optionalCast<TemperatureUnit>()){
+        result = (this->isAbsolute() == rUnit.cast<TemperatureUnit>().isAbsolute());
+      }else{
+        result = false;
+      }
+    }
+    return result;
   }
 
   void TemperatureUnit_Impl::operator*=(const Unit& rUnit) {

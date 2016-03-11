@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -437,15 +437,6 @@ namespace detail {
       return false;
     }
 
-    // be wiggly about standard reports
-    unsigned numReportWorkItems(0u);
-    if (getStandardReportWorkflowStep()) {
-      ++numReportWorkItems;
-    }
-    if (getCalibrationReportWorkflowStep()) {
-      ++numReportWorkItems;
-    }
-
     for (const InputVariable& variable : problem.variables()) {
       if (OptionalMeasureGroup dv = variable.optionalCast<MeasureGroup>()) {
         for (const Measure& measure : dv->measures(false)) {
@@ -482,12 +473,11 @@ namespace detail {
         if (nextWorkItemType.get() == JobType(JobType::ModelToIdf))
         {
           WorkItem wi = step.workItem();
-          if (wi.type == JobType(JobType::Ruby)
-              && wi.jobkeyname == "pat-radiance-job")
+          if (wi.type == JobType(JobType::Ruby) ||
+              wi.type == JobType(JobType::UserScript))
           {
             // we thought we were looking for ModelToIdf, but found
-            // the radiance script instead. That's OK, it means this is a project
-            // that uses radiance for its daylighting calculations
+            // this script instead. That's OK, 
             // continue to the next job in the loop
             continue;
           }
@@ -496,10 +486,23 @@ namespace detail {
         if (nextWorkItemType.get() == JobType(JobType::EnergyPlusPreProcess))
         {
           WorkItem wi = step.workItem();
-          if (wi.type == JobType(JobType::UserScript)
-              && wi.jobkeyname == "pat-report-request-job")
+          if (wi.type == JobType(JobType::Ruby) ||
+              wi.type == JobType(JobType::UserScript))
           {
             // we thought we were looking for EnergyPlusPreProcess, but found
+            // this script instead. That's OK, 
+            // continue to the next job in the loop
+            continue;
+          }
+        }
+
+        if (nextWorkItemType.get() == JobType(JobType::OpenStudioPostProcess))
+        {
+          WorkItem wi = step.workItem();
+          if (wi.type == JobType(JobType::Ruby) ||
+              wi.type == JobType(JobType::UserScript))
+          {
+            // we thought we were looking for OpenStudioPostProcess, but found
             // this script instead. That's OK, 
             // continue to the next job in the loop
             continue;
@@ -525,19 +528,7 @@ namespace detail {
             inputVariableOk = false;
             break;
           case JobType::EnergyPlus :
-            if (numReportWorkItems > 0) {
-              nextWorkItemType = JobType(JobType::UserScript);
-            }
-            else {
-              nextWorkItemType = JobType(JobType::OpenStudioPostProcess);
-            }
-            inputVariableOk = true; // reporting measures ok
-            break;
-          case JobType::UserScript :
-            ++reportCount;
-            if (reportCount == numReportWorkItems) {
-              nextWorkItemType = JobType(JobType::OpenStudioPostProcess);
-            }
+            nextWorkItemType = JobType(JobType::OpenStudioPostProcess);
             inputVariableOk = true; // reporting measures ok
             break;
           case JobType::OpenStudioPostProcess :
@@ -1289,12 +1280,20 @@ namespace detail {
     BCLMeasure replaceModelMeasure = insertMeasure(*it);
     RubyMeasure swapModel(replaceModelMeasure,false); // false so not used in algorithms
     swapModel.setName("Alternate Model: " + toString(newPath.filename()));
-    // hard-code argument since can't get arguments from library
+    swapModel.setDisplayName("Alternate Model: " + toString(newPath.filename()));
+    // hard-code arguments since can't get arguments from library
+    OSArgumentVector args;
     OSArgument arg = OSArgument::makePathArgument("alternativeModelPath",true,"osm");
     arg.setDisplayName("Alternative Model Path");
     arg.setValue(newPath);
-    swapModel.setArgument(arg);
+    args.push_back(arg);
+    arg = OSArgument::makeStringArgument("measures_json", true);
+    arg.setDisplayName("Alternative Measures");
+    arg.setValue("[]");
+    args.push_back(arg);
+    swapModel.setArguments(args);
     amvar.push(swapModel);
+
     int pIndex = amvar.numMeasures(false) - 1;
 
     // add data point
@@ -1341,6 +1340,7 @@ namespace detail {
     bool ok = analysis.addDataPoint(dataPoint.get());
     OS_ASSERT(ok);
     dataPoint->setName(swapModel.name());
+    dataPoint->setDisplayName(swapModel.displayName());
     dataPoint->setDescription("Replace baseline model with '" + toString(newPath) + "'.");
 
     return true;
@@ -1530,6 +1530,7 @@ namespace detail {
     // be able to access OpenStudio Ruby bindings
     rubyJobBuilder.setIncludeDir(getOpenStudioRubyIncludePath());
     runmanager::WorkItem workItem = rubyJobBuilder.toWorkItem();
+    workItem.jobkeyname = "pat-standard-report-job";
 
     bool ok = problem.insert(*index,WorkflowStep(workItem));
     if (!ok) {

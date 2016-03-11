@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -51,7 +51,7 @@ module OpenStudio
     attr_reader :outdoors_ext, :outdoorssun_ext, :outdoorswind_ext, :outdoorssunwind_ext
     attr_reader :outdoors_int, :outdoorssun_int, :outdoorswind_int, :outdoorssunwind_int
     attr_reader :subext_ext, :subext_int, :subint_ext, :subint_int
-    attr_reader :air_wall
+    attr_reader :air_wall, :solar_collector, :photovoltaic
     
     # for testing
     attr_accessor :observer
@@ -175,6 +175,22 @@ module OpenStudio
         @air_wall.texture = Plugin.dir + "/lib/resources/AirWall.png"
         @air_wall.texture.size = 180
         @air_wall.alpha = 0.25
+      end
+      
+      @solar_collector = @model_interface.skp_model.materials["OpenStudio_SolarCollector"]
+      if (@solar_collector.nil?)      
+        @solar_collector = @model_interface.skp_model.materials.add("OpenStudio_SolarCollector")
+        @solar_collector.texture = Plugin.dir + "/lib/resources/SolarCollector.png"
+        @solar_collector.texture.size = 40
+        @solar_collector.alpha = 1.0
+      end
+      
+      @photovoltaic = @model_interface.skp_model.materials["OpenStudio_Photovoltaic"]
+      if (@photovoltaic.nil?)      
+        @photovoltaic = @model_interface.skp_model.materials.add("OpenStudio_Photovoltaic")
+        @photovoltaic.texture = Plugin.dir + "/lib/resources/Photovoltaic.png"
+        @photovoltaic.texture.size = 40
+        @photovoltaic.alpha = 1.0
       end
       
     end

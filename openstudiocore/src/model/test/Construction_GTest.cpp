@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -612,6 +612,107 @@ TEST_F(ModelFixture, Construction_NetArea) {
   EXPECT_DOUBLE_EQ(12.5, cost2->totalCost());
 }
 
+TEST_F(ModelFixture, Construction_NetArea_InteriorWall) {
+  Model model;
+
+  Construction construction1(model);
+  Construction construction2(model);
+  EXPECT_DOUBLE_EQ(0.0, construction1.getNetArea());
+  EXPECT_DOUBLE_EQ(0.0, construction2.getNetArea());
+
+  // add costs
+  boost::optional<LifeCycleCost> cost1 = LifeCycleCost::createLifeCycleCost("Brick", construction1, 3.0, "CostPerArea", "Construction");
+  ASSERT_TRUE(cost1);
+  boost::optional<LifeCycleCost> cost2 = LifeCycleCost::createLifeCycleCost("Glass", construction2, 5.0, "CostPerArea", "Construction");
+  ASSERT_TRUE(cost2);
+  EXPECT_DOUBLE_EQ(0, cost1->totalCost());
+  EXPECT_DOUBLE_EQ(0, cost2->totalCost());
+
+  Building building = model.getUniqueModelObject<Building>();
+  DefaultSurfaceConstructions defaultExteriorSurfaceConstructions(model);
+  DefaultSurfaceConstructions defaultInteriorSurfaceConstructions(model);
+  DefaultSubSurfaceConstructions defaultExteriorSubSurfaceConstructions(model);
+  DefaultSubSurfaceConstructions defaultInteriorSubSurfaceConstructions(model);
+  DefaultConstructionSet defaultConstructionSet(model);
+  defaultConstructionSet.setDefaultExteriorSurfaceConstructions(defaultExteriorSurfaceConstructions);
+  defaultConstructionSet.setDefaultInteriorSurfaceConstructions(defaultInteriorSurfaceConstructions);
+  defaultConstructionSet.setDefaultExteriorSubSurfaceConstructions(defaultExteriorSubSurfaceConstructions);
+  defaultConstructionSet.setDefaultInteriorSubSurfaceConstructions(defaultInteriorSubSurfaceConstructions);
+  building.setDefaultConstructionSet(defaultConstructionSet);
+
+  Space space(model);
+
+  Point3dVector points;
+  points.push_back(Point3d(0, 0, 1));
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(0, 1, 1));
+
+  Surface surface1(points, model);
+  surface1.setSpace(space);
+  EXPECT_EQ("Wall", surface1.surfaceType());
+  EXPECT_EQ("Outdoors", surface1.outsideBoundaryCondition());
+  EXPECT_DOUBLE_EQ(1.0, surface1.netArea());
+
+  points.clear();
+  points.push_back(Point3d(0, 1, 1));
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(0, 0, 1));
+
+  Surface surface2(points, model);
+  surface2.setSpace(space);
+  EXPECT_EQ("Wall", surface2.surfaceType());
+  EXPECT_EQ("Outdoors", surface2.outsideBoundaryCondition());
+  EXPECT_DOUBLE_EQ(1.0, surface2.netArea());
+
+  EXPECT_DOUBLE_EQ(0.0, construction1.getNetArea());
+  EXPECT_DOUBLE_EQ(0.0, construction2.getNetArea());
+  EXPECT_DOUBLE_EQ(0, cost1->totalCost());
+  EXPECT_DOUBLE_EQ(0, cost2->totalCost());
+
+  defaultExteriorSurfaceConstructions.setWallConstruction(construction1);
+  ASSERT_TRUE(surface1.construction());
+  ASSERT_TRUE(surface2.construction());
+  EXPECT_EQ(surface1.construction()->handle(), construction1.handle());
+  EXPECT_EQ(surface2.construction()->handle(), construction1.handle());
+  EXPECT_DOUBLE_EQ(2.0, construction1.getNetArea());
+  EXPECT_DOUBLE_EQ(0.0, construction2.getNetArea());
+  EXPECT_DOUBLE_EQ(6.0, cost1->totalCost());
+  EXPECT_DOUBLE_EQ(0, cost2->totalCost());
+
+  surface1.setConstruction(construction1);
+  surface2.setConstruction(construction2);
+  ASSERT_TRUE(surface1.construction());
+  ASSERT_TRUE(surface2.construction());
+  EXPECT_EQ(surface1.construction()->handle(), construction1.handle());
+  EXPECT_EQ(surface2.construction()->handle(), construction2.handle());
+  EXPECT_DOUBLE_EQ(1.0, construction1.getNetArea());
+  EXPECT_DOUBLE_EQ(1.0, construction2.getNetArea());
+  EXPECT_DOUBLE_EQ(3.0, cost1->totalCost());
+  EXPECT_DOUBLE_EQ(5.0, cost2->totalCost());
+
+  surface1.setAdjacentSurface(surface2);
+  ASSERT_TRUE(surface1.construction());
+  ASSERT_TRUE(surface2.construction());
+  EXPECT_EQ(surface1.construction()->handle(), construction1.handle());
+  EXPECT_EQ(surface2.construction()->handle(), construction2.handle());
+  EXPECT_DOUBLE_EQ(1.0, construction1.getNetArea());
+  EXPECT_DOUBLE_EQ(1.0, construction2.getNetArea());
+  EXPECT_DOUBLE_EQ(3.0, cost1->totalCost());
+  EXPECT_DOUBLE_EQ(5.0, cost2->totalCost());
+
+  surface2.setConstruction(construction1);
+  ASSERT_TRUE(surface1.construction());
+  ASSERT_TRUE(surface2.construction());
+  EXPECT_EQ(surface1.construction()->handle(), construction1.handle());
+  EXPECT_EQ(surface2.construction()->handle(), construction1.handle());
+  EXPECT_DOUBLE_EQ(1.0, construction1.getNetArea());
+  EXPECT_DOUBLE_EQ(0.0, construction2.getNetArea());
+  EXPECT_DOUBLE_EQ(3.0, cost1->totalCost());
+  EXPECT_DOUBLE_EQ(0.0, cost2->totalCost());
+}
+
 TEST_F(ModelFixture, Construction_NetArea_SubSurface) {
   Model model;
 
@@ -712,7 +813,6 @@ TEST_F(ModelFixture, Construction_EnsureUniqueLayers)
   EXPECT_NE(construction1.layers()[2].handle(), construction2.layers()[2].handle());
 
 }
-
 
 TEST_F(ModelFixture, Construction_StandardsInformationConstruction)
 {

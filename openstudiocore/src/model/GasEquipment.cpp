@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -136,6 +136,14 @@ namespace detail {
 
   bool GasEquipment_Impl::isMultiplierDefaulted() const {
     return isEmpty(OS_GasEquipmentFields::Multiplier);
+  }
+
+  bool GasEquipment_Impl::isAbsolute() const {
+    GasEquipmentDefinition definition = gasEquipmentDefinition();
+    if (definition.designLevel()) {
+      return true;
+    }
+    return false;
   }
 
   std::string GasEquipment_Impl::endUseSubcategory() const {

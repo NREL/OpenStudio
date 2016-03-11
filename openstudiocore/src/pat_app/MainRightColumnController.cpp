@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -74,6 +74,10 @@ void MainRightColumnController::showHorizontalTab(int id)
   switch( id )
   {
     case MEASURE_LIBRARY:
+    // Evan note: It's bad to play with null pointers
+      if (!m_localLibraryController->localLibraryView) {
+        //return;
+      }
       horizontalTabWidget->mainViewSwitcher->setView(m_localLibraryController->localLibraryView);
 
       break;

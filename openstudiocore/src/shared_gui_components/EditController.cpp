@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -110,6 +110,11 @@ void EditController::updateDescription()
 
 void EditController::reset()
 {
+  // Evan note: It's bad to play with null pointers
+  if (!m_editNullView || !editView || !m_measureItem || !editRubyMeasureView) {
+    //return;
+  }
+
   editView->setView(m_editNullView);
 
   m_inputControllers.clear();

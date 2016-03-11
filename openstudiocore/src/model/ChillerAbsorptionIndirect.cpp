@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,20 +17,20 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ChillerAbsorptionIndirect.hpp>
-#include <model/ChillerAbsorptionIndirect_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Curve.hpp>
-#include <model/Curve_Impl.hpp>
-#include <model/CurveCubic.hpp>
-#include <model/CurveCubic_Impl.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/CurveQuadratic_Impl.hpp>
+#include "ChillerAbsorptionIndirect.hpp"
+#include "ChillerAbsorptionIndirect_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
+#include "CurveCubic.hpp"
+#include "CurveCubic_Impl.hpp"
+#include "CurveQuadratic.hpp"
+#include "CurveQuadratic_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Chiller_Absorption_Indirect_FieldEnums.hxx>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -472,41 +472,6 @@ namespace detail {
   {
     auto newMo = WaterToWaterComponent_Impl::clone(model).cast<ChillerAbsorptionIndirect>();
 
-    {
-      auto mo = generatorHeatInputFunctionofPartLoadRatioCurve().clone(model).cast<Curve>();
-      newMo.setGeneratorHeatInputFunctionofPartLoadRatioCurve(mo);
-    }
-
-    {
-      auto mo = pumpElectricInputFunctionofPartLoadRatioCurve().clone(model).cast<Curve>();
-      newMo.setPumpElectricInputFunctionofPartLoadRatioCurve(mo);
-    }
-
-    {
-      auto mo = capacityCorrectionFunctionofCondenserTemperatureCurve().clone(model).cast<Curve>();
-      newMo.setCapacityCorrectionFunctionofCondenserTemperatureCurve(mo);
-    }
-
-    {
-      auto mo = capacityCorrectionFunctionofChilledWaterTemperatureCurve().clone(model).cast<Curve>();
-      newMo.setCapacityCorrectionFunctionofChilledWaterTemperatureCurve(mo);
-    }
-
-    {
-      auto mo = capacityCorrectionFunctionofGeneratorTemperatureCurve().clone(model).cast<Curve>();
-      newMo.setCapacityCorrectionFunctionofGeneratorTemperatureCurve(mo);
-    }
-
-    {
-      auto mo = generatorHeatInputCorrectionFunctionofCondenserTemperatureCurve().clone(model).cast<Curve>();
-      newMo.setGeneratorHeatInputCorrectionFunctionofCondenserTemperatureCurve(mo);
-    }
-
-    {
-      auto mo = generatorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve().clone(model).cast<Curve>();
-      newMo.setGeneratorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve(mo);
-    }
-
     return newMo;
   }
 
@@ -523,6 +488,14 @@ namespace detail {
     result.push_back(generatorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve());
 
     return result;
+  }
+
+  unsigned ChillerAbsorptionIndirect_Impl::tertiaryInletPort() const {
+    return OS_Chiller_Absorption_IndirectFields::GeneratorInletNode;
+  }
+
+  unsigned ChillerAbsorptionIndirect_Impl::tertiaryOutletPort() const {
+    return OS_Chiller_Absorption_IndirectFields::GeneratorOutletNode;
   }
 
 } // detail

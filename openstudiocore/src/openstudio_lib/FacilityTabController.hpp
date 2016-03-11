@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -24,25 +24,39 @@
 
 namespace openstudio {
 
-class FacilityController;
-
 class FacilityTabController : public MainTabController
 {
   Q_OBJECT
 
   public:
 
-    FacilityTabController(bool isIP, const model::Model & model);
+  FacilityTabController(bool isIP, const model::Model & model);
 
-    virtual ~FacilityTabController() {}
+  virtual ~FacilityTabController();
 
   private:
 
-    std::shared_ptr<FacilityController> m_facilityController;
+  enum TabID
+  {
+    BUILDING,
+    STORIES,
+    SHADING,
+    EXTERIOR_EQUIPMENT
+  };
+
+  model::Model m_model;
+
+  bool m_isIP;
+
+  QWidget * m_currentView = nullptr;
+
+  int m_currentIndex = -1;
 
   public slots:
+  
+  void toggleUnits(bool displayIP);
 
-    void toggleUnits(bool displayIP);
+  virtual void setSubTab(int index) override;
 };
 
 } // openstudio

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -146,6 +146,10 @@ void SyncMeasuresDialog::findUpdates()
 
   // DLM: if m_measuresNeedingUpdates is empty should we do something else?  
   // just say "No updates available" and quit?
+
+  if (!m_measuresNeedingUpdates.empty()){
+    m_measureManager->updateMeasuresLists();
+  }
 
   m_centralWidget->setMeasures(m_measuresNeedingUpdates);
 

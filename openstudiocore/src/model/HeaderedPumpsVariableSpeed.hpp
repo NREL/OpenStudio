@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
 #ifndef MODEL_HEADEREDPUMPSVARIABLESPEED_HPP
 #define MODEL_HEADEREDPUMPSVARIABLESPEED_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 
@@ -57,6 +57,7 @@ class MODEL_API HeaderedPumpsVariableSpeed : public StraightComponent {
   /** @name Getters */
   //@{
 
+  /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Total Design Flow Rate" **/
   boost::optional<double> totalRatedFlowRate() const;
 
   bool isTotalRatedFlowRateAutosized() const;
@@ -65,8 +66,10 @@ class MODEL_API HeaderedPumpsVariableSpeed : public StraightComponent {
 
   std::string flowSequencingControlScheme() const;
 
+  /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Design Pump Head" **/
   double ratedPumpHead() const;
 
+  /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Design Power Consumption" **/
   boost::optional<double> ratedPowerConsumption() const;
 
   bool isRatedPowerConsumptionAutosized() const;

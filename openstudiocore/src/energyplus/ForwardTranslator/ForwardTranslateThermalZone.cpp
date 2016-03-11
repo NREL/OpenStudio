@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -29,6 +29,8 @@
 #include "../../model/PortList_Impl.hpp"
 #include "../../model/ZoneHVACEquipmentList.hpp"
 #include "../../model/ZoneHVACEquipmentList_Impl.hpp"
+#include "../../model/ZoneVentilationDesignFlowRate.hpp"
+#include "../../model/ZoneVentilationDesignFlowRate_Impl.hpp"
 #include "../../model/SizingZone.hpp"
 #include "../../model/SizingZone_Impl.hpp"
 #include "../../model/Schedule.hpp"
@@ -41,6 +43,9 @@
 #include "../../model/AirLoopHVAC_Impl.hpp"
 #include "../../model/Thermostat.hpp"
 #include "../../model/Thermostat_Impl.hpp"
+#include "../../model/ThermostatSetpointDualSetpoint.hpp"
+#include "../../model/ThermostatSetpointDualSetpoint_Impl.hpp"
+#include "../../model/ZoneControlContaminantController.hpp"
 #include "../../model/ZoneControlHumidistat.hpp"
 #include "../../model/ZoneControlThermostatStagedDualSetpoint.hpp"
 #include "../../model/DesignSpecificationOutdoorAir.hpp"
@@ -107,6 +112,7 @@
 #include "../../model/GlareSensor.hpp"
 #include "../../model/GlareSensor_Impl.hpp"
 #include "../../model/LifeCycleCost.hpp"
+#include "../../model/ZoneMixing.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/Workspace.hpp"
@@ -497,45 +503,75 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     }
   }
 
+  // translate zone mixing objects which supply air to this zone
+  ZoneMixingVector supplyZoneMixing = modelObject.supplyZoneMixing();
+  std::sort(supplyZoneMixing.begin(), supplyZoneMixing.end(), WorkspaceObjectNameLess());
+  for (ZoneMixing& mixing : supplyZoneMixing){
+    translateAndMapModelObject(mixing);
+  }
+
+  auto zoneEquipment = modelObject.equipment();
+
+  // In OS ZoneVentilationDesignFlowRate is considered zone equipment,
+  // but for the E+ perspective it is not so we have to remove them,
+  // and treat them differently.
+  auto isZoneVentilationDesignFlowRate = [](const ModelObject & mo) {
+    return (mo.iddObjectType() == ZoneVentilationDesignFlowRate::iddObjectType());
+  };
+  auto zoneVentilationBegin = std::remove_if(zoneEquipment.begin(),zoneEquipment.end(),isZoneVentilationDesignFlowRate);
+  std::vector<model::ModelObject> zoneVentilationObjects(zoneVentilationBegin,zoneEquipment.end());
+  zoneEquipment.erase(zoneVentilationBegin,zoneEquipment.end());
+
   // translate thermostat and/or humidistat
-  if( ( modelObject.equipment().size() > 0 ) || modelObject.useIdealAirLoads() )
+  if( ( zoneEquipment.size() > 0 ) || modelObject.useIdealAirLoads() )
   {
     // Thermostat
     if( auto thermostat = modelObject.thermostat() )
     {
       if( thermostat->iddObjectType() == ZoneControlThermostatStagedDualSetpoint::iddObjectType() )
       {
-        auto _thermostat = translateAndMapModelObject(thermostat.get());
+        translateAndMapModelObject(thermostat.get());
       } else {
-        IdfObject zoneControlThermostat(openstudio::IddObjectType::ZoneControl_Thermostat);
-        zoneControlThermostat.setString(ZoneControl_ThermostatFields::Name,modelObject.name().get() + " Thermostat");
-        zoneControlThermostat.setString(ZoneControl_ThermostatFields::ZoneorZoneListName,modelObject.name().get());
-        m_idfObjects.push_back(zoneControlThermostat);
+        auto createZoneControlThermostat = [&]() {
+          IdfObject zoneControlThermostat(openstudio::IddObjectType::ZoneControl_Thermostat);
+          zoneControlThermostat.setString(ZoneControl_ThermostatFields::Name,modelObject.name().get() + " Thermostat");
+          zoneControlThermostat.setString(ZoneControl_ThermostatFields::ZoneorZoneListName,modelObject.name().get());
+          m_idfObjects.push_back(zoneControlThermostat);
 
-        IdfObject scheduleCompact(openstudio::IddObjectType::Schedule_Compact);
-        scheduleCompact.setName(modelObject.name().get() + " Thermostat Schedule");
-        m_idfObjects.push_back(scheduleCompact);
-        scheduleCompact.setString(1,modelObject.name().get() + " Thermostat Schedule Type Limits");
-        scheduleCompact.setString(2,"Through: 12/31");
-        scheduleCompact.setString(3,"For: AllDays");
-        scheduleCompact.setString(4,"Until: 24:00");
-        scheduleCompact.setString(5,"4");
+          IdfObject scheduleCompact(openstudio::IddObjectType::Schedule_Compact);
+          scheduleCompact.setName(modelObject.name().get() + " Thermostat Schedule");
+          m_idfObjects.push_back(scheduleCompact);
+          scheduleCompact.setString(1,modelObject.name().get() + " Thermostat Schedule Type Limits");
+          scheduleCompact.setString(2,"Through: 12/31");
+          scheduleCompact.setString(3,"For: AllDays");
+          scheduleCompact.setString(4,"Until: 24:00");
+          scheduleCompact.setString(5,"4");
 
-        IdfObject scheduleTypeLimits(openstudio::IddObjectType::ScheduleTypeLimits);
-        scheduleTypeLimits.setName(modelObject.name().get() + " Thermostat Schedule Type Limits");
-        m_idfObjects.push_back(scheduleTypeLimits);
-        scheduleTypeLimits.setString(1,"0");
-        scheduleTypeLimits.setString(2,"4");
-        scheduleTypeLimits.setString(3,"DISCRETE");
+          IdfObject scheduleTypeLimits(openstudio::IddObjectType::ScheduleTypeLimits);
+          scheduleTypeLimits.setName(modelObject.name().get() + " Thermostat Schedule Type Limits");
+          m_idfObjects.push_back(scheduleTypeLimits);
+          scheduleTypeLimits.setString(1,"0");
+          scheduleTypeLimits.setString(2,"4");
+          scheduleTypeLimits.setString(3,"DISCRETE");
 
-        zoneControlThermostat.setString(ZoneControl_ThermostatFields::ControlTypeScheduleName,scheduleCompact.name().get());
+          zoneControlThermostat.setString(ZoneControl_ThermostatFields::ControlTypeScheduleName,scheduleCompact.name().get());
 
-        if( boost::optional<IdfObject> idfThermostat = translateAndMapModelObject(thermostat.get()) )
-        {
-          StringVector values(zoneControlThermostat.iddObject().properties().numExtensible);
-          values[ZoneControl_ThermostatExtensibleFields::ControlObjectType] = idfThermostat->iddObject().name();
-          values[ZoneControl_ThermostatExtensibleFields::ControlName] = idfThermostat->name().get();
-          IdfExtensibleGroup eg = zoneControlThermostat.pushExtensibleGroup(values);
+          if( boost::optional<IdfObject> idfThermostat = translateAndMapModelObject(thermostat.get()) )
+          {
+            StringVector values(zoneControlThermostat.iddObject().properties().numExtensible);
+            values[ZoneControl_ThermostatExtensibleFields::ControlObjectType] = idfThermostat->iddObject().name();
+            values[ZoneControl_ThermostatExtensibleFields::ControlName] = idfThermostat->name().get();
+            IdfExtensibleGroup eg = zoneControlThermostat.pushExtensibleGroup(values);
+          }
+        };
+
+        // Only translate ThermostatSetpointDualSetpoint if there are schedules attached
+        if( auto dualSetpoint = thermostat->optionalCast<ThermostatSetpointDualSetpoint>() ) {
+          if( dualSetpoint->heatingSetpointTemperatureSchedule() && dualSetpoint->coolingSetpointTemperatureSchedule() ) {
+            createZoneControlThermostat();
+          }  
+        } else {
+          createZoneControlThermostat();
         }
       }
     }
@@ -546,6 +582,11 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       if( boost::optional<IdfObject> idfHumidistat = translateAndMapModelObject(humidistat.get()) ) {
         idfHumidistat->setString(ZoneControl_HumidistatFields::ZoneName,modelObject.name().get());
       }
+    }
+
+    // ZoneControlContaminantController
+    if( auto controller = modelObject.zoneControlContaminantController() ) {
+      translateAndMapModelObject(controller.get());
     }
   }
 
@@ -559,12 +600,13 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     m_idfObjects.push_back(idealLoadsAirSystem); 
   }
 
-  ModelObjectVector zoneEquipment = modelObject.equipment();
+  // ZoneVentilationDesignFlowRate does not go on equipment connections or associated list
+  for( auto & zone_vent : zoneVentilationObjects ) {
+    translateAndMapModelObject(zone_vent);
+  }
 
-  if( zoneEquipment.size() > 0 )
-  {
+  if( zoneEquipment.size() > 0 ) {
     // ZoneHVAC_EquipmentConnections
-
     IdfObject connectionsObject(openstudio::IddObjectType::ZoneHVAC_EquipmentConnections);
     m_idfObjects.push_back(connectionsObject);
 

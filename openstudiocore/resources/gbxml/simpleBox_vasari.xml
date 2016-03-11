@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <gbXML useSIUnitsForResults="false" temperatureUnit="F" lengthUnit="Feet" areaUnit="SquareFeet" volumeUnit="CubicFeet" version="0.37" xmlns="http://www.gbxml.org/schema">
   <Campus id="aim1022">
     <Location>

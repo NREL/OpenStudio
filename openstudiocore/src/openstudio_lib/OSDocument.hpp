@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -164,8 +164,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
     CONSTRUCTIONS,
     LOADS,
     SPACE_TYPES,
-    BUILDING_STORIES,
     FACILITY,
+    SPACES,
     THERMAL_ZONES,
     HVAC_SYSTEMS,
     BUILDING_SUMMARY,
@@ -294,6 +294,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void disableTabsDuringRun();
 
+  void weatherFileReset();
+
  private:
 
   enum fileType{
@@ -311,8 +313,10 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   // Used by save and saveAs.
   void setSavePath(const QString & savePath);
 
-  // Attempts to make the model's weather file have a fully qualified path
-  bool setFullWeatherFilePath();
+  // When opening an OSM, check the model for a weather file, if a weather file is listed
+  // copy it into the temp directory.  If the listed weather file cannot be found, remove the 
+  // weather file object.  Returns false if the user's weather file is reset, returns true otherwise.
+  bool fixWeatherFileInTemp(bool opening);
 
   void createTab(int verticalId);
 
@@ -350,8 +354,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   boost::optional<analysisdriver::SimpleProject> m_simpleProject;
 
-  QString m_savePath;
-  QString m_modelTempDir;
+  QString m_savePath = QString();
+  QString m_modelTempDir = QString();
 
   int m_mainTabId = 0;
   int m_subTabId = 0;
@@ -366,6 +370,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   bool m_enableTabsAfterRun = true;
 
   bool m_tabButtonsCreated = false;
+
 };
 
 } // openstudio

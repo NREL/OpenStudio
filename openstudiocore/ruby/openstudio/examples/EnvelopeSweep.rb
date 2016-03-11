@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -41,7 +41,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 require 'fileutils'
 
 # provide path to EnergyPlus simulation directory including file 'in.idf'
@@ -65,10 +64,9 @@ if ARGV[2] and /[tT]rue/.match(ARGV[2])
 end
 
 # find EnergyPlus
-ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,3)
-ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
-ep_parent_path = ep_path.parent_path();
-idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
+co = OpenStudio::Runmanager::ConfigOptions.new
+co.fastFindEnergyPlus()
+co.fastFindRuby()
 epw_path = OpenStudio::Path.new(epDir / OpenStudio::Path.new("in.epw"))
 
 # configure logging
@@ -210,12 +208,7 @@ analysisDriver = OpenStudio::AnalysisDriver::AnalysisDriver.new(database)
 runOptions = OpenStudio::AnalysisDriver::AnalysisRunOptions.new(analysisDir, OpenStudio::Path.new($OpenStudio_Dir))
 
 # add tools 
-runOptions.setRunManagerTools(OpenStudio::Runmanager::ConfigOptions::makeTools(
-    ep_parent_path, 
-    OpenStudio::Path.new, 
-    OpenStudio::Path.new, 
-    $OpenStudio_RubyExeDir,
-    OpenStudio::Path.new))
+runOptions.setRunManagerTools(co.getTools)
 currentAnalysis = analysisDriver.run(analysis,runOptions)
 if show_gui
   runManager.showStatusDialog()

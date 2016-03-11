@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -80,7 +80,9 @@ TEST_F(SDDFixture, ForwardTranslator_exampleModel)
 
   EXPECT_TRUE(test);
 
-  // we do not currently support loading input xml
+  // DLM: the forward translator writes out an input SDD, the reverse translator reads a sim SDD
+  // these two are not compatible and round trip is not supported
+
   //ReverseTranslator reverseTranslator;
   //boost::optional<Model> model2 = reverseTranslator.loadModel(p);
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -20,48 +20,58 @@
 #ifndef OPENSTUDIO_MAINTABVIEW_HPP
 #define OPENSTUDIO_MAINTABVIEW_HPP
 
+#include <QPointer>
 #include <QWidget>
+
 #include <vector>
 
-class QStackedWidget;
-class QPushButton;
 class QLabel;
+class QPushButton;
+class QStackedWidget;
+class QVBoxLayout;
 
 namespace openstudio {
+
+class OSViewSwitcher;
 
 class MainTabView : public QWidget
 {
   Q_OBJECT
 
 public:
-  MainTabView(const QString & tabLabel, bool hasSubTabs, QWidget * parent = nullptr);
 
-  virtual ~MainTabView() {}
+  enum TabType {
+    MAIN_TAB,
+    SUB_TAB,
+    GRIDVIEW_SUB_TAB
+  };
 
-  void setHasSubTab(bool hasSubTab);
+  MainTabView(const QString & tabLabel, TabType tabType, QWidget * parent = nullptr);
+
+  virtual ~MainTabView();
+
+  void setTabType(TabType tabTyp);
 
   ///! Use this method only if your tab will *NOT* have sub tabs
   bool addTabWidget(QWidget * widget);
 
   ///! Use this method only if your tab will have sub tabs
-  bool addSubTab(const QString & subTabLabel, QWidget * widget, int id);
+  bool addSubTab(const QString & subTabLabel, int id);
+
+  void setSubTab(QWidget * widget);
 
   // Returns the id of the current sub tab.
   // Returns -1 if there are no sub tabs.
-  int subTabId() const;
+  //int subTabId() const;
 
   // Returns the index of the current sub tab.
   // Returns -1 if there are no sub tabs.
-  int subTabIndex() const;
+  //int subTabIndex() const;
 
   // Public method for setting the current sub tab.
   bool selectSubTabByIndex(int index);
 
-signals:
-
-  void tabSelected(int id);
-
-  void toggleUnitsClicked(bool displayIP);
+  QPointer<OSViewSwitcher> m_editView;
 
 protected:
 
@@ -70,21 +80,30 @@ protected:
   void paintEvent( QPaintEvent * event ) override;
   void resizeEvent( QResizeEvent * event ) override;
 
-private slots:
-  void select();
-
 private:
-  QLabel * m_tabLabel;
-  QStackedWidget * m_stackedWidget;
-  QWidget * m_mainWidget;
+
+  QLabel * m_tabLabel = nullptr;
+  QWidget * m_mainWidget = nullptr;
+  QWidget * m_currentInnerWidget = nullptr;
+  QVBoxLayout * m_innerLayout = nullptr;
 
   std::vector<QString> m_selectedPixmaps;
   std::vector<QString> m_neighborSelectedPixmaps;
   std::vector<QString> m_unSelectedPixmaps;
-  std::vector<QPushButton *> m_tabButtons; 
-  std::vector<int> m_ids; 
+  std::vector<QPushButton *> m_tabButtons;
+  std::vector<int> m_ids;
 
-  bool m_hasSubTab;
+  TabType m_tabType;
+
+signals:
+
+  void tabSelected(int id);
+  void toggleUnitsClicked(bool displayIP);
+
+private slots:
+
+  void select();
+
 };
 
 } // namespace openstudio

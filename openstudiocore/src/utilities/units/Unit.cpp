@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -150,7 +150,7 @@ namespace detail {
     }
   }
 
-  const Scale& Unit_Impl::scale() const {
+  Scale Unit_Impl::scale() const {
     return m_scale();
   }
 
@@ -568,7 +568,7 @@ void Unit::setBaseUnitExponent(const std::string& baseUnit,int exponent) {
   getImpl<detail::Unit_Impl>()->setBaseUnitExponent(baseUnit,exponent);
 }
 
-const Scale& Unit::scale() const {
+Scale Unit::scale() const {
   return getImpl<detail::Unit_Impl>()->scale();
 }
 

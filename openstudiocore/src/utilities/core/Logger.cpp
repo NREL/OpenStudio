@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -56,6 +56,11 @@ namespace openstudio{
       case QtDebugMsg:
         logFree(Debug, "Qt", msg);
         break;
+#if QT_VERSION >= 0x050500
+      case QtInfoMsg:
+        logFree(Info, "Qt", msg);
+        break;
+#endif
       case QtWarningMsg:
         logFree(Warn, "Qt", msg);
         break;

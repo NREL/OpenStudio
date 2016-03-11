@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -159,7 +159,7 @@ namespace radiance{
   }
 
   /// get the illuminance map in lux corresponding to date and time
-  const openstudio::Matrix& AnnualIlluminanceMap::illuminanceMap(const openstudio::DateTime& dateTime) const
+  openstudio::Matrix AnnualIlluminanceMap::illuminanceMap(const openstudio::DateTime& dateTime) const
   {
     auto it = m_dateTimeIlluminanceMap.find(dateTime);
     if (it != m_dateTimeIlluminanceMap.end()){

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -38,73 +38,106 @@
 
 namespace openstudio {
 
-LocationTabController::LocationTabController(const model::Model & model,
-                                             const QString& modelTempDir)
-  : MainTabController(new LocationTabView(model,modelTempDir))
+LocationTabController::LocationTabController(bool isIP,
+  const model::Model & model,
+  const QString& modelTempDir)
+  : MainTabController(new LocationTabView(model, modelTempDir)),
+  m_modelTempDir(modelTempDir),
+  m_model(model),
+  m_isIP(isIP)
 {
-  auto locationView = new LocationView(model, modelTempDir);
-  mainContentWidget()->addSubTab("Weather File && Design Days",locationView,WEATHER_FILE);
+  mainContentWidget()->addSubTab("Weather File && Design Days", WEATHER_FILE); 
+  mainContentWidget()->addSubTab("Life Cycle Costs", LIFE_CYCLE_COSTS);
+  mainContentWidget()->addSubTab("Utility Bills", UTILITY_BILLS);
 
-  auto lifeCycleCostsView = new LifeCycleCostsView(model);
-  mainContentWidget()->addSubTab("Life Cycle Costs",lifeCycleCostsView,LIFE_CYCLE_COSTS);
+  setSubTab(0);
+  connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &LocationTabController::setSubTab);
+}
 
-  QLabel * label;
+LocationTabController::~LocationTabController()
+{
+  disconnect(this->mainContentWidget(), &MainTabView::tabSelected, this, &LocationTabController::setSubTab);
+}
 
-  label = new QLabel();
-  label->setPixmap(QPixmap(":/images/utility_calibration_warning.png"));
-  label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-
-  m_utilityBillsController = std::shared_ptr<UtilityBillsController>(new UtilityBillsController(model));
-
-  m_utilityBillsStackedWidget = new QStackedWidget();
-  m_warningWidgetIndex = m_utilityBillsStackedWidget->addWidget(label);
-  m_visibleWidgetIndex = m_utilityBillsStackedWidget->addWidget(m_utilityBillsController->subTabView()); 
-
-  mainContentWidget()->addSubTab("Utility Bills",m_utilityBillsStackedWidget,UTILITY_BILLS);
-
+bool LocationTabController::showUtilityBills()
+{
   // Determine if the utility bill sub-tab is shown
-  boost::optional<model::YearDescription> yearDescription = model.yearDescription();
+  boost::optional<model::YearDescription> yearDescription = m_model.yearDescription();
   if (yearDescription){
     boost::optional<int> calendarYear = yearDescription.get().calendarYear();
     if (calendarYear){
-      boost::optional<model::WeatherFile> weatherFile = model.weatherFile();
+      boost::optional<model::WeatherFile> weatherFile = m_model.weatherFile();
       if (weatherFile){
-        boost::optional<model::RunPeriod> runPeriod = model.getOptionalUniqueModelObject<model::RunPeriod>();
+        boost::optional<model::RunPeriod> runPeriod = m_model.getOptionalUniqueModelObject<model::RunPeriod>();
         if (runPeriod.is_initialized()){
-          m_utilityBillsStackedWidget->setCurrentIndex(m_visibleWidgetIndex);
+          return true;
         }
         else {
-          m_utilityBillsStackedWidget->setCurrentIndex(m_warningWidgetIndex);
+          return false;
         }
       }
     }
   }
-
-  // Hack code to remove when tab active
-  label = new QLabel();
-  label->setPixmap(QPixmap(":/images/coming_soon_utility_rates.png"));
-  label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-  mainContentWidget()->addSubTab("Utility Rates",label,UTILITY_RATES);
-
-  // Hack code to remove when tab active
-  //label = new QLabel();
-  //label->setPixmap(QPixmap(":/images/coming_soon_ground_temperature.png"));
-  //label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-  //mainContentWidget()->addSubTab("Ground Temperature",label,GROUND_TEMPERATURE);
-
-  // Hack code to remove when tab active
-  //label = new QLabel();
-  //label->setPixmap(QPixmap(":/images/coming_soon_water_mains_temperature.png"));
-  //label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-  //mainContentWidget()->addSubTab("Water Mains Temperature",label,WATER_MAINS_TEMPERATURE);
+  // Oops, missing some needed object above, so default to warning
+  return false;
 }
 
-void LocationTabController::showSubTabView(bool showSubTabView)
+void LocationTabController::setSubTab(int index)
 {
-  if(showSubTabView){
-    m_utilityBillsStackedWidget->setCurrentIndex(m_visibleWidgetIndex);
-  } else {
-    m_utilityBillsStackedWidget->setCurrentIndex(m_warningWidgetIndex);
+  if (m_currentIndex == index) {
+    return;
+  }
+  else {
+    m_currentIndex = index;
+  }
+
+  if (qobject_cast<LocationView *>(m_currentView)) {
+    disconnect(this, &LocationTabController::toggleUnitsClicked, qobject_cast<LocationView *>(m_currentView), &LocationView::toggleUnitsClicked);
+  }
+  else if (qobject_cast<LifeCycleCostsView *>(m_currentView)) {
+  }
+  else if (qobject_cast<UtilityBillsInspectorView *>(m_currentView) || qobject_cast<QLabel *>(m_currentView)) {
+  }
+  else if (m_currentView) {
+    // Oops! Should never get here
+    OS_ASSERT(false);
+  }
+
+  switch (index){
+  case 0:
+  {
+    auto locationView = new LocationView(m_isIP, m_model, m_modelTempDir);
+    connect(this, &LocationTabController::toggleUnitsClicked, locationView, &LocationView::toggleUnitsClicked);
+    this->mainContentWidget()->setSubTab(locationView);
+    m_currentView = locationView;
+    break;
+  }
+  case 1:
+  {
+    auto lifeCycleCostsView = new LifeCycleCostsView(m_model);
+    this->mainContentWidget()->setSubTab(lifeCycleCostsView);
+    m_currentView = lifeCycleCostsView;
+    break;
+  }
+  case 2:
+  {
+    if (showUtilityBills()) {
+      auto utilityBillsController = new UtilityBillsController(m_model);
+      this->mainContentWidget()->setSubTab(utilityBillsController->subTabView());
+      m_currentView = utilityBillsController->subTabView()->inspectorView();
+    }
+    else {
+      auto label = new QLabel();
+      label->setPixmap(QPixmap(":/images/utility_calibration_warning.png"));
+      label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+      this->mainContentWidget()->setSubTab(label);
+      m_currentView = label;
+    }
+    break;
+  }
+  default:
+    OS_ASSERT(false);
+    break;
   }
 }
 

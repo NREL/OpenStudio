@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -108,6 +108,11 @@ namespace detail {
       result = this->setSchedule(*schedule);
     }
     return result;
+  }
+
+  bool SpaceInfiltrationEffectiveLeakageArea_Impl::isAbsolute() const
+  {
+    return true;
   }
 
   double SpaceInfiltrationEffectiveLeakageArea_Impl::effectiveAirLeakageArea() const {

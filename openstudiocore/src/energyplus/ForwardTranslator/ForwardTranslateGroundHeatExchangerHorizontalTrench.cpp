@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@
 #include "../../model/Node_Impl.hpp"
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/GroundHeatExchanger_HorizontalTrench_FieldEnums.hxx>
+#include <utilities/idd/Site_GroundTemperature_Undisturbed_KusudaAchenbach_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -150,22 +151,29 @@ boost::optional<IdfObject> ForwardTranslator::translateGroundHeatExchangerHorizo
   }
 
   if( istringEqual(modelObject.groundTemperatureModel(),"KusudaAchenbach") ) {
+    IdfObject groundModel(IddObjectType::Site_GroundTemperature_Undisturbed_KusudaAchenbach);
+    m_idfObjects.push_back(groundModel);
+
+    groundModel.setName(modelObject.name().get() + " Ground Model");
+
+    idfObject.setString(GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModelName,groundModel.name().get());
+
     // KusudaAchenbachAverageSurfaceTemperature
     {
       auto value = modelObject.kusudaAchenbachAverageSurfaceTemperature();
-      idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::KusudaAchenbachAverageSurfaceTemperature,value);
+      groundModel.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageSoilSurfaceTemperature,value);
     }
 
     // KusudaAchenbachAverageAmplitudeofSurfaceTemperature
     {
       auto value = modelObject.kusudaAchenbachAverageAmplitudeofSurfaceTemperature();
-      idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::KusudaAchenbachAverageAmplitudeofSurfaceTemperature,value);
+      groundModel.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageAmplitudeofSurfaceTemperature,value);
     }
 
     // KusudaAchenbachPhaseShiftofMinimumSurfaceTemperature
     {
       auto value = modelObject.kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature();
-      idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::KusudaAchenbachPhaseShiftofMinimumSurfaceTemperature,value);
+      groundModel.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::PhaseShiftofMinimumSurfaceTemperature,value);
     }
 
     // EvapotranspirationGroundCoverParameter

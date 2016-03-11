@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -30,7 +30,8 @@
 #include "../../model/ShadingControl_Impl.hpp"
 #include "../../model/WindowPropertyFrameAndDivider.hpp"
 #include "../../model/WindowPropertyFrameAndDivider_Impl.hpp"
-
+#include "../../model/SurfacePropertyOtherSideCoefficients.hpp"
+#include "../../model/SurfacePropertyOtherSideConditionsModel.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
@@ -90,6 +91,26 @@ boost::optional<IdfObject> ForwardTranslator::translateSubSurface( model::SubSur
   boost::optional<SubSurface> adjacentSubSurface = modelObject.adjacentSubSurface();
   if (adjacentSubSurface){
     idfObject.setString(FenestrationSurface_DetailedFields::OutsideBoundaryConditionObject, adjacentSubSurface->name().get());
+  }
+
+  boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients = modelObject.surfacePropertyOtherSideCoefficients();
+  if (surfacePropertyOtherSideCoefficients){
+    boost::optional<IdfObject> osc = translateAndMapModelObject(*surfacePropertyOtherSideCoefficients);
+    if (osc && osc->name()){
+      idfObject.setString(FenestrationSurface_DetailedFields::OutsideBoundaryConditionObject, osc->name().get());
+    } else{
+      LOG(Error, "SubSurface '" << modelObject.name().get() << "', could not translate OutsideBoundaryConditionObject");
+    }
+  }
+
+  boost::optional<SurfacePropertyOtherSideConditionsModel> surfacePropertyOtherSideConditionsModel = modelObject.surfacePropertyOtherSideConditionsModel();
+  if (surfacePropertyOtherSideConditionsModel){
+    boost::optional<IdfObject> oscm = translateAndMapModelObject(*surfacePropertyOtherSideConditionsModel);
+    if (oscm && oscm->name()){
+      idfObject.setString(FenestrationSurface_DetailedFields::OutsideBoundaryConditionObject, oscm->name().get());
+    } else{
+      LOG(Error, "SubSurface '" << modelObject.name().get() << "', could not translate OutsideBoundaryConditionObject");
+    }
   }
 
   boost::optional<double> viewFactortoGround = modelObject.viewFactortoGround();

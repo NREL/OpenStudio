@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -124,22 +124,6 @@ OptionalModelObject ReverseTranslator::translateAirTerminalSingleDuctVAVNoReheat
         if( boost::optional<Schedule> schedule = mo->optionalCast<Schedule>() )
         {
           airTerminal->setMinimumAirFlowFractionSchedule(schedule.get());
-        }
-      }
-    }
-
-    boost::optional<WorkspaceObject> _dsoa;
-
-    // DesignSpecificationOutdoorAirObjectName
-    _dsoa = workspaceObject.getTarget(AirTerminal_SingleDuct_VAV_NoReheatFields::DesignSpecificationOutdoorAirObjectName);
-    if( _dsoa )
-    {
-      boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(_dsoa.get());
-      if( mo )
-      {
-        if( boost::optional<DesignSpecificationOutdoorAir> dsoa = mo->optionalCast<DesignSpecificationOutdoorAir>() )
-        {
-          airTerminal->setDesignSpecificationOutdoorAirObject(dsoa.get());
         }
       }
     }

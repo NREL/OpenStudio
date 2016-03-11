@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@ class OSUnsignedEdit2: public QLineEdit {
 
   OSUnsignedEdit2(QWidget * parent = nullptr);
 
-  virtual ~OSUnsignedEdit2() {}
+  virtual ~OSUnsignedEdit2();
 
   void enableClickFocus() { this->m_hasClickFocus = true; }
 

@@ -119,6 +119,8 @@ set(geometry_src
   geometry/Plane.cpp
   geometry/Point3d.hpp
   geometry/Point3d.cpp
+  geometry/PointLatLon.hpp
+  geometry/PointLatLon.cpp  
   geometry/Transformation.hpp
   geometry/Transformation.cpp
   geometry/Vector3d.hpp
@@ -505,7 +507,7 @@ if(NOT APPLE)
   )
 endif()
 
-target_link_libraries(${target_name} ${${target_name}_depends})
+target_link_libraries(${target_name} PUBLIC ${${target_name}_depends} PRIVATE GeographicLib_STATIC)
 CREATE_SRC_GROUPS("${${target_name}_test_src}")
 CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
 

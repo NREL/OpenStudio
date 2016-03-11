@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ module OpenStudio
       if not model_object.empty? and (handle.to_s == model_object.get.handle.to_s)
         model_object = model_object.get
       else
-        puts "ConstructionBase: model_object is empty for #{handle.class}, #{handle.to_s}, #{Plugin.model_manager.model_interface.openstudio_model}"                    
+        puts "ConstructionBase: model_object is empty for #{handle.class}, #{handle.to_s}, #{Plugin.model_manager.model_interface.openstudio_model}"
         model_object = nil
       end
       return model_object

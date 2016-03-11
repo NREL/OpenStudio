@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -21,8 +21,11 @@
 #define OPENSTUDIO_LOCATIONTABCONTROLLER_HPP
 
 #include "../model/Model.hpp"
+
 #include "MainTabController.hpp"
+
 #include <boost/smart_ptr.hpp>
+
 #include <QDir>
 #include <QObject>
 
@@ -30,11 +33,8 @@ class QStackedWidget;
 
 namespace openstudio {
 
-namespace model {
-  //class myModelClass;
-}
-
 class LocationTabView;
+
 class UtilityBillsController;
 
 class LocationTabController : public MainTabController
@@ -42,29 +42,37 @@ class LocationTabController : public MainTabController
   Q_OBJECT
 
 public:
-  LocationTabController(const model::Model& model,
-                        const QString& modelTempDir);
 
-  virtual ~LocationTabController() {}
+  LocationTabController(bool isIP,
+    const model::Model& model,
+    const QString& modelTempDir);
+
+  virtual ~LocationTabController();
 
   enum TabID
   {
     WEATHER_FILE,
     LIFE_CYCLE_COSTS,
-    UTILITY_BILLS,
-    UTILITY_RATES,
-    GROUND_TEMPERATURE,
-    WATER_MAINS_TEMPERATURE 
+    UTILITY_BILLS
   };
 
 private:
-  std::shared_ptr<UtilityBillsController> m_utilityBillsController;
-  QStackedWidget * m_utilityBillsStackedWidget;
-  int m_warningWidgetIndex;
-  int m_visibleWidgetIndex;
+
+  bool showUtilityBills();
+
+  QString m_modelTempDir;
+
+  model::Model m_model;
+
+  bool m_isIP;
+
+  QWidget * m_currentView = nullptr;
+
+  int m_currentIndex = -1;
 
 private slots:
-  void showSubTabView(bool showSubTabView);
+
+  virtual void setSubTab(int index) override;
  
 };
 

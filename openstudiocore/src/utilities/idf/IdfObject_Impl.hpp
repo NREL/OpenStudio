@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -99,6 +99,10 @@ namespace detail {
     /** Get the name of the object, if it exists. Optionally, if returnDefault is passed in as true, 
      *  name will return the default name, if it exists. */
     boost::optional<std::string> name(bool returnDefault=false) const;
+
+    /** Returns the name if set or returns an empty string. Optionally, if returnDefault is passed in as true,
+    *  name will return the default name, if it exists. */
+    std::string nameString(bool returnDefault = false) const;
 
     /** Get a brief description of this object. Always includes iddObject().type(), and includes
      *  name() if available and not empty. */
@@ -455,6 +459,12 @@ namespace detail {
 
     /** Check fieldValue against bounds in iddField. */
     bool withinBounds(double fieldValue,const IddField& iddField) const;
+
+    // convert a user string to one that can be written to file
+    std::string encodeString(const std::string& value) const;
+
+    // convert a string in file to one the use sees
+    std::string decodeString(const std::string& string) const;
 
     // configure logging
     REGISTER_LOGGER("utilities.idf.IdfObject");

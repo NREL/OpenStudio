@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -420,7 +420,7 @@ InputCheckBox::InputCheckBox()
   mainHLayout->setSpacing(spacing);
   setLayout(mainHLayout);
 
-  m_label = new QLabel("hello world");
+  m_label = new QLabel();
   m_label->setWordWrap(true);
   mainHLayout->addWidget(m_label);
 

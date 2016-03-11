@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -82,20 +82,16 @@ namespace openstudio {
   OPENSTUDIO_API openstudio::path saveModel(openstudio::model::Model model, const openstudio::path& osmPath, const openstudio::path& modelTempDir);
 
 
-  // Returns true if the given runmanager database uses radiance for its daylight calculations
-  OPENSTUDIO_API bool usesRadianceForDaylightCalculations(openstudio::runmanager::RunManager rm);
-
-
   // Removes the model temporary directory.
   OPENSTUDIO_API void removeModelTempDir(const openstudio::path& modelTempDir);
 
   // Creates and saves the run manager database, overwriting previous database.
   OPENSTUDIO_API bool saveRunManagerDatabase(const openstudio::path& osmPath, const openstudio::path& modelTempDir, 
-                                             bool useRadianceForDaylightingCalculations,
+                                             std::vector <double> useRadianceForDaylightingCalculations,
                                              QWidget* parent = nullptr);
   OPENSTUDIO_API bool saveRunManagerDatabase(const openstudio::path& osmPath, const openstudio::path& modelTempDir, 
                                              const std::map<openstudio::path,std::vector<ruleset::UserScriptInfo> >& userScriptsByFolder,
-                                             bool useRadianceForDaylightingCalculations,
+                                             std::vector <double> useRadianceForDaylightingCalculations,
                                              QWidget* parent = nullptr);
 
   // Pause the run manager
@@ -103,7 +99,7 @@ namespace openstudio {
 
   // Start the run manager
   OPENSTUDIO_API void startRunManager(openstudio::runmanager::RunManager& rm, const openstudio::path& osmPath, const openstudio::path& modelTempDir,
-      bool useRadianceForDaylightingCalculations, bool requireCalibrationReports, QWidget* parent = nullptr);
+                                      std::vector <double> useRadianceForDaylightingCalculations, bool requireCalibrationReports, QWidget* parent = nullptr);
 
   OPENSTUDIO_API bool findBCLMeasureWorkItem(const std::vector<runmanager::WorkItem>& workItems, const openstudio::UUID& uuid);
   

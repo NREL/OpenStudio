@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -292,7 +292,7 @@ namespace detail{
 
   void AirTerminalSingleDuctVAVReheat_Impl::autosizeMaximumAirFlowRate()
   {
-    this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumAirFlowRate,"Autocalculate");
+    this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumAirFlowRate,"AutoSize");
   }
 
   bool AirTerminalSingleDuctVAVReheat_Impl::isMaximumAirFlowRateAutosized() const
@@ -385,7 +385,7 @@ namespace detail{
 
   void AirTerminalSingleDuctVAVReheat_Impl::autosizeMaximumHotWaterOrSteamFlowRate()
   {
-    this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumHotWaterorSteamFlowRate,"Autocalculate");
+    this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumHotWaterorSteamFlowRate,"AutoSize");
   }
 
   bool AirTerminalSingleDuctVAVReheat_Impl::isMaximumHotWaterOrSteamFlowRateAutosized() const
@@ -461,7 +461,7 @@ namespace detail{
 
   void AirTerminalSingleDuctVAVReheat_Impl::autosizeMaximumFlowPerZoneFloorAreaDuringReheat()
   {
-    this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumFlowperZoneFloorAreaDuringReheat,"Autocalculate");
+    this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumFlowperZoneFloorAreaDuringReheat,"AutoSize");
   }
 
   bool AirTerminalSingleDuctVAVReheat_Impl::isMaximumFlowPerZoneFloorAreaDuringReheatAutosized() const
@@ -494,7 +494,7 @@ namespace detail{
 
   void AirTerminalSingleDuctVAVReheat_Impl::autosizeMaximumFlowFractionDuringReheat()
   {
-    this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumFlowFractionDuringReheat,"Autocalculate");
+    this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumFlowFractionDuringReheat,"AutoSize");
   }
 
   bool AirTerminalSingleDuctVAVReheat_Impl::isMaximumFlowFractionDuringReheatAutosized() const
@@ -627,6 +627,16 @@ namespace detail{
     return true;
   }
 
+  bool AirTerminalSingleDuctVAVReheat_Impl::controlForOutdoorAir() const
+  {
+    return getBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ControlForOutdoorAir);
+  }
+  
+  void AirTerminalSingleDuctVAVReheat_Impl::setControlForOutdoorAir(bool controlForOutdoorAir)
+  {
+    setBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ControlForOutdoorAir,controlForOutdoorAir);
+  }
+
 } // detail
 
 AirTerminalSingleDuctVAVReheat::AirTerminalSingleDuctVAVReheat( const Model& model, 
@@ -643,33 +653,33 @@ AirTerminalSingleDuctVAVReheat::AirTerminalSingleDuctVAVReheat( const Model& mod
         << "availability schedule to " << availabilitySchedule.briefDescription() << ".");
   }
 
-  this->setReheatCoil(coil);
+  setReheatCoil(coil);
 
-  this->autosizeMaximumAirFlowRate();
+  autosizeMaximumAirFlowRate();
 
-  this->setZoneMinimumAirFlowMethod("Constant");
+  setZoneMinimumAirFlowMethod("Constant");
 
-  this->setConstantMinimumAirFlowFraction(0.3);
+  setConstantMinimumAirFlowFraction(0.3);
 
-  this->setFixedMinimumAirFlowRate(0.0);
+  setFixedMinimumAirFlowRate(0.0);
 
-  this->setMaximumFlowPerZoneFloorAreaDuringReheat(0.0);
+  setMaximumFlowPerZoneFloorAreaDuringReheat(0.0);
 
-  this->setMinimumHotWaterOrStreamFlowRate(0.0);
+  setMinimumHotWaterOrStreamFlowRate(0.0);
 
-  this->setConvergenceTolerance(0.001);
+  setConvergenceTolerance(0.001);
 
-  this->setDamperHeatingAction("Normal");
+  setDamperHeatingAction("Normal");
 
-  this->autosizeMaximumFlowPerZoneFloorAreaDuringReheat();
+  autosizeMaximumFlowPerZoneFloorAreaDuringReheat();
 
-  this->autosizeMaximumFlowFractionDuringReheat();
+  autosizeMaximumFlowFractionDuringReheat();
 
-  this->setMaximumReheatAirTemperature(35.0);
+  setMaximumReheatAirTemperature(35.0);
 
-  this->autosizeMaximumHotWaterOrSteamFlowRate();
+  autosizeMaximumHotWaterOrSteamFlowRate();
 
-  this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::DesignSpecificationOutdoorAirObjectName,"");
+  setControlForOutdoorAir(false);
 }
 
 Schedule AirTerminalSingleDuctVAVReheat::availabilitySchedule() const
@@ -872,6 +882,16 @@ HVACComponent AirTerminalSingleDuctVAVReheat::reheatCoil() const
 bool AirTerminalSingleDuctVAVReheat::setReheatCoil(HVACComponent & coil)
 {
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setReheatCoil(coil);
+}
+
+bool AirTerminalSingleDuctVAVReheat::controlForOutdoorAir() const
+{
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->controlForOutdoorAir();
+}
+
+void AirTerminalSingleDuctVAVReheat::setControlForOutdoorAir(bool controlForOutdoorAir)
+{
+  getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setControlForOutdoorAir(controlForOutdoorAir);
 }
 
 } // model

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -321,7 +321,7 @@ namespace openstudio {
   }
 
   VariablesTabView::VariablesTabView(openstudio::model::Model t_model, QWidget * parent)
-    : MainTabView("Output Variables",false,parent)
+    : MainTabView("Output Variables", MainTabView::MAIN_TAB, parent)
   {
     auto scrollarea = new QScrollArea();
     VariablesList *vl = new VariablesList(t_model);

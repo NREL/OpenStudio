@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -85,6 +85,7 @@ namespace gbxml {
     QFile file(toQString(path));
     if (file.open(QFile::WriteOnly)){
       QTextStream textStream(&file);
+      textStream.setCodec("UTF-8");
       textStream << doc->toString(2);
       file.close();
       return true;

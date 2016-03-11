@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -42,7 +42,11 @@ namespace openstudio {
 LifeCycleCostsTabView::LifeCycleCostsTabView(const model::Model & model,
                                  const QString& modelTempDir,
                                  QWidget * parent)
-                                 : MainTabView("Life Cycle Costs",true,parent)
+                                 : MainTabView("Life Cycle Costs", MainTabView::SUB_TAB, parent)
+{
+}
+
+LifeCycleCostsTabView::~LifeCycleCostsTabView()
 {
 }
 
@@ -53,6 +57,10 @@ LifeCycleCostsView::LifeCycleCostsView(const model::Model & model)
   m_lifeCycleCostParameters = m_model.getUniqueModelObject<model::LifeCycleCostParameters>();
   createWidgets();
   attach(m_lifeCycleCostParameters.get());
+}
+
+LifeCycleCostsView::~LifeCycleCostsView()
+{
 }
 
 void LifeCycleCostsView::createWidgets()

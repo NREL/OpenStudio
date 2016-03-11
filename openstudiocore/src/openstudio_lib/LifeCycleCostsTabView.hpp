@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -48,8 +48,8 @@ class LifeCycleCostsView : public QWidget
 public:
 
   LifeCycleCostsView(const model::Model & model);
-  
-  virtual ~LifeCycleCostsView() {}
+
+  virtual ~LifeCycleCostsView();
 
 private:
 
@@ -114,7 +114,7 @@ public:
                         const QString& modelTempDir,
                         QWidget * parent = nullptr);
 
-  virtual ~LifeCycleCostsTabView() {}
+  virtual ~LifeCycleCostsTabView();
 
 private:
 

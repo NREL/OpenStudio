@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OpenStudio Results</title>
+  <link href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+  <link href="file:///<%= web_asset_path %>/bootstrap.min.css" rel="stylesheet">
+
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+  <script type="text/javascript" src="file:///<%= web_asset_path %>/jquery.min.js"></script>
+  <script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="file:///<%= web_asset_path %>/bootstrap.min.js"></script>
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.8/d3.min.js"></script>
+  <script type="text/javascript" src="file:///<%= web_asset_path %>/d3.min.js"></script>
+  <script type="text/javascript" src="http://dimplejs.org/dist/dimple.v2.1.2.min.js"></script>
+  <script type="text/javascript" src="file:///<%= web_asset_path %>/dimple.v2.1.2.min.js"></script>
+  <style>
+      body {
+          position: relative;
+          height: 100%;
+      }
+
+      div.col-md-3 {
+          padding-left: 0;
+      }
+
+      #tocItems {
+          margin-top: 40px;
+          z-index: 1;
+      }
+
+      #tocItems > .nav > li > a {
+          padding-top: 4px;
+          padding-bottom: 4px;
+      }
+
+      .btn {
+          margin: 0 3px;
+      }
+
+      .bs-docs-sidebar.affix {
+          margin-left: 15px;
+          position: static;
+      }
+
+      .bs-docs-sidebar.well {
+          padding: 0;
+      }
+
+      /* sidebar */
+      .bs-docs-sidebar {
+          padding-left: 20px;
+          padding-bottom: 20px;
+      }
+
+      /* Show and affix the side nav when space allows it */
+      @media (min-width: 992px) {
+          .bs-docs-sidebar .nav > .active > ul {
+              display: block;
+          }
+
+          /* Widen the fixed sidebar */
+          .bs-docs-sidebar.affix,
+          .bs-docs-sidebar.affix-bottom {
+              width: 213px;
+          }
+
+          .bs-docs-sidebar.affix {
+              position: fixed; /* Undo the static from mobile first approach */
+          }
+
+          .bs-docs-sidebar.affix-bottom {
+              position: absolute; /* Undo the static from mobile first approach */
+          }
+      }
+
+      @media (min-width: 1200px) {
+          /* Widen the fixed sidebar again */
+          .bs-docs-sidebar.affix-bottom,
+          .bs-docs-sidebar.affix {
+              width: 263px;
+          }
+      }
+
+      /* make sidebar scrollable */
+      .bs-docs-sidebar > ul {
+          overflow-y: auto;
+          height: 85vh;
+          padding: 10px;
+      }
+
+      @media (max-width: 991px) {
+          #tocItems {
+              margin-top: 10px;
+          }
+
+          .bs-docs-sidebar > ul {
+              max-height: 300px;
+          }
+      }
+  </style>
+  <script type="text/javascript">
+      // This variable will be an array of graph data
+      var nine = <%= @test_nine_data || 'null' %>;
+  </script>
+</head>
+<body data-spy="scroll" data-target="#tocItems">
+<div id="content" class="container-fluid">
+  <div class="row">
+    <div class="col-md-3">
+      <div id="tocItems" class="bs-docs-sidebar hidden-print well affix" role="complementary">
+        <ul class="nav nav-pills nav-stacked" role="navigation">
+          <% @sections.each do |section| %>
+              <% next if not section %>
+              <li><a href="#<%= section[:title].gsub(' ', '_').gsub('/', '_') %>"><%= section[:title] %></a></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-9" role="main">
+      <h1>OpenStudio Results</h1>
+      <% chart_index = table_index = 0 %>
+      <% @sections.each do |section| %>
+
+          <% next if not section %>
+          <h2 id="<%= section[:title].gsub(' ', '_').gsub('/', '_') %>"><%= section[:title] %></h2>
+
+          <% if section[:messages] %>
+              <% section[:messages].each do |message|%>
+                  <h5><i><%= message %></i></h5>
+              <% end %>
+          <% elsif section[:tables].size == 0 %>
+              <h5><i>No Data to Show for <%= section[:title] %></i></h5>
+          <% end %>
+
+          <% section[:tables].each do |table| %>
+              <% next if not table %>
+              <br>
+              <button class="btn btn-primary" type="button" data-toggle="collapse" data-target=<%= "#table_#{table_index}" %> aria-expanded="false" aria-controls=<%= "table_#{table_index}" %>>
+                <% if not table.has_key?(:title) then table[:title] = '' end %>
+                <% if not table[:title] == '' and table.has_key?(:chart_type) %>
+                    <%= table[:title] %> - view table
+                    <% class_string = 'collapse' %>
+                <% elsif not table[:title] == '' %>
+                    <%= table[:title] %>
+                    <% class_string = 'in' %>
+                <% elsif table[:title] == '' and table.has_key?(:chart_type) %>
+                    <%= section[:title] %> - view table
+                    <% class_string = 'collapse' %>
+                <% else %>
+                    <%= section[:title] %>
+                    <% class_string = 'in' %>
+                <% end %>
+              </button>
+              <div class="<%= class_string %>" id=<%= "table_#{table_index}" %>>
+                <div class="well">
+                  <% if table.has_key?(:data_color) %>
+                      <table class="table table-bordered table-condensed">
+                  <% else %>
+                      <table class="table table-striped table-bordered table-condensed">
+                  <% end %>
+                  <tr>
+                    <% table[:header].each_with_index do |header, header_index| %>
+                        <% if not table[:units] or table[:units][header_index] == '' or not table[:units][header_index] %>
+                            <th><%= header %></th>
+                        <% else %>
+                            <th><%= "#{header} (#{table[:units][header_index]})" %></th>
+                        <% end %>
+                    <% end %>
+                  </tr>
+                  <% table[:data].each_with_index do |row, row_index| %>
+                      <tr>
+                        <% row.each_with_index do |column, column_index| %>
+                            <% if column.class.to_s == 'Hash' and column.key?(:sub_header) %>
+                                <td><h5><b><i>(<%= column[:sub_header] %>)</i></b></h5></td>
+                            <% else %>
+                                <% if table.has_key?(:data_color) %>
+                                    <td style="background-color:<%= "#{table[:data_color][row_index][column_index]}" %>"><%= column %></td>
+                                <% else %>
+                                    <td><%= column %></td>
+                                <% end %>
+                            <% end %>
+                        <% end %>
+                      </tr>
+                  <% end %>
+                  </table>
+                  <% table_index += 1 %>
+                </div>
+              </div>
+              <% if table[:chart_type] == 'simple_pie' %>
+
+                  <% chart_index += 1 %>
+                  <div id="chartContainer_<%= chart_index %>">
+                    <script type="text/javascript">
+                        var svg = dimple.newSvg("#chartContainer_<%= chart_index %>", 500, 240);
+                        var data = [<%= table[:chart].join(',') %>];
+                        var myChart = new dimple.chart(svg, data);
+                        myChart.setBounds(0, 20, 200, 200);
+                        myChart.addMeasureAxis("p", "value");
+                        myChart.addSeries("label", dimple.plot.pie);
+                        myChart.addLegend(225, 75, 175, 150, "left");
+                        <% table[:chart].each do |i| %>
+                        <% next if JSON.parse(i)['color'] == nil %>
+                        myChart.assignColor('<%= JSON.parse(i)['label'] %>', '<%= JSON.parse(i)['color'] %>', 'white', 1);
+                        <% end %>
+                        myChart.draw();
+                    </script>
+                  </div>
+
+              <% elsif table[:chart_type] == 'vertical_stacked_bar' %>
+
+                  <% chart_index += 1 %>
+                  <div id="chartContainer_<%= chart_index %>">
+                    <script type="text/javascript">
+                        var svg = dimple.newSvg("#chartContainer_<%= chart_index %>", 1100, 450);
+                        var data = [<%= table[:chart].join(',') %>];
+                        var myChart = new dimple.chart(svg, data);
+                        myChart.setBounds(50, 20, 800, 300);
+                        var x = myChart.addCategoryAxis("x", "label_x");
+                        <% if table[:chart_attributes][:sort_xaxis] %>
+                        x.addOrderRule(<%= table[:chart_attributes][:sort_xaxis]%>);
+                        <% else %>
+                        x.addOrderRule("label_x");
+                        <% end %>
+                        var y = myChart.addMeasureAxis("y", "value");
+                        var s = myChart.addSeries("label", dimple.plot.bar);
+                        <% if table[:chart_attributes][:sort_yaxis] %>
+                        s.addOrderRule(<%= table[:chart_attributes][:sort_yaxis]%>);
+                        <% else %>
+                        s.addOrderRule("label");
+                        <% end %>
+                        var legend = myChart.addLegend(900, 200, 125, 300, "left");
+                        // first, store a copy of the original _getEntries method.
+                        legend._getEntries_old = legend._getEntries;
+                        // now override the method
+                        legend._getEntries = function () {
+                            // but call the original version,
+                            // then sort the returned array before returning it.
+                            return legend._getEntries_old.apply(this, arguments).reverse();
+                        };
+                        <% table[:chart].each do |i| %>
+                        <% next if JSON.parse(i)['color'] == nil %>
+                        myChart.assignColor('<%= JSON.parse(i)['label'] %>', '<%= JSON.parse(i)['color'] %>', 'gray', 1);
+                        <% end %>
+                        myChart.draw();
+                        x.titleShape.text('<%= table[:chart_attributes][:label_x]%>');
+                        y.titleShape.text('<%= table[:chart_attributes][:value]%>');
+                    </script>
+                  </div>
+
+              <% elsif table[:chart_type] == 'vertical_grouped_bar' %>
+
+                  <% chart_index += 1 %>
+                  <div id="chartContainer_<%= chart_index %>">
+                    <script type="text/javascript">
+                        var svg = dimple.newSvg("#chartContainer_<%= chart_index %>", 1000, 400);
+                        var data = [<%= table[:chart].join(",") %>];
+                        var myChart = new dimple.chart(svg, data);
+                        myChart.setBounds(50, 20, 800, 300);
+                        var x = myChart.addCategoryAxis("x", ["label_x", "label"]);
+                        x.addOrderRule("label_x");
+                        var y = myChart.addMeasureAxis("y", "value");
+                        myChart.addSeries("label", dimple.plot.bar);
+                        myChart.addLegend(900, 200, 125, 300, "left");
+                        <% table[:chart].each do |i| %>
+                        <% next if JSON.parse(i)['color'] == nil %>
+                        myChart.assignColor('<%= JSON.parse(i)['label'] %>', '<%= JSON.parse(i)['color'] %>', 'white', 1);
+                        <% end %>
+                        myChart.draw();
+                        x.titleShape.text('<%= table[:chart_attributes][:label_x]%>');
+                        y.titleShape.text('<%= table[:chart_attributes][:value]%>');
+                    </script>
+                  </div>
+
+              <% elsif table[:chart_type] == 'scatter' %>
+
+                  <% chart_index += 1 %>
+                  <div id="chartContainer_<%= chart_index %>">
+                    <script type="text/javascript">
+                        var svg = dimple.newSvg("#chartContainer_<%= chart_index %>", 1000, 400);
+                        var data = [<%= table[:chart].join(",") %>];
+                        var myChart = new dimple.chart(svg, data);
+                        myChart.setBounds(50, 20, 800, 300);
+                        var x = myChart.addMeasureAxis("x", "label_x")
+                        var y = myChart.addMeasureAxis("y", "label_y");
+                        myChart.addSeries(["index","label"], dimple.plot.bubble);
+                        myChart.addLegend(900, 200, 125, 300, "left");
+                        myChart.draw();
+                        x.titleShape.text('<%= table[:chart_attributes][:label_x]%>');
+                        y.titleShape.text('<%= table[:chart_attributes][:label_y]%>');
+                    </script>
+                  </div>
+
+              <% elsif table[:chart_type] == 'vertical_grouped_bar_with_comp_line' %>
+
+                  <% chart_index += 1 %>
+                  <div id="chartContainer_<%= chart_index %>">
+                    <script type="text/javascript">
+                        var svg = dimple.newSvg("#chartContainer_<%= chart_index %>", 1150, 400);
+                        var data = [<%= table[:chart].join(',') %>];
+                        var myChart = new dimple.chart(svg, data);
+                        myChart.setBounds(50, 20, 800, 300);
+                        var x = myChart.addCategoryAxis("x", ["label_x", "label"]);
+                        <% if table[:chart_attributes][:sort_xaxis] %>
+                        x.addOrderRule(<%= table[:chart_attributes][:sort_xaxis]%>);
+                        <% else %>
+                        x.addOrderRule("label_x");
+                        <% end %>
+                        var y = myChart.addMeasureAxis("y", "value");
+                        var y2 = myChart.addMeasureAxis("y", "value2");
+                        var left = myChart.addSeries("label", dimple.plot.bar, [x, y]);
+                        var right = myChart.addSeries("label", dimple.plot.line, [x, y2]);
+                        right.lineMarkers = false;
+                        right.interpolation = "linear";
+                        myChart.addLegend(950, 200, 125, 300, "left");
+                        <% table[:chart].each do |i| %>
+                        <% next if JSON.parse(i)['color'] == nil %>
+                        myChart.assignColor('<%= JSON.parse(i)['label'] %>', '<%= JSON.parse(i)['color'] %>', '<%= JSON.parse(i)['color'] %>', 1);
+                        <% end %>
+                        myChart.draw();
+                        x.titleShape.text('<%= table[:chart_attributes][:label_x]%>');
+                        y.titleShape.text('<%= table[:chart_attributes][:value_left]%>');
+                        y2.titleShape.text('<%= table[:chart_attributes][:value_right]%>');
+                    </script>
+                  </div>
+              <% elsif table[:chart_type] == 'multi_step_line_grid' %>
+                  <div>
+                    <% table[:chart].each do |chart| %>
+                        <% chart_index += 1 %>
+                        <div id="chartContainer_<%= chart_index %>" style="display:inline-block;">
+                          <script type="text/javascript">
+                              var svg = dimple.newSvg("#chartContainer_<%= chart_index %>", 400, 400);
+                              var data = [<%= chart[:chart_data].join(',') %>];
+                              var myChart = new dimple.chart(svg, data);
+                              myChart.setBounds(50, 115, 350, 250);
+                              var x = myChart.addCategoryAxis("x", "label_x");
+                              x.addOrderRule("label_x");
+                              var y = myChart.addMeasureAxis("y", "value");
+                              <% if chart[:chart_attributes][:value] == 'Dimensionless' %>
+                              <% max = 1.0 %>
+                              <%chart[:chart_data].each do |data| %>
+                              <% if JSON.parse(data)['value'] > max %>
+                              <% max = JSON.parse(data)['value'] %>
+                              <% end %>
+                              <% end %>
+                              y.overrideMax = <%= max %>;
+                              <% end %>
+                              var s = myChart.addSeries("label", dimple.plot.line);
+                              s.addOrderRule("label");
+                              s.interpolation = "step-before";
+                              var myLegend = myChart.addLegend(60, 30, 200, 100, "left");
+
+                              myLegend._getEntries = function () {
+                                  var entries = [];
+                                  if (this.series) {
+                                      this.series.forEach(function (series) {
+                                          var data = series._positionData;
+                                          data.forEach(function (row) {
+                                              var index = -1,
+                                                      j,
+                                                      field = ((series.plot.grouped && !series.x._hasCategories() && !series.y._hasCategories() && row.aggField.length < 2 ? "All" : row.aggField.slice(-1)[0]));
+                                              for (j = 0; j < entries.length; j += 1) {
+                                                  if (entries[j].key === field) {
+                                                      index = j;
+                                                      break;
+                                                  }
+                                              }
+                                              if (index === -1 && series.chart._assignedColors[field]) {
+                                                  entries.push({
+                                                      key: field,
+                                                      fill: series.chart._assignedColors[field].fill,
+                                                      stroke: series.chart._assignedColors[field].stroke,
+                                                      opacity: series.chart._assignedColors[field].opacity,
+                                                      series: series,
+                                                      aggField: row.aggField
+                                                  });
+                                                  index = entries.length - 1;
+                                              }
+                                          });
+                                      }, this);
+                                  }
+
+                                  // PUT YOUR SORTING LOGIC HERE
+                                  // For example to sort numeric values ascending
+                                  entries.sort(function (a, b) {
+                                      return parseFloat(a.key) - parseFloat(b.key);
+                                  });
+
+                                  return entries;
+                              };
+                              <% chart[:chart_data].each do |i| %>
+                              <% next if JSON.parse(i)['color'] == nil %>
+                              myChart.assignColor('<%= JSON.parse(i)['label'] %>', '<%= JSON.parse(i)['color'] %>');
+                              <% end %>
+                              myChart.draw();
+                              x.titleShape.text('<%= chart[:chart_attributes][:label_x]%>');
+                              y.titleShape.text('<%= chart[:chart_attributes][:value]%>');
+
+                              // Add a title with some d3
+                              svg.append("text")
+                                      .attr("x", 60)
+                                      .attr("y", 20)
+                                      .style("text-anchor", "left")
+                                      .style("font-weight", "bold")
+                                      .text('<%= chart[:chart_attributes][:title]%>')
+
+                          </script>
+                        </div>
+                    <% end %>
+                  </div>
+
+              <% else %>
+
+              <% end %>
+
+          <% end %>
+
+      <% end %>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

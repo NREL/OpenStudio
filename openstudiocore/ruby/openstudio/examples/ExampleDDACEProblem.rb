@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -51,7 +51,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 require 'openstudio/analysis/find_dakota'
 require 'fileutils'
 
@@ -92,7 +91,7 @@ projectDir = ospPath.parent_path / Path.new(ospPath.stem)
 
 
 # EnergyPlus
-ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,3)
+ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,5)
 ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
 weatherData_path = Path.new(ep_hash[:energyplus_weatherdata].to_s)
 

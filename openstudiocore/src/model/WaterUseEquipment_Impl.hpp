@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -65,6 +65,8 @@ class MODEL_API WaterUseEquipment_Impl : public SpaceLoadInstance_Impl {
   virtual double multiplier() const override;
 
   virtual bool isMultiplierDefaulted() const override;
+
+  virtual bool isAbsolute() const override;
 
   virtual bool setDefinition(const SpaceLoadDefinition& definition) override;
 

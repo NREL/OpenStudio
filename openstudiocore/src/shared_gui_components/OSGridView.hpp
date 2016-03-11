@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -78,11 +78,9 @@ protected:
 
 signals:
 
-  void itemSelected(OSItem *);
-
   void dropZoneItemClicked(OSItem* item);
 
-  void gridRowSelected(OSItem*);
+  void gridRowSelectionChanged(int checkState);
 
 public slots:
 
@@ -101,8 +99,6 @@ private slots:
   void addWidget(int row, int column);
 
   void selectCategory(int index);
-
-  void onDropZoneItemClicked(OSItem* item);
 
   void doRefresh();
 

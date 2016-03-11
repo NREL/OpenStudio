@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -24,6 +24,7 @@
 
 #include "AccessPolicyStore.hpp"
 
+#include "../utilities/core/Assert.hpp"
 #include "../utilities/idd/IddFileAndFactoryWrapper.hpp"
 
 using std::map;
@@ -119,9 +120,19 @@ namespace openstudio
               LOG(Warn,"2 entries of same type found in policy xml. Later entries will obscure previous entires:"<<val.toStdString()<<"\n");
               delete exists->second;
               AccessPolicyStore::Instance().m_policyMap.erase( exists );
-
+              // DLM: return false?
+              OS_ASSERT(false);
             }
             m_curPolicy = new AccessPolicy();
+
+            OptionalIddObject opObj = m_factory.getObject(m_curType);
+            if (opObj)
+            {
+              // initialize here in case there are no rules
+              m_curPolicy->m_numNormalFields = opObj->numFields();
+              m_curPolicy->m_extensibleSize = opObj->properties().numExtensible;
+            }
+
             AccessPolicyStore::Instance().m_policyMap[m_curType] = m_curPolicy;
             return true;//I don't care about any other attributes!
 
@@ -190,7 +201,7 @@ namespace openstudio
                QString fieldName2(f->name().c_str());
                if( !fieldName.compare(fieldName2,Qt::CaseInsensitive) )
                {
-                   m_curPolicy->m_extensibleAccessMap[i-obj.numFields()]=level;
+                 m_curPolicy->m_extensibleAccessMap[i-obj.numFields()]=level;
                  foundInFields=true;
                  break;
                }
@@ -220,12 +231,9 @@ namespace openstudio
     }
 
 
-
-
-
-
-
     AccessPolicy::AccessPolicy()
+      : m_numNormalFields(std::numeric_limits<unsigned>::max()),
+        m_extensibleSize(std::numeric_limits<unsigned>::max())
     {
     }
 
@@ -233,6 +241,13 @@ namespace openstudio
 
     AccessPolicy::ACCESS_LEVEL AccessPolicy::getAccess(unsigned int index )const
     {
+      if (m_numNormalFields == std::numeric_limits<unsigned>::max()){
+        OS_ASSERT(false);
+      }
+      if (m_extensibleSize == std::numeric_limits<unsigned>::max()){
+        OS_ASSERT(false);
+      }
+
       if(index<m_numNormalFields)
       {
         auto i = m_accessMap.find(index);

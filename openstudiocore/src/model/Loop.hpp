@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -111,9 +111,13 @@ class MODEL_API Loop : public ParentObject {
 
   virtual Node supplyOutletNode() const;
 
+  virtual std::vector<Node> supplyOutletNodes() const;
+
   virtual Node demandInletNode() const;
 
   virtual Node demandOutletNode() const;
+
+  virtual std::vector<Node> demandInletNodes() const;
 
   /** Returns all of the supply side hvac equipment between
    * inletComps and outletComps.  If type is given then the results will

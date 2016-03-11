@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -171,11 +171,173 @@ TEST(DateTime,EpochConversions) {
 }
 
 TEST(DateTime,ISO8601Conversions) {
-  DateTime dateTime = DateTime::now();
-  std::string asIso = dateTime.toISO8601();
-  OptionalDateTime copy = DateTime::fromISO8601(asIso);
-  ASSERT_TRUE(copy);
-  EXPECT_EQ(dateTime,copy.get());
+  {
+    DateTime dateTime = DateTime::now();
+    double utcOffset = dateTime.utcOffset();
+    EXPECT_EQ(DateTime::localOffsetUTC(), utcOffset);
+
+    std::string asIso = dateTime.toISO8601();
+    OptionalDateTime copy = DateTime::fromISO8601(asIso);
+    ASSERT_TRUE(copy);
+    EXPECT_EQ(dateTime, copy.get());
+    EXPECT_EQ(dateTime.utcOffset(), copy->utcOffset());
+    EXPECT_EQ(dateTime.toEpoch(), copy->toEpoch());
+  }
+  {
+    DateTime dateTime = DateTime::nowUTC();
+    double utcOffset = dateTime.utcOffset();
+    EXPECT_EQ(0, utcOffset);
+
+    std::string asIso = dateTime.toISO8601();
+    OptionalDateTime copy = DateTime::fromISO8601(asIso);
+    ASSERT_TRUE(copy);
+    EXPECT_EQ(dateTime, copy.get());
+    EXPECT_EQ(dateTime.utcOffset(), copy->utcOffset());
+    EXPECT_EQ(dateTime.toEpoch(), copy->toEpoch());
+  }
+}
+
+TEST(DateTime, ISO8601Conversions_2) {
+  boost::optional<DateTime> test;
+
+
+  // Complete date plus hours and minutes :
+  test = DateTime::fromISO8601("1997-07-16T19:20+01:00");
+  ASSERT_TRUE(test);
+  EXPECT_EQ(1997, test->date().year());
+  EXPECT_EQ(7, test->date().monthOfYear().value());
+  EXPECT_EQ(16, test->date().dayOfMonth());
+  EXPECT_EQ(19, test->time().hours());
+  EXPECT_EQ(20, test->time().minutes());
+  EXPECT_EQ(0, test->time().seconds());
+  EXPECT_EQ(1, test->utcOffset());
+
+  test = DateTime::fromISO8601("19970716T1920+0100");  
+  ASSERT_TRUE(test);
+  EXPECT_EQ(1997, test->date().year());
+  EXPECT_EQ(7, test->date().monthOfYear().value());
+  EXPECT_EQ(16, test->date().dayOfMonth());
+  EXPECT_EQ(19, test->time().hours());
+  EXPECT_EQ(20, test->time().minutes());
+  EXPECT_EQ(0, test->time().seconds());
+  EXPECT_EQ(1, test->utcOffset());
+
+  test = DateTime::fromISO8601("19970716T1920Z");
+  ASSERT_TRUE(test);
+  EXPECT_EQ(1997, test->date().year());
+  EXPECT_EQ(7, test->date().monthOfYear().value());
+  EXPECT_EQ(16, test->date().dayOfMonth());
+  EXPECT_EQ(19, test->time().hours());
+  EXPECT_EQ(20, test->time().minutes());
+  EXPECT_EQ(0, test->time().seconds());
+  EXPECT_EQ(0, test->utcOffset());
+
+  test = DateTime::fromISO8601("19970716T1920");
+  ASSERT_TRUE(test);
+  EXPECT_EQ(1997, test->date().year());
+  EXPECT_EQ(7, test->date().monthOfYear().value());
+  EXPECT_EQ(16, test->date().dayOfMonth());
+  EXPECT_EQ(19, test->time().hours());
+  EXPECT_EQ(20, test->time().minutes());
+  EXPECT_EQ(0, test->time().seconds());
+  EXPECT_EQ(0, test->utcOffset());
+
+  // Complete date plus hours, minutes and seconds :
+  test = DateTime::fromISO8601("1997-07-16T19:20:30+01:00");
+  ASSERT_TRUE(test);
+  EXPECT_EQ(1997, test->date().year());
+  EXPECT_EQ(7, test->date().monthOfYear().value());
+  EXPECT_EQ(16, test->date().dayOfMonth());
+  EXPECT_EQ(19, test->time().hours());
+  EXPECT_EQ(20, test->time().minutes());
+  EXPECT_EQ(30, test->time().seconds());
+  EXPECT_EQ(1, test->utcOffset());
+
+  test = DateTime::fromISO8601("19970716T192030+0100");
+  ASSERT_TRUE(test);
+  EXPECT_EQ(1997, test->date().year());
+  EXPECT_EQ(7, test->date().monthOfYear().value());
+  EXPECT_EQ(16, test->date().dayOfMonth());
+  EXPECT_EQ(19, test->time().hours());
+  EXPECT_EQ(20, test->time().minutes());
+  EXPECT_EQ(30, test->time().seconds());
+  EXPECT_EQ(1, test->utcOffset());
+
+  test = DateTime::fromISO8601("19970716T192030Z"); 
+  ASSERT_TRUE(test);
+  EXPECT_EQ(1997, test->date().year());
+  EXPECT_EQ(7, test->date().monthOfYear().value());
+  EXPECT_EQ(16, test->date().dayOfMonth());
+  EXPECT_EQ(19, test->time().hours());
+  EXPECT_EQ(20, test->time().minutes());
+  EXPECT_EQ(30, test->time().seconds());
+  EXPECT_EQ(0, test->utcOffset());
+
+  test = DateTime::fromISO8601("19970716T192030");
+  ASSERT_TRUE(test);
+  EXPECT_EQ(1997, test->date().year());
+  EXPECT_EQ(7, test->date().monthOfYear().value());
+  EXPECT_EQ(16, test->date().dayOfMonth());
+  EXPECT_EQ(19, test->time().hours());
+  EXPECT_EQ(20, test->time().minutes());
+  EXPECT_EQ(30, test->time().seconds());
+  EXPECT_EQ(0, test->utcOffset());
+
+  // Complete date plus hours, minutes, seconds and a decimal fraction of a second :
+  test = DateTime::fromISO8601("1997-07-16T19:20:30.45+01:00");
+  ASSERT_TRUE(test);
+  EXPECT_EQ(1997, test->date().year());
+  EXPECT_EQ(7, test->date().monthOfYear().value());
+  EXPECT_EQ(16, test->date().dayOfMonth());
+  EXPECT_EQ(19, test->time().hours());
+  EXPECT_EQ(20, test->time().minutes());
+  EXPECT_EQ(30, test->time().seconds());
+  EXPECT_EQ(1, test->utcOffset());
+
+  test = DateTime::fromISO8601("19970716T19203045+0100");
+  ASSERT_TRUE(test);
+  EXPECT_EQ(1997, test->date().year());
+  EXPECT_EQ(7, test->date().monthOfYear().value());
+  EXPECT_EQ(16, test->date().dayOfMonth());
+  EXPECT_EQ(19, test->time().hours());
+  EXPECT_EQ(20, test->time().minutes());
+  EXPECT_EQ(30, test->time().seconds());
+  EXPECT_EQ(1, test->utcOffset());
+
+  test = DateTime::fromISO8601("19970716T19203045Z");
+  ASSERT_TRUE(test);
+  EXPECT_EQ(1997, test->date().year());
+  EXPECT_EQ(7, test->date().monthOfYear().value());
+  EXPECT_EQ(16, test->date().dayOfMonth());
+  EXPECT_EQ(19, test->time().hours());
+  EXPECT_EQ(20, test->time().minutes());
+  EXPECT_EQ(30, test->time().seconds());
+  EXPECT_EQ(0, test->utcOffset());
+
+  test = DateTime::fromISO8601("19970716T19203045");
+  ASSERT_TRUE(test);
+  EXPECT_EQ(1997, test->date().year());
+  EXPECT_EQ(7, test->date().monthOfYear().value());
+  EXPECT_EQ(16, test->date().dayOfMonth());
+  EXPECT_EQ(19, test->time().hours());
+  EXPECT_EQ(20, test->time().minutes());
+  EXPECT_EQ(30, test->time().seconds());
+  EXPECT_EQ(0, test->utcOffset());
+}
+
+TEST(DateTime, OutOfRangeYearTest) {
+
+  std::string timeString = "20151025T085412";
+  for (unsigned i = 0; i < 10000; ++i){
+    boost::optional<openstudio::DateTime> dateTime = openstudio::DateTime::fromISO8601(timeString);
+    ASSERT_TRUE(dateTime);
+    openstudio::Date date = dateTime->date();
+    for (unsigned j = 0; j < 10; ++j){
+      EXPECT_EQ(2015, date.year());
+      EXPECT_EQ(10, date.monthOfYear().value());
+      EXPECT_EQ(25, date.dayOfMonth());
+    }
+   }
 }
 
 

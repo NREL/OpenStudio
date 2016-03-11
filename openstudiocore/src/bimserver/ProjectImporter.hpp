@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -87,7 +87,7 @@ namespace bimserver {
       QString     m_ifcID;
       QListWidget *m_proList;
       QListWidget *m_ifcList;
-      QStatusBar	*m_statusBar;
+      QStatusBar  *m_statusBar;
       QEventLoop  *m_waitForOSM;
       QString     m_OSM;
 

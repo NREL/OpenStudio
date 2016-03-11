@@ -1,0 +1,38 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    aws-sdk-core (2.0.48)
+      builder (~> 3.0)
+      jmespath (~> 1.0)
+      multi_json (~> 1.0)
+    builder (3.2.2)
+    jmespath (1.0.2)
+      multi_json (~> 1.0)
+    multi_json (1.11.0)
+    net-scp (1.2.1)
+      net-ssh (>= 2.6.5)
+    net-ssh (2.9.2)
+    openstudio-aws (0.4.0.pre1)
+      aws-sdk-core (~> 2.0)
+      net-scp (~> 1.1)
+      semantic (~> 1.4)
+      sshkey (~> 1.7)
+    rake (0.9.6)
+    rdoc (4.0.0)
+    semantic (1.4.1)
+    sshkey (1.7.0)
+    test-unit (2.0.0)
+
+PLATFORMS
+  ruby
+  x64-mingw32
+  x86-mingw32
+
+DEPENDENCIES
+  openstudio-aws (~> 0.4.0.pre1)
+  rake (= 0.9.6)
+  rdoc (= 4.0.0)
+  test-unit (= 2.0.0.0)
+
+BUNDLED WITH
+   1.10.1

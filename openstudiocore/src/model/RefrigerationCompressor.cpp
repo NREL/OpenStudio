@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -76,20 +76,6 @@ namespace detail {
   ModelObject RefrigerationCompressor_Impl::clone(Model model) const
   {
     RefrigerationCompressor modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCompressor>();
-
-    CurveBicubic refPowerCurve = refrigerationCompressorPowerCurve();
-    modelObjectClone.setRefrigerationCompressorPowerCurve(refPowerCurve.clone(model).cast<CurveBicubic>());
-
-    CurveBicubic refCapacitryCurve = refrigerationCompressorCapacityCurve();
-    modelObjectClone.setRefrigerationCompressorCapacityCurve(refCapacitryCurve.clone(model).cast<CurveBicubic>());
-
-    if ( boost::optional<CurveBicubic> transPowerCurve = transcriticalCompressorPowerCurve() ) {
-      modelObjectClone.setTranscriticalCompressorPowerCurve(transPowerCurve.get().clone(model).cast<CurveBicubic>());
-    }
-
-    if ( boost::optional<CurveBicubic> transCapacitryCurve = transcriticalCompressorCapacityCurve() ) {
-      modelObjectClone.setTranscriticalCompressorCapacityCurve(transCapacitryCurve.get().clone(model).cast<CurveBicubic>());
-    }
 
     return modelObjectClone;
   }

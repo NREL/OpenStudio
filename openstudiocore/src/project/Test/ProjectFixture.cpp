@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -88,7 +88,11 @@ openstudio::project::ProjectDatabase ProjectFixture::getDatabase(
 void ProjectFixture::removeAllDatabases() {
   for (const openstudio::path& dbDir : databaseDirs) {
     if (boost::filesystem::exists(dbDir)) {
-      boost::filesystem::remove_all(dbDir);
+      try{
+        boost::filesystem::remove_all(dbDir);
+      } catch (const std::exception&){
+
+      }
     }
   }
   databaseDirs.clear();

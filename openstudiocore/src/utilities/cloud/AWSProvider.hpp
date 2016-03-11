@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -200,7 +200,7 @@ namespace detail {
     // returns the number of processor cores per worker
     unsigned numWorkerProcessors() const;
 
-    // returns the key pair's private key
+    // returns the cloud state in json format
     std::string privateKey() const;
 
     // returns the timestamp associated with the security group and key pair
@@ -247,7 +247,7 @@ namespace detail {
     // sets the number of processor cores per worker
     void setNumWorkerProcessors(const unsigned numWorkerProcessors);
 
-    // sets the key pair's private key
+    // sets the cloud state in json format
     void setPrivateKey(const std::string& privateKey);
 
     // sets the timestamp

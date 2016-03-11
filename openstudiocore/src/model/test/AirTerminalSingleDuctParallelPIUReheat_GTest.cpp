@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -30,6 +30,10 @@
 #include "../PlantLoop.hpp"
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
+#include "../PortList.hpp"
+#include "../PortList_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
 
 using namespace openstudio::model;
@@ -106,7 +110,7 @@ TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat) {
     ASSERT_EQ(hvacSchedule.handle(),fanSchedule.handle()); 
   }
 
-  // test that addToNode (by proxy addBranchForHVACComponent) sets the fan schedule to match system availabilitySchedule
+  // test that addToNode (by proxy addBranchForZone) sets the fan schedule to match system availabilitySchedule
   {
     Model m; 
     Schedule schedule = m.alwaysOnDiscreteSchedule();
@@ -119,8 +123,38 @@ TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat) {
     ScheduleRuleset hvacSchedule(m);
     airLoopHVAC.setAvailabilitySchedule(hvacSchedule);
 
-    airLoopHVAC.addBranchForHVACComponent(terminal);
+    ThermalZone zone(m);
+    // KSB: I don't think it is the greatest idea to test these private methods,
+    // but this area has resulted in a simulation error so it needs to be tested
+    EXPECT_FALSE(zone.getImpl<detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
+    EXPECT_FALSE(zone.getImpl<detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
+
+    airLoopHVAC.addBranchForZone(zone,terminal);
     auto fanSchedule = fan.availabilitySchedule();
     ASSERT_EQ(hvacSchedule.handle(),fanSchedule.handle()); 
+
+    EXPECT_TRUE(zone.getImpl<detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
+    EXPECT_TRUE(zone.getImpl<detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
+
+    EXPECT_EQ(9u,airLoopHVAC.demandComponents().size());
+    EXPECT_EQ(1u,zone.equipment().size());
+
+    auto zoneImpl = zone.getImpl<openstudio::model::detail::ThermalZone_Impl>();
+    auto exhaustMo = zoneImpl->exhaustPortList().lastModelObject();
+    ASSERT_TRUE(exhaustMo);
+    auto exhaustNode = exhaustMo->optionalCast<Node>();
+    ASSERT_TRUE(exhaustNode);
+    ASSERT_TRUE(exhaustNode->outletModelObject());
+    ASSERT_EQ(terminal,exhaustNode->outletModelObject().get());
+
+    terminal.remove();
+
+    EXPECT_FALSE(zone.getImpl<detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
+    EXPECT_TRUE(zone.getImpl<detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
+
+    EXPECT_EQ(7u,airLoopHVAC.demandComponents().size());
+    EXPECT_TRUE(zone.equipment().empty());
+
+    EXPECT_FALSE(zoneImpl->exhaustPortList().lastModelObject());
   }
 }

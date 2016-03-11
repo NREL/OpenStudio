@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -337,6 +337,14 @@ namespace runmanager {
     {
       exename = "energyplus";
     }
+    else if (eplus.first.getMajor() && eplus.first.getMajor() == 8 && eplus.first.getMinor() && eplus.first.getMinor() >= 3)
+    {
+      exename = "energyplus";
+    }
+    else if (eplus.first.getMajor() && eplus.first.getMajor() > 8)
+    {
+      exename = "energyplus";
+    }
 
 
     return openstudio::runmanager::ToolInfo(
@@ -542,6 +550,11 @@ namespace runmanager {
   {
     std::vector<openstudio::path> potentialpaths;
 
+    boost::optional<openstudio::path> radianceDirectory = getRadianceDirectory();
+    if (radianceDirectory){
+      potentialpaths.push_back(*radianceDirectory);
+    }
+
     QByteArray qba = qgetenv("RAYPATH");
     if (!qba.isEmpty())
     {
@@ -616,6 +629,9 @@ namespace runmanager {
   {
     std::vector<openstudio::path> potentialpaths;
 
+    potentialpaths.push_back(getEnergyPlusDirectory());
+    potentialpaths.push_back(getEnergyPlusExecutable());
+
     QByteArray qba = qgetenv("ENERGYPLUSDIR");
     if (!qba.isEmpty())
     {
@@ -664,6 +680,16 @@ namespace runmanager {
     return potentialpaths;
   }
 
+  std::vector<openstudio::path> ConfigOptions::potentialRubyLocations() const
+  {
+    std::vector<openstudio::path> potentialpaths;
+
+    potentialpaths.push_back(getOpenStudioEmbeddedRubyPath());
+    potentialpaths.push_back(getOpenStudioAWSRubyPath());
+
+    return potentialpaths;
+  }
+
   void ConfigOptions::fastFindRadiance()
   {
     std::vector<std::pair<openstudio::runmanager::ToolVersion, openstudio::runmanager::ToolLocationInfo> >
@@ -681,6 +707,14 @@ namespace runmanager {
     m_toolLocations.insert(foundTools.begin(), foundTools.end());
 
     setIDFEPWDefaults();
+  }
+
+  void ConfigOptions::fastFindRuby()
+  {
+    std::vector<std::pair<openstudio::runmanager::ToolVersion, openstudio::runmanager::ToolLocationInfo> >
+      foundTools = openstudio::runmanager::ToolFinder::findTools(potentialRubyLocations(), false);
+
+    m_toolLocations.insert(foundTools.begin(), foundTools.end());
   }
 
   void ConfigOptions::loadQSettingsData() 

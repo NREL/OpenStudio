@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -135,10 +135,24 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeCoolerIndirect
     idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::BlowdownConcentrationRatio,d.get());
   }
 
-  // SecondaryAirInletNode
-  if( boost::optional<model::Node> node = modelObject.getImpl<model::detail::EvaporativeCoolerIndirectResearchSpecial_Impl>()->reliefAirInletNode() )
-  {
+  // ReliefAirInletNodeName
+  if( boost::optional<model::Node> node = modelObject.getImpl<model::detail::EvaporativeCoolerIndirectResearchSpecial_Impl>()->reliefAirInletNode() ) {
     idfObject.setString(EvaporativeCooler_Indirect_ResearchSpecialFields::ReliefAirInletNodeName,node->name().get());
+  }
+
+  // Secondary Air Inlet Node Name
+  {
+    IdfObject inletNode(openstudio::IddObjectType::OutdoorAir_NodeList);
+    auto inletNodeName = modelObject.name().get() + " Secondary Air Inlet";
+    inletNode.setString(0,inletNodeName);
+    m_idfObjects.push_back(inletNode);
+    idfObject.setString(EvaporativeCooler_Indirect_ResearchSpecialFields::SecondaryAirInletNodeName,inletNodeName);
+  }
+
+  // Secondary Air Outlet Node Name
+  {
+    auto outletNodeName = modelObject.name().get() + " Secondary Air Outlet";
+    idfObject.setString(EvaporativeCooler_Indirect_ResearchSpecialFields::SecondaryAirOutletNodeName,outletNodeName);
   }
 
   // WetbulbEffectivenessFlowRatioModifierCurveName
@@ -198,9 +212,9 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeCoolerIndirect
   // PrimaryDesignAirFlowRate
   d = modelObject.primaryDesignAirFlowRate();
   if( modelObject.isPrimaryDesignAirFlowRateAutosized() ) {
-    idfObject.setString(EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryDesignAirFlowRate,"Autosize");
+    idfObject.setString(EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryAirDesignFlowRate,"Autosize");
   } else if ( d ) {
-    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryDesignAirFlowRate,d.get());
+    idfObject.setDouble(EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryAirDesignFlowRate,d.get());
   }
 
   return boost::optional<IdfObject>(idfObject);

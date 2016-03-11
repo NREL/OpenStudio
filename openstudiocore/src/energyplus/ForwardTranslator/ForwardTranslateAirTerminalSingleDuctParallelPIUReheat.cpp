@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -253,18 +253,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctPara
   if( (value = modelObject.minimumHotWaterorSteamFlowRate()) )
   {
     idfObject.setDouble(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::MinimumHotWaterorSteamFlowRate,value.get());
-  }
-
-  // HotWaterorSteamInletNodeName
-  if( boost::optional<CoilHeatingWater> coil = modelObject.reheatCoil().optionalCast<CoilHeatingWater>() )
-  {
-    if( boost::optional<ModelObject> mo = coil->waterInletModelObject() )
-    {
-      if( boost::optional<Node> node = mo->optionalCast<Node>() )
-      {
-        idfObject.setString(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::HotWaterorSteamInletNodeName,node->name().get());
-      }
-    }
   }
 
   // ConvergenceTolerance

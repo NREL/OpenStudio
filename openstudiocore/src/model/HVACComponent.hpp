@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -150,6 +150,8 @@ class MODEL_API HVACComponent : public ParentObject
   // *  connection to this object's port is made.
   // */
   //virtual boost::optional<unsigned> connectedObjectPort(unsigned port);
+
+  std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & previous);
 
   protected:
 

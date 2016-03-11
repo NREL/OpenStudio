@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -18,7 +18,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 
 def simulateOneWorkspace(workspace,epwFile,outputDirectory,failOnInvalid=true,printValidityReport=true)
 
@@ -39,9 +38,8 @@ def simulateOneWorkspace(workspace,epwFile,outputDirectory,failOnInvalid=true,pr
   idfFile = workspace.toIdfFile()
   
   # set up EnergyPlus
-  ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,3)
-  ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s) 
-  idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
+  co = OpenStudio::Runmanager::ConfigOptions.new
+  co.fastFindEnergyPlus()
   
   OpenStudio::create_directory(outputDirectory)
   
@@ -53,12 +51,11 @@ def simulateOneWorkspace(workspace,epwFile,outputDirectory,failOnInvalid=true,pr
   end
   
   # run simulation
-  job = OpenStudio::Runmanager::JobFactory::createEnergyPlusJob(
-            OpenStudio::Runmanager::ToolInfo.new(ep_path),
-            idd_path,
-            file_path,
-            OpenStudio::Path.new(epwFile),
-            outputDirectory)
+  workflow = OpenStudio::Runmanager::Workflow.new("EnergyPlus")
+  workflow.add(co.getTools)
+  
+  job = workflow.create(outputDirectory, file_path, OpenStudio::Path.new(epwFile))
+  
   runManager = OpenStudio::Runmanager::RunManager.new(outputDirectory / OpenStudio::Path.new("runmanager.db"), true)
   runManager.enqueue(job, true)
   print "Running EnergyPlus "

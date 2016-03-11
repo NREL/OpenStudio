@@ -1,7 +1,10 @@
 include(${CMAKE_ROOT}/Modules/CheckFunctionExists.cmake)
+INCLUDE (CheckIncludeFiles)
 
 set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS HAVE_LIBSQLITE3)
 set(HAVE_LIBSQLITE3 1)
+
+INCLUDE(CheckIncludeFiles)
 
 check_include_files(dlfcn.h HAVE_DLFCN_H)
 check_include_files(inttypes.h HAVE_INTTYPES_H)

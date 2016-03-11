@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -44,6 +44,10 @@ OSUnsignedEdit2::OSUnsignedEdit2( QWidget * parent )
   m_intValidator = new QIntValidator();
   m_intValidator->setBottom(0);
   this->setValidator(m_intValidator);
+}
+
+OSUnsignedEdit2::~OSUnsignedEdit2()
+{
 }
 
 void OSUnsignedEdit2::bind(model::ModelObject& modelObject,

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -103,6 +103,8 @@ TEST(Date, YearDayOfYearConstructor)
   EXPECT_THROW(Date::fromDayOfYear(-1, 2008), openstudio::Exception);
   EXPECT_THROW(Date::fromDayOfYear(367, 2008), openstudio::Exception);
   EXPECT_THROW(Date::fromDayOfYear(366, 2009), openstudio::Exception);
+  EXPECT_THROW(Date::fromDayOfYear(1, -2009), openstudio::Exception);
+  EXPECT_THROW(Date::fromDayOfYear(1, 1000000), openstudio::Exception);
 };
 
 TEST(Date, MonthDayConstructor)

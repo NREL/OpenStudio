@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -191,10 +191,6 @@ namespace detail {
       openstudio::radiance::ForwardTranslator ft;
       std::vector<openstudio::path> outfiles = ft.translateModel(outpath, model);
       
-      // capture translator errors and warnings?
-      //ft.errors();
-      //ft.warnings();
-      
       Files outfileinfos;
 
       for (std::vector<openstudio::path>::const_iterator itr = outfiles.begin();
@@ -207,7 +203,7 @@ namespace detail {
         outfileinfos.append(fi);
       }
 
-
+      // capture translator errors and warnings
       std::vector<openstudio::LogMessage> logwarnings = ft.warnings();
       std::vector<openstudio::LogMessage> logerrors = ft.errors();
 

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -136,6 +136,19 @@ QCoreApplication* ApplicationSingleton::application(bool gui)
   }
 
   return m_qApplication;
+}
+
+bool ApplicationSingleton::hasApplication() const
+{
+  return (m_qApplication != nullptr);
+}
+
+bool ApplicationSingleton::hasGUI() const
+{
+  if (hasApplication()){
+    return dynamic_cast<QApplication*>(m_qApplication);
+  }
+  return false;
 }
 
 /// set the QApplication, this should be done before calling application(), no op if it has already been set

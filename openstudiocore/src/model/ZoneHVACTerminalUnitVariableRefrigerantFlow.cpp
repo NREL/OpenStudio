@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -482,6 +482,46 @@ ZoneHVACTerminalUnitVariableRefrigerantFlow::ZoneHVACTerminalUnitVariableRefrige
 
   FanOnOff fan(model,alwaysOnSchedule);
   fan.setName(name().get() + " Fan");
+  getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setSupplyAirFan(fan);
+}
+
+ZoneHVACTerminalUnitVariableRefrigerantFlow::ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model, 
+  const CoilCoolingDXVariableRefrigerantFlow & coolingCoil,
+  const CoilHeatingDXVariableRefrigerantFlow & heatingCoil,
+  const HVACComponent & fan)
+  : ZoneHVACComponent(ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>());
+
+  Schedule alwaysOnSchedule = model.alwaysOnDiscreteSchedule();
+  setTerminalUnitAvailabilityschedule(alwaysOnSchedule);
+
+  autosizeSupplyAirFlowRateDuringCoolingOperation();
+
+  autosizeSupplyAirFlowRateWhenNoCoolingisNeeded();
+
+  autosizeSupplyAirFlowRateDuringHeatingOperation();
+
+  autosizeSupplyAirFlowRateWhenNoHeatingisNeeded();
+
+  autosizeOutdoorAirFlowRateDuringCoolingOperation();
+
+  autosizeOutdoorAirFlowRateDuringHeatingOperation();
+
+  autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+
+  setSupplyAirFanOperatingModeSchedule(alwaysOnSchedule);
+
+  setZoneTerminalUnitOnParasiticElectricEnergyUse(30);
+
+  setZoneTerminalUnitOffParasiticElectricEnergyUse(20);
+
+  setRatedTotalHeatingCapacitySizingRatio(1.0);
+
+  getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setCoolingCoil(coolingCoil);
+
+  getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setHeatingCoil(heatingCoil);
+
   getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setSupplyAirFan(fan);
 }
 

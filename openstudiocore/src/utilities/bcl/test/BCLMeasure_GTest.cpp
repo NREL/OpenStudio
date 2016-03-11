@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -37,7 +37,7 @@ TEST_F(BCLFixture, BCLMeasure)
 
   EXPECT_EQ("Set Window to Wall Ratio by Facade", measure->name());
   EXPECT_EQ("f347ae80-48b4-4c40-bfd4-6c5139b38136", measure->uid());
-  EXPECT_EQ("a0e33012-0183-45a0-8898-11f93f55164d", measure->versionId());
+  EXPECT_EQ("a0e33012-0183-45a0-8898-11f93f55164e", measure->versionId());
   EXPECT_EQ("This measure will set the window to wall ratio for exterior surfaces with a specified orientation. If one or more windows exist on an affected wall, they will be removed and replaced with a single ribbon window. Doors will not be removed. If the requested ratio can't be achieved then the wall will remain untouched.", measure->description());
   EXPECT_EQ("This measure identifies exterior surfaces of the proper orientation. Then it runs a method that removes existing windows and applies a new window with a specified window to wall ratio and sill height. The construction chosen for the new window is defaulted to what is assigned to the space, or inherited from a higher level object, such as the building. If the baseline model uses hard assigned constructions you may not get the expected results. The measure doesn't have any cost or lifecycle arguments, however if lifecycle objects exist for exterior wall and window constructions, then this measure will be able to calculate the economic impact of change in window to wall ratio.", measure->modelerDescription());
 
@@ -143,12 +143,13 @@ TEST_F(BCLFixture, BCLMeasure_CTor)
 TEST_F(BCLFixture, PatApplicationMeasures)
 {
   std::vector<BCLMeasure> patApplicationMeasures = BCLMeasure::patApplicationMeasures();
-  ASSERT_EQ(4u, patApplicationMeasures.size());
+  ASSERT_EQ(5u, patApplicationMeasures.size());
 
   bool filesUpdated;
   bool xmlUpdated;
 
   BCLMeasure alternativeModelMeasure = BCLMeasure::alternativeModelMeasure();
+  ASSERT_TRUE(alternativeModelMeasure.primaryRubyScriptPath());
   filesUpdated = alternativeModelMeasure.checkForUpdatesFiles();
   ASSERT_FALSE(filesUpdated); // DLM: comment out to update built in PAT measures
   xmlUpdated = alternativeModelMeasure.checkForUpdatesXML();
@@ -158,6 +159,7 @@ TEST_F(BCLFixture, PatApplicationMeasures)
   }
 
   BCLMeasure reportRequestMeasure = BCLMeasure::reportRequestMeasure();
+  ASSERT_TRUE(reportRequestMeasure.primaryRubyScriptPath());
   filesUpdated = reportRequestMeasure.checkForUpdatesFiles();
   ASSERT_FALSE(filesUpdated); // DLM: comment out to update built in PAT measures
   xmlUpdated = reportRequestMeasure.checkForUpdatesXML();
@@ -167,6 +169,7 @@ TEST_F(BCLFixture, PatApplicationMeasures)
   }
 
   BCLMeasure standardReportMeasure = BCLMeasure::standardReportMeasure();
+  ASSERT_TRUE(standardReportMeasure.primaryRubyScriptPath());
   filesUpdated = standardReportMeasure.checkForUpdatesFiles();
   ASSERT_FALSE(filesUpdated); // DLM: comment out to update built in PAT measures
   xmlUpdated = standardReportMeasure.checkForUpdatesXML();
@@ -176,12 +179,23 @@ TEST_F(BCLFixture, PatApplicationMeasures)
   }
 
   BCLMeasure calibrationReportMeasure = BCLMeasure::calibrationReportMeasure();
+  ASSERT_TRUE(calibrationReportMeasure.primaryRubyScriptPath());
   filesUpdated = calibrationReportMeasure.checkForUpdatesFiles();
   ASSERT_FALSE(filesUpdated); // DLM: comment out to update built in PAT measures
   xmlUpdated = calibrationReportMeasure.checkForUpdatesXML();
   ASSERT_FALSE(xmlUpdated); // DLM: comment out to update built in PAT measures
   if (filesUpdated || xmlUpdated){
     calibrationReportMeasure.save();
+  }
+
+  BCLMeasure radianceMeasure = BCLMeasure::radianceMeasure();
+  ASSERT_TRUE(radianceMeasure.primaryRubyScriptPath());
+  filesUpdated = radianceMeasure.checkForUpdatesFiles();
+  ASSERT_FALSE(filesUpdated); // DLM: comment out to update built in PAT measures
+  xmlUpdated = radianceMeasure.checkForUpdatesXML();
+  ASSERT_FALSE(xmlUpdated); // DLM: comment out to update built in PAT measures
+  if (filesUpdated || xmlUpdated){
+    radianceMeasure.save();
   }
 
 }

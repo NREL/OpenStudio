@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -117,6 +117,10 @@ LoopLibraryDialog::LoopLibraryDialog(QWidget * parent)
 
   newItem( ADDTOMODEL_AIRLOOPHVAC,
            QString("Empty Air Loop"),
+           QPixmap(":/images/air_loop_icon.png") );
+
+  newItem( ADDTOMODEL_DUAL_AIRLOOPHVAC,
+           QString("Dual Duct Air Loop"),
            QPixmap(":/images/air_loop_icon.png") );
 
   newItem( ADDTOMODEL_PLANTLOOP,

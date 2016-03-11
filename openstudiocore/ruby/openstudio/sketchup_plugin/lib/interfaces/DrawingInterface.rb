@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -280,6 +280,11 @@ module OpenStudio
         handles << model_object.handle if handles
         idf_objects << model_object.idfObject if idf_objects
         
+        model_object.lifeCycleCosts.each do |lifeCycleCost|
+          handles << lifeCycleCost.handle
+          idf_objects << lifeCycleCost.idfObject
+        end
+          
         parent_object = model_object.to_ParentObject
         if not parent_object.empty?
           parent_object.get.children.each do |child|
@@ -299,6 +304,8 @@ module OpenStudio
         Plugin.log(OpenStudio::Info, "Child #{model_object.class} with handle #{model_object.handle} selected")    
         handles << model_object.handle if handles
         idf_objects << model_object.idfObject if idf_objects
+        
+        # life cycle costs are not associated with an entity
         
         parent_object = model_object.to_ParentObject
         if not parent_object.empty?
@@ -333,6 +340,11 @@ module OpenStudio
           handles_to_remove << @model_object.handle
           idf_objects_to_restore << @model_object.idfObject
 
+          @model_object.lifeCycleCosts.each do |lifeCycleCost|
+            handles_to_remove << lifeCycleCost.handle
+            idf_objects_to_restore << lifeCycleCost.idfObject
+          end
+    
           parent_object = @model_object.to_ParentObject
           if not parent_object.empty?
           
@@ -377,6 +389,11 @@ module OpenStudio
       handles_to_remove << @model_object.handle
       idf_objects_to_restore << @model_object.idfObject
 
+      @model_object.lifeCycleCosts.each do |lifeCycleCost|
+        handles_to_remove << lifeCycleCost.handle
+        idf_objects_to_restore << lifeCycleCost.idfObject
+      end
+          
       parent_object = @model_object.to_ParentObject
       if not parent_object.empty?
         parent_object.get.children.each do |child|
@@ -537,6 +554,8 @@ module OpenStudio
           class_hash = @model_interface.class_hash
           handles_to_remove = OpenStudio::UUIDVector.new
           idf_objects_to_remove = OpenStudio::IdfObjectVector.new
+          
+          # life cycle costs do not have sketchup entities
           
           parent_object = @model_object.to_ParentObject
           if not parent_object.empty?

@@ -256,6 +256,7 @@ if(APPLE)
       \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodelcore.bundle\"
       \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodeleditor.bundle\"
       \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodelgeometry.bundle\"
+      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodelgenerators.bundle\"
       \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodelhvac.bundle\"
       \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodelrefrigeration.bundle\"
       \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodelresources.bundle\"

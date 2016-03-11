@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -68,7 +68,7 @@ HorizontalTabWidget::HorizontalTabWidget(QWidget * parent)
   m_tabBarLine->setStyleSheet("QWidget { border-top: 1px solid black; background-color: #95B3DE; }");
 
   // Page stack
-  
+
   m_pageStack = new QStackedWidget();
 
   m_pageStack->setObjectName("GrayWidget");

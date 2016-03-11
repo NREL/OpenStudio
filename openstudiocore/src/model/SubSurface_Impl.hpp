@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -33,6 +33,8 @@ class ShadingControl;
 class ShadingSurfaceGroup;
 class DaylightingDeviceShelf;
 class WindowPropertyFrameAndDivider;
+class SurfacePropertyOtherSideCoefficients;
+class SurfacePropertyOtherSideConditionsModel;
 
 namespace detail {
 
@@ -214,6 +216,24 @@ namespace detail {
 
     /// reset the adjacent subsurface, will clear references on both this and adjacent sub surface 
     void resetAdjacentSubSurface();
+
+    /** Returns the adjacent SurfaceSurfacePropertyOtherSideCoefficients, if it exists. */
+    boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;
+
+    /** Sets the SurfacePropertyOtherSideCoefficients. */
+    bool setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients);
+
+    /** Resets the SurfacePropertyOtherSideCoefficients. */
+    void resetSurfacePropertyOtherSideCoefficients();
+
+    /** Returns the adjacent SurfacePropertyOtherSideConditionsModel, if it exists. */
+    boost::optional<SurfacePropertyOtherSideConditionsModel> surfacePropertyOtherSideConditionsModel() const;
+
+    /** Sets the SurfacePropertyOtherSideConditionsModel. */
+    bool setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel);
+
+    /** Resets the SurfacePropertyOtherSideConditionsModel. */
+    void resetSurfacePropertyOtherSideConditionsModel();
 
     /** Default sub surface type based on vertices. */
     std::string defaultSubSurfaceType() const;

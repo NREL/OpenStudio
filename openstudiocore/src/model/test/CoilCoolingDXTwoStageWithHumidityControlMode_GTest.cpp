@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -18,9 +18,9 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/CoilCoolingDXTwoStageWithHumidityControlMode.hpp>
-#include <model/CoilCoolingDXTwoStageWithHumidityControlMode_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../CoilCoolingDXTwoStageWithHumidityControlMode.hpp"
+#include "../CoilCoolingDXTwoStageWithHumidityControlMode_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

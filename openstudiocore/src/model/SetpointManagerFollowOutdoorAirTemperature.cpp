@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -23,9 +23,7 @@
 #include "Model.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
-#include "AirLoopHVAC.hpp"
 #include "PlantLoop.hpp"
-#include "Schedule.hpp"
 
 #include <utilities/idd/OS_SetpointManager_FollowOutdoorAirTemperature_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -79,9 +77,7 @@ namespace detail{
     if( added ) {
       return added;
     } else if( boost::optional<PlantLoop> plantLoop = node.plantLoop() ) {
-      if( plantLoop->supplyComponent(node.handle()) ) {
-        return this->setSetpointNode(node);
-      }
+      return this->setSetpointNode(node);
     }
     return added;
   }

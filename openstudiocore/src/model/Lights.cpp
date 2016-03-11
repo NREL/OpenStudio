@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -146,6 +146,14 @@ namespace detail {
 
   bool Lights_Impl::isMultiplierDefaulted() const {
     return isEmpty(OS_LightsFields::Multiplier);
+  }
+
+  bool Lights_Impl::isAbsolute() const {
+    LightsDefinition definition = lightsDefinition();
+    if (definition.lightingLevel()) {
+      return true;
+    }
+    return false;
   }
 
   std::string Lights_Impl::endUseSubcategory() const {

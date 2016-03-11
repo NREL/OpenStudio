@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -74,6 +74,10 @@ UtilityBillsView::UtilityBillsView(const openstudio::model::Model& model, QWidge
     this, &UtilityBillsView::enableAddNewObjectButton);
 }
 
+UtilityBillsView::~UtilityBillsView()
+{
+}
+
 std::vector<std::pair<FuelType, std::string> > UtilityBillsView::utilityBillFuelTypesAndNames()
 {
   std::vector<std::pair<FuelType, std::string> > result;
@@ -93,9 +97,7 @@ std::vector<std::pair<FuelType, std::string> > UtilityBillsView::utilityBillFuel
   return result;
 }
 
-
 //**********************************************************************************************************
-
 
 UtilityBillsInspectorView::UtilityBillsInspectorView(const model::Model & model,
                                                      bool addScrollArea,
@@ -121,6 +123,10 @@ UtilityBillsInspectorView::UtilityBillsInspectorView(const model::Model & model,
     m_visibleWidgetIndex(0)
 {
   createWidgets();
+}
+
+UtilityBillsInspectorView::~UtilityBillsInspectorView()
+{
 }
 
 boost::optional<QString> UtilityBillsInspectorView::runPeriodDates()

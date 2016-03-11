@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -40,7 +40,7 @@ module OpenStudio
       if not model_object.empty?
         model_object = model_object.get
       else
-        puts "InteriorPartitionSurfaceGroup: model_object is empty for #{handle.class}, #{handle.to_s}, #{Plugin.model_manager.model_interface.openstudio_model}"                    
+        puts "InteriorPartitionSurfaceGroup: model_object is empty for #{handle.class}, #{handle.to_s}, #{Plugin.model_manager.model_interface.openstudio_model}"
         model_object = nil
       end
       return model_object

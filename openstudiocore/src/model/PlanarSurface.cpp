@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -33,6 +33,8 @@
 #include "AirWallMaterial_Impl.hpp"
 #include "SubSurface.hpp"
 #include "SubSurface_Impl.hpp"
+#include "GeneratorPhotovoltaic.hpp"
+#include "GeneratorPhotovoltaic_Impl.hpp"
 
 #include "../utilities/sql/SqlFile.hpp"
 
@@ -40,6 +42,8 @@
 #include "../utilities/geometry/Transformation.hpp"
 
 #include "../utilities/core/Assert.hpp"
+
+#include <utilities/idd/IddEnums.hxx>
 
 #include <boost/math/constants/constants.hpp>
 #include <boost/lexical_cast.hpp>
@@ -223,8 +227,8 @@ namespace model {
           OS_ASSERT(layers.size() == 1u);
           result = layers[0].optionalCast<AirWallMaterial>();
         }else if (construction.numLayers() == 0) {
-          LOG(Error, "Air wall detected with zero layers, classifying as air wall");
-          result = true;
+          LOG(Info, "Construction detected with zero layers, classifying as non-air wall");
+          result = false;
         }else {
           LOG(Error, "Air wall detected with more than one layer, classifying as non-air wall");
           result = false;
@@ -403,6 +407,7 @@ namespace model {
     boost::optional<double> PlanarSurface_Impl::visibleTransmittance() const
     {
       OptionalDouble result;
+      boost::optional<std::string> surfaceName = this->name();
       OptionalSqlFile sqlFile = model().sqlFile();
       OptionalConstructionBase oConstruction = this->construction();
 
@@ -413,28 +418,26 @@ namespace model {
         // from output
         OptionalDouble outputResult;
         if (sqlFile) {
-          OptionalString constructionName = oConstruction->name();
-          if (constructionName){
-            std::string query = "SELECT RowId FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' AND ReportForString='Entire Facility' AND TableName='Exterior Fenestration' AND ColumnName='Construction' AND Value='" + to_upper_copy(*constructionName) + "'";
-            OptionalInt rowId = sqlFile->execAndReturnFirstInt(query);
-            if (rowId) {
+          OptionalString surfaceName = this->name();
+          //OptionalString constructionName = oConstruction->name();
+          std::string query;
+          if (surfaceName){
+
+            if (!outputResult){
               std::stringstream ss;
-              ss << "SELECT Value FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' AND ReportForString='Entire Facility' AND TableName='Exterior Fenestration' AND RowId='";
-              ss << *rowId << "' AND ColumnName='Glass Visible Transmittance'";
+              ss << "SELECT Value FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' AND ReportForString='Entire Facility' AND TableName='Exterior Fenestration' AND RowName='";
+              ss << to_upper_copy(*surfaceName) << "' AND ColumnName='Glass Visible Transmittance'";
               query = ss.str();
               outputResult = sqlFile->execAndReturnFirstDouble(query);
-            }else{
-              query = "SELECT RowId FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' AND ReportForString='Entire Facility' AND TableName='Interior Fenestration' AND ColumnName='Construction' AND Value='" + to_upper_copy(*constructionName) + "'";
-              rowId = sqlFile->execAndReturnFirstInt(query);
-              if (rowId) {
-                std::stringstream ss;
-                ss << "SELECT Value FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' AND ReportForString='Entire Facility' AND TableName='Interior Fenestration' AND RowId='";
-                ss << *rowId << "' AND ColumnName='Glass Visible Transmittance'";
-                query = ss.str();
-                outputResult = sqlFile->execAndReturnFirstDouble(query);
-              }
             }
 
+            if (!outputResult){
+              std::stringstream ss;
+              ss << "SELECT Value FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' AND ReportForString='Entire Facility' AND TableName='Interior Fenestration' AND RowName='";
+              ss << to_upper_copy(*surfaceName) << "' AND ColumnName='Glass Visible Transmittance'";
+              query = ss.str();
+              outputResult = sqlFile->execAndReturnFirstDouble(query);
+            }
           }
         }
 
@@ -542,6 +545,29 @@ namespace model {
       return *result;
     }
 
+    std::vector<ModelObject> PlanarSurface_Impl::solarCollectors() const
+    {
+      std::vector<ModelObject> result;
+      for (const ModelObject& modelObject : getObject<ModelObject>().getModelObjectSources<ModelObject>()){
+        switch (modelObject.iddObject().type().value()){
+        case IddObjectType::OS_SolarCollector_FlatPlate_PhotovoltaicThermal: // fall through
+        case IddObjectType::OS_SolarCollector_FlatPlate_Water: // fall through
+        case IddObjectType::OS_SolarCollector_IntegralCollectorStorage: // fall through
+          result.push_back(modelObject);
+          break;
+        default:
+          break;
+        }
+        
+      }
+      return result;
+    }
+
+    std::vector<GeneratorPhotovoltaic> PlanarSurface_Impl::generatorPhotovoltaics() const
+    {
+      return getObject<ModelObject>().getModelObjectSources<GeneratorPhotovoltaic>();
+    }
+    
     boost::optional<ModelObject> PlanarSurface_Impl::constructionAsModelObject() const
     {
       return static_cast<boost::optional<ModelObject> >(this->construction());
@@ -766,6 +792,16 @@ std::vector<std::vector<Point3d> > PlanarSurface::triangulation() const
 Point3d PlanarSurface::centroid() const
 {
   return getImpl<detail::PlanarSurface_Impl>()->centroid();
+}
+
+std::vector<ModelObject> PlanarSurface::solarCollectors() const
+{
+  return getImpl<detail::PlanarSurface_Impl>()->solarCollectors();
+}
+
+std::vector<GeneratorPhotovoltaic> PlanarSurface::generatorPhotovoltaics() const
+{
+  return getImpl<detail::PlanarSurface_Impl>()->generatorPhotovoltaics();
 }
 
 std::vector<PlanarSurface> PlanarSurface::findPlanarSurfaces(const std::vector<PlanarSurface>& planarSurfaces,

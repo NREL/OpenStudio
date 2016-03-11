@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -25,34 +25,31 @@
 #include "OSItem.hpp"
 #include "ScheduleDialog.hpp"
 #include "ScheduleSetsController.hpp"
+#include "ScheduleSetsView.hpp"
 #include "SchedulesTabView.hpp"
 #include "SchedulesView.hpp"
 #include "ScheduleDayView.hpp"
 #include "SubTabView.hpp"
-#include "YearSettingsWidget.hpp"
 
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
-#include "../model/RunPeriodControlDaylightSavingTime.hpp"
-#include "../model/RunPeriodControlDaylightSavingTime_Impl.hpp"
 #include "../model/ScheduleRule.hpp"
 #include "../model/ScheduleRuleset.hpp"
 #include "../model/ScheduleRuleset_Impl.hpp"
 #include "../model/ScheduleRule_Impl.hpp"
 #include "../model/ScheduleTypeLimits.hpp"
 
+#include "../utilities/core/Assert.hpp"
 #include "../utilities/idf/IdfFile.hpp"
 #include "../utilities/time/Date.hpp"
 #include "../utilities/time/Time.hpp"
 #include "../utilities/units/Unit.hpp"
-#include "../utilities/units/Quantity.hpp"
 #include "../utilities/units/OSOptionalQuantity.hpp"
-#include "../utilities/core/Assert.hpp"
+#include "../utilities/units/Quantity.hpp"
 
 #include "../energyplus/ReverseTranslator.hpp"
 
 #include <QApplication>
-#include <QDateTime>
 #include <QDialog>
 #include <QFileDialog>
 #include <QString>
@@ -61,79 +58,18 @@ namespace openstudio {
 
 SchedulesTabController::SchedulesTabController(bool isIP, const model::Model & model)
   : MainTabController(new SchedulesTabView(model)),
-    m_yearSettingsWidget(nullptr),
     m_model(model),
-    m_scheduleDialog(nullptr),
     m_isIP(isIP)
 {
-  m_yearDescription = m_model.getUniqueModelObject<model::YearDescription>();
+  mainContentWidget()->addSubTab("Schedule Sets", SCHEDULE_SETS);
+  mainContentWidget()->addSubTab("Schedules", SCHEDULES);
 
-  m_yearSettingsWidget = new YearSettingsWidget(m_model);
-  addQObject(m_yearSettingsWidget);
-  this->mainContentWidget()->addSubTab("Year Settings",m_yearSettingsWidget,YEAR_SETTINGS);
-
-  m_scheduleSetsController = std::shared_ptr<ScheduleSetsController>( new ScheduleSetsController(m_model) );
-  this->mainContentWidget()->addSubTab("Schedule Sets",m_scheduleSetsController->subTabView(),SCHEDULE_SETS);
-
-  m_schedulesView = new SchedulesView(m_isIP,m_model);
-  addQObject(m_schedulesView);
-  this->mainContentWidget()->addSubTab("Schedules",m_schedulesView,SCHEDULES);
-
-  connect(this, &SchedulesTabController::toggleUnitsClicked, this, &SchedulesTabController::toggleUnits);
-
-  connect(this, &SchedulesTabController::toggleUnitsClicked, m_schedulesView, &SchedulesView::toggleUnitsClicked);
-
-  connect(m_scheduleSetsController.get(), &ScheduleSetsController::downloadComponentsClicked, this, &SchedulesTabController::downloadComponentsClicked);
-
-  connect(m_scheduleSetsController.get(), &ScheduleSetsController::openLibDlgClicked, this, &SchedulesTabController::openLibDlgClicked);
-
-  connect(m_schedulesView, &SchedulesView::addScheduleClicked, this, &SchedulesTabController::addScheduleRuleset);
-  
-  connect(m_schedulesView, &SchedulesView::copySelectedScheduleClicked, this, &SchedulesTabController::copySelectedSchedule);
-
-  connect(m_schedulesView, &SchedulesView::removeSelectedScheduleClicked, this, &SchedulesTabController::removeSelectedSchedule);
-
-  connect(m_schedulesView, &SchedulesView::purgeUnusedScheduleRulesetsClicked, this, &SchedulesTabController::purgeUnusedScheduleRulesets);
-
-  connect(m_schedulesView, &SchedulesView::addRuleClicked, this, &SchedulesTabController::addRule);
-
-  connect(m_schedulesView, &SchedulesView::addSummerProfileClicked, this, &SchedulesTabController::addSummerProfile);
-
-  connect(m_schedulesView, &SchedulesView::addWinterProfileClicked, this, &SchedulesTabController::addWinterProfile);
-
-  connect(m_schedulesView, &SchedulesView::dayScheduleSceneChanged, this, &SchedulesTabController::onDayScheduleSceneChanged);
-
-  connect(m_schedulesView, &SchedulesView::startDateTimeChanged, this, &SchedulesTabController::onStartDateTimeChanged);
-
-  connect(m_schedulesView, &SchedulesView::endDateTimeChanged, this, &SchedulesTabController::onEndDateTimeChanged);
-
-  connect(m_schedulesView, &SchedulesView::removeScheduleRuleClicked, this, &SchedulesTabController::removeScheduleRule);
-
-  connect(m_schedulesView, &SchedulesView::itemDropped, this, &SchedulesTabController::onItemDropped);
-
-  connect(m_schedulesView, &SchedulesView::modelObjectSelected, this, &SchedulesTabController::modelObjectSelected);
-
-  connect(m_yearSettingsWidget, &YearSettingsWidget::calendarYearSelected, this, &SchedulesTabController::setCalendarYear);
-
-  connect(m_yearSettingsWidget, &YearSettingsWidget::firstDayofYearSelected, this, &SchedulesTabController::setFirstDayofYear);
-
-  connect(m_yearSettingsWidget, &YearSettingsWidget::daylightSavingTimeClicked, this, &SchedulesTabController::setDaylightSavingsTime);
-
-  connect(m_yearSettingsWidget, &YearSettingsWidget::dstStartDayOfWeekAndMonthChanged, this, &SchedulesTabController::setDstStartDayOfWeekAndMonth);
-
-  connect(m_yearSettingsWidget, &YearSettingsWidget::dstStartDateChanged, this, &SchedulesTabController::setDstStartDate);
-
-  connect(m_yearSettingsWidget, &YearSettingsWidget::dstEndDayOfWeekAndMonthChanged, this, &SchedulesTabController::setDstEndDayOfWeekAndMonth);
-
-  connect(m_yearSettingsWidget, &YearSettingsWidget::dstEndDateChanged, this, &SchedulesTabController::setDstEndDate);
+  connect(this->mainContentWidget(), &MainTabView::tabSelected, this, &SchedulesTabController::setSubTab);
 }
 
-YearSettingsWidget * SchedulesTabController::yearSettingsWidget()
+SchedulesTabController::~SchedulesTabController()
 {
-  // assert non-null pointer
-  OS_ASSERT(m_yearSettingsWidget);
-
-  return m_yearSettingsWidget;
+  disconnect(this->mainContentWidget(), &MainTabView::tabSelected, this, &SchedulesTabController::setSubTab);
 }
 
 void SchedulesTabController::addScheduleRuleset()
@@ -153,17 +89,21 @@ void SchedulesTabController::showScheduleDialog()
 
 void SchedulesTabController::copySelectedSchedule()
 {
-  if (boost::optional<model::ScheduleRuleset> schedule = m_schedulesView->currentSchedule())
-  {
-    schedule->clone();
+  if (qobject_cast<SchedulesView *>(m_currentView)) {
+    if (boost::optional<model::ScheduleRuleset> schedule = (qobject_cast<SchedulesView *>(m_currentView))->currentSchedule())
+    {
+      schedule->clone();
+    }
   }
 }
 
 void SchedulesTabController::removeSelectedSchedule()
 {
-  if( boost::optional<model::ScheduleRuleset> schedule = m_schedulesView->currentSchedule() )
-  {
-    schedule->remove();
+  if (qobject_cast<SchedulesView *>(m_currentView)) {
+    if (boost::optional<model::ScheduleRuleset> schedule = (qobject_cast<SchedulesView *>(m_currentView))->currentSchedule())
+    {
+      schedule->remove();
+    }
   }
 }
 
@@ -221,7 +161,9 @@ void SchedulesTabController::addSummerProfile(model::ScheduleRuleset & scheduleR
 
   scheduleDay->remove();
 
-  m_schedulesView->showSummerScheduleDay(scheduleRuleset);
+  if (qobject_cast<SchedulesView *>(m_currentView)) {
+    (qobject_cast<SchedulesView *>(m_currentView))->showSummerScheduleDay(scheduleRuleset);
+  }
 }
 
 void SchedulesTabController::addWinterProfile(model::ScheduleRuleset & scheduleRuleset, UUID scheduleDayHandle)
@@ -247,7 +189,9 @@ void SchedulesTabController::addWinterProfile(model::ScheduleRuleset & scheduleR
 
   scheduleDay->remove();
 
-  m_schedulesView->showWinterScheduleDay(scheduleRuleset);
+  if (qobject_cast<SchedulesView *>(m_currentView)) {
+    (qobject_cast<SchedulesView *>(m_currentView))->showWinterScheduleDay(scheduleRuleset);
+  }
 }
 
 void SchedulesTabController::onDayScheduleSceneChanged( DayScheduleScene * scene, double lowerLimitValue, double upperLimitValue )
@@ -319,66 +263,6 @@ void SchedulesTabController::removeScheduleRule(model::ScheduleRule & scheduleRu
   scheduleRule.getImpl<openstudio::model::detail::ScheduleRule_Impl>();
 
   scheduleRule.remove();
-}
-
-void SchedulesTabController::setCalendarYear(int year)
-{
-  m_yearDescription->setCalendarYear(year);
-}
-
-void SchedulesTabController::setFirstDayofYear(const QString & firstDayofYear)
-{
-  m_yearDescription->resetCalendarYear();
-
-  m_yearDescription->setDayofWeekforStartDay(firstDayofYear.toStdString());
-}
-
-void SchedulesTabController::setDaylightSavingsTime(bool enabled)
-{
-  if( enabled )
-  {
-    m_model.getUniqueModelObject<model::RunPeriodControlDaylightSavingTime>();
-  }
-  else
-  {
-    if( boost::optional<model::RunPeriodControlDaylightSavingTime> dst =
-          m_model.getOptionalUniqueModelObject<model::RunPeriodControlDaylightSavingTime>() )
-    {
-      dst->remove();
-    }
-  }
-}
-
-void SchedulesTabController::setDstStartDayOfWeekAndMonth(int newWeek, int newDay, int newMonth)
-{
-  model::RunPeriodControlDaylightSavingTime dst =
-    m_model.getUniqueModelObject<model::RunPeriodControlDaylightSavingTime>();
-
-  dst.setStartDate(NthDayOfWeekInMonth(newWeek), DayOfWeek(newDay), MonthOfYear(newMonth));
-}
-
-void SchedulesTabController::setDstStartDate(const QDate & newdate)
-{
-  model::RunPeriodControlDaylightSavingTime dst =
-    m_model.getUniqueModelObject<model::RunPeriodControlDaylightSavingTime>();
-
-  dst.setStartDate(monthOfYear(newdate.month()),newdate.day());
-}
-
-void SchedulesTabController::setDstEndDayOfWeekAndMonth(int newWeek, int newDay, int newMonth)
-{
-  model::RunPeriodControlDaylightSavingTime dst =
-    m_model.getUniqueModelObject<model::RunPeriodControlDaylightSavingTime>();
-
-  dst.setEndDate(NthDayOfWeekInMonth(newWeek), DayOfWeek(newDay), MonthOfYear(newMonth));
-}
-
-void SchedulesTabController::setDstEndDate(const QDate & newdate)
-{
-  model::RunPeriodControlDaylightSavingTime dst =
-    m_model.getUniqueModelObject<model::RunPeriodControlDaylightSavingTime>();
-
-  dst.setEndDate(monthOfYear(newdate.month()),newdate.day());
 }
 
 void SchedulesTabController::onItemDropped(const OSItemId& itemId)
@@ -513,6 +397,84 @@ double SchedulesTabController::defaultStartingValue(const model::ScheduleDay& sc
     } // if siU
   }
   return result;
+}
+
+void SchedulesTabController::setSubTab(int index)
+{
+  if (m_currentIndex == index) {
+    return;
+  }
+  else {
+    m_currentIndex = index;
+  }
+
+  if (qobject_cast<ScheduleSetsView *>(m_currentView) && qobject_cast<ScheduleSetsController *>(m_currentController)) {
+    disconnect(qobject_cast<ScheduleSetsController *>(m_currentController), &ScheduleSetsController::downloadComponentsClicked, this, &SchedulesTabController::downloadComponentsClicked);
+    disconnect(qobject_cast<ScheduleSetsController *>(m_currentController), &ScheduleSetsController::openLibDlgClicked, this, &SchedulesTabController::openLibDlgClicked);
+    disconnect(this, &SchedulesTabController::toggleUnitsClicked, this, &SchedulesTabController::toggleUnits);
+    m_currentController = nullptr;
+  }
+  else if (qobject_cast<SchedulesView *>(m_currentView)) {
+    disconnect(this, &SchedulesTabController::toggleUnitsClicked, qobject_cast<SchedulesView *>(m_currentView), &SchedulesView::toggleUnitsClicked);
+    disconnect(qobject_cast<SchedulesView *>(m_currentView), &SchedulesView::addScheduleClicked, this, &SchedulesTabController::addScheduleRuleset);
+    disconnect(qobject_cast<SchedulesView *>(m_currentView), &SchedulesView::copySelectedScheduleClicked, this, &SchedulesTabController::copySelectedSchedule);
+    disconnect(qobject_cast<SchedulesView *>(m_currentView), &SchedulesView::removeSelectedScheduleClicked, this, &SchedulesTabController::removeSelectedSchedule);
+    disconnect(qobject_cast<SchedulesView *>(m_currentView), &SchedulesView::purgeUnusedScheduleRulesetsClicked, this, &SchedulesTabController::purgeUnusedScheduleRulesets);
+    disconnect(qobject_cast<SchedulesView *>(m_currentView), &SchedulesView::addRuleClicked, this, &SchedulesTabController::addRule);
+    disconnect(qobject_cast<SchedulesView *>(m_currentView), &SchedulesView::addSummerProfileClicked, this, &SchedulesTabController::addSummerProfile);
+    disconnect(qobject_cast<SchedulesView *>(m_currentView), &SchedulesView::addWinterProfileClicked, this, &SchedulesTabController::addWinterProfile);
+    disconnect(qobject_cast<SchedulesView *>(m_currentView), &SchedulesView::dayScheduleSceneChanged, this, &SchedulesTabController::onDayScheduleSceneChanged);
+    disconnect(qobject_cast<SchedulesView *>(m_currentView), &SchedulesView::startDateTimeChanged, this, &SchedulesTabController::onStartDateTimeChanged);
+    disconnect(qobject_cast<SchedulesView *>(m_currentView), &SchedulesView::endDateTimeChanged, this, &SchedulesTabController::onEndDateTimeChanged);
+    disconnect(qobject_cast<SchedulesView *>(m_currentView), &SchedulesView::removeScheduleRuleClicked, this, &SchedulesTabController::removeScheduleRule);
+    disconnect(qobject_cast<SchedulesView *>(m_currentView), &SchedulesView::itemDropped, this, &SchedulesTabController::onItemDropped);
+    disconnect(qobject_cast<SchedulesView *>(m_currentView), &SchedulesView::modelObjectSelected, this, &SchedulesTabController::modelObjectSelected);
+    disconnect(this, &SchedulesTabController::toggleUnitsClicked, this, &SchedulesTabController::toggleUnits);
+  }
+  else if (m_currentView) {
+    // Oops! Should never get here
+    OS_ASSERT(false);
+  }
+
+  switch (index){
+  case 0:
+  {
+    auto scheduleSetsController = new ScheduleSetsController(m_model);
+    connect(scheduleSetsController, &ScheduleSetsController::downloadComponentsClicked, this, &SchedulesTabController::downloadComponentsClicked);
+    connect(scheduleSetsController, &ScheduleSetsController::openLibDlgClicked, this, &SchedulesTabController::openLibDlgClicked);
+    connect(this, &SchedulesTabController::toggleUnitsClicked, this, &SchedulesTabController::toggleUnits);
+    this->mainContentWidget()->setSubTab(scheduleSetsController->subTabView());
+    m_currentView = scheduleSetsController->subTabView();
+    m_currentController = scheduleSetsController;
+    break;
+  }
+  case 1:
+  {
+    auto schedulesView = new SchedulesView(m_isIP, m_model);
+    addQObject(schedulesView);
+    connect(this, &SchedulesTabController::toggleUnitsClicked, schedulesView, &SchedulesView::toggleUnitsClicked);
+    connect(schedulesView, &SchedulesView::addScheduleClicked, this, &SchedulesTabController::addScheduleRuleset);
+    connect(schedulesView, &SchedulesView::copySelectedScheduleClicked, this, &SchedulesTabController::copySelectedSchedule);
+    connect(schedulesView, &SchedulesView::removeSelectedScheduleClicked, this, &SchedulesTabController::removeSelectedSchedule);
+    connect(schedulesView, &SchedulesView::purgeUnusedScheduleRulesetsClicked, this, &SchedulesTabController::purgeUnusedScheduleRulesets);
+    connect(schedulesView, &SchedulesView::addRuleClicked, this, &SchedulesTabController::addRule);
+    connect(schedulesView, &SchedulesView::addSummerProfileClicked, this, &SchedulesTabController::addSummerProfile);
+    connect(schedulesView, &SchedulesView::addWinterProfileClicked, this, &SchedulesTabController::addWinterProfile);
+    connect(schedulesView, &SchedulesView::dayScheduleSceneChanged, this, &SchedulesTabController::onDayScheduleSceneChanged);
+    connect(schedulesView, &SchedulesView::startDateTimeChanged, this, &SchedulesTabController::onStartDateTimeChanged);
+    connect(schedulesView, &SchedulesView::endDateTimeChanged, this, &SchedulesTabController::onEndDateTimeChanged);
+    connect(schedulesView, &SchedulesView::removeScheduleRuleClicked, this, &SchedulesTabController::removeScheduleRule);
+    connect(schedulesView, &SchedulesView::itemDropped, this, &SchedulesTabController::onItemDropped);
+    connect(schedulesView, &SchedulesView::modelObjectSelected, this, &SchedulesTabController::modelObjectSelected);
+    connect(this, &SchedulesTabController::toggleUnitsClicked, this, &SchedulesTabController::toggleUnits);
+    this->mainContentWidget()->setSubTab(schedulesView);
+    m_currentView = schedulesView;
+    break;
+  }
+  default:
+    OS_ASSERT(false);
+    break;
+  }
 }
 
 } // openstudio

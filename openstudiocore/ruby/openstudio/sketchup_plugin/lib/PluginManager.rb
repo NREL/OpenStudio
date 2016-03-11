@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -98,16 +98,14 @@ module OpenStudio
         # set up logging
         OpenStudio::Logger::instance.standardOutLogger.disable
         @log_file = OpenStudio::FileLogSink.new(OpenStudio::Path.new(self.log_path))
-        disable_logging
+        #disable_logging
         
-        if $OPENSTUDIO_SKETCHUPPLUGIN_DEVELOPER_MENU
-          #@log_file.setLogLevel(OpenStudio::Error)
-          #@log_file.setLogLevel(OpenStudio::Warn)
-          #@log_file.setLogLevel(OpenStudio::Info)
-          #@log_file.setLogLevel(OpenStudio::Debug)
-          @log_file.setLogLevel(OpenStudio::Trace)
-          #enable_logging # DLM: Todo, comment this out
-        end
+        #@log_file.setLogLevel(OpenStudio::Error)
+        #@log_file.setLogLevel(OpenStudio::Warn)
+        #@log_file.setLogLevel(OpenStudio::Info)
+        #@log_file.setLogLevel(OpenStudio::Debug)
+        @log_file.setLogLevel(OpenStudio::Trace)
+        #enable_logging # DLM: Todo, comment this out
       end
 
       self.log(OpenStudio::Info, "OpenStudio Plugin started")
@@ -164,7 +162,7 @@ module OpenStudio
       add_event( proc )
       
       if $OPENSTUDIO_SKETCHUPPLUGIN_LAUNCH_GETTING_STARTED_ON_START
-        UI.openURL("http://nrel.github.io/OpenStudio-user-documentation/next_steps/sketchup_plugin_interface/")
+        UI.openURL("http://nrel.github.io/OpenStudio-user-documentation/reference/sketchup_plugin_interface/")
       end
       
       @process_events_timer_id = nil
@@ -256,7 +254,7 @@ module OpenStudio
       
       if error
         msg  = "An error occurred in the OpenStudio SketchUp plug-in.\n\n"
-        msg += "It advised that you save a backup of your current OpenStudio model and restart SketchUp."
+        msg += "It is advised that you save a backup of your current OpenStudio model and restart SketchUp."
         UI.messagebox(msg)
       end
 
@@ -421,7 +419,7 @@ module OpenStudio
 
     # Create and set default preferences for any that might not be in the Registry already.
     # For example, the first time the plugin is run, or the first time a new version (with new preferences) is run.
-    # Stores values in the Registry at:  HKEY_CURRENT_USER\Software\SketchUp\SketchUp 2015\OpenStudio
+    # Stores values in the Registry at:  HKEY_CURRENT_USER\Software\SketchUp\SketchUp 2016\OpenStudio
     def load_default_preferences
       default_hash = default_preferences
       for key in default_hash.keys
@@ -432,7 +430,7 @@ module OpenStudio
     end
 
     def energyplus_version
-      return('8.3.0')
+      return('8.5.0')
     end
     
     def minimal_template_path

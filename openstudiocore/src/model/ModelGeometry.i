@@ -29,6 +29,9 @@
   %ignore openstudio::model::Space::thermalZone;
   %ignore openstudio::model::Space::setThermalZone;
   
+  // ignore GeneratorPhotovoltaic
+  %ignore openstudio::model::PlanarSurface::generatorPhotovoltaics;
+  
   // DLM: this is a proof of concept section to see how attributes work in C#
   %include <attribute.i>
 
@@ -83,6 +86,7 @@ class SpaceInfiltrationEffectiveLeakageArea;
 class DesignSpecificationOutdoorAir;
 class SpaceLoadInstance;
 class SpaceLoadDefinition;
+class GeneratorPhotovoltaic;
 }
 }
 
@@ -104,6 +108,8 @@ MODELOBJECT_TEMPLATES(ShadingSurfaceGroup);
 MODELOBJECT_TEMPLATES(ShadingSurface); 
 MODELOBJECT_TEMPLATES(InteriorPartitionSurfaceGroup); 
 MODELOBJECT_TEMPLATES(InteriorPartitionSurface);
+MODELOBJECT_TEMPLATES(SurfacePropertyOtherSideCoefficients);
+MODELOBJECT_TEMPLATES(SurfacePropertyOtherSideConditionsModel);
 MODELOBJECT_TEMPLATES(People);
 MODELOBJECT_TEMPLATES(Luminaire);
 MODELOBJECT_TEMPLATES(ElectricEquipment);
@@ -140,6 +146,8 @@ SWIG_MODELOBJECT(ShadingSurfaceGroup, 1);
 SWIG_MODELOBJECT(ShadingSurface, 1); 
 SWIG_MODELOBJECT(InteriorPartitionSurfaceGroup, 1); 
 SWIG_MODELOBJECT(InteriorPartitionSurface, 1);
+SWIG_MODELOBJECT(SurfacePropertyOtherSideCoefficients, 1);
+SWIG_MODELOBJECT(SurfacePropertyOtherSideConditionsModel, 1);
 SWIG_MODELOBJECT(People, 1);
 SWIG_MODELOBJECT(Luminaire, 1);
 SWIG_MODELOBJECT(ElectricEquipment, 1);

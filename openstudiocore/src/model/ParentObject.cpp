@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -20,6 +20,8 @@
 #include "ParentObject.hpp"
 #include "ParentObject_Impl.hpp"
 #include "ResourceObject.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
 #include "LifeCycleCost.hpp"
 #include "Component.hpp"
 
@@ -73,12 +75,22 @@ namespace detail {
     //}
       
     // subTree includes this object, make sure to include costs as well 
-    ModelObjectVector subTree = getRecursiveChildren(getObject<ParentObject>(), true);
-    for (const ModelObject& object : subTree) {
+    auto subTree = getRecursiveChildren(getObject<ParentObject>(), true);
+    // drop the Curve instances
+    // Perhaps this could be done in the getRecursiveChildren, but this way 
+    // the getRecursiveChildren method might be less surprising
+    // This is probably the unique situation where you want to get children minus curves
+    auto isCurve = [](const ModelObject & modelObject) {
+      return modelObject.optionalCast<Curve>();
+    };
+    auto end = std::remove_if(subTree.begin(), subTree.end(), isCurve); 
+    std::vector<ModelObject> noCurvesSubTree(subTree.begin(),end);
+
+    for (const ModelObject& object : noCurvesSubTree) {
       result.push_back(object.idfObject());
     }
       
-    bool ok = model().removeObjects(getHandles<ModelObject>(subTree));
+    bool ok = model().removeObjects(getHandles<ModelObject>(noCurvesSubTree));
     if (!ok) { result.clear(); }
 
     return result;

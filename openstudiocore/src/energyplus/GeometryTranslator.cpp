@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -27,6 +27,9 @@
 #include "../model/ShadingSurface.hpp"
 
 #include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/geometry/Point3d.hpp"
+#include "../utilities/geometry/Vector3d.hpp"
+
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Optional.hpp"
 #include "../utilities/core/Containers.hpp"

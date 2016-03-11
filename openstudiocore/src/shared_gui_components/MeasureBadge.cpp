@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -31,6 +31,9 @@ void MeasureBadge::setMeasureBadgeType(MeasureBadgeType type)
   } else if(type == MeasureBadgeType::MyMeasure) {
     setText("My");
     setStyleSheet("QLabel { color: #882255; font-size: 10pt; }");
+  } else if (type == MeasureBadgeType::OSMeasure) {
+    setText("OS");
+    setStyleSheet("QLabel { color: #4B7DB0; font-size: 10pt; }");
   } else {
     OS_ASSERT(false);
   }

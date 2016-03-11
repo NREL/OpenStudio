@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -619,21 +619,6 @@ namespace detail {
   ModelObject CoilHeatingDXSingleSpeed_Impl::clone(Model model) const
   {
     CoilHeatingDXSingleSpeed newCoil = StraightComponent_Impl::clone(model).cast<CoilHeatingDXSingleSpeed>();
-
-    Curve curve1 = totalHeatingCapacityFunctionofTemperatureCurve();
-    newCoil.setTotalHeatingCapacityFunctionofTemperatureCurve(curve1.clone(model).cast<Curve>());
-
-    Curve curve2 = totalHeatingCapacityFunctionofFlowFractionCurve();
-    newCoil.setTotalHeatingCapacityFunctionofFlowFractionCurve(curve2.clone(model).cast<Curve>());
-
-    Curve curve3 = energyInputRatioFunctionofTemperatureCurve();
-    newCoil.setEnergyInputRatioFunctionofTemperatureCurve(curve3.clone(model).cast<Curve>());
-
-    Curve curve4 = energyInputRatioFunctionofFlowFractionCurve();
-    newCoil.setEnergyInputRatioFunctionofFlowFractionCurve(curve4.clone(model).cast<Curve>());
-
-    Curve curve5 = partLoadFractionCorrelationCurve();
-    newCoil.setPartLoadFractionCorrelationCurve(curve5.clone(model).cast<Curve>());
 
     return newCoil;
   }

@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -24,10 +24,8 @@ require "pathname"
 
 if RUBY_PLATFORM =~ /darwin/
   mac_version = `/usr/bin/sw_vers -productVersion | tr -d "\n"`.split('.')
-  if mac_version[0].to_i <= 10
-    if mac_version[1].to_i < 8
-      raise LoadError, "OpenStudio is only compatible with OS 10.8 and later"
-    end
+  if mac_version[0].to_i < 10 || (mac_version[0].to_i == 10 && mac_version[1].to_i < 8)
+    raise LoadError, "OpenStudio is only compatible with OS 10.8 and later"
   end
 end
 
@@ -36,8 +34,22 @@ $OpenStudio_Dir = "#{File.expand_path(File.dirname(Pathname.new(__FILE__).realpa
 
 # add binary dir to system path
 original_path = ENV['PATH']
+platform_specific_path = nil
 if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
-  ENV['PATH'] = "#{$OpenStudio_BinaryDir};#{$OpenStudio_RubyBinaryDir};#{original_path}"
+  front = []
+  back = []
+  original_path.split(';').each do |p|
+	if /SketchUp/.match(p)
+	  if /platform_specific/.match(p)
+	    platform_specific_path = p
+	  end
+	  front << p
+	else
+	  back << p
+	end
+  end
+
+  ENV['PATH'] = "#{front.join(';')};#{$OpenStudio_BinaryDir};#{$OpenStudio_RubyBinaryDir};#{back.join(';')}"
 else
   ENV['PATH'] = "#{$OpenStudio_BinaryDir}:#{$OpenStudio_RubyBinaryDir}:#{original_path}"
 end
@@ -88,6 +100,7 @@ require 'openstudiomodelresources'
 require 'openstudiomodelgeometry'
 require 'openstudiomodelhvac'
 require 'openstudiomodelrefrigeration'
+require 'openstudiomodelgenerators'
 require 'openstudioenergyplus'
 require 'openstudioradiance'
 require 'openstudiogbxml'
@@ -107,12 +120,17 @@ require 'openstudiosdd'
 # restore original path
 ENV['PATH'] = original_path
 
-if (!OpenStudio::RemoteBCL::initializeSSL(OpenStudio::Path.new("#{$OpenStudio_RubyBinaryDir}")))
-  if (!OpenStudio::RemoteBCL::initializeSSL())
-    raise "Unable to initialize OpenSSL: Verify that ruby can access the OpenSSL libraries"
+have_open_ssl  = false
+if platform_specific_path
+  have_open_ssl = OpenStudio::RemoteBCL::initializeSSL(OpenStudio::Path.new(platform_specific_path))
+end
+if (!have_open_ssl)
+  if (!OpenStudio::RemoteBCL::initializeSSL(OpenStudio::Path.new("#{$OpenStudio_RubyBinaryDir}")))
+    if (!OpenStudio::RemoteBCL::initializeSSL())
+      raise "Unable to initialize OpenSSL: Verify that ruby can access the OpenSSL libraries"
+    end
   end
 end
-
 
 # Find current ruby path, we may need this for launching ruby jobs later
 begin
@@ -122,6 +140,13 @@ begin
   
   $OpenStudio_RubyExe = OpenStudio::Path.new(File.join(RbConfig::CONFIG['bindir'], RbConfig::CONFIG['ruby_install_name']).sub(/.*\s.*/m, '"\&"'))
   $OpenStudio_RubyExeDir = $OpenStudio_RubyExe.parent_path()
+
+  # add packaged gems to GEM_PATH
+  # The gem path of Ruby that is running is listed first (can be non-OpenStudio Ruby v2.0.0 to override our gems), followed by the version of Ruby we package as the default
+  ENV['GEM_PATH'] = "#{ENV['GEM_PATH']};#{RbConfig::CONFIG['rubylibprefix']}/gems/2.0.0;#{OpenStudio::getOpenStudioAWSRubyPath.to_s}/lib/ruby/gems/2.0.0"
+  
+  # require packaged gems here
+  
 
 rescue Exception=>e
 

@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -276,7 +276,7 @@ module OpenStudio
       
       if @model_object.isAirWall
         @entity.material = @model_interface.materials_interface.air_wall
-        @entity.back_material = @model_interface.materials_interface.air_wall
+        @entity.back_material = @model_interface.materials_interface.air_wall      
       else
         surfaceType = @model_object.surfaceType.upcase
         if (surfaceType == "FLOOR")
@@ -290,6 +290,13 @@ module OpenStudio
           @entity.back_material = @model_interface.materials_interface.wall_int
         end
       end
+      
+      if @model_object.solarCollectors.size > 0 
+        @entity.material = @model_interface.materials_interface.solar_collector
+      elsif @model_object.generatorPhotovoltaics.size > 0 
+        @entity.material = @model_interface.materials_interface.photovoltaic
+      end      
+      
     end
 
     def paint_boundary(info=nil)

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -226,7 +226,6 @@ namespace detail {
         newInletComponentOutletPort = inletNode->connectedObjectPort(inletNode->inletPort());
         OS_ASSERT(newInletComponent);
         OS_ASSERT(newInletComponentOutletPort);
-        inletNode->remove();
       } else {
         newInletComponent = inletComponent;
         newInletComponentOutletPort = inletComponentOutletPort;
@@ -234,6 +233,11 @@ namespace detail {
 
       _model.disconnect(thisObject,componentInletPort); 
       _model.disconnect(thisObject,componentOutletPort); 
+
+      // inletNode->remove() would have failed if we did it before the disconnect
+      if( inletNode && outletNode ) {
+        inletNode->remove();
+      }
 
       _model.connect( newInletComponent.get(), newInletComponentOutletPort.get(), 
                        outletComponent.get(), outletComponentInletPort.get() );
@@ -272,8 +276,6 @@ namespace detail {
       if( inletNode && outletNode ) {
         newOutletComponent = outletNode->outletModelObject();
         newOutletComponentInletPort = outletNode->connectedObjectPort(outletNode->outletPort());
-
-        outletNode->remove();
       }
 
       if( ! newOutletComponent ) newOutletComponent = outletComponent;
@@ -281,6 +283,11 @@ namespace detail {
 
       _model.disconnect(thisObject,componentInletPort); 
       _model.disconnect(thisObject,componentOutletPort); 
+
+      // outletNode->remove() would have failed if we did it before the disconnect
+      if( inletNode && outletNode ) {
+        outletNode->remove();
+      }
 
       model().connect( inletComponent.get(), inletComponentOutletPort.get(), 
                        newOutletComponent.get(), newOutletComponentInletPort.get() );
@@ -472,7 +479,7 @@ namespace detail {
     return ModelObject_Impl::clone(model);
   }
 
-  std::vector<HVACComponent> HVACComponent_Impl::edges(bool isDemandComponent)
+  std::vector<HVACComponent> HVACComponent_Impl::edges(const boost::optional<HVACComponent> & previous)
   {
     return std::vector<HVACComponent>();
   }
@@ -567,6 +574,11 @@ boost::optional<ZoneHVACComponent> HVACComponent::containingZoneHVACComponent() 
 boost::optional<StraightComponent> HVACComponent::containingStraightComponent() const
 {
   return getImpl<detail::HVACComponent_Impl>()->containingStraightComponent();
+}
+
+std::vector<HVACComponent> HVACComponent::edges(const boost::optional<HVACComponent> & previous)
+{
+  return getImpl<detail::HVACComponent_Impl>()->edges(previous);
 }
 
 } // model

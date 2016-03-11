@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -61,7 +61,11 @@ namespace detail {
 
     ModelObject clone(Model model) const override;
 
+    unsigned size() const;
+
     bool addModelObject(const ModelObject & modelObject );
+
+    bool hasModelObject(const ModelObject & modelObject) const;
 
     void removeModelObject(const ModelObject & modelObject );
 

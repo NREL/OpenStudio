@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -615,7 +615,7 @@ namespace openstudio{
       std::vector<std::string> availableReportingFrequencies(const std::string& envPeriod);
 
       // version specific translation for reporting frequencies used in database to reporting frequency enum values
-      openstudio::ReportingFrequency reportingFrequencyFromDB(const std::string& dbReportingFrequency);
+      openstudio::OptionalReportingFrequency reportingFrequencyFromDB(const std::string& dbReportingFrequency);
 
       // return a vector of all the available variableName for environment period and reporting frequency
       std::vector<std::string> availableVariableNames(const std::string& envPeriod, const std::string&  reportingFrequency) const;
@@ -807,9 +807,14 @@ namespace openstudio{
       boost::optional<Date> timeSeriesStartDate(const DataDictionaryItem& dataDictionary);
 
       // return first date in time table used for start date of run period variables
-      openstudio::DateTime firstDateTime(bool includeHourAndMinute);
+      openstudio::DateTime firstDateTime(bool includeHourAndMinute, int envPeriodIndex);
 
+      // return last date in time table used for end date of run period variables
+      openstudio::DateTime lastDateTime(bool includeHourAndMinute, int envPeriodIndex);
+
+      // DLM: timeSeriesInterval seems pretty useless, can we remove it?
       boost::optional<Time> timeSeriesInterval(const DataDictionaryItem& dataDictionary);
+
       std::vector<DateTime> dateTimeVec(const DataDictionaryItem& dataDictionary);
 
       bool isValidConnection();

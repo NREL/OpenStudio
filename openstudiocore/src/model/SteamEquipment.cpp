@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -151,6 +151,14 @@ namespace detail {
 
   bool SteamEquipment_Impl::isMultiplierDefaulted() const {
     return isEmpty(OS_SteamEquipmentFields::Multiplier);
+  }
+
+  bool SteamEquipment_Impl::isAbsolute() const {
+    SteamEquipmentDefinition definition = steamEquipmentDefinition();
+    if (definition.designLevel()) {
+      return true;
+    }
+    return false;
   }
 
   std::string SteamEquipment_Impl::endUseSubcategory() const {

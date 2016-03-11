@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -225,12 +225,6 @@ namespace detail {
   ModelObject CoilCoolingDXVariableRefrigerantFlow_Impl::clone(Model model) const
   {
     CoilCoolingDXVariableRefrigerantFlow objectClone = HVACComponent_Impl::clone(model).cast<CoilCoolingDXVariableRefrigerantFlow>();
-
-    Curve curveClone = coolingCapacityRatioModifierFunctionofTemperatureCurve().clone(model).cast<Curve>();
-    objectClone.setCoolingCapacityRatioModifierFunctionofTemperatureCurve(curveClone);
-
-    curveClone = coolingCapacityModifierCurveFunctionofFlowFraction().clone(model).cast<Curve>();
-    objectClone.setCoolingCapacityModifierCurveFunctionofFlowFraction(curveClone);
 
     return objectClone;
   }

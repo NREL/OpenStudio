@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -110,7 +110,11 @@ boost::optional<IdfObject> ForwardTranslator::translateControllerMechanicalVenti
   s = modelObject.systemOutdoorAirMethod();
   if( s )
   {
-    idfObject.setString(openstudio::Controller_MechanicalVentilationFields::SystemOutdoorAirMethod,s.get());
+    if( istringEqual("ProportionalControl",s.get()) ) {
+      idfObject.setString(openstudio::Controller_MechanicalVentilationFields::SystemOutdoorAirMethod,"ProportionalControlBasedonOccupancySchedule");
+    } else {
+      idfObject.setString(openstudio::Controller_MechanicalVentilationFields::SystemOutdoorAirMethod,s.get());
+    }
   }
 
   m_idfObjects.push_back(idfObject);

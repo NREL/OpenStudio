@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -171,7 +171,7 @@ ShadowCalculation::ShadowCalculation(const Model& model)
 {
   OS_ASSERT(getImpl<detail::ShadowCalculation_Impl>());
 
-  this->setCalculationFrequency(7);
+  this->setCalculationFrequency(20);
 
   this->setMaximumFiguresInShadowOverlapCalculations(15000);
 }

@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+#  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 #  All rights reserved.
 #
 #  This library is free software; you can redistribute it and/or
@@ -302,7 +302,7 @@ class DiagnosticScript < OpenStudio::Ruleset::UtilityUserScript
     end
     if switch == 0 then puts "none" end
   
-  # Find duplicate vertices within surface
+    # Find duplicate vertices within surface
     puts ""
     puts "Surfaces and SubSurfaces which have duplicate vertices"
     switch = 0
@@ -373,33 +373,111 @@ class DiagnosticScript < OpenStudio::Ruleset::UtilityUserScript
     end
     if switch == 0 then puts "none" end
     
-      # find and remove orphan sizing:zone objects
-      puts ""
-      puts "Removing sizing:zone objects that are not connected to any thermal zone"
-      #get all sizing:zone objects in the model
-      sizing_zones = model.getObjectsByType("OS:Sizing:Zone".to_IddObjectType)
-      #make an array to store the names of the orphan sizing:zone objects
-      orphaned_sizing_zones = Array.new
-      #loop through all sizing:zone objects, checking for missing ThermalZone field
-      sizing_zones.each do |sizing_zone|
-        sizing_zone = sizing_zone.to_SizingZone.get
-        if sizing_zone.isEmpty(1)
-          orphaned_sizing_zones << sizing_zone.handle
-          puts "*(error)#{sizing_zone.name} is not connected to a thermal zone"
-          if remove_errors
-            puts "**(removing object)#{sizing_zone.name} is not connected to a thermal zone"
-            sizing_zone.remove
-            savediagnostic = true
-          end
+    # find and remove orphan sizing:zone objects
+    puts ""
+    puts "Removing sizing:zone objects that are not connected to any thermal zone"
+    #get all sizing:zone objects in the model
+    sizing_zones = model.getObjectsByType("OS:Sizing:Zone".to_IddObjectType)
+    #make an array to store the names of the orphan sizing:zone objects
+    orphaned_sizing_zones = Array.new
+    #loop through all sizing:zone objects, checking for missing ThermalZone field
+    sizing_zones.each do |sizing_zone|
+      sizing_zone = sizing_zone.to_SizingZone.get
+      if sizing_zone.isEmpty(1)
+        orphaned_sizing_zones << sizing_zone.handle
+        puts "*(error)#{sizing_zone.name} is not connected to a thermal zone"
+        if remove_errors
+          puts "**(removing object)#{sizing_zone.name} is not connected to a thermal zone"
+          sizing_zone.remove
+          savediagnostic = true
         end
       end
-      #summarize the results
-      if orphaned_sizing_zones.length > 0
-        puts "#{orphaned_sizing_zones.length} orphaned sizing:zone objects were found"
-      else
-        puts "no orphaned sizing:zone objects were found"
+    end
+    #summarize the results
+    if orphaned_sizing_zones.length > 0
+      puts "#{orphaned_sizing_zones.length} orphaned sizing:zone objects were found"
+    else
+      puts "no orphaned sizing:zone objects were found"
+    end
+    
+    # find and remove orphan ZoneHVAC:EquipmentList objects
+    puts ""
+    puts "Removing ZoneHVAC:EquipmentList objects that are not connected to any thermal zone"
+    #get all ZoneHVAC:EquipmentList objects in the model
+    zonehvac_equipmentlists = model.getObjectsByType("OS:ZoneHVAC:EquipmentList".to_IddObjectType)
+    #make an array to store the names of the orphan ZoneHVAC:EquipmentList objects
+    orphaned_zonehvac_equipmentlists = Array.new
+    #loop through all ZoneHVAC:EquipmentList objects, checking for missing ThermalZone field
+    zonehvac_equipmentlists.each do |zonehvac_equipmentlist|
+      if zonehvac_equipmentlist.isEmpty(2)
+        orphaned_zonehvac_equipmentlists << zonehvac_equipmentlist.handle
+        puts "*(error)#{zonehvac_equipmentlist.name} is not connected to a thermal zone"
+        if remove_errors
+          puts "**(removing object)#{zonehvac_equipmentlist.name} is not connected to a thermal zone"
+          zonehvac_equipmentlist.remove
+          savediagnostic = true
+        end
       end
-
+    end
+    #summarize the results
+    if orphaned_zonehvac_equipmentlists.length > 0
+      puts "#{orphaned_zonehvac_equipmentlists.length} orphaned ZoneHVAC:EquipmentList objects were found"
+    else
+      puts "no orphaned ZoneHVAC:EquipmentList objects were found"
+    end
+    
+    # find and remove orphan PortList objects
+    puts ""
+    puts "Removing PortList objects that are not connected to any equipment"
+    #get all PortList objects in the model
+    port_lists = model.getObjectsByType("OS:PortList".to_IddObjectType)
+    #make an array to store the names of the orphan PortList objects
+    orphaned_port_lists = Array.new
+    #loop through all PortList objects, checking for missing HVAC Component field
+    port_lists.each do |port_list|
+      if port_list.isEmpty(2)
+        orphaned_port_lists << port_list.handle
+        puts "*(error)#{port_list.name} is not connected to any equipment"
+        if remove_errors
+          puts "**(removing object)#{port_list.name} is not connected to any equipment"
+          port_list.remove
+          savediagnostic = true
+        end
+      end
+    end
+    #summarize the results
+    if orphaned_port_lists.length > 0
+      puts "#{orphaned_port_lists.length} orphaned PortList objects were found"
+    else
+      puts "no orphaned PortList objects were found"
+    end
+  
+    # find and remove orphan LifeCycleCost objects
+    puts ""
+    puts "Removing LifeCycleCost objects that are not connected to any model object"
+    #get all LifeCycleCost objects in the model
+    lcc_objects = model.getObjectsByType("OS:LifeCycleCost".to_IddObjectType)
+    #make an array to store the names of the orphan LifeCycleCost objects
+    orphaned_lcc_objects = Array.new
+    #loop through all LifeCycleCost objects, checking for missing Item Name
+    lcc_objects.each do |lcc_object|
+      if lcc_object.isEmpty(4)
+        orphaned_lcc_objects << lcc_object.handle
+        puts "*(error)#{lcc_object.name} is not connected to any object"
+        if remove_errors
+          puts "**(removing object)#{lcc_object.name} is not connected to any model object"
+          lcc_object.remove
+          savediagnostic = true
+        end
+      end
+    end
+    #summarize the results
+    if orphaned_lcc_objects.length > 0
+      puts "#{orphaned_lcc_objects.length} orphaned LifeCycleCost objects were found"
+    else
+      puts "no orphaned LifeCycleCost objects were found"
+    end
+    
     puts ""
     puts ">>diagnostic test complete"
 

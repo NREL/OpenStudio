@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -35,6 +35,7 @@ namespace openstudio{
 
   class BCLComponent;
   class BCLMeasure;
+  class DateTime;
 
   /** \class BCLXMLType
    *  \brief Enumeration of the BCL XML file types.
@@ -101,6 +102,8 @@ namespace openstudio{
     std::string uid() const;
 
     std::string versionId() const;
+
+    boost::optional<DateTime> versionModified() const;
 
     std::string xmlChecksum() const;
 
@@ -216,6 +219,7 @@ namespace openstudio{
     std::string m_className; // only for measures
     std::string m_uid;
     std::string m_versionId;
+    std::string m_versionModified;
     std::string m_xmlChecksum;
     std::string m_description;
     std::string m_modelerDescription; // only for measures

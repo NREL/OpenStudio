@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@
 namespace openstudio {
 
 ScriptsTabView::ScriptsTabView(QWidget * parent)
-  : MainTabView("Measures",false,parent)
+  : MainTabView("Measures", MainTabView::MAIN_TAB, parent)
 {
   //setTitle("Organize and Edit Measures for Project");
 

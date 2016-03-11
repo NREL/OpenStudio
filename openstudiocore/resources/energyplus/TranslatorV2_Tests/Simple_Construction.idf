@@ -3,10 +3,12 @@
 ! Effective R-Value (SI): 0.1376
 ! Layer 1: Metal Roofing
 ! Layer 2: Roof Insulation [55]
- 
 !  Version,
 !    7.2.0.002;              !- Version Identifier
- 
+
+!  Version,
+!    8.5;                    !- Version Identifier
+
   Material,
     Metal Roofing,           !- Name
     MediumSmooth,            !- Roughness
@@ -17,7 +19,7 @@
     0.9,                     !- Thermal Absorptance
     0.7,                     !- Solar Absorptance
     0.3;                     !- Visible Absorptance
- 
+
   Material,
     Roof Insulation [55],    !- Name
     MediumRough,             !- Roughness
@@ -28,10 +30,10 @@
     0.9,                     !- Thermal Absorptance
     0.7,                     !- Solar Absorptance
     0.7;                     !- Visible Absorptance
- 
+
   Construction,
     Metal Building_NR_Roof,  !- Name
     Metal Roofing,           !- Outside Layer
     Roof Insulation [55];    !- Layer 2
- 
+
 ! Cost Source: Linear interpolation on U-Value from 90.1 project committee data (2006-05-31)

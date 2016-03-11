@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -69,6 +69,8 @@
 #include "Thermostat_Impl.hpp"
 #include "ThermostatSetpointDualSetpoint.hpp"
 #include "ThermostatSetpointDualSetpoint_Impl.hpp"
+#include "ZoneControlContaminantController.hpp"
+#include "ZoneControlContaminantController_Impl.hpp"
 #include "ZoneControlHumidistat.hpp"
 #include "ZoneControlHumidistat_Impl.hpp"
 #include "DesignSpecificationOutdoorAir.hpp"
@@ -83,6 +85,8 @@
 #include "LifeCycleCost_Impl.hpp"
 #include "SetpointManagerSingleZoneReheat.hpp"
 #include "SetpointManagerSingleZoneReheat_Impl.hpp"
+#include "ZoneMixing.hpp"
+#include "ZoneMixing_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -141,7 +145,13 @@ namespace detail {
     // Sizing Zone object
     SizingZone sizingZone = this->sizingZone();
     result.push_back(sizingZone);
-    
+
+    // DLM: temporarily add supplyZoneMixing as children so we can see them in IG
+    // remove once we have gridview for these
+    for (const auto& mixing : supplyZoneMixing()){
+      result.push_back(mixing);
+    }
+
     return result;
   }
 
@@ -157,6 +167,7 @@ namespace detail {
   std::vector<IddObjectType> ThermalZone_Impl::allowableChildTypes() const
   {
     std::vector<IddObjectType> result;
+    // DLM: this does not seem to agree with implementation of children()
     result.push_back(IddObjectType::OS_ThermostatSetpoint_DualSetpoint);
     result.push_back(IddObjectType::OS_ZoneControl_Thermostat_StagedDualSetpoint);
     return result;
@@ -280,11 +291,11 @@ namespace detail {
     return ThermalZone::iddObjectType();
   }
 
-  std::vector<HVACComponent> ThermalZone_Impl::edges(bool isDemandComponent)
+  std::vector<HVACComponent> ThermalZone_Impl::edges(const boost::optional<HVACComponent> & prev)
   {
     std::vector<HVACComponent> edges;
-    if( boost::optional<ModelObject> edgeModelObject = this->returnAirModelObject() ) {
-      if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+    if( auto edgeModelObject = this->returnAirModelObject() ) {
+      if( auto edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
         edges.push_back(*edgeObject);
       }
     }
@@ -966,18 +977,13 @@ namespace detail {
 
   bool ThermalZone_Impl::setThermostatSetpointDualSetpoint(const ThermostatSetpointDualSetpoint & thermostat)
   {
-    resetThermostat();
-    return setPointer(OS_ThermalZoneFields::ThermostatName, thermostat.handle());
+    return setThermostat(thermostat);
   }
 
   void ThermalZone_Impl::resetThermostatSetpointDualSetpoint()
   {
-    if( boost::optional<ThermostatSetpointDualSetpoint> thermostat = this->thermostatSetpointDualSetpoint() )
-    {
-      thermostat->remove();
-    }
-
-    setString(OS_ThermalZoneFields::ThermostatName, "");
+    // This will reset other thermostat types, but I think that is ok
+    resetThermostat();
   }
 
   boost::optional<Thermostat> ThermalZone_Impl::thermostat() const
@@ -987,14 +993,32 @@ namespace detail {
 
   bool ThermalZone_Impl::setThermostat(const Thermostat & thermostat)
   {
-    resetThermostat();
-    return setPointer(OS_ThermalZoneFields::ThermostatName, thermostat.handle());
+    auto t_model = model();
+
+    if( t_model != thermostat.model() ) {
+      return false;
+    }
+
+    if( auto currentZone = thermostat.thermalZone() ) {
+      if( currentZone->handle() == handle() ) {
+        // or should it be false?
+        // I think this is similar to what you would see in 
+        // Lights::setSpace() under similar conditions
+        return true;
+      } else {
+        auto thermostatClone = thermostat.clone(t_model).cast<Thermostat>();
+        resetThermostat();
+        return setPointer(OS_ThermalZoneFields::ThermostatName, thermostatClone.handle());
+      }
+    } else {
+      resetThermostat();
+      return setPointer(OS_ThermalZoneFields::ThermostatName, thermostat.handle());
+    }
   }
 
   void ThermalZone_Impl::resetThermostat()
   {
-    if( boost::optional<Thermostat> thermostat = this->thermostat() )
-    {
+    if( boost::optional<Thermostat> thermostat = this->thermostat() ) {
       thermostat->remove();
     }
 
@@ -1008,13 +1032,29 @@ namespace detail {
 
   bool ThermalZone_Impl::setZoneControlHumidistat(const ZoneControlHumidistat & humidistat)
   {
-    return setPointer(OS_ThermalZoneFields::HumidistatName, humidistat.handle());
+    auto t_model = model();
+
+    if( t_model != humidistat.model() ) {
+      return false;
+    }
+
+    if( auto currentZone = humidistat.controlledZone() ) {
+      if( currentZone->handle() == handle() ) {
+        return true;
+      } else {
+        auto humidistatClone = humidistat.clone(t_model).cast<ZoneControlHumidistat>();
+        resetZoneControlHumidistat();
+        return setPointer(OS_ThermalZoneFields::HumidistatName, humidistatClone.handle());
+      }
+    } else {
+      resetZoneControlHumidistat();
+      return setPointer(OS_ThermalZoneFields::HumidistatName, humidistat.handle());
+    }
   }
 
   void ThermalZone_Impl::resetZoneControlHumidistat()
   {
-    if( boost::optional<ZoneControlHumidistat> humidistat = this->zoneControlHumidistat() )
-    {
+    if( boost::optional<ZoneControlHumidistat> humidistat = this->zoneControlHumidistat() ) {
       humidistat->remove();
     }
 
@@ -1191,6 +1231,19 @@ namespace detail {
         allDesignSpecificationOutdoorAirDefaulted = false;
       }
 
+    }
+
+    // if all spaces share a common space type, ensure that there are no absolute loads
+    if (spaceType){
+      for (const auto& child : spaceType->children()){
+        if (child.optionalCast<SpaceLoad>()){
+          if (child.cast<SpaceLoad>().isAbsolute()){
+            LOG(Warn, "SpaceType '" << spaceType->name() << "' contains absolute loads, cannot be shared by combined spaces.")
+            spaceType.reset();
+            break;
+          }
+        }
+      }
     }
 
     // if some spaces are part of floor area but others are not, set floor area here
@@ -1416,6 +1469,7 @@ namespace detail {
 
     //detach it from the zone air node
     Node airNode = this->zoneAirNode();
+    airNode.disconnect();
 
     airNode.remove();
 
@@ -1428,6 +1482,15 @@ namespace detail {
     // remove ZoneHVACEquipmentList
       
     zoneHVACEquipmentList().remove();
+
+    // remove ZoneMixing objects
+
+    // DLM: these removed objects are not being returned in the result
+    for (auto mixing : this->zoneMixing()){
+      mixing.remove();
+      //std::vector<IdfObject> temp = mixing.remove();
+      //result.insert(result.end(), temp.begin(), temp.end());
+    }
 
     //turn the object back on and proceed  
     this->blockSignals(false);
@@ -1681,7 +1744,9 @@ namespace detail {
 
     std::vector<SizingZone> sizingObjects;
     
-    sizingObjects = model().getConcreteModelObjects<SizingZone>();
+    //sizingObjects = model().getConcreteModelObjects<SizingZone>();
+
+    sizingObjects = getObject<ModelObject>().getModelObjectSources<SizingZone>(SizingZone::iddObjectType());
 
     for( const auto & sizingObject : sizingObjects )
     {
@@ -1827,7 +1892,9 @@ namespace detail {
   {
     boost::optional<ZoneHVACEquipmentList> result;
 
-    std::vector<ZoneHVACEquipmentList> list = model().getConcreteModelObjects<ZoneHVACEquipmentList>();
+    std::vector<ZoneHVACEquipmentList> list = getObject<ModelObject>().getModelObjectSources<ZoneHVACEquipmentList>(ZoneHVACEquipmentList::iddObjectType());
+
+    //std::vector<ZoneHVACEquipmentList> list = model().getConcreteModelObjects<ZoneHVACEquipmentList>();
 
     for( const auto & elem : list )
     {
@@ -1837,9 +1904,13 @@ namespace detail {
       }
     }
 
-    OS_ASSERT(result);
-
-    return result.get();
+    if (result)
+    {
+      return result.get();
+    } else
+    {
+      LOG_AND_THROW("ThermalZone missing ZoneHVAC:EquipmentList object");
+    }
   }
 
   void ThermalZone_Impl::addEquipment(const ModelObject & equipment)
@@ -1880,6 +1951,14 @@ namespace detail {
   ModelObject ThermalZone_Impl::clone(Model model) const
   {
     ThermalZone tz = HVACComponent_Impl::clone(model).cast<ThermalZone>();
+    // We need this because "connect" is first going to try to disconnect from anything 
+    // currently attached.  At this point tz is left pointing (through a connection) to the old zone air node, 
+    // (because of ModelObject::clone behavior) so connecting to the new node will remove the connection joining
+    // the original zone and the original node.
+    tz.setString(OS_ThermalZoneFields::ZoneAirNodeName,"");
+
+    tz.setString(OS_ThermalZoneFields::ThermostatName,"");
+    tz.setString(OS_ThermalZoneFields::HumidistatName,"");
 
     Node node(model);
     model.connect(tz,tz.zoneAirPort(),node,node.inletPort());
@@ -1904,6 +1983,13 @@ namespace detail {
       auto humidistatClone = t_humidistat->clone(model).cast<ZoneControlHumidistat>();
       tz.setZoneControlHumidistat(humidistatClone);
     }
+
+    if( auto t_controller = zoneControlContaminantController() ) {
+      auto controllerClone = t_controller->clone(model).cast<ZoneControlContaminantController>();
+      tz.setZoneControlContaminantController(controllerClone);
+    }
+
+    // DLM: do not clone zone mixing objects
 
     return tz;
   }
@@ -1971,7 +2057,7 @@ namespace detail {
     return result;
   }
 
-  bool ThermalZone_Impl::setSupplyPlenum(const ThermalZone & plenumZone)
+  bool ThermalZone_Impl::setSupplyPlenum(const ThermalZone & plenumZone, unsigned branchIndex)
   {
     bool result = true;
 
@@ -2018,11 +2104,22 @@ namespace detail {
       }
     }
 
+    boost::optional<AirLoopHVACZoneSplitter> zoneSplitter;
+
+    if( result ) {
+      auto zoneSplitters = t_airLoopHVAC->zoneSplitters();
+      if( branchIndex < zoneSplitters.size() ) {
+        zoneSplitter = zoneSplitters[branchIndex];
+      }
+    }
+
+    if( ! zoneSplitter ) result = false; 
+
     if( result )
     {
       removeSupplyPlenum();
 
-      model::ModelObject mo = t_airLoopHVAC->demandComponents(t_airLoopHVAC->zoneSplitter(),getObject<ThermalZone>(),Node::iddObjectType()).front();
+      model::ModelObject mo = t_airLoopHVAC->demandComponents(zoneSplitter.get(),getObject<ThermalZone>(),Node::iddObjectType()).front();
       Node node = mo.cast<Node>();
 
       OS_ASSERT(plenum);
@@ -2032,41 +2129,59 @@ namespace detail {
     return result;
   }
 
-  void ThermalZone_Impl::removeSupplyPlenum()
+  bool ThermalZone_Impl::setSupplyPlenum(const ThermalZone & plenumZone)
+  {
+    return setSupplyPlenum(plenumZone,0u);
+  }
+
+  void ThermalZone_Impl::removeSupplyPlenum(unsigned branchIndex)
   {
     Model t_model = model();
     boost::optional<AirLoopHVAC> t_airLoopHVAC = airLoopHVAC();
 
     if( t_airLoopHVAC )
     {
-      AirLoopHVACZoneSplitter zoneSplitter = t_airLoopHVAC->zoneSplitter();
-      std::vector<ModelObject> modelObjects = t_airLoopHVAC->demandComponents(zoneSplitter,getObject<ThermalZone>());
-      std::vector<AirLoopHVACSupplyPlenum> plenums = subsetCastVector<AirLoopHVACSupplyPlenum>(modelObjects);
-      boost::optional<AirLoopHVACSupplyPlenum> plenum;
-
-      if( ! plenums.empty() )
-      {
-        plenum = plenums.front();
+      boost::optional<AirLoopHVACZoneSplitter> zoneSplitter;
+      auto zoneSplitters = t_airLoopHVAC->zoneSplitters();
+      if( branchIndex < zoneSplitters.size() ) {
+        zoneSplitter = zoneSplitters[branchIndex];
       }
 
-      if( plenum )
-      {
-        if( plenum->outletModelObjects().size() == 1u )
+      if( zoneSplitter ) {
+        std::vector<ModelObject> modelObjects = t_airLoopHVAC->demandComponents(zoneSplitter.get(),getObject<ThermalZone>());
+        std::vector<AirLoopHVACSupplyPlenum> plenums = subsetCastVector<AirLoopHVACSupplyPlenum>(modelObjects);
+        boost::optional<AirLoopHVACSupplyPlenum> plenum;
+
+        if( ! plenums.empty() )
         {
-          plenum->remove();
+          plenum = plenums.front();
         }
-        else
+
+        if( plenum )
         {
-          auto it = std::find(modelObjects.begin(),modelObjects.end(),plenum.get());
-          ModelObject plenumOutletModelObject = *(it + 1);
-          unsigned branchIndex = plenum->branchIndexForOutletModelObject(plenumOutletModelObject);
-          unsigned port = plenum->connectedObjectPort(plenum->outletPort(branchIndex)).get();
-          plenum->removePortForBranch(branchIndex);
-          t_model.connect(zoneSplitter,zoneSplitter.nextOutletPort(),plenumOutletModelObject,port);
+          if( plenum->outletModelObjects().size() == 1u )
+          {
+            plenum->remove();
+          }
+          else
+          {
+            auto it = std::find(modelObjects.begin(),modelObjects.end(),plenum.get());
+            ModelObject plenumOutletModelObject = *(it + 1);
+            unsigned branchIndex = plenum->branchIndexForOutletModelObject(plenumOutletModelObject);
+            unsigned port = plenum->connectedObjectPort(plenum->outletPort(branchIndex)).get();
+            plenum->removePortForBranch(branchIndex);
+            t_model.connect(zoneSplitter.get(),zoneSplitter->nextOutletPort(),plenumOutletModelObject,port);
+          }
         }
       }
     }
   }
+
+  void ThermalZone_Impl::removeSupplyPlenum()
+  {
+    return removeSupplyPlenum(0u);
+  }
+
   bool ThermalZone_Impl::setReturnPlenum(const ThermalZone & plenumZone)
   {
     bool result = true;
@@ -2161,6 +2276,96 @@ namespace detail {
           t_model.connect(plenumInletModelObject,port,zoneMixer,zoneMixer.nextInletPort());
         }
       }
+    }
+  }
+
+  std::vector<ZoneMixing> ThermalZone_Impl::zoneMixing() const
+  {
+    return getObject<ModelObject>().getModelObjectSources<ZoneMixing>();
+  }
+
+  std::vector<ZoneMixing> ThermalZone_Impl::supplyZoneMixing() const
+  {
+    std::vector<ZoneMixing> result = this->zoneMixing();
+
+    Handle handle = this->handle();
+    auto new_end = std::remove_if(result.begin(), result.end(),
+                                  [&](const ZoneMixing& mixing){ return (mixing.zone().handle() != handle); });
+
+    result.erase(new_end, result.end());
+    return result;
+  }
+
+  std::vector<ZoneMixing> ThermalZone_Impl::exhaustZoneMixing() const
+  {
+    std::vector<ZoneMixing> result = this->zoneMixing();
+
+    Handle handle = this->handle();
+    auto new_end = std::remove_if(result.begin(), result.end(),
+                                  [&](const ZoneMixing& mixing){ return (!mixing.sourceZone() || (mixing.sourceZone()->handle() != handle)); });
+
+    result.erase(new_end, result.end());
+    return result;
+  }
+
+  boost::optional<HVACComponent> ThermalZone_Impl::airLoopHVACTerminal() const
+  {
+    if( auto mo = inletPortList().airLoopHVACModelObject() ) {
+      if( auto node = mo->optionalCast<Node>() ) {
+        if( auto nodeInlet = node->inletModelObject() ) {
+          if( ! nodeInlet->optionalCast<Splitter>() ) {
+            return nodeInlet->optionalCast<HVACComponent>();
+          }
+        }
+      }
+    }
+
+    return boost::none;
+  }
+
+  boost::optional<ZoneControlContaminantController> ThermalZone_Impl::zoneControlContaminantController() const
+  {
+    auto h = handle();
+
+    auto controllers = model().getModelObjects<ZoneControlContaminantController>();
+    for( const auto & controller : controllers ) {
+      if( auto zone = controller.getImpl<detail::ZoneControlContaminantController_Impl>()->controlledZone() ) {
+        if( zone->handle() == h ) {
+          return controller;
+        }
+      }
+    }
+
+    return boost::none;
+  }
+
+  bool ThermalZone_Impl::setZoneControlContaminantController(const ZoneControlContaminantController & contaminantController)
+  {
+    auto t_model = model();
+
+    if( t_model != contaminantController.model() ) {
+      return false;
+    }
+
+    if( auto currentZone = contaminantController.controlledZone() ) {
+      if( currentZone->handle() == handle() ) {
+        return true;
+      } else {
+        auto controllerClone = contaminantController.clone(t_model).cast<ZoneControlContaminantController>();
+        auto tz = getObject<ThermalZone>();
+        return controllerClone.getImpl<detail::ZoneControlContaminantController_Impl>()->setControlledZone(tz);
+      }
+    } else {
+      resetZoneControlContaminantController();
+      auto tz = getObject<ThermalZone>();
+      return contaminantController.getImpl<detail::ZoneControlContaminantController_Impl>()->setControlledZone(tz);
+    }
+  }
+
+  void ThermalZone_Impl::resetZoneControlContaminantController()
+  {
+    if( auto controller = zoneControlContaminantController() ) {
+      controller->remove();
     }
   }
 
@@ -2695,9 +2900,19 @@ bool ThermalZone::setSupplyPlenum(const ThermalZone & plenumZone)
   return getImpl<detail::ThermalZone_Impl>()->setSupplyPlenum(plenumZone);
 }
 
+bool ThermalZone::setSupplyPlenum(const ThermalZone & plenumZone, unsigned branchIndex)
+{
+  return getImpl<detail::ThermalZone_Impl>()->setSupplyPlenum(plenumZone,branchIndex);
+}
+
 void ThermalZone::removeSupplyPlenum()
 {
   getImpl<detail::ThermalZone_Impl>()->removeSupplyPlenum();
+}
+
+void ThermalZone::removeSupplyPlenum(unsigned branchIndex)
+{
+  getImpl<detail::ThermalZone_Impl>()->removeSupplyPlenum(branchIndex);
 }
 
 bool ThermalZone::setReturnPlenum(const ThermalZone & plenumZone)
@@ -2708,6 +2923,41 @@ bool ThermalZone::setReturnPlenum(const ThermalZone & plenumZone)
 void ThermalZone::removeReturnPlenum()
 {
   getImpl<detail::ThermalZone_Impl>()->removeReturnPlenum();
+}
+
+std::vector<ZoneMixing> ThermalZone::zoneMixing() const
+{
+  return getImpl<detail::ThermalZone_Impl>()->zoneMixing();
+}
+
+std::vector<ZoneMixing> ThermalZone::supplyZoneMixing() const
+{
+  return getImpl<detail::ThermalZone_Impl>()->supplyZoneMixing();
+}
+
+std::vector<ZoneMixing> ThermalZone::exhaustZoneMixing() const
+{
+  return getImpl<detail::ThermalZone_Impl>()->exhaustZoneMixing();
+}
+
+boost::optional<HVACComponent> ThermalZone::airLoopHVACTerminal() const
+{
+  return getImpl<detail::ThermalZone_Impl>()->airLoopHVACTerminal();
+}
+
+boost::optional<ZoneControlContaminantController> ThermalZone::zoneControlContaminantController() const
+{
+  return getImpl<detail::ThermalZone_Impl>()->zoneControlContaminantController();
+}
+
+bool ThermalZone::setZoneControlContaminantController(const ZoneControlContaminantController & contaminantController)
+{
+  return getImpl<detail::ThermalZone_Impl>()->setZoneControlContaminantController(contaminantController);
+}
+
+void ThermalZone::resetZoneControlContaminantController()
+{
+  getImpl<detail::ThermalZone_Impl>()->resetZoneControlContaminantController();
 }
 
 /// @cond

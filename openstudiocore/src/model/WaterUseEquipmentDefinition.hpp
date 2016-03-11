@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -46,7 +46,7 @@ class MODEL_API WaterUseEquipmentDefinition : public SpaceLoadDefinition {
 
   virtual ~WaterUseEquipmentDefinition() {}
 
-  static const IddObjectType& iddObjectType();
+  static IddObjectType iddObjectType();
 
   std::string endUseSubcategory() const;
   bool isEndUseSubcategoryDefaulted() const;

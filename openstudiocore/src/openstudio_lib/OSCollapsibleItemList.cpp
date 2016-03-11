@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -161,26 +161,19 @@ void OSCollapsibleItemList::addCollapsibleItem(OSCollapsibleItem * collapsibleIt
 
   collapsibleItem->setStyleSheet(style);
 
-  connect(collapsibleItem, &OSCollapsibleItem::collapsableItemSelected,
-          this, &OSCollapsibleItemList::onCollapsableItemSelected);
+  connect(collapsibleItem, &OSCollapsibleItem::collapsableItemSelected, this, &OSCollapsibleItemList::onCollapsableItemSelected);
 
-  connect(collapsibleItem, &OSCollapsibleItem::itemSelected,
-          this, &OSCollapsibleItemList::onItemSelected);
+  connect(collapsibleItem, &OSCollapsibleItem::itemSelected, this, &OSCollapsibleItemList::onItemSelected);
 
-  connect(collapsibleItem, &OSCollapsibleItem::itemSelected,
-          this, &OSCollapsibleItemList::itemSelected);
+  connect(collapsibleItem, &OSCollapsibleItem::itemSelected, this, &OSCollapsibleItemList::itemSelected);
 
-  connect(collapsibleItem, &OSCollapsibleItem::itemReplacementDropped,
-          this, &OSCollapsibleItemList::itemReplacementDropped);
+  connect(collapsibleItem, &OSCollapsibleItem::itemReplacementDropped, this, &OSCollapsibleItemList::itemReplacementDropped);
 
-  connect(collapsibleItem, &OSCollapsibleItem::itemRemoveClicked,
-          this, &OSCollapsibleItemList::itemRemoveClicked);
+  connect(collapsibleItem, &OSCollapsibleItem::itemRemoveClicked, this, &OSCollapsibleItemList::itemRemoveClicked);
 
-  connect(collapsibleItem, &OSCollapsibleItem::selectionCleared,
-          this, &OSCollapsibleItemList::selectionCleared);
+  connect(collapsibleItem, &OSCollapsibleItem::selectionCleared, this, &OSCollapsibleItemList::selectionCleared);
 
-  connect(collapsibleItem, &OSCollapsibleItem::openLibDlgClicked,
-          this, &OSCollapsibleItemList::openLibDlgClicked);
+  connect(collapsibleItem, &OSCollapsibleItem::openLibDlgClicked, this, &OSCollapsibleItemList::openLibDlgClicked);
 
   if (!selectedItem()){
     collapsibleItem->itemList()->selectItem(collapsibleItem->itemList()->firstItem());

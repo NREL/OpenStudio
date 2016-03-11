@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -599,11 +599,18 @@ TEST_F(RunManagerTestFixture, BCLMeasureRubyScriptEPWPath)
   std::vector<openstudio::runmanager::FileInfo> infiles = j.inputFiles();
   ASSERT_EQ(2u, infiles.size());
   
-  openstudio::runmanager::FileInfo fi = infiles[1];
-  //Make sure epw got attached properly
-  EXPECT_EQ("SimpleModel.osm", fi.filename);
-  ASSERT_EQ(1u, fi.requiredFiles.size());
-  ASSERT_EQ("in.epw", openstudio::toString(fi.requiredFiles[0].second));
+  for (auto fi : infiles){
+    if (fi.filename == "UserScriptAdapter.rb"){
+    }else if (fi.filename == "SimpleModel.osm"){
+      //Make sure epw got attached properly
+      EXPECT_EQ("SimpleModel.osm", fi.filename);
+      ASSERT_EQ(1u, fi.requiredFiles.size());
+      ASSERT_EQ("in.epw", openstudio::toString(fi.requiredFiles[0].second));
+    } else{
+      EXPECT_TRUE(false) << fi.filename;
+    }
+  }
+
 
   rm.setPaused(false);
 
@@ -658,7 +665,10 @@ TEST_F(RunManagerTestFixture, RelocateDaylightSimPath)
 
 
   ASSERT_EQ(wi2.files.files().at(0).fullPath, getOpenStudioRubyScriptsPath() / openstudio::toPath("openstudio/radiance/DaylightCalculations.rb"));
-  ASSERT_EQ(openstudio::toPath(wi2.files.files().at(0).requiredFiles.at(0).first.toLocalFile()), getOpenStudioRubyScriptsPath() / openstudio::toPath("openstudio/radiance/ModelToRad.rb"));
+  openstudio::path p1 = openstudio::toPath(wi2.files.files().at(0).requiredFiles.at(0).first.toLocalFile());
+  openstudio::path p2 = getOpenStudioRubyScriptsPath() / openstudio::toPath("openstudio/radiance/ModelToRad.rb");
+  // DLM: this causes a stack overflow, not sure why
+  ASSERT_EQ(p1, p2);
 
   ASSERT_TRUE(boost::filesystem::exists(wi2.files.files().at(0).fullPath));
   ASSERT_EQ("testjobkeyname", wi2.jobkeyname);

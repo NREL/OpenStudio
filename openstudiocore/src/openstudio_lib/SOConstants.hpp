@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -26,6 +26,7 @@ enum AddToModelEnum
 {
   ADDTOMODEL_THERMALZONE,
   ADDTOMODEL_AIRLOOPHVAC,
+  ADDTOMODEL_DUAL_AIRLOOPHVAC,
   ADDTOMODEL_SYSTEM_TYPE_1,
   ADDTOMODEL_SYSTEM_TYPE_2,
   ADDTOMODEL_SYSTEM_TYPE_3,

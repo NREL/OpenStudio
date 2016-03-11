@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -547,33 +547,11 @@ namespace detail {
 
   bool ZoneHVACWaterToAirHeatPump_Impl::setHeatingCoil(HVACComponent& heatingCoilsWaterToAirHP) 
   {
-    bool isAllowedType = false;
-
-    if( heatingCoilsWaterToAirHP.iddObjectType() == IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit )
-    {
-      isAllowedType = true;
-    }
-
-    if( isAllowedType )
-    {
-      return setPointer(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatingCoilName,heatingCoilsWaterToAirHP.handle());
-    }
-    return false;
+    return setPointer(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatingCoilName,heatingCoilsWaterToAirHP.handle());
   }
 
   bool ZoneHVACWaterToAirHeatPump_Impl::setCoolingCoil(HVACComponent& coolingCoilsWaterToAirHP) {
-    bool isAllowedType = false;
-
-    if( coolingCoilsWaterToAirHP.iddObjectType() == IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit )
-    {
-      isAllowedType = true;
-    }
-
-    if( isAllowedType )
-    {
-      return setPointer(OS_ZoneHVAC_WaterToAirHeatPumpFields::CoolingCoilName,coolingCoilsWaterToAirHP.handle());
-    }
-    return false;
+    return setPointer(OS_ZoneHVAC_WaterToAirHeatPumpFields::CoolingCoilName,coolingCoilsWaterToAirHP.handle());
   }
 
   bool ZoneHVACWaterToAirHeatPump_Impl::setMaximumCyclingRate(boost::optional<double> maximumCyclingRate) {

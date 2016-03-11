@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+#  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 #  All rights reserved.
 #
 #  This library is free software; you can redistribute it and/or
@@ -68,6 +68,48 @@ module OpenStudio
     #  super
     #end
 
+    def show_error
+      msg  = "An error occurred in the OpenStudio SketchUp plug-in.\n\n"
+      msg += "It is advised that you save a backup of your current OpenStudio model and restart SketchUp."
+      UI.messagebox(msg)
+    end
+    
+    def onPushButtonNew(checked)
+      model_interface =  Plugin.model_manager.model_interface
+      if model_interface.model_watcher.enabled
+        super(checked)
+      else
+        show_error
+      end
+    end
+    
+    def onPushButtonCopy(checked)
+      model_interface =  Plugin.model_manager.model_interface
+      if model_interface.model_watcher.enabled
+        super(checked)
+      else
+        show_error
+      end
+    end
+    
+    def onPushButtonDelete(checked)
+      model_interface =  Plugin.model_manager.model_interface
+      if model_interface.model_watcher.enabled
+        super(checked)
+      else
+        show_error
+      end
+    end
+    
+    def onPushButtonPurge(checked)
+      model_interface =  Plugin.model_manager.model_interface
+      if model_interface.model_watcher.enabled
+        super(checked)
+      else
+        show_error
+      end
+    end
+    
     def show
       Plugin.log(OpenStudio::Trace, "#{current_method_name}, enabled? = #{enabled?}")
       update

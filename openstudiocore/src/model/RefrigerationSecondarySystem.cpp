@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -101,10 +101,6 @@ namespace detail {
   ModelObject RefrigerationSecondarySystem_Impl::clone(Model model) const
   {
     RefrigerationSecondarySystem modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationSecondarySystem>();
-
-    if (boost::optional<CurveCubic> variableSpeedPumpCubicCurve = this->variableSpeedPumpCubicCurve()) {
-      modelObjectClone.setVariableSpeedPumpCubicCurve(variableSpeedPumpCubicCurve.get().clone(model).cast<CurveCubic>());
-    }
 
     if (boost::optional<ModelObjectList> caseAndWalkinList = this->refrigeratedCaseAndWalkInList()) {
       ModelObjectList caseAndWalkinListClone = caseAndWalkinList->clone(model).cast<ModelObjectList>();

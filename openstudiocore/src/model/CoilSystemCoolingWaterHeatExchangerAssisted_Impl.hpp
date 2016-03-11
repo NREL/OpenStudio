@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
 #ifndef MODEL_COILSYSTEMCOOLINGWATERHEATEXCHANGERASSISTED_IMPL_HPP
 #define MODEL_COILSYSTEMCOOLINGWATERHEATEXCHANGERASSISTED_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -55,9 +55,9 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
@@ -79,11 +79,11 @@ namespace detail {
     /** @name Other */
     //@{
 
-    unsigned inletPort();
+    unsigned inletPort() override;
 
-    unsigned outletPort();
+    unsigned outletPort() override;
 
-    bool addToNode(Node & node);
+    bool addToNode(Node & node) override;
 
     //@}
    protected:

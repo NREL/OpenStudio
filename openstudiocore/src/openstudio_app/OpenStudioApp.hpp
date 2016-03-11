@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -30,7 +30,6 @@
 #include "../model/CurveQuadratic.hpp"
 #include "../model/CurveBiquadratic.hpp"
 #include "../model/AirLoopHVACOutdoorAirSystem.hpp"
-#include "../model/AvailabilityManagerScheduled.hpp"
 #include "../model/ControllerOutdoorAir.hpp"
 #include "../model/CoilHeatingGas.hpp"
 #include "../model/CoilCoolingDXSingleSpeed.hpp"

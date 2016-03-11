@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -47,7 +47,6 @@
 #include "../model/AirTerminalSingleDuctUncontrolled.hpp"
 #include "../model/AirTerminalSingleDuctVAVReheat.hpp"
 #include "../model/AirTerminalSingleDuctVAVNoReheat.hpp"
-#include "../model/AvailabilityManagerScheduled.hpp"
 #include "../model/BuildingStory.hpp"
 #include "../model/CoilCoolingCooledBeam.hpp"
 #include "../model/CoilCoolingDXSingleSpeed.hpp"
@@ -193,8 +192,6 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
       if(args.size() == 2){
         // check for 'noSavePath'
         if (args.at(1) == QString("noSavePath")){
-          // so new model can get access to weather file, file will be made relative again on save
-          m_osDocument->setFullWeatherFilePath(); 
           m_osDocument->setSavePath("");
           QTimer::singleShot(0, m_osDocument.get(), SLOT(markAsModified())); 
         }else{

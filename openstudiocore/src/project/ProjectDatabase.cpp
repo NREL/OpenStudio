@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -186,6 +186,7 @@ namespace detail {
     // make sure we are the last one using database connection
     OS_ASSERT(m_qSqlDatabase.use_count() == 1);
 
+    QString connectionName = m_qSqlDatabase->connectionName();
     m_qSqlDatabase->close();
     m_qSqlDatabase.reset(); // actually delete the database before removeDatabase
     QSqlDatabase::removeDatabase(toQString(m_path));

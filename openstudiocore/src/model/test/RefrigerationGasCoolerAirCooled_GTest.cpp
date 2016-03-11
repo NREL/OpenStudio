@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -64,7 +64,7 @@ TEST_F(ModelFixture, RefrigerationGasCoolerAirCooled_Remove)
     EXPECT_EQ(0, refrigerationAirCooledGasCoolers.size());
 
     ratedTotalHeatRejectionRateCurve = model.getModelObjects<CurveLinear>();
-    EXPECT_EQ(0, ratedTotalHeatRejectionRateCurve.size());
+    EXPECT_EQ(1, ratedTotalHeatRejectionRateCurve.size());
 }
 
 //Test the methods that set and get the fields
@@ -124,7 +124,7 @@ TEST_F(ModelFixture, RefrigerationGasCoolerAirCooled_CloneModelWithDefaultData)
     EXPECT_DOUBLE_EQ(testObjectClone.gasCoolerRefrigerantOperatingChargeInventory(),0.0);
     EXPECT_DOUBLE_EQ(testObjectClone.gasCoolerReceiverRefrigerantInventory(),0.0);
     EXPECT_DOUBLE_EQ(testObjectClone.gasCoolerOutletPipingRefrigerantInventory(),0.0);
-    EXPECT_NE(testObject.ratedTotalHeatRejectionRateCurve().get().handle(), testObjectClone.ratedTotalHeatRejectionRateCurve().get().handle());
+    EXPECT_EQ(testObject.ratedTotalHeatRejectionRateCurve().get().handle(), testObjectClone.ratedTotalHeatRejectionRateCurve().get().handle());
 }
 
 //Test clone model with custom data

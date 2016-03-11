@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -140,9 +140,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
   {
     idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumAirFlowRate,"Autosize");
   }
-
-  // HotWaterorSteamInletNodeName
-  idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::HotWaterorSteamInletNodeName,"");
 
   // MaximumHotWaterOrSteamFlowRate
   value = modelObject.maximumHotWaterorSteamFlowRate();

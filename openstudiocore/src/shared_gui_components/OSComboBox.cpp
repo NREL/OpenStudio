@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -173,6 +173,10 @@ OSComboBox2::OSComboBox2( QWidget * parent, bool editable )
   setEditable(editable);
   setEnabled(false);
   setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Fixed);
+}
+
+OSComboBox2::~OSComboBox2()
+{
 }
 
 bool OSComboBox2::event( QEvent * e )

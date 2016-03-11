@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -88,8 +88,8 @@ namespace openstudio {
     public:
 
       ResultsTabView(const QString & tabLabel,
-          bool hasSubTabs,
-          QWidget * parent = nullptr);
+        TabType tabType,
+        QWidget * parent = nullptr);
       virtual ~ResultsTabView() {}
       void searchForExistingResults(const openstudio::path &t_runDir);
 

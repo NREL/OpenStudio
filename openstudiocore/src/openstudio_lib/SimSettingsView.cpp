@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -109,7 +109,7 @@ SimSettingsView::SimSettingsView(bool isIP,
   m_runPeriodGroup(nullptr),
   m_radianceGroup(nullptr),
   m_runPeriodName(nullptr),
-  m_isIP(false),
+  m_isIP(isIP),
   // SimulationControl
   m_doZoneSizingCalculation(nullptr),
   m_doSystemSizingCalculation(nullptr),

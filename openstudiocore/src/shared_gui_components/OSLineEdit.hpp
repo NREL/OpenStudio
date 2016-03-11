@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@ public:
 
   OSLineEdit2(QWidget * parent = nullptr);
 
-  virtual ~OSLineEdit2() {}
+  virtual ~OSLineEdit2();
 
   void enableClickFocus() { this->m_hasClickFocus = true; }
   void setDeleteObject(bool deleteObject) { m_deleteObject = deleteObject; }
@@ -60,12 +60,18 @@ public:
             boost::optional<StringSetter> set=boost::none,
             boost::optional<NoFailAction> reset=boost::none,
             boost::optional<BasicQuery> isDefaulted=boost::none);
-  
+
   void bind(model::ModelObject& modelObject,
             OptionalStringGetterBoolArg get,
             boost::optional<StringSetterOptionalStringReturn> set,
             boost::optional<NoFailAction> reset=boost::none,
             boost::optional<BasicQuery> isDefaulted=boost::none);
+
+  void bind(model::ModelObject& modelObject,
+    StringGetter get,
+    boost::optional<StringSetterVoidReturn> set = boost::none,
+    boost::optional<NoFailAction> reset = boost::none,
+    boost::optional<BasicQuery> isDefaulted = boost::none);
 
   void unbind();
 
@@ -111,6 +117,7 @@ signals:
   boost::optional<OptionalStringGetterBoolArg> m_getOptionalBoolArg;
   boost::optional<StringSetter> m_set;
   boost::optional<StringSetterOptionalStringReturn> m_setOptionalStringReturn;
+  boost::optional<StringSetterVoidReturn> m_setVoidReturn;
   boost::optional<NoFailAction> m_reset;
   boost::optional<BasicQuery> m_isDefaulted;
 

@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -26,6 +26,8 @@ namespace openstudio {
 
 namespace model {
 
+class ControllerWaterCoil;
+
 namespace detail {
 
 class MODEL_API WaterToAirComponent_Impl : public HVACComponent_Impl {
@@ -51,11 +53,7 @@ class MODEL_API WaterToAirComponent_Impl : public HVACComponent_Impl {
 
   virtual boost::optional<ModelObject> waterOutletModelObject();
 
-  /** This function returns a vector of HVACComponent that are directly downstream
-   *  from this object on an AirLoopHVAC or PlantLoop. 
-   *  @param[in]  isDemandComponent  Boolean passed in whether object is a demand or supply component
-  **/
-  virtual std::vector<HVACComponent> edges(bool isDemandComponent) override;
+  virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & previous) override;
 
   virtual boost::optional<AirLoopHVAC> airLoopHVAC() const override;
 
@@ -88,6 +86,8 @@ class MODEL_API WaterToAirComponent_Impl : public HVACComponent_Impl {
   virtual bool removeFromAirLoopHVAC();
 
   virtual bool removeFromPlantLoop();
+
+  boost::optional<ControllerWaterCoil> controllerWaterCoil();
  private:
   REGISTER_LOGGER("openstudio.model.WaterToAirComponent");
 };

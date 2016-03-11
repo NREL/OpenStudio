@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -68,8 +68,8 @@ public:
 
   UtilityBillsView(const model::Model & model,
     QWidget * parent = nullptr);
-  
-  virtual ~UtilityBillsView() {}
+
+  virtual ~UtilityBillsView();
 
 private:
 
@@ -93,7 +93,7 @@ public:
     bool addScrollArea,
     QWidget * parent = nullptr);
 
-  virtual ~UtilityBillsInspectorView() {}
+  virtual ~UtilityBillsInspectorView();
 
   boost::optional<QString> runPeriodDates();
 

@@ -18,6 +18,7 @@
 %template(BoolVector) std::vector<bool>;
 %template(UnsignedVector) std::vector<unsigned>;
 %template(IntVector) std::vector<int>;
+%template(LongVector) std::vector<long>;
 %template(DoubleVector) std::vector<double>;
 %template(StringVector) std::vector<std::string>;
 %template(StringVectorVector) std::vector<std::vector<std::string> >;

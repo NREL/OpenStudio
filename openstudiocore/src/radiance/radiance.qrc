@@ -1,7 +1,8 @@
 <!DOCTYPE RCC><RCC version="1.0">
   <qresource>
-    <file>resources/cl_Tn0.44.xml</file>
-    <file>resources/cl_Tn0.44_blinds.xml</file>
-    <file>resources/df_Tn0.44.xml</file>
+    <file>resources/blinds.xml</file>
+    <file>resources/1xliloX.xml</file>
+    <file>resources/air.xml</file>
+    <file>resources/05_shadecloth_light.xml</file>
   </qresource>
 </RCC>

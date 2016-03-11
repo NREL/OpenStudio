@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -78,6 +78,7 @@ class MaterialsInspectorView : public ModelObjectInspectorView
     void showMaterialNoMassInspectorView(const openstudio::model::ModelObject & modelObject);
     void showMaterialRoofVegetationInspectorView(const openstudio::model::ModelObject & modelObject);
     void showWindowMaterialBlindInspectorView(const openstudio::model::ModelObject & modelObject);
+    void showWindowMaterialDaylightRedirectionDeviceInspectorView(const openstudio::model::ModelObject & modelObject);
     void showWindowMaterialGasInspectorView(const openstudio::model::ModelObject & modelObject);
     void showWindowMaterialGasMixtureInspectorView(const openstudio::model::ModelObject & modelObject);
     void showWindowMaterialGlazingGroupThermochromicInspectorView(const openstudio::model::ModelObject & modelObject);

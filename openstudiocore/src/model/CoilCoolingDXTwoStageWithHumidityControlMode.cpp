@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,31 +17,31 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CoilCoolingDXTwoStageWithHumidityControlMode.hpp>
-#include <model/CoilCoolingDXTwoStageWithHumidityControlMode_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/CurveQuadratic_Impl.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveBiquadratic_Impl.hpp>
-#include <model/CoilPerformanceDXCooling.hpp>
-#include <model/CoilPerformanceDXCooling_Impl.hpp>
-#include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
-#include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
-#include <model/AirLoopHVACUnitarySystem.hpp>
-#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
-#include <model/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp>
-#include <model/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
+#include "CoilCoolingDXTwoStageWithHumidityControlMode.hpp"
+#include "CoilCoolingDXTwoStageWithHumidityControlMode_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "CurveQuadratic.hpp"
+#include "CurveQuadratic_Impl.hpp"
+#include "CurveBiquadratic.hpp"
+#include "CurveBiquadratic_Impl.hpp"
+#include "CoilPerformanceDXCooling.hpp"
+#include "CoilPerformanceDXCooling_Impl.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
+#include "AirLoopHVACUnitarySystem.hpp"
+#include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
+#include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 #include <utilities/idd/OS_Coil_Cooling_DX_TwoStageWithHumidityControlMode_FieldEnums.hxx>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
 namespace openstudio {
@@ -345,22 +345,6 @@ namespace detail {
   ModelObject CoilCoolingDXTwoStageWithHumidityControlMode_Impl::clone(Model model) const
   {
     auto newCoil = StraightComponent_Impl::clone(model).cast<CoilCoolingDXTwoStageWithHumidityControlMode>();
-
-    if( auto mo = normalModeStage1CoilPerformance() ) {
-      newCoil.setNormalModeStage1CoilPerformance(mo->clone(model).cast<CoilPerformanceDXCooling>());
-    }
-
-    if( auto mo = normalModeStage1Plus2CoilPerformance() ) {
-      newCoil.setNormalModeStage1Plus2CoilPerformance(mo->clone(model).cast<CoilPerformanceDXCooling>());
-    }
-
-    if( auto mo = dehumidificationMode1Stage1CoilPerformance() ) {
-      newCoil.setDehumidificationMode1Stage1CoilPerformance(mo->clone(model).cast<CoilPerformanceDXCooling>());
-    }
-
-    if( auto mo = dehumidificationMode1Stage1Plus2CoilPerformance() ) {
-      newCoil.setDehumidificationMode1Stage1Plus2CoilPerformance(mo->clone(model).cast<CoilPerformanceDXCooling>());
-    }
 
     return newCoil;
   }

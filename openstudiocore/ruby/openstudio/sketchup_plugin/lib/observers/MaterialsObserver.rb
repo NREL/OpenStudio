@@ -1,5 +1,5 @@
 ######################################################################
-#  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+#  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 #  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
@@ -54,7 +54,7 @@ module OpenStudio
       return if not @enabled
       
       proc = Proc.new {
-        if material.drawing_interface
+        if !material.deleted? and material.drawing_interface
           material.drawing_interface.update_model_object
         end
       }

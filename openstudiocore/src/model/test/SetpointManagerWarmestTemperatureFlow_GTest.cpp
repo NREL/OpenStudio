@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -23,6 +23,7 @@
 
 #include "../SetpointManagerWarmestTemperatureFlow.hpp"
 #include "../SetpointManagerWarmestTemperatureFlow_Impl.hpp"
+#include "../Node.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

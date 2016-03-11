@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -85,6 +85,16 @@ class MODEL_API EvaporativeCoolerDirectResearchSpecial : public StraightComponen
   void autosizeRecirculatingWaterPumpPowerConsumption();
 
   bool isRecirculatingWaterPumpPowerConsumptionAutosized() const;
+
+  /** Returns the value of the PrimaryAirDesignFlowRate field. **/
+  boost::optional<double> primaryAirDesignFlowRate() const;
+
+  /** Sets the value of the PrimaryAirDesignFlowRate field. **/
+  void setPrimaryAirDesignFlowRate( double value );
+
+  void autosizePrimaryAirDesignFlowRate();
+
+  bool isPrimaryAirDesignFlowRateAutosized() const;
 
   /** Returns the Node referred to by the SensorNodeName field. **/
   boost::optional<Node> sensorNode() const;

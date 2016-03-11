@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2015, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -20,6 +20,9 @@
 #include "Geometry.hpp"
 #include "Intersection.hpp"
 #include "Transformation.hpp"
+#include "Point3d.hpp"
+#include "PointLatLon.hpp"
+#include "Vector3d.hpp"
 
 #include "../core/Assert.hpp"
 
@@ -346,21 +349,11 @@ namespace openstudio{
   /// lat and lon are specified in degrees
   double getDistanceLatLon(double lat1, double lon1, double lat2, double lon2)
   {
-
-    // for more accuracy would want to use WGS-84 ellipsoid params and Vincenty formula
-
-    // Haversine formula 
-    double R = 6371000; // Earth radius meters
-    double deltaLat = degToRad(lat2-lat1);
-    double deltaLon = degToRad(lon2-lon1); 
-    double a = sin(deltaLat/2) * sin(deltaLat/2) +
-               cos(degToRad(lat1)) * cos(degToRad(lat2)) * 
-               sin(deltaLon/2) * sin(deltaLon/2); 
-    double c = 2 * atan2(sqrt(a), sqrt(1-a)); 
-    double d = R * c;
-
-    return d;
+    PointLatLon p1(lat1, lon1);
+    PointLatLon p2(lat2, lon2);
+    return (p1 - p2);
   }
+
 
   bool circularEqual(const Point3dVector& points1, const Point3dVector& points2, double tol)
   {

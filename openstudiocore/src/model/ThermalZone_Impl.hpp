@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2015, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -36,10 +36,12 @@ class RenderingColor;
 class HVACTemplateZoneIdealLoadsAirSystem;
 class ThermostatSetpointDualSetpoint;
 class Thermostat;
+class ZoneControlContaminantController;
 class ZoneControlHumidistat;
 class ThermalZone;
 class SizingZone;
 class PortList;
+class ZoneMixing;
 class ZoneHVACEquipmentList;
 
 namespace detail {
@@ -137,11 +139,7 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
-    /** This function returns a vector of HVACComponent that are directly downstream
-     *  from this object on an AirLoopHVAC or PlantLoop. 
-     *  @param[in]  isDemandComponent  Boolean passed in whether object is a demand or supply component
-    **/
-    virtual std::vector<HVACComponent> edges(bool isDemandComponent) override;
+    virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & prev) override;
 
     /** @name Getters */
     //@{
@@ -175,6 +173,8 @@ namespace detail {
     boost::optional<ThermostatSetpointDualSetpoint> thermostatSetpointDualSetpoint() const;
 
     boost::optional<Thermostat> thermostat() const;
+
+    boost::optional<ZoneControlContaminantController> zoneControlContaminantController() const;
 
     boost::optional<ZoneControlHumidistat> zoneControlHumidistat() const;
 
@@ -243,6 +243,10 @@ namespace detail {
     bool setZoneControlHumidistat(const ZoneControlHumidistat & humidistat);
 
     void resetZoneControlHumidistat();
+
+    bool setZoneControlContaminantController(const ZoneControlContaminantController & contaminantController);
+
+    void resetZoneControlContaminantController();
 
     bool setFractionofZoneControlledbyPrimaryDaylightingControl(double fractionofZoneControlledbyPrimaryDaylightingControl);
     
@@ -436,9 +440,17 @@ namespace detail {
     bool isPlenum() const;
     bool canBePlenum() const;
     bool setSupplyPlenum(const ThermalZone & plenumZone);
+    bool setSupplyPlenum(const ThermalZone & plenumZone, unsigned branchIndex);
     void removeSupplyPlenum();
     bool setReturnPlenum(const ThermalZone & plenumZone);
     void removeReturnPlenum();
+    void removeSupplyPlenum(unsigned branchIndex);
+
+    std::vector<ZoneMixing> zoneMixing() const;
+    std::vector<ZoneMixing> supplyZoneMixing() const;
+    std::vector<ZoneMixing> exhaustZoneMixing() const;
+
+    boost::optional<HVACComponent> airLoopHVACTerminal() const;
 
    protected:
 
