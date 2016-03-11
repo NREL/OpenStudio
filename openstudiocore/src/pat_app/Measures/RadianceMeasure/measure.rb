@@ -132,7 +132,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
 
   # check for number of rmtxop processes
-  def mergeCount()
+  def merge_count()
     if OS.windows
       # TODO: properly handle the Windows case
       return 1
@@ -712,7 +712,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           # keep header, convert to illuminance, but no transpose
           ### foo (-ff)
           
-          while mergeCount() > 2
+          while merge_count() > 2
             puts "waiting in rmtxop queue..."
             sleep(5)
           end
@@ -728,7 +728,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
             # make single phase illuminance sched for each state
             states = ["clear", "tinted"]
             states.each_index do |i|
-              while mergeCount() > 2
+              while merge_count() > 2
                 puts "waiting in rmtxop queue..."
                 sleep(5)
               end
@@ -746,7 +746,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
             wgXMLs.each_index do |i|
               #rad_command = "dctimestep output/dc/#{wg}.vmx bsdf/#{wgXMLs[i].strip} output/dc/#{wg}.dmx annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - > output/ts/#{wg}_INDEX#{wgXMLs.index[i]}_#{wgXMLs[i].split[0]}.ill"
-              while mergeCount() > 2
+              while merge_count() > 2
                 puts "waiting in rmtxop queue..."
                 sleep(5)
               end
@@ -765,7 +765,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
 
         # get annual values for window control sensors (note: convert to illuminance, no transpose, strip header)
         ### foo leave at -fa
-        while mergeCount() > 2
+        while merge_count() > 2
           puts "waiting in rmtxop queue..."
           sleep(5)
         end
@@ -878,7 +878,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         exit false
       elsif mergeWindows.size == 1
         # go straight to final building results file format
-        while mergeCount() > 2
+        while merge_count() > 2
           puts "waiting in rmtxop queue..."
           sleep(5)
         end        
@@ -886,7 +886,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         exec_statement("rmtxop -fa #{mergeWindows[0]} -t | getinfo - > output/merged_space.ill", runner)
       else
         # make initial building results from first window group
-        while mergeCount() > 2
+        while merge_count() > 2
           puts "waiting in rmtxop queue..."
           sleep(5)
         end
@@ -896,7 +896,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
         mergeWindows[1..-1].each do |merge|
           print_statement("adding #{merge}...", runner)
           temp_fname = rand(36**15).to_s(36)
-          while mergeCount() > 2
+          while merge_count() > 2
             puts "waiting in rmtxop queue..."
             sleep(5)
           end
@@ -904,7 +904,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
           FileUtils.mv temp_fname, 'output/final_merge.tmp'
         end
         # strip header
-        while mergeCount() > 2
+        while merge_count() > 2
           puts "waiting in rmtxop queue..."
           sleep(5)
         end
