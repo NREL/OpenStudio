@@ -2,8 +2,8 @@
   <schema_version>3.0</schema_version>
   <name>radiance_measure</name>
   <uid>1e3cfef8-b051-4e60-8bb0-ed2d29d4f45d</uid>
-  <version_id>2aaf8284-e7a3-4639-a691-a6871a756431</version_id>
-  <version_modified>20160310T055441Z</version_modified>
+  <version_id>6b630f36-de6e-45ea-9fb5-60aaaa1eb6a8</version_id>
+  <version_modified>20160311T201342</version_modified>
   <xml_checksum>381B7733</xml_checksum>
   <class_name>RadianceMeasure</class_name>
   <display_name>Radiance Daylighting Measure</display_name>
@@ -74,7 +74,26 @@
     <argument>
       <name>debug_mode</name>
       <display_name>Debug Mode</display_name>
-      <description>Generates additional log messages, images for each window group, and saves all window group output.</description>
+      <description>Generate additional log messages, images for each window group, and save all window group output.</description>
+      <type>Boolean</type>
+      <required>false</required>
+      <model_dependent>false</model_dependent>
+      <default_value>false</default_value>
+      <choices>
+        <choice>
+          <value>true</value>
+          <display_name>true</display_name>
+        </choice>
+        <choice>
+          <value>false</value>
+          <display_name>false</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>cleanup_data</name>
+      <display_name>Cleanup Data</display_name>
+      <description>Delete Radiance input and (most) output data, post-simulation (lighting schedules are passed to OpenStudio model (and daylight metrics are passed to OpenStudio-server, if applicable)</description>
       <type>Boolean</type>
       <required>false</required>
       <model_dependent>false</model_dependent>
@@ -136,6 +155,12 @@
       <checksum>13FF1228</checksum>
     </file>
     <file>
+      <filename>radiance_measure_test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>75766E13</checksum>
+    </file>
+    <file>
       <version>
         <software_program>OpenStudio</software_program>
         <identifier>1.7.0</identifier>
@@ -144,13 +169,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>024DD994</checksum>
-    </file>
-    <file>
-      <filename>radiance_measure_test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>75766E13</checksum>
+      <checksum>09C4459A</checksum>
     </file>
   </files>
 </measure>
