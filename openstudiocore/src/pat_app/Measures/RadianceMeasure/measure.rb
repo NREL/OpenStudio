@@ -135,6 +135,7 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
   def merge_count()
     if OS.windows
       # TODO: properly handle the Windows case
+      # TODO: possibly add count as a user option
       return 1
     else 
       return `pgrep rmtxop`.split.size
