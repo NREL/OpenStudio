@@ -1,0 +1,30 @@
+
+OS:Version,
+  {4788e140-0bab-4027-909e-8e7e18a26759}, !- Handle
+  1.10.5;                                 !- Version Identifier
+
+OS:Construction,
+  {f43516c0-64e3-4c08-b367-00d1310a65d7}, !- Handle
+  Interior Door,                          !- Name
+  ,                                       !- Surface Rendering Name
+  {0f905820-25f4-4687-a682-09b35fdc3648}; !- Layer 1
+
+OS:Material,
+  {0f905820-25f4-4687-a682-09b35fdc3648}, !- Handle
+  G05 25mm wood,                          !- Name
+  MediumSmooth,                           !- Roughness
+  0.0254,                                 !- Thickness {m}
+  0.15,                                   !- Conductivity {W/m-K}
+  608,                                    !- Density {kg/m3}
+  1630;                                   !- Specific Heat {J/kg-K}
+
+OS:ComponentData,
+  {92df2ca8-9f41-43f5-bfe3-ee742ecab633}, !- Handle
+  Component Data 1,                       !- Name
+  {f3dfb855-f1bd-420b-847e-c8f3296c30ce}, !- UUID
+  {da969411-15ab-423e-8f4d-c1046d8633ac}, !- Version UUID
+  1457477509,                             !- Creation Timestamp
+  1457477509,                             !- Version Timestamp
+  {f43516c0-64e3-4c08-b367-00d1310a65d7}, !- Name of Object 1
+  {0f905820-25f4-4687-a682-09b35fdc3648}; !- Name of Object 2
+
