@@ -5,7 +5,7 @@ require 'yaml'
 begin_date = Time.parse('2016-02-21' + 'T06:00:00Z')
 
 end_date = Time.now
-end_date = Time.parse('2016-03-08' + 'T006:00:00Z')
+end_date = Time.parse('2016-03-11' + 'T006:00:00Z')
 
 repo_owner = 'NREL'
 repo = 'OpenStudio'

@@ -11,6 +11,7 @@
 - ![Fixed:][fixed] [#1730]( https://github.com/NREL/OpenStudio/issues/1730 ), ModelObjects not translated to E+
 - ![Fixed:][fixed] [#1870]( https://github.com/NREL/OpenStudio/issues/1870 ), PAT 1.8.0 - An unhandled exception has occured - AnalysisDriver.cpp - Invalid Results
 - ![Fixed:][fixed] [#1901]( https://github.com/NREL/OpenStudio/issues/1901 ), Fix Radiance translator's reporting behavior
+- ![Fixed:][fixed] [#1915]( https://github.com/NREL/OpenStudio/issues/1915 ), OpenStudio App loses weather file
 - ![Fixed:][fixed] [#1969]( https://github.com/NREL/OpenStudio/issues/1969 ), Using "x2" in app on thermal zone removes thermostat from other zones that used it.
 - ![Fixed:][fixed] [#1999]( https://github.com/NREL/OpenStudio/issues/1999 ), Model does not display in SketchUp
 - ![Fixed:][fixed] [#2001]( https://github.com/NREL/OpenStudio/issues/2001 ), Copying a measure produces invalid measure if "ended" is in description string (probably also issue in name and modeler description)
@@ -20,6 +21,7 @@
 - ![Fixed:][fixed] [#2051]( https://github.com/NREL/OpenStudio/issues/2051 ), Mac packages fail at runtime due to geo lib
 - ![Fixed:][fixed] [#2060]( https://github.com/NREL/OpenStudio/issues/2060 ), PAT 1.10.0 Run tab breaks if run cancelled
 - ![Fixed:][fixed] [#2061]( https://github.com/NREL/OpenStudio/issues/2061 ), PAT 1.10.0 stops working if user changes User Defined Measure category
+- ![Fixed:][fixed] [#2070]( https://github.com/NREL/OpenStudio/issues/2070 ), SetpointManager:Coldest translates to two identical energyplus objects
 - ![Fixed:][fixed] [#2078]( https://github.com/NREL/OpenStudio/issues/2078 ), Fix ShadingControl solar setpoint and units handling
 - ![Fixed:][fixed] [#2088]( https://github.com/NREL/OpenStudio/issues/2088 ), PAT XML export is not exporting user-defined names
 - ![Fixed:][fixed] [#2089]( https://github.com/NREL/OpenStudio/issues/2089 ), Radiance measure blows up real good on large models
