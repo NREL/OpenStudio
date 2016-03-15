@@ -2,7 +2,8 @@
   <schema_version>3.0</schema_version>
   <name>calibration_reports</name>
   <uid>e6642d40-7366-4647-8724-53a37991d579</uid>
-  <version_id>5f63612c-36b7-4512-a03b-7dfc86f4e14e</version_id>
+  <version_id>e99970d6-389f-40aa-a6ad-588ff89ebd91</version_id>
+  <version_modified>20160310T051924Z</version_modified>
   <xml_checksum>2C8A3EEF</xml_checksum>
   <class_name>CalibrationReports</class_name>
   <display_name>Calibration Reports</display_name>
@@ -39,12 +40,6 @@
       <checksum>A930DF8D</checksum>
     </file>
     <file>
-      <filename>CalibrationReports_Test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>E2AAA775</checksum>
-    </file>
-    <file>
       <version>
         <software_program>OpenStudio</software_program>
         <identifier>1.7.0</identifier>
@@ -60,6 +55,12 @@
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
       <checksum>D00AF8B5</checksum>
+    </file>
+    <file>
+      <filename>CalibrationReports_Test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>5FAA0FD2</checksum>
     </file>
   </files>
 </measure>

@@ -18,7 +18,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 require 'minitest/autorun'
 
 class ScanForToolsCrash_Test < MiniTest::Unit::TestCase
@@ -28,7 +27,6 @@ class ScanForToolsCrash_Test < MiniTest::Unit::TestCase
     # All it has to do is not crash
     co = OpenStudio::Runmanager::ConfigOptions.new(true)
     co.findTools(false, false, false, false)
-
 
   end
 end

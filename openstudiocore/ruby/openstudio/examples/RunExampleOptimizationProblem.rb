@@ -50,7 +50,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 require 'fileutils'
 
 include OpenStudio                      # to avoid the OpenStudio:: prefix

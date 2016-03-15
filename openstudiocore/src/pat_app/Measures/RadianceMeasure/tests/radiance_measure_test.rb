@@ -56,11 +56,12 @@ class RadianceMeasureTest < MiniTest::Unit::TestCase
 
     # get arguments and test that they are what we are expecting
     arguments = measure.arguments(model)
-    assert_equal(4, arguments.size)
+    assert_equal(5, arguments.size)
     assert_equal('apply_schedules', arguments[0].name)
-    assert_equal('write_sql', arguments[1].name)
-    assert_equal('use_cores', arguments[2].name)
-    assert_equal('rad_settings', arguments[3].name)
+    assert_equal('use_cores', arguments[1].name)
+    assert_equal('rad_settings', arguments[2].name)
+    assert_equal('debug_mode', arguments[3].name)
+    assert_equal('cleanup_data', arguments[4].name)
   end
 
   def test_measure
@@ -103,11 +104,10 @@ class RadianceMeasureTest < MiniTest::Unit::TestCase
     # If the argument has a default that you want to use, you don't need it in the hash
     args_hash = {}
     args_hash['apply_schedules'] = 'Yes'
-    args_hash['write_sql'] = 'No'
     args_hash['use_cores'] = 'Max'
     args_hash['rad_settings'] = 'Testing'
-
-    # using defaults values from measure.rb for other arguments
+    args_hash['debug_mode'] = 'false'
+    args_hash['cleanup_data'] = 'true'
 
     # populate argument with specified hash value if specified
     arguments.each do |arg|
