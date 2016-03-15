@@ -3290,7 +3290,7 @@ module OsLib_Reporting
     table_01_name = 'Zone Sensible Cooling'
     table_02_name = 'Zone Sensible Heating'
     columns = ['', 'Heating/Cooling', 'Calculated Design Load', 'Design Load With Sizing Factor', 'Calculated Design Air Flow', 'Design Air Flow  With Sizing Factor', 'Date/Time Of Peak', 'Outdoor Temperature at Peak Load', 'Outdoor Humidity Ratio at Peak Load']
-    columns_query = ['', 'Heating/Cooling', 'Calculated Design Load', 'User Design Load', 'Calculated Design Air Flow', 'User Design Air Flow', 'Date/Time Of Peak', 'Outdoor Temperature at Peak Load', 'Outdoor Humidity Ratio at Peak Load']
+    columns_query = ['', 'Heating/Cooling', 'Calculated Design Load', 'User Design Load', 'Calculated Design Air Flow', 'User Design Air Flow', 'Date/Time Of Peak {TIMESTAMP}', 'Outdoor Temperature at Peak Load', 'Outdoor Humidity Ratio at Peak Load']
 
     # populate dynamic rows
     rows_name_query = "SELECT DISTINCT  RowName FROM tabulardatawithstrings WHERE ReportName='#{report_name}' and TableName='#{table_01_name}'"
