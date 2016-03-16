@@ -483,8 +483,8 @@ namespace openstudio {
     if (!m_tabButtonsCreated) {
       m_tabButtonsCreated = true;
       createTabButtons();
-      createTab(m_verticalId);
     }
+    createTab(m_verticalId);
 
     QTimer::singleShot(0, this, SLOT(initializeModel()));
 
