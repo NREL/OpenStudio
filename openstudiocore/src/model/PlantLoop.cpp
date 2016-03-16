@@ -474,6 +474,11 @@ std::string PlantLoop_Impl::loadDistributionScheme()
 
 bool PlantLoop_Impl::setLoadDistributionScheme(std::string scheme)
 {
+  if( istringEqual(scheme,"Sequential") ) {
+    scheme = "SequentialLoad";
+  } else if( istringEqual(scheme,"Uniform") ) {
+    scheme = "UniformLoad";
+  }
   return setString(OS_PlantLoopFields::LoadDistributionScheme,scheme);
 }
 

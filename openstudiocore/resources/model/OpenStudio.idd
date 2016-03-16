@@ -18401,7 +18401,7 @@ OS:Pipe:Adiabatic,
        \object-list ConnectionNames      
 
 OS:PlantLoop,
-       \min-fields 1
+       \min-fields 25 
   A1, \field Handle
        \type handle
        \required-field
@@ -18490,9 +18490,11 @@ OS:PlantLoop,
   A15, \field Load Distribution Scheme
        \type choice
        \required-field
-       \key Optimal
-       \key Sequential
-       \key Uniform
+        \key Optimal
+        \key SequentialLoad
+        \key UniformLoad
+        \key UniformPLR
+        \key SequentialUniformPLR
   A16, \field Availability Manager List Name
        \type object-list
        \object-list SystemAvailabilityManagerLists

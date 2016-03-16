@@ -59,6 +59,22 @@ class MODEL_API PlantLoop : public Loop {
 
   static std::vector<std::string> loadDistributionSchemeValues();
 
+  /** Prior to OS 1.11.0 the options where
+      Optimal, Sequential, and Uniform.
+      E+ changed the available options to.
+      Optimal, SequentialLoad, UniformLoad, UniformPLR, SequentialUniformPLR
+      in version 8.2.0. 
+
+      OS did not catch up to the new options until 1.11.0. In 1.11.0 existing OS files will
+      be upgraded to use the new options. Sequential will be version translated to
+      SequentialLoad and Uniform will be translated to UniformLoad.
+
+      Existing API clients may continue using the old enumerations of Sequential and Uniform, however
+      these options are deprecated.
+
+      The current options supported by OS are now consisitent with E+,
+      Optimal, SequentialLoad, UniformLoad, UniformPLR, SequentialUniformPLR
+  **/
   std::string loadDistributionScheme();
 
   bool setLoadDistributionScheme(std::string scheme);
