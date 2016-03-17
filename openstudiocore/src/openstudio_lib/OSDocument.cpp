@@ -458,12 +458,6 @@ namespace openstudio {
 
     connect(m_model.getImpl<model::detail::Model_Impl>().get(), &model::detail::Model_Impl::onChange, this, &OSDocument::markAsModified);
 
-    std::shared_ptr<OSDocument> currentDocument = app->currentDocument();
-    if (currentDocument && saveCurrentTabs){
-      m_startTabIndex = app->currentDocument()->verticalTabIndex();
-      m_startSubTabIndex = app->currentDocument()->subTabIndex();
-    }
-
     // Main Right Column
 
     m_mainRightColumnController = std::shared_ptr<MainRightColumnController>(new MainRightColumnController(m_model, m_resourcesPath));
@@ -480,11 +474,18 @@ namespace openstudio {
       QTimer::singleShot(0, this, SLOT(markAsUnmodified()));
     }
 
+    // There are (at least) two situations where setModel
+    // is called.
     if (!m_tabButtonsCreated) {
+      // New OSDocument, setting model for the first time
       m_tabButtonsCreated = true;
       createTabButtons();
+      createTab(m_verticalId);
+    } else {
+      // Apply Measure Now has happened and we are reloading the model, but the document is not new
+      // We could and maybe should just create a new document on apply measure now.
+      onVerticalTabSelected(m_verticalId);
     }
-    createTab(m_verticalId);
 
     QTimer::singleShot(0, this, SLOT(initializeModel()));
 
@@ -1203,10 +1204,6 @@ namespace openstudio {
 
   void OSDocument::onVerticalTabSelected(int verticalId)
   {
-    openstudio::OSAppBase * app = OSAppBase::instance();
-    std::shared_ptr<OSDocument> currentDocument = app->currentDocument();
-    OS_ASSERT(currentDocument);
-
     m_mainTabId = verticalId;
 
     if (m_mainTabId != RUBY_SCRIPTS && m_mainRightColumnController->isMyModelTabHidden()){
