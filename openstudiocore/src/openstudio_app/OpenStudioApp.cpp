@@ -934,7 +934,7 @@ void OpenStudioApp::versionUpdateMessageBox(const osversion::VersionTranslator& 
 
     if (versionChanged || removedScriptDirs)
     {
-      m_osDocument->markAsModified();
+      QTimer::singleShot(0, m_osDocument.get(), SLOT(markAsModified()));
 
       QString message;
       if (versionChanged)
