@@ -1125,6 +1125,12 @@ namespace openstudio {
 
       // file does not exist anywhere
       weatherFile->remove();
+
+      // not yet listening to model signals
+      if (opening){
+        QTimer::singleShot(0, this, SLOT(markAsModified()));
+      }
+
       return false;
 
     } else if (!epwInUserPathChecksum){
@@ -1168,6 +1174,12 @@ namespace openstudio {
       } catch (...){
         // copy failed
         weatherFile->remove();
+
+        // not yet listening to model signals
+        if (opening){
+          QTimer::singleShot(0, this, SLOT(markAsModified()));
+        }
+
         return false;
       }
     } 
@@ -1181,9 +1193,19 @@ namespace openstudio {
 
       weatherFile->makeUrlRelative(tempResourcesDir);
 
+      // not yet listening to model signals
+      if (opening){
+        QTimer::singleShot(0, this, SLOT(markAsModified()));
+      }
+
     } catch (...){
       // epw file not valid
       weatherFile->remove();
+
+      // not yet listening to model signals
+      if (opening){
+        QTimer::singleShot(0, this, SLOT(markAsModified()));
+      }
 
       if (doCopy){
         boost::filesystem::remove_all(copyDest);
