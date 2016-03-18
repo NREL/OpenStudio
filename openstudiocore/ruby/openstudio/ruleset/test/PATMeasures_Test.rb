@@ -24,20 +24,79 @@ require 'minitest/autorun'
 
 class PATMeasures_Test < MiniTest::Unit::TestCase
 
-  def test_PATMeasures
+  def runPATMeasureTest(pat_measure_name, test_file_name, test_name)
     patApplicationMeasuresDir = OpenStudio::BCLMeasure::patApplicationMeasuresDir
     
     # copy measures to build directory and test there
     test_dir = (OpenStudio::Path.new($OpenStudio_ResourcePath) / 
-                OpenStudio::Path.new("ruleset/PATMeasures")).to_s
+                OpenStudio::Path.new("ruleset/PATMeasures/#{pat_measure_name}/#{test_name}")).to_s
     if File.exists?(test_dir)
       FileUtils.rm_rf(test_dir)
     end
-    FileUtils.cp_r(patApplicationMeasuresDir.to_s,test_dir)
+    assert(File.exists?("#{patApplicationMeasuresDir}/#{pat_measure_name}"))
+    FileUtils.mkdir_p(test_dir)
+    FileUtils.cp_r("#{patApplicationMeasuresDir}/#{pat_measure_name}", test_dir)
+    
+    test_file = "#{test_dir}/#{pat_measure_name}/tests/#{test_file_name}"
+    assert(File.exists?(test_file))
+    
+    test_found = false
+    File.open(test_file, 'r') do |file|
+      while line = file.gets
+        if /^\s*def\s+#{test_name}/.match(line)
+          test_found = true
+        end
+      end
+    end
+    assert(test_found)
 
-    puts "#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/ruleset/TestAllMeasuresInDir.rb' '#{test_dir}'"
-    assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/ruleset/TestAllMeasuresInDir.rb' '#{test_dir}'"))
+    test_string = "#{$OpenStudio_RubyExe} -I '#{$OpenStudio_Dir}' '#{test_file}' --name=#{test_name}"
+    puts test_string
+    assert(system(test_string))
+  end
+  
+  def test_CalibrationMeasure_test_CalibrationReports
+    runPATMeasureTest("CalibrationReports", "CalibrationReports_Test.rb", "test_CalibrationReports")
+  end
+  
+  def test_CalibrationMeasure_test_CalibrationReport_NoGas
+    runPATMeasureTest("CalibrationReports", "CalibrationReports_Test.rb", "test_CalibrationReport_NoGas")
+  end
+  
+  def test_CalibrationMeasure_test_CalibrationReports_NoDemand
+    runPATMeasureTest("CalibrationReports", "CalibrationReports_Test.rb", "test_CalibrationReports_NoDemand")
+  end
 
+  def test_RadianceMeasure_test_number_of_arguments_and_argument_names
+    runPATMeasureTest("RadianceMeasure", "radiance_measure_test.rb", "test_number_of_arguments_and_argument_names")
+  end
+  
+  def test_RadianceMeasure_test_measure
+    runPATMeasureTest("RadianceMeasure", "radiance_measure_test.rb", "test_measure")
+  end
+  
+  def test_ReplaceModel_test_ReplaceModel
+    runPATMeasureTest("ReplaceModel", "ReplaceModel_Test.rb", "test_ReplaceModel")
+  end
+  
+  def test_ReplaceModel_test_ReplaceModel_AltMeasures
+    runPATMeasureTest("ReplaceModel", "ReplaceModel_Test.rb", "test_ReplaceModel_AltMeasures")
+  end
+  
+  def test_ReportRequest_test_number_of_arguments_and_argument_names
+    runPATMeasureTest("ReportRequest", "report_request_test.rb", "test_number_of_arguments_and_argument_names")
+  end
+  
+  def test_StandardReports_test_example_model
+    runPATMeasureTest("StandardReports", "OpenStudioResults_Test.rb", "test_example_model")
+  end
+    
+  def test_StandardReports_test_edge_model
+    runPATMeasureTest("StandardReports", "OpenStudioResults_Test.rb", "test_edge_model")
+  end
+  
+  def test_StandardReports_test_empty_model
+    runPATMeasureTest("StandardReports", "OpenStudioResults_Test.rb", "test_empty_model")
   end
   
   def test_NewMeasures
@@ -69,5 +128,6 @@ class PATMeasures_Test < MiniTest::Unit::TestCase
     assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/ruleset/TestAllMeasuresInDir.rb' '#{test_dir}'"))
 
   end
+  
 end
 
