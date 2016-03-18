@@ -145,11 +145,12 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
     if yearDescription.empty?
       missingData = true
       runner.registerWarning("Model has no year description and cannot generate all data.")
-    end
-    calendarYear = yearDescription.get.calendarYear
-    if calendarYear.empty?
-      missingData = true
-      runner.registerWarning("Model has no calendar year and cannot generate all data.")
+    else
+      calendarYear = yearDescription.get.calendarYear
+      if calendarYear.empty?
+        missingData = true
+        runner.registerWarning("Model has no calendar year and cannot generate all data.")
+      end
     end
     
     bill_index = 1
