@@ -237,23 +237,23 @@ struct IndexLess {
 
 template<class T,class U>
 bool uuidsEqual(const T& left,const U& right) {
-  return (!left.uuid().is_nil()) && (left.uuid() == right.uuid());
+  return (!left.uuid().isNull()) && (left.uuid() == right.uuid());
 }
 
 template<class T,class U>
 bool uuidsAndVersionsEqual(const T& left,const U& right) {
-  return (!left.uuid().is_nil()) && (left.uuid() == right.uuid()) &&
-      (!left.versionUUID().is_nil()) && (left.versionUUID() == right.versionUUID());
+  return (!left.uuid().isNull()) && (left.uuid() == right.uuid()) &&
+      (!left.versionUUID().isNull()) && (left.versionUUID() == right.versionUUID());
 }
 
 template<class T,class U>
 bool uuidEquals(const T& object, const U& uuid) {
-  return !uuid.is_nil() && (object.uuid() == uuid);
+  return !uuid.isNull() && (object.uuid() == uuid);
 }
 
 template<class T,class U>
 bool handleEquals(const T& object, const U& handle) {
-  return !handle.is_nil() && (object.handle() == handle);
+  return !handle.isNull() && (object.handle() == handle);
 }
 
 }; // openstudio

@@ -65,7 +65,6 @@ namespace openstudio {
   {
     public:
       UUID();
-      using boost::uuids::uuid::is_nil;
 
       bool isNull() const {
         return is_nil();
