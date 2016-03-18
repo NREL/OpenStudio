@@ -22,6 +22,8 @@
 #include "../DateTime.hpp"
 #include "../../core/Exception.hpp"
 
+#include <QDateTime>
+
 #include <string>
 
 using namespace std;
@@ -169,6 +171,35 @@ TEST(DateTime,EpochConversions) {
   DateTime copy = DateTime::fromEpoch(asEpoch);
   EXPECT_EQ(dateTime,copy);
 }
+
+TEST(DateTime, QDateTime) {
+  {
+    DateTime dateTime = DateTime::now();
+    QDateTime qDateTime = toQDateTime(dateTime);
+    DateTime dateTime2 = toDateTime(qDateTime);
+    EXPECT_EQ(dateTime, dateTime2);
+  }
+  {
+    DateTime dateTime = DateTime::nowUTC();
+    QDateTime qDateTime = toQDateTime(dateTime);
+    DateTime dateTime2 = toDateTime(qDateTime);
+    EXPECT_EQ(dateTime, dateTime2);
+  }
+  {
+    QDateTime qDateTime = QDateTime::currentDateTime();
+    DateTime dateTime = toDateTime(qDateTime);
+    QDateTime qDateTime2 = toQDateTime(dateTime);
+    EXPECT_EQ(qDateTime.toTime_t(), qDateTime2.toTime_t());
+  }
+  {
+    QDateTime qDateTime = QDateTime::currentDateTimeUtc();
+    DateTime dateTime = toDateTime(qDateTime);
+    QDateTime qDateTime2 = toQDateTime(dateTime);
+    EXPECT_EQ(qDateTime.toTime_t(), qDateTime2.toTime_t());
+  }
+}
+
+
 
 TEST(DateTime,ISO8601Conversions) {
   {
