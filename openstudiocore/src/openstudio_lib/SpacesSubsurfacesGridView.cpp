@@ -480,6 +480,7 @@ namespace openstudio {
             );
         }
         else if (field == CONSTRUCTION) {
+          m_constructionColumn = 6;
           addDropZoneColumn(Heading(QString(CONSTRUCTION)),
             CastNullAdapter<model::SubSurface>(&model::SubSurface::construction),
             CastNullAdapter<model::SubSurface>(&model::SubSurface::setConstruction),
