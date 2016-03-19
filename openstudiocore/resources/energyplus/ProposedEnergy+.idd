@@ -37792,8 +37792,8 @@ Pump:ConstantSpeed,
        \type real
        \note Used to size Design Power Consumption from design flow rate for head and motor efficiency
        \default 1.282051282
-       \units W/((m3/s)-Pa)
-       \ip-units W/((gal/min)-ftH20)
+       \note units W/((m3/s)-Pa)
+       \note ip-units W/((gal/min)-ftH20)
        \minimum> 0
 
 Pump:VariableSpeed:Condensate,
@@ -37880,8 +37880,8 @@ Pump:VariableSpeed:Condensate,
        \type real
        \note Used to size Design Power Consumption from design flow rate for head and motor efficiency
        \default 1.282051282
-       \units W/((m3/s)-Pa)
-       \ip-units W/((gal/min)-ftH20)
+       \note units W/((m3/s)-Pa)
+       \note ip-units W/((gal/min)-ftH20)
        \minimum> 0
 
 HeaderedPumps:ConstantSpeed,
@@ -37973,8 +37973,8 @@ HeaderedPumps:ConstantSpeed,
        \type real
        \note Used to size Design Power Consumption from design flow rate for head and motor efficiency
        \default 1.282051282
-       \units W/((m3/s)-Pa)
-       \ip-units W/((gal/min)-ftH20)
+       \note units W/((m3/s)-Pa)
+       \note ip-units W/((gal/min)-ftH20)
        \minimum> 0
 
 HeaderedPumps:VariableSpeed,
@@ -38079,8 +38079,8 @@ HeaderedPumps:VariableSpeed,
        \type real
        \note Used to size Design Power Consumption from design flow rate for head and motor efficiency
        \default 1.282051282
-       \units W/((m3/s)-Pa)
-       \ip-units W/((gal/min)-ftH20)
+       \note units W/((m3/s)-Pa)
+       \note ip-units W/((gal/min)-ftH20)
        \minimum> 0
 
 \group Plant-Condenser Flow Control
