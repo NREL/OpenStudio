@@ -703,7 +703,8 @@ void OSDropZone2::dropEvent(QDropEvent *event)
         refresh();
       }
     }
-
+    // A dropped object cannot be inherited
+    this->setIsDefaulted(false);
   }
 }
 
@@ -795,14 +796,6 @@ void OSDropZone2::makeItem()
 
 void OSDropZone2::setIsDefaulted(bool defaulted)
 {
-  if (!m_item) {
-    makeItem();
-  }
-
-  if (m_item) {
-    m_item->setIsDefaulted(defaulted);
-  }
-
   if (defaulted) {
     m_label->setStyleSheet("QLabel { color:green }"); // color: #006837
   } else {
