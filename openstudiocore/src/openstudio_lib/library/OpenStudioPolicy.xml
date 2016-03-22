@@ -999,11 +999,6 @@
     <rule IddField="Water Storage Tank Name" Access="HIDDEN"/>
     <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
   </POLICY>
-  <POLICY IddObjectType="OS_Schedule_Day">
-    <rule IddField="Name" Access="HIDDEN"/>
-    <rule IddField="Schedule Type Limits Name" Access="HIDDEN"/>
-    <rule IddField="Interpolate to Timestep" Access="HIDDEN"/>
-  </POLICY>
   <POLICY IddObjectType="OS_TemperingValve">
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Outlet Node Name" Access="HIDDEN"/>
@@ -1113,495 +1108,453 @@
   <POLICY IddObjectType="CommentOnly">
   </POLICY>
   <POLICY IddObjectType="OS_BuildingStory">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Nominal Z Coordinate" Access="LOCKED">
-    <rule IddField="Nominal Floor to Floor Height" Access="LOCKED">
-    <rule IddField="Default Construction Set Name" Access="LOCKED">
-    <rule IddField="Default Schedule Set Name" Access="LOCKED">
-    <rule IddField="Group Rendering Name" Access="LOCKED">
-    <rule IddField="Nominal Floor to Ceiling Height" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Nominal Z Coordinate" Access="LOCKED"/>
+    <rule IddField="Nominal Floor to Floor Height" Access="LOCKED"/>
+    <rule IddField="Default Construction Set Name" Access="LOCKED"/>
+    <rule IddField="Default Schedule Set Name" Access="LOCKED"/>
+    <rule IddField="Group Rendering Name" Access="LOCKED"/>
+    <rule IddField="Nominal Floor to Ceiling Height" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_DefaultConstructionSet">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Default Exterior Surface Constructions Name" Access="LOCKED">
-    <rule IddField="Default Interior Surface Constructions Name" Access="LOCKED">
-    <rule IddField="Default Ground Contact Surface Constructions Name" Access="LOCKED">
-    <rule IddField="Default Exterior SubSurface Constructions Name" Access="LOCKED">
-    <rule IddField="Default Interior SubSurface Constructions Name" Access="LOCKED">
-    <rule IddField="Interior Partition Construction Name" Access="LOCKED">
-    <rule IddField="Space Shading Construction Name" Access="LOCKED">
-    <rule IddField="Building Shading Construction Name" Access="LOCKED">
-    <rule IddField="Site Shading Construction Name" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Default Exterior Surface Constructions Name" Access="LOCKED"/>
+    <rule IddField="Default Interior Surface Constructions Name" Access="LOCKED"/>
+    <rule IddField="Default Ground Contact Surface Constructions Name" Access="LOCKED"/>
+    <rule IddField="Default Exterior SubSurface Constructions Name" Access="LOCKED"/>
+    <rule IddField="Default Interior SubSurface Constructions Name" Access="LOCKED"/>
+    <rule IddField="Interior Partition Construction Name" Access="LOCKED"/>
+    <rule IddField="Space Shading Construction Name" Access="LOCKED"/>
+    <rule IddField="Building Shading Construction Name" Access="LOCKED"/>
+    <rule IddField="Site Shading Construction Name" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_DefaultScheduleSet">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Hours of Operation Schedule Name" Access="LOCKED">
-    <rule IddField="Number of People Schedule Name" Access="LOCKED">
-    <rule IddField="People Activity Level Schedule Name" Access="LOCKED">
-    <rule IddField="Lighting Schedule Name" Access="LOCKED">
-    <rule IddField="Electric Equipment Schedule Name" Access="LOCKED">
-    <rule IddField="Gas Equipment Schedule Name" Access="LOCKED">
-    <rule IddField="Hot Water Equipment Schedule Name" Access="LOCKED">
-    <rule IddField="Infiltration Schedule Name" Access="LOCKED">
-    <rule IddField="Steam Equipment Schedule Name" Access="LOCKED">
-    <rule IddField="Other Equipment Schedule Name" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Hours of Operation Schedule Name" Access="LOCKED"/>
+    <rule IddField="Number of People Schedule Name" Access="LOCKED"/>
+    <rule IddField="People Activity Level Schedule Name" Access="LOCKED"/>
+    <rule IddField="Lighting Schedule Name" Access="LOCKED"/>
+    <rule IddField="Electric Equipment Schedule Name" Access="LOCKED"/>
+    <rule IddField="Gas Equipment Schedule Name" Access="LOCKED"/>
+    <rule IddField="Hot Water Equipment Schedule Name" Access="LOCKED"/>
+    <rule IddField="Infiltration Schedule Name" Access="LOCKED"/>
+    <rule IddField="Steam Equipment Schedule Name" Access="LOCKED"/>
+    <rule IddField="Other Equipment Schedule Name" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_DefaultSubSurfaceConstructions">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Fixed Window Construction Name" Access="LOCKED">
-    <rule IddField="Operable Window Construction Name" Access="LOCKED">
-    <rule IddField="Door Construction Name" Access="LOCKED">
-    <rule IddField="Glass Door Construction Name" Access="LOCKED">
-    <rule IddField="Overhead Door Construction Name" Access="LOCKED">
-    <rule IddField="Skylight Construction Name" Access="LOCKED">
-    <rule IddField="Tubular Daylight Dome Construction Name" Access="LOCKED">
-    <rule IddField="Tubular Daylight Diffuser Construction Name" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Fixed Window Construction Name" Access="LOCKED"/>
+    <rule IddField="Operable Window Construction Name" Access="LOCKED"/>
+    <rule IddField="Door Construction Name" Access="LOCKED"/>
+    <rule IddField="Glass Door Construction Name" Access="LOCKED"/>
+    <rule IddField="Overhead Door Construction Name" Access="LOCKED"/>
+    <rule IddField="Skylight Construction Name" Access="LOCKED"/>
+    <rule IddField="Tubular Daylight Dome Construction Name" Access="LOCKED"/>
+    <rule IddField="Tubular Daylight Diffuser Construction Name" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_DefaultSurfaceConstructions">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Floor Construction Name" Access="LOCKED">
-    <rule IddField="Wall Construction Name" Access="LOCKED">
-    <rule IddField="Roof Ceiling Construction Name" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Floor Construction Name" Access="LOCKED"/>
+    <rule IddField="Wall Construction Name" Access="LOCKED"/>
+    <rule IddField="Roof Ceiling Construction Name" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_SpaceType">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Default Construction Set Name" Access="LOCKED">
-    <rule IddField="Default Schedule Set Name" Access="LOCKED">
-    <rule IddField="Group Rendering Name" Access="LOCKED">
-    <rule IddField="Design Specification Outdoor Air Object Name" Access="LOCKED">
-    <rule IddField="Standards Building Type" Access="LOCKED">
-    <rule IddField="Standards Space Type" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Default Construction Set Name" Access="LOCKED"/>
+    <rule IddField="Default Schedule Set Name" Access="LOCKED"/>
+    <rule IddField="Group Rendering Name" Access="LOCKED"/>
+    <rule IddField="Design Specification Outdoor Air Object Name" Access="LOCKED"/>
+    <rule IddField="Standards Building Type" Access="LOCKED"/>
+    <rule IddField="Standards Space Type" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Material">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Roughness" Access="LOCKED">
-    <rule IddField="Thickness" Access="LOCKED">
-    <rule IddField="Conductivity" Access="LOCKED">
-    <rule IddField="Density" Access="LOCKED">
-    <rule IddField="Specific Heat" Access="LOCKED">
-    <rule IddField="Thermal Absorptance" Access="LOCKED">
-    <rule IddField="Solar Absorptance" Access="LOCKED">
-    <rule IddField="Visible Absorptance" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Roughness" Access="LOCKED"/>
+    <rule IddField="Thickness" Access="LOCKED"/>
+    <rule IddField="Conductivity" Access="LOCKED"/>
+    <rule IddField="Density" Access="LOCKED"/>
+    <rule IddField="Specific Heat" Access="LOCKED"/>
+    <rule IddField="Thermal Absorptance" Access="LOCKED"/>
+    <rule IddField="Solar Absorptance" Access="LOCKED"/>
+    <rule IddField="Visible Absorptance" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Material_AirGap">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Thermal Resistance" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Thermal Resistance" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Material_AirWall">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Material_InfraredTransparent">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Material_NoMass">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Roughness" Access="LOCKED">
-    <rule IddField="Thermal Resistance" Access="LOCKED">
-    <rule IddField="Thermal Absorptance" Access="LOCKED">
-    <rule IddField="Solar Absorptance" Access="LOCKED">
-    <rule IddField="Visible Absorptance" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Roughness" Access="LOCKED"/>
+    <rule IddField="Thermal Resistance" Access="LOCKED"/>
+    <rule IddField="Thermal Absorptance" Access="LOCKED"/>
+    <rule IddField="Solar Absorptance" Access="LOCKED"/>
+    <rule IddField="Visible Absorptance" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Material_RoofVegetation">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Height of Plants" Access="LOCKED">
-    <rule IddField="Leaf Area Index" Access="LOCKED">
-    <rule IddField="Leaf Reflectivity" Access="LOCKED">
-    <rule IddField="Leaf Emissivity" Access="LOCKED">
-    <rule IddField="Minimum Stomatal Resistance" Access="LOCKED">
-    <rule IddField="Soil Layer Name" Access="LOCKED">
-    <rule IddField="Roughness" Access="LOCKED">
-    <rule IddField="Thickness" Access="LOCKED">
-    <rule IddField="Conductivity of Dry Soil" Access="LOCKED">
-    <rule IddField="Density of Dry Soil" Access="LOCKED">
-    <rule IddField="Specific Heat of Dry Soil" Access="LOCKED">
-    <rule IddField="Thermal Absorptance" Access="LOCKED">
-    <rule IddField="Solar Absorptance" Access="LOCKED">
-    <rule IddField="Visible Absorptance" Access="LOCKED">
-    <rule IddField="Saturation Volumetric Moisture Content of the Soil Layer" Access="LOCKED">
-    <rule IddField="Residual Volumetric Moisture Content of the Soil Layer" Access="LOCKED">
-    <rule IddField="Initial Volumetric Moisture Content of the Soil Layer" Access="LOCKED">
-    <rule IddField="Moisture Diffusion Calculation Method" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Height of Plants" Access="LOCKED"/>
+    <rule IddField="Leaf Area Index" Access="LOCKED"/>
+    <rule IddField="Leaf Reflectivity" Access="LOCKED"/>
+    <rule IddField="Leaf Emissivity" Access="LOCKED"/>
+    <rule IddField="Minimum Stomatal Resistance" Access="LOCKED"/>
+    <rule IddField="Soil Layer Name" Access="LOCKED"/>
+    <rule IddField="Roughness" Access="LOCKED"/>
+    <rule IddField="Thickness" Access="LOCKED"/>
+    <rule IddField="Conductivity of Dry Soil" Access="LOCKED"/>
+    <rule IddField="Density of Dry Soil" Access="LOCKED"/>
+    <rule IddField="Specific Heat of Dry Soil" Access="LOCKED"/>
+    <rule IddField="Thermal Absorptance" Access="LOCKED"/>
+    <rule IddField="Solar Absorptance" Access="LOCKED"/>
+    <rule IddField="Visible Absorptance" Access="LOCKED"/>
+    <rule IddField="Saturation Volumetric Moisture Content of the Soil Layer" Access="LOCKED"/>
+    <rule IddField="Residual Volumetric Moisture Content of the Soil Layer" Access="LOCKED"/>
+    <rule IddField="Initial Volumetric Moisture Content of the Soil Layer" Access="LOCKED"/>
+    <rule IddField="Moisture Diffusion Calculation Method" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_WindowMaterial_Blind">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Slat Orientation" Access="LOCKED">
-    <rule IddField="Slat Width" Access="LOCKED">
-    <rule IddField="Slat Separation" Access="LOCKED">
-    <rule IddField="Slat Thickness" Access="LOCKED">
-    <rule IddField="Slat Angle" Access="LOCKED">
-    <rule IddField="Slat Conductivity" Access="LOCKED">
-    <rule IddField="Slat Beam Solar Transmittance" Access="LOCKED">
-    <rule IddField="Front Side Slat Beam Solar Reflectance" Access="LOCKED">
-    <rule IddField="Back Side Slat Beam Solar Reflectance" Access="LOCKED">
-    <rule IddField="Slat Diffuse Solar Transmittance" Access="LOCKED">
-    <rule IddField="Front Side Slat Diffuse Solar Reflectance" Access="LOCKED">
-    <rule IddField="Back Side Slat Diffuse Solar Reflectance" Access="LOCKED">
-    <rule IddField="Slat Beam Visible Transmittance" Access="LOCKED">
-    <rule IddField="Front Side Slat Beam Visible Reflectance" Access="LOCKED">
-    <rule IddField="Back Side Slat Beam Visible Reflectance" Access="LOCKED">
-    <rule IddField="Slat Diffuse Visible Transmittance" Access="LOCKED">
-    <rule IddField="Front Side Slat Diffuse Visible Reflectance" Access="LOCKED">
-    <rule IddField="Back Side Slat Diffuse Visible Reflectance" Access="LOCKED">
-    <rule IddField="Slat Infrared Hemispherical Transmittance" Access="LOCKED">
-    <rule IddField="Front Side Slat Infrared Hemispherical Emissivity" Access="LOCKED">
-    <rule IddField="Back Side Slat Infrared Hemispherical Emissivity" Access="LOCKED">
-    <rule IddField="Blind to Glass Distance" Access="LOCKED">
-    <rule IddField="Blind Top Opening Multiplier" Access="LOCKED">
-    <rule IddField="Blind Bottom Opening Multiplier" Access="LOCKED">
-    <rule IddField="Blind Left Side Opening Multiplier" Access="LOCKED">
-    <rule IddField="Blind Right Side Opening Multiplier" Access="LOCKED">
-    <rule IddField="Minimum Slat Angle" Access="LOCKED">
-    <rule IddField="Maximum Slat Angle" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Slat Orientation" Access="LOCKED"/>
+    <rule IddField="Slat Width" Access="LOCKED"/>
+    <rule IddField="Slat Separation" Access="LOCKED"/>
+    <rule IddField="Slat Thickness" Access="LOCKED"/>
+    <rule IddField="Slat Angle" Access="LOCKED"/>
+    <rule IddField="Slat Conductivity" Access="LOCKED"/>
+    <rule IddField="Slat Beam Solar Transmittance" Access="LOCKED"/>
+    <rule IddField="Front Side Slat Beam Solar Reflectance" Access="LOCKED"/>
+    <rule IddField="Back Side Slat Beam Solar Reflectance" Access="LOCKED"/>
+    <rule IddField="Slat Diffuse Solar Transmittance" Access="LOCKED"/>
+    <rule IddField="Front Side Slat Diffuse Solar Reflectance" Access="LOCKED"/>
+    <rule IddField="Back Side Slat Diffuse Solar Reflectance" Access="LOCKED"/>
+    <rule IddField="Slat Beam Visible Transmittance" Access="LOCKED"/>
+    <rule IddField="Front Side Slat Beam Visible Reflectance" Access="LOCKED"/>
+    <rule IddField="Back Side Slat Beam Visible Reflectance" Access="LOCKED"/>
+    <rule IddField="Slat Diffuse Visible Transmittance" Access="LOCKED"/>
+    <rule IddField="Front Side Slat Diffuse Visible Reflectance" Access="LOCKED"/>
+    <rule IddField="Back Side Slat Diffuse Visible Reflectance" Access="LOCKED"/>
+    <rule IddField="Slat Infrared Hemispherical Transmittance" Access="LOCKED"/>
+    <rule IddField="Front Side Slat Infrared Hemispherical Emissivity" Access="LOCKED"/>
+    <rule IddField="Back Side Slat Infrared Hemispherical Emissivity" Access="LOCKED"/>
+    <rule IddField="Blind to Glass Distance" Access="LOCKED"/>
+    <rule IddField="Blind Top Opening Multiplier" Access="LOCKED"/>
+    <rule IddField="Blind Bottom Opening Multiplier" Access="LOCKED"/>
+    <rule IddField="Blind Left Side Opening Multiplier" Access="LOCKED"/>
+    <rule IddField="Blind Right Side Opening Multiplier" Access="LOCKED"/>
+    <rule IddField="Minimum Slat Angle" Access="LOCKED"/>
+    <rule IddField="Maximum Slat Angle" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_WindowMaterial_DaylightRedirectionDevice">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Daylight Redirection Device Type" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Daylight Redirection Device Type" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_WindowMaterial_Gas">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Gas Type" Access="LOCKED">
-    <rule IddField="Thickness" Access="LOCKED">
-    <rule IddField="Conductivity Coefficient A" Access="LOCKED">
-    <rule IddField="Conductivity Coefficient B" Access="LOCKED">
-    <rule IddField="Conductivity Coefficient C" Access="LOCKED">
-    <rule IddField="Viscosity Coefficient A" Access="LOCKED">
-    <rule IddField="Viscosity Coefficient B" Access="LOCKED">
-    <rule IddField="Viscosity Coefficient C" Access="LOCKED">
-    <rule IddField="Specific Heat Coefficient A" Access="LOCKED">
-    <rule IddField="Specific Heat Coefficient B" Access="LOCKED">
-    <rule IddField="Specific Heat Coefficient C" Access="LOCKED">
-    <rule IddField="Molecular Weight" Access="LOCKED">
-    <rule IddField="Specific Heat Ratio" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Gas Type" Access="LOCKED"/>
+    <rule IddField="Thickness" Access="LOCKED"/>
+    <rule IddField="Conductivity Coefficient A" Access="LOCKED"/>
+    <rule IddField="Conductivity Coefficient B" Access="LOCKED"/>
+    <rule IddField="Conductivity Coefficient C" Access="LOCKED"/>
+    <rule IddField="Viscosity Coefficient A" Access="LOCKED"/>
+    <rule IddField="Viscosity Coefficient B" Access="LOCKED"/>
+    <rule IddField="Viscosity Coefficient C" Access="LOCKED"/>
+    <rule IddField="Specific Heat Coefficient A" Access="LOCKED"/>
+    <rule IddField="Specific Heat Coefficient B" Access="LOCKED"/>
+    <rule IddField="Specific Heat Coefficient C" Access="LOCKED"/>
+    <rule IddField="Molecular Weight" Access="LOCKED"/>
+    <rule IddField="Specific Heat Ratio" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_WindowMaterial_GasMixture">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Thickness" Access="LOCKED">
-    <rule IddField="Number of Gases in Mixture" Access="LOCKED">
-    <rule IddField="Gas 1 Type" Access="LOCKED">
-    <rule IddField="Gas 1 Fraction" Access="LOCKED">
-    <rule IddField="Gas 2 Type" Access="LOCKED">
-    <rule IddField="Gas 2 Fraction" Access="LOCKED">
-    <rule IddField="Gas 3 Type" Access="LOCKED">
-    <rule IddField="Gas 3 Fraction" Access="LOCKED">
-    <rule IddField="Gas 4 Type" Access="LOCKED">
-    <rule IddField="Gas 4 Fraction" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Thickness" Access="LOCKED"/>
+    <rule IddField="Number of Gases in Mixture" Access="LOCKED"/>
+    <rule IddField="Gas 1 Type" Access="LOCKED"/>
+    <rule IddField="Gas 1 Fraction" Access="LOCKED"/>
+    <rule IddField="Gas 2 Type" Access="LOCKED"/>
+    <rule IddField="Gas 2 Fraction" Access="LOCKED"/>
+    <rule IddField="Gas 3 Type" Access="LOCKED"/>
+    <rule IddField="Gas 3 Fraction" Access="LOCKED"/>
+    <rule IddField="Gas 4 Type" Access="LOCKED"/>
+    <rule IddField="Gas 4 Fraction" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_WindowMaterial_Glazing">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Optical Data Type" Access="LOCKED">
-    <rule IddField="Window Glass Spectral Data Set Name" Access="LOCKED">
-    <rule IddField="Thickness" Access="LOCKED">
-    <rule IddField="Solar Transmittance at Normal Incidence" Access="LOCKED">
-    <rule IddField="Front Side Solar Reflectance at Normal Incidence" Access="LOCKED">
-    <rule IddField="Back Side Solar Reflectance at Normal Incidence" Access="LOCKED">
-    <rule IddField="Visible Transmittance at Normal Incidence" Access="LOCKED">
-    <rule IddField="Front Side Visible Reflectance at Normal Incidence" Access="LOCKED">
-    <rule IddField="Back Side Visible Reflectance at Normal Incidence" Access="LOCKED">
-    <rule IddField="Infrared Transmittance at Normal Incidence" Access="LOCKED">
-    <rule IddField="Front Side Infrared Hemispherical Emissivity" Access="LOCKED">
-    <rule IddField="Back Side Infrared Hemispherical Emissivity" Access="LOCKED">
-    <rule IddField="Conductivity" Access="LOCKED">
-    <rule IddField="Dirt Correction Factor for Solar and Visible Transmittance" Access="LOCKED">
-    <rule IddField="Solar Diffusing" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Optical Data Type" Access="LOCKED"/>
+    <rule IddField="Window Glass Spectral Data Set Name" Access="LOCKED"/>
+    <rule IddField="Thickness" Access="LOCKED"/>
+    <rule IddField="Solar Transmittance at Normal Incidence" Access="LOCKED"/>
+    <rule IddField="Front Side Solar Reflectance at Normal Incidence" Access="LOCKED"/>
+    <rule IddField="Back Side Solar Reflectance at Normal Incidence" Access="LOCKED"/>
+    <rule IddField="Visible Transmittance at Normal Incidence" Access="LOCKED"/>
+    <rule IddField="Front Side Visible Reflectance at Normal Incidence" Access="LOCKED"/>
+    <rule IddField="Back Side Visible Reflectance at Normal Incidence" Access="LOCKED"/>
+    <rule IddField="Infrared Transmittance at Normal Incidence" Access="LOCKED"/>
+    <rule IddField="Front Side Infrared Hemispherical Emissivity" Access="LOCKED"/>
+    <rule IddField="Back Side Infrared Hemispherical Emissivity" Access="LOCKED"/>
+    <rule IddField="Conductivity" Access="LOCKED"/>
+    <rule IddField="Dirt Correction Factor for Solar and Visible Transmittance" Access="LOCKED"/>
+    <rule IddField="Solar Diffusing" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_WindowMaterial_GlazingGroup_Thermochromic">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Optical Data Temperature" Access="LOCKED">
-    <rule IddField="Window Material Glazing Name" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Optical Data Temperature" Access="LOCKED"/>
+    <rule IddField="Window Material Glazing Name" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_WindowMaterial_Glazing_RefractionExtinctionMethod">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Thickness" Access="LOCKED">
-    <rule IddField="Solar Index of Refraction" Access="LOCKED">
-    <rule IddField="Solar Extinction Coefficient" Access="LOCKED">
-    <rule IddField="Visible Index of Refraction" Access="LOCKED">
-    <rule IddField="Visible Extinction Coefficient" Access="LOCKED">
-    <rule IddField="Infrared Transmittance at Normal Incidence" Access="LOCKED">
-    <rule IddField="Infrared Hemispherical Emissivity" Access="LOCKED">
-    <rule IddField="Conductivity" Access="LOCKED">
-    <rule IddField="Dirt Correction Factor for Solar and Visible Transmittance" Access="LOCKED">
-    <rule IddField="Solar Diffusing" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Thickness" Access="LOCKED"/>
+    <rule IddField="Solar Index of Refraction" Access="LOCKED"/>
+    <rule IddField="Solar Extinction Coefficient" Access="LOCKED"/>
+    <rule IddField="Visible Index of Refraction" Access="LOCKED"/>
+    <rule IddField="Visible Extinction Coefficient" Access="LOCKED"/>
+    <rule IddField="Infrared Transmittance at Normal Incidence" Access="LOCKED"/>
+    <rule IddField="Infrared Hemispherical Emissivity" Access="LOCKED"/>
+    <rule IddField="Conductivity" Access="LOCKED"/>
+    <rule IddField="Dirt Correction Factor for Solar and Visible Transmittance" Access="LOCKED"/>
+    <rule IddField="Solar Diffusing" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_WindowMaterial_Screen">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Reflected Beam Transmittance Accounting Method" Access="LOCKED">
-    <rule IddField="Diffuse Solar Reflectance" Access="LOCKED">
-    <rule IddField="Diffuse Visible Reflectance" Access="LOCKED">
-    <rule IddField="Thermal Hemispherical Emissivity" Access="LOCKED">
-    <rule IddField="Conductivity" Access="LOCKED">
-    <rule IddField="Screen Material Spacing" Access="LOCKED">
-    <rule IddField="Screen Material Diameter" Access="LOCKED">
-    <rule IddField="Screen to Glass Distance" Access="LOCKED">
-    <rule IddField="Top Opening Multiplier" Access="LOCKED">
-    <rule IddField="Bottom Opening Multiplier" Access="LOCKED">
-    <rule IddField="Left Side Opening Multiplier" Access="LOCKED">
-    <rule IddField="Right Side Opening Multiplier" Access="LOCKED">
-    <rule IddField="Angle of Resolution for Screen Transmittance Output Map" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Reflected Beam Transmittance Accounting Method" Access="LOCKED"/>
+    <rule IddField="Diffuse Solar Reflectance" Access="LOCKED"/>
+    <rule IddField="Diffuse Visible Reflectance" Access="LOCKED"/>
+    <rule IddField="Thermal Hemispherical Emissivity" Access="LOCKED"/>
+    <rule IddField="Conductivity" Access="LOCKED"/>
+    <rule IddField="Screen Material Spacing" Access="LOCKED"/>
+    <rule IddField="Screen Material Diameter" Access="LOCKED"/>
+    <rule IddField="Screen to Glass Distance" Access="LOCKED"/>
+    <rule IddField="Top Opening Multiplier" Access="LOCKED"/>
+    <rule IddField="Bottom Opening Multiplier" Access="LOCKED"/>
+    <rule IddField="Left Side Opening Multiplier" Access="LOCKED"/>
+    <rule IddField="Right Side Opening Multiplier" Access="LOCKED"/>
+    <rule IddField="Angle of Resolution for Screen Transmittance Output Map" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_WindowMaterial_Shade">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Solar Transmittance" Access="LOCKED">
-    <rule IddField="Solar Reflectance" Access="LOCKED">
-    <rule IddField="Visible Transmittance" Access="LOCKED">
-    <rule IddField="Visible Reflectance" Access="LOCKED">
-    <rule IddField="Thermal Hemispherical Emissivity" Access="LOCKED">
-    <rule IddField="Thermal Transmittance" Access="LOCKED">
-    <rule IddField="Thickness" Access="LOCKED">
-    <rule IddField="Conductivity" Access="LOCKED">
-    <rule IddField="Shade to Glass Distance" Access="LOCKED">
-    <rule IddField="Top Opening Multiplier" Access="LOCKED">
-    <rule IddField="Bottom Opening Multiplier" Access="LOCKED">
-    <rule IddField="Left-Side Opening Multiplier" Access="LOCKED">
-    <rule IddField="Right-Side Opening Multiplier" Access="LOCKED">
-    <rule IddField="Airflow Permeability" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Solar Transmittance" Access="LOCKED"/>
+    <rule IddField="Solar Reflectance" Access="LOCKED"/>
+    <rule IddField="Visible Transmittance" Access="LOCKED"/>
+    <rule IddField="Visible Reflectance" Access="LOCKED"/>
+    <rule IddField="Thermal Hemispherical Emissivity" Access="LOCKED"/>
+    <rule IddField="Thermal Transmittance" Access="LOCKED"/>
+    <rule IddField="Thickness" Access="LOCKED"/>
+    <rule IddField="Conductivity" Access="LOCKED"/>
+    <rule IddField="Shade to Glass Distance" Access="LOCKED"/>
+    <rule IddField="Top Opening Multiplier" Access="LOCKED"/>
+    <rule IddField="Bottom Opening Multiplier" Access="LOCKED"/>
+    <rule IddField="Left-Side Opening Multiplier" Access="LOCKED"/>
+    <rule IddField="Right-Side Opening Multiplier" Access="LOCKED"/>
+    <rule IddField="Airflow Permeability" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_WindowMaterial_SimpleGlazingSystem">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="U-Factor" Access="LOCKED">
-    <rule IddField="Solar Heat Gain Coefficient" Access="LOCKED">
-    <rule IddField="Visible Transmittance" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="U-Factor" Access="LOCKED"/>
+    <rule IddField="Solar Heat Gain Coefficient" Access="LOCKED"/>
+    <rule IddField="Visible Transmittance" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_StandardsInformation_Material">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Material Name" Access="LOCKED">
-    <rule IddField="Material Standard" Access="LOCKED">
-    <rule IddField="Material Standard Source" Access="LOCKED">
-    <rule IddField="Standards Category" Access="LOCKED">
-    <rule IddField="Standards Identifier" Access="LOCKED">
-    <rule IddField="Composite Framing Material" Access="LOCKED">
-    <rule IddField="Composite Framing Configuration" Access="LOCKED">
-    <rule IddField="Composite Framing Depth" Access="LOCKED">
-    <rule IddField="Composite Framing Size" Access="LOCKED">
-    <rule IddField="Composite Cavity Insulation" Access="LOCKED">
+    <rule IddField="Material Name" Access="LOCKED"/>
+    <rule IddField="Material Standard" Access="LOCKED"/>
+    <rule IddField="Material Standard Source" Access="LOCKED"/>
+    <rule IddField="Standards Category" Access="LOCKED"/>
+    <rule IddField="Standards Identifier" Access="LOCKED"/>
+    <rule IddField="Composite Framing Material" Access="LOCKED"/>
+    <rule IddField="Composite Framing Configuration" Access="LOCKED"/>
+    <rule IddField="Composite Framing Depth" Access="LOCKED"/>
+    <rule IddField="Composite Framing Size" Access="LOCKED"/>
+    <rule IddField="Composite Cavity Insulation" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Construction">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Surface Rendering Name" Access="LOCKED">
-    <rule IddField="Layer" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Surface Rendering Name" Access="LOCKED"/>
+    <rule IddField="Layer" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Construction_CfactorUndergroundWall">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="C-Factor" Access="LOCKED">
-    <rule IddField="Height" Access="LOCKED">
-    <rule IddField="Surface Rendering Name" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="C-Factor" Access="LOCKED"/>
+    <rule IddField="Height" Access="LOCKED"/>
+    <rule IddField="Surface Rendering Name" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Construction_FfactorGroundFloor">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="F-Factor" Access="LOCKED">
-    <rule IddField="Area" Access="LOCKED">
-    <rule IddField="PerimeterExposed" Access="LOCKED">
-    <rule IddField="Surface Rendering Name" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="F-Factor" Access="LOCKED"/>
+    <rule IddField="Area" Access="LOCKED"/>
+    <rule IddField="PerimeterExposed" Access="LOCKED"/>
+    <rule IddField="Surface Rendering Name" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Construction_InternalSource">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Source Present After Layer Number" Access="LOCKED">
-    <rule IddField="Temperature Calculation Requested After Layer Number" Access="LOCKED">
-    <rule IddField="Dimensions for the CTF Calculation" Access="LOCKED">
-    <rule IddField="Tube Spacing" Access="LOCKED">
-    <rule IddField="Surface Rendering Name" Access="LOCKED">
-    <rule IddField="Layer" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Source Present After Layer Number" Access="LOCKED"/>
+    <rule IddField="Temperature Calculation Requested After Layer Number" Access="LOCKED"/>
+    <rule IddField="Dimensions for the CTF Calculation" Access="LOCKED"/>
+    <rule IddField="Tube Spacing" Access="LOCKED"/>
+    <rule IddField="Surface Rendering Name" Access="LOCKED"/>
+    <rule IddField="Layer" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Construction_WindowDataFile">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Url" Access="LOCKED">
-    <rule IddField="Surface Rendering Name" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Url" Access="LOCKED"/>
+    <rule IddField="Surface Rendering Name" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_StandardsInformation_Construction">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Construction Name" Access="LOCKED">
-    <rule IddField="Intended Surface Type" Access="LOCKED">
-    <rule IddField="Standards Construction Type" Access="LOCKED">
-    <rule IddField="Perturbable Layer" Access="LOCKED">
-    <rule IddField="Perturbable Layer Type" Access="LOCKED">
-    <rule IddField="Other Perturbable Layer Type" Access="LOCKED">
-    <rule IddField="Construction Standard" Access="LOCKED">
-    <rule IddField="Construction Standard Source" Access="LOCKED">
-    <rule IddField="Fenestration Type" Access="LOCKED">
-    <rule IddField="Fenestration Assembly Context" Access="LOCKED">
-    <rule IddField="Fenestration Number of Panes" Access="LOCKED">
-    <rule IddField="Fenestration Frame Type" Access="LOCKED">
-    <rule IddField="Fenestration Divider Type" Access="LOCKED">
-    <rule IddField="Fenestration Tint" Access="LOCKED">
-    <rule IddField="Fenestration Gas Fill" Access="LOCKED">
-    <rule IddField="Fenestration Low Emissivity Coating" Access="LOCKED">
+    <rule IddField="Construction Name" Access="LOCKED"/>
+    <rule IddField="Intended Surface Type" Access="LOCKED"/>
+    <rule IddField="Standards Construction Type" Access="LOCKED"/>
+    <rule IddField="Perturbable Layer" Access="LOCKED"/>
+    <rule IddField="Perturbable Layer Type" Access="LOCKED"/>
+    <rule IddField="Other Perturbable Layer Type" Access="LOCKED"/>
+    <rule IddField="Construction Standard" Access="LOCKED"/>
+    <rule IddField="Construction Standard Source" Access="LOCKED"/>
+    <rule IddField="Fenestration Type" Access="LOCKED"/>
+    <rule IddField="Fenestration Assembly Context" Access="LOCKED"/>
+    <rule IddField="Fenestration Number of Panes" Access="LOCKED"/>
+    <rule IddField="Fenestration Frame Type" Access="LOCKED"/>
+    <rule IddField="Fenestration Divider Type" Access="LOCKED"/>
+    <rule IddField="Fenestration Tint" Access="LOCKED"/>
+    <rule IddField="Fenestration Gas Fill" Access="LOCKED"/>
+    <rule IddField="Fenestration Low Emissivity Coating" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_InternalMass_Definition">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Construction Name" Access="LOCKED">
-    <rule IddField="Design Level Calculation Method" Access="LOCKED">
-    <rule IddField="Surface Area" Access="LOCKED">
-    <rule IddField="Surface Area per Space Floor Area" Access="LOCKED">
-    <rule IddField="Surface Area per Person" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Construction Name" Access="LOCKED"/>
+    <rule IddField="Design Level Calculation Method" Access="LOCKED"/>
+    <rule IddField="Surface Area" Access="LOCKED"/>
+    <rule IddField="Surface Area per Space Floor Area" Access="LOCKED"/>
+    <rule IddField="Surface Area per Person" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_People_Definition">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Number of People Calculation Method" Access="LOCKED">
-    <rule IddField="Number of People" Access="LOCKED">
-    <rule IddField="People per Space Floor Area" Access="LOCKED">
-    <rule IddField="Space Floor Area per Person" Access="LOCKED">
-    <rule IddField="Fraction Radiant" Access="LOCKED">
-    <rule IddField="Sensible Heat Fraction" Access="LOCKED">
-    <rule IddField="Carbon Dioxide Generation Rate" Access="LOCKED">
-    <rule IddField="Enable ASHRAE 55 Comfort Warnings" Access="LOCKED">
-    <rule IddField="Mean Radiant Temperature Calculation Type" Access="LOCKED">
-    <rule IddField="Thermal Comfort Model Type" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Number of People Calculation Method" Access="LOCKED"/>
+    <rule IddField="Number of People" Access="LOCKED"/>
+    <rule IddField="People per Space Floor Area" Access="LOCKED"/>
+    <rule IddField="Space Floor Area per Person" Access="LOCKED"/>
+    <rule IddField="Fraction Radiant" Access="LOCKED"/>
+    <rule IddField="Sensible Heat Fraction" Access="LOCKED"/>
+    <rule IddField="Carbon Dioxide Generation Rate" Access="LOCKED"/>
+    <rule IddField="Enable ASHRAE 55 Comfort Warnings" Access="LOCKED"/>
+    <rule IddField="Mean Radiant Temperature Calculation Type" Access="LOCKED"/>
+    <rule IddField="Thermal Comfort Model Type" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Lights_Definition">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Design Level Calculation Method" Access="LOCKED">
-    <rule IddField="Lighting Level" Access="LOCKED">
-    <rule IddField="Watts per Space Floor Area" Access="LOCKED">
-    <rule IddField="Watts per Person" Access="LOCKED">
-    <rule IddField="Fraction Radiant" Access="LOCKED">
-    <rule IddField="Fraction Visible" Access="LOCKED">
-    <rule IddField="Return Air Fraction" Access="LOCKED">
-    <rule IddField="Return Air Fraction Calculated from Plenum Temperature" Access="LOCKED">
-    <rule IddField="Return Air Fraction Function of Plenum Temperature Coefficient 1" Access="LOCKED">
-    <rule IddField="Return Air Fraction Function of Plenum Temperature Coefficient 2" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Design Level Calculation Method" Access="LOCKED"/>
+    <rule IddField="Lighting Level" Access="LOCKED"/>
+    <rule IddField="Watts per Space Floor Area" Access="LOCKED"/>
+    <rule IddField="Watts per Person" Access="LOCKED"/>
+    <rule IddField="Fraction Radiant" Access="LOCKED"/>
+    <rule IddField="Fraction Visible" Access="LOCKED"/>
+    <rule IddField="Return Air Fraction" Access="LOCKED"/>
+    <rule IddField="Return Air Fraction Calculated from Plenum Temperature" Access="LOCKED"/>
+    <rule IddField="Return Air Fraction Function of Plenum Temperature Coefficient 1" Access="LOCKED"/>
+    <rule IddField="Return Air Fraction Function of Plenum Temperature Coefficient 2" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Luminaire_Definition">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="IES File Path" Access="LOCKED">
-    <rule IddField="Lighting Power" Access="LOCKED">
-    <rule IddField="Fraction Radiant" Access="LOCKED">
-    <rule IddField="Fraction Visible" Access="LOCKED">
-    <rule IddField="Return Air Fraction" Access="LOCKED">
-    <rule IddField="Return Air Fraction Calculated from Plenum Temperature" Access="LOCKED">
-    <rule IddField="Return Air Fraction Function of Plenum Temperature Coefficient 1" Access="LOCKED">
-    <rule IddField="Return Air Fraction Function of Plenum Temperature Coefficient 2" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="IES File Path" Access="LOCKED"/>
+    <rule IddField="Lighting Power" Access="LOCKED"/>
+    <rule IddField="Fraction Radiant" Access="LOCKED"/>
+    <rule IddField="Fraction Visible" Access="LOCKED"/>
+    <rule IddField="Return Air Fraction" Access="LOCKED"/>
+    <rule IddField="Return Air Fraction Calculated from Plenum Temperature" Access="LOCKED"/>
+    <rule IddField="Return Air Fraction Function of Plenum Temperature Coefficient 1" Access="LOCKED"/>
+    <rule IddField="Return Air Fraction Function of Plenum Temperature Coefficient 2" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_ElectricEquipment_Definition">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Design Level Calculation Method" Access="LOCKED">
-    <rule IddField="Design Level" Access="LOCKED">
-    <rule IddField="Watts per Space Floor Area" Access="LOCKED">
-    <rule IddField="Watts per Person" Access="LOCKED">
-    <rule IddField="Fraction Latent" Access="LOCKED">
-    <rule IddField="Fraction Radiant" Access="LOCKED">
-    <rule IddField="Fraction Lost" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Design Level Calculation Method" Access="LOCKED"/>
+    <rule IddField="Design Level" Access="LOCKED"/>
+    <rule IddField="Watts per Space Floor Area" Access="LOCKED"/>
+    <rule IddField="Watts per Person" Access="LOCKED"/>
+    <rule IddField="Fraction Latent" Access="LOCKED"/>
+    <rule IddField="Fraction Radiant" Access="LOCKED"/>
+    <rule IddField="Fraction Lost" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_GasEquipment_Definition">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Design Level Calculation Method" Access="LOCKED">
-    <rule IddField="Design Level" Access="LOCKED">
-    <rule IddField="Watts per Space Floor Area" Access="LOCKED">
-    <rule IddField="Watts per Person" Access="LOCKED">
-    <rule IddField="Fraction Latent" Access="LOCKED">
-    <rule IddField="Fraction Radiant" Access="LOCKED">
-    <rule IddField="Fraction Lost" Access="LOCKED">
-    <rule IddField="Carbon Dioxide Generation Rate" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Design Level Calculation Method" Access="LOCKED"/>
+    <rule IddField="Design Level" Access="LOCKED"/>
+    <rule IddField="Watts per Space Floor Area" Access="LOCKED"/>
+    <rule IddField="Watts per Person" Access="LOCKED"/>
+    <rule IddField="Fraction Latent" Access="LOCKED"/>
+    <rule IddField="Fraction Radiant" Access="LOCKED"/>
+    <rule IddField="Fraction Lost" Access="LOCKED"/>
+    <rule IddField="Carbon Dioxide Generation Rate" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_HotWaterEquipment_Definition">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Design Level Calculation Method" Access="LOCKED">
-    <rule IddField="Design Level" Access="LOCKED">
-    <rule IddField="Watts per Space Floor Area" Access="LOCKED">
-    <rule IddField="Watts per Person" Access="LOCKED">
-    <rule IddField="Fraction Latent" Access="LOCKED">
-    <rule IddField="Fraction Radiant" Access="LOCKED">
-    <rule IddField="Fraction Lost" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Design Level Calculation Method" Access="LOCKED"/>
+    <rule IddField="Design Level" Access="LOCKED"/>
+    <rule IddField="Watts per Space Floor Area" Access="LOCKED"/>
+    <rule IddField="Watts per Person" Access="LOCKED"/>
+    <rule IddField="Fraction Latent" Access="LOCKED"/>
+    <rule IddField="Fraction Radiant" Access="LOCKED"/>
+    <rule IddField="Fraction Lost" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_SteamEquipment_Definition">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Design Level Calculation Method" Access="LOCKED">
-    <rule IddField="Design Level" Access="LOCKED">
-    <rule IddField="Watts per Space Floor Area" Access="LOCKED">
-    <rule IddField="Watts per Person" Access="LOCKED">
-    <rule IddField="Fraction Latent" Access="LOCKED">
-    <rule IddField="Fraction Radiant" Access="LOCKED">
-    <rule IddField="Fraction Lost" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Design Level Calculation Method" Access="LOCKED"/>
+    <rule IddField="Design Level" Access="LOCKED"/>
+    <rule IddField="Watts per Space Floor Area" Access="LOCKED"/>
+    <rule IddField="Watts per Person" Access="LOCKED"/>
+    <rule IddField="Fraction Latent" Access="LOCKED"/>
+    <rule IddField="Fraction Radiant" Access="LOCKED"/>
+    <rule IddField="Fraction Lost" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_OtherEquipment_Definition">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Design Level Calculation Method" Access="LOCKED">
-    <rule IddField="Design Level" Access="LOCKED">
-    <rule IddField="Watts per Space Floor Area" Access="LOCKED">
-    <rule IddField="Watts per Person" Access="LOCKED">
-    <rule IddField="Fraction Latent" Access="LOCKED">
-    <rule IddField="Fraction Radiant" Access="LOCKED">
-    <rule IddField="Fraction Lost" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Design Level Calculation Method" Access="LOCKED"/>
+    <rule IddField="Design Level" Access="LOCKED"/>
+    <rule IddField="Watts per Space Floor Area" Access="LOCKED"/>
+    <rule IddField="Watts per Person" Access="LOCKED"/>
+    <rule IddField="Fraction Latent" Access="LOCKED"/>
+    <rule IddField="Fraction Radiant" Access="LOCKED"/>
+    <rule IddField="Fraction Lost" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Schedule_Day">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Schedule Type Limits Name" Access="LOCKED">
-    <rule IddField="Interpolate to Timestep" Access="LOCKED">
-    <rule IddField="Hour" Access="LOCKED">
-    <rule IddField="Minute" Access="LOCKED">
-    <rule IddField="Value Until Time" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Schedule Type Limits Name" Access="LOCKED"/>
+    <rule IddField="Interpolate to Timestep" Access="LOCKED"/>
+    <rule IddField="Hour" Access="LOCKED"/>
+    <rule IddField="Minute" Access="LOCKED"/>
+    <rule IddField="Value Until Time" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Schedule_Rule">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Schedule Ruleset Name" Access="LOCKED">
-    <rule IddField="Rule Order" Access="LOCKED">
-    <rule IddField="Day Schedule Name" Access="LOCKED">
-    <rule IddField="Apply Sunday" Access="LOCKED">
-    <rule IddField="Apply Monday" Access="LOCKED">
-    <rule IddField="Apply Tuesday" Access="LOCKED">
-    <rule IddField="Apply Wednesday" Access="LOCKED">
-    <rule IddField="Apply Thursday" Access="LOCKED">
-    <rule IddField="Apply Friday" Access="LOCKED">
-    <rule IddField="Apply Saturday" Access="LOCKED">
-    <rule IddField="Apply Holiday" Access="LOCKED">
-    <rule IddField="Date Specification Type" Access="LOCKED">
-    <rule IddField="Start Month" Access="LOCKED">
-    <rule IddField="Start Day" Access="LOCKED">
-    <rule IddField="End Month" Access="LOCKED">
-    <rule IddField="End Day" Access="LOCKED">
-    <rule IddField="Specific Month" Access="LOCKED">
-    <rule IddField="Specific Day" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Schedule Ruleset Name" Access="LOCKED"/>
+    <rule IddField="Rule Order" Access="LOCKED"/>
+    <rule IddField="Day Schedule Name" Access="LOCKED"/>
+    <rule IddField="Apply Sunday" Access="LOCKED"/>
+    <rule IddField="Apply Monday" Access="LOCKED"/>
+    <rule IddField="Apply Tuesday" Access="LOCKED"/>
+    <rule IddField="Apply Wednesday" Access="LOCKED"/>
+    <rule IddField="Apply Thursday" Access="LOCKED"/>
+    <rule IddField="Apply Friday" Access="LOCKED"/>
+    <rule IddField="Apply Saturday" Access="LOCKED"/>
+    <rule IddField="Apply Holiday" Access="LOCKED"/>
+    <rule IddField="Date Specification Type" Access="LOCKED"/>
+    <rule IddField="Start Month" Access="LOCKED"/>
+    <rule IddField="Start Day" Access="LOCKED"/>
+    <rule IddField="End Month" Access="LOCKED"/>
+    <rule IddField="End Day" Access="LOCKED"/>
+    <rule IddField="Specific Month" Access="LOCKED"/>
+    <rule IddField="Specific Day" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Schedule_Ruleset">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Schedule Type Limits Name" Access="LOCKED">
-    <rule IddField="Default Day Schedule Name" Access="LOCKED">
-    <rule IddField="Summer Design Day Schedule Name" Access="LOCKED">
-    <rule IddField="Winter Design Day Schedule Name" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Schedule Type Limits Name" Access="LOCKED"/>
+    <rule IddField="Default Day Schedule Name" Access="LOCKED"/>
+    <rule IddField="Summer Design Day Schedule Name" Access="LOCKED"/>
+    <rule IddField="Winter Design Day Schedule Name" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_ScheduleTypeLimits">
-    <rule IddField="Handle" Access="HIDDEN">
-    <rule IddField="Name" Access="LOCKED">
-    <rule IddField="Lower Limit Value" Access="LOCKED">
-    <rule IddField="Upper Limit Value" Access="LOCKED">
-    <rule IddField="Numeric Type" Access="LOCKED">
-    <rule IddField="Unit Type" Access="LOCKED">
+    <rule IddField="Name" Access="LOCKED"/>
+    <rule IddField="Lower Limit Value" Access="LOCKED"/>
+    <rule IddField="Upper Limit Value" Access="LOCKED"/>
+    <rule IddField="Numeric Type" Access="LOCKED"/>
+    <rule IddField="Unit Type" Access="LOCKED"/>
   </POLICY>
 </ROOT>
