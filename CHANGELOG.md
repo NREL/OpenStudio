@@ -1,3 +1,23 @@
+## OpenStudio v1.10.6
+###### 2016-03-22 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.10.5...v1.10.6 )
+
+- ![Fixed:][fixed] [#1916]( https://github.com/NREL/OpenStudio/issues/1916 ), Open Studio does not provide an error message when running VRF systems without cooling or heating schedules.
+- ![Fixed:][fixed] [#2005]( https://github.com/NREL/OpenStudio/issues/2005 ), Run Simulation Tab Says "Hello World" When Using Apply Measure Now
+- ![Fixed:][fixed] [#2007]( https://github.com/NREL/OpenStudio/issues/2007 ), alphabetize HVAC Systems list
+- ![Fixed:][fixed] [#2034]( https://github.com/NREL/OpenStudio/issues/2034 ), App closes when Air Loop availability schedule is set to blank and the 'Control' button clicked.
+- ![Fixed:][fixed] [#2037]( https://github.com/NREL/OpenStudio/issues/2037 ), HeatExchanger:FluidToFluid problems
+- ![Fixed:][fixed] [#2043]( https://github.com/NREL/OpenStudio/issues/2043 ), CoilHeatingWaterToAirHeatPump:EquationFit forward translator sets hard sized rated water flow rate as air flow rate
+- ![Fixed:][fixed] [#2046]( https://github.com/NREL/OpenStudio/issues/2046 ), HVAC templates should have a water cooled chiller and an air cooled chiller.
+- ![Fixed:][fixed] [#2055]( https://github.com/NREL/OpenStudio/issues/2055 ), PAT datapoints with comma's in name fail to run
+- ![Fixed:][fixed] [#2080]( https://github.com/NREL/OpenStudio/issues/2080 ), Deleting AirTerminal with reheat does not delete HW coil
+- ![Fixed:][fixed] [#2081]( https://github.com/NREL/OpenStudio/issues/2081 ), Dropping Schedule
+- ![Fixed:][fixed] [#2086]( https://github.com/NREL/OpenStudio/issues/2086 ), Mismatch between OpenStudio and EnergyPlus idd choice for PlantLoop Load Distribution Scheme
+- ![Fixed:][fixed] [#2097]( https://github.com/NREL/OpenStudio/issues/2097 ), Update OS to E+ 8.5
+- ![Fixed:][fixed] [#2098]( https://github.com/NREL/OpenStudio/issues/2098 ), air loop diagram
+- ![Fixed:][fixed] [#2149]( https://github.com/NREL/OpenStudio/issues/2149 ), Fix Date/Time Of Peak query in EnergyPlus 8.5
+- ![Fixed:][fixed] [#2153]( https://github.com/NREL/OpenStudio/issues/2153 ), Fails to import IDF when CondenserLoop is part of IDF
+- ![Fixed:][fixed] [#2155]( https://github.com/NREL/OpenStudio/issues/2155 ), 1.10.5 closes after apply measure now
+
 ## OpenStudio v1.10.5
 ###### 2016-03-08 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.10.4...v1.10.5 )
 
