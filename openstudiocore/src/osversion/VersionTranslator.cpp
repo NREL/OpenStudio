@@ -58,7 +58,7 @@
 
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/filesystem/fstream.hpp>
+
 
 namespace openstudio {
 namespace osversion {
@@ -216,7 +216,7 @@ boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::pat
   }
   
   path wp = completePathToFile(pathToOldOsm,path(),modelFileExtension(),false);
-  boost::filesystem::ifstream inFile(wp);
+  openstudio::filesystem::ifstream inFile(wp);
   if (inFile) {
     return loadModel(inFile,progressBar);
   }
@@ -240,7 +240,7 @@ boost::optional<model::Component> VersionTranslator::loadComponent(const openstu
     return boost::none;
   }
   path wp = completePathToFile(pathToOldOsc,path(),componentFileExtension(),false);
-  boost::filesystem::ifstream inFile(wp);
+  openstudio::filesystem::ifstream inFile(wp);
   if (inFile) {
     return loadComponent(inFile,progressBar);
   }

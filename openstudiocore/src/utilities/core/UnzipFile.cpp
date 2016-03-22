@@ -22,7 +22,7 @@
 #include <zlib/zlib.h>
 #include <zlib/contrib/minizip/unzip.h>
 #include <fstream>
-#include <boost/filesystem.hpp>
+
 
 #include <QDir>
 #include <QFile>
@@ -33,7 +33,7 @@ namespace openstudio {
     : m_unzFile(unzOpen(openstudio::toString(filename).c_str()))
   {
     if (!m_unzFile) {
-      if (!boost::filesystem::exists(filename))
+      if (!openstudio::filesystem::exists(filename))
       {
         throw std::runtime_error("UnzipFile " + openstudio::toString(filename) + " does not exist, could not be opened");
       } else {

@@ -38,7 +38,7 @@
 #include <QSettings>
 #include <QRegularExpression>
 
-#include <boost/filesystem.hpp>
+
 
 namespace openstudio{
 
@@ -61,7 +61,7 @@ namespace openstudio{
       return false;
     }
 
-    openstudio::path xmlPath = boost::filesystem::system_complete(m_bclXML.path());
+    openstudio::path xmlPath = openstudio::filesystem::system_complete(m_bclXML.path());
 
     QDir srcDir(toQString(source));
     
@@ -71,7 +71,7 @@ namespace openstudio{
       QString dstItemPath = toQString(destination) + "/" + info.fileName();
       if (info.isFile())
       {
-        if (m_bclXML.hasFile(toPath(srcItemPath)) || (xmlPath == boost::filesystem::system_complete(toPath(srcItemPath))))
+        if (m_bclXML.hasFile(toPath(srcItemPath)) || (xmlPath == openstudio::filesystem::system_complete(toPath(srcItemPath))))
         {
           if (!QFile::copy(srcItemPath, dstItemPath))
           {
@@ -87,7 +87,7 @@ namespace openstudio{
   BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, const openstudio::path& dir,
                          const std::string& taxonomyTag, MeasureType measureType, 
                          const std::string& description, const std::string& modelerDescription)
-    : m_directory(boost::filesystem::system_complete(dir)),
+    : m_directory(openstudio::filesystem::system_complete(dir)),
       m_bclXML(BCLXMLType::MeasureXML)
   {
 
@@ -305,7 +305,7 @@ namespace openstudio{
   }
 
   BCLMeasure::BCLMeasure(const openstudio::path& dir)
-    : m_directory(boost::filesystem::system_complete(dir)),
+    : m_directory(openstudio::filesystem::system_complete(dir)),
       m_bclXML(BCLXMLType::MeasureXML)
   {
     openstudio::path xmlPath = m_directory / toPath("measure.xml");
@@ -396,7 +396,7 @@ namespace openstudio{
     }else{
       result = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio-" + openStudioVersion() + "/pat/Measures");
     }
-    return boost::filesystem::system_complete(result);
+    return openstudio::filesystem::system_complete(result);
   }
 
   BCLMeasure BCLMeasure::alternativeModelMeasure() {
@@ -435,7 +435,7 @@ namespace openstudio{
     QSettings settings("OpenStudio", "BCLMeasure");
     QString value = settings.value("userMeasuresDir", QDir::homePath().append("/OpenStudio/Measures")).toString();
     openstudio::path result = toPath(value);
-    return boost::filesystem::system_complete(result);
+    return openstudio::filesystem::system_complete(result);
   }
 
   bool BCLMeasure::setUserMeasuresDir(const openstudio::path& userMeasuresDir)
@@ -577,8 +577,8 @@ namespace openstudio{
     }
 
     try{
-      boost::filesystem::directory_iterator endit; // default construction yields past-the-end
-      boost::filesystem::directory_iterator it(dir);
+      openstudio::filesystem::directory_iterator endit; // default construction yields past-the-end
+      openstudio::filesystem::directory_iterator it(dir);
       for( ; it != endit; ++it )
       {
         if ( is_directory(it->status()) )

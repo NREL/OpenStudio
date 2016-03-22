@@ -90,7 +90,7 @@ namespace gbxml {
 
     boost::optional<openstudio::model::Model> result;
 
-    if (boost::filesystem::exists(path)){
+    if (openstudio::filesystem::exists(path)){
 
       QFile file(toQString(path));
       if (file.open(QFile::ReadOnly)){

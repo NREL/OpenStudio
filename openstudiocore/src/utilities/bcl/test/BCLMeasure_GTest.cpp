@@ -119,7 +119,7 @@ TEST_F(BCLFixture, BCLMeasure)
 
 TEST_F(BCLFixture, BCLMeasure_CTor)
 {
-  openstudio::path dir = boost::filesystem::system_complete(toPath("./TestMeasure/"));
+  openstudio::path dir = openstudio::filesystem::system_complete(toPath("./TestMeasure/"));
   if(exists(dir)){
     removeDirectory(dir);
   }

@@ -20,7 +20,7 @@
 #include <gtest/gtest.h>
 
 
-#include <boost/filesystem.hpp>
+
 #include "CoreFixture.hpp"
 #include "../Path.hpp"
 #include "../ApplicationPathHelpers.hpp"
@@ -31,5 +31,5 @@ using openstudio::toString;
 TEST_F(CoreFixture, ApplicationPathHelpers_EnergyPlus)
 {
   openstudio::path ep = openstudio::getEnergyPlusExecutable();
-  EXPECT_TRUE(boost::filesystem::exists(ep));
+  EXPECT_TRUE(openstudio::filesystem::exists(ep));
 }

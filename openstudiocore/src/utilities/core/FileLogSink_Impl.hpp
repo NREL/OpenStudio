@@ -22,7 +22,7 @@
 
 #include "../UtilitiesAPI.hpp"
 
-#include <boost/filesystem/fstream.hpp>
+
 #include "LogSink_Impl.hpp"
 #include "FileLogSink.hpp"
 
@@ -50,7 +50,7 @@ namespace openstudio{
       private:
 
       openstudio::path m_path;
-      boost::shared_ptr<boost::filesystem::ofstream> m_ofs;
+      boost::shared_ptr<openstudio::filesystem::ofstream> m_ofs;
     };
 
 

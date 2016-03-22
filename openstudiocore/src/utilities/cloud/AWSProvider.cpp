@@ -519,7 +519,7 @@ namespace openstudio{
 #else
       m_ruby /= toPath("bin/ruby");
 #endif
-      if (!boost::filesystem::exists(m_ruby)) {
+      if (!openstudio::filesystem::exists(m_ruby)) {
         LOG_AND_THROW("Ruby 2.0 executable cannot be found.");
       }
 
@@ -537,7 +537,7 @@ namespace openstudio{
         m_script = getApplicationRunDirectory().parent_path() / openstudio::toPath("Ruby/cloud/aws.rb");
 #endif
       }
-      if (!boost::filesystem::exists(m_script)) {
+      if (!openstudio::filesystem::exists(m_script)) {
         LOG_AND_THROW("AWS script cannot be found.");
       }
 

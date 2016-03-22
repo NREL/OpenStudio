@@ -31,8 +31,8 @@
 #include <boost/iostreams/filter/newline.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
 
-#include <boost/filesystem.hpp>
-#include <boost/filesystem/fstream.hpp>
+
+
 
 #include <sstream>
 
@@ -100,7 +100,7 @@ OptionalImfFile ImfFile::load(const openstudio::path& p, IddFileType iddFileType
   path wp = completePathToFile(p,path(),"imf",true);
 
   // try to open file and parse
-  boost::filesystem::ifstream inFile(wp);
+  openstudio::filesystem::ifstream inFile(wp);
   if (inFile) {
     try { return load(inFile,iddFileType); }
     catch (...) { return boost::none; }
@@ -114,7 +114,7 @@ OptionalImfFile ImfFile::load(const openstudio::path& p, const IddFile& iddFile)
   path wp = completePathToFile(p,path(),"imf",true);
 
   // try to open file and parse
-  boost::filesystem::ifstream inFile(wp);
+  openstudio::filesystem::ifstream inFile(wp);
   if (inFile) {
     try { return load(inFile,iddFile); }
     catch (...) { return boost::none; }
@@ -144,7 +144,7 @@ bool ImfFile::save(const openstudio::path& p, bool overwrite) {
     return false;
   }
   if (makeParentFolder(p)) {
-    boost::filesystem::ofstream outFile(p);
+    openstudio::filesystem::ofstream outFile(p);
     if (outFile) {
       try {
         print(outFile);

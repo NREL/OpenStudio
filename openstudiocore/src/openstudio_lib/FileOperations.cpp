@@ -51,8 +51,8 @@
 #include <QMessageBox>
 #include <QTemporaryFile>
 
-#include <boost/filesystem/fstream.hpp>
-#include <boost/filesystem.hpp>
+
+
 
 #include "OSAppBase.hpp"
 
@@ -261,7 +261,7 @@ namespace openstudio {
   {
     bool result = true;
     
-    if( osmPath.empty() || !boost::filesystem::exists(osmPath)){
+    if( osmPath.empty() || !openstudio::filesystem::exists(osmPath)){
      
       LOG_FREE(Debug, "initializeModelTempDir", "OSM path '" << toString(osmPath) << "' is empty or does not exist");
       result = false;
@@ -278,7 +278,7 @@ namespace openstudio {
       // Copy all files from existing resources dir into temp dir when opening
       openstudio::path sourceDir = osmPath.parent_path() / osmPath.stem();
       openstudio::path destDir = modelTempDir / toPath("resources");
-      if (boost::filesystem::exists(sourceDir)){
+      if (openstudio::filesystem::exists(sourceDir)){
         LOG_FREE(Debug, "initializeModelTempDir", "Copying '" << toString(sourceDir) << "' to '" << toString(destDir) << "'");
 
         test = copyDir(toQString(sourceDir), toQString(destDir));
@@ -301,21 +301,21 @@ namespace openstudio {
     openstudio::path scriptspath = modelTempDir / openstudio::toPath("resources/scripts");
     openstudio::path filespath = modelTempDir / openstudio::toPath("resources/files");
 
-    if (!boost::filesystem::exists(runpath)) 
+    if (!openstudio::filesystem::exists(runpath)) 
     {
-      boost::filesystem::create_directories(runpath);
+      openstudio::filesystem::create_directories(runpath);
       modified = true;
     }
 
-    if (!boost::filesystem::exists(scriptspath)) 
+    if (!openstudio::filesystem::exists(scriptspath)) 
     {
-      boost::filesystem::create_directories(scriptspath);
+      openstudio::filesystem::create_directories(scriptspath);
       modified = true;
     }
 
-    if (!boost::filesystem::exists(filespath)) 
+    if (!openstudio::filesystem::exists(filespath)) 
     {
-      boost::filesystem::create_directories(filespath);
+      openstudio::filesystem::create_directories(filespath);
       modified = true;
     }
 

@@ -29,7 +29,7 @@
 namespace openstudio{
 
   BCLFileReference::BCLFileReference(const openstudio::path& path, const bool setMembers)
-    : m_path(boost::filesystem::system_complete(path))
+    : m_path(openstudio::filesystem::system_complete(path))
   {
     // DLM: why would you not want to set the members?
     if (setMembers) {

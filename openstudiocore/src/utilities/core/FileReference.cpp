@@ -150,7 +150,7 @@ void FileReference::setPath(const openstudio::path& newPath) {
 bool FileReference::makePathAbsolute(const openstudio::path& searchDirectory) {
   // trivial completion
   openstudio::path currentPath = path();
-  if (currentPath.is_complete() && boost::filesystem::exists(currentPath)) {
+  if (currentPath.is_complete() && openstudio::filesystem::exists(currentPath)) {
     return true;
   }
   openstudio::path workingPath(currentPath);
@@ -161,8 +161,8 @@ bool FileReference::makePathAbsolute(const openstudio::path& searchDirectory) {
   if (searchDirectory.empty()) {
     return false;
   }
-  openstudio::path newPath = boost::filesystem::complete(workingPath,searchDirectory);
-  if (newPath.empty() || !boost::filesystem::exists(newPath)) {
+  openstudio::path newPath = openstudio::filesystem::complete(workingPath,searchDirectory);
+  if (newPath.empty() || !openstudio::filesystem::exists(newPath)) {
     return false;
   }
   m_path = completeAndNormalize(newPath);
@@ -193,7 +193,7 @@ bool FileReference::update(const openstudio::path& searchDirectory) {
 bool FileReference::update(const openstudio::path& searchDirectory,bool lastOnly) {
   makePathAbsolute(searchDirectory);
   openstudio::path p = path();
-  if (boost::filesystem::exists(p)) {
+  if (openstudio::filesystem::exists(p)) {
     QFileInfo fileInfo(toQString(p));
     OS_ASSERT(fileInfo.exists());
 

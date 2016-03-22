@@ -793,7 +793,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
     << "    std::stringstream folderString;" << std::endl
     << "    folderString << version.major() << \"_\" << version.minor() << \"_\" << version.patch().get();" << std::endl
     << "    iddPath = iddPath / toPath(folderString.str() + \"/OpenStudio.idd\");" << std::endl
-    << "    if (boost::filesystem::exists(iddPath) && (version < currentVersion)) {" << std::endl
+    << "    if (openstudio::filesystem::exists(iddPath) && (version < currentVersion)) {" << std::endl
     << "      result = IddFile::load(iddPath);" << std::endl
     << "    }" << std::endl
     << "    if (result) {" << std::endl

@@ -52,7 +52,7 @@ namespace openstudio
   TemporaryDirectory::~TemporaryDirectory()
   {
     try {
-      boost::filesystem::remove_all(m_path);
+      openstudio::filesystem::remove_all(m_path);
     } catch (const std::exception &e) {
       LOG(Error, "Unable to remove temporary directory: " << openstudio::toString(m_path) << " error: " << e.what());
     }

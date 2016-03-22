@@ -51,12 +51,12 @@ std::string IddFactoryOutFile::finalize(const std::string& oldChecksum) {
   // files.
   bool copyFile = true; // (newChecksum != oldChecksum);
   if (copyFile) {
-    if (boost::filesystem::exists(finalPath)) {
-      boost::filesystem::remove(finalPath);
+    if (openstudio::filesystem::exists(finalPath)) {
+      openstudio::filesystem::remove(finalPath);
     }
-    boost::filesystem::copy_file(tempPath,finalPath);
+    openstudio::filesystem::copy_file(tempPath,finalPath);
   }
-  boost::filesystem::remove(tempPath);
+  openstudio::filesystem::remove(tempPath);
   return newChecksum;
 }
 
@@ -102,8 +102,8 @@ void GenerateIddFactoryOutFiles::finalizeIddFactoryOutFile(IddFactoryOutFile& ou
 }
 
 void GenerateIddFactoryOutFiles::loadIddFactoryFileIndex() {
-  if (boost::filesystem::exists(m_fileIndexPath)) {
-    boost::filesystem::ifstream fileIndex(m_fileIndexPath);
+  if (openstudio::filesystem::exists(m_fileIndexPath)) {
+    openstudio::filesystem::ifstream fileIndex(m_fileIndexPath);
     std::string line;
     boost::regex re("// ([^,]*),(.*)");
     boost::smatch m;
@@ -118,7 +118,7 @@ void GenerateIddFactoryOutFiles::loadIddFactoryFileIndex() {
 }
 
 void GenerateIddFactoryOutFiles::writeIddFactoryFileIndex() {
-  boost::filesystem::ofstream fileIndex(m_fileIndexPath);
+  openstudio::filesystem::ofstream fileIndex(m_fileIndexPath);
   for (std::map<std::string,std::pair<std::string,bool> >::const_iterator it = checksumMap.begin(),
        itEnd = checksumMap.end(); it != itEnd; ++it)
   {

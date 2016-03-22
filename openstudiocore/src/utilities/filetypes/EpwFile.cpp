@@ -2329,7 +2329,7 @@ bool EpwFile::translateToWth(openstudio::path path, std::string description)
 
 bool EpwFile::parse(bool storeData)
 {
-  if (!boost::filesystem::exists(m_path) || !boost::filesystem::is_regular_file(m_path)){
+  if (!openstudio::filesystem::exists(m_path) || !openstudio::filesystem::is_regular_file(m_path)){
     LOG(Error, "Path '" << m_path << "' is not an EPW file");
     return false;
   }

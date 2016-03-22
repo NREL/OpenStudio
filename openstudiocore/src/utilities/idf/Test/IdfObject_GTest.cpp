@@ -39,7 +39,7 @@
 
 #include <QVariant>
 
-#include <boost/filesystem/fstream.hpp>
+
 #include <boost/lexical_cast.hpp>
 
 #include <sstream>
@@ -69,7 +69,7 @@ TEST_F(IdfFixture, IdfObject_ConstructDefaultsFromIddObjectType) {
 
   // loop through each IddObject, create a default object, and print to a file.
   // examine, then partition into "good" and candidate for refactor (us or E+)
-  boost::filesystem::ofstream outFile("defaultObjects.idf");
+  openstudio::filesystem::ofstream outFile("defaultObjects.idf");
   ASSERT_TRUE(outFile?true:false);
 
   IddObjectVector iddObjects = IddFactory::instance().objects();

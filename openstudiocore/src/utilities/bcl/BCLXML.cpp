@@ -44,9 +44,9 @@ namespace openstudio{
   }
 
   BCLXML::BCLXML(const openstudio::path& xmlPath):
-    m_path(boost::filesystem::system_complete(xmlPath))
+    m_path(openstudio::filesystem::system_complete(xmlPath))
   {
-    if (!boost::filesystem::exists(xmlPath) || !boost::filesystem::is_regular_file(xmlPath)){
+    if (!openstudio::filesystem::exists(xmlPath) || !openstudio::filesystem::is_regular_file(xmlPath)){
       LOG_AND_THROW("'" << toString(xmlPath) << "' does not exist");
     }
 
@@ -523,7 +523,7 @@ namespace openstudio{
   {
     bool result = false;
 
-    openstudio::path test = boost::filesystem::system_complete(path);
+    openstudio::path test = openstudio::filesystem::system_complete(path);
 
     for (const BCLFileReference& file : m_files) {
       if (file.path() == test){
@@ -539,7 +539,7 @@ namespace openstudio{
   {
     bool result = false;
 
-    openstudio::path test = boost::filesystem::system_complete(path);
+    openstudio::path test = openstudio::filesystem::system_complete(path);
 
     std::vector<BCLFileReference> newFiles;
     for (const BCLFileReference& file : m_files) {
@@ -824,7 +824,7 @@ namespace openstudio{
   bool BCLXML::saveAs(const openstudio::path& xmlPath)
   {
     incrementVersionId();
-    m_path = boost::filesystem::system_complete(xmlPath);
+    m_path = openstudio::filesystem::system_complete(xmlPath);
     return save();
   }
 

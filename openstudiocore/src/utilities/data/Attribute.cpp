@@ -1397,7 +1397,7 @@ boost::optional<Attribute> Attribute::loadFromXml(const openstudio::path& path)
 {
   boost::optional<Attribute> result;
 
-  if (boost::filesystem::exists(path)){
+  if (openstudio::filesystem::exists(path)){
     try{
 
       QFile file(toQString(path));

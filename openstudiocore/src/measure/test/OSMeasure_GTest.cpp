@@ -262,7 +262,7 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript2) {
 
   // serialize ossrs
   openstudio::path fileDir = toPath("./OSResultOSSRs");
-  boost::filesystem::create_directory(fileDir);
+  openstudio::filesystem::create_directory(fileDir);
 
   // call with no arguments
   TestOSRunner runner;

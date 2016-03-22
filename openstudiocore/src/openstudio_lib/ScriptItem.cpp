@@ -32,7 +32,7 @@
 #include <QDir>
 #include <QMessageBox>
 
-#include <boost/filesystem.hpp>
+
 
 namespace openstudio {
 
@@ -168,9 +168,9 @@ void ScriptItem::saveArgumentsToDb() {
 
 void ScriptItem::deleteDb() {
   m_removed = true;
-  if (boost::filesystem::exists(argsDbPath())) {
-    boost::filesystem::remove(argsDbPath());
-    boost::filesystem::remove(toPath(toString((argsDbPath())) + "-journal"));
+  if (openstudio::filesystem::exists(argsDbPath())) {
+    openstudio::filesystem::remove(argsDbPath());
+    openstudio::filesystem::remove(toPath(toString((argsDbPath())) + "-journal"));
   }
 }
 

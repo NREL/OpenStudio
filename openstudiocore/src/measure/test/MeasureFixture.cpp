@@ -25,7 +25,7 @@
 
 #include "../../utilities/idd/IddEnums.hpp"
 
-#include <boost/filesystem.hpp>
+
 
 #include <resources.hxx>
 
@@ -63,8 +63,8 @@ void MeasureFixture::SetUpTestCase() {
 
   // clear scratch
   openstudio::path p = resourcesPath() / openstudio::toPath("ruleset/scratch");
-  boost::filesystem::remove_all(p);
-  boost::filesystem::create_directories(p);
+  openstudio::filesystem::remove_all(p);
+  openstudio::filesystem::create_directories(p);
 }
 
 void MeasureFixture::TearDownTestCase() {

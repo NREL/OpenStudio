@@ -923,10 +923,10 @@ void OpenStudioApp::versionUpdateMessageBox(const osversion::VersionTranslator& 
           itr != scriptfolders.end();
           ++itr)
       {
-        if (boost::filesystem::exists(*itr))
+        if (openstudio::filesystem::exists(*itr))
         {
           removedScriptDirs = true;
-          boost::filesystem::remove_all(*itr);
+          openstudio::filesystem::remove_all(*itr);
         }
       }
     }

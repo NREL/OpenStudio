@@ -21,7 +21,7 @@
 
 #include "../utilities/core/Assert.hpp"
 
-#include <boost/filesystem.hpp>
+
 
 #include <QFile>
 #include <QDomDocument>
@@ -168,7 +168,7 @@ void OSResult::appendAttribute(const Attribute& attribute) {
 
 boost::optional<OSResult> OSResult::load(const openstudio::path& p) {
   OptionalOSResult result;
-  if (boost::filesystem::exists(p)) {
+  if (openstudio::filesystem::exists(p)) {
     try {
       // load xml file
       QFile file(toQString(p));
@@ -198,7 +198,7 @@ boost::optional<OSResult> OSResult::load(const openstudio::path& p) {
 
 bool OSResult::save(const openstudio::path& p, bool overwrite) const {
   bool result(false);
-  if (overwrite || !boost::filesystem::exists(p)) {
+  if (overwrite || !openstudio::filesystem::exists(p)) {
     try {
       QFile file(toQString(p));
       file.open(QFile::WriteOnly);

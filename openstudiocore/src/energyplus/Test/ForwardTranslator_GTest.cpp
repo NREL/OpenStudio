@@ -144,7 +144,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateAirLoopHVAC) {
   ASSERT_NE(unsigned(0),workspace.objects().size());
 
   openstudio::path outDir = resourcesPath() / openstudio::toPath("airLoopHVAC.idf");
-  boost::filesystem::ofstream ofs(outDir);
+  openstudio::filesystem::ofstream ofs(outDir);
   workspace.toIdfFile().print(ofs);
   ofs.close();
 }
@@ -225,7 +225,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateCoolingCoil)
   EXPECT_EQ(3u,workspace.getObjectsByType(IddObjectType::Curve_Quadratic).size());
 
   path outDir = resourcesPath() / openstudio::toPath("CoolingCoilDXSingleSpeed.idf");
-  boost::filesystem::ofstream ofs(outDir);
+  openstudio::filesystem::ofstream ofs(outDir);
   workspace.toIdfFile().print(ofs);
   ofs.close();
 

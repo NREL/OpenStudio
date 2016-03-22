@@ -600,14 +600,14 @@ namespace isomodel {
     openstudio::path weatherFilename;
     //see if weather file path is absolute path
     //if so, use it, else assemble relative path
-    if(boost::filesystem::exists( _weatherFilePath ))
+    if(openstudio::filesystem::exists( _weatherFilePath ))
     {
       weatherFilename = _weatherFilePath;      
     }
     else
     {
       weatherFilename = _dataFile.parent_path() / _weatherFilePath;
-      if ( !boost::filesystem::exists( weatherFilename ) )
+      if ( !openstudio::filesystem::exists( weatherFilename ) )
       {
         LOG(Error, "Weather File Not Found: " << openstudio::toString(_weatherFilePath));
         _valid = false;
@@ -639,7 +639,7 @@ namespace isomodel {
   void UserModel::load(const openstudio::path &buildingFile){
     _dataFile = buildingFile;
     _valid = true;
-    if ( !boost::filesystem::exists( buildingFile ) )
+    if ( !openstudio::filesystem::exists( buildingFile ) )
     {
       LOG(Error, "ISO Model File Not Found: " << openstudio::toString(buildingFile));
       _valid = false;

@@ -20,7 +20,7 @@
 #include "PathHelpers.hpp"
 #include "Logger.hpp"
 #include "Assert.hpp"
-#include <boost/filesystem.hpp>
+
 
 #include <QDir>
 #include <QFile>
@@ -66,8 +66,8 @@ path completePathToFile(const path& p,const path& base,const std::string& ext,bo
   // complete path
   if (!result.is_complete()) {
     try {
-      if (!base.empty()) { result = boost::filesystem::complete(result,base); }
-      else { result = boost::filesystem::complete(result); }
+      if (!base.empty()) { result = openstudio::filesystem::complete(result,base); }
+      else { result = openstudio::filesystem::complete(result); }
     }
     catch (...) {
       LOG_FREE(Info,"openstudio.completePathToFile","Unable to compete path '" << toString(p)
@@ -77,7 +77,7 @@ path completePathToFile(const path& p,const path& base,const std::string& ext,bo
   }
 
   // check that result is a file
-  if (!boost::filesystem::is_regular_file(result)) {
+  if (!openstudio::filesystem::is_regular_file(result)) {
     LOG_FREE(Info,"openstudio.completePathToFile","Path '" << toString(p)
              << "' could not be resolved to an existing file. Returning an empty path.");
     return path();
@@ -88,7 +88,7 @@ path completePathToFile(const path& p,const path& base,const std::string& ext,bo
 }
 
 std::string getFileExtension(const path& p) {
-  std::string pext = boost::filesystem::extension(p);
+  std::string pext = openstudio::filesystem::extension(p);
   if (!pext.empty()) {
     // remove '.'
     pext = std::string(++pext.begin(),pext.end());
@@ -103,7 +103,7 @@ path setFileExtension(const path& p,
 {
   path result(p);
   path wext = toPath(ext);
-  std::string pext = boost::filesystem::extension(p);
+  std::string pext = openstudio::filesystem::extension(p);
   if (!pext.empty()) {
     // remove '.' from pext
     pext = std::string(++pext.begin(),pext.end());
@@ -128,10 +128,10 @@ bool makeParentFolder(const path& p,const path& base,bool recursive) {
   // get path to last directory
   path wp(p);
   if (base.empty()) {
-    wp = boost::filesystem::complete(wp);
+    wp = openstudio::filesystem::complete(wp);
   }
   else {
-    wp = boost::filesystem::complete(wp,base);
+    wp = openstudio::filesystem::complete(wp,base);
   }
   if (wp.has_filename()) {
     wp = wp.parent_path();
@@ -139,7 +139,7 @@ bool makeParentFolder(const path& p,const path& base,bool recursive) {
 
   // make one or more directories as needed and as directed by recursive
   bool result = true;
-  if (boost::filesystem::is_directory(wp)) {
+  if (openstudio::filesystem::is_directory(wp)) {
     return result;
   }
   else if (recursive) {
@@ -176,8 +176,8 @@ path relativePath(const path& p,const path& base) {
   }
   // p is not an extension of base, try to complete, then return p
   if (!((wBaseIt == wBaseEnd) || (toString(*wBaseIt) == "."))) { 
-    path completeP = boost::filesystem::complete(p);
-    path completeBase = boost::filesystem::complete(base);
+    path completeP = openstudio::filesystem::complete(p);
+    path completeBase = openstudio::filesystem::complete(base);
     if ((completeP != wp) || (completeBase != wBase)) { 
       LOG_FREE(Debug,"openstudio.utilities.core","Path '" << toString(p) 
         << "' does not extend base '" << toString(base) 
@@ -201,7 +201,7 @@ path relativePath(const path& p,const path& base) {
 }
 
 path completeAndNormalize(const path& p) {
-  path temp = boost::filesystem::system_complete(p);
+  path temp = openstudio::filesystem::system_complete(p);
   if (temp.empty() && !p.empty()) {
     temp = p;
   }
@@ -209,7 +209,7 @@ path completeAndNormalize(const path& p) {
 
   for(openstudio::path::iterator it=temp.begin(); it!=temp.end(); ++it) {
     if (*it == toPath("..")) {
-      if (boost::filesystem::is_symlink(result) || (result.filename() == toPath(".."))) {
+      if (openstudio::filesystem::is_symlink(result) || (result.filename() == toPath(".."))) {
         result /= *it;
       }
       else {
@@ -255,8 +255,8 @@ std::ostream& printPathInformation(std::ostream& os,const path& p) {
   os << "p.empty() = " << std::boolalpha << p.empty() << std::endl;
   os << "p.is_complete() = " << p.is_complete() << std::endl;
 
-  os << "boost::filesystem::complete(p) = " << toString(boost::filesystem::complete(p)) << std::endl;
-  os << "boost::filesystem::system_complete(p) = " << toString(boost::filesystem::system_complete(p)) << std::endl;
+  os << "openstudio::filesystem::complete(p) = " << toString(openstudio::filesystem::complete(p)) << std::endl;
+  os << "openstudio::filesystem::system_complete(p) = " << toString(openstudio::filesystem::system_complete(p)) << std::endl;
 
   return os;
 }

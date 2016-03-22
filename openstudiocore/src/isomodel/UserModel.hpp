@@ -24,7 +24,7 @@
 #include "EpwData.hpp"
 #include "SimModel.hpp"
 #include <boost/algorithm/string/predicate.hpp>
-#include <boost/filesystem.hpp>
+
 #include "../utilities/core/Logger.hpp"
 
 namespace openstudio {

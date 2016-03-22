@@ -582,7 +582,8 @@ void LocationView::onWeatherFileBtnClicked()
         }
       }
       
-      boost::filesystem::copy_file(epwPath, newPath, boost::filesystem::copy_option::overwrite_if_exists);
+
+      openstudio::filesystem::copy_file(epwPath, newPath, openstudio::filesystem::copy_option::overwrite_if_exists);
       
       // this can throw
       EpwFile epwFile(newPath);
@@ -599,8 +600,8 @@ void LocationView::onWeatherFileBtnClicked()
 
       if (!previousEPWPath.empty()){
         if (previousEPWPath.filename() != newPath.filename()){
-          if (boost::filesystem::exists(previousEPWPath)){
-            boost::filesystem::remove_all(previousEPWPath);
+          if (openstudio::filesystem::exists(previousEPWPath)){
+            openstudio::filesystem::remove_all(previousEPWPath);
           }
         }
       }
@@ -629,7 +630,7 @@ void LocationView::onWeatherFileBtnClicked()
 
     }catch(...){
 
-      boost::filesystem::remove_all(newPath);
+      openstudio::filesystem::remove_all(newPath);
 
       QMessageBox box(QMessageBox::Warning, "Failed To Set Weather File", QString("Failed To Set Weather File To ") + fileName, QMessageBox::Ok);
       box.setDetailedText(toQString(ss.string())); 
@@ -642,7 +643,7 @@ void LocationView::onWeatherFileBtnClicked()
           if (!previousEPWPath.empty()){
             if (previousEPWPath.filename() != weatherFilePath->filename()){
               weatherFile->remove();
-            }else if (!boost::filesystem::exists(previousEPWPath)){
+            }else if (!openstudio::filesystem::exists(previousEPWPath)){
               weatherFile->remove();
             }
           }

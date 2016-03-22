@@ -29,7 +29,7 @@
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
 #include "../utilities/core/Assert.hpp"
-#include <boost/filesystem.hpp>
+
 #include <iostream>
 #include <fstream>
 
@@ -81,10 +81,10 @@ void ScriptFolderListView::addScriptFolder(const openstudio::path &folder, const
 void ScriptFolderListView::addScriptToFolder(const openstudio::path &t_path, const openstudio::path& folder_name)
 {
   openstudio::path folder = m_rootPath / folder_name;
-  boost::filesystem::create_directories(folder);
+  openstudio::filesystem::create_directories(folder);
   openstudio::path filename = folder / t_path.filename();
   filename = iterateFileName(filename);
-  boost::filesystem::copy_file(t_path, filename, boost::filesystem::copy_option::overwrite_if_exists);
+  openstudio::filesystem::copy_file(t_path, filename, openstudio::filesystem::copy_option::overwrite_if_exists);
   
 
   ScriptsListView *lv = m_scriptsListViews[folder];
@@ -96,13 +96,13 @@ void ScriptFolderListView::addScriptToFolder(const openstudio::path &t_path, con
 
 void ScriptFolderListView::removeScript(const openstudio::path &t_path)
 {
-  boost::filesystem::remove(t_path);
+  openstudio::filesystem::remove(t_path);
 }
 
 void ScriptFolderListView::duplicateScript(const openstudio::path &t_path)
 {
   openstudio::path filename = iterateFileName(t_path);
-  boost::filesystem::copy_file(t_path, filename, boost::filesystem::copy_option::overwrite_if_exists);
+  openstudio::filesystem::copy_file(t_path, filename, openstudio::filesystem::copy_option::overwrite_if_exists);
 }
 
 void ScriptFolderListView::createEmptyScript(const openstudio::path &t_folder_name)
@@ -111,7 +111,7 @@ void ScriptFolderListView::createEmptyScript(const openstudio::path &t_folder_na
 
   // Scope for creating and closing file.
   {
-    boost::filesystem::create_directories(m_rootPath / t_folder_name);
+    openstudio::filesystem::create_directories(m_rootPath / t_folder_name);
     std::ofstream ofs(openstudio::toString(filename).c_str());
     ofs << "# Empty Script" << std::endl; 
   }
@@ -236,9 +236,9 @@ openstudio::path ScriptFolderListView::iterateFileName(const openstudio::path &t
     last = p;
     p = BuildFileName::doit(t_path.parent_path(), openstudio::toString(stem), openstudio::toString(t_path.extension()), num);
     --num;
-  } while (!boost::filesystem::exists(p) && num > -1);
+  } while (!openstudio::filesystem::exists(p) && num > -1);
 
-  if (!boost::filesystem::exists(p))
+  if (!openstudio::filesystem::exists(p))
   {
     return p;
   } else {

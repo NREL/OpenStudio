@@ -29,8 +29,8 @@ TEST_F(DataFixture, EndUses)
 {
 
   openstudio::path xmlPath = toPath("./report.xml");
-  if(boost::filesystem::exists(xmlPath)){
-    boost::filesystem::remove(xmlPath);
+  if(openstudio::filesystem::exists(xmlPath)){
+    openstudio::filesystem::remove(xmlPath);
   }
 
   EndUses endUses;
@@ -215,8 +215,8 @@ TEST_F(DataFixture, EndUses_Conversions)
 {
 
   openstudio::path xmlPath = toPath("./report.xml");
-  if(boost::filesystem::exists(xmlPath)){
-    boost::filesystem::remove(xmlPath);
+  if(openstudio::filesystem::exists(xmlPath)){
+    openstudio::filesystem::remove(xmlPath);
   }
 
   EndUses endUses;
