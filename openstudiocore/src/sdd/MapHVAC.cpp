@@ -198,7 +198,6 @@
 #include "../utilities/geometry/Point3d.hpp"
 #include "../utilities/geometry/BoundingBox.hpp"
 
-#include <QFile>
 #include <QDomDocument>
 #include <QDomElement>
 #include <QStringList>
