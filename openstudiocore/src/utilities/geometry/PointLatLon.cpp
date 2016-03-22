@@ -20,9 +20,9 @@
 #include "PointLatLon.hpp"
 #include "Point3d.hpp"
 
-#include <GeographicLib/Geodesic.hpp>
-#include <GeographicLib/LocalCartesian.hpp>
-#include <GeographicLib/UTMUPS.hpp>
+#include "../../GeographicLib/Geodesic.hpp"
+#include "../../GeographicLib/LocalCartesian.hpp"
+#include "../../GeographicLib/UTMUPS.hpp"
 
 namespace openstudio{
 
