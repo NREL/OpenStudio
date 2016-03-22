@@ -425,6 +425,9 @@ set(osversion_resources_src
   osversion/1_10_5/OpenStudio.idd
   osversion/1_10_5/example.osm
   osversion/1_10_5/example.osc
+  osversion/1_10_6/OpenStudio.idd
+  osversion/1_10_6/example.osm
+  osversion/1_10_6/example.osc
   osversion/unknown.osc
 )
 
