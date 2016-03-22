@@ -29,7 +29,6 @@
 #include <QDir>
 #include <QDomDocument>
 #include <QDomElement>
-#include <QFile>
 #include <QMessageBox>
 #include <QMutex>
 #include <QNetworkAccessManager>
@@ -570,8 +569,10 @@ namespace openstudio{
       return false;
     }
 
-    m_downloadFile = std::shared_ptr<QFile>(new QFile(QDir::tempPath().append(toQString("/"+uid+".bcl"))));
-    if (!m_downloadFile->open(QIODevice::WriteOnly | QIODevice::Truncate)){
+    m_downloadFile 
+      = std::make_shared<openstudio::ofstream>(openstudio::filesystem::temp_directory_path() / openstudio::toPath("/"+uid+".bcl"), 
+                                               std::ios_base::out | std::ios_base::trunc | std::ios_base::binary );
+    if (!m_downloadFile->is_open()) {
       m_mutex->unlock();
       return false;
     }
@@ -960,7 +961,8 @@ namespace openstudio{
   void RemoteBCL::downloadData()
   {
     OS_ASSERT(m_downloadReply);
-    m_downloadFile->write(m_downloadReply->readAll());
+    const auto data = m_downloadReply->readAll();
+    m_downloadFile->write(data.constData(), data.size());
   }
 
   void RemoteBCL::onDownloadComplete(QNetworkReply* reply)
@@ -989,7 +991,7 @@ namespace openstudio{
 
         openstudio::UnzipFile uf(src);
         std::vector<openstudio::path> createdFiles = uf.extractAllFiles(tempDest);
-        QFile::remove(toQString(src));
+        openstudio::filesystem::remove(src);
 
         // search for component.xml or measure.xml file
         boost::optional<openstudio::path> xmlPath;
@@ -1011,9 +1013,9 @@ namespace openstudio{
         if (xmlPath){
           path src = xmlPath->parent_path();
           path dest = src.parent_path();
-          QFile::remove(toQString(dest / toPath("DISCLAIMER.txt")));
-          QFile::remove(toQString(dest / toPath("README.txt")));
-          QFile::remove(toQString(dest / toPath("output.xml")));
+          openstudio::filesystem::remove(dest / toPath("DISCLAIMER.txt"));
+          openstudio::filesystem::remove(dest / toPath("README.txt"));
+          openstudio::filesystem::remove(dest / toPath("output.xml"));
           copyDirectory(src, dest);
           removeDirectory(src);
 

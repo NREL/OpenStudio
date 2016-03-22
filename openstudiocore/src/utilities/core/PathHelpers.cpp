@@ -23,8 +23,6 @@
 
 
 #include <QDir>
-#include <QFile>
-#include <QFileInfo>
 #include <QRegularExpression>
 
 #ifdef Q_OS_WIN
@@ -262,61 +260,31 @@ std::ostream& printPathInformation(std::ostream& os,const path& p) {
 }
 
 bool removeDirectory(const path& dirName) {
-
-  bool result = true;
-  QDir dir(toQString(dirName));
-
-  if (dir.exists()) 
-  {
-    for (const QFileInfo& info : dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden  | QDir::AllDirs | QDir::Files, QDir::DirsFirst))
-    {
-      if (info.isDir()) 
-      {
-        result = removeDirectory(toPath(info.absoluteFilePath()));
-      }
-      else 
-      {
-        result = QFile::remove(info.absoluteFilePath());
-      }
-
-      if (!result) 
-      {
-        return result;
-      }
-    }
-    result = QDir().rmdir(toQString(dirName));
+  try {
+    openstudio::filesystem::remove_directories(dirName);
+    return true;
+  } catch (const std::exception &) {
+    return false
   }
-
-  return result;
 }
 
 bool copyDirectory(const path& source, const path& destination) {
-
-  if (!QDir().mkpath(toQString(destination)))
-  {
+  try {
+    openstudio::filesystem::create_directories(destination);
+  } catch (const std::exception &) {
     return false;
   }
 
-  QDir srcDir(toQString(source));
-
-  for (const QFileInfo &info : srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot))
+  // note : we are not using openstudio::filesystem::copy to copy recursively
+  // because that copies the entire directory into the destination, not just the 
+  // contents of the directory
+  for (const auto &file : openstudio::filesystem::recursive_file_list(source))
   {
-    QString srcItemPath = toQString(source) + "/" + info.fileName();
-    QString dstItemPath = toQString(destination) + "/" + info.fileName();
-    if (info.isDir()) 
-    {
-      if (!copyDirectory(toPath(srcItemPath), toPath(dstItemPath)))
-      {
-        return false;
-      }
-    } 
-    else if (info.isFile()) 
-    {
-      if (!QFile::copy(srcItemPath, dstItemPath))
-      {
-        return false;
-      }
-    } 
+    try {
+      openstudio::filesystem::copy_file(source / file, destination / file);
+    } catch (const std::exception &) {
+      return false;
+    }
   }
 
   return true;
@@ -324,15 +292,15 @@ bool copyDirectory(const path& source, const path& destination) {
 
 bool isEmptyDirectory(const path& dirName)
 {
-  if (!QFile::exists(toQString(dirName))){
-    return false;
-  }
-  if (!QFileInfo(toQString(dirName)).isDir()){
+  if (!openstudio::filesystem::exists(dirName)) {
     return false;
   }
 
-  QDir dir(toQString(dirName));
-  return dir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot).empty();
+  if (!openstudio::filesystem::is_directory(dirName)) {
+    return false;
+  }
+
+  return openstudio::filesystem::is_empty(dirName);
 }
 
 

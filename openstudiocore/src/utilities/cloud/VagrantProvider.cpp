@@ -30,7 +30,6 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QMutex>
-#include <QFile>
 #include <QDir>
 
 namespace openstudio{
@@ -153,9 +152,9 @@ namespace openstudio{
       }
 
       if (overwriteExisting || m_password.empty()){
-        QFile file(QDir::homePath() + "/.ssh/vagrant");
-        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-          m_password = QString(file.readAll()).toStdString();
+        openstudio::filesystem::ifstream file(openstudio::toPath(QDir::homePath() + "/.ssh/vagrant"), std::ios_base::binary);
+        if (file.is_open()) {
+          m_password = openstudio::filesystem::read_all_as_string(file);
         }
       }
 
@@ -224,11 +223,12 @@ namespace openstudio{
         settings.setValue("username", toQString(m_username));
       }
 
-      QFile file(QDir::homePath() + "/.ssh/vagrant");
-      if (overwriteExisting || !file.exists()){
+      const openstudio::path file_path = openstudio::toPath(QDir::homePath() + "/.ssh/vagrant");
+      if (overwriteExisting || !openstudio::filesystem::exists(file_path)){
         if (QDir::home().exists(".ssh") || QDir::home().mkdir(".ssh")) {
-          if (file.open(QIODevice::WriteOnly)) {
-            file.write(m_password.c_str());
+          openstudio::filesystem::ofstream file(file_path, std::ios_base::binary);
+          if (file.is_open()) {
+            file << m_password;
             file.close();
           }
         }

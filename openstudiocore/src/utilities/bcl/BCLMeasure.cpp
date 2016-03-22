@@ -34,7 +34,6 @@
 
 #include <QDir>
 #include <QDomDocument>
-#include <QFile>
 #include <QSettings>
 #include <QRegularExpression>
 
@@ -63,20 +62,16 @@ namespace openstudio{
 
     openstudio::path xmlPath = openstudio::filesystem::system_complete(m_bclXML.path());
 
-    QDir srcDir(toQString(source));
-    
-    for (const QFileInfo &info : srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot))
+    for (const auto &path : openstudio::filesystem::directory_files(source))
     {
-      QString srcItemPath = toQString(source) + "/" + info.fileName();
-      QString dstItemPath = toQString(destination) + "/" + info.fileName();
-      if (info.isFile())
+      const auto srcItemPath = source / path;
+      const auto dstItemPath = destination / path;
+
+      if (m_bclXML.hasFile(srcItemPath) || (xmlPath == openstudio::filesystem::system_complete(srcItemPath)))
       {
-        if (m_bclXML.hasFile(toPath(srcItemPath)) || (xmlPath == openstudio::filesystem::system_complete(toPath(srcItemPath))))
+        if (!openstudio::filesystem::copy_file(srcItemPath, dstItemPath))
         {
-          if (!QFile::copy(srcItemPath, dstItemPath))
-          {
-            return false;
-          }
+          return false;
         }
       }
     }
@@ -170,10 +165,9 @@ namespace openstudio{
 
     QString measureString;
     if (!measureTemplate.isEmpty()){
-      QFile file(measureTemplate);
-      if(file.open(QFile::ReadOnly)){
-        QTextStream docIn(&file);
-        measureString = docIn.readAll();
+      openstudio::filesystem::ifstream file(openstudio::toPath(measureTemplate), std::ios_base::binary);
+      if(file.is_open()){
+        measureString = openstudio::filesystem::read_file_as_QByteArray(file);
         measureString.replace(templateClassName, toQString(className));
         measureString.replace(templateName, toQString(name));
         measureString.replace(templateModelerDescription, toQString(modelerDescription)); // put first as this includes description tag
@@ -184,10 +178,9 @@ namespace openstudio{
 
     QString testString;
     if (!testTemplate.isEmpty()){
-      QFile file(testTemplate);
-      if(file.open(QFile::ReadOnly)){
-        QTextStream docIn(&file);
-        testString = docIn.readAll();
+      openstudio::filesystem::ifstream file(openstudio::toPath(testTemplate), std::ios_base::binary);
+      if(file.is_open()){
+        testString = openstudio::filesystem::read_file_as_QByteArray(file);
         testString.replace(templateClassName, toQString(className));
         file.close();
       }
@@ -195,20 +188,18 @@ namespace openstudio{
 
     QString testOSMString;
     if (!testOSM.isEmpty()){
-      QFile file(testOSM);
-      if(file.open(QFile::ReadOnly)){
-        QTextStream docIn(&file);
-        testOSMString = docIn.readAll();
+      openstudio::filesystem::ifstream file(openstudio::toPath(testOSM), std::ios_base::binary);
+      if(file.is_open()){
+        testOSMString = openstudio::filesystem::read_file_as_QByteArray(file);
         file.close();
       }
     }
 
     QString resourceFileString;
     if (!resourceFile.isEmpty()){
-      QFile file(resourceFile);
-      if(file.open(QFile::ReadOnly)){
-        QTextStream docIn(&file);
-        resourceFileString = docIn.readAll();
+      openstudio::filesystem::ifstream file(openstudio::toPath(resourceFileString), std::ios_base::binary);
+      if(file.is_open()){
+        resourceFileString = openstudio::filesystem::read_file_as_QByteArray(file);
         file.close();
       }
     }
@@ -220,13 +211,11 @@ namespace openstudio{
 
     // write measure.rb
     {
-      QFile file(toQString(measureScriptPath));
-      bool opened = file.open(QIODevice::WriteOnly);
-      if (!opened){
+      openstudio::filesystem::ofstream file(measureScriptPath, std::ios_base::binary);
+      if (!file.is_open()){
         LOG_AND_THROW("Cannot write measure.rb to '" << toString(measureScriptPath) << "'");
       }
-      QTextStream textStream(&file);
-      textStream << measureString;
+      openstudio::filesystem::write(file, measureString);
       file.close();
 
       BCLFileReference measureScriptFileReference(measureScriptPath, true);
@@ -237,13 +226,11 @@ namespace openstudio{
 
     // write test
     {
-      QFile file(toQString(measureTestPath));
-      bool opened = file.open(QIODevice::WriteOnly);
-      if (!opened){
+      openstudio::filesystem::ofstream file(measureTestPath, std::ios_base::binary);
+      if (!file.is_open()){
         LOG_AND_THROW("Cannot write test file to '" << toString(measureTestPath) << "'");
       }
-      QTextStream textStream(&file);
-      textStream << testString;
+      openstudio::filesystem::write(file, testString);
       file.close();
 
       BCLFileReference measureTestFileReference(measureTestPath, true);
@@ -254,13 +241,11 @@ namespace openstudio{
     // write test osm
     { 
       if (!testOSMString.isEmpty()){
-        QFile file(toQString(testOSMPath));
-        bool opened = file.open(QIODevice::WriteOnly);
-        if (!opened){
+        openstudio::filesystem::ofstream file(testOSMPath, std::ios_base::binary);
+        if (!file.is_open()){
           LOG_AND_THROW("Cannot write test osm file to '" << toString(testOSMPath) << "'");
         }
-        QTextStream textStream(&file);
-        textStream << testOSMString;
+        openstudio::filesystem::write(textStream, testOSMString);
         file.close();
 
         BCLFileReference measureTestOSMFileReference(testOSMPath, true);
@@ -272,13 +257,11 @@ namespace openstudio{
     // write resource
     {
       if (!resourceFileString.isEmpty()){
-        QFile file(toQString(resourceFilePath));
-        bool opened = file.open(QIODevice::WriteOnly);
-        if (!opened){
+        openstudio::filesystem::ofstream file(resourceFilePath, std::ios_base::binary);
+        if (!file.is_open()){
           LOG_AND_THROW("Cannot write resource file to '" << toString(resourceFilePath) << "'");
         }
-        QTextStream textStream(&file);
-        textStream << resourceFileString;
+        openstudio::filesystem::write(textStream, resourceFileString);
         file.close();
 
         BCLFileReference resourceFileReference(resourceFilePath, true);
@@ -839,16 +822,15 @@ namespace openstudio{
     if (path && exists(*path)){
 
       QString fileString;
-      QFile file(toQString(*path));
-      if (file.open(QFile::ReadOnly)){
+      openstudio::filesystem::ifstream file(*path, std::ios_base::binary);
+      if (file.is_open()){
 
         QRegularExpression::PatternOptions opts = QRegularExpression::DotMatchesEverythingOption | QRegularExpression::MultilineOption;
         QString nameFunction = "\\1def name\n\\1  return \" " + toQString(name) + "\"\n\\1end";
         QString descriptionFunction = "\\1def description\n\\1  return \"" + toQString(description) + "\"\n\\1end";
         QString modelerDescriptionFunction = "\\1def modeler_description\n\\1  return \"" + toQString(modelerDescription) + "\"\n\\1end";
 
-        QTextStream docIn(&file);
-        fileString = docIn.readAll();
+        fileString = openstudio::filesystem::read_as_QByteArray(file);
 
         if (oldMeasureType != newMeasureType){
           fileString.replace(toQString(oldMeasureType.valueName()), toQString(newMeasureType.valueName()));
@@ -865,9 +847,9 @@ namespace openstudio{
         fileString.replace(QRegularExpression("^(\\s+)def modeler_description(.*?)end", opts), modelerDescriptionFunction);
         file.close();
 
-        if (file.open(QIODevice::WriteOnly)){
-          QTextStream textStream(&file);
-          textStream << fileString;
+        openstudio::filesystem::ofstream ofile(*path, std::ios_base::binary);
+        if (ofile.is_open()){
+          openstudio::filesystem::write(file, fileString);
           file.close();
           return true;
         }
@@ -901,20 +883,20 @@ namespace openstudio{
           }
         }
 
-        if (QFile::exists(newPath)) {
+        if (openstudio::filesystem::exists(newPath)) {
           // somehow this file already exists, don't clobber it
           newPath = oldPath;
         }else{
-          QFile::copy(oldPath, newPath);
-          QFile::remove(oldPath);
+          openstudio::filesystem::copy_file(openstudio::toPath(oldPath), openstudio::toPath(newPath));
+          openstudio::filesystem::remove(openstudio::toPath(oldPath));
         }
         
         QString fileString;
-        QFile file(newPath);
-        if (file.open(QFile::ReadOnly)){
+        openstudio::filesystem::ifstream file(openstudio::toPath(newPath), std::ios_base::binary);
+        if (file.is_open()){
 
           QTextStream docIn(&file);
-          fileString = docIn.readAll();
+          fileString = openstudio::filesystem::read_as_QByteArray(file);
           if (!oldClassName.empty() && !newClassName.empty() && oldClassName != newClassName){
             // DLM: might also want to check that oldClassName is greater than 3 characters long?
             // should we be doing a more selective replace (like require leading space and trailing space, ., or :)?
@@ -922,10 +904,10 @@ namespace openstudio{
           }
           file.close();
 
-          if (file.open(QIODevice::WriteOnly)){
-            QTextStream textStream(&file);
-            textStream << fileString;
-            file.close();
+          openstudio::filesystem::ofstream file2(openstudio::toPath(newPath), std::ios_base::binary);
+          if (file2.is_open()){
+            openstudio::filesystem::write(file2, fileString);
+            file2.close();
 
           } else {
             result = false;
@@ -985,9 +967,9 @@ namespace openstudio{
     // look for new files and add them
     openstudio::path srcDir = m_directory / "tests";
     openstudio::path ignoreDir = srcDir / "output";
-    for (const QFileInfo &info : QDir(toQString(srcDir)).entryInfoList(QDir::Files))
+    for (const auto &file : openstudio::filesystem::directory_files(srcDir))
     {
-      openstudio::path srcItemPath = srcDir / toPath(info.fileName());
+      openstudio::path srcItemPath = srcDir / file;
       openstudio::path parentPath = srcItemPath.parent_path();
       bool ignore = false;
       while (!parentPath.empty()){
@@ -1011,9 +993,9 @@ namespace openstudio{
     }
 
     srcDir = m_directory / "resources";
-    for (const QFileInfo &info : QDir(toQString(srcDir)).entryInfoList(QDir::Files))
+    for (const auto &file : openstudio::filesystem::directory_files(srcDir))
     {
-      openstudio::path srcItemPath = srcDir / toPath(info.fileName());
+      openstudio::path srcItemPath = srcDir / info;
       if (!m_bclXML.hasFile(srcItemPath)){
         BCLFileReference file(srcItemPath, true);
         file.setUsageType("resource");
@@ -1073,7 +1055,7 @@ namespace openstudio{
 
   boost::optional<BCLMeasure> BCLMeasure::clone(const openstudio::path& newDir) const
   {
-    if (QFile::exists(toQString(newDir))){
+    if (openstudio::filesystem::exists(newDir)){
       if (!isEmptyDirectory(newDir)){
         return boost::none;
       }

@@ -88,15 +88,10 @@ namespace openstudio {
     // following conventions in openstudio::copyDirectory
     QDir srcDir(toQString(localDir));
 
-    for (const QFileInfo& info : srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot)) {
-      QString srcItemPath = toQString(localDir) + "/" + info.fileName();
-      QString dstItemPath = toQString(destinationDir) + "/" + info.fileName();
-      if (info.isDir()) {
-        addDirectory(toPath(srcItemPath),toPath(dstItemPath));
-      }
-      else if (info.isFile()) {
-        addFile(toPath(srcItemPath),toPath(dstItemPath));
-      }
+    for (const auto& file: openstudio::filesystem::recursive_directory_files(localDir)) {
+      QString srcItemPath = toQString(localDir) + "/" + file;
+      QString dstItemPath = toQString(destinationDir) + "/" + file;
+      addFile(toPath(srcItemPath),toPath(dstItemPath));
     }
   }
 

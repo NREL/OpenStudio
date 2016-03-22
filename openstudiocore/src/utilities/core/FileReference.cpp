@@ -25,7 +25,6 @@
 #include "../time/DateTime.hpp"
 
 #include <QDateTime>
-#include <QFileInfo>
 
 namespace openstudio {
 
@@ -194,14 +193,11 @@ bool FileReference::update(const openstudio::path& searchDirectory,bool lastOnly
   makePathAbsolute(searchDirectory);
   openstudio::path p = path();
   if (openstudio::filesystem::exists(p)) {
-    QFileInfo fileInfo(toQString(p));
-    OS_ASSERT(fileInfo.exists());
-
     if (!lastOnly) {
-      m_timestampCreate = toDateTime(fileInfo.created());
+      m_timestampCreate = toDateTime(openstudio::filesystem::create_time_as_t_time(p));
     }
 
-    m_timestampLast = toDateTime(fileInfo.lastModified());
+    m_timestampLast = toDateTime(openstudio::filesystem::last_write_time_as_t_time(p));
     m_checksumLast = checksum(p);
     m_versionUUID = createUUID();
     return true;

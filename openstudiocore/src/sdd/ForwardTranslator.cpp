@@ -141,7 +141,6 @@
 #include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/core/Assert.hpp"
 
-#include <QFile>
 #include <QDomDocument>
 #include <QDomElement>
 #include <QThread>
@@ -194,11 +193,9 @@ namespace sdd {
       create_directory(path.parent_path());
     }
 
-    QFile file(toQString(path));
-    if (file.open(QFile::WriteOnly)){
-      QTextStream textStream(&file);
-      textStream.setCodec("UTF-8");
-      textStream << doc->toString(2);
+    openstudio::filesystem::ofstream file(path, std::ios_base::binary);
+    if (file.is_open()){
+      file << openstudio::toString(doc->toString(2));
       file.close();
       return true;
     }

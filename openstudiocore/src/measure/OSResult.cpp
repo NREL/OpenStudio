@@ -23,7 +23,6 @@
 
 
 
-#include <QFile>
 #include <QDomDocument>
 #include <QDomElement>
 
@@ -171,10 +170,9 @@ boost::optional<OSResult> OSResult::load(const openstudio::path& p) {
   if (openstudio::filesystem::exists(p)) {
     try {
       // load xml file
-      QFile file(toQString(p));
-      file.open(QFile::ReadOnly);
+      openstudio::filesystem::ifstream file(p, std::ios_base::binary);
       QDomDocument qDomDocument;
-      qDomDocument.setContent(&file);
+      qDomDocument.setContent(openstudio::filesystem::read_all_as_QByteArray(file));
       file.close();
 
       // de-serialize
@@ -200,10 +198,8 @@ bool OSResult::save(const openstudio::path& p, bool overwrite) const {
   bool result(false);
   if (overwrite || !openstudio::filesystem::exists(p)) {
     try {
-      QFile file(toQString(p));
-      file.open(QFile::WriteOnly);
-      QTextStream out(&file);
-      toXml().save(out, 2);
+      openstudio::filesystem::ofstream file(p, std::ios_base::binary | std::ios_base::trunc);
+      file << openstudio::toString(toXml().toString(2));
       file.close();
       result = true;
     }

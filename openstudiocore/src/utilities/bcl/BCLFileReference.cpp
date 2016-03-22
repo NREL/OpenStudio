@@ -22,7 +22,6 @@
 #include "../core/String.hpp"
 #include "../core/System.hpp"
 
-#include <QFile>
 #include <QDomDocument>
 #include <QDomElement>
 

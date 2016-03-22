@@ -68,8 +68,6 @@
 
 #include "../utilities/idd/IddEnums.hpp"
 
-#include <QFile>
-#include <QTextStream>
 #include <QThread>
 
 #include <sstream>
@@ -3481,15 +3479,9 @@ IdfObject ForwardTranslator::createRegisterAndNameIdfObject(const IddObjectType&
 }
 
 boost::optional<IdfFile> ForwardTranslator::findIdfFile(const std::string& path) {
-  QFile file(QString().fromStdString(path));
-  bool opened = file.open(QIODevice::ReadOnly | QIODevice::Text);
-  OS_ASSERT(opened);
-
-  QTextStream in(&file);
-  std::stringstream ss;
-  ss << in.readAll().toStdString();
-
-  return IdfFile::load(ss, IddFileType::EnergyPlus);
+  openstudio::filesystem::ifstream file(path);
+  OS_ASSERT(file.is_open());
+  return IdfFile::load(openstudio::filesystem::read_file_as_string(file), IddFileType::EnergyPlus);
 }
 
 bool ForwardTranslator::isHVACComponentWithinUnitary(const model::HVACComponent& hvacComponent) const

@@ -36,8 +36,6 @@ class QTextStream;
 namespace openstudio {
 
 
-/** Typedef openstudio::filesystem::path to openstudio::path. */
-typedef openstudio::filesystem::path path;
 
 // allow wpath to be written to cout on Windows
 UTILITIES_API ::std::ostream& operator<<(::std::ostream& os, const path& p);

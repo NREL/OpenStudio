@@ -51,7 +51,6 @@
 #include <utilities/idd/IddEnums.hxx>
 
 
-#include <QFile>
 #include <QDomDocument>
 #include <QDomElement>
 #include <QThread>
@@ -92,10 +91,10 @@ namespace gbxml {
 
     if (openstudio::filesystem::exists(path)){
 
-      QFile file(toQString(path));
-      if (file.open(QFile::ReadOnly)){
+      openstudio::filesystem::ifstream file(path, std::ios_base::binary);
+      if (file.is_open()) {
         QDomDocument doc;
-        doc.setContent(&file);
+        doc.setContent(openstudio::filesystem::read_all_as_QByteArray(file));
         file.close();
 
         result = this->convert(doc);

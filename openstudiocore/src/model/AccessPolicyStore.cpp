@@ -283,18 +283,22 @@ namespace openstudio
       return *s_instance;
     }
 
-    bool AccessPolicyStore::loadFile( QFile& file)
+    bool AccessPolicyStore::loadFile( openstudio::filesystem::ifstream& file)
     {
       QXmlSimpleReader xmlReader;
       AccessParser ap;
       xmlReader.setContentHandler( &ap );
 
-      if(!file.exists())
+      if(!file.is_open())
       {
-        LOG(Debug,"file:"<<file.fileName().toStdString()<<" was not found\n");
+        LOG(Debug,"file was not found\n");
         return false;
       }
-      auto source = new QXmlInputSource( &file );
+
+      //JMT 2016-03-22 this looks like a memory leak to me. I don't see an assigned owner
+      //               in Qt nor a delete
+      auto source = new QXmlInputSource( );
+      source->setData( openstudio::filesystem::read_all_as_QByteArray(file) );
       //LER:: add error handler
       if(!xmlReader.parse(source))
       {
@@ -307,7 +311,7 @@ namespace openstudio
 
     bool AccessPolicyStore::loadFile(const openstudio::path& path)
     {
-      QFile file(toQString(path));
+      openstudio::filesystem::ifstream file(path);
       return loadFile(file);
     }
 

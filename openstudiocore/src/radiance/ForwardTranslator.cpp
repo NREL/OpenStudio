@@ -1646,13 +1646,11 @@ namespace radiance {
 										}
 
 										// write shade BSDF
-										QFile outFile(toQString(shadeBSDFPath));
-										bool opened = outFile.open(QIODevice::WriteOnly);
-										if (!opened){
+                                                                                openstudio::filesystem::ofstream outfile(shadeBSDFPath);
+										if (!outFile.is_open()){
 											LOG_AND_THROW("Cannot write file to '" << toString(shadeBSDFPath) << "'");
 										}
-										QTextStream textStream(&outFile);
-										textStream << defaultFile;
+                                                                                openstudio::filesystem::write(file, defaultFile);
 										outFile.close();
 
 									}
@@ -1679,13 +1677,11 @@ namespace radiance {
 									}
 
 									// write shade BSDF
-									QFile outFileAir(toQString(airBSDFPath));
-									bool opened = outFileAir.open(QIODevice::WriteOnly);
-									if (!opened){
+                                                                        openstudio::filesystem::ofstream outFileAir(airBSDPath);
+									if (!outFileAir.is_open()){
 										LOG_AND_THROW("Cannot write file to '" << toString(airBSDFPath) << "'");
 									}
-									QTextStream textStream2(&outFileAir);
-									textStream2 << defaultFile;
+                                                                        file << openstudio::toString(defaultFile);
 									outFileAir.close();
 
 								}

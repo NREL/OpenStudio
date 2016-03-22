@@ -27,7 +27,6 @@
 #include "../units/QuantityConverter.hpp"
 
 #include <QStringList>
-#include <QFile>
 #include <QTextStream>
 
 #include <cmath>
@@ -2263,26 +2262,24 @@ bool EpwFile::translateToWth(openstudio::path path, std::string description)
     return false;
   }
 
-  QFile fp(openstudio::toQString(path));
-  if(!fp.open(QFile::WriteOnly)) {
+  openstudio::filesystem::ofstream fp(path, std::ios_base::binary);
+  if(!fp.is_open()) {
     LOG(Error, "Failed to open file '" + openstudio::toString(path) + "'");
     return false;
   }
 
-  QTextStream stream(&fp);
-
-  stream << "WeatherFile ContamW 2.0\n";
-  stream << openstudio::toQString(description) << "\n";
-  stream << QString("%1/%2\t!start date\n").arg(openstudio::month(startDate().monthOfYear())).arg(startDate().dayOfMonth());
-  stream << QString("%1/%2\t!end date\n").arg(openstudio::month(endDate().monthOfYear())).arg(endDate().dayOfMonth());
-  stream << "!Date\tDofW\tDtype\tDST\tTgrnd [K]\n";
+  fp << "WeatherFile ContamW 2.0\n";
+  fp << description << "\n";
+  fp << toString(QString("%1/%2\t!start date\n").arg(openstudio::month(startDate().monthOfYear())).arg(startDate().dayOfMonth()));
+  fp << toString(QString("%1/%2\t!end date\n").arg(openstudio::month(endDate().monthOfYear())).arg(endDate().dayOfMonth()));
+  fp << "!Date\tDofW\tDtype\tDST\tTgrnd [K]\n";
   openstudio::Time delta(1,0);
   int dayofweek = startDayOfWeek().value()+1;
   for(openstudio::Date current=startDate();current<=endDate();current += delta) {
-    stream << QString("%1/%2\t%3\t%3\t0\t283.15\n")
+    fp << toString(QString("%1/%2\t%3\t%3\t0\t283.15\n")
       .arg(openstudio::month(current.monthOfYear()))
       .arg(current.dayOfMonth())
-      .arg(dayofweek);
+      .arg(dayofweek));
     dayofweek++;
     if(dayofweek > 7) {
       dayofweek=1;

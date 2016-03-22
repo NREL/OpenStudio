@@ -27,7 +27,6 @@
 
 #include <OpenStudio.hxx>
 
-#include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
 
@@ -43,11 +42,11 @@ bool saveJSON(const QVariant& json, openstudio::path p, bool overwrite) {
   // Ensures file extension is .json. Warns if there is a mismatch.
   p = setFileExtension(p,"json",true);
 
-  // Use QFile and QIODevice serialize
-  QFile file(toQString(p));
-  if (file.open(QFile::WriteOnly)) {
+  openstudio::filesystem::ofstream file(p, std::ios_base::binary);
+  if (file.is_open()) {
     QJsonDocument doc = QJsonDocument::fromVariant(json);
-    file.write(doc.toJson());
+    const auto json = doc.toJson();
+    file.write(json.constData(), json.size());
     file.close();
 
     return true;
@@ -64,10 +63,10 @@ std::string toJSON(const QVariant& json) {
 }
 
 QVariant loadJSON(const openstudio::path& p) {
-  QFile file(toQString(p));
-  if (file.open(QFile::ReadOnly)) {
+  openstudio::filesystem::ifstream file(p, std::ios_base::binary);
+  if (file.is_open()) {
     QJsonParseError err;
-    QJsonDocument doc = QJsonDocument::fromJson(file.readAll(), &err);
+    QJsonDocument doc = QJsonDocument::fromJson(openstudio::filesystem::read_file_as_QByteArray(file), &err);
     file.close();
     if (err.error) {
       LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON: " + toString(err.errorString()));

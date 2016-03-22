@@ -19,7 +19,6 @@
 
 #include "SimFile.hpp"
 
-#include <QFile>
 #include <QStringList>
 
 namespace openstudio {
@@ -77,17 +76,18 @@ bool SimFile::readLfr(QString fileName)
   clearLfr();
   QVector<QString> day;
   QVector<QString> time;
-  QFile file(fileName);
-  if(!file.open(QFile::ReadOnly))
+  std::ifstream file(openstudio::toPath(fileName));
+  if(!file.is_open())
   {
     LOG(Error,"Failed to open LFR file '" << fileName.toStdString() << "'");
     return false;
   }
-  QTextStream textStream(&file);
   QMap<int,int> nrMap;
   // Read the header
-  QString header = textStream.readLine();
-  if(header.isNull())
+  std::string headerstr;
+  std::getline(file, headerstr);
+  QString header = openstudio::toQString(headerstr);
+  if(header.isNull() || header.empty())
   {
     LOG(Error,"No data in LFR file '" << fileName.toStdString() << "'");
     return false;
@@ -100,9 +100,11 @@ bool SimFile::readLfr(QString fileName)
     return false;
   }
   // Read the data
-  QString line;
-  while(!(line=textStream.readLine()).isNull())
+  while(file.good())
   {
+    std::string linestr;
+    std::getline(file, linestr);
+    QString line = openstudio::toQString(linestr);
     QStringList row = line.split('\t');
     if(row.size() != ncols)
     {
@@ -196,17 +198,19 @@ bool SimFile::readNfr(QString fileName)
   clearNfr();
   QVector<QString> day;
   QVector<QString> time;
-  QFile file(fileName);
-  if(!file.open(QFile::ReadOnly))
+  openstudio::filesystem::ifstream file(openstudio::topath(fileName));
+  if(file.is_open())
   {
     LOG(Error,"Failed to open NFR file '" << fileName.toStdString() << "'");
     return false;
   }
-  QTextStream textStream(&file);
+
   QMap<int,int> nrMap;
   // Read the header
-  QString header = textStream.readLine();
-  if(header.isNull())
+  std::string headerstr;
+  std::getline(file, headerstr);
+  QString header = openstudio::toQString(headerstr);
+  if(header.isNull() || header.empty())
   {
     LOG(Error,"No data in LFR file '" << fileName.toStdString() << "'");
     return false;
@@ -219,9 +223,11 @@ bool SimFile::readNfr(QString fileName)
     return false;
   }
   // Read the data
-  QString line;
   while(!(line=textStream.readLine()).isNull())
   {
+    std::string linestr;
+    QString line;
+
     QStringList row = line.split('\t');
     if(row.size() != ncols && row.size() != ncols+2)
     {

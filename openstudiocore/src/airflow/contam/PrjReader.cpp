@@ -26,9 +26,9 @@
 namespace openstudio {
 namespace contam {
 
-Reader::Reader(QFile *file) : m_lineNumber(0)
+Reader::Reader( openstudio::filesystem::ifstream &file ) : m_lineNumber(0)
 {
-  m_stream.setDevice(file);
+  m_stream.setDevice( openstudio::filesystem::read_all_as_QByteArray(file) );
 }
 
 Reader::Reader(QString *string, int starting) : m_lineNumber(starting)

@@ -22,7 +22,6 @@
 #include "../data/Attribute.hpp"
 
 #include <QDomDocument>
-#include <QFile>
 
 namespace openstudio{
 
@@ -37,10 +36,7 @@ namespace openstudio{
     m_directory(dir)
   {
     QDomDocument component("component.xml");
-    QFile file(toQString(m_directory+"/component.xml"));
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-    component.setContent(&file);
-    file.close();
+    component.setContent(openstudio::read_file_as_QByteArray(openstudio::toPath(m_directory) / "component.xml"));
 
     QDomElement comp = component.firstChildElement("component");
     m_name = comp.firstChildElement("name").firstChild().nodeValue().replace("_", " ")

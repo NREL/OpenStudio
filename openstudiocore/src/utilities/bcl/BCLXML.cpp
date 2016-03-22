@@ -31,7 +31,6 @@
 #include "../time/DateTime.hpp"
 
 #include <QDomDocument>
-#include <QFile>
 
 namespace openstudio{
 
@@ -51,9 +50,8 @@ namespace openstudio{
     }
 
     QDomDocument bclXML("bclXML");
-    QFile file(toQString(m_path));
-    bool opened = file.open(QIODevice::ReadOnly | QIODevice::Text);
-    if (opened){
+    openstudio::filesystem::ofstream file(m_path);
+    if (file.open()){
       bclXML.setContent(&file);
       file.close();
     }else{
@@ -808,15 +806,12 @@ namespace openstudio{
     }
 
     // write to disk
-    QFile file(toQString(m_path));
-    bool opened = file.open(QIODevice::WriteOnly | QIODevice::Text);
-    if (!opened){
-      file.close();
+    openstudio::filesystem::ofstream file(m_path);
+    if (!file.open()){
       return false;
     }
 
-    QTextStream textStream(&file);
-    textStream << doc.toString(2);
+    file << openstudio::toString(doc.toString(2));
     file.close();
     return true;
   }
