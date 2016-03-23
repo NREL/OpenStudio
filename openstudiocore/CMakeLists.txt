@@ -576,6 +576,8 @@ elseif(WIN32)
     ##Ignore dll specific warnings that are out of our hands to control, coming from external projects
     #add_definitions(/wd4251 /wd4275)
   #endif()
+elseif(UNIX)
+  set(Boost_USE_STATIC_LIBS ON)
 endif()
 
 mark_as_advanced(
