@@ -918,6 +918,9 @@ namespace detail {
   Schedule AirLoopHVAC_Impl::availabilitySchedule() const
   {
     auto result = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirLoopHVACFields::AvailabilitySchedule);
+    if( ! result ) {
+      result = model().alwaysOnDiscreteSchedule();
+    }
     OS_ASSERT(result);
     return result.get();
   }

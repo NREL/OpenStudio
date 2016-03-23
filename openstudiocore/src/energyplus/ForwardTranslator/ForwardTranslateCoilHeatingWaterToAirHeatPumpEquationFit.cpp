@@ -109,7 +109,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingWaterToAirHeat
   {
     idfObject.setString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedWaterFlowRate,"Autosize");
   }
-  else if((value = modelObject.ratedAirFlowRate()))
+  else if((value = modelObject.ratedWaterFlowRate()))
   {
     idfObject.setDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedWaterFlowRate,value.get());
   }  

@@ -703,7 +703,8 @@ void OSDropZone2::dropEvent(QDropEvent *event)
         refresh();
       }
     }
-
+    // A dropped object cannot be inherited
+    this->setIsDefaulted(false);
   }
 }
 
@@ -712,17 +713,8 @@ void OSDropZone2::mouseReleaseEvent(QMouseEvent * event)
   if (event->button() == Qt::LeftButton){
     event->accept();
 
-    if (!m_item && m_get && *m_get) {
-      boost::optional<model::ModelObject> modelObject = (*m_get)();
-
-      if (modelObject)
-      {
-        m_item = OSItem::makeItem(modelObjectToItemId(*modelObject, false));
-        m_item->setParent(this);
-        connect(m_item, &OSItem::itemRemoveClicked, this, &OSDropZone2::onItemRemoveClicked);
-
-        connect(modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSDropZone2::refresh);
-      }
+    if (!m_item) {
+      makeItem();
     }
 
     if (m_item) {
@@ -785,6 +777,39 @@ void OSDropZone2::onItemRemoveClicked()
     }
     emit objectRemoved(parent);
  }
+}
+void OSDropZone2::makeItem()
+{
+  if (!m_item && m_get && *m_get) {
+    boost::optional<model::ModelObject> modelObject = (*m_get)();
+
+    if (modelObject)
+    {
+      m_item = OSItem::makeItem(modelObjectToItemId(*modelObject, false));
+      m_item->setParent(this);
+      connect(m_item, &OSItem::itemRemoveClicked, this, &OSDropZone2::onItemRemoveClicked);
+
+      connect(modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSDropZone2::refresh);
+    }
+  }
+}
+
+void OSDropZone2::setIsDefaulted(bool defaulted)
+{
+  if (defaulted) {
+    m_label->setStyleSheet("QLabel { color:green }"); // color: #006837
+  } else {
+    m_label->setStyleSheet("QLabel { color:black }");
+  }
+}
+
+bool OSDropZone2::isDefaulted()
+{
+  bool isDefaluted = false;
+  if (m_item) {
+    isDefaluted = m_item->isDefaulted();
+  }
+  return isDefaluted;
 }
 
 } // openstudio

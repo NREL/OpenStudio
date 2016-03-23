@@ -75,8 +75,6 @@ boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerColdest( S
     }
   }
 
-  m_idfObjects.push_back(idfObject);
-
   return idfObject;
 }
 

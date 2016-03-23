@@ -23,6 +23,8 @@
 #include "../../model/HeatExchangerFluidToFluid_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
+#include "../../model/SetpointManager.hpp"
+#include "../../model/SetpointManager_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/core/Logger.hpp"
@@ -144,7 +146,16 @@ boost::optional<IdfObject> ForwardTranslator::translateHeatExchangerFluidToFluid
   // HeatExchangerSetpointNodeName
   if( (mo = modelObject.supplyOutletModelObject()) )
   {
-    idfObject.setString(HeatExchanger_FluidToFluidFields::HeatExchangerSetpointNodeName,mo->name().get());
+    auto node = mo->optionalCast<Node>();
+    OS_ASSERT(node);
+    if( ! node->setpointManagers().empty() ) {
+      idfObject.setString(HeatExchanger_FluidToFluidFields::HeatExchangerSetpointNodeName,mo->name().get());
+    } else {
+      auto plant = node->plantLoop();
+      OS_ASSERT(plant);
+      auto supplyOutletModelObject = plant->supplyOutletNode();
+      idfObject.setString(HeatExchanger_FluidToFluidFields::HeatExchangerSetpointNodeName,supplyOutletModelObject.name().get());
+    }
   }
 
   // MinimumTemperatureDifferencetoActivateHeatExchanger

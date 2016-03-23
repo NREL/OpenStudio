@@ -101,6 +101,7 @@
 #include "../model/ComponentData.hpp"
 #include "../model/ComponentData_Impl.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
 #include <utilities/idd/OS_ComponentData_FieldEnums.hxx>
 
 #include <QMessageBox>
@@ -199,12 +200,15 @@ void HVACSystemsController::update()
     systemComboBox->clear();
 
     // Populate system combo box
-    std::vector<model::Loop> loops = m_model.getModelObjects<model::Loop>();
+    auto airloops = m_model.getModelObjects<model::AirLoopHVAC>();
+    std::sort(airloops.begin(),airloops.end(),WorkspaceObjectNameLess());
+    for( auto it = airloops.begin(); it != airloops.end(); ++it ) {
+      systemComboBox->addItem(QString::fromStdString(it->name().get()),it->handle().toString());
+    }
 
-    for( auto it = loops.begin();
-         it != loops.end();
-         ++it )
-    {
+    auto plantloops = m_model.getModelObjects<model::PlantLoop>();
+    std::sort(plantloops.begin(),plantloops.end(),WorkspaceObjectNameLess());
+    for( auto it = plantloops.begin(); it != plantloops.end(); ++it ) {
       systemComboBox->addItem(QString::fromStdString(it->name().get()),it->handle().toString());
     }
 
