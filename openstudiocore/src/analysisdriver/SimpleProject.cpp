@@ -1852,16 +1852,19 @@ namespace detail {
     OptionalModel model = seedModel(progressBar);
     if (!model) {
       LOG(Info,"Could not set analysis weather file because could not load seed model.");
+      // DLM: shouldn't this clear the analysis weather file?
       return false;
     }
     OptionalWeatherFile weatherFile = model->getOptionalUniqueModelObject<WeatherFile>();
     if (!weatherFile) {
       LOG(Info,"Could not set analysis weather file because seed model has no weather file set.");
+      // DLM: shouldn't this clear the analysis weather file?
       return false;
     }
     boost::optional<openstudio::path> wfp = weatherFile->path();
     if (!wfp) {
       LOG(Info,"Could not set analysis weather file because seed model weather file has no path.");
+      // DLM: shouldn't this clear the analysis weather file?
       return false;
     }
 
@@ -1899,6 +1902,7 @@ namespace detail {
 
     if (!weatherFileLocated) {
       LOG(Info,"Could not set analysis weather file because could not locate weather file referenced by seed model.");
+      // DLM: shouldn't this clear the analysis weather file?
       return false;
     }
 
