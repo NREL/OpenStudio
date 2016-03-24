@@ -28,6 +28,7 @@
 #include "../../idd/IddFile.hpp"
 #include "../../idf/Workspace.hpp"
 #include "../../time/DateTime.hpp"
+#include "../../core/FilesystemHelpers.hpp"
 
 #include <QDateTime>
 #include <QDir>

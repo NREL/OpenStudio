@@ -47,6 +47,7 @@
 #include "../utilities/geometry/Geometry.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FilesystemHelpers.hpp"
 
 #include <boost/math/constants/constants.hpp>
 

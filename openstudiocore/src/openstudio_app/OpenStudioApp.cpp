@@ -125,7 +125,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<mea
 
   QFile f(":/library/OpenStudioPolicy.xml");
 
-  openstudio::model::AccessPolicyStore::Instance().loadFile(f);
+  openstudio::model::AccessPolicyStore::Instance().loadFile(f.readAll());
 
   QFile data(":/openstudiolib.qss");
   QString style;

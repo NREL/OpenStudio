@@ -64,6 +64,7 @@
 
 #include "../utilities/core/Compare.hpp"
 
+#include <QFile>
 #include <QLabel>
 #include <QComboBox>
 #include <QPushButton>

@@ -48,6 +48,7 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/FilesystemHelpers.hpp"
 #include "../utilities/geometry/Geometry.hpp"
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/bcl/BCL.hpp"
@@ -1647,11 +1648,11 @@ namespace radiance {
 
 										// write shade BSDF
                                                                                 openstudio::filesystem::ofstream outfile(shadeBSDFPath);
-										if (!outFile.is_open()){
+										if (!outfile.is_open()){
 											LOG_AND_THROW("Cannot write file to '" << toString(shadeBSDFPath) << "'");
 										}
-                                                                                openstudio::filesystem::write(file, defaultFile);
-										outFile.close();
+                                                                                openstudio::filesystem::write(outfile, defaultFile);
+										outfile.close();
 
 									}
 
@@ -1677,11 +1678,11 @@ namespace radiance {
 									}
 
 									// write shade BSDF
-                                                                        openstudio::filesystem::ofstream outFileAir(airBSDPath);
+                                                                        openstudio::filesystem::ofstream outFileAir(airBSDFPath);
 									if (!outFileAir.is_open()){
 										LOG_AND_THROW("Cannot write file to '" << toString(airBSDFPath) << "'");
 									}
-                                                                        openstudio::filesystem::write(file, defaultFile);
+                                                                        openstudio::filesystem::write(outFileAir, defaultFile);
 									outFileAir.close();
 
 								}

@@ -76,7 +76,7 @@ bool SimFile::readLfr(QString fileName)
   clearLfr();
   QVector<QString> day;
   QVector<QString> time;
-  std::ifstream file(openstudio::toPath(fileName));
+  openstudio::filesystem::ifstream file(openstudio::toPath(fileName));
   if(!file.is_open())
   {
     LOG(Error,"Failed to open LFR file '" << fileName.toStdString() << "'");
@@ -87,7 +87,7 @@ bool SimFile::readLfr(QString fileName)
   std::string headerstr;
   std::getline(file, headerstr);
   QString header = openstudio::toQString(headerstr);
-  if(header.isNull() || header.empty())
+  if(header.isNull() || header.isEmpty())
   {
     LOG(Error,"No data in LFR file '" << fileName.toStdString() << "'");
     return false;
@@ -198,7 +198,7 @@ bool SimFile::readNfr(QString fileName)
   clearNfr();
   QVector<QString> day;
   QVector<QString> time;
-  openstudio::filesystem::ifstream file(openstudio::topath(fileName));
+  openstudio::filesystem::ifstream file(openstudio::toPath(fileName));
   if(file.is_open())
   {
     LOG(Error,"Failed to open NFR file '" << fileName.toStdString() << "'");
@@ -210,7 +210,7 @@ bool SimFile::readNfr(QString fileName)
   std::string headerstr;
   std::getline(file, headerstr);
   QString header = openstudio::toQString(headerstr);
-  if(header.isNull() || header.empty())
+  if(header.isNull() || header.isEmpty())
   {
     LOG(Error,"No data in LFR file '" << fileName.toStdString() << "'");
     return false;
@@ -223,10 +223,11 @@ bool SimFile::readNfr(QString fileName)
     return false;
   }
   // Read the data
-  while(!(line=textStream.readLine()).isNull())
+  while(file.good())
   {
     std::string linestr;
-    QString line;
+    std::getline(file, linestr);
+    QString line = openstudio::toQString(linestr);
 
     QStringList row = line.split('\t');
     if(row.size() != ncols && row.size() != ncols+2)

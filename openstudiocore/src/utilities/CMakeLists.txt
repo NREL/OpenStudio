@@ -32,6 +32,10 @@ set(core_src
   core/FileLogSink.cpp
   core/FileReference.hpp
   core/FileReference.cpp
+  core/Filesystem.hpp
+  core/Filesystem.cpp
+  core/FilesystemHelpers.hpp
+  core/FilesystemHelpers.cpp
   core/Finder.hpp
   core/Json.hpp
   core/Json.cpp

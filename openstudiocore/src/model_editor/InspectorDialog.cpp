@@ -531,7 +531,7 @@ void InspectorDialog::init(InspectorDialogClient client)
       break;
     case InspectorDialogClient::SketchUpPlugin:
 
-      openstudio::model::AccessPolicyStore::Instance().loadFile(sketchUpPluginPolicy);
+      openstudio::model::AccessPolicyStore::Instance().loadFile(sketchUpPluginPolicy.readAll());
 
       m_iddFile = IddFactory::instance().getIddFile(IddFileType::OpenStudio);
 

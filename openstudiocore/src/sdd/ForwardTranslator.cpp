@@ -140,6 +140,7 @@
 
 #include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FilesystemHelpers.hpp"
 
 #include <QDomDocument>
 #include <QDomElement>

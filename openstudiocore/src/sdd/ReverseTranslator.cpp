@@ -102,6 +102,7 @@
 #include "../utilities/filetypes/EpwFile.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FilesystemHelpers.hpp"
 #include "../utilities/units/QuantityConverter.hpp"
 #include "../utilities/units/IPUnit.hpp"
 #include "../utilities/units/SIUnit.hpp"
@@ -159,7 +160,7 @@ namespace sdd {
       openstudio::filesystem::ifstream file(path, std::ios_base::binary);
       if (file.is_open()){
         QDomDocument doc;
-        bool ok = doc.setContent(openstudio::filesystem::read_all_as_QByteArray(file));
+        bool ok = doc.setContent(openstudio::filesystem::read_as_QByteArray(file));
         file.close();
 
         if (ok) {
@@ -1447,7 +1448,7 @@ namespace sdd {
       std::string runPeriodName = "Run Period";
       QDomElement annualWeatherFileElement = element.firstChildElement("AnnualWeatherFile");
       if (!annualWeatherFileElement.isNull()){
-        runPeriodName = openstudio::toPath(annualWeatherFileElement.text()).stem();
+        runPeriodName = openstudio::toString(openstudio::toPath(annualWeatherFileElement.text()).stem());
       }
 
       model::RunPeriod runPeriod = model.getUniqueModelObject<model::RunPeriod>();

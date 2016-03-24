@@ -29,6 +29,7 @@
 
 #include "OSAppBase.hpp"
 
+#include <QFile>
 #include <QBoxLayout>
 #include <QComboBox>
 #include <QDesktopWidget>

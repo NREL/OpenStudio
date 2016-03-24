@@ -24,6 +24,7 @@
 #include <QVector>
 #include <QSharedPointer>
 #include "../utilities/core/Logger.hpp"
+#include "../utilities/core/Filesystem.hpp"
 
 #include "PrjDefines.hpp"
 

@@ -20,6 +20,8 @@
 #include "BIMserverConnection.hpp"
 
 #include "../utilities/core/System.hpp"
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/FilesystemHelpers.hpp"
 
 #include <QString>
 #include <QUrl>
@@ -568,10 +570,10 @@ namespace bimserver {
     parameters["poid"] = QJsonValue(m_poid);
     parameters["comment"] = QJsonValue(QString(""));
     parameters["deserializerOid"] = QJsonValue(m_deserializerOid);
-    parameters["fileSize"] = QJsonValue(QString::number(openstudio::filesystem::size(path));
-    parameters["fileName"] = QJsonValue(path.stem());
+    parameters["fileSize"] = QJsonValue(QString::number(openstudio::filesystem::file_size(path)));
+    parameters["fileName"] = QJsonValue(openstudio::toQString(path.stem()));
     //encode file into Base64
-    QByteArray fileArray = std::openstudio::read_all_as_QByteArray(file);
+    QByteArray fileArray = openstudio::filesystem::read_as_QByteArray(file);
     QByteArray fileArrayEncoded = fileArray.toBase64();
     QString fileEncoded(fileArrayEncoded);
     parameters["data"] = QJsonValue(fileEncoded);

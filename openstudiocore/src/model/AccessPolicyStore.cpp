@@ -25,6 +25,7 @@
 #include "AccessPolicyStore.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FilesystemHelpers.hpp"
 #include "../utilities/idd/IddFileAndFactoryWrapper.hpp"
 
 using std::map;
@@ -283,6 +284,25 @@ namespace openstudio
       return *s_instance;
     }
 
+    bool AccessPolicyStore::loadFile( const QByteArray &data)
+    {
+      QXmlSimpleReader xmlReader;
+      AccessParser ap;
+      xmlReader.setContentHandler( &ap );
+
+      //JMT 2016-03-22 this looks like a memory leak to me. I don't see an assigned owner
+      //               in Qt nor a delete
+      auto source = new QXmlInputSource( );
+      source->setData( data );
+      //LER:: add error handler
+      if(!xmlReader.parse(source))
+      {
+        LOG(Debug,"xml parse error in AccessPolicyStore::loadFile\n");
+        return false;
+      }
+      return true;
+    }
+
     bool AccessPolicyStore::loadFile( openstudio::filesystem::ifstream& file)
     {
       QXmlSimpleReader xmlReader;
@@ -295,18 +315,7 @@ namespace openstudio
         return false;
       }
 
-      //JMT 2016-03-22 this looks like a memory leak to me. I don't see an assigned owner
-      //               in Qt nor a delete
-      auto source = new QXmlInputSource( );
-      source->setData( openstudio::filesystem::read_all_as_QByteArray(file) );
-      //LER:: add error handler
-      if(!xmlReader.parse(source))
-      {
-        LOG(Debug,"xml parse error in AccessPolicyStore::loadFile\n");
-        return false;
-      }
-      return true;
-
+      return loadFile(openstudio::filesystem::read_as_QByteArray(file));
     }
 
     bool AccessPolicyStore::loadFile(const openstudio::path& path)

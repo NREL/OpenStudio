@@ -44,6 +44,7 @@
 #include "../model/ConstructionBase_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FilesystemHelpers.hpp"
 #include "../utilities/units/UnitFactory.hpp"
 #include "../utilities/units/QuantityConverter.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
@@ -94,7 +95,7 @@ namespace gbxml {
       openstudio::filesystem::ifstream file(path, std::ios_base::binary);
       if (file.is_open()) {
         QDomDocument doc;
-        doc.setContent(openstudio::filesystem::read_all_as_QByteArray(file));
+        doc.setContent(openstudio::filesystem::read_as_QByteArray(file));
         file.close();
 
         result = this->convert(doc);

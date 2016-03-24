@@ -94,6 +94,7 @@ namespace openstudio
        */
       bool loadFile( openstudio::filesystem::ifstream & file );
       bool loadFile( const openstudio::path& path );
+      bool loadFile( const QByteArray &data );
 
       /*!Each IddObjectType has a uniqueAcessPolicy. This function will retrieve it*/
       const AccessPolicy* getPolicy( const openstudio::IddObjectType& )const;

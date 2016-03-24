@@ -67,6 +67,7 @@ namespace filesystem {
   using boost::filesystem::last_write_time;
   using boost::filesystem::remove;
   using boost::filesystem::remove_all;
+  using boost::filesystem::file_size;
   using boost::filesystem::system_complete;
   using boost::filesystem::temp_directory_path;
 

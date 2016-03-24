@@ -49,6 +49,7 @@
 #include "../utilities/idf/WorkspaceObjectOrder.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FilesystemHelpers.hpp"
 #include "../utilities/geometry/BoundingBox.hpp"
 #include "../utilities/time/Time.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
@@ -3481,7 +3482,7 @@ IdfObject ForwardTranslator::createRegisterAndNameIdfObject(const IddObjectType&
 boost::optional<IdfFile> ForwardTranslator::findIdfFile(const std::string& path) {
   openstudio::filesystem::ifstream file(path);
   OS_ASSERT(file.is_open());
-  return IdfFile::load(openstudio::filesystem::read_file_as_string(file), IddFileType::EnergyPlus);
+  return IdfFile::load(openstudio::filesystem::read_as_string(file), IddFileType::EnergyPlus);
 }
 
 bool ForwardTranslator::isHVACComponentWithinUnitary(const model::HVACComponent& hvacComponent) const

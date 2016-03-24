@@ -20,7 +20,7 @@
 #include "OSResult.hpp"
 
 #include "../utilities/core/Assert.hpp"
-
+#include "../utilities/core/FilesystemHelpers.hpp"
 
 
 #include <QDomDocument>
@@ -172,7 +172,7 @@ boost::optional<OSResult> OSResult::load(const openstudio::path& p) {
       // load xml file
       openstudio::filesystem::ifstream file(p, std::ios_base::binary);
       QDomDocument qDomDocument;
-      qDomDocument.setContent(openstudio::filesystem::read_all_as_QByteArray(file));
+      qDomDocument.setContent(openstudio::filesystem::read_as_QByteArray(file));
       file.close();
 
       // de-serialize
