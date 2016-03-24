@@ -235,6 +235,7 @@ namespace openstudio {
           );
         }
         else if (field == CONSTRUCTIONNAME) {
+          m_constructionColumn = 4;
           addDropZoneColumn(Heading(QString(CONSTRUCTIONNAME), true, false),
             CastNullAdapter<model::InteriorPartitionSurface>(&model::InteriorPartitionSurface::construction),
             CastNullAdapter<model::InteriorPartitionSurface>(&model::InteriorPartitionSurface::setConstruction),

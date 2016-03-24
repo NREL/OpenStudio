@@ -45,6 +45,7 @@
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/Sizing_Zone_FieldEnums.hxx>
 #include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
+#include <utilities/idd/Lights_FieldEnums.hxx>
 #include "../WorkspaceWatcher.hpp"
 #include "IdfTestQObjects.hpp"
 
@@ -1230,6 +1231,45 @@ TEST_F(IdfFixture,Workspace_ComplexNames) {
 
   EXPECT_EQ(static_cast<unsigned>(15),ws.numObjectsOfType(IddObjectType::Zone));
 }
+
+TEST_F(IdfFixture, Workspace_SpecialNames) {
+  Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
+
+  OptionalWorkspaceObject oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  WorkspaceObject zone = *oObject;
+  EXPECT_TRUE(zone.setName("Office, Hallway, and Other Zone"));
+  EXPECT_EQ("Office, Hallway, and Other Zone", zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Lights));
+  ASSERT_TRUE(oObject);
+  WorkspaceObject lights1 = *oObject;
+  EXPECT_TRUE(lights1.setName("Office, Hallway, and Other Lights"));
+  EXPECT_EQ("Office, Hallway, and Other Lights", lights1.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Lights));
+  ASSERT_TRUE(oObject);
+  WorkspaceObject lights2 = *oObject;
+  EXPECT_TRUE(lights2.setName("Office, Hallway, and Other Lights"));
+  EXPECT_EQ("Office, Hallway, and Other Lights 1", lights2.name().get());
+
+  bool exactMatch = true;
+  std::vector<WorkspaceObject> objects = ws.getObjectsByName("Office, Hallway, and Other Lights", exactMatch);
+  ASSERT_EQ(1u, objects.size());
+  EXPECT_EQ(lights1.handle(), objects[0].handle());
+
+  exactMatch = false;
+  objects = ws.getObjectsByName("Office, Hallway, and Other Lights", exactMatch);
+  ASSERT_EQ(2u, objects.size());
+
+  EXPECT_TRUE(lights1.setString(LightsFields::ZoneorZoneListName, "Office, Hallway, and Other Zone"));
+  ASSERT_TRUE(lights1.getTarget(LightsFields::ZoneorZoneListName));
+  EXPECT_EQ(zone.handle(), lights1.getTarget(LightsFields::ZoneorZoneListName).get().handle());
+
+  EXPECT_TRUE(lights2.setString(LightsFields::ZoneorZoneListName, "Office, Hallway, and Other Zone"));
+  ASSERT_TRUE(lights2.getTarget(LightsFields::ZoneorZoneListName));
+  EXPECT_EQ(zone.handle(), lights2.getTarget(LightsFields::ZoneorZoneListName).get().handle());
+} 
 
 TEST_F(IdfFixture,Workspace_AvoidingNameClashes_IdfObject) {
   // create workspace with one object

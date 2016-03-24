@@ -50,7 +50,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 require 'fileutils'
 
 include OpenStudio                      # to avoid the OpenStudio:: prefix
@@ -87,7 +86,7 @@ rmdbPath = toString(ospPath.stem) + "Run.db"
 rmdbPath = ospPath.parent_path / Path.new(rmdbPath)
 
 # EnergyPlus WeatherData
-ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,4)
+ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,5)
 weatherData_path = Path.new(ep_hash[:energyplus_weatherdata].to_s)
 
 

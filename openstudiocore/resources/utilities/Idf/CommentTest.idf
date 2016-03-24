@@ -1,11 +1,11 @@
 ! File Header
 ! Written by Elaine T. Hale, 15 September 2010
-
 ! Version object should keep up with EnergyPlus version number.
 
-  Version,7.1;
+  Version,8.5;
 
 ! Timestep should be > 1.
+
   Timestep,6;
 
   SimulationControl,
@@ -16,6 +16,7 @@
     Yes;                     !- Run Simulation for Weather File Run Periods
 
 ! When to start, when to stop, when to trust the weather file.
+
   RunPeriod,
     ,                        !- Name
     1,                       !- Begin Month
@@ -31,6 +32,7 @@
     1.0000;                  !- Number of Times Runperiod to be Repeated
 
 ! This building has no surfaces, no volume, no nothing.
+
   Building,
     Abstract Building,       !- Name
     0.0000,                  !- North Axis {deg}
@@ -39,5 +41,5 @@
     0.2000,                  !- Temperature Convergence Tolerance Value {deltaC}
     FullInteriorAndExterior, !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
-    ;                        !- Minimum Number of Warmup Days
+    6;                       !- Minimum Number of Warmup Days
 

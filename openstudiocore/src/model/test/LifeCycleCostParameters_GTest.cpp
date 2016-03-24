@@ -23,6 +23,12 @@
 
 #include "../LifeCycleCostParameters.hpp"
 #include "../LifeCycleCostParameters_Impl.hpp"
+#include "../LifeCycleCost.hpp"
+#include "../LifeCycleCost_Impl.hpp"
+#include "../Building.hpp"
+#include "../Building_Impl.hpp"
+
+#include <utilities/idd/OS_LifeCycleCost_FieldEnums.hxx>
 
 #include "../../utilities/time/Date.hpp"
 
@@ -196,4 +202,126 @@ TEST_F(ModelFixture, LifeCycleCostParameters) {
   EXPECT_TRUE(lifeCycleCostParameters.setLengthOfStudyPeriodInYears(5));
   EXPECT_EQ(5, lifeCycleCostParameters.lengthOfStudyPeriodInYears());
   EXPECT_FALSE(lifeCycleCostParameters.isLengthOfStudyPeriodInYearsDefaulted());
+}
+
+
+TEST_F(ModelFixture, LifeCycleCost_BadNames)
+{
+  Model model1;
+  Model model2;
+
+  Building building = model1.getUniqueModelObject<Building>();
+
+  {
+    boost::optional<LifeCycleCost> cost = LifeCycleCost::createLifeCycleCost("Good Name", building, 1000.0, "CostPerEach", "Construction");
+    ASSERT_TRUE(cost);
+    EXPECT_EQ("Good Name", cost->nameString());
+    ASSERT_TRUE(cost->getString(OS_LifeCycleCostFields::Name));
+    EXPECT_EQ("Good Name", cost->getString(OS_LifeCycleCostFields::Name).get());
+    IdfObject idfObject = cost->idfObject();
+    ASSERT_TRUE(idfObject.getString(OS_LifeCycleCostFields::Name));
+    EXPECT_EQ("Good Name", idfObject.getString(OS_LifeCycleCostFields::Name).get());
+
+    std::stringstream ss;
+    ss << *cost;
+    boost::optional<IdfObject> idf2 = IdfObject::load(ss.str());
+    ASSERT_TRUE(idf2);
+    ASSERT_TRUE(idf2->getString(OS_LifeCycleCostFields::Name));
+    EXPECT_EQ("Good Name", idf2->getString(OS_LifeCycleCostFields::Name).get());
+
+    boost::optional<WorkspaceObject> modelObject = model2.addObject(*idf2);
+    ASSERT_TRUE(modelObject);
+    EXPECT_EQ("Good Name", modelObject->nameString());
+  }
+
+  {
+    // &#44;
+    boost::optional<LifeCycleCost> cost = LifeCycleCost::createLifeCycleCost("Comma, In, Name", building, 1000.0, "CostPerEach", "Construction");
+    ASSERT_TRUE(cost);
+    EXPECT_EQ("Comma, In, Name", cost->nameString());
+    ASSERT_TRUE(cost->getString(OS_LifeCycleCostFields::Name));
+    EXPECT_EQ("Comma, In, Name", cost->getString(OS_LifeCycleCostFields::Name).get());
+    IdfObject idfObject = cost->idfObject();
+    ASSERT_TRUE(idfObject.getString(OS_LifeCycleCostFields::Name));
+    EXPECT_EQ("Comma, In, Name", idfObject.getString(OS_LifeCycleCostFields::Name).get());
+
+    std::stringstream ss;
+    ss << *cost;
+    boost::optional<IdfObject> idf2 = IdfObject::load(ss.str());
+    ASSERT_TRUE(idf2);
+    ASSERT_TRUE(idf2->getString(OS_LifeCycleCostFields::Name));
+    EXPECT_EQ("Comma, In, Name", idf2->getString(OS_LifeCycleCostFields::Name).get());
+
+    boost::optional<WorkspaceObject> modelObject = model2.addObject(*idf2);
+    ASSERT_TRUE(modelObject);
+    EXPECT_EQ("Comma, In, Name", modelObject->nameString());
+  }
+
+  {
+    // &#59;
+    boost::optional<LifeCycleCost> cost = LifeCycleCost::createLifeCycleCost("Semicolon; In; Name", building, 1000.0, "CostPerEach", "Construction");
+    ASSERT_TRUE(cost);
+    EXPECT_EQ("Semicolon; In; Name", cost->nameString());
+    ASSERT_TRUE(cost->getString(OS_LifeCycleCostFields::Name));
+    EXPECT_EQ("Semicolon; In; Name", cost->getString(OS_LifeCycleCostFields::Name).get());
+    IdfObject idfObject = cost->idfObject();
+    ASSERT_TRUE(idfObject.getString(OS_LifeCycleCostFields::Name));
+    EXPECT_EQ("Semicolon; In; Name", idfObject.getString(OS_LifeCycleCostFields::Name).get());
+
+    std::stringstream ss;
+    ss << *cost;
+    boost::optional<IdfObject> idf2 = IdfObject::load(ss.str());
+    ASSERT_TRUE(idf2);
+    ASSERT_TRUE(idf2->getString(OS_LifeCycleCostFields::Name));
+    EXPECT_EQ("Semicolon; In; Name", idf2->getString(OS_LifeCycleCostFields::Name).get());
+
+    boost::optional<WorkspaceObject> modelObject = model2.addObject(*idf2);
+    ASSERT_TRUE(modelObject);
+    EXPECT_EQ("Semicolon; In; Name", modelObject->nameString());
+  }
+
+  {
+    // &#33;
+    boost::optional<LifeCycleCost> cost = LifeCycleCost::createLifeCycleCost("Exclamation! In! Name", building, 1000.0, "CostPerEach", "Construction");
+    ASSERT_TRUE(cost);
+    EXPECT_EQ("Exclamation! In! Name", cost->nameString());
+    ASSERT_TRUE(cost->getString(OS_LifeCycleCostFields::Name));
+    EXPECT_EQ("Exclamation! In! Name", cost->getString(OS_LifeCycleCostFields::Name).get());
+    IdfObject idfObject = cost->idfObject();
+    ASSERT_TRUE(idfObject.getString(OS_LifeCycleCostFields::Name));
+    EXPECT_EQ("Exclamation! In! Name", idfObject.getString(OS_LifeCycleCostFields::Name).get());
+
+    std::stringstream ss;
+    ss << *cost;
+    boost::optional<IdfObject> idf2 = IdfObject::load(ss.str());
+    ASSERT_TRUE(idf2);
+    ASSERT_TRUE(idf2->getString(OS_LifeCycleCostFields::Name));
+    EXPECT_EQ("Exclamation! In! Name", idf2->getString(OS_LifeCycleCostFields::Name).get());
+
+    boost::optional<WorkspaceObject> modelObject = model2.addObject(*idf2);
+    ASSERT_TRUE(modelObject);
+    EXPECT_EQ("Exclamation! In! Name", modelObject->nameString());
+  }
+
+  {
+    boost::optional<LifeCycleCost> cost = LifeCycleCost::createLifeCycleCost("Crazy Name !@#$%^&*(),.?;'{}|-_+=<>:\"[]~`", building, 1000.0, "CostPerEach", "Construction");
+    ASSERT_TRUE(cost);
+    EXPECT_EQ("Crazy Name !@#$%^&*(),.?;'{}|-_+=<>:\"[]~`", cost->nameString());
+    ASSERT_TRUE(cost->getString(OS_LifeCycleCostFields::Name));
+    EXPECT_EQ("Crazy Name !@#$%^&*(),.?;'{}|-_+=<>:\"[]~`", cost->getString(OS_LifeCycleCostFields::Name).get());
+    IdfObject idfObject = cost->idfObject();
+    ASSERT_TRUE(idfObject.getString(OS_LifeCycleCostFields::Name));
+    EXPECT_EQ("Crazy Name !@#$%^&*(),.?;'{}|-_+=<>:\"[]~`", idfObject.getString(OS_LifeCycleCostFields::Name).get());
+
+    std::stringstream ss;
+    ss << *cost;
+    boost::optional<IdfObject> idf2 = IdfObject::load(ss.str());
+    ASSERT_TRUE(idf2);
+    ASSERT_TRUE(idf2->getString(OS_LifeCycleCostFields::Name));
+    EXPECT_EQ("Crazy Name !@#$%^&*(),.?;'{}|-_+=<>:\"[]~`", idf2->getString(OS_LifeCycleCostFields::Name).get());
+
+    boost::optional<WorkspaceObject> modelObject = model2.addObject(*idf2);
+    ASSERT_TRUE(modelObject);
+    EXPECT_EQ("Crazy Name !@#$%^&*(),.?;'{}|-_+=<>:\"[]~`", modelObject->nameString());
+  }
 }

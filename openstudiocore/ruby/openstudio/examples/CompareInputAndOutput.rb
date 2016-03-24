@@ -34,7 +34,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 require 'fileutils'
 
 # energyplus simulation directory
@@ -43,10 +42,9 @@ OpenStudio::create_directory(OpenStudio::Path.new($OpenStudio_ResourcePath + "mo
 OpenStudio::create_directory(runDir)
 
 # find energyplus
-ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,4)
-ep_exe = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
-weatherFilePath = OpenStudio::Path.new(ep_hash[:energyplus_weatherdata].to_s) / 
-    OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.epw")
+co = OpenStudio::Runmanager::ConfigOptions.new
+co.fastFindEnergyPlus()
+weatherFilePath = OpenStudio::Path.new(co.getDefaultEPWLocation.to_s) / OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.epw")
     
 # set up RunManager
 runDbPath = runDir / OpenStudio::Path.new("run.db")
@@ -63,8 +61,7 @@ workflow = OpenStudio::Runmanager::Workflow.new
 workflow.addJob("ModelToIdf".to_JobType)
 workflow.addJob("EnergyPlus".to_JobType)
 nullPath = OpenStudio::Path.new
-workflow.add(OpenStudio::Runmanager::ConfigOptions::makeTools(
-    ep_exe.parent_path,nullPath,nullPath,nullPath,nullPath))
+workflow.add(co.getTools)
 job = workflow.create(runDir,modelPath,weatherFilePath)
 
 # run simulation and get sql file

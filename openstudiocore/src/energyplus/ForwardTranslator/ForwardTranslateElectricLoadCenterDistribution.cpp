@@ -68,7 +68,7 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
   if (inverter){
     boost::optional<IdfObject> inverterIdf = translateAndMapModelObject(*inverter);
     if (inverterIdf){
-      idfObject.setString(ElectricLoadCenter_DistributionFields::InverterObjectName, inverterIdf->name().get());
+      idfObject.setString(ElectricLoadCenter_DistributionFields::InverterName, inverterIdf->name().get());
     }
   }
 

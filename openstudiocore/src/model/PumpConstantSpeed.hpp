@@ -52,6 +52,7 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
 
   static std::vector<std::string> pumpControlTypeValues();
 
+  /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Design Flow Rate" **/
   boost::optional<double> ratedFlowRate() const;
 
   OSOptionalQuantity getRatedFlowRate(bool returnIP=false) const;
@@ -66,6 +67,7 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
 
   void autosizeRatedFlowRate();
 
+  /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Design Pump Head" **/
   double ratedPumpHead() const;
 
   Quantity getRatedPumpHead(bool returnIP=false) const;
@@ -78,6 +80,7 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
 
   void resetRatedPumpHead();
 
+  /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Design Power Consumption" **/
   boost::optional<double> ratedPowerConsumption() const;
 
   OSOptionalQuantity getRatedPowerConsumption(bool returnIP=false) const;

@@ -43,6 +43,8 @@
 
 #include "../model/Model_Impl.hpp"
 #include "../model/ModelObject_Impl.hpp"
+#include "../model/PlanarSurface.hpp"
+#include "../model/PlanarSurface_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -1347,6 +1349,20 @@ namespace openstudio {
       }
       else if (HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(t_widget)) {
         connect(horizontalHeaderWidget, &HorizontalHeaderWidget::inFocus, holder, &Holder::inFocus);
+      }
+
+      // Is this widget's subrow a surface with a defaulted construction?
+      if (t_obj) {
+        if (auto planarSurface = t_obj->optionalCast<model::PlanarSurface>()) {
+          if (planarSurface && planarSurface->isConstructionDefaulted()) {
+            // Is this column a construction?
+            if (column == m_constructionColumn) {
+              if (OSDropZone2 * dropZone = qobject_cast<OSDropZone2 *>(t_widget)) {
+                dropZone->setIsDefaulted(true);
+              }
+            }
+          }
+        }
       }
 
       m_objectSelector->addWidget(t_obj, holder, row, column, hasSubRows ? numWidgets : boost::optional<int>(), t_selector);

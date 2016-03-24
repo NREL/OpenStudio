@@ -1,7 +1,7 @@
 
 OS:Version,
-  {5a955812-1d5c-4f31-9917-e05681c33207}, !- Handle
-  1.10.3;                                 !- Version Identifier
+  {7d8212eb-461a-4020-89ab-cf12cbe93283}, !- Handle
+  1.10.6;                                 !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -12,16 +12,16 @@ OS:Schedule:Constant,
 OS:ScheduleTypeLimits,
   {0d28348a-6700-450f-9304-2196e445dc49}, !- Handle
   Schedule Type Limits 1,                 !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  1,                                      !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
   Discrete,                               !- Numeric Type
   Availability;                           !- Unit Type
 
 OS:ScheduleTypeLimits,
   {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Handle
   Temperature,                            !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -369,16 +369,16 @@ OS:Schedule:Day,
 OS:ScheduleTypeLimits,
   {919bbba6-e6ba-472c-968a-3444cb36c6e6}, !- Handle
   Min Max Temp w Deadband Max Limits,     !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
 OS:ScheduleTypeLimits,
   {554ee901-8dc9-456e-884a-409b5b97127b}, !- Handle
   Min Max Temp w Deadband Min Limits,     !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -616,7 +616,7 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
 
 OS:AirTerminal:DualDuct:VAV,
   {1a944c0e-23c0-4649-bb65-af3745a1927f}, !- Handle
-  Dual Duct VAV,           !- Name
+  Dual Duct VAV,                          !- Name
   ,                                       !- Availability Schedule
   ,                                       !- Air Outlet Node
   ,                                       !- Hot Air Inlet Node
@@ -1270,8 +1270,8 @@ OS:Curve:Cubic,
   0.968044,                               !- Coefficient2 x
   1.119202,                               !- Coefficient3 x**2
   -0.5034,                                !- Coefficient4 x**3
-  0.15,                                   !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0.15,                                   !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {786ab5c0-a447-4696-8189-72f9ebaddc60}, !- Handle
@@ -1279,8 +1279,8 @@ OS:Curve:Quadratic,
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0.15,                                   !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0.15,                                   !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Cubic,
   {dce1b9c5-f1af-44cd-abbc-b6b14482d5f4}, !- Handle
@@ -1289,8 +1289,8 @@ OS:Curve:Cubic,
   0.023614,                               !- Coefficient2 x
   2.78e-05,                               !- Coefficient3 x**2
   1.3e-05,                                !- Coefficient4 x**3
-  7,                                      !- Minimum Value of x {BasedOnField A2}
-  25;                                     !- Maximum Value of x {BasedOnField A2}
+  7,                                      !- Minimum Value of x
+  25;                                     !- Maximum Value of x
 
 OS:Curve:Cubic,
   {5ddeaf9a-9a50-45f0-aa8a-5c176220373a}, !- Handle
@@ -1299,8 +1299,8 @@ OS:Curve:Cubic,
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  100;                                    !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  100;                                    !- Maximum Value of x
 
 OS:Curve:Cubic,
   {185b6b07-fd12-4ea0-a3e1-fd43ab28223f}, !- Handle
@@ -1309,8 +1309,8 @@ OS:Curve:Cubic,
   0.065571,                               !- Coefficient2 x
   -0.00289,                               !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  4,                                      !- Minimum Value of x {BasedOnField A2}
-  10;                                     !- Maximum Value of x {BasedOnField A2}
+  4,                                      !- Minimum Value of x
+  10;                                     !- Maximum Value of x
 
 OS:Curve:Cubic,
   {bd3e525e-e818-4526-b38e-07834a84abda}, !- Handle
@@ -1319,8 +1319,8 @@ OS:Curve:Cubic,
   -0.00478,                               !- Coefficient2 x
   0.000864,                               !- Coefficient3 x**2
   -1.3e-05,                               !- Coefficient4 x**3
-  7,                                      !- Minimum Value of x {BasedOnField A2}
-  30;                                     !- Maximum Value of x {BasedOnField A2}
+  7,                                      !- Minimum Value of x
+  30;                                     !- Maximum Value of x
 
 OS:Curve:Cubic,
   {5332ab8e-39d3-48c9-985c-37e3c3773ac5}, !- Handle
@@ -1329,12 +1329,12 @@ OS:Curve:Cubic,
   0.046821,                               !- Coefficient2 x
   -0.01099,                               !- Coefficient3 x**2
   0.000608,                               !- Coefficient4 x**3
-  4,                                      !- Minimum Value of x {BasedOnField A2}
-  10;                                     !- Maximum Value of x {BasedOnField A2}
+  4,                                      !- Minimum Value of x
+  10;                                     !- Maximum Value of x
 
 OS:Chiller:Electric:EIR,
   {849d9618-ded0-4983-b57f-090fa2a756c0}, ! Handle
-  Chiller Electric EIR,                   ! Name
+  Chiller - Air Cooled,                   ! Name
   Autosize,                               ! Reference Capacity {W}
   5.5,                                    ! Reference COP {W/W}
   ,                                       ! Reference Leaving Chilled Water Temperature {C}
@@ -1402,6 +1402,76 @@ OS:Curve:Quadratic,
   0,                                      ! Minimum Value of x {BasedOnField A2}
   1.2;                                    ! Maximum Value of x {BasedOnField A2}
 
+OS:Curve:Biquadratic,
+  {aeee1604-1859-46a8-9be1-4607fb0562ea}, !- Handle
+  Water Cooled Chiller CCFofT,            !- Name
+  0.258,                                  !- Coefficient1 Constant
+  0.0389,                                 !- Coefficient2 x
+  -0.000217,                              !- Coefficient3 x**2
+  0.0469,                                 !- Coefficient4 y
+  -0.000943,                              !- Coefficient5 y**2
+  -0.000343,                              !- Coefficient6 x*y
+  5,                                      !- Minimum Value of x
+  10,                                     !- Maximum Value of x
+  24,                                     !- Minimum Value of y
+  35;                                     !- Maximum Value of y
+
+OS:Curve:Biquadratic,
+  {6d4f917a-2262-4a69-9249-643fa85b4a69},          !- Handle
+  Water Cooled Chiller EItoCoolingOutputRatioFofT, !- Name
+  0.934,                                           !- Coefficient1 Constant
+  -0.0582,                                         !- Coefficient2 x
+  0.0045,                                          !- Coefficient3 x**2
+  0.00243,                                         !- Coefficient4 y
+  0.000486,                                        !- Coefficient5 y**2
+  -0.00122,                                        !- Coefficient6 x*y
+  5,                                               !- Minimum Value of x
+  10,                                              !- Maximum Value of x
+  24,                                              !- Minimum Value of y
+  35;                                              !- Maximum Value of y
+
+OS:Curve:Quadratic,
+  {8a27fa33-c1e0-4351-b280-8b5a14b4d61c}, !- Handle
+  Water Cooled Chiller EItoCoolingOutputRatioFofPLR, !- Name
+  0.222903,                               !- Coefficient1 Constant
+  0.313387,                               !- Coefficient2 x
+  0.46371,                                !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:Chiller:Electric:EIR,
+  {abe6edb0-141c-4175-a1bd-53fe7b1fd307}, !- Handle
+  Chiller - Water Cooled,                 !- Name
+  Autosize,                               !- Reference Capacity {W}
+  5.5,                                    !- Reference COP {W/W}
+  ,                                       !- Reference Leaving Chilled Water Temperature {C}
+  ,                                       !- Reference Entering Condenser Fluid Temperature {C}
+  ,                                       !- Reference Chilled Water Flow Rate {m3/s}
+  ,                                       !- Reference Condenser Fluid Flow Rate {m3/s}
+  {aeee1604-1859-46a8-9be1-4607fb0562ea}, !- Cooling Capacity Function of Temperature Curve Name
+  {6d4f917a-2262-4a69-9249-643fa85b4a69}, !- Electric Input to Cooling Output Ratio Function of Temperature Curve Name
+  {8a27fa33-c1e0-4351-b280-8b5a14b4d61c}, !- Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve Name
+  ,                                       !- Minimum Part Load Ratio
+  ,                                       !- Maximum Part Load Ratio
+  ,                                       !- Optimum Part Load Ratio
+  ,                                       !- Minimum Unloading Ratio
+  {556f1d22-0644-4bf3-a3b4-48616164fb71}, !- Chilled Water Inlet Node Name
+  {43ffb2e3-562e-41ee-aa64-71afb8c251bf}, !- Chilled Water Outlet Node Name
+  {4b4c85b1-9eee-496e-87a7-aa9226bf92cd}, !- Condenser Inlet Node Name
+  {3131fd05-66fc-4876-8181-fea5a22ec31d}, !- Condenser Outlet Node Name
+  ,                                       !- Condenser Type
+  ,                                       !- Condenser Fan Power Ratio {W/W}
+  ,                                       !- Compressor Motor Efficiency
+  ,                                       !- Leaving Chilled Water Lower Temperature Limit {C}
+  ,                                       !- Chiller Flow Mode
+  0,                                      !- Design Heat Recovery Water Flow Rate {m3/s}
+  ,                                       !- Heat Recovery Inlet Node Name
+  ,                                       !- Heat Recovery Outlet Node Name
+  1,                                      !- Sizing Factor
+  0,                                      !- Basin Heater Capacity {W/K}
+  10,                                     !- Basin Heater Setpoint Temperature {C}
+  ;                                       !- Basin Heater Operating Schedule Name
+
 OS:Boiler:HotWater,
   {7741e24f-1bf9-4cb7-b035-737b8734095c}, ! Handle
   HW Boiler,                              ! Name
@@ -1431,12 +1501,12 @@ OS:Curve:Biquadratic,
   0,                                      !- Coefficient4 y
   0,                                      !- Coefficient5 y**2
   0,                                      !- Coefficient6 x*y
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1,                                      !- Maximum Value of x {BasedOnField A2}
-  0,                                      !- Minimum Value of y {BasedOnField A3}
-  1,                                      !- Maximum Value of y {BasedOnField A3}
-  ,                                       !- Minimum Curve Output {BasedOnField A4}
-  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  0,                                      !- Minimum Value of x
+  1,                                      !- Maximum Value of x
+  0,                                      !- Minimum Value of y
+  1,                                      !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   ,                                       !- Input Unit Type for X
   ,                                       !- Input Unit Type for Y
   ;                                       !- Output Unit Type
@@ -1571,8 +1641,8 @@ OS:ZoneHVAC:HighTemperatureRadiant,
 OS:ScheduleTypeLimits,
   {a97fb7de-95e1-4e93-8e86-6fae9baf0f7e}, !- Handle
   Temperature 1,                          !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Discrete,                               !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -2192,12 +2262,12 @@ OS:Curve:Biquadratic,
   0.000466,                               !- Coefficient4 y
   2.6e-05,                                !- Coefficient5 y**2
   -0.00027,                               !- Coefficient6 x*y
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  40,                                     !- Maximum Value of x {BasedOnField A2}
-  20,                                     !- Minimum Value of y {BasedOnField A3}
-  90,                                     !- Maximum Value of y {BasedOnField A3}
-  ,                                       !- Minimum Curve Output {BasedOnField A4}
-  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  0,                                      !- Minimum Value of x
+  40,                                     !- Maximum Value of x
+  20,                                     !- Minimum Value of y
+  90,                                     !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Temperature,                            !- Input Unit Type for X
   Temperature,                            !- Input Unit Type for Y
   Dimensionless;                          !- Output Unit Type
@@ -2208,8 +2278,8 @@ OS:Curve:Quadratic,
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {a3bf6669-033c-4ec8-bb5c-71fe226cc3f3}, !- Handle
@@ -2217,8 +2287,8 @@ OS:Curve:Quadratic,
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {15fdb8d0-1cdf-48b5-a6be-cf1cdf5f7cb4}, !- Handle
@@ -2229,12 +2299,12 @@ OS:Curve:Biquadratic,
   -0.02675,                               !- Coefficient4 y
   0.000296,                               !- Coefficient5 y**2
   -0.00112,                               !- Coefficient6 x*y
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  40,                                     !- Maximum Value of x {BasedOnField A2}
-  20,                                     !- Minimum Value of y {BasedOnField A3}
-  90,                                     !- Maximum Value of y {BasedOnField A3}
-  ,                                       !- Minimum Curve Output {BasedOnField A4}
-  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  0,                                      !- Minimum Value of x
+  40,                                     !- Maximum Value of x
+  20,                                     !- Minimum Value of y
+  90,                                     !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Temperature,                            !- Input Unit Type for X
   Temperature,                            !- Input Unit Type for Y
   Dimensionless;                          !- Output Unit Type
@@ -2245,8 +2315,8 @@ OS:Curve:Quadratic,
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {489134e3-6c2a-4475-8f8b-a19ad0b8c965}, !- Handle
@@ -2254,8 +2324,8 @@ OS:Curve:Quadratic,
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {248ab195-cfb7-4c64-89bb-2018882ad681}, !- Handle
@@ -2263,8 +2333,8 @@ OS:Curve:Quadratic,
   0.75,                                   !- Coefficient1 Constant
   0.25,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Schedule:Ruleset,
   {9616370d-4aaf-4f17-8eca-210f8024f2a0}, ! Handle
@@ -2409,8 +2479,8 @@ OS:Schedule:Day,
 OS:ScheduleTypeLimits,
   {81cbda09-5e78-433c-aa14-d07601131750}, !- Handle
   Temperature 2,                          !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -2453,8 +2523,8 @@ OS:Schedule:Constant,
 OS:ScheduleTypeLimits,
   {689e8ec5-f8df-4594-944d-3a478e57ebde}, !- Handle
   OnOff 1,                                !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  1,                                      !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
   Discrete,                               !- Numeric Type
   Availability;                           !- Unit Type
 
@@ -2464,10 +2534,10 @@ OS:Curve:Exponent,
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 Constant
   0,                                      !- Coefficient3 Constant
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1,                                      !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  0,                                      !- Minimum Value of x
+  1,                                      !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   ,                                       !- Input Unit Type for X
   ;                                       !- Output Unit Type
 
@@ -2478,8 +2548,8 @@ OS:Curve:Cubic,
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Schedule:Ruleset,
   {8ec3f91c-d0c8-40e3-ad58-b93ce96ba5ed}, !- Handle
@@ -2514,8 +2584,8 @@ OS:Schedule:Day,
 OS:ScheduleTypeLimits,
   {e626ef76-63d7-4555-ace7-c0e9ffba76e6}, !- Handle
   Fractional 2,                           !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  1,                                      !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
   Continuous;                             !- Numeric Type
 
 OS:Schedule:Ruleset,
@@ -2551,8 +2621,8 @@ OS:Schedule:Day,
 OS:ScheduleTypeLimits,
   {09791629-0b05-4935-8060-d1ca19e6d0a3}, !- Handle
   Dimensionless,                          !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous;                             !- Numeric Type
 
 OS:Schedule:Ruleset,
@@ -2803,8 +2873,8 @@ OS:Fan:OnOff,
 OS:ScheduleTypeLimits,
   {28eb7ade-923f-4856-99f0-3770111df7d7}, !- Handle
   OnOff,                                  !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  1,                                      !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
   Discrete,                               !- Numeric Type
   Availability;                           !- Unit Type
 
@@ -2814,10 +2884,10 @@ OS:Curve:Exponent,
   0,                                      !- Coefficient1 Constant
   1,                                      !- Coefficient2 Constant
   3,                                      !- Coefficient3 Constant
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1.5,                                    !- Maximum Value of x {BasedOnField A2}
-  0.01,                                   !- Minimum Curve Output {BasedOnField A3}
-  1.5;                                    !- Maximum Curve Output {BasedOnField A3}
+  0,                                      !- Minimum Value of x
+  1.5,                                    !- Maximum Value of x
+  0.01,                                   !- Minimum Curve Output
+  1.5;                                    !- Maximum Curve Output
 
 OS:Curve:Cubic,
   {01de07cc-acc8-49fa-b77b-9ae4a8e35ed6}, !- Handle
@@ -2826,10 +2896,10 @@ OS:Curve:Cubic,
   1.72644131,                             !- Coefficient2 x
   -1.49280132,                            !- Coefficient3 x**2
   0.42776208,                             !- Coefficient4 x**3
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5,                                    !- Maximum Value of x {BasedOnField A2}
-  0.3,                                    !- Minimum Curve Output {BasedOnField A3}
-  1;                                      !- Maximum Curve Output {BasedOnField A3}
+  0.5,                                    !- Minimum Value of x
+  1.5,                                    !- Maximum Value of x
+  0.3,                                    !- Minimum Curve Output
+  1;                                      !- Maximum Curve Output
 
 OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
   {d683b8e6-1a67-4e2b-aa32-8a4aa6cedd5d}, !- Handle
@@ -3695,10 +3765,10 @@ OS:Curve:Linear,
   Refrigeration Condenser Air Cooled HR Curve, !- Name
   0,                                      !- Coefficient1 Constant
   22000,                                  !- Coefficient2 x
-  5,                                      !- Minimum Value of x {BasedOnField A2}
-  22.2,                                   !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  5,                                      !- Minimum Value of x
+  22.2,                                   !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   ,                                       !- Input Unit Type for X
   ;                                       !- Output Unit Type
 
@@ -3729,12 +3799,12 @@ OS:Curve:Bicubic,
   0.000633306,                            !- Coefficient8 y**3
   0.0778798,                              !- Coefficient9 x**2*y
   -0.0167386,                             !- Coefficient10 x*y**2
-  -23.3,                                  !- Minimum Value of x {BasedOnField A2}
-  7.2,                                    !- Maximum Value of x {BasedOnField A2}
-  10,                                     !- Minimum Value of y {BasedOnField A3}
-  60,                                     !- Maximum Value of y {BasedOnField A3}
-  ,                                       !- Minimum Curve Output {BasedOnField A4}
-  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  -23.3,                                  !- Minimum Value of x
+  7.2,                                    !- Maximum Value of x
+  10,                                     !- Minimum Value of y
+  60,                                     !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Temperature,                            !- Input Unit Type for X
   Temperature,                            !- Input Unit Type for Y
   Power;                                  !- Output Unit Type
@@ -3752,12 +3822,12 @@ OS:Curve:Bicubic,
   -0.0199971,                             !- Coefficient8 y**3
   -0.481641,                              !- Coefficient9 x**2*y
   0.0428673,                              !- Coefficient10 x*y**2
-  -23.3,                                  !- Minimum Value of x {BasedOnField A2}
-  7.2,                                    !- Maximum Value of x {BasedOnField A2}
-  10,                                     !- Minimum Value of y {BasedOnField A3}
-  60,                                     !- Maximum Value of y {BasedOnField A3}
-  ,                                       !- Minimum Curve Output {BasedOnField A4}
-  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  -23.3,                                  !- Minimum Value of x
+  7.2,                                    !- Maximum Value of x
+  10,                                     !- Minimum Value of y
+  60,                                     !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Temperature,                            !- Input Unit Type for X
   Temperature,                            !- Input Unit Type for Y
   Capacity;                               !- Output Unit Type
@@ -3789,12 +3859,12 @@ OS:Curve:Bicubic,
   0.000633306,                            !- Coefficient8 y**3
   0.0778798,                              !- Coefficient9 x**2*y
   -0.0167386,                             !- Coefficient10 x*y**2
-  -23.3,                                  !- Minimum Value of x {BasedOnField A2}
-  7.2,                                    !- Maximum Value of x {BasedOnField A2}
-  10,                                     !- Minimum Value of y {BasedOnField A3}
-  60,                                     !- Maximum Value of y {BasedOnField A3}
-  ,                                       !- Minimum Curve Output {BasedOnField A4}
-  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  -23.3,                                  !- Minimum Value of x
+  7.2,                                    !- Maximum Value of x
+  10,                                     !- Minimum Value of y
+  60,                                     !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Temperature,                            !- Input Unit Type for X
   Temperature,                            !- Input Unit Type for Y
   Power;                                  !- Output Unit Type
@@ -3812,12 +3882,12 @@ OS:Curve:Bicubic,
   -0.0199971,                             !- Coefficient8 y**3
   -0.481641,                              !- Coefficient9 x**2*y
   0.0428673,                              !- Coefficient10 x*y**2
-  -23.3,                                  !- Minimum Value of x {BasedOnField A2}
-  7.2,                                    !- Maximum Value of x {BasedOnField A2}
-  10,                                     !- Minimum Value of y {BasedOnField A3}
-  60,                                     !- Maximum Value of y {BasedOnField A3}
-  ,                                       !- Minimum Curve Output {BasedOnField A4}
-  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  -23.3,                                  !- Minimum Value of x
+  7.2,                                    !- Maximum Value of x
+  10,                                     !- Minimum Value of y
+  60,                                     !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Temperature,                            !- Input Unit Type for X
   Temperature,                            !- Input Unit Type for Y
   Capacity;                               !- Output Unit Type
@@ -3882,10 +3952,10 @@ OS:Curve:Cubic,
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1,                                      !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  0,                                      !- Minimum Value of x
+  1,                                      !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   ,                                       !- Input Unit Type for X
   ;                                       !- Output Unit Type
 
@@ -3896,18 +3966,18 @@ OS:Curve:Cubic,
   0.001078032,                            !- Coefficient2 x
   -6.02558e-05,                           !- Coefficient3 x**2
   1.23732e-06,                            !- Coefficient4 x**3
-  -35,                                    !- Minimum Value of x {BasedOnField A2}
-  20,                                     !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  -35,                                    !- Minimum Value of x
+  20,                                     !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   ,                                       !- Input Unit Type for X
   ;                                       !- Output Unit Type
 
 OS:ScheduleTypeLimits,
   {b753221d-2424-45d9-a74b-31494bf508ef}, !- Handle
   Fractional 1,                           !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  1,                                      !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
   Continuous;                             !- Numeric Type
 
 OS:Refrigeration:System,
@@ -4045,8 +4115,8 @@ OS:Refrigeration:WalkIn,
 OS:ScheduleTypeLimits,
   {800d56d5-16ef-4ac2-a7d0-6abcfc246032}, !- Handle
   Fractional,                             !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  1,                                      !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
   Continuous;                             !- Numeric Type
 
 OS:Refrigeration:WalkIn:ZoneBoundary,
@@ -4105,8 +4175,8 @@ OS:Curve:Cubic,
   0.0512,                                 !- Coefficient2 x
   -0.0838,                                !- Coefficient3 x**2
   1.0419,                                 !- Coefficient4 x**3
-  0.15,                                   !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0.15,                                   !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:CoolingTower:VariableSpeed,
   {c297d8fd-cf34-420a-bd55-ea44c46983f3}, !- Handle
@@ -4148,8 +4218,8 @@ OS:Curve:Cubic,
   0.0512,                                 !- Coefficient2 x
   -0.0838,                                !- Coefficient3 x**2
   1.0419,                                 !- Coefficient4 x**3
-  0.15,                                   !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0.15,                                   !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:CoolingTowerPerformance:CoolTools,
   {39b3c3c6-1e9c-4e29-a23e-4746c7e742e9}, !- Handle
@@ -4238,8 +4308,8 @@ OS:Curve:Cubic,
   0.0512,                                 !- Coefficient2 x
   -0.0838,                                !- Coefficient3 x**2
   1.0419,                                 !- Coefficient4 x**3
-  0.15,                                   !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0.15,                                   !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:CoolingTowerPerformance:YorkCalc,
   {d5189f31-0fbf-4acb-b874-cd2f88a1b6af}, !- Handle
@@ -4374,12 +4444,12 @@ OS:Curve:Biquadratic,
   0,                                      !- Coefficient4 y
   0,                                      !- Coefficient5 y**2
   0,                                      !- Coefficient6 x*y
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1,                                      !- Maximum Value of x {BasedOnField A2}
-  0,                                      !- Minimum Value of y {BasedOnField A3}
-  1,                                      !- Maximum Value of y {BasedOnField A3}
-  ,                                       !- Minimum Curve Output {BasedOnField A4}
-  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  0,                                      !- Minimum Value of x
+  1,                                      !- Maximum Value of x
+  0,                                      !- Minimum Value of y
+  1,                                      !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Dimensionless,                          !- Input Unit Type for X
   Dimensionless,                          !- Input Unit Type for Y
   Dimensionless;                          !- Output Unit Type
@@ -4393,12 +4463,12 @@ OS:Curve:Biquadratic,
   0,                                      !- Coefficient4 y
   0,                                      !- Coefficient5 y**2
   0,                                      !- Coefficient6 x*y
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1,                                      !- Maximum Value of x {BasedOnField A2}
-  0,                                      !- Minimum Value of y {BasedOnField A3}
-  1,                                      !- Maximum Value of y {BasedOnField A3}
-  ,                                       !- Minimum Curve Output {BasedOnField A4}
-  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  0,                                      !- Minimum Value of x
+  1,                                      !- Maximum Value of x
+  0,                                      !- Minimum Value of y
+  1,                                      !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Dimensionless,                          !- Input Unit Type for X
   Dimensionless,                          !- Input Unit Type for Y
   Dimensionless;                          !- Output Unit Type
@@ -4412,12 +4482,12 @@ OS:Curve:Biquadratic,
   0,                                      !- Coefficient4 y
   0,                                      !- Coefficient5 y**2
   0,                                      !- Coefficient6 x*y
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1,                                      !- Maximum Value of x {BasedOnField A2}
-  0,                                      !- Minimum Value of y {BasedOnField A3}
-  1,                                      !- Maximum Value of y {BasedOnField A3}
-  ,                                       !- Minimum Curve Output {BasedOnField A4}
-  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  0,                                      !- Minimum Value of x
+  1,                                      !- Maximum Value of x
+  0,                                      !- Minimum Value of y
+  1,                                      !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Dimensionless,                          !- Input Unit Type for X
   Dimensionless,                          !- Input Unit Type for Y
   Dimensionless;                          !- Output Unit Type
@@ -4431,12 +4501,12 @@ OS:Curve:Biquadratic,
   0,                                      !- Coefficient4 y
   0,                                      !- Coefficient5 y**2
   0,                                      !- Coefficient6 x*y
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1,                                      !- Maximum Value of x {BasedOnField A2}
-  0,                                      !- Minimum Value of y {BasedOnField A3}
-  1,                                      !- Maximum Value of y {BasedOnField A3}
-  ,                                       !- Minimum Curve Output {BasedOnField A4}
-  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  0,                                      !- Minimum Value of x
+  1,                                      !- Maximum Value of x
+  0,                                      !- Minimum Value of y
+  1,                                      !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Dimensionless,                          !- Input Unit Type for X
   Dimensionless,                          !- Input Unit Type for Y
   Dimensionless;                          !- Output Unit Type
@@ -4450,12 +4520,12 @@ OS:Curve:Biquadratic,
   0,                                      !- Coefficient4 y
   0,                                      !- Coefficient5 y**2
   0,                                      !- Coefficient6 x*y
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1,                                      !- Maximum Value of x {BasedOnField A2}
-  0,                                      !- Minimum Value of y {BasedOnField A3}
-  1,                                      !- Maximum Value of y {BasedOnField A3}
-  ,                                       !- Minimum Curve Output {BasedOnField A4}
-  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  0,                                      !- Minimum Value of x
+  1,                                      !- Maximum Value of x
+  0,                                      !- Minimum Value of y
+  1,                                      !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Dimensionless,                          !- Input Unit Type for X
   Dimensionless,                          !- Input Unit Type for Y
   Dimensionless;                          !- Output Unit Type
@@ -4469,12 +4539,12 @@ OS:Curve:Biquadratic,
   -1.76324e-06,                           !- Coefficient4 y
   -7.474e-09,                             !- Coefficient5 y**2
   -1.30413e-07,                           !- Coefficient6 x*y
-  15,                                     !- Minimum Value of x {BasedOnField A2}
-  24,                                     !- Maximum Value of x {BasedOnField A2}
-  -5,                                     !- Minimum Value of y {BasedOnField A3}
-  23,                                     !- Maximum Value of y {BasedOnField A3}
-  ,                                       !- Minimum Curve Output {BasedOnField A4}
-  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  15,                                     !- Minimum Value of x
+  24,                                     !- Maximum Value of x
+  -5,                                     !- Minimum Value of y
+  23,                                     !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Temperature,                            !- Input Unit Type for X
   Temperature,                            !- Input Unit Type for Y
   Dimensionless;                          !- Output Unit Type
@@ -4486,10 +4556,10 @@ OS:Curve:Cubic,
   -0.03150043,                            !- Coefficient2 x
   -0.01416595,                            !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  11,                                     !- Minimum Value of x {BasedOnField A2}
-  30,                                     !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  11,                                     !- Minimum Value of x
+  30,                                     !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Temperature,                            !- Input Unit Type for X
   Temperature;                            !- Output Unit Type
 
@@ -4502,12 +4572,12 @@ OS:Curve:Biquadratic,
   -0.0016218,                             !- Coefficient4 y
   -4.259e-07,                             !- Coefficient5 y**2
   -0.0003392,                             !- Coefficient6 x*y
-  15,                                     !- Minimum Value of x {BasedOnField A2}
-  24,                                     !- Maximum Value of x {BasedOnField A2}
-  16,                                     !- Minimum Value of y {BasedOnField A3}
-  43,                                     !- Maximum Value of y {BasedOnField A3}
-  ,                                       !- Minimum Curve Output {BasedOnField A4}
-  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  15,                                     !- Minimum Value of x
+  24,                                     !- Maximum Value of x
+  16,                                     !- Minimum Value of y
+  43,                                     !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Temperature,                            !- Input Unit Type for X
   Temperature,                            !- Input Unit Type for Y
   Dimensionless;                          !- Output Unit Type
@@ -4521,12 +4591,12 @@ OS:Curve:Biquadratic,
   0.005968336,                            !- Coefficient4 y
   -1.0289e-07,                            !- Coefficient5 y**2
   -0.00015686,                            !- Coefficient6 x*y
-  15,                                     !- Minimum Value of x {BasedOnField A2}
-  24,                                     !- Maximum Value of x {BasedOnField A2}
-  -5,                                     !- Minimum Value of y {BasedOnField A3}
-  23,                                     !- Maximum Value of y {BasedOnField A3}
-  ,                                       !- Minimum Curve Output {BasedOnField A4}
-  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  15,                                     !- Minimum Value of x
+  24,                                     !- Maximum Value of x
+  -5,                                     !- Minimum Value of y
+  23,                                     !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Temperature,                            !- Input Unit Type for X
   Temperature,                            !- Input Unit Type for Y
   Dimensionless;                          !- Output Unit Type
@@ -4538,10 +4608,10 @@ OS:Curve:Cubic,
   -0.03150043,                            !- Coefficient2 x
   -0.01416595,                            !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  15,                                     !- Minimum Value of x {BasedOnField A2}
-  24,                                     !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  15,                                     !- Minimum Value of x
+  24,                                     !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Temperature,                            !- Input Unit Type for X
   Temperature;                            !- Output Unit Type
 
@@ -4554,12 +4624,12 @@ OS:Curve:Biquadratic,
   0.0269442645,                           !- Coefficient4 y
   0.0001346163,                           !- Coefficient5 y**2
   -0.0006714941,                          !- Coefficient6 x*y
-  15,                                     !- Minimum Value of x {BasedOnField A2}
-  23.9,                                   !- Maximum Value of x {BasedOnField A2}
-  16.8,                                   !- Minimum Value of y {BasedOnField A3}
-  43.3,                                   !- Maximum Value of y {BasedOnField A3}
-  ,                                       !- Minimum Curve Output {BasedOnField A4}
-  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  15,                                     !- Minimum Value of x
+  23.9,                                   !- Maximum Value of x
+  16.8,                                   !- Minimum Value of y
+  43.3,                                   !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Temperature,                            !- Input Unit Type for X
   Temperature,                            !- Input Unit Type for Y
   Dimensionless;                          !- Output Unit Type
@@ -4571,10 +4641,10 @@ OS:Curve:Cubic,
   -0.1729687081,                          !- Coefficient2 x
   1.0828661347,                           !- Coefficient3 x**2
   -0.3618480897,                          !- Coefficient4 x**3
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1,                                      !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  0.5,                                    !- Minimum Value of x
+  1,                                      !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Temperature,                            !- Input Unit Type for X
   Temperature;                            !- Output Unit Type
 
@@ -4585,10 +4655,10 @@ OS:Curve:Cubic,
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  1,                                      !- Minimum Value of x {BasedOnField A2}
-  1.5,                                    !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  1,                                      !- Minimum Value of x
+  1.5,                                    !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Dimensionless,                          !- Input Unit Type for X
   Dimensionless;                          !- Output Unit Type
 
@@ -4599,10 +4669,10 @@ OS:Curve:Cubic,
   0.6349408697,                           !- Coefficient2 x
   -0.3076093963,                          !- Coefficient3 x**2
   0.0960752636,                           !- Coefficient4 x**3
-  1,                                      !- Minimum Value of x {BasedOnField A2}
-  1.5,                                    !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  1,                                      !- Minimum Value of x
+  1.5,                                    !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Dimensionless,                          !- Input Unit Type for X
   Dimensionless;                          !- Output Unit Type
 
@@ -4613,10 +4683,10 @@ OS:Curve:Cubic,
   0.15,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  1,                                      !- Minimum Value of x {BasedOnField A2}
-  1,                                      !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  1,                                      !- Minimum Value of x
+  1,                                      !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Dimensionless,                          !- Input Unit Type for X
   Dimensionless;                          !- Output Unit Type
 
@@ -4629,12 +4699,12 @@ OS:Curve:Biquadratic,
   0.0267564328,                           !- Coefficient4 y
   -4.986e-07,                             !- Coefficient5 y**2
   -0.0002635239,                          !- Coefficient6 x*y
-  21.1,                                   !- Minimum Value of x {BasedOnField A2}
-  27.2,                                   !- Maximum Value of x {BasedOnField A2}
-  -20,                                    !- Minimum Value of y {BasedOnField A3}
-  3.33,                                   !- Maximum Value of y {BasedOnField A3}
-  ,                                       !- Minimum Curve Output {BasedOnField A4}
-  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  21.1,                                   !- Minimum Value of x
+  27.2,                                   !- Maximum Value of x
+  -20,                                    !- Minimum Value of y
+  3.33,                                   !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Temperature,                            !- Input Unit Type for X
   Temperature,                            !- Input Unit Type for Y
   Dimensionless;                          !- Output Unit Type
@@ -4646,10 +4716,10 @@ OS:Curve:Cubic,
   -3.0255,                                !- Coefficient2 x
   0.0193,                                 !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  15,                                     !- Minimum Value of x {BasedOnField A2}
-  23.9,                                   !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  15,                                     !- Minimum Value of x
+  23.9,                                   !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Temperature,                            !- Input Unit Type for X
   Temperature;                            !- Output Unit Type
 
@@ -4662,12 +4732,12 @@ OS:Curve:Biquadratic,
   0,                                      !- Coefficient4 y
   0,                                      !- Coefficient5 y**2
   0,                                      !- Coefficient6 x*y
-  21.1,                                   !- Minimum Value of x {BasedOnField A2}
-  27.2,                                   !- Maximum Value of x {BasedOnField A2}
-  -9.44,                                  !- Minimum Value of y {BasedOnField A3}
-  15,                                     !- Maximum Value of y {BasedOnField A3}
-  ,                                       !- Minimum Curve Output {BasedOnField A4}
-  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  21.1,                                   !- Minimum Value of x
+  27.2,                                   !- Maximum Value of x
+  -9.44,                                  !- Minimum Value of y
+  15,                                     !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Temperature,                            !- Input Unit Type for X
   Temperature,                            !- Input Unit Type for Y
   Dimensionless;                          !- Output Unit Type
@@ -4681,12 +4751,12 @@ OS:Curve:Biquadratic,
   -0.0026435362,                          !- Coefficient4 y
   0.0012464766,                           !- Coefficient5 y**2
   -0.0001009161,                          !- Coefficient6 x*y
-  21.1,                                   !- Minimum Value of x {BasedOnField A2}
-  27.2,                                   !- Maximum Value of x {BasedOnField A2}
-  -20,                                    !- Minimum Value of y {BasedOnField A3}
-  3.33,                                   !- Maximum Value of y {BasedOnField A3}
-  ,                                       !- Minimum Curve Output {BasedOnField A4}
-  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  21.1,                                   !- Minimum Value of x
+  27.2,                                   !- Maximum Value of x
+  -20,                                    !- Minimum Value of y
+  3.33,                                   !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Temperature,                            !- Input Unit Type for X
   Temperature,                            !- Input Unit Type for Y
   Dimensionless;                          !- Output Unit Type
@@ -4698,10 +4768,10 @@ OS:Curve:Cubic,
   -3.0255,                                !- Coefficient2 x
   0.0193,                                 !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  15,                                     !- Minimum Value of x {BasedOnField A2}
-  23.9,                                   !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  15,                                     !- Minimum Value of x
+  23.9,                                   !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Temperature,                            !- Input Unit Type for X
   Temperature;                            !- Output Unit Type
 
@@ -4714,12 +4784,12 @@ OS:Curve:Biquadratic,
   -0.0273936962,                          !- Coefficient4 y
   0.0004030426,                           !- Coefficient5 y**2
   -5.9786e-05,                            !- Coefficient6 x*y
-  21.1,                                   !- Minimum Value of x {BasedOnField A2}
-  27.2,                                   !- Maximum Value of x {BasedOnField A2}
-  0,                                      !- Minimum Value of y {BasedOnField A3}
-  1,                                      !- Maximum Value of y {BasedOnField A3}
-  ,                                       !- Minimum Curve Output {BasedOnField A4}
-  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  21.1,                                   !- Minimum Value of x
+  27.2,                                   !- Maximum Value of x
+  0,                                      !- Minimum Value of y
+  1,                                      !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Temperature,                            !- Input Unit Type for X
   Temperature,                            !- Input Unit Type for Y
   Dimensionless;                          !- Output Unit Type
@@ -4731,10 +4801,10 @@ OS:Curve:Cubic,
   0.076016374,                            !- Coefficient2 x
   0.6983235783,                           !- Coefficient3 x**2
   -0.1688407813,                          !- Coefficient4 x**3
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1,                                      !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  0.5,                                    !- Minimum Value of x
+  1,                                      !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Dimensionless,                          !- Input Unit Type for X
   Dimensionless;                          !- Output Unit Type
 
@@ -4745,10 +4815,10 @@ OS:Curve:Cubic,
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  1,                                      !- Minimum Value of x {BasedOnField A2}
-  1.5,                                    !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  1,                                      !- Minimum Value of x
+  1.5,                                    !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Dimensionless,                          !- Input Unit Type for X
   Dimensionless;                          !- Output Unit Type
 
@@ -4759,10 +4829,10 @@ OS:Curve:Cubic,
   0.2617302019,                           !- Coefficient2 x
   -0.0159110245,                          !- Coefficient3 x**2
   -0.0125388376,                          !- Coefficient4 x**3
-  1,                                      !- Minimum Value of x {BasedOnField A2}
-  1.5,                                    !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  1,                                      !- Minimum Value of x
+  1.5,                                    !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Dimensionless,                          !- Input Unit Type for X
   Dimensionless;                          !- Output Unit Type
 
@@ -4775,12 +4845,12 @@ OS:Curve:Biquadratic,
   -1.6858129772,                          !- Coefficient4 y
   0.668703358,                            !- Coefficient5 y**2
   -4.5706e-05,                            !- Coefficient6 x*y
-  7.62,                                   !- Minimum Value of x {BasedOnField A2}
-  182.88,                                 !- Maximum Value of x {BasedOnField A2}
-  0.8,                                    !- Minimum Value of y {BasedOnField A3}
-  1.5,                                    !- Maximum Value of y {BasedOnField A3}
-  ,                                       !- Minimum Curve Output {BasedOnField A4}
-  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  7.62,                                   !- Minimum Value of x
+  182.88,                                 !- Maximum Value of x
+  0.8,                                    !- Minimum Value of y
+  1.5,                                    !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   Temperature,                            !- Input Unit Type for X
   Temperature,                            !- Input Unit Type for Y
   Dimensionless;                          !- Output Unit Type
@@ -4821,8 +4891,8 @@ OS:Schedule:Constant,
 OS:ScheduleTypeLimits,
   {c4b72eeb-4c4b-47c5-96c2-6f0d4a648825}, !- Handle
   Schedule Type Limits 2,                 !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  1,                                      !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
   Discrete,                               !- Numeric Type
   Availability;                           !- Unit Type
 
@@ -4847,12 +4917,12 @@ OS:Curve:Biquadratic,
   0.0109370473889647,                     !- Coefficient4 y
   -0.0001219549,                          !- Coefficient5 y**2
   -0.0005246615,                          !- Coefficient6 x*y
-  15,                                     !- Minimum Value of x {BasedOnField A2}
-  23.89,                                  !- Maximum Value of x {BasedOnField A2}
-  20,                                     !- Minimum Value of y {BasedOnField A3}
-  43.33,                                  !- Maximum Value of y {BasedOnField A3}
-  0.8083,                                 !- Minimum Curve Output {BasedOnField A4}
-  1.2583,                                 !- Maximum Curve Output {BasedOnField A4}
+  15,                                     !- Minimum Value of x
+  23.89,                                  !- Maximum Value of x
+  20,                                     !- Minimum Value of y
+  43.33,                                  !- Maximum Value of y
+  0.8083,                                 !- Minimum Curve Output
+  1.2583,                                 !- Maximum Curve Output
   Temperature,                            !- Input Unit Type for X
   Temperature,                            !- Input Unit Type for Y
   Dimensionless;                          !- Output Unit Type
@@ -4863,10 +4933,10 @@ OS:Curve:Quadratic,
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5,                                    !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  0.5,                                    !- Minimum Value of x
+  1.5,                                    !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   ,                                       !- Input Unit Type for X
   ;                                       !- Output Unit Type
 
@@ -4890,12 +4960,12 @@ OS:Curve:Biquadratic,
   0.0442618420640187,                     !- Coefficient4 y
   -0.0004009578,                          !- Coefficient5 y**2
   -0.0014819801,                          !- Coefficient6 x*y
-  21.11,                                  !- Minimum Value of x {BasedOnField A2}
-  27.22,                                  !- Maximum Value of x {BasedOnField A2}
-  -15,                                    !- Minimum Value of y {BasedOnField A3}
-  18.33,                                  !- Maximum Value of y {BasedOnField A3}
-  0.6074,                                 !- Minimum Curve Output {BasedOnField A4}
-  1,                                      !- Maximum Curve Output {BasedOnField A4}
+  21.11,                                  !- Minimum Value of x
+  27.22,                                  !- Maximum Value of x
+  -15,                                    !- Minimum Value of y
+  18.33,                                  !- Maximum Value of y
+  0.6074,                                 !- Minimum Curve Output
+  1,                                      !- Maximum Curve Output
   Temperature,                            !- Input Unit Type for X
   Temperature,                            !- Input Unit Type for Y
   Dimensionless;                          !- Output Unit Type
@@ -4906,10 +4976,10 @@ OS:Curve:Quadratic,
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5,                                    !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  0.5,                                    !- Minimum Value of x
+  1.5,                                    !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   ,                                       !- Input Unit Type for X
   ;                                       !- Output Unit Type
 
@@ -4934,10 +5004,10 @@ OS:Curve:Exponent,
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 Constant
   0,                                      !- Coefficient3 Constant
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1,                                      !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  0,                                      !- Minimum Value of x
+  1,                                      !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   ,                                       !- Input Unit Type for X
   ;                                       !- Output Unit Type
 
@@ -4948,10 +5018,10 @@ OS:Curve:Cubic,
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1,                                      !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  0,                                      !- Minimum Value of x
+  1,                                      !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   ,                                       !- Input Unit Type for X
   ;                                       !- Output Unit Type
 
@@ -5042,8 +5112,8 @@ OS:Curve:Exponent,
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 Constant
   0,                                      !- Coefficient3 Constant
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Cubic,
   {1a1163dc-e05d-4cc1-ab9b-9991eb8fcc80}, !- Handle
@@ -5052,8 +5122,8 @@ OS:Curve:Cubic,
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Coil:Cooling:DX:SingleSpeed,
   {fff3b049-43aa-408a-9c3a-d5f10c812c03}, !- Handle
@@ -5119,8 +5189,8 @@ OS:Curve:Cubic,
   0.027626,                               !- Coefficient2 x
   0.000148716,                            !- Coefficient3 x**2
   3.4992e-06,                             !- Coefficient4 x**3
-  -20,                                    !- Minimum Value of x {BasedOnField A2}
-  20;                                     !- Maximum Value of x {BasedOnField A2}
+  -20,                                    !- Minimum Value of x
+  20;                                     !- Maximum Value of x
 
 OS:Curve:Cubic,
   {23bc9330-ac19-4712-8109-d0892fa35397}, !- Handle
@@ -5129,8 +5199,8 @@ OS:Curve:Cubic,
   0.16,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Cubic,
   {acc1a724-4b7a-4e67-8798-127415e9fe18}, !- Handle
@@ -5139,8 +5209,8 @@ OS:Curve:Cubic,
   -0.0300438,                             !- Coefficient2 x
   0.00103745,                             !- Coefficient3 x**2
   -2.3328e-05,                            !- Coefficient4 x**3
-  -20,                                    !- Minimum Value of x {BasedOnField A2}
-  20;                                     !- Maximum Value of x {BasedOnField A2}
+  -20,                                    !- Minimum Value of x
+  20;                                     !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {ae1adfc4-ec7c-4851-923c-4aba9cb2e07f}, !- Handle
@@ -5148,8 +5218,8 @@ OS:Curve:Quadratic,
   1.3824,                                 !- Coefficient1 Constant
   -0.4336,                                !- Coefficient2 x
   0.0512,                                 !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {8775575a-e7ed-463d-be90-7a8457f1ddf9}, !- Handle
@@ -5157,8 +5227,8 @@ OS:Curve:Quadratic,
   0.75,                                   !- Coefficient1 Constant
   0.25,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {63b353d4-5a0b-421e-aa14-346b28218b2f}, !- Handle
@@ -5169,10 +5239,10 @@ OS:Curve:Biquadratic,
   0.00134961,                             !- Coefficient4 y
   -0.000261144,                           !- Coefficient5 y**2
   0.000457488,                            !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {9130dc0e-2a0e-4d35-b9b3-7e05ffd0de02}, !- Handle
@@ -5180,8 +5250,8 @@ OS:Curve:Quadratic,
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {02d2f3ed-26c3-4984-9eea-8acc9655154f}, !- Handle
@@ -5192,10 +5262,10 @@ OS:Curve:Biquadratic,
   0.00597727,                             !- Coefficient4 y
   0.000482112,                            !- Coefficient5 y**2
   -0.000956448,                           !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {a2171c29-bf61-4bfa-8242-bb8a974d3d65}, !- Handle
@@ -5203,8 +5273,8 @@ OS:Curve:Quadratic,
   1.156,                                  !- Coefficient1 Constant
   -0.1816,                                !- Coefficient2 x
   0.0256,                                 !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {d8867e00-07e7-4574-8cb1-37f23de91113}, !- Handle
@@ -5212,8 +5282,8 @@ OS:Curve:Quadratic,
   0.75,                                   !- Coefficient1 Constant
   0.25,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Coil:Heating:Electric,
   {57df53a7-30bb-453a-941d-18fe5d4b36a0}, !- Handle
@@ -5296,8 +5366,8 @@ OS:Curve:Exponent,
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 Constant
   0,                                      !- Coefficient3 Constant
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Cubic,
   {64892a72-eab0-449f-a142-997b12bb92d3}, !- Handle
@@ -5306,8 +5376,8 @@ OS:Curve:Cubic,
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Coil:Cooling:DX:TwoSpeed,
   {bff4c3aa-3268-40f1-a03f-6435e2cc376f}, !- Handle
@@ -5375,8 +5445,8 @@ OS:Curve:Cubic,
   0.027626,                               !- Coefficient2 x
   0.000148716,                            !- Coefficient3 x**2
   3.4992e-06,                             !- Coefficient4 x**3
-  -20,                                    !- Minimum Value of x {BasedOnField A2}
-  20;                                     !- Maximum Value of x {BasedOnField A2}
+  -20,                                    !- Minimum Value of x
+  20;                                     !- Maximum Value of x
 
 OS:Curve:Cubic,
   {5e7419fe-c19a-4c64-9f4b-d59f5ef67058}, !- Handle
@@ -5385,8 +5455,8 @@ OS:Curve:Cubic,
   0.16,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Cubic,
   {dfe7f5ae-9dbc-44ca-8e98-6888475e94fd}, !- Handle
@@ -5395,8 +5465,8 @@ OS:Curve:Cubic,
   -0.0300438,                             !- Coefficient2 x
   0.00103745,                             !- Coefficient3 x**2
   -2.3328e-05,                            !- Coefficient4 x**3
-  -20,                                    !- Minimum Value of x {BasedOnField A2}
-  20;                                     !- Maximum Value of x {BasedOnField A2}
+  -20,                                    !- Minimum Value of x
+  20;                                     !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {3c11f0d5-7340-4e85-b737-cc339d44c9b2}, !- Handle
@@ -5404,8 +5474,8 @@ OS:Curve:Quadratic,
   1.3824,                                 !- Coefficient1 Constant
   -0.4336,                                !- Coefficient2 x
   0.0512,                                 !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {01baf539-33a8-4f0c-b5c5-11e9069deb45}, !- Handle
@@ -5413,8 +5483,8 @@ OS:Curve:Quadratic,
   0.75,                                   !- Coefficient1 Constant
   0.25,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {7a9a0f08-f4c8-47f9-9aff-ae879332419d}, !- Handle
@@ -5425,10 +5495,10 @@ OS:Curve:Biquadratic,
   0.00134961,                             !- Coefficient4 y
   -0.000261144,                           !- Coefficient5 y**2
   0.000457488,                            !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {d35d181c-4e60-488a-beea-b2866f3ddc03}, !- Handle
@@ -5436,8 +5506,8 @@ OS:Curve:Quadratic,
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {131db39b-443c-4ef3-8841-ba913ad7faf9}, !- Handle
@@ -5448,10 +5518,10 @@ OS:Curve:Biquadratic,
   0.00597727,                             !- Coefficient4 y
   0.000482112,                            !- Coefficient5 y**2
   -0.000956448,                           !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {c120f886-1a44-40ba-ab2c-3f0ad5025445}, !- Handle
@@ -5459,8 +5529,8 @@ OS:Curve:Quadratic,
   1.156,                                  !- Coefficient1 Constant
   -0.1816,                                !- Coefficient2 x
   0.0256,                                 !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {05b0752e-17a0-4f0c-827a-f3803b986645}, !- Handle
@@ -5468,8 +5538,8 @@ OS:Curve:Quadratic,
   0.75,                                   !- Coefficient1 Constant
   0.25,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {55d48a87-0dec-40f2-8021-87ae5f5e6675}, !- Handle
@@ -5480,10 +5550,10 @@ OS:Curve:Biquadratic,
   0.00333,                                !- Coefficient4 y
   -8e-05,                                 !- Coefficient5 y**2
   -0.00021,                               !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Biquadratic,
   {89ce9122-836f-48b1-9d99-98826d8cb994}, !- Handle
@@ -5494,10 +5564,10 @@ OS:Curve:Biquadratic,
   -0.01434,                               !- Coefficient4 y
   0.00063,                                !- Coefficient5 y**2
   -0.00038,                               !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Coil:Heating:Electric,
   {437d9440-29e7-4af5-9ff9-6c92ef409db9}, !- Handle
@@ -5580,8 +5650,8 @@ OS:Curve:Exponent,
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 Constant
   0,                                      !- Coefficient3 Constant
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Cubic,
   {28ddbdfe-187d-4926-b54d-3b493b5ee332}, !- Handle
@@ -5590,8 +5660,8 @@ OS:Curve:Cubic,
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Coil:Cooling:DX:TwoSpeed,
   {bee5a7ad-cf9e-46ea-a08a-6e87c4590a2b}, !- Handle
@@ -5637,10 +5707,10 @@ OS:Curve:Biquadratic,
   0.00134961,                             !- Coefficient4 y
   -0.000261144,                           !- Coefficient5 y**2
   0.000457488,                            !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {27da7d9e-983d-49c2-86da-85bec761a301}, !- Handle
@@ -5648,8 +5718,8 @@ OS:Curve:Quadratic,
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {3c27b659-f47b-4b69-ae7c-63e879a6d465}, !- Handle
@@ -5660,10 +5730,10 @@ OS:Curve:Biquadratic,
   0.00597727,                             !- Coefficient4 y
   0.000482112,                            !- Coefficient5 y**2
   -0.000956448,                           !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {08cceec2-ac52-447f-91a9-6b6957e41aa5}, !- Handle
@@ -5671,8 +5741,8 @@ OS:Curve:Quadratic,
   1.156,                                  !- Coefficient1 Constant
   -0.1816,                                !- Coefficient2 x
   0.0256,                                 !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {e2a5850d-63e0-4cf0-b2c8-16ac34c050a0}, !- Handle
@@ -5680,8 +5750,8 @@ OS:Curve:Quadratic,
   0.75,                                   !- Coefficient1 Constant
   0.25,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {f058a48b-de2e-467a-b6f2-6abf002ba66e}, !- Handle
@@ -5692,10 +5762,10 @@ OS:Curve:Biquadratic,
   0.00333,                                !- Coefficient4 y
   -8e-05,                                 !- Coefficient5 y**2
   -0.00021,                               !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Biquadratic,
   {d0978886-f1be-46cc-87f1-321093763dec}, !- Handle
@@ -5706,10 +5776,10 @@ OS:Curve:Biquadratic,
   -0.01434,                               !- Coefficient4 y
   0.00063,                                !- Coefficient5 y**2
   -0.00038,                               !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Coil:Heating:Gas,
   {0a58120a-d7ec-4ec0-9399-63a57d595ed4}, !- Handle
@@ -5805,8 +5875,8 @@ OS:Curve:Exponent,
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 Constant
   0,                                      !- Coefficient3 Constant
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Cubic,
   {0b1c7f93-cfd7-4360-9d1c-b48571c28f18}, !- Handle
@@ -5815,8 +5885,8 @@ OS:Curve:Cubic,
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Coil:Cooling:DX:TwoSpeed,
   {bda71a80-9dc9-4c30-aa80-11d40bf233ca}, !- Handle
@@ -5862,10 +5932,10 @@ OS:Curve:Biquadratic,
   0.00134961,                             !- Coefficient4 y
   -0.000261144,                           !- Coefficient5 y**2
   0.000457488,                            !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {8e886261-26ab-4aa9-9b11-4dc61e58800c}, !- Handle
@@ -5873,8 +5943,8 @@ OS:Curve:Quadratic,
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {f1d0b176-9b26-4d60-ad2d-cf2b91d5008a}, !- Handle
@@ -5885,10 +5955,10 @@ OS:Curve:Biquadratic,
   0.00597727,                             !- Coefficient4 y
   0.000482112,                            !- Coefficient5 y**2
   -0.000956448,                           !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {ec17dea9-3453-4ebd-94c5-cb95f1c603ba}, !- Handle
@@ -5896,8 +5966,8 @@ OS:Curve:Quadratic,
   1.156,                                  !- Coefficient1 Constant
   -0.1816,                                !- Coefficient2 x
   0.0256,                                 !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {6cd46111-9e72-4001-b1b6-bd8885dd32be}, !- Handle
@@ -5905,8 +5975,8 @@ OS:Curve:Quadratic,
   0.75,                                   !- Coefficient1 Constant
   0.25,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {869b9051-2792-4170-a9db-1d574997486c}, !- Handle
@@ -5917,10 +5987,10 @@ OS:Curve:Biquadratic,
   0.00333,                                !- Coefficient4 y
   -8e-05,                                 !- Coefficient5 y**2
   -0.00021,                               !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Biquadratic,
   {9103a3af-2e8e-4ec0-8e0e-8f7c2a31720a}, !- Handle
@@ -5931,10 +6001,10 @@ OS:Curve:Biquadratic,
   -0.01434,                               !- Coefficient4 y
   0.00063,                                !- Coefficient5 y**2
   -0.00038,                               !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Coil:Heating:Electric,
   {be648e1c-0822-4f10-b08a-dcb96f541f34}, !- Handle
@@ -6026,8 +6096,8 @@ OS:Curve:Exponent,
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 Constant
   0,                                      !- Coefficient3 Constant
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Cubic,
   {2d054426-713d-426e-a7f6-67faae2c82dc}, !- Handle
@@ -6036,8 +6106,8 @@ OS:Curve:Cubic,
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Coil:Cooling:DX:SingleSpeed,
   {983b9c20-5a9e-49eb-9770-5c1545cc6b65}, !- Handle
@@ -6081,10 +6151,10 @@ OS:Curve:Biquadratic,
   0.00134961,                             !- Coefficient4 y
   -0.000261144,                           !- Coefficient5 y**2
   0.000457488,                            !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {eb283b72-6eed-45b1-9fef-d8532597ab91}, !- Handle
@@ -6092,8 +6162,8 @@ OS:Curve:Quadratic,
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {e390c23d-e305-4ad7-b617-4bfea48d5f03}, !- Handle
@@ -6104,10 +6174,10 @@ OS:Curve:Biquadratic,
   0.00597727,                             !- Coefficient4 y
   0.000482112,                            !- Coefficient5 y**2
   -0.000956448,                           !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {d2cd9c16-cea2-4c99-883c-5feff89a0986}, !- Handle
@@ -6115,8 +6185,8 @@ OS:Curve:Quadratic,
   1.156,                                  !- Coefficient1 Constant
   -0.1816,                                !- Coefficient2 x
   0.0256,                                 !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {3a8df571-a40a-4af6-8579-68d460f5add7}, !- Handle
@@ -6124,8 +6194,8 @@ OS:Curve:Quadratic,
   0.75,                                   !- Coefficient1 Constant
   0.25,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Coil:Heating:Electric,
   {ca3b3fed-58b0-4f64-85f9-257f45d033a5}, !- Handle
@@ -6217,8 +6287,8 @@ OS:Curve:Exponent,
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 Constant
   0,                                      !- Coefficient3 Constant
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Cubic,
   {743b953d-ee72-42bc-a069-2e9d079fe32a}, !- Handle
@@ -6227,8 +6297,8 @@ OS:Curve:Cubic,
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Coil:Cooling:DX:SingleSpeed,
   {7017ca11-fbaa-49eb-ac8c-6bda560c9d59}, !- Handle
@@ -6272,10 +6342,10 @@ OS:Curve:Biquadratic,
   0.00134961,                             !- Coefficient4 y
   -0.000261144,                           !- Coefficient5 y**2
   0.000457488,                            !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {6b131ebb-bb01-4447-93a8-295d49a0210e}, !- Handle
@@ -6283,8 +6353,8 @@ OS:Curve:Quadratic,
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {aa6c258f-4651-43d6-afab-87ba99b8fbf5}, !- Handle
@@ -6295,10 +6365,10 @@ OS:Curve:Biquadratic,
   0.00597727,                             !- Coefficient4 y
   0.000482112,                            !- Coefficient5 y**2
   -0.000956448,                           !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {d7abe7b1-a6c5-47e5-aaf6-71d2f9239e2e}, !- Handle
@@ -6306,8 +6376,8 @@ OS:Curve:Quadratic,
   1.156,                                  !- Coefficient1 Constant
   -0.1816,                                !- Coefficient2 x
   0.0256,                                 !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {d5485a83-a4e7-4d5e-8706-9781f4cd5f19}, !- Handle
@@ -6315,8 +6385,8 @@ OS:Curve:Quadratic,
   0.75,                                   !- Coefficient1 Constant
   0.25,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Coil:Heating:Gas,
   {9fc39cd0-1958-47fe-9b5c-9f2bdf86eb6c}, !- Handle
@@ -6656,8 +6726,8 @@ OS:Curve:Exponent,
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 Constant
   0,                                      !- Coefficient3 Constant
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Cubic,
   {2c195940-42f8-4508-b203-79682030cbff}, !- Handle
@@ -6666,8 +6736,8 @@ OS:Curve:Cubic,
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
   {3fca92a4-d330-424e-b370-5ad77441d416}, !- Handle
@@ -6803,8 +6873,8 @@ OS:Curve:Exponent,
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 Constant
   0,                                      !- Coefficient3 Constant
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Cubic,
   {e2d54377-fd8a-425c-9352-c730288b954c}, !- Handle
@@ -6813,8 +6883,8 @@ OS:Curve:Cubic,
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Coil:Cooling:DX:TwoSpeed,
   {da2c0524-1def-45c1-87d6-7070b22d98ef}, !- Handle
@@ -6860,10 +6930,10 @@ OS:Curve:Biquadratic,
   0.00134961,                             !- Coefficient4 y
   -0.000261144,                           !- Coefficient5 y**2
   0.000457488,                            !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {6fa9bfb9-2e27-4f2b-bfcc-2d2b16cf0ea7}, !- Handle
@@ -6871,8 +6941,8 @@ OS:Curve:Quadratic,
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {33ebfc04-6887-4ff0-86f5-668b08e661f7}, !- Handle
@@ -6883,10 +6953,10 @@ OS:Curve:Biquadratic,
   0.00597727,                             !- Coefficient4 y
   0.000482112,                            !- Coefficient5 y**2
   -0.000956448,                           !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {92288a82-d61d-4993-8784-d47e3823f32d}, !- Handle
@@ -6894,8 +6964,8 @@ OS:Curve:Quadratic,
   1.156,                                  !- Coefficient1 Constant
   -0.1816,                                !- Coefficient2 x
   0.0256,                                 !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {e2c6cb33-d7e3-4bf6-b29f-b9f7f1890509}, !- Handle
@@ -6903,8 +6973,8 @@ OS:Curve:Quadratic,
   0.75,                                   !- Coefficient1 Constant
   0.25,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {1dcdf837-099e-45d4-907d-8b9774717056}, !- Handle
@@ -6915,10 +6985,10 @@ OS:Curve:Biquadratic,
   0.00333,                                !- Coefficient4 y
   -8e-05,                                 !- Coefficient5 y**2
   -0.00021,                               !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Biquadratic,
   {837cfa5e-426c-4e02-900c-499e157f123b}, !- Handle
@@ -6929,10 +6999,10 @@ OS:Curve:Biquadratic,
   -0.01434,                               !- Coefficient4 y
   0.00063,                                !- Coefficient5 y**2
   -0.00038,                               !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Coil:Heating:Electric,
   {88f005e0-271a-449a-b091-3f2dc7cf35be}, !- Handle
@@ -7015,8 +7085,8 @@ OS:Curve:Exponent,
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 Constant
   0,                                      !- Coefficient3 Constant
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Cubic,
   {472f4b54-6688-4e68-8f8c-ea0e635c1128}, !- Handle
@@ -7025,8 +7095,8 @@ OS:Curve:Cubic,
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Coil:Cooling:DX:SingleSpeed,
   {b51db6e0-72e0-43f9-be35-ab8f087fcbee}, !- Handle
@@ -7070,10 +7140,10 @@ OS:Curve:Biquadratic,
   0.00134961,                             !- Coefficient4 y
   -0.000261144,                           !- Coefficient5 y**2
   0.000457488,                            !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {5765d597-97f6-46fb-bbfb-3579de26d2ca}, !- Handle
@@ -7081,8 +7151,8 @@ OS:Curve:Quadratic,
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {6ec22e09-5452-4a32-a098-2e005baeaab2}, !- Handle
@@ -7093,10 +7163,10 @@ OS:Curve:Biquadratic,
   0.00597727,                             !- Coefficient4 y
   0.000482112,                            !- Coefficient5 y**2
   -0.000956448,                           !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {54eff50e-908e-4895-aa48-2bd0f2df7e7d}, !- Handle
@@ -7104,8 +7174,8 @@ OS:Curve:Quadratic,
   1.156,                                  !- Coefficient1 Constant
   -0.1816,                                !- Coefficient2 x
   0.0256,                                 !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {b1db434d-7527-4816-9579-4b4b7865d7d3}, !- Handle
@@ -7113,8 +7183,8 @@ OS:Curve:Quadratic,
   0.75,                                   !- Coefficient1 Constant
   0.25,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Coil:Heating:Electric,
   {cbbc9cac-e14e-4540-ae79-93928dad263a}, !- Handle
@@ -7197,8 +7267,8 @@ OS:Curve:Exponent,
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 Constant
   0,                                      !- Coefficient3 Constant
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Cubic,
   {c8998397-482a-4ba4-a739-f6001df03874}, !- Handle
@@ -7207,8 +7277,8 @@ OS:Curve:Cubic,
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Coil:Heating:Electric,
   {dd47b809-68a7-4234-b52b-deb00b907b3c}, !- Handle
@@ -7291,8 +7361,8 @@ OS:Curve:Exponent,
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 Constant
   0,                                      !- Coefficient3 Constant
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Curve:Cubic,
   {f4b5bdbc-bfdc-44b0-98ff-0f8d4c657c2f}, !- Handle
@@ -7301,8 +7371,8 @@ OS:Curve:Cubic,
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Coil:Heating:Gas,
   {25934d58-5e08-4c43-9295-602bc31a8ade}, !- Handle
@@ -7614,10 +7684,10 @@ OS:Curve:Biquadratic,
   -0.011042676,                           !- Coefficient4 y
   5.249e-06,                              !- Coefficient5 y**2
   -9.72e-06,                              !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {99e951f0-55c5-4def-bc07-3729661eccca}, !- Handle
@@ -7625,8 +7695,8 @@ OS:Curve:Quadratic,
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {14d4810c-aaa4-4396-b496-56c0f92dedab}, !- Handle
@@ -7637,10 +7707,10 @@ OS:Curve:Biquadratic,
   0.004977216,                            !- Coefficient4 y
   0.000437951,                            !- Coefficient5 y**2
   -0.000728028,                           !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {755b9215-9c17-4fb8-963e-5a06f3d1dce5}, !- Handle
@@ -7648,8 +7718,8 @@ OS:Curve:Quadratic,
   1.1552,                                 !- Coefficient1 Constant
   -0.1808,                                !- Coefficient2 x
   0.0256,                                 !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {4eff1eb6-7727-4c85-94c3-1ad5550c5d2b}, !- Handle
@@ -7657,8 +7727,8 @@ OS:Curve:Quadratic,
   0.85,                                   !- Coefficient1 Constant
   0.15,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Coil:Heating:Gas,
   {7c90b827-b125-4a0b-a905-dc075571540e}, !- Handle
@@ -7822,10 +7892,10 @@ OS:Curve:Exponent,
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 Constant
   0,                                      !- Coefficient3 Constant
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1,                                      !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  0,                                      !- Minimum Value of x
+  1,                                      !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   ,                                       !- Input Unit Type for X
   ;                                       !- Output Unit Type
 
@@ -7836,8 +7906,8 @@ OS:Curve:Cubic,
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Coil:Heating:Water,
   {6ebfa242-93b1-4d90-9ca4-eb5362303729}, !- Handle
@@ -8097,10 +8167,10 @@ OS:Curve:Exponent,
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 Constant
   0,                                      !- Coefficient3 Constant
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1,                                      !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  0,                                      !- Minimum Value of x
+  1,                                      !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   ,                                       !- Input Unit Type for X
   ;                                       !- Output Unit Type
 
@@ -8111,8 +8181,8 @@ OS:Curve:Cubic,
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Coil:Heating:Water,
   {603abd52-5b41-4fa9-b6d8-bcf7fcc90cb1}, !- Handle
@@ -8174,10 +8244,10 @@ OS:Curve:Biquadratic,
   -0.011042676,                           !- Coefficient4 y
   5.249e-06,                              !- Coefficient5 y**2
   -9.72e-06,                              !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {aca3affe-6f07-4376-9be0-e020e3f440ae}, !- Handle
@@ -8185,8 +8255,8 @@ OS:Curve:Quadratic,
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {089f50c2-c451-4322-b450-f739b184eb8e}, !- Handle
@@ -8197,10 +8267,10 @@ OS:Curve:Biquadratic,
   0.004977216,                            !- Coefficient4 y
   0.000437951,                            !- Coefficient5 y**2
   -0.000728028,                           !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {8286caa5-21bc-4283-af24-07b42925170b}, !- Handle
@@ -8208,8 +8278,8 @@ OS:Curve:Quadratic,
   1.1552,                                 !- Coefficient1 Constant
   -0.1808,                                !- Coefficient2 x
   0.0256,                                 !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {401083ae-2f28-4dd8-b9d2-8903e9ffad32}, !- Handle
@@ -8217,8 +8287,8 @@ OS:Curve:Quadratic,
   0.85,                                   !- Coefficient1 Constant
   0.15,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:ZoneHVAC:PackagedTerminalAirConditioner,
   {b2a9eb10-60c4-4f70-a5ee-2bb5652ad3de}, !- Handle
@@ -8243,8 +8313,8 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
 OS:ScheduleTypeLimits,
   {57553c0e-9004-4492-814d-5cc751d9a160}, !- Handle
   ControlMode,                            !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  1,                                      !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
   Discrete,                               !- Numeric Type
   ControlMode;                            !- Unit Type
 
@@ -8269,10 +8339,10 @@ OS:Curve:Exponent,
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 Constant
   0,                                      !- Coefficient3 Constant
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1,                                      !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  0,                                      !- Minimum Value of x
+  1,                                      !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   ,                                       !- Input Unit Type for X
   ;                                       !- Output Unit Type
 
@@ -8283,8 +8353,8 @@ OS:Curve:Cubic,
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Coil:Heating:Gas,
   {b002c541-4c53-4faa-97c5-fc3544579a35}, !- Handle
@@ -8341,10 +8411,10 @@ OS:Curve:Biquadratic,
   -0.011042676,                           !- Coefficient4 y
   5.249e-06,                              !- Coefficient5 y**2
   -9.72e-06,                              !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {c214ff65-05a6-4f83-b8ce-1e46c698d10a}, !- Handle
@@ -8352,8 +8422,8 @@ OS:Curve:Quadratic,
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {00410767-9b92-4149-b750-e93dda8b5f6f}, !- Handle
@@ -8364,10 +8434,10 @@ OS:Curve:Biquadratic,
   0.004977216,                            !- Coefficient4 y
   0.000437951,                            !- Coefficient5 y**2
   -0.000728028,                           !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {02029ede-d523-4c8c-8e0a-4771587660a1}, !- Handle
@@ -8375,8 +8445,8 @@ OS:Curve:Quadratic,
   1.1552,                                 !- Coefficient1 Constant
   -0.1808,                                !- Coefficient2 x
   0.0256,                                 !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {8ede4960-0afc-41a3-b89d-18a5aedeb0cf}, !- Handle
@@ -8384,8 +8454,8 @@ OS:Curve:Quadratic,
   0.85,                                   !- Coefficient1 Constant
   0.15,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:ZoneHVAC:PackagedTerminalAirConditioner,
   {72b2278e-fba3-48af-82f0-ce4abf49f93c}, !- Handle
@@ -8428,10 +8498,10 @@ OS:Curve:Exponent,
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 Constant
   0,                                      !- Coefficient3 Constant
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1,                                      !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  0,                                      !- Minimum Value of x
+  1,                                      !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   ,                                       !- Input Unit Type for X
   ;                                       !- Output Unit Type
 
@@ -8442,8 +8512,8 @@ OS:Curve:Cubic,
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Coil:Heating:Electric,
   {73eb9865-de24-4f2e-898f-00783f94f083}, !- Handle
@@ -8496,10 +8566,10 @@ OS:Curve:Biquadratic,
   -0.011042676,                           !- Coefficient4 y
   5.249e-06,                              !- Coefficient5 y**2
   -9.72e-06,                              !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {e214532c-2aa3-45ec-8bf0-d9ce28a73f6d}, !- Handle
@@ -8507,8 +8577,8 @@ OS:Curve:Quadratic,
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {d9f3b21d-3e92-4281-b79f-2a58f017899c}, !- Handle
@@ -8519,10 +8589,10 @@ OS:Curve:Biquadratic,
   0.004977216,                            !- Coefficient4 y
   0.000437951,                            !- Coefficient5 y**2
   -0.000728028,                           !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {a311f75a-998c-4713-ac73-4d55b966091c}, !- Handle
@@ -8530,8 +8600,8 @@ OS:Curve:Quadratic,
   1.1552,                                 !- Coefficient1 Constant
   -0.1808,                                !- Coefficient2 x
   0.0256,                                 !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {e6cc8eb3-7c6a-4151-8a8b-c8cbdf0dde16}, !- Handle
@@ -8539,8 +8609,8 @@ OS:Curve:Quadratic,
   0.85,                                   !- Coefficient1 Constant
   0.15,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:ZoneHVAC:PackagedTerminalAirConditioner,
   {83f8ca38-5216-4e2e-ac87-b2c4a1e3863b}, !- Handle
@@ -8630,10 +8700,10 @@ OS:Curve:Biquadratic,
   -0.011042676,                           !- Coefficient4 y
   5.249e-06,                              !- Coefficient5 y**2
   -9.72e-06,                              !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {a189d704-2462-4e60-bdbe-2d41c93e5e91}, !- Handle
@@ -8641,8 +8711,8 @@ OS:Curve:Quadratic,
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {7954b548-c101-4b5c-a985-6d8a16dddba4}, !- Handle
@@ -8653,10 +8723,10 @@ OS:Curve:Biquadratic,
   0.004977216,                            !- Coefficient4 y
   0.000437951,                            !- Coefficient5 y**2
   -0.000728028,                           !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {68ea87fc-9da9-4041-9e89-113951952291}, !- Handle
@@ -8664,8 +8734,8 @@ OS:Curve:Quadratic,
   1.1552,                                 !- Coefficient1 Constant
   -0.1808,                                !- Coefficient2 x
   0.0256,                                 !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {c66a3dd7-81f4-4638-98a4-844efb7a19b5}, !- Handle
@@ -8673,8 +8743,8 @@ OS:Curve:Quadratic,
   0.85,                                   !- Coefficient1 Constant
   0.15,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:ZoneHVAC:PackagedTerminalAirConditioner,
   {1785b879-6709-499e-8d58-e8dbd465769d}, !- Handle
@@ -8760,10 +8830,10 @@ OS:Curve:Biquadratic,
   -0.011042676,                           !- Coefficient4 y
   5.249e-06,                              !- Coefficient5 y**2
   -9.72e-06,                              !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {aaba0bbb-c832-46bd-aeb3-855a051bf4b0}, !- Handle
@@ -8771,8 +8841,8 @@ OS:Curve:Quadratic,
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {69b5dc51-1e20-41ad-a5fa-fd5d7a086cd8}, !- Handle
@@ -8783,10 +8853,10 @@ OS:Curve:Biquadratic,
   0.004977216,                            !- Coefficient4 y
   0.000437951,                            !- Coefficient5 y**2
   -0.000728028,                           !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {43f45a87-464b-4f5a-8cf1-b4bc05ca21d8}, !- Handle
@@ -8794,8 +8864,8 @@ OS:Curve:Quadratic,
   1.1552,                                 !- Coefficient1 Constant
   -0.1808,                                !- Coefficient2 x
   0.0256,                                 !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {897e8da9-c2bb-4726-a6a2-416867232fdd}, !- Handle
@@ -8803,8 +8873,8 @@ OS:Curve:Quadratic,
   0.85,                                   !- Coefficient1 Constant
   0.15,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:ZoneHVAC:PackagedTerminalAirConditioner,
   {05567a93-e675-4832-9979-8a4558b8def7}, !- Handle
@@ -8864,10 +8934,10 @@ OS:Curve:Biquadratic,
   -0.002726426,                           !- Coefficient4 y
   -5.52654e-05,                           !- Coefficient5 y**2
   -6.31169e-05,                           !- Coefficient6 x*y
-  -100,                                   !- Minimum Value of x {BasedOnField A2}
-  100,                                    !- Maximum Value of x {BasedOnField A2}
-  -100,                                   !- Minimum Value of y {BasedOnField A3}
-  100;                                    !- Maximum Value of y {BasedOnField A3}
+  -100,                                   !- Minimum Value of x
+  100,                                    !- Maximum Value of x
+  -100,                                   !- Minimum Value of y
+  100;                                    !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {dcc0bff7-3579-49b1-86c0-afe368574723}, !- Handle
@@ -8875,8 +8945,8 @@ OS:Curve:Quadratic,
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {e8476be3-171c-4cd2-baac-e9c1f4bbdd89}, !- Handle
@@ -8887,10 +8957,10 @@ OS:Curve:Biquadratic,
   0.028298025,                            !- Coefficient4 y
   0.0004851,                              !- Coefficient5 y**2
   -0.001677095,                           !- Coefficient6 x*y
-  -100,                                   !- Minimum Value of x {BasedOnField A2}
-  100,                                    !- Maximum Value of x {BasedOnField A2}
-  -100,                                   !- Minimum Value of y {BasedOnField A3}
-  100;                                    !- Maximum Value of y {BasedOnField A3}
+  -100,                                   !- Minimum Value of x
+  100,                                    !- Maximum Value of x
+  -100,                                   !- Minimum Value of y
+  100;                                    !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {1fd1641b-70c2-43a5-8fe5-4bb2d64133e0}, !- Handle
@@ -8898,8 +8968,8 @@ OS:Curve:Quadratic,
   1.1552,                                 !- Coefficient1 Constant
   -0.1808,                                !- Coefficient2 x
   0.0256,                                 !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {c5ac203b-4e0a-4a99-b4e4-87c06dafb41a}, !- Handle
@@ -8907,8 +8977,8 @@ OS:Curve:Quadratic,
   0.85,                                   !- Coefficient1 Constant
   0.15,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:CoilPerformance:DX:Cooling,
   {f11f54d9-f089-403b-8d83-1aab0e698409}, !- Handle
@@ -8944,10 +9014,10 @@ OS:Curve:Biquadratic,
   -0.002726426,                           !- Coefficient4 y
   -5.52654e-05,                           !- Coefficient5 y**2
   -6.31169e-05,                           !- Coefficient6 x*y
-  -100,                                   !- Minimum Value of x {BasedOnField A2}
-  100,                                    !- Maximum Value of x {BasedOnField A2}
-  -100,                                   !- Minimum Value of y {BasedOnField A3}
-  100;                                    !- Maximum Value of y {BasedOnField A3}
+  -100,                                   !- Minimum Value of x
+  100,                                    !- Maximum Value of x
+  -100,                                   !- Minimum Value of y
+  100;                                    !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {a3bc1afd-70d1-49fb-a89e-811a28ee58ce}, !- Handle
@@ -8955,8 +9025,8 @@ OS:Curve:Quadratic,
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {dcfaf23f-7d1c-4023-a03f-7173ac071bc5}, !- Handle
@@ -8967,10 +9037,10 @@ OS:Curve:Biquadratic,
   0.028298025,                            !- Coefficient4 y
   0.0004851,                              !- Coefficient5 y**2
   -0.001677095,                           !- Coefficient6 x*y
-  -100,                                   !- Minimum Value of x {BasedOnField A2}
-  100,                                    !- Maximum Value of x {BasedOnField A2}
-  -100,                                   !- Minimum Value of y {BasedOnField A3}
-  100;                                    !- Maximum Value of y {BasedOnField A3}
+  -100,                                   !- Minimum Value of x
+  100,                                    !- Maximum Value of x
+  -100,                                   !- Minimum Value of y
+  100;                                    !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {53e51181-cf5f-44e6-b6e9-ee73f7f2579c}, !- Handle
@@ -8978,8 +9048,8 @@ OS:Curve:Quadratic,
   1.1552,                                 !- Coefficient1 Constant
   -0.1808,                                !- Coefficient2 x
   0.0256,                                 !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {787502f4-370f-4750-b69e-027561f4294a}, !- Handle
@@ -8987,8 +9057,8 @@ OS:Curve:Quadratic,
   0.85,                                   !- Coefficient1 Constant
   0.15,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:CoilPerformance:DX:Cooling,
   {29bdab02-4d09-41ad-bf2d-39594d0c1a6f}, !- Handle
@@ -9024,10 +9094,10 @@ OS:Curve:Biquadratic,
   -0.00375859,                            !- Coefficient4 y
   -9.17495e-05,                           !- Coefficient5 y**2
   -8.98373e-05,                           !- Coefficient6 x*y
-  -100,                                   !- Minimum Value of x {BasedOnField A2}
-  100,                                    !- Maximum Value of x {BasedOnField A2}
-  -100,                                   !- Minimum Value of y {BasedOnField A3}
-  100;                                    !- Maximum Value of y {BasedOnField A3}
+  -100,                                   !- Minimum Value of x
+  100,                                    !- Maximum Value of x
+  -100,                                   !- Minimum Value of y
+  100;                                    !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {75dc57c4-f87a-4fff-8e2b-58bfbcf3c2d4}, !- Handle
@@ -9035,8 +9105,8 @@ OS:Curve:Quadratic,
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {45338277-1f02-4238-b60b-0a09378e37cf}, !- Handle
@@ -9047,10 +9117,10 @@ OS:Curve:Biquadratic,
   0.015824043,                            !- Coefficient4 y
   0.000747287,                            !- Coefficient5 y**2
   -0.001779745,                           !- Coefficient6 x*y
-  -100,                                   !- Minimum Value of x {BasedOnField A2}
-  100,                                    !- Maximum Value of x {BasedOnField A2}
-  -100,                                   !- Minimum Value of y {BasedOnField A3}
-  100;                                    !- Maximum Value of y {BasedOnField A3}
+  -100,                                   !- Minimum Value of x
+  100,                                    !- Maximum Value of x
+  -100,                                   !- Minimum Value of y
+  100;                                    !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {a114056d-9e83-40a9-9ea0-34e3b51f50a0}, !- Handle
@@ -9058,8 +9128,8 @@ OS:Curve:Quadratic,
   1.1552,                                 !- Coefficient1 Constant
   -0.1808,                                !- Coefficient2 x
   0.0256,                                 !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {6f52d588-f4ac-4af7-9a25-e06658a4a535}, !- Handle
@@ -9067,8 +9137,8 @@ OS:Curve:Quadratic,
   0.85,                                   !- Coefficient1 Constant
   0.15,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:CoilPerformance:DX:Cooling,
   {6b093391-e4cc-4e5e-b113-8ddc300a3cc2}, !- Handle
@@ -9104,10 +9174,10 @@ OS:Curve:Biquadratic,
   -0.00375859,                            !- Coefficient4 y
   -9.17495e-05,                           !- Coefficient5 y**2
   -8.98373e-05,                           !- Coefficient6 x*y
-  -100,                                   !- Minimum Value of x {BasedOnField A2}
-  100,                                    !- Maximum Value of x {BasedOnField A2}
-  -100,                                   !- Minimum Value of y {BasedOnField A3}
-  100;                                    !- Maximum Value of y {BasedOnField A3}
+  -100,                                   !- Minimum Value of x
+  100,                                    !- Maximum Value of x
+  -100,                                   !- Minimum Value of y
+  100;                                    !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {66819713-8e11-43c0-bba9-da9abf47e21d}, !- Handle
@@ -9115,8 +9185,8 @@ OS:Curve:Quadratic,
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {ceeb5418-1f11-4489-b549-a321e748eb8c}, !- Handle
@@ -9127,10 +9197,10 @@ OS:Curve:Biquadratic,
   0.015824043,                            !- Coefficient4 y
   0.000747287,                            !- Coefficient5 y**2
   -0.001779745,                           !- Coefficient6 x*y
-  -100,                                   !- Minimum Value of x {BasedOnField A2}
-  100,                                    !- Maximum Value of x {BasedOnField A2}
-  -100,                                   !- Minimum Value of y {BasedOnField A3}
-  100;                                    !- Maximum Value of y {BasedOnField A3}
+  -100,                                   !- Minimum Value of x
+  100,                                    !- Maximum Value of x
+  -100,                                   !- Minimum Value of y
+  100;                                    !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {e3511949-611a-4041-b42c-abd4e2e8c9c4}, !- Handle
@@ -9138,8 +9208,8 @@ OS:Curve:Quadratic,
   1.1552,                                 !- Coefficient1 Constant
   -0.1808,                                !- Coefficient2 x
   0.0256,                                 !- Coefficient3 x**2
-  0.5,                                    !- Minimum Value of x {BasedOnField A2}
-  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {e30298f7-b1b3-4db1-a07f-00beeef9a253}, !- Handle
@@ -9147,8 +9217,8 @@ OS:Curve:Quadratic,
   0.85,                                   !- Coefficient1 Constant
   0.15,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:CoilPerformance:DX:Cooling,
   {57a94dc9-1e29-457f-82af-06f565cb1c06}, !- Handle
@@ -9200,10 +9270,10 @@ OS:Curve:QuadraticLinear,
   0.612,                                  !- Coefficient4 y
   -0.324,                                 !- Coefficient5 x*y
   -0.216,                                 !- Coefficient6 x**2*y
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1,                                      !- Maximum Value of x {BasedOnField A2}
-  0,                                      !- Minimum Value of y {BasedOnField A3}
-  9.9;                                    !- Maximum Value of y {BasedOnField A3}
+  0,                                      !- Minimum Value of x
+  1,                                      !- Maximum Value of x
+  0,                                      !- Minimum Value of y
+  9.9;                                    !- Maximum Value of y
 
 OS:Curve:QuadraticLinear,
   {baa65b6a-5ce0-4068-b226-be15d766a608}, !- Handle
@@ -9214,10 +9284,10 @@ OS:Curve:QuadraticLinear,
   0.612,                                  !- Coefficient4 y
   -0.324,                                 !- Coefficient5 x*y
   -0.216,                                 !- Coefficient6 x**2*y
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1,                                      !- Maximum Value of x {BasedOnField A2}
-  0,                                      !- Minimum Value of y {BasedOnField A3}
-  9.9;                                    !- Maximum Value of y {BasedOnField A3}
+  0,                                      !- Minimum Value of x
+  1,                                      !- Maximum Value of x
+  0,                                      !- Minimum Value of y
+  9.9;                                    !- Maximum Value of y
 
 OS:Duct,
   {ea824d81-93c3-43af-a30b-ffadd19d6cc1}, !- Handle
@@ -9405,10 +9475,10 @@ OS:Curve:Biquadratic,
   0.050053043874,                         !- Coefficient4 y
   -0.000203629282,                        !- Coefficient5 y**2
   -0.000341750531,                        !- Coefficient6 x*y
-  21,                                     !- Minimum Value of x {BasedOnField A2}
-  32.22,                                  !- Maximum Value of x {BasedOnField A2}
-  40,                                     !- Minimum Value of y {BasedOnField A3}
-  80;                                     !- Maximum Value of y {BasedOnField A3}
+  21,                                     !- Minimum Value of x
+  32.22,                                  !- Maximum Value of x
+  40,                                     !- Minimum Value of y
+  80;                                     !- Maximum Value of y
 
 OS:Curve:Biquadratic,
   {4e677b6a-34c7-4cf4-a4d5-c704bea97e7f}, !- Handle
@@ -9419,10 +9489,10 @@ OS:Curve:Biquadratic,
   0.066533716758,                         !- Coefficient4 y
   -0.000343198063,                        !- Coefficient5 y**2
   -0.000562490295,                        !- Coefficient6 x*y
-  21,                                     !- Minimum Value of x {BasedOnField A2}
-  32.22,                                  !- Maximum Value of x {BasedOnField A2}
-  40,                                     !- Minimum Value of y {BasedOnField A3}
-  80;                                     !- Maximum Value of y {BasedOnField A3}
+  21,                                     !- Minimum Value of x
+  32.22,                                  !- Maximum Value of x
+  40,                                     !- Minimum Value of y
+  80;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {3803b58a-8833-4a06-a04f-591fe46e3ac4}, !- Handle
@@ -9430,8 +9500,8 @@ OS:Curve:Quadratic,
   0.95,                                   !- Coefficient1 Constant
   0.05,                                   !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:PlantComponent:TemperatureSource,
   {796ae1cd-7682-46f0-8264-38474d73831e}, !- Handle
@@ -9470,8 +9540,8 @@ OS:Schedule:Day,
 OS:ScheduleTypeLimits,
   {e7abde92-45b2-45e9-9de6-9794b4b6edb4}, !- Handle
   Dimensionless 1,                        !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous;                             !- Numeric Type
 
 OS:ThermalStorage:ChilledWater:Stratified,
@@ -9538,8 +9608,8 @@ OS:Schedule:Day,
 OS:ScheduleTypeLimits,
   {92dfd9e8-d92e-43b9-841b-fc31bf02d5dd}, !- Handle
   Temperature 3,                          !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -9621,10 +9691,10 @@ OS:Curve:Exponent,
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 Constant
   0,                                      !- Coefficient3 Constant
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1,                                      !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  0,                                      !- Minimum Value of x
+  1,                                      !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   ,                                       !- Input Unit Type for X
   ;                                       !- Output Unit Type
 
@@ -9635,8 +9705,8 @@ OS:Curve:Cubic,
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Fan:OnOff,
   {39be15fa-c4bd-41c2-a950-a8d2ebacd3d6}, !- Handle
@@ -9659,10 +9729,10 @@ OS:Curve:Exponent,
   1,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 Constant
   0,                                      !- Coefficient3 Constant
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1,                                      !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Curve Output {BasedOnField A3}
-  ,                                       !- Maximum Curve Output {BasedOnField A3}
+  0,                                      !- Minimum Value of x
+  1,                                      !- Maximum Value of x
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
   ,                                       !- Input Unit Type for X
   ;                                       !- Output Unit Type
 
@@ -9673,8 +9743,8 @@ OS:Curve:Cubic,
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
   0,                                      !- Coefficient4 x**3
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:ZoneHVAC:UnitVentilator,
   {ec80d9b9-e91e-42de-b461-0ff9c3299b1f}, !- Handle

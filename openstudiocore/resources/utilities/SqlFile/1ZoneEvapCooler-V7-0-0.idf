@@ -60,7 +60,7 @@
 ! Floor Area:              232.25 m2
 ! Number of Stories:       1
 
-  Version,7.0;
+  Version,8.5;
 
   Timestep,6;
 
@@ -106,53 +106,6 @@
     -104.85,                 !- Longitude {deg}
     -7.00,                   !- Time Zone {hr}
     1793.00;                 !- Elevation {m}
-
- !  WMO=724666 Time Zone=NAM        (GMT-07:00) Mountain Time (US & Canada)
- !  Data Source=ASHRAE 2009 Annual Design Conditions
- ! Using Design Conditions from "Climate Design Data 2009 ASHRAE Handbook"
- ! Denver Centennial CO USA Extreme Annual Wind Speeds, 1%=11.1m/s, 2.5%=9.5m/s, 5%=8.4m/s
- ! Denver Centennial CO USA Extreme Annual Temperatures, Max Drybulb=-22.9°C Min Drybulb=36.1°C
- ! Denver Centennial CO USA Annual Heating Design Conditions Wind Speed=3m/s Wind Dir=340
- ! Coldest Month=December
- ! Denver Centennial CO USA Annual Heating 99.6%, MaxDB=-18.8°C
-
-  SizingPeriod:DesignDay,
-    Denver Centennial Ann Htg 99.6% Condns DB,  !- Name
-    -18.8,                   !- Maximum Dry-Bulb Temperature {C}
-    0.0,                     !- Daily Dry-Bulb Temperature Range {deltaC}
-    -18.8,                   !- Humidity Indicating Conditions at Maximum Dry-Bulb
-    81560.,                  !- Barometric Pressure {Pa}
-    3,                       !- Wind Speed {m/s}
-    340,                     !- Wind Direction {deg}
-    0.00,                    !- Sky Clearness
-    0,                       !- Rain Indicator
-    0,                       !- Snow Indicator
-    21,                      !- Day of Month
-    12,                      !- Month
-    WinterDesignDay,         !- Day Type
-    0,                       !- Daylight Saving Time Indicator
-    Wetbulb;                 !- Humidity Indicating Type
-
- ! Denver Centennial Annual Cooling Design Conditions Wind Speed=4.9m/s Wind Dir=0
- ! Hottest Month=July
- ! Denver Centennial CO USA Annual Cooling (DB=>MWB) 1%, MaxDB=32°C MWB=15.5°C
-
-  SizingPeriod:DesignDay,
-    Denver Centennial Ann Clg 1% Condns DB=>MWB,  !- Name
-    32,                      !- Maximum Dry-Bulb Temperature {C}
-    15.2,                    !- Daily Dry-Bulb Temperature Range {deltaC}
-    15.5,                    !- Humidity Indicating Conditions at Maximum Dry-Bulb
-    81560.,                  !- Barometric Pressure {Pa}
-    4.9,                     !- Wind Speed {m/s}
-    0,                       !- Wind Direction {deg}
-    1.00,                    !- Sky Clearness
-    0,                       !- Rain Indicator
-    0,                       !- Snow Indicator
-    21,                      !- Day of Month
-    7,                       !- Month
-    SummerDesignDay,         !- Day Type
-    0,                       !- Daylight Saving Time Indicator
-    Wetbulb;                 !- Humidity Indicating Type
 
   Material:NoMass,
     R13LAYER,                !- Name
@@ -321,7 +274,7 @@
     0.02,                    !- Design Flow Rate {m3/s}
     ,                        !- Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Flow per Exterior Surface Area {m3/s-m2}
-    ,                        !- Air Changes per Hour
+    ,                        !- Air Changes per Hour {1/hr}
     1.0000,                  !- Constant Term Coefficient
     0.0000,                  !- Temperature Term Coefficient
     0.0000,                  !- Velocity Term Coefficient
@@ -445,7 +398,7 @@
   Fan:ConstantVolume,
     Supply Fan,              !- Name
     Fan Availability Schedule,  !- Availability Schedule Name
-    0.7,                     !- Fan Efficiency
+    0.7,                     !- Fan Total Efficiency
     600.0,                   !- Pressure Rise {Pa}
     2.0,                     !- Maximum Flow Rate {m3/s}
     0.9,                     !- Motor Efficiency
@@ -513,8 +466,11 @@
   ZoneHVAC:Baseboard:Convective:Electric,
     Main Zone Baseboard,     !- Name
     System Availability Schedule,  !- Availability Schedule Name
-    8000,                    !- Nominal Capacity {W}
-    0.97;                    !- Efficiency
+    8000,                    !- Heating Design Capacity Method
+    0.97,                    !- Heating Design Capacity {W}
+    ,                        !- Heating Design Capacity Per Floor Area {W/m2}
+    1.0,                     !- Fraction of Autosized Heating Design Capacity
+    1.0;                     !- Efficiency
 
   ZoneControl:Thermostat,
     Main Zone Thermostat,    !- Name
@@ -554,21 +510,21 @@
   Output:Variable,*,Outdoor Humidity Ratio,hourly;
 
   Output:Variable,*,Outdoor Relative Humidity,hourly;
-  
+
   Output:Variable,*,Zone Mean Air Temperature,Annual;
-  
+
   Output:Variable,*,Zone Mean Air Temperature,RunPeriod;
-  
+
   Output:Variable,*,Zone Mean Air Temperature,Environment;
-  
+
   Output:Variable,*,Zone Mean Air Temperature,Monthly;
-  
+
   Output:Variable,*,Zone Mean Air Temperature,Daily;
 
   Output:Variable,*,Zone Mean Air Temperature,Hourly;
-  
+
   Output:Variable,*,Zone Mean Air Temperature,Timestep;
-  
+
   Output:Variable,*,Zone Mean Air Temperature,Detailed;
 
   Output:Variable,Supply Outlet Node,System Node MassFlowRate,hourly;
@@ -591,4 +547,6 @@
   Output:Table:SummaryReports,
     AllSummary;              !- Report 1 Name
 
-Output:SQLite,SimpleAndTabular;
+  Output:SQLite,
+    SimpleAndTabular;        !- Option Type
+

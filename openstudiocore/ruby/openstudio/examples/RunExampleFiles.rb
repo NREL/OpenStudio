@@ -37,7 +37,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 
 # maximum simulations, may be nil
 max_simulations = nil
@@ -46,10 +45,10 @@ if ARGV[0].to_i > 0
 end
 
 # find energyplus
-ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,4)
-ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
-idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
-weather_path = OpenStudio::Path.new(ep_hash[:energyplus_weatherdata].to_s)
+co = OpenStudio::Runmanager::ConfigOptions.new
+co.fastFindEnergyPlus()
+weather_path = co.getDefaultEPWLocation
+examples_path = weather_path / OpenStudio::Path.new("../ExampleFiles/")
 
 # just find first weather file for now
 weather_paths = Dir.glob(weather_path.to_s + "/*.epw")
@@ -60,23 +59,27 @@ epw_path = OpenStudio::Path.new(weather_paths.first)
 run_manager = OpenStudio::Runmanager::RunManager.new(OpenStudio::Path.new("runmanager-runexamplefiles.db"), true)
 
 # make a job for each example file
-Dir.glob(ep_hash[:energyplus_examplefiles] + "*.idf").each do |f|
+Dir.glob(examples_path.to_s + "*.idf").each do |f|
 
   # we don't handle parametric preprocessor
   next if /1ZoneParameterAspect.idf/.match(f)
   
-  puts "Running '#{f}'"
-
   idf_path = OpenStudio::Path.new(f)
-  job = OpenStudio::Runmanager::JobFactory::createEnergyPlusJob(OpenStudio::Runmanager::ToolInfo.new(ep_path), idd_path, idf_path, epw_path, OpenStudio::tempDir()/OpenStudio::Path.new("RunExampleFiles")/OpenStudio::Path.new(OpenStudio::Path.new(f).filename()) )
+  out_dir = OpenStudio::tempDir() / OpenStudio::Path.new("RunExampleFiles") / OpenStudio::Path.new(OpenStudio::Path.new(f).filename())
+  
+  puts "Running '#{idf_path}' in '#{out_dir}'"
+  
+  workflow = OpenStudio::Runmanager::Workflow.new("EnergyPlus")
+  workflow.add(co.getTools)
+  
+  job = workflow.create(out_dir, idf_path, epw_path)
+    
   run_manager.enqueue(job, false)
   
   # check if past max simulations
   break if max_simulations and run_manager.getJobs.size >= max_simulations
 end
 
-# wait for jobs to complete
-while run_manager.workPending()
-  sleep 1
-  OpenStudio::Application::instance().processEvents()
-end
+# start and wait for jobs to complete
+run_manager.setPaused(false)
+run_manager.waitForFinished

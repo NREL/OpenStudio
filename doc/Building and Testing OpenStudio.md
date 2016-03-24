@@ -22,36 +22,6 @@ If this is a major release
 
 - With Git, merge `develop` into `master`.
 
-Release Notes
-=============
-If this is a major release, release notes must be written.
-
-- Contact each OpenStudio developer and get from them a list of features and bug fixes which they feel should be highlighted.
-- In the folder doc\ReleaseNotes copy the most recent release notes, and update the name to reflect the correct version, and date.
-- Incorporate the developers notes previously obtained.
-- Have the release notes reviewed for accuracy.
-- Generate a PDF from the word doc.
-- Generate a markdown document from the word doc.
-
-
-Update CHANGELOG.md
-=================
-
-### Set the desired stats date range
-In folder `developer\ruby`
-- Open GitHubIssueStats.rb, and adjust date range
-
-### Get the stats
-In folder `developer\ruby`, open Git Bash and type the following
-
-	gem install github_api
-	ruby GitHubIssueStats.rb
-	ruby GitHubIssueStats.rb > out.txt
-
-Open out.txt, and paste data into CHANGELOG.md
-
-Commit CHANGELOG.md to the develop branch
-
 
 Builds
 ======
@@ -181,6 +151,55 @@ make package –j8
 
 Copy build to VM's share folder
 
+
+OSVersion Testing
+=================
+
+In folder `build\OSCore-prefix\src\OSCore-build\Products\Release`
+
+- Open cmd prompt
+- Drag and drop `openstudio_osversion_tests.exe` onto the prompt, then run
+- Make sure everything passes
+
+Sanity Testing Release Builds
+=============================
+
+### Ubuntu
+- On a clean Ubuntu VM, install the current version of OpenStudio
+- Open OpenStudio, and make a model
+- Open PAT, make a project, and select the model above as your baseline model
+
+### Mac
+- On a clean Mac VM, install the current version of SketchUp and OpenStudio
+- Open SketchUp, and make and save a model
+- Open OpenStudio, and open the model above
+- Open PAT, make a project, and select the model above as your baseline model
+
+### 32-bit Windows
+- On a clean Windows VM, install the current 32-bit version of SketchUp and the current 32-bit version of OpenStudio
+- Open SketchUp, and make and save a model
+- Open OpenStudio, and open the model above
+- Open PAT, make a project, and select the model above as your baseline model
+
+### 64-bit Windows
+- On a clean Windows VM, install the current 64-bit version of SketchUp and the current 64-bit version of OpenStudio
+- Open SketchUp, and make and save a model
+- Open OpenStudio, and open the model above
+- Open PAT, make a project, and select the model above as your baseline model
+
+### Tests to run
+- Test prior version of OpenStudio model
+- Test prior version of PAT project
+- Use SketchUp to make a model on Windows 32 bit, Windows 64 bit, and Mac
+- Test running PAT on the cloud on at least one platform
+- Test BCL downloads
+- Test user scripts in SketchUp
+- Test Apply Measures Now
+- Run simulation in OpenStudio
+- Run simulation in PAT
+- Test opening results in ResultsViewer
+
+
 GitHub Releases
 ===============
 https://github.com/NREL/OpenStudio/releases
@@ -249,52 +268,18 @@ In S3:
 - From `openstudio-sdk-documentation` bucket, download index.html and edit to new release numbers (23 changes)
 - Test at https://openstudio-sdk-documentation.s3.amazonaws.com/index.html
 
-OSVersion Testing
-=================
 
-In folder `build\OSCore-prefix\src\OSCore-build\Products\Release`
+Release Notes
+=============
+If this is a major release, release notes must be written.
 
-- Open cmd prompt
-- Drag and drop `openstudio_osversion_tests.exe` onto the prompt, then run
-- Make sure everything passes
+- Contact each OpenStudio developer and get from them a list of features and bug fixes which they feel should be highlighted.
+- In the folder doc\ReleaseNotes copy the most recent release notes, and update the name to reflect the correct version, and date.
+- Incorporate the developers notes previously obtained.
+- Have the release notes reviewed for accuracy.
+- Generate a PDF from the word doc.
+- Generate a markdown document from the word doc.
 
-Sanity Testing Release Builds
-=============================
-
-### Ubuntu
-- On a clean Ubuntu VM, install the current version of OpenStudio
-- Open OpenStudio, and make a model
-- Open PAT, make a project, and select the model above as your baseline model
-
-### Mac
-- On a clean Mac VM, install the current version of SketchUp and OpenStudio
-- Open SketchUp, and make and save a model
-- Open OpenStudio, and open the model above
-- Open PAT, make a project, and select the model above as your baseline model
-
-### 32-bit Windows
-- On a clean Windows VM, install the current 32-bit version of SketchUp and the current 32-bit version of OpenStudio
-- Open SketchUp, and make and save a model
-- Open OpenStudio, and open the model above
-- Open PAT, make a project, and select the model above as your baseline model
-
-### 64-bit Windows
-- On a clean Windows VM, install the current 64-bit version of SketchUp and the current 64-bit version of OpenStudio
-- Open SketchUp, and make and save a model
-- Open OpenStudio, and open the model above
-- Open PAT, make a project, and select the model above as your baseline model
-
-### Tests to run
-- Test prior version of OpenStudio model
-- Test prior version of PAT project
-- Use SketchUp to make a model on Windows 32 bit, Windows 64 bit, and Mac
-- Test running PAT on the cloud on at least one platform
-- Test BCL downloads
-- Test user scripts in SketchUp
-- Test Apply Measures Now
-- Run simulation in OpenStudio
-- Run simulation in PAT
-- Test opening results in ResultsViewer
 
 OpenStudio News Update
 ======================
@@ -311,6 +296,30 @@ If this is a major release, OpenStudio-web must be updated
 In the docroot folder\
 
 - open update.html and update its build version, sha, and date (2 places)
+
+
+Final Steps
+=============
+- With Git, switch to `develop`.
+
+
+Update CHANGELOG.md
+=================
+
+### Set the desired stats date range
+In folder `developer\ruby`
+- Open GitHubIssueStats.rb, and adjust date range
+
+### Get the stats
+In folder `developer\ruby`, open Git Bash and type the following
+
+	gem install github_api
+	ruby GitHubIssueStats.rb
+	ruby GitHubIssueStats.rb > out.txt
+
+Open out.txt, and paste data into CHANGELOG.md
+
+Commit CHANGELOG.md to the develop branch
 
 
 Version Update
@@ -358,3 +367,16 @@ Compatibility Matrix
 On https://github.com/NREL/OpenStudio/wiki/OpenStudio-Version-Compatibility-Matrix
 
 - Select `Edit` and add a new row of information
+
+
+Docker Image
+============
+
+1.	Edit the Dockerfile: https://github.com/NREL/docker-openstudio/blob/master/Dockerfile
+2.	Get the SHA and Version from here extracting it from the download file name on the release page (e.g. https://github.com/NREL/OpenStudio/releases/tag/v1.10.5) For example, OpenStudio-1.10.5.73e6a97b14-Linux.debwould have 1.10.5 and 73e6a97b14
+3.	Update the following variables in the Dockerfile 
+1.	OPENSTUDIO_VERSION
+2.	OPENSTUDIO_SHA
+4.	(optional) test that the new Dockerfile works by running `docker build -t test-openstudio .` after starting the docker-machine to make sure that it completes successfully.
+5.	Commit the changes on master. You may wish to wait to verify that the master/latest branch builds successfully from this site (https://hub.docker.com/r/nrel/openstudio/builds/). 
+6.	Once it completes successfully, then run `git tag -a 1.10.5` where 1.10.5 is the new version.
