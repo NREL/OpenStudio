@@ -59,17 +59,18 @@ namespace filesystem {
   using boost::filesystem::exists;
   using boost::filesystem::extension;
   using boost::filesystem::file_size;
-  using boost::filesystem::is_directory;
   using boost::filesystem::initial_path;
+  using boost::filesystem::is_directory;
+  using boost::filesystem::is_empty;
   using boost::filesystem::is_regular_file;
   using boost::filesystem::is_symlink;
   using boost::filesystem::last_write_time;
   using boost::filesystem::remove;
   using boost::filesystem::remove_all;
   using boost::filesystem::system_complete;
+  using boost::filesystem::temp_directory_path;
 
   UTILITIES_API std::vector<uint8_t> read_file(const openstudio::path &t_path);
-  UTILITIES_API QByteArray read_file_as_QByteArray(const openstudio::path &t_path);
 
 }
 }

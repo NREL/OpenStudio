@@ -25,6 +25,7 @@
 #include "../core/Path.hpp"
 #include "../core/String.hpp"
 #include "../core/System.hpp"
+#include "../core/FilesystemHelpers.hpp"
 
 #include <OpenStudio.hxx>
 #include <QDateTime>
@@ -125,7 +126,7 @@ namespace openstudio{
       if (overwriteExisting || m_secretKey.empty()) {
         openstudio::filesystem::ifstream file(openstudio::toPath(QDir::homePath() + "/.ssh/aws"));
         if (file.is_open()) {
-          const std::string secretKey = openstudio::filesystem::read_all_as_string(file);
+          const std::string secretKey = openstudio::filesystem::read_as_string(file);
           setSecretKey(secretKey);
         }
       }
@@ -170,18 +171,18 @@ namespace openstudio{
         settings.setValue("accessKey", toQString(m_accessKey));
       }
 
-      const auto awspath = QDir::homePath() + "/.ssh/aws";
+      const auto awspath = openstudio::toPath(QDir::homePath() + "/.ssh/aws");
       if (overwriteExisting || !openstudio::filesystem::exists(awspath)) {
         if (QDir::home().exists(".ssh") || QDir::home().mkdir(".ssh")) {
           // I belive this code change to ofstream(truncate) is a bug fix, if we are 
           // supposed to be overwriting the existing file
-          openstudio::filesystem::ofstream file(awspath, std::ios_base::truncate | std::ios_base::binary)
+          openstudio::filesystem::ofstream file(awspath, std::ios_base::trunc | std::ios_base::binary);
           if (file.is_open()) {
             file << m_secretKey;
           }
+          file.close();
         }
       }
-      file.close();
 
       if (overwriteExisting || settings.value("numWorkers").isNull()) {
         settings.setValue("numWorkers", m_numWorkers);
@@ -1745,7 +1746,7 @@ namespace openstudio{
               logError("Unable to open " + toString(file_path));
               return false;
             }
-            jsonObject[filename] = QJsonValue(QString(openstudio::filesystem::read_all_as_QByteArray(file)));
+            jsonObject[filename] = QJsonValue(QString(openstudio::filesystem::read_as_QByteArray(file)));
           }
           json = QJsonDocument(jsonObject);
           m_awsSession.setPrivateKey(QString(json.toJson(QJsonDocument::Compact)).toStdString());
@@ -1790,10 +1791,10 @@ namespace openstudio{
             const auto file_path = openstudio::toPath(m_workingDir.path() + "/" + filename);
             openstudio::filesystem::ifstream file(file_path);
             if (!file.is_open()) {
-              logError("Unable to open " + openstudio:;toString(file_path));
+              logError("Unable to open " + openstudio::toString(file_path));
               return false;
             }
-            jsonObject[filename] = QJsonValue(QString(openstudio::filesystem::read_all_as_QByteArray(file)));
+            jsonObject[filename] = QJsonValue(QString(openstudio::filesystem::read_as_QByteArray(file)));
           }
           json = QJsonDocument(jsonObject);
           m_awsSession.setPrivateKey(QString(json.toJson(QJsonDocument::Compact)).toStdString());
@@ -2095,12 +2096,12 @@ namespace openstudio{
       for (const auto &filename : QStringList{"state.json", "ec2_server_key.pem", "ec2_worker_key.pem", "ec2_worker_key.pub"}) {
         openstudio::filesystem::ofstream file(openstudio::toPath(m_workingDir.path() + "/" + filename));
         if (filename == "state.json") {
-          if (file.is_open) {
+          if (file.is_open()) {
             openstudio::filesystem::write(file, json.toJson(QJsonDocument::Compact));
           }
         } else {
           if (file.is_open()) {
-            oepnstudio::filesystem::write(file, json.object()[filename].toString().toStdString().c_str());
+            openstudio::filesystem::write(file, json.object()[filename].toString());
           }
         }
       }

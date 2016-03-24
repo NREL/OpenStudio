@@ -20,6 +20,7 @@
 #include "BCLComponent.hpp"
 #include "../core/System.hpp"
 #include "../data/Attribute.hpp"
+#include "../core/FilesystemHelpers.hpp"
 
 #include <QDomDocument>
 
@@ -36,7 +37,7 @@ namespace openstudio{
     m_directory(dir)
   {
     QDomDocument component("component.xml");
-    component.setContent(openstudio::read_file_as_QByteArray(openstudio::toPath(m_directory) / "component.xml"));
+    component.setContent(openstudio::filesystem::read_as_QByteArray(openstudio::toPath(m_directory) / "component.xml"));
 
     QDomElement comp = component.firstChildElement("component");
     m_name = comp.firstChildElement("name").firstChild().nodeValue().replace("_", " ")

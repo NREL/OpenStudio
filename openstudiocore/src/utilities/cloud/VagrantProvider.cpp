@@ -23,6 +23,7 @@
 #include "../core/Application.hpp"
 #include "../core/Assert.hpp"
 #include "../core/System.hpp"
+#include "../core/FilesystemHelpers.hpp"
 
 #include <QSettings>
 #include <QProcess>
@@ -154,7 +155,7 @@ namespace openstudio{
       if (overwriteExisting || m_password.empty()){
         openstudio::filesystem::ifstream file(openstudio::toPath(QDir::homePath() + "/.ssh/vagrant"), std::ios_base::binary);
         if (file.is_open()) {
-          m_password = openstudio::filesystem::read_all_as_string(file);
+          m_password = openstudio::filesystem::read_as_string(file);
         }
       }
 

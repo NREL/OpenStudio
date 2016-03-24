@@ -199,7 +199,7 @@ bool OSResult::save(const openstudio::path& p, bool overwrite) const {
   if (overwrite || !openstudio::filesystem::exists(p)) {
     try {
       openstudio::filesystem::ofstream file(p, std::ios_base::binary | std::ios_base::trunc);
-      file << openstudio::toString(toXml().toString(2));
+      openstudio::filesystem::write(file, toXml().toString(2));
       file.close();
       result = true;
     }

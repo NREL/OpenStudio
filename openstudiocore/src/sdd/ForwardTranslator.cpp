@@ -195,7 +195,7 @@ namespace sdd {
 
     openstudio::filesystem::ofstream file(path, std::ios_base::binary);
     if (file.is_open()){
-      file << openstudio::toString(doc->toString(2));
+      openstudio::filesystem::write(file, doc->toString(2));
       file.close();
       return true;
     }

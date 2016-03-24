@@ -1681,7 +1681,7 @@ namespace radiance {
 									if (!outFileAir.is_open()){
 										LOG_AND_THROW("Cannot write file to '" << toString(airBSDFPath) << "'");
 									}
-                                                                        file << openstudio::toString(defaultFile);
+                                                                        openstudio::filesystem::write(file, defaultFile);
 									outFileAir.close();
 
 								}

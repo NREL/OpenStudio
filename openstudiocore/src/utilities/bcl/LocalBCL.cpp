@@ -257,7 +257,7 @@ namespace openstudio{
           path src = toPath(m_libraryPath + "/" + query.value(0).toString() + "/" + query.value(1).toString() + query.value(2).toString().mid(query.value(2).toString().lastIndexOf("/")));
           path dest = src.parent_path();
           openstudio::filesystem::remove(dest / toPath("DISCLAIMER.txt"));
-          openstudio::filesystem::remove(toQString(dest / toPath("README.txt"));
+          openstudio::filesystem::remove(dest / toPath("README.txt"));
           openstudio::filesystem::remove(dest / toPath("output.xml"));
           copyDirectory(src, dest);
           removeDirectory(src);

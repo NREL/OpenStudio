@@ -23,6 +23,7 @@
 #include "../core/Assert.hpp"
 #include "../core/Containers.hpp"
 #include "../core/Json.hpp"
+#include "../core/FilesystemHelpers.hpp"
 
 #include "../units/UnitFactory.hpp"
 #include "../units/Quantity.hpp"
@@ -1401,7 +1402,7 @@ boost::optional<Attribute> Attribute::loadFromXml(const openstudio::path& path)
 
       openstudio::filesystem::ifstream file(path, std::ios_base::binary);
       QDomDocument qDomDocument;
-      qDomDocument.setContent(openstudio::filesystem::read_all_as_QByteArray(file));
+      qDomDocument.setContent(openstudio::filesystem::read_as_QByteArray(file));
       file.close();
 
       result = Attribute(qDomDocument.documentElement());
@@ -1578,7 +1579,7 @@ bool Attribute::saveToXml(const openstudio::path& path) const
 
   try {
     openstudio::filesystem::ofstream file(path);
-    openstudio::filesystem::write(path, this->toXml().toByteArray(2));
+    openstudio::filesystem::write(file, this->toXml().toByteArray(2));
     file.close();
     result = true;
   }

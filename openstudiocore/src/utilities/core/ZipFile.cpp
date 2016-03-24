@@ -18,6 +18,7 @@
 **********************************************************************/
 
 #include "ZipFile.hpp"
+#include "FilesystemHelpers.hpp"
 
 #include <zlib/zconf.h>
 #include <zlib/zlib.h>
@@ -86,12 +87,11 @@ namespace openstudio {
 
   void ZipFile::addDirectory(const openstudio::path& localDir, const openstudio::path& destinationDir) {
     // following conventions in openstudio::copyDirectory
-    QDir srcDir(toQString(localDir));
 
     for (const auto& file: openstudio::filesystem::recursive_directory_files(localDir)) {
-      QString srcItemPath = toQString(localDir) + "/" + file;
-      QString dstItemPath = toQString(destinationDir) + "/" + file;
-      addFile(toPath(srcItemPath),toPath(dstItemPath));
+      const auto srcItemPath = localDir / file;
+      const auto dstItemPath = destinationDir / file;
+      addFile(srcItemPath, dstItemPath);
     }
   }
 

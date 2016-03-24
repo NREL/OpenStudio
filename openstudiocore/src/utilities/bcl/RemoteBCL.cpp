@@ -570,7 +570,7 @@ namespace openstudio{
     }
 
     m_downloadFile 
-      = std::make_shared<openstudio::ofstream>(openstudio::filesystem::temp_directory_path() / openstudio::toPath("/"+uid+".bcl"), 
+      = std::make_shared<openstudio::filesystem::ofstream>(openstudio::filesystem::temp_directory_path() / openstudio::toPath("/"+uid+".bcl"), 
                                                std::ios_base::out | std::ios_base::trunc | std::ios_base::binary );
     if (!m_downloadFile->is_open()) {
       m_mutex->unlock();

@@ -24,6 +24,7 @@
 #include "../core/System.hpp"
 #include "../core/Path.hpp"
 #include "../core/PathHelpers.hpp"
+#include "../core/FilesystemHelpers.hpp"
 #include "../core/StringHelpers.hpp"
 #include "../core/FileReference.hpp"
 #include "../data/Attribute.hpp"
@@ -69,7 +70,7 @@ namespace openstudio{
 
       if (m_bclXML.hasFile(srcItemPath) || (xmlPath == openstudio::filesystem::system_complete(srcItemPath)))
       {
-        if (!openstudio::filesystem::copy_file(srcItemPath, dstItemPath))
+        if (!openstudio::filesystem::copy_file_no_throw(srcItemPath, dstItemPath))
         {
           return false;
         }
@@ -167,7 +168,7 @@ namespace openstudio{
     if (!measureTemplate.isEmpty()){
       openstudio::filesystem::ifstream file(openstudio::toPath(measureTemplate), std::ios_base::binary);
       if(file.is_open()){
-        measureString = openstudio::filesystem::read_file_as_QByteArray(file);
+        measureString = openstudio::filesystem::read_as_QByteArray(file);
         measureString.replace(templateClassName, toQString(className));
         measureString.replace(templateName, toQString(name));
         measureString.replace(templateModelerDescription, toQString(modelerDescription)); // put first as this includes description tag
@@ -180,7 +181,7 @@ namespace openstudio{
     if (!testTemplate.isEmpty()){
       openstudio::filesystem::ifstream file(openstudio::toPath(testTemplate), std::ios_base::binary);
       if(file.is_open()){
-        testString = openstudio::filesystem::read_file_as_QByteArray(file);
+        testString = openstudio::filesystem::read_as_QByteArray(file);
         testString.replace(templateClassName, toQString(className));
         file.close();
       }
@@ -190,7 +191,7 @@ namespace openstudio{
     if (!testOSM.isEmpty()){
       openstudio::filesystem::ifstream file(openstudio::toPath(testOSM), std::ios_base::binary);
       if(file.is_open()){
-        testOSMString = openstudio::filesystem::read_file_as_QByteArray(file);
+        testOSMString = openstudio::filesystem::read_as_QByteArray(file);
         file.close();
       }
     }
@@ -199,7 +200,7 @@ namespace openstudio{
     if (!resourceFile.isEmpty()){
       openstudio::filesystem::ifstream file(openstudio::toPath(resourceFileString), std::ios_base::binary);
       if(file.is_open()){
-        resourceFileString = openstudio::filesystem::read_file_as_QByteArray(file);
+        resourceFileString = openstudio::filesystem::read_as_QByteArray(file);
         file.close();
       }
     }
@@ -245,7 +246,7 @@ namespace openstudio{
         if (!file.is_open()){
           LOG_AND_THROW("Cannot write test osm file to '" << toString(testOSMPath) << "'");
         }
-        openstudio::filesystem::write(textStream, testOSMString);
+        openstudio::filesystem::write(file, testOSMString);
         file.close();
 
         BCLFileReference measureTestOSMFileReference(testOSMPath, true);
@@ -261,7 +262,7 @@ namespace openstudio{
         if (!file.is_open()){
           LOG_AND_THROW("Cannot write resource file to '" << toString(resourceFilePath) << "'");
         }
-        openstudio::filesystem::write(textStream, resourceFileString);
+        openstudio::filesystem::write(file, resourceFileString);
         file.close();
 
         BCLFileReference resourceFileReference(resourceFilePath, true);
@@ -849,8 +850,8 @@ namespace openstudio{
 
         openstudio::filesystem::ofstream ofile(*path, std::ios_base::binary);
         if (ofile.is_open()){
-          openstudio::filesystem::write(file, fileString);
-          file.close();
+          openstudio::filesystem::write(ofile, fileString);
+          ofile.close();
           return true;
         }
       }
@@ -883,7 +884,7 @@ namespace openstudio{
           }
         }
 
-        if (openstudio::filesystem::exists(newPath)) {
+        if (openstudio::filesystem::exists(openstudio::toPath(newPath))) {
           // somehow this file already exists, don't clobber it
           newPath = oldPath;
         }else{
@@ -895,7 +896,6 @@ namespace openstudio{
         openstudio::filesystem::ifstream file(openstudio::toPath(newPath), std::ios_base::binary);
         if (file.is_open()){
 
-          QTextStream docIn(&file);
           fileString = openstudio::filesystem::read_as_QByteArray(file);
           if (!oldClassName.empty() && !newClassName.empty() && oldClassName != newClassName){
             // DLM: might also want to check that oldClassName is greater than 3 characters long?
@@ -995,7 +995,7 @@ namespace openstudio{
     srcDir = m_directory / "resources";
     for (const auto &file : openstudio::filesystem::directory_files(srcDir))
     {
-      openstudio::path srcItemPath = srcDir / info;
+      openstudio::path srcItemPath = srcDir / file;
       if (!m_bclXML.hasFile(srcItemPath)){
         BCLFileReference file(srcItemPath, true);
         file.setUsageType("resource");

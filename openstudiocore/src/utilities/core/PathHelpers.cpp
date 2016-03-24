@@ -20,7 +20,7 @@
 #include "PathHelpers.hpp"
 #include "Logger.hpp"
 #include "Assert.hpp"
-
+#include "FilesystemHelpers.hpp"
 
 #include <QDir>
 #include <QRegularExpression>
@@ -261,10 +261,10 @@ std::ostream& printPathInformation(std::ostream& os,const path& p) {
 
 bool removeDirectory(const path& dirName) {
   try {
-    openstudio::filesystem::remove_directories(dirName);
+    openstudio::filesystem::remove_all(dirName);
     return true;
   } catch (const std::exception &) {
-    return false
+    return false;
   }
 }
 
@@ -278,7 +278,7 @@ bool copyDirectory(const path& source, const path& destination) {
   // note : we are not using openstudio::filesystem::copy to copy recursively
   // because that copies the entire directory into the destination, not just the 
   // contents of the directory
-  for (const auto &file : openstudio::filesystem::recursive_file_list(source))
+  for (const auto &file : openstudio::filesystem::recursive_directory_files(source))
   {
     try {
       openstudio::filesystem::copy_file(source / file, destination / file);

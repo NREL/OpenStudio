@@ -23,6 +23,7 @@
 #include "../core/System.hpp"
 #include "../core/Json.hpp"
 #include "../core/Assert.hpp"
+#include "../core/FilesystemHelpers.hpp"
 
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -645,7 +646,7 @@ namespace openstudio{
           QByteArray data(QString("--" + bound + "\r\n").toLatin1());
           data += "Content-Disposition: form-data; name=\"file\"; filename=\"project.zip\"\r\n";
           data += "Content-Type: application/zip\r\n\r\n";
-          data.append(openstudio::filesystem::read_all_as_QByteArray(file));
+          data.append(openstudio::filesystem::read_as_QByteArray(file));
           data += "\r\n";
           data += QString("--" + bound + "--\r\n.").toLatin1();
           data += "\r\n";
@@ -1539,7 +1540,7 @@ namespace openstudio{
 
       if (m_networkReply->error() == QNetworkReply::NoError){
        
-        openstudio::filesystem::ofstream file(m_lastDownloadDataPointPath, std::ios_base::truncate | std::ios_base::write | std::ios_base::binary);
+        openstudio::filesystem::ofstream file(m_lastDownloadDataPointPath, std::ios_base::trunc | std::ios_base::binary);
         if (file.is_open()) {
           openstudio::filesystem::write(file, m_networkReply->readAll());
           m_lastDownloadDataPointSuccess = true;

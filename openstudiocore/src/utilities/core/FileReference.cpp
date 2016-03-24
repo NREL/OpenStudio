@@ -23,6 +23,7 @@
 #include "Checksum.hpp"
 #include "PathHelpers.hpp"
 #include "../time/DateTime.hpp"
+#include "../core/FilesystemHelpers.hpp"
 
 #include <QDateTime>
 
@@ -194,10 +195,10 @@ bool FileReference::update(const openstudio::path& searchDirectory,bool lastOnly
   openstudio::path p = path();
   if (openstudio::filesystem::exists(p)) {
     if (!lastOnly) {
-      m_timestampCreate = toDateTime(openstudio::filesystem::create_time_as_t_time(p));
+      m_timestampCreate = DateTime::fromEpoch(openstudio::filesystem::create_time_as_time_t(p));
     }
 
-    m_timestampLast = toDateTime(openstudio::filesystem::last_write_time_as_t_time(p));
+    m_timestampLast = DateTime::fromEpoch(openstudio::filesystem::last_write_time_as_time_t(p));
     m_checksumLast = checksum(p);
     m_versionUUID = createUUID();
     return true;

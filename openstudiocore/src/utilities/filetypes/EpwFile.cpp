@@ -23,6 +23,7 @@
 #include <utilities/idd/IddEnums.hxx>
 #include "../core/Checksum.hpp"
 #include "../core/StringHelpers.hpp"
+#include "../core/FilesystemHelpers.hpp"
 #include "../core/Assert.hpp"
 #include "../units/QuantityConverter.hpp"
 
@@ -2303,14 +2304,14 @@ bool EpwFile::translateToWth(openstudio::path path, std::string description)
     return false;
   }
 
-  stream <<"!Date\tTime\tTa [K]\tPb [Pa]\tWs [m/s]\tWd [deg]\tHr [g/kg]\tIth [kJ/m^2]\tIdn [kJ/m^2]\tTs [K]\tRn [-]\tSn [-]\n";
+  fp <<"!Date\tTime\tTa [K]\tPb [Pa]\tWs [m/s]\tWd [deg]\tHr [g/kg]\tIth [kJ/m^2]\tIdn [kJ/m^2]\tTs [K]\tRn [-]\tSn [-]\n";
   boost::optional<std::string> output = firstPtOpt.get().toWthString();
   if(!output) {
     LOG(Error, "Translation to WTH has failed on starting data point");
     fp.close();
     return false;
   }
-  stream << output.get() << '\n';
+  fp << output.get() << '\n';
   for(unsigned int i=0;i<data().size();i++) {
     output = data()[i].toWthString();
     if(!output) {
@@ -2318,7 +2319,7 @@ bool EpwFile::translateToWth(openstudio::path path, std::string description)
       fp.close();
       return false;
     }
-    stream << output.get() << '\n';
+    fp << output.get() << '\n';
   }
   fp.close();
   return true;

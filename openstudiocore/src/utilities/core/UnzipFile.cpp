@@ -18,6 +18,7 @@
  **********************************************************************/
 
 #include "UnzipFile.hpp"
+#include "FilesystemHelpers.hpp"
 #include <zlib/zconf.h>
 #include <zlib/zlib.h>
 #include <zlib/contrib/minizip/unzip.h>
@@ -86,7 +87,7 @@ namespace openstudio {
 
       QDir().mkpath(toQString(createdFile.parent_path()));
 
-      openstudio::filesystem::ofstream file(createdFile, std::ios_base::trunc | std::ios_base::write, std::ios_base::binary);
+      openstudio::filesystem::ofstream file(createdFile, std::ios_base::trunc | std::ios_base::binary);
       while (cont)
       {
         std::vector<char> buffer(1024);
@@ -102,7 +103,8 @@ namespace openstudio {
         }
         else
         {
-          if (file.write(&buffer.front(), bytesread) < 0)
+          file.write(&buffer.front(), bytesread);
+          if (!file.good())
           {
             throw std::runtime_error("Error writing to output file: " + toString(createdFile));
           }

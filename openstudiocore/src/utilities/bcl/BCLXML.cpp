@@ -28,6 +28,7 @@
 #include "../core/System.hpp"
 #include "../core/Checksum.hpp"
 #include "../core/Assert.hpp"
+#include "../core/FilesystemHelpers.hpp"
 #include "../time/DateTime.hpp"
 
 #include <QDomDocument>
@@ -50,9 +51,9 @@ namespace openstudio{
     }
 
     QDomDocument bclXML("bclXML");
-    openstudio::filesystem::ofstream file(m_path);
-    if (file.open()){
-      bclXML.setContent(&file);
+    openstudio::filesystem::ifstream file(m_path);
+    if (file.is_open()){
+      bclXML.setContent(openstudio::filesystem::read_as_QByteArray(file));
       file.close();
     }else{
       file.close();
@@ -807,11 +808,11 @@ namespace openstudio{
 
     // write to disk
     openstudio::filesystem::ofstream file(m_path);
-    if (!file.open()){
+    if (!file.is_open()){
       return false;
     }
 
-    file << openstudio::toString(doc.toString(2));
+    openstudio::filesystem::write(file, doc.toString(2));
     file.close();
     return true;
   }

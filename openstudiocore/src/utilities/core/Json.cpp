@@ -23,6 +23,7 @@
 #include "Compare.hpp"
 #include "Logger.hpp"
 #include "PathHelpers.hpp"
+#include "FilesystemHelpers.hpp"
 #include "String.hpp"
 
 #include <OpenStudio.hxx>
@@ -66,7 +67,7 @@ QVariant loadJSON(const openstudio::path& p) {
   openstudio::filesystem::ifstream file(p, std::ios_base::binary);
   if (file.is_open()) {
     QJsonParseError err;
-    QJsonDocument doc = QJsonDocument::fromJson(openstudio::filesystem::read_file_as_QByteArray(file), &err);
+    QJsonDocument doc = QJsonDocument::fromJson(openstudio::filesystem::read_as_QByteArray(file), &err);
     file.close();
     if (err.error) {
       LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON: " + toString(err.errorString()));
