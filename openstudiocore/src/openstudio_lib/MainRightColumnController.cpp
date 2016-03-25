@@ -1135,7 +1135,7 @@ void MainRightColumnController::configureForScriptsSubTab(int subTabID)
 
   setLibraryView(m_measureLibraryController->localLibraryView.data());
   setMyModelView(nullptr);
-  m_measureEditController->reset();
+  //m_measureEditController->reset();
   //setEditView(m_measureEditController->editView.data());
 
   doc->openSidebar();
