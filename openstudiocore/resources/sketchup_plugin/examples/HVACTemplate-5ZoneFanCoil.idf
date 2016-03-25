@@ -99,7 +99,7 @@
 ! Environmental Emissions:        None
 ! Utility Tariffs:                None
 
-  Version,8.4;
+  Version,8.5;
 
   Building,
     Building,                !- Name
@@ -221,7 +221,7 @@
     WinterDesignDay,         !- Day Type
     -17.3,                   !- Maximum Dry-Bulb Temperature {C}
     0.0,                     !- Daily Dry-Bulb Temperature Range {deltaC}
-    ,                        !- Dry-Bulb Temperature Range Modifier Type
+    DefaultMultipliers,      !- Dry-Bulb Temperature Range Modifier Type
     ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     -17.3,                   !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
@@ -238,8 +238,8 @@
     ASHRAEClearSky,          !- Solar Model Indicator
     ,                        !- Beam Solar Day Schedule Name
     ,                        !- Diffuse Solar Day Schedule Name
-    ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
-    ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0.0;                     !- Sky Clearness
 
 ! CHICAGO_IL_USA Annual Cooling 1% Design Conditions, MaxDB=  31.5°C MCWB=  23.0°C
@@ -251,7 +251,7 @@
     SummerDesignDay,         !- Day Type
     31.5,                    !- Maximum Dry-Bulb Temperature {C}
     10.7,                    !- Daily Dry-Bulb Temperature Range {deltaC}
-    ,                        !- Dry-Bulb Temperature Range Modifier Type
+    DefaultMultipliers,      !- Dry-Bulb Temperature Range Modifier Type
     ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     23.0,                    !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
@@ -268,8 +268,8 @@
     ASHRAEClearSky,          !- Solar Model Indicator
     ,                        !- Beam Solar Day Schedule Name
     ,                        !- Diffuse Solar Day Schedule Name
-    ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
-    ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     1.0;                     !- Sky Clearness
 
   Site:GroundTemperature:BuildingSurface,21.5,21.4,21.5,21.5,22.0,22.9,23.0,23.1,23.1,22.2,21.7,21.6;
@@ -855,7 +855,7 @@
     ,                        !- People per Zone Floor Area {person/m2}
     ,                        !- Zone Floor Area per Person {m2/person}
     0.3,                     !- Fraction Radiant
-    ,                        !- Sensible Heat Fraction
+    Autocalculate,           !- Sensible Heat Fraction
     ActSchd;                 !- Activity Level Schedule Name
 
   Lights,
@@ -1066,7 +1066,7 @@
     ,                        !- People per Zone Floor Area {person/m2}
     ,                        !- Zone Floor Area per Person {m2/person}
     0.3,                     !- Fraction Radiant
-    ,                        !- Sensible Heat Fraction
+    Autocalculate,           !- Sensible Heat Fraction
     ActSchd;                 !- Activity Level Schedule Name
 
   Lights,
@@ -1241,7 +1241,7 @@
     ,                        !- People per Zone Floor Area {person/m2}
     ,                        !- Zone Floor Area per Person {m2/person}
     0.3,                     !- Fraction Radiant
-    ,                        !- Sensible Heat Fraction
+    Autocalculate,           !- Sensible Heat Fraction
     ActSchd;                 !- Activity Level Schedule Name
 
   Lights,
@@ -1432,7 +1432,7 @@
     ,                        !- People per Zone Floor Area {person/m2}
     ,                        !- Zone Floor Area per Person {m2/person}
     0.3,                     !- Fraction Radiant
-    ,                        !- Sensible Heat Fraction
+    Autocalculate,           !- Sensible Heat Fraction
     ActSchd;                 !- Activity Level Schedule Name
 
   Lights,
@@ -1607,7 +1607,7 @@
     ,                        !- People per Zone Floor Area {person/m2}
     ,                        !- Zone Floor Area per Person {m2/person}
     0.3,                     !- Fraction Radiant
-    ,                        !- Sensible Heat Fraction
+    Autocalculate,           !- Sensible Heat Fraction
     ActSchd;                 !- Activity Level Schedule Name
 
   Lights,
@@ -1816,9 +1816,9 @@
     50,                      !- Heating Coil Design Setpoint {C}
     ,                        !- Dedicated Outdoor Air System Name
     SupplyAirTemperature,    !- Zone Cooling Design Supply Air Temperature Input Method
-    ,                        !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
+    11.11,                   !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
     SupplyAirTemperature,    !- Zone Heating Design Supply Air Temperature Input Method
-    ,                        !- Zone Heating Design Supply Air Temperature Difference {deltaC}
+    30.0,                    !- Zone Heating Design Supply Air Temperature Difference {deltaC}
     ,                        !- Design Specification Outdoor Air Object Name
     ,                        !- Design Specification Zone Air Distribution Object Name
     ,                        !- Capacity Control Method
@@ -1852,9 +1852,9 @@
     50,                      !- Heating Coil Design Setpoint {C}
     ,                        !- Dedicated Outdoor Air System Name
     SupplyAirTemperature,    !- Zone Cooling Design Supply Air Temperature Input Method
-    ,                        !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
+    11.11,                   !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
     SupplyAirTemperature,    !- Zone Heating Design Supply Air Temperature Input Method
-    ,                        !- Zone Heating Design Supply Air Temperature Difference {deltaC}
+    30.0,                    !- Zone Heating Design Supply Air Temperature Difference {deltaC}
     ,                        !- Design Specification Outdoor Air Object Name
     ,                        !- Design Specification Zone Air Distribution Object Name
     ,                        !- Capacity Control Method
@@ -1888,9 +1888,9 @@
     50,                      !- Heating Coil Design Setpoint {C}
     ,                        !- Dedicated Outdoor Air System Name
     SupplyAirTemperature,    !- Zone Cooling Design Supply Air Temperature Input Method
-    ,                        !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
+    11.11,                   !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
     SupplyAirTemperature,    !- Zone Heating Design Supply Air Temperature Input Method
-    ,                        !- Zone Heating Design Supply Air Temperature Difference {deltaC}
+    30.0,                    !- Zone Heating Design Supply Air Temperature Difference {deltaC}
     ,                        !- Design Specification Outdoor Air Object Name
     ,                        !- Design Specification Zone Air Distribution Object Name
     ,                        !- Capacity Control Method
@@ -1924,9 +1924,9 @@
     50,                      !- Heating Coil Design Setpoint {C}
     ,                        !- Dedicated Outdoor Air System Name
     SupplyAirTemperature,    !- Zone Cooling Design Supply Air Temperature Input Method
-    ,                        !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
+    11.11,                   !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
     SupplyAirTemperature,    !- Zone Heating Design Supply Air Temperature Input Method
-    ,                        !- Zone Heating Design Supply Air Temperature Difference {deltaC}
+    30.0,                    !- Zone Heating Design Supply Air Temperature Difference {deltaC}
     ,                        !- Design Specification Outdoor Air Object Name
     ,                        !- Design Specification Zone Air Distribution Object Name
     ,                        !- Capacity Control Method
@@ -1960,9 +1960,9 @@
     50,                      !- Heating Coil Design Setpoint {C}
     ,                        !- Dedicated Outdoor Air System Name
     SupplyAirTemperature,    !- Zone Cooling Design Supply Air Temperature Input Method
-    ,                        !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
+    11.11,                   !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
     SupplyAirTemperature,    !- Zone Heating Design Supply Air Temperature Input Method
-    ,                        !- Zone Heating Design Supply Air Temperature Difference {deltaC}
+    30.0,                    !- Zone Heating Design Supply Air Temperature Difference {deltaC}
     ,                        !- Design Specification Outdoor Air Object Name
     ,                        !- Design Specification Zone Air Distribution Object Name
     ,                        !- Capacity Control Method
@@ -2003,7 +2003,7 @@
     3.2,                     !- Nominal COP {W/W}
     WaterCooled,             !- Condenser Type
     1,                       !- Priority
-    ;                        !- Sizing Factor
+    1.0;                     !- Sizing Factor
 
   HVACTemplate:Plant:Tower,
     Main Tower,              !- Name
@@ -2014,7 +2014,7 @@
     autosize,                !- Low Speed Fan Power {W}
     autosize,                !- Free Convection Capacity {W}
     1,                       !- Priority
-    ;                        !- Sizing Factor
+    1.0;                     !- Sizing Factor
 
   HVACTemplate:Plant:HotWaterLoop,
     Hot Water Loop,          !- Name
@@ -2039,7 +2039,7 @@
     0.8,                     !- Efficiency
     NaturalGas,              !- Fuel Type
     1,                       !- Priority
-    ;                        !- Sizing Factor
+    1.0;                     !- Sizing Factor
 
   Output:Variable,*,Outdoor Dry Bulb,hourly;
 

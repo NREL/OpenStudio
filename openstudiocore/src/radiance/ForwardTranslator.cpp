@@ -252,7 +252,7 @@ namespace radiance {
       LOG(Debug, "Working Directory: " + openstudio::toString(outPath));
 
       if (openstudio::filesystem::exists(outPath)){
-        openstudio::filesystem::remove(outPath);
+        openstudio::filesystem::remove_all(outPath);
       }
 
       openstudio::filesystem::create_directories(outPath);
@@ -425,8 +425,8 @@ namespace radiance {
 
     }catch(const std::exception& e){
       outfiles.clear();
-
-      LOG(Error, e.what());
+      std::string error = e.what();
+      LOG(Error, error);
     }
 
     return outfiles;

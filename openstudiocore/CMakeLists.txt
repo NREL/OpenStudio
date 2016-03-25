@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 2.8.11)
 
 project(OpenStudioCore)
 
+if( POLICY CMP0022 ) 
+  cmake_policy(SET CMP0022 NEW)
+endif()
 cmake_policy(SET CMP0020 NEW)
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.0")
   cmake_policy(SET CMP0042 NEW)
@@ -23,7 +26,7 @@ if(NOT ENERGYPLUS_VERSION_MAJOR)
   set(ENERGYPLUS_VERSION_MAJOR 8)
 endif()
 if(NOT ENERGYPLUS_VERSION_MINOR)
-  set(ENERGYPLUS_VERSION_MINOR 4)
+  set(ENERGYPLUS_VERSION_MINOR 5)
 endif()
 if(NOT ENERGYPLUS_VERSION_PATCH)
   set(ENERGYPLUS_VERSION_PATCH 0)
@@ -31,7 +34,7 @@ endif()
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
 if(NOT ENERGYPLUS_BUILD_SHA)
-  set(ENERGYPLUS_BUILD_SHA "832e4bb9cb")
+  set(ENERGYPLUS_BUILD_SHA "85848eef40")
 endif()
 
 # configure file with version information

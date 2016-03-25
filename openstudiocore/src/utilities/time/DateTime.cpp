@@ -49,6 +49,7 @@ double DateTime::localOffsetUTC()
 
 /// default constructor
 DateTime::DateTime()
+  : m_utcOffset(0.0)
 {
 }
 
@@ -332,8 +333,10 @@ DateTime toDateTime(const QDateTime &qdt)
 {
   Date d = Date::fromDayOfYear(qdt.date().dayOfYear(), qdt.date().year());
   Time t(0, qdt.time().hour(), qdt.time().minute(), qdt.time().second());
+  int secondsFromUtc = qdt.offsetFromUtc();
+  double utcOffset = secondsFromUtc * HOURS_PER_SECOND;
 
-  return DateTime(d, t, DateTime::localOffsetUTC());
+  return DateTime(d, t, utcOffset);
 }
 
 QDateTime toQDateTime(const DateTime& dt) {
@@ -343,7 +346,9 @@ QDateTime toQDateTime(const DateTime& dt) {
             dt.date().dayOfMonth()),
       QTime(dt.time().hours(), 
             dt.time().minutes(), 
-            dt.time().seconds())
+            dt.time().seconds()),
+      Qt::OffsetFromUTC,
+      dt.utcOffset() * SECONDS_PER_MINUTE * MINUTES_PER_HOUR
       );
 }
 

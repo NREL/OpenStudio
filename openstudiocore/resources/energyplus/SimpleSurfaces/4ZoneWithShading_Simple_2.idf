@@ -81,7 +81,7 @@
 ! Environmental Emissions:        None
 ! Utility Tariffs:                None
 
-  Version,8.4;
+  Version,8.5;
 
   Timestep,4;
 
@@ -131,7 +131,7 @@
     WinterDesignDay,         !- Day Type
     -16.6,                   !- Maximum Dry-Bulb Temperature {C}
     0.0,                     !- Daily Dry-Bulb Temperature Range {deltaC}
-    ,                        !- Dry-Bulb Temperature Range Modifier Type
+    DefaultMultipliers,      !- Dry-Bulb Temperature Range Modifier Type
     ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     -16.6,                   !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
@@ -148,8 +148,8 @@
     ASHRAEClearSky,          !- Solar Model Indicator
     ,                        !- Beam Solar Day Schedule Name
     ,                        !- Diffuse Solar Day Schedule Name
-    ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
-    ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0.00;                    !- Sky Clearness
 
  ! Chicago Ohare Intl Ap IL USA Annual Cooling (DB=>MWB) 1%, MaxDB=31.6°C MWB=23°C
@@ -161,7 +161,7 @@
     SummerDesignDay,         !- Day Type
     31.6,                    !- Maximum Dry-Bulb Temperature {C}
     10.5,                    !- Daily Dry-Bulb Temperature Range {deltaC}
-    ,                        !- Dry-Bulb Temperature Range Modifier Type
+    DefaultMultipliers,      !- Dry-Bulb Temperature Range Modifier Type
     ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     23,                      !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
@@ -178,8 +178,8 @@
     ASHRAEClearSky,          !- Solar Model Indicator
     ,                        !- Beam Solar Day Schedule Name
     ,                        !- Diffuse Solar Day Schedule Name
-    ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
-    ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     1.00;                    !- Sky Clearness
 
   RunPeriod,
@@ -473,7 +473,7 @@
     UpperLeftCorner,         !- Starting Vertex Position
     CounterClockWise,        !- Vertex Entry Direction
     Relative,                !- Coordinate System
-    ,                        !- Daylighting Reference Point Coordinate System
+    Relative,                !- Daylighting Reference Point Coordinate System
     Relative;                !- Rectangular Surface Coordinate System
 
   Shading:Building,
@@ -1027,15 +1027,15 @@
     ,                        !- Heating Availability Schedule Name
     ,                        !- Cooling Availability Schedule Name
     ConstantSupplyHumidityRatio,  !- Dehumidification Control Type
-    ,                        !- Cooling Sensible Heat Ratio {dimensionless}
+    0.7,                     !- Cooling Sensible Heat Ratio {dimensionless}
     ConstantSupplyHumidityRatio,  !- Humidification Control Type
     ,                        !- Design Specification Outdoor Air Object Name
     ,                        !- Outdoor Air Inlet Node Name
-    ,                        !- Demand Controlled Ventilation Type
-    ,                        !- Outdoor Air Economizer Type
-    ,                        !- Heat Recovery Type
-    ,                        !- Sensible Heat Recovery Effectiveness {dimensionless}
-    ;                        !- Latent Heat Recovery Effectiveness {dimensionless}
+    None,                    !- Demand Controlled Ventilation Type
+    NoEconomizer,            !- Outdoor Air Economizer Type
+    None,                    !- Heat Recovery Type
+    0.70,                    !- Sensible Heat Recovery Effectiveness {dimensionless}
+    0.65;                    !- Latent Heat Recovery Effectiveness {dimensionless}
 
   NodeList,
     ZONE 1 INLETS,           !- Name
@@ -1086,15 +1086,15 @@
     ,                        !- Heating Availability Schedule Name
     ,                        !- Cooling Availability Schedule Name
     ConstantSupplyHumidityRatio,  !- Dehumidification Control Type
-    ,                        !- Cooling Sensible Heat Ratio {dimensionless}
+    0.7,                     !- Cooling Sensible Heat Ratio {dimensionless}
     ConstantSupplyHumidityRatio,  !- Humidification Control Type
     ,                        !- Design Specification Outdoor Air Object Name
     ,                        !- Outdoor Air Inlet Node Name
-    ,                        !- Demand Controlled Ventilation Type
-    ,                        !- Outdoor Air Economizer Type
-    ,                        !- Heat Recovery Type
-    ,                        !- Sensible Heat Recovery Effectiveness {dimensionless}
-    ;                        !- Latent Heat Recovery Effectiveness {dimensionless}
+    None,                    !- Demand Controlled Ventilation Type
+    NoEconomizer,            !- Outdoor Air Economizer Type
+    None,                    !- Heat Recovery Type
+    0.70,                    !- Sensible Heat Recovery Effectiveness {dimensionless}
+    0.65;                    !- Latent Heat Recovery Effectiveness {dimensionless}
 
   NodeList,
     ZONE 2 INLETS,           !- Name
@@ -1145,15 +1145,15 @@
     ,                        !- Heating Availability Schedule Name
     ,                        !- Cooling Availability Schedule Name
     ConstantSupplyHumidityRatio,  !- Dehumidification Control Type
-    ,                        !- Cooling Sensible Heat Ratio {dimensionless}
+    0.7,                     !- Cooling Sensible Heat Ratio {dimensionless}
     ConstantSupplyHumidityRatio,  !- Humidification Control Type
     ,                        !- Design Specification Outdoor Air Object Name
     ,                        !- Outdoor Air Inlet Node Name
-    ,                        !- Demand Controlled Ventilation Type
-    ,                        !- Outdoor Air Economizer Type
-    ,                        !- Heat Recovery Type
-    ,                        !- Sensible Heat Recovery Effectiveness {dimensionless}
-    ;                        !- Latent Heat Recovery Effectiveness {dimensionless}
+    None,                    !- Demand Controlled Ventilation Type
+    NoEconomizer,            !- Outdoor Air Economizer Type
+    None,                    !- Heat Recovery Type
+    0.70,                    !- Sensible Heat Recovery Effectiveness {dimensionless}
+    0.65;                    !- Latent Heat Recovery Effectiveness {dimensionless}
 
   NodeList,
     ZONE 3 INLETS,           !- Name
@@ -1204,15 +1204,15 @@
     ,                        !- Heating Availability Schedule Name
     ,                        !- Cooling Availability Schedule Name
     ConstantSupplyHumidityRatio,  !- Dehumidification Control Type
-    ,                        !- Cooling Sensible Heat Ratio {dimensionless}
+    0.7,                     !- Cooling Sensible Heat Ratio {dimensionless}
     ConstantSupplyHumidityRatio,  !- Humidification Control Type
     ,                        !- Design Specification Outdoor Air Object Name
     ,                        !- Outdoor Air Inlet Node Name
-    ,                        !- Demand Controlled Ventilation Type
-    ,                        !- Outdoor Air Economizer Type
-    ,                        !- Heat Recovery Type
-    ,                        !- Sensible Heat Recovery Effectiveness {dimensionless}
-    ;                        !- Latent Heat Recovery Effectiveness {dimensionless}
+    None,                    !- Demand Controlled Ventilation Type
+    NoEconomizer,            !- Outdoor Air Economizer Type
+    None,                    !- Heat Recovery Type
+    0.70,                    !- Sensible Heat Recovery Effectiveness {dimensionless}
+    0.65;                    !- Latent Heat Recovery Effectiveness {dimensionless}
 
   NodeList,
     ZONE 4 INLETS,           !- Name

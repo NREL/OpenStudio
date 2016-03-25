@@ -1,7 +1,7 @@
 ! File to test the import of simple surfaces
 !-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
 
-  Version,8.4;
+  Version,8.5;
 
 !-   ===========  ALL OBJECTS IN CLASS: BUILDING ===========
 
@@ -325,7 +325,7 @@
     30.0,                    !- X Origin {m}
     40.0,                    !- Y Origin {m}
     0.0,                     !- Z Origin {m}
-    ,                        !- Type
+    1,                       !- Type
     1;                       !- Multiplier
 
 !- Reference:
@@ -401,7 +401,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     0.000000,0.000000,4.000000,  !- X,Y,Z ==> Vertex 1 {m}
     0.000000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -455,7 +455,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     25.000000,20.000000,4.000000,  !- X,Y,Z ==> Vertex 1 {m}
     25.000000,20.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -495,7 +495,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     0.000000,0.000000,4.000000,  !- X,Y,Z ==> Vertex 1 {m}
     25.000000,0.000000,4.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -591,7 +591,7 @@
     50.0,                    !- X Origin {m}
     55.0,                    !- Y Origin {m}
     0.0,                     !- Z Origin {m}
-    ,                        !- Type
+    1,                       !- Type
     1;                       !- Multiplier
 
 !- Reference:
@@ -640,7 +640,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     25.000000,20.000000,4.000000,  !- X,Y,Z ==> Vertex 1 {m}
     25.000000,20.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -656,7 +656,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     0.000000,0.000000,4.000000,  !- X,Y,Z ==> Vertex 1 {m}
     0.000000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -780,7 +780,7 @@
     Zone1 Front Wall,        !- Building Surface Name
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     10,                      !- Starting X Coordinate {m}
     1,                       !- Starting Z Coordinate {m}
     10,                      !- Length {m}
@@ -843,7 +843,7 @@
     Zone2 Door,              !- Name
     Exterior Door,           !- Construction Name
     Zone2 Front Wall,        !- Building Surface Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     10,                      !- Starting X Coordinate {m}
     0,                       !- Starting Z Coordinate {m}
     5,                       !- Length {m}
@@ -982,7 +982,7 @@
     Interior Window,         !- Construction Name
     Zone1 Interior Wall,     !- Building Surface Name
     Zone2 Interior Window,   !- Outside Boundary Condition Object
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     8,                       !- Starting X Coordinate {m}
     1,                       !- Starting Z Coordinate {m}
     10,                      !- Length {m}
@@ -993,7 +993,7 @@
     Interior Window,         !- Construction Name
     Zone2 Interior Wall,     !- Building Surface Name
     Zone1 Interior Window,   !- Outside Boundary Condition Object
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     2,                       !- Starting X Coordinate {m}
     1,                       !- Starting Z Coordinate {m}
     10,                      !- Length {m}

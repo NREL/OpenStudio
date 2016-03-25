@@ -1,6 +1,6 @@
 !-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
 
-  Version,8.4;
+  Version,8.5;
 
 !-   ===========  ALL OBJECTS IN CLASS: BUILDING ===========
 
@@ -224,7 +224,7 @@
     0.0,                     !- X Origin {m}
     0.0,                     !- Y Origin {m}
     0.0,                     !- Z Origin {m}
-    ,                        !- Type
+    1,                       !- Type
     1;                       !- Multiplier
 
   BuildingSurface:Detailed,
@@ -252,7 +252,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     1.524000,10.668000,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
     1.524000,10.668000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -268,7 +268,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     10.668000,10.668000,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
     10.668000,10.668000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -284,7 +284,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     14,                      !- Number of Vertices
     10.668000,1.524000,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
     10.668000,1.524000,2.133600,  !- X,Y,Z ==> Vertex 2 {m}
@@ -310,7 +310,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     1.524000,10.668000,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
     1.524000,1.524000,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -326,7 +326,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     1.524000,1.524000,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
     1.524000,1.524000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -339,10 +339,10 @@
     Exterior Window,         !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     9.144000,1.524000,1.828800,  !- X,Y,Z ==> Vertex 1 {m}
     9.144000,1.524000,0.609600,  !- X,Y,Z ==> Vertex 2 {m}
@@ -355,10 +355,10 @@
     Exterior Window,         !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     4.992688,1.524000,1.828800,  !- X,Y,Z ==> Vertex 1 {m}
     4.992688,1.524000,0.609600,  !- X,Y,Z ==> Vertex 2 {m}
@@ -371,10 +371,10 @@
     Exterior Window,         !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     8.534400,1.524000,1.828800,  !- X,Y,Z ==> Vertex 1 {m}
     8.534400,1.524000,0.609600,  !- X,Y,Z ==> Vertex 2 {m}
@@ -387,10 +387,10 @@
     Exterior Window,         !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     9.144000,1.524000,3.048000,  !- X,Y,Z ==> Vertex 1 {m}
     9.144000,1.524000,1.828800,  !- X,Y,Z ==> Vertex 2 {m}
@@ -403,10 +403,10 @@
     Exterior Window,         !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     8.534400,1.524000,3.048000,  !- X,Y,Z ==> Vertex 1 {m}
     8.534400,1.524000,1.828800,  !- X,Y,Z ==> Vertex 2 {m}
@@ -419,10 +419,10 @@
     Exterior Window,         !- Construction Name
     wall-01,                 !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     2.438400,1.524000,1.828800,  !- X,Y,Z ==> Vertex 1 {m}
     2.438400,1.524000,0.609600,  !- X,Y,Z ==> Vertex 2 {m}
@@ -435,10 +435,10 @@
     Exterior Window,         !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     5.602288,1.524000,1.828800,  !- X,Y,Z ==> Vertex 1 {m}
     5.602288,1.524000,0.609600,  !- X,Y,Z ==> Vertex 2 {m}
@@ -451,10 +451,10 @@
     Exterior Window,         !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     6.211888,1.524000,1.828800,  !- X,Y,Z ==> Vertex 1 {m}
     6.211888,1.524000,0.609600,  !- X,Y,Z ==> Vertex 2 {m}
@@ -467,10 +467,10 @@
     Exterior Window,         !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     5.791200,3.048000,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
     5.791200,2.438400,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -483,10 +483,10 @@
     Exterior Window,         !- Construction Name
     roof-01,                 !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     2.438400,3.048000,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
     2.438400,2.438400,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -499,10 +499,10 @@
     Exterior Window,         !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     9.144000,3.048000,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
     9.144000,2.438400,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -515,10 +515,10 @@
     Exterior Window,         !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     8.534400,3.048000,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
     8.534400,2.438400,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -531,10 +531,10 @@
     Exterior Window,         !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     9.144000,3.657600,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
     9.144000,3.048000,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -547,10 +547,10 @@
     Exterior Window,         !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     8.534400,3.657600,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
     8.534400,3.048000,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -563,10 +563,10 @@
     Exterior Window,         !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     5.181600,3.048000,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
     5.181600,2.438400,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -579,10 +579,10 @@
     Exterior Window,         !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     6.400800,3.048000,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
     6.400800,2.438400,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -595,10 +595,10 @@
     Exterior Window,         !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     7.924800,3.048000,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
     7.924800,2.438400,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -611,10 +611,10 @@
     Exterior Window,         !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     7.924800,3.657600,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
     7.924800,3.048000,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -627,10 +627,10 @@
     Exterior Window,         !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     8.534400,4.267200,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
     8.534400,3.657600,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -643,10 +643,10 @@
     Exterior Window,         !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     9.144000,4.267200,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
     9.144000,3.657600,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -659,10 +659,10 @@
     Exterior Window,         !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     7.924800,4.267200,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
     7.924800,3.657600,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -675,10 +675,10 @@
     Exterior Window,         !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     6.211888,1.524000,3.352800,  !- X,Y,Z ==> Vertex 1 {m}
     6.211888,1.524000,2.133600,  !- X,Y,Z ==> Vertex 2 {m}
@@ -691,10 +691,10 @@
     Exterior Window,         !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     4.992688,1.524000,3.352800,  !- X,Y,Z ==> Vertex 1 {m}
     4.992688,1.524000,2.133600,  !- X,Y,Z ==> Vertex 2 {m}
@@ -707,10 +707,10 @@
     Exterior Window,         !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     5.602288,1.524000,3.352800,  !- X,Y,Z ==> Vertex 1 {m}
     5.602288,1.524000,2.133600,  !- X,Y,Z ==> Vertex 2 {m}
@@ -723,10 +723,10 @@
     Exterior Door,           !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     10.668000,8.839200,2.133600,  !- X,Y,Z ==> Vertex 1 {m}
     10.668000,8.839200,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -739,10 +739,10 @@
     Exterior Door,           !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     10.668000,3.352800,2.133600,  !- X,Y,Z ==> Vertex 1 {m}
     10.668000,3.352800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -755,10 +755,10 @@
     Exterior Door,           !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     10.668000,7.924800,2.133600,  !- X,Y,Z ==> Vertex 1 {m}
     10.668000,7.924800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -771,10 +771,10 @@
     Exterior Door,           !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     10.668000,7.010400,2.133600,  !- X,Y,Z ==> Vertex 1 {m}
     10.668000,7.010400,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -787,10 +787,10 @@
     Exterior Door,           !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     10.668000,4.267200,2.133600,  !- X,Y,Z ==> Vertex 1 {m}
     10.668000,4.267200,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -803,10 +803,10 @@
     Exterior Door,           !- Construction Name
     ,                        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
-    ,                        !- Multiplier
+    1.0,                     !- Multiplier
     4,                       !- Number of Vertices
     10.668000,1.524000,2.133600,  !- X,Y,Z ==> Vertex 1 {m}
     10.668000,1.524000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}

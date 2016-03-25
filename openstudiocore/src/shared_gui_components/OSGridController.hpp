@@ -587,6 +587,11 @@ public:
 
   OSGridView * gridView();
 
+  // If a column contains information about a construction, it may be an inherited construction
+  // (as determined by calling PlanarSurface::isConstructionDefaulted). An instantiated gridview
+  // should set this value, if appropriate.
+  int m_constructionColumn = -1;
+
 protected:
 
   // This function determines the category for

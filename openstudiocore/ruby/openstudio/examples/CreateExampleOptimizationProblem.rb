@@ -44,7 +44,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 require 'openstudio/model/user_scripts/SummaryTable_Objects_Attributes_Relationships.rb'
 require 'openstudio/ruleset/NonInteractiveUserScriptRunner.rb'
 
@@ -70,7 +69,7 @@ projectDir = ospPath.parent_path / Path.new(ospPath.stem)
 
 
 # EnergyPlus
-ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,4)
+ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,5)
 ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
 
 

@@ -255,18 +255,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctPara
     idfObject.setDouble(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::MinimumHotWaterorSteamFlowRate,value.get());
   }
 
-  // HotWaterorSteamInletNodeName
-  if( boost::optional<CoilHeatingWater> coil = modelObject.reheatCoil().optionalCast<CoilHeatingWater>() )
-  {
-    if( boost::optional<ModelObject> mo = coil->waterInletModelObject() )
-    {
-      if( boost::optional<Node> node = mo->optionalCast<Node>() )
-      {
-        idfObject.setString(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::HotWaterorSteamInletNodeName,node->name().get());
-      }
-    }
-  }
-
   // ConvergenceTolerance
   if( (value = modelObject.convergenceTolerance()) )
   {

@@ -22,7 +22,7 @@ set(OpenStudioCore_INCLUDE_DIRS "${OpenStudioCore_INSTALL_PREFIX}/../src"
                                 "@GTEST_INCLUDE_DIR@"
                                 "@GEOGRAPHIC_INCLUDE_DIR@"
 )
-set(OpenStudioCore_LIBRARY_DIRS  "${OpenStudioCore_INSTALL_PREFIX}/Products" "@GTEST_LIB_DIR@" "@QJSON_LIBRARY_DIRS@" "@GEOGRAPHIC_LIB_DIR@")
+set(OpenStudioCore_LIBRARY_DIRS  "${OpenStudioCore_INSTALL_PREFIX}/Products" "@GTEST_LIB_DIR@" "@QJSON_LIBRARY_DIRS@")
 set(OpenStudioCore_CMAKE_DIR "@CMAKE_SOURCE_DIR@")
 set(OpenStudioCore_SWIG_INCLUDE_DIR "@CMAKE_SOURCE_DIR@/src")
 

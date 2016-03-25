@@ -285,6 +285,13 @@ bool OSItem::isDefaulted() const
 void OSItem::setIsDefaulted(bool isDefaulted)
 {
   m_itemId.setIsDefaulted(isDefaulted);
+  if (isDefaulted) {
+    m_textLbl->setStyleSheet("QLabel { color: #006837 }");
+    this->setRemoveable(false);
+  } else {
+    m_textLbl->setStyleSheet("QLabel { color: black }");
+    this->setRemoveable(true);
+  }
 }
 
 QString OSItem::text() const

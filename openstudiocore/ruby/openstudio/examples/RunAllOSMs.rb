@@ -37,7 +37,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 
 osmDir = OpenStudio::Path.new(ARGV[0])
 weatherFileDir = OpenStudio::system_complete(OpenStudio::Path.new(ARGV[1]))
@@ -53,7 +52,7 @@ OpenStudio::remove(runManagerDBPath) if (OpenStudio::exists(runManagerDBPath))
 runManager = OpenStudio::Runmanager::RunManager.new(runManagerDBPath,true)
 
 # find energyplus
-ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,4)
+ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,5)
 ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
 
 tools = OpenStudio::Runmanager::ConfigOptions::makeTools(ep_path.parent_path(),

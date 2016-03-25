@@ -700,7 +700,38 @@ Loop addSystemType7(Model & model)
 
   pump2.addToNode(chilledWaterInletNode);
 
-  ChillerElectricEIR chiller(model);
+  CurveBiquadratic ccFofT(model);
+  ccFofT.setCoefficient1Constant(0.258);
+  ccFofT.setCoefficient2x(0.0389);
+  ccFofT.setCoefficient3xPOW2(-0.000217);
+  ccFofT.setCoefficient4y(0.0469);
+  ccFofT.setCoefficient5yPOW2(-0.000943);
+  ccFofT.setCoefficient6xTIMESY(-0.000343);
+  ccFofT.setMinimumValueofx(5);
+  ccFofT.setMaximumValueofx(10);
+  ccFofT.setMinimumValueofy(24);
+  ccFofT.setMaximumValueofy(35);
+
+  CurveBiquadratic eiToCORFofT(model);
+  eiToCORFofT.setCoefficient1Constant(0.934);
+  eiToCORFofT.setCoefficient2x(-0.0582);
+  eiToCORFofT.setCoefficient3xPOW2(0.0045);
+  eiToCORFofT.setCoefficient4y(0.00243);
+  eiToCORFofT.setCoefficient5yPOW2(0.000486);
+  eiToCORFofT.setCoefficient6xTIMESY(-0.00122);
+  eiToCORFofT.setMinimumValueofx(5);
+  eiToCORFofT.setMaximumValueofx(10);
+  eiToCORFofT.setMinimumValueofy(24);
+  eiToCORFofT.setMaximumValueofy(35);
+
+  CurveQuadratic eiToCORFofPLR(model);
+  eiToCORFofPLR.setCoefficient1Constant(0.222903);
+  eiToCORFofPLR.setCoefficient2x(0.313387);
+  eiToCORFofPLR.setCoefficient3xPOW2(0.46371);
+  eiToCORFofPLR.setMinimumValueofx(0);
+  eiToCORFofPLR.setMaximumValueofx(1);
+
+  ChillerElectricEIR chiller(model,ccFofT,eiToCORFofT,eiToCORFofPLR );
 
   node = chilledWaterPlant.supplySplitter().lastOutletModelObject()->cast<Node>();
   chiller.addToNode(node);

@@ -103,7 +103,8 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.9.5")] = &VersionTranslator::update_1_9_4_to_1_9_5;
   m_updateMethods[VersionString("1.10.0")] = &VersionTranslator::update_1_9_5_to_1_10_0;
   m_updateMethods[VersionString("1.10.2")] = &VersionTranslator::update_1_10_1_to_1_10_2;
-  m_updateMethods[VersionString("1.10.5")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.10.6")] = &VersionTranslator::update_1_10_5_to_1_10_6;
+  m_updateMethods[VersionString("1.11.0")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -202,6 +203,8 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.10.2"));
   m_startVersions.push_back(VersionString("1.10.3"));
   m_startVersions.push_back(VersionString("1.10.4"));
+  m_startVersions.push_back(VersionString("1.10.5"));
+  m_startVersions.push_back(VersionString("1.10.6"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -3135,6 +3138,50 @@ std::string VersionTranslator::update_1_10_1_to_1_10_2(const IdfFile& idf_1_10_1
 
     m_new.push_back( newObject );
     ss << newObject;
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_10_5_to_1_10_6(const IdfFile& idf_1_10_5, const IddFileAndFactoryWrapper& idd_1_10_6) {
+  std::stringstream ss;
+
+  ss << idf_1_10_5.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_10_6.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_1_10_5.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:PlantLoop") {
+      auto iddObject = idd_1_10_6.getObject("OS:PlantLoop");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+         if( auto s = object.getString(i) ) {
+           if( i == 20 ) {
+             if( istringEqual("Sequential",s.get()) ) {
+               newObject.setString(i,"SequentialLoad");
+             } else if( istringEqual("Uniform",s.get()) ) {
+               newObject.setString(i,"UniformLoad");
+             } else {
+               newObject.setString(i,s.get());
+             }
+           } else {
+             newObject.setString(i,s.get());
+           }
+        } else {
+           
+        }
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else {
+      ss << object;
+    }
   }
 
   return ss.str();

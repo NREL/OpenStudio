@@ -111,7 +111,7 @@
 ! ZONE_TERMINAL_FAN_STATIC_PRESSURE=300
 ! End WebInterface Parameters
 
-  Version,8.4;
+  Version,8.5;
 
   Timestep,1;
 
@@ -253,7 +253,7 @@
     WinterDesignDay,         !- Day Type
     -21.20000,               !- Maximum Dry-Bulb Temperature {C}
     0.0000000E+00,           !- Daily Dry-Bulb Temperature Range {deltaC}
-    ,                        !- Dry-Bulb Temperature Range Modifier Type
+    DefaultMultipliers,      !- Dry-Bulb Temperature Range Modifier Type
     ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     -21.20000,               !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
@@ -270,8 +270,8 @@
     ASHRAEClearSky,          !- Solar Model Indicator
     ,                        !- Beam Solar Day Schedule Name
     ,                        !- Diffuse Solar Day Schedule Name
-    ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
-    ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0.0000000E+00;           !- Sky Clearness
 
 ! CHICAGO_IL_USA Cooling (WB=>MDB) .4%, MDB=  31.00 WB=  25.10
@@ -283,7 +283,7 @@
     SummerDesignDay,         !- Day Type
     31.00000,                !- Maximum Dry-Bulb Temperature {C}
     10.90000,                !- Daily Dry-Bulb Temperature Range {deltaC}
-    ,                        !- Dry-Bulb Temperature Range Modifier Type
+    DefaultMultipliers,      !- Dry-Bulb Temperature Range Modifier Type
     ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     25.10000,                !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
@@ -300,8 +300,8 @@
     ASHRAEClearSky,          !- Solar Model Indicator
     ,                        !- Beam Solar Day Schedule Name
     ,                        !- Diffuse Solar Day Schedule Name
-    ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
-    ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
+    0,                       !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     1.000000;                !- Sky Clearness
 
   Site:GroundTemperature:BuildingSurface,19.96,19.94,19.99,20.04,20.09,20.17,20.21,20.24,20.23,20.20,20.17,20.12;
@@ -2470,9 +2470,9 @@
     ,                        !- People per Zone Floor Area {person/m2}
     ,                        !- Zone Floor Area per Person {m2/person}
     0.3000,                  !- Fraction Radiant
-    ,                        !- Sensible Heat Fraction
+    Autocalculate,           !- Sensible Heat Fraction
     ACTIVITY_SCH,            !- Activity Level Schedule Name
-    ,                        !- Carbon Dioxide Generation Rate {m3/s-W}
+    3.82E-8,                 !- Carbon Dioxide Generation Rate {m3/s-W}
     NO,                      !- Enable ASHRAE 55 Comfort Warnings
     ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
@@ -2542,19 +2542,19 @@
     0.0,                     !- Zone Cooling Sizing Factor
     DesignDay,               !- Cooling Design Air Flow Method
     0.0,                     !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+    .000762,                 !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
     0.0,                     !- Cooling Minimum Air Flow {m3/s}
     0.0,                     !- Cooling Minimum Air Flow Fraction
     DesignDay,               !- Heating Design Air Flow Method
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+    .1415762,                !- Heating Maximum Air Flow {m3/s}
+    0.3;                     !- Heating Maximum Air Flow Fraction
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN_1_FLR_1_SEC_1,!- Name
     Flow/Zone,               !- Outdoor Air Method
-    ,                        !- Outdoor Air Flow per Person {m3/s-person}
+    0.00944,                 !- Outdoor Air Flow per Person {m3/s-person}
     0.0,                     !- Outdoor Air Flow per Zone Floor Area {m3/s-m2}
     0.4146;                  !- Outdoor Air Flow per Zone {m3/s}
 
@@ -2628,7 +2628,7 @@
     16.6,                    !- Rated Inlet Air Temperature {C}
     71.1,                    !- Rated Outlet Water Temperature {C}
     32.2,                    !- Rated Outlet Air Temperature {C}
-    ;                        !- Rated Ratio for Air and Water Convection
+    0.5;                     !- Rated Ratio for Air and Water Convection
 
   Zone,
     ZN_1_FLR_2_SEC_1,        !- Name
@@ -3647,9 +3647,9 @@
     ,                        !- People per Zone Floor Area {person/m2}
     ,                        !- Zone Floor Area per Person {m2/person}
     0.3000,                  !- Fraction Radiant
-    ,                        !- Sensible Heat Fraction
+    Autocalculate,           !- Sensible Heat Fraction
     ACTIVITY_SCH,            !- Activity Level Schedule Name
-    ,                        !- Carbon Dioxide Generation Rate {m3/s-W}
+    3.82E-8,                 !- Carbon Dioxide Generation Rate {m3/s-W}
     NO,                      !- Enable ASHRAE 55 Comfort Warnings
     ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
@@ -3719,19 +3719,19 @@
     0.0,                     !- Zone Cooling Sizing Factor
     DesignDay,               !- Cooling Design Air Flow Method
     0.0,                     !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+    .000762,                 !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
     0.0,                     !- Cooling Minimum Air Flow {m3/s}
     0.0,                     !- Cooling Minimum Air Flow Fraction
     DesignDay,               !- Heating Design Air Flow Method
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+    .1415762,                !- Heating Maximum Air Flow {m3/s}
+    0.3;                     !- Heating Maximum Air Flow Fraction
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN_1_FLR_2_SEC_1,!- Name
     Flow/Zone,               !- Outdoor Air Method
-    ,                        !- Outdoor Air Flow per Person {m3/s-person}
+    0.00944,                 !- Outdoor Air Flow per Person {m3/s-person}
     0.0,                     !- Outdoor Air Flow per Zone Floor Area {m3/s-m2}
     0.4146;                  !- Outdoor Air Flow per Zone {m3/s}
 
@@ -3805,7 +3805,7 @@
     16.6,                    !- Rated Inlet Air Temperature {C}
     71.1,                    !- Rated Outlet Water Temperature {C}
     32.2,                    !- Rated Outlet Air Temperature {C}
-    ;                        !- Rated Ratio for Air and Water Convection
+    0.5;                     !- Rated Ratio for Air and Water Convection
 
   Zone,
     ZN_1_FLR_3_SEC_1,        !- Name
@@ -5016,9 +5016,9 @@
     ,                        !- People per Zone Floor Area {person/m2}
     ,                        !- Zone Floor Area per Person {m2/person}
     0.3000,                  !- Fraction Radiant
-    ,                        !- Sensible Heat Fraction
+    Autocalculate,           !- Sensible Heat Fraction
     ACTIVITY_SCH,            !- Activity Level Schedule Name
-    ,                        !- Carbon Dioxide Generation Rate {m3/s-W}
+    3.82E-8,                 !- Carbon Dioxide Generation Rate {m3/s-W}
     NO,                      !- Enable ASHRAE 55 Comfort Warnings
     ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
@@ -5088,19 +5088,19 @@
     0.0,                     !- Zone Cooling Sizing Factor
     DesignDay,               !- Cooling Design Air Flow Method
     0.0,                     !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+    .000762,                 !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
     0.0,                     !- Cooling Minimum Air Flow {m3/s}
     0.0,                     !- Cooling Minimum Air Flow Fraction
     DesignDay,               !- Heating Design Air Flow Method
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+    .1415762,                !- Heating Maximum Air Flow {m3/s}
+    0.3;                     !- Heating Maximum Air Flow Fraction
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN_1_FLR_3_SEC_1,!- Name
     Flow/Zone,               !- Outdoor Air Method
-    ,                        !- Outdoor Air Flow per Person {m3/s-person}
+    0.00944,                 !- Outdoor Air Flow per Person {m3/s-person}
     0.0,                     !- Outdoor Air Flow per Zone Floor Area {m3/s-m2}
     0.4146;                  !- Outdoor Air Flow per Zone {m3/s}
 
@@ -5174,7 +5174,7 @@
     16.6,                    !- Rated Inlet Air Temperature {C}
     71.1,                    !- Rated Outlet Water Temperature {C}
     32.2,                    !- Rated Outlet Air Temperature {C}
-    ;                        !- Rated Ratio for Air and Water Convection
+    0.5;                     !- Rated Ratio for Air and Water Convection
 
   Zone,
     ZN_1_FLR_1_SEC_2,        !- Name
@@ -5488,9 +5488,9 @@
     ,                        !- People per Zone Floor Area {person/m2}
     ,                        !- Zone Floor Area per Person {m2/person}
     0.3000,                  !- Fraction Radiant
-    ,                        !- Sensible Heat Fraction
+    Autocalculate,           !- Sensible Heat Fraction
     ACTIVITY_SCH,            !- Activity Level Schedule Name
-    ,                        !- Carbon Dioxide Generation Rate {m3/s-W}
+    3.82E-8,                 !- Carbon Dioxide Generation Rate {m3/s-W}
     NO,                      !- Enable ASHRAE 55 Comfort Warnings
     ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
@@ -5560,19 +5560,19 @@
     0.0,                     !- Zone Cooling Sizing Factor
     DesignDay,               !- Cooling Design Air Flow Method
     0.0,                     !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+    .000762,                 !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
     0.0,                     !- Cooling Minimum Air Flow {m3/s}
     0.0,                     !- Cooling Minimum Air Flow Fraction
     DesignDay,               !- Heating Design Air Flow Method
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+    .1415762,                !- Heating Maximum Air Flow {m3/s}
+    0.3;                     !- Heating Maximum Air Flow Fraction
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN_1_FLR_1_SEC_2,!- Name
     Flow/Zone,               !- Outdoor Air Method
-    ,                        !- Outdoor Air Flow per Person {m3/s-person}
+    0.00944,                 !- Outdoor Air Flow per Person {m3/s-person}
     0.0,                     !- Outdoor Air Flow per Zone Floor Area {m3/s-m2}
     0.1382;                  !- Outdoor Air Flow per Zone {m3/s}
 
@@ -5646,7 +5646,7 @@
     16.6,                    !- Rated Inlet Air Temperature {C}
     71.1,                    !- Rated Outlet Water Temperature {C}
     32.2,                    !- Rated Outlet Air Temperature {C}
-    ;                        !- Rated Ratio for Air and Water Convection
+    0.5;                     !- Rated Ratio for Air and Water Convection
 
   Zone,
     ZN_1_FLR_2_SEC_2,        !- Name
@@ -5960,9 +5960,9 @@
     ,                        !- People per Zone Floor Area {person/m2}
     ,                        !- Zone Floor Area per Person {m2/person}
     0.3000,                  !- Fraction Radiant
-    ,                        !- Sensible Heat Fraction
+    Autocalculate,           !- Sensible Heat Fraction
     ACTIVITY_SCH,            !- Activity Level Schedule Name
-    ,                        !- Carbon Dioxide Generation Rate {m3/s-W}
+    3.82E-8,                 !- Carbon Dioxide Generation Rate {m3/s-W}
     NO,                      !- Enable ASHRAE 55 Comfort Warnings
     ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
@@ -6032,19 +6032,19 @@
     0.0,                     !- Zone Cooling Sizing Factor
     DesignDay,               !- Cooling Design Air Flow Method
     0.0,                     !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+    .000762,                 !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
     0.0,                     !- Cooling Minimum Air Flow {m3/s}
     0.0,                     !- Cooling Minimum Air Flow Fraction
     DesignDay,               !- Heating Design Air Flow Method
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+    .1415762,                !- Heating Maximum Air Flow {m3/s}
+    0.3;                     !- Heating Maximum Air Flow Fraction
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN_1_FLR_2_SEC_2,!- Name
     Flow/Zone,               !- Outdoor Air Method
-    ,                        !- Outdoor Air Flow per Person {m3/s-person}
+    0.00944,                 !- Outdoor Air Flow per Person {m3/s-person}
     0.0,                     !- Outdoor Air Flow per Zone Floor Area {m3/s-m2}
     0.1382;                  !- Outdoor Air Flow per Zone {m3/s}
 
@@ -6118,7 +6118,7 @@
     16.6,                    !- Rated Inlet Air Temperature {C}
     71.1,                    !- Rated Outlet Water Temperature {C}
     32.2,                    !- Rated Outlet Air Temperature {C}
-    ;                        !- Rated Ratio for Air and Water Convection
+    0.5;                     !- Rated Ratio for Air and Water Convection
 
   Zone,
     ZN_1_FLR_3_SEC_2,        !- Name
@@ -6480,9 +6480,9 @@
     ,                        !- People per Zone Floor Area {person/m2}
     ,                        !- Zone Floor Area per Person {m2/person}
     0.3000,                  !- Fraction Radiant
-    ,                        !- Sensible Heat Fraction
+    Autocalculate,           !- Sensible Heat Fraction
     ACTIVITY_SCH,            !- Activity Level Schedule Name
-    ,                        !- Carbon Dioxide Generation Rate {m3/s-W}
+    3.82E-8,                 !- Carbon Dioxide Generation Rate {m3/s-W}
     NO,                      !- Enable ASHRAE 55 Comfort Warnings
     ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
@@ -6552,19 +6552,19 @@
     0.0,                     !- Zone Cooling Sizing Factor
     DesignDay,               !- Cooling Design Air Flow Method
     0.0,                     !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+    .000762,                 !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
     0.0,                     !- Cooling Minimum Air Flow {m3/s}
     0.0,                     !- Cooling Minimum Air Flow Fraction
     DesignDay,               !- Heating Design Air Flow Method
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+    .1415762,                !- Heating Maximum Air Flow {m3/s}
+    0.3;                     !- Heating Maximum Air Flow Fraction
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN_1_FLR_3_SEC_2,!- Name
     Flow/Zone,               !- Outdoor Air Method
-    ,                        !- Outdoor Air Flow per Person {m3/s-person}
+    0.00944,                 !- Outdoor Air Flow per Person {m3/s-person}
     0.0,                     !- Outdoor Air Flow per Zone Floor Area {m3/s-m2}
     0.1382;                  !- Outdoor Air Flow per Zone {m3/s}
 
@@ -6638,7 +6638,7 @@
     16.6,                    !- Rated Inlet Air Temperature {C}
     71.1,                    !- Rated Outlet Water Temperature {C}
     32.2,                    !- Rated Outlet Air Temperature {C}
-    ;                        !- Rated Ratio for Air and Water Convection
+    0.5;                     !- Rated Ratio for Air and Water Convection
 
   Zone,
     ZN_1_FLR_1_SEC_3,        !- Name
@@ -7657,9 +7657,9 @@
     ,                        !- People per Zone Floor Area {person/m2}
     ,                        !- Zone Floor Area per Person {m2/person}
     0.3000,                  !- Fraction Radiant
-    ,                        !- Sensible Heat Fraction
+    Autocalculate,           !- Sensible Heat Fraction
     ACTIVITY_SCH,            !- Activity Level Schedule Name
-    ,                        !- Carbon Dioxide Generation Rate {m3/s-W}
+    3.82E-8,                 !- Carbon Dioxide Generation Rate {m3/s-W}
     NO,                      !- Enable ASHRAE 55 Comfort Warnings
     ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
@@ -7729,19 +7729,19 @@
     0.0,                     !- Zone Cooling Sizing Factor
     DesignDay,               !- Cooling Design Air Flow Method
     0.0,                     !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+    .000762,                 !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
     0.0,                     !- Cooling Minimum Air Flow {m3/s}
     0.0,                     !- Cooling Minimum Air Flow Fraction
     DesignDay,               !- Heating Design Air Flow Method
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+    .1415762,                !- Heating Maximum Air Flow {m3/s}
+    0.3;                     !- Heating Maximum Air Flow Fraction
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN_1_FLR_1_SEC_3,!- Name
     Flow/Zone,               !- Outdoor Air Method
-    ,                        !- Outdoor Air Flow per Person {m3/s-person}
+    0.00944,                 !- Outdoor Air Flow per Person {m3/s-person}
     0.0,                     !- Outdoor Air Flow per Zone Floor Area {m3/s-m2}
     0.4146;                  !- Outdoor Air Flow per Zone {m3/s}
 
@@ -7815,7 +7815,7 @@
     16.6,                    !- Rated Inlet Air Temperature {C}
     71.1,                    !- Rated Outlet Water Temperature {C}
     32.2,                    !- Rated Outlet Air Temperature {C}
-    ;                        !- Rated Ratio for Air and Water Convection
+    0.5;                     !- Rated Ratio for Air and Water Convection
 
   Zone,
     ZN_1_FLR_2_SEC_3,        !- Name
@@ -8834,9 +8834,9 @@
     ,                        !- People per Zone Floor Area {person/m2}
     ,                        !- Zone Floor Area per Person {m2/person}
     0.3000,                  !- Fraction Radiant
-    ,                        !- Sensible Heat Fraction
+    Autocalculate,           !- Sensible Heat Fraction
     ACTIVITY_SCH,            !- Activity Level Schedule Name
-    ,                        !- Carbon Dioxide Generation Rate {m3/s-W}
+    3.82E-8,                 !- Carbon Dioxide Generation Rate {m3/s-W}
     NO,                      !- Enable ASHRAE 55 Comfort Warnings
     ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
@@ -8906,19 +8906,19 @@
     0.0,                     !- Zone Cooling Sizing Factor
     DesignDay,               !- Cooling Design Air Flow Method
     0.0,                     !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+    .000762,                 !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
     0.0,                     !- Cooling Minimum Air Flow {m3/s}
     0.0,                     !- Cooling Minimum Air Flow Fraction
     DesignDay,               !- Heating Design Air Flow Method
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+    .1415762,                !- Heating Maximum Air Flow {m3/s}
+    0.3;                     !- Heating Maximum Air Flow Fraction
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN_1_FLR_2_SEC_3,!- Name
     Flow/Zone,               !- Outdoor Air Method
-    ,                        !- Outdoor Air Flow per Person {m3/s-person}
+    0.00944,                 !- Outdoor Air Flow per Person {m3/s-person}
     0.0,                     !- Outdoor Air Flow per Zone Floor Area {m3/s-m2}
     0.4146;                  !- Outdoor Air Flow per Zone {m3/s}
 
@@ -8992,7 +8992,7 @@
     16.6,                    !- Rated Inlet Air Temperature {C}
     71.1,                    !- Rated Outlet Water Temperature {C}
     32.2,                    !- Rated Outlet Air Temperature {C}
-    ;                        !- Rated Ratio for Air and Water Convection
+    0.5;                     !- Rated Ratio for Air and Water Convection
 
   Zone,
     ZN_1_FLR_3_SEC_3,        !- Name
@@ -10203,9 +10203,9 @@
     ,                        !- People per Zone Floor Area {person/m2}
     ,                        !- Zone Floor Area per Person {m2/person}
     0.3000,                  !- Fraction Radiant
-    ,                        !- Sensible Heat Fraction
+    Autocalculate,           !- Sensible Heat Fraction
     ACTIVITY_SCH,            !- Activity Level Schedule Name
-    ,                        !- Carbon Dioxide Generation Rate {m3/s-W}
+    3.82E-8,                 !- Carbon Dioxide Generation Rate {m3/s-W}
     NO,                      !- Enable ASHRAE 55 Comfort Warnings
     ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
@@ -10275,19 +10275,19 @@
     0.0,                     !- Zone Cooling Sizing Factor
     DesignDay,               !- Cooling Design Air Flow Method
     0.0,                     !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+    .000762,                 !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
     0.0,                     !- Cooling Minimum Air Flow {m3/s}
     0.0,                     !- Cooling Minimum Air Flow Fraction
     DesignDay,               !- Heating Design Air Flow Method
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+    .1415762,                !- Heating Maximum Air Flow {m3/s}
+    0.3;                     !- Heating Maximum Air Flow Fraction
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN_1_FLR_3_SEC_3,!- Name
     Flow/Zone,               !- Outdoor Air Method
-    ,                        !- Outdoor Air Flow per Person {m3/s-person}
+    0.00944,                 !- Outdoor Air Flow per Person {m3/s-person}
     0.0,                     !- Outdoor Air Flow per Zone Floor Area {m3/s-m2}
     0.4146;                  !- Outdoor Air Flow per Zone {m3/s}
 
@@ -10361,7 +10361,7 @@
     16.6,                    !- Rated Inlet Air Temperature {C}
     71.1,                    !- Rated Outlet Water Temperature {C}
     32.2,                    !- Rated Outlet Air Temperature {C}
-    ;                        !- Rated Ratio for Air and Water Convection
+    0.5;                     !- Rated Ratio for Air and Water Convection
 
 !***** Air Loop: Air1 *****
 
@@ -10391,7 +10391,7 @@
     FLOW,                    !- Actuator Variable
     Air1 Supply Equipment Outlet Node,  !- Sensor Node Name
     Air1CoolCDemand Inlet Node,  !- Actuator Node Name
-    ,                        !- Controller Convergence Tolerance {deltaC}
+    Autosize,                !- Controller Convergence Tolerance {deltaC}
     AUTOSIZE,                !- Maximum Actuated Flow {m3/s}
     0.0;                     !- Minimum Actuated Flow {m3/s}
 
@@ -10596,7 +10596,7 @@
     16.6,                    !- Rated Inlet Air Temperature {C}
     71.1,                    !- Rated Outlet Water Temperature {C}
     32.2,                    !- Rated Outlet Air Temperature {C}
-    ;                        !- Rated Ratio for Air and Water Convection
+    0.5;                     !- Rated Ratio for Air and Water Convection
 
   Fan:VariableVolume,
     Air1 Fan,                !- Name
@@ -10735,7 +10735,7 @@
 
   Branch,
     HeatSys1 Supply Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:VariableSpeed,      !- Component 1 Object Type
     HeatSys1 Pump,           !- Component 1 Name
@@ -10745,7 +10745,7 @@
 
   Branch,
     HeatSys1 Supply Equipment Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Boiler:HotWater,         !- Component 1 Object Type
     HeatSys1 Boiler,         !- Component 1 Name
@@ -10757,16 +10757,16 @@
     HeatSys1 Pump,           !- Name
     HeatSys1 Supply Inlet Node,  !- Inlet Node Name
     HeatSys1 Pump-HeatSys1 BoilerNodeviaConnector,  !- Outlet Node Name
-    AUTOSIZE,                !- Rated Flow Rate {m3/s}
-    179352,                  !- Rated Pump Head {Pa}
-    AUTOSIZE,                !- Rated Power Consumption {W}
+    AUTOSIZE,                !- Design Maximum Flow Rate {m3/s}
+    179352,                  !- Design Pump Head {Pa}
+    AUTOSIZE,                !- Design Power Consumption {W}
     0.9,                     !- Motor Efficiency
     0.0,                     !- Fraction of Motor Inefficiencies to Fluid Stream
     0,                       !- Coefficient 1 of the Part Load Performance Curve
     1,                       !- Coefficient 2 of the Part Load Performance Curve
     0,                       !- Coefficient 3 of the Part Load Performance Curve
     0,                       !- Coefficient 4 of the Part Load Performance Curve
-    0.0,                     !- Minimum Flow Rate {m3/s}
+    0.0,                     !- Design Minimum Flow Rate {m3/s}
     Intermittent;            !- Pump Control Type
 
   Output:PreprocessorMessage,
@@ -10809,7 +10809,7 @@
 
   Branch,
     HeatSys1 Supply Equipment Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     HeatSys1 Supply Equipment Bypass Pipe,  !- Component 1 Name
@@ -10824,7 +10824,7 @@
 
   Branch,
     HeatSys1 Supply Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     HeatSys1 Supply Outlet Pipe,  !- Component 1 Name
@@ -10892,7 +10892,7 @@
 
   Branch,
     HeatSys1 Demand Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     HeatSys1 Demand Inlet Pipe,  !- Component 1 Name
@@ -10907,7 +10907,7 @@
 
   Branch,
     HeatSys1 Demand Load Branch 1,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     ZN_1_FLR_1_SEC_1 VAV Box Reheat Coil,  !- Component 1 Name
@@ -10917,7 +10917,7 @@
 
   Branch,
     HeatSys1 Demand Load Branch 2,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     ZN_1_FLR_2_SEC_1 VAV Box Reheat Coil,  !- Component 1 Name
@@ -10927,7 +10927,7 @@
 
   Branch,
     HeatSys1 Demand Load Branch 3,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     ZN_1_FLR_3_SEC_1 VAV Box Reheat Coil,  !- Component 1 Name
@@ -10937,7 +10937,7 @@
 
   Branch,
     HeatSys1 Demand Load Branch 4,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     ZN_1_FLR_1_SEC_2 VAV Box Reheat Coil,  !- Component 1 Name
@@ -10947,7 +10947,7 @@
 
   Branch,
     HeatSys1 Demand Load Branch 5,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     ZN_1_FLR_2_SEC_2 VAV Box Reheat Coil,  !- Component 1 Name
@@ -10957,7 +10957,7 @@
 
   Branch,
     HeatSys1 Demand Load Branch 6,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     ZN_1_FLR_3_SEC_2 VAV Box Reheat Coil,  !- Component 1 Name
@@ -10967,7 +10967,7 @@
 
   Branch,
     HeatSys1 Demand Load Branch 7,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     ZN_1_FLR_1_SEC_3 VAV Box Reheat Coil,  !- Component 1 Name
@@ -10977,7 +10977,7 @@
 
   Branch,
     HeatSys1 Demand Load Branch 8,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     ZN_1_FLR_2_SEC_3 VAV Box Reheat Coil,  !- Component 1 Name
@@ -10987,7 +10987,7 @@
 
   Branch,
     HeatSys1 Demand Load Branch 9,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     ZN_1_FLR_3_SEC_3 VAV Box Reheat Coil,  !- Component 1 Name
@@ -10997,7 +10997,7 @@
 
   Branch,
     HeatSys1 Demand Load Branch 10,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Air1HeatC,               !- Component 1 Name
@@ -11007,7 +11007,7 @@
 
   Branch,
     HeatSys1 Demand Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     HeatSys1 Demand Bypass Pipe,  !- Component 1 Name
@@ -11022,7 +11022,7 @@
 
   Branch,
     HeatSys1 Demand Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     HeatSys1 Demand Outlet Pipe,  !- Component 1 Name
@@ -11115,7 +11115,7 @@
 
   Branch,
     CoolSys1 Supply Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:VariableSpeed,      !- Component 1 Object Type
     CoolSys1 Pump,           !- Component 1 Name
@@ -11125,7 +11125,7 @@
 
   Branch,
     CoolSys1 Supply Equipment Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Chiller:Electric,        !- Component 1 Object Type
     CoolSys1 Chiller,        !- Component 1 Name
@@ -11137,16 +11137,16 @@
     CoolSys1 Pump,           !- Name
     CoolSys1 Supply Inlet Node,  !- Inlet Node Name
     CoolSys1 Pump-CoolSys1 ChillerNodeviaConnector,  !- Outlet Node Name
-    AUTOSIZE,                !- Rated Flow Rate {m3/s}
-    179352,                  !- Rated Pump Head {Pa}
-    AUTOSIZE,                !- Rated Power Consumption {W}
+    AUTOSIZE,                !- Design Maximum Flow Rate {m3/s}
+    179352,                  !- Design Pump Head {Pa}
+    AUTOSIZE,                !- Design Power Consumption {W}
     0.9,                     !- Motor Efficiency
     0.0,                     !- Fraction of Motor Inefficiencies to Fluid Stream
     0,                       !- Coefficient 1 of the Part Load Performance Curve
     1,                       !- Coefficient 2 of the Part Load Performance Curve
     0,                       !- Coefficient 3 of the Part Load Performance Curve
     0,                       !- Coefficient 4 of the Part Load Performance Curve
-    0.0,                     !- Minimum Flow Rate {m3/s}
+    0.0,                     !- Design Minimum Flow Rate {m3/s}
     Intermittent;            !- Pump Control Type
 
   Chiller:Electric,
@@ -11180,7 +11180,7 @@
 
   Branch,
     CoolSys1 Supply Equipment Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     CoolSys1 Supply Equipment Bypass Pipe,  !- Component 1 Name
@@ -11195,7 +11195,7 @@
 
   Branch,
     CoolSys1 Supply Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     CoolSys1 Supply Outlet Pipe,  !- Component 1 Name
@@ -11236,7 +11236,7 @@
 
   Branch,
     CoolSys1 Demand Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     CoolSys1 Demand Inlet Pipe,  !- Component 1 Name
@@ -11251,7 +11251,7 @@
 
   Branch,
     CoolSys1 Demand Load Branch 1,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Cooling:Water,      !- Component 1 Object Type
     Air1CoolC,               !- Component 1 Name
@@ -11261,7 +11261,7 @@
 
   Branch,
     CoolSys1 Demand Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     CoolSys1 Demand Bypass Pipe,  !- Component 1 Name
@@ -11276,7 +11276,7 @@
 
   Branch,
     CoolSys1 Demand Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     CoolSys1 Demand Outlet Pipe,  !- Component 1 Name
@@ -11372,7 +11372,7 @@
 
   Branch,
     TowerWaterSys Supply Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:ConstantSpeed,      !- Component 1 Object Type
     TowerWaterSys Pump,      !- Component 1 Name
@@ -11382,7 +11382,7 @@
 
   Branch,
     TowerWaterSys Supply Equipment Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     CoolingTower:SingleSpeed,!- Component 1 Object Type
     TowerWaterSys CoolTower, !- Component 1 Name
@@ -11394,9 +11394,9 @@
     TowerWaterSys Pump,      !- Name
     TowerWaterSys Supply Inlet Node,  !- Inlet Node Name
     TowerWaterSys Pump-TowerWaterSys CoolTowerNodeviaConnector,  !- Outlet Node Name
-    AUTOSIZE,                !- Rated Flow Rate {m3/s}
-    179352,                  !- Rated Pump Head {Pa}
-    AUTOSIZE,                !- Rated Power Consumption {W}
+    AUTOSIZE,                !- Design Flow Rate {m3/s}
+    179352,                  !- Design Pump Head {Pa}
+    AUTOSIZE,                !- Design Power Consumption {W}
     0.87,                    !- Motor Efficiency
     0.0,                     !- Fraction of Motor Inefficiencies to Fluid Stream
     Intermittent;            !- Pump Control Type
@@ -11410,18 +11410,18 @@
     AUTOSIZE,                !- Design Fan Power {W}
     AUTOSIZE,                !- Design U-Factor Times Area Value {W/K}
     autocalculate,           !- Free Convection Air Flow Rate {m3/s}
-    ,                        !- Free Convection Air Flow Rate Sizing Factor
+    0.1,                     !- Free Convection Air Flow Rate Sizing Factor
     autocalculate,           !- Free Convection U-Factor Times Area Value {W/K}
-    ,                        !- Free Convection U-Factor Times Area Value Sizing Factor
-    ,                        !- Performance Input Method
-    ,                        !- Heat Rejection Capacity and Nominal Capacity Sizing Ratio
+    0.1,                     !- Free Convection U-Factor Times Area Value Sizing Factor
+    UFactorTimesAreaAndDesignWaterFlowRate,  !- Performance Input Method
+    1.25,                    !- Heat Rejection Capacity and Nominal Capacity Sizing Ratio
     ,                        !- Nominal Capacity {W}
     ,                        !- Free Convection Capacity {W}
-    ;                        !- Free Convection Nominal Capacity Sizing Factor
+    0.1;                     !- Free Convection Nominal Capacity Sizing Factor
 
   Branch,
     TowerWaterSys Supply Equipment Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     TowerWaterSys Supply Equipment Bypass Pipe,  !- Component 1 Name
@@ -11436,7 +11436,7 @@
 
   Branch,
     TowerWaterSys Supply Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     TowerWaterSys Supply Outlet Pipe,  !- Component 1 Name
@@ -11477,7 +11477,7 @@
 
   Branch,
     TowerWaterSys Demand Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     TowerWaterSys Demand Inlet Pipe,  !- Component 1 Name
@@ -11492,7 +11492,7 @@
 
   Branch,
     TowerWaterSys Demand Load Branch 1,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Chiller:Electric,        !- Component 1 Object Type
     CoolSys1 Chiller,        !- Component 1 Name
@@ -11502,7 +11502,7 @@
 
   Branch,
     TowerWaterSys Demand Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     TowerWaterSys Demand Bypass Pipe,  !- Component 1 Name
@@ -11517,7 +11517,7 @@
 
   Branch,
     TowerWaterSys Demand Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
+    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     TowerWaterSys Demand Outlet Pipe,  !- Component 1 Name
