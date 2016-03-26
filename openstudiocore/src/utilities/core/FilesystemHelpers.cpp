@@ -5,19 +5,7 @@
 
 namespace openstudio {
   namespace filesystem {
-    QByteArray read_as_QByteArray(openstudio::filesystem::ifstream &t_file)
-    {
-      const auto buf = read_as_vector(t_file);
-      return QByteArray(&buf.front(), buf.size());
-    }
-
-    QByteArray read_as_QByteArray(const openstudio::path &t_path)
-    {
-      openstudio::filesystem::ifstream f(t_path, std::ios_base::binary);
-      return read_as_QByteArray(f);
-    }
-
-    std::vector<char> read_as_vector(openstudio::filesystem::ifstream &t_file)
+    std::vector<char> read(openstudio::filesystem::ifstream &t_file)
     {
       OS_ASSERT(t_file.good());
       const auto cur_pos = t_file.tellg();
@@ -30,9 +18,21 @@ namespace openstudio {
       return buf;
     }
 
+    QByteArray read_as_QByteArray(openstudio::filesystem::ifstream &t_file)
+    {
+      const auto buf = read(t_file);
+      return QByteArray(&buf.front(), buf.size());
+    }
+
+    QByteArray read_as_QByteArray(const openstudio::path &t_path)
+    {
+      openstudio::filesystem::ifstream f(t_path, std::ios_base::binary);
+      return read_as_QByteArray(f);
+    }
+
     std::string read_as_string(openstudio::filesystem::ifstream &t_file)
     {
-      const auto vec = read_as_vector(t_file);
+      const auto vec = read(t_file);
       return std::string(vec.begin(), vec.end());
     }
 

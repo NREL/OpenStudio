@@ -71,7 +71,6 @@ namespace filesystem {
   using boost::filesystem::system_complete;
   using boost::filesystem::temp_directory_path;
 
-  UTILITIES_API std::vector<uint8_t> read_file(const openstudio::path &t_path);
 
 }
 }
