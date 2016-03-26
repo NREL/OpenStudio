@@ -1579,11 +1579,13 @@ bool Attribute::saveToXml(const openstudio::path& path) const
 
   try {
     openstudio::filesystem::ofstream file(path);
-    openstudio::filesystem::write(file, this->toXml().toByteArray(2));
+    openstudio::filesystem::write(file, this->toXml().toString(2));
     file.close();
     result = true;
   }
-  catch(...) {}
+  catch( const std::exception &e) {
+    LOG_FREE(Error, "openstudio.Attribute", "Error saving to XML: " << e.what());
+  } 
 
   return result;
 }

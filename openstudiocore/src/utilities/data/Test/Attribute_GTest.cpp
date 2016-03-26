@@ -50,7 +50,7 @@ TEST_F(DataFixture, Attribute_BoolTrue)
   EXPECT_EQ("units", attribute.units().get());
 
   // save to xml
-  attribute.saveToXml(xmlPath);
+  ASSERT_TRUE(attribute.saveToXml(xmlPath));
 
   // load 
   boost::optional<Attribute> testAttribute = Attribute::loadFromXml(xmlPath);

@@ -166,9 +166,10 @@ namespace openstudio{
 
     QString measureString;
     if (!measureTemplate.isEmpty()){
-      openstudio::filesystem::ifstream file(openstudio::toPath(measureTemplate), std::ios_base::binary);
-      if(file.is_open()){
-        measureString = openstudio::filesystem::read_as_QByteArray(file);
+      QFile file(measureTemplate);
+      if(file.open(QFile::ReadOnly)){
+        QTextStream docIn(&file);
+        measureString = docIn.readAll();
         measureString.replace(templateClassName, toQString(className));
         measureString.replace(templateName, toQString(name));
         measureString.replace(templateModelerDescription, toQString(modelerDescription)); // put first as this includes description tag
@@ -179,9 +180,10 @@ namespace openstudio{
 
     QString testString;
     if (!testTemplate.isEmpty()){
-      openstudio::filesystem::ifstream file(openstudio::toPath(testTemplate), std::ios_base::binary);
-      if(file.is_open()){
-        testString = openstudio::filesystem::read_as_QByteArray(file);
+      QFile file(testTemplate);
+      if(file.open(QFile::ReadOnly)){
+        QTextStream docIn(&file);
+        testString = docIn.readAll();
         testString.replace(templateClassName, toQString(className));
         file.close();
       }
@@ -189,18 +191,20 @@ namespace openstudio{
 
     QString testOSMString;
     if (!testOSM.isEmpty()){
-      openstudio::filesystem::ifstream file(openstudio::toPath(testOSM), std::ios_base::binary);
-      if(file.is_open()){
-        testOSMString = openstudio::filesystem::read_as_QByteArray(file);
+      QFile file(testOSM);
+      if(file.open(QFile::ReadOnly)){
+        QTextStream docIn(&file);
+        testOSMString = docIn.readAll();
         file.close();
       }
     }
 
     QString resourceFileString;
     if (!resourceFile.isEmpty()){
-      openstudio::filesystem::ifstream file(openstudio::toPath(resourceFileString), std::ios_base::binary);
-      if(file.is_open()){
-        resourceFileString = openstudio::filesystem::read_as_QByteArray(file);
+      QFile file(resourceFile);
+      if(file.open(QFile::ReadOnly)){
+        QTextStream docIn(&file);
+        resourceFileString = docIn.readAll();
         file.close();
       }
     }
@@ -967,40 +971,44 @@ namespace openstudio{
     // look for new files and add them
     openstudio::path srcDir = m_directory / "tests";
     openstudio::path ignoreDir = srcDir / "output";
-    for (const auto &file : openstudio::filesystem::directory_files(srcDir))
-    {
-      openstudio::path srcItemPath = srcDir / file;
-      openstudio::path parentPath = srcItemPath.parent_path();
-      bool ignore = false;
-      while (!parentPath.empty()){
-        if (parentPath == ignoreDir){
-          ignore = true;
-          break;
+    if (openstudio::filesystem::is_directory(srcDir)) {
+      for (const auto &file : openstudio::filesystem::directory_files(srcDir))
+      {
+        openstudio::path srcItemPath = srcDir / file;
+        openstudio::path parentPath = srcItemPath.parent_path();
+        bool ignore = false;
+        while (!parentPath.empty()){
+          if (parentPath == ignoreDir){
+            ignore = true;
+            break;
+          }
+          parentPath = parentPath.parent_path();
         }
-        parentPath = parentPath.parent_path();
-      }
 
-      if (ignore){
-        continue;
-      }
+        if (ignore){
+          continue;
+        }
 
-      if (!m_bclXML.hasFile(srcItemPath)){
-        BCLFileReference file(srcItemPath, true);
-        file.setUsageType("test");
-        result = true;
-        filesToAdd.push_back(file);
+        if (!m_bclXML.hasFile(srcItemPath)){
+          BCLFileReference file(srcItemPath, true);
+          file.setUsageType("test");
+          result = true;
+          filesToAdd.push_back(file);
+        }
       }
     }
 
     srcDir = m_directory / "resources";
-    for (const auto &file : openstudio::filesystem::directory_files(srcDir))
-    {
-      openstudio::path srcItemPath = srcDir / file;
-      if (!m_bclXML.hasFile(srcItemPath)){
-        BCLFileReference file(srcItemPath, true);
-        file.setUsageType("resource");
-        result = true;
-        filesToAdd.push_back(file);
+    if (openstudio::filesystem::is_directory(srcDir)) {
+      for (const auto &file : openstudio::filesystem::directory_files(srcDir))
+      {
+        openstudio::path srcItemPath = srcDir / file;
+        if (!m_bclXML.hasFile(srcItemPath)){
+          BCLFileReference file(srcItemPath, true);
+          file.setUsageType("resource");
+          result = true;
+          filesToAdd.push_back(file);
+        }
       }
     }
 

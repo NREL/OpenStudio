@@ -434,10 +434,18 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
   m_logSink.setThreadId(QThread::currentThread());
   m_logSink.resetStringStream();
 
-  m_prjModel.read(std::string(":/templates/template.prj"));
-  if (!m_prjModel.valid()) {
-    return boost::none;
+  {
+    QFile f(":/templates/template.prj");
+    f.open(QFile::ReadOnly);
+    QString s = f.readAll();
+    Reader r(&s);
+    m_prjModel.read(r);
+    if (!m_prjModel.valid()) {
+      LOG(Error, "Unable to load templates");
+      return boost::none;
+    }
   }
+
   // The template is a legal PRJ file, so it has one level. Not for long.
   m_prjModel.setLevels(std::vector<Level>());
 

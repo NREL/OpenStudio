@@ -269,18 +269,13 @@ bool removeDirectory(const path& dirName) {
 }
 
 bool copyDirectory(const path& source, const path& destination) {
-  try {
-    openstudio::filesystem::create_directories(destination);
-  } catch (const std::exception &) {
-    return false;
-  }
-
   // note : we are not using openstudio::filesystem::copy to copy recursively
   // because that copies the entire directory into the destination, not just the 
   // contents of the directory
   for (const auto &file : openstudio::filesystem::recursive_directory_files(source))
   {
     try {
+      openstudio::filesystem::create_directories( (destination / file).parent_path());
       openstudio::filesystem::copy_file(source / file, destination / file);
     } catch (const std::exception &) {
       return false;
