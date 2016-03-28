@@ -1,3 +1,8 @@
+PATH
+  remote: .
+  specs:
+    openstudio-workflow (0.2.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -30,6 +35,7 @@ PLATFORMS
 
 DEPENDENCIES
   openstudio-aws (~> 0.4.0.pre1)
+  openstudio-workflow (= 0.2.0)!
   rake (= 0.9.6)
   rdoc (= 4.0.0)
   test-unit (= 2.0.0.0)
