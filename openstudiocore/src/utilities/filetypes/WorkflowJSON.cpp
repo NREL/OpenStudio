@@ -430,6 +430,15 @@ WorkflowJSON::WorkflowJSON(const openstudio::path& p)
   : m_impl(std::shared_ptr<detail::WorkflowJSON_Impl>(new detail::WorkflowJSON_Impl(p)))
 {}
 
+WorkflowJSON::WorkflowJSON(std::shared_ptr<detail::WorkflowJSON_Impl> impl)
+  : m_impl(impl)
+{}
+
+WorkflowJSON WorkflowJSON::clone() const
+{
+  return WorkflowJSON(std::shared_ptr<detail::WorkflowJSON_Impl>(new detail::WorkflowJSON_Impl(*m_impl)));
+}
+
 boost::optional<WorkflowJSON> WorkflowJSON::load(const std::string& s)
 {
   boost::optional<WorkflowJSON> result;
