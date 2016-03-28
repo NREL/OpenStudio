@@ -7,4 +7,6 @@ gem 'test-unit', '= 2.0.0.0'
 
 # OpenStudio
 gem 'openstudio-aws', '~> 0.4.0.pre1'
-gem 'openstudio-workflow', '= 0.2.0', path: '.'
+
+# not able to install this from local gem, wait until it is on ruby gems
+#gem 'openstudio-workflow', '= 0.2.0', path: '.' 

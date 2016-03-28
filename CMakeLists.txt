@@ -646,6 +646,8 @@ if(WIN32)
                      COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/bundle" "install" "--no-cache"
                      COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/bundle" "clean" "--force"
                      WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/dependencies/ruby"
+                     COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/gem" "uninstall" "openstudio-workflow"                          
+                     COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/gem" "install" "openstudio-workflow-0.2.0.gem"                     
                      COMMENT "Installing gems..."
   )
 
