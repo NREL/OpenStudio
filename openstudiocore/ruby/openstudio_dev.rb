@@ -267,6 +267,14 @@ module Ruleset
   end
   
   # support for name deprecated as of 2.0.0
+  class OSArgumentMap < OpenStudio::Measure::OSArgumentMap
+    def initialize
+      OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "OSArgumentMap is deprecated, use OpenStudio::Measure::OSArgumentMap instead.")
+      super
+    end      
+  end
+  
+  # support for name deprecated as of 2.0.0
   class OSResult < OpenStudio::Measure::OSResult
     def initialize
       OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "OSResult is deprecated, use OpenStudio::Measure::OSResult instead.")
