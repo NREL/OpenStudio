@@ -24,6 +24,7 @@
 #include "ModelObject.hpp"
 
 #include "../utilities/idf/Workspace.hpp"
+#include "../utilities/filetypes/WorkflowJSON.hpp"
 #include "../utilities/core/Assert.hpp"
 
 #include <vector>
@@ -87,6 +88,9 @@ class MODEL_API Model : public openstudio::Workspace {
   /** @name Getters */
   //@{
 
+  /// Get the WorkflowJSON
+  WorkflowJSON workflowJSON() const;
+
   /** Returns the EnergyPlus output SqlFile if set. */
   boost::optional<SqlFile> sqlFile() const;
 
@@ -129,6 +133,12 @@ class MODEL_API Model : public openstudio::Workspace {
   //@}
   /** @name Setters */
   //@{
+
+  /**  Set the WorkflowJSON. */
+  bool setWorkflowJSON(const WorkflowJSON& workflowJSON);
+
+  /** Reset the WorkflowJSON. */
+  void resetWorkflowJSON();
 
   /** Sets the EnergyPlus output SqlFile.  SqlFile must correspond to EnergyPlus
    *  simulation of this Model. */
@@ -331,7 +341,10 @@ class MODEL_API Model : public openstudio::Workspace {
   //@}
 
   /** Load Model from file. */
-  static boost::optional<Model> load(const path& p);
+  static boost::optional<Model> load(const path& osmPath);
+
+  /** Load Model and WorkflowJSON from files. */
+  static boost::optional<Model> load(const path& osmPath, const path& workflowJSONPath);
 
   /// Equality test, tests if this Model shares the same implementation object with other.
   bool operator==(const Model& other) const;
