@@ -23,6 +23,21 @@ If this is a major release
 - With Git, merge `develop` into `master`.
 
 
+Updating EnergyPlus
+===================
+
+If a new version of EnergyPlus is to be incorporated into OpenStudio
+- Upload the 4 versions (Windows 64, Windows 32, Ubuntu, and Linux) to S3's folder `openstudio-resources/dependencies`
+- In the top level of your OpenStudio folder, update `CMakeLists.txt` following
+	- ENERGYPLUS_VERSION_MAJOR
+	- ENERGYPLUS_VERSION_MINOR
+	- ENERGYPLUS_VERSION_PATCH
+	- ENERGYPLUS_BUILD_SHA
+	- ENERGYPLUS_EXPECTED_HASH (In 4, perhaps 5 places: Win 32, Win 64, Darwin, Linux, and maybe Redhat)
+
+Note: use HashTab, or similar, to determine the MD5 hash value for each file referenced above.
+
+
 Builds
 ======
 
@@ -372,11 +387,15 @@ On https://github.com/NREL/OpenStudio/wiki/OpenStudio-Version-Compatibility-Matr
 Docker Image
 ============
 
-1.	Edit the Dockerfile: https://github.com/NREL/docker-openstudio/blob/master/Dockerfile
-2.	Get the SHA and Version from here extracting it from the download file name on the release page (e.g. https://github.com/NREL/OpenStudio/releases/tag/v1.10.5) For example, OpenStudio-1.10.5.73e6a97b14-Linux.debwould have 1.10.5 and 73e6a97b14
-3.	Update the following variables in the Dockerfile 
-1.	OPENSTUDIO_VERSION
-2.	OPENSTUDIO_SHA
-4.	(optional) test that the new Dockerfile works by running `docker build -t test-openstudio .` after starting the docker-machine to make sure that it completes successfully.
-5.	Commit the changes on master. You may wish to wait to verify that the master/latest branch builds successfully from this site (https://hub.docker.com/r/nrel/openstudio/builds/). 
-6.	Once it completes successfully, then run `git tag -a 1.10.5` where 1.10.5 is the new version.
+In the top level of your docker-openstudio folder, modify `Dockerfile`
+
+- Update OPENSTUDIO_VERSION with current version (X.Y.Z)
+- Update OPENSTUDIO_SHA with current SHA
+- (optional) test that the new Dockerfile works by running `docker build -t test-openstudio .` after starting the docker-machine to make sure that it completes successfully
+
+With Git, commit Dockerfile (Commit Message = Bump version)
+ 
+Verify master branch built successfully at https://hub.docker.com/r/nrel/openstudio/builds/
+
+In a command window:
+- In the top level of your docker-openstudio folder, run `git tag -a X.Y.Z` and annotate with 'X.Y.Z Release'
