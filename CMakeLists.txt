@@ -607,6 +607,19 @@ if(BUILD_RUBY AND UNIX)
   else()
     set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby.so)
   endif()
+  
+  # Install required gems
+  set(ENV{BUNDLE_PATH} "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/ruby/gems/2.0.0")
+  add_custom_command(TARGET Ruby
+                     POST_BUILD
+                     COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/bundle" "install" "--no-cache"
+                     COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/bundle" "clean" "--force"
+                     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/dependencies/ruby"
+                     COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/gem" "uninstall" "openstudio-workflow"                          
+                     COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/gem" "install" "openstudio-workflow.gem"                     
+                     COMMENT "Installing gems..."
+  )
+  
 endif()
 
 # Always unpack Ruby on Windows
@@ -647,7 +660,7 @@ if(WIN32)
                      COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/bundle" "clean" "--force"
                      WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/dependencies/ruby"
                      COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/gem" "uninstall" "openstudio-workflow"                          
-                     COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/gem" "install" "openstudio-workflow-0.2.0.gem"                     
+                     COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/gem" "install" "openstudio-workflow.gem"                     
                      COMMENT "Installing gems..."
   )
 
