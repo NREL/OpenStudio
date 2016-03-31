@@ -1,14 +1,14 @@
-require "openstudio-workflow"
+require 'openstudio-workflow'
 
 $logger = Logger.new(STDOUT)
 
-# This is the save puts to use to catch EPIPE. Uses `puts` on the given IO object and safely ignores any Errno::EPIPE.
+# This is the save puts to use to catch EPIPE. Uses `puts` on the given IO object and safely ignores any Errno::EPIPE
 #
-# @param [String] message Message to output.
-# @param [Hash] opts Options hash.
+# @param [String] message Message to output
+# @param [Hash] opts Options hash
 #
 def safe_puts(message=nil, opts=nil)
-  message ||= ""
+  message ||= ''
   opts = {
     io: $stdout,
     printer: :puts
@@ -17,89 +17,75 @@ def safe_puts(message=nil, opts=nil)
   begin
     opts[:io].send(opts[:printer], message)
   rescue Errno::EPIPE
-    # This is what makes this a `safe` puts.
+    # This is what makes this a `safe` puts
     return
   end
 end
 
-# Parses the options given an OptionParser instance.
-class Command
+# This is a convenience method that properly handles duping the originally argv array so that it is not destroyed. This
+# method will also automatically detect "-h" and "--help" and print help. And if any invalid options are  detected, the
+# help will be printed, as well
+#
+# @return[nil, If this method returns `nil`, then you should assume that help was printed and parsing failed
+#
+def parse_options(opts=nil)
+  # Creating a shallow copy of the arguments so the OptionParser
+  # doesn't destroy the originals.
+  argv = $argv.dup
 
-  # This is a convenience method that properly handles duping the originally argv array so that it is not destroyed.
-  #
-  # This method will also automatically detect "-h" and "--help" and print help. And if any invalid options are detected, the help
-  # will be printed, as well.
-  #
-  # @return[nil, If this method returns `nil`, then you should assume that help
-  # was printed and parsing failed.
-  def parse_options(opts=nil)
-    # Creating a shallow copy of the arguments so the OptionParser
-    # doesn't destroy the originals.
-    argv = $argv.dup
+  # Default opts to a blank optionparser if none is given
+  opts ||= OptionParser.new
 
-    # Default opts to a blank optionparser if none is given
-    opts ||= OptionParser.new
-
-    # Add the help option, which must be on every command.
-    opts.on_tail("-h", "--help", "Print this help") do
-      safe_puts(opts.help)
-      return nil
-    end
-
-    opts.parse!(argv)
-    return argv
-  rescue OptionParser::InvalidOption, OptionParser::MissingArgument
-    raise "Error: Invalid CLI option, #{opts.help.chomp}"
+  # Add the help option, which must be on every command.
+  opts.on_tail('-h', '--help', 'Print this help') do
+    safe_puts(opts.help)
+    return nil
   end
 
-  # This method will split the argv given into three parts: the
-  # flags to this command, the subcommand, and the flags to the
-  # subcommand. For example:
-  #
-  #     -v status -h -v
-  #
-  # The above would yield 3 parts:
-  #
-  #     ["-v"]
-  #     "status"
-  #     ["-h", "-v"]
-  #
-  # These parts are useful because the first is a list of arguments
-  # given to the current command, the second is a subcommand, and the
-  # third are the commands given to the subcommand.
-  #
-  # @return [Array] The three parts.
-  def split_main_and_subcommand(argv)
-    # Initialize return variables
-    main_args   = nil
-    sub_command = nil
-    sub_args    = []
-
-    # We split the arguments into two: One set containing any
-    # flags before a word, and then the rest. The rest are what
-    # get actually sent on to the subcommand.
-    argv.each_index do |i|
-      if !argv[i].start_with?("-")
-        # We found the beginning of the sub command. Split the
-        # args up.
-        main_args   = argv[0, i]
-        sub_command = argv[i]
-        sub_args    = argv[i + 1, argv.length - i + 1]
-
-        # Break so we don't find the next non flag and shift our
-        # main args.
-        break
-      end
-    end
-
-    # Handle the case that argv was empty or didn't contain any subcommand
-    main_args = argv.dup if main_args.nil?
-
-    return [main_args, sub_command, sub_args]
-  end
+  opts.parse!(argv)
+  return argv
+rescue OptionParser::InvalidOption, OptionParser::MissingArgument
+  raise "Error: Invalid CLI option, #{opts.help.chomp}"
 end
 
+# This method will split the argv given into three parts: the flags to this command, the subcommand, and the flags to
+# the subcommand. For example:
+#     -v status -h -v
+# The above would yield 3 parts:
+#     ["-v"]
+#     "status"
+#     ["-h", "-v"]
+# These parts are useful because the first is a list of arguments given to the current command, the second is a
+# subcommand, and the third are the commands given to the subcommand
+#
+# @return [Array] The three parts
+#
+def split_main_and_subcommand(argv)
+  # Initialize return variables
+  main_args   = nil
+  sub_command = nil
+  sub_args    = []
 
+  # We split the arguments into two: One set containing any flags before a word, and then the rest. The rest are what
+  # get actually sent on to the subcommand
+  argv.each_index do |i|
+    unless argv[i].start_with?('-')
+      # We found the beginning of the sub command. Split the
+      # args up.
+      main_args   = argv[0, i]
+      sub_command = argv[i]
+      sub_args    = argv[i + 1, argv.length - i + 1]
+
+      # Break so we don't find the next non flag and shift our main args
+      break
+    end
+  end
+
+  # Handle the case that argv was empty or didn't contain any subcommand
+  main_args = argv.dup if main_args.nil?
+
+  [main_args, sub_command, sub_args]
+end
 
 #This is the CLI class that does the actual execution, (i.e. the one we actually invoke)
 class CLI
@@ -121,7 +107,7 @@ class CLI
   end
 
   def execute
-    if $main_args.include?("-h") || $main_args.include?("--help")
+    if $main_args.include?('-h') || $main_args.include?('--help')
       # Help is next in short-circuiting everything. Print
       # the help and exit.
       help
@@ -152,8 +138,8 @@ class CLI
       result = 1
     end
 
-    result = 0 if !result.is_a?(Fixnum)
-    return result
+    result = 0 unless result.is_a?(Fixnum)
+    result
   end
 
   # This prints out the help for the CLI.
@@ -162,12 +148,12 @@ class CLI
     # an optionparser above because I don't think the performance hits
     # of creating a whole object are worth checking only a couple flags.
     opts = OptionParser.new do |o|
-      o.banner = "Usage: vagrant [options] <command> [<args>]"
-      o.separator ""
-      o.on("-v", "--version", "Print the version and exit.")
-      o.on("-h", "--help", "Print this help.")
-      o.separator ""
-      o.separator "Common commands:"
+      o.banner = 'Usage: vagrant [options] <command> [<args>]'
+      o.separator ''
+      o.on('-v', '--version', 'Print the version and exit.')
+      o.on('-h', '--help', 'Print this help.')
+      o.separator ''
+      o.separator 'Common commands:'
 
       # Add the available subcommands as separators in order to print them
       # out as well.
@@ -189,12 +175,12 @@ class CLI
         # @env.ui.machine("cli-command", key.dup) # @todo What to do with this? 
       end
 
-      o.separator ""
-      o.separator "For help on any individual command run `openstudio-cli COMMAND -h`"
-      o.separator ""
-      o.separator "Additional subcommands are available, but are either more advanced"
-      o.separator "or not commonly used. To see all subcommands, run the command"
-      o.separator "`openstudio-cli list-commands`."
+      o.separator ''
+      o.separator 'For help on any individual command run `openstudio-cli COMMAND -h`'
+      o.separator ''
+      o.separator 'Additional subcommands are available, but are either more advanced'
+      o.separator 'or not commonly used. To see all subcommands, run the command'
+      o.separator '`openstudio-cli list-commands`.'
     end
 
     # @env.ui.info(opts.help, prefix: false) @todo rewrite
@@ -203,7 +189,7 @@ end
 
 class Run < ::Command
   def self.synopsis
-    "Executes an OpenStudio Workflow file"
+    'Executes an OpenStudio Workflow file'
   end
 
   def execute
@@ -211,19 +197,19 @@ class Run < ::Command
     options[:debug] = false
 
     opts = OptionParser.new do |o|
-      o.banner = "Usage: openstudio-cli run [options] [file]"
-      o.separator ""
-      o.separator "Options:"
-      o.separator ""
+      o.banner = 'Usage: openstudio-cli run [options] [file]'
+      o.separator ''
+      o.separator 'Options:'
+      o.separator ''
 
-      o.on("--debug", "Includes additional outputs for debugging failing workflows") do |f|
+      o.on('--debug', 'Includes additional outputs for debugging failing workflows') do |f|
         options[:debug] = f
       end
     end
 
     # Parse the options
     argv = parse_options(opts)
-    return 1 if !argv
+    return 1 unless argv
 
     $logger.debug("Run command: #{argv.inspect} #{options.inspect}")
     
@@ -231,29 +217,35 @@ class Run < ::Command
 
     adapter_options = {workflow_filename: File.basename(osw_path)}
     adapter = OpenStudio::Workflow.load_adapter 'local', adapter_options
-    run_options = options[:debug] ? {debug: true} | {}
+    run_options = options[:debug] ? {debug: true} : {}
     k = OpenStudio::Workflow::Run.new adapter, File.dirname(osw_path), run_options
     k.run
     # Success, exit status 0
-    0
+    0 
   end
 end
 
 # FROM VAGRANT bin - the code used to invoke the CLI action
 # Split arguments by "--" if its there, we'll recombine them later
-argv = ARGV.dup
+$argv = ARGV.dup
 argv_extra = []
-if idx = argv.index("--")
+if idx == argv.index('--') # @todo WTW is idx? In bin/vagrant idx also shows up with no initialization, so huh?
   argv_extra = argv.slice(idx+1, argv.length-2)
-  argv = argv.slice(0, idx)
+  $argv = $argv.slice(0, idx)
 end
 
 # Fast path the version of OpenStudio
-if argv.include?("-v") || argv.include?("--version")
-  require_relative "../lib/vagrant/version"
+if $argv.include?('-v') || $argv.include?('--version')
+  require 'openstudio'
   safe_puts "Openstudio #{Openstudio::openStudioLongVersion}"
   exit 0
 end
 
+# Recombine the arguments
+unless argv_extra.empty?
+  $argv << '--'
+  $argv += argv_extra
+end
+
 # Execute the CLI interface, and exit with the proper error code
-exit_status = CLI.new(argv).execute
+CLI.new($argv).execute
