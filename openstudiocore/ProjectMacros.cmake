@@ -230,7 +230,6 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
 
 
-
   include_directories(${RUBY_INCLUDE_DIRS})
 
   if(WIN32)
@@ -275,10 +274,10 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
   #message(STATUS "${${NAME}_SWIG_Depends}")
   
-  set(RUBY_AUTODOC "")
-  if(BUILD_DOCUMENTATION)
-    set(RUBY_AUTODOC -features autodoc=1)
-  endif()
+  #set(RUBY_AUTODOC "")
+  #if(BUILD_DOCUMENTATION)
+  #  set(RUBY_AUTODOC -features autodoc=1)
+  #endif()
   
   add_custom_command(
     OUTPUT "${SWIG_WRAPPER}"
@@ -298,8 +297,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   endif()
 
   add_library(
-    ${swig_target}
-    MODULE
+    ${swig_target} STATIC
     ${SWIG_WRAPPER}
   )
 
@@ -319,39 +317,41 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
   endif()
 
-  set_target_properties(${swig_target} PROPERTIES PREFIX "")
-  set_target_properties(${swig_target} PROPERTIES OUTPUT_NAME "${LOWER_NAME}")
-  if(APPLE)
-    set_target_properties(${swig_target} PROPERTIES SUFFIX ".bundle" )
-    #set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
-    #set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-undefined suppress -flat_namespace")
-  endif()
+  #set_target_properties(${swig_target} PROPERTIES PREFIX "")
+  #set_target_properties(${swig_target} PROPERTIES OUTPUT_NAME "${LOWER_NAME}")
+  #if(APPLE)
+  #  set_target_properties(${swig_target} PROPERTIES SUFFIX ".bundle" )
+  #  #set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
+  #  #set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-undefined suppress -flat_namespace")
+  #endif()
 
 
-  if(MSVC)
-    # if visual studio 2010 or greater
-    if(NOT (${MSVC_VERSION} LESS 1600))
-      # trouble with macro redefinition in win32.h of Ruby
-      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4005 /wd4996") ## /wd4996 suppresses deprecated warning
-    else()
-      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996") ## /wd4996 suppresses deprecated warning
-    endif()
-  elseif(UNIX)
-    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-      # Prevent excessive warnings from generated swig files, suppress deprecated declarations
-      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations")
-    else()
-      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
-    endif()
-  endif()
+  #if(MSVC)
+  #  # if visual studio 2010 or greater
+  #  if(NOT (${MSVC_VERSION} LESS 1600))
+  #    # trouble with macro redefinition in win32.h of Ruby
+  #    set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4005 /wd4996") ## /wd4996 suppresses deprecated warning
+  #  else()
+  #    set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996") ## /wd4996 suppresses deprecated warning
+  #  endif()
+  #elseif(UNIX)
+  #  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  #    # Prevent excessive warnings from generated swig files, suppress deprecated declarations
+  #    set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations")
+  #  else()
+  #    set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
+  #  endif()
+  #endif()
+  #set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-keep_private_externs -DSWIGRUNTIME -Wno-deprecated-declarations -weak_library")
+  set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED -Wno-dynamic-class-memaccess -Wno-deprecated-declarations ")
 
-  if(CMAKE_COMPILER_IS_GNUCXX)
-    if(GCC_VERSION VERSION_GREATER 4.6 OR GCC_VERSION VERSION_EQUAL 4.6)
-      set_source_files_properties(${SWIG_WRAPPER} PROPERTIES COMPILE_FLAGS "-Wno-uninitialized -Wno-unused-but-set-variable")
-    else()
-      set_source_files_properties(${SWIG_WRAPPER} PROPERTIES COMPILE_FLAGS "-Wno-uninitialized")
-    endif()
-  endif()
+  #if(CMAKE_COMPILER_IS_GNUCXX)
+  #  if(GCC_VERSION VERSION_GREATER 4.6 OR GCC_VERSION VERSION_EQUAL 4.6)
+  #    set_source_files_properties(${SWIG_WRAPPER} PROPERTIES COMPILE_FLAGS "-Wno-uninitialized -Wno-unused-but-set-variable")
+  #  else()
+  #    set_source_files_properties(${SWIG_WRAPPER} PROPERTIES COMPILE_FLAGS "-Wno-uninitialized")
+  #  endif()
+  #endif()
 
   set_target_properties(${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/ruby/")
   if(RUBY_VERSION_MAJOR EQUAL "2" AND MSVC)
@@ -501,11 +501,12 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996") ## /wd4996 suppresses deprecated warning
       set_target_properties(${swig_target} PROPERTIES SUFFIX ".pyd")
     elseif(UNIX)
-      if(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
-        set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations")
-      else()
-        set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
-      endif()
+      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED -Wno-deprecated-declarations")
+      #if(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
+      #  set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations")
+      #else()
+      #  set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
+      #endif()
     endif()
 
     target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS} ${PYTHON_LIBRARY})

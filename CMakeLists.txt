@@ -536,29 +536,29 @@ else()
   option(BUILD_SWIG "Build SWIG" ON)
 endif()
 
-if(NOT WIN32)
-  find_program(RUBY_EXECUTABLE NAMES ruby2.0 ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH)
-
-  find_package(Ruby 2.0)
-
-  if(NOT RUBY_FOUND)
-    find_path(RUBY_CONFIG_INCLUDE_DIR
-      NAMES ruby/config.h config.h
-      HINTS /usr/include/x86_64-linux-gnu/ruby-2.0.0
-    )
-    find_package(Ruby 2.0)
-  endif()
-endif()
-
-if(APPLE)
-  option(BUILD_RUBY "Build Ruby" OFF)
-elseif(UNIX)
-  if(RUBY_FOUND)
-    option(BUILD_RUBY "Build Ruby" OFF)
-  else()
-    option(BUILD_RUBY "Build Ruby" ON)
-  endif()
-endif()
+#if(NOT WIN32)
+#  find_program(RUBY_EXECUTABLE NAMES ruby2.0 ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH)
+#
+#  find_package(Ruby 2.0)
+#
+#  if(NOT RUBY_FOUND)
+#    find_path(RUBY_CONFIG_INCLUDE_DIR
+#      NAMES ruby/config.h config.h
+#      HINTS /usr/include/x86_64-linux-gnu/ruby-2.0.0
+#    )
+#    find_package(Ruby 2.0)
+#  endif()
+#endif()
+#
+#if(APPLE)
+#  option(BUILD_RUBY "Build Ruby" OFF)
+#elseif(UNIX)
+#  if(RUBY_FOUND)
+#    option(BUILD_RUBY "Build Ruby" OFF)
+#  else()
+#    option(BUILD_RUBY "Build Ruby" ON)
+#  endif()
+#endif()
 
 if(NOT BUILD_SWIG)
   if(${SWIG_VERSION} VERSION_LESS "2.0.10")
@@ -592,64 +592,83 @@ if(BUILD_V8)
   set(V8_INCLUDE_DIR ${CMAKE_BINARY_DIR}/V8-prefix/src/V8/include)
 endif()
 
-if(BUILD_RUBY AND UNIX)
+#if(BUILD_RUBY AND UNIX)
   ExternalProject_Add(Ruby
-    URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0-p645.tar.gz
-    URL_MD5 49919bba0c855eaf8e247108c7933a62
-    CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && sh -c "./configure --enable-shared --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install CFLAGS=\"-fPIC\""
-    BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE)
-    INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE) install
+    #URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0-p645.tar.gz
+    GIT_REPOSITORY https://github.com/ruby/ruby.git
+    GIT_TAG ruby_2_2
+    BUILD_IN_SOURCE 1
+    PATCH_COMMAND ${PATCH_EXE} -p1 < "${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.patch"
+    #URL_MD5 49919bba0c855eaf8e247108c7933a62
+    # need autoconf
+    # you probably need to brew install for now, we can smooth that over later
+    #SOURCE_DIR ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby
+    #CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
+    #BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE)
+    #CONFIGURE_COMMAND cd <SOURCE_DIR> && autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
+    #BUILD_COMMAND cd <SOURCE_DIR> && $(MAKE)
+    #CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=<INSTALL_DIR>"
+    CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
+    BUILD_COMMAND $(MAKE)
+    INSTALL_COMMAND $(MAKE) install
   )
+  set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby-static.a)
+  set(RUBY_INCLUDE_DIR ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/)
   set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
+  set(RUBY_SOURCE_DIR ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby)
+  #set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/libruby-static.a)
+  #set(RUBY_INCLUDE_DIR ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/include)
+  #set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby)
+  #set(RUBY_SOURCE_DIR ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby)
 
-  if(APPLE)
-    set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby.2.0.0.dylib)
-  else()
-    set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby.so)
-  endif()
-endif()
+  #if(APPLE)
+  #  set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby.2.0.0.dylib)
+  #else()
+  #  set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby.so)
+  #endif()
+#endif()
 
-# Always unpack Ruby on Windows
-if(WIN32)
-  if(CMAKE_CL_64)
-    ExternalProject_Add(Ruby
-      URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0-p645-aws-win64.zip
-      URL_MD5 4ad4ddc213a623b74f18f4c486651bc3
-      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/x64-mingw32.patch
-      CONFIGURE_COMMAND ""
-      BUILD_COMMAND ""
-      INSTALL_COMMAND ""
-    )
-    set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe)
-    set(RUBY_DLL x64-msvcrt-ruby200.dll)
-    set(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
-    set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/libx64-msvcrt-ruby200.dll.a")
-  else()
-    ExternalProject_Add(Ruby
-      URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0-p645-aws-win32.zip
-      URL_MD5 712839ed5e7c21043026420ddd82b88c
-      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/i386-mingw32.patch
-      CONFIGURE_COMMAND ""
-      BUILD_COMMAND ""
-      INSTALL_COMMAND ""
-    )
-    set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe)
-    set(RUBY_DLL msvcrt-ruby200.dll)
-    set(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
-    set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/libmsvcrt-ruby200.dll.a")
-  endif()
-
-  # Install required gems
-  set(ENV{BUNDLE_PATH} "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/ruby/gems/2.0.0")
-  add_custom_command(TARGET Ruby
-                     POST_BUILD
-                     COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/bundle" "install" "--no-cache"
-                     COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/bundle" "clean" "--force"
-                     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/dependencies/ruby"
-                     COMMENT "Installing gems..."
-  )
-
-endif()
+## Always unpack Ruby on Windows
+#if(WIN32)
+#  if(CMAKE_CL_64)
+#    ExternalProject_Add(Ruby
+#      URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0-p645-aws-win64.zip
+#      URL_MD5 4ad4ddc213a623b74f18f4c486651bc3
+#      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/x64-mingw32.patch
+#      CONFIGURE_COMMAND ""
+#      BUILD_COMMAND ""
+#      INSTALL_COMMAND ""
+#    )
+#    set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe)
+#    set(RUBY_DLL x64-msvcrt-ruby200.dll)
+#    set(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
+#    set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/libx64-msvcrt-ruby200.dll.a")
+#  else()
+#    ExternalProject_Add(Ruby
+#      URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0-p645-aws-win32.zip
+#      URL_MD5 712839ed5e7c21043026420ddd82b88c
+#      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/i386-mingw32.patch
+#      CONFIGURE_COMMAND ""
+#      BUILD_COMMAND ""
+#      INSTALL_COMMAND ""
+#    )
+#    set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe)
+#    set(RUBY_DLL msvcrt-ruby200.dll)
+#    set(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
+#    set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/libmsvcrt-ruby200.dll.a")
+#  endif()
+#
+#  # Install required gems
+#  set(ENV{BUNDLE_PATH} "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/ruby/gems/2.0.0")
+#  add_custom_command(TARGET Ruby
+#                     POST_BUILD
+#                     COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/bundle" "install" "--no-cache"
+#                     COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/bundle" "clean" "--force"
+#                     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/dependencies/ruby"
+#                     COMMENT "Installing gems..."
+#  )
+#
+#endif()
 
 
 if(BUILD_SWIG)
@@ -851,9 +870,9 @@ if(BUILD_BOOST)
   list(APPEND OpenStudioCore_DEPENDS Boost)
 endif()
 
-if(BUILD_RUBY OR WIN32)
+#if(BUILD_RUBY OR WIN32)
   list(APPEND OpenStudioCore_DEPENDS Ruby)
-endif()
+#endif()
 
 if(BUILD_NODE)
   list(APPEND OpenStudioCore_DEPENDS Node)
@@ -926,11 +945,9 @@ ExternalProject_Add(OSCore
     -DQt5Concurrent_DIR:STRING=${Qt5Concurrent_DIR}
     -DQt5PrintSupport_DIR:STRING=${Qt5PrintSupport_DIR}
     -DSWIG_EXECUTABLE:STRING=${SWIG_EXECUTABLE}
-    -DRUBY_EXECUTABLE:STRING=${RUBY_EXECUTABLE}
     -DNODE_BIN_DIR:STRING=${NODE_BIN_DIR}
     -DNODE_INCLUDE_DIR:STRING=${NODE_INCLUDE_DIR}
     -DV8_INCLUDE_DIR:STRING=${V8_INCLUDE_DIR}
-    -DRUBY_LIBRARY:STRING=${RUBY_LIBRARY}
     -DDOXYGEN_EXECUTABLE:STRING=${DOXYGEN_EXECUTABLE}
     -DDOXYGEN_DOT_EXECUTABLE:STRING=${DOXYGEN_DOT_EXECUTABLE}
     -DENERGYPLUS_LOCATION:PATH=$ENV{ENERGYPLUSDIR}
@@ -938,6 +955,10 @@ ExternalProject_Add(OSCore
     -DOPENSSL_ROOT_DIR:PATH=${OPENSSL_ROOT_DIR}
     -DPATCH_EXE:PATH=${PATCH_EXE}
     -DMAXIMIZE_CPU_USAGE:BOOL=${MAXIMIZE_CPU_USAGE}
+    -DRUBY_LIBRARY:PATH=${RUBY_LIBRARY} 
+    -DRUBY_INCLUDE_DIR:PATH=${RUBY_INCLUDE_DIR}  
+    -DRUBY_EXECUTABLE:PATH=${RUBY_EXECUTABLE}
+    -DRUBY_SOURCE_DIR:PATH=${RUBY_SOURCE_DIR}
     INSTALL_COMMAND ""
 )
 

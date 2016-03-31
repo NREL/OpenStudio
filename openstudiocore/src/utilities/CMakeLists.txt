@@ -320,7 +320,7 @@ add_custom_command(
 
 set(${target_name}_src
   UtilitiesAPI.hpp
-  "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx" # referenced here to make sure it is generated when and where we expect
+  #"${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx" # referenced here to make sure it is generated when and where we expect
   ${bcl_src}
   ${bcl_moc_src}
   ${bcl_qrc_src}
