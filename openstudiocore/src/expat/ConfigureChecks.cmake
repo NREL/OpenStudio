@@ -1,4 +1,4 @@
-include(CheckIncludeFile)
+include(CheckIncludeFiles)
 include(CheckFunctionExists)
 include(CheckSymbolExists)
 
