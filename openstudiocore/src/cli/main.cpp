@@ -1,5 +1,6 @@
 #include "RubyInterpreter.hpp"
 #include "embedded_files.hpp"
+#include "GC_Value.hpp"
 #include "InitMacros.hxx"
 
 #include <iostream>
@@ -16,10 +17,49 @@ extern "C" {
   void Init_EmbeddedScripting(void);
   INIT_DECLARATIONS;
 
+
+  void Init_encdb(void);
+  void Init_big5(void);
+  void Init_cp949(void);
+  void Init_emacs_mule(void);
+  void Init_euc_jp(void);
+  void Init_euc_kr(void);
+  void Init_euc_tw(void);
+  void Init_gb2312(void);
+  void Init_gb18030(void);
+  void Init_gbk(void);
+  void Init_iso_8859_1(void);
+  void Init_iso_8859_2(void);
+  void Init_iso_8859_3(void);
+  void Init_iso_8859_4(void);
+  void Init_iso_8859_5(void);
+  void Init_iso_8859_6(void);
+  void Init_iso_8859_7(void);
+  void Init_iso_8859_8(void);
+  void Init_iso_8859_9(void);
+  void Init_iso_8859_10(void);
+  void Init_iso_8859_11(void);
+  void Init_iso_8859_13(void);
+  void Init_iso_8859_14(void);
+  void Init_iso_8859_15(void);
+  void Init_iso_8859_16(void);
+  void Init_koi8_r(void);
+  void Init_koi8_u(void);
+  void Init_shift_jis(void);
+  void Init_utf_16be(void);
+  void Init_utf_16le(void);
+  void Init_utf_32be(void);
+  void Init_utf_32le(void);
+  void Init_windows_31j(void);
+  void Init_windows_1250(void);
+  void Init_windows_1251(void);
+  void Init_windows_1252(void);
+
+
   //void Init_openstudioairflow(void);
   //void Init_openstudiomodelcore(void);
   //void Init_openstudiomodelsimulation(void);
-  //void Init_openstudioutilitiescore(void);
+  void Init_openstudioutilitiescore(void);
   ////void Init_openstudioutilitiesplot(void);
   ////void Init_openstudioenergyplus(void);
   ////void Init_openstudiomodeleditor(void);
@@ -43,7 +83,7 @@ extern "C" {
   ////void Init_openstudiomeasure(void);
   ////void Init_openstudiomodelrefrigeration(void);
   //void Init_openstudioutilitiesbcl(void);
-  //void Init_openstudioutilitiesidd(void);
+  void Init_openstudioutilitiesidd(void);
   ////void Init_openstudiomodel(void);
   ////void Init_openstudiomodelresources(void);
   //void Init_openstudioutilitiescloud(void);
@@ -58,13 +98,79 @@ int main(int argc, char *argv[])
   {
     RUBY_INIT_STACK;
     ruby_init();
+
+    swig::GC_VALUE::hash_id = rb_intern("hash");
+    swig::GC_VALUE::lt_id = rb_intern("<");
+    swig::GC_VALUE::gt_id = rb_intern(">");
+    swig::GC_VALUE::eq_id = rb_intern("==");
+    swig::GC_VALUE::le_id = rb_intern("<=");
+    swig::GC_VALUE::ge_id = rb_intern(">=");
+
+    swig::GC_VALUE::pos_id = rb_intern("+@");
+    swig::GC_VALUE::neg_id = rb_intern("-@");
+    swig::GC_VALUE::inv_id = rb_intern("~");
+
+    swig::GC_VALUE::add_id = rb_intern("+");
+    swig::GC_VALUE::sub_id = rb_intern("-");
+    swig::GC_VALUE::mul_id = rb_intern("*");
+    swig::GC_VALUE::div_id = rb_intern("/");
+    swig::GC_VALUE::mod_id = rb_intern("%");
+
+    swig::GC_VALUE::and_id = rb_intern("&");
+    swig::GC_VALUE::or_id  = rb_intern("|");
+    swig::GC_VALUE::xor_id = rb_intern("^");
+
+    swig::GC_VALUE::lshift_id = rb_intern("<<");
+    swig::GC_VALUE::rshift_id = rb_intern(">>");
+
     INIT_CALLS;
+
     RB_PROVIDES_CALLS;
+
+
+  Init_encdb();
+  rb_provide("encdb.so");
+  Init_big5();
+  Init_cp949();
+  Init_emacs_mule();
+  Init_euc_jp();
+  Init_euc_kr();
+  Init_euc_tw();
+  Init_gb2312();
+  Init_gb18030();
+  Init_gbk();
+  Init_iso_8859_1();
+  Init_iso_8859_2();
+  Init_iso_8859_3();
+  Init_iso_8859_4();
+  Init_iso_8859_5();
+  Init_iso_8859_6();
+  Init_iso_8859_7();
+  Init_iso_8859_8();
+  Init_iso_8859_9();
+  Init_iso_8859_10();
+  Init_iso_8859_11();
+  Init_iso_8859_13();
+  Init_iso_8859_14();
+  Init_iso_8859_15();
+  Init_iso_8859_16();
+  Init_koi8_r();
+  Init_koi8_u();
+  Init_shift_jis();
+  Init_utf_16be();
+  Init_utf_16le();
+  Init_utf_32be();
+  Init_utf_32le();
+  Init_windows_31j();
+  Init_windows_1250();
+  Init_windows_1251();
+  Init_windows_1252();
+
 
     //Init_openstudioairflow();
     //Init_openstudiomodelcore();
     //Init_openstudiomodelsimulation();
-    //Init_openstudioutilitiescore();
+    Init_openstudioutilitiescore();
     //Init_openstudioutilitiesplot();
     //Init_openstudioenergyplus();
     //Init_openstudiomodeleditor();
@@ -88,7 +194,7 @@ int main(int argc, char *argv[])
     ////Init_openstudiomeasure();
     ////Init_openstudiomodelrefrigeration();
     //Init_openstudioutilitiesbcl();
-    //Init_openstudioutilitiesidd();
+    Init_openstudioutilitiesidd();
     ////Init_openstudiomodel();
     ////Init_openstudiomodelresources();
     //Init_openstudioutilitiescloud();

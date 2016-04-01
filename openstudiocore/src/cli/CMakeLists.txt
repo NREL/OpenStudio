@@ -207,7 +207,7 @@ add_executable(EmbeddedScripting
  "${CMAKE_CURRENT_BINARY_DIR}/embedded_files.cxx"
  "${CMAKE_CURRENT_BINARY_DIR}/EmbeddedScriptingRUBY_wrap.cxx"
  "${CMAKE_BINARY_DIR}/src/utilities/ruby_OpenStudioUtilitiesCore_wrap.cxx"
- #"${CMAKE_BINARY_DIR}/src/utilities/ruby_OpenStudioUtilitiesIdd_wrap.cxx"
+ "${CMAKE_BINARY_DIR}/src/utilities/ruby_OpenStudioUtilitiesIdd_wrap.cxx"
  ${EMBED_SOURCE_FILES} 
 )
 
@@ -223,6 +223,7 @@ add_dependencies(EmbeddedScripting ruby_OpenStudioUtilitiesCore ruby_OpenStudioU
 
 target_link_libraries(EmbeddedScripting 
  ${EXTENSION_LIBS} 
+ "${RUBY_POSSIBLE_LIB_DIR}/../../Ruby/enc/libenc.a"
  #ruby_OpenStudioAirflow
  #ruby_OpenStudioModelCore
  #ruby_OpenStudioModelSimulation
