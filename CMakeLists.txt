@@ -592,41 +592,19 @@ if(BUILD_V8)
   set(V8_INCLUDE_DIR ${CMAKE_BINARY_DIR}/V8-prefix/src/V8/include)
 endif()
 
-#if(BUILD_RUBY AND UNIX)
-  ExternalProject_Add(Ruby
-    #URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0-p645.tar.gz
-    GIT_REPOSITORY https://github.com/ruby/ruby.git
-    GIT_TAG ruby_2_2
-    BUILD_IN_SOURCE 1
-    PATCH_COMMAND ${PATCH_EXE} -p1 < "${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.patch"
-    #URL_MD5 49919bba0c855eaf8e247108c7933a62
-    # need autoconf
-    # you probably need to brew install for now, we can smooth that over later
-    #SOURCE_DIR ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby
-    #CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
-    #BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE)
-    #CONFIGURE_COMMAND cd <SOURCE_DIR> && autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
-    #BUILD_COMMAND cd <SOURCE_DIR> && $(MAKE)
-    #CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=<INSTALL_DIR>"
-    CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
-    BUILD_COMMAND $(MAKE)
-    INSTALL_COMMAND $(MAKE) install
-  )
-  set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby-static.a)
-  set(RUBY_INCLUDE_DIR ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/)
-  set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
-  set(RUBY_SOURCE_DIR ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby)
-  #set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/libruby-static.a)
-  #set(RUBY_INCLUDE_DIR ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/include)
-  #set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby)
-  #set(RUBY_SOURCE_DIR ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby)
-
-  #if(APPLE)
-  #  set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby.2.0.0.dylib)
-  #else()
-  #  set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby.so)
-  #endif()
-#endif()
+ExternalProject_Add(Ruby
+  GIT_REPOSITORY https://github.com/ruby/ruby.git
+  GIT_TAG ruby_2_2
+  BUILD_IN_SOURCE 1
+  PATCH_COMMAND ${PATCH_EXE} -p1 < "${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.patch"
+  CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
+  BUILD_COMMAND $(MAKE)
+  INSTALL_COMMAND $(MAKE) install
+)
+#set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby-static.a)
+#set(RUBY_INCLUDE_DIR ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/)
+set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
+set(RUBY_SOURCE_DIR ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby)
 
 ## Always unpack Ruby on Windows
 #if(WIN32)

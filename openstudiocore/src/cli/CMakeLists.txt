@@ -1,22 +1,9 @@
-#cmake_minimum_required (VERSION 2.8.6)
-#
-#project (EmbeddedScripting CXX)
-#
-#find_program(SWIG_EXECUTABLE NAMES swig3.0 swig2.0 swig HINTS "c:/swigwin-3.0.8")
-#find_package(SWIG REQUIRED)
 
 IF (APPLE)
    find_library(COREFOUNDATION_LIBRARY CoreFoundation )
 ENDIF (APPLE)
 
-#if ("${MSVC_VERSION}" STREQUAL "1900")
-#  add_definitions(/DHAVE_STRUCT_TIMESPEC=1)
-#endif()
-#
-#find_package(Ruby 1.9 REQUIRED)
-
-
-file(GLOB EXTENSION_LIBS "${RUBY_POSSIBLE_LIB_DIR}/../../ext/**/*.a")
+file(GLOB EXTENSION_LIBS "${RUBY_SOURCE_DIR}/ext/**/*.a")
 
 set(LIBS 
   bigdecimal
@@ -150,31 +137,11 @@ embed_files(
   ${EMBED_RB} 
 )
 
-set(BUILD_SHARED_LIBS OFF)
+#set(BUILD_SHARED_LIBS OFF)
 
 set_source_files_properties(EmbeddedScripting.i
   PROPERTIES CPLUSPLUS true
-  )
-
-#if (UNIX)
-#  set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wextra -pthread ")
-#
-#  option(ENABLE_ADDRESS_SANITIZER "Enable address sanitizer testing in gcc/clang" FALSE)
-#  if(ENABLE_ADDRESS_SANITIZER)
-#    add_definitions(-fsanitize=address -g)
-#    set(LINKER_FLAGS "${LINKER_FLAGS} -fsanitize=address")
-#  endif()
-#
-#  option(ENABLE_MEMORY_SANITIZER "Enable memory sanitizer testing in gcc/clang" FALSE)
-#  if(ENABLE_MEMORY_SANITIZER)
-#    add_definitions(-fsanitize=memory -g)
-#    set(LINKER_FLAGS "${LINKER_FLAGS} -fsanitize=memory")
-#  endif()
-#endif()
-
-#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LINKER_FLAGS}")
-#set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${LINKER_FLAGS}")
-#set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${LINKER_FLAGS}")
+)
 
 include_directories(${RUBY_HDR_DIR} ${RUBY_ARCHHDR_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
 
@@ -199,67 +166,52 @@ add_custom_command(
 set_source_files_properties(${EMBED_SOURCE_FILES} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 add_executable(EmbeddedScripting
- #"${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
  main.cpp
  RubyException.hpp
  RubyInterpreter.hpp
  embedded_files.hpp
  "${CMAKE_CURRENT_BINARY_DIR}/embedded_files.cxx"
  "${CMAKE_CURRENT_BINARY_DIR}/EmbeddedScriptingRUBY_wrap.cxx"
- "${CMAKE_BINARY_DIR}/src/utilities/ruby_OpenStudioUtilitiesCore_wrap.cxx"
- "${CMAKE_BINARY_DIR}/src/utilities/ruby_OpenStudioUtilitiesIdd_wrap.cxx"
  ${EMBED_SOURCE_FILES} 
 )
-
-set_source_files_properties(
- "${CMAKE_BINARY_DIR}/src/utilities/ruby_OpenStudioUtilitiesCore_wrap.cxx"
- "${CMAKE_BINARY_DIR}/src/utilities/ruby_OpenStudioUtilitiesIdd_wrap.cxx"
-  PROPERTIES
-  GENERATED true 
-)
-
-add_dependencies(EmbeddedScripting ruby_OpenStudioUtilitiesCore ruby_OpenStudioUtilitiesIdd)
-#add_dependencies(EmbeddedScripting ruby_OpenStudioUtilitiesCore )
 
 target_link_libraries(EmbeddedScripting 
  ${EXTENSION_LIBS} 
  "${RUBY_POSSIBLE_LIB_DIR}/../../Ruby/enc/libenc.a"
  #ruby_OpenStudioAirflow
- #ruby_OpenStudioModelCore
- #ruby_OpenStudioModelSimulation
- #ruby_OpenStudioUtilitiesCore
- #ruby_OpenStudioUtilitiesPlot
+ ruby_OpenStudioModelCore
+ ruby_OpenStudioModelSimulation
+ ruby_OpenStudioUtilitiesCore
+ ruby_OpenStudioUtilitiesPlot
  ##ruby_OpenStudioEnergyPlus
  ##ruby_OpenStudioModelEditor
  ##ruby_OpenStudioOSVersion
- #ruby_OpenStudioUtilitiesData
- #ruby_OpenStudioUtilitiesSql
+ ruby_OpenStudioUtilitiesData
+ ruby_OpenStudioUtilitiesSql
  ##ruby_OpenStudioGBXML
  ##ruby_OpenStudioModelGenerators
  ##ruby_OpenStudioRadiance
- #ruby_OpenStudioUtilitiesEconomics
- #ruby_OpenStudioUtilitiesTime
+ ruby_OpenStudioUtilitiesEconomics
+ ruby_OpenStudioUtilitiesTime
  ##ruby_OpenStudioISOModel
- ##ruby_OpenStudioModelGeometry
+ ruby_OpenStudioModelGeometry
  ##ruby_OpenStudioSDD
- #ruby_OpenStudioUtilitiesFileTypes
- #ruby_OpenStudioUtilitiesUnits
+ ruby_OpenStudioUtilitiesFileTypes
+ ruby_OpenStudioUtilitiesUnits
  ##ruby_OpenStudioLib
- ##ruby_OpenStudioModelHVAC
- #ruby_OpenStudioUtilities
- #ruby_OpenStudioUtilitiesGeometry
+ ruby_OpenStudioModelHVAC
+ ruby_OpenStudioUtilities
+ ruby_OpenStudioUtilitiesGeometry
  ##ruby_OpenStudioMeasure
- ##ruby_OpenStudioModelRefrigeration
- #ruby_OpenStudioUtilitiesBCL
- #ruby_OpenStudioUtilitiesIdd
- ##ruby_OpenStudioModel
- ##ruby_OpenStudioModelResources
- #ruby_OpenStudioUtilitiesCloud
- #ruby_OpenStudioUtilitiesIdf
+ ruby_OpenStudioModelRefrigeration
+ ruby_OpenStudioUtilitiesBCL
+ ruby_OpenStudioUtilitiesIdd
+ ruby_OpenStudioModel
+ ruby_OpenStudioModelResources
+ ruby_OpenStudioUtilitiesCloud
+ ruby_OpenStudioUtilitiesIdf
 )
 
-#set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -weak_library ../../Products/ruby/libruby_OpenStudioUtilitiesCore.a" ) #-weak_library ../../Products/ruby/libruby_OpenStudioUtilitiesIdd.a")
-#set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}  -weak_library ../../Products/ruby/libruby_OpenStudioUtilitiesIdd.a")
 target_link_libraries(EmbeddedScripting 
   openstudio_utilities
   ${Boost_LIBRARIES}
@@ -275,7 +227,5 @@ endif()
 if( APPLE )
   target_link_libraries(EmbeddedScripting ${COREFOUNDATION_LIBRARY} )
 endif()
-
-#set_target_properties(EmbeddedScripting PROPERTIES COMPILE_FLAGS "-keep_private_externs -flat_namespace -Wno-deprecated-declarations")
 
 

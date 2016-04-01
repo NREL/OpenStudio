@@ -284,6 +284,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     COMMAND "${SWIG_EXECUTABLE}"
             "-ruby" "-c++" "-fvirtual" "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src" "${extra_includes}" "${extra_includes2}" ${RUBY_AUTODOC}
             -module "${MODULE}" -initname "${LOWER_NAME}"
+            "-I${CMAKE_SOURCE_DIR}/ruby"
             -o "${SWIG_WRAPPER_FULL_PATH}"
             "${SWIG_DEFINES}" ${SWIG_COMMON} "${KEY_I_FILE}"
     DEPENDS ${this_depends}
