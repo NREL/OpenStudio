@@ -598,7 +598,7 @@ ExternalProject_Add(Ruby
   BUILD_IN_SOURCE 1
   PATCH_COMMAND ${PATCH_EXE} -p1 < "${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.patch"
   CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
-  BUILD_COMMAND $(MAKE)
+  BUILD_COMMAND $(MAKE) libenc; $(MAKE) libtrans; $(MAKE)
   INSTALL_COMMAND $(MAKE) install
 )
 #set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby-static.a)
