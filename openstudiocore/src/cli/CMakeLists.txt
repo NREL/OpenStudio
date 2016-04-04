@@ -53,7 +53,13 @@ set(LIBS
   ##tcltklib
 )
 
-file(GLOB EXTENSION_LIBS "${RUBY_SOURCE_DIR}/ext/**/*.a")
+set(EXTENSION_LIBS "")
+if( UNIX )
+  file(GLOB EXTENSION_LIBS "${RUBY_SOURCE_DIR}/ext/**/*.a")
+else()
+  file(GLOB EXTENSION_LIBS "${RUBY_SOURCE_DIR}/ext/**/*.lib")
+endif()
+
 set(INIT_CALLS "")
 set(INIT_DECLARATIONS "")
 foreach(LIB ${EXTENSION_LIBS})
