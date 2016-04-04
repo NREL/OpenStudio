@@ -601,10 +601,11 @@ ExternalProject_Add(Ruby
   BUILD_COMMAND $(MAKE) libenc; $(MAKE) libtrans; $(MAKE)
   INSTALL_COMMAND $(MAKE) install
 )
-#set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby-static.a)
-#set(RUBY_INCLUDE_DIR ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/)
-set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
-set(RUBY_SOURCE_DIR ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby)
+set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby-static.a")
+set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.2.0")
+set(RUBY_CONFIG_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.2.0/x86_64-darwin13")
+set(RUBY_EXECUTABLE "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby")
+set(RUBY_SOURCE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby")
 
 ## Always unpack Ruby on Windows
 #if(WIN32)
@@ -935,6 +936,7 @@ ExternalProject_Add(OSCore
     -DMAXIMIZE_CPU_USAGE:BOOL=${MAXIMIZE_CPU_USAGE}
     -DRUBY_LIBRARY:PATH=${RUBY_LIBRARY} 
     -DRUBY_INCLUDE_DIR:PATH=${RUBY_INCLUDE_DIR}  
+    -DRUBY_CONFIG_INCLUDE_DIR:PATH=${RUBY_CONFIG_INCLUDE_DIR}
     -DRUBY_EXECUTABLE:PATH=${RUBY_EXECUTABLE}
     -DRUBY_SOURCE_DIR:PATH=${RUBY_SOURCE_DIR}
     INSTALL_COMMAND ""
