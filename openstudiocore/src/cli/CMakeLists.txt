@@ -3,7 +3,28 @@ IF (APPLE)
    find_library(COREFOUNDATION_LIBRARY CoreFoundation )
 ENDIF (APPLE)
 
-file(GLOB EXTENSION_LIBS "${RUBY_SOURCE_DIR}/ext/**/*.a")
+file(READ "${RUBY_SOURCE_DIR}/enc/encinit.c" ENCINIT_FILE_CONTENT)
+string(REGEX MATCHALL "init_enc\\([a-zA-Z0-9_]*\\);" ENCINIT_MATCH "${ENCINIT_FILE_CONTENT}")
+set(ENC_INIT_DECLARATIONS "")
+set(ENC_INIT_CALLS "")
+foreach(MATCH ${ENCINIT_MATCH})
+  string(REPLACE "init_enc(" "" MATCH "${MATCH}")
+  string(REPLACE ")" "" MATCH "${MATCH}")
+  set(ENC_INIT_DECLARATIONS "${ENC_INIT_DECLARATIONS} void Init_${MATCH}();\\\n" )
+  set(ENC_INIT_CALLS "${ENC_INIT_CALLS} Init_${MATCH}();\\\n" )
+  set(ENC_INIT_CALLS "${ENC_INIT_CALLS} rb_provide(\"enc/${MATCH}.so\");\\\n" )
+endforeach()
+
+string(REGEX MATCHALL "init_trans\\([a-zA-Z0-9_]*\\);" TRANSINIT_MATCH "${ENCINIT_FILE_CONTENT}")
+set(TRANS_INIT_DECLARATIONS "")
+set(TRANS_INIT_CALLS "")
+foreach(MATCH ${TRANSINIT_MATCH})
+  string(REPLACE "init_trans(" "" MATCH "${MATCH}")
+  string(REPLACE ")" "" MATCH "${MATCH}")
+  set(TRANS_INIT_DECLARATIONS "${TRANS_INIT_DECLARATIONS} void Init_trans_${MATCH}();\\\n" )
+  set(TRANS_INIT_CALLS "${TRANS_INIT_CALLS} Init_trans_${MATCH}();\\\n" )
+  set(TRANS_INIT_CALLS "${TRANS_INIT_CALLS} rb_provide(\"enc/trans/${MATCH}.so\");\\\n" )
+endforeach()
 
 set(LIBS 
   bigdecimal
@@ -32,16 +53,16 @@ set(LIBS
   ##tcltklib
 )
 
+file(GLOB EXTENSION_LIBS "${RUBY_SOURCE_DIR}/ext/**/*.a")
 set(INIT_CALLS "")
-set(RB_PROVIDES_CALLS "")
 set(INIT_DECLARATIONS "")
 foreach(LIB ${EXTENSION_LIBS})
   get_filename_component(LIB_NAME ${LIB} NAME_WE)
   list (FIND LIBS "${LIB_NAME}" _index)
   if( ${_index} GREATER -1 )
-    set(INIT_CALLS "${INIT_CALLS}  Init_${LIB_NAME}();\\\n" )
     set(INIT_DECLARATIONS "${INIT_DECLARATIONS}  void Init_${LIB_NAME}();\\\n" )
-    set(RB_PROVIDES_CALLS "${RB_PROVIDES_CALLS}  rb_provide(\"${LIB_NAME}.so\");\\\n" )
+    set(INIT_CALLS "${INIT_CALLS}  Init_${LIB_NAME}();\\\n" )
+    set(INIT_CALLS "${INIT_CALLS}  rb_provide(\"${LIB_NAME}.so\");\\\n" )
   endif()
 endforeach()
 
@@ -179,8 +200,8 @@ add_executable(EmbeddedScripting
 
 target_link_libraries(EmbeddedScripting 
  ${EXTENSION_LIBS} 
- "${RUBY_POSSIBLE_LIB_DIR}/../../Ruby/enc/libenc.a"
- "${RUBY_POSSIBLE_LIB_DIR}/../../Ruby/enc/libtrans.a"
+ "${RUBY_SOURCE_DIR}/enc/libenc.a"
+ "${RUBY_SOURCE_DIR}/enc/libtrans.a"
  #ruby_OpenStudioAirflow
  ruby_OpenStudioModelCore
  ruby_OpenStudioModelSimulation
