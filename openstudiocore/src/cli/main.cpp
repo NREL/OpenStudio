@@ -54,6 +54,26 @@ extern "C" {
   void Init_windows_1251(void);
   void Init_windows_1252(void);
 
+  void Init_transdb(void);
+  void Init_trans_big5(void);
+  void Init_trans_chinese(void);
+  void Init_trans_emoji(void);
+  void Init_trans_emoji_iso2022_kddi(void);
+  void Init_trans_emoji_sjis_docomo(void);
+  void Init_trans_emoji_sjis_kddi(void);
+  void Init_trans_emoji_sjis_softbank(void);
+  void Init_trans_escape(void);
+  void Init_trans_gb18030(void);
+  void Init_trans_gbk(void);
+  void Init_trans_iso2022(void);
+  void Init_trans_japanese(void);
+  void Init_trans_japanese_euc(void);
+  void Init_trans_japanese_sjis(void);
+  void Init_trans_korean(void);
+  void Init_trans_single_byte(void);
+  void Init_trans_utf8_mac(void);
+  void Init_trans_utf_16_32(void);
+
   //void Init_openstudioairflow(void);
   void Init_openstudiomodelcore(void);
   void Init_openstudiomodelsimulation(void);
@@ -163,6 +183,27 @@ int main(int argc, char *argv[])
   Init_windows_1250();
   Init_windows_1251();
   Init_windows_1252();
+
+  Init_transdb();
+  rb_provide("trans/transdb");
+  Init_trans_big5();
+  Init_trans_chinese();
+  Init_trans_emoji();
+  Init_trans_emoji_iso2022_kddi();
+  Init_trans_emoji_sjis_docomo();
+  Init_trans_emoji_sjis_kddi();
+  Init_trans_emoji_sjis_softbank();
+  Init_trans_escape();
+  Init_trans_gb18030();
+  Init_trans_gbk();
+  Init_trans_iso2022();
+  Init_trans_japanese();
+  Init_trans_japanese_euc();
+  Init_trans_japanese_sjis();
+  Init_trans_korean();
+  Init_trans_single_byte();
+  Init_trans_utf8_mac();
+  Init_trans_utf_16_32();
 
   Init_openstudioutilitiescore();
   Init_openstudioutilitiestime();

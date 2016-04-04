@@ -180,6 +180,7 @@ add_executable(EmbeddedScripting
 target_link_libraries(EmbeddedScripting 
  ${EXTENSION_LIBS} 
  "${RUBY_POSSIBLE_LIB_DIR}/../../Ruby/enc/libenc.a"
+ "${RUBY_POSSIBLE_LIB_DIR}/../../Ruby/enc/libtrans.a"
  #ruby_OpenStudioAirflow
  ruby_OpenStudioModelCore
  ruby_OpenStudioModelSimulation
