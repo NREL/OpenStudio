@@ -22792,7 +22792,7 @@ OS:WaterHeater:HeatPump,
        \type real
        \units C
        \required-field
-       \minimum 5
+       \minimum -5
        \note Heat pump compressor will not operate when the inlet air dry-bulb temperature
        \note is below this value.
   A13, \field Compressor Location
