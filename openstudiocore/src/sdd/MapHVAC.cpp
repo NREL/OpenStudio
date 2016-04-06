@@ -2722,7 +2722,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
   if( istringEqual(fanControlMethodElement.text().toStdString(),"ConstantVolume") ||
       istringEqual(fanControlMethodElement.text().toStdString(),"TwoSpeed") )
   {
-    // The type of fan is dependent on the context.  We use FanOnOff for fan coil units, FanConstantVolume for everything else
+    // The type of fan is dependent on the context.  We use FanOnOff for cycling zone systems, FanConstantVolume for everything else
     QDomElement parentElement = fanElement.parentNode().toElement();
 
     if( parentElement.nodeName().compare("ZnSys",Qt::CaseInsensitive) == 0 )
@@ -2735,6 +2735,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
       if( znSysTypeElement.text().compare("FPFC",Qt::CaseInsensitive) == 0 || 
           znSysTypeElement.text().compare("PTHP",Qt::CaseInsensitive) == 0 ||
           znSysTypeElement.text().compare("WSHP",Qt::CaseInsensitive) == 0 ||
+          ( 
+            istringEqual(znSysTypeElement.text().toStdString(),"SZAC") && 
+            istringEqual(znSysFanCtrlElement.text().toStdString(),"Cycling") && 
+          ) ||
+          ( 
+            istringEqual(znSysTypeElement.text().toStdString(),"SZHP") && 
+            istringEqual(znSysFanCtrlElement.text().toStdString(),"Cycling") && 
+          ) ||
           ( 
             istringEqual(znSysTypeElement.text().toStdString(),"VRF") && 
             istringEqual(znSysFanCtrlElement.text().toStdString(),"Continuous") && 
