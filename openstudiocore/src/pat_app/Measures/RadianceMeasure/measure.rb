@@ -65,10 +65,11 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     chs = OpenStudio::StringVector.new
     chs << 'Model'
     chs << 'Testing'
+    chs << 'High'
     rad_settings = OpenStudio::Ruleset::OSArgument.makeChoiceArgument('rad_settings', chs, true)
     rad_settings.setDisplayName('Radiance Settings')
     rad_settings.setDefaultValue('Model')
-    rad_settings.setDescription('The measure reads Radiance simulation parameters from the "Model" by default. The "Testing" option can be used for testing your model with the Radiance workflow; it uses very crude parameters for a fast simulation but produces very inaccurate results.')
+    rad_settings.setDescription('The measure gets the Radiance simulation parameters from the "Model" by default. "High" will force high-quality simulation paramaters, and "Testing" uses very crude parameters for a fast simulation but produces very inaccurate results.')
     args << rad_settings
 
     debug_mode = OpenStudio::Ruleset::OSArgument::makeBoolArgument('debug_mode', false)
@@ -425,11 +426,19 @@ class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
     options_tregVars = ""
     options_dmx = ""
     options_vmx = ""
+
     if rad_settings == "Testing"
       options_tregVars = "-e MF:1 -f tregenza.cal -b tbin -bn Ntbins"
       options_dmx = "-ab 1 -ad 128 -as 56 -dj 1 -dp 1 -dt 0.1 -dc 0.1 -lw 0.1 " 
       options_vmx = "-ab 1 -ad 128 -as 56 -dj 1 -dp 1 -dt 0.1 -dc 0.1 -lw 0.1"
     end
+
+    if rad_settings == "High"
+      options_tregVars = "-e MF:1 -f tregenza.cal -b tbin -bn Ntbins"
+      options_dmx = "-ab 3 -ad 1024 -as 512 -dj 1 -dp 1 -dt 0 -dc 1 -lw 0.0001 " 
+      options_vmx = "-ab 10 -ad 65536 -as 512 -dj 1 -dp 1 -dt 0 -dc 1 -lw 1.52e-05"
+    end
+
     options_klemsDensity = ""
     options_skyvecDensity = "1"
 
