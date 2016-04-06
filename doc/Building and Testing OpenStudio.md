@@ -186,19 +186,19 @@ Sanity Testing Release Builds
 
 ### Mac
 - On a clean Mac VM, install the current version of SketchUp and OpenStudio
-- Open SketchUp, and make and save a model
+- Open SketchUp, and make and save a model.  Ensure that plug-in loads with Extensions Policy = "Identified Extensions Only".
 - Open OpenStudio, and open the model above
 - Open PAT, make a project, and select the model above as your baseline model
 
 ### 32-bit Windows
 - On a clean Windows VM, install the current 32-bit version of SketchUp and the current 32-bit version of OpenStudio
-- Open SketchUp, and make and save a model
+- Open SketchUp, and make and save a model.  Ensure that plug-in loads with Extensions Policy = "Identified Extensions Only".
 - Open OpenStudio, and open the model above
 - Open PAT, make a project, and select the model above as your baseline model
 
 ### 64-bit Windows
 - On a clean Windows VM, install the current 64-bit version of SketchUp and the current 64-bit version of OpenStudio
-- Open SketchUp, and make and save a model
+- Open SketchUp, and make and save a model.  Ensure that plug-in loads with Extensions Policy = "Identified Extensions Only".
 - Open OpenStudio, and open the model above
 - Open PAT, make a project, and select the model above as your baseline model
 
@@ -353,6 +353,21 @@ At https://github.com/NREL/OpenStudio/blob/develop/openstudiocore/src/osversion/
 - Select "History", see edits if needed (usually use `defaultUpdate` in first location, 1 line for each of 2 locations)
 
 With Git, commit above files (Commit Message = `Updating version to X.Y.Z+1`) to the develop branch
+
+SketchUp Extension Signature
+=========
+If either of the files '/openstudiocore/ruby/openstudio/sketchup_plugin/OpenStudio.rb' or '/openstudiocore/ruby/openstudio/sketchup_plugin/Startup.rb' change, then the SketchUp Extension Signature in '/openstudiocore/ruby/openstudio/sketchup_plugin/OpenStudio.hash' must be updated.  To do this:
+
+- Build an OpenStudio package
+- Copy all the files in '\Ruby\Plugins' to another directory (you should see OpenStudio.rb and an OpenStudio folder)
+- Delete the 'OpenStudio.hash' file in the copied directory
+- Zip the OpenStudio.rb and OpenStudio folders (with OpenStudio.rb being at the top level of the zip archive)
+- Change the extension of the zip file from .zip to .rbz
+- Login to https://extensions.sketchup.com/en/developer_center/extension_signature as openstudio@nrel.gov
+- Drag the .rbz file into the upload box, upload the file, push the 'Sign The Extension' button (do not select any options to encrypt the ruby files)
+- Download the signed .rbz file, extract all the files
+- Copy the new OpenStudio.hash file over the existing one in the source tree, commit the new OpenStudio.hash file
+- Rebuild the OpenStudio package
 
 AMI BUILD
 =========
