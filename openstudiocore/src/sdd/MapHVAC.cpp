@@ -2737,11 +2737,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
           znSysTypeElement.text().compare("WSHP",Qt::CaseInsensitive) == 0 ||
           ( 
             istringEqual(znSysTypeElement.text().toStdString(),"SZAC") && 
-            istringEqual(znSysFanCtrlElement.text().toStdString(),"Cycling") && 
+            istringEqual(znSysFanCtrlElement.text().toStdString(),"Cycling")
           ) ||
           ( 
             istringEqual(znSysTypeElement.text().toStdString(),"SZHP") && 
-            istringEqual(znSysFanCtrlElement.text().toStdString(),"Cycling") && 
+            istringEqual(znSysFanCtrlElement.text().toStdString(),"Cycling")
           ) ||
           ( 
             istringEqual(znSysTypeElement.text().toStdString(),"VRF") && 
