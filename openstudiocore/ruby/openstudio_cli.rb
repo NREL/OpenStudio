@@ -106,13 +106,13 @@ class CLI
   def initialize(argv)
     $main_args, $sub_command, $sub_args = split_main_and_subcommand(argv)
 
-    $logger.info("CLI: #{$main_args.inspect} #{$sub_command.inspect} #{$sub_args.inspect}")
+    $logger.info("CLI Parsed Inputs: #{$main_args.inspect} #{$sub_command.inspect} #{$sub_args.inspect}")
   end
 
   def execute
-    puts "main_args are #{$main_args}"
-    puts "sub_command is #{$sub_command}"
-    puts "Sub_args are #{$sub_args}"
+    $logger.debug "Main arguments are #{$main_args}"
+    $logger.debug "Sub-command is #{$sub_command}"
+    $logger.debug "Sub-arguments are #{$sub_args}"
     if $main_args.include?('-h') || $main_args.include?('--help')
       # Help is next in short-circuiting everything. Print
       # the help and exit.
@@ -191,7 +191,6 @@ class CLI
     end
 
     safe_puts opts.help
-    # @env.ui.info(opts.help, prefix: false) @todo rewrite
   end
 end
 
@@ -218,10 +217,16 @@ class Run
     # Parse the options
     argv = parse_options(opts)
     return 1 unless argv
-
     $logger.debug("Run command: #{argv.inspect} #{options.inspect}")
 
-    osw_path = parse_options(opts)
+    argv.shift # @todo (rhorsey) figure out why run is prepended to the file argv...
+    osw_path = argv.shift.to_s
+    $logger.debug "Path for the OSW: #{osw_path}"
+
+    unless argv == []
+      $logger.error 'Extra arguments passed to the run command. Please refer to the help documentation.'
+      return 1
+    end
 
     adapter_options = {workflow_filename: File.basename(osw_path)}
     adapter = OpenStudio::Workflow.load_adapter 'local', adapter_options
@@ -229,14 +234,14 @@ class Run
     k = OpenStudio::Workflow::Run.new adapter, File.dirname(osw_path), run_options
     k.run
     # Success, exit status 0
-    0
+    return 0
   end
 end
 
 # FROM VAGRANT bin - the code used to invoke the CLI action
 # Split arguments by "--" if its there, we'll recombine them later
 $argv = ARGV.dup
-puts "input argv is #{$argv}"
+$logger.debug "Input ARGV is #{$argv}"
 
 # Execute the CLI interface, and exit with the proper error code
 CLI.new($argv).execute
