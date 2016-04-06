@@ -2,8 +2,8 @@
   <schema_version>3.0</schema_version>
   <name>radiance_measure</name>
   <uid>1e3cfef8-b051-4e60-8bb0-ed2d29d4f45d</uid>
-  <version_id>c4a23259-c1b5-48c9-8817-949fe4af681a</version_id>
-  <version_modified>20160317T154911Z</version_modified>
+  <version_id>7657df73-d022-4872-8c9d-448d4d630ea3</version_id>
+  <version_modified>20160331T220901Z</version_modified>
   <xml_checksum>381B7733</xml_checksum>
   <class_name>RadianceMeasure</class_name>
   <display_name>Radiance Daylighting Measure</display_name>
@@ -55,7 +55,7 @@
     <argument>
       <name>rad_settings</name>
       <display_name>Radiance Settings</display_name>
-      <description>The measure reads Radiance simulation parameters from the "Model" by default. The "Testing" option can be used for testing your model with the Radiance workflow; it uses very crude parameters for a fast simulation but produces very inaccurate results.</description>
+      <description>The measure gets the Radiance simulation parameters from the "Model" by default. "High" will force high-quality simulation paramaters, and "Testing" uses very crude parameters for a fast simulation but produces very inaccurate results.</description>
       <type>Choice</type>
       <required>true</required>
       <model_dependent>false</model_dependent>
@@ -68,6 +68,10 @@
         <choice>
           <value>Testing</value>
           <display_name>Testing</display_name>
+        </choice>
+        <choice>
+          <value>High</value>
+          <display_name>High</display_name>
         </choice>
       </choices>
     </argument>
@@ -155,6 +159,12 @@
       <checksum>13FF1228</checksum>
     </file>
     <file>
+      <filename>radiance_measure_test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>C2C8BCD2</checksum>
+    </file>
+    <file>
       <version>
         <software_program>OpenStudio</software_program>
         <identifier>1.7.0</identifier>
@@ -163,13 +173,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>09C4459A</checksum>
-    </file>
-    <file>
-      <filename>radiance_measure_test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>C2C8BCD2</checksum>
+      <checksum>73879C56</checksum>
     </file>
   </files>
 </measure>
