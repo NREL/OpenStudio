@@ -1,4 +1,7 @@
+#!/usr/bin/env ruby
+
 require 'openstudio-workflow'
+require 'optparse'
 
 $logger = Logger.new(STDOUT)
 
@@ -10,8 +13,8 @@ $logger = Logger.new(STDOUT)
 def safe_puts(message=nil, opts=nil)
   message ||= ''
   opts = {
-    io: $stdout,
-    printer: :puts
+      io: $stdout,
+      printer: :puts
   }.merge(opts || {})
 
   begin
@@ -91,13 +94,13 @@ end
 class CLI
 
   COMMAND_LIST = {
-    run: [{ ::Run }, [{primary: true, working: false}]],
-    apply_measure: [{ ::ApplyMeasure }, [{primary: true, working: false}]],
-    gem_install: [{ ::InstallGem }, [primary: true, working: false]],
-    e: [{ ::ExecuteRubyScript }, [primary: false, working: false]],
-    i: [{ ::InteractiveRubyShell }, [primary: false, working: false]],
-    openstudio_version: [{ ::OpenStudioVersion }, [primary: true, working: false]],
-    energyplus_version: [{ ::EnergyPlusVersion }, [primary: true, working: false]]
+      run: [ Proc.new { ::Run }, {primary: true, working: false}]#,
+      #apply_measure: [ Proc.new { ::ApplyMeasure }, {primary: true, working: false}],
+      #gem_install: [ Proc.new { ::InstallGem }, {primary: true, working: false}],
+      #e: [ Proc.new { ::ExecuteRubyScript }, {primary: false, working: false}],
+      #i: [ Proc.new { ::InteractiveRubyShell }, {primary: false, working: false}],
+      #openstudio_version: [ Proc.new { ::OpenStudioVersion }, {primary: true, working: false}],
+      #energyplus_version: [ Proc.new { ::EnergyPlusVersion }, {primary: true, working: false}]
   }
 
   def initialize(argv)
@@ -107,6 +110,9 @@ class CLI
   end
 
   def execute
+    puts "main_args are #{$main_args}"
+    puts "sub_command is #{$sub_command}"
+    puts "Sub_args are #{$sub_args}"
     if $main_args.include?('-h') || $main_args.include?('--help')
       # Help is next in short-circuiting everything. Print
       # the help and exit.
@@ -122,6 +128,7 @@ class CLI
     end
 
     if !command_plugin || !$sub_command
+      puts "Should print help"
       help
       return 1
     end
@@ -132,7 +139,7 @@ class CLI
     # Initialize and execute the command class, returning the exit status.
     result = 0
     begin
-      result = command_class.new($sub_args).execute
+      result = command_class.new.execute($sub_args)
     rescue Interrupt
       $logger.error '?'
       result = 1
@@ -172,7 +179,7 @@ class CLI
 
       commands.keys.sort.each do |key|
         o.separator "     #{key.ljust(longest+2)} #{commands[key]}"
-        # @env.ui.machine("cli-command", key.dup) # @todo What to do with this? 
+        # @env.ui.machine("cli-command", key.dup) # @todo What to do with this?
       end
 
       o.separator ''
@@ -183,16 +190,17 @@ class CLI
       o.separator '`openstudio-cli list-commands`.'
     end
 
+    safe_puts opts.help
     # @env.ui.info(opts.help, prefix: false) @todo rewrite
   end
 end
 
-class Run < ::Command
+class Run
   def self.synopsis
     'Executes an OpenStudio Workflow file'
   end
 
-  def execute
+  def execute(opts)
     options = {}
     options[:debug] = false
 
@@ -212,7 +220,7 @@ class Run < ::Command
     return 1 unless argv
 
     $logger.debug("Run command: #{argv.inspect} #{options.inspect}")
-    
+
     osw_path = parse_options(opts)
 
     adapter_options = {workflow_filename: File.basename(osw_path)}
@@ -221,31 +229,14 @@ class Run < ::Command
     k = OpenStudio::Workflow::Run.new adapter, File.dirname(osw_path), run_options
     k.run
     # Success, exit status 0
-    0 
+    0
   end
 end
 
 # FROM VAGRANT bin - the code used to invoke the CLI action
 # Split arguments by "--" if its there, we'll recombine them later
 $argv = ARGV.dup
-argv_extra = []
-if idx == argv.index('--') # @todo WTW is idx? In bin/vagrant idx also shows up with no initialization, so huh?
-  argv_extra = argv.slice(idx+1, argv.length-2)
-  $argv = $argv.slice(0, idx)
-end
-
-# Fast path the version of OpenStudio
-if $argv.include?('-v') || $argv.include?('--version')
-  require 'openstudio'
-  safe_puts "Openstudio #{Openstudio::openStudioLongVersion}"
-  exit 0
-end
-
-# Recombine the arguments
-unless argv_extra.empty?
-  $argv << '--'
-  $argv += argv_extra
-end
+puts "input argv is #{$argv}"
 
 # Execute the CLI interface, and exit with the proper error code
 CLI.new($argv).execute
