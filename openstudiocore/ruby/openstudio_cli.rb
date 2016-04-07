@@ -1,12 +1,16 @@
 #!/usr/bin/env ruby
 
+Signal.trap('INT') { abort }
+
 require 'openstudio-workflow'
 require 'optparse'
 require 'irb'
 
 $logger = Logger.new(STDOUT)
+$logger.level = Logger::WARN
 
-# This is the code chunk to allow for an embedded IRB shell. Written by Jason Roelofs, found on StackOverflow
+
+# This is the code chunk to allow for an embedded IRB shell. Provided by Jason Roelofs, found on StackOverflow
 module IRB # :nodoc:
   def self.start_session(binding)
     unless @__initialized
@@ -56,10 +60,10 @@ end
 #
 # @return[nil, If this method returns `nil`, then you should assume that help was printed and parsing failed
 #
-def parse_options(opts=nil)
+def parse_options(opts=nil, argv=nil)
   # Creating a shallow copy of the arguments so the OptionParser
   # doesn't destroy the originals.
-  argv = $argv.dup
+  argv ||= $argv.dup
 
   # Default opts to a blank optionparser if none is given
   opts ||= OptionParser.new
@@ -121,12 +125,13 @@ class CLI
   COMMAND_LIST = {
       run: [ Proc.new { ::Run }, {primary: true, working: true}],
       apply_measure: [ Proc.new { ::ApplyMeasure }, {primary: true, working: false}],
-      gem_install: [ Proc.new { ::InstallGem }, {primary: true, working: false}],
+      gem_install: [ Proc.new { ::InstallGem }, {primary: false, working: true}],
       e: [ Proc.new { ::ExecuteRubyScript }, {primary: false, working: true}],
       i: [ Proc.new { ::InteractiveRubyShell }, {primary: false, working: true}],
       openstudio_version: [ Proc.new { ::OpenStudioVersion }, {primary: true, working: true}],
       energyplus_version: [ Proc.new { ::EnergyPlusVersion }, {primary: true, working: true}],
-      ruby_version: [ Proc.new { ::RubyVersion }, {primary: true, working: true}]
+      ruby_version: [ Proc.new { ::RubyVersion }, {primary: false, working: true}],
+      list_commands: [ Proc.new { ::ListCommands }, {primary: true, working: true}]
   }
 
   def initialize(argv)
@@ -154,7 +159,6 @@ class CLI
     end
 
     if !command_plugin || !$sub_command
-      puts "Should print help"
       help
       return 1
     end
@@ -176,12 +180,12 @@ class CLI
   end
 
   # This prints out the help for the CLI.
-  def help
+  def help(list_all=false)
     opts = OptionParser.new do |o|
-      o.banner = 'Usage: vagrant [options] <command> [<args>]'
+      o.banner = 'Usage: openstudio_cli [options] <command> [<args>]'
       o.separator ''
-      o.on('-v', '--version', 'Print the version and exit.')
       o.on('-h', '--help', 'Print this help.')
+      o.on('--debug', 'Print the debugging log to STDOUT')
       o.separator ''
       o.separator 'Common commands:'
 
@@ -192,7 +196,7 @@ class CLI
       COMMAND_LIST.each do |key, data|
         # Skip non-primary commands. These only show up in extended
         # help output.
-        next unless data[1][:primary]
+        next unless data[1][:primary] unless list_all
 
         key           = key.to_s
         klass         = data[0].call
@@ -202,15 +206,16 @@ class CLI
 
       commands.keys.sort.each do |key|
         o.separator "     #{key.ljust(longest+2)} #{commands[key]}"
-        # @env.ui.machine("cli-command", key.dup) # @todo What to do with this?
       end
 
       o.separator ''
-      o.separator 'For help on any individual command run `openstudio-cli COMMAND -h`'
-      o.separator ''
-      o.separator 'Additional subcommands are available, but are either more advanced'
-      o.separator 'or not commonly used. To see all subcommands, run the command'
-      o.separator '`openstudio-cli list-commands`.'
+      o.separator 'For help on any individual command run `openstudio_cli COMMAND -h`'
+      unless list_all
+        o.separator ''
+        o.separator 'Additional subcommands are available, but are either more advanced'
+        o.separator 'or not commonly used. To see all subcommands, run the command'
+        o.separator '`openstudio_cli list_commands`.'
+      end
     end
 
     safe_puts opts.help
@@ -222,12 +227,12 @@ class Run
     'Executes an OpenStudio Workflow file'
   end
 
-  def execute(opts)
+  def execute(sub_argv)
     options = {}
     options[:debug] = false
 
     opts = OptionParser.new do |o|
-      o.banner = 'Usage: openstudio-cli run [options] [file]'
+      o.banner = 'Usage: openstudio_cli run [options] [file]'
       o.separator ''
       o.separator 'Options:'
       o.separator ''
@@ -238,12 +243,13 @@ class Run
     end
 
     # Parse the options
-    argv = parse_options(opts)
+    argv = parse_options(opts, sub_argv)
+    return 0 if argv == nil
     return 1 unless argv
     $logger.debug("Run command: #{argv.inspect} #{options.inspect}")
 
-    argv.shift # @todo (rhorsey) figure out why run is prepended to the file argv...
     osw_path = argv.shift.to_s
+    osw_path = File.absolute_path(File.join(Dir.pwd, osw_path)) unless Pathname.new(osw_path).absolute?
     $logger.debug "Path for the OSW: #{osw_path}"
 
     unless argv == []
@@ -256,8 +262,8 @@ class Run
     run_options = options[:debug] ? {debug: true} : {}
     k = OpenStudio::Workflow::Run.new adapter, File.dirname(osw_path), run_options
     k.run
-    # Success, exit status 0
-    return 0
+
+    0
   end
 end
 
@@ -266,49 +272,51 @@ class ApplyMeasure
     'Applies an OpenStudio, EnergyPlus, or Reporting measure'
   end
 
-  def execute(opts)
-    options = {}
-    options[:debug] = false
+  def execute(sub_argv)
+    # options = {}
+    # options[:debug] = false
 
-    opts = OptionParser.new do |o|
-      o.banner = 'Usage: openstudio_cli apply_measure'
-      o.separator ''
-      o.separator 'Options:'
-      o.separator ''
-    end
+    # opts = OptionParser.new do |o|
+    #   o.banner = 'Usage: openstudio_cli apply_measure'
+    #   o.separator ''
+    #   o.separator 'Options:'
+    #   o.separator ''
+    # end
 
     $logger.error 'This interface has yet to be defined.'
 
-    0
+    # Parse the options
+    # argv = parse_options(opts, sub_argv)
+    # return 1 unless argv
+    # $logger.debug("ApplyMeasure command: #{argv.inspect} #{options.inspect}")
+
+    1
   end
 end
 
-# Install gems @todo (kbenne) We need to figure out what the right thing to do here is for Packaging... See below
+# Install gems
 class InstallGem
   def self.synopsis
     'Installs a Gem using the embedded ruby'
   end
 
-  def execute(opts)
-    options = {}
-
-    opts = OptionParser.new do |o|
-      o.banner = 'Usage: openstudio_cli gem_install [gem] [options]'
-      o.separator ''
-      o.separator 'Options:'
-      o.separator ''
-    end
+  def execute(sub_argv)
+    require 'rubygems'
+    require 'rubygems/gem_runner'
 
     # Parse the options
-    argv = parse_options(opts)
-    return 1 unless argv
-    $logger.debug("GemInstall command: #{argv.inspect} #{options.inspect}")
+    argv = sub_argv.unshift('install')
+    $logger.debug("GemInstall command: #{argv.inspect}")
+    $logger.debug "Invoking the GemRunner with argv: #{argv}"
 
-    argv.shift # @todo (rhorsey) figure out why run is prepended to the file argv...
+    begin
+      Gem::GemRunner.new.run argv
+    rescue => e
+      $logger.error "Error installing gem: #{e.message} in #{e.backtrace.join("\n")}"
+      exit e.exit_code
+    end
 
-    # @todo (jason degraw) https://github.com/rubygems/rubygems/blob/master/bin/gem has the code we need to run, with
-    #   a copywrite. Thoughts on what to do?
-    $logger.error 'gem_install is not currently supported'
+    $logger.info 'The gem was successfully installed'
 
     0
   end
@@ -319,7 +327,7 @@ class ExecuteRubyScript
     'Executes a ruby file'
   end
 
-  def execute(opts)
+  def execute(sub_argv)
     options = {}
     options[:debug] = false
 
@@ -328,24 +336,20 @@ class ExecuteRubyScript
     end
 
     # Parse the options
-    argv = parse_options(opts)
+    argv = parse_options(opts, sub_argv)
+    return 0 if argv == nil
     return 1 unless argv
     $logger.debug("ExecuteRubyScript command: #{argv.inspect} #{options.inspect}")
-
-    argv.shift # @todo (rhorsey) figure out why run is prepended to the file argv...
     file_path = argv.shift.to_s
-    $logger.debug "Path for the file to run: #{osw_path}"
+    file_path = File.absolute_path(File.join(Dir.pwd, file_path)) unless Pathname.new(file_path).absolute?
+    $logger.debug "Path for the file to run: #{file_path}"
 
     unless argv == []
       $logger.error 'Extra arguments passed to the e command. Please refer to the help documentation.'
       return 1
     end
 
-    adapter_options = {workflow_filename: File.basename(osw_path)}
-    adapter = OpenStudio::Workflow.load_adapter 'local', adapter_options
-    run_options = options[:debug] ? {debug: true} : {}
-    k = OpenStudio::Workflow::Run.new adapter, File.dirname(osw_path), run_options
-    k.run
+    require file_path
 
     0
   end
@@ -356,7 +360,7 @@ class InteractiveRubyShell
     'Provides an interactive ruby shell'
   end
 
-  def execute(opts)
+  def execute(sub_argv)
     options = {}
 
     opts = OptionParser.new do |o|
@@ -364,10 +368,9 @@ class InteractiveRubyShell
     end
 
     # Parse the options
-    argv = parse_options(opts)
+    argv = parse_options(opts, sub_argv)
     $logger.debug("InteractiveRubyShell command: #{argv.inspect} #{options.inspect}")
-
-    argv.shift # @todo (rhorsey) figure out why run is prepended to the file argv...
+    return 0 if argv == nil
 
     unless argv == []
       $logger.error 'Extra arguments passed to the i command.'
@@ -385,7 +388,7 @@ class OpenStudioVersion
     'Returns the OpenStudio version used by the CLI'
   end
 
-  def execute(opts)
+  def execute(sub_argv)
     options = {}
 
     opts = OptionParser.new do |o|
@@ -393,10 +396,9 @@ class OpenStudioVersion
     end
 
     # Parse the options
-    argv = parse_options(opts)
+    argv = parse_options(opts, sub_argv)
     $logger.debug("OpenStudioVersion command: #{argv.inspect} #{options.inspect}")
-
-    argv.shift # @todo (rhorsey) figure out why run is prepended to the file argv...
+    return 0 if argv == nil
 
     unless argv == []
       $logger.error 'Extra arguments passed to the openstudio_version command.'
@@ -414,7 +416,7 @@ class EnergyPlusVersion
     'Returns the EnergyPlus version used by the CLI'
   end
 
-  def execute(opts)
+  def execute(sub_argv)
     options = {}
 
     opts = OptionParser.new do |o|
@@ -422,10 +424,9 @@ class EnergyPlusVersion
     end
 
     # Parse the options
-    argv = parse_options(opts)
+    argv = parse_options(opts, sub_argv)
     $logger.debug("EnergyPlusVersion command: #{argv.inspect} #{options.inspect}")
-
-    argv.shift # @todo (rhorsey) figure out why run is prepended to the file argv...
+    return 0 if argv == nil
 
     unless argv == []
       $logger.error 'Arguments passed to the energyplus_version command.'
@@ -443,7 +444,7 @@ class RubyVersion
     'Returns the Ruby version used by the CLI'
   end
 
-  def execute(opts)
+  def execute(sub_argv)
     options = {}
 
     opts = OptionParser.new do |o|
@@ -451,10 +452,9 @@ class RubyVersion
     end
 
     # Parse the options
-    argv = parse_options(opts)
+    argv = parse_options(opts, sub_argv)
     $logger.debug("RubyVersion command: #{argv.inspect} #{options.inspect}")
-
-    argv.shift # @todo (rhorsey) figure out why run is prepended to the file argv...
+    return 0 if argv == nil
 
     unless argv == []
       $logger.error 'Arguments passed to the ruby_version command.'
@@ -467,9 +467,42 @@ class RubyVersion
   end
 end
 
+class ListCommands
+  def self.synopsis
+    'Lists the entire set of available commands for openstudio_cli'
+  end
+
+  def execute(sub_argv)
+    options = {}
+
+    opts = OptionParser.new do |o|
+      o.banner = 'Usage: openstudio_cli list_commands'
+    end
+
+    # Parse the options
+    argv = parse_options(opts, sub_argv)
+    $logger.debug("ListCommands command: #{argv.inspect} #{options.inspect}")
+    return 0 if argv == nil
+
+    unless argv == []
+      $logger.error 'Arguments passed to the list_commands command.'
+      return 1
+    end
+
+    $logger.debug 'Creating a new CLI instance and calling help with list_all enabled'
+    ::CLI.new([]).help(true)
+
+    0
+  end
+end
+
 # FROM VAGRANT bin - the code used to invoke the CLI action
 # Split arguments by "--" if its there, we'll recombine them later
 $argv = ARGV.dup
+if $argv.include? '--debug'
+  $logger.level = Logger::DEBUG
+  $argv.delete '--debug'
+end
 $logger.debug "Input ARGV is #{$argv}"
 
 # Execute the CLI interface, and exit with the proper error code
