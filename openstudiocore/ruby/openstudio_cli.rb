@@ -2,8 +2,33 @@
 
 require 'openstudio-workflow'
 require 'optparse'
+require 'irb'
 
 $logger = Logger.new(STDOUT)
+
+# This is the code chunk to allow for an embedded IRB shell. Written by Jason Roelofs, found on StackOverflow
+module IRB # :nodoc:
+  def self.start_session(binding)
+    unless @__initialized
+      args = ARGV
+      ARGV.replace(ARGV.dup)
+      IRB.setup(nil)
+      ARGV.replace(args)
+      @__initialized = true
+    end
+
+    workspace = WorkSpace.new(binding)
+
+    irb = Irb.new(workspace)
+
+    @CONF[:IRB_RC].call(irb.context) if @CONF[:IRB_RC]
+    @CONF[:MAIN_CONTEXT] = irb.context
+
+    catch(:IRB_EXIT) do
+      irb.eval_input
+    end
+  end
+end
 
 # This is the save puts to use to catch EPIPE. Uses `puts` on the given IO object and safely ignores any Errno::EPIPE
 #
@@ -94,13 +119,14 @@ end
 class CLI
 
   COMMAND_LIST = {
-      run: [ Proc.new { ::Run }, {primary: true, working: false}]#,
-      #apply_measure: [ Proc.new { ::ApplyMeasure }, {primary: true, working: false}],
-      #gem_install: [ Proc.new { ::InstallGem }, {primary: true, working: false}],
-      #e: [ Proc.new { ::ExecuteRubyScript }, {primary: false, working: false}],
-      #i: [ Proc.new { ::InteractiveRubyShell }, {primary: false, working: false}],
-      #openstudio_version: [ Proc.new { ::OpenStudioVersion }, {primary: true, working: false}],
-      #energyplus_version: [ Proc.new { ::EnergyPlusVersion }, {primary: true, working: false}]
+      run: [ Proc.new { ::Run }, {primary: true, working: true}],
+      apply_measure: [ Proc.new { ::ApplyMeasure }, {primary: true, working: false}],
+      gem_install: [ Proc.new { ::InstallGem }, {primary: true, working: false}],
+      e: [ Proc.new { ::ExecuteRubyScript }, {primary: false, working: true}],
+      i: [ Proc.new { ::InteractiveRubyShell }, {primary: false, working: true}],
+      openstudio_version: [ Proc.new { ::OpenStudioVersion }, {primary: true, working: true}],
+      energyplus_version: [ Proc.new { ::EnergyPlusVersion }, {primary: true, working: true}],
+      ruby_version: [ Proc.new { ::RubyVersion }, {primary: true, working: true}]
   }
 
   def initialize(argv)
@@ -151,9 +177,6 @@ class CLI
 
   # This prints out the help for the CLI.
   def help
-    # We use the optionparser for this. Its just easier. We don't use
-    # an optionparser above because I don't think the performance hits
-    # of creating a whole object are worth checking only a couple flags.
     opts = OptionParser.new do |o|
       o.banner = 'Usage: vagrant [options] <command> [<args>]'
       o.separator ''
@@ -235,6 +258,212 @@ class Run
     k.run
     # Success, exit status 0
     return 0
+  end
+end
+
+class ApplyMeasure
+  def self.synopsis
+    'Applies an OpenStudio, EnergyPlus, or Reporting measure'
+  end
+
+  def execute(opts)
+    options = {}
+    options[:debug] = false
+
+    opts = OptionParser.new do |o|
+      o.banner = 'Usage: openstudio_cli apply_measure'
+      o.separator ''
+      o.separator 'Options:'
+      o.separator ''
+    end
+
+    $logger.error 'This interface has yet to be defined.'
+
+    0
+  end
+end
+
+# Install gems @todo (kbenne) We need to figure out what the right thing to do here is for Packaging... See below
+class InstallGem
+  def self.synopsis
+    'Installs a Gem using the embedded ruby'
+  end
+
+  def execute(opts)
+    options = {}
+
+    opts = OptionParser.new do |o|
+      o.banner = 'Usage: openstudio_cli gem_install [gem] [options]'
+      o.separator ''
+      o.separator 'Options:'
+      o.separator ''
+    end
+
+    # Parse the options
+    argv = parse_options(opts)
+    return 1 unless argv
+    $logger.debug("GemInstall command: #{argv.inspect} #{options.inspect}")
+
+    argv.shift # @todo (rhorsey) figure out why run is prepended to the file argv...
+
+    # @todo (jason degraw) https://github.com/rubygems/rubygems/blob/master/bin/gem has the code we need to run, with
+    #   a copywrite. Thoughts on what to do?
+    $logger.error 'gem_install is not currently supported'
+
+    0
+  end
+end
+
+class ExecuteRubyScript
+  def self.synopsis
+    'Executes a ruby file'
+  end
+
+  def execute(opts)
+    options = {}
+    options[:debug] = false
+
+    opts = OptionParser.new do |o|
+      o.banner = 'Usage: openstudio_cli e [file]'
+    end
+
+    # Parse the options
+    argv = parse_options(opts)
+    return 1 unless argv
+    $logger.debug("ExecuteRubyScript command: #{argv.inspect} #{options.inspect}")
+
+    argv.shift # @todo (rhorsey) figure out why run is prepended to the file argv...
+    file_path = argv.shift.to_s
+    $logger.debug "Path for the file to run: #{osw_path}"
+
+    unless argv == []
+      $logger.error 'Extra arguments passed to the e command. Please refer to the help documentation.'
+      return 1
+    end
+
+    adapter_options = {workflow_filename: File.basename(osw_path)}
+    adapter = OpenStudio::Workflow.load_adapter 'local', adapter_options
+    run_options = options[:debug] ? {debug: true} : {}
+    k = OpenStudio::Workflow::Run.new adapter, File.dirname(osw_path), run_options
+    k.run
+
+    0
+  end
+end
+
+class InteractiveRubyShell
+  def self.synopsis
+    'Provides an interactive ruby shell'
+  end
+
+  def execute(opts)
+    options = {}
+
+    opts = OptionParser.new do |o|
+      o.banner = 'Usage: openstudio_cli i'
+    end
+
+    # Parse the options
+    argv = parse_options(opts)
+    $logger.debug("InteractiveRubyShell command: #{argv.inspect} #{options.inspect}")
+
+    argv.shift # @todo (rhorsey) figure out why run is prepended to the file argv...
+
+    unless argv == []
+      $logger.error 'Extra arguments passed to the i command.'
+      return 1
+    end
+
+    IRB.start_session(binding)
+
+    0
+  end
+end
+
+class OpenStudioVersion
+  def self.synopsis
+    'Returns the OpenStudio version used by the CLI'
+  end
+
+  def execute(opts)
+    options = {}
+
+    opts = OptionParser.new do |o|
+      o.banner = 'Usage: openstudio_cli openstudio_version'
+    end
+
+    # Parse the options
+    argv = parse_options(opts)
+    $logger.debug("OpenStudioVersion command: #{argv.inspect} #{options.inspect}")
+
+    argv.shift # @todo (rhorsey) figure out why run is prepended to the file argv...
+
+    unless argv == []
+      $logger.error 'Extra arguments passed to the openstudio_version command.'
+      return 1
+    end
+
+    safe_puts OpenStudio.openStudioLongVersion
+
+    0
+  end
+end
+
+class EnergyPlusVersion
+  def self.synopsis
+    'Returns the EnergyPlus version used by the CLI'
+  end
+
+  def execute(opts)
+    options = {}
+
+    opts = OptionParser.new do |o|
+      o.banner = 'Usage: openstudio_cli energyplus_version'
+    end
+
+    # Parse the options
+    argv = parse_options(opts)
+    $logger.debug("EnergyPlusVersion command: #{argv.inspect} #{options.inspect}")
+
+    argv.shift # @todo (rhorsey) figure out why run is prepended to the file argv...
+
+    unless argv == []
+      $logger.error 'Arguments passed to the energyplus_version command.'
+      return 1
+    end
+
+    safe_puts OpenStudio.energyPlusVersion
+
+    0
+  end
+end
+
+class RubyVersion
+  def self.synopsis
+    'Returns the Ruby version used by the CLI'
+  end
+
+  def execute(opts)
+    options = {}
+
+    opts = OptionParser.new do |o|
+      o.banner = 'Usage: openstudio_cli ruby_version'
+    end
+
+    # Parse the options
+    argv = parse_options(opts)
+    $logger.debug("RubyVersion command: #{argv.inspect} #{options.inspect}")
+
+    argv.shift # @todo (rhorsey) figure out why run is prepended to the file argv...
+
+    unless argv == []
+      $logger.error 'Arguments passed to the ruby_version command.'
+      return 1
+    end
+
+    safe_puts RUBY_VERSION
+
+    0
   end
 end
 
