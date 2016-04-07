@@ -187,6 +187,9 @@ add_custom_command(
           "-ruby"
           "-c++"
           -o "${CMAKE_CURRENT_BINARY_DIR}/EmbeddedScriptingRUBY_wrap.cxx"
+	  "-fvirtual"
+	  "-D_WINDOWS"
+	  "-Fmicrosoft"
           "${CMAKE_CURRENT_SOURCE_DIR}/EmbeddedScripting.i"
   DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/EmbeddedScripting.i"
           "embedded_files.hpp"
@@ -196,56 +199,70 @@ set_source_files_properties(${EMBED_SOURCE_FILES} PROPERTIES HEADER_FILE_ONLY TR
 
 add_executable(EmbeddedScripting
  main.cpp
+ #"${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
  RubyException.hpp
  RubyInterpreter.hpp
  embedded_files.hpp
  "${CMAKE_CURRENT_BINARY_DIR}/embedded_files.cxx"
- "${CMAKE_CURRENT_BINARY_DIR}/EmbeddedScriptingRUBY_wrap.cxx"
+ #"${CMAKE_CURRENT_BINARY_DIR}/EmbeddedScriptingRUBY_wrap.cxx"
  ${EMBED_SOURCE_FILES} 
 )
 
+set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/EmbeddedScriptingRUBY_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED")
+
+set(ENCODING_LIB "")
+set(TRANSLATION_LIB "")
+if( UNIX )
+  set(ENCODING_LIB "${RUBY_SOURCE_DIR}/enc/libenc.a")
+  set(TRANSLATION_LIB "${RUBY_SOURCE_DIR}/enc/libtrans.a")
+else()
+  target_link_libraries(EmbeddedScripting wsock32 ws2_32 Iphlpapi Dbghelp Shlwapi)
+  set(ENCODING_LIB "${RUBY_SOURCE_DIR}/enc/libenc.lib")
+  set(TRANSLATION_LIB "${RUBY_SOURCE_DIR}/enc/libtrans.lib")
+endif()
+
 target_link_libraries(EmbeddedScripting 
  ${EXTENSION_LIBS} 
- "${RUBY_SOURCE_DIR}/enc/libenc.a"
- "${RUBY_SOURCE_DIR}/enc/libtrans.a"
- #ruby_OpenStudioAirflow
- ruby_OpenStudioModelCore
- ruby_OpenStudioModelSimulation
- ruby_OpenStudioUtilitiesCore
- ruby_OpenStudioUtilitiesPlot
- ##ruby_OpenStudioEnergyPlus
- ##ruby_OpenStudioModelEditor
- ##ruby_OpenStudioOSVersion
- ruby_OpenStudioUtilitiesData
- ruby_OpenStudioUtilitiesSql
- ##ruby_OpenStudioGBXML
- ##ruby_OpenStudioModelGenerators
- ##ruby_OpenStudioRadiance
- ruby_OpenStudioUtilitiesEconomics
- ruby_OpenStudioUtilitiesTime
- ##ruby_OpenStudioISOModel
- ruby_OpenStudioModelGeometry
- ##ruby_OpenStudioSDD
- ruby_OpenStudioUtilitiesFileTypes
- ruby_OpenStudioUtilitiesUnits
- ##ruby_OpenStudioLib
- ruby_OpenStudioModelHVAC
- ruby_OpenStudioUtilities
- ruby_OpenStudioUtilitiesGeometry
- ##ruby_OpenStudioMeasure
- ruby_OpenStudioModelRefrigeration
- ruby_OpenStudioUtilitiesBCL
- ruby_OpenStudioUtilitiesIdd
- ruby_OpenStudioModel
- ruby_OpenStudioModelResources
- ruby_OpenStudioUtilitiesCloud
- ruby_OpenStudioUtilitiesIdf
+ ${ENCODING_LIB}
+ ${TRANSLATION_LIB}
+ ##ruby_OpenStudioAirflow
+ #ruby_OpenStudioModelCore
+ #ruby_OpenStudioModelSimulation
+ #ruby_OpenStudioUtilitiesCore
+ #ruby_OpenStudioUtilitiesPlot
+ ###ruby_OpenStudioEnergyPlus
+ ###ruby_OpenStudioModelEditor
+ ###ruby_OpenStudioOSVersion
+ #ruby_OpenStudioUtilitiesData
+ #ruby_OpenStudioUtilitiesSql
+ ###ruby_OpenStudioGBXML
+ ###ruby_OpenStudioModelGenerators
+ ###ruby_OpenStudioRadiance
+ #ruby_OpenStudioUtilitiesEconomics
+ #ruby_OpenStudioUtilitiesTime
+ ###ruby_OpenStudioISOModel
+ #ruby_OpenStudioModelGeometry
+ ###ruby_OpenStudioSDD
+ #ruby_OpenStudioUtilitiesFileTypes
+ #ruby_OpenStudioUtilitiesUnits
+ ###ruby_OpenStudioLib
+ #ruby_OpenStudioModelHVAC
+ #ruby_OpenStudioUtilities
+ #ruby_OpenStudioUtilitiesGeometry
+ ###ruby_OpenStudioMeasure
+ #ruby_OpenStudioModelRefrigeration
+ #ruby_OpenStudioUtilitiesBCL
+ #ruby_OpenStudioUtilitiesIdd
+ #ruby_OpenStudioModel
+ #ruby_OpenStudioModelResources
+ #ruby_OpenStudioUtilitiesCloud
+ #ruby_OpenStudioUtilitiesIdf
 )
 
 target_link_libraries(EmbeddedScripting 
-  openstudio_utilities
-  ${Boost_LIBRARIES}
-  ${QT_LIBS}
+	#openstudio_utilities
+  	#${Boost_LIBRARIES}
+  	#${QT_LIBS}
 )
 
 if (UNIX AND NOT APPLE)
@@ -253,6 +270,7 @@ if (UNIX AND NOT APPLE)
 else()
   target_link_libraries(EmbeddedScripting ${RUBY_LIBRARY} )
 endif()
+
 
 if( APPLE )
   target_link_libraries(EmbeddedScripting ${COREFOUNDATION_LIBRARY} )
