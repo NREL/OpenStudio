@@ -986,7 +986,6 @@ set(all_exe_targets
   OpenStudio
   litesql-gen
   ResultsViewer
-  Pat
 )
 
 if(UNIX AND NOT APPLE)
