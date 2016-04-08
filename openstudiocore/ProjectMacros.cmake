@@ -302,7 +302,6 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     ${SWIG_WRAPPER}
   )
 
-
   AddPCH(${swig_target})
 
   # run rdoc
@@ -327,24 +326,16 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   #endif()
 
 
-  #if(MSVC)
-  #  # if visual studio 2010 or greater
-  #  if(NOT (${MSVC_VERSION} LESS 1600))
-  #    # trouble with macro redefinition in win32.h of Ruby
-  #    set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4005 /wd4996") ## /wd4996 suppresses deprecated warning
-  #  else()
-  #    set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996") ## /wd4996 suppresses deprecated warning
-  #  endif()
-  #elseif(UNIX)
-  #  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  #    # Prevent excessive warnings from generated swig files, suppress deprecated declarations
-  #    set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations")
-  #  else()
-  #    set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
-  #  endif()
-  #endif()
-  #set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-keep_private_externs -DSWIGRUNTIME -Wno-deprecated-declarations -weak_library")
-  set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED -Wno-dynamic-class-memaccess -Wno-deprecated-declarations ")
+  if(MSVC)
+    set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-DRUBY_EXTCONF_H=<osruby_config.h> -DRUBY_EMBEDDED /bigobj /wd4996") ## /wd4996 suppresses deprecated warning
+  elseif(UNIX)
+    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+      # Prevent excessive warnings from generated swig files, suppress deprecated declarations
+      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations")
+    else()
+      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
+    endif()
+  endif()
 
   #if(CMAKE_COMPILER_IS_GNUCXX)
   #  if(GCC_VERSION VERSION_GREATER 4.6 OR GCC_VERSION VERSION_EQUAL 4.6)
@@ -355,10 +346,10 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   #endif()
 
   set_target_properties(${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/ruby/")
-  if(RUBY_VERSION_MAJOR EQUAL "2" AND MSVC)
-    # Ruby 2 requires modules to have a .so extension, even on windows
-    set_target_properties(${swig_target} PROPERTIES SUFFIX ".so")
-  endif()
+  #if(RUBY_VERSION_MAJOR EQUAL "2" AND MSVC)
+  #  # Ruby 2 requires modules to have a .so extension, even on windows
+  #  set_target_properties(${swig_target} PROPERTIES SUFFIX ".so")
+  #endif()
   set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/ruby/")
   set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/")
   target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS} ${RUBY_LIBRARY})

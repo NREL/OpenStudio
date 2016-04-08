@@ -739,10 +739,10 @@ class RubyInterpreter
 
     ~RubyInterpreter()
     {
-      for (int i = 0; i < m_argc; i++){
-        delete[] m_argv[i];
-      }
-      delete[] m_argv;
+      //for (int i = 0; i < m_argc; i++){
+      //  delete[] m_argv[i];
+      //}
+      //delete[] m_argv;
     }
 
     /// Register a type along with its vector versions so that it can be used 
