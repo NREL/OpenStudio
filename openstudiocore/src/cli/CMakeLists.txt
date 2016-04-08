@@ -161,7 +161,7 @@ endforeach()
 
 embed_files(
   "${CMAKE_CURRENT_SOURCE_DIR}/embedded_help.rb" "embedded_help.rb"
-  ${EMBED_RB} 
+  #${EMBED_RB} 
 )
 
 #set(BUILD_SHARED_LIBS OFF)
@@ -199,16 +199,16 @@ set_source_files_properties(${EMBED_SOURCE_FILES} PROPERTIES HEADER_FILE_ONLY TR
 
 add_executable(EmbeddedScripting
  main.cpp
- #"${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
+ "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
  RubyException.hpp
  RubyInterpreter.hpp
  embedded_files.hpp
  "${CMAKE_CURRENT_BINARY_DIR}/embedded_files.cxx"
- #"${CMAKE_CURRENT_BINARY_DIR}/EmbeddedScriptingRUBY_wrap.cxx"
+ "${CMAKE_CURRENT_BINARY_DIR}/EmbeddedScriptingRUBY_wrap.cxx"
  ${EMBED_SOURCE_FILES} 
 )
 
-set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/EmbeddedScriptingRUBY_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED")
+set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/EmbeddedScriptingRUBY_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED" )
 
 set(ENCODING_LIB "")
 set(TRANSLATION_LIB "")
@@ -220,6 +220,8 @@ else()
   set(ENCODING_LIB "${RUBY_SOURCE_DIR}/enc/libenc.lib")
   set(TRANSLATION_LIB "${RUBY_SOURCE_DIR}/enc/libtrans.lib")
 endif()
+
+add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 
 target_link_libraries(EmbeddedScripting 
  ${EXTENSION_LIBS} 
