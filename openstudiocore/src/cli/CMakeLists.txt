@@ -161,7 +161,7 @@ endforeach()
 
 embed_files(
   "${CMAKE_CURRENT_SOURCE_DIR}/embedded_help.rb" "embedded_help.rb"
-  #${EMBED_RB} 
+  ${EMBED_RB} 
 )
 
 #set(BUILD_SHARED_LIBS OFF)
@@ -170,8 +170,7 @@ set_source_files_properties(EmbeddedScripting.i
   PROPERTIES CPLUSPLUS true
 )
 
-#include_directories(${RUBY_HDR_DIR} ${RUBY_ARCHHDR_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
-include_directories(${RUBY_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
+include_directories(${RUBY_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
 
 
 add_custom_command(
@@ -187,9 +186,9 @@ add_custom_command(
           "-ruby"
           "-c++"
           -o "${CMAKE_CURRENT_BINARY_DIR}/EmbeddedScriptingRUBY_wrap.cxx"
-	  "-fvirtual"
-	  "-D_WINDOWS"
-	  "-Fmicrosoft"
+          "-fvirtual"
+          "-D_WINDOWS"
+          "-Fmicrosoft"
           "${CMAKE_CURRENT_SOURCE_DIR}/EmbeddedScripting.i"
   DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/EmbeddedScripting.i"
           "embedded_files.hpp"
