@@ -185,7 +185,7 @@ class CLI
       o.banner = 'Usage: openstudio_cli [options] <command> [<args>]'
       o.separator ''
       o.on('-h', '--help', 'Print this help.')
-      o.on('--debug', 'Print the debugging log to STDOUT')
+      o.on('--verbose', 'Print the full log to STDOUT')
       o.separator ''
       o.separator 'Common commands:'
 
@@ -230,14 +230,26 @@ class Run
   def execute(sub_argv)
     options = {}
     options[:debug] = false
+    options[:no_simulation] = false
+    options[:workflow] = './workflow.osw'
+    options[:post_process] = false
 
     opts = OptionParser.new do |o|
-      o.banner = 'Usage: openstudio_cli run [options] [file]'
+      o.banner = 'Usage: openstudio_cli run [options]'
       o.separator ''
       o.separator 'Options:'
       o.separator ''
 
-      o.on('--debug', 'Includes additional outputs for debugging failing workflows') do |f|
+      o.on('-w', '--workflow [FILE]', 'Specify the FILE path to the workflow to run') do |workflow|
+        options[:workflow] = workflow
+      end
+      o.on('-m', '--measures_only', 'Only run the OpenStudio and EnergyPlus measures') do
+        options[:no_simulation] = true
+      end
+      o.on('-p', '--postprocess_only', 'Only run the reporting measures') do
+        options[:post_process] = true
+      end
+      o.on('--debug', 'Includes additional outputs for debugging failing workflows and does not clean up the run directory') do |f|
         options[:debug] = f
       end
     end
@@ -245,21 +257,55 @@ class Run
     # Parse the options
     argv = parse_options(opts, sub_argv)
     return 0 if argv == nil
-    return 1 unless argv
-    $logger.debug("Run command: #{argv.inspect} #{options.inspect}")
-
-    osw_path = argv.shift.to_s
-    osw_path = File.absolute_path(File.join(Dir.pwd, osw_path)) unless Pathname.new(osw_path).absolute?
-    $logger.debug "Path for the OSW: #{osw_path}"
-
     unless argv == []
       $logger.error 'Extra arguments passed to the run command. Please refer to the help documentation.'
       return 1
     end
+    $logger.debug("Run command: #{argv.inspect} #{options.inspect}")
+
+    if options[:post_process] && options[:no_simulation]
+      $logger.error "Both the -m and -p flags were set, which is an invalid combination."
+      return 1
+    end
+
+    osw_path = options[:workflow]
+    osw_path = File.absolute_path(File.join(Dir.pwd, osw_path)) unless Pathname.new(osw_path).absolute?
+    $logger.debug "Path for the OSW: #{osw_path}"
 
     adapter_options = {workflow_filename: File.basename(osw_path)}
     adapter = OpenStudio::Workflow.load_adapter 'local', adapter_options
-    run_options = options[:debug] ? {debug: true} : {}
+    run_options = options[:debug] ? {debug: true, cleanup: false} : {}
+    if options[:no_simulation]
+      run_options[:jobs] = [
+        { state: :queued, next_state: :initialization, options: { initial: true } },
+        { state: :initialization, next_state: :os_measures, job: :RunInitialization,
+          file: './jobs/run_initialization.rb', options: {} },
+        { state: :os_measures, next_state: :translator, job: :RunOpenStudioMeasures,
+          file: './jobs/run_os_measures.rb', options: {} },
+        { state: :translator, next_state: :ep_measures, job: :RunTranslation,
+          file: './jobs/run_translation.rb', options: {} },
+        { state: :ep_measures, next_state: :finished, job: :RunEnergyPlusMeasures,
+          file: './jobs/run_ep_measures.rb', options: {} },
+        { state: :finished },
+        { state: :errored }
+      ]
+    elsif options[:post_process]
+      run_options[:jobs] = [
+        { state: :queued, next_state: :initialization, options: { initial: true } },
+        { state: :initialization, next_state: :reporting_measures, job: :RunInitialization,
+          file: './jobs/run_initialization.rb', options: {} },
+        { state: :reporting_measures, next_state: :postprocess, job: :RunReportingMeasures,
+          file: './jobs/run_reporting_measures.rb', options: {} },
+        { state: :postprocess, next_state: :finished, job: :RunPostprocess,
+          file: './jobs/run_postprocess.rb', options: {} },
+        { state: :finished },
+        { state: :errored }
+      ]
+      run_options[:load_simulation_osm] = true
+      run_options[:load_simulation_idf] = true
+      run_options[:load_simulation_sql] = true
+      run_options[:preserve_run_dir] = true
+    end
     k = OpenStudio::Workflow::Run.new adapter, File.dirname(osw_path), run_options
     k.run
 
@@ -499,9 +545,9 @@ end
 # FROM VAGRANT bin - the code used to invoke the CLI action
 # Split arguments by "--" if its there, we'll recombine them later
 $argv = ARGV.dup
-if $argv.include? '--debug'
+if $argv.include? '--verbose'
   $logger.level = Logger::DEBUG
-  $argv.delete '--debug'
+  $argv.delete '--verbose'
 end
 $logger.debug "Input ARGV is #{$argv}"
 
