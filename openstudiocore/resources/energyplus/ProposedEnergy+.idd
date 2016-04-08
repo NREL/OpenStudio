@@ -26538,7 +26538,7 @@ Coil:Cooling:Water,
        \type choice
        \key CrossFlow
        \key CounterFlow
-       \default CounterFlow
+       \default CrossFlow
   A9;  \field Condensate Collection Water Storage Tank Name
        \type object-list
        \object-list WaterStorageTankNames
@@ -56948,5 +56948,3 @@ Output:PreprocessorMessage,
         \retaincase
    A12; \field Message Line 10
         \retaincase
-
-
