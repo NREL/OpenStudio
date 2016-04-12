@@ -25,12 +25,13 @@ Signal.trap('INT') { abort }
 require 'openstudio-workflow'
 require 'optparse'
 require 'irb'
+include OpenStudio::Workflow::Util::IO
 
 $logger = Logger.new(STDOUT)
 $logger.level = Logger::WARN
 
 
-# This is the code chunk to allow for an embedded IRB shell. Provided by Jason Roelofs, found on StackOverflow
+# This is the code chunk to allow for an embedded IRB shell. From Jason Roelofs, found on StackOverflow
 module IRB # :nodoc:
   def self.start_session(binding)
     unless @__initialized
@@ -78,7 +79,9 @@ end
 # method will also automatically detect "-h" and "--help" and print help. And if any invalid options are  detected, the
 # help will be printed, as well
 #
-# @return[nil, If this method returns `nil`, then you should assume that help was printed and parsing failed
+# @param [Object, nil] opts An instance of OptionParse to parse against, defaults to a new OptionParse instance
+# @param [Array, nil] argv The argv input to be parsed, defaults to $argv
+# @return[Array, nil] If this method returns `nil`, then you should assume that help was printed and parsing failed
 #
 def parse_options(opts=nil, argv=nil)
   # Creating a shallow copy of the arguments so the OptionParser
@@ -110,7 +113,8 @@ end
 # These parts are useful because the first is a list of arguments given to the current command, the second is a
 # subcommand, and the third are the commands given to the subcommand
 #
-# @return [Array] The three parts
+# @param [Array] argv The input to be split
+# @return [Array] The split command as [main arguments, sub command, sub command arguments]
 #
 def split_main_and_subcommand(argv)
   # Initialize return variables
@@ -139,13 +143,16 @@ def split_main_and_subcommand(argv)
   [main_args, sub_command, sub_args]
 end
 
-#This is the CLI class that does the actual execution, (i.e. the one we actually invoke)
+# This CLI class processes the input args and invokes the proper command class
 class CLI
 
+  # This constant maps subcommands to classes in this CLI and stores meta-data on them
   COMMAND_LIST = {
       run: [ Proc.new { ::Run }, {primary: true, working: true}],
       apply_measure: [ Proc.new { ::ApplyMeasure }, {primary: true, working: false}],
+      set_gem_home: [ Proc.new { ::SetGemHome }, {primary: true, working: true}],
       gem_install: [ Proc.new { ::InstallGem }, {primary: false, working: true}],
+      measure: [ Proc.new { ::Measure }, {primary: true, working: false}],
       e: [ Proc.new { ::ExecuteRubyScript }, {primary: false, working: true}],
       i: [ Proc.new { ::InteractiveRubyShell }, {primary: false, working: true}],
       openstudio_version: [ Proc.new { ::OpenStudioVersion }, {primary: true, working: true}],
@@ -154,12 +161,18 @@ class CLI
       list_commands: [ Proc.new { ::ListCommands }, {primary: true, working: true}]
   }
 
+  # This method instantiates the global variables $main_args, $sub_command, and $sub_args
+  #
+  # @param [Array] argv The arguments passed through the CLI
+  # @return [Object] An instance of the CLI class with initialized globals
+  #
   def initialize(argv)
     $main_args, $sub_command, $sub_args = split_main_and_subcommand(argv)
 
     $logger.info("CLI Parsed Inputs: #{$main_args.inspect} #{$sub_command.inspect} #{$sub_args.inspect}")
   end
 
+  # Checks to see if it should print the main help, and if not parses the subcommand into a class and executes it
   def execute
     $logger.debug "Main arguments are #{$main_args}"
     $logger.debug "Sub-command is #{$sub_command}"
@@ -199,7 +212,13 @@ class CLI
     result
   end
 
-  # This prints out the help for the CLI.
+  # Prints out the help text for the CLI
+  #
+  # @param [Boolean] list_all If set to true, the help prints all commands, however it otherwise only prints those
+  #   marked as primary in #COMMAND_LIST
+  # @return [void]
+  # @see #COMMAND_LIST #::ListCommands
+  #
   def help(list_all=false)
     opts = OptionParser.new do |o|
       o.banner = 'Usage: openstudio_cli [options] <command> [<args>]'
@@ -242,11 +261,19 @@ class CLI
   end
 end
 
+# Class to execute part or all of an OSW workflow
 class Run
+
+  # Provides text for the main help functionality
   def self.synopsis
     'Executes an OpenStudio Workflow file'
   end
 
+  # Executes the standard, or one of two custom, workflows using the workflow-gem
+  #
+  # @param [Array] sub_argv Options passed to the run subcommand from the user input
+  # @return [Fixnum] Return status
+  #
   def execute(sub_argv)
     options = {}
     options[:debug] = false
@@ -333,11 +360,21 @@ class Run
   end
 end
 
+# Class to apply an OpenStudio, EnergyPlus, or Reporting measure
+# @abstract
 class ApplyMeasure
+  
+  # Provides text for the main help functionality
   def self.synopsis
     'Applies an OpenStudio, EnergyPlus, or Reporting measure'
   end
 
+  # Executes a single measure using an undefined interface
+  #
+  # @param [Array] sub_argv Options passed to the apply_measures subcommand from the user input
+  # @return [Fixnum] Return status
+  # @abstract
+  #
   def execute(sub_argv)
     # options = {}
     # options[:debug] = false
@@ -360,18 +397,70 @@ class ApplyMeasure
   end
 end
 
-# Install gems
+# Class to set the local gem directory
+class SetGemHome
+
+  # Provides text for the main help functionality
+  def self.synopsis
+    'Sets the directory to install gems to for openstudio_cli'
+  end
+
+  # Alters the environment variable used to define the gem install location
+  #
+  # @param [Array] sub_argv Options passed to the gem_install subcommand from the user input
+  # @return [Fixnum] Return status
+  #
+  def execute(sub_argv)
+    opts = OptionParser.new do |o|
+      o.banner = 'Usage: openstudio_cli set_gem_home [directory]'
+    end
+
+    # Parse the options
+    argv = parse_options(opts, sub_argv)
+    return 1 unless argv[0].is_a? String
+    new_home = argv[0]
+
+    current_home = ENV['OPENSTUDIO_GEM_HOME']
+    $logger.warn "Overwriting previous OPENSTUDIO_GEM_HOME of #{current_home} to #{new_home}" if current_home
+    $logger.info "No current gem home set for OpenStudio, setting to #{new_home}" unless current_home
+
+    if OpenStudio::Workflow::Util::IO.is_windows?
+      res = system("set OPENSTUDIO_GEM_HOME=#{new_home}")
+    else
+      res = system("export OPENSTUDIO_GEM_HOME=#{new_home}")
+    end
+    $logger.error "Failed to set OPENSTUDIO_GEM_HOME to #{new_home}" unless res
+    return 1 unless res
+    $logger.info "Set OPENSTUDIO_GEM_HOME to #{new_home}"
+  end
+end
+
+# Class to install gems using the RubyGems functionality
 class InstallGem
+    
+  # Provides text for the main help functionality
   def self.synopsis
     'Installs a Gem using the embedded ruby'
   end
 
+  # Executes the RubyGems gem install process, using the RubyGems options
+  #
+  # @param [Array] sub_argv Options passed to the gem_install subcommand from the user input
+  # @return [Fixnum] Return status
+  #
   def execute(sub_argv)
     require 'rubygems'
     require 'rubygems/gem_runner'
 
     # Parse the options
     argv = sub_argv.unshift('install')
+    if argv.include? '--install-dir'
+      $logger.debug 'Using included user entry for --install-dir'
+    else
+      local_dir = ENV['OPENSTUDIO_GEM_HOME'] ? ENV['OPENSTUDIO_GEM_HOME'] : "~/OpenStudio/v#{OpenStudio.openStudioVersion}/gems"
+      argv.push('--install-dir')
+      argv.push(local_dir)
+    end
     $logger.debug("GemInstall command: #{argv.inspect}")
     $logger.debug "Invoking the GemRunner with argv: #{argv}"
 
@@ -388,14 +477,73 @@ class InstallGem
   end
 end
 
+# Class to update measures and compute arguments
+class Measure
+
+  # Provides text for the main help functionality
+  def self.synopsis
+    'Updates measures and compute arguments'
+  end
+
+  # Executes code to update and compute arguments for measures
+  #
+  # @param [Array] sub_argv Options passed to the e subcommand from the user input
+  # @return [Fixnum] Return status
+  # @todo (macumber) Add in the OpenStudio code to execute on measures
+  #
+  def execute(sub_argv)
+    options = {}
+    options[:check_for_update] = false
+    options[:update] = false
+    options[:compute_arguments] = nil
+
+    opts = OptionParser.new do |o|
+      o.banner = 'Usage: openstudio_cli measure [options] DIRECTORY'
+      o.separator ''
+      o.separator 'Options:'
+      o.separator ''
+
+      o.on('-c', '--check_for_updates', 'Check to see if the measure needs to be updated') do
+        options[:check_for_update] = workflow
+      end
+      o.on('-u', '--update', 'Update the measure.xml') do
+        options[:update] = true
+      end
+      o.on('-a', '--compute_arguments [MODEL]', 'Compute arguments for the given model') do |model_file|
+        options[:compute_arguments] = model_file
+      end
+    end
+
+    # Parse the options
+    argv = parse_options(opts, sub_argv)
+    $logger.error 'No directory provided' if argv == []
+    return 1 if argv == []
+    directory = argv[0]
+
+    $logger.debug("Measure command: #{argv.inspect} #{options.inspect}")
+    $logger.debug("Directory to examine is #{directory}")
+
+    $logger.error 'Code to be added here to operate on measures'
+
+    1
+  end
+end
+
+# Class to execute a ruby script
 class ExecuteRubyScript
+    
+  # Provides text for the main help functionality
   def self.synopsis
     'Executes a ruby file'
   end
 
+  # Executes an arbitrary ruby script
+  #
+  # @param [Array] sub_argv Options passed to the e subcommand from the user input
+  # @return [Fixnum] Return status
+  #
   def execute(sub_argv)
     options = {}
-    options[:debug] = false
 
     opts = OptionParser.new do |o|
       o.banner = 'Usage: openstudio_cli e [file]'
@@ -421,11 +569,19 @@ class ExecuteRubyScript
   end
 end
 
+# Class to put the user into an irb shell
 class InteractiveRubyShell
+    
+  # Provides text for the main help functionality
   def self.synopsis
     'Provides an interactive ruby shell'
   end
 
+  # Executes the commands to get into an IRB prompt
+  #
+  # @param [Array] sub_argv Options passed to the i subcommand from the user input
+  # @return [Fixnum] Return status
+  #
   def execute(sub_argv)
     options = {}
 
@@ -449,11 +605,19 @@ class InteractiveRubyShell
   end
 end
 
+# Class to return the packaged OpenStudio version
 class OpenStudioVersion
+    
+  # Provides text for the main help functionality
   def self.synopsis
     'Returns the OpenStudio version used by the CLI'
   end
 
+  # Executes the OpenStudio commands to return the OpenStudio version
+  #
+  # @param [Array] sub_argv Options passed to the energyplus_version subcommand from the user input
+  # @return [Fixnum] Return status
+  #
   def execute(sub_argv)
     options = {}
 
@@ -477,11 +641,19 @@ class OpenStudioVersion
   end
 end
 
+# Class to return the EnergyPlus version
 class EnergyPlusVersion
+    
+  # Provides text for the main help functionality
   def self.synopsis
     'Returns the EnergyPlus version used by the CLI'
   end
 
+  # Executes the OpenStudio command to return the EnergyPlus version
+  #
+  # @param [Array] sub_argv Options passed to the openstudio_version subcommand from the user input
+  # @return [Fixnum] Return status
+  #
   def execute(sub_argv)
     options = {}
 
@@ -505,11 +677,19 @@ class EnergyPlusVersion
   end
 end
 
+# Class to return the ruby version used by the packaged CLI
 class RubyVersion
+    
+  # Provides text for the main help functionality
   def self.synopsis
     'Returns the Ruby version used by the CLI'
   end
 
+  # Evaluates the RUBY_VERSION constant and returns it
+  #
+  # @param [Array] sub_argv Options passed to the ruby_version subcommand from the user input
+  # @return [Fixnum] Return status
+  #
   def execute(sub_argv)
     options = {}
 
@@ -533,11 +713,20 @@ class RubyVersion
   end
 end
 
+# Class to return the full set of possible commands for the CLI
 class ListCommands
+    
+  # Provides text for the main help functionality
   def self.synopsis
     'Lists the entire set of available commands for openstudio_cli'
   end
 
+  # Executes the standard help method with the list_all attribute set to true
+  #
+  # @param [Array] sub_argv Options passed to the list_all subcommand from the user input
+  # @return [Fixnum] Return status
+  # @see #::CLI.help
+  #
   def execute(sub_argv)
     options = {}
 
