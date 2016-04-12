@@ -150,7 +150,7 @@ class CLI
   COMMAND_LIST = {
       run: [ Proc.new { ::Run }, {primary: true, working: true}],
       apply_measure: [ Proc.new { ::ApplyMeasure }, {primary: true, working: false}],
-      set_gem_home: [ Proc.new { ::SetGemHome }, {primary: true, working: true}],
+      gem_list: [ Proc.new { ::GemList }, {primary: true, working: true}],
       gem_install: [ Proc.new { ::InstallGem }, {primary: false, working: true}],
       measure: [ Proc.new { ::Measure }, {primary: true, working: false}],
       e: [ Proc.new { ::ExecuteRubyScript }, {primary: false, working: true}],
@@ -225,6 +225,7 @@ class CLI
       o.separator ''
       o.on('-h', '--help', 'Print this help.')
       o.on('--verbose', 'Print the full log to STDOUT')
+      o.on('--gem_path PATH', 'Path to use for installing gems to and loading gems from')
       o.separator ''
       o.separator 'Common commands:'
 
@@ -311,7 +312,7 @@ class Run
     $logger.debug("Run command: #{argv.inspect} #{options.inspect}")
 
     if options[:post_process] && options[:no_simulation]
-      $logger.error "Both the -m and -p flags were set, which is an invalid combination."
+      $logger.error 'Both the -m and -p flags were set, which is an invalid combination.'
       return 1
     end
 
@@ -389,20 +390,20 @@ class ApplyMeasure
     $logger.error 'This interface has yet to be defined.'
 
     # Parse the options
-    # argv = parse_options(opts, sub_argv)
-    # return 1 unless argv
+    argv = parse_options(opts, sub_argv)
+    return 1 unless argv
     # $logger.debug("ApplyMeasure command: #{argv.inspect} #{options.inspect}")
 
     1
   end
 end
 
-# Class to set the local gem directory
-class SetGemHome
+# Class to list the gems used by the CLI
+class GemList
 
   # Provides text for the main help functionality
   def self.synopsis
-    'Sets the directory to install gems to for openstudio_cli'
+    'Lists the set gems available to openstudio_cli'
   end
 
   # Alters the environment variable used to define the gem install location
@@ -411,27 +412,27 @@ class SetGemHome
   # @return [Fixnum] Return status
   #
   def execute(sub_argv)
-    opts = OptionParser.new do |o|
-      o.banner = 'Usage: openstudio_cli set_gem_home [directory]'
-    end
+    require 'rubygems'
+    require 'rubygems/gem_runner'
 
     # Parse the options
-    argv = parse_options(opts, sub_argv)
-    return 1 unless argv[0].is_a? String
-    new_home = argv[0]
-
-    current_home = ENV['OPENSTUDIO_GEM_HOME']
-    $logger.warn "Overwriting previous OPENSTUDIO_GEM_HOME of #{current_home} to #{new_home}" if current_home
-    $logger.info "No current gem home set for OpenStudio, setting to #{new_home}" unless current_home
-
-    if OpenStudio::Workflow::Util::IO.is_windows?
-      res = system("set OPENSTUDIO_GEM_HOME=#{new_home}")
-    else
-      res = system("export OPENSTUDIO_GEM_HOME=#{new_home}")
+    opts = OptionParser.new do |o|
+      o.banner = 'Usage: openstudio_cli gem_list'
     end
-    $logger.error "Failed to set OPENSTUDIO_GEM_HOME to #{new_home}" unless res
-    return 1 unless res
-    $logger.info "Set OPENSTUDIO_GEM_HOME to #{new_home}"
+    argv = parse_options(opts, sub_argv)
+    unless argv == []
+      $logger.error 'Extra arguments passed to the gem_list command. Please refer to the help documentation.'
+      return 1
+    end
+
+    begin
+      Gem::GemRunner.new.run ['list']
+    rescue => e
+      $logger.error "Error listing gems: #{e.message} in #{e.backtrace.join("\n")}"
+      exit e.exit_code
+    end
+
+    0
   end
 end
 
@@ -455,13 +456,13 @@ class InstallGem
     # Parse the options
     argv = sub_argv.unshift('install')
     if argv.include? '--install-dir'
-      $logger.debug 'Using included user entry for --install-dir'
+      $logger.error 'The rubygems option --install-dir is not supported. Please use the --gem_path option'
+      return 1
     else
-      local_dir = ENV['OPENSTUDIO_GEM_HOME'] ? ENV['OPENSTUDIO_GEM_HOME'] : "~/OpenStudio/v#{OpenStudio.openStudioVersion}/gems"
-      argv.push('--install-dir')
-      argv.push(local_dir)
+      argv.push '--install-dir'
+      argv.push ENV['GEM_PATH']
     end
-    $logger.debug("GemInstall command: #{argv.inspect}")
+    $logger.debug "GemInstall command: #{argv.inspect}"
     $logger.debug "Invoking the GemRunner with argv: #{argv}"
 
     begin
@@ -560,6 +561,11 @@ class ExecuteRubyScript
 
     unless argv == []
       $logger.error 'Extra arguments passed to the e command. Please refer to the help documentation.'
+      return 1
+    end
+
+    unless File.exists? file_path
+      $logger.error "Unable to find the file #{file_path} on the filesystem"
       return 1
     end
 
@@ -751,14 +757,39 @@ class ListCommands
   end
 end
 
-# FROM VAGRANT bin - the code used to invoke the CLI action
-# Split arguments by "--" if its there, we'll recombine them later
+# Set the logger level to DEBUG if the arguments include --verbose
 $argv = ARGV.dup
 if $argv.include? '--verbose'
   $logger.level = Logger::DEBUG
   $argv.delete '--verbose'
+  $logger.debug 'Set Logger log level to DEBUG'
 end
 $logger.debug "Input ARGV is #{$argv}"
 
+# Operate on the gem_path option to set the gem search path
+if $argv.include? '--gem_path'
+  $logger.info 'Setting gem path'
+  option_index = $argv.index '--gem_path'
+  path_index = option_index + 1
+  new_home = $argv[path_index]
+  $argv.slice! path_index
+  $argv.slice! $argv.index '--gem_path'
+  current_home = ENV['OPENSTUDIO_GEM_PATH']
+  $logger.warn "Overwriting previous OPENSTUDIO_GEM_PATH of #{current_home} to #{new_home} for this command" if current_home
+  $logger.info "No current gem path set in OPENSTUDIO_GEM_PATH, setting to #{new_home}" unless current_home
+  ENV['OPENSTUDIO_GEM_PATH'] = new_home
+end
+
+# Configure Gems to load the correct Gem files
+# @see http://rubygems.rubyforge.org/rubygems-update/Gem.html
+local_dir = ENV['OPENSTUDIO_GEM_PATH'] ? ENV['OPENSTUDIO_GEM_PATH'] : "~/OpenStudio/v#{OpenStudio.openStudioVersion}"
+ENV['GEM_PATH'] = OpenStudio::Workflow::Util::IO.is_windows? ? local_dir.gsub('/', '\\') : local_dir
+$logger.debug "Set environment variable GEM_PATH to #{ENV['GEM_PATH']}"
+ENV['GEM_HOME'] = OpenStudio::Workflow::Util::IO.is_windows? ? '\\' : '/'
+$logger.debug "Set environment variable GEM_HOME to #{ENV['GEM_HOME']}"
+Gem.clear_paths
+$logger.debug 'Reset Gem paths; openstudio_cli associated gems should load correctly'
+
 # Execute the CLI interface, and exit with the proper error code
+$logger.info "Executing argv: #{$argv}"
 CLI.new($argv).execute
