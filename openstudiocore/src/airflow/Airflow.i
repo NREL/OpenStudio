@@ -40,7 +40,6 @@
 %template(ContamSimpleAhsVector) std::vector<openstudio::contam::Ahs>;
 %template(ContamZoneVector) std::vector<openstudio::contam::Zone>;
 %template(ContamAirflowPathVector) std::vector<openstudio::contam::AirflowPath>;
-%template(IntVectorVector) std::vector<std::vector<int> >;
 %template(ContamSketchPadIconVector) std::vector<openstudio::contam::Icon>;
 %template(ContamSchedulePointVector) std::vector<openstudio::contam::SchedulePoint>;
 %template(ContamFanDataPointVector) std::vector<openstudio::contam::FanDataPoint>;
