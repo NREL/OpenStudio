@@ -5,7 +5,6 @@
 %module openstudioairflow
 #endif
 
-
 #define UTILITIES_API
 #define AIRFLOW_API
 
@@ -26,6 +25,21 @@
 
 %ignore IndexModelImpl;
 %ignore IndexModel(Reader &input);
+%template(OptionalIndexModel) boost::optional<openstudio::contam::IndexModel>;
+
+// All the vectors
+%template(SpeciesVector) std::vector<openstudio::contam::Species>;
+%template(LevelVector) std::vector<openstudio::contam::Level>;
+%template(DayScheduleVector) std::vector<openstudio::contam::DaySchedule>;
+%template(WeekScheduleVector) std::vector<openstudio::contam::WeekSchedule>;
+%template(WindPressureProfileVector) std::vector<openstudio::contam::WindPressureProfile>;
+%template(PlrTest1Vector) std::vector<PlrTest1>;
+%template(PlrTest2Vector) std::vector<PlrTest2>;
+%template(CvfDatVector) std::vector<openstudio::contam::CvfDat>;
+%template(SimpleAhsVector) std::vector<openstudio::contam::Ahs>;
+%template(ContamZoneVector) std::vector<openstudio::contam::Zone>;
+%template(AirflowPathVector) std::vector<openstudio::contam::AirflowPath>;
+%template(IntVectorVector) std::vector<std::vector<int> >;
 
 // #ifdef SWIGCSHARP
 //%rename(ContamReverseTranslator) openstudio::contam::ReverseTranslator;
