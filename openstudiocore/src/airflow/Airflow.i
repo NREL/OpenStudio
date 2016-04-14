@@ -25,7 +25,7 @@
 
 %ignore IndexModelImpl;
 %ignore IndexModel(Reader &input);
-%template(OptionalIndexModel) boost::optional<openstudio::contam::IndexModel>;
+%template(OptionalContamIndexModel) boost::optional<openstudio::contam::IndexModel>;
 
 // All the vectors
 %template(ContamSpeciesVector) std::vector<openstudio::contam::Species>;
@@ -43,6 +43,9 @@
 %template(IntVectorVector) std::vector<std::vector<int> >;
 %template(ContamSketchPadIconVector) std::vector<openstudio::contam::Icon>;
 %template(ContamSchedulePointVector) std::vector<openstudio::contam::SchedulePoint>;
+%template(ContamFanDataPointVector) std::vector<openstudio::contam::FanDataPoint>;
+%template(ContamXyDataPointVector) std::vector<openstudio::contam::XyDataPoint>;
+%template(ContamAirflowSubelementDataVector) std::vector<openstudio::contam::AirflowSubelementData>;
 
 // #ifdef SWIGCSHARP
 //%rename(ContamReverseTranslator) openstudio::contam::ReverseTranslator;
