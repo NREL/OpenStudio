@@ -7,3 +7,4 @@ gem 'test-unit', '= 2.0.0.0'
 
 # OpenStudio
 gem 'openstudio-aws', '~> 0.4.0.pre1'
+gem 'openstudio-standards', '= 0.1.1'
