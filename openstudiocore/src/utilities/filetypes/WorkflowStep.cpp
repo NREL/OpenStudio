@@ -30,7 +30,7 @@ namespace openstudio{
 WorkflowStep::WorkflowStep(const std::string& measureDirName)
   : m_measureDirName(measureDirName)
 {}
-
+/*
 WorkflowStep::WorkflowStep(const Attribute& step)
 {
   boost::optional<Attribute> measureDirNameAttribute = step.findChildByName("measure_dir_name");
@@ -77,7 +77,7 @@ WorkflowStep::WorkflowStep(const Attribute& step)
     }
   }
 }
-
+*/
 std::string WorkflowStep::measureDirName() const
 {
   return m_measureDirName;

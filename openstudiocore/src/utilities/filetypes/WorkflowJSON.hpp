@@ -31,13 +31,6 @@
 
 namespace openstudio{
 
-  /** TODO:
-  * Variant class: remove
-  * Attribute class: simplify interface, not use QVariant, handle JSON objects (currently just does arrays), provide better JSON support
-  * WorkflowJSON class: ensure that this can read and write arbitrary JSON 
-  * WorkflowStep class: build around Attribute
-  */
-  
 class WorkflowStep;
 
 namespace detail{
@@ -85,42 +78,37 @@ public:
   /** Saves this file to a new location. */
   bool saveAs(const openstudio::path& p) const;
 
-  /** Returns the original path this workflow was loaded from, can be empty. */
-  openstudio::path path() const;
+  /** Returns the absolute path this workflow was loaded from or saved to, empty for new WorkflowJSON. */
+  openstudio::path oswPath() const;
 
-  /** Returns the absolute path to the root directory, can be empty. 
-   ** Key name is 'root', default value is '.' */
-  openstudio::path rootPath() const;
+  /** Returns the absolute path to the directory this workflow was loaded from or saved to.  Returns current working dir for new WorkflowJSON. */
+  openstudio::path oswDir() const;
 
-  /** Returns the absolute path to the seed file, can be empty. 
-   ** Key name is 'seed', default value is '' */
-  openstudio::path seedPath() const;
+  /** Returns the root directory, default value is '.'. Evaluated relative to oswDir if not absolute. */
+  openstudio::path rootDir() const;
+  openstudio::path absoluteRootDir() const;
 
-  /** Returns the absolute path to the weather file, can be empty. 
-   ** Key name is 'weather_file', default value is '' */
-  openstudio::path weatherPath() const;
+  /** Returns the paths that will be searched in order for files, default value is './files/'. Evaluated relative to rootDir if not absolute. */
+  std::vector<openstudio::path> filePaths() const;
+  std::vector<openstudio::path> absoluteFilePaths() const;
 
-  /** Returns the absolute path to the measures directory, can be empty. */
-  openstudio::path measuresDir() const;
+  /** Attempts to find a file by name, searches through filePaths in order and returns first match. */
+  boost::optional<openstudio::path> findFile(const openstudio::path& file);
+  boost::optional<openstudio::path> findFile(const std::string& fileName);
 
-  /** Returns the attributes (other than steps). */
-  std::vector<Attribute> attributes() const;
+  /** Returns the paths that will be searched in order for measures, default value is './measures/'. Evaluated relative to rootDir if not absolute. */
+  std::vector<openstudio::path> measurePaths() const;
+  std::vector<openstudio::path> absoluteMeasurePaths() const;
 
-  /** Gets an attribute (other than steps). */
-  boost::optional<Attribute> getAttribute(const std::string& name) const;
+  /** Attempts to find a measure by name, searches through measurePaths in order and returns first match. */
+  boost::optional<openstudio::path> findMeasure(const openstudio::path& measureDir);
+  boost::optional<openstudio::path> findMeasure(const std::string& measureDirName);
 
-  /** Removes an attribute (other than steps). */
-  bool removeAttribute(const std::string& name);
+  /** Returns the seed file path. Evaluated relative to filePaths if not absolute. */
+  boost::optional<openstudio::path> seedFile() const;
 
-  /** Sets an attribute (other than steps). */
-  bool setAttribute(const Attribute& attribute);
-  bool setAttribute(const std::string& name, bool value);
-  bool setAttribute(const std::string& name, double value);
-  bool setAttribute(const std::string& name, int value);
-  bool setAttribute(const std::string& name, const std::string& value);
-  
-  /** Clears all attributes (other than steps). */
-  void clearAttributes();
+  /** Returns the weather file path. Evaluated relative to filePaths if not absolute. */
+  boost::optional<openstudio::path> weatherFile() const;
 
   /** Returns the workflow steps. */
   std::vector<WorkflowStep> workflowSteps() const;

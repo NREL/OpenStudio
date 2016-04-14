@@ -37,10 +37,10 @@ TEST(Filetypes, WorkflowJSON_Min)
   try{
     WorkflowJSON workflow(p);
     EXPECT_TRUE(workflow.checkForUpdates());
-    EXPECT_EQ(p, workflow.path());
-    EXPECT_EQ(p.parent_path() / toPath("/."), workflow.rootPath());
-    EXPECT_TRUE(workflow.seedPath().empty());
-    EXPECT_TRUE(workflow.weatherPath().empty());
+    EXPECT_EQ(p, workflow.oswPath());
+    EXPECT_EQ(p.parent_path() / toPath("/."), workflow.rootDir());
+    EXPECT_FALSE(workflow.seedFile());
+    EXPECT_FALSE(workflow.weatherFile());
 
     EXPECT_TRUE(workflow.saveAs(p2));
 
@@ -85,10 +85,10 @@ TEST(Filetypes, WorkflowJSON_Min)
   try{
     WorkflowJSON workflow(p2);
     EXPECT_FALSE(workflow.checkForUpdates());
-    EXPECT_EQ(p2, workflow.path());
-    EXPECT_EQ(p2.parent_path() / toPath("/."), workflow.rootPath());
-    EXPECT_TRUE(workflow.seedPath().empty());
-    EXPECT_TRUE(workflow.weatherPath().empty());
+    EXPECT_EQ(p2, workflow.oswPath());
+    EXPECT_EQ(p2.parent_path() / toPath("/."), workflow.rootDir());
+    EXPECT_FALSE(workflow.seedFile());
+    EXPECT_FALSE(workflow.weatherFile());
 
     std::vector<WorkflowStep> workflowSteps = workflow.workflowSteps();
     ASSERT_EQ(3u, workflowSteps.size());
@@ -137,10 +137,10 @@ TEST(Filetypes, WorkflowJSON_Full)
   try{
     WorkflowJSON workflow(p);
     EXPECT_TRUE(workflow.checkForUpdates());
-    EXPECT_EQ(p, workflow.path());
-    EXPECT_EQ(p.parent_path() / toPath("../root/"), workflow.rootPath());
-    EXPECT_EQ(p.parent_path() / toPath("../root/seed/example.osm"), workflow.seedPath());
-    EXPECT_EQ(p.parent_path() / toPath("../root/weather/Golden_NREL.epw"), workflow.weatherPath());
+    EXPECT_EQ(p, workflow.oswPath());
+    EXPECT_EQ(p.parent_path() / toPath("../root/"), workflow.rootDir());
+    EXPECT_EQ(p.parent_path() / toPath("../root/seed/example.osm"), workflow.seedFile());
+    EXPECT_EQ(p.parent_path() / toPath("../root/weather/Golden_NREL.epw"), workflow.weatherFile());
 
     EXPECT_TRUE(workflow.saveAs(p2));
 
@@ -185,10 +185,10 @@ TEST(Filetypes, WorkflowJSON_Full)
   try{
     WorkflowJSON workflow(p2);
     EXPECT_FALSE(workflow.checkForUpdates());
-    EXPECT_EQ(p2, workflow.path());
-    EXPECT_EQ(p2.parent_path() / toPath("../root/"), workflow.rootPath());
-    EXPECT_EQ(p2.parent_path() / toPath("../root/seed/example.osm"), workflow.seedPath());
-    EXPECT_EQ(p2.parent_path() / toPath("../root/weather/Golden_NREL.epw"), workflow.weatherPath());
+    EXPECT_EQ(p2, workflow.oswPath());
+    EXPECT_EQ(p2.parent_path() / toPath("../root/"), workflow.rootDir());
+    EXPECT_EQ(p2.parent_path() / toPath("../root/seed/example.osm"), workflow.seedFile());
+    EXPECT_EQ(p2.parent_path() / toPath("../root/weather/Golden_NREL.epw"), workflow.seedFile());
 
     std::vector<WorkflowStep> workflowSteps = workflow.workflowSteps();
     ASSERT_EQ(3u, workflowSteps.size());
