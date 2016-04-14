@@ -28,18 +28,21 @@
 %template(OptionalIndexModel) boost::optional<openstudio::contam::IndexModel>;
 
 // All the vectors
-%template(SpeciesVector) std::vector<openstudio::contam::Species>;
-%template(LevelVector) std::vector<openstudio::contam::Level>;
-%template(DayScheduleVector) std::vector<openstudio::contam::DaySchedule>;
-%template(WeekScheduleVector) std::vector<openstudio::contam::WeekSchedule>;
-%template(WindPressureProfileVector) std::vector<openstudio::contam::WindPressureProfile>;
-%template(PlrTest1Vector) std::vector<PlrTest1>;
-%template(PlrTest2Vector) std::vector<PlrTest2>;
-%template(CvfDatVector) std::vector<openstudio::contam::CvfDat>;
-%template(SimpleAhsVector) std::vector<openstudio::contam::Ahs>;
+%template(ContamSpeciesVector) std::vector<openstudio::contam::Species>;
+%template(ContamLevelVector) std::vector<openstudio::contam::Level>;
+%template(ContamDayScheduleVector) std::vector<openstudio::contam::DaySchedule>;
+%template(ContamWeekScheduleVector) std::vector<openstudio::contam::WeekSchedule>;
+%template(ContamWindPressureProfileVector) std::vector<openstudio::contam::WindPressureProfile>;
+%template(ContamPressureCoefficientPointVector) std::vector<openstudio::contam::PressureCoefficientPoint>;
+%template(ContamPlrTest1Vector) std::vector<openstudio::contam::PlrTest1>;
+%template(ContamPlrTest2Vector) std::vector<openstudio::contam::PlrTest2>;
+%template(ContamCvfDatVector) std::vector<openstudio::contam::CvfDat>;
+%template(ContamSimpleAhsVector) std::vector<openstudio::contam::Ahs>;
 %template(ContamZoneVector) std::vector<openstudio::contam::Zone>;
-%template(AirflowPathVector) std::vector<openstudio::contam::AirflowPath>;
+%template(ContamAirflowPathVector) std::vector<openstudio::contam::AirflowPath>;
 %template(IntVectorVector) std::vector<std::vector<int> >;
+%template(ContamSketchPadIconVector) std::vector<openstudio::contam::Icon>;
+%template(ContamSchedulePointVector) std::vector<openstudio::contam::SchedulePoint>;
 
 // #ifdef SWIGCSHARP
 //%rename(ContamReverseTranslator) openstudio::contam::ReverseTranslator;
