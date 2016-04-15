@@ -132,8 +132,11 @@ namespace detail{
     return false;
   }
 
-  openstudio::path WorkflowJSON_Impl::oswPath() const
+  boost::optional<openstudio::path> WorkflowJSON_Impl::oswPath() const
   {
+    if (m_path.empty()){
+      return boost::none;
+    }
     return m_path;
   }
 
@@ -156,7 +159,7 @@ namespace detail{
   {
     openstudio::path result = rootDir();
     if (result.is_relative()){
-      // todo
+      return boost::filesystem::canonical(result, oswDir());
     }
     return result;
   }
@@ -181,9 +184,9 @@ namespace detail{
     std::vector<openstudio::path> result;
     for (const auto& path : filePaths()){
       if (path.is_absolute()){
-        result.push_back(path);
+        result.push_back(boost::filesystem::canonical(path));
       }else{
-        //todo
+        result.push_back(boost::filesystem::canonical(path, absoluteRootDir()));
       }
     }
     return result;
@@ -192,7 +195,10 @@ namespace detail{
   boost::optional<openstudio::path> WorkflowJSON_Impl::findFile(const openstudio::path& file)
   {
     for (const auto& path : absoluteFilePaths()){
-      // todo
+      openstudio::path p = path / file;
+      if (boost::filesystem::exists(p) && boost::filesystem::is_regular_file(p)){
+        return p;
+      }
     }
     return boost::none;
   }
@@ -222,9 +228,9 @@ namespace detail{
     std::vector<openstudio::path> result;
     for (const auto& path : measurePaths()){
       if (path.is_absolute()){
-        result.push_back(path);
+        result.push_back(boost::filesystem::canonical(path));
       } else{
-        //todo
+        result.push_back(boost::filesystem::canonical(path, absoluteRootDir()));
       }
     }
     return result;
@@ -233,7 +239,10 @@ namespace detail{
   boost::optional<openstudio::path> WorkflowJSON_Impl::findMeasure(const openstudio::path& measureDir)
   {
     for (const auto& path : absoluteMeasurePaths()){
-      // todo
+      openstudio::path p = path / measureDir;
+      if (boost::filesystem::exists(p) && boost::filesystem::is_directory(p)){
+        return p;
+      }
     }
     return boost::none;
   }
@@ -279,7 +288,7 @@ namespace detail{
 
       WorkflowStep workflowStep(measureDirName.asString());
 
-      Json::Value arguments = step["measure_dir_name"];
+      Json::Value arguments = step["arguments"];
       Json::ArrayIndex n2 = arguments.size();
       for (Json::ArrayIndex j = 0; j < n2; ++j){
         Json::Value argument = arguments[j];
@@ -296,6 +305,8 @@ namespace detail{
           workflowStep.setArgument(name.asString(), value.asString());
         }
       }
+
+      result.push_back(workflowStep);
     }
 
     return result;
@@ -386,7 +397,7 @@ bool WorkflowJSON::saveAs(const openstudio::path& p) const
   return getImpl<detail::WorkflowJSON_Impl>()->saveAs(p);
 }
 
-openstudio::path WorkflowJSON::oswPath() const
+boost::optional<openstudio::path> WorkflowJSON::oswPath() const
 {
   return getImpl<detail::WorkflowJSON_Impl>()->oswPath();
 }
@@ -399,6 +410,11 @@ openstudio::path WorkflowJSON::oswDir() const
 openstudio::path WorkflowJSON::rootDir() const
 {
   return getImpl<detail::WorkflowJSON_Impl>()->rootDir();
+}
+
+openstudio::path WorkflowJSON::absoluteRootDir() const
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->absoluteRootDir();
 }
 
 std::vector<openstudio::path> WorkflowJSON::filePaths() const

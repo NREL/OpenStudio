@@ -79,7 +79,7 @@ public:
   bool saveAs(const openstudio::path& p) const;
 
   /** Returns the absolute path this workflow was loaded from or saved to, empty for new WorkflowJSON. */
-  openstudio::path oswPath() const;
+  boost::optional<openstudio::path> oswPath() const;
 
   /** Returns the absolute path to the directory this workflow was loaded from or saved to.  Returns current working dir for new WorkflowJSON. */
   openstudio::path oswDir() const;

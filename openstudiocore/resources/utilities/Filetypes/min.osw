@@ -1,6 +1,4 @@
 {
-	"weather_file": "",
-	"seed": "",
 	"steps": [
 		{
 			"measure_dir_name": "IncreaseWallRValue",

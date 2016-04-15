@@ -1,7 +1,9 @@
 {
-  "root": "../root/",
-	"weather_file": "Golden_NREL.epw",
-	"seed": "example.osm",
+  "root": "../../",
+	"weather_file": "./USA_CO_Golden-NREL.724666_TMY3.epw",
+	"seed_file": "1_9_0/example.osm",
+  "file_paths": ["./utilities/Filetypes", "osversion"],
+  "measure_paths": ["./utilities/BCL/Measures/v2"],
 	"steps": [
 		{
 			"measure_dir_name": "IncreaseWallRValue",
