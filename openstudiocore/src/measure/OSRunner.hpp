@@ -55,9 +55,6 @@ class MEASURE_API OSRunner {
   /** @name Constructors and Destructors */
   //@{
 
-  // DLM: require a workflow?
-  OSRunner();
-
   OSRunner(const WorkflowJSON& workflow);
 
   virtual ~OSRunner();

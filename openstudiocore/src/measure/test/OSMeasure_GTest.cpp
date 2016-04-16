@@ -36,6 +36,7 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../../utilities/core/Finder.hpp"
+#include "../../utilities/filetypes/WorkflowJSON.hpp"
 
 #include "../../utilities/units/QuantityConverter.hpp"
 
@@ -48,6 +49,9 @@ using namespace openstudio::measure;
 
 class TestOSRunner : public OSRunner {
  public:
+   TestOSRunner(const WorkflowJSON& workflow)
+     : OSRunner(workflow)
+   {}
 
   virtual bool inSelection(const openstudio::model::ModelObject& modelObject) const override {
     return false;
@@ -99,7 +103,8 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript1) {
   TestModelUserScript1 script;
   EXPECT_EQ("TestModelUserScript1", script.name());
 
-  TestOSRunner runner;
+  WorkflowJSON workflow;
+  TestOSRunner runner(workflow);
   std::map<std::string, OSArgument> user_arguments;
 
   // test with empty model
@@ -265,7 +270,8 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript2) {
   boost::filesystem::create_directory(fileDir);
 
   // call with no arguments
-  TestOSRunner runner;
+  WorkflowJSON workflow;
+  TestOSRunner runner(workflow);
   std::map<std::string, OSArgument> user_arguments;
   bool ok = script.run(model,runner,user_arguments);
   EXPECT_FALSE(ok);

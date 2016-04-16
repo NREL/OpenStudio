@@ -36,7 +36,6 @@ namespace detail{
   {}
 
   WorkflowJSON_Impl::WorkflowJSON_Impl(const std::string& s)
-    : m_path()
   {
     Json::Reader reader;
     bool parsingSuccessful = reader.parse(s, m_value);
@@ -47,21 +46,22 @@ namespace detail{
   }
 
   WorkflowJSON_Impl::WorkflowJSON_Impl(const openstudio::path& p)
-    : m_path(p)
   {
-    if (!boost::filesystem::exists(m_path) || !boost::filesystem::is_regular_file(m_path)){
-      LOG_AND_THROW("Path '" << m_path << "' is not a WorkflowJSON file");
+    if (!boost::filesystem::exists(p) || !boost::filesystem::is_regular_file(p)){
+      LOG_AND_THROW("Path '" << p << "' is not a WorkflowJSON file");
     }
 
     // open file
-    std::ifstream ifs(openstudio::toString(m_path));
+    std::ifstream ifs(openstudio::toString(p));
 
     Json::Reader reader;
     bool parsingSuccessful = reader.parse(ifs, m_value);
     if (!parsingSuccessful){
       std::string errors = reader.getFormattedErrorMessages();
-      LOG_AND_THROW("WorkflowJSON '" << toString(m_path) << "' cannot be processed, " << errors);
+      LOG_AND_THROW("WorkflowJSON '" << toString(p) << "' cannot be processed, " << errors);
     }
+
+    setOswPath(p);
   }
 
   std::string WorkflowJSON_Impl::string(bool includeHash) const
@@ -134,18 +134,37 @@ namespace detail{
 
   boost::optional<openstudio::path> WorkflowJSON_Impl::oswPath() const
   {
-    if (m_path.empty()){
+    if (m_oswFilename.empty() || m_oswDir.empty()){
       return boost::none;
     }
-    return m_path;
+    return m_oswDir / m_oswFilename;
+  }
+
+  bool WorkflowJSON_Impl::setOswPath(const openstudio::path& path)
+  {
+    if (path.is_absolute()){
+      m_oswFilename = path.filename();
+      m_oswDir = path.parent_path();
+      return true;
+    }
+    return false;
   }
 
   openstudio::path WorkflowJSON_Impl::oswDir() const
   {
-    if (m_path.empty()){
+    if (m_oswDir.empty()){
       return boost::filesystem::current_path();
     }
-    return m_path.parent_path();
+    return m_oswDir;
+  }
+
+  bool WorkflowJSON_Impl::setOswDir(const openstudio::path& path)
+  {
+    if (path.is_absolute()){
+      m_oswDir = path;
+      return true;
+    }
+    return false;
   }
 
   openstudio::path WorkflowJSON_Impl::rootDir() const
@@ -402,9 +421,19 @@ boost::optional<openstudio::path> WorkflowJSON::oswPath() const
   return getImpl<detail::WorkflowJSON_Impl>()->oswPath();
 }
 
+bool WorkflowJSON::setOswPath(const openstudio::path& path)
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->setOswPath(path);
+}
+
 openstudio::path WorkflowJSON::oswDir() const
 {
   return getImpl<detail::WorkflowJSON_Impl>()->oswDir();
+}
+
+bool WorkflowJSON::setOswDir(const openstudio::path& path)
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->setOswDir(path);
 }
 
 openstudio::path WorkflowJSON::rootDir() const

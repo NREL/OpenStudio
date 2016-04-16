@@ -32,10 +32,6 @@
 namespace openstudio {
 namespace measure {
 
-OSRunner::OSRunner()
-  : m_currentStep(0), m_unitsPreference("IP"), m_languagePreference("en")
-{}
-
 OSRunner::OSRunner(const WorkflowJSON& workflow)
   : m_workflow(workflow), m_currentStep(0), m_unitsPreference("IP"), m_languagePreference("en")
 {}
@@ -45,7 +41,8 @@ OSRunner::~OSRunner()
 
 WorkflowJSON OSRunner::workflow() const
 {
-  return WorkflowJSON();
+  // return a clone because the workflow is immutable
+  return m_workflow.clone();
 }
 
 unsigned OSRunner::currentStep() const
@@ -146,7 +143,7 @@ std::map<std::string, OSArgument> OSRunner::getUserInput(std::vector<OSArgument>
 
 void OSRunner::reset()
 {
-  // m_workflow;
+  // m_workflow; // do not reset
   m_currentStep = 0;
   m_previousResults.clear();
   //m_unitsPreference // do not reset

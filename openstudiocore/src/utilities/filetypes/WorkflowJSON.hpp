@@ -81,8 +81,14 @@ public:
   /** Returns the absolute path this workflow was loaded from or saved to, empty for new WorkflowJSON. */
   boost::optional<openstudio::path> oswPath() const;
 
+  /** Sets the absolute path for this workflow. */
+  bool setOswPath(const openstudio::path& path);
+
   /** Returns the absolute path to the directory this workflow was loaded from or saved to.  Returns current working dir for new WorkflowJSON. */
   openstudio::path oswDir() const;
+
+  /** Sets the oswDir.  If oswPath is empty this does not set it.  If oswPath is set, this changes directories but preserves file name. */
+  bool setOswDir(const openstudio::path& path);
 
   /** Returns the root directory, default value is '.'. Evaluated relative to oswDir if not absolute. */
   openstudio::path rootDir() const;
