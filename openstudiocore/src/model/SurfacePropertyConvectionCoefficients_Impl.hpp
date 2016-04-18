@@ -95,9 +95,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    bool setSurface(const Surface& surface);
-
-    bool setSurface(const SubSurface& subSurface);
+    bool setSurface(const PlanarSurface& surface);
 
     void resetSurface();
 

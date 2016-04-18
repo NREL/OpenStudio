@@ -112,11 +112,6 @@ namespace detail {
       result.push_back(*daylightingDeviceShelf);
     }
 
-    boost::optional<WindowPropertyFrameAndDivider> windowPropertyFrameAndDivider = this->windowPropertyFrameAndDivider();
-    if (windowPropertyFrameAndDivider){
-      result.push_back(*windowPropertyFrameAndDivider);
-    }
-
     // solar collectors?
 
     for (const auto& surfaceProperty : surfacePropertyConvectionCoefficients()){

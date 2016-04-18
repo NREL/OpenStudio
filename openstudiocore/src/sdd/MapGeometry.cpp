@@ -83,6 +83,7 @@
 #include "../model/ThermostatSetpointDualSetpoint.hpp"
 #include "../model/AirLoopHVAC.hpp"
 #include "../model/AirLoopHVAC_Impl.hpp"
+#include "../model/SurfacePropertyConvectionCoefficients.hpp"
 
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/Geometry.hpp"
@@ -1166,6 +1167,67 @@ namespace sdd {
     return space;
   }
 
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateConvectionCoefficients(const QDomElement& element, const QDomDocument& doc, openstudio::model::PlanarSurface& surface)
+  {
+    boost::optional<std::string> convectionCoefficient1Location;
+    boost::optional<std::string> convectionCoefficient1Type;
+    boost::optional<double> convectionCoefficient1;
+    boost::optional<std::string> convectionCoefficient2Location;
+    boost::optional<std::string> convectionCoefficient2Type;
+    boost::optional<double> convectionCoefficient2;
+
+    QDomElement insideConvCoefElement = element.firstChildElement("InsideConvCoef");
+    if (!insideConvCoefElement.isNull()){
+
+      // sdd IP units (Btu/h-ft2-F), os SI units (W/m2-K) 
+      Quantity coefIP(insideConvCoefElement.text().toDouble(), BTUUnit(BTUExpnt(1, -2, -1, -1)));
+      OptionalQuantity coefSI = QuantityConverter::instance().convert(coefIP, UnitSystem(UnitSystem::Wh));
+      OS_ASSERT(coefSI);
+      OS_ASSERT(coefSI->units() == WhUnit(WhExpnt(1, 0, -2, -1)));
+
+      convectionCoefficient1Location = "Inside";
+      convectionCoefficient1 = coefSI->value();
+    }
+
+    QDomElement outsideConvCoefElement = element.firstChildElement("OutsideConvCoef");
+    if (!outsideConvCoefElement.isNull()){
+
+      // sdd IP units (Btu/h-ft2-F), os SI units (W/m2-K) 
+      Quantity coefIP(outsideConvCoefElement.text().toDouble(), BTUUnit(BTUExpnt(1, -2, -1, -1)));
+      OptionalQuantity coefSI = QuantityConverter::instance().convert(coefIP, UnitSystem(UnitSystem::Wh));
+      OS_ASSERT(coefSI);
+      OS_ASSERT(coefSI->units() == WhUnit(WhExpnt(1, 0, -2, -1)));
+
+      if (convectionCoefficient1Location){
+        convectionCoefficient2Location = "Outside";
+        convectionCoefficient2 = coefSI->value();
+      } else {
+        convectionCoefficient1Location = "Outside";
+        convectionCoefficient1 = coefSI->value();
+      }
+    }
+
+    if (convectionCoefficient1Location){
+
+      model::SurfacePropertyConvectionCoefficients surfacePropertyConvectionCoefficients(surface.model());
+      surfacePropertyConvectionCoefficients.setSurface(surface);
+
+      surfacePropertyConvectionCoefficients.setConvectionCoefficient1Location(*convectionCoefficient1Location);
+      surfacePropertyConvectionCoefficients.setConvectionCoefficient1Type("Value");
+      surfacePropertyConvectionCoefficients.setConvectionCoefficient1(*convectionCoefficient1);
+
+      if (convectionCoefficient2Location){
+        surfacePropertyConvectionCoefficients.setConvectionCoefficient2Location(*convectionCoefficient2Location);
+        surfacePropertyConvectionCoefficients.setConvectionCoefficient2Type("Value");
+        surfacePropertyConvectionCoefficients.setConvectionCoefficient2(*convectionCoefficient2);
+      }
+
+      return surfacePropertyConvectionCoefficients;
+    }
+
+    return boost::none;
+  }
+
   boost::optional<model::ModelObject> ReverseTranslator::translateSurface(const QDomElement& element, const QDomDocument& doc, openstudio::model::Space& space)
   {
     boost::optional<model::ModelObject> result;
@@ -1473,6 +1535,9 @@ namespace sdd {
         }
       }
 
+      // Convert surface convection coefficients
+      translateConvectionCoefficients(element, doc, subSurface);
+        
     }else if (tagName == "Dr"){
 
       subSurface.setSubSurfaceType("Door");
@@ -1502,6 +1567,9 @@ namespace sdd {
           LOG(Error, "Cannot find construction '" << constructionName << "'");
         }
       }
+
+      // Convert surface convection coefficients
+      translateConvectionCoefficients(element, doc, subSurface);
 
     }else{  
       LOG(Error, "Unknown subsurface type '" << toString(tagName) << "'");

@@ -61,6 +61,8 @@
 #include "../model/YearDescription_Impl.hpp"
 #include "../model/OutputControlReportingTolerances.hpp"
 #include "../model/OutputControlReportingTolerances_Impl.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/SubSurface_Impl.hpp"
 #include "../model/ChillerElectricEIR.hpp"
 #include "../model/ChillerElectricEIR_Impl.hpp"
 #include "../model/CoolingTowerSingleSpeed.hpp"
@@ -1042,6 +1044,9 @@ namespace sdd {
 
         var = model::OutputVariable("Site Direct Solar Radiation Rate per Area",*result);
         var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Site Diffuse Solar Radiation Rate per Area", *result);
+        var.setReportingFrequency(interval);
       }
 
       // SimVarsDayltg
@@ -1059,6 +1064,42 @@ namespace sdd {
 
         var = model::OutputVariable("Daylighting Lighting Power Multiplier",*result);
         var.setReportingFrequency(interval);
+      }
+
+      // SimVarsFen
+
+      QDomElement simVarsFenElement = projectElement.firstChildElement("SimVarsFen");
+
+      if ((simVarsFenElement.text().toInt() == 1))
+      {
+        for (const auto& subSurface : result->getConcreteModelObjects<model::SubSurface>())
+        {
+          std::string subSurfaceType = subSurface.subSurfaceType();
+
+          if (istringEqual(subSurfaceType, "FixedWindow") ||
+              istringEqual(subSurfaceType, "OperableWindow") ||
+              istringEqual(subSurfaceType, "GlassDoor") ||
+              istringEqual(subSurfaceType, "Skylight") ||
+              istringEqual(subSurfaceType, "TubularDaylightDome") ||
+              istringEqual(subSurfaceType, "TubularDaylightDiffuser"))
+          {
+            model::OutputVariable var("Surface Window Heat Gain Rate", *result);
+            var.setKeyValue(subSurface.name().get());
+            var.setReportingFrequency(interval);
+
+            var = model::OutputVariable("Surface Window Heat Loss Rate", *result);
+            var.setKeyValue(subSurface.name().get());
+            var.setReportingFrequency(interval);
+
+            var = model::OutputVariable("Surface Inside Face Adjacent Air Temperature", *result);
+            var.setKeyValue(subSurface.name().get());
+            var.setReportingFrequency(interval);
+
+            var = model::OutputVariable("Surface Outside Face Outdoor Air Drybulb Temperature", *result);
+            var.setKeyValue(subSurface.name().get());
+            var.setReportingFrequency(interval);
+          }
+        }
       }
 
       // SimVarsThrmlZn
@@ -1369,7 +1410,7 @@ namespace sdd {
       rt.setToleranceforTimeCoolingSetpointNotMet(0.56);
       rt.setToleranceforTimeHeatingSetpointNotMet(0.56);
     }
-    
+
     return result;
   }
 

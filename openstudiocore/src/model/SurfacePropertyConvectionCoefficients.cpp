@@ -94,7 +94,7 @@ namespace detail {
   }
 
   boost::optional<PlanarSurface> SurfacePropertyConvectionCoefficients_Impl::surface() const {
-    return getObject<PlanarSurface>().getModelObjectTarget<PlanarSurface>(OS_SurfaceProperty_ConvectionCoefficientsFields::SurfaceName);
+    return getObject<ModelObject>().getModelObjectTarget<PlanarSurface>(OS_SurfaceProperty_ConvectionCoefficientsFields::SurfaceName);
   }
 
   boost::optional<std::string> SurfacePropertyConvectionCoefficients_Impl::convectionCoefficient1Location() const {
@@ -137,13 +137,8 @@ namespace detail {
   //  return getObject<ModelObject>().getModelObjectTarget<UserConvectionModels>(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient2UserCurveName);
   //}
 
-  bool SurfacePropertyConvectionCoefficients_Impl::setSurface(const Surface& surface) {
+  bool SurfacePropertyConvectionCoefficients_Impl::setSurface(const PlanarSurface& surface) {
     bool result = setPointer(OS_SurfaceProperty_ConvectionCoefficientsFields::SurfaceName, surface.handle());
-    return result;
-  }
-
-  bool SurfacePropertyConvectionCoefficients_Impl::setSurface(const SubSurface& subSurface) {
-    bool result = setPointer(OS_SurfaceProperty_ConvectionCoefficientsFields::SurfaceName, subSurface.handle());
     return result;
   }
 
@@ -335,12 +330,8 @@ boost::optional<Schedule> SurfacePropertyConvectionCoefficients::convectionCoeff
 //  return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->convectionCoefficient2UserCurve();
 //}
 
-bool SurfacePropertyConvectionCoefficients::setSurface(const Surface& surface) {
+bool SurfacePropertyConvectionCoefficients::setSurface(const PlanarSurface& surface) {
   return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->setSurface(surface);
-}
-
-bool SurfacePropertyConvectionCoefficients::setSurface(const SubSurface& subSurface) {
-  return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->setSurface(subSurface);
 }
 
 bool SurfacePropertyConvectionCoefficients::setConvectionCoefficient1Location(const std::string& convectionCoefficient1Location) {
