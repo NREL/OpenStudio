@@ -54,7 +54,7 @@ extern "C" {
   void Init_openstudiomodelhvac(void);
   void Init_openstudioutilities(void);
   void Init_openstudioutilitiesgeometry(void);
-  ////void Init_openstudiomeasure(void);
+  void Init_openstudiomeasure(void);
   void Init_openstudiomodelrefrigeration(void);
   void Init_openstudioutilitiesbcl(void);
   void Init_openstudioutilitiesidd(void);
@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
     //Init_openstudiogbxml();
     //Init_openstudioairflow();
     //Init_openstudioosversion();
-    //Init_openstudiomeasure();
+    Init_openstudiomeasure();
     //Init_openstudiomodeleditor();
     //Init_openstudiolib();
     //Init_openstudioisomodel();
@@ -151,8 +151,10 @@ int main(int argc, char *argv[])
   // Need embedded_help for requiring files out of the embedded system
   auto embedded_extensions_string = embedded_files::getFileAsString(":/embedded_help.rb");
   rubyInterpreter.evalString(embedded_extensions_string);
+  rubyInterpreter.evalString(R"(require 'openstudio.rb')");
   // Load whatever you want from the standard library
   //rubyInterpreter.evalString(R"(require 'csv.rb')");
+  rubyInterpreter.evalString(R"(require 'optparse')");
   //Init_generator();
   //rubyInterpreter.evalString(R"(require 'json.rb')");
   //rubyInterpreter.evalString(R"(require 'scope_test.rb')");

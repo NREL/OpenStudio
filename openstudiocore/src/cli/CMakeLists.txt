@@ -177,6 +177,7 @@ endforeach()
 embed_files(
   "${CMAKE_CURRENT_SOURCE_DIR}/embedded_help.rb" "embedded_help.rb"
   "${CMAKE_CURRENT_SOURCE_DIR}/scope_test.rb" "scope_test.rb"
+  "${CMAKE_CURRENT_SOURCE_DIR}/openstudio.rb" "openstudio.rb"
   ${EMBED_RB} 
 )
 
@@ -271,7 +272,7 @@ target_link_libraries(EmbeddedScripting
  ruby_OpenStudioModelHVAC
  ruby_OpenStudioUtilities
  ruby_OpenStudioUtilitiesGeometry
- ##ruby_OpenStudioMeasure
+ ruby_OpenStudioMeasure
  ruby_OpenStudioModelRefrigeration
  ruby_OpenStudioUtilitiesBCL
  ruby_OpenStudioUtilitiesIdd
