@@ -23,6 +23,13 @@ extern "C" {
   void Init_transdb(void);
   TRANS_INIT_DECLARATIONS;
 
+  void Init_generator(void);
+  void Init_parser(void);
+//../Ruby//ext/json/generator/generator.a
+//../Ruby//ext/json/parser/parser.a
+
+
+
   //void Init_openstudioairflow(void);
   void Init_openstudiomodelcore(void);
   void Init_openstudiomodelsimulation(void);
@@ -132,6 +139,10 @@ int main(int argc, char *argv[])
     //Init_openstudioisomodel();
     //Init_openstudiosdd();
 
+    //Init_generator();
+    //Init_parser();
+
+
     Init_EmbeddedScripting();
   }
 
@@ -139,14 +150,34 @@ int main(int argc, char *argv[])
   std::vector<std::string> paths;
   RubyInterpreter rubyInterpreter(paths);
 
-  /////std::cout << "***** Shimming Our Kernel::require method *****\n";
+  std::cout << "***** Shimming Our Kernel::require method *****\n";
   // Need embedded_help for requiring files out of the embedded system
-  //auto embedded_extensions_string = embedded_files::getFileAsString(":/embedded_help.rb");
-  //rubyInterpreter.evalString(embedded_extensions_string);
+  auto embedded_extensions_string = embedded_files::getFileAsString(":/embedded_help.rb");
+  rubyInterpreter.evalString(embedded_extensions_string);
   // Load whatever you want from the standard library
   //rubyInterpreter.evalString(R"(require 'csv.rb')");
+  //Init_generator();
+  //rubyInterpreter.evalString(R"(require 'json.rb')");
+  //rubyInterpreter.evalString(R"(require 'scope_test.rb')");
   // Use whatever you want from the OpenStudio API
-  rubyInterpreter.evalString(R"(OpenStudio::Model::Model.new().save('testmodel.osm',true))");
+  //rubyInterpreter.evalString(R"(OpenStudio::Model::Model.new().save('testmodel.osm',true))");
+  rubyInterpreter.evalString(R"(require 'openstudio-workflow')");
 
 
 }
+
+extern "C" {
+  int rb_hasFile(const char *t_filename) {
+    std::cout << "rb_hasFile: " << t_filename << std::endl;
+    std::string expandedName = std::string(":/ruby/2.2.0/") + std::string(t_filename) + ".rb";
+    std::cout << expandedName << std::endl;
+    return embedded_files::hasFile(expandedName);
+  }
+  
+  const char* rb_getFileAsString(const char *t_filename) {
+    std::string expandedName = std::string(":/ruby/2.2.0/") + std::string(t_filename) + ".rb";
+    std::cout << "getFileAsString: " << expandedName << std::endl;
+    return embedded_files::getFileAsString(expandedName).c_str();
+  }
+}
+

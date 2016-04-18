@@ -627,6 +627,20 @@ else()
   set(RUBY_SOURCE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby")
 endif()
 
+# make this cross platform
+# and even better. take it out of external project and move it into openstudiocore project
+ExternalProject_Add(OpenStudio-workflow-gem
+  GIT_REPOSITORY https://github.com/NREL/OpenStudio-workflow-gem.git
+  GIT_TAG osw
+  BUILD_IN_SOURCE 1
+  CONFIGURE_COMMAND ""
+  BUILD_COMMAND sh -c "gem build openstudio-workflow.gemspec"
+  INSTALL_COMMAND sh -c "gem install --install-dir ${CMAKE_BINARY_DIR}/OpenStudio-workflow-gem-prefix/src/OpenStudio-workflow-gem-install ${CMAKE_BINARY_DIR}/OpenStudio-workflow-gem-prefix/src/OpenStudio-workflow-gem/openstudio-workflow-1.0.0.alpha.0.gem"
+)
+# Get rid of that version id in the path, or find it or something that doesn't require maintenance
+set(OPENSTUDIO_WORKFLOW_GEM "${CMAKE_BINARY_DIR}/OpenStudio-workflow-gem-prefix/src/OpenStudio-workflow-gem-install")
+
+
 ## Always unpack Ruby on Windows
 #if(WIN32)
 #  if(CMAKE_CL_64)
@@ -959,6 +973,7 @@ ExternalProject_Add(OSCore
     -DRUBY_CONFIG_INCLUDE_DIR:PATH=${RUBY_CONFIG_INCLUDE_DIR}
     -DRUBY_EXECUTABLE:PATH=${RUBY_EXECUTABLE}
     -DRUBY_SOURCE_DIR:PATH=${RUBY_SOURCE_DIR}
+    -DOPENSTUDIO_WORKFLOW_GEM:PATH=${OPENSTUDIO_WORKFLOW_GEM}
     INSTALL_COMMAND ""
 )
 

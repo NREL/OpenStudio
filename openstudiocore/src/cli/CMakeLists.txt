@@ -159,8 +159,24 @@ foreach( _FILE ${EXTENSION_RB} )
   list(APPEND EMBED_RB ${_FILE} ${LOCATION})
 endforeach()
 
+#add_custom_command(
+#  OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/gemstage/gems/openstudio-workflow-1.0.0.alpha.0/lib/openstudio-workflow.rb"
+#  COMMAND "gem" "install" "--install-dir" "${CMAKE_CURRENT_BINARY_DIR}/gemstage" "${OPENSTUDIO_WORKFLOW_GEM}"
+#  DEPENDS "${OPENSTUDIO_WORKFLOW_GEM}"
+#)
+
+message("OPENSTUDIO_WORKFLOW_GEM: ${OPENSTUDIO_WORKFLOW_GEM}")
+file(GLOB_RECURSE WORKFLOW_RB FOLLOW_SYMLINKS "${OPENSTUDIO_WORKFLOW_GEM}/**/*.rb")
+
+foreach( _FILE ${WORKFLOW_RB} )
+  message("WF FILE: ${_FILE}")
+  file(RELATIVE_PATH LOCATION "${OPENSTUDIO_WORKFLOW_GEM}/gems" ${_FILE})
+  list(APPEND EMBED_RB ${_FILE} ${LOCATION})
+endforeach()
+
 embed_files(
   "${CMAKE_CURRENT_SOURCE_DIR}/embedded_help.rb" "embedded_help.rb"
+  "${CMAKE_CURRENT_SOURCE_DIR}/scope_test.rb" "scope_test.rb"
   ${EMBED_RB} 
 )
 
@@ -192,6 +208,7 @@ add_custom_command(
           "${CMAKE_CURRENT_SOURCE_DIR}/EmbeddedScripting.i"
   DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/EmbeddedScripting.i"
           "embedded_files.hpp"
+          "EmbeddedHelp.hpp"
 )
 
 set_source_files_properties(${EMBED_SOURCE_FILES} PROPERTIES HEADER_FILE_ONLY TRUE)
@@ -222,8 +239,12 @@ endif()
 
 add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 
+message( "EXTENSION_LIBS: ${EXTENSION_LIBS}")
+
 target_link_libraries(EmbeddedScripting 
  ${EXTENSION_LIBS} 
+ "${RUBY_SOURCE_DIR}/ext/json/generator/generator.a"
+ "${RUBY_SOURCE_DIR}/ext/json/parser/parser.a"
  ${ENCODING_LIB}
  ${TRANSLATION_LIB}
  ruby_OpenStudioAirflow
