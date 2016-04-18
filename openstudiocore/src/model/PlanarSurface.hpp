@@ -157,12 +157,12 @@ class MODEL_API PlanarSurface : public ParentObject {
   /// Throws openstudio::Exception if cannot compute outward normal for this surface.
   double azimuth() const;
 
-  /** Returns the u-factor of this surface. Includes film coefficients.
+  /** Returns the u-factor of this surface. Includes standard film coefficients, does not consider any custom SurfacePropertyConvectionCoefficients.
   *   Attribute name: uFactor */
   boost::optional<double> uFactor() const;
 
   /** Sets the u-factor of this surface in W/m^2*K, if possible. Value should already include appropriate
-   *  film coefficients. By default, assumes still air indoors and 15 mph outdoor air speed.
+   *  standard film coefficients, assuming still air indoors and 15 mph outdoor air speed. Does not consider any custom SurfacePropertyConvectionCoefficients
    *  Attribute name: uFactor */
   bool setUFactor(double value);
 
