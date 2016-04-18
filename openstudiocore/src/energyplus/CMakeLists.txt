@@ -258,6 +258,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSteamEquipment.cpp
   ForwardTranslator/ForwardTranslateSubSurface.cpp
   ForwardTranslator/ForwardTranslateSurface.cpp
+  ForwardTranslator/ForwardTranslateSurfacePropertyConvectionCoefficients.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyConvectionCoefficientsMultipleSurface.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyOtherSideCoefficients.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyOtherSideConditionsModel.cpp
