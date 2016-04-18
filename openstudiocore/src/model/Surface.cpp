@@ -37,6 +37,7 @@
 #include "ShadingSurface.hpp"
 #include "InteriorPartitionSurfaceGroup.hpp"
 #include "InteriorPartitionSurface.hpp"
+#include "SurfacePropertyConvectionCoefficients.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -109,6 +110,12 @@ namespace detail {
    // subSurfaces
    SubSurfaceVector subSurfaces = this->subSurfaces();
    result.insert(result.end(), subSurfaces.begin(), subSurfaces.end());
+
+   // solar collectors?
+
+   for (const auto& surfaceProperty : surfacePropertyConvectionCoefficients()){
+     result.push_back(surfaceProperty);
+   }
 
    return result;
  }

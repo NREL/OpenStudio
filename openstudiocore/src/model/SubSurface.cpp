@@ -40,6 +40,7 @@
 #include "DaylightingDeviceShelf_Impl.hpp"
 #include "WindowPropertyFrameAndDivider.hpp"
 #include "WindowPropertyFrameAndDivider_Impl.hpp"
+#include "SurfacePropertyConvectionCoefficients.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -106,6 +107,18 @@ namespace detail {
     if (daylightingDeviceShelf){
       result.push_back(*daylightingDeviceShelf);
     }
+
+    boost::optional<WindowPropertyFrameAndDivider> windowPropertyFrameAndDivider = this->windowPropertyFrameAndDivider();
+    if (windowPropertyFrameAndDivider){
+      result.push_back(*windowPropertyFrameAndDivider);
+    }
+
+    // solar collectors?
+
+    for (const auto& surfaceProperty : surfacePropertyConvectionCoefficients()){
+      result.push_back(surfaceProperty);
+    }
+
     return result;
   }
 

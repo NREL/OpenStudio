@@ -34,6 +34,7 @@ namespace model {
 class PlanarSurfaceGroup;
 class Space;
 class ConstructionBase;
+class SurfacePropertyConvectionCoefficients;
 
 namespace detail {
   class PlanarSurface_Impl;
@@ -218,6 +219,8 @@ class MODEL_API PlanarSurface : public ParentObject {
   /// Returns any solar hot water collectors associated with this surface.
   std::vector<ModelObject> solarCollectors() const;
 
+  /// Returns any SurfacePropertyConvectionCoefficients associated with this surface, does not return SurfacePropertyConvectionCoefficientsMultipleSurface.
+  std::vector<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 
  protected:
 

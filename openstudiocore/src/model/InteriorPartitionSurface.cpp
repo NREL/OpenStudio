@@ -73,6 +73,10 @@ namespace detail {
   std::vector<ModelObject> InteriorPartitionSurface_Impl::children() const
   {
     std::vector<ModelObject> result;
+
+    // solar collectors?
+
+
     return result;
   }
 

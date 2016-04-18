@@ -33,6 +33,8 @@
 #include "AirWallMaterial_Impl.hpp"
 #include "SubSurface.hpp"
 #include "SubSurface_Impl.hpp"
+#include "SurfacePropertyConvectionCoefficients.hpp"
+#include "SurfacePropertyConvectionCoefficients_Impl.hpp"
 
 #include "../utilities/sql/SqlFile.hpp"
 
@@ -562,6 +564,11 @@ namespace model {
       return result;
     }
 
+    std::vector<SurfacePropertyConvectionCoefficients> PlanarSurface_Impl::surfacePropertyConvectionCoefficients() const
+    {
+      return getObject<ModelObject>().getModelObjectSources<SurfacePropertyConvectionCoefficients>();
+    }
+
     boost::optional<ModelObject> PlanarSurface_Impl::constructionAsModelObject() const
     {
       return static_cast<boost::optional<ModelObject> >(this->construction());
@@ -791,6 +798,11 @@ Point3d PlanarSurface::centroid() const
 std::vector<ModelObject> PlanarSurface::solarCollectors() const
 {
   return getImpl<detail::PlanarSurface_Impl>()->solarCollectors();
+}
+
+std::vector<SurfacePropertyConvectionCoefficients> PlanarSurface::surfacePropertyConvectionCoefficients() const
+{
+  return getImpl<detail::PlanarSurface_Impl>()->surfacePropertyConvectionCoefficients();
 }
 
 std::vector<PlanarSurface> PlanarSurface::findPlanarSurfaces(const std::vector<PlanarSurface>& planarSurfaces,

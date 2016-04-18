@@ -34,6 +34,7 @@ class PlanarSurfaceGroup;
 class PlanarSurface;
 class Space;
 class ConstructionBase;
+class SurfacePropertyConvectionCoefficients;
 
 namespace detail {
 
@@ -160,6 +161,8 @@ namespace detail {
     Point3d centroid() const;
 
     std::vector<ModelObject> solarCollectors() const;
+
+    std::vector<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 
     //@}
    protected:
