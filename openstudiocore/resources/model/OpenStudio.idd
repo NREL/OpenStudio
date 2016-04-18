@@ -5204,16 +5204,13 @@ OS:SurfaceProperty:ConvectionCoefficients,
       \type handle
       \required-field      
   A2, \field Surface Name
-      \required-field
       \type object-list
       \object-list AllHeatTranSurfNames
   A3, \field Convection Coefficient 1 Location
-      \required-field
       \type choice
       \key Outside
       \key Inside
   A4, \field Convection Coefficient 1 Type
-      \required-field
       \type choice
       \key Value
       \key Schedule
@@ -5323,7 +5320,6 @@ OS:SurfaceProperty:ConvectionCoefficients,
   N2, \field Convection Coefficient 2
       \note used if Convection Type=Value, min and max limits are set in HeatBalanceAlgorithm object.
       \note Default limits are Minimum >= 0.1 and Maximum <= 1000
-      \default .1
       \units W/m2-K
   A9, \field Convection Coefficient 2 Schedule Name
       \note used if Convection Type=Schedule,  min and max limits are set in HeatBalanceAlgorithm object.

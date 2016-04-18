@@ -20,17 +20,12 @@
 #include "SurfacePropertyConvectionCoefficients.hpp"
 #include "SurfacePropertyConvectionCoefficients_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include "AllHeatTranSurf.hpp"
-#include "AllHeatTranSurf_Impl.hpp"
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
+#include "SubSurface.hpp"
+#include "SubSurface_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-#include "UserConvectionModels.hpp"
-#include "UserConvectionModels_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "UserConvectionModels.hpp"
-#include "UserConvectionModels_Impl.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
 
@@ -98,24 +93,16 @@ namespace detail {
     return result;
   }
 
-  AllHeatTranSurf SurfacePropertyConvectionCoefficients_Impl::surface() const {
-    boost::optional<AllHeatTranSurf> value = optionalSurface();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Surface attached.");
-    }
-    return value.get();
+  boost::optional<PlanarSurface> SurfacePropertyConvectionCoefficients_Impl::surface() const {
+    return getObject<PlanarSurface>().getModelObjectTarget<PlanarSurface>(OS_SurfaceProperty_ConvectionCoefficientsFields::SurfaceName);
   }
 
-  std::string SurfacePropertyConvectionCoefficients_Impl::convectionCoefficient1Location() const {
-    boost::optional<std::string> value = getString(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient1Location,true);
-    OS_ASSERT(value);
-    return value.get();
+  boost::optional<std::string> SurfacePropertyConvectionCoefficients_Impl::convectionCoefficient1Location() const {
+    return getString(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient1Location,true);
   }
 
-  std::string SurfacePropertyConvectionCoefficients_Impl::convectionCoefficient1Type() const {
-    boost::optional<std::string> value = getString(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient1Type,true);
-    OS_ASSERT(value);
-    return value.get();
+  boost::optional<std::string> SurfacePropertyConvectionCoefficients_Impl::convectionCoefficient1Type() const {
+    return getString(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient1Type,true);
   }
 
   boost::optional<double> SurfacePropertyConvectionCoefficients_Impl::convectionCoefficient1() const {
@@ -126,9 +113,9 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient1ScheduleName);
   }
 
-  boost::optional<UserConvectionModels> SurfacePropertyConvectionCoefficients_Impl::convectionCoefficient1UserCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<UserConvectionModels>(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient1UserCurveName);
-  }
+  //boost::optional<UserConvectionModels> SurfacePropertyConvectionCoefficients_Impl::convectionCoefficient1UserCurve() const {
+  //  return getObject<ModelObject>().getModelObjectTarget<UserConvectionModels>(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient1UserCurveName);
+  //}
 
   boost::optional<std::string> SurfacePropertyConvectionCoefficients_Impl::convectionCoefficient2Location() const {
     return getString(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient2Location,true);
@@ -138,49 +125,41 @@ namespace detail {
     return getString(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient2Type,true);
   }
 
-  double SurfacePropertyConvectionCoefficients_Impl::convectionCoefficient2() const {
-    boost::optional<double> value = getDouble(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient2,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool SurfacePropertyConvectionCoefficients_Impl::isConvectionCoefficient2Defaulted() const {
-    return isEmpty(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient2);
+  boost::optional<double> SurfacePropertyConvectionCoefficients_Impl::convectionCoefficient2() const {
+    return getDouble(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient2,true);
   }
 
   boost::optional<Schedule> SurfacePropertyConvectionCoefficients_Impl::convectionCoefficient2Schedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient2ScheduleName);
   }
 
-  boost::optional<UserConvectionModels> SurfacePropertyConvectionCoefficients_Impl::convectionCoefficient2UserCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<UserConvectionModels>(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient2UserCurveName);
-  }
+  //boost::optional<UserConvectionModels> SurfacePropertyConvectionCoefficients_Impl::convectionCoefficient2UserCurve() const {
+  //  return getObject<ModelObject>().getModelObjectTarget<UserConvectionModels>(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient2UserCurveName);
+  //}
 
-  bool SurfacePropertyConvectionCoefficients_Impl::setSurface(const AllHeatTranSurf& allHeatTranSurf) {
-    bool result = setPointer(OS_SurfaceProperty_ConvectionCoefficientsFields::SurfaceName, allHeatTranSurf.handle());
+  bool SurfacePropertyConvectionCoefficients_Impl::setSurface(const Surface& surface) {
+    bool result = setPointer(OS_SurfaceProperty_ConvectionCoefficientsFields::SurfaceName, surface.handle());
     return result;
   }
 
-  bool SurfacePropertyConvectionCoefficients_Impl::setConvectionCoefficient1Location(std::string convectionCoefficient1Location) {
+  bool SurfacePropertyConvectionCoefficients_Impl::setSurface(const SubSurface& subSurface) {
+    bool result = setPointer(OS_SurfaceProperty_ConvectionCoefficientsFields::SurfaceName, subSurface.handle());
+    return result;
+  }
+
+  bool SurfacePropertyConvectionCoefficients_Impl::setConvectionCoefficient1Location(const std::string& convectionCoefficient1Location) {
     bool result = setString(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient1Location, convectionCoefficient1Location);
     return result;
   }
 
-  bool SurfacePropertyConvectionCoefficients_Impl::setConvectionCoefficient1Type(std::string convectionCoefficient1Type) {
+  bool SurfacePropertyConvectionCoefficients_Impl::setConvectionCoefficient1Type(const std::string& convectionCoefficient1Type) {
     bool result = setString(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient1Type, convectionCoefficient1Type);
     return result;
   }
 
-  void SurfacePropertyConvectionCoefficients_Impl::setConvectionCoefficient1(boost::optional<double> convectionCoefficient1) {
-    bool result(false);
-    if (convectionCoefficient1) {
-      result = setDouble(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient1, convectionCoefficient1.get());
-    }
-    else {
-      resetConvectionCoefficient1();
-      result = true;
-    }
-    OS_ASSERT(result);
+  bool SurfacePropertyConvectionCoefficients_Impl::setConvectionCoefficient1(double convectionCoefficient1) {
+    bool result = setDouble(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient1, convectionCoefficient1);
+    return result;
   }
 
   void SurfacePropertyConvectionCoefficients_Impl::resetConvectionCoefficient1() {
@@ -200,7 +179,7 @@ namespace detail {
     bool result = setString(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient1ScheduleName, "");
     OS_ASSERT(result);
   }
-
+  /*
   bool SurfacePropertyConvectionCoefficients_Impl::setConvectionCoefficient1UserCurve(const boost::optional<UserConvectionModels>& userConvectionModels) {
     bool result(false);
     if (userConvectionModels) {
@@ -217,16 +196,10 @@ namespace detail {
     bool result = setString(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient1UserCurveName, "");
     OS_ASSERT(result);
   }
+  */
 
-  bool SurfacePropertyConvectionCoefficients_Impl::setConvectionCoefficient2Location(boost::optional<std::string> convectionCoefficient2Location) {
-    bool result(false);
-    if (convectionCoefficient2Location) {
-      result = setString(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient2Location, convectionCoefficient2Location.get());
-    }
-    else {
-      resetConvectionCoefficient2Location();
-      result = true;
-    }
+  bool SurfacePropertyConvectionCoefficients_Impl::setConvectionCoefficient2Location(const std::string& convectionCoefficient2Location) {
+    bool result = setString(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient2Location, convectionCoefficient2Location);
     return result;
   }
 
@@ -235,15 +208,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool SurfacePropertyConvectionCoefficients_Impl::setConvectionCoefficient2Type(boost::optional<std::string> convectionCoefficient2Type) {
-    bool result(false);
-    if (convectionCoefficient2Type) {
-      result = setString(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient2Type, convectionCoefficient2Type.get());
-    }
-    else {
-      resetConvectionCoefficient2Type();
-      result = true;
-    }
+  bool SurfacePropertyConvectionCoefficients_Impl::setConvectionCoefficient2Type(const std::string& convectionCoefficient2Type) {
+    bool result = setString(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient2Type, convectionCoefficient2Type);
     return result;
   }
 
@@ -252,9 +218,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SurfacePropertyConvectionCoefficients_Impl::setConvectionCoefficient2(double convectionCoefficient2) {
+  bool SurfacePropertyConvectionCoefficients_Impl::setConvectionCoefficient2(double convectionCoefficient2) {
     bool result = setDouble(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient2, convectionCoefficient2);
-    OS_ASSERT(result);
+    return result;
   }
 
   void SurfacePropertyConvectionCoefficients_Impl::resetConvectionCoefficient2() {
@@ -274,7 +240,7 @@ namespace detail {
     bool result = setString(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient2ScheduleName, "");
     OS_ASSERT(result);
   }
-
+  /*
   bool SurfacePropertyConvectionCoefficients_Impl::setConvectionCoefficient2UserCurve(const boost::optional<UserConvectionModels>& userConvectionModels) {
     bool result(false);
     if (userConvectionModels) {
@@ -291,10 +257,7 @@ namespace detail {
     bool result = setString(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient2UserCurveName, "");
     OS_ASSERT(result);
   }
-
-  boost::optional<AllHeatTranSurf> SurfacePropertyConvectionCoefficients_Impl::optionalSurface() const {
-    return getObject<ModelObject>().getModelObjectTarget<AllHeatTranSurf>(OS_SurfaceProperty_ConvectionCoefficientsFields::SurfaceName);
-  }
+  */
 
 } // detail
 
@@ -302,18 +265,6 @@ SurfacePropertyConvectionCoefficients::SurfacePropertyConvectionCoefficients(con
   : ModelObject(SurfacePropertyConvectionCoefficients::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_SurfaceProperty_ConvectionCoefficientsFields::SurfaceName
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
-  // ok = setSurface();
-  OS_ASSERT(ok);
-  // ok = setConvectionCoefficient1Location();
-  OS_ASSERT(ok);
-  // ok = setConvectionCoefficient1Type();
-  OS_ASSERT(ok);
 }
 
 IddObjectType SurfacePropertyConvectionCoefficients::iddObjectType() {
@@ -340,15 +291,15 @@ std::vector<std::string> SurfacePropertyConvectionCoefficients::convectionCoeffi
                         OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient2Type);
 }
 
-AllHeatTranSurf SurfacePropertyConvectionCoefficients::surface() const {
+boost::optional<PlanarSurface> SurfacePropertyConvectionCoefficients::surface() const {
   return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->surface();
 }
 
-std::string SurfacePropertyConvectionCoefficients::convectionCoefficient1Location() const {
+boost::optional<std::string> SurfacePropertyConvectionCoefficients::convectionCoefficient1Location() const {
   return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->convectionCoefficient1Location();
 }
 
-std::string SurfacePropertyConvectionCoefficients::convectionCoefficient1Type() const {
+boost::optional<std::string> SurfacePropertyConvectionCoefficients::convectionCoefficient1Type() const {
   return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->convectionCoefficient1Type();
 }
 
@@ -360,9 +311,9 @@ boost::optional<Schedule> SurfacePropertyConvectionCoefficients::convectionCoeff
   return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->convectionCoefficient1Schedule();
 }
 
-boost::optional<UserConvectionModels> SurfacePropertyConvectionCoefficients::convectionCoefficient1UserCurve() const {
-  return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->convectionCoefficient1UserCurve();
-}
+//boost::optional<UserConvectionModels> SurfacePropertyConvectionCoefficients::convectionCoefficient1UserCurve() const {
+//  return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->convectionCoefficient1UserCurve();
+//}
 
 boost::optional<std::string> SurfacePropertyConvectionCoefficients::convectionCoefficient2Location() const {
   return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->convectionCoefficient2Location();
@@ -372,36 +323,36 @@ boost::optional<std::string> SurfacePropertyConvectionCoefficients::convectionCo
   return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->convectionCoefficient2Type();
 }
 
-double SurfacePropertyConvectionCoefficients::convectionCoefficient2() const {
+boost::optional<double> SurfacePropertyConvectionCoefficients::convectionCoefficient2() const {
   return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->convectionCoefficient2();
-}
-
-bool SurfacePropertyConvectionCoefficients::isConvectionCoefficient2Defaulted() const {
-  return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->isConvectionCoefficient2Defaulted();
 }
 
 boost::optional<Schedule> SurfacePropertyConvectionCoefficients::convectionCoefficient2Schedule() const {
   return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->convectionCoefficient2Schedule();
 }
 
-boost::optional<UserConvectionModels> SurfacePropertyConvectionCoefficients::convectionCoefficient2UserCurve() const {
-  return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->convectionCoefficient2UserCurve();
+//boost::optional<UserConvectionModels> SurfacePropertyConvectionCoefficients::convectionCoefficient2UserCurve() const {
+//  return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->convectionCoefficient2UserCurve();
+//}
+
+bool SurfacePropertyConvectionCoefficients::setSurface(const Surface& surface) {
+  return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->setSurface(surface);
 }
 
-bool SurfacePropertyConvectionCoefficients::setSurface(const AllHeatTranSurf& allHeatTranSurf) {
-  return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->setSurface(allHeatTranSurf);
+bool SurfacePropertyConvectionCoefficients::setSurface(const SubSurface& subSurface) {
+  return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->setSurface(subSurface);
 }
 
-bool SurfacePropertyConvectionCoefficients::setConvectionCoefficient1Location(std::string convectionCoefficient1Location) {
+bool SurfacePropertyConvectionCoefficients::setConvectionCoefficient1Location(const std::string& convectionCoefficient1Location) {
   return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->setConvectionCoefficient1Location(convectionCoefficient1Location);
 }
 
-bool SurfacePropertyConvectionCoefficients::setConvectionCoefficient1Type(std::string convectionCoefficient1Type) {
+bool SurfacePropertyConvectionCoefficients::setConvectionCoefficient1Type(const std::string& convectionCoefficient1Type) {
   return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->setConvectionCoefficient1Type(convectionCoefficient1Type);
 }
 
-void SurfacePropertyConvectionCoefficients::setConvectionCoefficient1(double convectionCoefficient1) {
-  getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->setConvectionCoefficient1(convectionCoefficient1);
+bool SurfacePropertyConvectionCoefficients::setConvectionCoefficient1(double convectionCoefficient1) {
+  return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->setConvectionCoefficient1(convectionCoefficient1);
 }
 
 void SurfacePropertyConvectionCoefficients::resetConvectionCoefficient1() {
@@ -416,15 +367,15 @@ void SurfacePropertyConvectionCoefficients::resetConvectionCoefficient1Schedule(
   getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->resetConvectionCoefficient1Schedule();
 }
 
-bool SurfacePropertyConvectionCoefficients::setConvectionCoefficient1UserCurve(const UserConvectionModels& userConvectionModels) {
-  return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->setConvectionCoefficient1UserCurve(userConvectionModels);
-}
+//bool SurfacePropertyConvectionCoefficients::setConvectionCoefficient1UserCurve(const UserConvectionModels& userConvectionModels) {
+//  return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->setConvectionCoefficient1UserCurve(userConvectionModels);
+//}
 
-void SurfacePropertyConvectionCoefficients::resetConvectionCoefficient1UserCurve() {
-  getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->resetConvectionCoefficient1UserCurve();
-}
+//void SurfacePropertyConvectionCoefficients::resetConvectionCoefficient1UserCurve() {
+//  getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->resetConvectionCoefficient1UserCurve();
+//}
 
-bool SurfacePropertyConvectionCoefficients::setConvectionCoefficient2Location(std::string convectionCoefficient2Location) {
+bool SurfacePropertyConvectionCoefficients::setConvectionCoefficient2Location(const std::string& convectionCoefficient2Location) {
   return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->setConvectionCoefficient2Location(convectionCoefficient2Location);
 }
 
@@ -432,7 +383,7 @@ void SurfacePropertyConvectionCoefficients::resetConvectionCoefficient2Location(
   getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->resetConvectionCoefficient2Location();
 }
 
-bool SurfacePropertyConvectionCoefficients::setConvectionCoefficient2Type(std::string convectionCoefficient2Type) {
+bool SurfacePropertyConvectionCoefficients::setConvectionCoefficient2Type(const std::string& convectionCoefficient2Type) {
   return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->setConvectionCoefficient2Type(convectionCoefficient2Type);
 }
 
@@ -440,8 +391,8 @@ void SurfacePropertyConvectionCoefficients::resetConvectionCoefficient2Type() {
   getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->resetConvectionCoefficient2Type();
 }
 
-void SurfacePropertyConvectionCoefficients::setConvectionCoefficient2(double convectionCoefficient2) {
-  getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->setConvectionCoefficient2(convectionCoefficient2);
+bool SurfacePropertyConvectionCoefficients::setConvectionCoefficient2(double convectionCoefficient2) {
+  return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->setConvectionCoefficient2(convectionCoefficient2);
 }
 
 void SurfacePropertyConvectionCoefficients::resetConvectionCoefficient2() {
@@ -456,13 +407,13 @@ void SurfacePropertyConvectionCoefficients::resetConvectionCoefficient2Schedule(
   getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->resetConvectionCoefficient2Schedule();
 }
 
-bool SurfacePropertyConvectionCoefficients::setConvectionCoefficient2UserCurve(const UserConvectionModels& userConvectionModels) {
-  return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->setConvectionCoefficient2UserCurve(userConvectionModels);
-}
+//bool SurfacePropertyConvectionCoefficients::setConvectionCoefficient2UserCurve(const UserConvectionModels& userConvectionModels) {
+//  return getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->setConvectionCoefficient2UserCurve(userConvectionModels);
+//}
 
-void SurfacePropertyConvectionCoefficients::resetConvectionCoefficient2UserCurve() {
-  getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->resetConvectionCoefficient2UserCurve();
-}
+//void SurfacePropertyConvectionCoefficients::resetConvectionCoefficient2UserCurve() {
+//  getImpl<detail::SurfacePropertyConvectionCoefficients_Impl>()->resetConvectionCoefficient2UserCurve();
+//}
 
 /// @cond
 SurfacePropertyConvectionCoefficients::SurfacePropertyConvectionCoefficients(std::shared_ptr<detail::SurfacePropertyConvectionCoefficients_Impl> impl)

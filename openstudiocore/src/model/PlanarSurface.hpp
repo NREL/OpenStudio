@@ -236,6 +236,7 @@ class MODEL_API PlanarSurface : public ParentObject {
 
   friend class Model;
   friend class openstudio::IdfObject;
+  friend class openstudio::detail::IdfObject_Impl;
 
   // constructor
   explicit PlanarSurface(std::shared_ptr<detail::PlanarSurface_Impl> impl);
