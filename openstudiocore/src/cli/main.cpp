@@ -64,6 +64,8 @@ extern "C" {
   void Init_openstudioutilitiesidf(void);
 }
 
+std::vector<std::string> paths;
+static RubyInterpreter rubyInterpreter(paths);//(paths);
 
 int main(int argc, char *argv[])
 {
@@ -142,13 +144,8 @@ int main(int argc, char *argv[])
     //Init_generator();
     //Init_parser();
 
-
     Init_EmbeddedScripting();
   }
-
-  /////std::cout << "***** Initializing RubyInterpreter Wrapper *****\n";
-  std::vector<std::string> paths;
-  RubyInterpreter rubyInterpreter(paths);
 
   std::cout << "***** Shimming Our Kernel::require method *****\n";
   // Need embedded_help for requiring files out of the embedded system
@@ -162,22 +159,19 @@ int main(int argc, char *argv[])
   // Use whatever you want from the OpenStudio API
   //rubyInterpreter.evalString(R"(OpenStudio::Model::Model.new().save('testmodel.osm',true))");
   rubyInterpreter.evalString(R"(require 'openstudio-workflow')");
-
-
 }
 
 extern "C" {
   int rb_hasFile(const char *t_filename) {
-    std::cout << "rb_hasFile: " << t_filename << std::endl;
+    // TODO Consider expanding this to use the path which we have artificially defined in embedded_help.rb
     std::string expandedName = std::string(":/ruby/2.2.0/") + std::string(t_filename) + ".rb";
-    std::cout << expandedName << std::endl;
     return embedded_files::hasFile(expandedName);
   }
-  
-  const char* rb_getFileAsString(const char *t_filename) {
-    std::string expandedName = std::string(":/ruby/2.2.0/") + std::string(t_filename) + ".rb";
-    std::cout << "getFileAsString: " << expandedName << std::endl;
-    return embedded_files::getFileAsString(expandedName).c_str();
+
+  int rb_require_embedded(const char *t_filename) {
+    std::string require_script = R"(require ')" + std::string(t_filename) + R"(')";
+    rubyInterpreter.evalString(require_script);
+    return 0;
   }
 }
 
