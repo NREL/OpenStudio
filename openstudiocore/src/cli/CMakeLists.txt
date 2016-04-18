@@ -178,6 +178,7 @@ embed_files(
   "${CMAKE_CURRENT_SOURCE_DIR}/embedded_help.rb" "embedded_help.rb"
   "${CMAKE_CURRENT_SOURCE_DIR}/scope_test.rb" "scope_test.rb"
   "${CMAKE_CURRENT_SOURCE_DIR}/openstudio.rb" "openstudio.rb"
+  "${CMAKE_CURRENT_SOURCE_DIR}/openstudio_cli.rb" "openstudio_cli.rb"
   ${EMBED_RB} 
 )
 
@@ -214,7 +215,7 @@ add_custom_command(
 
 set_source_files_properties(${EMBED_SOURCE_FILES} PROPERTIES HEADER_FILE_ONLY TRUE)
 
-add_executable(EmbeddedScripting
+add_executable(openstudio-wf
  main.cpp
  "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
  RubyException.hpp
@@ -233,7 +234,7 @@ if( UNIX )
   set(ENCODING_LIB "${RUBY_SOURCE_DIR}/enc/libenc.a")
   set(TRANSLATION_LIB "${RUBY_SOURCE_DIR}/enc/libtrans.a")
 else()
-  target_link_libraries(EmbeddedScripting wsock32 ws2_32 Iphlpapi Dbghelp Shlwapi)
+  target_link_libraries(openstudio-wf wsock32 ws2_32 Iphlpapi Dbghelp Shlwapi)
   set(ENCODING_LIB "${RUBY_SOURCE_DIR}/enc/libenc.lib")
   set(TRANSLATION_LIB "${RUBY_SOURCE_DIR}/enc/libtrans.lib")
 endif()
@@ -242,7 +243,7 @@ add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 
 message( "EXTENSION_LIBS: ${EXTENSION_LIBS}")
 
-target_link_libraries(EmbeddedScripting 
+target_link_libraries(openstudio-wf 
  ${EXTENSION_LIBS} 
  "${RUBY_SOURCE_DIR}/ext/json/generator/generator.a"
  "${RUBY_SOURCE_DIR}/ext/json/parser/parser.a"
@@ -282,21 +283,21 @@ target_link_libraries(EmbeddedScripting
  ruby_OpenStudioUtilitiesIdf
 )
 
-target_link_libraries(EmbeddedScripting 
+target_link_libraries(openstudio-wf 
 	openstudio_utilities
   	${Boost_LIBRARIES}
   	${QT_LIBS}
 )
 
 if (UNIX AND NOT APPLE)
-  target_link_libraries(EmbeddedScripting ${RUBY_LIBRARY}  "dl" "crypt")
+  target_link_libraries(openstudio-wf ${RUBY_LIBRARY}  "dl" "crypt")
 else()
-  target_link_libraries(EmbeddedScripting ${RUBY_LIBRARY} )
+  target_link_libraries(openstudio-wf ${RUBY_LIBRARY} )
 endif()
 
 
 if( APPLE )
-  target_link_libraries(EmbeddedScripting ${COREFOUNDATION_LIBRARY} )
+  target_link_libraries(openstudio-wf ${COREFOUNDATION_LIBRARY} )
 endif()
 
 

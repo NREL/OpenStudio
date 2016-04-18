@@ -69,7 +69,6 @@ static RubyInterpreter rubyInterpreter(paths);//(paths);
 
 int main(int argc, char *argv[])
 {
-  std::cout << "***** Initializing ruby *****\n";
   ruby_sysinit(&argc, &argv);
   {
     RUBY_INIT_STACK;
@@ -147,20 +146,15 @@ int main(int argc, char *argv[])
     Init_EmbeddedScripting();
   }
 
-  std::cout << "***** Shimming Our Kernel::require method *****\n";
   // Need embedded_help for requiring files out of the embedded system
   auto embedded_extensions_string = embedded_files::getFileAsString(":/embedded_help.rb");
   rubyInterpreter.evalString(embedded_extensions_string);
-  rubyInterpreter.evalString(R"(require 'openstudio.rb')");
-  // Load whatever you want from the standard library
-  //rubyInterpreter.evalString(R"(require 'csv.rb')");
-  rubyInterpreter.evalString(R"(require 'optparse')");
-  //Init_generator();
-  //rubyInterpreter.evalString(R"(require 'json.rb')");
-  //rubyInterpreter.evalString(R"(require 'scope_test.rb')");
-  // Use whatever you want from the OpenStudio API
-  //rubyInterpreter.evalString(R"(OpenStudio::Model::Model.new().save('testmodel.osm',true))");
-  rubyInterpreter.evalString(R"(require 'openstudio-workflow')");
+
+  // chop off the first argument which is the exe path/name
+  ruby_set_argv(argc - 1,argv + 1);
+  //rubyInterpreter.evalString(R"(require 'irb')");
+  //rubyInterpreter.evalString(R"(IRB.start)");
+  rubyInterpreter.evalString(R"(require 'openstudio_cli')");
 }
 
 extern "C" {
