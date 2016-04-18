@@ -31,6 +31,7 @@
 #include "../model/AvailabilityManagerOptimumStart.hpp"
 #include "../model/AvailabilityManagerNightCycle.hpp"
 #include "../model/ConstructionBase.hpp"
+#include "../model/AirConditionerVariableRefrigerantFlow.hpp"
 
 class QDomDocument;
 class QDomElement;
@@ -92,6 +93,7 @@ namespace sdd {
     boost::optional<openstudio::model::ModelObject> translateCrvCubic(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateCrvDblQuad(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateCrvQuad(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateCrvLin(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateCoilCoolingDXVariableRefrigerantFlow(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateCoilHeatingDXVariableRefrigerantFlow(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateFluidSys(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
@@ -189,6 +191,9 @@ namespace sdd {
 
     // Similar to m_optimumStartControlZones but for night cycle manager
     std::map<std::string,model::AvailabilityManagerNightCycle> m_nightCycleControlZones;
+
+    // Map from vrf system to master control zone name
+    std::map<std::string,model::AirConditionerVariableRefrigerantFlow> m_vrfSystemControlZones;
 
     REGISTER_LOGGER("openstudio.sdd.ReverseTranslator");
   };
