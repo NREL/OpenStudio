@@ -320,8 +320,10 @@ class Run
     osw_path = File.absolute_path(File.join(Dir.pwd, osw_path)) unless Pathname.new(osw_path).absolute?
     $logger.debug "Path for the OSW: #{osw_path}"
 
-    adapter_options = {workflow_filename: File.basename(osw_path)}
-    adapter = OpenStudio::Workflow.load_adapter 'local', adapter_options
+    adapter_options = {workflow_filename: File.basename(osw_path), output_directory: File.join(Dir.pwd, 'run')}
+    input_adapter = OpenStudio::Workflow.load_input_adapter 'local', adapter_options
+    output_adapter = OpenStudio::Workflow.load_output_adapter 'local', adapter_options
+    
     run_options = options[:debug] ? {debug: true, cleanup: false} : {}
     if options[:no_simulation]
       run_options[:jobs] = [
@@ -354,7 +356,7 @@ class Run
       run_options[:load_simulation_sql] = true
       run_options[:preserve_run_dir] = true
     end
-    k = OpenStudio::Workflow::Run.new adapter, File.dirname(osw_path), run_options
+    k = OpenStudio::Workflow::Run.new input_adapter, output_adapter, File.dirname(osw_path), run_options
     k.run
 
     0
