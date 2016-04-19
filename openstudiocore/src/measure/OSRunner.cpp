@@ -164,6 +164,16 @@ void OSRunner::incrementStep()
   ++m_currentStep;
 }
 
+void OSRunner::setCurrentStep(unsigned currentStep)
+{
+  m_previousResults.resize(currentStep);
+  m_result = OSResult();
+
+  m_measureName = "";
+  m_channel = "";
+  m_currentStep = currentStep;
+}
+
 void OSRunner::prepareForMeasureRun(const OSMeasure& measure) {
   // DLM: also in incrementStep
   m_result = OSResult();

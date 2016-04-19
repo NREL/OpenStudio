@@ -288,6 +288,9 @@ class MEASURE_API OSRunner {
   // incrementing step copies result to previous results
   void incrementStep();
 
+  // sets the current step index, prefer to use incrementStep if possible
+  void setCurrentStep(unsigned currentStep);
+
   // supports in-memory job chaining
   void setLastOpenStudioModel(const openstudio::model::Model& lastOpenStudioModel);
   void resetLastOpenStudioModel();
