@@ -300,10 +300,14 @@ module Ruleset
   
   # support for name deprecated as of 2.0.0
   class OSRunner < OpenStudio::Measure::OSRunner
-    def initialize
+    def initialize(workflow_json = nil)
       OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "OSRunner is deprecated, use OpenStudio::Measure::OSRunner instead.")
-      super
-    end      
+      if workflow_json.nil?
+        workflow_json = OpenStudio::WorkflowJSON.new
+        OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "No workflow provided, using empty WorkflowJSON.")
+      end
+      super(workflow_json)
+    end       
   end
   
 end # module Ruleset
