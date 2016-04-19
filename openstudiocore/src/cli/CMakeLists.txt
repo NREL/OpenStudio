@@ -3,6 +3,10 @@ IF (APPLE)
    find_library(COREFOUNDATION_LIBRARY CoreFoundation )
 ENDIF (APPLE)
 
+add_executable(CreateEmbeddedSource
+  CreateEmbeddedSource.cpp
+)
+
 file(READ "${RUBY_SOURCE_DIR}/enc/encinit.c" ENCINIT_FILE_CONTENT)
 string(REGEX MATCHALL "init_enc\\([a-zA-Z0-9_]*\\);" ENCINIT_MATCH "${ENCINIT_FILE_CONTENT}")
 set(ENC_INIT_DECLARATIONS "")
@@ -95,6 +99,7 @@ function(embed_files )
 
     # EMBED_SOURCE_FILE is the fully qualified path to a cxx file with the embedded data
     set(EMBED_SOURCE_FILE "${CMAKE_BINARY_DIR}/embedded_files/${BASE_PATH}/${BASE_FILENAME}${EXTENSION}.cxx")
+    set(EMBED_SOURCE_PATH "${CMAKE_BINARY_DIR}/embedded_files/${BASE_PATH}")
     file(RELATIVE_PATH EMBED_SOURCE_FILE_REL_PATH ${CMAKE_BINARY_DIR} ${EMBED_SOURCE_FILE})
     list(APPEND EMBED_SOURCE_FILES ${EMBED_SOURCE_FILE})    
 
@@ -110,12 +115,12 @@ function(embed_files )
     endif()
 
     add_custom_command(OUTPUT ${EMBED_SOURCE_FILE}
-      COMMAND ${CMAKE_COMMAND} 
-        -DFILENUM:Integer=${FILENUM} 
-        -DEMBED_SOURCE_FILE:String=${EMBED_SOURCE_FILE} 
-        -DINFILE:String=${INFILE} 
-        -DOUTNAME:String=${OUTNAME} 
-        -P "${CMAKE_CURRENT_SOURCE_DIR}/GenerateEmeddedSource.cmake"
+      COMMAND ${CMAKE_COMMAND} -E make_directory ${EMBED_SOURCE_PATH}
+      COMMAND CreateEmbeddedSource
+        ${INFILE}
+        ${EMBED_SOURCE_FILE}
+        ${FILENUM}
+        ${OUTNAME}
         DEPENDS ${INFILE}
     )
     set(EMBED_SOURCE_FILES ${EMBED_SOURCE_FILES} PARENT_SCOPE)
@@ -165,11 +170,9 @@ endforeach()
 #  DEPENDS "${OPENSTUDIO_WORKFLOW_GEM}"
 #)
 
-message("OPENSTUDIO_WORKFLOW_GEM: ${OPENSTUDIO_WORKFLOW_GEM}")
 file(GLOB_RECURSE WORKFLOW_RB FOLLOW_SYMLINKS "${OPENSTUDIO_WORKFLOW_GEM}/**/*.rb")
 
 foreach( _FILE ${WORKFLOW_RB} )
-  message("WF FILE: ${_FILE}")
   file(RELATIVE_PATH LOCATION "${OPENSTUDIO_WORKFLOW_GEM}/gems" ${_FILE})
   list(APPEND EMBED_RB ${_FILE} ${LOCATION})
 endforeach()
@@ -240,8 +243,6 @@ else()
 endif()
 
 add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
-
-message( "EXTENSION_LIBS: ${EXTENSION_LIBS}")
 
 target_link_libraries(openstudio-wf 
  ${EXTENSION_LIBS} 
