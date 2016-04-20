@@ -32,6 +32,7 @@
 #include "../../model/WindowPropertyFrameAndDivider_Impl.hpp"
 #include "../../model/SurfacePropertyOtherSideCoefficients.hpp"
 #include "../../model/SurfacePropertyOtherSideConditionsModel.hpp"
+#include "../../model/SurfacePropertyConvectionCoefficients.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
@@ -153,6 +154,13 @@ boost::optional<IdfObject> ForwardTranslator::translateSubSurface( model::SubSur
   }
   
   m_idfObjects.push_back(idfObject);
+
+  // translate surfacePropertyConvectionCoefficients
+  SurfacePropertyConvectionCoefficientsVector surfacePropertyConvectionCoefficients = modelObject.surfacePropertyConvectionCoefficients();
+  std::sort(surfacePropertyConvectionCoefficients.begin(), surfacePropertyConvectionCoefficients.end(), WorkspaceObjectNameLess());
+  for (SurfacePropertyConvectionCoefficients& surfacePropertyConvectionCoefficient : surfacePropertyConvectionCoefficients){
+    translateAndMapModelObject(surfacePropertyConvectionCoefficient);
+  }
 
   return idfObject;
 

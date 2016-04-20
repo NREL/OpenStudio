@@ -195,7 +195,7 @@ class MODEL_API Surface : public PlanarSurface {
   void assignDefaultWindExposure();
 
   /** Returns the default film thermal resistance (m^2*K/W) for this surface. Assumes still indoor
-   *  air, and 15 mph wind outside. */
+   *  air, and 15 mph wind outside. Does not consider any custom SurfacePropertyConvectionCoefficients. */
   double filmResistance() const;
 
   /** Get the window to wall ratio for this surface. Calculated as 

@@ -61,6 +61,8 @@
 #include "../model/YearDescription_Impl.hpp"
 #include "../model/OutputControlReportingTolerances.hpp"
 #include "../model/OutputControlReportingTolerances_Impl.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/SubSurface_Impl.hpp"
 #include "../model/ChillerElectricEIR.hpp"
 #include "../model/ChillerElectricEIR_Impl.hpp"
 #include "../model/CoolingTowerSingleSpeed.hpp"
@@ -1042,6 +1044,9 @@ namespace sdd {
 
         var = model::OutputVariable("Site Direct Solar Radiation Rate per Area",*result);
         var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Site Diffuse Solar Radiation Rate per Area", *result);
+        var.setReportingFrequency(interval);
       }
 
       // SimVarsDayltg
@@ -1059,6 +1064,42 @@ namespace sdd {
 
         var = model::OutputVariable("Daylighting Lighting Power Multiplier",*result);
         var.setReportingFrequency(interval);
+      }
+
+      // SimVarsFen
+
+      QDomElement simVarsFenElement = projectElement.firstChildElement("SimVarsFen");
+
+      if ((simVarsFenElement.text().toInt() == 1))
+      {
+        for (const auto& subSurface : result->getConcreteModelObjects<model::SubSurface>())
+        {
+          std::string subSurfaceType = subSurface.subSurfaceType();
+
+          if (istringEqual(subSurfaceType, "FixedWindow") ||
+              istringEqual(subSurfaceType, "OperableWindow") ||
+              istringEqual(subSurfaceType, "GlassDoor") ||
+              istringEqual(subSurfaceType, "Skylight") ||
+              istringEqual(subSurfaceType, "TubularDaylightDome") ||
+              istringEqual(subSurfaceType, "TubularDaylightDiffuser"))
+          {
+            model::OutputVariable var("Surface Window Heat Gain Rate", *result);
+            var.setKeyValue(subSurface.name().get());
+            var.setReportingFrequency(interval);
+
+            var = model::OutputVariable("Surface Window Heat Loss Rate", *result);
+            var.setKeyValue(subSurface.name().get());
+            var.setReportingFrequency(interval);
+
+            var = model::OutputVariable("Surface Inside Face Adjacent Air Temperature", *result);
+            var.setKeyValue(subSurface.name().get());
+            var.setReportingFrequency(interval);
+
+            var = model::OutputVariable("Surface Outside Face Outdoor Air Drybulb Temperature", *result);
+            var.setKeyValue(subSurface.name().get());
+            var.setReportingFrequency(interval);
+          }
+        }
       }
 
       // SimVarsThrmlZn
@@ -1114,6 +1155,67 @@ namespace sdd {
             var.setKeyValue(exhIt->name().get());
           }
         }
+      }
+
+      // SimVarsVRFSys
+      QDomElement simVarsVRFSys = projectElement.firstChildElement("SimVarsVRFSys");
+      if( simVarsVRFSys.text().toInt() == 1 ) {
+        model::OutputVariable var("VRF Heat Pump Total Cooling Rate",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Total Heating Rate",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Cooling Electric Power",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Heating Electric Power",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Cooling COP",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Heating COP",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump COP",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Defrost Electric Power",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Part Load Ratio",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Runtime Fraction",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Cycling Ratio",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Operating Mode",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Condenser Inlet Temperature",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Maximum Capacity Cooling Rate",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Maximum Capacity Heating Rate",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Crankcase Heater Electric Power",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Terminal Unit Cooling Load Rate",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Terminal Unit Heating Load Rate",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("VRF Heat Pump Heat Recovery Status Change Multiplier",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("Zone VRF Air Terminal Cooling Electric Power",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("Zone VRF Air Terminal Total Cooling Rate",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("Zone VRF Air Terminal Sensible Cooling Rate",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("Zone VRF Air Terminal Latent Cooling Rate",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("Zone VRF Air Terminal Heating Electric Power",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("Zone VRF Air Terminal Total Heating Rate",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("Zone VRF Air Terminal Sensible Heating Rate",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("Zone VRF Air Terminal Latent Heating Rate",*result);
+        var.setReportingFrequency(interval);
+        var = model::OutputVariable("Zone VRF Air Terminal Fan Availability Status",*result);
+        var.setReportingFrequency(interval);
       }
 
       // SimVarsHVACZn

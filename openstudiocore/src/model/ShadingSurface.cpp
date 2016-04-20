@@ -81,6 +81,9 @@ namespace detail {
   std::vector<ModelObject> ShadingSurface_Impl::children() const
   {
     std::vector<ModelObject> result;
+
+    // solar collectors?
+
     return result;
   }
 

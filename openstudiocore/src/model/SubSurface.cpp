@@ -40,6 +40,7 @@
 #include "DaylightingDeviceShelf_Impl.hpp"
 #include "WindowPropertyFrameAndDivider.hpp"
 #include "WindowPropertyFrameAndDivider_Impl.hpp"
+#include "SurfacePropertyConvectionCoefficients.hpp"
 #include "SurfacePropertyOtherSideCoefficients.hpp"
 #include "SurfacePropertyOtherSideCoefficients_Impl.hpp"
 #include "SurfacePropertyOtherSideConditionsModel.hpp"
@@ -110,6 +111,13 @@ namespace detail {
     if (daylightingDeviceShelf){
       result.push_back(*daylightingDeviceShelf);
     }
+
+    // solar collectors?
+
+    for (const auto& surfaceProperty : surfacePropertyConvectionCoefficients()){
+      result.push_back(surfaceProperty);
+    }
+
     return result;
   }
 

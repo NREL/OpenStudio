@@ -5177,6 +5177,145 @@ OS:WindowProperty:FrameAndDivider,
          
 \group OpenStudio Advanced Construction, Surface, Zone Concepts
 
+OS:SurfaceProperty:ConvectionCoefficients,
+      \memo Allow user settable interior and/or exterior convection coefficients.
+      \memo Note that some other factors may limit the lower bounds for these values, such as
+      \memo for windows, the interior convection coefficient must be >.28,
+      \memo for trombe wall algorithm selection (zone), the interior convection coefficient must be >.1
+      \memo for TARP interior convection, the lower limit is also .1
+      \memo Minimum and maximum limits are set in HeatBalanceAlgorithm object.
+      \memo Defaults in HeatBalanceAlgorithm object are [.1,1000].
+  A1, \field Handle
+      \type handle
+      \required-field      
+  A2, \field Surface Name
+      \type object-list
+      \object-list AllHeatTranSurfNames
+  A3, \field Convection Coefficient 1 Location
+      \type choice
+      \key Outside
+      \key Inside
+  A4, \field Convection Coefficient 1 Type
+      \type choice
+      \key Value
+      \key Schedule
+      \key UserCurve
+      \key Simple
+      \key SimpleCombined
+      \key TARP
+      \key DOE-2
+      \key MoWitt
+      \key AdaptiveConvectionAlgorithm
+      \key ASHRAEVerticalWall
+      \key WaltonUnstableHorizontalOrTilt
+      \key WaltonStableHorizontalOrTilt
+      \key FisherPedersenCeilingDiffuserWalls
+      \key FisherPedersenCeilingDiffuserCeiling
+      \key FisherPedersenCeilingDiffuserFloor
+      \key AlamdariHammondStableHorizontal
+      \key AlamdariHammondUnstableHorizontal
+      \key AlamdariHammondVerticalWall
+      \key KhalifaEq3WallAwayFromHeat
+      \key KhalifaEq4CeilingAwayFromHeat
+      \key KhalifaEq5WallNearHeat
+      \key KhalifaEq6NonHeatedWalls
+      \key KhalifaEq7Ceiling
+      \key AwbiHattonHeatedFloor
+      \key AwbiHattonHeatedWall
+      \key BeausoleilMorrisonMixedAssistedWall
+      \key BeausoleilMorrisonMixedOpposingWall
+      \key BeausoleilMorrisonMixedStableFloor
+      \key BeausoleilMorrisonMixedUnstableFloor
+      \key BeausoleilMorrisonMixedStableCeiling
+      \key BeausoleilMorrisonMixedUnstableCeiling
+      \key FohannoPolidoriVerticalWall
+      \key KaradagChilledCeiling
+      \key ISO15099Windows
+      \key GoldsteinNovoselacCeilingDiffuserWindow
+      \key GoldsteinNovoselacCeilingDiffuserWalls
+      \key GoldsteinNovoselacCeilingDiffuserFloor
+      \key NusseltJurges
+      \key McAdams
+      \key Mitchell
+      \key EmmelVertical
+      \key EmmelRoof
+      \key ClearRoof
+  N1, \field Convection Coefficient 1
+      \note used if Convection Type=Value, min and max limits are set in HeatBalanceAlgorithm object.
+      \note Default limits are Minimum >= 0.1 and Maximum <= 1000
+      \units W/m2-K
+  A5, \field Convection Coefficient 1 Schedule Name
+      \note used if Convection Type=Schedule,  min and max limits are set in HeatBalanceAlgorithm object.
+      \note Default limits are Minimum >= 0.1 and Maximum <= 1000
+      \type object-list
+      \object-list ScheduleNames
+  A6, \field Convection Coefficient 1 User Curve Name
+      \note used if Convection Type = UserCurve
+      \type object-list
+      \object-list UserConvectionModels
+  A7, \field Convection Coefficient 2 Location
+      \type choice
+      \key Outside
+      \key Inside
+  A8, \field Convection Coefficient 2 Type
+      \type choice
+      \key Value
+      \key Schedule
+      \key UserCurve
+      \key Simple
+      \key SimpleCombined
+      \key TARP
+      \key DOE-2
+      \key MoWitt
+      \key AdaptiveConvectionAlgorithm
+      \key ASHRAEVerticalWall
+      \key WaltonUnstableHorizontalOrTilt
+      \key WaltonStableHorizontalOrTilt
+      \key FisherPedersenCeilingDiffuserWalls
+      \key FisherPedersenCeilingDiffuserCeiling
+      \key FisherPedersenCeilingDiffuserFloor
+      \key AlamdariHammondStableHorizontal
+      \key AlamdariHammondUnstableHorizontal
+      \key AlamdariHammondVerticalWall
+      \key KhalifaEq3WallAwayFromHeat
+      \key KhalifaEq4CeilingAwayFromHeat
+      \key KhalifaEq5WallNearHeat
+      \key KhalifaEq6NonHeatedWalls
+      \key KhalifaEq7Ceiling
+      \key AwbiHattonHeatedFloor
+      \key AwbiHattonHeatedWall
+      \key BeausoleilMorrisonMixedAssistedWall
+      \key BeausoleilMorrisonMixedOpposingWall
+      \key BeausoleilMorrisonMixedStableFloor
+      \key BeausoleilMorrisonMixedUnstableFloor
+      \key BeausoleilMorrisonMixedStableCeiling
+      \key BeausoleilMorrisonMixedUnstableCeiling
+      \key FohannoPolidoriVerticalWall
+      \key KaradagChilledCeiling
+      \key ISO15099Windows
+      \key GoldsteinNovoselacCeilingDiffuserWindow
+      \key GoldsteinNovoselacCeilingDiffuserWalls
+      \key GoldsteinNovoselacCeilingDiffuserFloor
+      \key NusseltJurges
+      \key McAdams
+      \key Mitchell
+      \key EmmelVertical
+      \key EmmelRoof
+      \key ClearRoof
+  N2, \field Convection Coefficient 2
+      \note used if Convection Type=Value, min and max limits are set in HeatBalanceAlgorithm object.
+      \note Default limits are Minimum >= 0.1 and Maximum <= 1000
+      \units W/m2-K
+  A9, \field Convection Coefficient 2 Schedule Name
+      \note used if Convection Type=Schedule,  min and max limits are set in HeatBalanceAlgorithm object.
+      \note Default limits are Minimum >= 0.1 and Maximum <= 1000
+      \type object-list
+      \object-list ScheduleNames
+  A10; \field Convection Coefficient 2 User Curve Name
+      \note used if Convection Type = UserCurve
+      \type object-list
+      \object-list UserConvectionModels
+
 OS:SurfaceProperty:ConvectionCoefficients:MultipleSurface,
       \memo Allow user settable interior and/or exterior convection coefficients.
       \memo Note that some other factors may limit the lower bounds for these values, such as

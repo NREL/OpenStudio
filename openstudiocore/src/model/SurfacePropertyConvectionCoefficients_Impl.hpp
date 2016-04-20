@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODEL_SURFACEPROPERTYCONVECTIONCOEFFICIENTSMULTIPLESURFACE_IMPL_HPP
-#define MODEL_SURFACEPROPERTYCONVECTIONCOEFFICIENTSMULTIPLESURFACE_IMPL_HPP
+#ifndef MODEL_SURFACEPROPERTYCONVECTIONCOEFFICIENTS_IMPL_HPP
+#define MODEL_SURFACEPROPERTYCONVECTIONCOEFFICIENTS_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject_Impl.hpp"
@@ -27,28 +27,31 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
+class PlanarSurface;
+class Surface;
+class SubSurface;
 
 namespace detail {
 
-  /** SurfacePropertyConvectionCoefficientsMultipleSurface_Impl is a ModelObject_Impl that is the implementation class for SurfacePropertyConvectionCoefficientsMultipleSurface.*/
-  class MODEL_API SurfacePropertyConvectionCoefficientsMultipleSurface_Impl : public ModelObject_Impl {
+  /** SurfacePropertyConvectionCoefficients_Impl is a ModelObject_Impl that is the implementation class for SurfacePropertyConvectionCoefficients.*/
+  class MODEL_API SurfacePropertyConvectionCoefficients_Impl : public ModelObject_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{
 
-    SurfacePropertyConvectionCoefficientsMultipleSurface_Impl(const IdfObject& idfObject,
-                                                              Model_Impl* model,
-                                                              bool keepHandle);
+    SurfacePropertyConvectionCoefficients_Impl(const IdfObject& idfObject,
+                                               Model_Impl* model,
+                                               bool keepHandle);
 
-    SurfacePropertyConvectionCoefficientsMultipleSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                              Model_Impl* model,
-                                                              bool keepHandle);
+    SurfacePropertyConvectionCoefficients_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                               Model_Impl* model,
+                                               bool keepHandle);
 
-    SurfacePropertyConvectionCoefficientsMultipleSurface_Impl(const SurfacePropertyConvectionCoefficientsMultipleSurface_Impl& other,
-                                                              Model_Impl* model,
-                                                              bool keepHandle);
+    SurfacePropertyConvectionCoefficients_Impl(const SurfacePropertyConvectionCoefficients_Impl& other,
+                                               Model_Impl* model,
+                                               bool keepHandle);
 
-    virtual ~SurfacePropertyConvectionCoefficientsMultipleSurface_Impl() {}
+    virtual ~SurfacePropertyConvectionCoefficients_Impl() {}
 
     //@}
     /** @name Virtual Methods */
@@ -64,7 +67,7 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    boost::optional<std::string> surfaceType() const;
+    boost::optional<PlanarSurface> surface() const;
 
     boost::optional<std::string> convectionCoefficient1Location() const;
 
@@ -74,6 +77,7 @@ namespace detail {
 
     boost::optional<Schedule> convectionCoefficient1Schedule() const;
 
+    // DLM: not supporting user curves yet
     //boost::optional<UserConvectionModels> convectionCoefficient1UserCurve() const;
 
     boost::optional<std::string> convectionCoefficient2Location() const;
@@ -84,15 +88,16 @@ namespace detail {
 
     boost::optional<Schedule> convectionCoefficient2Schedule() const;
 
+    // DLM: not supporting user curves yet
     //boost::optional<UserConvectionModels> convectionCoefficient2UserCurve() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    bool setSurfaceType(const std::string& surfaceType);
+    bool setSurface(const PlanarSurface& surface);
 
-    void resetSurfaceType();
+    void resetSurface();
 
     bool setConvectionCoefficient1Location(const std::string& convectionCoefficient1Location);
 
@@ -110,6 +115,7 @@ namespace detail {
 
     void resetConvectionCoefficient1Schedule();
 
+    // DLM: not supporting user curves yet
     //bool setConvectionCoefficient1UserCurve(const boost::optional<UserConvectionModels>& userConvectionModels);
 
     //void resetConvectionCoefficient1UserCurve();
@@ -130,6 +136,7 @@ namespace detail {
 
     void resetConvectionCoefficient2Schedule();
 
+    // DLM: not supporting user curves yet
     //bool setConvectionCoefficient2UserCurve(const boost::optional<UserConvectionModels>& userConvectionModels);
 
     //void resetConvectionCoefficient2UserCurve();
@@ -141,7 +148,8 @@ namespace detail {
     //@}
    protected:
    private:
-    REGISTER_LOGGER("openstudio.model.SurfacePropertyConvectionCoefficientsMultipleSurface");
+    REGISTER_LOGGER("openstudio.model.SurfacePropertyConvectionCoefficients");
+
   };
 
 } // detail
@@ -149,5 +157,5 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_SURFACEPROPERTYCONVECTIONCOEFFICIENTSMULTIPLESURFACE_IMPL_HPP
+#endif // MODEL_SURFACEPROPERTYCONVECTIONCOEFFICIENTS_IMPL_HPP
 

@@ -1054,6 +1054,9 @@ set(${target_name}_src
   Surface.hpp
   Surface_Impl.hpp
   Surface.cpp
+  SurfacePropertyConvectionCoefficients.cpp
+  SurfacePropertyConvectionCoefficients.hpp
+  SurfacePropertyConvectionCoefficients_Impl.hpp  
   SurfacePropertyConvectionCoefficientsMultipleSurface.cpp
   SurfacePropertyConvectionCoefficientsMultipleSurface.hpp
   SurfacePropertyConvectionCoefficientsMultipleSurface_Impl.hpp
@@ -1715,6 +1718,7 @@ set(${target_name}_test_src
   test/SteamEquipment_GTest.cpp
   test/SubSurface_GTest.cpp
   test/Surface_GTest.cpp
+  test/SurfacePropertyConvectionCoefficients_GTest.cpp
   test/SurfacePropertyConvectionCoefficientsMultipleSurface_GTest.cpp
   test/TableMultiVariableLookup_GTest.cpp
   test/ThermalZone_GTest.cpp

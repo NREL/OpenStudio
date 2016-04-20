@@ -2277,6 +2277,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateOutsideSurfaceConvectionAlgorithm(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_SurfaceProperty_ConvectionCoefficients:
+  {
+    model::SurfacePropertyConvectionCoefficients obj = modelObject.cast<SurfacePropertyConvectionCoefficients>();
+    retVal = translateSurfacePropertyConvectionCoefficients(obj);
+    break;
+  }
   case openstudio::IddObjectType::OS_SurfaceProperty_ConvectionCoefficients_MultipleSurface:
   {
     model::SurfacePropertyConvectionCoefficientsMultipleSurface obj = modelObject.cast<SurfacePropertyConvectionCoefficientsMultipleSurface>();
@@ -2758,6 +2764,8 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_InteriorPartitionSurface);
   result.push_back(IddObjectType::OS_ShadingSurfaceGroup);
   result.push_back(IddObjectType::OS_ShadingSurface);
+
+  result.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);
 
   result.push_back(IddObjectType::OS_Daylighting_Control);
   result.push_back(IddObjectType::OS_DaylightingDevice_Shelf);

@@ -493,6 +493,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(SteamEquipmentDefinition);
     REGISTER_CONSTRUCTOR(SubSurface);
     REGISTER_CONSTRUCTOR(Surface);
+    REGISTER_CONSTRUCTOR(SurfacePropertyConvectionCoefficients);
     REGISTER_CONSTRUCTOR(SurfacePropertyConvectionCoefficientsMultipleSurface);
     REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideCoefficients);
     REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideConditionsModel);
@@ -894,6 +895,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(SteamEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(SubSurface);
     REGISTER_COPYCONSTRUCTORS(Surface);
+    REGISTER_COPYCONSTRUCTORS(SurfacePropertyConvectionCoefficients);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyConvectionCoefficientsMultipleSurface);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideCoefficients);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideConditionsModel);

@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODEL_SURFACEPROPERTYCONVECTIONCOEFFICIENTSMULTIPLESURFACE_HPP
-#define MODEL_SURFACEPROPERTYCONVECTIONCOEFFICIENTSMULTIPLESURFACE_HPP
+#ifndef MODEL_SURFACEPROPERTYCONVECTIONCOEFFICIENTS_HPP
+#define MODEL_SURFACEPROPERTYCONVECTIONCOEFFICIENTS_HPP
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject.hpp"
@@ -28,28 +28,29 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
+class PlanarSurface;
+class Surface;
+class SubSurface;
 
 namespace detail {
 
-  class SurfacePropertyConvectionCoefficientsMultipleSurface_Impl;
+  class SurfacePropertyConvectionCoefficients_Impl;
 
 } // detail
 
-/** SurfacePropertyConvectionCoefficientsMultipleSurface is a ModelObject that wraps the OpenStudio IDD object 'OS:SurfaceProperty:ConvectionCoefficients:MultipleSurface'. */
-class MODEL_API SurfacePropertyConvectionCoefficientsMultipleSurface : public ModelObject {
+/** SurfacePropertyConvectionCoefficients is a ModelObject that wraps the OpenStudio IDD object 'OS:SurfaceProperty:ConvectionCoefficients'. */
+class MODEL_API SurfacePropertyConvectionCoefficients : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  explicit SurfacePropertyConvectionCoefficientsMultipleSurface(const Model& model);
+  explicit SurfacePropertyConvectionCoefficients(const Model& model);
 
-  virtual ~SurfacePropertyConvectionCoefficientsMultipleSurface() {}
+  virtual ~SurfacePropertyConvectionCoefficients() {}
 
   //@}
 
   static IddObjectType iddObjectType();
-
-  static std::vector<std::string> surfaceTypeValues();
 
   static std::vector<std::string> convectionCoefficient1LocationValues();
 
@@ -62,7 +63,7 @@ class MODEL_API SurfacePropertyConvectionCoefficientsMultipleSurface : public Mo
   /** @name Getters */
   //@{
 
-  boost::optional<std::string> surfaceType() const;
+  boost::optional<PlanarSurface> surface() const;
 
   boost::optional<std::string> convectionCoefficient1Location() const;
 
@@ -90,9 +91,9 @@ class MODEL_API SurfacePropertyConvectionCoefficientsMultipleSurface : public Mo
   /** @name Setters */
   //@{
 
-  bool setSurfaceType(const std::string& surfaceType);
+  bool setSurface(const PlanarSurface& surface);
 
-  void resetSurfaceType();
+  void resetSurface();
 
   bool setConvectionCoefficient1Location(const std::string& convectionCoefficient1Location);
 
@@ -111,7 +112,7 @@ class MODEL_API SurfacePropertyConvectionCoefficientsMultipleSurface : public Mo
   void resetConvectionCoefficient1Schedule();
 
   // DLM: not supporting user curves yet
-  //bool setConvectionCoefficient1UserCurve(const UserConvectionModels& userConvectionModels);
+  //bool setConvectionCoefficient1UserCurve(const boost::optional<UserConvectionModels>& userConvectionModels);
 
   //void resetConvectionCoefficient1UserCurve();
 
@@ -132,7 +133,7 @@ class MODEL_API SurfacePropertyConvectionCoefficientsMultipleSurface : public Mo
   void resetConvectionCoefficient2Schedule();
 
   // DLM: not supporting user curves yet
-  //bool setConvectionCoefficient2UserCurve(const UserConvectionModels& userConvectionModels);
+  //bool setConvectionCoefficient2UserCurve(const boost::optional<UserConvectionModels>& userConvectionModels);
 
   //void resetConvectionCoefficient2UserCurve();
 
@@ -143,27 +144,27 @@ class MODEL_API SurfacePropertyConvectionCoefficientsMultipleSurface : public Mo
   //@}
  protected:
   /// @cond
-  typedef detail::SurfacePropertyConvectionCoefficientsMultipleSurface_Impl ImplType;
+  typedef detail::SurfacePropertyConvectionCoefficients_Impl ImplType;
 
-  explicit SurfacePropertyConvectionCoefficientsMultipleSurface(std::shared_ptr<detail::SurfacePropertyConvectionCoefficientsMultipleSurface_Impl> impl);
+  explicit SurfacePropertyConvectionCoefficients(std::shared_ptr<detail::SurfacePropertyConvectionCoefficients_Impl> impl);
 
-  friend class detail::SurfacePropertyConvectionCoefficientsMultipleSurface_Impl;
+  friend class detail::SurfacePropertyConvectionCoefficients_Impl;
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
   /// @endcond
  private:
-  REGISTER_LOGGER("openstudio.model.SurfacePropertyConvectionCoefficientsMultipleSurface");
+  REGISTER_LOGGER("openstudio.model.SurfacePropertyConvectionCoefficients");
 };
 
-/** \relates SurfacePropertyConvectionCoefficientsMultipleSurface*/
-typedef boost::optional<SurfacePropertyConvectionCoefficientsMultipleSurface> OptionalSurfacePropertyConvectionCoefficientsMultipleSurface;
+/** \relates SurfacePropertyConvectionCoefficients*/
+typedef boost::optional<SurfacePropertyConvectionCoefficients> OptionalSurfacePropertyConvectionCoefficients;
 
-/** \relates SurfacePropertyConvectionCoefficientsMultipleSurface*/
-typedef std::vector<SurfacePropertyConvectionCoefficientsMultipleSurface> SurfacePropertyConvectionCoefficientsMultipleSurfaceVector;
+/** \relates SurfacePropertyConvectionCoefficients*/
+typedef std::vector<SurfacePropertyConvectionCoefficients> SurfacePropertyConvectionCoefficientsVector;
 
 } // model
 } // openstudio
 
-#endif // MODEL_SURFACEPROPERTYCONVECTIONCOEFFICIENTSMULTIPLESURFACE_HPP
+#endif // MODEL_SURFACEPROPERTYCONVECTIONCOEFFICIENTS_HPP
 
