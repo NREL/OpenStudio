@@ -4,7 +4,7 @@ module Kernel
   # ":" is our root path to the embedded file system
   # make sure it is in the ruby load path
   $LOAD_PATH << ':'
-  $LOAD_PATH << ':/ruby/2.0.0'
+  $LOAD_PATH << ':/ruby/2.2.0'
   $LOAD_PATH << ':/openstudio-workflow-1.0.0.alpha.0/lib'
   $LOADED = []
 
