@@ -868,6 +868,7 @@ set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)
 set(OpenStudioCore_DEPENDS GoogleTest)
 
 list(APPEND OpenStudioCore_DEPENDS GeographicLib)
+list(APPEND OpenStudioCore_DEPENDS OpenStudio-workflow-gem)
 
 if(BUILD_QT)
   list(APPEND OpenStudioCore_DEPENDS Qt)
