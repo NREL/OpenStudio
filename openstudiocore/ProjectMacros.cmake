@@ -297,6 +297,8 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
   endif()
 
+  include_directories(${CMAKE_SOURCE_DIR})
+
   add_library(
     ${swig_target} STATIC
     ${SWIG_WRAPPER}
