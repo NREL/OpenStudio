@@ -13899,7 +13899,7 @@ OS:Coil:Cooling:Water,
        \key DetailedAnalysis
   A9; \field Heat Exchanger Configuration
        \type choice
-       \default CounterFlow
+       \default CrossFlow
        \key CrossFlow
        \key CounterFlow
 
