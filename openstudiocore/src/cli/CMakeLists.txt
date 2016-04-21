@@ -244,10 +244,16 @@ endif()
 
 add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 
+# TODO: use finder or something better
+if( WIN32 )
+  set(JSON_LIBS "${RUBY_SOURCE_DIR}/ext/json/generator/generator.lib" "${RUBY_SOURCE_DIR}/ext/json/parser/parser.lib")
+else()
+  set(JSON_LIBS "${RUBY_SOURCE_DIR}/ext/json/generator/generator.a" "${RUBY_SOURCE_DIR}/ext/json/parser/parser.a")
+endif()
+
 target_link_libraries(openstudio-wf 
  ${EXTENSION_LIBS} 
- "${RUBY_SOURCE_DIR}/ext/json/generator/generator.a"
- "${RUBY_SOURCE_DIR}/ext/json/parser/parser.a"
+ ${JSON_LIBS}
  ${ENCODING_LIB}
  ${TRANSLATION_LIB}
  ruby_OpenStudioAirflow
