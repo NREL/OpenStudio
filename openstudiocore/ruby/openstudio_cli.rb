@@ -30,7 +30,6 @@ include OpenStudio::Workflow::Util::IO
 $logger = Logger.new(STDOUT)
 $logger.level = Logger::WARN
 
-
 # This is the code chunk to allow for an embedded IRB shell. From Jason Roelofs, found on StackOverflow
 module IRB # :nodoc:
   def self.start_session(binding)
@@ -492,11 +491,11 @@ class Measure
   #
   # @param [Array] sub_argv Options passed to the e subcommand from the user input
   # @return [Fixnum] Return status
-  # @todo (macumber) Add in the OpenStudio code to execute on measures
   #
   def execute(sub_argv)
+    require_relative 'measure_manager'
+    
     options = {}
-    options[:check_for_update] = false
     options[:update] = false
     options[:compute_arguments] = nil
 
@@ -506,29 +505,124 @@ class Measure
       o.separator 'Options:'
       o.separator ''
 
-      o.on('-c', '--check_for_updates', 'Check to see if the measure needs to be updated') do
-        options[:check_for_update] = workflow
+      o.on('-t', '--update_all', 'Update all measures in a directory') do
+        options[:update_all] = true
       end
       o.on('-u', '--update', 'Update the measure.xml') do
         options[:update] = true
       end
-      o.on('-a', '--compute_arguments [MODEL]', 'Compute arguments for the given model') do |model_file|
-        options[:compute_arguments] = model_file
+      o.on('-a', '--compute_arguments [MODEL]', 'Compute arguments for the given OSM or IDF') do |model_file|
+        options[:compute_arguments] = true
+        options[:compute_arguments_model] = model_file
+      end
+      o.on('-s', '--start_server [PORT]', 'Start a measure manager server') do |port|
+        options[:start_server] = true
+        options[:start_server_port] = port
       end
     end
 
     # Parse the options
     argv = parse_options(opts, sub_argv)
-    $logger.error 'No directory provided' if argv == []
-    return 1 if argv == []
-    directory = argv[0]
+    
+    directory = nil
+    if !options[:start_server]
+      if argv == []
+        $logger.error 'No directory provided' 
+        return 1
+      end
+      directory = File.expand_path(argv[0])
+    end
 
     $logger.debug("Measure command: #{argv.inspect} #{options.inspect}")
     $logger.debug("Directory to examine is #{directory}")
 
-    $logger.error 'Code to be added here to operate on measures'
+    if options[:update_all]
+      measure_manager = MeasureManager.new
+      
+      # loop over all directories
+      result = []
+      $logger.debug("Hi")
+      Dir.glob("#{directory}/*/").each do |measure_dir|
+        $logger.debug("Inspecting directory #{measure_dir}")
+        if File.directory?(measure_dir)
+          measure = measure_manager.get_measure(measure_dir, true)
+          if measure.nil?
+            $logger.debug("Directory #{measure_dir} is not a measure")
+          else
+            result << measure_manager.measure_hash(measure_dir, measure)
+          end
+        end
+      end
+         
+      puts JSON.generate(result)
+      
+    elsif options[:update]
+      measure_manager = MeasureManager.new
+      measure = measure_manager.get_measure(directory, true)
+      if measure.nil?
+        $logger.error("Cannot load measure from '#{directory}'")
+        return 1
+      end
+      
+      hash = measure_manager.measure_hash(directory, measure)
+      puts JSON.generate(hash)
+      
+    elsif options[:compute_arguments]
+      measure_manager = MeasureManager.new
+      measure = measure_manager.get_measure(directory, true)
+      if measure.nil?
+        $logger.error("Cannot load measure from '#{directory}'")
+        return 1
+      end
+      
+      # todo - handle the case where compute_arguments_model is an IDF
+      osm_path = options[:compute_arguments_model]
+      
+      model = OpenStudio::Model::OptionalModel.new()
+      workspace = OpenStudio::OptionalWorkspace.new()
+      if osm_path
+        value = measure_manager.get_model(osm_path, true)
+        if value.nil?
+          $logger.error("Cannot load model from '#{osm_path}'")
+          return 1
+        else
+          model = value[0].clone(true).to_Model
+          workspace = value[1].clone(true)
+        end
+      else
+        osm_path = ""
+      end
+      
+      measure_info = measure_manager.get_measure_info(directory, measure, osm_path, model, workspace)
+      
+      hash = measure_manager.measure_hash(directory, measure, measure_info)
+      puts JSON.generate(hash)
+      
+    elsif options[:start_server]
+    
+      require_relative 'measure_manager_server'
+      
+      port = options[:start_server_port]
+      if port.nil?
+        port = 1234
+      end
 
-    1
+      server = WEBrick::HTTPServer.new(:Port => port)
+
+      server.mount "/", MeasureManagerServlet
+
+      trap("INT") {
+          server.shutdown
+      }
+
+      server.start
+
+    else
+      $logger.error("Measure command missing subcommand")
+      return 1
+    end
+
+    0
   end
 end
 
