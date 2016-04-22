@@ -105,7 +105,10 @@ set(filetypes_src
   filetypes/EpwFile.hpp
   filetypes/EpwFile.cpp
   filetypes/WorkflowJSON.hpp
+  filetypes/WorkflowJSON_Impl.hpp
   filetypes/WorkflowJSON.cpp
+  filetypes/WorkflowStep.hpp
+  filetypes/WorkflowStep.cpp  
 )
 
 set(geometry_src

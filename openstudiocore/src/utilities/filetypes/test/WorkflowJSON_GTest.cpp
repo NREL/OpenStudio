@@ -20,6 +20,7 @@
 #include <gtest/gtest.h>
 
 #include "../WorkflowJSON.hpp"
+#include "../WorkflowStep.hpp"
 
 #include "../../core/Exception.hpp"
 

@@ -38,41 +38,12 @@ namespace openstudio{
   * WorkflowStep class: build around Attribute
   */
   
-/** Class for accessing the OpenStudio Workflow (OSW) JSON format. */
-class UTILITIES_API WorkflowStep
-{
-public:
+class WorkflowStep;
+
+namespace detail{
+  class WorkflowJSON_Impl;
+}
   
-  WorkflowStep(const std::string& measureDirName);
-  WorkflowStep(const Attribute& attribute);
-
-  std::string measureDirName() const;
-    
-  // DLM: OSW JSON examples have vector but run method takes map 
-  std::map<std::string, Variant> arguments() const;
-
-  boost::optional<Variant> getArgument(const std::string& name) const;
-
-  void setArgument(const std::string& name, const Variant& value);
-  void setArgument(const std::string& name, bool value);
-  void setArgument(const std::string& name, double value);
-  void setArgument(const std::string& name, int value);
-  void setArgument(const std::string& name, const std::string& value);
-
-  void removeArgument(const std::string& name);
-
-  void clearArguments();
-
-private:
-
-  // configure logging
-  REGISTER_LOGGER("openstudio.WorkflowStep");
-
-  std::string m_measureDirName;
-  std::map<std::string, Variant> m_arguments;
-
-};
-
 /** Class for accessing the OpenStudio Workflow (OSW) JSON format. */
 class UTILITIES_API WorkflowJSON
 {
@@ -86,6 +57,9 @@ public:
 
   /** Constructor with path, will throw if path does not exist or file is incorrect. */
   WorkflowJSON(const openstudio::path& p);
+  
+  /** Clones this WorkflowJSON into a separate one. */
+  WorkflowJSON clone() const;
 
   /** Attempt to load a WorkflowJSON from string */
   static boost::optional<WorkflowJSON> load(const std::string& s);
@@ -136,14 +110,14 @@ public:
   boost::optional<Attribute> getAttribute(const std::string& name) const;
 
   /** Removes an attribute (other than steps). */
-  void removeAttribute(const std::string& name);
+  bool removeAttribute(const std::string& name);
 
   /** Sets an attribute (other than steps). */
-  void setAttribute(const Attribute& attribute);
-  void setAttribute(const std::string& name, bool value);
-  void setAttribute(const std::string& name, double value);
-  void setAttribute(const std::string& name, int value);
-  void setAttribute(const std::string& name, const std::string& value);
+  bool setAttribute(const Attribute& attribute);
+  bool setAttribute(const std::string& name, bool value);
+  bool setAttribute(const std::string& name, double value);
+  bool setAttribute(const std::string& name, int value);
+  bool setAttribute(const std::string& name, const std::string& value);
   
   /** Clears all attributes (other than steps). */
   void clearAttributes();
@@ -152,21 +126,28 @@ public:
   std::vector<WorkflowStep> workflowSteps() const;
 
   /** Assigns the workflow steps. */
-  void setWorkflowSteps(const std::vector<WorkflowStep>& steps);
+  bool setWorkflowSteps(const std::vector<WorkflowStep>& steps);
 
+protected:
+  
+  // get the impl
+  template<typename T>
+  std::shared_ptr<T> getImpl() const {
+    return std::dynamic_pointer_cast<T>(m_impl);
+  }
+  
+  friend class detail::WorkflowJSON_Impl;
+
+  /** Protected constructor from impl. */
+  WorkflowJSON(std::shared_ptr<detail::WorkflowJSON_Impl> impl);
+  
 private:
-
-  Attribute parse(const std::string& name, const Json::Value& json);
-
-  Json::Value json(bool includeHash) const;
 
   // configure logging
   REGISTER_LOGGER("openstudio.WorkflowJSON");
-  
-  openstudio::path m_path;
-  
-  std::vector<Attribute> m_attributes; // does not store 'steps'
-  std::vector<WorkflowStep> m_workflowSteps;
+
+  // pointer to implementation
+  std::shared_ptr<detail::WorkflowJSON_Impl> m_impl;
 };
 
 } // openstudio
