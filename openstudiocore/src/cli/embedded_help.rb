@@ -20,7 +20,7 @@ module Kernel
   end
 
   def require path
-    #puts "requiring path: #{path}"
+    puts "requiring path: #{path}"
 
     rb_path = path
 
