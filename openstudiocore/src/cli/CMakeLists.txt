@@ -298,6 +298,8 @@ target_link_libraries(openstudio-wf
 
 if (UNIX AND NOT APPLE)
   target_link_libraries(openstudio-wf ${RUBY_LIBRARY}  "dl" "crypt")
+elseif(WIN32)
+  target_link_libraries(openstudio-wf debug ${RUBY_LIBRARY_DEBUG} optimized ${RUBY_LIBRARY})
 else()
   target_link_libraries(openstudio-wf ${RUBY_LIBRARY} )
 endif()

@@ -28,6 +28,7 @@ require 'optparse'
 
 $logger = Logger.new(STDOUT)
 $logger.level = Logger::WARN
+#$logger.level = Logger::DEBUG
 
 
 ### This is the code chunk to allow for an embedded IRB shell. From Jason Roelofs, found on StackOverflow

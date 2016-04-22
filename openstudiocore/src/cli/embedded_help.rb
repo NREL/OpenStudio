@@ -21,6 +21,8 @@ module Kernel
 
   def require path
     puts "requiring path: #{path}"
+    #call_stack = caller.join("\n")
+    #puts "call_stack: #{call_stack}"
 
     rb_path = path
 
