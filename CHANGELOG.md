@@ -1,3 +1,11 @@
+## OpenStudio v1.11.1
+###### 2016-04-21 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.11.0...v1.11.1 )
+
+- ![Fixed:][fixed] [#1359]( https://github.com/NREL/OpenStudio/issues/1359 ), EnergyPlus does not update standard output during run
+- ![Fixed:][fixed] [#2181]( https://github.com/NREL/OpenStudio/issues/2181 ), Add "high" accuracy settings option to Radiance Measure
+- ![Fixed:][fixed] [#2186]( https://github.com/NREL/OpenStudio/issues/2186 ), SketchUp does not see plugin signature as valid
+- ![Fixed:][fixed] [#2191]( https://github.com/NREL/OpenStudio/issues/2191 ), MultiSpeed Coil Inlet/Outlet Nodes Not Being Connected Properly
+
 ## OpenStudio v1.11.0
 ###### 2016-03-28 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.10.6...v1.11.0 )
 
