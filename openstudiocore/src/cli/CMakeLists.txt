@@ -269,7 +269,7 @@ target_link_libraries(openstudio-wf
  ruby_OpenStudioUtilitiesData
  ruby_OpenStudioUtilitiesSql
  ##ruby_OpenStudioGBXML
- ##ruby_OpenStudioModelGenerators
+ ruby_OpenStudioModelGenerators
  ##ruby_OpenStudioRadiance
  ruby_OpenStudioUtilitiesEconomics
  ruby_OpenStudioUtilitiesTime

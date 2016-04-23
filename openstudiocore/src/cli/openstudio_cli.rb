@@ -29,7 +29,7 @@ require 'optparse'
 
 $logger = Logger.new(STDOUT)
 $logger.level = Logger::WARN
-#$logger.level = Logger::DEBUG
+$logger.level = Logger::DEBUG
 
 # This is the code chunk to allow for an embedded IRB shell. From Jason Roelofs, found on StackOverflow
 module IRB # :nodoc:
@@ -356,7 +356,11 @@ class Run
       run_options[:load_simulation_sql] = true
       run_options[:preserve_run_dir] = true
     end
+    
+    $logger.debug "Initializing run method"
     k = OpenStudio::Workflow::Run.new input_adapter, output_adapter, File.dirname(osw_path), run_options
+    
+    $logger.debug "Beginning run"
     k.run
 
     0

@@ -41,7 +41,7 @@ extern "C" {
   void Init_openstudioutilitiesdata(void);
   void Init_openstudioutilitiessql(void);
   ////void Init_openstudiogbxml(void);
-  ////void Init_openstudiomodelgenerators(void);
+  void Init_openstudiomodelgenerators(void);
   ////void Init_openstudioradiance(void);
   void Init_openstudioutilitieseconomics(void);
   void Init_openstudioutilitiestime(void);
@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
     Init_openstudiomodelgeometry();
     Init_openstudiomodelhvac();
     Init_openstudiomodelrefrigeration();
-    //Init_openstudiomodelgenerators();
+    Init_openstudiomodelgenerators();
     //Init_openstudioenergyplus();
     //Init_openstudioradiance();
     //Init_openstudiogbxml();
@@ -154,8 +154,6 @@ int main(int argc, char *argv[])
   ruby_set_argv(argc - 1,argv + 1);
   //rubyInterpreter.evalString(R"(require 'irb')");
   //rubyInterpreter.evalString(R"(IRB.start)");
-
-  // DLM: how can we set a return value in the exception block?
 
   try{
     rubyInterpreter.evalString("begin \n (require 'openstudio_cli') \n rescue Exception => e \n puts \n puts \"Error: #{e.message}\" \n puts \"Backtrace:\n\t\" + e.backtrace.join(\"\\n\\t\") \n raise \n end");
