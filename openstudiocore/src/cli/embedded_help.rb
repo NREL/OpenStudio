@@ -25,9 +25,9 @@ module Kernel
     #call_stack = caller.join("\n")
     #puts "call_stack: #{call_stack}"
     
-    if path == 'openstudio' 
-      return true
-    end
+    #if path == 'openstudio' 
+    #  return true
+    #end
 
     rb_path = path
 
