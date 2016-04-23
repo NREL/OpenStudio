@@ -29,6 +29,7 @@ include OpenStudio::Workflow::Util::IO
 
 $logger = Logger.new(STDOUT)
 $logger.level = Logger::WARN
+$logger.level = Logger::DEBUG
 
 # This is the code chunk to allow for an embedded IRB shell. From Jason Roelofs, found on StackOverflow
 module IRB # :nodoc:
@@ -320,7 +321,11 @@ class Run
     $logger.debug "Path for the OSW: #{osw_path}"
 
     adapter_options = {workflow_filename: File.basename(osw_path), output_directory: File.join(Dir.pwd, 'run')}
+    
+    $logger.debug "Loading input adapter, options = #{adapter_options}"
     input_adapter = OpenStudio::Workflow.load_input_adapter 'local', adapter_options
+    
+    $logger.debug "Loading output adapter, options = #{adapter_options}"
     output_adapter = OpenStudio::Workflow.load_output_adapter 'local', adapter_options
     
     run_options = options[:debug] ? {debug: true, cleanup: false} : {}
@@ -355,7 +360,11 @@ class Run
       run_options[:load_simulation_sql] = true
       run_options[:preserve_run_dir] = true
     end
+    
+    $logger.debug "Initializing run method"
     k = OpenStudio::Workflow::Run.new input_adapter, output_adapter, File.dirname(osw_path), run_options
+    
+    $logger.debug "Beginning run"
     k.run
 
     0
