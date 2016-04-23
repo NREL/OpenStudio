@@ -182,6 +182,8 @@ embed_files(
   "${CMAKE_CURRENT_SOURCE_DIR}/scope_test.rb" "scope_test.rb"
   "${CMAKE_CURRENT_SOURCE_DIR}/openstudio.rb" "openstudio.rb"
   "${CMAKE_CURRENT_SOURCE_DIR}/openstudio_cli.rb" "openstudio_cli.rb"
+  "${CMAKE_CURRENT_SOURCE_DIR}/measure_manager.rb" "measure_manager.rb"
+  "${CMAKE_CURRENT_SOURCE_DIR}/measure_manager_server.rb" "measure_manager_server.rb"
   ${EMBED_RB} 
 )
 
@@ -299,7 +301,8 @@ target_link_libraries(openstudio-wf
 if (UNIX AND NOT APPLE)
   target_link_libraries(openstudio-wf ${RUBY_LIBRARY}  "dl" "crypt")
 elseif(WIN32)
-  target_link_libraries(openstudio-wf debug ${RUBY_LIBRARY_DEBUG} optimized ${RUBY_LIBRARY})
+  target_link_libraries(openstudio-wf debug ${RUBY_LIBRARY} optimized ${RUBY_LIBRARY})
+  set_target_properties(openstudio-wf PROPERTIES LINK_FLAGS_DEBUG "/NODEFAULTLIB:MSVCRT")
 else()
   target_link_libraries(openstudio-wf ${RUBY_LIBRARY} )
 endif()

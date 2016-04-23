@@ -130,7 +130,7 @@ elseif(WIN32)
   if(EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip")
     file(MD5 "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" OPENSSL_HASH)
   endif()
-  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" OR NOT "${OPENSSL_HASH}" MATCHES "${OPENSSL_EXPECTED_HASH}")
+  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" OR NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}" OR NOT "${OPENSSL_HASH}" MATCHES "${OPENSSL_EXPECTED_HASH}")
     message(STATUS "Downloading OpenSSL ${OPENSSL_VERSION} (${OPENSSL_ARCH}-bit)")
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/OpenSSL-Win${OPENSSL_ARCH}-${OPENSSL_VERSION}.zip" "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${OPENSSL_EXPECTED_HASH})
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
@@ -620,33 +620,12 @@ else()
     BUILD_COMMAND nmake libenc && nmake libtrans && nmake
     INSTALL_COMMAND nmake install
   )
-  ExternalProject_Add(RubyDebug
-    URL https://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.2.0.tar.gz
-    URL_MD5 d4d8b600af2f77566515728d5bd7ffa4
-    BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND set CL=/MDd && .\\win32\\configure.bat --with-static-linked-ext --without-win32ole --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/RubyDebug-prefix/src/Ruby-install
-    BUILD_COMMAND nmake libenc && nmake libtrans && nmake
-    INSTALL_COMMAND nmake install
-  )  
   set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/x64-msvcr120-ruby220-static.lib")
-  set(RUBY_LIBRARY_DEBUG "${CMAKE_BINARY_DIR}/RubyDebug-prefix/src/Ruby-install/lib/x64-msvcr120-ruby220-static.lib")
   set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.2.0")
   set(RUBY_CONFIG_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.2.0/x64-mswin64_120")
   set(RUBY_EXECUTABLE "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby")
   set(RUBY_SOURCE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby")
-  
-  # Install required gems
-  set(ENV{BUNDLE_PATH} "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/ruby/gems/2.0.0")
-  add_custom_command(TARGET Ruby
-                     POST_BUILD
-                     COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/bundle" "install" "--no-cache"
-                     COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/bundle" "clean" "--force"
-                     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/dependencies/ruby"
-                     COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/gem" "uninstall" "openstudio-workflow"                          
-                     COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/gem" "install" "openstudio-workflow.gem"                     
-                     COMMENT "Installing gems..."
-  )
-  
+
 endif()
 
 # make this cross platform
@@ -993,7 +972,6 @@ ExternalProject_Add(OSCore
     -DPATCH_EXE:PATH=${PATCH_EXE}
     -DMAXIMIZE_CPU_USAGE:BOOL=${MAXIMIZE_CPU_USAGE}
     -DRUBY_LIBRARY:PATH=${RUBY_LIBRARY} 
-    -DRUBY_LIBRARY_DEBUG:PATH=${RUBY_LIBRARY_DEBUG} 
     -DRUBY_INCLUDE_DIR:PATH=${RUBY_INCLUDE_DIR}  
     -DRUBY_CONFIG_INCLUDE_DIR:PATH=${RUBY_CONFIG_INCLUDE_DIR}
     -DRUBY_EXECUTABLE:PATH=${RUBY_EXECUTABLE}
