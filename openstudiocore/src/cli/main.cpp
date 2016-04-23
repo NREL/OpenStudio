@@ -157,7 +157,11 @@ int main(int argc, char *argv[])
 
   try{
     rubyInterpreter.evalString("begin \n (require 'openstudio_cli') \n rescue Exception => e \n puts \n puts \"Error: #{e.message}\" \n puts \"Backtrace:\n\t\" + e.backtrace.join(\"\\n\\t\") \n raise \n end");
+  } catch (const std::exception& e){
+    std::cout << "Exception: " << e.what() << std::endl;
+    return 1;
   } catch (...){
+    std::cout << "Unknown Exception" << std::endl;
     return 1;
   }
   return 0;
