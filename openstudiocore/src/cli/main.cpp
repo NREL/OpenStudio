@@ -154,7 +154,15 @@ int main(int argc, char *argv[])
   ruby_set_argv(argc - 1,argv + 1);
   //rubyInterpreter.evalString(R"(require 'irb')");
   //rubyInterpreter.evalString(R"(IRB.start)");
-  rubyInterpreter.evalString(R"(require 'openstudio_cli')");
+
+  // DLM: how can we set a return value in the exception block?
+
+  try{
+    rubyInterpreter.evalString("begin \n (require 'openstudio_cli') \n rescue Exception => e \n puts \n puts \"Error: #{e.message}\" \n puts \"Backtrace:\n\t\" + e.backtrace.join(\"\\n\\t\") \n raise \n end");
+  } catch (...){
+    return 1;
+  }
+  return 0;
 }
 
 extern "C" {
