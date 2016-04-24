@@ -24,6 +24,10 @@ namespace embedded_files {
 
   inline std::string getFileAsString(const std::string &t_filename) {
     const auto fs = files();
+    if (fs.find(t_filename) == fs.end()){
+      std::cout << "getFileAsString, file not found: '" << t_filename << "'" << std::endl;
+      return "";
+    }
     const auto f = fs.at(t_filename);
     return std::string(f.second, f.second + f.first);
   }
