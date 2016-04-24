@@ -11,6 +11,10 @@
 #include <sys/types.h>
 #endif
 
+#include <boost/algorithm/string/replace.hpp>
+
+#include "../utilities/core/Path.hpp"
+
 #include <memory>
 #include <vector>
 
@@ -26,6 +30,29 @@ namespace embedded_files {
     const auto fs = files();
     if (fs.find(t_filename) == fs.end()){
       std::cout << "getFileAsString, file not found: '" << t_filename << "'" << std::endl;
+      
+      std::string other = t_filename;
+
+      // remove '..', '.'
+      boost::replace_first(other, ":/", "C:/");
+      other = openstudio::toString(boost::filesystem::system_complete(openstudio::toPath(other)));
+      boost::replace_first(other, "C:/", ":/");
+      std::cout << "getFileAsString, trying: '" << other << "'" << std::endl;
+      if (fs.find(other) != fs.end()){
+        std::cout << "getFileAsString, file found using alternate path" << std::endl;
+        const auto f = fs.at(other);
+        return std::string(f.second, f.second + f.first);
+      }
+
+      // look in gem locations
+      boost::replace_first(other, ":/", ":/openstudio-workflow-1.0.0.alpha.0/lib/");
+      std::cout << "getFileAsString, trying: '" << other << "'" << std::endl;
+      if (fs.find(other) != fs.end()){
+        std::cout << "getFileAsString, file found using alternate path" << std::endl;
+        const auto f = fs.at(other);
+        return std::string(f.second, f.second + f.first);
+      }
+      std::cout << "getFileAsString, file not found" << std::endl;
       return "";
     }
     const auto f = fs.at(t_filename);
