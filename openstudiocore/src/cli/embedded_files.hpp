@@ -45,13 +45,32 @@ namespace embedded_files {
       }
 
       // look in gem locations
-      boost::replace_first(other, ":/", ":/openstudio-workflow-1.0.0.alpha.0/lib/");
-      std::cout << "getFileAsString, trying: '" << other << "'" << std::endl;
-      if (fs.find(other) != fs.end()){
+      std::string other2 = other;
+      boost::replace_first(other2, ":/", ":/openstudio-workflow-1.0.0.alpha.0/lib/");
+      std::cout << "getFileAsString, trying: '" << other2 << "'" << std::endl;
+      if (fs.find(other2) != fs.end()){
         std::cout << "getFileAsString, file found using alternate path" << std::endl;
-        const auto f = fs.at(other);
+        const auto f = fs.at(other2);
         return std::string(f.second, f.second + f.first);
       }
+      
+      other2 = other;
+      boost::replace_first(other2, ":/", ":/openstudio-workflow-1.0.0.alpha.0/lib/openstudio/");
+      std::cout << "getFileAsString, trying: '" << other2 << "'" << std::endl;
+      if (fs.find(other2) != fs.end()){
+        std::cout << "getFileAsString, file found using alternate path" << std::endl;
+        const auto f = fs.at(other2);
+        return std::string(f.second, f.second + f.first);
+      }
+
+      other2 = other;
+      boost::replace_first(other2, ":/", ":/openstudio-workflow-1.0.0.alpha.0/lib/openstudio/workflow/");
+      std::cout << "getFileAsString, trying: '" << other2 << "'" << std::endl;
+      if (fs.find(other2) != fs.end()){
+        std::cout << "getFileAsString, file found using alternate path" << std::endl;
+        const auto f = fs.at(other2);
+        return std::string(f.second, f.second + f.first);
+      }      
       std::cout << "getFileAsString, file not found" << std::endl;
       return "";
     }

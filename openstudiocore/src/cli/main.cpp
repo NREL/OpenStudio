@@ -35,7 +35,7 @@ extern "C" {
   void Init_openstudiomodelsimulation(void);
   void Init_openstudioutilitiescore(void);
   void Init_openstudioutilitiesplot(void);
-  ////void Init_openstudioenergyplus(void);
+  void Init_openstudioenergyplus(void);
   ////void Init_openstudiomodeleditor(void);
   ////void Init_openstudioosversion(void);
   void Init_openstudioutilitiesdata(void);
@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
     Init_openstudiomodelhvac();
     Init_openstudiomodelrefrigeration();
     Init_openstudiomodelgenerators();
-    //Init_openstudioenergyplus();
+    //Init_openstudioenergyplus(); // failing on rb_require("openstudiomodel"), don't know why?
     //Init_openstudioradiance();
     //Init_openstudiogbxml();
     //Init_openstudioairflow();

@@ -263,7 +263,7 @@ target_link_libraries(openstudio-wf
  ruby_OpenStudioModelSimulation
  ruby_OpenStudioUtilitiesCore
  ruby_OpenStudioUtilitiesPlot
- ##ruby_OpenStudioEnergyPlus
+ ruby_OpenStudioEnergyPlus
  ##ruby_OpenStudioModelEditor
  ##ruby_OpenStudioOSVersion
  ruby_OpenStudioUtilitiesData
