@@ -28,52 +28,6 @@ namespace embedded_files {
 
   inline std::string getFileAsString(const std::string &t_filename) {
     const auto fs = files();
-    if (fs.find(t_filename) == fs.end()){
-      std::cout << "getFileAsString, file not found: '" << t_filename << "'" << std::endl;
-      
-      std::string other = t_filename;
-
-      // remove '..', '.'
-      boost::replace_first(other, ":/", "C:/");
-      other = openstudio::toString(boost::filesystem::system_complete(openstudio::toPath(other)));
-      boost::replace_first(other, "C:/", ":/");
-      std::cout << "getFileAsString, trying: '" << other << "'" << std::endl;
-      if (fs.find(other) != fs.end()){
-        std::cout << "getFileAsString, file found using alternate path" << std::endl;
-        const auto f = fs.at(other);
-        return std::string(f.second, f.second + f.first);
-      }
-
-      // look in gem locations
-      std::string other2 = other;
-      boost::replace_first(other2, ":/", ":/openstudio-workflow-1.0.0.alpha.0/lib/");
-      std::cout << "getFileAsString, trying: '" << other2 << "'" << std::endl;
-      if (fs.find(other2) != fs.end()){
-        std::cout << "getFileAsString, file found using alternate path" << std::endl;
-        const auto f = fs.at(other2);
-        return std::string(f.second, f.second + f.first);
-      }
-      
-      other2 = other;
-      boost::replace_first(other2, ":/", ":/openstudio-workflow-1.0.0.alpha.0/lib/openstudio/");
-      std::cout << "getFileAsString, trying: '" << other2 << "'" << std::endl;
-      if (fs.find(other2) != fs.end()){
-        std::cout << "getFileAsString, file found using alternate path" << std::endl;
-        const auto f = fs.at(other2);
-        return std::string(f.second, f.second + f.first);
-      }
-
-      other2 = other;
-      boost::replace_first(other2, ":/", ":/openstudio-workflow-1.0.0.alpha.0/lib/openstudio/workflow/");
-      std::cout << "getFileAsString, trying: '" << other2 << "'" << std::endl;
-      if (fs.find(other2) != fs.end()){
-        std::cout << "getFileAsString, file found using alternate path" << std::endl;
-        const auto f = fs.at(other2);
-        return std::string(f.second, f.second + f.first);
-      }      
-      std::cout << "getFileAsString, file not found" << std::endl;
-      return "";
-    }
     const auto f = fs.at(t_filename);
     return std::string(f.second, f.second + f.first);
   }
