@@ -129,7 +129,8 @@ int main(int argc, char *argv[])
     Init_openstudiomodelhvac();
     Init_openstudiomodelrefrigeration();
     Init_openstudiomodelgenerators();
-    //Init_openstudioenergyplus(); // failing on rb_require("openstudiomodel"), don't know why?
+    rb_provide("openstudiomodel");
+    Init_openstudioenergyplus(); // failing on rb_require("openstudiomodel"), don't know why?
     //Init_openstudioradiance();
     //Init_openstudiogbxml();
     //Init_openstudioairflow();
