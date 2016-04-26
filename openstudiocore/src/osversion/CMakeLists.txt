@@ -22,7 +22,7 @@ set(${target_name}_depends
   openstudio_model
 )
 
-add_library(${target_name} SHARED
+add_library(${target_name} 
   ${${target_name}_src}
 )
 

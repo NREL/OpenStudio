@@ -504,7 +504,7 @@ include_directories(${CMAKE_BINARY_DIR}/src/zlib)
 add_subdirectory(pch)
 
 
-add_library(${target_name} SHARED
+add_library(${target_name} 
   ${${target_name}_src}
 )
 
