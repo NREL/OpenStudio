@@ -10,6 +10,10 @@ function(embed_files FILES EMBEDDED_LOCATIONS CXX_OUTPUT_FILES)
     return()
   endif()
 
+  if( ARGV3 )
+    set(NAMESPACE ${ARGV3})  
+  endif()
+
   math(EXPR END "${FILES_LENGTH} - 1")
   set(NUMFILES ${FILES_LENGTH})
 
@@ -80,6 +84,11 @@ function(embed_files FILES EMBEDDED_LOCATIONS CXX_OUTPUT_FILES)
   endforeach()
 
   set_source_files_properties(${EMBED_SOURCE_FILES} PROPERTIES HEADER_FILE_ONLY TRUE)
+
+  if( NAMESPACE )
+    set(BEGIN_NAMESPACE "namespace ${NAMESPACE} {")
+    set(END_NAMESPACE "}")
+  endif()
 
   configure_file("${CMAKE_SOURCE_DIR}/embedded/embedded_files.hxx.in" "${CMAKE_CURRENT_BINARY_DIR}/embedded_files.hxx")
   list(APPEND EMBED_SOURCE_FILES "${CMAKE_CURRENT_BINARY_DIR}/embedded_files.hxx")

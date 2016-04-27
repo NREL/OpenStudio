@@ -18,7 +18,7 @@
  **********************************************************************/
 
 #include "EnergyPlusAPI.hpp"
-#include <embedded_files.hxx>
+#include <src/energyplus/embedded_files.hxx>
 
 #include "ForwardTranslator.hpp"
 
@@ -3482,14 +3482,8 @@ IdfObject ForwardTranslator::createRegisterAndNameIdfObject(const IddObjectType&
 }
 
 boost::optional<IdfFile> ForwardTranslator::findIdfFile(const std::string& path) {
-  //QFile file(QString().fromStdString(path));
-  //bool opened = file.open(QIODevice::ReadOnly | QIODevice::Text);
-  //OS_ASSERT(opened);
-
-  //QTextStream in(&file);
   std::stringstream ss;
-  //ss << in.readAll().toStdString();
-  ss << embedded_files::getFileAsString(path);
+  ss << ::energyplus::embedded_files::getFileAsString(path);
   return IdfFile::load(ss, IddFileType::EnergyPlus);
 }
 

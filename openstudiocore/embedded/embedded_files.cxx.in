@@ -1,5 +1,7 @@
 #include "embedded_files.hxx"
 
+@BEGIN_NAMESPACE@
+
 namespace embedded_files {
 
   static const size_t embedded_file_count = @NUMFILES@;
@@ -30,4 +32,6 @@ namespace embedded_files {
   }
 
 }
+
+@END_NAMESPACE@
 
