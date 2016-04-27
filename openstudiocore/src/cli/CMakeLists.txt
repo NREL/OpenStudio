@@ -3,10 +3,6 @@ IF (APPLE)
    find_library(COREFOUNDATION_LIBRARY CoreFoundation )
 ENDIF (APPLE)
 
-add_executable(CreateEmbeddedSource
-  CreateEmbeddedSource.cpp
-)
-
 file(READ "${RUBY_SOURCE_DIR}/enc/encinit.c" ENCINIT_FILE_CONTENT)
 string(REGEX MATCHALL "init_enc\\([a-zA-Z0-9_]*\\);" ENCINIT_MATCH "${ENCINIT_FILE_CONTENT}")
 set(ENC_INIT_DECLARATIONS "")
@@ -78,90 +74,17 @@ endforeach()
 
 configure_file("InitMacros.hxx.in" "InitMacros.hxx")
 
-function(embed_files )
-  math(EXPR ARGCEND "${ARGC} - 1")
-  math(EXPR NUMFILES "${ARGC} / 2")
-  math(EXPR MAXFILECOUNT "${NUMFILES} - 1")
-
-  foreach (arg RANGE 0 ${ARGCEND} 2)
-    # INFILE is the path to the file to embed into the executable
-    list(GET ARGV ${arg} INFILE)
-    math(EXPR argplus1 "${arg} + 1")
-    math(EXPR FILENUM "${arg} / 2")
-    # OUTNAME is the path to the embedded file
-    # this is the path used to reference the file inside the executable
-    list(GET ARGV ${argplus1} OUTNAME)
-
-    get_filename_component(BASE_PATH ${OUTNAME} DIRECTORY)
-    get_filename_component(BASE_FILENAME ${OUTNAME} NAME_WE)
-    get_filename_component(EXTENSION ${OUTNAME} EXT)
-    string(REPLACE "." "_" EXTENSION ${EXTENSION})
-
-    # EMBED_SOURCE_FILE is the fully qualified path to a cxx file with the embedded data
-    set(EMBED_SOURCE_FILE "${CMAKE_BINARY_DIR}/embedded_files/${BASE_PATH}/${BASE_FILENAME}${EXTENSION}.cxx")
-    set(EMBED_SOURCE_PATH "${CMAKE_BINARY_DIR}/embedded_files/${BASE_PATH}")
-    file(RELATIVE_PATH EMBED_SOURCE_FILE_REL_PATH ${CMAKE_BINARY_DIR} ${EMBED_SOURCE_FILE})
-    list(APPEND EMBED_SOURCE_FILES ${EMBED_SOURCE_FILE})    
-
-    # Fixup the name. We want to make sure it starts with :/
-    string(SUBSTRING ${OUTNAME} 0 1 OUTNAME_PREFIX)
-    string(SUBSTRING ${OUTNAME} 0 2 OUTNAME_PREFIX2)
-    if( OUTNAME_PREFIX2 STREQUAL :/ )
-      # don't do anything, already in embedded form
-    elseif( OUTNAME_PREFIX STREQUAL / )
-      set( OUTNAME ":${OUTNAME}" )
-    else()
-      set( OUTNAME ":/${OUTNAME}" )
-    endif()
-
-    add_custom_command(OUTPUT ${EMBED_SOURCE_FILE}
-      COMMAND ${CMAKE_COMMAND} -E make_directory ${EMBED_SOURCE_PATH}
-      COMMAND CreateEmbeddedSource
-        ${INFILE}
-        ${EMBED_SOURCE_FILE}
-        ${FILENUM}
-        ${OUTNAME}
-        DEPENDS ${INFILE}
-    )
-    set(EMBED_SOURCE_FILES ${EMBED_SOURCE_FILES} PARENT_SCOPE)
-    set(EMBEDDED_FILE_INCLUDES "${EMBEDDED_FILE_INCLUDES}#include <${EMBED_SOURCE_FILE_REL_PATH}>\n")
-  endforeach()
-
-  # file names
-  foreach (arg RANGE 0 ${MAXFILECOUNT})
-    set(EMBEDDED_FILE_NAMES "${EMBEDDED_FILE_NAMES}    embedded_file_name_${arg}")
-    if (NOT arg EQUAL MAXFILECOUNT)
-      set(EMBEDDED_FILE_NAMES "${EMBEDDED_FILE_NAMES},")
-    endif()
-    set(EMBEDDED_FILE_NAMES "${EMBEDDED_FILE_NAMES}\n")
-  endforeach()
-
-  # lengths
-  foreach (arg RANGE 0 ${MAXFILECOUNT})
-    set(EMBEDDED_FILE_LENS "${EMBEDDED_FILE_LENS}    embedded_file_len_${arg}")
-    if (NOT arg EQUAL MAXFILECOUNT)
-      set(EMBEDDED_FILE_LENS "${EMBEDDED_FILE_LENS},")
-    endif()
-    set(EMBEDDED_FILE_LENS "${EMBEDDED_FILE_LENS}\n")
-  endforeach()
-
-  # datas
-  foreach (arg RANGE 0 ${MAXFILECOUNT})
-    set(EMBEDDED_FILES "${EMBEDDED_FILES}    embedded_file_${arg}")
-    if (NOT arg EQUAL MAXFILECOUNT)
-      set(EMBEDDED_FILES "${EMBEDDED_FILES},")
-    endif()
-    set(EMBEDDED_FILES "${EMBEDDED_FILES}\n")
-  endforeach()
-
-  configure_file("embedded_files.cxx.in" "embedded_files.cxx")
-endfunction()
-
 file(GLOB_RECURSE  EXTENSION_RB  FOLLOW_SYMLINKS "${RUBY_POSSIBLE_LIB_DIR}/**/*.rb")
+
+#foreach( _FILE ${EXTENSION_RB} )
+#  file(RELATIVE_PATH LOCATION ${RUBY_POSSIBLE_LIB_DIR} ${_FILE})
+#  list(APPEND EMBED_RB ${_FILE} ${LOCATION})
+#endforeach()
 
 foreach( _FILE ${EXTENSION_RB} )
   file(RELATIVE_PATH LOCATION ${RUBY_POSSIBLE_LIB_DIR} ${_FILE})
-  list(APPEND EMBED_RB ${_FILE} ${LOCATION})
+  list(APPEND FILES ${_FILE})
+  list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
 #add_custom_command(
@@ -175,32 +98,42 @@ file(GLOB_RECURSE WORKFLOW_IDF FOLLOW_SYMLINKS "${OPENSTUDIO_WORKFLOW_GEM}/**/*.
 
 foreach( _FILE ${WORKFLOW_RB} )
   file(RELATIVE_PATH LOCATION "${OPENSTUDIO_WORKFLOW_GEM}/gems" ${_FILE})
-  list(APPEND EMBED_RB ${_FILE} ${LOCATION})
+  list(APPEND FILES ${_FILE})
+  list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
 foreach( _FILE ${WORKFLOW_IDF} )
   file(RELATIVE_PATH LOCATION "${OPENSTUDIO_WORKFLOW_GEM}/gems" ${_FILE})
-  list(APPEND EMBED_RB ${_FILE} ${LOCATION})
+  list(APPEND FILES ${_FILE})
+  list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-embed_files(
-  "${CMAKE_CURRENT_SOURCE_DIR}/embedded_help.rb" "embedded_help.rb"
-  "${CMAKE_CURRENT_SOURCE_DIR}/scope_test.rb" "scope_test.rb"
-  "${CMAKE_CURRENT_SOURCE_DIR}/openstudio.rb" "openstudio.rb"
-  "${CMAKE_CURRENT_SOURCE_DIR}/openstudio_cli.rb" "openstudio_cli.rb"
-  "${CMAKE_CURRENT_SOURCE_DIR}/measure_manager.rb" "measure_manager.rb"
-  "${CMAKE_CURRENT_SOURCE_DIR}/measure_manager_server.rb" "measure_manager_server.rb"
-  ${EMBED_RB} 
-)
+list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/embedded_help.rb")
+list(APPEND EMBEDDED_PATHS "embedded_help.rb")
 
-#set(BUILD_SHARED_LIBS OFF)
+list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/scope_test.rb")
+list(APPEND EMBEDDED_PATHS "scope_test.rb")
+
+list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/openstudio.rb")
+list(APPEND EMBEDDED_PATHS "openstudio.rb")
+
+list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/openstudio_cli.rb")
+list(APPEND EMBEDDED_PATHS "openstudio_cli.rb")
+
+list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/measure_manager.rb")
+list(APPEND EMBEDDED_PATHS "measure_manager.rb")
+
+list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/measure_manager_server.rb")
+list(APPEND EMBEDDED_PATHS "measure_manager_server.rb")
+
+include("${CMAKE_SOURCE_DIR}/embedded/EmbedFiles.cmake")
+embed_files("${FILES}" "${EMBEDDED_PATHS}" OUTPUT)
 
 set_source_files_properties(EmbeddedScripting.i
   PROPERTIES CPLUSPLUS true
 )
 
 include_directories(${RUBY_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
-
 
 add_custom_command(
   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
@@ -210,17 +143,17 @@ add_custom_command(
 )
 
 add_custom_command(
-  OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/EmbeddedScriptingRUBY_wrap.cxx"
+  OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx"
   COMMAND "${SWIG_EXECUTABLE}"
           "-ruby"
           "-c++"
-          -o "${CMAKE_CURRENT_BINARY_DIR}/EmbeddedScriptingRUBY_wrap.cxx"
+          -o "${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx"
           "-fvirtual"
           "-D_WINDOWS"
           "-Fmicrosoft"
           "${CMAKE_CURRENT_SOURCE_DIR}/EmbeddedScripting.i"
   DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/EmbeddedScripting.i"
-          "embedded_files.hpp"
+          "${CMAKE_CURRENT_BINARY_DIR}/embedded_files.hxx"
           "EmbeddedHelp.hpp"
 )
 
@@ -231,13 +164,11 @@ add_executable(openstudio-wf
  "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
  RubyException.hpp
  RubyInterpreter.hpp
- embedded_files.hpp
- "${CMAKE_CURRENT_BINARY_DIR}/embedded_files.cxx"
- "${CMAKE_CURRENT_BINARY_DIR}/EmbeddedScriptingRUBY_wrap.cxx"
- ${EMBED_SOURCE_FILES} 
+ "${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx"
+ ${OUTPUT}
 )
 
-set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/EmbeddedScriptingRUBY_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED" )
+set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED" )
 
 set(ENCODING_LIB "")
 set(TRANSLATION_LIB "")

@@ -1,7 +1,7 @@
 #include "RubyInterpreter.hpp"
-#include "embedded_files.hpp"
 #include "GC_Value.hpp"
 #include "InitMacros.hxx"
+#include <embedded_files.hxx>
 
 #include <iostream>
 

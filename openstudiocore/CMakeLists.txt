@@ -189,6 +189,8 @@ endif()
 ###############################################################################
 # Sub projects
 
+add_subdirectory(embedded)
+
 # Each subfolder of src is a major sub-project
 set(project_directories
   generateiddfactory

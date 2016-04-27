@@ -3,18 +3,12 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-
 #ifdef _MSC_VER
 #include <direct.h>
 #else
 #include <sys/stat.h>
 #include <sys/types.h>
 #endif
-
-#include <boost/algorithm/string/replace.hpp>
-
-#include "../utilities/core/Path.hpp"
-
 #include <memory>
 #include <vector>
 
@@ -82,3 +76,4 @@ namespace embedded_files {
   }
 
 }
+
