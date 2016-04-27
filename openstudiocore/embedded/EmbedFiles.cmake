@@ -17,9 +17,6 @@ function(embed_files FILES EMBEDDED_LOCATIONS CXX_OUTPUT_FILES)
     list(GET FILES ${i} FILE)
     list(GET EMBEDDED_LOCATIONS ${i} EMBEDDED_LOCATION)
 
-    message("FILE: ${FILE}")
-    message("EMBEDDED_LOCATION: ${EMBEDDED_LOCATION}")
-
     get_filename_component(BASE_PATH ${EMBEDDED_LOCATION} DIRECTORY)
     get_filename_component(BASE_FILENAME ${EMBEDDED_LOCATION} NAME_WE)
     get_filename_component(EXTENSION ${EMBEDDED_LOCATION} EXT)
@@ -88,7 +85,6 @@ function(embed_files FILES EMBEDDED_LOCATIONS CXX_OUTPUT_FILES)
   list(APPEND EMBED_SOURCE_FILES "${CMAKE_CURRENT_BINARY_DIR}/embedded_files.hxx")
 
   configure_file("${CMAKE_SOURCE_DIR}/embedded/embedded_files.cxx.in" "${CMAKE_CURRENT_BINARY_DIR}/embedded_files.cxx")
-  message("Message: ${CMAKE_CURRENT_BINARY_DIR}/embedded_files.cxx")
   list(APPEND EMBED_SOURCE_FILES "${CMAKE_CURRENT_BINARY_DIR}/embedded_files.cxx")    
 
   set(${CXX_OUTPUT_FILES} ${EMBED_SOURCE_FILES} PARENT_SCOPE)

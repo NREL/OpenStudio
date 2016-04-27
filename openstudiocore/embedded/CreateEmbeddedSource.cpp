@@ -18,7 +18,6 @@ int main(int argc, char *argv[])
   std::fstream outstream(outfile, std::fstream::out | std::fstream::trunc);
 
   if( outstream.is_open() ) {
-    std::cout << "Writing: " << outfile << std::endl;
     outstream << "static const uint8_t embedded_file_" << filenum << "[] = {";
     unsigned length = 0;
     while( 1 ) {
