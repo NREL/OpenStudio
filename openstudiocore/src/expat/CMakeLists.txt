@@ -36,7 +36,7 @@ if(WIN32)
   set(zkexpat_SRCS ${zkexpat_SRCS} lib/libexpat.def)
 endif()
 
-add_library(zkexpat SHARED ${zkexpat_SRCS})
+add_library(zkexpat ${zkexpat_SRCS})
 
 #set(xmlwf_SRCS
 #  xmlwf/xmlwf.c
