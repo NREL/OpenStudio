@@ -159,7 +159,7 @@ add_custom_command(
 
 set_source_files_properties(${EMBED_SOURCE_FILES} PROPERTIES HEADER_FILE_ONLY TRUE)
 
-add_executable(openstudio-wf
+add_executable(openstudio
  main.cpp
  "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
  RubyException.hpp
@@ -176,7 +176,7 @@ if( UNIX )
   set(ENCODING_LIB "${RUBY_SOURCE_DIR}/enc/libenc.a")
   set(TRANSLATION_LIB "${RUBY_SOURCE_DIR}/enc/libtrans.a")
 else()
-  target_link_libraries(openstudio-wf wsock32 ws2_32 Iphlpapi Dbghelp Shlwapi)
+  target_link_libraries(openstudio wsock32 ws2_32 Iphlpapi Dbghelp Shlwapi)
   set(ENCODING_LIB "${RUBY_SOURCE_DIR}/enc/libenc.lib")
   set(TRANSLATION_LIB "${RUBY_SOURCE_DIR}/enc/libtrans.lib")
 endif()
@@ -190,7 +190,7 @@ else()
   set(JSON_LIBS "${RUBY_SOURCE_DIR}/ext/json/generator/generator.a" "${RUBY_SOURCE_DIR}/ext/json/parser/parser.a")
 endif()
 
-target_link_libraries(openstudio-wf 
+target_link_libraries(openstudio 
  ${EXTENSION_LIBS} 
  ${JSON_LIBS}
  ${ENCODING_LIB}
@@ -229,24 +229,24 @@ target_link_libraries(openstudio-wf
  ruby_OpenStudioUtilitiesIdf
 )
 
-target_link_libraries(openstudio-wf 
+target_link_libraries(openstudio
 	openstudio_utilities
   	${Boost_LIBRARIES}
   	${QT_LIBS}
 )
 
 if (UNIX AND NOT APPLE)
-  target_link_libraries(openstudio-wf ${RUBY_LIBRARY}  "dl" "crypt")
+  target_link_libraries(openstudio ${RUBY_LIBRARY}  "dl" "crypt")
 elseif(WIN32)
-  target_link_libraries(openstudio-wf debug ${RUBY_LIBRARY} optimized ${RUBY_LIBRARY})
-  set_target_properties(openstudio-wf PROPERTIES LINK_FLAGS_DEBUG "/NODEFAULTLIB:MSVCRT")
+  target_link_libraries(openstudio debug ${RUBY_LIBRARY} optimized ${RUBY_LIBRARY})
+  set_target_properties(openstudio PROPERTIES LINK_FLAGS_DEBUG "/NODEFAULTLIB:MSVCRT")
 else()
-  target_link_libraries(openstudio-wf ${RUBY_LIBRARY} )
+  target_link_libraries(openstudio ${RUBY_LIBRARY} )
 endif()
 
 
 if( APPLE )
-  target_link_libraries(openstudio-wf ${COREFOUNDATION_LIBRARY} )
+  target_link_libraries(openstudio ${COREFOUNDATION_LIBRARY} )
 endif()
 
 
