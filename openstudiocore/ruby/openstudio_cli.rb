@@ -28,8 +28,13 @@ require 'irb'
 include OpenStudio::Workflow::Util::IO
 
 $logger = Logger.new(STDOUT)
-$logger.level = Logger::WARN
-$logger.level = Logger::DEBUG
+$logger.level = Logger::ERROR
+#$logger.level = Logger::WARN
+#$logger.level = Logger::DEBUG
+
+#OpenStudio::Logger.instance.standardOutLogger.disable
+#OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Warn)
+OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Error)
 
 # This is the code chunk to allow for an embedded IRB shell. From Jason Roelofs, found on StackOverflow
 module IRB # :nodoc:
@@ -149,8 +154,8 @@ class CLI
   # This constant maps subcommands to classes in this CLI and stores meta-data on them
   COMMAND_LIST = {
       run: [ Proc.new { ::Run }, {primary: true, working: true}],
-      apply_measure: [ Proc.new { ::ApplyMeasure }, {primary: true, working: false}],
-      gem_list: [ Proc.new { ::GemList }, {primary: true, working: true}],
+      #apply_measure: [ Proc.new { ::ApplyMeasure }, {primary: true, working: false}],
+      gem_list: [ Proc.new { ::GemList }, {primary: false, working: true}],
       gem_install: [ Proc.new { ::InstallGem }, {primary: false, working: true}],
       measure: [ Proc.new { ::Measure }, {primary: true, working: false}],
       e: [ Proc.new { ::ExecuteRubyScript }, {primary: false, working: true}],
@@ -532,6 +537,7 @@ class Measure
 
     # Parse the options
     argv = parse_options(opts, sub_argv)
+    return 0 if argv == nil
     
     directory = nil
     if !options[:start_server]
@@ -550,10 +556,8 @@ class Measure
       
       # loop over all directories
       result = []
-      $logger.debug("Hi")
       Dir.glob("#{directory}/*/").each do |measure_dir|
-        $logger.debug("Inspecting directory #{measure_dir}")
-        if File.directory?(measure_dir)
+        if File.directory?(measure_dir) && File.exists?(File.join(measure_dir, "measure.xml"))
           measure = measure_manager.get_measure(measure_dir, true)
           if measure.nil?
             $logger.debug("Directory #{measure_dir} is not a measure")
@@ -829,7 +833,7 @@ class ListCommands
     
   # Provides text for the main help functionality
   def self.synopsis
-    'Lists the entire set of available commands for openstudio_cli'
+    'Lists the entire set of available commands'
   end
 
   # Executes the standard help method with the list_all attribute set to true
@@ -866,6 +870,7 @@ end
 $argv = ARGV.dup
 if $argv.include? '--verbose'
   $logger.level = Logger::DEBUG
+  OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Debug)
   $argv.delete '--verbose'
   $logger.debug 'Set Logger log level to DEBUG'
 end
