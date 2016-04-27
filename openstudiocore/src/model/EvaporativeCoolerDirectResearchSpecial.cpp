@@ -325,6 +325,67 @@ namespace detail{
     OS_ASSERT(result);
   }
 
+
+  // Evaporative Operation Minimum Drybulb Temperature
+  boost::optional<double> EvaporativeCoolerDirectResearchSpecial_Impl::evaporativeOperationMinimumDrybulbTemperature() const {
+    return getDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMinimumDrybulbTemperature, true);
+  }
+
+  bool EvaporativeCoolerDirectResearchSpecial_Impl::isEvaporativeOperationMinimumDrybulbTemperatureDefaulted() const {
+    return isEmpty(OS_EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMinimumDrybulbTemperature);
+  }
+
+  bool EvaporativeCoolerDirectResearchSpecial_Impl::setEvaporativeOperationMinimumDrybulbTemperature(double evaporativeOperationMinimumDrybulbTemperature) {
+    bool result = setDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMinimumDrybulbTemperature, evaporativeOperationMinimumDrybulbTemperature);
+    return result;
+  }
+
+  void EvaporativeCoolerDirectResearchSpecial_Impl::resetEvaporativeOperationMinimumDrybulbTemperature() {
+    bool result = setString(OS_EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMinimumDrybulbTemperature, "");
+    OS_ASSERT(result);
+  }
+
+  // Evaporative Operation Maximum Limit Wetbulb Temperature
+  boost::optional<double> EvaporativeCoolerDirectResearchSpecial_Impl::evaporativeOperationMaximumLimitWetbulbTemperature() const {
+    return getDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitWetbulbTemperature, true);
+  }
+
+  bool EvaporativeCoolerDirectResearchSpecial_Impl::isEvaporativeOperationMaximumLimitWetbulbTemperatureDefaulted() const {
+    return isEmpty(OS_EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitWetbulbTemperature);
+  }
+
+  bool EvaporativeCoolerDirectResearchSpecial_Impl::setEvaporativeOperationMaximumLimitWetbulbTemperature(double evaporativeOperationMaximumLimitWetbulbTemperature) {
+    bool result = setDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitWetbulbTemperature, evaporativeOperationMaximumLimitWetbulbTemperature);
+    return result;
+  }
+
+  void EvaporativeCoolerDirectResearchSpecial_Impl::resetEvaporativeOperationMaximumLimitWetbulbTemperature() {
+    bool result = setString(OS_EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitWetbulbTemperature, "");
+    OS_ASSERT(result);
+  }
+
+  // Evaporative Operation Maximum Limit Drybulb Temperature
+  boost::optional<double> EvaporativeCoolerDirectResearchSpecial_Impl::evaporativeOperationMaximumLimitDryBulbTemperature() const {
+    return getDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitDryBulbTemperature, true);
+  }
+
+  bool EvaporativeCoolerDirectResearchSpecial_Impl::isEvaporativeOperationMaximumLimitDryBulbTemperatureDefaulted() const {
+    return isEmpty(OS_EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitDryBulbTemperature);
+  }
+
+  bool EvaporativeCoolerDirectResearchSpecial_Impl::setEvaporativeOperationMaximumLimitDryBulbTemperature(double evaporativeOperationMaximumLimitDryBulbTemperature) {
+    bool result = setDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitDryBulbTemperature, evaporativeOperationMaximumLimitDryBulbTemperature);
+    return result;
+  }
+
+  void EvaporativeCoolerDirectResearchSpecial_Impl::resetEvaporativeOperationMaximumLimitDryBulbTemperature() {
+    bool result = setString(OS_EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitDryBulbTemperature, "");
+    OS_ASSERT(result);
+  }
+
+
+
+
   boost::optional<double> EvaporativeCoolerDirectResearchSpecial_Impl::autosizedRecirculatingWaterPumpPowerConsumption() const {
     return getAutosizedValue("Recirculating Pump Power", "W");
   }

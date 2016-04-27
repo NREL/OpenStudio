@@ -140,6 +140,34 @@ class MODEL_API EvaporativeCoolerDirectResearchSpecial : public StraightComponen
 
   void resetWaterPumpPowerModifierCurve();
 
+  /** Sets the minimum and maximum operation temperatures **/
+
+  /** Returns the value of the EvaporativeOperationMinimumDrybulbTemperature field. **/
+  boost::optional<double> evaporativeOperationMinimumDrybulbTemperature() const;
+  /** Check for defaulted **/
+  bool isEvaporativeOperationMinimumDrybulbTemperatureDefaulted() const;
+  /** Sets or resets the value of the EvaporativeOperationMinimumDrybulbTemperature field. **/
+  void setEvaporativeOperationMinimumDrybulbTemperature(double evaporativeOperationMinimumDrybulbTemperature); 
+  void resetEvaporativeOperationMinimumDrybulbTemperature();
+
+  /** Returns the value of the EvaporativeOperationMaximumLimitWetbulbTemperature field. **/
+  boost::optional<double> evaporativeOperationMaximumLimitWetbulbTemperature() const;
+  /** Check for defaulted **/
+  bool isEvaporativeOperationMaximumLimitWetbulbTemperatureDefaulted() const;
+  /** Sets or resets the value of the EvaporativeOperationMaximumLimitWetbulbTemperature field. **/
+  void setEvaporativeOperationMaximumLimitWetbulbTemperature(double evaporativeOperationMaximumLimitWetbulbTemperature);
+  void resetEvaporativeOperationMaximumLimitWetbulbTemperature();
+
+  /** Returns the value of the EvaporativeOperationMaximumLimitDryBulbTemperature field. **/
+  boost::optional<double> evaporativeOperationMaximumLimitDryBulbTemperature() const;
+  /** Check for defaulted **/
+  bool isEvaporativeOperationMaximumLimitDryBulbTemperatureDefaulted() const;
+  /** Sets or resets the value of the EvaporativeOperationMaximumLimitDryBulbTemperature field. **/
+  void setEvaporativeOperationMaximumLimitDryBulbTemperature(double evaporativeOperationMaximumLimitDryBulbTemperature);
+  void resetEvaporativeOperationMaximumLimitDryBulbTemperature();
+  
+
+
   boost::optional<double> autosizedRecirculatingWaterPumpPowerConsumption() const ;
 
   boost::optional<double> autosizedPrimaryAirDesignFlowRate() const ;
