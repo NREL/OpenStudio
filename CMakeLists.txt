@@ -632,7 +632,7 @@ endif()
 # and even better. take it out of external project and move it into openstudiocore project
 ExternalProject_Add(OpenStudio-workflow-gem
   GIT_REPOSITORY https://github.com/NREL/OpenStudio-workflow-gem.git
-  GIT_TAG osw-embedded-mods
+  GIT_TAG osw
   BUILD_IN_SOURCE 1
   CONFIGURE_COMMAND ""
   BUILD_COMMAND sh -c "gem build openstudio-workflow.gemspec"
