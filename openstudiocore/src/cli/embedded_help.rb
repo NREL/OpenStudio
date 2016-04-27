@@ -216,7 +216,11 @@ module Ruleset
   class RubyUserScriptInfo < OpenStudio::Measure::OSMeasureInfo
     def initialize(*args)
       OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "RubyUserScriptInfo is deprecated, use OpenStudio::Measure::OSMeasureInfo instead.")
-      super(args)
+      if args.size == 1
+        super(args[0])
+      elsif args.size == 8
+        super(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7],args[8])
+      end
     end      
   end
   

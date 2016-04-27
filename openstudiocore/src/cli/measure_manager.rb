@@ -33,7 +33,7 @@ class MeasureManager
   end
 
   def print_message(message)
-    puts message
+    OpenStudio::logFree(OpenStudio::Debug, "MeasureManager", message)
   end
   
   def reset
@@ -77,9 +77,16 @@ class MeasureManager
     if !result
       # load from disk
       print_message("Attempting to load model '#{osm_path}'")
-      vt = OpenStudio::OSVersion::VersionTranslator.new
-      model = vt.loadModel(osm_path)
-        
+      
+      model = nil
+      begin
+        vt = OpenStudio::OSVersion::VersionTranslator.new
+        model = vt.loadModel(osm_path)
+      rescue
+        # temporary fix until OSVersion is fixed
+        model = OpenStudio::Model::Model.load(osm_path)
+      end
+      
       if model.empty?
         print_message("Failed to load model '#{osm_path}'")
         @osms[osm_path] = nil
@@ -181,7 +188,7 @@ class MeasureManager
       print_message("Loading measure info for '#{measure_dir}', '#{osm_path}'")
       begin
         result = OpenStudio::Ruleset.getInfo(measure, model, workspace)
-      rescue Exception => e  
+      rescue ScriptError, StandardError => e  
         result = OpenStudio::Ruleset::RubyUserScriptInfo.new(e.message)
       end
       
