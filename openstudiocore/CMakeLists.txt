@@ -211,7 +211,7 @@ set(project_directories
   resultsviewer
   model_editor
   openstudio_lib
-  openstudio_app
+  #openstudio_app # ignore for now, needs a bunch of name changes
   sdd
   cli
 )
