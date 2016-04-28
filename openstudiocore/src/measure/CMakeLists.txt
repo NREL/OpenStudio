@@ -44,7 +44,7 @@ set(${target_name}_depends
 )
 
 
-add_library(${target_name} 
+add_library(${target_name} STATIC
   ${${target_name}_src}
   ${${target_name}_moc_src}
 )
@@ -53,12 +53,13 @@ AddPCH(${target_name})
 
 target_link_libraries(${target_name} ${${target_name}_depends})
 
-if(NOT APPLE)
-  install(TARGETS ${target_name}
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-  )
-endif()
+# No need to install static lib
+#if(NOT APPLE)
+#  install(TARGETS ${target_name}
+#    RUNTIME DESTINATION bin
+#    LIBRARY DESTINATION lib
+#  )
+#endif()
 
 #if(UNIX)
 #  set_target_properties(${target_name} PROPERTIES COMPILE_DEFINITIONS "LINUX")

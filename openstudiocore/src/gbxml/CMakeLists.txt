@@ -32,15 +32,16 @@ set(${target_name}_depends
   zkexpat
 )
 
-add_library(${target_name} SHARED ${${target_name}_src})
+add_library(${target_name} STATIC ${${target_name}_src})
 target_link_libraries(${target_name} ${${target_name}_depends})
 AddPCH(${target_name})
 
+#No need to install static library
 #if(NOT APPLE)
-install(TARGETS ${target_name}
-  RUNTIME DESTINATION bin
-  LIBRARY DESTINATION lib
-)
+#install(TARGETS ${target_name}
+#  RUNTIME DESTINATION bin
+#  LIBRARY DESTINATION lib
+#)
 #endif()
 
 CREATE_SRC_GROUPS("${${target_name}_src}")

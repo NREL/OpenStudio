@@ -36,7 +36,7 @@ if(WIN32)
   set(zkexpat_SRCS ${zkexpat_SRCS} lib/libexpat.def)
 endif()
 
-add_library(zkexpat ${zkexpat_SRCS})
+add_library(zkexpat STATIC ${zkexpat_SRCS})
 
 #set(xmlwf_SRCS
 #  xmlwf/xmlwf.c
@@ -48,12 +48,13 @@ add_library(zkexpat ${zkexpat_SRCS})
 #add_executable(xmlwf ${xmlwf_SRCS})
 #target_link_libraries(xmlwf zkexpat)
 
-if(NOT APPLE)
-  install(TARGETS zkexpat RUNTIME DESTINATION bin
-                          LIBRARY DESTINATION lib
-                          ARCHIVE DESTINATION lib
-  )
-endif()
+# No need to install static lib
+#if(NOT APPLE)
+#  install(TARGETS zkexpat RUNTIME DESTINATION bin
+#                          LIBRARY DESTINATION lib
+#                          ARCHIVE DESTINATION lib
+#  )
+#endif()
 
 #install(FILES lib/expat.h lib/expat_external.h DESTINATION include)
 #install(FILES doc/xmlwf.1 DESTINATION man/man1)
