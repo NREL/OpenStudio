@@ -229,7 +229,7 @@ LocationView::LocationView(bool isIP,
   weatherFileGridLayout->addWidget(m_timeZoneLbl, i++, 0);
 
   // ***** Weather File Download Location *****
-  label = new QLabel("Download weather files at <a href=\"http://www.energyplus.gov\">www.energyplus.gov</a>");
+  label = new QLabel("Download weather files at <a href=\"http://www.energyplus.net/weather\">www.energyplus.net/weather</a>");
   label->setOpenExternalLinks(true);
   weatherFileGridLayout->addWidget(label, i++, 0);
 
