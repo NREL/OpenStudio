@@ -22,7 +22,7 @@
 
 #Signal.trap('INT') { abort }
 
-require 'openstudio-workflow'
+require 'logger'
 require 'optparse'
 #require 'irb'
 #include OpenStudio::Workflow::Util::IO
@@ -321,6 +321,8 @@ class Run
       return 1
     end
 
+    require 'openstudio-workflow'
+
     osw_path = options[:workflow]
     osw_path = File.absolute_path(File.join(Dir.pwd, osw_path)) unless Pathname.new(osw_path).absolute?
     $logger.debug "Path for the OSW: #{osw_path}"
@@ -407,6 +409,7 @@ class ApplyMeasure
     # Parse the options
     argv = parse_options(opts, sub_argv)
     return 1 unless argv
+    require 'openstudio-workflow'
     # $logger.debug("ApplyMeasure command: #{argv.inspect} #{options.inspect}")
 
     1
