@@ -2,8 +2,8 @@
   <schema_version>3.0</schema_version>
   <name>open_studio_results</name>
   <uid>a6b9a024-0912-4be3-a55d-57dfe0b8586c</uid>
-  <version_id>e9fa6088-381f-4e10-9927-07c6305b08ac</version_id>
-  <version_modified>20160315T205436Z</version_modified>
+  <version_id>54c5c464-8235-45bd-9859-9461e43abe05</version_id>
+  <version_modified>20160429T151606Z</version_modified>
   <xml_checksum>557BF06F</xml_checksum>
   <class_name>OpenStudioResults</class_name>
   <display_name>OpenStudio Results</display_name>
@@ -489,13 +489,13 @@
       <filename>ExampleModel.osm</filename>
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
-      <checksum>D64D89EE</checksum>
+      <checksum>E7812BB5</checksum>
     </file>
     <file>
       <filename>os_lib_reporting.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
-      <checksum>EC89B286</checksum>
+      <checksum>DCCD722E</checksum>
     </file>
   </files>
 </measure>

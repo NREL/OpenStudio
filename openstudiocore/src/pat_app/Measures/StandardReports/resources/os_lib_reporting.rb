@@ -1026,10 +1026,10 @@ module OsLib_Reporting
       else
         sizing_ip_neat = 'Autosized'
       end
-      value_source_units = 'Pa'
+      value_source_units = 'W'
       value_target_units = 'W'
-      if component.ratedFlowRate.is_initialized
-        value_ip = OpenStudio.convert(component.ratedFlowRate.get, sizing_source_units, sizing_target_units).get
+      if component.ratedPowerConsumption.is_initialized
+        value_ip = component.ratedPowerConsumption.get
         value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
       else
         value_ip_neat = 'Autosized'
@@ -1039,7 +1039,7 @@ module OsLib_Reporting
 
     elsif component.to_PumpVariableSpeed.is_initialized
       component = component.to_PumpVariableSpeed.get
-      sizing_source_units = 'm^3/s'
+        sizing_source_units = 'm^3/s'
       sizing_target_units = 'gal/min'
       if component.ratedFlowRate.is_initialized
         sizing_ip = OpenStudio.convert(component.ratedFlowRate.get, sizing_source_units, sizing_target_units).get
@@ -1047,10 +1047,10 @@ module OsLib_Reporting
       else
         sizing_ip_neat = 'Autosized'
       end
-      value_source_units = 'Pa'
+      value_source_units = 'W'
       value_target_units = 'W'
-      if component.ratedFlowRate.is_initialized
-        value_ip = OpenStudio.convert(component.ratedFlowRate.get, sizing_source_units, sizing_target_units).get
+      if component.ratedPowerConsumption.is_initialized
+        value_ip = component.ratedPowerConsumption.get
         value_ip_neat = OpenStudio.toNeatString(value_ip, 2, true)
       else
         value_ip_neat = 'Autosized'
@@ -1813,7 +1813,7 @@ module OsLib_Reporting
     # Exterior Lighting from output
     ext_light_data = {}
     ext_light_data[:title] = ''
-    ext_light_data[:header] = ['Description', 'Total Power', 'Consumption']
+    ext_light_data[:header] = ['Description', 'Total Power', 'Annual Consumption']
     power_units = 'W'
     consumption_units = 'kWh'
     ext_light_data[:units] = ['', power_units, consumption_units]
@@ -1838,7 +1838,7 @@ module OsLib_Reporting
     else
       # add data
       total_watts_ip = total_watts.get
-      consumption_ip = consumption.get * 0.2778 # value * energy conversion GJ to kWh todo - use real conversion
+      consumption_ip = OpenStudio.convert(sqlFile.netSiteEnergy.get,'GJ','kWh').get
       total_watts_ip_neat = OpenStudio.toNeatString(total_watts_ip, 2, true)
       consumption_ip_neat = OpenStudio.toNeatString(consumption_ip, 2, true)
       ext_light_data[:data] << ['Exterior Lighting Total', total_watts_ip_neat, consumption_ip_neat]
@@ -2871,7 +2871,7 @@ module OsLib_Reporting
     # data for query
     report_name = 'LightingSummary'
     table_name = 'Interior Lighting'
-    columns = ['', 'Zone', 'Lighting Power Density', 'Total Power', 'Schedule Name', 'Scheduled Hours/Week', 'Actual Load Hours/Week', 'Return Air Fraction', 'Consumption']
+    columns = ['', 'Zone', 'Lighting Power Density', 'Total Power', 'Schedule Name', 'Scheduled Hours/Week', 'Actual Load Hours/Week', 'Return Air Fraction', 'Annual Consumption']
     columns_query = ['', 'Zone', 'Lighting Power Density', 'Total Power', 'Schedule Name', 'Scheduled Hours/Week', 'Full Load Hours/Week', 'Return Air Fraction', 'Consumption']
 
     # populate dynamic rows
