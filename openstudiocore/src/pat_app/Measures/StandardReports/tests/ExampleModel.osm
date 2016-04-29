@@ -1,7 +1,7 @@
 
 OS:Version,
-  {407f94b6-3561-478a-b6dc-51aa10b1659c}, !- Handle
-  1.10.5;                                 !- Version Identifier
+  {38c2d8db-a7a8-4ea9-bac5-9b2bb64fa982}, !- Handle
+  1.11.0;                                 !- Version Identifier
 
 OS:SimulationControl,
   {41f65c43-2dc9-4d82-a6e4-a562bae08803}, !- Handle
@@ -3232,20 +3232,6 @@ OS:Rendering:Color,
   0,                                      !- Rendering Green Value
   255;                                    !- Rendering Blue Value
 
-OS:WeatherFile,
-  {cc5a7650-318f-41dd-a20a-acaeef25de6a}, !- Handle
-  Denver Centennial  Golden   Nr,         !- City
-  CO,                                     !- State Province Region
-  USA,                                    !- Country
-  TMY3,                                   !- Data Source
-  724666,                                 !- WMO Number
-  39.74,                                  !- Latitude {deg}
-  -105.18,                                !- Longitude {deg}
-  -7,                                     !- Time Zone {hr}
-  1829,                                   !- Elevation {m}
-  file:///C:/Users/dgoldwas/Documents/GitHub/OpenStudio-measures/NREL working measures/OpenStudioResults/tests/ExampleModel/files/USA_CO_Golden-NREL.724666_TMY3.epw, !- Url
-  BDF687C1;                               !- Checksum
-
 OS:Rendering:Color,
   {05fe2a32-7705-4617-9d37-17b9d1c310c0}, !- Handle
   Rendering Color 3,                      !- Name
@@ -5314,9 +5300,9 @@ OS:Pump:VariableSpeed,
   Pump Variable Speed 2,                  !- Name
   {ed247646-d754-4074-b9a1-53a43f00cba3}, !- Inlet Node Name
   {801dc7a8-844d-4acd-83ad-1f4de198c1c4}, !- Outlet Node Name
-  ,                                       !- Rated Flow Rate {m3/s}
+  0.00630901963994975,                    !- Rated Flow Rate {m3/s}
   ,                                       !- Rated Pump Head {Pa}
-  ,                                       !- Rated Power Consumption {W}
+  2500,                                   !- Rated Power Consumption {W}
   ,                                       !- Motor Efficiency
   ,                                       !- Fraction of Motor Inefficiencies to Fluid Stream
   ,                                       !- Coefficient 1 of the Part Load Performance Curve
@@ -6418,4 +6404,18 @@ OS:Connection,
   7,                                      !- Outlet Port
   {3ac6de72-4ea4-483d-960c-138d32cbf8d9}, !- Target Object
   2;                                      !- Inlet Port
+
+OS:WeatherFile,
+  {f8d26468-476f-405d-bb2c-6a73e549fd50}, !- Handle
+  Denver Centennial  Golden   Nr,         !- City
+  CO,                                     !- State Province Region
+  USA,                                    !- Country
+  TMY3,                                   !- Data Source
+  724666,                                 !- WMO Number
+  39.74,                                  !- Latitude {deg}
+  -105.18,                                !- Longitude {deg}
+  -7,                                     !- Time Zone {hr}
+  1829,                                   !- Elevation {m}
+  file:files/USA_CO_Golden-NREL.724666_TMY3.epw, !- Url
+  BDF687C1;                               !- Checksum
 
