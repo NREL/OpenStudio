@@ -503,6 +503,10 @@ include_directories(${CMAKE_BINARY_DIR}/src/zlib)
 #include subdir for pch
 add_subdirectory(pch)
 
+if(WIN32)
+  add_definitions("-D${target_name}_EXPORTS")
+endif()
+
 
 add_library(${target_name} STATIC
   ${${target_name}_src}

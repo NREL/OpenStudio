@@ -5,7 +5,7 @@
 
     #define UTILITIES_API
     #ifdef openstudio_utilities_EXPORTS
-      #define UTILITIES_TEMPLATE_EXT
+      #define UTILITIES_TEMPLATE_EXT 
     #else
       #define UTILITIES_TEMPLATE_EXT extern
     #endif
