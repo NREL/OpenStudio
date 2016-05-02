@@ -728,7 +728,7 @@ add_subdirectory(src/qwt)
 
 ###############################################################################
 ## expat
-add_subdirectory(src/expat)
+#add_subdirectory(src/expat)
 ###############################################################################
 
 ###############################################################################
@@ -977,7 +977,7 @@ set(all_lib_targets
   openstudio_sdd
   openstudio_airflow
   ${QTWINMIGRATE_EXPORT}
-  zkexpat
+  #zkexpat
   qwt
   miniziplib
   sqlite

@@ -29,7 +29,7 @@ set(${target_name}_depends
   openstudio_utilities
   openstudio_model
   openstudio_energyplus
-  zkexpat
+  #zkexpat
 )
 
 add_library(${target_name} STATIC ${${target_name}_src})

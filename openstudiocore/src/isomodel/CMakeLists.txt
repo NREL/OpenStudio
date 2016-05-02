@@ -53,7 +53,7 @@ set(${target_name}_depends
   ${QT_LIBS}
   openstudio_utilities
   openstudio_model
-  zkexpat
+  #zkexpat
 )
 
 add_library(${target_name} STATIC ${${target_name}_src})
