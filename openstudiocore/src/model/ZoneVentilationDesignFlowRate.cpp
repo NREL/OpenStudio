@@ -26,8 +26,8 @@
 #include "Model.hpp"
 #include "ZoneHVACEquipmentList.hpp"
 #include "ZoneHVACEquipmentList_Impl.hpp"
-#include "../../model/ScheduleTypeLimits.hpp"
-#include "../../model/ScheduleTypeRegistry.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_ZoneVentilation_DesignFlowRate_FieldEnums.hxx>
