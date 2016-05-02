@@ -207,8 +207,8 @@ set(economics_src
 set(${target_name}_depends
   sqlite
   jsoncpp
-  litesql
-  litesql-util
+  #litesql
+  #litesql-util
   miniziplib
   ${Boost_LIBRARIES}
   #JWD: On Ubuntu 14.04, the thread lib is included in Boost_LIBRARIES
@@ -323,7 +323,7 @@ add_custom_command(
 
 set(${target_name}_src
   UtilitiesAPI.hpp
-  #"${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx" # referenced here to make sure it is generated when and where we expect
+  "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx" # referenced here to make sure it is generated when and where we expect
   ${bcl_src}
   ${bcl_moc_src}
   ${bcl_qrc_src}
