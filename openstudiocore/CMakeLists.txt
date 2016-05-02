@@ -738,8 +738,8 @@ add_subdirectory(src/jsoncpp)
 
 ################################################################################
 ## litesql
-include_directories(SYSTEM src/litesql/include src/litesql/library ${CMAKE_BINARY_DIR}/litesql)
-add_subdirectory(src/litesql)
+#include_directories(SYSTEM src/litesql/include src/litesql/library ${CMAKE_BINARY_DIR}/litesql)
+#add_subdirectory(src/litesql)
 ################################################################################
 
 ################################################################################
@@ -982,8 +982,8 @@ set(all_lib_targets
   miniziplib
   sqlite
   jsoncpp
-  litesql
-  litesql-util
+  #litesql
+  #litesql-util
   ${ALL_RUBY_BINDING_TARGETS}
 )
 
@@ -996,7 +996,7 @@ set(all_exe_targets
   GenerateIddFactory
   gbXMLToIdf
   OpenStudio
-  litesql-gen
+  #litesql-gen
   ResultsViewer
 )
 
