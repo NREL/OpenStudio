@@ -882,6 +882,183 @@ OS:Site:GroundTemperature:BuildingSurface,
        \type real
        \units C
        \default 18
+
+OS:Site:GroundTemperature:FCfactorMethod,
+       \memo These temperatures are specifically for underground walls and ground floors
+       \memo defined with the C-factor and F-factor methods, and should be close to the
+       \memo monthly average outdoor air temperature delayed by 3 months for the location.
+       \unique-object
+       \min-fields 13
+       \format singleLine
+  A1, \field Handle
+       \type handle
+       \required-field
+  N1 , \field January Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N2 , \field February Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N3 , \field March Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N4 , \field April Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N5 , \field May Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N6 , \field June Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N7 , \field July Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N8 , \field August Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N9 , \field September Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N10, \field October Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N11, \field November Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N12; \field December Ground Temperature
+       \units C
+       \type real
+       \default 13
+
+OS:Site:GroundTemperature:Shallow,
+       \memo These temperatures are specifically for the Surface Ground Heat Exchanger and
+       \memo should probably be close to the average outdoor air temperature for the location.
+       \memo They are not used in other models.
+       \unique-object
+       \min-fields 13
+       \format singleLine
+  A1, \field Handle
+       \type handle
+       \required-field
+  N1 , \field January Surface Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N2 , \field February Surface Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N3 , \field March Surface Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N4 , \field April Surface Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N5 , \field May Surface Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N6 , \field June Surface Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N7 , \field July Surface Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N8 , \field August Surface Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N9 , \field September Surface Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N10, \field October Surface Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N11, \field November Surface Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N12; \field December Surface Ground Temperature
+       \units C
+       \type real
+       \default 13
+
+OS:Site:GroundTemperature:Deep,
+       \memo These temperatures are specifically for the ground heat exchangers that would use
+       \memo "deep" (3-4 m depth) ground temperatures for their heat source.
+       \memo They are not used in other models.
+       \unique-object
+       \min-fields 13
+       \format singleLine
+  A1, \field Handle
+       \type handle
+       \required-field
+  N1 , \field January Deep Ground Temperature
+       \units C
+       \type real
+       \default 16
+  N2 , \field February Deep Ground Temperature
+       \units C
+       \type real
+       \default 16
+  N3 , \field March Deep Ground Temperature
+       \units C
+       \type real
+       \default 16
+  N4 , \field April Deep Ground Temperature
+       \units C
+       \type real
+       \default 16
+  N5 , \field May Deep Ground Temperature
+       \units C
+       \type real
+       \default 16
+  N6 , \field June Deep Ground Temperature
+       \units C
+       \type real
+       \default 16
+  N7 , \field July Deep Ground Temperature
+       \units C
+       \type real
+       \default 16
+  N8 , \field August Deep Ground Temperature
+       \units C
+       \type real
+       \default 16
+  N9 , \field September Deep Ground Temperature
+       \units C
+       \type real
+       \default 16
+  N10, \field October Deep Ground Temperature
+       \units C
+       \type real
+       \default 16
+  N11, \field November Deep Ground Temperature
+       \units C
+       \type real
+       \default 16
+  N12; \field December Deep Ground Temperature
+       \units C
+       \type real
+       \default 16
      
 OS:Site:GroundReflectance,
   \unique-object

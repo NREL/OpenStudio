@@ -57,6 +57,7 @@ UNIQUEMODELOBJECT_TEMPLATES(ZoneCapacitanceMultiplierResearchSpecial);
 MODELOBJECT_TEMPLATES(SkyTemperature);
 MODELOBJECT_TEMPLATES(SiteGroundReflectance);
 MODELOBJECT_TEMPLATES(SiteGroundTemperatureBuildingSurface);
+MODELOBJECT_TEMPLATES(SiteGroundTemperatureDeep);
 MODELOBJECT_TEMPLATES(SiteWaterMainsTemperature);
 UNIQUEMODELOBJECT_TEMPLATES(YearDescription);
 
@@ -89,6 +90,7 @@ SWIG_UNIQUEMODELOBJECT(ZoneCapacitanceMultiplierResearchSpecial);
 SWIG_MODELOBJECT(SkyTemperature, 1);
 SWIG_UNIQUEMODELOBJECT(SiteGroundReflectance);
 SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureBuildingSurface);
+SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureDeep);
 SWIG_UNIQUEMODELOBJECT(SiteWaterMainsTemperature);
 SWIG_UNIQUEMODELOBJECT(YearDescription);
 

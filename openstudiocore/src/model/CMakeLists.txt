@@ -961,6 +961,9 @@ set(${target_name}_src
   SiteGroundTemperatureBuildingSurface.hpp
   SiteGroundTemperatureBuildingSurface_Impl.hpp
   SiteGroundTemperatureBuildingSurface.cpp
+  SiteGroundTemperatureDeep.hpp
+  SiteGroundTemperatureDeep_Impl.hpp
+  SiteGroundTemperatureDeep.cpp
   SiteWaterMainsTemperature.hpp
   SiteWaterMainsTemperature_Impl.hpp
   SiteWaterMainsTemperature.cpp
@@ -1400,6 +1403,7 @@ set(${target_name}_moc
   Site_Impl.hpp
   SiteGroundReflectance_Impl.hpp
   SiteGroundTemperatureBuildingSurface_Impl.hpp
+  SiteGroundTemperatureDeep_Impl.hpp
   SiteWaterMainsTemperature_Impl.hpp
   SizingParameters_Impl.hpp
   SizingPlant_Impl.hpp

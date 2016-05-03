@@ -469,6 +469,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(Site);
     REGISTER_CONSTRUCTOR(SiteGroundReflectance);
     REGISTER_CONSTRUCTOR(SiteGroundTemperatureBuildingSurface);
+    REGISTER_CONSTRUCTOR(SiteGroundTemperatureDeep);
     REGISTER_CONSTRUCTOR(SiteWaterMainsTemperature);
     REGISTER_CONSTRUCTOR(SizingParameters);
     REGISTER_CONSTRUCTOR(SizingPlant);
@@ -870,6 +871,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(Site);
     REGISTER_COPYCONSTRUCTORS(SiteGroundReflectance);
     REGISTER_COPYCONSTRUCTORS(SiteGroundTemperatureBuildingSurface);
+    REGISTER_COPYCONSTRUCTORS(SiteGroundTemperatureDeep);
     REGISTER_COPYCONSTRUCTORS(SiteWaterMainsTemperature);
     REGISTER_COPYCONSTRUCTORS(SizingParameters);
     REGISTER_COPYCONSTRUCTORS(SizingPlant);
@@ -1785,6 +1787,21 @@ void addExampleModelObjects(Model& model)
   groundTemp.setOctoberGroundTemperature(20.121);
   groundTemp.setNovemberGroundTemperature(19.802);
   groundTemp.setDecemberGroundTemperature(19.633);
+
+  // add SiteGroundTemperatureDeep
+  SiteGroundTemperatureDeep groundTempDeep = model.getUniqueModelObject<SiteGroundTemperatureDeep>();
+  groundTempDeep.setJanuaryGroundTemperature(19.527);
+  groundTempDeep.setFebruaryGroundTemperature(19.502);
+  groundTempDeep.setMarchGroundTemperature(19.536);
+  groundTempDeep.setAprilGroundTemperature(19.598);
+  groundTempDeep.setMayGroundTemperature(20.002);
+  groundTempDeep.setJuneGroundTemperature(21.640);
+  groundTempDeep.setJulyGroundTemperature(22.225);
+  groundTempDeep.setAugustGroundTemperature(22.375);
+  groundTempDeep.setSeptemberGroundTemperature(21.449);
+  groundTempDeep.setOctoberGroundTemperature(20.121);
+  groundTempDeep.setNovemberGroundTemperature(19.802);
+  groundTempDeep.setDecemberGroundTemperature(19.633);
 
   // add SiteWaterMainsTemperature
   SiteWaterMainsTemperature waterTemp = model.getUniqueModelObject<SiteWaterMainsTemperature>();
