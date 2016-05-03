@@ -709,7 +709,13 @@ add_library(${target_name} SHARED
 )
 
 set(depends
-  openstudio_model
+  openstudio_model_core
+  openstudio_model_resources_temp
+  openstudio_model_simulation
+  openstudio_model_geometry
+  openstudio_model_hvac
+  openstudio_model_refrigeration
+  openstudio_model_generators
   openstudio_energyplus
   openstudio_modeleditor
   #openstudio_runmanager

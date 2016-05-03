@@ -59,7 +59,13 @@ set(${target_name}_depends
   ${CMAKE_THREAD_LIBS}
   ${QT_LIBS}
   openstudio_utilities
-  openstudio_model
+  openstudio_model_core
+  openstudio_model_resources_temp
+  openstudio_model_simulation
+  openstudio_model_geometry
+  openstudio_model_hvac
+  openstudio_model_refrigeration
+  openstudio_model_generators
   openstudio_osversion
   #zkexpat
 )

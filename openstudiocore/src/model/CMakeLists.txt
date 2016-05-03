@@ -1,43 +1,747 @@
 set(target_name openstudio_model)
 
-set(${target_name}_src
+###############################################################################
+### openstudio_model_core #####################################################
+###############################################################################
+
+set(${target_name}_core_src
 
   mainpage.hpp
   ModelAPI.hpp
-  Model.hpp
-  Model_Impl.hpp
-  Model.cpp
+  
+  AccessPolicyStore.hpp
+  AccessPolicyStore.cpp
   Component.hpp
   Component_Impl.hpp
   Component.cpp
+  ComponentData.hpp
+  ComponentData_Impl.hpp
+  ComponentData.cpp
   ComponentWatcher.hpp
   ComponentWatcher_Impl.hpp
   ComponentWatcher.cpp
-  ModelObject.hpp
-  ModelObject_Impl.hpp
-  ModelObject.cpp
-  ModelExtensibleGroup.hpp
-  ModelExtensibleGroup.cpp
+  ConcreteModelObjects.hpp
   GenericModelObject.hpp
   GenericModelObject_Impl.hpp
   GenericModelObject.cpp
-  AccessPolicyStore.hpp
-  AccessPolicyStore.cpp
-  Relationship.hpp
-  Relationship.cpp
-  ScheduleTypeRegistry.hpp
-  ScheduleTypeRegistry.cpp
+  LifeCycleCost.hpp
+  LifeCycleCost_Impl.hpp
+  LifeCycleCost.cpp
+  LifeCycleCostParameters.hpp
+  LifeCycleCostParameters_Impl.hpp
+  LifeCycleCostParameters.cpp
+  Meter.hpp
+  Meter_Impl.hpp
+  Meter.cpp
+  Model.hpp
+  Model_Impl.hpp
+  Model.cpp
+  ModelExtensibleGroup.hpp
+  ModelExtensibleGroup.cpp
+  ModelObject.hpp
+  ModelObject_Impl.hpp
+  ModelObject.cpp
   ModelObjectList.hpp
   ModelObjectList_Impl.hpp
   ModelObjectList.cpp
+  OutputVariable.hpp
+  OutputVariable_Impl.hpp
+  OutputVariable.cpp
+  ParentObject.hpp
+  ParentObject_Impl.hpp
+  ParentObject.cpp
+  RadianceParameters.hpp
+  RadianceParameters_Impl.hpp
+  RadianceParameters.cpp
+  Relationship.hpp
+  Relationship.cpp
+  ResourceObject.hpp
+  ResourceObject_Impl.hpp
+  ResourceObject.cpp
+  Schedule.hpp
+  Schedule_Impl.hpp
+  Schedule.cpp
+  ScheduleBase.hpp
+  ScheduleBase_Impl.hpp
+  ScheduleBase.cpp
+  ScheduleDay.hpp
+  ScheduleDay_Impl.hpp
+  ScheduleDay.cpp
+  ScheduleRule.hpp
+  ScheduleRule_Impl.hpp
+  ScheduleRule.cpp
+  ScheduleRuleset.hpp
+  ScheduleRuleset_Impl.hpp
+  ScheduleRuleset.cpp
+  ScheduleTypeLimits.hpp
+  ScheduleTypeLimits_Impl.hpp
+  ScheduleTypeLimits.cpp
+  ScheduleTypeRegistry.hpp
+  ScheduleTypeRegistry.cpp
+  ScheduleWeek.hpp
+  ScheduleWeek_Impl.hpp
+  ScheduleWeek.cpp
+  ScheduleYear.hpp
+  ScheduleYear_Impl.hpp
+  ScheduleYear.cpp
+  UtilityBill.hpp
+  UtilityBill_Impl.hpp
+  UtilityBill.cpp  
+  Version.hpp
+  Version_Impl.hpp
+  Version.cpp
+)
 
-  ConcreteModelObjects.hpp
-  AirConditionerVariableRefrigerantFlow.hpp
-  AirConditionerVariableRefrigerantFlow_Impl.hpp
-  AirConditionerVariableRefrigerantFlow.cpp
+# Only need to moc files that have Q_OBJECT macro
+# Only files with signals, slots, or Q_PROPERTY need to have Q_OBJECT macro
+# We want the number of files moc'd to decrease over time, run CheckForQObject.rb to remove unnecessary moc's
+set(${target_name}_core_moc
+  Component_Impl.hpp
+  ComponentData_Impl.hpp
+  ComponentWatcher_Impl.hpp
+  LifeCycleCost_Impl.hpp
+  Meter_Impl.hpp
+  Model_Impl.hpp
+  ModelObject_Impl.hpp
+  OutputVariable_Impl.hpp
+  ParentObject_Impl.hpp
+)
+
+qt5_wrap_cpp_minimally(${target_name}_core_moc_src ${${target_name}_core_moc})
+
+set(${target_name}_core_qrc
+  Model.qrc
+)
+
+# generate rules for building source files from the resources
+qt5_add_resources(${target_name}_core_qrcs ${${target_name}_core_qrc})
+
+set(${target_name}_core_depends
+  openstudio_utilities
+)
+
+add_library(${target_name}_core STATIC ${${target_name}_core_src} ${${target_name}_core_moc_src} ${${target_name}_core_qrcs})
+target_link_libraries(${target_name}_core "${${target_name}_core_depends}")
+AddPCH(${target_name}_core)
+
+###############################################################################
+### openstudio_model_resources_temp ################################################
+###############################################################################
+
+set(${target_name}_resources_temp_src
   AirGap.hpp
   AirGap_Impl.hpp
   AirGap.cpp
+  AirWallMaterial.hpp
+  AirWallMaterial_Impl.hpp
+  AirWallMaterial.cpp
+  Blind.hpp
+  Blind_Impl.hpp
+  Blind.cpp
+  CFactorUndergroundWallConstruction.hpp
+  CFactorUndergroundWallConstruction_Impl.hpp
+  CFactorUndergroundWallConstruction.cpp
+  Construction.hpp
+  Construction_Impl.hpp
+  Construction.cpp
+  ConstructionBase.hpp
+  ConstructionBase_Impl.hpp
+  ConstructionBase.cpp
+  ConstructionWithInternalSource.hpp
+  ConstructionWithInternalSource_Impl.hpp
+  ConstructionWithInternalSource.cpp
+  Curve.hpp
+  Curve_Impl.hpp
+  Curve.cpp
+  CurveBicubic.hpp
+  CurveBicubic_Impl.hpp
+  CurveBicubic.cpp
+  CurveBiquadratic.hpp
+  CurveBiquadratic_Impl.hpp
+  CurveBiquadratic.cpp
+  CurveCubic.hpp
+  CurveCubic_Impl.hpp
+  CurveCubic.cpp
+  CurveDoubleExponentialDecay.hpp
+  CurveDoubleExponentialDecay_Impl.hpp
+  CurveDoubleExponentialDecay.cpp
+  CurveExponent.hpp
+  CurveExponent_Impl.hpp
+  CurveExponent.cpp
+  CurveExponentialDecay.hpp
+  CurveExponentialDecay_Impl.hpp
+  CurveExponentialDecay.cpp
+  CurveExponentialSkewNormal.hpp
+  CurveExponentialSkewNormal_Impl.hpp
+  CurveExponentialSkewNormal.cpp
+  CurveFanPressureRise.hpp
+  CurveFanPressureRise_Impl.hpp
+  CurveFanPressureRise.cpp
+  CurveFunctionalPressureDrop.hpp
+  CurveFunctionalPressureDrop_Impl.hpp
+  CurveFunctionalPressureDrop.cpp
+  CurveLinear.hpp
+  CurveLinear_Impl.hpp
+  CurveLinear.cpp
+  CurveQuadratic.hpp
+  CurveQuadratic_Impl.hpp
+  CurveQuadratic.cpp
+  CurveQuadraticLinear.hpp
+  CurveQuadraticLinear_Impl.hpp
+  CurveQuadraticLinear.cpp
+  CurveQuartic.hpp
+  CurveQuartic_Impl.hpp
+  CurveQuartic.cpp
+  CurveRectangularHyperbola1.hpp
+  CurveRectangularHyperbola1_Impl.hpp
+  CurveRectangularHyperbola1.cpp
+  CurveRectangularHyperbola2.hpp
+  CurveRectangularHyperbola2_Impl.hpp
+  CurveRectangularHyperbola2.cpp
+  CurveSigmoid.hpp
+  CurveSigmoid_Impl.hpp
+  CurveSigmoid.cpp
+  CurveTriquadratic.hpp
+  CurveTriquadratic_Impl.hpp
+  CurveTriquadratic.cpp
+  DaylightRedirectionDevice.hpp
+  DaylightRedirectionDevice_Impl.hpp
+  DaylightRedirectionDevice.cpp
+  DefaultScheduleSet.hpp
+  DefaultScheduleSet_Impl.hpp
+  DefaultScheduleSet.cpp
+  DefaultSubSurfaceConstructions.hpp
+  DefaultSubSurfaceConstructions_Impl.hpp
+  DefaultSubSurfaceConstructions.cpp
+  DefaultSurfaceConstructions.hpp
+  DefaultSurfaceConstructions_Impl.hpp
+  DefaultSurfaceConstructions.cpp
+  DesignSpecificationOutdoorAir.hpp
+  DesignSpecificationOutdoorAir_Impl.hpp
+  DesignSpecificationOutdoorAir.cpp
+  ElectricEquipmentDefinition.hpp
+  ElectricEquipmentDefinition_Impl.hpp
+  ElectricEquipmentDefinition.cpp
+  ExteriorLightsDefinition.hpp
+  ExteriorLightsDefinition_Impl.hpp
+  ExteriorLightsDefinition.cpp
+  FenestrationMaterial.hpp
+  FenestrationMaterial_Impl.hpp
+  FenestrationMaterial.cpp
+  FFactorGroundFloorConstruction.hpp
+  FFactorGroundFloorConstruction_Impl.hpp
+  FFactorGroundFloorConstruction.cpp
+  Gas.hpp
+  Gas_Impl.hpp
+  Gas.cpp
+  GasEquipmentDefinition.hpp
+  GasEquipmentDefinition_Impl.hpp
+  GasEquipmentDefinition.cpp
+  GasLayer.hpp
+  GasLayer_Impl.hpp
+  GasLayer.cpp
+  GasMixture.hpp
+  GasMixture_Impl.hpp
+  GasMixture.cpp
+  Glazing.hpp
+  Glazing_Impl.hpp
+  Glazing.cpp
+  HotWaterEquipmentDefinition.hpp
+  HotWaterEquipmentDefinition_Impl.hpp
+  HotWaterEquipmentDefinition.cpp
+  InfraredTransparentMaterial.hpp
+  InfraredTransparentMaterial_Impl.hpp
+  InfraredTransparentMaterial.cpp
+  InternalMassDefinition.hpp
+  InternalMassDefinition_Impl.hpp
+  InternalMassDefinition.cpp
+  LayeredConstruction.hpp
+  LayeredConstruction_Impl.hpp
+  LayeredConstruction.cpp
+  LightsDefinition.hpp
+  LightsDefinition_Impl.hpp
+  LightsDefinition.cpp
+  LuminaireDefinition.hpp
+  LuminaireDefinition_Impl.hpp
+  LuminaireDefinition.cpp
+  MasslessOpaqueMaterial.hpp
+  MasslessOpaqueMaterial_Impl.hpp
+  MasslessOpaqueMaterial.cpp
+  Material.hpp
+  Material_Impl.hpp
+  Material.cpp
+  ModelPartitionMaterial.hpp
+  ModelPartitionMaterial_Impl.hpp
+  ModelPartitionMaterial.cpp
+  OpaqueMaterial.hpp
+  OpaqueMaterial_Impl.hpp
+  OpaqueMaterial.cpp
+  OtherEquipmentDefinition.hpp
+  OtherEquipmentDefinition_Impl.hpp
+  OtherEquipmentDefinition.cpp
+  PeopleDefinition.hpp
+  PeopleDefinition_Impl.hpp
+  PeopleDefinition.cpp
+  RefractionExtinctionGlazing.hpp
+  RefractionExtinctionGlazing_Impl.hpp
+  RefractionExtinctionGlazing.cpp
+  RenderingColor.hpp
+  RenderingColor_Impl.hpp
+  RenderingColor.cpp
+  RoofVegetation.hpp
+  RoofVegetation_Impl.hpp
+  RoofVegetation.cpp
+  ScheduleCompact.hpp
+  ScheduleCompact_Impl.hpp
+  ScheduleCompact.cpp
+  ScheduleConstant.hpp
+  ScheduleConstant_Impl.hpp
+  ScheduleConstant.cpp
+  ScheduleFixedInterval.hpp
+  ScheduleFixedInterval_Impl.hpp
+  ScheduleFixedInterval.cpp
+  ScheduleInterval.hpp
+  ScheduleInterval_Impl.hpp
+  ScheduleInterval.cpp
+  ScheduleVariableInterval.hpp
+  ScheduleVariableInterval_Impl.hpp
+  ScheduleVariableInterval.cpp
+  Screen.hpp
+  Screen_Impl.hpp
+  Screen.cpp
+  Shade.hpp
+  Shade_Impl.hpp
+  Shade.cpp
+  ShadingControl.hpp
+  ShadingControl_Impl.hpp
+  ShadingControl.cpp
+  ShadingMaterial.hpp
+  ShadingMaterial_Impl.hpp
+  ShadingMaterial.cpp
+  SimpleGlazing.hpp
+  SimpleGlazing_Impl.hpp
+  SimpleGlazing.cpp
+  SpaceLoadDefinition.hpp
+  SpaceLoadDefinition_Impl.hpp
+  SpaceLoadDefinition.cpp
+  StandardGlazing.hpp
+  StandardGlazing_Impl.hpp
+  StandardGlazing.cpp
+  StandardOpaqueMaterial.hpp
+  StandardOpaqueMaterial_Impl.hpp
+  StandardOpaqueMaterial.cpp
+  StandardsInformationConstruction.hpp
+  StandardsInformationConstruction_Impl.hpp
+  StandardsInformationConstruction.cpp
+  StandardsInformationMaterial.hpp
+  StandardsInformationMaterial_Impl.hpp
+  StandardsInformationMaterial.cpp
+  SteamEquipmentDefinition.hpp
+  SteamEquipmentDefinition_Impl.hpp
+  SteamEquipmentDefinition.cpp
+  TableMultiVariableLookup.hpp
+  TableMultiVariableLookup_Impl.hpp
+  TableMultiVariableLookup.cpp
+  ThermochromicGlazing.hpp
+  ThermochromicGlazing_Impl.hpp
+  ThermochromicGlazing.cpp
+  WindowDataFile.hpp
+  WindowDataFile_Impl.hpp
+  WindowDataFile.cpp
+  WindowPropertyFrameAndDivider.hpp
+  WindowPropertyFrameAndDivider_Impl.hpp
+  WindowPropertyFrameAndDivider.cpp
+)
+
+# Only need to moc files that have Q_OBJECT macro
+# Only files with signals, slots, or Q_PROPERTY need to have Q_OBJECT macro
+# We want the number of files moc'd to decrease over time, run CheckForQObject.rb to remove unnecessary moc's
+set(${target_name}_resources_temp_moc
+  AirGap_Impl.hpp
+  Blind_Impl.hpp
+  CFactorUndergroundWallConstruction_Impl.hpp
+  ConstructionBase_Impl.hpp
+  ConstructionWithInternalSource_Impl.hpp
+  Curve_Impl.hpp
+  CurveBicubic_Impl.hpp
+  CurveBiquadratic_Impl.hpp
+  CurveCubic_Impl.hpp
+  CurveDoubleExponentialDecay_Impl.hpp
+  CurveExponent_Impl.hpp
+  CurveExponentialDecay_Impl.hpp
+  CurveExponentialSkewNormal_Impl.hpp
+  CurveFanPressureRise_Impl.hpp
+  CurveFunctionalPressureDrop_Impl.hpp
+  CurveLinear_Impl.hpp
+  CurveQuadratic_Impl.hpp
+  CurveQuadraticLinear_Impl.hpp
+  CurveQuartic_Impl.hpp
+  CurveRectangularHyperbola1_Impl.hpp
+  CurveRectangularHyperbola2_Impl.hpp
+  CurveSigmoid_Impl.hpp
+  CurveTriquadratic_Impl.hpp
+  DefaultConstructionSet_Impl.hpp
+  DefaultScheduleSet_Impl.hpp
+  DefaultSubSurfaceConstructions_Impl.hpp
+  DefaultSurfaceConstructions_Impl.hpp
+  ElectricEquipmentDefinition_Impl.hpp
+  ExteriorLightsDefinition_Impl.hpp
+  FFactorGroundFloorConstruction_Impl.hpp
+  Gas_Impl.hpp
+  GasEquipmentDefinition_Impl.hpp
+  GasMixture_Impl.hpp
+  HotWaterEquipmentDefinition_Impl.hpp
+  InternalMassDefinition_Impl.hpp
+  LayeredConstruction_Impl.hpp
+  LightsDefinition_Impl.hpp
+  LuminaireDefinition_Impl.hpp
+  MasslessOpaqueMaterial_Impl.hpp
+  Material_Impl.hpp
+  OpaqueMaterial_Impl.hpp
+  OtherEquipmentDefinition_Impl.hpp
+  RefractionExtinctionGlazing_Impl.hpp
+  RenderingColor_Impl.hpp
+  RoofVegetation_Impl.hpp
+  ScheduleBase_Impl.hpp
+  ScheduleConstant_Impl.hpp
+  ScheduleDay_Impl.hpp
+  ScheduleFixedInterval_Impl.hpp
+  ScheduleRule_Impl.hpp
+  ScheduleTypeLimits_Impl.hpp
+  ScheduleVariableInterval_Impl.hpp
+  Screen_Impl.hpp
+  Shade_Impl.hpp
+  SimpleGlazing_Impl.hpp
+  StandardGlazing_Impl.hpp
+  StandardOpaqueMaterial_Impl.hpp
+  SteamEquipmentDefinition_Impl.hpp
+)
+
+qt5_wrap_cpp_minimally(${target_name}_resources_temp_moc_src ${${target_name}_resources_temp_moc})
+
+set(${target_name}_resources_temp_depends
+  openstudio_utilities
+)
+
+add_library(${target_name}_resources_temp STATIC ${${target_name}_resources_temp_src} ${${target_name}_resources_temp_moc_src})
+target_link_libraries(${target_name}_resources_temp "${${target_name}_resources_temp_depends}")
+AddPCH(${target_name}_resources_temp)
+
+###############################################################################
+### openstudio_model_simulation ###############################################
+###############################################################################
+
+set(${target_name}_simulation_src
+  ClimateZones.hpp
+  ClimateZones_Impl.hpp
+  ClimateZones.cpp
+  ConvergenceLimits.hpp
+  ConvergenceLimits_Impl.hpp
+  ConvergenceLimits.cpp
+  DesignDay.hpp
+  DesignDay_Impl.hpp
+  DesignDay.cpp
+  HeatBalanceAlgorithm.hpp
+  HeatBalanceAlgorithm_Impl.hpp
+  HeatBalanceAlgorithm.cpp
+  InsideSurfaceConvectionAlgorithm.hpp
+  InsideSurfaceConvectionAlgorithm_Impl.hpp
+  InsideSurfaceConvectionAlgorithm.cpp
+  LightingDesignDay.hpp
+  LightingDesignDay_Impl.hpp
+  LightingDesignDay.cpp
+  LightingSimulationControl.hpp
+  LightingSimulationControl_Impl.hpp
+  LightingSimulationControl.cpp
+  OutputControlReportingTolerances.hpp
+  OutputControlReportingTolerances_Impl.hpp
+  OutputControlReportingTolerances.cpp
+  OutsideSurfaceConvectionAlgorithm.hpp
+  OutsideSurfaceConvectionAlgorithm_Impl.hpp
+  OutsideSurfaceConvectionAlgorithm.cpp
+  RunPeriod.hpp
+  RunPeriod_Impl.hpp
+  RunPeriod.cpp
+  RunPeriodControlDaylightSavingTime.hpp
+  RunPeriodControlDaylightSavingTime_Impl.hpp
+  RunPeriodControlDaylightSavingTime.cpp
+  RunPeriodControlSpecialDays.hpp
+  RunPeriodControlSpecialDays_Impl.hpp
+  RunPeriodControlSpecialDays.cpp
+  ShadowCalculation.hpp
+  ShadowCalculation_Impl.hpp
+  ShadowCalculation.cpp
+  SkyTemperature.hpp
+  SkyTemperature_Impl.hpp
+  SkyTemperature.cpp
+  SimulationControl.hpp
+  SimulationControl_Impl.hpp
+  SimulationControl.cpp
+  SiteGroundReflectance.hpp
+  SiteGroundReflectance_Impl.hpp
+  SiteGroundReflectance.cpp
+  SiteGroundTemperatureBuildingSurface.hpp
+  SiteGroundTemperatureBuildingSurface_Impl.hpp
+  SiteGroundTemperatureBuildingSurface.cpp
+  SiteWaterMainsTemperature.hpp
+  SiteWaterMainsTemperature_Impl.hpp
+  SiteWaterMainsTemperature.cpp
+  SizingParameters.hpp
+  SizingParameters_Impl.hpp
+  SizingParameters.cpp
+  SizingPeriod.hpp
+  SizingPeriod_Impl.hpp
+  SizingPeriod.cpp
+  SurfacePropertyConvectionCoefficientsMultipleSurface.cpp
+  SurfacePropertyConvectionCoefficientsMultipleSurface.hpp
+  SurfacePropertyConvectionCoefficientsMultipleSurface_Impl.hpp
+  Timestep.hpp
+  Timestep_Impl.hpp
+  Timestep.cpp
+  WeatherFile.hpp
+  WeatherFile_Impl.hpp
+  WeatherFile.cpp
+  WeatherFileConditionType.hpp
+  WeatherFileConditionType_Impl.hpp
+  WeatherFileConditionType.cpp
+  WeatherFileDays.hpp
+  WeatherFileDays_Impl.hpp
+  WeatherFileDays.cpp
+  YearDescription.hpp
+  YearDescription_Impl.hpp
+  YearDescription.cpp
+  ZoneAirContaminantBalance.hpp
+  ZoneAirContaminantBalance_Impl.hpp
+  ZoneAirContaminantBalance.cpp
+  ZoneAirHeatBalanceAlgorithm.hpp
+  ZoneAirHeatBalanceAlgorithm_Impl.hpp
+  ZoneAirHeatBalanceAlgorithm.cpp
+  ZoneAirMassFlowConservation.hpp
+  ZoneAirMassFlowConservation_Impl.hpp
+  ZoneAirMassFlowConservation.cpp
+  ZoneCapacitanceMultiplierResearchSpecial.hpp
+  ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp
+  ZoneCapacitanceMultiplierResearchSpecial.cpp
+)
+
+# Only need to moc files that have Q_OBJECT macro
+# Only files with signals, slots, or Q_PROPERTY need to have Q_OBJECT macro
+# We want the number of files moc'd to decrease over time, run CheckForQObject.rb to remove unnecessary moc's
+set(${target_name}_simulation_moc
+  ConvergenceLimits_Impl.hpp
+  DesignDay_Impl.hpp
+  HeatBalanceAlgorithm_Impl.hpp
+  InsideSurfaceConvectionAlgorithm_Impl.hpp
+  LightingDesignDay_Impl.hpp
+  LightingSimulationControl_Impl.hpp
+  OutputControlReportingTolerances_Impl.hpp
+  OutsideSurfaceConvectionAlgorithm_Impl.hpp
+  ProgramControl_Impl.hpp
+  RadianceParameters_Impl.hpp
+  ShadowCalculation_Impl.hpp
+  SimulationControl_Impl.hpp
+  SiteGroundReflectance_Impl.hpp
+  SiteGroundTemperatureBuildingSurface_Impl.hpp
+  SiteWaterMainsTemperature_Impl.hpp
+  SizingParameters_Impl.hpp
+  Timestep_Impl.hpp
+  WeatherFile_Impl.hpp
+  YearDescription_Impl.hpp
+  ZoneAirContaminantBalance_Impl.hpp
+  ZoneAirHeatBalanceAlgorithm_Impl.hpp
+  ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp
+)
+
+qt5_wrap_cpp_minimally(${target_name}_simulation_moc_src ${${target_name}_simulation_moc})
+
+set(${target_name}_depends
+  openstudio_utilities
+)
+
+add_library(${target_name}_simulation STATIC ${${target_name}_simulation_src} ${${target_name}_simulation_moc_src})
+target_link_libraries(${target_name}_simulation "${${target_name}_simulation_depends}")
+AddPCH(${target_name}_simulation)
+
+
+###############################################################################
+### openstudio_model_geometry ################################################
+###############################################################################
+
+
+set(${target_name}_geometry_src
+  Building.hpp
+  Building_Impl.hpp
+  Building.cpp
+  BuildingStory.hpp
+  BuildingStory_Impl.hpp
+  BuildingStory.cpp
+  DaylightingControl.hpp
+  DaylightingControl_Impl.hpp
+  DaylightingControl.cpp
+  DaylightingDeviceShelf.hpp
+  DaylightingDeviceShelf_Impl.hpp
+  DaylightingDeviceShelf.cpp
+  DefaultConstructionSet.hpp
+  DefaultConstructionSet_Impl.hpp
+  DefaultConstructionSet.cpp
+  ElectricEquipment.hpp
+  ElectricEquipment_Impl.hpp
+  ElectricEquipment.cpp
+  ExteriorLights.hpp
+  ExteriorLights_Impl.hpp
+  ExteriorLights.cpp
+  Facility.hpp
+  Facility_Impl.hpp
+  Facility.cpp
+  GasEquipment.hpp
+  GasEquipment_Impl.hpp
+  GasEquipment.cpp
+  GlareSensor.hpp
+  GlareSensor_Impl.hpp
+  GlareSensor.cpp
+  HotWaterEquipment.hpp
+  HotWaterEquipment_Impl.hpp
+  HotWaterEquipment.cpp
+  IlluminanceMap.hpp
+  IlluminanceMap_Impl.hpp
+  IlluminanceMap.cpp
+  InteriorPartitionSurface.hpp
+  InteriorPartitionSurface_Impl.hpp
+  InteriorPartitionSurface.cpp
+  InteriorPartitionSurfaceGroup.hpp
+  InteriorPartitionSurfaceGroup_Impl.hpp
+  InteriorPartitionSurfaceGroup.cpp
+  InternalMass.hpp
+  InternalMass_Impl.hpp
+  InternalMass.cpp
+  LightingSimulationZone.hpp
+  LightingSimulationZone_Impl.hpp
+  LightingSimulationZone.cpp
+  Lights.hpp
+  Lights_Impl.hpp
+  Lights.cpp
+  Luminaire.hpp
+  Luminaire_Impl.hpp
+  Luminaire.cpp
+  OtherEquipment.hpp
+  OtherEquipment_Impl.hpp
+  OtherEquipment.cpp
+  People.hpp
+  People_Impl.hpp
+  People.cpp
+  PlanarSurface.hpp
+  PlanarSurface_Impl.hpp
+  PlanarSurface.cpp
+  PlanarSurfaceGroup.hpp
+  PlanarSurfaceGroup_Impl.hpp
+  PlanarSurfaceGroup.cpp
+  ShadingSurface.hpp
+  ShadingSurface_Impl.hpp
+  ShadingSurface.cpp
+  ShadingSurfaceGroup.hpp
+  ShadingSurfaceGroup_Impl.hpp
+  ShadingSurfaceGroup.cpp
+  Site.hpp
+  Site_Impl.hpp
+  Site.cpp
+  Space.hpp
+  Space_Impl.hpp
+  Space.cpp
+  SpaceInfiltrationDesignFlowRate.hpp
+  SpaceInfiltrationDesignFlowRate_Impl.hpp
+  SpaceInfiltrationDesignFlowRate.cpp
+  SpaceInfiltrationEffectiveLeakageArea.hpp
+  SpaceInfiltrationEffectiveLeakageArea_Impl.hpp
+  SpaceInfiltrationEffectiveLeakageArea.cpp
+  SpaceItem.hpp
+  SpaceItem_Impl.hpp
+  SpaceItem.cpp
+  SpaceLoad.hpp
+  SpaceLoad_Impl.hpp
+  SpaceLoad.cpp
+  SpaceLoadInstance.hpp
+  SpaceLoadInstance_Impl.hpp
+  SpaceLoadInstance.cpp
+  SpaceType.hpp
+  SpaceType_Impl.hpp
+  SpaceType.cpp
+  SteamEquipment.hpp
+  SteamEquipment_Impl.hpp
+  SteamEquipment.cpp
+  SubSurface.hpp
+  SubSurface_Impl.hpp
+  SubSurface.cpp
+  Surface.hpp
+  Surface_Impl.hpp
+  Surface.cpp
+  SurfacePropertyOtherSideCoefficients.cpp
+  SurfacePropertyOtherSideCoefficients.hpp
+  SurfacePropertyOtherSideCoefficients_Impl.hpp
+  SurfacePropertyOtherSideConditionsModel.cpp
+  SurfacePropertyOtherSideConditionsModel.hpp
+  SurfacePropertyOtherSideConditionsModel_Impl.hpp
+)
+
+# Only need to moc files that have Q_OBJECT macro
+# Only files with signals, slots, or Q_PROPERTY need to have Q_OBJECT macro
+# We want the number of files moc'd to decrease over time, run CheckForQObject.rb to remove unnecessary moc's
+set(${target_name}_geometry_moc
+  Building_Impl.hpp
+  BuildingStory_Impl.hpp
+  DaylightingControl_Impl.hpp
+  DesignSpecificationOutdoorAir_Impl.hpp
+  DesignSpecificationZoneAirDistribution_Impl.hpp
+  ElectricEquipment_Impl.hpp
+  ExteriorLights_Impl.hpp
+  Facility_Impl.hpp
+  GasEquipment_Impl.hpp
+  GlareSensor_Impl.hpp
+  HotWaterEquipment_Impl.hpp
+  IlluminanceMap_Impl.hpp
+  InternalMass_Impl.hpp
+  InteriorPartitionSurface_Impl.hpp
+  InteriorPartitionSurfaceGroup_Impl.hpp
+  Lights_Impl.hpp
+  Luminaire_Impl.hpp
+  OtherEquipment_Impl.hpp
+  People_Impl.hpp
+  PlanarSurface_Impl.hpp
+  PlanarSurfaceGroup_Impl.hpp
+  ShadingSurface_Impl.hpp
+  ShadingSurfaceGroup_Impl.hpp
+  Site_Impl.hpp
+  Space_Impl.hpp
+  SpaceInfiltrationDesignFlowRate_Impl.hpp
+  SpaceInfiltrationEffectiveLeakageArea_Impl.hpp
+  SpaceItem_Impl.hpp
+  SpaceLoad_Impl.hpp
+  SpaceLoadInstance_Impl.hpp
+  SpaceType_Impl.hpp
+  SteamEquipment_Impl.hpp
+  SubSurface_Impl.hpp
+  Surface_Impl.hpp
+)
+
+qt5_wrap_cpp_minimally(${target_name}_geometry_moc_src ${${target_name}_geometry_moc})
+
+set(${target_name}_depends
+  openstudio_utilities
+)
+
+add_library(${target_name}_geometry STATIC ${${target_name}_geometry_src} ${${target_name}_geometry_moc_src})
+target_link_libraries(${target_name}_geometry "${${target_name}_geometry_depends}")
+AddPCH(${target_name}_geometry)
+
+
+###############################################################################
+### openstudio_model_hvac #####################################################
+###############################################################################
+
+
+set(${target_name}_hvac_src
+  AirConditionerVariableRefrigerantFlow.hpp
+  AirConditionerVariableRefrigerantFlow_Impl.hpp
+  AirConditionerVariableRefrigerantFlow.cpp
   AirLoopHVAC.hpp
   AirLoopHVAC_Impl.hpp
   AirLoopHVAC.cpp
@@ -107,9 +811,6 @@ set(${target_name}_src
   AirToAirComponent.hpp
   AirToAirComponent_Impl.hpp
   AirToAirComponent.cpp
-  AirWallMaterial.hpp
-  AirWallMaterial_Impl.hpp
-  AirWallMaterial.cpp
   AvailabilityManager.hpp
   AvailabilityManager_Impl.hpp
   AvailabilityManager.cpp
@@ -128,30 +829,18 @@ set(${target_name}_src
   AvailabilityManagerNightCycle.hpp
   AvailabilityManagerNightCycle_Impl.hpp
   AvailabilityManagerNightCycle.cpp
-  Blind.hpp
-  Blind_Impl.hpp
-  Blind.cpp
   BoilerHotWater.hpp
   BoilerHotWater_Impl.hpp
   BoilerHotWater.cpp
   BoilerSteam.hpp
   BoilerSteam_Impl.hpp
   BoilerSteam.cpp
-  Building.hpp
-  Building_Impl.hpp
-  Building.cpp
-  BuildingStory.hpp
-  BuildingStory_Impl.hpp
-  BuildingStory.cpp
 ##  CentralHeatPumpSystem.hpp
 ##  CentralHeatPumpSystem_Impl.hpp
 ##  CentralHeatPumpSystem.cpp
 ##  CentralHeatPumpSystemModule.hpp
 ##  CentralHeatPumpSystemModule_Impl.hpp
 ##  CentralHeatPumpSystemModule.cpp
-  CFactorUndergroundWallConstruction.hpp
-  CFactorUndergroundWallConstruction_Impl.hpp
-  CFactorUndergroundWallConstruction.cpp
   ChillerAbsorption.hpp
   ChillerAbsorption_Impl.hpp
   ChillerAbsorption.cpp
@@ -164,9 +853,6 @@ set(${target_name}_src
 ##  ChillerHeaterPerformanceElectricEIR.hpp
 ##  ChillerHeaterPerformanceElectricEIR_Impl.hpp
 ##  ChillerHeaterPerformanceElectricEIR.cpp
-  ClimateZones.hpp
-  ClimateZones_Impl.hpp
-  ClimateZones.cpp
   CoilCoolingCooledBeam.hpp
   CoilCoolingCooledBeam_Impl.hpp
   CoilCoolingCooledBeam.cpp
@@ -287,9 +973,6 @@ set(${target_name}_src
   ComponentCostAdjustments.hpp
   ComponentCostAdjustments_Impl.hpp
   ComponentCostAdjustments.cpp
-  ComponentData.hpp
-  ComponentData_Impl.hpp
-  ComponentData.cpp
   Connection.hpp
   Connection_Impl.hpp
   Connection.cpp
@@ -299,15 +982,6 @@ set(${target_name}_src
   ConnectorSplitter.hpp
   ConnectorSplitter_Impl.hpp
   ConnectorSplitter.cpp
-  Construction.hpp
-  Construction_Impl.hpp
-  Construction.cpp
-  ConstructionBase.hpp
-  ConstructionBase_Impl.hpp
-  ConstructionBase.cpp
-  ConstructionWithInternalSource.hpp
-  ConstructionWithInternalSource_Impl.hpp
-  ConstructionWithInternalSource.cpp
   ControllerMechanicalVentilation.hpp
   ControllerMechanicalVentilation_Impl.hpp
   ControllerMechanicalVentilation.cpp
@@ -317,9 +991,6 @@ set(${target_name}_src
   ControllerWaterCoil.hpp
   ControllerWaterCoil_Impl.hpp
   ControllerWaterCoil.cpp
-  ConvergenceLimits.hpp
-  ConvergenceLimits_Impl.hpp
-  ConvergenceLimits.cpp
   CoolingTowerPerformanceCoolTools.hpp
   CoolingTowerPerformanceCoolTools_Impl.hpp
   CoolingTowerPerformanceCoolTools.cpp
@@ -338,87 +1009,6 @@ set(${target_name}_src
   CurrencyType.hpp
   CurrencyType_Impl.hpp
   CurrencyType.cpp
-  Curve.hpp
-  Curve_Impl.hpp
-  Curve.cpp
-  CurveBicubic.hpp
-  CurveBicubic_Impl.hpp
-  CurveBicubic.cpp
-  CurveBiquadratic.hpp
-  CurveBiquadratic_Impl.hpp
-  CurveBiquadratic.cpp
-  CurveCubic.hpp
-  CurveCubic_Impl.hpp
-  CurveCubic.cpp
-  CurveDoubleExponentialDecay.hpp
-  CurveDoubleExponentialDecay_Impl.hpp
-  CurveDoubleExponentialDecay.cpp
-  CurveExponent.hpp
-  CurveExponent_Impl.hpp
-  CurveExponent.cpp
-  CurveExponentialDecay.hpp
-  CurveExponentialDecay_Impl.hpp
-  CurveExponentialDecay.cpp
-  CurveExponentialSkewNormal.hpp
-  CurveExponentialSkewNormal_Impl.hpp
-  CurveExponentialSkewNormal.cpp
-  CurveFanPressureRise.hpp
-  CurveFanPressureRise_Impl.hpp
-  CurveFanPressureRise.cpp
-  CurveFunctionalPressureDrop.hpp
-  CurveFunctionalPressureDrop_Impl.hpp
-  CurveFunctionalPressureDrop.cpp
-  CurveLinear.hpp
-  CurveLinear_Impl.hpp
-  CurveLinear.cpp
-  CurveQuadratic.hpp
-  CurveQuadratic_Impl.hpp
-  CurveQuadratic.cpp
-  CurveQuadraticLinear.hpp
-  CurveQuadraticLinear_Impl.hpp
-  CurveQuadraticLinear.cpp
-  CurveQuartic.hpp
-  CurveQuartic_Impl.hpp
-  CurveQuartic.cpp
-  CurveRectangularHyperbola1.hpp
-  CurveRectangularHyperbola1_Impl.hpp
-  CurveRectangularHyperbola1.cpp
-  CurveRectangularHyperbola2.hpp
-  CurveRectangularHyperbola2_Impl.hpp
-  CurveRectangularHyperbola2.cpp
-  CurveSigmoid.hpp
-  CurveSigmoid_Impl.hpp
-  CurveSigmoid.cpp
-  CurveTriquadratic.hpp
-  CurveTriquadratic_Impl.hpp
-  CurveTriquadratic.cpp
-  DaylightingControl.hpp
-  DaylightingControl_Impl.hpp
-  DaylightingControl.cpp
-  DaylightingDeviceShelf.hpp
-  DaylightingDeviceShelf_Impl.hpp
-  DaylightingDeviceShelf.cpp
-  DaylightRedirectionDevice.hpp
-  DaylightRedirectionDevice_Impl.hpp
-  DaylightRedirectionDevice.cpp
-  DefaultConstructionSet.hpp
-  DefaultConstructionSet_Impl.hpp
-  DefaultConstructionSet.cpp
-  DefaultScheduleSet.hpp
-  DefaultScheduleSet_Impl.hpp
-  DefaultScheduleSet.cpp
-  DefaultSubSurfaceConstructions.hpp
-  DefaultSubSurfaceConstructions_Impl.hpp
-  DefaultSubSurfaceConstructions.cpp
-  DefaultSurfaceConstructions.hpp
-  DefaultSurfaceConstructions_Impl.hpp
-  DefaultSurfaceConstructions.cpp
-  DesignDay.hpp
-  DesignDay_Impl.hpp
-  DesignDay.cpp
-  DesignSpecificationOutdoorAir.hpp
-  DesignSpecificationOutdoorAir_Impl.hpp
-  DesignSpecificationOutdoorAir.cpp
   DesignSpecificationZoneAirDistribution.hpp
   DesignSpecificationZoneAirDistribution_Impl.hpp
   DesignSpecificationZoneAirDistribution.cpp
@@ -431,21 +1021,6 @@ set(${target_name}_src
   Duct.hpp
   Duct_Impl.hpp
   Duct.cpp
-  ElectricEquipment.hpp
-  ElectricEquipment_Impl.hpp
-  ElectricEquipment.cpp
-  ElectricEquipmentDefinition.hpp
-  ElectricEquipmentDefinition_Impl.hpp
-  ElectricEquipmentDefinition.cpp
-  ElectricLoadCenterDistribution.hpp
-  ElectricLoadCenterDistribution_Impl.hpp
-  ElectricLoadCenterDistribution.cpp
-  ElectricLoadCenterInverterLookUpTable.hpp
-  ElectricLoadCenterInverterLookUpTable_Impl.hpp
-  ElectricLoadCenterInverterLookUpTable.cpp
-  ElectricLoadCenterInverterSimple.hpp
-  ElectricLoadCenterInverterSimple_Impl.hpp
-  ElectricLoadCenterInverterSimple.cpp
   EvaporativeCoolerDirectResearchSpecial.hpp
   EvaporativeCoolerDirectResearchSpecial_Impl.hpp
   EvaporativeCoolerDirectResearchSpecial.cpp
@@ -458,15 +1033,6 @@ set(${target_name}_src
   EvaporativeFluidCoolerTwoSpeed.hpp
   EvaporativeFluidCoolerTwoSpeed_Impl.hpp
   EvaporativeFluidCoolerTwoSpeed.cpp
-  ExteriorLights.hpp
-  ExteriorLights_Impl.hpp
-  ExteriorLights.cpp
-  ExteriorLightsDefinition.hpp
-  ExteriorLightsDefinition_Impl.hpp
-  ExteriorLightsDefinition.cpp
-  Facility.hpp
-  Facility_Impl.hpp
-  Facility.cpp
   FanConstantVolume.hpp
   FanConstantVolume_Impl.hpp
   FanConstantVolume.cpp
@@ -479,45 +1045,12 @@ set(${target_name}_src
   FanZoneExhaust.hpp
   FanZoneExhaust_Impl.hpp
   FanZoneExhaust.cpp
-  FenestrationMaterial.hpp
-  FenestrationMaterial_Impl.hpp
-  FenestrationMaterial.cpp
-  FFactorGroundFloorConstruction.hpp
-  FFactorGroundFloorConstruction_Impl.hpp
-  FFactorGroundFloorConstruction.cpp
   FluidCoolerSingleSpeed.hpp
   FluidCoolerSingleSpeed_Impl.hpp
   FluidCoolerSingleSpeed.cpp
   FluidCoolerTwoSpeed.hpp
   FluidCoolerTwoSpeed_Impl.hpp
   FluidCoolerTwoSpeed.cpp 
-  Gas.hpp
-  Gas_Impl.hpp
-  Gas.cpp
-  GasEquipment.hpp
-  GasEquipment_Impl.hpp
-  GasEquipment.cpp
-  GasEquipmentDefinition.hpp
-  GasEquipmentDefinition_Impl.hpp
-  GasEquipmentDefinition.cpp
-  GasLayer.hpp
-  GasLayer_Impl.hpp
-  GasLayer.cpp
-  GasMixture.hpp
-  GasMixture_Impl.hpp
-  GasMixture.cpp
-  Generator.hpp
-  Generator_Impl.hpp
-  Generator.cpp 
-  GeneratorPhotovoltaic.hpp
-  GeneratorPhotovoltaic_Impl.hpp
-  GeneratorPhotovoltaic.cpp  
-  GlareSensor.hpp
-  GlareSensor_Impl.hpp
-  GlareSensor.cpp
-  Glazing.hpp
-  Glazing_Impl.hpp
-  Glazing.cpp
   GroundHeatExchangerHorizontalTrench.hpp
   GroundHeatExchangerHorizontalTrench_Impl.hpp
   GroundHeatExchangerHorizontalTrench.cpp
@@ -530,9 +1063,6 @@ set(${target_name}_src
   HeaderedPumpsVariableSpeed.hpp
   HeaderedPumpsVariableSpeed_Impl.hpp
   HeaderedPumpsVariableSpeed.cpp
-  HeatBalanceAlgorithm.hpp
-  HeatBalanceAlgorithm_Impl.hpp
-  HeatBalanceAlgorithm.cpp
   HeatPumpWaterToWaterEquationFitCooling.hpp
   HeatPumpWaterToWaterEquationFitCooling_Impl.hpp
   HeatPumpWaterToWaterEquationFitCooling.cpp
@@ -545,12 +1075,6 @@ set(${target_name}_src
   HeatExchangerFluidToFluid.hpp
   HeatExchangerFluidToFluid_Impl.hpp
   HeatExchangerFluidToFluid.cpp
-  HotWaterEquipment.hpp
-  HotWaterEquipment_Impl.hpp
-  HotWaterEquipment.cpp
-  HotWaterEquipmentDefinition.hpp
-  HotWaterEquipmentDefinition_Impl.hpp
-  HotWaterEquipmentDefinition.cpp
   HumidifierSteamElectric.hpp
   HumidifierSteamElectric_Impl.hpp
   HumidifierSteamElectric.cpp
@@ -562,123 +1086,21 @@ set(${target_name}_src
   ZoneHVACComponent.cpp
   HVACTemplates.cpp
   HVACTemplates.hpp
-  IlluminanceMap.hpp
-  IlluminanceMap_Impl.hpp
-  IlluminanceMap.cpp
-  InfraredTransparentMaterial.hpp
-  InfraredTransparentMaterial_Impl.hpp
-  InfraredTransparentMaterial.cpp
-  InsideSurfaceConvectionAlgorithm.hpp
-  InsideSurfaceConvectionAlgorithm_Impl.hpp
-  InsideSurfaceConvectionAlgorithm.cpp
-  InternalMass.hpp
-  InternalMass_Impl.hpp
-  InternalMass.cpp
-  InternalMassDefinition.hpp
-  InternalMassDefinition_Impl.hpp
-  InternalMassDefinition.cpp
-  InteriorPartitionSurface.hpp
-  InteriorPartitionSurface_Impl.hpp
-  InteriorPartitionSurface.cpp
-  InteriorPartitionSurfaceGroup.hpp
-  InteriorPartitionSurfaceGroup_Impl.hpp
-  InteriorPartitionSurfaceGroup.cpp
-  Inverter.hpp
-  Inverter_Impl.hpp
-  Inverter.cpp  
-  LayeredConstruction.hpp
-  LayeredConstruction_Impl.hpp
-  LayeredConstruction.cpp
-  LifeCycleCost.hpp
-  LifeCycleCost_Impl.hpp
-  LifeCycleCost.cpp
-  LifeCycleCostParameters.hpp
-  LifeCycleCostParameters_Impl.hpp
-  LifeCycleCostParameters.cpp
   LifeCycleCostUsePriceEscalation.hpp
   LifeCycleCostUsePriceEscalation_Impl.hpp
   LifeCycleCostUsePriceEscalation.cpp
-  LightingDesignDay.hpp
-  LightingDesignDay_Impl.hpp
-  LightingDesignDay.cpp
-  LightingSimulationControl.hpp
-  LightingSimulationControl_Impl.hpp
-  LightingSimulationControl.cpp
-  LightingSimulationZone.hpp
-  LightingSimulationZone_Impl.hpp
-  LightingSimulationZone.cpp
-  Lights.hpp
-  Lights_Impl.hpp
-  Lights.cpp
-  LightsDefinition.hpp
-  LightsDefinition_Impl.hpp
-  LightsDefinition.cpp
   LoadProfilePlant.hpp
   LoadProfilePlant_Impl.hpp
   LoadProfilePlant.cpp
   Loop.hpp
   Loop_Impl.hpp
   Loop.cpp
-  Luminaire.hpp
-  Luminaire_Impl.hpp
-  Luminaire.cpp
-  LuminaireDefinition.hpp
-  LuminaireDefinition_Impl.hpp
-  LuminaireDefinition.cpp
-  MasslessOpaqueMaterial.hpp
-  MasslessOpaqueMaterial_Impl.hpp
-  MasslessOpaqueMaterial.cpp
-  Material.hpp
-  Material_Impl.hpp
-  Material.cpp
-  Meter.hpp
-  Meter_Impl.hpp
-  Meter.cpp
   Mixer.hpp
   Mixer_Impl.hpp
   Mixer.cpp
-  ModelPartitionMaterial.hpp
-  ModelPartitionMaterial_Impl.hpp
-  ModelPartitionMaterial.cpp
   Node.hpp
   Node_Impl.hpp
   Node.cpp
-  OtherEquipment.hpp
-  OtherEquipment_Impl.hpp
-  OtherEquipment.cpp
-  OtherEquipmentDefinition.hpp
-  OtherEquipmentDefinition_Impl.hpp
-  OtherEquipmentDefinition.cpp
-  OpaqueMaterial.hpp
-  OpaqueMaterial_Impl.hpp
-  OpaqueMaterial.cpp
-  OutputControlReportingTolerances.hpp
-  OutputControlReportingTolerances_Impl.hpp
-  OutputControlReportingTolerances.cpp
-  OutputVariable.hpp
-  OutputVariable_Impl.hpp
-  OutputVariable.cpp
-  OutsideSurfaceConvectionAlgorithm.hpp
-  OutsideSurfaceConvectionAlgorithm_Impl.hpp
-  OutsideSurfaceConvectionAlgorithm.cpp
-  ParentObject.hpp
-  ParentObject_Impl.hpp
-  ParentObject.cpp
-  People.hpp
-  People_Impl.hpp
-  People.cpp
-  PeopleDefinition.hpp
-  PeopleDefinition_Impl.hpp
-  PeopleDefinition.cpp
-  PhotovoltaicPerformance.hpp
-  PhotovoltaicPerformance_Impl.hpp
-  PhotovoltaicPerformance.cpp
-  PhotovoltaicPerformanceEquivalentOneDiode.hpp
-  PhotovoltaicPerformanceEquivalentOneDiode_Impl.hpp
-  PhotovoltaicPerformanceEquivalentOneDiode.cpp
-  PhotovoltaicPerformanceSimple.hpp
-  PhotovoltaicPerformanceSimple_Impl.hpp
-  PhotovoltaicPerformanceSimple.cpp
   PipeAdiabatic.hpp
   PipeAdiabatic_Impl.hpp
   PipeAdiabatic.cpp
@@ -688,12 +1110,6 @@ set(${target_name}_src
   PipeOutdoor.hpp
   PipeOutdoor_Impl.hpp
   PipeOutdoor.cpp
-  PlanarSurface.hpp
-  PlanarSurface_Impl.hpp
-  PlanarSurface.cpp
-  PlanarSurfaceGroup.hpp
-  PlanarSurfaceGroup_Impl.hpp
-  PlanarSurfaceGroup.cpp
   PlantComponentTemperatureSource.hpp
   PlantComponentTemperatureSource_Impl.hpp
   PlantComponentTemperatureSource.cpp
@@ -745,120 +1161,6 @@ set(${target_name}_src
   PumpVariableSpeed.hpp
   PumpVariableSpeed_Impl.hpp
   PumpVariableSpeed.cpp
-  RadianceParameters.hpp
-  RadianceParameters_Impl.hpp
-  RadianceParameters.cpp
-  RefractionExtinctionGlazing.hpp
-  RefractionExtinctionGlazing_Impl.hpp
-  RefractionExtinctionGlazing.cpp
-  RefrigerationAirChiller.hpp
-  RefrigerationAirChiller_Impl.hpp
-  RefrigerationAirChiller.cpp
-  RefrigerationCase.hpp
-  RefrigerationCase_Impl.hpp
-  RefrigerationCase.cpp
-  RefrigerationCompressor.hpp
-  RefrigerationCompressor_Impl.hpp
-  RefrigerationCompressor.cpp
-  RefrigerationCondenserAirCooled.hpp
-  RefrigerationCondenserAirCooled_Impl.hpp
-  RefrigerationCondenserAirCooled.cpp
-  RefrigerationCondenserCascade.hpp
-  RefrigerationCondenserCascade_Impl.hpp
-  RefrigerationCondenserCascade.cpp
-  RefrigerationCondenserEvaporativeCooled.hpp
-  RefrigerationCondenserEvaporativeCooled_Impl.hpp
-  RefrigerationCondenserEvaporativeCooled.cpp
-  RefrigerationCondenserWaterCooled.hpp
-  RefrigerationCondenserWaterCooled_Impl.hpp
-  RefrigerationCondenserWaterCooled.cpp
-  RefrigerationDefrostCycleParameters.hpp
-  RefrigerationDefrostCycleParameters_Impl.hpp
-  RefrigerationDefrostCycleParameters.cpp
-  RefrigerationGasCoolerAirCooled.hpp
-  RefrigerationGasCoolerAirCooled_Impl.hpp
-  RefrigerationGasCoolerAirCooled.cpp
-  RefrigerationSubcoolerLiquidSuction.hpp
-  RefrigerationSubcoolerLiquidSuction_Impl.hpp
-  RefrigerationSubcoolerLiquidSuction.cpp
-  RefrigerationSubcoolerMechanical.hpp
-  RefrigerationSubcoolerMechanical_Impl.hpp
-  RefrigerationSubcoolerMechanical.cpp
-  RefrigerationSecondarySystem.hpp
-  RefrigerationSecondarySystem_Impl.hpp
-  RefrigerationSecondarySystem.cpp
-  RefrigerationSystem.hpp
-  RefrigerationSystem_Impl.hpp
-  RefrigerationSystem.cpp
-  RefrigerationTranscriticalSystem.hpp
-  RefrigerationTranscriticalSystem_Impl.hpp
-  RefrigerationTranscriticalSystem.cpp
-  RefrigerationWalkIn.hpp
-  RefrigerationWalkIn_Impl.hpp
-  RefrigerationWalkIn.cpp
-  RefrigerationWalkInZoneBoundary.hpp
-  RefrigerationWalkInZoneBoundary_Impl.hpp
-  RefrigerationWalkInZoneBoundary.cpp
-  RenderingColor.hpp
-  RenderingColor_Impl.hpp
-  RenderingColor.cpp
-  ResourceObject.hpp
-  ResourceObject_Impl.hpp
-  ResourceObject.cpp
-  RoofVegetation.hpp
-  RoofVegetation_Impl.hpp
-  RoofVegetation.cpp
-  RunPeriod.hpp
-  RunPeriod_Impl.hpp
-  RunPeriod.cpp
-  RunPeriodControlDaylightSavingTime.hpp
-  RunPeriodControlDaylightSavingTime_Impl.hpp
-  RunPeriodControlDaylightSavingTime.cpp
-  RunPeriodControlSpecialDays.hpp
-  RunPeriodControlSpecialDays_Impl.hpp
-  RunPeriodControlSpecialDays.cpp
-  Schedule.hpp
-  Schedule_Impl.hpp
-  Schedule.cpp
-  ScheduleBase.hpp
-  ScheduleBase_Impl.hpp
-  ScheduleBase.cpp
-  ScheduleCompact.hpp
-  ScheduleCompact_Impl.hpp
-  ScheduleCompact.cpp
-  ScheduleConstant.hpp
-  ScheduleConstant_Impl.hpp
-  ScheduleConstant.cpp
-  ScheduleDay.hpp
-  ScheduleDay_Impl.hpp
-  ScheduleDay.cpp
-  ScheduleFixedInterval.hpp
-  ScheduleFixedInterval_Impl.hpp
-  ScheduleFixedInterval.cpp
-  ScheduleInterval.hpp
-  ScheduleInterval_Impl.hpp
-  ScheduleInterval.cpp
-  ScheduleRule.hpp
-  ScheduleRule_Impl.hpp
-  ScheduleRule.cpp
-  ScheduleRuleset.hpp
-  ScheduleRuleset_Impl.hpp
-  ScheduleRuleset.cpp
-  ScheduleTypeLimits.hpp
-  ScheduleTypeLimits_Impl.hpp
-  ScheduleTypeLimits.cpp
-  ScheduleVariableInterval.hpp
-  ScheduleVariableInterval_Impl.hpp
-  ScheduleVariableInterval.cpp
-  ScheduleWeek.hpp
-  ScheduleWeek_Impl.hpp
-  ScheduleWeek.cpp
-  ScheduleYear.hpp
-  ScheduleYear_Impl.hpp
-  ScheduleYear.cpp
-  Screen.hpp
-  Screen_Impl.hpp
-  Screen.cpp
   SetpointManager.hpp
   SetpointManager_Impl.hpp
   SetpointManager.cpp
@@ -928,48 +1230,6 @@ set(${target_name}_src
   SetpointManagerWarmestTemperatureFlow.hpp
   SetpointManagerWarmestTemperatureFlow_Impl.hpp
   SetpointManagerWarmestTemperatureFlow.cpp
-  Shade.hpp
-  Shade_Impl.hpp
-  Shade.cpp
-  ShadingControl.hpp
-  ShadingControl_Impl.hpp
-  ShadingControl.cpp
-  ShadingMaterial.hpp
-  ShadingMaterial_Impl.hpp
-  ShadingMaterial.cpp
-  ShadingSurface.hpp
-  ShadingSurface_Impl.hpp
-  ShadingSurface.cpp
-  ShadingSurfaceGroup.hpp
-  ShadingSurfaceGroup_Impl.hpp
-  ShadingSurfaceGroup.cpp
-  ShadowCalculation.hpp
-  ShadowCalculation_Impl.hpp
-  ShadowCalculation.cpp
-  SimpleGlazing.hpp
-  SimpleGlazing_Impl.hpp
-  SimpleGlazing.cpp
-  SimulationControl.hpp
-  SimulationControl_Impl.hpp
-  SimulationControl.cpp
-  Site.hpp
-  Site_Impl.hpp
-  Site.cpp
-  SiteGroundReflectance.hpp
-  SiteGroundReflectance_Impl.hpp
-  SiteGroundReflectance.cpp
-  SiteGroundTemperatureBuildingSurface.hpp
-  SiteGroundTemperatureBuildingSurface_Impl.hpp
-  SiteGroundTemperatureBuildingSurface.cpp
-  SiteWaterMainsTemperature.hpp
-  SiteWaterMainsTemperature_Impl.hpp
-  SiteWaterMainsTemperature.cpp
-  SizingParameters.hpp
-  SizingParameters_Impl.hpp
-  SizingParameters.cpp
-  SizingPeriod.hpp
-  SizingPeriod_Impl.hpp
-  SizingPeriod.cpp
   SizingPlant.hpp
   SizingPlant_Impl.hpp
   SizingPlant.cpp
@@ -979,9 +1239,6 @@ set(${target_name}_src
   SizingZone.hpp
   SizingZone_Impl.hpp
   SizingZone.cpp
-  SkyTemperature.hpp
-  SkyTemperature_Impl.hpp
-  SkyTemperature.cpp
   SolarCollectorFlatPlatePhotovoltaicThermal.hpp
   SolarCollectorFlatPlatePhotovoltaicThermal_Impl.hpp
   SolarCollectorFlatPlatePhotovoltaicThermal.cpp  
@@ -1000,72 +1257,12 @@ set(${target_name}_src
   SolarCollectorPerformancePhotovoltaicThermalSimple.hpp
   SolarCollectorPerformancePhotovoltaicThermalSimple_Impl.hpp
   SolarCollectorPerformancePhotovoltaicThermalSimple.cpp  
-  Space.hpp
-  Space_Impl.hpp
-  Space.cpp
-  SpaceInfiltrationDesignFlowRate.hpp
-  SpaceInfiltrationDesignFlowRate_Impl.hpp
-  SpaceInfiltrationDesignFlowRate.cpp
-  SpaceInfiltrationEffectiveLeakageArea.hpp
-  SpaceInfiltrationEffectiveLeakageArea_Impl.hpp
-  SpaceInfiltrationEffectiveLeakageArea.cpp
-  SpaceItem.hpp
-  SpaceItem_Impl.hpp
-  SpaceItem.cpp
-  SpaceLoad.hpp
-  SpaceLoad_Impl.hpp
-  SpaceLoad.cpp
-  SpaceLoadInstance.hpp
-  SpaceLoadInstance_Impl.hpp
-  SpaceLoadInstance.cpp
-  SpaceLoadDefinition.hpp
-  SpaceLoadDefinition_Impl.hpp
-  SpaceLoadDefinition.cpp
-  SpaceType.hpp
-  SpaceType_Impl.hpp
-  SpaceType.cpp
   Splitter.hpp
   Splitter_Impl.hpp
   Splitter.cpp
-  StandardGlazing.hpp
-  StandardGlazing_Impl.hpp
-  StandardGlazing.cpp
-  StandardOpaqueMaterial.hpp
-  StandardOpaqueMaterial_Impl.hpp
-  StandardOpaqueMaterial.cpp
-  StandardsInformationConstruction.hpp
-  StandardsInformationConstruction_Impl.hpp
-  StandardsInformationConstruction.cpp
-  StandardsInformationMaterial.hpp
-  StandardsInformationMaterial_Impl.hpp
-  StandardsInformationMaterial.cpp
-  SteamEquipment.hpp
-  SteamEquipment_Impl.hpp
-  SteamEquipment.cpp
-  SteamEquipmentDefinition.hpp
-  SteamEquipmentDefinition_Impl.hpp
-  SteamEquipmentDefinition.cpp
   StraightComponent.hpp
   StraightComponent_Impl.hpp
   StraightComponent.cpp
-  SubSurface.hpp
-  SubSurface_Impl.hpp
-  SubSurface.cpp
-  Surface.hpp
-  Surface_Impl.hpp
-  Surface.cpp
-  SurfacePropertyConvectionCoefficientsMultipleSurface.cpp
-  SurfacePropertyConvectionCoefficientsMultipleSurface.hpp
-  SurfacePropertyConvectionCoefficientsMultipleSurface_Impl.hpp
-  SurfacePropertyOtherSideCoefficients.cpp
-  SurfacePropertyOtherSideCoefficients.hpp
-  SurfacePropertyOtherSideCoefficients_Impl.hpp
-  SurfacePropertyOtherSideConditionsModel.cpp
-  SurfacePropertyOtherSideConditionsModel.hpp
-  SurfacePropertyOtherSideConditionsModel_Impl.hpp
-  TableMultiVariableLookup.hpp
-  TableMultiVariableLookup_Impl.hpp
-  TableMultiVariableLookup.cpp
   ThermalStorageChilledWaterStratified.hpp
   ThermalStorageChilledWaterStratified_Impl.hpp
   ThermalStorageChilledWaterStratified.cpp
@@ -1075,9 +1272,6 @@ set(${target_name}_src
   ThermalZone.hpp
   ThermalZone_Impl.hpp
   ThermalZone.cpp
-  ThermochromicGlazing.hpp
-  ThermochromicGlazing_Impl.hpp
-  ThermochromicGlazing.cpp
   Thermostat.hpp
   Thermostat_Impl.hpp
   Thermostat.cpp
@@ -1090,18 +1284,9 @@ set(${target_name}_src
   ZoneControlContaminantController.hpp
   ZoneControlContaminantController_Impl.hpp
   ZoneControlContaminantController.cpp
-  Timestep.hpp
-  Timestep_Impl.hpp
-  Timestep.cpp
   TemperingValve.hpp
   TemperingValve_Impl.hpp
   TemperingValve.cpp
-  Version.hpp
-  Version_Impl.hpp
-  Version.cpp
-  UtilityBill.hpp
-  UtilityBill_Impl.hpp
-  UtilityBill.cpp
   UtilityCost_Charge_Block.hpp
   UtilityCost_Charge_Block_Impl.hpp
   UtilityCost_Charge_Block.cpp
@@ -1147,36 +1332,6 @@ set(${target_name}_src
   WaterUseEquipmentDefinition.hpp
   WaterUseEquipmentDefinition_Impl.hpp
   WaterUseEquipmentDefinition.cpp
-  WeatherFile.hpp
-  WeatherFile_Impl.hpp
-  WeatherFile.cpp
-  WeatherFileConditionType.hpp
-  WeatherFileConditionType_Impl.hpp
-  WeatherFileConditionType.cpp
-  WeatherFileDays.hpp
-  WeatherFileDays_Impl.hpp
-  WeatherFileDays.cpp
-  WindowDataFile.hpp
-  WindowDataFile_Impl.hpp
-  WindowDataFile.cpp
-  WindowPropertyFrameAndDivider.hpp
-  WindowPropertyFrameAndDivider_Impl.hpp
-  WindowPropertyFrameAndDivider.cpp
-  YearDescription.hpp
-  YearDescription_Impl.hpp
-  YearDescription.cpp
-  ZoneAirContaminantBalance.hpp
-  ZoneAirContaminantBalance_Impl.hpp
-  ZoneAirContaminantBalance.cpp
-  ZoneAirHeatBalanceAlgorithm.hpp
-  ZoneAirHeatBalanceAlgorithm_Impl.hpp
-  ZoneAirHeatBalanceAlgorithm.cpp
-  ZoneAirMassFlowConservation.hpp
-  ZoneAirMassFlowConservation_Impl.hpp
-  ZoneAirMassFlowConservation.cpp
-  ZoneCapacitanceMultiplierResearchSpecial.hpp
-  ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp
-  ZoneCapacitanceMultiplierResearchSpecial.cpp
   ZoneControlHumidistat.hpp
   ZoneControlHumidistat_Impl.hpp
   ZoneControlHumidistat.cpp
@@ -1248,6 +1403,196 @@ set(${target_name}_src
   ZoneVentilationDesignFlowRate.cpp
 )
 
+# Only need to moc files that have Q_OBJECT macro
+# Only files with signals, slots, or Q_PROPERTY need to have Q_OBJECT macro
+# We want the number of files moc'd to decrease over time, run CheckForQObject.rb to remove unnecessary moc's
+set(${target_name}_hvac_moc
+  AirLoopHVAC_Impl.hpp
+  AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp
+  AirLoopHVACOutdoorAirSystem_Impl.hpp
+  AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp
+  AirTerminalSingleDuctParallelPIUReheat_Impl.hpp
+  AirTerminalSingleDuctUncontrolled_Impl.hpp
+  AirTerminalSingleDuctVAVNoReheat_Impl.hpp
+  AirTerminalSingleDuctVAVReheat_Impl.hpp
+  AvailabilityManagerNightCycle_Impl.hpp
+  BoilerHotWater_Impl.hpp
+  BoilerSteam_Impl.hpp
+  ChillerElectricEIR_Impl.hpp
+  CoilCoolingDXSingleSpeed_Impl.hpp
+  CoilCoolingWater_Impl.hpp
+  CoilHeatingDXSingleSpeed_Impl.hpp
+  CoilHeatingElectric_Impl.hpp
+  CoilHeatingGas_Impl.hpp
+  CoilHeatingWater_Impl.hpp
+  ControllerMechanicalVentilation_Impl.hpp
+  ControllerWaterCoil_Impl.hpp
+  CoolingTowerSingleSpeed_Impl.hpp
+  EvaporativeCoolerDirectResearchSpecial_Impl.hpp
+  FanConstantVolume_Impl.hpp
+  FanVariableVolume_Impl.hpp
+  HeatExchangerAirToAirSensibleAndLatent_Impl.hpp
+  HVACComponent_Impl.hpp
+  Loop_Impl.hpp
+  PumpConstantSpeed_Impl.hpp
+  PumpVariableSpeed_Impl.hpp
+  RefractionExtinctionGlazing_Impl.hpp
+  SetpointManagerMixedAir_Impl.hpp
+  SetpointManagerOutdoorAirReset_Impl.hpp
+  SetpointManagerScheduled_Impl.hpp
+  SetpointManagerSingleZoneReheat_Impl.hpp
+  SizingPlant_Impl.hpp
+  SizingSystem_Impl.hpp
+  SizingZone_Impl.hpp
+  ThermalZone_Impl.hpp
+  ThermostatSetpointDualSetpoint_Impl.hpp
+  WaterHeaterMixed_Impl.hpp
+  WaterUseConnections_Impl.hpp
+  WaterUseEquipment_Impl.hpp
+  WaterUseEquipmentDefinition_Impl.hpp
+  ZoneHVACBaseboardConvectiveElectric_Impl.hpp
+  ZoneHVACIdealLoadsAirSystem_Impl.hpp
+  ZoneHVACFourPipeFanCoil_Impl.hpp
+  ZoneHVACPackagedTerminalHeatPump_Impl.hpp
+  ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
+)
+
+qt5_wrap_cpp_minimally(${target_name}_hvac_moc_src ${${target_name}_hvac_moc})
+
+set(${target_name}_hvac_depends
+  openstudio_utilities
+)
+
+add_library(${target_name}_hvac STATIC ${${target_name}_hvac_src} ${${target_name}_hvac_moc_src})
+target_link_libraries(${target_name}_hvac "${${target_name}_hvac_depends}")
+AddPCH(${target_name}_hvac)
+
+###############################################################################
+### openstudio_model_refrigeration ############################################
+###############################################################################
+
+
+set(${target_name}_refrigeration_src
+  RefrigerationAirChiller.hpp
+  RefrigerationAirChiller_Impl.hpp
+  RefrigerationAirChiller.cpp
+  RefrigerationCase.hpp
+  RefrigerationCase_Impl.hpp
+  RefrigerationCase.cpp
+  RefrigerationCompressor.hpp
+  RefrigerationCompressor_Impl.hpp
+  RefrigerationCompressor.cpp
+  RefrigerationCondenserAirCooled.hpp
+  RefrigerationCondenserAirCooled_Impl.hpp
+  RefrigerationCondenserAirCooled.cpp
+  RefrigerationCondenserCascade.hpp
+  RefrigerationCondenserCascade_Impl.hpp
+  RefrigerationCondenserCascade.cpp
+  RefrigerationCondenserEvaporativeCooled.hpp
+  RefrigerationCondenserEvaporativeCooled_Impl.hpp
+  RefrigerationCondenserEvaporativeCooled.cpp
+  RefrigerationCondenserWaterCooled.hpp
+  RefrigerationCondenserWaterCooled_Impl.hpp
+  RefrigerationCondenserWaterCooled.cpp
+  RefrigerationDefrostCycleParameters.hpp
+  RefrigerationDefrostCycleParameters_Impl.hpp
+  RefrigerationDefrostCycleParameters.cpp
+  RefrigerationGasCoolerAirCooled.hpp
+  RefrigerationGasCoolerAirCooled_Impl.hpp
+  RefrigerationGasCoolerAirCooled.cpp
+  RefrigerationSubcoolerLiquidSuction.hpp
+  RefrigerationSubcoolerLiquidSuction_Impl.hpp
+  RefrigerationSubcoolerLiquidSuction.cpp
+  RefrigerationSubcoolerMechanical.hpp
+  RefrigerationSubcoolerMechanical_Impl.hpp
+  RefrigerationSubcoolerMechanical.cpp
+  RefrigerationSecondarySystem.hpp
+  RefrigerationSecondarySystem_Impl.hpp
+  RefrigerationSecondarySystem.cpp
+  RefrigerationSystem.hpp
+  RefrigerationSystem_Impl.hpp
+  RefrigerationSystem.cpp
+  RefrigerationTranscriticalSystem.hpp
+  RefrigerationTranscriticalSystem_Impl.hpp
+  RefrigerationTranscriticalSystem.cpp
+  RefrigerationWalkIn.hpp
+  RefrigerationWalkIn_Impl.hpp
+  RefrigerationWalkIn.cpp
+  RefrigerationWalkInZoneBoundary.hpp
+  RefrigerationWalkInZoneBoundary_Impl.hpp
+  RefrigerationWalkInZoneBoundary.cpp
+)
+
+# Only need to moc files that have Q_OBJECT macro
+# Only files with signals, slots, or Q_PROPERTY need to have Q_OBJECT macro
+# We want the number of files moc'd to decrease over time, run CheckForQObject.rb to remove unnecessary moc's
+set(${target_name}_refrigeration_moc
+)
+
+qt5_wrap_cpp_minimally(${target_name}_refrigeration_moc_src ${${target_name}_refrigeration_moc})
+
+set(${target_name}_refrigeration_depends
+  openstudio_utilities
+)
+
+add_library(${target_name}_refrigeration STATIC ${${target_name}_refrigeration_src} ${${target_name}_refrigeration_moc_src})
+target_link_libraries(${target_name}_refrigeration "${${target_name}_refrigeration_depends}")
+AddPCH(${target_name}_refrigeration)
+
+
+###############################################################################
+### openstudio_model_generators ###############################################
+###############################################################################
+
+
+set(${target_name}_generators_src
+
+  ElectricLoadCenterDistribution.hpp
+  ElectricLoadCenterDistribution_Impl.hpp
+  ElectricLoadCenterDistribution.cpp
+  ElectricLoadCenterInverterLookUpTable.hpp
+  ElectricLoadCenterInverterLookUpTable_Impl.hpp
+  ElectricLoadCenterInverterLookUpTable.cpp
+  ElectricLoadCenterInverterSimple.hpp
+  ElectricLoadCenterInverterSimple_Impl.hpp
+  ElectricLoadCenterInverterSimple.cpp
+  Generator.hpp
+  Generator_Impl.hpp
+  Generator.cpp 
+  GeneratorPhotovoltaic.hpp
+  GeneratorPhotovoltaic_Impl.hpp
+  GeneratorPhotovoltaic.cpp  
+  Inverter.hpp
+  Inverter_Impl.hpp
+  Inverter.cpp  
+  PhotovoltaicPerformance.hpp
+  PhotovoltaicPerformance_Impl.hpp
+  PhotovoltaicPerformance.cpp
+  PhotovoltaicPerformanceEquivalentOneDiode.hpp
+  PhotovoltaicPerformanceEquivalentOneDiode_Impl.hpp
+  PhotovoltaicPerformanceEquivalentOneDiode.cpp
+  PhotovoltaicPerformanceSimple.hpp
+  PhotovoltaicPerformanceSimple_Impl.hpp
+  PhotovoltaicPerformanceSimple.cpp
+)
+
+# Only need to moc files that have Q_OBJECT macro
+# Only files with signals, slots, or Q_PROPERTY need to have Q_OBJECT macro
+# We want the number of files moc'd to decrease over time, run CheckForQObject.rb to remove unnecessary moc's
+set(${target_name}_generators_moc
+
+)
+
+qt5_wrap_cpp_minimally(${target_name}_generators_moc_src ${${target_name}_generators_moc})
+
+set(${target_name}_generators_depends
+  openstudio_utilities
+)
+
+add_library(${target_name}_generators STATIC ${${target_name}_generators_src} ${${target_name}_generators_moc_src})
+target_link_libraries(${target_name}_generators "${${target_name}_generators_depends}")
+AddPCH(${target_name}_generators)
+
 set(${target_name}_swig_src
   Model_Common_Include.i
   Model.i
@@ -1259,217 +1604,6 @@ set(${target_name}_swig_src
   ModelRefrigeration.i
   ModelGenerators.i
 )
-
-# Only need to moc files that have Q_OBJECT macro
-# Only files with signals, slots, or Q_PROPERTY need to have Q_OBJECT macro
-# We want the number of files moc'd to decrease over time, run CheckForQObject.rb to remove unnecessary moc's
-set(${target_name}_moc
-  Model_Impl.hpp
-  Component_Impl.hpp
-  ComponentWatcher_Impl.hpp
-  ModelObject_Impl.hpp
-
-  AirGap_Impl.hpp
-  AirLoopHVAC_Impl.hpp
-  AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp
-  AirLoopHVACOutdoorAirSystem_Impl.hpp
-  AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp
-  AirTerminalSingleDuctParallelPIUReheat_Impl.hpp
-  AirTerminalSingleDuctUncontrolled_Impl.hpp
-  AirTerminalSingleDuctVAVNoReheat_Impl.hpp
-  AirTerminalSingleDuctVAVReheat_Impl.hpp
-  AvailabilityManagerNightCycle_Impl.hpp
-  Blind_Impl.hpp
-  BoilerHotWater_Impl.hpp
-  BoilerSteam_Impl.hpp
-  Building_Impl.hpp
-  BuildingStory_Impl.hpp
-  CFactorUndergroundWallConstruction_Impl.hpp
-  ChillerElectricEIR_Impl.hpp
-  CoilCoolingDXSingleSpeed_Impl.hpp
-  CoilCoolingWater_Impl.hpp
-  CoilHeatingDXSingleSpeed_Impl.hpp
-  CoilHeatingElectric_Impl.hpp
-  CoilHeatingGas_Impl.hpp
-  CoilHeatingWater_Impl.hpp
-  ComponentData_Impl.hpp
-  ConstructionBase_Impl.hpp
-  ConstructionWithInternalSource_Impl.hpp
-  ControllerMechanicalVentilation_Impl.hpp
-  ControllerWaterCoil_Impl.hpp
-  ConvergenceLimits_Impl.hpp
-  CoolingTowerSingleSpeed_Impl.hpp
-  Curve_Impl.hpp
-  CurveBicubic_Impl.hpp
-  CurveBiquadratic_Impl.hpp
-  CurveCubic_Impl.hpp
-  CurveDoubleExponentialDecay_Impl.hpp
-  CurveExponent_Impl.hpp
-  CurveExponentialDecay_Impl.hpp
-  CurveExponentialSkewNormal_Impl.hpp
-  CurveFanPressureRise_Impl.hpp
-  CurveFunctionalPressureDrop_Impl.hpp
-  CurveLinear_Impl.hpp
-  CurveQuadratic_Impl.hpp
-  CurveQuadraticLinear_Impl.hpp
-  CurveQuartic_Impl.hpp
-  CurveRectangularHyperbola1_Impl.hpp
-  CurveRectangularHyperbola2_Impl.hpp
-  CurveSigmoid_Impl.hpp
-  CurveTriquadratic_Impl.hpp
-  DaylightingControl_Impl.hpp
-  DefaultConstructionSet_Impl.hpp
-  DefaultScheduleSet_Impl.hpp
-  DefaultSubSurfaceConstructions_Impl.hpp
-  DefaultSurfaceConstructions_Impl.hpp
-  DesignDay_Impl.hpp
-  DesignSpecificationOutdoorAir_Impl.hpp
-  DesignSpecificationZoneAirDistribution_Impl.hpp
-  ElectricEquipment_Impl.hpp
-  ElectricEquipmentDefinition_Impl.hpp
-  EvaporativeCoolerDirectResearchSpecial_Impl.hpp
-  ExteriorLights_Impl.hpp
-  ExteriorLightsDefinition_Impl.hpp
-  Facility_Impl.hpp
-  FanConstantVolume_Impl.hpp
-  FanVariableVolume_Impl.hpp
-  FFactorGroundFloorConstruction_Impl.hpp
-  Gas_Impl.hpp
-  GasEquipment_Impl.hpp
-  GasEquipmentDefinition_Impl.hpp
-  GasMixture_Impl.hpp
-  GlareSensor_Impl.hpp
-  HeatBalanceAlgorithm_Impl.hpp
-  HeatExchangerAirToAirSensibleAndLatent_Impl.hpp
-  HotWaterEquipment_Impl.hpp
-  HotWaterEquipmentDefinition_Impl.hpp
-  HVACComponent_Impl.hpp
-  IlluminanceMap_Impl.hpp
-  InsideSurfaceConvectionAlgorithm_Impl.hpp
-  InternalMass_Impl.hpp
-  InternalMassDefinition_Impl.hpp
-  InteriorPartitionSurface_Impl.hpp
-  InteriorPartitionSurfaceGroup_Impl.hpp
-  LayeredConstruction_Impl.hpp
-  LifeCycleCost_Impl.hpp
-  LightingDesignDay_Impl.hpp
-  LightingSimulationControl_Impl.hpp
-  Lights_Impl.hpp
-  LightsDefinition_Impl.hpp
-  Loop_Impl.hpp
-  Luminaire_Impl.hpp
-  LuminaireDefinition_Impl.hpp
-  MasslessOpaqueMaterial_Impl.hpp
-  Material_Impl.hpp
-  Meter_Impl.hpp
-  OpaqueMaterial_Impl.hpp
-  OtherEquipment_Impl.hpp
-  OtherEquipmentDefinition_Impl.hpp
-  OutputControlReportingTolerances_Impl.hpp
-  OutputVariable_Impl.hpp
-  OutsideSurfaceConvectionAlgorithm_Impl.hpp
-  ParentObject_Impl.hpp
-  People_Impl.hpp
-  PlanarSurface_Impl.hpp
-  PlanarSurfaceGroup_Impl.hpp
-  ProgramControl_Impl.hpp
-  PumpConstantSpeed_Impl.hpp
-  PumpVariableSpeed_Impl.hpp
-  RadianceParameters_Impl.hpp
-  RefractionExtinctionGlazing_Impl.hpp
-  RenderingColor_Impl.hpp
-  RoofVegetation_Impl.hpp
-  ScheduleBase_Impl.hpp
-  ScheduleConstant_Impl.hpp
-  ScheduleDay_Impl.hpp
-  ScheduleFixedInterval_Impl.hpp
-  ScheduleRule_Impl.hpp
-  ScheduleTypeLimits_Impl.hpp
-  ScheduleVariableInterval_Impl.hpp
-  Screen_Impl.hpp
-  SetpointManagerMixedAir_Impl.hpp
-  SetpointManagerOutdoorAirReset_Impl.hpp
-  SetpointManagerScheduled_Impl.hpp
-  SetpointManagerSingleZoneReheat_Impl.hpp
-  Shade_Impl.hpp
-  ShadingSurface_Impl.hpp
-  ShadingSurfaceGroup_Impl.hpp
-  ShadowCalculation_Impl.hpp
-  SimpleGlazing_Impl.hpp
-  SimulationControl_Impl.hpp
-  Site_Impl.hpp
-  SiteGroundReflectance_Impl.hpp
-  SiteGroundTemperatureBuildingSurface_Impl.hpp
-  SiteWaterMainsTemperature_Impl.hpp
-  SizingParameters_Impl.hpp
-  SizingPlant_Impl.hpp
-  SizingSystem_Impl.hpp
-  SizingZone_Impl.hpp
-  Space_Impl.hpp
-  SpaceInfiltrationDesignFlowRate_Impl.hpp
-  SpaceInfiltrationEffectiveLeakageArea_Impl.hpp
-  SpaceItem_Impl.hpp
-  SpaceLoad_Impl.hpp
-  SpaceLoadInstance_Impl.hpp
-  SpaceType_Impl.hpp
-  StandardGlazing_Impl.hpp
-  StandardOpaqueMaterial_Impl.hpp
-  SteamEquipment_Impl.hpp
-  SteamEquipmentDefinition_Impl.hpp
-  SubSurface_Impl.hpp
-  Surface_Impl.hpp
-  ThermalZone_Impl.hpp
-  ThermostatSetpointDualSetpoint_Impl.hpp
-  Timestep_Impl.hpp
-  WaterHeaterMixed_Impl.hpp
-  WaterUseConnections_Impl.hpp
-  WaterUseEquipment_Impl.hpp
-  WaterUseEquipmentDefinition_Impl.hpp
-  WeatherFile_Impl.hpp
-  YearDescription_Impl.hpp
-  ZoneAirContaminantBalance_Impl.hpp
-  ZoneAirHeatBalanceAlgorithm_Impl.hpp
-  ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp
-  ZoneHVACBaseboardConvectiveElectric_Impl.hpp
-  ZoneHVACIdealLoadsAirSystem_Impl.hpp
-  ZoneHVACFourPipeFanCoil_Impl.hpp
-  ZoneHVACPackagedTerminalHeatPump_Impl.hpp
-  ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
-)
-
-qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
-
-set(${target_name}_qrc
-  Model.qrc
-)
-
-# generate rules for building source files from the resources
-qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
-
-
-set(${target_name}_depends
-  openstudio_utilities
-)
-
-add_library(${target_name} STATIC ${${target_name}_src} ${${target_name}_moc_src} ${${target_name}_qrcs})
-target_link_libraries(${target_name} "${${target_name}_depends}")
-AddPCH(${target_name})
-
-
-# No need to install static lib
-#if(NOT APPLE)
-#  install(TARGETS ${target_name}
-#    RUNTIME DESTINATION bin
-#    LIBRARY DESTINATION lib
-#  )
-#endif()
-
-
-# Compiler and system specific options
-if(UNIX OR MINGW)
-  # treat warnings as errors
-  #set_target_properties("${target_name}" PROPERTIES "COMPILE_FLAGS" "-Werror")
-endif()
 
 set(${target_name}_test_src
   test/AirConditionerVariableRefrigerantFlow_GTest.cpp
@@ -1755,7 +1889,14 @@ set(${target_name}_test_src
 )
 
 set(${target_name}_test_depends
-  ${${target_name}_depends}
+  openstudio_utilities
+  ${target_name}_core
+  ${target_name}_resources_temp
+  ${target_name}_simulation
+  ${target_name}_geometry
+  ${target_name}_hvac
+  ${target_name}_refrigeration
+  ${target_name}_generators
 )
 
 CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
@@ -1774,18 +1915,18 @@ if(BUILD_TESTING)
 endif()
 
 
-MAKE_SWIG_TARGET(OpenStudioModelCore model "${CMAKE_CURRENT_SOURCE_DIR}/ModelCore.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilities)
+MAKE_SWIG_TARGET(OpenStudioModelCore model "${CMAKE_CURRENT_SOURCE_DIR}/ModelCore.i" "${${target_name}_swig_src}" ${target_name}_core OpenStudioUtilities)
 
-MAKE_SWIG_TARGET(OpenStudioModelSimulation model "${CMAKE_CURRENT_SOURCE_DIR}/ModelSimulation.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelCore)
+MAKE_SWIG_TARGET(OpenStudioModelSimulation model "${CMAKE_CURRENT_SOURCE_DIR}/ModelSimulation.i" "${${target_name}_swig_src}" ${target_name}_simulation OpenStudioModelCore)
 
-MAKE_SWIG_TARGET(OpenStudioModelResources model "${CMAKE_CURRENT_SOURCE_DIR}/ModelResources.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelSimulation)
+MAKE_SWIG_TARGET(OpenStudioModelResources model "${CMAKE_CURRENT_SOURCE_DIR}/ModelResources.i" "${${target_name}_swig_src}" ${target_name}_resources_temp OpenStudioModelSimulation)
 
-MAKE_SWIG_TARGET(OpenStudioModelGeometry model "${CMAKE_CURRENT_SOURCE_DIR}/ModelGeometry.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelResources)
+MAKE_SWIG_TARGET(OpenStudioModelGeometry model "${CMAKE_CURRENT_SOURCE_DIR}/ModelGeometry.i" "${${target_name}_swig_src}" ${target_name}_geometry OpenStudioModelResources)
 
-MAKE_SWIG_TARGET(OpenStudioModelHVAC model "${CMAKE_CURRENT_SOURCE_DIR}/ModelHVAC.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelGeometry)
+MAKE_SWIG_TARGET(OpenStudioModelHVAC model "${CMAKE_CURRENT_SOURCE_DIR}/ModelHVAC.i" "${${target_name}_swig_src}" ${target_name}_hvac OpenStudioModelGeometry)
 
-MAKE_SWIG_TARGET(OpenStudioModelRefrigeration model "${CMAKE_CURRENT_SOURCE_DIR}/ModelRefrigeration.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelHVAC)
+MAKE_SWIG_TARGET(OpenStudioModelRefrigeration model "${CMAKE_CURRENT_SOURCE_DIR}/ModelRefrigeration.i" "${${target_name}_swig_src}" ${target_name}_refrigeration OpenStudioModelHVAC)
 
-MAKE_SWIG_TARGET(OpenStudioModelGenerators model "${CMAKE_CURRENT_SOURCE_DIR}/ModelGenerators.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelRefrigeration)
+MAKE_SWIG_TARGET(OpenStudioModelGenerators model "${CMAKE_CURRENT_SOURCE_DIR}/ModelGenerators.i" "${${target_name}_swig_src}" ${target_name}_generators OpenStudioModelRefrigeration)
 
-MAKE_SWIG_TARGET(OpenStudioModel model "${CMAKE_CURRENT_SOURCE_DIR}/Model.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelGenerators)
+MAKE_SWIG_TARGET(OpenStudioModel model "${CMAKE_CURRENT_SOURCE_DIR}/Model.i" "${${target_name}_swig_src}" ${target_name}_generators OpenStudioModelGenerators)

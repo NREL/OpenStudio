@@ -58,6 +58,9 @@ macro(CREATE_TEST_TARGETS BASE_NAME SRC DEPENDENCIES)
     if("${BASE_NAME_TYPE}" STREQUAL "EXECUTABLE")
       # don't link base name
       set(ALL_DEPENDENCIES ${DEPENDENCIES})
+    elseif("${BASE_NAME_TYPE}" STREQUAL "BASE_NAME_TYPE-NOTFOUND")
+      # don't link base name
+      set(ALL_DEPENDENCIES ${DEPENDENCIES})
     else()
       # also link base name
       set(ALL_DEPENDENCIES ${BASE_NAME} ${DEPENDENCIES})
@@ -113,7 +116,23 @@ endmacro()
 # add a swig target
 # KEY_I_FILE should include path, see src/utilities/CMakeLists.txt.
 macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_SWIG_TARGETS)
-  set(DEPENDS "${PARENT_TARGET}")
+  
+  string(REGEX MATCH "model" IS_MODEL "${SIMPLENAME}")
+  if(IS_MODEL)
+    set( DEPENDS   
+      openstudio_model_core
+      openstudio_model_resources_temp
+      openstudio_model_simulation
+      openstudio_model_geometry
+      openstudio_model_hvac
+      openstudio_model_refrigeration
+      openstudio_model_generators
+    )
+  else()
+    set(DEPENDS "${PARENT_TARGET}")
+  endif()
+  
+  
   set(SWIG_DEFINES "")
   set(SWIG_COMMON "")
 

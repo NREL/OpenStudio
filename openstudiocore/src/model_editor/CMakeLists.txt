@@ -116,7 +116,13 @@ add_library(${target_name} SHARED
 # lib dependencies
 set(${target_name}_depends
   openstudio_energyplus
-  openstudio_model
+  openstudio_model_core
+  openstudio_model_resources_temp
+  openstudio_model_simulation
+  openstudio_model_geometry
+  openstudio_model_hvac
+  openstudio_model_refrigeration
+  openstudio_model_generators
 )
 
 add_dependencies(${target_name} ${${target_name}_depends})

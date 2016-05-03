@@ -484,7 +484,13 @@ set(${target_name}_swig_src
 ##qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
 
 set(${target_name}_depends
-  openstudio_model
+  openstudio_model_core
+  openstudio_model_resources_temp
+  openstudio_model_simulation
+  openstudio_model_geometry
+  openstudio_model_hvac
+  openstudio_model_refrigeration
+  openstudio_model_generators
 )
 
 set(FILES 

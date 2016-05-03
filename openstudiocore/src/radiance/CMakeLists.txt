@@ -31,7 +31,13 @@ set(${target_name}_test_src
 )
 
 set(${target_name}_depends
-  openstudio_model
+  openstudio_model_core
+  openstudio_model_resources_temp
+  openstudio_model_simulation
+  openstudio_model_geometry
+  openstudio_model_hvac
+  openstudio_model_refrigeration
+  openstudio_model_generators
 )
 
 set(${target_name}_swig_src

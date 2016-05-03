@@ -962,7 +962,13 @@ set(all_lib_targets
   #openstudio_runmanager
   #openstudio_project
   openstudio_osversion
-  openstudio_model
+  openstudio_model_core
+  openstudio_model_resources_temp
+  openstudio_model_simulation
+  openstudio_model_geometry
+  openstudio_model_hvac
+  openstudio_model_refrigeration
+  openstudio_model_generators
   openstudio_modeleditor
   openstudio_utilities
   openstudio_energyplus
