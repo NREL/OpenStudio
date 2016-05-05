@@ -39,6 +39,8 @@ class MODEL_API SiteGroundTemperatureDeep : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
+  explicit SiteGroundTemperatureDeep(Model& model);
+
   virtual ~SiteGroundTemperatureDeep() {}
 
   //@}
@@ -161,8 +163,6 @@ class MODEL_API SiteGroundTemperatureDeep : public ModelObject {
   friend class detail::SiteGroundTemperatureDeep_Impl;
 
   explicit SiteGroundTemperatureDeep(std::shared_ptr<detail::SiteGroundTemperatureDeep_Impl> impl);
-
-  explicit SiteGroundTemperatureDeep(Model& model);
 
   /// @endcond
  private:

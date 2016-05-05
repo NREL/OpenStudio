@@ -1702,6 +1702,7 @@ set(${target_name}_test_src
   test/SimpleGlazing_GTest.cpp
   test/SimulationControl_GTest.cpp
   test/Site_GTest.cpp
+  test/SiteGroundTemperatureDeep_GTest.cpp
   test/SizingPlant_GTest.cpp
   test/SizingSystem_GTest.cpp
   test/SizingZone_GTest.cpp
