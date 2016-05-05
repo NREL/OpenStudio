@@ -36,8 +36,8 @@ namespace model {
 namespace detail {
 
   SiteGroundTemperatureDeep_Impl::SiteGroundTemperatureDeep_Impl(
-      const IdfObject& idfObject, 
-      Model_Impl* model, 
+      const IdfObject& idfObject,
+      Model_Impl* model,
       bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
@@ -76,243 +76,243 @@ namespace detail {
     return SiteGroundTemperatureDeep::iddObjectType();
   }
 
-  double SiteGroundTemperatureDeep_Impl::januaryGroundTemperature() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_DeepFields::JanuaryGroundTemperature,true);
+  double SiteGroundTemperatureDeep_Impl::januaryDeepGroundTemperature() const {
+    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_DeepFields::JanuaryDeepGroundTemperature,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool SiteGroundTemperatureDeep_Impl::isJanuaryGroundTemperatureDefaulted() const {
-    return isEmpty(OS_Site_GroundTemperature_DeepFields::JanuaryGroundTemperature);
+  bool SiteGroundTemperatureDeep_Impl::isJanuaryDeepGroundTemperatureDefaulted() const {
+    return isEmpty(OS_Site_GroundTemperature_DeepFields::JanuaryDeepGroundTemperature);
   }
 
-  double SiteGroundTemperatureDeep_Impl::februaryGroundTemperature() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_DeepFields::FebruaryGroundTemperature,true);
+  double SiteGroundTemperatureDeep_Impl::februaryDeepGroundTemperature() const {
+    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_DeepFields::FebruaryDeepGroundTemperature,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool SiteGroundTemperatureDeep_Impl::isFebruaryGroundTemperatureDefaulted() const {
-    return isEmpty(OS_Site_GroundTemperature_DeepFields::FebruaryGroundTemperature);
+  bool SiteGroundTemperatureDeep_Impl::isFebruaryDeepGroundTemperatureDefaulted() const {
+    return isEmpty(OS_Site_GroundTemperature_DeepFields::FebruaryDeepGroundTemperature);
   }
 
-  double SiteGroundTemperatureDeep_Impl::marchGroundTemperature() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_DeepFields::MarchGroundTemperature,true);
+  double SiteGroundTemperatureDeep_Impl::marchDeepGroundTemperature() const {
+    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_DeepFields::MarchDeepGroundTemperature,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool SiteGroundTemperatureDeep_Impl::isMarchGroundTemperatureDefaulted() const {
-    return isEmpty(OS_Site_GroundTemperature_DeepFields::MarchGroundTemperature);
+  bool SiteGroundTemperatureDeep_Impl::isMarchDeepGroundTemperatureDefaulted() const {
+    return isEmpty(OS_Site_GroundTemperature_DeepFields::MarchDeepGroundTemperature);
   }
 
-  double SiteGroundTemperatureDeep_Impl::aprilGroundTemperature() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_DeepFields::AprilGroundTemperature,true);
+  double SiteGroundTemperatureDeep_Impl::aprilDeepGroundTemperature() const {
+    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_DeepFields::AprilDeepGroundTemperature,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool SiteGroundTemperatureDeep_Impl::isAprilGroundTemperatureDefaulted() const {
-    return isEmpty(OS_Site_GroundTemperature_DeepFields::AprilGroundTemperature);
+  bool SiteGroundTemperatureDeep_Impl::isAprilDeepGroundTemperatureDefaulted() const {
+    return isEmpty(OS_Site_GroundTemperature_DeepFields::AprilDeepGroundTemperature);
   }
 
-  double SiteGroundTemperatureDeep_Impl::mayGroundTemperature() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_DeepFields::MayGroundTemperature,true);
+  double SiteGroundTemperatureDeep_Impl::mayDeepGroundTemperature() const {
+    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_DeepFields::MayDeepGroundTemperature,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool SiteGroundTemperatureDeep_Impl::isMayGroundTemperatureDefaulted() const {
-    return isEmpty(OS_Site_GroundTemperature_DeepFields::MayGroundTemperature);
+  bool SiteGroundTemperatureDeep_Impl::isMayDeepGroundTemperatureDefaulted() const {
+    return isEmpty(OS_Site_GroundTemperature_DeepFields::MayDeepGroundTemperature);
   }
 
-  double SiteGroundTemperatureDeep_Impl::juneGroundTemperature() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_DeepFields::JuneGroundTemperature,true);
+  double SiteGroundTemperatureDeep_Impl::juneDeepGroundTemperature() const {
+    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_DeepFields::JuneDeepGroundTemperature,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool SiteGroundTemperatureDeep_Impl::isJuneGroundTemperatureDefaulted() const {
-    return isEmpty(OS_Site_GroundTemperature_DeepFields::JuneGroundTemperature);
+  bool SiteGroundTemperatureDeep_Impl::isJuneDeepGroundTemperatureDefaulted() const {
+    return isEmpty(OS_Site_GroundTemperature_DeepFields::JuneDeepGroundTemperature);
   }
 
-  double SiteGroundTemperatureDeep_Impl::julyGroundTemperature() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_DeepFields::JulyGroundTemperature,true);
+  double SiteGroundTemperatureDeep_Impl::julyDeepGroundTemperature() const {
+    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_DeepFields::JulyDeepGroundTemperature,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool SiteGroundTemperatureDeep_Impl::isJulyGroundTemperatureDefaulted() const {
-    return isEmpty(OS_Site_GroundTemperature_DeepFields::JulyGroundTemperature);
+  bool SiteGroundTemperatureDeep_Impl::isJulyDeepGroundTemperatureDefaulted() const {
+    return isEmpty(OS_Site_GroundTemperature_DeepFields::JulyDeepGroundTemperature);
   }
 
-  double SiteGroundTemperatureDeep_Impl::augustGroundTemperature() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_DeepFields::AugustGroundTemperature,true);
+  double SiteGroundTemperatureDeep_Impl::augustDeepGroundTemperature() const {
+    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_DeepFields::AugustDeepGroundTemperature,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool SiteGroundTemperatureDeep_Impl::isAugustGroundTemperatureDefaulted() const {
-    return isEmpty(OS_Site_GroundTemperature_DeepFields::AugustGroundTemperature);
+  bool SiteGroundTemperatureDeep_Impl::isAugustDeepGroundTemperatureDefaulted() const {
+    return isEmpty(OS_Site_GroundTemperature_DeepFields::AugustDeepGroundTemperature);
   }
 
-  double SiteGroundTemperatureDeep_Impl::septemberGroundTemperature() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_DeepFields::SeptemberGroundTemperature,true);
+  double SiteGroundTemperatureDeep_Impl::septemberDeepGroundTemperature() const {
+    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_DeepFields::SeptemberDeepGroundTemperature,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool SiteGroundTemperatureDeep_Impl::isSeptemberGroundTemperatureDefaulted() const {
-    return isEmpty(OS_Site_GroundTemperature_DeepFields::SeptemberGroundTemperature);
+  bool SiteGroundTemperatureDeep_Impl::isSeptemberDeepGroundTemperatureDefaulted() const {
+    return isEmpty(OS_Site_GroundTemperature_DeepFields::SeptemberDeepGroundTemperature);
   }
 
-  double SiteGroundTemperatureDeep_Impl::octoberGroundTemperature() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_DeepFields::OctoberGroundTemperature,true);
+  double SiteGroundTemperatureDeep_Impl::octoberDeepGroundTemperature() const {
+    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_DeepFields::OctoberDeepGroundTemperature,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool SiteGroundTemperatureDeep_Impl::isOctoberGroundTemperatureDefaulted() const {
-    return isEmpty(OS_Site_GroundTemperature_DeepFields::OctoberGroundTemperature);
+  bool SiteGroundTemperatureDeep_Impl::isOctoberDeepGroundTemperatureDefaulted() const {
+    return isEmpty(OS_Site_GroundTemperature_DeepFields::OctoberDeepGroundTemperature);
   }
 
-  double SiteGroundTemperatureDeep_Impl::novemberGroundTemperature() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_DeepFields::NovemberGroundTemperature,true);
+  double SiteGroundTemperatureDeep_Impl::novemberDeepGroundTemperature() const {
+    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_DeepFields::NovemberDeepGroundTemperature,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool SiteGroundTemperatureDeep_Impl::isNovemberGroundTemperatureDefaulted() const {
-    return isEmpty(OS_Site_GroundTemperature_DeepFields::NovemberGroundTemperature);
+  bool SiteGroundTemperatureDeep_Impl::isNovemberDeepGroundTemperatureDefaulted() const {
+    return isEmpty(OS_Site_GroundTemperature_DeepFields::NovemberDeepGroundTemperature);
   }
 
-  double SiteGroundTemperatureDeep_Impl::decemberGroundTemperature() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_DeepFields::DecemberGroundTemperature,true);
+  double SiteGroundTemperatureDeep_Impl::decemberDeepGroundTemperature() const {
+    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_DeepFields::DecemberDeepGroundTemperature,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool SiteGroundTemperatureDeep_Impl::isDecemberGroundTemperatureDefaulted() const {
-    return isEmpty(OS_Site_GroundTemperature_DeepFields::DecemberGroundTemperature);
+  bool SiteGroundTemperatureDeep_Impl::isDecemberDeepGroundTemperatureDefaulted() const {
+    return isEmpty(OS_Site_GroundTemperature_DeepFields::DecemberDeepGroundTemperature);
   }
 
-  void SiteGroundTemperatureDeep_Impl::setJanuaryGroundTemperature(double januaryGroundTemperature) {
-    bool result = setDouble(OS_Site_GroundTemperature_DeepFields::JanuaryGroundTemperature, januaryGroundTemperature);
+  void SiteGroundTemperatureDeep_Impl::setJanuaryDeepGroundTemperature(double januaryDeepGroundTemperature) {
+    bool result = setDouble(OS_Site_GroundTemperature_DeepFields::JanuaryDeepGroundTemperature, januaryDeepGroundTemperature);
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureDeep_Impl::resetJanuaryGroundTemperature() {
-    bool result = setString(OS_Site_GroundTemperature_DeepFields::JanuaryGroundTemperature, "");
+  void SiteGroundTemperatureDeep_Impl::resetJanuaryDeepGroundTemperature() {
+    bool result = setString(OS_Site_GroundTemperature_DeepFields::JanuaryDeepGroundTemperature, "");
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureDeep_Impl::setFebruaryGroundTemperature(double februaryGroundTemperature) {
-    bool result = setDouble(OS_Site_GroundTemperature_DeepFields::FebruaryGroundTemperature, februaryGroundTemperature);
+  void SiteGroundTemperatureDeep_Impl::setFebruaryDeepGroundTemperature(double februaryDeepGroundTemperature) {
+    bool result = setDouble(OS_Site_GroundTemperature_DeepFields::FebruaryDeepGroundTemperature, februaryDeepGroundTemperature);
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureDeep_Impl::resetFebruaryGroundTemperature() {
-    bool result = setString(OS_Site_GroundTemperature_DeepFields::FebruaryGroundTemperature, "");
+  void SiteGroundTemperatureDeep_Impl::resetFebruaryDeepGroundTemperature() {
+    bool result = setString(OS_Site_GroundTemperature_DeepFields::FebruaryDeepGroundTemperature, "");
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureDeep_Impl::setMarchGroundTemperature(double marchGroundTemperature) {
-    bool result = setDouble(OS_Site_GroundTemperature_DeepFields::MarchGroundTemperature, marchGroundTemperature);
+  void SiteGroundTemperatureDeep_Impl::setMarchDeepGroundTemperature(double marchDeepGroundTemperature) {
+    bool result = setDouble(OS_Site_GroundTemperature_DeepFields::MarchDeepGroundTemperature, marchDeepGroundTemperature);
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureDeep_Impl::resetMarchGroundTemperature() {
-    bool result = setString(OS_Site_GroundTemperature_DeepFields::MarchGroundTemperature, "");
+  void SiteGroundTemperatureDeep_Impl::resetMarchDeepGroundTemperature() {
+    bool result = setString(OS_Site_GroundTemperature_DeepFields::MarchDeepGroundTemperature, "");
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureDeep_Impl::setAprilGroundTemperature(double aprilGroundTemperature) {
-    bool result = setDouble(OS_Site_GroundTemperature_DeepFields::AprilGroundTemperature, aprilGroundTemperature);
+  void SiteGroundTemperatureDeep_Impl::setAprilDeepGroundTemperature(double aprilDeepGroundTemperature) {
+    bool result = setDouble(OS_Site_GroundTemperature_DeepFields::AprilDeepGroundTemperature, aprilDeepGroundTemperature);
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureDeep_Impl::resetAprilGroundTemperature() {
-    bool result = setString(OS_Site_GroundTemperature_DeepFields::AprilGroundTemperature, "");
+  void SiteGroundTemperatureDeep_Impl::resetAprilDeepGroundTemperature() {
+    bool result = setString(OS_Site_GroundTemperature_DeepFields::AprilDeepGroundTemperature, "");
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureDeep_Impl::setMayGroundTemperature(double mayGroundTemperature) {
-    bool result = setDouble(OS_Site_GroundTemperature_DeepFields::MayGroundTemperature, mayGroundTemperature);
+  void SiteGroundTemperatureDeep_Impl::setMayDeepGroundTemperature(double mayDeepGroundTemperature) {
+    bool result = setDouble(OS_Site_GroundTemperature_DeepFields::MayDeepGroundTemperature, mayDeepGroundTemperature);
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureDeep_Impl::resetMayGroundTemperature() {
-    bool result = setString(OS_Site_GroundTemperature_DeepFields::MayGroundTemperature, "");
+  void SiteGroundTemperatureDeep_Impl::resetMayDeepGroundTemperature() {
+    bool result = setString(OS_Site_GroundTemperature_DeepFields::MayDeepGroundTemperature, "");
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureDeep_Impl::setJuneGroundTemperature(double juneGroundTemperature) {
-    bool result = setDouble(OS_Site_GroundTemperature_DeepFields::JuneGroundTemperature, juneGroundTemperature);
+  void SiteGroundTemperatureDeep_Impl::setJuneDeepGroundTemperature(double juneDeepGroundTemperature) {
+    bool result = setDouble(OS_Site_GroundTemperature_DeepFields::JuneDeepGroundTemperature, juneDeepGroundTemperature);
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureDeep_Impl::resetJuneGroundTemperature() {
-    bool result = setString(OS_Site_GroundTemperature_DeepFields::JuneGroundTemperature, "");
+  void SiteGroundTemperatureDeep_Impl::resetJuneDeepGroundTemperature() {
+    bool result = setString(OS_Site_GroundTemperature_DeepFields::JuneDeepGroundTemperature, "");
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureDeep_Impl::setJulyGroundTemperature(double julyGroundTemperature) {
-    bool result = setDouble(OS_Site_GroundTemperature_DeepFields::JulyGroundTemperature, julyGroundTemperature);
+  void SiteGroundTemperatureDeep_Impl::setJulyDeepGroundTemperature(double julyDeepGroundTemperature) {
+    bool result = setDouble(OS_Site_GroundTemperature_DeepFields::JulyDeepGroundTemperature, julyDeepGroundTemperature);
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureDeep_Impl::resetJulyGroundTemperature() {
-    bool result = setString(OS_Site_GroundTemperature_DeepFields::JulyGroundTemperature, "");
+  void SiteGroundTemperatureDeep_Impl::resetJulyDeepGroundTemperature() {
+    bool result = setString(OS_Site_GroundTemperature_DeepFields::JulyDeepGroundTemperature, "");
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureDeep_Impl::setAugustGroundTemperature(double augustGroundTemperature) {
-    bool result = setDouble(OS_Site_GroundTemperature_DeepFields::AugustGroundTemperature, augustGroundTemperature);
+  void SiteGroundTemperatureDeep_Impl::setAugustDeepGroundTemperature(double augustDeepGroundTemperature) {
+    bool result = setDouble(OS_Site_GroundTemperature_DeepFields::AugustDeepGroundTemperature, augustDeepGroundTemperature);
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureDeep_Impl::resetAugustGroundTemperature() {
-    bool result = setString(OS_Site_GroundTemperature_DeepFields::AugustGroundTemperature, "");
+  void SiteGroundTemperatureDeep_Impl::resetAugustDeepGroundTemperature() {
+    bool result = setString(OS_Site_GroundTemperature_DeepFields::AugustDeepGroundTemperature, "");
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureDeep_Impl::setSeptemberGroundTemperature(double septemberGroundTemperature) {
-    bool result = setDouble(OS_Site_GroundTemperature_DeepFields::SeptemberGroundTemperature, septemberGroundTemperature);
+  void SiteGroundTemperatureDeep_Impl::setSeptemberDeepGroundTemperature(double septemberDeepGroundTemperature) {
+    bool result = setDouble(OS_Site_GroundTemperature_DeepFields::SeptemberDeepGroundTemperature, septemberDeepGroundTemperature);
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureDeep_Impl::resetSeptemberGroundTemperature() {
-    bool result = setString(OS_Site_GroundTemperature_DeepFields::SeptemberGroundTemperature, "");
+  void SiteGroundTemperatureDeep_Impl::resetSeptemberDeepGroundTemperature() {
+    bool result = setString(OS_Site_GroundTemperature_DeepFields::SeptemberDeepGroundTemperature, "");
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureDeep_Impl::setOctoberGroundTemperature(double octoberGroundTemperature) {
-    bool result = setDouble(OS_Site_GroundTemperature_DeepFields::OctoberGroundTemperature, octoberGroundTemperature);
+  void SiteGroundTemperatureDeep_Impl::setOctoberDeepGroundTemperature(double octoberDeepGroundTemperature) {
+    bool result = setDouble(OS_Site_GroundTemperature_DeepFields::OctoberDeepGroundTemperature, octoberDeepGroundTemperature);
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureDeep_Impl::resetOctoberGroundTemperature() {
-    bool result = setString(OS_Site_GroundTemperature_DeepFields::OctoberGroundTemperature, "");
+  void SiteGroundTemperatureDeep_Impl::resetOctoberDeepGroundTemperature() {
+    bool result = setString(OS_Site_GroundTemperature_DeepFields::OctoberDeepGroundTemperature, "");
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureDeep_Impl::setNovemberGroundTemperature(double novemberGroundTemperature) {
-    bool result = setDouble(OS_Site_GroundTemperature_DeepFields::NovemberGroundTemperature, novemberGroundTemperature);
+  void SiteGroundTemperatureDeep_Impl::setNovemberDeepGroundTemperature(double novemberDeepGroundTemperature) {
+    bool result = setDouble(OS_Site_GroundTemperature_DeepFields::NovemberDeepGroundTemperature, novemberDeepGroundTemperature);
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureDeep_Impl::resetNovemberGroundTemperature() {
-    bool result = setString(OS_Site_GroundTemperature_DeepFields::NovemberGroundTemperature, "");
+  void SiteGroundTemperatureDeep_Impl::resetNovemberDeepGroundTemperature() {
+    bool result = setString(OS_Site_GroundTemperature_DeepFields::NovemberDeepGroundTemperature, "");
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureDeep_Impl::setDecemberGroundTemperature(double decemberGroundTemperature) {
-    bool result = setDouble(OS_Site_GroundTemperature_DeepFields::DecemberGroundTemperature, decemberGroundTemperature);
+  void SiteGroundTemperatureDeep_Impl::setDecemberDeepGroundTemperature(double decemberDeepGroundTemperature) {
+    bool result = setDouble(OS_Site_GroundTemperature_DeepFields::DecemberDeepGroundTemperature, decemberDeepGroundTemperature);
     OS_ASSERT(result);
   }
 
-  void SiteGroundTemperatureDeep_Impl::resetDecemberGroundTemperature() {
-    bool result = setString(OS_Site_GroundTemperature_DeepFields::DecemberGroundTemperature, "");
+  void SiteGroundTemperatureDeep_Impl::resetDecemberDeepGroundTemperature() {
+    bool result = setString(OS_Site_GroundTemperature_DeepFields::DecemberDeepGroundTemperature, "");
     OS_ASSERT(result);
   }
 
@@ -323,196 +323,196 @@ IddObjectType SiteGroundTemperatureDeep::iddObjectType() {
   return result;
 }
 
-double SiteGroundTemperatureDeep::januaryGroundTemperature() const {
-  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->januaryGroundTemperature();
+double SiteGroundTemperatureDeep::januaryDeepGroundTemperature() const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->januaryDeepGroundTemperature();
 }
 
-bool SiteGroundTemperatureDeep::isJanuaryGroundTemperatureDefaulted() const {
-  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isJanuaryGroundTemperatureDefaulted();
+bool SiteGroundTemperatureDeep::isJanuaryDeepGroundTemperatureDefaulted() const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isJanuaryDeepGroundTemperatureDefaulted();
 }
 
-double SiteGroundTemperatureDeep::februaryGroundTemperature() const {
-  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->februaryGroundTemperature();
+double SiteGroundTemperatureDeep::februaryDeepGroundTemperature() const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->februaryDeepGroundTemperature();
 }
 
-bool SiteGroundTemperatureDeep::isFebruaryGroundTemperatureDefaulted() const {
-  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isFebruaryGroundTemperatureDefaulted();
+bool SiteGroundTemperatureDeep::isFebruaryDeepGroundTemperatureDefaulted() const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isFebruaryDeepGroundTemperatureDefaulted();
 }
 
-double SiteGroundTemperatureDeep::marchGroundTemperature() const {
-  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->marchGroundTemperature();
+double SiteGroundTemperatureDeep::marchDeepGroundTemperature() const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->marchDeepGroundTemperature();
 }
 
-bool SiteGroundTemperatureDeep::isMarchGroundTemperatureDefaulted() const {
-  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isMarchGroundTemperatureDefaulted();
+bool SiteGroundTemperatureDeep::isMarchDeepGroundTemperatureDefaulted() const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isMarchDeepGroundTemperatureDefaulted();
 }
 
-double SiteGroundTemperatureDeep::aprilGroundTemperature() const {
-  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->aprilGroundTemperature();
+double SiteGroundTemperatureDeep::aprilDeepGroundTemperature() const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->aprilDeepGroundTemperature();
 }
 
-bool SiteGroundTemperatureDeep::isAprilGroundTemperatureDefaulted() const {
-  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isAprilGroundTemperatureDefaulted();
+bool SiteGroundTemperatureDeep::isAprilDeepGroundTemperatureDefaulted() const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isAprilDeepGroundTemperatureDefaulted();
 }
 
-double SiteGroundTemperatureDeep::mayGroundTemperature() const {
-  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->mayGroundTemperature();
+double SiteGroundTemperatureDeep::mayDeepGroundTemperature() const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->mayDeepGroundTemperature();
 }
 
-bool SiteGroundTemperatureDeep::isMayGroundTemperatureDefaulted() const {
-  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isMayGroundTemperatureDefaulted();
+bool SiteGroundTemperatureDeep::isMayDeepGroundTemperatureDefaulted() const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isMayDeepGroundTemperatureDefaulted();
 }
 
-double SiteGroundTemperatureDeep::juneGroundTemperature() const {
-  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->juneGroundTemperature();
+double SiteGroundTemperatureDeep::juneDeepGroundTemperature() const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->juneDeepGroundTemperature();
 }
 
-bool SiteGroundTemperatureDeep::isJuneGroundTemperatureDefaulted() const {
-  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isJuneGroundTemperatureDefaulted();
+bool SiteGroundTemperatureDeep::isJuneDeepGroundTemperatureDefaulted() const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isJuneDeepGroundTemperatureDefaulted();
 }
 
-double SiteGroundTemperatureDeep::julyGroundTemperature() const {
-  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->julyGroundTemperature();
+double SiteGroundTemperatureDeep::julyDeepGroundTemperature() const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->julyDeepGroundTemperature();
 }
 
-bool SiteGroundTemperatureDeep::isJulyGroundTemperatureDefaulted() const {
-  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isJulyGroundTemperatureDefaulted();
+bool SiteGroundTemperatureDeep::isJulyDeepGroundTemperatureDefaulted() const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isJulyDeepGroundTemperatureDefaulted();
 }
 
-double SiteGroundTemperatureDeep::augustGroundTemperature() const {
-  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->augustGroundTemperature();
+double SiteGroundTemperatureDeep::augustDeepGroundTemperature() const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->augustDeepGroundTemperature();
 }
 
-bool SiteGroundTemperatureDeep::isAugustGroundTemperatureDefaulted() const {
-  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isAugustGroundTemperatureDefaulted();
+bool SiteGroundTemperatureDeep::isAugustDeepGroundTemperatureDefaulted() const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isAugustDeepGroundTemperatureDefaulted();
 }
 
-double SiteGroundTemperatureDeep::septemberGroundTemperature() const {
-  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->septemberGroundTemperature();
+double SiteGroundTemperatureDeep::septemberDeepGroundTemperature() const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->septemberDeepGroundTemperature();
 }
 
-bool SiteGroundTemperatureDeep::isSeptemberGroundTemperatureDefaulted() const {
-  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isSeptemberGroundTemperatureDefaulted();
+bool SiteGroundTemperatureDeep::isSeptemberDeepGroundTemperatureDefaulted() const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isSeptemberDeepGroundTemperatureDefaulted();
 }
 
-double SiteGroundTemperatureDeep::octoberGroundTemperature() const {
-  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->octoberGroundTemperature();
+double SiteGroundTemperatureDeep::octoberDeepGroundTemperature() const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->octoberDeepGroundTemperature();
 }
 
-bool SiteGroundTemperatureDeep::isOctoberGroundTemperatureDefaulted() const {
-  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isOctoberGroundTemperatureDefaulted();
+bool SiteGroundTemperatureDeep::isOctoberDeepGroundTemperatureDefaulted() const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isOctoberDeepGroundTemperatureDefaulted();
 }
 
-double SiteGroundTemperatureDeep::novemberGroundTemperature() const {
-  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->novemberGroundTemperature();
+double SiteGroundTemperatureDeep::novemberDeepGroundTemperature() const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->novemberDeepGroundTemperature();
 }
 
-bool SiteGroundTemperatureDeep::isNovemberGroundTemperatureDefaulted() const {
-  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isNovemberGroundTemperatureDefaulted();
+bool SiteGroundTemperatureDeep::isNovemberDeepGroundTemperatureDefaulted() const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isNovemberDeepGroundTemperatureDefaulted();
 }
 
-double SiteGroundTemperatureDeep::decemberGroundTemperature() const {
-  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->decemberGroundTemperature();
+double SiteGroundTemperatureDeep::decemberDeepGroundTemperature() const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->decemberDeepGroundTemperature();
 }
 
-bool SiteGroundTemperatureDeep::isDecemberGroundTemperatureDefaulted() const {
-  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isDecemberGroundTemperatureDefaulted();
+bool SiteGroundTemperatureDeep::isDecemberDeepGroundTemperatureDefaulted() const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isDecemberDeepGroundTemperatureDefaulted();
 }
 
-void SiteGroundTemperatureDeep::setJanuaryGroundTemperature(double januaryGroundTemperature) {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setJanuaryGroundTemperature(januaryGroundTemperature);
+void SiteGroundTemperatureDeep::setJanuaryDeepGroundTemperature(double januaryDeepGroundTemperature) {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setJanuaryDeepGroundTemperature(januaryDeepGroundTemperature);
 }
 
-void SiteGroundTemperatureDeep::resetJanuaryGroundTemperature() {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetJanuaryGroundTemperature();
+void SiteGroundTemperatureDeep::resetJanuaryDeepGroundTemperature() {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetJanuaryDeepGroundTemperature();
 }
 
-void SiteGroundTemperatureDeep::setFebruaryGroundTemperature(double februaryGroundTemperature) {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setFebruaryGroundTemperature(februaryGroundTemperature);
+void SiteGroundTemperatureDeep::setFebruaryDeepGroundTemperature(double februaryDeepGroundTemperature) {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setFebruaryDeepGroundTemperature(februaryDeepGroundTemperature);
 }
 
-void SiteGroundTemperatureDeep::resetFebruaryGroundTemperature() {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetFebruaryGroundTemperature();
+void SiteGroundTemperatureDeep::resetFebruaryDeepGroundTemperature() {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetFebruaryDeepGroundTemperature();
 }
 
-void SiteGroundTemperatureDeep::setMarchGroundTemperature(double marchGroundTemperature) {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setMarchGroundTemperature(marchGroundTemperature);
+void SiteGroundTemperatureDeep::setMarchDeepGroundTemperature(double marchDeepGroundTemperature) {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setMarchDeepGroundTemperature(marchDeepGroundTemperature);
 }
 
-void SiteGroundTemperatureDeep::resetMarchGroundTemperature() {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetMarchGroundTemperature();
+void SiteGroundTemperatureDeep::resetMarchDeepGroundTemperature() {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetMarchDeepGroundTemperature();
 }
 
-void SiteGroundTemperatureDeep::setAprilGroundTemperature(double aprilGroundTemperature) {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setAprilGroundTemperature(aprilGroundTemperature);
+void SiteGroundTemperatureDeep::setAprilDeepGroundTemperature(double aprilDeepGroundTemperature) {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setAprilDeepGroundTemperature(aprilDeepGroundTemperature);
 }
 
-void SiteGroundTemperatureDeep::resetAprilGroundTemperature() {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetAprilGroundTemperature();
+void SiteGroundTemperatureDeep::resetAprilDeepGroundTemperature() {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetAprilDeepGroundTemperature();
 }
 
-void SiteGroundTemperatureDeep::setMayGroundTemperature(double mayGroundTemperature) {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setMayGroundTemperature(mayGroundTemperature);
+void SiteGroundTemperatureDeep::setMayDeepGroundTemperature(double mayDeepGroundTemperature) {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setMayDeepGroundTemperature(mayDeepGroundTemperature);
 }
 
-void SiteGroundTemperatureDeep::resetMayGroundTemperature() {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetMayGroundTemperature();
+void SiteGroundTemperatureDeep::resetMayDeepGroundTemperature() {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetMayDeepGroundTemperature();
 }
 
-void SiteGroundTemperatureDeep::setJuneGroundTemperature(double juneGroundTemperature) {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setJuneGroundTemperature(juneGroundTemperature);
+void SiteGroundTemperatureDeep::setJuneDeepGroundTemperature(double juneDeepGroundTemperature) {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setJuneDeepGroundTemperature(juneDeepGroundTemperature);
 }
 
-void SiteGroundTemperatureDeep::resetJuneGroundTemperature() {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetJuneGroundTemperature();
+void SiteGroundTemperatureDeep::resetJuneDeepGroundTemperature() {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetJuneDeepGroundTemperature();
 }
 
-void SiteGroundTemperatureDeep::setJulyGroundTemperature(double julyGroundTemperature) {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setJulyGroundTemperature(julyGroundTemperature);
+void SiteGroundTemperatureDeep::setJulyDeepGroundTemperature(double julyDeepGroundTemperature) {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setJulyDeepGroundTemperature(julyDeepGroundTemperature);
 }
 
-void SiteGroundTemperatureDeep::resetJulyGroundTemperature() {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetJulyGroundTemperature();
+void SiteGroundTemperatureDeep::resetJulyDeepGroundTemperature() {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetJulyDeepGroundTemperature();
 }
 
-void SiteGroundTemperatureDeep::setAugustGroundTemperature(double augustGroundTemperature) {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setAugustGroundTemperature(augustGroundTemperature);
+void SiteGroundTemperatureDeep::setAugustDeepGroundTemperature(double augustDeepGroundTemperature) {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setAugustDeepGroundTemperature(augustDeepGroundTemperature);
 }
 
-void SiteGroundTemperatureDeep::resetAugustGroundTemperature() {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetAugustGroundTemperature();
+void SiteGroundTemperatureDeep::resetAugustDeepGroundTemperature() {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetAugustDeepGroundTemperature();
 }
 
-void SiteGroundTemperatureDeep::setSeptemberGroundTemperature(double septemberGroundTemperature) {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setSeptemberGroundTemperature(septemberGroundTemperature);
+void SiteGroundTemperatureDeep::setSeptemberDeepGroundTemperature(double septemberDeepGroundTemperature) {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setSeptemberDeepGroundTemperature(septemberDeepGroundTemperature);
 }
 
-void SiteGroundTemperatureDeep::resetSeptemberGroundTemperature() {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetSeptemberGroundTemperature();
+void SiteGroundTemperatureDeep::resetSeptemberDeepGroundTemperature() {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetSeptemberDeepGroundTemperature();
 }
 
-void SiteGroundTemperatureDeep::setOctoberGroundTemperature(double octoberGroundTemperature) {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setOctoberGroundTemperature(octoberGroundTemperature);
+void SiteGroundTemperatureDeep::setOctoberDeepGroundTemperature(double octoberDeepGroundTemperature) {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setOctoberDeepGroundTemperature(octoberDeepGroundTemperature);
 }
 
-void SiteGroundTemperatureDeep::resetOctoberGroundTemperature() {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetOctoberGroundTemperature();
+void SiteGroundTemperatureDeep::resetOctoberDeepGroundTemperature() {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetOctoberDeepGroundTemperature();
 }
 
-void SiteGroundTemperatureDeep::setNovemberGroundTemperature(double novemberGroundTemperature) {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setNovemberGroundTemperature(novemberGroundTemperature);
+void SiteGroundTemperatureDeep::setNovemberDeepGroundTemperature(double novemberDeepGroundTemperature) {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setNovemberDeepGroundTemperature(novemberDeepGroundTemperature);
 }
 
-void SiteGroundTemperatureDeep::resetNovemberGroundTemperature() {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetNovemberGroundTemperature();
+void SiteGroundTemperatureDeep::resetNovemberDeepGroundTemperature() {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetNovemberDeepGroundTemperature();
 }
 
-void SiteGroundTemperatureDeep::setDecemberGroundTemperature(double decemberGroundTemperature) {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setDecemberGroundTemperature(decemberGroundTemperature);
+void SiteGroundTemperatureDeep::setDecemberDeepGroundTemperature(double decemberDeepGroundTemperature) {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setDecemberDeepGroundTemperature(decemberDeepGroundTemperature);
 }
 
-void SiteGroundTemperatureDeep::resetDecemberGroundTemperature() {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetDecemberGroundTemperature();
+void SiteGroundTemperatureDeep::resetDecemberDeepGroundTemperature() {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetDecemberDeepGroundTemperature();
 }
 
 /// @cond
@@ -528,4 +528,3 @@ SiteGroundTemperatureDeep::SiteGroundTemperatureDeep(Model& model)
 
 } // model
 } // openstudio
-

@@ -31,30 +31,30 @@ namespace detail {
   /** SiteGroundTemperatureDeep_Impl is a ModelObject_Impl that is the implementation class for SiteGroundTemperatureDeep.*/
   class MODEL_API SiteGroundTemperatureDeep_Impl : public ModelObject_Impl {
     Q_OBJECT;
-    Q_PROPERTY(double januaryGroundTemperature READ januaryGroundTemperature WRITE setJanuaryGroundTemperature RESET resetJanuaryGroundTemperature);
-    Q_PROPERTY(bool isJanuaryGroundTemperatureDefaulted READ isJanuaryGroundTemperatureDefaulted);
-    Q_PROPERTY(double februaryGroundTemperature READ februaryGroundTemperature WRITE setFebruaryGroundTemperature RESET resetFebruaryGroundTemperature);
-    Q_PROPERTY(bool isFebruaryGroundTemperatureDefaulted READ isFebruaryGroundTemperatureDefaulted);
-    Q_PROPERTY(double marchGroundTemperature READ marchGroundTemperature WRITE setMarchGroundTemperature RESET resetMarchGroundTemperature);
-    Q_PROPERTY(bool isMarchGroundTemperatureDefaulted READ isMarchGroundTemperatureDefaulted);
-    Q_PROPERTY(double aprilGroundTemperature READ aprilGroundTemperature WRITE setAprilGroundTemperature RESET resetAprilGroundTemperature);
-    Q_PROPERTY(bool isAprilGroundTemperatureDefaulted READ isAprilGroundTemperatureDefaulted);
-    Q_PROPERTY(double mayGroundTemperature READ mayGroundTemperature WRITE setMayGroundTemperature RESET resetMayGroundTemperature);
-    Q_PROPERTY(bool isMayGroundTemperatureDefaulted READ isMayGroundTemperatureDefaulted);
-    Q_PROPERTY(double juneGroundTemperature READ juneGroundTemperature WRITE setJuneGroundTemperature RESET resetJuneGroundTemperature);
-    Q_PROPERTY(bool isJuneGroundTemperatureDefaulted READ isJuneGroundTemperatureDefaulted);
-    Q_PROPERTY(double julyGroundTemperature READ julyGroundTemperature WRITE setJulyGroundTemperature RESET resetJulyGroundTemperature);
-    Q_PROPERTY(bool isJulyGroundTemperatureDefaulted READ isJulyGroundTemperatureDefaulted);
-    Q_PROPERTY(double augustGroundTemperature READ augustGroundTemperature WRITE setAugustGroundTemperature RESET resetAugustGroundTemperature);
-    Q_PROPERTY(bool isAugustGroundTemperatureDefaulted READ isAugustGroundTemperatureDefaulted);
-    Q_PROPERTY(double septemberGroundTemperature READ septemberGroundTemperature WRITE setSeptemberGroundTemperature RESET resetSeptemberGroundTemperature);
-    Q_PROPERTY(bool isSeptemberGroundTemperatureDefaulted READ isSeptemberGroundTemperatureDefaulted);
-    Q_PROPERTY(double octoberGroundTemperature READ octoberGroundTemperature WRITE setOctoberGroundTemperature RESET resetOctoberGroundTemperature);
-    Q_PROPERTY(bool isOctoberGroundTemperatureDefaulted READ isOctoberGroundTemperatureDefaulted);
-    Q_PROPERTY(double novemberGroundTemperature READ novemberGroundTemperature WRITE setNovemberGroundTemperature RESET resetNovemberGroundTemperature);
-    Q_PROPERTY(bool isNovemberGroundTemperatureDefaulted READ isNovemberGroundTemperatureDefaulted);
-    Q_PROPERTY(double decemberGroundTemperature READ decemberGroundTemperature WRITE setDecemberGroundTemperature RESET resetDecemberGroundTemperature);
-    Q_PROPERTY(bool isDecemberGroundTemperatureDefaulted READ isDecemberGroundTemperatureDefaulted);
+    Q_PROPERTY(double januaryDeepGroundTemperature READ januaryDeepGroundTemperature WRITE setJanuaryDeepGroundTemperature RESET resetJanuaryDeepGroundTemperature);
+    Q_PROPERTY(bool isJanuaryDeepGroundTemperatureDefaulted READ isJanuaryDeepGroundTemperatureDefaulted);
+    Q_PROPERTY(double februaryDeepGroundTemperature READ februaryDeepGroundTemperature WRITE setFebruaryDeepGroundTemperature RESET resetFebruaryDeepGroundTemperature);
+    Q_PROPERTY(bool isFebruaryDeepGroundTemperatureDefaulted READ isFebruaryDeepGroundTemperatureDefaulted);
+    Q_PROPERTY(double marchDeepGroundTemperature READ marchDeepGroundTemperature WRITE setMarchDeepGroundTemperature RESET resetMarchDeepGroundTemperature);
+    Q_PROPERTY(bool isMarchDeepGroundTemperatureDefaulted READ isMarchDeepGroundTemperatureDefaulted);
+    Q_PROPERTY(double aprilDeepGroundTemperature READ aprilDeepGroundTemperature WRITE setAprilDeepGroundTemperature RESET resetAprilDeepGroundTemperature);
+    Q_PROPERTY(bool isAprilDeepGroundTemperatureDefaulted READ isAprilDeepGroundTemperatureDefaulted);
+    Q_PROPERTY(double mayDeepGroundTemperature READ mayDeepGroundTemperature WRITE setMayDeepGroundTemperature RESET resetMayDeepGroundTemperature);
+    Q_PROPERTY(bool isMayDeepGroundTemperatureDefaulted READ isMayDeepGroundTemperatureDefaulted);
+    Q_PROPERTY(double juneDeepGroundTemperature READ juneDeepGroundTemperature WRITE setJuneDeepGroundTemperature RESET resetJuneDeepGroundTemperature);
+    Q_PROPERTY(bool isJuneDeepGroundTemperatureDefaulted READ isJuneDeepGroundTemperatureDefaulted);
+    Q_PROPERTY(double julyDeepGroundTemperature READ julyDeepGroundTemperature WRITE setJulyDeepGroundTemperature RESET resetJulyDeepGroundTemperature);
+    Q_PROPERTY(bool isJulyDeepGroundTemperatureDefaulted READ isJulyDeepGroundTemperatureDefaulted);
+    Q_PROPERTY(double augustDeepGroundTemperature READ augustDeepGroundTemperature WRITE setAugustDeepGroundTemperature RESET resetAugustDeepGroundTemperature);
+    Q_PROPERTY(bool isAugustDeepGroundTemperatureDefaulted READ isAugustDeepGroundTemperatureDefaulted);
+    Q_PROPERTY(double septemberDeepGroundTemperature READ septemberDeepGroundTemperature WRITE setSeptemberDeepGroundTemperature RESET resetSeptemberDeepGroundTemperature);
+    Q_PROPERTY(bool isSeptemberDeepGroundTemperatureDefaulted READ isSeptemberDeepGroundTemperatureDefaulted);
+    Q_PROPERTY(double octoberDeepGroundTemperature READ octoberDeepGroundTemperature WRITE setOctoberDeepGroundTemperature RESET resetOctoberDeepGroundTemperature);
+    Q_PROPERTY(bool isOctoberDeepGroundTemperatureDefaulted READ isOctoberDeepGroundTemperatureDefaulted);
+    Q_PROPERTY(double novemberDeepGroundTemperature READ novemberDeepGroundTemperature WRITE setNovemberDeepGroundTemperature RESET resetNovemberDeepGroundTemperature);
+    Q_PROPERTY(bool isNovemberDeepGroundTemperatureDefaulted READ isNovemberDeepGroundTemperatureDefaulted);
+    Q_PROPERTY(double decemberDeepGroundTemperature READ decemberDeepGroundTemperature WRITE setDecemberDeepGroundTemperature RESET resetDecemberDeepGroundTemperature);
+    Q_PROPERTY(bool isDecemberDeepGroundTemperatureDefaulted READ isDecemberDeepGroundTemperatureDefaulted);
    public:
 
     /** @name Constructors and Destructors */
@@ -83,105 +83,105 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    double januaryGroundTemperature() const;
+    double januaryDeepGroundTemperature() const;
 
-    bool isJanuaryGroundTemperatureDefaulted() const;
+    bool isJanuaryDeepGroundTemperatureDefaulted() const;
 
-    double februaryGroundTemperature() const;
+    double februaryDeepGroundTemperature() const;
 
-    bool isFebruaryGroundTemperatureDefaulted() const;
+    bool isFebruaryDeepGroundTemperatureDefaulted() const;
 
-    double marchGroundTemperature() const;
+    double marchDeepGroundTemperature() const;
 
-    bool isMarchGroundTemperatureDefaulted() const;
+    bool isMarchDeepGroundTemperatureDefaulted() const;
 
-    double aprilGroundTemperature() const;
+    double aprilDeepGroundTemperature() const;
 
-    bool isAprilGroundTemperatureDefaulted() const;
+    bool isAprilDeepGroundTemperatureDefaulted() const;
 
-    double mayGroundTemperature() const;
+    double mayDeepGroundTemperature() const;
 
-    bool isMayGroundTemperatureDefaulted() const;
+    bool isMayDeepGroundTemperatureDefaulted() const;
 
-    double juneGroundTemperature() const;
+    double juneDeepGroundTemperature() const;
 
-    bool isJuneGroundTemperatureDefaulted() const;
+    bool isJuneDeepGroundTemperatureDefaulted() const;
 
-    double julyGroundTemperature() const;
+    double julyDeepGroundTemperature() const;
 
-    bool isJulyGroundTemperatureDefaulted() const;
+    bool isJulyDeepGroundTemperatureDefaulted() const;
 
-    double augustGroundTemperature() const;
+    double augustDeepGroundTemperature() const;
 
-    bool isAugustGroundTemperatureDefaulted() const;
+    bool isAugustDeepGroundTemperatureDefaulted() const;
 
-    double septemberGroundTemperature() const;
+    double septemberDeepGroundTemperature() const;
 
-    bool isSeptemberGroundTemperatureDefaulted() const;
+    bool isSeptemberDeepGroundTemperatureDefaulted() const;
 
-    double octoberGroundTemperature() const;
+    double octoberDeepGroundTemperature() const;
 
-    bool isOctoberGroundTemperatureDefaulted() const;
+    bool isOctoberDeepGroundTemperatureDefaulted() const;
 
-    double novemberGroundTemperature() const;
+    double novemberDeepGroundTemperature() const;
 
-    bool isNovemberGroundTemperatureDefaulted() const;
+    bool isNovemberDeepGroundTemperatureDefaulted() const;
 
-    double decemberGroundTemperature() const;
+    double decemberDeepGroundTemperature() const;
 
-    bool isDecemberGroundTemperatureDefaulted() const;
+    bool isDecemberDeepGroundTemperatureDefaulted() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    void setJanuaryGroundTemperature(double januaryGroundTemperature);
+    void setJanuaryDeepGroundTemperature(double januaryDeepGroundTemperature);
 
-    void resetJanuaryGroundTemperature();
+    void resetJanuaryDeepGroundTemperature();
 
-    void setFebruaryGroundTemperature(double februaryGroundTemperature);
+    void setFebruaryDeepGroundTemperature(double februaryDeepGroundTemperature);
 
-    void resetFebruaryGroundTemperature();
+    void resetFebruaryDeepGroundTemperature();
 
-    void setMarchGroundTemperature(double marchGroundTemperature);
+    void setMarchDeepGroundTemperature(double marchDeepGroundTemperature);
 
-    void resetMarchGroundTemperature();
+    void resetMarchDeepGroundTemperature();
 
-    void setAprilGroundTemperature(double aprilGroundTemperature);
+    void setAprilDeepGroundTemperature(double aprilDeepGroundTemperature);
 
-    void resetAprilGroundTemperature();
+    void resetAprilDeepGroundTemperature();
 
-    void setMayGroundTemperature(double mayGroundTemperature);
+    void setMayDeepGroundTemperature(double mayDeepGroundTemperature);
 
-    void resetMayGroundTemperature();
+    void resetMayDeepGroundTemperature();
 
-    void setJuneGroundTemperature(double juneGroundTemperature);
+    void setJuneDeepGroundTemperature(double juneDeepGroundTemperature);
 
-    void resetJuneGroundTemperature();
+    void resetJuneDeepGroundTemperature();
 
-    void setJulyGroundTemperature(double julyGroundTemperature);
+    void setJulyDeepGroundTemperature(double julyDeepGroundTemperature);
 
-    void resetJulyGroundTemperature();
+    void resetJulyDeepGroundTemperature();
 
-    void setAugustGroundTemperature(double augustGroundTemperature);
+    void setAugustDeepGroundTemperature(double augustDeepGroundTemperature);
 
-    void resetAugustGroundTemperature();
+    void resetAugustDeepGroundTemperature();
 
-    void setSeptemberGroundTemperature(double septemberGroundTemperature);
+    void setSeptemberDeepGroundTemperature(double septemberDeepGroundTemperature);
 
-    void resetSeptemberGroundTemperature();
+    void resetSeptemberDeepGroundTemperature();
 
-    void setOctoberGroundTemperature(double octoberGroundTemperature);
+    void setOctoberDeepGroundTemperature(double octoberDeepGroundTemperature);
 
-    void resetOctoberGroundTemperature();
+    void resetOctoberDeepGroundTemperature();
 
-    void setNovemberGroundTemperature(double novemberGroundTemperature);
+    void setNovemberDeepGroundTemperature(double novemberDeepGroundTemperature);
 
-    void resetNovemberGroundTemperature();
+    void resetNovemberDeepGroundTemperature();
 
-    void setDecemberGroundTemperature(double decemberGroundTemperature);
+    void setDecemberDeepGroundTemperature(double decemberDeepGroundTemperature);
 
-    void resetDecemberGroundTemperature();
+    void resetDecemberDeepGroundTemperature();
 
     //@}
    protected:
@@ -195,4 +195,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_SITEGROUNDTEMPERATUREDEEP_IMPL_HPP
-

@@ -332,7 +332,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(FanConstantVolume);
     REGISTER_CONSTRUCTOR(FanOnOff);
     REGISTER_CONSTRUCTOR(FanVariableVolume);
-    REGISTER_CONSTRUCTOR(FanZoneExhaust);    
+    REGISTER_CONSTRUCTOR(FanZoneExhaust);
     REGISTER_CONSTRUCTOR(FFactorGroundFloorConstruction);
     REGISTER_CONSTRUCTOR(FluidCoolerSingleSpeed);
     REGISTER_CONSTRUCTOR(FluidCoolerTwoSpeed);
@@ -534,8 +534,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ZoneControlHumidistat);
     REGISTER_CONSTRUCTOR(ZoneControlThermostatStagedDualSetpoint);
     REGISTER_CONSTRUCTOR(ZoneHVACEquipmentList);
-    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveElectric);  
-    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveWater);  
+    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveElectric);
+    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveWater);
     REGISTER_CONSTRUCTOR(ZoneHVACIdealLoadsAirSystem);
     REGISTER_CONSTRUCTOR(ZoneHVACFourPipeFanCoil);
     REGISTER_CONSTRUCTOR(ZoneHVACHighTemperatureRadiant);
@@ -734,7 +734,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(FanConstantVolume);
     REGISTER_COPYCONSTRUCTORS(FanOnOff);
     REGISTER_COPYCONSTRUCTORS(FanVariableVolume);
-    REGISTER_COPYCONSTRUCTORS(FanZoneExhaust);    
+    REGISTER_COPYCONSTRUCTORS(FanZoneExhaust);
     REGISTER_COPYCONSTRUCTORS(FFactorGroundFloorConstruction);
     REGISTER_COPYCONSTRUCTORS(FluidCoolerSingleSpeed);
     REGISTER_COPYCONSTRUCTORS(FluidCoolerTwoSpeed);
@@ -1790,18 +1790,18 @@ void addExampleModelObjects(Model& model)
 
   // add SiteGroundTemperatureDeep
   SiteGroundTemperatureDeep groundTempDeep = model.getUniqueModelObject<SiteGroundTemperatureDeep>();
-  groundTempDeep.setJanuaryGroundTemperature(19.527);
-  groundTempDeep.setFebruaryGroundTemperature(19.502);
-  groundTempDeep.setMarchGroundTemperature(19.536);
-  groundTempDeep.setAprilGroundTemperature(19.598);
-  groundTempDeep.setMayGroundTemperature(20.002);
-  groundTempDeep.setJuneGroundTemperature(21.640);
-  groundTempDeep.setJulyGroundTemperature(22.225);
-  groundTempDeep.setAugustGroundTemperature(22.375);
-  groundTempDeep.setSeptemberGroundTemperature(21.449);
-  groundTempDeep.setOctoberGroundTemperature(20.121);
-  groundTempDeep.setNovemberGroundTemperature(19.802);
-  groundTempDeep.setDecemberGroundTemperature(19.633);
+  groundTempDeep.setJanuaryDeepGroundTemperature(19.527);
+  groundTempDeep.setFebruaryDeepGroundTemperature(19.502);
+  groundTempDeep.setMarchDeepGroundTemperature(19.536);
+  groundTempDeep.setAprilDeepGroundTemperature(19.598);
+  groundTempDeep.setMayDeepGroundTemperature(20.002);
+  groundTempDeep.setJuneDeepGroundTemperature(21.640);
+  groundTempDeep.setJulyDeepGroundTemperature(22.225);
+  groundTempDeep.setAugustDeepGroundTemperature(22.375);
+  groundTempDeep.setSeptemberDeepGroundTemperature(21.449);
+  groundTempDeep.setOctoberDeepGroundTemperature(20.121);
+  groundTempDeep.setNovemberDeepGroundTemperature(19.802);
+  groundTempDeep.setDecemberDeepGroundTemperature(19.633);
 
   // add SiteWaterMainsTemperature
   SiteWaterMainsTemperature waterTemp = model.getUniqueModelObject<SiteWaterMainsTemperature>();
