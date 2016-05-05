@@ -30,31 +30,7 @@ namespace detail {
 
   /** SiteGroundTemperatureDeep_Impl is a ModelObject_Impl that is the implementation class for SiteGroundTemperatureDeep.*/
   class MODEL_API SiteGroundTemperatureDeep_Impl : public ModelObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(double januaryDeepGroundTemperature READ januaryDeepGroundTemperature WRITE setJanuaryDeepGroundTemperature RESET resetJanuaryDeepGroundTemperature);
-    Q_PROPERTY(bool isJanuaryDeepGroundTemperatureDefaulted READ isJanuaryDeepGroundTemperatureDefaulted);
-    Q_PROPERTY(double februaryDeepGroundTemperature READ februaryDeepGroundTemperature WRITE setFebruaryDeepGroundTemperature RESET resetFebruaryDeepGroundTemperature);
-    Q_PROPERTY(bool isFebruaryDeepGroundTemperatureDefaulted READ isFebruaryDeepGroundTemperatureDefaulted);
-    Q_PROPERTY(double marchDeepGroundTemperature READ marchDeepGroundTemperature WRITE setMarchDeepGroundTemperature RESET resetMarchDeepGroundTemperature);
-    Q_PROPERTY(bool isMarchDeepGroundTemperatureDefaulted READ isMarchDeepGroundTemperatureDefaulted);
-    Q_PROPERTY(double aprilDeepGroundTemperature READ aprilDeepGroundTemperature WRITE setAprilDeepGroundTemperature RESET resetAprilDeepGroundTemperature);
-    Q_PROPERTY(bool isAprilDeepGroundTemperatureDefaulted READ isAprilDeepGroundTemperatureDefaulted);
-    Q_PROPERTY(double mayDeepGroundTemperature READ mayDeepGroundTemperature WRITE setMayDeepGroundTemperature RESET resetMayDeepGroundTemperature);
-    Q_PROPERTY(bool isMayDeepGroundTemperatureDefaulted READ isMayDeepGroundTemperatureDefaulted);
-    Q_PROPERTY(double juneDeepGroundTemperature READ juneDeepGroundTemperature WRITE setJuneDeepGroundTemperature RESET resetJuneDeepGroundTemperature);
-    Q_PROPERTY(bool isJuneDeepGroundTemperatureDefaulted READ isJuneDeepGroundTemperatureDefaulted);
-    Q_PROPERTY(double julyDeepGroundTemperature READ julyDeepGroundTemperature WRITE setJulyDeepGroundTemperature RESET resetJulyDeepGroundTemperature);
-    Q_PROPERTY(bool isJulyDeepGroundTemperatureDefaulted READ isJulyDeepGroundTemperatureDefaulted);
-    Q_PROPERTY(double augustDeepGroundTemperature READ augustDeepGroundTemperature WRITE setAugustDeepGroundTemperature RESET resetAugustDeepGroundTemperature);
-    Q_PROPERTY(bool isAugustDeepGroundTemperatureDefaulted READ isAugustDeepGroundTemperatureDefaulted);
-    Q_PROPERTY(double septemberDeepGroundTemperature READ septemberDeepGroundTemperature WRITE setSeptemberDeepGroundTemperature RESET resetSeptemberDeepGroundTemperature);
-    Q_PROPERTY(bool isSeptemberDeepGroundTemperatureDefaulted READ isSeptemberDeepGroundTemperatureDefaulted);
-    Q_PROPERTY(double octoberDeepGroundTemperature READ octoberDeepGroundTemperature WRITE setOctoberDeepGroundTemperature RESET resetOctoberDeepGroundTemperature);
-    Q_PROPERTY(bool isOctoberDeepGroundTemperatureDefaulted READ isOctoberDeepGroundTemperatureDefaulted);
-    Q_PROPERTY(double novemberDeepGroundTemperature READ novemberDeepGroundTemperature WRITE setNovemberDeepGroundTemperature RESET resetNovemberDeepGroundTemperature);
-    Q_PROPERTY(bool isNovemberDeepGroundTemperatureDefaulted READ isNovemberDeepGroundTemperatureDefaulted);
-    Q_PROPERTY(double decemberDeepGroundTemperature READ decemberDeepGroundTemperature WRITE setDecemberDeepGroundTemperature RESET resetDecemberDeepGroundTemperature);
-    Q_PROPERTY(bool isDecemberDeepGroundTemperatureDefaulted READ isDecemberDeepGroundTemperatureDefaulted);
+
    public:
 
     /** @name Constructors and Destructors */
