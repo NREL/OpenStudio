@@ -10874,9 +10874,11 @@ OS:Chiller:Electric:EIR,
        \minimum 0
        \default 0.0
   A12, \field Heat Recovery Inlet Node Name
-       \type alpha
+       \type object-list
+       \object-list ConnectionNames
   A13, \field Heat Recovery Outlet Node Name
-       \type alpha
+       \type object-list
+       \object-list ConnectionNames
   N15, \field Sizing Factor
        \note Multiplies the autosized capacity and flow rates
        \type real
