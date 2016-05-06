@@ -109,6 +109,8 @@ namespace detail {
 
     double getTemperatureByMonth(int month) const;
 
+    bool isMonthDefaulted(int month) const;
+
     //@}
     /** @name Setters */
     //@{
@@ -160,6 +162,12 @@ namespace detail {
     void setDecemberDeepGroundTemperature(double decemberDeepGroundTemperature);
 
     void resetDecemberDeepGroundTemperature();
+
+    void setTemperatureByMonth(int month, double temperature);
+
+    void resetTemperatureByMonth(int month);
+
+    void resetAllMonths();
 
     //@}
    protected:

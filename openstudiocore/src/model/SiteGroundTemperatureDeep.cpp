@@ -211,6 +211,25 @@ namespace detail {
     return retval;
   }
 
+  bool SiteGroundTemperatureDeep_Impl::isMonthDefaulted(int month) const {
+    bool is_defaulted;
+    switch(month) {
+      case 1 : is_defaulted = this->isJanuaryDeepGroundTemperatureDefaulted(); break;
+      case 2 : is_defaulted = this->isFebruaryDeepGroundTemperatureDefaulted(); break;
+      case 3 : is_defaulted = this->isMarchDeepGroundTemperatureDefaulted(); break;
+      case 4 : is_defaulted = this->isAprilDeepGroundTemperatureDefaulted(); break;
+      case 5 : is_defaulted = this->isMayDeepGroundTemperatureDefaulted(); break;
+      case 6 : is_defaulted = this->isJuneDeepGroundTemperatureDefaulted(); break;
+      case 7 : is_defaulted = this->isJulyDeepGroundTemperatureDefaulted(); break;
+      case 8 : is_defaulted = this->isAugustDeepGroundTemperatureDefaulted(); break;
+      case 9 : is_defaulted = this->isSeptemberDeepGroundTemperatureDefaulted(); break;
+      case 10 : is_defaulted = this->isOctoberDeepGroundTemperatureDefaulted(); break;
+      case 11 : is_defaulted = this->isNovemberDeepGroundTemperatureDefaulted(); break;
+      case 12 : is_defaulted = this->isDecemberDeepGroundTemperatureDefaulted(); break;
+    }
+    return is_defaulted;
+  }
+
   bool SiteGroundTemperatureDeep_Impl::isDecemberDeepGroundTemperatureDefaulted() const {
     return isEmpty(OS_Site_GroundTemperature_DeepFields::DecemberDeepGroundTemperature);
   }
@@ -335,6 +354,46 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  void SiteGroundTemperatureDeep_Impl::setTemperatureByMonth(int month, double temperature) {
+    switch(month) {
+      case 1 : this->setJanuaryDeepGroundTemperature(temperature); break;
+      case 2 : this->setFebruaryDeepGroundTemperature(temperature); break;
+      case 3 : this->setMarchDeepGroundTemperature(temperature); break;
+      case 4 : this->setAprilDeepGroundTemperature(temperature); break;
+      case 5 : this->setMayDeepGroundTemperature(temperature); break;
+      case 6 : this->setJuneDeepGroundTemperature(temperature); break;
+      case 7 : this->setJulyDeepGroundTemperature(temperature); break;
+      case 8 : this->setAugustDeepGroundTemperature(temperature); break;
+      case 9 : this->setSeptemberDeepGroundTemperature(temperature); break;
+      case 10 : this->setOctoberDeepGroundTemperature(temperature); break;
+      case 11 : this->setNovemberDeepGroundTemperature(temperature); break;
+      case 12 : this->setDecemberDeepGroundTemperature(temperature); break;
+    }
+  }
+
+  void SiteGroundTemperatureDeep_Impl::resetTemperatureByMonth(int month) {
+    switch(month) {
+      case 1 : this->resetJanuaryDeepGroundTemperature(); break;
+      case 2 : this->resetFebruaryDeepGroundTemperature(); break;
+      case 3 : this->resetMarchDeepGroundTemperature(); break;
+      case 4 : this->resetAprilDeepGroundTemperature(); break;
+      case 5 : this->resetMayDeepGroundTemperature(); break;
+      case 6 : this->resetJuneDeepGroundTemperature(); break;
+      case 7 : this->resetJulyDeepGroundTemperature(); break;
+      case 8 : this->resetAugustDeepGroundTemperature(); break;
+      case 9 : this->resetSeptemberDeepGroundTemperature(); break;
+      case 10 : this->resetOctoberDeepGroundTemperature(); break;
+      case 11 : this->resetNovemberDeepGroundTemperature(); break;
+      case 12 : this->resetDecemberDeepGroundTemperature(); break;
+    }
+  }
+
+  void SiteGroundTemperatureDeep_Impl::resetAllMonths() {
+    for (int i = 1; i <= 12; ++i) {
+      this->resetTemperatureByMonth(i);
+    }
+  }
+
 } // detail
 
 IddObjectType SiteGroundTemperatureDeep::iddObjectType() {
@@ -442,6 +501,10 @@ double SiteGroundTemperatureDeep::getTemperatureByMonth(int month) const {
   return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->getTemperatureByMonth(month);
 }
 
+bool SiteGroundTemperatureDeep::isMonthDefaulted(int month) const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isMonthDefaulted(month);
+}
+
 void SiteGroundTemperatureDeep::setJanuaryDeepGroundTemperature(double januaryDeepGroundTemperature) {
   getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setJanuaryDeepGroundTemperature(januaryDeepGroundTemperature);
 }
@@ -536,6 +599,18 @@ void SiteGroundTemperatureDeep::setDecemberDeepGroundTemperature(double december
 
 void SiteGroundTemperatureDeep::resetDecemberDeepGroundTemperature() {
   getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetDecemberDeepGroundTemperature();
+}
+
+void SiteGroundTemperatureDeep::setTemperatureByMonth(int month, double temperature) {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setTemperatureByMonth(month, temperature);
+}
+
+void SiteGroundTemperatureDeep::resetTemperatureByMonth(int month) {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetTemperatureByMonth(month);
+}
+
+void SiteGroundTemperatureDeep::resetAllMonths() {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetAllMonths();
 }
 
 /// @cond

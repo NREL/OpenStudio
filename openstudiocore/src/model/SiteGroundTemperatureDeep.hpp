@@ -103,6 +103,8 @@ class MODEL_API SiteGroundTemperatureDeep : public ModelObject {
 
   double getTemperatureByMonth(int month) const;
 
+  bool isMonthDefaulted(int month) const;
+
   //@}
   /** @name Setters */
   //@{
@@ -154,6 +156,12 @@ class MODEL_API SiteGroundTemperatureDeep : public ModelObject {
   void setDecemberDeepGroundTemperature(double decemberDeepGroundTemperature);
 
   void resetDecemberDeepGroundTemperature();
+
+  void setTemperatureByMonth(int month, double temperature);
+
+  void resetTemperatureByMonth(int month);
+
+  void resetAllMonths();
 
   //@}
  protected:

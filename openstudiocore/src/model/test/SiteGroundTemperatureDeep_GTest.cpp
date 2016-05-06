@@ -17,6 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
+#include <vector>
 #include <gtest/gtest.h>
 #include "ModelFixture.hpp"
 #include "../SiteGroundTemperatureDeep.hpp"
@@ -117,30 +118,64 @@ TEST_F(ModelFixture, SiteGroundTemperatureDeep_SetGetFields)
   // Check the fields
   ASSERT_FALSE(ground_temp.isJanuaryDeepGroundTemperatureDefaulted());
   ASSERT_EQ(20.0, ground_temp.januaryDeepGroundTemperature());
+  ASSERT_EQ(20.0, ground_temp.getTemperatureByMonth(1));
   ASSERT_FALSE(ground_temp.isFebruaryDeepGroundTemperatureDefaulted());
   ASSERT_EQ(21.0, ground_temp.februaryDeepGroundTemperature());
+  ASSERT_EQ(21.0, ground_temp.getTemperatureByMonth(2));
   ASSERT_FALSE(ground_temp.isMarchDeepGroundTemperatureDefaulted());
   ASSERT_EQ(22.0, ground_temp.marchDeepGroundTemperature());
+  ASSERT_EQ(22.0, ground_temp.getTemperatureByMonth(3));
   ASSERT_FALSE(ground_temp.isAprilDeepGroundTemperatureDefaulted());
   ASSERT_EQ(23.0, ground_temp.aprilDeepGroundTemperature());
+  ASSERT_EQ(23.0, ground_temp.getTemperatureByMonth(4));
   ASSERT_FALSE(ground_temp.isMayDeepGroundTemperatureDefaulted());
   ASSERT_EQ(24.0, ground_temp.mayDeepGroundTemperature());
+  ASSERT_EQ(24.0, ground_temp.getTemperatureByMonth(5));
   ASSERT_FALSE(ground_temp.isJuneDeepGroundTemperatureDefaulted());
   ASSERT_EQ(25.0, ground_temp.juneDeepGroundTemperature());
+  ASSERT_EQ(25.0, ground_temp.getTemperatureByMonth(6));
   ASSERT_FALSE(ground_temp.isJulyDeepGroundTemperatureDefaulted());
   ASSERT_EQ(25.0, ground_temp.julyDeepGroundTemperature());
+  ASSERT_EQ(25.0, ground_temp.getTemperatureByMonth(7));
   ASSERT_FALSE(ground_temp.isAugustDeepGroundTemperatureDefaulted());
   ASSERT_EQ(24.0, ground_temp.augustDeepGroundTemperature());
+  ASSERT_EQ(24.0, ground_temp.getTemperatureByMonth(8));
   ASSERT_FALSE(ground_temp.isSeptemberDeepGroundTemperatureDefaulted());
   ASSERT_EQ(23.0, ground_temp.septemberDeepGroundTemperature());
+  ASSERT_EQ(23.0, ground_temp.getTemperatureByMonth(9));
   ASSERT_FALSE(ground_temp.isOctoberDeepGroundTemperatureDefaulted());
   ASSERT_EQ(22.0, ground_temp.octoberDeepGroundTemperature());
+  ASSERT_EQ(22.0, ground_temp.getTemperatureByMonth(10));
   ASSERT_FALSE(ground_temp.isNovemberDeepGroundTemperatureDefaulted());
   ASSERT_EQ(21.0, ground_temp.novemberDeepGroundTemperature());
+  ASSERT_EQ(21.0, ground_temp.getTemperatureByMonth(11));
   ASSERT_FALSE(ground_temp.isDecemberDeepGroundTemperatureDefaulted());
   ASSERT_EQ(20.0, ground_temp.decemberDeepGroundTemperature());
+  ASSERT_EQ(20.0, ground_temp.getTemperatureByMonth(12));
 
-  // Check the new getter
-  ASSERT_EQ(24.0, ground_temp.getTemperatureByMonth(8));
+  // Reset them all and make sure they're all defaulted again.
+  ground_temp.resetAllMonths();
+  for (int i = 1; i <= 12; ++i) {
+    ASSERT_TRUE(ground_temp.isMonthDefaulted(i));
+  }
+
+  // Test the setTemperatureByMonth and getTemperatureByMonth methods.
+  std::vector<double> temperatures;
+  temperatures.reserve(12);
+  for (int i=0; i < 12; ++i) {
+    temperatures.push_back(i + 18.0);
+  }
+  ASSERT_EQ(temperatures.size(), 12);
+  for (int i=1; i <= 12; ++i) {
+    ground_temp.setTemperatureByMonth(i, temperatures[i-1]);
+    ASSERT_FALSE(ground_temp.isMonthDefaulted(i));
+    ASSERT_EQ(temperatures[i-1], ground_temp.getTemperatureByMonth(i));
+  }
+
+  // Reset them one by one with the resetTemperatureByMonth method and check that it worked.
+  for (int i = 1; i <= 12; ++i) {
+    ground_temp.resetTemperatureByMonth(i);
+    ASSERT_TRUE(ground_temp.isMonthDefaulted(i));
+  }
 
 }
