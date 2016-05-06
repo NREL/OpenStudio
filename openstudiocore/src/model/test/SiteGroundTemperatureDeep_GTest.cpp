@@ -178,4 +178,14 @@ TEST_F(ModelFixture, SiteGroundTemperatureDeep_SetGetFields)
     ASSERT_TRUE(ground_temp.isMonthDefaulted(i));
   }
 
+  // Test the vector getter/setters
+  ground_temp.setAllMonthlyTemperatures(temperatures);
+  std::vector<double> returned_temperatures = ground_temp.getAllMonthlyTemperatures();
+  ASSERT_EQ(temperatures.size(), 12);
+  for (int i=0; i < 12; ++i) {
+    ASSERT_EQ(temperatures[i], returned_temperatures[i]);
+    ASSERT_FALSE(ground_temp.isMonthDefaulted(i+1));
+    ASSERT_EQ(temperatures[i], ground_temp.getTemperatureByMonth(i+1));
+  }
+
 }

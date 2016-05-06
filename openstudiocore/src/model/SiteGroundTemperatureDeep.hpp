@@ -20,6 +20,7 @@
 #ifndef MODEL_SITEGROUNDTEMPERATUREDEEP_HPP
 #define MODEL_SITEGROUNDTEMPERATUREDEEP_HPP
 
+#include <vector>
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 
@@ -105,6 +106,8 @@ class MODEL_API SiteGroundTemperatureDeep : public ModelObject {
 
   bool isMonthDefaulted(int month) const;
 
+  std::vector<double> getAllMonthlyTemperatures() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -162,6 +165,8 @@ class MODEL_API SiteGroundTemperatureDeep : public ModelObject {
   void resetTemperatureByMonth(int month);
 
   void resetAllMonths();
+
+  void setAllMonthlyTemperatures(const std::vector<double> &monthly_temperatures);
 
   //@}
  protected:
