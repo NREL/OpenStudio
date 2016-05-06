@@ -107,6 +107,8 @@ namespace detail {
 
     bool isDecemberDeepGroundTemperatureDefaulted() const;
 
+    double getTemperatureByMonth(int month) const;
+
     //@}
     /** @name Setters */
     //@{

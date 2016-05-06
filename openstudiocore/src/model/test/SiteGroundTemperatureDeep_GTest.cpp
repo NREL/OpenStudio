@@ -140,4 +140,7 @@ TEST_F(ModelFixture, SiteGroundTemperatureDeep_SetGetFields)
   ASSERT_FALSE(ground_temp.isDecemberDeepGroundTemperatureDefaulted());
   ASSERT_EQ(20.0, ground_temp.decemberDeepGroundTemperature());
 
+  // Check the new getter
+  ASSERT_EQ(24.0, ground_temp.getTemperatureByMonth(8));
+
 }
