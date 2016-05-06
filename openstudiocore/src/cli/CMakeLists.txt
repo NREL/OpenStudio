@@ -57,7 +57,9 @@ set(EXTENSION_LIBS "")
 if( UNIX )
   file(GLOB EXTENSION_LIBS "${RUBY_SOURCE_DIR}/ext/**/*.a")
 else()
-  file(GLOB EXTENSION_LIBS "${RUBY_SOURCE_DIR}/ext/**/*.lib")
+  file(GLOB EXTENSION_LIBS_RELEASE "${RUBY_SOURCE_DIR}/ext/**/*.lib")
+  file(GLOB EXTENSION_LIBS_DEBUG "${RUBY_SOURCE_DIR_DEBUG}/ext/**/*.lib")
+  set(EXTENSION_LIBS optimized ${EXTENSION_LIBS_RELEASE} debug ${EXTENSION_LIBS_DEBUG})
 endif()
 
 set(INIT_CALLS "")
@@ -177,15 +179,20 @@ if( UNIX )
   set(TRANSLATION_LIB "${RUBY_SOURCE_DIR}/enc/libtrans.a")
 else()
   target_link_libraries(openstudio wsock32 ws2_32 Iphlpapi Dbghelp Shlwapi)
-  set(ENCODING_LIB "${RUBY_SOURCE_DIR}/enc/libenc.lib")
-  set(TRANSLATION_LIB "${RUBY_SOURCE_DIR}/enc/libtrans.lib")
+  set(ENCODING_LIB optimized "${RUBY_SOURCE_DIR}/enc/libenc.lib" debug "${RUBY_SOURCE_DIR_DEBUG}/enc/libenc.lib")
+  set(TRANSLATION_LIB optimized "${RUBY_SOURCE_DIR}/enc/libtrans.lib" debug "${RUBY_SOURCE_DIR}/enc/libtrans.lib")
 endif()
 
 add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 
 # TODO: use finder or something better
 if( WIN32 )
-  set(JSON_LIBS "${RUBY_SOURCE_DIR}/ext/json/generator/generator.lib" "${RUBY_SOURCE_DIR}/ext/json/parser/parser.lib")
+  set(JSON_LIBS optimized 
+          "${RUBY_SOURCE_DIR}/ext/json/generator/generator.lib" 
+          "${RUBY_SOURCE_DIR}/ext/json/parser/parser.lib"
+          debug
+          "${RUBY_SOURCE_DIR_DEBUG}/ext/json/generator/generator.lib" 
+          "${RUBY_SOURCE_DIR_DEBUG}/ext/json/parser/parser.lib")
 else()
   set(JSON_LIBS "${RUBY_SOURCE_DIR}/ext/json/generator/generator.a" "${RUBY_SOURCE_DIR}/ext/json/parser/parser.a")
 endif()
