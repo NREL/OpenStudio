@@ -23,6 +23,7 @@
 #include <vector>
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
+#include <utilities/time/Date.hpp>
 
 namespace openstudio {
 namespace model {
@@ -104,7 +105,11 @@ class MODEL_API SiteGroundTemperatureDeep : public ModelObject {
 
   double getTemperatureByMonth(int month) const;
 
+  double getTemperatureByMonth(const openstudio::MonthOfYear & month) const;
+
   bool isMonthDefaulted(int month) const;
+
+  bool isMonthDefaulted(const openstudio::MonthOfYear & month) const;
 
   std::vector<double> getAllMonthlyTemperatures() const;
 
@@ -162,7 +167,11 @@ class MODEL_API SiteGroundTemperatureDeep : public ModelObject {
 
   void setTemperatureByMonth(int month, double temperature);
 
+  void setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature);
+
   void resetTemperatureByMonth(int month);
+
+  void resetTemperatureByMonth(const openstudio::MonthOfYear & month);
 
   void resetAllMonths();
 

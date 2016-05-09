@@ -25,6 +25,7 @@
 #include "../SiteGroundTemperatureDeep_Impl.hpp"
 #include "../Model.hpp"
 #include "../../utilities/core/Exception.hpp"
+#include "../../utilities/time/Date.hpp"
 
 using namespace openstudio::model;
 
@@ -189,6 +190,13 @@ TEST_F(ModelFixture, SiteGroundTemperatureDeep_SetGetFields)
     ASSERT_FALSE(ground_temp.isMonthDefaulted(i+1));
     ASSERT_EQ(temperatures[i], ground_temp.getTemperatureByMonth(i+1));
   }
+
+  // Test the ...byMonth getter/setters with MonthOfYear enums
+  ground_temp.resetAllMonths();
+  ground_temp.setTemperatureByMonth(openstudio::MonthOfYear::Jan, 15.0);
+  ASSERT_EQ(ground_temp.getTemperatureByMonth(openstudio::MonthOfYear::Jan), 15.0);
+  ground_temp.resetTemperatureByMonth(openstudio::MonthOfYear::Jan);
+  ASSERT_TRUE(ground_temp.isMonthDefaulted(openstudio::MonthOfYear::Jan));
 
   // Test exceptions on an invalid month
   try {

@@ -29,8 +29,8 @@
 
 #include <utilities/idd/OS_Site_GroundTemperature_Deep_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-
-#include "../utilities/core/Assert.hpp"
+#include <utilities/core/Assert.hpp>
+#include <utilities/time/Date.hpp>
 
 namespace openstudio {
 namespace model {
@@ -218,6 +218,10 @@ namespace detail {
     return retval;
   }
 
+  double SiteGroundTemperatureDeep_Impl::getTemperatureByMonth(const openstudio::MonthOfYear & month) const {
+    return getTemperatureByMonth(month.value());
+  }
+
   bool SiteGroundTemperatureDeep_Impl::isMonthDefaulted(int month) const {
     bool is_defaulted;
     switch(month) {
@@ -236,6 +240,10 @@ namespace detail {
       default : LOG_AND_THROW("SiteGroundTemperature::getTemperatureByMonth: Invalid Month " + std::to_string(month)); break;
     }
     return is_defaulted;
+  }
+
+  bool SiteGroundTemperatureDeep_Impl::isMonthDefaulted(const openstudio::MonthOfYear & month) const {
+    return isMonthDefaulted(month.value());
   }
 
   std::vector<double> SiteGroundTemperatureDeep_Impl::getAllMonthlyTemperatures() const {
@@ -385,6 +393,10 @@ namespace detail {
     }
   }
 
+  void SiteGroundTemperatureDeep_Impl::setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature) {
+    return setTemperatureByMonth(month.value(), temperature);
+  }
+
   void SiteGroundTemperatureDeep_Impl::resetTemperatureByMonth(int month) {
     switch(month) {
       case 1 : resetJanuaryDeepGroundTemperature(); break;
@@ -401,6 +413,10 @@ namespace detail {
       case 12 : resetDecemberDeepGroundTemperature(); break;
       default : LOG_AND_THROW("SiteGroundTemperature::getTemperatureByMonth: Invalid Month " + std::to_string(month)); break;
     }
+  }
+
+  void SiteGroundTemperatureDeep_Impl::resetTemperatureByMonth(const openstudio::MonthOfYear & month) {
+    return resetTemperatureByMonth(month.value());
   }
 
   void SiteGroundTemperatureDeep_Impl::resetAllMonths() {
@@ -523,7 +539,15 @@ double SiteGroundTemperatureDeep::getTemperatureByMonth(int month) const {
   return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->getTemperatureByMonth(month);
 }
 
+double SiteGroundTemperatureDeep::getTemperatureByMonth(const openstudio::MonthOfYear & month) const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->getTemperatureByMonth(month);
+}
+
 bool SiteGroundTemperatureDeep::isMonthDefaulted(int month) const {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isMonthDefaulted(month);
+}
+
+bool SiteGroundTemperatureDeep::isMonthDefaulted(const openstudio::MonthOfYear & month) const {
   return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->isMonthDefaulted(month);
 }
 
@@ -631,7 +655,15 @@ void SiteGroundTemperatureDeep::setTemperatureByMonth(int month, double temperat
   getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setTemperatureByMonth(month, temperature);
 }
 
+void SiteGroundTemperatureDeep::setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature) {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setTemperatureByMonth(month, temperature);
+}
+
 void SiteGroundTemperatureDeep::resetTemperatureByMonth(int month) {
+  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetTemperatureByMonth(month);
+}
+
+void SiteGroundTemperatureDeep::resetTemperatureByMonth(const openstudio::MonthOfYear & month) {
   getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetTemperatureByMonth(month);
 }
 
