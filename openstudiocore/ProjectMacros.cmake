@@ -54,18 +54,20 @@ macro(CREATE_TEST_TARGETS BASE_NAME SRC DEPENDENCIES)
 
     CREATE_SRC_GROUPS("${SRC}")
 
-    get_target_property(BASE_NAME_TYPE ${BASE_NAME} TYPE)
-    if("${BASE_NAME_TYPE}" STREQUAL "EXECUTABLE")
-      # don't link base name
-      set(ALL_DEPENDENCIES ${DEPENDENCIES})
-    elseif("${BASE_NAME_TYPE}" STREQUAL "BASE_NAME_TYPE-NOTFOUND")
-      # don't link base name
-      set(ALL_DEPENDENCIES ${DEPENDENCIES})
+    if(TARGET ${BASE_NAME})
+      get_target_property(BASE_NAME_TYPE ${BASE_NAME} TYPE)
+      if("${BASE_NAME_TYPE}" STREQUAL "EXECUTABLE")
+        # don't link base name
+        set(ALL_DEPENDENCIES ${DEPENDENCIES})
+      else()
+        # also link base name
+        set(ALL_DEPENDENCIES ${BASE_NAME} ${DEPENDENCIES})
+      endif()
     else()
-      # also link base name
-      set(ALL_DEPENDENCIES ${BASE_NAME} ${DEPENDENCIES})
+      # don't link base name
+      set(ALL_DEPENDENCIES ${DEPENDENCIES})
     endif()
-
+    
     target_link_libraries(${BASE_NAME}_tests
       gtest
       gtest_main
