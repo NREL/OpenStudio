@@ -490,6 +490,23 @@ WaterHeaterHeatPumpWrappedCondenser::WaterHeaterHeatPumpWrappedCondenser(const M
 
 }
 
+WaterHeaterHeatPumpWrappedCondenser::WaterHeaterHeatPumpWrappedCondenser(const Model& model,
+  const HVACComponent & dxCoil,
+  const HVACComponent & tank,
+  const HVACComponent & fan,
+  Schedule & compressorSetpointTemperatureSchedule,
+  Schedule & inletAirMixerSchedule)
+  : ZoneHVACComponent(WaterHeaterHeatPumpWrappedCondenser::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::WaterHeaterHeatPumpWrappedCondenser_Impl>());
+
+  setDXCoil(dxCoil);
+  setTank(tank);
+  setFan(fan);
+  setCompressorSetpointTemperatureSchedule(compressorSetpointTemperatureSchedule);
+  setInletAirMixerSchedule(inletAirMixerSchedule);
+}
+
 IddObjectType WaterHeaterHeatPumpWrappedCondenser::iddObjectType() {
   return IddObjectType(IddObjectType::OS_WaterHeater_HeatPump_WrappedCondenser);
 }

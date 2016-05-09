@@ -44,6 +44,13 @@ class MODEL_API WaterHeaterHeatPumpWrappedCondenser : public ZoneHVACComponent {
 
   explicit WaterHeaterHeatPumpWrappedCondenser(const Model& model);
 
+  explicit WaterHeaterHeatPumpWrappedCondenser(const Model& model,
+    const HVACComponent & dxCoil,
+    const HVACComponent & tank,
+    const HVACComponent & fan,
+    Schedule & compressorSetpointTemperatureSchedule,
+    Schedule & inletAirMixerSchedule);
+
   virtual ~WaterHeaterHeatPumpWrappedCondenser() {}
 
   //@}
