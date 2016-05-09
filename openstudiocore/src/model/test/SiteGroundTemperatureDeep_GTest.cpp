@@ -39,7 +39,7 @@ TEST_F(ModelFixture, SiteGroundTemperatureDeep_SiteGroundTemperatureDeep)
       Model m;
 
       // create a SiteGroundTemperatureDeep object
-      SiteGroundTemperatureDeep ground_temp(m);
+      SiteGroundTemperatureDeep groundTemp(m);
       exit(0);
     },
     ::testing::ExitedWithCode(0),
@@ -50,21 +50,21 @@ TEST_F(ModelFixture, SiteGroundTemperatureDeep_SiteGroundTemperatureDeep)
   Model m;
 
   // create a SiteGroundTemperatureDeep object
-  SiteGroundTemperatureDeep ground_temp(m);
+  SiteGroundTemperatureDeep groundTemp(m);
 
   // Check to make sure all the fields are defaulted as expected
-  EXPECT_TRUE(ground_temp.isJanuaryDeepGroundTemperatureDefaulted());
-  EXPECT_TRUE(ground_temp.isFebruaryDeepGroundTemperatureDefaulted());
-  EXPECT_TRUE(ground_temp.isMarchDeepGroundTemperatureDefaulted());
-  EXPECT_TRUE(ground_temp.isAprilDeepGroundTemperatureDefaulted());
-  EXPECT_TRUE(ground_temp.isMayDeepGroundTemperatureDefaulted());
-  EXPECT_TRUE(ground_temp.isJuneDeepGroundTemperatureDefaulted());
-  EXPECT_TRUE(ground_temp.isJulyDeepGroundTemperatureDefaulted());
-  EXPECT_TRUE(ground_temp.isAugustDeepGroundTemperatureDefaulted());
-  EXPECT_TRUE(ground_temp.isSeptemberDeepGroundTemperatureDefaulted());
-  EXPECT_TRUE(ground_temp.isOctoberDeepGroundTemperatureDefaulted());
-  EXPECT_TRUE(ground_temp.isNovemberDeepGroundTemperatureDefaulted());
-  EXPECT_TRUE(ground_temp.isDecemberDeepGroundTemperatureDefaulted());
+  EXPECT_TRUE(groundTemp.isJanuaryDeepGroundTemperatureDefaulted());
+  EXPECT_TRUE(groundTemp.isFebruaryDeepGroundTemperatureDefaulted());
+  EXPECT_TRUE(groundTemp.isMarchDeepGroundTemperatureDefaulted());
+  EXPECT_TRUE(groundTemp.isAprilDeepGroundTemperatureDefaulted());
+  EXPECT_TRUE(groundTemp.isMayDeepGroundTemperatureDefaulted());
+  EXPECT_TRUE(groundTemp.isJuneDeepGroundTemperatureDefaulted());
+  EXPECT_TRUE(groundTemp.isJulyDeepGroundTemperatureDefaulted());
+  EXPECT_TRUE(groundTemp.isAugustDeepGroundTemperatureDefaulted());
+  EXPECT_TRUE(groundTemp.isSeptemberDeepGroundTemperatureDefaulted());
+  EXPECT_TRUE(groundTemp.isOctoberDeepGroundTemperatureDefaulted());
+  EXPECT_TRUE(groundTemp.isNovemberDeepGroundTemperatureDefaulted());
+  EXPECT_TRUE(groundTemp.isDecemberDeepGroundTemperatureDefaulted());
 
 }
 
@@ -75,23 +75,23 @@ TEST_F(ModelFixture, SiteGroundTemperatureDeep_Clone)
   Model m;
 
   // Create the object
-  SiteGroundTemperatureDeep ground_temp(m);
+  SiteGroundTemperatureDeep groundTemp(m);
 
   // Change some of the fields
-  ground_temp.setJanuaryDeepGroundTemperature(25.0);
+  groundTemp.setJanuaryDeepGroundTemperature(25.0);
 
   // Clone it into the same model
-  SiteGroundTemperatureDeep ground_temp_clone = ground_temp.clone(m).cast<SiteGroundTemperatureDeep>();
-  ASSERT_FALSE(ground_temp_clone.isJanuaryDeepGroundTemperatureDefaulted());
-  ASSERT_EQ(25.0, ground_temp_clone.januaryDeepGroundTemperature());
-  ASSERT_TRUE(ground_temp_clone.isFebruaryDeepGroundTemperatureDefaulted());
+  SiteGroundTemperatureDeep groundTempClone = groundTemp.clone(m).cast<SiteGroundTemperatureDeep>();
+  ASSERT_FALSE(groundTempClone.isJanuaryDeepGroundTemperatureDefaulted());
+  ASSERT_EQ(25.0, groundTempClone.januaryDeepGroundTemperature());
+  ASSERT_TRUE(groundTempClone.isFebruaryDeepGroundTemperatureDefaulted());
 
   // Clone it into a different model
   Model m2;
-  SiteGroundTemperatureDeep ground_temp_clone2 = ground_temp.clone(m2).cast<SiteGroundTemperatureDeep>();
-  ASSERT_FALSE(ground_temp_clone2.isJanuaryDeepGroundTemperatureDefaulted());
-  ASSERT_EQ(25.0, ground_temp_clone2.januaryDeepGroundTemperature());
-  ASSERT_TRUE(ground_temp_clone2.isFebruaryDeepGroundTemperatureDefaulted());
+  SiteGroundTemperatureDeep groundTempClone2 = groundTemp.clone(m2).cast<SiteGroundTemperatureDeep>();
+  ASSERT_FALSE(groundTempClone2.isJanuaryDeepGroundTemperatureDefaulted());
+  ASSERT_EQ(25.0, groundTempClone2.januaryDeepGroundTemperature());
+  ASSERT_TRUE(groundTempClone2.isFebruaryDeepGroundTemperatureDefaulted());
 
 }
 
@@ -102,64 +102,64 @@ TEST_F(ModelFixture, SiteGroundTemperatureDeep_SetGetFields)
   Model m;
 
   // Create the object
-  SiteGroundTemperatureDeep ground_temp(m);
+  SiteGroundTemperatureDeep groundTemp(m);
 
   // Set the fields
-  ground_temp.setJanuaryDeepGroundTemperature(20.0);
-  ground_temp.setFebruaryDeepGroundTemperature(21.0);
-  ground_temp.setMarchDeepGroundTemperature(22.0);
-  ground_temp.setAprilDeepGroundTemperature(23.0);
-  ground_temp.setMayDeepGroundTemperature(24.0);
-  ground_temp.setJuneDeepGroundTemperature(25.0);
-  ground_temp.setJulyDeepGroundTemperature(25.0);
-  ground_temp.setAugustDeepGroundTemperature(24.0);
-  ground_temp.setSeptemberDeepGroundTemperature(23.0);
-  ground_temp.setOctoberDeepGroundTemperature(22.0);
-  ground_temp.setNovemberDeepGroundTemperature(21.0);
-  ground_temp.setDecemberDeepGroundTemperature(20.0);
+  groundTemp.setJanuaryDeepGroundTemperature(20.0);
+  groundTemp.setFebruaryDeepGroundTemperature(21.0);
+  groundTemp.setMarchDeepGroundTemperature(22.0);
+  groundTemp.setAprilDeepGroundTemperature(23.0);
+  groundTemp.setMayDeepGroundTemperature(24.0);
+  groundTemp.setJuneDeepGroundTemperature(25.0);
+  groundTemp.setJulyDeepGroundTemperature(25.0);
+  groundTemp.setAugustDeepGroundTemperature(24.0);
+  groundTemp.setSeptemberDeepGroundTemperature(23.0);
+  groundTemp.setOctoberDeepGroundTemperature(22.0);
+  groundTemp.setNovemberDeepGroundTemperature(21.0);
+  groundTemp.setDecemberDeepGroundTemperature(20.0);
 
   // Check the fields
-  ASSERT_FALSE(ground_temp.isJanuaryDeepGroundTemperatureDefaulted());
-  ASSERT_EQ(20.0, ground_temp.januaryDeepGroundTemperature());
-  ASSERT_EQ(20.0, ground_temp.getTemperatureByMonth(1));
-  ASSERT_FALSE(ground_temp.isFebruaryDeepGroundTemperatureDefaulted());
-  ASSERT_EQ(21.0, ground_temp.februaryDeepGroundTemperature());
-  ASSERT_EQ(21.0, ground_temp.getTemperatureByMonth(2));
-  ASSERT_FALSE(ground_temp.isMarchDeepGroundTemperatureDefaulted());
-  ASSERT_EQ(22.0, ground_temp.marchDeepGroundTemperature());
-  ASSERT_EQ(22.0, ground_temp.getTemperatureByMonth(3));
-  ASSERT_FALSE(ground_temp.isAprilDeepGroundTemperatureDefaulted());
-  ASSERT_EQ(23.0, ground_temp.aprilDeepGroundTemperature());
-  ASSERT_EQ(23.0, ground_temp.getTemperatureByMonth(4));
-  ASSERT_FALSE(ground_temp.isMayDeepGroundTemperatureDefaulted());
-  ASSERT_EQ(24.0, ground_temp.mayDeepGroundTemperature());
-  ASSERT_EQ(24.0, ground_temp.getTemperatureByMonth(5));
-  ASSERT_FALSE(ground_temp.isJuneDeepGroundTemperatureDefaulted());
-  ASSERT_EQ(25.0, ground_temp.juneDeepGroundTemperature());
-  ASSERT_EQ(25.0, ground_temp.getTemperatureByMonth(6));
-  ASSERT_FALSE(ground_temp.isJulyDeepGroundTemperatureDefaulted());
-  ASSERT_EQ(25.0, ground_temp.julyDeepGroundTemperature());
-  ASSERT_EQ(25.0, ground_temp.getTemperatureByMonth(7));
-  ASSERT_FALSE(ground_temp.isAugustDeepGroundTemperatureDefaulted());
-  ASSERT_EQ(24.0, ground_temp.augustDeepGroundTemperature());
-  ASSERT_EQ(24.0, ground_temp.getTemperatureByMonth(8));
-  ASSERT_FALSE(ground_temp.isSeptemberDeepGroundTemperatureDefaulted());
-  ASSERT_EQ(23.0, ground_temp.septemberDeepGroundTemperature());
-  ASSERT_EQ(23.0, ground_temp.getTemperatureByMonth(9));
-  ASSERT_FALSE(ground_temp.isOctoberDeepGroundTemperatureDefaulted());
-  ASSERT_EQ(22.0, ground_temp.octoberDeepGroundTemperature());
-  ASSERT_EQ(22.0, ground_temp.getTemperatureByMonth(10));
-  ASSERT_FALSE(ground_temp.isNovemberDeepGroundTemperatureDefaulted());
-  ASSERT_EQ(21.0, ground_temp.novemberDeepGroundTemperature());
-  ASSERT_EQ(21.0, ground_temp.getTemperatureByMonth(11));
-  ASSERT_FALSE(ground_temp.isDecemberDeepGroundTemperatureDefaulted());
-  ASSERT_EQ(20.0, ground_temp.decemberDeepGroundTemperature());
-  ASSERT_EQ(20.0, ground_temp.getTemperatureByMonth(12));
+  ASSERT_FALSE(groundTemp.isJanuaryDeepGroundTemperatureDefaulted());
+  ASSERT_EQ(20.0, groundTemp.januaryDeepGroundTemperature());
+  ASSERT_EQ(20.0, groundTemp.getTemperatureByMonth(1));
+  ASSERT_FALSE(groundTemp.isFebruaryDeepGroundTemperatureDefaulted());
+  ASSERT_EQ(21.0, groundTemp.februaryDeepGroundTemperature());
+  ASSERT_EQ(21.0, groundTemp.getTemperatureByMonth(2));
+  ASSERT_FALSE(groundTemp.isMarchDeepGroundTemperatureDefaulted());
+  ASSERT_EQ(22.0, groundTemp.marchDeepGroundTemperature());
+  ASSERT_EQ(22.0, groundTemp.getTemperatureByMonth(3));
+  ASSERT_FALSE(groundTemp.isAprilDeepGroundTemperatureDefaulted());
+  ASSERT_EQ(23.0, groundTemp.aprilDeepGroundTemperature());
+  ASSERT_EQ(23.0, groundTemp.getTemperatureByMonth(4));
+  ASSERT_FALSE(groundTemp.isMayDeepGroundTemperatureDefaulted());
+  ASSERT_EQ(24.0, groundTemp.mayDeepGroundTemperature());
+  ASSERT_EQ(24.0, groundTemp.getTemperatureByMonth(5));
+  ASSERT_FALSE(groundTemp.isJuneDeepGroundTemperatureDefaulted());
+  ASSERT_EQ(25.0, groundTemp.juneDeepGroundTemperature());
+  ASSERT_EQ(25.0, groundTemp.getTemperatureByMonth(6));
+  ASSERT_FALSE(groundTemp.isJulyDeepGroundTemperatureDefaulted());
+  ASSERT_EQ(25.0, groundTemp.julyDeepGroundTemperature());
+  ASSERT_EQ(25.0, groundTemp.getTemperatureByMonth(7));
+  ASSERT_FALSE(groundTemp.isAugustDeepGroundTemperatureDefaulted());
+  ASSERT_EQ(24.0, groundTemp.augustDeepGroundTemperature());
+  ASSERT_EQ(24.0, groundTemp.getTemperatureByMonth(8));
+  ASSERT_FALSE(groundTemp.isSeptemberDeepGroundTemperatureDefaulted());
+  ASSERT_EQ(23.0, groundTemp.septemberDeepGroundTemperature());
+  ASSERT_EQ(23.0, groundTemp.getTemperatureByMonth(9));
+  ASSERT_FALSE(groundTemp.isOctoberDeepGroundTemperatureDefaulted());
+  ASSERT_EQ(22.0, groundTemp.octoberDeepGroundTemperature());
+  ASSERT_EQ(22.0, groundTemp.getTemperatureByMonth(10));
+  ASSERT_FALSE(groundTemp.isNovemberDeepGroundTemperatureDefaulted());
+  ASSERT_EQ(21.0, groundTemp.novemberDeepGroundTemperature());
+  ASSERT_EQ(21.0, groundTemp.getTemperatureByMonth(11));
+  ASSERT_FALSE(groundTemp.isDecemberDeepGroundTemperatureDefaulted());
+  ASSERT_EQ(20.0, groundTemp.decemberDeepGroundTemperature());
+  ASSERT_EQ(20.0, groundTemp.getTemperatureByMonth(12));
 
   // Reset them all and make sure they're all defaulted again.
-  ground_temp.resetAllMonths();
+  groundTemp.resetAllMonths();
   for (int i = 1; i <= 12; ++i) {
-    ASSERT_TRUE(ground_temp.isMonthDefaulted(i));
+    ASSERT_TRUE(groundTemp.isMonthDefaulted(i));
   }
 
   // Test the setTemperatureByMonth and getTemperatureByMonth methods.
@@ -170,65 +170,65 @@ TEST_F(ModelFixture, SiteGroundTemperatureDeep_SetGetFields)
   }
   ASSERT_EQ(temperatures.size(), 12);
   for (int i=1; i <= 12; ++i) {
-    ground_temp.setTemperatureByMonth(i, temperatures[i-1]);
-    ASSERT_FALSE(ground_temp.isMonthDefaulted(i));
-    ASSERT_EQ(temperatures[i-1], ground_temp.getTemperatureByMonth(i));
+    groundTemp.setTemperatureByMonth(i, temperatures[i-1]);
+    ASSERT_FALSE(groundTemp.isMonthDefaulted(i));
+    ASSERT_EQ(temperatures[i-1], groundTemp.getTemperatureByMonth(i));
   }
 
   // Reset them one by one with the resetTemperatureByMonth method and check that it worked.
   for (int i = 1; i <= 12; ++i) {
-    ground_temp.resetTemperatureByMonth(i);
-    ASSERT_TRUE(ground_temp.isMonthDefaulted(i));
+    groundTemp.resetTemperatureByMonth(i);
+    ASSERT_TRUE(groundTemp.isMonthDefaulted(i));
   }
 
   // Test the vector getter/setters
-  bool setWorked = ground_temp.setAllMonthlyTemperatures(temperatures);
+  bool setWorked = groundTemp.setAllMonthlyTemperatures(temperatures);
   ASSERT_TRUE(setWorked);
-  std::vector<double> returned_temperatures = ground_temp.getAllMonthlyTemperatures();
+  std::vector<double> returned_temperatures = groundTemp.getAllMonthlyTemperatures();
   ASSERT_EQ(temperatures.size(), 12);
   for (int i=0; i < 12; ++i) {
     ASSERT_EQ(temperatures[i], returned_temperatures[i]);
-    ASSERT_FALSE(ground_temp.isMonthDefaulted(i+1));
-    ASSERT_EQ(temperatures[i], ground_temp.getTemperatureByMonth(i+1));
+    ASSERT_FALSE(groundTemp.isMonthDefaulted(i+1));
+    ASSERT_EQ(temperatures[i], groundTemp.getTemperatureByMonth(i+1));
   }
 
   // Try to set the monthly temperatures with a vector of the wrong length
   temperatures.push_back(20.4);
   ASSERT_EQ(temperatures.size(), 13);
-  setWorked = ground_temp.setAllMonthlyTemperatures(temperatures);
+  setWorked = groundTemp.setAllMonthlyTemperatures(temperatures);
   ASSERT_FALSE(setWorked);
 
   // Test the ...byMonth getter/setters with MonthOfYear enums
-  ground_temp.resetAllMonths();
-  ground_temp.setTemperatureByMonth(openstudio::MonthOfYear::Jan, 15.0);
-  ASSERT_EQ(ground_temp.getTemperatureByMonth(openstudio::MonthOfYear::Jan), 15.0);
-  ground_temp.resetTemperatureByMonth(openstudio::MonthOfYear::Jan);
-  ASSERT_TRUE(ground_temp.isMonthDefaulted(openstudio::MonthOfYear::Jan));
+  groundTemp.resetAllMonths();
+  groundTemp.setTemperatureByMonth(openstudio::MonthOfYear::Jan, 15.0);
+  ASSERT_EQ(groundTemp.getTemperatureByMonth(openstudio::MonthOfYear::Jan), 15.0);
+  groundTemp.resetTemperatureByMonth(openstudio::MonthOfYear::Jan);
+  ASSERT_TRUE(groundTemp.isMonthDefaulted(openstudio::MonthOfYear::Jan));
 
   // Test exceptions on an invalid month
   try {
-    ground_temp.getTemperatureByMonth(13);
+    groundTemp.getTemperatureByMonth(13);
   } catch (openstudio::Exception const & err) {
     ASSERT_TRUE(boost::algorithm::ends_with(err.message(), "Invalid Month 13"));
   } catch (...) {
     FAIL();
   }
   try {
-    ground_temp.isMonthDefaulted(13);
+    groundTemp.isMonthDefaulted(13);
   } catch (openstudio::Exception const & err) {
     ASSERT_TRUE(boost::algorithm::ends_with(err.message(), "Invalid Month 13"));
   } catch (...) {
     FAIL();
   }
   try {
-    ground_temp.setTemperatureByMonth(13, 19.2);
+    groundTemp.setTemperatureByMonth(13, 19.2);
   } catch (openstudio::Exception const & err) {
     ASSERT_TRUE(boost::algorithm::ends_with(err.message(), "Invalid Month 13"));
   } catch (...) {
     FAIL();
   }
   try {
-    ground_temp.resetTemperatureByMonth(13);
+    groundTemp.resetTemperatureByMonth(13);
   } catch (openstudio::Exception const & err) {
     ASSERT_TRUE(boost::algorithm::ends_with(err.message(), "Invalid Month 13"));
   } catch (...) {
