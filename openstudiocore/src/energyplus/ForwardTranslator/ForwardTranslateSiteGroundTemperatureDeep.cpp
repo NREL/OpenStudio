@@ -40,53 +40,29 @@ boost::optional<IdfObject> ForwardTranslator::translateSiteGroundTemperatureDeep
 
   m_idfObjects.push_back(idfObject);
 
-  if (!modelObject.isJanuaryDeepGroundTemperatureDefaulted()){
-    idfObject.setDouble(Site_GroundTemperature_DeepFields::JanuaryDeepGroundTemperature, modelObject.januaryDeepGroundTemperature());
-  }
+  idfObject.setDouble(Site_GroundTemperature_DeepFields::JanuaryDeepGroundTemperature, modelObject.januaryDeepGroundTemperature());
 
-  if (!modelObject.isFebruaryDeepGroundTemperatureDefaulted()){
-    idfObject.setDouble(Site_GroundTemperature_DeepFields::FebruaryDeepGroundTemperature, modelObject.februaryDeepGroundTemperature());
-  }
+  idfObject.setDouble(Site_GroundTemperature_DeepFields::FebruaryDeepGroundTemperature, modelObject.februaryDeepGroundTemperature());
 
-  if (!modelObject.isMarchDeepGroundTemperatureDefaulted()){
-    idfObject.setDouble(Site_GroundTemperature_DeepFields::MarchDeepGroundTemperature, modelObject.marchDeepGroundTemperature());
-  }
+  idfObject.setDouble(Site_GroundTemperature_DeepFields::MarchDeepGroundTemperature, modelObject.marchDeepGroundTemperature());
 
-  if (!modelObject.isAprilDeepGroundTemperatureDefaulted()){
-    idfObject.setDouble(Site_GroundTemperature_DeepFields::AprilDeepGroundTemperature, modelObject.aprilDeepGroundTemperature());
-  }
+  idfObject.setDouble(Site_GroundTemperature_DeepFields::AprilDeepGroundTemperature, modelObject.aprilDeepGroundTemperature());
 
-  if (!modelObject.isMayDeepGroundTemperatureDefaulted()){
-    idfObject.setDouble(Site_GroundTemperature_DeepFields::MayDeepGroundTemperature, modelObject.mayDeepGroundTemperature());
-  }
+  idfObject.setDouble(Site_GroundTemperature_DeepFields::MayDeepGroundTemperature, modelObject.mayDeepGroundTemperature());
 
-  if (!modelObject.isJuneDeepGroundTemperatureDefaulted()){
-    idfObject.setDouble(Site_GroundTemperature_DeepFields::JuneDeepGroundTemperature, modelObject.juneDeepGroundTemperature());
-  }
+  idfObject.setDouble(Site_GroundTemperature_DeepFields::JuneDeepGroundTemperature, modelObject.juneDeepGroundTemperature());
 
-  if (!modelObject.isJulyDeepGroundTemperatureDefaulted()){
-    idfObject.setDouble(Site_GroundTemperature_DeepFields::JulyDeepGroundTemperature, modelObject.julyDeepGroundTemperature());
-  }
+  idfObject.setDouble(Site_GroundTemperature_DeepFields::JulyDeepGroundTemperature, modelObject.julyDeepGroundTemperature());
 
-  if (!modelObject.isAugustDeepGroundTemperatureDefaulted()){
-    idfObject.setDouble(Site_GroundTemperature_DeepFields::AugustDeepGroundTemperature, modelObject.augustDeepGroundTemperature());
-  }
+  idfObject.setDouble(Site_GroundTemperature_DeepFields::AugustDeepGroundTemperature, modelObject.augustDeepGroundTemperature());
 
-  if (!modelObject.isSeptemberDeepGroundTemperatureDefaulted()){
-    idfObject.setDouble(Site_GroundTemperature_DeepFields::SeptemberDeepGroundTemperature, modelObject.septemberDeepGroundTemperature());
-  }
+  idfObject.setDouble(Site_GroundTemperature_DeepFields::SeptemberDeepGroundTemperature, modelObject.septemberDeepGroundTemperature());
 
-  if (!modelObject.isOctoberGroundTemperatureDefaulted()){
-    idfObject.setDouble(Site_GroundTemperature_DeepFields::OctoberGroundTemperature, modelObject.octoberDeepGroundTemperature());
-  }
+  idfObject.setDouble(Site_GroundTemperature_DeepFields::OctoberGroundTemperature, modelObject.octoberDeepGroundTemperature());
 
-  if (!modelObject.isNovemberDeepGroundTemperatureDefaulted()){
-    idfObject.setDouble(Site_GroundTemperature_DeepFields::NovemberDeepGroundTemperature, modelObject.novemberDeepGroundTemperature());
-  }
+  idfObject.setDouble(Site_GroundTemperature_DeepFields::NovemberDeepGroundTemperature, modelObject.novemberDeepGroundTemperature());
 
-  if (!modelObject.isDecemberDeepGroundTemperatureDefaulted()){
-    idfObject.setDouble(Site_GroundTemperature_DeepFields::DecemberDeepGroundTemperature, modelObject.decemberDeepGroundTemperature());
-  }
+  idfObject.setDouble(Site_GroundTemperature_DeepFields::DecemberDeepGroundTemperature, modelObject.decemberDeepGroundTemperature());
 
   return idfObject;
 }
