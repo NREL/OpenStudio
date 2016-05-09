@@ -19,10 +19,12 @@
 
 #include <vector>
 #include <gtest/gtest.h>
+#include <boost/algorithm/string/predicate.hpp>
 #include "ModelFixture.hpp"
 #include "../SiteGroundTemperatureDeep.hpp"
 #include "../SiteGroundTemperatureDeep_Impl.hpp"
 #include "../Model.hpp"
+#include "../../utilities/core/Exception.hpp"
 
 using namespace openstudio::model;
 
@@ -187,5 +189,36 @@ TEST_F(ModelFixture, SiteGroundTemperatureDeep_SetGetFields)
     ASSERT_FALSE(ground_temp.isMonthDefaulted(i+1));
     ASSERT_EQ(temperatures[i], ground_temp.getTemperatureByMonth(i+1));
   }
+
+  // Test exceptions on an invalid month
+  try {
+    ground_temp.getTemperatureByMonth(13);
+  } catch (openstudio::Exception const & err) {
+    ASSERT_TRUE(boost::algorithm::ends_with(err.message(), "Invalid Month 13"));
+  } catch (...) {
+    FAIL();
+  }
+  try {
+    ground_temp.isMonthDefaulted(13);
+  } catch (openstudio::Exception const & err) {
+    ASSERT_TRUE(boost::algorithm::ends_with(err.message(), "Invalid Month 13"));
+  } catch (...) {
+    FAIL();
+  }
+  try {
+    ground_temp.setTemperatureByMonth(13, 19.2);
+  } catch (openstudio::Exception const & err) {
+    ASSERT_TRUE(boost::algorithm::ends_with(err.message(), "Invalid Month 13"));
+  } catch (...) {
+    FAIL();
+  }
+  try {
+    ground_temp.resetTemperatureByMonth(13);
+  } catch (openstudio::Exception const & err) {
+    ASSERT_TRUE(boost::algorithm::ends_with(err.message(), "Invalid Month 13"));
+  } catch (...) {
+    FAIL();
+  }
+
 
 }

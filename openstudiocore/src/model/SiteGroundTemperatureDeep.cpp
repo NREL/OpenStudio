@@ -18,6 +18,7 @@
  **********************************************************************/
 
 #include <vector>
+#include <string>
 #include "SiteGroundTemperatureDeep.hpp"
 #include "SiteGroundTemperatureDeep_Impl.hpp"
 
@@ -212,6 +213,7 @@ namespace detail {
       case 10 : retval = octoberDeepGroundTemperature(); break;
       case 11 : retval = novemberDeepGroundTemperature(); break;
       case 12 : retval = decemberDeepGroundTemperature(); break;
+      default : LOG_AND_THROW("SiteGroundTemperature::getTemperatureByMonth: Invalid Month " + std::to_string(month)); break;
     }
     return retval;
   }
@@ -231,6 +233,7 @@ namespace detail {
       case 10 : is_defaulted = isOctoberDeepGroundTemperatureDefaulted(); break;
       case 11 : is_defaulted = isNovemberDeepGroundTemperatureDefaulted(); break;
       case 12 : is_defaulted = isDecemberDeepGroundTemperatureDefaulted(); break;
+      default : LOG_AND_THROW("SiteGroundTemperature::getTemperatureByMonth: Invalid Month " + std::to_string(month)); break;
     }
     return is_defaulted;
   }
@@ -378,6 +381,7 @@ namespace detail {
       case 10 : setOctoberDeepGroundTemperature(temperature); break;
       case 11 : setNovemberDeepGroundTemperature(temperature); break;
       case 12 : setDecemberDeepGroundTemperature(temperature); break;
+      default : LOG_AND_THROW("SiteGroundTemperature::getTemperatureByMonth: Invalid Month " + std::to_string(month)); break;
     }
   }
 
@@ -395,6 +399,7 @@ namespace detail {
       case 10 : resetOctoberDeepGroundTemperature(); break;
       case 11 : resetNovemberDeepGroundTemperature(); break;
       case 12 : resetDecemberDeepGroundTemperature(); break;
+      default : LOG_AND_THROW("SiteGroundTemperature::getTemperatureByMonth: Invalid Month " + std::to_string(month)); break;
     }
   }
 
