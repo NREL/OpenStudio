@@ -175,7 +175,7 @@ class MODEL_API SiteGroundTemperatureDeep : public ModelObject {
 
   void resetAllMonths();
 
-  void setAllMonthlyTemperatures(const std::vector<double> &monthly_temperatures);
+  bool setAllMonthlyTemperatures(const std::vector<double> &monthly_temperatures);
 
   //@}
  protected:

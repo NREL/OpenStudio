@@ -182,7 +182,8 @@ TEST_F(ModelFixture, SiteGroundTemperatureDeep_SetGetFields)
   }
 
   // Test the vector getter/setters
-  ground_temp.setAllMonthlyTemperatures(temperatures);
+  bool setWorked = ground_temp.setAllMonthlyTemperatures(temperatures);
+  ASSERT_TRUE(setWorked);
   std::vector<double> returned_temperatures = ground_temp.getAllMonthlyTemperatures();
   ASSERT_EQ(temperatures.size(), 12);
   for (int i=0; i < 12; ++i) {
@@ -190,6 +191,12 @@ TEST_F(ModelFixture, SiteGroundTemperatureDeep_SetGetFields)
     ASSERT_FALSE(ground_temp.isMonthDefaulted(i+1));
     ASSERT_EQ(temperatures[i], ground_temp.getTemperatureByMonth(i+1));
   }
+
+  // Try to set the monthly temperatures with a vector of the wrong length
+  temperatures.push_back(20.4);
+  ASSERT_EQ(temperatures.size(), 13);
+  setWorked = ground_temp.setAllMonthlyTemperatures(temperatures);
+  ASSERT_FALSE(setWorked);
 
   // Test the ...byMonth getter/setters with MonthOfYear enums
   ground_temp.resetAllMonths();

@@ -425,10 +425,14 @@ namespace detail {
     }
   }
 
-  void SiteGroundTemperatureDeep_Impl::setAllMonthlyTemperatures(const std::vector<double> &monthly_temperatures) {
-    OS_ASSERT(monthly_temperatures.size() == 12);
-    for (int i = 1; i <= 12; ++i) {
-      setTemperatureByMonth(i, monthly_temperatures[i-1]);
+  bool SiteGroundTemperatureDeep_Impl::setAllMonthlyTemperatures(const std::vector<double> &monthly_temperatures) {
+    if (monthly_temperatures.size() == 12) {
+      for (int i = 1; i <= 12; ++i) {
+        setTemperatureByMonth(i, monthly_temperatures[i-1]);
+      }
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -671,8 +675,8 @@ void SiteGroundTemperatureDeep::resetAllMonths() {
   getImpl<detail::SiteGroundTemperatureDeep_Impl>()->resetAllMonths();
 }
 
-void SiteGroundTemperatureDeep::setAllMonthlyTemperatures(const std::vector<double> &monthly_temperatures) {
-  getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setAllMonthlyTemperatures(monthly_temperatures);
+bool SiteGroundTemperatureDeep::setAllMonthlyTemperatures(const std::vector<double> &monthly_temperatures) {
+  return getImpl<detail::SiteGroundTemperatureDeep_Impl>()->setAllMonthlyTemperatures(monthly_temperatures);
 }
 
 /// @cond
