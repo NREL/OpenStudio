@@ -1514,6 +1514,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateWaterHeaterHeatPump(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_WaterHeater_HeatPump_WrappedCondenser :
+    {
+      auto mo = modelObject.cast<WaterHeaterHeatPumpWrappedCondenser>();
+      retVal = translateWaterHeaterHeatPumpWrappedCondenser(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_WaterHeater_Stratified :
     {
       model::WaterHeaterStratified waterHeaterStratified = modelObject.cast<WaterHeaterStratified>();

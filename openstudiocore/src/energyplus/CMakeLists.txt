@@ -279,6 +279,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateVersion.cpp
   ForwardTranslator/ForwardTranslateWaterHeaterMixed.cpp
   ForwardTranslator/ForwardTranslateWaterHeaterHeatPump.cpp
+  ForwardTranslator/ForwardTranslateWaterHeaterHeatPumpWrappedCondenser.cpp
   ForwardTranslator/ForwardTranslateWaterHeaterStratified.cpp
   ForwardTranslator/ForwardTranslateWaterUseConnections.cpp
   ForwardTranslator/ForwardTranslateWaterUseEquipment.cpp
