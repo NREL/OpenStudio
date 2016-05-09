@@ -52,18 +52,18 @@ TEST_F(ModelFixture, SiteGroundTemperatureDeep_SiteGroundTemperatureDeep)
   SiteGroundTemperatureDeep ground_temp(m);
 
   // Check to make sure all the fields are defaulted as expected
-  ASSERT_TRUE(ground_temp.isJanuaryDeepGroundTemperatureDefaulted());
-  ASSERT_TRUE(ground_temp.isFebruaryDeepGroundTemperatureDefaulted());
-  ASSERT_TRUE(ground_temp.isMarchDeepGroundTemperatureDefaulted());
-  ASSERT_TRUE(ground_temp.isAprilDeepGroundTemperatureDefaulted());
-  ASSERT_TRUE(ground_temp.isMayDeepGroundTemperatureDefaulted());
-  ASSERT_TRUE(ground_temp.isJuneDeepGroundTemperatureDefaulted());
-  ASSERT_TRUE(ground_temp.isJulyDeepGroundTemperatureDefaulted());
-  ASSERT_TRUE(ground_temp.isAugustDeepGroundTemperatureDefaulted());
-  ASSERT_TRUE(ground_temp.isSeptemberDeepGroundTemperatureDefaulted());
-  ASSERT_TRUE(ground_temp.isOctoberDeepGroundTemperatureDefaulted());
-  ASSERT_TRUE(ground_temp.isNovemberDeepGroundTemperatureDefaulted());
-  ASSERT_TRUE(ground_temp.isDecemberDeepGroundTemperatureDefaulted());
+  EXPECT_TRUE(ground_temp.isJanuaryDeepGroundTemperatureDefaulted());
+  EXPECT_TRUE(ground_temp.isFebruaryDeepGroundTemperatureDefaulted());
+  EXPECT_TRUE(ground_temp.isMarchDeepGroundTemperatureDefaulted());
+  EXPECT_TRUE(ground_temp.isAprilDeepGroundTemperatureDefaulted());
+  EXPECT_TRUE(ground_temp.isMayDeepGroundTemperatureDefaulted());
+  EXPECT_TRUE(ground_temp.isJuneDeepGroundTemperatureDefaulted());
+  EXPECT_TRUE(ground_temp.isJulyDeepGroundTemperatureDefaulted());
+  EXPECT_TRUE(ground_temp.isAugustDeepGroundTemperatureDefaulted());
+  EXPECT_TRUE(ground_temp.isSeptemberDeepGroundTemperatureDefaulted());
+  EXPECT_TRUE(ground_temp.isOctoberDeepGroundTemperatureDefaulted());
+  EXPECT_TRUE(ground_temp.isNovemberDeepGroundTemperatureDefaulted());
+  EXPECT_TRUE(ground_temp.isDecemberDeepGroundTemperatureDefaulted());
 
 }
 
