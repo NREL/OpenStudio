@@ -1646,6 +1646,10 @@ namespace detail {
     for (const auto & file : t_files)
     {
       QFileInfo qfi(openstudio::toQString(file.first));
+      
+      openstudio::DateTime lastModified = toDateTime(qfi.lastModified());
+      openstudio::DateTime lastRun = toDateTime(t_lastRun);
+
       if (qfi.lastModified() >= t_lastRun)
       {
         std::string checksum = openstudio::checksum(file.first);
