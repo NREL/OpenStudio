@@ -59,6 +59,7 @@ MODELOBJECT_TEMPLATES(SiteGroundReflectance);
 MODELOBJECT_TEMPLATES(SiteGroundTemperatureBuildingSurface);
 MODELOBJECT_TEMPLATES(SiteGroundTemperatureDeep);
 MODELOBJECT_TEMPLATES(SiteGroundTemperatureShallow);
+MODELOBJECT_TEMPLATES(SiteGroundTemperatureFCfactorMethod);
 MODELOBJECT_TEMPLATES(SiteWaterMainsTemperature);
 UNIQUEMODELOBJECT_TEMPLATES(YearDescription);
 
@@ -93,6 +94,7 @@ SWIG_UNIQUEMODELOBJECT(SiteGroundReflectance);
 SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureBuildingSurface);
 SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureDeep);
 SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureShallow);
+SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureFCfactorMethod);
 SWIG_UNIQUEMODELOBJECT(SiteWaterMainsTemperature);
 SWIG_UNIQUEMODELOBJECT(YearDescription);
 

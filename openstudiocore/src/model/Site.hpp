@@ -33,6 +33,7 @@ class SiteGroundReflectance;
 class SiteGroundTemperatureBuildingSurface;
 class SiteGroundTemperatureDeep;
 class SiteGroundTemperatureShallow;
+class SiteGroundTemperatureFCfactorMethod;
 class SiteWaterMainsTemperature;
 class Facility;
 class ShadingSurfaceGroup;
@@ -123,6 +124,9 @@ class MODEL_API Site : public ParentObject {
 
   /** Unique SiteGroundTemperatureShallow object parented by Site. */
   boost::optional<SiteGroundTemperatureShallow> siteGroundTemperatureShallow() const;
+
+  /** Unique SiteGroundTemperatureFCfactorMethod object parented by Site. */
+  boost::optional<SiteGroundTemperatureFCfactorMethod> siteGroundTemperatureFCfactorMethod() const;
 
   /** Unique SiteWaterMainsTemperature object parented by Site. */
   boost::optional<SiteWaterMainsTemperature> siteWaterMainsTemperature() const;
