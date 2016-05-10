@@ -20,8 +20,10 @@
 #ifndef MODEL_SITEGROUNDTEMPERATUREBUILDINGSURFACE_IMPL_HPP
 #define MODEL_SITEGROUNDTEMPERATUREBUILDINGSURFACE_IMPL_HPP
 
+#include <vector>
 #include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
+#include <utilities/time/Date.hpp>
 
 namespace openstudio {
 namespace model {
@@ -107,6 +109,16 @@ namespace detail {
 
     bool isDecemberGroundTemperatureDefaulted() const;
 
+    double getTemperatureByMonth(int month) const;
+
+    double getTemperatureByMonth(const openstudio::MonthOfYear & month) const;
+
+    bool isMonthDefaulted(int month) const;
+
+    bool isMonthDefaulted(const openstudio::MonthOfYear & month) const;
+
+    std::vector<double> getAllMonthlyTemperatures() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -158,6 +170,18 @@ namespace detail {
     void setDecemberGroundTemperature(double decemberGroundTemperature);
 
     void resetDecemberGroundTemperature();
+
+    void setTemperatureByMonth(int month, double temperature);
+
+    void setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature);
+
+    void resetTemperatureByMonth(int month);
+
+    void resetTemperatureByMonth(const openstudio::MonthOfYear & month);
+
+    void resetAllMonths();
+
+    bool setAllMonthlyTemperatures(const std::vector<double> &monthly_temperatures);
 
     //@}
    protected:
