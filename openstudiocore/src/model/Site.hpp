@@ -31,6 +31,7 @@ class ClimateZones;
 class WeatherFile;
 class SiteGroundReflectance;
 class SiteGroundTemperatureBuildingSurface;
+class SiteGroundTemperatureDeep;
 class SiteWaterMainsTemperature;
 class Facility;
 class ShadingSurfaceGroup;
@@ -116,9 +117,12 @@ class MODEL_API Site : public ParentObject {
   /** Unique SiteGroundTemperatureBuildingSurface object parented by Site. */
   boost::optional<SiteGroundTemperatureBuildingSurface> siteGroundTemperatureBuildingSurface() const;
 
+  /** Unique SiteGroundTemperatureBuildingSurface object parented by Site. */
+  boost::optional<SiteGroundTemperatureDeep> siteGroundTemperatureDeep() const;
+
   /** Unique SiteWaterMainsTemperature object parented by Site. */
-  boost::optional<SiteWaterMainsTemperature> siteWaterMainsTemperature() const; 
-    
+  boost::optional<SiteWaterMainsTemperature> siteWaterMainsTemperature() const;
+
   /** Unique ClimateZones object parented by Site. */
   boost::optional<ClimateZones> climateZones() const;
 
@@ -129,7 +133,7 @@ class MODEL_API Site : public ParentObject {
   //std::string activeClimateZoneValue() const;
 
   /** Set the value of the active climate zone. */
-  //bool setActiveClimateZoneValue(const std::string& value); 
+  //bool setActiveClimateZoneValue(const std::string& value);
 
   /** The institution name of the active climate zone in the ClimateZones object. May be empty. */
   //std::string activeClimateZoneInstitution() const;
@@ -164,4 +168,3 @@ typedef std::vector<Site> SiteVector;
 } // openstudio
 
 #endif // MODEL_SITE_HPP
-
