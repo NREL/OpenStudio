@@ -180,7 +180,7 @@ if( UNIX )
 else()
   target_link_libraries(openstudio wsock32 ws2_32 Iphlpapi Dbghelp Shlwapi)
   set(ENCODING_LIB optimized "${RUBY_SOURCE_DIR}/enc/libenc.lib" debug "${RUBY_SOURCE_DIR_DEBUG}/enc/libenc.lib")
-  set(TRANSLATION_LIB optimized "${RUBY_SOURCE_DIR}/enc/libtrans.lib" debug "${RUBY_SOURCE_DIR}/enc/libtrans.lib")
+  set(TRANSLATION_LIB optimized "${RUBY_SOURCE_DIR}/enc/libtrans.lib" debug "${RUBY_SOURCE_DIR_DEBUG}/enc/libtrans.lib")
 endif()
 
 add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
