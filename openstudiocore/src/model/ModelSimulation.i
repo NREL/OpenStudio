@@ -18,14 +18,14 @@
 
   #undef _csharp_module_name
   #define _csharp_module_name OpenStudioModelSimulation
-  
+
   //%rename(ModelYearDescription) openstudio::model::YearDescription;
   %ignore openstudio::model::YearDescription;
-  
+
   // site is being imported from weather file
   // schedule day is being imported from design day
   // might want to move both of those to geometry so they can import resources and site
-  
+
 #endif
 
 UNIQUEMODELOBJECT_TEMPLATES(SimulationControl);
@@ -58,6 +58,7 @@ MODELOBJECT_TEMPLATES(SkyTemperature);
 MODELOBJECT_TEMPLATES(SiteGroundReflectance);
 MODELOBJECT_TEMPLATES(SiteGroundTemperatureBuildingSurface);
 MODELOBJECT_TEMPLATES(SiteGroundTemperatureDeep);
+MODELOBJECT_TEMPLATES(SiteGroundTemperatureShallow);
 MODELOBJECT_TEMPLATES(SiteWaterMainsTemperature);
 UNIQUEMODELOBJECT_TEMPLATES(YearDescription);
 
@@ -91,7 +92,8 @@ SWIG_MODELOBJECT(SkyTemperature, 1);
 SWIG_UNIQUEMODELOBJECT(SiteGroundReflectance);
 SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureBuildingSurface);
 SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureDeep);
+SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureShallow);
 SWIG_UNIQUEMODELOBJECT(SiteWaterMainsTemperature);
 SWIG_UNIQUEMODELOBJECT(YearDescription);
 
-#endif 
+#endif

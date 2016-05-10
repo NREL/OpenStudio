@@ -32,6 +32,7 @@ class WeatherFile;
 class SiteGroundReflectance;
 class SiteGroundTemperatureBuildingSurface;
 class SiteGroundTemperatureDeep;
+class SiteGroundTemperatureShallow;
 class SiteWaterMainsTemperature;
 class Facility;
 class ShadingSurfaceGroup;
@@ -146,6 +147,9 @@ namespace detail {
 
     /** Unique SiteGroundTemperatureDeep object parented by Site. */
     boost::optional<SiteGroundTemperatureDeep> siteGroundTemperatureDeep() const;
+
+    /** Unique SiteGroundTemperatureShallow object parented by Site. */
+    boost::optional<SiteGroundTemperatureShallow> siteGroundTemperatureShallow() const;
 
     /** Unique SiteWaterMainsTemperature object parented by Site. */
     boost::optional<SiteWaterMainsTemperature> siteWaterMainsTemperature() const;

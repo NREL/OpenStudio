@@ -470,6 +470,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(SiteGroundReflectance);
     REGISTER_CONSTRUCTOR(SiteGroundTemperatureBuildingSurface);
     REGISTER_CONSTRUCTOR(SiteGroundTemperatureDeep);
+    REGISTER_CONSTRUCTOR(SiteGroundTemperatureShallow);
     REGISTER_CONSTRUCTOR(SiteWaterMainsTemperature);
     REGISTER_CONSTRUCTOR(SizingParameters);
     REGISTER_CONSTRUCTOR(SizingPlant);
@@ -872,6 +873,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(SiteGroundReflectance);
     REGISTER_COPYCONSTRUCTORS(SiteGroundTemperatureBuildingSurface);
     REGISTER_COPYCONSTRUCTORS(SiteGroundTemperatureDeep);
+    REGISTER_COPYCONSTRUCTORS(SiteGroundTemperatureShallow);
     REGISTER_COPYCONSTRUCTORS(SiteWaterMainsTemperature);
     REGISTER_COPYCONSTRUCTORS(SizingParameters);
     REGISTER_COPYCONSTRUCTORS(SizingPlant);

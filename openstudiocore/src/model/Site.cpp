@@ -54,6 +54,8 @@
 #include "SiteGroundTemperatureBuildingSurface_Impl.hpp"
 #include "SiteGroundTemperatureDeep.hpp"
 #include "SiteGroundTemperatureDeep_Impl.hpp"
+#include "SiteGroundTemperatureShallow.hpp"
+#include "SiteGroundTemperatureShallow_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -116,6 +118,10 @@ namespace detail {
     OptionalSiteGroundTemperatureDeep siteGroundTemperatureDeep = this->siteGroundTemperatureDeep();
     if (siteGroundTemperatureDeep){ result.push_back(*siteGroundTemperatureDeep); }
 
+    // site ground temperature shallow
+    OptionalSiteGroundTemperatureShallow siteGroundTemperatureShallow = this->siteGroundTemperatureShallow();
+    if (siteGroundTemperatureShallow){ result.push_back(*siteGroundTemperatureShallow); }
+
     // site water mains temperature
     OptionalSiteWaterMainsTemperature siteWaterMainsTemperature = this->siteWaterMainsTemperature();
     if (siteWaterMainsTemperature){ result.push_back(*siteWaterMainsTemperature); }
@@ -159,6 +165,7 @@ namespace detail {
     result.push_back(SiteGroundReflectance::iddObjectType());
     result.push_back(SiteGroundTemperatureBuildingSurface::iddObjectType());
     result.push_back(SiteGroundTemperatureDeep::iddObjectType());
+    result.push_back(SiteGroundTemperatureShallow::iddObjectType());
     result.push_back(SiteWaterMainsTemperature::iddObjectType());
     result.push_back(ShadingSurfaceGroup::iddObjectType());
     return result;
@@ -290,6 +297,11 @@ namespace detail {
   boost::optional<SiteGroundTemperatureDeep> Site_Impl::siteGroundTemperatureDeep() const
   {
     return this->model().getOptionalUniqueModelObject<SiteGroundTemperatureDeep>();
+  }
+
+  boost::optional<SiteGroundTemperatureShallow> Site_Impl::siteGroundTemperatureShallow() const
+  {
+    return this->model().getOptionalUniqueModelObject<SiteGroundTemperatureShallow>();
   }
 
   boost::optional<SiteWaterMainsTemperature> Site_Impl::siteWaterMainsTemperature() const
@@ -455,6 +467,11 @@ boost::optional<SiteGroundTemperatureBuildingSurface> Site::siteGroundTemperatur
 boost::optional<SiteGroundTemperatureDeep> Site::siteGroundTemperatureDeep() const
 {
   return getImpl<detail::Site_Impl>()->siteGroundTemperatureDeep();
+}
+
+boost::optional<SiteGroundTemperatureShallow> Site::siteGroundTemperatureShallow() const
+{
+  return getImpl<detail::Site_Impl>()->siteGroundTemperatureShallow();
 }
 
 boost::optional<SiteWaterMainsTemperature> Site::siteWaterMainsTemperature() const
