@@ -19,7 +19,7 @@
 
 #include <vector>
 #include <gtest/gtest.h>
-#include <boost/algorithm/string/predicate.hpp>
+#include <string>
 #include "ModelFixture.hpp"
 #include "../SiteGroundTemperatureFCfactorMethod.hpp"
 #include "../SiteGroundTemperatureFCfactorMethod_Impl.hpp"
@@ -206,31 +206,33 @@ TEST_F(ModelFixture, SiteGroundTemperatureFCfactorMethod_SetGetFields)
   ASSERT_TRUE(groundTemp.isMonthDefaulted(openstudio::MonthOfYear::Jan));
 
   // Test exceptions on an invalid month
+  const std::string errorMsg("Invalid Month 13");
   try {
     groundTemp.getTemperatureByMonth(13);
   } catch (openstudio::Exception const & err) {
-    ASSERT_TRUE(boost::algorithm::ends_with(err.message(), "Invalid Month 13"));
+    // Test to make sure the error message returned ends with the value of errorMsg.
+    ASSERT_EQ(err.message().rfind(errorMsg), err.message().size() - errorMsg.size());
   } catch (...) {
     FAIL();
   }
   try {
     groundTemp.isMonthDefaulted(13);
   } catch (openstudio::Exception const & err) {
-    ASSERT_TRUE(boost::algorithm::ends_with(err.message(), "Invalid Month 13"));
+    ASSERT_EQ(err.message().rfind(errorMsg), err.message().size() - errorMsg.size());
   } catch (...) {
     FAIL();
   }
   try {
     groundTemp.setTemperatureByMonth(13, 19.2);
   } catch (openstudio::Exception const & err) {
-    ASSERT_TRUE(boost::algorithm::ends_with(err.message(), "Invalid Month 13"));
+    ASSERT_EQ(err.message().rfind(errorMsg), err.message().size() - errorMsg.size());
   } catch (...) {
     FAIL();
   }
   try {
     groundTemp.resetTemperatureByMonth(13);
   } catch (openstudio::Exception const & err) {
-    ASSERT_TRUE(boost::algorithm::ends_with(err.message(), "Invalid Month 13"));
+    ASSERT_EQ(err.message().rfind(errorMsg), err.message().size() - errorMsg.size());
   } catch (...) {
     FAIL();
   }
