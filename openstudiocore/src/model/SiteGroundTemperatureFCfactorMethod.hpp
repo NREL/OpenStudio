@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODEL_SITEGROUNDTEMPERATUREBUILDINGSURFACE_HPP
-#define MODEL_SITEGROUNDTEMPERATUREBUILDINGSURFACE_HPP
+#ifndef MODEL_SITEGROUNDTEMPERATUREFCFACTORMETHOD_HPP
+#define MODEL_SITEGROUNDTEMPERATUREFCFACTORMETHOD_HPP
 
 #include <vector>
 #include "ModelAPI.hpp"
@@ -30,20 +30,20 @@ namespace model {
 
 namespace detail {
 
-  class SiteGroundTemperatureBuildingSurface_Impl;
+  class SiteGroundTemperatureFCfactorMethod_Impl;
 
 } // detail
 
-/** SiteGroundTemperatureBuildingSurface is a ModelObject that wraps the OpenStudio IDD object 'OS_Site_GroundTemperature_BuildingSurface'. */
-class MODEL_API SiteGroundTemperatureBuildingSurface : public ModelObject {
+/** SiteGroundTemperatureFCfactorMethod is a ModelObject that wraps the OpenStudio IDD object 'OS_Site_GroundTemperature_FCfactorMethod'. */
+class MODEL_API SiteGroundTemperatureFCfactorMethod : public ModelObject {
  public:
 
   /** @name Constructors and Destructors */
   //@{
 
-  explicit SiteGroundTemperatureBuildingSurface(Model& model);
+  explicit SiteGroundTemperatureFCfactorMethod(Model& model);
 
-  virtual ~SiteGroundTemperatureBuildingSurface() {}
+  virtual ~SiteGroundTemperatureFCfactorMethod() {}
 
   //@}
   /** @name Static Methods */
@@ -180,27 +180,27 @@ class MODEL_API SiteGroundTemperatureBuildingSurface : public ModelObject {
   //@}
  protected:
   /// @cond
-  typedef detail::SiteGroundTemperatureBuildingSurface_Impl ImplType;
+  typedef detail::SiteGroundTemperatureFCfactorMethod_Impl ImplType;
 
   friend class Model;
   friend class openstudio::IdfObject;
-  friend class detail::SiteGroundTemperatureBuildingSurface_Impl;
+  friend class detail::SiteGroundTemperatureFCfactorMethod_Impl;
 
-  explicit SiteGroundTemperatureBuildingSurface(std::shared_ptr<detail::SiteGroundTemperatureBuildingSurface_Impl> impl);
+  explicit SiteGroundTemperatureFCfactorMethod(std::shared_ptr<detail::SiteGroundTemperatureFCfactorMethod_Impl> impl);
 
   /// @endcond
  private:
 
-  REGISTER_LOGGER("openstudio.model.SiteGroundTemperatureBuildingSurface");
+  REGISTER_LOGGER("openstudio.model.SiteGroundTemperatureFCfactorMethod");
 };
 
-/** \relates SiteGroundTemperatureBuildingSurface*/
-typedef boost::optional<SiteGroundTemperatureBuildingSurface> OptionalSiteGroundTemperatureBuildingSurface;
+/** \relates SiteGroundTemperatureFCfactorMethod*/
+typedef boost::optional<SiteGroundTemperatureFCfactorMethod> OptionalSiteGroundTemperatureFCfactorMethod;
 
-/** \relates SiteGroundTemperatureBuildingSurface*/
-typedef std::vector<SiteGroundTemperatureBuildingSurface> SiteGroundTemperatureBuildingSurfaceVector;
+/** \relates SiteGroundTemperatureFCfactorMethod*/
+typedef std::vector<SiteGroundTemperatureFCfactorMethod> SiteGroundTemperatureFCfactorMethodVector;
 
 } // model
 } // openstudio
 
-#endif // MODEL_SITEGROUNDTEMPERATUREBUILDINGSURFACE_HPP
+#endif // MODEL_SITEGROUNDTEMPERATUREFCFACTORMETHOD_HPP

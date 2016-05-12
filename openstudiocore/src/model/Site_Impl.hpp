@@ -31,6 +31,9 @@ class ClimateZones;
 class WeatherFile;
 class SiteGroundReflectance;
 class SiteGroundTemperatureBuildingSurface;
+class SiteGroundTemperatureDeep;
+class SiteGroundTemperatureShallow;
+class SiteGroundTemperatureFCfactorMethod;
 class SiteWaterMainsTemperature;
 class Facility;
 class ShadingSurfaceGroup;
@@ -51,8 +54,8 @@ namespace detail {
     Q_PROPERTY(bool isElevationDefaulted READ isElevationDefaulted);
     Q_PROPERTY(std::string terrain READ terrain WRITE setTerrain RESET resetTerrain);
     Q_PROPERTY(bool isTerrainDefaulted READ isTerrainDefaulted);
-    //Q_PROPERTY(std::string activeClimateZoneValue READ activeClimateZoneValue WRITE setActiveClimateZoneValue);  
-    //Q_PROPERTY(std::string activeClimateZoneInstitution READ activeClimateZoneInstitution WRITE setActiveClimateZoneInstitution);  
+    //Q_PROPERTY(std::string activeClimateZoneValue READ activeClimateZoneValue WRITE setActiveClimateZoneValue);
+    //Q_PROPERTY(std::string activeClimateZoneInstitution READ activeClimateZoneInstitution WRITE setActiveClimateZoneInstitution);
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -143,8 +146,17 @@ namespace detail {
     /** Unique SiteGroundTemperatureBuildingSurface object parented by Site. */
     boost::optional<SiteGroundTemperatureBuildingSurface> siteGroundTemperatureBuildingSurface() const;
 
+    /** Unique SiteGroundTemperatureDeep object parented by Site. */
+    boost::optional<SiteGroundTemperatureDeep> siteGroundTemperatureDeep() const;
+
+    /** Unique SiteGroundTemperatureShallow object parented by Site. */
+    boost::optional<SiteGroundTemperatureShallow> siteGroundTemperatureShallow() const;
+
+    /** Unique SiteGroundTemperatureFCfactorMethod object parented by Site. */
+    boost::optional<SiteGroundTemperatureFCfactorMethod> siteGroundTemperatureFCfactorMethod() const;
+
     /** Unique SiteWaterMainsTemperature object parented by Site. */
-    boost::optional<SiteWaterMainsTemperature> siteWaterMainsTemperature() const; 
+    boost::optional<SiteWaterMainsTemperature> siteWaterMainsTemperature() const;
 
     /** Unique ClimateZones object parented by Site. */
     boost::optional<ClimateZones> climateZones() const;
@@ -156,7 +168,7 @@ namespace detail {
     //std::string activeClimateZoneValue() const;
 
     /** Set the value of the active climate zone. */
-    //bool setActiveClimateZoneValue(const std::string& value); 
+    //bool setActiveClimateZoneValue(const std::string& value);
 
     /** The institution name of the active climate zone in the ClimateZones object. May be empty. */
     //std::string activeClimateZoneInstitution() const;
@@ -175,4 +187,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_SITE_IMPL_HPP
-
