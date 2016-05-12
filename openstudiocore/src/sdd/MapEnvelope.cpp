@@ -80,8 +80,7 @@ namespace sdd {
       return boost::none;
     }
 
-    if (specificationElement.text() == "Layers" ||
-        specificationElement.text() == "UFactor" ){ // temp code
+    if (specificationElement.text() == "Layers"){
 
       openstudio::model::Construction construction(model);
       construction.setName(name);
