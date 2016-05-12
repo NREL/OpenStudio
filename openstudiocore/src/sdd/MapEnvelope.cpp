@@ -277,13 +277,13 @@ namespace sdd {
     UnitSystem whSys(UnitSystem::Wh);
 
     QDomElement nameElement = element.firstChildElement("Name");
-    QDomElement uFactorElement = element.firstChildElement("UFactor"); // Btu/h-ft2-F
+    QDomElement uFactorElement = element.firstChildElement("UFactorSim"); // Btu/h-ft2-F
 
     if (nameElement.isNull()){
       LOG(Error, "DrCons element 'Name' is empty.  Construction will not be created.");
     }
     if (uFactorElement.isNull()){
-      LOG(Error, "DrCons element 'UFactor' is empty.  Construction will not be created.");
+      LOG(Error, "DrCons element 'UFactorSim' is empty.  Construction will not be created.");
     }
 
     if (!nameElement.isNull() && !uFactorElement.isNull()){
@@ -329,7 +329,7 @@ namespace sdd {
 
     QDomElement nameElement = element.firstChildElement("Name");
     QDomElement shgcElement = element.firstChildElement("SHGC"); // unitless
-    QDomElement uFactorElement = element.firstChildElement("UFactor"); // Btu/h-ft2-F
+    QDomElement uFactorElement = element.firstChildElement("UFactorSim"); // Btu/h-ft2-F
     QDomElement vtElement = element.firstChildElement("VT"); // unitless
 
     if (nameElement.isNull()){
@@ -339,7 +339,7 @@ namespace sdd {
       LOG(Error, "FenCons element 'SHGC' is empty.  Construction will not be created.");
     }
     if (uFactorElement.isNull()){
-      LOG(Error, "FenCons element 'UFactor' is empty.  Construction will not be created.");
+      LOG(Error, "FenCons element 'UFactorSim' is empty.  Construction will not be created.");
     }
     if (vtElement.isNull()){
       LOG(Error, "FenCons element 'VT' is empty.  Construction will not be created.");

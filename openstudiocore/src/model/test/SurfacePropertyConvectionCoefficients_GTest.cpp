@@ -21,8 +21,8 @@
 
 #include "ModelFixture.hpp"
 
-#include "../SurfacePropertyConvectionCoefficientsMultipleSurface.hpp"
-#include "../SurfacePropertyConvectionCoefficientsMultipleSurface_Impl.hpp"
+#include "../SurfacePropertyConvectionCoefficients.hpp"
+#include "../SurfacePropertyConvectionCoefficients_Impl.hpp"
 
 #include "../../utilities/units/Quantity.hpp"
 #include "../../utilities/units/Unit.hpp"
@@ -30,9 +30,9 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SurfacePropertyConvectionCoefficientsMultipleSurface) {
+TEST_F(ModelFixture, SurfacePropertyConvectionCoefficients) {
   Model model;
  
-  SurfacePropertyConvectionCoefficientsMultipleSurface convectionCoefficients(model);
+  SurfacePropertyConvectionCoefficients convectionCoefficients(model);
 
 }
