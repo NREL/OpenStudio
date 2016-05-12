@@ -40,7 +40,7 @@
     //  {
     //   return OpenStudio.OpenStudioModelCore.toModelObject(this);
     //  }
-    }    
+    //}    
   %}
   
 #else
