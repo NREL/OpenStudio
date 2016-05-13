@@ -81,6 +81,10 @@ namespace detail {
       openstudio::path rootDir() const;
       openstudio::path absoluteRootDir() const;
 
+      /** Returns the run directory, default value is './run'. Evaluated relative to rootDir if not absolute. */
+      openstudio::path runDir() const;
+      openstudio::path absoluteRunDir() const;
+
       /** Returns the paths that will be searched in order for files, default value is './files/'. Evaluated relative to rootDir if not absolute. */
       std::vector<openstudio::path> filePaths() const;
       std::vector<openstudio::path> absoluteFilePaths() const;

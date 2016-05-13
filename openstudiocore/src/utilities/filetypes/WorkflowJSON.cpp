@@ -183,6 +183,22 @@ namespace detail{
     return result;
   }
 
+  openstudio::path WorkflowJSON_Impl::runDir() const
+  {
+    Json::Value defaultValue("./run");
+    Json::Value runDirectory = m_value.get("run_directory", defaultValue);
+    return toPath(runDirectory.asString());
+  }
+
+  openstudio::path WorkflowJSON_Impl::absoluteRunDir() const
+  {
+    openstudio::path result = runDir();
+    if (result.is_relative()){
+      return boost::filesystem::canonical(result, absoluteRootDir());
+    }
+    return result;
+  }
+
   std::vector<openstudio::path> WorkflowJSON_Impl::filePaths() const
   {
     std::vector<openstudio::path> result;
@@ -444,6 +460,16 @@ openstudio::path WorkflowJSON::rootDir() const
 openstudio::path WorkflowJSON::absoluteRootDir() const
 {
   return getImpl<detail::WorkflowJSON_Impl>()->absoluteRootDir();
+}
+
+openstudio::path WorkflowJSON::runDir() const
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->runDir();
+}
+
+openstudio::path WorkflowJSON::absoluteRunDir() const
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->absoluteRunDir();
 }
 
 std::vector<openstudio::path> WorkflowJSON::filePaths() const
