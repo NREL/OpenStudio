@@ -22,8 +22,16 @@
 
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include "HVACComponent.hpp"
 #include "HVACComponent_Impl.hpp"
+#include "WaterToWaterComponent.hpp"
+#include "WaterToWaterComponent_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "WaterHeaterMixed.hpp"
+#include "WaterHeaterMixed_Impl.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
 
@@ -479,6 +487,77 @@ namespace detail {
 
   unsigned WaterHeaterHeatPumpWrappedCondenser_Impl::outletPort() const {
     return OS_WaterHeater_HeatPump_WrappedCondenserFields::AirOutletNodeName;
+  }
+
+  ModelObject WaterHeaterHeatPumpWrappedCondenser_Impl::clone(Model model) const
+  {
+    auto newWaterHeater = ZoneHVACComponent_Impl::clone(model).cast<WaterHeaterHeatPumpWrappedCondenser>();
+
+    {
+      auto mo = tank().clone(model).cast<HVACComponent>();
+      newWaterHeater.setTank(mo);
+    }
+
+    {
+      auto mo = dXCoil().clone(model).cast<HVACComponent>();
+      newWaterHeater.setDXCoil(mo);
+    }
+
+    {
+      auto mo = fan().clone(model).cast<HVACComponent>();
+      newWaterHeater.setFan(mo);
+    }
+
+    return newWaterHeater;
+  }
+
+  std::vector<IdfObject> WaterHeaterHeatPumpWrappedCondenser_Impl::remove()
+  {
+    auto t_tank = tank();
+    if( auto waterToWaterTank = t_tank.optionalCast<WaterToWaterComponent>() ) {
+      waterToWaterTank->removeFromPlantLoop();
+      waterToWaterTank->removeFromSecondaryPlantLoop();
+    } else {
+      // All tanks are WaterToWaterComponent at this time, but the api says they could be any HVACComponent,
+      // so this is a little dangerous. Consider enhanced APIs to remove HVACComponent from system. 
+      // Something we currently don't have.
+      // Ideally remove would just take care of all of this, but the way ParentObject::remove works out children remove methods
+      // aren't being called cleanly. 
+      LOG_AND_THROW("Unsupported tank " << t_tank.briefDescription() << " attached to WaterHeaterHeatPump " << briefDescription());
+    }
+
+    return ZoneHVACComponent_Impl::remove();
+  }
+
+  std::vector<ModelObject> WaterHeaterHeatPumpWrappedCondenser_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+
+    result.push_back(tank());
+    result.push_back(dXCoil());
+    result.push_back(fan());
+
+    return result;
+  }
+
+  bool WaterHeaterHeatPumpWrappedCondenser_Impl::addToThermalZone(ThermalZone & thermalZone)
+  {
+    bool result = false;
+    auto thisObject = getObject<WaterHeaterHeatPumpWrappedCondenser>();
+
+    if( (result = ZoneHVACComponent_Impl::addToThermalZone(thermalZone)) ) {
+      thermalZone.setHeatingPriority(thisObject,1);
+      thermalZone.setCoolingPriority(thisObject,1);
+      setCompressorLocation("Zone");
+      setInletAirConfiguration("ZoneAirOnly");
+      auto t_tank = tank();
+      if( auto waterHeaterMixed = t_tank.optionalCast<WaterHeaterMixed>() ) {
+        waterHeaterMixed->setAmbientTemperatureIndicator("ThermalZone");
+        waterHeaterMixed->setAmbientTemperatureThermalZone(thermalZone);
+      }
+    }
+
+    return result;
   }
 
 } // detail

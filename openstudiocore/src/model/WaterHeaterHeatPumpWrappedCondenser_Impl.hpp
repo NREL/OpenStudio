@@ -195,6 +195,11 @@ namespace detail {
 
     virtual unsigned outletPort() const;
 
+    std::vector<ModelObject> children() const override;
+    ModelObject clone(Model model) const override;
+    bool addToThermalZone(ThermalZone & thermalZone) override;
+    std::vector<IdfObject> remove() override;
+
     //@}
    protected:
    private:

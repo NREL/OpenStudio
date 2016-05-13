@@ -968,6 +968,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateCoilWaterHeatingAirToWaterHeatPump(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump_Wrapped :
+    {
+      auto mo = modelObject.cast<CoilWaterHeatingAirToWaterHeatPumpWrapped>();
+      retVal = translateCoilWaterHeatingAirToWaterHeatPumpWrapped(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_ComponentData :
     {
       // no-op
