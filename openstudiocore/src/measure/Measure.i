@@ -44,11 +44,12 @@
 %}
 
 //user scripts
-%ignore std::vector<openstudio::measure::OSArgument>::vector(size_type);
-%ignore std::vector<openstudio::measure::OSArgument>::resize(size_type);
 %template(OSArgumentVector) std::vector<openstudio::measure::OSArgument>;
 %template(OptionalOSArgument) boost::optional<openstudio::measure::OSArgument>;
 %template(OSArgumentMap) std::map<std::string, openstudio::measure::OSArgument>;
+
+%template(OSResultVector)std::vector<openstudio::measure::OSResult>;
+%template(OptionalOSResult)boost::optional<openstudio::measure::OSResult>;
 
 %ignore std::vector<openstudio::measure::OSOutput>::vector(size_type);
 %ignore std::vector<openstudio::measure::OSOutput>::resize(size_type);

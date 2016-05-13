@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODEL_SITEGROUNDTEMPERATUREBUILDINGSURFACE_IMPL_HPP
-#define MODEL_SITEGROUNDTEMPERATUREBUILDINGSURFACE_IMPL_HPP
+#ifndef MODEL_SITEGROUNDTEMPERATUREFCFACTORMETHOD_IMPL_HPP
+#define MODEL_SITEGROUNDTEMPERATUREFCFACTORMETHOD_IMPL_HPP
 
 #include <vector>
 #include "ModelAPI.hpp"
@@ -30,25 +30,25 @@ namespace model {
 
 namespace detail {
 
-  /** SiteGroundTemperatureBuildingSurface_Impl is a ModelObject_Impl that is the implementation class for SiteGroundTemperatureBuildingSurface.*/
-  class MODEL_API SiteGroundTemperatureBuildingSurface_Impl : public ModelObject_Impl {
+  /** SiteGroundTemperatureFCfactorMethod_Impl is a ModelObject_Impl that is the implementation class for SiteGroundTemperatureFCfactorMethod.*/
+  class MODEL_API SiteGroundTemperatureFCfactorMethod_Impl : public ModelObject_Impl {
 
    public:
 
     /** @name Constructors and Destructors */
     //@{
 
-    SiteGroundTemperatureBuildingSurface_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+    SiteGroundTemperatureFCfactorMethod_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SiteGroundTemperatureBuildingSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+    SiteGroundTemperatureFCfactorMethod_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                               Model_Impl* model,
                                               bool keepHandle);
 
-    SiteGroundTemperatureBuildingSurface_Impl(const SiteGroundTemperatureBuildingSurface_Impl& other,
+    SiteGroundTemperatureFCfactorMethod_Impl(const SiteGroundTemperatureFCfactorMethod_Impl& other,
                                               Model_Impl* model,
                                               bool keepHandle);
 
-    virtual ~SiteGroundTemperatureBuildingSurface_Impl() {}
+    virtual ~SiteGroundTemperatureFCfactorMethod_Impl() {}
 
     //@}
 
@@ -186,7 +186,7 @@ namespace detail {
     //@}
    protected:
    private:
-    REGISTER_LOGGER("openstudio.model.SiteGroundTemperatureBuildingSurface");
+    REGISTER_LOGGER("openstudio.model.SiteGroundTemperatureFCfactorMethod");
   };
 
 } // detail
@@ -194,4 +194,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_SITEGROUNDTEMPERATUREBUILDINGSURFACE_IMPL_HPP
+#endif // MODEL_SITEGROUNDTEMPERATUREFCFACTORMETHOD_IMPL_HPP
