@@ -609,7 +609,6 @@ WaterHeaterHeatPump::WaterHeaterHeatPump(const Model& model)
   setOffCycleParasiticElectricLoad(0.0);
   setParasiticHeatRejectionLocation("Outdoors");
   setControlSensorLocationInStratifiedTank("Heater1");
-
 }
 
 IddObjectType WaterHeaterHeatPump::iddObjectType() {

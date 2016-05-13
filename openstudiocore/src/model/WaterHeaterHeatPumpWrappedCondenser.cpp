@@ -26,12 +26,20 @@
 #include "Model_Impl.hpp"
 #include "HVACComponent.hpp"
 #include "HVACComponent_Impl.hpp"
+#include "FanOnOff.hpp"
+#include "FanOnOff_Impl.hpp"
 #include "WaterToWaterComponent.hpp"
 #include "WaterToWaterComponent_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "WaterHeaterMixed.hpp"
 #include "WaterHeaterMixed_Impl.hpp"
+#include "ScheduleRuleset.hpp"
+#include "ScheduleRuleset_Impl.hpp"
+#include "ScheduleDay.hpp"
+#include "ScheduleDay_Impl.hpp"
+#include "CoilWaterHeatingAirToWaterHeatPumpWrapped.hpp"
+#include "CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
 
@@ -179,8 +187,8 @@ namespace detail {
     return value.get();
   }
 
-  HVACComponent WaterHeaterHeatPumpWrappedCondenser_Impl::dXCoil() const {
-    boost::optional<HVACComponent> value = optionalDXCoil();
+  ModelObject WaterHeaterHeatPumpWrappedCondenser_Impl::dXCoil() const {
+    boost::optional<ModelObject> value = optionalDXCoil();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an DXCoil attached.");
     }
@@ -350,7 +358,7 @@ namespace detail {
     return result;
   }
 
-  bool WaterHeaterHeatPumpWrappedCondenser_Impl::setDXCoil(const HVACComponent& coil) {
+  bool WaterHeaterHeatPumpWrappedCondenser_Impl::setDXCoil(const ModelObject& coil) {
     bool result = setPointer(OS_WaterHeater_HeatPump_WrappedCondenserFields::DXCoilName, coil.handle());
     return result;
   }
@@ -473,8 +481,8 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_WaterHeater_HeatPump_WrappedCondenserFields::TankName);
   }
 
-  boost::optional<HVACComponent> WaterHeaterHeatPumpWrappedCondenser_Impl::optionalDXCoil() const {
-    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_WaterHeater_HeatPump_WrappedCondenserFields::DXCoilName);
+  boost::optional<ModelObject> WaterHeaterHeatPumpWrappedCondenser_Impl::optionalDXCoil() const {
+    return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_WaterHeater_HeatPump_WrappedCondenserFields::DXCoilName);
   }
 
   boost::optional<HVACComponent> WaterHeaterHeatPumpWrappedCondenser_Impl::optionalFan() const {
@@ -567,10 +575,64 @@ WaterHeaterHeatPumpWrappedCondenser::WaterHeaterHeatPumpWrappedCondenser(const M
 {
   OS_ASSERT(getImpl<detail::WaterHeaterHeatPumpWrappedCondenser_Impl>());
 
+  CoilWaterHeatingAirToWaterHeatPumpWrapped coil(model);
+  setDXCoil(coil);
+
+  WaterHeaterMixed waterHeater(model);
+  setTank(waterHeater);
+
+  FanOnOff fan(model);
+  setFan(fan);
+
+  {
+    auto schedule = model.alwaysOnDiscreteSchedule();
+    setAvailabilitySchedule(schedule);
+  }
+
+  {
+    ScheduleRuleset schedule(model);
+    schedule.defaultDaySchedule().addValue(Time(0,24,0,0),60.0);
+    setCompressorSetpointTemperatureSchedule(schedule);
+  }
+
+  {
+    ScheduleRuleset schedule(model);
+    schedule.defaultDaySchedule().addValue(Time(0,24,0,0),19.7);
+    setInletAirTemperatureSchedule(schedule);
+  }
+
+  {
+    ScheduleRuleset schedule(model);
+    schedule.defaultDaySchedule().addValue(Time(0,24,0,0),0.5);
+    setInletAirHumiditySchedule(schedule);
+  }
+
+  {
+    ScheduleRuleset schedule(model);
+    schedule.defaultDaySchedule().addValue(Time(0,24,0,0),21.0);
+    setCompressorAmbientTemperatureSchedule(schedule);
+  }
+
+  setDeadBandTemperatureDifference(3.89);
+  setCondenserBottomLocation(0.0664166667);
+  setCondenserTopLocation(0.8634166667);
+  setEvaporatorAirFlowRate(0.2279);
+  setInletAirConfiguration("OutdoorAirOnly");
+  setMinimumInletAirTemperatureforCompressorOperation(7.2);
+  setMaximumInletAirTemperatureforCompressorOperation(48.89);
+  setCompressorLocation("Outdoors");
+  setFanPlacement("DrawThrough");
+  setOnCycleParasiticElectricLoad(0.0);
+  setOffCycleParasiticElectricLoad(0.0);
+  setParasiticHeatRejectionLocation("Outdoors");
+  setTankElementControlLogic("MutuallyExclusive");
+  setControlSensor1HeightInStratifiedTank(1.262);
+  setControlSensor1Weight(0.75);
+  setControlSensor2HeightInStratifiedTank(0.464);
 }
 
 WaterHeaterHeatPumpWrappedCondenser::WaterHeaterHeatPumpWrappedCondenser(const Model& model,
-  const HVACComponent & dxCoil,
+  const ModelObject & dxCoil,
   const HVACComponent & tank,
   const HVACComponent & fan,
   Schedule & compressorSetpointTemperatureSchedule,
@@ -584,6 +646,23 @@ WaterHeaterHeatPumpWrappedCondenser::WaterHeaterHeatPumpWrappedCondenser(const M
   setFan(fan);
   setCompressorSetpointTemperatureSchedule(compressorSetpointTemperatureSchedule);
   setInletAirMixerSchedule(inletAirMixerSchedule);
+
+  setDeadBandTemperatureDifference(3.89);
+  setCondenserBottomLocation(0.0664166667);
+  setCondenserTopLocation(0.8634166667);
+  setEvaporatorAirFlowRate(0.2279);
+  setInletAirConfiguration("OutdoorAirOnly");
+  setMinimumInletAirTemperatureforCompressorOperation(7.2);
+  setMaximumInletAirTemperatureforCompressorOperation(48.89);
+  setCompressorLocation("Outdoors");
+  setFanPlacement("DrawThrough");
+  setOnCycleParasiticElectricLoad(0.0);
+  setOffCycleParasiticElectricLoad(0.0);
+  setParasiticHeatRejectionLocation("Outdoors");
+  setTankElementControlLogic("MutuallyExclusive");
+  setControlSensor1HeightInStratifiedTank(1.262);
+  setControlSensor1Weight(0.75);
+  setControlSensor2HeightInStratifiedTank(0.464);
 }
 
 IddObjectType WaterHeaterHeatPumpWrappedCondenser::iddObjectType() {
@@ -775,7 +854,7 @@ bool WaterHeaterHeatPumpWrappedCondenser::setTank(const HVACComponent& tank) {
   return getImpl<detail::WaterHeaterHeatPumpWrappedCondenser_Impl>()->setTank(tank);
 }
 
-bool WaterHeaterHeatPumpWrappedCondenser::setDXCoil(const HVACComponent& coil) {
+bool WaterHeaterHeatPumpWrappedCondenser::setDXCoil(const ModelObject& coil) {
   return getImpl<detail::WaterHeaterHeatPumpWrappedCondenser_Impl>()->setDXCoil(coil);
 }
 

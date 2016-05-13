@@ -45,7 +45,7 @@ class MODEL_API WaterHeaterHeatPumpWrappedCondenser : public ZoneHVACComponent {
   explicit WaterHeaterHeatPumpWrappedCondenser(const Model& model);
 
   explicit WaterHeaterHeatPumpWrappedCondenser(const Model& model,
-    const HVACComponent & dxCoil,
+    const ModelObject & dxCoil,
     const HVACComponent & tank,
     const HVACComponent & fan,
     Schedule & compressorSetpointTemperatureSchedule,
@@ -154,7 +154,7 @@ class MODEL_API WaterHeaterHeatPumpWrappedCondenser : public ZoneHVACComponent {
 
   bool setTank(const HVACComponent& waterHeaterStratified);
 
-  bool setDXCoil(const HVACComponent& heatPumpWaterHeaterDXCoilsWrapped);
+  bool setDXCoil(const ModelObject& heatPumpWaterHeaterDXCoilsWrapped);
 
   bool setMinimumInletAirTemperatureforCompressorOperation(double minimumInletAirTemperatureforCompressorOperation);
 

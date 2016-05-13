@@ -87,7 +87,7 @@ namespace detail {
 
     HVACComponent tank() const;
 
-    HVACComponent dXCoil() const;
+    ModelObject dXCoil() const;
 
     double minimumInletAirTemperatureforCompressorOperation() const;
 
@@ -149,7 +149,7 @@ namespace detail {
 
     bool setTank(const HVACComponent& tank);
 
-    bool setDXCoil(const HVACComponent& coil);
+    bool setDXCoil(const ModelObject& coil);
 
     bool setMinimumInletAirTemperatureforCompressorOperation(double minimumInletAirTemperatureforCompressorOperation);
 
@@ -207,7 +207,7 @@ namespace detail {
 
     boost::optional<Schedule> optionalCompressorSetpointTemperatureSchedule() const;
     boost::optional<HVACComponent> optionalTank() const;
-    boost::optional<HVACComponent> optionalDXCoil() const;
+    boost::optional<ModelObject> optionalDXCoil() const;
     boost::optional<HVACComponent> optionalFan() const;
   };
 
