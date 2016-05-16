@@ -18,118 +18,297 @@
  **********************************************************************/
 
 #include "WorkflowStep.hpp"
+#include "WorkflowStep_Impl.hpp"
 
 #include "../core/Assert.hpp"
 
-#include <boost/optional.hpp>
-
-#include <string>
+#include <jsoncpp/json.h>
 
 namespace openstudio{
+namespace detail{
 
-WorkflowStep::WorkflowStep(const std::string& measureDirName)
-  : m_measureDirName(measureDirName)
-{}
-/*
-WorkflowStep::WorkflowStep(const Attribute& step)
-{
+  WorkflowStep_Impl::WorkflowStep_Impl()
+  {}
+
+  WorkflowStep_Impl::~WorkflowStep_Impl()
+  {}
+
+  boost::optional<WorkflowStepResult> WorkflowStep_Impl::result() const
+  {
+    return m_result;
+  }
+
+  void WorkflowStep_Impl::setResult(const WorkflowStepResult& result)
+  {
+    m_result = result;
+  }
+
+  void WorkflowStep_Impl::resetResult()
+  {
+    m_result.reset();
+  }
+
+  MeasureStep_Impl::MeasureStep_Impl(const std::string& measureDirName)
+    : m_measureDirName(measureDirName)
+  {}
+  /*
+  MeasureStep_Impl::MeasureStep_Impl(const Attribute& step)
+  {
   boost::optional<Attribute> measureDirNameAttribute = step.findChildByName("measure_dir_name");
   if (measureDirNameAttribute && (measureDirNameAttribute->valueType().value() == AttributeValueType::String)){
-    m_measureDirName = measureDirNameAttribute->valueAsString();
+  m_measureDirName = measureDirNameAttribute->valueAsString();
   } else{
-    LOG_AND_THROW("Missing 'measure_dir_name' attribute");
+  LOG_AND_THROW("Missing 'measure_dir_name' attribute");
   }
 
   boost::optional<Attribute> arguments = step.findChildByName("arguments");
   if (!arguments){
-    LOG_AND_THROW("Missing 'arguments' attribute");
+  LOG_AND_THROW("Missing 'arguments' attribute");
   } else if (arguments->valueType().value() != AttributeValueType::AttributeVector){
-    LOG_AND_THROW("Attribute 'arguments' is not an AttributeVector");
+  LOG_AND_THROW("Attribute 'arguments' is not an AttributeVector");
   }
 
   for (const auto& argument : arguments->valueAsAttributeVector()){
 
-    boost::optional<Attribute> name = argument.findChildByName("name");
-    if (!name || name->valueType().value() != AttributeValueType::String){
-      continue;
+  boost::optional<Attribute> name = argument.findChildByName("name");
+  if (!name || name->valueType().value() != AttributeValueType::String){
+  continue;
+  }
+
+  std::string nameString = name->valueAsString();
+  boost::optional<Variant> variant;
+
+  boost::optional<Attribute> value = argument.findChildByName("value");
+  if (!value){
+  continue;
+  } else if (value->valueType().value() == AttributeValueType::Boolean){
+  variant = Variant(value->valueAsBoolean());
+  } else if (value->valueType().value() == AttributeValueType::Double){
+  variant = Variant(value->valueAsDouble());
+  } else if (value->valueType().value() == AttributeValueType::Integer){
+  variant = Variant(value->valueAsInteger());
+  } else if (value->valueType().value() == AttributeValueType::Unsigned){
+  variant = Variant((int)value->valueAsUnsigned());
+  } else if (value->valueType().value() == AttributeValueType::String){
+  variant = Variant(value->valueAsString());
+  }
+
+  if (variant){
+  m_arguments.insert(std::make_pair(nameString, *variant));
+  }
+  }
+  }
+  */
+
+  std::string MeasureStep_Impl::string() const 
+  {
+    Json::Value result;
+    result["measure_dir_name"] = m_measureDirName;
+    
+    Json::Value arguments(Json::objectValue);
+    for (const auto& argument : m_arguments){
+      std::string name = argument.first;
+      Variant value = argument.second;
+
+      if (value.variantType() == VariantType::String){
+        arguments[name] = value.valueAsString();
+      }else if (value.variantType() == VariantType::Double){
+        arguments[name] = value.valueAsDouble();
+      }else if (value.variantType() == VariantType::Integer){
+        arguments[name] = value.valueAsInteger();
+      }else if (value.variantType() == VariantType::Boolean){
+        arguments[name] = value.valueAsBoolean();
+      }
+
     }
+    result["arguments"] = arguments;
 
-    std::string nameString = name->valueAsString();
-    boost::optional<Variant> variant;
+    Json::StyledWriter writer;
+    return writer.write(result);
+  }
 
-    boost::optional<Attribute> value = argument.findChildByName("value");
-    if (!value){
-      continue;
-    } else if (value->valueType().value() == AttributeValueType::Boolean){
-      variant = Variant(value->valueAsBoolean());
-    } else if (value->valueType().value() == AttributeValueType::Double){
-      variant = Variant(value->valueAsDouble());
-    } else if (value->valueType().value() == AttributeValueType::Integer){
-      variant = Variant(value->valueAsInteger());
-    } else if (value->valueType().value() == AttributeValueType::Unsigned){
-      variant = Variant((int)value->valueAsUnsigned());
-    } else if (value->valueType().value() == AttributeValueType::String){
-      variant = Variant(value->valueAsString());
+
+  std::string MeasureStep_Impl::measureDirName() const
+  {
+    return m_measureDirName;
+  }
+
+  std::map<std::string, Variant> MeasureStep_Impl::arguments() const
+  {
+    return m_arguments;
+  }
+
+  boost::optional<Variant> MeasureStep_Impl::getArgument(const std::string& name) const
+  {
+    auto it = m_arguments.find(name);
+    if (it != m_arguments.end()){
+      return it->second;
     }
+    return boost::none;
+  }
 
-    if (variant){
-      m_arguments.insert(std::make_pair(nameString, *variant));
+  void MeasureStep_Impl::setArgument(const std::string& name, const Variant& value)
+  {
+    m_arguments.insert(std::make_pair(name, value));
+  }
+
+  void MeasureStep_Impl::setArgument(const std::string& name, bool value)
+  {
+    setArgument(name, Variant(value));
+  }
+
+  void MeasureStep_Impl::setArgument(const std::string& name, double value)
+  {
+    setArgument(name, Variant(value));
+  }
+
+  void MeasureStep_Impl::setArgument(const std::string& name, int value)
+  {
+    setArgument(name, Variant(value));
+  }
+
+  void MeasureStep_Impl::setArgument(const std::string& name, const std::string& value)
+  {
+    setArgument(name, Variant(value));
+  }
+
+  void MeasureStep_Impl::removeArgument(const std::string& name)
+  {
+    m_arguments.erase(name);
+  }
+
+  void MeasureStep_Impl::clearArguments()
+  {
+    m_arguments.clear();
+  }
+
+} //detail
+
+WorkflowStep::WorkflowStep(std::shared_ptr<detail::WorkflowStep_Impl> impl)
+  : m_impl(impl)
+{
+  OS_ASSERT(getImpl<detail::WorkflowStep_Impl>());
+}
+
+WorkflowStep::~WorkflowStep()
+{}
+
+boost::optional<WorkflowStep> WorkflowStep::fromString(const std::string& s)
+{
+  boost::optional<WorkflowStep> result;
+
+  Json::Reader reader;
+  Json::Value value;
+  bool parsingSuccessful = reader.parse(s, value);
+  if (!parsingSuccessful){
+    return result;
+  }
+
+  if (value.isMember("measure_dir_name")){
+    Json::Value measureDirName = value["measure_dir_name"];
+
+    MeasureStep measureStep(measureDirName.asString());
+    result = measureStep;
+
+    Json::Value arguments = value["arguments"];
+    for (const auto& name : arguments.getMemberNames()){
+      Json::Value value = arguments[name];
+
+      if (value.isBool()){
+        measureStep.setArgument(name, value.asBool());
+      }else if (value.isIntegral()){
+        measureStep.setArgument(name, value.asInt());
+      }else if (value.isDouble()){
+        measureStep.setArgument(name, value.asDouble());
+      }else{
+        measureStep.setArgument(name, value.asString());
+      }
     }
   }
-}
-*/
-std::string WorkflowStep::measureDirName() const
-{
-  return m_measureDirName;
+
+  return result;
 }
 
-std::map<std::string, Variant> WorkflowStep::arguments() const
+std::string WorkflowStep::string() const
 {
-  return m_arguments;
+  return getImpl<detail::WorkflowStep_Impl>()->string();
 }
 
-boost::optional<Variant> WorkflowStep::getArgument(const std::string& name) const
+boost::optional<WorkflowStepResult> WorkflowStep::result() const
 {
-  auto it = m_arguments.find(name);
-  if (it != m_arguments.end()){
-    return it->second;
-  }
-  return boost::none;
+  return getImpl<detail::WorkflowStep_Impl>()->result();
 }
 
-void WorkflowStep::setArgument(const std::string& name, const Variant& value)
+void WorkflowStep::setResult(const WorkflowStepResult& result)
 {
-  m_arguments.insert(std::make_pair(name, value));
+  getImpl<detail::WorkflowStep_Impl>()->setResult(result);
 }
 
-void WorkflowStep::setArgument(const std::string& name, bool value)
+void WorkflowStep::resetResult()
 {
-  setArgument(name, Variant(value));
+  getImpl<detail::WorkflowStep_Impl>()->resetResult();
 }
 
-void WorkflowStep::setArgument(const std::string& name, double value)
+MeasureStep::MeasureStep(const std::string& measureDirName)
+  : WorkflowStep(std::shared_ptr<detail::MeasureStep_Impl>(new detail::MeasureStep_Impl(measureDirName)))
 {
-  setArgument(name, Variant(value));
+  OS_ASSERT(getImpl<detail::MeasureStep_Impl>());
 }
 
-void WorkflowStep::setArgument(const std::string& name, int value)
+MeasureStep::MeasureStep(std::shared_ptr<detail::MeasureStep_Impl> impl)
+  : WorkflowStep(impl)
 {
-  setArgument(name, Variant(value));
+  OS_ASSERT(getImpl<detail::MeasureStep_Impl>());
 }
 
-void WorkflowStep::setArgument(const std::string& name, const std::string& value)
+std::string MeasureStep::measureDirName() const
 {
-  setArgument(name, Variant(value));
+  return getImpl<detail::MeasureStep_Impl>()->measureDirName();
 }
 
-void WorkflowStep::removeArgument(const std::string& name)
+std::map<std::string, Variant> MeasureStep::arguments() const
 {
-  m_arguments.erase(name);
+  return getImpl<detail::MeasureStep_Impl>()->arguments();
 }
 
-void WorkflowStep::clearArguments()
+boost::optional<Variant> MeasureStep::getArgument(const std::string& name) const
 {
-  m_arguments.clear();
+  return getImpl<detail::MeasureStep_Impl>()->getArgument(name);
+}
+
+void MeasureStep::setArgument(const std::string& name, const Variant& value)
+{
+  getImpl<detail::MeasureStep_Impl>()->setArgument(name, value);
+}
+
+void MeasureStep::setArgument(const std::string& name, bool value)
+{
+  getImpl<detail::MeasureStep_Impl>()->setArgument(name, value);
+}
+
+void MeasureStep::setArgument(const std::string& name, double value)
+{
+  getImpl<detail::MeasureStep_Impl>()->setArgument(name, value);
+}
+
+void MeasureStep::setArgument(const std::string& name, int value)
+{
+  getImpl<detail::MeasureStep_Impl>()->setArgument(name, value);
+}
+
+void MeasureStep::setArgument(const std::string& name, const std::string& value)
+{
+  getImpl<detail::MeasureStep_Impl>()->setArgument(name, value);
+}
+
+void MeasureStep::removeArgument(const std::string& name)
+{
+  getImpl<detail::MeasureStep_Impl>()->removeArgument(name);
+}
+
+void MeasureStep::clearArguments()
+{
+  getImpl<detail::MeasureStep_Impl>()->clearArguments();
 }
 
 } // openstudio

@@ -20,6 +20,9 @@
 #include "WorkflowJSON.hpp"
 #include "WorkflowJSON_Impl.hpp"
 
+#include "WorkflowStep.hpp"
+#include "WorkflowStepResult.hpp"
+
 #include "../core/Assert.hpp"
 #include "../core/PathHelpers.hpp"
 #include "../core/Checksum.hpp"
@@ -43,6 +46,8 @@ namespace detail{
       std::string errors = reader.getFormattedErrorMessages();
       LOG_AND_THROW("WorkflowJSON cannot be processed, " << errors);
     }
+
+    parseSteps();
   }
 
   WorkflowJSON_Impl::WorkflowJSON_Impl(const openstudio::path& p)
@@ -61,6 +66,8 @@ namespace detail{
       LOG_AND_THROW("WorkflowJSON '" << toString(p) << "' cannot be processed, " << errors);
     }
 
+    parseSteps();
+
     setOswPath(p);
   }
 
@@ -70,6 +77,18 @@ namespace detail{
     if (!includeHash){
       clone.removeMember("hash");
     }
+
+    Json::Value steps(Json::arrayValue);
+    for (const auto& step : m_steps){
+
+      Json::Reader reader;
+      Json::Value stepValue;
+      bool parsingSuccessful = reader.parse(step.string(), stepValue);
+      if (parsingSuccessful){
+        steps.append(stepValue);
+      }
+    }
+    clone["steps"] = steps;
 
     Json::StyledWriter writer;
     std::string result = writer.write(clone);
@@ -311,7 +330,18 @@ namespace detail{
 
   std::vector<WorkflowStep> WorkflowJSON_Impl::workflowSteps() const
   {
-    std::vector<WorkflowStep> result;
+    return m_steps;
+  }
+
+  bool WorkflowJSON_Impl::setWorkflowSteps(const std::vector<WorkflowStep>& workflowSteps)
+  {
+    m_steps = workflowSteps;
+    return true;
+  }
+
+  void WorkflowJSON_Impl::parseSteps()
+  {
+    m_steps.clear();
 
     Json::Value defaultValue(Json::arrayValue);
     Json::Value steps = m_value.get("steps", defaultValue);
@@ -319,44 +349,20 @@ namespace detail{
     Json::ArrayIndex n = steps.size();
     for (Json::ArrayIndex i = 0; i < n; ++i){
       Json::Value step = steps[i];
-      Json::Value measureDirName = step["measure_dir_name"];
 
-      WorkflowStep workflowStep(measureDirName.asString());
+      Json::FastWriter writer;
+      std::string s = writer.write(step);
 
-      Json::Value arguments = step["arguments"];
-      Json::ArrayIndex n2 = arguments.size();
-      for (Json::ArrayIndex j = 0; j < n2; ++j){
-        Json::Value argument = arguments[j];
-        Json::Value name = argument["name"];
-        Json::Value value = argument["value"];
-
-        if (value.isBool()){
-          workflowStep.setArgument(name.asString(), value.asBool());
-        } else if (value.isIntegral()){
-          workflowStep.setArgument(name.asString(), value.asInt());
-        } else if (value.isDouble()){
-          workflowStep.setArgument(name.asString(), value.asDouble());
-        } else{
-          workflowStep.setArgument(name.asString(), value.asString());
-        }
+      boost::optional<WorkflowStep> workflowStep = WorkflowStep::fromString(s);
+      if (workflowStep){
+        m_steps.push_back(*workflowStep);
+      }else{
+        LOG_AND_THROW("Step " << i << " cannot be processed");
       }
-
-      result.push_back(workflowStep);
     }
 
-    return result;
-  }
+    m_value.removeMember("steps");
 
-  bool WorkflowJSON_Impl::setWorkflowSteps(const std::vector<WorkflowStep>& workflowSteps)
-  {
-    Json::Value steps(Json::arrayValue);
-    for (const auto& workflowStep : workflowSteps){
-      Json::Value step(Json::objectValue);
-      step["measure_dir_name"] = Json::Value(workflowStep.measureDirName());
-      // todo
-    }
-    m_value["steps"] = steps;
-    return true;
   }
 
 } // detail

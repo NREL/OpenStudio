@@ -118,9 +118,12 @@ namespace detail {
       // configure logging
       REGISTER_LOGGER("openstudio.WorkflowJSON");
 
+      void parseSteps();
+
       openstudio::path m_oswDir;
       openstudio::path m_oswFilename;
       Json::Value m_value;
+      std::vector<WorkflowStep> m_steps;
     };
 
 } // detail

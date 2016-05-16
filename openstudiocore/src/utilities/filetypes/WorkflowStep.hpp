@@ -29,17 +29,88 @@
 #include <jsoncpp/json.h>
 
 namespace openstudio{
+namespace detail{
+  class WorkflowStep_Impl;
+  class MeasureStep_Impl;
+}
 
-/** Class for accessing the OpenStudio Workflow (OSW) JSON format. */
+class WorkflowStepResult;
+
+/** Base class for defining a step in an OpenStudio Workflow. */
 class UTILITIES_API WorkflowStep
 {
 public:
-  
-  WorkflowStep(const std::string& measureDirName);
+
+  virtual ~WorkflowStep();
+
+  /// Construct from JSON formatted string
+  static boost::optional<WorkflowStep> fromString(const std::string& s);
+
+  /// Serialize to JSON formatted string
+  std::string string() const;
+
+  /// Returns the optional WorkflowStepResult
+  boost::optional<WorkflowStepResult> result() const;
+
+  /// Sets the optional WorkflowStepResult
+  void setResult(const WorkflowStepResult& result);
+
+  /// Resets the optional WorkflowStepResult
+  void resetResult();
+
+  /// cast to type T, can throw std::bad_cast
+  template<typename T>
+  T cast() const{
+    std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+    if (!impl){
+      throw(std::bad_cast());
+    }
+    return T(impl);
+  }
+
+  /// cast to optional of type T
+  template<typename T>
+  boost::optional<T> optionalCast() const{
+    boost::optional<T> result;
+    std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+    if (impl){
+      result = T(impl);
+    }
+    return result;
+  }
+
+protected:
+
+  // get the impl
+  template<typename T>
+  std::shared_ptr<T> getImpl() const {
+    return std::dynamic_pointer_cast<T>(m_impl);
+  }
+
+  friend class detail::WorkflowStep_Impl;
+
+  /** Protected constructor from impl. */
+  WorkflowStep(std::shared_ptr<detail::WorkflowStep_Impl> impl);
+
+private:
+
+  // configure logging
+  REGISTER_LOGGER("openstudio.WorkflowStep");
+
+  // pointer to implementation
+  std::shared_ptr<detail::WorkflowStep_Impl> m_impl;
+
+};
+
+/** Base class for defining a step in an OpenStudio Workflow. */
+class UTILITIES_API MeasureStep : public WorkflowStep
+{
+public:
+
+  MeasureStep(const std::string& measureDirName);
 
   std::string measureDirName() const;
-    
-  // DLM: OSW JSON examples have vector but run method takes map 
+
   std::map<std::string, Variant> arguments() const;
 
   boost::optional<Variant> getArgument(const std::string& name) const;
@@ -54,13 +125,18 @@ public:
 
   void clearArguments();
 
+protected:
+
+  MeasureStep(std::shared_ptr<detail::MeasureStep_Impl> impl);
+
 private:
 
-  // configure logging
-  REGISTER_LOGGER("openstudio.WorkflowStep");
+  typedef detail::MeasureStep_Impl ImplType;
 
-  std::string m_measureDirName;
-  std::map<std::string, Variant> m_arguments;
+  friend class WorkflowStep;
+
+  // configure logging
+  REGISTER_LOGGER("openstudio.MeasureStep");
 
 };
 

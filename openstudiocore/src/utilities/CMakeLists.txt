@@ -108,7 +108,11 @@ set(filetypes_src
   filetypes/WorkflowJSON_Impl.hpp
   filetypes/WorkflowJSON.cpp
   filetypes/WorkflowStep.hpp
+  filetypes/WorkflowStep_Impl.hpp 
   filetypes/WorkflowStep.cpp  
+  filetypes/WorkflowStepResult.hpp
+  filetypes/WorkflowStepResult_Impl.hpp 
+  filetypes/WorkflowStepResult.cpp  
 )
 
 set(geometry_src
