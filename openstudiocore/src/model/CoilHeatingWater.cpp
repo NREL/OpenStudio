@@ -29,6 +29,8 @@
 #include "ZoneHVACFourPipeFanCoil_Impl.hpp"
 #include "ZoneHVACPackagedTerminalAirConditioner.hpp"
 #include "ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
+#include "ZoneHVACPackagedTerminalHeatPump.hpp"
+#include "ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
 #include "ZoneHVACWaterToAirHeatPump.hpp"
 #include "ZoneHVACWaterToAirHeatPump_Impl.hpp"
 #include "ZoneHVACUnitHeater.hpp"
@@ -460,6 +462,24 @@ namespace detail{
         }
       }
     }
+
+    // ZoneHVACPackagedTerminalHeatPump
+
+    std::vector<ZoneHVACPackagedTerminalHeatPump> zoneHVACPackagedTerminalHeatPumps;
+
+    zoneHVACPackagedTerminalHeatPumps = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalHeatPump>();
+
+    for( const auto & zoneHVACPackagedTerminalHeatPump : zoneHVACPackagedTerminalHeatPumps )
+    {
+      if( boost::optional<HVACComponent> coil = zoneHVACPackagedTerminalHeatPump.supplementalHeatingCoil() )
+      {
+        if( coil->handle() == this->handle() )
+        {
+          return zoneHVACPackagedTerminalHeatPump;
+        }
+      }
+    }
+
     // ZoneHVACWaterToAirHeatPump
 
     std::vector<ZoneHVACWaterToAirHeatPump> zoneHVACWaterToAirHeatPumps;

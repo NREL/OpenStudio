@@ -1,3 +1,19 @@
+## OpenStudio v1.11.2
+###### 2016-05-02 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.11.1...v1.11.2 )
+
+- ![Fixed:][fixed] [#1627]( https://github.com/NREL/OpenStudio/issues/1627 ), HVAC Tab - Low Temp Radient components come in without any names
+- ![Fixed:][fixed] [#2203]( https://github.com/NREL/OpenStudio/issues/2203 ), Ruby inside of Mac installer won't load openstudio bindings
+- ![Fixed:][fixed] [#2207]( https://github.com/NREL/OpenStudio/issues/2207 ), Fix exterior lights on standard report
+- ![Fixed:][fixed] [#2208]( https://github.com/NREL/OpenStudio/issues/2208 ), Fix Variable Speed Pump reporting in standard report
+
+## OpenStudio v1.11.1
+###### 2016-04-21 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.11.0...v1.11.1 )
+
+- ![Fixed:][fixed] [#1359]( https://github.com/NREL/OpenStudio/issues/1359 ), EnergyPlus does not update standard output during run
+- ![Fixed:][fixed] [#2181]( https://github.com/NREL/OpenStudio/issues/2181 ), Add "high" accuracy settings option to Radiance Measure
+- ![Fixed:][fixed] [#2186]( https://github.com/NREL/OpenStudio/issues/2186 ), SketchUp does not see plugin signature as valid
+- ![Fixed:][fixed] [#2191]( https://github.com/NREL/OpenStudio/issues/2191 ), MultiSpeed Coil Inlet/Outlet Nodes Not Being Connected Properly
+
 ## OpenStudio v1.11.0
 ###### 2016-03-28 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.10.6...v1.11.0 )
 
