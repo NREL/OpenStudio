@@ -884,9 +884,11 @@ void MainRightColumnController::configureForThermalZonesSubTab(int subTabID)
   myModelList->setItemsRemoveable(false);
   myModelList->setItemsType(OSItemType::LibraryItem);
   myModelList->setShowFilterLayout(true);
-
-  myModelList->addModelObjectType(IddObjectType::OS_Schedule_Compact,"Compact Schedules");
-  myModelList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset,"Schedule Rulesets");
+  myModelList->addModelObjectType(IddObjectType::OS_Schedule_VariableInterval, "Variable Interval Schedules");
+  myModelList->addModelObjectType(IddObjectType::OS_Schedule_FixedInterval, "Fixed Interval Schedules");
+  myModelList->addModelObjectType(IddObjectType::OS_Schedule_Constant, "Constant Schedules");
+  myModelList->addModelObjectType(IddObjectType::OS_Schedule_Compact, "Compact Schedules");
+  myModelList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset, "Ruleset Schedules");
   myModelList->addModelObjectType(IddObjectType::OS_WaterHeater_HeatPump,"Heat Pump Water Heater");
 
   setMyModelView(myModelList);
@@ -961,8 +963,11 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   myModelList->addModelObjectType(IddObjectType::OS_Chiller_Electric_EIR,"Chiller - Electric EIR");
   myModelList->addModelObjectType(IddObjectType::OS_Chiller_Absorption,"Chiller - Absorption");
   myModelList->addModelObjectType(IddObjectType::OS_Chiller_Absorption_Indirect,"Chiller - Indirect Absorption");
-  myModelList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset,"Schedules");
-
+  myModelList->addModelObjectType(IddObjectType::OS_Schedule_VariableInterval, "Variable Interval Schedules");
+  myModelList->addModelObjectType(IddObjectType::OS_Schedule_FixedInterval, "Fixed Interval Schedules");
+  myModelList->addModelObjectType(IddObjectType::OS_Schedule_Constant, "Constant Schedules");
+  myModelList->addModelObjectType(IddObjectType::OS_Schedule_Compact, "Compact Schedules");
+  myModelList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset, "Ruleset Schedules");
 
   setMyModelView(myModelList);
 
@@ -1130,6 +1135,7 @@ void MainRightColumnController::configureForScriptsSubTab(int subTabID)
 
   setLibraryView(m_measureLibraryController->localLibraryView.data());
   setMyModelView(nullptr);
+  m_measureEditController->reset();
   setEditView(m_measureEditController->editView.data());
 
   doc->openSidebar();

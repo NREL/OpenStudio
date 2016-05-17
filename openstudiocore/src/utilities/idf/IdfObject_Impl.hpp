@@ -460,6 +460,12 @@ namespace detail {
     /** Check fieldValue against bounds in iddField. */
     bool withinBounds(double fieldValue,const IddField& iddField) const;
 
+    // convert a user string to one that can be written to file
+    std::string encodeString(const std::string& value) const;
+
+    // convert a string in file to one the use sees
+    std::string decodeString(const std::string& string) const;
+
     // configure logging
     REGISTER_LOGGER("utilities.idf.IdfObject");
   };

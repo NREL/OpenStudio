@@ -2378,6 +2378,12 @@ bool EpwFile::parse(bool storeData)
     }
   }
 
+  if (!result){
+    ifs.close();
+    LOG(Error, "Failed to parse EPW file header '" << m_path << "'");
+    return false;
+  }
+
   // read rest of file
   int lineNumber = 8;
   boost::optional<Date> startDate;

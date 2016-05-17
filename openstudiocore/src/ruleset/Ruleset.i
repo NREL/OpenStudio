@@ -45,12 +45,12 @@
 %}
 
 //user scripts
-%ignore std::vector<openstudio::ruleset::OSArgument>::vector(size_type);
-%ignore std::vector<openstudio::ruleset::OSArgument>::resize(size_type);
 %template(OSArgumentVector) std::vector<openstudio::ruleset::OSArgument>;
 %template(OptionalOSArgument) boost::optional<openstudio::ruleset::OSArgument>;
-%template(OptionalOSResult) boost::optional<openstudio::ruleset::OSResult>;
 %template(OSArgumentMap) std::map<std::string, openstudio::ruleset::OSArgument>;
+
+%template(OSResultVector) std::vector<openstudio::ruleset::OSResult>;
+%template(OptionalOSResult) boost::optional<openstudio::ruleset::OSResult>;
 
 %template(UserScriptInfo) std::pair<openstudio::path,std::vector<openstudio::ruleset::OSArgument> >;
 %template(UserScriptInfoVector) std::vector< std::pair<openstudio::path, std::vector<openstudio::ruleset::OSArgument> > >;

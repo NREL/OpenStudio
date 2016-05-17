@@ -665,7 +665,10 @@ TEST_F(RunManagerTestFixture, RelocateDaylightSimPath)
 
 
   ASSERT_EQ(wi2.files.files().at(0).fullPath, getOpenStudioRubyScriptsPath() / openstudio::toPath("openstudio/radiance/DaylightCalculations.rb"));
-  ASSERT_EQ(openstudio::toPath(wi2.files.files().at(0).requiredFiles.at(0).first.toLocalFile()), getOpenStudioRubyScriptsPath() / openstudio::toPath("openstudio/radiance/ModelToRad.rb"));
+  openstudio::path p1 = openstudio::toPath(wi2.files.files().at(0).requiredFiles.at(0).first.toLocalFile());
+  openstudio::path p2 = getOpenStudioRubyScriptsPath() / openstudio::toPath("openstudio/radiance/ModelToRad.rb");
+  // DLM: this causes a stack overflow, not sure why
+  ASSERT_EQ(p1, p2);
 
   ASSERT_TRUE(boost::filesystem::exists(wi2.files.files().at(0).fullPath));
   ASSERT_EQ("testjobkeyname", wi2.jobkeyname);

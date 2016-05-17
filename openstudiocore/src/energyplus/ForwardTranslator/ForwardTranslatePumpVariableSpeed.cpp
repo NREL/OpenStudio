@@ -85,29 +85,29 @@ boost::optional<IdfObject> ForwardTranslator::translatePumpVariableSpeed(
 
   if( modelObject.isRatedFlowRateAutosized() )
   {
-    idfObject.setString(Pump_VariableSpeedFields::RatedFlowRate,"Autosize");
+    idfObject.setString(Pump_VariableSpeedFields::DesignMaximumFlowRate,"Autosize");
   }
   else if( (value = modelObject.ratedFlowRate()) )
   {
-    idfObject.setDouble(Pump_VariableSpeedFields::RatedFlowRate,value.get());
+    idfObject.setDouble(Pump_VariableSpeedFields::DesignMaximumFlowRate,value.get());
   }
 
   // RatedPumpHead
 
   if( (value = modelObject.ratedPumpHead()) )
   {
-    idfObject.setDouble(Pump_VariableSpeedFields::RatedPumpHead,value.get());
+    idfObject.setDouble(Pump_VariableSpeedFields::DesignPumpHead,value.get());
   }
 
   // RatedPowerConsumption
 
   if( modelObject.isRatedPowerConsumptionAutosized() )
   {
-    idfObject.setString(Pump_VariableSpeedFields::RatedPowerConsumption,"Autosize");
+    idfObject.setString(Pump_VariableSpeedFields::DesignPowerConsumption,"Autosize");
   }
   else if( (value = modelObject.ratedPowerConsumption()) )
   {
-    idfObject.setDouble(Pump_VariableSpeedFields::RatedPowerConsumption,value.get());
+    idfObject.setDouble(Pump_VariableSpeedFields::DesignPowerConsumption,value.get());
   }
 
   // MotorEfficiency
@@ -156,7 +156,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePumpVariableSpeed(
 
   if( (value = modelObject.minimumFlowRate()) )
   {
-    idfObject.setDouble(Pump_VariableSpeedFields::MinimumFlowRate,value.get());
+    idfObject.setDouble(Pump_VariableSpeedFields::DesignMinimumFlowRate,value.get());
   }
 
   // PumpControlType

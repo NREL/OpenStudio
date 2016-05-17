@@ -326,29 +326,7 @@ namespace openstudio {
       modified = true;
     }
 
-    boost::optional<model::WeatherFile> weatherFile = model.getOptionalUniqueModelObject<model::WeatherFile>();
-    if (weatherFile){
-      LOG_FREE(Debug, "updateModelTempDir", "existing weather file found in osm");
-      boost::optional<openstudio::path> epwPath = weatherFile->path();
-      if (epwPath){
-        LOG_FREE(Debug, "updateModelTempDir", "existing weather file path: " << toString(*epwPath));
-        if (epwPath->is_complete() || (!epwPath->empty() && toString(*epwPath->begin()) != "files"))
-        {
-          LOG_FREE(Debug, "updateModelTempDir", "existing weather file path is not relative to osmfolder: " << toString(modelTempDir));
-          openstudio::path newPath = modelTempDir / toPath("resources/files") / epwPath->filename();
-          try {
-            boost::filesystem::copy_file(*epwPath, newPath, boost::filesystem::copy_option::overwrite_if_exists);
-            EpwFile epwFile(newPath);
-            boost::optional<openstudio::model::WeatherFile> newweatherfile = openstudio::model::WeatherFile::setWeatherFile(model, epwFile);
-            newweatherfile->makeUrlRelative(modelTempDir / toPath("resources"));
-            LOG_FREE(Debug, "updateModelTempDir", "existing weather file moved to new location: " << toString(newPath));
-            modified = true;
-          } catch (...) {
-            LOG_FREE(Error, "updateModelTempDir", "Unable to copy file from " << toString(*epwPath) << " to " << toString(newPath));
-          }
-        }
-      }
-    }
+    // weather file is fixed in OSDocument::fixWeatherFileOnOpen
 
     return modified;
   }
@@ -415,8 +393,9 @@ namespace openstudio {
     // DLM: eventually put saveRunManagerDatabase here, needs to happen before saveModelTempDir
 
     // DLM: eventually add this back in too
+    // DLM: for now this is accomplished by calling saveModelTempDir after saveModel in all cases
     //saveModelTempDir(modelTempDir, modelPath);
-    
+
     return modelPath;
   }
 

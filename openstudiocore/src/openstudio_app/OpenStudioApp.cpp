@@ -192,8 +192,6 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
       if(args.size() == 2){
         // check for 'noSavePath'
         if (args.at(1) == QString("noSavePath")){
-          // so new model can get access to weather file, file will be made relative again on save
-          m_osDocument->setFullWeatherFilePath(); 
           m_osDocument->setSavePath("");
           QTimer::singleShot(0, m_osDocument.get(), SLOT(markAsModified())); 
         }else{
@@ -936,7 +934,7 @@ void OpenStudioApp::versionUpdateMessageBox(const osversion::VersionTranslator& 
 
     if (versionChanged || removedScriptDirs)
     {
-      m_osDocument->markAsModified();
+      QTimer::singleShot(0, m_osDocument.get(), SLOT(markAsModified()));
 
       QString message;
       if (versionChanged)

@@ -184,15 +184,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctSeri
       {
         _reheatCoil->setString(Coil_Heating_WaterFields::AirInletNodeName,fanOutletNodeName);
         _reheatCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName,outletNodeName.get());
-        boost::optional<WaterToAirComponent> waterCoil = coil.optionalCast<WaterToAirComponent>();
-        OS_ASSERT(waterCoil);
-        if( boost::optional<ModelObject> mo = waterCoil->waterOutletModelObject()  )
-        {
-          if( boost::optional<Node> node = mo->optionalCast<Node>() )
-          {
-            idfObject.setString(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::HotWaterorSteamInletNodeName,node->name().get());
-          }
-        }
       }
     }
   }

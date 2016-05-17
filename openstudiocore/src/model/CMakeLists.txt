@@ -493,7 +493,7 @@ set(${target_name}_src
   FluidCoolerSingleSpeed.cpp
   FluidCoolerTwoSpeed.hpp
   FluidCoolerTwoSpeed_Impl.hpp
-  FluidCoolerTwoSpeed.cpp 
+  FluidCoolerTwoSpeed.cpp
   Gas.hpp
   Gas_Impl.hpp
   Gas.cpp
@@ -511,10 +511,10 @@ set(${target_name}_src
   GasMixture.cpp
   Generator.hpp
   Generator_Impl.hpp
-  Generator.cpp 
+  Generator.cpp
   GeneratorPhotovoltaic.hpp
   GeneratorPhotovoltaic_Impl.hpp
-  GeneratorPhotovoltaic.cpp  
+  GeneratorPhotovoltaic.cpp
   GlareSensor.hpp
   GlareSensor_Impl.hpp
   GlareSensor.cpp
@@ -588,7 +588,7 @@ set(${target_name}_src
   InteriorPartitionSurfaceGroup.cpp
   Inverter.hpp
   Inverter_Impl.hpp
-  Inverter.cpp  
+  Inverter.cpp
   LayeredConstruction.hpp
   LayeredConstruction_Impl.hpp
   LayeredConstruction.cpp
@@ -964,6 +964,15 @@ set(${target_name}_src
   SiteGroundTemperatureBuildingSurface.hpp
   SiteGroundTemperatureBuildingSurface_Impl.hpp
   SiteGroundTemperatureBuildingSurface.cpp
+  SiteGroundTemperatureDeep.hpp
+  SiteGroundTemperatureDeep_Impl.hpp
+  SiteGroundTemperatureDeep.cpp
+  SiteGroundTemperatureShallow.hpp
+  SiteGroundTemperatureShallow_Impl.hpp
+  SiteGroundTemperatureShallow.cpp
+  SiteGroundTemperatureFCfactorMethod.hpp
+  SiteGroundTemperatureFCfactorMethod_Impl.hpp
+  SiteGroundTemperatureFCfactorMethod.cpp
   SiteWaterMainsTemperature.hpp
   SiteWaterMainsTemperature_Impl.hpp
   SiteWaterMainsTemperature.cpp
@@ -987,7 +996,7 @@ set(${target_name}_src
   SkyTemperature.cpp
   SolarCollectorFlatPlatePhotovoltaicThermal.hpp
   SolarCollectorFlatPlatePhotovoltaicThermal_Impl.hpp
-  SolarCollectorFlatPlatePhotovoltaicThermal.cpp  
+  SolarCollectorFlatPlatePhotovoltaicThermal.cpp
   SolarCollectorFlatPlateWater.hpp
   SolarCollectorFlatPlateWater_Impl.hpp
   SolarCollectorFlatPlateWater.cpp
@@ -999,10 +1008,10 @@ set(${target_name}_src
   SolarCollectorPerformanceFlatPlate.cpp
   SolarCollectorPerformanceIntegralCollectorStorage.hpp
   SolarCollectorPerformanceIntegralCollectorStorage_Impl.hpp
-  SolarCollectorPerformanceIntegralCollectorStorage.cpp  
+  SolarCollectorPerformanceIntegralCollectorStorage.cpp
   SolarCollectorPerformancePhotovoltaicThermalSimple.hpp
   SolarCollectorPerformancePhotovoltaicThermalSimple_Impl.hpp
-  SolarCollectorPerformancePhotovoltaicThermalSimple.cpp  
+  SolarCollectorPerformancePhotovoltaicThermalSimple.cpp
   Space.hpp
   Space_Impl.hpp
   Space.cpp
@@ -1248,7 +1257,7 @@ set(${target_name}_src
   ZoneHVACWaterToAirHeatPump.cpp
   ZoneMixing.hpp
   ZoneMixing_Impl.hpp
-  ZoneMixing.cpp  
+  ZoneMixing.cpp
   ZoneVentilationDesignFlowRate.hpp
   ZoneVentilationDesignFlowRate_Impl.hpp
   ZoneVentilationDesignFlowRate.cpp
@@ -1405,7 +1414,6 @@ set(${target_name}_moc
   SimulationControl_Impl.hpp
   Site_Impl.hpp
   SiteGroundReflectance_Impl.hpp
-  SiteGroundTemperatureBuildingSurface_Impl.hpp
   SiteWaterMainsTemperature_Impl.hpp
   SizingParameters_Impl.hpp
   SizingPlant_Impl.hpp
@@ -1706,6 +1714,10 @@ set(${target_name}_test_src
   test/SimpleGlazing_GTest.cpp
   test/SimulationControl_GTest.cpp
   test/Site_GTest.cpp
+  test/SiteGroundTemperatureDeep_GTest.cpp
+  test/SiteGroundTemperatureFCfactorMethod_GTest.cpp
+  test/SiteGroundTemperatureShallow_GTest.cpp
+  test/SiteGroundTemperatureBuildingSurface_GTest.cpp
   test/SizingPlant_GTest.cpp
   test/SizingSystem_GTest.cpp
   test/SizingZone_GTest.cpp

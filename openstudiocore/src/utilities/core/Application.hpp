@@ -41,6 +41,12 @@ namespace openstudio{
     /// get the QApplication, if no QApplication has been set this will create a default one
     QCoreApplication* application(bool gui=true);
 
+    /// check if the application has been initialized
+    bool hasApplication() const;
+
+    /// check if the application has GUI enabled
+    bool hasGUI() const;
+
     /// set the QApplication, this should be done before calling application(), 
     /// no op if it has already been set.  Returns true if set succeeded.
     bool setApplication(QCoreApplication *qApplication);

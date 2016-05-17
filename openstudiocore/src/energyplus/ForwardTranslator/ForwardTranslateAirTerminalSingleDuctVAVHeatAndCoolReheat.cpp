@@ -136,13 +136,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctVAVH
     idfObject.setDouble(AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::ZoneMinimumAirFlowFraction,value.get());
   }
 
-  // HotWaterorSteamInletNodeName
-  if( auto waterCoil = coil.optionalCast<WaterToAirComponent>() ) {
-    if( auto node = waterCoil->waterInletModelObject() ) {
-      idfObject.setString(AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::HotWaterorSteamInletNodeName,node->name().get());
-    }
-  }
-
   if( _coil ) {
     // ReheatCoilObjectType
     idfObject.setString(AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::ReheatCoilObjectType,_coil->iddObject().name());

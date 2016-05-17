@@ -422,6 +422,18 @@ set(osversion_resources_src
   osversion/1_10_4/OpenStudio.idd
   osversion/1_10_4/example.osm
   osversion/1_10_4/example.osc
+  osversion/1_10_5/OpenStudio.idd
+  osversion/1_10_5/example.osm
+  osversion/1_10_5/example.osc
+  osversion/1_10_6/OpenStudio.idd
+  osversion/1_10_6/example.osm
+  osversion/1_10_6/example.osc
+  osversion/1_11_0/OpenStudio.idd
+  osversion/1_11_0/example.osm
+  osversion/1_11_0/example.osc
+  osversion/1_11_1/OpenStudio.idd
+  osversion/1_11_1/example.osm
+  osversion/1_11_1/example.osc
   osversion/unknown.osc
 )
 
@@ -604,7 +616,6 @@ CREATE_SRC_GROUPS("${ruleset_resources_src}")
 set(ENERGYPLUS_OUTPUTS "")
 
 set(energyplus_resources_src
-  energyplus/Energy+.idd
   energyplus/ProposedEnergy+.idd
   energyplus/NewFileTemplate.idf
   energyplus/5ZoneAirCooled/in.idf

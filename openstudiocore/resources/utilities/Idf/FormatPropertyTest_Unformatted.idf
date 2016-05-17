@@ -5,7 +5,7 @@
 !-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
 ! \format singleLine
 
-  Version,7.1;
+  Version,8.5;
 
 !-   ===========  ALL OBJECTS IN CLASS: HEATBALANCEALGORITHM ===========
 ! \format singleLine
@@ -89,7 +89,6 @@
     0,10,0;  !- X,Y,Z ==> Vertex 4 {m}
 
 !-   ===========  ALL OBJECTS IN CLASS: ZONEPROPERTY:USERVIEWFACTORS ===========
-
 !  ZoneProperty:UserViewFactors,
 !    MyZone,                 !- Zone Name
 !    0,                      !- i 1
@@ -104,7 +103,6 @@
 !    1,                      !- i 4
 !    1,                      !- j 4
 !    0.75;                   !- Fij 4
-
 !-   ===========  ALL OBJECTS IN CLASS: FLUIDPROPERTIES:TEMPERATURES ===========
 ! \format FluidProperty
 

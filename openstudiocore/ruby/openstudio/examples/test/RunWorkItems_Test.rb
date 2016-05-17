@@ -18,7 +18,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 require 'fileutils'
 
 require 'minitest/autorun'
@@ -50,8 +49,9 @@ class RunWorkItems_Test < MiniTest::Unit::TestCase
     
     # copy weather file over to model_dir
     puts "Adding weather file and design days."
-    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,4)
-    weather_dir = OpenStudio::Path.new(ep_hash[:energyplus_weatherdata].to_s)
+    co = OpenStudio::Runmanager::ConfigOptions.new
+    co.fastFindEnergyPlus()
+    weather_dir = co.getDefaultEPWLocation
     weather_path = weather_dir / OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.epw")
     ddy_path = weather_dir / OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.ddy")
     files_dir = model_dir / OpenStudio::Path.new("files")

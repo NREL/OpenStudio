@@ -20,8 +20,10 @@
 #ifndef MODEL_SITEGROUNDTEMPERATUREBUILDINGSURFACE_IMPL_HPP
 #define MODEL_SITEGROUNDTEMPERATUREBUILDINGSURFACE_IMPL_HPP
 
+#include <vector>
 #include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
+#include <utilities/time/Date.hpp>
 
 namespace openstudio {
 namespace model {
@@ -30,31 +32,7 @@ namespace detail {
 
   /** SiteGroundTemperatureBuildingSurface_Impl is a ModelObject_Impl that is the implementation class for SiteGroundTemperatureBuildingSurface.*/
   class MODEL_API SiteGroundTemperatureBuildingSurface_Impl : public ModelObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(double januaryGroundTemperature READ januaryGroundTemperature WRITE setJanuaryGroundTemperature RESET resetJanuaryGroundTemperature);
-    Q_PROPERTY(bool isJanuaryGroundTemperatureDefaulted READ isJanuaryGroundTemperatureDefaulted);
-    Q_PROPERTY(double februaryGroundTemperature READ februaryGroundTemperature WRITE setFebruaryGroundTemperature RESET resetFebruaryGroundTemperature);
-    Q_PROPERTY(bool isFebruaryGroundTemperatureDefaulted READ isFebruaryGroundTemperatureDefaulted);
-    Q_PROPERTY(double marchGroundTemperature READ marchGroundTemperature WRITE setMarchGroundTemperature RESET resetMarchGroundTemperature);
-    Q_PROPERTY(bool isMarchGroundTemperatureDefaulted READ isMarchGroundTemperatureDefaulted);
-    Q_PROPERTY(double aprilGroundTemperature READ aprilGroundTemperature WRITE setAprilGroundTemperature RESET resetAprilGroundTemperature);
-    Q_PROPERTY(bool isAprilGroundTemperatureDefaulted READ isAprilGroundTemperatureDefaulted);
-    Q_PROPERTY(double mayGroundTemperature READ mayGroundTemperature WRITE setMayGroundTemperature RESET resetMayGroundTemperature);
-    Q_PROPERTY(bool isMayGroundTemperatureDefaulted READ isMayGroundTemperatureDefaulted);
-    Q_PROPERTY(double juneGroundTemperature READ juneGroundTemperature WRITE setJuneGroundTemperature RESET resetJuneGroundTemperature);
-    Q_PROPERTY(bool isJuneGroundTemperatureDefaulted READ isJuneGroundTemperatureDefaulted);
-    Q_PROPERTY(double julyGroundTemperature READ julyGroundTemperature WRITE setJulyGroundTemperature RESET resetJulyGroundTemperature);
-    Q_PROPERTY(bool isJulyGroundTemperatureDefaulted READ isJulyGroundTemperatureDefaulted);
-    Q_PROPERTY(double augustGroundTemperature READ augustGroundTemperature WRITE setAugustGroundTemperature RESET resetAugustGroundTemperature);
-    Q_PROPERTY(bool isAugustGroundTemperatureDefaulted READ isAugustGroundTemperatureDefaulted);
-    Q_PROPERTY(double septemberGroundTemperature READ septemberGroundTemperature WRITE setSeptemberGroundTemperature RESET resetSeptemberGroundTemperature);
-    Q_PROPERTY(bool isSeptemberGroundTemperatureDefaulted READ isSeptemberGroundTemperatureDefaulted);
-    Q_PROPERTY(double octoberGroundTemperature READ octoberGroundTemperature WRITE setOctoberGroundTemperature RESET resetOctoberGroundTemperature);
-    Q_PROPERTY(bool isOctoberGroundTemperatureDefaulted READ isOctoberGroundTemperatureDefaulted);
-    Q_PROPERTY(double novemberGroundTemperature READ novemberGroundTemperature WRITE setNovemberGroundTemperature RESET resetNovemberGroundTemperature);
-    Q_PROPERTY(bool isNovemberGroundTemperatureDefaulted READ isNovemberGroundTemperatureDefaulted);
-    Q_PROPERTY(double decemberGroundTemperature READ decemberGroundTemperature WRITE setDecemberGroundTemperature RESET resetDecemberGroundTemperature);
-    Q_PROPERTY(bool isDecemberGroundTemperatureDefaulted READ isDecemberGroundTemperatureDefaulted);
+
    public:
 
     /** @name Constructors and Destructors */
@@ -131,6 +109,16 @@ namespace detail {
 
     bool isDecemberGroundTemperatureDefaulted() const;
 
+    double getTemperatureByMonth(int month) const;
+
+    double getTemperatureByMonth(const openstudio::MonthOfYear & month) const;
+
+    bool isMonthDefaulted(int month) const;
+
+    bool isMonthDefaulted(const openstudio::MonthOfYear & month) const;
+
+    std::vector<double> getAllMonthlyTemperatures() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -183,6 +171,18 @@ namespace detail {
 
     void resetDecemberGroundTemperature();
 
+    void setTemperatureByMonth(int month, double temperature);
+
+    void setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature);
+
+    void resetTemperatureByMonth(int month);
+
+    void resetTemperatureByMonth(const openstudio::MonthOfYear & month);
+
+    void resetAllMonths();
+
+    bool setAllMonthlyTemperatures(const std::vector<double> &monthly_temperatures);
+
     //@}
    protected:
    private:
@@ -195,4 +195,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_SITEGROUNDTEMPERATUREBUILDINGSURFACE_IMPL_HPP
-

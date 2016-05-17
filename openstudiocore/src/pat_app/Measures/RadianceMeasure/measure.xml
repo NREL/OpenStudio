@@ -2,8 +2,8 @@
   <schema_version>3.0</schema_version>
   <name>radiance_measure</name>
   <uid>1e3cfef8-b051-4e60-8bb0-ed2d29d4f45d</uid>
-  <version_id>110a647f-57f6-4446-a458-b1ff3adbaa93</version_id>
-  <version_modified>20160219T165449</version_modified>
+  <version_id>7657df73-d022-4872-8c9d-448d4d630ea3</version_id>
+  <version_modified>20160331T220901Z</version_modified>
   <xml_checksum>381B7733</xml_checksum>
   <class_name>RadianceMeasure</class_name>
   <display_name>Radiance Daylighting Measure</display_name>
@@ -55,7 +55,7 @@
     <argument>
       <name>rad_settings</name>
       <display_name>Radiance Settings</display_name>
-      <description>The measure reads Radiance simulation parameters from the "Model" by default. The "Testing" option can be used for testing your model with the Radiance workflow; it uses very crude parameters for a fast simulation but produces very inaccurate results.</description>
+      <description>The measure gets the Radiance simulation parameters from the "Model" by default. "High" will force high-quality simulation paramaters, and "Testing" uses very crude parameters for a fast simulation but produces very inaccurate results.</description>
       <type>Choice</type>
       <required>true</required>
       <model_dependent>false</model_dependent>
@@ -69,12 +69,35 @@
           <value>Testing</value>
           <display_name>Testing</display_name>
         </choice>
+        <choice>
+          <value>High</value>
+          <display_name>High</display_name>
+        </choice>
       </choices>
     </argument>
     <argument>
       <name>debug_mode</name>
       <display_name>Debug Mode</display_name>
-      <description>Generates additional log messages, images for each window group, and saves all window group output.</description>
+      <description>Generate additional log messages, images for each window group, and save all window group output.</description>
+      <type>Boolean</type>
+      <required>false</required>
+      <model_dependent>false</model_dependent>
+      <default_value>false</default_value>
+      <choices>
+        <choice>
+          <value>true</value>
+          <display_name>true</display_name>
+        </choice>
+        <choice>
+          <value>false</value>
+          <display_name>false</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>cleanup_data</name>
+      <display_name>Cleanup Data</display_name>
+      <description>Delete Radiance input and (most) output data, post-simulation (lighting schedules are passed to OpenStudio model (and daylight metrics are passed to OpenStudio-server, if applicable)</description>
       <type>Boolean</type>
       <required>false</required>
       <model_dependent>false</model_dependent>
@@ -139,7 +162,7 @@
       <filename>radiance_measure_test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
-      <checksum>0361F12D</checksum>
+      <checksum>C2C8BCD2</checksum>
     </file>
     <file>
       <version>
@@ -150,7 +173,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>E0E6D0EC</checksum>
+      <checksum>73879C56</checksum>
     </file>
   </files>
 </measure>

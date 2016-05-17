@@ -420,7 +420,7 @@ InputCheckBox::InputCheckBox()
   mainHLayout->setSpacing(spacing);
   setLayout(mainHLayout);
 
-  m_label = new QLabel("hello world");
+  m_label = new QLabel();
   m_label->setWordWrap(true);
   mainHLayout->addWidget(m_label);
 

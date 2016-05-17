@@ -3746,7 +3746,7 @@ void SupplySideItem::layout()
   if( m_outletBranchItem ) {
     auto height = m_outletBranchItem->getVGridLength();
     if( height > j ) {
-      j = height;
+      j = height - 1;
     }
   }
 
@@ -3807,7 +3807,7 @@ void SupplySideItem::layout()
   }
 
   if( m_outletBranchItem ) {
-    m_outletBranchItem->setGridPos(i,(j - m_inletBranchItem->getVGridLength() + 1));
+    m_outletBranchItem->setGridPos(i,(j - m_outletBranchItem->getVGridLength() + 1));
 
     if( m_inletBranchItem ) {
       m_outletBranchItem->setPadding(m_padding / 2);

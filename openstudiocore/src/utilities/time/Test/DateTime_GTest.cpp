@@ -22,6 +22,8 @@
 #include "../DateTime.hpp"
 #include "../../core/Exception.hpp"
 
+#include <QDateTime>
+
 #include <string>
 
 using namespace std;
@@ -170,45 +172,97 @@ TEST(DateTime,EpochConversions) {
   EXPECT_EQ(dateTime,copy);
 }
 
+TEST(DateTime, QDateTime) {
+  {
+    DateTime dateTime = DateTime::now();
+    QDateTime qDateTime = toQDateTime(dateTime);
+    DateTime dateTime2 = toDateTime(qDateTime);
+    EXPECT_EQ(dateTime, dateTime2);
+  }
+  {
+    DateTime dateTime = DateTime::nowUTC();
+    QDateTime qDateTime = toQDateTime(dateTime);
+    DateTime dateTime2 = toDateTime(qDateTime);
+    EXPECT_EQ(dateTime, dateTime2);
+  }
+  {
+    QDateTime qDateTime = QDateTime::currentDateTime();
+    DateTime dateTime = toDateTime(qDateTime);
+    QDateTime qDateTime2 = toQDateTime(dateTime);
+    EXPECT_EQ(qDateTime.toTime_t(), qDateTime2.toTime_t());
+  }
+  {
+    QDateTime qDateTime = QDateTime::currentDateTimeUtc();
+    DateTime dateTime = toDateTime(qDateTime);
+    QDateTime qDateTime2 = toQDateTime(dateTime);
+    EXPECT_EQ(qDateTime.toTime_t(), qDateTime2.toTime_t());
+  }
+}
+
+
+
 TEST(DateTime,ISO8601Conversions) {
-  DateTime dateTime = DateTime::now();
-  std::string asIso = dateTime.toISO8601();
-  OptionalDateTime copy = DateTime::fromISO8601(asIso);
-  ASSERT_TRUE(copy);
-  EXPECT_EQ(dateTime,copy.get());
+  {
+    DateTime dateTime = DateTime::now();
+    double utcOffset = dateTime.utcOffset();
+    EXPECT_EQ(DateTime::localOffsetUTC(), utcOffset);
+
+    std::string asIso = dateTime.toISO8601();
+    OptionalDateTime copy = DateTime::fromISO8601(asIso);
+    ASSERT_TRUE(copy);
+    EXPECT_EQ(dateTime, copy.get());
+    EXPECT_EQ(dateTime.utcOffset(), copy->utcOffset());
+    EXPECT_EQ(dateTime.toEpoch(), copy->toEpoch());
+  }
+  {
+    DateTime dateTime = DateTime::nowUTC();
+    double utcOffset = dateTime.utcOffset();
+    EXPECT_EQ(0, utcOffset);
+
+    std::string asIso = dateTime.toISO8601();
+    OptionalDateTime copy = DateTime::fromISO8601(asIso);
+    ASSERT_TRUE(copy);
+    EXPECT_EQ(dateTime, copy.get());
+    EXPECT_EQ(dateTime.utcOffset(), copy->utcOffset());
+    EXPECT_EQ(dateTime.toEpoch(), copy->toEpoch());
+  }
 }
 
 TEST(DateTime, ISO8601Conversions_2) {
   boost::optional<DateTime> test;
 
-  // Year :
-  //test = DateTime::fromISO8601("1997");
-  //EXPECT_TRUE(test);
-
-  // Year and month  :
-  //test = DateTime::fromISO8601("1997-07");
-  //EXPECT_TRUE(test);
-  //test = DateTime::fromISO8601("199707");
-  //EXPECT_TRUE(test);
- 
-  // Complete date :
-  //test = DateTime::fromISO8601("1997-07-16");
-  //EXPECT_TRUE(test);
-  //test = DateTime::fromISO8601("19970716");
-  //EXPECT_TRUE(test);
 
   // Complete date plus hours and minutes :
-  //test = DateTime::fromISO8601("1997-07-16T19:20+01:00");
-  //EXPECT_TRUE(test);
-  test = DateTime::fromISO8601("19970716T1920+0100");  // DLM: ignores time zone
+  test = DateTime::fromISO8601("1997-07-16T19:20+01:00");
   ASSERT_TRUE(test);
   EXPECT_EQ(1997, test->date().year());
   EXPECT_EQ(7, test->date().monthOfYear().value());
   EXPECT_EQ(16, test->date().dayOfMonth());
   EXPECT_EQ(19, test->time().hours());
   EXPECT_EQ(20, test->time().minutes());
-  //test = DateTime::fromISO8601("19970716T1820Z"); // DLM: cannot accept zulu time zone after HHMM
-  //EXPECT_TRUE(test);
+  EXPECT_EQ(0, test->time().seconds());
+  EXPECT_EQ(1, test->utcOffset());
+
+  test = DateTime::fromISO8601("19970716T1920+0100");  
+  ASSERT_TRUE(test);
+  EXPECT_EQ(1997, test->date().year());
+  EXPECT_EQ(7, test->date().monthOfYear().value());
+  EXPECT_EQ(16, test->date().dayOfMonth());
+  EXPECT_EQ(19, test->time().hours());
+  EXPECT_EQ(20, test->time().minutes());
+  EXPECT_EQ(0, test->time().seconds());
+  EXPECT_EQ(1, test->utcOffset());
+
+  test = DateTime::fromISO8601("19970716T1920Z");
+  ASSERT_TRUE(test);
+  EXPECT_EQ(1997, test->date().year());
+  EXPECT_EQ(7, test->date().monthOfYear().value());
+  EXPECT_EQ(16, test->date().dayOfMonth());
+  EXPECT_EQ(19, test->time().hours());
+  EXPECT_EQ(20, test->time().minutes());
+  EXPECT_EQ(0, test->time().seconds());
+  EXPECT_EQ(0, test->utcOffset());
+
   test = DateTime::fromISO8601("19970716T1920");
   ASSERT_TRUE(test);
   EXPECT_EQ(1997, test->date().year());
@@ -216,24 +270,40 @@ TEST(DateTime, ISO8601Conversions_2) {
   EXPECT_EQ(16, test->date().dayOfMonth());
   EXPECT_EQ(19, test->time().hours());
   EXPECT_EQ(20, test->time().minutes());
+  EXPECT_EQ(0, test->time().seconds());
+  EXPECT_EQ(0, test->utcOffset());
 
   // Complete date plus hours, minutes and seconds :
-  //test = DateTime::fromISO8601("1997-07-16T19:20:30+01:00");
-  //EXPECT_TRUE(test);
-  test = DateTime::fromISO8601("19970716T192030+0100"); // DLM: ignores time zone
+  test = DateTime::fromISO8601("1997-07-16T19:20:30+01:00");
   ASSERT_TRUE(test);
   EXPECT_EQ(1997, test->date().year());
   EXPECT_EQ(7, test->date().monthOfYear().value());
   EXPECT_EQ(16, test->date().dayOfMonth());
   EXPECT_EQ(19, test->time().hours());
   EXPECT_EQ(20, test->time().minutes());
-  test = DateTime::fromISO8601("19970716T192030Z"); // DLM: can accept zulu time zone after HHMMSS
+  EXPECT_EQ(30, test->time().seconds());
+  EXPECT_EQ(1, test->utcOffset());
+
+  test = DateTime::fromISO8601("19970716T192030+0100");
   ASSERT_TRUE(test);
   EXPECT_EQ(1997, test->date().year());
   EXPECT_EQ(7, test->date().monthOfYear().value());
   EXPECT_EQ(16, test->date().dayOfMonth());
   EXPECT_EQ(19, test->time().hours());
   EXPECT_EQ(20, test->time().minutes());
+  EXPECT_EQ(30, test->time().seconds());
+  EXPECT_EQ(1, test->utcOffset());
+
+  test = DateTime::fromISO8601("19970716T192030Z"); 
+  ASSERT_TRUE(test);
+  EXPECT_EQ(1997, test->date().year());
+  EXPECT_EQ(7, test->date().monthOfYear().value());
+  EXPECT_EQ(16, test->date().dayOfMonth());
+  EXPECT_EQ(19, test->time().hours());
+  EXPECT_EQ(20, test->time().minutes());
+  EXPECT_EQ(30, test->time().seconds());
+  EXPECT_EQ(0, test->utcOffset());
+
   test = DateTime::fromISO8601("19970716T192030");
   ASSERT_TRUE(test);
   EXPECT_EQ(1997, test->date().year());
@@ -242,14 +312,39 @@ TEST(DateTime, ISO8601Conversions_2) {
   EXPECT_EQ(19, test->time().hours());
   EXPECT_EQ(20, test->time().minutes());
   EXPECT_EQ(30, test->time().seconds());
+  EXPECT_EQ(0, test->utcOffset());
 
   // Complete date plus hours, minutes, seconds and a decimal fraction of a second :
-  //test = DateTime::fromISO8601("1997-07-16T19:20:30.45+01:00");
-  //EXPECT_TRUE(test);
-  //test = DateTime::fromISO8601("19970716T19203045+0100");
-  //EXPECT_TRUE(test);
-  //test = DateTime::fromISO8601("19970716T18203045Z");
-  //EXPECT_TRUE(test);
+  test = DateTime::fromISO8601("1997-07-16T19:20:30.45+01:00");
+  ASSERT_TRUE(test);
+  EXPECT_EQ(1997, test->date().year());
+  EXPECT_EQ(7, test->date().monthOfYear().value());
+  EXPECT_EQ(16, test->date().dayOfMonth());
+  EXPECT_EQ(19, test->time().hours());
+  EXPECT_EQ(20, test->time().minutes());
+  EXPECT_EQ(30, test->time().seconds());
+  EXPECT_EQ(1, test->utcOffset());
+
+  test = DateTime::fromISO8601("19970716T19203045+0100");
+  ASSERT_TRUE(test);
+  EXPECT_EQ(1997, test->date().year());
+  EXPECT_EQ(7, test->date().monthOfYear().value());
+  EXPECT_EQ(16, test->date().dayOfMonth());
+  EXPECT_EQ(19, test->time().hours());
+  EXPECT_EQ(20, test->time().minutes());
+  EXPECT_EQ(30, test->time().seconds());
+  EXPECT_EQ(1, test->utcOffset());
+
+  test = DateTime::fromISO8601("19970716T19203045Z");
+  ASSERT_TRUE(test);
+  EXPECT_EQ(1997, test->date().year());
+  EXPECT_EQ(7, test->date().monthOfYear().value());
+  EXPECT_EQ(16, test->date().dayOfMonth());
+  EXPECT_EQ(19, test->time().hours());
+  EXPECT_EQ(20, test->time().minutes());
+  EXPECT_EQ(30, test->time().seconds());
+  EXPECT_EQ(0, test->utcOffset());
+
   test = DateTime::fromISO8601("19970716T19203045");
   ASSERT_TRUE(test);
   EXPECT_EQ(1997, test->date().year());
@@ -258,7 +353,7 @@ TEST(DateTime, ISO8601Conversions_2) {
   EXPECT_EQ(19, test->time().hours());
   EXPECT_EQ(20, test->time().minutes());
   EXPECT_EQ(30, test->time().seconds());
-
+  EXPECT_EQ(0, test->utcOffset());
 }
 
 TEST(DateTime, OutOfRangeYearTest) {

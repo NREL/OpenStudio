@@ -1,6 +1,6 @@
 !-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
 
-  Version,8.4;
+  Version,8.5;
 
 !-   ===========  ALL OBJECTS IN CLASS: BUILDING ===========
 
@@ -12,7 +12,7 @@
     0.4,                     !- Temperature Convergence Tolerance Value {deltaC}
     FullInteriorAndExterior, !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
-    ;                        !- Minimum Number of Warmup Days
+    6;                       !- Minimum Number of Warmup Days
 
 !-   ===========  ALL OBJECTS IN CLASS: TIMESTEP ===========
 
@@ -563,7 +563,7 @@
     0.921031,                !- X Origin {m}
     0.967624,                !- Y Origin {m}
     0.0,                     !- Z Origin {m}
-    ,                        !- Type
+    1,                       !- Type
     1;                       !- Multiplier
 
   BuildingSurface:Detailed,
@@ -575,7 +575,7 @@
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     6.759841648045,6.974514227314,0.000000000000,  !- X,Y,Z ==> Vertex 1 {m}
     6.759841648045,1.254751727314,0.000000000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -591,7 +591,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     1.251216648045,6.974514227314,3.795712500000,  !- X,Y,Z ==> Vertex 1 {m}
     1.251216648045,6.974514227314,0.000000000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -639,7 +639,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     6.759841648045,6.974514227314,3.795712500000,  !- X,Y,Z ==> Vertex 1 {m}
     6.759841648045,6.974514227314,0.000000000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -655,7 +655,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     1.251216648045,6.974514227314,3.795712500000,  !- X,Y,Z ==> Vertex 1 {m}
     1.251216648045,1.254751727314,3.795712500000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -668,7 +668,7 @@
     0.921031,                !- X Origin {m}
     0.967624,                !- Y Origin {m}
     0.0,                     !- Z Origin {m}
-    ,                        !- Type
+    1,                       !- Type
     1;                       !- Multiplier
 
   BuildingSurface:Detailed,
@@ -680,7 +680,7 @@
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     12.268466648045,6.974514227314,0.000000000000,  !- X,Y,Z ==> Vertex 1 {m}
     12.268466648045,1.254751727314,0.000000000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -696,7 +696,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     6.759841648045,6.974514227314,3.795712500000,  !- X,Y,Z ==> Vertex 1 {m}
     6.759841648045,1.254751727314,3.795712500000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -712,7 +712,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     12.268466648045,6.974514227314,3.795712500000,  !- X,Y,Z ==> Vertex 1 {m}
     12.268466648045,6.974514227314,0.000000000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -728,7 +728,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    ,                        !- View Factor to Ground
+    Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
     12.268466648045,1.254751727314,3.795712500000,  !- X,Y,Z ==> Vertex 1 {m}
     12.268466648045,1.254751727314,0.000000000000,  !- X,Y,Z ==> Vertex 2 {m}

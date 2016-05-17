@@ -41,7 +41,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 require 'fileutils'
 
 include OpenStudio                      # to avoid the OpenStudio:: prefix
@@ -76,9 +75,10 @@ FileUtils.mkdir(projectDir.to_s) if not exists(projectDir)
 
 
 # find EnergyPlus DataSets
-ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,4)
-datasets_path = Path.new(ep_hash[:energyplus_datasets].to_s)
-
+co = OpenStudio::Runmanager::ConfigOptions.new
+co.fastFindEnergyPlus()
+weather_path = co.getDefaultEPWLocation
+datasets_path = weather_path / OpenStudio::Path.new("../DataSets/")
 
 # create Window construction components
 windowDir = projectDir / Path.new("WindowConstructions")

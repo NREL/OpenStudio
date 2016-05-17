@@ -229,7 +229,7 @@ LocationView::LocationView(bool isIP,
   weatherFileGridLayout->addWidget(m_timeZoneLbl, i++, 0);
 
   // ***** Weather File Download Location *****
-  label = new QLabel("Download weather files at <a href=\"http://www.energyplus.gov\">www.energyplus.gov</a>");
+  label = new QLabel("Download weather files at <a href=\"http://www.energyplus.net/weather\">www.energyplus.net/weather</a>");
   label->setOpenExternalLinks(true);
   weatherFileGridLayout->addWidget(label, i++, 0);
 
@@ -582,6 +582,8 @@ void LocationView::onWeatherFileBtnClicked()
         }
       }
       
+      // duplicate code in OSDocument::fixWeatherFilePath
+
       boost::filesystem::copy_file(epwPath, newPath, boost::filesystem::copy_option::overwrite_if_exists);
       
       // this can throw

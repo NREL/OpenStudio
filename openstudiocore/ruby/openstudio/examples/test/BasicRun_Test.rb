@@ -18,7 +18,6 @@
 ######################################################################
 
 require 'openstudio'
-require 'openstudio/energyplus/find_energyplus'
 require 'minitest/autorun'
 
 class BasicRun_Test < MiniTest::Unit::TestCase
@@ -32,8 +31,9 @@ class BasicRun_Test < MiniTest::Unit::TestCase
   def test_BasicRun
     idfPathAndFilename = OpenStudio::Path.new($OpenStudio_ResourcePath + "resultsviewer/SmallOffice/in.idf")  
     # find EnergyPlus
-    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,4)
-    weatherDir = OpenStudio::Path.new(ep_hash[:energyplus_weatherdata].to_s)
+    co = OpenStudio::Runmanager::ConfigOptions.new
+    co.fastFindEnergyPlus()
+    weatherDir = co.getDefaultEPWLocation
     weatherPathAndFilename = weatherDir / OpenStudio::Path.new("USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")
     outputDirectory = OpenStudio::Path.new
     launchResultsViewer = false

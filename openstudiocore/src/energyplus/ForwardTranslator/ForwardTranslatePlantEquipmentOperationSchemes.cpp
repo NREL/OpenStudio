@@ -490,13 +490,15 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
 
   operationSchemes.setName(plantLoop.name().get() + " Operation Schemes");
 
+  auto alwaysOnSchedule = plantLoop.model().alwaysOnDiscreteSchedule();
+  auto _alwaysOn = translateAndMapModelObject(alwaysOnSchedule);
+  OS_ASSERT(_alwaysOn);
+
   // Lambda does what the name suggests, create setpoint operation schemes.
   // This is for any component that has a setpoint manager on its outlet node
   auto createSetpointOperationScheme = [&](PlantLoop & plantLoop) {
     const auto & t_setpointComponents = setpointComponents(plantLoop);
     if( ! t_setpointComponents.empty() ) {
-      Schedule alwaysOn = plantLoop.model().alwaysOnDiscreteSchedule();
-
       IdfObject setpointOperation(IddObjectType::PlantEquipmentOperation_ComponentSetpoint);
       setpointOperation.setName(plantLoop.name().get() + " Setpoint Operation Scheme");
       m_idfObjects.push_back(setpointOperation);
@@ -505,7 +507,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
       IdfExtensibleGroup eg = operationSchemes.pushExtensibleGroup();
       eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,setpointOperation.iddObject().name());
       eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,setpointOperation.name().get());
-      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,alwaysOn.name().get());
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,_alwaysOn->name().get());
 
       for( auto setpointComponent : t_setpointComponents )
       {
@@ -543,7 +545,6 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
     }
   };
 
-  Schedule alwaysOn = plantLoop.model().alwaysOnDiscreteSchedule();
   bool applyDefault = true;
 
   // If any operation schemes are defined in the model then don't apply default operation schemes
@@ -554,7 +555,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
     auto eg = operationSchemes.pushExtensibleGroup();
     eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,_scheme->iddObject().name());
     eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,_scheme->name().get());
-    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,alwaysOn.name().get());
+    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,_alwaysOn->name().get());
 
     applyDefault = false;
   } 
@@ -565,7 +566,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
     auto eg = operationSchemes.pushExtensibleGroup();
     eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,_scheme->iddObject().name());
     eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,_scheme->name().get());
-    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,alwaysOn.name().get());
+    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,_alwaysOn->name().get());
 
     applyDefault = false;
   }
@@ -576,7 +577,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
     auto eg = operationSchemes.pushExtensibleGroup();
     eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,_scheme->iddObject().name());
     eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,_scheme->name().get());
-    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,alwaysOn.name().get());
+    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,_alwaysOn->name().get());
 
     createSetpointOperationScheme(plantLoop);
     applyDefault = false;
@@ -605,7 +606,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
       eg = operationSchemes.pushExtensibleGroup();
       eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,heatingOperation.iddObject().name());
       eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,heatingOperation.name().get());
-      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,alwaysOn.name().get());
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,_alwaysOn->name().get());
 
       for( auto heatingComponent : t_heatingComponents ) {
         if( const auto & idfObject = translateAndMapModelObject(heatingComponent) ) {
@@ -636,7 +637,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
       eg = operationSchemes.pushExtensibleGroup();
       eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,coolingOperation.iddObject().name());
       eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,coolingOperation.name().get());
-      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,alwaysOn.name().get());
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,_alwaysOn->name().get());
 
       for( auto coolingComponent : t_coolingComponents ) {
         if( const auto & idfObject = translateAndMapModelObject(coolingComponent) ) {
@@ -665,7 +666,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationSc
       auto eg = operationSchemes.pushExtensibleGroup();
       eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,uncontrolledOperation.iddObject().name());
       eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,uncontrolledOperation.name().get());
-      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,alwaysOn.name().get());
+      eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,_alwaysOn->name().get());
 
       for( auto uncontrolledComponent : t_uncontrolledComponents ) {
         if( const auto & idfObject = translateAndMapModelObject(uncontrolledComponent) ) {

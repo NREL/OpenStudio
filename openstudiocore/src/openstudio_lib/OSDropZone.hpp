@@ -64,7 +64,8 @@ public:
   bool hasData() { return !this->m_label->text().isEmpty(); }
   void setDeleteObject(bool deleteObject) { m_deleteObject = deleteObject; }
   bool deleteObject() { return m_deleteObject; }
-
+  void setIsDefaulted(bool defaulted);
+  bool isDefaulted();
   void bind(model::ModelObject & modelObject,
             OptionalModelObjectGetter get,
             ModelObjectSetter set,
@@ -96,6 +97,8 @@ private slots:
   void dropEvent(QDropEvent *event) override;
 
 private:
+
+  void makeItem();
 
   boost::optional<OptionalModelObjectGetter> m_get;
   boost::optional<ModelObjectSetter> m_set;

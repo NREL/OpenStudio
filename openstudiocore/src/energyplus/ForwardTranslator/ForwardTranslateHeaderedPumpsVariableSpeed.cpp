@@ -65,9 +65,9 @@ boost::optional<IdfObject> ForwardTranslator::translateHeaderedPumpsVariableSpee
 
   // TotalRatedFlowRate
   if( modelObject.isTotalRatedFlowRateAutosized() ) {
-    idfObject.setString(HeaderedPumps_VariableSpeedFields::TotalRatedFlowRate,"Autosize");
+    idfObject.setString(HeaderedPumps_VariableSpeedFields::TotalDesignFlowRate,"Autosize");
   } else if ( auto value = modelObject.totalRatedFlowRate() ) {
-    idfObject.setDouble(HeaderedPumps_VariableSpeedFields::TotalRatedFlowRate,value.get());
+    idfObject.setDouble(HeaderedPumps_VariableSpeedFields::TotalDesignFlowRate,value.get());
   }
 
   // NumberofPumpsinBank
@@ -85,14 +85,14 @@ boost::optional<IdfObject> ForwardTranslator::translateHeaderedPumpsVariableSpee
   // RatedPumpHead
   {
     auto value = modelObject.ratedPumpHead();
-    idfObject.setDouble(HeaderedPumps_VariableSpeedFields::RatedPumpHead,value);
+    idfObject.setDouble(HeaderedPumps_VariableSpeedFields::DesignPumpHead,value);
   }
 
   // RatedPowerConsumption
   if( modelObject.isRatedPowerConsumptionAutosized() ) {
-    idfObject.setString(HeaderedPumps_VariableSpeedFields::RatedPowerConsumption,"Autosize");
+    idfObject.setString(HeaderedPumps_VariableSpeedFields::DesignPowerConsumption,"Autosize");
   } else if( auto value = modelObject.ratedPowerConsumption() ) {
-    idfObject.setDouble(HeaderedPumps_VariableSpeedFields::RatedPowerConsumption,value.get());
+    idfObject.setDouble(HeaderedPumps_VariableSpeedFields::DesignPowerConsumption,value.get());
   }
 
   // MotorEfficiency
