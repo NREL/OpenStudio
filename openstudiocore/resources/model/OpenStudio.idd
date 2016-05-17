@@ -23299,6 +23299,7 @@ OS:WaterHeater:HeatPump:WrappedCondenser,
        \required-field
        \type alpha
        \note Unique name for this instance of a heat pump water heater.
+       \reference ConnectionObject
   A3 , \field Availability Schedule Name
        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
        \note If this field is blank, the system is always available.
@@ -23467,7 +23468,7 @@ OS:WaterHeater:HeatPump:WrappedCondenser,
        \note proportional to the schedule value.
   A19, \field Tank Element Control Logic
        \type choice
-       \key MutuallyExlcusive
+       \key MutuallyExclusive
        \key Simultaneous
        \required-field
        \note MutuallyExclusive means that once the tank heating element is active the
@@ -23670,6 +23671,7 @@ OS:WaterHeater:Stratified,
        \required-field
        \type alpha
        \reference WaterHeaterNames
+       \reference WaterHeaterStratifiedNames
        \reference ConnectionObject
   A3,  \field End-Use Subcategory
        \required-field

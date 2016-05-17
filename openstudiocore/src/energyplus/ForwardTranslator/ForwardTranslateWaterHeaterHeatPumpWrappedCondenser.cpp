@@ -338,9 +338,11 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPumpWrappe
     idfObject.setString(WaterHeater_HeatPump_WrappedCondenserFields::CompressorLocation,value);
   }
 
-  if( auto schedule = modelObject.compressorAmbientTemperatureSchedule() ) {
-    if( auto _schedule = translateAndMapModelObject(schedule.get()) ) {
-      idfObject.setString(WaterHeater_HeatPump_WrappedCondenserFields::CompressorAmbientTemperatureScheduleName,_schedule->nameString());
+  if( istringEqual("Schedule",modelObject.compressorLocation()) ) {
+    if( auto schedule = modelObject.compressorAmbientTemperatureSchedule() ) {
+      if( auto _schedule = translateAndMapModelObject(schedule.get()) ) {
+        idfObject.setString(WaterHeater_HeatPump_WrappedCondenserFields::CompressorAmbientTemperatureScheduleName,_schedule->nameString());
+      }
     }
   }
 

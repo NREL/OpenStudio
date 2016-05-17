@@ -32,8 +32,8 @@
 #include "WaterToWaterComponent_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
-#include "WaterHeaterMixed.hpp"
-#include "WaterHeaterMixed_Impl.hpp"
+#include "WaterHeaterStratified.hpp"
+#include "WaterHeaterStratified_Impl.hpp"
 #include "ScheduleRuleset.hpp"
 #include "ScheduleRuleset_Impl.hpp"
 #include "ScheduleDay.hpp"
@@ -559,9 +559,9 @@ namespace detail {
       setCompressorLocation("Zone");
       setInletAirConfiguration("ZoneAirOnly");
       auto t_tank = tank();
-      if( auto waterHeaterMixed = t_tank.optionalCast<WaterHeaterMixed>() ) {
-        waterHeaterMixed->setAmbientTemperatureIndicator("ThermalZone");
-        waterHeaterMixed->setAmbientTemperatureThermalZone(thermalZone);
+      if( auto waterHeaterStratified = t_tank.optionalCast<WaterHeaterStratified>() ) {
+        waterHeaterStratified->setAmbientTemperatureIndicator("ThermalZone");
+        waterHeaterStratified->setAmbientTemperatureThermalZone(thermalZone);
       }
     }
 
@@ -578,7 +578,7 @@ WaterHeaterHeatPumpWrappedCondenser::WaterHeaterHeatPumpWrappedCondenser(const M
   CoilWaterHeatingAirToWaterHeatPumpWrapped coil(model);
   setDXCoil(coil);
 
-  WaterHeaterMixed waterHeater(model);
+  WaterHeaterStratified waterHeater(model);
   setTank(waterHeater);
 
   FanOnOff fan(model);
@@ -617,7 +617,7 @@ WaterHeaterHeatPumpWrappedCondenser::WaterHeaterHeatPumpWrappedCondenser(const M
   setCondenserBottomLocation(0.0664166667);
   setCondenserTopLocation(0.8634166667);
   setEvaporatorAirFlowRate(0.2279);
-  setInletAirConfiguration("OutdoorAirOnly");
+  setInletAirConfiguration("Schedule");
   setMinimumInletAirTemperatureforCompressorOperation(7.2);
   setMaximumInletAirTemperatureforCompressorOperation(48.89);
   setCompressorLocation("Outdoors");
@@ -651,7 +651,7 @@ WaterHeaterHeatPumpWrappedCondenser::WaterHeaterHeatPumpWrappedCondenser(const M
   setCondenserBottomLocation(0.0664166667);
   setCondenserTopLocation(0.8634166667);
   setEvaporatorAirFlowRate(0.2279);
-  setInletAirConfiguration("OutdoorAirOnly");
+  setInletAirConfiguration("Schedule");
   setMinimumInletAirTemperatureforCompressorOperation(7.2);
   setMaximumInletAirTemperatureforCompressorOperation(48.89);
   setCompressorLocation("Outdoors");
