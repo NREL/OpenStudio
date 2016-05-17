@@ -61,11 +61,14 @@ class UTILITIES_API WorkflowStepResult {
   /** @name Constructors and Destructors */
   //@{
 
-  /** Default constructor sets value() to StepResult::Success. */
-   WorkflowStepResult();
+  /** Default constructor. */
+  WorkflowStepResult();
+
+  /** Copy constructor. */
+  WorkflowStepResult(const WorkflowStepResult& other);
 
   /// Construct from JSON formatted string
-  static boost::optional<WorkflowStepResult> fromString();
+  static boost::optional<WorkflowStepResult> fromString(const std::string& s);
 
   /// Serialize to JSON formatted string
   std::string string() const;
@@ -74,11 +77,11 @@ class UTILITIES_API WorkflowStepResult {
   /** @name Getters */
   //@{
 
-  DateTime startedAt();
+  boost::optional<DateTime> startedAt() const;
 
-  DateTime completedAt();
+  boost::optional<DateTime> completedAt() const;
 
-  StepResult stepResult() const;
+  boost::optional<StepResult> stepResult() const;
 
   boost::optional<std::string> initialCondition() const;
 
@@ -94,14 +97,50 @@ class UTILITIES_API WorkflowStepResult {
 
   std::vector<openstudio::path> stepFiles() const;
 
-  std::string stdOut() const;
+  boost::optional<std::string> stdOut() const;
 
-  std::string stdErr() const;
+  boost::optional<std::string> stdErr() const;
 
   //@}
   /** @name Setters */
   //@{
 
+  void setStartedAt(const DateTime& dateTime);
+  void resetStartedAt();
+
+  void setCompletedAt(const DateTime& dateTime);
+  void resetCompletedAt();
+
+  void setStepResult(const StepResult& result);
+  void resetStepResult();
+
+  void setInitialCondition(const std::string& initialCondition);
+  void resetInitialCondition();
+
+  void setFinalCondition(const std::string& finalCondition);
+  void resetFinalCondition();
+
+  void addStepError(const std::string& error);
+  void resetStepErrors();
+
+  void addStepWarning(const std::string& warning);
+  void resetStepWarnings();
+
+  void addStepInfo(const std::string& info);
+  void resetStepInfo();
+
+  void addStepValue(const std::pair<std::string, Variant>& value);
+  void addStepValue(const std::string& name, const Variant& value);
+  void resetStepValues();
+
+  void addStepFile(const openstudio::path& path);
+  void resetStepFiles();
+
+  void setStdOut(const std::string& stdOut);
+  void resetStdOut();
+
+  void setStdErr(const std::string& stdErr);
+  void resetStdErr();
 
   //@}
 
@@ -119,6 +158,7 @@ class UTILITIES_API WorkflowStepResult {
   WorkflowStepResult(std::shared_ptr<detail::WorkflowStepResult_Impl> impl);
 
  private:
+
    REGISTER_LOGGER("openstudio.WorkflowStepResult");
 
    std::shared_ptr<detail::WorkflowStepResult_Impl> m_impl;

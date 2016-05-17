@@ -71,6 +71,11 @@ namespace detail{
     setOswPath(p);
   }
 
+  WorkflowJSON WorkflowJSON_Impl::clone() const
+  {
+    return WorkflowJSON(this->string(true));
+  }
+
   std::string WorkflowJSON_Impl::string(bool includeHash) const
   {
     Json::Value clone(m_value);
@@ -385,7 +390,7 @@ WorkflowJSON::WorkflowJSON(std::shared_ptr<detail::WorkflowJSON_Impl> impl)
 
 WorkflowJSON WorkflowJSON::clone() const
 {
-  return WorkflowJSON(std::shared_ptr<detail::WorkflowJSON_Impl>(new detail::WorkflowJSON_Impl(*m_impl)));
+  return getImpl<detail::WorkflowJSON_Impl>()->clone();
 }
 
 boost::optional<WorkflowJSON> WorkflowJSON::load(const std::string& s)

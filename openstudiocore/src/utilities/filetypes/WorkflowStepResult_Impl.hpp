@@ -38,11 +38,11 @@ class UTILITIES_API WorkflowStepResult_Impl {
 
   std::string string() const;
 
-  DateTime startedAt();
+  boost::optional<DateTime> startedAt() const;
 
-  DateTime completedAt();
+  boost::optional<DateTime> completedAt() const;
 
-  StepResult stepResult() const;
+  boost::optional<StepResult> stepResult() const;
 
   boost::optional<std::string> initialCondition() const;
 
@@ -58,16 +58,53 @@ class UTILITIES_API WorkflowStepResult_Impl {
 
   std::vector<openstudio::path> stepFiles() const;
 
-  std::string stdOut() const;
+  boost::optional<std::string> stdOut() const;
 
-  std::string stdErr() const;
+  boost::optional<std::string> stdErr() const;
+
+  void setStartedAt(const DateTime& dateTime);
+  void resetStartedAt();
+
+  void setCompletedAt(const DateTime& dateTime);
+  void resetCompletedAt();
+
+  void setStepResult(const StepResult& result);
+  void resetStepResult();
+
+  void setInitialCondition(const std::string& initialCondition);
+  void resetInitialCondition();
+
+  void setFinalCondition(const std::string& finalCondition);
+  void resetFinalCondition();
+
+  void addStepError(const std::string& error);
+  void resetStepErrors();
+
+  void addStepWarning(const std::string& warning);
+  void resetStepWarnings();
+
+  void addStepInfo(const std::string& info);
+  void resetStepInfo();
+
+  void addStepValue(const std::pair<std::string, Variant>& value);
+  void addStepValue(const std::string& name, const Variant& value);
+  void resetStepValues();
+
+  void addStepFile(const openstudio::path& path);
+  void resetStepFiles();
+
+  void setStdOut(const std::string& stdOut);
+  void resetStdOut();
+
+  void setStdErr(const std::string& stdErr);
+  void resetStdErr();
 
  private:
    REGISTER_LOGGER("openstudio.WorkflowStepResult");
 
-   DateTime m_startedAt;
-   DateTime m_completedAt;
-   StepResult m_stepResult;
+   boost::optional<DateTime> m_startedAt;
+   boost::optional<DateTime> m_completedAt;
+   boost::optional<StepResult> m_stepResult;
    boost::optional<std::string> m_initialCondition;
    boost::optional<std::string> m_finalCondition;
    std::vector<std::string> m_stepErrors;
@@ -75,9 +112,8 @@ class UTILITIES_API WorkflowStepResult_Impl {
    std::vector<std::string> m_stepInfo;
    std::vector<std::pair<std::string, Variant> > m_stepValues;
    std::vector<openstudio::path> m_stepFiles;
-   std::string m_stdOut;
-   std::string m_stdErr;
-
+   boost::optional<std::string> m_stdOut;
+   boost::optional<std::string> m_stdErr;
 };
 
 

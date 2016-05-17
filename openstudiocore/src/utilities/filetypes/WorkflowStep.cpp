@@ -123,6 +123,16 @@ namespace detail{
     }
     result["arguments"] = arguments;
 
+    boost::optional<WorkflowStepResult> workflowStepResult = this->result();
+    if (workflowStepResult){
+      Json::Reader reader;
+      Json::Value v;
+      bool parsingSuccessful = reader.parse(workflowStepResult->string(), v);
+      if (parsingSuccessful){
+        result["result"] = v;
+      }
+    }
+
     Json::StyledWriter writer;
     return writer.write(result);
   }
@@ -223,6 +233,16 @@ boost::optional<WorkflowStep> WorkflowStep::fromString(const std::string& s)
       }else{
         measureStep.setArgument(name, value.asString());
       }
+    }
+  }
+
+  if (value.isMember("result")){
+    Json::StyledWriter writer;
+    Json::Value v = value["result"];
+    std::string s = writer.write(v);
+    boost::optional<WorkflowStepResult> workflowStepResult = WorkflowStepResult::fromString(s);
+    if (workflowStepResult){
+      result->setResult(*workflowStepResult);
     }
   }
 

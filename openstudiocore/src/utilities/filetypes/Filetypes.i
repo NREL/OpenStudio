@@ -5,6 +5,7 @@
   namespace openstudio{}
   using namespace openstudio;
   #include <utilities/filetypes/EpwFile.hpp>
+  #include <utilities/filetypes/WorkflowStepResult.hpp>
   #include <utilities/filetypes/WorkflowStep.hpp>
   #include <utilities/filetypes/WorkflowJSON.hpp>
   #include <utilities/units/Quantity.hpp>
@@ -22,6 +23,11 @@
 %ignore std::vector<openstudio::EpwFile>::resize(size_type);
 %template(EpwFileVector) std::vector<openstudio::EpwFile>;
 %template(OptionalEpwFile) boost::optional<openstudio::EpwFile>;
+
+%template(WorkflowStepResultVector) std::vector<openstudio::WorkflowStepResult>;
+%template(OptionalWorkflowStepResult) boost::optional<openstudio::WorkflowStepResult>;
+%template(WorkflowStepResultValue) std::pair<std::string, Variant>;
+%template(WorkflowStepResultValueVector) std::vector<std::pair<std::string, Variant> >;
 
 %ignore std::vector<openstudio::WorkflowStep>::vector(size_type);
 %ignore std::vector<openstudio::WorkflowStep>::resize(size_type);

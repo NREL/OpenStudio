@@ -38,84 +38,62 @@ namespace detail {
     {
     public:
 
-      /** Create a new, empty workflow. */
       WorkflowJSON_Impl();
 
-      /** Constructor with string, will throw if string is incorrect. */
       WorkflowJSON_Impl(const std::string& s);
 
-      /** Constructor with path, will throw if path does not exist or file is incorrect. */
       WorkflowJSON_Impl(const openstudio::path& p);
 
-      /** Get the workflow as a string. */
+      WorkflowJSON clone() const;
+
       std::string string(bool includeHash = true) const;
 
-      /** Get a stored hash of the workflow. */
       std::string hash() const;
 
-      /** Compute the current hash of the workflow. */
       std::string computeHash() const;
 
-      /** Check for updates and return true if there are any, updates value of the stored hash. */
       bool checkForUpdates();
 
-      /** Saves this file to the current location. */
       bool save() const;
 
-      /** Saves this file to a new location. */
       bool saveAs(const openstudio::path& p) const;
 
-      /** Returns the absolute path this workflow was loaded from or saved to, empty for new WorkflowJSON. */
       boost::optional<openstudio::path> oswPath() const;
 
-      /** Sets the absolute path for this workflow. */
       bool setOswPath(const openstudio::path& path);
 
-      /** Returns the absolute path to the directory this workflow was loaded from or saved to.  Returns current working dir for new WorkflowJSON. */
       openstudio::path oswDir() const;
 
-      /** Sets the oswDir.  If oswPath is empty this does not set it.  If oswPath is set, this changes directories but preserves file name. */
       bool setOswDir(const openstudio::path& path);
 
-      /** Returns the root directory, default value is '.'. Evaluated relative to oswDir if not absolute. */
       openstudio::path rootDir() const;
       openstudio::path absoluteRootDir() const;
 
-      /** Returns the run directory, default value is './run'. Evaluated relative to rootDir if not absolute. */
       openstudio::path runDir() const;
       openstudio::path absoluteRunDir() const;
 
-      /** Returns the paths that will be searched in order for files, default value is './files/'. Evaluated relative to rootDir if not absolute. */
       std::vector<openstudio::path> filePaths() const;
       std::vector<openstudio::path> absoluteFilePaths() const;
 
-      /** Attempts to find a file by name, searches through filePaths in order and returns first match. */
       boost::optional<openstudio::path> findFile(const openstudio::path& file);
       boost::optional<openstudio::path> findFile(const std::string& fileName);
 
-      /** Returns the paths that will be searched in order for measures, default value is './measures/'. Evaluated relative to rootDir if not absolute. */
       std::vector<openstudio::path> measurePaths() const;
       std::vector<openstudio::path> absoluteMeasurePaths() const;
 
-      /** Attempts to find a measure by name, searches through measurePaths in order and returns first match. */
       boost::optional<openstudio::path> findMeasure(const openstudio::path& measureDir);
       boost::optional<openstudio::path> findMeasure(const std::string& measureDirName);
 
-      /** Returns the seed file path. Evaluated relative to filePaths if not absolute. */
       boost::optional<openstudio::path> seedFile() const;
 
-      /** Returns the weather file path. Evaluated relative to filePaths if not absolute. */
       boost::optional<openstudio::path> weatherFile() const;
 
-      /** Returns the workflow steps. */
       std::vector<WorkflowStep> workflowSteps() const;
 
-      /** Assigns the workflow steps. */
       bool setWorkflowSteps(const std::vector<WorkflowStep>& steps);
 
     private:
 
-      // configure logging
       REGISTER_LOGGER("openstudio.WorkflowJSON");
 
       void parseSteps();
