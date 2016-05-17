@@ -543,4 +543,10 @@ bool WorkflowJSON::setWorkflowSteps(const std::vector<WorkflowStep>& steps)
   return getImpl<detail::WorkflowJSON_Impl>()->setWorkflowSteps(steps);
 }
 
+std::ostream& operator<<(std::ostream& os, const WorkflowJSON& workflowJSON)
+{
+  os << workflowJSON.string();
+  return os;
+}
+
 } // openstudio

@@ -140,6 +140,8 @@ private:
 
 };
 
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const WorkflowStep& workflowStep);
+
 } // openstudio
 
 #endif //UTILITIES_FILETYPES_WORKFLOWSTEP_HPP

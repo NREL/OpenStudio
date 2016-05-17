@@ -91,6 +91,8 @@ typedef boost::optional<Variant> OptionalVariant;
 /** \relates Variant */
 typedef std::vector<Variant> VariantVector;
 
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const Variant& variant);
+
 } // openstudio
 
 #endif // UTILITIES_DATA_VARIANT_HPP

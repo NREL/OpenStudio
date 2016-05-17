@@ -73,5 +73,24 @@ namespace openstudio {
     return boost::get<std::string>(m_value);
   }
 
+  std::ostream& operator<<(std::ostream& os, const Variant& variant)
+  {
+    VariantType variantType = variant.variantType();
+    if (variantType == VariantType::String){
+      os << variant.valueAsString();
+    } else if (variantType == VariantType::Double){
+      os << variant.valueAsDouble();
+    } else if (variantType == VariantType::Integer){
+      os << variant.valueAsInteger();
+    } else if (variantType == VariantType::Boolean){
+      if (variant.valueAsBoolean()){
+        os << "true";
+      } else {
+        os << "false";
+      }
+    }
+    return os;
+  }
+
 } // openstudio
 

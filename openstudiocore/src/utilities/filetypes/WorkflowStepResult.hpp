@@ -164,6 +164,8 @@ class UTILITIES_API WorkflowStepResult {
    std::shared_ptr<detail::WorkflowStepResult_Impl> m_impl;
 };
 
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const WorkflowStepResult& workflowStepResult);
+
 } // openstudio
 
 #endif // UTILITIES_FILETYPES_WORKFLOWSTEPRESULT_HPP

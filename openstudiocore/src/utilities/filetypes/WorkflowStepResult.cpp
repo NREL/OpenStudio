@@ -613,5 +613,10 @@ void WorkflowStepResult::resetStdErr()
   getImpl<detail::WorkflowStepResult_Impl>()->resetStdErr();
 }
 
+std::ostream& operator<<(std::ostream& os, const WorkflowStepResult& workflowStepResult)
+{
+  os << workflowStepResult.string();
+  return os;
+}
 
 } // openstudio

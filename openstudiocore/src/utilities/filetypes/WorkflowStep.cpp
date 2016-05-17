@@ -331,4 +331,10 @@ void MeasureStep::clearArguments()
   getImpl<detail::MeasureStep_Impl>()->clearArguments();
 }
 
+std::ostream& operator<<(std::ostream& os, const WorkflowStep& workflowStep)
+{
+  os << workflowStep.string();
+  return os;
+}
+
 } // openstudio

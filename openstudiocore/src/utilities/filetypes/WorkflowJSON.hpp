@@ -148,6 +148,8 @@ private:
   std::shared_ptr<detail::WorkflowJSON_Impl> m_impl;
 };
 
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const WorkflowJSON& workflowJSON);
+
 } // openstudio
 
 #endif //UTILITIES_FILETYPES_WORKFLOWJSON_HPP
