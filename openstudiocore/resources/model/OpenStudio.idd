@@ -21714,7 +21714,7 @@ OS:ZoneHVAC:PackagedTerminalHeatPump,
        \note Needs to match in the supplemental heating coil object.
        \type object-list
        \required-field
-       \object-list HeatingCoilsGasElec
+       \object-list HeatingCoilName
   N10, \field Maximum Supply Air Temperature from Supplemental Heater
        \note Supply air temperature from the supplemental heater will not exceed this value.
        \type real
