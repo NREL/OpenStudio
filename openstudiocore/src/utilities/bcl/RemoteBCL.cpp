@@ -529,6 +529,16 @@ namespace openstudio{
     return false;
   }
 
+  QString RemoteBCL::checkForRedirect(const QNetworkReply* reply) const
+  {
+    // In Qt > 5.3, use QNetworkRequest::FollowRedirectsAttribute instead
+    QVariant replyStatus = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+    if (replyStatus == 301 || replyStatus == 302) {
+      return reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toString();
+    }
+    return QString();
+  }
+
   boost::optional<BCLComponent> RemoteBCL::waitForComponentDownload(int msec) const
   {
     waitForLock(msec);
@@ -578,24 +588,11 @@ namespace openstudio{
     
     m_downloadUid = uid;
 
-    QUrl url = toQString(remoteUrl() + "/api/component/download");
+    QString url = toQString(remoteUrl() + "/api/component/download?uids=" + uid);
+    //LOG(Warn, toString(url));
 
-    QByteArray data;
-    QUrlQuery query;
-    query.addQueryItem("uids", toQString(uid));
-    //query.addQueryItem("api_version", toQString(m_apiVersion));
-    url.setQuery(query);
-
-    data.append(url.query());
-    LOG(Warn, url.toString().toStdString());
-
-    QNetworkRequest request(toQString(remoteUrl() + "/api/component/download"));
-    request.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
+    QNetworkRequest request = QNetworkRequest(QUrl(url));
     request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
-
-    // for testing
-    std::string testString = url.toString().toStdString();
-    LOG(Info, testString);
 
     // disconnect all signals from m_networkManager to this
     disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
@@ -608,7 +605,7 @@ namespace openstudio{
     connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
 #endif
 
-    m_downloadReply = m_networkManager->post(request, data);
+    m_downloadReply = m_networkManager->get(request);
         
     connect(m_downloadReply, &QNetworkReply::readyRead, this, &RemoteBCL::downloadData);
 
@@ -965,158 +962,182 @@ namespace openstudio{
 
   void RemoteBCL::onDownloadComplete(QNetworkReply* reply)
   {
-    m_downloadFile->close();
-    std::string componentType;
+    QString redirect = this->checkForRedirect(reply);
+    if (!redirect.isEmpty()) {
+      QNetworkRequest request = QNetworkRequest(QUrl(redirect));
+      request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
+      m_downloadReply = m_networkManager->get(request);
+      connect(m_downloadReply, &QNetworkReply::readyRead, this, &RemoteBCL::downloadData);
+    } else {
+      m_downloadFile->close();
+      std::string componentType;
 
-    if (!reply){
-      LOG(Error, "Empty reply");
-    }else{
-      if (reply->error() == QNetworkReply::NoError){
-        //Print response headers
+      if (!reply) {
+        LOG(Error, "Empty reply");
+      } else {
+        if (reply->error() == QNetworkReply::NoError) {
+          //Print response headers
         /*for(int i=0; i<reply->rawHeaderList().size(); ++i){
-          QString str(reply->rawHeaderList()[i].constData());
-          std::cout << toString(str) << ": " << toString(reply->rawHeader(reply->rawHeaderList()[i] ).constData()) << std::endl;
+            QString str(reply->rawHeaderList()[i].constData());
+            std::cout << toString(str) << ": " << toString(reply->rawHeader(reply->rawHeaderList()[i] ).constData()) << std::endl;
         }*/
-        
-        // Extract the files to a temp location
-        openstudio::path src = toPath(QDir::tempPath().append(toQString("/"+m_downloadUid+".bcl")));
-        openstudio::path tempDest = toPath(QDir::tempPath().append(toQString("/"+m_downloadUid+"/")));
 
-        if (QDir().exists(toQString(tempDest))){
-          removeDirectory(tempDest);
-        }
-        QDir().mkpath(toQString(tempDest));
+          // Extract the files to a temp location
+          openstudio::path src = toPath(QDir::tempPath().append(toQString("/" + m_downloadUid + ".bcl")));
+          openstudio::path tempDest = toPath(QDir::tempPath().append(toQString("/" + m_downloadUid + "/")));
 
-        openstudio::UnzipFile uf(src);
-        std::vector<openstudio::path> createdFiles = uf.extractAllFiles(tempDest);
-        QFile::remove(toQString(src));
-
-        // search for component.xml or measure.xml file
-        boost::optional<openstudio::path> xmlPath;
-        
-        for (const openstudio::path& path : createdFiles) {
-          if (path.filename() == toPath("component.xml")) {
-            componentType = "component";
-            m_lastComponentDownload.reset();
-            xmlPath = path;
-            break;
-          } else if (path.filename() == toPath("measure.xml")) {
-            componentType = "measure";
-            m_lastMeasureDownload.reset();
-            xmlPath = path;
-            break;
+          if (QDir().exists(toQString(tempDest))) {
+            removeDirectory(tempDest);
           }
-        }
+          QDir().mkpath(toQString(tempDest));
 
-        if (xmlPath){
-          path src = xmlPath->parent_path();
-          path dest = src.parent_path();
-          QFile::remove(toQString(dest / toPath("DISCLAIMER.txt")));
-          QFile::remove(toQString(dest / toPath("README.txt")));
-          QFile::remove(toQString(dest / toPath("output.xml")));
-          copyDirectory(src, dest);
-          removeDirectory(src);
+          openstudio::UnzipFile uf(src);
+          std::vector<openstudio::path> createdFiles = uf.extractAllFiles(tempDest);
+          QFile::remove(toQString(src));
 
-          if (componentType == "component")
-          {
-            path componentXmlPath = dest / toPath("component.xml");
-            // open the component to figure out uid and vid
-            BCLComponent component(toString(componentXmlPath.parent_path()));
-            std::string uid = component.uid();
-            std::string versionId = component.versionId();
+          // search for component.xml or measure.xml file
+          boost::optional<openstudio::path> xmlPath;
 
-            // check if component has proper uid and vid
-            if (!uid.empty() && !versionId.empty()){
-
-              dest = toPath(LocalBCL::instance().libraryPath().append(toQString("/"+uid+"/"+versionId)));
-
-              removeDirectory(dest);
-              if (copyDirectory(componentXmlPath.parent_path(), dest))
-              {
-                // Add to LocalBCL
-                m_lastComponentDownload = BCLComponent(toString(dest));
-                LocalBCL::instance().addComponent(*m_lastComponentDownload);
-              }
+          for (const openstudio::path& path : createdFiles) {
+            if (path.filename() == toPath("component.xml")) {
+              componentType = "component";
+              m_lastComponentDownload.reset();
+              xmlPath = path;
+              break;
+            } else if (path.filename() == toPath("measure.xml")) {
+              componentType = "measure";
+              m_lastMeasureDownload.reset();
+              xmlPath = path;
+              break;
             }
-          } else if (componentType == "measure") {
-            path measureXmlPath = dest / toPath("measure.xml");
-            // open the measure to figure out uid and vid
-            boost::optional<BCLMeasure> measure;
-            try{
-              measure = BCLMeasure(measureXmlPath.parent_path());
+          }
 
-              std::string uid = measure->uid();
-              std::string versionId = measure->versionId();
+          if (xmlPath) {
+            path src = xmlPath->parent_path();
+            path dest = src.parent_path();
+            QFile::remove(toQString(dest / toPath("DISCLAIMER.txt")));
+            QFile::remove(toQString(dest / toPath("README.txt")));
+            QFile::remove(toQString(dest / toPath("output.xml")));
+            copyDirectory(src, dest);
+            removeDirectory(src);
+
+            if (componentType == "component")
+            {
+              path componentXmlPath = dest / toPath("component.xml");
+              // open the component to figure out uid and vid
+              BCLComponent component(toString(componentXmlPath.parent_path()));
+              std::string uid = component.uid();
+              std::string versionId = component.versionId();
 
               // check if component has proper uid and vid
-              if (!uid.empty() && !versionId.empty()){
+              if (!uid.empty() && !versionId.empty()) {
 
-                dest = toPath(LocalBCL::instance().libraryPath().append(toQString("/"+uid+"/"+versionId)));
+                dest = toPath(LocalBCL::instance().libraryPath().append(toQString("/" + uid + "/" + versionId)));
 
                 removeDirectory(dest);
-                if (copyDirectory(measureXmlPath.parent_path(), dest))
+                if (copyDirectory(componentXmlPath.parent_path(), dest))
                 {
                   // Add to LocalBCL
-                  m_lastMeasureDownload = BCLMeasure(dest);
-                  LocalBCL::instance().addMeasure(*m_lastMeasureDownload);
+                  m_lastComponentDownload = BCLComponent(toString(dest));
+                  LocalBCL::instance().addComponent(*m_lastComponentDownload);
                 }
               }
-            }catch(const std::exception&){
-              LOG(Error, "Unable to create measure from download: " + toString(measureXmlPath.parent_path()));
+            } else if (componentType == "measure") {
+              path measureXmlPath = dest / toPath("measure.xml");
+              // open the measure to figure out uid and vid
+              boost::optional<BCLMeasure> measure;
+              try {
+                measure = BCLMeasure(measureXmlPath.parent_path());
+
+                std::string uid = measure->uid();
+                std::string versionId = measure->versionId();
+
+                // check if component has proper uid and vid
+                if (!uid.empty() && !versionId.empty()) {
+
+                  dest = toPath(LocalBCL::instance().libraryPath().append(toQString("/" + uid + "/" + versionId)));
+
+                  removeDirectory(dest);
+                  if (copyDirectory(measureXmlPath.parent_path(), dest))
+                  {
+                    // Add to LocalBCL
+                    m_lastMeasureDownload = BCLMeasure(dest);
+                    LocalBCL::instance().addMeasure(*m_lastMeasureDownload);
+                  }
+                }
+              } catch (const std::exception&) {
+                LOG(Error, "Unable to create measure from download: " + toString(measureXmlPath.parent_path()));
+              }
             }
+          } else {
+            LOG(Error, "No component.xml or measure.xml file found in downloaded contents");
           }
-        }else{
-          LOG(Error, "No component.xml or measure.xml file found in downloaded contents");
+
+          // delete the temp unzip directory
+          removeDirectory(tempDest);
+
+        } else {
+          LOG(Error, "Network Error: " << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt());
         }
-
-        // delete the temp unzip directory
-        removeDirectory(tempDest);
-
-      } else {
-        LOG(Error, "Network Error: " << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt());
       }
-    }
 
-    if (componentType == "measure") {
-      emit measureDownloaded(m_downloadUid, m_lastMeasureDownload);
-    } else {
-      emit componentDownloaded(m_downloadUid, m_lastComponentDownload);
-    }
+      if (componentType == "measure") {
+        emit measureDownloaded(m_downloadUid, m_lastMeasureDownload);
+      } else {
+        emit componentDownloaded(m_downloadUid, m_lastComponentDownload);
+      }
 
+      m_mutex->unlock();
+    }
     reply->deleteLater();
-    m_mutex->unlock();
   }
 
   void RemoteBCL::onMetaSearchResponseComplete(QNetworkReply* reply)
   {
-    boost::optional<RemoteQueryResponse> remoteQueryResponse = this->processReply(reply);
-    if (remoteQueryResponse){
-      m_lastMetaSearch = processMetaSearchResponse(*remoteQueryResponse);
+    QString redirect = this->checkForRedirect(reply);
+    if (!redirect.isEmpty()) {
+      QNetworkRequest request = QNetworkRequest(QUrl(redirect));
+      request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+      request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
+      m_networkManager->get(request);
+    } else {
+      boost::optional<RemoteQueryResponse> remoteQueryResponse = this->processReply(reply);
+      if (remoteQueryResponse) {
+        m_lastMetaSearch = processMetaSearchResponse(*remoteQueryResponse);
+      }
+
+      if (m_lastMetaSearch) {
+        setLastTotalResults(m_lastMetaSearch->numResults());
+      } else {
+        setLastTotalResults(0);
+      }
+
+      emit metaSearchCompleted(m_lastMetaSearch);
+
+      m_mutex->unlock();
     }
-
-    if (m_lastMetaSearch){
-      setLastTotalResults(m_lastMetaSearch->numResults());
-    }else{
-      setLastTotalResults(0);
-    }
-
-    emit metaSearchCompleted(m_lastMetaSearch);
-
     reply->deleteLater();
-    m_mutex->unlock();
   }
 
   void RemoteBCL::onSearchResponseComplete(QNetworkReply* reply)
   {
-    boost::optional<RemoteQueryResponse> remoteQueryResponse = this->processReply(reply);
-    if (remoteQueryResponse){
-      m_lastSearch = processSearchResponse(*remoteQueryResponse);
+    QString redirect = this->checkForRedirect(reply);
+    if (!redirect.isEmpty()) {
+      QNetworkRequest request = QNetworkRequest(QUrl(redirect));
+      request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+      request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
+      m_networkManager->get(request);
+    } else {
+      boost::optional<RemoteQueryResponse> remoteQueryResponse = this->processReply(reply);
+      if (remoteQueryResponse) {
+        m_lastSearch = processSearchResponse(*remoteQueryResponse);
+      }
+
+      emit searchCompleted(m_lastSearch);
+
+      m_mutex->unlock();
     }
-
-    emit searchCompleted(m_lastSearch);
-
     reply->deleteLater();
-    m_mutex->unlock();
   }
 
   void RemoteBCL::catchSslErrors(QNetworkReply* reply, const QList<QSslError>& errorList)
