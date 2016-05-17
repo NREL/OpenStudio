@@ -610,21 +610,28 @@ if( UNIX )
   set(RUBY_EXECUTABLE "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby")
   set(RUBY_SOURCE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby")
 else()
+  configure_file("${CMAKE_SOURCE_DIR}/dependencies/ruby/build_ruby.bat.in" "${CMAKE_BINARY_DIR}/build_ruby.bat")
   # This will require bison, sed, and at least ruby 1.8 in your path
   # Consider minsys even though the build will be done by msvc the ruby build system uses some traditionally unix tools
   ExternalProject_Add(Ruby
     URL https://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.2.0.tar.gz
     URL_MD5 d4d8b600af2f77566515728d5bd7ffa4
     BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND .\\win32\\configure.bat --with-static-linked-ext --without-win32ole --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install
-    BUILD_COMMAND nmake libenc && nmake libtrans && nmake
-    INSTALL_COMMAND nmake install
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND cmd /C "${CMAKE_BINARY_DIR}/build_ruby.bat"
+    INSTALL_COMMAND ""
   )
-  set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/x64-msvcr120-ruby220-static.lib")
-  set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.2.0")
-  set(RUBY_CONFIG_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.2.0/x64-mswin64_120")
-  set(RUBY_EXECUTABLE "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby")
-  set(RUBY_SOURCE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby")
+  set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-release/lib/x64-msvcr120-ruby220-static.lib")
+  set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-release/include/ruby-2.2.0")
+  set(RUBY_CONFIG_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-release/include/ruby-2.2.0/x64-mswin64_120")
+  set(RUBY_EXECUTABLE "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-release/bin/ruby")
+  set(RUBY_SOURCE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release")
+
+  set(RUBY_LIBRARY_DEBUG "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-debug/lib/x64-msvcr120-ruby220-static.lib")
+  set(RUBY_INCLUDE_DIR_DEBUG "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-debug/include/ruby-2.2.0")
+  set(RUBY_CONFIG_INCLUDE_DIR_DEBUG "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-debug/include/ruby-2.2.0/x64-mswin64_120")
+  set(RUBY_EXECUTABLE_DEBUG "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-debug/bin/ruby")
+  set(RUBY_SOURCE_DIR_DEBUG "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-debug")
 
 endif()
 
@@ -976,6 +983,11 @@ ExternalProject_Add(OSCore
     -DRUBY_CONFIG_INCLUDE_DIR:PATH=${RUBY_CONFIG_INCLUDE_DIR}
     -DRUBY_EXECUTABLE:PATH=${RUBY_EXECUTABLE}
     -DRUBY_SOURCE_DIR:PATH=${RUBY_SOURCE_DIR}
+    -DRUBY_LIBRARY_DEBUG:PATH=${RUBY_LIBRARY_DEBUG} 
+    -DRUBY_INCLUDE_DIR_DEBUG:PATH=${RUBY_INCLUDE_DIR_DEBUG}  
+    -DRUBY_CONFIG_INCLUDE_DIR_DEBUG:PATH=${RUBY_CONFIG_INCLUDE_DIR_DEBUG}
+    -DRUBY_EXECUTABLE_DEBUG:PATH=${RUBY_EXECUTABLE_DEBUG}
+    -DRUBY_SOURCE_DIR_DEBUG:PATH=${RUBY_SOURCE_DIR_DEBUG}
     -DOPENSTUDIO_WORKFLOW_GEM:PATH=${OPENSTUDIO_WORKFLOW_GEM}
     INSTALL_COMMAND ""
 )
