@@ -5,6 +5,8 @@
   #include <utilities/data/Variant.hpp>
 %}
 
+%nodefaultctor openstudio::Variant;
+
 // create an instantiation of the optional class
 %template(OptionalVariant) boost::optional<openstudio::Variant>;
 

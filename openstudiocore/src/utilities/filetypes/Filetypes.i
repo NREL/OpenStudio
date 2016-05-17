@@ -40,15 +40,19 @@
 %template(EpwFileVector) std::vector<openstudio::EpwFile>;
 %template(OptionalEpwFile) boost::optional<openstudio::EpwFile>;
 
-%template(WorkflowStepResultVector) std::vector<openstudio::WorkflowStepResult>;
-%template(OptionalWorkflowStepResult) boost::optional<openstudio::WorkflowStepResult>;
-
-// DLM: do not know why this is not working
+// DLM: SWIG is generating some code that I can't turn off, hopefully fixed in future version of SWIG
+//%nodefaultctor; 
+//%nodefaultctor std::pair<std::string, openstudio::Variant>;
 //%ignore std::pair<std::string, openstudio::Variant>::pair();
 //%template(WorkflowStepResultValue) std::pair<std::string, openstudio::Variant>;
+//%clearnodefaultctor;
+
 %ignore std::vector<std::pair<std::string, openstudio::Variant> >::vector(size_type);
 %ignore std::vector<std::pair<std::string, openstudio::Variant> >::resize(size_type);
 %template(WorkflowStepResultValueVector) std::vector<std::pair<std::string, openstudio::Variant> >;
+
+%template(WorkflowStepResultVector) std::vector<openstudio::WorkflowStepResult>;
+%template(OptionalWorkflowStepResult) boost::optional<openstudio::WorkflowStepResult>;
 
 %ignore std::vector<openstudio::WorkflowStep>::vector(size_type);
 %ignore std::vector<openstudio::WorkflowStep>::resize(size_type);
