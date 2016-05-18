@@ -25,6 +25,7 @@
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/WorkspaceObject.hpp"
 #include "../utilities/math/FloatCompare.hpp"
+#include "../utilities/filetypes/WorkflowStep.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -32,8 +33,9 @@ namespace openstudio {
 namespace measure {
 
 OSRunner::OSRunner(const WorkflowJSON& workflow)
-  : m_workflow(workflow), m_currentStep(0), m_unitsPreference("IP"), m_languagePreference("en")
-{}
+  : m_workflow(workflow), m_unitsPreference("IP"), m_languagePreference("en")
+{
+}
 
 OSRunner::~OSRunner()
 {}
@@ -42,16 +44,6 @@ WorkflowJSON OSRunner::workflow() const
 {
   // return a clone because the workflow is immutable
   return m_workflow.clone();
-}
-
-unsigned OSRunner::currentStep() const
-{
-  return m_currentStep;
-}
-
-std::vector<WorkflowStepResult> OSRunner::previousResults() const
-{
-  return m_previousResults;
 }
 
 std::string OSRunner::unitsPreference() const
@@ -142,33 +134,41 @@ std::map<std::string, OSArgument> OSRunner::getUserInput(std::vector<OSArgument>
 
 void OSRunner::reset()
 {
-  // m_workflow; // do not reset
-  m_currentStep = 0;
-  m_previousResults.clear();
+  m_workflow.reset();
+
   //m_unitsPreference // do not reset
   //m_languagePreference; // do not reset
 
   m_result = WorkflowStepResult();
-  m_result.setStepResult(StepResult::Skip);
 }
 
-void OSRunner::incrementStep()
+bool OSRunner::incrementStep()
 {
-  m_previousResults.push_back(m_result);
+  if (!m_result.stepResult()){
+    // must have been skipped
+    m_result.setStepResult(StepResult::Skip);
+  }
+
+  boost::optional<WorkflowStep> currentStep = m_workflow.currentStep();
+  if (currentStep){
+    currentStep->setResult(m_result);
+  }else{
+    LOG(Error, "Cannot find current Workflow Step");
+  }
 
   m_result = WorkflowStepResult();
-  m_result.setStepResult(StepResult::Skip);
 
-  ++m_currentStep;
+  return m_workflow.incrementStep();
 }
 
-void OSRunner::setCurrentStep(unsigned currentStep)
-{
-  m_previousResults.resize(currentStep);
-  m_result = WorkflowStepResult();
-
-  m_currentStep = currentStep;
-}
+//void OSRunner::setCurrentStep(unsigned currentStep)
+//{
+//  m_previousResults.resize(currentStep);
+//  m_result = WorkflowStepResult();
+//  m_result.setStepResult(StepResult::Skip);
+//
+//  m_currentStep = currentStep;
+//}
 
 void OSRunner::prepareForMeasureRun(const OSMeasure& measure) {
   m_result = WorkflowStepResult();

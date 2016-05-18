@@ -60,14 +60,8 @@ class MEASURE_API OSRunner {
   /** @name Getters and Queries */
   //@{
 
-  /** Returns the workflow currently being run. New in OS 2.0. */
+  /** Returns a clone of the workflow currently being run. New in OS 2.0. */
   WorkflowJSON workflow() const;
-
-  /** Returns the current step in the workflow being run, indexing starts at 0. New in OS 2.0. */
-  unsigned currentStep() const;
-
-  /** Returns results from the previous steps that were run. New in OS 2.0. */
-  std::vector<WorkflowStepResult> previousResults() const;
 
   /** Returns preferred unit system, either 'IP' or 'SI'. New in OS 2.0. */
   std::string unitsPreference() const;
@@ -264,14 +258,11 @@ class MEASURE_API OSRunner {
 
   //@}
 
-  // reset the runner between workflows
+  // reset the runner to re-run the workflow
   void reset();
 
-  // incrementing step copies result to previous results
-  void incrementStep();
-
-  // sets the current step index, prefer to use incrementStep if possible
-  void setCurrentStep(unsigned currentStep);
+  // increments step to run next, returns true if there is another step
+  bool incrementStep();
 
   // supports in-memory job chaining
   void setLastOpenStudioModel(const openstudio::model::Model& lastOpenStudioModel);
@@ -311,8 +302,6 @@ class MEASURE_API OSRunner {
   REGISTER_LOGGER("openstudio.measure.OSRunner");
 
   WorkflowJSON m_workflow;
-  unsigned m_currentStep;
-  std::vector<WorkflowStepResult> m_previousResults;
   std::string m_unitsPreference;
   std::string m_languagePreference;
 

@@ -23,6 +23,11 @@
 
 namespace openstudio {
 
+  Variant::Variant()
+    : m_type(VariantType::Boolean), m_value(false)
+  {
+  }
+
   Variant::Variant(bool value)
     : m_type(VariantType::Boolean), m_value(value)
   {

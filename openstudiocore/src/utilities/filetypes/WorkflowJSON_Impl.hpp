@@ -32,6 +32,9 @@
 #include <jsoncpp/json.h>
 
 namespace openstudio{
+  
+class DateTime;
+
 namespace detail {
 
     class UTILITIES_API WorkflowJSON_Impl
@@ -58,6 +61,28 @@ namespace detail {
 
       bool saveAs(const openstudio::path& p) const;
 
+      void reset();
+
+      void start();
+
+      unsigned currentStepIndex() const;
+
+      boost::optional<WorkflowStep> currentStep() const;
+
+      bool incrementStep();
+
+      boost::optional<std::string> completedStatus() const;
+
+      void setCompletedStatus(const std::string& status);
+
+      boost::optional<DateTime> createdAt() const;
+
+      boost::optional<DateTime> startedAt() const;
+
+      boost::optional<DateTime> updatedAt() const;
+
+      boost::optional<DateTime> completedAt() const;
+
       boost::optional<openstudio::path> oswPath() const;
 
       bool setOswPath(const openstudio::path& path);
@@ -72,17 +97,20 @@ namespace detail {
       openstudio::path runDir() const;
       openstudio::path absoluteRunDir() const;
 
+      openstudio::path outPath() const;
+      openstudio::path absoluteOutPath() const;
+
       std::vector<openstudio::path> filePaths() const;
       std::vector<openstudio::path> absoluteFilePaths() const;
 
-      boost::optional<openstudio::path> findFile(const openstudio::path& file);
-      boost::optional<openstudio::path> findFile(const std::string& fileName);
+      boost::optional<openstudio::path> findFile(const openstudio::path& file) const;
+      boost::optional<openstudio::path> findFile(const std::string& fileName) const;
 
       std::vector<openstudio::path> measurePaths() const;
       std::vector<openstudio::path> absoluteMeasurePaths() const;
 
-      boost::optional<openstudio::path> findMeasure(const openstudio::path& measureDir);
-      boost::optional<openstudio::path> findMeasure(const std::string& measureDirName);
+      boost::optional<openstudio::path> findMeasure(const openstudio::path& measureDir) const;
+      boost::optional<openstudio::path> findMeasure(const std::string& measureDirName) const;
 
       boost::optional<openstudio::path> seedFile() const;
 
@@ -95,6 +123,8 @@ namespace detail {
     private:
 
       REGISTER_LOGGER("openstudio.WorkflowJSON");
+
+      void onUpdate();
 
       void parseSteps();
 

@@ -32,6 +32,7 @@
 namespace openstudio{
 
 class WorkflowStep;
+class DateTime;
 
 namespace detail{
   class WorkflowJSON_Impl;
@@ -78,6 +79,39 @@ public:
   /** Saves this file to a new location. */
   bool saveAs(const openstudio::path& p) const;
 
+  /** Reset to re-run the workflow, does not delete steps. */
+  void reset();
+
+  /** Sets the started at time. */
+  void start();
+
+  /** Get the current step index. */
+  unsigned currentStepIndex() const;
+
+  /** Get the current step. */
+  boost::optional<WorkflowStep> currentStep() const;
+
+  /** Increments current step, returns true if there is another step. */
+  bool incrementStep();
+
+  /** Returns the completion status, "Success" or "Fail". */
+  boost::optional<std::string> completedStatus() const;
+
+  /** Sets the completion status, "Success" or "Fail". */
+  void setCompletedStatus(const std::string& status);
+
+  /** Returns the time this WorkflowJSON was created at. */
+  boost::optional<DateTime> createdAt() const;
+
+  /** Returns the time this WorkflowJSON was started at. */
+  boost::optional<DateTime> startedAt() const;
+
+  /** Returns the time this WorkflowJSON was updated at. */
+  boost::optional<DateTime> updatedAt() const;
+
+  /** Returns the time this WorkflowJSON was completed at. */
+  boost::optional<DateTime> completedAt() const;
+
   /** Returns the absolute path this workflow was loaded from or saved to, empty for new WorkflowJSON. */
   boost::optional<openstudio::path> oswPath() const;
 
@@ -98,21 +132,25 @@ public:
   openstudio::path runDir() const;
   openstudio::path absoluteRunDir() const;
 
+  /** Returns the path to write output OSW, default value is './out.osw'. Evaluated relative to rootDir if not absolute. */
+  openstudio::path outPath() const;
+  openstudio::path absoluteOutPath() const;
+
   /** Returns the paths that will be searched in order for files, default value is './files/'. Evaluated relative to rootDir if not absolute. */
   std::vector<openstudio::path> filePaths() const;
   std::vector<openstudio::path> absoluteFilePaths() const;
 
   /** Attempts to find a file by name, searches through filePaths in order and returns first match. */
-  boost::optional<openstudio::path> findFile(const openstudio::path& file);
-  boost::optional<openstudio::path> findFile(const std::string& fileName);
+  boost::optional<openstudio::path> findFile(const openstudio::path& file) const;
+  boost::optional<openstudio::path> findFile(const std::string& fileName) const;
 
   /** Returns the paths that will be searched in order for measures, default value is './measures/'. Evaluated relative to rootDir if not absolute. */
   std::vector<openstudio::path> measurePaths() const;
   std::vector<openstudio::path> absoluteMeasurePaths() const;
 
   /** Attempts to find a measure by name, searches through measurePaths in order and returns first match. */
-  boost::optional<openstudio::path> findMeasure(const openstudio::path& measureDir);
-  boost::optional<openstudio::path> findMeasure(const std::string& measureDirName);
+  boost::optional<openstudio::path> findMeasure(const openstudio::path& measureDir) const;
+  boost::optional<openstudio::path> findMeasure(const std::string& measureDirName) const;
 
   /** Returns the seed file path. Evaluated relative to filePaths if not absolute. */
   boost::optional<openstudio::path> seedFile() const;

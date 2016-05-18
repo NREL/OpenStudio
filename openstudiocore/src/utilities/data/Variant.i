@@ -5,15 +5,9 @@
   #include <utilities/data/Variant.hpp>
 %}
 
-%nodefaultctor openstudio::Variant;
-
-// create an instantiation of the optional class
 %template(OptionalVariant) boost::optional<openstudio::Variant>;
-
-// create an instantiation of the vector class
-%ignore std::vector<openstudio::Variant>::vector(size_type);
-%ignore std::vector<openstudio::Variant>::resize(size_type);
 %template(VariantVector) std::vector<openstudio::Variant>;
+%template(StringVariantMap) std::map<std::string, openstudio::Variant>;
 
 %ignore openstudio::Variant::Variant(const char* value);
 

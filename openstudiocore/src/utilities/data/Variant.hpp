@@ -55,6 +55,7 @@ class UTILITIES_API Variant {
  public:
 
   /// constructors
+  explicit Variant();
   explicit Variant(bool value);
   explicit Variant(double value);
   explicit Variant(int value);

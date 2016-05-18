@@ -7,6 +7,7 @@
   #include <utilities/filetypes/EpwFile.hpp>
   #include <utilities/filetypes/WorkflowStepResult.hpp>
   #include <utilities/filetypes/WorkflowStep.hpp>
+  #include <utilities/filetypes/WorkflowStep_Impl.hpp>
   #include <utilities/filetypes/WorkflowJSON.hpp>
 
   // this is all garbage, I don't know why it is needed, probably comes from quantity
@@ -53,6 +54,11 @@
 %template(WorkflowStepVector) std::vector<openstudio::WorkflowStep>;
 %template(OptionalWorkflowStep) boost::optional<openstudio::WorkflowStep>;
 
+%ignore std::vector<openstudio::MeasureStep>::vector(size_type);
+%ignore std::vector<openstudio::MeasureStep>::resize(size_type);
+%template(MeasureStepVector) std::vector<openstudio::MeasureStep>;
+%template(OptionalMeasureStep) boost::optional<openstudio::MeasureStep>;
+
 %template(WorkflowJSONVector) std::vector<openstudio::WorkflowJSON>;
 %template(OptionalWorkflowJSON) boost::optional<openstudio::WorkflowJSON>;
 
@@ -76,6 +82,11 @@
     os << *self;
     return os.str();
   }
+
+  boost::optional<openstudio::MeasureStep> to_MeasureStep() {
+    return self->optionalCast<openstudio::MeasureStep>();
+  }
+
 };
 
 %extend openstudio::WorkflowJSON{
