@@ -32,9 +32,7 @@
 #include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
-
-class Attribute;
-class Quantity;
+  
 class Workspace;
 class WorkspaceObject;
 
@@ -142,10 +140,6 @@ class MEASURE_API OSRunner {
   /** Sets the result final condition to message. */
   virtual void registerFinalCondition(const std::string& message);
 
-  /** Saves attribute as an output result of the measure currently being 
-   *  run, and sets the attribute's source accordingly. */
-  virtual void registerAttribute(Attribute& attribute);
-
   /** \overload Shortcut method for registering boolean attribute. */
   virtual void registerValue(const std::string& name, bool value);
   /** \overload Shortcut method for registering boolean attribute. */
@@ -202,7 +196,7 @@ class MEASURE_API OSRunner {
   /** @name Common Error Checking Functions */
   //@{
 
-  /** Returns true, logs no messages, and \link registerAttribute registers a value\endlink
+  /** Returns true, logs no messages, and registers a value
    *  for each argument with a value or default value if all script_arguments are in
    *  user_arguments, and if all required script_arguments have been set or have defaults
    *  in user_arguments. Otherwise, returns false and \link registerError registers an
@@ -225,17 +219,6 @@ class MEASURE_API OSRunner {
   /** Call this method to retrieve the value of an OSArgument of type double that is optional
    *  (not required and does not have a default). */
   boost::optional<double> getOptionalDoubleArgumentValue(
-      const std::string& argument_name,
-      const std::map<std::string,OSArgument>& user_arguments);
-
-  /** Call this method to retrieve the value of an OSArgument of type quantity that is either
-   *  required or has a default. */
-  Quantity getQuantityArgumentValue(const std::string& argument_name,
-                                    const std::map<std::string,OSArgument>& user_arguments);
-
-  /** Call this method to retrieve the value of an OSArgument of type quantity that is optional
-   *  (not required and does not have a default). */
-  boost::optional<Quantity> getOptionalQuantityArgumentValue(
       const std::string& argument_name,
       const std::map<std::string,OSArgument>& user_arguments);
 
@@ -335,9 +318,7 @@ class MEASURE_API OSRunner {
 
   // current data
   WorkflowStepResult m_result;
-  std::string m_measureName;
-  std::string m_channel;
-
+  
   mutable boost::optional<openstudio::model::Model> m_lastOpenStudioModel;
   boost::optional<openstudio::path> m_lastOpenStudioModelPath;
   mutable boost::optional<openstudio::Workspace> m_lastEnergyPlusWorkspace;

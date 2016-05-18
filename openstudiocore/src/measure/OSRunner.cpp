@@ -24,7 +24,6 @@
 
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/WorkspaceObject.hpp"
-#include "../utilities/units/Quantity.hpp"
 #include "../utilities/math/FloatCompare.hpp"
 
 #include "../utilities/core/Assert.hpp"
@@ -150,17 +149,16 @@ void OSRunner::reset()
   //m_languagePreference; // do not reset
 
   m_result = WorkflowStepResult();
-  m_measureName = "";
-  m_channel = "";
+  m_result.setStepResult(StepResult::Skip);
 }
 
 void OSRunner::incrementStep()
 {
   m_previousResults.push_back(m_result);
-  m_result = WorkflowStepResult();
 
-  m_measureName = "";
-  m_channel = "";
+  m_result = WorkflowStepResult();
+  m_result.setStepResult(StepResult::Skip);
+
   ++m_currentStep;
 }
 
@@ -169,81 +167,75 @@ void OSRunner::setCurrentStep(unsigned currentStep)
   m_previousResults.resize(currentStep);
   m_result = WorkflowStepResult();
 
-  m_measureName = "";
-  m_channel = "";
   m_currentStep = currentStep;
 }
 
 void OSRunner::prepareForMeasureRun(const OSMeasure& measure) {
-  // DLM: also in incrementStep
   m_result = WorkflowStepResult();
-
-  m_measureName = measure.name();
-  std::stringstream ss;
-  ss << "openstudio.measure." << m_measureName;
-  m_channel = ss.str();
+  m_result.setStepResult(StepResult::Success);
 }
 
 void OSRunner::registerError(const std::string& message) {
-  m_result.setValue(StepResult::Fail);
-  m_result.addError(m_channel,message);
+  m_result.setStepResult(StepResult::Fail);
+  m_result.addStepError(message);
 }
 
 bool OSRunner::registerWarning(const std::string& message) {
-  m_result.addWarning(m_channel,message);
+  m_result.addStepWarning(message);
   return true;
 }
 
 bool OSRunner::registerInfo(const std::string& message) {
-  m_result.addInfo(m_channel,message);
+  m_result.addStepInfo(message);
   return true;
 }
 
 void OSRunner::registerAsNotApplicable(const std::string& message) {
-  m_result.setValue(StepResult::NA);
-  m_result.addInfo(m_channel,message);
+  m_result.setStepResult(StepResult::NA);
+  m_result.addStepInfo(message);
 }
 
 void OSRunner::registerInitialCondition(const std::string& message) {
-  m_result.setInitialCondition(m_channel, message);
+  m_result.setInitialCondition(message);
 }
 
 void OSRunner::registerFinalCondition(const std::string& message) {
-  m_result.setFinalCondition(m_channel, message);
+  m_result.setFinalCondition(message);
 }
 
 
 void OSRunner::registerValue(const std::string& name, bool value) {
-  Attribute attribute(name,value);
-  registerAttribute(attribute);
+  WorkflowStepValue stepValue(name,value);
+  m_result.addStepValue(stepValue);
 }
 
 void OSRunner::registerValue(const std::string& name,
                              const std::string& displayName,
                              bool value)
 {
-  Attribute attribute(name,value);
-  attribute.setDisplayName(displayName);
-  registerAttribute(attribute);
+  WorkflowStepValue stepValue(name,value);
+  stepValue.setDisplayName(displayName);
+  m_result.addStepValue(stepValue);
 }
 
 void OSRunner::registerValue(const std::string& name, double value) {
-  Attribute attribute(name,value);
-  registerAttribute(attribute);
+  WorkflowStepValue stepValue(name,value);
+  m_result.addStepValue(stepValue);
 }
 
 void OSRunner::registerValue(const std::string& name, double value, const std::string& units) {
-  Attribute attribute(name,value,units);
-  registerAttribute(attribute);
+  WorkflowStepValue stepValue(name,value);
+  stepValue.setUnits(units);
+  m_result.addStepValue(stepValue);
 }
 
 void OSRunner::registerValue(const std::string& name,
                              const std::string& displayName,
                              double value)
 {
-  Attribute attribute(name,value);
-  attribute.setDisplayName(displayName);
-  registerAttribute(attribute);
+  WorkflowStepValue stepValue(name,value);
+  stepValue.setDisplayName(displayName);
+  m_result.addStepValue(stepValue);
 }
 
 void OSRunner::registerValue(const std::string& name,
@@ -251,28 +243,29 @@ void OSRunner::registerValue(const std::string& name,
                              double value,
                              const std::string& units)
 {
-  Attribute attribute(name,value,units);
-  attribute.setDisplayName(displayName);
-  registerAttribute(attribute);
+  WorkflowStepValue stepValue(name,value);
+  stepValue.setDisplayName(displayName);
+  stepValue.setUnits(units);
+  m_result.addStepValue(stepValue);
 }
 
 void OSRunner::registerValue(const std::string& name, int value) {
-  Attribute attribute(name,value);
-  registerAttribute(attribute);
-}
+  WorkflowStepValue stepValue(name,value);
+  m_result.addStepValue(stepValue);}
 
 void OSRunner::registerValue(const std::string& name, int value, const std::string& units) {
-  Attribute attribute(name,value,units);
-  registerAttribute(attribute);
+  WorkflowStepValue stepValue(name,value);
+  stepValue.setUnits(units);
+  m_result.addStepValue(stepValue);
 }
 
 void OSRunner::registerValue(const std::string& name,
                              const std::string& displayName,
                              int value)
 {
-  Attribute attribute(name,value);
-  attribute.setDisplayName(displayName);
-  registerAttribute(attribute);
+  WorkflowStepValue stepValue(name,value);
+  stepValue.setDisplayName(displayName);
+  m_result.addStepValue(stepValue);
 }
 
 void OSRunner::registerValue(const std::string& name,
@@ -280,23 +273,24 @@ void OSRunner::registerValue(const std::string& name,
                              int value,
                              const std::string& units)
 {
-  Attribute attribute(name,value,units);
-  attribute.setDisplayName(displayName);
-  registerAttribute(attribute);
+  WorkflowStepValue stepValue(name,value);
+  stepValue.setDisplayName(displayName);
+  stepValue.setUnits(units);
+  m_result.addStepValue(stepValue);
 }
 
 void OSRunner::registerValue(const std::string& name, const std::string& value) {
-  Attribute attribute(name,value);
-  registerAttribute(attribute);
+  WorkflowStepValue stepValue(name,value);
+  m_result.addStepValue(stepValue);
 }
 
 void OSRunner::registerValue(const std::string& name,
                              const std::string& displayName,
                              const std::string& value)
 {
-  Attribute attribute(name,value);
-  attribute.setDisplayName(displayName);
-  registerAttribute(attribute);
+  WorkflowStepValue stepValue(name,value);
+  stepValue.setDisplayName(displayName);
+  m_result.addStepValue(stepValue);
 }
 
 void OSRunner::createProgressBar(const std::string& text) const {
@@ -313,7 +307,7 @@ bool OSRunner::validateUserArguments(const std::vector<OSArgument>& script_argum
 {
   bool result(true);
   std::stringstream ss;
-  AttributeVector argumentValueAttributes;
+  std::vector<WorkflowStepValue> stepValues;
   for (const OSArgument& script_argument : script_arguments) {
     auto it = user_arguments.find(script_argument.name());
     if (it == user_arguments.end()) {
@@ -379,11 +373,6 @@ bool OSRunner::validateUserArguments(const std::vector<OSArgument>& script_argum
             break;
           case OSArgumentType::Double :
             if (user_argument.defaultValueAsDouble() != script_argument.defaultValueAsDouble()) {
-              registerWarning(ss.str());
-            }
-            break;
-          case OSArgumentType::Quantity :
-            if (user_argument.defaultValueAsQuantity() != script_argument.defaultValueAsQuantity()) {
               registerWarning(ss.str());
             }
             break;
@@ -459,44 +448,35 @@ bool OSRunner::validateUserArguments(const std::vector<OSArgument>& script_argum
 
       // success, set the values
       if (result) {
-        Quantity q;
         switch(user_argument.type().value()) {
           case OSArgumentType::Boolean :
             if (user_argument.hasValue()) {
-              argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.valueAsBool()));
+              stepValues.push_back(WorkflowStepValue(user_argument.name(),user_argument.valueAsBool()));
             } else if (user_argument.hasDefaultValue()) {
-              argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.defaultValueAsBool()));
+              stepValues.push_back(WorkflowStepValue(user_argument.name(),user_argument.defaultValueAsBool()));
             }
            break;
           case OSArgumentType::Double :
             if (user_argument.hasValue()) {
-              argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.valueAsDouble()));
+              stepValues.push_back(WorkflowStepValue(user_argument.name(),user_argument.valueAsDouble()));
             } else if (user_argument.hasDefaultValue()) {
-              argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.defaultValueAsDouble()));
+              stepValues.push_back(WorkflowStepValue(user_argument.name(),user_argument.defaultValueAsDouble()));
             }
-           break;
-          case OSArgumentType::Quantity :
-            if (user_argument.hasValue()) {
-              q = user_argument.valueAsQuantity();
-            } else if (user_argument.hasDefaultValue()) {
-              q = user_argument.defaultValueAsQuantity();
-            }
-            argumentValueAttributes.push_back(Attribute(user_argument.name(),q.value(),q.units().print()));
            break;
           case OSArgumentType::Integer :
             if (user_argument.hasValue()) {
-              argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.valueAsInteger()));
+              stepValues.push_back(WorkflowStepValue(user_argument.name(),user_argument.valueAsInteger()));
             } else if (user_argument.hasDefaultValue()) {
-              argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.defaultValueAsInteger()));
+              stepValues.push_back(WorkflowStepValue(user_argument.name(),user_argument.defaultValueAsInteger()));
             }
            break;
           case OSArgumentType::String :
           case OSArgumentType::Choice :
           case OSArgumentType::Path :
             if (user_argument.hasValue()) {
-              argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.valueAsString()));
+              stepValues.push_back(WorkflowStepValue(user_argument.name(),user_argument.valueAsString()));
             } else if (user_argument.hasDefaultValue()) {
-              argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.defaultValueAsString()));
+              stepValues.push_back(WorkflowStepValue(user_argument.name(),user_argument.defaultValueAsString()));
             }
            break;
           default:
@@ -507,8 +487,8 @@ bool OSRunner::validateUserArguments(const std::vector<OSArgument>& script_argum
   }
 
   if (result) {
-    for (Attribute& attribute : argumentValueAttributes) {
-      registerAttribute(attribute);
+    for (const auto& stepValue : stepValues) {
+      m_result.addStepValue(stepValue);
     }
   }
 
@@ -574,47 +554,6 @@ boost::optional<double> OSRunner::getOptionalDoubleArgumentValue(
     }
     else if (it->second.hasDefaultValue()) {
       return it->second.defaultValueAsDouble();
-    }
-  }
-
-  return boost::none;
-}
-
-Quantity OSRunner::getQuantityArgumentValue(const std::string& argument_name,
-                                            const std::map<std::string,OSArgument>& user_arguments)
-{
-  std::stringstream ss;
-
-  auto it = user_arguments.find(argument_name);
-  if (it != user_arguments.end()) {
-    if (it->second.hasValue()) {
-      return it->second.valueAsQuantity();
-    }
-    else if (it->second.hasDefaultValue()) {
-      return it->second.defaultValueAsQuantity();
-    }
-  }
-
-  ss << "No value found for argument '" << argument_name << "'.";
-  if (it != user_arguments.end()) {
-    ss << " Full argument as passed in by user:" << std::endl << it->second;
-  }
-  registerError(ss.str());
-  LOG_AND_THROW(ss.str());
-  return Quantity();
-}
-
-boost::optional<Quantity> OSRunner::getOptionalQuantityArgumentValue(
-    const std::string& argument_name,
-    const std::map<std::string,OSArgument>& user_arguments)
-{
-  auto it = user_arguments.find(argument_name);
-  if (it != user_arguments.end()) {
-    if (it->second.hasValue()) {
-      return it->second.valueAsQuantity();
-    }
-    else if (it->second.hasDefaultValue()) {
-      return it->second.defaultValueAsQuantity();
     }
   }
 
