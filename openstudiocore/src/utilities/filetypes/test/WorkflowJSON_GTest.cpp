@@ -307,10 +307,10 @@ WorkflowStepResult getWorkflowStepResult(const WorkflowStep& step)
   workflowStepResult.addStepInfo(stepName + " Info 1");
   workflowStepResult.addStepInfo(stepName + " Info 2");
   workflowStepResult.addStepInfo(stepName + " Info 3");
-  workflowStepResult.addStepValue(stepName + " String Value", Variant("String"));
-  workflowStepResult.addStepValue(stepName + " Double Value", Variant(1.1));
-  workflowStepResult.addStepValue(stepName + " Int Value", Variant(1));
-  workflowStepResult.addStepValue(stepName + " Bool Value", Variant(true));
+  workflowStepResult.addStepValue(WorkflowStepValue(stepName + " String Value", "String"));
+  workflowStepResult.addStepValue(WorkflowStepValue(stepName + " Double Value", 1.1));
+  workflowStepResult.addStepValue(WorkflowStepValue(stepName + " Int Value", 1));
+  workflowStepResult.addStepValue(WorkflowStepValue(stepName + " Bool Value", true));
   workflowStepResult.addStepFile(stepName + " File.1");
   workflowStepResult.addStepFile(stepName + " File.2");
   workflowStepResult.setStdOut(stepName + " StdOut");
@@ -360,14 +360,14 @@ void checkWorkflowStepResult(const WorkflowStep& step)
   EXPECT_EQ(stepName + " Info 3", workflowStepResult.stepInfo()[2]);
 
   ASSERT_EQ(4u, workflowStepResult.stepValues().size());
-  EXPECT_EQ(stepName + " String Value", workflowStepResult.stepValues()[0].first);
-  EXPECT_EQ(VariantType::String, workflowStepResult.stepValues()[0].second.variantType().value());
-  EXPECT_EQ(stepName + " Double Value", workflowStepResult.stepValues()[1].first);
-  EXPECT_EQ(VariantType::Double, workflowStepResult.stepValues()[1].second.variantType().value());
-  EXPECT_EQ(stepName + " Int Value", workflowStepResult.stepValues()[2].first);
-  EXPECT_EQ(VariantType::Integer, workflowStepResult.stepValues()[2].second.variantType().value());
-  EXPECT_EQ(stepName + " Bool Value", workflowStepResult.stepValues()[3].first);
-  EXPECT_EQ(VariantType::Boolean, workflowStepResult.stepValues()[3].second.variantType().value());
+  EXPECT_EQ(stepName + " String Value", workflowStepResult.stepValues()[0].name());
+  EXPECT_EQ(VariantType::String, workflowStepResult.stepValues()[0].variantType().value());
+  EXPECT_EQ(stepName + " Double Value", workflowStepResult.stepValues()[1].name());
+  EXPECT_EQ(VariantType::Double, workflowStepResult.stepValues()[1].variantType().value());
+  EXPECT_EQ(stepName + " Int Value", workflowStepResult.stepValues()[2].name());
+  EXPECT_EQ(VariantType::Integer, workflowStepResult.stepValues()[2].variantType().value());
+  EXPECT_EQ(stepName + " Bool Value", workflowStepResult.stepValues()[3].name());
+  EXPECT_EQ(VariantType::Boolean, workflowStepResult.stepValues()[3].variantType().value());
 
   ASSERT_EQ(2u, workflowStepResult.stepFiles().size());
   EXPECT_EQ(stepName + " File.1", toString(workflowStepResult.stepFiles()[0]));

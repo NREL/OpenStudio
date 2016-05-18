@@ -25,11 +25,12 @@
 #include "../utilities/core/Enum.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/Path.hpp"
-
+#include "../utilities/data/Variant.hpp"
 
 namespace openstudio {
 
 namespace detail{
+  class WorkflowStepValue_Impl;
   class WorkflowStepResult_Impl;
 }
 class DateTime;
@@ -53,6 +54,87 @@ OPENSTUDIO_ENUM(StepResult,
   ((Success)(Pass)(0))
   ((Fail)(Fail)(1))
 );
+
+/** Class for storing a value set by OSRunner::registerValue. */
+class UTILITIES_API WorkflowStepValue {
+ public:
+  /** @name Constructors and Destructors */
+  //@{
+
+  WorkflowStepValue(const std::string& name, const Variant& value);
+  WorkflowStepValue(const std::string& name, const std::string& value);
+  WorkflowStepValue(const std::string& name, const char* value);
+  WorkflowStepValue(const std::string& name, double value);
+  WorkflowStepValue(const std::string& name, int value);
+  WorkflowStepValue(const std::string& name, bool value);
+
+  /// Construct from JSON formatted string
+  static boost::optional<WorkflowStepValue> fromString(const std::string& s);
+
+  /// Serialize to JSON formatted string
+  std::string string() const;
+
+  //@}
+  /** @name Getters */
+  //@{
+
+  std::string name() const;
+
+  std::string displayName() const;
+
+  boost::optional<std::string> units() const;
+
+  /// get the variant value type
+  VariantType variantType() const;
+
+  /// get value as a Variant
+  Variant valueAsVariant() const;
+
+  /// get value as a bool
+  bool valueAsBoolean() const;
+
+  /// get value as int
+  int valueAsInteger() const;
+
+  /// get value as double
+  double valueAsDouble() const;
+
+  /// get value as string
+  std::string valueAsString() const;
+
+  //@}
+  /** @name Setters */
+  //@{
+
+  void setName(const std::string& name);
+
+  void setDisplayName(const std::string& displayName);
+  void resetDisplayName();
+
+  void setUnits(const std::string& units);
+  void resetUnits();
+
+  //@}
+
+ protected:
+
+  // get the impl
+  template<typename T>
+  std::shared_ptr<T> getImpl() const {
+    return std::dynamic_pointer_cast<T>(m_impl);
+  }
+
+  friend class detail::WorkflowStepValue_Impl;
+
+  /** Protected constructor from impl. */
+  WorkflowStepValue(std::shared_ptr<detail::WorkflowStepValue_Impl> impl);
+
+ private:
+
+   REGISTER_LOGGER("openstudio.WorkflowStepValue");
+
+   std::shared_ptr<detail::WorkflowStepValue_Impl> m_impl;
+};
 
 /** Class for documenting the outcome of running a UserScript or a Ruleset. There is an overall
  *  result flag (available from value()), and a number of message types. */
@@ -93,7 +175,7 @@ class UTILITIES_API WorkflowStepResult {
 
   std::vector<std::string> stepInfo() const;
 
-  std::vector<std::pair<std::string, Variant> > stepValues() const;
+  std::vector<WorkflowStepValue> stepValues() const;
 
   std::vector<openstudio::path> stepFiles() const;
 
@@ -129,8 +211,7 @@ class UTILITIES_API WorkflowStepResult {
   void addStepInfo(const std::string& info);
   void resetStepInfo();
 
-  void addStepValue(const std::pair<std::string, Variant>& value);
-  void addStepValue(const std::string& name, const Variant& value);
+  void addStepValue(const WorkflowStepValue& value);
   void resetStepValues();
 
   void addStepFile(const openstudio::path& path);

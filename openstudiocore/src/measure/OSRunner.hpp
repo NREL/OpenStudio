@@ -22,10 +22,9 @@
 
 #include "MeasureAPI.hpp"
 
-#include "OSResult.hpp"
-
 #include "../model/Model.hpp"
 
+#include "../utilities/filetypes/WorkflowStepResult.hpp"
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/sql/SqlFile.hpp"
 #include "../utilities/filetypes/EpwFile.hpp"
@@ -70,7 +69,7 @@ class MEASURE_API OSRunner {
   unsigned currentStep() const;
 
   /** Returns results from the previous steps that were run. New in OS 2.0. */
-  std::vector<OSResult> previousResults() const;
+  std::vector<WorkflowStepResult> previousResults() const;
 
   /** Returns preferred unit system, either 'IP' or 'SI'. New in OS 2.0. */
   std::string unitsPreference() const;
@@ -78,12 +77,12 @@ class MEASURE_API OSRunner {
   /** Returns preferred language, e.g. 'en' or 'fr'. New in OS 2.0. */
   std::string languagePreference() const;
 
-  /** Returns the OSResult for the current/last OSMeasure run by this OSRunner. (prepareForMeasureRun
+  /** Returns the result for the current/last OSMeasure run by this OSRunner. (prepareForMeasureRun
    *  should be called prior to each run to ensure that result() corresponds to a single script, and
    *  is not instead a running result over multiple scripts. One way to ensure that this happens is
    *  to call the default version of run in ModelMeasure, etc. at the beginning of any particular
    *  run method.) */
-  OSResult result() const;
+  WorkflowStepResult result() const;
 
   /** Returns a copy of the last Model generated in the workflow if available. */
   boost::optional<openstudio::model::Model> lastOpenStudioModel() const;
@@ -330,12 +329,12 @@ class MEASURE_API OSRunner {
 
   WorkflowJSON m_workflow;
   unsigned m_currentStep;
-  std::vector<OSResult> m_previousResults;
+  std::vector<WorkflowStepResult> m_previousResults;
   std::string m_unitsPreference;
   std::string m_languagePreference;
 
   // current data
-  OSResult m_result;
+  WorkflowStepResult m_result;
   std::string m_measureName;
   std::string m_channel;
 

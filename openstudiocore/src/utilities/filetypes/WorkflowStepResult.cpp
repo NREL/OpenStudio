@@ -27,8 +27,203 @@
 namespace openstudio {
 namespace detail {
 
+  WorkflowStepValue_Impl::WorkflowStepValue_Impl(const std::string& name, const Variant& value)
+    : m_name(name), m_value(value)
+  {}
+
+  std::string WorkflowStepValue_Impl::string() const
+  {
+    Json::Value value(Json::objectValue);
+    value["name"] = m_name;
+
+    if (m_displayName){
+      value["display_name"] = *m_displayName;
+    }
+
+    if (m_units){
+      value["units"] = *m_units;
+    }
+
+    if (m_value.variantType() == VariantType::String){
+      value["value"] = m_value.valueAsString();
+    }else if (m_value.variantType() == VariantType::Double){
+      value ["value"] = m_value.valueAsDouble();
+    }else if (m_value.variantType() == VariantType::Integer){
+      value["value"] = m_value.valueAsInteger();
+    }else if (m_value.variantType() == VariantType::Boolean){
+      value["value"] = m_value.valueAsBoolean();
+    }
+
+    Json::StyledWriter writer;
+    std::string result = writer.write(value);
+
+    return result;  }
+
+  std::string WorkflowStepValue_Impl::name() const
+  {
+    return m_name;
+  }
+
+  std::string WorkflowStepValue_Impl::displayName() const
+  {
+    if (m_displayName){
+      return *m_displayName;
+    }
+    return m_name;
+  }
+
+  boost::optional<std::string> WorkflowStepValue_Impl::units() const
+  {
+    return m_units;
+  }
+
+  VariantType WorkflowStepValue_Impl::variantType() const
+  {
+    return m_value.variantType();
+  }
+
+  Variant WorkflowStepValue_Impl::valueAsVariant() const
+  {
+    return m_value;
+  }
+
+  bool WorkflowStepValue_Impl::valueAsBoolean() const
+  {
+    return m_value.valueAsBoolean();
+  }
+
+  int WorkflowStepValue_Impl::valueAsInteger() const
+  {
+    return m_value.valueAsInteger();
+  }
+
+  double WorkflowStepValue_Impl::valueAsDouble() const
+  {
+    return m_value.valueAsDouble();
+  }
+
+  std::string WorkflowStepValue_Impl::valueAsString() const
+  {
+    return m_value.valueAsString();
+  }
+
+  void WorkflowStepValue_Impl::setName(const std::string& name)
+  {
+    m_name = name;
+  }
+
+  void WorkflowStepValue_Impl::setDisplayName(const std::string& displayName)
+  {
+    m_displayName = displayName;
+  }
+
+  void WorkflowStepValue_Impl::resetDisplayName()
+  {
+    m_displayName.reset();
+  }
+
+  void WorkflowStepValue_Impl::setUnits(const std::string& units)
+  {
+    m_units = units;
+  }
+
+  void WorkflowStepValue_Impl::resetUnits()
+  {
+    m_units.reset();
+  }
+
   WorkflowStepResult_Impl::WorkflowStepResult_Impl()
   {}
+
+  std::string WorkflowStepResult_Impl::string() const
+  {
+    Json::Value value(Json::objectValue);
+    bool complete = false;
+ 
+    if (startedAt()){
+      value["started_at"] = startedAt()->toISO8601();
+    }
+
+    if (completedAt()){
+      complete = true;
+      value["completed_at"] = completedAt()->toISO8601();
+    }
+
+    if (complete){
+      if (stepResult()){
+        value["step_result"] = stepResult()->valueName();
+      }else{
+        // error
+      }
+    }
+
+    if (initialCondition()){
+      value["initial_condition"] = initialCondition().get();
+    }
+
+    if (finalCondition()){
+      value["final_condition"] = finalCondition().get();
+    }
+
+    if (complete || (stepErrors().size() > 0)){
+      Json::Value errors(Json::arrayValue);
+      for (const auto& stepError : stepErrors()){
+        errors.append(stepError);
+      }
+      value["step_errors"] = errors;
+    }
+
+    if (complete || (stepWarnings().size() > 0)){
+      Json::Value warnings(Json::arrayValue);
+      for (const auto& stepWarning : stepWarnings()){
+        warnings.append(stepWarning);
+      }
+      value["step_warnings"] = warnings;
+    }
+
+    if (complete || (stepInfo().size() > 0)){
+      Json::Value info(Json::arrayValue);
+      for (const auto& stepI : stepInfo()){
+        info.append(stepI);
+      }
+      value["step_info"] = info;
+    }
+
+    if (complete || (stepValues().size() > 0)){
+      Json::Value values(Json::arrayValue);
+      for (const auto& stepValue : stepValues()){
+        
+        Json::Value v;
+        Json::Reader reader;
+        bool parsingSuccessful = reader.parse(stepValue.string(), v);
+        if (parsingSuccessful){
+          values.append(v);
+        }
+      }
+      value["step_values"] = values;
+    }
+
+    if (complete || (stepFiles().size() > 0)){
+      Json::Value files(Json::arrayValue);
+      for (const auto& stepFile : stepFiles()){
+        files.append(toString(stepFile));
+      }
+      value["step_files"] = files;
+    }
+
+    if (stdOut()){
+      value["stdout"] = stdOut().get();
+    }
+
+    if (stdErr()){
+      value["stderr"] = stdErr().get();
+    }
+
+    Json::StyledWriter writer;
+    std::string result = writer.write(value);
+
+    return result;
+  }
 
   boost::optional<DateTime> WorkflowStepResult_Impl::startedAt() const
   {
@@ -70,7 +265,7 @@ namespace detail {
     return m_stepInfo;
   }
 
-  std::vector<std::pair<std::string, Variant> > WorkflowStepResult_Impl::stepValues() const
+  std::vector<WorkflowStepValue> WorkflowStepResult_Impl::stepValues() const
   {
     return m_stepValues;
   }
@@ -170,15 +365,9 @@ namespace detail {
     m_stepInfo.clear();
   }
 
-  void WorkflowStepResult_Impl::addStepValue(const std::pair<std::string, Variant>& value)
+  void WorkflowStepResult_Impl::addStepValue(const WorkflowStepValue& value)
   {
     m_stepValues.push_back(value);
-  }
-
-  void WorkflowStepResult_Impl::addStepValue(const std::string& name, const Variant& value)
-  {
-    std::pair<std::string, Variant> p(name, value);
-    addStepValue(p);
   }
 
   void WorkflowStepResult_Impl::resetStepValues()
@@ -217,6 +406,139 @@ namespace detail {
   }
 
 } // detail
+
+WorkflowStepValue::WorkflowStepValue(const std::string& name, const Variant& value)
+  : m_impl(std::shared_ptr<detail::WorkflowStepValue_Impl>(new detail::WorkflowStepValue_Impl(name, value)))
+{}
+
+WorkflowStepValue::WorkflowStepValue(const std::string& name, const std::string& value)
+  : m_impl(std::shared_ptr<detail::WorkflowStepValue_Impl>(new detail::WorkflowStepValue_Impl(name, Variant(value))))
+{}
+
+WorkflowStepValue::WorkflowStepValue(const std::string& name, const char* value)
+  : m_impl(std::shared_ptr<detail::WorkflowStepValue_Impl>(new detail::WorkflowStepValue_Impl(name, Variant(std::string(value)))))
+{}
+
+WorkflowStepValue::WorkflowStepValue(const std::string& name, double value)
+  : m_impl(std::shared_ptr<detail::WorkflowStepValue_Impl>(new detail::WorkflowStepValue_Impl(name, Variant(value))))
+{}
+
+WorkflowStepValue::WorkflowStepValue(const std::string& name, int value)
+  : m_impl(std::shared_ptr<detail::WorkflowStepValue_Impl>(new detail::WorkflowStepValue_Impl(name, Variant(value))))
+{}
+
+WorkflowStepValue::WorkflowStepValue(const std::string& name, bool value)
+  : m_impl(std::shared_ptr<detail::WorkflowStepValue_Impl>(new detail::WorkflowStepValue_Impl(name, Variant(value))))
+{}
+
+boost::optional<WorkflowStepValue> WorkflowStepValue::fromString(const std::string& s)
+{
+  Json::Reader reader;
+  Json::Value value;
+  bool parsingSuccessful = reader.parse(s, value);
+  if (!parsingSuccessful){
+    return boost::none;
+  }
+
+  boost::optional<WorkflowStepValue> result;
+
+  try{  
+    std::string name = value["name"].asString();
+    Json::Value v = value["value"];
+    if (v.isString()){
+      result = WorkflowStepValue(name, v.asString());
+    } else if (v.isIntegral()){
+      result = WorkflowStepValue(name, v.asInt());
+    } else if (v.isDouble()){
+      result = WorkflowStepValue(name, v.asDouble());
+    } else if (v.isBool()){
+      result = WorkflowStepValue(name, v.asBool());
+    } else{
+      //error
+    }
+ 
+  } catch (const std::exception&){
+    return boost::none;
+  }
+
+  return result;
+
+}
+
+std::string WorkflowStepValue::string() const
+{
+  return getImpl<detail::WorkflowStepValue_Impl>()->string();
+}
+
+std::string WorkflowStepValue::name() const
+{
+  return getImpl<detail::WorkflowStepValue_Impl>()->name();
+}
+
+std::string WorkflowStepValue::displayName() const
+{
+  return getImpl<detail::WorkflowStepValue_Impl>()->displayName();
+}
+
+boost::optional<std::string> WorkflowStepValue::units() const
+{
+  return getImpl<detail::WorkflowStepValue_Impl>()->units();
+}
+
+VariantType WorkflowStepValue::variantType() const
+{
+  return getImpl<detail::WorkflowStepValue_Impl>()->variantType();
+}
+
+Variant WorkflowStepValue::valueAsVariant() const
+{
+  return getImpl<detail::WorkflowStepValue_Impl>()->valueAsVariant();
+}
+
+bool WorkflowStepValue::valueAsBoolean() const
+{
+  return getImpl<detail::WorkflowStepValue_Impl>()->valueAsBoolean();
+}
+
+int WorkflowStepValue::valueAsInteger() const
+{
+  return getImpl<detail::WorkflowStepValue_Impl>()->valueAsInteger();
+}
+
+double WorkflowStepValue::valueAsDouble() const
+{
+  return getImpl<detail::WorkflowStepValue_Impl>()->valueAsDouble();
+}
+
+std::string WorkflowStepValue::valueAsString() const
+{
+  return getImpl<detail::WorkflowStepValue_Impl>()->valueAsString();
+}
+
+void WorkflowStepValue::setName(const std::string& name)
+{
+  getImpl<detail::WorkflowStepValue_Impl>()->setName(name);
+}
+
+void WorkflowStepValue::setDisplayName(const std::string& displayName)
+{
+  getImpl<detail::WorkflowStepValue_Impl>()->setDisplayName(displayName);
+}
+
+void WorkflowStepValue::resetDisplayName()
+{
+  getImpl<detail::WorkflowStepValue_Impl>()->resetDisplayName();
+}
+
+void WorkflowStepValue::setUnits(const std::string& units)
+{
+  getImpl<detail::WorkflowStepValue_Impl>()->setUnits(units);
+}
+
+void WorkflowStepValue::resetUnits()
+{
+  getImpl<detail::WorkflowStepValue_Impl>()->resetUnits();
+}
 
 WorkflowStepResult::WorkflowStepResult()
   : m_impl(std::shared_ptr<detail::WorkflowStepResult_Impl>(new detail::WorkflowStepResult_Impl))
@@ -296,18 +618,11 @@ boost::optional<WorkflowStepResult> WorkflowStepResult::fromString(const std::st
     Json::Value stepValues = value.get("step_values", defaultArrayValue);
     n = stepValues.size();
     for (Json::ArrayIndex i = 0; i < n; ++i){
-      std::string name = stepValues[i]["name"].asString();
-      Json::Value v = stepValues[i]["value"];
-      if (v.isString()){
-        result.addStepValue(name, Variant(v.asString()));
-      } else if (v.isIntegral()){
-        result.addStepValue(name, Variant(v.asInt()));
-      } else if (v.isDouble()){
-        result.addStepValue(name, Variant(v.asDouble()));
-      } else if (v.isBool()){
-        result.addStepValue(name, Variant(v.asBool()));
-      } else{
-        //error
+      Json::StyledWriter writer;
+      std::string s = writer.write(stepValues[i]);
+      boost::optional<WorkflowStepValue> workflowStepValue = WorkflowStepValue::fromString(s);
+      if (workflowStepValue){
+        result.addStepValue(*workflowStepValue);
       }
     }
 
@@ -334,98 +649,7 @@ boost::optional<WorkflowStepResult> WorkflowStepResult::fromString(const std::st
 
 std::string WorkflowStepResult::string() const
 {
-  Json::Value value(Json::objectValue);
-  bool complete = false;
- 
-  if (startedAt()){
-    value["started_at"] = startedAt()->toISO8601();
-  }
-
-  if (completedAt()){
-    complete = true;
-    value["completed_at"] = completedAt()->toISO8601();
-  }
-
-  if (complete){
-    if (stepResult()){
-      value["step_result"] = stepResult()->valueName();
-    }else{
-      // error
-    }
-  }
-
-  if (initialCondition()){
-    value["initial_condition"] = initialCondition().get();
-  }
-
-  if (finalCondition()){
-    value["final_condition"] = finalCondition().get();
-  }
-
-  if (complete || (stepErrors().size() > 0)){
-    Json::Value errors(Json::arrayValue);
-    for (const auto& stepError : stepErrors()){
-      errors.append(stepError);
-    }
-    value["step_errors"] = errors;
-  }
-
-  if (complete || (stepWarnings().size() > 0)){
-    Json::Value warnings(Json::arrayValue);
-    for (const auto& stepWarning : stepWarnings()){
-      warnings.append(stepWarning);
-    }
-    value["step_warnings"] = warnings;
-  }
-
-  if (complete || (stepInfo().size() > 0)){
-    Json::Value info(Json::arrayValue);
-    for (const auto& stepI : stepInfo()){
-      info.append(stepI);
-    }
-    value["step_info"] = info;
-  }
-
-  if (complete || (stepValues().size() > 0)){
-    Json::Value values(Json::arrayValue);
-    for (const auto& stepValue : stepValues()){
-      Json::Value v(Json::objectValue);
-      v["name"] = stepValue.first;
-
-      if (stepValue.second.variantType() == VariantType::String){
-        v["value"] = stepValue.second.valueAsString();
-      }else if (stepValue.second.variantType() == VariantType::Double){
-        v["value"] = stepValue.second.valueAsDouble();
-      }else if (stepValue.second.variantType() == VariantType::Integer){
-        v["value"] = stepValue.second.valueAsInteger();
-      }else if (stepValue.second.variantType() == VariantType::Boolean){
-        v["value"] = stepValue.second.valueAsBoolean();
-      }
-      values.append(v);
-    }
-    value["step_values"] = values;
-  }
-
-  if (complete || (stepFiles().size() > 0)){
-    Json::Value files(Json::arrayValue);
-    for (const auto& stepFile : stepFiles()){
-      files.append(toString(stepFile));
-    }
-    value["step_files"] = files;
-  }
-
-  if (stdOut()){
-    value["stdout"] = stdOut().get();
-  }
-
-  if (stdErr()){
-    value["stderr"] = stdErr().get();
-  }
-
-  Json::StyledWriter writer;
-  std::string result = writer.write(value);
-
-  return result;
+  return getImpl<detail::WorkflowStepResult_Impl>()->string();
 }
 
 boost::optional<DateTime> WorkflowStepResult::startedAt() const
@@ -468,7 +692,7 @@ std::vector<std::string> WorkflowStepResult::stepInfo() const
   return getImpl<detail::WorkflowStepResult_Impl>()->stepInfo();
 }
 
-std::vector<std::pair<std::string, Variant> > WorkflowStepResult::stepValues() const
+std::vector<WorkflowStepValue> WorkflowStepResult::stepValues() const
 {
   return getImpl<detail::WorkflowStepResult_Impl>()->stepValues();
 }
@@ -568,14 +792,9 @@ void WorkflowStepResult::resetStepInfo()
   getImpl<detail::WorkflowStepResult_Impl>()->resetStepInfo();
 }
 
-void WorkflowStepResult::addStepValue(const std::pair<std::string, Variant>& value)
+void WorkflowStepResult::addStepValue(const WorkflowStepValue& value)
 {
   getImpl<detail::WorkflowStepResult_Impl>()->addStepValue(value);
-}
-
-void WorkflowStepResult::addStepValue(const std::string& name, const Variant& value)
-{
-  getImpl<detail::WorkflowStepResult_Impl>()->addStepValue(name, value);
 }
 
 void WorkflowStepResult::resetStepValues()

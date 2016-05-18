@@ -18,8 +18,6 @@ set(${target_name}_src
   OSMeasureInfoGetter.hpp
   OSOutput.cpp
   OSOutput.hpp  
-  OSResult.cpp
-  OSResult.hpp
   OSRunner.cpp
   OSRunner.hpp
   ReportingMeasure.cpp

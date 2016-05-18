@@ -50,7 +50,7 @@ unsigned OSRunner::currentStep() const
   return m_currentStep;
 }
 
-std::vector<OSResult> OSRunner::previousResults() const
+std::vector<WorkflowStepResult> OSRunner::previousResults() const
 {
   return m_previousResults;
 }
@@ -65,7 +65,7 @@ std::string OSRunner::languagePreference() const
   return m_languagePreference;
 }
 
-OSResult OSRunner::result() const {
+WorkflowStepResult OSRunner::result() const {
   return m_result;
 }
 
@@ -149,7 +149,7 @@ void OSRunner::reset()
   //m_unitsPreference // do not reset
   //m_languagePreference; // do not reset
 
-  m_result = OSResult();
+  m_result = WorkflowStepResult();
   m_measureName = "";
   m_channel = "";
 }
@@ -157,7 +157,7 @@ void OSRunner::reset()
 void OSRunner::incrementStep()
 {
   m_previousResults.push_back(m_result);
-  m_result = OSResult();
+  m_result = WorkflowStepResult();
 
   m_measureName = "";
   m_channel = "";
@@ -167,7 +167,7 @@ void OSRunner::incrementStep()
 void OSRunner::setCurrentStep(unsigned currentStep)
 {
   m_previousResults.resize(currentStep);
-  m_result = OSResult();
+  m_result = WorkflowStepResult();
 
   m_measureName = "";
   m_channel = "";
@@ -176,7 +176,7 @@ void OSRunner::setCurrentStep(unsigned currentStep)
 
 void OSRunner::prepareForMeasureRun(const OSMeasure& measure) {
   // DLM: also in incrementStep
-  m_result = OSResult();
+  m_result = WorkflowStepResult();
 
   m_measureName = measure.name();
   std::stringstream ss;
@@ -185,7 +185,7 @@ void OSRunner::prepareForMeasureRun(const OSMeasure& measure) {
 }
 
 void OSRunner::registerError(const std::string& message) {
-  m_result.setValue(OSResultValue::Fail);
+  m_result.setValue(StepResult::Fail);
   m_result.addError(m_channel,message);
 }
 
@@ -200,7 +200,7 @@ bool OSRunner::registerInfo(const std::string& message) {
 }
 
 void OSRunner::registerAsNotApplicable(const std::string& message) {
-  m_result.setValue(OSResultValue::NA);
+  m_result.setValue(StepResult::NA);
   m_result.addInfo(m_channel,message);
 }
 
@@ -212,10 +212,6 @@ void OSRunner::registerFinalCondition(const std::string& message) {
   m_result.setFinalCondition(m_channel, message);
 }
 
-void OSRunner::registerAttribute(Attribute& attribute) {
-  attribute.setSource(m_measureName);
-  m_result.appendAttribute(attribute);
-}
 
 void OSRunner::registerValue(const std::string& name, bool value) {
   Attribute attribute(name,value);

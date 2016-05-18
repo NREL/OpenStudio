@@ -31,6 +31,59 @@
 namespace openstudio {
 namespace detail {
 
+class UTILITIES_API WorkflowStepValue_Impl {
+ public:
+
+  WorkflowStepValue_Impl(const std::string& name, const Variant& value);
+
+  std::string string() const;
+
+  //@}
+  /** @name Getters */
+  //@{
+
+  std::string name() const;
+
+  std::string displayName() const;
+
+  boost::optional<std::string> units() const;
+
+  VariantType variantType() const;
+
+  Variant valueAsVariant() const;
+
+  bool valueAsBoolean() const;
+
+  int valueAsInteger() const;
+
+  double valueAsDouble() const;
+
+  std::string valueAsString() const;
+
+  //@}
+  /** @name Setters */
+  //@{
+
+  void setName(const std::string& name);
+
+  void setDisplayName(const std::string& displayName);
+  void resetDisplayName();
+
+  void setUnits(const std::string& units);
+  void resetUnits();
+
+  //@}
+
+ private:
+
+   REGISTER_LOGGER("openstudio.WorkflowStepValue");
+
+   std::string m_name;
+   Variant m_value;
+   boost::optional<std::string> m_displayName;
+   boost::optional<std::string> m_units;
+};
+
 class UTILITIES_API WorkflowStepResult_Impl {
  public:
 
@@ -54,7 +107,7 @@ class UTILITIES_API WorkflowStepResult_Impl {
 
   std::vector<std::string> stepInfo() const;
 
-  std::vector<std::pair<std::string, Variant> > stepValues() const;
+  std::vector<WorkflowStepValue> stepValues() const;
 
   std::vector<openstudio::path> stepFiles() const;
 
@@ -86,8 +139,7 @@ class UTILITIES_API WorkflowStepResult_Impl {
   void addStepInfo(const std::string& info);
   void resetStepInfo();
 
-  void addStepValue(const std::pair<std::string, Variant>& value);
-  void addStepValue(const std::string& name, const Variant& value);
+  void addStepValue(const WorkflowStepValue& value);
   void resetStepValues();
 
   void addStepFile(const openstudio::path& path);
@@ -110,7 +162,7 @@ class UTILITIES_API WorkflowStepResult_Impl {
    std::vector<std::string> m_stepErrors;
    std::vector<std::string> m_stepWarnings;
    std::vector<std::string> m_stepInfo;
-   std::vector<std::pair<std::string, Variant> > m_stepValues;
+   std::vector<WorkflowStepValue> m_stepValues;
    std::vector<openstudio::path> m_stepFiles;
    boost::optional<std::string> m_stdOut;
    boost::optional<std::string> m_stdErr;
