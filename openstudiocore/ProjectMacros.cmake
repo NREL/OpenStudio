@@ -118,23 +118,7 @@ endmacro()
 # add a swig target
 # KEY_I_FILE should include path, see src/utilities/CMakeLists.txt.
 macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_SWIG_TARGETS)
-  
-  string(REGEX MATCH "model" IS_MODEL "${SIMPLENAME}")
-  if(IS_MODEL)
-    set( DEPENDS   
-      openstudio_model_core
-      openstudio_model_resources_temp
-      openstudio_model_simulation
-      openstudio_model_geometry
-      openstudio_model_hvac
-      openstudio_model_refrigeration
-      openstudio_model_generators
-    )
-  else()
-    set(DEPENDS "${PARENT_TARGET}")
-  endif()
-  
-  
+  set(DEPENDS "${PARENT_TARGET}")
   set(SWIG_DEFINES "")
   set(SWIG_COMMON "")
 
