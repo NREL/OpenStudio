@@ -14877,26 +14877,60 @@ OS:Coil:Heating:Water:Baseboard,
       \required-field
       \reference BaseboardHeatingCoil
       \reference ConnectionObject
-  N1, \field U-Factor Times Area Value
+  A3 , \field Heating Design Capacity Method
+       \type choice
+       \key HeatingDesignCapacity
+       \key CapacityPerFloorArea
+       \key FractionOfAutosizedHeatingCapacity
+       \required-field
+       \note Enter the method used to determine the heating design capacity.
+       \note HeatingDesignCapacity = > selected when the design heating capacity value or autosize
+       \note is specified. CapacityPerFloorArea = > selected when the design heating capacity is
+       \note determine from user specified heating capacity per floor area and zone floor area.
+       \note FractionOfAutosizedHeatingCapacity = > is selected when the design heating capacity is
+       \note determined from a user specified fraction and the auto-sized design heating capacity.
+  N1 , \field Heating Design Capacity
+       \type real
+       \units W
+       \minimum 0.0
+       \autosizable
+       \required-field
+       \ip-units W
+       \note Enter the design heating capacity.Required field when the heating design capacity method
+       \note HeatingDesignCapacity.
+  N2 , \field Heating Design Capacity Per Floor Area
+       \type real
+       \units W/m2
+       \minimum 0.0
+       \required-field
+       \note Enter the heating design capacity per zone floor area.Required field when the heating design
+       \note capacity method field is CapacityPerFloorArea.
+  N3 , \field Fraction of Autosized Heating Design Capacity
+       \type real
+       \minimum 0.0
+       \required-field
+       \note Enter the fraction of auto - sized heating design capacity.Required field when capacity the
+       \note heating design capacity method field is FractionOfAutosizedHeatingCapacity.
+  N4, \field U-Factor Times Area Value
       \type real
       \autosizable
       \units W/K
       \default autosize
-  N2, \field Maximum Water Flow Rate
+  N5, \field Maximum Water Flow Rate
       \type real
       \autosizable
       \units m3/s
       \ip-units gal/min
       \default Autosize
-  N3, \field Convergence Tolerance
+  N6, \field Convergence Tolerance
       \type real
       \minimum> 0.0
       \default 0.001       
-  A3, \field Water Inlet Node Name
+  A4, \field Water Inlet Node Name
       \type object-list
       \required-field
       \object-list ConnectionNames
-  A4; \field Water Outlet Node Name
+  A5; \field Water Outlet Node Name
       \type object-list
       \required-field
       \object-list ConnectionNames

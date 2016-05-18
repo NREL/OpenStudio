@@ -28,6 +28,7 @@
 
 #include <utilities/idd/OS_Coil_Heating_Water_Baseboard_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
 
 #include "../utilities/units/Unit.hpp"
 
@@ -107,6 +108,37 @@ namespace detail {
     return boost::none;
   }
 
+  std::string CoilHeatingWaterBaseboard_Impl::heatingDesignCapacityMethod() const {
+    boost::optional<std::string> value = getString(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacityMethod,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  boost::optional<double> CoilHeatingWaterBaseboard_Impl::heatingDesignCapacity() const {
+    return getDouble(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacity,true);
+  }
+
+  bool CoilHeatingWaterBaseboard_Impl::isHeatingDesignCapacityAutosized() const {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacity, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "autosize");
+    }
+    return result;
+  }
+
+  double CoilHeatingWaterBaseboard_Impl::heatingDesignCapacityPerFloorArea() const {
+    boost::optional<double> value = getDouble(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacityPerFloorArea,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  double CoilHeatingWaterBaseboard_Impl::fractionofAutosizedHeatingDesignCapacity() const {
+    boost::optional<double> value = getDouble(OS_Coil_Heating_Water_BaseboardFields::FractionofAutosizedHeatingDesignCapacity,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
   boost::optional<double> CoilHeatingWaterBaseboard_Impl::uFactorTimesAreaValue() const {
     return getDouble(OS_Coil_Heating_Water_BaseboardFields::UFactorTimesAreaValue,true);
   }
@@ -149,6 +181,34 @@ namespace detail {
 
    bool CoilHeatingWaterBaseboard_Impl::isConvergenceToleranceDefaulted() const {
     return isEmpty(OS_Coil_Heating_Water_BaseboardFields::ConvergenceTolerance);
+  }
+
+  bool CoilHeatingWaterBaseboard_Impl::setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod) {
+    bool result = setString(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacityMethod, heatingDesignCapacityMethod);
+    return result;
+  }
+
+  bool CoilHeatingWaterBaseboard_Impl::setHeatingDesignCapacity(boost::optional<double> heatingDesignCapacity) {
+    bool result(false);
+    if (heatingDesignCapacity) {
+      result = setDouble(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacity, heatingDesignCapacity.get());
+    }
+    return result;
+  }
+
+  void CoilHeatingWaterBaseboard_Impl::autosizeHeatingDesignCapacity() {
+    bool result = setString(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacity, "autosize");
+    OS_ASSERT(result);
+  }
+
+  bool CoilHeatingWaterBaseboard_Impl::setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea) {
+    bool result = setDouble(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacityPerFloorArea, heatingDesignCapacityPerFloorArea);
+    return result;
+  }
+
+  bool CoilHeatingWaterBaseboard_Impl::setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity) {
+    bool result = setDouble(OS_Coil_Heating_Water_BaseboardFields::FractionofAutosizedHeatingDesignCapacity, fractionofAutosizedHeatingDesignCapacity);
+    return result;
   }
 
    void CoilHeatingWaterBaseboard_Impl::setUFactorTimesAreaValue(boost::optional<double> uFactorTimesAreaValue) {
@@ -225,6 +285,11 @@ CoilHeatingWaterBaseboard::CoilHeatingWaterBaseboard(const Model& model)
   : StraightComponent(CoilHeatingWaterBaseboard::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::CoilHeatingWaterBaseboard_Impl>());
+
+  setHeatingDesignCapacityMethod("HeatingDesignCapacity");
+  autosizeHeatingDesignCapacity();
+  setHeatingDesignCapacityPerFloorArea(0.0);
+  setFractionofAutosizedHeatingDesignCapacity(0.8);
 }
 unsigned CoilHeatingWaterBaseboard::inletPort()
 {
@@ -238,6 +303,31 @@ unsigned CoilHeatingWaterBaseboard::outletPort()
 
 IddObjectType CoilHeatingWaterBaseboard::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Coil_Heating_Water_Baseboard);
+}
+
+std::vector<std::string> CoilHeatingWaterBaseboard::heatingDesignCapacityMethodValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacityMethod);
+}
+
+std::string CoilHeatingWaterBaseboard::heatingDesignCapacityMethod() const {
+  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->heatingDesignCapacityMethod();
+}
+
+boost::optional<double> CoilHeatingWaterBaseboard::heatingDesignCapacity() const {
+  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->heatingDesignCapacity();
+}
+
+bool CoilHeatingWaterBaseboard::isHeatingDesignCapacityAutosized() const {
+  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->isHeatingDesignCapacityAutosized();
+}
+
+double CoilHeatingWaterBaseboard::heatingDesignCapacityPerFloorArea() const {
+  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->heatingDesignCapacityPerFloorArea();
+}
+
+double CoilHeatingWaterBaseboard::fractionofAutosizedHeatingDesignCapacity() const {
+  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->fractionofAutosizedHeatingDesignCapacity();
 }
 
 boost::optional<double> CoilHeatingWaterBaseboard::uFactorTimesAreaValue() const {
@@ -270,6 +360,26 @@ double CoilHeatingWaterBaseboard::convergenceTolerance() const {
 
 bool CoilHeatingWaterBaseboard::isConvergenceToleranceDefaulted() const {
   return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->isConvergenceToleranceDefaulted();
+}
+
+bool CoilHeatingWaterBaseboard::setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod) {
+  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->setHeatingDesignCapacityMethod(heatingDesignCapacityMethod);
+}
+
+bool CoilHeatingWaterBaseboard::setHeatingDesignCapacity(double heatingDesignCapacity) {
+  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->setHeatingDesignCapacity(heatingDesignCapacity);
+}
+
+void CoilHeatingWaterBaseboard::autosizeHeatingDesignCapacity() {
+  getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->autosizeHeatingDesignCapacity();
+}
+
+bool CoilHeatingWaterBaseboard::setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea) {
+  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->setHeatingDesignCapacityPerFloorArea(heatingDesignCapacityPerFloorArea);
+}
+
+bool CoilHeatingWaterBaseboard::setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity) {
+  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->setFractionofAutosizedHeatingDesignCapacity(fractionofAutosizedHeatingDesignCapacity);
 }
 
 void CoilHeatingWaterBaseboard::setUFactorTimesAreaValue(double uFactorTimesAreaValue) {

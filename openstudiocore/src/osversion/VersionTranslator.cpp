@@ -104,7 +104,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.10.0")] = &VersionTranslator::update_1_9_5_to_1_10_0;
   m_updateMethods[VersionString("1.10.2")] = &VersionTranslator::update_1_10_1_to_1_10_2;
   m_updateMethods[VersionString("1.10.6")] = &VersionTranslator::update_1_10_5_to_1_10_6;
-  m_updateMethods[VersionString("1.11.4")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.11.4")] = &VersionTranslator::update_1_11_3_to_1_11_4;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -3180,6 +3180,48 @@ std::string VersionTranslator::update_1_10_5_to_1_10_6(const IdfFile& idf_1_10_5
            
         }
       }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_11_3_to_1_11_4(const IdfFile& idf_1_11_3, const IddFileAndFactoryWrapper& idd_1_11_4) {
+  std::stringstream ss;
+
+  ss << idf_1_11_3.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_11_4.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_1_11_3.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:Coil:Heating:Water:Baseboard") {
+      auto iddObject = idd_1_11_4.getObject("OS:Coil:Heating:Water:Baseboard");
+      IdfObject newObject(iddObject.get());
+
+      size_t newi = 0;
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( auto s = object.getString(i) ) {
+          newObject.setString(newi,s.get());
+          if( i == 1 ) {
+            newi = newi + 4;
+          }
+        }
+        ++newi;
+      }
+
+      newObject.setString(2,"HeatingDesignCapacity");
+      newObject.setString(3,"Autosize");
+      newObject.setDouble(4,0.0);
+      newObject.setDouble(5,0.8);
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;

@@ -97,6 +97,27 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACBaseboardConvecti
       }
     }
 
+    {
+      auto value = coilHeatBBConvWater.heatingDesignCapacityMethod();
+      idfObject.setString(ZoneHVAC_Baseboard_Convective_WaterFields::HeatingDesignCapacityMethod,value);
+    }
+
+    if( coilHeatBBConvWater.isHeatingDesignCapacityAutosized() ) {
+      idfObject.setString(ZoneHVAC_Baseboard_Convective_WaterFields::HeatingDesignCapacity,"Autosize");
+    } else if( auto value = coilHeatBBConvWater.heatingDesignCapacity() ) {
+      idfObject.setDouble(ZoneHVAC_Baseboard_Convective_WaterFields::HeatingDesignCapacity,value.get());
+    }
+
+    {
+      auto value = coilHeatBBConvWater.heatingDesignCapacityPerFloorArea();
+      idfObject.setDouble(ZoneHVAC_Baseboard_Convective_WaterFields::HeatingDesignCapacityPerFloorArea,value);
+    }
+
+    {
+      auto value = coilHeatBBConvWater.fractionofAutosizedHeatingDesignCapacity();
+      idfObject.setDouble(ZoneHVAC_Baseboard_Convective_WaterFields::FractionofAutosizedHeatingDesignCapacity,value);
+    }
+
     // UFactorTimesAreaValue
     if(coilHeatBBConvWater.isUFactorTimesAreaValueAutosized())
     {
