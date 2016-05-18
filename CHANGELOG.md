@@ -1,3 +1,8 @@
+## OpenStudio v1.11.3
+###### 2016-05-17 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.11.2...v1.11.3 )
+
+- ![Fixed:][fixed] [#2225]( https://github.com/NREL/OpenStudio/issues/2225 ), Daylighting Controls Measure: OS:Daylighting:Control objects do not forward translate in certain cases
+
 ## OpenStudio v1.11.2
 ###### 2016-05-02 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.11.1...v1.11.2 )
 
