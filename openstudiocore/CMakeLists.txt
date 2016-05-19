@@ -742,12 +742,6 @@ add_subdirectory(src/jsoncpp)
 ###############################################################################
 
 ################################################################################
-## litesql
-#include_directories(SYSTEM src/litesql/include src/litesql/library ${CMAKE_BINARY_DIR}/litesql)
-#add_subdirectory(src/litesql)
-################################################################################
-
-################################################################################
 ## sqlite
 add_subdirectory(src/sqlite)
 ################################################################################
@@ -987,8 +981,6 @@ set(all_lib_targets
   miniziplib
   sqlite
   jsoncpp
-  #litesql
-  #litesql-util
   ${ALL_RUBY_BINDING_TARGETS}
 )
 
