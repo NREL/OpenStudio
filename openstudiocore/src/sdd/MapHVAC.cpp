@@ -5080,7 +5080,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
     if( auto mo = translateHX(hxElement,doc,model) ) {
       auto hx = mo->cast<model::HeatExchangerFluidToFluid>();
-      auto economizerIntegration = hxElement.firstChildElement("EconomizerIntegration").text().toStdString();
+      auto economizerIntegration = hxElement.firstChildElement("EconoIntegration").text().toStdString();
       if( istringEqual("Nonintegrated",economizerIntegration) ) {
         plantLoop.addSupplyBranchForComponent(hx);
       } else {
