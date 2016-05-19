@@ -151,6 +151,7 @@ bool OSRunner::incrementStep()
 
   boost::optional<WorkflowStep> currentStep = m_workflow.currentStep();
   if (currentStep){
+    m_result.setCompletedAt(DateTime::nowUTC());
     currentStep->setResult(m_result);
   }else{
     LOG(Error, "Cannot find current Workflow Step");
@@ -172,6 +173,7 @@ bool OSRunner::incrementStep()
 
 void OSRunner::prepareForMeasureRun(const OSMeasure& measure) {
   m_result = WorkflowStepResult();
+  m_result.setStartedAt(DateTime::nowUTC());
   m_result.setStepResult(StepResult::Success);
 }
 
