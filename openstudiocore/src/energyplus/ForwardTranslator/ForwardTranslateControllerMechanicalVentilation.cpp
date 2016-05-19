@@ -69,6 +69,7 @@ boost::optional<IdfObject> ForwardTranslator::translateControllerMechanicalVenti
   // Note that this scheme will not support fractions (schedule values above 0) because anything greater than 0 will
   // make the mechanical ventilation controller avaiable and thus taking precedence.
   bool useAvailabiltySchedule = true;
+  auto availabilitySchedule = modelObject.availabilitySchedule();
 
   // Find the associated oa controller
   auto oaControllers = modelObject.model().getConcreteModelObjects<ControllerOutdoorAir>();
@@ -80,17 +81,22 @@ boost::optional<IdfObject> ForwardTranslator::translateControllerMechanicalVenti
     return false;
   };
   auto oaController = std::find_if(oaControllers.begin(),oaControllers.end(),predicate);
-  if( oaController != oaControllers.end() ) {
-    if( auto minOASchedule = oaController->minimumOutdoorAirSchedule() ) {
-      auto _schedule = translateAndMapModelObject(minOASchedule.get());
-      OS_ASSERT(_schedule);
-      idfObject.setString(Controller_MechanicalVentilationFields::AvailabilityScheduleName,_schedule->name().get());
-      useAvailabiltySchedule = false;
+  // alwaysOnDiscreteSchedule is the default availability schedule for the mechanical ventilation controller
+  // if the default is still in place BUT the user has defined a minimumOutdoorAirSchedule for the oa controller,
+  // then use the minimumOutdoorAirSchedule for the mechanical ventilation controller availability schedule
+  // The minimumOutdoorAirSchedule will not do its job while the controller mechanical ventilation object is available.
+  if( availabilitySchedule == modelObject.model().alwaysOnDiscreteSchedule() ) {
+    if( oaController != oaControllers.end() ) {
+      if( auto minOASchedule = oaController->minimumOutdoorAirSchedule() ) {
+        auto _schedule = translateAndMapModelObject(minOASchedule.get());
+        OS_ASSERT(_schedule);
+        idfObject.setString(Controller_MechanicalVentilationFields::AvailabilityScheduleName,_schedule->name().get());
+        useAvailabiltySchedule = false;
+      }
     }
   }
 
   if( useAvailabiltySchedule ) {
-    Schedule availabilitySchedule = modelObject.availabilitySchedule();
     boost::optional<IdfObject> availabilityScheduleIdf = translateAndMapModelObject(availabilitySchedule);
     OS_ASSERT(availabilityScheduleIdf);
     idfObject.setString(openstudio::Controller_MechanicalVentilationFields::AvailabilityScheduleName,availabilityScheduleIdf->name().get());
