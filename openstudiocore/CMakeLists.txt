@@ -209,14 +209,9 @@ set(project_directories
   isomodel
   osversion
   measure
-  #runmanager/lib
-  #analysis
-  #project
-  #analysisdriver
   resultsviewer
   model_editor
   openstudio_lib
-  #openstudio_app # ignore for now, needs a bunch of name changes
   sdd
   cli
 )
@@ -356,47 +351,9 @@ unset(ENERGYPLUS_WEATHER_DIR CACHE)
 find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
 
 # Ruby
-
 find_package(Ruby 2.2 REQUIRED)
-  message("ruby include: ${RUBY_INCLUDE_DIRS}")
-
-
-######find_program(RUBY_EXECUTABLE NAMES ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH)
-######
-######find_package(Ruby 2)
-######
-######if(NOT RUBY_FOUND)
-######  find_path(RUBY_CONFIG_INCLUDE_DIR
-######    NAMES ruby/config.h config.h
-######    HINTS
-######    /usr/include/x86_64-linux-gnu/ruby-2.0.0
-######  )
-######  find_package(Ruby 2.0 REQUIRED)
-######endif()
-######
 set(RUBY_MODULE_DIR "Ruby")
-
 set(RUBY_MODULE_ARCH_DIR "Ruby/openstudio")
-######
-#######We want to use the site_ruby folder if this is intended for /usr/local install
-#######If it is intended for /usr install, we want to use the main ruby module folder
-######if(${CMAKE_INSTALL_PREFIX} STREQUAL "/usr" AND RUBY_ARCH_DIR MATCHES "^/usr/lib.*/.*")
-######  string(REGEX REPLACE "^/usr/" "" RUBY_MODULE_ARCH_DIR ${RUBY_ARCH_DIR})
-######  string(REGEX REPLACE "^/usr/" "" RUBY_MODULE_DIR ${RUBY_RUBY_LIB_DIR})
-######elseif(${CMAKE_INSTALL_PREFIX} STREQUAL "/usr/local" AND RUBY_SITEARCH_DIR MATCHES "^/usr/local/lib.*/.*")
-######  string(REGEX REPLACE "^/usr/local/" "" RUBY_MODULE_ARCH_DIR ${RUBY_SITEARCH_DIR})
-######  string(REGEX REPLACE "^/usr/local/" "" RUBY_MODULE_DIR ${RUBY_SITELIB_DIR})
-######endif()
-######
-######if(UNIX AND NOT APPLE)
-######  set(RUBY_MODULE_SITE_DIR "${RUBY_MODULE_DIR}")
-######
-######  set(RUBY_MODULE_DIR "lib/openstudio-${OPENSTUDIO_VERSION}/ruby/${RUBY_VERSION_MAJOR}.${RUBY_VERSION_MINOR}")
-######  set(RUBY_MODULE_ARCH_DIR "lib/openstudio-${OPENSTUDIO_VERSION}/ruby/${RUBY_VERSION_MAJOR}.${RUBY_VERSION_MINOR}")
-######endif()
-######
-######message(STATUS "Ruby module code installing to: ${RUBY_MODULE_DIR}")
-######message(STATUS "Ruby module arch library installing to: ${RUBY_MODULE_ARCH_DIR}")
 
 
 # OpenSSL / libssh support
@@ -420,8 +377,6 @@ if(BUILD_WITH_OPENSSL)
   endif()
 
 endif()
-
-
 
 find_package(SWIG 3.0.0 REQUIRED)
 mark_as_advanced(
@@ -757,46 +712,6 @@ include_directories("${CMAKE_BINARY_DIR}/src/")
 # Include the resources, should happen after find EnergyPlus
 add_subdirectory(resources)
 
-
-# Set up embedded ruby for Unix use with 'aws-sdk'
-
-#if(UNIX)
-#  if(APPLE)
-#    set(AWS_RUBY_PATH ruby-2.0.0-aws-Darwin)
-#    set(AWS_RUBY_DESTINATION ".")
-#    set(AWS_RUBY_URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0-p645-aws-Darwin.tar.bz2)
-#    set(AWS_RUBY_CHECKSUM 49bceb609b5c1d6d41f824115af46ec4)
-#  elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
-#    set(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-x86_64)
-#    set(AWS_RUBY_DESTINATION "lib/openstudio-${OPENSTUDIO_VERSION}")
-#    set(AWS_RUBY_URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0-p645-aws-Linux-x86_64.tar.bz2)
-#    set(AWS_RUBY_CHECKSUM c46c9e93770749208222aa43ca99fe62)
-#  endif()
-#
-#  file(DOWNLOAD ${AWS_RUBY_URL} "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}.tar.bz2" TIMEOUT 120 INACTIVITY_TIMEOUT 120)
-#  execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}")
-#  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}.tar.bz2" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-#
-#  # Install required gems
-#  set(ENV{BUNDLE_PATH} "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}/lib/ruby/gems/2.0.0")
-#  execute_process(COMMAND "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}/bin/ruby" "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}/bin/bundle" "install" "--no-cache"
-#                  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/../dependencies/ruby"
-#                  TIMEOUT 120
-#  )
-#  execute_process(COMMAND "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}/bin/ruby" "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}/bin/bundle" "clean" "--force"
-#                  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/../dependencies/ruby"
-#                  TIMEOUT 120
-#  )
-#
-#  install(
-#    DIRECTORY "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}"
-#    DESTINATION "${AWS_RUBY_DESTINATION}"
-#    USE_SOURCE_PERMISSIONS
-#  )
-#endif()
-
-# end ruby aws-sdk info
-
 foreach(D ${project_directories})
   add_subdirectory(src/${D})
 endforeach()
@@ -953,16 +868,12 @@ else()
 endif()
 
 set(all_lib_targets
-  #openstudio_runmanager
-  #openstudio_project
   openstudio_osversion
   openstudio_model
   openstudio_modeleditor
   openstudio_utilities
   openstudio_energyplus
-  #openstudio_analysisdriver
   openstudio_measure
-  #openstudio_analysis
   openstudio_radiance
   openstudio_gbxml
   openstudio_bimserver
