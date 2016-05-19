@@ -50,12 +50,24 @@ class MODEL_API CoilHeatingWaterBaseboard : public StraightComponent {
 
   static IddObjectType iddObjectType();
 
+  static std::vector<std::string> heatingDesignCapacityMethodValues();
+
   /** @name Getters */
   //@{
  
   unsigned inletPort();
 
   unsigned outletPort();
+
+  std::string heatingDesignCapacityMethod() const;
+
+  boost::optional<double> heatingDesignCapacity() const;
+
+  bool isHeatingDesignCapacityAutosized() const;
+
+  double heatingDesignCapacityPerFloorArea() const;
+
+  double fractionofAutosizedHeatingDesignCapacity() const;
 
   /** Returns the value of the UFactorTimesAreaValue field. **/
   boost::optional<double> uFactorTimesAreaValue() const;
@@ -81,6 +93,15 @@ class MODEL_API CoilHeatingWaterBaseboard : public StraightComponent {
   //@}
   /** @name Setters */
   //@{
+  bool setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod);
+
+  bool setHeatingDesignCapacity(double heatingDesignCapacity);
+
+  void autosizeHeatingDesignCapacity();
+
+  bool setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea);
+
+  bool setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity);
 
   void setUFactorTimesAreaValue(double uFactorTimesAreaValue);
 

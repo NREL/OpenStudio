@@ -72,6 +72,16 @@ namespace detail {
     /** @name Getters */
     //@{
 
+    std::string heatingDesignCapacityMethod() const;
+
+    boost::optional<double> heatingDesignCapacity() const;
+
+    bool isHeatingDesignCapacityAutosized() const;
+
+    double heatingDesignCapacityPerFloorArea() const;
+
+    double fractionofAutosizedHeatingDesignCapacity() const;
+
     boost::optional<double> uFactorTimesAreaValue() const;
 
     bool isUFactorTimesAreaValueDefaulted() const;
@@ -91,6 +101,15 @@ namespace detail {
     //@}
     /** @name Setters */
     //@{
+    bool setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod);
+
+    bool setHeatingDesignCapacity(boost::optional<double> heatingDesignCapacity);
+
+    void autosizeHeatingDesignCapacity();
+
+    bool setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea);
+
+    bool setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity);
 
     void setUFactorTimesAreaValue(boost::optional<double> uFactorTimesAreaValue);
 
