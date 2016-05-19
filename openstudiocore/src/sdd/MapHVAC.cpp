@@ -4621,6 +4621,11 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
       terminal.setMaximumAirFlowRate(primaryAirFlow.get());
     }
 
+    auto ctrlForOAElement = trmlUnitElement.firstChildElement("CtrlForOA");
+    if( istringEqual("1",ctrlForOAElement.text().toStdString()) ) {
+      terminal.setControlForOutdoorAir(true);
+    }
+
     result = terminal;
   }
   else if( istringEqual("VAVReheatBox",typeElement.text().toStdString()) )
@@ -4738,6 +4743,11 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
           terminal.setMaximumFlowFractionDuringReheat(0.2);
         }
       }
+    }
+
+    auto ctrlForOAElement = trmlUnitElement.firstChildElement("CtrlForOA");
+    if( istringEqual("1",ctrlForOAElement.text().toStdString()) ) {
+      terminal.setControlForOutdoorAir(true);
     }
 
     result = terminal;
