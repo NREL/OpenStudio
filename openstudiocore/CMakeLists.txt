@@ -732,11 +732,6 @@ add_subdirectory(src/qwt)
 ###############################################################################
 
 ###############################################################################
-## expat
-#add_subdirectory(src/expat)
-###############################################################################
-
-###############################################################################
 ## jsoncpp
 add_subdirectory(src/jsoncpp)
 ###############################################################################
@@ -976,7 +971,6 @@ set(all_lib_targets
   openstudio_sdd
   openstudio_airflow
   ${QTWINMIGRATE_EXPORT}
-  #zkexpat
   qwt
   miniziplib
   sqlite
@@ -993,7 +987,6 @@ set(all_exe_targets
   GenerateIddFactory
   gbXMLToIdf
   OpenStudio
-  #litesql-gen
   ResultsViewer
 )
 
