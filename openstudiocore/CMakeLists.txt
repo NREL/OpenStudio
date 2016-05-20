@@ -203,8 +203,8 @@ set(project_directories
   model
   energyplus
   radiance
-  gbxml
-  bimserver
+  #gbxml
+  #bimserver
   airflow
   isomodel
   osversion
@@ -720,7 +720,7 @@ endforeach()
 #add_dependencies(ResultsViewer ResultsViewer_resources)
 
 # ruby, after loading projects
-add_subdirectory(ruby)
+#add_subdirectory(ruby)
 
 if(UNIX AND NOT APPLE)
 
@@ -875,8 +875,8 @@ set(all_lib_targets
   openstudio_energyplus
   openstudio_measure
   openstudio_radiance
-  openstudio_gbxml
-  openstudio_bimserver
+  #openstudio_gbxml
+  #openstudio_bimserver
   openstudio_isomodel
   #openstudio_lib
   openstudio_sdd

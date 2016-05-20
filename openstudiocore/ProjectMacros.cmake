@@ -361,72 +361,73 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/")
   target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS} ${RUBY_LIBRARY})
 
-  if(APPLE)
-    set(_NAME "${LOWER_NAME}.bundle")
-    # the following script will change the bindings to prefer the version of libruby included with SketchUp to the system library, preventing loading two different copies of libruby
-    add_custom_command(TARGET ${swig_target} POST_BUILD COMMAND ${RUBY_EXECUTABLE} "${CMAKE_SOURCE_DIR}/SketchUpInstallName.rb" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/${_NAME}")
-  elseif(RUBY_VERSION_MAJOR EQUAL "2" AND MSVC)
-    set(_NAME "${LOWER_NAME}.so")
-  else()
-    set(_NAME "${LOWER_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}")
-  endif()
+  ####Remove binding install related stuff. At least for now. Might need some of this to support sketchup
+  ####if(APPLE)
+  ####  set(_NAME "${LOWER_NAME}.bundle")
+  ####  # the following script will change the bindings to prefer the version of libruby included with SketchUp to the system library, preventing loading two different copies of libruby
+  ####  add_custom_command(TARGET ${swig_target} POST_BUILD COMMAND ${RUBY_EXECUTABLE} "${CMAKE_SOURCE_DIR}/SketchUpInstallName.rb" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/${_NAME}")
+  ####elseif(RUBY_VERSION_MAJOR EQUAL "2" AND MSVC)
+  ####  set(_NAME "${LOWER_NAME}.so")
+  ####else()
+  ####  set(_NAME "${LOWER_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+  ####endif()
 
-  if(WIN32 OR APPLE)
-    install(TARGETS ${swig_target} DESTINATION Ruby/openstudio/)
-
-
-    install(CODE "
-      #message(\"INSTALLING SWIG_TARGET: ${swig_target}  with NAME = ${_NAME}\")
-      include(GetPrerequisites)
-      get_prerequisites(\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/${_NAME} PREREQUISITES 1 1 \"\" \"${Prereq_Dirs}\")
-      #message(\"PREREQUISITES = \${PREREQUISITES}\")
+  ####if(WIN32 OR APPLE)
+  ####  install(TARGETS ${swig_target} DESTINATION Ruby/openstudio/)
 
 
-      if(WIN32)
-        list(REVERSE PREREQUISITES)
-      endif()
+  ####  install(CODE "
+  ####    #message(\"INSTALLING SWIG_TARGET: ${swig_target}  with NAME = ${_NAME}\")
+  ####    include(GetPrerequisites)
+  ####    get_prerequisites(\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/${_NAME} PREREQUISITES 1 1 \"\" \"${Prereq_Dirs}\")
+  ####    #message(\"PREREQUISITES = \${PREREQUISITES}\")
 
-      foreach(PREREQ IN LISTS PREREQUISITES)
-      
-        if(APPLE AND PREREQ MATCHES \".*libruby.*\")  
-          # skip updating references to libruby, we do not install this with the bindings
-        else()   
-          gp_resolve_item(\"\" \${PREREQ} \"\" \"${Prereq_Dirs}\" resolved_item_var)
-          execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\")
-  
-          get_filename_component(PREREQNAME \${resolved_item_var} NAME)
-  
-          if(APPLE)
-            execute_process(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/\${PREREQNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/${_NAME}\")
-            foreach(PR IN LISTS PREREQUISITES)
-              gp_resolve_item(\"\" \${PR} \"\" \"\" PRPATH)
-              get_filename_component( PRNAME \${PRPATH} NAME)
-              execute_process(COMMAND \"install_name_tool\" -change \"\${PR}\" \"@loader_path/\${PRNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\${PREREQNAME}\")
-            endforeach()
-          else()
-            if(EXISTS \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\")
-              file(READ \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" TEXT)
-            else()
-              set(TEXT \"\")
-            endif()
-            string(REGEX MATCH \${PREREQNAME} MATCHVAR \"\${TEXT}\")
-            if(NOT (\"\${MATCHVAR}\" STREQUAL \"\${PREREQNAME}\"))
-              file(APPEND \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" \"DL::dlopen \\\"\\\#{File.dirname(__FILE__)}/\${PREREQNAME}\\\"\n\")
-            endif()
-          endif()        
-        endif()
 
-      endforeach()
-    ")
-  else()
-    install(TARGETS ${swig_target} DESTINATION "${RUBY_MODULE_ARCH_DIR}")
-  endif()
-  if(UNIX)
-    # do not write file on unix, existence of file is checked before it is loaded
-    #install(CODE "
-    #  file(WRITE \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" \"# Nothing to see here\")
-    #")
-  endif()
+  ####    if(WIN32)
+  ####      list(REVERSE PREREQUISITES)
+  ####    endif()
+
+  ####    foreach(PREREQ IN LISTS PREREQUISITES)
+  ####    
+  ####      if(APPLE AND PREREQ MATCHES \".*libruby.*\")  
+  ####        # skip updating references to libruby, we do not install this with the bindings
+  ####      else()   
+  ####        gp_resolve_item(\"\" \${PREREQ} \"\" \"${Prereq_Dirs}\" resolved_item_var)
+  ####        execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\")
+  ####
+  ####        get_filename_component(PREREQNAME \${resolved_item_var} NAME)
+  ####
+  ####        if(APPLE)
+  ####          execute_process(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/\${PREREQNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/${_NAME}\")
+  ####          foreach(PR IN LISTS PREREQUISITES)
+  ####            gp_resolve_item(\"\" \${PR} \"\" \"\" PRPATH)
+  ####            get_filename_component( PRNAME \${PRPATH} NAME)
+  ####            execute_process(COMMAND \"install_name_tool\" -change \"\${PR}\" \"@loader_path/\${PRNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\${PREREQNAME}\")
+  ####          endforeach()
+  ####        else()
+  ####          if(EXISTS \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\")
+  ####            file(READ \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" TEXT)
+  ####          else()
+  ####            set(TEXT \"\")
+  ####          endif()
+  ####          string(REGEX MATCH \${PREREQNAME} MATCHVAR \"\${TEXT}\")
+  ####          if(NOT (\"\${MATCHVAR}\" STREQUAL \"\${PREREQNAME}\"))
+  ####            file(APPEND \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" \"DL::dlopen \\\"\\\#{File.dirname(__FILE__)}/\${PREREQNAME}\\\"\n\")
+  ####          endif()
+  ####        endif()        
+  ####      endif()
+
+  ####    endforeach()
+  ####  ")
+  ####else()
+  ####  install(TARGETS ${swig_target} DESTINATION "${RUBY_MODULE_ARCH_DIR}")
+  ####endif()
+  ####if(UNIX)
+  ####  # do not write file on unix, existence of file is checked before it is loaded
+  ####  #install(CODE "
+  ####  #  file(WRITE \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" \"# Nothing to see here\")
+  ####  #")
+  ####endif()
 
   execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\")
 
