@@ -342,39 +342,6 @@ namespace detail {
     return *ou;
   }
 
-  ValidityReport GasMixture_Impl::validityReport(StrictnessLevel level,bool checkNames) const {
-    ValidityReport report(level,getObject<GasMixture>());
-    populateValidityReport(report,checkNames);
-    return report;
-  }
-
-  void GasMixture_Impl::populateValidityReport(ValidityReport& report,bool checkNames) const {
-    // Inherit lower-level errors
-    ModelObject_Impl::populateValidityReport(report,checkNames);
-
-    if (report.level() == StrictnessLevel::Final) {
-      // all gases must be defined
-      for (unsigned i = 0, n = numGases(); i < n; ++i) {
-        try {
-          getGasType(i);
-        }
-        catch (...) {
-          report.insertError(DataError(mf_getGasTypeFieldIndex(i),
-                                       getObject<GasMixture>(),
-                                       DataErrorType::NullAndRequired));
-        }
-        try {
-          /* double fraction =*/ getGasFraction(i);
-        }
-        catch (...) {
-          report.insertError(DataError(mf_getGasFractionFieldIndex(i),
-                                       getObject<GasMixture>(),
-                                       DataErrorType::NullAndRequired));
-        }
-      }
-    }
-  }
-
   unsigned GasMixture_Impl::mf_getGasTypeFieldIndex(unsigned gasIndex) const {
     unsigned result(0);
     switch (gasIndex) {
