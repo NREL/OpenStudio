@@ -299,19 +299,12 @@ namespace detail {
     /** @name Queries */
     //@{
 
-    /** Returns a ValidityReport for this Gas object containing all errors at or below level. 
-     *  Adds on to the WorkspaceObject requirements by ensuring that custom values are specified
-     *  if needed at StrictnessLevel::Final. */
-    virtual ValidityReport validityReport(StrictnessLevel level,bool checkNames) const;
-
     //@}
     /** @name Other */
     //@{
 
     //@}
    protected:
-
-    virtual void populateValidityReport(ValidityReport& report,bool checkNames) const override;
 
    private:
     REGISTER_LOGGER("openstudio.model.Gas");

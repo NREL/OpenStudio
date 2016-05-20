@@ -176,12 +176,6 @@ namespace detail {
     /// get visible transmittance (unitless)
     virtual boost::optional<double> visibleTransmittance() const override;
 
-    /** Returns a ValidityReport for this Gas object containing all errors at or below level. 
-     *  Adds on to the WorkspaceObject requirements by ensuring that the layers in the construction
-     *  make sense. At StrictnessLevel::Draft, the construction should be opaque, fenestration, or 
-     *  model partition, and at StrictnessLevel::Final, have no null layers. */
-    virtual ValidityReport validityReport(StrictnessLevel level,bool checkNames) const;
-
     //@}
     /** @name Standards Methods */
     //@{
@@ -204,8 +198,6 @@ namespace detail {
    protected:
 
     friend class LayeredConstruction;
-
-    virtual void populateValidityReport(ValidityReport& report,bool checkNames) const override;
 
     // Erase all nullLayers, and return the new value for layerIndex, if it is affected by erasures.
     // If layerIndex was originally pointing to a nullLayer, upon return it will point to the first 

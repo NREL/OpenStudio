@@ -116,7 +116,7 @@ namespace detail {
 
     //@}
    protected:
-    virtual void populateValidityReport(ValidityReport& report,bool checkNames) const override;
+
    private:
     REGISTER_LOGGER("openstudio.model.SiteWaterMainsTemperature");
 

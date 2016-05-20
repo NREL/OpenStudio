@@ -293,65 +293,6 @@ namespace detail {
     return setDouble(OS_WindowMaterial_GasFields::MolecularWeight,value);
   }
 
-  ValidityReport Gas_Impl::validityReport(StrictnessLevel level,bool checkNames) const {
-    ValidityReport report(level,getObject<model::Gas>());
-    populateValidityReport(report,checkNames);
-    return report;
-  }
-
-  void Gas_Impl::populateValidityReport(ValidityReport& report,bool checkNames) const {
-    // Inherit lower-level errors
-    ModelObject_Impl::populateValidityReport(report,checkNames);
-
-    if (report.level() == StrictnessLevel::Final) {
-      try {
-        std::string gasType = this->gasType();
-        if (openstudio::istringEqual(gasType,"Custom")) {
-          if (!customConductivityCoefficientA()) {
-            report.insertError(DataError(OS_WindowMaterial_GasFields::ConductivityCoefficientA,
-                                         getObject<model::Gas>(),
-                                         DataErrorType::NullAndRequired));
-          }
-          if (!customConductivityCoefficientB()) {
-            report.insertError(DataError(OS_WindowMaterial_GasFields::ConductivityCoefficientB,
-                                         getObject<model::Gas>(),
-                                         DataErrorType::NullAndRequired));
-          }
-          if (!customViscosityCoefficientA()) {
-            report.insertError(DataError(OS_WindowMaterial_GasFields::ViscosityCoefficientA,
-                                         getObject<model::Gas>(),
-                                         DataErrorType::NullAndRequired));
-          }
-          if (!customViscosityCoefficientB()) {
-            report.insertError(DataError(OS_WindowMaterial_GasFields::ViscosityCoefficientB,
-                                         getObject<model::Gas>(),
-                                         DataErrorType::NullAndRequired));
-          }
-          if (!customSpecificHeatCoefficientA()) {
-            report.insertError(DataError(OS_WindowMaterial_GasFields::SpecificHeatCoefficientA,
-                                         getObject<model::Gas>(),
-                                         DataErrorType::NullAndRequired));
-          }
-          if (!customSpecificHeatCoefficientB()) {
-            report.insertError(DataError(OS_WindowMaterial_GasFields::SpecificHeatCoefficientB,
-                                         getObject<model::Gas>(),
-                                         DataErrorType::NullAndRequired));
-          }
-          if (!customMolecularWeight()) {
-            report.insertError(DataError(OS_WindowMaterial_GasFields::MolecularWeight,
-                                         getObject<model::Gas>(),
-                                         DataErrorType::NullAndRequired));
-          }
-        }
-      }
-      catch (...) {
-        // lack of gasType should already be listed
-        OS_ASSERT(report.numErrors() > 0);
-      }
-    } // if
-
-  }
-
   Quantity Gas_Impl::getThickness(bool returnIP) const {
     OptionalDouble value = thickness();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_GasFields::Thickness, value, returnIP);
