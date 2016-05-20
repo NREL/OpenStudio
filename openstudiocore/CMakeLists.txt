@@ -209,9 +209,9 @@ set(project_directories
   isomodel
   osversion
   measure
-  resultsviewer
-  model_editor
-  openstudio_lib
+  #resultsviewer
+  #model_editor
+  #openstudio_lib
   sdd
   cli
 )
@@ -717,7 +717,7 @@ foreach(D ${project_directories})
 endforeach()
 
 # Make sure resultsviewer has its resources built
-add_dependencies(ResultsViewer ResultsViewer_resources)
+#add_dependencies(ResultsViewer ResultsViewer_resources)
 
 # ruby, after loading projects
 add_subdirectory(ruby)
@@ -870,7 +870,7 @@ endif()
 set(all_lib_targets
   openstudio_osversion
   openstudio_model
-  openstudio_modeleditor
+  #openstudio_modeleditor
   openstudio_utilities
   openstudio_energyplus
   openstudio_measure
@@ -878,7 +878,7 @@ set(all_lib_targets
   openstudio_gbxml
   openstudio_bimserver
   openstudio_isomodel
-  openstudio_lib
+  #openstudio_lib
   openstudio_sdd
   openstudio_airflow
   ${QTWINMIGRATE_EXPORT}
