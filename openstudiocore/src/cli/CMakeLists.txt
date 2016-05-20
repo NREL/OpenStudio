@@ -256,4 +256,6 @@ if( APPLE )
   target_link_libraries(openstudio ${COREFOUNDATION_LIBRARY} )
 endif()
 
+install(TARGETS openstudio DESTINATION bin)
+
 
