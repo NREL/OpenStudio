@@ -675,10 +675,10 @@ endif()
 
 ###############################################################################
 # qtwinmigrate
-#if(WIN32)
-#  add_subdirectory(src/qtwinmigrate)
-#  include_directories(src/qtwinmigrate)
-#endif()
+if(WIN32)
+  add_subdirectory(src/qtwinmigrate)
+  include_directories(src/qtwinmigrate)
+endif()
 ###############################################################################
 
 ###############################################################################
@@ -848,11 +848,11 @@ endif()
 
 set(TARGETS_FILE ${CMAKE_BINARY_DIR}/OpenStudioTargets.cmake)
 
-#if(WIN32)
-#  set(QTWINMIGRATE_EXPORT "qtwinmigrate")
-#else()
-#  set(QTWINMIGRATE_EXPORT "")
-#endif()
+if(WIN32)
+  set(QTWINMIGRATE_EXPORT "qtwinmigrate")
+else()
+  set(QTWINMIGRATE_EXPORT "")
+endif()
 
 set(all_lib_targets
   openstudio_osversion
