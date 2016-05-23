@@ -585,7 +585,7 @@ else()
   set(RUBY_SOURCE_DIR_DEBUG "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-debug")
 endif()
 
-set(SHELL_COMMAND "sh -c")
+set(SHELL_COMMAND sh -c)
 if( WIN32 )
   set(SHELL_COMMAND "cmd /C")
 endif()
