@@ -284,9 +284,6 @@ elseif(WIN32)
   set(RADIANCE_LOCATION "${CMAKE_BINARY_DIR}/Radiance")
 endif()
 
-# Build Ruby gem
-option(BUILD_RUBY_GEM "Build Ruby Gem" OFF)
-
 if(BUILD_V8_BINDINGS)
   if(WIN32)
     message(SEND_ERROR "V8 is only tested and supported on Unix like systems")
@@ -303,34 +300,12 @@ if(BUILD_V8_BINDINGS)
 
 endif()
 
-if(BUILD_RUBY_GEM)
-  # Build Ruby gem and package up all the libs
-  option(BUILD_RUBY_GEM_WITH_LIBS "Package all required libs with the Ruby Gem" ON)
-
-  set(BUILD_PACKAGE ON)
-  set(CPACK_BINARY_DEB OFF)
-  set(CPACK_BINARY_NSIS OFF)
-  set(CPACK_BINARY_RPM OFF)
-  set(CPACK_BINARY_STGZ OFF)
-  set(CPACK_BINARY_TBZ2 OFF)
-  set(CPACK_BINARY_TZ OFF)
-  set(CPACK_BINARY_TGZ ON)
-
-  if(CPACK_BINARY_DEB OR CPACK_BINARY_NSIS OR CPACK_BINARY_RPM OR CPACK_BINARY_STGZ
-      OR CPACK_BINARY_TBZ2 OR CPACK_BINARY_TZ OR NOT CPACK_BINARY_TGZ OR NOT BUILD_PACKAGE)
-    message(FATAL_ERROR "To build the Ruby Gem please enable ONLY CPACK_BINARY_TGZ of the cpack binary options")
-  endif()
-
-  message("Enabling Ruby Gem overrides all of your packaging options. To build the Ruby Gem please type 'make package'")
-endif()
-
 if(MSVC)
   mark_as_advanced(CMAKE_CONFIGURATION_TYPES)
 endif()
 
 # Use PCH
 option(USE_PCH "Use precompiled headers" OFF)
-
 
 # Smart find qt location, looking for 64bit when appropriate
 # and preferring opengl installations
@@ -538,30 +513,6 @@ else()
   option(BUILD_SWIG "Build SWIG" ON)
 endif()
 
-#if(NOT WIN32)
-#  find_program(RUBY_EXECUTABLE NAMES ruby2.0 ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH)
-#
-#  find_package(Ruby 2.0)
-#
-#  if(NOT RUBY_FOUND)
-#    find_path(RUBY_CONFIG_INCLUDE_DIR
-#      NAMES ruby/config.h config.h
-#      HINTS /usr/include/x86_64-linux-gnu/ruby-2.0.0
-#    )
-#    find_package(Ruby 2.0)
-#  endif()
-#endif()
-#
-#if(APPLE)
-#  option(BUILD_RUBY "Build Ruby" OFF)
-#elseif(UNIX)
-#  if(RUBY_FOUND)
-#    option(BUILD_RUBY "Build Ruby" OFF)
-#  else()
-#    option(BUILD_RUBY "Build Ruby" ON)
-#  endif()
-#endif()
-
 if(NOT BUILD_SWIG)
   if(${SWIG_VERSION} VERSION_LESS "2.0.10")
     set(BUILD_SWIG ON)
@@ -632,7 +583,6 @@ else()
   set(RUBY_CONFIG_INCLUDE_DIR_DEBUG "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-debug/include/ruby-2.2.0/x64-mswin64_120")
   set(RUBY_EXECUTABLE_DEBUG "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install-debug/bin/ruby")
   set(RUBY_SOURCE_DIR_DEBUG "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-debug")
-
 endif()
 
 set(SHELL_COMMAND "sh -c")
@@ -649,50 +599,6 @@ ExternalProject_Add(OpenStudio-workflow-gem
 )
 # Get rid of that version id in the path, or find it or something that doesn't require maintenance
 set(OPENSTUDIO_WORKFLOW_GEM "${CMAKE_BINARY_DIR}/OpenStudio-workflow-gem-prefix/src/OpenStudio-workflow-gem-install")
-
-
-## Always unpack Ruby on Windows
-#if(WIN32)
-#  if(CMAKE_CL_64)
-#    ExternalProject_Add(Ruby
-#      URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0-p645-aws-win64.zip
-#      URL_MD5 4ad4ddc213a623b74f18f4c486651bc3
-#      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/x64-mingw32.patch
-#      CONFIGURE_COMMAND ""
-#      BUILD_COMMAND ""
-#      INSTALL_COMMAND ""
-#    )
-#    set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe)
-#    set(RUBY_DLL x64-msvcrt-ruby200.dll)
-#    set(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
-#    set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/libx64-msvcrt-ruby200.dll.a")
-#  else()
-#    ExternalProject_Add(Ruby
-#      URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0-p645-aws-win32.zip
-#      URL_MD5 712839ed5e7c21043026420ddd82b88c
-#      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/i386-mingw32.patch
-#      CONFIGURE_COMMAND ""
-#      BUILD_COMMAND ""
-#      INSTALL_COMMAND ""
-#    )
-#    set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe)
-#    set(RUBY_DLL msvcrt-ruby200.dll)
-#    set(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/${RUBY_DLL}")
-#    set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/libmsvcrt-ruby200.dll.a")
-#  endif()
-#
-#  # Install required gems
-#  set(ENV{BUNDLE_PATH} "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/ruby/gems/2.0.0")
-#  add_custom_command(TARGET Ruby
-#                     POST_BUILD
-#                     COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/bundle" "install" "--no-cache"
-#                     COMMAND "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby.exe" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/bundle" "clean" "--force"
-#                     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/dependencies/ruby"
-#                     COMMENT "Installing gems..."
-#  )
-#
-#endif()
-
 
 if(BUILD_SWIG)
   if(UNIX)
@@ -895,9 +801,7 @@ if(BUILD_BOOST)
   list(APPEND OpenStudioCore_DEPENDS Boost)
 endif()
 
-#if(BUILD_RUBY OR WIN32)
-  list(APPEND OpenStudioCore_DEPENDS Ruby)
-#endif()
+list(APPEND OpenStudioCore_DEPENDS Ruby)
 
 if(BUILD_NODE)
   list(APPEND OpenStudioCore_DEPENDS Node)
@@ -906,7 +810,6 @@ endif()
 if(BUILD_V8)
   list(APPEND OpenStudioCore_DEPENDS V8)
 endif()
-
 
 if(MSVC)
   set(OS_BUILD_COMMAND BUILD_COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build" --config $(Configuration) -- /maxcpucount)

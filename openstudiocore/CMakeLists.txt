@@ -372,8 +372,8 @@ if(BUILD_WITH_OPENSSL)
     file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/Debug/")
     file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/RelWithDebInfo/")
     file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/MinSizeRel/")
-    install(FILES "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "bin")
-    install(FILES "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION ${RUBY_MODULE_ARCH_DIR})
+    #install(FILES "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "bin")
+    #install(FILES "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION ${RUBY_MODULE_ARCH_DIR})
   endif()
 
 endif()
@@ -675,15 +675,15 @@ endif()
 
 ###############################################################################
 # qtwinmigrate
-if(WIN32)
-  add_subdirectory(src/qtwinmigrate)
-  include_directories(src/qtwinmigrate)
-endif()
+#if(WIN32)
+#  add_subdirectory(src/qtwinmigrate)
+#  include_directories(src/qtwinmigrate)
+#endif()
 ###############################################################################
 
 ###############################################################################
-# qwt
-add_subdirectory(src/qwt)
+## qwt
+#add_subdirectory(src/qwt)
 ###############################################################################
 
 ###############################################################################
@@ -721,19 +721,6 @@ endforeach()
 
 # ruby, after loading projects
 #add_subdirectory(ruby)
-
-if(UNIX AND NOT APPLE)
-
-  file(RELATIVE_PATH relative "${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}" "${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_DIR}")
-
-  install(CODE "
-    execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory \"\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}\")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink \"${relative}/openstudio.rb\" \"\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}/openstudio.rb\")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink \"${relative}/openstudio\" \"\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}/openstudio\")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink \"${relative}/cloud\" \"\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}/cloud\")
-  ")
-
-endif()
 
 # csharp, after loading projects
 if(BUILD_CSHARP_BINDINGS)
@@ -861,11 +848,11 @@ endif()
 
 set(TARGETS_FILE ${CMAKE_BINARY_DIR}/OpenStudioTargets.cmake)
 
-if(WIN32)
-  set(QTWINMIGRATE_EXPORT "qtwinmigrate")
-else()
-  set(QTWINMIGRATE_EXPORT "")
-endif()
+#if(WIN32)
+#  set(QTWINMIGRATE_EXPORT "qtwinmigrate")
+#else()
+#  set(QTWINMIGRATE_EXPORT "")
+#endif()
 
 set(all_lib_targets
   openstudio_osversion
@@ -882,7 +869,7 @@ set(all_lib_targets
   openstudio_sdd
   openstudio_airflow
   ${QTWINMIGRATE_EXPORT}
-  qwt
+  #qwt
   miniziplib
   sqlite
   jsoncpp
@@ -918,8 +905,8 @@ else()
 endif()
 
 # Used by some Ruby tests, remove eventually
-install(FILES "${CMAKE_SOURCE_DIR}/resources/resultsviewer/SmallOffice/SmallOffice.idf"
-        DESTINATION "${examplesdir}/resultsviewer/SmallOffice/")
+#install(FILES "${CMAKE_SOURCE_DIR}/resources/resultsviewer/SmallOffice/SmallOffice.idf"
+#        DESTINATION "${examplesdir}/resultsviewer/SmallOffice/")
 # Unnecessary files or just left out for size?
 #install(FILES ${CMAKE_BINARY_DIR}/resources/resultsviewer/SmallOffice/eplustbl.htm
 #        DESTINATION ${examplesdir}/resultsviewer/SmallOffice/)
@@ -943,48 +930,37 @@ if(UNIX AND NOT APPLE)
   endif()
 endif()
 
-if(NOT UNIX)
-  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_SOURCE_DIR}/../dependencies/strawberry-perl-5.16.2.1-32bit-portable-reduced.tar.bz2"
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    RESULT_VARIABLE rv)
+#if(NOT UNIX)
+#  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_SOURCE_DIR}/../dependencies/strawberry-perl-5.16.2.1-32bit-portable-reduced.tar.bz2"
+#    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+#    RESULT_VARIABLE rv)
+#
+#  install(DIRECTORY "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced" DESTINATION .)
+#
+#  set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
+#  include(InstallRequiredSystemLibraries)
+#  if(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
+#    install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
+#      DESTINATION "bin")
+#  endif()
+#endif()
 
-  install(DIRECTORY "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced" DESTINATION .)
-
-  get_filename_component(RubyEXEPath "${RUBY_EXECUTABLE}" DIRECTORY)
-  get_filename_component(RubyPath "${RubyEXEPath}" DIRECTORY)
-  install(DIRECTORY "${RubyPath}/" DESTINATION "ruby-install/ruby")
-
-  set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
-  include(InstallRequiredSystemLibraries)
-  if(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
-    install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-      DESTINATION "bin")
-
-    # Install the system libraries to the ruby dir
-    install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-      DESTINATION "Ruby/openstudio")
-
-    install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-      DESTINATION "ruby-install/ruby/bin")
-  endif()
-endif()
-
-# Package Radiance
-set(RADIANCE_LOCATION "" CACHE PATH "Location of Radiance to Package")
-if(APPLE)
-  install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
-elseif(MSVC)
-  install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
-else()
-  install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
-endif()
-
-# Package EnergyPlus
-get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
-if(APPLE)
-  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
-elseif(MSVC)
-  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
-else()
-  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
-endif()
+## Package Radiance
+#set(RADIANCE_LOCATION "" CACHE PATH "Location of Radiance to Package")
+#if(APPLE)
+#  install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+#elseif(MSVC)
+#  install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
+#else()
+#  install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
+#endif()
+#
+## Package EnergyPlus
+#get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
+#if(APPLE)
+#  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+#elseif(MSVC)
+#  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
+#else()
+#  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
+#endif()
