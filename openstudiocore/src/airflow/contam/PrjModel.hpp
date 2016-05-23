@@ -375,13 +375,13 @@ public:
   /** Replace an airflow element with a PlrTest1 airflow element */
   bool replaceAirflowElement(int nr, PlrTest1 element);
 
-  /** Returns a vector of all CvfDat control node in the model. */
+  /** Returns a vector of all CvfDat control nodes in the model. */
   std::vector<CvfDat> getCvfDat() const;
   /** Add an CvfDat airflow element to the model. */
   bool addControlNode(CvfDat element, bool sequence=true);
 
   /** Returns a vector of all simple air handling systems in the model. */
-  std::vector <Ahs> ahs() const;
+  std::vector<Ahs> ahs() const;
   /** Sets the model simple air handling systems vector. */
   void setAhs(const std::vector<Ahs> &ahs);
   /** Add a simple air handling system to the model. */

@@ -52,6 +52,12 @@
 #include "SiteGroundReflectance_Impl.hpp"
 #include "SiteGroundTemperatureBuildingSurface.hpp"
 #include "SiteGroundTemperatureBuildingSurface_Impl.hpp"
+#include "SiteGroundTemperatureDeep.hpp"
+#include "SiteGroundTemperatureDeep_Impl.hpp"
+#include "SiteGroundTemperatureShallow.hpp"
+#include "SiteGroundTemperatureShallow_Impl.hpp"
+#include "SiteGroundTemperatureFCfactorMethod.hpp"
+#include "SiteGroundTemperatureFCfactorMethod_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -110,6 +116,18 @@ namespace detail {
     OptionalSiteGroundTemperatureBuildingSurface siteGroundTemperatureBuildingSurface = this->siteGroundTemperatureBuildingSurface();
     if (siteGroundTemperatureBuildingSurface){ result.push_back(*siteGroundTemperatureBuildingSurface); }
 
+    // site ground temperature deep
+    OptionalSiteGroundTemperatureDeep siteGroundTemperatureDeep = this->siteGroundTemperatureDeep();
+    if (siteGroundTemperatureDeep){ result.push_back(*siteGroundTemperatureDeep); }
+
+    // site ground temperature shallow
+    OptionalSiteGroundTemperatureShallow siteGroundTemperatureShallow = this->siteGroundTemperatureShallow();
+    if (siteGroundTemperatureShallow){ result.push_back(*siteGroundTemperatureShallow); }
+
+    // site ground temperature FCfactorMethod
+    OptionalSiteGroundTemperatureFCfactorMethod siteGroundTemperatureFCfactorMethod = this->siteGroundTemperatureFCfactorMethod();
+    if (siteGroundTemperatureFCfactorMethod){ result.push_back(*siteGroundTemperatureFCfactorMethod); }
+
     // site water mains temperature
     OptionalSiteWaterMainsTemperature siteWaterMainsTemperature = this->siteWaterMainsTemperature();
     if (siteWaterMainsTemperature){ result.push_back(*siteWaterMainsTemperature); }
@@ -152,6 +170,9 @@ namespace detail {
     result.push_back(WeatherFileDays::iddObjectType());
     result.push_back(SiteGroundReflectance::iddObjectType());
     result.push_back(SiteGroundTemperatureBuildingSurface::iddObjectType());
+    result.push_back(SiteGroundTemperatureDeep::iddObjectType());
+    result.push_back(SiteGroundTemperatureShallow::iddObjectType());
+    result.push_back(SiteGroundTemperatureFCfactorMethod::iddObjectType());
     result.push_back(SiteWaterMainsTemperature::iddObjectType());
     result.push_back(ShadingSurfaceGroup::iddObjectType());
     return result;
@@ -280,10 +301,25 @@ namespace detail {
     return this->model().getOptionalUniqueModelObject<SiteGroundTemperatureBuildingSurface>();
   }
 
+  boost::optional<SiteGroundTemperatureDeep> Site_Impl::siteGroundTemperatureDeep() const
+  {
+    return this->model().getOptionalUniqueModelObject<SiteGroundTemperatureDeep>();
+  }
+
+  boost::optional<SiteGroundTemperatureShallow> Site_Impl::siteGroundTemperatureShallow() const
+  {
+    return this->model().getOptionalUniqueModelObject<SiteGroundTemperatureShallow>();
+  }
+
+  boost::optional<SiteGroundTemperatureFCfactorMethod> Site_Impl::siteGroundTemperatureFCfactorMethod() const
+  {
+    return this->model().getOptionalUniqueModelObject<SiteGroundTemperatureFCfactorMethod>();
+  }
+
   boost::optional<SiteWaterMainsTemperature> Site_Impl::siteWaterMainsTemperature() const
   {
     return this->model().getOptionalUniqueModelObject<SiteWaterMainsTemperature>();
-  } 
+  }
 
   boost::optional<ClimateZones> Site_Impl::climateZones() const {
     return this->model().getOptionalUniqueModelObject<ClimateZones>();
@@ -440,10 +476,25 @@ boost::optional<SiteGroundTemperatureBuildingSurface> Site::siteGroundTemperatur
   return getImpl<detail::Site_Impl>()->siteGroundTemperatureBuildingSurface();
 }
 
+boost::optional<SiteGroundTemperatureDeep> Site::siteGroundTemperatureDeep() const
+{
+  return getImpl<detail::Site_Impl>()->siteGroundTemperatureDeep();
+}
+
+boost::optional<SiteGroundTemperatureShallow> Site::siteGroundTemperatureShallow() const
+{
+  return getImpl<detail::Site_Impl>()->siteGroundTemperatureShallow();
+}
+
+boost::optional<SiteGroundTemperatureFCfactorMethod> Site::siteGroundTemperatureFCfactorMethod() const
+{
+  return getImpl<detail::Site_Impl>()->siteGroundTemperatureFCfactorMethod();
+}
+
 boost::optional<SiteWaterMainsTemperature> Site::siteWaterMainsTemperature() const
 {
   return getImpl<detail::Site_Impl>()->siteWaterMainsTemperature();
-} 
+}
 
 boost::optional<ClimateZones> Site::climateZones() const {
   return getImpl<detail::Site_Impl>()->climateZones();
@@ -484,4 +535,3 @@ Site::Site(Model& model)
 
 } // model
 } // openstudio
-

@@ -1,4 +1,4 @@
-!IDD_Version 1.11.1
+!IDD_Version 1.11.4
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -882,6 +882,183 @@ OS:Site:GroundTemperature:BuildingSurface,
        \type real
        \units C
        \default 18
+
+OS:Site:GroundTemperature:FCfactorMethod,
+       \memo These temperatures are specifically for underground walls and ground floors
+       \memo defined with the C-factor and F-factor methods, and should be close to the
+       \memo monthly average outdoor air temperature delayed by 3 months for the location.
+       \unique-object
+       \min-fields 13
+       \format singleLine
+  A1, \field Handle
+       \type handle
+       \required-field
+  N1 , \field January Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N2 , \field February Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N3 , \field March Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N4 , \field April Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N5 , \field May Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N6 , \field June Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N7 , \field July Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N8 , \field August Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N9 , \field September Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N10, \field October Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N11, \field November Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N12; \field December Ground Temperature
+       \units C
+       \type real
+       \default 13
+
+OS:Site:GroundTemperature:Shallow,
+       \memo These temperatures are specifically for the Surface Ground Heat Exchanger and
+       \memo should probably be close to the average outdoor air temperature for the location.
+       \memo They are not used in other models.
+       \unique-object
+       \min-fields 13
+       \format singleLine
+  A1, \field Handle
+       \type handle
+       \required-field
+  N1 , \field January Surface Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N2 , \field February Surface Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N3 , \field March Surface Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N4 , \field April Surface Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N5 , \field May Surface Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N6 , \field June Surface Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N7 , \field July Surface Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N8 , \field August Surface Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N9 , \field September Surface Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N10, \field October Surface Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N11, \field November Surface Ground Temperature
+       \units C
+       \type real
+       \default 13
+  N12; \field December Surface Ground Temperature
+       \units C
+       \type real
+       \default 13
+
+OS:Site:GroundTemperature:Deep,
+       \memo These temperatures are specifically for the ground heat exchangers that would use
+       \memo "deep" (3-4 m depth) ground temperatures for their heat source.
+       \memo They are not used in other models.
+       \unique-object
+       \min-fields 13
+       \format singleLine
+  A1, \field Handle
+       \type handle
+       \required-field
+  N1 , \field January Deep Ground Temperature
+       \units C
+       \type real
+       \default 16
+  N2 , \field February Deep Ground Temperature
+       \units C
+       \type real
+       \default 16
+  N3 , \field March Deep Ground Temperature
+       \units C
+       \type real
+       \default 16
+  N4 , \field April Deep Ground Temperature
+       \units C
+       \type real
+       \default 16
+  N5 , \field May Deep Ground Temperature
+       \units C
+       \type real
+       \default 16
+  N6 , \field June Deep Ground Temperature
+       \units C
+       \type real
+       \default 16
+  N7 , \field July Deep Ground Temperature
+       \units C
+       \type real
+       \default 16
+  N8 , \field August Deep Ground Temperature
+       \units C
+       \type real
+       \default 16
+  N9 , \field September Deep Ground Temperature
+       \units C
+       \type real
+       \default 16
+  N10, \field October Deep Ground Temperature
+       \units C
+       \type real
+       \default 16
+  N11, \field November Deep Ground Temperature
+       \units C
+       \type real
+       \default 16
+  N12; \field December Deep Ground Temperature
+       \units C
+       \type real
+       \default 16
      
 OS:Site:GroundReflectance,
   \unique-object
@@ -13899,7 +14076,7 @@ OS:Coil:Cooling:Water,
        \key DetailedAnalysis
   A9; \field Heat Exchanger Configuration
        \type choice
-       \default CounterFlow
+       \default CrossFlow
        \key CrossFlow
        \key CounterFlow
 
@@ -14700,26 +14877,60 @@ OS:Coil:Heating:Water:Baseboard,
       \required-field
       \reference BaseboardHeatingCoil
       \reference ConnectionObject
-  N1, \field U-Factor Times Area Value
+  A3 , \field Heating Design Capacity Method
+       \type choice
+       \key HeatingDesignCapacity
+       \key CapacityPerFloorArea
+       \key FractionOfAutosizedHeatingCapacity
+       \required-field
+       \note Enter the method used to determine the heating design capacity.
+       \note HeatingDesignCapacity = > selected when the design heating capacity value or autosize
+       \note is specified. CapacityPerFloorArea = > selected when the design heating capacity is
+       \note determine from user specified heating capacity per floor area and zone floor area.
+       \note FractionOfAutosizedHeatingCapacity = > is selected when the design heating capacity is
+       \note determined from a user specified fraction and the auto-sized design heating capacity.
+  N1 , \field Heating Design Capacity
+       \type real
+       \units W
+       \minimum 0.0
+       \autosizable
+       \required-field
+       \ip-units W
+       \note Enter the design heating capacity.Required field when the heating design capacity method
+       \note HeatingDesignCapacity.
+  N2 , \field Heating Design Capacity Per Floor Area
+       \type real
+       \units W/m2
+       \minimum 0.0
+       \required-field
+       \note Enter the heating design capacity per zone floor area.Required field when the heating design
+       \note capacity method field is CapacityPerFloorArea.
+  N3 , \field Fraction of Autosized Heating Design Capacity
+       \type real
+       \minimum 0.0
+       \required-field
+       \note Enter the fraction of auto - sized heating design capacity.Required field when capacity the
+       \note heating design capacity method field is FractionOfAutosizedHeatingCapacity.
+  N4, \field U-Factor Times Area Value
       \type real
       \autosizable
       \units W/K
       \default autosize
-  N2, \field Maximum Water Flow Rate
+  N5, \field Maximum Water Flow Rate
       \type real
       \autosizable
       \units m3/s
       \ip-units gal/min
       \default Autosize
-  N3, \field Convergence Tolerance
+  N6, \field Convergence Tolerance
       \type real
       \minimum> 0.0
       \default 0.001       
-  A3, \field Water Inlet Node Name
+  A4, \field Water Inlet Node Name
       \type object-list
       \required-field
       \object-list ConnectionNames
-  A4; \field Water Outlet Node Name
+  A5; \field Water Outlet Node Name
       \type object-list
       \required-field
       \object-list ConnectionNames
@@ -21537,7 +21748,7 @@ OS:ZoneHVAC:PackagedTerminalHeatPump,
        \note Needs to match in the supplemental heating coil object.
        \type object-list
        \required-field
-       \object-list HeatingCoilsGasElec
+       \object-list HeatingCoilName
   N10, \field Maximum Supply Air Temperature from Supplemental Heater
        \note Supply air temperature from the supplemental heater will not exceed this value.
        \type real

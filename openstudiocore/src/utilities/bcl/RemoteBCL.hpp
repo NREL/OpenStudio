@@ -243,6 +243,8 @@ namespace openstudio{
     /// Validate an OAuth key
     bool validateAuthKey(const std::string& authKey, const std::string& remoteUrl);
 
+    QString checkForRedirect(const QNetworkReply* reply) const;
+
     bool waitForLock(int msec) const;
 
     boost::optional<RemoteQueryResponse> processReply(QNetworkReply* reply);

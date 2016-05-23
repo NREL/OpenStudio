@@ -20,8 +20,10 @@
 #ifndef MODEL_SITEGROUNDTEMPERATUREBUILDINGSURFACE_HPP
 #define MODEL_SITEGROUNDTEMPERATUREBUILDINGSURFACE_HPP
 
+#include <vector>
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
+#include <utilities/time/Date.hpp>
 
 namespace openstudio {
 namespace model {
@@ -38,6 +40,8 @@ class MODEL_API SiteGroundTemperatureBuildingSurface : public ModelObject {
 
   /** @name Constructors and Destructors */
   //@{
+
+  explicit SiteGroundTemperatureBuildingSurface(Model& model);
 
   virtual ~SiteGroundTemperatureBuildingSurface() {}
 
@@ -99,6 +103,16 @@ class MODEL_API SiteGroundTemperatureBuildingSurface : public ModelObject {
 
   bool isDecemberGroundTemperatureDefaulted() const;
 
+  double getTemperatureByMonth(int month) const;
+
+  double getTemperatureByMonth(const openstudio::MonthOfYear & month) const;
+
+  bool isMonthDefaulted(int month) const;
+
+  bool isMonthDefaulted(const openstudio::MonthOfYear & month) const;
+
+  std::vector<double> getAllMonthlyTemperatures() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -151,6 +165,18 @@ class MODEL_API SiteGroundTemperatureBuildingSurface : public ModelObject {
 
   void resetDecemberGroundTemperature();
 
+  void setTemperatureByMonth(int month, double temperature);
+
+  void setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature);
+
+  void resetTemperatureByMonth(int month);
+
+  void resetTemperatureByMonth(const openstudio::MonthOfYear & month);
+
+  void resetAllMonths();
+
+  bool setAllMonthlyTemperatures(const std::vector<double> &monthly_temperatures);
+
   //@}
  protected:
   /// @cond
@@ -161,8 +187,6 @@ class MODEL_API SiteGroundTemperatureBuildingSurface : public ModelObject {
   friend class detail::SiteGroundTemperatureBuildingSurface_Impl;
 
   explicit SiteGroundTemperatureBuildingSurface(std::shared_ptr<detail::SiteGroundTemperatureBuildingSurface_Impl> impl);
-
-  explicit SiteGroundTemperatureBuildingSurface(Model& model);
 
   /// @endcond
  private:
@@ -180,4 +204,3 @@ typedef std::vector<SiteGroundTemperatureBuildingSurface> SiteGroundTemperatureB
 } // openstudio
 
 #endif // MODEL_SITEGROUNDTEMPERATUREBUILDINGSURFACE_HPP
-

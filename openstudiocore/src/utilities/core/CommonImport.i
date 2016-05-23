@@ -22,6 +22,7 @@
 %template(DoubleVector) std::vector<double>;
 %template(StringVector) std::vector<std::string>;
 %template(StringVectorVector) std::vector<std::vector<std::string> >;
+%template(IntVectorVector) std::vector<std::vector<int> >;
 
 %template(UnsignedSet) std::set<unsigned>;
 %template(IntSet) std::set<int>;
