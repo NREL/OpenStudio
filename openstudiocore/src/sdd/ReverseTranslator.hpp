@@ -119,6 +119,7 @@ namespace sdd {
     boost::optional<openstudio::model::ModelObject> translateCoilHeating(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateEvapClr(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateFan(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateHtRcvry(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateThermalZone(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateTrmlUnit(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateVRFSys(const QDomElement& vrfSysElement, const QDomDocument& doc, openstudio::model::Model& model);

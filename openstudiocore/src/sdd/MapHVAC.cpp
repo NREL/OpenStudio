@@ -141,6 +141,8 @@
 #include "../model/CoilHeatingWater_Impl.hpp"
 #include "../model/WaterToAirComponent.hpp"
 #include "../model/WaterToAirComponent_Impl.hpp"
+#include "../model/HeatExchangerAirToAirSensibleAndLatent.hpp"
+#include "../model/HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
 #include "../model/PlantLoop.hpp"
 #include "../model/PlantLoop_Impl.hpp"
 #include "../model/ZoneHVACComponent.hpp"
@@ -1655,6 +1657,87 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
         indirectEvapUsingReturn->getImpl<model::detail::EvaporativeCoolerIndirectResearchSpecial_Impl>()->setReliefAirInletNode(outboardReliefNode.get());
       }
     }
+
+    OS_ASSERT(oaSystem);
+    auto outboardOANode = oaSystem->outboardOANode().get();
+
+    for (int i = 0; i < airSegmentElements.count(); i++) {
+      auto airSegmentElement = airSegmentElements.at(i).toElement();
+      auto airSegmentTypeElement = airSegmentElement.firstChildElement("Type");
+
+      if(istringEqual(airSegmentTypeElement.text().toStdString(),"OutdoorAir")) {
+        auto airSegmentChildElements = airSegmentElement.childNodes();
+
+        for(int j = airSegmentChildElements.count() - 1; j > -1; j--) {
+          auto airSegmentChildElement = airSegmentChildElements.at(j).toElement();
+
+          if( (istringEqual(airSegmentChildElement.tagName().toStdString(),"Fan")) ) {
+            if( auto mo = translateFan(airSegmentChildElement,doc,model) ) {
+              mo->cast<model::HVACComponent>().addToNode(outboardOANode);
+            }
+          } else if( istringEqual(airSegmentChildElement.tagName().toStdString(),"CoilHtg") ) {
+            if( auto mo = translateCoilHeating(airSegmentChildElement,doc,model) ) {
+              mo->cast<model::HVACComponent>().addToNode(outboardOANode);
+            }
+          } else if( istringEqual(airSegmentChildElement.tagName().toStdString(),"CoilClg") ) {
+            if( auto mo = translateCoilCooling(airSegmentChildElement,doc,model) ) {
+              mo->cast<model::HVACComponent>().addToNode(outboardOANode);
+            }
+          } else if( istringEqual(airSegmentChildElement.tagName().toStdString(),"EvapClr") ) {
+            if( auto mo = translateEvapClr(airSegmentChildElement,doc,model) ) {
+              mo->cast<model::HVACComponent>().addToNode(outboardOANode);
+            }
+          }
+        }
+      }
+    }
+
+    // HtRecvryRef
+    auto htRcvryRefElement = airSystemOACtrlElement.firstChildElement("HtRcvryRef");
+    auto htRcvryElements = airSystemElement.elementsByTagName("HtRcvry");
+    for(int i = 0; i < htRcvryElements.count(); i++) {
+      auto htRcvryElement = htRcvryElements.at(i).toElement();
+      if( auto mo = translateHtRcvry(htRcvryElement,doc,model) ) {
+        auto hx = mo->cast<model::HeatExchangerAirToAirSensibleAndLatent>();
+        hx.addToNode(outboardOANode);
+
+        // TempCtrl
+        auto tempCtrl = htRcvryElement.firstChildElement("TempCtrl").text().toStdString();
+        if( istringEqual(tempCtrl,"None") ) {
+          hx.setSupplyAirOutletTemperatureControl(false);
+        } else if( istringEqual(tempCtrl,"Fixed") ) {
+          hx.setSupplyAirOutletTemperatureControl(true);
+          value = htRcvryElement.firstChildElement("FixedSupTemp").text().toDouble(&ok);
+          if( ok ) {
+            value = unitToUnit(value,"F","C").get();
+            model::ScheduleRuleset schedule(model);
+            schedule.setName(hx.nameString() + " Setpoint");
+            model::ScheduleDay scheduleDay = schedule.defaultDaySchedule();
+            scheduleDay.addValue(Time(1.0),value);
+
+            model::SetpointManagerScheduled spm(model,schedule);
+            spm.setName(hx.nameString() + " Setpoint");
+            auto nodeMO = hx.primaryAirOutletModelObject();
+            OS_ASSERT(nodeMO);
+            auto node = nodeMO->cast<model::Node>();
+            spm.addToNode(node);
+          }
+        } else if( istringEqual(tempCtrl,"Scheduled") ) {
+          hx.setSupplyAirOutletTemperatureControl(true);
+          auto schRefElement = htRcvryElement.firstChildElement("TempSetPtSchRef");
+          auto schRef = escapeName(schRefElement.text());
+          auto sch = model.getModelObjectByName<model::Schedule>(schRef);
+          if( sch ) {
+            model::SetpointManagerScheduled spm(model,sch.get());
+            spm.setName(hx.nameString() + " Setpoint");
+            auto nodeMO = hx.primaryAirOutletModelObject();
+            OS_ASSERT(nodeMO);
+            auto node = nodeMO->cast<model::Node>();
+            spm.addToNode(node);
+          }
+        }
+      }
+    }
   }
 
   for (int i = 0; i < airSegmentElements.count(); i++)
@@ -2994,6 +3077,138 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
   }
 
   return result;
+}
+
+boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRcvry(
+  const QDomElement& element, 
+  const QDomDocument& doc, 
+  openstudio::model::Model& model)
+{
+  if( ! istringEqual(element.tagName().toStdString(),"HtRcvry") ) {
+    return boost::none;
+  }
+
+  double value;
+  bool ok;
+
+  model::HeatExchangerAirToAirSensibleAndLatent hx(model); 
+
+  auto nameElement = element.firstChildElement("Name");
+  hx.setName(nameElement.text().toStdString());
+
+  // AvailSchRef
+  auto availSchRefElement = element.firstChildElement("AvailSchRef");
+  auto availSchRef = escapeName(availSchRefElement.text());
+  auto availSch = model.getModelObjectByName<model::Schedule>(availSchRef);
+  if( availSch ) {
+    hx.setAvailabilitySchedule(availSch.get());
+  }
+
+  // SupFlowRtd
+  auto supFlowRtdElement = element.firstChildElement("SupFlowRtd");
+  value = supFlowRtdElement.text().toDouble(&ok);
+  if( ok ) {
+    value = unitToUnit(value,"cfm","m^3/s").get();
+    hx.setNominalSupplyAirFlowRate(value);
+  }
+  
+  // HtgSensEff100
+  auto htgSensEff100Element = element.firstChildElement("HtgSensEff100");
+  value = htgSensEff100Element.text().toDouble(&ok);
+  if( ok ) {
+    hx.setSensibleEffectivenessat100HeatingAirFlow(value);
+  }
+
+  // HtgSensEff75
+  auto htgSensEff75Element = element.firstChildElement("HtgSensEff75");
+  value = htgSensEff75Element.text().toDouble(&ok);
+  if( ok ) {
+    hx.setSensibleEffectivenessat75HeatingAirFlow(value);
+  }
+  
+  // HtgLatEff100
+  auto htgLatEff100Element = element.firstChildElement("HtgLatEff100");
+  value = htgLatEff100Element.text().toDouble(&ok);
+  if( ok ) {
+    hx.setLatentEffectivenessat100HeatingAirFlow(value);
+  }
+
+  // HtgLatEff75
+  auto htgLatEff75Element = element.firstChildElement("HtgLatEff75");
+  value = htgLatEff75Element.text().toDouble(&ok);
+  if( ok ) {
+    hx.setLatentEffectivenessat75HeatingAirFlow(value);
+  }
+  
+  // ClgSensEff100
+  auto clgSensEff100Element = element.firstChildElement("ClgSensEff100");
+  value = clgSensEff100Element.text().toDouble(&ok);
+  if( ok ) {
+    hx.setSensibleEffectivenessat100CoolingAirFlow(value);
+  }
+
+  // ClgSensEff75
+  auto clgSensEff75Element = element.firstChildElement("ClgSensEff75");
+  value = clgSensEff75Element.text().toDouble(&ok);
+  if( ok ) {
+    hx.setSensibleEffectivenessat75CoolingAirFlow(value);
+  }
+  
+  // ClgLatEff100
+  auto clgLatEff100Element = element.firstChildElement("ClgLatEff100");
+  value = clgLatEff100Element.text().toDouble(&ok);
+  if( ok ) {
+    hx.setLatentEffectivenessat100CoolingAirFlow(value);
+  }
+
+  // ClgLatEff75
+  auto clgLatEff75Element = element.firstChildElement("ClgLatEff75");
+  value = clgLatEff75Element.text().toDouble(&ok);
+  if( ok ) {
+    hx.setLatentEffectivenessat75CoolingAirFlow(value);
+  }
+
+  // AuxPwr
+  auto auxPwrElement = element.firstChildElement("AuxPwr");
+  value = auxPwrElement.text().toDouble(&ok);
+  if( ok ) {
+    value = unitToUnit(value,"Btu/h","W").get();
+    hx.setNominalElectricPower(value);
+  }
+
+  auto type = element.firstChildElement("Type").text().toStdString();
+  hx.setHeatExchangerType(type);
+
+  auto defrostCtrl = element.firstChildElement("DefrostCtrl").text().toStdString();
+  hx.setFrostControlType(defrostCtrl);
+
+  value = element.firstChildElement("DefrostCtrlTemp").text().toDouble(&ok);
+  if( ok ) {
+    value = unitToUnit(value,"F","C").get();
+    hx.setThresholdTemperature(value);
+  }
+
+  // DefrostTimeFrac
+  value = element.firstChildElement("DefrostTimeFrac").text().toDouble(&ok);
+  if( ok ) {
+    hx.setInitialDefrostTimeFraction(value);
+  }
+
+  // DefrostTimeFracRt
+  value = element.firstChildElement("DefrostTimeFracRt").text().toDouble(&ok);
+  if( ok ) {
+    hx.setRateofDefrostTimeFractionIncrease(value);
+  }
+
+  // EconoLockout
+  auto econoLockout = element.firstChildElement("EconoLockout").text().toStdString();
+  if( istringEqual(econoLockout,"1") ) {
+    hx.setEconomizerLockout(true);
+  } else {
+    hx.setEconomizerLockout(false);
+  }
+
+  return hx;
 }
 
 boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateEvapClr(
