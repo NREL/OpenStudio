@@ -29,7 +29,7 @@
 
 #include "../core/Assert.hpp"
 
-#include <boost/filesystem/fstream.hpp>
+
 #include <boost/lexical_cast.hpp>
 #include <boost/tokenizer.hpp>
 #include <boost/algorithm/string.hpp>

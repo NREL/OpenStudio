@@ -21,7 +21,7 @@
 
 #include <resources.hxx>
 
-#include <boost/filesystem.hpp>
+
 #include "CoreFixture.hpp"
 #include "../Path.hpp"
 #include "../PathHelpers.hpp"
@@ -106,16 +106,16 @@ TEST_F(CoreFixture, Path_SetFileExtension)
   // example usage for assigning proper file extension
   path p = resourcesPath()/toPath("energyplus/5ZoneAirCooled/in");
   path result = setFileExtension(p,"idf");
-  EXPECT_TRUE(boost::filesystem::extension(p).empty());
-  EXPECT_TRUE(toString(boost::filesystem::extension(result)) == std::string(".idf"));
-  EXPECT_TRUE(boost::filesystem::exists(result));
-  EXPECT_TRUE(boost::filesystem::is_regular_file(result));
+  EXPECT_TRUE(openstudio::filesystem::extension(p).empty());
+  EXPECT_TRUE(toString(openstudio::filesystem::extension(result)) == std::string(".idf"));
+  EXPECT_TRUE(openstudio::filesystem::exists(result));
+  EXPECT_TRUE(openstudio::filesystem::is_regular_file(result));
 
   // passes out path as is if file extension already set
   p = resourcesPath()/toPath("energyplus/5ZoneAirCooled/in.idf");
   result = setFileExtension(p,"idf");
-  EXPECT_TRUE(toString(boost::filesystem::extension(p)) == std::string(".idf"));
-  EXPECT_TRUE(toString(boost::filesystem::extension(result)) == std::string(".idf"));
+  EXPECT_TRUE(toString(openstudio::filesystem::extension(p)) == std::string(".idf"));
+  EXPECT_TRUE(toString(openstudio::filesystem::extension(result)) == std::string(".idf"));
 
   // will not replace extension, but will log warning and alert user by returning empty path
   p = toPath("energyplus/5ZoneAirCooled/in.osm");
@@ -125,12 +125,12 @@ TEST_F(CoreFixture, Path_SetFileExtension)
   // will replace extension if asked
   p = toPath("energyplus/5ZoneAirCooled/in.osm");
   result = setFileExtension(p,"idf",true,false);
-  EXPECT_TRUE(toString(boost::filesystem::extension(result)) == std::string(".idf"));
+  EXPECT_TRUE(toString(openstudio::filesystem::extension(result)) == std::string(".idf"));
 
   // setFileExtension does not care about existence
   p = toPath("fakeDir/fakeDirOrFile");
   result = setFileExtension(p,"jjj",true);
-  EXPECT_TRUE(toString(boost::filesystem::extension(result)) == std::string(".jjj"));
+  EXPECT_TRUE(toString(openstudio::filesystem::extension(result)) == std::string(".jjj"));
 }
 
 TEST_F(CoreFixture, Path_MakeParentFolder)
@@ -138,41 +138,41 @@ TEST_F(CoreFixture, Path_MakeParentFolder)
   // path to directory
   // add one folder
   path p = resourcesPath()/toPath("energyplus/5ZoneAirCooled/MyTestFolder/");
-  EXPECT_FALSE(boost::filesystem::is_directory(p));
-  EXPECT_FALSE(boost::filesystem::exists(p));
+  EXPECT_FALSE(openstudio::filesystem::is_directory(p));
+  EXPECT_FALSE(openstudio::filesystem::exists(p));
   EXPECT_TRUE(makeParentFolder(p));
-  EXPECT_TRUE(boost::filesystem::is_directory(p));
-  EXPECT_TRUE(boost::filesystem::exists(p));
-  EXPECT_EQ(static_cast<unsigned>(1),boost::filesystem::remove_all(p));
+  EXPECT_TRUE(openstudio::filesystem::is_directory(p));
+  EXPECT_TRUE(openstudio::filesystem::exists(p));
+  EXPECT_EQ(static_cast<unsigned>(1),openstudio::filesystem::remove_all(p));
 
   // path to file
   // add parent folder
   p = resourcesPath()/toPath("energyplus/5ZoneAirCooled/MyTestFolder/in.idf");
-  EXPECT_FALSE(boost::filesystem::is_directory(p.parent_path()));
-  EXPECT_FALSE(boost::filesystem::exists(p.parent_path()));
-  EXPECT_FALSE(boost::filesystem::is_regular_file(p));
+  EXPECT_FALSE(openstudio::filesystem::is_directory(p.parent_path()));
+  EXPECT_FALSE(openstudio::filesystem::exists(p.parent_path()));
+  EXPECT_FALSE(openstudio::filesystem::is_regular_file(p));
   EXPECT_TRUE(makeParentFolder(p));
-  EXPECT_TRUE(boost::filesystem::is_directory(p.parent_path()));
-  EXPECT_TRUE(boost::filesystem::exists(p.parent_path()));
-  EXPECT_FALSE(boost::filesystem::is_regular_file(p));
-  EXPECT_EQ(static_cast<unsigned>(1),boost::filesystem::remove_all(p.parent_path()));
+  EXPECT_TRUE(openstudio::filesystem::is_directory(p.parent_path()));
+  EXPECT_TRUE(openstudio::filesystem::exists(p.parent_path()));
+  EXPECT_FALSE(openstudio::filesystem::is_regular_file(p));
+  EXPECT_EQ(static_cast<unsigned>(1),openstudio::filesystem::remove_all(p.parent_path()));
 
   // path to directory/directory
   // do not add any folders
   p = resourcesPath()/toPath("energyplus/5ZoneAirCooled/MyTestFolder1/MyTestFolder2/MyTestFolder3/");
-  EXPECT_FALSE(boost::filesystem::is_directory(p));
-  EXPECT_FALSE(boost::filesystem::exists(p));
+  EXPECT_FALSE(openstudio::filesystem::is_directory(p));
+  EXPECT_FALSE(openstudio::filesystem::exists(p));
   EXPECT_FALSE(makeParentFolder(p));
-  EXPECT_FALSE(boost::filesystem::is_directory(p));
-  EXPECT_FALSE(boost::filesystem::exists(p));
+  EXPECT_FALSE(openstudio::filesystem::is_directory(p));
+  EXPECT_FALSE(openstudio::filesystem::exists(p));
 
   // path to directory/directory
   // add folders recursively
   p = resourcesPath()/toPath("energyplus/5ZoneAirCooled/MyTestFolder1/MyTestFolder2/MyTestFolder3/");
-  EXPECT_FALSE(boost::filesystem::is_directory(p));
+  EXPECT_FALSE(openstudio::filesystem::is_directory(p));
   EXPECT_TRUE(makeParentFolder(p,path(),true));
-  EXPECT_TRUE(boost::filesystem::is_directory(p));
-  EXPECT_EQ(static_cast<unsigned>(3),boost::filesystem::remove_all(p.parent_path().parent_path().parent_path()));
+  EXPECT_TRUE(openstudio::filesystem::is_directory(p));
+  EXPECT_EQ(static_cast<unsigned>(3),openstudio::filesystem::remove_all(p.parent_path().parent_path().parent_path()));
 
   // path to directory/directory/file
   // use base
@@ -180,12 +180,12 @@ TEST_F(CoreFixture, Path_MakeParentFolder)
   p = toPath("energyplus/5ZoneAirCooled/MyTestFolder1/MyTestFolder2/MyTestFolder3/in.idf");
   path base = resourcesPath();
   path tmp = base/p;
-  EXPECT_FALSE(boost::filesystem::is_directory(tmp.parent_path()));
-  EXPECT_FALSE(boost::filesystem::is_regular_file(tmp));
+  EXPECT_FALSE(openstudio::filesystem::is_directory(tmp.parent_path()));
+  EXPECT_FALSE(openstudio::filesystem::is_regular_file(tmp));
   EXPECT_TRUE(makeParentFolder(p,base,true));
-  EXPECT_TRUE(boost::filesystem::is_directory(tmp.parent_path()));
-  EXPECT_FALSE(boost::filesystem::is_regular_file(tmp));
-  EXPECT_EQ(static_cast<unsigned>(3),boost::filesystem::remove_all(tmp.parent_path().parent_path().parent_path()));
+  EXPECT_TRUE(openstudio::filesystem::is_directory(tmp.parent_path()));
+  EXPECT_FALSE(openstudio::filesystem::is_regular_file(tmp));
+  EXPECT_EQ(static_cast<unsigned>(3),openstudio::filesystem::remove_all(tmp.parent_path().parent_path().parent_path()));
 }
 
 TEST_F(CoreFixture, Path_WindowsPathOnUnix)

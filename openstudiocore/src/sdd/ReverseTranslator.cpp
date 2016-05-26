@@ -102,6 +102,7 @@
 #include "../utilities/filetypes/EpwFile.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FilesystemHelpers.hpp"
 #include "../utilities/units/QuantityConverter.hpp"
 #include "../utilities/units/IPUnit.hpp"
 #include "../utilities/units/SIUnit.hpp"
@@ -114,11 +115,9 @@
 #include "../utilities/units/UnitFactory.hpp"
 #include "../utilities/units/Unit.hpp"
 
-#include <QFile>
 #include <QDomDocument>
 #include <QDomElement>
 #include <QThread>
-#include <QFileInfo>
 
 namespace openstudio {
 namespace sdd {
@@ -157,12 +156,11 @@ namespace sdd {
 
     boost::optional<openstudio::model::Model> result;
 
-    if (boost::filesystem::exists(path)){
-
-      QFile file(toQString(path));
-      if (file.open(QFile::ReadOnly)){
+    if (openstudio::filesystem::exists(path)){
+      openstudio::filesystem::ifstream file(path, std::ios_base::binary);
+      if (file.is_open()){
         QDomDocument doc;
-        bool ok = doc.setContent(&file);
+        bool ok = doc.setContent(openstudio::filesystem::read_as_QByteArray(file));
         file.close();
 
         if (ok) {
@@ -1459,8 +1457,7 @@ namespace sdd {
       std::string runPeriodName = "Run Period";
       QDomElement annualWeatherFileElement = element.firstChildElement("AnnualWeatherFile");
       if (!annualWeatherFileElement.isNull()){
-        QFileInfo annualWeatherFile(annualWeatherFileElement.text());
-        runPeriodName = toString(annualWeatherFile.baseName());
+        runPeriodName = openstudio::toString(openstudio::toPath(annualWeatherFileElement.text()).stem());
       }
 
       model::RunPeriod runPeriod = model.getUniqueModelObject<model::RunPeriod>();

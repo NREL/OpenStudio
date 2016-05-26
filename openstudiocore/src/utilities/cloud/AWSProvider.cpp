@@ -25,11 +25,11 @@
 #include "../core/Path.hpp"
 #include "../core/String.hpp"
 #include "../core/System.hpp"
+#include "../core/FilesystemHelpers.hpp"
 
 #include <OpenStudio.hxx>
 #include <QDateTime>
 #include <QDir>
-#include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -124,9 +124,9 @@ namespace openstudio{
       }
 
       if (overwriteExisting || m_secretKey.empty()) {
-        QFile file(QDir::homePath() + "/.ssh/aws");
-        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-          std::string secretKey = QString(file.readAll()).toStdString();
+        openstudio::filesystem::ifstream file(openstudio::toPath(QDir::homePath() + "/.ssh/aws"));
+        if (file.is_open()) {
+          const std::string secretKey = openstudio::filesystem::read_as_string(file);
           setSecretKey(secretKey);
         }
       }
@@ -171,15 +171,18 @@ namespace openstudio{
         settings.setValue("accessKey", toQString(m_accessKey));
       }
 
-      QFile file(QDir::homePath() + "/.ssh/aws");
-      if (overwriteExisting || !file.exists()) {
+      const auto awspath = openstudio::toPath(QDir::homePath() + "/.ssh/aws");
+      if (overwriteExisting || !openstudio::filesystem::exists(awspath)) {
         if (QDir::home().exists(".ssh") || QDir::home().mkdir(".ssh")) {
-          if (file.open(QIODevice::WriteOnly)) {
-            file.write(m_secretKey.c_str());
+          // I belive this code change to ofstream(truncate) is a bug fix, if we are 
+          // supposed to be overwriting the existing file
+          openstudio::filesystem::ofstream file(awspath, std::ios_base::trunc | std::ios_base::binary);
+          if (file.is_open()) {
+            file << m_secretKey;
           }
+          file.close();
         }
       }
-      file.close();
 
       if (overwriteExisting || settings.value("numWorkers").isNull()) {
         settings.setValue("numWorkers", m_numWorkers);
@@ -519,7 +522,7 @@ namespace openstudio{
 #else
       m_ruby /= toPath("bin/ruby");
 #endif
-      if (!boost::filesystem::exists(m_ruby)) {
+      if (!openstudio::filesystem::exists(m_ruby)) {
         LOG_AND_THROW("Ruby 2.0 executable cannot be found.");
       }
 
@@ -537,7 +540,7 @@ namespace openstudio{
         m_script = getApplicationRunDirectory().parent_path() / openstudio::toPath("Ruby/cloud/aws.rb");
 #endif
       }
-      if (!boost::filesystem::exists(m_script)) {
+      if (!openstudio::filesystem::exists(m_script)) {
         LOG_AND_THROW("AWS script cannot be found.");
       }
 
@@ -1737,12 +1740,13 @@ namespace openstudio{
           // Read keys and add to json
           auto jsonObject = json.object();
           for (const auto &filename : QStringList{"ec2_server_key.pem", "ec2_worker_key.pem", "ec2_worker_key.pub"}) {
-            QFile file(m_workingDir.path() + "/" + filename);
-            if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-              logError("Unable to open " + file.fileName().toStdString());
+            const auto file_path = openstudio::toPath(m_workingDir.path() + "/" + filename);
+            openstudio::filesystem::ifstream file(file_path);
+            if (!file.is_open()) {
+              logError("Unable to open " + toString(file_path));
               return false;
             }
-            jsonObject[filename] = QJsonValue(QString(file.readAll()));
+            jsonObject[filename] = QJsonValue(QString(openstudio::filesystem::read_as_QByteArray(file)));
           }
           json = QJsonDocument(jsonObject);
           m_awsSession.setPrivateKey(QString(json.toJson(QJsonDocument::Compact)).toStdString());
@@ -1784,12 +1788,13 @@ namespace openstudio{
           // Read keys and add to json
           auto jsonObject = json.object();
           for (const auto &filename : QStringList{"ec2_server_key.pem", "ec2_worker_key.pem", "ec2_worker_key.pub"}) {
-            QFile file(m_workingDir.path() + "/" + filename);
-            if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-              logError("Unable to open " + file.fileName().toStdString());
+            const auto file_path = openstudio::toPath(m_workingDir.path() + "/" + filename);
+            openstudio::filesystem::ifstream file(file_path);
+            if (!file.is_open()) {
+              logError("Unable to open " + openstudio::toString(file_path));
               return false;
             }
-            jsonObject[filename] = QJsonValue(QString(file.readAll()));
+            jsonObject[filename] = QJsonValue(QString(openstudio::filesystem::read_as_QByteArray(file)));
           }
           json = QJsonDocument(jsonObject);
           m_awsSession.setPrivateKey(QString(json.toJson(QJsonDocument::Compact)).toStdString());
@@ -2089,14 +2094,14 @@ namespace openstudio{
       json = QJsonDocument(jsonObject);
 
       for (const auto &filename : QStringList{"state.json", "ec2_server_key.pem", "ec2_worker_key.pem", "ec2_worker_key.pub"}) {
-        QFile file(m_workingDir.path() + "/" + filename);
+        openstudio::filesystem::ofstream file(openstudio::toPath(m_workingDir.path() + "/" + filename));
         if (filename == "state.json") {
-          if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-            file.write(json.toJson(QJsonDocument::Compact));
+          if (file.is_open()) {
+            openstudio::filesystem::write(file, json.toJson(QJsonDocument::Compact));
           }
         } else {
-          if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-            file.write(json.object()[filename].toString().toStdString().c_str());
+          if (file.is_open()) {
+            openstudio::filesystem::write(file, json.object()[filename].toString());
           }
         }
       }

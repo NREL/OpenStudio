@@ -48,6 +48,7 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/FilesystemHelpers.hpp"
 #include "../utilities/geometry/Geometry.hpp"
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/bcl/BCL.hpp"
@@ -63,8 +64,8 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/regex.hpp>
 #include <boost/math/constants/constants.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/filesystem/fstream.hpp>
+
+
 
 #include <cstring>
 #include <cmath>
@@ -92,7 +93,7 @@ using openstudio::model::OptionalShadingSurfaceGroup;
 using openstudio::model::OptionalInteriorPartitionSurfaceGroup;
 using openstudio::model::OptionalSurface;
 
-typedef boost::filesystem::basic_ofstream<char> OFSTREAM;
+typedef openstudio::filesystem::basic_ofstream<char> OFSTREAM;
 
 namespace openstudio {
 namespace radiance {
@@ -250,23 +251,23 @@ namespace radiance {
 
       LOG(Debug, "Working Directory: " + openstudio::toString(outPath));
 
-      if (boost::filesystem::exists(outPath)){
-        boost::filesystem::remove_all(outPath);
+      if (openstudio::filesystem::exists(outPath)){
+        openstudio::filesystem::remove_all(outPath);
       }
 
-      boost::filesystem::create_directories(outPath);
+      openstudio::filesystem::create_directories(outPath);
 
       //create radiance dirs for model export
       openstudio::path radDir = outPath;
-      boost::filesystem::create_directory(radDir / openstudio::toPath("scene"));
-      boost::filesystem::create_directory(radDir / openstudio::toPath("scene/glazing"));
-      boost::filesystem::create_directory(radDir / openstudio::toPath("scene/shades"));
-      boost::filesystem::create_directory(radDir / openstudio::toPath("materials"));
-      boost::filesystem::create_directory(radDir / openstudio::toPath("numeric"));
-      boost::filesystem::create_directory(radDir / openstudio::toPath("views"));
-      boost::filesystem::create_directory(radDir / openstudio::toPath("options"));
-      boost::filesystem::create_directory(radDir / openstudio::toPath("bsdf"));
-      boost::filesystem::create_directory(radDir / openstudio::toPath("skies"));
+      openstudio::filesystem::create_directory(radDir / openstudio::toPath("scene"));
+      openstudio::filesystem::create_directory(radDir / openstudio::toPath("scene/glazing"));
+      openstudio::filesystem::create_directory(radDir / openstudio::toPath("scene/shades"));
+      openstudio::filesystem::create_directory(radDir / openstudio::toPath("materials"));
+      openstudio::filesystem::create_directory(radDir / openstudio::toPath("numeric"));
+      openstudio::filesystem::create_directory(radDir / openstudio::toPath("views"));
+      openstudio::filesystem::create_directory(radDir / openstudio::toPath("options"));
+      openstudio::filesystem::create_directory(radDir / openstudio::toPath("bsdf"));
+      openstudio::filesystem::create_directory(radDir / openstudio::toPath("skies"));
 
       // get the building
       openstudio::model::Building building = m_model.getUniqueModelObject<openstudio::model::Building>();
@@ -1646,14 +1647,12 @@ namespace radiance {
 										}
 
 										// write shade BSDF
-										QFile outFile(toQString(shadeBSDFPath));
-										bool opened = outFile.open(QIODevice::WriteOnly);
-										if (!opened){
+                                                                                openstudio::filesystem::ofstream outfile(shadeBSDFPath);
+										if (!outfile.is_open()){
 											LOG_AND_THROW("Cannot write file to '" << toString(shadeBSDFPath) << "'");
 										}
-										QTextStream textStream(&outFile);
-										textStream << defaultFile;
-										outFile.close();
+                                                                                openstudio::filesystem::write(outfile, defaultFile);
+										outfile.close();
 
 									}
 
@@ -1679,13 +1678,11 @@ namespace radiance {
 									}
 
 									// write shade BSDF
-									QFile outFileAir(toQString(airBSDFPath));
-									bool opened = outFileAir.open(QIODevice::WriteOnly);
-									if (!opened){
+                                                                        openstudio::filesystem::ofstream outFileAir(airBSDFPath);
+									if (!outFileAir.is_open()){
 										LOG_AND_THROW("Cannot write file to '" << toString(airBSDFPath) << "'");
 									}
-									QTextStream textStream2(&outFileAir);
-									textStream2 << defaultFile;
+                                                                        openstudio::filesystem::write(outFileAir, defaultFile);
 									outFileAir.close();
 
 								}

@@ -41,12 +41,12 @@ namespace openstudio {
     : m_path(t_path), m_fswatcher(t_fswatcher)
   {
     connect(m_fswatcher.get(), &QFileSystemWatcher::directoryChanged, this, &ScriptsVectorController::directoryChanged);
-    if (boost::filesystem::exists(t_path))
+    if (openstudio::filesystem::exists(t_path))
     {
       m_fswatcher->addPath(openstudio::toQString(t_path));
     }
 
-    if (boost::filesystem::exists(t_path.parent_path()))
+    if (openstudio::filesystem::exists(t_path.parent_path()))
     {
       m_fswatcher->addPath(openstudio::toQString(t_path.parent_path()));
     }
@@ -81,13 +81,13 @@ namespace openstudio {
     openstudio::path path = openstudio::toPath(t_path);
 
     if (!m_fswatcher->directories().contains(toQString(m_path))
-        && boost::filesystem::exists(m_path))
+        && openstudio::filesystem::exists(m_path))
     {
       m_fswatcher->addPath(openstudio::toQString(m_path));
     }
 
     if (!m_fswatcher->directories().contains(toQString(m_path.parent_path()))
-        && boost::filesystem::exists(m_path.parent_path()))
+        && openstudio::filesystem::exists(m_path.parent_path()))
     {
       m_fswatcher->addPath(openstudio::toQString(m_path.parent_path()));
     }

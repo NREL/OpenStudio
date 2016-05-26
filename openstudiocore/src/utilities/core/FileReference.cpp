@@ -23,9 +23,9 @@
 #include "Checksum.hpp"
 #include "PathHelpers.hpp"
 #include "../time/DateTime.hpp"
+#include "../core/FilesystemHelpers.hpp"
 
 #include <QDateTime>
-#include <QFileInfo>
 
 namespace openstudio {
 
@@ -35,8 +35,7 @@ FileReference::FileReference(const openstudio::path& p)
     m_name(toString(p)),
     m_displayName(toString(p.filename())),
     m_path(completeAndNormalize(p)),
-    m_timestampCreate(DateTime::now()),
-    m_timestampLast(m_timestampCreate),
+    m_timestampLast(),
     m_checksumCreate(checksum(m_path)),
     m_checksumLast(m_checksumCreate)
 {
@@ -46,7 +45,7 @@ FileReference::FileReference(const openstudio::path& p)
   catch (...) {
     m_fileType = FileReferenceType::Unknown;
   }
-  update(openstudio::path(),false);
+  update(openstudio::path());
 }
 
 /** De-serialization constructor. Not for general use. */
@@ -57,7 +56,6 @@ FileReference::FileReference(const openstudio::UUID& uuid,
                              const std::string& description,
                              const openstudio::path& p,
                              const FileReferenceType& fileType,
-                             const DateTime& timestampCreate,
                              const DateTime& timestampLast,
                              const std::string& checksumCreate,
                              const std::string& checksumLast)
@@ -68,7 +66,6 @@ FileReference::FileReference(const openstudio::UUID& uuid,
     m_description(description),
     m_path(p),
     m_fileType(fileType),
-    m_timestampCreate(timestampCreate),
     m_timestampLast(timestampLast),
     m_checksumCreate(checksumCreate),
     m_checksumLast(checksumLast)
@@ -109,10 +106,6 @@ FileReferenceType FileReference::fileType() const {
   return m_fileType;
 }
 
-DateTime FileReference::timestampCreate() const {
-  return m_timestampCreate;
-}
-
 DateTime FileReference::timestampLast() const {
   return m_timestampLast;
 }
@@ -150,7 +143,7 @@ void FileReference::setPath(const openstudio::path& newPath) {
 bool FileReference::makePathAbsolute(const openstudio::path& searchDirectory) {
   // trivial completion
   openstudio::path currentPath = path();
-  if (currentPath.is_complete() && boost::filesystem::exists(currentPath)) {
+  if (currentPath.is_complete() && openstudio::filesystem::exists(currentPath)) {
     return true;
   }
   openstudio::path workingPath(currentPath);
@@ -161,8 +154,8 @@ bool FileReference::makePathAbsolute(const openstudio::path& searchDirectory) {
   if (searchDirectory.empty()) {
     return false;
   }
-  openstudio::path newPath = boost::filesystem::complete(workingPath,searchDirectory);
-  if (newPath.empty() || !boost::filesystem::exists(newPath)) {
+  openstudio::path newPath = openstudio::filesystem::complete(workingPath,searchDirectory);
+  if (newPath.empty() || !openstudio::filesystem::exists(newPath)) {
     return false;
   }
   m_path = completeAndNormalize(newPath);
@@ -187,21 +180,10 @@ bool FileReference::makePathRelative(const openstudio::path& basePath) {
 }
 
 bool FileReference::update(const openstudio::path& searchDirectory) {
-  return update(searchDirectory,true);
-}
-
-bool FileReference::update(const openstudio::path& searchDirectory,bool lastOnly) {
   makePathAbsolute(searchDirectory);
   openstudio::path p = path();
-  if (boost::filesystem::exists(p)) {
-    QFileInfo fileInfo(toQString(p));
-    OS_ASSERT(fileInfo.exists());
-
-    if (!lastOnly) {
-      m_timestampCreate = toDateTime(fileInfo.created());
-    }
-
-    m_timestampLast = toDateTime(fileInfo.lastModified());
+  if (openstudio::filesystem::exists(p)) {
+    m_timestampLast = DateTime::fromEpoch(openstudio::filesystem::last_write_time_as_time_t(p));
     m_checksumLast = checksum(p);
     m_versionUUID = createUUID();
     return true;
@@ -230,7 +212,6 @@ namespace detail {
     }
     fileReferenceData["path"] = toQString(fileReference.path());
     fileReferenceData["file_type"] = toQString(fileReference.fileType().valueName());
-    fileReferenceData["timestamp_create"] = toQString(fileReference.timestampCreate().toISO8601());
     fileReferenceData["timestamp_last"] = toQString(fileReference.timestampLast().toISO8601());
     fileReferenceData["checksum_create"] = toQString(fileReference.checksumCreate());
     fileReferenceData["checksum_last"] = toQString(fileReference.checksumLast());
@@ -240,16 +221,13 @@ namespace detail {
 
   FileReference toFileReference(const QVariant& variant, const VersionString& version) {
     QVariantMap map = variant.toMap();
-    OptionalDateTime timestampCreate, timestampLast;
+    OptionalDateTime timestampLast;
     if (version < VersionString("1.0.4")) {
-      timestampCreate = DateTime(map["timestamp_create"].toString().toStdString());
       timestampLast = DateTime(map["timestamp_last"].toString().toStdString());
     }
     else {
-      timestampCreate = DateTime::fromISO8601(map["timestamp_create"].toString().toStdString());
       timestampLast = DateTime::fromISO8601(map["timestamp_last"].toString().toStdString());
     }
-    OS_ASSERT(timestampCreate);
     OS_ASSERT(timestampLast);
     return FileReference(toUUID(map["uuid"].toString().toStdString()),
                          toUUID(map["version_uuid"].toString().toStdString()),
@@ -258,7 +236,6 @@ namespace detail {
                          map.contains("description") ? map["description"].toString().toStdString() : std::string(),
                          toPath(map["path"].toString()),
                          FileReferenceType(map["file_type"].toString().toStdString()),
-                         timestampCreate.get(),
                          timestampLast.get(),
                          map["checksum_create"].toString().toStdString(),
                          map["checksum_last"].toString().toStdString());

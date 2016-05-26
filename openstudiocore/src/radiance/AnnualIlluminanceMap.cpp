@@ -26,7 +26,7 @@
 
 #include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>
-#include <boost/filesystem/fstream.hpp>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/tokenizer.hpp>
 
@@ -56,7 +56,7 @@ namespace radiance{
     }
 
     // open file
-    boost::filesystem::ifstream file(path);
+    openstudio::filesystem::ifstream file(path);
 
     // keep track of line number
     unsigned lineNum = 0;

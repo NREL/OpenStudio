@@ -45,7 +45,7 @@
 
 #include "../../utilities/core/Compare.hpp"
 
-#include <boost/filesystem.hpp>
+
 
 #include <resources.hxx>
 #include <OpenStudio.hxx>
@@ -59,8 +59,8 @@ void testExampleModel(int minor, int major) {
 
   // iterate through osversion subfolders
   openstudio::path resources = resourcesPath() / toPath("osversion");
-  for (boost::filesystem::directory_iterator it(resources); it != boost::filesystem::directory_iterator(); ++it) {
-    if (boost::filesystem::is_directory(it->status())) {
+  for (openstudio::filesystem::directory_iterator it(resources); it != openstudio::filesystem::directory_iterator(); ++it) {
+    if (openstudio::filesystem::is_directory(it->status())) {
 
       QString stem = toQString(it->path().stem()).replace("_", ".");
       VersionString vs(toString(stem));
@@ -141,8 +141,8 @@ void testExampleComponent(int major, int minor) {
 
   // iterate through osversion subfolders
   openstudio::path resources = resourcesPath() / toPath("osversion");
-  for (boost::filesystem::directory_iterator it(resources); it != boost::filesystem::directory_iterator(); ++it) {
-    if (boost::filesystem::is_directory(it->status())) {
+  for (openstudio::filesystem::directory_iterator it(resources); it != openstudio::filesystem::directory_iterator(); ++it) {
+    if (openstudio::filesystem::is_directory(it->status())) {
 
       QString stem = toQString(it->path().stem()).replace("_", ".");
       VersionString vs(toString(stem));
@@ -473,7 +473,7 @@ TEST_F(OSVersionFixture,PrimaryObject) {
 
   openstudio::path path = resourcesPath() / toPath("osversion/unknown.osc");
 
-  ASSERT_TRUE(boost::filesystem::exists(path));
+  ASSERT_TRUE(openstudio::filesystem::exists(path));
 
   osversion::VersionTranslator translator;
   boost::optional<model::Component> component = translator.loadComponent(path);

@@ -50,6 +50,7 @@
 #include "../utilities/idf/WorkspaceObjectOrder.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FilesystemHelpers.hpp"
 #include "../utilities/geometry/BoundingBox.hpp"
 #include "../utilities/time/Time.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
@@ -70,7 +71,6 @@
 #include "../utilities/idd/IddEnums.hpp"
 
 #include <QFile>
-#include <QTextStream>
 #include <QThread>
 
 #include <sstream>

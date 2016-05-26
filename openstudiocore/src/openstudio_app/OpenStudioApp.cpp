@@ -125,7 +125,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<mea
 
   QFile f(":/library/OpenStudioPolicy.xml");
 
-  openstudio::model::AccessPolicyStore::Instance().loadFile(f);
+  openstudio::model::AccessPolicyStore::Instance().loadFile(f.readAll());
 
   QFile data(":/openstudiolib.qss");
   QString style;
@@ -921,10 +921,10 @@ void OpenStudioApp::versionUpdateMessageBox(const osversion::VersionTranslator& 
           itr != scriptfolders.end();
           ++itr)
       {
-        if (boost::filesystem::exists(*itr))
+        if (openstudio::filesystem::exists(*itr))
         {
           removedScriptDirs = true;
-          boost::filesystem::remove_all(*itr);
+          openstudio::filesystem::remove_all(*itr);
         }
       }
     }

@@ -172,7 +172,7 @@ OSItem* OSItem::makeItem(const OSItemId& itemId, OSItemType osItemType)
       result = new ModelObjectItem(*modelObject,itemId.isDefaulted(),osItemType);
     } else {
       openstudio::path p = openstudio::toPath(itemId.itemId());
-      if (boost::filesystem::exists(p))
+      if (openstudio::filesystem::exists(p))
       {
         result = new ScriptItem(p, osItemType);
       }

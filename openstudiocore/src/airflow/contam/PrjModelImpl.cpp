@@ -93,22 +93,20 @@ IndexModelImpl::IndexModelImpl(Reader &input)
 
 bool IndexModelImpl::read(openstudio::path path)
 {
-  return read(openstudio::toString(path));
+  setDefaults();
+  openstudio::filesystem::ifstream file(path);
+  m_valid = false;
+  if (file.is_open())
+  {
+    Reader input(file);
+    read(input);
+  }
+  return m_valid;
 }
 
 bool IndexModelImpl::read(std::string filename)
 {
-  setDefaults();
-  QFile fp(QString().fromStdString(filename));
-
-  m_valid = false;
-  if (fp.open(QFile::ReadOnly))
-  {
-    Reader input(&fp);
-    read(input);
-
-  }
-  return m_valid;
+  return read(openstudio::toPath(filename));
 }
 
 bool IndexModelImpl::read(Reader &input)

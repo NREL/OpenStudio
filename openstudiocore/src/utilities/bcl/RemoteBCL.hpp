@@ -29,6 +29,7 @@ class QNetworkAccessManager;
 class QNetworkRequest;
 class QMutex;
 class QSslError;
+class QFile;
 
 namespace openstudio{
 

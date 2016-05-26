@@ -29,6 +29,7 @@
 
 #include "OSAppBase.hpp"
 
+#include <QFile>
 #include <QBoxLayout>
 #include <QComboBox>
 #include <QDesktopWidget>
@@ -47,7 +48,7 @@
 #include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/Assert.hpp"
 
-#include <boost/filesystem.hpp>
+
 
 namespace openstudio {
 
@@ -218,7 +219,7 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir)
   std::vector<openstudio::path> radout;
   std::vector<openstudio::path> reports;
 
-  for ( boost::filesystem::recursive_directory_iterator end, dir(t_runDir); 
+  for ( openstudio::filesystem::recursive_directory_iterator end, dir(t_runDir); 
         dir != end; 
         ++dir ) 
   {

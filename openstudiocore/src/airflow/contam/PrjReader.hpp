@@ -20,11 +20,11 @@
 #ifndef AIRFLOW_CONTAM_PRJREADER_HPP
 #define AIRFLOW_CONTAM_PRJREADER_HPP
 
-#include <QFile>
 #include <QStringList>
 #include <QVector>
 #include <QSharedPointer>
 #include "../utilities/core/Logger.hpp"
+#include "../utilities/core/Filesystem.hpp"
 
 #include "PrjDefines.hpp"
 
@@ -34,7 +34,7 @@ namespace contam {
 class Reader
 {
 public:
-  explicit Reader(QFile *file);
+  explicit Reader(openstudio::filesystem::ifstream &file);
   explicit Reader(QString *string, int starting=0);
   ~Reader();
 
