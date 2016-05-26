@@ -38,8 +38,8 @@ namespace openstudio{
   BCLXML::BCLXML(const BCLXMLType& bclXMLType)
     : m_bclXMLType(bclXMLType)
   {
-    m_uid = removeBraces(UUID::createUuid());
-    m_versionId = removeBraces(UUID::createUuid());
+    m_uid = removeBraces(openstudio::createUUID());
+    m_versionId = removeBraces(openstudio::createUUID());
     m_versionModified = DateTime::nowUTC().toISO8601();
   }
 
@@ -830,13 +830,13 @@ namespace openstudio{
 
   void BCLXML::changeUID()
   {
-    m_uid = removeBraces(UUID::createUuid());
+    m_uid = removeBraces(openstudio::createUUID());
     // DLM: should this call incrementVersionId() ?
   }
 
   void BCLXML::incrementVersionId()
   {
-    m_versionId = removeBraces(UUID::createUuid());
+    m_versionId = removeBraces(openstudio::createUUID());
     m_versionModified = DateTime::nowUTC().toISO8601();
   }
 

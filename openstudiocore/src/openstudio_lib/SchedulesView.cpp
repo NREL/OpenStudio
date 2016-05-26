@@ -1416,7 +1416,7 @@ NewProfileView::NewProfileView(const model::ScheduleRuleset & scheduleRuleset, S
 void NewProfileView::onAddClicked()
 {
   int currentIndex = m_scheduleRuleComboBox->currentIndex();
-  UUID handle = m_scheduleRuleComboBox->itemData(currentIndex).toUuid();
+  UUID handle = toUUID(m_scheduleRuleComboBox->itemData(currentIndex).toString());
 
   switch (m_type)
   {
@@ -1435,20 +1435,20 @@ void NewProfileView::populateComboBox(const model::ScheduleRuleset & scheduleRul
 {
   
 
-  m_scheduleRuleComboBox->addItem("<New Profile>", UUID());
+  m_scheduleRuleComboBox->addItem("<New Profile>", toQString(UUID()));
 
-  m_scheduleRuleComboBox->addItem("Default Day Schedule", scheduleRuleset.defaultDaySchedule().handle());
+  m_scheduleRuleComboBox->addItem("Default Day Schedule", toQString(scheduleRuleset.defaultDaySchedule().handle()));
 
   if (!scheduleRuleset.isSummerDesignDayScheduleDefaulted()){
-    m_scheduleRuleComboBox->addItem("Summer Design Day Schedule", scheduleRuleset.summerDesignDaySchedule().handle());
+    m_scheduleRuleComboBox->addItem("Summer Design Day Schedule", toQString(scheduleRuleset.summerDesignDaySchedule().handle()));
   }
 
   if (!scheduleRuleset.isWinterDesignDayScheduleDefaulted()){
-    m_scheduleRuleComboBox->addItem("Winter Design Day Schedule", scheduleRuleset.winterDesignDaySchedule().handle());
+    m_scheduleRuleComboBox->addItem("Winter Design Day Schedule", toQString(scheduleRuleset.winterDesignDaySchedule().handle()));
   }
 
   for (const auto& rule : scheduleRuleset.scheduleRules()){
-    m_scheduleRuleComboBox->addItem(toQString(rule.name().get()), rule.daySchedule().handle());
+    m_scheduleRuleComboBox->addItem(toQString(rule.name().get()), toQString(rule.daySchedule().handle()));
   }
 
   m_scheduleRuleComboBox->setCurrentIndex(0);

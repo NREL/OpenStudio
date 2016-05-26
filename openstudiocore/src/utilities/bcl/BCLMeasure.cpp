@@ -363,7 +363,7 @@ namespace openstudio{
     }
 
     if (result.isEmpty()){
-      result = QString("A") + createUUID().toString();
+      result = QString("A") + openstudio::toQString(createUUID());
       result.replace('{',"").replace('}',"").replace('-',"");
     }else if (!startsWithLetter){
       result.prepend("A");

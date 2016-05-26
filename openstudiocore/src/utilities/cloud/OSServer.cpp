@@ -1755,7 +1755,7 @@ namespace openstudio{
       for (const QJsonValue& val : array) {
         if (val.toObject().contains("_id")){
           QString id = val.toObject()["_id"].toString();
-          UUID uuid(id);
+          UUID uuid = toUUID(id);
           result.push_back(uuid);
         }else{
           success = false;

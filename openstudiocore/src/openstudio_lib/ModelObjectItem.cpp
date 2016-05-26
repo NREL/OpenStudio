@@ -38,7 +38,7 @@ OSItemId modelObjectToItemId(const openstudio::model::ModelObject& modelObject, 
 {
   std::stringstream ss;
   ss << modelObject;
-  return OSItemId(modelObject.handle().toString(), modelToSourceId(modelObject.model()), isDefaulted, toQString(ss.str()));
+  return OSItemId(toQString(modelObject.handle()), modelToSourceId(modelObject.model()), isDefaulted, toQString(ss.str()));
 }
 
 QString modelToSourceId(const openstudio::model::Model& model)

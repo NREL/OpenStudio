@@ -1619,20 +1619,20 @@ namespace openstudio {
   boost::optional<model::ModelObject> OSDocument::getModelObject(const OSItemId& itemId) const
   {
     if (fromModel(itemId)){
-      Handle handle(itemId.itemId());
+      Handle handle(toUUID(itemId.itemId()));
       return m_model.getModelObject<model::ModelObject>(handle);
     }
     else if (fromComponentLibrary(itemId)){
       if (itemId.sourceId() == modelToSourceId(m_compLibrary)){
-        Handle handle(itemId.itemId());
+        Handle handle(toUUID(itemId.itemId()));
         return m_compLibrary.getModelObject<model::ModelObject>(handle);
       }
       else if (itemId.sourceId() == modelToSourceId(m_hvacCompLibrary)){
-        Handle handle(itemId.itemId());
+        Handle handle(toUUID(itemId.itemId()));
         return m_hvacCompLibrary.getModelObject<model::ModelObject>(handle);
       }
       else if (itemId.sourceId() == modelToSourceId(m_combinedCompLibrary)){
-        Handle handle(itemId.itemId());
+        Handle handle(toUUID(itemId.itemId()));
         return m_combinedCompLibrary.getModelObject<model::ModelObject>(handle);
       }
     }

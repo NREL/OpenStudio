@@ -810,12 +810,12 @@ namespace detail{
     QDomText text;
 
     childElement = doc.createElement(QString::fromStdString("UUID"));
-    text = doc.createTextNode(m_uuid.toString());
+    text = doc.createTextNode(openstudio::toQString(m_uuid));
     childElement.appendChild(text);
     element.appendChild(childElement);
 
     childElement = doc.createElement(QString::fromStdString("VersionUUID"));
-    text = doc.createTextNode(m_versionUUID.toString());
+    text = doc.createTextNode(openstudio::toQString(m_versionUUID));
     childElement.appendChild(text);
     element.appendChild(childElement);
 

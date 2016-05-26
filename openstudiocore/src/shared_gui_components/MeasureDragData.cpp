@@ -59,7 +59,7 @@ MeasureDragData::MeasureDragData(const QByteArray & data)
   QDomElement idElement = measureDragDataElement.firstChildElement("ID");
   QString idString = idElement.text();
   
-  m_id = UUID(idString);
+  m_id = toUUID(idString);
 }
 
 MeasureDragData::MeasureDragData(const UUID & id)
@@ -105,7 +105,7 @@ QString MeasureDragData::toXml()
   QDomElement idElement = doc.createElement("ID");
   measureDragDataElement.appendChild(idElement);
 
-  QDomText idText = doc.createTextNode(m_id.toString());
+  QDomText idText = doc.createTextNode(toQString(m_id));
   idElement.appendChild(idText);
 
   return doc.toString();
