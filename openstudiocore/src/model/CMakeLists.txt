@@ -509,6 +509,9 @@ set(${target_name}_src
   Generator.hpp
   Generator_Impl.hpp
   Generator.cpp
+  GeneratorMicroTurbine.hpp
+  GeneratorMicroTurbine_Impl.hpp
+  GeneratorMicroTurbine.cpp
   GeneratorPhotovoltaic.hpp
   GeneratorPhotovoltaic_Impl.hpp
   GeneratorPhotovoltaic.cpp
