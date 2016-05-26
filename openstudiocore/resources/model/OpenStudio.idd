@@ -25791,3 +25791,245 @@ OS:Output:Variable,
        \type object-list
        \object-list ScheduleNames
 
+OS:Generator:MicroTurbine,
+      \memo MicroTurbine generators are small combustion turbines (e.g., 25kW to 500kW). The model
+      \memo calculates electrical power output, fuel use, standby and ancillary power.
+      \memo Energy recovery from exhaust air can be used to heat water.
+      \min-fields 120
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+      \required-field
+      \type alpha
+      \reference GeneratorNames
+      \reference MicroTurbineGeneratorNames
+  N1, \field Reference Electrical Power Output
+      \required-field
+      \type real
+      \units W
+      \minimum> 0.0
+  N2, \field Minimum Full Load Electrical Power Output
+      \type real
+      \units W
+      \minimum 0.0
+      \default 0.0
+  N3, \field Maximum Full Load Electrical Power Output
+      \type real
+      \units W
+      \minimum> 0.0
+      \note If left blank, Maximum Full Load Electrical Power Output will be set
+      \note equal to the Reference Electrical Power Output.
+  N4, \field Reference Electrical Efficiency Using Lower Heating Value
+      \required-field
+      \type real
+      \minimum> 0.0
+      \maximum 1.0
+      \note Electric power output divided by fuel energy input (LHV basis)
+      \note at reference conditions.
+  N5, \field Reference Combustion Air Inlet Temperature
+      \type real
+      \units C
+      \default 15.0
+  N6, \field Reference Combustion Air Inlet Humidity Ratio
+      \type real
+      \units kgWater/kgDryAir
+      \minimum> 0.0
+      \default 0.00638
+  N7, \field Reference Elevation
+      \type real
+      \units m
+      \minimum -300.0
+      \default 0.0
+  A3, \field Electrical Power Function of Temperature and Elevation Curve Name
+      \required-field
+      \type object-list
+      \object-list BiquadraticCurves
+      \object-list BiVariateTables
+      \note curve = a + b*T + c*T**2 + d*Elev + e*Elev**2 + f*T*Elev
+      \note T = combustion air inlet temperature (C)
+      \note Elev = elevation (m)
+  A4, \field Electrical Efficiency Function of Temperature Curve Name
+      \required-field
+      \type object-list
+      \object-list QuadraticCubicCurves
+      \note Quadratic curve = a + b*T + c*T**2
+      \note Cubic curve = a + b*T + c*T**2 + d*T**3
+      \note T = combustion air inlet temperature (C)
+  A5, \field Electrical Efficiency Function of Part Load Ratio Curve Name
+      \required-field
+      \type object-list
+      \object-list QuadraticCubicCurves
+      \note Quadratic curve = a + b*PLR + c*PLR**2
+      \note Cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
+      \note PLR = ratio of Generator Load to steady state Electrical Power Output at
+      \note current operating conditions
+  A6, \field Fuel Type
+      \type choice
+      \key NaturalGas
+      \key PropaneGas
+      \default NaturalGas
+  N8, \field Fuel Higher Heating Value
+      \type real
+      \units kJ/kg
+      \default 50000
+      \minimum> 0.0
+  N9, \field Fuel Lower Heating Value
+      \type real
+      \units kJ/kg
+      \default 45450
+      \minimum> 0.0
+ N10, \field Standby Power
+      \type real
+      \units W
+      \default 0.0
+      \minimum 0.0
+      \note Electric power consumed when the generator is available but not being called
+      \note by the Electric Load Center.
+ N11, \field Ancillary Power
+      \type real
+      \units W
+      \default 0.0
+      \minimum 0.0
+      \note Electric power consumed by ancillary equipment (e.g., external fuel pressurization pump).
+      \note Set to zero if Reference Electrical Power Output is the 'net' value (ancillary power
+      \note already deducted). Input value is positive, but indicates negative electric generation.
+  A7, \field Ancillary Power Function of Fuel Input Curve Name
+      \type object-list
+      \object-list QuadraticCurves
+      \object-list UniVariateTables
+      \note Quadratic curve = a + b*mdot + c*mdot**2
+      \note mdot = fuel mass flow rate (kg/s)
+      \note If left blank, model assumes ancillary power defined in previous field is constant
+      \note whenever the generator is operating.
+  A8, \field Heat Recovery Water Inlet Node Name
+      \type node
+  A9, \field Heat Recovery Water Outlet Node Name
+      \type node
+ N12, \field Reference Thermal Efficiency Using Lower Heat Value
+      \type real
+      \minimum 0.0
+      \maximum 1.0
+      \default 0.0
+      \note Reference thermal efficiency (heat recovery to water) based on the
+      \note Lower Heating Value (LHV) of the fuel.
+ N13, \field Reference Inlet Water Temperature
+      \type real
+      \units C
+  A10, \field Heat Recovery Water Flow Operating Mode
+      \type choice
+      \key PlantControl
+      \key InternalControl
+      \default PlantControl
+      \note PlantControl means the heat recovery water flow rate is determined by the plant,
+      \note but the user needs to supply a heat recovery water flow rate.
+      \note InternalControl means the heat recovery water flow rate is controlled by this generator.
+      \note If 'InternalControl' is selected, then the user needs to supply a reference heat
+      \note recovery water flow rate and optionally the name of a heat recovery flow rate modifier curve.
+ N14, \field Reference Heat Recovery Water Flow Rate
+      \type real
+      \units m3/s
+      \ip-units gal/min
+      \minimum> 0.0
+ A11, \field Heat Recovery Water Flow Rate Function of Temperature and Power Curve Name
+      \type object-list
+      \object-list BiquadraticCurves
+      \object-list BiVariateTables
+      \note curve = a + b*T + c*T**2 + d*Pnet + e*Pnet + f*T*Pnet
+      \note T = heat recovery inlet water temperature
+      \note Pnet = net power output = electric power output - ancillary power
+      \note If left blank, model assumes the heat recovery water flow rate is constant whenever the
+      \note generator is operating, at the Reference HR Water Flow Rate defined in the previous field.
+ A12, \field Thermal Efficiency Function of Temperature and Elevation Curve Name
+      \type object-list
+      \object-list BicubicBiquadraticCurves
+      \object-list BiVariateTables
+      \note Bicubic curve = a + b*T + c*T**2 + d*Elev + e*Elev**2 + f*T*Elev + g*T**3 + h*Elev**3 + i*T**2*Elev + j*T*Elev**2
+      \note Biquadratic curve = a + b*T + c*T**2 + d*Elev + e*Elev**2 + f*T*Elev
+      \note T = combustion air inlet temperature (C)
+      \note Elev = elevation (m)
+      \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
+ A13, \field Heat Recovery Rate Function of Part Load Ratio Curve Name
+      \type object-list
+      \object-list QuadraticCubicCurves
+      \object-list UniVariateTables
+      \note Quadratic curve = a + b*PLR + c*PLR**2
+      \note Cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
+      \note PLR = ratio of Generator Load to steady state Electrical Power Output at
+      \note current operating conditions
+      \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
+ A14, \field Heat Recovery Rate Function of Inlet Water Temperature Curve Name
+      \type object-list
+      \object-list QuadraticCurves
+      \object-list UniVariateTables
+      \note Quadratic curve = a + b*T + c*T**2
+      \note T = inlet water temperature (C)
+      \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
+ A15, \field Heat Recovery Rate Function of Water Flow Rate Curve Name
+      \type object-list
+      \object-list QuadraticCurves
+      \object-list UniVariateTables
+      \note Quadratic curve = a + b*Flow + c*Flow**2
+      \note Flow = flow rate of water through the heat exchanger (m3/s)
+      \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
+ N15, \field Minimum Heat Recovery Water Flow Rate
+      \type real
+      \units m3/s
+      \ip-units gal/min
+      \minimum 0.0
+      \default 0.0
+ N16, \field Maximum Heat Recovery Water Flow Rate
+      \type real
+      \units m3/s
+      \ip-units gal/min
+      \minimum 0.0
+      \default 0.0
+ N17, \field Maximum Heat Recovery Water Temperature
+      \type real
+      \units C
+ A16, \field Combustion Air Inlet Node Name
+      \type node
+      \note Must be an outdoor air node.
+ A17, \field Combustion Air Outlet Node Name
+      \type node
+ N18, \field Reference Exhaust Air Mass Flow Rate
+      \type real
+      \units kg/s
+      \minimum> 0.0
+ A18, \field Exhaust Air Flow Rate Function of Temperature Curve Name
+      \type object-list
+      \object-list QuadraticCubicCurves
+      \object-list UniVariateTables
+      \note Quadratic curve = a + b*T + c*T**2
+      \note Cubic curve = a + b*T + c*T**2 + d*T**3
+      \note T = combustion air inlet temperature (C)
+      \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
+ A19, \field Exhaust Air Flow Rate Function of Part Load Ratio Curve Name
+      \type object-list
+      \object-list QuadraticCubicCurves
+      \object-list UniVariateTables
+      \note Quadratic curve = a + b*PLR + c*PLR**2
+      \note Cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
+      \note PLR = ratio of Generator Load to steady state Electrical Power Output at
+      \note current operating conditions.
+      \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
+ N19, \field Nominal Exhaust Air Outlet Temperature
+      \type real
+      \note Exhaust air outlet temperature at reference conditions.
+ A20, \field Exhaust Air Temperature Function of Temperature Curve Name
+      \type object-list
+      \object-list QuadraticCubicCurves
+      \object-list UniVariateTables
+      \note Quadratic curve = a + b*T + c*T**2
+      \note Cubic curve = a + b*T + c*T**2 + d*T**3
+      \note T = combustion air inlet temperature (C)
+      \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
+ A21; \field Exhaust Air Temperature Function of Part Load Ratio Curve Name
+      \type object-list
+      \object-list QuadraticCubicCurves
+      \object-list UniVariateTables
+      \note Quadratic curve = a + b*PLR + c*PLR**2
+      \note Cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
+      \note PLR = ratio of Generator Load to steady state Electrical Power Output at
+      \note current operating conditions.
+      \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
