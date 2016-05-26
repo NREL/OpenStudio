@@ -1533,6 +1533,24 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
         }
       }
 
+      // CtrlType
+      auto ctrlType = airSystemOACtrlElement.firstChildElement("CtrlType").text().toStdString();
+      oaController.setEconomizerControlActionType(ctrlType);
+
+      // MinLimitType
+      auto minLimitType = airSystemOACtrlElement.firstChildElement("MinLimitType").text().toStdString();
+      oaController.setMinimumLimitType(minLimitType);
+
+      // HtRcvryBypassCtrlType
+      auto htRcvryBypassCtrlType = airSystemOACtrlElement.firstChildElement("HtRcvryBypassCtrlType").text().toStdString();
+      oaController.setHeatRecoveryBypassControlType(htRcvryBypassCtrlType);
+
+      // EconoAvailSchRef
+      auto econoAvailSchRef = airSystemOACtrlElement.firstChildElement("EconoAvailSchRef").text().toStdString();
+      if( auto schedule = model.getModelObjectByName<model::Schedule>(econoAvailSchRef) ) {
+        oaController.setTimeofDayEconomizerControlSchedule(schedule.get());
+      }
+
       // OASchMthd 
       QDomElement oaSchMthdElement = airSystemOACtrlElement.firstChildElement("OASchMthd");
       if( istringEqual(oaSchMthdElement.text().toStdString(),"Constant") )
@@ -1598,13 +1616,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
       // EconoIntegration
       QDomElement econoIntegrationElement = airSystemOACtrlElement.firstChildElement("EconoIntegration");
-      if( istringEqual(econoIntegrationElement.text().toStdString(),"Integrated") )
+      if( istringEqual(econoIntegrationElement.text().toStdString(),"LockoutWithHeating") )
       {
-        oaController.setLockoutType("NoLockout");
+        oaController.setLockoutType("LockoutWithHeating");
       }
       else if( istringEqual(econoIntegrationElement.text().toStdString(),"NonIntegrated") )
       {
         oaController.setLockoutType("LockoutWithCompressor");
+      } else {
+        oaController.setLockoutType("NoLockout");
       }
 
       // EconoHiTempLockout
