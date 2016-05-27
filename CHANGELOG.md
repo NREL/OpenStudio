@@ -1,3 +1,19 @@
+## OpenStudio v1.11.4
+###### 2016-05-27 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.11.3...v1.11.4 )
+
+- ![Fixed:][fixed] [#2126]( https://github.com/NREL/OpenStudio/issues/2126 ), 1.10.4 EnergyPlus crash with Output:Table:SummaryReports measure
+- ![Fixed:][fixed] [#2129]( https://github.com/NREL/OpenStudio/issues/2129 ), Additional Radiance Measure Server Fixes
+- ![Fixed:][fixed] [#2188]( https://github.com/NREL/OpenStudio/issues/2188 ), change 90.1 construction sets to match the PRM
+- ![Fixed:][fixed] [#2223]( https://github.com/NREL/OpenStudio/issues/2223 ), Controller Mechanical Ventilation Availability Schedule
+- ![Fixed:][fixed] [#2226]( https://github.com/NREL/OpenStudio/issues/2226 ), AirConditionerVariableRefrigerantFlow::clone does not include curves
+- ![Fixed:][fixed] [#2231]( https://github.com/NREL/OpenStudio/issues/2231 ), PTHP does not allow water coils
+- ![Fixed:][fixed] [#2233]( https://github.com/NREL/OpenStudio/issues/2233 ), Enhance ZoneHVACBaseboardConvectiveWater
+- ![Fixed:][fixed] [#2235]( https://github.com/NREL/OpenStudio/issues/2235 ), OtherEquipment should allow negative schedule values to -1.
+- ![Fixed:][fixed] [#2238]( https://github.com/NREL/OpenStudio/issues/2238 ), Remove custom populateValidityReport implementations from ModelObject classes
+- ![Fixed:][fixed] [#2242]( https://github.com/NREL/OpenStudio/issues/2242 ), CBECC Translate OA equipment including HX
+- ![Fixed:][fixed] [#2243]( https://github.com/NREL/OpenStudio/issues/2243 ), OpenStudio crashes when going to "Measures" tab on two user models
+- ![Fixed:][fixed] [#2244]( https://github.com/NREL/OpenStudio/issues/2244 ), OA Mixer should be at the end of the oa system equipment list
+
 ## OpenStudio v1.11.3
 ###### 2016-05-17 — [Diff]( https://github.com/NREL/OpenStudio/compare/v1.11.2...v1.11.3 )
 
