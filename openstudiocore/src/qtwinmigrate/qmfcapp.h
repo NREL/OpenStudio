@@ -51,31 +51,34 @@
 class CWinApp;
 #endif
 
-/*#if defined(Q_OS_WIN)
-#  if !defined(QT_QTWINMIGRATE_EXPORT) && !defined(QT_QTWINMIGRATE_IMPORT)
-#    define QT_QTWINMIGRATE_EXPORT
-#  elif defined(QT_QTWINMIGRATE_IMPORT)
-#    if defined(QT_QTWINMIGRATE_EXPORT)
-#      undef QT_QTWINMIGRATE_EXPORT
-#    endif
-#    define QT_QTWINMIGRATE_EXPORT __declspec(dllimport)
-#  elif defined(QT_QTWINMIGRATE_EXPORT)
-#    undef QT_QTWINMIGRATE_EXPORT
-#    define QT_QTWINMIGRATE_EXPORT __declspec(dllexport)
-#  endif
-#else
-#  define QT_QTWINMIGRATE_EXPORT
-#endif*/
+///*#if defined(Q_OS_WIN)
+//#  if !defined(QT_QTWINMIGRATE_EXPORT) && !defined(QT_QTWINMIGRATE_IMPORT)
+//#    define QT_QTWINMIGRATE_EXPORT
+//#  elif defined(QT_QTWINMIGRATE_IMPORT)
+//#    if defined(QT_QTWINMIGRATE_EXPORT)
+//#      undef QT_QTWINMIGRATE_EXPORT
+//#    endif
+//#    define QT_QTWINMIGRATE_EXPORT __declspec(dllimport)
+//#  elif defined(QT_QTWINMIGRATE_EXPORT)
+//#    undef QT_QTWINMIGRATE_EXPORT
+//#    define QT_QTWINMIGRATE_EXPORT __declspec(dllexport)
+//#  endif
+//#else
+//#  define QT_QTWINMIGRATE_EXPORT
+//#endif*/
+//
+//#if (_WIN32 || _MSC_VER)
+//#  ifdef qtwinmigrate_EXPORTS
+//#    define QT_QTWINMIGRATE_EXPORT __declspec(dllexport)
+//#  else
+//#    define QT_QTWINMIGRATE_EXPORT __declspec(dllimport)
+//#  endif
+//#else
+//#  define QT_QTWINMIGRATE_EXPORT
+//#endif
 
-#if (_WIN32 || _MSC_VER)
-#  ifdef qtwinmigrate_EXPORTS
-#    define QT_QTWINMIGRATE_EXPORT __declspec(dllexport)
-#  else
-#    define QT_QTWINMIGRATE_EXPORT __declspec(dllimport)
-#  endif
-#else
-#  define QT_QTWINMIGRATE_EXPORT
-#endif
+
+#define QT_QTWINMIGRATE_EXPORT
 
 #if QT_VERSION >= 0x050000
 #include <QAbstractNativeEventFilter>
