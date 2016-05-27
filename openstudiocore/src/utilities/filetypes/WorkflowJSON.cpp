@@ -349,8 +349,8 @@ namespace detail{
 
   openstudio::path WorkflowJSON_Impl::outPath() const
   {
-    Json::Value defaultValue("./out.osw");
-    Json::Value path = m_value.get("out_path", defaultValue);
+    Json::Value defaultValue("out.osw");
+    Json::Value path = m_value.get("out_name", defaultValue);
     return toPath(path.asString());
   }
 
@@ -358,7 +358,7 @@ namespace detail{
   {
     openstudio::path result = outPath();
     if (result.is_relative()){
-      return boost::filesystem::absolute(result, absoluteRootDir());
+      return boost::filesystem::absolute(result, oswDir());
     }
     return result;
   }

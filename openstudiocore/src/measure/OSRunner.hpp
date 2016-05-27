@@ -262,6 +262,7 @@ class MEASURE_API OSRunner {
   void reset();
 
   // increments step to run next, returns true if there is another step
+  // should be called immediately after the last step completes
   bool incrementStep();
 
   // supports in-memory job chaining
@@ -317,6 +318,13 @@ class MEASURE_API OSRunner {
   mutable boost::optional<openstudio::EpwFile> m_lastEpwFile;
   boost::optional<openstudio::path> m_lastEpwFilePath;
 
+  std::streambuf* m_originalStdOut;
+  std::streambuf* m_originalStdErr;
+  std::stringstream m_bufferStdOut;
+  std::stringstream m_bufferStdErr;
+
+  boost::optional<openstudio::path> m_currentDir;
+  std::set<openstudio::path> m_currentDirFiles;
 };
 
 } // measure

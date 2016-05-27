@@ -22,6 +22,7 @@
 #include "../WorkflowJSON.hpp"
 #include "../WorkflowStep.hpp"
 #include "../WorkflowStep_Impl.hpp"
+#include "../WorkflowStepResult.hpp"
 
 #include "../../time/DateTime.hpp"
 
@@ -515,4 +516,132 @@ TEST(Filetypes, WorkflowJSON_Bad)
   p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
   EXPECT_THROW({ WorkflowJSON workflow(p); }, openstudio::Exception);
   EXPECT_FALSE(WorkflowJSON::load(p));
+}
+
+TEST(Filetypes, WorkflowStep_EscapeCharacters)
+{
+  MeasureStep step("\"My Measure\"");
+
+  std::string jsonValue = "\"steps\" : [ {\"arguments\" : {}, \"measure_dir_name\" : \"IncreaseWallRValue\"}]";
+  step.setArgument("\"My Argument\"", jsonValue);
+
+  boost::optional<WorkflowStep> temp = WorkflowStep::fromString(step.string());
+  ASSERT_TRUE(temp);
+  ASSERT_TRUE(temp->optionalCast<MeasureStep>());
+  MeasureStep step2 = temp->cast<MeasureStep>();
+
+  std::cout << step.string() << std::endl;
+
+  EXPECT_EQ("\"My Measure\"", step2.measureDirName());
+
+  ASSERT_EQ(1u, step2.arguments().size());
+
+  boost::optional<Variant> value = step2.getArgument("\"My Argument\"");
+  ASSERT_TRUE(value);
+  ASSERT_EQ(VariantType::String, value->variantType().value());
+  EXPECT_EQ(jsonValue, value->valueAsString());
+
+}
+
+TEST(Filetypes, WorkflowStep_EscapeCharacters2)
+{
+  MeasureStep step(R"("My Measure")");
+
+  std::string jsonValue = R"("steps" : [ {"arguments" : {}, "measure_dir_name" : "IncreaseWallRValue"}])";
+  step.setArgument(R"("My Argument")", jsonValue);
+
+  boost::optional<WorkflowStep> temp = WorkflowStep::fromString(step.string());
+  ASSERT_TRUE(temp);
+  ASSERT_TRUE(temp->optionalCast<MeasureStep>());
+  MeasureStep step2 = temp->cast<MeasureStep>();
+
+  std::cout << step.string() << std::endl;
+
+  EXPECT_EQ("\"My Measure\"", step2.measureDirName());
+
+  ASSERT_EQ(1u, step2.arguments().size());
+
+  boost::optional<Variant> value = step2.getArgument("\"My Argument\"");
+  ASSERT_TRUE(value);
+  ASSERT_EQ(VariantType::String, value->variantType().value());
+  EXPECT_EQ(jsonValue, value->valueAsString());
+
+}
+
+TEST(Filetypes, WorkflowStepResult_EscapeCharacters)
+{
+  WorkflowStepResult result;
+
+  result.setInitialCondition("\"Initial Condition\"");
+  result.setFinalCondition("\"Final Condition\"");
+  result.addStepError("\"Step Error\"");
+  result.addStepWarning("\"Step Warning\"");
+  result.addStepInfo("\"Step Info\"");
+  result.setStdOut("\"Standard Output\"");
+  result.setStdErr("\"Standard Error\"");
+
+  WorkflowStepValue value("\"Value Name\"", 1.1);
+  result.addStepValue(value);
+
+  boost::optional<WorkflowStepResult> result2 = WorkflowStepResult::fromString(result.string());
+  ASSERT_TRUE(result2);
+
+  std::cout << result.string() << std::endl;
+
+  ASSERT_TRUE(result2->initialCondition());
+  EXPECT_EQ("\"Initial Condition\"", result2->initialCondition().get());
+  ASSERT_TRUE(result2->finalCondition());
+  EXPECT_EQ("\"Final Condition\"", result2->finalCondition().get());
+  /*ASSERT_TRUE(result2->initialCondition());
+  result2.addStepError("\"Step Error\"");
+  ASSERT_TRUE(result2->initialCondition());
+  result2.addStepWarning("\"Step Warning\"");
+  ASSERT_TRUE(result2->initialCondition());
+  result2.addStepInfo("\"Step Info\"");
+  ASSERT_TRUE(result2->initialCondition());
+    */
+  ASSERT_TRUE(result2->stdOut());
+  EXPECT_EQ("\"Standard Output\"", result2->stdOut().get());
+  ASSERT_TRUE(result2->stdErr());
+  EXPECT_EQ("\"Standard Error\"", result2->stdErr().get());
+
+}
+
+TEST(Filetypes, WorkflowStepResult_EscapeCharacters2)
+{
+  WorkflowStepResult result;
+
+  result.setInitialCondition(R"("Initial Condition")");
+  result.setFinalCondition(R"("Final Condition")");
+  result.addStepError(R"("Step Error")");
+  result.addStepWarning(R"("Step Warning")");
+  result.addStepInfo(R"("Step Info")");
+  result.setStdOut(R"("Standard Output")");
+  result.setStdErr(R"("Standard Error")");
+
+  WorkflowStepValue value(R"("Value Name")", 1.1);
+  result.addStepValue(value);
+
+  boost::optional<WorkflowStepResult> result2 = WorkflowStepResult::fromString(result.string());
+  ASSERT_TRUE(result2);
+
+  std::cout << result.string() << std::endl;
+
+  ASSERT_TRUE(result2->initialCondition());
+  EXPECT_EQ("\"Initial Condition\"", result2->initialCondition().get());
+  ASSERT_TRUE(result2->finalCondition());
+  EXPECT_EQ("\"Final Condition\"", result2->finalCondition().get());
+  /*ASSERT_TRUE(result2->initialCondition());
+  result2.addStepError("\"Step Error\"");
+  ASSERT_TRUE(result2->initialCondition());
+  result2.addStepWarning("\"Step Warning\"");
+  ASSERT_TRUE(result2->initialCondition());
+  result2.addStepInfo("\"Step Info\"");
+  ASSERT_TRUE(result2->initialCondition());
+    */
+  ASSERT_TRUE(result2->stdOut());
+  EXPECT_EQ("\"Standard Output\"", result2->stdOut().get());
+  ASSERT_TRUE(result2->stdErr());
+  EXPECT_EQ("\"Standard Error\"", result2->stdErr().get());
+
 }

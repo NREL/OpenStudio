@@ -132,7 +132,7 @@ public:
   openstudio::path runDir() const;
   openstudio::path absoluteRunDir() const;
 
-  /** Returns the path to write output OSW, default value is './out.osw'. Evaluated relative to rootDir if not absolute. */
+  /** Returns the path to write output OSW, default value is 'out.osw'. Evaluated relative to oswDir to ensure relative paths remain valid. */
   openstudio::path outPath() const;
   openstudio::path absoluteOutPath() const;
 

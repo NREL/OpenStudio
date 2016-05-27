@@ -28,17 +28,33 @@
 #include "../utilities/filetypes/WorkflowStep.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+
+#include <stdio.h>
+#include <stdlib.h>
 
 namespace openstudio {
 namespace measure {
 
 OSRunner::OSRunner(const WorkflowJSON& workflow)
-  : m_workflow(workflow), m_unitsPreference("IP"), m_languagePreference("en")
+  : m_workflow(workflow), m_unitsPreference("IP"), m_languagePreference("en"), m_originalStdOut(nullptr), m_originalStdErr(nullptr)
 {
 }
 
 OSRunner::~OSRunner()
-{}
+{
+  if (m_originalStdOut){
+    std::cout.rdbuf(m_originalStdOut);
+    m_originalStdOut = nullptr;
+    std::cout << m_bufferStdOut.str();
+  }
+
+  if (m_originalStdErr){
+    std::cout.rdbuf(m_originalStdErr);
+    m_originalStdErr = nullptr;
+    std::cerr << m_bufferStdErr.str();
+  }
+}
 
 WorkflowJSON OSRunner::workflow() const
 {
@@ -149,6 +165,52 @@ bool OSRunner::incrementStep()
     m_result.setStepResult(StepResult::Skip);
   }
 
+  // restore stdout and stderr
+  m_result.setStdOut(m_bufferStdOut.str());
+  if (m_originalStdOut){
+    std::cout.rdbuf(m_originalStdOut);
+    m_originalStdOut = nullptr;
+    std::cout << m_bufferStdOut.str();
+  }
+  m_bufferStdOut.str("");
+
+  m_result.setStdErr(m_bufferStdErr.str());
+  if (m_originalStdErr){
+    std::cout.rdbuf(m_originalStdErr);
+    m_originalStdErr = nullptr;
+    std::cerr << m_bufferStdErr.str();
+  }
+  m_bufferStdErr.str("");
+
+  // check for created files
+  
+  // get list of new files
+  if (m_currentDir){
+    openstudio::path absoluteRootDir = m_workflow.absoluteRootDir();
+    if (boost::filesystem::exists(*m_currentDir) && boost::filesystem::is_directory(*m_currentDir))
+    {
+      for (boost::filesystem::directory_iterator dir_iter(*m_currentDir), end_iter; dir_iter != end_iter; ++dir_iter)
+      {
+        if (boost::filesystem::is_regular_file(dir_iter->status()))
+        {
+          if (m_currentDirFiles.find(dir_iter->path()) == m_currentDirFiles.end()){
+
+            openstudio::path path = dir_iter->path();
+            OS_ASSERT(path.is_absolute());
+            try{
+              path = relativePath(path, absoluteRootDir);
+            } catch (const std::exception&){
+            }
+            m_result.addStepFile(path);
+          }
+        }
+      }
+    }
+  }
+  m_currentDir.reset();
+  m_currentDirFiles.clear();
+
+
   boost::optional<WorkflowStep> currentStep = m_workflow.currentStep();
   if (currentStep){
     m_result.setCompletedAt(DateTime::nowUTC());
@@ -156,6 +218,8 @@ bool OSRunner::incrementStep()
   }else{
     LOG(Error, "Cannot find current Workflow Step");
   }
+
+
 
   m_result = WorkflowStepResult();
 
@@ -172,9 +236,32 @@ bool OSRunner::incrementStep()
 //}
 
 void OSRunner::prepareForMeasureRun(const OSMeasure& measure) {
+  // create a new result
   m_result = WorkflowStepResult();
   m_result.setStartedAt(DateTime::nowUTC());
   m_result.setStepResult(StepResult::Success);
+
+  // capture std out and err
+  m_originalStdOut = std::cout.rdbuf();
+  m_bufferStdOut.str("");
+  std::cout.rdbuf(m_bufferStdOut.rdbuf());
+
+  m_originalStdErr = std::cerr.rdbuf();
+  m_bufferStdErr.str("");
+  std::cerr.rdbuf(m_bufferStdErr.rdbuf());
+
+  // get initial list of files
+  m_currentDir = boost::filesystem::current_path();
+  if (boost::filesystem::exists(*m_currentDir) && boost::filesystem::is_directory(*m_currentDir))
+  {
+    for( boost::filesystem::directory_iterator dir_iter(*m_currentDir), end_iter ; dir_iter != end_iter ; ++dir_iter)
+    {
+      if (boost::filesystem::is_regular_file(dir_iter->status()) )
+      {
+        m_currentDirFiles.insert(dir_iter->path());
+      }
+    }
+  }
 }
 
 void OSRunner::registerError(const std::string& message) {
