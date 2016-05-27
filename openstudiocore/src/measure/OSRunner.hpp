@@ -302,7 +302,12 @@ class MEASURE_API OSRunner {
  private:
   REGISTER_LOGGER("openstudio.measure.OSRunner");
 
+  void captureStreams();
+  void restoreStreams();
+
   WorkflowJSON m_workflow;
+  bool m_startedStep;
+  bool m_streamsCaptured;
   std::string m_unitsPreference;
   std::string m_languagePreference;
 

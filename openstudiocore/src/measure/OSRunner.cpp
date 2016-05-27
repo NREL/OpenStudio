@@ -37,23 +37,14 @@ namespace openstudio {
 namespace measure {
 
 OSRunner::OSRunner(const WorkflowJSON& workflow)
-  : m_workflow(workflow), m_unitsPreference("IP"), m_languagePreference("en"), m_originalStdOut(nullptr), m_originalStdErr(nullptr)
+  : m_workflow(workflow), m_startedStep(false), m_streamsCaptured(false), 
+    m_unitsPreference("IP"), m_languagePreference("en"), m_originalStdOut(nullptr), m_originalStdErr(nullptr)
 {
 }
 
 OSRunner::~OSRunner()
 {
-  if (m_originalStdOut){
-    std::cout.rdbuf(m_originalStdOut);
-    m_originalStdOut = nullptr;
-    std::cout << m_bufferStdOut.str();
-  }
-
-  if (m_originalStdErr){
-    std::cout.rdbuf(m_originalStdErr);
-    m_originalStdErr = nullptr;
-    std::cerr << m_bufferStdErr.str();
-  }
+  restoreStreams();
 }
 
 WorkflowJSON OSRunner::workflow() const
@@ -152,6 +143,8 @@ void OSRunner::reset()
 {
   m_workflow.reset();
 
+  restoreStreams();
+
   //m_unitsPreference // do not reset
   //m_languagePreference; // do not reset
 
@@ -160,6 +153,16 @@ void OSRunner::reset()
 
 bool OSRunner::incrementStep()
 {
+  if (!m_startedStep){
+    LOG(Error, "Not prepared for step");
+    return false;
+  }
+  boost::optional<WorkflowStep> currentStep = m_workflow.currentStep();
+  if (!currentStep){
+    LOG(Error, "Cannot find current Workflow Step");
+    return false;
+  }
+
   if (!m_result.stepResult()){
     // must have been skipped
     m_result.setStepResult(StepResult::Skip);
@@ -167,20 +170,8 @@ bool OSRunner::incrementStep()
 
   // restore stdout and stderr
   m_result.setStdOut(m_bufferStdOut.str());
-  if (m_originalStdOut){
-    std::cout.rdbuf(m_originalStdOut);
-    m_originalStdOut = nullptr;
-    std::cout << m_bufferStdOut.str();
-  }
-  m_bufferStdOut.str("");
-
   m_result.setStdErr(m_bufferStdErr.str());
-  if (m_originalStdErr){
-    std::cout.rdbuf(m_originalStdErr);
-    m_originalStdErr = nullptr;
-    std::cerr << m_bufferStdErr.str();
-  }
-  m_bufferStdErr.str("");
+  restoreStreams();
 
   // check for created files
   
@@ -210,18 +201,12 @@ bool OSRunner::incrementStep()
   m_currentDir.reset();
   m_currentDirFiles.clear();
 
-
-  boost::optional<WorkflowStep> currentStep = m_workflow.currentStep();
-  if (currentStep){
-    m_result.setCompletedAt(DateTime::nowUTC());
-    currentStep->setResult(m_result);
-  }else{
-    LOG(Error, "Cannot find current Workflow Step");
-  }
-
-
-
+  m_result.setCompletedAt(DateTime::nowUTC());
+    
+  currentStep->setResult(m_result);
+  
   m_result = WorkflowStepResult();
+  m_startedStep = false;
 
   return m_workflow.incrementStep();
 }
@@ -236,19 +221,26 @@ bool OSRunner::incrementStep()
 //}
 
 void OSRunner::prepareForMeasureRun(const OSMeasure& measure) {
+  
+  if (m_startedStep){
+    LOG(Error, "Step already started");
+    return;
+  }
+  boost::optional<WorkflowStep> currentStep = m_workflow.currentStep();
+  if (!currentStep){
+    LOG(Error, "Cannot find current Workflow Step");
+    return;
+  }
+
+  m_startedStep = true;
+
   // create a new result
   m_result = WorkflowStepResult();
   m_result.setStartedAt(DateTime::nowUTC());
   m_result.setStepResult(StepResult::Success);
 
   // capture std out and err
-  m_originalStdOut = std::cout.rdbuf();
-  m_bufferStdOut.str("");
-  std::cout.rdbuf(m_bufferStdOut.rdbuf());
-
-  m_originalStdErr = std::cerr.rdbuf();
-  m_bufferStdErr.str("");
-  std::cerr.rdbuf(m_bufferStdErr.rdbuf());
+  captureStreams();
 
   // get initial list of files
   m_currentDir = boost::filesystem::current_path();
@@ -903,6 +895,50 @@ bool OSRunner::setLanguagePreference(const std::string& languagePreference)
 void OSRunner::resetLanguagePreference()
 {
   m_languagePreference = "en";
+}
+
+void OSRunner::captureStreams()
+{
+  if (m_streamsCaptured){
+    return;
+  }
+  m_streamsCaptured = true;
+
+  std::cout.flush();
+  std::cout.rdbuf()->pubsync();
+  m_originalStdOut = std::cout.rdbuf();
+  m_bufferStdOut.str("");
+  std::cout.rdbuf(m_bufferStdOut.rdbuf());
+
+  std::cerr.flush();
+  std::cerr.rdbuf()->pubsync();
+  m_originalStdErr = std::cerr.rdbuf();
+  m_bufferStdErr.str("");
+  std::cerr.rdbuf(m_bufferStdErr.rdbuf());
+}
+
+void OSRunner::restoreStreams()
+{
+  if (!m_streamsCaptured){
+    return;
+  }
+  m_streamsCaptured = false;
+
+  OS_ASSERT(m_originalStdOut);
+  OS_ASSERT(m_originalStdErr);
+
+  std::cout.rdbuf(m_originalStdOut);
+  std::cout << m_bufferStdOut.str();
+  std::cout.flush();
+  m_originalStdOut = nullptr;
+  m_bufferStdOut.str("");
+
+  std::cerr.rdbuf(m_originalStdErr);
+  std::cerr << m_bufferStdErr.str();
+  std::cerr.flush();
+  m_originalStdErr = nullptr;
+  m_bufferStdErr.str("");
+
 }
 
 } // measure
