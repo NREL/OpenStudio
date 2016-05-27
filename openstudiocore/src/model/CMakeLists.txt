@@ -512,6 +512,9 @@ set(${target_name}_src
   GeneratorMicroTurbine.hpp
   GeneratorMicroTurbine_Impl.hpp
   GeneratorMicroTurbine.cpp
+  GeneratorMicroTurbineHeatRecovery.hpp
+  GeneratorMicroTurbineHeatRecovery_Impl.hpp
+  GeneratorMicroTurbineHeatRecovery.cpp
   GeneratorPhotovoltaic.hpp
   GeneratorPhotovoltaic_Impl.hpp
   GeneratorPhotovoltaic.cpp

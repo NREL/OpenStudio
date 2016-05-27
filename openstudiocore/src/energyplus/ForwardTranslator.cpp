@@ -1386,6 +1386,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   }
   case openstudio::IddObjectType::OS_Generator_MicroTurbine:
   {
+    // Will also translate the Generator:MicroTurbine:HeatRecovery if there is one
     model::GeneratorMicroTurbine temp = modelObject.cast<GeneratorMicroTurbine>();
     retVal = translateGeneratorMicroTurbine(temp);
     break;
