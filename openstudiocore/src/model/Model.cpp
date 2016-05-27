@@ -340,6 +340,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(GasEquipment);
     REGISTER_CONSTRUCTOR(GasEquipmentDefinition);
     REGISTER_CONSTRUCTOR(GasMixture);
+    REGISTER_CONSTRUCTOR(GeneratorMicroTurbine);
     REGISTER_CONSTRUCTOR(GeneratorPhotovoltaic);
     REGISTER_CONSTRUCTOR(GlareSensor);
     REGISTER_CONSTRUCTOR(GroundHeatExchangerHorizontalTrench);
@@ -744,6 +745,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(GasEquipment);
     REGISTER_COPYCONSTRUCTORS(GasEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(GasMixture);
+    REGISTER_COPYCONSTRUCTORS(GeneratorMicroTurbine);
     REGISTER_COPYCONSTRUCTORS(GeneratorPhotovoltaic);
     REGISTER_COPYCONSTRUCTORS(GlareSensor);
     REGISTER_COPYCONSTRUCTORS(GroundHeatExchangerHorizontalTrench);
