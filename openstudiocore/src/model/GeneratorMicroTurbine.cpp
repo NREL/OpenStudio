@@ -20,41 +20,31 @@
 #include "GeneratorMicroTurbine.hpp"
 #include "GeneratorMicroTurbine_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include "BiquadraticCurves.hpp"
-#include "BiquadraticCurves_Impl.hpp"
-#include "QuadraticCubicCurves.hpp"
-#include "QuadraticCubicCurves_Impl.hpp"
-#include "QuadraticCubicCurves.hpp"
-#include "QuadraticCubicCurves_Impl.hpp"
-#include "QuadraticCurves.hpp"
-#include "QuadraticCurves_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "BiquadraticCurves.hpp"
-#include "BiquadraticCurves_Impl.hpp"
-#include "BicubicBiquadraticCurves.hpp"
-#include "BicubicBiquadraticCurves_Impl.hpp"
-#include "QuadraticCubicCurves.hpp"
-#include "QuadraticCubicCurves_Impl.hpp"
-#include "QuadraticCurves.hpp"
-#include "QuadraticCurves_Impl.hpp"
-#include "QuadraticCurves.hpp"
-#include "QuadraticCurves_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "QuadraticCubicCurves.hpp"
-#include "QuadraticCubicCurves_Impl.hpp"
-#include "QuadraticCubicCurves.hpp"
-#include "QuadraticCubicCurves_Impl.hpp"
-#include "QuadraticCubicCurves.hpp"
-#include "QuadraticCubicCurves_Impl.hpp"
-#include "QuadraticCubicCurves.hpp"
-#include "QuadraticCubicCurves_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
+
+// TODO: Here I think I need the child classes of Curve too? To make sure the user doesn't set to a curve that isn't appropriate?
+//#include "CurveBicubic.hpp"
+//#include "CurveBicubic_Impl.hpp"
+//#include "CurveBiquadratic.hpp"
+//#include "CurveBiquadratic_Impl.hpp"
+//#include "CurveCubic.hpp"
+//#include "CurveCubic_Impl.hpp"
+//#include "CurveQuadratic.hpp"
+//#include "CurveQuadratic_Impl.hpp"
+
+// TODO: add the tables class if they get added to OS later?
+//#include "VariateTables.hpp" // Or whatever the name will be. DataTables maybe
+//#include "VariateTables_Impl.hpp"
+//#include "UniVariateTables.hpp"
+//#include "UniVariateTables_Impl.hpp"
+//#include "BiVariateTables.hpp"
+//#include "BiVariateTables_Impl.hpp"
+
+//class Connection;
+
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -101,6 +91,19 @@ namespace detail {
 
   IddObjectType GeneratorMicroTurbine_Impl::iddObjectType() const {
     return GeneratorMicroTurbine::iddObjectType();
+  }
+  
+  // Add an implementation of StraightComponent_Impl?
+  
+  // TODO: this is actually an optional... should I handle that explicitly?
+  unsigned GeneratorMicroTurbine_Impl::inletPort()
+  {
+    return OS_Generator_MicroTurbineFields::HeatRecoveryWaterInletNodeName;
+  }
+
+  unsigned GeneratorMicroTurbine_Impl::outletPort()
+  {
+    return OS_Generator_MicroTurbineFields::HeatRecoveryWaterOutletNodeName;
   }
 
   double GeneratorMicroTurbine_Impl::referenceElectricalPowerOutput() const {
@@ -159,29 +162,30 @@ namespace detail {
     return isEmpty(OS_Generator_MicroTurbineFields::ReferenceElevation);
   }
 
-  BiquadraticCurves GeneratorMicroTurbine_Impl::electricalPowerFunctionofTemperatureandElevationCurve() const {
-    boost::optional<BiquadraticCurves> value = optionalElectricalPowerFunctionofTemperatureandElevationCurve();
+  Curve GeneratorMicroTurbine_Impl::electricalPowerFunctionofTemperatureandElevationCurve() const {
+    boost::optional<Curve> value = optionalElectricalPowerFunctionofTemperatureandElevationCurve();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Electrical Power Functionof Temperatureand Elevation Curve attached.");
+      LOG_AND_THROW(briefDescription() << " does not have an Electrical Power Function of Temperature and Elevation Curve attached.");
     }
     return value.get();
   }
 
-  QuadraticCubicCurves GeneratorMicroTurbine_Impl::electricalEfficiencyFunctionofTemperatureCurve() const {
-    boost::optional<QuadraticCubicCurves> value = optionalElectricalEfficiencyFunctionofTemperatureCurve();
+  Curve GeneratorMicroTurbine_Impl::electricalEfficiencyFunctionofTemperatureCurve() const {
+    boost::optional<Curve> value = optionalElectricalEfficiencyFunctionofTemperatureCurve();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Electrical Efficiency Functionof Temperature Curve attached.");
+      LOG_AND_THROW(briefDescription() << " does not have an Electrical Efficiency Function of Temperature Curve attached.");
     }
     return value.get();
   }
 
-  QuadraticCubicCurves GeneratorMicroTurbine_Impl::electricalEfficiencyFunctionofPartLoadRatioCurve() const {
-    boost::optional<QuadraticCubicCurves> value = optionalElectricalEfficiencyFunctionofPartLoadRatioCurve();
+  Curve GeneratorMicroTurbine_Impl::electricalEfficiencyFunctionofPartLoadRatioCurve() const {
+    boost::optional<Curve> value = optionalElectricalEfficiencyFunctionofPartLoadRatioCurve();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Electrical Efficiency Functionof Part Load Ratio Curve attached.");
+      LOG_AND_THROW(briefDescription() << " does not have an Electrical Efficiency Function of Part Load Ratio Curve attached.");
     }
     return value.get();
   }
+  
 
   std::string GeneratorMicroTurbine_Impl::fuelType() const {
     boost::optional<std::string> value = getString(OS_Generator_MicroTurbineFields::FuelType,true);
@@ -233,17 +237,17 @@ namespace detail {
     return isEmpty(OS_Generator_MicroTurbineFields::AncillaryPower);
   }
 
-  boost::optional<QuadraticCurves> GeneratorMicroTurbine_Impl::ancillaryPowerFunctionofFuelInputCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<QuadraticCurves>(OS_Generator_MicroTurbineFields::AncillaryPowerFunctionofFuelInputCurveName);
+  boost::optional<Curve> GeneratorMicroTurbine_Impl::ancillaryPowerFunctionofFuelInputCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::AncillaryPowerFunctionofFuelInputCurveName);
   }
 
-  boost::optional<Connection> GeneratorMicroTurbine_Impl::heatRecoveryWaterInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_MicroTurbineFields::HeatRecoveryWaterInletNodeName);
-  }
+  //boost::optional<Connection> GeneratorMicroTurbine_Impl::heatRecoveryWaterInletNode() const {
+  //  return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_MicroTurbineFields::HeatRecoveryWaterInletNodeName);
+  //}
 
-  boost::optional<Connection> GeneratorMicroTurbine_Impl::heatRecoveryWaterOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_MicroTurbineFields::HeatRecoveryWaterOutletNodeName);
-  }
+  //boost::optional<Connection> GeneratorMicroTurbine_Impl::heatRecoveryWaterOutletNode() const {
+  //  return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_MicroTurbineFields::HeatRecoveryWaterOutletNodeName);
+  //}
 
   double GeneratorMicroTurbine_Impl::referenceThermalEfficiencyUsingLowerHeatValue() const {
     boost::optional<double> value = getDouble(OS_Generator_MicroTurbineFields::ReferenceThermalEfficiencyUsingLowerHeatValue,true);
@@ -273,24 +277,24 @@ namespace detail {
     return getDouble(OS_Generator_MicroTurbineFields::ReferenceHeatRecoveryWaterFlowRate,true);
   }
 
-  boost::optional<BiquadraticCurves> GeneratorMicroTurbine_Impl::heatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<BiquadraticCurves>(OS_Generator_MicroTurbineFields::HeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurveName);
+  boost::optional<Curve> GeneratorMicroTurbine_Impl::heatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::HeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurveName);
   }
 
-  boost::optional<BicubicBiquadraticCurves> GeneratorMicroTurbine_Impl::thermalEfficiencyFunctionofTemperatureandElevationCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<BicubicBiquadraticCurves>(OS_Generator_MicroTurbineFields::ThermalEfficiencyFunctionofTemperatureandElevationCurveName);
+  boost::optional<Curve> GeneratorMicroTurbine_Impl::thermalEfficiencyFunctionofTemperatureandElevationCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::ThermalEfficiencyFunctionofTemperatureandElevationCurveName);
   }
 
-  boost::optional<QuadraticCubicCurves> GeneratorMicroTurbine_Impl::heatRecoveryRateFunctionofPartLoadRatioCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<QuadraticCubicCurves>(OS_Generator_MicroTurbineFields::HeatRecoveryRateFunctionofPartLoadRatioCurveName);
+  boost::optional<Curve> GeneratorMicroTurbine_Impl::heatRecoveryRateFunctionofPartLoadRatioCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::HeatRecoveryRateFunctionofPartLoadRatioCurveName);
   }
 
-  boost::optional<QuadraticCurves> GeneratorMicroTurbine_Impl::heatRecoveryRateFunctionofInletWaterTemperatureCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<QuadraticCurves>(OS_Generator_MicroTurbineFields::HeatRecoveryRateFunctionofInletWaterTemperatureCurveName);
+  boost::optional<Curve> GeneratorMicroTurbine_Impl::heatRecoveryRateFunctionofInletWaterTemperatureCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::HeatRecoveryRateFunctionofInletWaterTemperatureCurveName);
   }
 
-  boost::optional<QuadraticCurves> GeneratorMicroTurbine_Impl::heatRecoveryRateFunctionofWaterFlowRateCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<QuadraticCurves>(OS_Generator_MicroTurbineFields::HeatRecoveryRateFunctionofWaterFlowRateCurveName);
+  boost::optional<Curve> GeneratorMicroTurbine_Impl::heatRecoveryRateFunctionofWaterFlowRateCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::HeatRecoveryRateFunctionofWaterFlowRateCurveName);
   }
 
   double GeneratorMicroTurbine_Impl::minimumHeatRecoveryWaterFlowRate() const {
@@ -317,36 +321,36 @@ namespace detail {
     return getDouble(OS_Generator_MicroTurbineFields::MaximumHeatRecoveryWaterTemperature,true);
   }
 
-  boost::optional<Connection> GeneratorMicroTurbine_Impl::combustionAirInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_MicroTurbineFields::CombustionAirInletNodeName);
-  }
+  //boost::optional<Connection> GeneratorMicroTurbine_Impl::combustionAirInletNode() const {
+  //  return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_MicroTurbineFields::CombustionAirInletNodeName);
+  //}
 
-  boost::optional<Connection> GeneratorMicroTurbine_Impl::combustionAirOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_MicroTurbineFields::CombustionAirOutletNodeName);
-  }
+  //boost::optional<Connection> GeneratorMicroTurbine_Impl::combustionAirOutletNode() const {
+  //  return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_MicroTurbineFields::CombustionAirOutletNodeName);
+  //}
 
   boost::optional<double> GeneratorMicroTurbine_Impl::referenceExhaustAirMassFlowRate() const {
     return getDouble(OS_Generator_MicroTurbineFields::ReferenceExhaustAirMassFlowRate,true);
   }
 
-  boost::optional<QuadraticCubicCurves> GeneratorMicroTurbine_Impl::exhaustAirFlowRateFunctionofTemperatureCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<QuadraticCubicCurves>(OS_Generator_MicroTurbineFields::ExhaustAirFlowRateFunctionofTemperatureCurveName);
+  boost::optional<Curve> GeneratorMicroTurbine_Impl::exhaustAirFlowRateFunctionofTemperatureCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::ExhaustAirFlowRateFunctionofTemperatureCurveName);
   }
 
-  boost::optional<QuadraticCubicCurves> GeneratorMicroTurbine_Impl::exhaustAirFlowRateFunctionofPartLoadRatioCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<QuadraticCubicCurves>(OS_Generator_MicroTurbineFields::ExhaustAirFlowRateFunctionofPartLoadRatioCurveName);
+  boost::optional<Curve> GeneratorMicroTurbine_Impl::exhaustAirFlowRateFunctionofPartLoadRatioCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::ExhaustAirFlowRateFunctionofPartLoadRatioCurveName);
   }
 
   boost::optional<double> GeneratorMicroTurbine_Impl::nominalExhaustAirOutletTemperature() const {
     return getDouble(OS_Generator_MicroTurbineFields::NominalExhaustAirOutletTemperature,true);
   }
 
-  boost::optional<QuadraticCubicCurves> GeneratorMicroTurbine_Impl::exhaustAirTemperatureFunctionofTemperatureCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<QuadraticCubicCurves>(OS_Generator_MicroTurbineFields::ExhaustAirTemperatureFunctionofTemperatureCurveName);
+  boost::optional<Curve> GeneratorMicroTurbine_Impl::exhaustAirTemperatureFunctionofTemperatureCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::ExhaustAirTemperatureFunctionofTemperatureCurveName);
   }
 
-  boost::optional<QuadraticCubicCurves> GeneratorMicroTurbine_Impl::exhaustAirTemperatureFunctionofPartLoadRatioCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<QuadraticCubicCurves>(OS_Generator_MicroTurbineFields::ExhaustAirTemperatureFunctionofPartLoadRatioCurveName);
+  boost::optional<Curve> GeneratorMicroTurbine_Impl::exhaustAirTemperatureFunctionofPartLoadRatioCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::ExhaustAirTemperatureFunctionofPartLoadRatioCurveName);
   }
 
   bool GeneratorMicroTurbine_Impl::setReferenceElectricalPowerOutput(double referenceElectricalPowerOutput) {
@@ -415,19 +419,35 @@ namespace detail {
     bool result = setString(OS_Generator_MicroTurbineFields::ReferenceElevation, "");
     OS_ASSERT(result);
   }
-
-  bool GeneratorMicroTurbine_Impl::setElectricalPowerFunctionofTemperatureandElevationCurve(const BiquadraticCurves& biquadraticCurves) {
-    bool result = setPointer(OS_Generator_MicroTurbineFields::ElectricalPowerFunctionofTemperatureandElevationCurveName, biquadraticCurves.handle());
+  
+  bool GeneratorMicroTurbine_Impl::setElectricalPowerFunctionofTemperatureandElevationCurve(const Curve& curve)
+  {
+    if(model() != curve.model())
+    {
+      LOG(briefDescription() << " does not below to the same model as the curve you want to set.");
+      return false;
+    }
+    bool result = setPointer(OS_Chiller_Electric_EIRFields::CoolingCapacityFunctionofTemperatureCurveName, curve.handle());
     return result;
   }
 
-  bool GeneratorMicroTurbine_Impl::setElectricalEfficiencyFunctionofTemperatureCurve(const QuadraticCubicCurves& quadraticCubicCurves) {
-    bool result = setPointer(OS_Generator_MicroTurbineFields::ElectricalEfficiencyFunctionofTemperatureCurveName, quadraticCubicCurves.handle());
+  bool GeneratorMicroTurbine_Impl::setElectricalEfficiencyFunctionofTemperatureCurve(const Curve& curve) {
+    if(model() != curve.model())
+    {
+      LOG(briefDescription() << " does not below to the same model as the curve you want to set.");
+      return false;
+    }
+    bool result = setPointer(OS_Generator_MicroTurbineFields::ElectricalEfficiencyFunctionofTemperatureCurveName, curve.handle());
     return result;
   }
 
-  bool GeneratorMicroTurbine_Impl::setElectricalEfficiencyFunctionofPartLoadRatioCurve(const QuadraticCubicCurves& quadraticCubicCurves) {
-    bool result = setPointer(OS_Generator_MicroTurbineFields::ElectricalEfficiencyFunctionofPartLoadRatioCurveName, quadraticCubicCurves.handle());
+  bool GeneratorMicroTurbine_Impl::setElectricalEfficiencyFunctionofPartLoadRatioCurve(const Curve& curve) {
+    if(model() != curve.model())
+    {
+      LOG(briefDescription() << " does not below to the same model as the curve you want to set.");
+      return false;
+    }
+    bool result = setPointer(OS_Generator_MicroTurbineFields::ElectricalEfficiencyFunctionofPartLoadRatioCurveName, curve.handle());
     return result;
   }
 
@@ -481,10 +501,15 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorMicroTurbine_Impl::setAncillaryPowerFunctionofFuelInputCurve(const boost::optional<QuadraticCurves>& quadraticCurves) {
+  bool GeneratorMicroTurbine_Impl::setAncillaryPowerFunctionofFuelInputCurve(const boost::optional<Curve>& curve) {
     bool result(false);
-    if (quadraticCurves) {
-      result = setPointer(OS_Generator_MicroTurbineFields::AncillaryPowerFunctionofFuelInputCurveName, quadraticCurves.get().handle());
+    if (curve) {
+      if(model() != curve.get().model())
+      {
+        LOG(briefDescription() << " does not below to the same model as the curve you want to set.");
+        return false;
+      }
+      result = setPointer(OS_Generator_MicroTurbineFields::AncillaryPowerFunctionofFuelInputCurveName, curve.get().handle());
     }
     else {
       resetAncillaryPowerFunctionofFuelInputCurve();
@@ -586,10 +611,15 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorMicroTurbine_Impl::setHeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve(const boost::optional<BiquadraticCurves>& biquadraticCurves) {
+  bool GeneratorMicroTurbine_Impl::setHeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve(const boost::optional<Curve>& curve) {
     bool result(false);
-    if (biquadraticCurves) {
-      result = setPointer(OS_Generator_MicroTurbineFields::HeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurveName, biquadraticCurves.get().handle());
+    if (curve) {
+      if(model() != curve.get().model())
+      {
+        LOG(briefDescription() << " does not below to the same model as the curve you want to set.");
+        return false;
+      }
+      result = setPointer(OS_Generator_MicroTurbineFields::HeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurveName, curve.get().handle());
     }
     else {
       resetHeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve();
@@ -603,10 +633,15 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorMicroTurbine_Impl::setThermalEfficiencyFunctionofTemperatureandElevationCurve(const boost::optional<BicubicBiquadraticCurves>& bicubicBiquadraticCurves) {
+  bool GeneratorMicroTurbine_Impl::setThermalEfficiencyFunctionofTemperatureandElevationCurve(const boost::optional<Curve>& curve) {
     bool result(false);
-    if (bicubicBiquadraticCurves) {
-      result = setPointer(OS_Generator_MicroTurbineFields::ThermalEfficiencyFunctionofTemperatureandElevationCurveName, bicubicBiquadraticCurves.get().handle());
+    if (curve) {
+      if(model() != curve.get().model())
+      {
+        LOG(briefDescription() << " does not below to the same model as the curve you want to set.");
+        return false;
+      }
+      result = setPointer(OS_Generator_MicroTurbineFields::ThermalEfficiencyFunctionofTemperatureandElevationCurveName, curve.get().handle());
     }
     else {
       resetThermalEfficiencyFunctionofTemperatureandElevationCurve();
@@ -620,10 +655,15 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorMicroTurbine_Impl::setHeatRecoveryRateFunctionofPartLoadRatioCurve(const boost::optional<QuadraticCubicCurves>& quadraticCubicCurves) {
+  bool GeneratorMicroTurbine_Impl::setHeatRecoveryRateFunctionofPartLoadRatioCurve(const boost::optional<Curve>& curve) {
     bool result(false);
-    if (quadraticCubicCurves) {
-      result = setPointer(OS_Generator_MicroTurbineFields::HeatRecoveryRateFunctionofPartLoadRatioCurveName, quadraticCubicCurves.get().handle());
+    if (curve) {
+      if(model() != curve.get().model())
+      {
+        LOG(briefDescription() << " does not below to the same model as the curve you want to set.");
+        return false;
+      }
+      result = setPointer(OS_Generator_MicroTurbineFields::HeatRecoveryRateFunctionofPartLoadRatioCurveName, curve.get().handle());
     }
     else {
       resetHeatRecoveryRateFunctionofPartLoadRatioCurve();
@@ -637,10 +677,15 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorMicroTurbine_Impl::setHeatRecoveryRateFunctionofInletWaterTemperatureCurve(const boost::optional<QuadraticCurves>& quadraticCurves) {
+  bool GeneratorMicroTurbine_Impl::setHeatRecoveryRateFunctionofInletWaterTemperatureCurve(const boost::optional<Curve>& curve) {
     bool result(false);
-    if (quadraticCurves) {
-      result = setPointer(OS_Generator_MicroTurbineFields::HeatRecoveryRateFunctionofInletWaterTemperatureCurveName, quadraticCurves.get().handle());
+    if (curve) {
+      if(model() != curve.get().model())
+      {
+        LOG(briefDescription() << " does not below to the same model as the curve you want to set.");
+        return false;
+      }
+      result = setPointer(OS_Generator_MicroTurbineFields::HeatRecoveryRateFunctionofInletWaterTemperatureCurveName, curve.get().handle());
     }
     else {
       resetHeatRecoveryRateFunctionofInletWaterTemperatureCurve();
@@ -654,10 +699,15 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorMicroTurbine_Impl::setHeatRecoveryRateFunctionofWaterFlowRateCurve(const boost::optional<QuadraticCurves>& quadraticCurves) {
+  bool GeneratorMicroTurbine_Impl::setHeatRecoveryRateFunctionofWaterFlowRateCurve(const boost::optional<Curve>& curve) {
     bool result(false);
-    if (quadraticCurves) {
-      result = setPointer(OS_Generator_MicroTurbineFields::HeatRecoveryRateFunctionofWaterFlowRateCurveName, quadraticCurves.get().handle());
+    if (curve) {
+      if(model() != curve.get().model())
+      {
+        LOG(briefDescription() << " does not below to the same model as the curve you want to set.");
+        return false;
+      }
+      result = setPointer(OS_Generator_MicroTurbineFields::HeatRecoveryRateFunctionofWaterFlowRateCurveName, curve.get().handle());
     }
     else {
       resetHeatRecoveryRateFunctionofWaterFlowRateCurve();
@@ -759,10 +809,15 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorMicroTurbine_Impl::setExhaustAirFlowRateFunctionofTemperatureCurve(const boost::optional<QuadraticCubicCurves>& quadraticCubicCurves) {
+  bool GeneratorMicroTurbine_Impl::setExhaustAirFlowRateFunctionofTemperatureCurve(const boost::optional<Curve>& curve) {
     bool result(false);
-    if (quadraticCubicCurves) {
-      result = setPointer(OS_Generator_MicroTurbineFields::ExhaustAirFlowRateFunctionofTemperatureCurveName, quadraticCubicCurves.get().handle());
+    if (curve) {
+      if(model() != curve.get().model())
+      {
+        LOG(briefDescription() << " does not below to the same model as the curve you want to set.");
+        return false;
+      }
+      result = setPointer(OS_Generator_MicroTurbineFields::ExhaustAirFlowRateFunctionofTemperatureCurveName, curve.get().handle());
     }
     else {
       resetExhaustAirFlowRateFunctionofTemperatureCurve();
@@ -776,10 +831,15 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorMicroTurbine_Impl::setExhaustAirFlowRateFunctionofPartLoadRatioCurve(const boost::optional<QuadraticCubicCurves>& quadraticCubicCurves) {
+  bool GeneratorMicroTurbine_Impl::setExhaustAirFlowRateFunctionofPartLoadRatioCurve(const boost::optional<Curve>& curve) {
     bool result(false);
-    if (quadraticCubicCurves) {
-      result = setPointer(OS_Generator_MicroTurbineFields::ExhaustAirFlowRateFunctionofPartLoadRatioCurveName, quadraticCubicCurves.get().handle());
+    if (curve) {
+      if(model() != curve.get().model())
+      {
+        LOG(briefDescription() << " does not below to the same model as the curve you want to set.");
+        return false;
+      }  
+      result = setPointer(OS_Generator_MicroTurbineFields::ExhaustAirFlowRateFunctionofPartLoadRatioCurveName, curve.get().handle());
     }
     else {
       resetExhaustAirFlowRateFunctionofPartLoadRatioCurve();
@@ -810,10 +870,15 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorMicroTurbine_Impl::setExhaustAirTemperatureFunctionofTemperatureCurve(const boost::optional<QuadraticCubicCurves>& quadraticCubicCurves) {
+  bool GeneratorMicroTurbine_Impl::setExhaustAirTemperatureFunctionofTemperatureCurve(const boost::optional<Curve>& curve) {
     bool result(false);
-    if (quadraticCubicCurves) {
-      result = setPointer(OS_Generator_MicroTurbineFields::ExhaustAirTemperatureFunctionofTemperatureCurveName, quadraticCubicCurves.get().handle());
+    if (curve) {
+      if(model() != curve.get().model())
+      {
+        LOG(briefDescription() << " does not below to the same model as the curve you want to set.");
+        return false;
+      }
+      result = setPointer(OS_Generator_MicroTurbineFields::ExhaustAirTemperatureFunctionofTemperatureCurveName, curve.get().handle());
     }
     else {
       resetExhaustAirTemperatureFunctionofTemperatureCurve();
@@ -827,10 +892,15 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorMicroTurbine_Impl::setExhaustAirTemperatureFunctionofPartLoadRatioCurve(const boost::optional<QuadraticCubicCurves>& quadraticCubicCurves) {
+  bool GeneratorMicroTurbine_Impl::setExhaustAirTemperatureFunctionofPartLoadRatioCurve(const boost::optional<Curve>& curve) {
     bool result(false);
-    if (quadraticCubicCurves) {
-      result = setPointer(OS_Generator_MicroTurbineFields::ExhaustAirTemperatureFunctionofPartLoadRatioCurveName, quadraticCubicCurves.get().handle());
+    if (curve) {
+      if(model() != curve.get().model())
+      {
+        LOG(briefDescription() << " does not below to the same model as the curve you want to set.");
+        return false;
+      }
+      result = setPointer(OS_Generator_MicroTurbineFields::ExhaustAirTemperatureFunctionofPartLoadRatioCurveName, curve.get().handle());
     }
     else {
       resetExhaustAirTemperatureFunctionofPartLoadRatioCurve();
@@ -844,16 +914,16 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  boost::optional<BiquadraticCurves> GeneratorMicroTurbine_Impl::optionalElectricalPowerFunctionofTemperatureandElevationCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<BiquadraticCurves>(OS_Generator_MicroTurbineFields::ElectricalPowerFunctionofTemperatureandElevationCurveName);
+  boost::optional<Curve> GeneratorMicroTurbine_Impl::optionalElectricalPowerFunctionofTemperatureandElevationCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::ElectricalPowerFunctionofTemperatureandElevationCurveName);
   }
 
-  boost::optional<QuadraticCubicCurves> GeneratorMicroTurbine_Impl::optionalElectricalEfficiencyFunctionofTemperatureCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<QuadraticCubicCurves>(OS_Generator_MicroTurbineFields::ElectricalEfficiencyFunctionofTemperatureCurveName);
+  boost::optional<Curve> GeneratorMicroTurbine_Impl::optionalElectricalEfficiencyFunctionofTemperatureCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::ElectricalEfficiencyFunctionofTemperatureCurveName);
   }
 
-  boost::optional<QuadraticCubicCurves> GeneratorMicroTurbine_Impl::optionalElectricalEfficiencyFunctionofPartLoadRatioCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<QuadraticCubicCurves>(OS_Generator_MicroTurbineFields::ElectricalEfficiencyFunctionofPartLoadRatioCurveName);
+  boost::optional<Curve> GeneratorMicroTurbine_Impl::optionalElectricalEfficiencyFunctionofPartLoadRatioCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::ElectricalEfficiencyFunctionofPartLoadRatioCurveName);
   }
 
 } // detail
@@ -940,15 +1010,15 @@ bool GeneratorMicroTurbine::isReferenceElevationDefaulted() const {
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->isReferenceElevationDefaulted();
 }
 
-BiquadraticCurves GeneratorMicroTurbine::electricalPowerFunctionofTemperatureandElevationCurve() const {
+Curve GeneratorMicroTurbine::electricalPowerFunctionofTemperatureandElevationCurve() const {
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->electricalPowerFunctionofTemperatureandElevationCurve();
 }
 
-QuadraticCubicCurves GeneratorMicroTurbine::electricalEfficiencyFunctionofTemperatureCurve() const {
+Curve GeneratorMicroTurbine::electricalEfficiencyFunctionofTemperatureCurve() const {
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->electricalEfficiencyFunctionofTemperatureCurve();
 }
 
-QuadraticCubicCurves GeneratorMicroTurbine::electricalEfficiencyFunctionofPartLoadRatioCurve() const {
+Curve GeneratorMicroTurbine::electricalEfficiencyFunctionofPartLoadRatioCurve() const {
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->electricalEfficiencyFunctionofPartLoadRatioCurve();
 }
 
@@ -992,7 +1062,7 @@ bool GeneratorMicroTurbine::isAncillaryPowerDefaulted() const {
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->isAncillaryPowerDefaulted();
 }
 
-boost::optional<QuadraticCurves> GeneratorMicroTurbine::ancillaryPowerFunctionofFuelInputCurve() const {
+boost::optional<Curve> GeneratorMicroTurbine::ancillaryPowerFunctionofFuelInputCurve() const {
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->ancillaryPowerFunctionofFuelInputCurve();
 }
 
@@ -1028,23 +1098,23 @@ boost::optional<double> GeneratorMicroTurbine::referenceHeatRecoveryWaterFlowRat
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->referenceHeatRecoveryWaterFlowRate();
 }
 
-boost::optional<BiquadraticCurves> GeneratorMicroTurbine::heatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve() const {
+boost::optional<Curve> GeneratorMicroTurbine::heatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve() const {
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->heatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve();
 }
 
-boost::optional<BicubicBiquadraticCurves> GeneratorMicroTurbine::thermalEfficiencyFunctionofTemperatureandElevationCurve() const {
+boost::optional<Curve> GeneratorMicroTurbine::thermalEfficiencyFunctionofTemperatureandElevationCurve() const {
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->thermalEfficiencyFunctionofTemperatureandElevationCurve();
 }
 
-boost::optional<QuadraticCubicCurves> GeneratorMicroTurbine::heatRecoveryRateFunctionofPartLoadRatioCurve() const {
+boost::optional<Curve> GeneratorMicroTurbine::heatRecoveryRateFunctionofPartLoadRatioCurve() const {
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->heatRecoveryRateFunctionofPartLoadRatioCurve();
 }
 
-boost::optional<QuadraticCurves> GeneratorMicroTurbine::heatRecoveryRateFunctionofInletWaterTemperatureCurve() const {
+boost::optional<Curve> GeneratorMicroTurbine::heatRecoveryRateFunctionofInletWaterTemperatureCurve() const {
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->heatRecoveryRateFunctionofInletWaterTemperatureCurve();
 }
 
-boost::optional<QuadraticCurves> GeneratorMicroTurbine::heatRecoveryRateFunctionofWaterFlowRateCurve() const {
+boost::optional<Curve> GeneratorMicroTurbine::heatRecoveryRateFunctionofWaterFlowRateCurve() const {
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->heatRecoveryRateFunctionofWaterFlowRateCurve();
 }
 
@@ -1080,11 +1150,11 @@ boost::optional<double> GeneratorMicroTurbine::referenceExhaustAirMassFlowRate()
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->referenceExhaustAirMassFlowRate();
 }
 
-boost::optional<QuadraticCubicCurves> GeneratorMicroTurbine::exhaustAirFlowRateFunctionofTemperatureCurve() const {
+boost::optional<Curve> GeneratorMicroTurbine::exhaustAirFlowRateFunctionofTemperatureCurve() const {
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->exhaustAirFlowRateFunctionofTemperatureCurve();
 }
 
-boost::optional<QuadraticCubicCurves> GeneratorMicroTurbine::exhaustAirFlowRateFunctionofPartLoadRatioCurve() const {
+boost::optional<Curve> GeneratorMicroTurbine::exhaustAirFlowRateFunctionofPartLoadRatioCurve() const {
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->exhaustAirFlowRateFunctionofPartLoadRatioCurve();
 }
 
@@ -1092,11 +1162,11 @@ boost::optional<double> GeneratorMicroTurbine::nominalExhaustAirOutletTemperatur
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->nominalExhaustAirOutletTemperature();
 }
 
-boost::optional<QuadraticCubicCurves> GeneratorMicroTurbine::exhaustAirTemperatureFunctionofTemperatureCurve() const {
+boost::optional<Curve> GeneratorMicroTurbine::exhaustAirTemperatureFunctionofTemperatureCurve() const {
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->exhaustAirTemperatureFunctionofTemperatureCurve();
 }
 
-boost::optional<QuadraticCubicCurves> GeneratorMicroTurbine::exhaustAirTemperatureFunctionofPartLoadRatioCurve() const {
+boost::optional<Curve> GeneratorMicroTurbine::exhaustAirTemperatureFunctionofPartLoadRatioCurve() const {
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->exhaustAirTemperatureFunctionofPartLoadRatioCurve();
 }
 
@@ -1148,16 +1218,16 @@ void GeneratorMicroTurbine::resetReferenceElevation() {
   getImpl<detail::GeneratorMicroTurbine_Impl>()->resetReferenceElevation();
 }
 
-bool GeneratorMicroTurbine::setElectricalPowerFunctionofTemperatureandElevationCurve(const BiquadraticCurves& biquadraticCurves) {
-  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setElectricalPowerFunctionofTemperatureandElevationCurve(biquadraticCurves);
+bool GeneratorMicroTurbine::setElectricalPowerFunctionofTemperatureandElevationCurve(const Curve& curve) {
+  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setElectricalPowerFunctionofTemperatureandElevationCurve(curve);
 }
 
-bool GeneratorMicroTurbine::setElectricalEfficiencyFunctionofTemperatureCurve(const QuadraticCubicCurves& quadraticCubicCurves) {
-  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setElectricalEfficiencyFunctionofTemperatureCurve(quadraticCubicCurves);
+bool GeneratorMicroTurbine::setElectricalEfficiencyFunctionofTemperatureCurve(const Curve& curve) {
+  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setElectricalEfficiencyFunctionofTemperatureCurve(curve);
 }
 
-bool GeneratorMicroTurbine::setElectricalEfficiencyFunctionofPartLoadRatioCurve(const QuadraticCubicCurves& quadraticCubicCurves) {
-  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setElectricalEfficiencyFunctionofPartLoadRatioCurve(quadraticCubicCurves);
+bool GeneratorMicroTurbine::setElectricalEfficiencyFunctionofPartLoadRatioCurve(const Curve& curve) {
+  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setElectricalEfficiencyFunctionofPartLoadRatioCurve(curve);
 }
 
 bool GeneratorMicroTurbine::setFuelType(std::string fuelType) {
@@ -1200,8 +1270,8 @@ void GeneratorMicroTurbine::resetAncillaryPower() {
   getImpl<detail::GeneratorMicroTurbine_Impl>()->resetAncillaryPower();
 }
 
-bool GeneratorMicroTurbine::setAncillaryPowerFunctionofFuelInputCurve(const QuadraticCurves& quadraticCurves) {
-  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setAncillaryPowerFunctionofFuelInputCurve(quadraticCurves);
+bool GeneratorMicroTurbine::setAncillaryPowerFunctionofFuelInputCurve(const Curve& curve) {
+  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setAncillaryPowerFunctionofFuelInputCurve(curve);
 }
 
 void GeneratorMicroTurbine::resetAncillaryPowerFunctionofFuelInputCurve() {
@@ -1256,40 +1326,40 @@ void GeneratorMicroTurbine::resetReferenceHeatRecoveryWaterFlowRate() {
   getImpl<detail::GeneratorMicroTurbine_Impl>()->resetReferenceHeatRecoveryWaterFlowRate();
 }
 
-bool GeneratorMicroTurbine::setHeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve(const BiquadraticCurves& biquadraticCurves) {
-  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setHeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve(biquadraticCurves);
+bool GeneratorMicroTurbine::setHeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve(const Curve& curve) {
+  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setHeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve(curve);
 }
 
 void GeneratorMicroTurbine::resetHeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve() {
   getImpl<detail::GeneratorMicroTurbine_Impl>()->resetHeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve();
 }
 
-bool GeneratorMicroTurbine::setThermalEfficiencyFunctionofTemperatureandElevationCurve(const BicubicBiquadraticCurves& bicubicBiquadraticCurves) {
-  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setThermalEfficiencyFunctionofTemperatureandElevationCurve(bicubicBiquadraticCurves);
+bool GeneratorMicroTurbine::setThermalEfficiencyFunctionofTemperatureandElevationCurve(const Curve& curve) {
+  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setThermalEfficiencyFunctionofTemperatureandElevationCurve(curve);
 }
 
 void GeneratorMicroTurbine::resetThermalEfficiencyFunctionofTemperatureandElevationCurve() {
   getImpl<detail::GeneratorMicroTurbine_Impl>()->resetThermalEfficiencyFunctionofTemperatureandElevationCurve();
 }
 
-bool GeneratorMicroTurbine::setHeatRecoveryRateFunctionofPartLoadRatioCurve(const QuadraticCubicCurves& quadraticCubicCurves) {
-  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setHeatRecoveryRateFunctionofPartLoadRatioCurve(quadraticCubicCurves);
+bool GeneratorMicroTurbine::setHeatRecoveryRateFunctionofPartLoadRatioCurve(const Curve& curve) {
+  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setHeatRecoveryRateFunctionofPartLoadRatioCurve(curve);
 }
 
 void GeneratorMicroTurbine::resetHeatRecoveryRateFunctionofPartLoadRatioCurve() {
   getImpl<detail::GeneratorMicroTurbine_Impl>()->resetHeatRecoveryRateFunctionofPartLoadRatioCurve();
 }
 
-bool GeneratorMicroTurbine::setHeatRecoveryRateFunctionofInletWaterTemperatureCurve(const QuadraticCurves& quadraticCurves) {
-  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setHeatRecoveryRateFunctionofInletWaterTemperatureCurve(quadraticCurves);
+bool GeneratorMicroTurbine::setHeatRecoveryRateFunctionofInletWaterTemperatureCurve(const Curve& curve) {
+  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setHeatRecoveryRateFunctionofInletWaterTemperatureCurve(curve);
 }
 
 void GeneratorMicroTurbine::resetHeatRecoveryRateFunctionofInletWaterTemperatureCurve() {
   getImpl<detail::GeneratorMicroTurbine_Impl>()->resetHeatRecoveryRateFunctionofInletWaterTemperatureCurve();
 }
 
-bool GeneratorMicroTurbine::setHeatRecoveryRateFunctionofWaterFlowRateCurve(const QuadraticCurves& quadraticCurves) {
-  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setHeatRecoveryRateFunctionofWaterFlowRateCurve(quadraticCurves);
+bool GeneratorMicroTurbine::setHeatRecoveryRateFunctionofWaterFlowRateCurve(const Curve& curve) {
+  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setHeatRecoveryRateFunctionofWaterFlowRateCurve(curve);
 }
 
 void GeneratorMicroTurbine::resetHeatRecoveryRateFunctionofWaterFlowRateCurve() {
@@ -1344,16 +1414,16 @@ void GeneratorMicroTurbine::resetReferenceExhaustAirMassFlowRate() {
   getImpl<detail::GeneratorMicroTurbine_Impl>()->resetReferenceExhaustAirMassFlowRate();
 }
 
-bool GeneratorMicroTurbine::setExhaustAirFlowRateFunctionofTemperatureCurve(const QuadraticCubicCurves& quadraticCubicCurves) {
-  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setExhaustAirFlowRateFunctionofTemperatureCurve(quadraticCubicCurves);
+bool GeneratorMicroTurbine::setExhaustAirFlowRateFunctionofTemperatureCurve(const Curve& curve) {
+  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setExhaustAirFlowRateFunctionofTemperatureCurve(curve);
 }
 
 void GeneratorMicroTurbine::resetExhaustAirFlowRateFunctionofTemperatureCurve() {
   getImpl<detail::GeneratorMicroTurbine_Impl>()->resetExhaustAirFlowRateFunctionofTemperatureCurve();
 }
 
-bool GeneratorMicroTurbine::setExhaustAirFlowRateFunctionofPartLoadRatioCurve(const QuadraticCubicCurves& quadraticCubicCurves) {
-  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setExhaustAirFlowRateFunctionofPartLoadRatioCurve(quadraticCubicCurves);
+bool GeneratorMicroTurbine::setExhaustAirFlowRateFunctionofPartLoadRatioCurve(const Curve& curve) {
+  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setExhaustAirFlowRateFunctionofPartLoadRatioCurve(curve);
 }
 
 void GeneratorMicroTurbine::resetExhaustAirFlowRateFunctionofPartLoadRatioCurve() {
@@ -1368,21 +1438,54 @@ void GeneratorMicroTurbine::resetNominalExhaustAirOutletTemperature() {
   getImpl<detail::GeneratorMicroTurbine_Impl>()->resetNominalExhaustAirOutletTemperature();
 }
 
-bool GeneratorMicroTurbine::setExhaustAirTemperatureFunctionofTemperatureCurve(const QuadraticCubicCurves& quadraticCubicCurves) {
-  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setExhaustAirTemperatureFunctionofTemperatureCurve(quadraticCubicCurves);
+bool GeneratorMicroTurbine::setExhaustAirTemperatureFunctionofTemperatureCurve(const Curve& curve) {
+  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setExhaustAirTemperatureFunctionofTemperatureCurve(curve);
 }
 
 void GeneratorMicroTurbine::resetExhaustAirTemperatureFunctionofTemperatureCurve() {
   getImpl<detail::GeneratorMicroTurbine_Impl>()->resetExhaustAirTemperatureFunctionofTemperatureCurve();
 }
 
-bool GeneratorMicroTurbine::setExhaustAirTemperatureFunctionofPartLoadRatioCurve(const QuadraticCubicCurves& quadraticCubicCurves) {
-  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setExhaustAirTemperatureFunctionofPartLoadRatioCurve(quadraticCubicCurves);
+bool GeneratorMicroTurbine::setExhaustAirTemperatureFunctionofPartLoadRatioCurve(const Curve& curve) {
+  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setExhaustAirTemperatureFunctionofPartLoadRatioCurve(curve);
 }
 
 void GeneratorMicroTurbine::resetExhaustAirTemperatureFunctionofPartLoadRatioCurve() {
   getImpl<detail::GeneratorMicroTurbine_Impl>()->resetExhaustAirTemperatureFunctionofPartLoadRatioCurve();
 }
+
+
+/// New Methods
+  // Problably useless...
+  //boost::optional<std::string> GeneratorMicroTurbine_Impl::heatRecoveryWaterInletNodeName() const {
+  //  return getString(OS_Generator_MicroTurbineFields::HeatRecoveryWaterInletNodeName,true);
+  //}
+
+  ModelObject GeneratorMicroTurbine_Impl::clone(Model model) const
+  {
+    GeneratorMicroTurbine newMCHP = StraightComponent_Impl::clone(model).cast<GeneratorMicroTurbine>();
+
+    return newMCHP;
+  }
+  
+  bool GeneratorMicroTurbine_Impl::addToNode(Node & node)
+  {
+    if( boost::optional<PlantLoop> plant = node.plantLoop() )
+    {
+      if( plant->supplyComponent(node.handle()) )
+      {
+        if( StraightComponent_Impl::addToNode(node) )
+        {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+
+
 
 /// @cond
 GeneratorMicroTurbine::GeneratorMicroTurbine(std::shared_ptr<detail::GeneratorMicroTurbine_Impl> impl)
