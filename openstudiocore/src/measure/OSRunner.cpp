@@ -188,10 +188,13 @@ bool OSRunner::incrementStep()
 
             openstudio::path path = dir_iter->path();
             OS_ASSERT(path.is_absolute());
-            try{
-              path = relativePath(path, absoluteRootDir);
-            } catch (const std::exception&){
-            }
+
+            // DLM: we need to figure out what these should be
+            // are they absolute, relative to root dir, relative to measure dir, valid after reports have been packed up?
+            //try{
+            //  path = relativePath(path, absoluteRootDir);
+            //} catch (const std::exception&){
+            //}
             m_result.addStepFile(path);
           }
         }
