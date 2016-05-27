@@ -24840,24 +24840,96 @@ OS:Generator:MicroTurbine,
       \note mdot = fuel mass flow rate (kg/s)
       \note If left blank, model assumes ancillary power defined in previous field is constant
       \note whenever the generator is operating.
-  A8, \field Heat Recovery Water Inlet Node Name
+  A8, \field Generator MicroTurbine Heat Recovery Name
+      \type object-list
+      \object-list MicroTurbineHeatRecoveryNames
+      \note Reference an optional OpenStudio specific object for the HeatRecovery Module itself
+ A9, \field Combustion Air Inlet Node Name
       \type object-list
       \object-list ConnectionNames
-  A9, \field Heat Recovery Water Outlet Node Name
+      \note Must be an outdoor air node.
+ A10, \field Combustion Air Outlet Node Name
       \type object-list
       \object-list ConnectionNames
- N12, \field Reference Thermal Efficiency Using Lower Heat Value
+ N12, \field Reference Exhaust Air Mass Flow Rate
+      \type real
+      \units kg/s
+      \minimum> 0.0
+ A11, \field Exhaust Air Flow Rate Function of Temperature Curve Name
+      \type object-list
+      \object-list QuadraticCubicCurves
+      \object-list UniVariateTables
+      \note Quadratic curve = a + b*T + c*T**2
+      \note Cubic curve = a + b*T + c*T**2 + d*T**3
+      \note T = combustion air inlet temperature (C)
+      \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
+ A12, \field Exhaust Air Flow Rate Function of Part Load Ratio Curve Name
+      \type object-list
+      \object-list QuadraticCubicCurves
+      \object-list UniVariateTables
+      \note Quadratic curve = a + b*PLR + c*PLR**2
+      \note Cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
+      \note PLR = ratio of Generator Load to steady state Electrical Power Output at
+      \note current operating conditions.
+      \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
+ N13, \field Nominal Exhaust Air Outlet Temperature
+      \type real
+      \note Exhaust air outlet temperature at reference conditions.
+ A13, \field Exhaust Air Temperature Function of Temperature Curve Name
+      \type object-list
+      \object-list QuadraticCubicCurves
+      \object-list UniVariateTables
+      \note Quadratic curve = a + b*T + c*T**2
+      \note Cubic curve = a + b*T + c*T**2 + d*T**3
+      \note T = combustion air inlet temperature (C)
+      \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
+ A14; \field Exhaust Air Temperature Function of Part Load Ratio Curve Name
+      \type object-list
+      \object-list QuadraticCubicCurves
+      \object-list UniVariateTables
+      \note Quadratic curve = a + b*PLR + c*PLR**2
+      \note Cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
+      \note PLR = ratio of Generator Load to steady state Electrical Power Output at
+      \note current operating conditions.
+      \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
+      
+OS:Generator:MicroTurbine:HeatRecovery,
+      \memo MicroTurbine generators are small combustion turbines (e.g., 25kW to 500kW). The model
+      \memo calculates electrical power output, fuel use, standby and ancillary power.
+      \memo Energy recovery from exhaust air can be used to heat water.
+      \memo this class is purely for OpenStudio to separate
+      \memo the HeatRecovery (StraightComponent) from the Generator:MicroTurbine(Generator)
+      \min-fields 12
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2, \field Name
+      \required-field
+      \type alpha
+      \reference MicroTurbineHeatRecoveryNames
+      \reference ConnectionObject
+  A3, \field Heat Recovery Water Inlet Node Name
+      \type object-list
+      \required-field
+      \object-list ConnectionNames
+  A4, \field Heat Recovery Water Outlet Node Name
+      \type object-list
+      \required-field
+      \object-list ConnectionNames
+ N1 , \field Reference Thermal Efficiency Using Lower Heat Value
       \type real
       \minimum 0.0
       \maximum 1.0
       \default 0.0
       \note Reference thermal efficiency (heat recovery to water) based on the
       \note Lower Heating Value (LHV) of the fuel.
- N13, \field Reference Inlet Water Temperature
+ N2 , \field Reference Inlet Water Temperature
       \type real
+      \required-field
       \units C
-  A10, \field Heat Recovery Water Flow Operating Mode
+ A5 , \field Heat Recovery Water Flow Operating Mode
       \type choice
+      \required-field
       \key PlantControl
       \key InternalControl
       \default PlantControl
@@ -24866,12 +24938,13 @@ OS:Generator:MicroTurbine,
       \note InternalControl means the heat recovery water flow rate is controlled by this generator.
       \note If 'InternalControl' is selected, then the user needs to supply a reference heat
       \note recovery water flow rate and optionally the name of a heat recovery flow rate modifier curve.
- N14, \field Reference Heat Recovery Water Flow Rate
+ N6 , \field Reference Heat Recovery Water Flow Rate
       \type real
+      \required-field
       \units m3/s
       \ip-units gal/min
       \minimum> 0.0
- A11, \field Heat Recovery Water Flow Rate Function of Temperature and Power Curve Name
+ A6 , \field Heat Recovery Water Flow Rate Function of Temperature and Power Curve Name
       \type object-list
       \object-list BiquadraticCurves
       \object-list BiVariateTables
@@ -24880,7 +24953,7 @@ OS:Generator:MicroTurbine,
       \note Pnet = net power output = electric power output - ancillary power
       \note If left blank, model assumes the heat recovery water flow rate is constant whenever the
       \note generator is operating, at the Reference HR Water Flow Rate defined in the previous field.
- A12, \field Thermal Efficiency Function of Temperature and Elevation Curve Name
+ A7 , \field Thermal Efficiency Function of Temperature and Elevation Curve Name
       \type object-list
       \object-list BicubicBiquadraticCurves
       \object-list BiVariateTables
@@ -24889,7 +24962,7 @@ OS:Generator:MicroTurbine,
       \note T = combustion air inlet temperature (C)
       \note Elev = elevation (m)
       \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
- A13, \field Heat Recovery Rate Function of Part Load Ratio Curve Name
+ A8 , \field Heat Recovery Rate Function of Part Load Ratio Curve Name
       \type object-list
       \object-list QuadraticCubicCurves
       \object-list UniVariateTables
@@ -24898,83 +24971,38 @@ OS:Generator:MicroTurbine,
       \note PLR = ratio of Generator Load to steady state Electrical Power Output at
       \note current operating conditions
       \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
- A14, \field Heat Recovery Rate Function of Inlet Water Temperature Curve Name
+ A9 , \field Heat Recovery Rate Function of Inlet Water Temperature Curve Name
       \type object-list
       \object-list QuadraticCurves
       \object-list UniVariateTables
       \note Quadratic curve = a + b*T + c*T**2
       \note T = inlet water temperature (C)
       \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
- A15, \field Heat Recovery Rate Function of Water Flow Rate Curve Name
+ A10, \field Heat Recovery Rate Function of Water Flow Rate Curve Name
       \type object-list
       \object-list QuadraticCurves
       \object-list UniVariateTables
       \note Quadratic curve = a + b*Flow + c*Flow**2
       \note Flow = flow rate of water through the heat exchanger (m3/s)
       \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
- N15, \field Minimum Heat Recovery Water Flow Rate
+ N7, \field Minimum Heat Recovery Water Flow Rate
       \type real
       \units m3/s
       \ip-units gal/min
       \minimum 0.0
       \default 0.0
- N16, \field Maximum Heat Recovery Water Flow Rate
+ N8, \field Maximum Heat Recovery Water Flow Rate
       \type real
+      \required-field
       \units m3/s
       \ip-units gal/min
       \minimum 0.0
       \default 0.0
- N17, \field Maximum Heat Recovery Water Temperature
+      \note Eplus defaults to 0 but here it would be moot to have a Heat
+      \note Recovery module with a max flow of 0 so it is a required field
+ N9; \field Maximum Heat Recovery Water Temperature
       \type real
       \units C
- A16, \field Combustion Air Inlet Node Name
-      \type object-list
-      \object-list ConnectionNames
-      \note Must be an outdoor air node.
- A17, \field Combustion Air Outlet Node Name
-      \type object-list
-      \object-list ConnectionNames
- N18, \field Reference Exhaust Air Mass Flow Rate
-      \type real
-      \units kg/s
-      \minimum> 0.0
- A18, \field Exhaust Air Flow Rate Function of Temperature Curve Name
-      \type object-list
-      \object-list QuadraticCubicCurves
-      \object-list UniVariateTables
-      \note Quadratic curve = a + b*T + c*T**2
-      \note Cubic curve = a + b*T + c*T**2 + d*T**3
-      \note T = combustion air inlet temperature (C)
-      \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
- A19, \field Exhaust Air Flow Rate Function of Part Load Ratio Curve Name
-      \type object-list
-      \object-list QuadraticCubicCurves
-      \object-list UniVariateTables
-      \note Quadratic curve = a + b*PLR + c*PLR**2
-      \note Cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
-      \note PLR = ratio of Generator Load to steady state Electrical Power Output at
-      \note current operating conditions.
-      \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
- N19, \field Nominal Exhaust Air Outlet Temperature
-      \type real
-      \note Exhaust air outlet temperature at reference conditions.
- A20, \field Exhaust Air Temperature Function of Temperature Curve Name
-      \type object-list
-      \object-list QuadraticCubicCurves
-      \object-list UniVariateTables
-      \note Quadratic curve = a + b*T + c*T**2
-      \note Cubic curve = a + b*T + c*T**2 + d*T**3
-      \note T = combustion air inlet temperature (C)
-      \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
- A21; \field Exhaust Air Temperature Function of Part Load Ratio Curve Name
-      \type object-list
-      \object-list QuadraticCubicCurves
-      \object-list UniVariateTables
-      \note Quadratic curve = a + b*PLR + c*PLR**2
-      \note Cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
-      \note PLR = ratio of Generator Load to steady state Electrical Power Output at
-      \note current operating conditions.
-      \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
 
 OS:Generator:Photovoltaic,
         \memo Describes an array of photovoltaic (PV) modules. PV performance is taken from the
@@ -25021,7 +25049,7 @@ OS:Generator:Photovoltaic,
         \note If this field is blank, the generator is always available.
         \type object-list
         \object-list ScheduleNames
-  
+
 OS:PhotovoltaicPerformance:Simple,
         \memo Describes a simple model of photovoltaics that may be useful for early phase
         \memo design analysis. In this model the user has direct access to the efficiency with

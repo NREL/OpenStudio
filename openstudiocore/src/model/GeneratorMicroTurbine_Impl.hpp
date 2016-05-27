@@ -26,8 +26,13 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Curve;
+// For the optional Generator:MicroTurbine:HeatRecovery
+// It was broken out because that part needs to connect to a plant loop
+class StraightComponent;
+
+// TODO: add the tables class if they get added to OS later?
+//class DataTables // UniVariateTables and BiVariateTables
 
 namespace detail {
 
@@ -59,10 +64,6 @@ namespace detail {
     virtual const std::vector<std::string>& outputVariableNames() const;
 
     virtual IddObjectType iddObjectType() const;
-    
-    virtual unsigned inletPort() override;
-
-    virtual unsigned outletPort() override;
 
     //@}
     /** @name Getters */
@@ -113,44 +114,8 @@ namespace detail {
     // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
     boost::optional<Curve> ancillaryPowerFunctionofFuelInputCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    //boost::optional<Connection> heatRecoveryWaterInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    //boost::optional<Connection> heatRecoveryWaterOutletNode() const;
-
-    double referenceThermalEfficiencyUsingLowerHeatValue() const;
-    bool isReferenceThermalEfficiencyUsingLowerHeatValueDefaulted() const;
-
-    boost::optional<double> referenceInletWaterTemperature() const;
-
-    std::string heatRecoveryWaterFlowOperatingMode() const;
-    bool isHeatRecoveryWaterFlowOperatingModeDefaulted() const;
-
-    boost::optional<double> referenceHeatRecoveryWaterFlowRate() const;
-
-    // TODO: Check return type. From object lists, some candidates are: BiquadraticCurves, BiVariateTables.
-    boost::optional<Curve> heatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve() const;
-
-    // TODO: Check return type. From object lists, some candidates are: BicubicBiquadraticCurves, BiVariateTables.
-    boost::optional<Curve> thermalEfficiencyFunctionofTemperatureandElevationCurve() const;
-
-    // TODO: Check return type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
-    boost::optional<Curve> heatRecoveryRateFunctionofPartLoadRatioCurve() const;
-
-    // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-    boost::optional<Curve> heatRecoveryRateFunctionofInletWaterTemperatureCurve() const;
-
-    // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-    boost::optional<Curve> heatRecoveryRateFunctionofWaterFlowRateCurve() const;
-
-    double minimumHeatRecoveryWaterFlowRate() const;
-    bool isMinimumHeatRecoveryWaterFlowRateDefaulted() const;
-
-    double maximumHeatRecoveryWaterFlowRate() const;
-    bool isMaximumHeatRecoveryWaterFlowRateDefaulted() const;
-
-    boost::optional<double> maximumHeatRecoveryWaterTemperature() const;
+    // Optional Generator:MicroTurbine:HeatRecovery
+    boost::optional<StraightComponent> generatorMicroTurbineHeatRecovery() const;
 
     // TODO: Check return type. From object lists, some candidates are: Connection.
     //boost::optional<Connection> combustionAirInletNode() const;
@@ -225,54 +190,9 @@ namespace detail {
     bool setAncillaryPowerFunctionofFuelInputCurve(const Curve& ancillaryPowerFunctionofFuelInputCurve);
     void resetAncillaryPowerFunctionofFuelInputCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    //bool setHeatRecoveryWaterInletNode(const Connection& connection);
-    //void resetHeatRecoveryWaterInletNode();
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    //bool setHeatRecoveryWaterOutletNode(const Connection& connection);
-    //void resetHeatRecoveryWaterOutletNode();
-
-    bool setReferenceThermalEfficiencyUsingLowerHeatValue(double referenceThermalEfficiencyUsingLowerHeatValue);
-    void resetReferenceThermalEfficiencyUsingLowerHeatValue();
-
-    void setReferenceInletWaterTemperature(double referenceInletWaterTemperature);
-    void resetReferenceInletWaterTemperature();
-
-    bool setHeatRecoveryWaterFlowOperatingMode(std::string heatRecoveryWaterFlowOperatingMode);
-    void resetHeatRecoveryWaterFlowOperatingMode();
-
-    bool setReferenceHeatRecoveryWaterFlowRate(double referenceHeatRecoveryWaterFlowRate);
-    void resetReferenceHeatRecoveryWaterFlowRate();
-
-    // TODO: Check argument type. From object lists, some candidates are: BiquadraticCurves, BiVariateTables.
-    bool setHeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve(const Curve& heatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve);
-    void resetHeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve();
-
-    // TODO: Check argument type. From object lists, some candidates are: BicubicBiquadraticCurves, BiVariateTables.
-    bool setThermalEfficiencyFunctionofTemperatureandElevationCurve(const Curve& thermalEfficiencyFunctionofTemperatureandElevationCurve);
-    void resetThermalEfficiencyFunctionofTemperatureandElevationCurve();
-
-    // TODO: Check argument type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
-    bool setHeatRecoveryRateFunctionofPartLoadRatioCurve(const Curve& heatRecoveryRateFunctionofPartLoadRatioCurve);
-    void resetHeatRecoveryRateFunctionofPartLoadRatioCurve();
-
-    // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-    bool setHeatRecoveryRateFunctionofInletWaterTemperatureCurve(const Curve& heatRecoveryRateFunctionofInletWaterTemperatureCurve);
-    void resetHeatRecoveryRateFunctionofInletWaterTemperatureCurve();
-
-    // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-    bool setHeatRecoveryRateFunctionofWaterFlowRateCurve(const curve& heatRecoveryRateFunctionofWaterFlowRateCurve);
-    void resetHeatRecoveryRateFunctionofWaterFlowRateCurve();
-
-    bool setMinimumHeatRecoveryWaterFlowRate(double minimumHeatRecoveryWaterFlowRate);
-    void resetMinimumHeatRecoveryWaterFlowRate();
-
-    bool setMaximumHeatRecoveryWaterFlowRate(double maximumHeatRecoveryWaterFlowRate);
-    void resetMaximumHeatRecoveryWaterFlowRate();
-
-    void setMaximumHeatRecoveryWaterTemperature(double maximumHeatRecoveryWaterTemperature);
-    void resetMaximumHeatRecoveryWaterTemperature();
+    // Optional Generator:MicroTurbine:HeatRecovery
+    bool setGeneratorMicroTurbineHeatRecovery(const StraightComponent& generatorMicroTurbineHeatRecovery);
+    void resetGeneratorMicroTurbineHeatRecovery();
 
     // TODO: Check argument type. From object lists, some candidates are: Connection.
     //bool setCombustionAirInletNode(const Connection& connection);
@@ -307,9 +227,6 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-    bool addToNode(Node & node) override;
-
-    ModelObject clone(Model model) const override;
 
     //@}
    protected:
