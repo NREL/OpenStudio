@@ -650,23 +650,6 @@ get_directory_property(dupdirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} INCLUDE_DIR
 list(REMOVE_DUPLICATES dupdirs)
 set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${dupdirs}")
 
-# list of all Qt libs and dependencies we are using
-###list(APPEND QT_LIBS ${Qt5Widgets_LIBRARIES})
-###list(APPEND QT_LIBS ${Qt5Sql_LIBRARIES})
-###list(APPEND QT_LIBS ${Qt5Network_LIBRARIES})
-###list(APPEND QT_LIBS ${Qt5Xml_LIBRARIES})
-#list(APPEND QT_LIBS ${Qt5OpenGL_LIBRARIES})
-#if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
-#  list(APPEND QT_LIBS ${Qt5WebKit_LIBRARIES})
-#  list(APPEND QT_LIBS ${Qt5WebKitWidgets_LIBRARIES})
-#else()
-#  list(APPEND QT_LIBS ${Qt5WebEngine_LIBRARIES})
-#  list(APPEND QT_LIBS ${Qt5WebEngineWidgets_LIBRARIES})
-#endif()
-#list(APPEND QT_LIBS ${Qt5WinExtras_LIBRARIES})
-###list(APPEND QT_LIBS ${Qt5Concurrent_LIBRARIES})
-###list(APPEND QT_LIBS ${Qt5PrintSupport_LIBRARIES})
-
 ### recreating QT_LIBRARY_DIR for qt5
 if(WIN32 AND TARGET Qt5::Core)
   get_property(_Qt5_Core_LOCATION TARGET Qt5::Core PROPERTY LOCATION)
@@ -674,11 +657,6 @@ if(WIN32 AND TARGET Qt5::Core)
 else()
   set(QT_LIBRARY_DIR "")
 endif()
-#find_package(Qt5OpenGL HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5PrintSupport, Qt5Widgets
-#find_package(Qt5OpenGLExtensions HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5PrintSupport, Qt5Widgets
-#find_package(OpenGL)
-#list(APPEND QT_LIBS Qt5::OpenGL)
-#list(APPEND QT_LIBS ${OPENGL_LIBRARIES})
 
 list(APPEND QT_LIBS Qt5::Core)
 list(APPEND QT_LIBS Qt5::Gui)
@@ -688,14 +666,18 @@ list(APPEND QT_LIBS Qt5::Network)
 list(APPEND QT_LIBS Qt5::Xml)
 list(APPEND QT_LIBS Qt5::Concurrent)
 list(APPEND QT_LIBS Qt5::PrintSupport)
-list(APPEND QT_LIBS Qt5::WinExtras)
-
 list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/lib/qtpcre.lib")
 list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/lib/qtharfbuzzng.lib")
 list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/plugins/sqldrivers/qsqlite.lib")
-list(APPEND QT_LIBS wsock32)
-list(APPEND QT_LIBS ws2_32)
-list(APPEND QT_LIBS Crypt32)
+
+if( WIN32 )
+  # This is a dirty hack and only works for release
+  # clean this up
+  list(APPEND QT_LIBS Qt5::WinExtras)
+  list(APPEND QT_LIBS wsock32)
+  list(APPEND QT_LIBS ws2_32)
+  list(APPEND QT_LIBS Crypt32)
+endif()
 
 
 #get_target_property(
