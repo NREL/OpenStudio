@@ -365,6 +365,7 @@ find_package(Qt5Xml HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Xml
 #find_package(Qt5WinExtras HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5WinExtras
 find_package(Qt5Concurrent HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Concurrent
 find_package(Qt5PrintSupport HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5PrintSupport, Qt5Widgets
+find_package(Qt5OpenGL HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5PrintSupport, Qt5Widgets
 mark_as_advanced(
   Qt5Concurrent_DIR
   Qt5Core_DIR
@@ -384,6 +385,7 @@ mark_as_advanced(
   Qt5Widgets_DIR
   #Qt5WinExtras_DIR
   Qt5Xml_DIR
+  Qt5OpenGL_DIR
 )
 
 # Build Qt

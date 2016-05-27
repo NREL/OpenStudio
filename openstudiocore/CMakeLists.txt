@@ -587,13 +587,15 @@ add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
 #--------------------------------------------------------------------------------
 # Qt
 
+find_package(Qt5Core REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Sql REQUIRED)
 find_package(Qt5Network REQUIRED)
 find_package(Qt5Xml REQUIRED)
-#find_package(Qt5WinExtras)
+find_package(Qt5WinExtras REQUIRED)
 find_package(Qt5Concurrent REQUIRED)
 find_package(Qt5PrintSupport REQUIRED)
+find_package(Qt5Gui REQUIRED)
 mark_as_advanced(
   Qt5Concurrent_DIR
   Qt5Core_DIR
@@ -649,10 +651,11 @@ list(REMOVE_DUPLICATES dupdirs)
 set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${dupdirs}")
 
 # list of all Qt libs and dependencies we are using
-list(APPEND QT_LIBS ${Qt5Widgets_LIBRARIES})
-list(APPEND QT_LIBS ${Qt5Sql_LIBRARIES})
-list(APPEND QT_LIBS ${Qt5Network_LIBRARIES})
-list(APPEND QT_LIBS ${Qt5Xml_LIBRARIES})
+###list(APPEND QT_LIBS ${Qt5Widgets_LIBRARIES})
+###list(APPEND QT_LIBS ${Qt5Sql_LIBRARIES})
+###list(APPEND QT_LIBS ${Qt5Network_LIBRARIES})
+###list(APPEND QT_LIBS ${Qt5Xml_LIBRARIES})
+#list(APPEND QT_LIBS ${Qt5OpenGL_LIBRARIES})
 #if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
 #  list(APPEND QT_LIBS ${Qt5WebKit_LIBRARIES})
 #  list(APPEND QT_LIBS ${Qt5WebKitWidgets_LIBRARIES})
@@ -661,8 +664,8 @@ list(APPEND QT_LIBS ${Qt5Xml_LIBRARIES})
 #  list(APPEND QT_LIBS ${Qt5WebEngineWidgets_LIBRARIES})
 #endif()
 #list(APPEND QT_LIBS ${Qt5WinExtras_LIBRARIES})
-list(APPEND QT_LIBS ${Qt5Concurrent_LIBRARIES})
-list(APPEND QT_LIBS ${Qt5PrintSupport_LIBRARIES})
+###list(APPEND QT_LIBS ${Qt5Concurrent_LIBRARIES})
+###list(APPEND QT_LIBS ${Qt5PrintSupport_LIBRARIES})
 
 ### recreating QT_LIBRARY_DIR for qt5
 if(WIN32 AND TARGET Qt5::Core)
@@ -671,6 +674,56 @@ if(WIN32 AND TARGET Qt5::Core)
 else()
   set(QT_LIBRARY_DIR "")
 endif()
+#find_package(Qt5OpenGL HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5PrintSupport, Qt5Widgets
+#find_package(Qt5OpenGLExtensions HINTS ${QT_HINT_DIR}) #Qt5Core, Qt5Gui, Qt5PrintSupport, Qt5Widgets
+#find_package(OpenGL)
+#list(APPEND QT_LIBS Qt5::OpenGL)
+#list(APPEND QT_LIBS ${OPENGL_LIBRARIES})
+
+list(APPEND QT_LIBS Qt5::Core)
+list(APPEND QT_LIBS Qt5::Gui)
+list(APPEND QT_LIBS Qt5::Widgets)
+list(APPEND QT_LIBS Qt5::Sql)
+list(APPEND QT_LIBS Qt5::Network)
+list(APPEND QT_LIBS Qt5::Xml)
+list(APPEND QT_LIBS Qt5::Concurrent)
+list(APPEND QT_LIBS Qt5::PrintSupport)
+list(APPEND QT_LIBS Qt5::WinExtras)
+
+list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/lib/qtpcre.lib")
+list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/lib/qtharfbuzzng.lib")
+list(APPEND QT_LIBS wsock32)
+list(APPEND QT_LIBS ws2_32)
+
+
+#get_target_property(
+#    linked_libs
+#    Qt5::Core
+#    INTERFACE_LINK_LIBRARIES
+#)
+#
+#set(debug "${_qt5Core_install_prefix}/lib/qtpcred.lib")
+#set(nondebug "${_qt5Core_install_prefix}/lib/qtpcre.lib")
+#
+#set(debug_gen_expr "$<$<CONFIG:Debug>:${debug}>")
+#set(nondebug_gen_expr "$<$<NOT:$<CONFIG:Debug>>:${release}>")
+#set(gen_expr "${debug_gen_expr};${nondebug_gen_expr}")
+#
+#set_target_properties(
+#	Qt5::Core
+#    PROPERTIES
+#    INTERFACE_LINK_LIBRARIES "${gen_expr};${linked_libs}"
+#)
+
+
+
+
+
+
+
+
+
+
 
 
 ###############################################################################
