@@ -15,3 +15,24 @@ cd path/to/Examples/compact_osw
 
 The OpenStudio command line needs to access EnergyPlus. It will do this by first looking for the environment variable ENERGYPLUS_EXE_PATH, and then by looking in the standard EnergyPlus install location for the system.
 
+## Note about versioning
+
+```
+openstudio.exe openstudio_version
+```
+
+This command will report out the version of the OpenStudio command line interface. At this time, even though this is a 2.0 preview, the version will be reported as 1.x.y corresponding to the version of the OpenStudio model for which it is compatiable.
+
+
+## Known Issues
+
+Too many to list. This is a work in progress.
+
+* No version translation support. Older osm files will not run using the command line interface, because the version translator is not yet included.
+* Missing Ruby libraries. Most of the Ruby standard library is available from command line interface and therefore accessible from OpenStudio Measures. There are a few libraries that are still missing.
+* Incomplete. There is no OpenStudio Application, Standards Gem, or Prototype buildings included in the package. Those things are coming.
+
+## Updates
+
+Look for new stuff every two weeks.
+
