@@ -717,3 +717,6 @@ add_custom_target(openstudio_airflow_resources
 )
 
 CREATE_SRC_GROUPS("${airflow_resources_src}")
+
+install(DIRECTORY "Examples" DESTINATION .)
+
