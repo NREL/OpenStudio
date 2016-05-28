@@ -589,7 +589,7 @@ endif()
 
 set(SHELL_COMMAND sh -c)
 if( WIN32 )
-  set(SHELL_COMMAND "cmd /C")
+  set(SHELL_COMMAND cmd /C)
 endif()
 ExternalProject_Add(OpenStudio-workflow-gem
   GIT_REPOSITORY https://github.com/NREL/OpenStudio-workflow-gem.git
