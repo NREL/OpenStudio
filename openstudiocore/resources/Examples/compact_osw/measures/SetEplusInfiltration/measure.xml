@@ -1,0 +1,53 @@
+<measure>
+  <schema_version>3.0</schema_version>
+  <name>Set EnergyPlus Infiltration Flow Rate Per Floor Area</name>
+  <uid>490a2af3-7b64-4915-bf9e-9a3a7b525a17</uid>
+  <version_id>22c341d1-64e2-486d-a430-f30d3c6f9ad4</version_id>
+  <xml_checksum>2AC0F979</xml_checksum>
+  <class_name>SetEnergyPlusInfiltrationFlowRatePerFloorArea</class_name>
+  <display_name>Set EnergyPlus Infiltration Flow Rate Per Floor Area</display_name>
+  <description>Set the flow rate per floor area value for all infiltration objects in the model. Input values are in SI units.</description>
+  <modeler_description>Affected infiltration objects will have "Design Flor Rate Calculation Method" set to "Flow/Area" and the "Flow per Zone Floor Area" set to the requested SI value.</modeler_description>
+  <arguments/>
+  <provenances/>
+  <tags>
+    <tag>Envelope.Infiltration</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Type</name>
+      <value>EnergyPlusMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Uses SketchUp API</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>1.1.0</identifier>
+        <min_compatible>1.1.0</min_compatible>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>4BCA3C57</checksum>
+    </file>
+    <file>
+      <filename>Test.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>BCF2DBB8</checksum>
+    </file>
+    <file>
+      <filename>SetEnergyPlusInfiltrationFlowRatePerFloorArea_Test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>F47EC348</checksum>
+    </file>
+  </files>
+</measure>

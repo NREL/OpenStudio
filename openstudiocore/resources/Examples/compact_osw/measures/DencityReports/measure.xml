@@ -1,0 +1,64 @@
+<measure>
+  <schema_version>3.0</schema_version>
+  <name>dencity_reports</name>
+  <uid>4f939be0-fe1c-11e3-a3ac-0800200c9a66</uid>
+  <version_id>5dbbecc1-55ab-4113-8c8b-dca006df2d53</version_id>
+  <xml_checksum>2C8A3EEF</xml_checksum>
+  <class_name>DencityReports</class_name>
+  <display_name>Dencity Reports</display_name>
+  <description>Default reports needed for DEnCity</description>
+  <modeler_description>Add this reporting measure to the end of the workflow</modeler_description>
+  <arguments>
+    <argument>
+      <name>output_format</name>
+      <display_name>Output Format</display_name>
+      <type>Choice</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>Both</default_value>
+      <choices>
+        <choice>
+          <value>MessagePack</value>
+          <display_name>MessagePack</display_name>
+        </choice>
+        <choice>
+          <value>CSV</value>
+          <display_name>CSV</display_name>
+        </choice>
+        <choice>
+          <value>Both</value>
+          <display_name>Both</display_name>
+        </choice>
+      </choices>
+    </argument>
+  </arguments>
+  <provenances/>
+  <tags>
+    <tag>Reporting.QAQC</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ReportingMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Uses SketchUp API</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>1.3.0</identifier>
+        <min_compatible>1.3.0</min_compatible>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>CAD52B50</checksum>
+    </file>
+  </files>
+</measure>

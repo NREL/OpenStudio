@@ -1,0 +1,183 @@
+name,display_name,short_name,description,unit,datatype,user_defined
+building_area,Total Building Area,Bldg Area,Total building area as calculated by Energy Plus,square_meter,double,FALSE
+electricity_heating_eui,Heating Electricity EUI,Elec Heat EUI,Total electricity used for heating per square foot,megajoules_per_square_meter,double,FALSE
+electricity_cooling_eui,Cooling Electricity EUI,Elec Cool EUI,Total electricity used for cooling per square foot,megajoules_per_square_meter,double,FALSE
+electricity_interior_lighting_eui,Interior Lighting Electricity EUI,Elec Int Light EUI,Total electricity used for interior lighting per square foot,megajoules_per_square_meter,double,FALSE
+electricity_exterior_lighting_eui,Exterior Lighting Electricity EUI,Elec Ext Light EUI,Total electricity used for exterior lighting per square foot,megajoules_per_square_meter,double,FALSE
+electricity_interior_equipment_eui,Interior Equipment Electricity EUI,Elec Int Equip EUI,Total electricity used for interior equipment per square foot,megajoules_per_square_meter,double,FALSE
+electricity_exterior_equipment_eui,Exterior Equipment Electricity EUI,Elec Ext Equip EUI,Total electricity used for exterior equipment per square foot,megajoules_per_square_meter,double,FALSE
+electricity_fans_eui,Fans Electricity EUI,Elec Fans EUI,Total electricity used for fans per square foot,megajoules_per_square_meter,double,FALSE
+electricity_pumps_eui,Pumps Electricity EUI,Elec Pumps EUI,Total electricity used for pumps per square foot,megajoules_per_square_meter,double,FALSE
+electricity_heat_rejection_eui,Heat Rejection Electricity EUI,Elec Heat Rej EUI,Total electricity used for heat rejection per square foot,megajoules_per_square_meter,double,FALSE
+electricity_humidification_eui,Humidification Electricity EUI,Elec Humid EUI,Total electricity used for humidification per square foot,megajoules_per_square_meter,double,FALSE
+electricity_heat_recovery_eui,Heat Recovery Electricity EUI,Elec Heat Rec EUI,Total electricity used for heat recovery per square foot,megajoules_per_square_meter,double,FALSE
+electricity_water_systems_eui,Water Systems Electricity EUI,Elec Water Systems EUI,Total electricity used for water systems per square foot,megajoules_per_square_meter,double,FALSE
+electricity_refrigeration_eui,Refrigeration Electricity EUI,Elec Rfg EUI,Total electricity used for refrigeration per square foot,megajoules_per_square_meter,double,FALSE
+electricity_generators_eui,Generators Electricity EUI,Elec Gen EUI,Total electricity used for generators per square foot,megajoules_per_square_meter,double,FALSE
+total_electricity_end_use,Total Electricity End Use,Elec Total,Total electricity End Use,gigajoule,double,FALSE
+natural_gas_heating_eui,Heating Natural Gas EUI,NG Heat EUI,Total natural gas used for heating per square foot,megajoules_per_square_meter,double,FALSE
+natural_gas_cooling_eui,Cooling Natural Gas EUI,NG Cool EUI,Total natural gas used for cooling per square foot,megajoules_per_square_meter,double,FALSE
+natural_gas_interior_lighting_eui,Interior Lighting Natural Gas EUI,NG Int Light EUI,Total natural gas used for interior lighting per square foot,megajoules_per_square_meter,double,FALSE
+natural_gas_exterior_lighting_eui,Exterior Lighting Natural Gas EUI,NG Ext Light EUI,Total natural gas used for exterior lighting per square foot,megajoules_per_square_meter,double,FALSE
+natural_gas_interior_equipment_eui,Interior Equipment Natural Gas EUI,NG Int Equip EUI,Total natural gas used for interior equipment per square foot,megajoules_per_square_meter,double,FALSE
+natural_gas_exterior_equipment_eui,Exterior Equipment Natural Gas EUI,NG Ext Equip EUI,Total natural gas used for exterior equipment per square foot,megajoules_per_square_meter,double,FALSE
+natural_gas_fans_eui,Fans Natural Gas EUI,NG Fans EUI,Total natural gas used for fans per square foot,megajoules_per_square_meter,double,FALSE
+natural_gas_pumps_eui,Pumps Natural Gas EUI,NG Pumps EUI,Total natural gas used for pumps per square foot,megajoules_per_square_meter,double,FALSE
+natural_gas_heat_rejection_eui,Heat Rejection Natural Gas EUI,NG Heat Rej EUI,Total natural gas used for heat rejection per square foot,megajoules_per_square_meter,double,FALSE
+natural_gas_humidification_eui,Humidification Natural Gas EUI,NG Humid EUI,Total natural gas used for humidification per square foot,megajoules_per_square_meter,double,FALSE
+natural_gas_heat_recovery_eui,Heat Recovery Natural Gas EUI,NG Heat Rec EUI,Total natural gas used for heat recovery per square foot,megajoules_per_square_meter,double,FALSE
+natural_gas_water_systems_eui,Water Systems Natural Gas EUI,NG Water Systems EUI,Total natural gas used for water systems per square foot,megajoules_per_square_meter,double,FALSE
+natural_gas_refrigeration_eui,Refrigeration Natural Gas EUI,NG Rfg EUI,Total natural gas used for refrigeration per square foot,megajoules_per_square_meter,double,FALSE
+natural_gas_generators_eui,Generators Natural Gas EUI,NG Gen EUI,Total natural gas used for generators per square foot,megajoules_per_square_meter,double,FALSE
+total_natural_gas_end_use,Total Natural Gas End Use,NG Total,Total natural gas End Use,gigajoule,double,FALSE
+additional_fuel_heating_eui,Heating Additional Fuel EUI,Other Fuel Heat EUI,Total additional fuel used for heating per square foot,megajoules_per_square_meter,double,FALSE
+additional_fuel_cooling_eui,Cooling Additional Fuel EUI,Other Fuel Cool EUI,Total additional fuel used for cooling per square foot,megajoules_per_square_meter,double,FALSE
+additional_fuel_interior_lighting_eui,Interior Lighting Additional Fuel EUI,Other Fuel Int Light EUI,Total additional fuel used for interior lighting per square foot,megajoules_per_square_meter,double,FALSE
+additional_fuel_exterior_lighting_eui,Exterior Lighting Additional Fuel EUI,Other Fuel Ext Light EUI,Total additional fuel used for exterior lighting per square foot,megajoules_per_square_meter,double,FALSE
+additional_fuel_interior_equipment_eui,Interior Equipment Additional Fuel EUI,Other Fuel Int Equip EUI,Total additional fuel used for interior equipment per square foot,megajoules_per_square_meter,double,FALSE
+additional_fuel_exterior_equipment_eui,Exterior Equipment Additional Fuel EUI,Other Fuel Ext Equip EUI,Total additional fuel used for exterior equipment per square foot,megajoules_per_square_meter,double,FALSE
+additional_fuel_fans_eui,Fans Additional Fuel EUI,Other Fuel Fans EUI,Total additional fuel used for fans per square foot,megajoules_per_square_meter,double,FALSE
+additional_fuel_pumps_eui,Pumps Additional Fuel EUI,Other Fuel Pumps EUI,Total additional fuel used for pumps per square foot,megajoules_per_square_meter,double,FALSE
+additional_fuel_heat_rejection_eui,Heat Rejection Additional Fuel EUI,Other Fuel Heat Rej EUI,Total additional fuel used for heat rejection per square foot,megajoules_per_square_meter,double,FALSE
+additional_fuel_humidification_eui,Humidification Additional Fuel EUI,Other Fuel Humid EUI,Total additional fuel used for humidification per square foot,megajoules_per_square_meter,double,FALSE
+additional_fuel_heat_recovery_eui,Heat Recovery Additional Fuel EUI,Other Fuel Heat Rec EUI,Total additional fuel used for heat recovery per square foot,megajoules_per_square_meter,double,FALSE
+additional_fuel_water_systems_eui,Water Systems Additional Fuel EUI,Other Fuel Water Systems EUI,Total additional fuel used for water systems per square foot,megajoules_per_square_meter,double,FALSE
+additional_fuel_refrigeration_eui,Refrigeration Additional Fuel EUI,Other Fuel Rfg EUI,Total additional fuel used for refrigeration per square foot,megajoules_per_square_meter,double,FALSE
+additional_fuel_generators_eui,Generators Additional Fuel EUI,Other Fuel Gen EUI,Total additional fuel used for generators per square foot,megajoules_per_square_meter,double,FALSE
+total_additional_fuel_end_use,Total Additional Fuel End Use,Other Fuel Total,Total additional fuel End Use,gigajoule,double,FALSE
+district_cooling_heating_eui,Heating District Cooling EUI,Dist Cool Heat EUI,Total district cooling used for heating per square foot,megajoules_per_square_meter,double,FALSE
+district_cooling_cooling_eui,Cooling District Cooling EUI,Dist Cool Cool EUI,Total district cooling used for cooling per square foot,megajoules_per_square_meter,double,FALSE
+district_cooling_interior_lighting_eui,Interior Lighting District Cooling EUI,Dist Cool Int Light EUI,Total district cooling used for interior lighting per square foot,megajoules_per_square_meter,double,FALSE
+district_cooling_exterior_lighting_eui,Exterior Lighting District Cooling EUI,Dist Cool Ext Light EUI,Total district cooling used for exterior lighting per square foot,megajoules_per_square_meter,double,FALSE
+district_cooling_interior_equipment_eui,Interior Equipment District Cooling EUI,Dist Cool Int Equip EUI,Total district cooling used for interior equipment per square foot,megajoules_per_square_meter,double,FALSE
+district_cooling_exterior_equipment_eui,Exterior Equipment District Cooling EUI,Dist Cool Ext Equip EUI,Total district cooling used for exterior equipment per square foot,megajoules_per_square_meter,double,FALSE
+district_cooling_fans_eui,Fans District Cooling EUI,Dist Cool Fans EUI,Total district cooling used for fans per square foot,megajoules_per_square_meter,double,FALSE
+district_cooling_pumps_eui,Pumps District Cooling EUI,Dist Cool Pumps EUI,Total district cooling used for pumps per square foot,megajoules_per_square_meter,double,FALSE
+district_cooling_heat_rejection_eui,Heat Rejection District Cooling EUI,Dist Cool Heat Rej EUI,Total district cooling used for heat rejection per square foot,megajoules_per_square_meter,double,FALSE
+district_cooling_humidification_eui,Humidification District Cooling EUI,Dist Cool Humid EUI,Total district cooling used for humidification per square foot,megajoules_per_square_meter,double,FALSE
+district_cooling_heat_recovery_eui,Heat Recovery District Cooling EUI,Dist Cool Heat Rec EUI,Total district cooling used for heat recovery per square foot,megajoules_per_square_meter,double,FALSE
+district_cooling_water_systems_eui,Water Systems District Cooling EUI,Dist Cool Water Systems EUI,Total district cooling used for water systems per square foot,megajoules_per_square_meter,double,FALSE
+district_cooling_refrigeration_eui,Refrigeration District Cooling EUI,Dist Cool Rfg EUI,Total district cooling used for refrigeration per square foot,megajoules_per_square_meter,double,FALSE
+district_cooling_generators_eui,Generators District Cooling EUI,Dist Cool Gen EUI,Total district cooling used for generators per square foot,megajoules_per_square_meter,double,FALSE
+total_district_cooling_end_use,Total District Cooling End Use,Dist Cool Total,Total district cooling End Use,gigajoule,double,FALSE
+district_heating_heating_eui,Heating District Heating EUI,Dist Heat Heat EUI,Total district heating used for heating per square foot,megajoules_per_square_meter,double,FALSE
+district_heating_cooling_eui,Cooling District Heating EUI,Dist Heat Cool EUI,Total district heating used for cooling per square foot,megajoules_per_square_meter,double,FALSE
+district_heating_interior_lighting_eui,Interior Lighting District Heating EUI,Dist Heat Int Light EUI,Total district heating used for interior lighting per square foot,megajoules_per_square_meter,double,FALSE
+district_heating_exterior_lighting_eui,Exterior Lighting District Heating EUI,Dist Heat Ext Light EUI,Total district heating used for exterior lighting per square foot,megajoules_per_square_meter,double,FALSE
+district_heating_interior_equipment_eui,Interior Equipment District Heating EUI,Dist Heat Int Equip EUI,Total district heating used for interior equipment per square foot,megajoules_per_square_meter,double,FALSE
+district_heating_exterior_equipment_eui,Exterior Equipment District Heating EUI,Dist Heat Ext Equip EUI,Total district heating used for exterior equipment per square foot,megajoules_per_square_meter,double,FALSE
+district_heating_fans_eui,Fans District Heating EUI,Dist Heat Fans EUI,Total district heating used for fans per square foot,megajoules_per_square_meter,double,FALSE
+district_heating_pumps_eui,Pumps District Heating EUI,Dist Heat Pumps EUI,Total district heating used for pumps per square foot,megajoules_per_square_meter,double,FALSE
+district_heating_heat_rejection_eui,Heat Rejection District Heating EUI,Dist Heat Heat Rej EUI,Total district heating used for heat rejection per square foot,megajoules_per_square_meter,double,FALSE
+district_heating_humidification_eui,Humidification District Heating EUI,Dist Heat Humid EUI,Total district heating used for humidification per square foot,megajoules_per_square_meter,double,FALSE
+district_heating_heat_recovery_eui,Heat Recovery District Heating EUI,Dist Heat Heat Rec EUI,Total district heating used for heat recovery per square foot,megajoules_per_square_meter,double,FALSE
+district_heating_water_systems_eui,Water Systems District Heating EUI,Dist Heat Water Systems EUI,Total district heating used for water systems per square foot,megajoules_per_square_meter,double,FALSE
+district_heating_refrigeration_eui,Refrigeration District Heating EUI,Dist Heat Rfg EUI,Total district heating used for refrigeration per square foot,megajoules_per_square_meter,double,FALSE
+district_heating_generators_eui,Generators District Heating EUI,Dist Heat Gen EUI,Total district heating used for generators per square foot,megajoules_per_square_meter,double,FALSE
+total_district_heating_end_use,Total District Heating End Use,Dist Heat Total,Total district heating End Use,gigajoule,double,FALSE
+water_heating_eui,Heating Water EUI,Water Heat EUI,Total water used for heating per square foot,meter,double,FALSE
+water_cooling_eui,Cooling Water EUI,Water Cool EUI,Total water used for cooling per square foot,meter,double,FALSE
+water_interior_lighting_eui,Interior Lighting Water EUI,Water Int Light EUI,Total water used for interior lighting per square foot,meter,double,FALSE
+water_exterior_lighting_eui,Exterior Lighting Water EUI,Water Ext Light EUI,Total water used for exterior lighting per square foot,meter,double,FALSE
+water_interior_equipment_eui,Interior Equipment Water EUI,Water Int Equip EUI,Total water used for interior equipment per square foot,meter,double,FALSE
+water_exterior_equipment_eui,Exterior Equipment Water EUI,Water Ext Equip EUI,Total water used for exterior equipment per square foot,meter,double,FALSE
+water_fans_eui,Fans Water EUI,Water Fans EUI,Total water used for fans per square foot,meter,double,FALSE
+water_pumps_eui,Pumps Water EUI,Water Pumps EUI,Total water used for pumps per square foot,meter,double,FALSE
+water_heat_rejection_eui,Heat Rejection Water EUI,Water Heat Rej EUI,Total water used for heat rejection per square foot,meter,double,FALSE
+water_humidification_eui,Humidification Water EUI,Water Humid EUI,Total water used for humidification per square foot,meter,double,FALSE
+water_heat_recovery_eui,Heat Recovery Water EUI,Water Heat Rec EUI,Total water used for heat recovery per square foot,meter,double,FALSE
+water_water_systems_eui,Water Systems Water EUI,Water Water Systems EUI,Total water used for water systems per square foot,meter,double,FALSE
+water_refrigeration_eui,Refrigeration Water EUI,Water Rfg EUI,Total water used for refrigeration per square foot,meter,double,FALSE
+water_generators_eui,Generators Water EUI,Water Gen EUI,Total water used for generators per square foot,meter,double,FALSE
+total_water_end_use,Total Water End Use,Water Total,Total water End Use,cubic meter,double,FALSE
+site_energy_use,Total Site Energy Use,Site Energy,Total energy consumption for the site,gigajoule,double,FALSE
+january_end_use_electricity_eui,January Electricity EUI,Jan Elec EUI,Total electricity end use energy use per square meter in January,megajoules_per_square_meter,double,FALSE
+february_end_use_electricity_eui,February Electricity EUI,Feb Elec EUI,Total electricity end use energy use per square meter in February,megajoules_per_square_meter,double,FALSE
+march_end_use_electricity_eui,March Electricity EUI,Mar Elec EUI,Total electricity end use energy use per square meter in March,megajoules_per_square_meter,double,FALSE
+april_end_use_electricity_eui,April Electricity EUI,Apr Elec EUI,Total electricity end use energy use per square meter in April,megajoules_per_square_meter,double,FALSE
+may_end_use_electricity_eui,May Electricity EUI,May Elec EUI,Total electricity end use energy use per square meter in May,megajoules_per_square_meter,double,FALSE
+june_end_use_electricity_eui,June Electricity EUI,Jun Elec EUI,Total electricity end use energy use per square meter in June,megajoules_per_square_meter,double,FALSE
+july_end_use_electricity_eui,July Electricity EUI,Jul Elec EUI,Total electricity end use energy use per square meter in July,megajoules_per_square_meter,double,FALSE
+august_end_use_electricity_eui,August Electricity EUI,Aug Elec EUI,Total electricity end use energy use per square meter in August,megajoules_per_square_meter,double,FALSE
+september_end_use_electricity_eui,September Electricity EUI,Sep Elec EUI,Total electricity end use energy use per square meter in September,megajoules_per_square_meter,double,FALSE
+october_end_use_electricity_eui,October Electricity EUI,Oct Elec EUI,Total electricity end use energy use per square meter in October,megajoules_per_square_meter,double,FALSE
+november_end_use_electricity_eui,November Electricity EUI,Nov Elec EUI,Total electricity end use energy use per square meter in November,megajoules_per_square_meter,double,FALSE
+december_end_use_electricity_eui,December Electricity EUI,Dec Elec EUI,Total electricity end use energy use per square meter in December,megajoules_per_square_meter,double,FALSE
+january_end_use_natural_gas_eui,January Natural Gas EUI,Jan NG EUI,Total natural gas end use energy use per square meter in January,megajoules_per_square_meter,double,FALSE
+february_end_use_natural_gas_eui,February Natural Gas EUI,Feb NG EUI,Total natural gas end use energy use per square meter in February,megajoules_per_square_meter,double,FALSE
+march_end_use_natural_gas_eui,March Natural Gas EUI,Mar NG EUI,Total natural gas end use energy use per square meter in March,megajoules_per_square_meter,double,FALSE
+april_end_use_natural_gas_eui,April Natural Gas EUI,Apr NG EUI,Total natural gas end use energy use per square meter in April,megajoules_per_square_meter,double,FALSE
+may_end_use_natural_gas_eui,May Natural Gas EUI,May NG EUI,Total natural gas end use energy use per square meter in May,megajoules_per_square_meter,double,FALSE
+june_end_use_natural_gas_eui,June Natural Gas EUI,Jun NG EUI,Total natural gas end use energy use per square meter in June,megajoules_per_square_meter,double,FALSE
+july_end_use_natural_gas_eui,July Natural Gas EUI,Jul NG EUI,Total natural gas end use energy use per square meter in July,megajoules_per_square_meter,double,FALSE
+august_end_use_natural_gas_eui,August Natural Gas EUI,Aug NG EUI,Total natural gas end use energy use per square meter in August,megajoules_per_square_meter,double,FALSE
+september_end_use_natural_gas_eui,September Natural Gas EUI,Sep NG EUI,Total natural gas end use energy use per square meter in September,megajoules_per_square_meter,double,FALSE
+october_end_use_natural_gas_eui,October Natural Gas EUI,Oct NG EUI,Total natural gas end use energy use per square meter in October,megajoules_per_square_meter,double,FALSE
+november_end_use_natural_gas_eui,November Natural Gas EUI,Nov NG EUI,Total natural gas end use energy use per square meter in November,megajoules_per_square_meter,double,FALSE
+december_end_use_natural_gas_eui,December Natural Gas EUI,Dec NG EUI,Total natural gas end use energy use per square meter in December,megajoules_per_square_meter,double,FALSE
+january_end_use_additional_fuel_eui,January Additional Fuel EUI,Jan Other Fuel EUI,Total additional fuel end use energy use per square meter in January,megajoules_per_square_meter,double,FALSE
+february_end_use_additional_fuel_eui,February Additional Fuel EUI,Feb Other Fuel EUI,Total additional fuel end use energy use per square meter in February,megajoules_per_square_meter,double,FALSE
+march_end_use_additional_fuel_eui,March Additional Fuel EUI,Mar Other Fuel EUI,Total additional fuel end use energy use per square meter in March,megajoules_per_square_meter,double,FALSE
+april_end_use_additional_fuel_eui,April Additional Fuel EUI,Apr Other Fuel EUI,Total additional fuel end use energy use per square meter in April,megajoules_per_square_meter,double,FALSE
+may_end_use_additional_fuel_eui,May Additional Fuel EUI,May Other Fuel EUI,Total additional fuel end use energy use per square meter in May,megajoules_per_square_meter,double,FALSE
+june_end_use_additional_fuel_eui,June Additional Fuel EUI,Jun Other Fuel EUI,Total additional fuel end use energy use per square meter in June,megajoules_per_square_meter,double,FALSE
+july_end_use_additional_fuel_eui,July Additional Fuel EUI,Jul Other Fuel EUI,Total additional fuel end use energy use per square meter in July,megajoules_per_square_meter,double,FALSE
+august_end_use_additional_fuel_eui,August Additional Fuel EUI,Aug Other Fuel EUI,Total additional fuel end use energy use per square meter in August,megajoules_per_square_meter,double,FALSE
+september_end_use_additional_fuel_eui,September Additional Fuel EUI,Sep Other Fuel EUI,Total additional fuel end use energy use per square meter in September,megajoules_per_square_meter,double,FALSE
+october_end_use_additional_fuel_eui,October Additional Fuel EUI,Oct Other Fuel EUI,Total additional fuel end use energy use per square meter in October,megajoules_per_square_meter,double,FALSE
+november_end_use_additional_fuel_eui,November Additional Fuel EUI,Nov Other Fuel EUI,Total additional fuel end use energy use per square meter in November,megajoules_per_square_meter,double,FALSE
+december_end_use_additional_fuel_eui,December Additional Fuel EUI,Dec Other Fuel EUI,Total additional fuel end use energy use per square meter in December,megajoules_per_square_meter,double,FALSE
+january_end_use_district_cooling_eui,January District Cooling EUI,Jan Dist Cool EUI,Total district cooling end use energy use per square meter in January,megajoules_per_square_meter,double,FALSE
+february_end_use_district_cooling_eui,February District Cooling EUI,Feb Dist Cool EUI,Total district cooling end use energy use per square meter in February,megajoules_per_square_meter,double,FALSE
+march_end_use_district_cooling_eui,March District Cooling EUI,Mar Dist Cool EUI,Total district cooling end use energy use per square meter in March,megajoules_per_square_meter,double,FALSE
+april_end_use_district_cooling_eui,April District Cooling EUI,Apr Dist Cool EUI,Total district cooling end use energy use per square meter in April,megajoules_per_square_meter,double,FALSE
+may_end_use_district_cooling_eui,May District Cooling EUI,May Dist Cool EUI,Total district cooling end use energy use per square meter in May,megajoules_per_square_meter,double,FALSE
+june_end_use_district_cooling_eui,June District Cooling EUI,Jun Dist Cool EUI,Total district cooling end use energy use per square meter in June,megajoules_per_square_meter,double,FALSE
+july_end_use_district_cooling_eui,July District Cooling EUI,Jul Dist Cool EUI,Total district cooling end use energy use per square meter in July,megajoules_per_square_meter,double,FALSE
+august_end_use_district_cooling_eui,August District Cooling EUI,Aug Dist Cool EUI,Total district cooling end use energy use per square meter in August,megajoules_per_square_meter,double,FALSE
+september_end_use_district_cooling_eui,September District Cooling EUI,Sep Dist Cool EUI,Total district cooling end use energy use per square meter in September,megajoules_per_square_meter,double,FALSE
+october_end_use_district_cooling_eui,October District Cooling EUI,Oct Dist Cool EUI,Total district cooling end use energy use per square meter in October,megajoules_per_square_meter,double,FALSE
+november_end_use_district_cooling_eui,November District Cooling EUI,Nov Dist Cool EUI,Total district cooling end use energy use per square meter in November,megajoules_per_square_meter,double,FALSE
+december_end_use_district_cooling_eui,December District Cooling EUI,Dec Dist Cool EUI,Total district cooling end use energy use per square meter in December,megajoules_per_square_meter,double,FALSE
+january_end_use_district_heating_eui,January District Heating EUI,Jan Dist Heat EUI,Total district heating end use energy use per square meter in January,megajoules_per_square_meter,double,FALSE
+february_end_use_district_heating_eui,February District Heating EUI,Feb Dist Heat EUI,Total district heating end use energy use per square meter in February,megajoules_per_square_meter,double,FALSE
+march_end_use_district_heating_eui,March District Heating EUI,Mar Dist Heat EUI,Total district heating end use energy use per square meter in March,megajoules_per_square_meter,double,FALSE
+april_end_use_district_heating_eui,April District Heating EUI,Apr Dist Heat EUI,Total district heating end use energy use per square meter in April,megajoules_per_square_meter,double,FALSE
+may_end_use_district_heating_eui,May District Heating EUI,May Dist Heat EUI,Total district heating end use energy use per square meter in May,megajoules_per_square_meter,double,FALSE
+june_end_use_district_heating_eui,June District Heating EUI,Jun Dist Heat EUI,Total district heating end use energy use per square meter in June,megajoules_per_square_meter,double,FALSE
+july_end_use_district_heating_eui,July District Heating EUI,Jul Dist Heat EUI,Total district heating end use energy use per square meter in July,megajoules_per_square_meter,double,FALSE
+august_end_use_district_heating_eui,August District Heating EUI,Aug Dist Heat EUI,Total district heating end use energy use per square meter in August,megajoules_per_square_meter,double,FALSE
+september_end_use_district_heating_eui,September District Heating EUI,Sep Dist Heat EUI,Total district heating end use energy use per square meter in September,megajoules_per_square_meter,double,FALSE
+october_end_use_district_heating_eui,October District Heating EUI,Oct Dist Heat EUI,Total district heating end use energy use per square meter in October,megajoules_per_square_meter,double,FALSE
+november_end_use_district_heating_eui,November District Heating EUI,Nov Dist Heat EUI,Total district heating end use energy use per square meter in November,megajoules_per_square_meter,double,FALSE
+december_end_use_district_heating_eui,December District Heating EUI,Dec Dist Heat EUI,Total district heating end use energy use per square meter in December,megajoules_per_square_meter,double,FALSE
+life_cycle_cost,Total Life Cycle Cost,Life Cycle Cost,Total calculated life cycle cost,us_dollar,double,FALSE
+conditioned_area,Total Conditioned Area,Cond Bldg Area,Total conditioned building area as calculated by Energy Plus,square_meter,double,FALSE
+unconditioned_area,Total Unconditioned Area,Uncond Bldg Area,Total unconditioned building area as calculated by EnergyPlus,square_meter,double,FALSE
+total_site_eui,Total Site Energy Use Intensity,Site EUI,Total site energy use intensity per conditioned building area as calculated by EnergyPlus,megajoules_per_square_meter,double,FALSE
+total_source_eui,Total Source Energy Use Intensity,Source EUI,Total source energy use intensity per conditioned building area as calculated by EnergyPlus,megajoules_per_square_meter,double,FALSE
+time_setpoint_not_met_during_occupied_heating,Occupied Time During Which Heating Setpoint Not Met,Setpoint Missed Heat,Hours during which the building was occupied but the heating setpoint temperature was not met,hour,double,FALSE
+time_setpoint_not_met_during_occupied_cooling,Occupied Time During Which Cooling Setpoint Not Met,Setpoint Missed Cool,Hours during which the building was occupied but the cooling setpoint temperature was not met,hour,double,FALSE
+time_setpoint_not_met_during_occupied_hours,Occupied Time During Which Temperature Setpoint Not Met,Setpoint Missed Total,Hours during which the building was occupied but the setpoint temperatures were not met,hour,double,FALSE
+window_to_wall_ratio_north,North Window to Wall Ratio,WWR North,Window to wall ratio of wall objects facing between 315 and 45 degrees,percent,double,FALSE
+window_to_wall_ratio_south,South Window to Wall Ratio,WWR South,Window to wall ratio of wall objects facing between 135 and 225 degrees,percent,double,FALSE
+window_to_wall_ratio_east,East Window to Wall Ratio,WWR East,Window to wall ratio of wall objects facing between 45 and 135 degrees,percent,double,FALSE
+window_to_wall_ratio_west,West Window to Wall Ratio,WWR West,Window to wall ratio of wall objects facing between 225 and 315 degrees,percent,double,FALSE
+latitude,Latitude,Lat,Building latitude based on weather file,degrees_angular,double,FALSE
+longitude,Longitude,Long,Building longitude based on weather file,degrees_angular,double,FALSE
+weather_file,Weather File,Weather File,Name of weather file,none,string,FALSE
+orientation,Building Orientation,Orientation,Degrees of building north axis off of true north,degrees_angular,double,FALSE
+total_building_volume,Total Building Volume,Volume,Building volume calculated by multiplying floor to floor height and footprint,cubic_meter,double,FALSE
+total_occupancy,Total Building Occupancy,Bldg Occ,Number of people in the building as calculated by EnergyPlus,none,double,FALSE
+occupant_density,Building Occupancy Density,Occ Density,Number of people per floor area as calculated by EnergyPlus,none,double,FALSE
+lighting_power,Lighting Power,Lighting Pwr,Total lighting power,watt,double,FALSE
+lighting_power_density,Lighting Power Density,LPD,Total lighting power density,watts_per_square_meter,double,FALSE
+infiltration_rate,Infiltration Rate,Infil Rate,Infiltration rate of air into the building,none,double,FALSE
+number_of_floors,Number of Floors,Number of Floors,Total number of storeys in the building,none,double,FALSE
+building_type,Building Type,Bldg Type,Building type as defined by the modeler,none,string,FALSE
+exterior_wall_area,Exterior Wall Area,Ext Wall Area,Total area of all surfaces with the conditions of 'Outdoors' and 'Wall',square_meter,double,FALSE
+exterior_roof_area,Exterior Roof Area,Ext Roof Area,Total area of all surfaces with the conditions of 'Outdoors' and 'Roof',square_meter,double,FALSE
+ground_contact_area,Ground Contact Area,Gnd Area,Total area of all surfaces with the conditions of 'Ground' and 'Floor',square_meter,double,FALSE
+exterior_fenestration_area,Exterior Fenestration Area,Window Area Total,Total area of all surfaces with the conditions of 'Outdoors' and 'FixedWindow' or 'OperableWindow',square_meter,double,FALSE
+economizer_density,Economizer Density,Econ Density,Proportion of air loops with economizers to air loops without,percent,double,FALSE
+aspect_ratio,Aspect Ratio,Aspect Ratio,Proportion of north wall area to east wall area,percent,double,FALSE
