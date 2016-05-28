@@ -968,20 +968,20 @@ if(UNIX AND NOT APPLE)
   endif()
 endif()
 
-#if(NOT UNIX)
-#  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_SOURCE_DIR}/../dependencies/strawberry-perl-5.16.2.1-32bit-portable-reduced.tar.bz2"
-#    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-#    RESULT_VARIABLE rv)
-#
-#  install(DIRECTORY "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced" DESTINATION .)
-#
-#  set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
-#  include(InstallRequiredSystemLibraries)
-#  if(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
-#    install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-#      DESTINATION "bin")
-#  endif()
-#endif()
+if(NOT UNIX)
+  #execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_SOURCE_DIR}/../dependencies/strawberry-perl-5.16.2.1-32bit-portable-reduced.tar.bz2"
+  #  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  #  RESULT_VARIABLE rv)
+
+  #install(DIRECTORY "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced" DESTINATION .)
+
+  #set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
+  include(InstallRequiredSystemLibraries)
+  if(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
+    install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
+      DESTINATION "bin")
+  endif()
+endif()
 
 ## Package Radiance
 #set(RADIANCE_LOCATION "" CACHE PATH "Location of Radiance to Package")
