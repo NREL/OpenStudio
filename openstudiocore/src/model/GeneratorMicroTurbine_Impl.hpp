@@ -74,7 +74,9 @@ namespace detail {
     double minimumFullLoadElectricalPowerOutput() const;
     bool isMinimumFullLoadElectricalPowerOutputDefaulted() const;
 
-    boost::optional<double> maximumFullLoadElectricalPowerOutput() const;
+    // This will default to referenceElectricalPowerOutput if not defined, like E+ does
+		double maximumFullLoadElectricalPowerOutput() const;
+		bool isMaximumFullLoadElectricalPowerOutputDefaulted() const;
 
     double referenceElectricalEfficiencyUsingLowerHeatingValue() const;
     
@@ -115,7 +117,7 @@ namespace detail {
     boost::optional<Curve> ancillaryPowerFunctionofFuelInputCurve() const;
 
     // Optional Generator:MicroTurbine:HeatRecovery
-    boost::optional<StraightComponent> generatorMicroTurbineHeatRecovery() const;
+    boost::optional<GeneratorMicroTurbineHeatRecovery> generatorMicroTurbineHeatRecovery() const;
 
     // TODO: Check return type. From object lists, some candidates are: Connection.
     //boost::optional<Connection> combustionAirInletNode() const;
@@ -191,7 +193,7 @@ namespace detail {
     void resetAncillaryPowerFunctionofFuelInputCurve();
 
     // Optional Generator:MicroTurbine:HeatRecovery
-    bool setGeneratorMicroTurbineHeatRecovery(const StraightComponent& generatorMicroTurbineHeatRecovery);
+    bool setGeneratorMicroTurbineHeatRecovery(const GeneratorMicroTurbineHeatRecovery& generatorMicroTurbineHeatRecovery);
     void resetGeneratorMicroTurbineHeatRecovery();
 
     // TODO: Check argument type. From object lists, some candidates are: Connection.

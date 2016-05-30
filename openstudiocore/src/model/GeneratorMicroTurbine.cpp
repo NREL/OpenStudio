@@ -95,9 +95,27 @@ namespace detail {
     return isEmpty(OS_Generator_MicroTurbineFields::MinimumFullLoadElectricalPowerOutput);
   }
 
-  boost::optional<double> GeneratorMicroTurbine_Impl::maximumFullLoadElectricalPowerOutput() const {
-    return getDouble(OS_Generator_MicroTurbineFields::MaximumFullLoadElectricalPowerOutput,true);
+  // If defaulted, return referenceElectricalPowerOutput
+  double GeneratorMicroTurbine_Impl::maximumFullLoadElectricalPowerOutput() const {
+	// TODO: Check if that's the typical way of doing this... Might has well write code that looks the same as usual. @danmacumber?
+	  boost::optional<double> maximumFullLoadElectricalPowerOutput = getDouble(OS_Generator_MicroTurbineFields::MaximumFullLoadElectricalPowerOutput,true);
+		// If there is a Heat Recovery Object
+		if (maximumFullLoadElectricalPowerOutput) {
+			// Get it
+			maximumFullLoadElectricalPowerOutput = *maximumFullLoadElectricalPowerOutput;
+			return maximumFullLoadElectricalPowerOutput;
+		}
+		else { 
+			boost::optional<double> referenceElectricalPowerOutput = getDouble(OS_Generator_MicroTurbineFields::ReferenceElectricalPowerOutput,true);
+			OS_ASSERT(referenceElectricalPowerOutput);
+			return referenceElectricalPowerOutput.get();
+		}
   }
+	
+	bool GeneratorMicroTurbine_Impl::isMaximumFullLoadElectricalPowerOutputDefaulted() const {
+    return isEmpty(OS_Generator_MicroTurbineFields::MaximumFullLoadElectricalPowerOutput);
+  }
+	
 
   double GeneratorMicroTurbine_Impl::referenceElectricalEfficiencyUsingLowerHeatingValue() const {
     boost::optional<double> value = getDouble(OS_Generator_MicroTurbineFields::ReferenceElectricalEfficiencyUsingLowerHeatingValue,true);
@@ -215,8 +233,8 @@ namespace detail {
   }
 
   // Optional Generator:MicroTurbine:HeatRecovery
-  boost::optional<StraightComponent> GeneratorMicroTurbine_Impl::generatorMicroTurbineHeatRecovery() const {
-    return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_Generator_MicroTurbineFields::GeneratorMicroTurbineHeatRecoveryName);
+  boost::optional<GeneratorMicroTurbineHeatRecovery> GeneratorMicroTurbine_Impl::generatorMicroTurbineHeatRecovery() const {
+    return getObject<ModelObject>().getModelObjectTarget<GeneratorMicroTurbineHeatRecovery>(OS_Generator_MicroTurbineFields::GeneratorMicroTurbineHeatRecoveryName);
   }
 
   //boost::optional<Connection> GeneratorMicroTurbine_Impl::combustionAirInletNode() const {
@@ -423,7 +441,7 @@ namespace detail {
   
   
   // Optional Generator:MicroTurbine:HeatRecovery
-  bool GeneratorMicroTurbine_Impl::setGeneratorMicroTurbineHeatRecovery(const boost::optional<StraightComponent>& generatorMicroTurbineHeatRecovery) {
+  bool GeneratorMicroTurbine_Impl::setGeneratorMicroTurbineHeatRecovery(const boost::optional<GeneratorMicroTurbineHeatRecovery>& generatorMicroTurbineHeatRecovery) {
     bool result(false);
     if (generatorMicroTurbineHeatRecovery) {
       if(model() != generatorMicroTurbineHeatRecovery.get().model())
@@ -445,12 +463,12 @@ namespace detail {
     OS_ASSERT(result);
   }
   
-  boost::optional<StraightComponent> GeneratorMicroTurbine_Impl::generatorMicroTurbineHeatRecovery() const {
-    return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_Generator_MicroTurbineFields::GeneratorMicroTurbineHeatRecoveryName);
+  boost::optional<GeneratorMicroTurbineHeatRecovery> GeneratorMicroTurbine_Impl::generatorMicroTurbineHeatRecovery() const {
+    return getObject<ModelObject>().getModelObjectTarget<GeneratorMicroTurbineHeatRecovery>(OS_Generator_MicroTurbineFields::GeneratorMicroTurbineHeatRecoveryName);
   }
   
   // Optional Generator:MicroTurbine:HeatRecovery
-    bool setGeneratorMicroTurbineHeatRecovery(const StraightComponent& generatorMicroTurbineHeatRecovery);
+    bool setGeneratorMicroTurbineHeatRecovery(const GeneratorMicroTurbineHeatRecovery& generatorMicroTurbineHeatRecovery);
     void resetGeneratorMicroTurbineHeatRecovery();
     
     
@@ -664,8 +682,12 @@ bool GeneratorMicroTurbine::isMinimumFullLoadElectricalPowerOutputDefaulted() co
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->isMinimumFullLoadElectricalPowerOutputDefaulted();
 }
 
-boost::optional<double> GeneratorMicroTurbine::maximumFullLoadElectricalPowerOutput() const {
+double GeneratorMicroTurbine::maximumFullLoadElectricalPowerOutput() const {
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->maximumFullLoadElectricalPowerOutput();
+}
+
+bool GeneratorMicroTurbine::isMaximumFullLoadElectricalPowerOutputDefaulted() const {
+  return getImpl<detail::GeneratorMicroTurbine_Impl>()->isMaximumFullLoadElectricalPowerOutputDefaulted();
 }
 
 double GeneratorMicroTurbine::referenceElectricalEfficiencyUsingLowerHeatingValue() const {

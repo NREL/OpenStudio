@@ -78,12 +78,12 @@ namespace detail {
     double referenceThermalEfficiencyUsingLowerHeatValue() const;
     bool isReferenceThermalEfficiencyUsingLowerHeatValueDefaulted() const;
 
-    boost::optional<double> referenceInletWaterTemperature() const;
+    double referenceInletWaterTemperature() const;
 
     std::string heatRecoveryWaterFlowOperatingMode() const;
     bool isHeatRecoveryWaterFlowOperatingModeDefaulted() const;
 
-    boost::optional<double> referenceHeatRecoveryWaterFlowRate() const;
+    double referenceHeatRecoveryWaterFlowRate() const;
 
     // TODO: Check return type. From object lists, some candidates are: BiquadraticCurves, BiVariateTables.
     boost::optional<Curve> heatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve() const;
@@ -124,13 +124,11 @@ namespace detail {
     void resetReferenceThermalEfficiencyUsingLowerHeatValue();
 
     void setReferenceInletWaterTemperature(double referenceInletWaterTemperature);
-    void resetReferenceInletWaterTemperature();
 
     bool setHeatRecoveryWaterFlowOperatingMode(std::string heatRecoveryWaterFlowOperatingMode);
     void resetHeatRecoveryWaterFlowOperatingMode();
 
     bool setReferenceHeatRecoveryWaterFlowRate(double referenceHeatRecoveryWaterFlowRate);
-    void resetReferenceHeatRecoveryWaterFlowRate();
 
     // TODO: Check argument type. From object lists, some candidates are: BiquadraticCurves, BiVariateTables.
     bool setHeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve(const Curve& heatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve);
@@ -149,7 +147,7 @@ namespace detail {
     void resetHeatRecoveryRateFunctionofInletWaterTemperatureCurve();
 
     // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-    bool setHeatRecoveryRateFunctionofWaterFlowRateCurve(const curve& heatRecoveryRateFunctionofWaterFlowRateCurve);
+    bool setHeatRecoveryRateFunctionofWaterFlowRateCurve(const Curve& heatRecoveryRateFunctionofWaterFlowRateCurve);
     void resetHeatRecoveryRateFunctionofWaterFlowRateCurve();
 
     bool setMinimumHeatRecoveryWaterFlowRate(double minimumHeatRecoveryWaterFlowRate);

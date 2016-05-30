@@ -69,7 +69,7 @@ class MODEL_API GeneratorMicroTurbineHeatRecovery : public StraightComponent {
   double referenceThermalEfficiencyUsingLowerHeatValue() const;
   bool isReferenceThermalEfficiencyUsingLowerHeatValueDefaulted() const;
 
-  boost::optional<double> referenceInletWaterTemperature() const;
+  double referenceInletWaterTemperature() const;
 
   std::string heatRecoveryWaterFlowOperatingMode() const;
 
@@ -115,8 +115,7 @@ class MODEL_API GeneratorMicroTurbineHeatRecovery : public StraightComponent {
   bool setReferenceThermalEfficiencyUsingLowerHeatValue(double referenceThermalEfficiencyUsingLowerHeatValue);
   void resetReferenceThermalEfficiencyUsingLowerHeatValue();
 
-  void setReferenceInletWaterTemperature(double referenceInletWaterTemperature);
-  void resetReferenceInletWaterTemperature();
+  bool setReferenceInletWaterTemperature(double referenceInletWaterTemperature);
 
   bool setHeatRecoveryWaterFlowOperatingMode(std::string heatRecoveryWaterFlowOperatingMode);
   void resetHeatRecoveryWaterFlowOperatingMode();
@@ -141,7 +140,7 @@ class MODEL_API GeneratorMicroTurbineHeatRecovery : public StraightComponent {
   void resetHeatRecoveryRateFunctionofInletWaterTemperatureCurve();
 
   // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-  bool setHeatRecoveryRateFunctionofWaterFlowRateCurve(const curve& heatRecoveryRateFunctionofWaterFlowRateCurve);
+  bool setHeatRecoveryRateFunctionofWaterFlowRateCurve(const Curve& heatRecoveryRateFunctionofWaterFlowRateCurve);
   void resetHeatRecoveryRateFunctionofWaterFlowRateCurve();
 
   bool setMinimumHeatRecoveryWaterFlowRate(double minimumHeatRecoveryWaterFlowRate);

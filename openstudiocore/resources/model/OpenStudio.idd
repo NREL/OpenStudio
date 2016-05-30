@@ -24741,7 +24741,6 @@ OS:Generator:MicroTurbine,
       \type alpha
       \reference GeneratorNames
       \reference MicroTurbineGeneratorNames
-      \reference ConnectionObject
   N1, \field Reference Electrical Power Output
       \required-field
       \type real
