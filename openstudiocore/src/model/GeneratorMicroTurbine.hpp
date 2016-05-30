@@ -22,6 +22,7 @@
 
 #include <model/ModelAPI.hpp>
 #include "Generator.hpp"
+#include "GeneratorMicroTurbineHeatRecovery.hpp"
 
 namespace openstudio {
 
@@ -185,7 +186,7 @@ class MODEL_API GeneratorMicroTurbine : public Generator {
   void resetAncillaryPowerFunctionofFuelInputCurve();
   
   // Optional Generator:MicroTurbine:HeatRecovery
-  bool setGeneratorMicroTurbineHeatRecovery(const StraightComponent& generatorMicroTurbineHeatRecovery);
+  bool setGeneratorMicroTurbineHeatRecovery(const GeneratorMicroTurbineHeatRecovery& generatorMicroTurbineHeatRecovery);
   void resetGeneratorMicroTurbineHeatRecovery();
 
   // TODO: Check argument type. From object lists, some candidates are: Connection.

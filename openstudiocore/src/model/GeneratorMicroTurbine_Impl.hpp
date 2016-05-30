@@ -22,6 +22,7 @@
 
 #include <model/ModelAPI.hpp>
 #include "Generator_Impl.hpp"
+#include "GeneratorMicroTurbineHeatRecovery_Impl.hpp"
 
 namespace openstudio {
 namespace model {
