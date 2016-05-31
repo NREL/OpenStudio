@@ -50,9 +50,9 @@ class MODEL_API GeneratorMicroTurbine : public Generator {
   /** @name Constructors and Destructors */
   //@{
 
+  // TODO: Could add a constructor with all the required inputs, but that's a lot of them
+
   explicit GeneratorMicroTurbine(const Model& model);
-  
-  // TODO: Could add a constructor with the curve but that'd be nuts, there are 13 of them
 
   virtual ~GeneratorMicroTurbine() {}
 

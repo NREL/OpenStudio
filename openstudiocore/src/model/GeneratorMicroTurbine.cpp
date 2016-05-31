@@ -101,9 +101,8 @@ namespace detail {
 	  boost::optional<double> maximumFullLoadElectricalPowerOutput = getDouble(OS_Generator_MicroTurbineFields::MaximumFullLoadElectricalPowerOutput,true);
 		// If there is a Heat Recovery Object
 		if (maximumFullLoadElectricalPowerOutput) {
-			// Get it
-			maximumFullLoadElectricalPowerOutput = *maximumFullLoadElectricalPowerOutput;
-			return maximumFullLoadElectricalPowerOutput;
+			// Get it and return
+			return maximumFullLoadElectricalPowerOutput.get();
 		}
 		else { 
 			boost::optional<double> referenceElectricalPowerOutput = getDouble(OS_Generator_MicroTurbineFields::ReferenceElectricalPowerOutput,true);
@@ -154,28 +153,23 @@ namespace detail {
   }
 
   Curve GeneratorMicroTurbine_Impl::electricalPowerFunctionofTemperatureandElevationCurve() const {
-    boost::optional<Curve> value = optionalElectricalPowerFunctionofTemperatureandElevationCurve();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Electrical Power Function of Temperature and Elevation Curve attached.");
-    }
-    return value.get();
+	  return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::ElectricalPowerFunctionofTemperatureandElevationCurveName);
   }
 
   Curve GeneratorMicroTurbine_Impl::electricalEfficiencyFunctionofTemperatureCurve() const {
-    boost::optional<Curve> value = optionalElectricalEfficiencyFunctionofTemperatureCurve();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Electrical Efficiency Function of Temperature Curve attached.");
-    }
-    return value.get();
+	  return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::ElectricalEfficiencyFunctionofTemperatureCurveName);
   }
 
   Curve GeneratorMicroTurbine_Impl::electricalEfficiencyFunctionofPartLoadRatioCurve() const {
+	  return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::ElectricalEfficiencyFunctionofPartLoadRatioCurveName);
+  }
+/*  Curve GeneratorMicroTurbine_Impl::electricalEfficiencyFunctionofPartLoadRatioCurve() const {
     boost::optional<Curve> value = optionalElectricalEfficiencyFunctionofPartLoadRatioCurve();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Electrical Efficiency Function of Part Load Ratio Curve attached.");
     }
     return value.get();
-  }
+  }*/
   
 
   std::string GeneratorMicroTurbine_Impl::fuelType() const {
@@ -617,7 +611,7 @@ namespace detail {
     bool result = setString(OS_Generator_MicroTurbineFields::ExhaustAirTemperatureFunctionofPartLoadRatioCurveName, "");
     OS_ASSERT(result);
   }
-
+  /*
   boost::optional<Curve> GeneratorMicroTurbine_Impl::optionalElectricalPowerFunctionofTemperatureandElevationCurve() const {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::ElectricalPowerFunctionofTemperatureandElevationCurveName);
   }
@@ -629,6 +623,7 @@ namespace detail {
   boost::optional<Curve> GeneratorMicroTurbine_Impl::optionalElectricalEfficiencyFunctionofPartLoadRatioCurve() const {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::ElectricalEfficiencyFunctionofPartLoadRatioCurveName);
   }
+  */
 
 } // detail
 
@@ -637,23 +632,80 @@ GeneratorMicroTurbine::GeneratorMicroTurbine(const Model& model)
 {
   OS_ASSERT(getImpl<detail::GeneratorMicroTurbine_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_Generator_MicroTurbineFields::ElectricalPowerFunctionofTemperatureandElevationCurveName
-  //     OS_Generator_MicroTurbineFields::ElectricalEfficiencyFunctionofTemperatureCurveName
-  //     OS_Generator_MicroTurbineFields::ElectricalEfficiencyFunctionofPartLoadRatioCurveName
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
-  // ok = setReferenceElectricalPowerOutput();
-  OS_ASSERT(ok);
-  // ok = setReferenceElectricalEfficiencyUsingLowerHeatingValue();
-  OS_ASSERT(ok);
-  // ok = setElectricalPowerFunctionofTemperatureandElevationCurve();
-  OS_ASSERT(ok);
-  // ok = setElectricalEfficiencyFunctionofTemperatureCurve();
-  OS_ASSERT(ok);
-  // ok = setElectricalEfficiencyFunctionofPartLoadRatioCurve();
-  OS_ASSERT(ok);
+  // TODO set a value to all required fields with no default...
+  // Source: Generators.idf, Capstone C65
+  //setName("Generator MicroTurbine Capstone C65");
+
+  // Reference Electrical Power Output
+  setReferenceElectricalPowerOutput(65000);
+
+  // Reference Electrical Efficiency Using Lower Heating Value
+  setReferenceElectricalEfficiencyUsingLowerHeatingValue(0.29);
+
+  //Electrical Power Function of Temperature and Elevation Curve Name
+  CurveCubic electricalPowerFunctionofTemperatureandElevationCurve(model);
+	  electricalPowerFunctionofTemperatureandElevationCurve.setName(name().get() + " Capstone C65 Power_vs_Temp_Elev")
+	  electricalPowerFunctionofTemperatureandElevationCurve.setCoefficient1Constant(1.2027697);
+	  electricalPowerFunctionofTemperatureandElevationCurve.setCoefficient2x(-9.671305E-03);
+	  electricalPowerFunctionofTemperatureandElevationCurve.setCoefficient3xPOW2(-4.860793E-06);
+	  electricalPowerFunctionofTemperatureandElevationCurve.setCoefficient4y(-1.542394E-04);
+	  electricalPowerFunctionofTemperatureandElevationCurve.setCoefficient5yPOW(9.111418E-09);
+	  electricalPowerFunctionofTemperatureandElevationCurve.setCoefficient6xTIMESY(8.797885E-07);
+	  electricalPowerFunctionofTemperatureandElevationCurve.setMinimumValueofx(-17.8);
+	  electricalPowerFunctionofTemperatureandElevationCurve.setMaximumValueofx(50);
+	  electricalPowerFunctionofTemperatureandElevationCurve.setMinimumValueofy(0);
+      electricalPowerFunctionofTemperatureandElevationCurve.setMaximumValueofy(3050.);
+	  //	Temperature, !- Input Unit Type for X
+	  // Distance, !- Input Unit Type for Y
+	  // Dimensionless;           !- Output Unit Type
+	setElectricalPowerFunctionofTemperatureandElevationCurve(electricalPowerFunctionofTemperatureandElevationCurve);
+
+	// ElectricalEfficiencyFunctionofTemperatureCurveName
+	// \object - list QuadraticCubicCurves
+	/*! Electrical Efficiency Modifier Curve (function of temperature)
+! x = Dry-Bulb Temperature of Combustion Inlet Air (C)
+
+  Curve:Cubic,
+    Capstone C65 Efficiency_vs_Temp,  !- Name
+    1.0402217,               !- Coefficient1 Constant
+    -0.0017314,              !- Coefficient2 x
+    -6.497040E-05,           !- Coefficient3 x**2
+    5.133175E-07,            !- Coefficient4 x**3
+    -20.0,                   !- Minimum Value of x
+    50.0,                    !- Maximum Value of x
+    ,                        !- Minimum Curve Output
+    ,                        !- Maximum Curve Output
+    Temperature,             !- Input Unit Type for X
+    Dimensionless;           !- Output Unit Type*/
+  CurveCubic electricalEfficiencyFunctionofTemperatureCurve(model);
+	electricalEfficiencyFunctionofTemperatureCurve.setName(name().get() + " Capstone C65 Efficiency_vs_Temp")
+	electricalEfficiencyFunctionofTemperatureCurve.setCoefficient1Constant(1.0402217);
+	electricalEfficiencyFunctionofTemperatureCurve.setCoefficient2x(-0.0017314);
+	electricalEfficiencyFunctionofTemperatureCurve.setCoefficient3xPOW2(-6.497040E-05);
+	electricalEfficiencyFunctionofTemperatureCurve.setCoefficient4xPOW3(5.133175E-07);
+	electricalEfficiencyFunctionofTemperatureCurve.setMinimumValueofx(-20);
+	electricalEfficiencyFunctionofTemperatureCurve.setMaximumValueofx(50);
+	setElectricalEfficiencyFunctionofTemperatureCurve(electricalEfficiencyFunctionofTemperatureCurve);
+
+  // ElectricalEfficiencyFunctionofPartLoadRatioCurveName
+  // QuadraticCubicCurves
+	/*  Curve:Cubic,
+    Capstone C65 Efficiency_vs_PLR,  !- Name
+    ,                !- Coefficient1 Constant
+    ,                !- Coefficient2 x
+    ,                !- Coefficient3 x**2
+    ,                !- Coefficient4 x**3
+    0.03,                    !- Minimum Value of x
+    1.0;                     !- Maximum Value of x*/
+  CurveCubic electricalEfficiencyFunctionofPartLoadRatioCurve(model);
+	electricalEfficiencyFunctionofPartLoadRatioCurve.setName(name().get() + " Capstone C65 Efficiency_vs_PLR")
+	electricalEfficiencyFunctionofPartLoadRatioCurve.setCoefficient1Constant(0.215290);
+	electricalEfficiencyFunctionofPartLoadRatioCurve.setCoefficient2x(2.561463);
+	electricalEfficiencyFunctionofPartLoadRatioCurve.setCoefficient3xPOW2(-3.24613);
+	electricalEfficiencyFunctionofPartLoadRatioCurve.setCoefficient4xPOW3(1.497306);
+	electricalEfficiencyFunctionofPartLoadRatioCurve.setMinimumValueofx(0.03);
+	electricalEfficiencyFunctionofPartLoadRatioCurve.setMaximumValueofx(1.0);
+	setElectricalEfficiencyFunctionofTemperatureCurve(electricalEfficiencyFunctionofPartLoadRatioCurve);
 }
 
 IddObjectType GeneratorMicroTurbine::iddObjectType() {
