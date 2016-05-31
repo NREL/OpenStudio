@@ -653,22 +653,22 @@ GeneratorMicroTurbine::GeneratorMicroTurbine(const Model& model)
 
   //Electrical Power Function of Temperature and Elevation Curve Name
   // CurveBiquadratic
-  CurveBiquadratric electricalPowerFunctionofTemperatureandElevationCurve(model);
-	electricalPowerFunctionofTemperatureandElevationCurve.setName(name().get() + " Capstone C65 Power_vs_Temp_Elev")
-	electricalPowerFunctionofTemperatureandElevationCurve.setCoefficient1Constant(1.2027697);
-	electricalPowerFunctionofTemperatureandElevationCurve.setCoefficient2x(-9.671305E-03);
-	electricalPowerFunctionofTemperatureandElevationCurve.setCoefficient3xPOW2(-4.860793E-06);
-	electricalPowerFunctionofTemperatureandElevationCurve.setCoefficient4y(-1.542394E-04);
-	electricalPowerFunctionofTemperatureandElevationCurve.setCoefficient5yPOW(9.111418E-09);
-	electricalPowerFunctionofTemperatureandElevationCurve.setCoefficient6xTIMESY(8.797885E-07);
-	electricalPowerFunctionofTemperatureandElevationCurve.setMinimumValueofx(-17.8);
-	electricalPowerFunctionofTemperatureandElevationCurve.setMaximumValueofx(50);
-	electricalPowerFunctionofTemperatureandElevationCurve.setMinimumValueofy(0);
-  electricalPowerFunctionofTemperatureandElevationCurve.setMaximumValueofy(3050.);
+  CurveBiquadratric elecPowerFTempElevation(model);
+  elecPowerFTempElevation.setName(name().get() + " Capstone C65 Power_vs_Temp_Elev");
+  elecPowerFTempElevation.setCoefficient1Constant(1.2027697);
+  elecPowerFTempElevation.setCoefficient2x(-9.671305E-03);
+  elecPowerFTempElevation.setCoefficient3xPOW2(-4.860793E-06);
+  elecPowerFTempElevation.setCoefficient4y(-1.542394E-04);
+  elecPowerFTempElevation.setCoefficient5yPOW(9.111418E-09);
+  elecPowerFTempElevation.setCoefficient6xTIMESY(8.797885E-07);
+  elecPowerFTempElevation.setMinimumValueofx(-17.8);
+  elecPowerFTempElevation.setMaximumValueofx(50);
+  elecPowerFTempElevation.setMinimumValueofy(0);
+  elecPowerFTempElevation.setMaximumValueofy(3050.);
 	  //	Temperature, !- Input Unit Type for X
 	  // Distance, !- Input Unit Type for Y
 	  // Dimensionless;           !- Output Unit Type
-	setElectricalPowerFunctionofTemperatureandElevationCurve(electricalPowerFunctionofTemperatureandElevationCurve);
+  setElectricalPowerFunctionofTemperatureandElevationCurve(elecPowerFTempElevation);
 
 	// ElectricalEfficiencyFunctionofTemperatureCurveName
 	// \object - list QuadraticCubicCurves
@@ -687,15 +687,15 @@ GeneratorMicroTurbine::GeneratorMicroTurbine(const Model& model)
     ,                        !- Maximum Curve Output
     Temperature,             !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type*/
-  CurveCubic electricalEfficiencyFunctionofTemperatureCurve(model);
-	electricalEfficiencyFunctionofTemperatureCurve.setName(name().get() + " Capstone C65 Efficiency_vs_Temp")
-	electricalEfficiencyFunctionofTemperatureCurve.setCoefficient1Constant(1.0402217);
-	electricalEfficiencyFunctionofTemperatureCurve.setCoefficient2x(-0.0017314);
-	electricalEfficiencyFunctionofTemperatureCurve.setCoefficient3xPOW2(-6.497040E-05);
-	electricalEfficiencyFunctionofTemperatureCurve.setCoefficient4xPOW3(5.133175E-07);
-	electricalEfficiencyFunctionofTemperatureCurve.setMinimumValueofx(-20);
-	electricalEfficiencyFunctionofTemperatureCurve.setMaximumValueofx(50);
-	setElectricalEfficiencyFunctionofTemperatureCurve(electricalEfficiencyFunctionofTemperatureCurve);
+  CurveCubic elecEffFT(model);
+  elecEffFT.setName(name().get() + " Capstone C65 Efficiency_vs_Temp");
+  elecEffFT.setCoefficient1Constant(1.0402217);
+  elecEffFT.setCoefficient2x(-0.0017314);
+  elecEffFT.setCoefficient3xPOW2(-6.497040E-05);
+  elecEffFT.setCoefficient4xPOW3(5.133175E-07);
+  elecEffFT.setMinimumValueofx(-20);
+  elecEffFT.setMaximumValueofx(50);
+  setElectricalEfficiencyFunctionofTemperatureCurve(elecEffFT);
 
   // ElectricalEfficiencyFunctionofPartLoadRatioCurveName
   // QuadraticCubicCurves
@@ -707,15 +707,15 @@ GeneratorMicroTurbine::GeneratorMicroTurbine(const Model& model)
     ,                !- Coefficient4 x**3
     0.03,                    !- Minimum Value of x
     1.0;                     !- Maximum Value of x*/
-  CurveCubic electricalEfficiencyFunctionofPartLoadRatioCurve(model);
-	electricalEfficiencyFunctionofPartLoadRatioCurve.setName(name().get() + " Capstone C65 Efficiency_vs_PLR")
-	electricalEfficiencyFunctionofPartLoadRatioCurve.setCoefficient1Constant(0.215290);
-	electricalEfficiencyFunctionofPartLoadRatioCurve.setCoefficient2x(2.561463);
-	electricalEfficiencyFunctionofPartLoadRatioCurve.setCoefficient3xPOW2(-3.24613);
-	electricalEfficiencyFunctionofPartLoadRatioCurve.setCoefficient4xPOW3(1.497306);
-	electricalEfficiencyFunctionofPartLoadRatioCurve.setMinimumValueofx(0.03);
-	electricalEfficiencyFunctionofPartLoadRatioCurve.setMaximumValueofx(1.0);
-	setElectricalEfficiencyFunctionofTemperatureCurve(electricalEfficiencyFunctionofPartLoadRatioCurve);
+  CurveCubic elecEffFPLR(model);
+  elecEffFPLR.setName(name().get() + " Capstone C65 Efficiency_vs_PLR");
+  elecEffFPLR.setCoefficient1Constant(0.215290);
+  elecEffFPLR.setCoefficient2x(2.561463);
+  elecEffFPLR.setCoefficient3xPOW2(-3.24613);
+  elecEffFPLR.setCoefficient4xPOW3(1.497306);
+  elecEffFPLR.setMinimumValueofx(0.03);
+  elecEffFPLR.setMaximumValueofx(1.0);
+  setElectricalEfficiencyFunctionofTemperatureCurve(elecEffFPLR);
 }
 
 IddObjectType GeneratorMicroTurbine::iddObjectType() {

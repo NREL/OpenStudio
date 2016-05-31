@@ -36,9 +36,15 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Generator_MicroTurbine_FieldEnums.hxx>
 
-#include "../utilities/units/Unit.hpp"
 
+// TODO not sure if need all of these
+#include <utilities/idd/OS_Generator_MicroTurbine_HeatRecovery_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
+#include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
+
 
 namespace openstudio {
 namespace model {
