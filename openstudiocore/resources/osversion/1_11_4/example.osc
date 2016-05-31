@@ -1,44 +1,28 @@
 
 OS:Version,
-  {14b034c9-d1e4-4384-9ab7-fdac22ad5f84}, !- Handle
+  {86cec4e1-2446-4574-bdcb-d568c61ea3de}, !- Handle
   1.11.4;                                 !- Version Identifier
 
 OS:Construction,
-  {0cace899-48a1-4533-9ef7-ac9c85b3ccec}, !- Handle
-  Slab,                                   !- Name
+  {d87733c4-3f29-4362-87fe-4e89a3cc2c31}, !- Handle
+  Exterior Window,                        !- Name
   ,                                       !- Surface Rendering Name
-  {f2f4624a-4a2c-4566-a784-aa7b43f20b45}, !- Layer 1
-  {7fb79027-6904-454b-8d89-d64d891b02ef}; !- Layer 2
+  {16fedf2e-09b5-414f-bb58-f990a5e8fc67}; !- Layer 1
 
-OS:Material,
-  {f2f4624a-4a2c-4566-a784-aa7b43f20b45}, !- Handle
-  MAT-CC05 8 HW CONCRETE,                 !- Name
-  Rough,                                  !- Roughness
-  0.2032,                                 !- Thickness {m}
-  1.311,                                  !- Conductivity {W/m-K}
-  2240,                                   !- Density {kg/m3}
-  836.8,                                  !- Specific Heat {J/kg-K}
-  0.9,                                    !- Thermal Absorptance
-  0.7,                                    !- Solar Absorptance
-  0.7;                                    !- Visible Absorptance
-
-OS:Material:NoMass,
-  {7fb79027-6904-454b-8d89-d64d891b02ef}, !- Handle
-  CP02 CARPET PAD,                        !- Name
-  VeryRough,                              !- Roughness
-  0.2165,                                 !- Thermal Resistance {m2-K/W}
-  0.9,                                    !- Thermal Absorptance
-  0.7,                                    !- Solar Absorptance
-  0.8;                                    !- Visible Absorptance
+OS:WindowMaterial:SimpleGlazingSystem,
+  {16fedf2e-09b5-414f-bb58-f990a5e8fc67}, !- Handle
+  Simple Glazing,                         !- Name
+  3.23646,                                !- U-Factor {W/m2-K}
+  0.39,                                   !- Solar Heat Gain Coefficient
+  0.6;                                    !- Visible Transmittance
 
 OS:ComponentData,
-  {3b0dc12c-55aa-48ca-af2a-baf8fa3a7013}, !- Handle
+  {7ca24ee6-49d0-4c8e-b17b-6ac72b6e5eb3}, !- Handle
   Component Data 1,                       !- Name
-  {c902eca7-470a-4f34-a2e3-e466a5323ce6}, !- UUID
-  {bce28b4c-9575-409b-a85b-7932601f0aad}, !- Version UUID
-  1464377388,                             !- Creation Timestamp
-  1464377388,                             !- Version Timestamp
-  {0cace899-48a1-4533-9ef7-ac9c85b3ccec}, !- Name of Object 1
-  {f2f4624a-4a2c-4566-a784-aa7b43f20b45}, !- Name of Object 2
-  {7fb79027-6904-454b-8d89-d64d891b02ef}; !- Name of Object 3
+  {808676dd-dd84-405a-8dfb-cecac8372a64}, !- UUID
+  {065396ef-9b0d-4858-9573-2c64613fb6ef}, !- Version UUID
+  1464729037,                             !- Creation Timestamp
+  1464729037,                             !- Version Timestamp
+  {d87733c4-3f29-4362-87fe-4e89a3cc2c31}, !- Name of Object 1
+  {16fedf2e-09b5-414f-bb58-f990a5e8fc67}; !- Name of Object 2
 
