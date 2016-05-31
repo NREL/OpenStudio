@@ -246,7 +246,7 @@ namespace detail {
     if (curve) {
       if(model() != curve.get().model())
       {
-        LOG(briefDescription() << " does not below to the same model as the curve you want to set.");
+        LOG(Warn,briefDescription() << " does not below to the same model as the curve you want to set.");
         return false;
       }
       result = setPointer(OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurveName, curve.get().handle());
@@ -268,7 +268,7 @@ namespace detail {
     if (curve) {
       if(model() != curve.get().model())
       {
-        LOG(briefDescription() << " does not below to the same model as the curve you want to set.");
+        LOG(Warn,briefDescription() << " does not below to the same model as the curve you want to set.");
         return false;
       }
       result = setPointer(OS_Generator_MicroTurbineHeatRecoveryFields::ThermalEfficiencyFunctionofTemperatureandElevationCurveName, curve.get().handle());
@@ -290,7 +290,7 @@ namespace detail {
     if (curve) {
       if(model() != curve.get().model())
       {
-        LOG(briefDescription() << " does not below to the same model as the curve you want to set.");
+        LOG(Warn,briefDescription() << " does not below to the same model as the curve you want to set.");
         return false;
       }
       result = setPointer(OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryRateFunctionofPartLoadRatioCurveName, curve.get().handle());
@@ -312,7 +312,7 @@ namespace detail {
     if (curve) {
       if(model() != curve.get().model())
       {
-        LOG(briefDescription() << " does not below to the same model as the curve you want to set.");
+        LOG(Warn,briefDescription() << " does not below to the same model as the curve you want to set.");
         return false;
       }
       result = setPointer(OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryRateFunctionofInletWaterTemperatureCurveName, curve.get().handle());
@@ -334,7 +334,7 @@ namespace detail {
     if (curve) {
       if(model() != curve.get().model())
       {
-        LOG(briefDescription() << " does not below to the same model as the curve you want to set.");
+        LOG(Warn,briefDescription() << " does not below to the same model as the curve you want to set.");
         return false;
       }
       result = setPointer(OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryRateFunctionofWaterFlowRateCurveName, curve.get().handle());
@@ -392,7 +392,27 @@ namespace detail {
 
 GeneratorMicroTurbineHeatRecovery::GeneratorMicroTurbineHeatRecovery(const Model& model)
   : StraightComponent(GeneratorMicroTurbineHeatRecovery::iddObjectType(),model)
-{}
+{
+
+  // Reference Thermal Efficiency Using Lower Heat Value has a default of 0 in E+ idd which isn't smart in this case
+  // TODO Should I set it here, or change the .idd??
+  // 0.4975 would be better
+
+  // Assign all values that are required but have no default
+
+  // Reference Inlet Water Temperature
+  setReferenceInletWaterTemperature(60);
+
+	// Reference Heat Recovery Water Flow Rate
+  setReferenceHeatRecoveryWaterFlowRate(0.00252362);
+
+  // Maximum Heat Recovery Water Flow Rate: has a default value of 0 in E+.idd which isn't right in this case
+  // TODO: Should I set it here or change default in .idd?
+  // 0.003785432
+
+
+
+}
 
 IddObjectType GeneratorMicroTurbineHeatRecovery::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Generator_MicroTurbine);

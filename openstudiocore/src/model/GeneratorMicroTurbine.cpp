@@ -20,6 +20,10 @@
 #include "GeneratorMicroTurbine.hpp"
 #include "GeneratorMicroTurbine_Impl.hpp"
 
+// Need model to check if curve is part of model when setting
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
 
@@ -334,9 +338,10 @@ namespace detail {
   {
     if(model() != curve.model())
     {
-      LOG(briefDescription() << " does not belong to the same model as the curve you want to set.");
+      LOG(Warn,briefDescription() << " does not belong to the same model as the curve you want to set.");
       return false;
     }
+	// Todo: do I need to explicitly check if the curve is of the right type? or does defining \object-list BiquadraticCurves in .idd suffice?
     bool result = setPointer(OS_Generator_MicroTurbineFields::ElectricalPowerFunctionofTemperatureandElevationCurveName, curve.handle());
     return result;
   }
@@ -344,7 +349,7 @@ namespace detail {
   bool GeneratorMicroTurbine_Impl::setElectricalEfficiencyFunctionofTemperatureCurve(const Curve& curve) {
     if(model() != curve.model())
     {
-      LOG(briefDescription() << " does not belong to the same model as the curve you want to set.");
+      LOG(Warn,briefDescription() << " does not belong to the same model as the curve you want to set.");
       return false;
     }
     bool result = setPointer(OS_Generator_MicroTurbineFields::ElectricalEfficiencyFunctionofTemperatureCurveName, curve.handle());
@@ -354,7 +359,7 @@ namespace detail {
   bool GeneratorMicroTurbine_Impl::setElectricalEfficiencyFunctionofPartLoadRatioCurve(const Curve& curve) {
     if(model() != curve.model())
     {
-      LOG(briefDescription() << " does not belong to the same model as the curve you want to set.");
+      LOG(Warn,briefDescription() << " does not belong to the same model as the curve you want to set.");
       return false;
     }
     bool result = setPointer(OS_Generator_MicroTurbineFields::ElectricalEfficiencyFunctionofPartLoadRatioCurveName, curve.handle());
@@ -416,7 +421,7 @@ namespace detail {
     if (curve) {
       if(model() != curve.get().model())
       {
-        LOG(briefDescription() << " does not belong to the same model as the curve you want to set.");
+        LOG(Warn,briefDescription() << " does not belong to the same model as the curve you want to set.");
         return false;
       }
       result = setPointer(OS_Generator_MicroTurbineFields::AncillaryPowerFunctionofFuelInputCurveName, curve.get().handle());
@@ -440,7 +445,7 @@ namespace detail {
     if (generatorMicroTurbineHeatRecovery) {
       if(model() != generatorMicroTurbineHeatRecovery.get().model())
       {
-        LOG(briefDescription() << " does not belong to the same model as the Generator:MicroTurbine:HeatRecovery you want to set.");
+        LOG(Warn,briefDescription() << " does not belong to the same model as the Generator:MicroTurbine:HeatRecovery you want to set.");
         return false;
       }
       result = setPointer(OS_Generator_MicroTurbineFields::GeneratorMicroTurbineHeatRecoveryName, generatorMicroTurbineHeatRecovery.get().handle());
@@ -512,7 +517,7 @@ namespace detail {
     if (curve) {
       if(model() != curve.get().model())
       {
-        LOG(briefDescription() << " does not belong to the same model as the curve you want to set.");
+        LOG(Warn,briefDescription() << " does not belong to the same model as the curve you want to set.");
         return false;
       }
       result = setPointer(OS_Generator_MicroTurbineFields::ExhaustAirFlowRateFunctionofTemperatureCurveName, curve.get().handle());
@@ -534,7 +539,7 @@ namespace detail {
     if (curve) {
       if(model() != curve.get().model())
       {
-        LOG(briefDescription() << " does not belong to the same model as the curve you want to set.");
+        LOG(Warn,briefDescription() << " does not belong to the same model as the curve you want to set.");
         return false;
       }  
       result = setPointer(OS_Generator_MicroTurbineFields::ExhaustAirFlowRateFunctionofPartLoadRatioCurveName, curve.get().handle());
@@ -573,7 +578,7 @@ namespace detail {
     if (curve) {
       if(model() != curve.get().model())
       {
-        LOG(briefDescription() << " does not belong to the same model as the curve you want to set.");
+        LOG(Warn,briefDescription() << " does not belong to the same model as the curve you want to set.");
         return false;
       }
       result = setPointer(OS_Generator_MicroTurbineFields::ExhaustAirTemperatureFunctionofTemperatureCurveName, curve.get().handle());
@@ -595,7 +600,7 @@ namespace detail {
     if (curve) {
       if(model() != curve.get().model())
       {
-        LOG(briefDescription() << " does not belong to the same model as the curve you want to set.");
+        LOG(Warn,briefDescription() << " does not belong to the same model as the curve you want to set.");
         return false;
       }
       result = setPointer(OS_Generator_MicroTurbineFields::ExhaustAirTemperatureFunctionofPartLoadRatioCurveName, curve.get().handle());
