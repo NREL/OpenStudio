@@ -426,7 +426,7 @@ openstudio::path getEnergyPlusExecutable() {
 #elif defined(Q_OS_MAC)
   auto systemPath = openstudio::toPath("/Applications") / energyPlusDirectoryName / energyPlusExeName;
 #else
-  auto systemPath = openstudio::toPath("C:") / energyPlusDirectoryName / energyPlusExeName;
+  auto systemPath = openstudio::toPath("C:/EnergyPlusV8-5-0/energyplus.exe");
 #endif
 
   if( openstudio::filesystem::exists(envPath) ) {
