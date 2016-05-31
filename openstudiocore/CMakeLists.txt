@@ -586,6 +586,20 @@ add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
 
 #--------------------------------------------------------------------------------
 # Qt
+if( WIN32 )
+  set(QT_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_msvc2013_64_static.zip")
+  file(MD5 ${QT_ZIP_LOCAL_PATH} QT_ZIP_MD5)
+  if( NOT QT_ZIP_MD5 STREQUAL "52424fdb4d553b94156de088881506b5" )
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/qt_5_6_msvc2013_64_static.zip" 
+      ${QT_ZIP_LOCAL_PATH} 
+      INACTIVITY_TIMEOUT 120 
+      SHOW_PROGRESS
+      EXPECTED_MD5 52424fdb4d553b94156de088881506b5)
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+  endif()
+
+  list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_msvc2013_64_static/lib/cmake")
+endif()
 
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Widgets REQUIRED)
@@ -630,33 +644,33 @@ mark_as_advanced(
 set(CMAKE_AUTOMOC OFF)
 
 #Adding libraries to the list of includes
-include_directories(${Qt5Widgets_INCLUDE_DIRS})
-include_directories(${Qt5Sql_INCLUDE_DIRS})
-include_directories(${Qt5Network_INCLUDE_DIRS})
-include_directories(${Qt5Xml_INCLUDE_DIRS})
-#if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
-#  include_directories(${Qt5WebKit_INCLUDE_DIRS})
-#  include_directories(${Qt5WebKitWidgets_INCLUDE_DIRS})
-#else()
-#  include_directories(${Qt5WebEngine_INCLUDE_DIRS})
-#  include_directories(${Qt5WebEngineWidgets_INCLUDE_DIRS})
-#endif()
-#include_directories(${Qt5WinExtras_INCLUDE_DIRS})
-include_directories(${Qt5Concurrent_INCLUDE_DIRS})
-include_directories(${Qt5PrintSupport_INCLUDE_DIRS})
+###include_directories(${Qt5Widgets_INCLUDE_DIRS})
+###include_directories(${Qt5Sql_INCLUDE_DIRS})
+###include_directories(${Qt5Network_INCLUDE_DIRS})
+###include_directories(${Qt5Xml_INCLUDE_DIRS})
+####if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
+####  include_directories(${Qt5WebKit_INCLUDE_DIRS})
+####  include_directories(${Qt5WebKitWidgets_INCLUDE_DIRS})
+####else()
+####  include_directories(${Qt5WebEngine_INCLUDE_DIRS})
+####  include_directories(${Qt5WebEngineWidgets_INCLUDE_DIRS})
+####endif()
+####include_directories(${Qt5WinExtras_INCLUDE_DIRS})
+###include_directories(${Qt5Concurrent_INCLUDE_DIRS})
+###include_directories(${Qt5PrintSupport_INCLUDE_DIRS})
 
-#include_directories is supposed to be a set, however there are tons of Qt duplicate includes
-get_directory_property(dupdirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} INCLUDE_DIRECTORIES)
-list(REMOVE_DUPLICATES dupdirs)
-set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${dupdirs}")
+###include_directories is supposed to be a set, however there are tons of Qt duplicate includes
+##get_directory_property(dupdirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} INCLUDE_DIRECTORIES)
+##list(REMOVE_DUPLICATES dupdirs)
+##set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${dupdirs}")
 
-### recreating QT_LIBRARY_DIR for qt5
-if(WIN32 AND TARGET Qt5::Core)
-  get_property(_Qt5_Core_LOCATION TARGET Qt5::Core PROPERTY LOCATION)
-  get_filename_component(QT_LIBRARY_DIR "${_Qt5_Core_LOCATION}" DIRECTORY)
-else()
-  set(QT_LIBRARY_DIR "")
-endif()
+##### recreating QT_LIBRARY_DIR for qt5
+##if(WIN32 AND TARGET Qt5::Core)
+##  get_property(_Qt5_Core_LOCATION TARGET Qt5::Core PROPERTY LOCATION)
+##  get_filename_component(QT_LIBRARY_DIR "${_Qt5_Core_LOCATION}" DIRECTORY)
+##else()
+##  set(QT_LIBRARY_DIR "")
+##endif()
 
 list(APPEND QT_LIBS Qt5::Core)
 list(APPEND QT_LIBS Qt5::Gui)
