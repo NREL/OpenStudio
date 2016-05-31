@@ -26,6 +26,10 @@
 
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
+#include "CurveBiquadratic.hpp"
+#include "CurveBiquadratic_Impl.hpp"
+#include "CurveCubic.hpp"
+#include "CurveCubic_Impl.hpp"
 
 #include "StraightComponent.hpp"
 #include "StraightComponent_Impl.hpp"
@@ -648,18 +652,19 @@ GeneratorMicroTurbine::GeneratorMicroTurbine(const Model& model)
   setReferenceElectricalEfficiencyUsingLowerHeatingValue(0.29);
 
   //Electrical Power Function of Temperature and Elevation Curve Name
-  CurveCubic electricalPowerFunctionofTemperatureandElevationCurve(model);
-	  electricalPowerFunctionofTemperatureandElevationCurve.setName(name().get() + " Capstone C65 Power_vs_Temp_Elev")
-	  electricalPowerFunctionofTemperatureandElevationCurve.setCoefficient1Constant(1.2027697);
-	  electricalPowerFunctionofTemperatureandElevationCurve.setCoefficient2x(-9.671305E-03);
-	  electricalPowerFunctionofTemperatureandElevationCurve.setCoefficient3xPOW2(-4.860793E-06);
-	  electricalPowerFunctionofTemperatureandElevationCurve.setCoefficient4y(-1.542394E-04);
-	  electricalPowerFunctionofTemperatureandElevationCurve.setCoefficient5yPOW(9.111418E-09);
-	  electricalPowerFunctionofTemperatureandElevationCurve.setCoefficient6xTIMESY(8.797885E-07);
-	  electricalPowerFunctionofTemperatureandElevationCurve.setMinimumValueofx(-17.8);
-	  electricalPowerFunctionofTemperatureandElevationCurve.setMaximumValueofx(50);
-	  electricalPowerFunctionofTemperatureandElevationCurve.setMinimumValueofy(0);
-      electricalPowerFunctionofTemperatureandElevationCurve.setMaximumValueofy(3050.);
+  // CurveBiquadratic
+  CurveBiquadratric electricalPowerFunctionofTemperatureandElevationCurve(model);
+	electricalPowerFunctionofTemperatureandElevationCurve.setName(name().get() + " Capstone C65 Power_vs_Temp_Elev")
+	electricalPowerFunctionofTemperatureandElevationCurve.setCoefficient1Constant(1.2027697);
+	electricalPowerFunctionofTemperatureandElevationCurve.setCoefficient2x(-9.671305E-03);
+	electricalPowerFunctionofTemperatureandElevationCurve.setCoefficient3xPOW2(-4.860793E-06);
+	electricalPowerFunctionofTemperatureandElevationCurve.setCoefficient4y(-1.542394E-04);
+	electricalPowerFunctionofTemperatureandElevationCurve.setCoefficient5yPOW(9.111418E-09);
+	electricalPowerFunctionofTemperatureandElevationCurve.setCoefficient6xTIMESY(8.797885E-07);
+	electricalPowerFunctionofTemperatureandElevationCurve.setMinimumValueofx(-17.8);
+	electricalPowerFunctionofTemperatureandElevationCurve.setMaximumValueofx(50);
+	electricalPowerFunctionofTemperatureandElevationCurve.setMinimumValueofy(0);
+  electricalPowerFunctionofTemperatureandElevationCurve.setMaximumValueofy(3050.);
 	  //	Temperature, !- Input Unit Type for X
 	  // Distance, !- Input Unit Type for Y
 	  // Dimensionless;           !- Output Unit Type
