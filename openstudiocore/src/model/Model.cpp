@@ -1000,7 +1000,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     boost::optional<Building> result = this->model().getOptionalUniqueModelObject<Building>();
     if (result){
       m_cachedBuilding = result;
-      QObject::connect(result->getImpl<Building_Impl>().get(), &Building_Impl::onRemoveFromWorkspace, this, &Model_Impl::clearCachedBuilding);
+      result->getImpl<Building_Impl>().get()->Building_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedBuilding>(const_cast<openstudio::model::detail::Model_Impl *>(this));
     }
 
     return m_cachedBuilding;
@@ -1015,8 +1015,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     boost::optional<LifeCycleCostParameters> result = this->model().getOptionalUniqueModelObject<LifeCycleCostParameters>();
     if (result){
       m_cachedLifeCycleCostParameters = result;
-      QObject::connect(result->getImpl<LifeCycleCostParameters_Impl>().get(), &LifeCycleCostParameters_Impl::onRemoveFromWorkspace,
-        this, &Model_Impl::clearCachedLifeCycleCostParameters);
+      result->getImpl<LifeCycleCostParameters_Impl>().get()->LifeCycleCostParameters_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedLifeCycleCostParameters>(const_cast<openstudio::model::detail::Model_Impl *>(this));
     }
 
     return m_cachedLifeCycleCostParameters;
@@ -1031,7 +1030,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     boost::optional<RunPeriod> result = this->model().getOptionalUniqueModelObject<RunPeriod>();
     if (result){
       m_cachedRunPeriod = result;
-      QObject::connect(result->getImpl<RunPeriod_Impl>().get(), &RunPeriod_Impl::onRemoveFromWorkspace, this, &Model_Impl::clearCachedRunPeriod);
+      result->getImpl<RunPeriod_Impl>().get()->RunPeriod_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedRunPeriod>(const_cast<openstudio::model::detail::Model_Impl *>(this));
     }
 
     return m_cachedRunPeriod;
@@ -1046,8 +1045,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     boost::optional<YearDescription> result = this->model().getOptionalUniqueModelObject<YearDescription>();
     if (result){
       m_cachedYearDescription = result;
-      QObject::connect(result->getImpl<YearDescription_Impl>().get(), &YearDescription_Impl::onRemoveFromWorkspace,
-        this, &Model_Impl::clearCachedYearDescription);
+      result->getImpl<YearDescription_Impl>().get()->YearDescription_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedYearDescription>(const_cast<openstudio::model::detail::Model_Impl *>(this));
     }
 
     return m_cachedYearDescription;
@@ -1062,7 +1060,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     boost::optional<WeatherFile> result = this->model().getOptionalUniqueModelObject<WeatherFile>();
     if (result){
       m_cachedWeatherFile = result;
-      QObject::connect(result->getImpl<WeatherFile_Impl>().get(), &WeatherFile_Impl::onRemoveFromWorkspace, this, &Model_Impl::clearCachedWeatherFile);
+      result->getImpl<WeatherFile_Impl>().get()->WeatherFile_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedWeatherFile>(const_cast<openstudio::model::detail::Model_Impl *>(this));
     }
 
     return m_cachedWeatherFile;
@@ -1472,15 +1470,15 @@ if (_className::iddObjectType() == typeToCreate) { \
   void Model_Impl::reportInitialModelObjects()
   {
     for (const WorkspaceObject& workspaceObject : this->objects()) {
-      emit initialModelObject(workspaceObject.getImpl<detail::ModelObject_Impl>().get(), workspaceObject.iddObject().type(), workspaceObject.handle());
+      this->initialModelObject.nano_emit(workspaceObject.getImpl<detail::ModelObject_Impl>().get(), workspaceObject.iddObject().type(), workspaceObject.handle());
     }
-    emit initialReportComplete();
+    this->initialReportComplete.nano_emit();
   }
 
   void Model_Impl::mf_createComponentWatcher(ComponentData& componentData) {
     try {
       ComponentWatcher watcher(componentData);
-      QObject::connect(watcher.getImpl().get(), &ComponentWatcher_Impl::obsolete, this, &Model_Impl::obsoleteComponentWatcher);
+      watcher.getImpl().get()->ComponentWatcher_Impl::obsolete.connect<Model_Impl, &Model_Impl::obsoleteComponentWatcher>(this); // #HASHTAG Problem?
       m_componentWatchers.push_back(watcher);
     }
     catch (...) {
@@ -1489,27 +1487,27 @@ if (_className::iddObjectType() == typeToCreate) { \
     }
   }
 
-  void Model_Impl::clearCachedBuilding()
+  void Model_Impl::clearCachedBuilding(const Handle &)
   {
     m_cachedBuilding.reset();
   }
 
-  void Model_Impl::clearCachedLifeCycleCostParameters()
+  void Model_Impl::clearCachedLifeCycleCostParameters(const Handle &handle)
   {
     m_cachedLifeCycleCostParameters.reset();
   }
 
-  void Model_Impl::clearCachedRunPeriod()
+  void Model_Impl::clearCachedRunPeriod(const Handle& handle)
   {
     m_cachedRunPeriod.reset();
   }
 
-  void Model_Impl::clearCachedYearDescription()
+  void Model_Impl::clearCachedYearDescription(const Handle& handle)
   {
     m_cachedYearDescription.reset();
   }
 
-  void Model_Impl::clearCachedWeatherFile()
+  void Model_Impl::clearCachedWeatherFile(const Handle& handle)
   {
     m_cachedWeatherFile.reset();
   }

@@ -191,9 +191,9 @@ void OSQuantityEdit2::completeBind(bool isIP,
   
   connect(m_lineEdit, &QLineEdit::editingFinished, this, &OSQuantityEdit2::onEditingFinished); // Evan note: would behaviors improve with "textChanged"?
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSQuantityEdit2::onModelObjectChange);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSQuantityEdit2, &OSQuantityEdit2::onModelObjectChange>(this);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSQuantityEdit2::onModelObjectRemove);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace.connect<OSQuantityEdit2, &OSQuantityEdit2::onModelObjectRemove>(this);
 
   refreshTextAndLabel();
 }
@@ -300,7 +300,7 @@ void OSQuantityEdit2::onUnitSystemChange(bool isIP) {
   refreshTextAndLabel();
 }
 
-void OSQuantityEdit2::onModelObjectRemove(Handle handle) {
+void OSQuantityEdit2::onModelObjectRemove(const Handle& handle) {
   unbind();
 }
 
@@ -545,9 +545,9 @@ void OSQuantityEdit::bind(model::ModelObject& modelObject,
 
   connect(m_lineEdit, &QLineEdit::editingFinished, this, &OSQuantityEdit::onEditingFinished);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSQuantityEdit::onModelObjectChange);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSQuantityEdit, &OSQuantityEdit::onModelObjectChange>(this);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSQuantityEdit::onModelObjectRemove);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace.connect<OSQuantityEdit, &OSQuantityEdit::onModelObjectRemove>(this);
 
   refreshTextAndLabel();
 }
@@ -617,7 +617,7 @@ void OSQuantityEdit::onUnitSystemChange(bool isIP) {
   refreshTextAndLabel();
 }
 
-void OSQuantityEdit::onModelObjectRemove(Handle handle) {
+void OSQuantityEdit::onModelObjectRemove(const Handle&  handle) {
   m_modelObject.reset();
   m_property = "";
   setEnabled(false);

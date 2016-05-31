@@ -203,7 +203,7 @@ class SchedulesView : public QWidget
 
     void onModelObjectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&);
 
-    void onScheduleRuleRemoved(Handle handle);
+    void onScheduleRuleRemoved(const Handle& handle);
 
   private:
 
@@ -379,7 +379,7 @@ signals:
 
   public slots:
 
-  void scheduleRefresh();
+  void scheduleRefresh(const Handle& handle=NULL);
 
   private slots:
 

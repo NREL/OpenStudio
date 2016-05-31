@@ -22,6 +22,7 @@
 
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp" // required for Q_PROPERTY
+#include "nano_signal_slot.hpp" // Signal-Slot replacement
 
 #include "../utilities/idf/WorkspaceObject_Impl.hpp"
 
@@ -229,15 +230,18 @@ namespace detail {
     boost::optional<unsigned> connectedObjectPort(unsigned port) const;
 
     //@}
+    /** @name Nano Signals */
+    //@{
+
+    Nano::Signal<void(const QVariantMap&)> reportProperties;
+    
+    //@}
+
    public slots:
 
     void requestProperties(const QStringList& names);
 
     void setProperties(const QVariantMap& properties);
-
-   signals:
-
-    void reportProperties(const QVariantMap& properties);
 
    protected:
 

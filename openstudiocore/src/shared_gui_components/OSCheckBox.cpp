@@ -50,9 +50,9 @@ namespace openstudio {
 
     setEnabled(true);
 
-    connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSCheckBox3::onModelObjectChange);
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSCheckBox3, &OSCheckBox3::onModelObjectChange>(this);
 
-    connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSCheckBox3::onModelObjectRemove);
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace.connect<OSCheckBox3, &OSCheckBox3::onModelObjectRemove>(this);
 
     connect(this, &OSCheckBox3::toggled, this, &OSCheckBox3::onToggled);
     bool checked = (*m_get)();
@@ -74,9 +74,9 @@ namespace openstudio {
 
     setEnabled(true);
 
-    connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSCheckBox3::onModelObjectChange);
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSCheckBox3, &OSCheckBox3::onModelObjectChange>(this);
 
-    connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSCheckBox3::onModelObjectRemove);
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace.connect<OSCheckBox3, &OSCheckBox3::onModelObjectRemove>(this);
 
     connect(this, &OSCheckBox3::toggled, this, &OSCheckBox3::onToggled);
     bool checked = (*m_get)();
@@ -122,7 +122,7 @@ namespace openstudio {
     }
   }
 
-  void OSCheckBox3::onModelObjectRemove(Handle handle)
+  void OSCheckBox3::onModelObjectRemove(const Handle& handle)
   {
     unbind();
   }
@@ -152,9 +152,9 @@ void OSCheckBox2::bind(model::ModelObject & modelObject,
 
   setEnabled(true);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSCheckBox2::onModelObjectChange);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSCheckBox2, &OSCheckBox2::onModelObjectChange>(this);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSCheckBox2::onModelObjectRemove);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace.connect<OSCheckBox2, &OSCheckBox2::onModelObjectRemove>(this);
 
   connect(this, &OSCheckBox2::toggled, this, &OSCheckBox2::onToggled);
   bool checked = (*m_get)();
@@ -190,7 +190,7 @@ void OSCheckBox2::onModelObjectChange()
   }
 }
 
-void OSCheckBox2::onModelObjectRemove(Handle handle)
+void OSCheckBox2::onModelObjectRemove(const Handle& handle)
 {
   unbind();
 }
@@ -214,9 +214,9 @@ void OSCheckBox::bind(model::ModelObject & modelObject, const char * property)
 
   setEnabled(true);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSCheckBox::onModelObjectChange);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSCheckBox, &OSCheckBox::onModelObjectChange>(this);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSCheckBox::onModelObjectRemove);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace.connect<OSCheckBox, &OSCheckBox::onModelObjectRemove>(this);
 
   connect(this, &OSCheckBox::toggled, this, &OSCheckBox::onToggled);
   bool checked = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str()).toBool();
@@ -252,7 +252,7 @@ void OSCheckBox::onModelObjectChange()
   }
 }
 
-void OSCheckBox::onModelObjectRemove(Handle handle)
+void OSCheckBox::onModelObjectRemove(const Handle& handle)
 {
   m_modelObject.reset();
   m_property = "";

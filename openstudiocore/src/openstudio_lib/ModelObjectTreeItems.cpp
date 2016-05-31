@@ -150,11 +150,11 @@ ModelObjectTreeItem::ModelObjectTreeItem(const openstudio::model::ModelObject& m
   this->setText(0, toQString(modelObject.name().get()));
   this->setStyle(0, "");
 
-  connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onNameChange, this, &ModelObjectTreeItem::changeName);
+  m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->model::detail::ModelObject_Impl::onNameChange.connect<ModelObjectTreeItem, &ModelObjectTreeItem::changeName>(this);
    
-  connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onChange, this, &ModelObjectTreeItem::change);
+  m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->model::detail::ModelObject_Impl::onChange.connect<ModelObjectTreeItem, &ModelObjectTreeItem::change>(this);
 
-  connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onRelationshipChange, this, &ModelObjectTreeItem::changeRelationship);
+  m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->model::detail::ModelObject_Impl::onRelationshipChange.connect<ModelObjectTreeItem, &ModelObjectTreeItem::changeRelationship>(this);
 }
 
 ModelObjectTreeItem::ModelObjectTreeItem(const std::string& name, const openstudio::model::Model& model, QTreeWidgetItem* parent)

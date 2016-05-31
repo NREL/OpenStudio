@@ -135,15 +135,9 @@ namespace openstudio {
   VariablesList::VariablesList(openstudio::model::Model t_model)
     : m_model(t_model), m_dirty(true)
   {
-    connect(t_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-      static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-      this,
-      &VariablesList::onAdded);
+    t_model.getImpl<openstudio::model::detail::Model_Impl>().get()->model::detail::Model_Impl::addWorkspaceObject.connect<VariablesList, &VariablesList::onAdded>(this);
 
-    connect(t_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-      static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
-      this,
-      &VariablesList::onRemoved);
+    t_model.getImpl<openstudio::model::detail::Model_Impl>().get()->model::detail::Model_Impl::removeWorkspaceObject.connect<VariablesList, &VariablesList::onRemoved>(this);
     auto vbox = new QVBoxLayout();
     vbox->setContentsMargins(10,10,10,10);
     vbox->setSpacing(10);

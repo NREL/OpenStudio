@@ -139,7 +139,7 @@ class OSQuantityEdit2: public QWidget {
 
   void onModelObjectChange();
 
-  void onModelObjectRemove(Handle handle);
+  void onModelObjectRemove(const Handle& handle);
 
   void onInFocus(bool inFocus);
 
@@ -217,7 +217,7 @@ class OSQuantityEdit: public QWidget {
 
   void onModelObjectChange();
 
-  void onModelObjectRemove(Handle handle);
+  void onModelObjectRemove(const Handle& handle);
 
  private:
 

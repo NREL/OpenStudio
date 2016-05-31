@@ -125,9 +125,9 @@ void OSLineEdit2::completeBind() {
     setReadOnly(true);
   }
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSLineEdit2::onModelObjectChange);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSLineEdit2, &OSLineEdit2::onModelObjectChange>(this);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSLineEdit2::onModelObjectRemove);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace.connect<OSLineEdit2, &OSLineEdit2::onModelObjectRemove>(this);
 
   connect(this, &OSLineEdit2::editingFinished, this, &OSLineEdit2::onEditingFinished);
 
@@ -252,7 +252,7 @@ void OSLineEdit2::emitItemClicked()
 #endif
 }
 
-void OSLineEdit2::onModelObjectRemove(Handle handle)
+void OSLineEdit2::onModelObjectRemove(const Handle& handle)
 {
   unbind();
 }
@@ -333,9 +333,9 @@ void OSLineEdit::bind(model::ModelObject & modelObject, const char * property)
 
   setEnabled(true);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSLineEdit::onModelObjectChange);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSLineEdit, &OSLineEdit::onModelObjectChange>(this);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSLineEdit::onModelObjectRemove);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace.connect<OSLineEdit, &OSLineEdit::onModelObjectRemove>(this);
 
   connect(this, &OSLineEdit::editingFinished, this, &OSLineEdit::onEditingFinished);
 
@@ -400,7 +400,7 @@ void OSLineEdit::onModelObjectChange()
   }
 }
 
-void OSLineEdit::onModelObjectRemove(Handle handle)
+void OSLineEdit::onModelObjectRemove(const Handle& handle)
 {
   m_modelObject.reset();
   m_property = "";

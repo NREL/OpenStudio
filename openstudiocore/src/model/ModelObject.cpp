@@ -800,7 +800,7 @@ namespace detail {
       }
       properties.insert(*it, value);
     }
-    emit reportProperties(properties);
+    this->reportProperties.nano_emit(properties);
   }
 
   void ModelObject_Impl::setProperties(const QVariantMap& properties)
@@ -818,7 +818,7 @@ namespace detail {
     }
 
     if (anyFailures){
-      emit onChange();
+      this->onChange.nano_emit();
     }
   }
 

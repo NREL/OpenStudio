@@ -118,9 +118,9 @@ class HVACSystemsController : public QObject
 
   void onShowGridClicked();
 
-  void onObjectAdded(const WorkspaceObject&);
+  void onObjectAdded(const WorkspaceObject&, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
-  void onObjectRemoved(const WorkspaceObject&);
+  void onObjectRemoved(const WorkspaceObject&, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
   void onObjectChanged();
 

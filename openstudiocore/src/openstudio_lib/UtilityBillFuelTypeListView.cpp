@@ -37,17 +37,9 @@ UtilityBillFuelTypeListController::UtilityBillFuelTypeListController(const model
   openstudio::FuelType fuelType)
   : m_iddObjectType(model::UtilityBill::iddObjectType()), m_fuelType(fuelType), m_model(model)
 {
-  connect(model.getImpl<model::detail::Model_Impl>().get(), 
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-    this,
-    &UtilityBillFuelTypeListController::objectAdded,
-    Qt::QueuedConnection);
+  model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::addWorkspaceObjectPtr.connect<UtilityBillFuelTypeListController, &UtilityBillFuelTypeListController::objectAdded>(this);
   
-  connect(model.getImpl<model::detail::Model_Impl>().get(), 
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
-    this,
-    &UtilityBillFuelTypeListController::objectRemoved,
-    Qt::QueuedConnection);
+  model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::removeWorkspaceObjectPtr.connect<UtilityBillFuelTypeListController, &UtilityBillFuelTypeListController::objectRemoved>(this);
   
 }
 

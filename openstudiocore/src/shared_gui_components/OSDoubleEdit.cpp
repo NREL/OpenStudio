@@ -203,9 +203,9 @@ void OSDoubleEdit2::completeBind() {
 
   connect(this, &OSDoubleEdit2::editingFinished, this, &OSDoubleEdit2::onEditingFinished);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSDoubleEdit2::onModelObjectChange);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSDoubleEdit2, &OSDoubleEdit2::onModelObjectChange>(this);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSDoubleEdit2::onModelObjectRemove);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace.connect<OSDoubleEdit2, &OSDoubleEdit2::onModelObjectRemove>(this);
 
   refreshTextAndLabel();
 }
@@ -302,7 +302,7 @@ void OSDoubleEdit2::onModelObjectChange() {
   refreshTextAndLabel();
 }
 
-void OSDoubleEdit2::onModelObjectRemove(Handle handle) {
+void OSDoubleEdit2::onModelObjectRemove(const Handle& handle) {
   unbind();
 }
 
@@ -488,9 +488,9 @@ void OSDoubleEdit::bind(model::ModelObject& modelObject,
 
   connect(this, &OSDoubleEdit::editingFinished, this, &OSDoubleEdit::onEditingFinished);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSDoubleEdit::onModelObjectChange);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSDoubleEdit, &OSDoubleEdit::onModelObjectChange>(this);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSDoubleEdit::onModelObjectRemove);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace.connect<OSDoubleEdit, &OSDoubleEdit::onModelObjectRemove>(this);
 
   refreshTextAndLabel();
 }
@@ -546,7 +546,7 @@ void OSDoubleEdit::onModelObjectChange() {
   refreshTextAndLabel();
 }
 
-void OSDoubleEdit::onModelObjectRemove(Handle handle) {
+void OSDoubleEdit::onModelObjectRemove(const Handle& handle) {
   m_modelObject.reset();
   m_property = "";
   setEnabled(false);

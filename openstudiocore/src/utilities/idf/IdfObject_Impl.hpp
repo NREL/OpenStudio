@@ -27,6 +27,7 @@
 
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/Containers.hpp>
+ #include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 
 #include <boost/optional.hpp>
 
@@ -368,17 +369,19 @@ namespace detail {
 
     //@}
 
-   signals:
+    //@}
+    /** @name Nano Signals */
+    //@{
 
-    /** Emitted on any change--any field, any comment. */
-    void onChange();
+    // Emitted on any change--any field, any comment.
+    Nano::Signal<void()> onChange;
 
-    /** Emitted if name field changed. */
-    void onNameChange();
+    // Emitted if name field changed.
+    Nano::Signal<void()> onNameChange;
 
-    /** Emitted when any dataFields() are changed (WorkspaceObject and higher), or when any field 
-     *  data is changed in Idf mode. */
-    void onDataChange();
+    // Emitted when any dataFields() are changed (WorkspaceObject and higher), or when any field
+    // data is changed in Idf mode.
+    Nano::Signal<void()> onDataChange;
 
    protected:
 

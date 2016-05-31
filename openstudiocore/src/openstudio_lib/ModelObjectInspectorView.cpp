@@ -61,7 +61,7 @@ void ModelObjectInspectorView::selectModelObject(const openstudio::model::ModelO
 
   m_modelObject = modelObject;
 
-  connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onChange, this, &ModelObjectInspectorView::update);
+  m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->model::detail::ModelObject_Impl::onChange.connect<QWidget, &QWidget::update>(this);
 
   onSelectModelObject(*m_modelObject);
 }

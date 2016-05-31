@@ -245,17 +245,11 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
 
   // Connect
 
-  connect(m_yearDescription->getImpl<model::detail::YearDescription_Impl>().get(), &model::detail::YearDescription_Impl::onChange,
-    this, &YearSettingsWidget::scheduleRefresh);
-  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-    this,
-    &YearSettingsWidget::onWorkspaceObjectAdd);
+  m_yearDescription->getImpl<model::detail::YearDescription_Impl>().get()->model::detail::YearDescription_Impl::onChange.connect<YearSettingsWidget, &YearSettingsWidget::scheduleRefresh>(this);
+  
+  m_model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::addWorkspaceObjectPtr.connect<YearSettingsWidget, &YearSettingsWidget::onWorkspaceObjectAdd>(this);
 
-  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
-    this,
-    &YearSettingsWidget::onWorkspaceObjectRemove);
+  m_model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::removeWorkspaceObjectPtr.connect<YearSettingsWidget, &YearSettingsWidget::onWorkspaceObjectRemove>(this);
 
   connect(m_startWeekBox, static_cast<void (OSComboBox::*)(const QString &)>(&OSComboBox::currentIndexChanged),
     this, &YearSettingsWidget::onDstStartDayWeekMonthChanged);
@@ -283,20 +277,17 @@ bool YearSettingsWidget::calendarYearChecked() {
   }
 }
 
-void YearSettingsWidget::onWorkspaceObjectAdd(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wo)
+void YearSettingsWidget::onWorkspaceObjectAdd(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wo, const openstudio::IddObjectType& type, const openstudio::UUID& uuid)
 {
   if(wo->iddObject().type() == IddObjectType::OS_RunPeriodControl_DaylightSavingTime)
   {
-    connect(wo.get(),
-      &detail::WorkspaceObject_Impl::onChange,
-      this,
-      &YearSettingsWidget::scheduleRefresh);
+    wo.get()->detail::WorkspaceObject_Impl::onChange.connect<YearSettingsWidget, &YearSettingsWidget::scheduleRefresh>(this);
 
     scheduleRefresh();
   }
 }
 
-void YearSettingsWidget::onWorkspaceObjectRemove(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wo)
+void YearSettingsWidget::onWorkspaceObjectRemove(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wo, const openstudio::IddObjectType& type, const openstudio::UUID& uuid)
 {
   if(wo->iddObject().type() == IddObjectType::OS_RunPeriodControl_DaylightSavingTime)
   {

@@ -281,8 +281,7 @@ void RenderingColorWidget::attach(const openstudio::model::RenderingColor& rende
 
   m_renderingColor = renderingColor;
 
-  connect(m_renderingColor->getImpl<model::detail::ModelObject_Impl>().get(),
-    &model::detail::ModelObject_Impl::onChange, this, &RenderingColorWidget::refresh);
+  m_renderingColor->getImpl<model::detail::ModelObject_Impl>().get()->model::detail::ModelObject_Impl::onChange.connect<RenderingColorWidget, &RenderingColorWidget::refresh>(this);
 
   refresh();
 }

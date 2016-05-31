@@ -457,7 +457,7 @@ namespace openstudio {
       QTimer::singleShot(0, this, SLOT(weatherFileReset()));
     }
 
-    connect(m_model.getImpl<model::detail::Model_Impl>().get(), &model::detail::Model_Impl::onChange, this, &OSDocument::markAsModified);
+    m_model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::onChange.connect<OSDocument, &OSDocument::markAsModified>(this);
 
     // Main Right Column
 

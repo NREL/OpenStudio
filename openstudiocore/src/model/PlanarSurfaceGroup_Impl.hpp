@@ -105,6 +105,8 @@ namespace detail {
     /** Get the BoundingBox in local coordinates. */
     virtual openstudio::BoundingBox boundingBox() const = 0;
 
+    Nano::Signal<void()> onChange;
+
     //@}
    private slots:
 

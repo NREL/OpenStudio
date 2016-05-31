@@ -101,7 +101,7 @@ signals:
 
   void onModelObjectChange();
 
-  void onModelObjectRemove(Handle handle);
+  void onModelObjectRemove(const Handle& handle);
 
   void emitItemClicked();
 
@@ -152,7 +152,7 @@ class OSLineEdit : public QLineEdit
 
   void onModelObjectChange();
 
-  void onModelObjectRemove(Handle handle);
+  void onModelObjectRemove(const Handle& handle);
 
   private:
 

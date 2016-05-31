@@ -158,9 +158,9 @@ void OSUnsignedEdit2::completeBind() {
 
   connect(this, &OSUnsignedEdit2::editingFinished, this, &OSUnsignedEdit2::onEditingFinished);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSUnsignedEdit2::onModelObjectChange);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSUnsignedEdit2, &OSUnsignedEdit2::onModelObjectChange>(this);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSUnsignedEdit2::onModelObjectRemove);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace.connect<OSUnsignedEdit2, &OSUnsignedEdit2::onModelObjectRemove>(this);
 
   refreshTextAndLabel();
 }
@@ -252,7 +252,7 @@ void OSUnsignedEdit2::onModelObjectChange() {
   refreshTextAndLabel();
 }
 
-void OSUnsignedEdit2::onModelObjectRemove(Handle handle) {
+void OSUnsignedEdit2::onModelObjectRemove(const Handle& handle) {
   unbind();
 }
 
@@ -423,9 +423,9 @@ void OSUnsignedEdit::bind(model::ModelObject& modelObject,
 
   connect(this, &OSUnsignedEdit::editingFinished, this, &OSUnsignedEdit::onEditingFinished);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSUnsignedEdit::onModelObjectChange);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSUnsignedEdit, &OSUnsignedEdit::onModelObjectChange>(this);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSUnsignedEdit::onModelObjectRemove);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace.connect<OSUnsignedEdit, &OSUnsignedEdit::onModelObjectRemove>(this);
 
   refreshTextAndLabel();
 }
@@ -481,7 +481,7 @@ void OSUnsignedEdit::onModelObjectChange() {
   refreshTextAndLabel();
 }
 
-void OSUnsignedEdit::onModelObjectRemove(Handle handle) {
+void OSUnsignedEdit::onModelObjectRemove(const Handle& handle) {
   m_modelObject.reset();
   m_property = "";
   setEnabled(false);

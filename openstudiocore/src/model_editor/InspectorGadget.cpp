@@ -1228,7 +1228,7 @@ void InspectorGadget::onTimeout()
   }
 }
 
-void InspectorGadget::onWorkspaceObjectRemoved()
+void InspectorGadget::onWorkspaceObjectRemoved(const openstudio::Handle &)
 {
   m_workspaceObjectChanged = true;
   clear(true);
@@ -1236,16 +1236,27 @@ void InspectorGadget::onWorkspaceObjectRemoved()
   QTimer::singleShot(0,this,SLOT(onTimeout()));
 }
 
+void InspectorGadget::workspaceObjectRemoved(const openstudio::Handle& handle)
+{
+  if (m_workspaceObj){
+    openstudio::detail::WorkspaceObject_Impl* impl = m_workspaceObj->getImpl<openstudio::detail::WorkspaceObject_Impl>().get();
+    if (impl){
+      impl->openstudio::detail::WorkspaceObject_Impl::workspaceObjectRemovedSignal.nano_emit(handle);
+    }
+  }
+}
+
 void InspectorGadget::connectWorkspaceObjectSignals() const
 {
   if (m_workspaceObj){
     openstudio::detail::WorkspaceObject_Impl* impl = m_workspaceObj->getImpl<openstudio::detail::WorkspaceObject_Impl>().get();
     if (impl){
-      connect(impl, &openstudio::detail::WorkspaceObject_Impl::onChange, this, &InspectorGadget::onWorkspaceObjectChanged);
+      impl->openstudio::detail::WorkspaceObject_Impl::onChange.connect<InspectorGadget, &InspectorGadget::onWorkspaceObjectChanged>(const_cast<InspectorGadget *>(this));
 
-      connect(impl, &openstudio::detail::WorkspaceObject_Impl::onRemoveFromWorkspace, this, &InspectorGadget::workspaceObjectRemoved);
+      impl->openstudio::detail::WorkspaceObject_Impl::onRemoveFromWorkspace.connect<InspectorGadget, &InspectorGadget::workspaceObjectRemoved>(const_cast<InspectorGadget *>(this));
+      // impl->openstudio::detail::WorkspaceObject_Impl::onRemoveFromWorkspace.connect<InspectorGadget, &InspectorGadget::onWorkspaceObjectRemoved>(const_cast<InspectorGadget *>(this)); // Remove issue of chaining.
 
-      connect(this, &InspectorGadget::workspaceObjectRemoved, this, &InspectorGadget::onWorkspaceObjectRemoved);
+      impl->openstudio::detail::WorkspaceObject_Impl::workspaceObjectRemovedSignal.connect<InspectorGadget, &InspectorGadget::onWorkspaceObjectRemoved>(const_cast<InspectorGadget *>(this));
     }
   }
 }

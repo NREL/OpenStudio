@@ -164,6 +164,10 @@ public:
 
   void setUnitSystem(const UNIT_SYSTEM unitSystem);
 
+  void onWorkspaceObjectRemoved(const openstudio::Handle &);
+
+  void workspaceObjectRemoved(const openstudio::Handle &);
+
 public slots:
 
     void toggleUnits(bool displayIP);
@@ -227,6 +231,11 @@ public slots:
 
   void setRecursive( bool recursive);
 
+  // void workspaceObjectRemoved(const openstudio::Handle &);
+
+
+  // void workspaceObjectRemoved(const openstudio::Handle &); // Slot function of same name -- evaluating 
+
  signals:
 
   void nameChanged(QString);
@@ -240,7 +249,8 @@ public slots:
    */
   void dirty();
 
-  void workspaceObjectRemoved();
+  
+  
 
 protected slots:
 
@@ -248,7 +258,7 @@ protected slots:
 
   void onTimeout();
 
-  void onWorkspaceObjectRemoved();
+  // void onWorkspaceObjectRemoved(const openstudio::Handle &);
 
 protected:
 

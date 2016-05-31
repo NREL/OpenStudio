@@ -157,9 +157,9 @@ void OSIntegerEdit2::completeBind() {
 
   connect(this, &OSIntegerEdit2::editingFinished, this, &OSIntegerEdit2::onEditingFinished);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSIntegerEdit2::onModelObjectChange);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSIntegerEdit2, &OSIntegerEdit2::onModelObjectChange>(this);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSIntegerEdit2::onModelObjectRemove);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace.connect<OSIntegerEdit2, &OSIntegerEdit2::onModelObjectRemove>(this);
 
   refreshTextAndLabel();
 }
@@ -251,7 +251,7 @@ void OSIntegerEdit2::onModelObjectChange() {
   refreshTextAndLabel();
 }
 
-void OSIntegerEdit2::onModelObjectRemove(Handle handle) {
+void OSIntegerEdit2::onModelObjectRemove(const Handle& handle) {
   unbind();
 }
 
@@ -422,9 +422,9 @@ void OSIntegerEdit::bind(model::ModelObject& modelObject,
 
   connect(this, &OSIntegerEdit::editingFinished, this, &OSIntegerEdit::onEditingFinished);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSIntegerEdit::onModelObjectChange);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSIntegerEdit, &OSIntegerEdit::onModelObjectChange>(this);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSIntegerEdit::onModelObjectRemove);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace.connect<OSIntegerEdit, &OSIntegerEdit::onModelObjectRemove>(this);
 
   refreshTextAndLabel();
 }
@@ -480,7 +480,7 @@ void OSIntegerEdit::onModelObjectChange() {
   refreshTextAndLabel();
 }
 
-void OSIntegerEdit::onModelObjectRemove(Handle handle) {
+void OSIntegerEdit::onModelObjectRemove(const Handle& handle) {
   m_modelObject.reset();
   m_property = "";
   setEnabled(false);

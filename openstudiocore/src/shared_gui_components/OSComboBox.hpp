@@ -78,9 +78,9 @@ class OSObjectListCBDS : public OSComboBoxDataSource
 
   private slots:
 
-  void onObjectAdded(const WorkspaceObject&);
+  void onObjectAdded(const WorkspaceObject&, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
-  void onObjectWillBeRemoved(const WorkspaceObject&);
+  void onObjectWillBeRemoved(const WorkspaceObject&, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
   void onObjectChanged();
 
@@ -176,7 +176,7 @@ class OSComboBox2 : public QComboBox {
 
   void onModelObjectChanged();
 
-  void onModelObjectRemoved(Handle handle);
+  void onModelObjectRemoved(const Handle& handle);
 
   void onCurrentIndexChanged(const QString & text);
 
@@ -235,7 +235,7 @@ class OSComboBox : public QComboBox {
 
   void onModelObjectChanged();
 
-  void onModelObjectRemoved(Handle handle);
+  void onModelObjectRemoved(const Handle& handle);
 
   void onCurrentIndexChanged(const QString & text);
 

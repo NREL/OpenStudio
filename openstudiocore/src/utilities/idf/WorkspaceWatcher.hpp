@@ -87,11 +87,13 @@ class UTILITIES_API WorkspaceWatcher : public QObject {
 
   void change();
 
-  void objectAdd(const WorkspaceObject& addedObject);
+  // Note: Args 2 & 3 are simply to comply with Nano::Signal template parameters
+  void objectAdd(const WorkspaceObject& addedObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
   void processAddedObjects();
 
-  void objectRemove(const WorkspaceObject& removedObject);
+  // Note: Args 2 & 3 are simply to comply with Nano::Signal template parameters
+  void objectRemove(const WorkspaceObject& removedObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
  private:
 

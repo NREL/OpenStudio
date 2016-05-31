@@ -66,11 +66,10 @@ void OSSwitch2::bind(model::ModelObject & modelObject,
   m_reset = reset;
   m_isDefaulted = isDefaulted;
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSSwitch2::onModelObjectChange);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSSwitch2, &OSSwitch2::onModelObjectChange>(this);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSSwitch2::onModelObjectRemove);
-
-  connect(this, &OSSwitch2::clicked, this, &OSSwitch2::onClicked);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace.connect<OSSwitch2, &OSSwitch2::onModelObjectRemove>(this);
+  
 
   onModelObjectChange();
 }
@@ -107,7 +106,7 @@ void OSSwitch2::onModelObjectChange()
   }
 }
 
-void OSSwitch2::onModelObjectRemove(Handle handle) {
+void OSSwitch2::onModelObjectRemove(const Handle& handle) {
   unbind();
 }
 
@@ -129,9 +128,9 @@ void OSSwitch::bind(model::ModelObject & modelObject, const char * property)
 
   m_property = property;
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSSwitch::onModelObjectChange);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSSwitch, &OSSwitch::onModelObjectChange>(this);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSSwitch::onModelObjectRemove);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace.connect<OSSwitch, &OSSwitch::onModelObjectRemove>(this);
 
   connect(this, &OSSwitch::clicked, this, &OSSwitch::onClicked);
 
@@ -168,7 +167,7 @@ void OSSwitch::onModelObjectChange()
   }
 }
 
-void OSSwitch::onModelObjectRemove(Handle handle)
+void OSSwitch::onModelObjectRemove(const Handle& handle)
 {
   m_modelObject.reset();
   m_property = "";

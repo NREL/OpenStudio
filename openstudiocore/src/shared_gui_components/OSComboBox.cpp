@@ -61,19 +61,13 @@ void OSObjectListCBDS::initialize()
     {
       m_workspaceObjects << modelObject;
 
-      connect(modelObject.getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onChange, this, &OSObjectListCBDS::onObjectChanged);
+      modelObject.getImpl<model::detail::ModelObject_Impl>().get()->model::detail::ModelObject_Impl::onChange.connect<OSObjectListCBDS, &OSObjectListCBDS::onObjectChanged>(this);
     }
   }
 
-  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject), 
-    this,
-    &OSObjectListCBDS::onObjectAdded);
+  m_model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::addWorkspaceObject.connect<OSObjectListCBDS, &OSObjectListCBDS::onObjectAdded>(this);
 
-  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject), 
-    this,
-    &OSObjectListCBDS::onObjectWillBeRemoved);
+  m_model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::removeWorkspaceObject.connect<OSObjectListCBDS, &OSObjectListCBDS::onObjectWillBeRemoved>(this);
 }
 
 int OSObjectListCBDS::numberOfItems()
@@ -107,13 +101,13 @@ QString OSObjectListCBDS::valueAt(int i)
   }
 }
 
-void OSObjectListCBDS::onObjectAdded(const WorkspaceObject & workspaceObject)
+void OSObjectListCBDS::onObjectAdded(const WorkspaceObject & workspaceObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid)
 {
   if(std::find(m_types.begin(),m_types.end(),workspaceObject.cast<model::ModelObject>().iddObjectType()) != m_types.end())
   {
     m_workspaceObjects << workspaceObject;
 
-    connect(workspaceObject.getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onChange, this, &OSObjectListCBDS::onObjectChanged);
+    workspaceObject.getImpl<model::detail::ModelObject_Impl>().get()->model::detail::ModelObject_Impl::onChange.connect<OSObjectListCBDS, &OSObjectListCBDS::onObjectChanged>(this);
     if( m_allowEmptySelection )
     {
       emit itemAdded(m_workspaceObjects.size());
@@ -125,7 +119,7 @@ void OSObjectListCBDS::onObjectAdded(const WorkspaceObject & workspaceObject)
   }
 }
 
-void OSObjectListCBDS::onObjectWillBeRemoved(const WorkspaceObject & workspaceObject)
+void OSObjectListCBDS::onObjectWillBeRemoved(const WorkspaceObject & workspaceObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid)
 {
   if(std::find(m_types.begin(),m_types.end(),workspaceObject.cast<model::ModelObject>().iddObjectType()) != m_types.end())
   {
@@ -258,7 +252,7 @@ void OSComboBox2::onModelObjectChanged() {
   }
 }
 
-void OSComboBox2::onModelObjectRemoved(Handle handle)
+void OSComboBox2::onModelObjectRemoved(const Handle& handle)
 {
   unbind();
 }
@@ -345,9 +339,9 @@ void OSComboBox2::onDataSourceRemove(int i)
 void OSComboBox2::completeBind() {
   if (m_modelObject) {
     // connections
-    connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSComboBox2::onModelObjectChanged);
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSComboBox2, &OSComboBox2::onModelObjectChanged>(this);
 
-    connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSComboBox2::onModelObjectRemoved);
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace.connect<OSComboBox2, &OSComboBox2::onModelObjectRemoved>(this);
 
     connect(this, static_cast<void (OSComboBox2::*)(const QString &)>(&OSComboBox2::currentIndexChanged), this, &OSComboBox2::onCurrentIndexChanged);
 
@@ -373,7 +367,7 @@ void OSComboBox2::completeBind() {
 
     // if this is too burdensome, implement Workspace_Impl onNameChange() signal and uncomment the above two connections.
     // (IdfObject_Impl already has onNameChange(); Workspace_Impl::onChange() includes object addition and removal.)
-    connect(m_modelObject->model().getImpl<openstudio::model::detail::Model_Impl>().get(), &openstudio::model::detail::Model_Impl::onChange, this, &OSComboBox2::onChoicesRefreshTrigger);
+    m_modelObject->model().getImpl<openstudio::model::detail::Model_Impl>().get()->openstudio::model::detail::Model_Impl::onChange.connect<OSComboBox2, &OSComboBox2::onChoicesRefreshTrigger>(this);
 
     // populate choices
     // ETH@20140228 - With extension of this class to choices of ModelObjects, and beyond,
@@ -451,9 +445,9 @@ void OSComboBox::bind(model::ModelObject & modelObject, const char * property)
 
   // Connections
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onChange, this, &OSComboBox::onModelObjectChanged);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSComboBox, &OSComboBox::onModelObjectChanged>(this);
 
-  connect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), &openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace, this, &OSComboBox::onModelObjectRemoved);
+  m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onRemoveFromWorkspace.connect<OSComboBox, &OSComboBox::onModelObjectRemoved>(this);
 
   connect(this, static_cast<void (OSComboBox::*)(const QString &)>(&OSComboBox::currentIndexChanged), this, &OSComboBox::onCurrentIndexChanged);
 
@@ -509,7 +503,7 @@ void OSComboBox::onModelObjectChanged()
   }
 }
 
-void OSComboBox::onModelObjectRemoved(Handle handle)
+void OSComboBox::onModelObjectRemoved(const Handle& handle)
 {
   unbind();
 }

@@ -755,26 +755,18 @@ void SpaceLoadInstancesWidget::attach(const model::Space& space)
   m_space = space;
   m_model = space.model();
 
-  connect(m_model->getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-    this,
-    &SpaceLoadInstancesWidget::objectAdded,
-    Qt::QueuedConnection);
+  m_model->getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::addWorkspaceObjectPtr.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectAdded>(this);
 
-  connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
-    this,
-    &SpaceLoadInstancesWidget::objectRemoved,
-    Qt::QueuedConnection);
+  m_model->getImpl<openstudio::model::detail::Model_Impl>().get()->model::detail::Model_Impl::removeWorkspaceObjectPtr.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectRemoved>(this);
 
   model::Building building = m_model->getUniqueModelObject<model::Building>();
-  connect(building.getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onRelationshipChange, this, &SpaceLoadInstancesWidget::onBuildingRelationshipChange);
+  building.getImpl<model::detail::ModelObject_Impl>().get()->model::detail::ModelObject_Impl::onRelationshipChange.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::onBuildingRelationshipChange>(this);
 
   for (model::SpaceType spaceType : m_model->getConcreteModelObjects<model::SpaceType>()){
-    connect(spaceType.getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onRelationshipChange, this, &SpaceLoadInstancesWidget::onSpaceTypeRelationshipChange);
+    spaceType.getImpl<model::detail::ModelObject_Impl>().get()->model::detail::ModelObject_Impl::onRelationshipChange.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::onSpaceTypeRelationshipChange>(this);
   }
 
-  connect(m_space->getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onRelationshipChange, this, &SpaceLoadInstancesWidget::onSpaceRelationshipChange);
+  m_space->getImpl<model::detail::ModelObject_Impl>().get()->model::detail::ModelObject_Impl::onRelationshipChange.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::onSpaceRelationshipChange>(this);
 
   m_dirty = true;
   QTimer::singleShot(0, this, SLOT(refresh()));
@@ -787,23 +779,15 @@ void SpaceLoadInstancesWidget::attach(const model::SpaceType& spaceType)
   m_spaceType = spaceType;
   m_model = spaceType.model();
 
-  connect(m_model->getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-    this,
-    &SpaceLoadInstancesWidget::objectAdded,
-    Qt::QueuedConnection);
+  m_model->getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::addWorkspaceObjectPtr.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectAdded>(this);
 
-  connect(m_model->getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
-    this,
-    &SpaceLoadInstancesWidget::objectRemoved,
-    Qt::QueuedConnection);
+  m_model->getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::removeWorkspaceObjectPtr.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::objectRemoved>(this);
 
   model::Building building = m_model->getUniqueModelObject<model::Building>();
-  connect(building.getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onRelationshipChange, this, &SpaceLoadInstancesWidget::onBuildingRelationshipChange);
+  building.getImpl<model::detail::ModelObject_Impl>().get()->model::detail::ModelObject_Impl::onRelationshipChange.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::onBuildingRelationshipChange>(this);
 
   for (model::SpaceType spaceType : m_model->getConcreteModelObjects<model::SpaceType>()){
-    connect(spaceType.getImpl<model::detail::ModelObject_Impl>().get(), &model::detail::ModelObject_Impl::onRelationshipChange, this, &SpaceLoadInstancesWidget::onSpaceTypeRelationshipChange);
+    spaceType.getImpl<model::detail::ModelObject_Impl>().get()->model::detail::ModelObject_Impl::onRelationshipChange.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::onSpaceTypeRelationshipChange>(this);
   }
 
   m_dirty = true;
@@ -849,7 +833,7 @@ void SpaceLoadInstancesWidget::onSpaceRelationshipChange(int index, Handle newHa
 void SpaceLoadInstancesWidget::objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
   if (iddObjectType == IddObjectType::OS_SpaceType){
-    connect(impl.get(), &detail::WorkspaceObject_Impl::onRelationshipChange, this, &SpaceLoadInstancesWidget::onSpaceTypeRelationshipChange);
+    impl.get()->detail::WorkspaceObject_Impl::onRelationshipChange.connect<SpaceLoadInstancesWidget, &SpaceLoadInstancesWidget::onSpaceTypeRelationshipChange>(this);
     return;
   }
 

@@ -45,7 +45,7 @@ class UTILITIES_API WorkspaceObjectWatcher : public IdfObjectWatcher {
   virtual void clearState() override;
 
   /// called each time a pointer field changes if watcher enabled
-  virtual void onRelationshipChange(int index,Handle newHandle,Handle oldHandle);
+  virtual void onRelationshipChange(int index, Handle newHandle, Handle oldHandle);
 
   /// called when the object is removed from its workspace if watcher enabled
   virtual void onRemoveFromWorkspace(Handle handle);
@@ -54,7 +54,7 @@ class UTILITIES_API WorkspaceObjectWatcher : public IdfObjectWatcher {
 
   void relationshipChange(int index,Handle newHandle,Handle oldHandle);
 
-  void removedFromWorkspace(Handle handle);
+  void removedFromWorkspace(const Handle & handle);
 
  protected:
   bool m_relationshipChanged;

@@ -756,10 +756,7 @@ RefrigerationSystemListController::RefrigerationSystemListController(Refrigerati
 {
   std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
   model::Model t_model = doc->model();
-  connect(t_model.getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(const WorkspaceObject &, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-    this,
-    &RefrigerationSystemListController::onModelObjectAdd);
+  t_model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::addWorkspaceObject.connect<RefrigerationSystemListController, &RefrigerationSystemListController::onModelObjectAdd>(this);
 
   connect(this, &RefrigerationSystemListController::itemInsertedPrivate, this, &RefrigerationSystemListController::itemInserted, Qt::QueuedConnection);
 }

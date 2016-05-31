@@ -39,15 +39,9 @@ ServiceWaterScene::ServiceWaterScene(const model::Model & model)
     m_dirty(true),
     m_model(model)
 {
-  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-    this,
-    &ServiceWaterScene::onAddedWorkspaceObject);
+  m_model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::addWorkspaceObjectPtr.connect<ServiceWaterScene, &ServiceWaterScene::onAddedWorkspaceObject>(this);
 
-  connect(m_model.getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
-    this,
-    &ServiceWaterScene::onRemovedWorkspaceObject);
+  m_model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::removeWorkspaceObjectPtr.connect<ServiceWaterScene, &ServiceWaterScene::onRemovedWorkspaceObject>(this);
 
   layout();
 }
@@ -73,7 +67,7 @@ model::Model ServiceWaterScene::model() const
   return m_model;
 }
 
-void ServiceWaterScene::onAddedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr )
+void ServiceWaterScene::onAddedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr, const openstudio::IddObjectType& type, const openstudio::UUID& uuid)
 {
   model::detail::WaterUseConnections_Impl* hvac_impl = dynamic_cast<model::detail::WaterUseConnections_Impl*>(wPtr.get());
   if(hvac_impl)
@@ -84,7 +78,7 @@ void ServiceWaterScene::onAddedWorkspaceObject(std::shared_ptr<openstudio::detai
   }
 }
 
-void ServiceWaterScene::onRemovedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr)
+void ServiceWaterScene::onRemovedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr, const openstudio::IddObjectType& type, const openstudio::UUID& uuid)
 {
   model::detail::WaterUseConnections_Impl* hvac_impl = dynamic_cast<model::detail::WaterUseConnections_Impl*>(wPtr.get());
   if(hvac_impl)
@@ -102,15 +96,9 @@ WaterUseConnectionsDetailScene::WaterUseConnectionsDetailScene(const model::Wate
 {
   model::Model model = m_waterUseConnections.model();
 
-  connect(model.getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::addWorkspaceObject),
-    this,
-    &WaterUseConnectionsDetailScene::onAddedWorkspaceObject);
+  model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::addWorkspaceObjectPtr.connect<WaterUseConnectionsDetailScene, &WaterUseConnectionsDetailScene::onAddedWorkspaceObject>(this);
 
-  connect(model.getImpl<model::detail::Model_Impl>().get(),
-    static_cast<void (model::detail::Model_Impl::*)(std::shared_ptr<detail::WorkspaceObject_Impl>, const IddObjectType &, const UUID &) const>(&model::detail::Model_Impl::removeWorkspaceObject),
-    this,
-    &WaterUseConnectionsDetailScene::onRemovedWorkspaceObject);
+  model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::removeWorkspaceObjectPtr.connect<WaterUseConnectionsDetailScene, &WaterUseConnectionsDetailScene::onRemovedWorkspaceObject>(this);
 
   layout();
 }
@@ -136,7 +124,7 @@ void WaterUseConnectionsDetailScene::layout()
   Q_UNUSED(backgroundItem);
 }
 
-void WaterUseConnectionsDetailScene::onAddedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr )
+void WaterUseConnectionsDetailScene::onAddedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr, const openstudio::IddObjectType& type, const openstudio::UUID& uuid)
 {
   model::detail::WaterUseEquipment_Impl * hvac_impl = dynamic_cast<model::detail::WaterUseEquipment_Impl*>(wPtr.get());
   if(hvac_impl)
@@ -147,7 +135,7 @@ void WaterUseConnectionsDetailScene::onAddedWorkspaceObject(std::shared_ptr<open
   }
 }
 
-void WaterUseConnectionsDetailScene::onRemovedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr)
+void WaterUseConnectionsDetailScene::onRemovedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr, const openstudio::IddObjectType& type, const openstudio::UUID& uuid)
 {
   model::detail::WaterUseEquipment_Impl * hvac_impl = dynamic_cast<model::detail::WaterUseEquipment_Impl*>(wPtr.get());
   if(hvac_impl)

@@ -54,7 +54,7 @@ class OSSwitch2 : public QPushButton {
 
   void onModelObjectChange();
 
-  void onModelObjectRemove(Handle handle);
+  void onModelObjectRemove(const Handle& handle);
 
  private:
   boost::optional<model::ModelObject> m_modelObject;
@@ -84,7 +84,7 @@ class OSSwitch : public QPushButton
 
   void onModelObjectChange();
 
-  void onModelObjectRemove(Handle handle);
+  void onModelObjectRemove(const Handle& handle);
 
   private:
 

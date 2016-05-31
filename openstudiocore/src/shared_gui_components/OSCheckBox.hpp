@@ -58,7 +58,7 @@ namespace openstudio {
 
     void onModelObjectChange();
 
-    void onModelObjectRemove(Handle handle);
+    void onModelObjectRemove(const Handle& handle);
 
   private:
     boost::optional<model::ModelObject> m_modelObject;
@@ -92,7 +92,7 @@ namespace openstudio {
 
   void onModelObjectChange();
 
-  void onModelObjectRemove(Handle handle);
+  void onModelObjectRemove(const Handle& handle);
 
  private:
   boost::optional<model::ModelObject> m_modelObject;
@@ -121,7 +121,7 @@ class OSCheckBox : public QPushButton {
 
   void onModelObjectChange();
 
-  void onModelObjectRemove(Handle handle);
+  void onModelObjectRemove(const Handle& handle);
 
  private:
 

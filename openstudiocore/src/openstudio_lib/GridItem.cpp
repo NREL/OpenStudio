@@ -238,8 +238,7 @@ void ModelObjectGraphicsItem::setModelObject( model::OptionalModelObject modelOb
 
   if( m_modelObject )
   {
-    connect(m_modelObject->getImpl<detail::IdfObject_Impl>().get(), &detail::IdfObject_Impl::onNameChange,
-            this, &ModelObjectGraphicsItem::onNameChange);
+    m_modelObject->getImpl<detail::IdfObject_Impl>().get()->detail::IdfObject_Impl::onNameChange.connect<ModelObjectGraphicsItem, &ModelObjectGraphicsItem::onNameChange>(this);
 
     setFlag(QGraphicsItem::ItemIsSelectable);
 

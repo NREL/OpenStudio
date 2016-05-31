@@ -129,7 +129,7 @@ class OSDoubleEdit2: public QLineEdit {
 
   void onModelObjectChange();
 
-  void onModelObjectRemove(Handle handle);
+  void onModelObjectRemove(const Handle& handle);
 
  private:
   boost::optional<model::ModelObject> m_modelObject; // will be set if attached to ModelObject or ModelExtensibleGroup
@@ -187,7 +187,7 @@ class OSDoubleEdit: public QLineEdit {
 
   void onModelObjectChange();
 
-  void onModelObjectRemove(Handle handle);
+  void onModelObjectRemove(const Handle& handle);
 
  private:
   boost::optional<model::ModelObject> m_modelObject;

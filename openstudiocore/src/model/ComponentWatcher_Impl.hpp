@@ -26,6 +26,9 @@
 
 #include "../utilities/core/Logger.hpp"
 
+// Signals/Slots QT Replacement
+#include "nano_signal_slot.hpp"
+
 #include <QObject>
 
 namespace openstudio {
@@ -54,9 +57,10 @@ namespace detail {
     ComponentData componentData() const;
 
     //@}
-   signals: 
-
-    void obsolete(const ComponentWatcher& watcher);
+    /** @name Nano Signals */
+    //@{ 
+    
+    Nano::Signal<void(const ComponentWatcher &)> obsolete;
 
    public slots:
 
@@ -70,7 +74,7 @@ namespace detail {
     
     void objectRemove(const Handle& handleOfRemovedObject);
 
-    void objectAdd(const WorkspaceObject& addedObject);
+    void objectAdd(const WorkspaceObject& addedObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
    private:
     ComponentData m_componentData;
