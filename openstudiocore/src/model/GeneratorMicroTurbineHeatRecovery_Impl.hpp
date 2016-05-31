@@ -22,7 +22,6 @@
 
 #include "ModelAPI.hpp"
 #include "StraightComponent_Impl.hpp"
-#include "Generator_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -32,26 +31,25 @@ class Curve;
 
 namespace detail {
 
-  /** GeneratorMicroTurbine_Impl is a Generator_Impl that is the implementation class for GeneratorMicroTurbine.*/
-  class MODEL_API GeneratorMicroTurbine_Impl : public Generator_Impl {
+  class MODEL_API GeneratorMicroTurbineHeatRecovery_Impl : public StraightComponent_Impl {
     Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
 
-    GeneratorMicroTurbine_Impl(const IdfObject& idfObject,
-                               Model_Impl* model,
-                               bool keepHandle);
+    GeneratorMicroTurbineHeatRecovery_Impl(const IdfObject& idfObject,
+                                           Model_Impl* model,
+                                           bool keepHandle);
 
-    GeneratorMicroTurbine_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle);
+    GeneratorMicroTurbineHeatRecovery_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                           Model_Impl* model,
+                                           bool keepHandle);
 
-    GeneratorMicroTurbine_Impl(const GeneratorMicroTurbine_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle);
+    GeneratorMicroTurbineHeatRecovery_Impl(const GeneratorMicroTurbineHeatRecovery_Impl& other,
+                                           Model_Impl* model,
+                                           bool keepHandle);
 
-    virtual ~GeneratorMicroTurbine_Impl() {}
+    virtual ~GeneratorMicroTurbineHeatRecovery_Impl() {}
 
     //@}
     /** @name Virtual Methods */
@@ -123,7 +121,7 @@ namespace detail {
     bool setReferenceThermalEfficiencyUsingLowerHeatValue(double referenceThermalEfficiencyUsingLowerHeatValue);
     void resetReferenceThermalEfficiencyUsingLowerHeatValue();
 
-    void setReferenceInletWaterTemperature(double referenceInletWaterTemperature);
+    bool setReferenceInletWaterTemperature(double referenceInletWaterTemperature);
 
     bool setHeatRecoveryWaterFlowOperatingMode(std::string heatRecoveryWaterFlowOperatingMode);
     void resetHeatRecoveryWaterFlowOperatingMode();
@@ -169,7 +167,7 @@ namespace detail {
     //@}
    protected:
    private:
-    REGISTER_LOGGER("openstudio.model.GeneratorMicroTurbine");
+    REGISTER_LOGGER("openstudio.model.GeneratorMicroTurbineHeatRecovery");
 
     // TODO: Check the return types of these methods.
     // Optional getters for use by methods like children() so can remove() if the constructor fails.

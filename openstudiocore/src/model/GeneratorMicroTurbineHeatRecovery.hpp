@@ -75,7 +75,7 @@ class MODEL_API GeneratorMicroTurbineHeatRecovery : public StraightComponent {
 
   bool isHeatRecoveryWaterFlowOperatingModeDefaulted() const;
 
-  boost::optional<double> referenceHeatRecoveryWaterFlowRate() const;
+  double referenceHeatRecoveryWaterFlowRate() const;
 
   // TODO: Check return type. From object lists, some candidates are: BiquadraticCurves, BiVariateTables.
   boost::optional<Curve> heatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve() const;

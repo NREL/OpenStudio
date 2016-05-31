@@ -19,12 +19,13 @@
 
 #include "GeneratorMicroTurbineHeatRecovery.hpp"
 #include "GeneratorMicroTurbineHeatRecovery_Impl.hpp"
+#include "Model.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 #include "PlantLoop.hpp"
 #include "PlantLoop_Impl.hpp"
-#include "GeneratorMicroTurbineHeatRecovery.hpp"
-#include "GeneratorMicroTurbineHeatRecovery_Impl.hpp"
+#include "GeneratorMicroTurbine.hpp"
+#include "GeneratorMicroTurbine_Impl.hpp"
 
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
@@ -34,7 +35,7 @@
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/idd/OS_Generator_MicroTurbine_FieldEnums.hxx>
+#include <utilities/idd/OS_Generator_MicroTurbine_HeatRecovery_FieldEnums.hxx>
 
 
 // TODO not sure if need all of these
@@ -54,7 +55,7 @@ namespace detail {
   GeneratorMicroTurbineHeatRecovery_Impl::GeneratorMicroTurbineHeatRecovery_Impl(const IdfObject& idfObject,
                                                          Model_Impl* model,
                                                          bool keepHandle)
-    : Generator_Impl(idfObject,model,keepHandle)
+    : StraightComponent_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == GeneratorMicroTurbineHeatRecovery::iddObjectType());
   }
@@ -62,7 +63,7 @@ namespace detail {
   GeneratorMicroTurbineHeatRecovery_Impl::GeneratorMicroTurbineHeatRecovery_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                          Model_Impl* model,
                                                          bool keepHandle)
-    : Generator_Impl(other,model,keepHandle)
+    : StraightComponent_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == GeneratorMicroTurbineHeatRecovery::iddObjectType());
   }
@@ -70,7 +71,7 @@ namespace detail {
   GeneratorMicroTurbineHeatRecovery_Impl::GeneratorMicroTurbineHeatRecovery_Impl(const GeneratorMicroTurbineHeatRecovery_Impl& other,
                                                          Model_Impl* model,
                                                          bool keepHandle)
-    : Generator_Impl(other,model,keepHandle)
+    : StraightComponent_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& GeneratorMicroTurbineHeatRecovery_Impl::outputVariableNames() const
@@ -90,16 +91,16 @@ namespace detail {
   // TODO: this is actually an optional... should I handle that explicitly?
   unsigned GeneratorMicroTurbineHeatRecovery_Impl::inletPort()
   {
-    return OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryWaterInletNodeName;
+    return OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterInletNodeName;
   }
 
   unsigned GeneratorMicroTurbineHeatRecovery_Impl::outletPort()
   {
-    return OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryWaterOutletNodeName;
+    return OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterOutletNodeName;
   }
 
   //boost::optional<Connection> GeneratorMicroTurbineHeatRecovery_Impl::heatRecoveryWaterInletNode() const {
-  //  return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryWaterInletNodeName);
+  //  return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterInletNodeName);
   //}
 
   //boost::optional<Connection> GeneratorMicroTurbineHeatRecovery_Impl::heatRecoveryWaterOutletNode() const {
@@ -107,79 +108,79 @@ namespace detail {
   //}
 
   double GeneratorMicroTurbineHeatRecovery_Impl::referenceThermalEfficiencyUsingLowerHeatValue() const {
-    boost::optional<double> value = getDouble(OS_Generator_MicroTurbineHeatRecoveryFields::ReferenceThermalEfficiencyUsingLowerHeatValue,true);
+    boost::optional<double> value = getDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::ReferenceThermalEfficiencyUsingLowerHeatValue,true);
     OS_ASSERT(value);
     return value.get();
   }
 
   bool GeneratorMicroTurbineHeatRecovery_Impl::isReferenceThermalEfficiencyUsingLowerHeatValueDefaulted() const {
-    return isEmpty(OS_Generator_MicroTurbineHeatRecoveryFields::ReferenceThermalEfficiencyUsingLowerHeatValue);
+    return isEmpty(OS_Generator_MicroTurbine_HeatRecoveryFields::ReferenceThermalEfficiencyUsingLowerHeatValue);
   }
 
   double GeneratorMicroTurbineHeatRecovery_Impl::referenceInletWaterTemperature() const {
-		boost::optional<double> value = getDouble(OS_Generator_MicroTurbineHeatRecoveryFields::ReferenceInletWaterTemperature,true);
+    boost::optional<double> value = getDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::ReferenceInletWaterTemperature,true);
     OS_ASSERT(value);
     return value.get();
   }
 
   std::string GeneratorMicroTurbineHeatRecovery_Impl::heatRecoveryWaterFlowOperatingMode() const {
-    boost::optional<std::string> value = getString(OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryWaterFlowOperatingMode,true);
+    boost::optional<std::string> value = getString(OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterFlowOperatingMode,true);
     OS_ASSERT(value);
     return value.get();
   }
 
   bool GeneratorMicroTurbineHeatRecovery_Impl::isHeatRecoveryWaterFlowOperatingModeDefaulted() const {
-    return isEmpty(OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryWaterFlowOperatingMode);
+    return isEmpty(OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterFlowOperatingMode);
   }
 
   double GeneratorMicroTurbineHeatRecovery_Impl::referenceHeatRecoveryWaterFlowRate() const {
-		boost::optional<double> value = getDouble(OS_Generator_MicroTurbineHeatRecoveryFields::ReferenceHeatRecoveryWaterFlowRate,true);
+    boost::optional<double> value = getDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::ReferenceHeatRecoveryWaterFlowRate,true);
     OS_ASSERT(value);
     return value.get();
   }
 
   boost::optional<Curve> GeneratorMicroTurbineHeatRecovery_Impl::heatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurveName);
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurveName);
   }
 
   boost::optional<Curve> GeneratorMicroTurbineHeatRecovery_Impl::thermalEfficiencyFunctionofTemperatureandElevationCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineHeatRecoveryFields::ThermalEfficiencyFunctionofTemperatureandElevationCurveName);
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbine_HeatRecoveryFields::ThermalEfficiencyFunctionofTemperatureandElevationCurveName);
   }
 
   boost::optional<Curve> GeneratorMicroTurbineHeatRecovery_Impl::heatRecoveryRateFunctionofPartLoadRatioCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryRateFunctionofPartLoadRatioCurveName);
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryRateFunctionofPartLoadRatioCurveName);
   }
 
   boost::optional<Curve> GeneratorMicroTurbineHeatRecovery_Impl::heatRecoveryRateFunctionofInletWaterTemperatureCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryRateFunctionofInletWaterTemperatureCurveName);
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryRateFunctionofInletWaterTemperatureCurveName);
   }
 
   boost::optional<Curve> GeneratorMicroTurbineHeatRecovery_Impl::heatRecoveryRateFunctionofWaterFlowRateCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryRateFunctionofWaterFlowRateCurveName);
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryRateFunctionofWaterFlowRateCurveName);
   }
 
   double GeneratorMicroTurbineHeatRecovery_Impl::minimumHeatRecoveryWaterFlowRate() const {
-    boost::optional<double> value = getDouble(OS_Generator_MicroTurbineHeatRecoveryFields::MinimumHeatRecoveryWaterFlowRate,true);
+    boost::optional<double> value = getDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::MinimumHeatRecoveryWaterFlowRate,true);
     OS_ASSERT(value);
     return value.get();
   }
 
   bool GeneratorMicroTurbineHeatRecovery_Impl::isMinimumHeatRecoveryWaterFlowRateDefaulted() const {
-    return isEmpty(OS_Generator_MicroTurbineHeatRecoveryFields::MinimumHeatRecoveryWaterFlowRate);
+    return isEmpty(OS_Generator_MicroTurbine_HeatRecoveryFields::MinimumHeatRecoveryWaterFlowRate);
   }
 
   double GeneratorMicroTurbineHeatRecovery_Impl::maximumHeatRecoveryWaterFlowRate() const {
-    boost::optional<double> value = getDouble(OS_Generator_MicroTurbineHeatRecoveryFields::MaximumHeatRecoveryWaterFlowRate,true);
+    boost::optional<double> value = getDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::MaximumHeatRecoveryWaterFlowRate,true);
     OS_ASSERT(value);
     return value.get();
   }
 
   bool GeneratorMicroTurbineHeatRecovery_Impl::isMaximumHeatRecoveryWaterFlowRateDefaulted() const {
-    return isEmpty(OS_Generator_MicroTurbineHeatRecoveryFields::MaximumHeatRecoveryWaterFlowRate);
+    return isEmpty(OS_Generator_MicroTurbine_HeatRecoveryFields::MaximumHeatRecoveryWaterFlowRate);
   }
 
   boost::optional<double> GeneratorMicroTurbineHeatRecovery_Impl::maximumHeatRecoveryWaterTemperature() const {
-    return getDouble(OS_Generator_MicroTurbineHeatRecoveryFields::MaximumHeatRecoveryWaterTemperature,true);
+    return getDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::MaximumHeatRecoveryWaterTemperature,true);
   }
 
   
@@ -218,179 +219,112 @@ namespace detail {
   } */
 
   bool GeneratorMicroTurbineHeatRecovery_Impl::setReferenceThermalEfficiencyUsingLowerHeatValue(double value) {
-    bool result = setDouble(OS_Generator_MicroTurbineHeatRecoveryFields::ReferenceThermalEfficiencyUsingLowerHeatValue, value);
+    bool result = setDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::ReferenceThermalEfficiencyUsingLowerHeatValue, value);
     return result;
   }
 
   void GeneratorMicroTurbineHeatRecovery_Impl::resetReferenceThermalEfficiencyUsingLowerHeatValue() {
-    bool result = setString(OS_Generator_MicroTurbineHeatRecoveryFields::ReferenceThermalEfficiencyUsingLowerHeatValue, "");
+    bool result = setString(OS_Generator_MicroTurbine_HeatRecoveryFields::ReferenceThermalEfficiencyUsingLowerHeatValue, "");
     OS_ASSERT(result);
   }
 
   bool GeneratorMicroTurbineHeatRecovery_Impl::setReferenceInletWaterTemperature(double value) {
-    bool result = setDouble(OS_Generator_MicroTurbineHeatRecoveryFields::ReferenceInletWaterTemperature, value);
-		return result;
+    bool result = setDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::ReferenceInletWaterTemperature, value);
+    return result;
   }
 
   bool GeneratorMicroTurbineHeatRecovery_Impl::setHeatRecoveryWaterFlowOperatingMode(std::string heatRecoveryWaterFlowOperatingMode) {
-    bool result = setString(OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryWaterFlowOperatingMode, heatRecoveryWaterFlowOperatingMode);
+    bool result = setString(OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterFlowOperatingMode, heatRecoveryWaterFlowOperatingMode);
     return result;
   }
 
   void GeneratorMicroTurbineHeatRecovery_Impl::resetHeatRecoveryWaterFlowOperatingMode() {
-    bool result = setString(OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryWaterFlowOperatingMode, "");
+    bool result = setString(OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterFlowOperatingMode, "");
     OS_ASSERT(result);
   }
 
   bool GeneratorMicroTurbineHeatRecovery_Impl::setReferenceHeatRecoveryWaterFlowRate(double value) {
-    bool result = setDouble(OS_Generator_MicroTurbineHeatRecoveryFields::ReferenceHeatRecoveryWaterFlowRate, value);
+    bool result = setDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::ReferenceHeatRecoveryWaterFlowRate, value);
     return result;
   }
 
-  bool GeneratorMicroTurbineHeatRecovery_Impl::setHeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve(const boost::optional<Curve>& curve) {
-    bool result(false);
-    if (curve) {
-      if(model() != curve.get().model())
-      {
-        LOG(Warn,briefDescription() << " does not below to the same model as the curve you want to set.");
-        return false;
-      }
-      result = setPointer(OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurveName, curve.get().handle());
-    }
-    else {
-      resetHeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve();
-      result = true;
-    }
+  bool GeneratorMicroTurbineHeatRecovery_Impl::setHeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve(const Curve& curve) {
+    bool result = setPointer(OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurveName, curve.handle());
     return result;
   }
 
   void GeneratorMicroTurbineHeatRecovery_Impl::resetHeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve() {
-    bool result = setString(OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurveName, "");
+    bool result = setString(OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurveName, "");
     OS_ASSERT(result);
   }
 
-  bool GeneratorMicroTurbineHeatRecovery_Impl::setThermalEfficiencyFunctionofTemperatureandElevationCurve(const boost::optional<Curve>& curve) {
-    bool result(false);
-    if (curve) {
-      if(model() != curve.get().model())
-      {
-        LOG(Warn,briefDescription() << " does not below to the same model as the curve you want to set.");
-        return false;
-      }
-      result = setPointer(OS_Generator_MicroTurbineHeatRecoveryFields::ThermalEfficiencyFunctionofTemperatureandElevationCurveName, curve.get().handle());
-    }
-    else {
-      resetThermalEfficiencyFunctionofTemperatureandElevationCurve();
-      result = true;
-    }
+  bool GeneratorMicroTurbineHeatRecovery_Impl::setThermalEfficiencyFunctionofTemperatureandElevationCurve(const Curve& curve) {
+    bool result = setPointer(OS_Generator_MicroTurbine_HeatRecoveryFields::ThermalEfficiencyFunctionofTemperatureandElevationCurveName, curve.handle());
     return result;
   }
 
   void GeneratorMicroTurbineHeatRecovery_Impl::resetThermalEfficiencyFunctionofTemperatureandElevationCurve() {
-    bool result = setString(OS_Generator_MicroTurbineHeatRecoveryFields::ThermalEfficiencyFunctionofTemperatureandElevationCurveName, "");
+    bool result = setString(OS_Generator_MicroTurbine_HeatRecoveryFields::ThermalEfficiencyFunctionofTemperatureandElevationCurveName, "");
     OS_ASSERT(result);
   }
 
-  bool GeneratorMicroTurbineHeatRecovery_Impl::setHeatRecoveryRateFunctionofPartLoadRatioCurve(const boost::optional<Curve>& curve) {
-    bool result(false);
-    if (curve) {
-      if(model() != curve.get().model())
-      {
-        LOG(Warn,briefDescription() << " does not below to the same model as the curve you want to set.");
-        return false;
-      }
-      result = setPointer(OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryRateFunctionofPartLoadRatioCurveName, curve.get().handle());
-    }
-    else {
-      resetHeatRecoveryRateFunctionofPartLoadRatioCurve();
-      result = true;
-    }
+  bool GeneratorMicroTurbineHeatRecovery_Impl::setHeatRecoveryRateFunctionofPartLoadRatioCurve(const Curve& curve) {
+    bool result = setPointer(OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryRateFunctionofPartLoadRatioCurveName, curve.handle());
     return result;
   }
 
   void GeneratorMicroTurbineHeatRecovery_Impl::resetHeatRecoveryRateFunctionofPartLoadRatioCurve() {
-    bool result = setString(OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryRateFunctionofPartLoadRatioCurveName, "");
+    bool result = setString(OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryRateFunctionofPartLoadRatioCurveName, "");
     OS_ASSERT(result);
   }
 
-  bool GeneratorMicroTurbineHeatRecovery_Impl::setHeatRecoveryRateFunctionofInletWaterTemperatureCurve(const boost::optional<Curve>& curve) {
-    bool result(false);
-    if (curve) {
-      if(model() != curve.get().model())
-      {
-        LOG(Warn,briefDescription() << " does not below to the same model as the curve you want to set.");
-        return false;
-      }
-      result = setPointer(OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryRateFunctionofInletWaterTemperatureCurveName, curve.get().handle());
-    }
-    else {
-      resetHeatRecoveryRateFunctionofInletWaterTemperatureCurve();
-      result = true;
-    }
+  bool GeneratorMicroTurbineHeatRecovery_Impl::setHeatRecoveryRateFunctionofInletWaterTemperatureCurve(const Curve& curve) {
+    bool result = setPointer(OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryRateFunctionofInletWaterTemperatureCurveName, curve.handle());
     return result;
   }
 
   void GeneratorMicroTurbineHeatRecovery_Impl::resetHeatRecoveryRateFunctionofInletWaterTemperatureCurve() {
-    bool result = setString(OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryRateFunctionofInletWaterTemperatureCurveName, "");
+    bool result = setString(OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryRateFunctionofInletWaterTemperatureCurveName, "");
     OS_ASSERT(result);
   }
 
-  bool GeneratorMicroTurbineHeatRecovery_Impl::setHeatRecoveryRateFunctionofWaterFlowRateCurve(const boost::optional<Curve>& curve) {
-    bool result(false);
-    if (curve) {
-      if(model() != curve.get().model())
-      {
-        LOG(Warn,briefDescription() << " does not below to the same model as the curve you want to set.");
-        return false;
-      }
-      result = setPointer(OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryRateFunctionofWaterFlowRateCurveName, curve.get().handle());
-    }
-    else {
-      resetHeatRecoveryRateFunctionofWaterFlowRateCurve();
-      result = true;
-    }
+  bool GeneratorMicroTurbineHeatRecovery_Impl::setHeatRecoveryRateFunctionofWaterFlowRateCurve(const Curve& curve) {
+    bool result = setPointer(OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryRateFunctionofWaterFlowRateCurveName, curve.handle());
     return result;
   }
 
   void GeneratorMicroTurbineHeatRecovery_Impl::resetHeatRecoveryRateFunctionofWaterFlowRateCurve() {
-    bool result = setString(OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryRateFunctionofWaterFlowRateCurveName, "");
+    bool result = setString(OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryRateFunctionofWaterFlowRateCurveName, "");
     OS_ASSERT(result);
   }
 
   bool GeneratorMicroTurbineHeatRecovery_Impl::setMinimumHeatRecoveryWaterFlowRate(double minimumHeatRecoveryWaterFlowRate) {
-    bool result = setDouble(OS_Generator_MicroTurbineHeatRecoveryFields::MinimumHeatRecoveryWaterFlowRate, minimumHeatRecoveryWaterFlowRate);
+    bool result = setDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::MinimumHeatRecoveryWaterFlowRate, minimumHeatRecoveryWaterFlowRate);
     return result;
   }
 
   void GeneratorMicroTurbineHeatRecovery_Impl::resetMinimumHeatRecoveryWaterFlowRate() {
-    bool result = setString(OS_Generator_MicroTurbineHeatRecoveryFields::MinimumHeatRecoveryWaterFlowRate, "");
+    bool result = setString(OS_Generator_MicroTurbine_HeatRecoveryFields::MinimumHeatRecoveryWaterFlowRate, "");
     OS_ASSERT(result);
   }
 
   bool GeneratorMicroTurbineHeatRecovery_Impl::setMaximumHeatRecoveryWaterFlowRate(double maximumHeatRecoveryWaterFlowRate) {
-    bool result = setDouble(OS_Generator_MicroTurbineHeatRecoveryFields::MaximumHeatRecoveryWaterFlowRate, maximumHeatRecoveryWaterFlowRate);
+    bool result = setDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::MaximumHeatRecoveryWaterFlowRate, maximumHeatRecoveryWaterFlowRate);
     return result;
   }
 
   void GeneratorMicroTurbineHeatRecovery_Impl::resetMaximumHeatRecoveryWaterFlowRate() {
-    bool result = setString(OS_Generator_MicroTurbineHeatRecoveryFields::MaximumHeatRecoveryWaterFlowRate, "");
+    bool result = setString(OS_Generator_MicroTurbine_HeatRecoveryFields::MaximumHeatRecoveryWaterFlowRate, "");
     OS_ASSERT(result);
   }
 
-  void GeneratorMicroTurbineHeatRecovery_Impl::setMaximumHeatRecoveryWaterTemperature(boost::optional<double> maximumHeatRecoveryWaterTemperature) {
-    bool result(false);
-    if (maximumHeatRecoveryWaterTemperature) {
-      result = setDouble(OS_Generator_MicroTurbineHeatRecoveryFields::MaximumHeatRecoveryWaterTemperature, maximumHeatRecoveryWaterTemperature.get());
-    }
-    else {
-      resetMaximumHeatRecoveryWaterTemperature();
-      result = true;
-    }
+  void GeneratorMicroTurbineHeatRecovery_Impl::setMaximumHeatRecoveryWaterTemperature(double maximumHeatRecoveryWaterTemperature) {
+    bool result = setDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::MaximumHeatRecoveryWaterTemperature, maximumHeatRecoveryWaterTemperature);
     OS_ASSERT(result);
   }
 
   void GeneratorMicroTurbineHeatRecovery_Impl::resetMaximumHeatRecoveryWaterTemperature() {
-    bool result = setString(OS_Generator_MicroTurbineHeatRecoveryFields::MaximumHeatRecoveryWaterTemperature, "");
+    bool result = setString(OS_Generator_MicroTurbine_HeatRecoveryFields::MaximumHeatRecoveryWaterTemperature, "");
     OS_ASSERT(result);
   }
 
@@ -409,7 +343,7 @@ GeneratorMicroTurbineHeatRecovery::GeneratorMicroTurbineHeatRecovery(const Model
   // Reference Inlet Water Temperature
   setReferenceInletWaterTemperature(60);
 
-	// Reference Heat Recovery Water Flow Rate
+  // Reference Heat Recovery Water Flow Rate
   setReferenceHeatRecoveryWaterFlowRate(0.00252362);
 
   // Maximum Heat Recovery Water Flow Rate: has a default value of 0 in E+.idd which isn't right in this case
@@ -424,15 +358,11 @@ IddObjectType GeneratorMicroTurbineHeatRecovery::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Generator_MicroTurbine);
 }
 
-std::vector<std::string> GeneratorMicroTurbineHeatRecovery::fuelTypeValues() {
+std::vector<std::string> GeneratorMicroTurbineHeatRecovery::validHeatRecoveryWaterFlowOperatingModeValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_Generator_MicroTurbineHeatRecoveryFields::FuelType);
+                        OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterFlowOperatingMode);
 }
 
-std::vector<std::string> GeneratorMicroTurbineHeatRecovery::heatRecoveryWaterFlowOperatingModeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_Generator_MicroTurbineHeatRecoveryFields::HeatRecoveryWaterFlowOperatingMode);
-}
 
 /*
 boost::optional<Connection> GeneratorMicroTurbineHeatRecovery::heatRecoveryWaterInletNode() const {
@@ -534,7 +464,7 @@ void GeneratorMicroTurbineHeatRecovery::resetReferenceThermalEfficiencyUsingLowe
 }
 
 bool GeneratorMicroTurbineHeatRecovery::setReferenceInletWaterTemperature(double value) {
-  getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->setReferenceInletWaterTemperature(value);
+  return getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->setReferenceInletWaterTemperature(value);
 }
 
 bool GeneratorMicroTurbineHeatRecovery::setHeatRecoveryWaterFlowOperatingMode(std::string heatRecoveryWaterFlowOperatingMode) {

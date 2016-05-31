@@ -105,24 +105,24 @@ namespace detail {
 
   // If defaulted, return referenceElectricalPowerOutput
   double GeneratorMicroTurbine_Impl::maximumFullLoadElectricalPowerOutput() const {
-	// TODO: Check if that's the typical way of doing this... Might has well write code that looks the same as usual. @danmacumber?
-	  boost::optional<double> maximumFullLoadElectricalPowerOutput = getDouble(OS_Generator_MicroTurbineFields::MaximumFullLoadElectricalPowerOutput,true);
-		// If there is a Heat Recovery Object
-		if (maximumFullLoadElectricalPowerOutput) {
-			// Get it and return
-			return maximumFullLoadElectricalPowerOutput.get();
-		}
-		else { 
-			boost::optional<double> referenceElectricalPowerOutput = getDouble(OS_Generator_MicroTurbineFields::ReferenceElectricalPowerOutput,true);
-			OS_ASSERT(referenceElectricalPowerOutput);
-			return referenceElectricalPowerOutput.get();
-		}
+  // TODO: Check if that's the typical way of doing this... Might has well write code that looks the same as usual. @danmacumber?
+    boost::optional<double> maximumFullLoadElectricalPowerOutput = getDouble(OS_Generator_MicroTurbineFields::MaximumFullLoadElectricalPowerOutput,true);
+    // If there is a Heat Recovery Object
+    if (maximumFullLoadElectricalPowerOutput) {
+      // Get it and return
+      return maximumFullLoadElectricalPowerOutput.get();
+    }
+    else { 
+      boost::optional<double> referenceElectricalPowerOutput = getDouble(OS_Generator_MicroTurbineFields::ReferenceElectricalPowerOutput,true);
+      OS_ASSERT(referenceElectricalPowerOutput);
+      return referenceElectricalPowerOutput.get();
+    }
   }
-	
-	bool GeneratorMicroTurbine_Impl::isMaximumFullLoadElectricalPowerOutputDefaulted() const {
+  
+  bool GeneratorMicroTurbine_Impl::isMaximumFullLoadElectricalPowerOutputDefaulted() const {
     return isEmpty(OS_Generator_MicroTurbineFields::MaximumFullLoadElectricalPowerOutput);
   }
-	
+  
 
   double GeneratorMicroTurbine_Impl::referenceElectricalEfficiencyUsingLowerHeatingValue() const {
     boost::optional<double> value = getDouble(OS_Generator_MicroTurbineFields::ReferenceElectricalEfficiencyUsingLowerHeatingValue,true);
@@ -161,15 +161,21 @@ namespace detail {
   }
 
   Curve GeneratorMicroTurbine_Impl::electricalPowerFunctionofTemperatureandElevationCurve() const {
-	  return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::ElectricalPowerFunctionofTemperatureandElevationCurveName);
+    boost::optional<Curve> curve = getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::ElectricalPowerFunctionofTemperatureandElevationCurveName);
+    OS_ASSERT(curve);
+    return curve.get();
   }
 
   Curve GeneratorMicroTurbine_Impl::electricalEfficiencyFunctionofTemperatureCurve() const {
-	  return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::ElectricalEfficiencyFunctionofTemperatureCurveName);
+    boost::optional<Curve> curve = getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::ElectricalEfficiencyFunctionofTemperatureCurveName);
+    OS_ASSERT(curve);
+    return curve.get();
   }
 
   Curve GeneratorMicroTurbine_Impl::electricalEfficiencyFunctionofPartLoadRatioCurve() const {
-	  return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::ElectricalEfficiencyFunctionofPartLoadRatioCurveName);
+    boost::optional<Curve> curve =  getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::ElectricalEfficiencyFunctionofPartLoadRatioCurveName);
+    OS_ASSERT(curve);
+    return curve.get();
   }
 /*  Curve GeneratorMicroTurbine_Impl::electricalEfficiencyFunctionofPartLoadRatioCurve() const {
     boost::optional<Curve> value = optionalElectricalEfficiencyFunctionofPartLoadRatioCurve();
@@ -286,15 +292,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorMicroTurbine_Impl::setMaximumFullLoadElectricalPowerOutput(boost::optional<double> maximumFullLoadElectricalPowerOutput) {
-    bool result(false);
-    if (maximumFullLoadElectricalPowerOutput) {
-      result = setDouble(OS_Generator_MicroTurbineFields::MaximumFullLoadElectricalPowerOutput, maximumFullLoadElectricalPowerOutput.get());
-    }
-    else {
-      resetMaximumFullLoadElectricalPowerOutput();
-      result = true;
-    }
+  bool GeneratorMicroTurbine_Impl::setMaximumFullLoadElectricalPowerOutput(double maximumFullLoadElectricalPowerOutput) {
+    bool result = setDouble(OS_Generator_MicroTurbineFields::MaximumFullLoadElectricalPowerOutput, maximumFullLoadElectricalPowerOutput);
     return result;
   }
 
@@ -345,7 +344,7 @@ namespace detail {
       LOG(Warn,briefDescription() << " does not belong to the same model as the curve you want to set.");
       return false;
     }
-	// Todo: do I need to explicitly check if the curve is of the right type? or does defining \object-list BiquadraticCurves in .idd suffice?
+  // Todo: do I need to explicitly check if the curve is of the right type? or does defining \object-list BiquadraticCurves in .idd suffice?
     bool result = setPointer(OS_Generator_MicroTurbineFields::ElectricalPowerFunctionofTemperatureandElevationCurveName, curve.handle());
     return result;
   }
@@ -420,20 +419,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorMicroTurbine_Impl::setAncillaryPowerFunctionofFuelInputCurve(const boost::optional<Curve>& curve) {
-    bool result(false);
-    if (curve) {
-      if(model() != curve.get().model())
-      {
-        LOG(Warn,briefDescription() << " does not belong to the same model as the curve you want to set.");
-        return false;
-      }
-      result = setPointer(OS_Generator_MicroTurbineFields::AncillaryPowerFunctionofFuelInputCurveName, curve.get().handle());
-    }
-    else {
-      resetAncillaryPowerFunctionofFuelInputCurve();
-      result = true;
-    }
+  bool GeneratorMicroTurbine_Impl::setAncillaryPowerFunctionofFuelInputCurve(const Curve& curve) {
+    bool result = setPointer(OS_Generator_MicroTurbineFields::AncillaryPowerFunctionofFuelInputCurveName, curve.handle());
     return result;
   }
 
@@ -444,20 +431,8 @@ namespace detail {
   
   
   // Optional Generator:MicroTurbine:HeatRecovery
-  bool GeneratorMicroTurbine_Impl::setGeneratorMicroTurbineHeatRecovery(const boost::optional<GeneratorMicroTurbineHeatRecovery>& generatorMicroTurbineHeatRecovery) {
-    bool result(false);
-    if (generatorMicroTurbineHeatRecovery) {
-      if(model() != generatorMicroTurbineHeatRecovery.get().model())
-      {
-        LOG(Warn,briefDescription() << " does not belong to the same model as the Generator:MicroTurbine:HeatRecovery you want to set.");
-        return false;
-      }
-      result = setPointer(OS_Generator_MicroTurbineFields::GeneratorMicroTurbineHeatRecoveryName, generatorMicroTurbineHeatRecovery.get().handle());
-    }
-    else {
-      resetGeneratorMicroTurbineHeatRecovery();
-      result = true;
-    }
+  bool GeneratorMicroTurbine_Impl::setGeneratorMicroTurbineHeatRecovery(const GeneratorMicroTurbineHeatRecovery& generatorMicroTurbineHeatRecovery) {
+    bool result = setPointer(OS_Generator_MicroTurbineFields::GeneratorMicroTurbineHeatRecoveryName, generatorMicroTurbineHeatRecovery.handle());
     return result;
   }
 
@@ -465,17 +440,6 @@ namespace detail {
     bool result = setString(OS_Generator_MicroTurbineFields::GeneratorMicroTurbineHeatRecoveryName, "");
     OS_ASSERT(result);
   }
-  
-  boost::optional<GeneratorMicroTurbineHeatRecovery> GeneratorMicroTurbine_Impl::generatorMicroTurbineHeatRecovery() const {
-    return getObject<ModelObject>().getModelObjectTarget<GeneratorMicroTurbineHeatRecovery>(OS_Generator_MicroTurbineFields::GeneratorMicroTurbineHeatRecoveryName);
-  }
-  
-  // Optional Generator:MicroTurbine:HeatRecovery
-    bool setGeneratorMicroTurbineHeatRecovery(const GeneratorMicroTurbineHeatRecovery& generatorMicroTurbineHeatRecovery);
-    void resetGeneratorMicroTurbineHeatRecovery();
-    
-    
-    
 
   /* void GeneratorMicroTurbine_Impl::resetCombustionAirInletNode() {
     bool result = setString(OS_Generator_MicroTurbineFields::CombustionAirInletNodeName, "");
@@ -499,15 +463,8 @@ namespace detail {
     OS_ASSERT(result);
   } */
 
-  bool GeneratorMicroTurbine_Impl::setReferenceExhaustAirMassFlowRate(boost::optional<double> referenceExhaustAirMassFlowRate) {
-    bool result(false);
-    if (referenceExhaustAirMassFlowRate) {
-      result = setDouble(OS_Generator_MicroTurbineFields::ReferenceExhaustAirMassFlowRate, referenceExhaustAirMassFlowRate.get());
-    }
-    else {
-      resetReferenceExhaustAirMassFlowRate();
-      result = true;
-    }
+  bool GeneratorMicroTurbine_Impl::setReferenceExhaustAirMassFlowRate(double referenceExhaustAirMassFlowRate) {
+    bool result = setDouble(OS_Generator_MicroTurbineFields::ReferenceExhaustAirMassFlowRate, referenceExhaustAirMassFlowRate);
     return result;
   }
 
@@ -516,20 +473,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorMicroTurbine_Impl::setExhaustAirFlowRateFunctionofTemperatureCurve(const boost::optional<Curve>& curve) {
-    bool result(false);
-    if (curve) {
-      if(model() != curve.get().model())
-      {
-        LOG(Warn,briefDescription() << " does not belong to the same model as the curve you want to set.");
-        return false;
-      }
-      result = setPointer(OS_Generator_MicroTurbineFields::ExhaustAirFlowRateFunctionofTemperatureCurveName, curve.get().handle());
-    }
-    else {
-      resetExhaustAirFlowRateFunctionofTemperatureCurve();
-      result = true;
-    }
+  bool GeneratorMicroTurbine_Impl::setExhaustAirFlowRateFunctionofTemperatureCurve(const Curve& curve) {
+    bool result = setPointer(OS_Generator_MicroTurbineFields::ExhaustAirFlowRateFunctionofTemperatureCurveName, curve.handle());
     return result;
   }
 
@@ -538,20 +483,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorMicroTurbine_Impl::setExhaustAirFlowRateFunctionofPartLoadRatioCurve(const boost::optional<Curve>& curve) {
-    bool result(false);
-    if (curve) {
-      if(model() != curve.get().model())
-      {
-        LOG(Warn,briefDescription() << " does not belong to the same model as the curve you want to set.");
-        return false;
-      }  
-      result = setPointer(OS_Generator_MicroTurbineFields::ExhaustAirFlowRateFunctionofPartLoadRatioCurveName, curve.get().handle());
-    }
-    else {
-      resetExhaustAirFlowRateFunctionofPartLoadRatioCurve();
-      result = true;
-    }
+  bool GeneratorMicroTurbine_Impl::setExhaustAirFlowRateFunctionofPartLoadRatioCurve(const Curve& curve) {
+    bool result = setPointer(OS_Generator_MicroTurbineFields::ExhaustAirFlowRateFunctionofPartLoadRatioCurveName, curve.handle());
     return result;
   }
 
@@ -560,15 +493,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorMicroTurbine_Impl::setNominalExhaustAirOutletTemperature(boost::optional<double> nominalExhaustAirOutletTemperature) {
-    bool result(false);
-    if (nominalExhaustAirOutletTemperature) {
-      result = setDouble(OS_Generator_MicroTurbineFields::NominalExhaustAirOutletTemperature, nominalExhaustAirOutletTemperature.get());
-    }
-    else {
-      resetNominalExhaustAirOutletTemperature();
-      result = true;
-    }
+  void GeneratorMicroTurbine_Impl::setNominalExhaustAirOutletTemperature(double nominalExhaustAirOutletTemperature) {
+    bool result = setDouble(OS_Generator_MicroTurbineFields::NominalExhaustAirOutletTemperature, nominalExhaustAirOutletTemperature);
     OS_ASSERT(result);
   }
 
@@ -577,20 +503,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorMicroTurbine_Impl::setExhaustAirTemperatureFunctionofTemperatureCurve(const boost::optional<Curve>& curve) {
-    bool result(false);
-    if (curve) {
-      if(model() != curve.get().model())
-      {
-        LOG(Warn,briefDescription() << " does not belong to the same model as the curve you want to set.");
-        return false;
-      }
-      result = setPointer(OS_Generator_MicroTurbineFields::ExhaustAirTemperatureFunctionofTemperatureCurveName, curve.get().handle());
-    }
-    else {
-      resetExhaustAirTemperatureFunctionofTemperatureCurve();
-      result = true;
-    }
+  bool GeneratorMicroTurbine_Impl::setExhaustAirTemperatureFunctionofTemperatureCurve(const Curve& curve) {
+    bool result = setPointer(OS_Generator_MicroTurbineFields::ExhaustAirTemperatureFunctionofTemperatureCurveName, curve.handle());
     return result;
   }
 
@@ -599,20 +513,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool GeneratorMicroTurbine_Impl::setExhaustAirTemperatureFunctionofPartLoadRatioCurve(const boost::optional<Curve>& curve) {
-    bool result(false);
-    if (curve) {
-      if(model() != curve.get().model())
-      {
-        LOG(Warn,briefDescription() << " does not belong to the same model as the curve you want to set.");
-        return false;
-      }
-      result = setPointer(OS_Generator_MicroTurbineFields::ExhaustAirTemperatureFunctionofPartLoadRatioCurveName, curve.get().handle());
-    }
-    else {
-      resetExhaustAirTemperatureFunctionofPartLoadRatioCurve();
-      result = true;
-    }
+  bool GeneratorMicroTurbine_Impl::setExhaustAirTemperatureFunctionofPartLoadRatioCurve(const Curve& curve) {
+    bool result = setPointer(OS_Generator_MicroTurbineFields::ExhaustAirTemperatureFunctionofPartLoadRatioCurveName, curve.handle());
     return result;
   }
 
@@ -653,26 +555,26 @@ GeneratorMicroTurbine::GeneratorMicroTurbine(const Model& model)
 
   //Electrical Power Function of Temperature and Elevation Curve Name
   // CurveBiquadratic
-  CurveBiquadratric elecPowerFTempElevation(model);
+  CurveBiquadratic elecPowerFTempElevation(model);
   elecPowerFTempElevation.setName(name().get() + " Capstone C65 Power_vs_Temp_Elev");
   elecPowerFTempElevation.setCoefficient1Constant(1.2027697);
   elecPowerFTempElevation.setCoefficient2x(-9.671305E-03);
   elecPowerFTempElevation.setCoefficient3xPOW2(-4.860793E-06);
   elecPowerFTempElevation.setCoefficient4y(-1.542394E-04);
-  elecPowerFTempElevation.setCoefficient5yPOW(9.111418E-09);
+  elecPowerFTempElevation.setCoefficient5yPOW2(9.111418E-09);
   elecPowerFTempElevation.setCoefficient6xTIMESY(8.797885E-07);
   elecPowerFTempElevation.setMinimumValueofx(-17.8);
   elecPowerFTempElevation.setMaximumValueofx(50);
   elecPowerFTempElevation.setMinimumValueofy(0);
   elecPowerFTempElevation.setMaximumValueofy(3050.);
-	  //	Temperature, !- Input Unit Type for X
-	  // Distance, !- Input Unit Type for Y
-	  // Dimensionless;           !- Output Unit Type
+    //	Temperature, !- Input Unit Type for X
+    // Distance, !- Input Unit Type for Y
+    // Dimensionless;           !- Output Unit Type
   setElectricalPowerFunctionofTemperatureandElevationCurve(elecPowerFTempElevation);
 
-	// ElectricalEfficiencyFunctionofTemperatureCurveName
-	// \object - list QuadraticCubicCurves
-	/*! Electrical Efficiency Modifier Curve (function of temperature)
+  // ElectricalEfficiencyFunctionofTemperatureCurveName
+  // \object - list QuadraticCubicCurves
+  /*! Electrical Efficiency Modifier Curve (function of temperature)
 ! x = Dry-Bulb Temperature of Combustion Inlet Air (C)
 
   Curve:Cubic,
@@ -699,7 +601,7 @@ GeneratorMicroTurbine::GeneratorMicroTurbine(const Model& model)
 
   // ElectricalEfficiencyFunctionofPartLoadRatioCurveName
   // QuadraticCubicCurves
-	/*  Curve:Cubic,
+  /*  Curve:Cubic,
     Capstone C65 Efficiency_vs_PLR,  !- Name
     ,                !- Coefficient1 Constant
     ,                !- Coefficient2 x
@@ -722,14 +624,9 @@ IddObjectType GeneratorMicroTurbine::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Generator_MicroTurbine);
 }
 
-std::vector<std::string> GeneratorMicroTurbine::fuelTypeValues() {
+std::vector<std::string> GeneratorMicroTurbine::validFuelTypeValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_Generator_MicroTurbineFields::FuelType);
-}
-
-std::vector<std::string> GeneratorMicroTurbine::heatRecoveryWaterFlowOperatingModeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_Generator_MicroTurbineFields::HeatRecoveryWaterFlowOperatingMode);
 }
 
 double GeneratorMicroTurbine::referenceElectricalPowerOutput() const {
@@ -836,7 +733,7 @@ boost::optional<Curve> GeneratorMicroTurbine::ancillaryPowerFunctionofFuelInputC
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->ancillaryPowerFunctionofFuelInputCurve();
 }
 
-boost::optional<Curve> GeneratorMicroTurbine::generatorMicroTurbineHeatRecovery() const {
+boost::optional<GeneratorMicroTurbineHeatRecovery> GeneratorMicroTurbine::generatorMicroTurbineHeatRecovery() const {
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->generatorMicroTurbineHeatRecovery();
 }
 
@@ -981,12 +878,8 @@ void GeneratorMicroTurbine::resetAncillaryPowerFunctionofFuelInputCurve() {
   getImpl<detail::GeneratorMicroTurbine_Impl>()->resetAncillaryPowerFunctionofFuelInputCurve();
 }
 
-bool GeneratorMicroTurbine::setHeatRecoveryWaterInletNode(const Connection& connection) {
-  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setHeatRecoveryWaterInletNode(connection);
-}
-
-void GeneratorMicroTurbine::setGeneratorMicroTurbineHeatRecovery() {
-  getImpl<detail::GeneratorMicroTurbine_Impl>()->setGeneratorMicroTurbineHeatRecovery();
+bool GeneratorMicroTurbine::setGeneratorMicroTurbineHeatRecovery(const GeneratorMicroTurbineHeatRecovery& heatRecovery) {
+  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setGeneratorMicroTurbineHeatRecovery(heatRecovery);
 }
 
 void GeneratorMicroTurbine::resetGeneratorMicroTurbineHeatRecovery() {
