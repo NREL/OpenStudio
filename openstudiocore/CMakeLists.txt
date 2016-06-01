@@ -597,8 +597,19 @@ if( WIN32 )
       EXPECTED_MD5 52424fdb4d553b94156de088881506b5)
       execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
   endif()
-
   list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_msvc2013_64_static/lib/cmake")
+elseif( APPLE )
+  set(QT_TAR_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_osx_static.tar.gz")
+  file(MD5 ${QT_TAR_LOCAL_PATH} QT_TAR_MD5)
+  if( NOT QT_TAR_MD5 STREQUAL "e4bfe40212b660895f76d5728685373d" )
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/qt_5_6_osx_static.tar.gz" 
+      ${QT_TAR_LOCAL_PATH} 
+      INACTIVITY_TIMEOUT 120 
+      SHOW_PROGRESS
+      EXPECTED_MD5 e4bfe40212b660895f76d5728685373d)
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_TAR_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+  endif()
+  list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_osx_static/lib/cmake")
 endif()
 
 find_package(Qt5Core REQUIRED)
@@ -606,10 +617,12 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Sql REQUIRED)
 find_package(Qt5Network REQUIRED)
 find_package(Qt5Xml REQUIRED)
-find_package(Qt5WinExtras REQUIRED)
 find_package(Qt5Concurrent REQUIRED)
 find_package(Qt5PrintSupport REQUIRED)
 find_package(Qt5Gui REQUIRED)
+if( WIN32 )
+  find_package(Qt5WinExtras REQUIRED)
+endif()
 mark_as_advanced(
   Qt5Concurrent_DIR
   Qt5Core_DIR
@@ -627,7 +640,7 @@ mark_as_advanced(
   Qt5Sensors_DIR
   Qt5Sql_DIR
   Qt5Widgets_DIR
-  #Qt5WinExtras_DIR
+  Qt5WinExtras_DIR
   Qt5Xml_DIR
 )
 
