@@ -30,12 +30,16 @@
 #include "CurveBiquadratic_Impl.hpp"
 #include "CurveCubic.hpp"
 #include "CurveCubic_Impl.hpp"
-#include "Schedule.hpp"
 
 #include "StraightComponent.hpp"
 #include "StraightComponent_Impl.hpp"
 #include "GeneratorMicroTurbineHeatRecovery.hpp"
 #include "GeneratorMicroTurbineHeatRecovery_Impl.hpp"
+
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "../../model/ScheduleTypeLimits.hpp"
+#include "../../model/ScheduleTypeRegistry.hpp"
 
 // TODO: Add DataTables if added later to OS?
 //#include "DataTables.hpp" // UniVariateTables and BiVariateTables
@@ -80,6 +84,32 @@ namespace detail {
   {
     static std::vector<std::string> result;
     if (result.empty()){
+      result.push_back("Generator Produced Electric Power");
+      result.push_back("Generator Produced Electric Energy");
+      result.push_back("Generator LHV Basis Electric Efficiency");
+      // <FuelType>
+      result.push_back("Generator Gas HHV Basis Rate");
+      result.push_back("Generator Gas HHV Basis Energy");
+      result.push_back("Generator Gas Mass Flow Rate");
+      
+      result.push_back("Generator Propane HHV Basis Rate");
+      result.push_back("Generator Propane HHV Basis Energy");
+      result.push_back("Generator Propane Mass Flow Rate");
+      // </FuelType>
+      result.push_back("Generator Fuel HHV Basis Rate");
+      result.push_back("Generator Fuel HHV Basis Energy");
+      result.push_back("Generator Produced Thermal Rate");
+      result.push_back("Generator Produced Thermal Energy");
+      result.push_back("Generator Thermal Efficiency LHV Basis");
+      result.push_back("Generator Heat Recovery Inlet Temperature");
+      result.push_back("Generator Heat Recovery Outlet Temperature");
+      result.push_back("Generator Heat Recovery Water Mass Flow Rate");
+      result.push_back("Generator Standby Electric Power");
+      result.push_back("Generator Standby Electric Energy");
+      result.push_back("Generator Ancillary Electric Power");
+      result.push_back("Generator Ancillary Electric Energy");
+      result.push_back("Generator Exhaust Air Mass Flow Rate");
+      result.push_back("Generator Exhaust Air Temperature");
     }
     return result;
   }
@@ -93,6 +123,19 @@ namespace detail {
     // translated to ElectricLoadCenter:Generators 'Generator Object Type'
     return "Generator:MicroTurbine";
   }
+  
+  std::vector<ScheduleTypeKey> GeneratorMicroTurbine_Impl::getScheduleTypeKeys(const Schedule& schedule) const
+  {
+    // TODO: Check schedule display names.
+    std::vector<ScheduleTypeKey> result;
+    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+    if (std::find(b,e,OS_Generator_PhotovoltaicFields::AvailabilityScheduleName) != e)
+    {
+      result.push_back(ScheduleTypeKey("GeneratorMicroTurbine","Availability"));
+    }
+    return result;
+  }
 
   boost::optional<double> GeneratorMicroTurbine_Impl::ratedElectricPowerOutput() const
   {
@@ -100,11 +143,8 @@ namespace detail {
     return referenceElectricalPowerOutput();
   }
 
-  boost::optional<Schedule> GeneratorMicroTurbine_Impl::availabilitySchedule() const
-  {
-    // translated to ElectricLoadCenter:Generators 'Generator Availability Schedule Name'
-    // DLM: this object should have an availability schedule, we need to add it to IDD
-    return boost::none;
+  boost::optional<Schedule> GeneratorMicroTurbine_Impl::availabilitySchedule() const {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Generator_MicroTurbineFields::AvailabilityScheduleName);
   }
 
   boost::optional<double> GeneratorMicroTurbine_Impl::ratedThermalToElectricalPowerRatio() const
@@ -302,6 +342,20 @@ namespace detail {
 
   boost::optional<Curve> GeneratorMicroTurbine_Impl::exhaustAirTemperatureFunctionofPartLoadRatioCurve() const {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::ExhaustAirTemperatureFunctionofPartLoadRatioCurveName);
+  }
+  
+  
+  bool GeneratorMicroTurbine_Impl::setAvailabilitySchedule(Schedule& schedule) {
+    bool result = setSchedule(OS_Generator_MicroTurbineFields::AvailabilityScheduleName,
+                              "GeneratorMicroTurbine",
+                              "Availability",
+                              schedule);
+    return result;
+  }
+  
+  void GeneratorMicroTurbine_Impl::resetAvailabilitySchedule() {
+    bool result = setString(OS_Generator_MicroTurbineFields::AvailabilityScheduleName, "");
+    OS_ASSERT(result);
   }
 
   bool GeneratorMicroTurbine_Impl::setReferenceElectricalPowerOutput(double referenceElectricalPowerOutput) {
@@ -660,6 +714,10 @@ double GeneratorMicroTurbine::referenceElectricalPowerOutput() const {
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->referenceElectricalPowerOutput();
 }
 
+boost::optional<Schedule> GeneratorMicroTurbine::availabilitySchedule() const {
+  return getImpl<detail::GeneratorMicroTurbine_Impl>()->availabilitySchedule();
+}
+
 double GeneratorMicroTurbine::minimumFullLoadElectricalPowerOutput() const {
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->minimumFullLoadElectricalPowerOutput();
 }
@@ -807,6 +865,14 @@ bool GeneratorMicroTurbine::setMinimumFullLoadElectricalPowerOutput(double minim
 
 void GeneratorMicroTurbine::resetMinimumFullLoadElectricalPowerOutput() {
   getImpl<detail::GeneratorMicroTurbine_Impl>()->resetMinimumFullLoadElectricalPowerOutput();
+}
+
+bool GeneratorMicroTurbine::setAvailabilitySchedule(Schedule& schedule) {
+  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setAvailabilitySchedule(schedule);
+}
+
+void GeneratorMicroTurbine::resetAvailabilitySchedule() {
+  getImpl<detail::GeneratorMicroTurbine_Impl>()->resetAvailabilitySchedule();
 }
 
 bool GeneratorMicroTurbine::setMaximumFullLoadElectricalPowerOutput(double maximumFullLoadElectricalPowerOutput) {

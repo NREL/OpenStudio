@@ -24741,6 +24741,11 @@ OS:Generator:MicroTurbine,
       \type alpha
       \reference GeneratorNames
       \reference MicroTurbineGeneratorNames
+  A3, \field Availability Schedule Name
+      \note Availability schedule name for this generator. Schedule value > 0 means the generator is available.
+      \note If this field is blank, the generator is always available.
+      \type object-list
+      \object-list ScheduleNames
   N1, \field Reference Electrical Power Output
       \required-field
       \type real
@@ -24778,7 +24783,7 @@ OS:Generator:MicroTurbine,
       \units m
       \minimum -300.0
       \default 0.0
-  A3, \field Electrical Power Function of Temperature and Elevation Curve Name
+  A4, \field Electrical Power Function of Temperature and Elevation Curve Name
       \required-field
       \type object-list
       \object-list BiquadraticCurves
@@ -24786,14 +24791,14 @@ OS:Generator:MicroTurbine,
       \note curve = a + b*T + c*T**2 + d*Elev + e*Elev**2 + f*T*Elev
       \note T = combustion air inlet temperature (C)
       \note Elev = elevation (m)
-  A4, \field Electrical Efficiency Function of Temperature Curve Name
+  A5, \field Electrical Efficiency Function of Temperature Curve Name
       \required-field
       \type object-list
       \object-list QuadraticCubicCurves
       \note Quadratic curve = a + b*T + c*T**2
       \note Cubic curve = a + b*T + c*T**2 + d*T**3
       \note T = combustion air inlet temperature (C)
-  A5, \field Electrical Efficiency Function of Part Load Ratio Curve Name
+  A6, \field Electrical Efficiency Function of Part Load Ratio Curve Name
       \required-field
       \type object-list
       \object-list QuadraticCubicCurves
@@ -24801,7 +24806,7 @@ OS:Generator:MicroTurbine,
       \note Cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
       \note PLR = ratio of Generator Load to steady state Electrical Power Output at
       \note current operating conditions
-  A6, \field Fuel Type
+  A7, \field Fuel Type
       \type choice
       \key NaturalGas
       \key PropaneGas
@@ -24831,7 +24836,7 @@ OS:Generator:MicroTurbine,
       \note Electric power consumed by ancillary equipment (e.g., external fuel pressurization pump).
       \note Set to zero if Reference Electrical Power Output is the 'net' value (ancillary power
       \note already deducted). Input value is positive, but indicates negative electric generation.
-  A7, \field Ancillary Power Function of Fuel Input Curve Name
+  A8, \field Ancillary Power Function of Fuel Input Curve Name
       \type object-list
       \object-list QuadraticCurves
       \object-list UniVariateTables
@@ -24839,22 +24844,22 @@ OS:Generator:MicroTurbine,
       \note mdot = fuel mass flow rate (kg/s)
       \note If left blank, model assumes ancillary power defined in previous field is constant
       \note whenever the generator is operating.
-  A8, \field Generator MicroTurbine Heat Recovery Name
+  A9, \field Generator MicroTurbine Heat Recovery Name
       \type object-list
       \object-list MicroTurbineHeatRecoveryNames
       \note Reference an optional OpenStudio specific object for the HeatRecovery Module itself
- A9, \field Combustion Air Inlet Node Name
+ A10, \field Combustion Air Inlet Node Name
       \type object-list
       \object-list ConnectionNames
       \note Must be an outdoor air node.
- A10, \field Combustion Air Outlet Node Name
+ A11, \field Combustion Air Outlet Node Name
       \type object-list
       \object-list ConnectionNames
  N12, \field Reference Exhaust Air Mass Flow Rate
       \type real
       \units kg/s
       \minimum> 0.0
- A11, \field Exhaust Air Flow Rate Function of Temperature Curve Name
+ A12, \field Exhaust Air Flow Rate Function of Temperature Curve Name
       \type object-list
       \object-list QuadraticCubicCurves
       \object-list UniVariateTables
@@ -24862,7 +24867,7 @@ OS:Generator:MicroTurbine,
       \note Cubic curve = a + b*T + c*T**2 + d*T**3
       \note T = combustion air inlet temperature (C)
       \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
- A12, \field Exhaust Air Flow Rate Function of Part Load Ratio Curve Name
+ A13, \field Exhaust Air Flow Rate Function of Part Load Ratio Curve Name
       \type object-list
       \object-list QuadraticCubicCurves
       \object-list UniVariateTables
@@ -24874,7 +24879,7 @@ OS:Generator:MicroTurbine,
  N13, \field Nominal Exhaust Air Outlet Temperature
       \type real
       \note Exhaust air outlet temperature at reference conditions.
- A13, \field Exhaust Air Temperature Function of Temperature Curve Name
+ A14, \field Exhaust Air Temperature Function of Temperature Curve Name
       \type object-list
       \object-list QuadraticCubicCurves
       \object-list UniVariateTables
@@ -24882,7 +24887,7 @@ OS:Generator:MicroTurbine,
       \note Cubic curve = a + b*T + c*T**2 + d*T**3
       \note T = combustion air inlet temperature (C)
       \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
- A14; \field Exhaust Air Temperature Function of Part Load Ratio Curve Name
+ A15; \field Exhaust Air Temperature Function of Part Load Ratio Curve Name
       \type object-list
       \object-list QuadraticCubicCurves
       \object-list UniVariateTables

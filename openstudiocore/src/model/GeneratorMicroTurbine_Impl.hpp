@@ -154,6 +154,9 @@ namespace detail {
     /** @name Setters */
     //@{
 
+    bool setAvailabilitySchedule(Schedule& schedule);
+    void resetAvailabilitySchedule();
+    
     bool setReferenceElectricalPowerOutput(double referenceElectricalPowerOutput);
 
     bool setMinimumFullLoadElectricalPowerOutput(double minimumFullLoadElectricalPowerOutput);

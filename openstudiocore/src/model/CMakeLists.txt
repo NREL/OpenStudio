@@ -1600,6 +1600,7 @@ set(${target_name}_test_src
   test/GasMixture_GTest.cpp
   test/Gas_GTest.cpp
   test/GeneratorPhotovoltaic_GTest.cpp
+  test/GeneratorMicroTurbine_GTest.cpp
   test/GlareSensor_GTest.cpp
   test/GroundHeatExchangerHorizontalTrench_GTest.cpp
   test/GroundHeatExchangerVertical_GTest.cpp
