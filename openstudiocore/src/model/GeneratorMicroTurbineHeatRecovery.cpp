@@ -343,7 +343,7 @@ GeneratorMicroTurbineHeatRecovery::GeneratorMicroTurbineHeatRecovery(const Model
   // TODO Should I set it here, or change the .idd??
   // 0.4975 would be better
   // Going with Kyle and Mark's way
-  setReferenceThermalEfficiencyUsingLowerHeatValue(0.4975)
+  setReferenceThermalEfficiencyUsingLowerHeatValue(0.4975);
 
   // Assign all values that are required but have no default
 

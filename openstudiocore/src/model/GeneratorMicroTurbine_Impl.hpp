@@ -65,6 +65,8 @@ namespace detail {
     virtual const std::vector<std::string>& outputVariableNames() const;
 
     virtual IddObjectType iddObjectType() const;
+		
+		virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
     virtual std::string generatorObjectType() const;
 

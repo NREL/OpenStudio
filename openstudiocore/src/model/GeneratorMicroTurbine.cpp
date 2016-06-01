@@ -132,7 +132,7 @@ namespace detail {
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_Generator_PhotovoltaicFields::AvailabilityScheduleName) != e)
+    if (std::find(b,e,OS_Generator_MicroTurbineFields::AvailabilityScheduleName) != e)
     {
       result.push_back(ScheduleTypeKey("GeneratorMicroTurbine","Availability"));
     }
