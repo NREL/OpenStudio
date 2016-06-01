@@ -100,12 +100,14 @@ namespace detail {
       // </FuelType>
       result.push_back("Generator Fuel HHV Basis Rate");
       result.push_back("Generator Fuel HHV Basis Energy");
-      result.push_back("Generator Produced Thermal Rate");
-      result.push_back("Generator Produced Thermal Energy");
-      result.push_back("Generator Thermal Efficiency LHV Basis");
-      result.push_back("Generator Heat Recovery Inlet Temperature");
-      result.push_back("Generator Heat Recovery Outlet Temperature");
-      result.push_back("Generator Heat Recovery Water Mass Flow Rate");
+			
+			// These are part of Generator:MicroTurbine:HeatRecovery
+      // result.push_back("Generator Produced Thermal Rate");
+      // result.push_back("Generator Produced Thermal Energy");
+      // result.push_back("Generator Thermal Efficiency LHV Basis");
+      // result.push_back("Generator Heat Recovery Inlet Temperature");
+      // result.push_back("Generator Heat Recovery Outlet Temperature");
+      // result.push_back("Generator Heat Recovery Water Mass Flow Rate");
       result.push_back("Generator Standby Electric Power");
       result.push_back("Generator Standby Electric Energy");
       result.push_back("Generator Ancillary Electric Power");
@@ -124,6 +126,48 @@ namespace detail {
   {
     // translated to ElectricLoadCenter:Generators 'Generator Object Type'
     return "Generator:MicroTurbine";
+  }
+	
+	// Add an implementation of StraightComponent_Impl?
+	ModelObject GeneratorMicroTurbine_Impl::clone(Model model) const
+  {
+    GeneratorMicroTurbine newCHP = ModelObject_Impl::clone(model).cast<GeneratorMicroTurbine>();
+
+		// If there's a GeneratorMicroTurbineHeatRecovery, clone it as well
+    if( boost::optional<ModelObject> mo = generatorMicroTurbineHeatRecovery_Impl() )
+    {
+      newCHP.setGeneratorMicroTurbineHeatRecovery_Impl(mo->clone(model));
+    }
+
+    return newCHP;
+  }
+	
+	// Return allowable child types: curves and Generator:MicroTurbine
+	std::vector<IddObjectType> GeneratorMicroTurbine_Impl::allowableChildTypes() const
+  {
+    std::vector<IddObjectType> result;
+    result.push_back(IddObjectType::OS_Generator_MicroTurbine_HeatRecovery);
+		result.push_back(IddObjectType::OS_Curve_Biquadratic);
+		result.push_back(IddObjectType::OS_Curve_Cubic);
+		result.push_back(IddObjectType::OS_Curve_Quadratic);
+    return result;
+  }
+	
+	std::vector<ModelObject> GeneratorMicroTurbine_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+    if(boost::optional<ModelObject> mo = generatorMicroTurbineHeatRecovery())
+    {
+      result.push_back(mo.get());
+    }
+
+		// Should I include curves in there? Even now that then can be shared (resources)
+    if(boost::optional<CurveCubic> mo = electricalPowerFunctionofTemperatureandElevationCurve() )
+    {
+      result.push_back(mo.get());
+    }
+
+    return result;
   }
   
   std::vector<ScheduleTypeKey> GeneratorMicroTurbine_Impl::getScheduleTypeKeys(const Schedule& schedule) const
@@ -1045,24 +1089,6 @@ bool GeneratorMicroTurbine::setExhaustAirTemperatureFunctionofPartLoadRatioCurve
 void GeneratorMicroTurbine::resetExhaustAirTemperatureFunctionofPartLoadRatioCurve() {
   getImpl<detail::GeneratorMicroTurbine_Impl>()->resetExhaustAirTemperatureFunctionofPartLoadRatioCurve();
 }
-
-
-/// New Methods
-  // Problably useless...
-  //boost::optional<std::string> GeneratorMicroTurbine_Impl::heatRecoveryWaterInletNodeName() const {
-  //  return getString(OS_Generator_MicroTurbineFields::HeatRecoveryWaterInletNodeName,true);
-  //}
-
-  /*
-  ModelObject GeneratorMicroTurbine_Impl::clone(Model model) const
-  {
-    GeneratorMicroTurbine newMCHP = Generator_Impl::clone(model).cast<GeneratorMicroTurbine>();
-
-    return newMCHP;
-  }
-  */
-
-
 
 
 /// @cond

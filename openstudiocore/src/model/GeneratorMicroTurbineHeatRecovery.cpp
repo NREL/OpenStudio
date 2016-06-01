@@ -16,16 +16,17 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
+#include "Model.hpp"
 
+#include "GeneratorMicroTurbine.hpp"
+#include "GeneratorMicroTurbine_Impl.hpp"
 #include "GeneratorMicroTurbineHeatRecovery.hpp"
 #include "GeneratorMicroTurbineHeatRecovery_Impl.hpp"
-#include "Model.hpp"
+
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 #include "PlantLoop.hpp"
 #include "PlantLoop_Impl.hpp"
-#include "GeneratorMicroTurbine.hpp"
-#include "GeneratorMicroTurbine_Impl.hpp"
 
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
@@ -52,57 +53,97 @@ namespace model {
 
   namespace detail {
 
-    GeneratorMicroTurbineHeatRecovery_Impl::GeneratorMicroTurbineHeatRecovery_Impl(const IdfObject& idfObject,
-      Model_Impl* model,
-      bool keepHandle)
-      : StraightComponent_Impl(idfObject, model, keepHandle)
-    {
-      OS_ASSERT(idfObject.iddObject().type() == GeneratorMicroTurbineHeatRecovery::iddObjectType());
-    }
+	GeneratorMicroTurbineHeatRecovery_Impl::GeneratorMicroTurbineHeatRecovery_Impl(const IdfObject& idfObject,
+		Model_Impl* model,
+		bool keepHandle)
+		: StraightComponent_Impl(idfObject, model, keepHandle)
+	{
+		OS_ASSERT(idfObject.iddObject().type() == GeneratorMicroTurbineHeatRecovery::iddObjectType());
+	}
 
-    GeneratorMicroTurbineHeatRecovery_Impl::GeneratorMicroTurbineHeatRecovery_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-      Model_Impl* model,
-      bool keepHandle)
-      : StraightComponent_Impl(other, model, keepHandle)
-    {
-      OS_ASSERT(other.iddObject().type() == GeneratorMicroTurbineHeatRecovery::iddObjectType());
-    }
+	GeneratorMicroTurbineHeatRecovery_Impl::GeneratorMicroTurbineHeatRecovery_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+		Model_Impl* model,
+		bool keepHandle)
+		: StraightComponent_Impl(other, model, keepHandle)
+	{
+		OS_ASSERT(other.iddObject().type() == GeneratorMicroTurbineHeatRecovery::iddObjectType());
+	}
 
-    GeneratorMicroTurbineHeatRecovery_Impl::GeneratorMicroTurbineHeatRecovery_Impl(const GeneratorMicroTurbineHeatRecovery_Impl& other,
-      Model_Impl* model,
-      bool keepHandle)
-      : StraightComponent_Impl(other, model, keepHandle)
-    {}
+	GeneratorMicroTurbineHeatRecovery_Impl::GeneratorMicroTurbineHeatRecovery_Impl(const GeneratorMicroTurbineHeatRecovery_Impl& other,
+		Model_Impl* model,
+		bool keepHandle)
+		: StraightComponent_Impl(other, model, keepHandle)
+	{}
 
-    const std::vector<std::string>& GeneratorMicroTurbineHeatRecovery_Impl::outputVariableNames() const
+	const std::vector<std::string>& GeneratorMicroTurbineHeatRecovery_Impl::outputVariableNames() const
+	{
+		static std::vector<std::string> result;
+		if (result.empty()){
+			result.push_back("Generator Produced Thermal Rate");
+      result.push_back("Generator Produced Thermal Energy");
+      result.push_back("Generator Thermal Efficiency LHV Basis");
+      result.push_back("Generator Heat Recovery Inlet Temperature");
+      result.push_back("Generator Heat Recovery Outlet Temperature");
+      result.push_back("Generator Heat Recovery Water Mass Flow Rate");
+		}
+		return result;
+	}
+
+	IddObjectType GeneratorMicroTurbineHeatRecovery_Impl::iddObjectType() const {
+		return GeneratorMicroTurbineHeatRecovery::iddObjectType();
+	}
+
+	// Clone
+	ModelObject GeneratorMicroTurbineHeatRecovery_Impl::clone(Model model) const
+	{
+		GeneratorMicroTurbineHeatRecovery newmCHPHR = ModelObject_Impl::clone(model).cast<GeneratorMicroTurbineHeatRecovery>();
+
+		return newmCHPHR;
+	}
+
+  std::vector<IddObjectType> GeneratorMicroTurbineHeatRecovery_Impl::allowableChildTypes() const
+  {
+    std::vector<IddObjectType> result;
+    result.push_back(IddObjectType::OS_Curve_Bicubic);
+		result.push_back(IddObjectType::OS_Curve_Biquadratic);
+		result.push_back(IddObjectType::OS_Curve_Cubic);
+		result.push_back(IddObjectType::OS_Curve_Quadratic);
+    return result;
+  }
+
+  std::vector<ModelObject> GeneratorMicroTurbineHeatRecovery_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+		
+		// TODO: Should I include curves? (share resource)
+
+    return result;
+  }
+
+	unsigned GeneratorMicroTurbineHeatRecovery_Impl::inletPort()
+	{
+		return OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterInletNodeName;
+	}
+
+	unsigned GeneratorMicroTurbineHeatRecovery_Impl::outletPort()
+	{
+		return OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterOutletNodeName;
+	}
+
+	// Add to plantLoop Node
+	bool  GeneratorMicroTurbineHeatRecovery_Impl::addToNode(Node & node)
+	{
+		if( boost::optional<PlantLoop> plant = node.plantLoop() )
     {
-      static std::vector<std::string> result;
-      if (result.empty()){
+      if( plant->supplyComponent(node.handle()) )
+      {
+        return StraightComponent_Impl::addToNode(node);
       }
-      return result;
     }
 
-    IddObjectType GeneratorMicroTurbineHeatRecovery_Impl::iddObjectType() const {
-      return GeneratorMicroTurbineHeatRecovery::iddObjectType();
-    }
-
-    // Add an implementation of StraightComponent_Impl?
-
-    // TODO: this is actually an optional... should I handle that explicitly?
-    unsigned GeneratorMicroTurbineHeatRecovery_Impl::inletPort()
-    {
-      return OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterInletNodeName;
-    }
-
-    unsigned GeneratorMicroTurbineHeatRecovery_Impl::outletPort()
-    {
-      return OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterOutletNodeName;
-    }
-
-    bool  GeneratorMicroTurbineHeatRecovery_Impl::addToNode(Node & node)
-    {
-      return false;
-    }
+    return false;
+	}
+	
 
   //boost::optional<Connection> GeneratorMicroTurbineHeatRecovery_Impl::heatRecoveryWaterInletNode() const {
   //  return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterInletNodeName);

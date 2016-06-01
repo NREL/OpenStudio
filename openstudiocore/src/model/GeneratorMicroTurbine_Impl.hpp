@@ -243,6 +243,14 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+			
+		ModelObject clone(Model model) const override;
+
+    std::vector<IddObjectType> allowableChildTypes() const override;
+
+    std::vector<ModelObject> children() const override;
+
+    bool addToNode(Node & node) override;
 
     //@}
    protected:

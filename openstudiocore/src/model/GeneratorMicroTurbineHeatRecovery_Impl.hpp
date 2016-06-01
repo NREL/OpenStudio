@@ -163,22 +163,20 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-    bool addToNode(Node & node) override;
+			
+		ModelObject clone(Model model) const override;
 
-    //ModelObject clone(Model model) const override;
+    std::vector<IddObjectType> allowableChildTypes() const override;
+
+    std::vector<ModelObject> children() const override;
+
+    bool addToNode(Node & node) override;
 
     //@}
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.GeneratorMicroTurbineHeatRecovery");
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    //boost::optional<Curve> optionalElectricalPowerFunctionofTemperatureandElevationCurve() const;
-    //boost::optional<Curve> optionalElectricalEfficiencyFunctionofTemperatureCurve() const;
-    //boost::optional<Curve> optionalElectricalEfficiencyFunctionofPartLoadRatioCurve() const;
   };
 
 } // detail
