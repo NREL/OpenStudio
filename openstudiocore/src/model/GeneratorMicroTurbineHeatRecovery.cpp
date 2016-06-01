@@ -96,7 +96,7 @@ namespace model {
 	// Clone
 	ModelObject GeneratorMicroTurbineHeatRecovery_Impl::clone(Model model) const
 	{
-		GeneratorMicroTurbineHeatRecovery newmCHPHR = ModelObject_Impl::clone(model).cast<GeneratorMicroTurbineHeatRecovery>();
+		GeneratorMicroTurbineHeatRecovery newmCHPHR = StraightComponent_Impl::clone(model).cast<GeneratorMicroTurbineHeatRecovery>();
 
 		return newmCHPHR;
 	}

@@ -19,6 +19,8 @@
 
 #include "GeneratorMicroTurbine.hpp"
 #include "GeneratorMicroTurbine_Impl.hpp"
+#include "GeneratorMicroTurbineHeatRecovery.hpp"
+#include "GeneratorMicroTurbineHeatRecovery_Impl.hpp"
 
 // Need model to check if curve is part of model when setting
 #include "Model.hpp"
@@ -156,7 +158,7 @@ namespace detail {
 	std::vector<ModelObject> GeneratorMicroTurbine_Impl::children() const
   {
     std::vector<ModelObject> result;
-    if(boost::optional<ModelObject> mo = generatorMicroTurbineHeatRecovery())
+    if(boost::optional<GeneratorMicroTurbineHeatRecovery> mo = generatorMicroTurbineHeatRecovery())
     {
       result.push_back(mo.get());
     }

@@ -250,8 +250,6 @@ namespace detail {
 
     std::vector<ModelObject> children() const override;
 
-    bool addToNode(Node & node) override;
-
     //@}
    protected:
    private:
