@@ -10,7 +10,7 @@ This is an example workflow included in this package as ```compact_osw``` under 
 
 ```
 cd path/to/Examples/compact_osw
-./path/to/openstudio.exe run -w compacw.ows
+./path/to/openstudio.exe run -w compact.osw
 ```
 
 The OpenStudio command line needs to access EnergyPlus. It will do this by first looking for the environment variable ENERGYPLUS_EXE_PATH, and then by looking in the standard EnergyPlus install location for the system.
