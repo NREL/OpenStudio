@@ -138,7 +138,7 @@ namespace detail {
 		// If there's a GeneratorMicroTurbineHeatRecovery, clone it as well
     if( boost::optional<ModelObject> mo = generatorMicroTurbineHeatRecovery_Impl() )
     {
-      newCHP.setGeneratorMicroTurbineHeatRecovery_Impl(mo->clone(model));
+      newCHP.setGeneratorMicroTurbine_Impl(mo->clone(model));
     }
 
     return newCHP;
