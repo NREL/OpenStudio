@@ -28,6 +28,8 @@
 
 #include "ModelEditorAPI.hpp"
 
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+
 #include "../utilities/idd/IddField.hpp"
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/Workspace_Impl.hpp"
@@ -89,7 +91,7 @@ class IGComboBox : public QComboBox
  * Choice is displayed as a ComboBox
  *
  */
-class MODELEDITOR_API InspectorGadget : public QWidget
+class MODELEDITOR_API InspectorGadget : public QWidget, Nano::Observer
 {
 
   Q_OBJECT
@@ -164,9 +166,7 @@ public:
 
   void setUnitSystem(const UNIT_SYSTEM unitSystem);
 
-  void onWorkspaceObjectRemoved(const openstudio::Handle &);
-
-  void workspaceObjectRemoved(const openstudio::Handle &);
+  void workspaceObjectRemoved(const openstudio::Handle &); // Moved to become regular function due to chaining
 
 public slots:
 
@@ -231,11 +231,6 @@ public slots:
 
   void setRecursive( bool recursive);
 
-  // void workspaceObjectRemoved(const openstudio::Handle &);
-
-
-  // void workspaceObjectRemoved(const openstudio::Handle &); // Slot function of same name -- evaluating 
-
  signals:
 
   void nameChanged(QString);
@@ -249,7 +244,7 @@ public slots:
    */
   void dirty();
 
-  
+  // void workspaceObjectRemoved(const openstudio::Handle &);
   
 
 protected slots:
@@ -258,7 +253,7 @@ protected slots:
 
   void onTimeout();
 
-  // void onWorkspaceObjectRemoved(const openstudio::Handle &);
+  void onWorkspaceObjectRemoved(const openstudio::Handle &);
 
 protected:
 

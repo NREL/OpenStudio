@@ -157,7 +157,7 @@ class Signal<RT(Args...)> : private Observer
 
     bool empty() const
     {
-        return Observer::isEmpty();
+        return Observer::ss_isEmpty();
     }
 
     void removeAll()

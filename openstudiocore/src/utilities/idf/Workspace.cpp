@@ -2303,8 +2303,9 @@ namespace detail {
 
   void Workspace_Impl::registerAdditionOfObject(const WorkspaceObject& object) {
     object.getImpl<WorkspaceObject_Impl>().get()->WorkspaceObject_Impl::onChange.connect<Workspace_Impl, &Workspace_Impl::change>(this);
+    auto sh_ptr = object.getImpl<WorkspaceObject_Impl>();
     this->addWorkspaceObject.nano_emit(object, object.iddObject().type(), object.handle());
-    this->addWorkspaceObjectPtr.nano_emit(object.getImpl<WorkspaceObject_Impl>(), object.iddObject().type(), object.handle());
+    this->addWorkspaceObjectPtr.nano_emit(sh_ptr, object.iddObject().type(), object.handle());
     this->onChange.nano_emit();
   }
 

@@ -1,4 +1,4 @@
-/**********************************************************************
+  /**********************************************************************
  *  Copyright (c) 2008-2016, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
@@ -53,7 +53,8 @@ namespace detail {
   /** Implementation of Workspace. Maintains object handles and relationships. Locks down
    *  relationship fields in its IdfObjects if possible. */
   class UTILITIES_API Workspace_Impl : public QObject,
-                                       public std::enable_shared_from_this<Workspace_Impl>
+                                       public std::enable_shared_from_this<Workspace_Impl>,
+                                       public Nano::Observer
   {
     Q_OBJECT;
    public:

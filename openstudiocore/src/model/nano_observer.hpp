@@ -12,13 +12,13 @@ class Observer
     template <typename T> friend class Signal;
 
     struct DelegateKeyObserver { DelegateKey delegate; Observer* observer; };
-    struct Node { DelegateKeyObserver data; Node* next; } *head = nullptr;
+    struct SSNode { DelegateKeyObserver data; SSNode* next; } *head = nullptr;
 
     //-----------------------------------------------------------PRIVATE METHODS
 
     void insert(DelegateKey const& key, Observer* ptr)
     {
-        head = new Node { { key, ptr }, head };
+        head = new SSNode { { key, ptr }, head };
     }
 
     void insert(DelegateKey const& key)
@@ -28,8 +28,8 @@ class Observer
 
     void remove(DelegateKey const& key)
     {
-        Node* node = head;
-        Node* prev = nullptr;
+        SSNode* node = head;
+        SSNode* prev = nullptr;
         // Only delete the first occurrence
         for ( ; node; prev = node, node = node->next)
         {
@@ -66,7 +66,7 @@ class Observer
         head = nullptr;
     }
 
-    bool isEmpty() const
+    bool ss_isEmpty() const
     {
         return head == nullptr;
     }
