@@ -75,6 +75,7 @@ namespace detail {
     // TODO: Check return type. From object lists, some candidates are: Connection.
     //boost::optional<Connection> heatRecoveryWaterOutletNode() const;
 
+    // TODO: I might need to make this one default to something that makes sense...
     double referenceThermalEfficiencyUsingLowerHeatValue() const;
     bool isReferenceThermalEfficiencyUsingLowerHeatValueDefaulted() const;
 

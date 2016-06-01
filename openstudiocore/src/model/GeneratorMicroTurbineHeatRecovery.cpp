@@ -342,6 +342,8 @@ GeneratorMicroTurbineHeatRecovery::GeneratorMicroTurbineHeatRecovery(const Model
   // Reference Thermal Efficiency Using Lower Heat Value has a default of 0 in E+ idd which isn't smart in this case
   // TODO Should I set it here, or change the .idd??
   // 0.4975 would be better
+  // Going with Kyle and Mark's way
+  setReferenceThermalEfficiencyUsingLowerHeatValue(0.4975)
 
   // Assign all values that are required but have no default
 
@@ -354,6 +356,7 @@ GeneratorMicroTurbineHeatRecovery::GeneratorMicroTurbineHeatRecovery(const Model
   // Maximum Heat Recovery Water Flow Rate: has a default value of 0 in E+.idd which isn't right in this case
   // TODO: Should I set it here or change default in .idd?
   // 0.003785432
+  // TODO: Or make it an optional and set it to the reference Heat recovery water flow rate times 1.5?
 
 
 

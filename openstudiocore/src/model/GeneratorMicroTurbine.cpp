@@ -30,6 +30,8 @@
 #include "CurveBiquadratic_Impl.hpp"
 #include "CurveCubic.hpp"
 #include "CurveCubic_Impl.hpp"
+#include "CurveQuadratic.hpp"
+#include "CurveQuadratic_Impl.hpp"
 
 #include "StraightComponent.hpp"
 #include "StraightComponent_Impl.hpp"
