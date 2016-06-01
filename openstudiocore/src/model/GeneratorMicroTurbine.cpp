@@ -138,8 +138,8 @@ namespace detail {
 		// If there's a GeneratorMicroTurbineHeatRecovery, clone it as well
     if( boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = generatorMicroTurbineHeatRecovery() )
     {
-			//GeneratorMicroTurbineHeatRecovery mchpHRClone = *mchpHR.clone(model).cast<GeneratorMicroTurbineHeatRecovery>();
-      newCHP.setGeneratorMicroTurbine(*mchpHR->clone(model));
+		  GeneratorMicroTurbineHeatRecovery mchpHRClone = mchpHR.get().clone(model).cast<GeneratorMicroTurbineHeatRecovery>();
+      newCHP.setGeneratorMicroTurbineHeatRecovery(mchpHRClone);
     }
 
     return newCHP;
@@ -165,10 +165,8 @@ namespace detail {
     }
 
 		// Should I include curves in there? Even now that then can be shared (resources)
-    if(CurveBiquadratic mo = electricalPowerFunctionofTemperatureandElevationCurve() )
-    {
-      result.push_back(mo.get());
-    }
+    Curve mo = electricalPowerFunctionofTemperatureandElevationCurve();
+    result.push_back(mo);
 
     return result;
   }
