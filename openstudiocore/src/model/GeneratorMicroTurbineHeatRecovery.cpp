@@ -50,54 +50,59 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  GeneratorMicroTurbineHeatRecovery_Impl::GeneratorMicroTurbineHeatRecovery_Impl(const IdfObject& idfObject,
-                                                         Model_Impl* model,
-                                                         bool keepHandle)
-    : StraightComponent_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == GeneratorMicroTurbineHeatRecovery::iddObjectType());
-  }
-
-  GeneratorMicroTurbineHeatRecovery_Impl::GeneratorMicroTurbineHeatRecovery_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                         Model_Impl* model,
-                                                         bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == GeneratorMicroTurbineHeatRecovery::iddObjectType());
-  }
-
-  GeneratorMicroTurbineHeatRecovery_Impl::GeneratorMicroTurbineHeatRecovery_Impl(const GeneratorMicroTurbineHeatRecovery_Impl& other,
-                                                         Model_Impl* model,
-                                                         bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& GeneratorMicroTurbineHeatRecovery_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result;
-    if (result.empty()){
+    GeneratorMicroTurbineHeatRecovery_Impl::GeneratorMicroTurbineHeatRecovery_Impl(const IdfObject& idfObject,
+      Model_Impl* model,
+      bool keepHandle)
+      : StraightComponent_Impl(idfObject, model, keepHandle)
+    {
+      OS_ASSERT(idfObject.iddObject().type() == GeneratorMicroTurbineHeatRecovery::iddObjectType());
     }
-    return result;
-  }
 
-  IddObjectType GeneratorMicroTurbineHeatRecovery_Impl::iddObjectType() const {
-    return GeneratorMicroTurbineHeatRecovery::iddObjectType();
-  }
-  
-  // Add an implementation of StraightComponent_Impl?
-  
-  // TODO: this is actually an optional... should I handle that explicitly?
-  unsigned GeneratorMicroTurbineHeatRecovery_Impl::inletPort()
-  {
-    return OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterInletNodeName;
-  }
+    GeneratorMicroTurbineHeatRecovery_Impl::GeneratorMicroTurbineHeatRecovery_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+      Model_Impl* model,
+      bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle)
+    {
+      OS_ASSERT(other.iddObject().type() == GeneratorMicroTurbineHeatRecovery::iddObjectType());
+    }
 
-  unsigned GeneratorMicroTurbineHeatRecovery_Impl::outletPort()
-  {
-    return OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterOutletNodeName;
-  }
+    GeneratorMicroTurbineHeatRecovery_Impl::GeneratorMicroTurbineHeatRecovery_Impl(const GeneratorMicroTurbineHeatRecovery_Impl& other,
+      Model_Impl* model,
+      bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle)
+    {}
+
+    const std::vector<std::string>& GeneratorMicroTurbineHeatRecovery_Impl::outputVariableNames() const
+    {
+      static std::vector<std::string> result;
+      if (result.empty()){
+      }
+      return result;
+    }
+
+    IddObjectType GeneratorMicroTurbineHeatRecovery_Impl::iddObjectType() const {
+      return GeneratorMicroTurbineHeatRecovery::iddObjectType();
+    }
+
+    // Add an implementation of StraightComponent_Impl?
+
+    // TODO: this is actually an optional... should I handle that explicitly?
+    unsigned GeneratorMicroTurbineHeatRecovery_Impl::inletPort()
+    {
+      return OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterInletNodeName;
+    }
+
+    unsigned GeneratorMicroTurbineHeatRecovery_Impl::outletPort()
+    {
+      return OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterOutletNodeName;
+    }
+
+    bool  GeneratorMicroTurbineHeatRecovery_Impl::addToNode(Node & node)
+    {
+      return false;
+    }
 
   //boost::optional<Connection> GeneratorMicroTurbineHeatRecovery_Impl::heatRecoveryWaterInletNode() const {
   //  return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterInletNodeName);

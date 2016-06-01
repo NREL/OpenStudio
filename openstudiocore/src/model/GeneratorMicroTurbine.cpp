@@ -30,6 +30,7 @@
 #include "CurveBiquadratic_Impl.hpp"
 #include "CurveCubic.hpp"
 #include "CurveCubic_Impl.hpp"
+#include "Schedule.hpp"
 
 #include "StraightComponent.hpp"
 #include "StraightComponent_Impl.hpp"
@@ -85,6 +86,32 @@ namespace detail {
 
   IddObjectType GeneratorMicroTurbine_Impl::iddObjectType() const {
     return GeneratorMicroTurbine::iddObjectType();
+  }
+
+  std::string GeneratorMicroTurbine_Impl::generatorObjectType() const
+  {
+    // translated to ElectricLoadCenter:Generators 'Generator Object Type'
+    return "Generator:MicroTurbine";
+  }
+
+  boost::optional<double> GeneratorMicroTurbine_Impl::ratedElectricPowerOutput() const
+  {
+    // translated to ElectricLoadCenter:Generators 'Generator Rated Electric Power Output'
+    return referenceElectricalPowerOutput();
+  }
+
+  boost::optional<Schedule> GeneratorMicroTurbine_Impl::availabilitySchedule() const
+  {
+    // translated to ElectricLoadCenter:Generators 'Generator Availability Schedule Name'
+    // DLM: this object should have an availability schedule, we need to add it to IDD
+    return boost::none;
+  }
+
+  boost::optional<double> GeneratorMicroTurbine_Impl::ratedThermalToElectricalPowerRatio() const
+  {
+    // translated to ElectricLoadCenter:Generators 'Generator Rated Thermal to Electrical Power Ratio'
+    //DLM: need to look into meaning of this field, is this heat recovery size divided by electrical power?
+    return boost::none;
   }
 
   double GeneratorMicroTurbine_Impl::referenceElectricalPowerOutput() const {
@@ -369,7 +396,7 @@ namespace detail {
     return result;
   }
 
-  bool GeneratorMicroTurbine_Impl::setFuelType(std::string fuelType) {
+  bool GeneratorMicroTurbine_Impl::setFuelType(const std::string& fuelType) {
     bool result = setString(OS_Generator_MicroTurbineFields::FuelType, fuelType);
     return result;
   }
@@ -830,7 +857,7 @@ bool GeneratorMicroTurbine::setElectricalEfficiencyFunctionofPartLoadRatioCurve(
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->setElectricalEfficiencyFunctionofPartLoadRatioCurve(curve);
 }
 
-bool GeneratorMicroTurbine::setFuelType(std::string fuelType) {
+bool GeneratorMicroTurbine::setFuelType(const std::string& fuelType) {
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->setFuelType(fuelType);
 }
 

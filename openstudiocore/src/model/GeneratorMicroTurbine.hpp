@@ -166,7 +166,7 @@ class MODEL_API GeneratorMicroTurbine : public Generator {
   // TODO: Check argument type. From object lists, some candidates are: QuadraticCubicCurves.
   bool setElectricalEfficiencyFunctionofPartLoadRatioCurve(const Curve& electricalEfficiencyFunctionofPartLoadRatioCurve);
 
-  bool setFuelType(std::string fuelType);
+  bool setFuelType(const std::string& fuelType);
   void resetFuelType();
 
   bool setFuelHigherHeatingValue(double fuelHigherHeatingValue);

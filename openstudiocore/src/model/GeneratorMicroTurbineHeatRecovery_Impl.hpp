@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODEL_GENERATORMICROTURBINE_IMPL_HPP
-#define MODEL_GENERATORMICROTURBINE_IMPL_HPP
+#ifndef MODEL_GENERATORMICROTURBINEHEATRECOVERY_IMPL_HPP
+#define MODEL_GENERATORMICROTURBINEHEATRECOVERY_IMPL_HPP
 
 #include "ModelAPI.hpp"
 #include "StraightComponent_Impl.hpp"
@@ -32,7 +32,7 @@ class Curve;
 namespace detail {
 
   class MODEL_API GeneratorMicroTurbineHeatRecovery_Impl : public StraightComponent_Impl {
-    Q_OBJECT;
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -62,6 +62,8 @@ namespace detail {
     virtual unsigned inletPort() override;
 
     virtual unsigned outletPort() override;
+
+    // DLM: consider reimplementing any other virtual methods of StraightComponent or HVACComponent
 
     //@}
     /** @name Getters */
@@ -183,5 +185,5 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_GENERATORMICROTURBINE_IMPL_HPP
+#endif // MODEL_GENERATORMICROTURBINEHEATRECOVERY_IMPL_HPP
 

@@ -56,10 +56,6 @@ class MODEL_API GeneratorMicroTurbineHeatRecovery : public StraightComponent {
   /** @name Getters */
   //@{
       
-  unsigned inletPort();
-
-  unsigned outletPort();
-
   // TODO: Check return type. From object lists, some candidates are: Connection.
   // boost::optional<Connection> heatRecoveryWaterInletNode() const;
 
@@ -72,7 +68,6 @@ class MODEL_API GeneratorMicroTurbineHeatRecovery : public StraightComponent {
   double referenceInletWaterTemperature() const;
 
   std::string heatRecoveryWaterFlowOperatingMode() const;
-
   bool isHeatRecoveryWaterFlowOperatingModeDefaulted() const;
 
   double referenceHeatRecoveryWaterFlowRate() const;

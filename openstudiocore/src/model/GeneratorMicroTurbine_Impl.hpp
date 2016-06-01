@@ -39,7 +39,7 @@ namespace detail {
 
   /** GeneratorMicroTurbine_Impl is a Generator_Impl that is the implementation class for GeneratorMicroTurbine.*/
   class MODEL_API GeneratorMicroTurbine_Impl : public Generator_Impl {
-    Q_OBJECT;
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -66,6 +66,14 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const;
 
+    virtual std::string generatorObjectType() const;
+
+    virtual boost::optional<double> ratedElectricPowerOutput() const;
+
+    virtual boost::optional<Schedule> availabilitySchedule() const;
+
+    virtual boost::optional<double> ratedThermalToElectricalPowerRatio() const;
+
     //@}
     /** @name Getters */
     //@{
@@ -76,8 +84,8 @@ namespace detail {
     bool isMinimumFullLoadElectricalPowerOutputDefaulted() const;
 
     // This will default to referenceElectricalPowerOutput if not defined, like E+ does
-		double maximumFullLoadElectricalPowerOutput() const;
-		bool isMaximumFullLoadElectricalPowerOutputDefaulted() const;
+    double maximumFullLoadElectricalPowerOutput() const;
+    bool isMaximumFullLoadElectricalPowerOutputDefaulted() const;
 
     double referenceElectricalEfficiencyUsingLowerHeatingValue() const;
     
@@ -174,7 +182,7 @@ namespace detail {
     // TODO: Check argument type. From object lists, some candidates are: QuadraticCubicCurves.
     bool setElectricalEfficiencyFunctionofPartLoadRatioCurve(const Curve& electricalEfficiencyFunctionofPartLoadRatioCurve);
 
-    bool setFuelType(std::string fuelType);
+    bool setFuelType(const std::string& fuelType);
     void resetFuelType();
 
     bool setFuelHigherHeatingValue(double fuelHigherHeatingValue);
