@@ -1539,7 +1539,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
       // MinLimitType
       auto minLimitType = airSystemOACtrlElement.firstChildElement("MinLimitType").text().toStdString();
-      oaController.setMinimumLimitType(minLimitType);
+      if( istringEqual(minLimitType,"Fixed") ) {
+        oaController.setMinimumLimitType("FixedMinimum");
+      } else if( istringEqual(minLimitType,"Proportional") ) {
+        oaController.setMinimumLimitType("ProportionalMinimum");
+      }
 
       // HtRcvryBypassCtrlType
       auto htRcvryBypassCtrlType = airSystemOACtrlElement.firstChildElement("HtRcvryBypassCtrlType").text().toStdString();
@@ -1744,8 +1748,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
           }
         } else if( istringEqual(tempCtrl,"Scheduled") ) {
           hx.setSupplyAirOutletTemperatureControl(true);
-          auto schRefElement = htRcvryElement.firstChildElement("TempSetPtSchRef");
-          auto schRef = escapeName(schRefElement.text());
+          auto schRef = htRcvryElement.firstChildElement("TempSetptSchRef").text().toStdString();
           auto sch = model.getModelObjectByName<model::Schedule>(schRef);
           if( sch ) {
             model::SetpointManagerScheduled spm(model,sch.get());
@@ -3125,7 +3128,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRc
   }
 
   // SupFlowRtd
-  auto supFlowRtdElement = element.firstChildElement("SupFlowRtd");
+  auto supFlowRtdElement = element.firstChildElement("SupFlowRtdSim");
   value = supFlowRtdElement.text().toDouble(&ok);
   if( ok ) {
     value = unitToUnit(value,"cfm","m^3/s").get();
@@ -3192,12 +3195,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRc
   auto auxPwrElement = element.firstChildElement("AuxPwr");
   value = auxPwrElement.text().toDouble(&ok);
   if( ok ) {
-    value = unitToUnit(value,"Btu/h","W").get();
     hx.setNominalElectricPower(value);
   }
 
   auto type = element.firstChildElement("Type").text().toStdString();
-  hx.setHeatExchangerType(type);
+  if( istringEqual(type,"Plate") ) {
+    hx.setHeatExchangerType("Plate");
+  } else if( istringEqual(type,"Wheel") ) {
+    hx.setHeatExchangerType("Rotary");
+  }
 
   auto defrostCtrl = element.firstChildElement("DefrostCtrl").text().toStdString();
   hx.setFrostControlType(defrostCtrl);
@@ -3222,10 +3228,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRc
 
   // EconoLockout
   auto econoLockout = element.firstChildElement("EconoLockout").text().toStdString();
-  if( istringEqual(econoLockout,"1") ) {
-    hx.setEconomizerLockout(true);
-  } else {
+  if( istringEqual(econoLockout,"No") ) {
     hx.setEconomizerLockout(false);
+  } else {
+    hx.setEconomizerLockout(true);
   }
 
   return hx;

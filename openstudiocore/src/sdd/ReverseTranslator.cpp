@@ -32,6 +32,8 @@
 #include "../model/AvailabilityManagerOptimumStart_Impl.hpp"
 #include "../model/AvailabilityManagerNightCycle.hpp"
 #include "../model/AvailabilityManagerNightCycle_Impl.hpp"
+#include "../model/HeatExchangerAirToAirSensibleAndLatent.hpp"
+#include "../model/HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
 #include "../model/Facility.hpp"
 #include "../model/Facility_Impl.hpp"
 #include "../model/Building.hpp"
@@ -1327,8 +1329,67 @@ namespace sdd {
         var = model::OutputVariable("Heating Coil Total Heating Rate",*result);
         var.setReportingFrequency(interval);
 
-        std::vector<model::AirLoopHVAC> airloops = result->getModelObjects<model::AirLoopHVAC>();
+        auto hxs = result->getModelObjects<model::HeatExchangerAirToAirSensibleAndLatent>();
+        for( auto & hx : hxs ) {
+          var = model::OutputVariable("Heat Exchanger Sensible Heating Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(hx.nameString());
+          var = model::OutputVariable("Heat Exchanger Latent Gain Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(hx.nameString());
+          var = model::OutputVariable("Heat Exchanger Total Heating Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(hx.nameString());
+          var = model::OutputVariable("Heat Exchanger Sensible Cooling Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(hx.nameString());
+          var = model::OutputVariable("Heat Exchanger Latent Cooling Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(hx.nameString());
+          var = model::OutputVariable("Heat Exchanger Total Cooling Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(hx.nameString());
+          var = model::OutputVariable("Heat Exchanger Electric Power",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(hx.nameString());
+          var = model::OutputVariable("Heat Exchanger Sensible Effectiveness",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(hx.nameString());
+          var = model::OutputVariable("Heat Exchanger Latent Effectiveness",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(hx.nameString());
+          var = model::OutputVariable("Heat Exchanger Supply Air Bypass Mass Flow Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(hx.nameString());
+          var = model::OutputVariable("Heat Exchanger Exhaust Air Bypass Mass Flow Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(hx.nameString());
+          var = model::OutputVariable("Heat Exchanger Defrost Time Fraction",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(hx.nameString());
 
+          if( auto node = hx.primaryAirOutletModelObject() ) {
+            var = model::OutputVariable("System Node Temperature",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(node->name().get());
+
+            var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(node->name().get());
+          }
+
+          if( auto node = hx.secondaryAirOutletModelObject() ) {
+            var = model::OutputVariable("System Node Temperature",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(node->name().get());
+
+            var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(node->name().get());
+          }
+        }
+
+        std::vector<model::AirLoopHVAC> airloops = result->getModelObjects<model::AirLoopHVAC>();
         for( auto & airloop : airloops)
         {
           var = model::OutputVariable("System Node Temperature",*result);
