@@ -217,8 +217,9 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   CurveQuadratic ancPFfuelInputCurve(model);
   mchp.setAncillaryPowerFunctionofFuelInputCurve(ancPFfuelInputCurve);
   ASSERT_TRUE(mchp.ancillaryPowerFunctionofFuelInputCurve());
-  boost::optional<Curve> setCurve = mchp.ancillaryPowerFunctionofFuelInputCurve();
-  EXPECT_EQ(ancPFfuelInputCurve.handle(), *setCurve->handle());;
+  if( boost::optional<Curve> setCurve = mchp.ancillaryPowerFunctionofFuelInputCurve() ) {
+    EXPECT_EQ(ancPFfuelInputCurve.handle(), *setCurve->handle());
+  }
 
   
   // Optional Generator:MicroTurbine:HeatRecovery
@@ -244,8 +245,11 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   CurveQuadratic exhaustAirFlowFT(model);
   mchp.setExhaustAirFlowRateFunctionofTemperatureCurve(exhaustAirFlowFT);
   ASSERT_TRUE(mchp.exhaustAirFlowRateFunctionofTemperatureCurve());
-  boost::optional<Curve> setCurve = mchp.exhaustAirFlowRateFunctionofTemperatureCurve();
-  EXPECT_EQ(exhaustAirFlowFT.handle(), *setCurve->handle());
+  if( boost::optional<Curve> setCurve = mchp.exhaustAirFlowRateFunctionofTemperatureCurve() ) {
+    EXPECT_EQ(exhaustAirFlowFT.handle(), *setCurve->handle());
+  }
+  
+  
   
 
   // A13, \field Exhaust Air Flow Rate Function of Part Load Ratio Curve Name
@@ -255,9 +259,10 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   CurveQuadratic exhaustAirFlowFPLR(model);
   mchp.setExhaustAirFlowRateFunctionofPartLoadRatioCurve(exhaustAirFlowFPLR);
   ASSERT_TRUE(mchp.exhaustAirFlowRateFunctionofPartLoadRatioCurve());
-  boost::optional<Curve> setCurve = mchp.exhaustAirFlowRateFunctionofPartLoadRatioCurve();
-  EXPECT_EQ(exhaustAirFlowFPLR.handle(), *setCurve->handle());
-  
+  if( boost::optional<Curve> setCurve = mchp.exhaustAirFlowRateFunctionofPartLoadRatioCurve() ) {
+    EXPECT_EQ(exhaustAirFlowFPLR.handle(), *setCurve->handle());
+  }
+
   
   // N13, \field Nominal Exhaust Air Outlet Temperature
   EXPECT_FALSE(mchp.nominalExhaustAirOutletTemperature());
@@ -271,8 +276,9 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   CurveQuadratic exhaustAirTempFPLR(model);
   mchp.setExhaustAirTemperatureFunctionofPartLoadRatioCurve(exhaustAirTempFPLR);
   ASSERT_TRUE(mchp.exhaustAirTemperatureFunctionofPartLoadRatioCurve());
-  boost::optional<Curve> setCurve = mchp.exhaustAirTemperatureFunctionofPartLoadRatioCurve();
-  EXPECT_EQ(exhaustAirTempFPLR.handle(), *setCurve->handle());  
+  if( boost::optional<Curve> setCurve = mchp.exhaustAirTemperatureFunctionofPartLoadRatioCurve() ) {
+    EXPECT_EQ(exhaustAirTempFPLR.handle(), *setCurve->handle());
+  }
   
 }
 
@@ -334,8 +340,9 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   CurveBiQuadratic hrWaterFlowFTP(model);
   mchpHR.setExhaustAirTemperatureFunctionofPartLoadRatioCurve(hrWaterFlowFTP);
   ASSERT_TRUE(mchpHR.heatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve());
-  boost::optional<Curve> setCurve = mchpHR.heatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve();
-  EXPECT_EQ(hrWaterFlowFTP.handle(), *setCurve->handle());  
+  if( boost::optional<Curve> setCurve = mchpHR.heatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve() ) {
+    EXPECT_EQ(hrWaterFlowFTP.handle(), *setCurve->handle());  
+  }
   
 
   // A7 , \field Thermal Efficiency Function of Temperature and Elevation Curve Name
@@ -345,8 +352,9 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   CurveBiQuadratic hrWaterFlowFTP(model);
   mchpHR.setThermalEfficiencyFunctionofTemperatureandElevationCurve(hrWaterFlowFTP);
   ASSERT_TRUE(mchpHR.thermalEfficiencyFunctionofTemperatureandElevationCurve());
-  boost::optional<Curve> setCurve = mchpHR.thermalEfficiencyFunctionofTemperatureandElevationCurve();
-  EXPECT_EQ(hrWaterFlowFTP.handle(), *setCurve->handle()); 
+  if( boost::optional<Curve> setCurve = mchpHR.thermalEfficiencyFunctionofTemperatureandElevationCurve() ) {
+    EXPECT_EQ(hrWaterFlowFTP.handle(), *setCurve->handle()); 
+  }  
   
   // A8 , \field Heat Recovery Rate Function of Part Load Ratio Curve Name
   // QuadraticCubicCurves, UniVariateTables
@@ -355,8 +363,10 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   CurveCubic hrRRWaterFlowFPLR(model);
   mchpHR.setHeatRecoveryRateFunctionofPartLoadRatioCurve(hrRRWaterFlowFPLR);
   ASSERT_TRUE(mchpHR.heatRecoveryRateFunctionofPartLoadRatioCurve());
-  boost::optional<Curve> setCurve = mchpHR.heatRecoveryRateFunctionofPartLoadRatioCurve();
-  EXPECT_EQ(hrRRWaterFlowFPLR.handle(), *setCurve->handle());   
+  if( boost::optional<Curve> setCurve = mchpHR.heatRecoveryRateFunctionofPartLoadRatioCurve() ) {
+    EXPECT_EQ(hrRRWaterFlowFPLR.handle(), *setCurve->handle());  
+  }
+    
   
   
   // A9 , \field Heat Recovery Rate Function of Inlet Water Temperature Curve Name
@@ -366,8 +376,10 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   CurveQuadratic hrRRFInletTemp(model);
   mchpHR.setHeatRecoveryRateFunctionofInletWaterTemperatureCurve(hrRRFInletTemp);
   ASSERT_TRUE(mchpHR.heatRecoveryRateFunctionofInletWaterTemperatureCurve());
-  boost::optional<Curve> setCurve = mchpHR.heatRecoveryRateFunctionofInletWaterTemperatureCurve();
-  EXPECT_EQ(hrRRFInletTemp.handle(), *setCurve->handle());
+  if( boost::optional<Curve> setCurve = mchpHR.heatRecoveryRateFunctionofInletWaterTemperatureCurve() ) {
+    EXPECT_EQ(hrRRFInletTemp.handle(), *setCurve->handle()); 
+  }
+  
   
   // A10, \field Heat Recovery Rate Function of Water Flow Rate Curve Name
   // QuadraticCurves, UniVariateTables.
@@ -376,8 +388,9 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   CurveQuadratic hrRRFWaterFlow(model);
   mchpHR.setHeatRecoveryRateFunctionofWaterFlowRateCurve(hrRRFWaterFlow);
   ASSERT_TRUE(mchpHR.heatRecoveryRateFunctionofWaterFlowRateCurve());
-  boost::optional<Curve> setCurve = mchpHR.heatRecoveryRateFunctionofWaterFlowRateCurve();
-  EXPECT_EQ(hrRRFWaterFlow.handle(), *setCurve->handle());
+  if( boost::optional<Curve> setCurve = mchpHR.heatRecoveryRateFunctionofWaterFlowRateCurve() ) {
+    EXPECT_EQ(hrRRFWaterFlow.handle(), *setCurve->handle()); 
+  }
  
  
   // N7, \field Minimum Heat Recovery Water Flow Rate
