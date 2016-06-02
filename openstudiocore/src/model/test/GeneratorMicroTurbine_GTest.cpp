@@ -67,7 +67,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
 
   // Reference Electrical Efficiency Using Lower Heating Value
   ASSERT_EQ(0.29, mchp.referenceElectricalEfficiencyUsingLowerHeatingValue());
-  mchp.setReferenceElectricalEfficiencyUsingLowerHeatingValue(0.35)
+  mchp.setReferenceElectricalEfficiencyUsingLowerHeatingValue(0.35);
   ASSERT_EQ(0.35, mchp.referenceElectricalEfficiencyUsingLowerHeatingValue());
   
   // Check that the curves have been properly defaulted
@@ -110,7 +110,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   
   // Test defaulted values
   EXPECT_FALSE(mchp.availabilitySchedule());
-  auto schedule = model.alwaysOnDiscreteSchedule();
+  Schedule schedule = model.alwaysOnDiscreteSchedule();
   EXPECT_TRUE(mchp.setAvailabilitySchedule(schedule));
   ASSERT_TRUE(mchp.availabilitySchedule());
   
@@ -125,7 +125,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   
   // Maximum Full Load Electrical Power Output => defaulted to referenceElectricalPowerOutput
   EXPECT_TRUE(mchp.isMaximumFullLoadElectricalPowerOutputDefaulted());
-  EXPECT_EQ(mchp.referenceElectricalPowerOutput, mchp.maximumFullLoadElectricalPowerOutput());
+  EXPECT_EQ(mchp.referenceElectricalPowerOutput(), mchp.maximumFullLoadElectricalPowerOutput());
   mchp.setMaximumFullLoadElectricalPowerOutput(55000);
   EXPECT_EQ(55000.0, mchp.maximumFullLoadElectricalPowerOutput());
   EXPECT_FALSE(mchp.isMaximumFullLoadElectricalPowerOutputDefaulted());
@@ -190,13 +190,13 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   
   // N10, \field Standby Power
   //   \default 0.0
-  EXPECT_TRUE(mchp.isStandByPowerDefaulted());
-  EXPECT_EQ(0.0, mchp.standByPower());
-  mchp.setStandByPower(10);
-  EXPECT_EQ(10.0, mchp.standByPower());
-  EXPECT_FALSE(mchp.isStandByPowerDefaulted());
-  mchp.resetStandByPower();
-  EXPECT_TRUE(mchp.isStandByPowerDefaulted());
+  EXPECT_TRUE(mchp.isStandbyPowerDefaulted());
+  EXPECT_EQ(0.0, mchp.StandbyPower());
+  mchp.setStandbyPower(10);
+  EXPECT_EQ(10.0, mchp.StandbyPower());
+  EXPECT_FALSE(mchp.isStandbyPowerDefaulted());
+  mchp.resetStandbyPower();
+  EXPECT_TRUE(mchp.isStandbyPowerDefaulted());
    
    
   // N11, \field Ancillary Power
