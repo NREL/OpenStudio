@@ -102,8 +102,8 @@ namespace detail {
       // </FuelType>
       result.push_back("Generator Fuel HHV Basis Rate");
       result.push_back("Generator Fuel HHV Basis Energy");
-			
-			// These are part of Generator:MicroTurbine:HeatRecovery
+      
+      // These are part of Generator:MicroTurbine:HeatRecovery
       // result.push_back("Generator Produced Thermal Rate");
       // result.push_back("Generator Produced Thermal Energy");
       // result.push_back("Generator Thermal Efficiency LHV Basis");
@@ -129,34 +129,34 @@ namespace detail {
     // translated to ElectricLoadCenter:Generators 'Generator Object Type'
     return "Generator:MicroTurbine";
   }
-	
-	// Add an implementation of StraightComponent_Impl?
-	ModelObject GeneratorMicroTurbine_Impl::clone(Model model) const
+  
+  // Add an implementation of StraightComponent_Impl?
+  ModelObject GeneratorMicroTurbine_Impl::clone(Model model) const
   {
     GeneratorMicroTurbine newCHP = ModelObject_Impl::clone(model).cast<GeneratorMicroTurbine>();
 
-		// If there's a GeneratorMicroTurbineHeatRecovery, clone it as well
+    // If there's a GeneratorMicroTurbineHeatRecovery, clone it as well
     if( boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = generatorMicroTurbineHeatRecovery() )
     {
-		  GeneratorMicroTurbineHeatRecovery mchpHRClone = mchpHR.get().clone(model).cast<GeneratorMicroTurbineHeatRecovery>();
+      GeneratorMicroTurbineHeatRecovery mchpHRClone = mchpHR.get().clone(model).cast<GeneratorMicroTurbineHeatRecovery>();
       newCHP.setGeneratorMicroTurbineHeatRecovery(mchpHRClone);
     }
 
     return newCHP;
   }
-	
-	// Return allowable child types: curves and Generator:MicroTurbine
-	std::vector<IddObjectType> GeneratorMicroTurbine_Impl::allowableChildTypes() const
+  
+  // Return allowable child types: curves and Generator:MicroTurbine
+  std::vector<IddObjectType> GeneratorMicroTurbine_Impl::allowableChildTypes() const
   {
     std::vector<IddObjectType> result;
     result.push_back(IddObjectType::OS_Generator_MicroTurbine_HeatRecovery);
-		result.push_back(IddObjectType::OS_Curve_Biquadratic);
-		result.push_back(IddObjectType::OS_Curve_Cubic);
-		result.push_back(IddObjectType::OS_Curve_Quadratic);
+    result.push_back(IddObjectType::OS_Curve_Biquadratic);
+    result.push_back(IddObjectType::OS_Curve_Cubic);
+    result.push_back(IddObjectType::OS_Curve_Quadratic);
     return result;
   }
-	
-	std::vector<ModelObject> GeneratorMicroTurbine_Impl::children() const
+  
+  std::vector<ModelObject> GeneratorMicroTurbine_Impl::children() const
   {
     std::vector<ModelObject> result;
     if(boost::optional<GeneratorMicroTurbineHeatRecovery> mo = generatorMicroTurbineHeatRecovery())
@@ -164,7 +164,7 @@ namespace detail {
       result.push_back(mo.get());
     }
 
-		// Should I include curves in there? Even now that then can be shared (resources)
+    // Should I include curves in there? Even now that then can be shared (resources)
     Curve mo = electricalPowerFunctionofTemperatureandElevationCurve();
     result.push_back(mo);
 

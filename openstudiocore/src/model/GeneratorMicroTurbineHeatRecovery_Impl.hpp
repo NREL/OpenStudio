@@ -163,8 +163,8 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-			
-		ModelObject clone(Model model) const override;
+      
+    ModelObject clone(Model model) const override;
 
     std::vector<IddObjectType> allowableChildTypes() const override;
 

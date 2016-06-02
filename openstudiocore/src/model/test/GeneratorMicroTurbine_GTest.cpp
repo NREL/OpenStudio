@@ -496,7 +496,7 @@ TEST_F(ModelFixture,GeneratorMicroTurbine_Clone)
 }
 
 
-TEST_F(ModelFixture,Generator_MicroTurbine_HeatRecovery_addToNode) {
+TEST_F(ModelFixture,GeneratorMicroTurbine_HeatRecovery_addToNode) {
   Model model;
   
   GeneratorMicroTurbineHeatRecovery mchpHR = GeneratorMicroTurbineHeatRecovery(model);
