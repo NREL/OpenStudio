@@ -404,7 +404,7 @@ GeneratorMicroTurbineHeatRecovery::GeneratorMicroTurbineHeatRecovery(const Model
 }
 
 IddObjectType GeneratorMicroTurbineHeatRecovery::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_Generator_MicroTurbine);
+  return IddObjectType(IddObjectType::OS_Generator_MicroTurbine_HeatRecovery);
 }
 
 std::vector<std::string> GeneratorMicroTurbineHeatRecovery::validHeatRecoveryWaterFlowOperatingModeValues() {
