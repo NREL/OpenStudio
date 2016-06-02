@@ -22,8 +22,6 @@
 #include <model/test/ModelFixture.hpp>
 
 #include "../Model.hpp"
-#include "../Node.hpp"
-#include "../Node_Impl.hpp"
 
 // Need the Generator:MicroTurbine, the Generator:MicroTurbine:HeatRecovery and an ElectricalLoadCenterDistribution object
 #include "../GeneratorMicroTurbine.hpp"
@@ -43,8 +41,13 @@
 #include "../CurveQuadratic_Impl.hpp"
 
 
-// PlantLoop for Heat Recovery module
+
+// PlantLoop and Node for Heat Recovery module (and AirLoop to make sure you can't put it on one)
+#include "../AirLoopHVAC.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
 #include "../PlantLoop.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
 
 
 using namespace openstudio;
@@ -310,12 +313,9 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
 
   // N2 , \field Reference Inlet Water Temperature = 60 in constructor
   // boost::optional<double> referenceInletWaterTemperature() const;
-  EXPECT_TRUE(mchpHR.referenceInletWaterTemperature());
+  EXPECT_EQ(60.0, mchpHR.referenceInletWaterTemperature());
   mchpHR.setReferenceInletWaterTemperature(65);
-  boost::optional<double> refEWT = mchpHR.referenceInletWaterTemperature();
-  EXPECT_EQ((*refEWT),65);
-  mchpHR.resetReferenceInletWaterTemperature();
-  EXPECT_FALSE(mchpHR.referenceInletWaterTemperature());
+  EXPECT_EQ(65.0, mchpHR.referenceInletWaterTemperature());
   
 
   // A5 , \field Heat Recovery Water Flow Operating Mode
@@ -350,7 +350,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   // \object-list BicubicBiquadraticCurves, BiVariateTables
   // boost::optional<Curve> thermalEfficiencyFunctionofTemperatureandElevationCurve() const;
   EXPECT_FALSE(mchpHR.thermalEfficiencyFunctionofTemperatureandElevationCurve());
-  CurveBiQuadratic hrEffFTempElev(model);
+  CurveBiquadratic hrEffFTempElev(model);
   mchpHR.setThermalEfficiencyFunctionofTemperatureandElevationCurve(hrEffFTempElev);
   ASSERT_TRUE(mchpHR.thermalEfficiencyFunctionofTemperatureandElevationCurve());
   if( boost::optional<Curve> setCurve = mchpHR.thermalEfficiencyFunctionofTemperatureandElevationCurve() ) {
@@ -424,10 +424,9 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   mchp.setGeneratorMicroTurbineHeatRecovery(mchpHR);
   ASSERT_TRUE(mchp.generatorMicroTurbineHeatRecovery());
   boost::optional<GeneratorMicroTurbineHeatRecovery> setmchpHR = mchp.generatorMicroTurbineHeatRecovery();
-  EXPECT_EQ(mchpHR.handle(), *setmchpHR.handle()) 
+  EXPECT_EQ(mchpHR.handle(), setmchpHR->handle());
   mchp.resetGeneratorMicroTurbineHeatRecovery();
   ASSERT_FALSE(mchp.generatorMicroTurbineHeatRecovery());
-  
 }
 
 
@@ -475,17 +474,24 @@ TEST_F(ModelFixture,GeneratorMicroTurbine_Clone)
 	GeneratorMicroTurbine  mchpClone1 = mchp.clone(model).cast<GeneratorMicroTurbine>();
 	ASSERT_TRUE(mchpClone1.generatorMicroTurbineHeatRecovery());
 	// Make sure it's not just pointing to the same one
-  boost::optional<Curve> mchpHRclone = mchpClone1.generatorMicroTurbineHeatRecovery();
-  EXPECT_FALSE(mchpHR.handle(), *mchpHRclone.handle())
+  boost::optional<GeneratorMicroTurbine> mchpHRclone = mchpClone1.generatorMicroTurbineHeatRecovery();
+  EXPECT_FALSE(mchpHR.handle(), mchpHRclone->handle());
 	
 	
   //Clone into another model
   Model model2;
-  GeneratorMicroTurbine  mchpClone2 = coil.clone(model2).cast<GeneratorMicroTurbine>();
+  GeneratorMicroTurbine  mchpClone2 = mchp.clone(model2).cast<GeneratorMicroTurbine>();
 
+  // Check that curves have been carried with it
   ASSERT_EQ(1,mchpClone2.electricalPowerFunctionofTemperatureandElevationCurve().cast<CurveBiquadratic>().coefficient1Constant());
   ASSERT_EQ(2,mchpClone2.electricalEfficiencyFunctionofTemperatureCurve().cast<CurveCubic>().coefficient1Constant());
   ASSERT_EQ(3,mchpClone2.electricalEfficiencyFunctionofPartLoadRatioCurve().cast<CurveCubic>().coefficient1Constant());
+  
+  // Check that the heatRecovery module has been clone into the model too
+  ASSERT_TRUE(mchpClone2.generatorMicroTurbineHeatRecovery());
+	// Make sure it's not just pointing to the same one
+  boost::optional<GeneratorMicroTurbine> mchpHRclone = mchpClone1.generatorMicroTurbineHeatRecovery();
+  EXPECT_FALSE(mchpHR.handle(), mchpHRclone->handle());
   
 }
 
