@@ -191,9 +191,9 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   // N10, \field Standby Power
   //   \default 0.0
   EXPECT_TRUE(mchp.isStandbyPowerDefaulted());
-  EXPECT_EQ(0.0, mchp.StandbyPower());
+  EXPECT_EQ(0.0, mchp.standbyPower());
   mchp.setStandbyPower(10);
-  EXPECT_EQ(10.0, mchp.StandbyPower());
+  EXPECT_EQ(10.0, mchp.standbyPower());
   EXPECT_FALSE(mchp.isStandbyPowerDefaulted());
   mchp.resetStandbyPower();
   EXPECT_TRUE(mchp.isStandbyPowerDefaulted());
@@ -217,7 +217,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   mchp.setAncillaryPowerFunctionofFuelInputCurve(ancPFfuelInputCurve);
   ASSERT_TRUE(mchp.ancillaryPowerFunctionofFuelInputCurve());
   boost::optional<Curve> curve = mchp.ancillaryPowerFunctionofFuelInputCurve();
-  EXPECT_EQ(ancPFfuelInputCurve.handle(), *curve.handle())
+  EXPECT_EQ(ancPFfuelInputCurve.handle(), *curve->handle());;
 
   
   // Optional Generator:MicroTurbine:HeatRecovery
@@ -244,7 +244,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   mchp.setExhaustAirFlowRateFunctionofTemperatureCurve(exhaustAirFlowFT);
   ASSERT_TRUE(mchp.exhaustAirFlowRateFunctionofTemperatureCurve());
   boost::optional<Curve> curve = mchp.exhaustAirFlowRateFunctionofTemperatureCurve();
-  EXPECT_EQ(exhaustAirFlowFT.handle(), *curve.handle())
+  EXPECT_EQ(exhaustAirFlowFT.handle(), *curve->handle());
   
 
   // A13, \field Exhaust Air Flow Rate Function of Part Load Ratio Curve Name
@@ -255,7 +255,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   mchp.setExhaustAirFlowRateFunctionofPartLoadRatioCurve(exhaustAirFlowFPLR);
   ASSERT_TRUE(mchp.exhaustAirFlowRateFunctionofPartLoadRatioCurve());
   boost::optional<Curve> curve = mchp.exhaustAirFlowRateFunctionofPartLoadRatioCurve();
-  EXPECT_EQ(exhaustAirFlowFPLR.handle(), *curve.handle())
+  EXPECT_EQ(exhaustAirFlowFPLR.handle(), *curve->handle());
   
   
   // N13, \field Nominal Exhaust Air Outlet Temperature
@@ -271,7 +271,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   mchp.setExhaustAirTemperatureFunctionofPartLoadRatioCurve(exhaustAirTempFPLR);
   ASSERT_TRUE(mchp.exhaustAirTemperatureFunctionofPartLoadRatioCurve());
   boost::optional<Curve> curve = mchp.exhaustAirTemperatureFunctionofPartLoadRatioCurve();
-  EXPECT_EQ(exhaustAirTempFPLR.handle(), *curve.handle())  
+  EXPECT_EQ(exhaustAirTempFPLR.handle(), *curve->handle());  
   
 }
 
@@ -334,7 +334,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   mchpHR.setExhaustAirTemperatureFunctionofPartLoadRatioCurve(hrWaterFlowFTP);
   ASSERT_TRUE(mchpHR.heatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve());
   boost::optional<Curve> curve = mchpHR.heatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve();
-  EXPECT_EQ(hrWaterFlowFTP.handle(), *curve.handle())  
+  EXPECT_EQ(hrWaterFlowFTP.handle(), *curve->handle());  
   
 
   // A7 , \field Thermal Efficiency Function of Temperature and Elevation Curve Name
@@ -345,7 +345,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   mchpHR.setThermalEfficiencyFunctionofTemperatureandElevationCurve(hrWaterFlowFTP);
   ASSERT_TRUE(mchpHR.thermalEfficiencyFunctionofTemperatureandElevationCurve());
   boost::optional<Curve> curve = mchpHR.thermalEfficiencyFunctionofTemperatureandElevationCurve();
-  EXPECT_EQ(hrWaterFlowFTP.handle(), *curve.handle()) 
+  EXPECT_EQ(hrWaterFlowFTP.handle(), *curve->handle()); 
   
   // A8 , \field Heat Recovery Rate Function of Part Load Ratio Curve Name
   // QuadraticCubicCurves, UniVariateTables
@@ -355,7 +355,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   mchpHR.setHeatRecoveryRateFunctionofPartLoadRatioCurve(hrRRWaterFlowFPLR);
   ASSERT_TRUE(mchpHR.heatRecoveryRateFunctionofPartLoadRatioCurve());
   boost::optional<Curve> curve = mchpHR.heatRecoveryRateFunctionofPartLoadRatioCurve();
-  EXPECT_EQ(hrRRWaterFlowFPLR.handle(), *curve.handle())   
+  EXPECT_EQ(hrRRWaterFlowFPLR.handle(), *curve->handle());   
   
   
   // A9 , \field Heat Recovery Rate Function of Inlet Water Temperature Curve Name
@@ -366,7 +366,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   mchpHR.setHeatRecoveryRateFunctionofInletWaterTemperatureCurve(hrRRFInletTemp);
   ASSERT_TRUE(mchpHR.heatRecoveryRateFunctionofInletWaterTemperatureCurve());
   boost::optional<Curve> curve = mchpHR.heatRecoveryRateFunctionofInletWaterTemperatureCurve();
-  EXPECT_EQ(hrRRFInletTemp.handle(), *curve.handle())
+  EXPECT_EQ(hrRRFInletTemp.handle(), *curve->handle());
   
   // A10, \field Heat Recovery Rate Function of Water Flow Rate Curve Name
   // QuadraticCurves, UniVariateTables.
@@ -376,7 +376,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   mchpHR.setHeatRecoveryRateFunctionofWaterFlowRateCurve(hrRRFWaterFlow);
   ASSERT_TRUE(mchpHR.heatRecoveryRateFunctionofWaterFlowRateCurve());
   boost::optional<Curve> curve = mchpHR.heatRecoveryRateFunctionofWaterFlowRateCurve();
-  EXPECT_EQ(hrRRFWaterFlow.handle(), *curve.handle())
+  EXPECT_EQ(hrRRFWaterFlow.handle(), *curve->handle());
  
  
   // N7, \field Minimum Heat Recovery Water Flow Rate
