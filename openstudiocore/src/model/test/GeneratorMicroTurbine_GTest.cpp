@@ -466,18 +466,18 @@ TEST_F(ModelFixture,GeneratorMicroTurbine_Clone)
   ASSERT_EQ(2,mchpClone.electricalEfficiencyFunctionofTemperatureCurve().cast<CurveCubic>().coefficient1Constant());
   ASSERT_EQ(3,mchpClone.electricalEfficiencyFunctionofPartLoadRatioCurve().cast<CurveCubic>().coefficient1Constant());
 
-	// Add a MicroTurbine:HeatRecovery and clone again
-	GeneratorMicroTurbineHeatRecovery mchpHR = GeneratorMicroTurbineHeatRecovery(model);
-	mchp.setGeneratorMicroTurbineHeatRecovery(mchpHR);
-	
-	// Clone in same model and verify that the mCHPHR is also cloned
-	GeneratorMicroTurbine  mchpClone1 = mchp.clone(model).cast<GeneratorMicroTurbine>();
-	ASSERT_TRUE(mchpClone1.generatorMicroTurbineHeatRecovery());
-	// Make sure it's not just pointing to the same one
-  boost::optional<GeneratorMicroTurbine> mchpHRclone = mchpClone1.generatorMicroTurbineHeatRecovery();
-  EXPECT_FALSE(mchpHR.handle(), mchpHRclone->handle());
-	
-	
+  // Add a MicroTurbine:HeatRecovery and clone again
+  GeneratorMicroTurbineHeatRecovery mchpHR = GeneratorMicroTurbineHeatRecovery(model);
+  mchp.setGeneratorMicroTurbineHeatRecovery(mchpHR);
+  
+  // Clone in same model and verify that the mCHPHR is also cloned
+  GeneratorMicroTurbine  mchpClone1 = mchp.clone(model).cast<GeneratorMicroTurbine>();
+  ASSERT_TRUE(mchpClone1.generatorMicroTurbineHeatRecovery());
+  // Make sure it's not just pointing to the same one
+  boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHRclone = mchpClone1.generatorMicroTurbineHeatRecovery();
+  EXPECT_NE(mchpHR.handle(), mchpHRclone->handle());
+  
+  
   //Clone into another model
   Model model2;
   GeneratorMicroTurbine  mchpClone2 = mchp.clone(model2).cast<GeneratorMicroTurbine>();
@@ -489,17 +489,17 @@ TEST_F(ModelFixture,GeneratorMicroTurbine_Clone)
   
   // Check that the heatRecovery module has been clone into the model too
   ASSERT_TRUE(mchpClone2.generatorMicroTurbineHeatRecovery());
-	// Make sure it's not just pointing to the same one
-  boost::optional<GeneratorMicroTurbine> mchpHRclone = mchpClone1.generatorMicroTurbineHeatRecovery();
-  EXPECT_FALSE(mchpHR.handle(), mchpHRclone->handle());
+  // Make sure it's not just pointing to the same one
+  boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHRclone2 = mchpClone1.generatorMicroTurbineHeatRecovery();
+  EXPECT_NE(mchpHR.handle(), mchpHRclone2->handle());
   
 }
 
 
 TEST_F(ModelFixture,Generator_MicroTurbine_HeatRecovery_addToNode) {
   Model model;
-	
-	GeneratorMicroTurbineHeatRecovery mchpHR = GeneratorMicroTurbineHeatRecovery(model);
+  
+  GeneratorMicroTurbineHeatRecovery mchpHR = GeneratorMicroTurbineHeatRecovery(model);
 
   AirLoopHVAC airLoop = AirLoopHVAC(model);
 
@@ -510,7 +510,7 @@ TEST_F(ModelFixture,Generator_MicroTurbine_HeatRecovery_addToNode) {
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
-  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_FALSE(mchpHR.addToNode(inletNode));
   EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
 
   PlantLoop plantLoop(model);
@@ -523,8 +523,6 @@ TEST_F(ModelFixture,Generator_MicroTurbine_HeatRecovery_addToNode) {
   EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
 
   GeneratorMicroTurbineHeatRecovery mchpHRClone = mchpHR.clone(model).cast<GeneratorMicroTurbineHeatRecovery>();
-  mchpHRClone = plantLoop.supplyOutletNode();
-
   EXPECT_TRUE(mchpHRClone.addToNode(supplyOutletNode));
   EXPECT_EQ( (unsigned)9, plantLoop.supplyComponents().size() );
 }
