@@ -131,7 +131,7 @@ HVACSystemsController::HVACSystemsController(bool isIP, const model::Model & mod
 
   m_model.getImpl<model::detail::Model_Impl>().get()->model::detail::Model_Impl::removeWorkspaceObject.connect<HVACSystemsController, &HVACSystemsController::onObjectRemoved>(this);
 
-   
+  connect(m_hvacSystemsView->hvacToolbarView->addButton, &QPushButton::clicked, this, &HVACSystemsController::onAddSystemClicked);
 
   connect(m_hvacSystemsView->hvacToolbarView->deleteButton, &QPushButton::clicked, this, &HVACSystemsController::onRemoveLoopClicked);
 
