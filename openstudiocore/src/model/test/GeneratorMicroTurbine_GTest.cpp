@@ -104,7 +104,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
     elecEffFPLR.setCoefficient1Constant(3);
     elecEffFPLR.setCoefficient2x(0.3);
     elecEffFPLR.setCoefficient3xPOW2(0.03);
-    mchp.setElectricalEfficiencyFunctionofTemperatureCurve(elecEffFPLR);
+    mchp.setElectricalEfficiencyFunctionofPartLoadRatioCurve(elecEffFPLR);
     
   // Verify the setter
   ASSERT_EQ(1,mchp.electricalPowerFunctionofTemperatureandElevationCurve().cast<CurveBiquadratic>().coefficient1Constant());
@@ -138,7 +138,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   
   // Reference Combustion Air Inlet Temperature defaults to 15
   EXPECT_TRUE(mchp.isReferenceCombustionAirInletTemperatureDefaulted());
-  EXPECT_EQ(18.0, mchp.referenceCombustionAirInletTemperature());
+  EXPECT_EQ(15.0, mchp.referenceCombustionAirInletTemperature());
   mchp.setReferenceCombustionAirInletTemperature(18);
   EXPECT_EQ(18.0, mchp.referenceCombustionAirInletTemperature());
   EXPECT_FALSE(mchp.isReferenceCombustionAirInletTemperatureDefaulted());
@@ -303,7 +303,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
  
   //N1 , \field Reference Thermal Efficiency Using Lower Heat Value
   //  \default 0.0 but overriden in construction to 0.4975
-  EXPECT_TRUE(mchpHR.isReferenceThermalEfficiencyUsingLowerHeatValueDefaulted());
+  EXPECT_FALSE(mchpHR.isReferenceThermalEfficiencyUsingLowerHeatValueDefaulted());
   EXPECT_EQ(0.4975, mchpHR.referenceThermalEfficiencyUsingLowerHeatValue());
   mchpHR.setReferenceThermalEfficiencyUsingLowerHeatValue(0.5);
   EXPECT_EQ(0.5, mchpHR.referenceThermalEfficiencyUsingLowerHeatValue());
@@ -400,7 +400,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   mchpHR.setMinimumHeatRecoveryWaterFlowRate(0.001);
   EXPECT_EQ(0.001, mchpHR.minimumHeatRecoveryWaterFlowRate());
   EXPECT_FALSE(mchpHR.isMinimumHeatRecoveryWaterFlowRateDefaulted());
-  mchpHR.resetHeatRecoveryWaterFlowOperatingMode();
+  mchpHR.resetMinimumHeatRecoveryWaterFlowRate();
   EXPECT_TRUE(mchpHR.isMinimumHeatRecoveryWaterFlowRateDefaulted());
  
   // N8, \field Maximum Heat Recovery Water Flow Rate
@@ -410,7 +410,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery) {
   mchpHR.setMaximumHeatRecoveryWaterFlowRate(0.003);
   EXPECT_EQ(0.003, mchpHR.maximumHeatRecoveryWaterFlowRate());
   EXPECT_FALSE(mchpHR.isMaximumHeatRecoveryWaterFlowRateDefaulted());
-  mchpHR.resetHeatRecoveryWaterFlowOperatingMode();
+  mchpHR.resetMaximumHeatRecoveryWaterFlowRate();
   EXPECT_TRUE(mchpHR.isMaximumHeatRecoveryWaterFlowRateDefaulted());
   
   //  N9; \field Maximum Heat Recovery Water Temperature
@@ -455,7 +455,7 @@ TEST_F(ModelFixture,GeneratorMicroTurbine_Clone)
     elecEffFPLR.setCoefficient1Constant(3);
     elecEffFPLR.setCoefficient2x(0.3);
     elecEffFPLR.setCoefficient3xPOW2(0.03);
-    mchp.setElectricalEfficiencyFunctionofTemperatureCurve(elecEffFPLR);
+    mchp.setElectricalEfficiencyFunctionofPartLoadRatioCurve(elecEffFPLR);
     
   // Verify the setter is already done above...
   

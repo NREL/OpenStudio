@@ -52,6 +52,7 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Generator_MicroTurbine_FieldEnums.hxx>
+#include <utilities/idd/OS_Generator_MicroTurbine_HeatRecovery_FieldEnums.hxx>
 
 #include "../utilities/units/Unit.hpp"
 
@@ -130,7 +131,6 @@ namespace detail {
     return "Generator:MicroTurbine";
   }
   
-  // Add an implementation of StraightComponent_Impl?
   ModelObject GeneratorMicroTurbine_Impl::clone(Model model) const
   {
     GeneratorMicroTurbine newCHP = ModelObject_Impl::clone(model).cast<GeneratorMicroTurbine>();
@@ -745,7 +745,7 @@ GeneratorMicroTurbine::GeneratorMicroTurbine(const Model& model)
   elecEffFPLR.setCoefficient4xPOW3(1.497306);
   elecEffFPLR.setMinimumValueofx(0.03);
   elecEffFPLR.setMaximumValueofx(1.0);
-  setElectricalEfficiencyFunctionofTemperatureCurve(elecEffFPLR);
+  setElectricalEfficiencyFunctionofPartLoadRatioCurve(elecEffFPLR);
 }
 
 IddObjectType GeneratorMicroTurbine::iddObjectType() {
