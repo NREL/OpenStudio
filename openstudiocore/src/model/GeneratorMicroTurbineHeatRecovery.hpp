@@ -116,7 +116,7 @@ class MODEL_API GeneratorMicroTurbineHeatRecovery : public StraightComponent {
   void resetHeatRecoveryWaterFlowOperatingMode();
 
   bool setReferenceHeatRecoveryWaterFlowRate(double referenceHeatRecoveryWaterFlowRate);
-  void resetReferenceHeatRecoveryWaterFlowRate();
+  //void resetReferenceHeatRecoveryWaterFlowRate();
 
   // TODO: Check argument type. From object lists, some candidates are: BiquadraticCurves, BiVariateTables.
   bool setHeatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve(const Curve& heatRecoveryWaterFlowRateFunctionofTemperatureandPowerCurve);
