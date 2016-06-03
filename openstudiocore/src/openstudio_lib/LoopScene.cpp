@@ -68,7 +68,7 @@ void LoopScene::initDefault()
 
 void LoopScene::layout()
 {
-  if( m_dirty && m_loop.handle() != nullptr )
+  if( m_dirty && !m_loop.handle().isNull() )
   {
     QList<QGraphicsItem *> itemList = items();
     for( QList<QGraphicsItem *>::iterator it = itemList.begin(); 

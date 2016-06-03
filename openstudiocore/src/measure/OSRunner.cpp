@@ -778,8 +778,8 @@ void OSRunner::resetLastOpenStudioModel()
 
 void OSRunner::setLastOpenStudioModelPath(const openstudio::path& lastOpenStudioModelPath)
 {
-  if (boost::filesystem::exists(lastOpenStudioModelPath)){
-    m_lastOpenStudioModelPath = boost::filesystem::canonical(lastOpenStudioModelPath);
+  if (openstudio::filesystem::exists(lastOpenStudioModelPath)){
+    m_lastOpenStudioModelPath = openstudio::filesystem::canonical(lastOpenStudioModelPath);
   }else{
     m_lastOpenStudioModelPath = lastOpenStudioModelPath;
   }
@@ -806,8 +806,8 @@ void OSRunner::resetLastEnergyPlusWorkspace()
 
 void OSRunner::setLastEnergyPlusWorkspacePath(const openstudio::path& lastEnergyPlusWorkspacePath)
 {
-  if (boost::filesystem::exists(lastEnergyPlusWorkspacePath)){
-    m_lastEnergyPlusWorkspacePath = boost::filesystem::canonical(lastEnergyPlusWorkspacePath);
+  if (openstudio::filesystem::exists(lastEnergyPlusWorkspacePath)){
+    m_lastEnergyPlusWorkspacePath = openstudio::filesystem::canonical(lastEnergyPlusWorkspacePath);
   }else{
     m_lastEnergyPlusWorkspacePath = lastEnergyPlusWorkspacePath;
   }
@@ -822,8 +822,8 @@ void OSRunner::resetLastEnergyPlusWorkspacePath()
 
 void OSRunner::setLastEnergyPlusSqlFilePath(const openstudio::path& lastEnergyPlusSqlFilePath)
 {
-  if (boost::filesystem::exists(lastEnergyPlusSqlFilePath)){
-    m_lastEnergyPlusSqlFilePath = boost::filesystem::canonical(lastEnergyPlusSqlFilePath);
+  if (openstudio::filesystem::exists(lastEnergyPlusSqlFilePath)){
+    m_lastEnergyPlusSqlFilePath = openstudio::filesystem::canonical(lastEnergyPlusSqlFilePath);
   }else{
     m_lastEnergyPlusSqlFilePath = lastEnergyPlusSqlFilePath;
   }
@@ -838,8 +838,8 @@ void OSRunner::resetLastEnergyPlusSqlFilePath()
 
 void OSRunner::setLastEpwFilePath(const openstudio::path& lastEpwFilePath)
 {
-  if (boost::filesystem::exists(lastEpwFilePath)){
-    m_lastEpwFilePath = boost::filesystem::canonical(lastEpwFilePath);
+  if (openstudio::filesystem::exists(lastEpwFilePath)){
+    m_lastEpwFilePath = openstudio::filesystem::canonical(lastEpwFilePath);
   }else{
     m_lastEpwFilePath = lastEpwFilePath;
   }

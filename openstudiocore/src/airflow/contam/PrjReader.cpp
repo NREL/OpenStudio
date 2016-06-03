@@ -22,13 +22,14 @@
 #include <stdlib.h>
 
 #include "../utilities/core/Logger.hpp"
+#include "../utilities/core/FilesystemHelpers.hpp"
 
 namespace openstudio {
 namespace contam {
 
-Reader::Reader(QFile *file) : m_lineNumber(0)
+Reader::Reader( openstudio::filesystem::ifstream &file ) 
+  : m_stream(openstudio::filesystem::read_as_QByteArray(file)), m_lineNumber(0)
 {
-  m_stream.setDevice(file);
 }
 
 Reader::Reader(QString *string, int starting) : m_lineNumber(starting)

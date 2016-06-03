@@ -23,11 +23,11 @@
 #include <utilities/idd/IddEnums.hxx>
 #include "../core/Checksum.hpp"
 #include "../core/StringHelpers.hpp"
+#include "../core/FilesystemHelpers.hpp"
 #include "../core/Assert.hpp"
 #include "../units/QuantityConverter.hpp"
 
 #include <QStringList>
-#include <QFile>
 #include <QTextStream>
 
 #include <cmath>
@@ -2263,26 +2263,24 @@ bool EpwFile::translateToWth(openstudio::path path, std::string description)
     return false;
   }
 
-  QFile fp(openstudio::toQString(path));
-  if(!fp.open(QFile::WriteOnly)) {
+  openstudio::filesystem::ofstream fp(path, std::ios_base::binary);
+  if(!fp.is_open()) {
     LOG(Error, "Failed to open file '" + openstudio::toString(path) + "'");
     return false;
   }
 
-  QTextStream stream(&fp);
-
-  stream << "WeatherFile ContamW 2.0\n";
-  stream << openstudio::toQString(description) << "\n";
-  stream << QString("%1/%2\t!start date\n").arg(openstudio::month(startDate().monthOfYear())).arg(startDate().dayOfMonth());
-  stream << QString("%1/%2\t!end date\n").arg(openstudio::month(endDate().monthOfYear())).arg(endDate().dayOfMonth());
-  stream << "!Date\tDofW\tDtype\tDST\tTgrnd [K]\n";
+  fp << "WeatherFile ContamW 2.0\n";
+  fp << description << "\n";
+  fp << toString(QString("%1/%2\t!start date\n").arg(openstudio::month(startDate().monthOfYear())).arg(startDate().dayOfMonth()));
+  fp << toString(QString("%1/%2\t!end date\n").arg(openstudio::month(endDate().monthOfYear())).arg(endDate().dayOfMonth()));
+  fp << "!Date\tDofW\tDtype\tDST\tTgrnd [K]\n";
   openstudio::Time delta(1,0);
   int dayofweek = startDayOfWeek().value()+1;
   for(openstudio::Date current=startDate();current<=endDate();current += delta) {
-    stream << QString("%1/%2\t%3\t%3\t0\t283.15\n")
+    fp << toString(QString("%1/%2\t%3\t%3\t0\t283.15\n")
       .arg(openstudio::month(current.monthOfYear()))
       .arg(current.dayOfMonth())
-      .arg(dayofweek);
+      .arg(dayofweek));
     dayofweek++;
     if(dayofweek > 7) {
       dayofweek=1;
@@ -2306,14 +2304,14 @@ bool EpwFile::translateToWth(openstudio::path path, std::string description)
     return false;
   }
 
-  stream <<"!Date\tTime\tTa [K]\tPb [Pa]\tWs [m/s]\tWd [deg]\tHr [g/kg]\tIth [kJ/m^2]\tIdn [kJ/m^2]\tTs [K]\tRn [-]\tSn [-]\n";
+  fp <<"!Date\tTime\tTa [K]\tPb [Pa]\tWs [m/s]\tWd [deg]\tHr [g/kg]\tIth [kJ/m^2]\tIdn [kJ/m^2]\tTs [K]\tRn [-]\tSn [-]\n";
   boost::optional<std::string> output = firstPtOpt.get().toWthString();
   if(!output) {
     LOG(Error, "Translation to WTH has failed on starting data point");
     fp.close();
     return false;
   }
-  stream << output.get() << '\n';
+  fp << output.get() << '\n';
   for(unsigned int i=0;i<data().size();i++) {
     output = data()[i].toWthString();
     if(!output) {
@@ -2321,7 +2319,7 @@ bool EpwFile::translateToWth(openstudio::path path, std::string description)
       fp.close();
       return false;
     }
-    stream << output.get() << '\n';
+    fp << output.get() << '\n';
   }
   fp.close();
   return true;
@@ -2329,7 +2327,7 @@ bool EpwFile::translateToWth(openstudio::path path, std::string description)
 
 bool EpwFile::parse(bool storeData)
 {
-  if (!boost::filesystem::exists(m_path) || !boost::filesystem::is_regular_file(m_path)){
+  if (!openstudio::filesystem::exists(m_path) || !openstudio::filesystem::is_regular_file(m_path)){
     LOG(Error, "Path '" << m_path << "' is not an EPW file");
     return false;
   }

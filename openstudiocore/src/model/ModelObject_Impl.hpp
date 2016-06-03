@@ -271,8 +271,6 @@ namespace detail {
                      const std::string& scheduleDisplayName,
                      Schedule& schedule);
 
-    virtual void populateValidityReport(ValidityReport& report,bool checkNames) const override;
-
    private:
 
     REGISTER_LOGGER("openstudio.model.ModelObject");

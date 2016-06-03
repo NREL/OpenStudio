@@ -33,6 +33,7 @@
 #include "../utilities/idf/Workspace_Impl.hpp"
 #include "../utilities/idf/WorkspaceObject.hpp"
 #include "../utilities/idf/WorkspaceObject_Impl.hpp"
+#include "../utilities/filetypes/WorkflowJSON.hpp"
 
 #include <boost/optional.hpp>
 
@@ -118,6 +119,9 @@ namespace detail {
     /** @name Getters */
     //@{
 
+    /// Get the WorkflowJSON
+    WorkflowJSON workflowJSON() const;
+
     /// Get the sql file
     boost::optional<openstudio::SqlFile> sqlFile() const;
 
@@ -166,6 +170,11 @@ namespace detail {
     virtual std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> createObject(
         const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>& originalObjectImplPtr,
         bool keepHandle) override;
+
+    /// Set the WorkflowJSON
+    bool setWorkflowJSON(const WorkflowJSON& workflowJSON);
+
+    void resetWorkflowJSON();
 
     /// set the sql file
     virtual bool setSqlFile(const openstudio::SqlFile& sqlFile);
@@ -236,6 +245,8 @@ namespace detail {
 
     void mf_createComponentWatcher(ComponentData& componentData);
 
+    WorkflowJSON m_workflowJSON;
+
   private:
 
     mutable boost::optional<Building> m_cachedBuilding;
@@ -246,11 +257,20 @@ namespace detail {
 
   // private slots:
 
+<<<<<<< HEAD
     void clearCachedBuilding(const Handle& handle);
     void clearCachedLifeCycleCostParameters(const Handle& handle);
     void clearCachedRunPeriod(const Handle& handle);
     void clearCachedYearDescription(const Handle& handle);
     void clearCachedWeatherFile(const Handle& handle);
+=======
+    void clearCachedData();
+    void clearCachedBuilding();
+    void clearCachedLifeCycleCostParameters();
+    void clearCachedRunPeriod();
+    void clearCachedYearDescription();
+    void clearCachedWeatherFile();
+>>>>>>> origin/os_2_0_develop
 
   };
 

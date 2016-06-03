@@ -21,7 +21,7 @@
 
 #include <resources.hxx>
 
-#include <boost/filesystem.hpp>
+
 
 #include "CoreFixture.hpp"
 #include "../UnzipFile.hpp"
@@ -63,7 +63,7 @@ TEST_F(CoreFixture, Unzip_ExtractFileTest)
   openstudio::UnzipFile uf(p);
 
   openstudio::path outpath = openstudio::tempDir() / openstudio::toPath("ExtractFileTest");
-  boost::filesystem::remove_all(outpath);
+  openstudio::filesystem::remove_all(outpath);
 
   openstudio::path outfile1 = outpath / openstudio::toPath("file2.txt");
   openstudio::path outfile2 = outpath / openstudio::toPath("testdir1/testdir2/file3.txt");
@@ -71,7 +71,7 @@ TEST_F(CoreFixture, Unzip_ExtractFileTest)
 
   EXPECT_EQ(outfile1, uf.extractFile(openstudio::toPath("file2.txt"), outpath));
 
-  ASSERT_TRUE(boost::filesystem::exists(outfile1));
+  ASSERT_TRUE(openstudio::filesystem::exists(outfile1));
 
 
   std::ifstream ifs(openstudio::toString(outfile1).c_str());
@@ -85,10 +85,10 @@ TEST_F(CoreFixture, Unzip_ExtractFileTest)
   EXPECT_EQ(outfile2, uf.extractFile(openstudio::toPath("testdir1/testdir2/file3.txt"), outpath));
   EXPECT_EQ(outfile3, uf.extractFile(openstudio::toPath("testdir1/testdir2/testpat.db"), outpath));
 
-  ASSERT_TRUE(boost::filesystem::exists(outfile2));
-  ASSERT_TRUE(boost::filesystem::exists(outfile3));
-  EXPECT_EQ(0u, boost::filesystem::file_size(outfile2));
-  EXPECT_EQ(112640u, boost::filesystem::file_size(outfile3));
+  ASSERT_TRUE(openstudio::filesystem::exists(outfile2));
+  ASSERT_TRUE(openstudio::filesystem::exists(outfile3));
+  EXPECT_EQ(0u, openstudio::filesystem::file_size(outfile2));
+  EXPECT_EQ(112640u, openstudio::filesystem::file_size(outfile3));
 }
 
 TEST_F(CoreFixture, Unzip_ExtractAllFilesTest)
@@ -98,7 +98,7 @@ TEST_F(CoreFixture, Unzip_ExtractAllFilesTest)
   openstudio::UnzipFile uf(p);
 
   openstudio::path outpath = openstudio::tempDir() / openstudio::toPath("ExtractAllFilesTest");
-  boost::filesystem::remove_all(outpath);
+  openstudio::filesystem::remove_all(outpath);
 
   std::vector<openstudio::path> createdFiles = uf.extractAllFiles(outpath);
 
@@ -109,7 +109,7 @@ TEST_F(CoreFixture, Unzip_ExtractAllFilesTest)
        itr != createdFiles.end();
        ++itr)
   {
-    EXPECT_TRUE(boost::filesystem::exists(*itr));
+    EXPECT_TRUE(openstudio::filesystem::exists(*itr));
   }
 }
 
@@ -119,10 +119,10 @@ TEST_F(CoreFixture, Zip_CreateFile)
   openstudio::path outpath = openstudio::tempDir() / openstudio::toPath("CreateFileTest");
   openstudio::path outzip = outpath / openstudio::toPath("new.zip");
 
-  boost::filesystem::remove_all(outpath);
+  openstudio::filesystem::remove_all(outpath);
 
   {
-    boost::filesystem::create_directories(outzip.parent_path());
+    openstudio::filesystem::create_directories(outzip.parent_path());
     openstudio::ZipFile zf(outzip, false);
     zf.addFile(p, openstudio::toPath("added.zip"));
   }
@@ -132,8 +132,8 @@ TEST_F(CoreFixture, Zip_CreateFile)
   std::vector<openstudio::path> createdFiles = uf.extractAllFiles(outpath);
 
   ASSERT_EQ(1u, createdFiles.size());
-  ASSERT_TRUE(boost::filesystem::exists(createdFiles[0]));
-  EXPECT_EQ(boost::filesystem::file_size(p), boost::filesystem::file_size(createdFiles[0]));
+  ASSERT_TRUE(openstudio::filesystem::exists(createdFiles[0]));
+  EXPECT_EQ(openstudio::filesystem::file_size(p), openstudio::filesystem::file_size(createdFiles[0]));
 
 }
 
@@ -143,10 +143,10 @@ TEST_F(CoreFixture, Zip_AppendFile)
   openstudio::path outpath = openstudio::tempDir() / openstudio::toPath("AppendFileTest");
   openstudio::path outzip = outpath / openstudio::toPath("new.zip");
 
-  boost::filesystem::remove_all(outpath);
+  openstudio::filesystem::remove_all(outpath);
 
   {
-    boost::filesystem::create_directories(outzip.parent_path());
+    openstudio::filesystem::create_directories(outzip.parent_path());
     openstudio::ZipFile zf(outzip, false);
     zf.addFile(p, openstudio::toPath("added.zip"));
   }
@@ -161,10 +161,10 @@ TEST_F(CoreFixture, Zip_AppendFile)
   std::vector<openstudio::path> createdFiles = uf.extractAllFiles(outpath);
 
   ASSERT_EQ(2u, createdFiles.size());
-  ASSERT_TRUE(boost::filesystem::exists(createdFiles[0]));
-  ASSERT_TRUE(boost::filesystem::exists(createdFiles[1]));
-  EXPECT_EQ(boost::filesystem::file_size(p), boost::filesystem::file_size(createdFiles[0]));
-  EXPECT_EQ(boost::filesystem::file_size(p), boost::filesystem::file_size(createdFiles[1]));
+  ASSERT_TRUE(openstudio::filesystem::exists(createdFiles[0]));
+  ASSERT_TRUE(openstudio::filesystem::exists(createdFiles[1]));
+  EXPECT_EQ(openstudio::filesystem::file_size(p), openstudio::filesystem::file_size(createdFiles[0]));
+  EXPECT_EQ(openstudio::filesystem::file_size(p), openstudio::filesystem::file_size(createdFiles[1]));
 
   EXPECT_EQ(outpath / openstudio::toPath("in/some/subdir/added2.zip"), createdFiles[1]);
 }

@@ -942,39 +942,6 @@ namespace detail {
     return setPointer(index,schedule.handle());
   }
 
-  void ModelObject_Impl::populateValidityReport(ValidityReport& report,bool checkNames) const {
-    WorkspaceObject_Impl::populateValidityReport(report,checkNames);
-
-    // StrictnessLevel::Draft
-    if (report.level() > StrictnessLevel::None) {
-      ModelObject me = getObject<ModelObject>();
-
-      ScheduleVector schedules = me.getModelObjectTargets<Schedule>();
-      for (const Schedule& schedule : schedules) {
-        std::vector<ScheduleTypeKey> keys = getScheduleTypeKeys(schedule);
-        for (int i = 0, n = keys.size(); i < n; ++i) {
-          OptionalScheduleTypeLimits limits = schedule.scheduleTypeLimits();
-          // ideally, limits would be required, but ModelObject::clone makes an intermediate
-          // Workspace that often has just an object and its schedules (and other non-recursive
-          // resources). also, this fits the notion of Draft, versus Final, strictness.
-          if (limits && (!isCompatible(keys[i].first,keys[i].second,*limits))) {
-            UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-            OS_ASSERT(!fieldIndices.empty());
-            if (fieldIndices.size() != unsigned(n)) {
-              LOG(Warn,"Number of ScheduleTypeKeys for " << schedule.briefDescription()
-                  << " and number of source indices from " << briefDescription()
-                  << " do not agree (" << keys.size() << " versus " << fieldIndices.size()
-                  << "). The reported field number in the DataError associated with a schedule "
-                  << "type mismatch for this pair may be inaccurate.");
-            }
-            int j = std::min<int>(i,fieldIndices.size() - 1);
-            report.insertError(DataError(fieldIndices[j],me,DataErrorType(DataErrorType::DataType)));
-          }
-        }
-      }
-    }
-  }
-
   boost::optional<ModelObject> ModelObject_Impl::parentAsModelObject() const {
     boost::optional<ModelObject> result;
     OptionalParentObject intermediate = parent();

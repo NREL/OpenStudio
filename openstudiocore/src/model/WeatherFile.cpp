@@ -265,7 +265,7 @@ namespace detail {
     if (currentPath){
 
       // try to load absolute path
-      if (currentPath->is_complete() && boost::filesystem::exists(*currentPath)) {
+      if (currentPath->is_complete() && openstudio::filesystem::exists(*currentPath)) {
         try {
           result = EpwFile(*currentPath);
           return result;
@@ -277,8 +277,8 @@ namespace detail {
 
       // try relative path
       if (!dir.empty()){
-        openstudio::path newPath = boost::filesystem::complete(*currentPath, dir);
-        if (boost::filesystem::exists(newPath)) {
+        openstudio::path newPath = openstudio::filesystem::complete(*currentPath, dir);
+        if (openstudio::filesystem::exists(newPath)) {
           try {
             result = EpwFile(newPath);
             return result;
@@ -311,25 +311,25 @@ namespace detail {
   bool WeatherFile_Impl::makeUrlAbsolute(const openstudio::path& searchDirectory) {
     boost::optional<openstudio::path> currentPath = this->path();
     if (currentPath){
-      if (currentPath->is_complete() && boost::filesystem::exists(*currentPath)) {
+      if (currentPath->is_complete() && openstudio::filesystem::exists(*currentPath)) {
         return true;
       }
       openstudio::path newPath, workingPath(*currentPath);
       if (!currentPath->is_complete()) {
-        newPath = boost::filesystem::system_complete(workingPath);
+        newPath = openstudio::filesystem::system_complete(workingPath);
         LOG(Debug,"Current path '" << toString(*currentPath) << "' not complete. "
             << "After calling system_complete have '" << toString(newPath) << "'.");
       }
-      if (newPath.empty() || !boost::filesystem::exists(newPath)) {
+      if (newPath.empty() || !openstudio::filesystem::exists(newPath)) {
         newPath = searchDirectory / *currentPath;
         LOG(Debug,"Going to look for '" << toString(newPath) << "'.");
       }
-      if (newPath.empty() || !boost::filesystem::exists(newPath)) {
+      if (newPath.empty() || !openstudio::filesystem::exists(newPath)) {
         workingPath = currentPath->filename();
         newPath = searchDirectory / workingPath;
         LOG(Debug,"Going to look for '" << toString(newPath) << "'.");
       }
-      if (newPath.empty() || !boost::filesystem::exists(newPath)) {
+      if (newPath.empty() || !openstudio::filesystem::exists(newPath)) {
         return false;
       }
       std::string weatherFileUrl = toString(toURL(newPath));

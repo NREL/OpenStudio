@@ -47,7 +47,7 @@ QUrl completeURL(const QUrl &t_source, const std::vector<QUrl> &t_searchPaths, b
 
         openstudio::path completepath = searchpath / origpath;
 
-        if (boost::filesystem::exists(completepath))
+        if (openstudio::filesystem::exists(completepath))
         {
           return QUrl::fromLocalFile(toQString(completepath));
         }

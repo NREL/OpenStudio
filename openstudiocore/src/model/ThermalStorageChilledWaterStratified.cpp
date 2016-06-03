@@ -26,8 +26,8 @@
 #include "ThermalZone_Impl.hpp"
 #include "ScheduleRuleset.hpp"
 #include "ScheduleDay.hpp"
-#include "../../model/ScheduleTypeLimits.hpp"
-#include "../../model/ScheduleTypeRegistry.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>

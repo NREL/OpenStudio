@@ -18,14 +18,14 @@
  **********************************************************************/
 
 #include "UnzipFile.hpp"
+#include "FilesystemHelpers.hpp"
 #include <zlib/zconf.h>
 #include <zlib/zlib.h>
 #include <zlib/contrib/minizip/unzip.h>
 #include <fstream>
-#include <boost/filesystem.hpp>
+
 
 #include <QDir>
-#include <QFile>
 
 namespace openstudio {
 
@@ -33,7 +33,7 @@ namespace openstudio {
     : m_unzFile(unzOpen(openstudio::toString(filename).c_str()))
   {
     if (!m_unzFile) {
-      if (!boost::filesystem::exists(filename))
+      if (!openstudio::filesystem::exists(filename))
       {
         throw std::runtime_error("UnzipFile " + openstudio::toString(filename) + " does not exist, could not be opened");
       } else {
@@ -87,8 +87,7 @@ namespace openstudio {
 
       QDir().mkpath(toQString(createdFile.parent_path()));
 
-      QFile file(toQString(createdFile));
-      file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Truncate);
+      openstudio::filesystem::ofstream file(createdFile, std::ios_base::trunc | std::ios_base::binary);
       while (cont)
       {
         std::vector<char> buffer(1024);
@@ -104,7 +103,8 @@ namespace openstudio {
         }
         else
         {
-          if (file.write(QByteArray(&buffer.front(), bytesread)) < 0)
+          file.write(&buffer.front(), bytesread);
+          if (!file.good())
           {
             throw std::runtime_error("Error writing to output file: " + toString(createdFile));
           }

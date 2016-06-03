@@ -50,7 +50,7 @@
 
 #include "../shared_gui_components/WorkflowTools.hpp"
 
-#include <boost/filesystem.hpp>
+
 
 #include "../energyplus/ForwardTranslator.hpp"
 

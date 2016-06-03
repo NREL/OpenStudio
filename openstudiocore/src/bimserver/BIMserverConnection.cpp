@@ -20,6 +20,8 @@
 #include "BIMserverConnection.hpp"
 
 #include "../utilities/core/System.hpp"
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/FilesystemHelpers.hpp"
 
 #include <QString>
 #include <QUrl>
@@ -31,7 +33,6 @@
 #include <QJsonArray>
 #include <QJsonValue>
 #include <QByteArray>
-#include <QFileInfo>
 #include <iostream>
 #include <boost/none.hpp>
 
@@ -558,21 +559,21 @@ namespace bimserver {
   }
 
   void BIMserverConnection::sendCheckInIFCRequest(QString IFCFilePath) {
-    QFile file(IFCFilePath);
-    if (!file.open(QIODevice::ReadOnly)) {
+    const auto path = openstudio::toPath(IFCFilePath);
+    openstudio::filesystem::ifstream file(path);
+    if (!file.is_open()) {
       emit errorOccured(QString("Cannot open file, please verify and try again"));
       return;
     }
-    QFileInfo info(IFCFilePath);
 
     QJsonObject parameters;
     parameters["poid"] = QJsonValue(m_poid);
     parameters["comment"] = QJsonValue(QString(""));
     parameters["deserializerOid"] = QJsonValue(m_deserializerOid);
-    parameters["fileSize"] = QJsonValue(QString::number(info.size()));
-    parameters["fileName"] = QJsonValue(info.completeBaseName());
+    parameters["fileSize"] = QJsonValue(QString::number(openstudio::filesystem::file_size(path)));
+    parameters["fileName"] = QJsonValue(openstudio::toQString(path.stem()));
     //encode file into Base64
-    QByteArray fileArray = file.readAll();
+    QByteArray fileArray = openstudio::filesystem::read_as_QByteArray(file);
     QByteArray fileArrayEncoded = fileArray.toBase64();
     QString fileEncoded(fileArrayEncoded);
     parameters["data"] = QJsonValue(fileEncoded);

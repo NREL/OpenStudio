@@ -97,9 +97,10 @@ namespace detail {
   // copy constructor, used for clone
   Model_Impl::Model_Impl(const Model_Impl& other, bool keepHandles)
     : Workspace_Impl(other, keepHandles),
+      m_workflowJSON(WorkflowJSON(other.m_workflowJSON)),
       m_sqlFile((other.m_sqlFile)?(std::shared_ptr<SqlFile>(new SqlFile(*other.m_sqlFile))):(other.m_sqlFile))
   {
-    // notice we are cloning the sqlfile too, if necessary
+    // notice we are cloning the workflow and sqlfile too, if necessary
     // careful not to call anything that calls shared_from_this here, this is not yet constructed
   }
 
@@ -109,9 +110,10 @@ namespace detail {
                          bool keepHandles,
                          StrictnessLevel level)
     : Workspace_Impl(other,hs,keepHandles,level),
+      m_workflowJSON(WorkflowJSON(other.m_workflowJSON)),
       m_sqlFile((other.m_sqlFile)?(std::shared_ptr<SqlFile>(new SqlFile(*other.m_sqlFile))):(other.m_sqlFile))
   {
-    // notice we are cloning the sqlfile too, if necessary
+    // notice we are cloning the workflow and sqlfile too, if necessary
   }
   Workspace Model_Impl::clone(bool keepHandles) const {
     // copy everything but objects
@@ -146,6 +148,10 @@ namespace detail {
     // swap Model-level data
     std::shared_ptr<Model_Impl> otherImpl = other.getImpl<detail::Model_Impl>();
 
+    WorkflowJSON twf = m_workflowJSON;
+    setWorkflowJSON(otherImpl->workflowJSON());
+    otherImpl->setWorkflowJSON(twf);
+
     std::shared_ptr<SqlFile> tsf = m_sqlFile;
     m_sqlFile = otherImpl->m_sqlFile;
     otherImpl->m_sqlFile = tsf;
@@ -154,13 +160,8 @@ namespace detail {
     m_componentWatchers = otherImpl->m_componentWatchers;
     otherImpl->m_componentWatchers = tcw;
 
-    OptionalBuilding tcb = m_cachedBuilding;
-    m_cachedBuilding = otherImpl->m_cachedBuilding;
-    otherImpl->m_cachedBuilding = tcb;
-
-    OptionalLifeCycleCostParameters tclccp = m_cachedLifeCycleCostParameters;
-    m_cachedLifeCycleCostParameters = otherImpl->m_cachedLifeCycleCostParameters;
-    otherImpl->m_cachedLifeCycleCostParameters = tclccp;
+    clearCachedData();
+    otherImpl->clearCachedData();
   }
 
   void Model_Impl::createComponentWatchers() {
@@ -332,7 +333,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(FanConstantVolume);
     REGISTER_CONSTRUCTOR(FanOnOff);
     REGISTER_CONSTRUCTOR(FanVariableVolume);
-    REGISTER_CONSTRUCTOR(FanZoneExhaust);    
+    REGISTER_CONSTRUCTOR(FanZoneExhaust);
     REGISTER_CONSTRUCTOR(FFactorGroundFloorConstruction);
     REGISTER_CONSTRUCTOR(FluidCoolerSingleSpeed);
     REGISTER_CONSTRUCTOR(FluidCoolerTwoSpeed);
@@ -469,6 +470,9 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(Site);
     REGISTER_CONSTRUCTOR(SiteGroundReflectance);
     REGISTER_CONSTRUCTOR(SiteGroundTemperatureBuildingSurface);
+    REGISTER_CONSTRUCTOR(SiteGroundTemperatureDeep);
+    REGISTER_CONSTRUCTOR(SiteGroundTemperatureShallow);
+    REGISTER_CONSTRUCTOR(SiteGroundTemperatureFCfactorMethod);
     REGISTER_CONSTRUCTOR(SiteWaterMainsTemperature);
     REGISTER_CONSTRUCTOR(SizingParameters);
     REGISTER_CONSTRUCTOR(SizingPlant);
@@ -533,8 +537,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ZoneControlHumidistat);
     REGISTER_CONSTRUCTOR(ZoneControlThermostatStagedDualSetpoint);
     REGISTER_CONSTRUCTOR(ZoneHVACEquipmentList);
-    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveElectric);  
-    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveWater);  
+    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveElectric);
+    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveWater);
     REGISTER_CONSTRUCTOR(ZoneHVACIdealLoadsAirSystem);
     REGISTER_CONSTRUCTOR(ZoneHVACFourPipeFanCoil);
     REGISTER_CONSTRUCTOR(ZoneHVACHighTemperatureRadiant);
@@ -733,7 +737,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(FanConstantVolume);
     REGISTER_COPYCONSTRUCTORS(FanOnOff);
     REGISTER_COPYCONSTRUCTORS(FanVariableVolume);
-    REGISTER_COPYCONSTRUCTORS(FanZoneExhaust);    
+    REGISTER_COPYCONSTRUCTORS(FanZoneExhaust);
     REGISTER_COPYCONSTRUCTORS(FFactorGroundFloorConstruction);
     REGISTER_COPYCONSTRUCTORS(FluidCoolerSingleSpeed);
     REGISTER_COPYCONSTRUCTORS(FluidCoolerTwoSpeed);
@@ -870,6 +874,9 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(Site);
     REGISTER_COPYCONSTRUCTORS(SiteGroundReflectance);
     REGISTER_COPYCONSTRUCTORS(SiteGroundTemperatureBuildingSurface);
+    REGISTER_COPYCONSTRUCTORS(SiteGroundTemperatureDeep);
+    REGISTER_COPYCONSTRUCTORS(SiteGroundTemperatureShallow);
+    REGISTER_COPYCONSTRUCTORS(SiteGroundTemperatureFCfactorMethod);
     REGISTER_COPYCONSTRUCTORS(SiteWaterMainsTemperature);
     REGISTER_COPYCONSTRUCTORS(SizingParameters);
     REGISTER_COPYCONSTRUCTORS(SizingPlant);
@@ -1246,6 +1253,11 @@ if (_className::iddObjectType() == typeToCreate) { \
     return spaceType;
   }
 
+  WorkflowJSON Model_Impl::workflowJSON() const
+  {
+    return m_workflowJSON;
+  }
+
   /// get the sql file
   boost::optional<openstudio::SqlFile> Model_Impl::sqlFile() const
   {
@@ -1255,6 +1267,17 @@ if (_className::iddObjectType() == typeToCreate) { \
     } else {
       return boost::optional<openstudio::SqlFile>();
     }
+  }
+
+  bool Model_Impl::setWorkflowJSON(const openstudio::WorkflowJSON& workflowJSON)
+  {
+    m_workflowJSON = workflowJSON;
+    return true;
+  }
+
+  void Model_Impl::resetWorkflowJSON()
+  {
+    m_workflowJSON = WorkflowJSON();
   }
 
   /// set the sql file
@@ -1487,7 +1510,20 @@ if (_className::iddObjectType() == typeToCreate) { \
     }
   }
 
+<<<<<<< HEAD
   void Model_Impl::clearCachedBuilding(const Handle &)
+=======
+  void Model_Impl::clearCachedData()
+  {
+    clearCachedBuilding();
+    clearCachedLifeCycleCostParameters();
+    clearCachedRunPeriod();
+    clearCachedYearDescription();
+    clearCachedWeatherFile();
+  }
+
+  void Model_Impl::clearCachedBuilding()
+>>>>>>> origin/os_2_0_develop
   {
     m_cachedBuilding.reset();
   }
@@ -1573,6 +1609,21 @@ boost::optional<Model> Model::load(const path& p) {
   return result;
 }
 
+boost::optional<Model> Model::load(const path& osmPath, const path& workflowJSONPath)
+{
+  OptionalModel result = load(osmPath);
+  if (result){
+    boost::optional<WorkflowJSON> workflowJSON = WorkflowJSON::load(workflowJSONPath);
+    if (workflowJSON){
+      result->setWorkflowJSON(*workflowJSON);
+    } else{
+      result.reset();
+    }
+  }
+  return result;
+}
+
+
 Model::Model(std::shared_ptr<detail::Model_Impl> p)
   : Workspace(p)
 {}
@@ -1620,6 +1671,21 @@ Schedule Model::alwaysOnContinuousSchedule() const
 SpaceType Model::plenumSpaceType() const
 {
   return getImpl<detail::Model_Impl>()->plenumSpaceType();
+}
+
+openstudio::WorkflowJSON Model::workflowJSON() const
+{
+  return getImpl<detail::Model_Impl>()->workflowJSON();
+}
+
+bool Model::setWorkflowJSON(const openstudio::WorkflowJSON& setWorkflowJSON)
+{
+  return getImpl<detail::Model_Impl>()->setWorkflowJSON(setWorkflowJSON);
+}
+
+void Model::resetWorkflowJSON()
+{
+  return getImpl<detail::Model_Impl>()->resetWorkflowJSON();
 }
 
 openstudio::OptionalSqlFile Model::sqlFile() const
@@ -1783,6 +1849,21 @@ void addExampleModelObjects(Model& model)
   groundTemp.setOctoberGroundTemperature(20.121);
   groundTemp.setNovemberGroundTemperature(19.802);
   groundTemp.setDecemberGroundTemperature(19.633);
+
+  // add SiteGroundTemperatureDeep
+  SiteGroundTemperatureDeep groundTempDeep = model.getUniqueModelObject<SiteGroundTemperatureDeep>();
+  groundTempDeep.setJanuaryDeepGroundTemperature(19.527);
+  groundTempDeep.setFebruaryDeepGroundTemperature(19.502);
+  groundTempDeep.setMarchDeepGroundTemperature(19.536);
+  groundTempDeep.setAprilDeepGroundTemperature(19.598);
+  groundTempDeep.setMayDeepGroundTemperature(20.002);
+  groundTempDeep.setJuneDeepGroundTemperature(21.640);
+  groundTempDeep.setJulyDeepGroundTemperature(22.225);
+  groundTempDeep.setAugustDeepGroundTemperature(22.375);
+  groundTempDeep.setSeptemberDeepGroundTemperature(21.449);
+  groundTempDeep.setOctoberDeepGroundTemperature(20.121);
+  groundTempDeep.setNovemberDeepGroundTemperature(19.802);
+  groundTempDeep.setDecemberDeepGroundTemperature(19.633);
 
   // add SiteWaterMainsTemperature
   SiteWaterMainsTemperature waterTemp = model.getUniqueModelObject<SiteWaterMainsTemperature>();

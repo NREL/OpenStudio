@@ -2371,10 +2371,10 @@ namespace detail {
         {
           if (relativity == URLSearchPath::ToInputFile)
           {
-            completesearchpath = boost::filesystem::complete(searchpath, t_infile.parent_path());
+            completesearchpath = openstudio::filesystem::complete(searchpath, t_infile.parent_path());
           } else {
             // relative to where app was started from
-            completesearchpath = boost::filesystem::complete(searchpath);
+            completesearchpath = openstudio::filesystem::complete(searchpath);
           }
         }
 

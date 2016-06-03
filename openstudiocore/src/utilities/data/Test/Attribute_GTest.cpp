@@ -38,8 +38,8 @@ using namespace openstudio;
 TEST_F(DataFixture, Attribute_BoolTrue)
 {
   openstudio::path xmlPath = openstudio::toPath("./report_bool_true.xml");
-  if(boost::filesystem::exists(xmlPath)){
-    boost::filesystem::remove(xmlPath);
+  if(openstudio::filesystem::exists(xmlPath)){
+    openstudio::filesystem::remove(xmlPath);
   }
 
   Attribute attribute("bool", true, std::string("units"));
@@ -50,7 +50,7 @@ TEST_F(DataFixture, Attribute_BoolTrue)
   EXPECT_EQ("units", attribute.units().get());
 
   // save to xml
-  attribute.saveToXml(xmlPath);
+  ASSERT_TRUE(attribute.saveToXml(xmlPath));
 
   // load 
   boost::optional<Attribute> testAttribute = Attribute::loadFromXml(xmlPath);
@@ -65,8 +65,8 @@ TEST_F(DataFixture, Attribute_BoolTrue)
 TEST_F(DataFixture, Attribute_Integer)
 {
   openstudio::path xmlPath = openstudio::toPath("./report_integer.xml");
-  if(boost::filesystem::exists(xmlPath)){
-    boost::filesystem::remove(xmlPath);
+  if(openstudio::filesystem::exists(xmlPath)){
+    openstudio::filesystem::remove(xmlPath);
   }
 
   Attribute attribute("int", 1);
@@ -90,8 +90,8 @@ TEST_F(DataFixture, Attribute_Integer)
 TEST_F(DataFixture, Attribute_Unsigned)
 {
   openstudio::path xmlPath = openstudio::toPath("./report_unsigned.xml");
-  if(boost::filesystem::exists(xmlPath)){
-    boost::filesystem::remove(xmlPath);
+  if(openstudio::filesystem::exists(xmlPath)){
+    openstudio::filesystem::remove(xmlPath);
   }
 
   Attribute attribute("unsigned", 1u);
@@ -115,8 +115,8 @@ TEST_F(DataFixture, Attribute_Unsigned)
 TEST_F(DataFixture, Attribute_Double_Small)
 {
   openstudio::path xmlPath = openstudio::toPath("./report_double_small.xml");
-  if(boost::filesystem::exists(xmlPath)){
-    boost::filesystem::remove(xmlPath);
+  if(openstudio::filesystem::exists(xmlPath)){
+    openstudio::filesystem::remove(xmlPath);
   }
 
   Attribute attribute("double", 1.5);
@@ -140,8 +140,8 @@ TEST_F(DataFixture, Attribute_Double_Small)
 TEST_F(DataFixture, Attribute_Double_Big)
 {
   openstudio::path xmlPath = openstudio::toPath("./report_double_big.xml");
-  if(boost::filesystem::exists(xmlPath)){
-    boost::filesystem::remove(xmlPath);
+  if(openstudio::filesystem::exists(xmlPath)){
+    openstudio::filesystem::remove(xmlPath);
   }
 
   Attribute attribute("double", 1.189679819371987395175049501E32);
@@ -167,8 +167,8 @@ TEST_F(DataFixture, Attribute_String)
 {
 
   openstudio::path xmlPath = openstudio::toPath("./report_string.xml");
-  if(boost::filesystem::exists(xmlPath)){
-    boost::filesystem::remove(xmlPath);
+  if(openstudio::filesystem::exists(xmlPath)){
+    openstudio::filesystem::remove(xmlPath);
   }
 
   Attribute attribute("string", "value");
@@ -193,8 +193,8 @@ TEST_F(DataFixture, Attribute_AttributeVector)
 {
 
   openstudio::path xmlPath = openstudio::toPath("./report_attribute_vector.xml");
-  if(boost::filesystem::exists(xmlPath)){
-    boost::filesystem::remove(xmlPath);
+  if(openstudio::filesystem::exists(xmlPath)){
+    openstudio::filesystem::remove(xmlPath);
   }
 
   std::vector<Attribute> attributes;

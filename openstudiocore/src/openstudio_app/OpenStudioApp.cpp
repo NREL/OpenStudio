@@ -125,7 +125,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<mea
 
   QFile f(":/library/OpenStudioPolicy.xml");
 
-  openstudio::model::AccessPolicyStore::Instance().loadFile(f);
+  openstudio::model::AccessPolicyStore::Instance().loadFile(f.readAll());
 
   QFile data(":/openstudiolib.qss");
   QString style;
@@ -195,7 +195,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<mea
           m_osDocument->setSavePath("");
           QTimer::singleShot(0, m_osDocument.get(), SLOT(markAsModified())); 
         }else{
-          LOG_FREE(Warn, "OpenStudio", "Incorrect second argument '" << args.at(1) << "'");
+          LOG_FREE(Warn, "OpenStudio", "Incorrect second argument '" << toString(args.at(1)) << "'");
         }
       }
 
@@ -921,10 +921,10 @@ void OpenStudioApp::versionUpdateMessageBox(const osversion::VersionTranslator& 
           itr != scriptfolders.end();
           ++itr)
       {
-        if (boost::filesystem::exists(*itr))
+        if (openstudio::filesystem::exists(*itr))
         {
           removedScriptDirs = true;
-          boost::filesystem::remove_all(*itr);
+          openstudio::filesystem::remove_all(*itr);
         }
       }
     }

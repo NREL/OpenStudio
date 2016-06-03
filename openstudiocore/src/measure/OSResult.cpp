@@ -20,10 +20,9 @@
 #include "OSResult.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FilesystemHelpers.hpp"
 
-#include <boost/filesystem.hpp>
 
-#include <QFile>
 #include <QDomDocument>
 #include <QDomElement>
 
@@ -168,13 +167,12 @@ void OSResult::appendAttribute(const Attribute& attribute) {
 
 boost::optional<OSResult> OSResult::load(const openstudio::path& p) {
   OptionalOSResult result;
-  if (boost::filesystem::exists(p)) {
+  if (openstudio::filesystem::exists(p)) {
     try {
       // load xml file
-      QFile file(toQString(p));
-      file.open(QFile::ReadOnly);
+      openstudio::filesystem::ifstream file(p, std::ios_base::binary);
       QDomDocument qDomDocument;
-      qDomDocument.setContent(&file);
+      qDomDocument.setContent(openstudio::filesystem::read_as_QByteArray(file));
       file.close();
 
       // de-serialize
@@ -198,12 +196,10 @@ boost::optional<OSResult> OSResult::load(const openstudio::path& p) {
 
 bool OSResult::save(const openstudio::path& p, bool overwrite) const {
   bool result(false);
-  if (overwrite || !boost::filesystem::exists(p)) {
+  if (overwrite || !openstudio::filesystem::exists(p)) {
     try {
-      QFile file(toQString(p));
-      file.open(QFile::WriteOnly);
-      QTextStream out(&file);
-      toXml().save(out, 2);
+      openstudio::filesystem::ofstream file(p, std::ios_base::binary | std::ios_base::trunc);
+      openstudio::filesystem::write(file, toXml().toString(2));
       file.close();
       result = true;
     }

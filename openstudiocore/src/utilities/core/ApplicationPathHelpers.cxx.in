@@ -406,35 +406,36 @@ openstudio::path getOpenStudioEmbeddedRubyPath() {
 }
 
 openstudio::path getEnergyPlusDirectory() {
-  openstudio::path cmakeEnergyPlusPath = openstudio::toPath("${ENERGYPLUS_EXE}");
-  openstudio::path cmakeEnergyPlusDirectory = cmakeEnergyPlusPath.parent_path();
-  openstudio::path energyPlusDirectoryName = cmakeEnergyPlusDirectory.filename();
-
-  if (applicationIsRunningFromBuildDirectory())
-  {
-    return cmakeEnergyPlusDirectory;
-  } else {
-#ifdef Q_OS_LINUX
-    return getApplicationInstallDirectory() / openstudio::toPath("share/openstudio-" + openStudioVersion()) / energyPlusDirectoryName;
-#elif defined(Q_OS_MAC)
-    return getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("sharedresources") / energyPlusDirectoryName;
-#else
-    return getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio") / energyPlusDirectoryName;
-#endif
-  }
+  return getEnergyPlusExecutable().parent_path();
 }
 
 openstudio::path getEnergyPlusExecutable() {
+  openstudio::path envPath;
+  auto envPathString = std::getenv("ENERGYPLUS_EXE_PATH");
+  if( envPathString ) {
+    envPath = openstudio::toPath(envPathString);
+  }
+
   openstudio::path cmakeEnergyPlusPath = openstudio::toPath("${ENERGYPLUS_EXE}");
-  openstudio::path energyPlusFileName = cmakeEnergyPlusPath.filename();
+  openstudio::path energyPlusExeName = cmakeEnergyPlusPath.filename();
+  openstudio::path cmakeEnergyPlusDirectory = cmakeEnergyPlusPath.parent_path();
+  openstudio::path energyPlusDirectoryName = cmakeEnergyPlusDirectory.filename();
 
 #ifdef Q_OS_LINUX
-    return getEnergyPlusDirectory() / energyPlusFileName;
+  auto systemPath = openstudio::toPath("/usr/local") / energyPlusDirectoryName / energyPlusExeName;
 #elif defined(Q_OS_MAC)
-    return getEnergyPlusDirectory() / energyPlusFileName;
+  auto systemPath = openstudio::toPath("/Applications") / energyPlusDirectoryName / energyPlusExeName;
 #else
-   return getEnergyPlusDirectory() / energyPlusFileName;
+  auto systemPath = openstudio::toPath("C:/EnergyPlusV8-5-0/energyplus.exe");
 #endif
+
+  if( openstudio::filesystem::exists(envPath) ) {
+    return envPath;
+  } else if( openstudio::filesystem::exists(systemPath) ) {
+    return systemPath;
+  } else {
+    return openstudio::path();
+  }
 }
 
 boost::optional<openstudio::path> getRadianceDirectory() {

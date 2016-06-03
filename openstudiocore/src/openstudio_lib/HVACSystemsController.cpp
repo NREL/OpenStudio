@@ -197,13 +197,13 @@ void HVACSystemsController::update()
     auto airloops = m_model.getModelObjects<model::AirLoopHVAC>();
     std::sort(airloops.begin(),airloops.end(),WorkspaceObjectNameLess());
     for( auto it = airloops.begin(); it != airloops.end(); ++it ) {
-      systemComboBox->addItem(QString::fromStdString(it->name().get()),it->handle().toString());
+      systemComboBox->addItem(QString::fromStdString(it->name().get()), toQString(it->handle()));
     }
 
     auto plantloops = m_model.getModelObjects<model::PlantLoop>();
     std::sort(plantloops.begin(),plantloops.end(),WorkspaceObjectNameLess());
     for( auto it = plantloops.begin(); it != plantloops.end(); ++it ) {
-      systemComboBox->addItem(QString::fromStdString(it->name().get()),it->handle().toString());
+      systemComboBox->addItem(QString::fromStdString(it->name().get()), toQString(it->handle()));
     }
 
     systemComboBox->addItem("Service Hot Water",SHW);
@@ -213,7 +213,7 @@ void HVACSystemsController::update()
     // Set system combo box current index
     QString handle = currentHandle();
     if( handle == SHW  ||
-        m_model.getModelObject<model::WaterUseConnections>(handle)
+        m_model.getModelObject<model::WaterUseConnections>(toUUID(handle))
       )
     {
       int index = systemComboBox->findData(SHW);
@@ -473,7 +473,7 @@ void HVACLayoutController::addLibraryObjectToModelNode(OSItemId itemid, model::H
 
   if( auto component = doc->getComponent(itemid) ) {
     // Ugly hack to avoid the component being treated as a resource.
-    component->componentData().setString(OS_ComponentDataFields::UUID,createUUID().toString().toStdString());
+    component->componentData().setString(OS_ComponentDataFields::UUID, toString(createUUID()));
     if( auto componentData = comp.model().insertComponent(component.get()) ) {
       object = componentData->primaryComponentObject();
       remove = true;
@@ -546,12 +546,12 @@ void HVACLayoutController::addLibraryObjectToModelNode(OSItemId itemid, model::H
 
 boost::optional<model::Loop> HVACSystemsController::currentLoop() const
 {
-  return m_model.getModelObject<model::Loop>(m_currentHandle);
+  return m_model.getModelObject<model::Loop>(toUUID(m_currentHandle));
 }
 
 void HVACLayoutController::removeModelObject(model::ModelObject & modelObject)
 {
-  if( modelObject.handle() == nullptr ) return;
+  if( modelObject.handle().isNull() ) return;
 
   model::OptionalModelObject mo;
 
@@ -638,7 +638,7 @@ void HVACLayoutController::goToOtherLoop( model::ModelObject & modelObject )
 
   if( boost::optional<model::Loop> loop = modelObject.optionalCast<model::Loop>() )
   {
-    m_hvacSystemsController->setCurrentHandle(loop->handle().toString());
+    m_hvacSystemsController->setCurrentHandle(toQString(loop->handle()));
 
     return;
   }
@@ -653,7 +653,7 @@ void HVACLayoutController::goToOtherLoop( model::ModelObject & modelObject )
       {
         if( boost::optional<model::PlantLoop> plantLoop = comp->plantLoop() )
         {
-          m_hvacSystemsController->setCurrentHandle(plantLoop->handle().toString());
+          m_hvacSystemsController->setCurrentHandle(toQString(plantLoop->handle()));
         }
 
         return;
@@ -662,7 +662,7 @@ void HVACLayoutController::goToOtherLoop( model::ModelObject & modelObject )
       {
         if( boost::optional<model::AirLoopHVAC> airLoopHVAC = comp->airLoopHVAC() )
         {
-          m_hvacSystemsController->setCurrentHandle(airLoopHVAC->handle().toString());
+          m_hvacSystemsController->setCurrentHandle(toQString(airLoopHVAC->handle()));
         }
 
         return;
@@ -677,7 +677,7 @@ void HVACLayoutController::goToOtherLoop( model::ModelObject & modelObject )
         {
           if( boost::optional<model::PlantLoop> secondaryPlantLoop = comp->secondaryPlantLoop() )
           {
-            m_hvacSystemsController->setCurrentHandle(secondaryPlantLoop->handle().toString());
+            m_hvacSystemsController->setCurrentHandle(toQString(secondaryPlantLoop->handle()));
 
             return;
           }
@@ -690,7 +690,7 @@ void HVACLayoutController::goToOtherLoop( model::ModelObject & modelObject )
         {
           if( boost::optional<model::PlantLoop> plantLoop = comp->plantLoop() )
           {
-            m_hvacSystemsController->setCurrentHandle(plantLoop->handle().toString());
+            m_hvacSystemsController->setCurrentHandle(toQString(plantLoop->handle()));
 
             return;
           }
@@ -776,7 +776,7 @@ void HVACSystemsController::addToModel(AddToModelEnum addToModelEnum)
 
   if( loop )
   {
-    m_currentHandle = loop->handle().toString();
+    m_currentHandle = toQString(loop->handle());
   }
 }
 
@@ -825,15 +825,15 @@ void HVACSystemsController::onRemoveLoopClicked()
 
     QComboBox * chooser = m_hvacSystemsView->hvacToolbarView->systemComboBox;
 
-    int i = chooser->findData(loop->handle().toString());
+    int i = chooser->findData(toQString(loop->handle()));
 
     if( i == 0 )
     {
-      setCurrentHandle(QUuid(chooser->itemData(i + 1).toString()).toString());
+      setCurrentHandle(chooser->itemData(i + 1).toString());
     }
     else
     {
-      setCurrentHandle(QUuid(chooser->itemData(i - 1).toString()).toString());
+      setCurrentHandle(chooser->itemData(i - 1).toString());
     }
 
     loop->remove();
@@ -846,7 +846,7 @@ void HVACLayoutController::onModelObjectSelected(model::OptionalModelObject & mo
   {
     if( boost::optional<model::WaterUseConnections> waterUseConnections = modelObject->optionalCast<model::WaterUseConnections>() )
     {
-      m_hvacSystemsController->setCurrentHandle(waterUseConnections->handle().toString());
+      m_hvacSystemsController->setCurrentHandle(toQString(waterUseConnections->handle()));
     }
     else
     {
@@ -1100,14 +1100,14 @@ void HVACControlsController::update()
              it != thermalZones.end();
              ++it )
         {
-          m_singleZoneReheatSPMView->controlZoneComboBox->addItem(QString::fromStdString(it->name().get()),it->handle().toString());
+          m_singleZoneReheatSPMView->controlZoneComboBox->addItem(QString::fromStdString(it->name().get()), toQString(it->handle()));
         }
 
-        m_singleZoneReheatSPMView->controlZoneComboBox->addItem("",QUuid().toString());
+        m_singleZoneReheatSPMView->controlZoneComboBox->addItem("",toQString(UUID()));
 
         if( boost::optional<model::ThermalZone> tz = spmSZR->controlZone() )
         {
-          int index = m_singleZoneReheatSPMView->controlZoneComboBox->findData(tz->handle().toString());
+          int index = m_singleZoneReheatSPMView->controlZoneComboBox->findData(toQString(tz->handle()));
 
           if( index > -1 )
           {
@@ -1115,7 +1115,7 @@ void HVACControlsController::update()
           }
           else
           {
-            m_singleZoneReheatSPMView->controlZoneComboBox->addItem(QString::fromStdString(tz->name().get()),tz->handle().toString());
+            m_singleZoneReheatSPMView->controlZoneComboBox->addItem(QString::fromStdString(tz->name().get()), toQString(tz->handle()));
 
             int i = m_singleZoneReheatSPMView->controlZoneComboBox->count() - 1;
 
@@ -1124,7 +1124,7 @@ void HVACControlsController::update()
         }
         else
         {
-          int index = m_singleZoneReheatSPMView->controlZoneComboBox->findData(QUuid().toString());
+          int index = m_singleZoneReheatSPMView->controlZoneComboBox->findData(toQString(UUID()));
 
           OS_ASSERT( index > -1 );
 
@@ -1180,14 +1180,14 @@ void HVACControlsController::update()
              it != thermalZones.end();
              ++it )
         {
-          m_airLoopHVACUnitaryHeatPumpAirToAirControlView->controlZoneComboBox->addItem(QString::fromStdString(it->name().get()),it->handle().toString());
+          m_airLoopHVACUnitaryHeatPumpAirToAirControlView->controlZoneComboBox->addItem(QString::fromStdString(it->name().get()), toQString(it->handle()));
         }
 
-        m_airLoopHVACUnitaryHeatPumpAirToAirControlView->controlZoneComboBox->addItem("",QUuid().toString());
+        m_airLoopHVACUnitaryHeatPumpAirToAirControlView->controlZoneComboBox->addItem("",toQString(UUID()));
 
         if( boost::optional<model::ThermalZone> tz = hp.controllingZone() )
         {
-          int index = m_airLoopHVACUnitaryHeatPumpAirToAirControlView->controlZoneComboBox->findData(tz->handle().toString());
+          int index = m_airLoopHVACUnitaryHeatPumpAirToAirControlView->controlZoneComboBox->findData(toQString(tz->handle()));
 
           if( index > -1 )
           {
@@ -1195,7 +1195,7 @@ void HVACControlsController::update()
           }
           else
           {
-            m_airLoopHVACUnitaryHeatPumpAirToAirControlView->controlZoneComboBox->addItem(QString::fromStdString(tz->name().get()),tz->handle().toString());
+            m_airLoopHVACUnitaryHeatPumpAirToAirControlView->controlZoneComboBox->addItem(QString::fromStdString(tz->name().get()),toQString(tz->handle()));
 
             int i = m_airLoopHVACUnitaryHeatPumpAirToAirControlView->controlZoneComboBox->count() - 1;
 
@@ -1204,7 +1204,7 @@ void HVACControlsController::update()
         }
         else
         {
-          int index = m_airLoopHVACUnitaryHeatPumpAirToAirControlView->controlZoneComboBox->findData(QUuid().toString());
+          int index = m_airLoopHVACUnitaryHeatPumpAirToAirControlView->controlZoneComboBox->findData(toQString(UUID()));
 
           OS_ASSERT( index > -1 );
 
@@ -1283,7 +1283,7 @@ void HVACControlsController::onControlZoneComboBoxChanged(int index)
 {
   QString stringHandle = m_singleZoneReheatSPMView->controlZoneComboBox->itemData(index).toString();
 
-  QUuid handle(stringHandle);
+  UUID handle(toUUID(stringHandle));
 
   model::Model t_model = m_hvacSystemsController->model();
 
@@ -1308,7 +1308,7 @@ void HVACControlsController::onUnitaryHeatPumpControlZoneChanged(int index)
 {
   QString stringHandle = m_airLoopHVACUnitaryHeatPumpAirToAirControlView->controlZoneComboBox->itemData(index).toString();
 
-  QUuid handle(stringHandle);
+  UUID handle(toUUID(stringHandle));
 
   model::Model t_model = m_hvacSystemsController->model();
 
@@ -1376,9 +1376,9 @@ HVACGraphicsView * HVACLayoutController::hvacGraphicsView() const
 
 void HVACLayoutController::goToServiceWaterScene()
 {
-  // A null QUuid signals the service water scene
+  // A null UUID signals the service water scene
 
-  m_hvacSystemsController->setCurrentHandle(QUuid().toString());
+  m_hvacSystemsController->setCurrentHandle(toQString(UUID()));
 }
 
 void HVACLayoutController::clearSceneSelection()
@@ -1403,7 +1403,7 @@ void HVACLayoutController::update()
 
     QString handle = m_hvacSystemsController->currentHandle();
 
-    boost::optional<model::ModelObject> mo = t_model.getModelObject<model::ModelObject>(handle);
+    boost::optional<model::ModelObject> mo = t_model.getModelObject<model::ModelObject>(toUUID(handle));
 
     if( mo )
     {

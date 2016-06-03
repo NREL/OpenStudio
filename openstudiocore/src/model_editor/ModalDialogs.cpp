@@ -64,6 +64,7 @@
 
 #include "../utilities/core/Compare.hpp"
 
+#include <QFile>
 #include <QLabel>
 #include <QComboBox>
 #include <QPushButton>
@@ -105,7 +106,7 @@ boost::optional<openstudio::model::ModelObject> ModelObjectSelectorDialog::selec
   if (currentIndex >= 0){
     QVariant itemData = m_comboBox->itemData(currentIndex);
     OS_ASSERT(itemData.isValid());
-    Handle handle(itemData.toString());
+    Handle handle(toUUID(itemData.toString()));
     result = m_model.getModelObject<ModelObject>(handle);
   }
   return result;
@@ -273,7 +274,7 @@ void ModelObjectSelectorDialog::loadComboBoxData()
   for (WorkspaceObject workspaceObject : workspaceObjects){
     OS_ASSERT(workspaceObject.name());
     std::string objectName = workspaceObject.name().get();
-    m_comboBox->addItem(toQString(objectName), workspaceObject.handle().toString());
+    m_comboBox->addItem(toQString(objectName), toQString(workspaceObject.handle()));
   }
 
   if (m_comboBox->count() > 0){

@@ -118,23 +118,23 @@ TEST(String, SimpleConversions)
 //  // Hello World + std::string (in Russian)
 //  std::string str("Hello World \xd1\x88 \xd0\xbd \xd1\x83 \xd1\x80");
 //  path dir = toPath("Hello World \xd1\x88 \xd0\xbd \xd1\x83 \xd1\x80");
-//  boost::filesystem::create_directory(dir);
+//  openstudio::filesystem::create_directory(dir);
 //
 //  // write out, file is close on scope exit
 //  {
-//    boost::filesystem::ofstream ofs(dir / toPath(str + ".txt"));
+//    openstudio::filesystem::ofstream ofs(dir / toPath(str + ".txt"));
 //    boost::archive::text_oarchive out(ofs);
 //    out << boost::serialization::make_nvp("str", str);
 //    out << boost::serialization::make_nvp("dir", dir);
 //  }
 //  {
-//    boost::filesystem::ofstream ofs(dir / toPath(str + ".xml"));
+//    openstudio::filesystem::ofstream ofs(dir / toPath(str + ".xml"));
 //    boost::archive::xml_oarchive out(ofs);
 //    out << boost::serialization::make_nvp("str", str);
 //    out << boost::serialization::make_nvp("dir", dir);
 //  }
 //  {
-//    boost::filesystem::ofstream ofs(dir / toPath(str + ".bin"));
+//    openstudio::filesystem::ofstream ofs(dir / toPath(str + ".bin"));
 //    boost::archive::binary_oarchive out(ofs);
 //    out << boost::serialization::make_nvp("str", str);
 //    out << boost::serialization::make_nvp("dir", dir);
@@ -144,7 +144,7 @@ TEST(String, SimpleConversions)
 //  std::string newStr;  
 //  path newDir;
 //  {
-//    boost::filesystem::ifstream ifs(dir / toPath(str + ".txt"));
+//    openstudio::filesystem::ifstream ifs(dir / toPath(str + ".txt"));
 //    boost::archive::text_iarchive in(ifs);
 //    in >> boost::serialization::make_nvp("str", newStr);
 //    in >> boost::serialization::make_nvp("dir", newDir);
@@ -152,7 +152,7 @@ TEST(String, SimpleConversions)
 //    ASSERT_TRUE(dir == newDir);
 //  }
 //  {
-//    boost::filesystem::ifstream ifs(dir / toPath(str + ".xml"));
+//    openstudio::filesystem::ifstream ifs(dir / toPath(str + ".xml"));
 //    boost::archive::xml_iarchive in(ifs);
 //    in >> boost::serialization::make_nvp("str", newStr);
 //    in >> boost::serialization::make_nvp("dir", newDir);
@@ -160,7 +160,7 @@ TEST(String, SimpleConversions)
 //    ASSERT_TRUE(dir == newDir);
 //  }
 //  {
-//    boost::filesystem::ifstream ifs(dir / toPath(str + ".bin"));
+//    openstudio::filesystem::ifstream ifs(dir / toPath(str + ".bin"));
 //    boost::archive::binary_iarchive in(ifs);
 //    in >> boost::serialization::make_nvp("str", newStr);
 //    in >> boost::serialization::make_nvp("dir", newDir);

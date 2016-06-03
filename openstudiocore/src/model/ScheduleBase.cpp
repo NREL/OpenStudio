@@ -112,28 +112,6 @@ namespace detail {
     return result;
   }
 
-  void ScheduleBase_Impl::populateValidityReport(ValidityReport& report,bool checkNames) const {
-    // Inherit lower-level errors
-    ModelObject_Impl::populateValidityReport(report,checkNames);
-    // StrictnessLevel::Draft
-    if (report.level() > StrictnessLevel::None) {
-      OptionalScheduleTypeLimits scheduleTypeLimits = this->scheduleTypeLimits();
-      if (scheduleTypeLimits && !candidateIsCompatibleWithCurrentUse(*scheduleTypeLimits)) {
-        report.insertError(DataError(getObject<ScheduleBase>(),
-                                     DataErrorType(DataErrorType::DataType)));
-      }
-    }
-
-    // StrictnessLevel::Final
-    if (report.level() > StrictnessLevel::Draft) {
-      if (!valuesAreWithinBounds()) {
-        report.insertError(DataError(getObject<ScheduleBase>(),
-                                     DataErrorType(DataErrorType::NumericBound)));
-      }
-    }
-
-  }
-
   bool ScheduleBase_Impl::okToResetScheduleTypeLimits() const {
     // can only reset if not used by object with keys
     for (const ModelObject& user : getObject<ScheduleBase>().getModelObjectSources<ModelObject>()) {

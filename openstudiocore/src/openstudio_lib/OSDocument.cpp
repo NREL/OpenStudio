@@ -105,8 +105,8 @@
 #include "../gbxml/ForwardTranslator.hpp"
 #include "../sdd/ForwardTranslator.hpp"
 
-#include <boost/filesystem/fstream.hpp>
-#include <boost/filesystem.hpp>
+
+
 
 #include <QDir>
 #include <QFileDialog>
@@ -987,7 +987,7 @@ namespace openstudio {
 
       // search for E+ and Radiance results in the save directory
       openstudio::path searchPath = toPath(m_savePath).parent_path() / toPath(m_savePath).stem() / openstudio::toPath("run");
-      if (boost::filesystem::exists(searchPath)) {
+      if (openstudio::filesystem::exists(searchPath)) {
         if (qobject_cast<ResultsTabController *>(m_mainTabController.get())){
           qobject_cast<ResultsTabController *>(m_mainTabController.get())->searchForExistingResults(searchPath);
         }
@@ -1328,7 +1328,7 @@ namespace openstudio {
       energyplus::ForwardTranslator trans;
       Workspace workspace = trans.translateModel(m);
       openstudio::path outDir = toPath(fileName);
-      boost::filesystem::ofstream ofs(outDir);
+      openstudio::filesystem::ofstream ofs(outDir);
       workspace.toIdfFile().print(ofs);
       ofs.close();
     }
@@ -1619,20 +1619,20 @@ namespace openstudio {
   boost::optional<model::ModelObject> OSDocument::getModelObject(const OSItemId& itemId) const
   {
     if (fromModel(itemId)){
-      Handle handle(itemId.itemId());
+      Handle handle(toUUID(itemId.itemId()));
       return m_model.getModelObject<model::ModelObject>(handle);
     }
     else if (fromComponentLibrary(itemId)){
       if (itemId.sourceId() == modelToSourceId(m_compLibrary)){
-        Handle handle(itemId.itemId());
+        Handle handle(toUUID(itemId.itemId()));
         return m_compLibrary.getModelObject<model::ModelObject>(handle);
       }
       else if (itemId.sourceId() == modelToSourceId(m_hvacCompLibrary)){
-        Handle handle(itemId.itemId());
+        Handle handle(toUUID(itemId.itemId()));
         return m_hvacCompLibrary.getModelObject<model::ModelObject>(handle);
       }
       else if (itemId.sourceId() == modelToSourceId(m_combinedCompLibrary)){
-        Handle handle(itemId.itemId());
+        Handle handle(toUUID(itemId.itemId()));
         return m_combinedCompLibrary.getModelObject<model::ModelObject>(handle);
       }
     }
@@ -1668,7 +1668,7 @@ namespace openstudio {
 
 #endif
 
-          //OS_ASSERT(boost::filesystem::exists(oscPath));
+          //OS_ASSERT(openstudio::filesystem::exists(oscPath));
 
           osversion::VersionTranslator translator;
           //translator.setAllowNewerVersions(false); // DLM: allow to open newer versions?

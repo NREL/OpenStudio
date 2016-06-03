@@ -61,7 +61,7 @@ foreach(f ${RUBY_TEST_SRC})
 endforeach()
 
 # add a custom target to build openstudio_cli
-add_custom_target(openstudio_cli DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/install/openstudio_cli.rb")
+add_custom_target(openstudio_cli ALL DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/install/openstudio_cli.rb")
 add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/install/openstudio_cli.rb"
                    COMMAND "${CMAKE_COMMAND}" -E copy "${CMAKE_SOURCE_DIR}/ruby/openstudio_cli.rb" "${CMAKE_CURRENT_BINARY_DIR}/install/openstudio_cli.rb"
                    DEPENDS "${CMAKE_SOURCE_DIR}/ruby/openstudio_cli.rb"

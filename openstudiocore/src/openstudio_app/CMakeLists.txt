@@ -93,6 +93,7 @@ set(depends
   openstudio_bimserver
   ${QT_LIBS}
   ${RUBY_LIBRARY}
+  ${COREFOUNDATION_LIBRARY}
 )
 
 target_link_libraries(${target_name} ${depends})

@@ -25,8 +25,8 @@
 #include "ThermalZone_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-#include "../../model/ScheduleTypeLimits.hpp"
-#include "../../model/ScheduleTypeRegistry.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_ZoneControl_ContaminantController_FieldEnums.hxx>
 #include "../utilities/core/Assert.hpp"

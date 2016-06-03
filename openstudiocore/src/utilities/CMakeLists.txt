@@ -32,6 +32,10 @@ set(core_src
   core/FileLogSink.cpp
   core/FileReference.hpp
   core/FileReference.cpp
+  core/Filesystem.hpp
+  core/Filesystem.cpp
+  core/FilesystemHelpers.hpp
+  core/FilesystemHelpers.cpp
   core/Finder.hpp
   core/Json.hpp
   core/Json.cpp
@@ -105,7 +109,10 @@ set(filetypes_src
   filetypes/EpwFile.hpp
   filetypes/EpwFile.cpp
   filetypes/WorkflowJSON.hpp
+  filetypes/WorkflowJSON_Impl.hpp
   filetypes/WorkflowJSON.cpp
+  filetypes/WorkflowStep.hpp
+  filetypes/WorkflowStep.cpp  
 )
 
 set(geometry_src
@@ -204,8 +211,8 @@ set(economics_src
 set(${target_name}_depends
   sqlite
   jsoncpp
-  litesql
-  litesql-util
+  #litesql
+  #litesql-util
   miniziplib
   ${Boost_LIBRARIES}
   #JWD: On Ubuntu 14.04, the thread lib is included in Boost_LIBRARIES
@@ -500,19 +507,24 @@ include_directories(${CMAKE_BINARY_DIR}/src/zlib)
 #include subdir for pch
 add_subdirectory(pch)
 
+if(WIN32)
+  add_definitions("-D${target_name}_EXPORTS")
+endif()
 
-add_library(${target_name} SHARED
+
+add_library(${target_name} STATIC
   ${${target_name}_src}
 )
 
 AddPCH(${target_name})
 
-if(NOT APPLE)
-  install(TARGETS ${target_name}
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-  )
-endif()
+# No need to install static lib
+#if(NOT APPLE)
+#  install(TARGETS ${target_name}
+#    RUNTIME DESTINATION bin
+#    LIBRARY DESTINATION lib
+#  )
+#endif()
 
 target_link_libraries(${target_name} PUBLIC ${${target_name}_depends} PRIVATE GeographicLib_STATIC)
 CREATE_SRC_GROUPS("${${target_name}_test_src}")

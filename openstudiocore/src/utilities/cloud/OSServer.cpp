@@ -23,6 +23,7 @@
 #include "../core/System.hpp"
 #include "../core/Json.hpp"
 #include "../core/Assert.hpp"
+#include "../core/FilesystemHelpers.hpp"
 
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -32,7 +33,6 @@
 #include <QNetworkRequest>
 #include <QHttpMultiPart>
 #include <QMutex>
-#include <QFile>
 
 namespace openstudio{
   namespace detail{
@@ -638,15 +638,15 @@ namespace openstudio{
 
       if (exists(analysisZipFile)){
 
-        QFile file(toQString(analysisZipFile));
-        if (file.open(QIODevice::ReadOnly)){
+        openstudio::filesystem::ifstream file(analysisZipFile, std::ios_base::binary);
+        if (file.is_open()){
 
           QString bound="-------3dpj1k39xoa84u4804ee1156snfxl6"; 
 
           QByteArray data(QString("--" + bound + "\r\n").toLatin1());
           data += "Content-Disposition: form-data; name=\"file\"; filename=\"project.zip\"\r\n";
           data += "Content-Type: application/zip\r\n\r\n";
-          data.append(file.readAll());
+          data.append(openstudio::filesystem::read_as_QByteArray(file));
           data += "\r\n";
           data += QString("--" + bound + "--\r\n.").toLatin1();
           data += "\r\n";
@@ -665,7 +665,7 @@ namespace openstudio{
           connect(m_networkReply, &QNetworkReply::finished, this, &OSServer_Impl::processUploadAnalysisFiles);
 
           connect(m_networkReply, &QNetworkReply::uploadProgress, this, &OSServer_Impl::logUploadProgress);
-          
+
           return true;
         }
 
@@ -1539,10 +1539,10 @@ namespace openstudio{
       logNetworkReply("processDownloadDataPointComplete");
 
       if (m_networkReply->error() == QNetworkReply::NoError){
-        
-        QFile file(toQString(m_lastDownloadDataPointPath));
-        if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)){
-          file.write(m_networkReply->readAll());
+       
+        openstudio::filesystem::ofstream file(m_lastDownloadDataPointPath, std::ios_base::trunc | std::ios_base::binary);
+        if (file.is_open()) {
+          openstudio::filesystem::write(file, m_networkReply->readAll());
           m_lastDownloadDataPointSuccess = true;
           success = true;
           file.close();
@@ -1755,7 +1755,7 @@ namespace openstudio{
       for (const QJsonValue& val : array) {
         if (val.toObject().contains("_id")){
           QString id = val.toObject()["_id"].toString();
-          UUID uuid(id);
+          UUID uuid = toUUID(id);
           result.push_back(uuid);
         }else{
           success = false;

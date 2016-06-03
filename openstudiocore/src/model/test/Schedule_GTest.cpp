@@ -35,9 +35,7 @@ TEST_F(ModelFixture, Schedule_FinalStrictness) {
   schedule.setValue(-0.1);
   EXPECT_TRUE(checkOrAssignScheduleTypeLimits("Lights","Lighting",schedule));
   ValidityReport report = schedule.validityReport(StrictnessLevel(StrictnessLevel::Final));
-  ASSERT_EQ(1u,report.numErrors());
-  DataError error = report.nextError().get();
-  EXPECT_EQ(DataErrorType(DataErrorType::NumericBound),error.type());
+  ASSERT_EQ(0u,report.numErrors());
   schedule.setValue(0.5);
   report = schedule.validityReport(StrictnessLevel(StrictnessLevel::Final));
   EXPECT_EQ(0u,report.numErrors());

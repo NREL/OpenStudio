@@ -507,11 +507,9 @@
 #include <typeinfo>
 #include <utility>
 #include <vector>
-#include <QFile>
 #include <QMetaType>
 #include <QObject>
 #include <QString>
 #include <QTextStream>
 #include <QUrl>
-#include <QUuid>
 #include <QVariant>
