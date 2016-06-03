@@ -256,21 +256,12 @@ namespace detail {
     mutable boost::optional<WeatherFile> m_cachedWeatherFile;
 
   // private slots:
-
-<<<<<<< HEAD
+    void clearCachedData();
     void clearCachedBuilding(const Handle& handle);
     void clearCachedLifeCycleCostParameters(const Handle& handle);
     void clearCachedRunPeriod(const Handle& handle);
     void clearCachedYearDescription(const Handle& handle);
     void clearCachedWeatherFile(const Handle& handle);
-=======
-    void clearCachedData();
-    void clearCachedBuilding();
-    void clearCachedLifeCycleCostParameters();
-    void clearCachedRunPeriod();
-    void clearCachedYearDescription();
-    void clearCachedWeatherFile();
->>>>>>> origin/os_2_0_develop
 
   };
 

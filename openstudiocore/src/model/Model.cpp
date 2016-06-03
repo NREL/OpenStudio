@@ -1510,9 +1510,6 @@ if (_className::iddObjectType() == typeToCreate) { \
     }
   }
 
-<<<<<<< HEAD
-  void Model_Impl::clearCachedBuilding(const Handle &)
-=======
   void Model_Impl::clearCachedData()
   {
     clearCachedBuilding();
@@ -1522,8 +1519,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     clearCachedWeatherFile();
   }
 
-  void Model_Impl::clearCachedBuilding()
->>>>>>> origin/os_2_0_develop
+  void Model_Impl::clearCachedBuilding(const Handle &)
   {
     m_cachedBuilding.reset();
   }
