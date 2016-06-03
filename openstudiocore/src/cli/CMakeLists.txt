@@ -44,6 +44,7 @@ set(LIBS
   pty
   ##readline
   ripper
+  rbconfig
   sdbm
   socket
   stringio
@@ -190,19 +191,27 @@ add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 
 # TODO: use finder or something better
 if( WIN32 )
-  set(JSON_LIBS optimized 
-          "${RUBY_SOURCE_DIR}/ext/json/generator/generator.lib" 
-          "${RUBY_SOURCE_DIR}/ext/json/parser/parser.lib"
-          debug
-          "${RUBY_SOURCE_DIR_DEBUG}/ext/json/generator/generator.lib" 
-          "${RUBY_SOURCE_DIR_DEBUG}/ext/json/parser/parser.lib")
+  set(OTHER_EXT_LIBS optimized 
+    "${RUBY_SOURCE_DIR}/ext/json/generator/generator.lib" 
+    "${RUBY_SOURCE_DIR}/ext/json/parser/parser.lib"
+    debug
+    "${RUBY_SOURCE_DIR_DEBUG}/ext/json/generator/generator.lib" 
+    "${RUBY_SOURCE_DIR_DEBUG}/ext/json/parser/parser.lib")
 else()
-  set(JSON_LIBS "${RUBY_SOURCE_DIR}/ext/json/generator/generator.a" "${RUBY_SOURCE_DIR}/ext/json/parser/parser.a")
+  set(OTHER_EXT_LIBS 
+    "${RUBY_SOURCE_DIR}/ext/json/generator/generator.a" 
+    "${RUBY_SOURCE_DIR}/ext/json/parser/parser.a"
+    "${RUBY_SOURCE_DIR}/ext/rbconfig/sizeof/sizeof.a"
+#./ext/digest/digest.a
+    "${RUBY_SOURCE_DIR}/ext/digest/md5/md5.a"
+    "${RUBY_SOURCE_DIR}/ext/digest/rmd160/rmd160.a"
+    "${RUBY_SOURCE_DIR}/ext/digest/sha1/sha1.a"
+    "${RUBY_SOURCE_DIR}/ext/digest/sha2/sha2.a")
 endif()
 
 target_link_libraries(openstudio 
  ${EXTENSION_LIBS} 
- ${JSON_LIBS}
+ ${OTHER_EXT_LIBS}
  ${ENCODING_LIB}
  ${TRANSLATION_LIB}
  ruby_OpenStudioAirflow
