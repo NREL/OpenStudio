@@ -19,24 +19,24 @@
 
 #include "../ReverseTranslator.hpp"
 
-#include "GeneratorMicroTurbine.hpp"
-#include "GeneratorMicroTurbine_Impl.hpp"
-#include "GeneratorMicroTurbineHeatRecovery.hpp"
-#include "GeneratorMicroTurbineHeatRecovery_Impl.hpp"
+#include "../../model/GeneratorMicroTurbine.hpp"
+#include "../../model/GeneratorMicroTurbine_Impl.hpp"
+#include "../../model/GeneratorMicroTurbineHeatRecovery.hpp"
+#include "../../model/GeneratorMicroTurbineHeatRecovery_Impl.hpp"
 
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
 
-#include "Curve.hpp"
-#include "Curve_Impl.hpp"
-#include "CurveBicubic.hpp"
-#include "CurveBicubic_Impl.hpp"
-#include "CurveBiquadratic.hpp"
-#include "CurveBiquadratic_Impl.hpp"
-#include "CurveCubic.hpp"
-#include "CurveCubic_Impl.hpp"
-#include "CurveQuadratic.hpp"
-#include "CurveQuadratic_Impl.hpp"
+#include "../../model/Curve.hpp"
+#include "../../model/Curve_Impl.hpp"
+#include "../../model/CurveBicubic.hpp"
+#include "../../model/CurveBicubic_Impl.hpp"
+#include "../../model/CurveBiquadratic.hpp"
+#include "../../model/CurveBiquadratic_Impl.hpp"
+#include "../../model/CurveCubic.hpp"
+#include "../../model/CurveCubic_Impl.hpp"
+#include "../../model/CurveQuadratic.hpp"
+#include "../../model/CurveQuadratic_Impl.hpp"
 
 #include <utilities/idd/Generator_MicroTurbine_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
