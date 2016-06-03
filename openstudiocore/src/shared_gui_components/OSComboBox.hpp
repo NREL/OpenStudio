@@ -23,6 +23,7 @@
 #include "FieldMethodTypedefs.hpp"
 #include "OSConcepts.hpp"
 
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
 
@@ -35,7 +36,7 @@
 
 namespace openstudio {
 
-class OSComboBoxDataSource : public QObject
+class OSComboBoxDataSource : public QObject, public Nano::Observer
 {
   Q_OBJECT
 
@@ -95,7 +96,7 @@ class OSObjectListCBDS : public OSComboBoxDataSource
   QList<WorkspaceObject> m_workspaceObjects;
 };
 
-class OSComboBox2 : public QComboBox {
+class OSComboBox2 : public QComboBox, public Nano::Observer {
   Q_OBJECT
  public:
   
@@ -206,7 +207,7 @@ class OSComboBox2 : public QComboBox {
  *
  * Alternatively, a OSComboBoxDataSource can be set to provide data to OSComoboBox.
  **/
-class OSComboBox : public QComboBox {
+class OSComboBox : public QComboBox, public Nano::Observer {
   Q_OBJECT
 
  public:

@@ -20,6 +20,7 @@
 #ifndef SHAREDGUICOMPONENTS_OSQUANTITYEDIT_HPP
 #define SHAREDGUICOMPONENTS_OSQUANTITYEDIT_HPP
 
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "FieldMethodTypedefs.hpp"
 
 #include "../model/ModelObject.hpp"
@@ -64,7 +65,7 @@ signals:
 
 };
 
-class OSQuantityEdit2: public QWidget {
+class OSQuantityEdit2: public QWidget, public Nano::Observer {
   Q_OBJECT
  public:
 
@@ -187,7 +188,7 @@ class OSQuantityEdit2: public QWidget {
 };
 
 /** \deprecated Use OSQuantityEdit2. */
-class OSQuantityEdit: public QWidget {
+class OSQuantityEdit: public QWidget, public Nano::Observer {
   Q_OBJECT
   
  public:

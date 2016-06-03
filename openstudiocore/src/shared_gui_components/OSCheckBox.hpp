@@ -25,11 +25,12 @@
 #include "../model/Model.hpp"
 
 #include <QCheckBox>
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 #include <QPushButton>
 
 namespace openstudio {
 
-  class OSCheckBox3 : public QCheckBox {
+  class OSCheckBox3 : public QCheckBox, public Nano::Observer {
     Q_OBJECT
 
   public:
@@ -69,7 +70,7 @@ namespace openstudio {
     boost::optional<BasicQuery> m_isDefaulted;
   };
 
-  class OSCheckBox2 : public QPushButton {
+  class OSCheckBox2 : public QPushButton, public Nano::Observer {
   Q_OBJECT
 
  public:
@@ -102,7 +103,7 @@ namespace openstudio {
   boost::optional<BasicQuery> m_isDefaulted;
 };
 
-class OSCheckBox : public QPushButton {
+class OSCheckBox : public QPushButton, public Nano::Observer {
   Q_OBJECT
 
  public:

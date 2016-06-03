@@ -22,6 +22,7 @@
 
 #include "FieldMethodTypedefs.hpp"
 
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "../model/ModelObject.hpp"
 #include "../model/ModelExtensibleGroup.hpp"
 
@@ -37,7 +38,7 @@ namespace openstudio {
 
 /** Should only be used for dimensionless real fields. Real fields with units should use
  *  OSQuantityEdit. */
-class OSDoubleEdit2: public QLineEdit {
+class OSDoubleEdit2: public QLineEdit, public Nano::Observer {
   Q_OBJECT
  public:
 
@@ -162,7 +163,7 @@ class OSDoubleEdit2: public QLineEdit {
 
 /** Should only be used for dimensionless real fields. Real fields with units should use
  *  OSQuantityEdit. */
-class OSDoubleEdit: public QLineEdit {
+class OSDoubleEdit: public QLineEdit, public Nano::Observer {
   Q_OBJECT
 
  public:

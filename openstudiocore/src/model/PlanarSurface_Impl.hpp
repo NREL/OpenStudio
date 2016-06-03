@@ -26,6 +26,8 @@
 #include "../utilities/geometry/Point3d.hpp"
 #include "../utilities/geometry/Vector3d.hpp"
 
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+
 namespace openstudio {
 
 namespace model {
@@ -39,7 +41,7 @@ class GeneratorPhotovoltaic;
 namespace detail {
 
   // derive PlanarSurface_Impl from ParentObject_Impl to override virtual methods
-  class MODEL_API PlanarSurface_Impl : public ParentObject_Impl{
+  class MODEL_API PlanarSurface_Impl : public ParentObject_Impl {
     Q_OBJECT;
     Q_PROPERTY(double area READ grossArea);
     Q_PROPERTY(double grossArea READ grossArea);

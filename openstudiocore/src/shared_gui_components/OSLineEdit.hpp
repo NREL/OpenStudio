@@ -22,6 +22,7 @@
 
 #include "FieldMethodTypedefs.hpp"
 
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "../model/Model.hpp"
 
 #include <QLineEdit>
@@ -35,7 +36,7 @@ namespace openstudio {
 
 class OSItem;
 
-class OSLineEdit2 : public QLineEdit {
+class OSLineEdit2 : public QLineEdit, public Nano::Observer {
   Q_OBJECT
 
 public:
@@ -132,7 +133,7 @@ signals:
   bool m_deleteObject = false;
 };
 
-class OSLineEdit : public QLineEdit
+class OSLineEdit : public QLineEdit, public Nano::Observer
 {
   Q_OBJECT
 

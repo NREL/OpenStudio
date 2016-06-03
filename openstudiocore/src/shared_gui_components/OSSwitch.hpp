@@ -20,6 +20,7 @@
 #ifndef SHAREDGUICOMPONENTS_OSSWITCH_HPP
 #define SHAREDGUICOMPONENTS_OSSWITCH_HPP
 
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "FieldMethodTypedefs.hpp"
 
 #include "../model/Model.hpp"
@@ -27,7 +28,7 @@
 
 namespace openstudio {
 
-class OSSwitch2 : public QPushButton {
+class OSSwitch2 : public QPushButton, public Nano::Observer {
   Q_OBJECT
  public:
 
@@ -64,7 +65,7 @@ class OSSwitch2 : public QPushButton {
   boost::optional<BasicQuery> m_isDefaulted;
 };
 
-class OSSwitch : public QPushButton
+class OSSwitch : public QPushButton, public Nano::Observer
 {
   Q_OBJECT
 

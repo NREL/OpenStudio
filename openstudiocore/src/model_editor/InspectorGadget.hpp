@@ -47,7 +47,7 @@ class QVBoxLayout;
 
 class ComboHighlightBridge;
 
-class MODELEDITOR_API IGWidget : public QWidget
+class MODELEDITOR_API IGWidget : public QWidget, public Nano::Observer
 {
   public:
   
@@ -91,7 +91,7 @@ class IGComboBox : public QComboBox
  * Choice is displayed as a ComboBox
  *
  */
-class MODELEDITOR_API InspectorGadget : public QWidget, Nano::Observer
+class MODELEDITOR_API InspectorGadget : public QWidget, public Nano::Observer
 {
 
   Q_OBJECT
@@ -166,7 +166,7 @@ public:
 
   void setUnitSystem(const UNIT_SYSTEM unitSystem);
 
-  void workspaceObjectRemoved(const openstudio::Handle &); // Moved to become regular function due to chaining
+  void removeWorkspaceObject(const openstudio::Handle &); // Middleman nano slot to emit QT signal to simulate signal chaining
 
 public slots:
 
@@ -244,7 +244,7 @@ public slots:
    */
   void dirty();
 
-  // void workspaceObjectRemoved(const openstudio::Handle &);
+  void workspaceObjectRemoved(const openstudio::Handle &);
   
 
 protected slots:

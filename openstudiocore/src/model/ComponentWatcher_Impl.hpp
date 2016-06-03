@@ -38,7 +38,7 @@ class ComponentWatcher;
 
 namespace detail {
 
-  class MODEL_API ComponentWatcher_Impl : public QObject, public std::enable_shared_from_this<ComponentWatcher_Impl> {
+  class MODEL_API ComponentWatcher_Impl : public QObject, public std::enable_shared_from_this<ComponentWatcher_Impl>, public Nano::Observer {
     Q_OBJECT;
    public:
     /** @name Constructors and Destructors */

@@ -25,13 +25,14 @@
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
 #include <vector>
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 
 namespace openstudio {
 
 class OSItem;
 class OSItemId;
 
-class OSVectorController : public QObject
+class OSVectorController : public QObject, public Nano::Observer
 {
   Q_OBJECT
 

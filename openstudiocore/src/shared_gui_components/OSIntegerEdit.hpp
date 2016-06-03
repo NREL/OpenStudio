@@ -22,6 +22,7 @@
 
 #include "FieldMethodTypedefs.hpp"
 
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "../model/ModelObject.hpp"
 #include "../model/ModelExtensibleGroup.hpp"
 
@@ -36,7 +37,7 @@ class QFocusEvent;
 
 namespace openstudio {
 
-class OSIntegerEdit2: public QLineEdit {
+class OSIntegerEdit2: public QLineEdit, public Nano::Observer {
   Q_OBJECT
 
  public:
@@ -139,7 +140,7 @@ class OSIntegerEdit2: public QLineEdit {
   REGISTER_LOGGER("openstudio.OSIntegerEdit");
 };
 
-class OSIntegerEdit: public QLineEdit {
+class OSIntegerEdit: public QLineEdit, public Nano::Observer {
   Q_OBJECT
 
  public:

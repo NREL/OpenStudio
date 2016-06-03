@@ -22,6 +22,7 @@
 
 #include "ModelObjectVectorController.hpp"
 
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "../model/Building.hpp"
 #include "../model/DefaultScheduleSet.hpp"
 #include "../model/Model.hpp"
@@ -151,7 +152,7 @@ protected:
   virtual void onDrop(const OSItemId& itemId) override;
 };
 
-class SpaceLoadInstancesWidget : public QWidget
+class SpaceLoadInstancesWidget : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 

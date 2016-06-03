@@ -1236,14 +1236,9 @@ void InspectorGadget::onWorkspaceObjectRemoved(const openstudio::Handle &)
   QTimer::singleShot(0,this,SLOT(onTimeout()));
 }
 
-void InspectorGadget::workspaceObjectRemoved(const openstudio::Handle& handle)
+void InspectorGadget::removeWorkspaceObject(const openstudio::Handle &handle)
 {
-  if (m_workspaceObj){
-    openstudio::detail::WorkspaceObject_Impl* impl = m_workspaceObj->getImpl<openstudio::detail::WorkspaceObject_Impl>().get();
-    if (impl){
-      impl->openstudio::detail::WorkspaceObject_Impl::workspaceObjectRemovedSignal.nano_emit(handle);
-    }
-  }
+  emit workspaceObjectRemoved(handle);
 }
 
 void InspectorGadget::connectWorkspaceObjectSignals() const
@@ -1253,10 +1248,9 @@ void InspectorGadget::connectWorkspaceObjectSignals() const
     if (impl){
       impl->openstudio::detail::WorkspaceObject_Impl::onChange.connect<InspectorGadget, &InspectorGadget::onWorkspaceObjectChanged>(const_cast<InspectorGadget *>(this));
 
-      impl->openstudio::detail::WorkspaceObject_Impl::onRemoveFromWorkspace.connect<InspectorGadget, &InspectorGadget::workspaceObjectRemoved>(const_cast<InspectorGadget *>(this));
-      // impl->openstudio::detail::WorkspaceObject_Impl::onRemoveFromWorkspace.connect<InspectorGadget, &InspectorGadget::onWorkspaceObjectRemoved>(const_cast<InspectorGadget *>(this)); // Remove issue of chaining.
+      impl->openstudio::detail::WorkspaceObject_Impl::onRemoveFromWorkspace.connect<InspectorGadget, &InspectorGadget::removeWorkspaceObject>(const_cast<InspectorGadget *>(this));
 
-      impl->openstudio::detail::WorkspaceObject_Impl::workspaceObjectRemovedSignal.connect<InspectorGadget, &InspectorGadget::onWorkspaceObjectRemoved>(const_cast<InspectorGadget *>(this));
+      connect(this, &InspectorGadget::workspaceObjectRemoved, this, &InspectorGadget::onWorkspaceObjectRemoved);
     }
   }
 }

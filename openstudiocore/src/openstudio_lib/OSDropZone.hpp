@@ -21,6 +21,7 @@
 #define OPENSTUDIO_OSDROPZONE_HPP
 
 #include "OSItem.hpp"
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 
 #include "../shared_gui_components/FieldMethodTypedefs.hpp"
 
@@ -50,7 +51,7 @@ class OSVectorController;
 // that looks different because it is initially designed to go 
 // in a grid.  It also works differently because it binds to function pointers.
 // There is no use of VectorController like in OSDropZone.
-class OSDropZone2 : public QWidget
+class OSDropZone2 : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -110,7 +111,7 @@ private:
   QLabel * m_label;
 };
 
-class OSDropZone : public QWidget
+class OSDropZone : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
@@ -230,7 +231,7 @@ private:
 // This is a version of OSDropZone that works with QGraphicsScene
 // as opposed to QWidget.  Much of the custom drawing in the HVAC 
 // interface is done with QGraphicsScene.
-class OSDropZoneItem : public QGraphicsObject
+class OSDropZoneItem : public QGraphicsObject, public Nano::Observer
 {
   Q_OBJECT;
 

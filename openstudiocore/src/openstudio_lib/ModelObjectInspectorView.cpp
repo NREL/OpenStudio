@@ -53,6 +53,17 @@ ModelObjectInspectorView::ModelObjectInspectorView(const openstudio::model::Mode
   connect(this, &ModelObjectInspectorView::toggleUnitsClicked, this, &ModelObjectInspectorView::toggleUnits);
 }
 
+void ModelObjectInspectorView::update()
+{
+  /** Nano Signal onChange originally modified a slot directly inside
+   *  QWidget called update(). This is fine, except for when we need
+   *  to automatically disconnect. Now this nano signal calls this slot,
+   *  And this slot automatically emits the QSignal that will call 
+   *  call QWidget::update().
+   */
+  emit onChange();
+}
+
 void ModelObjectInspectorView::selectModelObject(const openstudio::model::ModelObject& modelObject)
 {
   if (m_modelObject){
@@ -61,7 +72,7 @@ void ModelObjectInspectorView::selectModelObject(const openstudio::model::ModelO
 
   m_modelObject = modelObject;
 
-  m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->model::detail::ModelObject_Impl::onChange.connect<QWidget, &QWidget::update>(this);
+  m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->model::detail::ModelObject_Impl::onChange.connect<ModelObjectInspectorView, &ModelObjectInspectorView::update>(this);
 
   onSelectModelObject(*m_modelObject);
 }

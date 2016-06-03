@@ -23,6 +23,7 @@
 #include "ModelEditorAPI.hpp"
 
 #include "../model/Model.hpp"
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 
 #include "../utilities/idd/IddEnums.hpp"
 #include "../utilities/core/UUID.hpp"
@@ -46,7 +47,7 @@ namespace openstudio{
   }
 }
 
-class MODELEDITOR_API ModelObjectSelectorDialog : public QDialog
+class MODELEDITOR_API ModelObjectSelectorDialog : public QDialog, public Nano::Observer
 {
   Q_OBJECT
 
@@ -106,7 +107,7 @@ private:
   void loadComboBoxData();
 };
 
-class MODELEDITOR_API ModelObjectSelectorDialogWatcher : public QObject
+class MODELEDITOR_API ModelObjectSelectorDialogWatcher : public QObject, public Nano::Observer
 {
   Q_OBJECT
   

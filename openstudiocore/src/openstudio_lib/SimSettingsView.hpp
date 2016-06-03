@@ -22,6 +22,7 @@
 
 #include <QWidget>
 
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "../model/Model.hpp"
 #include "../model/ShadowCalculation.hpp"
 #include "../model/SimulationControl.hpp"
@@ -47,7 +48,7 @@ namespace openstudio {
   class OSSwitch2;
   class ScheduleCalendarWidget;
 
-class SimSettingsView : public QWidget
+class SimSettingsView : public QWidget, public Nano::Observer
 {
   Q_OBJECT
 
