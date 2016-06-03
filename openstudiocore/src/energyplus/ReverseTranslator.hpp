@@ -148,6 +148,8 @@ class ENERGYPLUS_API ReverseTranslator {
   boost::optional<model::ModelObject> translateFenestrationSurfaceDetailed(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateGasEquipment(const WorkspaceObject & workspaceObject);
+  
+  boost::optional<model::ModelObject> translateGeneratorMicroTurbine(const WorkspaceObject& workspaceObject);
 
   boost::optional<model::ModelObject> translateGroundHeatExchangerVertical(const WorkspaceObject & workspaceObject);
 
