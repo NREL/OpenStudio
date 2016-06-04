@@ -40,10 +40,14 @@ namespace detail {
   {
     OS_ASSERT(idfObject.iddObject().type() == RunPeriodControlDaylightSavingTime::iddObjectType());
 
-    bool result = setString(OS_RunPeriodControl_DaylightSavingTimeFields::StartDate, "2nd Sunday in March");
-    OS_ASSERT(result);
-    result = setString(OS_RunPeriodControl_DaylightSavingTimeFields::EndDate, "1st Sunday in November");
-    OS_ASSERT(result);
+    if (isEmpty(OS_RunPeriodControl_DaylightSavingTimeFields::StartDate)){
+      bool result = setString(OS_RunPeriodControl_DaylightSavingTimeFields::StartDate, "2nd Sunday in March");
+      OS_ASSERT(result);
+    }
+    if (isEmpty(OS_RunPeriodControl_DaylightSavingTimeFields::EndDate)){
+      bool result = setString(OS_RunPeriodControl_DaylightSavingTimeFields::EndDate, "1st Sunday in November");
+      OS_ASSERT(result);
+    }
   }
 
   RunPeriodControlDaylightSavingTime_Impl::RunPeriodControlDaylightSavingTime_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -133,19 +137,19 @@ namespace detail {
     std::stringstream ss;
     switch (nth.value()){
       case NthDayOfWeekInMonth::first:
-        ss << "1st " << dayOfWeek.valueName() << " in " << monthOfYear.valueName();
+        ss << "1st " << dayOfWeek.valueName() << " in " << monthOfYear.valueDescription();
         break;
       case NthDayOfWeekInMonth::second:
-        ss << "2nd " << dayOfWeek.valueName() << " in " << monthOfYear.valueName();
+        ss << "2nd " << dayOfWeek.valueName() << " in " << monthOfYear.valueDescription();
         break;
       case NthDayOfWeekInMonth::third:
-        ss << "3rd " << dayOfWeek.valueName() << " in " << monthOfYear.valueName();
+        ss << "3rd " << dayOfWeek.valueName() << " in " << monthOfYear.valueDescription();
         break;
       case NthDayOfWeekInMonth::fourth:
-        ss << "4th " << dayOfWeek.valueName() << " in " << monthOfYear.valueName();
+        ss << "4th " << dayOfWeek.valueName() << " in " << monthOfYear.valueDescription();
         break;
       case NthDayOfWeekInMonth::fifth:
-        ss << "5th " << dayOfWeek.valueName() << " in " << monthOfYear.valueName();
+        ss << "Last " << dayOfWeek.valueName() << " in " << monthOfYear.valueDescription();
         break;
       default:
         OS_ASSERT(false);
@@ -177,19 +181,19 @@ namespace detail {
     std::stringstream ss;
     switch (nth.value()){
       case NthDayOfWeekInMonth::first:
-        ss << "1st " << dayOfWeek.valueName() << " in " << monthOfYear.valueName();
+        ss << "1st " << dayOfWeek.valueName() << " in " << monthOfYear.valueDescription();
         break;
       case NthDayOfWeekInMonth::second:
-        ss << "2nd " << dayOfWeek.valueName() << " in " << monthOfYear.valueName();
+        ss << "2nd " << dayOfWeek.valueName() << " in " << monthOfYear.valueDescription();
         break;
       case NthDayOfWeekInMonth::third:
-        ss << "3rd " << dayOfWeek.valueName() << " in " << monthOfYear.valueName();
+        ss << "3rd " << dayOfWeek.valueName() << " in " << monthOfYear.valueDescription();
         break;
       case NthDayOfWeekInMonth::fourth:
-        ss << "4th " << dayOfWeek.valueName() << " in " << monthOfYear.valueName();
+        ss << "4th " << dayOfWeek.valueName() << " in " << monthOfYear.valueDescription();
         break;
       case NthDayOfWeekInMonth::fifth:
-        ss << "5th " << dayOfWeek.valueName() << " in " << monthOfYear.valueName();
+        ss << "Last " << dayOfWeek.valueName() << " in " << monthOfYear.valueDescription();
         break;
       default:
         OS_ASSERT(false);
