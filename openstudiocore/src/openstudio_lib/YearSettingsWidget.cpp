@@ -635,7 +635,6 @@ void YearSettingsWidget::onDefineStartByDateClicked()
 
   m_startDateEdit->setEnabled(true);
 
-  m_startDateEdit->setDate(m_startDateEdit->date());
   emit dstStartDateChanged(m_startDateEdit->date());
 }
 
@@ -649,8 +648,7 @@ void YearSettingsWidget::onDefineEndByDateClicked()
 
   m_endDateEdit->setEnabled(true);
 
-  m_endDateEdit->setDate(m_endDateEdit->date());
-  emit dstEndDateChanged(m_startDateEdit->date());
+  emit dstEndDateChanged(m_endDateEdit->date());
 }
 
 } // openstudio
