@@ -141,7 +141,7 @@ bool ExportXML::exportXML(const analysisdriver::SimpleProject project, QString x
         errors << toQString(datapoint.displayName());
       }
     }else{
-		errors << toQString(datapoint.displayName());
+    errors << toQString(datapoint.displayName());
     }
     // drop this DataPoint's Model and SqlFile from memory
     datapoint.clearFileDataFromCache();
@@ -188,7 +188,7 @@ boost::optional<QDomElement> ExportXML::exportAlternative(QDomDocument& doc,
     QDomElement nameElem = doc.createElement("baseline_type");
     alternative.appendChild(nameElem);
     nameElem.appendChild(doc.createTextNode("EDA Baseline"));
-	  isBaseline = true;
+    isBaseline = true;
   }
   
   if (dataPt.displayName() == proposedBaselineName) {
@@ -337,7 +337,7 @@ boost::optional<QDomElement> ExportXML::exportAlternative(QDomDocument& doc,
 
     //checks
     if ( boost::optional<Attribute> checksAttr = alternativeAttr.findChildByName("checks") ) {
-		  if (boost::optional<QDomElement> checksElem = exportChecks(doc, isBaseline, *checksAttr)){
+      if (boost::optional<QDomElement> checksElem = exportChecks(doc, isBaseline, *checksAttr)){
         alternative.appendChild(*checksElem);
       }       
     }
@@ -784,7 +784,7 @@ boost::optional<QDomElement> ExportXML::exportMonthly(QDomDocument& doc,
 } 
 
 boost::optional<QDomElement> ExportXML::exportChecks(QDomDocument& doc,
-													                            bool& isBaseline,
+                                                      bool& isBaseline,
                                                       const Attribute& checksAttr)
   {
       
@@ -815,7 +815,7 @@ boost::optional<QDomElement> ExportXML::exportChecks(QDomDocument& doc,
       QDomElement checkElem = doc.createElement("check");
       checksElem.appendChild(checkElem);
       for ( const Attribute & checkValAttr : checkAttr.valueAsAttributeVector()) {
-		    if ( checkValAttr.name() == "name" ) {
+        if ( checkValAttr.name() == "name" ) {
           QDomElement elem = doc.createElement("name");
           checkElem.appendChild(elem);
           elem.appendChild(doc.createTextNode(toQString(checkValAttr.valueAsString())));
