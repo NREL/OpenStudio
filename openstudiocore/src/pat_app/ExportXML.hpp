@@ -79,6 +79,7 @@ namespace pat {
                                                 const Attribute& monthlyAttr);
 
     boost::optional<QDomElement> exportChecks(QDomDocument& doc,
+                                              bool& isBaseline,
                                               const Attribute& checksAttr);
 
   };

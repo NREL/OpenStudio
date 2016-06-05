@@ -56,6 +56,7 @@
 
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include <QMessageBox>
 #include <QJsonDocument>
@@ -140,7 +141,7 @@ bool ExportXML::exportXML(const analysisdriver::SimpleProject project, QString x
         errors << toQString(datapoint.displayName());
       }
     }else{
-		errors << toQString(datapoint.displayName());
+    errors << toQString(datapoint.displayName());
     }
     // drop this DataPoint's Model and SqlFile from memory
     datapoint.clearFileDataFromCache();
@@ -182,10 +183,12 @@ boost::optional<QDomElement> ExportXML::exportAlternative(QDomDocument& doc,
   nameElem.appendChild(doc.createTextNode(name));
   
   //baseline type
+  bool isBaseline = false;
   if (dataPt.displayName() == edaBaselineName) {
     QDomElement nameElem = doc.createElement("baseline_type");
     alternative.appendChild(nameElem);
     nameElem.appendChild(doc.createTextNode("EDA Baseline"));
+    isBaseline = true;
   }
   
   if (dataPt.displayName() == proposedBaselineName) {
@@ -334,7 +337,7 @@ boost::optional<QDomElement> ExportXML::exportAlternative(QDomDocument& doc,
 
     //checks
     if ( boost::optional<Attribute> checksAttr = alternativeAttr.findChildByName("checks") ) {
-      if ( boost::optional<QDomElement> checksElem = exportChecks(doc, *checksAttr) ){
+      if (boost::optional<QDomElement> checksElem = exportChecks(doc, isBaseline, *checksAttr)){
         alternative.appendChild(*checksElem);
       }       
     }
@@ -781,6 +784,7 @@ boost::optional<QDomElement> ExportXML::exportMonthly(QDomDocument& doc,
 } 
 
 boost::optional<QDomElement> ExportXML::exportChecks(QDomDocument& doc,
+                                                      bool& isBaseline,
                                                       const Attribute& checksAttr)
   {
       
@@ -788,6 +792,26 @@ boost::optional<QDomElement> ExportXML::exportChecks(QDomDocument& doc,
   QDomElement checksElem = doc.createElement("checks");
   for ( const Attribute & checkAttr : checksAttr.valueAsAttributeVector()) {
     if ( checkAttr.name() == "check" ) {
+      
+      // determine if this is a baseline check
+      bool isBaselineCheck = false;
+      for (const Attribute & checkValAttr : checkAttr.valueAsAttributeVector()) {
+        if (checkValAttr.name() == "category") {
+          if (boost::iequals(checkValAttr.valueAsString(), "Baseline"))
+          {
+            isBaselineCheck = true;
+          }
+        }
+      }
+
+      // Do not export this check if it is
+      // a baseline check but the alternative
+      // is not the baseline.
+      if (isBaselineCheck && !isBaseline) {
+        continue; // Skip to the next check
+      }
+
+      // Export the check
       QDomElement checkElem = doc.createElement("check");
       checksElem.appendChild(checkElem);
       for ( const Attribute & checkValAttr : checkAttr.valueAsAttributeVector()) {
@@ -812,6 +836,8 @@ boost::optional<QDomElement> ExportXML::exportChecks(QDomDocument& doc,
           elem.appendChild(doc.createTextNode(toQString(checkValAttr.valueAsString()))); 
         }
       }
+
+
     }
   }
 
