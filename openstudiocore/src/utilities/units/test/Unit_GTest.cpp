@@ -57,7 +57,7 @@ TEST_F(UnitsFixture,Unit_Constructors)
   testStreamOutput("km",u1);
 
   // bad scale specifications
-  ASSERT_THROW(Unit(1),Exception);
+  ASSERT_THROW(Unit(100),Exception);
   ASSERT_THROW(Unit("b"),Exception);
 }
 
