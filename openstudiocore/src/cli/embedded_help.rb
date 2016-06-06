@@ -1,10 +1,22 @@
+
+module RbConfig
+  def RbConfig.ruby
+    EmbeddedScripting::applicationFilePath;
+  end
+end
+
 BINDING = Kernel::binding()
+Encoding.default_external = Encoding::ASCII
 
 module Kernel
   # ":" is our root path to the embedded file system
   # make sure it is in the ruby load path
   $LOAD_PATH << ':'
   $LOAD_PATH << ':/ruby/2.2.0'
+  # TODO configure this in a better way
+  # these hardcoded platform paths are brain dead
+  $LOAD_PATH << ':/ruby/2.2.0/x86_64-darwin13'
+  $LOAD_PATH << ':/ruby/2.2.0/x64-mswin64_120'
   $LOAD_PATH << ':/openstudio-workflow-1.0.0.alpha.0/lib'
   $LOADED = []
 
