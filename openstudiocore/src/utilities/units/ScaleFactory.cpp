@@ -105,10 +105,17 @@ ScaleFactorySingleton::ScaleFactorySingleton() {
   registerScale(tera);
   registerScale(giga);
   registerScale(mega);
+  registerScale(hectokilo);
+  registerScale(myria);
   registerScale(kilo);
+  registerScale(hecto);
+  registerScale(deka);
   registerScale(one);
+  registerScale(deci);
   registerScale(centi);
   registerScale(milli);
+  registerScale(decimilli);
+  registerScale(centimilli);
   registerScale(micro);
   registerScale(nano);
   registerScale(pico);

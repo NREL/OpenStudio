@@ -110,6 +110,64 @@ TEST_F(UnitsFixture, IPUnit_convert)
   EXPECT_NEAR(10.7639, value.get(), 0.0001);
 }
 
+TEST_F(UnitsFixture, IPUnit_convert2)
+{
+  boost::optional<double> value;
+
+  value = convert(1.0, "in", "cm");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(2.54, value.get(), 0.0001);
+
+  value = convert(1.0, "cm", "in");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(0.393701, value.get(), 0.0001);
+
+  value = convert(1.0, "in^2", "cm^2");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(6.4516, value.get(), 0.0001);
+
+  value = convert(1.0, "cm^2", "in^2");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(0.1550, value.get(), 0.0001);
+
+  value = convert(1.0, "1/in^2", "1/cm^2");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(0.1550, value.get(), 0.0001);
+
+  value = convert(1.0, "$/in^2", "$/cm^2");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(0.1550, value.get(), 0.0001);
+}
+
+TEST_F(UnitsFixture, IPUnit_convert3)
+{
+  boost::optional<double> value;
+
+  value = convert(1.0, "in", "ft");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(0.083333, value.get(), 0.0001);
+
+  value = convert(1.0, "ft", "in");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(12.0, value.get(), 0.0001);
+
+  value = convert(1.0, "in^2", "ft^2");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(0.006944, value.get(), 0.0001);
+
+  value = convert(1.0, "ft^2", "in^2");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(144.0, value.get(), 0.0001);
+
+  value = convert(1.0, "1/in^2", "1/ft^2");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(144.0, value.get(), 0.0001);
+
+  value = convert(1.0, "$/in^2", "$/ft^2");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(144.0, value.get(), 0.0001);
+}
+
 TEST_F(UnitsFixture,IPUnit_LogicalOperators)
 {
   LOG(Debug,"IPUnit_LogicalOperators");

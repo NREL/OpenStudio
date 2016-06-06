@@ -33,7 +33,9 @@ using openstudio::tera;
 using openstudio::giga;
 using openstudio::mega;
 using openstudio::kilo;
+using openstudio::deka;
 using openstudio::one;
+using openstudio::deci;
 using openstudio::centi;
 using openstudio::milli;
 using openstudio::micro;
@@ -99,9 +101,9 @@ TEST_F(UnitsFixture,ScaleFactory_ScaleOperations) {
   ASSERT_EQ(scaleResult.first().exponent,0);
   testNumbersEqual(1.0,scaleResult.second);
   // exact match not in factory
-  scaleResult = centi()*kilo();
-  ASSERT_EQ(scaleResult.first().exponent,0);
-  testNumbersEqual(10.0,scaleResult.second);
+  scaleResult = deci()*micro();
+  ASSERT_EQ(scaleResult.first().exponent,-6);
+  testNumbersEqual(0.1,scaleResult.second);
 
   // DIVISION
   // exact match in factory
@@ -109,8 +111,8 @@ TEST_F(UnitsFixture,ScaleFactory_ScaleOperations) {
   ASSERT_EQ(scaleResult.first().exponent,3);
   testNumbersEqual(1.0,scaleResult.second);
   // exact match not in factory
-  scaleResult = micro()/centi();
-  ASSERT_EQ(scaleResult.first().exponent,-3);
+  scaleResult = micro()/deka();
+  ASSERT_EQ(scaleResult.first().exponent,-6);
   testNumbersEqual(0.1,scaleResult.second);
 
   // POWER
@@ -122,8 +124,8 @@ TEST_F(UnitsFixture,ScaleFactory_ScaleOperations) {
   ASSERT_EQ(scaleResult.first().exponent,0);
   testNumbersEqual(1.0,scaleResult.second);
   // exact match not in factory
-  scaleResult = pow(centi(),-2);
-  ASSERT_EQ(3,scaleResult.first().exponent);
+  scaleResult = pow(centi(),-5);
+  ASSERT_EQ(9,scaleResult.first().exponent);
   testNumbersEqual(10.0,scaleResult.second);
 
 }
