@@ -197,10 +197,10 @@ if( WIN32 )
     "${RUBY_SOURCE_DIR}/ext/digest/md5/md5.lib"
     "${RUBY_SOURCE_DIR}/ext/digest/rmd160/rmd160.lib"
     "${RUBY_SOURCE_DIR}/ext/digest/sha1/sha1.lib"
-    "${RUBY_SOURCE_DIR}/ext/digest/sha2/sha2.lib")
+    "${RUBY_SOURCE_DIR}/ext/digest/sha2/sha2.lib"
     debug
     "${RUBY_SOURCE_DIR_DEBUG}/ext/json/generator/generator.lib" 
-    "${RUBY_SOURCE_DIR_DEBUG}/ext/json/parser/parser.lib")
+    "${RUBY_SOURCE_DIR_DEBUG}/ext/json/parser/parser.lib"
     "${RUBY_SOURCE_DIR_DEBUG}/ext/digest/md5/md5.lib"
     "${RUBY_SOURCE_DIR_DEBUG}/ext/digest/rmd160/rmd160.lib"
     "${RUBY_SOURCE_DIR_DEBUG}/ext/digest/sha1/sha1.lib"
