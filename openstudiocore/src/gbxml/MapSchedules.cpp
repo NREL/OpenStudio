@@ -40,7 +40,6 @@
 
 #include <utilities/idd/OS_ScheduleTypeLimits_FieldEnums.hxx>
 
-#include <QFile>
 #include <QDomDocument>
 #include <QDomElement>
 #include <QStringList>

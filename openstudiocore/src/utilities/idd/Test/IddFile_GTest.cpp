@@ -36,7 +36,7 @@
 #include <resources.hxx>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem/fstream.hpp>
+
 
 #include <utilities/idd/IddEnums.hxx>
 
@@ -61,7 +61,7 @@ TEST_F(IddFixture, EpIddFile)
 
   // from file
   path iddPath = resourcesPath()/toPath("energyplus/ProposedEnergy+.idd");
-  boost::filesystem::ifstream inFile(iddPath); ASSERT_TRUE(inFile?true:false);
+  openstudio::filesystem::ifstream inFile(iddPath); ASSERT_TRUE(inFile?true:false);
   OptionalIddFile loadedIddFile = IddFile::load(inFile);
   ASSERT_TRUE(loadedIddFile); inFile.close();
 
@@ -138,7 +138,7 @@ TEST_F(IddFixture, OSIddFile)
 
   // from file
   path iddPath = resourcesPath() / toPath("model/OpenStudio.idd");
-  boost::filesystem::ifstream inFile(iddPath); ASSERT_TRUE(inFile ? true : false);
+  openstudio::filesystem::ifstream inFile(iddPath); ASSERT_TRUE(inFile ? true : false);
   OptionalIddFile loadedIddFile = IddFile::load(inFile);
   ASSERT_TRUE(loadedIddFile); inFile.close();
 

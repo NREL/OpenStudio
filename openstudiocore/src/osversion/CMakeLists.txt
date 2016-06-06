@@ -22,7 +22,7 @@ set(${target_name}_depends
   openstudio_model
 )
 
-add_library(${target_name} SHARED
+add_library(${target_name} STATIC 
   ${${target_name}_src}
 )
 
@@ -30,12 +30,13 @@ AddPCH(${target_name})
 
 target_link_libraries(${target_name} ${${target_name}_depends})
 
-if(NOT APPLE)
-  install(TARGETS ${target_name}
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-  )
-endif()
+# No need to install static lib
+#if(NOT APPLE)
+#  install(TARGETS ${target_name}
+#    RUNTIME DESTINATION bin
+#    LIBRARY DESTINATION lib
+#  )
+#endif()
 
 set(${target_name}_test_depends
   ${${target_name}_depends}

@@ -44,6 +44,7 @@
 #include "../model/ConstructionBase_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FilesystemHelpers.hpp"
 #include "../utilities/units/UnitFactory.hpp"
 #include "../utilities/units/QuantityConverter.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
@@ -51,7 +52,6 @@
 #include <utilities/idd/IddEnums.hxx>
 
 
-#include <QFile>
 #include <QDomDocument>
 #include <QDomElement>
 #include <QThread>
@@ -90,12 +90,12 @@ namespace gbxml {
 
     boost::optional<openstudio::model::Model> result;
 
-    if (boost::filesystem::exists(path)){
+    if (openstudio::filesystem::exists(path)){
 
-      QFile file(toQString(path));
-      if (file.open(QFile::ReadOnly)){
+      openstudio::filesystem::ifstream file(path, std::ios_base::binary);
+      if (file.is_open()) {
         QDomDocument doc;
-        doc.setContent(&file);
+        doc.setContent(openstudio::filesystem::read_as_QByteArray(file));
         file.close();
 
         result = this->convert(doc);

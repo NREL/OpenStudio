@@ -1,0 +1,73 @@
+######################################################################
+#  Copyright (c) 2008-2016, Alliance for Sustainable Energy.  
+#  All rights reserved.
+#  
+#  This library is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU Lesser General Public
+#  License as published by the Free Software Foundation; either
+#  version 2.1 of the License, or (at your option) any later version.
+#  
+#  This library is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#  Lesser General Public License for more details.
+#  
+#  You should have received a copy of the GNU Lesser General Public
+#  License along with this library; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+######################################################################
+
+require 'openstudio'
+require 'minitest/autorun'
+
+class RubyWorkflow_Test < MiniTest::Unit::TestCase
+
+  def test_Workflow
+
+    # General setup
+    epw_path = OpenStudio::Path.new($OpenStudio_ResourcePath + "runmanager/USA_CO_Golden-NREL.724666_TMY3.epw") 
+
+    # Get energyplus configuration
+    co = OpenStudio::Runmanager::ConfigOptions.new(true)
+    co.fastFindEnergyPlus()
+    co.fastFindRuby()
+
+    # Generate some reasonable output directory name
+    outdir = OpenStudio::tempDir() / OpenStudio::Path.new("rubyworkflow")
+    osm_path = outdir / OpenStudio::Path.new("in.osm") 
+    OpenStudio::Model::exampleModel().save(osm_path, true)
+
+    # Create a new workflow. We are going to take advantage of the string processor
+    # constructor to help us kick start the first two parts 
+    #workflow = OpenStudio::Runmanager::Workflow.new("modeltoidf")
+    workflow = OpenStudio::Runmanager::Workflow.new("modeltoidf->energyplus")
+
+    # DLM: this does not work for reporting measures, issue #2021
+    # DLM: actually this does appear to work, it just outputs an error message saying it doesn't
+    standardReportMeasure = OpenStudio::BCLMeasure.standardReportMeasure
+    rubyjobbuilder = OpenStudio::Runmanager::RubyJobBuilder.new(standardReportMeasure)
+    rubyjobbuilder.setIncludeDir(OpenStudio::Path.new($OpenStudio_Dir)) 
+
+    # Add it to the workflow
+    workflow.addJob(rubyjobbuilder.toWorkItem())
+
+    # Set up the basic general tools needed. This takes care of EnergyPlus, XMLPreprocessor, Radiance, Ruby 
+    workflow.add(co.getTools)
+
+    # Create a runmanager
+    run_manager = OpenStudio::Runmanager::RunManager.new(OpenStudio::tempDir() / OpenStudio::Path.new("rubyworkflow.db"), true)
+
+    # create the job tree
+    jobtree = workflow.create(outdir, osm_path, epw_path)
+
+    # run the job tree
+    run_manager.enqueue(jobtree, true)
+
+    # wait until done
+    run_manager.waitForFinished()
+
+    # get path of report
+    puts jobtree.treeOutputFiles().getLastByFilename("report.html").fullPath.to_s
+    
+  end
+end

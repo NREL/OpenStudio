@@ -60,8 +60,8 @@
 
 #include <resources.hxx>
 
-#include <boost/filesystem/fstream.hpp>
-#include <boost/filesystem.hpp>
+
+
 
 using namespace openstudio;
 
@@ -83,7 +83,7 @@ TEST_F(IdfFixture, IdfFile_Workspace_Roundtrip)
   IdfFile copyOfIdfFile = workspace.toIdfFile();
   // until == available, print out for diff
   openstudio::path outPath = outDir/toPath("passedThroughWorkspace.idf");
-  boost::filesystem::ofstream outFile(outPath); ASSERT_TRUE(outFile?true:false);
+  openstudio::filesystem::ofstream outFile(outPath); ASSERT_TRUE(outFile?true:false);
   copyOfIdfFile.print(outFile); outFile.close();
 }
 

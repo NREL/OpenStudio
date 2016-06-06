@@ -29,6 +29,7 @@ class QNetworkAccessManager;
 class QNetworkRequest;
 class QMutex;
 class QSslError;
+class QFile;
 
 namespace openstudio{
 
@@ -242,6 +243,8 @@ namespace openstudio{
     // DLM: once this actually uses the website it will need a non-blocking implementation
     /// Validate an OAuth key
     bool validateAuthKey(const std::string& authKey, const std::string& remoteUrl);
+
+    QString checkForRedirect(const QNetworkReply* reply) const;
 
     bool waitForLock(int msec) const;
 

@@ -303,5 +303,29 @@ module Ruleset
     end      
   end
   
+  # support for name deprecated as of 2.0.0
+  class RubyUserScriptInfo < OpenStudio::Measure::OSMeasureInfo
+    def initialize(*args)
+      OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "RubyUserScriptInfo is deprecated, use OpenStudio::Measure::OSMeasureInfo instead.")
+      if args.size == 1
+        super(args[0])
+      elsif args.size == 8
+        super(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7],args[8])
+      end
+    end          
+  end
+  
+  # support for name deprecated as of 2.0.0
+  def self.infoExtractorRubyFunction
+    OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "Ruleset is deprecated, use OpenStudio::Measure::infoExtractorRubyFunction instead.")
+    return OpenStudio::Measure.infoExtractorRubyFunction
+  end
+    
+  # support for name deprecated as of 2.0.0
+  def self.getInfo(measure, model, workspace)
+    OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "Ruleset is deprecated, use OpenStudio::Measure::getInfo instead.")
+    return OpenStudio::Measure.getInfo(measure, model, workspace)
+  end
+  
 end # module Ruleset
 end # module OpenStudio

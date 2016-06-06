@@ -23,6 +23,7 @@
 #include "../core/Assert.hpp"
 #include "../core/Containers.hpp"
 #include "../core/Json.hpp"
+#include "../core/FilesystemHelpers.hpp"
 
 #include "../units/UnitFactory.hpp"
 #include "../units/Quantity.hpp"
@@ -37,7 +38,6 @@
 
 #include <QDomElement>
 #include <QDomDocument>
-#include <QFile>
 
 namespace openstudio {
 namespace detail{
@@ -810,12 +810,12 @@ namespace detail{
     QDomText text;
 
     childElement = doc.createElement(QString::fromStdString("UUID"));
-    text = doc.createTextNode(m_uuid.toString());
+    text = doc.createTextNode(openstudio::toQString(m_uuid));
     childElement.appendChild(text);
     element.appendChild(childElement);
 
     childElement = doc.createElement(QString::fromStdString("VersionUUID"));
-    text = doc.createTextNode(m_versionUUID.toString());
+    text = doc.createTextNode(openstudio::toQString(m_versionUUID));
     childElement.appendChild(text);
     element.appendChild(childElement);
 
@@ -1397,13 +1397,12 @@ boost::optional<Attribute> Attribute::loadFromXml(const openstudio::path& path)
 {
   boost::optional<Attribute> result;
 
-  if (boost::filesystem::exists(path)){
+  if (openstudio::filesystem::exists(path)){
     try{
 
-      QFile file(toQString(path));
-      file.open(QFile::ReadOnly);
+      openstudio::filesystem::ifstream file(path, std::ios_base::binary);
       QDomDocument qDomDocument;
-      qDomDocument.setContent(&file);
+      qDomDocument.setContent(openstudio::filesystem::read_as_QByteArray(file));
       file.close();
 
       result = Attribute(qDomDocument.documentElement());
@@ -1579,14 +1578,14 @@ bool Attribute::saveToXml(const openstudio::path& path) const
   bool result = false;
 
   try {
-    QFile file(toQString(path));
-    file.open(QFile::WriteOnly);
-    QTextStream out(&file);
-    this->toXml().save(out, 2);
+    openstudio::filesystem::ofstream file(path);
+    openstudio::filesystem::write(file, this->toXml().toString(2));
     file.close();
     result = true;
   }
-  catch(...) {}
+  catch( const std::exception &e) {
+    LOG_FREE(Error, "openstudio.Attribute", "Error saving to XML: " << e.what());
+  } 
 
   return result;
 }

@@ -54,15 +54,20 @@ macro(CREATE_TEST_TARGETS BASE_NAME SRC DEPENDENCIES)
 
     CREATE_SRC_GROUPS("${SRC}")
 
-    get_target_property(BASE_NAME_TYPE ${BASE_NAME} TYPE)
-    if("${BASE_NAME_TYPE}" STREQUAL "EXECUTABLE")
+    if(TARGET ${BASE_NAME})
+      get_target_property(BASE_NAME_TYPE ${BASE_NAME} TYPE)
+      if("${BASE_NAME_TYPE}" STREQUAL "EXECUTABLE")
+        # don't link base name
+        set(ALL_DEPENDENCIES ${DEPENDENCIES})
+      else()
+        # also link base name
+        set(ALL_DEPENDENCIES ${BASE_NAME} ${DEPENDENCIES})
+      endif()
+    else()
       # don't link base name
       set(ALL_DEPENDENCIES ${DEPENDENCIES})
-    else()
-      # also link base name
-      set(ALL_DEPENDENCIES ${BASE_NAME} ${DEPENDENCIES})
     endif()
-
+    
     target_link_libraries(${BASE_NAME}_tests
       gtest
       gtest_main
@@ -230,7 +235,6 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
 
 
-
   include_directories(${RUBY_INCLUDE_DIRS})
 
   if(WIN32)
@@ -275,16 +279,17 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
   #message(STATUS "${${NAME}_SWIG_Depends}")
   
-  set(RUBY_AUTODOC "")
-  if(BUILD_DOCUMENTATION)
-    set(RUBY_AUTODOC -features autodoc=1)
-  endif()
+  #set(RUBY_AUTODOC "")
+  #if(BUILD_DOCUMENTATION)
+  #  set(RUBY_AUTODOC -features autodoc=1)
+  #endif()
   
   add_custom_command(
     OUTPUT "${SWIG_WRAPPER}"
     COMMAND "${SWIG_EXECUTABLE}"
             "-ruby" "-c++" "-fvirtual" "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src" "${extra_includes}" "${extra_includes2}" ${RUBY_AUTODOC}
             -module "${MODULE}" -initname "${LOWER_NAME}"
+            "-I${CMAKE_SOURCE_DIR}/ruby"
             -o "${SWIG_WRAPPER_FULL_PATH}"
             "${SWIG_DEFINES}" ${SWIG_COMMON} "${KEY_I_FILE}"
     DEPENDS ${this_depends}
@@ -297,12 +302,12 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
   endif()
 
+  include_directories(${CMAKE_SOURCE_DIR})
+
   add_library(
-    ${swig_target}
-    MODULE
+    ${swig_target} STATIC
     ${SWIG_WRAPPER}
   )
-
 
   AddPCH(${swig_target})
 
@@ -319,23 +324,17 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
   endif()
 
-  set_target_properties(${swig_target} PROPERTIES PREFIX "")
-  set_target_properties(${swig_target} PROPERTIES OUTPUT_NAME "${LOWER_NAME}")
-  if(APPLE)
-    set_target_properties(${swig_target} PROPERTIES SUFFIX ".bundle" )
-    #set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
-    #set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-undefined suppress -flat_namespace")
-  endif()
+  #set_target_properties(${swig_target} PROPERTIES PREFIX "")
+  #set_target_properties(${swig_target} PROPERTIES OUTPUT_NAME "${LOWER_NAME}")
+  #if(APPLE)
+  #  set_target_properties(${swig_target} PROPERTIES SUFFIX ".bundle" )
+  #  #set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
+  #  #set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-undefined suppress -flat_namespace")
+  #endif()
 
 
   if(MSVC)
-    # if visual studio 2010 or greater
-    if(NOT (${MSVC_VERSION} LESS 1600))
-      # trouble with macro redefinition in win32.h of Ruby
-      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4005 /wd4996") ## /wd4996 suppresses deprecated warning
-    else()
-      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996") ## /wd4996 suppresses deprecated warning
-    endif()
+    set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-DRUBY_EXTCONF_H=<osruby_config.h> -DRUBY_EMBEDDED /bigobj /wd4996") ## /wd4996 suppresses deprecated warning
   elseif(UNIX)
     if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
       # Prevent excessive warnings from generated swig files, suppress deprecated declarations
@@ -345,89 +344,90 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     endif()
   endif()
 
-  if(CMAKE_COMPILER_IS_GNUCXX)
-    if(GCC_VERSION VERSION_GREATER 4.6 OR GCC_VERSION VERSION_EQUAL 4.6)
-      set_source_files_properties(${SWIG_WRAPPER} PROPERTIES COMPILE_FLAGS "-Wno-uninitialized -Wno-unused-but-set-variable")
-    else()
-      set_source_files_properties(${SWIG_WRAPPER} PROPERTIES COMPILE_FLAGS "-Wno-uninitialized")
-    endif()
-  endif()
+  #if(CMAKE_COMPILER_IS_GNUCXX)
+  #  if(GCC_VERSION VERSION_GREATER 4.6 OR GCC_VERSION VERSION_EQUAL 4.6)
+  #    set_source_files_properties(${SWIG_WRAPPER} PROPERTIES COMPILE_FLAGS "-Wno-uninitialized -Wno-unused-but-set-variable")
+  #  else()
+  #    set_source_files_properties(${SWIG_WRAPPER} PROPERTIES COMPILE_FLAGS "-Wno-uninitialized")
+  #  endif()
+  #endif()
 
   set_target_properties(${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/ruby/")
-  if(RUBY_VERSION_MAJOR EQUAL "2" AND MSVC)
-    # Ruby 2 requires modules to have a .so extension, even on windows
-    set_target_properties(${swig_target} PROPERTIES SUFFIX ".so")
-  endif()
+  #if(RUBY_VERSION_MAJOR EQUAL "2" AND MSVC)
+  #  # Ruby 2 requires modules to have a .so extension, even on windows
+  #  set_target_properties(${swig_target} PROPERTIES SUFFIX ".so")
+  #endif()
   set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/ruby/")
   set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/")
   target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS} ${RUBY_LIBRARY})
 
-  if(APPLE)
-    set(_NAME "${LOWER_NAME}.bundle")
-    # the following script will change the bindings to prefer the version of libruby included with SketchUp to the system library, preventing loading two different copies of libruby
-    add_custom_command(TARGET ${swig_target} POST_BUILD COMMAND ${RUBY_EXECUTABLE} "${CMAKE_SOURCE_DIR}/SketchUpInstallName.rb" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/${_NAME}")
-  elseif(RUBY_VERSION_MAJOR EQUAL "2" AND MSVC)
-    set(_NAME "${LOWER_NAME}.so")
-  else()
-    set(_NAME "${LOWER_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}")
-  endif()
+  ####Remove binding install related stuff. At least for now. Might need some of this to support sketchup
+  ####if(APPLE)
+  ####  set(_NAME "${LOWER_NAME}.bundle")
+  ####  # the following script will change the bindings to prefer the version of libruby included with SketchUp to the system library, preventing loading two different copies of libruby
+  ####  add_custom_command(TARGET ${swig_target} POST_BUILD COMMAND ${RUBY_EXECUTABLE} "${CMAKE_SOURCE_DIR}/SketchUpInstallName.rb" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/${_NAME}")
+  ####elseif(RUBY_VERSION_MAJOR EQUAL "2" AND MSVC)
+  ####  set(_NAME "${LOWER_NAME}.so")
+  ####else()
+  ####  set(_NAME "${LOWER_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+  ####endif()
 
-  if(WIN32 OR APPLE)
-    install(TARGETS ${swig_target} DESTINATION Ruby/openstudio/)
-
-
-    install(CODE "
-      #message(\"INSTALLING SWIG_TARGET: ${swig_target}  with NAME = ${_NAME}\")
-      include(GetPrerequisites)
-      get_prerequisites(\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/${_NAME} PREREQUISITES 1 1 \"\" \"${Prereq_Dirs}\")
-      #message(\"PREREQUISITES = \${PREREQUISITES}\")
+  ####if(WIN32 OR APPLE)
+  ####  install(TARGETS ${swig_target} DESTINATION Ruby/openstudio/)
 
 
-      if(WIN32)
-        list(REVERSE PREREQUISITES)
-      endif()
+  ####  install(CODE "
+  ####    #message(\"INSTALLING SWIG_TARGET: ${swig_target}  with NAME = ${_NAME}\")
+  ####    include(GetPrerequisites)
+  ####    get_prerequisites(\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/${_NAME} PREREQUISITES 1 1 \"\" \"${Prereq_Dirs}\")
+  ####    #message(\"PREREQUISITES = \${PREREQUISITES}\")
 
-      foreach(PREREQ IN LISTS PREREQUISITES)
-      
-        if(APPLE AND PREREQ MATCHES \".*libruby.*\")  
-          # skip updating references to libruby, we do not install this with the bindings
-        else()   
-          gp_resolve_item(\"\" \${PREREQ} \"\" \"${Prereq_Dirs}\" resolved_item_var)
-          execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\")
-  
-          get_filename_component(PREREQNAME \${resolved_item_var} NAME)
-  
-          if(APPLE)
-            execute_process(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/\${PREREQNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/${_NAME}\")
-            foreach(PR IN LISTS PREREQUISITES)
-              gp_resolve_item(\"\" \${PR} \"\" \"\" PRPATH)
-              get_filename_component( PRNAME \${PRPATH} NAME)
-              execute_process(COMMAND \"install_name_tool\" -change \"\${PR}\" \"@loader_path/\${PRNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\${PREREQNAME}\")
-            endforeach()
-          else()
-            if(EXISTS \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\")
-              file(READ \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" TEXT)
-            else()
-              set(TEXT \"\")
-            endif()
-            string(REGEX MATCH \${PREREQNAME} MATCHVAR \"\${TEXT}\")
-            if(NOT (\"\${MATCHVAR}\" STREQUAL \"\${PREREQNAME}\"))
-              file(APPEND \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" \"DL::dlopen \\\"\\\#{File.dirname(__FILE__)}/\${PREREQNAME}\\\"\n\")
-            endif()
-          endif()        
-        endif()
 
-      endforeach()
-    ")
-  else()
-    install(TARGETS ${swig_target} DESTINATION "${RUBY_MODULE_ARCH_DIR}")
-  endif()
-  if(UNIX)
-    # do not write file on unix, existence of file is checked before it is loaded
-    #install(CODE "
-    #  file(WRITE \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" \"# Nothing to see here\")
-    #")
-  endif()
+  ####    if(WIN32)
+  ####      list(REVERSE PREREQUISITES)
+  ####    endif()
+
+  ####    foreach(PREREQ IN LISTS PREREQUISITES)
+  ####    
+  ####      if(APPLE AND PREREQ MATCHES \".*libruby.*\")  
+  ####        # skip updating references to libruby, we do not install this with the bindings
+  ####      else()   
+  ####        gp_resolve_item(\"\" \${PREREQ} \"\" \"${Prereq_Dirs}\" resolved_item_var)
+  ####        execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\")
+  ####
+  ####        get_filename_component(PREREQNAME \${resolved_item_var} NAME)
+  ####
+  ####        if(APPLE)
+  ####          execute_process(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/\${PREREQNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/${_NAME}\")
+  ####          foreach(PR IN LISTS PREREQUISITES)
+  ####            gp_resolve_item(\"\" \${PR} \"\" \"\" PRPATH)
+  ####            get_filename_component( PRNAME \${PRPATH} NAME)
+  ####            execute_process(COMMAND \"install_name_tool\" -change \"\${PR}\" \"@loader_path/\${PRNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\${PREREQNAME}\")
+  ####          endforeach()
+  ####        else()
+  ####          if(EXISTS \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\")
+  ####            file(READ \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" TEXT)
+  ####          else()
+  ####            set(TEXT \"\")
+  ####          endif()
+  ####          string(REGEX MATCH \${PREREQNAME} MATCHVAR \"\${TEXT}\")
+  ####          if(NOT (\"\${MATCHVAR}\" STREQUAL \"\${PREREQNAME}\"))
+  ####            file(APPEND \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" \"DL::dlopen \\\"\\\#{File.dirname(__FILE__)}/\${PREREQNAME}\\\"\n\")
+  ####          endif()
+  ####        endif()        
+  ####      endif()
+
+  ####    endforeach()
+  ####  ")
+  ####else()
+  ####  install(TARGETS ${swig_target} DESTINATION "${RUBY_MODULE_ARCH_DIR}")
+  ####endif()
+  ####if(UNIX)
+  ####  # do not write file on unix, existence of file is checked before it is loaded
+  ####  #install(CODE "
+  ####  #  file(WRITE \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" \"# Nothing to see here\")
+  ####  #")
+  ####endif()
 
   execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\")
 
@@ -501,11 +501,12 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996") ## /wd4996 suppresses deprecated warning
       set_target_properties(${swig_target} PROPERTIES SUFFIX ".pyd")
     elseif(UNIX)
-      if(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
-        set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations")
-      else()
-        set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
-      endif()
+      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED -Wno-deprecated-declarations")
+      #if(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
+      #  set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations")
+      #else()
+      #  set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
+      #endif()
     endif()
 
     target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS} ${PYTHON_LIBRARY})
@@ -1031,7 +1032,7 @@ function(QT5_WRAP_CPP_MINIMALLY outfiles)
   foreach(it ${moc_files})
     get_filename_component(it ${it} ABSOLUTE)
     qt5_make_output_file(${it} moc_ cxx outfile)
-    qt5_create_moc_command(${it} ${outfile} "${moc_flags}" "${moc_options}" "${moc_target}")
+    qt5_create_moc_command(${it} ${outfile} "${moc_flags}" "${moc_options}" "${moc_target}" "")
     list(APPEND ${outfiles} ${outfile})
   endforeach()
   set(${outfiles} ${${outfiles}} PARENT_SCOPE)

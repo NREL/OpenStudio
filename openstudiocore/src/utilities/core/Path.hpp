@@ -22,10 +22,11 @@
 
 #include "../UtilitiesAPI.hpp"
 
-#include <boost/filesystem/path.hpp>
-#include <boost/filesystem/operations.hpp>
 #include <ostream>
 #include <boost/optional.hpp>
+
+#include "Filesystem.hpp"
+
 
 
 // forward declarations
@@ -34,8 +35,7 @@ class QTextStream;
 
 namespace openstudio {
 
-/** Typedef boost::filesystem::path to openstudio::path. */
-typedef boost::filesystem::path path;
+
 
 // allow wpath to be written to cout on Windows
 UTILITIES_API ::std::ostream& operator<<(::std::ostream& os, const path& p);

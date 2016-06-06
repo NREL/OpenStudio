@@ -73,7 +73,7 @@ void UtilityBillFuelTypeListController::objectAdded(std::shared_ptr<openstudio::
         emit itemIds(ids);
 
         for (const OSItemId& id : ids){
-          if (id.itemId() == impl->handle().toString()){
+          if (id.itemId() == toQString(impl->handle())){
             emit selectedItemId(id);
             break;
           }

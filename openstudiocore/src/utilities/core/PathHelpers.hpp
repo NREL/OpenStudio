@@ -77,7 +77,7 @@ UTILITIES_API path relocatePath(const path& originalPath,
                                 const path& originalBase,
                                 const path& newBase);
 
-/** Print information about path p available through boost::filesystem. */
+/** Print information about path p available through openstudio::filesystem. */
 UTILITIES_API std::ostream& printPathInformation(std::ostream& os,const path& p);
 
 /** Recursively remove a directory, not subject to MAX_PATH */

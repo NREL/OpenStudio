@@ -179,9 +179,9 @@ TEST_F(SqlFileFixture, BadStatement)
 TEST_F(SqlFileFixture, CreateSqlFile)
 {
   openstudio::path outfile = openstudio::tempDir() / openstudio::toPath("OpenStudioSqlFileTest.sql");
-  if (boost::filesystem::exists(outfile))
+  if (openstudio::filesystem::exists(outfile))
   {
-    boost::filesystem::remove(outfile);
+    openstudio::filesystem::remove(outfile);
   }
 
   openstudio::Calendar c(2012);
@@ -315,13 +315,13 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   openstudio::path fromPath = resourcesPath() / toPath("utilities/SqlFile") / toPath(name);
   openstudio::path path = toPath(name);
 
-  if (boost::filesystem::exists(path)){
-    boost::filesystem::remove(path);
+  if (openstudio::filesystem::exists(path)){
+    openstudio::filesystem::remove(path);
   }
-  ASSERT_FALSE(boost::filesystem::exists(path));
-  ASSERT_TRUE(boost::filesystem::exists(fromPath)) << toString(fromPath);
-  boost::filesystem::copy(fromPath, path);
-  ASSERT_TRUE(boost::filesystem::exists(path));
+  ASSERT_FALSE(openstudio::filesystem::exists(path));
+  ASSERT_TRUE(openstudio::filesystem::exists(fromPath)) << toString(fromPath);
+  openstudio::filesystem::copy(fromPath, path);
+  ASSERT_TRUE(openstudio::filesystem::exists(path));
 
   boost::optional<SqlFile> sqlFile;
   EXPECT_NO_THROW(sqlFile = SqlFile(path));

@@ -104,6 +104,8 @@
 #include "../model/ZoneHVACLowTempRadiantVarFlow_Impl.hpp"
 #include "../model/ZoneHVACPackagedTerminalAirConditioner.hpp"
 #include "../model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
+#include "../model/ZoneHVACPackagedTerminalHeatPump.hpp"
+#include "../model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
 #include "../model/ZoneHVACUnitHeater.hpp"
 #include "../model/ZoneHVACUnitHeater_Impl.hpp"
 #include "../model/ZoneHVACUnitVentilator.hpp"
@@ -567,6 +569,28 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       connect(static_cast<ZoneHVACPackagedTerminalAirConditionerInspectorView *>(m_currentView), &ZoneHVACPackagedTerminalAirConditionerInspectorView::removeFromLoopClicked,
               this, &InspectorView::removeFromLoopClicked);
     }
+    else if( boost::optional<model::ZoneHVACPackagedTerminalHeatPump> component = 
+             modelObject->optionalCast<model::ZoneHVACPackagedTerminalHeatPump>()  )
+
+    {
+      if( m_currentView )
+      {
+        delete m_currentView;
+      }
+
+      m_currentView = new ZoneHVACPackagedTerminalHeatPumpInspectorView();
+      connect(this, &InspectorView::toggleUnitsClicked, m_currentView, &BaseInspectorView::toggleUnitsClicked);
+
+      m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
+
+      m_vLayout->addWidget(m_currentView);
+
+      connect(static_cast<ZoneHVACPackagedTerminalHeatPumpInspectorView *>(m_currentView), &ZoneHVACPackagedTerminalHeatPumpInspectorView::addToLoopClicked,
+              this, &InspectorView::addToLoopClicked);
+
+      connect(static_cast<ZoneHVACPackagedTerminalHeatPumpInspectorView *>(m_currentView), &ZoneHVACPackagedTerminalHeatPumpInspectorView::removeFromLoopClicked,
+              this, &InspectorView::removeFromLoopClicked);
+    }
     else if( boost::optional<model::WaterHeaterHeatPump> component = 
              modelObject->optionalCast<model::WaterHeaterHeatPump>()  )
 
@@ -845,7 +869,7 @@ NewPlenumDialog::NewPlenumDialog(QWidget * parent)
   {
     if( (! it->isPlenum()) && it->equipment().empty() && (! it->airLoopHVAC()) )
     {
-      zoneChooser->addItem(QString::fromStdString(it->name().get()),it->handle().toString());
+      zoneChooser->addItem(QString::fromStdString(it->name().get()),toQString(it->handle()));
     }
   }
 
@@ -1021,7 +1045,7 @@ void ThermalZoneInspectorView::onSupplyPlenumChooserChanged(int newIndex)
   OS_ASSERT(thermalZone);
 
   QString newPlenumString = m_plenumChooser->supplyPlenumChooser->itemData(newIndex).toString();
-  Handle newPlenumHandle(newPlenumString);
+  Handle newPlenumHandle(toUUID(newPlenumString));
 
   emit moveBranchForZoneSupplySelected(thermalZone.get(),newPlenumHandle);
 }
@@ -1034,7 +1058,7 @@ void ThermalZoneInspectorView::onReturnPlenumChooserChanged(int newIndex)
   OS_ASSERT(thermalZone);
 
   QString newPlenumString = m_plenumChooser->returnPlenumChooser->itemData(newIndex).toString();
-  Handle newPlenumHandle(newPlenumString);
+  Handle newPlenumHandle(toUUID(newPlenumString));
 
   emit moveBranchForZoneReturnSelected(thermalZone.get(),newPlenumHandle);
 }
@@ -1047,7 +1071,7 @@ void ThermalZoneInspectorView::onNewSupplyPlenumClicked()
   if( result == QDialog::Accepted )
   {
     QComboBox * cb = dialog.zoneChooser;
-    Handle newZoneHandle(cb->itemData(cb->currentIndex()).toString());
+    Handle newZoneHandle(toUUID(cb->itemData(cb->currentIndex()).toString()));
     if( ! newZoneHandle.isNull() )
     {
       OS_ASSERT(m_modelObject);
@@ -1068,7 +1092,7 @@ void ThermalZoneInspectorView::onNewReturnPlenumClicked()
   if( result == QDialog::Accepted )
   {
     QComboBox * cb = dialog.zoneChooser;
-    Handle newZoneHandle(cb->itemData(cb->currentIndex()).toString());
+    Handle newZoneHandle(toUUID(cb->itemData(cb->currentIndex()).toString()));
     if( ! newZoneHandle.isNull() )
     {
       OS_ASSERT(m_modelObject);
@@ -1159,11 +1183,11 @@ void ThermalZoneInspectorView::update()
     boost::optional<model::ThermalZone> t_plenumZone = it->thermalZone();
     if( t_plenumZone )
     {
-      supplyChooser->addItem(supplyPixmap,QString::fromStdString(t_plenumZone->name().get()),it->handle().toString());
+      supplyChooser->addItem(supplyPixmap,QString::fromStdString(t_plenumZone->name().get()),toQString(it->handle()));
     }
     else 
     {
-      supplyChooser->addItem(supplyPixmap,QString::fromStdString(it->name().get()),it->handle().toString());
+      supplyChooser->addItem(supplyPixmap,QString::fromStdString(it->name().get()),toQString(it->handle()));
     }
   }
   supplyChooser->addItem("Ducted Supply - No Plenum","");
@@ -1176,7 +1200,7 @@ void ThermalZoneInspectorView::update()
   }
   else
   {
-    supplyChooser->setCurrentIndex(supplyChooser->findData(thisZoneSupplyPlenums.front().handle().toString()));
+    supplyChooser->setCurrentIndex(supplyChooser->findData(toQString(thisZoneSupplyPlenums.front().handle())));
   }
   supplyChooser->blockSignals(false);
 
@@ -1213,11 +1237,11 @@ void ThermalZoneInspectorView::update()
     boost::optional<model::ThermalZone> t_plenumZone = it->thermalZone();
     if( t_plenumZone )
     {
-      returnChooser->addItem(returnPixmap,QString::fromStdString(t_plenumZone->name().get()),it->handle().toString());
+      returnChooser->addItem(returnPixmap,QString::fromStdString(t_plenumZone->name().get()), toQString(it->handle()));
     }
     else 
     {
-      returnChooser->addItem(returnPixmap,QString::fromStdString(it->name().get()),it->handle().toString());
+      returnChooser->addItem(returnPixmap,QString::fromStdString(it->name().get()), toQString(it->handle()));
     }
   }
   returnChooser->addItem("Ducted Return - No Plenum","");
@@ -1230,7 +1254,7 @@ void ThermalZoneInspectorView::update()
   }
   else
   {
-    returnChooser->setCurrentIndex(returnChooser->findData(thisZoneReturnPlenums.front().handle().toString()));
+    returnChooser->setCurrentIndex(returnChooser->findData(toQString(thisZoneReturnPlenums.front().handle())));
   }
   returnChooser->blockSignals(false);
 }
@@ -2166,6 +2190,76 @@ void ZoneHVACPackagedTerminalAirConditionerInspectorView::layoutModelObject( mod
         modelObject.optionalCast<model::ZoneHVACPackagedTerminalAirConditioner>() )
   {
     if( boost::optional<model::HVACComponent> coil = ptac->heatingCoil() )
+    {
+      if( boost::optional<model::WaterToAirComponent> waterToAirCoil = coil->optionalCast<model::WaterToAirComponent>() )
+      {
+        boost::optional<model::ModelObject> mo = waterToAirCoil.get();
+
+        m_loopChooserView->layoutModelObject(mo);
+
+        waterCoil = true;
+      }
+    }
+  }
+
+  if( ! waterCoil )
+  {
+    boost::optional<model::ModelObject> mo;
+
+    m_loopChooserView->layoutModelObject(mo);
+  }
+}
+
+ZoneHVACPackagedTerminalHeatPumpInspectorView::ZoneHVACPackagedTerminalHeatPumpInspectorView( QWidget * parent )
+  : BaseInspectorView(parent)
+{
+  m_inspectorGadget = new InspectorGadget();
+  connect(this, &ZoneHVACPackagedTerminalHeatPumpInspectorView::toggleUnitsClicked, m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
+  connect(m_inspectorGadget, &InspectorGadget::workspaceObjectRemoved, this, &BaseInspectorView::workspaceObjectRemoved);
+
+  m_loopChooserView = new LoopChooserView();
+
+  m_libraryTabWidget->addTab( m_inspectorGadget,
+                              ":images/properties_icon_on.png",
+                              ":images/properties_icon_off.png" );
+
+  m_libraryTabWidget->addTab( m_loopChooserView,
+                              ":images/link_icon_on.png",
+                              ":images/link_icon_off.png" );
+
+  m_libraryTabWidget->setCurrentIndex(0);
+
+  connect(m_loopChooserView, &LoopChooserView::addToLoopClicked,
+          this, &ZoneHVACPackagedTerminalHeatPumpInspectorView::addToLoopClicked);
+  
+  connect(m_loopChooserView, &LoopChooserView::removeFromLoopClicked,
+          this, &ZoneHVACPackagedTerminalHeatPumpInspectorView::removeFromLoopClicked);
+}
+
+void ZoneHVACPackagedTerminalHeatPumpInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP)
+{
+  m_modelObject = modelObject;
+
+  bool force=false;
+  bool recursive=true;
+  bool locked=readOnly;
+  bool hideChildren=false;
+  if( displayIP )
+  {
+    m_inspectorGadget->setUnitSystem(InspectorGadget::IP);
+  }
+  else
+  {
+    m_inspectorGadget->setUnitSystem(InspectorGadget::SI);
+  }
+  m_inspectorGadget->layoutModelObj(modelObject, force, recursive, locked, hideChildren);
+
+  bool waterCoil = false;
+
+  if( boost::optional<model::ZoneHVACPackagedTerminalHeatPump> pthp = 
+        modelObject.optionalCast<model::ZoneHVACPackagedTerminalHeatPump>() )
+  {
+    if( boost::optional<model::HVACComponent> coil = pthp->supplementalHeatingCoil() )
     {
       if( boost::optional<model::WaterToAirComponent> waterToAirCoil = coil->optionalCast<model::WaterToAirComponent>() )
       {

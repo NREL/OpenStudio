@@ -19,11 +19,9 @@
 
 #include "GenerateIddFactory.hpp"
 
-#include <boost/filesystem/path.hpp>
 #include "../utilities/core/GeneratorApplicationPathHelpers.hpp"
 
 #include <boost/program_options.hpp>
-#include <boost/filesystem/fstream.hpp>
 
 #include <iostream>
 #include <exception>
@@ -60,7 +58,7 @@ int main(int argc, char *argv[])
     }
 
     // get valid output directory, if possible (otherwise throws)
-    boost::filesystem::path outPath = openstudio::getApplicationOutputDirectory(outdir);
+    openstudio::filesystem::path outPath = openstudio::getApplicationOutputDirectory(outdir);
 
     // get the idd file information, if possible (otherwise throws)
     openstudio::IddFileFactoryDataVector iddFiles = 

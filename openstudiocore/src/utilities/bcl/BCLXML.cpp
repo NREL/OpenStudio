@@ -28,33 +28,32 @@
 #include "../core/System.hpp"
 #include "../core/Checksum.hpp"
 #include "../core/Assert.hpp"
+#include "../core/FilesystemHelpers.hpp"
 #include "../time/DateTime.hpp"
 
 #include <QDomDocument>
-#include <QFile>
 
 namespace openstudio{
 
   BCLXML::BCLXML(const BCLXMLType& bclXMLType)
     : m_bclXMLType(bclXMLType)
   {
-    m_uid = removeBraces(UUID::createUuid());
-    m_versionId = removeBraces(UUID::createUuid());
+    m_uid = removeBraces(openstudio::createUUID());
+    m_versionId = removeBraces(openstudio::createUUID());
     m_versionModified = DateTime::nowUTC().toISO8601();
   }
 
   BCLXML::BCLXML(const openstudio::path& xmlPath):
-    m_path(boost::filesystem::system_complete(xmlPath))
+    m_path(openstudio::filesystem::system_complete(xmlPath))
   {
-    if (!boost::filesystem::exists(xmlPath) || !boost::filesystem::is_regular_file(xmlPath)){
+    if (!openstudio::filesystem::exists(xmlPath) || !openstudio::filesystem::is_regular_file(xmlPath)){
       LOG_AND_THROW("'" << toString(xmlPath) << "' does not exist");
     }
 
     QDomDocument bclXML("bclXML");
-    QFile file(toQString(m_path));
-    bool opened = file.open(QIODevice::ReadOnly | QIODevice::Text);
-    if (opened){
-      bclXML.setContent(&file);
+    openstudio::filesystem::ifstream file(m_path);
+    if (file.is_open()){
+      bclXML.setContent(openstudio::filesystem::read_as_QByteArray(file));
       file.close();
     }else{
       file.close();
@@ -523,7 +522,7 @@ namespace openstudio{
   {
     bool result = false;
 
-    openstudio::path test = boost::filesystem::system_complete(path);
+    openstudio::path test = openstudio::filesystem::system_complete(path);
 
     for (const BCLFileReference& file : m_files) {
       if (file.path() == test){
@@ -539,7 +538,7 @@ namespace openstudio{
   {
     bool result = false;
 
-    openstudio::path test = boost::filesystem::system_complete(path);
+    openstudio::path test = openstudio::filesystem::system_complete(path);
 
     std::vector<BCLFileReference> newFiles;
     for (const BCLFileReference& file : m_files) {
@@ -808,15 +807,12 @@ namespace openstudio{
     }
 
     // write to disk
-    QFile file(toQString(m_path));
-    bool opened = file.open(QIODevice::WriteOnly | QIODevice::Text);
-    if (!opened){
-      file.close();
+    openstudio::filesystem::ofstream file(m_path);
+    if (!file.is_open()){
       return false;
     }
 
-    QTextStream textStream(&file);
-    textStream << doc.toString(2);
+    openstudio::filesystem::write(file, doc.toString(2));
     file.close();
     return true;
   }
@@ -824,19 +820,19 @@ namespace openstudio{
   bool BCLXML::saveAs(const openstudio::path& xmlPath)
   {
     incrementVersionId();
-    m_path = boost::filesystem::system_complete(xmlPath);
+    m_path = openstudio::filesystem::system_complete(xmlPath);
     return save();
   }
 
   void BCLXML::changeUID()
   {
-    m_uid = removeBraces(UUID::createUuid());
+    m_uid = removeBraces(openstudio::createUUID());
     // DLM: should this call incrementVersionId() ?
   }
 
   void BCLXML::incrementVersionId()
   {
-    m_versionId = removeBraces(UUID::createUuid());
+    m_versionId = removeBraces(openstudio::createUUID());
     m_versionModified = DateTime::nowUTC().toISO8601();
   }
 

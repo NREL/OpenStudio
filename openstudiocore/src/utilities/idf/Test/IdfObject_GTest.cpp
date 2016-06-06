@@ -39,7 +39,7 @@
 
 #include <QVariant>
 
-#include <boost/filesystem/fstream.hpp>
+
 #include <boost/lexical_cast.hpp>
 
 #include <sstream>
@@ -69,7 +69,7 @@ TEST_F(IdfFixture, IdfObject_ConstructDefaultsFromIddObjectType) {
 
   // loop through each IddObject, create a default object, and print to a file.
   // examine, then partition into "good" and candidate for refactor (us or E+)
-  boost::filesystem::ofstream outFile("defaultObjects.idf");
+  openstudio::filesystem::ofstream outFile("defaultObjects.idf");
   ASSERT_TRUE(outFile?true:false);
 
   IddObjectVector iddObjects = IddFactory::instance().objects();
@@ -748,7 +748,7 @@ TEST_F(IdfFixture, Handle_QVariant)
 {
   Handle handle = createUUID();
   QVariant variant = QVariant::fromValue(handle);
-  EXPECT_EQ("QUuid", std::string(variant.typeName()));
+  EXPECT_EQ("openstudio::UUID", std::string(variant.typeName()));
   ASSERT_TRUE(variant.canConvert<Handle>());
   Handle handle2 = variant.value<Handle>();
   EXPECT_TRUE(handle == handle2);

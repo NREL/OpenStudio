@@ -327,8 +327,8 @@ TEST_F(ModelFixture, Component_CreateScheduleLibrary) {
     std::stringstream ss;
     ss << "./component" << index;
     openstudio::path p = toPath(ss.str());
-    if (boost::filesystem::exists(p)) {
-      boost::filesystem::remove_all(p);
+    if (openstudio::filesystem::exists(p)) {
+      openstudio::filesystem::remove_all(p);
     }
     component.save(p / toPath("component.osc"));
     ++index;

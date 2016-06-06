@@ -602,7 +602,7 @@ namespace openstudio {
 
   void SpacesSubtabGridView::loadTypeFilterChanged(const QString& text)
   {
-    LOG(Debug, "Load filter changed: " << text);
+    LOG(Debug, "Load filter changed: " << toString(text));
 
     auto objectSelector = this->m_gridController->getObjectSelector();
     if (text == ALL)

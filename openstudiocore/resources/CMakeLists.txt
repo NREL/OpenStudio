@@ -386,6 +386,12 @@ set(osversion_resources_src
   osversion/1_11_1/OpenStudio.idd
   osversion/1_11_1/example.osm
   osversion/1_11_1/example.osc
+  osversion/1_11_2/OpenStudio.idd
+  osversion/1_11_2/example.osm
+  osversion/1_11_2/example.osc
+  osversion/1_11_3/OpenStudio.idd
+  osversion/1_11_3/example.osm
+  osversion/1_11_3/example.osc
   osversion/unknown.osc
 )
 
@@ -402,28 +408,28 @@ add_custom_target(openstudio_osversion_resources
 CREATE_SRC_GROUPS("${osversion_resources_src}")
 
 
-if(APPLE)
-  install(DIRECTORY ${CMAKE_SOURCE_DIR}/resources/osversion
-          DESTINATION sharedresources
-  )
-  install(DIRECTORY ${CMAKE_SOURCE_DIR}/resources/web_assets
-          DESTINATION sharedresources
-  )
-elseif(UNIX)
-  install(DIRECTORY ${CMAKE_SOURCE_DIR}/resources/osversion
-          DESTINATION share/openstudio-${OPENSTUDIO_VERSION}
-  )
-  install(DIRECTORY ${CMAKE_SOURCE_DIR}/resources/web_assets
-          DESTINATION share/openstudio-${OPENSTUDIO_VERSION}
-  )
-else()
-  install(DIRECTORY ${CMAKE_SOURCE_DIR}/resources/osversion
-          DESTINATION share/openstudio
-  )
-  install(DIRECTORY ${CMAKE_SOURCE_DIR}/resources/web_assets
-          DESTINATION share/openstudio
-  )
-endif()
+#if(APPLE)
+#  install(DIRECTORY ${CMAKE_SOURCE_DIR}/resources/osversion
+#          DESTINATION sharedresources
+#  )
+#  install(DIRECTORY ${CMAKE_SOURCE_DIR}/resources/web_assets
+#          DESTINATION sharedresources
+#  )
+#elseif(UNIX)
+#  install(DIRECTORY ${CMAKE_SOURCE_DIR}/resources/osversion
+#          DESTINATION share/openstudio-${OPENSTUDIO_VERSION}
+#  )
+#  install(DIRECTORY ${CMAKE_SOURCE_DIR}/resources/web_assets
+#          DESTINATION share/openstudio-${OPENSTUDIO_VERSION}
+#  )
+#else()
+#  install(DIRECTORY ${CMAKE_SOURCE_DIR}/resources/osversion
+#          DESTINATION share/openstudio
+#  )
+#  install(DIRECTORY ${CMAKE_SOURCE_DIR}/resources/web_assets
+#          DESTINATION share/openstudio
+#  )
+#endif()
 
 
 ########################################################
@@ -711,3 +717,6 @@ add_custom_target(openstudio_airflow_resources
 )
 
 CREATE_SRC_GROUPS("${airflow_resources_src}")
+
+install(DIRECTORY "Examples" DESTINATION .)
+

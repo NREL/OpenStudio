@@ -141,9 +141,18 @@ if(CMAKE_COMPILER_IS_GNUCC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
 endif()
 
+IF (APPLE)
+   find_library(COREFOUNDATION_LIBRARY CoreFoundation )
+ENDIF (APPLE)
+
 if(UNIX AND NOT APPLE AND BUILD_TESTING)
   # Enable libgtest linking
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lpthread")
+endif()
+
+if( WIN32 )
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /OPT:REF /OPT:NOICF")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi")
 endif()
 
 
@@ -185,6 +194,8 @@ endif()
 ###############################################################################
 # Sub projects
 
+add_subdirectory(embedded)
+
 # Each subfolder of src is a major sub-project
 set(project_directories
   generateiddfactory
@@ -192,21 +203,17 @@ set(project_directories
   model
   energyplus
   radiance
-  gbxml
-  bimserver
+  #gbxml
+  #bimserver
   airflow
   isomodel
   osversion
   measure
-  #runmanager/lib
-  #analysis
-  #project
-  #analysisdriver
-  resultsviewer
-  model_editor
-  openstudio_lib
-  openstudio_app
+  #resultsviewer
+  #model_editor
+  #openstudio_lib
   sdd
+  cli
 )
 
 
@@ -344,42 +351,9 @@ unset(ENERGYPLUS_WEATHER_DIR CACHE)
 find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
 
 # Ruby
-find_program(RUBY_EXECUTABLE NAMES ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH)
-
-find_package(Ruby 2)
-
-if(NOT RUBY_FOUND)
-  find_path(RUBY_CONFIG_INCLUDE_DIR
-    NAMES ruby/config.h config.h
-    HINTS
-    /usr/include/x86_64-linux-gnu/ruby-2.0.0
-  )
-  find_package(Ruby 2.0 REQUIRED)
-endif()
-
+find_package(Ruby 2.2 REQUIRED)
 set(RUBY_MODULE_DIR "Ruby")
-
 set(RUBY_MODULE_ARCH_DIR "Ruby/openstudio")
-
-#We want to use the site_ruby folder if this is intended for /usr/local install
-#If it is intended for /usr install, we want to use the main ruby module folder
-if(${CMAKE_INSTALL_PREFIX} STREQUAL "/usr" AND RUBY_ARCH_DIR MATCHES "^/usr/lib.*/.*")
-  string(REGEX REPLACE "^/usr/" "" RUBY_MODULE_ARCH_DIR ${RUBY_ARCH_DIR})
-  string(REGEX REPLACE "^/usr/" "" RUBY_MODULE_DIR ${RUBY_RUBY_LIB_DIR})
-elseif(${CMAKE_INSTALL_PREFIX} STREQUAL "/usr/local" AND RUBY_SITEARCH_DIR MATCHES "^/usr/local/lib.*/.*")
-  string(REGEX REPLACE "^/usr/local/" "" RUBY_MODULE_ARCH_DIR ${RUBY_SITEARCH_DIR})
-  string(REGEX REPLACE "^/usr/local/" "" RUBY_MODULE_DIR ${RUBY_SITELIB_DIR})
-endif()
-
-if(UNIX AND NOT APPLE)
-  set(RUBY_MODULE_SITE_DIR "${RUBY_MODULE_DIR}")
-
-  set(RUBY_MODULE_DIR "lib/openstudio-${OPENSTUDIO_VERSION}/ruby/${RUBY_VERSION_MAJOR}.${RUBY_VERSION_MINOR}")
-  set(RUBY_MODULE_ARCH_DIR "lib/openstudio-${OPENSTUDIO_VERSION}/ruby/${RUBY_VERSION_MAJOR}.${RUBY_VERSION_MINOR}")
-endif()
-
-message(STATUS "Ruby module code installing to: ${RUBY_MODULE_DIR}")
-message(STATUS "Ruby module arch library installing to: ${RUBY_MODULE_ARCH_DIR}")
 
 
 # OpenSSL / libssh support
@@ -398,13 +372,11 @@ if(BUILD_WITH_OPENSSL)
     file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/Debug/")
     file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/RelWithDebInfo/")
     file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/MinSizeRel/")
-    install(FILES "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "bin")
-    install(FILES "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION ${RUBY_MODULE_ARCH_DIR})
+    #install(FILES "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "bin")
+    #install(FILES "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION ${RUBY_MODULE_ARCH_DIR})
   endif()
 
 endif()
-
-
 
 find_package(SWIG 3.0.0 REQUIRED)
 mark_as_advanced(
@@ -614,14 +586,43 @@ add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
 
 #--------------------------------------------------------------------------------
 # Qt
+if( WIN32 )
+  set(QT_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_msvc2013_64_static.zip")
+  file(MD5 ${QT_ZIP_LOCAL_PATH} QT_ZIP_MD5)
+  if( NOT QT_ZIP_MD5 STREQUAL "52424fdb4d553b94156de088881506b5" )
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/qt_5_6_msvc2013_64_static.zip" 
+      ${QT_ZIP_LOCAL_PATH} 
+      INACTIVITY_TIMEOUT 120 
+      SHOW_PROGRESS
+      EXPECTED_MD5 52424fdb4d553b94156de088881506b5)
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+  endif()
+  list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_msvc2013_64_static/lib/cmake")
+elseif( APPLE )
+  set(QT_TAR_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_osx_static.tar.gz")
+  file(MD5 ${QT_TAR_LOCAL_PATH} QT_TAR_MD5)
+  if( NOT QT_TAR_MD5 STREQUAL "e4bfe40212b660895f76d5728685373d" )
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/qt_5_6_osx_static.tar.gz" 
+      ${QT_TAR_LOCAL_PATH} 
+      INACTIVITY_TIMEOUT 120 
+      SHOW_PROGRESS
+      EXPECTED_MD5 e4bfe40212b660895f76d5728685373d)
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_TAR_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+  endif()
+  list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_osx_static/lib/cmake")
+endif()
 
+find_package(Qt5Core REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Sql REQUIRED)
 find_package(Qt5Network REQUIRED)
 find_package(Qt5Xml REQUIRED)
-#find_package(Qt5WinExtras)
 find_package(Qt5Concurrent REQUIRED)
 find_package(Qt5PrintSupport REQUIRED)
+find_package(Qt5Gui REQUIRED)
+if( WIN32 )
+  find_package(Qt5WinExtras REQUIRED)
+endif()
 mark_as_advanced(
   Qt5Concurrent_DIR
   Qt5Core_DIR
@@ -639,67 +640,56 @@ mark_as_advanced(
   Qt5Sensors_DIR
   Qt5Sql_DIR
   Qt5Widgets_DIR
-  #Qt5WinExtras_DIR
+  Qt5WinExtras_DIR
   Qt5Xml_DIR
 )
 
-if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
-  find_package(Qt5WebKit REQUIRED)
-  find_package(Qt5WebKitWidgets REQUIRED)
-  mark_as_advanced(Qt5WebKit_DIR Qt5WebKitWidgets_DIR)
-else()
-  find_package(Qt5WebEngine REQUIRED)
-  find_package(Qt5WebEngineWidgets REQUIRED)
-  mark_as_advanced(Qt5WebEngine_DIR Qt5WebEngineWidgets_DIR)
-endif()
-
 set(CMAKE_AUTOMOC OFF)
 
-#Adding libraries to the list of includes
-include_directories(${Qt5Widgets_INCLUDE_DIRS})
-include_directories(${Qt5Sql_INCLUDE_DIRS})
-include_directories(${Qt5Network_INCLUDE_DIRS})
-include_directories(${Qt5Xml_INCLUDE_DIRS})
-if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
-  include_directories(${Qt5WebKit_INCLUDE_DIRS})
-  include_directories(${Qt5WebKitWidgets_INCLUDE_DIRS})
-else()
-  include_directories(${Qt5WebEngine_INCLUDE_DIRS})
-  include_directories(${Qt5WebEngineWidgets_INCLUDE_DIRS})
-endif()
-#include_directories(${Qt5WinExtras_INCLUDE_DIRS})
-include_directories(${Qt5Concurrent_INCLUDE_DIRS})
-include_directories(${Qt5PrintSupport_INCLUDE_DIRS})
-
-#include_directories is supposed to be a set, however there are tons of Qt duplicate includes
-get_directory_property(dupdirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} INCLUDE_DIRECTORIES)
-list(REMOVE_DUPLICATES dupdirs)
-set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${dupdirs}")
-
-# list of all Qt libs and dependencies we are using
-list(APPEND QT_LIBS ${Qt5Widgets_LIBRARIES})
-list(APPEND QT_LIBS ${Qt5Sql_LIBRARIES})
-list(APPEND QT_LIBS ${Qt5Network_LIBRARIES})
-list(APPEND QT_LIBS ${Qt5Xml_LIBRARIES})
-if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
-  list(APPEND QT_LIBS ${Qt5WebKit_LIBRARIES})
-  list(APPEND QT_LIBS ${Qt5WebKitWidgets_LIBRARIES})
-else()
-  list(APPEND QT_LIBS ${Qt5WebEngine_LIBRARIES})
-  list(APPEND QT_LIBS ${Qt5WebEngineWidgets_LIBRARIES})
-endif()
-#list(APPEND QT_LIBS ${Qt5WinExtras_LIBRARIES})
-list(APPEND QT_LIBS ${Qt5Concurrent_LIBRARIES})
-list(APPEND QT_LIBS ${Qt5PrintSupport_LIBRARIES})
-
-### recreating QT_LIBRARY_DIR for qt5
-if(WIN32 AND TARGET Qt5::Core)
-  get_property(_Qt5_Core_LOCATION TARGET Qt5::Core PROPERTY LOCATION)
-  get_filename_component(QT_LIBRARY_DIR "${_Qt5_Core_LOCATION}" DIRECTORY)
-else()
-  set(QT_LIBRARY_DIR "")
+list(APPEND QT_LIBS Qt5::Core)
+list(APPEND QT_LIBS Qt5::Gui)
+list(APPEND QT_LIBS Qt5::Widgets)
+list(APPEND QT_LIBS Qt5::Sql)
+list(APPEND QT_LIBS Qt5::Network)
+list(APPEND QT_LIBS Qt5::Xml)
+list(APPEND QT_LIBS Qt5::Concurrent)
+list(APPEND QT_LIBS Qt5::PrintSupport)
+if( UNIX )
+  list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/plugins/sqldrivers/libqsqlite.a")
+  list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/lib/libqtpcre.a")
+  list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/lib/libqtharfbuzzng.a")
+  find_package(OpenGL REQUIRED)
+  list(APPEND QT_LIBS "${OPENGL_LIBRARIES}")
 endif()
 
+if( APPLE )
+  find_library(corefoundation_lib CoreFoundation)
+  find_library(cfnetwork_lib CFNetwork)
+  find_library(coregraphics_lib CoreGraphics)
+  find_library(carbon_lib Carbon)
+  find_library(appkit_lib AppKit)
+  find_library(systemconfiguration_lib SystemConfiguration)
+  find_library(security_lib Security)
+  list(APPEND QT_LIBS ${corefoundation_lib})
+  list(APPEND QT_LIBS ${cfnetwork_lib})
+  list(APPEND QT_LIBS ${coregraphics_lib})
+  list(APPEND QT_LIBS ${carbon_lib})
+  list(APPEND QT_LIBS ${appkit_lib})
+  list(APPEND QT_LIBS ${systemconfiguration_lib})
+  list(APPEND QT_LIBS ${security_lib})
+endif()
+
+if( WIN32 )
+  # This is a dirty hack and only works for release
+  # clean this up
+  list(APPEND QT_LIBS Qt5::WinExtras)
+  list(APPEND QT_LIBS wsock32)
+  list(APPEND QT_LIBS ws2_32)
+  list(APPEND QT_LIBS Crypt32)
+  list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/plugins/sqldrivers/qsqlite.lib")
+  list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/lib/qtpcre.lib")
+  list(APPEND QT_LIBS "${_qt5Widgets_install_prefix}/lib/qtharfbuzzng.lib")
+endif()
 
 ###############################################################################
 # qtwinmigrate
@@ -710,25 +700,14 @@ endif()
 ###############################################################################
 
 ###############################################################################
-# qwt
-add_subdirectory(src/qwt)
-###############################################################################
-
-###############################################################################
-## expat
-add_subdirectory(src/expat)
+## qwt
+#add_subdirectory(src/qwt)
 ###############################################################################
 
 ###############################################################################
 ## jsoncpp
 add_subdirectory(src/jsoncpp)
 ###############################################################################
-
-################################################################################
-## litesql
-include_directories(SYSTEM src/litesql/include src/litesql/library ${CMAKE_BINARY_DIR}/litesql)
-add_subdirectory(src/litesql)
-################################################################################
 
 ################################################################################
 ## sqlite
@@ -751,68 +730,15 @@ include_directories("${CMAKE_BINARY_DIR}/src/")
 # Include the resources, should happen after find EnergyPlus
 add_subdirectory(resources)
 
-
-# Set up embedded ruby for Unix use with 'aws-sdk'
-
-if(UNIX)
-  if(APPLE)
-    set(AWS_RUBY_PATH ruby-2.0.0-aws-Darwin)
-    set(AWS_RUBY_DESTINATION ".")
-    set(AWS_RUBY_URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0-p645-aws-Darwin.tar.bz2)
-    set(AWS_RUBY_CHECKSUM 49bceb609b5c1d6d41f824115af46ec4)
-  elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
-    set(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-x86_64)
-    set(AWS_RUBY_DESTINATION "lib/openstudio-${OPENSTUDIO_VERSION}")
-    set(AWS_RUBY_URL http://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.0.0-p645-aws-Linux-x86_64.tar.bz2)
-    set(AWS_RUBY_CHECKSUM c46c9e93770749208222aa43ca99fe62)
-  endif()
-
-  file(DOWNLOAD ${AWS_RUBY_URL} "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}.tar.bz2" TIMEOUT 120 INACTIVITY_TIMEOUT 120)
-  execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}")
-  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}.tar.bz2" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-
-  # Install required gems
-  set(ENV{BUNDLE_PATH} "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}/lib/ruby/gems/2.0.0")
-  execute_process(COMMAND "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}/bin/ruby" "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}/bin/bundle" "install" "--no-cache"
-                  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/../dependencies/ruby"
-                  TIMEOUT 120
-  )
-  execute_process(COMMAND "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}/bin/ruby" "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}/bin/bundle" "clean" "--force"
-                  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/../dependencies/ruby"
-                  TIMEOUT 120
-  )
-
-  install(
-    DIRECTORY "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}"
-    DESTINATION "${AWS_RUBY_DESTINATION}"
-    USE_SOURCE_PERMISSIONS
-  )
-endif()
-
-# end ruby aws-sdk info
-
 foreach(D ${project_directories})
   add_subdirectory(src/${D})
 endforeach()
 
 # Make sure resultsviewer has its resources built
-add_dependencies(ResultsViewer ResultsViewer_resources)
+#add_dependencies(ResultsViewer ResultsViewer_resources)
 
 # ruby, after loading projects
-add_subdirectory(ruby)
-
-if(UNIX AND NOT APPLE)
-
-  file(RELATIVE_PATH relative "${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}" "${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_DIR}")
-
-  install(CODE "
-    execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory \"\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}\")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink \"${relative}/openstudio.rb\" \"\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}/openstudio.rb\")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink \"${relative}/openstudio\" \"\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}/openstudio\")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink \"${relative}/cloud\" \"\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}/cloud\")
-  ")
-
-endif()
+#add_subdirectory(ruby)
 
 # csharp, after loading projects
 if(BUILD_CSHARP_BINDINGS)
@@ -947,31 +873,24 @@ else()
 endif()
 
 set(all_lib_targets
-  #openstudio_runmanager
-  #openstudio_project
   openstudio_osversion
   openstudio_model
-  openstudio_modeleditor
+  #openstudio_modeleditor
   openstudio_utilities
   openstudio_energyplus
-  #openstudio_analysisdriver
   openstudio_measure
-  #openstudio_analysis
   openstudio_radiance
-  openstudio_gbxml
-  openstudio_bimserver
+  #openstudio_gbxml
+  #openstudio_bimserver
   openstudio_isomodel
-  openstudio_lib
+  #openstudio_lib
   openstudio_sdd
   openstudio_airflow
   ${QTWINMIGRATE_EXPORT}
-  zkexpat
-  qwt
+  #qwt
   miniziplib
   sqlite
   jsoncpp
-  litesql
-  litesql-util
   ${ALL_RUBY_BINDING_TARGETS}
 )
 
@@ -984,7 +903,6 @@ set(all_exe_targets
   GenerateIddFactory
   gbXMLToIdf
   OpenStudio
-  litesql-gen
   ResultsViewer
 )
 
@@ -1005,8 +923,8 @@ else()
 endif()
 
 # Used by some Ruby tests, remove eventually
-install(FILES "${CMAKE_SOURCE_DIR}/resources/resultsviewer/SmallOffice/SmallOffice.idf"
-        DESTINATION "${examplesdir}/resultsviewer/SmallOffice/")
+#install(FILES "${CMAKE_SOURCE_DIR}/resources/resultsviewer/SmallOffice/SmallOffice.idf"
+#        DESTINATION "${examplesdir}/resultsviewer/SmallOffice/")
 # Unnecessary files or just left out for size?
 #install(FILES ${CMAKE_BINARY_DIR}/resources/resultsviewer/SmallOffice/eplustbl.htm
 #        DESTINATION ${examplesdir}/resultsviewer/SmallOffice/)
@@ -1015,7 +933,8 @@ install(FILES "${CMAKE_SOURCE_DIR}/resources/resultsviewer/SmallOffice/SmallOffi
 
 
 # Install additional Documents, such as release notes
-install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_10_0_20151218.pdf" DESTINATION .)
+#install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_10_0_20151218.pdf" DESTINATION .)
+install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/ReleaseNotes.md" DESTINATION .)
 
 ###############################################################################
 
@@ -1031,47 +950,36 @@ if(UNIX AND NOT APPLE)
 endif()
 
 if(NOT UNIX)
-  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_SOURCE_DIR}/../dependencies/strawberry-perl-5.16.2.1-32bit-portable-reduced.tar.bz2"
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    RESULT_VARIABLE rv)
+  #execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_SOURCE_DIR}/../dependencies/strawberry-perl-5.16.2.1-32bit-portable-reduced.tar.bz2"
+  #  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  #  RESULT_VARIABLE rv)
 
-  install(DIRECTORY "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced" DESTINATION .)
+  #install(DIRECTORY "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced" DESTINATION .)
 
-  get_filename_component(RubyEXEPath "${RUBY_EXECUTABLE}" DIRECTORY)
-  get_filename_component(RubyPath "${RubyEXEPath}" DIRECTORY)
-  install(DIRECTORY "${RubyPath}/" DESTINATION "ruby-install/ruby")
-
-  set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
+  #set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
   include(InstallRequiredSystemLibraries)
   if(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
     install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
       DESTINATION "bin")
-
-    # Install the system libraries to the ruby dir
-    install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-      DESTINATION "Ruby/openstudio")
-
-    install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-      DESTINATION "ruby-install/ruby/bin")
   endif()
 endif()
 
-# Package Radiance
-set(RADIANCE_LOCATION "" CACHE PATH "Location of Radiance to Package")
-if(APPLE)
-  install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
-elseif(MSVC)
-  install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
-else()
-  install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
-endif()
-
-# Package EnergyPlus
-get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
-if(APPLE)
-  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
-elseif(MSVC)
-  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
-else()
-  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
-endif()
+## Package Radiance
+#set(RADIANCE_LOCATION "" CACHE PATH "Location of Radiance to Package")
+#if(APPLE)
+#  install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+#elseif(MSVC)
+#  install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
+#else()
+#  install(DIRECTORY "${RADIANCE_LOCATION}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
+#endif()
+#
+## Package EnergyPlus
+#get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
+#if(APPLE)
+#  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
+#elseif(MSVC)
+#  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
+#else()
+#  install(DIRECTORY "${ENERGYPLUS_DIR}" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
+#endif()

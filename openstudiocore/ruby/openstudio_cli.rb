@@ -28,8 +28,13 @@ require 'irb'
 include OpenStudio::Workflow::Util::IO
 
 $logger = Logger.new(STDOUT)
-$logger.level = Logger::WARN
+$logger.level = Logger::ERROR
+#$logger.level = Logger::WARN
+#$logger.level = Logger::DEBUG
 
+#OpenStudio::Logger.instance.standardOutLogger.disable
+#OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Warn)
+OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Error)
 
 # This is the code chunk to allow for an embedded IRB shell. From Jason Roelofs, found on StackOverflow
 module IRB # :nodoc:
@@ -149,8 +154,8 @@ class CLI
   # This constant maps subcommands to classes in this CLI and stores meta-data on them
   COMMAND_LIST = {
       run: [ Proc.new { ::Run }, {primary: true, working: true}],
-      apply_measure: [ Proc.new { ::ApplyMeasure }, {primary: true, working: false}],
-      gem_list: [ Proc.new { ::GemList }, {primary: true, working: true}],
+      #apply_measure: [ Proc.new { ::ApplyMeasure }, {primary: true, working: false}],
+      gem_list: [ Proc.new { ::GemList }, {primary: false, working: true}],
       gem_install: [ Proc.new { ::InstallGem }, {primary: false, working: true}],
       measure: [ Proc.new { ::Measure }, {primary: true, working: false}],
       e: [ Proc.new { ::ExecuteRubyScript }, {primary: false, working: true}],
@@ -320,8 +325,14 @@ class Run
     osw_path = File.absolute_path(File.join(Dir.pwd, osw_path)) unless Pathname.new(osw_path).absolute?
     $logger.debug "Path for the OSW: #{osw_path}"
 
-    adapter_options = {workflow_filename: File.basename(osw_path)}
-    adapter = OpenStudio::Workflow.load_adapter 'local', adapter_options
+    adapter_options = {workflow_filename: File.basename(osw_path), output_directory: File.join(Dir.pwd, 'run')}
+    
+    $logger.debug "Loading input adapter, options = #{adapter_options}"
+    input_adapter = OpenStudio::Workflow.load_input_adapter 'local', adapter_options
+    
+    $logger.debug "Loading output adapter, options = #{adapter_options}"
+    output_adapter = OpenStudio::Workflow.load_output_adapter 'local', adapter_options
+    
     run_options = options[:debug] ? {debug: true, cleanup: false} : {}
     if options[:no_simulation]
       run_options[:jobs] = [
@@ -354,7 +365,11 @@ class Run
       run_options[:load_simulation_sql] = true
       run_options[:preserve_run_dir] = true
     end
-    k = OpenStudio::Workflow::Run.new adapter, File.dirname(osw_path), run_options
+    
+    $logger.debug "Initializing run method"
+    k = OpenStudio::Workflow::Run.new input_adapter, output_adapter, File.dirname(osw_path), run_options
+    
+    $logger.debug "Beginning run"
     k.run
 
     0
@@ -490,11 +505,11 @@ class Measure
   #
   # @param [Array] sub_argv Options passed to the e subcommand from the user input
   # @return [Fixnum] Return status
-  # @todo (macumber) Add in the OpenStudio code to execute on measures
   #
   def execute(sub_argv)
+    require_relative 'measure_manager'
+    
     options = {}
-    options[:check_for_update] = false
     options[:update] = false
     options[:compute_arguments] = nil
 
@@ -504,29 +519,123 @@ class Measure
       o.separator 'Options:'
       o.separator ''
 
-      o.on('-c', '--check_for_updates', 'Check to see if the measure needs to be updated') do
-        options[:check_for_update] = workflow
+      o.on('-t', '--update_all', 'Update all measures in a directory') do
+        options[:update_all] = true
       end
       o.on('-u', '--update', 'Update the measure.xml') do
         options[:update] = true
       end
-      o.on('-a', '--compute_arguments [MODEL]', 'Compute arguments for the given model') do |model_file|
-        options[:compute_arguments] = model_file
+      o.on('-a', '--compute_arguments [MODEL]', 'Compute arguments for the given OSM or IDF') do |model_file|
+        options[:compute_arguments] = true
+        options[:compute_arguments_model] = model_file
+      end
+      o.on('-s', '--start_server [PORT]', 'Start a measure manager server') do |port|
+        options[:start_server] = true
+        options[:start_server_port] = port
       end
     end
 
     # Parse the options
     argv = parse_options(opts, sub_argv)
-    $logger.error 'No directory provided' if argv == []
-    return 1 if argv == []
-    directory = argv[0]
+    return 0 if argv == nil
+    
+    directory = nil
+    if !options[:start_server]
+      if argv == []
+        $logger.error 'No directory provided' 
+        return 1
+      end
+      directory = File.expand_path(argv[0])
+    end
 
     $logger.debug("Measure command: #{argv.inspect} #{options.inspect}")
     $logger.debug("Directory to examine is #{directory}")
 
-    $logger.error 'Code to be added here to operate on measures'
+    if options[:update_all]
+      measure_manager = MeasureManager.new
+      
+      # loop over all directories
+      result = []
+      Dir.glob("#{directory}/*/").each do |measure_dir|
+        if File.directory?(measure_dir) && File.exists?(File.join(measure_dir, "measure.xml"))
+          measure = measure_manager.get_measure(measure_dir, true)
+          if measure.nil?
+            $logger.debug("Directory #{measure_dir} is not a measure")
+          else
+            result << measure_manager.measure_hash(measure_dir, measure)
+          end
+        end
+      end
+         
+      puts JSON.generate(result)
+      
+    elsif options[:update]
+      measure_manager = MeasureManager.new
+      measure = measure_manager.get_measure(directory, true)
+      if measure.nil?
+        $logger.error("Cannot load measure from '#{directory}'")
+        return 1
+      end
+      
+      hash = measure_manager.measure_hash(directory, measure)
+      puts JSON.generate(hash)
+      
+    elsif options[:compute_arguments]
+      measure_manager = MeasureManager.new
+      measure = measure_manager.get_measure(directory, true)
+      if measure.nil?
+        $logger.error("Cannot load measure from '#{directory}'")
+        return 1
+      end
+      
+      # todo - handle the case where compute_arguments_model is an IDF
+      osm_path = options[:compute_arguments_model]
+      
+      model = OpenStudio::Model::OptionalModel.new()
+      workspace = OpenStudio::OptionalWorkspace.new()
+      if osm_path
+        value = measure_manager.get_model(osm_path, true)
+        if value.nil?
+          $logger.error("Cannot load model from '#{osm_path}'")
+          return 1
+        else
+          model = value[0].clone(true).to_Model
+          workspace = value[1].clone(true)
+        end
+      else
+        osm_path = ""
+      end
+      
+      measure_info = measure_manager.get_measure_info(directory, measure, osm_path, model, workspace)
+      
+      hash = measure_manager.measure_hash(directory, measure, measure_info)
+      puts JSON.generate(hash)
+      
+    elsif options[:start_server]
+    
+      require_relative 'measure_manager_server'
+      
+      port = options[:start_server_port]
+      if port.nil?
+        port = 1234
+      end
 
-    1
+      server = WEBrick::HTTPServer.new(:Port => port)
+
+      server.mount "/", MeasureManagerServlet
+
+      trap("INT") {
+          server.shutdown
+      }
+
+      server.start
+
+    else
+      $logger.error("Measure command missing subcommand")
+      return 1
+    end
+
+    0
   end
 end
 
@@ -724,7 +833,7 @@ class ListCommands
     
   # Provides text for the main help functionality
   def self.synopsis
-    'Lists the entire set of available commands for openstudio_cli'
+    'Lists the entire set of available commands'
   end
 
   # Executes the standard help method with the list_all attribute set to true
@@ -761,6 +870,7 @@ end
 $argv = ARGV.dup
 if $argv.include? '--verbose'
   $logger.level = Logger::DEBUG
+  OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Debug)
   $argv.delete '--verbose'
   $logger.debug 'Set Logger log level to DEBUG'
 end

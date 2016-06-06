@@ -621,14 +621,6 @@ RowName = '";
     return result;
   }
 
-  ValidityReport LayeredConstruction_Impl::validityReport(StrictnessLevel level,
-                                                          bool checkNames) const 
-  {
-    ValidityReport report(level,getObject<model::LayeredConstruction>());
-    populateValidityReport(report,checkNames);
-    return report;
-  }
-
   boost::optional<OpaqueMaterial> LayeredConstruction_Impl::insulation() const {
     StandardsInformationConstruction stdsInfo = standardsInformation();
     boost::optional<std::string> perturbableLayerType = stdsInfo.perturbableLayerType();
@@ -684,35 +676,6 @@ RowName = '";
         bool test = group.setPointer(0, newMaterial.handle());
         OS_ASSERT(test);
       } 
-    }
-  }
-
-  void LayeredConstruction_Impl::populateValidityReport(ValidityReport& report,bool checkNames) const
-  {
-    // Inherit lower-level errors
-    ModelObject_Impl::populateValidityReport(report,checkNames);
-
-    if (report.level() > StrictnessLevel::None) {
-      // construction should be of one type
-      if (!((numLayers() == 0) || isOpaque() || isFenestration() || isModelPartition())) {
-        report.insertError(DataError(getObject<LayeredConstruction>(),DataErrorType::DataType));
-      }
-    }
-
-    if (report.level() == StrictnessLevel::Final) {
-      // opaque and fenestration layers should be valid, taken as a whole
-      if (isOpaque() && !LayeredConstruction::layersAreValid(castVector<OpaqueMaterial>(layers()))) {
-        report.insertError(DataError(getObject<LayeredConstruction>(),DataErrorType::DataType));
-      }
-      if (isFenestration() && !LayeredConstruction::layersAreValid(castVector<FenestrationMaterial>(layers()))) {
-        report.insertError(DataError(getObject<LayeredConstruction>(),DataErrorType::DataType));
-      }
-      // there should be no nullLayers()
-      for (unsigned layerIndex : nullLayers()) {
-        report.insertError(DataError(iddObject().index(ExtensibleIndex(layerIndex,0)),
-                                     getObject<LayeredConstruction>(),
-                                     DataErrorType::NullAndRequired));
-      }
     }
   }
 
