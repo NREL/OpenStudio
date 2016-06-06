@@ -462,6 +462,7 @@ set(${target_name}_test_src
   Test/Surface_GTest.cpp
   Test/TableMultiVariableLookup_GTest.cpp
   Test/ThermalZone_GTest.cpp
+  Test/WindowMaterial_GTest.cpp
   Test/WindowPropertyFrameAndDivider_GTest.cpp
   Test/ZoneHVACLowTemperatureRadiantConstFlow_GTest.cpp
   Test/ZoneHVACLowTempRadiantElectric_GTest.cpp
