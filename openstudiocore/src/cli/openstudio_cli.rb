@@ -130,7 +130,13 @@ def split_main_and_subcommand(argv)
   # We split the arguments into two: One set containing any flags before a word, and then the rest. The rest are what
   # get actually sent on to the command
   argv.each_index do |i|
-    unless argv[i].start_with?('-')
+    if argv[i].start_with?('-') 
+      next
+    elsif argv[i].end_with?('.rb')
+      sub_command = 'e'
+      sub_args    = argv[i..-1]
+      break
+    else
       # We found the beginning of the sub command. Split the
       # args up.
       main_args   = argv[0, i]
@@ -656,6 +662,8 @@ class ExecuteRubyScript
   # @return [Fixnum] Return status
   #
   def execute(sub_argv)
+    require 'pathname'
+
     options = {}
 
     opts = OptionParser.new do |o|

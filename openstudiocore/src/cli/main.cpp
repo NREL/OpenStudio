@@ -28,7 +28,15 @@ extern "C" {
 //../Ruby//ext/json/generator/generator.a
 //../Ruby//ext/json/parser/parser.a
 
+  //void Init_sizeof();
+//./ext/rbconfig/sizeof/sizeof.a
 
+  void Init_Encoding(void);
+
+  void Init_md5(void);
+  void Init_rmd160(void);
+  void Init_sha1(void);
+  void Init_sha2(void);
 
   //void Init_openstudioairflow(void);
   void Init_openstudiomodelcore(void);
@@ -99,6 +107,7 @@ int main(int argc, char *argv[])
     swig::GC_VALUE::rshift_id = rb_intern(">>");
 
     INIT_CALLS;
+  
 
     Init_encdb();
     rb_provide("encdb.so");
@@ -107,6 +116,8 @@ int main(int argc, char *argv[])
     Init_transdb();
     rb_provide("trans/transdb");
     TRANS_INIT_CALLS;
+
+    Init_Encoding();
 
     Init_openstudioutilitiescore();
     rb_provide("openstudioutilitiescore");
@@ -165,6 +176,18 @@ int main(int argc, char *argv[])
 
     //Init_generator();
     //Init_parser();
+
+    //Init_sizeof();
+    //rb_provide("rbconfig");
+
+    Init_md5();
+    rb_provide("digest/md5");
+    Init_rmd160();
+    rb_provide("digest/rmd160");
+    Init_sha1();
+    rb_provide("digest/sha1");
+    Init_sha2();
+    rb_provide("digest/sha2");
 
     Init_EmbeddedScripting();
   }
