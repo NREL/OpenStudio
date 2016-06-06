@@ -643,6 +643,10 @@ set(GeographicLib_DIR ${CMAKE_BINARY_DIR}/GeographicLib-prefix/src/GeographicLib
 #./configure -v -release -opensource -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix /Users/kbenne/Development/Qt/qt_5_6_osx_static
 #
 
+## linux configure notes
+# install deps according to here http://doc.qt.io/qt-5/linux-requirements.html
+#./configure -v -release -opensource -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -qt-xcb -confirm-license  -no-qml-debug -prefix /home/kbenne/Qt/qt_5_6_linux_64_static 
+
 
 
 set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)

@@ -609,7 +609,19 @@ elseif( APPLE )
       EXPECTED_MD5 e4bfe40212b660895f76d5728685373d)
       execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_TAR_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
   endif()
-  list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_osx_static/lib/cmake")
+  list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_linux_64_static/lib/cmake")
+elseif( UNIX )
+  set(QT_TAR_LOCAL_PATH "${CMAKE_BINARY_DIR}/qt_5_6_linux_64_static.tar.gz")
+  file(MD5 ${QT_TAR_LOCAL_PATH} QT_TAR_MD5)
+  if( NOT QT_TAR_MD5 STREQUAL "4fd726173b801f34dc965ddbce53c193" )
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/qt_5_6_linux_64_static.tar.gz" 
+      ${QT_TAR_LOCAL_PATH} 
+      INACTIVITY_TIMEOUT 120 
+      SHOW_PROGRESS
+      EXPECTED_MD5 4fd726173b801f34dc965ddbce53c193)
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_TAR_LOCAL_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+  endif()
+  list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/qt_5_6_linux_64_static/lib/cmake")
 endif()
 
 find_package(Qt5Core REQUIRED)
