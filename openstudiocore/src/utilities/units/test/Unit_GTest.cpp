@@ -94,8 +94,8 @@ TEST_F(UnitsFixture,Unit_Scales)
   s1 = u1.scale();
   EXPECT_EQ("c",s1.abbr);
 
-  // there is no scale for 10^2
-  ASSERT_FALSE(u1.setScale(2));
+  // there is no scale for 10^20
+  ASSERT_FALSE(u1.setScale(20));
 
   // change to peta
   ASSERT_TRUE(u1.setScale("P"));

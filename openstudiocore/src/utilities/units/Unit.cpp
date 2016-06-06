@@ -491,9 +491,17 @@ namespace detail {
     }
 
     // scale
-    if (scale().exponent != 0) {
-      ScaleOpReturnType resultScale = openstudio::pow(scale(),expNum,expDenom);
-      setScale(resultScale.first().exponent);
+    const Scale& sc = scale();
+    if (sc.exponent != 0) {
+      ScaleOpReturnType resultScale = openstudio::pow(sc,expNum,expDenom);
+      const Scale& sc2 = resultScale.first();
+      int exponent = sc2.exponent;
+      // DLM: check that there are no extra multipliers not accounted for in scale
+      if (resultScale.second != 1.0){
+        LOG_AND_THROW("Cannot raise scale '" << sc << "' to the " << expNum << "/" << expDenom << " power.")
+      }
+      bool test = setScale(exponent);
+      OS_ASSERT(test);
     }
 
     // pretty string
