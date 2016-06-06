@@ -1,6 +1,5 @@
 
 #include <iostream>
-#include <QCoreApplication>
 #if defined __APPLE__
 #include <mach-o/dyld.h> /* _NSGetExecutablePath */
 #include <limits.h> /* PATH_MAX */
@@ -33,7 +32,7 @@ namespace embedded_help {
     }
 #elif defined _WIN32 
     TCHAR szPath[MAX_PATH];
-    if( !GetModuleFileName( "", szPath, MAX_PATH ) ) {
+    if( !GetModuleFileName( nullptr, szPath, MAX_PATH ) ) {
       return std::string(szPath);
     } else {
         return std::string();
