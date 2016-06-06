@@ -181,6 +181,14 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     }
   }
 
+  // remove orphan surfaces
+  for (PlanarSurface planarSurface : model.getModelObjects<PlanarSurface>()){
+    if (!planarSurface.planarSurfaceGroup()){
+      LOG(Warn, planarSurface.briefDescription() << " is not associated with a PlanarSurfaceGroup, it will not be translated.");
+      planarSurface.remove();
+    }
+  }
+
   // next thing to do is combine all spaces in each thermal zone
   // after this each zone will have 0 or 1 spaces and each space will have 0 or 1 zone
   for (ThermalZone thermalZone : model.getConcreteModelObjects<ThermalZone>()){
