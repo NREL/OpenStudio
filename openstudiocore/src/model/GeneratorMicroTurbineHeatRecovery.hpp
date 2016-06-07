@@ -147,6 +147,9 @@ class MODEL_API GeneratorMicroTurbineHeatRecovery : public StraightComponent {
   bool setMaximumHeatRecoveryWaterFlowRate(double maximumHeatRecoveryWaterFlowRate);
   void resetMaximumHeatRecoveryWaterFlowRate();
 
+  bool setMaximumHeatRecoveryWaterTemperature(double maximumHeatRecoveryWaterTemperature);
+  void resetMaximumHeatRecoveryWaterTemperature();
+
   bool setRatedThermalToElectricalPowerRatio(double ratedThermalToElectricalPowerRatio);
   void resetRatedThermalToElectricalPowerRatio();
 
