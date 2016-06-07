@@ -25004,9 +25004,14 @@ OS:Generator:MicroTurbine:HeatRecovery,
       \default 0.0
       \note Eplus defaults to 0 but here it would be moot to have a Heat
       \note Recovery module with a max flow of 0 so it is a required field
- N9; \field Maximum Heat Recovery Water Temperature
+ N9, \field Maximum Heat Recovery Water Temperature
       \type real
       \units C
+ N10; \field Rated Thermal to Electrical Power Ratio
+      \type real
+      \minimum> 0.0
+      \note Required field when generator is used by an ElectricLoadCenter:Distribution object with Generator Operation Scheme set to FollowThermal or FollowThermalLimitElectrical
+      \note Will default to 'Reference Thermal Efficiency Using Lower Heat Value' divided by 'Reference Electrical Efficiency Using Lower Heating Value'
 
 OS:Generator:Photovoltaic,
         \memo Describes an array of photovoltaic (PV) modules. PV performance is taken from the

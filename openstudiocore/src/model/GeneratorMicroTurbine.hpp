@@ -65,7 +65,7 @@ class MODEL_API GeneratorMicroTurbine : public Generator {
   /** @name Getters */
   //@{
     
-  // TODO: In E+ there's ElectricLoadCenter:GeneratorList where you'll specify the order of generators and the availability Scheduke
+  // TODO: In E+ there's ElectricLoadCenter:GeneratorList where you'll specify the order of generators and the availability Schedule
   // here it's been moved to the Generator themselves
   boost::optional<Schedule> availabilitySchedule() const;
 

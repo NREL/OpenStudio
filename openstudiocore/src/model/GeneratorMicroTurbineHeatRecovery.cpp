@@ -226,6 +226,36 @@ namespace model {
   boost::optional<double> GeneratorMicroTurbineHeatRecovery_Impl::maximumHeatRecoveryWaterTemperature() const {
     return getDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::MaximumHeatRecoveryWaterTemperature,true);
   }
+  
+  
+  
+  
+  /*
+  // If defaulted, return mchpHR 'Reference Thermal Efficiency Using Lower Heat Value' divided by mchp 'Reference Electrical Efficiency Using Lower Heating Value'
+  double GeneratorMicroTurbineHeatRecovery_Impl::ratedThermalToElectricalPowerRatio() const {
+    boost::optional<double> ratedThermalToElectricalPowerRatio = getDouble(GeneratorMicroTurbineHeatRecovery_Impl::RatedThermalToElectricalPowerRatio,true);
+    // If there it's set
+    if (ratedThermalToElectricalPowerRatio) {
+      // Get it and return
+      return ratedThermalToElectricalPowerRatio.get();
+    }
+    else {
+      
+      boost::optional<double> referenceElectricalPowerOutput = getDouble(OS_Generator_MicroTurbineFields::ReferenceElectricalPowerOutput,true);
+      OS_ASSERT(referenceElectricalPowerOutput);
+      return referenceElectricalPowerOutput.get();
+    }
+  }*/
+  
+  double GeneratorMicroTurbineHeatRecovery_Impl::ratedThermalToElectricalPowerRatio() const {
+    boost::optional<double> value = getDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::RatedThermalToElectricalPowerRatio,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool GeneratorMicroTurbineHeatRecovery_Impl::isRatedThermalToElectricalPowerRatioDefaulted() const {
+    return isEmpty(OS_Generator_MicroTurbine_HeatRecoveryFields::RatedThermalToElectricalPowerRatio);
+  }
 
   
   /*bool GeneratorMicroTurbineHeatRecovery_Impl::setHeatRecoveryWaterInletNode(const boost::optional<Connection>& connection) {
@@ -362,15 +392,26 @@ namespace model {
     OS_ASSERT(result);
   }
 
-  void GeneratorMicroTurbineHeatRecovery_Impl::setMaximumHeatRecoveryWaterTemperature(double maximumHeatRecoveryWaterTemperature) {
+  bool GeneratorMicroTurbineHeatRecovery_Impl::setMaximumHeatRecoveryWaterTemperature(double maximumHeatRecoveryWaterTemperature) {
     bool result = setDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::MaximumHeatRecoveryWaterTemperature, maximumHeatRecoveryWaterTemperature);
-    OS_ASSERT(result);
+    return result
   }
 
   void GeneratorMicroTurbineHeatRecovery_Impl::resetMaximumHeatRecoveryWaterTemperature() {
     bool result = setString(OS_Generator_MicroTurbine_HeatRecoveryFields::MaximumHeatRecoveryWaterTemperature, "");
     OS_ASSERT(result);
   }
+  
+  bool GeneratorMicroTurbineHeatRecovery_Impl::setRatedThermalToElectricalPowerRatio(double ratedThermalToElectricalPowerRatio) {
+    bool result = setDouble(OS_Generator_MicroTurbine_HeatRecoveryFields::RatedThermalToElectricalPowerRatio, ratedThermalToElectricalPowerRatio);
+    return result;
+  }
+
+  void GeneratorMicroTurbineHeatRecovery_Impl::resetRatedThermalToElectricalPowerRatio() {
+    bool result = setString(OS_Generator_MicroTurbine_HeatRecoveryFields::RatedThermalToElectricalPowerRatio, "");
+    OS_ASSERT(result);
+  }
+  
 
 } // detail
 
@@ -485,6 +526,15 @@ boost::optional<double> GeneratorMicroTurbineHeatRecovery::maximumHeatRecoveryWa
   return getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->maximumHeatRecoveryWaterTemperature();
 }
 
+double GeneratorMicroTurbineHeatRecovery::ratedThermalToElectricalPowerRatio() const {
+  return getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->ratedThermalToElectricalPowerRatio();
+}
+
+bool GeneratorMicroTurbineHeatRecovery::isRatedThermalToElectricalPowerRatioDefaulted() const {
+  return getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->isRatedThermalToElectricalPowerRatioDefaulted();
+}
+
+
 /*
 bool GeneratorMicroTurbineHeatRecovery::setHeatRecoveryWaterInletNode(const Connection& connection) {
   return getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->setHeatRecoveryWaterInletNode(connection);
@@ -588,6 +638,14 @@ void GeneratorMicroTurbineHeatRecovery::setMaximumHeatRecoveryWaterTemperature(d
 
 void GeneratorMicroTurbineHeatRecovery::resetMaximumHeatRecoveryWaterTemperature() {
   getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->resetMaximumHeatRecoveryWaterTemperature();
+}
+
+bool GeneratorMicroTurbineHeatRecovery::setRatedThermalToElectricalPowerRatio(double ratedThermalToElectricalPowerRatio) {
+  return getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->setRatedThermalToElectricalPowerRatio(ratedThermalToElectricalPowerRatio);
+}
+
+void GeneratorMicroTurbineHeatRecovery::resetRatedThermalToElectricalPowerRatio() {
+  getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->resetRatedThermalToElectricalPowerRatio();
 }
 
 

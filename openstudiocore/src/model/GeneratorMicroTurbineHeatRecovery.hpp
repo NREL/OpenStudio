@@ -94,6 +94,9 @@ class MODEL_API GeneratorMicroTurbineHeatRecovery : public StraightComponent {
   bool isMaximumHeatRecoveryWaterFlowRateDefaulted() const;
 
   boost::optional<double> maximumHeatRecoveryWaterTemperature() const;
+  
+  double ratedThermalToElectricalPowerRatio() const;
+  bool isRatedThermalToElectricalPowerRatioDefaulted() const;
 
   //@}
   /** @name Setters */
@@ -144,8 +147,8 @@ class MODEL_API GeneratorMicroTurbineHeatRecovery : public StraightComponent {
   bool setMaximumHeatRecoveryWaterFlowRate(double maximumHeatRecoveryWaterFlowRate);
   void resetMaximumHeatRecoveryWaterFlowRate();
 
-  void setMaximumHeatRecoveryWaterTemperature(double maximumHeatRecoveryWaterTemperature);
-  void resetMaximumHeatRecoveryWaterTemperature();
+  bool setRatedThermalToElectricalPowerRatio(double ratedThermalToElectricalPowerRatio);
+  void resetRatedThermalToElectricalPowerRatio();
 
   //@}
   /** @name Other */

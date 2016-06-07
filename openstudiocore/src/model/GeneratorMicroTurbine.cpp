@@ -198,6 +198,7 @@ namespace detail {
   {
     // translated to ElectricLoadCenter:Generators 'Generator Rated Thermal to Electrical Power Ratio'
     //DLM: need to look into meaning of this field, is this heat recovery size divided by electrical power?
+    // TODO: Use the GeneratorMicroTurbineHeatRecovery method
     return boost::none;
   }
 
