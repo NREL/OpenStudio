@@ -913,9 +913,9 @@ export(TARGETS
 
 set(all_exe_targets
   GenerateIddFactory
-  gbXMLToIdf
-  OpenStudio
-  ResultsViewer
+  #gbXMLToIdf
+  #OpenStudio
+  #ResultsViewer
 )
 
 if(UNIX AND NOT APPLE)

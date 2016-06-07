@@ -447,19 +447,34 @@ if(BUILD_V8)
   set(V8_INCLUDE_DIR ${CMAKE_BINARY_DIR}/V8-prefix/src/V8/include)
 endif()
 
-if( UNIX )
+if( APPLE )
   ExternalProject_Add(Ruby
     URL https://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.2.0.tar.gz
     URL_MD5 d4d8b600af2f77566515728d5bd7ffa4
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
-    BUILD_COMMAND $(MAKE) libenc; $(MAKE) libtrans; $(MAKE)
+    BUILD_COMMAND $(MAKE)  libenc; $(MAKE) libtrans; $(MAKE)
     INSTALL_COMMAND $(MAKE) install
   )
   set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby-static.a")
   set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.2.0")
   # Uh... yeah. this line needs some work...
   set(RUBY_CONFIG_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.2.0/x86_64-darwin13")
+  set(RUBY_EXECUTABLE "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby")
+  set(RUBY_SOURCE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby")
+elseif( UNIX )
+  ExternalProject_Add(Ruby
+    URL https://openstudio-resources.s3.amazonaws.com/dependencies/ruby-2.2.0.tar.gz
+    URL_MD5 d4d8b600af2f77566515728d5bd7ffa4
+    BUILD_IN_SOURCE 1
+    CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext --without-gmp --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
+    BUILD_COMMAND $(MAKE)
+    INSTALL_COMMAND $(MAKE) install
+  )
+  set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby-static.a")
+  set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.2.0")
+  # Uh... yeah. this line needs some work...
+  set(RUBY_CONFIG_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.2.0/x86_64-linux")
   set(RUBY_EXECUTABLE "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby")
   set(RUBY_SOURCE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby")
 else()
