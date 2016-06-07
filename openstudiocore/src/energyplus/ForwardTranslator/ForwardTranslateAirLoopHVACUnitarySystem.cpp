@@ -40,6 +40,8 @@
 #include <utilities/idd/AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_TwoSpeed_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_MultiSpeed_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_Water_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit_FieldEnums.hxx>
@@ -535,6 +537,16 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
     {
       _coolingCoil->setString(Coil_Cooling_DX_TwoSpeedFields::AirInletNodeName,inletNodeName);
       _coolingCoil->setString(Coil_Cooling_DX_TwoSpeedFields::AirOutletNodeName,outletNodeName);
+    }
+    else if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_MultiSpeed )
+    {
+      _coolingCoil->setString(Coil_Cooling_DX_MultiSpeedFields::AirInletNodeName,inletNodeName);
+      _coolingCoil->setString(Coil_Cooling_DX_MultiSpeedFields::AirOutletNodeName,outletNodeName);
+    }
+    else if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed )
+    {
+      _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName,inletNodeName);
+      _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName,outletNodeName);
     }
     else if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_Water )
     {
