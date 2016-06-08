@@ -15,6 +15,12 @@ int main(int argc, char *argv[])
   auto embeddedname = argv[4];
 
   std::fstream instream(infile, std::fstream::in | std::fstream::binary);
+
+  if (!instream.is_open()){
+    std::cout << "Could not open '" << infile << "' for reading" << std::endl;
+    return EXIT_FAILURE;
+  }
+
   std::fstream outstream(outfile, std::fstream::out | std::fstream::trunc);
 
   if( outstream.is_open() ) {
@@ -42,6 +48,10 @@ int main(int argc, char *argv[])
 
     instream.close();
     outstream.close();
+  } else{
+    std::cout << "Could not open '" << outfile << "' for writing" << std::endl;
+    instream.close();
+    return EXIT_FAILURE;
   }
 
   return 0;

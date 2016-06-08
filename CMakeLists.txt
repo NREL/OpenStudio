@@ -493,10 +493,10 @@ if( WIN32 )
 endif()
 ExternalProject_Add(OpenStudio-workflow-gem
   GIT_REPOSITORY https://github.com/NREL/OpenStudio-workflow-gem.git
-  GIT_TAG osw
+  GIT_TAG c2f6ed3b51515b512378c7a913537b43851e8229
   BUILD_IN_SOURCE 1
   CONFIGURE_COMMAND ""
-  BUILD_COMMAND ${SHELL_COMMAND} "gem build openstudio-workflow.gemspec"
+  BUILD_COMMAND ${SHELL_COMMAND} "gem build --force openstudio-workflow.gemspec"
   INSTALL_COMMAND ${SHELL_COMMAND} "gem install --force --install-dir ${CMAKE_BINARY_DIR}/OpenStudio-workflow-gem-prefix/src/OpenStudio-workflow-gem-install ${CMAKE_BINARY_DIR}/OpenStudio-workflow-gem-prefix/src/OpenStudio-workflow-gem/openstudio-workflow-1.0.0.alpha.0.gem"
 )
 # Get rid of that version id in the path, or find it or something that doesn't require maintenance

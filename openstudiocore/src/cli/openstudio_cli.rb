@@ -30,7 +30,7 @@ require 'optparse'
 $logger = Logger.new(STDOUT)
 $logger.level = Logger::ERROR
 #$logger.level = Logger::WARN
-#$logger.level = Logger::DEBUG
+$logger.level = Logger::DEBUG
 
 #OpenStudio::Logger.instance.standardOutLogger.disable
 #OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Warn)
@@ -333,13 +333,13 @@ class Run
     osw_path = File.absolute_path(File.join(Dir.pwd, osw_path)) unless Pathname.new(osw_path).absolute?
     $logger.debug "Path for the OSW: #{osw_path}"
 
-    adapter_options = {workflow_filename: File.basename(osw_path), output_directory: File.join(Dir.pwd, 'run')}
+    #adapter_options = {workflow_filename: File.basename(osw_path), output_directory: File.join(Dir.pwd, 'run')}
     
-    $logger.debug "Loading input adapter, options = #{adapter_options}"
-    input_adapter = OpenStudio::Workflow.load_input_adapter 'local', adapter_options
+    #$logger.debug "Loading input adapter, options = #{adapter_options}"
+    #input_adapter = OpenStudio::Workflow.load_input_adapter 'local', adapter_options
     
-    $logger.debug "Loading output adapter, options = #{adapter_options}"
-    output_adapter = OpenStudio::Workflow.load_output_adapter 'local', adapter_options
+    #$logger.debug "Loading output adapter, options = #{adapter_options}"
+    #output_adapter = OpenStudio::Workflow.load_output_adapter 'local', adapter_options
     
     run_options = options[:debug] ? {debug: true, cleanup: false} : {}
     if options[:no_simulation]
@@ -375,7 +375,7 @@ class Run
     end
     
     $logger.debug "Initializing run method"
-    k = OpenStudio::Workflow::Run.new input_adapter, output_adapter, File.dirname(osw_path), run_options
+    k = OpenStudio::Workflow::Run.new osw_path, run_options
     
     $logger.debug "Beginning run"
     k.run
