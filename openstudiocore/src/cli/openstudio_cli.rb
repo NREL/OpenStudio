@@ -30,7 +30,7 @@ require 'optparse'
 $logger = Logger.new(STDOUT)
 $logger.level = Logger::ERROR
 #$logger.level = Logger::WARN
-$logger.level = Logger::DEBUG
+#$logger.level = Logger::DEBUG
 
 #OpenStudio::Logger.instance.standardOutLogger.disable
 #OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Warn)
