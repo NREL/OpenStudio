@@ -23,7 +23,6 @@
 #include <utilities/UtilitiesAPI.hpp>
 #include <utilities/idf/IdfObject.hpp>
 #include <utilities/idf/Workspace.hpp>
-#include <QObject>
 
 namespace openstudio{
 
@@ -37,8 +36,8 @@ namespace openstudio{
  *  would be preferred to connect your own heap allocated QObject to the Workspace signals directly rather
  *  than using this convenience class.
  **/
-class UTILITIES_API WorkspaceWatcher : public QObject {
-  Q_OBJECT;
+class UTILITIES_API WorkspaceWatcher {
+
  public:
 
   WorkspaceWatcher(const Workspace& workspace);
@@ -83,7 +82,7 @@ class UTILITIES_API WorkspaceWatcher : public QObject {
   /// the object is still valid when this method is called
   virtual void onObjectRemove(const WorkspaceObject& removedObject);
 
- public slots:
+ // public slots:
 
   void change();
 

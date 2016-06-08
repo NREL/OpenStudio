@@ -2978,19 +2978,27 @@ bool Workspace::operator!=(const Workspace& other) const {
 }
 
 // connect a progress bar
-bool Workspace::connectProgressBar(const openstudio::ProgressBar& progressBar) const
+bool Workspace::connectProgressBar(openstudio::ProgressBar& progressBar)
 {
-  bool result = true;
-  result = result && progressBar.connect(m_impl.get(), SIGNAL(progressRange(int, int)), SLOT(setRange(int, int)));
-  result = result && progressBar.connect(m_impl.get(), SIGNAL(progressValue(int)), SLOT(setValue(int)));
-  result = result && progressBar.connect(m_impl.get(), SIGNAL(progressCaption(const QString&)), SLOT(setWindowTitle(const QString&)));
-  return result;
+  m_impl.get()->progressRange.connect<ProgressBar, &ProgressBar::setRange>(&progressBar);
+  m_impl.get()->progressValue.connect<ProgressBar, &ProgressBar::setValue>(&progressBar);
+  m_impl.get()->progressCaption.connect<ProgressBar, &ProgressBar::setWindowTitle>(&progressBar);
+
+  // result = result && progressBar.connect(m_impl.get(), SIGNAL(progressRange(int, int)), SLOT(setRange(int, int)));
+  // result = result && progressBar.connect(m_impl.get(), SIGNAL(progressValue(int)), SLOT(setValue(int)));
+  // result = result && progressBar.connect(m_impl.get(), SIGNAL(progressCaption(const QString&)), SLOT(setWindowTitle(const QString&)));
+  return true;
 }
 
 // disconnect a progress bar
-bool Workspace::disconnectProgressBar(const openstudio::ProgressBar& progressBar) const
+bool Workspace::disconnectProgressBar(openstudio::ProgressBar& progressBar)
 {
-  return m_impl.get()->disconnect(&progressBar);
+  
+  m_impl.get()->progressRange.disconnect<ProgressBar, &ProgressBar::setRange>(&progressBar);
+  m_impl.get()->progressValue.disconnect<ProgressBar, &ProgressBar::setValue>(&progressBar);
+  m_impl.get()->progressCaption.disconnect<ProgressBar, &ProgressBar::setWindowTitle>(&progressBar);
+
+  return true; /* m_impl.get()->disconnect(&progressBar); */
 }
 
 // SERIALIZATION

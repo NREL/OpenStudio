@@ -66,7 +66,7 @@ namespace detail {
 
   /** Container for the OpenStudio Building Model hierarchy. */
   class MODEL_API Model_Impl : public openstudio::detail::Workspace_Impl {
-    Q_OBJECT;
+    
    public:
     /** @name Constructors and Destructors */
     //@{

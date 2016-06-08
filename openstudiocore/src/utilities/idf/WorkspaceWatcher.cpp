@@ -140,7 +140,8 @@ void WorkspaceWatcher::objectAdd(const WorkspaceObject& addedObject, const opens
 
   if (enabled()){
     m_addedObjects.push_back(addedObject);
-    QTimer::singleShot(0,this,SLOT(processAddedObjects()));
+    // QTimer::singleShot(0,this,SLOT(processAddedObjects()));
+    processAddedObjects();
   }
 }
 

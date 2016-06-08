@@ -26,8 +26,6 @@
 #include <utilities/idf/IdfObject_Impl.hpp>
 #include <utilities/idf/ObjectPointer.hpp>
 
-#include <QObject>
-
 namespace openstudio {
 
 // forward declarations
@@ -105,7 +103,6 @@ namespace detail {
   }
 
   class UTILITIES_API WorkspaceObject_Impl : public IdfObject_Impl {
-    Q_OBJECT;
    public:
 
     /** @name Constructors */

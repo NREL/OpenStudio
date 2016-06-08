@@ -32,8 +32,6 @@
 
 #include <utilities/core/Logger.hpp>
 
-#include <QObject>
-
 #include <string>
 #include <ostream>
 #include <vector>
@@ -52,11 +50,9 @@ namespace detail {
 
   /** Implementation of Workspace. Maintains object handles and relationships. Locks down
    *  relationship fields in its IdfObjects if possible. */
-  class UTILITIES_API Workspace_Impl : public QObject,
-                                       public std::enable_shared_from_this<Workspace_Impl>,
+  class UTILITIES_API Workspace_Impl : public std::enable_shared_from_this<Workspace_Impl>,
                                        public Nano::Observer
   {
-    Q_OBJECT;
    public:
 
     /** @name Constructors and Destructors */

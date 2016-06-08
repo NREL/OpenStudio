@@ -330,7 +330,7 @@ namespace detail {
         }
       }
     }
-    return result;
+    return result; 
   }
 
   boost::optional<QUrl> IdfObject_Impl::getURL(unsigned index, 

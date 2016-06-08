@@ -245,20 +245,20 @@ set(core_moc
 )
 
 set(idf_moc
-  idf/IdfObject_Impl.hpp
-  idf/IdfObjectWatcher.hpp
-  idf/WorkspaceObjectWatcher.hpp
-  idf/WorkspaceObject_Impl.hpp
-  idf/Workspace_Impl.hpp
-  idf/WorkspaceWatcher.hpp
+#  idf/IdfObject_Impl.hpp
+#  idf/IdfObjectWatcher.hpp
+#  idf/WorkspaceObjectWatcher.hpp
+#  idf/WorkspaceObject_Impl.hpp
+#  idf/Workspace_Impl.hpp
+#  idf/WorkspaceWatcher.hpp
 )
 
 set(data_moc
-  data/Attribute_Impl.hpp
+#  data/Attribute_Impl.hpp
 )
 
 set(plot_moc
-  plot/ProgressBar.hpp
+#  plot/ProgressBar.hpp
 )
 
 ###############################################################################
@@ -287,10 +287,10 @@ endforeach()
 ## Qt MOC generation
 qt5_wrap_cpp_minimally(bcl_moc_src ${bcl_moc})
 qt5_wrap_cpp_minimally(cloud_moc_src ${cloud_moc})
-qt5_wrap_cpp_minimally(core_moc_src ${core_moc})
+qt5_wrap_cpp_minimally(core_moc_src ${core_moc}) # RM
 qt5_wrap_cpp_minimally(idf_moc_src ${idfxx_moc})
-qt5_wrap_cpp_minimally(data_moc_src ${data_moc})
-qt5_wrap_cpp_minimally(plot_moc_src ${plot_moc})
+qt5_wrap_cpp_minimally(data_moc_src ${data_moc}) # RM
+qt5_wrap_cpp_minimally(plot_moc_src ${plot_moc}) # [sudo] RM [-rf]
 
 # qrc files
 set(bcl_qrc

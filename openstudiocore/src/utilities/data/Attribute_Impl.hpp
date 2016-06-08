@@ -37,10 +37,8 @@ class QDomDocument;
 namespace openstudio {
 namespace detail {
 
-  class UTILITIES_API Attribute_Impl : public QObject, public std::enable_shared_from_this<Attribute_Impl>
+  class UTILITIES_API Attribute_Impl : public std::enable_shared_from_this<Attribute_Impl>
   {
-
-    Q_OBJECT;
 
    public:
 

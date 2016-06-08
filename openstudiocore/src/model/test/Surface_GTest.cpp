@@ -57,7 +57,7 @@
 #include "../DefaultSurfaceConstructions_Impl.hpp"
 #include "../SpaceType.hpp"
 #include "../SpaceType_Impl.hpp"
-#include "../Relationship.hpp"
+// #include "../Relationship.hpp"
 #include "../DaylightingDeviceShelf.hpp"
 #include "../InteriorPartitionSurface.hpp"
 #include "../InteriorPartitionSurfaceGroup.hpp"

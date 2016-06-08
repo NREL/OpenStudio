@@ -1512,11 +1512,12 @@ if (_className::iddObjectType() == typeToCreate) { \
 
   void Model_Impl::clearCachedData()
   {
-    clearCachedBuilding();
-    clearCachedLifeCycleCostParameters();
-    clearCachedRunPeriod();
-    clearCachedYearDescription();
-    clearCachedWeatherFile();
+    Handle dummy;
+    clearCachedBuilding(dummy);
+    clearCachedLifeCycleCostParameters(dummy);
+    clearCachedRunPeriod(dummy);
+    clearCachedYearDescription(dummy);
+    clearCachedWeatherFile(dummy);
   }
 
   void Model_Impl::clearCachedBuilding(const Handle &)

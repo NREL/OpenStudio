@@ -28,9 +28,8 @@
 
 #include "../utilities/core/Optional.hpp"
 
-#include <QObject>
-#include <QVariant>
-#include <QStringList>
+// #include <QVariant>
+// #include <QStringList>
 
 namespace openstudio {
 
@@ -43,7 +42,6 @@ class Model;
 class Component;
 class LifeCycleCosts;
 
-class Relationship;
 class FieldViewer;
 
 class ParentObject;
@@ -60,13 +58,13 @@ namespace detail {
   /** Implemetation class for ModelObject. Each class deriving from ModelObject
    *  should provide an implementation class that derives from ModelObject_Impl. */
   class MODEL_API ModelObject_Impl : public openstudio::detail::WorkspaceObject_Impl {
-    Q_OBJECT;
-    Q_PROPERTY(openstudio::IddObjectType iddObjectType READ iddObjectType);
-    Q_PROPERTY(openstudio::UUID handle READ handle);
-    Q_PROPERTY(boost::optional<std::string> name READ name WRITE mf_setName STORED true);
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> parent READ parentAsModelObject WRITE setParentAsModelObject);
-    Q_PROPERTY(std::vector<openstudio::model::ModelObject> resources READ resourcesAsModelObjects);
+    // Q_PROPERTY(openstudio::IddObjectType iddObjectType READ iddObjectType);
+    // Q_PROPERTY(openstudio::UUID handle READ handle);
+    // Q_PROPERTY(boost::optional<std::string> name READ name WRITE mf_setName STORED true);
+
+    // Q_PROPERTY(boost::optional<openstudio::model::ModelObject> parent READ parentAsModelObject WRITE setParentAsModelObject);
+    // Q_PROPERTY(std::vector<openstudio::model::ModelObject> resources READ resourcesAsModelObjects);
    public:
 
     /** @name Constructors and Destructors */
@@ -109,17 +107,17 @@ namespace detail {
     virtual Component createComponent() const;
 
     /** Return all valid relationship names. */
-    std::vector<std::string> relationshipNames() const;
+    // std::vector<std::string> relationshipNames() const;
 
     /** Return all \link Relationship relationships\endlink for this ModelObject. */
-    std::vector<Relationship> relationships() const;
+    // std::vector<Relationship> relationships() const;
 
     /** Get the \link Relationship relationship\endlink named name, if it exists. */
-    boost::optional<Relationship> getRelationship(const std::string& name) const;
+    // boost::optional<Relationship> getRelationship(const std::string& name) const;
 
-    bool setRelationship(const std::string& name, boost::optional<ModelObject> relatedModelObject);
+    // bool setRelationship(const std::string& name, boost::optional<ModelObject> relatedModelObject);
 
-    bool setRelationship(const std::string& name, const Component& component);
+    // bool setRelationship(const std::string& name, const Component& component);
 
     //@}
     /** @name Attributes
@@ -131,46 +129,46 @@ namespace detail {
     //@{
 
     /** Return all valid attribute names. */
-    std::vector<std::string> attributeNames() const;
+    // std::vector<std::string> attributeNames() const;
 
     /** Return all \link Attribute Attributes\endlink for this ModelObject. */
-    std::vector<openstudio::Attribute> attributes() const;
+    // std::vector<openstudio::Attribute> attributes() const;
 
     /** Get the attribute named name, if it exists. */
-    boost::optional<openstudio::Attribute> getAttribute(const std::string& name) const;
+    // boost::optional<openstudio::Attribute> getAttribute(const std::string& name) const;
 
     /** Is the named attribute settable. */
-    bool isSettableAttribute(const std::string& name) const;
+    // bool isSettableAttribute(const std::string& name) const;
 
     /** Is the named attribute optional. */
-    bool isOptionalAttribute(const std::string& name) const;
+    // bool isOptionalAttribute(const std::string& name) const;
 
     /** Set the attribute named name, if it exists. */
-    bool setAttribute(const std::string& name, bool value);
+    // bool setAttribute(const std::string& name, bool value);
 
     /** \overload */
-    bool setAttribute(const std::string& name, int value);
+    // bool setAttribute(const std::string& name, int value);
 
     /** \overload */
-    bool setAttribute(const std::string& name, unsigned value);
+    // bool setAttribute(const std::string& name, unsigned value);
 
     /** \overload */
-    bool setAttribute(const std::string& name, double value);
+    // bool setAttribute(const std::string& name, double value);
 
     /** \overload */
-    bool setAttribute(const std::string& name, const Quantity& value);
+    // bool setAttribute(const std::string& name, const Quantity& value);
 
     /** \overload */
-    bool setAttribute(const std::string& name, const std::string& value);
+    // bool setAttribute(const std::string& name, const std::string& value);
 
     /** \overload */
-    bool setAttribute(const std::string& name, const char* value);
+    // bool setAttribute(const std::string& name, const char* value);
 
     /** \overload */
-    bool setAttribute(const std::string& name, const QVariant& value);
+    // bool setAttribute(const std::string& name, const QVariant& value);
 
     /** Reset the attribute attribute, e.g. for optional types. */
-    bool resetAttribute(const std::string& name);
+    // bool resetAttribute(const std::string& name);
 
     //@}
     /** @name Getters */
@@ -233,15 +231,13 @@ namespace detail {
     /** @name Nano Signals */
     //@{
 
-    Nano::Signal<void(const QVariantMap&)> reportProperties;
+    // Nano::Signal<void(const QVariantMap&)> reportProperties;
     
     //@}
 
-   public slots:
+    // void requestProperties(const QStringList& names);
 
-    void requestProperties(const QStringList& names);
-
-    void setProperties(const QVariantMap& properties);
+    // void setProperties(const QVariantMap& properties);
 
    protected:
 

@@ -26,7 +26,7 @@
 namespace openstudio {
 
 class UTILITIES_API WorkspaceObjectWatcher : public IdfObjectWatcher {
-  Q_OBJECT;
+  // Q_OBJECT;
  public:
 
   /// constructor with IdfObject to watch
@@ -50,9 +50,9 @@ class UTILITIES_API WorkspaceObjectWatcher : public IdfObjectWatcher {
   /// called when the object is removed from its workspace if watcher enabled
   virtual void onRemoveFromWorkspace(Handle handle);
 
- public slots:
+ // public slots:
 
-  void relationshipChange(int index,Handle newHandle,Handle oldHandle);
+  void relationshipChange(int index, Handle newHandle, Handle oldHandle);
 
   void removedFromWorkspace(const Handle & handle);
 

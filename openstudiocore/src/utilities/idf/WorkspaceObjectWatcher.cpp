@@ -54,7 +54,7 @@ void WorkspaceObjectWatcher::clearState()
   IdfObjectWatcher::clearState();
 }
 
-void WorkspaceObjectWatcher::onRelationshipChange(int index, Handle newHandle,Handle oldHandle) 
+void WorkspaceObjectWatcher::onRelationshipChange(int index, Handle newHandle,  Handle oldHandle) 
 {
   // onChange will be emitted with onRelationshipChange, that will set dirty
 }
@@ -64,12 +64,12 @@ void WorkspaceObjectWatcher::onRemoveFromWorkspace(Handle handle)
   // onChange will not be emitted with onRemoveFromWorkspace, dirty will not be set
 }
 
-void WorkspaceObjectWatcher::relationshipChange(int index,Handle newHandle,Handle oldHandle) 
+void WorkspaceObjectWatcher::relationshipChange(int index, Handle newHandle, Handle oldHandle) 
 {
   m_relationshipChanged = true;
 
   if (enabled()){
-    onRelationshipChange(index,newHandle,oldHandle);
+    onRelationshipChange(index, newHandle, oldHandle);
   }
 }
 

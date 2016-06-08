@@ -121,7 +121,7 @@ namespace detail {
     std::vector<IdfObject> result;
 
     std::shared_ptr<Model_Impl> t_model = model().getImpl<Model_Impl>();
-    t_model->blockSignals(true);
+    // t_model->blockSignals(true);
 
     if (boost::optional<RefrigerationDefrostCycleParameters> walkinDefrostCycleParameters = this->optionalWalkinDefrostCycleParameters()) {
       std::vector<IdfObject> removedDefrostCycleParameters = walkinDefrostCycleParameters->remove();
@@ -135,7 +135,7 @@ namespace detail {
       result.insert(result.end(), removedZoneBoundaries.begin(), removedZoneBoundaries.end());
     }      
 
-    t_model->blockSignals(false);
+    // t_model->blockSignals(false);
 
     std::vector<IdfObject> removedRRefrigerationWalkIn = ModelObject_Impl::remove();
     result.insert(result.end(), removedRRefrigerationWalkIn.begin(), removedRRefrigerationWalkIn.end());

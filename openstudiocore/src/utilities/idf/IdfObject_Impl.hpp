@@ -27,11 +27,10 @@
 
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/Containers.hpp>
- #include <model/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <model/nano_signal_slot.hpp> // Signal-Slot replacement
 
 #include <boost/optional.hpp>
 
-#include <QObject>
 #include <QUrl>
 
 #include <string>
@@ -54,8 +53,8 @@ class OSOptionalQuantity;
 namespace detail { 
 
   /** Implementation of IdfObject. */
-  class UTILITIES_API IdfObject_Impl : public QObject, public std::enable_shared_from_this<IdfObject_Impl>, public Nano::Observer {
-    Q_OBJECT;
+  class UTILITIES_API IdfObject_Impl : public std::enable_shared_from_this<IdfObject_Impl>, 
+                                       public Nano::Observer {
    public:
 
     /** @name Constructors */
