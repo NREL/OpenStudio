@@ -564,21 +564,7 @@ namespace detail {
 
   void ZoneHVACPackagedTerminalHeatPump_Impl::setSupplementalHeatingCoil( HVACComponent & hvacComponent )
   {
-    bool isAllowedType = false;
-
-    if( hvacComponent.iddObjectType() == IddObjectType::OS_Coil_Heating_Gas )
-    {
-      isAllowedType = true;
-    }
-    else if( hvacComponent.iddObjectType() == IddObjectType::OS_Coil_Heating_Electric )
-    {
-      isAllowedType = true;
-    }
-
-    if( isAllowedType )
-    {
-      setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplementalHeatingCoilName,hvacComponent.handle());
-    }
+    setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplementalHeatingCoilName,hvacComponent.handle());
   }
 
   void ZoneHVACPackagedTerminalHeatPump_Impl::setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater) {
