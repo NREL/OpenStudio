@@ -634,6 +634,9 @@ set(${target_name}_src
   Meter.hpp
   Meter_Impl.hpp
   Meter.cpp
+  MeterCustom.hpp
+  MeterCustom_Impl.hpp
+  MeterCustom.cpp
   Mixer.hpp
   Mixer_Impl.hpp
   Mixer.cpp
