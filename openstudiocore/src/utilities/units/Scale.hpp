@@ -88,17 +88,38 @@ namespace openstudio{
   /** Static constant defining SI prefix for 10^6. */
   UTILITIES_API const Scale& mega();
 
+  /** Static constant defining SI prefix for 10^5. */
+  UTILITIES_API const Scale& hectokilo();
+
+  /** Static constant defining SI prefix for 10^4. */
+  UTILITIES_API const Scale& myria();
+
   /** Static constant defining SI prefix for 10^3. */
   UTILITIES_API const Scale& kilo();
 
+  /** Static constant defining SI prefix for 10^2. */
+  UTILITIES_API const Scale& hecto();
+
+  /** Static constant defining SI prefix for 10^1. */
+  UTILITIES_API const Scale& deka();
+
   /** Static constant defining no scale (1.0). */
   UTILITIES_API const Scale& one();
+
+  /** Static constant defining SI prefix for 10^{-1} */
+  UTILITIES_API const Scale& deci();
 
   /** Static constant defining SI prefix for 10^{-2} */
   UTILITIES_API const Scale& centi();
 
   /** Static constant defining SI prefix for 10^{-3} */
   UTILITIES_API const Scale& milli();
+
+  /** Static constant defining SI prefix for 10^{-4} */
+  UTILITIES_API const Scale& decimilli();
+
+  /** Static constant defining SI prefix for 10^{-5} */
+  UTILITIES_API const Scale& centimilli();
 
   /** Static constant defining SI prefix for 10^{-6} */
   UTILITIES_API const Scale& micro();
