@@ -51,7 +51,7 @@ namespace detail {
   MeterCustom_Impl::MeterCustom_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                      Model_Impl* model,
                                      bool keepHandle)
-                                     : ModelObject_Impl(other, model, keepHandle)
+    : ModelObject_Impl(other, model, keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == MeterCustom::iddObjectType());
   }

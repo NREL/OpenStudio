@@ -123,13 +123,15 @@ class MODEL_API MeterCustom_Impl : public ModelObject_Impl {
     /** @name Type Casting */
     //@{
 
+    // TODO: DO I NEED THAT?
+
     /** Get a public object that wraps this impl.*/
-    template<typename T>
-    T getPublicObject() const {
-      T result(std::dynamic_pointer_cast<typename T::ImplType>(
-                 std::const_pointer_cast<MeterCustom_Impl>(shared_from_this())));
-      return result;
-    }
+    //template<typename T>
+    //T getPublicObject() const {
+    //  T result(std::dynamic_pointer_cast<typename T::ImplType>(
+    //             std::const_pointer_cast<MeterCustom_Impl>(shared_from_this())));
+    //  return result;
+    //}
 
     //@}
    protected:
