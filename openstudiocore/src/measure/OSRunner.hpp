@@ -22,10 +22,9 @@
 
 #include "MeasureAPI.hpp"
 
-#include "OSResult.hpp"
-
 #include "../model/Model.hpp"
 
+#include "../utilities/filetypes/WorkflowStepResult.hpp"
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/sql/SqlFile.hpp"
 #include "../utilities/filetypes/EpwFile.hpp"
@@ -33,9 +32,7 @@
 #include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
-
-class Attribute;
-class Quantity;
+  
 class Workspace;
 class WorkspaceObject;
 
@@ -55,9 +52,6 @@ class MEASURE_API OSRunner {
   /** @name Constructors and Destructors */
   //@{
 
-  // DLM: require a workflow?
-  OSRunner();
-
   OSRunner(const WorkflowJSON& workflow);
 
   virtual ~OSRunner();
@@ -66,14 +60,8 @@ class MEASURE_API OSRunner {
   /** @name Getters and Queries */
   //@{
 
-  /** Returns the workflow currently being run. New in OS 2.0. */
+  /** Returns a clone of the workflow currently being run. New in OS 2.0. */
   WorkflowJSON workflow() const;
-
-  /** Returns the current step in the workflow being run, indexing starts at 0. New in OS 2.0. */
-  unsigned currentStep() const;
-
-  /** Returns results from the previous steps that were run. New in OS 2.0. */
-  std::vector<OSResult> previousResults() const;
 
   /** Returns preferred unit system, either 'IP' or 'SI'. New in OS 2.0. */
   std::string unitsPreference() const;
@@ -81,12 +69,12 @@ class MEASURE_API OSRunner {
   /** Returns preferred language, e.g. 'en' or 'fr'. New in OS 2.0. */
   std::string languagePreference() const;
 
-  /** Returns the OSResult for the current/last OSMeasure run by this OSRunner. (prepareForMeasureRun
+  /** Returns the result for the current/last OSMeasure run by this OSRunner. (prepareForMeasureRun
    *  should be called prior to each run to ensure that result() corresponds to a single script, and
    *  is not instead a running result over multiple scripts. One way to ensure that this happens is
    *  to call the default version of run in ModelMeasure, etc. at the beginning of any particular
    *  run method.) */
-  OSResult result() const;
+  WorkflowStepResult result() const;
 
   /** Returns a copy of the last Model generated in the workflow if available. */
   boost::optional<openstudio::model::Model> lastOpenStudioModel() const;
@@ -146,10 +134,6 @@ class MEASURE_API OSRunner {
   /** Sets the result final condition to message. */
   virtual void registerFinalCondition(const std::string& message);
 
-  /** Saves attribute as an output result of the measure currently being 
-   *  run, and sets the attribute's source accordingly. */
-  virtual void registerAttribute(Attribute& attribute);
-
   /** \overload Shortcut method for registering boolean attribute. */
   virtual void registerValue(const std::string& name, bool value);
   /** \overload Shortcut method for registering boolean attribute. */
@@ -206,7 +190,7 @@ class MEASURE_API OSRunner {
   /** @name Common Error Checking Functions */
   //@{
 
-  /** Returns true, logs no messages, and \link registerAttribute registers a value\endlink
+  /** Returns true, logs no messages, and registers a value
    *  for each argument with a value or default value if all script_arguments are in
    *  user_arguments, and if all required script_arguments have been set or have defaults
    *  in user_arguments. Otherwise, returns false and \link registerError registers an
@@ -229,17 +213,6 @@ class MEASURE_API OSRunner {
   /** Call this method to retrieve the value of an OSArgument of type double that is optional
    *  (not required and does not have a default). */
   boost::optional<double> getOptionalDoubleArgumentValue(
-      const std::string& argument_name,
-      const std::map<std::string,OSArgument>& user_arguments);
-
-  /** Call this method to retrieve the value of an OSArgument of type quantity that is either
-   *  required or has a default. */
-  Quantity getQuantityArgumentValue(const std::string& argument_name,
-                                    const std::map<std::string,OSArgument>& user_arguments);
-
-  /** Call this method to retrieve the value of an OSArgument of type quantity that is optional
-   *  (not required and does not have a default). */
-  boost::optional<Quantity> getOptionalQuantityArgumentValue(
       const std::string& argument_name,
       const std::map<std::string,OSArgument>& user_arguments);
 
@@ -285,11 +258,12 @@ class MEASURE_API OSRunner {
 
   //@}
 
-  // reset the runner between workflows
+  // reset the runner to re-run the workflow
   void reset();
 
-  // incrementing step copies result to previous results
-  void incrementStep();
+  // increments step to run next, returns true if there is another step
+  // should be called immediately after the last step completes
+  bool incrementStep();
 
   // supports in-memory job chaining
   void setLastOpenStudioModel(const openstudio::model::Model& lastOpenStudioModel);
@@ -328,17 +302,18 @@ class MEASURE_API OSRunner {
  private:
   REGISTER_LOGGER("openstudio.measure.OSRunner");
 
+  void captureStreams();
+  void restoreStreams();
+
   WorkflowJSON m_workflow;
-  unsigned m_currentStep;
-  std::vector<OSResult> m_previousResults;
+  bool m_startedStep;
+  bool m_streamsCaptured;
   std::string m_unitsPreference;
   std::string m_languagePreference;
 
   // current data
-  OSResult m_result;
-  std::string m_measureName;
-  std::string m_channel;
-
+  WorkflowStepResult m_result;
+  
   mutable boost::optional<openstudio::model::Model> m_lastOpenStudioModel;
   boost::optional<openstudio::path> m_lastOpenStudioModelPath;
   mutable boost::optional<openstudio::Workspace> m_lastEnergyPlusWorkspace;
@@ -348,6 +323,13 @@ class MEASURE_API OSRunner {
   mutable boost::optional<openstudio::EpwFile> m_lastEpwFile;
   boost::optional<openstudio::path> m_lastEpwFilePath;
 
+  std::streambuf* m_originalStdOut;
+  std::streambuf* m_originalStdErr;
+  std::stringstream m_bufferStdOut;
+  std::stringstream m_bufferStdErr;
+
+  boost::optional<openstudio::path> m_currentDir;
+  std::set<openstudio::path> m_currentDirFiles;
 };
 
 } // measure

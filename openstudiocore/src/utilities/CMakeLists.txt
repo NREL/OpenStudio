@@ -2,6 +2,9 @@
 
 set(target_name openstudio_utilities)
 
+include_directories(${CMAKE_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 include(idd/CMakeLists.txt)
 include(idf/CMakeLists.txt)
 include(sql/CMakeLists.txt)
@@ -112,7 +115,11 @@ set(filetypes_src
   filetypes/WorkflowJSON_Impl.hpp
   filetypes/WorkflowJSON.cpp
   filetypes/WorkflowStep.hpp
+  filetypes/WorkflowStep_Impl.hpp 
   filetypes/WorkflowStep.cpp  
+  filetypes/WorkflowStepResult.hpp
+  filetypes/WorkflowStepResult_Impl.hpp 
+  filetypes/WorkflowStepResult.cpp  
 )
 
 set(geometry_src
@@ -292,13 +299,19 @@ qt5_wrap_cpp_minimally(idf_moc_src ${idfxx_moc})
 qt5_wrap_cpp_minimally(data_moc_src ${data_moc})
 qt5_wrap_cpp_minimally(plot_moc_src ${plot_moc})
 
-# qrc files
-set(bcl_qrc
-  bcl/bcl.qrc
-)
 
-# generate rules for building source files from the resources
-qt5_add_resources(bcl_qrc_src ${bcl_qrc})
+# embedded files
+file(GLOB_RECURSE BCL_TEMPLATES  FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/bcl/templates/**/*.*")
+
+foreach( _FILE ${BCL_TEMPLATES} )
+  file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/bcl/" ${_FILE})
+  list(APPEND E_FILES ${_FILE})
+  list(APPEND E_PATHS ${LOCATION})
+endforeach()
+
+include("${CMAKE_SOURCE_DIR}/embedded/EmbedFiles.cmake")
+embed_files("${E_FILES}" "${E_PATHS}" EMBEDDED_OUTPUT openstudio)
+
 # set up groups of source files for Visual Studio
 source_group(bcl FILES ${bcl_src})
 source_group(cloud FILES ${cloud_src})
@@ -315,6 +328,7 @@ source_group(time FILES ${time_src})
 source_group(units FILES ${units_src})
 source_group(documentation FILES ${documentation_src})
 source_group(economics FILES ${economics_src})
+source_group(embedded FILES ${EMBEDDED_OUTPUT})
 
 
 add_custom_command(
@@ -330,7 +344,6 @@ set(${target_name}_src
   "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx" # referenced here to make sure it is generated when and where we expect
   ${bcl_src}
   ${bcl_moc_src}
-  ${bcl_qrc_src}
   ${cloud_src}
   ${cloud_moc_src}
   ${core_src}
@@ -350,6 +363,7 @@ set(${target_name}_src
   ${plot_moc_src}
   ${time_src}
   ${units_src}
+  ${EMBEDDED_OUTPUT}
 )
 
 set(${target_name}_test_src

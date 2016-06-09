@@ -18,8 +18,6 @@ set(${target_name}_src
   OSMeasureInfoGetter.hpp
   OSOutput.cpp
   OSOutput.hpp  
-  OSResult.cpp
-  OSResult.hpp
   OSRunner.cpp
   OSRunner.hpp
   ReportingMeasure.cpp
@@ -29,6 +27,7 @@ set(${target_name}_src
 set(${target_name}_test_src
   test/MeasureFixture.hpp
   test/MeasureFixture.cpp
+  test/OSRunner_GTest.cpp
   test/OSMeasure_GTest.cpp
   test/OSOutput_GTest.cpp
   test/OSArgument_GTest.cpp

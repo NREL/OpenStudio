@@ -142,6 +142,7 @@ if (!have_open_ssl)
   end
 end
 
+# handled in config.rb for dev build
 if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
   $OpenStudio_BinaryDir = "#{$OpenStudio_Dir}../bin/"
 elsif /darwin/.match(RUBY_PLATFORM)
@@ -290,20 +291,33 @@ module Ruleset
     end      
   end
   
-  # support for name deprecated as of 2.0.0
-  class OSResult < OpenStudio::Measure::OSResult
-    def initialize
-      OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "OSResult is deprecated, use OpenStudio::Measure::OSResult instead.")
-      super
-    end      
-  end
+  # class was replaced by OpenStudio::WorkflowStepResult
+#  # support for name deprecated as of 2.0.0
+#  class OSResult < OpenStudio::Measure::OSResult
+#    def initialize
+#      OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "OSResult is deprecated, use OpenStudio::Measure::OSResult instead.")
+#      super
+#    end      
+#  end
+#  
+#  # support for name deprecated as of 2.0.0
+#  class OSResultVector < OpenStudio::Measure::OSResultVector
+#    def initialize
+#      OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "OSResultVector is deprecated, use OpenStudio::Measure::OSResultVector instead.")
+#      super
+#    end      
+#  end
   
   # support for name deprecated as of 2.0.0
   class OSRunner < OpenStudio::Measure::OSRunner
-    def initialize
+    def initialize(workflow_json = nil)
       OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "OSRunner is deprecated, use OpenStudio::Measure::OSRunner instead.")
-      super
-    end      
+      if workflow_json.nil?
+        workflow_json = OpenStudio::WorkflowJSON.new
+        OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "No workflow provided, using empty WorkflowJSON.")
+      end
+      super(workflow_json)
+    end       
   end
   
   # support for name deprecated as of 2.0.0

@@ -20,9 +20,13 @@
 #include "WorkflowJSON.hpp"
 #include "WorkflowJSON_Impl.hpp"
 
+#include "WorkflowStep.hpp"
+#include "WorkflowStepResult.hpp"
+
 #include "../core/Assert.hpp"
 #include "../core/PathHelpers.hpp"
 #include "../core/Checksum.hpp"
+#include "../time/DateTime.hpp"
 
 #include <boost/optional.hpp>
 
@@ -33,68 +37,94 @@ namespace openstudio{
 namespace detail{
 
   WorkflowJSON_Impl::WorkflowJSON_Impl()
-  {}
+  {
+    m_value["created_at"] = DateTime::nowUTC().toISO8601();
+    m_value["steps"] = Json::Value(Json::arrayValue);
+  }
 
   WorkflowJSON_Impl::WorkflowJSON_Impl(const std::string& s)
-    : m_path()
   {
     Json::Reader reader;
-    Json::Value json;
-    bool parsingSuccessful = reader.parse(s, json);
+    bool parsingSuccessful = reader.parse(s, m_value);
     if (!parsingSuccessful){
       std::string errors = reader.getFormattedErrorMessages();
       LOG_AND_THROW("WorkflowJSON cannot be processed, " << errors);
     }
-    parse("", json);
+
+    parseSteps();
   }
 
   WorkflowJSON_Impl::WorkflowJSON_Impl(const openstudio::path& p)
-    : m_path(p)
   {
-    if (!boost::filesystem::exists(m_path) || !boost::filesystem::is_regular_file(m_path)){
-      LOG_AND_THROW("Path '" << m_path << "' is not a WorkflowJSON file");
+    if (!boost::filesystem::exists(p) || !boost::filesystem::is_regular_file(p)){
+      LOG_AND_THROW("Path '" << p << "' is not a WorkflowJSON file");
     }
 
     // open file
-    std::ifstream ifs(openstudio::toString(m_path));
+    std::ifstream ifs(openstudio::toString(p));
 
     Json::Reader reader;
-    Json::Value json;
-    bool parsingSuccessful = reader.parse(ifs, json);
+    bool parsingSuccessful = reader.parse(ifs, m_value);
     if (!parsingSuccessful){
       std::string errors = reader.getFormattedErrorMessages();
-      LOG_AND_THROW("WorkflowJSON '" << toString(m_path) << "' cannot be processed, " << errors);
+      LOG_AND_THROW("WorkflowJSON '" << toString(p) << "' cannot be processed, " << errors);
     }
-    parse("", json);
+
+    parseSteps();
+
+    setOswPath(p);
+  }
+
+  WorkflowJSON WorkflowJSON_Impl::clone() const
+  {
+    WorkflowJSON result(this->string(true));
+      
+    boost::optional<openstudio::path> oswPath = this->oswPath();
+    if (oswPath){
+      result.setOswPath(*oswPath);
+    } else{
+      result.setOswDir(this->oswDir());
+    }
+
+    return result;
   }
 
   std::string WorkflowJSON_Impl::string(bool includeHash) const
   {
-    Json::Value root = json(true);
+    Json::Value clone(m_value);
+    if (!includeHash){
+      clone.removeMember("hash");
+    }
+
+    Json::Value steps(Json::arrayValue);
+    for (const auto& step : m_steps){
+
+      Json::Reader reader;
+      Json::Value stepValue;
+      bool parsingSuccessful = reader.parse(step.string(), stepValue);
+      if (parsingSuccessful){
+        steps.append(stepValue);
+      }
+    }
+    clone["steps"] = steps;
 
     Json::StyledWriter writer;
-    std::string result = writer.write(root);
+    std::string result = writer.write(clone);
 
     return result;
   }
 
   std::string WorkflowJSON_Impl::hash() const
   {
-    boost::optional<Attribute> attribute = getAttribute("hash");
-    if (attribute && attribute->valueType().value() == AttributeValueType::String){
-      return attribute->valueAsString();
-    }
-    return std::string();
+    Json::Value defaultValue("");
+    Json::Value h = m_value.get("hash", defaultValue);
+
+    return h.asString();
   }
 
   std::string WorkflowJSON_Impl::computeHash() const
   {
-    Json::Value root = json(false);
-
-    Json::StyledWriter writer;
-    std::string result = writer.write(root);
-
-    return checksum(result);
+    return checksum(string(false));
   }
 
   bool WorkflowJSON_Impl::checkForUpdates()
@@ -103,7 +133,8 @@ namespace detail{
     std::string h2 = computeHash();
     bool result = (h1 != h2);
     if (result){
-      setAttribute("hash", h2);
+      m_value["hash"] = h2;
+      onUpdate();
     }
     return result;
   }
@@ -138,284 +169,363 @@ namespace detail{
 
     return false;
   }
-
-  openstudio::path WorkflowJSON_Impl::path() const
+  
+  void WorkflowJSON_Impl::reset()
   {
-    return m_path;
+    m_value.removeMember("started_at");
+    m_value.removeMember("completed_at");
+    m_value.removeMember("completed_status");
+    m_value.removeMember("current_step");
+    onUpdate();
   }
 
-  openstudio::path WorkflowJSON_Impl::rootPath() const
+  void WorkflowJSON_Impl::start()
   {
-    openstudio::path rootPath = toPath(".");
-    boost::optional<Attribute> attribute = getAttribute("root");
-    if (attribute && (AttributeValueType::String == attribute->valueType().value())){
-      rootPath = toPath(attribute->valueAsString());
+    m_value["started_at"] = DateTime::nowUTC().toISO8601();
+    m_value["current_step"] = 0;
+    for (auto& step : workflowSteps()){
+      step.resetResult();
     }
-
-    if (rootPath.is_absolute()){
-      return rootPath;
-    }
-
-    if (m_path.empty()){
-      return openstudio::path();
-    }
-
-    return boost::filesystem::absolute(rootPath, m_path.parent_path());
+    onUpdate();
   }
 
-  openstudio::path WorkflowJSON_Impl::seedPath() const
+  unsigned WorkflowJSON_Impl::currentStepIndex() const
   {
-    openstudio::path rootPath = this->rootPath();
-    if (rootPath.empty()){
-      return openstudio::path();
-    }
-
-    std::string seedName;
-    boost::optional<Attribute> attribute = getAttribute("seed");
-    if (attribute && (AttributeValueType::String == attribute->valueType().value())){
-      seedName = attribute->valueAsString();
-    }
-
-    if (seedName.empty()){
-      return openstudio::path();
-    }
-
-    return rootPath / toPath("seed") / toPath(seedName);
+    Json::Value defaultValue(0);
+    Json::Value index = m_value.get("current_step", defaultValue);
+    return index.asUInt();
   }
 
-  openstudio::path WorkflowJSON_Impl::weatherPath() const
+  boost::optional<WorkflowStep> WorkflowJSON_Impl::currentStep() const
   {
-    openstudio::path rootPath = this->rootPath();
-    if (rootPath.empty()){
-      return openstudio::path();
+    unsigned index = currentStepIndex();
+    std::vector<WorkflowStep> steps = this->workflowSteps();
+
+    if (index >= steps.size()){
+      return boost::none;
     }
 
-    std::string weatherName;
-    boost::optional<Attribute> attribute = getAttribute("weather_file");
-    if (attribute && (AttributeValueType::String == attribute->valueType().value())){
-      weatherName = attribute->valueAsString();
-    }
-
-    if (weatherName.empty()){
-      return openstudio::path();
-    }
-
-    return rootPath / toPath("weather") / toPath(weatherName);
+    return steps[index];
   }
 
-  openstudio::path WorkflowJSON_Impl::measuresDir() const
+  bool WorkflowJSON_Impl::incrementStep()
   {
-    openstudio::path rootPath = this->rootPath();
-    if (rootPath.empty()){
-      return openstudio::path();
+    unsigned index = currentStepIndex();
+    m_value["current_step"] = index + 1;
+    onUpdate();
+    return currentStep();
+  }
+
+  boost::optional<std::string> WorkflowJSON_Impl::completedStatus() const
+  {
+    Json::Value defaultValue("");
+    Json::Value status = m_value.get("completed_status", defaultValue);
+    std::string result = status.asString();
+    if (result.empty()){
+      return boost::none;
     }
-    return rootPath / toPath("measures/");
+    return result;
   }
 
-  std::vector<Attribute> WorkflowJSON_Impl::attributes() const
+  void WorkflowJSON_Impl::setCompletedStatus(const std::string& status)
   {
-    return m_attributes;
+    m_value["completed_status"] = status;
+    m_value["completed_at"] = DateTime::nowUTC().toISO8601();
+    onUpdate();
   }
 
-  boost::optional<Attribute> WorkflowJSON_Impl::getAttribute(const std::string& name) const
+  boost::optional<DateTime> WorkflowJSON_Impl::createdAt() const
   {
-    for (const Attribute& attribute : m_attributes){
-      if (attribute.name() == name){
-        return attribute;
+    Json::Value defaultValue("");
+    Json::Value value = m_value.get("created_at", defaultValue);
+    std::string str = value.asString();
+    if (str.empty()){
+      return boost::none;
+    }
+    return DateTime::fromISO8601(str);
+  }
+
+  boost::optional<DateTime> WorkflowJSON_Impl::startedAt() const
+  {
+    Json::Value defaultValue("");
+    Json::Value value = m_value.get("started_at", defaultValue);
+    std::string str = value.asString();
+    if (str.empty()){
+      return boost::none;
+    }
+    return DateTime::fromISO8601(str);
+  }
+
+  boost::optional<DateTime> WorkflowJSON_Impl::updatedAt() const
+  {
+    Json::Value defaultValue("");
+    Json::Value value = m_value.get("updated_at", defaultValue);
+    std::string str = value.asString();
+    if (str.empty()){
+      return boost::none;
+    }
+    return DateTime::fromISO8601(str);
+  }
+
+  boost::optional<DateTime> WorkflowJSON_Impl::completedAt() const
+  {
+    Json::Value defaultValue("");
+    Json::Value value = m_value.get("completed_at", defaultValue);
+    std::string str = value.asString();
+    if (str.empty()){
+      return boost::none;
+    }
+    return DateTime::fromISO8601(str);
+  }
+
+  boost::optional<openstudio::path> WorkflowJSON_Impl::oswPath() const
+  {
+    if (m_oswFilename.empty() || m_oswDir.empty()){
+      return boost::none;
+    }
+    return m_oswDir / m_oswFilename;
+  }
+
+  bool WorkflowJSON_Impl::setOswPath(const openstudio::path& path)
+  {
+    if (path.is_absolute()){
+      m_oswFilename = path.filename();
+      m_oswDir = path.parent_path();
+      onUpdate();
+      return true;
+    }
+    return false;
+  }
+
+  openstudio::path WorkflowJSON_Impl::oswDir() const
+  {
+    if (m_oswDir.empty()){
+      return boost::filesystem::current_path();
+    }
+    return m_oswDir;
+  }
+
+  bool WorkflowJSON_Impl::setOswDir(const openstudio::path& path)
+  {
+    if (path.is_absolute()){
+      m_oswDir = path;
+      onUpdate();
+      return true;
+    }
+    return false;
+  }
+
+  openstudio::path WorkflowJSON_Impl::rootDir() const
+  {
+    Json::Value defaultValue(".");
+    Json::Value root = m_value.get("root", defaultValue);
+    return toPath(root.asString());
+  }
+
+  openstudio::path WorkflowJSON_Impl::absoluteRootDir() const
+  {
+    openstudio::path result = rootDir();
+    if (result.is_relative()){
+      return boost::filesystem::absolute(result, oswDir());
+    }
+    return result;
+  }
+
+  openstudio::path WorkflowJSON_Impl::runDir() const
+  {
+    Json::Value defaultValue("./run");
+    Json::Value runDirectory = m_value.get("run_directory", defaultValue);
+    return toPath(runDirectory.asString());
+  }
+
+  openstudio::path WorkflowJSON_Impl::absoluteRunDir() const
+  {
+    openstudio::path result = runDir();
+    if (result.is_relative()){
+      return boost::filesystem::absolute(result, absoluteRootDir());
+    }
+    return result;
+  }
+
+  openstudio::path WorkflowJSON_Impl::outPath() const
+  {
+    Json::Value defaultValue("out.osw");
+    Json::Value path = m_value.get("out_name", defaultValue);
+    return toPath(path.asString());
+  }
+
+  openstudio::path WorkflowJSON_Impl::absoluteOutPath() const
+  {
+    openstudio::path result = outPath();
+    if (result.is_relative()){
+      return boost::filesystem::absolute(result, oswDir());
+    }
+    return result;
+  }
+
+  std::vector<openstudio::path> WorkflowJSON_Impl::filePaths() const
+  {
+    std::vector<openstudio::path> result;
+
+    Json::Value defaultValue(Json::arrayValue);
+    defaultValue.append("./files");
+    defaultValue.append("./weather");
+    defaultValue.append("../../files");
+    defaultValue.append("../../weather");
+    defaultValue.append("./");
+
+    Json::Value paths = m_value.get("file_paths", defaultValue);
+
+    Json::ArrayIndex n = paths.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      result.push_back(toPath(paths[i].asString()));
+    }
+
+    return result;
+  }
+
+  std::vector<openstudio::path> WorkflowJSON_Impl::absoluteFilePaths() const
+  {
+    std::vector<openstudio::path> result;
+    for (const auto& path : filePaths()){
+      if (path.is_absolute()){
+        result.push_back(path);
+      }else{
+        result.push_back(boost::filesystem::absolute(path, absoluteRootDir()));
+      }
+    }
+    return result;
+  }
+
+  boost::optional<openstudio::path> WorkflowJSON_Impl::findFile(const openstudio::path& file) const
+  {
+    for (const auto& path : absoluteFilePaths()){
+      openstudio::path p = path / file;
+      if (boost::filesystem::exists(p) && boost::filesystem::is_regular_file(p)){
+        return boost::filesystem::canonical(p);
       }
     }
     return boost::none;
   }
 
-  bool WorkflowJSON_Impl::removeAttribute(const std::string& name)
+  boost::optional<openstudio::path> WorkflowJSON_Impl::findFile(const std::string& fileName) const
   {
-    m_attributes.erase(std::remove_if(m_attributes.begin(),
-                                      m_attributes.end(),
-                                      [&name](const Attribute& attribute){return (attribute.name() == name); }),
-                      m_attributes.end());
-    return true;
+    return findFile(toPath(fileName));
   }
 
-  bool WorkflowJSON_Impl::setAttribute(const Attribute& attribute)
+  std::vector<openstudio::path> WorkflowJSON_Impl::measurePaths() const
   {
-    removeAttribute(attribute.name());
-    m_attributes.push_back(attribute);
-    return true;
-  }
+    std::vector<openstudio::path> result;
 
-  bool WorkflowJSON_Impl::setAttribute(const std::string& name, bool value)
-  {
-    if (name != "steps"){
-      return setAttribute(Attribute(name, value));
+    Json::Value defaultValue(Json::arrayValue);
+    defaultValue.append("./measures");
+    defaultValue.append("../../measures");
+    defaultValue.append("./");
+
+    Json::Value paths = m_value.get("measure_paths", defaultValue);
+
+    Json::ArrayIndex n = paths.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      result.push_back(toPath(paths[i].asString()));
     }
-    return false;
+
+    return result;
   }
 
-  bool WorkflowJSON_Impl::setAttribute(const std::string& name, double value)
+  std::vector<openstudio::path> WorkflowJSON_Impl::absoluteMeasurePaths() const
   {
-    if (name != "steps"){
-      return setAttribute(Attribute(name, value));
+    std::vector<openstudio::path> result;
+    for (const auto& path : measurePaths()){
+      if (path.is_absolute()){
+        result.push_back(path);
+      } else{
+        result.push_back(boost::filesystem::absolute(path, absoluteRootDir()));
+      }
     }
-    return false;
+    return result;
   }
 
-  bool WorkflowJSON_Impl::setAttribute(const std::string& name, int value)
+  boost::optional<openstudio::path> WorkflowJSON_Impl::findMeasure(const openstudio::path& measureDir) const
   {
-    if (name != "steps"){
-      return setAttribute(Attribute(name, value));
+    for (const auto& path : absoluteMeasurePaths()){
+      openstudio::path p = path / measureDir;
+      if (boost::filesystem::exists(p) && boost::filesystem::is_directory(p)){
+        return boost::filesystem::canonical(p);
+      }
     }
-    return false;
+    return boost::none;
   }
 
-  bool WorkflowJSON_Impl::setAttribute(const std::string& name, const std::string& value)
+  boost::optional<openstudio::path> WorkflowJSON_Impl::findMeasure(const std::string& measureDirName) const
   {
-    if (name != "steps"){
-      return setAttribute(Attribute(name, value));
+    return findMeasure(toPath(measureDirName));
+  }
+
+  boost::optional<openstudio::path> WorkflowJSON_Impl::seedFile() const
+  {
+    Json::Value defaultValue("");
+    Json::Value seed = m_value.get("seed_file", defaultValue);
+    std::string result = seed.asString();
+    if (result.empty()){
+      return boost::none;
     }
-    return false;
+    return toPath(result);
   }
 
-  void WorkflowJSON_Impl::clearAttributes()
+  boost::optional<openstudio::path> WorkflowJSON_Impl::weatherFile() const
   {
-    m_attributes.clear();
+    Json::Value defaultValue("");
+    Json::Value weather = m_value.get("weather_file", defaultValue);
+    std::string result = weather.asString();
+    if (result.empty()){
+      return boost::none;
+    }
+    return toPath(result);
   }
 
   std::vector<WorkflowStep> WorkflowJSON_Impl::workflowSteps() const
   {
-    return m_workflowSteps;
+    return m_steps;
   }
-
-  bool WorkflowJSON_Impl::setWorkflowSteps(const std::vector<WorkflowStep>& steps)
+  
+  bool WorkflowJSON_Impl::setWorkflowSteps(const std::vector<WorkflowStep>& workflowSteps)
   {
-    m_workflowSteps = steps;
+    m_steps = workflowSteps;
+    onUpdate();
     return true;
   }
 
-  Attribute WorkflowJSON_Impl::parse(const std::string& name, const Json::Value& json)
+  void WorkflowJSON_Impl::onUpdate()
   {
-    bool topLevel = name.empty();
-
-    std::vector<openstudio::Attribute> attributeVector;
-
-    if (json.isObject()) {
-      std::vector<std::string> members = json.getMemberNames();
-      for (auto it = members.begin(); it != members.end(); ++it){
-        Json::Value child = json[*it];
-        Attribute attribute = parse(*it, child);
-        attributeVector.push_back(attribute);
-        if (topLevel){
-          m_attributes.push_back(attribute);
-        }
-      }
-    } else if (json.isArray()) {
-      unsigned n = json.size();
-      for (unsigned i = 0; i < n; ++i){
-        Json::Value child = json[i];
-        Attribute attribute = parse("obj", child);
-        attributeVector.push_back(attribute);
-        if (topLevel){
-          m_attributes.push_back(attribute);
-        }
-      }
-    } else if (json.isString()) {
-      std::string val = json.asString();
-      Attribute attribute(name, val);
-      return attribute;
-    } else if (json.isBool()) {
-      bool val = json.asBool();
-      Attribute attribute(name, val);
-      return attribute;
-    } else if (json.isInt()) {
-      int val = json.asInt();
-      Attribute attribute(name, val);
-      return attribute;
-    } else if (json.isUInt()) {
-      int val = (int)json.asUInt();
-      Attribute attribute(name, val);
-      return attribute;
-    } else if (json.isDouble()) {
-      double val = json.asDouble();
-      Attribute attribute(name, val);
-      return attribute;
-    } else{
-    }
-
-    Attribute attribute(name, attributeVector);
-
-    if (topLevel){
-      //std::cout << attribute.toString();
-      boost::optional<Attribute> attribute = getAttribute("steps");
-      if (attribute){
-
-        if (attribute->valueType().value() == AttributeValueType::AttributeVector){
-          std::vector<Attribute> steps = attribute->valueAsAttributeVector();
-          for (const Attribute& step : steps){
-            try{
-              WorkflowStep workflowStep(step);
-              m_workflowSteps.push_back(workflowStep);
-            } catch (const std::exception&){
-
-            }
-          }
-        }
-
-        removeAttribute("steps");
-      }
-    }
-
-    return attribute;
+    m_value["updated_at"] = DateTime::nowUTC().toISO8601();
   }
 
-  Json::Value WorkflowJSON_Impl::json(bool includeHash) const
+  void WorkflowJSON_Impl::parseSteps()
   {
-    Json::Value result(Json::objectValue);
+    m_steps.clear();
 
-    for (const Attribute& attribute : m_attributes){
-      if (!includeHash && attribute.name() == "hash"){
-        continue;
-      }
+    Json::Value defaultValue(Json::arrayValue);
+    Json::Value steps = m_value.get("steps", defaultValue);
 
-      if (attribute.valueType().value() == AttributeValueType::Boolean){
-        result[attribute.name()] = Json::Value(attribute.valueAsBoolean());
-      } else if (attribute.valueType().value() == AttributeValueType::Double){
-        result[attribute.name()] = Json::Value(attribute.valueAsDouble());
-      } else if (attribute.valueType().value() == AttributeValueType::Integer){
-        result[attribute.name()] = Json::Value(attribute.valueAsInteger());
-      } else if (attribute.valueType().value() == AttributeValueType::Unsigned){
-        result[attribute.name()] = Json::Value((int)attribute.valueAsUnsigned());
-      } else if (attribute.valueType().value() == AttributeValueType::String){
-        result[attribute.name()] = Json::Value(attribute.valueAsString());
+    Json::ArrayIndex n = steps.size();
+    for (Json::ArrayIndex i = 0; i < n; ++i){
+      Json::Value step = steps[i];
+
+      Json::FastWriter writer;
+      std::string s = writer.write(step);
+
+      boost::optional<WorkflowStep> workflowStep = WorkflowStep::fromString(s);
+      if (workflowStep){
+        m_steps.push_back(*workflowStep);
+      }else{
+        LOG_AND_THROW("Step " << i << " cannot be processed");
       }
     }
 
-    Json::Value steps(Json::arrayValue);
-    for (const WorkflowStep& workflowStep : m_workflowSteps){
-      Json::Value step(Json::objectValue);
-      step["measure_dir_name"] = Json::Value(workflowStep.measureDirName());
+    m_value.removeMember("steps");
 
-      Json::Value arguments(Json::arrayValue);
-      for (const auto argument : workflowStep.arguments()){
-        Json::Value object(Json::objectValue);
-        object["name"] = Json::Value(argument.first);
-        if (argument.second.variantType().value() == VariantType::Boolean){
-          object["value"] = Json::Value(argument.second.valueAsBoolean());
-        } else if (argument.second.variantType().value() == VariantType::Double){
-          object["value"] = Json::Value(argument.second.valueAsDouble());
-        } else if (argument.second.variantType().value() == VariantType::Integer){
-          object["value"] = Json::Value(argument.second.valueAsInteger());
-        } else if (argument.second.variantType().value() == VariantType::String){
-          object["value"] = Json::Value(argument.second.valueAsString());
-        }
-        arguments.append(object);
-      }
-      step["arguments"] = arguments;
-      steps.append(step);
-    }
-
-    result["steps"] = steps;
-
-    return result;
   }
+
 } // detail
 
 WorkflowJSON::WorkflowJSON()
@@ -436,7 +546,7 @@ WorkflowJSON::WorkflowJSON(std::shared_ptr<detail::WorkflowJSON_Impl> impl)
 
 WorkflowJSON WorkflowJSON::clone() const
 {
-  return WorkflowJSON(std::shared_ptr<detail::WorkflowJSON_Impl>(new detail::WorkflowJSON_Impl(*m_impl)));
+  return getImpl<detail::WorkflowJSON_Impl>()->clone();
 }
 
 boost::optional<WorkflowJSON> WorkflowJSON::load(const std::string& s)
@@ -489,74 +599,159 @@ bool WorkflowJSON::saveAs(const openstudio::path& p) const
   return getImpl<detail::WorkflowJSON_Impl>()->saveAs(p);
 }
 
-openstudio::path WorkflowJSON::path() const
+void WorkflowJSON::reset()
 {
-  return getImpl<detail::WorkflowJSON_Impl>()->path();
+  getImpl<detail::WorkflowJSON_Impl>()->reset();
 }
 
-openstudio::path WorkflowJSON::rootPath() const
+void WorkflowJSON::start()
 {
-  return getImpl<detail::WorkflowJSON_Impl>()->rootPath();
+  getImpl<detail::WorkflowJSON_Impl>()->start();
 }
 
-openstudio::path WorkflowJSON::seedPath() const
+unsigned WorkflowJSON::currentStepIndex() const
 {
-  return getImpl<detail::WorkflowJSON_Impl>()->seedPath();
+  return getImpl<detail::WorkflowJSON_Impl>()->currentStepIndex();
 }
 
-openstudio::path WorkflowJSON::weatherPath() const
+boost::optional<WorkflowStep> WorkflowJSON::currentStep() const
 {
-  return getImpl<detail::WorkflowJSON_Impl>()->weatherPath();
+  return getImpl<detail::WorkflowJSON_Impl>()->currentStep();
 }
 
-openstudio::path WorkflowJSON::measuresDir() const
+bool WorkflowJSON::incrementStep()
 {
-  return getImpl<detail::WorkflowJSON_Impl>()->measuresDir();
+  return getImpl<detail::WorkflowJSON_Impl>()->incrementStep();
 }
 
-std::vector<Attribute> WorkflowJSON::attributes() const
+boost::optional<std::string> WorkflowJSON::completedStatus() const
 {
-  return getImpl<detail::WorkflowJSON_Impl>()->attributes();
+  return getImpl<detail::WorkflowJSON_Impl>()->completedStatus();
 }
 
-boost::optional<Attribute> WorkflowJSON::getAttribute(const std::string& name) const
+void WorkflowJSON::setCompletedStatus(const std::string& status)
 {
-  return getImpl<detail::WorkflowJSON_Impl>()->getAttribute(name);
+  return getImpl<detail::WorkflowJSON_Impl>()->setCompletedStatus(status);
 }
 
-bool WorkflowJSON::removeAttribute(const std::string& name)
+boost::optional<DateTime> WorkflowJSON::createdAt() const
 {
-  return getImpl<detail::WorkflowJSON_Impl>()->removeAttribute(name);
+  return getImpl<detail::WorkflowJSON_Impl>()->createdAt();
 }
 
-bool WorkflowJSON::setAttribute(const Attribute& attribute)
+boost::optional<DateTime> WorkflowJSON::startedAt() const
 {
-  return getImpl<detail::WorkflowJSON_Impl>()->setAttribute(attribute);
+  return getImpl<detail::WorkflowJSON_Impl>()->startedAt();
 }
 
-bool WorkflowJSON::setAttribute(const std::string& name, bool value)
+boost::optional<DateTime> WorkflowJSON::updatedAt() const
 {
-  return getImpl<detail::WorkflowJSON_Impl>()->setAttribute(name, value);
+  return getImpl<detail::WorkflowJSON_Impl>()->updatedAt();
 }
 
-bool WorkflowJSON::setAttribute(const std::string& name, double value)
+boost::optional<DateTime> WorkflowJSON::completedAt() const
 {
-  return getImpl<detail::WorkflowJSON_Impl>()->setAttribute(name, value);
+  return getImpl<detail::WorkflowJSON_Impl>()->completedAt();
 }
 
-bool WorkflowJSON::setAttribute(const std::string& name, int value)
+boost::optional<openstudio::path> WorkflowJSON::oswPath() const
 {
-  return getImpl<detail::WorkflowJSON_Impl>()->setAttribute(name, value);
+  return getImpl<detail::WorkflowJSON_Impl>()->oswPath();
 }
 
-bool WorkflowJSON::setAttribute(const std::string& name, const std::string& value)
+bool WorkflowJSON::setOswPath(const openstudio::path& path)
 {
-  return getImpl<detail::WorkflowJSON_Impl>()->setAttribute(name, value);
+  return getImpl<detail::WorkflowJSON_Impl>()->setOswPath(path);
 }
 
-void WorkflowJSON::clearAttributes()
+openstudio::path WorkflowJSON::oswDir() const
 {
-  getImpl<detail::WorkflowJSON_Impl>()->clearAttributes();
+  return getImpl<detail::WorkflowJSON_Impl>()->oswDir();
+}
+
+bool WorkflowJSON::setOswDir(const openstudio::path& path)
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->setOswDir(path);
+}
+
+openstudio::path WorkflowJSON::rootDir() const
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->rootDir();
+}
+
+openstudio::path WorkflowJSON::absoluteRootDir() const
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->absoluteRootDir();
+}
+
+openstudio::path WorkflowJSON::runDir() const
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->runDir();
+}
+
+openstudio::path WorkflowJSON::absoluteRunDir() const
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->absoluteRunDir();
+}
+
+openstudio::path WorkflowJSON::outPath() const
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->outPath();
+}
+
+openstudio::path WorkflowJSON::absoluteOutPath() const
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->absoluteOutPath();
+}
+
+std::vector<openstudio::path> WorkflowJSON::filePaths() const
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->filePaths();
+}
+
+std::vector<openstudio::path> WorkflowJSON::absoluteFilePaths() const
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->absoluteFilePaths();
+}
+
+boost::optional<openstudio::path> WorkflowJSON::findFile(const openstudio::path& file) const
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->findFile(file);
+}
+
+boost::optional<openstudio::path> WorkflowJSON::findFile(const std::string& fileName) const
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->findFile(fileName);
+}
+
+std::vector<openstudio::path> WorkflowJSON::measurePaths() const
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->measurePaths();
+}
+
+std::vector<openstudio::path> WorkflowJSON::absoluteMeasurePaths() const
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->absoluteMeasurePaths();
+}
+
+boost::optional<openstudio::path> WorkflowJSON::findMeasure(const openstudio::path& measureDir) const
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->findMeasure(measureDir);
+}
+
+boost::optional<openstudio::path> WorkflowJSON::findMeasure(const std::string& measureDirName) const
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->findMeasure(measureDirName);
+}
+
+boost::optional<openstudio::path> WorkflowJSON::seedFile() const
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->seedFile();
+}
+
+boost::optional<openstudio::path> WorkflowJSON::weatherFile() const
+{
+  return getImpl<detail::WorkflowJSON_Impl>()->weatherFile();
 }
 
 std::vector<WorkflowStep> WorkflowJSON::workflowSteps() const
@@ -567,6 +762,12 @@ std::vector<WorkflowStep> WorkflowJSON::workflowSteps() const
 bool WorkflowJSON::setWorkflowSteps(const std::vector<WorkflowStep>& steps)
 {
   return getImpl<detail::WorkflowJSON_Impl>()->setWorkflowSteps(steps);
+}
+
+std::ostream& operator<<(std::ostream& os, const WorkflowJSON& workflowJSON)
+{
+  os << workflowJSON.string();
+  return os;
 }
 
 } // openstudio

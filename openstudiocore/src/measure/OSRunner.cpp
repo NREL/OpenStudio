@@ -24,38 +24,33 @@
 
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/WorkspaceObject.hpp"
-#include "../utilities/units/Quantity.hpp"
 #include "../utilities/math/FloatCompare.hpp"
+#include "../utilities/filetypes/WorkflowStep.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+
+#include <stdio.h>
+#include <stdlib.h>
 
 namespace openstudio {
 namespace measure {
 
-OSRunner::OSRunner()
-  : m_currentStep(0), m_unitsPreference("IP"), m_languagePreference("en")
-{}
-
 OSRunner::OSRunner(const WorkflowJSON& workflow)
-  : m_workflow(workflow), m_currentStep(0), m_unitsPreference("IP"), m_languagePreference("en")
-{}
+  : m_workflow(workflow), m_startedStep(false), m_streamsCaptured(false), 
+    m_unitsPreference("IP"), m_languagePreference("en"), m_originalStdOut(nullptr), m_originalStdErr(nullptr)
+{
+}
 
 OSRunner::~OSRunner()
-{}
+{
+  restoreStreams();
+}
 
 WorkflowJSON OSRunner::workflow() const
 {
-  return WorkflowJSON();
-}
-
-unsigned OSRunner::currentStep() const
-{
-  return m_currentStep;
-}
-
-std::vector<OSResult> OSRunner::previousResults() const
-{
-  return m_previousResults;
+  // return a clone because the workflow is immutable
+  return m_workflow.clone();
 }
 
 std::string OSRunner::unitsPreference() const
@@ -68,7 +63,7 @@ std::string OSRunner::languagePreference() const
   return m_languagePreference;
 }
 
-OSResult OSRunner::result() const {
+WorkflowStepResult OSRunner::result() const {
   return m_result;
 }
 
@@ -146,101 +141,185 @@ std::map<std::string, OSArgument> OSRunner::getUserInput(std::vector<OSArgument>
 
 void OSRunner::reset()
 {
-  // m_workflow;
-  m_currentStep = 0;
-  m_previousResults.clear();
+  m_workflow.reset();
+
+  restoreStreams();
+
   //m_unitsPreference // do not reset
   //m_languagePreference; // do not reset
 
-  m_result = OSResult();
-  m_measureName = "";
-  m_channel = "";
+  m_result = WorkflowStepResult();
 }
 
-void OSRunner::incrementStep()
+bool OSRunner::incrementStep()
 {
-  m_previousResults.push_back(m_result);
-  m_result = OSResult();
+  if (!m_startedStep){
+    LOG(Error, "Not prepared for step");
+    return false;
+  }
+  boost::optional<WorkflowStep> currentStep = m_workflow.currentStep();
+  if (!currentStep){
+    LOG(Error, "Cannot find current Workflow Step");
+    return false;
+  }
 
-  m_measureName = "";
-  m_channel = "";
-  ++m_currentStep;
+  if (!m_result.stepResult()){
+    // must have been skipped
+    m_result.setStepResult(StepResult::Skip);
+  }
+
+  // restore stdout and stderr
+  m_result.setStdOut(m_bufferStdOut.str());
+  m_result.setStdErr(m_bufferStdErr.str());
+  restoreStreams();
+
+  // check for created files
+  
+  // get list of new files
+  if (m_currentDir){
+    openstudio::path absoluteRootDir = m_workflow.absoluteRootDir();
+    if (boost::filesystem::exists(*m_currentDir) && boost::filesystem::is_directory(*m_currentDir))
+    {
+      for (boost::filesystem::directory_iterator dir_iter(*m_currentDir), end_iter; dir_iter != end_iter; ++dir_iter)
+      {
+        if (boost::filesystem::is_regular_file(dir_iter->status()))
+        {
+          if (m_currentDirFiles.find(dir_iter->path()) == m_currentDirFiles.end()){
+
+            openstudio::path path = dir_iter->path();
+            OS_ASSERT(path.is_absolute());
+
+            // DLM: we need to figure out what these should be
+            // are they absolute, relative to root dir, relative to measure dir, valid after reports have been packed up?
+            //try{
+            //  path = relativePath(path, absoluteRootDir);
+            //} catch (const std::exception&){
+            //}
+            m_result.addStepFile(path);
+          }
+        }
+      }
+    }
+  }
+  m_currentDir.reset();
+  m_currentDirFiles.clear();
+
+  m_result.setCompletedAt(DateTime::nowUTC());
+    
+  currentStep->setResult(m_result);
+  
+  m_result = WorkflowStepResult();
+  m_startedStep = false;
+
+  return m_workflow.incrementStep();
 }
+
+//void OSRunner::setCurrentStep(unsigned currentStep)
+//{
+//  m_previousResults.resize(currentStep);
+//  m_result = WorkflowStepResult();
+//  m_result.setStepResult(StepResult::Skip);
+//
+//  m_currentStep = currentStep;
+//}
 
 void OSRunner::prepareForMeasureRun(const OSMeasure& measure) {
-  // DLM: also in incrementStep
-  m_result = OSResult();
+  
+  if (m_startedStep){
+    LOG(Error, "Step already started");
+    return;
+  }
+  boost::optional<WorkflowStep> currentStep = m_workflow.currentStep();
+  if (!currentStep){
+    LOG(Error, "Cannot find current Workflow Step");
+    return;
+  }
 
-  m_measureName = measure.name();
-  std::stringstream ss;
-  ss << "openstudio.measure." << m_measureName;
-  m_channel = ss.str();
+  m_startedStep = true;
+
+  // create a new result
+  m_result = WorkflowStepResult();
+  m_result.setStartedAt(DateTime::nowUTC());
+  m_result.setStepResult(StepResult::Success);
+
+  // capture std out and err
+  captureStreams();
+
+  // get initial list of files
+  m_currentDir = boost::filesystem::current_path();
+  if (boost::filesystem::exists(*m_currentDir) && boost::filesystem::is_directory(*m_currentDir))
+  {
+    for( boost::filesystem::directory_iterator dir_iter(*m_currentDir), end_iter ; dir_iter != end_iter ; ++dir_iter)
+    {
+      if (boost::filesystem::is_regular_file(dir_iter->status()) )
+      {
+        m_currentDirFiles.insert(dir_iter->path());
+      }
+    }
+  }
 }
 
 void OSRunner::registerError(const std::string& message) {
-  m_result.setValue(OSResultValue::Fail);
-  m_result.addError(m_channel,message);
+  m_result.setStepResult(StepResult::Fail);
+  m_result.addStepError(message);
 }
 
 bool OSRunner::registerWarning(const std::string& message) {
-  m_result.addWarning(m_channel,message);
+  m_result.addStepWarning(message);
   return true;
 }
 
 bool OSRunner::registerInfo(const std::string& message) {
-  m_result.addInfo(m_channel,message);
+  m_result.addStepInfo(message);
   return true;
 }
 
 void OSRunner::registerAsNotApplicable(const std::string& message) {
-  m_result.setValue(OSResultValue::NA);
-  m_result.addInfo(m_channel,message);
+  m_result.setStepResult(StepResult::NA);
+  m_result.addStepInfo(message);
 }
 
 void OSRunner::registerInitialCondition(const std::string& message) {
-  m_result.setInitialCondition(m_channel, message);
+  m_result.setInitialCondition(message);
 }
 
 void OSRunner::registerFinalCondition(const std::string& message) {
-  m_result.setFinalCondition(m_channel, message);
+  m_result.setFinalCondition(message);
 }
 
-void OSRunner::registerAttribute(Attribute& attribute) {
-  attribute.setSource(m_measureName);
-  m_result.appendAttribute(attribute);
-}
 
 void OSRunner::registerValue(const std::string& name, bool value) {
-  Attribute attribute(name,value);
-  registerAttribute(attribute);
+  WorkflowStepValue stepValue(name,value);
+  m_result.addStepValue(stepValue);
 }
 
 void OSRunner::registerValue(const std::string& name,
                              const std::string& displayName,
                              bool value)
 {
-  Attribute attribute(name,value);
-  attribute.setDisplayName(displayName);
-  registerAttribute(attribute);
+  WorkflowStepValue stepValue(name,value);
+  stepValue.setDisplayName(displayName);
+  m_result.addStepValue(stepValue);
 }
 
 void OSRunner::registerValue(const std::string& name, double value) {
-  Attribute attribute(name,value);
-  registerAttribute(attribute);
+  WorkflowStepValue stepValue(name,value);
+  m_result.addStepValue(stepValue);
 }
 
 void OSRunner::registerValue(const std::string& name, double value, const std::string& units) {
-  Attribute attribute(name,value,units);
-  registerAttribute(attribute);
+  WorkflowStepValue stepValue(name,value);
+  stepValue.setUnits(units);
+  m_result.addStepValue(stepValue);
 }
 
 void OSRunner::registerValue(const std::string& name,
                              const std::string& displayName,
                              double value)
 {
-  Attribute attribute(name,value);
-  attribute.setDisplayName(displayName);
-  registerAttribute(attribute);
+  WorkflowStepValue stepValue(name,value);
+  stepValue.setDisplayName(displayName);
+  m_result.addStepValue(stepValue);
 }
 
 void OSRunner::registerValue(const std::string& name,
@@ -248,28 +327,29 @@ void OSRunner::registerValue(const std::string& name,
                              double value,
                              const std::string& units)
 {
-  Attribute attribute(name,value,units);
-  attribute.setDisplayName(displayName);
-  registerAttribute(attribute);
+  WorkflowStepValue stepValue(name,value);
+  stepValue.setDisplayName(displayName);
+  stepValue.setUnits(units);
+  m_result.addStepValue(stepValue);
 }
 
 void OSRunner::registerValue(const std::string& name, int value) {
-  Attribute attribute(name,value);
-  registerAttribute(attribute);
-}
+  WorkflowStepValue stepValue(name,value);
+  m_result.addStepValue(stepValue);}
 
 void OSRunner::registerValue(const std::string& name, int value, const std::string& units) {
-  Attribute attribute(name,value,units);
-  registerAttribute(attribute);
+  WorkflowStepValue stepValue(name,value);
+  stepValue.setUnits(units);
+  m_result.addStepValue(stepValue);
 }
 
 void OSRunner::registerValue(const std::string& name,
                              const std::string& displayName,
                              int value)
 {
-  Attribute attribute(name,value);
-  attribute.setDisplayName(displayName);
-  registerAttribute(attribute);
+  WorkflowStepValue stepValue(name,value);
+  stepValue.setDisplayName(displayName);
+  m_result.addStepValue(stepValue);
 }
 
 void OSRunner::registerValue(const std::string& name,
@@ -277,23 +357,24 @@ void OSRunner::registerValue(const std::string& name,
                              int value,
                              const std::string& units)
 {
-  Attribute attribute(name,value,units);
-  attribute.setDisplayName(displayName);
-  registerAttribute(attribute);
+  WorkflowStepValue stepValue(name,value);
+  stepValue.setDisplayName(displayName);
+  stepValue.setUnits(units);
+  m_result.addStepValue(stepValue);
 }
 
 void OSRunner::registerValue(const std::string& name, const std::string& value) {
-  Attribute attribute(name,value);
-  registerAttribute(attribute);
+  WorkflowStepValue stepValue(name,value);
+  m_result.addStepValue(stepValue);
 }
 
 void OSRunner::registerValue(const std::string& name,
                              const std::string& displayName,
                              const std::string& value)
 {
-  Attribute attribute(name,value);
-  attribute.setDisplayName(displayName);
-  registerAttribute(attribute);
+  WorkflowStepValue stepValue(name,value);
+  stepValue.setDisplayName(displayName);
+  m_result.addStepValue(stepValue);
 }
 
 void OSRunner::createProgressBar(const std::string& text) const {
@@ -310,7 +391,7 @@ bool OSRunner::validateUserArguments(const std::vector<OSArgument>& script_argum
 {
   bool result(true);
   std::stringstream ss;
-  AttributeVector argumentValueAttributes;
+  std::vector<WorkflowStepValue> stepValues;
   for (const OSArgument& script_argument : script_arguments) {
     auto it = user_arguments.find(script_argument.name());
     if (it == user_arguments.end()) {
@@ -376,11 +457,6 @@ bool OSRunner::validateUserArguments(const std::vector<OSArgument>& script_argum
             break;
           case OSArgumentType::Double :
             if (user_argument.defaultValueAsDouble() != script_argument.defaultValueAsDouble()) {
-              registerWarning(ss.str());
-            }
-            break;
-          case OSArgumentType::Quantity :
-            if (user_argument.defaultValueAsQuantity() != script_argument.defaultValueAsQuantity()) {
               registerWarning(ss.str());
             }
             break;
@@ -456,44 +532,35 @@ bool OSRunner::validateUserArguments(const std::vector<OSArgument>& script_argum
 
       // success, set the values
       if (result) {
-        Quantity q;
         switch(user_argument.type().value()) {
           case OSArgumentType::Boolean :
             if (user_argument.hasValue()) {
-              argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.valueAsBool()));
+              stepValues.push_back(WorkflowStepValue(user_argument.name(),user_argument.valueAsBool()));
             } else if (user_argument.hasDefaultValue()) {
-              argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.defaultValueAsBool()));
+              stepValues.push_back(WorkflowStepValue(user_argument.name(),user_argument.defaultValueAsBool()));
             }
            break;
           case OSArgumentType::Double :
             if (user_argument.hasValue()) {
-              argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.valueAsDouble()));
+              stepValues.push_back(WorkflowStepValue(user_argument.name(),user_argument.valueAsDouble()));
             } else if (user_argument.hasDefaultValue()) {
-              argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.defaultValueAsDouble()));
+              stepValues.push_back(WorkflowStepValue(user_argument.name(),user_argument.defaultValueAsDouble()));
             }
-           break;
-          case OSArgumentType::Quantity :
-            if (user_argument.hasValue()) {
-              q = user_argument.valueAsQuantity();
-            } else if (user_argument.hasDefaultValue()) {
-              q = user_argument.defaultValueAsQuantity();
-            }
-            argumentValueAttributes.push_back(Attribute(user_argument.name(),q.value(),q.units().print()));
            break;
           case OSArgumentType::Integer :
             if (user_argument.hasValue()) {
-              argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.valueAsInteger()));
+              stepValues.push_back(WorkflowStepValue(user_argument.name(),user_argument.valueAsInteger()));
             } else if (user_argument.hasDefaultValue()) {
-              argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.defaultValueAsInteger()));
+              stepValues.push_back(WorkflowStepValue(user_argument.name(),user_argument.defaultValueAsInteger()));
             }
            break;
           case OSArgumentType::String :
           case OSArgumentType::Choice :
           case OSArgumentType::Path :
             if (user_argument.hasValue()) {
-              argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.valueAsString()));
+              stepValues.push_back(WorkflowStepValue(user_argument.name(),user_argument.valueAsString()));
             } else if (user_argument.hasDefaultValue()) {
-              argumentValueAttributes.push_back(Attribute(user_argument.name(),user_argument.defaultValueAsString()));
+              stepValues.push_back(WorkflowStepValue(user_argument.name(),user_argument.defaultValueAsString()));
             }
            break;
           default:
@@ -504,8 +571,8 @@ bool OSRunner::validateUserArguments(const std::vector<OSArgument>& script_argum
   }
 
   if (result) {
-    for (Attribute& attribute : argumentValueAttributes) {
-      registerAttribute(attribute);
+    for (const auto& stepValue : stepValues) {
+      m_result.addStepValue(stepValue);
     }
   }
 
@@ -571,47 +638,6 @@ boost::optional<double> OSRunner::getOptionalDoubleArgumentValue(
     }
     else if (it->second.hasDefaultValue()) {
       return it->second.defaultValueAsDouble();
-    }
-  }
-
-  return boost::none;
-}
-
-Quantity OSRunner::getQuantityArgumentValue(const std::string& argument_name,
-                                            const std::map<std::string,OSArgument>& user_arguments)
-{
-  std::stringstream ss;
-
-  auto it = user_arguments.find(argument_name);
-  if (it != user_arguments.end()) {
-    if (it->second.hasValue()) {
-      return it->second.valueAsQuantity();
-    }
-    else if (it->second.hasDefaultValue()) {
-      return it->second.defaultValueAsQuantity();
-    }
-  }
-
-  ss << "No value found for argument '" << argument_name << "'.";
-  if (it != user_arguments.end()) {
-    ss << " Full argument as passed in by user:" << std::endl << it->second;
-  }
-  registerError(ss.str());
-  LOG_AND_THROW(ss.str());
-  return Quantity();
-}
-
-boost::optional<Quantity> OSRunner::getOptionalQuantityArgumentValue(
-    const std::string& argument_name,
-    const std::map<std::string,OSArgument>& user_arguments)
-{
-  auto it = user_arguments.find(argument_name);
-  if (it != user_arguments.end()) {
-    if (it->second.hasValue()) {
-      return it->second.valueAsQuantity();
-    }
-    else if (it->second.hasDefaultValue()) {
-      return it->second.defaultValueAsQuantity();
     }
   }
 
@@ -872,6 +898,50 @@ bool OSRunner::setLanguagePreference(const std::string& languagePreference)
 void OSRunner::resetLanguagePreference()
 {
   m_languagePreference = "en";
+}
+
+void OSRunner::captureStreams()
+{
+  if (m_streamsCaptured){
+    return;
+  }
+  m_streamsCaptured = true;
+
+  std::cout.flush();
+  std::cout.rdbuf()->pubsync();
+  m_originalStdOut = std::cout.rdbuf();
+  m_bufferStdOut.str("");
+  std::cout.rdbuf(m_bufferStdOut.rdbuf());
+
+  std::cerr.flush();
+  std::cerr.rdbuf()->pubsync();
+  m_originalStdErr = std::cerr.rdbuf();
+  m_bufferStdErr.str("");
+  std::cerr.rdbuf(m_bufferStdErr.rdbuf());
+}
+
+void OSRunner::restoreStreams()
+{
+  if (!m_streamsCaptured){
+    return;
+  }
+  m_streamsCaptured = false;
+
+  OS_ASSERT(m_originalStdOut);
+  OS_ASSERT(m_originalStdErr);
+
+  std::cout.rdbuf(m_originalStdOut);
+  std::cout << m_bufferStdOut.str();
+  std::cout.flush();
+  m_originalStdOut = nullptr;
+  m_bufferStdOut.str("");
+
+  std::cerr.rdbuf(m_originalStdErr);
+  std::cerr << m_bufferStdErr.str();
+  std::cerr.flush();
+  m_originalStdErr = nullptr;
+  m_bufferStdErr.str("");
+
 }
 
 } // measure

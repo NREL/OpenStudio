@@ -33,7 +33,7 @@ class MeasureManager
   end
 
   def print_message(message)
-    OpenStudio::logFree(OpenStudio::Debug, "MeasureManager", message)
+    puts message
   end
   
   def reset
@@ -148,7 +148,13 @@ class MeasureManager
       file_updates = result.checkForUpdatesFiles # checks if any files have been updated
       xml_updates = result.checkForUpdatesXML # only checks if xml as loaded has been changed since last save
       
-      if file_updates || xml_updates
+      missing_fields = false
+      begin
+        missing_fields = result.missingRequiredFields
+      rescue
+      end
+      
+      if file_updates || xml_updates || missing_fields
         print_message("Changes detected, updating '#{measure_dir}'")
 
         # clear cache before calling get_measure_info
@@ -188,7 +194,7 @@ class MeasureManager
       print_message("Loading measure info for '#{measure_dir}', '#{osm_path}'")
       begin
         result = OpenStudio::Ruleset.getInfo(measure, model, workspace)
-      rescue ScriptError, StandardError => e  
+      rescue Exception => e  
         result = OpenStudio::Ruleset::RubyUserScriptInfo.new(e.message)
       end
       

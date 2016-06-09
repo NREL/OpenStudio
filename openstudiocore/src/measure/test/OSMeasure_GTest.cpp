@@ -22,7 +22,6 @@
 
 #include "../OSArgument.hpp"
 #include "../OSRunner.hpp"
-#include "../OSResult.hpp"
 #include "../OSMeasure.hpp"
 #include "../ModelMeasure.hpp"
 
@@ -36,6 +35,7 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../../utilities/core/Finder.hpp"
+#include "../../utilities/filetypes/WorkflowJSON.hpp"
 
 #include "../../utilities/units/QuantityConverter.hpp"
 
@@ -48,6 +48,9 @@ using namespace openstudio::measure;
 
 class TestOSRunner : public OSRunner {
  public:
+   TestOSRunner(const WorkflowJSON& workflow)
+     : OSRunner(workflow)
+   {}
 
   virtual bool inSelection(const openstudio::model::ModelObject& modelObject) const override {
     return false;
@@ -99,7 +102,8 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript1) {
   TestModelUserScript1 script;
   EXPECT_EQ("TestModelUserScript1", script.name());
 
-  TestOSRunner runner;
+  WorkflowJSON workflow;
+  TestOSRunner runner(workflow);
   std::map<std::string, OSArgument> user_arguments;
 
   // test with empty model
@@ -108,19 +112,16 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript1) {
   EXPECT_EQ(0u, script.arguments(model1).size());
   script.run(model1, runner, user_arguments);
   EXPECT_EQ(1u, model1.getModelObjects<openstudio::model::Space>().size());
-  OSResult result = runner.result();
-  EXPECT_TRUE(result.value() == OSResultValue::Success);
-  EXPECT_EQ(0u,result.errors().size());
-  EXPECT_EQ(0u,result.warnings().size());
-  EXPECT_EQ(0u,result.info().size());
+  WorkflowStepResult result = runner.result();
+  ASSERT_TRUE(result.stepResult());
+  EXPECT_TRUE(result.stepResult()->value() == StepResult::Success);
+  EXPECT_EQ(0u,result.stepErrors().size());
+  EXPECT_EQ(0u,result.stepWarnings().size());
+  EXPECT_EQ(0u,result.stepInfo().size());
   ASSERT_TRUE(result.initialCondition());
-  EXPECT_TRUE(result.initialCondition()->logLevel() == Info);
-  EXPECT_EQ("openstudio.measure." + script.name(),result.initialCondition()->logChannel());
-  EXPECT_EQ("Initial model had 0 spaces.",result.initialCondition()->logMessage());
+  EXPECT_EQ("Initial model had 0 spaces.",result.initialCondition().get());
   ASSERT_TRUE(result.finalCondition());
-  EXPECT_TRUE(result.finalCondition()->logLevel() == Info);
-  EXPECT_EQ("openstudio.measure." + script.name(),result.finalCondition()->logChannel());
-  EXPECT_EQ("Removed the 0 original spaces, and added one new one named 'Space 1'.",result.finalCondition()->logMessage());
+  EXPECT_EQ("Removed the 0 original spaces, and added one new one named 'Space 1'.",result.finalCondition().get());
 
   // test with populated model
   openstudio::model::Model model2;
@@ -131,18 +132,15 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript1) {
   script.run(model2, runner, user_arguments);
   EXPECT_EQ(1u, model2.getModelObjects<openstudio::model::Space>().size());
   result = runner.result();
-  EXPECT_TRUE(result.value() == OSResultValue::Success);
-  EXPECT_EQ(0u,result.errors().size());
-  EXPECT_EQ(0u,result.warnings().size());
-  EXPECT_EQ(0u,result.info().size());
+  ASSERT_TRUE(result.stepResult());
+  EXPECT_TRUE(result.stepResult()->value() == StepResult::Success);
+  EXPECT_EQ(0u,result.stepErrors().size());
+  EXPECT_EQ(0u,result.stepWarnings().size());
+  EXPECT_EQ(0u,result.stepInfo().size());
   ASSERT_TRUE(result.initialCondition());
-  EXPECT_TRUE(result.initialCondition()->logLevel() == Info);
-  EXPECT_EQ("openstudio.measure." + script.name(),result.initialCondition()->logChannel());
-  EXPECT_EQ("Initial model had 2 spaces.",result.initialCondition()->logMessage());
+  EXPECT_EQ("Initial model had 2 spaces.",result.initialCondition().get());
   ASSERT_TRUE(result.finalCondition());
-  EXPECT_TRUE(result.finalCondition()->logLevel() == Info);
-  EXPECT_EQ("openstudio.measure." + script.name(),result.finalCondition()->logChannel());
-  EXPECT_EQ("Removed the 2 original spaces, and added one new one named 'Space 1'.",result.finalCondition()->logMessage());
+  EXPECT_EQ("Removed the 2 original spaces, and added one new one named 'Space 1'.",result.finalCondition().get());
 }
 
 class TestModelUserScript2 : public ModelMeasure {
@@ -265,19 +263,20 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript2) {
   openstudio::filesystem::create_directory(fileDir);
 
   // call with no arguments
-  TestOSRunner runner;
+  WorkflowJSON workflow;
+  TestOSRunner runner(workflow);
   std::map<std::string, OSArgument> user_arguments;
   bool ok = script.run(model,runner,user_arguments);
   EXPECT_FALSE(ok);
-  OSResult result = runner.result();
-  EXPECT_TRUE(result.value() == OSResultValue::Fail);
-  EXPECT_EQ(2u,result.errors().size()); // missing required and defaulted arguments
-  EXPECT_EQ(0u,result.warnings().size());
-  EXPECT_EQ(0u,result.info().size());
+  WorkflowStepResult result = runner.result();
+  ASSERT_TRUE(result.stepResult());
+  EXPECT_TRUE(result.stepResult()->value() == StepResult::Fail);
+  EXPECT_EQ(2u,result.stepErrors().size()); // missing required and defaulted arguments
+  EXPECT_EQ(0u,result.stepWarnings().size());
+  EXPECT_EQ(0u,result.stepInfo().size());
   EXPECT_FALSE(result.initialCondition());
   EXPECT_FALSE(result.finalCondition());
-  EXPECT_TRUE(result.attributes().empty());
-  result.save(fileDir / toPath("TestModelUserScript2_1.ossr"),true);
+  EXPECT_TRUE(result.stepValues().empty());
 
   // call with required argument, but no lights definitions in model
   LightsDefinition lightsDef(model);
@@ -291,17 +290,15 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript2) {
   ok = script.run(model,runner,user_arguments);
   EXPECT_FALSE(ok);
   result = runner.result();
-  EXPECT_TRUE(result.value() == OSResultValue::Fail);
-  EXPECT_EQ(1u,result.errors().size()); // object not in model
-  EXPECT_EQ(0u,result.warnings().size());
-  EXPECT_EQ(0u,result.info().size());
+  ASSERT_TRUE(result.stepResult());
+  EXPECT_TRUE(result.stepResult()->value() == StepResult::Fail);
+  EXPECT_EQ(1u,result.stepErrors().size()); // object not in model
+  EXPECT_EQ(0u,result.stepWarnings().size());
+  EXPECT_EQ(0u,result.stepInfo().size());
   EXPECT_FALSE(result.initialCondition());
   EXPECT_FALSE(result.finalCondition());
-  EXPECT_EQ(2u,result.attributes().size()); // registers argument values
-  result.save(fileDir / toPath("TestModelUserScript2_2.ossr"),true);
-  // save attributes json for inspection
-  saveJSON(result.attributes(),fileDir / toPath("TestModelUserScript2_2.json"),true);
-
+  EXPECT_EQ(2u,result.stepValues().size()); // registers argument values
+ 
   // call properly using default multiplier, but lights definition not Watts/Area
   lightsDef = LightsDefinition(model);
   lightsDef.setLightingLevel(700.0);
@@ -313,34 +310,31 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript2) {
   ok = script.run(model,runner,user_arguments);
   EXPECT_TRUE(ok);
   result = runner.result();
-  EXPECT_TRUE(result.value() == OSResultValue::NA);
-  EXPECT_EQ(0u,result.errors().size());
-  EXPECT_EQ(0u,result.warnings().size());
-  EXPECT_EQ(1u,result.info().size()); // Measure not applicable as called
+  ASSERT_TRUE(result.stepResult());
+  EXPECT_TRUE(result.stepResult()->value() == StepResult::NA);
+  EXPECT_EQ(0u,result.stepErrors().size());
+  EXPECT_EQ(0u,result.stepWarnings().size());
+  EXPECT_EQ(1u,result.stepInfo().size()); // Measure not applicable as called
   EXPECT_FALSE(result.initialCondition());
   EXPECT_FALSE(result.finalCondition());
-  EXPECT_EQ(3u,result.attributes().size()); // Registers lights definition name, then fails
-  result.save(fileDir / toPath("TestModelUserScript2_3.ossr"),true);
-  // save attributes json for inspection
-  saveJSON(result.attributes(),fileDir / toPath("TestModelUserScript2_3.json"),true);
-
+  EXPECT_EQ(3u,result.stepValues().size()); // Registers lights definition name, then fails
+  
   // call properly using default multiplier
   lightsDef.setWattsperSpaceFloorArea(10.0);
   ok = script.run(model,runner,user_arguments);
   EXPECT_TRUE(ok);
   result = runner.result();
-  EXPECT_TRUE(result.value() == OSResultValue::Success);
-  EXPECT_EQ(0u,result.errors().size());
-  EXPECT_EQ(0u,result.warnings().size());
-  EXPECT_EQ(0u,result.info().size());
+  ASSERT_TRUE(result.stepResult());
+  EXPECT_TRUE(result.stepResult()->value() == StepResult::Success);
+  EXPECT_EQ(0u,result.stepErrors().size());
+  EXPECT_EQ(0u,result.stepWarnings().size());
+  EXPECT_EQ(0u,result.stepInfo().size());
   EXPECT_TRUE(result.initialCondition()); // describes original state
   EXPECT_TRUE(result.finalCondition());   // describes changes
-  EXPECT_EQ(8u,result.attributes().size());
-  result.save(fileDir / toPath("TestModelUserScript2_4.ossr"),true);
+  EXPECT_EQ(8u,result.stepValues().size());
+  
   EXPECT_DOUBLE_EQ(8.0,lightsDef.wattsperSpaceFloorArea().get());
-  // save attributes json for inspection
-  saveJSON(result.attributes(),fileDir / toPath("TestModelUserScript2_4.json"),true);
-
+  
   // call properly using different multiplier
   arg = definitions[1];
   arg.setValue(0.5);
@@ -348,223 +342,15 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript2) {
   ok = script.run(model,runner,user_arguments);
   EXPECT_TRUE(ok);
   result = runner.result();
-  EXPECT_TRUE(result.value() == OSResultValue::Success);
-  EXPECT_EQ(0u,result.errors().size());
-  EXPECT_EQ(0u,result.warnings().size());
-  EXPECT_EQ(0u,result.info().size());
+  ASSERT_TRUE(result.stepResult());
+  EXPECT_TRUE(result.stepResult()->value() == StepResult::Success);
+  EXPECT_EQ(0u,result.stepErrors().size());
+  EXPECT_EQ(0u,result.stepWarnings().size());
+  EXPECT_EQ(0u,result.stepInfo().size());
   EXPECT_TRUE(result.initialCondition()); // describes original state
   EXPECT_TRUE(result.finalCondition());   // describes changes
-  EXPECT_EQ(8u,result.attributes().size());
-  result.save(fileDir / toPath("TestModelUserScript2_5.ossr"),true);
+  EXPECT_EQ(8u,result.stepValues().size());
+
   EXPECT_DOUBLE_EQ(4.0,lightsDef.wattsperSpaceFloorArea().get());
-  // save attributes json for inspection
-  saveJSON(result.attributes(),fileDir / toPath("TestModelUserScript2_5.json"),true);
 
-  // check that can load ossrs
-  OptionalOSResult temp = OSResult::load(fileDir / toPath("TestModelUserScript2_1.ossr"));
-  ASSERT_TRUE(temp);
-  result = temp.get();
-  EXPECT_TRUE(result.value() == OSResultValue::Fail);
-  EXPECT_EQ(2u,result.errors().size()); // missing required argument
-  EXPECT_EQ(0u,result.warnings().size());
-  EXPECT_EQ(0u,result.info().size());
-  EXPECT_FALSE(result.initialCondition());
-  EXPECT_FALSE(result.finalCondition());
-
-  temp = OSResult::load(fileDir / toPath("TestModelUserScript2_2.ossr"));
-  ASSERT_TRUE(temp);
-  result = temp.get();
-  EXPECT_TRUE(result.value() == OSResultValue::Fail);
-  EXPECT_EQ(1u,result.errors().size()); // object not in model
-  EXPECT_EQ(0u,result.warnings().size());
-  EXPECT_EQ(0u,result.info().size());
-  EXPECT_FALSE(result.initialCondition());
-  EXPECT_FALSE(result.finalCondition());
-
-  temp = OSResult::load(fileDir / toPath("TestModelUserScript2_3.ossr"));
-  ASSERT_TRUE(temp);
-  result = temp.get();
-  EXPECT_TRUE(result.value() == OSResultValue::NA);
-  EXPECT_EQ(0u,result.errors().size());
-  EXPECT_EQ(0u,result.warnings().size());
-  EXPECT_EQ(1u,result.info().size()); // Measure not applicable as called
-  EXPECT_FALSE(result.initialCondition());
-  EXPECT_FALSE(result.finalCondition());
-
-  temp = OSResult::load(fileDir / toPath("TestModelUserScript2_4.ossr"));
-  ASSERT_TRUE(temp);
-  result = temp.get();
-  EXPECT_TRUE(result.value() == OSResultValue::Success);
-  EXPECT_EQ(0u,result.errors().size());
-  EXPECT_EQ(0u,result.warnings().size());
-  EXPECT_EQ(0u,result.info().size());
-  EXPECT_TRUE(result.initialCondition()); // describes original state
-  EXPECT_TRUE(result.finalCondition());   // describes changes
-
-  temp = OSResult::load(fileDir / toPath("TestModelUserScript2_5.ossr"));
-  ASSERT_TRUE(temp);
-  result = temp.get();
-  EXPECT_TRUE(result.value() == OSResultValue::Success);
-  EXPECT_EQ(0u,result.errors().size());
-  EXPECT_EQ(0u,result.warnings().size());
-  EXPECT_EQ(0u,result.info().size());
-  EXPECT_TRUE(result.initialCondition()); // describes original state
-  EXPECT_TRUE(result.finalCondition());   // describes changes
-
-  // check that can load attribute jsons
-  std::vector<Attribute> loadedAttributes;
-  NameFinder<Attribute> lightsDefinitionFinder("lights_definition",true);
-  NameFinder<Attribute> multiplierFinder("multiplier",true);
-  NameFinder<Attribute> lightsDefinitionNameFinder("lights_definition_name",true);
-  NameFinder<Attribute> lpdInFinder("lpd_in",true);
-  NameFinder<Attribute> lpdOutFinder("lpd_out",true);
-  NameFinder<Attribute> lightsDefinitionNumInstancesFinder("lights_definition_num_instances",true);
-  NameFinder<Attribute> lightsDefinitionFloorAreaFinder("lights_definition_floor_area",true);
-  NameFinder<Attribute> lightsDefinitionFloorAreaIPFinder("lights_definition_floor_area_ip",true);
-  AttributeVector::const_iterator it;
-
-  // lights definition not in model - load attributes
-  loadedAttributes = toVectorOfAttribute(fileDir / toPath("TestModelUserScript2_2.json"));
-  EXPECT_EQ(2u,loadedAttributes.size());
-  // lights_definition
-  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionFinder);
-  ASSERT_FALSE(it == loadedAttributes.end());
-  EXPECT_TRUE(it->valueType() == AttributeValueType::String);
-  EXPECT_FALSE(it->valueAsString().empty());
-  // multiplier
-  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),multiplierFinder);
-  ASSERT_FALSE(it == loadedAttributes.end());
-  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
-  EXPECT_DOUBLE_EQ(0.8,it->valueAsDouble());
-  EXPECT_FALSE(it->units());
-
-  // run with bad lights definition type - load attributes
-  loadedAttributes = toVectorOfAttribute(fileDir / toPath("TestModelUserScript2_3.json"));
-  EXPECT_EQ(3u,loadedAttributes.size());
-  // lights_definition
-  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionFinder);
-  ASSERT_FALSE(it == loadedAttributes.end());
-  EXPECT_TRUE(it->valueType() == AttributeValueType::String);
-  EXPECT_FALSE(it->valueAsString().empty());
-  // multiplier
-  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),multiplierFinder);
-  ASSERT_FALSE(it == loadedAttributes.end());
-  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
-  EXPECT_DOUBLE_EQ(0.8,it->valueAsDouble());
-  EXPECT_FALSE(it->units());
-  // lights_definition_name
-  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionNameFinder);
-  ASSERT_FALSE(it == loadedAttributes.end());
-  EXPECT_TRUE(it->valueType() == AttributeValueType::String);
-  EXPECT_FALSE(it->valueAsString().empty());
-
-  // good run, default multiplier
-  loadedAttributes = toVectorOfAttribute(fileDir / toPath("TestModelUserScript2_4.json"));
-  EXPECT_EQ(8u,loadedAttributes.size());
-  // lights_definition
-  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionFinder);
-  ASSERT_FALSE(it == loadedAttributes.end());
-  EXPECT_TRUE(it->valueType() == AttributeValueType::String);
-  EXPECT_FALSE(it->valueAsString().empty());
-  // multiplier
-  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),multiplierFinder);
-  ASSERT_FALSE(it == loadedAttributes.end());
-  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
-  EXPECT_DOUBLE_EQ(0.8,it->valueAsDouble());
-  EXPECT_FALSE(it->units());
-  // lights_definition_name
-  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionNameFinder);
-  ASSERT_FALSE(it == loadedAttributes.end());
-  EXPECT_TRUE(it->valueType() == AttributeValueType::String);
-  EXPECT_FALSE(it->valueAsString().empty());
-  // lpd_in
-  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lpdInFinder);
-  ASSERT_FALSE(it == loadedAttributes.end());
-  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
-  EXPECT_DOUBLE_EQ(10.0,it->valueAsDouble());
-  ASSERT_TRUE(it->units());
-  EXPECT_EQ("W/m^2",it->units().get());
-  // -- unit conversion example --
-  OptionalDouble ipValue = convert(it->valueAsDouble(),it->units().get(),"W/ft^2");
-  ASSERT_TRUE(ipValue);
-  EXPECT_DOUBLE_EQ(0.9290304,*ipValue);
-  // lpd_out
-  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lpdOutFinder);
-  ASSERT_FALSE(it == loadedAttributes.end());
-  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
-  EXPECT_DOUBLE_EQ(8.0,it->valueAsDouble());
-  ASSERT_TRUE(it->units());
-  EXPECT_EQ("W/m^2",it->units().get());
-  // lights_definition_num_instances
-  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionNumInstancesFinder);
-  ASSERT_FALSE(it == loadedAttributes.end());
-  //EXPECT_TRUE(it->valueType() == AttributeValueType::Integer); // JSON does not distinguish between int and float
-  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
-  // lights_definition_floor_area
-  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionFloorAreaFinder);
-  ASSERT_FALSE(it == loadedAttributes.end());
-  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
-  ASSERT_TRUE(it->units());
-  EXPECT_EQ("m^2",it->units().get());
-  // lights_definition_floor_area_ip
-  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionFloorAreaIPFinder);
-  ASSERT_FALSE(it == loadedAttributes.end());
-  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
-  ASSERT_TRUE(it->units());
-  EXPECT_EQ("ft^2",it->units().get());
-
-  // good run, different multiplier
-  loadedAttributes = toVectorOfAttribute(fileDir / toPath("TestModelUserScript2_5.json"));
-  EXPECT_EQ(8u,loadedAttributes.size());
-  // lights_definition
-  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionFinder);
-  ASSERT_FALSE(it == loadedAttributes.end());
-  EXPECT_TRUE(it->valueType() == AttributeValueType::String);
-  EXPECT_FALSE(it->valueAsString().empty());
-  // multiplier
-  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),multiplierFinder);
-  ASSERT_FALSE(it == loadedAttributes.end());
-  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
-  EXPECT_DOUBLE_EQ(0.5,it->valueAsDouble());
-  EXPECT_FALSE(it->units());
-  // lights_definition_name
-  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionNameFinder);
-  ASSERT_FALSE(it == loadedAttributes.end());
-  EXPECT_TRUE(it->valueType() == AttributeValueType::String);
-  EXPECT_FALSE(it->valueAsString().empty());
-  // lpd_in
-  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lpdInFinder);
-  ASSERT_FALSE(it == loadedAttributes.end());
-  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
-  EXPECT_DOUBLE_EQ(8.0,it->valueAsDouble()); // uses previous example _out as _in
-  ASSERT_TRUE(it->units());
-  EXPECT_EQ("W/m^2",it->units().get());
-  // -- unit conversion example --
-  ipValue = convert(it->valueAsDouble(),it->units().get(),"W/ft^2");
-  ASSERT_TRUE(ipValue);
-  EXPECT_DOUBLE_EQ(0.74322432,*ipValue);
-  // lpd_out
-  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lpdOutFinder);
-  ASSERT_FALSE(it == loadedAttributes.end());
-  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
-  EXPECT_DOUBLE_EQ(4.0,it->valueAsDouble());
-  ASSERT_TRUE(it->units());
-  EXPECT_EQ("W/m^2",it->units().get());
-  // lights_definition_num_instances
-  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionNumInstancesFinder);
-  ASSERT_FALSE(it == loadedAttributes.end());
-  //EXPECT_TRUE(it->valueType() == AttributeValueType::Integer); // JSON does not distinguish between int and float
-  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
-  // lights_definition_floor_area
-  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionFloorAreaFinder);
-  ASSERT_FALSE(it == loadedAttributes.end());
-  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
-  ASSERT_TRUE(it->units());
-  EXPECT_EQ("m^2",it->units().get());
-  // lights_definition_floor_area_ip
-  it = std::find_if(loadedAttributes.begin(),loadedAttributes.end(),lightsDefinitionFloorAreaIPFinder);
-  ASSERT_FALSE(it == loadedAttributes.end());
-  EXPECT_TRUE(it->valueType() == AttributeValueType::Double);
-  ASSERT_TRUE(it->units());
-  EXPECT_EQ("ft^2",it->units().get());
 }
