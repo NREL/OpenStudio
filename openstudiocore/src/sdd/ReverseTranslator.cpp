@@ -821,13 +821,36 @@ namespace sdd {
               {
                 mixedAir->setName(comp->name().get() + " Mixed Air Node");
               }
-              if( boost::optional<model::Node> oaNode = comp->outboardOANode() )
-              {
+
+              auto oaNode = comp->outboardOANode();
+              auto reliefNode = comp->outboardReliefNode();
+              if( oaNode ) {
                 oaNode->setName(comp->name().get() + " OA Node");
               }
-              if( boost::optional<model::Node> reliefNode = comp->outboardReliefNode() )
-              {
+              if( reliefNode ) {
                 reliefNode->setName(comp->name().get() + " Relief Node");
+              }
+
+              {
+                auto oaNodes = subsetCastVector<model::Node>(comp->oaComponents());
+                for( auto & node : oaNodes ) {
+                  if( oaNode && (node != oaNode.get()) ) {
+                    if( const auto & outletComp = node.inletModelObject() ) {
+                      node.setName(outletComp->nameString() + " OA Stream Outlet Node");
+                    }
+                  }
+                }
+              }
+
+              {
+                auto reliefNodes = subsetCastVector<model::Node>(comp->reliefComponents());
+                for( auto & node : reliefNodes ) {
+                  if( reliefNode && (node != reliefNode.get()) ) {
+                    if( const auto & outletComp = node.inletModelObject() ) {
+                      node.setName(outletComp->nameString() + " Relief Stream Outlet Node");
+                    }
+                  }
+                }
               }
             }
             else if( boost::optional<model::Mixer> comp = it->optionalCast<model::Mixer>() )
