@@ -111,6 +111,8 @@ class MODEL_API CoilHeatingDXSingleSpeed_Impl : public StraightComponent_Impl {
 
   boost::optional<double> ratedAirFlowRate() const;
 
+  double ratedSupplyFanPowerPerVolumeFlowRate() const;
+
   bool isRatedAirFlowRateAutosized() const;
 
   double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
@@ -162,6 +164,8 @@ class MODEL_API CoilHeatingDXSingleSpeed_Impl : public StraightComponent_Impl {
   bool setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate);
 
   void autosizeRatedAirFlowRate();
+
+  bool setRatedSupplyFanPowerPerVolumeFlowRate(double ratedSupplyFanPowerPerVolumeFlowRate);
 
   bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 

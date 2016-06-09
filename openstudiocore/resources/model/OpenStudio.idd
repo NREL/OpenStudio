@@ -14249,6 +14249,16 @@ OS:Coil:Heating:DX:SingleSpeed,
        \autosizable
        \units m3/s
        \minimum> 0
+  N4 , \field Rated Supply Fan Power Per Volume Flow Rate
+       \note Enter the supply fan power per air volume flow rate at the rated test conditions.
+       \note The test conditions vary external static pressure based on heating capacity.
+       \note This value is only used to calculate Heating Seasonal Performance Factor(HSPF). This value is not
+       \note used for modeling the supply (condenser) fan during simulations.
+       \type real
+       \units W/(m3/s)
+       \minimum 0.0
+       \maximum 1250.0
+       \required-field
   A4, \field Air Inlet Node Name
        \type object-list
        \object-list ConnectionNames
@@ -14305,24 +14315,24 @@ OS:Coil:Heating:DX:SingleSpeed,
        \note only required if ReverseCycle defrost strategy is specified
        \type object-list
        \object-list BiquadraticCurves
-  N4, \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
+  N5, \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
        \type real
        \units C
        \minimum -20
        \default -8.0
-  N5, \field Maximum Outdoor Dry-Bulb Temperature for Defrost Operation
+  N6, \field Maximum Outdoor Dry-Bulb Temperature for Defrost Operation
        \type real
        \units C
        \minimum 0
        \maximum 7.22
        \default 5.0
-  N6, \field Crankcase Heater Capacity
+  N7, \field Crankcase Heater Capacity
        \type real
        \units W
        \ip-units Btu/h
        \minimum 0
        \default 0.0
-  N7, \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
+  N8, \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
        \type real
        \units C
        \minimum 0
@@ -14337,13 +14347,13 @@ OS:Coil:Heating:DX:SingleSpeed,
        \default Timed
        \key Timed
        \key OnDemand
-  N8, \field Defrost Time Period Fraction
+  N9, \field Defrost Time Period Fraction
        \note Fraction of time in defrost mode
        \note only applicable if timed defrost control is specified
        \type real
        \minimum 0
        \default 0.058333
-  N9; \field Resistive Defrost Heater Capacity
+  N10; \field Resistive Defrost Heater Capacity
        \note only applicable if resistive defrost strategy is specified
        \type real
        \autosizable

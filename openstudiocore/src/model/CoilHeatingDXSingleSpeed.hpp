@@ -86,6 +86,8 @@ class MODEL_API CoilHeatingDXSingleSpeed : public StraightComponent {
 
   bool isRatedAirFlowRateAutosized() const;
 
+  double ratedSupplyFanPowerPerVolumeFlowRate() const;
+
   double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
   bool isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const;
@@ -135,6 +137,8 @@ class MODEL_API CoilHeatingDXSingleSpeed : public StraightComponent {
   bool setRatedAirFlowRate(double ratedAirFlowRate);
 
   void autosizeRatedAirFlowRate();
+
+  bool setRatedSupplyFanPowerPerVolumeFlowRate(double ratedSupplyFanPowerPerVolumeFlowRate);
 
   bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
