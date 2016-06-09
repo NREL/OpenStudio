@@ -90,6 +90,8 @@ UTILITIES_API std::pair<std::string,std::string> extractScaleAbbreviation(const 
 
 /** Return type for scale multiplication and division. See the corresponding operators
  *  for its use. */
+// DLM: this is ill-conceived and easy to misuse (which is what was happening) in #2240
+// all operations (e.g. *) between two Scales should return a Scale
 typedef std::pair<ScaleConstant,double> ScaleOpReturnType;
 
 /** Multiplication of scales. If result implied by adding exponents is not 

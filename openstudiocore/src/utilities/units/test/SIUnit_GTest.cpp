@@ -22,11 +22,14 @@
 
 #include "../SIUnit.hpp"
 #include "../Scale.hpp"
+#include "../QuantityConverter.hpp"
+#include "../UnitFactory.hpp"
 
 #include "../../core/Exception.hpp"
 
 using openstudio::Unit;
 using openstudio::UnitSystem;
+using openstudio::UnitFactory;
 using openstudio::SIExpnt;
 using openstudio::SIUnit;
 using openstudio::Exception;
@@ -40,6 +43,8 @@ using openstudio::createSIPeople;
 using openstudio::createSIForce;
 using openstudio::createSIEnergy;
 using openstudio::createSIPower;
+
+using openstudio::convert;
 
 TEST_F(UnitsFixture,SIUnit_Constructors)
 {
@@ -120,7 +125,7 @@ TEST_F(UnitsFixture,SIUnit_ArithmeticOperators)
   testStreamOutput("cm^6",u7);
   EXPECT_EQ("p",u7.scale().abbr);
   u7.pow(1,3); // (cm)^2
-  testStreamOutput("m(m^2)",u7); // no 10^-4 scale--moves to 10^-3
+  testStreamOutput("cm^2",u7);
 }
 
 TEST_F(UnitsFixture,SIUnit_createFunctions)
@@ -174,4 +179,144 @@ TEST_F(UnitsFixture,SIUnit_createFunctions)
   EXPECT_EQ("kg*m^2/s^3",u.standardString());
   EXPECT_EQ("W",u.prettyString());
 
+}
+
+TEST_F(UnitsFixture, SIUnit_convert)
+{
+  boost::optional<double> value;
+
+  boost::optional<Unit> mUnit = UnitFactory::instance().createUnit("m");
+  boost::optional<Unit> cmUnit = UnitFactory::instance().createUnit("cm");
+  boost::optional<Unit> m2Unit = UnitFactory::instance().createUnit("m^2");
+  boost::optional<Unit> cm2Unit = UnitFactory::instance().createUnit("cm^2");
+  ASSERT_TRUE(mUnit);
+  ASSERT_TRUE(cmUnit);
+  ASSERT_TRUE(m2Unit);
+  ASSERT_TRUE(cm2Unit);
+ 
+  EXPECT_TRUE(mUnit->isBaseUnit("m"));
+  EXPECT_EQ(1, mUnit->baseUnitExponent("m"));
+  EXPECT_EQ("", mUnit->scale().abbr);
+  EXPECT_EQ("", mUnit->scale().name);
+  EXPECT_EQ(0, mUnit->scale().exponent);
+  EXPECT_EQ(1, mUnit->scale().value);
+
+  EXPECT_TRUE(cmUnit->isBaseUnit("m"));
+  EXPECT_EQ(1, cmUnit->baseUnitExponent("m"));
+  EXPECT_EQ("c", cmUnit->scale().abbr);
+  EXPECT_EQ("centi", cmUnit->scale().name);
+  EXPECT_EQ(-2, cmUnit->scale().exponent);
+  EXPECT_EQ(0.01, cmUnit->scale().value);
+
+  EXPECT_TRUE(m2Unit->isBaseUnit("m"));
+  EXPECT_EQ(2, m2Unit->baseUnitExponent("m"));
+  EXPECT_EQ("", m2Unit->scale().abbr);
+  EXPECT_EQ("", m2Unit->scale().name);
+  EXPECT_EQ(0, m2Unit->scale().exponent);
+  EXPECT_EQ(1, m2Unit->scale().value);
+ 
+  EXPECT_TRUE(cm2Unit->isBaseUnit("m"));
+  EXPECT_EQ(2, cm2Unit->baseUnitExponent("m"));
+  EXPECT_EQ("_dm", cm2Unit->scale().abbr);
+  EXPECT_EQ("decimilli", cm2Unit->scale().name);
+  EXPECT_EQ(-4, cm2Unit->scale().exponent);
+  EXPECT_EQ(0.0001, cm2Unit->scale().value);
+
+  value = convert(1.0, "m", "cm");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(100.0, value.get(), 0.0001);
+
+  value = convert(1.0, "cm", "m");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(0.01, value.get(), 0.0001);
+  
+  value = convert(1.0, "1/m", "1/cm");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(0.01, value.get(), 0.0001);
+
+  value = convert(1.0, "$/m", "$/cm");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(0.01, value.get(), 0.0001);
+
+  value = convert(1.0, "m^2", "cm^2");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(10000.0, value.get(), 0.0001);
+
+  value = convert(1.0, "cm^2", "m^2");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(0.0001, value.get(), 0.0001);
+
+  value = convert(1.0, "1/m^2", "1/cm^2");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(0.0001, value.get(), 0.0001);
+
+  value = convert(1.0, "$/m^2", "$/cm^2");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(0.0001, value.get(), 0.0001);
+}
+
+TEST_F(UnitsFixture, SIUnit_convert2)
+{
+  boost::optional<double> value;
+
+  boost::optional<Unit> mUnit = UnitFactory::instance().createUnit("m");
+  boost::optional<Unit> cmUnit = UnitFactory::instance().createUnit("cm");
+  boost::optional<Unit> m3Unit = UnitFactory::instance().createUnit("m^3");
+  boost::optional<Unit> cm3Unit = UnitFactory::instance().createUnit("cm^3");
+  ASSERT_TRUE(mUnit);
+  ASSERT_TRUE(cmUnit);
+  ASSERT_TRUE(m3Unit);
+  ASSERT_TRUE(cm3Unit);
+ 
+  EXPECT_TRUE(mUnit->isBaseUnit("m"));
+  EXPECT_EQ(1, mUnit->baseUnitExponent("m"));
+  EXPECT_EQ("", mUnit->scale().abbr);
+  EXPECT_EQ("", mUnit->scale().name);
+  EXPECT_EQ(0, mUnit->scale().exponent);
+  EXPECT_EQ(1, mUnit->scale().value);
+
+  EXPECT_TRUE(cmUnit->isBaseUnit("m"));
+  EXPECT_EQ(1, cmUnit->baseUnitExponent("m"));
+  EXPECT_EQ("c", cmUnit->scale().abbr);
+  EXPECT_EQ("centi", cmUnit->scale().name);
+  EXPECT_EQ(-2, cmUnit->scale().exponent);
+  EXPECT_EQ(0.01, cmUnit->scale().value);
+
+  EXPECT_TRUE(m3Unit->isBaseUnit("m"));
+  EXPECT_EQ(3, m3Unit->baseUnitExponent("m"));
+  EXPECT_EQ("", m3Unit->scale().abbr);
+  EXPECT_EQ("", m3Unit->scale().name);
+  EXPECT_EQ(0, m3Unit->scale().exponent);
+  EXPECT_EQ(1, m3Unit->scale().value);
+ 
+  EXPECT_TRUE(cm3Unit->isBaseUnit("m"));
+  EXPECT_EQ(3, cm3Unit->baseUnitExponent("m"));
+  EXPECT_EQ("\\mu", cm3Unit->scale().abbr);
+  EXPECT_EQ("micro", cm3Unit->scale().name);
+  EXPECT_EQ(-6, cm3Unit->scale().exponent);
+  EXPECT_EQ(0.000001, cm3Unit->scale().value);
+
+  value = convert(1.0, "m", "cm");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(100.0, value.get(), 0.0001);
+
+  value = convert(1.0, "cm", "m");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(0.01, value.get(), 0.0001);
+
+  value = convert(1.0, "m^3", "cm^3");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(1000000.0, value.get(), 0.0001);
+
+  value = convert(1.0, "cm^3", "m^3");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(0.000001, value.get(), 0.0000001);
+
+  value = convert(1.0, "1/m^3", "1/cm^3");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(0.000001, value.get(), 0.0000001);
+
+  value = convert(1.0, "$/m^3", "$/cm^3");
+  ASSERT_TRUE(value);
+  EXPECT_NEAR(0.000001, value.get(), 0.0000001);
 }
