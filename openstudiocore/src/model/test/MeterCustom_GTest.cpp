@@ -45,10 +45,10 @@ TEST_F(ModelFixture, MeterCustom_Remove)
   Model model; 
   MeterCustom testObject(model);
 
-  EXPECT_EQ((unsigned)1, model.meterCustoms().size());
+  EXPECT_EQ((unsigned)1, model.getModelObjects<MeterCustom>().size());
 
   testObject.remove();
-  EXPECT_EQ((unsigned)0, model.meterCustoms().size());
+  EXPECT_EQ((unsigned)0, model.getModelObjects<MeterCustom>().size());
 }
 
 TEST_F(ModelFixture, MeterCustom_KeyVarGroups)
@@ -58,21 +58,20 @@ TEST_F(ModelFixture, MeterCustom_KeyVarGroups)
 
   std::vector< std::pair<std::string,std::string> > keyVarGroups = testObject.keyVarGroups();
 
-  EXPECT_TRUE(testObject.addKeyVarGroups("SPACE1-1 Lights 1", "Lights Electric Energy"));
+  EXPECT_TRUE(testObject.addKeyVarGroup("SPACE1-1 Lights 1", "Lights Electric Energy"));
   keyVarGroups = testObject.keyVarGroups();
-  EXPECT_EQ(1, keyVarGroups.size())
+  EXPECT_EQ(1, keyVarGroups.size());
   // Also test the numKeyVarGroups method
-  EXPECT_EQ(1, testObject.numKeyVarGroups())
+  EXPECT_EQ(1, testObject.numKeyVarGroups());
 
   testObject.removeAllKeyVarGroups();
-  EXPECT_EQ(0, testObject.numKeyVarGroups())
+  EXPECT_EQ(0, testObject.numKeyVarGroups());
 
-  EXPECT_TRUE(testObject.addKeyVarGroups("SPACE1-1 Lights 1", "Lights Electric Energy");
-  gFunctions = testObject.gFunctions();
-  EXPECT_EQ(1, testObject.numKeyVarGroups())
+  EXPECT_TRUE(testObject.addKeyVarGroup("SPACE1-1 Lights 1", "Lights Electric Energy"));
+  EXPECT_EQ(1, testObject.numKeyVarGroups());
 
-  EXPECT_TRUE(testObject.addKeyVarGroups("SPACE1-1 Equipment 1", "Equipment Electric Energy");
-  EXPECT_EQ(2, testObject.numKeyVarGroups())
+  EXPECT_TRUE(testObject.addKeyVarGroup("SPACE1-1 Equipment 1", "Equipment Electric Energy"));
+  EXPECT_EQ(2, testObject.numKeyVarGroups());
 
   // Try removing at index 0
   testObject.removeKeyVarGroup(0);
@@ -95,10 +94,10 @@ TEST_F(ModelFixture, MeterCustom_KeyVarGroups)
 
   testObject.removeAllKeyVarGroups();
   for (int i=0; i<100; i++) {
-    testObject.addKeyVarGroups("key " << i, "var "<< i);
+    testObject.addKeyVarGroup("key " + std::to_string(i), "var " + std::to_string(i));
   }
   keyVarGroups = testObject.keyVarGroups();
   EXPECT_EQ(100, keyVarGroups.size());
-  EXPECT_EQ(100, testObject.numKeyVarGroups())
+  EXPECT_EQ(100, testObject.numKeyVarGroups());
   
 }
