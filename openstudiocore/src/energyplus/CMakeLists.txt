@@ -365,6 +365,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateMaterial.cpp
   ReverseTranslator/ReverseTranslateMaterialAirGap.cpp
   ReverseTranslator/ReverseTranslateMaterialNoMass.cpp
+  ReverseTranslator/ReverseTranslateMeterCustom.cpp
   ReverseTranslator/ReverseTranslateOtherEquipment.cpp
   ReverseTranslator/ReverseTranslateOutputIlluminanceMap.cpp
   ReverseTranslator/ReverseTranslateOutputMeter.cpp
