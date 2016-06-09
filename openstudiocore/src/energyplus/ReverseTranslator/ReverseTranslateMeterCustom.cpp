@@ -43,7 +43,8 @@ OptionalModelObject ReverseTranslator::translateMeterCustom( const WorkspaceObje
 
   // Create an OS:Meter:Custom object
   MeterCustom meterCustom = MeterCustom( m_model );
-  
+
+ 
   // Name
   boost::optional<std::string> s = workspaceObject.getString(Meter_CustomFields::Name);
   if (s) {
@@ -51,7 +52,7 @@ OptionalModelObject ReverseTranslator::translateMeterCustom( const WorkspaceObje
   }
   
   // Fuel Type
-  boost::optional<std::string> s = workspaceObject.getString(Meter_CustomFields::FuelType);
+  s = workspaceObject.getString(Meter_CustomFields::FuelType);
   if (s) {
     // TODO: JM to DLM: should I also check it's part of the validFuelTypes?
     meterCustom.setFuelType(s.get());
