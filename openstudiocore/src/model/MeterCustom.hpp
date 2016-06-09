@@ -21,12 +21,9 @@
 #define MODEL_METERCUSTOM_HPP
 
 #include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 //#include <memory>
-#include <boost/optional.hpp>
-
-
-#include <vector>
 
 namespace openstudio {
 namespace model {
@@ -37,12 +34,13 @@ namespace detail {
 
 } // detail
 
-/** MeterCustom is a  that wraps the OpenStudio IDD object 'OS:Meter:Custom'. */
-class MODEL_API MeterCustom {
+/** MeterCustom is a ModelObject that wraps the OpenStudio IDD object 'OS:Meter:Custom'. */
+class MODEL_API MeterCustom : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
 
+  // Constructs a new MeterCustom object in the model.
   explicit MeterCustom(const Model& model);
 
   virtual ~MeterCustom() {}
@@ -61,7 +59,7 @@ class MODEL_API MeterCustom {
   // TODO: Handle this object's extensible fields.
 
   // Return a vector of (Key, Var) pairs
-  std::vector< std::pair<std::string, std::string> > MeterCustom_Impl::keyVarGroups();
+  std::vector< std::pair<std::string, std::string> > keyVarGroups();
 
   // Return the number of (KeyName, OutputVariableorMeterName) groups
   unsigned numKeyVars() const;
@@ -88,10 +86,10 @@ class MODEL_API MeterCustom {
   bool addKeyVarGroup(const std::string& keyName, const std::string& outputVariableorMeterName);
 
   // Remove the (Key, Var) group at given index
-  bool MeterCustom_Impl::removeKeyVarGroup(unsigned groupIndex);
+  bool removeKeyVarGroup(unsigned groupIndex);
 
   // Remove all the (Key, Var) groups
-  void MeterCustom_Impl::removeAllKeyVarGroups();
+  void removeAllKeyVarGroups();
 
 
   // Lower level functions

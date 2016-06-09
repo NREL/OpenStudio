@@ -20,6 +20,8 @@
 #include "MeterCustom.hpp"
 #include "MeterCustom_Impl.hpp"
 
+#include "Model.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Meter_Custom_FieldEnums.hxx>
@@ -37,7 +39,7 @@ namespace detail {
   MeterCustom_Impl::MeterCustom_Impl(const IdfObject& idfObject,
                                      Model_Impl* model,
                                      bool keepHandle)
-    : _Impl(idfObject,model,keepHandle)
+    : ModelObject_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == MeterCustom::iddObjectType());
   }
@@ -45,7 +47,7 @@ namespace detail {
   MeterCustom_Impl::MeterCustom_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                      Model_Impl* model,
                                      bool keepHandle)
-    : _Impl(other,model,keepHandle)
+                                     : ModelObject_Impl(other, model, keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == MeterCustom::iddObjectType());
   }
@@ -53,7 +55,7 @@ namespace detail {
   MeterCustom_Impl::MeterCustom_Impl(const MeterCustom_Impl& other,
                                      Model_Impl* model,
                                      bool keepHandle)
-    : _Impl(other,model,keepHandle)
+    : ModelObject_Impl(other,model,keepHandle)
   {}
 
   // This logically doesn't produce any output variables
@@ -221,7 +223,7 @@ namespace detail {
 } // detail
 
 MeterCustom::MeterCustom(const Model& model)
-  : (MeterCustom::iddObjectType(),model)
+  : ModelObject(MeterCustom::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::MeterCustom_Impl>());
 
@@ -301,7 +303,7 @@ boost::optional<std::string> MeterCustom::setOutputVariableorMeterName(
 
 /// @cond
 MeterCustom::MeterCustom(std::shared_ptr<detail::MeterCustom_Impl> impl)
-  : m_impl(impl)
+  : ModelObject(impl)
 {}
 /// @endcond
 

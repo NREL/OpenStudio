@@ -21,17 +21,16 @@
 #define MODEL_METERCUSTOM_IMPL_HPP
 
 #include "ModelAPI.hpp"
+#include "ModelObject_Impl.hpp"
 
-//#include <QObject>
-//#include <memory>
 
 namespace openstudio {
 namespace model {
 
 namespace detail {
 
-  /** MeterCustom_Impl is the implementation class for MeterCustom.*/
-  class MODEL_API MeterCustom_Impl : public std::enable_shared_from_this<MeterCustom_Impl> {
+  /** MeterCustom_Impl is a ModelObject_Impl that is the implementation class for MeterCustom.*/
+class MODEL_API MeterCustom_Impl : public ModelObject_Impl {
 
    public:
     /** @name Constructors and Destructors */
@@ -72,7 +71,7 @@ namespace detail {
     // TODO: Handle this object's extensible fields.
 
     // Return a vector of (Key, Var) pairs
-    std::vector< std::pair<std::string, std::string> > MeterCustom_Impl::keyVarGroups();
+    std::vector< std::pair<std::string, std::string> > keyVarGroups();
 
     // Return the number of (KeyName, OutputVariableorMeterName) groups
     unsigned numKeyVars() const;
