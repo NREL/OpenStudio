@@ -40,13 +40,25 @@ boost::optional<IdfObject> ForwardTranslator::translateRunPeriodControlDaylightS
   s = modelObject.getString(OS_RunPeriodControl_DaylightSavingTimeFields::StartDate);
   if( s )
   {
-    idfObject.setString(RunPeriodControl_DaylightSavingTimeFields::StartDate, s.get());
+    std::string str = s.get();
+    //auto index = str.find("5th", 0);
+    //if (index != std::string::npos){
+    //  str.replace(index, 3, "Last");
+    //}
+
+    idfObject.setString(RunPeriodControl_DaylightSavingTimeFields::StartDate, str);
   }
 
   s = modelObject.getString(OS_RunPeriodControl_DaylightSavingTimeFields::EndDate);
   if( s )
   {
-    idfObject.setString(RunPeriodControl_DaylightSavingTimeFields::EndDate, s.get());
+    std::string str = s.get();
+    //auto index = str.find("5th", 0);
+    //if (index != std::string::npos){
+    //  str.replace(index, 3, "Last");
+    //}
+
+    idfObject.setString(RunPeriodControl_DaylightSavingTimeFields::EndDate, str);
   }
   
   m_idfObjects.push_back(idfObject);
