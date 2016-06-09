@@ -245,6 +245,9 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSite.cpp
   ForwardTranslator/ForwardTranslateSiteGroundReflectance.cpp
   ForwardTranslator/ForwardTranslateSiteGroundTemperatureBuildingSurface.cpp
+  ForwardTranslator/ForwardTranslateSiteGroundTemperatureDeep.cpp
+  ForwardTranslator/ForwardTranslateSiteGroundTemperatureFCfactorMethod.cpp
+  ForwardTranslator/ForwardTranslateSiteGroundTemperatureShallow.cpp
   ForwardTranslator/ForwardTranslateSiteWaterMainsTemperature.cpp
   ForwardTranslator/ForwardTranslateSkyTemperature.cpp
   ForwardTranslator/ForwardTranslateSizingParameters.cpp
@@ -282,7 +285,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateWaterHeaterStratified.cpp
   ForwardTranslator/ForwardTranslateWaterUseConnections.cpp
   ForwardTranslator/ForwardTranslateWaterUseEquipment.cpp
-  ForwardTranslator/ForwardTranslateWindowPropertyFrameAndDivider.cpp  
+  ForwardTranslator/ForwardTranslateWindowPropertyFrameAndDivider.cpp
   ForwardTranslator/ForwardTranslateZoneAirContaminantBalance.cpp
   ForwardTranslator/ForwardTranslateZoneAirHeatBalanceAlgorithm.cpp
   ForwardTranslator/ForwardTranslateZoneAirMassFlowConservation.cpp
@@ -409,7 +412,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateWindowMaterialGas.cpp
   ReverseTranslator/ReverseTranslateWindowMaterialGlazing.cpp
   ReverseTranslator/ReverseTranslateWindowMaterialSimpleGlazingSystem.cpp
-  ReverseTranslator/ReverseTranslateWindowPropertyFrameAndDivider.cpp  
+  ReverseTranslator/ReverseTranslateWindowPropertyFrameAndDivider.cpp
   ReverseTranslator/ReverseTranslateZoneAirHeatBalanceAlgorithm.cpp
   ReverseTranslator/ReverseTranslateZoneAirMassFlowConservation.cpp
   ReverseTranslator/ReverseTranslateZone.cpp
