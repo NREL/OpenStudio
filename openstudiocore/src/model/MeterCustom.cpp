@@ -216,7 +216,7 @@ MeterCustom::MeterCustom(const Model& model)
 {
   OS_ASSERT(getImpl<detail::MeterCustom_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
+  // Default the fuelType to Electricity (maybe "Generic"?)
   setFuelType("Electricity");
 
 }

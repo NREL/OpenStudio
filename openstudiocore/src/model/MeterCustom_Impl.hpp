@@ -68,8 +68,6 @@ class MODEL_API MeterCustom_Impl : public ModelObject_Impl {
 
     boost::optional<std::string> fuelType() const;
 
-    // TODO: Handle this object's extensible fields.
-
     // Return a vector of (Key, Var) pairs
     std::vector< std::pair<std::string, std::string> > keyVarGroups();
 
@@ -91,8 +89,6 @@ class MODEL_API MeterCustom_Impl : public ModelObject_Impl {
     bool setFuelType(boost::optional<std::string> fuelType);
 
     void resetFuelType();
-
-    // TODO: Handle this object's extensible fields.
 
     // Add a new (Key, Var) group
     bool addKeyVarGroup(const std::string& keyName, const std::string& outputVariableorMeterName);
@@ -122,16 +118,6 @@ class MODEL_API MeterCustom_Impl : public ModelObject_Impl {
     //@}
     /** @name Type Casting */
     //@{
-
-    // TODO: DO I NEED THAT?
-
-    /** Get a public object that wraps this impl.*/
-    //template<typename T>
-    //T getPublicObject() const {
-    //  T result(std::dynamic_pointer_cast<typename T::ImplType>(
-    //             std::const_pointer_cast<MeterCustom_Impl>(shared_from_this())));
-    //  return result;
-    //}
 
     //@}
    protected:

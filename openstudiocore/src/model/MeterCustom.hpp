@@ -56,8 +56,6 @@ class MODEL_API MeterCustom : public ModelObject {
 
   boost::optional<std::string> fuelType() const;
 
-  // TODO: Handle this object's extensible fields.
-
   // Return a vector of (Key, Var) pairs
   std::vector< std::pair<std::string, std::string> > keyVarGroups();
 
@@ -79,8 +77,6 @@ class MODEL_API MeterCustom : public ModelObject {
   bool setFuelType(std::string fuelType);
 
   void resetFuelType();
-
-  // TODO: Handle this object's extensible fields.
 
   // Add a new (Key, Var) group
   bool addKeyVarGroup(const std::string& keyName, const std::string& outputVariableorMeterName);
@@ -107,36 +103,6 @@ class MODEL_API MeterCustom : public ModelObject {
   /** @name Type Casting */
   //@{
 
-  /** Get the impl pointer */
-
-  // TODO: WHAT IS THAT?
-
-  //template<typename T>
-  //std::shared_ptr<T> getImpl() const {
-  //  return std::dynamic_pointer_cast<T>(m_impl);
-  //}
-
-  ///** Cast to type T. Throws std::bad_cast if object is not a T. */
-  //template<typename T>
-  //T cast() const {
-  //  std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
-  //  if (!impl) {
-  //    throw(std::bad_cast());
-  //  }
-  //  return T(impl);
-  //}
-
-  ///** Cast to boost::optional<T>. Return value is boost::none (evaluates to false) 
-  // *  if object is not a T. */
-  //template<typename T>
-  //boost::optional<T> optionalCast() const{
-  //  boost::optional<T> result;
-  //  std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
-  //  if (impl){
-  //    result = T(impl);
-  //  }
-  //  return result;
-  //}
 
   //@}
  protected:
