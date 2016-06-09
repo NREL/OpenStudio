@@ -182,6 +182,7 @@ class Lights;
 class Luminaire;
 class MasslessOpaqueMaterial;
 class Meter;
+class MeterCustom;
 class Node;
 class OtherEquipment;
 class OutsideSurfaceConvectionAlgorithm;
@@ -709,6 +710,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateMasslessOpaqueMaterial( model::MasslessOpaqueMaterial & modelObject );
 
   boost::optional<IdfObject> translateMeter( model::Meter & modelObject );
+  
+  boost::optional<IdfObject> translateMeterCustom( model::MeterCustom & modelObject );
 
   boost::optional<IdfObject> translateNode( model::Node & modelObject );
 
